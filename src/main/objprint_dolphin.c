@@ -1979,11 +1979,11 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
             } else {
                 vtx = (u8*)((ModelFileHeader*)m)->vertices;
             }
-            ObjModel_BlendVertexStream((u8*)gObjBoneMtxBuffer, m + 0x88, vtx,
+            ObjModel_BlendVertexStream((u8*)gObjBoneMtxBuffer, &((ModelFileHeader*)m)->vertexAnimJob, vtx,
                                        (int*)(int)((ModelFileHeader*)am)->jointBlendData,
                                        (u8*)((int*)((char*)am + 0x1c))[(((ObjModel*)am)->bufferFlags >> 1) & 1]);
-            ObjModel_BlendNormalStream((u8*)gObjBoneMtxBuffer, m + 0xac, (u8*)(int)((ModelFileHeader*)m)->normals,
-                                       (u8**)((ObjModel*)am)->blendAnimData, ((ModelFileHeader*)m)->flags24 & 8);
+            ObjModel_BlendNormalStream((u8*)gObjBoneMtxBuffer, &((ModelFileHeader*)m)->normalAnimJob,
+                                       (u8*)(int)((ModelFileHeader*)m)->normals, (u8**)((ObjModel*)am)->blendAnimData, ((ModelFileHeader*)m)->flags24 & 8);
         }
         if (((ModelFileHeader*)m)->hitVolumeCount != 0) {
             objUpdateHitSpheres((ObjModel*)am, (ModelFileHeader*)m, obj, NULL, obj2);
@@ -2243,11 +2243,11 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
                 } else {
                     vtx = (u8*)((ModelFileHeader*)m)->vertices;
                 }
-                ObjModel_BlendVertexStream((u8*)gObjBoneMtxBuffer, m + 0x88, vtx,
+                ObjModel_BlendVertexStream((u8*)gObjBoneMtxBuffer, &((ModelFileHeader*)m)->vertexAnimJob, vtx,
                                            (int*)(int)((ModelFileHeader*)am)->jointBlendData,
                                            (u8*)((int*)((char*)am + 0x1c))[(((ObjModel*)am)->bufferFlags >> 1) & 1]);
-                ObjModel_BlendNormalStream((u8*)gObjBoneMtxBuffer, m + 0xac, (u8*)(int)((ModelFileHeader*)m)->normals,
-                                           (u8**)((ObjModel*)am)->blendAnimData, ((ModelFileHeader*)m)->flags24 & 8);
+                ObjModel_BlendNormalStream((u8*)gObjBoneMtxBuffer, &((ModelFileHeader*)m)->normalAnimJob,
+                                           (u8*)(int)((ModelFileHeader*)m)->normals, (u8**)((ObjModel*)am)->blendAnimData, ((ModelFileHeader*)m)->flags24 & 8);
             }
         }
         if (((ModelFileHeader*)m)->hitVolumeCount != 0) {

@@ -93,6 +93,44 @@ STATIC_ASSERT(sizeof(ModelRenderOpTextureRefs) == 0x0C);
 STATIC_ASSERT(offsetof(ModelRenderOpTextureRefs, texture1) == 0x04);
 STATIC_ASSERT(offsetof(ModelRenderOpTextureRefs, swapSelector) == 0x08);
 
+/* Jobs and chunk records for the cached vertex and normal blend streams. */
+typedef struct ModelVtxAnimJob {
+    u8 unk00[2];
+    u16 chunkCount; /* 0x02 */
+    u8 unk04[2];
+    u8 quantShift; /* 0x06: GQR7 scale for the s16/s8 streams */
+    u8 unk07[5];
+    struct ModelVtxAnimChunk* chunks; /* 0x0C */
+} ModelVtxAnimJob;
+
+typedef struct ModelVtxAnimChunk {
+    u8 unk00[0x60];
+    s32 srcDataOffset; /* 0x60: into the anim data */
+    u8* weightStream;  /* 0x64 */
+    u8 unk68[4];
+    u8 mtxIdxA; /* 0x6C: * 0x30 into the reordered matrix array */
+    u8 mtxIdxB; /* 0x6D */
+    u8 unk6E;
+    u8 weightBlocks;   /* 0x6F */
+    u16 vtxCount;     /* 0x70 */
+    u8 dstByteOffset; /* 0x72 */
+    u8 vtxBlocks;      /* 0x73 */
+} ModelVtxAnimChunk;  /* 0x74 */
+
+STATIC_ASSERT(sizeof(ModelVtxAnimChunk) == 0x74);
+STATIC_ASSERT(sizeof(ModelVtxAnimJob) == 0x10);
+STATIC_ASSERT(offsetof(ModelVtxAnimJob, quantShift) == 0x06);
+STATIC_ASSERT(offsetof(ModelVtxAnimChunk, weightStream) == 0x64);
+STATIC_ASSERT(offsetof(ModelVtxAnimChunk, mtxIdxA) == 0x6c);
+STATIC_ASSERT(offsetof(ModelVtxAnimChunk, mtxIdxB) == 0x6d);
+STATIC_ASSERT(offsetof(ModelVtxAnimChunk, weightBlocks) == 0x6f);
+STATIC_ASSERT(offsetof(ModelVtxAnimChunk, dstByteOffset) == 0x72);
+STATIC_ASSERT(offsetof(ModelVtxAnimChunk, vtxBlocks) == 0x73);
+STATIC_ASSERT(offsetof(ModelVtxAnimJob, chunkCount) == 0x02);
+STATIC_ASSERT(offsetof(ModelVtxAnimJob, chunks) == 0x0C);
+STATIC_ASSERT(offsetof(ModelVtxAnimChunk, srcDataOffset) == 0x60);
+STATIC_ASSERT(offsetof(ModelVtxAnimChunk, vtxCount) == 0x70);
+
 /*
  * ModelFileHeader - in-place header of a loaded .MOD model file. Offset
  * fields are patched to pointers by ObjModel_RelocateModelData /
@@ -147,17 +185,12 @@ typedef struct ModelFileHeader {
     };
     s32 animationDataFileOffset;
     s16 headerSize; /* roundUpTo8(loaded header size) + 0xb0; read back into size table */
-    u8 unk86[4];
-    u16 vertexAnimCount; /* count of 0x74-stride entries at vertexAnimEntries */
-    u8 unk8C[8];
-    u8* vertexAnimEntriesRaw;
+    u8 unk86[2];
+    ModelVtxAnimJob vertexAnimJob;
     u8 unk98[0xC];
     u8* vertexAnimEntries; /* 0x74-stride entries */
     u8* vertexAnimBase;
-    u8 unkAC[2];
-    u16 blendAnimCount; /* count of 0x74-stride entries at blendAnimEntries */
-    u8 unkB0[8];
-    u8* blendAnimEntriesRaw;
+    ModelVtxAnimJob normalAnimJob;
     u8 unkBC[0xC];
     u8* blendAnimEntries; /* 0x74-stride entries */
     u8* blendAnimBase;
@@ -209,6 +242,8 @@ typedef struct ModelFileHeader {
 #define OBJMODEL_BUFFER_FLAG_HITSPHERE_SELECT 0x4 /* selects a hitVolumeSphereBuffers entry */
 #define OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED  0x40
 
+STATIC_ASSERT(offsetof(ModelFileHeader, vertexAnimJob) == 0x88);
+STATIC_ASSERT(offsetof(ModelFileHeader, normalAnimJob) == 0xac);
 STATIC_ASSERT(offsetof(ModelFileHeader, modelId) == 0x04);
 STATIC_ASSERT(offsetof(ModelFileHeader, modNo) == 0x04);
 STATIC_ASSERT(offsetof(ModelFileHeader, jointData) == 0x3C);
@@ -264,38 +299,6 @@ typedef struct ObjModelHitSphere {
 STATIC_ASSERT(sizeof(ObjModelHitSphere) == 0x10);
 STATIC_ASSERT(offsetof(ObjModelHitSphere, radius) == 0x00);
 STATIC_ASSERT(offsetof(ObjModelHitSphere, pos) == 0x04);
-
-/* Vertex-anim job header + chunk records consumed by ObjModel_Blend{Vertex,
- * Normal}Stream (the raw .c spells chunkCount as ((ModelFileHeader*)hdr)->flags;
- * the stride 0x74 matches ModelFileHeader.vertexAnimEntries). */
-typedef struct ModelVtxAnimJob {
-    u8 unk00[2];
-    u16 chunkCount; /* 0x02 */
-    u8 unk04[2];
-    u8 quantShift; /* 0x06: GQR6/7 scale for the s16/s8 streams */
-    u8 unk07[5];
-    struct ModelVtxAnimChunk* chunks; /* 0x0C */
-} ModelVtxAnimJob;
-
-typedef struct ModelVtxAnimChunk {
-    u8 unk00[0x60];
-    s32 srcDataOffset; /* 0x60: into the anim data */
-    u8* weightStream;  /* 0x64 */
-    u8 unk68[4];
-    u8 mtxIdxA; /* 0x6C: * 0x30 into the reordered matrix array */
-    u8 mtxIdxB; /* 0x6D */
-    u8 unk6E;
-    u8 weightWords;   /* 0x6F */
-    u16 vtxCount;     /* 0x70 */
-    u8 dstByteOffset; /* 0x72 */
-    u8 vtxWords;      /* 0x73 */
-} ModelVtxAnimChunk;  /* 0x74 */
-
-STATIC_ASSERT(sizeof(ModelVtxAnimChunk) == 0x74);
-STATIC_ASSERT(offsetof(ModelVtxAnimJob, chunkCount) == 0x02);
-STATIC_ASSERT(offsetof(ModelVtxAnimJob, chunks) == 0x0C);
-STATIC_ASSERT(offsetof(ModelVtxAnimChunk, srcDataOffset) == 0x60);
-STATIC_ASSERT(offsetof(ModelVtxAnimChunk, vtxCount) == 0x70);
 
 /* ModelFileHeader.jointData entry (wiki: Bone). tail is the inverse bind-pose
  * translation, negated into PSMTXTrans every frame by modelInitBoneMtxs. */
@@ -388,9 +391,9 @@ typedef struct ObjModel {
     ModelRenderOpTextureRefs* textureRefs;
     void* renderCallback;
     void* postRenderCallback;
-    s32* vertexAnimData; /* 0x40: per-entry s32 array (file->vertexAnimCount), filled from vertexAnimEntries[i]+0x60 */
+    s32* vertexAnimData; /* 0x40: per-entry s32 array (file->vertexAnimJob.chunkCount), filled from vertexAnimEntries[i]+0x60 */
     s32*
-        blendAnimData; /* 0x44: per-entry s32 array (file->blendAnimCount), filled from normalBuf + blendAnimEntries[i]+0x60 */
+        blendAnimData; /* 0x44: per-entry s32 array (file->normalAnimJob.chunkCount), filled from normalBuf + blendAnimEntries[i]+0x60 */
     u8* hitVolumeSphereBuffers[2]; /* 0x48: double-buffered runtime hit spheres */
     u8* activeHitVolumeSpheres;    /* 0x50: current hit-sphere buffer */
     u8* groundShadowVerts; /* 0x54: ground-shadow quad buffer (s16 verts; status byte at +0x18: 0 = rebuild via buildGroundShadowQuad, 0xff = skip draw); allocated only with load flag 0x8000 */

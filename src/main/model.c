@@ -626,11 +626,11 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
                 (((u32)((ModelFileHeader*)hdr)->jointCount * 7) << 2) + (int)sizeof(ModelJointWork) + total;
     }
     if (((ModelFileHeader*)hdr)->vertexAnimEntries != 0) {
-        total = (va = (u32)((ModelFileHeader*)hdr)->vertexAnimCount * 4, va + total);
+        total = (va = (u32)((ModelFileHeader*)hdr)->vertexAnimJob.chunkCount * 4, va + total);
         total += 4;
     }
     if (((ModelFileHeader*)hdr)->blendAnimEntries != 0) {
-        total = (va = (u32)((ModelFileHeader*)hdr)->blendAnimCount * 4, va + total);
+        total = (va = (u32)((ModelFileHeader*)hdr)->normalAnimJob.chunkCount * 4, va + total);
         total += 4;
     }
     total += (u32)((ModelFileHeader*)hdr)->renderOpCount * (int)sizeof(ModelRenderOpTextureRefs);
@@ -803,12 +803,12 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c) {
     if (((ModelFileHeader*)p)->vertexAnimEntries != NULL) {
         pos = roundUpTo4(pos);
         *(int*)&((ObjModel*)out2)->vertexAnimData = pos;
-        pos += ((ModelFileHeader*)p)->vertexAnimCount * 4;
+        pos += ((ModelFileHeader*)p)->vertexAnimJob.chunkCount * 4;
     }
     if (((ModelFileHeader*)p)->blendAnimEntries != NULL) {
         pos = roundUpTo4(pos);
         *(int*)&((ObjModel*)out2)->blendAnimData = pos;
-        pos += ((ModelFileHeader*)p)->blendAnimCount * 4;
+        pos += ((ModelFileHeader*)p)->normalAnimJob.chunkCount * 4;
     }
     pos = roundUpTo4(pos);
     *(int*)&((ObjModel*)out2)->textureRefs = pos;
@@ -2005,8 +2005,8 @@ void* ObjModel_LoadModelData(int id);
 
 void ObjModel_RelocateAnimData(u8* m, u8* dst) {
     int i;
-    ((ModelFileHeader*)m)->vertexAnimEntriesRaw = ((ModelFileHeader*)m)->vertexAnimEntries;
-    for (i = 0; i < ((ModelFileHeader*)m)->vertexAnimCount; i++) {
+    ((ModelFileHeader*)m)->vertexAnimJob.chunks = (ModelVtxAnimChunk*)((ModelFileHeader*)m)->vertexAnimEntries;
+    for (i = 0; i < ((ModelFileHeader*)m)->vertexAnimJob.chunkCount; i++) {
         ((ObjModel*)dst)->vertexAnimData[i] =
             ((ModelVtxAnimChunk*)((ModelFileHeader*)m)->vertexAnimEntries)[i].srcDataOffset;
         if (((ModelVtxAnimChunk*)((ModelFileHeader*)m)->vertexAnimEntries)[i].weightStream <
@@ -2016,8 +2016,8 @@ void ObjModel_RelocateAnimData(u8* m, u8* dst) {
                 (u32)((ModelVtxAnimChunk*)((ModelFileHeader*)m)->vertexAnimEntries)[i].weightStream;
         }
     }
-    ((ModelFileHeader*)m)->blendAnimEntriesRaw = ((ModelFileHeader*)m)->blendAnimEntries;
-    for (i = 0; i < ((ModelFileHeader*)m)->blendAnimCount; i++) {
+    ((ModelFileHeader*)m)->normalAnimJob.chunks = (ModelVtxAnimChunk*)((ModelFileHeader*)m)->blendAnimEntries;
+    for (i = 0; i < ((ModelFileHeader*)m)->normalAnimJob.chunkCount; i++) {
         ((ObjModel*)dst)->blendAnimData[i] =
             *(int*)&((ObjModel*)dst)->normalBuf +
             ((ModelVtxAnimChunk*)((ModelFileHeader*)m)->blendAnimEntries)[i].srcDataOffset;
@@ -2285,127 +2285,127 @@ void ObjModel_InitRenderBuffers(void) {
     setGQR6_2(7, 4, 7, 4);
 }
 
-void ObjModel_BlendNormalStream(u8* mtxs, u8* job, u8* animData, u8** outs, int quad) {
-    u16 chunkWords[2];
+void ObjModel_BlendNormalStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, u8** outs, int quad) {
+    u16 chunkBlocks[2];
 
-    setGQR7Packed(job[6], 6, job[6], 6);
+    setGQR7Packed(job->quantShift, 6, job->quantShift, 6);
     ObjModel_InitScratchBuffers();
-    if (((ModelFileHeader*)job)->flags != 0) {
-        u8* chunk;
-        int vtxWords;
-        int weightWords;
+    if (job->chunkCount != 0) {
+        ModelVtxAnimChunk* chunk;
+        int vtxBlocks;
+        int weightBlocks;
         u32 i;
         u32 nextSlot;
         u8* chunkDst;
-        u8* lastChunk;
+        ModelVtxAnimChunk* lastChunk;
 
-        chunk = *(u8**)(job + 0xc);
-        vtxWords = (u32)((chunk[0x73] << 5) + 0x1f) >> 5;
-        copyToCache(gModelCacheBuffersA[0], animData + *(int*)(chunk + 0x60), vtxWords);
-        chunkWords[0] = vtxWords;
-        weightWords = (u32)(((chunk = *(u8**)(job + 0xc))[0x6f] << 5) + 0x1f) >> 5;
-        copyToCache(*(u8**)((int)gModelCacheBuffersA + 4), *(u8**)(chunk + 0x64), weightWords);
-        for (i = 0; i < (u32)(((ModelFileHeader*)job)->flags - 1); i++) {
-            int nextVtxWords;
+        chunk = job->chunks;
+        vtxBlocks = (u32)((chunk->vtxBlocks << 5) + 0x1f) >> 5;
+        copyToCache(gModelCacheBuffersA[0], animData + chunk->srcDataOffset, vtxBlocks);
+        chunkBlocks[0] = vtxBlocks;
+        weightBlocks = (u32)(((chunk = job->chunks)->weightBlocks << 5) + 0x1f) >> 5;
+        copyToCache(*(u8**)((int)gModelCacheBuffersA + sizeof(gModelCacheBuffersA[0])), chunk->weightStream, weightBlocks);
+        for (i = 0; i < (u32)(job->chunkCount - 1); i++) {
+            int nextVtxBlocks;
 
-            chunk = *(u8**)(job + 0xc) + i * 0x74;
-            nextVtxWords = (u32)((chunk[0xe7] << 5) + 0x1f) >> 5;
+            chunk = job->chunks + i;
+            nextVtxBlocks = (u32)((chunk[1].vtxBlocks << 5) + 0x1f) >> 5;
             nextSlot = (i + 1) & 1;
-            copyToCache(gModelCacheBuffersA[(u8)(nextSlot * 2)], animData + *(int*)(chunk + 0xd4), nextVtxWords);
-            chunkWords[(i + 1) & 1] = nextVtxWords;
+            copyToCache(gModelCacheBuffersA[(u8)(nextSlot * 2)], animData + chunk[1].srcDataOffset, nextVtxBlocks);
+            chunkBlocks[(i + 1) & 1] = nextVtxBlocks;
             {
-                u8* nextChunk;
-                int nextWeightWords = (u32)(((nextChunk = *(u8**)(job + 0xc) + i * 0x74)[0xe3] << 5) + 0x1f) >> 5;
-                copyToCache(gModelCacheBuffersA[(u8)((u8)(nextSlot * 2) + 1)], *(u8**)(nextChunk + 0xd8),
-                            nextWeightWords);
+                ModelVtxAnimChunk* nextChunk;
+                int nextWeightBlocks = (u32)(((nextChunk = job->chunks + i)[1].weightBlocks << 5) + 0x1f) >> 5;
+                copyToCache(gModelCacheBuffersA[(u8)((u8)(nextSlot * 2) + 1)], nextChunk[1].weightStream,
+                            nextWeightBlocks);
             }
             cacheQueueWait(2);
             if ((u8)quad) {
                 chunkDst = outs[i];
                 ObjModel_TransformQuadVerticesLinear(
-                    mtxs + chunk[0x6c] * 0x30, mtxs + chunk[0x6d] * 0x30, gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                    (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-                    (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), *(u16*)(chunk + 0x70));
-                memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkWords[i & 1]);
+                    mtxs + chunk->mtxIdxA * sizeof(ROMtx), mtxs + chunk->mtxIdxB * sizeof(ROMtx), gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
+                    (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+                    (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), chunk->vtxCount);
+                memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
             } else {
                 chunkDst = outs[i];
                 ObjModel_TransformVerticesLinear(
-                    mtxs + chunk[0x6c] * 0x30, mtxs + chunk[0x6d] * 0x30, gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                    (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-                    (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), *(u16*)(chunk + 0x70));
-                memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkWords[i & 1]);
+                    mtxs + chunk->mtxIdxA * sizeof(ROMtx), mtxs + chunk->mtxIdxB * sizeof(ROMtx), gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
+                    (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+                    (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), chunk->vtxCount);
+                memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
             }
         }
-        lastChunk = *(u8**)(job + 0xc) + i * 0x74;
+        lastChunk = job->chunks + i;
         cacheQueueWait(0);
         if ((u8)quad) {
             chunkDst = outs[i];
-            ObjModel_TransformQuadVerticesLinear(mtxs + lastChunk[0x6c] * 0x30, mtxs + lastChunk[0x6d] * 0x30,
+            ObjModel_TransformQuadVerticesLinear(mtxs + lastChunk->mtxIdxA * sizeof(ROMtx), mtxs + lastChunk->mtxIdxB * sizeof(ROMtx),
                                                  gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                                 (u8*)(lastChunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-                                                 (u8*)(lastChunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-                                                 *(u16*)(lastChunk + 0x70));
-            memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkWords[i & 1]);
+                                                 (u8*)(lastChunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+                                                 (u8*)(lastChunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+                                                 lastChunk->vtxCount);
+            memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
         } else {
             chunkDst = outs[i];
-            ObjModel_TransformVerticesLinear(mtxs + lastChunk[0x6c] * 0x30, mtxs + lastChunk[0x6d] * 0x30,
+            ObjModel_TransformVerticesLinear(mtxs + lastChunk->mtxIdxA * sizeof(ROMtx), mtxs + lastChunk->mtxIdxB * sizeof(ROMtx),
                                              gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                             (u8*)(lastChunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-                                             (u8*)(lastChunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-                                             *(u16*)(lastChunk + 0x70));
-            memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkWords[i & 1]);
+                                             (u8*)(lastChunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+                                             (u8*)(lastChunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+                                             lastChunk->vtxCount);
+            memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
         }
         cacheQueueWait(0);
     }
 }
 
-void ObjModel_BlendVertexStream(u8* mtxs, u8* job, u8* animData, int* dstOffsets, u8* dstBase) {
-    u16 chunkWords[2];
+void ObjModel_BlendVertexStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, int* dstOffsets, u8* dstBase) {
+    u16 chunkBlocks[2];
 
-    setGQR7Packed(job[6], 7, job[6], 7);
+    setGQR7Packed(job->quantShift, 7, job->quantShift, 7);
     ObjModel_InitScratchBuffers();
-    if (((ModelFileHeader*)job)->flags != 0) {
-        u8* chunk;
-        int vtxWords;
-        int weightWords;
+    if (job->chunkCount != 0) {
+        ModelVtxAnimChunk* chunk;
+        int vtxBlocks;
+        int weightBlocks;
         u32 i;
         u32 nextSlot;
         u8* chunkDst;
 
-        chunk = *(u8**)(job + 0xc);
-        vtxWords = (u32)((chunk[0x73] << 5) + 0x1f) >> 5;
-        copyToCache(gModelCacheBuffersA[0], animData + *(int*)(chunk + 0x60), vtxWords);
-        chunkWords[0] = vtxWords;
-        weightWords = (u32)(((chunk = *(u8**)(job + 0xc))[0x6f] << 5) + 0x1f) >> 5;
-        copyToCache(*(u8**)((int)gModelCacheBuffersA + 4), *(u8**)(chunk + 0x64), weightWords);
-        for (i = 0; i < (u32)(((ModelFileHeader*)job)->flags - 1); i++) {
-            chunk = *(u8**)(job + 0xc) + i * 0x74;
-            vtxWords = (u32)((chunk[0xe7] << 5) + 0x1f) >> 5;
+        chunk = job->chunks;
+        vtxBlocks = (u32)((chunk->vtxBlocks << 5) + 0x1f) >> 5;
+        copyToCache(gModelCacheBuffersA[0], animData + chunk->srcDataOffset, vtxBlocks);
+        chunkBlocks[0] = vtxBlocks;
+        weightBlocks = (u32)(((chunk = job->chunks)->weightBlocks << 5) + 0x1f) >> 5;
+        copyToCache(*(u8**)((int)gModelCacheBuffersA + sizeof(gModelCacheBuffersA[0])), chunk->weightStream, weightBlocks);
+        for (i = 0; i < (u32)(job->chunkCount - 1); i++) {
+            chunk = job->chunks + i;
+            vtxBlocks = (u32)((chunk[1].vtxBlocks << 5) + 0x1f) >> 5;
             nextSlot = (i + 1) & 1;
-            copyToCache(gModelCacheBuffersA[(u8)(nextSlot * 2)], animData + *(int*)(chunk + 0xd4), vtxWords);
-            chunkWords[(i + 1) & 1] = vtxWords;
+            copyToCache(gModelCacheBuffersA[(u8)(nextSlot * 2)], animData + chunk[1].srcDataOffset, vtxBlocks);
+            chunkBlocks[(i + 1) & 1] = vtxBlocks;
             {
-                u8* nextChunk;
-                int nextWeightWords = (u32)(((nextChunk = *(u8**)(job + 0xc) + i * 0x74)[0xe3] << 5) + 0x1f) >> 5;
-                copyToCache(gModelCacheBuffersA[(u8)((u8)(nextSlot * 2) + 1)], *(u8**)(nextChunk + 0xd8),
-                            nextWeightWords);
+                ModelVtxAnimChunk* nextChunk;
+                int nextWeightBlocks = (u32)(((nextChunk = job->chunks + i)[1].weightBlocks << 5) + 0x1f) >> 5;
+                copyToCache(gModelCacheBuffersA[(u8)((u8)(nextSlot * 2) + 1)], nextChunk[1].weightStream,
+                            nextWeightBlocks);
             }
             cacheQueueWait(2);
             chunkDst = dstBase + dstOffsets[i];
             ObjModel_TransformVerticesWithTranslation(
-                mtxs + chunk[0x6c] * 0x30, mtxs + chunk[0x6d] * 0x30, gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-                (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), *(u16*)(chunk + 0x70));
-            memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkWords[i & 1]);
+                mtxs + chunk->mtxIdxA * sizeof(ROMtx), mtxs + chunk->mtxIdxB * sizeof(ROMtx), gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
+                (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+                (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), chunk->vtxCount);
+            memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
         }
-        chunk = *(u8**)(job + 0xc) + i * 0x74;
+        chunk = job->chunks + i;
         cacheQueueWait(0);
         chunkDst = dstBase + dstOffsets[i];
         ObjModel_TransformVerticesWithTranslation(
-            mtxs + chunk[0x6c] * 0x30, mtxs + chunk[0x6d] * 0x30, gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-            (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-            (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), *(u16*)(chunk + 0x70));
-        memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkWords[i & 1]);
+            mtxs + chunk->mtxIdxA * sizeof(ROMtx), mtxs + chunk->mtxIdxB * sizeof(ROMtx), gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
+            (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+            (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), chunk->vtxCount);
+        memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
         cacheQueueWait(0);
     }
 }
