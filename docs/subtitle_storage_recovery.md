@@ -89,3 +89,26 @@ Preserved retail quirks and test limits:
 Both `ninja all_source` and the strict DOL checksum gate pass. Subtitle remains
 NonMatching, so the checksum uses retail subtitle code; it does validate the
 still-Matching initializer consumer. Host tests are not PPC floating-point emulation.
+
+## Regional symbol ownership follow-up
+
+The four other version configs now assign the complete `0xC00` extent to
+`gSubtitleLineTable`, matching the common source definition. Their existing
+subtitle BSS split windows already covered exactly those extents; no region's
+addresses, split boundaries, or expected checksums change.
+
+| Version | Table base | End | Evidence checked |
+| --- | --- | --- | --- |
+| EN rev1 | `8033BEA0` | `8033CAA0` | Config spans and retail builder/initializer |
+| JP | `8033B360` | `8033BF60` | Config spans and retail builder/initializer |
+| PAL rev0 | `8033C9E0` | `8033D5E0` | Existing config spans only |
+| PAL rev1 | `8033CBA0` | `8033D7A0` | Config spans and retail builder/initializer |
+
+The checked regional builders contain 240 instructions and their initializers
+48. Relative to EN, differences are call displacements, global addresses,
+and SDA offsets; the member offsets and 256-entry initialization stay the same.
+The local artifact under `orig/GSAP01/sys/main.dol` identifies as **PAL rev1**
+by SHA-1 `c1a6ccdc61c7e719e20ea7cc59c8de09fd183e66`, matching
+`config/GSAP01_rev1/build.sha1`. Its subtitle base is `8033CBA0`, so it was
+not treated as evidence for the PAL rev0 addresses. The artifact was left in
+place. This audit does not claim successful builds of the secondary versions.
