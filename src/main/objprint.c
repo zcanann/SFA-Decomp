@@ -791,10 +791,10 @@ void characterUpdateHeadLook(GameObject* obj, CharacterEyeAnimState* state, f32 
         state->headTrackMode = (s16)(state->headTrackMode | (flag << 8));
     }
 }
-s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, ObjJointTrackPair* tracks, s16* spd, f32 yOff, int unused,
-                              int basePitch);
-s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, ObjJointTrackPair* tracks, s16* spd, f32 yOff, int unused,
-                              int basePitch) {
+s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, ObjJointTrackPair* tracks, s16* spd,
+                              f32 yOff, int unused, int basePitch);
+s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, ObjJointTrackPair* tracks, s16* spd,
+                              f32 yOff, int unused, int basePitch) {
     s16 src[2];
     s16 dst[2];
     GameObject* go = obj;
