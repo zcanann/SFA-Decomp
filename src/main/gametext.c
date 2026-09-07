@@ -3129,7 +3129,8 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
                 while (remainingUnits--) {
                     *dst8++ = *src8++;
                 }
-                DCFlushRange(textureGetImageData(charset->textures[textureIndex]), charset->textures[textureIndex]->dataSize);
+                DCFlushRange(textureGetImageData(charset->textures[textureIndex]),
+                             charset->textures[textureIndex]->dataSize);
             } else {
                 u16* src16 = textureCursor;
                 u16* dst16 = textureGetImageData(charset->textures[textureIndex]);
@@ -3137,7 +3138,8 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
                 while (remainingUnits--) {
                     *dst16++ = *src16++;
                 }
-                DCFlushRange(textureGetImageData(charset->textures[textureIndex]), charset->textures[textureIndex]->dataSize);
+                DCFlushRange(textureGetImageData(charset->textures[textureIndex]),
+                             charset->textures[textureIndex]->dataSize);
             }
         }
         {
