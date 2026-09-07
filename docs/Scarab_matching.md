@@ -96,3 +96,39 @@ lifetimes, propagation, CSE, optimization level, deferred inlining, and
 language mode also fail to produce an exact unit. Production compiler flags
 and TU boundaries are unchanged. These observations describe the tested
 source forms, not a proof that matching clean C is impossible.
+
+## Frontend investigation
+
+`tools/mwcc_frontend_trace.py` exposes the compiler's own earlier IR listings:
+
+```sh
+python3 tools/mwcc_frontend_trace.py \
+  --unit main/dlls/objects/262/262 --function Scarab_update \
+  --output build/flag_probe/scarab_frontend
+```
+
+The tool hash-checks GC/1.3, verifies the hook instructions, and enables only
+the disabled listing gates in a private LLDB/Wibo process. It copies the
+input source into the diagnostic output directory and compares ordinary
+and instrumented objects byte for byte. A successful manifest records the
+source, compiler, object, and listing hashes alongside the actual command.
+The default debugger deadline is 60 seconds; incomplete captures publish
+no success manifest.
+
+The pre-initializer-recovery source at `fa8042be9c` produces 79 stage dumps.
+Its initial `collisionDetected = bestGroundHitIndex` is an `EASS` from an
+indirect scalar read in `IRO_BuildflowGraph`. The first `Copy and constant
+propagation` stage replaces that read with `Operand 0`. Later, between the
+last `IRO_EvaluateConditionals` and `Before RebuildCondExpressions`, the
+initial/stunned ground-index component becomes an anonymous temporary;
+the active ground-index component and initial collision component retain
+their original names. GC/1.3's lifetime-partition routine at compiler VA
+`0x45D090` creates these anonymous variables. This explains why changing
+only the initializer's spelling does not repair the backend mismatch.
+
+The local-initializer source was traced separately: 79 stages again, with
+ordinary and instrumented object hash `030b14ff...e59bfa0` as recorded above.
+EN rev1, JP, PAL, and PAL rev1 all retain `mr r30,r31` at the corresponding
+instruction 26. This corroborates the instruction's retail identity without
+establishing the missing source form. None of the diagnostic scalar, alias,
+aggregate, guard, or optimizer variants is retained.
