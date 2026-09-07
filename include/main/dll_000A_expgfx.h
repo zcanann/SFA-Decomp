@@ -30,7 +30,7 @@ typedef struct ExpgfxDllInterface {
 
 extern ExpgfxDllInterface expgfx_funcs;
 
-void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot);
+void expgfxRemove(void* slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot);
 void expgfxRemoveAll(void);
 int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, u32 sourceId);
 void expgfx_initSlotQuad(void* slot);

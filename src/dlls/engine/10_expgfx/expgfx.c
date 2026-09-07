@@ -588,19 +588,19 @@ int expgfx_addremove(EffectSpawnConfig* config, int preferredPoolIndex, int slot
 
         resourceTableIndex = expgfx_acquireResourceEntry(config->textureId);
         if (resourceTableIndex < 0) {
-            expgfxRemove(gExpgfxSlotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
+            expgfxRemove((void*)gExpgfxSlotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
         resourceHandle = gExpgfxResourceEntries[resourceTableIndex].resource;
         if (resourceHandle != NULL) {
             if (resourceHandle->refCount >= EXPGFX_REFCOUNT_OVERFLOW) {
-                expgfxRemove(gExpgfxSlotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
+                expgfxRemove((void*)gExpgfxSlotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
                 return EXPGFX_INVALID_POOL_INDEX;
             }
             resourceHandle->refCount++;
             resourceHandle->linkGroup = config->linkGroup;
         } else {
-            expgfxRemove(gExpgfxSlotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
+            expgfxRemove((void*)gExpgfxSlotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
 
@@ -648,7 +648,7 @@ int expgfx_addremove(EffectSpawnConfig* config, int preferredPoolIndex, int slot
         expTabIndex = expgfx_addToTable((u32)resourceHandle, (u32)attachedSource, attachedTableKey, config->textureId);
         if ((short)expTabIndex == EXPGFX_INVALID_TABLE_INDEX) {
             debugPrintf("expgfx.c: invalid tabindex\n");
-            expgfxRemove(gExpgfxSlotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
+            expgfxRemove((void*)gExpgfxSlotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
         ((struct {
@@ -920,7 +920,7 @@ void expgfx_free(u32 sourceId) {
                         (ExpgfxTableEntry*)((u8*)gExpgfxTableEntries +
                                             (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16);
                     if (tableEntry->sourceId == sourceId) {
-                        expgfxRemove(*slotPoolBases[0], poolIndex, slotIndex, 0, 1);
+                        expgfxRemove((void*)*slotPoolBases[0], poolIndex, slotIndex, 0, 1);
                     }
                 }
                 slot = (ExpgfxSlot*)((u8*)slot + EXPGFX_SLOT_SIZE);
@@ -1396,10 +1396,18 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
 }
 
 void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameState) {
+    u32* maskPtr;
+    int ambRPlus1;
+    int ambGPlus1;
+    int ambBPlus1;
+    int curPool;
+    f32* maxXPtr;
+    s8* activeCountScan;
+    u8* curPoolBuf;
+    int poolByteOffset;
     ExpgfxBounds* bounds;
     int nextActivePool;
     int scanIdx;
-    f32* maxXPtr;
     f32* minYPtr;
     f32* maxYPtr;
     f32* minZPtr;
@@ -1416,14 +1424,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     GameObject* player;
     GameObject* tricky;
     u8* nextCacheBuf;
-    int curPool;
-    u32* maskPtr;
-    u8* curPoolBuf;
     ObjAnimComponent* srcObj;
     u8 cacheQueued;
-    int ambRPlus1;
-    int ambGPlus1;
-    int ambBPlus1;
     ExpgfxSlot* curCacheBuf;
     void* cache;
     u8 ambientScaled[3]; /* BGR order: [2]=R, [1]=G, [0]=B */
@@ -1506,11 +1508,11 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
             *maxZPtr = boundsMax;
             curPool = activePool;
             scanIdx = curPool + 1;
-            curPoolBuf = (u8*)&gExpgfxPoolActiveCounts[scanIdx];
+            activeCountScan = &gExpgfxPoolActiveCounts[scanIdx];
             for (; scanIdx < EXPGFX_POOL_COUNT || (scanIdx = -1, 0); scanIdx++) {
-                switch (*(s8*)curPoolBuf) {
+                switch (*activeCountScan) {
                 case 0:
-                    curPoolBuf++;
+                    activeCountScan++;
                     continue;
                 }
                 break;
@@ -1528,7 +1530,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
             cacheQueueWait(cacheQueued);
             slot--;
             slotIdx = 0;
-            maskPtr = &gExpgfxSlotActiveMasks[activePool];
+            poolByteOffset = activePool * sizeof(gExpgfxSlotActiveMasks[0]);
+            maskPtr = (u32*)((u8*)gExpgfxSlotActiveMasks + poolByteOffset);
             curPoolBuf = (u8*)cache + cacheParity * 0x1000;
             for (; slotIdx < EXPGFX_SLOTS_PER_POOL; slotIdx++) {
                 ExpgfxQuadVertex* quad;
@@ -1558,7 +1561,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     continue;
                 }
                 if (phase == 1) {
-                    expgfxRemove((u32)curPoolBuf, curPool, slotIdx, 0, 0);
+                    expgfxRemove(curPoolBuf, curPool, slotIdx, 0, 0);
                     continue;
                 }
                 if (slot->lifetimeFrame <= 0 || slot->lifetimeFrame > slot->lifetimeFrameLimit) {
@@ -2245,7 +2248,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     }
                 }
             }
-            memcpyToCache((void*)gExpgfxSlotPoolBases[activePool], curPoolBuf, EXPGFX_POOL_CACHE_LINE_COUNT);
+            memcpyToCache((void*)*(u32*)((u8*)gExpgfxSlotPoolBases + poolByteOffset), curPoolBuf, EXPGFX_POOL_CACHE_LINE_COUNT);
             cacheQueued = 1;
             activePool = nextActivePool;
         }
@@ -2416,7 +2419,7 @@ void expgfxRemoveAll(void) {
     expgfxRemoveAllBody();
 }
 
-void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot) {
+void expgfxRemove(void* slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot) {
     int activeBit[1];
     void** resources[1];
     ExpgfxSlot* slot;
@@ -2428,7 +2431,7 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
         return;
     }
 
-    slot = (ExpgfxSlot*)(slotPoolBase + slotIndex * EXPGFX_SLOT_SIZE);
+    slot = (ExpgfxSlot*)((u8*)slotPoolBase + slotIndex * EXPGFX_SLOT_SIZE);
     slot->behaviorFlags = 0;
 
     if (skipTextureFree == 0) {

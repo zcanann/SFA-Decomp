@@ -2,17 +2,16 @@
 
 ## Native storage and current EN match (2026-09-07)
 
-Expgfx now reaches **99.99813% fuzzy match**, with **45 of 46 functions exact**.
-The allocator is complete. The remaining update difference is 18 instruction
-bytes: stack displacements for eight spilled values. The unit stays
-`NonMatching` until its source-linked DOL passes the retail checksum.
+Expgfx now reaches **100% match**, with **all 46 functions and all 6,660 data
+bytes exact**. The unit is `MatchingFor("GSAE01")`, and the source-linked DOL passes
+the strict retail checksum.
 
 | Measure | Previous | Current |
 | --- | ---: | ---: |
-| Unit fuzzy match | 99.88683% | 99.99813% |
-| Exact functions | 44 / 46 | 45 / 46 |
+| Unit fuzzy match | 99.88683% | 100% |
+| Exact functions | 44 / 46 | 46 / 46 |
 | `expgfxGetSlot` | 95.89899% | 100% |
-| `expgfx_updateActivePools` | 99.88024% | 99.99222% |
+| `expgfx_updateActivePools` | 99.88024% | 100% |
 | Update instructions | 2,311 | 2,313 |
 | Exact data bytes | 6,660 | 6,660 |
 
@@ -73,11 +72,10 @@ indexes entries instead of incrementing the entry argument. That distinction
 preserves the retail register allocation and all 116 instructions.
 
 The update keeps the active pool index separate from the texture/resource
-address. It uses that index for both the active-mask lookup and final pool
-writeback, allowing the compiler to share the byte-offset calculation. The
-byte-buffer local retains its two nonoverlapping roles in the next-pool scan
-and cache writeback. Splitting those roles currently creates an extra store.
-All arithmetic, branches, instruction counts, and register operands now agree.
+address. A named byte offset is shared by the active-mask lookup and final
+pool writeback. The next-pool scan has its own signed-byte cursor, separate
+from the cache writeback buffer. All arithmetic, branches, instruction counts,
+register operands, and stack displacements agree.
 
 The earlier trail-vector recovery, narrowed ambient-color products, and direct
 `s16` rotation-speed conversions are retained. The three rotation products
@@ -90,36 +88,34 @@ relocations. A direct truth test of the floating-point frame timer recovers
 retail's timer-first, zero-second load order. The linked-byte comparison
 verifies this correction.
 
-### Remaining stack layout
+### Completing the stack layout
 
-Only these eight stack locations differ in `expgfx_updateActivePools`:
+Native array recovery initially left only 18 displacement bytes different in
+the update, covering eight spilled values. The final blocker was the
+`expgfxRemove` API: its first argument is a pool buffer pointer, but the
+reconstruction declared it as `u32`. Its body immediately used the value as
+the base of a slot address. All direct consumers are in this TU.
 
-| Value | Retail offset | Current offset |
-| --- | ---: | ---: |
-| pool byte offset | 316 | 344 |
-| cache writeback buffer | 320 | 340 |
-| maximum-X pointer | 324 | 336 |
-| current pool index | 328 | 332 |
-| ambient blue plus one | 332 | 316 |
-| ambient green plus one | 336 | 320 |
-| ambient red plus one | 340 | 324 |
-| active-mask pointer | 344 | 328 |
+With the integer prototype, separating the scan cursor and writeback buffer
+introduced a duplicate spill store. Naming the common pool byte offset moved
+that value into the correct slot, but could not resolve the buffer's generated
+temporary. Declaring the buffer argument as `void*` eliminates the cast at the
+update call and allows the separate buffer local to retain the required stack
+home. The integer-backed engine pool table is cast only at its call boundary;
+the remover computes the slot address through a byte pointer.
 
-The 18 affected loads/stores differ only in their displacement byte. Native
-array access was the structural breakthrough; changing declaration scopes,
-scan helpers, or merging the pool index back into the resource address has not
-resolved the final layout without other regressions. No forced stack record,
-volatile storage, or compiler override is retained.
+Keeping the recovered scalar declarations in their codegen-proven order then
+reproduces all eight retail stack locations, from the pool byte offset at
+316(r1) through the active-mask pointer at 344(r1). Only the update's text
+changes from the preceding recovery; every other function, symbol offset,
+and non-text section remains byte-identical. No forced stack record,
+volatile storage, or compiler override is used.
 
 ### Validation
 
 - `ninja all_source` and the normal matching build pass, including the strict
-  retail checksum. Expgfx's normal matching link still uses its retail object.
-- A diagnostic source link produces a DOL of the same size as retail and differs
-  at exactly the 18 displacement bytes listed above, all inside the update.
-  Every other linked byte agrees, verifying the new BSS offsets, initialized
-  data, anonymous literals, relocations, and the other 45 functions. Its strict
-  checksum fails as expected; the unit is restored to `NonMatching` afterward.
+  retail checksum with Expgfx linked from source. This verifies the new BSS
+  offsets, initialized data, anonymous literals, relocations, and all functions.
 - All allocated non-text section bytes, sizes, and alignments are preserved.
   Named array offsets and sizes are checked independently of zero-filled BSS
   section equality. Objdiff reports all 6,660 data bytes exact.
