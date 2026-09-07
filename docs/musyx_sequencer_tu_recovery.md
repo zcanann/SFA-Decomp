@@ -69,9 +69,9 @@ All shared named storage symbols retain retail offsets and sizes; retail
 labels for compiler-generated literals, padding, and the jump table do not
 exist as named C declarations. All 20 jump-table relocation destinations
 were independently audited. Exception sections retain their sizes but not
-their contents. Both the strict DOL checksum and `ninja all_source` pass;
-the merged unit remains `NonMatching`, so the strict link uses its retail
-object and is not proof that the reconstructed C matches.
+their contents. At that stage both the strict DOL checksum and `ninja all_source` passed,
+but the merged unit was `NonMatching`, so that checksum used its retail
+object and did not prove that the reconstructed C matched.
 
 The compiler remains MusyX's GC/1.2.5n with `-fp_contract off`. Explicit
 inlining (`-inline noauto`) now preserves the three retail `seqGetPrivateId`
@@ -101,6 +101,18 @@ functions. The corrected frames also restore all 260 bytes of `extab` and
 ordinary data bytes, and data-symbol layouts are unchanged. `seqInit` remains at 97.643%, with matching instruction order
 and a swapped pair of register assignments; bounded local/helper declaration
 order probes did not improve it and were discarded.
+
+The final initializer recovery replaces manually advanced voice and priority-row
+pointers with per-iteration `seqInstance[i]` and `seqMIDIPriority[i][j]` accesses.
+This reproduces the retail register assignments without changing the stored
+values or list topology. `seqInit` now matches all 560 bytes; all other function
+bodies and every data-symbol offset remain unchanged.
+
+The EN unit is now `MatchingFor("GSAE01")`: all 26 functions (13,800 bytes) and
+all data sections (55,756 bytes) are exact. The strict link uses the compiled
+sequencer object and reproduces the retail DOL checksum. `ninja all_source`
+and the seven sequencer runtime tests also pass. GC/1.2.5n, the single confirmed
+translation unit, and the explicit-inlining profile remain unchanged.
 
 `python tools/test_musyx_sequence_runtime.py` checks PPC BSS layout and runs
 143 host scenarios at both O0 and O2 (286 executions): initialization,

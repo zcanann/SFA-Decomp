@@ -1578,16 +1578,14 @@ void seqHandle(u32 deltaTime) {
  * Initialize sequence instances, note priorities, and callback links.
  */
 void seqInit(void) {
-    u16* note;
     SynthVoice* voice;
     u32 i;
     int j;
 
     seqActiveRoot = NULL;
     seqPausedRoot = NULL;
-    voice = &seqInstance[0];
-    note = seqMIDIPriority[0];
     for (i = 0; i < 8; i++) {
+        voice = &seqInstance[i];
         if (i == 0) {
             seqFreeRoot = voice;
             voice->prev = NULL;
@@ -1598,10 +1596,8 @@ void seqInit(void) {
         voice->slotIndex = i;
         voice->state = 0;
         for (j = 0; j < 16; j++) {
-            note[j] = 0xffff;
+            seqMIDIPriority[i][j] = 0xffff;
         }
-        note += 16;
-        voice++;
     }
     seqInstance[i - 1].next = NULL;
 
