@@ -258,7 +258,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     char path[64];
     u8 vol;
     AudioDvdStreamStorage* dvd[1];
-    int* fadeTbl;
+    AudioStreamDataLayout* data;
     StreamEntry* s;
     int count;
     int slot;
@@ -266,7 +266,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     u8 stopped;
 
     dvd[0] = (AudioDvdStreamStorage*)&gAudioStreamDvdBlockCurrent;
-    fadeTbl = gAudioStreamFadeTable;
+    data = (AudioStreamDataLayout*)gAudioStreamFadeTable;
     s = gStreamsData;
     count = gStreamsCount;
     slot = -1;
@@ -305,9 +305,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     }
     gAudioStreamDvdState = 0;
 
-    if (concatThreeStrings(path, (void*)0x40,
-                           (char*)fadeTbl + offsetof(AudioStreamDataLayout, streamDirectory), s->name,
-                           sAdpExtension) != 0)
+    if (concatThreeStrings(path, (void*)0x40, data->streamDirectory, s->name, sAdpExtension) != 0)
     {
         if (DVDOpen(path, &dvd[0]->prepared.fileInfo) == 0)
         {
@@ -320,8 +318,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
             AISetStreamVolRight(0);
             if (DVDCancelStreamAsync(&dvd[0]->currentCommand, AudioStream_CancelCallback) == 0)
             {
-                OSReport((char*)fadeTbl +
-                         offsetof(AudioStreamDataLayout, dvdCancelStreamWarning));
+                OSReport(data->dvdCancelStreamWarning);
                 gAudioStreamPlaying = 0;
             }
             gAudioStreamPreparedId = 0;
@@ -343,8 +340,8 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
             gAudioStreamEndPos = gAudioStreamEndPosInfinite;
         }
 
-        gAudioStreamMusicFadeFlagA = fadeTbl[s->fadeModeA] == 0 ? 0 : 1;
-        gAudioStreamMusicFadeFlagB = fadeTbl[s->fadeModeB] == 0 ? 0 : 1;
+        gAudioStreamMusicFadeFlagA = data->fadeTable[s->fadeModeA] == 0 ? 0 : 1;
+        gAudioStreamMusicFadeFlagB = data->fadeTable[s->fadeModeB] == 0 ? 0 : 1;
         if (s->stopObjectSounds)
         {
             Sfx_StopAllObjectSounds();

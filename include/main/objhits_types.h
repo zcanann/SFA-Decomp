@@ -12,7 +12,7 @@ struct ObjHitReactEntry;
 
 /*
  * ObjHitboxTransformState - the per-hitbox runtime record at
- * ObjAnimComponent+0x58 (also reached as ObjHitbox.transformState).
+ * ObjAnimComponent.hitboxTransformState.
  * objhits.c allocates it and keeps the current/previous collision and
  * model matrices in the 0x100-byte matrix block; the tail holds the
  * objects currently in contact with the hitbox. Lives here rather than

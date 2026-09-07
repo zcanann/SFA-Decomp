@@ -460,7 +460,7 @@ static void render_jointDecode(RenderJointWork* work, int channel, const ObjAnim
         }
     }
     while ((u16)adjustments[0] != 0x1000) {
-        s16* value = (s16*)((u8*)work + offsetof(RenderJointWork, pose.rotation) + channel * 6 + (u16)adjustments[0]);
+        s16* value = (s16*)((u8*)work->pose.rotation[channel] + (u16)adjustments[0]);
         *value += adjustments[2];
         if (paired) {
             value[3] += adjustments[2];
@@ -855,7 +855,7 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
     outPos = RENDER_PACKED_ADDRESS(outRotation);
     curB = anim->frameStreamStride;
     posA = RENDER_PACKED_ADDRESS(anim->frameStreamCursor);
-    tp = RENDER_PACKED_ADDRESS(anim->moveFrameData) + offsetof(ObjAnimFrameHeader, trackDescriptors);
+    tp = RENDER_PACKED_ADDRESS(anim->moveFrameData->trackDescriptors);
     q = &tmp;
     maskConst = 0xFFF0;
 

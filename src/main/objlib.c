@@ -115,25 +115,12 @@ extern int gObjContactCallbackCount;
 #define OBJTRIGGER_PLAYER_STATE_NONE    -1
 #define OBJTRIGGER_PLAYER_STATE_CLEAR   0x40
 
-#define OBJLINK_PARENT_OFFSET      0xc4
 #define OBJLINK_CHILD_LIST_OFFSET  0xc8
-#define OBJLINK_CHILD_COUNT_OFFSET 0xeb
-#define OBJLINK_FLAGS_OFFSET       0xb0
 #define OBJLINK_FLAGS_MODE_MASK    0x0007
 #define OBJLINK_FLAGS_DEAD         0x0040
 
-#define OBJ_MODEL_INSTANCE_OFFSET     0x50
-#define OBJ_ACTIVE_MODEL_INDEX_OFFSET 0xad
-#define OBJ_POSITION_X_OFFSET         0x0c
-#define OBJ_POSITION_Y_OFFSET         0x10
-#define OBJ_POSITION_Z_OFFSET         0x14
-
-#define OBJ_MODEL_JOINT_COUNT_OFFSET 0xf3
-
 /* hit-object romDefNo that triggers the staff-impact sfx (retail OBJECTS.bin). */
 #define OBJLIB_HITOBJ_SEQID_STAFF  0x69 /* "staff" (DLL 0xE2) */
-#define OBJPATH_POINTS_OFFSET      0x2c
-#define OBJPATH_POINT_COUNT_OFFSET 0x58
 #define OBJPATH_ROOT_JOINT_INDEX   -1
 typedef struct ObjMsgEntry {
     u32 message;
@@ -161,15 +148,6 @@ STATIC_ASSERT(offsetof(ObjMsgQueueCursor, entry) == 0x8);
 STATIC_ASSERT(offsetof(ObjMsgQueueCursor, nextEntry) == 0x14);
 STATIC_ASSERT(sizeof(ObjMsgQueueCursor) == 0x20);
 
-typedef struct ObjPathPoint {
-    f32 x;
-    f32 y;
-    f32 z;
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    s8 modelIndex[6];
-} ObjPathPoint;
 
 int objIsObjectType(GameObject* obj, int group) {
     GameObject** entry;
@@ -933,28 +911,24 @@ void ObjPath_GetPointWorldPositionArray(GameObject* obj, int pointIndex, int cou
 }
 
 void ObjPath_GetPointLocalPosition(GameObject* obj, int pointIndex, float* xOut, float* yOut, float* zOut) {
-    *xOut = ((ObjPathPoint*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) +
-                             pointIndex * sizeof(ObjPathPoint)))
-                ->x;
-    *yOut =
-        *(f32*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 4 + pointIndex * sizeof(ObjPathPoint));
-    *zOut =
-        *(f32*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 8 + pointIndex * sizeof(ObjPathPoint));
+    *xOut = obj->anim.modelInstance->attachPoints[pointIndex].pos[0];
+    *yOut = obj->anim.modelInstance->attachPoints[pointIndex].pos[1];
+    *zOut = obj->anim.modelInstance->attachPoints[pointIndex].pos[2];
     return;
 }
 
 void ObjPath_GetPointLocalMtx(GameObject* obj, int pointIndex, float* mtxOut) {
-    ObjPathPoint* pathPoint;
+    ObjAttachPoint* pathPoint;
     ObjPathTransform transform;
 
-    pathPoint = (ObjPathPoint*)obj->anim.modelInstance->attachPoints;
-    transform.x = pathPoint[pointIndex].x;
+    pathPoint = obj->anim.modelInstance->attachPoints;
+    transform.x = pathPoint[pointIndex].pos[0];
     pathPoint += pointIndex;
-    transform.y = pathPoint->y;
-    transform.z = pathPoint->z;
-    transform.rotX = pathPoint->rotX;
-    transform.rotY = pathPoint->rotY;
-    transform.rotZ = pathPoint->rotZ;
+    transform.y = pathPoint->pos[1];
+    transform.z = pathPoint->pos[2];
+    transform.rotX = pathPoint->rot[0];
+    transform.rotY = pathPoint->rot[1];
+    transform.rotZ = pathPoint->rot[2];
     transform.scale = 1.0f;
     setMatrixFromObjectTransposed(&transform, mtxOut);
     return;
@@ -962,13 +936,13 @@ void ObjPath_GetPointLocalMtx(GameObject* obj, int pointIndex, float* mtxOut) {
 
 ObjModelJointMatrix* ObjPath_GetPointModelMtx(GameObject* obj, int pointIndex) {
     ObjModel* model;
-    ObjPathPoint* pathPoint;
+    ObjAttachPoint* pathPoint;
     int jointIndex;
 
     model = Obj_GetActiveModel(obj);
-    pathPoint = (ObjPathPoint*)obj->anim.modelInstance->attachPoints;
+    pathPoint = obj->anim.modelInstance->attachPoints;
     pathPoint += pointIndex;
-    jointIndex = pathPoint->modelIndex[obj->anim.bankIndex];
+    jointIndex = pathPoint->joints[obj->anim.bankIndex];
     if ((jointIndex >= 0) && (jointIndex < (int)(u32)model->file->jointCount)) {
         return ObjModel_GetJointMatrix((u8*)model, jointIndex);
     } else {
@@ -978,9 +952,8 @@ ObjModelJointMatrix* ObjPath_GetPointModelMtx(GameObject* obj, int pointIndex) {
 
 void ObjPath_GetPointWorldPosition(GameObject* obj, int pointIndex, float* outX, float* outY, float* outZ,
                                    int useInputPosition) {
-    int pointOffset;
-    ObjPathPoint* pathPoint;
-    int* model;
+    ObjAttachPoint* pathPoint;
+    ObjModel* model;
     float* jointMtx;
     int jointIndex;
     ObjPathTransform transform;
@@ -989,19 +962,15 @@ void ObjPath_GetPointWorldPosition(GameObject* obj, int pointIndex, float* outX,
     float concatMtx[12];
     float rotMtx[16];
 
-    if ((pointIndex < 0) ||
-        (pointIndex >= (int)(u32) * (u8*)((int)obj->anim.modelInstance + OBJPATH_POINT_COUNT_OFFSET))) {
+    if ((pointIndex < 0) || (pointIndex >= (int)obj->anim.modelInstance->attachPointCount)) {
         *outX = obj->anim.localPosX;
         *outY = obj->anim.localPosY;
         *outZ = obj->anim.localPosZ;
     } else {
-        model = (int*)Obj_GetActiveModel(obj);
-        pathPoint = (ObjPathPoint*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET));
-        pointOffset = pointIndex * sizeof(ObjPathPoint);
-        pathPoint = (ObjPathPoint*)((int)pathPoint + pointOffset);
-        jointIndex = pathPoint->modelIndex[(int)*(char*)((int)obj + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
-        if ((jointIndex < OBJPATH_ROOT_JOINT_INDEX) ||
-            (jointIndex >= (int)(u32) * (u8*)(*model + OBJ_MODEL_JOINT_COUNT_OFFSET))) {
+        model = Obj_GetActiveModel(obj);
+        pathPoint = &obj->anim.modelInstance->attachPoints[pointIndex];
+        jointIndex = pathPoint->joints[obj->anim.bankIndex];
+        if ((jointIndex < OBJPATH_ROOT_JOINT_INDEX) || (jointIndex >= (int)model->file->jointCount)) {
             *outX = obj->anim.localPosX;
             *outY = obj->anim.localPosY;
             *outZ = obj->anim.localPosZ;
@@ -1020,14 +989,13 @@ void ObjPath_GetPointWorldPosition(GameObject* obj, int pointIndex, float* outX,
                 transform.rotY = 0;
                 transform.rotZ = 0;
             } else {
-                transform.x = *(f32*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + pointOffset);
-                pathPoint =
-                    (ObjPathPoint*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + pointOffset);
-                transform.y = pathPoint->y;
-                transform.z = pathPoint->z;
-                transform.rotX = pathPoint->rotX;
-                transform.rotY = pathPoint->rotY;
-                transform.rotZ = pathPoint->rotZ;
+                transform.x = obj->anim.modelInstance->attachPoints[pointIndex].pos[0];
+                pathPoint = &obj->anim.modelInstance->attachPoints[pointIndex];
+                transform.y = pathPoint->pos[1];
+                transform.z = pathPoint->pos[2];
+                transform.rotX = pathPoint->rot[0];
+                transform.rotY = pathPoint->rot[1];
+                transform.rotZ = pathPoint->rot[2];
             }
             mtxRotateByVec3s(rotMtx, &transform);
             mtx44Transpose(rotMtx, transposedMtx);

@@ -7,7 +7,6 @@
 typedef struct ObjHitReactEntry ObjHitReactEntry;
 typedef struct ObjModel ObjAnimBank;
 typedef struct ObjAnimComponent ObjAnimComponent;
-typedef struct ObjHitbox ObjHitbox;
 
 typedef struct ObjHitReactMoveEntry {
   s16 moveId;
@@ -97,7 +96,7 @@ STATIC_ASSERT(offsetof(ObjHitReactEntry, hitEffectMode) == 0x08);
 STATIC_ASSERT(offsetof(ObjHitReactEntry, reactionStepScale) == 0x0C);
 
 void ObjHitReact_ResetActiveObjects(int objectCount);
-int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,u32 arena);
+int ObjHitbox_AllocRotatedBounds(ObjAnimComponent *objAnim,u32 arena);
 void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int objType,
                                  ObjHitReactState *hitState,int moveId,int async);
 u32 ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,

@@ -1770,7 +1770,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     if (modelDef->hitboxStateCount != 0) {
         cursor = ObjHits_AllocObjectState(obj, cursor);
         if ((s8)modelDef->primaryHitboxShapeFlags & 8) {
-            cursor = ObjHitbox_AllocRotatedBounds((ObjHitbox*)obj, cursor);
+            cursor = ObjHitbox_AllocRotatedBounds(&obj->anim, cursor);
         }
     }
     if (modelDef->jointCount != 0) {

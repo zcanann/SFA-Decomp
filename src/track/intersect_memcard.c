@@ -61,11 +61,11 @@ u32 gSaveCardSerialHi;
 char* gSaveCardIoBuffer;
 void* gSaveCardWorkArea;
 void loadReflectionTexMtxs(void) {
-    u8* base = (u8*)&gCameraModelViewMatrix;
+    ReflectionTextureMatrixLayout* mtxs = (ReflectionTextureMatrixLayout*)gCameraModelViewMatrix;
     Mtx tmp;
-    PSMTXConcat((void*)(base + offsetof(ReflectionTextureMatrixLayout, lightPerspectiveScaled)), (void*)(int)base, tmp);
+    PSMTXConcat(mtxs->lightPerspectiveScaled, (MtxPtr)(u32)mtxs->modelView, tmp);
     GXLoadTexMtxImm(tmp, GX_TEXMTX0, GX_MTX3x4);
-    PSMTXConcat((void*)(base + offsetof(ReflectionTextureMatrixLayout, lightPerspectiveFlipY)), (void*)(int)base, tmp);
+    PSMTXConcat(mtxs->lightPerspectiveFlipY, (MtxPtr)(u32)mtxs->modelView, tmp);
     GXLoadTexMtxImm(tmp, GX_TEXMTX2, GX_MTX3x4);
 }
 

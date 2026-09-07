@@ -871,50 +871,50 @@ void ObjHits_TickPriorityHitCooldowns(void) {
     return;
 }
 
-void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix) {
+void ObjHitbox_UpdateRotatedBounds(ObjAnimComponent* objAnim, int advanceMatrix) {
     ObjHitboxTransformState* transformState;
     float* matrixBase;
     int matrixFloatOffset;
     MatrixTransform xform;
 
-    transformState = hitbox->transformState;
+    transformState = objAnim->hitboxTransformState;
     if (transformState != 0) {
         if (advanceMatrix != 0) {
             transformState->activeMatrixIndex = (transformState->activeMatrixIndex + 1) & 1;
         }
         matrixFloatOffset = transformState->activeMatrixIndex * OBJHITBOX_STATE_MATRIX_FLOAT_COUNT;
         matrixBase = (float*)transformState->matrices + matrixFloatOffset;
-        xform.rotX = -hitbox->rotationX;
-        if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Y) != 0) {
+        xform.rotX = -objAnim->rotX;
+        if ((ObjAnim_GetPriorityHitState(objAnim)->flags & OBJHITBOX_DEF_CLAMP_Y) != 0) {
             xform.rotY = 0;
         } else {
-            xform.rotY = -hitbox->rotationY;
+            xform.rotY = -objAnim->rotY;
         }
-        if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Z) != 0) {
+        if ((ObjAnim_GetPriorityHitState(objAnim)->flags & OBJHITBOX_DEF_CLAMP_Z) != 0) {
             xform.rotZ = 0;
         } else {
-            xform.rotZ = -hitbox->rotationZ;
+            xform.rotZ = -objAnim->rotZ;
         }
         xform.scale = 1.0f;
-        xform.x = -hitbox->radiusX;
-        xform.y = -hitbox->radiusY;
-        xform.z = -hitbox->radiusZ;
+        xform.x = -objAnim->worldPosX;
+        xform.y = -objAnim->worldPosY;
+        xform.z = -objAnim->worldPosZ;
         mtxRotateByVec3s(matrixBase, &xform);
-        xform.rotX = hitbox->rotationX;
-        if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Y) != 0) {
+        xform.rotX = objAnim->rotX;
+        if ((ObjAnim_GetPriorityHitState(objAnim)->flags & OBJHITBOX_DEF_CLAMP_Y) != 0) {
             xform.rotY = 0;
         } else {
-            xform.rotY = hitbox->rotationY;
+            xform.rotY = objAnim->rotY;
         }
-        if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Z) != 0) {
+        if ((ObjAnim_GetPriorityHitState(objAnim)->flags & OBJHITBOX_DEF_CLAMP_Z) != 0) {
             xform.rotZ = 0;
         } else {
-            xform.rotZ = hitbox->rotationZ;
+            xform.rotZ = objAnim->rotZ;
         }
         xform.scale = 1.0f;
-        xform.x = hitbox->radiusX;
-        xform.y = hitbox->radiusY;
-        xform.z = hitbox->radiusZ;
+        xform.x = objAnim->worldPosX;
+        xform.y = objAnim->worldPosY;
+        xform.z = objAnim->worldPosZ;
         matrixFloatOffset = (transformState->activeMatrixIndex + 2) * OBJHITBOX_STATE_MATRIX_FLOAT_COUNT;
         setMatrixFromObjectPos((float*)transformState->matrices + matrixFloatOffset, &xform);
         if (transformState->resetFrames != 0) {
@@ -2278,17 +2278,17 @@ void ObjHitReact_ResetActiveObjects(int objectCount) {
     }
 }
 
-int ObjHitbox_AllocRotatedBounds(ObjHitbox* hitbox, u32 arena) {
+int ObjHitbox_AllocRotatedBounds(ObjAnimComponent* objAnim, u32 arena) {
     ObjHitboxTransformState* transformState;
 
     transformState = (ObjHitboxTransformState*)roundUpTo4(arena);
-    hitbox->transformState = transformState;
-    if (hitbox->transformState != NULL) {
-        hitbox->transformState->activeMatrixIndex = 0;
-        hitbox->transformState->resetFrames = OBJHITBOX_ROTATED_BOUNDS_RESET_FRAMES;
-        hitbox->transformState->contactObjectCount = 0;
-        ObjHitbox_UpdateRotatedBounds(hitbox, 1);
-        ObjHitbox_UpdateRotatedBounds(hitbox, 1);
+    objAnim->hitboxTransformState = transformState;
+    if (objAnim->hitboxTransformState != NULL) {
+        objAnim->hitboxTransformState->activeMatrixIndex = 0;
+        objAnim->hitboxTransformState->resetFrames = OBJHITBOX_ROTATED_BOUNDS_RESET_FRAMES;
+        objAnim->hitboxTransformState->contactObjectCount = 0;
+        ObjHitbox_UpdateRotatedBounds(objAnim, 1);
+        ObjHitbox_UpdateRotatedBounds(objAnim, 1);
     }
     return (u32)transformState + sizeof(ObjHitboxTransformState);
 }
@@ -2970,7 +2970,7 @@ void ObjHitReact_UpdateResetObjects(void) {
     }
     objectOffset = 0;
     for (; objectOffset < gObjHitReactResetObjectCount; objectOffset = objectOffset + 1) {
-        ObjHitbox_UpdateRotatedBounds((ObjHitbox*)gObjHitReactResetObjects[objectOffset], 1);
+        ObjHitbox_UpdateRotatedBounds(gObjHitReactResetObjects[objectOffset], 1);
     }
     return;
 }

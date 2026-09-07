@@ -41,24 +41,7 @@
 #define OBJHITS_SKELETON_HIT_POINT_INDEX_A_WORD      0x10
 #define OBJHITS_SKELETON_HIT_POINT_INDEX_B_WORD      0x11
 #define OBJHITS_SKELETON_HIT_SENTINEL                -1
-#define OBJHITBOX_WORLD_X_OFFSET                     0x18
-#define OBJHITBOX_WORLD_Y_OFFSET                     0x1C
-#define OBJHITBOX_WORLD_Z_OFFSET                     0x20
 #define OBJHITBOX_TRANSFORM_STATE_OFFSET             0x58
-#define OBJHITBOX_DEF_OFFSET                         offsetof(ObjAnimComponent, hitReactState)
-#define OBJHITBOX_RADIUS_X_OFFSET                    0x18
-#define OBJHITBOX_RADIUS_Y_OFFSET                    0x1C
-#define OBJHITBOX_RADIUS_Z_OFFSET                    0x20
-#define OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET          offsetof(ObjHitsPriorityState, capsuleScale)
-#define OBJHITBOX_DEF_RADIUS_OFFSET                  offsetof(ObjHitsPriorityState, primaryRadius)
-#define OBJHITBOX_DEF_VERTICAL_MIN_OFFSET            offsetof(ObjHitsPriorityState, primaryCapsuleOffsetA)
-#define OBJHITBOX_DEF_VERTICAL_MAX_OFFSET            offsetof(ObjHitsPriorityState, primaryCapsuleOffsetB)
-#define OBJHITBOX_DEF_FLAGS_OFFSET                   offsetof(ObjHitsPriorityState, flags)
-#define OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET             offsetof(ObjHitsPriorityState, shapeFlags)
-#define OBJHITBOX_DEF_HIT_TYPE_OFFSET                offsetof(ObjHitsPriorityState, objectPairPriority)
-#define OBJHITBOX_DEF_HIT_PRIORITY_OFFSET            offsetof(ObjHitsPriorityState, objectPairHitVolume)
-#define OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET       offsetof(ObjHitsPriorityState, activeHitboxMode)
-#define OBJHITBOX_DEF_SKIP_SKELETON_PAIRS_OFFSET     offsetof(ObjHitsPriorityState, resetHitboxMode)
 #define OBJHITBOX_DEF_SOLID                          0x0001
 #define OBJHITBOX_DEF_NO_SEPARATION_RESPONSE         0x0002
 #define OBJHITBOX_DEF_CLAMP_Y                        0x0800
@@ -106,35 +89,6 @@ void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, int radius, int verticalM
 int ObjHits_AllocObjectState(GameObject* obj, u32 arena);
 void ObjHits_ResetWorkBuffers(void);
 void ObjHits_InitWorkBuffers(void);
-
-typedef struct ObjHitboxDef {
-    u8 pad00[OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET];
-    s16 distanceCache;
-    s16 radius;
-    s16 verticalMin;
-    s16 verticalMax;
-    s16 flags;
-    u8 shapeFlags;
-    u8 pad63[OBJHITBOX_DEF_HIT_TYPE_OFFSET - (OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET + 1)];
-    s8 hitType;
-    u8 hitPriority;
-    u8 pad6E[OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET - (OBJHITBOX_DEF_HIT_PRIORITY_OFFSET + 1)];
-    u8 skipObjectPairs;
-    u8 skipSkeletonPairs;
-} ObjHitboxDef;
-
-typedef struct ObjHitbox {
-    s16 rotationX;
-    s16 rotationY;
-    s16 rotationZ;
-    u8 pad06[OBJHITBOX_RADIUS_X_OFFSET - 6];
-    f32 radiusX;
-    f32 radiusY;
-    f32 radiusZ;
-    u8 pad24[OBJHITBOX_DEF_OFFSET - 0x24];
-    ObjHitboxDef* def;
-    ObjHitboxTransformState* transformState;
-} ObjHitbox;
 
 typedef struct ObjHitsSweepEntry {
     float maxX;
@@ -207,7 +161,7 @@ int ObjHits_TestTaperedCapsule3D(float* point, float pointRadius, float baseRadi
                                  float* axis, float* tip, float length, float* axial, float* dist2, float* sumR);
 void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount);
 void ObjHits_TickPriorityHitCooldowns(void);
-void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix);
+void ObjHitbox_UpdateRotatedBounds(ObjAnimComponent* objAnim, int advanceMatrix);
 int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcObj, char checkA, char checkB, u32 mask,
                             u32 volMask);
 void ObjHits_OnPlayerHitVolumeMiss(GameObject* objA, GameObject* objB, GameObject* attachment, void* state,
