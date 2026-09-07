@@ -303,8 +303,8 @@ void Scarab_update(GameObject* obj) {
                 contact.collisionDetected = 1;
             }
             if (contact.collisionDetected == 0) {
-                contact.collisionDetected = trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX, 1.0f, 0,
-                                                          &bboxHit, obj, 8, -1, 0, 0);
+                contact.collisionDetected = trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX,
+                                                                  1.0f, 0, &bboxHit, obj, 8, -1, 0, 0);
             }
             if (contact.collisionDetected != 0) {
                 obj->anim.rotZ = 0;
@@ -409,8 +409,8 @@ void Scarab_update(GameObject* obj) {
                     if (deltaY < gScarabMinGroundNormalY) {
                         contact.collisionDetected = 1;
                     } else {
-                        Scarab_applyOrientation(obj, groundHits[contact.bestGroundHitIndex], SCARAB_ORIENTATION_GROUND_NORMAL,
-                                                hitResults.planes[0]);
+                        Scarab_applyOrientation(obj, groundHits[contact.bestGroundHitIndex],
+                                                SCARAB_ORIENTATION_GROUND_NORMAL, hitResults.planes[0]);
                     }
                 } else {
                     obj->anim.localPosY = state->initialY;
@@ -439,8 +439,8 @@ void Scarab_update(GameObject* obj) {
                     }
                 }
                 if (contact.collisionDetected != 0) {
-                    angle =
-                        (u16)getAngle(groundHits[contact.bestGroundHitIndex]->normalX, groundHits[contact.bestGroundHitIndex]->normalZ);
+                    angle = (u16)getAngle(groundHits[contact.bestGroundHitIndex]->normalX,
+                                          groundHits[contact.bestGroundHitIndex]->normalZ);
                     heading = angle;
                     heading = gScarabGroundHeadingScale * heading + 32768.0f;
                     obj->anim.rotX = heading;
@@ -459,8 +459,8 @@ void Scarab_update(GameObject* obj) {
                     ObjAnim_SampleRootCurvePhase(&obj->anim, speed, &animationPhase);
                     ObjAnim_AdvanceCurrentMove(obj, animationPhase, timeDelta, NULL);
                 }
-                contact.collisionDetected = trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX, 1.0f, 0,
-                                                          &bboxHit, obj, 8, -1, 0, 0);
+                contact.collisionDetected = trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX,
+                                                                  1.0f, 0, &bboxHit, obj, 8, -1, 0, 0);
                 hitResults.radii[0] = 1.0f;
                 hitResults.surfaceTypes[0] = -1;
                 hitResults.queryTypes[0] = 10;
@@ -494,8 +494,8 @@ void Scarab_update(GameObject* obj) {
                 }
                 if (groundHits != NULL) {
                     obj->anim.localPosY = groundHits[contact.bestGroundHitIndex]->height;
-                    Scarab_applyOrientation(obj, groundHits[contact.bestGroundHitIndex], SCARAB_ORIENTATION_GROUND_NORMAL,
-                                            hitResults.planes[0]);
+                    Scarab_applyOrientation(obj, groundHits[contact.bestGroundHitIndex],
+                                            SCARAB_ORIENTATION_GROUND_NORMAL, hitResults.planes[0]);
                 } else {
                     obj->anim.localPosY = state->initialY;
                 }
