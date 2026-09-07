@@ -519,6 +519,7 @@ void* textureLoad(int texId, u8 useHandle) {
     int slot;
     Texture* walk;
     u32 bankWord;
+    int bankWordHeld;
     int bankWordSaved;
     BOOL interruptState;
     int origTexId;
@@ -532,7 +533,6 @@ void* textureLoad(int texId, u8 useHandle) {
     int decompressedSize;
     int compressedSize;
     BOOL interruptsDisabled;
-    int bankWordHeld;
 
     interruptState = TRUE;
     interruptsDisabled = FALSE;
@@ -620,7 +620,7 @@ void* textureLoad(int texId, u8 useHandle) {
     frameIndex = 0;
     bankWordHeld = bankWordSaved;
     frameCountFixed = frameCount << 8;
-    dataByteOffset = (bankWordSaved & 0xffffff) << 1;
+    dataByteOffset = bankWordSaved = (bankWordSaved & 0xffffff) << 1;
     for (; frameIndex < frameCount; frameIndex++) {
         if (frameCount > 1) {
             if (bank == 0) {
@@ -741,16 +741,13 @@ void* textureLoad(int texId, u8 useHandle) {
 }
 
 static inline void loadTextureBank(int bank, int fileId) {
-    int* p;
     int n = 0;
 
-    p = getCurrentDataFile(fileId);
-    gRcpTexBankTable[bank] = p;
+    gRcpTexBankTable[bank] = getCurrentDataFile(fileId);
     if (gRcpTexBankTable == NULL) {
         return;
     }
-    while (p[0] != -1) {
-        p++;
+    while (gRcpTexBankTable[bank][n] != -1) {
         n++;
     }
     gRcpTexBankCount[bank] = n - 1;
@@ -983,6 +980,13 @@ void Rcp_ClearRenderFlags(u32 bits) {
     gRcpRenderFlags &= ~(u64)bits;
 }
 
+static inline GXBool textureHasMipmaps(Texture* texture, GXBool hasMipmaps) {
+    if (texture->maxLod - texture->minLod > 0) {
+        hasMipmaps = TRUE;
+    }
+    return hasMipmaps;
+}
+
 void textureInitGXTexObj(Texture* texture) {
     GXBool hasMipmaps = FALSE;
     GXTexObj* gxTexObj;
@@ -992,9 +996,7 @@ void textureInitGXTexObj(Texture* texture) {
     texture->tmemAddr = NULL;
     texture->preloaded = hasMipmaps;
     gxTexObj = textureGetGXTexObj(texture);
-    if (texture->maxLod - texture->minLod > 0) {
-        hasMipmaps = 1;
-    }
+    hasMipmaps = textureHasMipmaps(texture, hasMipmaps);
     GXInitTexObj(gxTexObj, textureGetImageData(texture), texture->width, texture->height, texture->format,
                  texture->wrapS, texture->wrapT, hasMipmaps);
     if (hasMipmaps != 0) {
