@@ -78,8 +78,6 @@ extern int lbl_803DEBB0;
 extern IndTexMtx23 gTexIndMtxTable;
 #define FRUSTUM_PLANE_COUNT 5
 WarpDestination gRcpPendingWarpDest;
-extern GXColor gTexShaderFogColor;
-extern GXColor gTexLightmapFogColor;
 
 extern LightSortEntry gLightmapDrawQueue[];
 
@@ -213,12 +211,11 @@ Shader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, ModelRe
     Shader* shader;
     u32 shaderIdx;
     u8* byteBase;
-    GXColor fogColor;
+    GXColor fogColor = {0, 0, 0, 0};
     u32 bits;
     u32 bitPos;
     u8 ambColor[3];
 
-    fogColor = gTexLightmapFogColor;
     bitPos = state->bit;
     {
         int off = (int)bitPos >> 3;
@@ -703,7 +700,7 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode) {
 Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRenderInstrsState* state) {
     Shader* shader;
     u32 shaderIdx;
-    GXColor fogColor;
+    GXColor fogColor = {0, 0, 0, 0};
     u8* byteBase;
     u32 flags;
     int* cloudTex;
@@ -712,7 +709,6 @@ Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRende
     u32 bits;
     u32 bitPos;
 
-    fogColor = gTexShaderFogColor;
     bitPos = state->bit;
     {
         int off = (int)bitPos >> 3;
