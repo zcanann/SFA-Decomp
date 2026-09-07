@@ -105,3 +105,43 @@ changes preserve the existing calculations and the slot layout.
 - Both `ninja all_source` and the strict EN retail checksum pass. The checksum
   continues to use the retail Expgfx object. The two slot-layout tests and all
   33 backend-IR tests pass.
+
+## Rotation Increments and Signed Bounds Index (2026-09-07)
+
+`expgfx_updateActivePools` improves from 99.86511% to 99.88024%, and the
+complete unit from 99.883194% to 99.88683%. Expgfx remains NonMatching with
+44 of 46 exact functions.
+
+The three source-rotation increments now convert their floating-point speeds
+directly to `s16` before multiplying by the frame count and accumulating into
+halfword angles. GC/1.3 emits the existing `fctiwz` conversion without an extra
+sign-extension instruction, and all three integer products now use the retail
+operand order. Casting to `int` and then narrowing is a different compiler
+expression and introduces extra instructions.
+
+The bounds lookup explicitly interprets the shared pool/resource scratch value
+as an `int` pool index. This recovers retail's use of r15 for the bounds-stride
+multiplication. The distinction is compiler-significant: this build defines
+`s32` as `signed long`, and substituting that cast does not recover the same
+instruction. The shared scratch lifetime remains intact.
+
+### Verification
+
+- Exactly four instructions change: the bounds-stride multiplication and three
+  rotation products. All four now equal their retail instructions.
+- All 45 other function bodies, allocated non-text sections, named-symbol
+  offsets, and relocation records remain byte-identical. The full object changes
+  by seven bytes and retains its section sizes.
+- Object SHA-256:
+  `28cc232a3adf2734c70623569146761b363a6f8e2dc8b0be58baf21c8a27aa5d`.
+- The update still has 2,311 instructions against retail's 2,313. Its remaining
+  mnemonic-aligned differences are two missing instructions and 26 operand
+  differences, down from two and 30. The remaining work concerns pool scanning,
+  bounds-pointer calculation, and spilled pool/cache/mask/ambient temporaries.
+- `expgfxGetSlot` remains 95.89899%. Native and inline-helper searches, alternative
+  counter lifetimes, mask snapshots, and pointer representations did not improve
+  that function. Splitting the update's pool/resource scratch, forcing addressable
+  mask storage, and changing scan helpers also regressed the update; none is kept.
+- `ninja all_source`, the strict EN retail checksum, both slot-layout tests, and
+  the TU/header formatting checks pass. The strict checksum still links the
+  retail Expgfx object.

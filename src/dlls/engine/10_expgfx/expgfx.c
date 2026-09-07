@@ -2173,7 +2173,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
         boundsMin = EXPGFX_BOUNDS_INIT_MIN;
         boundsMax = EXPGFX_BOUNDS_INIT_MAX;
         while ((s32)poolOrResource > -1) {
-            curPoolBuf = (u8*)runtime + poolOrResource * sizeof(ExpgfxBounds);
+            curPoolBuf = (u8*)runtime + (int)poolOrResource * sizeof(ExpgfxBounds);
             bounds = (ExpgfxBounds*)(curPoolBuf + EXPGFX_POOL_BOUNDS_OFFSET);
             bounds->minX = boundsMin;
             maxXPtr = &bounds->maxX;
@@ -2652,9 +2652,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         rotParams.x = 0.0f;
                         rotParams.y = 0.0f;
                         rotParams.z = 0.0f;
-                        slot->sourceVecX = slot->sourceVecX + (int)slot->sourcePosX.value * framesThisStep;
-                        slot->sourceVecY = slot->sourceVecY + (int)slot->sourcePosY.value * framesThisStep;
-                        slot->sourceVecZ = slot->sourceVecZ + (int)slot->sourcePosZ.value * framesThisStep;
+                        slot->sourceVecX += (s16)slot->sourcePosX.value * framesThisStep;
+                        slot->sourceVecY += (s16)slot->sourcePosY.value * framesThisStep;
+                        slot->sourceVecZ += (s16)slot->sourcePosZ.value * framesThisStep;
                         rotParams.scale = 1.0f;
                         workVec[0] = (f32)quadTemplate[0].x;
                         workVec[1] = (f32)quadTemplate[0].y;
