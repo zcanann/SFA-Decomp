@@ -15,6 +15,24 @@ typedef struct TrackBlockDescriptor {
     void* alternateCollisionMatrix;
 } TrackBlockDescriptor;
 
+/* One edge sweep packet: endpoints, unit direction, and sphere dimensions. */
+typedef struct TrackSphereSweepEdge {
+    f32 start[3];
+    f32 end[3];
+    f32 direction[3];
+    f32 radius;
+    f32 radiusSquared;
+    f32 length;
+} TrackSphereSweepEdge;
+
+STATIC_ASSERT(sizeof(TrackSphereSweepEdge) == 0x30);
+STATIC_ASSERT(offsetof(TrackSphereSweepEdge, start) == 0x00);
+STATIC_ASSERT(offsetof(TrackSphereSweepEdge, end) == 0x0C);
+STATIC_ASSERT(offsetof(TrackSphereSweepEdge, direction) == 0x18);
+STATIC_ASSERT(offsetof(TrackSphereSweepEdge, radius) == 0x24);
+STATIC_ASSERT(offsetof(TrackSphereSweepEdge, radiusSquared) == 0x28);
+STATIC_ASSERT(offsetof(TrackSphereSweepEdge, length) == 0x2C);
+
 typedef struct TrackShadowTriangle {
     Vec3f normal;
     f32 planeDistance;
@@ -56,6 +74,9 @@ STATIC_ASSERT(sizeof(TrackBlockDescriptor) == 0x18);
 STATIC_ASSERT(offsetof(TrackBlockDescriptor, firstTriangle) == 4);
 STATIC_ASSERT(offsetof(TrackBlockDescriptor, currentCollisionMatrix) == 0x0C);
 STATIC_ASSERT(sizeof(TrackShadowTriangle) == 0x14);
+
+int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, f32* rayOrigin, f32* rayDirection, f32 maxDistance, f32* hitPointOut, f32* planeOut, f32 unusedClearance,
+                                f32* hitDistanceOut, f32 unusedEpsilon);
 
 TrackBlockDescriptor* trackGetBlockDescriptors(u32* outCount);
 
