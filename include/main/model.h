@@ -8,8 +8,7 @@
 typedef struct GameObject GameObject;
 typedef struct ObjAnimState ObjAnimState;
 
-typedef struct ShaderLayer
-{
+typedef struct ShaderLayer {
     union {
         s32 textureIndex;
         Texture* texture;
@@ -25,8 +24,7 @@ STATIC_ASSERT(offsetof(ShaderLayer, typeBits) == 0x04);
 STATIC_ASSERT(offsetof(ShaderLayer, materialId) == 0x05);
 STATIC_ASSERT(offsetof(ShaderLayer, scrollMtx) == 0x06);
 
-typedef struct Shader
-{
+typedef struct Shader {
     u8 pad00[0x08];
     void* reg1Texture;
     u8 alpha;
@@ -84,8 +82,7 @@ STATIC_ASSERT(offsetof(Shader, alphaOverride) == 0x43);
  * the display list associated with the current render op. */
 #define OBJMODEL_RENDER_CALLBACK_SKIP_DRAW 2
 
-typedef struct ModelRenderOpTextureRefs
-{
+typedef struct ModelRenderOpTextureRefs {
     void* texture0;
     void* texture1;
     u8 swapSelector;
@@ -114,35 +111,35 @@ typedef struct ModelFileHeader {
     u8 unk06[6];
     s32 dataSize; /* anim data appended at header + dataSize */
     u8 unk10[8];
-    u8 *unk18;
-    u8 *unk1C;
-    s32 *textureIds; /* file texture ids, patched to texture ptrs on load */
-    u8 flags24; /* bit 8 = 9-byte (else 3-byte) entries at normals */
+    u8* unk18;
+    u8* unk1C;
+    s32* textureIds; /* file texture ids, patched to texture ptrs on load */
+    u8 flags24;      /* bit 8 = 9-byte (else 3-byte) entries at normals */
     u8 unk25[3];
-    u8 *vertices; /* 6 bytes each, vertexCount */
-    u8 *normals;  /* 3 or 9 bytes each, normalCount */
-    u8 *colors;   /* GX_VA_CLR0 array, stride 2 */
-    u8 *texCoords; /* GX_VA_TEX0/TEX1 array, stride 4 */
-    Shader *renderOps;
-    u8 *jointData;
-    u8 *jointBlendData; /* 0x40: per-joint blend/pivot table (stride joff); [+0..8]=pivot XYZ (PSMTXTrans to/from origin for scale-fuzz), [+0xc]=scale divisor; passed to ObjModel_BlendVertexStream; offset->ptr relocated on load */
+    u8* vertices;  /* 6 bytes each, vertexCount */
+    u8* normals;   /* 3 or 9 bytes each, normalCount */
+    u8* colors;    /* GX_VA_CLR0 array, stride 2 */
+    u8* texCoords; /* GX_VA_TEX0/TEX1 array, stride 4 */
+    Shader* renderOps;
+    u8* jointData;
+    u8* jointBlendData; /* 0x40: per-joint blend/pivot table (stride joff); [+0..8]=pivot XYZ (PSMTXTrans to/from origin for scale-fuzz), [+0xc]=scale divisor; passed to ObjModel_BlendVertexStream; offset->ptr relocated on load */
     f32 vertexAnimPivot[3];
     f32 vertexAnimScaleDivisor;
-    u8 *extraJointDefs; /* 0x54: extraJointCount 3-byte records {jointA, jointB, weight*4}; modelCalcVtxGroupMtxs blends the two joint matrices into the extra joint at jointCount+i; offset->ptr relocated on load */
+    u8* extraJointDefs; /* 0x54: extraJointCount 3-byte records {jointA, jointB, weight*4}; modelCalcVtxGroupMtxs blends the two joint matrices into the extra joint at jointCount+i; offset->ptr relocated on load */
     union {
-        u8 *hitVolumes;      /* 0x18-byte ModelHitSphereDef records */
-        void *hitReactTable; /* animation-bank hit-reaction rows */
+        u8* hitVolumes;      /* 0x18-byte ModelHitSphereDef records */
+        void* hitReactTable; /* animation-bank hit-reaction rows */
     };
-    u8 *collisionTriangles; /* 0x5c: 8-byte triangle vertex-index records (hit-detect mesh) */
-    u8 *collisionBlocks;    /* 0x60: 0x14-byte spatial blocks (AABB + triangle range), collisionBlockCount entries */
+    u8* collisionTriangles; /* 0x5c: 8-byte triangle vertex-index records (hit-detect mesh) */
+    u8* collisionBlocks;    /* 0x60: 0x14-byte spatial blocks (AABB + triangle range), collisionBlockCount entries */
     union {
-        u8 *animationModelPtrs;
-        u8 **moveData;
+        u8* animationModelPtrs;
+        u8** moveData;
     };
-    u8 *animationDataSection;
+    u8* animationDataSection;
     union {
-        u8 *animationHeaderBuffer; /* per-joint s16 table */
-        s16 *cachedAnimIds;
+        u8* animationHeaderBuffer; /* per-joint s16 table */
+        s16* cachedAnimIds;
     };
     union {
         s16 animGroupBaseIndices[8]; /* group bases from modelLoadAnimations */
@@ -153,22 +150,22 @@ typedef struct ModelFileHeader {
     u8 unk86[4];
     u16 vertexAnimCount; /* count of 0x74-stride entries at vertexAnimEntries */
     u8 unk8C[8];
-    u8 *vertexAnimEntriesRaw;
+    u8* vertexAnimEntriesRaw;
     u8 unk98[0xC];
-    u8 *vertexAnimEntries; /* 0x74-stride entries */
-    u8 *vertexAnimBase;
+    u8* vertexAnimEntries; /* 0x74-stride entries */
+    u8* vertexAnimBase;
     u8 unkAC[2];
     u16 blendAnimCount; /* count of 0x74-stride entries at blendAnimEntries */
     u8 unkB0[8];
-    u8 *blendAnimEntriesRaw;
+    u8* blendAnimEntriesRaw;
     u8 unkBC[0xC];
-    u8 *blendAnimEntries; /* 0x74-stride entries */
-    u8 *blendAnimBase;
-    u8 *displayLists; /* 0x1c-stride entries, displayListCount + shadowDisplayListCount */
-    u8 *instrs;
+    u8* blendAnimEntries; /* 0x74-stride entries */
+    u8* blendAnimBase;
+    u8* displayLists; /* 0x1c-stride entries, displayListCount + shadowDisplayListCount */
+    u8* instrs;
     u16 instrsBitLenWords; /* 0xD8: render-instruction stream length; *8 gives bit length (see objprint_dolphin render-instr readers) */
     u8 unkDA[2];
-    u8 **morphTargetPtrs; /* pointer table, morphTargetCount entries */
+    u8** morphTargetPtrs; /* pointer table, morphTargetCount entries */
     u16 cullDistance;
     u16 shaderFlags;
     u16 vertexCount;
@@ -186,19 +183,19 @@ typedef struct ModelFileHeader {
     u8 extraJointCount;
     u8 displayListCount; /* 0xF5: count of the primary (non-shadow) 0x1c-stride display-list group; base index for the shadow group */
     u8 shadowDisplayListCount; /* count of the 2nd display-list group (shadow), indexed at base displayListCount */
-    u8 hitVolumeCount; /* 0xF7: count of 0x10-byte runtime hit-sphere records */
+    u8 hitVolumeCount;         /* 0xF7: count of 0x10-byte runtime hit-sphere records */
     u8 renderOpCount;
     u8 morphTargetCount;
     u8 texMtxCount; /* 0xFA: texture-matrix descriptor count (GX_VA_TEXnMTXIDX loop bound) */
 } ModelFileHeader;
 
 /* ModelFileHeader.flags bits */
-#define MODEL_FLAG_NO_ANIMATIONS 0x2
+#define MODEL_FLAG_NO_ANIMATIONS          0x2
 #define MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS 0x10
-#define MODEL_FLAG_VERTEX_ANIM_AREA 0x40
-#define MODEL_FLAG_NO_DEPTH_TEST 0x400
-#define MODEL_FLAG_ALPHA_Z_UPDATE 0x2000
-#define MODEL_FLAG_ALT_POINTER_LAYOUT 0x8000
+#define MODEL_FLAG_VERTEX_ANIM_AREA       0x40
+#define MODEL_FLAG_NO_DEPTH_TEST          0x400
+#define MODEL_FLAG_ALPHA_Z_UPDATE         0x2000
+#define MODEL_FLAG_ALT_POINTER_LAYOUT     0x8000
 
 /* ModelFileHeader.flags24 bits */
 #define MODEL_FLAGS24_VERY_BRIGHT 0x02
@@ -210,7 +207,7 @@ typedef struct ModelFileHeader {
 
 /* ObjModel.bufferFlags bits */
 #define OBJMODEL_BUFFER_FLAG_HITSPHERE_SELECT 0x4 /* selects a hitVolumeSphereBuffers entry */
-#define OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED 0x40
+#define OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED  0x40
 
 STATIC_ASSERT(offsetof(ModelFileHeader, modelId) == 0x04);
 STATIC_ASSERT(offsetof(ModelFileHeader, modNo) == 0x04);
@@ -243,12 +240,12 @@ STATIC_ASSERT(sizeof(ModelDisplayListEntry) == 0x1C);
 typedef struct ModelHitSphereDef {
     s16 jointIdx;
     u8 pad02[2];
-    f32 radius;    /* scaled by anim.rootMotionScale at update */
-    f32 center[3]; /* joint-space center */
+    f32 radius;        /* scaled by anim.rootMotionScale at update */
+    f32 center[3];     /* joint-space center */
     u16 linkedSpheres; /* packed relative indices for track-contact sweeps */
     s8 sphereIndex;    /* owning sphere for mask tests */
     s8 maskBit;        /* bit selected from the object's hit-volume mask */
-} ModelHitSphereDef; /* 0x18 */
+} ModelHitSphereDef;   /* 0x18 */
 
 STATIC_ASSERT(sizeof(ModelHitSphereDef) == 0x18);
 STATIC_ASSERT(offsetof(ModelHitSphereDef, linkedSpheres) == 0x14);
@@ -270,24 +267,24 @@ typedef struct ModelVtxAnimJob {
     u8 unk00[2];
     u16 chunkCount; /* 0x02 */
     u8 unk04[2];
-    u8 quantShift;  /* 0x06: GQR6/7 scale for the s16/s8 streams */
+    u8 quantShift; /* 0x06: GQR6/7 scale for the s16/s8 streams */
     u8 unk07[5];
-    struct ModelVtxAnimChunk *chunks; /* 0x0C */
+    struct ModelVtxAnimChunk* chunks; /* 0x0C */
 } ModelVtxAnimJob;
 
 typedef struct ModelVtxAnimChunk {
     u8 unk00[0x60];
     s32 srcDataOffset; /* 0x60: into the anim data */
-    u8 *weightStream;  /* 0x64 */
+    u8* weightStream;  /* 0x64 */
     u8 unk68[4];
-    u8 mtxIdxA;      /* 0x6C: * 0x30 into the reordered matrix array */
-    u8 mtxIdxB;      /* 0x6D */
+    u8 mtxIdxA; /* 0x6C: * 0x30 into the reordered matrix array */
+    u8 mtxIdxB; /* 0x6D */
     u8 unk6E;
-    u8 weightWords;  /* 0x6F */
-    u16 vtxCount;    /* 0x70 */
+    u8 weightWords;   /* 0x6F */
+    u16 vtxCount;     /* 0x70 */
     u8 dstByteOffset; /* 0x72 */
-    u8 vtxWords;     /* 0x73 */
-} ModelVtxAnimChunk; /* 0x74 */
+    u8 vtxWords;      /* 0x73 */
+} ModelVtxAnimChunk;  /* 0x74 */
 
 STATIC_ASSERT(sizeof(ModelVtxAnimChunk) == 0x74);
 STATIC_ASSERT(offsetof(ModelVtxAnimJob, chunkCount) == 0x02);
@@ -324,18 +321,18 @@ STATIC_ASSERT(offsetof(ObjModelJointMatrix, translationZ) == 0x2C);
 typedef struct ObjModelBlendChannel {
     f32 weight;
     f32 targetWeight;
-    f32 weightRate;   /* 0x08: per-dt weight delta (weight += weightRate * dt) */
-    s8 morphTargetA;  /* 0x0C: index into morphTargetPtrs[] for blend source A (-1 = none) */
-    s8 morphTargetB;  /* 0x0D: index into morphTargetPtrs[] for blend source B (-1 = none) */
+    f32 weightRate;  /* 0x08: per-dt weight delta (weight += weightRate * dt) */
+    s8 morphTargetA; /* 0x0C: index into morphTargetPtrs[] for blend source A (-1 = none) */
+    s8 morphTargetB; /* 0x0D: index into morphTargetPtrs[] for blend source B (-1 = none) */
     u8 flags0E;
     u8 unk0F;
 } ObjModelBlendChannel;
 
 /* ObjModelBlendChannel.flags0E fade/state bits */
-#define BLENDCHAN_FLAG_MANUAL 0x01    /* weight is manual; skip auto-advance */
+#define BLENDCHAN_FLAG_MANUAL       0x01 /* weight is manual; skip auto-advance */
 #define BLENDCHAN_FLAG_RESET_WEIGHT 0x02 /* reset weight to base pending */
-#define BLENDCHAN_FLAG_FADING 0x04    /* fade in progress */
-#define BLENDCHAN_FLAG_FADED 0x08     /* fade processed/settled */
+#define BLENDCHAN_FLAG_FADING       0x04 /* fade in progress */
+#define BLENDCHAN_FLAG_FADED        0x08 /* fade processed/settled */
 #define BLENDCHAN_FLAG_CLAMP_TARGET 0x20 /* clamp low weight to targetWeight floor */
 
 STATIC_ASSERT(sizeof(ObjModelBlendChannel) == 0x10);
@@ -346,13 +343,13 @@ STATIC_ASSERT(sizeof(ObjModelBlendChannel) == 0x10);
  * buffers are selected by flags bits 0/1.
  */
 typedef struct ModelJointWork {
-    Vec *jointPositions;
-    f32 *jointRadii;
-    f32 *radiiSq;
-    f32 *jointLengths;
-    f32 *jointCullDistances;
-    u8 *unk14;
-    u8 *touchedJoints;
+    Vec* jointPositions;
+    f32* jointRadii;
+    f32* radiiSq;
+    f32* jointLengths;
+    f32* jointCullDistances;
+    u8* unk14;
+    u8* touchedJoints;
 } ModelJointWork;
 
 STATIC_ASSERT(sizeof(ModelJointWork) == 0x1C);
@@ -364,35 +361,36 @@ STATIC_ASSERT(offsetof(ModelJointWork, touchedJoints) == 0x18);
 
 typedef struct ObjModel {
     union {
-        ModelFileHeader *file;
-        ModelFileHeader *animDef;
+        ModelFileHeader* file;
+        ModelFileHeader* animDef;
     };
     u8 unk04[8];
-    u8 *jointMatrices[2];
-    ModelJointWork *skeletonJointData;
+    u8* jointMatrices[2];
+    ModelJointWork* skeletonJointData;
     u16 bufferFlags; /* 1 = mtx buffer select, 2 = vtx buffer select, 0x40 = textures loaded */
     u8 unk1A[2];
-    u8 *vtxBuf[2];
-    u8 *normalBuf;
-    struct ObjModelBlendChannel *blendChannels; /* 3 channels */
+    u8* vtxBuf[2];
+    u8* normalBuf;
+    struct ObjModelBlendChannel* blendChannels; /* 3 channels */
     union {
-        void *animStateA;
-        ObjAnimState *currentState;
+        void* animStateA;
+        ObjAnimState* currentState;
     };
     union {
-        void *animStateB; /* only with load flag 0x80 */
-        ObjAnimState *activeState;
+        void* animStateB; /* only with load flag 0x80 */
+        ObjAnimState* activeState;
     };
-    ModelRenderOpTextureRefs *textureRefs;
-    void *renderCallback;
-    void *postRenderCallback;
-    s32 *vertexAnimData; /* 0x40: per-entry s32 array (file->vertexAnimCount), filled from vertexAnimEntries[i]+0x60 */
-    s32 *blendAnimData;  /* 0x44: per-entry s32 array (file->blendAnimCount), filled from normalBuf + blendAnimEntries[i]+0x60 */
-    u8 *hitVolumeSphereBuffers[2]; /* 0x48: double-buffered runtime hit spheres */
-    u8 *activeHitVolumeSpheres; /* 0x50: current hit-sphere buffer */
-    u8 *groundShadowVerts; /* 0x54: ground-shadow quad buffer (s16 verts; status byte at +0x18: 0 = rebuild via buildGroundShadowQuad, 0xff = skip draw); allocated only with load flag 0x8000 */
-    void *renderAttachment;
-    u8 *curMtxBuf;
+    ModelRenderOpTextureRefs* textureRefs;
+    void* renderCallback;
+    void* postRenderCallback;
+    s32* vertexAnimData; /* 0x40: per-entry s32 array (file->vertexAnimCount), filled from vertexAnimEntries[i]+0x60 */
+    s32*
+        blendAnimData; /* 0x44: per-entry s32 array (file->blendAnimCount), filled from normalBuf + blendAnimEntries[i]+0x60 */
+    u8* hitVolumeSphereBuffers[2]; /* 0x48: double-buffered runtime hit spheres */
+    u8* activeHitVolumeSpheres;    /* 0x50: current hit-sphere buffer */
+    u8* groundShadowVerts; /* 0x54: ground-shadow quad buffer (s16 verts; status byte at +0x18: 0 = rebuild via buildGroundShadowQuad, 0xff = skip draw); allocated only with load flag 0x8000 */
+    void* renderAttachment;
+    u8* curMtxBuf;
     u8 vtxBufDirty; /* 0x60: set when the active vertex buffer needs re-layout; cleared at layout */
     u8 unk61[3];
 } ObjModel;
@@ -433,18 +431,18 @@ typedef struct ObjModelChainNode {
 } ObjModelChainNode; /* 0x54 */
 
 typedef struct ObjModelChainDesc {
-    s32 *jointIndices; /* per-node model joint index */
+    s32* jointIndices; /* per-node model joint index */
     s32 nodeCount;
 } ObjModelChainDesc;
 
 typedef struct ObjModelChainEntry {
-    ObjModelChainNode *nodes; /* nodeCount+1 records */
-    ObjModelChainDesc *desc;
+    ObjModelChainNode* nodes; /* nodeCount+1 records */
+    ObjModelChainDesc* desc;
     s32 nodeCount;
 } ObjModelChainEntry;
 
 typedef struct ObjModelChain {
-    ObjModelChainEntry *entries;
+    ObjModelChainEntry* entries;
     s32 count;
     f32 stiffness; /* 0x08: dot-product lerp stiffness toward the target orientation */
     f32 damping;   /* 0x0C: per-frame momentum damping multiplier */
@@ -473,7 +471,7 @@ STATIC_ASSERT(offsetof(ObjModelChain, updatedThisFrame) == 0x18);
 STATIC_ASSERT(offsetof(ObjModelChain, firstUpdateDone) == 0x19);
 STATIC_ASSERT(offsetof(ObjModelChain, enabled) == 0x1A);
 
-ObjModelJointMatrix *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex);
+ObjModelJointMatrix* ObjModel_GetJointMatrix(u8* modelBytes, int jointIndex);
 u16 modelFileHeaderGetCullDistance(ModelFileHeader* modelFile);
 void ObjModel_CopyJointTranslation(u8* modelBytes, int jointIndex, f32* out);
 int ObjModel_HasActiveBlendChannels(ObjModel* model);
@@ -482,11 +480,11 @@ void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight);
 void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int targetA, int targetB, f32 weight, int flags);
 void ObjModel_SampleJointTransform(ObjModel* model, int animState, int frameSource, f32 phase, f32 rootMotionScale,
                                    f32* outPosition, s16* outRotation);
-ObjModelChain *ObjModelChain_Alloc(void *models, int count);
-void ObjModelChain_SetOrigin(ObjModelChain *chain, f32 x, f32 y, f32 z);
-void ObjModelChain_SetEnabled(ObjModelChain *chain, u8 enabled);
-void ObjModelChain_AdvancePhase(ObjModelChain *chain);
-void ObjModelChain_Free(ObjModelChain *chain);
+ObjModelChain* ObjModelChain_Alloc(void* models, int count);
+void ObjModelChain_SetOrigin(ObjModelChain* chain, f32 x, f32 y, f32 z);
+void ObjModelChain_SetEnabled(ObjModelChain* chain, u8 enabled);
+void ObjModelChain_AdvancePhase(ObjModelChain* chain);
+void ObjModelChain_Free(ObjModelChain* chain);
 
 void setGQR6_2(int a, int b, int c, int d);
 void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA, u8* targetB, int blendScale);
