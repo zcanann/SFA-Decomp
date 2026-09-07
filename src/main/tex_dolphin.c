@@ -797,39 +797,6 @@ Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRende
     return shader;
 }
 
-typedef struct TrackP6Entry {
-    f32 relX0;
-    f32 relY0;
-    f32 relZ0;
-    f32 relX1;
-    f32 relY1;
-    f32 relZ1;
-    f32 relX2;
-    f32 relY2;
-    f32 relZ2;
-} TrackP6Entry;
-
-/* TrackTriangle -- the 0x4c-byte collision triangle record packed into
- * gTrackTriangleBuffer.  Plane and edge-plane normals are prebaked f32;
- * vertex coordinates are stored as s16 triplets grouped by axis
- * (x0 x1 x2 / y0 y1 y2 / z0 z1 z2), which the hit-detect code reads both
- * by field and as an s16 index off the record base. */
-typedef struct TrackTriangle {
-    f32 planeD;     /* 0x00 plane equation constant */
-    f32 planeN[3];  /* 0x04 plane normal xyz */
-    s16 vx[3];      /* 0x10 vertex x coords */
-    s16 vy[3];      /* 0x16 vertex y coords */
-    s16 vz[3];      /* 0x1c vertex z coords */
-    u8 pad22[2];    /* 0x22 */
-    f32 edgeN0[3];  /* 0x24 edge 0 outward normal */
-    f32 edgeN1[3];  /* 0x30 edge 1 outward normal */
-    f32 edgeN2[3];  /* 0x3c edge 2 outward normal */
-    u8 surfaceType; /* 0x48 copied into intersect-line records */
-    s8 flags;       /* 0x49 0x10 = disabled, 0x4 = force */
-    u8 minMaxY;     /* 0x4a lo/hi nibble: s16 index (base 0xb) of min/max height */
-    u8 edgeOutBits; /* 0x4b per-edge outside bits from last query */
-} TrackTriangle;
-
 extern volatile PPCWGPipe GXWGFifo : (0xCC008000);
 extern int sSynthFadeUnit;
 extern int renderFlags;
@@ -846,8 +813,6 @@ static inline void GXTexCoord2f32(const f32 s, const f32 t) {
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
 }
-
-void* trackGetBlockDescriptors(u32* outVal);
 
 void mapBlockRender_setVtxDcrs(u8 doSetup, MapBlockData* block, Shader* shader, ModelRenderInstrsState* state) {
     int* stateWords;
@@ -1445,111 +1410,107 @@ void mapClearBlockEdgeFlags(void) {
     }
 }
 
-int collectShadowTrackTriangles(GameObject* obj, int triBuf, void* planesOut, int vertsOut, int unusedTriangleCount,
+int collectShadowTrackTriangles(GameObject* obj, TrackTriangle* triangles, TrackShadowTriangle* planesOut, Vec3f* verticesOut, int unusedTriangleCount,
                                 f32 offX, f32 offZ, int unusedRenderMode, int kindSelector) {
     int j;
-    f32 lm[12];
-    u8* descBytes = trackGetBlockDescriptors((u32*)&j);
-    u8* end = descBytes + j * 0x18;
-    int total;
-    int grp;
-    int outOff;
+    f32 localMatrix[12];
+    TrackBlockDescriptor* desc = trackGetBlockDescriptors((u32*)&j);
+    TrackBlockDescriptor* end = desc + j;
+    int vertexCount;
+    int triangleCount;
     int triangleFlag;
 
-    outOff = 0;
-    j = grp = 0;
-    total = 0;
+    j = triangleCount = 0;
+    vertexCount = 0;
     triangleFlag = kindSelector ? 4 : 8;
-    for (; descBytes < end; descBytes += 0x18) {
-        u32 id = *(u32*)descBytes;
-        if (id == 0 || id == *(u32*)&obj->anim.parent) {
+    for (; desc < end; desc++) {
+        void* owner = desc->object;
+        if (owner == NULL || owner == obj->anim.parent) {
             f32 fx = obj->anim.localPosX;
             f32 fz = obj->anim.localPosZ;
-            TrackShadowTriangle* outA;
+            TrackShadowTriangle* outputTriangle;
 
-            if (id == 0) {
+            if (owner == NULL) {
                 fx -= offX;
                 fz -= offZ;
             }
-            j = (s16)((TrackBlockDescriptor*)descBytes)->firstTriangle;
-            outA = (TrackShadowTriangle*)((char*)planesOut + outOff);
-            while (j < (s16)((TrackBlockDescriptor*)descBytes)[1].firstTriangle && grp < 0x4b0 && total < 0xe10) {
-                if (triangleFlag & ((TrackTriangle*)triBuf + j)->flags) {
-                    ((TrackP6Entry*)vertsOut)->relX0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[0]) - fx;
-                    ((TrackP6Entry*)vertsOut)->relY0 =
-                        __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[0]) - obj->anim.localPosY;
-                    ((TrackP6Entry*)vertsOut)->relZ0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[0]) - fz;
-                    ((TrackP6Entry*)vertsOut)->relX1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[1]) - fx;
-                    ((TrackP6Entry*)vertsOut)->relY1 =
-                        __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[1]) - obj->anim.localPosY;
-                    ((TrackP6Entry*)vertsOut)->relZ1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[1]) - fz;
-                    ((TrackP6Entry*)vertsOut)->relX2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[2]) - fx;
-                    ((TrackP6Entry*)vertsOut)->relY2 =
-                        __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[2]) - obj->anim.localPosY;
-                    ((TrackP6Entry*)vertsOut)->relZ2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[2]) - fz;
-                    outA->normal.x = ((TrackTriangle*)triBuf + j)->planeN[0];
-                    outA->normal.y = ((TrackTriangle*)triBuf + j)->planeN[1];
-                    outA->normal.z = ((TrackTriangle*)triBuf + j)->planeN[2];
-                    outA->flags = ((TrackTriangle*)triBuf + j)->flags;
-                    vertsOut += 0x24;
-                    total += 3;
-                    outA++;
-                    grp += 1;
-                    outOff += 0x14;
+            j = desc->firstTriangle;
+            outputTriangle = &planesOut[triangleCount];
+            while (j < desc[1].firstTriangle && triangleCount < 0x4b0 && vertexCount < 0xe10) {
+                if (triangleFlag & triangles[j].flags) {
+                    verticesOut[0].x = __OSs16tof32(&triangles[j].vx[0]) - fx;
+                    verticesOut[0].y =
+                        __OSs16tof32(&triangles[j].vy[0]) - obj->anim.localPosY;
+                    verticesOut[0].z = __OSs16tof32(&triangles[j].vz[0]) - fz;
+                    verticesOut[1].x = __OSs16tof32(&triangles[j].vx[1]) - fx;
+                    verticesOut[1].y =
+                        __OSs16tof32(&triangles[j].vy[1]) - obj->anim.localPosY;
+                    verticesOut[1].z = __OSs16tof32(&triangles[j].vz[1]) - fz;
+                    verticesOut[2].x = __OSs16tof32(&triangles[j].vx[2]) - fx;
+                    verticesOut[2].y =
+                        __OSs16tof32(&triangles[j].vy[2]) - obj->anim.localPosY;
+                    verticesOut[2].z = __OSs16tof32(&triangles[j].vz[2]) - fz;
+                    outputTriangle->normal.x = triangles[j].planeN[0];
+                    outputTriangle->normal.y = triangles[j].planeN[1];
+                    outputTriangle->normal.z = triangles[j].planeN[2];
+                    outputTriangle->flags = triangles[j].flags;
+                    verticesOut += 3;
+                    vertexCount += 3;
+                    outputTriangle++;
+                    triangleCount += 1;
                 }
                 j++;
             }
         } else {
-            f32* m = *(f32**)((char*)descBytes + 0xc);
-            f32* p6start;
-            int totalStart;
-            TrackShadowTriangle* outA;
+            f32* m = desc->currentCollisionMatrix;
+            f32* firstOutputVertex;
+            int firstVertex;
+            TrackShadowTriangle* outputTriangle;
 
-            lm[0] = m[0];
-            lm[1] = m[4];
-            lm[2] = m[8];
-            lm[3] = m[12] - obj->anim.localPosX;
-            lm[4] = m[1];
-            lm[5] = m[5];
-            lm[6] = m[9];
-            lm[7] = m[13] - obj->anim.localPosY;
-            lm[8] = m[2];
-            lm[9] = m[6];
-            lm[10] = m[10];
-            lm[11] = m[14] - obj->anim.localPosZ;
-            p6start = (f32*)vertsOut;
-            totalStart = total;
-            j = (s16)((TrackBlockDescriptor*)descBytes)->firstTriangle;
-            outA = (TrackShadowTriangle*)((char*)planesOut + outOff);
-            while (j < (s16)((TrackBlockDescriptor*)descBytes)[1].firstTriangle && grp < 0x4b0 && total < 0xe10) {
-                if (triangleFlag & ((TrackTriangle*)triBuf + j)->flags) {
-                    ((TrackP6Entry*)vertsOut)->relX0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[0]);
-                    ((TrackP6Entry*)vertsOut)->relY0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[0]);
-                    ((TrackP6Entry*)vertsOut)->relZ0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[0]);
-                    ((TrackP6Entry*)vertsOut)->relX1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[1]);
-                    ((TrackP6Entry*)vertsOut)->relY1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[1]);
-                    ((TrackP6Entry*)vertsOut)->relZ1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[1]);
-                    ((TrackP6Entry*)vertsOut)->relX2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[2]);
-                    ((TrackP6Entry*)vertsOut)->relY2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[2]);
-                    ((TrackP6Entry*)vertsOut)->relZ2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[2]);
-                    outA->normal.x = ((TrackTriangle*)triBuf + j)->planeN[0];
-                    outA->normal.y = ((TrackTriangle*)triBuf + j)->planeN[1];
-                    outA->normal.z = ((TrackTriangle*)triBuf + j)->planeN[2];
-                    outA->flags = ((TrackTriangle*)triBuf + j)->flags;
-                    vertsOut += 0x24;
-                    total += 3;
-                    outA++;
-                    grp += 1;
-                    outOff += 0x14;
+            localMatrix[0] = m[0];
+            localMatrix[1] = m[4];
+            localMatrix[2] = m[8];
+            localMatrix[3] = m[12] - obj->anim.localPosX;
+            localMatrix[4] = m[1];
+            localMatrix[5] = m[5];
+            localMatrix[6] = m[9];
+            localMatrix[7] = m[13] - obj->anim.localPosY;
+            localMatrix[8] = m[2];
+            localMatrix[9] = m[6];
+            localMatrix[10] = m[10];
+            localMatrix[11] = m[14] - obj->anim.localPosZ;
+            firstOutputVertex = (f32*)verticesOut;
+            firstVertex = vertexCount;
+            j = desc->firstTriangle;
+            outputTriangle = &planesOut[triangleCount];
+            while (j < desc[1].firstTriangle && triangleCount < 0x4b0 && vertexCount < 0xe10) {
+                if (triangleFlag & triangles[j].flags) {
+                    verticesOut[0].x = __OSs16tof32(&triangles[j].vx[0]);
+                    verticesOut[0].y = __OSs16tof32(&triangles[j].vy[0]);
+                    verticesOut[0].z = __OSs16tof32(&triangles[j].vz[0]);
+                    verticesOut[1].x = __OSs16tof32(&triangles[j].vx[1]);
+                    verticesOut[1].y = __OSs16tof32(&triangles[j].vy[1]);
+                    verticesOut[1].z = __OSs16tof32(&triangles[j].vz[1]);
+                    verticesOut[2].x = __OSs16tof32(&triangles[j].vx[2]);
+                    verticesOut[2].y = __OSs16tof32(&triangles[j].vy[2]);
+                    verticesOut[2].z = __OSs16tof32(&triangles[j].vz[2]);
+                    outputTriangle->normal.x = triangles[j].planeN[0];
+                    outputTriangle->normal.y = triangles[j].planeN[1];
+                    outputTriangle->normal.z = triangles[j].planeN[2];
+                    outputTriangle->flags = triangles[j].flags;
+                    verticesOut += 3;
+                    vertexCount += 3;
+                    outputTriangle++;
+                    triangleCount += 1;
                 }
                 j++;
             }
-            if (totalStart < total) {
-                PSMTXMultVecArray((MtxPtr)lm, (Vec*)p6start, (Vec*)p6start, total - totalStart);
+            if (firstVertex < vertexCount) {
+                PSMTXMultVecArray((MtxPtr)localMatrix, (Vec*)firstOutputVertex, (Vec*)firstOutputVertex, vertexCount - firstVertex);
             }
         }
     }
-    return grp;
+    return triangleCount;
 }
 
 FrustumPlane gViewFrustumPlanes[FRUSTUM_PLANE_COUNT];

@@ -729,8 +729,10 @@ int objShadowRender(GameObject* obj, int renderMode, int unused, int frameCount)
         trackGetTriangleBuffer(&idxOut, &triangleTable);
 
         triangleBuffer = triangleTable;
-        idxOut = collectShadowTrackTriangles(obj, triangleBuffer, gShadowDrawScratch, (int)gShadowVolumeBuffer, idxOut, (f32)(int)vtx[0],
-                             (f32)(int)vtx[2], renderMode, modelState->flags & OBJ_MODEL_STATE_SHADOW_ALT_TRACK_SURFACE);
+        idxOut = collectShadowTrackTriangles(
+            obj, (TrackTriangle*)triangleBuffer, (TrackShadowTriangle*)gShadowDrawScratch, gShadowVolumeBuffer,
+            idxOut, (f32)(int)vtx[0], (f32)(int)vtx[2], renderMode,
+            modelState->flags & OBJ_MODEL_STATE_SHADOW_ALT_TRACK_SURFACE);
         gShadowTrackTriangleBuffer = triangleBuffer;
         gShadowTrackTriangleCount = idxOut;
         gShadowTrackGridOrigin = (int)vtx;
