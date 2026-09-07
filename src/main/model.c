@@ -101,8 +101,9 @@ void ObjModel_TransformQuadVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d
  * r17 holds weight A; r18/r19 hold pending relative indices; r23/r24 are
  * stream cursors and r25 is the current relative vertex. The private
  * decoder uses r20 and returns X/Y/Z through r10/r12/r15. */
-asm void modelBlendMorphTargetChunk(u8* baseVertices, u8* outVertices, u16 vertexCount, u16** targetA,
-                                    u16** targetB, int weightB, u16 firstVertex) {
+asm void modelBlendMorphTargetChunk(u8* baseVertices, u8* outVertices, u16 vertexCount, u16** targetA, u16** targetB,
+                                    int weightB, u16 firstVertex) {
+    // clang-format off
     nofralloc
     mflr r0
     stwu r1, -0x50(r1)
@@ -233,11 +234,13 @@ finishChunk:
     lmw r14, 8(r1)
     addi r1, r1, 0x50
     blr
+    // clang-format on
 }
 
 /* Private entry: cursor in/out r20, signed X/Y/Z in r10/r12/r15.
  * Clobbers r21, r22 and CR0. This is not an ordinary C-callable function. */
 asm void modelReadMorphDelta(void) {
+    // clang-format off
     nofralloc
     lhz r21, 0(r20)
     addi r20, r20, 2
@@ -259,6 +262,7 @@ readZ:
     lha r15, 0(r20)
     addi r20, r20, 2
     blr
+    // clang-format on
 }
 
 void modelAnimUpdateChannels(ModelFileHeader* file, ObjAnimState* work, int channelCount) {

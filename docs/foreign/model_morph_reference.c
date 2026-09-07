@@ -77,4 +77,3 @@ u16* modelReadMorphDelta(u16* stream, int* dx, int* dy, int* dz) {
     }
     return stream;
 }
-
