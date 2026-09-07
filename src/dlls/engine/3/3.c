@@ -69,8 +69,16 @@ s32 Checkpoint_advanceRoute(CheckpointCursor* out, CheckpointNavState* o, f32 di
 
 s32 Checkpoint_buildControlPoints(CheckpointRouteEntry* checkpoint, s32 linkIndex, f32* outX, f32* outY, f32* outZ,
                                   u8 mode, f32 lateralOffset, f32 verticalOffset) {
-    struct { f32* xPoints; f32* yPoints; f32* zPoints; s32 pointIndex; } cursor;
-    struct { CheckpointRouteEntry* start; CheckpointRouteEntry* end; } segment;
+    struct {
+        f32* xPoints;
+        f32* yPoints;
+        f32* zPoints;
+        s32 pointIndex;
+    } cursor;
+    struct {
+        CheckpointRouteEntry* start;
+        CheckpointRouteEntry* end;
+    } segment;
     f32 startSideX;
     f32 endSideX;
     f32 startSideZ;
@@ -120,20 +128,20 @@ s32 Checkpoint_buildControlPoints(CheckpointRouteEntry* checkpoint, s32 linkInde
         while (outputCount < 0x10) {
             cursor.xPoints[0] = segment.start->sideOffsets[cursor.pointIndex] * startSideX + segment.start->posX;
             cursor.xPoints[1] = segment.end->sideOffsets[cursor.pointIndex] * endSideX + segment.end->posX;
-            cursor.xPoints[2] =
-                2.0f * (segment.start->tangentScale * mathSinf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
+            cursor.xPoints[2] = 2.0f * (segment.start->tangentScale *
+                                        mathSinf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
             cursor.xPoints[3] = 2.0f * (segment.end->tangentScale *
-                                 mathSinf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
+                                        mathSinf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
             cursor.yPoints[0] = startWidthScale * segment.start->heightOffsets[cursor.pointIndex] + segment.start->posY;
             cursor.yPoints[1] = endWidthScale * segment.end->heightOffsets[cursor.pointIndex] + segment.end->posY;
             cursor.yPoints[2] = 0.0f;
             cursor.yPoints[3] = 0.0f;
             cursor.zPoints[0] = segment.start->sideOffsets[cursor.pointIndex] * startSideZ + segment.start->posZ;
             cursor.zPoints[1] = segment.end->sideOffsets[cursor.pointIndex] * endSideZ + segment.end->posZ;
-            cursor.zPoints[2] =
-                2.0f * (segment.start->tangentScale * mathCosf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
+            cursor.zPoints[2] = 2.0f * (segment.start->tangentScale *
+                                        mathCosf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
             cursor.zPoints[3] = 2.0f * (segment.end->tangentScale *
-                                 mathCosf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
+                                        mathCosf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
             cursor.pointIndex += 1;
             cursor.xPoints += 4;
             cursor.yPoints += 4;
@@ -143,10 +151,10 @@ s32 Checkpoint_buildControlPoints(CheckpointRouteEntry* checkpoint, s32 linkInde
     } else if (mode == 0) {
         outX[0] = lateralOffset * (startWidthScale * startNegCos) + segment.start->posX;
         outX[1] = lateralOffset * (endWidthScale * endNegCos) + segment.end->posX;
-        outX[2] =
-            2.0f * (segment.start->tangentScale * mathSinf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
-        outX[3] = 2.0f * (segment.end->tangentScale *
-                          mathSinf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
+        outX[2] = 2.0f * (segment.start->tangentScale *
+                          mathSinf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
+        outX[3] =
+            2.0f * (segment.end->tangentScale * mathSinf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
         outY[0] = startWidthScale * verticalOffset + segment.start->posY;
         outY[1] = endWidthScale * verticalOffset + segment.end->posY;
         {
@@ -156,18 +164,18 @@ s32 Checkpoint_buildControlPoints(CheckpointRouteEntry* checkpoint, s32 linkInde
         }
         outZ[0] = lateralOffset * (startWidthScale * -startNegSin) + segment.start->posZ;
         outZ[1] = lateralOffset * (endWidthScale * -endNegSin) + segment.end->posZ;
-        outZ[2] =
-            2.0f * (segment.start->tangentScale * mathCosf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
-        outZ[3] = 2.0f * (segment.end->tangentScale *
-                          mathCosf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
+        outZ[2] = 2.0f * (segment.start->tangentScale *
+                          mathCosf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
+        outZ[3] =
+            2.0f * (segment.end->tangentScale * mathCosf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
     } else {
         cursor.pointIndex = mode - 2;
         outX[0] = segment.start->sideOffsets[cursor.pointIndex] * (startWidthScale * startNegCos) + segment.start->posX;
         outX[1] = segment.end->sideOffsets[cursor.pointIndex] * (endWidthScale * endNegCos) + segment.end->posX;
-        outX[2] =
-            2.0f * (segment.start->tangentScale * mathSinf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
-        outX[3] = 2.0f * (segment.end->tangentScale *
-                          mathSinf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
+        outX[2] = 2.0f * (segment.start->tangentScale *
+                          mathSinf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
+        outX[3] =
+            2.0f * (segment.end->tangentScale * mathSinf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
         outY[0] = startWidthScale * segment.start->heightOffsets[cursor.pointIndex] + segment.start->posY;
         outY[1] = endWidthScale * segment.end->heightOffsets[cursor.pointIndex] + segment.end->posY;
         {
@@ -175,12 +183,13 @@ s32 Checkpoint_buildControlPoints(CheckpointRouteEntry* checkpoint, s32 linkInde
             outY[2] = zero;
             outY[3] = zero;
         }
-        outZ[0] = segment.start->sideOffsets[cursor.pointIndex] * (startWidthScale * -startNegSin) + segment.start->posZ;
+        outZ[0] =
+            segment.start->sideOffsets[cursor.pointIndex] * (startWidthScale * -startNegSin) + segment.start->posZ;
         outZ[1] = segment.end->sideOffsets[cursor.pointIndex] * (endWidthScale * -endNegSin) + segment.end->posZ;
-        outZ[2] =
-            2.0f * (segment.start->tangentScale * mathCosf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
-        outZ[3] = 2.0f * (segment.end->tangentScale *
-                          mathCosf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
+        outZ[2] = 2.0f * (segment.start->tangentScale *
+                          mathCosf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
+        outZ[3] =
+            2.0f * (segment.end->tangentScale * mathCosf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
     }
     return result;
 }
