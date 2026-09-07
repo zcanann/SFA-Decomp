@@ -79,6 +79,10 @@ static inline ObjModel* ObjHits_GetActiveModel(GameObject* obj) {
     return (ObjModel*)objAnim->banks[objAnim->bankIndex];
 }
 
+static inline f32 ObjHits_LengthSquared(f32 x, f32 y, f32 z) {
+    return x * x + y * y + z * z;
+}
+
 int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointData, ObjModel* model,
                                   ObjHitsSkeletonHit* hits, ObjHitsSkeletonHit** outBest, f32 yMax, f32 yMin,
                                   f32* outAccum) {
@@ -127,7 +131,7 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointD
     jointPos.z = jointMatrix->translationZ;
     dx = jointPos.x - point[0];
     dz = jointPos.z - point[2];
-    rootCullDistance = sqrtf(dx * dx + 0.0f + dz * dz) - radius;
+    rootCullDistance = sqrtf(ObjHits_LengthSquared(dx, 0.0f, dz)) - radius;
     doubledPointX = point[0] + point[0];
     doubledPointZ = point[2] + point[2];
     joint = modelFile->jointCount;
@@ -158,14 +162,12 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointD
                 }
                 broadPhaseLimit = diameter + (broadPhaseLimit + maxJointDiameter);
                 broadPhaseLimit *= broadPhaseLimit;
-                if (doubledMidpointDeltaX * doubledMidpointDeltaX + 0.0f +
-                        doubledMidpointDeltaZ * doubledMidpointDeltaZ <
-                    broadPhaseLimit) {
+                if (ObjHits_LengthSquared(doubledMidpointDeltaX, 0.0f, doubledMidpointDeltaZ) < broadPhaseLimit) {
                     axisDir.x = parentPos.x - jointPos.x;
                     axisDir.y = parentPos.y - jointPos.y;
                     axisDir.z = parentPos.z - jointPos.z;
                     jointLength = jointData->jointLengths[joint];
-                    if (jointLength != 0.0f) {
+                    if (jointLength) {
                         inverseJointLength = 1.0f / jointLength;
                         axisDir.x *= inverseJointLength;
                         axisDir.y *= inverseJointLength;
@@ -263,7 +265,7 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointD
     jointPos.z = jointMatrix->translationZ;
     dx = jointPos.x - point[0];
     dz = jointPos.z - point[2];
-    rootCullDistance = sqrtf(dx * dx + 0.0f + dz * dz) - radius;
+    rootCullDistance = sqrtf(ObjHits_LengthSquared(dx, 0.0f, dz)) - radius;
     doubledPointX = point[0] + point[0];
     doubledPointZ = point[2] + point[2];
     joint = modelFile->jointCount;
@@ -292,8 +294,7 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointD
             }
             broadPhaseLimit = diameter + (broadPhaseLimit + maxJointDiameter);
             broadPhaseLimit *= broadPhaseLimit;
-            if (doubledMidpointDeltaX * doubledMidpointDeltaX + 0.0f + doubledMidpointDeltaZ * doubledMidpointDeltaZ <
-                broadPhaseLimit) {
+            if (ObjHits_LengthSquared(doubledMidpointDeltaX, 0.0f, doubledMidpointDeltaZ) < broadPhaseLimit) {
                 axisDir.x = parentPos.x - jointPos.x;
                 axisDir.y = parentPos.y - jointPos.y;
                 axisDir.z = parentPos.z - jointPos.z;
