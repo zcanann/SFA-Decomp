@@ -728,7 +728,7 @@ float* ObjHits_CalcTaperedCapsuleNormal(float* point, float axial, float* base, 
         normal[1] = point[1] - surface[1];
         normal[2] = point[2] - surface[2];
         Vec3_Normalize(normal);
-        if (radiusDelta == 0.0f) {
+        if (!radiusDelta) {
             out[0] = normal[0];
             out[1] = normal[1];
             out[2] = normal[2];
@@ -1686,7 +1686,7 @@ void ObjHits_DetectObjectPair(GameObject* objA, GameObject* objB) {
         vertical = 1;
     }
     dist = dx * dx + dy * dy + dz * dz;
-    if (dist != 0.0f) {
+    if (dist) {
         dist = sqrtf(dist);
     }
     distInt = (int)(f32)(int)dist;

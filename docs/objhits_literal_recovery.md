@@ -61,3 +61,18 @@ the two collector functions.
 
 `ninja all_source` and the strict DOL gate pass. ObjHits remains NonMatching,
 so the strict link uses retail code and does not validate these C changes.
+
+## Native zero-test follow-up
+
+Using the scalar conditions `!radiusDelta` and `dist` recovers the retail
+`fcmpu` operand order without restoring named constants. Against `f92f0bf6e2`,
+only one comparison instruction changes in each of the capsule-normal and
+object-pair functions; the other 52 bodies, all allocated non-text sections,
+symbol layouts, and relocations remain unchanged.
+
+`ObjHits_CalcTaperedCapsuleNormal` is exact again (612 bytes); the object-pair
+function improves from 99.74026% to 99.77273%, with its remaining FPR allocation
+differences unchanged. The TU reaches 45/54 exact functions and 99.489456%
+fuzzy match. The native literal pool ordering remains unresolved. The 200-call
+capsule harness still passes; these scalar conditions preserve zero, nonzero,
+and unordered comparison results.
