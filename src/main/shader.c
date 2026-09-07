@@ -3533,7 +3533,8 @@ static void renderObjects(s8* opacity) {
 
     queueBase = (u8*)gLightmapDrawQueue.entries;
     objects = ObjList_GetObjects((int*)0, 0);
-    for (sortIndex = 1, sortKey = (u32*)(queueBase + 0x8818) + 1; sortIndex < gVisibleObjectSortKeyCount; sortKey++, sortIndex++) {
+    for (sortIndex = 1, sortKey = (u32*)(queueBase + 0x8818) + 1; sortIndex < gVisibleObjectSortKeyCount;
+         sortKey++, sortIndex++) {
         objectIndex = *sortKey & 0x3ff;
         obj = objects[objectIndex];
         objectFlags = obj->anim.modelInstance->flags;
@@ -3542,7 +3543,8 @@ static void renderObjects(s8* opacity) {
             if (opacity[objectIndex] != 0 && gLightmapDeferredObjectCount < 0x14) {
                 deferredIndex = gLightmapDeferredObjectCount;
                 gLightmapDeferredObjectCount = deferredIndex + 1;
-                *(GameObject**)(queueBase + (deferredIndex * (int)sizeof(GameObject*) + offsetof(LightmapDrawQueue, deferred))) = obj;
+                *(GameObject**)(queueBase + (deferredIndex * (int)sizeof(GameObject*) +
+                                             offsetof(LightmapDrawQueue, deferred))) = obj;
             }
         } else {
             if ((objectFlags & OBJDEF_FLAG_RUNTIME_BATCHABLE) == 0) {
@@ -3554,7 +3556,8 @@ static void renderObjects(s8* opacity) {
                 u32 shadowKind;
                 renderShadowType3(obj, 0x13, 0);
                 shadowKind = 2;
-                *(u32*)(queueBase + (gLightmapDrawQueueCount * (int)sizeof(LightSortEntry) + offsetof(LightSortEntry, type))) = shadowKind;
+                *(u32*)(queueBase + (gLightmapDrawQueueCount * (int)sizeof(LightSortEntry) +
+                                     offsetof(LightSortEntry, type))) = shadowKind;
                 gLightmapDrawQueueCount += 1;
             } else if (obj->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH &&
                        (obj->anim.flags & OBJANIM_FLAG_HIDDEN) == 0 &&
@@ -3562,7 +3565,8 @@ static void renderObjects(s8* opacity) {
                 u32 shadowKind;
                 renderShadowType3(obj, 0x13, 0);
                 shadowKind = 3;
-                *(u32*)(queueBase + (gLightmapDrawQueueCount * (int)sizeof(LightSortEntry) + offsetof(LightSortEntry, type))) = shadowKind;
+                *(u32*)(queueBase + (gLightmapDrawQueueCount * (int)sizeof(LightSortEntry) +
+                                     offsetof(LightSortEntry, type))) = shadowKind;
                 gLightmapDrawQueueCount += 1;
             }
         }
