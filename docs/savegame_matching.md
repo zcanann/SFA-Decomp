@@ -90,3 +90,30 @@ python3 tools/mwcc_frontend_trace.py --unit main/dlls/engine/23/23 \
   --function SaveGame_findTransientMapBit \
   --output build/flag_probe/savegame_group_frontend
 ```
+
+## Pointer-propagation follow-up
+
+The four extra cursor updates survive because of the backend's address
+propagation checks. In the baseline capture, each stride-three update carries
+`gTransientMapBits` as its known global symbol. When the post-unrolling pass
+considers combining that update with the following byte load, it rejects the
+candidate at GC/1.3 compiler PC `0x569e69`. The analogous map-status cursor
+updates have no known global symbol and are combined successfully. These are
+compiler-process addresses, not game addresses.
+
+A scratch diagnostic that initializes the caller's record pointer from a
+`static SaveGameRecord* const` reproduces all five retail search displacements
+and the final stride of 15. It scores 99.15909% for the function, but replaces
+retail's address construction with a pointer load and emits additional pointer
+data. It is not a valid matching improvement. Local aggregate initializers,
+pointer union views, and indirect local-pointer accesses can also remove the
+search updates, but introduce stack stores or reloads. None was retained.
+
+Direct and shared-counter search/allocation bodies, helper return types,
+register qualifiers, pointer qualifiers, and complete-record declarations did
+not improve the ordinary function while preserving its exact siblings. The
+next source investigation should account for both the initial record address
+and the compiler's tracking of that address through the inlined search; changing
+only the loop's counter or exit spelling does not remove this propagation
+barrier. The source, compiler profile, and ordinary object remain unchanged
+from the hash recorded above.
