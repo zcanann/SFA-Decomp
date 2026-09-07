@@ -173,24 +173,13 @@ int setSubtitlesEnabled(int enabled) {
 
 void subtitleInit(void) {
     int i;
-    int zero;
-    int(*scratch)[8];
 
-    zero = 0;
-    gSubtitleActive = zero;
+    gSubtitleActive = 0;
     gSubtitlesEnabled = 1;
     gGameTextSavedDir = -1;
 
-    scratch = (int(*)[8])gSubtitleLineTable;
-    for (i = 0; i < 32; i++) {
-        scratch[i][0] = zero;
-        scratch[i][1] = zero;
-        scratch[i][2] = zero;
-        scratch[i][3] = zero;
-        scratch[i][4] = zero;
-        scratch[i][5] = zero;
-        scratch[i][6] = zero;
-        scratch[i][7] = zero;
+    for (i = 0; i < SUBTITLE_LINE_COUNT; i++) {
+        gSubtitleLineTable.blocks[i] = NULL;
     }
 }
 

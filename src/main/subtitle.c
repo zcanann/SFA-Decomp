@@ -1,3 +1,4 @@
+#include "main/subtitle.h"
 #include "main/gametext_api.h"
 #include "main/gametext_color_api.h"
 #include "main/gametext_charset_api.h"
@@ -12,10 +13,9 @@
 
 #define SUBTITLE_TIME_NONE 0.0001f
 
-SubtitleCmd* subtitleParseControlCmds(char* str, int* count);
 static void subtitleBuildLineTable(void);
 
-void* gSubtitleLineTable[0x100];
+SubtitleLineTable gSubtitleLineTable;
 
 void subtitleUpdateAndDraw(int unused) {
     int savedCharset;
@@ -36,10 +36,10 @@ void subtitleUpdateAndDraw(int unused) {
         currentTime = gSubtitleElapsedFrames / 60.0f;
         gSubtitleCurTime = currentTime;
         lineIndex = gSubtitleLineIndex;
-        if (lineIndex + 1 < gSubtitleLineCount && currentTime >= gSubtitleLineTimes[lineIndex + 1]) {
-            char** lineStrs[1];
-            lineStrs[0] = gSubtitleLineStrs;
-            commands = subtitleParseControlCmds(lineStrs[0][lineIndex], &commandCount);
+        if (lineIndex + 1 < gSubtitleLineCount && currentTime >= gSubtitleLineTable.times[lineIndex + 1]) {
+            char** lineStrs;
+            lineStrs = gSubtitleLineTable.lines;
+            commands = subtitleParseControlCmds(lineStrs[lineIndex], &commandCount);
             if (commands != NULL) {
                 SubtitleCmd* command = &commands[commandCount];
                 while (command--, commandCount-- != 0) {
@@ -66,7 +66,7 @@ void subtitleUpdateAndDraw(int unused) {
             }
         }
         gameTextSetColor(gSubtitleColorR, gSubtitleColorG, gSubtitleColorB, gSubtitleColorA);
-        gameTextShowStr(gSubtitleLineStrs[gSubtitleLineIndex], 10, 0, 0);
+        gameTextShowStr(gSubtitleLineTable.lines[gSubtitleLineIndex], 10, 0, 0);
         if (gGameTextSequenceMode != 0) {
             gameTextSetCharset(savedCharset, 2);
         }
@@ -86,25 +86,25 @@ void mainLoopDoGameText(void) {
 }
 
 void subtitleStop(void) {
-    void** blockSlot[1];
-    int zero[1];
+    void** blockSlot;
+    int zero;
     int blockIndex;
     int oldDelay;
     int savedDir;
 
     if (gSubtitleActive != 0) {
-        zero[0] = 0;
-        gSubtitleActive = zero[0];
+        zero = 0;
+        gSubtitleActive = zero;
         blockIndex = 0;
-        blockSlot[0] = &gSubtitleLineTable[0];
+        blockSlot = &gSubtitleLineTable.blocks[0];
         while (blockIndex < gSubtitleBlockCount) {
-            if (*blockSlot[0] != NULL) {
+            if (*blockSlot != NULL) {
                 oldDelay = mmSetFreeDelay(0);
-                mm_free(*blockSlot[0]);
+                mm_free(*blockSlot);
                 mmSetFreeDelay(oldDelay);
-                *blockSlot[0] = (void*)zero[0];
+                *blockSlot = (void*)zero;
             }
-            blockSlot[0]++;
+            blockSlot++;
             blockIndex++;
         }
 
@@ -118,87 +118,87 @@ void subtitleStop(void) {
 
 static void subtitleBuildLineTable(void) {
     int savedCharset;
-    SubtitleLineTable* s[1];
-    f32 delta;
-    f32 curTime;
-    GameTextDef* t;
-    GameTextBox* win;
-    int m;
-    int i;
-    char* str;
-    int k;
-    int total;
-    int oldDelay;
-    char** strLines;
-    int found;
-    int q;
-    int n;
+    SubtitleLineTable* table;
+    f32 intervalSeconds;
+    f32 intervalStart;
+    GameTextDef* text;
+    GameTextBox* textBox;
+    int scanLine;
+    int index;
+    char* sourceString;
+    int lineIndex;
+    int totalCharacters;
+    int oldFreeDelay;
+    char** wrappedLines;
+    int foundNextTimestamp;
+    int position;
     int count;
-    int args[3];
-    f32 ftotal;
-    void** blk;
+    int wrappedLineCount;
+    int timeCode[3];
+    f32 previousCharacterTotal;
+    void** blockSlot;
 
-    s[0] = (SubtitleLineTable*)gSubtitleLineTable;
-    total = 0;
-    curTime = 0.0f;
+    table = &gSubtitleLineTable;
+    totalCharacters = 0;
+    intervalStart = 0.0f;
     if (gGameTextSequenceMode != 0) {
         savedCharset = gameTextGetCharset();
         gameTextSetCharset(1, 1);
     }
-    t = (GameTextDef*)gameTextGet(gGameTextPendingTextId);
-    win = &gTextBoxes[10];
+    text = (GameTextDef*)gameTextGet(gGameTextPendingTextId);
+    textBox = &gTextBoxes[10];
     gSubtitleLineCount = 0;
     gSubtitleBlockCount = 0;
-    for (i = 0; i < SUBTITLE_LINE_COUNT; i++) {
-        s[0]->times[i] = SUBTITLE_TIME_NONE;
+    for (index = 0; index < SUBTITLE_LINE_COUNT; index++) {
+        table->times[index] = SUBTITLE_TIME_NONE;
     }
-    for (i = 0; i < t->count; i++) {
-        str = t->strings[i];
-        n = GameText_FindControlCodeArgs((u8*)str, TEXT_CTRL_SEQ_TIME, args);
-        if (n != 0) {
-            q = args[2] / 60;
-            s[0]->times[gSubtitleLineCount] = (f32)(args[1] + args[0] * 60 + q);
+    for (index = 0; index < text->count; index++) {
+        sourceString = text->strings[index];
+        count = GameText_FindControlCodeArgs((u8*)sourceString, TEXT_CTRL_SEQ_TIME, timeCode);
+        if (count != 0) {
+            position = timeCode[2] / 60;
+            table->times[gSubtitleLineCount] = (f32)(timeCode[1] + timeCode[0] * 60 + position);
         }
-        strLines = gameTextWrapLines(str, (f32)(u32)win->maxWidth, win->scale, &count, NULL);
-        if (strLines != NULL) {
-            for (k = 0; k < count; k++) {
-                s[0]->lines[gSubtitleLineCount++] = strLines[k];
+        wrappedLines = gameTextWrapLines(sourceString, (f32)(u32)textBox->maxWidth, textBox->scale, &wrappedLineCount, NULL);
+        if (wrappedLines != NULL) {
+            for (lineIndex = 0; lineIndex < wrappedLineCount; lineIndex++) {
+                table->lines[gSubtitleLineCount++] = wrappedLines[lineIndex];
             }
-            blk = &s[0]->blocks[gSubtitleBlockCount];
-            if (*blk != NULL) {
-                oldDelay = mmSetFreeDelay(0);
-                blk = (void**)((u8*)s[0] + gSubtitleBlockCount * 4);
-                mm_free(*blk);
-                mmSetFreeDelay(oldDelay);
+            blockSlot = &table->blocks[gSubtitleBlockCount];
+            if (*blockSlot != NULL) {
+                oldFreeDelay = mmSetFreeDelay(0);
+                blockSlot = &table->blocks[gSubtitleBlockCount];
+                mm_free(*blockSlot);
+                mmSetFreeDelay(oldFreeDelay);
             }
-            blk = (void**)((u8*)s[0] + gSubtitleBlockCount++ * 4);
-            *blk = strLines;
+            blockSlot = &table->blocks[gSubtitleBlockCount++];
+            *blockSlot = wrappedLines;
         }
     }
-    for (k = 0; k < gSubtitleLineCount; k++) {
-        if (SUBTITLE_TIME_NONE != s[0]->times[k]) {
-            curTime = s[0]->times[k];
-            total = GameText_CountPrintableChars((u8*)s[0]->lines[k]);
+    for (lineIndex = 0; lineIndex < gSubtitleLineCount; lineIndex++) {
+        if (SUBTITLE_TIME_NONE != table->times[lineIndex]) {
+            intervalStart = table->times[lineIndex];
+            totalCharacters = GameText_CountPrintableChars((u8*)table->lines[lineIndex]);
         } else {
-            found = 0;
-            m = k;
-            for (i = 0; i < SUBTITLE_LINE_COUNT; i++) {
-                ftotal = total;
-                if (m < 255) {
-                    if (SUBTITLE_TIME_NONE != s[0]->times[m + 1]) {
-                        delta = s[0]->times[m + 1] - curTime;
-                        found = 1;
+            foundNextTimestamp = 0;
+            scanLine = lineIndex;
+            for (index = 0; index < SUBTITLE_LINE_COUNT; index++) {
+                previousCharacterTotal = totalCharacters;
+                if (scanLine < 255) {
+                    if (SUBTITLE_TIME_NONE != table->times[scanLine + 1]) {
+                        intervalSeconds = table->times[scanLine + 1] - intervalStart;
+                        foundNextTimestamp = 1;
                     }
-                    n = GameText_CountPrintableChars((u8*)s[0]->lines[m]);
-                    s[0]->times[m] = n;
-                    total += n;
-                    if (found != 0) {
-                        for (q = m; q >= k; q--) {
-                            s[0]->times[q] = s[0]->times[q + 1] - delta * (s[0]->times[q] / total);
+                    count = GameText_CountPrintableChars((u8*)table->lines[scanLine]);
+                    table->times[scanLine] = count;
+                    totalCharacters += count;
+                    if (foundNextTimestamp != 0) {
+                        for (position = scanLine; position >= lineIndex; position--) {
+                            table->times[position] = table->times[position + 1] - intervalSeconds * (table->times[position] / totalCharacters);
                         }
                         break;
                     }
-                    m++;
+                    scanLine++;
                 }
             }
         }
@@ -210,6 +210,3 @@ static void subtitleBuildLineTable(void) {
         gameTextSetCharset(savedCharset, 1);
     }
 }
-
-f32 gSubtitleLineTimes[0x100];
-char* gSubtitleLineStrs[0x100];
