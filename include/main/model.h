@@ -369,22 +369,28 @@ STATIC_ASSERT(offsetof(ObjModelJointMatrix, translationZ) == 0x2C);
 
 typedef struct ObjModelBlendChannel {
     f32 weight;
-    f32 targetWeight;
+    f32 previousWeight; /* weight observed by the preceding blend-channel apply pass */
     f32 weightRate;  /* 0x08: per-dt weight delta (weight += weightRate * dt) */
     s8 morphTargetA; /* 0x0C: index into morphTargetPtrs[] for blend source A (-1 = none) */
     s8 morphTargetB; /* 0x0D: index into morphTargetPtrs[] for blend source B (-1 = none) */
-    u8 flags0E;
+    u8 flags;
     u8 unk0F;
 } ObjModelBlendChannel;
 
-/* ObjModelBlendChannel.flags0E fade/state bits */
+/* ObjModelBlendChannel.flags */
 #define BLENDCHAN_FLAG_MANUAL       0x01 /* weight is manual; skip auto-advance */
 #define BLENDCHAN_FLAG_RESET_WEIGHT 0x02 /* reset weight to base pending */
-#define BLENDCHAN_FLAG_FADING       0x04 /* fade in progress */
-#define BLENDCHAN_FLAG_FADED        0x08 /* fade processed/settled */
-#define BLENDCHAN_FLAG_CLAMP_TARGET 0x20 /* clamp low weight to targetWeight floor */
+#define BLENDCHAN_FLAG_DIRTY       0x04 /* refresh this buffer, then request another refresh */
+#define BLENDCHAN_FLAG_REFRESH_NEXT        0x08 /* second vertex-buffer refresh pending */
+#define BLENDCHAN_FLAG_KEEP_WEIGHT 0x10 /* retain weight when changing targets */
+#define BLENDCHAN_FLAG_ALLOW_NEGATIVE 0x20 /* permit weights down to -1 instead of zero */
 
 STATIC_ASSERT(sizeof(ObjModelBlendChannel) == 0x10);
+STATIC_ASSERT(offsetof(ObjModelBlendChannel, previousWeight) == 0x04);
+STATIC_ASSERT(offsetof(ObjModelBlendChannel, weightRate) == 0x08);
+STATIC_ASSERT(offsetof(ObjModelBlendChannel, morphTargetA) == 0x0c);
+STATIC_ASSERT(offsetof(ObjModelBlendChannel, morphTargetB) == 0x0d);
+STATIC_ASSERT(offsetof(ObjModelBlendChannel, flags) == 0x0e);
 
 /*
  * ObjModel - per-object model working set built by modelLoad_layoutBuffers
@@ -533,10 +539,10 @@ STATIC_ASSERT(offsetof(ObjModelChain, enabled) == 0x1A);
 ObjModelJointMatrix* ObjModel_GetJointMatrix(u8* modelBytes, int jointIndex);
 u16 modelFileHeaderGetCullDistance(ModelFileHeader* modelFile);
 void ObjModel_CopyJointTranslation(u8* modelBytes, int jointIndex, f32* out);
-int ObjModel_HasActiveBlendChannels(ObjModel* model);
+int ObjModel_NeedsBlendChannelUpdate(ObjModel* model);
 void ObjModel_ClearBlendChannels(ObjModel* model);
 void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight);
-void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int targetA, int targetB, f32 weight, int flags);
+void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int targetA, int targetB, f32 weightRate, int flags);
 void ObjModel_SampleJointTransform(ObjModel* model, int animState, int frameSource, f32 phase, f32 rootMotionScale,
                                    f32* outPosition, s16* outRotation);
 ObjModelChain* ObjModelChain_Alloc(void* models, int count);
@@ -550,7 +556,7 @@ void modelBlendMorphTargets(u8* srcVtx, u8* dstVtx, u16 vtxCount, u16* targetA, 
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c);
 void modelAnimResetState(void* m, void* data);
 int modelLoadAnimations(ModelFileHeader* file, int modelId, void* animBase);
-void ObjModel_AdvanceBlendChannels(u8* model, f32 dt);
+void ObjModel_AdvanceBlendChannels(ObjModel* model, f32 dt);
 void ObjModel_LoadRenderOpTextures(u8* model, GameObject* object);
 void ObjModel_Release(u8* model);
 void* ObjModel_LoadAnimData(u8* modelData, int loadFlags, u8* destination);

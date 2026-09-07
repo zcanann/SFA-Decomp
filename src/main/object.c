@@ -1985,7 +1985,7 @@ void Obj_UpdateModelBlendStates(void) {
                 if (m != 0) {
                     m->bufferFlags &= ~8;
                     if (m->file->morphTargetCount != 0) {
-                        ObjModel_AdvanceBlendChannels((u8*)m, timeDelta);
+                        ObjModel_AdvanceBlendChannels(m, timeDelta);
                     }
                 }
             }
@@ -2007,7 +2007,7 @@ void Obj_UpdateModelBlendStates(void) {
                                     bp = 0;
                                 }
                                 if (c0 == 0 || (bp != 0 && ((ObjSeqState*)bp)->movementState == 0)) {
-                                    ObjModel_AdvanceBlendChannels((u8*)m, timeDelta);
+                                    ObjModel_AdvanceBlendChannels(m, timeDelta);
                                 }
                             }
                         }

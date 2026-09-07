@@ -761,19 +761,19 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c) {
         ((ObjModelBlendChannel*)q)->morphTargetB = -1;
         f = 0.0f;
         ((ObjModelBlendChannel*)q)->weight = f;
-        ((ObjModelBlendChannel*)q)->targetWeight = f;
+        ((ObjModelBlendChannel*)q)->previousWeight = f;
         ((ObjModelBlendChannel*)q)->weightRate = f;
         q = (u8*)((ObjModel*)out2)->blendChannels;
         ((ObjModelBlendChannel*)q)[1].morphTargetA = -1;
         ((ObjModelBlendChannel*)q)[1].morphTargetB = -1;
         ((ObjModelBlendChannel*)q)[1].weight = f;
-        ((ObjModelBlendChannel*)q)[1].targetWeight = f;
+        ((ObjModelBlendChannel*)q)[1].previousWeight = f;
         ((ObjModelBlendChannel*)q)[1].weightRate = f;
         q = (u8*)((ObjModel*)out2)->blendChannels;
         ((ObjModelBlendChannel*)q)[2].morphTargetA = -1;
         ((ObjModelBlendChannel*)q)[2].morphTargetB = -1;
         ((ObjModelBlendChannel*)q)[2].weight = f;
-        ((ObjModelBlendChannel*)q)[2].targetWeight = f;
+        ((ObjModelBlendChannel*)q)[2].previousWeight = f;
         ((ObjModelBlendChannel*)q)[2].weightRate = f;
     }
     if (szs[1] > 0) {
@@ -1292,7 +1292,7 @@ typedef struct ModelBlendChannelFlags {
 } ModelBlendChannelFlags;
 
 const ModelBlendChannelFlags sModelBlendChannelActiveInit = {{0, 0, 0}};
-const ModelBlendChannelFlags sModelBlendChannelFadeInit = {{0, 0, 0}};
+const ModelBlendChannelFlags sModelBlendChannelRefreshInit = {{0, 0, 0}};
 
 void ObjModel_ApplyBlendChannels(ObjModel* model) {
     ModelFileHeader* hdr;
@@ -1300,12 +1300,12 @@ void ObjModel_ApplyBlendChannels(ObjModel* model) {
     int i;
     s16 emptyTarget;
     ModelBlendChannelFlags chanActive = sModelBlendChannelActiveInit;
-    ModelBlendChannelFlags chanFade = sModelBlendChannelFadeInit;
+    ModelBlendChannelFlags chanRefresh = sModelBlendChannelRefreshInit;
     u16* targetA;
     u16* targetB;
     u8* srcVtx;
     u8* dstVtx;
-    int fadeBits;
+    int refreshBits;
 
     hdr = model->file;
     if (hdr->morphTargetPtrs == NULL) {
@@ -1314,20 +1314,20 @@ void ObjModel_ApplyBlendChannels(ObjModel* model) {
     emptyTarget = hdr->vertexCount + 1;
     for (i = 0; i < 3; i++) {
         ch = &model->blendChannels[i];
-        if (ch->weight != ch->targetWeight) {
-            ch->flags0E &= ~0xc;
-            ch->flags0E |= BLENDCHAN_FLAG_FADING;
+        if (ch->weight != ch->previousWeight) {
+            ch->flags &= ~(BLENDCHAN_FLAG_DIRTY | BLENDCHAN_FLAG_REFRESH_NEXT);
+            ch->flags |= BLENDCHAN_FLAG_DIRTY;
         }
-        fadeBits = ch->flags0E & 0xc;
-        chanFade.values[i] = fadeBits;
-        if (ch->morphTargetA != -1 || ch->morphTargetB != -1 || fadeBits != 0) {
+        refreshBits = ch->flags & (BLENDCHAN_FLAG_DIRTY | BLENDCHAN_FLAG_REFRESH_NEXT);
+        chanRefresh.values[i] = refreshBits;
+        if (ch->morphTargetA != -1 || ch->morphTargetB != -1 || refreshBits != 0) {
             chanActive.values[i] = 1;
         }
-        if (chanFade.values[i] & 4) {
-            ch->flags0E &= ~BLENDCHAN_FLAG_FADING;
-            ch->flags0E |= BLENDCHAN_FLAG_FADED;
-        } else if (chanFade.values[i] & 8) {
-            ch->flags0E &= ~BLENDCHAN_FLAG_FADED;
+        if (chanRefresh.values[i] & BLENDCHAN_FLAG_DIRTY) {
+            ch->flags &= ~BLENDCHAN_FLAG_DIRTY;
+            ch->flags |= BLENDCHAN_FLAG_REFRESH_NEXT;
+        } else if (chanRefresh.values[i] & BLENDCHAN_FLAG_REFRESH_NEXT) {
+            ch->flags &= ~BLENDCHAN_FLAG_REFRESH_NEXT;
         }
     }
     if (chanActive.values[0] == 0 && chanActive.values[1] == 0 && chanActive.values[2] == 0) {
@@ -1336,25 +1336,25 @@ void ObjModel_ApplyBlendChannels(ObjModel* model) {
     if (chanActive.values[1]) {
         chanActive.values[0] = 0;
     }
-    if (chanFade.values[2]) {
-        chanFade.values[0] = 1;
-        chanFade.values[1] = 1;
+    if (chanRefresh.values[2]) {
+        chanRefresh.values[0] = 1;
+        chanRefresh.values[1] = 1;
     }
-    if ((chanActive.values[0] && chanFade.values[0]) || (chanActive.values[1] && chanFade.values[1])) {
+    if ((chanActive.values[0] && chanRefresh.values[0]) || (chanActive.values[1] && chanRefresh.values[1])) {
         if (chanActive.values[2]) {
-            chanFade.values[2] = 1;
+            chanRefresh.values[2] = 1;
         }
     }
     for (i = 0; i < 3; i++) {
         if (chanActive.values[i] && hdr->vertexAnimEntries) {
-            chanFade.values[i] = 1;
+            chanRefresh.values[i] = 1;
         }
         ch = &model->blendChannels[i];
-        if (ch->flags0E & BLENDCHAN_FLAG_RESET_WEIGHT) {
-            ch->flags0E &= ~BLENDCHAN_FLAG_RESET_WEIGHT;
+        if (ch->flags & BLENDCHAN_FLAG_RESET_WEIGHT) {
+            ch->flags &= ~BLENDCHAN_FLAG_RESET_WEIGHT;
             ch->weight = 0.0f;
         }
-        if (chanActive.values[i] && chanFade.values[i]) {
+        if (chanActive.values[i] && chanRefresh.values[i]) {
             f32 weight;
             f32 tw;
             f32 eased;
@@ -1382,7 +1382,7 @@ void ObjModel_ApplyBlendChannels(ObjModel* model) {
             if (weight > 1.0f) {
                 ch->weight = 1.0f;
             } else if (weight < 0.0f) {
-                if (ch->flags0E & BLENDCHAN_FLAG_CLAMP_TARGET) {
+                if (ch->flags & BLENDCHAN_FLAG_ALLOW_NEGATIVE) {
                     if (weight < -1.0f) {
                         ch->weight = -1.0f;
                     }
@@ -1402,53 +1402,53 @@ void ObjModel_ApplyBlendChannels(ObjModel* model) {
             modelBlendMorphTargets(srcVtx, dstVtx, hdr->vertexCount, targetA, targetB, (int)(65536.0f * eased));
             model->vtxBufDirty = 1;
         }
-        if (ch->targetWeight != ch->weight) {
-            ch->targetWeight = ch->weight;
+        if (ch->previousWeight != ch->weight) {
+            ch->previousWeight = ch->weight;
         }
     }
 }
 
-void ObjModel_AdvanceBlendChannels(u8* model, f32 dt) {
+void ObjModel_AdvanceBlendChannels(ObjModel* model, f32 dt) {
     int i;
     ObjModelBlendChannel* ch;
-    if (((ObjModel*)model)->file->morphTargetPtrs == NULL) {
+    if (model->file->morphTargetPtrs == NULL) {
         return;
     }
     for (i = 0; i < 3; i++) {
-        ch = ((ObjModel*)model)->blendChannels + i;
+        ch = model->blendChannels + i;
         if (ch[0].morphTargetA == -1 && ch[0].morphTargetB == -1) {
             continue;
         }
-        if (ch[0].flags0E & BLENDCHAN_FLAG_MANUAL) {
+        if (ch[0].flags & BLENDCHAN_FLAG_MANUAL) {
             continue;
         }
         ch[0].weight = ch[0].weightRate * dt + ch[0].weight;
         if (ch[0].weight >= 0.99f) {
             ch[0].weight = 0.99f;
             ch[0].weightRate = 0.001f;
-            ch[0].flags0E &= ~BLENDCHAN_FLAG_FADING;
+            ch[0].flags &= ~BLENDCHAN_FLAG_DIRTY;
         } else if (ch[0].weight <= 0.002f) {
             ch[0].weight = 0.002f;
             ch[0].weightRate = 0.001f;
-            ch[0].flags0E &= ~BLENDCHAN_FLAG_FADING;
+            ch[0].flags &= ~BLENDCHAN_FLAG_DIRTY;
         }
     }
 }
 
-int ObjModel_HasActiveBlendChannels(ObjModel* model) {
+int ObjModel_NeedsBlendChannelUpdate(ObjModel* model) {
     ObjModelBlendChannel* ch;
 
     if (model->file->morphTargetPtrs == NULL) {
         return 0;
     }
     ch = model->blendChannels;
-    if (ch[0].weight != ch[0].targetWeight || (ch[0].flags0E & 0xe)) {
+    if (ch[0].weight != ch[0].previousWeight || (ch[0].flags & (BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY | BLENDCHAN_FLAG_REFRESH_NEXT))) {
         return 1;
     }
-    if (ch[1].weight != ch[1].targetWeight || (ch[1].flags0E & 0xe)) {
+    if (ch[1].weight != ch[1].previousWeight || (ch[1].flags & (BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY | BLENDCHAN_FLAG_REFRESH_NEXT))) {
         return 1;
     }
-    if (ch[2].weight != ch[2].targetWeight || (ch[2].flags0E & 0xe)) {
+    if (ch[2].weight != ch[2].previousWeight || (ch[2].flags & (BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY | BLENDCHAN_FLAG_REFRESH_NEXT))) {
         return 1;
     }
     return 0;
@@ -1464,10 +1464,10 @@ void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight) {
     if (weight != ch->weight) {
         ch->weight = weight;
     }
-    ch[0].flags0E |= BLENDCHAN_FLAG_FADING;
+    ch[0].flags |= BLENDCHAN_FLAG_DIRTY;
 }
 
-void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b, f32 weight, int flags) {
+void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b, f32 weightRate, int flags) {
     ObjModelBlendChannel* ch;
     u8* hdr;
     if (channel > 2 || ((ModelFileHeader*)(hdr = (u8*)model->file))->morphTargetPtrs == NULL) {
@@ -1485,7 +1485,7 @@ void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b,
     ch = model->blendChannels + channel;
     if (a == -1 && b == -1) {
         if (ch[0].morphTargetA != -1 || ch[0].morphTargetB != -1) {
-            flags |= 6;
+            flags |= BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY;
         } else {
             return;
         }
@@ -1495,19 +1495,19 @@ void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b,
     }
     ch[0].morphTargetA = a;
     ch[0].morphTargetB = b;
-    if (!(flags & 0x10)) {
+    if (!(flags & BLENDCHAN_FLAG_KEEP_WEIGHT)) {
         ch[0].weight = 0.0f;
     }
-    ch[0].targetWeight = -1.0f;
-    ch[0].weightRate = weight;
-    ch[0].flags0E = flags | BLENDCHAN_FLAG_FADING;
+    ch[0].previousWeight = -1.0f;
+    ch[0].weightRate = weightRate;
+    ch[0].flags = flags | BLENDCHAN_FLAG_DIRTY;
 }
 
 void ObjModel_ClearBlendChannels(ObjModel* model) {
     if (model->file->morphTargetPtrs != NULL) {
-        ObjModel_SetBlendChannelTargets(model, 0, -1, -1, 0.0f, 7);
-        ObjModel_SetBlendChannelTargets(model, 1, -1, -1, 0.0f, 7);
-        ObjModel_SetBlendChannelTargets(model, 2, -1, -1, 0.0f, 7);
+        ObjModel_SetBlendChannelTargets(model, 0, -1, -1, 0.0f, BLENDCHAN_FLAG_MANUAL | BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY);
+        ObjModel_SetBlendChannelTargets(model, 1, -1, -1, 0.0f, BLENDCHAN_FLAG_MANUAL | BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY);
+        ObjModel_SetBlendChannelTargets(model, 2, -1, -1, 0.0f, BLENDCHAN_FLAG_MANUAL | BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY);
     }
 }
 

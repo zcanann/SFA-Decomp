@@ -678,7 +678,7 @@ void TitleScreen_update(GameObject* obj) {
             characterDoEyeAnims(obj, state);
         }
         model = Obj_GetActiveModel(obj);
-        if (model->file->morphTargetCount != 0 && ObjModel_HasActiveBlendChannels(model) == 0 &&
+        if (model->file->morphTargetCount != 0 && ObjModel_NeedsBlendChannelUpdate(model) == 0 &&
             randomGetRange(0xf0, 0x168) == 0xf0) {
             blend = model->blendChannels;
             morphTarget = randomGetRange(0, model->file->morphTargetCount);
