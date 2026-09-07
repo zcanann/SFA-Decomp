@@ -369,7 +369,7 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     ObjAnimBank* bank;
     f32 segmentStartDistance;
     ObjAnimMoveData* moveData;
-    ObjAnimState* state;
+    ObjAnimDef* animDef;
     ObjModelInstance* model;
     s16* moveSamples;
     s16* blendSamples;
@@ -392,7 +392,7 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     f32 rootMotionScale;
     int hasFirstAxis;
     int foundPhase;
-    ObjAnimDef* animDef;
+    ObjAnimState* state;
 
     bank = ObjAnim_GetActiveBank(objAnim);
     animDef = bank->animDef;
