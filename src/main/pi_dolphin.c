@@ -188,7 +188,8 @@ struct MldfNames
     char fmtModTab[0x10];
 };
 
-/* Resource file table at gResourceFileTable (0x80345E10, 0x20000 bytes). File slots are
+/* Address view of neighbouring resource arrays relative to gResourceFileTable.
+   This is not one allocation: gResourceFileTable itself contains only 0x160 bytes. File slots are
    indexed by resource fileId (0..0x57); map-owned resources use paired slots (e.g.
    ANIMCURV 0xd/0x55) so two maps can be resident at once. Several arrays are also
    addressed directly through their own symbols elsewhere in this file:
@@ -221,6 +222,10 @@ STATIC_ASSERT(offsetof(struct MldfTables, mergeTex0) == 0x10200);
 STATIC_ASSERT(offsetof(struct MldfTables, mergeAnim) == 0x14200);
 STATIC_ASSERT(offsetof(struct MldfTables, mergeModels) == 0x170E0);
 STATIC_ASSERT(offsetof(struct MldfTables, ids) == 0x19138);
+STATIC_ASSERT(offsetof(struct MldfTables, loadedFlags) == 0x190E0);
+STATIC_ASSERT(offsetof(struct MldfTables, sizes) == 0x19298);
+STATIC_ASSERT(offsetof(struct MldfTables, ptrs) == 0x195D8);
+STATIC_ASSERT(offsetof(struct MldfTables, owners) == 0x19738);
 
 typedef u8 MldfArenaBlock[0x20000];
 enum
@@ -644,17 +649,17 @@ static inline int loadedFileFlags(void)
 
 void defragMemory(int mode)
 {
-    char* q1;
-    char* q2;
-    char* q3;
-    char* q4;
-    int i;
-    int pass;
-    int done;
-    int d;
-    u8* base = gResourceFileTable;
-    done = 0;
-    pass = 0;
+    void** buffers;
+    s16* owners;
+    int* sizes;
+    u8* flags;
+    int fileId;
+    int passIndex;
+    int stable;
+    int previousFreeDelay;
+    u8* resourceAddress = gResourceFileTable;
+    stable = 0;
+    passIndex = 0;
     mmSetTextureAllocationState(2);
     if (loadedFileFlags() != 0)
     {
@@ -668,195 +673,195 @@ void defragMemory(int mode)
     }
     if (mode != 0)
     {
-        char* p1;
-        char* p2;
-        char* p3;
-        char* p4;
-        void* n;
-        int i;
+        void** moveBuffers;
+        s16* moveOwners;
+        int* moveSizes;
+        u8* moveFlags;
+        void* replacement;
+        int fileId;
         mmSetForceHeaps1and2Only(1);
-        i = 0;
+        fileId = 0;
         {
-            char* hi = (char*)base + 0x20000;
-            p1 = hi - 0x6a28;
-            p2 = hi - 0x68c8;
-            p3 = hi - 0x6d68;
-            p4 = hi - 0x6f20;
+            char* biasedBase = (char*)resourceAddress + sizeof(MldfArenaBlock);
+            moveBuffers = (void**)(biasedBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ptrs)));
+            moveOwners = (s16*)(biasedBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, owners)));
+            moveSizes = (int*)(biasedBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, sizes)));
+            moveFlags = (u8*)(biasedBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, loadedFlags)));
         }
         do
         {
-            switch (i)
+            switch (fileId)
             {
-            case 0xd:
-            case 0x1b:
-            case 0x23:
-            case 0x25:
-            case 0x2b:
-            case 0x30:
-            case 0x46:
-            case 0x47:
-            case 0x4a:
-            case 0x4d:
-            case 0x54:
-            case 0x55:
+            case MLDF_FILEID_ANIMCURV_BIN_A:
+            case MLDF_FILEID_VOXMAP_BIN_A:
+            case MLDF_FILEID_TEX0_BIN_A:
+            case MLDF_FILEID_BLOCKS_BIN_A:
+            case MLDF_FILEID_MODELS_BIN_A:
+            case MLDF_FILEID_ANIM_BIN_A:
+            case MLDF_FILEID_MODELS_BIN_B:
+            case MLDF_FILEID_BLOCKS_BIN_B:
+            case MLDF_FILEID_ANIM_BIN_B:
+            case MLDF_FILEID_TEX0_BIN_B:
+            case MLDF_FILEID_VOXMAP_BIN_B:
+            case MLDF_FILEID_ANIMCURV_BIN_B:
             {
-                if (*(void**)p1 == NULL)
+                if (*moveBuffers == NULL)
                 {
                     break;
                 }
-                if (*(s16*)p2 == -1)
+                if (*moveOwners == -1)
                 {
                     break;
                 }
-                if (mmGetRegionForPtr(*(void**)p1) != 0)
+                if (mmGetRegionForPtr(*moveBuffers) != 0)
                 {
                     break;
                 }
                 if (mode == 2)
                 {
-                    if (i == 0x20)
+                    if (fileId == MLDF_FILEID_TEX1_BIN_A)
                         break;
-                    if (i == 0x4b)
+                    if (fileId == MLDF_FILEID_TEX1_BIN_B)
                         break;
-                    if (i == 0x23)
+                    if (fileId == MLDF_FILEID_TEX0_BIN_A)
                         break;
-                    if (i == 0x4d)
+                    if (fileId == MLDF_FILEID_TEX0_BIN_B)
                         break;
                 }
-                n = mmAlloc(*(int*)p3 + 0x20, 0x7d7d7d7d, 0);
-                if (n == NULL)
+                replacement = mmAlloc(*moveSizes + 0x20, 0x7d7d7d7d, 0);
+                if (replacement == NULL)
                 {
                     break;
                 }
-                memcpy(n, *(void**)p1, *(int*)p3);
+                memcpy(replacement, *moveBuffers, *moveSizes);
                 {
-                    int d = mmSetFreeDelay(0);
-                    mm_free(*(void**)p1);
-                    *(int*)p1 = 0;
-                    *(void**)p1 = n;
-                    mmSetFreeDelay(d);
+                    int previousFreeDelay = mmSetFreeDelay(0);
+                    mm_free(*moveBuffers);
+                    *moveBuffers = NULL;
+                    *moveBuffers = replacement;
+                    mmSetFreeDelay(previousFreeDelay);
                 }
                 break;
             }
             }
-            *(u8*)p4 = 0;
-            p1 += 4;
-            p2 += 2;
-            p3 += 4;
-            p4 += 1;
-            i++;
-        } while (i <= 0x57);
+            *moveFlags = 0;
+            moveBuffers++;
+            moveOwners++;
+            moveSizes++;
+            moveFlags++;
+            fileId++;
+        } while (fileId <= MLDF_FILEID_ENVFXACT_BIN);
         mmSetForceHeaps1and2Only(-1);
     }
-    base = (u8*)((char*)base + 0x20000);
-    while (done == 0 && pass < 10)
+    resourceAddress = (u8*)((char*)resourceAddress + sizeof(MldfArenaBlock));
+    while (stable == 0 && passIndex < 10)
     {
-        done = 1;
-        i = 0;
-        q1 = (char*)base - 0x6a28;
-        q2 = (char*)base - 0x68c8;
-        q3 = (char*)base - 0x6d68;
-        q4 = (char*)base - 0x6f20;
+        stable = 1;
+        fileId = 0;
+        buffers = (void**)((char*)resourceAddress - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ptrs)));
+        owners = (s16*)((char*)resourceAddress - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, owners)));
+        sizes = (int*)((char*)resourceAddress - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, sizes)));
+        flags = (u8*)((char*)resourceAddress - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, loadedFlags)));
         do
         {
-            switch (i)
+            switch (fileId)
             {
-            case 0xd:
-            case 0x1b:
-            case 0x23:
-            case 0x25:
-            case 0x2b:
-            case 0x30:
-            case 0x46:
-            case 0x47:
-            case 0x4a:
-            case 0x4d:
-            case 0x54:
-            case 0x55:
+            case MLDF_FILEID_ANIMCURV_BIN_A:
+            case MLDF_FILEID_VOXMAP_BIN_A:
+            case MLDF_FILEID_TEX0_BIN_A:
+            case MLDF_FILEID_BLOCKS_BIN_A:
+            case MLDF_FILEID_MODELS_BIN_A:
+            case MLDF_FILEID_ANIM_BIN_A:
+            case MLDF_FILEID_MODELS_BIN_B:
+            case MLDF_FILEID_BLOCKS_BIN_B:
+            case MLDF_FILEID_ANIM_BIN_B:
+            case MLDF_FILEID_TEX0_BIN_B:
+            case MLDF_FILEID_VOXMAP_BIN_B:
+            case MLDF_FILEID_ANIMCURV_BIN_B:
             {
-                void* n;
-                if (*(void**)q1 != NULL && *(s16*)q2 != -1 && mmGetRegionForPtr(*(void**)q1) == 0)
+                void* replacement;
+                if (*buffers != NULL && *owners != -1 && mmGetRegionForPtr(*buffers) == 0)
                 {
-                    n = mmAlloc(*(int*)q3 + 0x20, 0x7d7d7d7d, 0);
-                    if (n == NULL)
+                    replacement = mmAlloc(*sizes + 0x20, 0x7d7d7d7d, 0);
+                    if (replacement == NULL)
                     {
                         break;
                     }
-                    if (*(int*)q3 >= 0x33450 && *(u32*)q1 < (u32)n)
+                    if (*sizes >= MM_REGION0_LARGE_ALLOCATION_THRESHOLD && (u32)*buffers < (u32)replacement)
                     {
-                        int d = mmSetFreeDelay(0);
-                        mm_free(n);
-                        mmSetFreeDelay(d);
+                        int previousFreeDelay = mmSetFreeDelay(0);
+                        mm_free(replacement);
+                        mmSetFreeDelay(previousFreeDelay);
                     }
-                    else if (*(int*)q3 < 0x33450 && *(u32*)q1 > (u32)n)
+                    else if (*sizes < MM_REGION0_LARGE_ALLOCATION_THRESHOLD && (u32)*buffers > (u32)replacement)
                     {
-                        int d = mmSetFreeDelay(0);
-                        mm_free(n);
-                        mmSetFreeDelay(d);
+                        int previousFreeDelay = mmSetFreeDelay(0);
+                        mm_free(replacement);
+                        mmSetFreeDelay(previousFreeDelay);
                     }
                     else
                     {
-                        int d;
-                        memcpy(n, *(void**)q1, *(int*)q3);
-                        d = mmSetFreeDelay(0);
-                        mm_free(*(void**)q1);
-                        *(int*)q1 = 0;
-                        *(void**)q1 = n;
-                        mmSetFreeDelay(d);
-                        done = 0;
+                        int previousFreeDelay;
+                        memcpy(replacement, *buffers, *sizes);
+                        previousFreeDelay = mmSetFreeDelay(0);
+                        mm_free(*buffers);
+                        *buffers = NULL;
+                        *buffers = replacement;
+                        mmSetFreeDelay(previousFreeDelay);
+                        stable = 0;
                     }
                 }
                 else
                 {
                     if (mode == 2)
                         break;
-                    if (pass == 0)
+                    if (passIndex == 0)
                         break;
-                    if (*(void**)q1 == NULL)
+                    if (*buffers == NULL)
                         break;
-                    if (*(s16*)q2 == -1)
+                    if (*owners == -1)
                         break;
-                    if (mmGetRegionForPtr(*(void**)q1) != 1 && mmGetRegionForPtr(*(void**)q1) != 2)
+                    if (mmGetRegionForPtr(*buffers) != 1 && mmGetRegionForPtr(*buffers) != 2)
                     {
                         break;
                     }
-                    if (getHeapItemSize(*(void**)q1) < 0x3000)
+                    if (getHeapItemSize(*buffers) < 0x3000)
                     {
                         break;
                     }
-                    n = mmAlloc(*(int*)q3 + 0x20, 0x7d7d7d7d, 0);
-                    if (n == NULL)
+                    replacement = mmAlloc(*sizes + 0x20, 0x7d7d7d7d, 0);
+                    if (replacement == NULL)
                     {
                         break;
                     }
-                    if (mmGetRegionForPtr(n) != 0)
+                    if (mmGetRegionForPtr(replacement) != 0)
                     {
-                        int d = mmSetFreeDelay(0);
-                        mm_free(n);
-                        mmSetFreeDelay(d);
+                        int previousFreeDelay = mmSetFreeDelay(0);
+                        mm_free(replacement);
+                        mmSetFreeDelay(previousFreeDelay);
                     }
                     else
                     {
-                        memcpy(n, *(void**)q1, *(int*)q3);
-                        d = mmSetFreeDelay(0);
-                        mm_free(*(void**)q1);
-                        *(int*)q1 = 0;
-                        *(void**)q1 = n;
-                        mmSetFreeDelay(d);
-                        done = 0;
+                        memcpy(replacement, *buffers, *sizes);
+                        previousFreeDelay = mmSetFreeDelay(0);
+                        mm_free(*buffers);
+                        *buffers = NULL;
+                        *buffers = replacement;
+                        mmSetFreeDelay(previousFreeDelay);
+                        stable = 0;
                     }
                 }
                 break;
             }
             }
-            *(u8*)q4 = 0;
-            q1 += 4;
-            q2 += 2;
-            q3 += 4;
-            q4 += 1;
-            i++;
-        } while (i <= 0x57);
-        pass++;
+            *flags = 0;
+            buffers++;
+            owners++;
+            sizes++;
+            flags++;
+            fileId++;
+        } while (fileId <= MLDF_FILEID_ENVFXACT_BIN);
+        passIndex++;
     }
     mmSetTextureAllocationState(0);
 }

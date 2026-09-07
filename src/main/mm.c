@@ -394,7 +394,7 @@ static int mmAllocFromRegion(int region, int size, int type, int tag) {
     base = (HeapItem*)gMmRegionTable[region].start;
     idx = 0;
 
-    if (region == 0 && size < 0x33450) {
+    if (region == 0 && size < MM_REGION0_LARGE_ALLOCATION_THRESHOLD) {
         it = base;
         while (it->next != -1) {
             idx = it->next;
@@ -439,7 +439,7 @@ static int mmAllocFromRegion(int region, int size, int type, int tag) {
         if (gMmRegionTable[region].usedBytes < 0 || gMmRegionTable[region].usedBytes > gMmRegionTable[region].size) {
             OSReport(sMmAllocMemoryUsageCorruptedError);
         }
-        if (gMmRegion0SpawnEnabled != 0 && region == 0 && size < 0x33450) {
+        if (gMmRegion0SpawnEnabled != 0 && region == 0 && size < MM_REGION0_LARGE_ALLOCATION_THRESHOLD) {
             bestIdx = heapSpawnSlot(region, bestIdx, size, 1, 0, type, tag);
         } else {
             changeHeapSlot(region, bestIdx, size, 1, 0, type, tag);

@@ -1265,6 +1265,13 @@ returning that string to a literal at its use site, makes the merged
 
 ### `objprint_dolphin.c` + `pi_dolphin.c` is one TU, and the merge is blocked on one row
 
+**Historical hypothesis, superseded by `7736da1675`.** The actual repair moved
+36 loader functions into `pi_dolphin.c`, where their local jump tables and
+file statics belong. The renderer ends at EN `80041D30`; the relocation audit
+supports the current boundary there. The whole-file merge proposed below is
+not the current boundary plan. Match regressions from correcting the old
+compiler-profile seam were accepted when that repair landed.
+
 Three independent oracles agree: five jumptables carved to
 `pi_dolphin`'s `.data` are owned by `objprint_dolphin` functions
 (`ObjLoad_GetDvdCommandBlockStatus`, `defragMemory`, `mapUnload`); both

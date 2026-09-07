@@ -3,6 +3,9 @@
 
 #include "types.h"
 
+/* Region 0 places large allocations toward its low-address end. */
+#define MM_REGION0_LARGE_ALLOCATION_THRESHOLD 0x33450
+
 int alignUp2(int value);
 int roundUpTo4(int value);
 int roundUpTo8(int value);
