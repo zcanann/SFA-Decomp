@@ -4,7 +4,7 @@ The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
 All 40,656 assigned data bytes match. The common GC/1.3 invocation produces
-137/145 exact functions and a 99.50477% instruction fuzzy score; the TU remains
+137/145 exact functions and a 99.537125% instruction fuzzy score; the TU remains
 `NonMatching` because eight functions still differ.
 
 This supersedes the constant-pool blocker in
@@ -119,6 +119,21 @@ MWCC place the plane-table address before the zero literal. The direct accesses
 let the constant load precede that address, reproducing the complete function.
 The GC/1.3 trace decoder also recognizes the observed `beqlr-` and `bgelr-`
 conditional returns, so this function can pass its instruction-alignment audit.
+
+`unloadMap` and `doPendingMapLoads` now share the private inline
+`mapReleaseBlockReference` routine. It owns the negative-slot guard, reference
+count decrement, final slot removal, shader-layer resource release, texture
+release, optional buffers, and block free. The shader walk retains an explicit
+byte cursor and an independent index; their initialization and update order
+reproduce retail's zero sharing. The helper takes a promoted integer slot, which
+also preserves the byte-load/sign-extension sequence in `unloadMap`. No
+out-of-line helper is emitted.
+
+This raises `unloadMap` from 97.92208% to 99.512985%, reducing 41 differing
+instructions to twelve register-operand differences. `doPendingMapLoads` rises
+from 98.458015% to 98.65522%. The two callers preserve the existing release order,
+including clearing the slot before callbacks and freeing the block last. All
+other function bytes and the assigned data remain unchanged.
 
 The old `lightmap` and initializer fragments depended on extra `noprop` and
 `nocse` flags. They now share shader's existing `nopeephole,noschedule` /

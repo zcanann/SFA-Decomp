@@ -1355,17 +1355,57 @@ static int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
     return 1;
 }
 
+static inline void mapReleaseBlockReference(int blockIndex) {
+    if (blockIndex >= 0) {
+        gMapBlockRefCounts[blockIndex]--;
+        if (gMapBlockRefCounts[blockIndex] == 0) {
+            int shaderOffset;
+            Shader* shader;
+            int index;
+            ShaderLayer* shaderLayer;
+            int layerIndex;
+            u32 scrollSlot;
+            MapBlockData* block;
+
+            block = gMapBlocks[blockIndex];
+            gMapBlockIds[blockIndex] = -1;
+            gMapBlocks[blockIndex] = NULL;
+            index = 0;
+            shaderOffset = 0;
+            for (; index < block->shaderCount; shaderOffset += sizeof(Shader), index++) {
+                shader = (Shader*)((u8*)block->shaders + shaderOffset);
+                for (layerIndex = 0; layerIndex < shader->layerCount; layerIndex++) {
+                    shaderLayer = &shader->layers[layerIndex];
+                    scrollSlot = shaderLayer->scrollMtx;
+                    if (scrollSlot != 0xff) {
+                        if (gMapTextureScrolls[scrollSlot].refCount != 0) {
+                            gMapTextureScrolls[scrollSlot].refCount -= 1;
+                        }
+                    }
+                    if (shaderLayer->materialId != 0) {
+                        mapTextureOverrideRelease(shaderLayer->texture, shaderLayer->materialId);
+                    }
+                }
+            }
+            for (index = 0; index < block->textureCount; index++) {
+                textureFree(block->textures[index].texture);
+            }
+            if (block->auxData != NULL) {
+                mm_free(block->auxData);
+            }
+            if (block->hits != NULL) {
+                mm_free(block->hits);
+            }
+            setMapBlockFlag();
+            mm_free(block);
+        }
+    }
+}
+
 void unloadMap(void) {
-    MapBlockData* block;
-    int j;
-    ShaderLayer* shaderLayer;
     int i;
     int layer;
     s8* cur;
-    s8 mapType;
-    Shader* shader;
-    int k;
-    u32 scrollSlot;
 
     audioStopByMask(4);
     Sfx_ClearLoopedObjectSounds();
@@ -1373,41 +1413,7 @@ void unloadMap(void) {
     for (layer = 0; layer < MAP_BLOCK_LAYER_COUNT; layer++) {
         cur = gMapBlockLayerTables[layer];
         for (i = 0; i < 256; i++) {
-            mapType = cur[i];
-            if (mapType >= 0) {
-                gMapBlockRefCounts[mapType]--;
-                if (gMapBlockRefCounts[mapType] == 0) {
-                    block = gMapBlocks[mapType];
-                    gMapBlockIds[mapType] = -1;
-                    gMapBlocks[mapType] = NULL;
-                    for (j = 0; j < block->shaderCount; j++) {
-                        shader = &block->shaders[j];
-                        for (k = 0; k < shader->layerCount; k++) {
-                            shaderLayer = &shader->layers[k];
-                            scrollSlot = shaderLayer->scrollMtx;
-                            if (scrollSlot != 0xff) {
-                                if (gMapTextureScrolls[scrollSlot].refCount != 0) {
-                                    gMapTextureScrolls[scrollSlot].refCount -= 1;
-                                }
-                            }
-                            if (shaderLayer->materialId != 0) {
-                                mapTextureOverrideRelease(shaderLayer->texture, shaderLayer->materialId);
-                            }
-                        }
-                    }
-                    for (j = 0; j < block->textureCount; j++) {
-                        textureFree(block->textures[j].texture);
-                    }
-                    if (block->auxData != NULL) {
-                        mm_free(block->auxData);
-                    }
-                    if (block->hits != NULL) {
-                        mm_free(block->hits);
-                    }
-                    setMapBlockFlag();
-                    mm_free(block);
-                }
-            }
+            mapReleaseBlockReference(cur[i]);
         }
     }
     gMapBlockCount = 0;
@@ -2199,44 +2205,7 @@ void doPendingMapLoads(void) {
                 {
                     for (i = 0; i < cnt; i++) {
                         s16 blockId = savedBlocks->blockId;
-                        if (blockId >= 0) {
-                            gMapBlockRefCounts[blockId] -= 1;
-                            if (gMapBlockRefCounts[blockId] == 0) {
-                                MapBlockData* block = gMapBlocks[blockId];
-                                Shader* shader;
-                                ShaderLayer* shaderLayer;
-                                int k;
-                                u32 scrollSlot;
-                                gMapBlockIds[blockId] = -1;
-                                gMapBlocks[blockId] = NULL;
-                                for (n = 0; n < block->shaderCount; n++) {
-                                    shader = &block->shaders[n];
-                                    for (k = 0; k < shader->layerCount; k++) {
-                                        shaderLayer = &shader->layers[k];
-                                        scrollSlot = shaderLayer->scrollMtx;
-                                        if (scrollSlot != 0xff) {
-                                            if (gMapTextureScrolls[scrollSlot].refCount != 0) {
-                                                gMapTextureScrolls[scrollSlot].refCount -= 1;
-                                            }
-                                        }
-                                        if (shaderLayer->materialId != 0) {
-                                            mapTextureOverrideRelease(shaderLayer->texture, shaderLayer->materialId);
-                                        }
-                                    }
-                                }
-                                for (n = 0; n < block->textureCount; n++) {
-                                    textureFree(block->textures[n].texture);
-                                }
-                                if (block->auxData != NULL) {
-                                    mm_free(block->auxData);
-                                }
-                                if (block->hits != NULL) {
-                                    mm_free(block->hits);
-                                }
-                                setMapBlockFlag();
-                                mm_free(block);
-                            }
-                        }
+                        mapReleaseBlockReference(blockId);
                         savedBlocks++;
                     }
                 }
