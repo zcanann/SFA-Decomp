@@ -68,18 +68,14 @@
 #include "dolphin/os/OSThread.h"
 #include "dolphin/vi/vifuncs.h"
 
-
 void videoSwapFrameBuffers(u32 retraceCount);
 void gpuErrorHandler(u32 retraceCount);
 void videoBreakPointCallback(void);
 
-
-void initViewport(void)
-{
+void initViewport(void) {
     C_MTXOrtho(hudMatrix, 0.0f, 480.0f, 0.0f, 640.0f, 1.0f, 100.0f);
 }
-void videoInit(void* unusedRenderMode, int unusedArg)
-{
+void videoInit(void* unusedRenderMode, int unusedArg) {
     GXFifoObj fifo;
     Mtx mtx;
     u8* arenaLo;
@@ -119,18 +115,14 @@ void videoInit(void* unusedRenderMode, int unusedArg)
     VISetPreRetraceCallback(videoSwapFrameBuffers);
     VISetPostRetraceCallback(gpuErrorHandler);
     GXSetBreakPtCallback(videoBreakPointCallback);
-    GXSetViewport(0.0f, 0.0f, gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, 0.0f,
-                  1.0f);
+    GXSetViewport(0.0f, 0.0f, gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, 0.0f, 1.0f);
     GXSetFieldMode(gRenderModeObj->field_rendering, gRenderModeObj->xfbHeight < gRenderModeObj->viHeight);
     GXSetScissor(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
     GXSetDispCopyDst(gRenderModeObj->fbWidth, gDispCopyYScaleLines);
-    if (gRenderModeObj->aa != 0)
-    {
+    if (gRenderModeObj->aa != 0) {
         GXSetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
         GXSetDither(GX_TRUE);
-    }
-    else
-    {
+    } else {
         GXSetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
         GXSetDither(GX_FALSE);
     }
@@ -214,32 +206,25 @@ void videoInit(void* unusedRenderMode, int unusedArg)
     PPCMthid0(PPCMfhid0() | HID0_SPD);
 }
 
-void videoSetEfbCopyClearColor(u8 r, u8 g, u8 b)
-{
+void videoSetEfbCopyClearColor(u8 r, u8 g, u8 b) {
     gEfbCopyClearColor.r = r;
     gEfbCopyClearColor.g = g;
     gEfbCopyClearColor.b = b;
 }
 
-void setDisplayCopyFilter(void)
-{
+void setDisplayCopyFilter(void) {
     GXRenderModeObj* renderMode = gRenderModeObj;
-    if (renderMode == &GXNtsc480Prog || renderMode->field_rendering != 0)
-    {
+    if (renderMode == &GXNtsc480Prog || renderMode->field_rendering != 0) {
         GXSetCopyFilter(renderMode->aa, renderMode->sample_pattern, GX_FALSE, renderMode->vfilter);
-    }
-    else
-    {
+    } else {
         GXSetCopyFilter(renderMode->aa, renderMode->sample_pattern, GX_TRUE, gDispCopyFilterWeights);
     }
 }
 
-
 #include "main/dll/ppcwgpipe_struct.h"
 extern volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
-int GXFlush_(u8 visible, int unused)
-{
+int GXFlush_(u8 visible, int unused) {
     void* fifo_get;
     void* fifo_put;
     void* item[3];
@@ -254,8 +239,7 @@ int GXFlush_(u8 visible, int unused)
     item[2] = renderFrameBuffer;
     s = OSDisableInterrupts();
     Queue_Push(&gVideoFlipQueue, item);
-    if (gGxBreakPtEnabled == 0)
-    {
+    if (gGxBreakPtEnabled == 0) {
         GXEnableBreakPt(fifo_put);
         gGxBreakPtEnabled = 1;
     }
@@ -264,16 +248,13 @@ int GXFlush_(u8 visible, int unused)
     GXCopyDisp(renderFrameBuffer, 1);
     GXFlush();
     gGxDrawSyncToken = gGxDrawSyncToken + 1;
-    if (renderFrameBuffer == (next = externalFrameBuffer0))
-    {
+    if (renderFrameBuffer == (next = externalFrameBuffer0)) {
         next = externalFrameBuffer1;
     }
     renderFrameBuffer = next;
-    if (visible != 0 && gVideoBlackScreenFrameCount != 0)
-    {
+    if (visible != 0 && gVideoBlackScreenFrameCount != 0) {
         gVideoBlackScreenFrameCount--;
-        if (gVideoBlackScreenFrameCount == 0)
-        {
+        if (gVideoBlackScreenFrameCount == 0) {
             VISetBlack(0);
             gVideoBlackScreenFrameCount = 0;
         }
@@ -281,10 +262,7 @@ int GXFlush_(u8 visible, int unused)
     return 0;
 }
 
-
-
-void videoBlackScreenForFrames(int frameCount)
-{
+void videoBlackScreenForFrames(int frameCount) {
     int frames = frameCount;
     VISetBlack(1);
     VIFlush();
@@ -293,8 +271,7 @@ void videoBlackScreenForFrames(int frameCount)
 void logGpuHang(void);
 void gxSetGPMetricsEnabled(int enabled);
 
-void logGpuHang(void)
-{
+void logGpuHang(void) {
     char* strs = (char*)gLoadingScreenTextures;
     u32 topClks, topPerf0, topClks2, topPerf1;
     u32 botClks, botPerf0, botClks2, botPerf1;
@@ -315,32 +292,21 @@ void logGpuHang(void)
     cmdIdle = (botPerf1 - topPerf1) != 0;
     GXGetGPStatus(&fifoErr, &fifoErr, &cmdRdy, &readIdle, &fifoErr);
     OSReport(strs + 0x4002c, cmdRdy, readIdle, xfStuck, cmdStuck, rdIdle, cmdIdle);
-    if (cmdStuck == 0 && rdIdle != 0)
-    {
+    if (cmdStuck == 0 && rdIdle != 0) {
         OSReport(strs + 0x400fc);
-    }
-    else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0)
-    {
+    } else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0) {
         OSReport(strs + 0x4011c);
-    }
-    else if ((readIdleVal = readIdle) == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0)
-    {
+    } else if ((readIdleVal = readIdle) == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0) {
         OSReport(strs + 0x40144);
-    }
-    else if (cmdRdy != 0 && readIdleVal != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 && cmdIdle != 0)
-    {
+    } else if (cmdRdy != 0 && readIdleVal != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 && cmdIdle != 0) {
         OSReport(strs + 0x4016c);
-    }
-    else
-    {
+    } else {
         OSReport(strs + 0x4019c);
     }
 }
 
-void gxSetGPMetricsEnabled(int enabled)
-{
-    if ((u8)enabled != 0)
-    {
+void gxSetGPMetricsEnabled(int enabled) {
+    if ((u8)enabled != 0) {
         GXSetGPMetric(GX_PERF0_NONE, GX_PERF1_NONE);
         GXWGFifo.u8 = 0x61;
         GXWGFifo.u32 = 0x2402c004;
@@ -350,9 +316,7 @@ void gxSetGPMetricsEnabled(int enabled)
         GXWGFifo.u16 = 0;
         GXWGFifo.u16 = 0x1006;
         GXWGFifo.u32 = 0x84400;
-    }
-    else
-    {
+    } else {
         GXWGFifo.u8 = 0x61;
         GXWGFifo.u32 = 0x24000000;
         GXWGFifo.u8 = 0x61;
@@ -363,42 +327,34 @@ void gxSetGPMetricsEnabled(int enabled)
         GXWGFifo.u32 = 0;
     }
 }
-void gxDisableGpuHangRecovery(void)
-{
+void gxDisableGpuHangRecovery(void) {
     gGpuHangRecoveryEnabled = 0;
     gxSetGPMetricsEnabled(0);
 }
 
 char sThreadStateAttrSuspendFormat[] = "thread: state=%d attr=%d suspend=%d\n";
 
-void waitNextFrame(void)
-{
+void waitNextFrame(void) {
     int lvl;
     f32 dt;
     u32 frames;
     u8 step;
 
     OSStopStopwatch(&gFrameStopwatch);
-    gFrameElapsedMs =
-        (u64)OSCheckStopwatch(&gFrameStopwatch) / (f32)(u32)((*(u32*)0x800000f8 >> 2) / 1000);
+    gFrameElapsedMs = (u64)OSCheckStopwatch(&gFrameStopwatch) / (f32)(u32)((*(u32*)0x800000f8 >> 2) / 1000);
     OSResetStopwatch(&gFrameStopwatch);
     OSStartStopwatch(&gFrameStopwatch);
     timeDelta = 60.0f * (0.001f * gFrameElapsedMs);
-    if (gDvdErrorPauseActive != 0)
-    {
+    if (gDvdErrorPauseActive != 0) {
         timeDelta = 0.0f;
     }
-    if (timeDelta > 6.0f)
-    {
+    if (timeDelta > 6.0f) {
         timeDelta = 6.0f;
     }
     dt = timeDelta;
-    if (dt > 0.1f)
-    {
+    if (dt > 0.1f) {
         oneOverTimeDelta = 1.0f / dt;
-    }
-    else
-    {
+    } else {
         oneOverTimeDelta = 1.0f;
     }
     step = (int)(dt + gFrameStepRemainder);
@@ -406,19 +362,16 @@ void waitNextFrame(void)
     frames = step & 0xff;
     gFrameStepRemainder = (dt + gFrameStepRemainder) - (f32)frames;
     framesThisStepUnclamped = step;
-    if (frames < 1)
-    {
+    if (frames < 1) {
         framesThisStep = 1;
     }
     lvl = OSDisableInterrupts();
     gVideoWaitThread = OSGetCurrentThread();
-    if (gVideoWaitThread->state != OS_THREAD_STATE_RUNNING)
-    {
+    if (gVideoWaitThread->state != OS_THREAD_STATE_RUNNING) {
         OSReport(sThreadStateAttrSuspendFormat, gVideoWaitThread->state, gVideoWaitThread->attr,
                  gVideoWaitThread->suspend);
     }
-    if ((u32)Queue_GetCount(&gVideoFlipQueue) > 1)
-    {
+    if ((u32)Queue_GetCount(&gVideoFlipQueue) > 1) {
         gGpuStallRetraceCount = 0;
         OSSleepThread((OSThreadQueue*)&gVideoFlipWaitQueue);
     }
