@@ -1,3 +1,4 @@
+#include "main/ground_shadow.h"
 #include "main/frame_timing.h"
 #include "sys/objects.h"
 #include "main/shader_api.h"

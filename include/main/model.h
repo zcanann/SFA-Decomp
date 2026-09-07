@@ -4,6 +4,7 @@
 #include "global.h"
 #include "main/texture.h"
 #include "main/collision_polygon.h"
+#include "main/ground_shadow.h"
 #include "dolphin/mtx.h"
 
 typedef struct GameObject GameObject;
@@ -434,7 +435,7 @@ typedef struct ObjModel {
     u8** normalAnimOutputs;        /* 0x44: one destination in normalBuf per normal animation chunk */
     u8* hitVolumeSphereBuffers[2]; /* 0x48: double-buffered runtime hit spheres */
     u8* activeHitVolumeSpheres;    /* 0x50: current hit-sphere buffer */
-    u8* groundShadowVerts; /* 0x54: ground-shadow quad buffer (s16 verts; status byte at +0x18: 0 = rebuild via buildGroundShadowQuad, 0xff = skip draw); allocated only with load flag 0x8000 */
+    GroundShadowQuad* groundShadowQuad; /* 0x54: allocated only with load flag 0x8000 */
     void* renderAttachment;
     u8* curMtxBuf;
     u8 vtxBufDirty; /* 0x60: set when the active vertex buffer needs re-layout; cleared at layout */
@@ -464,6 +465,7 @@ STATIC_ASSERT(offsetof(ObjModel, activeState) == 0x30);
 STATIC_ASSERT(offsetof(ObjModel, skeletonJointData) == 0x14);
 STATIC_ASSERT(offsetof(ObjModel, hitVolumeSphereBuffers) == 0x48);
 STATIC_ASSERT(offsetof(ObjModel, activeHitVolumeSpheres) == 0x50);
+STATIC_ASSERT(offsetof(ObjModel, groundShadowQuad) == 0x54);
 STATIC_ASSERT(offsetof(ObjModel, textureRefs) == 0x34);
 STATIC_ASSERT(offsetof(ObjModel, renderCallback) == 0x38);
 STATIC_ASSERT(offsetof(ObjModel, vtxBufDirty) == 0x60);

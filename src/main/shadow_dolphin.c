@@ -1,3 +1,4 @@
+#include "main/ground_shadow.h"
 #include "main/map_block.h"
 #include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
@@ -225,76 +226,76 @@ static void vecGetRanges(f32* pts, f32* base, f32 scale, int* out) {
     }
 }
 
-static void buildGroundShadowQuad(s16* out, GameObject* obj)
+static void buildGroundShadowQuad(GroundShadowQuad* quad, GameObject* obj)
 {
-    f32 dist;
-    Vec b;
-    Vec c;
-    Vec a;
-    f32 d;
-    f32 scale;
-    f32 z;
-    f32 s;
-    f32 nd;
+    f32 groundOffset;
+    Vec tangent;
+    Vec bitangent;
+    Vec groundNormal;
+    f32 axisAlignment;
+    f32 halfSize;
+    f32 zero;
+    f32 fixedScale;
+    f32 localGroundY;
 
     if (trackGetNearestGroundOffsetAndNormal(obj, obj->anim.localPosX, obj->anim.localPosY,
-                                             obj->anim.localPosZ, &dist, (f32*)&a, 0) == 0)
+                                             obj->anim.localPosZ, &groundOffset, (f32*)&groundNormal, 0) == 0)
     {
-        PSVECNormalize(&a, &a);
-        b.x = 1.0f;
-        b.y = 0.0f;
-        b.z = 0.0f;
-        d = __fabsf(PSVECDotProduct(&a, &b));
-        if (d >= 0.9f)
+        PSVECNormalize(&groundNormal, &groundNormal);
+        tangent.x = 1.0f;
+        tangent.y = 0.0f;
+        tangent.z = 0.0f;
+        axisAlignment = __fabsf(PSVECDotProduct(&groundNormal, &tangent));
+        if (axisAlignment >= 0.9f)
         {
-            b.x = 0.0f;
-            b.z = 1.0f;
+            tangent.x = 0.0f;
+            tangent.z = 1.0f;
         }
-        PSVECCrossProduct(&a, &b, &c);
-        PSVECCrossProduct(&c, &a, &b);
-        PSVECNormalize(&b, &b);
-        PSVECNormalize(&c, &c);
-        scale = 0.5f * (&obj->anim)->modelState->shadowScale;
-        PSVECScale(&b, &b, scale);
-        PSVECScale(&c, &c, scale);
-        nd = -dist;
-        s = 256.0f;
-        z = 0.0f;
-        out[0] = (s * ((z - b.x) - c.x));
-        out[1] = (s * ((nd - b.y) - c.y));
-        out[2] = (s * ((z - b.z) - c.z));
-        out[3] = (s * ((z + b.x) - c.x));
-        out[4] = (s * ((nd + b.y) - c.y));
-        out[5] = (s * ((z + b.z) - c.z));
-        out[6] = (s * (c.x + (z + b.x)));
-        out[7] = (s * (c.y + (nd + b.y)));
-        out[8] = (s * (c.z + (z + b.z)));
-        out[9] = (s * (c.x + (z - b.x)));
-        out[10] = (s * (c.y + (nd - b.y)));
-        out[11] = (s * (c.z + (z - b.z)));
-        *(u8*)((char*)out + 0x18) = 1;
+        PSVECCrossProduct(&groundNormal, &tangent, &bitangent);
+        PSVECCrossProduct(&bitangent, &groundNormal, &tangent);
+        PSVECNormalize(&tangent, &tangent);
+        PSVECNormalize(&bitangent, &bitangent);
+        halfSize = 0.5f * (&obj->anim)->modelState->shadowScale;
+        PSVECScale(&tangent, &tangent, halfSize);
+        PSVECScale(&bitangent, &bitangent, halfSize);
+        localGroundY = -groundOffset;
+        fixedScale = 256.0f;
+        zero = 0.0f;
+        quad->vertices[0].x = (fixedScale * ((zero - tangent.x) - bitangent.x));
+        quad->vertices[0].y = (fixedScale * ((localGroundY - tangent.y) - bitangent.y));
+        quad->vertices[0].z = (fixedScale * ((zero - tangent.z) - bitangent.z));
+        quad->vertices[1].x = (fixedScale * ((zero + tangent.x) - bitangent.x));
+        quad->vertices[1].y = (fixedScale * ((localGroundY + tangent.y) - bitangent.y));
+        quad->vertices[1].z = (fixedScale * ((zero + tangent.z) - bitangent.z));
+        quad->vertices[2].x = (fixedScale * (bitangent.x + (zero + tangent.x)));
+        quad->vertices[2].y = (fixedScale * (bitangent.y + (localGroundY + tangent.y)));
+        quad->vertices[2].z = (fixedScale * (bitangent.z + (zero + tangent.z)));
+        quad->vertices[3].x = (fixedScale * (bitangent.x + (zero - tangent.x)));
+        quad->vertices[3].y = (fixedScale * (bitangent.y + (localGroundY - tangent.y)));
+        quad->vertices[3].z = (fixedScale * (bitangent.z + (zero - tangent.z)));
+        quad->status = 1;
     }
     else
     {
-        *(u8*)((char*)out + 0x18) = 0xff;
+        quad->status = 0xff;
     }
 }
 
 void objDrawGroundShadow(GameObject* obj, ObjModel* model)
 {
-    s16* shadowVerts;
+    GroundShadowQuad* quad;
     u8 alpha;
     MtxPtr viewMtx;
     GXColor kColor;
     f32 mtx[16];
     f32 outMtx[16];
 
-    shadowVerts = (s16*)model->groundShadowVerts;
-    if (*(u8*)((u8*)shadowVerts + 0x18) == 0)
+    quad = model->groundShadowQuad;
+    if (quad->status == 0)
     {
-        buildGroundShadowQuad(shadowVerts, obj);
+        buildGroundShadowQuad(quad, obj);
     }
-    if (*(u8*)((u8*)shadowVerts + 0x18) != 0xff)
+    if (quad->status != 0xff)
     {
         alpha = (u8)objShadowGetFadedAlpha(obj, 0x96);
         kColor.a = alpha;
@@ -337,13 +338,13 @@ void objDrawGroundShadow(GameObject* obj, ObjModel* model)
             GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
             selectTexture((Texture*)(&obj->anim)->modelState->shadowTexture, 0);
             GXBegin(GX_QUADS, GX_VTXFMT6, 4);
-            GXPosition3s16(shadowVerts[0], shadowVerts[1], shadowVerts[2]);
+            GXPosition3s16(quad->vertices[0].x, quad->vertices[0].y, quad->vertices[0].z);
             GXTexCoord2s16(0, 0);
-            GXPosition3s16(shadowVerts[3], shadowVerts[4], shadowVerts[5]);
+            GXPosition3s16(quad->vertices[1].x, quad->vertices[1].y, quad->vertices[1].z);
             GXTexCoord2s16(0x400, 0);
-            GXPosition3s16(shadowVerts[6], shadowVerts[7], shadowVerts[8]);
+            GXPosition3s16(quad->vertices[2].x, quad->vertices[2].y, quad->vertices[2].z);
             GXTexCoord2s16(0x400, 0x400);
-            GXPosition3s16(shadowVerts[9], shadowVerts[10], shadowVerts[11]);
+            GXPosition3s16(quad->vertices[3].x, quad->vertices[3].y, quad->vertices[3].z);
             GXTexCoord2s16(0, 0x400);
             GXSetCurrentMtx(GX_PNMTX0);
         }

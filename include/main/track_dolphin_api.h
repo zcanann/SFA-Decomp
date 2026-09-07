@@ -69,7 +69,6 @@ void renderMapBlock(struct MapBlockData* block, u8 type);
 void shadowBeginFrame(void);
 void shadowVolumeBeginFrame(void);
 void trackInvalidateDynamicSlotsForObject(GameObject* target);
-void objDrawGroundShadow(GameObject* obj, ObjModel* model);
 int findSurfaceInYRange(GameObject* obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
                         GameObject** outSurfaceObj);
 void renderGlows(void);

@@ -636,7 +636,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     }
     total += (u32)((ModelFileHeader*)hdr)->renderOpCount * (int)sizeof(ModelRenderOpTextureRefs);
     if ((flags & 0x8000) != 0) {
-        total += 0x1a;
+        total += (int)sizeof(GroundShadowQuad);
     }
     return roundUpTo32(((total + 0x2f) & ~0xf) + 0x10);
 }
@@ -821,8 +821,8 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c) {
     }
     if (b & 0x8000) {
         pos = alignUp2(pos);
-        *(int*)&((ObjModel*)out2)->groundShadowVerts = pos;
-        *(u8*)(((ObjModel*)out2)->groundShadowVerts + 0x18) = 0;
+        ((ObjModel*)out2)->groundShadowQuad = (GroundShadowQuad*)pos;
+        ((ObjModel*)out2)->groundShadowQuad->status = 0;
     }
     ((ObjModel*)out2)->renderAttachment = NULL;
     ((ObjModel*)out2)->file = (ModelFileHeader*)p;
