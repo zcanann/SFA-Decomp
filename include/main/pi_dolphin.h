@@ -30,7 +30,6 @@ extern void** gDvdFileInfoPool;
 extern GXRenderModeObj* gRenderModeObj;
 extern s32 gObjLevelLockSlots[2];
 
-
 #include "main/mldf_fileid.h"
 
 extern volatile int gAssetLoadInFlightFlags;
