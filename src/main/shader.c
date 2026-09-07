@@ -2740,10 +2740,8 @@ int mapProcessRomList(int slot) {
     gCurRomListPage = entry->romlist;
     rects = (s16*)(*(int*)(base + 0x417C) + slot * 10);
     ((MapRomListPage*)gCurRomListPage)->mapLayer = *(u8*)(*(int*)(base + 0x4184) + slot);
-    ((MapRomListPage*)gCurRomListPage)->worldX =
-        640.0f * (f32)(rects[0] + ((MapRomListPage*)gCurRomListPage)->originX);
-    ((MapRomListPage*)gCurRomListPage)->worldZ =
-        640.0f * (f32)(rects[2] + ((MapRomListPage*)gCurRomListPage)->originZ);
+    ((MapRomListPage*)gCurRomListPage)->worldX = 640.0f * (f32)(rects[0] + ((MapRomListPage*)gCurRomListPage)->originX);
+    ((MapRomListPage*)gCurRomListPage)->worldZ = 640.0f * (f32)(rects[2] + ((MapRomListPage*)gCurRomListPage)->originZ);
     cur = gCurRomListPage;
     dz = cur->worldZ;
     dx = cur->worldX;
@@ -3939,8 +3937,7 @@ void lightmapDrawQueuedObject(GameObject* obj);
 
 void sceneDrawTransparentPolys(void);
 
-void initMapBlocks(void)
-{
+void initMapBlocks(void) {
     u8* mb = (u8*)gLightmapDrawQueue.entries;
     MapLayerBuffers* buffers = (MapLayerBuffers*)gLightmapDrawQueue.entries;
     u32 zero;
@@ -3958,8 +3955,7 @@ void initMapBlocks(void)
     buffers->blockDescriptors[0] = mmAlloc(0x3c00, 5, 0);
     buffers->cellStates[0] = mmAlloc(0x500, 5, 0);
 
-    for (i = 0; i < 16; i += 4)
-    {
+    for (i = 0; i < 16; i += 4) {
         *(u32*)(mb + 0x41f8 + i) = *(u32*)(mb + 0x41f4 + i) + 0x100;
         *(u32*)(mb + 0x41e4 + i) = *(u32*)(mb + 0x41e0 + i) + 0xc00;
         *(u32*)(mb + 0x41d0 + i) = *(u32*)(mb + 0x41cc + i) + 0x100;
@@ -3970,8 +3966,7 @@ void initMapBlocks(void)
 
     q = (u32*)((u8*)(mb + 0x10000) - 0x7c58);
     zero = 0;
-    for (i = 0; i < 3; i++)
-    {
+    for (i = 0; i < 3; i++) {
         q[0] = zero;
         q[1] = zero;
         q[2] = zero;
@@ -4019,8 +4014,7 @@ void initMapBlocks(void)
 
     gTrkBlkTabCount = 0;
     p = gTrkBlkTab;
-    while (*p != 0xffff)
-    {
+    while (*p != 0xffff) {
         p++;
         gTrkBlkTabCount++;
     }
