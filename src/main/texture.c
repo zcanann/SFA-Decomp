@@ -575,11 +575,14 @@ void* textureLoad(int texId, u8 useHandle) {
     bankWordSaved = bankWord;
     if (frameCount == 1) {
         if (bank == 0) {
-            tex0GetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, 0, TEXTURE_FRAME_QUERY_HEADER);
+            tex0GetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, 0,
+                         TEXTURE_FRAME_QUERY_HEADER);
         } else if (bank == 2) {
-            texPreGetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, 0, TEXTURE_FRAME_QUERY_HEADER);
+            texPreGetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, 0,
+                           TEXTURE_FRAME_QUERY_HEADER);
         } else {
-            tex1GetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, 0, TEXTURE_FRAME_QUERY_HEADER);
+            tex1GetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, 0,
+                         TEXTURE_FRAME_QUERY_HEADER);
         }
         gRcpTexHeaderBuffer[0] = 0;
         gRcpTexHeaderBuffer[1] = decompressedSize;
@@ -589,11 +592,14 @@ void* textureLoad(int texId, u8 useHandle) {
             gRcpTexHeaderBuffer[2] = compressedSize;
         }
     } else if (bank == 0) {
-        tex0GetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_OFFSETS);
+        tex0GetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, gRcpTexHeaderBuffer,
+                     TEXTURE_FRAME_QUERY_OFFSETS);
     } else if (bank == 2) {
-        texPreGetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_OFFSETS);
+        texPreGetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, gRcpTexHeaderBuffer,
+                       TEXTURE_FRAME_QUERY_OFFSETS);
     } else {
-        tex1GetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_OFFSETS);
+        tex1GetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, gRcpTexHeaderBuffer,
+                     TEXTURE_FRAME_QUERY_OFFSETS);
     }
     firstTex = NULL;
     prevTex = NULL;
@@ -604,11 +610,14 @@ void* textureLoad(int texId, u8 useHandle) {
     for (; frameIndex < frameCount; frameIndex++) {
         if (frameCount > 1) {
             if (bank == 0) {
-                tex0GetFrame(bankWordHeld, bankIndex, &decompressedSize, &compressedSize, frameIndex, gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_INDEXED_HEADER);
+                tex0GetFrame(bankWordHeld, bankIndex, &decompressedSize, &compressedSize, frameIndex,
+                             gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_INDEXED_HEADER);
             } else if (bank == 2) {
-                texPreGetFrame(bankWordHeld, bankIndex, &decompressedSize, &compressedSize, frameIndex, gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_INDEXED_HEADER);
+                texPreGetFrame(bankWordHeld, bankIndex, &decompressedSize, &compressedSize, frameIndex,
+                               gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_INDEXED_HEADER);
             } else {
-                tex1GetFrame(bankWordHeld, bankIndex, &decompressedSize, &compressedSize, frameIndex, gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_INDEXED_HEADER);
+                tex1GetFrame(bankWordHeld, bankIndex, &decompressedSize, &compressedSize, frameIndex,
+                             gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_INDEXED_HEADER);
             }
         }
         size = decompressedSize;
@@ -651,15 +660,16 @@ void* textureLoad(int texId, u8 useHandle) {
             }
         }
         if (compressedSize == -1) {
-            buf = loadAndDecompressDataFile(fileId, 0, dataByteOffset + gRcpTexHeaderBuffer[frameIndex], storedSize, 0, bankIndex,
-                                            0);
+            buf = loadAndDecompressDataFile(fileId, 0, dataByteOffset + gRcpTexHeaderBuffer[frameIndex], storedSize, 0,
+                                            bankIndex, 0);
             buf->cached = 1;
             if (useHandle != 0) {
                 useHandle = 0;
             }
             buf->refCount = 1;
         } else {
-            loadAndDecompressDataFile(fileId, buf, dataByteOffset + gRcpTexHeaderBuffer[frameIndex], storedSize, 0, bankIndex, 0);
+            loadAndDecompressDataFile(fileId, buf, dataByteOffset + gRcpTexHeaderBuffer[frameIndex], storedSize, 0,
+                                      bankIndex, 0);
         }
         if (compressedSize != -1) {
             DCStoreRange(buf, size);

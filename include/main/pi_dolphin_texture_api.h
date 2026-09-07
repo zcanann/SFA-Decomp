@@ -12,6 +12,6 @@ void tex0GetFrame(int bankWord, int unused, int* decompressedSize, int* compress
 void tex1GetFrame(int bankWord, int unused, int* decompressedSize, int* compressedSize, int frameIndexOrCount,
                   int* frameOffsets, int queryMode);
 void texPreGetFrame(int bankWord, int unused, int* decompressedSize, int* compressedSize, int frameIndexOrCount,
-                  int* frameOffsets, int queryMode);
+                    int* frameOffsets, int queryMode);
 void freeAndNull(void** p);
 #endif /* MAIN_PI_DOLPHIN_TEXTURE_API_H_ */
