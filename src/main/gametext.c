@@ -1261,12 +1261,23 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
     mmSetForceHeap3Only(oldHeap);
 }
 
+static inline void gameTextResetFont(TextFont* font) {
+    int i;
+    font->glyphCount = 0;
+    font->entryCount = 0;
+    font->glyphs = NULL;
+    font->entries = NULL;
+    font->status = 0;
+    font->timer = 0.0f;
+    font->dirId = GAMETEXT_INVALID_DIR;
+    font->languageId = GAMETEXT_INVALID_LANGUAGE;
+    for (i = ARRAY_COUNT(font->textures); i-- != 0;) {
+        font->textures[i] = NULL;
+    }
+}
+
 void gameTextInitRendererState(void) {
-    char** fallbackString;
-    GameTextDef* fallbackDef;
     int fallbackCount;
-    TextFont* font;
-    f32 zero;
     int i;
     int j;
 
@@ -1276,37 +1287,22 @@ void gameTextInitRendererState(void) {
     }
 
     for (fallbackCount = GAMETEXT_FALLBACK_COUNT; fallbackCount-- != 0;) {
-        fallbackString = &sGameTextFallbackStrings[fallbackCount];
-        fallbackDef = &sGameTextFallbackDefs[fallbackCount];
-        *fallbackString = sGameTextFallbackBuffers[fallbackCount];
-        fallbackDef->identifier = 0xffff;
-        fallbackDef->count = 1;
-        fallbackDef->boxId = 0xff;
-        fallbackDef->alignH = 0;
-        fallbackDef->alignV = 0;
-        fallbackDef->language = 0;
-        fallbackDef->strings = fallbackString;
+        sGameTextFallbackStrings[fallbackCount] = sGameTextFallbackBuffers[fallbackCount];
+        sGameTextFallbackDefs[fallbackCount].identifier = 0xffff;
+        sGameTextFallbackDefs[fallbackCount].count = 1;
+        sGameTextFallbackDefs[fallbackCount].boxId = 0xff;
+        sGameTextFallbackDefs[fallbackCount].alignH = 0;
+        sGameTextFallbackDefs[fallbackCount].alignV = 0;
+        sGameTextFallbackDefs[fallbackCount].language = 0;
+        sGameTextFallbackDefs[fallbackCount].strings = &sGameTextFallbackStrings[fallbackCount];
     }
 
     for (i = GAMETEXT_BOX_COUNT; i-- != 0;) {
         gTextBoxes[i].alpha = 0xff;
     }
 
-    zero = 0.0f;
     for (j = GAMETEXT_PENDING_SOURCE_COUNT; j-- != 0;) {
-        font = &gGameTextCharsets[j];
-        font->glyphCount = 0;
-        font->entryCount = 0;
-        font->glyphs = NULL;
-        font->entries = NULL;
-        font->status = 0;
-        font->timer = zero;
-        font->dirId = GAMETEXT_INVALID_DIR;
-        font->languageId = GAMETEXT_INVALID_LANGUAGE;
-
-        for (i = ARRAY_COUNT(font->textures); i-- != 0;) {
-            font->textures[i] = NULL;
-        }
+        gameTextResetFont(&gGameTextCharsets[j]);
     }
 
     gameTextFonts = &gGameTextCharsets[GAMETEXT_SLOT_ERROR];
@@ -1324,9 +1320,8 @@ void gameTextInitRendererState(void) {
     gGameTextCommandCount = 0;
     gGameTextCommandStringCursor = sGameTextCommandStringBuffer;
     gGameTextBufferIndex = 0;
-    fallbackDef = sGameTextFallbackDefs;
-    gGameTextLastEntry = fallbackDef;
-    gCurTextBuffer = *fallbackDef->strings;
+    gGameTextLastEntry = sGameTextFallbackDefs;
+    gCurTextBuffer = *gGameTextLastEntry->strings;
     gGameTextShadowColorR = 0;
     gGameTextShadowColorG = 0;
     gGameTextShadowColorB = 0;

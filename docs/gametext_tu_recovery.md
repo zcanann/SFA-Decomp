@@ -392,3 +392,30 @@ The TU and canonical API header pass `clang-format --dry-run --Werror`.
 Formatting produces no source diff and preserves the complete object; no separate
 formatting commit is needed. The shared text-rendering header edit is limited to
 removing the two obsolete format-array declarations.
+
+## Exact renderer initialization (2026-09-07)
+
+`gameTextInitRendererState` now matches all 492 retail bytes. The fallback loop
+indexes the native string, definition, and backing-buffer arrays directly. Its
+separately staged string/definition pointers had changed the three generated
+cursor registers. The final current-buffer lookup uses `gGameTextLastEntry`
+after assigning it, reproducing the retail pointer lifetime.
+
+The private inline `gameTextResetFont` owns the repeated font-record reset,
+including all three texture slots. The outer initializer walks the four fonts
+and calls it. This boundary reproduces the retail allocation of the font cursor,
+texture cursor, and inner loop counter. No out-of-line helper is emitted.
+All reverse loops remain bounded integer-index loops; no pointer is formed
+before an array to drive termination.
+
+Only the initializer's instruction bytes change. Every other function, named
+symbol layout, and allocated non-text section remains unchanged. The unit rises
+from 42/54 to 43/54 exact functions and from 97.420944% to 97.45126%, adding 492
+matched code bytes. No compiler setting or TU boundary changes. The runtime
+fixture executes the new production helper as part of its complete initialization
+checks; all sixteen gametext tests pass, including both sets of 402 load-lifecycle
+scenarios. The unit remains `NonMatching` pending its other eleven functions.
+
+`ninja all_source` and the strict retail checksum both pass with 30-second
+limits. The resulting DOL remains byte-identical to retail; the complete unit
+still links its retail object until the remaining functions are recovered.

@@ -58,7 +58,8 @@ class GameTextRuntimeHostTests(unittest.TestCase):
                                    if line.startswith('extern ') and re.search(
                                        r'\b(sGameText(Fallback|Path|CommandString)|gGameText(LastEntry|FallbackRequestDelta)|sSubtitleCtrlCmdScratch)', line))
         bodies = []
-        for name, prefix in (('gameTextInitRendererState', 'void'),
+        for name, prefix in (('gameTextResetFont', 'static inline void'),
+                             ('gameTextInitRendererState', 'void'),
                              ('gameTextSelectFallbackBuffer', 'static inline void'),
                              ('gameTextGet', 'void*'), ('gameTextGetPhrase', 'void*'),
                              ('gameTextGetStr', 'void*'), ('subtitleParseControlCmds', 'SubtitleCmd*')):
