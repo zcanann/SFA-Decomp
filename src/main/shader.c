@@ -5556,7 +5556,8 @@ static inline int isGlowInFrustum(ModelLightStruct* light) {
     bias = 0.0f;
     for (; i < 5; i++) {
         f32 dot;
-        dot = light->worldY * gViewFrustumPlanes[i].normalY + gViewFrustumPlanes[i].normalX * (light->worldX - offsetX) +
+        dot = light->worldY * gViewFrustumPlanes[i].normalY +
+              gViewFrustumPlanes[i].normalX * (light->worldX - offsetX) +
               gViewFrustumPlanes[i].normalZ * (light->worldZ - offsetZ) + gViewFrustumPlanes[i].distance + bias;
         if (dot < bias) {
             return 0;
