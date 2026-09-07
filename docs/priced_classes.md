@@ -2661,6 +2661,8 @@ second, orphaned one. **Eight callee spellings measured**: positive-`if`-wraps-l
 `!ptr` test, `*p` instead of `p[0]`). Inliner block-layout bookkeeping; the baseline is the
 best reachable shape.
 
+**Resolved 2026-09-07:** engine DLL 11 now matches all 33 functions and its complete assigned data. Native buffer traversal, a shared copy cursor, and distinct sequence-address expressions resolve this case. The render and update functions are also exact; the obsolete literal-pool alignment override is removed. See [particle-effects matching](partfx_matching.md). The following records the earlier frontier.
+
 **`dll_0B_spawnEffect`** (engine/11, 98.982, NEW). Two hunks: one allocator-forged
 (`mr r9,r6` vs `li r10,0` — retail copies a register that already holds zero), and one CSE
 shape. Retail computes the same `*(int*)(base + off + 16)` two ways inside one loop —

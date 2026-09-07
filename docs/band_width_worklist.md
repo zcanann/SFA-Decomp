@@ -163,7 +163,7 @@ The li/mr rematerialisation family (incl. the srawi/extsh u64-pair pocket and co
 | Shield_update | dlls/objects/229/229 | 808 | 99.431 | 21 | 0 | 9G/1F | 2 | web-class: 226/229/engine-22 copy-class placement / copy-survival textures |
 | staff_setupSwipe | dlls/objects/226/226 | 1780 | 99.708 | 26 | 0 | 10G/7F | 2 | web-class: 226/229/engine-22 copy-class placement / copy-survival textures |
 | textRenderStr | main/textrender | 4104 | 99.693 | 50 | 1 | 12G/10F | 1 | textRenderStr walls (copy-survival cited; other-lane file) |
-| dll_0B_spawnEffect | dlls/engine/11/11 | 2432 | 98.998 | 72 | 3 | 11G/0F | 3 | flip-frontier: li;mr produced by the off=i idiom; residual scratch perm |
+| dll_0B_spawnEffect | dlls/engine/11/11 | 2432 | 100.000 | 0 | 0 | — | 0 | Resolved 2026-09-07: native buffer traversal, shared copy cursor, and sequence address forms; see partfx_matching.md |
 
 ### const-zero-remat (7)
 
@@ -294,7 +294,7 @@ Width >=5 saved band, identical mnemonic stream: the rotation-offset model — e
 | ObjSeq_ExecuteActionCommand | dlls/engine/2/2 | 2012 | 99.742 | 22 | 0 | 7G/0F | 5 | near100-band-census-2026-08-01 (16 dead ends) |
 | ObjHits_CheckTrackContact | main/objhits | 1068 | 99.551 | 23 | 0 | 9G/0F | 9 | objhits GROUND pass 08-03: all 9 T==C recolours, no lever site |
 | objFuzzRenderCb | main/objprint_dolphin | 2780 | 99.827 | 24 | 0 | 5G/1F | 6 | signature: struc 0, band >=5, no recorded lever site |
-| dll_0B_renderEffects | dlls/engine/11/11 | 2512 | 99.745 | 24 | 0 | 12G/2F | 3 | near100-band-census-2026-08-01 (16 dead ends) |
+| dll_0B_renderEffects | dlls/engine/11/11 | 2512 | 100.000 | 0 | 0 | — | 0 | Resolved 2026-09-07: integer frame masks preserve the texture-walk allocation; see partfx_matching.md |
 | CameraModeNormal_updateWallAvoidance | dlls/engine/66/66 | 1280 | 99.594 | 24 | 0 | 6G/7F | 1 | refreshed-flip-frontier 08-02 (width noted per fn) |
 | ObjHits_DetectObjectPair | main/objhits | 1232 | 99.529 | 24 | 0 | 5G/8F | 9 | objhits GROUND pass 08-03: all 9 T==C recolours, no lever site |
 | mapFillCellEntry | main/shader | 752 | 99.324 | 26 | 0 | 8G/0F | 8 | signature: struc 0, band >=5, no recorded lever site |
@@ -311,7 +311,7 @@ Width >=5 saved band, identical mnemonic stream: the rotation-offset model — e
 | tricky_SeqFn | dlls/objects/196_Tricky/tricky | 1168 | 99.384 | 35 | 0 | 8G/0F | 6 | surplus-queue tricky walls (5 exhaustive sweeps flat) |
 | addShaderLayerStages | main/objprint_dolphin | 1128 | 99.184 | 38 | 0 | 13G/0F | 6 | signature: struc 0, band >=5, no recorded lever site |
 | StaffCollision_spawn | dlls/modgfx/90/90 | 1408 | 100.000 | 0 | 0 | 17G/7F | 0 | RESOLVED 2026-09-07: restore the s16 spawn result, use the neighboring resource-table pattern, and place spawnCount after spawnIndex; see staffcollision_matching.md |
-| dll_0B_updateActiveEffects | dlls/engine/11/11 | 3420 | 99.749 | 40 | 0 | 13G/0F | 3 | signature: struc 0, band >=5, no recorded lever site |
+| dll_0B_updateActiveEffects | dlls/engine/11/11 | 3420 | 100.000 | 0 | 0 | — | 0 | Resolved 2026-09-07: retry flow, command cursor, and chained initialization; see partfx_matching.md |
 | ObjHits_CheckSkeletonPair | main/objhits | 1116 | 99.247 | 41 | 0 | 5G/0F | 9 | objhits GROUND pass 08-03: all 9 T==C recolours, no lever site |
 | objSetupRenderOpGxState | main/objprint_dolphin | 1976 | 99.524 | 43 | 0 | 13G/0F | 6 | signature: struc 0, band >=5, no recorded lever site |
 | trackGetIntersect2 | main/track_dolphin | 4460 | 99.762 | 47 | 0 | 18G/11F | 7 | near100-band-census-2026-08-01 (16 dead ends) |
