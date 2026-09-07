@@ -196,17 +196,15 @@ typedef struct SynthVoice {
     SynthSequenceQueue section[SYNTH_VOICE_NOTE_COUNT];
 } SynthVoice;
 
-typedef struct SynthVoiceRuntime {
-    SynthCallbackLink callbacks[SYNTH_CALLBACK_COUNT];
-    SynthVoice voices[SYNTH_MAX_VOICES];
-    u16 voiceNotes[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
-} SynthVoiceRuntime;
-
+STATIC_ASSERT(sizeof(SynthCallbackLink) == 0x14);
 STATIC_ASSERT(sizeof(SynthVoice) == 0x1868);
-STATIC_ASSERT(offsetof(SynthVoiceRuntime, voices) == 0x1400);
-STATIC_ASSERT(offsetof(SynthVoiceRuntime, voices[0].section[0].speed) == 0x291A);
-STATIC_ASSERT(offsetof(SynthVoiceRuntime, voices[0].syncCrossInfo.speed2) == 0x22D8);
-STATIC_ASSERT(offsetof(SynthVoiceRuntime, voices[0].syncCrossInfo.flags) == 0x22DA);
+STATIC_ASSERT(offsetof(SynthVoice, section) == 0x14E8);
+STATIC_ASSERT(offsetof(SynthVoice, section[0].speed) == 0x151A);
+STATIC_ASSERT(offsetof(SynthVoice, syncCrossInfo) == 0xEB4);
+STATIC_ASSERT(offsetof(SynthVoice, syncCrossInfo.speed2) == 0xED8);
+STATIC_ASSERT(offsetof(SynthVoice, syncCrossInfo.flags) == 0xEDA);
+STATIC_ASSERT(offsetof(SynthVoice, syncSeqIdPtr) == 0xEDC);
+STATIC_ASSERT(offsetof(SynthVoice, syncActive) == 0xEE0);
 
 extern SynthCallbackLink seqNote[SYNTH_CALLBACK_COUNT];
 extern u8 synthJobTableIndex;
@@ -222,15 +220,11 @@ extern SynthVoice* seqActiveRoot;
 extern SynthVoice* seqPausedRoot;
 extern u32 seq_next_id;
 
-#define SYNTH_VOICE_RUNTIME() ((SynthVoiceRuntime*)(void*)seqNote)
-
 void synthSetBpm(int bpm, u8 set, u8 section);
 int synthGetTicksPerSecond(McmdVoiceState* slot);
 SynthSequenceEvent* GenerateNextTrackEvent(u8 channel);
 void InsertGlobalEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event);
 SynthSequenceEvent* HandleEvent(SynthSequenceEvent* event, u8 groupIndex, u32* output);
-void synthInitChannelEventQueues(void);
-void synthRefreshChannelEventQueue(u8 groupIndex);
 u32 HandleTrackEvents(u8 groupIndex, u32 delta);
 void ResetNotes(SynthVoice* voice);
 SynthCallbackLink* AllocateNote(s32 triggerValue, u8 controllerIndex);

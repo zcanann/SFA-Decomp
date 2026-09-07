@@ -4580,34 +4580,12 @@ dolphin/amcstubs/AmcExi2Stubs.c:
 dolphin/odenotstub/odenotstub.c:
 	.text       start:0x8026C03C end:0x8026C044
 
-musyx/runtime/synth_callback.c:
-	extab       start:0x80005620 end:0x80005630
-	extabindex  start:0x80005CC0 end:0x80005CD8
-	.text       start:0x8026C044 end:0x8026C578
-	.bss        start:0x803AF670 end:0x803B0A70
-
-musyx/runtime/synth_queue.c:
-	extab       start:0x80005630 end:0x80005650
-	extabindex  start:0x80005CD8 end:0x80005D08
-	.text       start:0x8026C578 end:0x8026D720
-	.bss        start:0x803B0A70 end:0x803BCEB0
-
-musyx/runtime/synth_channel.c:
-	.text       start:0x8026D720 end:0x8026D7D4
-
-musyx/runtime/synth_handle.c:
-	extab       start:0x80005650 end:0x80005660
-	extabindex  start:0x80005D08 end:0x80005D20
-	.text       start:0x8026D7D4 end:0x8026DF48
-
-musyx/runtime/synth_seq_events.c:
-	.text       start:0x8026DF48 end:0x8026E1D4
-
-musyx/runtime/synth_seq_dispatch.c:
-	extab       start:0x80005660 end:0x80005688
-	extabindex  start:0x80005D20 end:0x80005D5C
-	.text       start:0x8026E1D4 end:0x8026F62C
+musyx/runtime/seq.c:
+	extab       start:0x80005620 end:0x80005688
+	extabindex  start:0x80005CC0 end:0x80005D5C
+	.text       start:0x8026C044 end:0x8026F62C
 	.data       start:0x8032EEA0 end:0x8032EEF0
+	.bss        start:0x803AF670 end:0x803BCEB0
 	.sbss       start:0x803DE338 end:0x803DE358
 	.sdata2     start:0x803E78A0 end:0x803E78B8
 

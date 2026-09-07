@@ -1,14 +1,9 @@
 # Split-owner source files still managed by tools/ghidra_bulk_import.py.
 # This replaces the old visible auto-generated banners in the source itself.
-ghidra_homes/musyx/runtime/synth_callback.c
-ghidra_homes/musyx/runtime/synth_channel.c
 ghidra_homes/musyx/runtime/synth_control.c
 ghidra_homes/musyx/runtime/synth_delay.c
-ghidra_homes/musyx/runtime/synth_handle.c
 ghidra_homes/musyx/runtime/synth_init.c
 ghidra_homes/musyx/runtime/synth_scale.c
-ghidra_homes/musyx/runtime/synth_seq_queue.c
-ghidra_homes/musyx/runtime/synth_sequence.c
 main/dll/alphaanim.c
 main/dll/anim.c
 main/dll/ARW/ARWarwingattachment.c
@@ -359,9 +354,6 @@ main/unknown/autos/placeholder_80080E58.c
 main/unknown/autos/placeholder_801175B4.c
 main/unknown/autos/placeholder_801F5184.c
 main/unknown/autos/placeholder_80209FE0.c
-musyx/runtime/synth_queue.c
-musyx/runtime/synth_seq_events.c
-musyx/runtime/synth_seq_dispatch.c
 musyx/runtime/synth_channel_scale.c
 main/unknown/autos/placeholder_8026FD94.c
 main/unknown/autos/placeholder_80271BFC.c
