@@ -74,7 +74,7 @@ static inline ObjModel* ObjHits_GetActiveModel(GameObject* obj) {
     return (ObjModel*)objAnim->banks[objAnim->bankIndex];
 }
 
-int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointData, int* model,
+int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointData, ObjModel* model,
                                   ObjHitsSkeletonHit* hits, ObjHitsSkeletonHit** outBest, f32 yMax, f32 yMin,
                                   f32* outAccum) {
     float doubledPointX;
@@ -110,7 +110,7 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointD
     if (jointData == NULL) {
         return 0;
     }
-    modelFile = *(ModelFileHeader**)model;
+    modelFile = model->file;
     radii = jointData->jointRadii;
     diameter = radius + radius;
     hit = hits;
@@ -212,7 +212,7 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointD
     hit->pointIndexA = OBJHITS_SKELETON_HIT_SENTINEL;
     return hit != hits;
 }
-int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointData, int* model,
+int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointData, ObjModel* model,
                                   ObjHitsSkeletonHit* hits, ObjHitsSkeletonHit** outBest, f32* outAccum) {
     float doubledPointX;
     float doubledPointZ;
@@ -246,7 +246,7 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointD
     if (jointData == NULL) {
         return 0;
     }
-    modelFile = *(ModelFileHeader**)model;
+    modelFile = model->file;
     radii = jointData->jointRadii;
     diameter = radius + radius;
     hit = hits;
@@ -341,7 +341,7 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointD
 }
 
 int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, GameObject* obj, ObjHitsSkeletonHit* hits,
-                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit, f32 t,
+                                   ModelJointWork* jointPoints, ModelFileHeader* unusedModelFile, ObjHitsSkeletonHit* bestHit, f32 t,
                                    f32 axial, f32* out) {
     float moveLen;
     float zf;
@@ -463,7 +463,7 @@ int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, GameObject* obj, ObjHit
 }
 
 int ObjHits_CalcSkeletonResponse3D(f32* pos, f32 radius, GameObject* obj, ObjHitsSkeletonHit* hits,
-                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit, f32 t,
+                                   ModelJointWork* jointPoints, ModelFileHeader* unusedModelFile, ObjHitsSkeletonHit* bestHit, f32 t,
                                    f32 axial, f32* out) {
     float moveLen;
     float zf;
@@ -1761,9 +1761,9 @@ void ObjHits_DetectObjectPair(GameObject* objA, GameObject* objB) {
     }
 }
 
-void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, void* hits, void* scratchB, void* scratchC,
+void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, ObjHitsSkeletonHit* hits, void* scratchB, void* scratchC,
                                void* scratchD, void* scratchE, int depth) {
-    int* hitboxBuf;
+    ObjModel* model;
     f32 outAxial;
     ObjHitsPriorityState* objAState;
     u8 shapeFlags;
@@ -1785,31 +1785,23 @@ void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, void* hits, v
         objBState->activeHitboxMode != 0 || objAState->activeHitboxMode != 0) {
         return;
     }
-    hitboxBuf = (int*)ObjHits_GetActiveModel(objA);
+    model = ObjHits_GetActiveModel(objA);
     shapeFlags = objBState->shapeFlags;
     if ((shapeFlags & OBJHITBOX_SHAPE_SKELETON_3D) != 0) {
         point.x = objB->anim.worldPosX - playerMapOffsetX;
         point.y = objB->anim.worldPosY;
         point.z = objB->anim.worldPosZ - playerMapOffsetZ;
         point3D = point;
-        hitCount = ObjHits_CollectSkeletonHits3D(&point3D.x, objBState->primaryRadius, (ModelJointWork*)hitboxBuf[5],
-                                                 hitboxBuf, (ObjHitsSkeletonHit*)hits, &bestHit, &outAxial);
+        hitCount = ObjHits_CollectSkeletonHits3D(&point3D.x, objBState->primaryRadius, model->skeletonJointData,
+                                                 model, hits, &bestHit, &outAxial);
         if (hitCount != 0) {
             ratio = (objB->anim.hitboxScale * objB->anim.rootMotionScale) /
                     (objA->anim.hitboxScale * objA->anim.rootMotionScale);
 
-            {
-                f32* pos = &point.x;
-                f32 rad = objBState->primaryRadius;
-                u32 ob = (u32)objB;
-                ObjHitsSkeletonHit* hh = (ObjHitsSkeletonHit*)hits;
-                ModelJointWork* jd = (ModelJointWork*)hitboxBuf[5];
-                int mf = *hitboxBuf;
-                ObjHitsSkeletonHit* bh = bestHit;
-                ObjHits_CalcSkeletonResponse3D(pos, rad, (GameObject*)ob, hh, jd, mf, bh,
-                                               (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), outAxial,
-                                               response);
-            }
+            ObjHits_CalcSkeletonResponse3D(&point.x, objBState->primaryRadius, objB, hits,
+                                           model->skeletonJointData, model->file, bestHit,
+                                           (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), outAxial,
+                                           response);
             response[0] = ((responseX = response[0]) < -10.0f) ? -10.0f : ((responseX > 10.0f) ? 10.0f : responseX);
             responseY = response[1];
             response[1] = (responseY < -10.0f) ? -10.0f : ((responseY > 10.0f) ? 10.0f : responseY);
@@ -1822,26 +1814,18 @@ void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, void* hits, v
         point.y = objB->anim.worldPosY;
         point.z = objB->anim.worldPosZ - playerMapOffsetZ;
         pointXZ = point;
-        hitCount = ObjHits_CollectSkeletonHitsXZ(&pointXZ.x, objBState->primaryRadius, (ModelJointWork*)hitboxBuf[5],
-                                                 hitboxBuf, (ObjHitsSkeletonHit*)hits, &bestHit,
+        hitCount = ObjHits_CollectSkeletonHitsXZ(&pointXZ.x, objBState->primaryRadius, model->skeletonJointData,
+                                                 model, hits, &bestHit,
                                                  point.y + objBState->primaryCapsuleOffsetB,
                                                  point.y + objBState->primaryCapsuleOffsetA, &outAxial);
         if (hitCount != 0) {
             ratio = (objB->anim.hitboxScale * objB->anim.rootMotionScale) /
                     (objA->anim.hitboxScale * objB->anim.rootMotionScale);
 
-            {
-                f32* pos = &point.x;
-                f32 rad = objBState->primaryRadius;
-                u32 ob = (u32)objB;
-                ObjHitsSkeletonHit* hh = (ObjHitsSkeletonHit*)hits;
-                ModelJointWork* jd = (ModelJointWork*)hitboxBuf[5];
-                int mf = *hitboxBuf;
-                ObjHitsSkeletonHit* bh = bestHit;
-                ObjHits_CalcSkeletonResponseXZ(pos, rad, (GameObject*)ob, hh, jd, mf, bh,
-                                               (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), outAxial,
-                                               response);
-            }
+            ObjHits_CalcSkeletonResponseXZ(&point.x, objBState->primaryRadius, objB, hits,
+                                           model->skeletonJointData, model->file, bestHit,
+                                           (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), outAxial,
+                                           response);
             response[0] = ((responseX = response[0]) < -10.0f) ? -10.0f : ((responseX > 10.0f) ? 10.0f : responseX);
             responseY = response[1];
             response[1] = (responseY < -10.0f) ? -10.0f : ((responseY > 10.0f) ? 10.0f : responseY);

@@ -187,16 +187,16 @@ STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, inverseDistance) == OBJHITS_SKELETON_
 STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointIndexA) == OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointIndexB) == OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET);
 
-int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointData, int* model,
+int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointData, ObjModel* model,
                                   ObjHitsSkeletonHit* hits, ObjHitsSkeletonHit** outBest, f32 yMax, f32 yMin,
                                   f32* outAccum);
-int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointData, int* model,
+int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointData, ObjModel* model,
                                   ObjHitsSkeletonHit* hits, ObjHitsSkeletonHit** outBest, f32* outAccum);
 int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, GameObject* obj, ObjHitsSkeletonHit* hits,
-                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit, f32 t,
+                                   ModelJointWork* jointPoints, ModelFileHeader* unusedModelFile, ObjHitsSkeletonHit* bestHit, f32 t,
                                    f32 axial, f32* out);
 int ObjHits_CalcSkeletonResponse3D(f32* pos, f32 radius, GameObject* obj, ObjHitsSkeletonHit* hits,
-                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit, f32 t,
+                                   ModelJointWork* jointPoints, ModelFileHeader* unusedModelFile, ObjHitsSkeletonHit* bestHit, f32 t,
                                    f32 axial, f32* out);
 float* ObjHits_ProjectPointToTaperedCapsuleXZ(float* point, float pointRadius, float axial, float* base, float* tip,
                                               float baseRadius, float tipRadius, float length, float* out);
@@ -219,7 +219,7 @@ void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObjec
 void ObjHits_RegisterActiveHitVolumeObject(GameObject* obj);
 void ObjHits_ApplyPairResponse(GameObject* objA, GameObject* objB, f32 x, f32 y, f32 z, int flag);
 void ObjHits_DetectObjectPair(GameObject* objA, GameObject* objB);
-void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, void* hits, void* scratchB, void* scratchC,
+void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, ObjHitsSkeletonHit* hits, void* scratchB, void* scratchC,
                                void* scratchD, void* scratchE, int depth);
 void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB);
 void ObjHits_Update(int objectCount);
