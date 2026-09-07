@@ -371,6 +371,15 @@ exception is paired-single `psq_l` / `psq_st` when MWCC has no intrinsic and a
 known-good donor or original binary proves the sequence. Do not trade plausible
 C for a higher match score; a clean-C 90% match is better than an asm 100% match.
 
+Narrow evidence-backed exception (2026-09-07), under the active goal's allowance
+for compelling evidence: `modelBlendMorphTargetChunk` and `modelReadMorphDelta`
+in `src/main/model.c` preserve the retail decoder's private register interface.
+Its cursor and multiple results use non-EABI registers, and the parent owns
+callee-save preservation across four direct calls. This establishes an assembly
+interface, not definitive original-language provenance. Retain the portable C
+reference and run both morph probes; see `docs/model_morph_targets.md`.
+This exception does not authorize assembly in other functions.
+
 ## Pragmas
 
 Inline pragmas are banned. `#pragma` of any kind must not appear inline in `src/main/` or `src/track/`

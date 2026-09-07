@@ -91,77 +91,174 @@ extern char sModelAnimationBufferOverflowWarning[];
 extern Vec gModelJitterAxis;
 
 void setGQR7Packed(int a, int b, int c, int d);
-u16* modelReadMorphDelta(u16* stream, int* dx, int* dy, int* dz);
+asm void modelReadMorphDelta(void);
 static inline void* modelGetBoneMtx(ObjModel* model, int idx);
 void ObjModel_TransformVerticesWithTranslation(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
 void ObjModel_TransformVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
 void ObjModel_TransformQuadVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
-void modelBlendMorphTargetChunk(u8* baseVertices, u8* outVertices, u16 vertexCount, u16** targetA, u16** targetB,
-                                int weightB, u16 firstVertex) {
-    u16* a = *targetA;
-    u16* b = *targetB;
-    int i = 0;
-    u32 weightA = 0x10000u - (u32)weightB;
-    int indexA;
-    int indexB;
-    int ax, ay, az;
-    int bx, by, bz;
+/* Register ABI: r3/r4 are vertex buffers, r5 is the chunk count, r6/r7
+ * point to stream cursors, r8 is weight B and r9 is the first vertex.
+ * r17 holds weight A; r18/r19 hold pending relative indices; r23/r24 are
+ * stream cursors and r25 is the current relative vertex. The private
+ * decoder uses r20 and returns X/Y/Z through r10/r12/r15. */
+asm void modelBlendMorphTargetChunk(u8* baseVertices, u8* outVertices, u16 vertexCount, u16** targetA,
+                                    u16** targetB, int weightB, u16 firstVertex) {
+    nofralloc
+    mflr r0
+    stwu r1, -0x50(r1)
+    stw r0, 0x54(r1)
+    stmw r14, 8(r1)
+    lwz r23, 0(r6)
+    lwz r24, 0(r7)
+    li r25, 0
+    lis r17, 1
+    subf r17, r8, r17
 
-    while (i < vertexCount) {
-        indexA = (*(s16*)a & MODEL_MORPH_VERTEX_INDEX_MASK) - firstVertex;
-        indexB = (*(s16*)b & MODEL_MORPH_VERTEX_INDEX_MASK) - firstVertex;
-        if (i >= indexA) {
-            if (i == indexB) {
-                b = modelReadMorphDelta(b, &bx, &by, &bz);
-                a = modelReadMorphDelta(a, &ax, &ay, &az);
-                *(u16*)outVertices = (((u32)ax * weightA + (u32)bx * (u32)weightB) >> 16) + *(s16*)baseVertices;
-                *(u16*)(outVertices + 2) =
-                    (((u32)ay * weightA + (u32)by * (u32)weightB) >> 16) + *(s16*)(baseVertices + 2);
-                *(u16*)(outVertices + 4) =
-                    (((u32)az * weightA + (u32)bz * (u32)weightB) >> 16) + *(s16*)(baseVertices + 4);
-            } else {
-                a = modelReadMorphDelta(a, &ax, &ay, &az);
-                *(u16*)outVertices = (((u32)ax * weightA) >> 16) + *(s16*)baseVertices;
-                *(u16*)(outVertices + 2) = (((u32)ay * weightA) >> 16) + *(s16*)(baseVertices + 2);
-                *(u16*)(outVertices + 4) = (((u32)az * weightA) >> 16) + *(s16*)(baseVertices + 4);
-            }
-        } else if (i >= indexB) {
-            b = modelReadMorphDelta(b, &bx, &by, &bz);
-            *(u16*)outVertices = (((u32)bx * (u32)weightB) >> 16) + *(s16*)baseVertices;
-            *(u16*)(outVertices + 2) = (((u32)by * (u32)weightB) >> 16) + *(s16*)(baseVertices + 2);
-            *(u16*)(outVertices + 4) = (((u32)bz * (u32)weightB) >> 16) + *(s16*)(baseVertices + 4);
-        } else {
-            *(u32*)outVertices = *(u32*)baseVertices;
-            *(u16*)(outVertices + 4) = *(s16*)(baseVertices + 4);
-        }
-        baseVertices += 6;
-        outVertices += 6;
-        i++;
-    }
-    *targetA = a;
-    *targetB = b;
+readPendingIndices:
+    lha r18, 0(r23)
+    lha r19, 0(r24)
+    andi. r18, r18, MODEL_MORPH_VERTEX_INDEX_MASK
+    andi. r19, r19, MODEL_MORPH_VERTEX_INDEX_MASK
+    subf r18, r9, r18
+    subf r19, r9, r19
+
+checkVertex:
+    cmpw r25, r5
+    bge finishChunk
+    cmpw r25, r18
+    bge targetAPresent
+    cmpw r25, r19
+    bge blendTargetB
+
+    lwz r20, 0(r3)
+    lha r22, 4(r3)
+    addi r3, r3, 6
+    stw r20, 0(r4)
+    addi r25, r25, 1
+    sth r22, 4(r4)
+    addi r4, r4, 6
+    b checkVertex
+
+targetAPresent:
+    cmpw r25, r19
+    bne blendTargetA
+    mr r20, r24
+    bl modelReadMorphDelta
+    mr r24, r20
+    mr r11, r10
+    mr r14, r12
+    mr r16, r15
+    mr r20, r23
+    bl modelReadMorphDelta
+    mr r23, r20
+    mullw r10, r10, r17
+    mullw r12, r12, r17
+    mullw r15, r15, r17
+    mullw r11, r11, r8
+    mullw r14, r14, r8
+    mullw r16, r16, r8
+    add r10, r10, r11
+    add r12, r12, r14
+    add r15, r15, r16
+    srwi r10, r10, 16
+    srwi r12, r12, 16
+    srwi r15, r15, 16
+    lha r11, 0(r3)
+    lha r14, 2(r3)
+    lha r16, 4(r3)
+    add r10, r10, r11
+    add r12, r12, r14
+    add r15, r15, r16
+    sth r10, 0(r4)
+    sth r12, 2(r4)
+    sth r15, 4(r4)
+    addi r3, r3, 6
+    addi r4, r4, 6
+    addi r25, r25, 1
+    b readPendingIndices
+
+blendTargetA:
+    mr r20, r23
+    bl modelReadMorphDelta
+    mr r23, r20
+    mullw r10, r10, r17
+    mullw r12, r12, r17
+    mullw r15, r15, r17
+    srwi r10, r10, 16
+    srwi r12, r12, 16
+    srwi r15, r15, 16
+    lha r11, 0(r3)
+    lha r14, 2(r3)
+    lha r16, 4(r3)
+    add r10, r10, r11
+    add r12, r12, r14
+    add r15, r15, r16
+    sth r10, 0(r4)
+    sth r12, 2(r4)
+    sth r15, 4(r4)
+    addi r3, r3, 6
+    addi r4, r4, 6
+    addi r25, r25, 1
+    b readPendingIndices
+
+blendTargetB:
+    mr r20, r24
+    bl modelReadMorphDelta
+    mr r24, r20
+    mullw r10, r10, r8
+    mullw r12, r12, r8
+    mullw r15, r15, r8
+    srwi r10, r10, 16
+    srwi r12, r12, 16
+    srwi r15, r15, 16
+    lha r11, 0(r3)
+    lha r14, 2(r3)
+    lha r16, 4(r3)
+    add r10, r10, r11
+    add r12, r12, r14
+    add r15, r15, r16
+    sth r10, 0(r4)
+    sth r12, 2(r4)
+    sth r15, 4(r4)
+    addi r3, r3, 6
+    addi r4, r4, 6
+    addi r25, r25, 1
+    b readPendingIndices
+
+finishChunk:
+    stw r23, 0(r6)
+    stw r24, 0(r7)
+    lwz r0, 0x54(r1)
+    mtlr r0
+    lmw r14, 8(r1)
+    addi r1, r1, 0x50
+    blr
 }
 
-u16* modelReadMorphDelta(u16* stream, int* dx, int* dy, int* dz) {
-    u16 flags = *stream;
-
-    stream++;
-    *dx = 0;
-    if (flags & MODEL_MORPH_HAS_X) {
-        *dx = *(s16*)stream;
-        stream++;
-    }
-    *dy = 0;
-    if (flags & MODEL_MORPH_HAS_Y) {
-        *dy = *(s16*)stream;
-        stream++;
-    }
-    *dz = 0;
-    if (flags & MODEL_MORPH_HAS_Z) {
-        *dz = *(s16*)stream;
-        stream++;
-    }
-    return stream;
+/* Private entry: cursor in/out r20, signed X/Y/Z in r10/r12/r15.
+ * Clobbers r21, r22 and CR0. This is not an ordinary C-callable function. */
+asm void modelReadMorphDelta(void) {
+    nofralloc
+    lhz r21, 0(r20)
+    addi r20, r20, 2
+    andi. r22, r21, MODEL_MORPH_HAS_X
+    li r10, 0
+    beq readY
+    lha r10, 0(r20)
+    addi r20, r20, 2
+readY:
+    andi. r22, r21, MODEL_MORPH_HAS_Y
+    li r12, 0
+    beq readZ
+    lha r12, 0(r20)
+    addi r20, r20, 2
+readZ:
+    andi. r22, r21, MODEL_MORPH_HAS_Z
+    li r15, 0
+    beqlr
+    lha r15, 0(r20)
+    addi r20, r20, 2
+    blr
 }
 
 void modelAnimUpdateChannels(ModelFileHeader* file, ObjAnimState* work, int channelCount) {
