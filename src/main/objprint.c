@@ -791,9 +791,9 @@ void characterUpdateHeadLook(GameObject* obj, CharacterEyeAnimState* state, f32 
         state->headTrackMode = (s16)(state->headTrackMode | (flag << 8));
     }
 }
-s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8* p4, s16* spd, f32 yOff, int unused,
+s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, ObjJointTrackPair* tracks, s16* spd, f32 yOff, int unused,
                               int basePitch);
-s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8* p4, s16* spd, f32 yOff, int unused,
+s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, ObjJointTrackPair* tracks, s16* spd, f32 yOff, int unused,
                               int basePitch) {
     s16 src[2];
     s16 dst[2];
@@ -865,12 +865,12 @@ s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8*
             }
         }
 
-        if (p4 != NULL) {
-            ((ObjJointTrackPair*)p4)->yaw.angle = dst[0];
-            characterTrackJointYaw((s16*)p4, found);
-            ((ObjJointTrackPair*)p4)->pitch.angle = dst[1];
-            characterTrackJointPitch((s16*)&((ObjJointTrackPair*)p4)->pitch, found, 10.0f, 500.0f);
-            p4 += 0x60;
+        if (tracks != NULL) {
+            tracks->yaw.angle = dst[0];
+            characterTrackJointYaw((s16*)&tracks->yaw, found);
+            tracks->pitch.angle = dst[1];
+            characterTrackJointPitch((s16*)&tracks->pitch, found, 10.0f, 500.0f);
+            tracks++;
         } else {
             s16* fv = found;
             s16 d1 = (s16)((s16)((fv[1] + dst[0]) >> 1) - fv[1]);

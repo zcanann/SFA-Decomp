@@ -59,3 +59,20 @@ resolved relocation destinations are unchanged. One anonymous float literal
 is renumbered without moving its storage or changing its six references.
 Both `ninja all_source` and the strict retail checksum build pass. Formatting
 already passes and leaves the compiled object unchanged.
+
+## Typed aiming channels
+
+The optional channel argument to `objJointTracksAimAtTarget` is now an
+`ObjJointTrackPair*`. The retail path writes yaw at +0x14, pitch at +0x44,
+passes the two 0x30-byte channel records to the tracking helpers, and advances
+by 0x60 for the next joint. The existing pair definition expresses that layout
+without repeated casts or a literal byte stride. Both moveLib callers convert
+their existing backing buffers at the API boundary; null still selects the
+direct pose-adjustment path.
+
+The objprint and moveLib objects remain byte-for-byte identical. This API
+recovery does not resolve the five pitch-clamp register-operand differences:
+the retail positive limit uses r7 and the doubled divisor r6, whereas the
+current compiler exchanges those registers. The staff segment transform also
+retains its existing expression-order and register differences. No compiler
+profile or matching status changes accompany this recovery.

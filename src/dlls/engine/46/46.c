@@ -688,7 +688,7 @@ void dll_2E_updateLookAt(GameObject* obj, MoveLibState* s)
                         s->setupFlag = 0;
                     }
                     objJointTracksAimAtTarget(obj, (GameObject*)target, &s->targetX,
-                                              (s->setupFlag != 0) ? s->animChannels : NULL, s->turnTable, targetYaw, 8,
+                                              (s->setupFlag != 0) ? (ObjJointTrackPair*)s->animChannels : NULL, s->turnTable, targetYaw, 8,
                                               s->yawLimitA);
                     s->phase = MOVELIB_PHASE_TURN;
                 }
@@ -747,7 +747,7 @@ int moveLibTurnToFaceTarget(GameObject* obj, GameObject* targetObj, int* turning
     }
 
     hitResult = objJointTracksAimAtTarget(obj, targetObj, control->primary,
-                                          ((control->flags & 8) != 0) ? NULL : control->secondary, control->events,
+                                          ((control->flags & 8) != 0) ? NULL : (ObjJointTrackPair*)control->secondary, control->events,
                                           distance, 8, control->eventState);
     if ((control->flags & 8) == 0)
     {
