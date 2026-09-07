@@ -7,6 +7,23 @@ function-order / source-tag evidence may redraw a boundary. Every row below is r
 whoever holds that adjudication has the measurements in one place instead of scattered across
 three lanes' notes.
 
+## GC/1.3 revalidation — 2026-09-07
+
+The closed-sweep conclusions below describe the earlier compiler configurations; they do not
+establish the same result under the common GC/1.3 game compiler. Rebuilding the complete
+`main/gameloop_buttonobj.c` TU from its current Ninja compiler command with only
+`-opt nopeephole` added produces **100%** in objdiff: both functions and all 236 text bytes match.
+The configured baseline was 98.22034%, with `removeButtonObject` at 98.09091% and
+`getButtonObjects` already exact. Retail retains `srwi r0,r3,3; cmplwi r0,0`; peephole optimization
+fuses those into `srwi. r0,r3,3` and shortens the function by four bytes.
+
+The TU now uses the existing `cflags_dll_noopt_noautoinline` profile and is matching for GSAE01.
+This preserves GC/1.3, `noschedule`, `-inline noauto`, the source, and the existing TU boundary.
+It supersedes row 4's earlier negative result; no compiler-version exception is needed.
+Validation: `python3 configure.py --matching`, `ninja all_source`, and the strict `ninja` retail
+checksum target pass with this TU linked from C. Clang-format checks pass for the TU and its
+shared game-loop headers; formatting leaves the source and object unchanged.
+
 ## Why this file exists
 
 Working the narrow-band frontier (`tools/bandscreen.py --max-band 3 --struct-only`, the regime
@@ -16,7 +33,7 @@ That is a different kind of residual from the ones the project normally fixes, a
 actionable from a lane. The pattern is worth adjudicating as a whole rather than one function at
 a time.
 
-## ★ The flag axis is CLOSED — do not re-run a combination sweep
+## Historical sweep: the flag axis was closed for the measured configurations
 
 **89 of 89 units carrying sub-100 functions have been swept across the pair and triple `-opt`
 space. Zero candidates.** A candidate meant: strictly more byte-identical functions than the
@@ -63,16 +80,15 @@ measured absorption was 68.4%, so two-thirds of the compute is redundant without
 
 ## The findings
 
-`Δfn` / `Δunit` are `fuzzy_match_percent`. "Collateral" is the point of the table: in every case
-where a profile *does* reproduce retail, it is unlandable because of what it does to the rest of
-the unit.
+`Δfn` / `Δunit` are `fuzzy_match_percent`. "Collateral" records effects on the rest of the unit;
+the current GC/1.3 revalidation of row 4 is an exception to the earlier negative findings.
 
-| # | unit | function | profile that matches / would match | Δfn | Δunit | collateral — why it is unlandable |
+| # | unit | function | profile that matches / would match | Δfn | Δunit | collateral / disposition |
 |---|---|---|---|---|---|---|
 | 1 | `dlls/objects/195_Player/player.c` | `playerUpdate` (2372 B) | **`-opt nocse`** (also `nocse,nopropagation`) — **byte-exact** | 98.432 → 100 | not measured | TU-wide flag change; the unit has 22 sub-100 functions, none re-measured under `nocse`. Conflicts with row 2 — see *The player.c conflict* below. |
 | 2 | `dlls/objects/195_Player/player.c` | `fn_802AABE4` (352 B) | **`-opt nopropagation`** (also `nocse,noprop` / `noprop,noauto` / `noprop,inloff`) — **byte-exact** | 97.045 → 100 | not measured | Same TU as row 1 but a *different* profile. Both cannot hold. |
 | 3 | `main/audio.c` | `streamsLoadedCallback` (280 B) | **none identified** | 97.643 → 97.057 with the correct source (see note) | 99.93366 → 99.91717 | No `-opt` knob reproduces it. The TU is already `nopeephole,noschedule,nostrength`, so it is outside the peephole/CSE/propagation classes. **The most interesting row: the residual class is not fully covered by the flags anyone has enumerated.** |
-| 4 | `main/gameloop_buttonobj.c` | `removeButtonObject` (220 B) | **none** — hypothesis *unconfirmed* | — | — | Retail emits `srwi r0,r3,3; cmplwi r0,0`; we fuse to `srwi. r0,r3,3`. The TU is `-opt noschedule` only (peephole **ON**) while the rest of `main/` is `nopeephole`, so peephole fusion was the natural hypothesis — but `fn_flag_probe.py`, **all of whose profiles are `nopeephole`**, reports no match. Peephole-off alone does not fix it. Recorded as unexplained, not as a peephole finding. |
+| 4 | `main/gameloop_buttonobj.c` | `removeButtonObject` (220 B) | **GC/1.3, `-opt nopeephole,noschedule`, `-inline noauto`** | 98.09091 → 100 | 98.22034 → 100 | Resolved on 2026-09-07: both functions match, with no regressions. The earlier fixed-profile probe's negative result is superseded by the current complete-TU measurement above. |
 | 5 | `dlls/.../SaveGame` | `SaveGame_gplaySetObjGroupStatus` | `-opt peephole,noschedule` | 97.981 → 87.746 | 99.743 → 92.652 | Catastrophic: the profile that helps the region destroys the unit. A clear negative. |
 | 6 | `main/gametext_tail.c` | `textMeasureFn_80016c9c` (1836 B) | `-opt noloopinvariants` | 98.039 → 98.943 | not recorded | Breaks `gameTextRenderById` **100 → 95.404**. Net loss; the classic shape of this whole table. |
 | 7 | `dlls/objects/202/202.c` | `gcRobotPatrol_updateWhileFrozen` (212 B) | **`-opt nocse`** — **byte-exact** | 98.679 → 100 | matched_code 97.570 → **60.358** | **The largest collateral in the table.** Buys exactly 1 function and costs 24, dropping **23 from 100** — `iceBaddie_updateEffectAnchors` 100 → 92.429, `sharpClawHandleHitMessage` 100 → 92.557, `crawler_updateB/C` (1624 B / 1944 B) ≈ 100 → 95.4/95.8. Unit matched functions **135 → 113**. Adjudicated: current `noloopinvariants` stands. |
