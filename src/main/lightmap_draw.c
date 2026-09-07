@@ -298,45 +298,41 @@ void lightmap_sortTransparentDrawQueue(void) {
 }
 
 void lightmapQueueShadowRow(MapBlockBoundsRec* bounds, MapBlockData* block, s32 selector) {
-    Vec stk;
-    s32 t;
+    Vec center;
+    Vec packedMin;
+    Vec packedMax;
+    s32 depthKey;
     f32 half;
-    f32 maxXs;
-    f32 minXs;
-    f32 maxYs;
-    f32 maxW;
-    f32 minYs;
-    f32 maxZs;
-    f32 maxD;
-    f32 minZs;
-    f32 minW;
-    f32 minD;
+    f32 worldMaxY;
+    f32 worldMaxZ;
+    f32 worldMinY;
+    f32 worldMinZ;
 
     if (gLightmapDrawQueueCount == 1000) {
         sceneDrawTransparentPolys();
         gLightmapDrawQueueCount = 0;
     }
-    OSs16tof32(&bounds->maxX, &maxXs);
-    OSs16tof32(&bounds->minX, &minXs);
-    OSs16tof32(&bounds->maxY, &maxYs);
-    maxW = maxYs * gTrackPackedCoordScale + block->transform[1][3];
-    OSs16tof32(&bounds->minY, &minYs);
-    OSs16tof32(&bounds->maxZ, &maxZs);
-    maxD = maxZs * gTrackPackedCoordScale + block->transform[2][3];
-    OSs16tof32(&bounds->minZ, &minZs);
+    OSs16tof32(&bounds->maxX, &packedMax.x);
+    OSs16tof32(&bounds->minX, &packedMin.x);
+    OSs16tof32(&bounds->maxY, &packedMax.y);
+    worldMaxY = packedMax.y * gTrackPackedCoordScale + block->transform[1][3];
+    OSs16tof32(&bounds->minY, &packedMin.y);
+    OSs16tof32(&bounds->maxZ, &packedMax.z);
+    worldMaxZ = packedMax.z * gTrackPackedCoordScale + block->transform[2][3];
+    OSs16tof32(&bounds->minZ, &packedMin.z);
     half = 0.5f;
-    stk.x = half * ((minXs * gTrackPackedCoordScale + block->transform[0][3]) +
-                    (maxXs * gTrackPackedCoordScale + block->transform[0][3]));
-    minW = minYs * gTrackPackedCoordScale + block->transform[1][3];
-    stk.y = half * (minW + maxW);
-    minD = minZs * gTrackPackedCoordScale + block->transform[2][3];
-    stk.z = half * (minD + maxD);
-    PSMTXMultVec((MtxPtr)Camera_GetViewMatrix(), &stk, &stk);
-    t = (s32)-stk.z;
-    t = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
+    center.x = half * ((packedMin.x * gTrackPackedCoordScale + block->transform[0][3]) +
+                    (packedMax.x * gTrackPackedCoordScale + block->transform[0][3]));
+    worldMinY = packedMin.y * gTrackPackedCoordScale + block->transform[1][3];
+    center.y = half * (worldMinY + worldMaxY);
+    worldMinZ = packedMin.z * gTrackPackedCoordScale + block->transform[2][3];
+    center.z = half * (worldMinZ + worldMaxZ);
+    PSMTXMultVec((MtxPtr)Camera_GetViewMatrix(), &center, &center);
+    depthKey = (s32)-center.z;
+    depthKey = depthKey < 0 ? 0 : (depthKey > 0x7ffffff ? 0x7ffffff : depthKey);
     gLightmapDrawQueue[gLightmapDrawQueueCount].a = (u32)bounds;
     gLightmapDrawQueue[gLightmapDrawQueueCount].b = (u32)block;
-    gLightmapDrawQueue[gLightmapDrawQueueCount].key = t | ((selector & 0xff) << 27);
+    gLightmapDrawQueue[gLightmapDrawQueueCount].key = depthKey | ((selector & 0xff) << 27);
 }
 
 void sortVisibleObjectKeysDescending(u32* arr, int n);
@@ -344,49 +340,49 @@ void sortVisibleObjectKeysDescending(u32* arr, int n);
 void mapBlockRenderMain(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx) {
     int state[5];
     int countShifted;
-    int cursor;
-    u32 v;
-    int* base;
-    struct Shader* newR;
-    int nibble;
+    int bitCursor;
+    u32 instructionBits;
+    u8* instructionCursor;
+    struct Shader* shader;
+    int entryCount;
     int i;
-    u8* s0;
+    u8* instructionBytes;
 
     countShifted = block->nRenderInstrsMain << 3;
     modelRenderInstrsState_init((ModelRenderInstrsState*)state, block->renderInstrsMain, countShifted, countShifted);
     modelRenderInstrsState_setBit((ModelRenderInstrsState*)state, bounds->renderBitOffset);
     state[4] += 4;
     mapBlockRender_drawDimmedAabbLights(bounds, block, viewMtx);
-    newR = mapBlockRender_setLightmapShader(block, (ModelRenderInstrsState*)state);
+    shader = mapBlockRender_setLightmapShader(block, (ModelRenderInstrsState*)state);
     state[4] += 4;
-    mapBlockRender_setVtxDcrs(1, block, newR, (ModelRenderInstrsState*)state);
-    cursor = state[4] + 4;
-    state[4] = cursor;
-    countShifted = cursor >> 3;
-    s0 = (u8*)state[0];
-    v = s0[countShifted];
-    base = (int*)(state[0] + countShifted);
-    v = v | ((u32)((u8*)base)[1] << 8);
-    v = v | ((u32)((u8*)base)[2] << 16);
+    mapBlockRender_setVtxDcrs(1, block, shader, (ModelRenderInstrsState*)state);
+    bitCursor = state[4] + 4;
+    state[4] = bitCursor;
+    countShifted = bitCursor >> 3;
+    instructionBytes = (u8*)state[0];
+    instructionBits = instructionBytes[countShifted];
+    instructionCursor = (u8*)(state[0] + countShifted);
+    instructionBits = instructionBits | ((u32)instructionCursor[1] << 8);
+    instructionBits = instructionBits | ((u32)instructionCursor[2] << 16);
     state[4] += 4;
-    nibble = (v >> (cursor & 7)) & 0xf;
-    for (i = 0; i < nibble; i++) {
+    entryCount = (instructionBits >> (bitCursor & 7)) & 0xf;
+    for (i = 0; i < entryCount; i++) {
         *(int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
-    mapBlockRender_drawLightmapIndirectPasses(block, newR, (ModelRenderInstrsState*)state, (float (*)[4])viewMtx);
+    mapBlockRender_drawLightmapIndirectPasses(block, shader, (ModelRenderInstrsState*)state, (float (*)[4])viewMtx);
 }
 void mapBlockRenderWater(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx) {
     int state[5];
     Mtx m;
     int countShifted;
-    struct Shader* newR;
-    int cursor;
-    u32 v;
-    int* base;
-    int nibble;
+    struct Shader* shader;
+    int bitCursor;
+    u32 instructionBits;
+    u8* instructionCursor;
+    int entryCount;
     int i;
-    u8* s0;
+    u8* instructionBytes;
 
     PSMTXConcat((MtxPtr)gCameraLightPerspectiveScaledMatrix, (MtxPtr)viewMtx, m);
     GXLoadTexMtxImm(m, GX_TEXMTX0, GX_MTX3x4);
@@ -397,59 +393,59 @@ void mapBlockRenderWater(MapBlockBoundsRec* bounds, MapBlockData* block, float* 
     modelRenderInstrsState_init((ModelRenderInstrsState*)state, block->renderInstrsWater, countShifted, countShifted);
     modelRenderInstrsState_setBit((ModelRenderInstrsState*)state, bounds->renderBitOffset);
     state[4] += 4;
-    newR = mapBlockRender_setShader(1, block, (ModelRenderInstrsState*)state);
+    shader = mapBlockRender_setShader(1, block, (ModelRenderInstrsState*)state);
     state[4] += 4;
-    mapBlockRender_setVtxDcrs(1, block, newR, (ModelRenderInstrsState*)state);
-    cursor = state[4] + 4;
-    state[4] = cursor;
-    countShifted = cursor >> 3;
-    s0 = (u8*)state[0];
-    v = s0[countShifted];
-    base = (int*)(state[0] + countShifted);
-    v = v | ((u32)((u8*)base)[1] << 8);
-    v = v | ((u32)((u8*)base)[2] << 16);
+    mapBlockRender_setVtxDcrs(1, block, shader, (ModelRenderInstrsState*)state);
+    bitCursor = state[4] + 4;
+    state[4] = bitCursor;
+    countShifted = bitCursor >> 3;
+    instructionBytes = (u8*)state[0];
+    instructionBits = instructionBytes[countShifted];
+    instructionCursor = (u8*)(state[0] + countShifted);
+    instructionBits = instructionBits | ((u32)instructionCursor[1] << 8);
+    instructionBits = instructionBits | ((u32)instructionCursor[2] << 16);
     state[4] += 4;
-    nibble = (v >> (cursor & 7)) & 0xf;
-    for (i = 0; i < nibble; i++) {
+    entryCount = (instructionBits >> (bitCursor & 7)) & 0xf;
+    for (i = 0; i < entryCount; i++) {
         *(int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
-    mapBlockRender_callList(1, 1, block, newR, (ModelRenderInstrsState*)state, viewMtx);
+    mapBlockRender_callList(1, 1, block, shader, (ModelRenderInstrsState*)state, viewMtx);
 }
 void mapBlockRenderTransparent(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx) {
     int state[5];
     int countShifted;
-    struct Shader* newR;
-    int cursor;
-    u32 v;
-    int* base;
-    int nibble;
+    struct Shader* shader;
+    int bitCursor;
+    u32 instructionBits;
+    u8* instructionCursor;
+    int entryCount;
     int i;
-    u8* s0;
+    u8* instructionBytes;
 
     Camera_ApplyTransparentViewport();
     countShifted = block->nRenderInstrsTransp << 3;
     modelRenderInstrsState_init((ModelRenderInstrsState*)state, block->renderInstrsTransp, countShifted, countShifted);
     modelRenderInstrsState_setBit((ModelRenderInstrsState*)state, bounds->renderBitOffset);
     state[4] += 4;
-    newR = mapBlockRender_setShader(1, block, (ModelRenderInstrsState*)state);
+    shader = mapBlockRender_setShader(1, block, (ModelRenderInstrsState*)state);
     state[4] += 4;
-    mapBlockRender_setVtxDcrs(1, block, newR, (ModelRenderInstrsState*)state);
-    cursor = state[4] + 4;
-    state[4] = cursor;
-    countShifted = cursor >> 3;
-    s0 = (u8*)state[0];
-    v = s0[countShifted];
-    base = (int*)(state[0] + countShifted);
-    v = v | ((u32)((u8*)base)[1] << 8);
-    v = v | ((u32)((u8*)base)[2] << 16);
+    mapBlockRender_setVtxDcrs(1, block, shader, (ModelRenderInstrsState*)state);
+    bitCursor = state[4] + 4;
+    state[4] = bitCursor;
+    countShifted = bitCursor >> 3;
+    instructionBytes = (u8*)state[0];
+    instructionBits = instructionBytes[countShifted];
+    instructionCursor = (u8*)(state[0] + countShifted);
+    instructionBits = instructionBits | ((u32)instructionCursor[1] << 8);
+    instructionBits = instructionBits | ((u32)instructionCursor[2] << 16);
     state[4] += 4;
-    nibble = (v >> (cursor & 7)) & 0xf;
-    for (i = 0; i < nibble; i++) {
+    entryCount = (instructionBits >> (bitCursor & 7)) & 0xf;
+    for (i = 0; i < entryCount; i++) {
         *(int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
-    mapBlockRender_callList(1, 1, block, newR, (ModelRenderInstrsState*)state, viewMtx);
+    mapBlockRender_callList(1, 1, block, shader, (ModelRenderInstrsState*)state, viewMtx);
     Camera_ApplyFullViewport();
 }
 
