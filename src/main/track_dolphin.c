@@ -2295,7 +2295,8 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     return retLo | (retHi << 4);
 }
 
-int trackGetIntersect(GameObject* contactSource, f32* startPoints, f32* endPoints, int pointCount, void* resultStorage, int unusedFlags) {
+int trackGetIntersect(GameObject* contactSource, f32* startPoints, f32* endPoints, int pointCount, void* resultStorage,
+                      int unusedFlags) {
     TrackHitResults* results = resultStorage;
     s16 pointIndex;
     u8 hitMask;
@@ -2315,11 +2316,13 @@ int trackGetIntersect(GameObject* contactSource, f32* startPoints, f32* endPoint
     }
 
     hitMask = trackGetIntersect2(0, gTrackTriangleBuffer + blocks->firstTriangle,
-                                  gTrackTriangleBuffer + blocks[1].firstTriangle, startPoints, endPoints, pointCount, results, 0);
+                                 gTrackTriangleBuffer + blocks[1].firstTriangle, startPoints, endPoints, pointCount,
+                                 results, 0);
 
     for (pointIndex = 0; pointIndex < pointCount; pointIndex++) {
         if (results->objects[pointIndex] != NULL) {
-            Obj_TransformLocalVectorByWorldMatrix(results->objects[pointIndex], results->planes[pointIndex], results->planes[pointIndex]);
+            Obj_TransformLocalVectorByWorldMatrix(results->objects[pointIndex], results->planes[pointIndex],
+                                                  results->planes[pointIndex]);
             if (contactSource != NULL) {
                 ObjHits_AddContactObject(results->objects[pointIndex], contactSource);
             }
