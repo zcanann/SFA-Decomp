@@ -1,3 +1,4 @@
+#include "main/lightmap_render_queue_api.h"
 #include "main/ground_shadow.h"
 #include "main/frame_timing.h"
 #include "sys/objects.h"
@@ -8,7 +9,6 @@
 #include "main/dll/waterfx_interface.h"
 #include "main/lightmap_api.h"
 #include "main/lightmap_render_control_api.h"
-#include "main/lightmap_render_queue_api.h"
 #include "main/lightmap_text_color_api.h"
 #include "main/model.h"
 #include "main/model_render_instrs_api.h"
@@ -299,34 +299,33 @@ void lightmap_sortTransparentDrawQueue(void) {
 
 void lightmapQueueShadowRow(MapBlockBoundsRec* bounds, MapBlockData* block, s32 selector) {
     Vec center;
-    Vec packedMin;
-    Vec packedMax;
     s32 depthKey;
-    f32 half;
-    f32 worldMaxY;
-    f32 worldMaxZ;
+    f32 worldMinX;
     f32 worldMinY;
     f32 worldMinZ;
+    f32 worldMaxX;
+    f32 worldMaxY;
+    f32 worldMaxZ;
 
     if (gLightmapDrawQueueCount == 1000) {
         sceneDrawTransparentPolys();
         gLightmapDrawQueueCount = 0;
     }
-    OSs16tof32(&bounds->maxX, &packedMax.x);
-    OSs16tof32(&bounds->minX, &packedMin.x);
-    OSs16tof32(&bounds->maxY, &packedMax.y);
-    worldMaxY = packedMax.y * gTrackPackedCoordScale + block->transform[1][3];
-    OSs16tof32(&bounds->minY, &packedMin.y);
-    OSs16tof32(&bounds->maxZ, &packedMax.z);
-    worldMaxZ = packedMax.z * gTrackPackedCoordScale + block->transform[2][3];
-    OSs16tof32(&bounds->minZ, &packedMin.z);
-    half = 0.5f;
-    center.x = half * ((packedMin.x * gTrackPackedCoordScale + block->transform[0][3]) +
-                       (packedMax.x * gTrackPackedCoordScale + block->transform[0][3]));
-    worldMinY = packedMin.y * gTrackPackedCoordScale + block->transform[1][3];
-    center.y = half * (worldMinY + worldMaxY);
-    worldMinZ = packedMin.z * gTrackPackedCoordScale + block->transform[2][3];
-    center.z = half * (worldMinZ + worldMaxZ);
+    OSs16tof32(&bounds->maxX, &worldMaxX);
+    worldMaxX = worldMaxX / 8.0f + block->transform[0][3];
+    OSs16tof32(&bounds->minX, &worldMinX);
+    worldMinX = worldMinX / 8.0f + block->transform[0][3];
+    OSs16tof32(&bounds->maxY, &worldMaxY);
+    worldMaxY = worldMaxY / 8.0f + block->transform[1][3];
+    OSs16tof32(&bounds->minY, &worldMinY);
+    worldMinY = worldMinY / 8.0f + block->transform[1][3];
+    OSs16tof32(&bounds->maxZ, &worldMaxZ);
+    worldMaxZ = worldMaxZ / 8.0f + block->transform[2][3];
+    OSs16tof32(&bounds->minZ, &worldMinZ);
+    worldMinZ = worldMinZ / 8.0f + block->transform[2][3];
+    center.x = 0.5f * (worldMinX + worldMaxX);
+    center.y = 0.5f * (worldMinY + worldMaxY);
+    center.z = 0.5f * (worldMinZ + worldMaxZ);
     PSMTXMultVec((MtxPtr)Camera_GetViewMatrix(), &center, &center);
     depthKey = (s32)-center.z;
     depthKey = depthKey < 0 ? 0 : (depthKey > 0x7ffffff ? 0x7ffffff : depthKey);
