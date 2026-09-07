@@ -7,8 +7,7 @@
 
 void dataInitStack(void);
 
-u32 seqPlaySong(u16 groupId, u16 songId, void* arrangement, SynthPlayParams* params,
-                u8 noLock, u8 studio);
+u32 seqPlaySong(u16 groupId, u16 songId, void* arrangement, SynthPlayParams* params, u8 noLock, u8 studio);
 u32 sndSeqPlayEx(u16 groupId, u16 songId, void* arrangement, SynthPlayParams* params, u8 studio);
 
 #endif /* MUSYX_SND_GROUPS_H_ */
