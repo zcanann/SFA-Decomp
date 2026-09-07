@@ -57,3 +57,36 @@ python3 tools/tricky_backend_trace.py --unit main/dlls/engine/23/23 \
 `python3 configure.py --matching`, `ninja all_source`, and strict `ninja` pass
 with `main.dol: OK`; each Ninja invocation has a 30-second timeout. Backend
 tool tests pass, including malformed mask and corrupted instruction checks.
+
+## Map-group follow-up
+
+A second pass tested 51 compiled variants without improving the function's
+98.04924% match. The game source and ordinary object remain unchanged. Search
+counter widths, loop exits and bounds, byte/record addressing, inline boundaries,
+and allocator index/address reuse either reproduced the baseline or regressed.
+The exact standalone search was checked alongside the inlined search.
+
+The frontend trace rejects its own search-loop unrolling because the loop has
+multiple exits, then strength-reduces indexed accesses into a walking pointer.
+The backend subsequently unrolls that loop five times. Its snapshots contain
+two stride-three `addi` instructions before global optimization (one per search
+or allocation loop), six after loop transformations, and six in final code.
+Thus the four extra cursor updates are already present immediately after backend
+unrolling; later propagation does not combine them. Track the complete loop at
+each stage: compiler arena addresses can be reused for unrelated instructions.
+
+Enabling peephole optimization as a scratch diagnostic combines intermediate
+pointer updates with loads into `lbzu`, but does not reproduce retail's increasing
+load displacements and regresses other functions. A complete global record in
+place of the current overlay also leaves the search updates intact. Neither
+experiment supports a compiler/profile exception or proves a source-level fix
+impossible.
+
+The frontend capture reproduces the same ordinary object hash listed above:
+
+```sh
+python3 tools/mwcc_frontend_trace.py --unit main/dlls/engine/23/23 \
+  --function SaveGame_gplaySetObjGroupStatus \
+  --function SaveGame_findTransientMapBit \
+  --output build/flag_probe/savegame_group_frontend
+```
