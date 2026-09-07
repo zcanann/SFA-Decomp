@@ -1616,8 +1616,8 @@ void ObjHits_ApplyPairResponse(GameObject* objA, GameObject* objB, f32 x, f32 y,
     }
 }
 
-static inline f32 ObjHits_SweepPointDistance(GameObject* otherObject, ObjHitsPriorityState* sweepState,
-                                 f32 moveX, f32 moveY, f32 moveZ, f32 fraction) {
+static inline f32 ObjHits_SweepPointDistance(GameObject* otherObject, ObjHitsPriorityState* sweepState, f32 moveX,
+                                             f32 moveY, f32 moveZ, f32 fraction) {
     f32 delta;
     f32 squaredZ;
     f32 squaredX;
@@ -1885,7 +1885,8 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
             currentSphereCursor = currentSpheres;
             previousSphereCursor = previousSpheres;
             for (volumeIndex = 0; volumeIndex < (int)(u32)modelFile->hitVolumeCount;
-                 definitionOffset += sizeof(ModelHitSphereDef), currentSphereCursor++, previousSphereCursor++, volumeIndex = volumeIndex + 1) {
+                 definitionOffset += sizeof(ModelHitSphereDef), currentSphereCursor++, previousSphereCursor++,
+                volumeIndex = volumeIndex + 1) {
                 hitVolume = (ModelHitSphereDef*)(modelFile->hitVolumes + definitionOffset);
                 if ((volumeIndex == hitVolume->sphereIndex) && ((hitMask & 1 << hitVolume->maskBit) != 0)) {
                     sphereBits = hitVolume->linkedSpheres;
