@@ -1306,7 +1306,7 @@ void staffUpdateSegmentTransforms(GameObject* staffArg, GameObject* objArg, ObjM
                 MtxPtr jointMatrixB;
                 int jointIndexB;
                 jointIndexB = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1]
-                            .joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
+                                  .joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
                 jointMatrixB = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, jointIndexB);
                 pointBPtr->x = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1].pos[0];
                 pointB.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1].pos[1];
@@ -1321,7 +1321,10 @@ void staffUpdateSegmentTransforms(GameObject* staffArg, GameObject* objArg, ObjM
             if (attachmentIndex < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
                 ObjAttachPoint* attachmentA = (ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset);
                 int jointIndexA = attachmentA->joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
-                MtxPtr jointMatrixA = (MtxPtr)(jointIndexA * (int)sizeof(ObjModelJointMatrix) + *(int*)((u8*)model + ((model->bufferFlags & 1) * sizeof(model->jointMatrices[0])) + offsetof(ObjModel, jointMatrices)));
+                MtxPtr jointMatrixA =
+                    (MtxPtr)(jointIndexA * (int)sizeof(ObjModelJointMatrix) +
+                             *(int*)((u8*)model + ((model->bufferFlags & 1) * sizeof(model->jointMatrices[0])) +
+                                     offsetof(ObjModel, jointMatrices)));
                 pointA.x = attachmentA->pos[0];
                 pointA.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))->pos[1];
                 pointA.z = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))->pos[2];
