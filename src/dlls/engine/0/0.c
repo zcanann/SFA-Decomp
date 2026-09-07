@@ -7784,6 +7784,7 @@ void GameUI_initialise(void) {
     airMeter = 0;
 }
 
+int gPauseMenuPlayerMapCell;
 int gPauseMenuSavedTextDir;
 int gGameUiCurHintTextMap;
 short gCMenuOpenAnim;

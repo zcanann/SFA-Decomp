@@ -60,18 +60,18 @@ extern const int gDRCloudRunnerCurveIds[4];
 extern DRCloudRunnerMoveParams gDRCloudRunnerMoveParamTable;
 extern int gDRCloudRunnerAirMeterBaseline;
 extern const Vec3f gDRCloudRunnerVecTable[];
-extern s16 gDRCloudRunnerRollAngleLimits;
+extern s16 gDRCloudRunnerRollAngleLimits[3];
 
 extern char sOnCloudFormat[];
 
-extern int lbl_803DC770;
-extern int lbl_803DC774;
-extern int lbl_803DC778;
-extern int lbl_803DC77C;
-extern int lbl_803DC780;
-extern int lbl_803DC784;
-extern f32 lbl_803DC78C;
-extern f32 lbl_803DC790;
+extern f32 gDRCloudRunnerMode1SegmentRadius;
+extern f32 gDRCloudRunnerMode1LocalRadius;
+extern f32 gDRCloudRunnerMode2SegmentRadius;
+extern f32 gDRCloudRunnerMode2LocalRadii[2];
+
+extern f32 gDRCloudRunnerMode0LocalRadii[2];
+extern f32 gDRCloudRunnerCameraOffsetY;
+extern f32 gDRCloudRunnerCameraOffsetZ;
 
 int DR_CloudRunner_defaultStateHandler(void);
 void DR_CloudRunner_func21(void);

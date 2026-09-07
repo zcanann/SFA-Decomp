@@ -1448,7 +1448,7 @@ dlls/engine/0/0.c:
 	.data       start:0x8031AE20 end:0x8031C168
 	.bss        start:0x803A87F0 end:0x803A9458
 	.sdata      start:0x803DBA30 end:0x803DBBB0
-	.sbss       start:0x803DD728 end:0x803DD8E0
+	.sbss       start:0x803DD728 end:0x803DD8E8
 	.sdata2     start:0x803E1E00 end:0x803E21D4
 
 dlls/engine/59/59.c:
@@ -5204,7 +5204,7 @@ dlls/objects/599_DR_EarthWar/DR_EarthWar.c:
 	.rodata     start:0x802C2CA8 end:0x802C2D00
 	.data       start:0x803351F8 end:0x803356F0
 	.bss        start:0x803DB170 end:0x803DB1C0
-	.sdata      start:0x803DC760 end:0x803DC76C
+	.sdata      start:0x803DC760 end:0x803DC770
 	.sbss       start:0x803DE4D0 end:0x803DE4D8
 	.sdata2     start:0x803E82D8 end:0x803E8398
 
@@ -5213,5 +5213,6 @@ dlls/objects/600_DR_CloudRun/DR_CloudRun.c:
 	.rodata     start:0x802C2D00 end:0x802C2D4C
 	.data       start:0x803356F0 end:0x8033583D
 	.bss        start:0x803DB1C0 end:0x803DB1E0
+	.sdata      start:0x803DC770 end:0x803DC79E
 	.sbss       start:0x803DE4D8 end:0x803DE4E4
 	.sdata2     start:0x803E8398 end:0x803E8428
