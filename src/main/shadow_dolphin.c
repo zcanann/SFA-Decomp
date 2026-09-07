@@ -95,7 +95,6 @@ s8 gShadowVolumesDirty = 10;
 s16 gSunMagnitude = 100;
 int gSunDirChanged = 1;
 
-
 extern volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 static void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
@@ -107,7 +106,6 @@ static void vecGetRanges(f32* pts, f32* base, f32 scale, int* out);
 
 static int objShadowGetFadedAlpha(GameObject* obj, u8 param);
 
-
 extern f32 gShadowVolumeBoxCorners[0x19];
 f32 gPrevSunDir[3];
 
@@ -115,39 +113,33 @@ extern u8 gShadowDrawScratch[0x5DC0];
 
 extern f32 lbl_8038D77C[0x18];
 
-static inline void GXPosition3s16(const int x, const int y, const int z)
-{
+static inline void GXPosition3s16(const int x, const int y, const int z) {
     GXWGFifo.s16 = x;
     GXWGFifo.s16 = y;
     GXWGFifo.s16 = z;
 }
 
-static inline void GXTexCoord2s16(const s16 x, const s16 y)
-{
+static inline void GXTexCoord2s16(const s16 x, const s16 y) {
     GXWGFifo.s16 = x;
     GXWGFifo.s16 = y;
 }
 
-static inline void GXPosition3f32(const f32 x, const f32 y, const f32 z)
-{
+static inline void GXPosition3f32(const f32 x, const f32 y, const f32 z) {
     GXWGFifo.f32 = x;
     GXWGFifo.f32 = y;
     GXWGFifo.f32 = z;
 }
 
-static f32 shadowGetSunMagnitude(void)
-{
+static f32 shadowGetSunMagnitude(void) {
     f32 magnitude = 0.0f;
 
-    if (gSunMagnitude > 0)
-    {
+    if (gSunMagnitude > 0) {
         magnitude = (f32)gSunMagnitude;
     }
     return magnitude;
 }
 
-void buildShadowVolumeBox(f32* direction, f32* out, f32 lowerScale)
-{
+void buildShadowVolumeBox(f32* direction, f32* out, f32 lowerScale) {
     MatrixTransform xf;
     f32 ax;
     f32 az;
@@ -161,29 +153,21 @@ void buildShadowVolumeBox(f32* direction, f32* out, f32 lowerScale)
     xf.rotZ = 0;
     ax = __fabsf(direction[0]);
     az = __fabsf(direction[2]);
-    if (ax > az)
-    {
+    if (ax > az) {
         rotY = (u16)getAngle(ax, direction[1]);
-    }
-    else
-    {
+    } else {
         rotY = (u16)getAngle(az, direction[1]);
     }
     xf.rotY = rotY;
-    if (xf.rotY > 0x2000)
-    {
+    if (xf.rotY > 0x2000) {
         xf.rotY = 0x2000;
     }
     xf.rotX = (s16)getAngle(direction[0], direction[2]);
-    for (i = 0; i < 8; i++)
-    {
+    for (i = 0; i < 8; i++) {
         out[i * 3 + 0] = gShadowVolumeBoxCorners[i * 3 + 0];
-        if (gShadowVolumeBoxCorners[i * 3 + 1] > 0.0f)
-        {
+        if (gShadowVolumeBoxCorners[i * 3 + 1] > 0.0f) {
             out[i * 3 + 1] = gShadowVolumeBoxCorners[i * 3 + 1];
-        }
-        else
-        {
+        } else {
             out[i * 3 + 1] = lowerScale * gShadowVolumeBoxCorners[i * 3 + 1];
         }
         out[i * 3 + 2] = gShadowVolumeBoxCorners[i * 3 + 2];
@@ -226,8 +210,7 @@ static void vecGetRanges(f32* pts, f32* base, f32 scale, int* out) {
     }
 }
 
-static void buildGroundShadowQuad(GroundShadowQuad* quad, GameObject* obj)
-{
+static void buildGroundShadowQuad(GroundShadowQuad* quad, GameObject* obj) {
     f32 groundOffset;
     Vec tangent;
     Vec bitangent;
@@ -238,16 +221,14 @@ static void buildGroundShadowQuad(GroundShadowQuad* quad, GameObject* obj)
     f32 fixedScale;
     f32 localGroundY;
 
-    if (trackGetNearestGroundOffsetAndNormal(obj, obj->anim.localPosX, obj->anim.localPosY,
-                                             obj->anim.localPosZ, &groundOffset, (f32*)&groundNormal, 0) == 0)
-    {
+    if (trackGetNearestGroundOffsetAndNormal(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
+                                             &groundOffset, (f32*)&groundNormal, 0) == 0) {
         PSVECNormalize(&groundNormal, &groundNormal);
         tangent.x = 1.0f;
         tangent.y = 0.0f;
         tangent.z = 0.0f;
         axisAlignment = __fabsf(PSVECDotProduct(&groundNormal, &tangent));
-        if (axisAlignment >= 0.9f)
-        {
+        if (axisAlignment >= 0.9f) {
             tangent.x = 0.0f;
             tangent.z = 1.0f;
         }
@@ -274,15 +255,12 @@ static void buildGroundShadowQuad(GroundShadowQuad* quad, GameObject* obj)
         quad->vertices[3].y = (fixedScale * (bitangent.y + (localGroundY - tangent.y)));
         quad->vertices[3].z = (fixedScale * (bitangent.z + (zero - tangent.z)));
         quad->status = 1;
-    }
-    else
-    {
+    } else {
         quad->status = 0xff;
     }
 }
 
-void objDrawGroundShadow(GameObject* obj, ObjModel* model)
-{
+void objDrawGroundShadow(GameObject* obj, ObjModel* model) {
     GroundShadowQuad* quad;
     u8 alpha;
     MtxPtr viewMtx;
@@ -291,16 +269,13 @@ void objDrawGroundShadow(GameObject* obj, ObjModel* model)
     f32 outMtx[16];
 
     quad = model->groundShadowQuad;
-    if (quad->status == 0)
-    {
+    if (quad->status == 0) {
         buildGroundShadowQuad(quad, obj);
     }
-    if (quad->status != 0xff)
-    {
+    if (quad->status != 0xff) {
         alpha = (u8)objShadowGetFadedAlpha(obj, 0x96);
         kColor.a = alpha;
-        if (alpha != 0)
-        {
+        if (alpha != 0) {
             viewMtx = (MtxPtr)Camera_GetViewMatrix();
             Obj_BuildWorldTransformMatrix(obj, mtx, 0);
             mtx[0] = 1.0f;
@@ -313,7 +288,7 @@ void objDrawGroundShadow(GameObject* obj, ObjModel* model)
             mtx[9] = 0.0f;
             mtx[10] = 1.0f;
             PSMTXConcat(viewMtx, (MtxPtr)mtx, (MtxPtr)outMtx);
-            GXLoadPosMtxImm((const f32 (*)[4])outMtx, GX_PNMTX9);
+            GXLoadPosMtxImm((const f32(*)[4])outMtx, GX_PNMTX9);
             GXClearVtxDesc();
             GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
             GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
@@ -510,8 +485,7 @@ static int cullVisibleShadowTriangles(GameObject* obj, void* u1, void* u2, int c
 }
 
 void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObject* obj, int triangleCount,
-                             void* unusedDrawScratch, void* unusedBounds, f32 unusedYOffset)
-{
+                             void* unusedDrawScratch, void* unusedBounds, f32 unusedYOffset) {
     u8 shadowColor[4];
     Vec3f savedWorldPos;
     Vec3f savedLocalPos;
@@ -537,17 +511,17 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
     savedRotX = obj->anim.rotX;
     savedRotZ = obj->anim.rotZ;
     savedRotY = obj->anim.rotY;
-    if (modelState->shadowRenderResource == NULL ||
-        modelState->shadowRenderResource != OBJECT_SHADOW_MESH_UNCACHED)
+    if (modelState->shadowRenderResource == NULL || modelState->shadowRenderResource != OBJECT_SHADOW_MESH_UNCACHED) {
         obj->anim.rootMotionScale = 0.05f;
-    else
+    } else {
         obj->anim.rootMotionScale = 1.0f;
+    }
     obj->anim.rotX = 0;
     obj->anim.rotY = 0;
-    if ((modelState->flags & OBJ_MODEL_STATE_SHADOW_KEEP_ROT_Z) == 0)
+    if ((modelState->flags & OBJ_MODEL_STATE_SHADOW_KEEP_ROT_Z) == 0) {
         obj->anim.rotZ = 0;
-    if (modelState->flags & OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE)
-    {
+    }
+    if (modelState->flags & OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE) {
         memcpy(&savedLocalPos, &obj->anim.localPos, sizeof(Vec3f));
         memcpy(&savedWorldPos, &obj->anim.worldPos, sizeof(Vec3f));
         memcpy(&obj->anim.worldPos, &modelState->overrideWorldPos, sizeof(Vec3f));
@@ -556,32 +530,24 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
     Obj_BuildWorldTransformMatrix(obj, (f32*)worldMtx, 0);
     viewMtx = (MtxPtr)Camera_GetViewMatrix();
     PSMTXConcat(viewMtx, (MtxPtr)worldMtx, (MtxPtr)viewWorldMtx);
-    GXLoadPosMtxImm((const f32 (*)[4])viewWorldMtx, GX_PNMTX0);
-    if (obj->anim.modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
-    {
+    GXLoadPosMtxImm((const f32(*)[4])viewWorldMtx, GX_PNMTX0);
+    if (obj->anim.modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) {
         GXColor color = *(GXColor*)shadowColor;
         objectShadow_setupSwappedProjectedTexture(modelState->shadowCastSlot, &color, worldMtx);
-    }
-    else
-    {
-        if (obj == Obj_GetPlayerObject())
+    } else {
+        if (obj == Obj_GetPlayerObject()) {
             projectionScale = 10.0f;
-        else
+        } else {
             projectionScale = obj->anim.hitboxScale * obj->anim.rootMotionScale;
+        }
         if (modelState->shadowRenderResource != OBJECT_SHADOW_MESH_UNCACHED ||
-            (diskTexture = newshadows_getSmallDiskTexture(),
-             modelState->shadowCastSlot->texture == diskTexture))
-        {
+            (diskTexture = newshadows_getSmallDiskTexture(), modelState->shadowCastSlot->texture == diskTexture)) {
             GXColor color = *(GXColor*)shadowColor;
             objectShadow_setupProjectedTexture(modelState->shadowCastSlot, &color, worldMtx);
-        }
-        else if (modelState->shadowCastSlot->mode == 0xff)
-        {
+        } else if (modelState->shadowCastSlot->mode == 0xff) {
             GXColor color = *(GXColor*)shadowColor;
             objectShadow_setupProjectedTextureDepthFade(modelState->shadowCastSlot, &color, worldMtx, projectionScale);
-        }
-        else
-        {
+        } else {
             GXColor color = *(GXColor*)shadowColor;
             objectShadow_setupProjectedTextureChannel(modelState->shadowCastSlot, &color, worldMtx, projectionScale);
         }
@@ -592,18 +558,17 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
     obj->anim.rotX = savedRotX;
     obj->anim.rotY = savedRotY;
     obj->anim.rotZ = savedRotZ;
-    if (modelState->shadowRenderResource == NULL)
-    {
+    if (modelState->shadowRenderResource == NULL) {
         modelState->shadowRenderResource = mmAlloc(triangleCount * 0x12 + sizeof(ObjectShadowMesh), 0x18, 0);
-        if (modelState->shadowRenderResource == NULL)
+        if (modelState->shadowRenderResource == NULL) {
             return;
+        }
         modelState->shadowRenderResource->vertices =
             (Vec3s*)((u8*)modelState->shadowRenderResource + sizeof(ObjectShadowMesh));
         modelState->shadowRenderResource->vertexCount = triangleCount * 3;
         i = 0;
         meshVertexScale = 20.0f;
-        for (; i < modelState->shadowRenderResource->vertexCount; i++)
-        {
+        for (; i < modelState->shadowRenderResource->vertexCount; i++) {
             modelState->shadowRenderResource->vertices[i].x = meshVertexScale * vertices[i].x;
             modelState->shadowRenderResource->vertices[i].y = meshVertexScale * vertices[i].y;
             modelState->shadowRenderResource->vertices[i].z = meshVertexScale * vertices[i].z;
@@ -621,11 +586,9 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
         int w0;
         GXBegin(GX_TRIANGLES, GX_VTXFMT2, (triangleCount * 3) & 0xffff);
         w0 = 0;
-        for (i = 0; i < triangleCount; i++)
-        {
+        for (i = 0; i < triangleCount; i++) {
             int k;
-            for (k = 0; k < 3; k++)
-            {
+            for (k = 0; k < 3; k++) {
                 Vec3f* v1 = &vertices[w0 + k];
                 f32 b1;
                 f32 b2;
@@ -640,8 +603,7 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
             w0 += 3;
         }
     }
-    if (modelState->flags & OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE)
-    {
+    if (modelState->flags & OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE) {
         memcpy(&obj->anim.localPos, &savedLocalPos, sizeof(Vec3f));
         memcpy(&obj->anim.worldPos, &savedWorldPos, sizeof(Vec3f));
     }
@@ -675,8 +637,7 @@ static int objShadowGetFadedAlpha(GameObject* obj, u8 param) {
     }
 }
 
-int objShadowRender(GameObject* obj, int renderMode, int unused, int frameCount)
-{
+int objShadowRender(GameObject* obj, int renderMode, int unused, int frameCount) {
     ObjModelState* modelState;
     Vec3f* cache;
     f32 yOff;
@@ -694,15 +655,13 @@ int objShadowRender(GameObject* obj, int renderMode, int unused, int frameCount)
 
     cache = (Vec3f*)(getCache());
     modelState = obj->anim.modelState;
-    if ((s32)shouldDrawShadows() == 0)
-    {
+    if ((s32)shouldDrawShadows() == 0) {
         obj->anim.modelState->shadowCastSlot = NULL;
         return 0;
     }
 
     shadowMesh = modelState->shadowRenderResource;
-    if (shadowMesh == NULL || shadowMesh == OBJECT_SHADOW_MESH_UNCACHED)
-    {
+    if (shadowMesh == NULL || shadowMesh == OBJECT_SHADOW_MESH_UNCACHED) {
         vec[0] = modelState->shadowOffsetX;
         vec[1] = modelState->shadowOffsetY;
         vec[2] = modelState->shadowOffsetZ;
@@ -710,12 +669,9 @@ int objShadowRender(GameObject* obj, int renderMode, int unused, int frameCount)
 
         {
             ObjHitsPriorityState* p54 = (ObjHitsPriorityState*)(obj->anim.hitReactState);
-            if (p54 != NULL)
-            {
+            if (p54 != NULL) {
                 yOff = (f32)((int)p54->primaryCapsuleOffsetB / 2);
-            }
-            else
-            {
+            } else {
                 yOff = 0.0f;
             }
         }
@@ -730,23 +686,22 @@ int objShadowRender(GameObject* obj, int renderMode, int unused, int frameCount)
         trackGetTriangleBuffer(&idxOut, &triangleTable);
 
         triangleBuffer = triangleTable;
-        idxOut = collectShadowTrackTriangles(
-            obj, (TrackTriangle*)triangleBuffer, (TrackShadowTriangle*)gShadowDrawScratch, gShadowVolumeBuffer,
-            idxOut, (f32)(int)vtx[0], (f32)(int)vtx[2], renderMode,
-            modelState->flags & OBJ_MODEL_STATE_SHADOW_ALT_TRACK_SURFACE);
+        idxOut =
+            collectShadowTrackTriangles(obj, (TrackTriangle*)triangleBuffer, (TrackShadowTriangle*)gShadowDrawScratch,
+                                        gShadowVolumeBuffer, idxOut, (f32)(int)vtx[0], (f32)(int)vtx[2], renderMode,
+                                        modelState->flags & OBJ_MODEL_STATE_SHADOW_ALT_TRACK_SURFACE);
         gShadowTrackTriangleBuffer = triangleBuffer;
         gShadowTrackTriangleCount = idxOut;
         gShadowTrackGridOrigin = (int)vtx;
         trackDolphin_buildShadowVolumePlanes((int*)obj, buf48, bufA8);
         cullVisibleShadowTriangles(obj, buf48, bufA8, idxOut, gShadowVolumeBuffer, cache,
-                    (TrackShadowTriangle*)gShadowDrawScratch, 0x555);
+                                   (TrackShadowTriangle*)gShadowDrawScratch, 0x555);
     }
     objDrawShadowCasterMesh(cache, modelState, obj, gShadowVisibleCount, &drawScratch, buf48, yOff);
     return 0;
 }
 
-u8 objShadowUpdateAlpha(GameObject* obj, int delta)
-{
+u8 objShadowUpdateAlpha(GameObject* obj, int delta) {
     ObjModelState* modelState;
     s16* alphaStep;
     f32 alphaScale;
@@ -754,24 +709,18 @@ u8 objShadowUpdateAlpha(GameObject* obj, int delta)
 
     modelState = obj->anim.modelState;
     alphaStep = &modelState->shadowAlphaStep;
-    if (modelState->flags & OBJ_MODEL_STATE_SHADOW_FADE_OUT)
-    {
+    if (modelState->flags & OBJ_MODEL_STATE_SHADOW_FADE_OUT) {
         *alphaStep = *alphaStep - (delta << 9);
-        if (*alphaStep <= 0)
-        {
+        if (*alphaStep <= 0) {
             *alphaStep = 0;
         }
-        if (*alphaStep == 0)
-        {
+        if (*alphaStep == 0) {
             modelState->shadowCastSlot = NULL;
             return 0;
         }
-    }
-    else if (!(modelState->flags & OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD))
-    {
+    } else if (!(modelState->flags & OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD)) {
         *alphaStep = *alphaStep + (delta << 9);
-        if (*alphaStep >= 0x4000)
-        {
+        if (*alphaStep >= 0x4000) {
             *alphaStep = 0x4000;
         }
     }
@@ -781,23 +730,18 @@ u8 objShadowUpdateAlpha(GameObject* obj, int delta)
         f32 tint = objShadowGetFadedAlpha(obj, modelState->shadowTintA);
         v = (s16)(int)(tint * alphaScale);
     }
-    if (v > 0xff)
-    {
+    if (v > 0xff) {
         v = 0xff;
-    }
-    else if (v < 0)
-    {
+    } else if (v < 0) {
         v = 0;
     }
     return v & 0xff;
 }
 
-void shadowVolumeBeginFrame(void)
-{
+void shadowVolumeBeginFrame(void) {
     void* selectedBuffer;
     s16 zero;
-    if ((s8)gShadowVolumesDirty == 0)
-    {
+    if ((s8)gShadowVolumesDirty == 0) {
         return;
     }
     zero = 0;
@@ -817,8 +761,7 @@ void shadowVolumeBeginFrame(void)
     lbl_803DCF0C = lbl_803DCF20;
 }
 
-void shadowBeginFrame(void)
-{
+void shadowBeginFrame(void) {
     lbl_803DCEF6 = 0;
     lbl_803DCEFA = 0;
     lbl_803DCEEA = (s8)(1 - lbl_803DCEEA);
@@ -827,18 +770,15 @@ void shadowBeginFrame(void)
     lbl_803DCEE8 = 0;
 }
 
-void objShadowInvalidate(GameObject* obj)
-{
+void objShadowInvalidate(GameObject* obj) {
     gShadowVolumesDirty = 0x1;
 }
 
-void shadowVolumesSetDirty(s32 dirty)
-{
+void shadowVolumesSetDirty(s32 dirty) {
     gShadowVolumesDirty = dirty;
 }
 
-int shadowInit(GameObject* obj, u32 arena, int flags)
-{
+int shadowInit(GameObject* obj, u32 arena, int flags) {
     int rounded;
     ObjModelState* modelState;
     s16 texId;
@@ -847,29 +787,19 @@ int shadowInit(GameObject* obj, u32 arena, int flags)
     obj->anim.modelState = (ObjModelState*)rounded;
     modelState = obj->anim.modelState;
     texId = obj->anim.modelInstance->shadowTextureId;
-    if (texId != -1 && obj->anim.modelInstance->shadowType != OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
-    {
+    if (texId != -1 && obj->anim.modelInstance->shadowType != OBJ_SHADOW_TYPE_MODEL_GEOMETRIC) {
         modelState->shadowTexture = (void*)textureLoad(-texId, 0);
-    }
-    else if (obj->anim.modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
-    {
+    } else if (obj->anim.modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) {
         modelState->shadowTexture = (void*)newshadows_allocTexture512();
-    }
-    else if (obj->anim.modelInstance->renderFlags & 0x2)
-    {
+    } else if (obj->anim.modelInstance->renderFlags & 0x2) {
         modelState->shadowTexture = NULL;
         modelState->shadowWorkBuffer = NULL;
-    }
-    else
-    {
+    } else {
         modelState->shadowTexture = newshadows_getSmallDiskTexture();
     }
-    if (obj->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_BIG_BOX)
-    {
+    if (obj->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_BIG_BOX) {
         modelState->shadowRenderResource = NULL;
-    }
-    else
-    {
+    } else {
         modelState->shadowRenderResource = OBJECT_SHADOW_MESH_UNCACHED;
     }
     modelState->shadowScale = obj->anim.modelInstance->shadowScaleBase;
@@ -887,21 +817,18 @@ int shadowInit(GameObject* obj, u32 arena, int flags)
     return rounded + sizeof(ObjModelState);
 }
 
-void playerShadowClearPositionOverride(GameObject* obj)
-{
+void playerShadowClearPositionOverride(GameObject* obj) {
     ObjModelState* modelState = obj->anim.modelState;
-    if (modelState == NULL)
+    if (modelState == NULL) {
         return;
-    modelState->flags &=
-        ~(OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE | OBJ_MODEL_STATE_SHADOW_KEEP_ROT_Z);
+    }
+    modelState->flags &= ~(OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE | OBJ_MODEL_STATE_SHADOW_KEEP_ROT_Z);
 }
 
-void playerShadowSetPositionOverride(GameObject* obj, f32 x, f32 y, f32 z)
-{
+void playerShadowSetPositionOverride(GameObject* obj, f32 x, f32 y, f32 z) {
 }
 
-void shadowSetLightDirection(f32 directionX, f32 directionY, f32 directionZ, int magnitude)
-{
+void shadowSetLightDirection(f32 directionX, f32 directionY, f32 directionZ, int magnitude) {
     Vec normalizedDirection;
     f32 directionSimilarity;
     f32 directionMagnitudeSquared;
@@ -916,41 +843,32 @@ void shadowSetLightDirection(f32 directionX, f32 directionY, f32 directionZ, int
     gShadowOffsetX = directionX * magnitude;
     gShadowOffsetY = directionY * magnitude;
     gShadowAlphaScale = 1.0f;
-    if (gShadowOffsetY < 80.0f)
-    {
+    if (gShadowOffsetY < 80.0f) {
         gShadowOffsetY = 80.0f;
     }
     gShadowOffsetZ = directionZ * magnitude;
     directionSimilarity = normalizedDirection.x * gPrevSunDir[0] + normalizedDirection.y * gPrevSunDir[1] +
                           normalizedDirection.z * gPrevSunDir[2];
-    magnitudeSquared = normalizedDirection.x * normalizedDirection.x +
-                       normalizedDirection.y * normalizedDirection.y;
+    magnitudeSquared = normalizedDirection.x * normalizedDirection.x + normalizedDirection.y * normalizedDirection.y;
     directionMagnitudeSquared = magnitudeSquared + normalizedDirection.z * normalizedDirection.z;
-    magnitudeSquared = gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] +
-                       gPrevSunDir[2] * gPrevSunDir[2];
+    magnitudeSquared =
+        gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] + gPrevSunDir[2] * gPrevSunDir[2];
     combinedMagnitudeSquared = directionMagnitudeSquared * magnitudeSquared;
-    if (combinedMagnitudeSquared)
-    {
+    if (combinedMagnitudeSquared) {
         magnitudeSquared = sqrtf(combinedMagnitudeSquared);
     }
-    if (magnitudeSquared)
-    {
+    if (magnitudeSquared) {
         gSunDotCos = directionSimilarity / magnitudeSquared;
-    }
-    else
-    {
+    } else {
         gSunDotCos = 0.0f;
     }
-    if (gSunDotCos < 0.0f)
-    {
+    if (gSunDotCos < 0.0f) {
         gSunDotCos *= -1.0f;
     }
-    if (gSunDotCos <= 0.99619f)
-    {
+    if (gSunDotCos <= 0.99619f) {
         gSunDirChanged = 1;
     }
-    if (gSunDirChanged != 0)
-    {
+    if (gSunDirChanged != 0) {
         gPrevSunDir[0] = normalizedDirection.x;
         gPrevSunDir[1] = normalizedDirection.y;
         gPrevSunDir[2] = normalizedDirection.z;
@@ -959,8 +877,7 @@ void shadowSetLightDirection(f32 directionX, f32 directionY, f32 directionZ, int
     }
 }
 
-void initTextures(void)
-{
+void initTextures(void) {
     f32* a = lbl_8038D77C;
     f32* b = gShadowVolumeBoxCorners;
 

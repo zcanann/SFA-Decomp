@@ -8,7 +8,7 @@ struct ObjModel;
 
 typedef struct GroundShadowQuad {
     Vec3s vertices[4]; /* Object-relative coordinates with eight fractional bits. */
-    u8 status;        /* 0 = not built, 1 = ready, 0xff = no ground found. */
+    u8 status;         /* 0 = not built, 1 = ready, 0xff = no ground found. */
     u8 pad19;
 } GroundShadowQuad;
 
