@@ -4,8 +4,8 @@ The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
 All 40,656 assigned data bytes match. The common GC/1.3 invocation produces
-129/145 exact functions and a 99.218056% instruction fuzzy score; the TU remains
-`NonMatching` because sixteen functions still differ.
+133/145 exact functions and a 99.24838% instruction fuzzy score; the TU remains
+`NonMatching` because twelve functions still differ.
 
 This supersedes the constant-pool blocker in
 [lightmap_draw_recovery.md](lightmap_draw_recovery.md) and the historical
@@ -69,15 +69,42 @@ the `renderObjects` mismatch.
 
 ## Remaining source-link blockers
 
+The subsequent code pass restores four functions without changing their sizes
+or any other function's generated instructions:
+
+- `renderSceneGeometry`: initialize the horizontal cursor alongside the row's
+  minimum X before computing the cell pointer. Keep the row bound and moving
+  cursor as separate locals.
+- `collectShadowTrackTriangles`: select the triangle flag with an explicit
+  branch and declare the triangle count before the descriptor pointers. The
+  compiler trace confirms the ternary introduced a temporary that colored
+  ahead of the loop's persistent registers.
+- `mapBlockRender_setShader`: read the three packed instruction bytes with
+  offsets from an unchanged base pointer. This removes the mutable pointer web
+  responsible for the final register swap.
+- `mapInstantiateObjects`: correct `MapEventInterface.getMapAct` and its inline
+  wrapper to take `int`, matching `SaveGame_getMapAct`, then restore the cursor,
+  end pointer, and object-index declaration order. Dolphin's `s32` is `long`
+  under MWCC; the old interface introduced an int-to-long conversion temporary.
+  Comparing all 2,684 compiled objects before and after the interface correction
+  found no changes outside this function in `shader.o`.
+
+The GC/1.3 backend decoder now also recognizes the observed `andc`, `srw`, and
+`psq_lx` records. They were validated against captured final instruction streams
+and emitted ELF instructions. The diagnostic captures passed the ordinary versus
+instrumented full-object hash gate, and their register graphs replayed without
+high-degree removals.
+
 The old `lightmap` and initializer fragments depended on extra `noprop` and
 `nocse` flags. They now share shader's existing `nopeephole,noschedule` /
 `-inline noauto` profile and the required common game compiler. No compiler
 exceptions, per-function pragmas, or section-alignment overrides were retained.
-This exposes six formerly exact functions: `updateVisibleGeometry`,
+The initial merge exposed six formerly exact functions: `updateVisibleGeometry`,
 `renderObjects`, `renderSceneGeometry`, `initMapBlocks`, `renderGlows`, and
-`queueGlowRender`. Three other functions became exact, so the combined exact
-function count changes from 132 to 129. These code differences must be recovered
-before `MatchingFor` is justified.
+`queueGlowRender`. Three other functions became exact, so that merge changed the
+combined exact function count from 132 to 129. The follow-up above brings it to
+133. All twelve remaining code differences must be recovered before
+`MatchingFor` is justified.
 
 `renderGlows` also reloads the zero/one literals more often than retail across
 the FIFO-writing helpers. The pool values and addresses are correct; the load

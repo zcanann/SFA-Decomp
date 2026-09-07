@@ -466,11 +466,11 @@ void mapInstantiateObjects(MapRomListPage* page, int mapId, int index, GameObjec
     MapRomListIndex* romListIndex = &gMapRomListIndexes[mapId];
     int i;
     char* p;
-    char* end;
+    char* obj;
     char* romBase;
     char* objStart;
+    char* end;
     int objIndex;
-    char* obj;
     int v;
     int flag;
     int byteIdx;
@@ -3597,16 +3597,16 @@ static void renderObjects(s8* opacity) {
     }
 }
 static inline void fillBoxRows(u8* map, int* box) {
-    int y, x0;
-    int xs, xe;
-    u8* p;
+    int y, x;
+    int minX, maxX;
+    u8* cell;
     for (y = box[2]; y <= box[3]; y++) {
-        xs = box[0];
-        p = map + (y + 7) * 0x10 + xs;
-        xe = box[1];
-        for (x0 = xs; x0 <= xe; x0++) {
-            p[7] = 1;
-            p++;
+        x = minX = box[0];
+        cell = map + (y + 7) * 0x10 + minX;
+        maxX = box[1];
+        for (; x <= maxX; x++) {
+            cell[7] = 1;
+            cell++;
         }
     }
 }
@@ -5151,7 +5151,7 @@ Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRende
     Shader* shader;
     u32 shaderIdx;
     GXColor fogColor = gTexShaderFogColor;
-    u8* byteBase;
+    u8* instructionBytes;
     u32 flags;
     int* cloudTex;
     u8 ambColor[3];
@@ -5161,12 +5161,11 @@ Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRende
 
     bitPos = state->bit;
     {
-        int off = (int)bitPos >> 3;
-        byteBase = state->instrs;
-        bits = byteBase[off];
-        byteBase += off;
-        bits |= (u32)byteBase[1] << 8;
-        bits |= (u32)byteBase[2] << 16;
+        int byteOffset = (int)bitPos >> 3;
+        instructionBytes = state->instrs;
+        bits = instructionBytes[byteOffset];
+        bits |= (u32)instructionBytes[byteOffset + 1] << 8;
+        bits |= (u32)instructionBytes[byteOffset + 2] << 16;
         state->bit = bitPos + 6;
         shaderIdx = (bits >> (bitPos & 7)) & 0x3f;
         shader = &blockData->shaders[shaderIdx];
@@ -5857,15 +5856,19 @@ int collectShadowTrackTriangles(GameObject* obj, TrackTriangle* triangles, Track
                                 int kindSelector) {
     int j;
     f32 localMatrix[12];
+    int triangleCount;
     TrackBlockDescriptor* desc = trackGetBlockDescriptors((u32*)&j);
     TrackBlockDescriptor* end = desc + j;
     int vertexCount;
-    int triangleCount;
     int triangleFlag;
 
     j = triangleCount = 0;
     vertexCount = 0;
-    triangleFlag = kindSelector ? 4 : 8;
+    if (kindSelector) {
+        triangleFlag = 4;
+    } else {
+        triangleFlag = 8;
+    }
     for (; desc < end; desc++) {
         void* owner = desc->object;
         if (owner == NULL || owner == obj->anim.parent) {

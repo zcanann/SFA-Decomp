@@ -25,7 +25,7 @@ typedef struct MapEventInterface {
     void (*clearRestartPoint)(void);
     int (*getRestartGameNotCleared)(void);
     u8 pad34[0x40 - 0x34];
-    u8 (*getMapAct)(s32 mapId);
+    u8 (*getMapAct)(int mapId);
     void (*setMapAct)(int mapId, int act);
     void (*setMapActLut)(int value, int idx);
     u8 (*getObjGroupStatus)(int mapId, int shift);
@@ -49,7 +49,7 @@ typedef struct MapEventInterface {
 
 extern MapEventInterface **gMapEventInterface;
 
-static inline u8 mapEventGetMapAct(s32 mapId)
+static inline u8 mapEventGetMapAct(int mapId)
 {
     return (*gMapEventInterface)->getMapAct(mapId);
 }
