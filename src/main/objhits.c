@@ -61,14 +61,19 @@
 #include "main/objprint_internal.h"
 #include "main/objprint_render_api.h"
 
+f32 gObjHitsPriorityHitTickDelta;
+ObjAnimComponent** gObjHitReactResetObjects;
+int gObjHitReactResetObjectCount;
+ObjHitsPriorityWorkSlot* gObjHitsPriorityHitStates;
+void* gObjHitsWorkBuffer;
+void* gObjHitsPrimaryHitboxScratchBuffers[2];
+void* gObjHitsSecondaryHitboxScratchBuffers[2];
+
 GameObject* gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT] = {NULL};
 ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
-extern ObjHitsPriorityWorkSlot* gObjHitsPriorityHitStates;
-extern void* gObjHitsWorkBuffer;
 extern f32 gObjHitsResponseDominanceRatio;
 
-extern f32 gObjHitsPriorityHitTickDelta;
 static inline ObjModel* ObjHits_GetActiveModel(GameObject* obj) {
     ObjAnimComponent* objAnim = &obj->anim;
     return (ObjModel*)objAnim->banks[objAnim->bankIndex];
@@ -1367,28 +1372,28 @@ void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObjec
             hitboxBuf = ObjHits_GetActiveModel(objA);
             bufIndex = (hitboxBuf->bufferFlags >> 2) & 1;
             if ((stateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
-                memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex], gObjHitsPrimaryHitboxBufferScratch0,
+                memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex], gObjHitsPrimaryHitboxScratchBuffers[0],
                        hitboxBuf->file->hitVolumeCount << 4);
-                memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1], gObjHitsPrimaryHitboxBufferScratch1,
+                memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1], gObjHitsPrimaryHitboxScratchBuffers[1],
                        hitboxBuf->file->hitVolumeCount << 4);
             } else {
-                memcpy(gObjHitsPrimaryHitboxBufferScratch0, hitboxBuf->hitVolumeSphereBuffers[bufIndex],
+                memcpy(gObjHitsPrimaryHitboxScratchBuffers[0], hitboxBuf->hitVolumeSphereBuffers[bufIndex],
                        hitboxBuf->file->hitVolumeCount << 4);
-                memcpy(gObjHitsPrimaryHitboxBufferScratch1, hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
+                memcpy(gObjHitsPrimaryHitboxScratchBuffers[1], hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
                        hitboxBuf->file->hitVolumeCount << 4);
             }
             if (attA != NULL) {
                 hitboxBuf = ObjHits_GetActiveModel(attA);
                 bufIndex = (hitboxBuf->bufferFlags >> 2) & 1;
                 if ((stateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
-                    memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex], gObjHitsSecondaryHitboxBufferScratch0,
+                    memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex], gObjHitsSecondaryHitboxScratchBuffers[0],
                            hitboxBuf->file->hitVolumeCount << 4);
-                    memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1], gObjHitsSecondaryHitboxBufferScratch1,
+                    memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1], gObjHitsSecondaryHitboxScratchBuffers[1],
                            hitboxBuf->file->hitVolumeCount << 4);
                 } else {
-                    memcpy(gObjHitsSecondaryHitboxBufferScratch0, hitboxBuf->hitVolumeSphereBuffers[bufIndex],
+                    memcpy(gObjHitsSecondaryHitboxScratchBuffers[0], hitboxBuf->hitVolumeSphereBuffers[bufIndex],
                            hitboxBuf->file->hitVolumeCount << 4);
-                    memcpy(gObjHitsSecondaryHitboxBufferScratch1, hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
+                    memcpy(gObjHitsSecondaryHitboxScratchBuffers[1], hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
                            hitboxBuf->file->hitVolumeCount << 4);
                     stateA->flags |= OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
                 }
@@ -1411,28 +1416,28 @@ void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObjec
             hitboxBuf = ObjHits_GetActiveModel(objB);
             bufIndex = (hitboxBuf->bufferFlags >> 2) & 1;
             if ((stateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
-                memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex], gObjHitsPrimaryHitboxBufferScratch0,
+                memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex], gObjHitsPrimaryHitboxScratchBuffers[0],
                        hitboxBuf->file->hitVolumeCount << 4);
-                memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1], gObjHitsPrimaryHitboxBufferScratch1,
+                memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1], gObjHitsPrimaryHitboxScratchBuffers[1],
                        hitboxBuf->file->hitVolumeCount << 4);
             } else {
-                memcpy(gObjHitsPrimaryHitboxBufferScratch0, hitboxBuf->hitVolumeSphereBuffers[bufIndex],
+                memcpy(gObjHitsPrimaryHitboxScratchBuffers[0], hitboxBuf->hitVolumeSphereBuffers[bufIndex],
                        hitboxBuf->file->hitVolumeCount << 4);
-                memcpy(gObjHitsPrimaryHitboxBufferScratch1, hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
+                memcpy(gObjHitsPrimaryHitboxScratchBuffers[1], hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
                        hitboxBuf->file->hitVolumeCount << 4);
             }
             if (attB != NULL) {
                 hitboxBuf = ObjHits_GetActiveModel(attB);
                 bufIndex = (hitboxBuf->bufferFlags >> 2) & 1;
                 if ((stateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
-                    memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex], gObjHitsSecondaryHitboxBufferScratch0,
+                    memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex], gObjHitsSecondaryHitboxScratchBuffers[0],
                            hitboxBuf->file->hitVolumeCount << 4);
-                    memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1], gObjHitsSecondaryHitboxBufferScratch1,
+                    memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1], gObjHitsSecondaryHitboxScratchBuffers[1],
                            hitboxBuf->file->hitVolumeCount << 4);
                 } else {
-                    memcpy(gObjHitsSecondaryHitboxBufferScratch0, hitboxBuf->hitVolumeSphereBuffers[bufIndex],
+                    memcpy(gObjHitsSecondaryHitboxScratchBuffers[0], hitboxBuf->hitVolumeSphereBuffers[bufIndex],
                            hitboxBuf->file->hitVolumeCount << 4);
-                    memcpy(gObjHitsSecondaryHitboxBufferScratch1, hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
+                    memcpy(gObjHitsSecondaryHitboxScratchBuffers[1], hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
                            hitboxBuf->file->hitVolumeCount << 4);
                     stateB->flags |= OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
                 }
@@ -2991,10 +2996,10 @@ void ObjHits_InitWorkBuffers(void) {
         (ObjAnimComponent**)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(ObjAnimComponent*), 0xe, 0);
     gObjHitsPriorityHitStates = mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * sizeof(ObjHitsPriorityWorkSlot), 0xe, 0);
     gObjHitsWorkBuffer = mmAlloc(0x1900, 0xe, 0);
-    gObjHitsPrimaryHitboxBufferScratch0 = mmAlloc(0x400, 0xe, 0);
-    gObjHitsPrimaryHitboxBufferScratch1 = mmAlloc(0x400, 0xe, 0);
-    gObjHitsSecondaryHitboxBufferScratch0 = mmAlloc(0x400, 0xe, 0);
-    gObjHitsSecondaryHitboxBufferScratch1 = mmAlloc(0x400, 0xe, 0);
+    gObjHitsPrimaryHitboxScratchBuffers[0] = mmAlloc(0x400, 0xe, 0);
+    gObjHitsPrimaryHitboxScratchBuffers[1] = mmAlloc(0x400, 0xe, 0);
+    gObjHitsSecondaryHitboxScratchBuffers[0] = mmAlloc(0x400, 0xe, 0);
+    gObjHitsSecondaryHitboxScratchBuffers[1] = mmAlloc(0x400, 0xe, 0);
     gObjHitsPriorityHitTickDelta = 2.0f;
     ((int*)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex = 0] = 0;
     ((int*)(int)gObjHitsActiveHitVolumeObjects)[++hitVolumeIndex] = 0;

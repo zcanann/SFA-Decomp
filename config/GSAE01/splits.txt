@@ -180,6 +180,7 @@ main/objhits.c:
 	.data       start:0x802CADA0 end:0x802CAE20
 	.bss        start:0x803408F8 end:0x803428F8
 	.sdata      start:0x803DB450 end:0x803DB460
+	.sbss       start:0x803DCBC8 end:0x803DCBF0
 	.sdata2     start:0x803DE910 end:0x803DE968
 
 main/objlib.c:

@@ -91,8 +91,8 @@ STATIC_ASSERT(sizeof(ObjHitsContactScratchEntry) == 0x1C);
 
 extern GameObject* gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT];
 extern ObjHitsContactScratchEntry gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT];
-extern void* gObjHitsPrimaryHitboxBufferScratch0;
-extern void* gObjHitsSecondaryHitboxBufferScratch0;
+extern void* gObjHitsPrimaryHitboxScratchBuffers[];
+extern void* gObjHitsSecondaryHitboxScratchBuffers[];
 extern char sObjHitsTooManyHitSpheresWarning[];
 
 void ObjHitbox_SetStateIndex(GameObject* obj, ObjHitReactState* hitState, int stateIndex);
@@ -106,9 +106,6 @@ void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, int radius, int verticalM
 int ObjHits_AllocObjectState(GameObject* obj, u32 arena);
 void ObjHits_ResetWorkBuffers(void);
 void ObjHits_InitWorkBuffers(void);
-
-#define gObjHitsPrimaryHitboxBufferScratch1   (&gObjHitsPrimaryHitboxBufferScratch0)[1]
-#define gObjHitsSecondaryHitboxBufferScratch1 (&gObjHitsSecondaryHitboxBufferScratch0)[1]
 
 typedef struct ObjHitboxDef {
     u8 pad00[OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET];

@@ -76,3 +76,35 @@ differences unchanged. The TU reaches 45/54 exact functions and 99.489456%
 fuzzy match. The native literal pool ordering remains unresolved. The 200-call
 capsule harness still passes; these scalar conditions preserve zero, nonzero,
 and unordered comparison results.
+
+## Native collision work-state storage
+
+The `803DCBC8..803DCBF0` small-BSS range belongs to `objhits.c`:
+`ObjHits_InitWorkBuffers` allocates the reset-object list, priority work slots,
+work buffer, and four hit-volume scratch buffers. `ObjHits_CheckObjectHitVolumes`
+saves and restores both model sphere-buffer banks through each scratch pair.
+The primary and secondary scratch pairs are now real two-pointer arrays;
+indexing past a declared scalar no longer supplies their second entries.
+
+| Offset | Definition | Bytes |
+|---|---|---:|
+| `+00` | `gObjHitsSecondaryHitboxScratchBuffers[2]` | 8 |
+| `+08` | `gObjHitsPrimaryHitboxScratchBuffers[2]` | 8 |
+| `+10` | `gObjHitsWorkBuffer` | 4 |
+| `+14` | `gObjHitsPriorityHitStates` | 4 |
+| `+18` | `gObjHitReactResetObjectCount` | 4 |
+| `+1C` | `gObjHitReactResetObjects` | 4 |
+| `+20` | `gObjHitsPriorityHitTickDelta` | 4 |
+
+GC/1.3 emits 36 bytes with eight-byte section alignment, matching the 40-byte
+retail span including its trailing alignment. Sized array definitions precede
+their consumers so the compiler can select small-data addressing; public extern
+array declarations remain unsized. All seven symbols have their retail offsets.
+The tick delta is a four-byte float, not an eight-byte allocation.
+
+Against `95bb0fe7d2`, all 54 function bodies and every pre-existing allocated data
+section and named data-symbol position are byte-identical. Objdiff credits 40
+additional matched data bytes (8,352 to 8,392); code remains 99.61259% fuzzy and
+45/54 exact functions. The TU remains NonMatching, so its source storage is
+verified by object comparison, while the strict DOL link still uses its retail
+object. The strict checksum and `ninja all_source` both pass.
