@@ -240,8 +240,6 @@ static void vsUpdateBuffer(void* entry, u32 elapsed)
 #define SYNTH_VIRTUAL_SAMPLE_RELEASE_ROUND        0xfff
 #define SYNTH_VIRTUAL_SAMPLE_RELEASE_SHIFT        0x1000
 
-extern s16 sp;
-
 /*
  * Periodic virtual-sample tick processor: walks 64 active voices, computes
  * elapsed tick for each, and either advances the stream buffer (state 1)
@@ -338,12 +336,4 @@ void vsSampleUpdates(void)
             }
         }
     }
-}
-
-/*
- * Reset the loaded sound-group table count.
- */
-void dataInitStack(void)
-{
-    sp = 0;
 }

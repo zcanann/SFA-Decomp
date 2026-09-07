@@ -4697,14 +4697,15 @@ musyx/runtime/synth_adsr.c:
 musyx/runtime/synth_vsamples.c:
 	extab       start:0x800059C0 end:0x800059E0
 	extabindex  start:0x80006230 end:0x80006260
-	.text       start:0x8027ACB8 end:0x8027B42C
+	.text       start:0x8027ACB8 end:0x8027B420
 	.bss        start:0x803CB290 end:0x803CBBE0
 
 musyx/runtime/snd_groups.c:
 	extab       start:0x800059E0 end:0x80005A08
 	extabindex  start:0x80006260 end:0x8000629C
-	.text       start:0x8027B42C end:0x8027BA04
+	.text       start:0x8027B420 end:0x8027BA04
 	.bss        start:0x803CBBE0 end:0x803CC1E0
+	.sbss       start:0x803DE308 end:0x803DE310
 
 musyx/runtime/sal_studio.c:
 	extab       start:0x80005A08 end:0x80005A30

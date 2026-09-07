@@ -77,8 +77,14 @@ typedef struct FX_DATA
     FX_TAB fx[1];
 } FX_DATA;
 
-extern s16 sp;
+static s16 sp;
 GSTACK gs[128];
+
+/* Reset the loaded sound-group table count. */
+void dataInitStack(void)
+{
+    sp = 0;
+}
 
 static inline MEM_DATA* GetMacroAddr(u16 id, POOL_DATA* pool)
 {

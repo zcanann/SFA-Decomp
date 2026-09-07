@@ -63,6 +63,5 @@ void vsInit(void);
 u32 vsSampleStartNotify(u8 voice);
 void vsSampleEndNotify(u32 packed);
 void vsSampleUpdates(void);
-void dataInitStack(void);
 
 #endif /* MUSYX_SYNTH_VIRTUAL_SAMPLE_H_ */
