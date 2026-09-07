@@ -4,8 +4,7 @@
 #include "global.h"
 #include "main/dll/cloudaction_interface.h"
 
-typedef struct CloudEnvTbl
-{
+typedef struct CloudEnvTbl {
     s32 mainCloudAssetIds[5];
     s32 upperCloudAssetIds[4];
     s32 lowerCloudAssetIds[5];
