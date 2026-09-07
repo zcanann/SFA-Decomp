@@ -92,8 +92,7 @@ static int babyCloudRunner_canCapture(GameObject* obj) {
     placement = (BabyCloudRunnerPlacement*)obj->anim.placement;
     found = 0;
     if (Vec_distance(&player->anim.worldPosX, &obj->anim.worldPosX) < (f32)placement->innerRadius &&
-        state->runnerState == BABYCLOUDRUNNER_STATE_FREED &&
-        (obj->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0) {
+        state->runnerState == BABYCLOUDRUNNER_STATE_FREED && (obj->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0) {
         found = 1;
     }
     return found;
@@ -142,8 +141,7 @@ void babyCloudRunner_turnTowardTarget(GameObject* obj, GameObject* target, BabyC
     if (playMove == 0) {
         return;
     }
-    if (yawStep > -BABYCLOUDRUNNER_TURN_ALIGNMENT_TOLERANCE &&
-        yawStep < BABYCLOUDRUNNER_TURN_ALIGNMENT_TOLERANCE) {
+    if (yawStep > -BABYCLOUDRUNNER_TURN_ALIGNMENT_TOLERANCE && yawStep < BABYCLOUDRUNNER_TURN_ALIGNMENT_TOLERANCE) {
         if (state->turnLatch != 0) {
             state->turnLatch = 0;
             babyCloudRunner_startMove(obj, BABYCLOUDRUNNER_MOVE_IDLE_A);
