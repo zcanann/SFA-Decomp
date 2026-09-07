@@ -124,28 +124,16 @@ s16 gExpgfxStaticPoolSlotTypeIds[80] = {
 u8 gExpgfxStaticPoolFrameFlags[EXPGFX_POOL_COUNT] = {0};
 
 /* Unused EN data; the predecessor retains two triangle records here. */
-u8 gExpgfxUnusedTriangleData[32] = {
-    64, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
+u8 gExpgfxUnusedTriangleData[32] = {64, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                    64, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 /* Crystal amplitudes and independent particle quad templates. */
 f32 gObjFxCrystalAmplitudes[4] = {0.5f, 0.55f, 0.65f, 0.7f};
-Vec3s gExpgfxQuadTemplateA[4] = {
-{-1000, 0, 1000},
-{1000, 0, 1000},
-{1000, 0, -1000},
-{-1000, 0, -1000}
-};
-Vec3s gExpgfxQuadTemplateB[4] = {
-{-1000, -1000, 0},
-{1000, -1000, 0},
-{1000, 1000, 0},
-{-1000, 1000, 0}
-};
+Vec3s gExpgfxQuadTemplateA[4] = {{-1000, 0, 1000}, {1000, 0, 1000}, {1000, 0, -1000}, {-1000, 0, -1000}};
+Vec3s gExpgfxQuadTemplateB[4] = {{-1000, -1000, 0}, {1000, -1000, 0}, {1000, 1000, 0}, {-1000, 1000, 0}};
 /* Repeats template B in retail; no active consumer is known. */
-u8 gExpgfxUnusedTemplateData[24] = {
-    0xFC, 0x18, 0xFC, 0x18, 0x00, 0x00, 0x03, 0xE8, 0xFC, 0x18, 0x00, 0x00, 0x03, 0xE8, 0x03, 0xE8, 0x00, 0x00, 0xFC, 0x18, 0x03, 0xE8, 0x00, 0x00
-};
+u8 gExpgfxUnusedTemplateData[24] = {0xFC, 0x18, 0xFC, 0x18, 0x00, 0x00, 0x03, 0xE8, 0xFC, 0x18, 0x00, 0x00,
+                                    0x03, 0xE8, 0x03, 0xE8, 0x00, 0x00, 0xFC, 0x18, 0x03, 0xE8, 0x00, 0x00};
 
 /* Light RGB triplets per fx type (referenced by objfx.c). */
 ObjFxLightColor gObjFxLightColorTbl[12] = {
@@ -356,8 +344,10 @@ static inline void expgfxRemoveAllBody(void) {
         while (slotIndex < EXPGFX_SLOTS_PER_POOL) {
             activeBit = 1 << slotIndex;
             if ((activeBit & *poolActiveMasks) != 0) {
-                if (((ExpgfxTableEntry*)((u8*)gExpgfxTableEntries + Expgfx_GetSlotTableIndex(slot) * 16))->resource != 0 &&
-                    ((ExpgfxTableEntry*)((u8*)gExpgfxTableEntries + Expgfx_GetSlotTableIndex(slot) * 16))->resource != 0) {
+                if (((ExpgfxTableEntry*)((u8*)gExpgfxTableEntries + Expgfx_GetSlotTableIndex(slot) * 16))->resource !=
+                        0 &&
+                    ((ExpgfxTableEntry*)((u8*)gExpgfxTableEntries + Expgfx_GetSlotTableIndex(slot) * 16))->resource !=
+                        0) {
                     gExpgfxTextureFreeInProgress = 1;
                     textureFree((Texture*)((void*)((ExpgfxTableEntry*)((u8*)gExpgfxTableEntries +
                                                                        Expgfx_GetSlotTableIndex(slot) * 16))
@@ -1543,7 +1533,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
             for (; slotIdx < EXPGFX_SLOTS_PER_POOL; slotIdx++) {
                 ExpgfxQuadVertex* quad;
                 ExpgfxTableEntry* entry;
-                u32 phase; u32 resourceHandle;
+                u32 phase;
+                u32 resourceHandle;
 
                 slot++;
                 if ((1 << slotIdx & *maskPtr) == 0) {
@@ -2163,11 +2154,11 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
-                    attached =
-                        (GameObject*)((ExpgfxTableEntry*)((u8*)gExpgfxTableEntries + (((u32)slot->encodedTableIndex >> 1) &
-                                                                                  EXPGFX_SLOT_TABLE_INDEX_MASK) *
-                                                                                     16))
-                            ->attachedTableKey;
+                    attached = (GameObject*)((ExpgfxTableEntry*)((u8*)gExpgfxTableEntries +
+                                                                 (((u32)slot->encodedTableIndex >> 1) &
+                                                                  EXPGFX_SLOT_TABLE_INDEX_MASK) *
+                                                                     16))
+                                   ->attachedTableKey;
                     rotParams.x = 0.0f;
                     rotParams.y = 0.0f;
                     rotParams.z = 0.0f;
@@ -2254,8 +2245,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     }
                 }
             }
-            memcpyToCache((void*)gExpgfxSlotPoolBases[activePool], curPoolBuf,
-                          EXPGFX_POOL_CACHE_LINE_COUNT);
+            memcpyToCache((void*)gExpgfxSlotPoolBases[activePool], curPoolBuf, EXPGFX_POOL_CACHE_LINE_COUNT);
             cacheQueued = 1;
             activePool = nextActivePool;
         }
@@ -2493,8 +2483,7 @@ int expgfx_acquireResourceEntry(int resourceId) {
     for (; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
         entry = &gExpgfxResourceEntries[i];
         if (entry->resource != NULL && resourceId == entry->resourceId) {
-            resourceHandle =
-                (ExpgfxResourceHandle*)gExpgfxResourceEntries[i].resource;
+            resourceHandle = (ExpgfxResourceHandle*)gExpgfxResourceEntries[i].resource;
             if (resourceHandle != NULL && resourceHandle->refCount >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
                 return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
             }
@@ -2505,10 +2494,8 @@ int expgfx_acquireResourceEntry(int resourceId) {
     for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
         entry = &gExpgfxResourceEntries[i];
         if (entry->resource == NULL) {
-            gExpgfxResourceEntries[i].resource =
-                textureLoadAsset(resourceId);
-            resourceHandle =
-                (ExpgfxResourceHandle*)gExpgfxResourceEntries[i].resource;
+            gExpgfxResourceEntries[i].resource = textureLoadAsset(resourceId);
+            resourceHandle = (ExpgfxResourceHandle*)gExpgfxResourceEntries[i].resource;
             if (resourceHandle != NULL && resourceHandle->refCount >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
                 gExpgfxTextureFreeInProgress = 1;
                 if (resourceHandle != NULL) {
@@ -2540,15 +2527,13 @@ int expgfx_acquireResourceEntry(int resourceId) {
         }
     }
     gExpgfxTextureFreeInProgress = 1;
-    resourceHandle =
-        (ExpgfxResourceHandle*)gExpgfxResourceEntries[minIndex].resource;
+    resourceHandle = (ExpgfxResourceHandle*)gExpgfxResourceEntries[minIndex].resource;
     if (resourceHandle != NULL) {
         textureFree((Texture*)((u8*)resourceHandle));
     }
     gExpgfxTextureFreeInProgress = 0;
     gExpgfxResourceEntries[minIndex].resource = NULL;
-    gExpgfxResourceEntries[minIndex].resource =
-        textureLoadAsset(resourceId);
+    gExpgfxResourceEntries[minIndex].resource = textureLoadAsset(resourceId);
     if (gExpgfxResourceEntries[minIndex].resource != NULL) {
         gExpgfxResourceEntries[minIndex].evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
         gExpgfxResourceEntries[minIndex].resourceId = resourceId;
