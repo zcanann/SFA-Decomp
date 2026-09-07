@@ -175,7 +175,8 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
                 transform.rotY = 0;
                 transform.rotX = 0;
                 /* Retail advances by 16 matrix rows per joint in this renderer. */
-                jointMatrix = (MtxPtr)model->jointMatrices[model->bufferFlags & 1] + ((jointId = gBoneParticleJointIds[gBoneParticleStageIndex][jointSlot]) << 4);
+                jointMatrix = (MtxPtr)model->jointMatrices[model->bufferFlags & 1] +
+                              ((jointId = gBoneParticleJointIds[gBoneParticleStageIndex][jointSlot]) << 4);
                 jointX = jointMatrix[3][0] + playerMapOffsetX;
                 jointY = jointMatrix[3][1];
                 jointZ = jointMatrix[3][2] + playerMapOffsetZ;
@@ -206,9 +207,12 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
                                           &transform.y, &transform.z);
                     transform.x += playerMapOffsetX;
                     transform.z += playerMapOffsetZ;
-                    gBoneParticleEffectBuffers[bufferIndex][cornerIndex + vertexBase].x = jointX + (transform.x - obj->anim.localPosX);
-                    gBoneParticleEffectBuffers[bufferIndex][cornerIndex + vertexBase].y = jointY + (transform.y - obj->anim.localPosY);
-                    gBoneParticleEffectBuffers[bufferIndex][cornerIndex + vertexBase].z = jointZ + (transform.z - obj->anim.localPosZ);
+                    gBoneParticleEffectBuffers[bufferIndex][cornerIndex + vertexBase].x =
+                        jointX + (transform.x - obj->anim.localPosX);
+                    gBoneParticleEffectBuffers[bufferIndex][cornerIndex + vertexBase].y =
+                        jointY + (transform.y - obj->anim.localPosY);
+                    gBoneParticleEffectBuffers[bufferIndex][cornerIndex + vertexBase].z =
+                        jointZ + (transform.z - obj->anim.localPosZ);
                     gBoneParticleEffectBuffers[bufferIndex][cornerIndex + vertexBase].a = 0x9b;
                     gBoneParticleEffectBuffers[bufferIndex][cornerIndex + vertexBase].t =
                         (s16)(gBoneParticleInitVertices[cornerIndex + vertexBase].t - (gBoneParticleScrollOffset << 2));
