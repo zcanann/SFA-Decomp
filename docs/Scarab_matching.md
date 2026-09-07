@@ -1,11 +1,10 @@
 # Scarab (object DLL 262)
 
-EN v1.0, GC/1.3, 2026-09-07. The unit remains `NonMatching`: five of seven
+EN v1.0, GC/1.3, 2026-09-07. The unit remains `NonMatching`: six of seven
 functions are exact and all 240 assigned data bytes match. `Scarab_update`
-has two differing instructions in 3,476 bytes (99.91945%);
-`Scarab_applyOrientation` has one in 492 bytes (99.9187%). Whole-unit text
-is 99.93948% fuzzy matched. The cleanup below intentionally accepts two
-equivalent floating-point comparison differences to remove redundant locals.
+has one differing instruction in 3,476 bytes (99.930954%). Whole-unit text
+is 99.95461% fuzzy matched. The canonical collision records and direct
+expressions from the cleanup remain in place.
 
 ## Collection helper
 
@@ -175,5 +174,29 @@ link substituting the cleaned source object differs from retail at exactly
 eight bytes across the three instructions above; every allocated section
 retains its address and length, and all other bytes match.
 
-These cleaner forms are the new baseline. The previous higher percentage
+This cleanup established a cleaner baseline. The previous higher percentage
 does not establish the discarded expressions as original source.
+
+## Magnitude checks
+
+Using C's scalar truth test, `if (magnitudeSquared)` and `if (speed)`, produces
+the two retail `fcmpu cr0,f1,f0` instructions without zero temporaries. These
+conditions have the same nonzero and unordered behavior as `!= 0.0f`. Explicit
+integer zero, reversed operands, negated equality, and a conditional expression
+retained the comparison mismatch; a greater-than test changes the condition
+and was rejected.
+
+Relative to the cleanup object, only the four bytes in those two comparisons
+change. All section layouts, named symbols, and relocation records remain
+identical. The normal object SHA256 is
+`807ca3ffea301d016e4320256457a2e782d470566d771fda15c2fe7390373cf8`.
+`Scarab_applyOrientation` is exact again; `Scarab_update` retains only its
+integer initialization mismatch.
+
+The cleaned-source backend capture puts that initialization in virtual GPR 42,
+outside the late value-numbering range `[44, 237]`; the old sphere aliases
+accounted for two additional named registers in the earlier capture. Gold-query
+reuse still reaches a copy which coalescing removes (868 instructions,
+99.75835%). Separating tumbling and slope flags instead adds an initialization
+and changes the saved-register range (870 instructions, 98.37745%). Neither
+variant is retained.

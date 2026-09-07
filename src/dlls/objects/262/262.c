@@ -150,7 +150,7 @@ static void Scarab_applyOrientation(GameObject* obj, const TrackGroundHit* groun
         obj->anim.velocityX = direction[0];
         obj->anim.velocityZ = direction[2];
         magnitudeSquared = obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ;
-        if (magnitudeSquared != 0.0f) {
+        if (magnitudeSquared) {
             magnitudeSquared = sqrtf(magnitudeSquared);
         }
         obj->anim.velocityX /= 2.0f * magnitudeSquared;
@@ -355,7 +355,7 @@ void Scarab_update(GameObject* obj) {
                 obj->anim.velocityZ = player->anim.localPosZ - obj->anim.localPosZ;
                 obj->anim.rotX = 0;
                 speed = obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ;
-                if (speed != 0.0f) {
+                if (speed) {
                     speed = sqrtf(speed);
                 }
                 obj->anim.velocityX /= 2.0f * speed;
