@@ -98,7 +98,8 @@ static int babyCloudRunner_canCapture(GameObject* obj) {
     return found;
 }
 
-static void babyCloudRunner_renderModel(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5) {
+static void babyCloudRunner_renderModel(GameObject* obj, int renderArg2, int renderArg3, int renderArg4,
+                                        int renderArg5) {
     objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
 }
 
@@ -136,7 +137,8 @@ int babyCloudRunner_updateBurrowAnimation(GameObject* obj) {
     return 1;
 }
 
-static void babyCloudRunner_followCurve(GameObject* obj, BabyCloudRunnerState* state, f32 advanceStep, f32 speed, f32 pitchFactor) {
+static void babyCloudRunner_followCurve(GameObject* obj, BabyCloudRunnerState* state, f32 advanceStep, f32 speed,
+                                        f32 pitchFactor) {
     Obj_UpdateRomCurveFollowVelocity(obj, &state->curveWalker, advanceStep, 10.0f * advanceStep, speed, 1);
     Obj_SmoothTurnAnglesTowardVelocity(obj, &obj->anim.velocity, BABYCLOUDRUNNER_TURN_FRAMES, 10.0f, pitchFactor);
     objMove(obj, obj->anim.velocityX, obj->anim.velocityY, obj->anim.velocityZ);
