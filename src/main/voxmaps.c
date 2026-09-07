@@ -43,6 +43,8 @@ Texture* gVoxMapsLargeTextures[2];
 Texture* gVoxMapsSmallTextures[2];
 
 static inline void heapSiftUp(CurveHeapNode* q, int i);
+static inline void voxmaps_queueNode(RouteState* state, u16 nodeIndex, u16 priority);
+static inline void voxmaps_reprioritizeNode(RouteState* state, u16 nodeIndex, u16 priority);
 
 static inline int voxmaps_findRouteNode(RouteState* state, s16* box, int* expandedOut);
 
@@ -638,11 +640,7 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state) {
             }
             {
                 u16 cost = node->hCost + node->gCost;
-                CurveHeapNode* queue = state->queue;
-
-                queue[++state->queueCount].value = (u16)(state->nodeCount - 1);
-                queue[state->queueCount].priority = (u16)(0xffff - cost);
-                heapSiftUp(queue, state->queueCount);
+                voxmaps_queueNode(state, state->nodeCount - 1, 0xffff - cost);
                 state->pathCount = 0;
             }
             pathDirect[0] = 0;
@@ -999,16 +997,13 @@ void voxmaps_visitRouteNeighbor(struct RouteState* state, RouteNode* parentNode,
                                 s16* box) {
     int foundIdx;
     int savedExpanded;
-    int foundSlot;
     int shiftLo;
-    CurveHeapNode* q;
     RouteNode* routeNode;
     u8 occ[3][4];
     int dxh;
     int dzh;
     int nodeCount;
     int key;
-    int oldp;
     int dx;
     int dz;
     int shiftHi;
@@ -1027,7 +1022,6 @@ void voxmaps_visitRouteNeighbor(struct RouteState* state, RouteNode* parentNode,
     int sumNext;
     int sumCur;
     int i;
-    int slot;
     int ySlot;
 
     VoxMapFile* map;
@@ -1047,10 +1041,7 @@ void voxmaps_visitRouteNeighbor(struct RouteState* state, RouteNode* parentNode,
             dzh = routeNode->z - state->tgtZ;
             routeNode->hCost = (u16)(2.0f * sqrtf((f32)(dxh * dxh + dzh * dzh)));
         }
-        q = state->queue;
-        q[++state->queueCount].value = idx;
-        q[state->queueCount].priority = 0xFFFE;
-        heapSiftUp(q, state->queueCount);
+        voxmaps_queueNode(state, idx, 0xFFFE);
     }
 
     vs = &gVoxMapsActiveState;
@@ -1180,33 +1171,7 @@ void voxmaps_visitRouteNeighbor(struct RouteState* state, RouteNode* parentNode,
         routeNode->parentNodeIndex = parentNodeIndex;
         routeNode->gCost = count;
         key = (u16)(routeNode->hCost + routeNode->gCost);
-        {
-            s16 qcnt = state->queueCount;
-            q = state->queue;
-            for (slot = 0; slot <= qcnt; slot++) {
-                if ((u16)foundIdx == q[slot].value) {
-                    foundSlot = slot;
-                    slot = state->queueCount + 1;
-                }
-            }
-            oldp = q[foundSlot].priority;
-            q[foundSlot].priority = key;
-            if (key < oldp) {
-                CurveHeap_SiftDown(q, qcnt, foundSlot);
-            } else if (key > oldp) {
-                u16 upKey = q[foundSlot].priority;
-                u16 upVal = q[foundSlot].value;
-                int parent;
-                q[0].priority = 0xFFFF;
-                while (q[(parent = foundSlot >> 1)].priority <= upKey) {
-                    q[foundSlot].value = q[parent].value;
-                    q[foundSlot].priority = q[parent].priority;
-                    foundSlot = parent;
-                }
-                q[foundSlot].priority = upKey;
-                q[foundSlot].value = upVal;
-            }
-        }
+        voxmaps_reprioritizeNode(state, foundIdx, key);
         return;
     }
 
@@ -1236,19 +1201,13 @@ void voxmaps_visitRouteNeighbor(struct RouteState* state, RouteNode* parentNode,
 
     if (routeNode->hCost > state->minHCost) {
         key = (u16)(routeNode->hCost + routeNode->gCost);
-        q = state->queue;
-        q[++state->queueCount].value = nodeCount;
-        q[state->queueCount].priority = 0xFFFF - key;
-        heapSiftUp(q, state->queueCount);
+        voxmaps_queueNode(state, nodeCount, 0xFFFF - key);
     } else {
         if (routeNode->hCost < state->minHCost) {
             state->minHCost = routeNode->hCost;
         }
         key = (u16)(routeNode->hCost + routeNode->gCost);
-        q = state->queue;
-        q[++state->queueCount].value = nodeCount;
-        q[state->queueCount].priority = 0xFFFF - key;
-        heapSiftUp(q, state->queueCount);
+        voxmaps_queueNode(state, nodeCount, 0xFFFF - key);
     }
 }
 
@@ -1278,4 +1237,33 @@ static inline void heapSiftUp(CurveHeapNode* q, int i) {
     }
     q[i].priority = key;
     q[i].value = val;
+}
+
+static inline void voxmaps_queueNode(RouteState* state, u16 nodeIndex, u16 priority) {
+    CurveHeapNode* queue = state->queue;
+    queue[++state->queueCount].value = nodeIndex;
+    queue[state->queueCount].priority = priority;
+    heapSiftUp(queue, state->queueCount);
+}
+
+static inline void voxmaps_reprioritizeNode(RouteState* state, u16 nodeIndex, u16 priority) {
+    CurveHeapNode* queue;
+    int slot;
+    int foundSlot;
+    int previousPriority;
+    s16 queueCount = state->queueCount;
+    queue = state->queue;
+    for (slot = 0; slot <= queueCount; slot++) {
+        if (nodeIndex == queue[slot].value) {
+            foundSlot = slot;
+            slot = state->queueCount + 1;
+        }
+    }
+    previousPriority = queue[foundSlot].priority;
+    queue[foundSlot].priority = priority;
+    if (priority < previousPriority) {
+        CurveHeap_SiftDown(queue, queueCount, foundSlot);
+    } else if (priority > previousPriority) {
+        heapSiftUp(queue, foundSlot);
+    }
 }

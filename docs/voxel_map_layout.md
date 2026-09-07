@@ -163,3 +163,32 @@ not establish runtime coverage of the reconstructed cache-loader code.
 The TU and canonical header pass `clang-format --dry-run --Werror`.
 Running the formatter produces no source diff and preserves the complete object,
 so no separate formatting commit is required.
+
+## Shared route-queue operations (2026-09-07)
+
+Four insertion sequences now call the private inline `voxmaps_queueNode` helper.
+It stores a 16-bit node index and priority after incrementing the signed queue
+count, then invokes the existing sift-up operation. The caller still inverts
+the accumulated route cost for ordinary insertions and supplies 0xfffe for the
+goal-node insertion. These argument lifetimes reproduce the retail register
+choices in `voxmaps_updateRoutePath`, making all 1,192 bytes exact.
+
+The existing-node update is extracted as `voxmaps_reprioritizeNode`; its upward
+case shares `heapSiftUp` instead of duplicating it. The helper retains the
+inclusive search from slot zero through the queue count, the original found-slot
+lifetime, and the conditional downward/upward sift. The caller still supplies
+the un-inverted cost here, unlike ordinary insertion. This pass records that
+retail distinction without silently changing the search algorithm.
+
+The unit advances from 25/28 to 26/28 exact functions and from 99.665924% to
+99.870766%. Neighbor expansion improves from 98.98955% to 99.651566%; its
+2,296-byte instruction count is unchanged. Only these two functions change
+instruction bytes. All named symbol layouts and allocated non-text section
+bytes, sizes, and alignments are unchanged. The current GC/1.3 compiler profile
+and TU structure are unchanged. The remaining two functions differ only in
+register allocation, and the unit remains `NonMatching`.
+
+Both `ninja all_source` and the strict matching checksum pass with 30-second
+limits. The linked DOL remains byte-identical to retail; as above, the unit's
+`NonMatching` status means that check uses its retail object. Objdiff confirms
+that no other unit's match measures change.
