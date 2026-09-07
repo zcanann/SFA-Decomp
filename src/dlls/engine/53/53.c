@@ -54,6 +54,7 @@
 #define CHEAT_INPUT_TIMEOUT 0xF
 #define SECONDS_PER_HOUR    3600
 #define SECONDS_PER_MINUTE  60
+#define SAVE_SELECT_VISIBLE_TASK_TEXT_COUNT 3
 
 extern void* gSaveSelectTextures[4];
 
@@ -594,32 +595,27 @@ void SaveSelectScreen_render(int param)
     case SAVE_SELECT_PANEL_OPEN_FILE:
     {
         u8* infoTextIds;
-        int taskTextOffset;
-        int slotCount;
-        int infoIndex;
+        int taskTextCount;
+        int taskTextIndex;
         FrontendSaveSlot* slot;
 
         saveSelect_drawText(param, alpha);
         gameTextSetColor(0xff, 0xff, 0xff, alpha);
-        slotCount = 0;
+        taskTextCount = 0;
         slot = &saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex];
-        while (slotCount < 3 && slot->taskTexts[slotCount] != NULL)
+        while (taskTextCount < SAVE_SELECT_VISIBLE_TASK_TEXT_COUNT && slot->taskTexts[taskTextCount] != NULL)
         {
-            slotCount++;
+            taskTextCount++;
         }
-        infoIndex = 0;
-        infoTextIds = gSaveSelectInfoTextIds + (u8)(3 - slotCount);
-        taskTextOffset = 0;
-        while (infoIndex < slotCount)
+        taskTextIndex = 0;
+        infoTextIds = gSaveSelectInfoTextIds + (u8)(SAVE_SELECT_VISIBLE_TASK_TEXT_COUNT - taskTextCount);
+        while (taskTextIndex < taskTextCount)
         {
             gameTextAppendStr(
-                ((FrontendSaveSlot*)((char*)saveFileSelect_saveSlots +
-                                     saveFileSelect_currentSlotIndex * 0x24 + taskTextOffset))
-                    ->taskTexts[0],
+                saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].taskTexts[taskTextIndex],
                 *infoTextIds);
             infoTextIds++;
-            taskTextOffset += 4;
-            infoIndex++;
+            taskTextIndex++;
         }
         if (gSaveSelectMenuItem != NULL)
         {
@@ -638,18 +634,15 @@ void SaveSelectScreen_render(int param)
         if (gSaveGameEnabled != 0)
         {
             int slotIndex;
-            int slotOffset;
 
             saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
             slotIndex = 0;
-            slotOffset = 0;
             do
             {
                 sprintf(gSaveSelectTextBuffers[slotIndex], sFrontendPercentFormat,
-                        ((FrontendSaveSlot*)((u8*)saveFileSelect_saveSlots + slotOffset))->completionPercent);
+                        saveFileSelect_saveSlots[slotIndex].completionPercent);
                 gameTextSetColor(0xff, 0xff, 0xff, alpha);
                 gameTextAppendStr(gSaveSelectTextBuffers[slotIndex], gSaveSelectSlotTextIds[slotIndex]);
-                slotOffset += sizeof(FrontendSaveSlot);
                 slotIndex++;
             } while (slotIndex < FRONTEND_SAVE_SLOT_COUNT);
         }
@@ -727,7 +720,7 @@ int SaveSelectScreen_run(void)
                 n_attractmode_releaseMovieBuffers();
                 if (gSaveGameEnabled != 0)
                 {
-                    trySaveGame(*(u8*)&saveFileSelect_currentSlotIndex);
+                    trySaveGame((u8)saveFileSelect_currentSlotIndex);
                 }
                 else
                 {
@@ -742,7 +735,7 @@ int SaveSelectScreen_run(void)
                 Music_Trigger(MUSICTRIG_windydocks, 0);
                 if (gSaveSelectChapter != 0)
                 {
-                    gplayNewGame(sFrontendFoxName, *(u8*)&saveFileSelect_currentSlotIndex);
+                    gplayNewGame(sFrontendFoxName, (u8)saveFileSelect_currentSlotIndex);
                     (*gMapEventInterface)->setCharacter(1);
                     flagPtr = (SaveGameCharacterPosition*)(*gMapEventInterface)->getCurCharPos();
                     flagPtr->mapDataFileId = -1;
