@@ -9,16 +9,13 @@
 
 const f32 gVecMathZero[1] = {0.0f};
 
-f32 interpolate(f32 a, f32 t, f32 exp)
-{
-    if (t <= 1.0f)
-    {
+f32 interpolate(f32 a, f32 t, f32 exp) {
+    if (t <= 1.0f) {
         return a * (1.0f - powfBitEstimate(1.0f - t, exp));
     }
     return gVecMathZero[0];
 }
-void basisVectorsToEulerAngles(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
-{
+void basisVectorsToEulerAngles(f32* a, f32* b, s16* out0, s16* out1, s16* out2) {
     f32 cross[3];
     f32 sinp;
     f32 c0;
@@ -39,20 +36,14 @@ void basisVectorsToEulerAngles(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
     b1 = b[1];
     a2 = a[2];
     sinp = asinf(-b[2]);
-    if (sinp < 1.5707964f)
-    {
-        if (sinp > -1.5707964f)
-        {
+    if (sinp < 1.5707964f) {
+        if (sinp > -1.5707964f) {
             roll = atan2f_fast(c2, a2);
             yaw = atan2f_fast(b0, b1);
-        }
-        else
-        {
+        } else {
             roll = -atan2f_fast(c1, c0) + (yaw = gVecMathZero[0]);
         }
-    }
-    else
-    {
+    } else {
         roll = atan2f_fast(c1, c0) - (yaw = gVecMathZero[0]);
     }
     {
@@ -65,8 +56,7 @@ void basisVectorsToEulerAngles(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
     }
 }
 
-void setMatrixFromObjectTransposed(void* obj, f32* out)
-{
+void setMatrixFromObjectTransposed(void* obj, f32* out) {
     f32 m[16];
     setMatrixFromObjectPos(m, obj);
     out[0] = m[0];
@@ -83,8 +73,7 @@ void setMatrixFromObjectTransposed(void* obj, f32* out)
     out[11] = m[14];
 }
 
-void mtx44Transpose(f32* src, f32* dst)
-{
+void mtx44Transpose(f32* src, f32* dst) {
     dst[0] = src[0];
     dst[1] = src[4];
     dst[2] = src[8];
@@ -98,58 +87,49 @@ void mtx44Transpose(f32* src, f32* dst)
     dst[7] = src[13];
     dst[11] = src[14];
 }
-f32 getXZDistanceSquared(f32* a, f32* b)
-{
+f32 getXZDistanceSquared(f32* a, f32* b) {
     f32 dx = a[0] - b[0];
     f32 dz = a[2] - b[2];
     return dx * dx + dz * dz;
 }
 
-f32 Vec_xzDistance(f32* a, f32* b)
-{
+f32 Vec_xzDistance(f32* a, f32* b) {
     f32 dx = a[0] - b[0];
     f32 dz = a[2] - b[2];
     return sqrtf(dx * dx + dz * dz);
 }
 
-f32 vec3f_distanceSquared(f32* a, f32* b)
-{
+f32 vec3f_distanceSquared(f32* a, f32* b) {
     f32 dx = a[0] - b[0];
     f32 dy = a[1] - b[1];
     f32 dz = a[2] - b[2];
     return dx * dx + dy * dy + dz * dz;
 }
 
-f32 Vec_distance(f32* a, f32* b)
-{
+f32 Vec_distance(f32* a, f32* b) {
     f32 dx = a[0] - b[0];
     f32 dy = a[1] - b[1];
     f32 dz = a[2] - b[2];
     return sqrtf(dx * dx + dy * dy + dz * dz);
 }
 
-int sin16(s16 angle)
-{
+int sin16(s16 angle) {
     return (int)(65536.0f * fsin16((u16)angle));
 }
 
-int atan2Angle16(float y, float x)
-{
+int atan2Angle16(float y, float x) {
     return (int)(10430.37835 * atan2f(y, x));
 }
 
-int getAngle(float y, float x)
-{
+int getAngle(float y, float x) {
     return (int)(10430.37835 * atan2f(y, x));
 }
 
-int atan2i(int y, int x)
-{
+int atan2i(int y, int x) {
     return (int)(10430.37835 * atan2f((f32)y, x));
 }
 
-void initRotationMtx(f32* m, f32 a, f32 b, f32 c)
-{
+void initRotationMtx(f32* m, f32 a, f32 b, f32 c) {
     f32 z = gVecMathZero[0];
     m[0] = z;
     m[1] = z;
@@ -171,8 +151,7 @@ void initRotationMtx(f32* m, f32 a, f32 b, f32 c)
     m[5] = b;
     m[10] = c;
 }
-void vecRotateYXZ(s16* a, f32* v)
-{
+void vecRotateYXZ(s16* a, f32* v) {
     f32 x, y, z;
     f32 s1, s2;
     f32 trig;
@@ -215,8 +194,7 @@ void vecRotateYXZ(s16* a, f32* v)
 
 const f32 gVecMathAngleScaleInv[1] = {1.0f / 65536.0f};
 
-void vecRotateZXY(s16* rotation, f32* vector)
-{
+void vecRotateZXY(s16* rotation, f32* vector) {
     f32 s2;
     f32 c2;
     f32 s1;
@@ -237,8 +215,7 @@ void vecRotateZXY(s16* rotation, f32* vector)
     vector[0] = t5 * c0 + t2 * s0;
     vector[2] = t2 * c0 - t5 * s0;
 }
-void mtxRotateByVec3s(f32* mtx, const void* transform)
-{
+void mtxRotateByVec3s(f32* mtx, const void* transform) {
     f32 sinX;
     f32 cosX;
     f32 sinY;
@@ -326,15 +303,13 @@ void mtxRotateByVec3s(f32* mtx, const void* transform)
     mtx[15] = 1.0f;
 }
 
-void mtx44ScaleRow1(f32* p, f32 s)
-{
+void mtx44ScaleRow1(f32* p, f32 s) {
     p[4] *= s;
     p[5] *= s;
     p[6] *= s;
 }
 
-void setMatrixFromObjectPos(f32* m, const MatrixTransform* transform)
-{
+void setMatrixFromObjectPos(f32* m, const MatrixTransform* transform) {
     f32 scale;
     f32 s0;
     f32 c0;
@@ -364,8 +339,7 @@ void setMatrixFromObjectPos(f32* m, const MatrixTransform* transform)
     m[14] = transform->z;
     m[15] = 1.0f;
 }
-int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi)
-{
+int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi) {
     f32* timer = timerp;
     int trig;
     int range;
@@ -375,21 +349,14 @@ int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi)
     f32 t;
 
     *timer += timeDelta / (freq = 60.0f);
-    if (*timer > lo)
-    {
-        if (*timer > hi)
-        {
+    if (*timer > lo) {
+        if (*timer > hi) {
             trig = 1;
-        }
-        else
-        {
+        } else {
             range = (int)(oneOverTimeDelta * (freq * (hi - lo)));
-            if (range == 0)
-            {
+            if (range == 0) {
                 val = 0;
-            }
-            else
-            {
+            } else {
                 rv = rand();
                 {
                     f32 acc = rv;
@@ -401,8 +368,7 @@ int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi)
             }
             trig = !val;
         }
-        if (trig != 0)
-        {
+        if (trig != 0) {
             *timer = gVecMathZero[0];
         }
         return trig;
@@ -410,11 +376,9 @@ int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi)
     return 0;
 }
 
-int randomGetRange(int lo, int hi)
-{
+int randomGetRange(int lo, int hi) {
     f32 v;
-    if (lo == hi)
-    {
+    if (lo == hi) {
         return lo;
     }
     v = (f32)(u32)rand();
@@ -424,8 +388,7 @@ int randomGetRange(int lo, int hi)
     return v;
 }
 
-void copyMatrix44(f32* src, f32* dst)
-{
+void copyMatrix44(f32* src, f32* dst) {
     dst[0] = src[0];
     dst[1] = src[1];
     dst[2] = src[2];
@@ -443,15 +406,13 @@ void copyMatrix44(f32* src, f32* dst)
     dst[14] = src[14];
     dst[15] = src[15];
 }
-void mtx44_mult(f32* a, f32* b, f32* out)
-{
+void mtx44_mult(f32* a, f32* b, f32* out) {
     f32* end = a + 12;
     f32 a1, a0, a2;
     f32 b0, b1, b2, b3;
     f32 s, t;
 
-    do
-    {
+    do {
         a0 = a[0];
         a1 = a[1];
         a2 = a[2];
@@ -522,8 +483,7 @@ void mtx44_mult(f32* a, f32* b, f32* out)
     out[2] = t;
 }
 
-void mtx44_multSafe(f32* a, f32* b, f32* out)
-{
+void mtx44_multSafe(f32* a, f32* b, f32* out) {
     f32 tmp[16];
     int o3, o2, o1;
     int t;
@@ -537,15 +497,13 @@ void mtx44_multSafe(f32* a, f32* b, f32* out)
     row = 0;
     zero = gVecMathZero[0];
     tp = tmp;
-    for (; i < 4; i++)
-    {
+    for (; i < 4; i++) {
         j = 0;
         t = row;
         o1 = (row + 1) * 4;
         o2 = (row + 2) * 4;
         o3 = (row + 3) * 4;
-        for (; j < 4; j++)
-        {
+        for (; j < 4; j++) {
             tp[t] = zero;
             tp[t] += (a)[row] * (b)[j];
             tp[t] += *(f32*)((int)a + o1) * *(f32*)((int)b + (j + 4) * 4);
@@ -555,8 +513,7 @@ void mtx44_multSafe(f32* a, f32* b, f32* out)
         }
         row += 4;
     }
-    for (i = 0; i < 16; i += 4)
-    {
+    for (i = 0; i < 16; i += 4) {
         *(f32*)((int)out + (i << 2)) = *(f32*)((int)tmp + (i << 2));
         *(f32*)((int)out + ((i + 1) << 2)) = *(f32*)((int)tmp + ((i + 1) << 2));
         *(f32*)((int)out + ((i + 2) << 2)) = *(f32*)((int)tmp + ((i + 2) << 2));
@@ -564,8 +521,7 @@ void mtx44_multSafe(f32* a, f32* b, f32* out)
     }
 }
 
-void Matrix_TransformVector(const f32* matrix, const f32* vector, f32* out)
-{
+void Matrix_TransformVector(const f32* matrix, const f32* vector, f32* out) {
     f32 vx, vy, vz;
     f32 m0, m1, m2;
     f32 t;
@@ -601,8 +557,7 @@ void Matrix_TransformVector(const f32* matrix, const f32* vector, f32* out)
     out[2] = m0 + m2;
 }
 
-void Matrix_TransformPoint(const f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ)
-{
+void Matrix_TransformPoint(const f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ) {
     *outX = matrix[12] + (matrix[0] * x + matrix[4] * y + matrix[8] * z);
     *outY = matrix[13] + (matrix[1] * x + matrix[5] * y + matrix[9] * z);
     *outZ = matrix[14] + (matrix[2] * x + matrix[6] * y + matrix[10] * z);
