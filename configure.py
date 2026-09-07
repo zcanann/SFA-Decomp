@@ -1126,7 +1126,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/engine/25/25.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/26/26.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/27/27.c"),
-            Object(NonMatching, "dlls/engine/28/28.c"),
+            Object(MatchingFor("GSAE01"), "dlls/engine/28/28.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/29/29.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/30/30.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/31/31.c"),

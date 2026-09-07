@@ -8,7 +8,7 @@ void Effect3_func05_nop(void);
 void Effect3_func03_nop(void);
 void Effect3_release(void);
 void Effect3_initialise(void);
-int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParams* spawnParamsIn, u32 spawnFlags,
+int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                         u8 modelId, f32* extraArgs);
 
 #endif /* MAIN_DLL_DLL_001C_EFFECT3_H_ */

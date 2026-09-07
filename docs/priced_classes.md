@@ -3181,6 +3181,11 @@ whole stream, i.e. the verification arm fires.
 
 ### 30b. `Effect3_spawnObject` — the PARAM-HOME row worked to exhaustion (7 796 B, 0.75 loss)
 
+**Resolved 2026-09-07:** the source now matches at 100% with the unchanged GC/1.3
+profile. Direct float-to-`s16` casts and removal of the parameter alias change the
+allocator graph while preserving the instruction shape. The historical probes below
+did not exhaust that combination; see [the measured explanation](effect3_matching.md).
+
 Every axis measured inert (home map unchanged in all of them): **7 declaration orders** of the
 three-local block including A91 split forms; **4 parameter-list orders**; **5 parameter retypes**
 (`u32`->`int` flags, `int`->`u32` id, `u8`->`int` modelId, and two that do not compile);
