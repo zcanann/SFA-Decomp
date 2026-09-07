@@ -61,23 +61,16 @@ static inline void screenTransitionFadeColor(u8 r, u8 g, u8 b)
  * center of the viewport with alpha-fading strips expanding outward, first along
  * X (vertical band), then along Y (horizontal band). The band grows with the
  * transition alpha; when it covers the viewport this falls back to a plain fade.
- * The locals are reused across the two passes with shifted roles:
- *   half:     pass 1 = half viewport width; pass 2 = fade extent (fadeSpan role)
- *   band:     pass 1 = band half-width, then left draw cursor; pass 2 = half height
- *   wipe:     pass 1 = wipe amount from alpha; pass 2 = band half-height, then top cursor
- *   fadeSpan: pass 1 = fade extent per side; pass 2 = bottom draw cursor
- *   outer:    pass 1 = right draw cursor; pass 2 = masked walk distance (dist role)
- * Note the (r, b, g) argument order on the fallback call is genuine retail
- * behavior (harmless: only ever invoked with r==g==b==0xFF).
+ * The fallback passes (r, b, g), as in retail; this renderer is called with white.
  */
 void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
 {
-    u32 band;
-    u32 height;
-    u32 walked;
-    u32 outer;
-    u8 strip;
     u8 maxAlpha;
+    u32 verticalWalked;
+    u32 horizontalFade;
+    int horizontalLimit;
+    int verticalLimit;
+    u32 horizontalStep;
     s32 vx;
     s32 vy;
     u32 vr;
@@ -87,16 +80,29 @@ void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     u32 sw;
     u32 sh;
     GXColor col;
-    u32 width;
-    u32 wipeSpan;
-    u32 wipe;
-    u32 half;
-    u32 dist;
+    u16 halfHeight;
     u32 alphaSpan;
-    u32 fadeSpan;
+    u32 wipeSpan;
+    u32 verticalStep;
+    u16 halfWidth;
+    u32 top;
+    u32 height;
     f32 conv;
-    s32 viewWidth;
+    u32 bottom;
+    u32 horizontalWalked;
+    u32 right;
+    u32 left;
+    u32 verticalFade;
+    s32 verticalDistance;
+    u32 bandHalfWidth;
+    u32 width;
     s32 viewHeight;
+    s32 viewWidth;
+    s32 horizontalDistance;
+    u32 bandHalfHeight;
+    u32 wipeAmount;
+    u8 horizontalStrip;
+    u8 verticalStrip;
 
     GXGetScissor(&sx, &sy, &sw, &sh);
     Camera_GetFullViewportRect(&vx, &vy, &vr, &vb);
@@ -107,91 +113,96 @@ void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     if (screenTransitionAlpha > SCREEN_TRANSITION_ALPHA_MIDPOINT)
     {
         maxAlpha = 0xff;
-        wipe = (int)(screenTransitionAlpha - SCREEN_TRANSITION_ALPHA_MIDPOINT);
+        wipeAmount = (int)(screenTransitionAlpha - SCREEN_TRANSITION_ALPHA_MIDPOINT);
     }
     else
     {
         maxAlpha = SCREEN_TRANSITION_ALPHA_SCALE * screenTransitionAlpha;
-        wipe = 0;
+        wipeAmount = 0;
     }
-    half = (u16)(width >> 1);
-    wipeSpan = wipe & 0xffff;
-    conv = (f32)(int)(wipeSpan * half);
-    band = (u32)(int)(conv / 128.0f) & 0xffff;
-    if (band == half)
+    halfWidth = (u16)(width >> 1);
+    wipeSpan = wipeAmount & 0xffff;
+    conv = (f32)(int)(wipeSpan * halfWidth);
+    bandHalfWidth = (u16)(conv / 128.0f);
+    if (bandHalfWidth == halfWidth)
     {
         screenTransitionFadeColor(r, b, g);
     }
     else
     {
-        fadeSpan = (half - band) & 0xffff;
-        outer = (half + band) & 0xffff;
-        band = ((half - 1) - band) & 0xffff;
+        horizontalFade = (halfWidth - bandHalfWidth) & 0xffff;
+        right = (halfWidth + bandHalfWidth) & 0xffff;
+        left = ((halfWidth - 1) - bandHalfWidth) & 0xffff;
         GXSetScissor(vx, vy, viewWidth, viewHeight);
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
         col.a = maxAlpha;
-        hudDrawRect(vx + band + 1, vy, vx + outer, vb, col);
-        strip = (int)fadeSpan / ((int)half / 6);
-        if (strip == 0)
+        hudDrawRect(vx + left + 1, vy, vx + right, vb, col);
+        horizontalStrip = (int)horizontalFade / ((int)halfWidth / 6);
+        if (horizontalStrip == 0)
         {
-            strip = 1;
+            horizontalStrip = 1;
         }
-        walked = 0;
+        horizontalWalked = 0;
         alphaSpan = maxAlpha;
-        for (; dist = walked & 0xffff, (int)dist < (int)(fadeSpan - strip);)
+        horizontalStep = horizontalStrip;
+        horizontalLimit = horizontalFade - horizontalStep;
+        while ((horizontalDistance = horizontalWalked & 0xffff) < horizontalLimit)
         {
             col.r = 0xff;
             col.g = 0xff;
             col.b = 0xff;
-            col.a = ((int)(alphaSpan * (half - dist)) / (int)half) & 0xff;
-            hudDrawRect(vx + (outer & 0xffff), vy, strip + (vx + (outer & 0xffff)), vb, col);
-            hudDrawRect((vx + (band & 0xffff) - strip) + 1, vy, vx + (band & 0xffff) + 1, vb, col);
-            walked += strip;
-            outer += strip;
-            band -= strip;
+            col.a = ((int)(alphaSpan * (halfWidth - horizontalDistance)) / (int)halfWidth) & 0xff;
+            hudDrawRect(vx + (right & 0xffff), vy, horizontalStep + (vx + (right & 0xffff)), vb, col);
+            hudDrawRect((vx + (left & 0xffff) - horizontalStep) + 1, vy, vx + (left & 0xffff) + 1, vb, col);
+            horizontalWalked += horizontalStep;
+            right += horizontalStep;
+            left -= horizontalStep;
         }
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = ((int)(alphaSpan * (half - dist)) / (int)half) & 0xff;
-        hudDrawRect(vx + (outer & 0xffff), vy, vr, vb, col);
-        hudDrawRect(vx, vy, vx + (band & 0xffff) + 1, vb, col);
-        band = (u16)(height >> 1);
-        conv = (f32)(int)(wipeSpan * band);
-        wipe = (u32)(int)(conv / 128.0f) & 0xffff;
-        half = (band - wipe) & 0xffff;
-        fadeSpan = (band + wipe) & 0xffff;
-        wipe = ((band - 1) - wipe) & 0xffff;
+        col.a = ((int)(alphaSpan * (halfWidth - horizontalDistance)) / (int)halfWidth) & 0xff;
+        hudDrawRect(vx + (right & 0xffff), vy, vr, vb, col);
+        hudDrawRect(vx, vy, vx + (left & 0xffff) + 1, vb, col);
+        halfHeight = (u16)(height >> 1);
+        conv = (f32)(int)(wipeSpan * halfHeight);
+        bandHalfHeight = (u16)(conv / 128.0f);
+        verticalFade = (halfHeight - bandHalfHeight) & 0xffff;
+        bottom = (halfHeight + bandHalfHeight) & 0xffff;
+        top = ((halfHeight - 1) - bandHalfHeight) & 0xffff;
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
         col.a = maxAlpha;
-        hudDrawRect(vx, vy + wipe + 1, vr, vy + fadeSpan, col);
-        strip = (int)half / (int)(band >> 3);
-        if (strip == 0)
+        hudDrawRect(vx, vy + top + 1, vr, vy + bottom, col);
+        verticalStrip = (int)verticalFade / (int)((u32)halfHeight >> 3);
+        if (verticalStrip == 0)
         {
-            strip = 1;
+            verticalStrip = 1;
         }
-        for (walked = 0; outer = walked & 0xffff, (int)outer < (int)(half - strip);)
+        verticalWalked = 0;
+        verticalStep = verticalStrip;
+        verticalLimit = verticalFade - verticalStep;
+        while ((verticalDistance = verticalWalked & 0xffff) < verticalLimit)
         {
             col.r = 0xff;
             col.g = 0xff;
             col.b = 0xff;
-            col.a = ((int)(alphaSpan * (band - outer)) / (int)band) & 0xff;
-            hudDrawRect(vx, vy + (fadeSpan & 0xffff), vr, strip + (vy + (fadeSpan & 0xffff)), col);
-            hudDrawRect(vx, (vy + (wipe & 0xffff) - strip) + 1, vr, vy + (wipe & 0xffff) + 1, col);
-            walked += strip;
-            fadeSpan += strip;
-            wipe -= strip;
+            col.a = ((int)(alphaSpan * (halfHeight - verticalDistance)) / (int)halfHeight) & 0xff;
+            hudDrawRect(vx, vy + (bottom & 0xffff), vr, verticalStep + (vy + (bottom & 0xffff)), col);
+            hudDrawRect(vx, (vy + (top & 0xffff) - verticalStep) + 1, vr, vy + (top & 0xffff) + 1, col);
+            verticalWalked += verticalStep;
+            bottom += verticalStep;
+            top -= verticalStep;
         }
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = ((int)(alphaSpan * (band - outer)) / (int)band) & 0xff;
-        hudDrawRect(vx, vy + (fadeSpan & 0xffff), vr, vb, col);
-        hudDrawRect(vx, vy, vr, vy + (wipe & 0xffff) + 1, col);
+        col.a = ((int)(alphaSpan * (halfHeight - verticalDistance)) / (int)halfHeight) & 0xff;
+        hudDrawRect(vx, vy + (bottom & 0xffff), vr, vb, col);
+        hudDrawRect(vx, vy, vr, vy + (top & 0xffff) + 1, col);
         GXSetScissor(sx, sy, sw, sh);
     }
 }

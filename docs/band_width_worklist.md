@@ -15,6 +15,13 @@ Update 2026-09-07: `padUpdate` is also resolved at 100%. Native controller
 arrays and fully indexed loops replace the synthetic layout and explicit
 cursors. See [controller input matching](pad_matching.md).
 
+Update 2026-09-07: `Link_render` and `screenTransition_drawWhiteWipe` are resolved,
+with both complete TUs matching under their unchanged GC/1.3 profiles. Color
+masks and local ordering resolve [Link rendering](link_render_matching.md);
+separate axis lifetimes and native half-extents resolve
+[screen transitions](screen_transition_matching.md). These recoveries supersede
+the source-unreachable classifications below.
+
 ## Rotation class CLOSED WITH MECHANISM (2026-08-03 corpus mining)
 
 The saved-band rotation offset is set by the inline-boundary value count, dose-saturating at one,
