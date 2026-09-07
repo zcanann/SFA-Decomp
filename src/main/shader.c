@@ -3665,9 +3665,9 @@ void renderSceneGeometry(u8 renderType, s8* order) {
 
 void sceneDraw(void) {
     char* q;
+    GameObject* player;
     int i;
     GameObject** deferred;
-    GameObject* player;
     u8 flag;
     int t;
     GXColor c;
@@ -3756,9 +3756,8 @@ void sceneDraw(void) {
     i = 0;
     deferred = (GameObject**)(q + 0x4114);
     for (; i < gLightmapDeferredObjectCount; i++) {
-        (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, *deferred);
-        objRender(0, 0, 0, 0, *deferred, 1);
-        deferred++;
+        (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, deferred[i]);
+        objRender(0, 0, 0, 0, deferred[i], 1);
     }
     renderParticles();
     renderSceneGeometry(1, gMapBlockDrawOrderBackToFront);

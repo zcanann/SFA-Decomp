@@ -4,8 +4,8 @@ The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
 All 40,656 assigned data bytes match. The common GC/1.3 invocation produces
-138/145 exact functions and a 99.57328% instruction fuzzy score; the TU remains
-`NonMatching` because seven functions still differ.
+139/145 exact functions and a 99.5749% instruction fuzzy score; the TU remains
+`NonMatching` because six functions still differ.
 
 This supersedes the constant-pool blocker in
 [lightmap_draw_recovery.md](lightmap_draw_recovery.md) and the historical
@@ -224,7 +224,7 @@ The initial merge exposed six formerly exact functions: `updateVisibleGeometry`,
 `renderObjects`, `renderSceneGeometry`, `initMapBlocks`, `renderGlows`, and
 `queueGlowRender`. Three other functions became exact, so that merge changed the
 combined exact function count from 132 to 129. The follow-up passes bring it to
-138. All seven remaining code differences must be recovered before
+139. All six remaining code differences must be recovered before
 `MatchingFor` is justified.
 
 All forty functions that directly consume this pool now have matching literal
@@ -309,3 +309,24 @@ Both 30-second-bounded build gates pass after matching configuration
 (`main.dol: OK`). Formatting is recorded separately and preserves generated
 objects. The shader unit still links its retail object while its remaining
 mismatched functions are recovered.
+
+
+## Exact scene drawing (2026-09-07)
+
+`sceneDraw` now matches all 375 instructions. Indexing the deferred-object list
+with `deferred[i]`, together with declaring `player` before the loop index and
+list pointer, recovers the target register allocation. MWCC generates the same
+pointer walk from this ordinary array traversal. The index alone leaves the
+previous three differences; the declaration order alone leaves four pointer
+register differences. Both changes are required.
+
+Only `sceneDraw` changes instruction bytes. All assigned data bytes and named
+symbol layouts remain unchanged. Anonymous symbols after this function are
+renumbered by one; relocation locations, kinds, addends, and target offsets
+remain identical. The TU reaches 139/145 exact functions and remains
+`NonMatching` while the other six functions are recovered.
+
+The data and literal-sequence audits pass, as do `ninja all_source` and the
+strict retail checksum gate with 30-second timeouts. Formatting preserves
+the probe object byte-for-byte. The strict build continues to use the retail
+shader object.
