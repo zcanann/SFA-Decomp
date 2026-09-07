@@ -896,7 +896,7 @@ int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unus
         queueCount = 0;
         distance = (directCurve->z - startCurve->z) * (directCurve->z - startCurve->z);
         queueDistances[queueCount] = (directCurve->x - startCurve->x) * (directCurve->x - startCurve->x) +
-                            (directCurve->y - startCurve->y) * (directCurve->y - startCurve->y) + distance;
+                                     (directCurve->y - startCurve->y) * (directCurve->y - startCurve->y) + distance;
         queueIndices[queueCount++] = directIndex;
         visited[directIndex] = 1;
 
