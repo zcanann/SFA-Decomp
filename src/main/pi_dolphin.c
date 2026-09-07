@@ -4693,7 +4693,7 @@ void piRomLoadSection(int romOffset, int mapIndex, void* destBuf)
     }
 }
 
-void tex1GetFrame(int texId, int unused, int* outA, int* outB, int count, int* frameTable, int queryMode)
+void tex1GetFrame(int bankWord, int unused, int* decompressedSize, int* compressedSize, int frameIndexOrCount, int* frameOffsets, int queryMode)
 {
     int idx = -1;
     if (gResourceFileBuffers[0x20] != 0 || gResourceFileBuffers[0x4b] != 0)
@@ -4705,11 +4705,11 @@ void tex1GetFrame(int texId, int unused, int* outA, int* outB, int count, int* f
         OSRestoreInterrupts(s);
         f46c = gResourceFileBuffers[0x21];
         f518 = gResourceFileBuffers[0x4c];
-        if ((texId & 0x80000000) != 0 && (flags & 0x2000) == 0)
+        if ((bankWord & 0x80000000) != 0 && (flags & 0x2000) == 0)
         {
             idx = 0x4b;
         }
-        else if ((texId & 0x40000000) != 0 && (flags & 0x1000) == 0)
+        else if ((bankWord & 0x40000000) != 0 && (flags & 0x1000) == 0)
         {
             idx = 0x20;
         }
@@ -4725,31 +4725,31 @@ void tex1GetFrame(int texId, int unused, int* outA, int* outB, int count, int* f
             u32 base = gResourceFileBuffers[idx];
             if (base != 0)
             {
-                if (queryMode == 1 && frameTable != 0)
+                if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0)
                 {
-                    int e = (texId & 0xffffff) * 2 + frameTable[count];
+                    int e = (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount];
                     int v;
                     e = base + e + 4;
                     v = *(int*)(e + 4);
-                    *outB = *(int*)(e + 8);
-                    *outA = v;
+                    *compressedSize = *(int*)(e + 8);
+                    *decompressedSize = v;
                 }
-                else if (queryMode == 2 && frameTable != 0)
+                else if (queryMode == TEXTURE_FRAME_QUERY_OFFSETS && frameOffsets != 0)
                 {
-                    memcpy(frameTable, (void*)(base + (texId & 0xffffff) * 2), (count + 1) * 4);
+                    memcpy(frameOffsets, (void*)(base + (bankWord & 0xffffff) * 2), (frameIndexOrCount + 1) * 4);
                 }
                 else
                 {
-                    int e = base + (texId & 0xffffff) * 2;
+                    int e = base + (bankWord & 0xffffff) * 2;
                     int v = *(int*)(e + 0xc);
-                    *outA = *(int*)(e + 8);
+                    *decompressedSize = *(int*)(e + 8);
                     if (strncmp(sDirBlockTag, (char*)e, 3) == 0)
                     {
-                        *outB = 0xffffffff;
+                        *compressedSize = 0xffffffff;
                     }
                     else
                     {
-                        *outB = v;
+                        *compressedSize = v;
                     }
                 }
             }
@@ -4760,33 +4760,33 @@ void tex1GetFrame(int texId, int unused, int* outA, int* outB, int count, int* f
                 char* buf;
                 DVDOpen(sResourceFileNameTable[idx], &fileInfo);
                 buf = mmAlloc(0x400, 0x7f7f7fff, 0);
-                DVDRead(&fileInfo, buf, 0x400, (texId & 0xffffff) * 2);
+                DVDRead(&fileInfo, buf, 0x400, (bankWord & 0xffffff) * 2);
                 DVDClose(&fileInfo);
                 DCStoreRange(buf, 0x400);
-                if (queryMode == 1 && frameTable != 0)
+                if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0)
                 {
-                    int e = frameTable[count];
+                    int e = frameOffsets[frameIndexOrCount];
                     int v;
                     e = (int)buf + e + 4;
                     v = *(int*)(e + 4);
-                    *outB = *(int*)(e + 8);
-                    *outA = v;
+                    *compressedSize = *(int*)(e + 8);
+                    *decompressedSize = v;
                 }
-                else if (queryMode == 2 && frameTable != 0)
+                else if (queryMode == TEXTURE_FRAME_QUERY_OFFSETS && frameOffsets != 0)
                 {
-                    memcpy(frameTable, buf, (count + 1) * 4);
+                    memcpy(frameOffsets, buf, (frameIndexOrCount + 1) * 4);
                 }
                 else
                 {
                     v = *(int*)(buf + 0xc);
-                    *outA = *(int*)(buf + 8);
+                    *decompressedSize = *(int*)(buf + 8);
                     if (strncmp(sDirBlockTag, buf, 3) == 0)
                     {
-                        *outB = 0xffffffff;
+                        *compressedSize = 0xffffffff;
                     }
                     else
                     {
-                        *outB = v;
+                        *compressedSize = v;
                     }
                 }
                 mm_free(buf);
@@ -4796,7 +4796,7 @@ void tex1GetFrame(int texId, int unused, int* outA, int* outB, int count, int* f
 }
 
 
-void tex0GetFrame(int texId, int unused, int* outA, int* outB, int count, int* frameTable, int queryMode)
+void tex0GetFrame(int bankWord, int unused, int* decompressedSize, int* compressedSize, int frameIndexOrCount, int* frameOffsets, int queryMode)
 {
     int idx = -1;
     if (gResourceFileBuffers[0x23] != 0 || gResourceFileBuffers[0x4d] != 0)
@@ -4808,11 +4808,11 @@ void tex0GetFrame(int texId, int unused, int* outA, int* outB, int count, int* f
         OSRestoreInterrupts(s);
         f478 = gResourceFileBuffers[0x24];
         f520 = gResourceFileBuffers[0x4e];
-        if ((texId & 0x80000000) != 0 && (flags & 0x200) == 0)
+        if ((bankWord & 0x80000000) != 0 && (flags & 0x200) == 0)
         {
             idx = 0x4d;
         }
-        else if ((texId & 0x40000000) != 0 && (flags & 0x100) == 0)
+        else if ((bankWord & 0x40000000) != 0 && (flags & 0x100) == 0)
         {
             idx = 0x23;
         }
@@ -4824,57 +4824,57 @@ void tex0GetFrame(int texId, int unused, int* outA, int* outB, int count, int* f
         {
             idx = 0x4d;
         }
-        if (queryMode == 1 && frameTable != 0)
+        if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0)
         {
             int base = gResourceFileBuffers[idx];
-            int e = base + (texId & 0xffffff) * 2 + frameTable[count] + 4;
+            int e = base + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount] + 4;
             int v = *(int*)(e + 8);
-            *outA = *(int*)(e + 4);
-            *outB = v;
+            *decompressedSize = *(int*)(e + 4);
+            *compressedSize = v;
         }
-        else if (queryMode == 2 && frameTable != 0)
+        else if (queryMode == TEXTURE_FRAME_QUERY_OFFSETS && frameOffsets != 0)
         {
-            memcpy(frameTable, (void*)(gResourceFileBuffers[idx] + (texId & 0xffffff) * 2), (count + 1) * 4);
+            memcpy(frameOffsets, (void*)(gResourceFileBuffers[idx] + (bankWord & 0xffffff) * 2), (frameIndexOrCount + 1) * 4);
         }
         else
         {
-            int e = gResourceFileBuffers[idx] + (texId & 0xffffff) * 2 + 4;
+            int e = gResourceFileBuffers[idx] + (bankWord & 0xffffff) * 2 + 4;
             int v = *(int*)(e + 8);
-            *outA = *(int*)(e + 4);
-            *outB = v;
+            *decompressedSize = *(int*)(e + 4);
+            *compressedSize = v;
         }
     }
 }
 
 
-void texPreGetMipmap(int texId, int unused, int* outA, int* outB, int count, int* frameTable, int queryMode)
+void texPreGetFrame(int bankWord, int unused, int* decompressedSize, int* compressedSize, int frameIndexOrCount, int* frameOffsets, int queryMode)
 {
     u32 base = gResourceFileBuffers[0x4f];
     if (base != 0)
     {
-        if (queryMode == 1 && frameTable != 0)
+        if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0)
         {
-            int e = base + (texId & 0xffffff) * 2 + frameTable[count] + 4;
+            int e = base + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount] + 4;
             int v = *(int*)(e + 8);
-            *outA = *(int*)(e + 4);
-            *outB = v;
+            *decompressedSize = *(int*)(e + 4);
+            *compressedSize = v;
         }
-        else if (queryMode == 2 && frameTable != 0)
+        else if (queryMode == TEXTURE_FRAME_QUERY_OFFSETS && frameOffsets != 0)
         {
-            memcpy(frameTable, (void*)(base + (texId & 0xffffff) * 2), (count + 1) * 4);
+            memcpy(frameOffsets, (void*)(base + (bankWord & 0xffffff) * 2), (frameIndexOrCount + 1) * 4);
         }
         else
         {
-            int e = base + (texId & 0xffffff) * 2;
+            int e = base + (bankWord & 0xffffff) * 2;
             int v = *(int*)(e + 0xc);
-            *outA = *(int*)(e + 8);
+            *decompressedSize = *(int*)(e + 8);
             if (strncmp(sDirBlockTag, (char*)e, 3) == 0)
             {
-                *outB = 0xffffffff;
+                *compressedSize = 0xffffffff;
             }
             else
             {
-                *outB = v;
+                *compressedSize = v;
             }
         }
     }

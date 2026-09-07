@@ -190,7 +190,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot) {
     newshadows_loadReflectionColorTexture(1);
     tex2 = textureIdxToPtr(renderOp->auxTextureIndex);
     wrapBit = (tex2->maxLod - tex2->minLod > 0) ? GX_TRUE : GX_FALSE;
-    GXInitTexObj((void*)tex2->gxTexObj, (u8*)tex2 + sizeof(Texture), tex2->width, tex2->height, tex2->format, GX_REPEAT,
+    GXInitTexObj(&tex2->gxTexObj, (u8*)tex2 + sizeof(Texture), tex2->width, tex2->height, tex2->format, GX_REPEAT,
                  GX_REPEAT, wrapBit);
     selectTexture((Texture*)tex2, 2);
     GXLoadTexMtxImm(gCameraLightPerspectiveScaledMatrix, GX_PTTEXMTX6, GX_MTX3x4);

@@ -82,7 +82,7 @@ u32 gRcpTexAllocTag = 6;
 char sDebugIntLineFormat[] = "%d\n";
 
 void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter);
-void textureInitGXTexObj(void* textureData);
+void textureInitGXTexObj(Texture* texture);
 
 void* textureIdxToPtr(int idx) {
     int i;
@@ -225,34 +225,31 @@ void textureInitSecondaryGXTexObj(Texture* tex, GXTexObj* obj) {
     }
 }
 
-void textureInitGXTexObj(void* textureData) {
-    u8 hasMipmaps[1];
+void textureInitGXTexObj(Texture* texture) {
+    GXBool hasMipmaps = FALSE;
     GXTexObj* gxTexObj;
-    Texture* texture = (Texture*)textureData;
-    hasMipmaps[0] = 0;
+    u16 width;
+    u16 height;
+    GXTexFmt format;
     texture->tmemAddr = NULL;
-    texture->preloaded = hasMipmaps[0];
+    texture->preloaded = hasMipmaps;
     gxTexObj = textureGetGXTexObj(texture);
     if (texture->maxLod - texture->minLod > 0) {
-        hasMipmaps[0] = 1;
+        hasMipmaps = 1;
     }
     GXInitTexObj(gxTexObj, textureGetImageData(texture), texture->width, texture->height, texture->format,
-                 texture->wrapS, texture->wrapT, hasMipmaps[0]);
-    if (hasMipmaps[0] != 0) {
+                 texture->wrapS, texture->wrapT, hasMipmaps);
+    if (hasMipmaps != 0) {
         GXInitTexObjLOD(gxTexObj, texture->minFilter, texture->magFilter, (f32)(u32)texture->minLod,
                         (f32)(s32)texture->maxLod, -2.0f, 0, 0, 0);
     } else {
         GXInitTexObjLOD(gxTexObj, texture->minFilter, texture->magFilter, 0.0f, 0.0f, 0.0f, 0, 0, 0);
     }
     GXInitTexObjUserData(gxTexObj, texture);
-    {
-        u16 width;
-        u16 height;
-        GXTexFmt format = GXGetTexObjFmt(gxTexObj);
-        width = GXGetTexObjWidth(gxTexObj);
-        height = GXGetTexObjHeight(gxTexObj);
-        texture->dataSize = GXGetTexBufferSize(width, height, format, 0, 0);
-    }
+    format = GXGetTexObjFmt(gxTexObj);
+    width = GXGetTexObjWidth(gxTexObj);
+    height = GXGetTexObjHeight(gxTexObj);
+    texture->dataSize = GXGetTexBufferSize(width, height, format, 0, 0);
 }
 
 void Rcp_ClearRenderFlags(u32 bits) {
@@ -497,10 +494,10 @@ static inline void loadTextureBank(int bank, int fileId) {
     gRcpTexBankCount[bank] = n - 1;
 }
 
-void* textureLoad(int texId, u8 flagIn) {
-    int file;
+void* textureLoad(int texId, u8 useHandle) {
+    int fileId;
     int bank;
-    int id16;
+    int bankIndex;
     u32 size;
     Texture* buf;
     Texture* firstTex;
@@ -511,18 +508,17 @@ void* textureLoad(int texId, u8 flagIn) {
     int bankWordSaved;
     BOOL interruptState;
     int origTexId;
-    int mipChainWord;
+    int frameCountFixed;
     u16 remapped;
     int dataByteOffset;
-    int mips;
-    int mipLevel;
-    int frameSize;
+    int frameCount;
+    int frameIndex;
+    int storedSize;
     int n;
-    int sizeOut;
-    int frameOut;
+    int decompressedSize;
+    int compressedSize;
     BOOL interruptsDisabled;
     int bankWordHeld;
-    LoadedTextureEntry* entry;
 
     interruptState = TRUE;
     interruptsDisabled = FALSE;
@@ -535,13 +531,11 @@ void* textureLoad(int texId, u8 flagIn) {
             }
         }
     }
-    n = 0;
-    entry = gLoadedTextures;
-    for (; n < gLoadedTextureCount; entry++, n++) {
-        if (texId == entry->key) {
+    for (n = 0; n < gLoadedTextureCount; n++) {
+        if (texId == gLoadedTextures[n].key) {
             buf = (Texture*)gLoadedTextures[n].texture;
             buf->refCount += 1;
-            if (flagIn != 0 && gLoadedTextures[n].flag != 0) {
+            if (useHandle != 0 && gLoadedTextures[n].flag != 0) {
                 return (void*)(n + 1);
             }
             return buf;
@@ -559,69 +553,69 @@ void* textureLoad(int texId, u8 flagIn) {
     } else {
         texId = gRcpTexIdRemap[texId];
     }
-    id16 = texId & 0xffff;
+    bankIndex = texId & 0xffff;
     if (texId & 0x8000) {
         bank = 1;
-        file = 0x20;
-        id16 &= 0x7fff;
+        fileId = 0x20;
+        bankIndex &= 0x7fff;
     } else if (origTexId >= 0xbb8) {
         bank = 2;
-        file = 0x4f;
+        fileId = 0x4f;
     } else {
         bank = 0;
-        file = 0x23;
+        fileId = 0x23;
     }
-    if (id16 >= gRcpTexBankCount[bank] || id16 < 0) {
-        id16 = 0;
+    if (bankIndex >= gRcpTexBankCount[bank] || bankIndex < 0) {
+        bankIndex = 0;
     }
     loadTextureBank(0, MLDF_FILEID_TEX0_TAB_A);
     loadTextureBank(1, MLDF_FILEID_TEX1_TAB_A);
-    bankWord = gRcpTexBankTable[bank][id16];
-    mips = (bankWord >> TEX_TAB_MIP_COUNT_SHIFT) & TEX_TAB_MIP_COUNT_MASK;
+    bankWord = gRcpTexBankTable[bank][bankIndex];
+    frameCount = (bankWord >> TEX_TAB_FRAME_COUNT_SHIFT) & TEX_TAB_FRAME_COUNT_MASK;
     bankWordSaved = bankWord;
-    if (mips == 1) {
+    if (frameCount == 1) {
         if (bank == 0) {
-            tex0GetFrame(bankWord, id16, &sizeOut, &frameOut, mips, 0, 0);
+            tex0GetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, 0, TEXTURE_FRAME_QUERY_HEADER);
         } else if (bank == 2) {
-            texPreGetMipmap(bankWord, id16, &sizeOut, &frameOut, mips, 0, 0);
+            texPreGetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, 0, TEXTURE_FRAME_QUERY_HEADER);
         } else {
-            tex1GetFrame(bankWord, id16, &sizeOut, &frameOut, mips, 0, 0);
+            tex1GetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, 0, TEXTURE_FRAME_QUERY_HEADER);
         }
         gRcpTexHeaderBuffer[0] = 0;
-        gRcpTexHeaderBuffer[1] = sizeOut;
-        if (frameOut == -1) {
-            gRcpTexHeaderBuffer[2] = sizeOut;
+        gRcpTexHeaderBuffer[1] = decompressedSize;
+        if (compressedSize == -1) {
+            gRcpTexHeaderBuffer[2] = decompressedSize;
         } else {
-            gRcpTexHeaderBuffer[2] = frameOut;
+            gRcpTexHeaderBuffer[2] = compressedSize;
         }
     } else if (bank == 0) {
-        tex0GetFrame(bankWord, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
+        tex0GetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_OFFSETS);
     } else if (bank == 2) {
-        texPreGetMipmap(bankWord, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
+        texPreGetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_OFFSETS);
     } else {
-        tex1GetFrame(bankWord, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
+        tex1GetFrame(bankWord, bankIndex, &decompressedSize, &compressedSize, frameCount, gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_OFFSETS);
     }
     firstTex = NULL;
     prevTex = NULL;
-    mipLevel = 0;
+    frameIndex = 0;
     bankWordHeld = bankWordSaved;
-    mipChainWord = mips << 8;
+    frameCountFixed = frameCount << 8;
     dataByteOffset = (bankWordSaved & 0xffffff) << 1;
-    for (; mipLevel < mips; mipLevel++) {
-        if (mips > 1) {
+    for (; frameIndex < frameCount; frameIndex++) {
+        if (frameCount > 1) {
             if (bank == 0) {
-                tex0GetFrame(bankWordHeld, id16, &sizeOut, &frameOut, mipLevel, gRcpTexHeaderBuffer, 1);
+                tex0GetFrame(bankWordHeld, bankIndex, &decompressedSize, &compressedSize, frameIndex, gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_INDEXED_HEADER);
             } else if (bank == 2) {
-                texPreGetMipmap(bankWordHeld, id16, &sizeOut, &frameOut, mipLevel, gRcpTexHeaderBuffer, 1);
+                texPreGetFrame(bankWordHeld, bankIndex, &decompressedSize, &compressedSize, frameIndex, gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_INDEXED_HEADER);
             } else {
-                tex1GetFrame(bankWordHeld, id16, &sizeOut, &frameOut, mipLevel, gRcpTexHeaderBuffer, 1);
+                tex1GetFrame(bankWordHeld, bankIndex, &decompressedSize, &compressedSize, frameIndex, gRcpTexHeaderBuffer, TEXTURE_FRAME_QUERY_INDEXED_HEADER);
             }
         }
-        size = sizeOut;
-        if (frameOut == -1) {
-            frameSize = sizeOut;
+        size = decompressedSize;
+        if (compressedSize == -1) {
+            storedSize = decompressedSize;
         } else {
-            frameSize = frameOut;
+            storedSize = compressedSize;
             mmSetTextureAllocationState(1);
             buf = mmAlloc(size, gRcpTexAllocTag, 0);
             mmSetTextureAllocationState(0);
@@ -632,42 +626,42 @@ void* textureLoad(int texId, u8 flagIn) {
                 } else if (interruptsDisabled == TRUE) {
                     OSRestoreInterrupts(interruptState);
                 }
-                if (flagIn != 0) {
+                if (useHandle != 0) {
                     return (void*)1;
                 }
                 return gLoadedTextures[0].texture;
             }
         }
-        if (frameOut != -1 && buf == NULL) {
-            if (mipLevel == 0) {
+        if (compressedSize != -1 && buf == NULL) {
+            if (frameIndex == 0) {
                 gRcpTexAllocFailed = 1;
                 if (getLoadedFileFlags(0) != 0 && interruptsDisabled == TRUE) {
                     OSRestoreInterrupts(interruptState);
                 } else if (interruptsDisabled == TRUE) {
                     OSRestoreInterrupts(interruptState);
                 }
-                if (flagIn != 0) {
+                if (useHandle != 0) {
                     return (void*)1;
                 }
                 return gLoadedTextures[0].texture;
             } else {
-                firstTex->animationFrameCount = mipChainWord;
-                mipLevel = mips;
+                firstTex->animationFrameCount = frameCountFixed;
+                frameIndex = frameCount;
                 continue;
             }
         }
-        if (frameOut == -1) {
-            buf = loadAndDecompressDataFile(file, 0, dataByteOffset + gRcpTexHeaderBuffer[mipLevel], frameSize, 0, id16,
+        if (compressedSize == -1) {
+            buf = loadAndDecompressDataFile(fileId, 0, dataByteOffset + gRcpTexHeaderBuffer[frameIndex], storedSize, 0, bankIndex,
                                             0);
             buf->cached = 1;
-            if (flagIn != 0) {
-                flagIn = 0;
+            if (useHandle != 0) {
+                useHandle = 0;
             }
             buf->refCount = 1;
         } else {
-            loadAndDecompressDataFile(file, buf, dataByteOffset + gRcpTexHeaderBuffer[mipLevel], frameSize, 0, id16, 0);
+            loadAndDecompressDataFile(fileId, buf, dataByteOffset + gRcpTexHeaderBuffer[frameIndex], storedSize, 0, bankIndex, 0);
         }
-        if (frameOut != -1) {
+        if (compressedSize != -1) {
             DCStoreRange(buf, size);
         }
         buf->nextAnimationFrame = NULL;
@@ -675,19 +669,17 @@ void* textureLoad(int texId, u8 flagIn) {
             prevTex->nextAnimationFrame = buf;
         }
         prevTex = buf;
-        if (mipLevel == 0) {
+        if (frameIndex == 0) {
             firstTex = buf;
-            buf->animationFrameCount = mipChainWord;
+            buf->animationFrameCount = frameCountFixed;
         } else {
             buf->animationFrameCount = 1;
         }
     }
     walk = firstTex;
     firstTex->loadedSize = size;
-    slot = 0;
-    entry = gLoadedTextures;
-    for (; slot < gLoadedTextureCount; entry++, slot++) {
-        if (entry->key == -1) {
+    for (slot = 0; slot < gLoadedTextureCount; slot++) {
+        if (gLoadedTextures[slot].key == -1) {
             break;
         }
     }
@@ -696,7 +688,7 @@ void* textureLoad(int texId, u8 flagIn) {
     }
     gLoadedTextures[slot].key = origTexId;
     gLoadedTextures[slot].texture = (u8*)firstTex;
-    gLoadedTextures[slot].flag = flagIn;
+    gLoadedTextures[slot].flag = useHandle;
     gLoadedTextures[slot].size = getHeapItemSize(gLoadedTextures[slot].texture);
     if (gLoadedTextureCount > LOADED_TEXTURE_CAPACITY) {
         if (getLoadedFileFlags(0) != 0 && interruptsDisabled == TRUE) {
@@ -704,7 +696,7 @@ void* textureLoad(int texId, u8 flagIn) {
         } else if (interruptsDisabled == TRUE) {
             OSRestoreInterrupts(interruptState);
         }
-        if (flagIn != 0) {
+        if (useHandle != 0) {
             return (void*)1;
         }
         return gLoadedTextures[0].texture;
@@ -718,7 +710,7 @@ void* textureLoad(int texId, u8 flagIn) {
     } else if (interruptsDisabled == TRUE) {
         OSRestoreInterrupts(interruptState);
     }
-    if (flagIn != 0) {
+    if (useHandle != 0) {
         return (void*)(slot + 1);
     }
     return firstTex;

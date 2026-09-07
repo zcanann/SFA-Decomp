@@ -5,9 +5,9 @@
 #include "dolphin/gx/GXStruct.h"
 
 /*
- * Texture - the in-memory texture record managed by rcp_dolphin.c
+ * Texture - the in-memory texture record managed by texture.c
  * (LoadedTextureEntry.texture points at one; textureLoad/textureFree
- * hand them out engine-wide). Field evidence (rcp_dolphin.c):
+ * hand them out engine-wide). Field evidence (texture.c):
  *  - width/height/refCount @0xA/0xC/0xE: GXInitTexObj dims; refCount
  *    decremented on release, <=1 makes a cached texture evictable
  *  - wrapS/wrapT @0x17/0x18, minFilter/magFilter @0x19/0x1A,
@@ -21,7 +21,7 @@
  *    imageOffset (read as *(int *) for indexing and *(void **) for
  *    null tests - keep the null-test width via launder)
  * Record is variable-length (image data follows the 0x60 header) -
- * do not take sizeof or index arrays of it.
+ * sizeof(Texture) is the header size, not the complete allocation size.
  */
 typedef struct Texture {
     struct Texture* nextAnimationFrame;
@@ -44,7 +44,7 @@ typedef struct Texture {
     u8 minLod;
     u8 maxLod;
     u8 unk1E[2];
-    u32 gxTexObj[sizeof(GXTexObj) / sizeof(u32)];
+    GXTexObj gxTexObj;
     u32* tmemAddr;
     u32 dataSize;
     u8 preloaded;
@@ -60,6 +60,8 @@ STATIC_ASSERT(offsetof(Texture, nextAnimationFrame) == 0x00);
 STATIC_ASSERT(offsetof(Texture, width) == 0xA);
 STATIC_ASSERT(offsetof(Texture, animationFrameCount) == 0x10);
 STATIC_ASSERT(offsetof(Texture, animationFrameStep) == 0x14);
+STATIC_ASSERT(offsetof(Texture, minLod) == 0x1C);
+STATIC_ASSERT(offsetof(Texture, maxLod) == 0x1D);
 STATIC_ASSERT(offsetof(Texture, gxTexObj) == 0x20);
 STATIC_ASSERT(offsetof(Texture, tmemAddr) == 0x40);
 STATIC_ASSERT(offsetof(Texture, dataSize) == 0x44);
@@ -69,7 +71,7 @@ STATIC_ASSERT(offsetof(Texture, imageOffset) == 0x50);
 STATIC_ASSERT(sizeof(Texture) == 0x60);
 
 static inline GXTexObj* textureGetGXTexObj(Texture* texture) {
-    return (GXTexObj*)texture->gxTexObj;
+    return &texture->gxTexObj;
 }
 
 static inline void* textureGetImageData(Texture* texture) {

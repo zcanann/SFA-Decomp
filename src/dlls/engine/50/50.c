@@ -150,7 +150,7 @@ static inline void initLoadingScreenTexturesBody(void)
         textureHeader = *textureSlot;
         textureHeader->tmemAddr = 0;
         textureHeader->preloaded = 0;
-        texObj = (GXTexObj*)textureHeader->gxTexObj;
+        texObj = &textureHeader->gxTexObj;
         GXInitTexObj(texObj, (u8*)textureHeader + sizeof(Texture), textureHeader->width, textureHeader->height,
                      textureHeader->format, textureHeader->wrapS, textureHeader->wrapT, 0);
         GXInitTexObjLOD(texObj, textureHeader->minFilter, textureHeader->magFilter, 0.0f, 0.0f, 0.0f, 0, 0, 0);
