@@ -1,34 +1,30 @@
 # Vector-math matrix temporary lifetimes
 
-EN GSAE01, common GC/1.3 compiler, existing whole-TU
-`nopeephole,noschedule,nostrength` profile. No compiler flags or pragmas changed.
+EN GSAE01: all 25 functions, all 5,068 code bytes, and all 72 data bytes
+match. The TU uses the common GC/1.3 compiler and its existing whole-TU
+`-O4,p -opt nopeephole,noschedule,nostrength` profile. No compiler flags or
+pragmas changed.
 
-`mtxRotateByVec3s` reuses its completed rotation temporaries for the translation
-vector. Loading X, Y, then Z into these temporaries reproduces the retail load
-order and all three translation dot products. The previous Z/X/Y order had a
-slightly better fuzzy score than X/Y/Z with separate locals, but neither its
-load order nor its register assignments matched retail.
+`mtxRotateByVec3s` builds an inverse rotation basis, then multiplies the
+supplied translation vector by that basis. The older Rare `mathRpyXyzMtx`
+assembly in the Diddy Kong Racing and Jet Force Gemini reference projects
+provides a useful structural analogue: six trig values, two arithmetic
+scratch values, and reuse of the first three trig values for translation.
+The EN GameCube object remains the matching authority.
 
-The last rotation row also reuses an intermediate product after its previous
-value is consumed. Keep the separate single-precision operations: contracting
-or reassociating these expressions is not part of this change. The neutral
-`component0..2` names reflect their successive rotation/translation roles.
+The recovered C keeps the multiply, add, subtract, and negate steps separate.
+It uses two scratch values throughout the matrix calculation and lets MWCC
+eliminate repeated cross products. The homogeneous zero entries use the
+shared constant directly. This produces the retail floating-point register
+allocation, including the zero in f0, without manually retaining the cross
+products or a local zero across rows.
 
-The function remains 200 instructions / 800 bytes. Differing instruction rows
-fall from 38 to 17, entirely register operands, and function fuzzy similarity
-improves from 98.785% to 99.5%. The translation calculation is exact; the
-remaining differences lie at instruction indices 132..151, where the shared
-zero occupies f3 instead of retail's f0 and changes the adjacent product
-registers. The TU improves from 99.808205% to 99.921074% fuzzy similarity.
+The first three rotation components become X, Y, and Z for the translation
+calculation. Their neutral `component0..2` names reflect those successive
+roles. Reusing different rotation components changes register allocation even
+when the load order and arithmetic are otherwise identical.
 
-All other 24 functions retain their exact bytes, and all 72 data bytes remain
-exact. This is a partial matching improvement: the TU remains `NonMatching`.
-Both `ninja all_source` and the strict retail-checksum build pass; the matching
-link still uses the retail vecmath object.
-
-The diagnostic backend capture reproduced the ordinary baseline object hash,
-replayed all 84 FPR color choices, and found no high-degree removals. Probes of
-declaration order, scoped temporaries, scalar qualifiers, small vector records,
-inline helpers, and additional product spellings did not finish the match.
-Whole-TU flag probes either retained the residual or regressed other functions;
-none is adopted. The reduced source is the retained result, not those probes.
+The last function remains 200 instructions / 800 bytes, now with no differing
+instructions. All other 24 functions and the constant pool remain exact.
+`ninja all_source` and the strict retail-checksum build both pass with vecmath
+marked matching and its compiled source object included in the final DOL.
