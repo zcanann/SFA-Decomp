@@ -13,6 +13,13 @@ the two spellings into one expression tree).
 
 ## The screen, before any lever
 
+Update 2026-09-07: the categorical closure claims in this historical checklist
+are superseded. An alternate-profile match does not prove source recovery is
+exhausted or that a confirmed TU should be split. The current GC/1.3
+[subtitle investigation](subtitle_matching.md) records the whole-TU tradeoff,
+including live level-1 CSE and propagation options; the flag prober now reports
+which existing matches each alternative loses.
+
 Run these in order. Each one can end the round without a build.
 
 1. **Run `python3 tools/fn_flag_probe.py <unit>` FIRST. A MATCH under any other profile means
