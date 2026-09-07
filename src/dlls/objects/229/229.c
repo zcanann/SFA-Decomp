@@ -120,12 +120,11 @@ GameObject* Shield_spawnOmniShield(GameObject* obj, f32 rootMotionScale) {
 void Shield_setMode(GameObject* obj, u8 mode) {
     f32* tableCursor[1];
     ShieldState* state;
-    void* stateData;
+    int i;
     GameObject* player;
     GameObject* staff;
     tableCursor[0] = gShieldSegmentTable + SHIELD_SCALE_TABLE_OFFSET;
     state = obj->extra;
-    stateData = state;
     player = Obj_GetPlayerObject();
     staff = NULL;
     if (player != NULL) {
@@ -199,34 +198,27 @@ void Shield_setMode(GameObject* obj, u8 mode) {
             {
                 f32 amp;
                 f32 k;
-                s16* phaseCursor;
-                f32* valueCursor;
-                f32* segmentAlphaCursor;
-                int i;
+                f32* segmentAlphas;
                 amp = 1.0f;
                 state->fadeRate = amp;
                 i = 0;
-                phaseCursor = stateData;
-                valueCursor = stateData;
-                segmentAlphaCursor = tableCursor[0] + SHIELD_ALPHA_TABLE_OFFSET;
+                segmentAlphas = tableCursor[0] + SHIELD_ALPHA_TABLE_OFFSET;
                 k = 0.5f;
                 for (; i < SHIELD_SEGMENT_COUNT; i++) {
                     f32 wave;
                     f32 sum;
-                    phaseCursor[SHIELD_SEGMENT_PHASE_S16_INDEX] = -0x4000;
-                    wave = fsin16((u16)phaseCursor[SHIELD_SEGMENT_PHASE_S16_INDEX]);
+                    f32 baseScale;
+                    state->segmentPhase[i] = -0x4000;
+                    wave = fsin16((u16)state->segmentPhase[i]);
                     sum = amp + wave;
                     wave = sum * k;
-                    valueCursor[SHIELD_SEGMENT_SCALE_F32_INDEX] = *tableCursor[0] * wave;
-                    valueCursor[SHIELD_SEGMENT_ALPHA_F32_INDEX] = *segmentAlphaCursor;
-                    phaseCursor[SHIELD_SEGMENT_RATE_S16_INDEX] =
+                    baseScale = tableCursor[0][i];
+                    state->segmentScale[i] = baseScale * wave;
+                    state->segmentAlpha[i] = segmentAlphas[i];
+                    state->segmentRate[i] =
                         (s16)((f32)(i *
                                     randomGetRange(SHIELD_SEGMENT_RATE_RANDOM_MIN, SHIELD_SEGMENT_RATE_RANDOM_MAX)) +
                               SHIELD_SEGMENT_RATE_BASE);
-                    phaseCursor += 1;
-                    tableCursor[0] += 1;
-                    valueCursor += 1;
-                    segmentAlphaCursor += 1;
                 }
             }
             Sfx_PlayFromObject(obj, SFXTRIG_lrope_powerup);
@@ -272,32 +264,25 @@ void Shield_setMode(GameObject* obj, u8 mode) {
         }
         state->fadeTarget = 60.0f;
         {
-            int i;
-            s16* phaseCursor;
-            f32* valueCursor;
-            f32* segmentAlphaCursor;
+            f32* segmentAlphas;
             f32 k;
             f32 amp;
             amp = 1.0f;
             state->fadeRate = amp;
             i = 0;
-            phaseCursor = stateData;
-            valueCursor = stateData;
-            segmentAlphaCursor = tableCursor[0] + SHIELD_ALPHA_TABLE_OFFSET;
+            segmentAlphas = tableCursor[0] + SHIELD_ALPHA_TABLE_OFFSET;
             k = 0.5f;
             for (; i < SHIELD_SEGMENT_COUNT; i++) {
                 f32 wave;
                 f32 sum;
-                phaseCursor[SHIELD_SEGMENT_PHASE_S16_INDEX] = 0;
-                wave = fsin16((u16)phaseCursor[SHIELD_SEGMENT_PHASE_S16_INDEX]);
+                f32 baseScale;
+                state->segmentPhase[i] = 0;
+                wave = fsin16((u16)state->segmentPhase[i]);
                 sum = amp + wave;
                 wave = sum * k;
-                valueCursor[SHIELD_SEGMENT_SCALE_F32_INDEX] = *tableCursor[0] * wave;
-                valueCursor[SHIELD_SEGMENT_ALPHA_F32_INDEX] = *segmentAlphaCursor;
-                phaseCursor += 1;
-                tableCursor[0] += 1;
-                valueCursor += 1;
-                segmentAlphaCursor += 1;
+                baseScale = tableCursor[0][i];
+                state->segmentScale[i] = baseScale * wave;
+                state->segmentAlpha[i] = segmentAlphas[i];
             }
         }
         Sfx_PlayFromObject(obj, SFXTRIG_lockon3_on);
@@ -318,34 +303,27 @@ void Shield_setMode(GameObject* obj, u8 mode) {
         state->fadeRate = amp;
         state->fadeMax = fade;
         {
-            int i;
-            s16* phaseCursor;
-            f32* segmentScaleCursor;
-            f32* valueCursor;
-            f32* segmentAlphaCursor;
+            f32* segmentScales;
+            f32* segmentAlphas;
             f32 k;
             i = 0;
-            phaseCursor = stateData;
-            segmentScaleCursor = tableCursor[0] + SHIELD_OMNI_SCALE_TABLE_OFFSET;
-            valueCursor = stateData;
-            segmentAlphaCursor = tableCursor[0] + SHIELD_OMNI_ALPHA_TABLE_OFFSET;
+            segmentScales = tableCursor[0] + SHIELD_OMNI_SCALE_TABLE_OFFSET;
+            segmentAlphas = tableCursor[0] + SHIELD_OMNI_ALPHA_TABLE_OFFSET;
             k = 0.5f;
             for (; i < SHIELD_SEGMENT_COUNT; i++) {
                 f32 wave;
                 f32 sum;
-                phaseCursor[SHIELD_SEGMENT_PHASE_S16_INDEX] = -0x4000;
-                wave = fsin16((u16)phaseCursor[SHIELD_SEGMENT_PHASE_S16_INDEX]);
+                f32 baseScale;
+                state->segmentPhase[i] = -0x4000;
+                wave = fsin16((u16)state->segmentPhase[i]);
                 sum = amp + wave;
                 wave = sum * k;
-                valueCursor[SHIELD_SEGMENT_SCALE_F32_INDEX] = *segmentScaleCursor * wave;
-                valueCursor[SHIELD_SEGMENT_ALPHA_F32_INDEX] = *segmentAlphaCursor;
-                phaseCursor[SHIELD_SEGMENT_RATE_S16_INDEX] =
+                baseScale = segmentScales[i];
+                state->segmentScale[i] = baseScale * wave;
+                state->segmentAlpha[i] = segmentAlphas[i];
+                state->segmentRate[i] =
                     (s16)((f32)(i * randomGetRange(SHIELD_SEGMENT_RATE_RANDOM_MIN, SHIELD_SEGMENT_RATE_RANDOM_MAX)) +
                           SHIELD_SEGMENT_RATE_BASE);
-                phaseCursor += 1;
-                segmentScaleCursor += 1;
-                valueCursor += 1;
-                segmentAlphaCursor += 1;
             }
         }
         Sfx_PlayFromObject(obj, SFXTRIG_lockon3_on);
@@ -353,33 +331,26 @@ void Shield_setMode(GameObject* obj, u8 mode) {
         break;
     }
     case SHIELD_MODE_OMNI_HIT: {
-        int i;
-        s16* phaseCursor;
-        f32* segmentScaleCursor;
-        f32* valueCursor;
-        f32* segmentAlphaCursor;
+        f32* segmentScales;
+        f32* segmentAlphas;
         f32 amp;
         f32 k;
         i = 0;
-        phaseCursor = stateData;
-        segmentScaleCursor = tableCursor[0] + SHIELD_OMNI_SCALE_TABLE_OFFSET;
-        valueCursor = stateData;
-        segmentAlphaCursor = tableCursor[0] + SHIELD_OMNI_ALPHA_TABLE_OFFSET;
+        segmentScales = tableCursor[0] + SHIELD_OMNI_SCALE_TABLE_OFFSET;
+        segmentAlphas = tableCursor[0] + SHIELD_OMNI_ALPHA_TABLE_OFFSET;
         amp = 1.0f;
         k = 0.5f;
         for (; i < SHIELD_SEGMENT_COUNT; i++) {
             f32 wave;
             f32 sum;
-            phaseCursor[SHIELD_SEGMENT_PHASE_S16_INDEX] = 0x4000;
-            wave = fsin16((u16)phaseCursor[SHIELD_SEGMENT_PHASE_S16_INDEX]);
+            f32 baseScale;
+            state->segmentPhase[i] = 0x4000;
+            wave = fsin16((u16)state->segmentPhase[i]);
             sum = amp + wave;
             wave = sum * k;
-            valueCursor[SHIELD_SEGMENT_SCALE_F32_INDEX] = *segmentScaleCursor * wave;
-            valueCursor[SHIELD_SEGMENT_ALPHA_F32_INDEX] = *segmentAlphaCursor;
-            phaseCursor += 1;
-            segmentScaleCursor += 1;
-            valueCursor += 1;
-            segmentAlphaCursor += 1;
+            baseScale = segmentScales[i];
+            state->segmentScale[i] = baseScale * wave;
+            state->segmentAlpha[i] = segmentAlphas[i];
         }
         break;
     }
