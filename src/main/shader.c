@@ -3857,48 +3857,56 @@ void sceneRender(int wpad0, int wpad1, int wpad2, int wpad3, int wpad4, int wpad
 
 void doNothing_beforeTitleScreen(void) {
 }
+
+static inline void mapUpdateTextureAnimations(void) {
+    MapTextureOverride* textureOverride;
+    Texture* texture;
+    int i;
+
+    i = 0;
+    for (; i < 80; i++) {
+        textureOverride = &gMapTextureOverrides[i];
+        if (textureOverride->refCount != 0 && (texture = textureOverride->texture) != NULL &&
+            texture->animationFrameCountFixed != 0x100 && texture->animationFrameStep != 0) {
+            textureUpdateAnimationFrame(texture, &textureOverride->flags, &textureOverride->frame);
+        }
+    }
+}
+
+static inline void mapUpdateTextureScrolls(void) {
+    MapTextureScroll* textureScroll;
+    int byteOffset;
+    int i;
+    f32 offsetX;
+    f32 deltaTime;
+    f32 deltaX;
+    f32 deltaY;
+
+    i = 0;
+    byteOffset = 0;
+    for (; i < 58; i++) {
+        textureScroll = (MapTextureScroll*)((u8*)gMapTextureScrolls + byteOffset);
+        if (textureScroll->refCount != 0) {
+            deltaY = textureScroll->yStep * (deltaTime = timeDelta);
+            offsetX = textureScroll->offsetX;
+            deltaX = textureScroll->xStep * deltaTime;
+            textureScroll->offsetX = offsetX + deltaX;
+            textureScroll->offsetY += deltaY;
+        }
+        byteOffset += sizeof(MapTextureScroll);
+    }
+}
+
 void updateEnvironment(int mode) {
     if (mode == 0) {
-        MapTextureOverride* textureOverride;
-        MapTextureScroll* textureScroll;
-        Texture* texture;
-        int i;
-        int byteOffset;
-        f32 offsetX;
-        f32 deltaY;
-        f32 deltaX;
-        f32 deltaTime;
-
         skyUpdateEnvFx();
         (*gCloudActionInterface)->scrollTexture();
         (*gSky2Interface)->run();
         (*gSkyInterface)->updateTimeOfDay();
         (*gNewCloudsInterface)->run();
 
-        i = 0;
-        byteOffset = 0;
-        for (; i < 80; i++) {
-            textureOverride = (MapTextureOverride*)((u8*)gMapTextureOverrides + byteOffset);
-            if (textureOverride->refCount != 0 && (texture = textureOverride->texture) != NULL &&
-                texture->animationFrameCountFixed != 0x100 && texture->animationFrameStep != 0) {
-                textureUpdateAnimationFrame(texture, &textureOverride->flags, &textureOverride->frame);
-            }
-            byteOffset += sizeof(MapTextureOverride);
-        }
-
-        i = 0;
-        byteOffset = 0;
-        for (; i < 58; i++) {
-            textureScroll = (MapTextureScroll*)((u8*)gMapTextureScrolls + byteOffset);
-            if (textureScroll->refCount != 0) {
-                deltaY = textureScroll->yStep * (deltaTime = timeDelta);
-                offsetX = textureScroll->offsetX;
-                deltaX = textureScroll->xStep * deltaTime;
-                textureScroll->offsetX = offsetX + deltaX;
-                textureScroll->offsetY += deltaY;
-            }
-            byteOffset += sizeof(MapTextureScroll);
-        }
+        mapUpdateTextureAnimations();
+        mapUpdateTextureScrolls();
 
         loadNextMap();
         if (gEnvironmentUpdateInterface != NULL) {
@@ -3940,8 +3948,7 @@ void sceneDrawTransparentPolys(void);
 void initMapBlocks(void) {
     u8* mb = (u8*)gLightmapDrawQueue.entries;
     MapLayerBuffers* buffers = (MapLayerBuffers*)gLightmapDrawQueue.entries;
-    u32 zero;
-    u32* q;
+    MapRomListPage** romListPage;
     u16* p;
     void* tmp;
     int i;
@@ -3955,59 +3962,18 @@ void initMapBlocks(void) {
     buffers->blockDescriptors[0] = mmAlloc(0x3c00, 5, 0);
     buffers->cellStates[0] = mmAlloc(0x500, 5, 0);
 
-    for (i = 0; i < 16; i += 4) {
-        *(u32*)(mb + 0x41f8 + i) = *(u32*)(mb + 0x41f4 + i) + 0x100;
-        *(u32*)(mb + 0x41e4 + i) = *(u32*)(mb + 0x41e0 + i) + 0xc00;
-        *(u32*)(mb + 0x41d0 + i) = *(u32*)(mb + 0x41cc + i) + 0x100;
+    for (i = 1; i < MAP_BLOCK_LAYER_COUNT; i++) {
+        buffers->blockIndices[i] = buffers->blockIndices[i - 1] + 0x100;
+        buffers->blockDescriptors[i] = buffers->blockDescriptors[i - 1] + 0xc00;
+        buffers->cellStates[i] = buffers->cellStates[i - 1] + 0x100;
     }
 
     loadAssetFileById(&gMapsTab, MLDF_FILEID_MAPS_TAB);
     loadAssetFileById(&gHitsTab, MLDF_FILEID_HITS_TAB);
 
-    q = (u32*)((u8*)(mb + 0x10000) - 0x7c58);
-    zero = 0;
-    for (i = 0; i < 3; i++) {
-        q[0] = zero;
-        q[1] = zero;
-        q[2] = zero;
-        q[3] = zero;
-        q[4] = zero;
-        q[5] = zero;
-        q[6] = zero;
-        q[7] = zero;
-        q[8] = zero;
-        q[9] = zero;
-        q[10] = zero;
-        q[11] = zero;
-        q[12] = zero;
-        q[13] = zero;
-        q[14] = zero;
-        q[15] = zero;
-        q[16] = zero;
-        q[17] = zero;
-        q[18] = zero;
-        q[19] = zero;
-        q[20] = zero;
-        q[21] = zero;
-        q[22] = zero;
-        q[23] = zero;
-        q[24] = zero;
-        q[25] = zero;
-        q[26] = zero;
-        q[27] = zero;
-        q[28] = zero;
-        q[29] = zero;
-        q[30] = zero;
-        q[31] = zero;
-        q[32] = zero;
-        q[33] = zero;
-        q[34] = zero;
-        q[35] = zero;
-        q[36] = zero;
-        q[37] = zero;
-        q[38] = zero;
-        q[39] = zero;
-        q += 40;
+    romListPage = (MapRomListPage**)((u8*)(mb + 0x10000) - 0x7c58);
+    for (i = 0; i < ROM_LIST_PAGE_COUNT; i++) {
+        *romListPage++ = NULL;
     }
 
     loadAssetFileById(&gTrkBlkTab, MLDF_FILEID_TRKBLK_TAB);
@@ -5434,6 +5400,8 @@ void renderGlows(void) {
     u8 alpha;
     u8 sunAlpha;
     f32 sunDot;
+    f32 zero;
+    f32 one;
     int i;
     ModelLightStruct* e;
 
@@ -5452,7 +5420,7 @@ void renderGlows(void) {
     gSunFlareScissorWidth = 0;
     gSunFlareScissorHeight = 0;
     sunAlpha = skyGetSunRenderAlpha(2);
-    if (sunAlpha != 0 && (renderFlags & 0x40)) {
+    if (sunAlpha != 0 && ((int)renderFlags & 0x40)) {
         viewMtx = (MtxPtr)Camera_GetViewMatrix();
         skyGetSunLightDirection(0, &dir.x, &dir.y, &dir.z);
         cam.x = viewMtx[2][0];
@@ -5513,14 +5481,16 @@ void renderGlows(void) {
                 fade = 20000.0f * sunDot;
                 sunDot = fade / 256.0f;
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
-                GXPosition3f32(-sunDot, -sunDot, 0.0f);
-                GXTexCoord2f32(0.0f, 0.0f);
-                GXPosition3f32(sunDot, -sunDot, 0.0f);
-                GXTexCoord2f32(1.0f, 0.0f);
-                GXPosition3f32(sunDot, sunDot, 0.0f);
-                GXTexCoord2f32(1.0f, 1.0f);
-                GXPosition3f32(-sunDot, sunDot, 0.0f);
-                GXTexCoord2f32(0.0f, 1.0f);
+                zero = 0.0f;
+                one = 1.0f;
+                GXPosition3f32(-sunDot, -sunDot, zero);
+                GXTexCoord2f32(zero, zero);
+                GXPosition3f32(sunDot, -sunDot, zero);
+                GXTexCoord2f32(one, zero);
+                GXPosition3f32(sunDot, sunDot, zero);
+                GXTexCoord2f32(one, one);
+                GXPosition3f32(-sunDot, sunDot, zero);
+                GXTexCoord2f32(zero, one);
             }
         }
     }
@@ -5551,14 +5521,16 @@ void renderGlows(void) {
                                 (int)((f32)(u32)e->glowColor[2] * e->activeIntensity),
                                 (u8)((int)(e->glowColor[3] * e->glowAlpha) >> 8));
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
+                zero = 0.0f;
+                one = 1.0f;
                 GXPosition3f32(e->viewX - e->glowScale, e->viewY - e->glowScale, e->viewZ);
-                GXTexCoord2f32(0.0f, 0.0f);
+                GXTexCoord2f32(zero, zero);
                 GXPosition3f32(e->viewX + e->glowScale, e->viewY - e->glowScale, e->viewZ);
-                GXTexCoord2f32(1.0f, 0.0f);
+                GXTexCoord2f32(one, zero);
                 GXPosition3f32(e->viewX + e->glowScale, e->viewY + e->glowScale, e->viewZ);
-                GXTexCoord2f32(1.0f, 1.0f);
+                GXTexCoord2f32(one, one);
                 GXPosition3f32(e->viewX - e->glowScale, e->viewY + e->glowScale, e->viewZ);
-                GXTexCoord2f32(0.0f, 1.0f);
+                GXTexCoord2f32(zero, one);
             }
         }
         GXSetCurrentMtx(GX_PNMTX0);

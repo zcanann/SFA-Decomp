@@ -4,8 +4,8 @@ The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
 All 40,656 assigned data bytes match. The common GC/1.3 invocation produces
-133/145 exact functions and a 99.24838% instruction fuzzy score; the TU remains
-`NonMatching` because twelve functions still differ.
+136/145 exact functions and a 99.488594% instruction fuzzy score; the TU remains
+`NonMatching` because nine functions still differ.
 
 This supersedes the constant-pool blocker in
 [lightmap_draw_recovery.md](lightmap_draw_recovery.md) and the historical
@@ -95,6 +95,24 @@ and emitted ELF instructions. The diagnostic captures passed the ordinary versus
 instrumented full-object hash gate, and their register graphs replayed without
 high-degree removals.
 
+A second code pass restores three more functions:
+
+- `updateEnvironment`: separate inline routines update texture animations and
+  texture scrolling. The animation routine uses a native indexed array walk;
+  the scroll routine retains its byte cursor. Inlining makes the zero
+  initializers eligible for commoning, and the local declaration order restores
+  both the integer and floating-register assignments.
+- `renderGlows`: ordinary `f32` locals retain zero and one across the FIFO
+  writes, removing sixteen extra literal loads. Making those locals `const`
+  reinstates the extra loads under the shared GC/1.3 profile. The render-flag
+  test also keeps the retail signed comparison. The function and its complete
+  pool-load sequence are now exact.
+- `initMapBlocks`: initialize all five layers through the existing typed buffer
+  view, then clear 120 ROM-list page pointers with one ordinary loop. MWCC
+  supplies the forty-store unrolling that was previously handwritten. The
+  page cursor is typed, and the existing two-part base-address expression is
+  retained because collapsing it changes the address temporary's register.
+
 The old `lightmap` and initializer fragments depended on extra `noprop` and
 `nocse` flags. They now share shader's existing `nopeephole,noschedule` /
 `-inline noauto` profile and the required common game compiler. No compiler
@@ -102,14 +120,13 @@ exceptions, per-function pragmas, or section-alignment overrides were retained.
 The initial merge exposed six formerly exact functions: `updateVisibleGeometry`,
 `renderObjects`, `renderSceneGeometry`, `initMapBlocks`, `renderGlows`, and
 `queueGlowRender`. Three other functions became exact, so that merge changed the
-combined exact function count from 132 to 129. The follow-up above brings it to
-133. All twelve remaining code differences must be recovered before
+combined exact function count from 132 to 129. The follow-up passes bring it to
+136. All nine remaining code differences must be recovered before
 `MatchingFor` is justified.
 
-`renderGlows` also reloads the zero/one literals more often than retail across
-the FIFO-writing helpers. The pool values and addresses are correct; the load
-sequence is not. The other 39 functions that directly consume this pool have
-matching value sequences.
+All forty functions that directly consume this pool now have matching literal
+value sequences. This includes `renderGlows`, whose extra zero/one loads were
+removed in the second code pass.
 
 Two zero fog-color records at `.sbss2` `0x803E8444` and `0x803E8448` remain retail
 externs (`gTexShaderFogColor` and `gTexLightmapFogColor`). Their declaration and
