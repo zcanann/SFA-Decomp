@@ -35,7 +35,8 @@ all 46 bytes without padding objects or section-placement overrides.
 | `803DC770` | Mode 1 segment radius | 40.0 |
 | `803DC774` | Mode 1 local-point radius | 40.0 |
 | `803DC778` | Mode 2 segment radius | 20.0 |
-| `803DC77C` | Mode 2 local-point radii, two floats | 20.0, 0.0 |
+| `803DC77C` | Mode 2 local-point radius | 20.0 |
+| `803DC780` | Mode 0 segment radius | 0.0 |
 | `803DC784` | Mode 0 local-point radii, two floats | 15.0, 15.0 |
 | `803DC78C` | Camera local Y offset | 16.0 |
 | `803DC790` | Camera local Z offset | -16.0 |
@@ -46,10 +47,26 @@ all 46 bytes without padding objects or section-placement overrides.
 The first two entries were misclassified as three-byte strings by the old symbol
 carve. `curves_setSegmentCollision` reads float radii; the local-point setter
 stores float-radius pointers and point counts consumed by the collision walker.
-Mode 2 supplies two local points, proving the eight-byte radius span starting at
-`803DC77C`. Mode 0's segment setup uses the zero second element at `803DC780`;
-remove that interior standalone symbol and express the shared element directly.
-The former integer extern declarations did not describe these floating values.
+Mode 2 supplies two local points but only one radius scalar. The second radius
+read crosses into the following mode-0 segment-radius word. The earlier eight-byte
+array reconstruction concealed this overread and made mode 0 address an interior
+array element, adding an instruction that retail does not contain.
+
+The Dinosaur Planet counterpart, object DLL 714's `dll_714_func_3574`, supplies
+independent evidence for these scalar boundaries. Its mode-2 radius is at data
+`0x5C`; the next word at `0x60` is also the first component of mode 0's position
+vector. Mode 0's segment radius is a separate word at `0x6C`. The same two-radius
+request is present there, but the second read crosses into that position vector.
+EN's small-data separation places the independent mode-0 radius next to the mode-2
+radius instead. Preserve the two-count request and this retail adjacency.
+
+Define `gDRCloudRunnerMode2LocalRadius = 20.0f` and
+`gDRCloudRunnerMode0SegmentRadius = 0.0f` separately. The direct EN references at
+`802BF1C4` and `802BF270`, the separate donor roles, and the initialized zero at
+`803DC780` support these definitions. The TU's `explicit_zero_data on` setting
+keeps the explicitly initialized zero in `.sdata`; its genuinely uninitialized
+globals remain in their existing `.sbss` slots. GC/1.3 and all optimization and
+inlining options are unchanged. No new padding or interior alias is needed.
 
 The flight handler bounds its move index to 0..5 (unrecognized moves use index 4),
 then selects one roll limit per pair of moves. Use a three-element `s16` array
@@ -57,21 +74,16 @@ indexed by `idx / 2`, replacing byte-offset arithmetic from a scalar declaration
 That expression preserves the exact original function body. Shifting first and
 then indexing instead generated an extra shift; it is not retained.
 
-The path setup's address of the shared zero entry introduces one `addi` under
-the existing compiler settings. Setup grows from 508 to 512 bytes; the other 35
-functions retain their exact bodies, and the other data allocations are unchanged.
-The unit is now `NonMatching`: exact code falls by 508 bytes and all 10,164 retail
-code bytes stop linking from C, while 46 new data bytes match. Its 597 previously
-linked data bytes also fall back to retail. This is the explicit cost of recovering
-the complete native radius storage instead of unresolved interior aliases.
-A separate zero-valued float was tested and emitted `.sbss`, contradicting the
-retail placement; scalar definitions do not establish the correct layout.
+The restored direct scalar address reduces path setup from 512 to the retail
+508 bytes. All 36 functions (10,164 bytes) and all 643 assigned data bytes now
+match. Every allocated non-code section remains byte-identical, including the
+46-byte `.sdata` and twelve-byte `.sbss`; all other named data offsets are
+unchanged. Slot 600 is `MatchingFor("GSAE01")` and links from C again.
 
 ## Verification
 
 Strict matching checksum and `ninja all_source` both pass with 30-second timeouts.
-The strict DOL remains byte-identical, using the retail CloudRunner object after
-the matching-status change. Object comparison verifies every unaffected function,
-existing allocated data section, and named storage offset. Total matched data
-increases by 58 bytes, including UI alignment. Formatting is committed separately
-and checked to preserve the complete generated objects.
+The strict DOL remains byte-identical with the native CloudRunner object selected.
+Objdiff confirms all code and data exact; the linked object inputs independently
+confirm the matching-status change. The TU and its owning header pass the formatting
+check; running `clang-format -i` produces no source changes.

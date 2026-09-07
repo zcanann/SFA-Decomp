@@ -67,7 +67,8 @@ extern char sOnCloudFormat[];
 extern f32 gDRCloudRunnerMode1SegmentRadius;
 extern f32 gDRCloudRunnerMode1LocalRadius;
 extern f32 gDRCloudRunnerMode2SegmentRadius;
-extern f32 gDRCloudRunnerMode2LocalRadii[2];
+extern f32 gDRCloudRunnerMode2LocalRadius;
+extern f32 gDRCloudRunnerMode0SegmentRadius;
 
 extern f32 gDRCloudRunnerMode0LocalRadii[2];
 extern f32 gDRCloudRunnerCameraOffsetY;

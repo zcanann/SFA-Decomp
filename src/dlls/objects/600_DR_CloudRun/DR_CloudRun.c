@@ -85,14 +85,15 @@ void DR_CloudRunner_setupPath(GameObject* obj, CloudRunnerState* state, int mode
         (*gPathControlInterface)->setup(pathState, 1, &base->pathPointsA, &gDRCloudRunnerMode1SegmentRadius, &stk);
     } else if (moveMode == 2) {
         (*gPathControlInterface)->init(pathState, 3, 0x42087, 0);
+        /* The second radius reads the following mode-0 segment-radius word. */
         (*gPathControlInterface)
-            ->setLocalPointCollision(pathState, 2, &base->pathCollisionB, &gDRCloudRunnerMode2LocalRadii, 8);
+            ->setLocalPointCollision(pathState, 2, &base->pathCollisionB, &gDRCloudRunnerMode2LocalRadius, 8);
         (*gPathControlInterface)->setup(pathState, 1, &base->pathPointsB, &gDRCloudRunnerMode2SegmentRadius, &stk);
     } else if (moveMode == 0) {
         (*gPathControlInterface)->init(pathState, 3, 0x42087, 0);
         (*gPathControlInterface)
             ->setLocalPointCollision(pathState, 2, &base->pathCollisionC, &gDRCloudRunnerMode0LocalRadii, 8);
-        (*gPathControlInterface)->setup(pathState, 1, &base->pathPointsC, &gDRCloudRunnerMode2LocalRadii[1], &stk);
+        (*gPathControlInterface)->setup(pathState, 1, &base->pathPointsC, &gDRCloudRunnerMode0SegmentRadius, &stk);
     }
     (*gPathControlInterface)->attachObject(obj, pathState);
 }
@@ -1137,8 +1138,8 @@ DRCloudRunnerMoveParams gDRCloudRunnerMoveParamTable = {
 f32 gDRCloudRunnerMode1SegmentRadius = 40.0f;
 f32 gDRCloudRunnerMode1LocalRadius = 40.0f;
 f32 gDRCloudRunnerMode2SegmentRadius = 20.0f;
-/* Mode 0 also uses the second radius as its segment radius. */
-f32 gDRCloudRunnerMode2LocalRadii[2] = {20.0f, 0.0f};
+f32 gDRCloudRunnerMode2LocalRadius = 20.0f;
+f32 gDRCloudRunnerMode0SegmentRadius = 0.0f;
 f32 gDRCloudRunnerMode0LocalRadii[2] = {15.0f, 15.0f};
 f32 gDRCloudRunnerCameraOffsetY = 16.0f;
 f32 gDRCloudRunnerCameraOffsetZ = -16.0f;
