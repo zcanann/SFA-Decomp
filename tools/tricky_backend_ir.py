@@ -20,7 +20,7 @@ MNEMONICS = {
     0x08: "bge+ bge- ble+ ble- bne+ bne-", 0x0B: "bdnz+ bdnz-",
     0x11: "blr", 0x12: "bctr", 0x13: "bctrl", 0x15: "lbz",
     0x17: "lbzx", 0x19: "lhz", 0x1B: "lhzx", 0x1D: "lha", 0x1F: "lhax",
-    0x22: "lwz", 0x24: "lwzx", 0x28: "stb", 0x2C: "sth",
+    0x22: "lwz", 0x24: "lwzx", 0x28: "stb", 0x2A: "stbx", 0x2C: "sth",
     0x31: "stw", 0x32: "stwu", 0x33: "stwx", 0x3C: "add", 0x3F: "addi",
     0x42: "addis", 0x44: "addze", 0x47: "mulhw", 0x49: "mulli", 0x4A: "mullw", 0x4B: "neg",
     0x4C: "subf", 0x4F: "subfic", 0x52: "cmpwi", 0x53: "cmpw",
@@ -30,7 +30,7 @@ MNEMONICS = {
     0x69: "rlwimi", 0x6A: "slw", 0x6C: "srawi", 0x6D: "sraw", 0x70: "crset", 0x73: "cror",
     0x75: "crclr", 0x78: "mtctr", 0x79: "mtlr", 0x81: "mflr", 0x82: "mfcr",
     0x89: "li", 0x8A: "lis", 0x8B: "mr", 0x8D: "not", 0x8E: "lfs",
-    0x90: "lfsx", 0x92: "lfd", 0x96: "stfs", 0x9A: "stfd", 0x9E: "fmr",
+    0x90: "lfsx", 0x92: "lfd", 0x96: "stfs", 0x98: "stfsx", 0x9A: "stfd", 0x9E: "fmr",
     0xA0: "fneg", 0xA2: "fadd", 0xA3: "fadds", 0xA4: "fsub", 0xA5: "fsubs", 0xA6: "fmul", 0xA7: "fmuls",
     0xA8: "fdiv", 0xA9: "fdivs", 0xAA: "fmadd", 0xAB: "fmadds", 0xAD: "fmsubs", 0xAF: "fnmadds",
     0xB0: "fnmsub", 0xB1: "fnmsubs", 0xB5: "frsp", 0xB7: "fctiwz",
@@ -200,7 +200,7 @@ def emitted_instructions(snapshot):
 
 
 def validate_alignment(snapshot, assembly, code):
-    """Check opcodes, explicit registers, and exact load/move/bit-mask encodings.
+    """Check opcodes, registers, and exact load/move/indexed-store/bit-mask encodings.
 
     This is deliberately not a complete PowerPC emitter or relocation decoder.
     Unsupported opcodes fail closed rather than silently aligning a shifted trace.
@@ -250,6 +250,16 @@ def validate_alignment(snapshot, assembly, code):
                 raise ValueError("invalid emitted move registers")
             extended = 444 if op == 0x8B else 124  # mr = or; not = nor.
             expected = (31 << 26) | (source["number"] << 21) | (dest["number"] << 16) | (source["number"] << 11) | (extended << 1)
+        elif op in (0x2A, 0x33, 0x98):
+            classes = (3 if op == 0x98 else 4, 4, 4)
+            if len(args) != 3 or any(
+                    a["kind"] != 0 or a["register_class"] != cls or not 0 <= a["number"] < 32
+                    for a, cls in zip(args, classes)):
+                raise ValueError("invalid indexed store operands")
+            source, base, index_register = args
+            extended = {0x2A: 215, 0x33: 151, 0x98: 663}[op]
+            expected = ((31 << 26) | (source["number"] << 21) | (base["number"] << 16)
+                        | (index_register["number"] << 11) | (extended << 1))
         elif op == 0x56:
             if len(args) != 4:
                 raise ValueError("invalid immediate mask operands")

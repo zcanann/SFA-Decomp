@@ -173,6 +173,33 @@ class BackendIRTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "opcode alignment"):
             validate_alignment(data, ["stw r31,0(r3)", "mr r4,r7", "blr"], code)
 
+    def test_hcurves_indexed_store_encodings(self):
+        cases = [
+            (0x2A, "stbx r4,r3,r0", reg(4, 1), 0, 0x7C8301AE),
+            (0x33, "stwx r31,r3,r29", reg(31, 1), 29, 0x7FE3E92E),
+            (0x98, "stfsx f1,r3,r0", reg(1, 1, 3), 0, 0x7C23052E),
+        ]
+        for opcode, instruction, source, index, encoding in cases:
+            data = fixture()
+            store = data["blocks"][0]["instructions"][0]["words"]
+            store[8:] = [opcode | (3 << 16)] + list(struct.unpack("<9I", source + reg(3, 1) + reg(index, 1)))
+            asm = [instruction, "mr r4,r7", "blr"]
+            code = struct.pack(">3I", encoding, 0x7CE43B78, 0x4E800020)
+            with self.subTest(opcode=opcode):
+                self.assertEqual(len(validate_alignment(data, asm, code)), 3)
+            for bit in (0, 1, 11, 16, 21, 26):
+                corrupt = struct.pack(">3I", encoding ^ (1 << bit), 0x7CE43B78, 0x4E800020)
+                with self.subTest(opcode=opcode, bit=bit), self.assertRaisesRegex(ValueError, "operand encoding"):
+                    validate_alignment(data, asm, corrupt)
+
+    def test_indexed_store_rejects_invalid_register_class(self):
+        data = fixture()
+        store = data["blocks"][0]["instructions"][0]["words"]
+        store[8:] = [0x98 | (3 << 16)] + list(struct.unpack("<9I", reg(1, 1) + reg(3, 1) + reg(0, 1)))
+        with self.assertRaisesRegex(ValueError, "invalid indexed store operands"):
+            validate_alignment(data, ["stfsx r1,r3,r0", "mr r4,r7", "blr"],
+                               bytes.fromhex("7c23052e 7ce43b78 4e800020"))
+
     def test_branch_hex_addresses_are_not_float_registers(self):
         data = fixture()
         data["blocks"][0]["instructions"][1]["words"][8] = 0x05 | (1 << 16)
