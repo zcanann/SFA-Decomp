@@ -306,8 +306,9 @@ parallel and lerps by sub-frame phase; rotation samples decode as `base + delta*
 **Frame stream** at the stream offset: `frameCount` packets of `stride` bytes.
 
 **Root motion curve** at the root-curve offset: `f32 scale; s16 sampleCount;` then exactly 6 axes
-of `{s16 firstSample; if != 0, s16 samples[sampleCount]}` (`ObjAnimRootCurve`,
-`include/main/objanim_internal.h`). The walk lands inside the record's trailing 32-byte-alignment
+of `{s16 hasSamples; if != 0, s16 samples[sampleCount]}` (`ObjAnimRootCurve`,
+`include/main/objanim_internal.h`). The leading word marks presence and is not
+a motion sample. The walk lands inside the record's trailing 32-byte-alignment
 pad in all 580 rooted records. Encoder quirk: when `frameCount*stride` is odd the root-curve
 offset is rounded *down* to even, overlapping the frame stream's final pad byte (41 records).
 

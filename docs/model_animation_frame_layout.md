@@ -99,3 +99,40 @@ The full source build checks all users of the changed headers. All 1,002 source
 objects in the pre-integration comparison remain byte-identical. Matching
 configuration, 30-second-bounded `ninja all_source`, and the strict `ninja` target
 pass (`main.dol: OK`). Existing match status and runtime behavior are preserved.
+
+
+## Variable-length root-curve axes (2026-09-07)
+
+The EN decoder reads a six-byte root-curve header (`f32 scale`, `s16 sampleCount`)
+followed by six variable-length axis records. Each record starts with a signed
+halfword tested for zero. Zero consumes just that word; a nonzero marker is
+followed by `sampleCount` signed-halfword samples. It is a presence marker,
+not a first motion sample. Translation and rotation consumers retain their
+existing scaling and output widths.
+
+`ObjAnimRootCurveAxis.hasSamples` names that tested word, and `samples[]` is a
+flexible payload. `ObjAnimRootCurve.axisData[]` is the packed halfword stream;
+it is not a fixed-stride array of axis structs. Both former one-element arrays
+are removed. Assertions establish the marker, sample payload, scale, count,
+and axis-stream offsets. `sizeof(ObjAnimRootCurve)` includes compiler tail
+padding and must not be used as the serialized six-byte header length.
+
+The live presence checks use the named axis field. The retained sample-access
+helper uses `samples[]` directly, removing its reference to the undefined
+`ObjAnim_ReadPackedS16` helper without deleting the existing inline function.
+
+Four multi-role cursors retain their header advance as canonical `offsetof`
+arithmetic. Direct field decay, element/array address forms, and the existing
+accessor change register allocation. A separate typed header pointer reduces
+the advancing function's regression to four operands but does not preserve its
+exact code. These probes are not retained. Blended-axis traversal, zero-axis
+handling, and sample-count assumptions remain unchanged.
+
+The complete `objanim.o` object remains byte-identical to its pre-recovery
+version. This is record and field recovery; the remaining phase-sampling
+mismatch still consists of seven floating-point register operands.
+
+
+The shared-header rebuild preserves all 1,002 source objects byte for byte.
+Formatting the active TU and header produces no changes. Matching configuration,
+30-second-bounded `ninja all_source`, and strict `ninja` pass (`main.dol: OK`).

@@ -17,6 +17,10 @@ and need further cleanup.
   through `offsetof(RomCurveDef, linkWalkGroups)`.
 - `src/main/pi_pathsearch.c` `pathSearchExpandNode`: link id read through a
   byte walker plus `offsetof(RomCurveDef, linkIds)`.
+- `src/main/objanim.c` `ObjAnim_SampleRootCurvePhase` and
+  `ObjAnim_AdvanceCurrentMove`: four header-to-axis cursor advances now use
+  `offsetof(ObjAnimRootCurve, axisData)`. Direct member access changes codegen;
+  the variable-length record types and presence fields are recovered.
 
 ## `*_OFFSET` macros
 
@@ -26,9 +30,6 @@ and need further cleanup.
   contact list reached through `OBJHITBOX_TRANSFORM_STATE_OFFSET`,
   `OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET` and
   `OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET`.
-- `src/main/objanim.c` `ObjAnim_SampleRootCurvePhase` and
-  `ObjAnim_AdvanceCurrentMove`: root-curve axis data reached through
-  `OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET` or a bare `+= 3` (four sites).
 
 The cached move offset sites are recovered: `ObjAnimCachedMove` contains the
 joint-matrix-slot table prefix and the named `moveData` member. State cache

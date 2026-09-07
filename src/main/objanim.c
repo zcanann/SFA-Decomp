@@ -350,7 +350,7 @@ static inline s16* ObjAnim_FindFirstRootTranslationAxis(ObjAnimRootCurve* curve)
 
     axis = ObjAnim_GetRootCurveAxisData(curve);
     for (axisIndex = 0; axisIndex < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT; axisIndex++) {
-        if (*axis != 0) {
+        if (((ObjAnimRootCurveAxis*)axis)->hasSamples != 0) {
             return axis;
         }
         axis++;
@@ -359,7 +359,7 @@ static inline s16* ObjAnim_FindFirstRootTranslationAxis(ObjAnimRootCurve* curve)
 }
 
 static inline s16 ObjAnim_ReadRootAxisSample(s16* axis, int sampleIndex) {
-    return ObjAnim_ReadPackedS16(&axis[sampleIndex + 1]);
+    return ((ObjAnimRootCurveAxis*)axis)->samples[sampleIndex];
 }
 
 int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float* phaseOut) {
@@ -417,12 +417,12 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
         if (moveData->rootCurveOffset != 0) {
             blendSamples = (s16*)ObjAnim_GetMoveDataRootCurve(moveData);
             blendScale = ((ObjAnimRootCurve*)blendSamples)->scale * rootMotionScale;
-            blendSamples += OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET / sizeof(*blendSamples);
-            if (*blendSamples == 0) {
+            blendSamples += offsetof(ObjAnimRootCurve, axisData) / sizeof(*blendSamples);
+            if (((ObjAnimRootCurveAxis*)blendSamples)->hasSamples == 0) {
                 blendSamples++;
-                if (*blendSamples == 0) {
+                if (((ObjAnimRootCurveAxis*)blendSamples)->hasSamples == 0) {
                     blendSamples++;
-                    if (*blendSamples == 0) {
+                    if (((ObjAnimRootCurveAxis*)blendSamples)->hasSamples == 0) {
                         blendSamples = NULL;
                     }
                 }
@@ -443,9 +443,9 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
 
         moveRootScale = ((ObjAnimRootCurve*)moveSamples)->scale * rootMotionScale;
         segmentCount = ((ObjAnimRootCurve*)moveSamples)->sampleCount - 1;
-        moveSamples += OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET / sizeof(*moveSamples);
+        moveSamples += offsetof(ObjAnimRootCurve, axisData) / sizeof(*moveSamples);
         hasFirstAxis = 0;
-        axisMarker = *moveSamples;
+        axisMarker = ((ObjAnimRootCurveAxis*)moveSamples)->hasSamples;
         if (axisMarker != 0) {
             hasFirstAxis = 1;
         }
@@ -453,12 +453,12 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
             moveSamples++;
         }
         if (hasFirstAxis == 0) {
-            axisMarker = *moveSamples;
+            axisMarker = ((ObjAnimRootCurveAxis*)moveSamples)->hasSamples;
             if (axisMarker == 0) {
                 moveSamples++;
             }
         }
-        axisMarker = *moveSamples;
+        axisMarker = ((ObjAnimRootCurveAxis*)moveSamples)->hasSamples;
         if (axisMarker != 0) {
             moveSamples++;
             segmentOffset = segmentCount * 2;
@@ -710,7 +710,7 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
         axis = (s16*)ObjAnim_GetMoveDataRootCurve(moveData);
         rootScale = ((ObjAnimRootCurve*)axis)->scale * objAnim->rootMotionScale;
         segmentCount = ((ObjAnimRootCurve*)axis)->sampleCount - 1;
-        axis += OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET / sizeof(*axis);
+        axis += offsetof(ObjAnimRootCurve, axisData) / sizeof(*axis);
         sampleSpan = segmentCount;
         previousScaledSample = sampleSpan * previousProgress;
         previousSampleIndex = previousScaledSample;
@@ -730,7 +730,7 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
             }
             blendCurve = ObjAnim_GetMoveDataRootCurve(moveData);
             blendAxis = (s16*)blendCurve;
-            blendAxis += 3;
+            blendAxis += offsetof(ObjAnimRootCurve, axisData) / sizeof(*blendAxis);
         } else {
             blendWeight = 0.0f;
             moveWeight = OBJANIM_PROGRESS_ONE;
@@ -738,7 +738,7 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
 
         axisIndex = 0;
         do {
-            if (*axis != 0) {
+            if (((ObjAnimRootCurveAxis*)axis)->hasSamples != 0) {
                 axis++;
                 if (blendAxis != NULL) {
                     blendAxis++;

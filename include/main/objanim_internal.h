@@ -59,7 +59,6 @@ typedef s16 ObjAnimPackedEvent;
 #define OBJANIM_MOVE_GROUP_SHIFT                  8
 #define OBJANIM_MOVE_INDEX_MASK                   0xFF
 #define OBJANIM_MOVE_GROUP_BASE_COUNT             0x3E
-#define OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET       6
 #define OBJANIM_ROOT_CURVE_Z_AXIS_OFFSET          10
 #define OBJANIM_ROOT_CURVE_AXIS_COUNT             6
 #define OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT 3
@@ -231,21 +230,27 @@ typedef struct ObjAnimState {
 } ObjAnimState;
 
 typedef struct ObjAnimRootCurveAxis {
-    s16 firstSample;
-    s16 samples[1];
+    s16 hasSamples;
+    s16 samples[];
 } ObjAnimRootCurveAxis;
 
 /*
  * Root curves are packed by axis after the scale/sample-count header.  An axis
- * with firstSample == 0 occupies only that first s16; otherwise it is followed
+ * with hasSamples == 0 occupies only that marker; otherwise it is followed
  * by sampleCount additional s16 samples. Translation axes emit scaled floats,
  * while rotation axes emit raw s16 deltas into ObjAnimEventList.
  */
 typedef struct ObjAnimRootCurve {
     f32 scale;
     s16 sampleCount;
-    ObjAnimRootCurveAxis axes[1];
+    s16 axisData[];
 } ObjAnimRootCurve;
+
+STATIC_ASSERT(offsetof(ObjAnimRootCurveAxis, hasSamples) == 0);
+STATIC_ASSERT(offsetof(ObjAnimRootCurveAxis, samples) == 2);
+STATIC_ASSERT(offsetof(ObjAnimRootCurve, scale) == 0);
+STATIC_ASSERT(offsetof(ObjAnimRootCurve, sampleCount) == 4);
+STATIC_ASSERT(offsetof(ObjAnimRootCurve, axisData) == 6);
 
 typedef struct ObjDefHitVolume {
     s16 jointOffsetX;
@@ -968,7 +973,7 @@ static inline ObjAnimRootCurve* ObjAnim_GetMoveDataRootCurve(ObjAnimMoveData* mo
 }
 
 static inline s16* ObjAnim_GetRootCurveAxisData(ObjAnimRootCurve* curve) {
-    return &curve->axes[0].firstSample;
+    return curve->axisData;
 }
 
 static inline ObjAnimRootCurve* ObjAnim_GetMoveRootCurve(ObjAnimDef* animDef, ObjAnimState* state) {
