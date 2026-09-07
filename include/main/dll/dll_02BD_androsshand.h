@@ -6,8 +6,7 @@
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_setup.h"
 
-typedef enum AndrossHandStateId
-{
+typedef enum AndrossHandStateId {
     ANDROSSHAND_STATE_IDLE = 0,
     ANDROSSHAND_STATE_ENTER = 1,
     ANDROSSHAND_STATE_EXIT = 2,
@@ -22,38 +21,35 @@ typedef enum AndrossHandStateId
  * Per-object extra state for an Andross hand
  * (AndrossHand_getExtraSize == 0x2C).
  */
-typedef struct AndrossHandState
-{
+typedef struct AndrossHandState {
     GameObject* androssObj; /* 0x00: cached Andross body GameObject */
     GameObject* arwingObj;  /* 0x04: cached player Arwing GameObject */
-    u8 pad08[0x14 - 0x08]; /* 0x08-0x13: unknown */
-    f32 animSpeed;         /* 0x14 */
-    f32 zSpringOffset;     /* 0x18 */
-    f32 zSpringVelocity;   /* 0x1C */
-    s16 shotTimer;         /* 0x20 */
-    u8 sideFlag;           /* 0x22: setup[0x1B], left/right hand select */
-    s8 handState;          /* 0x23 */
-    s8 prevState;          /* 0x24: latches handState as a raw byte to detect a state change */
-    u8 health;             /* 0x25 */
-    u8 hitCooldown;        /* 0x26 */
-    u8 startupDelay;       /* 0x27 */
-    u8 damageTextureState; /* 0x28: 0 clean, 1 hit-flash, 2 destroyed */
-    u8 soundGate;          /* 0x29: one-shot gate for per-move sfx */
+    u8 pad08[0x14 - 0x08];  /* 0x08-0x13: unknown */
+    f32 animSpeed;          /* 0x14 */
+    f32 zSpringOffset;      /* 0x18 */
+    f32 zSpringVelocity;    /* 0x1C */
+    s16 shotTimer;          /* 0x20 */
+    u8 sideFlag;            /* 0x22: setup[0x1B], left/right hand select */
+    s8 handState;           /* 0x23 */
+    s8 prevState;           /* 0x24: latches handState as a raw byte to detect a state change */
+    u8 health;              /* 0x25 */
+    u8 hitCooldown;         /* 0x26 */
+    u8 startupDelay;        /* 0x27 */
+    u8 damageTextureState;  /* 0x28: 0 clean, 1 hit-flash, 2 destroyed */
+    u8 soundGate;           /* 0x29: one-shot gate for per-move sfx */
     u8 pad2A[2];
 } AndrossHandState;
 
 /* Spawn-setup buffer for an Andross-hand shot: ObjPlacement head (pos/color)
  * plus the class-specific yaw/pitch/flag bytes the parent seeds at +0x18. */
-typedef struct AndrossHandShotSetup
-{
+typedef struct AndrossHandShotSetup {
     ObjPlacement head; /* 0x00: pos/color/ident */
     u8 flag18;         /* 0x18 */
     u8 pitch;          /* 0x19 */
     u8 yaw;            /* 0x1a */
 } AndrossHandShotSetup;
 
-typedef struct AndrossHandSetup
-{
+typedef struct AndrossHandSetup {
     ObjPlacement head;
     u8 pad18[3];
     u8 sideFlag;
