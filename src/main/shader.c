@@ -2947,8 +2947,7 @@ void mapDebugRender(ModelRenderInstrsState* state) {
             if (v & 7) {
                 n += 1;
             }
-            modelRenderInstrsState_init(state, (void*)(gMapCellRenderInstrsTable + n * cell),
-                                        v, v);
+            modelRenderInstrsState_init(state, (void*)(gMapCellRenderInstrsTable + n * cell), v, v);
         }
     }
 }

@@ -19,8 +19,7 @@ STATIC_ASSERT(offsetof(ModelRenderInstrsState, bitCount) == 0x08);
 STATIC_ASSERT(offsetof(ModelRenderInstrsState, fieldC) == 0x0C);
 STATIC_ASSERT(offsetof(ModelRenderInstrsState, bit) == 0x10);
 
-static inline void modelRenderInstrsState_advance(ModelRenderInstrsState* state, s32 bitCount)
-{
+static inline void modelRenderInstrsState_advance(ModelRenderInstrsState* state, s32 bitCount) {
     state->bit += bitCount;
 }
 
