@@ -987,11 +987,10 @@ static void modelChainApplyDampingAndJitter(ObjModel* model, ModelFileHeader* un
     ModelFileHeader* hdr;
     u32 count;
     int total;
-    u8* base;
+    ObjModelJointMatrix* jointMtx;
     f32 dot;
     f32 scaled;
     f32 amp;
-    int off;
     int i;
 
     modelIndex = 0;
@@ -1005,10 +1004,10 @@ static void modelChainApplyDampingAndJitter(ObjModel* model, ModelFileHeader* un
     if (modelIndex >= total) {
         modelIndex = 0;
     }
-    base = model->jointMatrices[model->bufferFlags & 1] + modelIndex * 0x40;
-    vec.x = *(f32*)(base + 0x20);
-    vec.y = *(f32*)(base + 0x24);
-    vec.z = *(f32*)(base + 0x28);
+    jointMtx = &((ObjModelJointMatrix*)model->jointMatrices[model->bufferFlags & 1])[modelIndex];
+    vec.x = jointMtx->row2[0];
+    vec.y = jointMtx->row2[1];
+    vec.z = jointMtx->row2[2];
     dot = PSVECDotProduct(&vec, &gModelJitterAxis);
     if (dot < 0.0f) {
         dot = 0.0f;
@@ -1016,126 +1015,65 @@ static void modelChainApplyDampingAndJitter(ObjModel* model, ModelFileHeader* un
     scaled = gModelChainJitterScale * (1.2f - dot);
     amp = 0.01f * randomGetRange((int)(75.0f * scaled), (int)(100.0f * scaled));
     i = 0;
-    off = 0;
     while (i < entry->nodeCount + 1) {
-        u8* p = (u8*)entry->nodes + off;
-        *(f32*)&((ModelFileHeader*)p)->dataSize =
-            *(f32*)&((ModelFileHeader*)p)->dataSize * chain->damping + gModelJitterAxis.x * amp;
-        *(f32*)(p + 0x10) = gModelJitterAxis.y * amp + (*(f32*)(p + 0x10) * chain->damping + chain->gravityY);
-        *(f32*)(p + 0x14) = *(f32*)(p + 0x14) * chain->damping + gModelJitterAxis.z * amp;
-        off += 0x54;
+        ObjModelChainNode* node = &entry->nodes[i];
+        node->posDelta.x =
+            node->posDelta.x * chain->damping + gModelJitterAxis.x * amp;
+        node->posDelta.y = gModelJitterAxis.y * amp + (node->posDelta.y * chain->damping + chain->gravityY);
+        node->posDelta.z = node->posDelta.z * chain->damping + gModelJitterAxis.z * amp;
         i++;
     }
 }
 
-static void modelChainInitNodesFromJoints(int* obj, ModelFileHeader* b, int* desc) {
+static void modelChainInitNodesFromJoints(ObjModel* model, ModelFileHeader* file, ObjModelChainEntry* entry) {
     int i;
 
     i = 0;
-    for (; i < desc[2]; i++) {
-        int jointIdx = *(int*)(*(int*)desc[1] + i * 4);
-        int entry = *desc + i * 0x54;
-        int idx;
-        u8* hdr;
-        u32 n;
-        int lim;
+    for (; i < entry->nodeCount; i++) {
+        int jointIdx = entry->desc->jointIndices[i];
+        ObjModelChainNode* node = &entry->nodes[i];
+        node->localOffset.x = ((ModelBone*)file->jointData)[jointIdx].head[0];
+        node->localOffset.y = ((ModelBone*)file->jointData)[jointIdx].head[1];
+        node->localOffset.z = ((ModelBone*)file->jointData)[jointIdx].head[2];
 
-        *(f32*)(entry + 0x18) = *(f32*)((int)b->jointData + jointIdx * 0x1c + 4);
-        *(f32*)&((ObjModel*)entry)->vtxBuf[0] = *(f32*)((int)b->jointData + jointIdx * 0x1c + 8);
-        *(f32*)&((ObjModel*)entry)->vtxBuf[1] = *(f32*)((int)b->jointData + jointIdx * 0x1c + 0xc);
-
-        idx = jointIdx;
-        hdr = *(u8**)obj;
-        n = ((ModelFileHeader*)hdr)->jointCount;
-        if (n != 0) {
-            lim = n + ((ModelFileHeader*)hdr)->extraJointCount;
-        } else {
-            lim = 1;
-        }
-        if (jointIdx >= lim) {
-            idx = 0;
-        }
-        *(f32*)&((ObjModel*)entry)->file =
-            *(f32*)(*(int*)((int)obj + ((*(u16*)((u8*)obj + 0x18) & 1) << 2) + 0xc) + idx * 0x40 + 0xc);
-
-        idx = jointIdx;
-        hdr = *(u8**)obj;
-        n = ((ModelFileHeader*)hdr)->jointCount;
-        if (n != 0) {
-            lim = n + ((ModelFileHeader*)hdr)->extraJointCount;
-        } else {
-            lim = 1;
-        }
-        if (jointIdx >= lim) {
-            idx = 0;
-        }
-        *(f32*)(entry + 4) =
-            *(f32*)(*(int*)((int)obj + ((*(u16*)((u8*)obj + 0x18) & 1) << 2) + 0xc) + idx * 0x40 + 0x1c);
-
-        idx = jointIdx;
-        hdr = *(u8**)obj;
-        n = ((ModelFileHeader*)hdr)->jointCount;
-        if (n != 0) {
-            lim = n + ((ModelFileHeader*)hdr)->extraJointCount;
-        } else {
-            lim = 1;
-        }
-        if (jointIdx >= lim) {
-            idx = 0;
-        }
-        *(f32*)(entry + 8) =
-            *(f32*)(*(int*)((int)obj + ((*(u16*)((u8*)obj + 0x18) & 1) << 2) + 0xc) + idx * 0x40 + 0x2c);
+        node->pos.x = ((ObjModelJointMatrix*)modelGetBoneMtx(model, jointIdx))->translationX;
+        node->pos.y = ((ObjModelJointMatrix*)modelGetBoneMtx(model, jointIdx))->translationY;
+        node->pos.z = ((ObjModelJointMatrix*)modelGetBoneMtx(model, jointIdx))->translationZ;
     }
     {
         int lastJointIdx;
-        u8* lastHdr;
-        u32 lastCnt;
-        int lastLim;
-        int lastEntry = *desc + i * 0x54;
+        ObjModelChainNode* lastNode = &entry->nodes[i];
         f32 zero = 0.0f;
 
-        *(f32*)(lastEntry + 0x18) = zero;
-        *(f32*)(lastEntry + 0x1c) = zero;
-        *(f32*)(lastEntry + 0x20) = 100.0f;
+        lastNode->localOffset.x = zero;
+        lastNode->localOffset.y = zero;
+        lastNode->localOffset.z = 100.0f;
         {
-            int* jointIdxArr = (int*)*(int*)desc[1];
-            lastJointIdx = jointIdxArr[desc[2] - 1];
+            s32* jointIdxArr = entry->desc->jointIndices;
+            lastJointIdx = jointIdxArr[entry->nodeCount - 1];
         }
-        lastHdr = *(u8**)obj;
-        lastCnt = *(u8*)(lastHdr + 0xf3);
-        if (lastCnt != 0) {
-            lastLim = lastCnt + *(u8*)(lastHdr + 0xf4);
-        } else {
-            lastLim = 1;
-        }
-        if (lastJointIdx >= lastLim) {
-            lastJointIdx = 0;
-        }
-        PSMTXMultVec((MtxPtr)(obj[(*(u16*)((u8*)obj + 0x18) & 1) + 3] + lastJointIdx * 0x40), (Vec*)(lastEntry + 0x18),
-                     (Vec*)lastEntry);
+        PSMTXMultVec(modelGetBoneMtx(model, lastJointIdx), &lastNode->localOffset,
+                     &lastNode->pos);
     }
 }
 
 void ObjModelChain_Update(ObjModel* model, ModelFileHeader* file, ObjModelChain* chain,
                           ObjModelChainUpdateCallback callback) {
-    int off;
     int i;
 
     if (chain->enabled != 0) {
         i = 0;
-        off = 0;
         for (; i < chain->count; i++) {
             if (chain->firstUpdateDone == 0) {
-                modelChainInitNodesFromJoints((int*)model, file, (int*)((u8*)chain->entries + off));
+                modelChainInitNodesFromJoints(model, file, &chain->entries[i]);
             }
             if (getHudHiddenFrameCount() == 0) {
-                modelChainApplyDampingAndJitter(model, file, chain, (ObjModelChainEntry*)((u8*)chain->entries + off));
-                modelChainUpdateNodes(model, file, chain, (ObjModelChainEntry*)((u8*)chain->entries + off), callback,
+                modelChainApplyDampingAndJitter(model, file, chain, &chain->entries[i]);
+                modelChainUpdateNodes(model, file, chain, &chain->entries[i], callback,
                                       i);
             } else {
-                modelChainUpdateNodesPassive(model, file, chain, (ObjModelChainEntry*)((u8*)chain->entries + off));
+                modelChainUpdateNodesPassive(model, file, chain, &chain->entries[i]);
             }
-            off += 0xc;
         }
         chain->updatedThisFrame = 1;
         chain->firstUpdateDone = 1;
@@ -1174,7 +1112,7 @@ void ObjModelChain_Free(ObjModelChain* chain) {
 }
 
 ObjModelChain* ObjModelChain_Alloc(void* models, int count) {
-    int** p;
+    ObjModelChainDesc** desc;
     int off;
     ObjModelChain* state;
     int i;
@@ -1185,15 +1123,15 @@ ObjModelChain* ObjModelChain_Alloc(void* models, int count) {
     state->updatedThisFrame = 0;
     state->entries = mmAlloc(count * sizeof(ObjModelChainEntry), 0x1a, 0);
     i = 0;
-    p = models;
+    desc = models;
     off = 0;
     for (; i < count; i++) {
-        *(int**)((char*)state->entries + off + 4) = *p;
-        *(int*)((char*)state->entries + off + 8) = (*p)[1];
-        *(void**)((char*)state->entries + off) =
-            mmAlloc((*(int*)((char*)state->entries + off + 8) + 1) * 0x54, 0x1a, 0);
-        p++;
-        off += 0xc;
+        ((ObjModelChainEntry*)((u8*)state->entries + off))->desc = *desc;
+        ((ObjModelChainEntry*)((u8*)state->entries + off))->nodeCount = (*desc)->nodeCount;
+        ((ObjModelChainEntry*)((u8*)state->entries + off))->nodes =
+            mmAlloc((((ObjModelChainEntry*)((u8*)state->entries + off))->nodeCount + 1) * sizeof(ObjModelChainNode), 0x1a, 0);
+        desc++;
+        off += sizeof(ObjModelChainEntry);
     }
     state->stiffness = 0.12f;
     state->damping = 0.675f;

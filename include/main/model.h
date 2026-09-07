@@ -457,6 +457,14 @@ typedef void (*ObjModelChainUpdateCallback)(ModelFileHeader* file, ObjModel* mod
                                             int nodeIndex, f32 phase);
 
 STATIC_ASSERT(sizeof(ObjModelChainNode) == 0x54);
+STATIC_ASSERT(offsetof(ObjModelChainNode, pos) == 0x00);
+STATIC_ASSERT(offsetof(ObjModelChainNode, posDelta) == 0x0C);
+STATIC_ASSERT(offsetof(ObjModelChainNode, localOffset) == 0x18);
+STATIC_ASSERT(offsetof(ObjModelChainNode, mtx) == 0x24);
+STATIC_ASSERT(sizeof(ObjModelChainDesc) == 0x08);
+STATIC_ASSERT(offsetof(ObjModelChainDesc, jointIndices) == 0x00);
+STATIC_ASSERT(offsetof(ObjModelChainDesc, nodeCount) == 0x04);
+STATIC_ASSERT(sizeof(ObjModelChain) == 0x1C);
 STATIC_ASSERT(sizeof(ObjModelChainEntry) == 0x0C);
 STATIC_ASSERT(offsetof(ObjModelChainEntry, nodes) == 0x00);
 STATIC_ASSERT(offsetof(ObjModelChainEntry, desc) == 0x04);
