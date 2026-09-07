@@ -261,3 +261,40 @@ python3 -m unittest discover -s tools -p 'test_mwcc_register_compare.py'
 
 No tested source variant improves the existing objdiff score. The TU remains
 `NonMatching`, 99.97990% fuzzy, with 12/13 functions and all data exact.
+
+
+### Addressed product store (2026-09-08)
+
+The reduced reproducer now also tests replacing the move-product assignment
+with `*(f32*)&moveDistanceDelta = ...`. This is a diagnostic lvalue spelling,
+not proposed game source. It produces both the desired FP registers and the
+multiply-before-address order, but retains an extra `stfs` between them.
+
+| Reduced variant | Instructions | Bias / product | Product index | Blend address index | Intervening store |
+| --- | ---: | --- | ---: | ---: | --- |
+| Named product | 104 | f11 / f12 | 57 | 58 | none |
+| Staged difference | 104 | f12 / f11 | 58 | 57 | none |
+| Address-cast store | 105 | f12 / f11 | 57 | 59 | stfs at 58 |
+
+All three ordinary/instrumented object hashes agree under frontend tracing.
+The address-cast reduced object has SHA-256
+`6e4e762417a7ade3e31df36ca6e2723280b0334c721e7a8c82afb9aa7b13b8be`.
+Its full-function counterpart similarly adds one instruction and shifts stack
+spill offsets. An inline output-parameter helper reproduces this only when its
+store also contains the cast: plain `*out = ...`, direct address dereferencing,
+and scalarized struct outputs return to the original seven-register mismatch.
+Thus taking an output parameter alone does not explain the change.
+
+In the final full-function frontend listing, the ordinary assignment addresses
+the local directly through `EINDIRECT`; the casted store inserts `ETYPCON`
+between the local operand and `EINDIRECT`. The latter still forwards the product
+into its eventual arithmetic use but retains the memory store. Explicit
+`deadstore`, `deadcode`, and `cse` diagnostic options did not remove that store;
+production compiler flags remain unchanged. Unrolled two-curve loops and
+aggregate returns likewise introduced stores or extra rounding instructions.
+
+Reproduce all three reduced cases with
+`python3 tools/objanim_expression_order.py --trace`. The JSON report records
+product-store indices as well as register and instruction-order observations.
+These results distinguish another frontend path but do not improve the TU's
+99.97990% score or establish an exact source spelling.

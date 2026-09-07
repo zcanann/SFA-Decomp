@@ -28,6 +28,7 @@ UNIT = "main/main/objanim"
 FUNCTION = "sampleRootDelta"
 ASSIGNMENT = "moveDistanceDelta = moveRootScale * ((f32)axisSamples[1] - axisSamples[0]);"
 STAGED = "curveProgress = (f32)axisSamples[1] - axisSamples[0];\n                moveDistanceDelta = moveRootScale * curveProgress;"
+ADDRESS_CAST = "*(f32*)&" + ASSIGNMENT
 
 
 def summarize(assembly):
@@ -49,7 +50,8 @@ def summarize(assembly):
     destination = lambda i: re.search(r"\bf(\d+),", assembly[i]).group(1)
     return {"instruction_count": len(assembly), "move_product_index": move,
             "blend_address_index": addresses[0], "bias_register": "f" + destination(biases[-1]),
-            "move_product_register": "f" + destination(move)}
+            "move_product_register": "f" + destination(move),
+            "product_store_indices": [i for i in range(move + 1, blend) if mnemonics[i] == "stfs"]}
 
 
 def main():
@@ -71,7 +73,9 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     (output / "report.json").unlink(missing_ok=True)
     report = {"compiler_sha256": COMPILER_SHA256, "unit": UNIT, "variants": {}}
-    for name, text in [("named", source), ("staged", source.replace(ASSIGNMENT, STAGED))]:
+    variants = [("named", source), ("staged", source.replace(ASSIGNMENT, STAGED)),
+                ("address_cast", source.replace(ASSIGNMENT, ADDRESS_CAST))]
+    for name, text in variants:
         directory = output / name
         directory.mkdir(parents=True, exist_ok=True)
         candidate = directory / "objanim_expression_order.c"
@@ -91,7 +95,8 @@ def main():
         report["variants"][name] = item
         print(f"{name}: {item['instruction_count']} instructions; bias {item['bias_register']}; "
               f"move product {item['move_product_register']} at {item['move_product_index']}; "
-              f"blend address at {item['blend_address_index']}", flush=True)
+              f"blend address at {item['blend_address_index']}; "
+              f"product stores at {item['product_store_indices']}", flush=True)
         if args.trace:
             subprocess.run([sys.executable, str(ROOT / "tools/mwcc_frontend_trace.py"), "--unit", UNIT,
                             "--function", FUNCTION, "--source", str(candidate), "--output", str(directory / "frontend"),
