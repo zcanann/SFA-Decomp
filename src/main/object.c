@@ -1549,7 +1549,8 @@ void Obj_RegisterObject(GameObject* obj, int flags) {
     }
 }
 
-GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objectIndex, GameObject* parent, int unused) {
+GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objectIndex, GameObject* parent,
+                          int unused) {
     int id;
     int offsets[20];
     void* models[20];
@@ -1642,7 +1643,10 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
         callbackFlags = 0x1cb;
         break;
     default:
-        if (tmpl.anim.dll != NULL && (int)(getModelLoadFlags = (int (*)(GameObject*))((ObjectInterface*)*tmpl.anim.dll)->getObjectTypeId) != -1 && getModelLoadFlags != NULL) {
+        if (tmpl.anim.dll != NULL &&
+            (int)(getModelLoadFlags = (int (*)(GameObject*))((ObjectInterface*)*tmpl.anim.dll)->getObjectTypeId) !=
+                -1 &&
+            getModelLoadFlags != NULL) {
             callbackFlags = getModelLoadFlags(tp);
         } else {
             callbackFlags = 0;
@@ -1741,7 +1745,8 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
         dllStateSize = 0x8e0;
         break;
     default:
-        if (obj->anim.dll != NULL && (getExtraSize = (int (*)(GameObject*, int))((ObjectInterface*)*obj->anim.dll)->getExtraSize) != NULL) {
+        if (obj->anim.dll != NULL &&
+            (getExtraSize = (int (*)(GameObject*, int))((ObjectInterface*)*obj->anim.dll)->getExtraSize) != NULL) {
             dllStateSize = getExtraSize(obj, cursor);
         } else {
             dllStateSize = 0;
