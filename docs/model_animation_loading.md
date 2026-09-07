@@ -8,7 +8,7 @@ the one-element byte-offset array without changing the retail loop.
 
 The loader has two distinct resource paths:
 
-- With `MODEL_FLAG_VERTEX_ANIM_AREA`, the caller's buffer retains the
+- With `MODEL_FLAG_CACHED_ANIMATIONS`, the caller's buffer retains the
   `MODANIM.BIN` ID list, padded to eight bytes. Animations are subsequently
   fetched through the move-cache path. `animationModelPtrs` is cleared.
 - Otherwise, the ID list temporarily uses `gModelResourceBuffer`. The caller's

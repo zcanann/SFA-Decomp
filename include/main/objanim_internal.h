@@ -28,7 +28,6 @@ typedef struct ObjAnimFrameHeader {
 
 typedef s16 ObjAnimPackedEvent;
 
-#define OBJANIM_DEF_FLAG_CACHED_MOVES 0x40
 #define OBJANIM_DEF_FLAG_SKELETON_HITBOXES 0x1000
 /* Object allocated & owns its own placementData copy (must free it). Set after
    mmAlloc+memcpy into placementData; gates the placementData mm_free in Obj_FreeObject. */
@@ -41,7 +40,6 @@ typedef s16 ObjAnimPackedEvent;
 #define OBJANIM_MOVE_CACHE_SLOT_COUNT 2
 #define OBJANIM_MISSING_MOVE_ID -1
 #define OBJANIM_BLEND_MOVE_INDEX_INVALID -1
-#define OBJANIM_CACHED_MOVE_DATA_OFFSET 0x80
 #define OBJANIM_MOVE_ROOT_CURVE_OFFSET 4
 #define OBJANIM_FRAME_COMMANDS_OFFSET 6
 #define OBJANIM_FRAME_TYPE_CLAMPED 0
@@ -171,10 +169,10 @@ typedef struct ObjAnimState {
   };
   union {
     struct {
-      u8 *moveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
-      u8 *blendMoveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
+      ObjAnimCachedMove *moveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
+      ObjAnimCachedMove *blendMoveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
     };
-    u8 *cachedMoves[OBJANIM_MOVE_CACHE_SLOT_COUNT * 2];
+    ObjAnimCachedMove *cachedMoves[OBJANIM_MOVE_CACHE_SLOT_COUNT * 2];
   };
   /* 0x2c: cursor into the current frame's packed bitstream, written by
      ObjModel_SampleJointTransform and consumed by modelRenderInterpolateRootTransform. */
@@ -402,6 +400,15 @@ typedef struct ObjAnimMoveData {
   s16 rootCurveOffset;
   u8 frameCommands[];
 } ObjAnimMoveData;
+
+/* Fixed joint-slot prefix followed by a variable-length move resource. */
+struct ObjAnimCachedMove {
+  u8 jointMatrixSlots[0x80];
+  ObjAnimMoveData moveData;
+};
+
+STATIC_ASSERT(offsetof(ObjAnimCachedMove, jointMatrixSlots) == 0);
+STATIC_ASSERT(offsetof(ObjAnimCachedMove, moveData) == 0x80);
 
 typedef ObjModel ObjAnimBank;
 
@@ -939,8 +946,8 @@ static inline s32 ObjAnim_GetHitReactEntryIndex(ObjAnimDef *animDef, s32 sphereI
 
 static inline ObjAnimMoveData *ObjAnim_GetMoveData(ObjAnimDef *animDef, ObjAnimState *state,
                                                    u16 slot) {
-  if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
-    return (ObjAnimMoveData *)(state->moveCache[slot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+  if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
+    return &state->moveCache[slot]->moveData;
   }
   return (ObjAnimMoveData *)animDef->moveData[slot];
 }
@@ -952,8 +959,8 @@ static inline ObjAnimMoveData *ObjAnim_GetCurrentMoveData(ObjAnimDef *animDef,
 
 static inline ObjAnimMoveData *ObjAnim_GetBlendMoveData(ObjAnimDef *animDef, ObjAnimState *state,
                                                         u16 slot) {
-  if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
-    return (ObjAnimMoveData *)(state->blendMoveCache[slot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+  if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
+    return &state->blendMoveCache[slot]->moveData;
   }
   return (ObjAnimMoveData *)animDef->moveData[slot];
 }

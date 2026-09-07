@@ -6,6 +6,7 @@
 typedef struct ModelFileHeader ObjAnimDef;
 typedef struct ObjModel ObjAnimBank;
 typedef struct ObjAnimState ObjAnimState;
+typedef struct ObjAnimCachedMove ObjAnimCachedMove;
 typedef struct ObjAnimComponent ObjAnimComponent;
 typedef struct ObjAnimEventTable ObjAnimEventTable;
 typedef struct ObjAnimEventList ObjAnimEventList;
@@ -37,7 +38,7 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
 int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events);
 int ObjAnim_SetMoveProgress(ObjAnimComponent* objAnim, f32 moveProgress);
 int ObjAnim_SetCurrentMove(void* objAnimHandle, int moveId, f32 moveProgress, u8 moveControlFlags);
-void* ObjAnim_LoadCachedMove(int animId, int moveIndex, u8* cache, ObjAnimDef* animDef);
+void* ObjAnim_LoadCachedMove(int animId, int moveIndex, ObjAnimCachedMove* cache, ObjAnimDef* animDef);
 void objGetWeaponDa(u8* objAnim, int objType, ObjWeaponDaTable* weaponDaTable, int key, u8 load);
 void ObjAnim_LoadMoveEvents(u8* objAnim, int objType, ObjAnimEventTable* eventTable, u32 moveId, u8 load);
 

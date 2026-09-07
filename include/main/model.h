@@ -9,6 +9,7 @@
 
 typedef struct GameObject GameObject;
 typedef struct ObjAnimState ObjAnimState;
+struct ObjAnimCachedMove;
 
 typedef struct ShaderLayer {
     union {
@@ -216,7 +217,7 @@ typedef struct ModelFileHeader {
         s16 moveGroupBaseIndices[8];
     };
     s32 animationDataFileOffset;
-    s16 headerSize; /* roundUpTo8(loaded header size) + 0xb0; read back into size table */
+    s16 animationCacheSize; /* Per-cache allocation size, including the joint-slot prefix. */
     u8 unk86[2];
     ModelVtxAnimJob vertexAnimJob;
     u8 unk98[0xC];
@@ -257,7 +258,7 @@ typedef struct ModelFileHeader {
 /* ModelFileHeader.flags bits */
 #define MODEL_FLAG_NO_ANIMATIONS          0x2
 #define MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS 0x10
-#define MODEL_FLAG_VERTEX_ANIM_AREA       0x40
+#define MODEL_FLAG_CACHED_ANIMATIONS       0x40
 #define MODEL_FLAG_NO_DEPTH_TEST          0x400
 #define MODEL_FLAG_ALPHA_Z_UPDATE         0x2000
 #define MODEL_FLAG_ALT_POINTER_LAYOUT     0x8000
@@ -290,6 +291,7 @@ STATIC_ASSERT(offsetof(ModelFileHeader, hitVolumes) == 0x58);
 STATIC_ASSERT(offsetof(ModelFileHeader, hitReactTable) == 0x58);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveData) == 0x64);
 STATIC_ASSERT(offsetof(ModelFileHeader, cachedAnimIds) == 0x6C);
+STATIC_ASSERT(offsetof(ModelFileHeader, animationCacheSize) == 0x84);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveGroupBaseIndices) == 0x70);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveCount) == 0xEC);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20);
@@ -567,7 +569,7 @@ void ObjModel_InitResourceCaches(void);
 void ObjModel_InitScratchBuffers(void);
 void ObjModel_TouchModelCache(void);
 void* loadModelInstance(int resourceId, int arg, void* buffer);
-void* loadAnimation(ModelFileHeader* hdr, s16 id, int b, u8* bufout);
+void* loadAnimation(ModelFileHeader* hdr, s16 id, int b, struct ObjAnimCachedMove* bufout);
 
 int loadModelAndAnimTabs(void);
 void postRenderSetAlphaBlendState(void);

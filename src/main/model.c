@@ -47,7 +47,7 @@ u16 gModelMorphChunkVertexLimit = 0x2A0;
 #define MODEL_MORPH_HAS_X             0x2000
 #define MODEL_MORPH_HAS_Y             0x4000
 #define MODEL_MORPH_HAS_Z             0x8000
-void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
+void* animLoadFromTable(u8* hdr, int idx, int a, ObjAnimCachedMove* b);
 #define LOADCOLOR_BLOCK(SLOT)                                                                                          \
     {                                                                                                                  \
         int idx;                                                                                                       \
@@ -73,7 +73,7 @@ void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
                     *hp += 1;                                                                                          \
                 }                                                                                                      \
             } else {                                                                                                   \
-                animLoadFromTable(hdr, idx, 0, (u8*)v);                                                                \
+                animLoadFromTable(hdr, idx, 0, (ObjAnimCachedMove*)v);                                                                \
             }                                                                                                          \
         }                                                                                                              \
     }
@@ -174,10 +174,9 @@ void modelAnimUpdateChannels(ModelFileHeader* file, ObjAnimState* work, int chan
     f32 frameIdxF;
 
     for (i = 0; i < channelCount; i++) {
-        if (file->flags & MODEL_FLAG_VERTEX_ANIM_AREA) {
-            frameStream = work->cachedMoves[work->cacheSlots[i]];
-            mtxSlotRow = frameStream;
-            frameStream += 0x80;
+        if (file->flags & MODEL_FLAG_CACHED_ANIMATIONS) {
+            mtxSlotRow = work->cachedMoves[work->cacheSlots[i]]->jointMatrixSlots;
+            frameStream = (u8*)&work->cachedMoves[work->cacheSlots[i]]->moveData;
         } else {
             mtxSlotRow = file->animationDataSection + work->cacheSlots[i] * (((file->jointCount - 1) & ~7) + 8);
             frameStream = ((u8**)file->animationModelPtrs)[work->cacheSlots[i]];
@@ -229,7 +228,7 @@ void modelAnimEvalSlotPair(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
     work.framePhases[1] = channel->framePhases[idxB];
     idxB = (u8)blendSel;
     work.frameData[1] = channel->frameData[idxB];
-    if (file->flags & MODEL_FLAG_VERTEX_ANIM_AREA) {
+    if (file->flags & MODEL_FLAG_CACHED_ANIMATIONS) {
         work.cacheSlots[0] = 0;
         work.cacheSlots[1] = 1;
         work.cachedMoves[0] = channel->cachedMoves[channel->cacheSlots[idxA]];
@@ -330,7 +329,7 @@ void modelAnimEvalChannels(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
                 work.frameLengths[1] = channel->frameLengths[i];
                 work.framePhases[1] = channel->framePhases[i];
                 work.frameData[1] = channel->frameData[i + 2];
-                if (file->flags & MODEL_FLAG_VERTEX_ANIM_AREA) {
+                if (file->flags & MODEL_FLAG_CACHED_ANIMATIONS) {
                     work.cacheSlots[0] = 0;
                     work.cacheSlots[1] = 1;
                     work.cachedMoves[0] = channel->cachedMoves[channel->cacheSlots[i]];
@@ -381,7 +380,7 @@ void modelAnimEvalChannels(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
     }
 }
 
-void* ObjAnim_LoadCachedMove(int animId, int moveIndex, u8* cache, ObjAnimDef* animDef) {
+void* ObjAnim_LoadCachedMove(int animId, int moveIndex, ObjAnimCachedMove* cache, ObjAnimDef* animDef) {
     void* out = NULL;
     animationLoad(&out, animId, moveIndex, cache, animDef);
     return out;
@@ -405,13 +404,13 @@ void modelAnimResetState(void* m, void* data) {
     channel->frameType = 0;
     hdr = *(u8**)m;
     if (((ModelFileHeader*)hdr)->animationCount != 0) {
-        if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) {
+        if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_CACHED_ANIMATIONS) {
             LOADCOLOR_BLOCK(channel->moveCache[0])
             LOADCOLOR_BLOCK(channel->moveCache[1])
             LOADCOLOR_BLOCK(channel->blendMoveCache[0])
             LOADCOLOR_BLOCK(channel->blendMoveCache[1])
             channel->moveCacheSlot = 0;
-            mdl = channel->moveCache[channel->moveCacheSlot] + 0x80;
+            mdl = (u8*)&channel->moveCache[channel->moveCacheSlot]->moveData;
         } else {
             mdl = ((u8**)((ModelFileHeader*)hdr)->animationModelPtrs)[channel->moveCacheSlot];
         }
@@ -468,7 +467,7 @@ int modelLoadAnimations(ModelFileHeader* file, int modelId, void* animBase) {
     file->animationDataFileOffset = gModelAnimOffsetTable[modelId & 3];
     amapOffset = gModelAnimOffsetTable[modelId & 3];
     modelId = gModelAnimOffsetTable[(modelId & 3) + 1] - amapOffset;
-    if (file->flags & MODEL_FLAG_VERTEX_ANIM_AREA) {
+    if (file->flags & MODEL_FLAG_CACHED_ANIMATIONS) {
         file->animationHeaderBuffer = bufferCursor;
         while (modelAnimBytes & 7) {
             modelAnimBytes++;
@@ -488,7 +487,7 @@ int modelLoadAnimations(ModelFileHeader* file, int modelId, void* animBase) {
             file->animGroupBaseIndices[groupSlot++] = (s16)(i + 1);
         }
     }
-    if ((file->flags & MODEL_FLAG_VERTEX_ANIM_AREA) == 0) {
+    if ((file->flags & MODEL_FLAG_CACHED_ANIMATIONS) == 0) {
         file->animationHeaderBuffer = NULL;
         file->animationModelPtrs = bufferCursor;
         bufferCursor += file->animationCount * (int)sizeof(u8*);
@@ -604,8 +603,8 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
         sizes[1] = hitSphereBytes << 1;
     }
     sizes[3] = 0;
-    if ((((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) != 0) {
-        sizes[5] = ((ModelFileHeader*)hdr)->headerSize;
+    if ((((ModelFileHeader*)hdr)->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
+        sizes[5] = ((ModelFileHeader*)hdr)->animationCacheSize;
         while ((sizes[5] & 7) != 0) {
             *(int*)((int)sizes + 0x14) = *(int*)((int)sizes + 0x14) + 1;
         }
@@ -729,26 +728,26 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c) {
         *(int*)&((ObjModel*)out2)->animStateB = pos;
         pos += 0x68;
     }
-    if (((ModelFileHeader*)p)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) {
+    if (((ModelFileHeader*)p)->flags & MODEL_FLAG_CACHED_ANIMATIONS) {
         pos = roundUpTo8(pos);
         q = ((ObjModel*)out2)->animStateA;
-        ((ObjAnimState*)q)->moveCache[0] = (u8*)pos;
+        ((ObjAnimState*)q)->moveCache[0] = (ObjAnimCachedMove*)pos;
         pos += szs[5];
-        ((ObjAnimState*)q)->moveCache[1] = (u8*)pos;
+        ((ObjAnimState*)q)->moveCache[1] = (ObjAnimCachedMove*)pos;
         pos += szs[5];
-        ((ObjAnimState*)q)->blendMoveCache[0] = (u8*)pos;
+        ((ObjAnimState*)q)->blendMoveCache[0] = (ObjAnimCachedMove*)pos;
         pos += szs[5];
-        ((ObjAnimState*)q)->blendMoveCache[1] = (u8*)pos;
+        ((ObjAnimState*)q)->blendMoveCache[1] = (ObjAnimCachedMove*)pos;
         pos += szs[5];
         q = ((ObjModel*)out2)->animStateB;
         if (q != 0) {
-            ((ObjAnimState*)q)->moveCache[0] = (u8*)pos;
+            ((ObjAnimState*)q)->moveCache[0] = (ObjAnimCachedMove*)pos;
             pos += szs[5];
-            ((ObjAnimState*)q)->moveCache[1] = (u8*)pos;
+            ((ObjAnimState*)q)->moveCache[1] = (ObjAnimCachedMove*)pos;
             pos += szs[5];
-            ((ObjAnimState*)q)->blendMoveCache[0] = (u8*)pos;
+            ((ObjAnimState*)q)->blendMoveCache[0] = (ObjAnimCachedMove*)pos;
             pos += szs[5];
-            ((ObjAnimState*)q)->blendMoveCache[1] = (u8*)pos;
+            ((ObjAnimState*)q)->blendMoveCache[1] = (ObjAnimCachedMove*)pos;
             pos += szs[5];
         }
     }
@@ -1638,15 +1637,15 @@ void ObjModel_SampleJointTransform(ObjModel* model, int animState, int frameSour
     }
     savedFrameData = state->moveFrameData;
     state->moveFrameData = state->frameData[frameSource];
-    if (model->file->flags & MODEL_FLAG_VERTEX_ANIM_AREA) {
+    if (model->file->flags & MODEL_FLAG_CACHED_ANIMATIONS) {
         if (frameSource > 1) {
-            u8** cache = state->blendMoveCache;
+            ObjAnimCachedMove** cache = state->blendMoveCache;
             u16* cacheSlots = state->cacheSlots;
-            animationData = cache[cacheSlots[frameSource]] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
+            animationData = (u8*)&cache[cacheSlots[frameSource]]->moveData;
         } else {
-            u8** cache = state->moveCache;
+            ObjAnimCachedMove** cache = state->moveCache;
             u16* cacheSlots = state->cacheSlots;
-            animationData = cache[cacheSlots[frameSource]] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
+            animationData = (u8*)&cache[cacheSlots[frameSource]]->moveData;
         }
     } else {
         u16* cacheSlots = state->cacheSlots;
@@ -1685,7 +1684,7 @@ void ObjModel_SampleJointTransform(ObjModel* model, int animState, int frameSour
     outPos[2] *= rootMotionScale;
 }
 
-void* animLoadFromTable(u8* hdr, int id, int idx, u8* out) {
+void* animLoadFromTable(u8* hdr, int id, int idx, ObjAnimCachedMove* out) {
     int size;
     int flags;
     int out2;
@@ -1696,23 +1695,23 @@ void* animLoadFromTable(u8* hdr, int id, int idx, u8* out) {
     fileLoadToBufferOffset(MLDF_FILEID_PREANIM_TAB, &flags, id * sizeof(u32), 4);
     if (flags & 0x10000000) {
         loadAndDecompressDataFile(MLDF_FILEID_PREANIM_BIN, 0, flags, 0, &size, id, 1);
-        buf = out + 0x80;
+        buf = (u8*)&out->moveData;
         loadAndDecompressDataFile(MLDF_FILEID_PREANIM_BIN, buf, flags, size, &out2, id, 0);
         stride = ((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8;
-        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, out,
+        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, out->jointMatrixSlots,
                                ((ModelFileHeader*)hdr)->animationDataFileOffset + idx * stride, stride);
     } else {
         flags = gModelAnimDataOffsetTable[id];
         loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, flags, 0, &size, id, 1);
-        buf = out + 0x80;
+        buf = (u8*)&out->moveData;
         loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, buf, flags, size, &out2, id, 0);
         stride = ((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8;
-        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, out,
+        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, out->jointMatrixSlots,
                                ((ModelFileHeader*)hdr)->animationDataFileOffset + idx * stride, stride);
     }
     return buf;
 }
-void* loadAnimation(ModelFileHeader* hdr, s16 id, int b, u8* bufout) {
+void* loadAnimation(ModelFileHeader* hdr, s16 id, int b, ObjAnimCachedMove* bufout) {
     int tmp;
     int size;
     u8* ptr;
@@ -1890,9 +1889,9 @@ static void ObjModel_BuildAnimBlendTable(ObjAnimComponent* objAnim, ObjAnimState
     u8* rowA;
     u8* rowB;
 
-    if (file->flags & MODEL_FLAG_VERTEX_ANIM_AREA) {
-        rowA = channel->moveCache[channel->moveCacheSlot];
-        rowB = channel->moveCache[channel->prevMoveCacheSlot];
+    if (file->flags & MODEL_FLAG_CACHED_ANIMATIONS) {
+        rowA = channel->moveCache[channel->moveCacheSlot]->jointMatrixSlots;
+        rowB = channel->moveCache[channel->prevMoveCacheSlot]->jointMatrixSlots;
     } else {
         rowA = file->animationDataSection + channel->moveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
         rowB = file->animationDataSection + channel->prevMoveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
@@ -2109,28 +2108,28 @@ void ObjModel_RelocateModelData(u8* m) {
 }
 
 void* ObjModel_LoadModelData(int id) {
-    int fileOffset, dataLen, animCount, headerSize, amapFlag;
+    int fileOffset, dataLen, animCount, cacheSize, amapFlag;
     int amapSize;
     void* model;
     if (getTableFileEntry(MLDF_FILEID_MODELS_TAB_A, id, &fileOffset) == 0) {
         return NULL;
     }
-    loadModelsBin(fileOffset, &animCount, &headerSize, &amapFlag, &dataLen, id);
-    headerSize = roundUpTo8(headerSize);
-    headerSize += 0xb0;
+    loadModelsBin(fileOffset, &animCount, &cacheSize, &amapFlag, &dataLen, id);
+    cacheSize = roundUpTo8(cacheSize);
+    cacheSize += 0xb0;
     amapSize = modelGetAmapSize(id, amapFlag, animCount);
     model = (void*)roundUpTo16((int)mmAlloc(dataLen + amapSize + 0x1f4, 9, 0));
     loadAndDecompressDataFile(MLDF_FILEID_MODELS_BIN_A, model, fileOffset, dataLen, 0, id, 0);
-    ((ModelFileHeader*)model)->headerSize = headerSize;
+    ((ModelFileHeader*)model)->animationCacheSize = cacheSize;
     ((ModelFileHeader*)model)->modelId = id;
     ((ModelFileHeader*)model)->animationCount = animCount;
-    ((ModelFileHeader*)model)->flags &= ~MODEL_FLAG_VERTEX_ANIM_AREA;
+    ((ModelFileHeader*)model)->flags &= ~MODEL_FLAG_CACHED_ANIMATIONS;
     ((ModelFileHeader*)model)->refCount = 1;
     if (((ModelFileHeader*)model)->animationCount == 0) {
         ((ModelFileHeader*)model)->flags |= MODEL_FLAG_NO_ANIMATIONS;
     }
     if (amapFlag != 0) {
-        ((ModelFileHeader*)model)->flags |= MODEL_FLAG_VERTEX_ANIM_AREA;
+        ((ModelFileHeader*)model)->flags |= MODEL_FLAG_CACHED_ANIMATIONS;
     }
     return model;
 }

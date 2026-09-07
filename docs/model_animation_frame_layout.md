@@ -38,8 +38,7 @@ The sampler now uses the existing four-element `ObjAnimState.frameData` and
 `cacheSlots` arrays rather than indexing beyond the first named scalar member.
 Slots select current/previous move and current/previous blend data. Cached
 blend slots use the blend cache; other cached slots use the move cache. Both
-apply the canonical `OBJANIM_CACHED_MOVE_DATA_OFFSET` before interpreting the
-move prefix. Uncached slots use the model's animation pointer table.
+select the cached record's `moveData` member before interpreting the move prefix. Uncached slots use the model's animation pointer table.
 
 The sampler temporarily installs the selected frame header, computes the
 stream cursor and interpolation stride, calls the root-transform decoder, then
@@ -57,3 +56,46 @@ exact 692-byte function, with no match-score changes in the affected units.
 The full strict checksum and `all_source` builds check the shared declaration
 across consumers. The active model TU is formatted separately; shared
 animation and rendering edits are limited to the recovered type and fields.
+
+
+## Cached move records (2026-09-07)
+
+`ObjAnimCachedMove` owns a fixed `0x80`-byte joint-matrix-slot table area followed
+by the variable-length `ObjAnimMoveData` resource. The offset assertion describes
+the resource start; it does not claim a fixed total cache allocation or 128 active
+joints. `animLoadFromTable` decompresses ANIM/PREANIM data into `moveData` and
+loads the AMAP row into `jointMatrixSlots`, using the model's joint count rounded
+up to eight bytes. Channel evaluation and blend-table construction read the same
+slot bytes. The loader's two destinations and these consumers establish the
+record boundary independently of a guessed struct size.
+
+All current/previous move and blend cache pointers in `ObjAnimState` now use
+this record type. The move-data accessors, move setup and advancement, root-curve
+sampling, channel update/reset, and joint-transform sampler use the named member
+instead of adding `0x80`. The typed pointer also passes through
+`ObjAnim_LoadCachedMove`, the asset request, `loadAnimation`, and
+`animLoadFromTable`. The generic request's integer storage retains its explicit
+cast at dispatch. Uncached animation pointers keep their existing path.
+
+`MODEL_FLAG_CACHED_ANIMATIONS` is the shared `0x40` flag for the model and object
+animation readers. It replaces the misleading `MODEL_FLAG_VERTEX_ANIM_AREA`
+name and the duplicate `OBJANIM_DEF_FLAG_CACHED_MOVES` definition. The model loader
+sets it from the animation-map mode; it selects cached animation IDs and four
+per-state cache allocations rather than a second vertex-animation region.
+
+`ModelFileHeader.animationCacheSize` at `0x84` is the size used for each cache
+allocation, not the model-header size. Its serialized input is rounded to eight
+bytes and increased by `0xB0` exactly as before; signedness, extra space, and
+allocation behavior are unchanged. No use of `sizeof(ObjAnimCachedMove)` replaces
+this variable allocation contract.
+
+The complete `model.o`, `objanim.o`, and `gameloop.o` objects are byte-identical
+to their pre-recovery versions, including all code, storage, symbols, and
+relocations. This is shared layout/API recovery and does not claim new exact
+functions. Formatting is committed separately and preserves object identity.
+
+
+The full source build checks all users of the changed headers. All 1,002 source
+objects in the pre-integration comparison remain byte-identical. Matching
+configuration, 30-second-bounded `ninja all_source`, and the strict `ninja` target
+pass (`main.dol: OK`). Existing match status and runtime behavior are preserved.

@@ -172,7 +172,7 @@ static void loadAsset(AssetReq* req) {
         break;
     case 7:
         *(void**)req->dest =
-            loadAnimation((ModelFileHeader*)req->arg24, req->resourceId, (s16)req->argC, (u8*)req->arg20);
+            loadAnimation((ModelFileHeader*)req->arg24, req->resourceId, (s16)req->argC, (ObjAnimCachedMove*)req->arg20);
         break;
     }
 }
@@ -183,7 +183,7 @@ void doNothing_startOfFrame(void) {
 }
 extern AssetReq gGameLoopAssetReq;
 
-void animationLoad(void** out, int animId, int moveIndex, u8* cache, ObjAnimDef* animDef) {
+void animationLoad(void** out, int animId, int moveIndex, ObjAnimCachedMove* cache, ObjAnimDef* animDef) {
     gGameLoopAssetReq.pending = 1;
     gGameLoopAssetReq.type = 7;
     gGameLoopAssetReq.resourceId = (s16)animId;

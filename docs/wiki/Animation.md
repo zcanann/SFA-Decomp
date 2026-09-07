@@ -258,7 +258,7 @@ references maps; it looks like a model-animation resource, not a map one.
   `&mdl->frameCommands[0]`) and reads `frameType = mdl[1] & 0xf0` (`OBJANIM_FRAME_TYPE_MASK`,
   already `#define`d). The **same** `ObjAnimMoveData` shape backs both the model's own
   `animationModelPtrs[]` entries and the object "moves" system's `ObjAnimDef.moveData[]` /
-  `state->moveCache[slot] + OBJANIM_CACHED_MOVE_DATA_OFFSET` (`0x80`) — one compressed-stream
+  `&state->moveCache[slot]->moveData` (the resource starts at `0x80`) — one compressed-stream
   format, two different tables of pointers into it.
 
 ### On-disk record grammar (corpus-certified)

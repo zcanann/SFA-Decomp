@@ -27,7 +27,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
     if (moveIndex < 0) {
         moveIndex = 0;
     }
-    if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+    if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
         if (state->lastBlendMoveIndex != moveIndex) {
             state->blendCacheSlot = state->blendToggle;
             state->prevBlendCacheSlot = (u16)(OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle);
@@ -39,7 +39,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
                                    state->blendMoveCache[state->blendCacheSlot], animDef);
             state->lastBlendMoveIndex = moveIndex;
         }
-        moveData = (ObjAnimMoveData*)(state->blendMoveCache[state->blendCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+        moveData = &state->blendMoveCache[state->blendCacheSlot]->moveData;
     } else {
         state->blendCacheSlot = moveIndex;
         moveData = (ObjAnimMoveData*)animDef->moveData[state->blendCacheSlot];
@@ -275,7 +275,7 @@ int Object_ObjAnimSetMove(void* objAnimHandle, int moveId, f32 moveProgress, u8 
     moveChanged = previousMove != moveId;
     objAnim->activeMove = moveId;
     moveId = ObjAnim_ResolveMoveIndex(animDef, moveId);
-    if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+    if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
         if (moveChanged != 0) {
             state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
             state->moveCacheSlot = state->blendToggle;
@@ -286,7 +286,7 @@ int Object_ObjAnimSetMove(void* objAnimHandle, int moveId, f32 moveProgress, u8 
             ObjAnim_LoadCachedMove((int)animDef->cachedAnimIds[moveId], (int)(s16)moveId,
                                    state->moveCache[state->moveCacheSlot], animDef);
         }
-        moveData = (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+        moveData = &state->moveCache[state->moveCacheSlot]->moveData;
     } else {
         state->moveCacheSlot = moveId;
         moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
@@ -409,9 +409,9 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     if (state->eventState != 0) {
         blendWeight = state->eventState / 16384.0f;
         moveWeight = OBJANIM_PROGRESS_ONE - blendWeight;
-        if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+        if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
             moveData =
-                (ObjAnimMoveData*)(state->blendMoveCache[state->blendCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+                &state->blendMoveCache[state->blendCacheSlot]->moveData;
         } else {
             moveData = (ObjAnimMoveData*)animDef->moveData[state->blendCacheSlot];
         }
@@ -434,8 +434,8 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
         }
     }
 
-    if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
-        moveData = (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+    if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
+        moveData = &state->moveCache[state->moveCacheSlot]->moveData;
     } else {
         moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
     }
@@ -701,8 +701,8 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
         }
     }
 
-    if ((bank->animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
-        moveData = (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+    if ((bank->animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
+        moveData = &state->moveCache[state->moveCacheSlot]->moveData;
     } else {
         moveData = (ObjAnimMoveData*)bank->animDef->moveData[state->moveCacheSlot];
     }
@@ -724,9 +724,9 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
         if (state->eventState != 0) {
             blendWeight = state->eventState / 16384.0f;
             moveWeight = OBJANIM_PROGRESS_ONE - blendWeight;
-            if ((bank->animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+            if ((bank->animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
                 moveData =
-                    (ObjAnimMoveData*)(state->blendMoveCache[state->blendCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+                    &state->blendMoveCache[state->blendCacheSlot]->moveData;
             } else {
                 moveData = (ObjAnimMoveData*)bank->animDef->moveData[state->blendCacheSlot];
             }
@@ -885,7 +885,7 @@ int ObjAnim_SetCurrentMove(void* objAnimHandle, int moveId, f32 moveProgress, u8
     if (moveId < 0) {
         moveId = 0;
     }
-    if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+    if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
         if (moveChanged != 0) {
             state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
             state->moveCacheSlot = state->blendToggle;
@@ -896,7 +896,7 @@ int ObjAnim_SetCurrentMove(void* objAnimHandle, int moveId, f32 moveProgress, u8
             ObjAnim_LoadCachedMove((int)animDef->cachedAnimIds[moveId], (int)(s16)moveId,
                                    state->moveCache[state->moveCacheSlot], animDef);
         }
-        moveData = (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+        moveData = &state->moveCache[state->moveCacheSlot]->moveData;
     } else {
         state->moveCacheSlot = moveId;
         moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];

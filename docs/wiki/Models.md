@@ -261,7 +261,13 @@ All offsets below were cross-checked against `include/main/model.h` (`ModelFileH
 | 0xf9 nPtrsDC | `morphTargetCount` | offset match; paired with `morphTargetPtrs`@0xdc same as the wiki pairs `nPtrsDC` with `ptrs_0xdc` |
 | 0xfa nTexMtxs | not a named field in `ModelFileHeader`, but **confirmed by usage**: `objprint_dolphin.c:1583` loops `for (i = 0; i < hdr[0xfa]; i++)` while setting up `GX_VA_TEXnMTXIDX` descriptors — this is exactly a texture-matrix count | ready to name (see below) |
 
-**ModelDataFlags2 bits.** Two of the six wiki bits have named `#define`s in `include/main/model.h`: `MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS` (0x10) and `MODEL_FLAG_VERTEX_ANIM_AREA` (0x40). The wiki's interpretation of these bits ("copy vertices on load" / "use local MODANIM.TAB") differs from this repo's current comments; usage in `model.c` (toggling around vertex-anim-area setup, `model.c:460-2179`) is consistent with "there is a second vertex-anim data area selected by this bit" but doesn't clearly confirm either exact wording. Treat both as plausible, not settled.
+**ModelDataFlags2 bits.** `MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS` (0x10) and
+`MODEL_FLAG_CACHED_ANIMATIONS` (0x40) are defined in `include/main/model.h`.
+The `0x40` bit selects the cached animation-ID path, typed per-state move caches,
+and their joint-matrix-slot prefixes. The earlier `VERTEX_ANIM_AREA` name was
+misleading; the recovered loader and consumers establish this animation-cache
+contract. The wiki's exact interpretation of the separate `0x10` bit remains a
+separate question.
 
 **ModelDataFlags24.** `MODEL_FLAGS24_NORMALS_9BYTE` (0x8) in `include/main/model.h` matches the wiki's "08 = use 9 normals instead of 3" exactly, including the bit value.
 
@@ -298,7 +304,7 @@ Nothing here is applied to any header — for a maintainer to lift into `include
 /* ModelFileHeader.flags (ModelDataFlags2) bits not yet named in model.h */
 #define MODEL_FLAG_NO_ANIMATIONS       0x0002
 /* 0x0010 = MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS (already defined) */
-/* 0x0040 = MODEL_FLAG_VERTEX_ANIM_AREA (already defined) */
+/* 0x0040 = MODEL_FLAG_CACHED_ANIMATIONS (already defined) */
 #define MODEL_FLAG_NO_DEPTH_TEST       0x0400
 #define MODEL_FLAG_ALPHA_Z_UPDATE      0x2000
 #define MODEL_FLAG_ALT_POINTER_LAYOUT  0x8000

@@ -26,18 +26,11 @@ and need further cleanup.
   contact list reached through `OBJHITBOX_TRANSFORM_STATE_OFFSET`,
   `OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET` and
   `OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET`.
-- `src/main/objanim.c` `ObjAnim_SetBlendMove`, `Object_ObjAnimSetMove`,
-  `ObjAnim_SampleRootCurvePhase`, `ObjAnim_AdvanceCurrentMove` and
-  `ObjAnim_SetCurrentMove`: cached move data reached through
-  `OBJANIM_CACHED_MOVE_DATA_OFFSET` (seven sites), and root curve axis data
-  reached through `OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET` or a bare `+= 3`
-  (four sites).
-- `include/main/objanim_internal.h` `ObjAnim_GetMoveData` and
-  `ObjAnim_GetBlendMoveData`: same cached move offset.
-- `src/main/model.c` `ObjModel_SampleJointTransform`, `modelAnimResetState`
-  and `modelAnimUpdateChannels`: cached move data reached through
-  `OBJANIM_CACHED_MOVE_DATA_OFFSET` or a bare `+ 0x80`.
+- `src/main/objanim.c` `ObjAnim_SampleRootCurvePhase` and
+  `ObjAnim_AdvanceCurrentMove`: root-curve axis data reached through
+  `OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET` or a bare `+= 3` (four sites).
 
-The cached move sites share one layout: a 0x80-byte joint matrix slot row
-followed by `ObjAnimMoveData`. A struct for that record would let
-`moveCache`, `blendMoveCache` and `cachedMoves` in `ObjAnimState` be typed.
+The cached move offset sites are recovered: `ObjAnimCachedMove` contains the
+joint-matrix-slot table prefix and the named `moveData` member. State cache
+pointers and their loader path now use this type; see
+[animation frame layouts](model_animation_frame_layout.md#cached-move-records-2026-09-07).
