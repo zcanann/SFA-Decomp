@@ -1,7 +1,9 @@
 #ifndef MAIN_VOXMAPS_H_
 #define MAIN_VOXMAPS_H_
 
-#include "types.h"
+#include "global.h"
+
+#define VOXMAP_SLOT_COUNT 6
 
 struct CurveHeapNode;
 struct GameObject;
@@ -12,13 +14,20 @@ typedef struct VoxMapSlotOrigin {
     s16 gridZ;
 } VoxMapSlotOrigin;
 
+/* Each occupied tile stores four rows of four packed two-bit cells. */
+typedef struct VoxMapNode {
+    u8 rows[4];
+} VoxMapNode;
+
+STATIC_ASSERT(sizeof(VoxMapNode) == 4);
+
 typedef struct VoxMapFile {
     u8 pad00[4];
     int minY;
     u8 pad08[4];
     int maxY;
     u8 pad10[4];
-    int* nodeBase;
+    VoxMapNode* nodeBase;
     int f18;
     u8* rowCounts;
     int f20;
@@ -26,15 +35,29 @@ typedef struct VoxMapFile {
     int f28;
 } VoxMapFile;
 
+STATIC_ASSERT(offsetof(VoxMapFile, nodeBase) == 0x14);
+STATIC_ASSERT(offsetof(VoxMapFile, rowCounts) == 0x1c);
+STATIC_ASSERT(offsetof(VoxMapFile, bitmap) == 0x24);
+STATIC_ASSERT(sizeof(VoxMapFile) == 0x2c);
+
 typedef struct VoxMaps {
-    VoxMapSlotOrigin slotOrigin[6];
-    int timer[6];
-    int blockId[6];
+    VoxMapSlotOrigin slotOrigin[VOXMAP_SLOT_COUNT];
+    int timer[VOXMAP_SLOT_COUNT];
+    int blockId[VOXMAP_SLOT_COUNT];
     int blockOriginWorld[2];
     int blockOriginGrid[2];
     VoxMapFile* activeMap;
-    VoxMapFile* mapBuffer[6];
+    VoxMapFile* mapBuffer[VOXMAP_SLOT_COUNT];
 } VoxMaps;
+
+STATIC_ASSERT(offsetof(VoxMaps, slotOrigin) == 0);
+STATIC_ASSERT(offsetof(VoxMaps, timer) == 0x18);
+STATIC_ASSERT(offsetof(VoxMaps, blockId) == 0x30);
+STATIC_ASSERT(offsetof(VoxMaps, blockOriginWorld) == 0x48);
+STATIC_ASSERT(offsetof(VoxMaps, blockOriginGrid) == 0x50);
+STATIC_ASSERT(offsetof(VoxMaps, activeMap) == 0x58);
+STATIC_ASSERT(offsetof(VoxMaps, mapBuffer) == 0x5c);
+STATIC_ASSERT(sizeof(VoxMaps) == 0x74);
 
 typedef struct VoxPos {
     s16 x;
@@ -116,7 +139,7 @@ extern VoxState gVoxMapsRouteState;
 extern char sVoxmapsRouteNodesListOverflow[];
 extern char sVoxMapsDebugStrings[];
 
-u8* voxmaps_getRouteNode(u8* rowCounts, int* nodeBase, u8* bitmap, int tileX, int ySlot, int tileZ);
+u8* voxmaps_getRouteNode(u8* rowCounts, VoxMapNode* nodeBase, u8* bitmap, int tileX, int ySlot, int tileZ);
 void voxmaps_freeRouteWork(RouteState* state);
 void voxmaps_allocRouteWork(RouteState* state);
 void voxmaps_updateTimers(void);

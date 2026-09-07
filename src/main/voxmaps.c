@@ -1,3 +1,4 @@
+#include "main/voxmaps.h"
 #include "main/curve.h"
 #include "main/debug.h"
 #include "main/lightmap_api.h"
@@ -7,7 +8,6 @@
 #include "main/pi_dolphin.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/shader_api.h"
-#include "main/voxmaps.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/os/OSReport.h"
@@ -15,10 +15,12 @@
 #include "main/table_file.h"
 #include "string.h"
 
-#define VOXMAP_SLOT_COUNT           6
 #define VOXMAPS_ROUTE_NODE_CAPACITY 200
 #define VOXMAPS_PATH_POINT_CAPACITY 10
 #define VOXMAPS_SCRATCH_BUFFER_SIZE 640
+#define VOXMAPS_UNUSED_BLOCK_ID (-2)
+#define VOXMAPS_MAX_SLOT_AGE 0x3FFFFFFF
+#define VOXMAPS_UNUSED_SLOT_AGE 0x40000000
 
 typedef struct VoxRouteWork {
     RouteNode nodes[VOXMAPS_ROUTE_NODE_CAPACITY];
@@ -26,9 +28,6 @@ typedef struct VoxRouteWork {
     f32 pathPoints[VOXMAPS_PATH_POINT_CAPACITY][3];
 } VoxRouteWork;
 
-STATIC_ASSERT(sizeof(VoxMapFile) == 0x2c);
-STATIC_ASSERT(offsetof(VoxMaps, activeMap) == 0x58);
-STATIC_ASSERT(sizeof(VoxMaps) == 0x74);
 STATIC_ASSERT(sizeof(RouteNode) == 0xe);
 STATIC_ASSERT(offsetof(VoxRouteWork, queue) == 0xaf0);
 STATIC_ASSERT(offsetof(VoxRouteWork, pathPoints) == 0xe10);
@@ -1179,7 +1178,7 @@ void voxmaps_gridToWorld(f32* out, s16* grid)
  * (tileX, tileZ), then index nodeBase by that running count. The per-row base count
  * is packed into rowCounts (low/high nibble depending on which 8-tile half tileZ is
  * in), then popcount adds every occupied cell before the target column. */
-u8* voxmaps_getRouteNode(u8* rowCounts, int* nodeBase, u8* bitmap, int tileX, int ySlot, int tileZ)
+u8* voxmaps_getRouteNode(u8* rowCounts, VoxMapNode* nodeBase, u8* bitmap, int tileX, int ySlot, int tileZ)
 {
     int count;
     int hdrRow = ySlot * 2 + ySlot;
@@ -1220,7 +1219,7 @@ u8* voxmaps_getRouteNode(u8* rowCounts, int* nodeBase, u8* bitmap, int tileX, in
         bits &= bits - 1;
         count++;
     }
-    return (u8*)(nodeBase + count);
+    return nodeBase[count].rows;
 }
 int* voxmaps_updateActiveMap(VoxPos* obj)
 {
@@ -1354,7 +1353,7 @@ VoxMapFile* voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
     }
     hdr->rowCounts += (int)hdr;
     hdr->bitmap += (int)hdr;
-    hdr->nodeBase = (int*)((int)hdr->nodeBase + (int)hdr);
+    hdr->nodeBase = (VoxMapNode*)((int)hdr->nodeBase + (int)hdr);
     hdr->f20 += (int)hdr;
     hdr->f28 += (int)hdr;
     hdr->f18 += (int)hdr;
@@ -1367,7 +1366,7 @@ void voxmaps_updateTimers(void)
     int i;
     for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
     {
-        if (*p < 0x3FFFFFFF)
+        if (*p < VOXMAPS_MAX_SLOT_AGE)
         {
             (*p)++;
         }
@@ -1377,7 +1376,7 @@ void voxmaps_updateTimers(void)
 
 void voxmaps_resetLoadedMaps(void)
 {
-    void** mapBuffer[1];
+    VoxMapFile** mapBuffer[1];
     int* blockId[1];
     int* timer[1];
     u8* slotInUse[1];
@@ -1389,8 +1388,8 @@ void voxmaps_resetLoadedMaps(void)
     timer[0] = 0;
     slotInUse[0] = 0;
     slotOrigin[0] = gVoxMaps.slotOrigin;
-    for (i = 0, mapBuffer[0] = (void**)(slotOrigin[0] + 23), blockId[0] = (int*)(slotOrigin[0] + 12),
-        timer[0] = (int*)(slotOrigin[0] + 6), slotInUse[0] = gVoxMapsSlotInUse;
+    for (i = 0, mapBuffer[0] = ((VoxMaps*)slotOrigin[0])->mapBuffer, blockId[0] = ((VoxMaps*)slotOrigin[0])->blockId,
+        timer[0] = ((VoxMaps*)slotOrigin[0])->timer, slotInUse[0] = gVoxMapsSlotInUse;
          i < VOXMAP_SLOT_COUNT; i++)
     {
         if (*mapBuffer[0] != NULL)
@@ -1398,8 +1397,8 @@ void voxmaps_resetLoadedMaps(void)
             mm_free(*mapBuffer[0]);
             *mapBuffer[0] = NULL;
         }
-        *blockId[0] = -2;
-        *timer[0] = 0x40000000;
+        *blockId[0] = VOXMAPS_UNUSED_BLOCK_ID;
+        *timer[0] = VOXMAPS_UNUSED_SLOT_AGE;
         *slotInUse[0] = 0;
         slotOrigin[0]->gridX = 0;
         slotOrigin[0]->gridZ = 0;
@@ -1428,8 +1427,8 @@ void voxmaps_initialise(void)
     for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
     {
         mgr->mapBuffer[i] = NULL;
-        mgr->blockId[i] = -2;
-        mgr->timer[i] = 0x40000000;
+        mgr->blockId[i] = VOXMAPS_UNUSED_BLOCK_ID;
+        mgr->timer[i] = VOXMAPS_UNUSED_SLOT_AGE;
         gVoxMapsSlotInUse[i] = 0;
         mgr->slotOrigin[i].gridX = 0;
         mgr->slotOrigin[i].gridZ = 0;
