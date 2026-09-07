@@ -239,6 +239,11 @@ typedef struct ShaderRomListSlot {
     s8 flag;
     s8 pad;
 } ShaderRomListSlot;
+
+typedef struct ShaderRomListCursor {
+    int index;
+    ShaderRomListSlot* entry;
+} ShaderRomListCursor;
 extern int gShaderMapRomBuffers[];
 #define INIT_MAP_SLOT(slot)                                                                                            \
     e = (MapBounds*)((char*)gShaderMapRomBuffers[1] + (slot) * 10 + ofs[0]);                                           \
@@ -2140,27 +2145,30 @@ void doPendingMapLoads(void) {
                                 mapMarkRectRows(g3, rectD);
                                 {
                                     int loadedCount = 0;
-                                    int zc[2];
+                                    struct {
+                                        int cellIndex;
+                                        int row;
+                                    } walk;
                                     char* cellState;
-                                    zc[0] = 0;
-                                    zc[1] = zc[0];
+                                    walk.cellIndex = 0;
+                                    walk.row = walk.cellIndex;
                                     cellState = g3;
                                     do {
                                         for (col = 0; col < 16; col++) {
                                             int bx = gMapBlockOriginX + col;
-                                            int bz = gMapBlockOriginZ + zc[1];
+                                            int bz = gMapBlockOriginZ + walk.row;
                                             if (*cellState == -3) {
-                                                if (mapLoadBlock(col, zc[1], bx, bz, layer) == 0) {
+                                                if (mapLoadBlock(col, walk.row, bx, bz, layer) == 0) {
                                                     *cellState = -2;
                                                 } else {
-                                                    gMapLayerCellStates[zc[0]] = (s8)loadedCount++;
+                                                    gMapLayerCellStates[walk.cellIndex] = (s8)loadedCount++;
                                                 }
                                             }
-                                            zc[0]++;
+                                            walk.cellIndex++;
                                             cellState++;
                                         }
-                                        zc[1]++;
-                                    } while (zc[1] < 16);
+                                        walk.row++;
+                                    } while (walk.row < 16);
                                 }
                                 aBase++;
                                 cBase++;
@@ -2170,33 +2178,32 @@ void doPendingMapLoads(void) {
                     }
                 }
                 {
-                    int slotIndex;
+                    ShaderRomListCursor cursor;
                     s8 first;
-                    ShaderRomListSlot* romListSlot;
 
                     first = 1;
-                    slotIndex = gShaderRomListSlotCount - 1;
-                    romListSlot = (ShaderRomListSlot*)(base + 0x418C) + slotIndex;
-                    for (; slotIndex >= 0; slotIndex--) {
-                        if (romListSlot->flag == 0) {
-                            if (romListSlot->romlist != NULL) {
-                                s16 sl = romListSlot->slot;
-                                mapBuildRomListIndex(romListSlot->romlist, &((MapRomListIndex*)(base + 0x4208))[sl], sl,
-                                                     1);
-                                mm_free(romListSlot->romlist);
+                    cursor.index = gShaderRomListSlotCount - 1;
+                    cursor.entry = (ShaderRomListSlot*)(base + 0x418C) + cursor.index;
+                    for (; cursor.index >= 0; cursor.index--) {
+                        if (cursor.entry->flag == 0) {
+                            if (cursor.entry->romlist != NULL) {
+                                s16 sl = cursor.entry->slot;
+                                mapBuildRomListIndex(cursor.entry->romlist, &((MapRomListIndex*)(base + 0x4208))[sl],
+                                                     sl, 1);
+                                mm_free(cursor.entry->romlist);
                                 *(int*)(sl * 4 + 0x83A8 + base) = 0;
                             }
-                            romListSlot->romlist = NULL;
-                            romListSlot->slot = -1;
+                            cursor.entry->romlist = NULL;
+                            cursor.entry->slot = -1;
                         }
                         if (first) {
-                            if (romListSlot->romlist == NULL) {
+                            if (cursor.entry->romlist == NULL) {
                                 gShaderRomListSlotCount--;
                             } else {
                                 first = 0;
                             }
                         }
-                        romListSlot--;
+                        cursor.entry--;
                     }
                 }
                 {
@@ -2656,14 +2663,13 @@ int mapProcessRomList(int slot) {
     char* base;
     int j;
     char* obj;
-    int i;
     MapRomListPage* cur;
     u8 flag;
     ShaderRomListSlot* p;
     int count;
     ShaderRomListSlot* slots;
-    ShaderRomListSlot* entry;
     s16* rects;
+    ShaderRomListCursor cursor;
     int step;
     int rl;
     f32 dx, dz;
@@ -2687,23 +2693,27 @@ int mapProcessRomList(int slot) {
             flag = 1;
         }
     }
-    i = 0;
+    cursor.index = 0;
     p = (ShaderRomListSlot*)(base + 0x418C);
     count = gShaderRomListSlotCount;
-    while (i < count && p->romlist != 0) {
+    while (cursor.index < count && p->romlist != 0) {
         p++;
-        i++;
+        cursor.index++;
     }
-    if (i == count) {
+    if (cursor.index == count) {
         gShaderRomListSlotCount++;
     }
     rl = (int)mapGetRomListAndOffsets(slot, 0);
     slots = (ShaderRomListSlot*)(base + 0x418C);
-    entry = &slots[i];
-    entry->romlist = (void*)rl;
-    *(int*)(slot * 4 + 0x83A8 + base) = rl;
-    ((s16*)(base + 0x4190))[i * 4] = slot;
-    gCurRomListPage = entry->romlist;
+    cursor.entry = &slots[cursor.index];
+    cursor.entry->romlist = (void*)rl;
+    {
+        const int cacheOffset = slot * sizeof(void*);
+        const int cacheBase = (int)(base + 0x83A8);
+        *(int*)(cacheOffset + cacheBase) = rl;
+    }
+    ((s16*)(base + 0x4190))[cursor.index * 4] = slot;
+    gCurRomListPage = cursor.entry->romlist;
     rects = (s16*)(*(int*)(base + 0x417C) + slot * 10);
     ((MapRomListPage*)gCurRomListPage)->mapLayer = *(u8*)(*(int*)(base + 0x4184) + slot);
     ((MapRomListPage*)gCurRomListPage)->worldX = 640.0f * (f32)(rects[0] + ((MapRomListPage*)gCurRomListPage)->originX);
@@ -2724,7 +2734,7 @@ int mapProcessRomList(int slot) {
         }
     }
     lbl_803DB620 = slot;
-    return i;
+    return cursor.index;
 }
 
 MapRomListPage* mapGetRomListAndOffsets(int p1, int flag) {

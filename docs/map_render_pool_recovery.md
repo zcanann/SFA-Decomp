@@ -4,8 +4,8 @@ The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
 All 40,656 assigned data bytes match. The common GC/1.3 invocation produces
-137/145 exact functions and a 99.56559% instruction fuzzy score; the TU remains
-`NonMatching` because eight functions still differ.
+138/145 exact functions and a 99.57328% instruction fuzzy score; the TU remains
+`NonMatching` because seven functions still differ.
 
 This supersedes the constant-pool blocker in
 [lightmap_draw_recovery.md](lightmap_draw_recovery.md) and the historical
@@ -173,6 +173,31 @@ unrelated `GameObject` animation fields at the same offsets. Its function bytes
 are unchanged. Only `sceneDraw` changes compiled code in this pass; all other
 144 functions, including both unload paths, retain their previous bytes.
 
+`mapProcessRomList` now matches all 140 retail instructions. A private
+`ShaderRomListCursor` groups the selected slot index with its entry pointer,
+recovering six register operands. The cached-page store computes its byte offset
+before the base address and adds them in that order. This recovers the remaining
+`slwi` / `addis` / `add` ordering without changing the compiler profile.
+
+| ROM-list source | Instruction fuzzy score |
+| --- | ---: |
+| Previous independent locals and cache expression | 99.64286% |
+| Cursor only | 99.92857% |
+| Explicit cache offset/base only | 99.71429% |
+| Both changes | 100% |
+
+The instrumented backend reproduces the ordinary object exactly, captures
+17 stages, and aligns all 140 instructions with zero retail differences. GPR
+simplification replays without high-degree removals.
+
+The same cursor type improves ROM-list retirement in `doPendingMapLoads` from
+98.71501% to 98.77226%. Its cell-loading walk also replaces the temporary
+`zc[2]` array with named `cellIndex` and `row` fields; that change alone preserves
+the complete raw object. Naming the shared cursor type likewise preserves the
+object produced by the equivalent local records. Only `mapProcessRomList` and
+`doPendingMapLoads` change function bytes in this pass; every previously exact
+function remains exact.
+
 The old `lightmap` and initializer fragments depended on extra `noprop` and
 `nocse` flags. They now share shader's existing `nopeephole,noschedule` /
 `-inline noauto` profile and the required common game compiler. No compiler
@@ -181,7 +206,7 @@ The initial merge exposed six formerly exact functions: `updateVisibleGeometry`,
 `renderObjects`, `renderSceneGeometry`, `initMapBlocks`, `renderGlows`, and
 `queueGlowRender`. Three other functions became exact, so that merge changed the
 combined exact function count from 132 to 129. The follow-up passes bring it to
-137. All eight remaining code differences must be recovered before
+138. All seven remaining code differences must be recovered before
 `MatchingFor` is justified.
 
 All forty functions that directly consume this pool now have matching literal
