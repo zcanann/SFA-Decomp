@@ -2661,31 +2661,23 @@ void gameTextInit(void) {
 }
 
 void gameTextInitRendererState(void) {
-    Texture** texture;
-    char (*fallbackBuffer)[GAMETEXT_FALLBACK_BUFFER_SIZE];
     char** fallbackString;
     GameTextDef* fallbackDef;
-    GameTextBox* textWindow;
     int fallbackCount;
     TextFont* font;
-    GameTextBox* p;
     f32 zero;
     int i;
     int j;
 
-    i = GAMETEXT_BOX_COUNT;
-    p = textWindow = &gTextBoxes[GAMETEXT_BOX_COUNT];
-    while (p--, i-- != 0) {
-        p->width = p->maxWidth;
-        p->height = p->maxHeight;
+    for (i = GAMETEXT_BOX_COUNT; i-- != 0;) {
+        gTextBoxes[i].width = gTextBoxes[i].maxWidth;
+        gTextBoxes[i].height = gTextBoxes[i].maxHeight;
     }
 
-    fallbackCount = GAMETEXT_FALLBACK_COUNT;
-    fallbackBuffer = sGameTextFallbackBuffers + GAMETEXT_FALLBACK_COUNT;
-    fallbackString = sGameTextFallbackStrings + GAMETEXT_FALLBACK_COUNT;
-    fallbackDef = sGameTextFallbackDefs + GAMETEXT_FALLBACK_COUNT;
-    while (fallbackBuffer--, fallbackString--, fallbackDef--, fallbackCount-- != 0) {
-        *fallbackString = *fallbackBuffer;
+    for (fallbackCount = GAMETEXT_FALLBACK_COUNT; fallbackCount-- != 0;) {
+        fallbackString = &sGameTextFallbackStrings[fallbackCount];
+        fallbackDef = &sGameTextFallbackDefs[fallbackCount];
+        *fallbackString = sGameTextFallbackBuffers[fallbackCount];
         fallbackDef->identifier = 0xffff;
         fallbackDef->count = 1;
         fallbackDef->boxId = 0xff;
@@ -2695,15 +2687,13 @@ void gameTextInitRendererState(void) {
         fallbackDef->strings = fallbackString;
     }
 
-    i = GAMETEXT_BOX_COUNT;
-    while (textWindow--, i-- != 0) {
-        textWindow->alpha = 0xff;
+    for (i = GAMETEXT_BOX_COUNT; i-- != 0;) {
+        gTextBoxes[i].alpha = 0xff;
     }
 
-    j = GAMETEXT_PENDING_SOURCE_COUNT;
-    font = gGameTextCharsets + GAMETEXT_PENDING_SOURCE_COUNT;
     zero = 0.0f;
-    while (font--, j-- != 0) {
+    for (j = GAMETEXT_PENDING_SOURCE_COUNT; j-- != 0;) {
+        font = &gGameTextCharsets[j];
         font->glyphCount = 0;
         font->entryCount = 0;
         font->glyphs = NULL;
@@ -2713,10 +2703,8 @@ void gameTextInitRendererState(void) {
         font->dirId = GAMETEXT_INVALID_DIR;
         font->languageId = GAMETEXT_INVALID_LANGUAGE;
 
-        i = ARRAY_COUNT(font->textures);
-        texture = font->textures + ARRAY_COUNT(font->textures);
-        while (texture--, i-- != 0) {
-            *texture = NULL;
+        for (i = ARRAY_COUNT(font->textures); i-- != 0;) {
+            font->textures[i] = NULL;
         }
     }
 
@@ -3044,6 +3032,7 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     GameTextTableHeader* tableHeader;
     u16* textureDataStart;
     GameTextGlyphTable* resource;
+    TextGlyph* glyphs;
     u16 textureFormat;
     GameTextDef* definitions;
     int stringCount;
@@ -3073,8 +3062,9 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
         loadSlot->state = 6;
         return;
     }
-    charset->glyphs = resource->glyphs;
-    tableHeader = (GameTextTableHeader*)(resource->glyphs + charset->glyphCount);
+    glyphs = resource->glyphs;
+    charset->glyphs = glyphs;
+    tableHeader = (GameTextTableHeader*)(glyphs + charset->glyphCount);
     charset->entryCount = tableHeader->entryCount;
     stringDataSize = tableHeader->stringDataSize;
     definitions = (GameTextDef*)(tableHeader + 1);
@@ -3085,7 +3075,7 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     for (i = 0; i < charset->entryCount; i++) {
         charset->entries[i].strings = (char**)(stringPointers + (int)charset->entries[i].strings);
     }
-    stringData = (u8*)(stringTable->offsets + stringCount);
+    stringData = (u8*)(stringPointers + stringCount);
     {
         int j;
         for (j = 0; j < stringCount; j++) {

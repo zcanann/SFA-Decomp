@@ -102,3 +102,11 @@ Both the strict checksum target and `ninja all_source` pass with 30-second
 timeouts. The existing load-slot, runtime, font-resource, measurement, and color
 suites also pass. Formatting is a separate commit and preserves the complete
 generated object.
+
+## Local table bases
+
+Retaining the glyph-table pointer in a local and deriving the string-data block
+from the existing string-pointer local removes two address calculations. The
+native record boundaries remain unchanged. The parser improves from 97.79397%
+to 98.095474% fuzzy and shrinks from 1,596 to 1,588 bytes. All 432 PPC comparisons
+above pass again, including the allocator guards and ABI checks.

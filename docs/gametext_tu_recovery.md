@@ -306,3 +306,25 @@ The subsequent [resource-parser recovery](gametext_resource_parser.md) corrects
 the overlapping message-header record, introduces native glyph/texture headers,
 and replaces the font-record pointer cast with real texture-array indexing. It
 also provides compiled-versus-retail PPC execution checks for this parser.
+
+## Bounded initialization loops
+
+`gameTextInitRendererState` now expresses its reverse traversal with integer
+indices. The former comma-expression conditions decremented pointers once more
+when the count reached zero, forming pointers before their arrays even though
+the body did not dereference them. The recovered C now addresses only valid
+elements: all 148 windows, eight fallback records and their two pointer levels,
+four charsets, and three textures per charset. The final negative value belongs
+only to the integer loop counter.
+
+The existing runtime suite checks every initialized element and preserves
+unrelated window state. The initializer remains 532 bytes and moves slightly
+from 86.333336% to 86.162605% fuzzy. Together with the parser's local-table-base
+improvement, gametext rises from 96.39944% to 96.416885%, retaining 41/54 exact
+functions and unchanged exact-code/data credit. Only those two functions change
+instruction bytes; all non-text section bytes and named storage offsets remain
+unchanged. The TU and its canonical header pass clang-format without a
+formatting-only diff.
+
+The runtime and load-slot suites, 432 parser emulation comparisons, the strict
+retail checksum, and `ninja all_source` all pass for this checkpoint.
