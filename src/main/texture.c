@@ -345,8 +345,8 @@ void textureSetAnimationFrameStep(Texture* texture, u16 frameStep) {
     texture->animationFrameStep = frameStep;
 }
 
-void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* forcedTexture, int flags, int packedFrame,
-                                     int unused0, int unused1) {
+void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* forcedTexture, int flags,
+                                     int packedFrame, int unused0, int unused1) {
     int i;
     int idx, count;
     Texture* node;
