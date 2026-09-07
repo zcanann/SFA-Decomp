@@ -391,8 +391,8 @@ typedef struct ObjModel {
     ModelRenderOpTextureRefs* textureRefs;
     void* renderCallback;
     void* postRenderCallback;
-    s32* vertexAnimOffsets; /* 0x40: byte offset for each vertex animation chunk */
-    u8** normalAnimOutputs; /* 0x44: one destination in normalBuf per normal animation chunk */
+    s32* vertexAnimOffsets;        /* 0x40: byte offset for each vertex animation chunk */
+    u8** normalAnimOutputs;        /* 0x44: one destination in normalBuf per normal animation chunk */
     u8* hitVolumeSphereBuffers[2]; /* 0x48: double-buffered runtime hit spheres */
     u8* activeHitVolumeSpheres;    /* 0x50: current hit-sphere buffer */
     u8* groundShadowVerts; /* 0x54: ground-shadow quad buffer (s16 verts; status byte at +0x18: 0 = rebuild via buildGroundShadowQuad, 0xff = skip draw); allocated only with load flag 0x8000 */

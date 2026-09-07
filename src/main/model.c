@@ -2007,25 +2007,18 @@ void ObjModel_RelocateAnimData(ModelFileHeader* file, ObjModel* model) {
     int i;
     file->vertexAnimJob.chunks = file->vertexAnimEntries;
     for (i = 0; i < file->vertexAnimJob.chunkCount; i++) {
-        model->vertexAnimOffsets[i] =
-            file->vertexAnimEntries[i].srcDataOffset;
-        if (file->vertexAnimEntries[i].weightStream <
-            file->vertexAnimBase) {
+        model->vertexAnimOffsets[i] = file->vertexAnimEntries[i].srcDataOffset;
+        if (file->vertexAnimEntries[i].weightStream < file->vertexAnimBase) {
             file->vertexAnimEntries[i].weightStream =
-                file->vertexAnimBase +
-                (u32)file->vertexAnimEntries[i].weightStream;
+                file->vertexAnimBase + (u32)file->vertexAnimEntries[i].weightStream;
         }
     }
     file->normalAnimJob.chunks = file->normalAnimEntries;
     for (i = 0; i < file->normalAnimJob.chunkCount; i++) {
-        model->normalAnimOutputs[i] =
-            model->normalBuf +
-            file->normalAnimEntries[i].srcDataOffset;
-        if (file->normalAnimEntries[i].weightStream <
-            file->normalAnimBase) {
+        model->normalAnimOutputs[i] = model->normalBuf + file->normalAnimEntries[i].srcDataOffset;
+        if (file->normalAnimEntries[i].weightStream < file->normalAnimBase) {
             file->normalAnimEntries[i].weightStream =
-                file->normalAnimBase +
-                (u32)file->normalAnimEntries[i].weightStream;
+                file->normalAnimBase + (u32)file->normalAnimEntries[i].weightStream;
         }
     }
 }
@@ -2073,13 +2066,15 @@ void ObjModel_RelocateModelData(u8* m) {
         ((ModelFileHeader*)m)->morphTargetPtrs = (u8**)(m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs);
     }
     if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries) {
-        ((ModelFileHeader*)m)->vertexAnimEntries = (ModelVtxAnimChunk*)(m + *(u32*)&((ModelFileHeader*)m)->vertexAnimEntries);
+        ((ModelFileHeader*)m)->vertexAnimEntries =
+            (ModelVtxAnimChunk*)(m + *(u32*)&((ModelFileHeader*)m)->vertexAnimEntries);
     }
     if (*(u32*)&((ModelFileHeader*)m)->vertexAnimBase) {
         ((ModelFileHeader*)m)->vertexAnimBase = m + *(u32*)&((ModelFileHeader*)m)->vertexAnimBase;
     }
     if (*(u32*)&((ModelFileHeader*)m)->normalAnimEntries) {
-        ((ModelFileHeader*)m)->normalAnimEntries = (ModelVtxAnimChunk*)(m + *(u32*)&((ModelFileHeader*)m)->normalAnimEntries);
+        ((ModelFileHeader*)m)->normalAnimEntries =
+            (ModelVtxAnimChunk*)(m + *(u32*)&((ModelFileHeader*)m)->normalAnimEntries);
     }
     if (*(u32*)&((ModelFileHeader*)m)->normalAnimBase) {
         ((ModelFileHeader*)m)->normalAnimBase = m + *(u32*)&((ModelFileHeader*)m)->normalAnimBase;
