@@ -42,10 +42,11 @@ ModelList* gModelAnimCacheList;
 u32* gModelAnimDataOffsetTable;
 f32 gModelChainJitterScale;
 
-u16 gModelCopyChunkWordLimit = 0x2A0;
-#define MODEL_BONEXFORM_HAS_X 0x2000
-#define MODEL_BONEXFORM_HAS_Y 0x4000
-#define MODEL_BONEXFORM_HAS_Z 0x8000
+u16 gModelMorphChunkVertexLimit = 0x2A0;
+#define MODEL_MORPH_VERTEX_INDEX_MASK 0x1fff
+#define MODEL_MORPH_HAS_X 0x2000
+#define MODEL_MORPH_HAS_Y 0x4000
+#define MODEL_MORPH_HAS_Z 0x8000
 void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
 #define LOADCOLOR_BLOCK(SLOT)                                                                                          \
     {                                                                                                                  \
@@ -88,72 +89,72 @@ extern char sModelAnimationBufferOverflowWarning[];
 extern Vec gModelJitterAxis;
 
 void setGQR7Packed(int a, int b, int c, int d);
-u8* modelBoneTransforms_next(u8* stream, int* dx, int* dy, int* dz);
+u16* modelReadMorphDelta(u16* stream, int* dx, int* dy, int* dz);
 static inline void* modelGetBoneMtx(ObjModel* model, int idx);
 void ObjModel_TransformVerticesWithTranslation(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
 void ObjModel_TransformVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
 void ObjModel_TransformQuadVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
-void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16 pos) {
-    u8* a = *pd;
-    u8* b = *pe;
+void modelBlendMorphTargetChunk(u8* baseVertices, u8* outVertices, u16 vertexCount, u16** targetA, u16** targetB, int weightB, u16 firstVertex) {
+    u16* a = *targetA;
+    u16* b = *targetB;
     int i = 0;
-    int wHi = 0x10000 - f;
-    int aIdx;
-    int bIdx;
+    u32 weightA = 0x10000u - (u32)weightB;
+    int indexA;
+    int indexB;
     int ax, ay, az;
     int bx, by, bz;
 
-    while (i < n) {
-        aIdx = (*(s16*)a & 0x1fff) - pos;
-        bIdx = (*(s16*)b & 0x1fff) - pos;
-        if (i >= aIdx) {
-            if (i == bIdx) {
-                b = modelBoneTransforms_next(b, &bx, &by, &bz);
-                a = modelBoneTransforms_next(a, &ax, &ay, &az);
-                *(u16*)out = ((u32)(ax * wHi + bx * f) >> 16) + *(s16*)p;
-                *(u16*)(out + 2) = ((u32)(ay * wHi + by * f) >> 16) + *(s16*)(p + 2);
-                *(u16*)(out + 4) = ((u32)(az * wHi + bz * f) >> 16) + *(s16*)(p + 4);
+    while (i < vertexCount) {
+        indexA = (*(s16*)a & MODEL_MORPH_VERTEX_INDEX_MASK) - firstVertex;
+        indexB = (*(s16*)b & MODEL_MORPH_VERTEX_INDEX_MASK) - firstVertex;
+        if (i >= indexA) {
+            if (i == indexB) {
+                b = modelReadMorphDelta(b, &bx, &by, &bz);
+                a = modelReadMorphDelta(a, &ax, &ay, &az);
+                *(u16*)outVertices = (((u32)ax * weightA + (u32)bx * (u32)weightB) >> 16) + *(s16*)baseVertices;
+                *(u16*)(outVertices + 2) = (((u32)ay * weightA + (u32)by * (u32)weightB) >> 16) + *(s16*)(baseVertices + 2);
+                *(u16*)(outVertices + 4) = (((u32)az * weightA + (u32)bz * (u32)weightB) >> 16) + *(s16*)(baseVertices + 4);
             } else {
-                a = modelBoneTransforms_next(a, &ax, &ay, &az);
-                *(u16*)out = ((u32)(ax * wHi) >> 16) + *(s16*)p;
-                *(u16*)(out + 2) = ((u32)(ay * wHi) >> 16) + *(s16*)(p + 2);
-                *(u16*)(out + 4) = ((u32)(az * wHi) >> 16) + *(s16*)(p + 4);
+                a = modelReadMorphDelta(a, &ax, &ay, &az);
+                *(u16*)outVertices = (((u32)ax * weightA) >> 16) + *(s16*)baseVertices;
+                *(u16*)(outVertices + 2) = (((u32)ay * weightA) >> 16) + *(s16*)(baseVertices + 2);
+                *(u16*)(outVertices + 4) = (((u32)az * weightA) >> 16) + *(s16*)(baseVertices + 4);
             }
-        } else if (i >= bIdx) {
-            b = modelBoneTransforms_next(b, &bx, &by, &bz);
-            *(u16*)out = ((u32)(bx * f) >> 16) + *(s16*)p;
-            *(u16*)(out + 2) = ((u32)(by * f) >> 16) + *(s16*)(p + 2);
-            *(u16*)(out + 4) = ((u32)(bz * f) >> 16) + *(s16*)(p + 4);
+        } else if (i >= indexB) {
+            b = modelReadMorphDelta(b, &bx, &by, &bz);
+            *(u16*)outVertices = (((u32)bx * (u32)weightB) >> 16) + *(s16*)baseVertices;
+            *(u16*)(outVertices + 2) = (((u32)by * (u32)weightB) >> 16) + *(s16*)(baseVertices + 2);
+            *(u16*)(outVertices + 4) = (((u32)bz * (u32)weightB) >> 16) + *(s16*)(baseVertices + 4);
         } else {
-            *(u32*)out = *(u32*)p;
-            *(u16*)(out + 4) = *(s16*)(p + 4);
+            *(u32*)outVertices = *(u32*)baseVertices;
+            *(u16*)(outVertices + 4) = *(s16*)(baseVertices + 4);
         }
-        p += 6;
-        out += 6;
+        baseVertices += 6;
+        outVertices += 6;
         i++;
     }
-    *pd = a;
-    *pe = b;
+    *targetA = a;
+    *targetB = b;
 }
 
-u8* modelBoneTransforms_next(u8* stream, int* dx, int* dy, int* dz) {
-    u16 flags = *(u16*)stream;
+u16* modelReadMorphDelta(u16* stream, int* dx, int* dy, int* dz) {
+    u16 flags = *stream;
 
-    stream += 2;
+    stream++;
     *dx = 0;
-    if (flags & MODEL_BONEXFORM_HAS_X) {
+    if (flags & MODEL_MORPH_HAS_X) {
         *dx = *(s16*)stream;
-        stream += 2;
+        stream++;
     }
     *dy = 0;
-    if (flags & MODEL_BONEXFORM_HAS_Y) {
+    if (flags & MODEL_MORPH_HAS_Y) {
         *dy = *(s16*)stream;
-        stream += 2;
+        stream++;
     }
     *dz = 0;
-    if (flags & MODEL_BONEXFORM_HAS_Z) {
+    if (flags & MODEL_MORPH_HAS_Z) {
         *dz = *(s16*)stream;
-        stream += 2;
+        stream++;
     }
     return stream;
 }
@@ -1142,10 +1143,6 @@ void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out) 
     }
 }
 
-/* Double-buffered DMA-cache vertex transform: stream vtxCount verts through a
-   two-slot scratch cache (0x2000 apart, transform output at +0x1000), copying
-   worker chunks in via copyToCache while the previous chunk is being processed,
-   then writing transformed verts (6 bytes each) back to dstVtx. */
 int loadModelAndAnimTabs(void) {
     int* p = getCurrentDataFile(MLDF_FILEID_MODELS_TAB_A);
     if (p == NULL) {
@@ -1165,12 +1162,16 @@ int loadModelAndAnimTabs(void) {
     return 1;
 }
 
-void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA, u8* targetB, int blendScale) {
+/* Double-buffered DMA-cache vertex transform: stream vtxCount verts through a
+   two-slot scratch cache (0x2000 apart, transform output at +0x1000), copying
+   worker chunks in via copyToCache while the previous chunk is being processed,
+   then writing transformed verts (6 bytes each) back to dstVtx. */
+void modelBlendMorphTargets(u8* srcVtx, u8* dstVtx, u16 vtxCount, u16* targetA, u16* targetB, int blendScale) {
     u16 vtxPos;
     u16 chunk;
-    u16 words;
+    u16 cacheBlocks;
     u16 nextChunk;
-    u16 nextWords;
+    u16 nextCacheBlocks;
     u16 bufIdx;
     u8* cache;
     u8* out;
@@ -1180,38 +1181,38 @@ void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA,
 
     cache = getCache();
     vtxPos = 0;
-    if (vtxCount > gModelCopyChunkWordLimit) {
-        chunk = gModelCopyChunkWordLimit;
+    if (vtxCount > gModelMorphChunkVertexLimit) {
+        chunk = gModelMorphChunkVertexLimit;
     } else {
         chunk = vtxCount;
     }
-    words = (u32)(chunk * 6 + 0x1f & 0xffe0) >> 5;
-    copyToCache(cache, srcVtx, words);
+    cacheBlocks = (u32)(chunk * 6 + 0x1f & 0xffe0) >> 5;
+    copyToCache(cache, srcVtx, cacheBlocks);
     bufIdx = 0;
     sync = 0;
     while (vtxCount != 0) {
         vtxCount -= chunk;
         if (vtxCount != 0) {
-            if (vtxCount > gModelCopyChunkWordLimit) {
-                nextChunk = gModelCopyChunkWordLimit;
+            if (vtxCount > gModelMorphChunkVertexLimit) {
+                nextChunk = gModelMorphChunkVertexLimit;
             } else {
                 nextChunk = vtxCount;
             }
-            nextWords = (u32)(nextChunk * 6 + 0x1f & 0xffe0) >> 5;
-            copyToCache(cache + (bufIdx ^ 1) * 0x2000, srcVtx + (vtxPos + gModelCopyChunkWordLimit) * 6, nextWords);
+            nextCacheBlocks = (u32)(nextChunk * 6 + 0x1f & 0xffe0) >> 5;
+            copyToCache(cache + (bufIdx ^ 1) * 0x2000, srcVtx + (vtxPos + gModelMorphChunkVertexLimit) * 6, nextCacheBlocks);
             sync = 1;
         }
         cacheQueueWait(sync);
         curBuf = bufIdx;
         in = cache + curBuf * 0x2000;
         out = in + 0x1000;
-        modelApplyBoneTransform(in, out, chunk, (u8**)&targetA, (u8**)&targetB, blendScale, vtxPos);
-        memcpyToCache(dstVtx + vtxPos * 6, out, words);
+        modelBlendMorphTargetChunk(in, out, chunk, &targetA, &targetB, blendScale, vtxPos);
+        memcpyToCache(dstVtx + vtxPos * 6, out, cacheBlocks);
         vtxPos += chunk;
         sync = 1;
         bufIdx = curBuf ^ 1;
         chunk = nextChunk;
-        words = nextWords;
+        cacheBlocks = nextCacheBlocks;
     }
     cacheQueueWait(0);
 }
@@ -1293,11 +1294,11 @@ void ObjModel_ApplyBlendChannels(ObjModel* model) {
     ModelFileHeader* hdr;
     ObjModelBlendChannel* ch;
     int i;
-    s16 defFrame;
+    s16 emptyTarget;
     ModelBlendChannelFlags chanActive = sModelBlendChannelActiveInit;
     ModelBlendChannelFlags chanFade = sModelBlendChannelFadeInit;
-    u8* targetA;
-    u8* targetB;
+    u16* targetA;
+    u16* targetB;
     u8* srcVtx;
     u8* dstVtx;
     int fadeBits;
@@ -1306,7 +1307,7 @@ void ObjModel_ApplyBlendChannels(ObjModel* model) {
     if (hdr->morphTargetPtrs == NULL) {
         return;
     }
-    defFrame = hdr->vertexCount + 1;
+    emptyTarget = hdr->vertexCount + 1;
     for (i = 0; i < 3; i++) {
         ch = &model->blendChannels[i];
         if (ch->weight != ch->targetWeight) {
@@ -1357,12 +1358,12 @@ void ObjModel_ApplyBlendChannels(ObjModel* model) {
             if (ch->morphTargetA > -1) {
                 targetA = hdr->morphTargetPtrs[ch->morphTargetA];
             } else {
-                targetA = (u8*)&defFrame;
+                targetA = (u16*)&emptyTarget;
             }
             if (ch->morphTargetB > -1) {
                 targetB = hdr->morphTargetPtrs[ch->morphTargetB];
             } else {
-                targetB = (u8*)&defFrame;
+                targetB = (u16*)&emptyTarget;
             }
             if (i == 2) {
                 if (chanActive.values[0] == 0 && chanActive.values[1] == 0) {
@@ -1394,7 +1395,7 @@ void ObjModel_ApplyBlendChannels(ObjModel* model) {
                 eased *= -1.0f;
             }
             dstVtx = model->vtxBuf[(model->bufferFlags >> 1) & 1];
-            modelApplyBoneTransforms(srcVtx, dstVtx, hdr->vertexCount, targetA, targetB, (int)(65536.0f * eased));
+            modelBlendMorphTargets(srcVtx, dstVtx, hdr->vertexCount, targetA, targetB, (int)(65536.0f * eased));
             model->vtxBufDirty = 1;
         }
         if (ch->targetWeight != ch->weight) {
@@ -2062,7 +2063,7 @@ void ObjModel_RelocateModelData(u8* m) {
         ((ModelFileHeader*)m)->displayLists = (ModelDisplayListEntry*)(m + *(u32*)&((ModelFileHeader*)m)->displayLists);
     }
     if (*(u32*)&((ModelFileHeader*)m)->morphTargetPtrs) {
-        ((ModelFileHeader*)m)->morphTargetPtrs = (u8**)(m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs);
+        ((ModelFileHeader*)m)->morphTargetPtrs = (u16**)(m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs);
     }
     if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries) {
         ((ModelFileHeader*)m)->vertexAnimEntries =
@@ -2085,7 +2086,7 @@ void ObjModel_RelocateModelData(u8* m) {
         ((ModelFileHeader*)m)->displayLists[i].dlist = m + *(u32*)&((ModelFileHeader*)m)->displayLists[i].dlist;
     }
     for (i = 0; i < ((ModelFileHeader*)m)->morphTargetCount; i++) {
-        ((ModelFileHeader*)m)->morphTargetPtrs[i] = m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs[i];
+        ((ModelFileHeader*)m)->morphTargetPtrs[i] = (u16*)(m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs[i]);
     }
     if (*(u32*)&((ModelFileHeader*)m)->collisionTriangles) {
         ((ModelFileHeader*)m)->collisionTriangles =

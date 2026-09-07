@@ -230,7 +230,7 @@ typedef struct ModelFileHeader {
     u8* instrs;
     u16 instrsBitLenWords; /* 0xD8: render-instruction stream length; *8 gives bit length (see objprint_dolphin render-instr readers) */
     u8 unkDA[2];
-    u8** morphTargetPtrs; /* pointer table, morphTargetCount entries */
+    u16** morphTargetPtrs; /* morphTargetCount streams: index/flags, then signed component words */
     u16 cullDistance;
     u16 shaderFlags;
     u16 vertexCount;
@@ -285,6 +285,7 @@ STATIC_ASSERT(offsetof(ModelFileHeader, extraJointDefs) == 0x54);
 STATIC_ASSERT(offsetof(ModelFileHeader, collisionTriangles) == 0x5C);
 STATIC_ASSERT(offsetof(ModelFileHeader, collisionBlocks) == 0x60);
 STATIC_ASSERT(offsetof(ModelFileHeader, displayLists) == 0xD0);
+STATIC_ASSERT(offsetof(ModelFileHeader, morphTargetPtrs) == 0xDC);
 STATIC_ASSERT(offsetof(ModelFileHeader, hitVolumes) == 0x58);
 STATIC_ASSERT(offsetof(ModelFileHeader, hitReactTable) == 0x58);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveData) == 0x64);
@@ -545,7 +546,7 @@ void ObjModelChain_AdvancePhase(ObjModelChain* chain);
 void ObjModelChain_Free(ObjModelChain* chain);
 
 void setGQR6_2(int a, int b, int c, int d);
-void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA, u8* targetB, int blendScale);
+void modelBlendMorphTargets(u8* srcVtx, u8* dstVtx, u16 vtxCount, u16* targetA, u16* targetB, int blendScale);
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c);
 void modelAnimResetState(void* m, void* data);
 int modelLoadAnimations(ModelFileHeader* file, int modelId, void* animBase);
