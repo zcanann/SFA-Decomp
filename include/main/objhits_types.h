@@ -6,6 +6,9 @@
 
 #define OBJHITS_PRIORITY_HIT_COUNT 3
 
+/* Initial value and upper bound for the nearest eligible object-pair distance. */
+#define OBJHITS_PAIR_DISTANCE_LIMIT 0x400
+
 #define OBJHITBOX_CONTACT_OBJECT_COUNT 3
 
 struct ObjHitReactEntry;
@@ -44,7 +47,7 @@ STATIC_ASSERT(sizeof(ObjHitboxTransformState) == 0x110);
 #define OBJHITS_CONTACT_FLAG_KIND0        0x1 /* contact with a kind-0 hit volume */
 #define OBJHITS_CONTACT_FLAG_KIND_NONZERO 0x2 /* contact with a nonzero-kind hit volume */
 
-/* ObjHitsPriorityState.flags (state+0xAC s16) state bits. Moved here from
+/* ObjHitsPriorityState.flags (state+0x60 s16) state bits. Moved here from
  * objhits.h so DLL object states (which include this types header, not the
  * full objhits.h) can name the flag they set/test on the priority-state. */
 #define OBJHITS_PRIORITY_STATE_ENABLED                0x0001
@@ -80,7 +83,7 @@ typedef struct ObjHitsPriorityState {
     u32 skeletonHitMask;
     u32 lastHitObject;
     u8 pad54[0x58 - 0x54];
-    s16 capsuleScale;
+    s16 nearestPairDistance; /* Center distance; horizontal for vertical-span pairs. */
     s16 primaryRadius;
     s16 primaryCapsuleOffsetA;
     s16 primaryCapsuleOffsetB;
@@ -133,7 +136,7 @@ STATIC_ASSERT(offsetof(ObjHitsPriorityState, sweepRadiusX) == 0x38);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, objectHitMask) == 0x48);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, skeletonHitMask) == 0x4C);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, lastHitObject) == 0x50);
-STATIC_ASSERT(offsetof(ObjHitsPriorityState, capsuleScale) == 0x58);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, nearestPairDistance) == 0x58);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryRadius) == 0x5A);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryCapsuleOffsetA) == 0x5C);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryCapsuleOffsetB) == 0x5E);

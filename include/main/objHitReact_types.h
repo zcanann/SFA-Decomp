@@ -36,7 +36,6 @@ extern ObjAnimComponent **gObjHitReactResetObjects;
 #define OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS 0x401
 #define OBJHITREACT_HIT_EFFECT_NO_SOURCE -1
 #define OBJHITREACT_ALT_EFFECT_COUNT 1
-#define OBJHITREACT_RESET_FRAME_COUNT 0x400
 #define OBJHITREACT_ENTRY_TAB_FILE_ID MLDF_FILEID_OBJHITS_BIN
 #define OBJHITREACT_ENTRY_ARENA_BYTES 300
 #define OBJHITREACT_ACTIVE_HITBOX_MODE 1
@@ -52,7 +51,7 @@ typedef struct ObjHitReactState {
   s16 entryBufferByteCapacity;
   ObjHitReactEntry *entries;
   u8 pad0C[0x58 - 0x0C];
-  s16 resetFrameCount;
+  s16 nearestPairDistance; /* Same field as ObjHitsPriorityState.nearestPairDistance. */
   u8 pad5A[0x60 - 0x5A];
   s16 flags;
   u8 shapeFlags;
@@ -82,7 +81,7 @@ STATIC_ASSERT(offsetof(ObjHitReactState, activeHit) == 0x00);
 STATIC_ASSERT(offsetof(ObjHitReactState, activeEntryByteCount) == 0x04);
 STATIC_ASSERT(offsetof(ObjHitReactState, entryBufferByteCapacity) == 0x06);
 STATIC_ASSERT(offsetof(ObjHitReactState, entries) == 0x08);
-STATIC_ASSERT(offsetof(ObjHitReactState, resetFrameCount) == 0x58);
+STATIC_ASSERT(offsetof(ObjHitReactState, nearestPairDistance) == 0x58);
 STATIC_ASSERT(offsetof(ObjHitReactState, flags) == 0x60);
 STATIC_ASSERT(offsetof(ObjHitReactState, shapeFlags) == 0x62);
 STATIC_ASSERT(offsetof(ObjHitReactState, activeHitboxMode) == 0xAE);

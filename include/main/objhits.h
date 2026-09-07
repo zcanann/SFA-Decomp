@@ -46,7 +46,6 @@
 #define OBJHITBOX_DEF_NO_SEPARATION_RESPONSE         0x0002
 #define OBJHITBOX_DEF_CLAMP_Y                        0x0800
 #define OBJHITBOX_DEF_CLAMP_Z                        0x1000
-#define OBJHITBOX_DEFAULT_CAPSULE_SCALE              0x400
 #define OBJHITBOX_SHAPE_SKELETON_3D                  0x01
 #define OBJHITBOX_SHAPE_VERTICAL_SPAN                0x02
 #define OBJHITBOX_SHAPE_CHECK_REVERSE                0x20

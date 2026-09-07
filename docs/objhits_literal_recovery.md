@@ -360,3 +360,34 @@ Full source compilation and the strict retail checksum pass. Rebuilding the
 public header's consumers changes no source-object hash. The active source and
 header pass the formatter check, and the separate formatting commit preserves
 the complete object bytes.
+
+## Nearest object-pair distance
+
+The signed halfword at hit-state offset 0x58 is now `nearestPairDistance`
+in both `ObjHitsPriorityState` and `ObjHitReactState`. The former names,
+`capsuleScale` and `resetFrameCount`, described neither its comparisons nor
+its updates. Both layout assertions continue to pin the same field to 0x58.
+
+`ObjHits_DetectObjectPair` calculates the current center distance, truncates
+it to an integer through the existing conversion sequence, caps it at 1024,
+and retains the smaller value in each object's state. This happens before
+the swept-movement distance refinement and separation-response checks. Pairs
+using a vertical span first pass the vertical overlap test, then use X/Z
+distance; ordinary pairs use all three axes. It is therefore an accumulated
+coarse distance for eligible pairs since reset, not penetration depth or a
+swept-contact distance.
+
+The same limit is restored when capsule bounds are set, object hit state is
+refreshed, or the enabled reset-update path in `ObjHitReact_ResetActiveObjects`
+runs. There is no decrementing frame counter in these uses. All three resets
+and both pair-distance clamps now use `OBJHITS_PAIR_DISTANCE_LIMIT` from the
+canonical hit-state types header. The two misleading default/reset constants
+are removed, and the stale flags-offset comment is corrected to the asserted
+0x60 offset.
+
+All 1,002 generated source objects are byte-identical after the semantic
+change and after formatting. Function scores, allocated data, layouts, and
+relocations are unchanged; this recovery does not add an exact function.
+The active TU and all three owning headers pass the formatter check. Only
+the reaction-state header needs formatting, committed separately. Both
+`ninja all_source` and the strict retail checksum build pass.

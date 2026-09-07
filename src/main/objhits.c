@@ -1714,17 +1714,17 @@ void ObjHits_DetectObjectPair(GameObject* objA, GameObject* objB) {
     }
     distInt = (int)(f32)(int)dist;
     distClamped = distInt;
-    if (distInt > 0x400) {
-        distClamped = 0x400;
+    if (distInt > OBJHITS_PAIR_DISTANCE_LIMIT) {
+        distClamped = OBJHITS_PAIR_DISTANCE_LIMIT;
     }
-    if (distClamped <= stateA->capsuleScale) {
-        stateA->capsuleScale = distClamped;
+    if (distClamped <= stateA->nearestPairDistance) {
+        stateA->nearestPairDistance = distClamped;
     }
-    if (distInt > 0x400) {
-        distInt = 0x400;
+    if (distInt > OBJHITS_PAIR_DISTANCE_LIMIT) {
+        distInt = OBJHITS_PAIR_DISTANCE_LIMIT;
     }
-    if (distInt <= stateB->capsuleScale) {
-        stateB->capsuleScale = distInt;
+    if (distInt <= stateB->nearestPairDistance) {
+        stateB->nearestPairDistance = distInt;
     }
     if ((stateB->flags & OBJHITS_PRIORITY_STATE_ENABLED) != 0) {
         sumRadius = radiusB + radiusA;
@@ -2280,7 +2280,7 @@ void ObjHitReact_ResetActiveObjects(int objectCount) {
                     }
                     hitState->activeHit = 0;
                     hitState->flags = (s16)(hitState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED);
-                    hitState->resetFrameCount = OBJHITREACT_RESET_FRAME_COUNT;
+                    hitState->nearestPairDistance = OBJHITS_PAIR_DISTANCE_LIMIT;
                 }
             }
         }
@@ -2456,7 +2456,7 @@ void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, s16 radius, s16 verticalM
             hitState->primaryCapsuleOffsetB = vmax;
             hitState->primaryRadius = r16;
             hitState->primaryRadiusSquared = (float)(s32)hitState->primaryRadius * (float)(s32)hitState->primaryRadius;
-            hitState->capsuleScale = OBJHITBOX_DEFAULT_CAPSULE_SCALE;
+            hitState->nearestPairDistance = OBJHITS_PAIR_DISTANCE_LIMIT;
             hitState->primaryRadiusY = obj->hitboxScale * obj->rootMotionScale;
             absVal = vmin;
             if (absVal < 0) {
@@ -2692,7 +2692,7 @@ void ObjHits_RefreshObjectState(GameObject* object) {
         hitState->primaryCapsuleOffsetA = obj->modelInstance->primaryCapsuleOffsetA;
         hitState->primaryCapsuleOffsetB = obj->modelInstance->primaryCapsuleOffsetB;
         hitState->stateIndex = (s8)(int)obj->modelInstance->hitboxStateIndex;
-        hitState->capsuleScale = OBJHITBOX_DEFAULT_CAPSULE_SCALE;
+        hitState->nearestPairDistance = OBJHITS_PAIR_DISTANCE_LIMIT;
         hitState->primaryRadiusSquared = (float)(s32)hitState->primaryRadius * (float)(s32)hitState->primaryRadius;
         hitState->secondaryShapeFlags = obj->modelInstance->secondaryHitboxShapeFlags;
         hitState->secondaryRadius = obj->modelInstance->secondaryHitboxRadius;
