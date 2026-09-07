@@ -1512,7 +1512,8 @@ void ObjModel_ClearBlendChannels(ObjModel* model) {
     }
 }
 
-void objUpdateHitSpheres(ObjModel* model, ModelFileHeader* file, GameObject* targetObj, u8* boneMtx, GameObject* sourceObj) {
+void objUpdateHitSpheres(ObjModel* model, ModelFileHeader* file, GameObject* targetObj, u8* boneMtx,
+                         GameObject* sourceObj) {
     int off[2];
     ObjModelHitSphere* prevSphere;
     int i;
