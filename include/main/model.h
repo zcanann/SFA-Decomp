@@ -258,7 +258,7 @@ typedef struct ModelFileHeader {
 /* ModelFileHeader.flags bits */
 #define MODEL_FLAG_NO_ANIMATIONS          0x2
 #define MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS 0x10
-#define MODEL_FLAG_CACHED_ANIMATIONS       0x40
+#define MODEL_FLAG_CACHED_ANIMATIONS      0x40
 #define MODEL_FLAG_NO_DEPTH_TEST          0x400
 #define MODEL_FLAG_ALPHA_Z_UPDATE         0x2000
 #define MODEL_FLAG_ALT_POINTER_LAYOUT     0x8000

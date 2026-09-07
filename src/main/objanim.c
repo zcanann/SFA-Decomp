@@ -410,8 +410,7 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
         blendWeight = state->eventState / 16384.0f;
         moveWeight = OBJANIM_PROGRESS_ONE - blendWeight;
         if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
-            moveData =
-                &state->blendMoveCache[state->blendCacheSlot]->moveData;
+            moveData = &state->blendMoveCache[state->blendCacheSlot]->moveData;
         } else {
             moveData = (ObjAnimMoveData*)animDef->moveData[state->blendCacheSlot];
         }
@@ -725,8 +724,7 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
             blendWeight = state->eventState / 16384.0f;
             moveWeight = OBJANIM_PROGRESS_ONE - blendWeight;
             if ((bank->animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
-                moveData =
-                    &state->blendMoveCache[state->blendCacheSlot]->moveData;
+                moveData = &state->blendMoveCache[state->blendCacheSlot]->moveData;
             } else {
                 moveData = (ObjAnimMoveData*)bank->animDef->moveData[state->blendCacheSlot];
             }

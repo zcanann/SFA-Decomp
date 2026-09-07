@@ -73,7 +73,7 @@ void* animLoadFromTable(u8* hdr, int idx, int a, ObjAnimCachedMove* b);
                     *hp += 1;                                                                                          \
                 }                                                                                                      \
             } else {                                                                                                   \
-                animLoadFromTable(hdr, idx, 0, (ObjAnimCachedMove*)v);                                                                \
+                animLoadFromTable(hdr, idx, 0, (ObjAnimCachedMove*)v);                                                 \
             }                                                                                                          \
         }                                                                                                              \
     }
