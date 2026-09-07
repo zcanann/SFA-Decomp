@@ -307,8 +307,10 @@ Window `cd782d6179` -> `5b120c0545`: tree 99.81533 -> 99.81422, matched_data 119
   permutations (all 98.333), explicit base-pointer local (96.667), block-scope `effect`
   initialiser (96.575).
 - **engine/9.** Retail issues two back-to-back `lfs` of `gCloudActionGlareQuadSize` for the
-  third quad vertex; without `volatile` our build value-numbers them into one. No non-volatile
-  spelling forces a reload of a plain global that the compiler has already proven unchanged.
+  third quad vertex; ordinary array reads let the frontend combine them. **Resolved
+  2026-09-07:** explicit const-qualified horizontal reads preserve both loads without
+  volatile storage. The TU now matches and source-links completely; see
+  [Cloud rendering match](cloud_render_matching.md) for the compiler trace and checksum.
 - **MMP_moonroc.** Seeding `spacingClear = 1` before the loop makes it live ACROSS the loop,
   costing one extra callee-saved GPR (`_savegpr_26` vs retail `_savegpr_27`); the `goto` wrote
   the flag on both exit paths and needed none. Probed: assign-on-both-paths 98.606,
