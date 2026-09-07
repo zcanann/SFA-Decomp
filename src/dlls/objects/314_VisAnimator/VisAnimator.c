@@ -36,7 +36,7 @@ void VisAnimator_update(GameObject* obj) {
     gateValue = mainGetBit(placement->gateGameBit);
     state->currentGateState = (u8)(state->gateMask & gateValue);
     if (state->previousGateState != state->currentGateState) {
-        state->visibilityBit = state->visibilityBit ^ 1;
+        state->visibilityBit ^= 1;
         state->flags |= VIS_ANIMATOR_STATE_REFRESH_PENDING;
     }
     state->previousGateState = state->currentGateState;
@@ -58,7 +58,7 @@ void VisAnimator_init(GameObject* obj, VisAnimatorPlacement* placement) {
     state->gateMask = (u8)(1 << placement->gateBitIndex);
     gateValue = mainGetBit(placement->gateGameBit);
     if ((state->gateMask & gateValue) != 0) {
-        state->visibilityBit = state->visibilityBit ^ 1;
+        state->visibilityBit ^= 1;
     }
     mapGetBlock(
         objPosToMapBlockIdx((double)obj->anim.localPosX, (double)obj->anim.localPosY, (double)obj->anim.localPosZ));

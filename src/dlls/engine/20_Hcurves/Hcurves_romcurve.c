@@ -733,14 +733,14 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
         if (maxDistance) {
             if (state->reverse != 0) {
                 distanceCurve = (RomCurveDef*)state->nextNode;
-                dx = distanceCurve->x - (obj)->anim.localPosX;
-                dy = distanceCurve->y - (obj)->anim.localPosY;
-                dz = distanceCurve->z - (obj)->anim.localPosZ;
+                dx = distanceCurve->x - obj->anim.localPosX;
+                dy = distanceCurve->y - obj->anim.localPosY;
+                dz = distanceCurve->z - obj->anim.localPosZ;
             } else {
                 distanceCurve = (RomCurveDef*)state->currentNode;
-                dx = distanceCurve->x - (obj)->anim.localPosX;
-                dy = distanceCurve->y - (obj)->anim.localPosY;
-                dz = distanceCurve->z - (obj)->anim.localPosZ;
+                dx = distanceCurve->x - obj->anim.localPosX;
+                dy = distanceCurve->y - obj->anim.localPosY;
+                dz = distanceCurve->z - obj->anim.localPosZ;
             }
             distance = sqrtf(dx * dx + dy * dy + dz * dz);
             if (distance > maxDistance) {
@@ -788,9 +788,9 @@ int curves_findNearObj(GameObject* obj, int* curveTypes, int typeCount, int acti
     bestActionDistance = bestDistance;
     bestActionCurve = NULL;
 
-    curvePos[0] = (obj)->anim.localPosX;
-    curvePos[1] = ROMCURVE_VERTICAL_OFFSET + (obj)->anim.localPosY;
-    curvePos[2] = (obj)->anim.localPosZ;
+    curvePos[0] = obj->anim.localPosX;
+    curvePos[1] = ROMCURVE_VERTICAL_OFFSET + obj->anim.localPosY;
+    curvePos[2] = obj->anim.localPosZ;
     voxmaps_worldToGrid(curvePos, objGrid);
 
     for (curveIndex = 0; curveIndex < nRomCurves; curveIndex++) {
@@ -798,9 +798,9 @@ int curves_findNearObj(GameObject* obj, int* curveTypes, int typeCount, int acti
         typeIndex = 0;
         do {
             if ((curve->type == curveTypes[typeIndex]) || (typeCount <= 0)) {
-                dx = curve->x - (obj)->anim.localPosX;
-                dy = curve->y - (obj)->anim.localPosY;
-                dz = curve->z - (obj)->anim.localPosZ;
+                dx = curve->x - obj->anim.localPosX;
+                dy = curve->y - obj->anim.localPosY;
+                dz = curve->z - obj->anim.localPosZ;
                 distance = sqrtf(dz * dz + (dx * dx + dy * dy));
                 if (distance < bestDistance) {
                     curvePos[0] = curve->x;
@@ -809,7 +809,7 @@ int curves_findNearObj(GameObject* obj, int* curveTypes, int typeCount, int acti
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
                     if (((traceHit == 1) || (traceResult != 0)) &&
-                        (trackGetLineIntersect(&(obj)->anim.localPosX, curvePos, ROMCURVE_ONE, 0,
+                        (trackGetLineIntersect(&obj->anim.localPosX, curvePos, ROMCURVE_ONE, 0,
                                                (TrackLineIntersectResult*)bboxHit, obj, bboxMode, -1, 0, 0) == 0)) {
                         bestDistance = distance;
                         bestCurve = curve;
@@ -822,7 +822,7 @@ int curves_findNearObj(GameObject* obj, int* curveTypes, int typeCount, int acti
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
                     if (((traceHit == 1) || (traceResult != 0)) &&
-                        (trackGetLineIntersect(&(obj)->anim.localPosX, curvePos, ROMCURVE_ONE, 0,
+                        (trackGetLineIntersect(&obj->anim.localPosX, curvePos, ROMCURVE_ONE, 0,
                                                (TrackLineIntersectResult*)bboxHit, obj, bboxMode, -1, 0, 0) == 0)) {
                         bestActionDistance = distance;
                         bestActionCurve = curve;
@@ -1162,7 +1162,7 @@ f32 curves_getPathLength(RomCurveDef* startNode, RomCurveDef* endNode, f32* posA
                 dx = posB[0] - startNode->x;
                 dy = posB[1] - startNode->y;
                 dz = posB[2] - startNode->z;
-                total = total + sqrtf(dx * dx + dy * dy + dz * dz);
+                total += sqrtf(dx * dx + dy * dy + dz * dz);
             } else {
                 count = RomCurve_CollectForwardLinks(startNode, cand3);
                 if (count != 0) {
@@ -1174,7 +1174,7 @@ f32 curves_getPathLength(RomCurveDef* startNode, RomCurveDef* endNode, f32* posA
                 dx = next->x - startNode->x;
                 dy = next->y - startNode->y;
                 dz = next->z - startNode->z;
-                total = total + sqrtf(dx * dx + dy * dy + dz * dz);
+                total += sqrtf(dx * dx + dy * dy + dz * dz);
                 startNode = next;
             }
         }
@@ -1311,8 +1311,8 @@ int RomCurve_projectPointToAdjacentWindow(int* curveIds, f32 x, f32 y, f32 z, f3
     tangentDz = ROMCURVE_HALF * (tdz + dz);
     tangentLen = sqrtf(tangentDx * tangentDx + tangentDz * tangentDz);
     if (ROMCURVE_ZERO != tangentLen) {
-        tangentDx = tangentDx / tangentLen;
-        tangentDz = tangentDz / tangentLen;
+        tangentDx /= tangentLen;
+        tangentDz /= tangentLen;
     }
 
     x1 = curves[1]->x;
@@ -1337,8 +1337,8 @@ int RomCurve_projectPointToAdjacentWindow(int* curveIds, f32 x, f32 y, f32 z, f3
     tangentDz = ROMCURVE_HALF * (tdz + dz);
     tangentLen = sqrtf(tangentDx * tangentDx + tangentDz * tangentDz);
     if (ROMCURVE_ZERO != tangentLen) {
-        tangentDx = tangentDx / tangentLen;
-        tangentDz = tangentDz / tangentLen;
+        tangentDx /= tangentLen;
+        tangentDz /= tangentLen;
     }
 
     numer = -((tangentDx * curves[2]->x) + (tangentDz * curves[2]->z));
@@ -1467,11 +1467,11 @@ int curves_findNearestOfType16(f32 x, f32 y, f32 z, int queryAll) {
     nearestDistance = ROMCURVE_ZERO;
     for (i = 0; i < objectCount; i = i + 1) {
         obj = objects[i];
-        if ((((obj)->anim.classId == 0x2c) && ((obj)->anim.mapEventSlot != queryAll)) &&
+        if (((obj->anim.classId == 0x2c) && (obj->anim.mapEventSlot != queryAll)) &&
             (curve = (RomCurveDef*)obj->anim.placementData, curve != NULL) && curve->type == ROMCURVE_TYPE_16) {
-            dx = (obj)->anim.worldPosX - x;
-            dy = (obj)->anim.worldPosY - y;
-            dz = (obj)->anim.worldPosZ - z;
+            dx = obj->anim.worldPosX - x;
+            dy = obj->anim.worldPosY - y;
+            dz = obj->anim.worldPosZ - z;
             distance = sqrtf(dz * dz + (dx * dx + dy * dy));
             if (ROMCURVE_NEG_ONE == nearestCurveId || distance < nearestDistance) {
                 nearestDistance = distance;
@@ -1850,9 +1850,9 @@ f32 curves_distToObj(GameObject* obj, u32 curveId) {
 
     curve = RomCurve_FindByIdInline(curveId);
     if (curve != NULL && (void*)obj != NULL) {
-        dx = curve->x - (obj)->anim.localPosX;
-        dy = curve->y - (obj)->anim.localPosY;
-        dz = curve->z - (obj)->anim.localPosZ;
+        dx = curve->x - obj->anim.localPosX;
+        dy = curve->y - obj->anim.localPosY;
+        dz = curve->z - obj->anim.localPosZ;
         return sqrtf(dx * dx + dy * dy + dz * dz);
     }
 
@@ -2099,7 +2099,7 @@ int RomCurve_buildAdjacentWindowPoints(u32* curveIds, float* outX, float* outY, 
             outX[i] = windowCurves[i]->x;
             outY[i] = windowCurves[i]->y;
             outZ[i] = windowCurves[i]->z;
-            foundCount = foundCount + 1;
+            foundCount += 1;
         }
     }
 
@@ -2119,11 +2119,11 @@ int RomCurve_buildAdjacentWindowPoints(u32* curveIds, float* outX, float* outY, 
                 *outZ = windowCurves[2]->z + (windowCurves[2]->z - windowCurves[1]->z);
             }
         }
-        resolveCursor = resolveCursor + 1;
-        outXStart = outXStart + 1;
-        outY = outY + 1;
-        outZ = outZ + 1;
-        foundCount = foundCount + 1;
+        resolveCursor += 1;
+        outXStart += 1;
+        outY += 1;
+        outZ += 1;
+        foundCount += 1;
     }
     return 1;
 }
@@ -2430,7 +2430,7 @@ void RomCurve_remove(RomCurveDef* curve) {
 
     removeIndex = 0;
     while ((removeIndex < nRomCurves) && (curve->id != romCurves[removeIndex]->id)) {
-        removeIndex = removeIndex + 1;
+        removeIndex += 1;
     }
 
     sortedCurveCount = nRomCurves;
@@ -2438,12 +2438,12 @@ void RomCurve_remove(RomCurveDef* curve) {
         return;
     }
 
-    nRomCurves = nRomCurves - 1;
+    nRomCurves -= 1;
     sortedCurveCount = nRomCurves;
     tableSlot = romCurves + removeIndex;
     for (; removeIndex < sortedCurveCount; removeIndex++) {
         tableSlot[0] = tableSlot[1];
-        tableSlot = tableSlot + 1;
+        tableSlot += 1;
     }
 }
 

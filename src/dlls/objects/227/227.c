@@ -159,7 +159,7 @@ void Fireball_homeToTarget(GameObject* obj, FireballState* state, GameObject* ta
         {
             f32 cosP = mathCosf(dx);
             if (cosP != 0.0f) {
-                t = t / cosP;
+                t /= cosP;
             }
         }
         obj->anim.velocityY = t;

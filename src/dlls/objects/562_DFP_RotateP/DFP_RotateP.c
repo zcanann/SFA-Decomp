@@ -390,7 +390,7 @@ void DFP_RotateP_init(GameObject* obj, DFPRotatePPlacement* placement)
     {
         state->flags.bit20 = 1;
     }
-    obj->objectFlags = obj->objectFlags | (OBJECT_OBJFLAG_HITDETECT_DISABLED | OBJECT_OBJFLAG_HIDDEN);
+    obj->objectFlags |= (OBJECT_OBJFLAG_HITDETECT_DISABLED | OBJECT_OBJFLAG_HIDDEN);
 }
 
 void DFP_RotateP_release(void)

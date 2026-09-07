@@ -47,7 +47,7 @@ int dll_2A3_getObjectTypeId(void)
 
 void dll_2A3_free(void)
 {
-    gDll2A3InstanceCount = gDll2A3InstanceCount - 1;
+    gDll2A3InstanceCount -= 1;
 }
 
 void dll_2A3_render(GameObject* obj, int p2, int p3, int p4, int p5)
@@ -110,7 +110,7 @@ void dll_2A3_init(GameObject* obj)
     state->spinRateX = randomGetRange(-0x32, 0x32);
     state->spinRateY = randomGetRange(-0x32, 0x32);
     state->spinRateZ = randomGetRange(-0x32, 0x32);
-    gDll2A3InstanceCount = gDll2A3InstanceCount + 1;
+    gDll2A3InstanceCount += 1;
 }
 
 void dll_2A3_release_nop(void)

@@ -1,5 +1,3 @@
-#define OBJHITS_STATE_INDEX_S8
-#define TEX_SETSHADER_U8
 #include "main/map_block.h"
 #include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
@@ -21,7 +19,6 @@
 #include "main/model_render_instrs_api.h"
 #include "main/objHitReact.h"
 #include "main/objhits.h"
-#undef OBJHITS_STATE_INDEX_S8
 #include "main/objtype.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
@@ -43,11 +40,7 @@
 #include "main/pi_dolphin_api.h"
 #include "dolphin/mtx/vec.h"
 #define TRACK_BBOX_FLAGS_S8
-#define TRACK_BBOX_MASK_TYPE  s8
-#define TRACK_BBOX_ARG10_TYPE s8
 #include "main/track_bbox_api.h"
-#undef TRACK_BBOX_ARG10_TYPE
-#undef TRACK_BBOX_MASK_TYPE
 #undef TRACK_BBOX_FLAGS_S8
 #include "main/dll/player_api.h"
 #include "main/pause_menu_api.h"
@@ -143,14 +136,14 @@ static u8 mapBlockBounds_HasCornerPastDepthThreshold(MapBlockBoundsRec* bounds, 
                 break;
             }
         }
-        v.x = v.x * timing;
-        v.y = v.y * timing;
-        v.z = v.z * timing;
+        v.x *= timing;
+        v.y *= timing;
+        v.z *= timing;
         PSMTXMultVec((MtxPtr)xform, &v, &v);
         if (v.z >= fbset) {
             return 1;
         }
-        i = i + 1;
+        i += 1;
         if ((int)i < 8) {
             continue;
         }
@@ -467,14 +460,14 @@ void mapBlockRender_callList(u8 passSelect, u32 visArg, MapBlockData* block, Sha
                 lightmapQueueShadowRow(bounds[0], block, bounds[0]->selector);
                 shadowType = 5;
                 texGlobals[gLightmapDrawQueueCount].type = shadowType;
-                gLightmapDrawQueueCount = gLightmapDrawQueueCount + 1;
+                gLightmapDrawQueueCount += 1;
             } else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0)) {
                 int shadowType;
 
                 lightmapQueueShadowRow(bounds[0], block, bounds[0]->selector);
                 shadowType = 4;
                 texGlobals[gLightmapDrawQueueCount].type = shadowType;
-                gLightmapDrawQueueCount = gLightmapDrawQueueCount + 1;
+                gLightmapDrawQueueCount += 1;
             }
         } else {
             if (shader != NULL) {
@@ -567,7 +560,7 @@ void mapBlockRender_callList(u8 passSelect, u32 visArg, MapBlockData* block, Sha
                 lightmapQueueShadowRow(bounds[0], block, 0x17);
                 shadowType = 6;
                 texGlobals[gLightmapDrawQueueCount].type = shadowType;
-                gLightmapDrawQueueCount = gLightmapDrawQueueCount + 1;
+                gLightmapDrawQueueCount += 1;
             }
         }
     }
@@ -604,8 +597,8 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode) {
                         texture = textureGetAnimationFrame(layerTextureId, overrides[overrideIdx].frame);
                         break;
                     }
-                    overrideEntry = overrideEntry + 1;
-                    overrideIdx = overrideIdx + 1;
+                    overrideEntry += 1;
+                    overrideIdx += 1;
                 }
             } else {
                 texture = layer->texture;
@@ -637,8 +630,8 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode) {
                         texture = textureGetAnimationFrame(layerTextureId, overrides[overrideIdx].frame);
                         break;
                     }
-                    overrideEntry = overrideEntry + 1;
-                    overrideIdx = overrideIdx + 1;
+                    overrideEntry += 1;
+                    overrideIdx += 1;
                 }
             } else {
                 texture = layer->texture;
@@ -672,8 +665,8 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode) {
                                 texture = textureGetAnimationFrame(layerTextureId, overrides[overrideIdx].frame);
                                 break;
                             }
-                            overrideEntry = overrideEntry + 1;
-                            overrideIdx = overrideIdx + 1;
+                            overrideEntry += 1;
+                            overrideIdx += 1;
                         }
                     } else {
                         texture = layerTextureId;
@@ -1099,8 +1092,8 @@ void renderGlows(void) {
             } else if (fade < -0.0125f) {
                 fade = -0.0125f;
             }
-            gSunFlareFade = gSunFlareFade + fade;
-            sunDot = sunDot * gSunFlareFade;
+            gSunFlareFade += fade;
+            sunDot *= gSunFlareFade;
             if (sunDot > 0.0f) {
                 PSMTXConcat(viewMtx, sunMtx, sunMtx);
                 GXLoadPosMtxImm((const f32(*)[4])sunMtx, GX_PNMTX0);

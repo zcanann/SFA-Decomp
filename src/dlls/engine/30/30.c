@@ -72,7 +72,7 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     cfg.velocityZ = 0.0f;
     cfg.scale = 0.0f;
     cfg.lifetimeFrames = 0;
-    cfg.quadVertex3Pad06 = -1;
+    cfg.impactEffectId = -1;
     cfg.initialAlpha = 0xff;
     cfg.linkGroup = 0;
     cfg.textureId = 0;
@@ -121,7 +121,7 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
             cfg.textureId = 0x1a1;
         } else if (spawnParams->dig.variant == 2) {
             cfg.textureId = 0xc10;
-            cfg.renderFlags = cfg.renderFlags | 0x800;
+            cfg.renderFlags |= 0x800;
         } else {
             cfg.textureId = 0x2b;
         }
@@ -153,7 +153,7 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
             cfg.textureId = 0x1a1;
         } else if (spawnParams->dig.variant == 2) {
             cfg.textureId = 0xc10;
-            cfg.renderFlags = cfg.renderFlags | 0x800;
+            cfg.renderFlags |= 0x800;
         } else {
             cfg.textureId = 0x2b;
         }
@@ -258,7 +258,7 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         break;
     case 0xd5:
         cfg.scale = 0.004f;
-        cfg.quadVertex3Pad06 = 0xd6;
+        cfg.impactEffectId = 0xd6;
         cfg.lifetimeFrames = 0x64;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80000;
@@ -285,15 +285,15 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     default:
         return -1;
     }
-    cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
+    cfg.behaviorFlags |= spawnFlags;
     if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
         cfg.behaviorFlags ^= 2;
     }
     if ((cfg.behaviorFlags & 1) != 0) {
         if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0) {
-            cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
-            cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
-            cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
+            cfg.startPosX += cfg.sourcePosX;
+            cfg.startPosY += cfg.sourcePosY;
+            cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != 0) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;

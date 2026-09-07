@@ -41,13 +41,13 @@ typedef struct CheckpointRouteEntry {
     s8 sideOffsets[4];
     s8 heightOffsets[4];
     u8 pad35[0x08];
-    u8 waveAmplitude;
-    u8 wavePhase;
+    u8 tangentScale;
+    u8 tangentHeading;
 } CheckpointRouteEntry;
 
 typedef struct CheckpointSlot {
     u32 key;
-    CheckpointRouteEntry *entry;
+    CheckpointRouteEntry* entry;
 } CheckpointSlot;
 
 typedef struct CheckpointRouteState {
@@ -65,7 +65,7 @@ typedef struct CheckpointRouteState {
 extern CheckpointSlot gCheckpointRouteTable[];
 extern s32 gCheckpointRouteCount;
 
-CheckpointRouteEntry *Checkpoint_find(s32 key, s32 *idx_out);
+CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out);
 
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, posX) == 0x08);
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, checkpointId) == 0x14);
@@ -76,8 +76,8 @@ STATIC_ASSERT(offsetof(CheckpointRouteEntry, heading) == 0x29);
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, width) == 0x2A);
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, sideOffsets) == 0x2D);
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, heightOffsets) == 0x31);
-STATIC_ASSERT(offsetof(CheckpointRouteEntry, waveAmplitude) == 0x3D);
-STATIC_ASSERT(offsetof(CheckpointRouteEntry, wavePhase) == 0x3E);
+STATIC_ASSERT(offsetof(CheckpointRouteEntry, tangentScale) == 0x3D);
+STATIC_ASSERT(offsetof(CheckpointRouteEntry, tangentHeading) == 0x3E);
 STATIC_ASSERT(sizeof(CheckpointSlot) == 0x08);
 STATIC_ASSERT(offsetof(CheckpointRouteState, localX) == 0x00);
 STATIC_ASSERT(offsetof(CheckpointRouteState, pathT) == 0x08);

@@ -71,7 +71,7 @@ void WispBaddie_updateMovement(GameObject* obj, WispBaddieState* state) {
         obj->anim.velocityZ = 0.006f * (curve->posZ - obj->anim.localPosZ) + obj->anim.velocityZ;
     }
 
-    obj->anim.velocityX = obj->anim.velocityX * (step = 0.9f);
+    obj->anim.velocityX *= (step = 0.9f);
     obj->anim.velocityY *= step;
     obj->anim.velocityZ *= step;
 
@@ -202,7 +202,7 @@ void WispBaddie_update(GameObject* obj) {
         state->cryTimer -= timeDelta;
         if (state->cryTimer < 0.0f) {
             Sfx_PlayFromObject(obj, SFXTRIG_fball2_c);
-            state->cryTimer = (f32)randomGetRange(60, 120);
+            state->cryTimer = randomGetRange(60, 120);
         }
         state->particleId = 0x338;
     }

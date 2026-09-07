@@ -65,7 +65,7 @@ static inline void SfxPlayer_startSound(GameObject* obj, SfxPlayerPlacement* pla
 
     if (soundId != 0) {
         soundObj = obj;
-        state->flags = state->flags | SFXPLAYER_STATE_FLAG_ACTIVE;
+        state->flags |= SFXPLAYER_STATE_FLAG_ACTIVE;
         if ((placement->flags & SFXPLAYER_FLAG_AT_OBJECT) == 0) {
             soundObj = NULL;
         }
@@ -163,7 +163,7 @@ void SfxPlayer_update(GameObject* obj) {
                 SfxPlayer_startSound(obj, placement, state, placement->secondarySfxId);
             }
         } else if ((state->flags & SFXPLAYER_STATE_FLAG_ACTIVE) != 0) {
-            state->flags = state->flags & ~SFXPLAYER_STATE_FLAG_ACTIVE;
+            state->flags &= ~SFXPLAYER_STATE_FLAG_ACTIVE;
             SFXPLAYER_STOP_SOUND_PAIR();
         }
         break;
@@ -179,7 +179,7 @@ void SfxPlayer_update(GameObject* obj) {
                 SfxPlayer_startSound(obj, placement, state, placement->secondarySfxId);
             }
         } else if ((state->flags & SFXPLAYER_STATE_FLAG_ACTIVE) != 0) {
-            state->flags = state->flags & ~SFXPLAYER_STATE_FLAG_ACTIVE;
+            state->flags &= ~SFXPLAYER_STATE_FLAG_ACTIVE;
             SFXPLAYER_STOP_SOUND_PAIR();
         }
         break;

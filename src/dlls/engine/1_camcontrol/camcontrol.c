@@ -959,7 +959,7 @@ void camcontrol_updateTargetFeedback(void) {
             }
         }
         if (target != NULL) {
-            target->anim.resetHitboxFlags = target->anim.resetHitboxFlags | INTERACT_FLAG_IN_RANGE;
+            target->anim.resetHitboxFlags |= INTERACT_FLAG_IN_RANGE;
             buttons = getButtonsJustPressed(0);
             buttonMask = PAD_BUTTON_A;
             targetKind = camcontrol_getTargetKind(target);
@@ -971,7 +971,7 @@ void camcontrol_updateTargetFeedback(void) {
             }
             if ((target->anim.resetHitboxFlags & INTERACT_FLAG_PROMPT_SUPPRESSED) == 0) {
                 if (buttonPressed) {
-                    target->anim.resetHitboxFlags = target->anim.resetHitboxFlags | INTERACT_FLAG_ACTIVATED;
+                    target->anim.resetHitboxFlags |= INTERACT_FLAG_ACTIVATED;
                 }
             } else if ((buttonPressed) && (result = isTalkingToNpc(), result == 0)) {
                 Sfx_PlayFromObject(0, SFXTRIG_sc_clock_timesup);

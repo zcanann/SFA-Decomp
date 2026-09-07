@@ -48,7 +48,7 @@ int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
             obj->anim.worldPosY = obj->anim.localPosY;
             obj->anim.worldPosZ = obj->anim.localPosZ;
             spawnExplosion(obj, 100.0f, 1, 1, 0, 0, 0, 0, 0);
-            obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
+            obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
             if (obj->anim.romDefNo == WMNEWCRYSTAL_OBJECT_BLUE)
             {
                 mainSetBits(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 0);

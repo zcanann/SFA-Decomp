@@ -112,7 +112,7 @@ void CloudPrisonControl_update(GameObject* obj) {
                     targetEntry[0]++;
                 }
                 if (!targetFound) {
-                    gCloudPrisonTargets[gCloudPrisonTargetCount].object = (GameObject*)sender;
+                    gCloudPrisonTargets[gCloudPrisonTargetCount].object = sender;
                     gCloudPrisonTargets[gCloudPrisonTargetCount].flags = 0;
                     gCloudPrisonTargets[gCloudPrisonTargetCount++].value = data;
                 }
@@ -126,7 +126,7 @@ void CloudPrisonControl_update(GameObject* obj) {
         case CLOUD_PRISON_CONTROL_MESSAGE_UNREGISTER:
             targetIndex = 0;
             targetSearch[0] = gCloudPrisonTargets;
-            while (targetIndex < gCloudPrisonTargetCount && targetSearch[0]->object != (GameObject*)sender) {
+            while (targetIndex < gCloudPrisonTargetCount && targetSearch[0]->object != sender) {
                 targetSearch[0]++;
                 targetIndex++;
             }
@@ -144,7 +144,7 @@ void CloudPrisonControl_update(GameObject* obj) {
         default:
             deferredOffset = gCloudPrisonDeferredMessageCount * CLOUD_PRISON_CONTROL_DEFERRED_MESSAGE_RECORD_SIZE;
             ((CloudPrisonDeferredMessage*)((char*)gCloudPrisonDeferredMessageStorage + deferredOffset))->sender =
-                (GameObject*)sender;
+                sender;
             ((CloudPrisonDeferredMessage*)((char*)gCloudPrisonDeferredMessageStorage + deferredOffset))->messageId =
                 messageId;
             ((CloudPrisonDeferredMessage*)((char*)gCloudPrisonDeferredMessageStorage + deferredOffset))->data = data;

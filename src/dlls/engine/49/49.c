@@ -474,11 +474,11 @@ int Minimap_update(void)
                         yrel = -player->anim.worldPosZ + gMinimapRegionMaxZ;
                     }
                     e = boxW - texW * gMinimapZoom;
-                    e = e / 2.0f;
+                    e /= 2.0f;
                     t = (0.0f > e) ? 0.0f : e;
                     panx = -t;
                     e = boxH - texH * gMinimapZoom;
-                    e = e / 2.0f;
+                    e /= 2.0f;
                     t = (0.0f > e) ? 0.0f : e;
                     pany = -t;
                     if (panx == 0.0f)
@@ -723,7 +723,7 @@ void Minimap_drawCompassNeedle(void)
     gMinimapCompassPhase = -(500.0f * timeDelta - gMinimapCompassPhase);
     if (gMinimapCompassPhase > 32768.0f)
     {
-        gMinimapCompassPhase = gMinimapCompassPhase - 65536.0f;
+        gMinimapCompassPhase -= 65536.0f;
     }
     c0 = compassTipSin(60.0f, gMinimapCompassPhase);
     s0 = compassTipCos(60.0f, gMinimapCompassPhase);
@@ -762,7 +762,7 @@ void Minimap_drawCompassBlip(void)
     {
         objRender(0, 0, 0, 0, gMinimapBlipObjects[i], 1);
         model = Obj_GetActiveModel((GameObject*)gMinimapBlipObjects[i]);
-        model->bufferFlags = model->bufferFlags & ~0x8;
+        model->bufferFlags &= ~0x8;
         gMinimapBlipObjects[i]->anim.renderAlpha = 255;
     }
     gameUiEndOverlayView();
@@ -933,12 +933,12 @@ void Minimap_frameStart(void)
                 if ((held & 4) != 0)
                 {
                     pw = powfCoreFast(gMinimapZoomInRate, timeDelta);
-                    gMinimapZoomStep = gMinimapZoomStep * pw;
+                    gMinimapZoomStep *= pw;
                 }
                 else if ((held & 8) != 0)
                 {
                     pw = powfCoreFast(gMinimapZoomOutRate, timeDelta);
-                    gMinimapZoomStep = gMinimapZoomStep * pw;
+                    gMinimapZoomStep *= pw;
                 }
                 else
                 {

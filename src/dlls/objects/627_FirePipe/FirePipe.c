@@ -448,7 +448,7 @@ void firepipe_render(GameObject* obj, int p1, int p2, int p3, int p4, char visib
 
 void firepipe_update(GameObject* obj)
 {
-    obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+    obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     firepipe_updateState(obj);
 }
 

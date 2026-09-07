@@ -72,7 +72,7 @@ void dimtruthhornice_update(GameObject* obj) {
     case DIM_TRUTH_HORN_ICE_PHASE_SHATTERING: {
         PartFxSpawnParams spawnParams;
 
-        state->timer = state->timer + timeDelta;
+        state->timer += timeDelta;
         if (state->timer > DIM_TRUTH_HORN_ICE_SHATTER_DELAY) {
             int particleCount;
 

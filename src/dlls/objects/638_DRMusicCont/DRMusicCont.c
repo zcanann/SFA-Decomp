@@ -84,8 +84,7 @@ void drmusiccont_update(GameObject* obj)
 
     cloudSetOverridePosition(DRMUSICCONT_CLOUD_OVERRIDE_POS_X, DRMUSICCONT_CLOUD_OVERRIDE_POS_Y,
                              DRMUSICCONT_CLOUD_OVERRIDE_POS_Z);
-    if ((obj)->userData1 == 0)
-    {
+    if (obj->userData1 == 0) {
         if (mainGetBit(GAMEBIT_DRArwingRelated0E7B) == 0)
         {
             getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_A, 0);
@@ -95,7 +94,7 @@ void drmusiccont_update(GameObject* obj)
             skySetLightIndex(0, 0.0f);
             mainSetBits(GAMEBIT_DRArwingRelated0E7B, 1);
         }
-        (obj)->userData1 = 1;
+        obj->userData1 = 1;
     }
 
     GameBitLatch_Update(&state->gameBitLatch, 2, 0x1a7, 0x64b, 0xf0e, 0xe5);

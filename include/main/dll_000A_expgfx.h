@@ -5,6 +5,7 @@
 #include "main/dll/expgfx_interface.h"
 #include "dlls/object_descriptor.h"
 #include "main/dll/expgfx_resource_api.h"
+#include "main/dll/effectspawnconfig_struct.h"
 
 typedef struct ExpgfxDllInterface {
     u32 reserved0;
@@ -47,8 +48,7 @@ void expgfx_free2(u32 sourceId);
 void expgfx_free(u32 sourceId);
 void expgfx_resetAllPools(void);
 void expgfx_updateFrameState(int sourceMode, int sourceId);
-struct ExpgfxSpawnConfig;
-int expgfx_addremove(struct ExpgfxSpawnConfig* config, int preferredPoolIndex, int slotType, int planeOffsetSetId);
+int expgfx_addremove(EffectSpawnConfig* config, int preferredPoolIndex, int slotType, int planeOffsetSetId);
 void expgfx_onMapSetup(void);
 void expgfx_release(void);
 void expgfx_initialise(void);

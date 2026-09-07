@@ -61,8 +61,8 @@ static const f32 sExplosionFadeOutExponent[] = {25.0f};
 static const f32 sExplosionSpawnDelay[] = {8.0f};
 
 void explosion_spawnFlame(GameObject* obj, f32 speed, u8 generation, f32 x, f32 y, f32 z) {
-    DimExplosionPlacement* placement = (DimExplosionPlacement*)(obj)->anim.placementData;
-    DimExplosionState* state = (obj)->extra;
+    DimExplosionPlacement* placement = (DimExplosionPlacement*)obj->anim.placementData;
+    DimExplosionState* state = obj->extra;
     DimExplosionFlame* flames = (DimExplosionFlame*)state->flames;
     int flameIndex = state->flameCount++;
     flames[flameIndex].posX = x;
@@ -91,7 +91,7 @@ void explosion_spawnFlame(GameObject* obj, f32 speed, u8 generation, f32 x, f32 
             } else if (sfxKind == 3) {
                 Sfx_PlayFromObject(obj, SFXTRIG_wp_sexpl2_c_4c2);
             } else {
-                s8 mapEventSlot = (obj)->anim.mapEventSlot;
+                s8 mapEventSlot = obj->anim.mapEventSlot;
                 switch (mapEventSlot) {
                 case 0x2c:
                 case 0x3a:
@@ -340,19 +340,19 @@ void explosion_update(GameObject* obj) {
                             spawnState = obj->extra;
                             childOffset.x =
                                 state->flames[i].scale *
-                                (sExplosionChildOffsetStep[0] * (f32)randomGetRange(-5, 3) + sExplosionBaseScale[0]);
+                                (sExplosionChildOffsetStep[0] * randomGetRange(-5, 3) + sExplosionBaseScale[0]);
                             childOffset.y = sExplosionZero[0];
                             childOffset.z = sExplosionZero[0];
                             PSMTXRotRad(spawnMtx, 'z',
                                         (f32)(sExplosionPi[0] *
-                                              (f64)((f32)randomGetRange(0, 0xffff) / sExplosionAngleScale[0])));
+                                              (f64)(randomGetRange(0, 0xffff) / sExplosionAngleScale[0])));
                             PSMTXConcat((MtxPtr)Camera_GetInverseViewRotationMatrix(), spawnMtx, spawnMtx);
                             PSMTXMultVecSR(spawnMtx, &childOffset, &childOffset);
                             childOffset.x += state->flames[i].posX;
                             childOffset.y += state->flames[i].posY;
                             childOffset.z += state->flames[i].posZ;
-                            childSpeed = parentSpeed * (f32)randomGetRange(0xc0, 0x100);
-                            childSpeed = childSpeed * sExplosionSpeedScale[0];
+                            childSpeed = parentSpeed * randomGetRange(0xc0, 0x100);
+                            childSpeed *= sExplosionSpeedScale[0];
                             if (spawnState->flameCount < DIM_EXPLOSION_FLAME_CAPACITY) {
                                 explosion_spawnFlame(obj, childSpeed, (u8)(parentGeneration + 1), childOffset.x,
                                                      childOffset.y, childOffset.z);
@@ -473,8 +473,8 @@ void explosion_update(GameObject* obj) {
             }
             {
                 f32 frac = (f32)state->frameCounter / (f32)state->lifeFrames;
-                (obj)->anim.rootMotionScale = 0.1f * (frac * state->scale);
-                (obj)->anim.alpha = sExplosionColorMax[0] - sExplosionColorMax[0] * frac;
+                obj->anim.rootMotionScale = 0.1f * (frac * state->scale);
+                obj->anim.alpha = sExplosionColorMax[0] - sExplosionColorMax[0] * frac;
             }
             if (state->halfLifeFired == 0 && state->frameCounter >= (state->lifeFrames >> 1)) {
                 u32 k;
@@ -533,26 +533,26 @@ void explosion_init(GameObject* obj, DimExplosionPlacement* placementAddress) {
         debrisCount = (int)((f32)(6.0f * scale) / 100.0f);
         for (i = 0; i < debrisCount; i++) {
             if (state->nearGround != 0) {
-                f32 mag = 2.0f * ((f32)randomGetRange(0x14, 0x28) * 0.01f) + 2.0f;
+                f32 mag = 2.0f * (randomGetRange(0x14, 0x28) * 0.01f) + 2.0f;
                 vsp.x = mag;
                 vsp.y = sExplosionZero[0];
                 vsp.z = sExplosionZero[0];
-                PSMTXRotRad(mB, 'z', (f32)(sExplosionPi[0] * (f64)((f32)randomGetRange(0x2000, 0x6000) / 65535.0f)));
+                PSMTXRotRad(mB, 'z', (f32)(sExplosionPi[0] * (f64)(randomGetRange(0x2000, 0x6000) / 65535.0f)));
                 PSMTXRotRad(mA, 0x79,
-                            (f32)(sExplosionPi[0] * (f64)((f32)randomGetRange(0, 0xffff) / sExplosionAngleScale[0])));
+                            (f32)(sExplosionPi[0] * (f64)(randomGetRange(0, 0xffff) / sExplosionAngleScale[0])));
                 PSMTXConcat(mA, mB, mB);
                 PSMTXMultVecSR(mB, &vsp, &vsp);
             } else {
-                f32 mag = 2.0f * ((f32)randomGetRange(0x14, 0x28) * 0.01f) + 2.0f;
+                f32 mag = 2.0f * (randomGetRange(0x14, 0x28) * 0.01f) + 2.0f;
                 u8 spreadDirectionIndex;
                 spreadDirectionIndex = i % 4;
                 vsp.x = mag * gExplosionSpreadDirs[spreadDirectionIndex].x;
                 vsp.y = mag * gExplosionSpreadDirs[spreadDirectionIndex].y;
                 vsp.z = mag * gExplosionSpreadDirs[spreadDirectionIndex].z;
                 PSMTXRotRad(mB, 0x7a,
-                            (f32)(sExplosionPi[0] * (f64)(((f32)randomGetRange(0, 0x8000) - 16384.0f) / 65535.0f)));
+                            (f32)(sExplosionPi[0] * (f64)((randomGetRange(0, 0x8000) - 16384.0f) / 65535.0f)));
                 PSMTXRotRad(mA, 0x78,
-                            (f32)(sExplosionPi[0] * (f64)(((f32)randomGetRange(0, 0x8000) - 16384.0f) / 65535.0f)));
+                            (f32)(sExplosionPi[0] * (f64)((randomGetRange(0, 0x8000) - 16384.0f) / 65535.0f)));
                 PSMTXConcat(mA, mB, mB);
                 PSMTXMultVecSR(mB, &vsp, &vsp);
             }

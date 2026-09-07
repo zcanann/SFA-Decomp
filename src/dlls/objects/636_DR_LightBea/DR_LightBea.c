@@ -58,9 +58,9 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
 
     if (state->flags.bit80)
     {
-        state->handle->start[0] = (obj)->anim.localPosX;
-        state->handle->start[1] = (obj)->anim.localPosY;
-        state->handle->start[2] = (obj)->anim.localPosZ;
+        state->handle->start[0] = obj->anim.localPosX;
+        state->handle->start[1] = obj->anim.localPosY;
+        state->handle->start[2] = obj->anim.localPosZ;
         if (setup->targetId == 0)
         {
             player = Obj_GetPlayerObject();
@@ -92,9 +92,9 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
         if (state->flags.bit80)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_id_30f);
-            sourcePos[0] = (obj)->anim.localPosX;
-            sourcePos[1] = (obj)->anim.localPosY;
-            sourcePos[2] = (obj)->anim.localPosZ;
+            sourcePos[0] = obj->anim.localPosX;
+            sourcePos[1] = obj->anim.localPosY;
+            sourcePos[2] = obj->anim.localPosZ;
             if (setup->targetId != 0 && dll_2E_getCurveActionTarget(setup->targetId, &target) != 0)
             {
                 targetPos[0] = target.x;

@@ -132,9 +132,9 @@ void WarpstoneUI_frameEnd(void) {
 int WarpstoneUI_frameStart(void) {
     f32 alpha;
     if (warpstoneUIState[0] == 0) {
-        gWarpStoneUiFadeAlpha = gWarpStoneUiFadeAlpha - (8.0f * timeDelta);
+        gWarpStoneUiFadeAlpha -= (8.0f * timeDelta);
     } else {
-        gWarpStoneUiFadeAlpha = gWarpStoneUiFadeAlpha + (8.0f * timeDelta);
+        gWarpStoneUiFadeAlpha += (8.0f * timeDelta);
     }
     alpha = gWarpStoneUiFadeAlpha;
     if (alpha > 255.0f) {

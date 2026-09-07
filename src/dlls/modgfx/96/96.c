@@ -74,9 +74,9 @@ void dll_60_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commandCursor[2].flags = 0xe;
     commandCursor[2].tex = &resourceData[offsetof(Dll60EffectResourceView, allVertexIndices)];
     commandCursor[2].mode = 8;
-    commandCursor[2].x = 150.0f + (f32)randomGetRange(0, 0x69);
-    commandCursor[2].y = 150.0f + (f32)randomGetRange(0, 0x69);
-    commandCursor[2].z = 150.0f + (f32)randomGetRange(0, 0x69);
+    commandCursor[2].x = 150.0f + randomGetRange(0, 0x69);
+    commandCursor[2].y = 150.0f + randomGetRange(0, 0x69);
+    commandCursor[2].z = 150.0f + randomGetRange(0, 0x69);
     commandCursor[3].layer = 0;
     commandCursor[3].flags = 0x7a;
     commandCursor[3].tex = NULL;
@@ -84,7 +84,7 @@ void dll_60_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commandCursor[3].x = 0.0f;
     commandCursor[3].y = 0.0f;
     commandCursor[3].z = 0.0f;
-    randomAngle = (f32)randomGetRange(0, 0xfffe);
+    randomAngle = randomGetRange(0, 0xfffe);
     commandCursor[4].layer = 0;
     commandCursor[4].flags = 0;
     commandCursor[4].tex = NULL;

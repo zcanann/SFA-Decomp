@@ -8,9 +8,9 @@
 #include "track/intersect_render_setup_api.h"
 #include "track/intersect_screen_api.h"
 
-typedef struct IntersectModLineObject IntersectModLineObject;
+struct ObjDef;
 
-void intersectModLineBuild(IntersectModLineObject* obj);
+void intersectModLineBuild(struct ObjDef* definition);
 void gxSetOpaqueZWriteMode(void);
 void gxSetAdditiveBlendNoZTest(void);
 void gxSetAlphaBlendZTest(void);

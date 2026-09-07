@@ -120,6 +120,18 @@ class BackendIRTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "opcode alignment"):
             validate_alignment(fixture(), ["li r7,0", "addi r4,r7,0", "blr"], bytes.fromhex("38e00000 7ce43b78 4e800020"))
 
+    def test_worldplanet_shift_and_condition_register_reads(self):
+        data = fixture()
+        shift = data["blocks"][0]["instructions"][0]["words"]
+        shift[8:] = [0x6D | (3 << 16)] + list(struct.unpack("<9I", reg(0) + reg(0, 1) + reg(3, 1)))
+        condition = data["blocks"][1]["instructions"][0]["words"]
+        condition[8:] = [0x82 | (1 << 16)] + list(struct.unpack("<3I", reg(0)))
+        code = bytes.fromhex("7c001e30 7c000026 4e800020")
+        asm = ["sraw r0,r0,r3", "mfcr r0", "blr"]
+        self.assertEqual(len(validate_alignment(data, asm, code)), 3)
+        with self.assertRaisesRegex(ValueError, "register alignment"):
+            validate_alignment(data, ["sraw r0,r0,r4", "mfcr r0", "blr"], code)
+
     def test_alignment_checks_explicit_registers(self):
         with self.assertRaisesRegex(ValueError, "register alignment"):
             validate_alignment(fixture(), ["li r6,0", "mr r4,r7", "blr"], bytes.fromhex("38e00000 7ce43b78 4e800020"))

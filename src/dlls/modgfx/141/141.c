@@ -94,7 +94,7 @@ s16 dll_8D_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* sp
         command->flags = 8;
         command->tex = &resourceData[offsetof(Dll8DEffectResourceView, nineVertexIndices)];
         command->mode = 2;
-        jitter = 0.05f * (f32)randomGetRange(0, 0xc);
+        jitter = 0.05f * randomGetRange(0, 0xc);
         command->y = command->x = 5.0f + jitter;
         command->z = 28.0f + jitter;
         command++;
@@ -137,7 +137,7 @@ s16 dll_8D_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* sp
         command->flags = 8;
         command->tex = &resourceData[offsetof(Dll8DEffectResourceView, nineVertexIndices)];
         command->mode = 2;
-        jitter = 0.05f * (f32)randomGetRange(0, 0xc);
+        jitter = 0.05f * randomGetRange(0, 0xc);
         command->y = command->x = 1.2f + jitter;
         command->z = 12.0f + jitter;
         command++;

@@ -75,8 +75,7 @@
 #define OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET  0x10F
 #define OBJHITBOX_ROTATED_BOUNDS_RESET_FRAMES        10
 
-typedef struct ObjHitsContactScratchEntry
-{
+typedef struct ObjHitsContactScratchEntry {
     f32 responseX;
     f32 responseZ;
     f32 contactOffsetX;
@@ -94,10 +93,6 @@ extern GameObject* gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJE
 extern ObjHitsContactScratchEntry gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT];
 extern void* gObjHitsPrimaryHitboxBufferScratch0;
 extern void* gObjHitsSecondaryHitboxBufferScratch0;
-extern const f32 gObjHitsScalarZero[1];
-extern const f32 gObjHitsScalarTwo[1];
-extern const f32 gObjHitsScalarTenth[1];
-extern const f32 gObjHitsScalarOne[1];
 extern char sObjHitsTooManyHitSpheresWarning[];
 
 void ObjHitbox_SetStateIndex(GameObject* obj, ObjHitReactState* hitState, int stateIndex);
@@ -115,8 +110,7 @@ void ObjHits_InitWorkBuffers(void);
 #define gObjHitsPrimaryHitboxBufferScratch1   (&gObjHitsPrimaryHitboxBufferScratch0)[1]
 #define gObjHitsSecondaryHitboxBufferScratch1 (&gObjHitsSecondaryHitboxBufferScratch0)[1]
 
-typedef struct ObjHitboxDef
-{
+typedef struct ObjHitboxDef {
     u8 pad00[OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET];
     s16 distanceCache;
     s16 radius;
@@ -132,8 +126,7 @@ typedef struct ObjHitboxDef
     u8 skipSkeletonPairs;
 } ObjHitboxDef;
 
-typedef struct ObjHitbox
-{
+typedef struct ObjHitbox {
     s16 rotationX;
     s16 rotationY;
     s16 rotationZ;
@@ -146,16 +139,14 @@ typedef struct ObjHitbox
     ObjHitboxTransformState* transformState;
 } ObjHitbox;
 
-typedef struct ObjHitsSweepEntry
-{
+typedef struct ObjHitsSweepEntry {
     float maxX;
     float minX;
     GameObject* obj;
 } ObjHitsSweepEntry;
 STATIC_ASSERT(offsetof(ObjHitsSweepEntry, obj) == 0x08);
 
-typedef struct ObjHitsPriorityWorkSlot
-{
+typedef struct ObjHitsPriorityWorkSlot {
     int active;
     u8 pad04[OBJHITS_PRIORITY_WORK_SLOT_OBJ_OFFSET - 0x04];
     GameObject* object;
@@ -167,8 +158,7 @@ typedef struct ObjHitsPriorityWorkSlot
  * by writing -1 to pointIndexA. Response code then walks the same records to
  * blend capsule normals and pair response vectors.
  */
-typedef struct ObjHitsSkeletonHit
-{
+typedef struct ObjHitsSkeletonHit {
     float* pointARef;
     float* pointBRef;
     float pointA[3];
@@ -203,11 +193,11 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointD
 int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointData, int* model,
                                   ObjHitsSkeletonHit* hits, ObjHitsSkeletonHit** outBest, f32* outAccum);
 int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, GameObject* obj, ObjHitsSkeletonHit* hits,
-                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit,
-                                   f32 t, f32 axial, f32* out);
+                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit, f32 t,
+                                   f32 axial, f32* out);
 int ObjHits_CalcSkeletonResponse3D(f32* pos, f32 radius, GameObject* obj, ObjHitsSkeletonHit* hits,
-                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit,
-                                   f32 t, f32 axial, f32* out);
+                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit, f32 t,
+                                   f32 axial, f32* out);
 float* ObjHits_ProjectPointToTaperedCapsuleXZ(float* point, float pointRadius, float axial, float* base, float* tip,
                                               float baseRadius, float tipRadius, float length, float* out);
 float* ObjHits_ProjectPointToTaperedCapsule3D(float* point, float pointRadius, float axial, float* base, float* tip,
@@ -221,14 +211,16 @@ int ObjHits_TestTaperedCapsule3D(float* point, float pointRadius, float baseRadi
 void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount);
 void ObjHits_TickPriorityHitCooldowns(void);
 void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix);
-int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcObj, char checkA, char checkB, u32 mask, u32 volMask);
-void ObjHits_OnPlayerHitVolumeMiss(GameObject* objA, GameObject* objB, GameObject* attachment, void* state, void* attachmentState, f32 dt);
+int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcObj, char checkA, char checkB, u32 mask,
+                            u32 volMask);
+void ObjHits_OnPlayerHitVolumeMiss(GameObject* objA, GameObject* objB, GameObject* attachment, void* state,
+                                   void* attachmentState, f32 dt);
 void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObject* attA, GameObject* attB, f32 dt);
 void ObjHits_RegisterActiveHitVolumeObject(GameObject* obj);
 void ObjHits_ApplyPairResponse(GameObject* objA, GameObject* objB, f32 x, f32 y, f32 z, int flag);
 void ObjHits_DetectObjectPair(GameObject* objA, GameObject* objB);
-void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, void* hits, void* scratchB, void* scratchC, void* scratchD,
-                               void* scratchE, int depth);
+void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, void* hits, void* scratchB, void* scratchC,
+                               void* scratchD, void* scratchE, int depth);
 void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB);
 void ObjHits_Update(int objectCount);
 void ObjHits_SetTargetMask(GameObject* obj, u8 targetMask);

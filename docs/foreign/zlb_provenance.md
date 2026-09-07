@@ -221,6 +221,32 @@ exhaustive DEFLATE or hardware-fault model.
 The retained change also passes `ninja all_source`, the strict retail checksum
 target, and `clang-format --dry-run --Werror` for the source and owned header.
 
+## Typed Huffman Table Recovery
+
+At `42e19e0dce`, the existing reconstruction was 583 instructions and
+57.977890%. Recovering the literal decode pointer and active length-count
+pointer as `u16*` removes their byte-offset arithmetic and repeated casts.
+All three decode-table builders now use `table[nextCode[length]++]`, instead
+of incrementing a temporary and then subtracting one from its index or the
+table pointer. The code-length alphabet lookup takes the high `maxBits` bits
+of its reversed byte with a right shift; its maximum is bounded to seven.
+
+Together these C changes produce **584 instructions and 58.585033%**.
+All four data sections and every data-symbol offset/size are unchanged.
+No compiler flags, register bindings, or inline assembly were added or changed.
+This remains a partial reconstruction, not a matched function or provenance
+claim. The reconstructed object SHA-256 is
+`c2a10429efc24ebef6fe9e7742e76c4102f552be3cdf1fcfae19d1fe69cd3a5f`.
+
+The emulator now compares all 12 mutable Huffman arrays against retail after
+each complete decode, using target-config symbol sizes and each image's own
+addresses. All 15 streams pass output, canary, ABI, and table comparisons.
+A scratch negative control toggles `gInflateLiteralNextCode[0]` just before
+return: all 15 outputs remain correct, but all 15 source runs are rejected
+specifically for the table mismatch. This controls the new check independently
+of the output comparison. Stored-block quirks and the unresolved rotate/frame
+provenance are unchanged.
+
 ## Reproduction
 
 Configure/build in matching mode first, keeping each ninja invocation under the

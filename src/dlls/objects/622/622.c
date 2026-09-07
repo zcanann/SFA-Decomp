@@ -225,11 +225,11 @@ void drshackle_update(GameObject* obj)
 
 void drshackle_init(GameObject* obj, char* arg)
 {
-    DrshackleState* state = (obj)->extra;
+    DrshackleState* state = obj->extra;
     objAddObjectType(obj, DRSHACKLE_OBJGROUP);
     state->flags1A.b0 = (mainGetBit(((DrshacklePlacement*)arg)->activeGameBit) == 0);
     state->pathPointA = ((DrshacklePlacement*)arg)->startPathPoint % 2;
-    (obj)->animEventCallback = drshackle_SeqFn;
+    obj->animEventCallback = drshackle_SeqFn;
     if (((DrshacklePlacement*)arg)->quarterTurns == 1)
     {
         state->slotCount = 2;

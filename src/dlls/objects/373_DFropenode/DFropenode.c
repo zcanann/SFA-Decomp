@@ -199,7 +199,7 @@ static inline s16 DFropenode_calculateRopeYaw(f32 dx, f32 dz) {
         angle = angle - 0xffff;
     }
     if (angle < -0x8000) {
-        angle = angle + 0xffff;
+        angle += 0xffff;
     }
 
     return angle;

@@ -267,7 +267,7 @@ REAL_ROWS = [
     ("main/objhits.c", "ObjHits_CheckHitVolumes"),
     ("dlls/engine/6/6.c", "sky2_run"),
     ("dlls/engine/71/71.c", "pathcam_buildWindowSamples"),
-    ("main/gametext_tail.c", "gameTextWrapLines"),
+    ("main/gametext.c", "gameTextWrapLines"),
     ("dlls/objects/229/229.c", "Shield_update"),
     ("main/pi_pathsearch.c", "pathSearchAddNeighbor"),
     ("main/dll_80136a40.c", "debugPrintDrawRecord"),

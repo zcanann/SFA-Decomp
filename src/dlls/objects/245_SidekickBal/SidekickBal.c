@@ -238,7 +238,7 @@ void SidekickBall_update(GameObject* obj) {
     int triggered;
 
     state = (SidekickBallState*)obj->extra;
-    obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+    obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     state->onPathPoint = 0;
 
     player = Obj_GetPlayerObject();
@@ -253,7 +253,7 @@ void SidekickBall_update(GameObject* obj) {
 
     if (state->ballMode == SIDEKICK_BALL_THROWN || state->ballMode == SIDEKICK_BALL_HELD ||
         state->ballMode == SIDEKICK_BALL_MOVING) {
-        state->fadeTimer = state->fadeTimer + timeDelta;
+        state->fadeTimer += timeDelta;
         if (state->fadeTimer >= SIDEKICKBALL_ACTIVE_TIMEOUT) {
             state->fadeTimer = 0.0f;
             state->ballMode = SIDEKICK_BALL_FADING;
@@ -268,7 +268,7 @@ void SidekickBall_update(GameObject* obj) {
         trickyBallMove(obj);
         /* Fall through to process player interaction triggers. */
     case SIDEKICK_BALL_HELD:
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         triggered = 0;
         if ((buttonGetDisabled(0) & PAD_BUTTON_A) == 0u && obj->userData2 == 0 && ObjTrigger_IsSet(obj) != 0) {
             ObjHits_DisableObject(obj);
@@ -282,7 +282,7 @@ void SidekickBall_update(GameObject* obj) {
         }
         break;
     case SIDEKICK_BALL_FADING:
-        state->fadeTimer = state->fadeTimer + timeDelta;
+        state->fadeTimer += timeDelta;
         if (state->fadeTimer >= SIDEKICKBALL_FADE_DURATION) {
             Obj_FreeObject(obj);
             return;

@@ -91,10 +91,10 @@ void magicmaker_update(GameObject* obj) {
                     spawnSetup->counterGameBit = MAGICMAKER_GAMEBIT_NONE;
                     spawnSetup->hideGameBit = MAGICMAKER_GAMEBIT_NONE;
                     spawnSetup->base.posX =
-                        obj->anim.localPosX + (f32)randomGetRange(-MAGICMAKER_SPAWN_RADIUS, MAGICMAKER_SPAWN_RADIUS);
+                        obj->anim.localPosX + randomGetRange(-MAGICMAKER_SPAWN_RADIUS, MAGICMAKER_SPAWN_RADIUS);
                     spawnSetup->base.posY = 10.0f + obj->anim.localPosY;
                     spawnSetup->base.posZ =
-                        obj->anim.localPosZ + (f32)randomGetRange(-MAGICMAKER_SPAWN_RADIUS, MAGICMAKER_SPAWN_RADIUS);
+                        obj->anim.localPosZ + randomGetRange(-MAGICMAKER_SPAWN_RADIUS, MAGICMAKER_SPAWN_RADIUS);
                     spawnSetup->visibilityGameBit = MAGICMAKER_GAMEBIT_NONE;
                     spawnSetup->base.color[0] = placement->color[0];
                     spawnSetup->base.color[2] = placement->color[2];

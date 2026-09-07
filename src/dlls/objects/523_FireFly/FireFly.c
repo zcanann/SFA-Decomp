@@ -157,8 +157,8 @@ s16 gFireFlyDespawnThreshold = 0xAA;
 
 /* Fade in, advance the B-spline, spawn trail effects, and detect touch. */
 void firefly_activeTick(GameObject* obj) {
-    FireFlyState* state = (obj)->extra;
-    ObjAnimComponent* objAnim = &(obj)->anim;
+    FireFlyState* state = obj->extra;
+    ObjAnimComponent* objAnim = &obj->anim;
     int player = (int)Obj_GetPlayerObject();
     if ((int)objAnim->alpha < FIREFLY_ALPHA_OPAQUE) {
         int newAlpha = (int)(2.0f * timeDelta + (f32)(int)objAnim->alpha);
@@ -168,7 +168,7 @@ void firefly_activeTick(GameObject* obj) {
         objAnim->alpha = newAlpha;
     }
     if (state->flight.splineT > 1.0f) {
-        state->flight.splineT = state->flight.splineT - 1.0f;
+        state->flight.splineT -= 1.0f;
         if (state->flight.pathAge >= 4) {
             state->flight.pathAge += 1;
         } else {
@@ -183,17 +183,17 @@ void firefly_activeTick(GameObject* obj) {
         state->flight.splineX[2] = state->flight.splineX[3];
         state->flight.splineY[2] = state->flight.splineY[3];
         state->flight.splineZ[2] = state->flight.splineZ[3];
-        state->flight.splineSpeed = 0.00015f * (f32)randomGetRange(0xa0, 0xb4);
+        state->flight.splineSpeed = 0.00015f * randomGetRange(0xa0, 0xb4);
         state->flight.splineX[3] = state->flight.targetX;
         state->flight.splineY[3] = state->flight.targetY;
         state->flight.splineZ[3] = state->flight.targetZ;
     }
-    (obj)->anim.localPosX = Curve_EvalBSpline(state->flight.splineX, state->flight.splineT, 0);
-    (obj)->anim.localPosY = Curve_EvalBSpline(state->flight.splineY, state->flight.splineT, 0);
-    (obj)->anim.localPosZ = Curve_EvalBSpline(state->flight.splineZ, state->flight.splineT, 0);
+    obj->anim.localPosX = Curve_EvalBSpline(state->flight.splineX, state->flight.splineT, 0);
+    obj->anim.localPosY = Curve_EvalBSpline(state->flight.splineY, state->flight.splineT, 0);
+    obj->anim.localPosZ = Curve_EvalBSpline(state->flight.splineZ, state->flight.splineT, 0);
     state->flight.splineT = state->flight.splineSpeed * timeDelta + state->flight.splineT;
-    (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
-                                (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ);
+    obj->anim.rotX =
+        getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX, obj->anim.localPosZ - obj->anim.previousLocalPosZ);
     if (state->flight.kind == FIREFLY_KIND_BLUE_MAIN || state->flight.kind == FIREFLY_KIND_BLUE_NEAR) {
         (*gPartfxInterface)
             ->spawnObject((void*)obj, FIREFLY_PARTFX_BLUE_TRAIL, NULL, FIREFLY_PARTFX_KIND,
@@ -204,7 +204,7 @@ void firefly_activeTick(GameObject* obj) {
                           FIREFLY_PARTFX_INVALID_HANDLE, NULL);
     }
     /* Compare against the player's world position. */
-    if (Vec_xzDistance((f32*)(player + 0x18), &(obj)->anim.placement->posX) < state->flight.playerRadius) {
+    if (Vec_xzDistance((f32*)(player + 0x18), &obj->anim.placement->posX) < state->flight.playerRadius) {
         f32 maxAlpha;
         f32 curAlpha;
         if (state->flight.kind == FIREFLY_KIND_BLUE_NEAR) {
@@ -238,18 +238,18 @@ void firefly_activeTick(GameObject* obj) {
         }
     }
     {
-        f32 dy = (obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
+        f32 dy = obj->anim.localPosY - ((GameObject*)player)->anim.localPosY;
         if ((state->flags & FIREFLY_FLAG_PLAYER_TOUCHED) == 0) {
             if (dy < 35.0f && dy > 0.0f) {
-                if (getXZDistanceSquared(&(obj)->anim.worldPosX, (f32*)(player + 0x18)) < 225.0f) {
+                if (getXZDistanceSquared(&obj->anim.worldPosX, (f32*)(player + 0x18)) < 225.0f) {
                     state->flags = (u8)(state->flags | FIREFLY_FLAG_PLAYER_TOUCHED);
                     if (mainGetBit(FIREFLY_FIRST_TOUCH_BIT) == 0) {
                         state->messageParam = -1;
                         ObjMsg_SendToObject((void*)player, FIREFLY_MESSAGE_TALK, obj, (u32)&state->messageParam);
                         mainSetBits(FIREFLY_FIRST_TOUCH_BIT, 1);
                     } else {
-                        FireFlyState* st = (obj)->extra;
-                        (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+                        FireFlyState* st = obj->extra;
+                        obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
                         st->flight.despawnTimer = sFireFlyDespawnDelay[0];
                         gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
                         gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
@@ -335,10 +335,10 @@ void firefly_update(GameObject* obj) {
 void firefly_init(GameObject* obj, FireFlyMapData* mapData) {
     FireFlyState* state;
 
-    state = (obj)->extra;
+    state = obj->extra;
     firefly_initFlightRec(obj, &state->flight);
-    (obj)->anim.alpha = 0;
-    (obj)->animEventCallback = firefly_animEventCallback;
+    obj->anim.alpha = 0;
+    obj->animEventCallback = firefly_animEventCallback;
     ObjMsg_AllocQueue(obj, 1);
     storeZeroToFloatParam(&state->flight.lifeTimer);
     if (mapData->variantParam == 0x7f) {

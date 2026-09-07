@@ -102,7 +102,7 @@ void wmwallcrawler_free(GameObject* obj) {
 }
 
 void wmwallcrawler_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis) {
-    ObjAnimComponent* objAnim = &(obj)->anim;
+    ObjAnimComponent* objAnim = &obj->anim;
     WmwallcrawlerState* state = obj->extra;
     if ((state->flags & WMWALLCRAWLER_FLAG_FADE_IN) != 0 && objAnim->alpha < 0xff) {
         if (objAnim->alpha > 0xff - framesThisStep) {
@@ -118,7 +118,7 @@ void wmwallcrawler_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
 }
 
 void wmwallcrawler_hitDetect(GameObject* obj) {
-    WmwallcrawlerState* state = (obj)->extra;
+    WmwallcrawlerState* state = obj->extra;
     f32 stk = 100000.0f;
     if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
         if ((state->flags & WMWALLCRAWLER_FLAG_DEATH_ANIM) != 0) {
@@ -130,7 +130,7 @@ void wmwallcrawler_hitDetect(GameObject* obj) {
             Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
             objFreeObjectType(obj, WMWALLCRAWLER_OBJGROUP);
-            (obj)->anim.flags = (obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
+            obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
     } else if (state->hitBits.hit != 0) {
         GameObject* target;
@@ -182,7 +182,7 @@ void wmwallcrawler_update(GameObject* obj) {
             ob->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             if (ob->anim.currentMove != 1) {
                 ObjAnim_SetCurrentMove(ob, 1, 0.0f, 0);
-                Sfx_PlayFromObject((GameObject*)ob, SFXTRIG_id_73);
+                Sfx_PlayFromObject(ob, SFXTRIG_id_73);
             }
             if (ob->anim.currentMoveProgress > 0.4f) {
                 ob->anim.rootMotionScale *= 0.95f;
@@ -192,11 +192,11 @@ void wmwallcrawler_update(GameObject* obj) {
                     mainSetBits(state->counterGameBit, mainGetBit(state->counterGameBit) + 1);
                 }
                 if (WMWALLCRAWLER_PLACEMENT_IDENT(ob) == 0) {
-                    ObjHits_DisableObject((GameObject*)ob);
-                    Obj_FreeObject((GameObject*)ob);
+                    ObjHits_DisableObject(ob);
+                    Obj_FreeObject(ob);
                 } else {
-                    Obj_RemoveFromUpdateList((GameObject*)ob);
-                    ObjHits_DisableObject((GameObject*)ob);
+                    Obj_RemoveFromUpdateList(ob);
+                    ObjHits_DisableObject(ob);
                     objFreeObjectType(ob, WMWALLCRAWLER_OBJGROUP);
                     ob->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 }
@@ -213,11 +213,11 @@ void wmwallcrawler_update(GameObject* obj) {
                 if (timerCountDown((f32*)&state->despawnTimer) != 0) {
                     ob->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                     if (WMWALLCRAWLER_PLACEMENT_IDENT(ob) == 0) {
-                        ObjHits_DisableObject((GameObject*)ob);
-                        Obj_FreeObject((GameObject*)ob);
+                        ObjHits_DisableObject(ob);
+                        Obj_FreeObject(ob);
                     } else {
-                        Obj_RemoveFromUpdateList((GameObject*)ob);
-                        ObjHits_DisableObject((GameObject*)ob);
+                        Obj_RemoveFromUpdateList(ob);
+                        ObjHits_DisableObject(ob);
                         objFreeObjectType(ob, WMWALLCRAWLER_OBJGROUP);
                         ob->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     }
@@ -229,11 +229,11 @@ void wmwallcrawler_update(GameObject* obj) {
             }
             if (sum >= 6) {
                 if (WMWALLCRAWLER_PLACEMENT_IDENT(ob) == 0) {
-                    ObjHits_DisableObject((GameObject*)ob);
-                    Obj_FreeObject((GameObject*)ob);
+                    ObjHits_DisableObject(ob);
+                    Obj_FreeObject(ob);
                 } else {
-                    Obj_RemoveFromUpdateList((GameObject*)ob);
-                    ObjHits_DisableObject((GameObject*)ob);
+                    Obj_RemoveFromUpdateList(ob);
+                    ObjHits_DisableObject(ob);
                     objFreeObjectType(ob, WMWALLCRAWLER_OBJGROUP);
                     ob->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 }
@@ -253,24 +253,24 @@ void wmwallcrawler_update(GameObject* obj) {
                         } else if (1000.0f < state->fleeChaseThreshold) {
                             state->lifeTimer -= framesThisStep;
                             if (randomChanceOneIn(0x32) != 0) {
-                                Sfx_PlayFromObject((GameObject*)ob, SFXTRIG_id_74);
+                                Sfx_PlayFromObject(ob, SFXTRIG_id_74);
                             }
                             if (state->lifeTimer <= 0) {
                                 if ((state->flags & WMWALLCRAWLER_FLAG_DEATH_ANIM) != 0) {
                                     state->mode = WMWALLCRAWLER_MODE_DIE;
                                 } else if (WMWALLCRAWLER_PLACEMENT_IDENT(ob) == 0) {
-                                    ObjHits_DisableObject((GameObject*)ob);
-                                    Obj_FreeObject((GameObject*)ob);
+                                    ObjHits_DisableObject(ob);
+                                    Obj_FreeObject(ob);
                                 } else {
-                                    Obj_RemoveFromUpdateList((GameObject*)ob);
-                                    ObjHits_DisableObject((GameObject*)ob);
+                                    Obj_RemoveFromUpdateList(ob);
+                                    ObjHits_DisableObject(ob);
                                     objFreeObjectType(ob, WMWALLCRAWLER_OBJGROUP);
                                     ob->anim.flags |= OBJANIM_FLAG_HIDDEN;
                                 }
                                 return;
                             }
                             if (state->mode != WMWALLCRAWLER_MODE_FLEE) {
-                                Sfx_StopObjectChannel((GameObject*)ob, 0x10);
+                                Sfx_StopObjectChannel(ob, 0x10);
                                 state->mode = WMWALLCRAWLER_MODE_FLEE;
                                 ob->anim.velocityX = -ob->anim.velocityX * (d = 0.25f);
                                 ob->anim.velocityZ = -ob->anim.velocityZ * d;
@@ -280,9 +280,9 @@ void wmwallcrawler_update(GameObject* obj) {
                     if ((state->flags & WMWALLCRAWLER_FLAG_TRICKY_FLEE) != 0 &&
                         state->mode != WMWALLCRAWLER_MODE_FLEE && (tricky = getTrickyObject()) != 0 &&
                         Vec_distance(&ob->anim.worldPosX, &tricky->anim.worldPosX) < 30.0f &&
-                        TRICKY_INTERFACE(tricky)->isGuarding((GameObject*)tricky) != 0) {
+                        TRICKY_INTERFACE(tricky)->isGuarding(tricky) != 0) {
                         state->mode = WMWALLCRAWLER_MODE_FLEE;
-                        Sfx_PlayFromObject((GameObject*)ob, SFXTRIG_id_74);
+                        Sfx_PlayFromObject(ob, SFXTRIG_id_74);
                     }
                     if (state->mode == WMWALLCRAWLER_MODE_FLEE) {
                         if ((state->flags & WMWALLCRAWLER_FLAG_PATH_CONTROL) != 0) {
@@ -301,8 +301,8 @@ void wmwallcrawler_update(GameObject* obj) {
                         state->lifeTimer -= framesThisStep;
                         if ((state->flags & WMWALLCRAWLER_FLAG_FLOOR_SNAP) != 0) {
                             best = 10000.0f;
-                            hitCount = trackGetHeight((GameObject*)ob, ob->anim.localPosX, ob->anim.localPosY,
-                                                      ob->anim.localPosZ, &list, 0, 0);
+                            hitCount = trackGetHeight(ob, ob->anim.localPosX, ob->anim.localPosY, ob->anim.localPosZ,
+                                                      &list, 0, 0);
                             for (k = 0; k < hitCount; k++) {
                                 d = list[k]->height - ob->anim.localPosY;
                                 if (d < 0.0f) {
@@ -315,7 +315,7 @@ void wmwallcrawler_update(GameObject* obj) {
                             }
                             if (list != 0) {
                                 ob->anim.localPosY = list[bestIdx]->height;
-                                wmwallcrawler_alignToFloorNormal((GameObject*)ob, list[bestIdx]);
+                                wmwallcrawler_alignToFloorNormal(ob, list[bestIdx]);
                             } else {
                                 ob->anim.localPosY = state->homeY;
                             }
@@ -327,7 +327,7 @@ void wmwallcrawler_update(GameObject* obj) {
                                 state->mode = WMWALLCRAWLER_MODE_DIE;
                             } else {
                                 state->mode = WMWALLCRAWLER_MODE_IDLE;
-                                Sfx_StopObjectChannel((GameObject*)ob, 0x18);
+                                Sfx_StopObjectChannel(ob, 0x18);
                                 ob->anim.localPosX = state->homeX;
                                 ob->anim.localPosY = state->homeY + (f32)state->heightOffset;
                                 ob->anim.localPosZ = state->homeZ;
@@ -358,7 +358,7 @@ void wmwallcrawler_update(GameObject* obj) {
                                     ObjAnim_SetCurrentMove(ob, 0, 0.0f, 0);
                                 }
                             } else if (mode == WMWALLCRAWLER_MODE_CHASE) {
-                                Sfx_PlayFromObject((GameObject*)ob, SFXTRIG_id_47);
+                                Sfx_PlayFromObject(ob, SFXTRIG_id_47);
                                 if ((state->flags & WMWALLCRAWLER_FLAG_PATH_CONTROL) != 0) {
                                     (*gPathControlInterface)->update((void*)ob, state, timeDelta);
                                     (*gPathControlInterface)->apply((void*)ob, state);
@@ -366,7 +366,7 @@ void wmwallcrawler_update(GameObject* obj) {
                                 }
                                 if ((state->flags & WMWALLCRAWLER_FLAG_FLOOR_SNAP) != 0) {
                                     best = 10000.0f;
-                                    hitCount = trackGetHeight((GameObject*)ob, ob->anim.localPosX, ob->anim.localPosY,
+                                    hitCount = trackGetHeight(ob, ob->anim.localPosX, ob->anim.localPosY,
                                                               ob->anim.localPosZ, &list, 0, 0);
                                     for (k = 0; k < hitCount; k++) {
                                         d = list[k]->height - ob->anim.localPosY;
@@ -380,7 +380,7 @@ void wmwallcrawler_update(GameObject* obj) {
                                     }
                                     if (list != 0) {
                                         ob->anim.localPosY = list[bestIdx]->height;
-                                        wmwallcrawler_alignToFloorNormal((GameObject*)ob, list[bestIdx]);
+                                        wmwallcrawler_alignToFloorNormal(ob, list[bestIdx]);
                                     } else {
                                         ob->anim.localPosY = state->homeY;
                                     }
@@ -400,9 +400,9 @@ void wmwallcrawler_update(GameObject* obj) {
                                           (ob->anim.velocityX * ob->anim.velocityX +
                                            ob->anim.velocityY * ob->anim.velocityY)) > gWallCrawlerSpeedCap) {
                                     Vec3_Normalize(&ob->anim.velocityX);
-                                    ob->anim.velocityX = ob->anim.velocityX * (timeDelta * gWallCrawlerSpeedCap);
-                                    ob->anim.velocityY = ob->anim.velocityY * (timeDelta * gWallCrawlerSpeedCap);
-                                    ob->anim.velocityZ = ob->anim.velocityZ * (timeDelta * gWallCrawlerSpeedCap);
+                                    ob->anim.velocityX *= (timeDelta * gWallCrawlerSpeedCap);
+                                    ob->anim.velocityY *= (timeDelta * gWallCrawlerSpeedCap);
+                                    ob->anim.velocityZ *= (timeDelta * gWallCrawlerSpeedCap);
                                 }
                                 if (ob->anim.currentMove == 0 && (state->flags & WMWALLCRAWLER_FLAG_ATTACK_MOVE) != 0 &&
                                     dist < 15.0f) {
@@ -424,7 +424,7 @@ void wmwallcrawler_update(GameObject* obj) {
                                     } else if (gWallCrawlerHitCount >= 3 ||
                                                ((state->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) != 0 &&
                                                 gWallCrawlerHitCount >= 3)) {
-                                        Sfx_PlayFromObject((GameObject*)ob, SFXTRIG_id_75);
+                                        Sfx_PlayFromObject(ob, SFXTRIG_id_75);
                                         if ((state->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0) {
                                             ObjMsg_SendToObject((void*)player, WMWALLCRAWLER_MSG_PLAYER_BURST,
                                                                 (void*)ob, 1);
@@ -487,7 +487,7 @@ void wmwallcrawler_update(GameObject* obj) {
                             ob->anim.localPosY = ob->anim.velocityY * timeDelta + ob->anim.localPosY;
                         }
                         if (randomChanceOneIn(0x32) != 0) {
-                            Sfx_PlayFromObject((GameObject*)ob, SFXTRIG_id_76);
+                            Sfx_PlayFromObject(ob, SFXTRIG_id_76);
                         }
                     }
                 }
@@ -497,11 +497,11 @@ void wmwallcrawler_update(GameObject* obj) {
 }
 
 void wmwallcrawler_init(GameObject* obj, WmwallcrawlerMapData* mapData) {
-    ObjAnimComponent* objAnim = &(obj)->anim;
-    WmwallcrawlerState* state = (obj)->extra;
+    ObjAnimComponent* objAnim = &obj->anim;
+    WmwallcrawlerState* state = obj->extra;
     u16 flags;
     objAddObjectType(obj, WMWALLCRAWLER_OBJGROUP);
-    (obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
+    obj->anim.rotX = (s16)(mapData->rotXByte << 8);
     ObjMsg_AllocQueue(obj, 2);
     state->homeX = mapData->base.posX;
     state->homeY = mapData->base.posY;
@@ -514,16 +514,16 @@ void wmwallcrawler_init(GameObject* obj, WmwallcrawlerMapData* mapData) {
     storeZeroToFloatParam((f32*)&state->attackTimer);
     flags = state->flags;
     if ((flags & WMWALLCRAWLER_FLAG_START_ACTIVE) != 0) {
-        (obj)->anim.rotZ = 0;
+        obj->anim.rotZ = 0;
         state->mode = WMWALLCRAWLER_MODE_DESCEND;
     } else if ((flags & WMWALLCRAWLER_FLAG_TIMED_EXPLODE) != 0) {
         s16toFloat((f32*)&state->explodeTimer, 0x4b0);
         state->triggerRadius = 100.0f;
-        (obj)->anim.rotZ = 0;
+        obj->anim.rotZ = 0;
         state->mode = WMWALLCRAWLER_MODE_DESCEND;
     } else {
         s16toFloat((f32*)&state->attackTimer, 0x190);
-        (obj)->anim.rotZ = -0x7fff;
+        obj->anim.rotZ = -0x7fff;
         state->mode = WMWALLCRAWLER_MODE_IDLE;
     }
     if ((state->flags & WMWALLCRAWLER_FLAG_FADE_IN) != 0) {
@@ -531,7 +531,7 @@ void wmwallcrawler_init(GameObject* obj, WmwallcrawlerMapData* mapData) {
     }
     state->animSpeed = 0.0f;
     state->heightOffset = mapData->heightOffset;
-    (obj)->anim.localPosY = mapData->base.posY + (f32)(int)state->heightOffset;
+    obj->anim.localPosY = mapData->base.posY + (f32)(int)state->heightOffset;
     state->lifeTimer = (s16)(randomGetRange(0, 0x50) + 0x190);
     state->fleeChaseThreshold = 80.0f;
     state->counterGameBit = mapData->counterGameBit;
@@ -543,7 +543,7 @@ void wmwallcrawler_init(GameObject* obj, WmwallcrawlerMapData* mapData) {
         (*gPathControlInterface)->attachObject((void*)obj, state);
         state->pathState.flags |= 0x40000u | CURVES_COLLISION_STATE_LOCAL_POINTS;
     }
-    (obj)->animEventCallback = wmwallcrawler_animEventCallback;
+    obj->animEventCallback = wmwallcrawler_animEventCallback;
     ObjHits_EnableObject(obj);
     ObjHits_SyncObjectPositionIfDirty(obj);
 }

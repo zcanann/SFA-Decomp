@@ -91,7 +91,7 @@ void androssligh_setState(GameObject* obj, AndrossLighMode newState, u8 force)
     {
         return;
     }
-    state = (obj)->extra;
+    state = obj->extra;
     if (state->state == ANDROSSLIGH_DONE)
     {
         if (force == 0)
@@ -132,7 +132,7 @@ void androssligh_hitDetect(void)
 
 void androssligh_update(GameObject* obj)
 {
-    AndrossLighState* state = (obj)->extra;
+    AndrossLighState* state = obj->extra;
 
     if (state->anchor == NULL)
     {
@@ -140,9 +140,9 @@ void androssligh_update(GameObject* obj)
     }
     if (state->anchor != NULL)
     {
-        (obj)->anim.localPosX = state->anchor->anim.localPosX;
-        (obj)->anim.localPosY = state->anchor->anim.localPosY;
-        (obj)->anim.localPosZ = state->anchor->anim.localPosZ;
+        obj->anim.localPosX = state->anchor->anim.localPosX;
+        obj->anim.localPosY = state->anchor->anim.localPosY;
+        obj->anim.localPosZ = state->anchor->anim.localPosZ;
     }
     state->prevState = state->state;
     switch (state->state)

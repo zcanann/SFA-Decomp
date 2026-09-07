@@ -42,9 +42,9 @@ int DR_Creator_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
             if (mainGetBit(state->spawnGameBit) != 0)
             {
                 setup = (DrcreatorSetup*)Obj_AllocObjectSetup(sizeof(DrcreatorSetup), DRCREATOR_CHILD_OBJ_DRHOMINGMIS);
-                setup->base.posX = (obj)->anim.localPosX;
-                setup->base.posY = (obj)->anim.localPosY;
-                setup->base.posZ = (obj)->anim.localPosZ;
+                setup->base.posX = obj->anim.localPosX;
+                setup->base.posY = obj->anim.localPosY;
+                setup->base.posZ = obj->anim.localPosZ;
                 setup->base.color[0] = 1;
                 setup->base.color[1] = 1;
                 setup->base.color[2] = 255;
@@ -57,11 +57,11 @@ int DR_Creator_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
                     projectile->anim.rotX = randomGetRange(0, 65535);
                     projectile->anim.velocityX =
                         0.2f *
-                        (f32)randomGetRange(-state->velocitySpread, state->velocitySpread);
+                        randomGetRange(-state->velocitySpread, state->velocitySpread);
                     projectile->anim.velocityY = 0.2f * (f32)state->speedScale;
                     projectile->anim.velocityZ =
                         0.2f *
-                        (f32)randomGetRange(-state->velocitySpread, state->velocitySpread);
+                        randomGetRange(-state->velocitySpread, state->velocitySpread);
                     projectile->ownerObj = obj;
                 }
             }
@@ -118,19 +118,16 @@ void DR_Creator_update(GameObject* obj)
                 if (state->spawnTimer <= 0)
                 {
                     setup = (DrcreatorSetup*)Obj_AllocObjectSetup(sizeof(DrcreatorSetup), DRCREATOR_CHILD_OBJ_DRHOMINGMIS);
-                    setup->base.posX = (obj)->anim.localPosX;
-                    setup->base.posY = (obj)->anim.localPosY;
-                    setup->base.posZ = (obj)->anim.localPosZ;
+                    setup->base.posX = obj->anim.localPosX;
+                    setup->base.posY = obj->anim.localPosY;
+                    setup->base.posZ = obj->anim.localPosZ;
                     setup->base.color[0] = 1;
                     setup->base.color[1] = 1;
                     setup->base.color[2] = 255;
                     setup->base.color[3] = 250;
-                    if ((obj)->anim.mapEventSlot == 2)
-                    {
+                    if (obj->anim.mapEventSlot == 2) {
                         setup->projectileVariant = 4;
-                    }
-                    else
-                    {
+                    } else {
                         setup->projectileVariant = 1;
                     }
                     projectile = objSetupObject(&setup->base, 5, -1, -1, NULL);
@@ -139,15 +136,13 @@ void DR_Creator_update(GameObject* obj)
                         projectile->anim.rotY = 0;
                         projectile->anim.rotX = randomGetRange(0, 65535);
                         projectile->anim.velocityX =
-                            0.03f *
-                            (10.0f * ((f32)state->speedScale *
-                                             -mathSinf((3.14159274f * (f32)(obj)->anim.rotX) / 32768.0f)));
+                            0.03f * (10.0f * ((f32)state->speedScale *
+                                              -mathSinf((3.14159274f * (f32)obj->anim.rotX) / 32768.0f)));
                         projectile->anim.velocityY =
-                            0.03f * ((f32)state->speedScale * (0.01f * (f32)randomGetRange(0, 1000)));
+                            0.03f * ((f32)state->speedScale * (0.01f * randomGetRange(0, 1000)));
                         projectile->anim.velocityZ =
-                            0.03f *
-                            (10.0f * ((f32)state->speedScale *
-                                             -mathCosf((3.14159274f * (f32)(obj)->anim.rotX) / 32768.0f)));
+                            0.03f * (10.0f * ((f32)state->speedScale *
+                                              -mathCosf((3.14159274f * (f32)obj->anim.rotX) / 32768.0f)));
                         projectile->ownerObj = obj;
                     }
                     state->spawnTimer = state->spawnInterval + randomGetRange(0, state->timerVariance);

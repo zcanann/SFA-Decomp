@@ -67,11 +67,11 @@ void dll_1DA_update(GameObject* obj) {
 
     state = obj->extra;
     if (state->grounded != 0) {
-        obj->anim.velocityX = obj->anim.velocityX * (scale = 0.85f);
-        obj->anim.velocityZ = obj->anim.velocityZ * scale;
+        obj->anim.velocityX *= (scale = 0.85f);
+        obj->anim.velocityZ *= scale;
     } else {
-        obj->anim.velocityX = obj->anim.velocityX * (scale = 0.9f);
-        obj->anim.velocityZ = obj->anim.velocityZ * scale;
+        obj->anim.velocityX *= (scale = 0.9f);
+        obj->anim.velocityZ *= scale;
     }
 
     if (obj->anim.velocityX < 0.1f && obj->anim.velocityX > -0.1f && obj->anim.velocityZ < 0.1f &&
@@ -92,9 +92,9 @@ void dll_1DA_update(GameObject* obj) {
         if (collisionSpeed != 0.0f) {
             f32 inverseSpeed = 1.0f / collisionSpeed;
 
-            inverseVelocityX = inverseVelocityX * inverseSpeed;
-            inverseVelocityY = inverseVelocityY * inverseSpeed;
-            inverseVelocityZ = inverseVelocityZ * inverseSpeed;
+            inverseVelocityX *= inverseSpeed;
+            inverseVelocityY *= inverseSpeed;
+            inverseVelocityZ *= inverseSpeed;
         }
 
         reflectedScale = 2.0f * (inverseVelocityZ * collision.normalZ +
@@ -102,12 +102,12 @@ void dll_1DA_update(GameObject* obj) {
         obj->anim.velocityX = collision.normalX * reflectedScale;
         obj->anim.velocityY = collision.normalY * reflectedScale;
         obj->anim.velocityZ = collision.normalZ * reflectedScale;
-        obj->anim.velocityX = obj->anim.velocityX - inverseVelocityX;
-        obj->anim.velocityY = obj->anim.velocityY - inverseVelocityY;
-        obj->anim.velocityZ = obj->anim.velocityZ - inverseVelocityZ;
-        obj->anim.velocityX = obj->anim.velocityX * (damping = 0.8f * collisionSpeed);
-        obj->anim.velocityY = obj->anim.velocityY * (0.5f * collisionSpeed);
-        obj->anim.velocityZ = obj->anim.velocityZ * damping;
+        obj->anim.velocityX -= inverseVelocityX;
+        obj->anim.velocityY -= inverseVelocityY;
+        obj->anim.velocityZ -= inverseVelocityZ;
+        obj->anim.velocityX *= (damping = 0.8f * collisionSpeed);
+        obj->anim.velocityY *= (0.5f * collisionSpeed);
+        obj->anim.velocityZ *= damping;
     }
 
     obj->anim.localPosY = -(0.2f * timeDelta - obj->anim.localPosY);

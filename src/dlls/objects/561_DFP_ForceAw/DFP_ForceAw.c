@@ -302,7 +302,7 @@ void TrickyCurve_updateCooldownTrigger(GameObject* obj)
         bound = state->rangeX;
         if (deltaX < bound)
         {
-            axisCount = axisCount + 1;
+            axisCount += 1;
         }
     }
 
@@ -311,7 +311,7 @@ void TrickyCurve_updateCooldownTrigger(GameObject* obj)
         bound = state->rangeZ;
         if (deltaZ > -bound)
         {
-            axisCount = axisCount + 1;
+            axisCount += 1;
         }
     }
     if (deltaZ > 0.0f)
@@ -319,7 +319,7 @@ void TrickyCurve_updateCooldownTrigger(GameObject* obj)
         bound = state->rangeZ;
         if (deltaZ < bound)
         {
-            axisCount = axisCount + 1;
+            axisCount += 1;
         }
     }
 
@@ -328,7 +328,7 @@ void TrickyCurve_updateCooldownTrigger(GameObject* obj)
         bound = state->rangeY;
         if (deltaY > -bound)
         {
-            axisCount = axisCount + 1;
+            axisCount += 1;
         }
     }
     if (deltaY > 0.0f)
@@ -336,7 +336,7 @@ void TrickyCurve_updateCooldownTrigger(GameObject* obj)
         bound = state->rangeY;
         if (deltaY < bound)
         {
-            axisCount = axisCount + 1;
+            axisCount += 1;
         }
     }
 
@@ -388,15 +388,15 @@ void TrickyCurve_updateBurstTrigger(GameObject* obj)
     PartFxSpawnParams fxParams;
     int burstParticles;
 
-    state = (obj)->extra;
+    state = obj->extra;
     player = Obj_GetPlayerObject();
     insideCount = 0;
     xSide = 0;
     ySide = 0;
     zSide = 0;
-    dx = player->anim.localPosX - (obj)->anim.localPosX;
-    dy = player->anim.localPosY - (obj)->anim.localPosY;
-    dz = player->anim.localPosZ - (obj)->anim.localPosZ;
+    dx = player->anim.localPosX - obj->anim.localPosX;
+    dy = player->anim.localPosY - obj->anim.localPosY;
+    dz = player->anim.localPosZ - obj->anim.localPosZ;
 
     if ((state->gateGameBit != -1) &&
         (mainGetBit(state->gateGameBit) != 0))

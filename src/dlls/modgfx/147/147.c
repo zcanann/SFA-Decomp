@@ -48,7 +48,7 @@ void dll_93_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[1].flags = 0x15;
     commands[1].tex = &resourceData[offsetof(Dll93EffectResourceView, allVertexIndices)];
     commands[1].mode = 0x2;
-    randomScale = 0.1f * (f32)randomGetRange(0, 10) + 1.0f;
+    randomScale = 0.1f * randomGetRange(0, 10) + 1.0f;
     commands[1].x = randomScale;
     commands[1].y = 10.5f;
     commands[1].z = randomScale;

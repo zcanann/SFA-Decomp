@@ -50,7 +50,7 @@ void dimgate_update(GameObject* obj) {
         int triggerFound;
         int contactIndex;
 
-        if (*(s8*)&((ObjHitsPriorityState*)obj->anim.hitReactState)->stateIndex != DIM_GATE_MODE_OPENING) {
+        if (((ObjHitsPriorityState*)obj->anim.hitReactState)->stateIndex != DIM_GATE_MODE_OPENING) {
             ObjHitbox_SetStateIndex(obj, obj->anim.hitReactState, DIM_GATE_MODE_OPENING);
         }
         triggerFound = 0;
@@ -64,7 +64,7 @@ void dimgate_update(GameObject* obj) {
         }
         if (triggerFound) {
             mainSetBits(placement->openGameBit, 1);
-            if (*(s8*)&((ObjHitsPriorityState*)obj->anim.hitReactState)->stateIndex != DIM_GATE_MODE_OPEN) {
+            if (((ObjHitsPriorityState*)obj->anim.hitReactState)->stateIndex != DIM_GATE_MODE_OPEN) {
                 ObjHitbox_SetStateIndex(obj, obj->anim.hitReactState, DIM_GATE_MODE_OPEN);
             }
             state->mode = DIM_GATE_MODE_OPEN;
@@ -74,7 +74,7 @@ void dimgate_update(GameObject* obj) {
     case DIM_GATE_MODE_OPENING:
         break;
     case DIM_GATE_MODE_OPEN: {
-        if (*(s8*)&((ObjHitsPriorityState*)obj->anim.hitReactState)->stateIndex != DIM_GATE_MODE_OPEN) {
+        if (((ObjHitsPriorityState*)obj->anim.hitReactState)->stateIndex != DIM_GATE_MODE_OPEN) {
             ObjHitbox_SetStateIndex(obj, obj->anim.hitReactState, DIM_GATE_MODE_OPEN);
         }
         break;

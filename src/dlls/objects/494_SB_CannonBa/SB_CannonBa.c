@@ -167,7 +167,7 @@ void SB_CannonBall_update(GameObject* obj) {
     obj->anim.localPosX = state->posX;
     obj->anim.localPosY = state->posY;
     obj->anim.localPosZ = state->posZ;
-    obj->userData1 = obj->userData1 - framesThisStep;
+    obj->userData1 -= framesThisStep;
     if (obj->userData1 < 0) {
         Obj_FreeObject(obj);
     }

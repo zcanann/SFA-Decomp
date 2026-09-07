@@ -634,11 +634,11 @@ void SaveGame_gplaySetObjGroupStatus(int mapId, int groupBit, int enabled) {
         oldStatus = newStatus;
         if (enabled != 0) {
             bit = 1 << groupBit;
-            newStatus = newStatus | bit;
+            newStatus |= bit;
         } else {
             bit = 1 << groupBit;
             bit = ~bit;
-            newStatus = newStatus & bit;
+            newStatus &= bit;
         }
 
         mainSetBits(gSaveGameMapObjGroupBits[mapId], newStatus);

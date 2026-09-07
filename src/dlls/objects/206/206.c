@@ -323,8 +323,7 @@ int dll_CE_updateAlertState(GameObject* obj, GroundBaddieState* state) {
         }
         playerChild = ((GameObject*)Obj_GetPlayerObject())->childObjs[0];
         player = Obj_GetPlayerObject();
-        childState = (*(DllCEStaffInterface**)playerChild->anim.dll)
-                         ->getHitReactValue((GameObject*)playerChild);
+        childState = (*(DllCEStaffInterface**)playerChild->anim.dll)->getHitReactValue(playerChild);
         if (childState != 0) {
             if (player->anim.romDefNo != 0) {
                 Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
@@ -366,7 +365,7 @@ int dll_CE_updateSpitState(GameObject* obj, GroundBaddieState* state) {
             if ((void*)siblingAddress != (void*)obj &&
                 siblingAddress->anim.romDefNo == DLL_CE_SIBLING_SEQ_ID) {
                 (*(DllCESiblingInterface**)siblingAddress->anim.dll)
-                    ->handleMessage((GameObject*)siblingAddress, DLL_CE_MESSAGE_RELEASE, 0);
+                    ->handleMessage(siblingAddress, DLL_CE_MESSAGE_RELEASE, 0);
             }
             objectIndex++;
         }
@@ -383,7 +382,7 @@ int dll_CE_updateSpitState(GameObject* obj, GroundBaddieState* state) {
     if ((state->baddie.eventFlags & BADDIE_EVENT_FOOTSTEP) != 0U) {
         DllCEControl* control = objectState->control;
 
-        state->baddie.eventFlags = state->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
+        state->baddie.eventFlags &= ~BADDIE_EVENT_FOOTSTEP;
         control->effectFlags |= DLL_CE_EFFECT_PROJECTILE;
         Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite_266);
     }
@@ -785,7 +784,7 @@ void dll_CE_init(GameObject* obj, DllCEPlacement* placement, int flags) {
     (*gBaddieControlInterface)->initGroundBaddie(obj, (u8*)placement, (u8*)state, 7, 6, 0x102, mode, 20.0f);
     obj->animEventCallback = NULL;
     control = state->control;
-    control->soundTimer = (f32)randomGetRange(10, 300);
+    control->soundTimer = randomGetRange(10, 300);
     ObjAnim_SetCurrentMove(obj, 8, 0.0f, 0);
     obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     (*gPlayerInterface)->setState(obj, state, 0);

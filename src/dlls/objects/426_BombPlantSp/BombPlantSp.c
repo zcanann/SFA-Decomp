@@ -76,9 +76,9 @@ void BombPlantSpore_startDriftBurst(GameObject* obj, BombPlantSporeState* state)
     placement = (BombPlantSporePlacement*)obj->anim.placementData;
     baseAngle = placement->behavior.baseAngle;
 
-    state->spinTimer = (f32)randomGetRange(0x1E, 0x2D);
+    state->spinTimer = randomGetRange(0x1E, 0x2D);
 
-    state->driftTimer = state->spinTimer + (f32)randomGetRange(0x78, 0xB4);
+    state->driftTimer = state->spinTimer + randomGetRange(0x78, 0xB4);
 
     state->burstDriftAngle = (s16)(state->currentSpinAngle + randomGetRange(-2000, 2000));
     angleDelta = (s32)state->burstDriftAngle - (u16)baseAngle;
@@ -95,7 +95,7 @@ void BombPlantSpore_startDriftBurst(GameObject* obj, BombPlantSporeState* state)
         state->burstDriftAngle = (s16)(baseAngle - placement->behavior.angleSpread);
     }
 
-    state->driftSpeedTarget = (f32)randomGetRange(900, 0x514) / 1000.0f;
+    state->driftSpeedTarget = randomGetRange(900, 0x514) / 1000.0f;
     state->driftSpeed = 0.0f;
 
     state->driftSin = mathSinf((3.1415927f * (f32)state->burstDriftAngle) / 32768.0f);
@@ -134,7 +134,7 @@ void BombPlantSpore_updateDrift(GameObject* obj, BombPlantSporeState* state) {
 
     if (randomGetRange(0, 100) < 10 && state->spinChangeTimer <= 0.0f) {
         state->driftAmplitudeTarget =
-            state->driftAmplitude + (f32)randomGetRange(-200, 200) / 1000.0f;
+            state->driftAmplitude + randomGetRange(-200, 200) / 1000.0f;
         if (state->driftAmplitudeTarget < 0.5f) {
             state->driftAmplitudeTarget = 0.5f;
         } else if (state->driftAmplitudeTarget > 1.0f) {
@@ -324,7 +324,7 @@ void BombPlantSpore_init(GameObject* obj, BombPlantSporePlacement* placement) {
     ObjHits_DisableObject(obj);
     state->spinAngle = randomGetRange(0, 0xFFFF);
 
-    state->driftAmplitudeTarget = (f32)randomGetRange(0, 1000) / 1000.0f;
+    state->driftAmplitudeTarget = randomGetRange(0, 1000) / 1000.0f;
 
     (*gPathControlInterface)->init(&state->path, 0, BOMB_PLANT_SPORE_PATH_FLAGS, 1);
     (*gPathControlInterface)

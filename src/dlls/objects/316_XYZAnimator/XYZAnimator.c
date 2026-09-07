@@ -106,15 +106,15 @@ void XyzAnimator_free(GameObject* obj, int flags) {
     XyzAnimatorPlacement* placement;
     f32 zeroOffset;
 
-    state = (XyzAnimatorState*)(obj)->extra;
+    state = (XyzAnimatorState*)obj->extra;
     placement = (XyzAnimatorPlacement*)obj->anim.placementData;
     zeroOffset = 0.0f;
     state->offsetX = zeroOffset;
     state->offsetY = zeroOffset;
     state->offsetZ = zeroOffset;
     if (flags == 0) {
-        blockAddress = objPosToMapBlockIdx((double)(obj)->anim.localPosX, (double)(obj)->anim.localPosY,
-                                           (double)(obj)->anim.localPosZ);
+        blockAddress =
+            objPosToMapBlockIdx((double)obj->anim.localPosX, (double)obj->anim.localPosY, (double)obj->anim.localPosZ);
         blockAddress = (int)mapGetBlock(blockAddress);
         if (((void*)blockAddress != NULL) && (state->vertexCount != 0)) {
             XyzAnimator_applyToMapBlock(placement, state, (MapBlockData*)blockAddress);
@@ -234,7 +234,7 @@ void XyzAnimator_update(GameObject* obj) {
             value = mapBlockGetPolygonGroupType(polygonGroup);
             if (placement->blockLayer == value) {
                 state->polygonGroupCount++;
-                state->vertexCount += ((MapTriGroup*)polygonGroup)[1].firstTri - polygonGroup->firstTri;
+                state->vertexCount += (polygonGroup)[1].firstTri - polygonGroup->firstTri;
             }
         }
         if (state->vertexCount == 0) {
@@ -263,35 +263,35 @@ void XyzAnimator_update(GameObject* obj) {
         streamSize = state->polygonGroupCount * 2;
         bufferAddress = bufferAddress + state->vertexCount * 6;
         state->polygonBuffer0 = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->polygonBuffer1 = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->posABuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->posBBuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->polygonBuffer4 = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->polygonBuffer5 = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         streamSize = state->displayListCount * 2;
         state->minXBuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->maxXBuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->minYBuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->maxYBuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->minZBuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->maxZBuffer = bufferAddress;
-        XyzAnimator_captureGeometry(placement, state, (MapBlockData*)blockAddress);
+        XyzAnimator_captureGeometry(placement, state, blockAddress);
         if (placement->mode != XYZ_ANIMATOR_MODE_DEFERRED_ONESHOT) {
-            XyzAnimator_applyToMapBlock(placement, state, (MapBlockData*)blockAddress);
-            blockAddress->flags4 = blockAddress->flags4 ^ 1;
-            XyzAnimator_applyToMapBlock(placement, state, (MapBlockData*)blockAddress);
-            blockAddress->flags4 = blockAddress->flags4 ^ 1;
+            XyzAnimator_applyToMapBlock(placement, state, blockAddress);
+            blockAddress->flags4 ^= 1;
+            XyzAnimator_applyToMapBlock(placement, state, blockAddress);
+            blockAddress->flags4 ^= 1;
         }
     }
     if (placement->mode == XYZ_ANIMATOR_MODE_GATED) {
@@ -504,7 +504,7 @@ void XyzAnimator_update(GameObject* obj) {
         }
         break;
     }
-    XyzAnimator_applyToMapBlock(placement, state, (MapBlockData*)blockAddress);
+    XyzAnimator_applyToMapBlock(placement, state, blockAddress);
     return;
 }
 

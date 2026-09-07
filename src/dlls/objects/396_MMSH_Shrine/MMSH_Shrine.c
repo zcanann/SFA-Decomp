@@ -186,12 +186,12 @@ void mmshShrine_updateHoverMotion(GameObject* obj) {
 
     trigA = mathSinf((MMSH_SHRINE_ORBIT_PI * state->orbitPhaseB) / MMSH_SHRINE_ORBIT_ANGLE_SCALE);
     trigB = mathSinf((MMSH_SHRINE_ORBIT_PI * state->orbitPhaseA) / MMSH_SHRINE_ORBIT_ANGLE_SCALE);
-    trigB = trigB + trigA;
+    trigB += trigA;
     obj->anim.rotZ = (s16)(MMSH_SHRINE_ORBIT_ROTATION_SCALE * trigB);
 
     trigA = mathSinf((MMSH_SHRINE_ORBIT_PI * state->orbitPhaseC) / MMSH_SHRINE_ORBIT_ANGLE_SCALE);
     trigB = mathSinf((MMSH_SHRINE_ORBIT_PI * state->orbitPhaseA) / MMSH_SHRINE_ORBIT_ANGLE_SCALE);
-    trigB = trigB + trigA;
+    trigB += trigA;
     obj->anim.rotY = (s16)(MMSH_SHRINE_ORBIT_ROTATION_SCALE * trigB);
 
     ObjAnim_AdvanceCurrentMove(obj, MMSH_SHRINE_ANIMATION_STEP, timeDelta, &animEvents);

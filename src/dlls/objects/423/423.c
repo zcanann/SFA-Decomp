@@ -260,7 +260,7 @@ void EdibleMushroom_updateBehavior(GameObject* obj, EdibleMushroomState* state, 
         ObjHits_ClearSourceMask((ObjAnimComponent*)obj, 1);
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_cagelp_c);
         if (state->burrowAttackTimer <= 0.0f) {
-            state->burrowAttackTimer = (f32)randomGetRange(0xF0, 0x12C);
+            state->burrowAttackTimer = randomGetRange(0xF0, 0x12C);
         }
         timer = state->burrowAttackTimer - timeDelta;
         state->burrowAttackTimer = timer;
@@ -565,7 +565,7 @@ void EdibleMushroom_init(GameObject* obj, EdibleMushroomPlacement* placement) {
     if (state->lungeRange < 0.0f) {
         state->lungeRange = -state->lungeRange;
     }
-    state->lungeRange = state->lungeRange * state->lungeRootSpeedScale;
+    state->lungeRange *= state->lungeRootSpeedScale;
     state->lungeRange += 20.0f;
 
     ObjAnim_SetCurrentMove(obj, 4, 0.0f, 0);

@@ -235,7 +235,7 @@ void mmpMoonRock_reconcilePlacement(GameObject* obj, u8 place, u8 mode) {
                 }
                 if (state->kind == 3 || state->kind == 4 || state->kind == 6) {
                     if (mode != 2) {
-                        pedestalCount = pedestalCount + 1;
+                        pedestalCount += 1;
                     }
                     if (mode == 0) {
                         Sfx_PlayFromObject(0, pedestalCount < 3 ? SFXTRIG_menuups16k : SFXTRIG_mpick1_b);
@@ -340,7 +340,7 @@ void mmpMoonRock_update(GameObject* obj) {
     }
     if ((state->flags & MMP_MOON_ROCK_FLAG_RESETTING) != 0) {
         if (state->resetTimer > 0.0f) {
-            state->resetTimer = state->resetTimer - timeDelta;
+            state->resetTimer -= timeDelta;
             if (state->resetTimer <= 0.0f) {
                 state->flags = 0;
                 obj->anim.alpha = 0xFF;
@@ -449,13 +449,13 @@ void mmpMoonRock_init(GameObject* obj, const MMPMoonRockPlacement* placement) {
     MMPMoonRockState* state = obj->extra;
     u8 kind;
 
-    obj->objectFlags = obj->objectFlags | OBJECT_OBJFLAG_HITDETECT_DISABLED;
+    obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
     state->flags = 0;
     state->kind = mainGetBit(placement->kindGameBit);
     kind = state->kind;
     if (kind != 0) {
         if ((u8)(kind - 3) <= 1 || kind == 6) {
-            state->flags = state->flags | MMP_MOON_ROCK_FLAG_PLACED;
+            state->flags |= MMP_MOON_ROCK_FLAG_PLACED;
         }
         (*gCarryableInterface)->setGravityEnabled(&state->carryable, 0);
     } else {

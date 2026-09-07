@@ -136,36 +136,36 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
             commands[1].flags = 4;
             commands[1].tex = gDll5BQuadIndices;
             commands[1].mode = 2;
-            commands[1].x = 0.15f * (f32)randomGetRange(1, 6);
-            commands[1].y = 0.15f * (f32)randomGetRange(1, 6);
-            commands[1].z = 0.15f * (f32)randomGetRange(1, 6);
+            commands[1].x = 0.15f * randomGetRange(1, 6);
+            commands[1].y = 0.15f * randomGetRange(1, 6);
+            commands[1].z = 0.15f * randomGetRange(1, 6);
             commandCursor = &commands[2];
         } else if (effectId == 0xd) {
             commands[1].layer = 0;
             commands[1].flags = 4;
             commands[1].tex = gDll5BQuadIndices;
             commands[1].mode = 2;
-            commands[1].x = 0.15f * (f32)randomGetRange(1, 6);
-            commands[1].y = 0.15f * (f32)randomGetRange(1, 6);
-            commands[1].z = 0.15f * (f32)randomGetRange(1, 6);
+            commands[1].x = 0.15f * randomGetRange(1, 6);
+            commands[1].y = 0.15f * randomGetRange(1, 6);
+            commands[1].z = 0.15f * randomGetRange(1, 6);
             commandCursor = &commands[2];
         } else if (effectId == 0x14) {
             commands[1].layer = 0;
             commands[1].flags = 4;
             commands[1].tex = gDll5BQuadIndices;
             commands[1].mode = 2;
-            commands[1].x = 0.25f * (f32)randomGetRange(3, 6);
-            commands[1].y = 0.25f * (f32)randomGetRange(3, 6);
-            commands[1].z = 0.25f * (f32)randomGetRange(3, 6);
+            commands[1].x = 0.25f * randomGetRange(3, 6);
+            commands[1].y = 0.25f * randomGetRange(3, 6);
+            commands[1].z = 0.25f * randomGetRange(3, 6);
             commandCursor = &commands[2];
         } else if (effectId == 0x11) {
             commands[1].layer = 0;
             commands[1].flags = 4;
             commands[1].tex = gDll5BQuadIndices;
             commands[1].mode = 2;
-            commands[1].x = 0.25f * (f32)randomGetRange(3, 6);
-            commands[1].y = 0.25f * (f32)randomGetRange(3, 6);
-            commands[1].z = 0.25f * (f32)randomGetRange(3, 6);
+            commands[1].x = 0.25f * randomGetRange(3, 6);
+            commands[1].y = 0.25f * randomGetRange(3, 6);
+            commands[1].z = 0.25f * randomGetRange(3, 6);
             commandCursor = &commands[2];
         } else if (effectId == 0x10) {
             commands[1].layer = 0;
@@ -179,18 +179,18 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
             commands[2].flags = 4;
             commands[2].tex = gDll5BQuadIndices;
             commands[2].mode = 2;
-            commands[2].x = 2.5f * (f32)randomGetRange(3, 6);
-            commands[2].y = 2.5f * (f32)randomGetRange(3, 6);
-            commands[2].z = 2.5f * (f32)randomGetRange(3, 6);
+            commands[2].x = 2.5f * randomGetRange(3, 6);
+            commands[2].y = 2.5f * randomGetRange(3, 6);
+            commands[2].z = 2.5f * randomGetRange(3, 6);
             commandCursor = &commands[3];
         } else {
             commands[1].layer = 0;
             commands[1].flags = 4;
             commands[1].tex = gDll5BQuadIndices;
             commands[1].mode = 2;
-            commands[1].x = 0.15f * (f32)randomGetRange(1, 6);
-            commands[1].y = 0.15f * (f32)randomGetRange(1, 6);
-            commands[1].z = 0.15f * (f32)randomGetRange(1, 6);
+            commands[1].x = 0.15f * randomGetRange(1, 6);
+            commands[1].y = 0.15f * randomGetRange(1, 6);
+            commands[1].z = 0.15f * randomGetRange(1, 6);
             commandCursor = &commands[2];
         }
         commandCursor[0].layer = 1;
@@ -205,8 +205,8 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
         commandCursor[1].tex = NULL;
         commandCursor[1].mode = 0x100;
         commandCursor[1].x = 0.0f;
-        commandCursor[1].y = 300.0f * (f32)randomGetRange(-10, 10);
-        commandCursor[1].z = 300.0f * (f32)randomGetRange(-10, 10);
+        commandCursor[1].y = 300.0f * randomGetRange(-10, 10);
+        commandCursor[1].z = 300.0f * randomGetRange(-10, 10);
         if (effectId == 0x10) {
             commandCursor[2].layer = 1;
             commandCursor[2].flags = 0;
@@ -214,7 +214,7 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
             commandCursor[2].mode = 0x400000;
             commandCursor[2].x = 0.0f;
             commandCursor[2].y = 0.0f;
-            commandCursor[2].z = 300.0f + (f32)randomGetRange(0, 300);
+            commandCursor[2].z = 300.0f + randomGetRange(0, 300);
             partFxParams.rotationY = randomGetRange(-0x7fff, -0xfa0);
             partFxParams.rotationX = randomGetRange(0, 0xffff);
             vecRotateZXY(&partFxParams.rotationX, &commandCursor[2].x);
@@ -226,7 +226,7 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
             commandCursor[2].mode = 0x400000;
             commandCursor[2].x = 0.0f;
             commandCursor[2].y = 0.0f;
-            commandCursor[2].z = 300.0f + (f32)randomGetRange(0, 300);
+            commandCursor[2].z = 300.0f + randomGetRange(0, 300);
             partFxParams.rotationY = randomGetRange(-0x7fff, -0xfa0);
             partFxParams.rotationX = randomGetRange(0, 0xffff);
             vecRotateZXY(&partFxParams.rotationX, &commandCursor[2].x);
@@ -238,7 +238,7 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
             commandCursor[2].mode = 0x400000;
             commandCursor[2].x = 0.0f;
             commandCursor[2].y = 0.0f;
-            commandCursor[2].z = 100.0f + (f32)randomGetRange(0, 100);
+            commandCursor[2].z = 100.0f + randomGetRange(0, 100);
             partFxParams.rotationY = randomGetRange(-0x7fff, -0xfa0);
             partFxParams.rotationX = randomGetRange(0, 0xffff);
             vecRotateZXY(&partFxParams.rotationX, &commandCursor[2].x);

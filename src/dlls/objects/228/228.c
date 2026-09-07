@@ -108,7 +108,7 @@ void FlameThrowerspe_update(GameObject* obj) {
             (FLAMETHROWERSPE_SPEED_SCALE *
              (state->sizeScale *
               (FLAMETHROWERSPE_RANDOM_SPEED_SCALE *
-               (f32)randomGetRange(FLAMETHROWERSPE_RANDOM_SPEED_MIN, FLAMETHROWERSPE_RANDOM_SPEED_MAX))));
+               randomGetRange(FLAMETHROWERSPE_RANDOM_SPEED_MIN, FLAMETHROWERSPE_RANDOM_SPEED_MAX))));
         vecRotateZXY(&obj->anim.rotX, &obj->anim.velocityX);
         state->sphereRadius = gFlameThrowerspeRadiusMultiplier * state->sizeScale;
         s16toFloat(&state->lifeTimer, (s16)gFlameThrowerspeLifetimeFrames);

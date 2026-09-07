@@ -120,9 +120,9 @@ void EffectBox_update(GameObject* obj) {
             offsetX = target->anim.localPosX;
             offsetY = target->anim.localPosY;
             offsetZ = target->anim.localPosZ;
-            offsetX = offsetX - obj->anim.localPosX;
-            offsetY = offsetY - obj->anim.localPosY;
-            offsetZ = offsetZ - obj->anim.localPosZ;
+            offsetX -= obj->anim.localPosX;
+            offsetY -= obj->anim.localPosY;
+            offsetZ -= obj->anim.localPosZ;
             projection = offsetX * yawCos + offsetZ * yawSin;
             if (projection > negativeExtentX && projection < extentX) {
                 projection = (-offsetX) * yawSin + offsetZ * yawCos;

@@ -70,7 +70,7 @@ s16 dll_79_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* sp
         commandCursor[1].flags = 8;
         commandCursor[1].tex = &resourceData[offsetof(Dll79EffectResourceView, allVertexIndices)];
         commandCursor[1].mode = 2;
-        jitter = 0.05f * (f32)randomGetRange(0, 0xc);
+        jitter = 0.05f * randomGetRange(0, 0xc);
         commandCursor[1].x = 3.5f + jitter;
         commandCursor[1].y = 3.5f + jitter;
         commandCursor[1].z = 20.0f + jitter;
@@ -104,7 +104,7 @@ s16 dll_79_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* sp
         commandCursor[1].flags = 8;
         commandCursor[1].tex = &resourceData[offsetof(Dll79EffectResourceView, allVertexIndices)];
         commandCursor[1].mode = 2;
-        jitter = 0.05f * (f32)randomGetRange(0, 0xc);
+        jitter = 0.05f * randomGetRange(0, 0xc);
         commandCursor[1].x = 1.2f + jitter;
         commandCursor[1].y = 1.2f + jitter;
         commandCursor[1].z = 12.0f + jitter;

@@ -128,20 +128,19 @@ void pollenfragment_hitDetect(GameObject* obj)
         {
             if ((extra->def)->explodeSfxId != -1)
             {
-                spawnExplosion((GameObject*)obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
+                spawnExplosion(obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
                 Sfx_PlayFromObjectLimited(
                     obj, (u16)(extra->def)->explodeSfxId, 3);
             }
             ObjHits_DisableObject(obj);
             s16toFloat(&extra->deathTimer, 0x78);
         }
-        if (((ObjHitsPriorityState*)(obj)->anim.hitReactState)->contactFlags != 0)
-        {
+        if (((ObjHitsPriorityState*)obj->anim.hitReactState)->contactFlags != 0) {
             ObjHits_DisableObject(obj);
             extra->timer = 0.0f;
             if ((extra->def)->explodeSfxId != -1)
             {
-                spawnExplosion((GameObject*)obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
+                spawnExplosion(obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
                 Sfx_PlayFromObjectLimited(
                     obj, (u16)(extra->def)->explodeSfxId, 3);
             }
@@ -261,8 +260,8 @@ void pollenfragment_update(GameObject* obj)
                                                          210.0f;
         }
     }
-    obj->anim.velocityX = obj->anim.velocityX * (horizDamping = 0.97f);
-    obj->anim.velocityZ = obj->anim.velocityZ * horizDamping;
+    obj->anim.velocityX *= (horizDamping = 0.97f);
+    obj->anim.velocityZ *= horizDamping;
     obj->anim.velocityY *= 0.95f;
     if ((extra->def)->noVertical)
     {

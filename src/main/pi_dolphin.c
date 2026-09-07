@@ -1424,7 +1424,7 @@ u32 loadTableFiles(void)
         mergeTableFiles((u32*)tbl->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
     }
     gObjTableFileRequestFlags = flags;
-    gAssetLoadInFlightFlags = gAssetLoadInFlightFlags ^ gAssetLoadCompletedFlags;
+    gAssetLoadInFlightFlags ^= gAssetLoadCompletedFlags;
     gAssetLoadCompletedFlags = 0;
     OSRestoreInterrupts(s);
     return gAssetLoadInFlightFlags;
@@ -2067,7 +2067,7 @@ void* mapLoadDataFile(int mapId, int fileId)
         o47 = MLDF_OWNER(0x47);
         if (o47 != -1)
         {
-            nOwned = nOwned + 1;
+            nOwned += 1;
         }
         if (nOwned == 0)
         {
@@ -2091,7 +2091,7 @@ void* mapLoadDataFile(int mapId, int fileId)
             sync = 1;
         }
     }
-    sync = sync | gForceLoadImmediately;
+    sync |= gForceLoadImmediately;
     switch (fileId)
     {
     case 0xd:
@@ -2182,11 +2182,11 @@ void* mapLoadDataFile(int mapId, int fileId)
                         {
                             if (slot == 0xd)
                             {
-                                gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x10000000;
+                                gAssetLoadInFlightFlags |= 0x10000000;
                             }
                             else
                             {
-                                gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x40000000;
+                                gAssetLoadInFlightFlags |= 0x40000000;
                             }
                             DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, animCurvReadCb, 2);
                             MLDF_FINFO4(x) = fi;
@@ -2267,11 +2267,11 @@ void* mapLoadDataFile(int mapId, int fileId)
                     {
                         if (slot == 0xe)
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x20000000;
+                            gAssetLoadInFlightFlags |= 0x20000000;
                         }
                         else
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x80000000;
+                            gAssetLoadInFlightFlags |= 0x80000000;
                         }
                         DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animCurvTabReadCb, 2);
                         MLDF_FINFO4(x) = fi;
@@ -2360,11 +2360,11 @@ void* mapLoadDataFile(int mapId, int fileId)
             {
                 if (slot == 0x1b)
                 {
-                    gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x1000000;
+                    gAssetLoadInFlightFlags |= 0x1000000;
                 }
                 else
                 {
-                    gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x4000000;
+                    gAssetLoadInFlightFlags |= 0x4000000;
                 }
                 MLDF_FINFO4(x) = fi;
                 DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapReadCb, 2);
@@ -2443,11 +2443,11 @@ void* mapLoadDataFile(int mapId, int fileId)
                     {
                         if (slot == 0x1a)
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x2000000;
+                            gAssetLoadInFlightFlags |= 0x2000000;
                         }
                         else
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x8000000;
+                            gAssetLoadInFlightFlags |= 0x8000000;
                         }
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapTabReadCb, 2);
@@ -2553,11 +2553,11 @@ void* mapLoadDataFile(int mapId, int fileId)
                     {
                         if (slot == 0x25)
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x10000;
+                            gAssetLoadInFlightFlags |= 0x10000;
                         }
                         else
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x40000;
+                            gAssetLoadInFlightFlags |= 0x40000;
                         }
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, blocksReadCb, 2);
@@ -2648,11 +2648,11 @@ void* mapLoadDataFile(int mapId, int fileId)
                 {
                     if (slot == 0x26)
                     {
-                        gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x20000;
+                        gAssetLoadInFlightFlags |= 0x20000;
                     }
                     else
                     {
-                        gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x80000;
+                        gAssetLoadInFlightFlags |= 0x80000;
                     }
                     MLDF_FINFO4(x) = fi;
                     DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, blocksTabReadCb, 2);
@@ -2746,18 +2746,18 @@ void* mapLoadDataFile(int mapId, int fileId)
                         {
                             mergeTableFiles(tbl->mergeModels, 0x2a, 0x45, 0x800);
                         }
-                        gModelsArchiveLoadCount = gModelsArchiveLoadCount + 1;
+                        gModelsArchiveLoadCount += 1;
                     }
                     else
                     {
-                        gModelsArchiveLoadCount = gModelsArchiveLoadCount + 1;
+                        gModelsArchiveLoadCount += 1;
                         if (slot == 0x2b)
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 1;
+                            gAssetLoadInFlightFlags |= 1;
                         }
                         else
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 2;
+                            gAssetLoadInFlightFlags |= 2;
                         }
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, modelsReadCb, 2);
@@ -2831,11 +2831,11 @@ void* mapLoadDataFile(int mapId, int fileId)
                 {
                     if (slot == 0x2a)
                     {
-                        gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 4;
+                        gAssetLoadInFlightFlags |= 4;
                     }
                     else
                     {
-                        gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 8;
+                        gAssetLoadInFlightFlags |= 8;
                     }
                     MLDF_FINFO4(x) = fi;
                     DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, modelsTabReadCb, 2);
@@ -2933,11 +2933,11 @@ void* mapLoadDataFile(int mapId, int fileId)
                     {
                         if (slot == 0x30)
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x10;
+                            gAssetLoadInFlightFlags |= 0x10;
                         }
                         else
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x20;
+                            gAssetLoadInFlightFlags |= 0x20;
                         }
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, animReadCb, 2);
@@ -3011,11 +3011,11 @@ void* mapLoadDataFile(int mapId, int fileId)
                 {
                     if (slot == 0x2f)
                     {
-                        gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x40;
+                        gAssetLoadInFlightFlags |= 0x40;
                     }
                     else
                     {
-                        gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x80;
+                        gAssetLoadInFlightFlags |= 0x80;
                     }
                     MLDF_FINFO4(x) = fi;
                     DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animTabReadCb, 2);
@@ -3113,11 +3113,11 @@ void* mapLoadDataFile(int mapId, int fileId)
                     {
                         if (slot == 0x23)
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x100;
+                            gAssetLoadInFlightFlags |= 0x100;
                         }
                         else
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x200;
+                            gAssetLoadInFlightFlags |= 0x200;
                         }
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, tex0readCb, 2);
@@ -3191,13 +3191,13 @@ void* mapLoadDataFile(int mapId, int fileId)
                 {
                     if (slot == 0x24)
                     {
-                        gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x400;
+                        gAssetLoadInFlightFlags |= 0x400;
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab1readCb, 2);
                     }
                     else
                     {
-                        gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x800;
+                        gAssetLoadInFlightFlags |= 0x800;
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab2readCb, 2);
                     }
@@ -3291,11 +3291,11 @@ void* mapLoadDataFile(int mapId, int fileId)
                     {
                         if (slot == 0x20)
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x1000;
+                            gAssetLoadInFlightFlags |= 0x1000;
                         }
                         else
                         {
-                            gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x2000;
+                            gAssetLoadInFlightFlags |= 0x2000;
                         }
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, tex1ReadCb, 2);
@@ -3364,12 +3364,12 @@ void* mapLoadDataFile(int mapId, int fileId)
                     MLDF_FINFO4(x) = tabFi;
                     if (slot == 0x21)
                     {
-                        gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x4000;
+                        gAssetLoadInFlightFlags |= 0x4000;
                         DVDReadAsyncPrio(tabFi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab1readCb, 2);
                     }
                     else
                     {
-                        gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x8000;
+                        gAssetLoadInFlightFlags |= 0x8000;
                         DVDReadAsyncPrio(tabFi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab2readCb, 2);
                     }
                 }
@@ -3509,7 +3509,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         {
             fileId = 0x55;
         }
-        offsetFlags = offsetFlags & 0xfffffff;
+        offsetFlags &= 0xfffffff;
         break;
     case 0x1b:
         intr = OSDisableInterrupts();
@@ -3598,7 +3598,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         {
             fileId = 0x54;
         }
-        offsetFlags = offsetFlags & 0xfffffff;
+        offsetFlags &= 0xfffffff;
         break;
     case 0x25:
         intr = OSDisableInterrupts();
@@ -3628,7 +3628,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         {
             fileId = 0x47;
         }
-        offsetFlags = offsetFlags & 0xfffffff;
+        offsetFlags &= 0xfffffff;
         break;
     case 0x2b:
         intr = OSDisableInterrupts();
@@ -3713,7 +3713,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
@@ -3723,12 +3723,12 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while (entryOff != (((int*)tab1)[prev] & 0xffffff));
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
@@ -3738,7 +3738,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
@@ -3756,7 +3756,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
@@ -3766,12 +3766,12 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while (entryOff != (((int*)tab0)[prev] & 0xffffff));
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
@@ -3781,7 +3781,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
@@ -3799,7 +3799,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
@@ -3809,12 +3809,12 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while (entryOff != (((int*)tab0)[prev] & 0xffffff));
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
@@ -3824,7 +3824,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - entryOff;
                 }
@@ -3842,7 +3842,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
@@ -3852,12 +3852,12 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while (entryOff != (((int*)tab1)[prev] & 0xffffff));
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
@@ -3867,13 +3867,13 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= entryOff);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - entryOff;
                 }
             }
         }
-        offsetFlags = offsetFlags & 0xfffffff;
+        offsetFlags &= 0xfffffff;
         break;
     case 0x30:
         intr = OSDisableInterrupts();
@@ -3977,7 +3977,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                 *sizeOut = (((u32*)(tab1 + 4))[entryIndex] & 0xfffffff) - (((u32*)tab1)[entryIndex] & 0xfffffff);
             }
         }
-        offsetFlags = offsetFlags & 0xfffffff;
+        offsetFlags &= 0xfffffff;
         if (((u8)flagBits & 1) != 0)
         {
             qptr = *(u32*)((fileId << 2) + (u32)&tbl->ptrs[0]);
@@ -4000,7 +4000,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                            (((u32*)slotScratch)[entryIndex] & 0xfffffff);
             }
         }
-        offsetFlags = offsetFlags & 0xfffffff;
+        offsetFlags &= 0xfffffff;
         if (((u8)flagBits & 1) != 0)
         {
             qptr = *(u32*)((fileId << 2) + (u32)&tbl->ptrs[0]);
@@ -4095,7 +4095,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4105,7 +4105,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4124,7 +4124,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4134,7 +4134,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4152,7 +4152,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4162,7 +4162,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4180,7 +4180,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4190,13 +4190,13 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
-        offsetFlags = offsetFlags & 0xfffffff;
+        offsetFlags &= 0xfffffff;
         break;
     case 0x20:
         intr = OSDisableInterrupts();
@@ -4281,7 +4281,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4291,7 +4291,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4310,7 +4310,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4320,7 +4320,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4338,7 +4338,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4348,7 +4348,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab1)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4366,7 +4366,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
@@ -4376,13 +4376,13 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tab0)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tab0 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
-        offsetFlags = offsetFlags & 0xfffffff;
+        offsetFlags &= 0xfffffff;
         break;
     case 0x4f:
     {
@@ -4400,7 +4400,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = tab0;
-                        tab0 = tab0 + 1;
+                        tab0 += 1;
                     } while ((((int*)tabPtr)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tabPtr - 4))[tab0] & 0xffffff) - offsetFlags;
                 }
@@ -4410,13 +4410,13 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     do
                     {
                         prev = i;
-                        i = i + 1;
+                        i += 1;
                     } while ((((int*)tabPtr)[prev] & 0xffffff) <= offsetFlags);
                     *sizeOut = (((int*)(tabPtr - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
         }
-        offsetFlags = offsetFlags & 0xfffffff;
+        offsetFlags &= 0xfffffff;
         break;
     }
     }
@@ -5225,7 +5225,7 @@ u8 initLoadFiles(void)
                     DVDOpen(*it.names, fileInfo);
                     *it.sizes = fileInfo->length;
                     *it.ptrs = mmAlloc(*it.sizes + 0x20, 0x7d7d7d7d, 0);
-                    gPendingDvdReadCount = gPendingDvdReadCount + 1;
+                    gPendingDvdReadCount += 1;
                     DVDReadAsyncPrio(fileInfo, *it.ptrs, *it.sizes, 0, initLoadFileReadCb, 2);
                 }
                 *it.owners = -1;
@@ -5376,7 +5376,7 @@ void videoSwapFrameBuffers(u32 retraceCount)
     void* tok[3];
     GXFifoObj fifo;
 
-    gRetraceCountSinceFlip = gRetraceCountSinceFlip + 1;
+    gRetraceCountSinceFlip += 1;
     sync = GXReadDrawSync();
     if (sync == (u16)(gLastDrawSyncToken + 1))
     {
@@ -5395,7 +5395,7 @@ void videoSwapFrameBuffers(u32 retraceCount)
         lbl_803DB5C8 = gRetraceCountSinceFlip;
         gRetraceCountSinceFlip = 0;
     }
-    gGpuStallRetraceCount = gGpuStallRetraceCount + 1;
+    gGpuStallRetraceCount += 1;
     if (gGpuHangRecoveryEnabled != 0 && (u32)gGpuStallRetraceCount > 18000)
     {
         logGpuHang();

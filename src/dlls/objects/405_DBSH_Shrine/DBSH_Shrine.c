@@ -270,7 +270,7 @@ void dbshShrine_update(GameObject* obj) {
         state->idleSfxTimer = idleSfxTimer;
         if (idleSfxTimer <= 0.0f) {
             Sfx_PlayFromObject(obj, SFXTRIG_spirit_voice);
-            state->idleSfxTimer = (f32)randomGetRange(500, 1000);
+            state->idleSfxTimer = randomGetRange(500, 1000);
         }
         if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0) {
             groupActive = (*gMapEventInterface)->getObjGroupStatus(obj->anim.mapEventSlot, 1);

@@ -44,7 +44,7 @@ void KT_Lazerwall_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
     {
         f32 fr = angle;
         f32 half;
-        fr = fr * state->driftSpeed;
+        fr *= state->driftSpeed;
         half = 0.5f;
         dir.y = -(fr * half);
     }

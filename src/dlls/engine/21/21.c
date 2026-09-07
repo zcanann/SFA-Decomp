@@ -11,7 +11,6 @@
 #include "main/objhits.h"
 #include "game/objects/object.h"
 #include "string.h"
-#define TRACK_BBOX_ARG10_TYPE int
 #include "main/track_bbox_api.h"
 #include "main/gamebits.h"
 #include "main/object_transform.h"
@@ -140,15 +139,15 @@ void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision) 
                         if ((pointY < 50.0f + object->anim.worldPosY) &&
                             ((s8)point->surfaceType != ROMCURVE_POINT_TYPE_WATER)) {
                             heights[i] = point->height;
-                            sum1 = sum1 + point->normalX;
-                            sum2 = sum2 + point->normalY;
-                            sum3 = sum3 + point->normalZ;
-                            sum0 = sum0 + pointY;
+                            sum1 += point->normalX;
+                            sum2 += point->normalY;
+                            sum3 += point->normalZ;
+                            sum0 += pointY;
                             count++;
                             found1 = 1;
                         }
                     }
-                    list = list + 1;
+                    list += 1;
                 }
             }
             collision->points[i][1] = heights[i];
@@ -164,15 +163,15 @@ void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision) 
         }
         dx = heights[3];
         dz = collision->segmentLocalPoints[11];
-        dz = dz - collision->segmentLocalPoints[2];
-        dx = dx - heights[0];
+        dz -= collision->segmentLocalPoints[2];
+        dx -= heights[0];
         getAngle(dx, dz);
         ang = getAngle(dx, dz);
         object->anim.rotY = -ang;
         if (((int)collision->flags & 0x400) != 0) {
             dx = heights[1];
             dz = collision->segmentLocalPoints[3] - collision->segmentLocalPoints[0];
-            dx = dx - heights[0];
+            dx -= heights[0];
             object->anim.rotZ = getAngle(dx, dz);
         }
     }
@@ -192,9 +191,9 @@ void curves_resolveSingleTrace(GameObject* obj, CurvesCollisionState* collision)
     startX = collision->points[1][0];
     startZ = collision->points[1][2];
     if ((s32)(collision->flags & CURVES_COLLISION_STATE_KEEP_POSITION) == 0) {
-        (obj)->anim.worldPosX = startX;
-        (obj)->anim.worldPosZ = startZ;
-        (obj)->anim.worldPosY = collision->points[0][1];
+        obj->anim.worldPosX = startX;
+        obj->anim.worldPosZ = startZ;
+        obj->anim.worldPosY = collision->points[0][1];
     }
 
     points = curves_getCurves(obj, collision->points[1][0], collision->points[1][2], (u32*)&hitCount, 0);
@@ -215,7 +214,7 @@ void curves_resolveSingleTrace(GameObject* obj, CurvesCollisionState* collision)
         pointIndex++;
     }
 
-    if ((obj)->anim.classId == 1) {
+    if (obj->anim.classId == 1) {
         collision->traceStart[2][0] = collision->points[1][0];
         collision->traceStart[2][1] = collision->points[1][1];
         collision->traceStart[2][2] = collision->points[1][2];
@@ -423,12 +422,12 @@ void curves_snapToNearestSurface(GameObject* obj, CurvesCollisionState* collisio
 
     point = curves_getCurves(obj, collision->points[0][0], collision->points[0][2], &hitCount, 0);
     hitIndex = hitCount - 1;
-    currentY = (obj)->anim.worldPosY;
+    currentY = obj->anim.worldPosY;
     window = CURVES_DEFAULT_VERTICAL_WINDOW;
     while (hitIndex >= 0) {
         if ((s8)point[hitIndex].surfaceType != ROMCURVE_POINT_TYPE_WATER) {
             if ((currentY <= point[hitIndex].height) && (currentY >= (point[hitIndex].height - window))) {
-                (obj)->anim.worldPosY = point[hitIndex].height;
+                obj->anim.worldPosY = point[hitIndex].height;
                 collision->surfaceNormalX = point[hitIndex].normalX;
                 collision->surfaceNormalY = point[hitIndex].normalY;
                 collision->surfaceNormalZ = point[hitIndex].normalZ;
@@ -616,40 +615,38 @@ void curves_preparePointCollisionFrame(GameObject* obj, CurvesCollisionState* co
     f32 matrix[16];
 
     if ((s32)(collision->flags & CURVES_COLLISION_STATE_ACTIVE) != 0) {
-        if ((void*)((GameObject*)obj)->anim.parent != NULL) {
-            if ((((GameObject*)obj)->anim.parentAnim->hitboxTransformState != NULL) &&
-                (ObjHits_IsObjectEnabled((ObjAnimComponent*)((GameObject*)obj)->anim.parent) != 0)) {
-                matrixSource = ((GameObject*)obj)->anim.parentAnim->hitboxTransformState;
+        if ((void*)obj->anim.parent != NULL) {
+            if ((obj->anim.parentAnim->hitboxTransformState != NULL) &&
+                (ObjHits_IsObjectEnabled((ObjAnimComponent*)obj->anim.parent) != 0)) {
+                matrixSource = obj->anim.parentAnim->hitboxTransformState;
                 matrixOffset = (matrixSource->activeMatrixIndex + 2) * 0x10;
-                Matrix_TransformPoint((f32*)matrixSource + matrixOffset, ((GameObject*)obj)->anim.localPosX,
-                                      ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
-                                      &((GameObject*)obj)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosY,
-                                      &((GameObject*)obj)->anim.worldPosZ);
+                Matrix_TransformPoint((f32*)matrixSource + matrixOffset, obj->anim.localPosX, obj->anim.localPosY,
+                                      obj->anim.localPosZ, &obj->anim.worldPosX, &obj->anim.worldPosY,
+                                      &obj->anim.worldPosZ);
             } else {
-                Obj_TransformLocalPointToWorld(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                               ((GameObject*)obj)->anim.localPosZ, &((GameObject*)obj)->anim.worldPosX,
-                                               &((GameObject*)obj)->anim.worldPosY, &((GameObject*)obj)->anim.worldPosZ,
-                                               (GameObject*)((GameObject*)obj)->anim.parent);
+                Obj_TransformLocalPointToWorld(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
+                                               &obj->anim.worldPosX, &obj->anim.worldPosY, &obj->anim.worldPosZ,
+                                               (GameObject*)obj->anim.parent);
             }
         } else {
-            ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
-            ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
-            ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
+            obj->anim.worldPosX = obj->anim.localPosX;
+            obj->anim.worldPosY = obj->anim.localPosY;
+            obj->anim.worldPosZ = obj->anim.localPosZ;
         }
         flags = collision->flags;
         if ((s32)(flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0) {
-            transform.rotX = ((GameObject*)obj)->anim.rotX;
+            transform.rotX = obj->anim.rotX;
             if ((s32)(flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0) {
                 transform.rotY = 0;
                 transform.rotZ = 0;
             } else {
-                transform.rotY = ((GameObject*)obj)->anim.rotY;
-                transform.rotZ = ((GameObject*)obj)->anim.rotZ;
+                transform.rotY = obj->anim.rotY;
+                transform.rotZ = obj->anim.rotZ;
             }
             transform.scale = CURVES_ONE;
-            transform.x = ((GameObject*)obj)->anim.worldPosX;
-            transform.y = ((GameObject*)obj)->anim.worldPosY;
-            transform.z = ((GameObject*)obj)->anim.worldPosZ;
+            transform.x = obj->anim.worldPosX;
+            transform.y = obj->anim.worldPosY;
+            transform.z = obj->anim.worldPosZ;
             setMatrixFromObjectPos(matrix, &transform);
             iv[0] = 0;
             iv[1] = iv[0];
@@ -673,11 +670,10 @@ void curves_preparePointCollisionFrame(GameObject* obj, CurvesCollisionState* co
                 collision->traceStart[iv[1]][2] = collision->points[iv[1]][2];
             }
         }
-        if (((GameObject*)obj)->anim.classId == 1) {
-            collision->traceStart[2][0] = collision->points[2][0] = ((GameObject*)obj)->anim.worldPosX;
-            collision->traceStart[2][1] = collision->points[2][1] =
-                CURVES_FALLBACK_TRACE_HEIGHT + ((GameObject*)obj)->anim.worldPosY;
-            collision->traceStart[2][2] = collision->points[2][2] = ((GameObject*)obj)->anim.worldPosZ;
+        if (obj->anim.classId == 1) {
+            collision->traceStart[2][0] = collision->points[2][0] = obj->anim.worldPosX;
+            collision->traceStart[2][1] = collision->points[2][1] = CURVES_FALLBACK_TRACE_HEIGHT + obj->anim.worldPosY;
+            collision->traceStart[2][2] = collision->points[2][2] = obj->anim.worldPosZ;
         }
         collision->surfaceFlags = 0;
         collision->surfaceHitMask = 0;
@@ -711,18 +707,18 @@ void curves_updateLocalPointTransforms(GameObject* obj, CurvesCollisionState* co
     flags = collision->flags;
     if (((s32)(flags & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
         ((s32)(flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0)) {
-        transform.rotX = ((GameObject*)obj)->anim.rotX;
+        transform.rotX = obj->anim.rotX;
         if ((s32)(flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0) {
             transform.rotY = 0;
             transform.rotZ = 0;
         } else {
-            transform.rotY = ((GameObject*)obj)->anim.rotY;
-            transform.rotZ = ((GameObject*)obj)->anim.rotZ;
+            transform.rotY = obj->anim.rotY;
+            transform.rotZ = obj->anim.rotZ;
         }
         transform.scale = CURVES_ONE;
-        transform.x = ((GameObject*)obj)->anim.localPosX;
-        transform.y = ((GameObject*)obj)->anim.localPosY;
-        transform.z = ((GameObject*)obj)->anim.localPosZ;
+        transform.x = obj->anim.localPosX;
+        transform.y = obj->anim.localPosY;
+        transform.z = obj->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
         iv[0] = 0;
         iv[1] = iv[0];
@@ -744,7 +740,7 @@ void curves_updateLocalPointTransforms(GameObject* obj, CurvesCollisionState* co
             collision->localPointTarget[iv[0]][1] = CURVES_ONE + collision->localPointWorld[iv[0]][1];
             collision->localPointTarget[iv[0]][2] = collision->localPointWorld[iv[0]][2];
         }
-        trackInvalidateDynamicSlotsForObject((GameObject*)obj);
+        trackInvalidateDynamicSlotsForObject(obj);
     }
 }
 
@@ -763,18 +759,18 @@ void curves_reset(GameObject* obj, CurvesCollisionState* collision) {
     flags = collision->flags;
     if (((s32)(flags & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
         ((s32)(flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0)) {
-        transform.rotX = (obj)->anim.rotX;
+        transform.rotX = obj->anim.rotX;
         if ((s32)(flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0) {
             transform.rotY = 0;
             transform.rotZ = 0;
         } else {
-            transform.rotY = (obj)->anim.rotY;
-            transform.rotZ = (obj)->anim.rotZ;
+            transform.rotY = obj->anim.rotY;
+            transform.rotZ = obj->anim.rotZ;
         }
         transform.scale = CURVES_ONE;
-        transform.x = (obj)->anim.localPosX;
-        transform.y = (obj)->anim.localPosY;
-        transform.z = (obj)->anim.localPosZ;
+        transform.x = obj->anim.localPosX;
+        transform.y = obj->anim.localPosY;
+        transform.z = obj->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
         loopIdx[0] = 0;
         loopIdx[1] = loopIdx[0];
@@ -1276,11 +1272,11 @@ void curves_updateQueryBounds(GameObject* obj, CurvesCollisionState* state, f32 
             *radDst = radSrc->segmentHits.radii[0];
             rr = radiusScale * *radDst;
             *radDst = sqrtf(rr * *radDst);
-            ptsWalk = ptsWalk + 3;
-            byteOff = byteOff + 0xc;
-            idx3 = idx3 + 3;
+            ptsWalk += 3;
+            byteOff += 0xc;
+            idx3 += 3;
             radSrc = (CurvesCollisionState*)((u8*)radSrc + 4);
-            radDst = radDst + 1;
+            radDst += 1;
         }
         maxX = CURVES_BOUNDS_MAX_SEED;
         minX = CURVES_BOUNDS_MIN_SEED;
@@ -1338,9 +1334,9 @@ void curves_updateQueryBounds(GameObject* obj, CurvesCollisionState* state, f32 
             if (bound < minZ) {
                 minZ = bound;
             }
-            ptsRead = ptsRead + 3;
+            ptsRead += 3;
             traceSrc = (CurvesCollisionState*)((u8*)traceSrc + 12);
-            radWrite = radWrite + 1;
+            radWrite += 1;
         }
         state->hitBounds.minX = minX;
         state->hitBounds.maxX = maxX;
@@ -1424,7 +1420,7 @@ void saveFileStruct_setCheatActive(u8 optionIndex, u8 active) {
     if (active != 0) {
         save->enabledCheats |= 1 << optionIndex;
     } else {
-        save->enabledCheats = save->enabledCheats & ~(1 << optionIndex);
+        save->enabledCheats &= ~(1 << optionIndex);
     }
 }
 

@@ -84,7 +84,7 @@ void dll_61_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[5].flags = 9;
     commands[5].tex = &resourceData[offsetof(Dll61EffectResourceView, nineVertexIndices)];
     commands[5].mode = 2;
-    randomScale = 0.05f * (f32)randomGetRange(0, 0xc);
+    randomScale = 0.05f * randomGetRange(0, 0xc);
     randomScale = 2.6f + randomScale;
     commands[5].x = randomScale;
     commands[5].y = randomScale;

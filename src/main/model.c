@@ -755,7 +755,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
         total = sizes[4] + (int)sizeof(ObjModel);
         total = (sizes[3] + sizes[6] + sizes[1] + 8) + total;
     }
-    total = total + sizes[0];
+    total += sizes[0];
     if (((ModelFileHeader*)hdr)->jointData != 0 && ((ModelFileHeader*)hdr)->jointCount != 0 && ((ModelFileHeader*)hdr)->
         unk18 != 0)
     {
@@ -765,12 +765,12 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     if (((ModelFileHeader*)hdr)->vertexAnimEntries != 0)
     {
         total = (va = (u32)((ModelFileHeader*)hdr)->vertexAnimCount * 4, va + total);
-        total = total + 4;
+        total += 4;
     }
     if (((ModelFileHeader*)hdr)->blendAnimEntries != 0)
     {
         total = (va = (u32)((ModelFileHeader*)hdr)->blendAnimCount * 4, va + total);
-        total = total + 4;
+        total += 4;
     }
     total += (u32)((ModelFileHeader*)hdr)->renderOpCount * (int)sizeof(ModelRenderOpTextureRefs);
     if ((flags & 0x8000) != 0)
@@ -2419,12 +2419,11 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
     s16 rot[3];
 
     ObjModel_BuildAnimBlendTable((u8*)obj, (u8*)model->animStateA, (u8*)blend);
-    ((ObjModel*)model)->bufferFlags ^= 1;
-    ch = ((ObjModel*)model)->animStateA;
+    model->bufferFlags ^= 1;
+    ch = model->animStateA;
     if (ch->moveControlFlags & 4)
     {
-        ObjModel_SampleJointTransform((ObjModel*)model, 0, 0, obj->anim.currentMoveProgress,
-                                      obj->anim.rootMotionScale, pos, rot);
+        ObjModel_SampleJointTransform(model, 0, 0, obj->anim.currentMoveProgress, obj->anim.rootMotionScale, pos, rot);
         gModelRootRotX = rot[0];
         gModelRootRotY = rot[1];
         gModelRootRotZ = rot[2];
@@ -2433,10 +2432,8 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
     {
         modelAnimEvalChannels((u8*)dst, model, (ObjAnimState*)model->animStateA,
                               obj->anim.currentMoveProgress, 0x7f);
-    }
-    else if (((ObjAnimState*)((ObjModel*)model)->animStateA)->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP)
-    {
-        ch2 = ((ObjModel*)model)->animStateB;
+    } else if (((ObjAnimState*)model->animStateA)->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP) {
+        ch2 = model->animStateB;
         modelAnimEvalSlotPair((u8*)dst, model, ch, obj->anim.currentMoveProgress, 0x7f, 0, 0, 2, 0x14,
                              (s16)ch->eventState);
         modelAnimEvalSlotPair((u8*)dst, model, ch2, obj->anim.activeMoveProgress, 0x7f, 0, 0, 2, 0x18,
@@ -2445,12 +2442,10 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
                              (s16)ch2->eventCountdown);
         modelAnimEvalSlotPair((u8*)dst, model, ch, obj->anim.currentMoveProgress, 0x7f, 0, 1, 1, 1,
                              (s16)ch->eventCountdown);
-    }
-    else
-    {
+    } else {
         modelAnimEvalChannels((u8*)dst, model, (ObjAnimState*)model->animStateA,
                               obj->anim.currentMoveProgress, 0x7f);
-        ch2 = ((ObjModel*)model)->animStateB;
+        ch2 = model->animStateB;
         if (ch2 != NULL && obj->anim.activeMove > -1)
         {
             ObjModel_BuildAnimBlendTable((u8*)obj, (u8*)model->animStateB, (u8*)blend);
@@ -2809,7 +2804,7 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize)
     }
     else
     {
-        (*(u8*)header)++;
+        (*header)++;
     }
     *outSize = modelLoad_calcSizes(header, loadFlag, sizes, 0);
     return header;

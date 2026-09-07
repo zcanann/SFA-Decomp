@@ -1,5 +1,4 @@
-#define OBJHITS_STATE_INDEX_S8
-#define TEX_SETSHADER_U8
+#include "main/newshadows.h"
 #include "main/map_block.h"
 #include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
@@ -22,7 +21,6 @@
 #include "main/model_render_instrs_api.h"
 #include "main/objHitReact.h"
 #include "main/objhits.h"
-#undef OBJHITS_STATE_INDEX_S8
 #include "main/objtype.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
@@ -42,11 +40,7 @@
 #include "main/newshadows_shadow_api.h"
 #include "dolphin/mtx/vec.h"
 #define TRACK_BBOX_FLAGS_S8
-#define TRACK_BBOX_MASK_TYPE  s8
-#define TRACK_BBOX_ARG10_TYPE s8
 #include "main/track_bbox_api.h"
-#undef TRACK_BBOX_ARG10_TYPE
-#undef TRACK_BBOX_MASK_TYPE
 #undef TRACK_BBOX_FLAGS_S8
 #include "main/dll/player_api.h"
 #include "main/pause_menu_api.h"
@@ -56,7 +50,6 @@
 #include "track/intersect_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/objmodel.h"
-#include "main/newshadows.h"
 #include "main/sky.h"
 #include "main/newshadows_texture_api.h"
 #include "main/acosf_api.h"
@@ -79,15 +72,12 @@
 extern Texture* gNewShadowHeavyFogTexture;
 extern u8 gNewShadowHeavyFogIntensity;
 
-#define READ_TEXTURE_U16(address)         (*(u16*)(address))
-#define WRITE_TEXTURE_U16(address, value) (*(u16*)(address) = (value))
-
 void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst) {
-    u32 fmt;
-    u32 w;
-    u32 h;
-    u8 wA;
-    u8 wB;
+    u32 format;
+    u32 width;
+    u32 height;
+    u8 weightA;
+    u8 weightB;
     int pixelB;
     int pixelA;
     int redB;
@@ -106,126 +96,132 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst) {
     if (dst == NULL) {
         return;
     }
-    fmt = src1->format;
-    if (fmt != GX_TF_RGB565 && fmt != GX_TF_RGBA8) {
+    format = src1->format;
+    if (format != GX_TF_RGB565 && format != GX_TF_RGBA8) {
         return;
     }
-    if (src2->format != fmt) {
+    if (src2->format != format) {
         return;
     }
-    if (dst->format != fmt) {
+    if (dst->format != format) {
         return;
     }
-    w = src1->width;
-    if (w != src2->width) {
+    width = src1->width;
+    if (width != src2->width) {
         return;
     }
-    h = src1->height;
-    if (h != src2->height) {
+    height = src1->height;
+    if (height != src2->height) {
         return;
     }
-    if (w != dst->width || h != dst->height) {
+    if (width != dst->width || height != dst->height) {
         return;
     }
     {
-        wA = (int)(255.0f * blend) & 0xff;
-        wB = (0xff - wA) & 0xff;
-        if (fmt == GX_TF_RGB565) {
-            int i, j;
-            for (i = 0; i < src1->height; i++) {
-                u8* pa;
-                u8* pb;
-                u8* pc;
-                u32 wd;
+        weightA = (int)(255.0f * blend) & 0xff;
+        weightB = (0xff - weightA) & 0xff;
+        if (format == GX_TF_RGB565) {
+            int y, x;
+            u32 tileRow;
+            u32 rowInTile;
+            for (y = 0; y < src1->height; y++) {
+                u8* sourcePixelA;
+                u8* sourcePixelB;
+                u8* destinationPixel;
+                u32 rowWidth;
                 int rowDataOffset;
                 int tileColumnOffset;
                 int pixelColumnOffset;
-                j = 0;
-                w = i & 0xfffffffc;
-                h = (i & 3) * 8;
-                for (; j < (int)(wd = src1->width); j++) {
-                    pixelColumnOffset = (j & 3) * 2;
-                    pa = (u8*)src1 + pixelColumnOffset;
-                    tileColumnOffset = (j >> 2) * 0x20;
-                    pa += h;
-                    pa += tileColumnOffset;
-                    rowDataOffset = w * (int)wd * 2;
-                    pa += rowDataOffset;
-                    pixelA = READ_TEXTURE_U16(pa + sizeof(Texture));
+                x = 0;
+                tileRow = y & 0xfffffffc;
+                rowInTile = (y & 3) * 8;
+                for (; x < (int)(rowWidth = src1->width); x++) {
+                    pixelColumnOffset = (x & 3) * 2;
+                    sourcePixelA = (u8*)src1 + pixelColumnOffset;
+                    tileColumnOffset = (x >> 2) * 0x20;
+                    sourcePixelA += tileColumnOffset;
+                    sourcePixelA += rowInTile;
+                    rowDataOffset = (int)rowWidth * tileRow * 2;
+                    sourcePixelA += rowDataOffset;
+                    pixelA = *(u16*)(sourcePixelA + sizeof(Texture));
                     redA = (pixelA & 0xf800) >> 8;
                     redA = (u8)(redA | ((pixelA & 0xe000) >> 13));
-                    pb = (u8*)src2 + pixelColumnOffset;
-                    pb += h;
-                    pb += tileColumnOffset;
-                    pb += rowDataOffset;
-                    pixelB = READ_TEXTURE_U16(pb + sizeof(Texture));
+                    sourcePixelB = (u8*)src2 + pixelColumnOffset;
+                    sourcePixelB += tileColumnOffset;
+                    sourcePixelB += rowInTile;
+                    sourcePixelB += rowDataOffset;
+                    pixelB = *(u16*)(sourcePixelB + sizeof(Texture));
                     redB = (pixelB & 0xf800) >> 8;
                     redB = (u8)(redB | ((pixelB & 0xe000) >> 13));
-                    blue = ((u8)(((int)(wA * (u8)(((pixelA & 0x1f) << 3) | ((pixelA & 0x1c) >> 2))) >> 8) +
-                                 ((int)(wB * (u8)(((pixelB & 0x1f) << 3) | ((pixelB & 0x1c) >> 2))) >> 8)) &
+                    blue = ((u8)(((int)(weightA * (u8)(((pixelA & 0x1f) << 3) | ((pixelA & 0x1c) >> 2))) >> 8) +
+                                 ((int)(weightB * (u8)(((pixelB & 0x1f) << 3) | ((pixelB & 0x1c) >> 2))) >> 8)) &
                             0xf8) >>
                            3;
-                    red = ((u8)(((int)(redB * wB) >> 8) + ((int)(redA * wA) >> 8)) & 0xf8) << 8;
-                    green = ((u8)(((int)(wA * (u8)(((pixelA & 0x7e0) >> 3) | ((pixelA & 0x600) >> 9))) >> 8) +
-                                  ((int)(wB * (u8)(((pixelB & 0x7e0) >> 3) | ((pixelB & 0x600) >> 9))) >> 8)) &
+                    red = ((u8)(((int)(redA * weightA) >> 8) + ((int)(redB * weightB) >> 8)) & 0xf8) << 8;
+                    green = ((u8)(((int)(weightA * (u8)(((pixelA & 0x7e0) >> 3) | ((pixelA & 0x600) >> 9))) >> 8) +
+                                  ((int)(weightB * (u8)(((pixelB & 0x7e0) >> 3) | ((pixelB & 0x600) >> 9))) >> 8)) &
                              0xfc)
                             << 3;
                     outputPixel = blue | (red | green);
-                    pc = (u8*)dst + pixelColumnOffset + tileColumnOffset + h + rowDataOffset;
-                    WRITE_TEXTURE_U16(pc + sizeof(Texture), outputPixel);
+                    destinationPixel = (u8*)dst + pixelColumnOffset;
+                    destinationPixel += tileColumnOffset;
+                    destinationPixel += rowInTile;
+                    destinationPixel += rowDataOffset;
+                    *(u16*)(destinationPixel + sizeof(Texture)) = outputPixel;
                 }
             }
         } else {
-            int i, j;
-            for (i = 0; i < src1->height; i++) {
-                u32 wd;
-                j = 0;
-                w = (i >> 2) * 8;
-                h = (i & 3) * 8;
-                for (; j < (int)(wd = src1->width); j++) {
+            int y, x;
+            u32 tileRow;
+            u32 rowInTile;
+            for (y = 0; y < src1->height; y++) {
+                u32 rowWidth;
+                x = 0;
+                tileRow = (y >> 2) * 8;
+                rowInTile = (y & 3) * 8;
+                for (; x < (int)(rowWidth = src1->width); x++) {
                     int rowDataOffset;
-                    int pixelColumnOffset = (j & 3) * 2;
+                    int pixelColumnOffset = (x & 3) * 2;
                     int tileColumnOffset;
                     int pixelA, pixelB;
-                    u8 *ad, *bd, *ct, *cd;
-                    int aLo, bLo, aHi, bHi;
-                    ad = (u8*)src1 + pixelColumnOffset;
-                    tileColumnOffset = (j >> 2) * 0x40;
-                    ad += tileColumnOffset;
-                    ad += h;
-                    rowDataOffset = (int)wd * w * 2;
-                    ad += rowDataOffset;
-                    bd = (u8*)src2 + pixelColumnOffset;
-                    bd += tileColumnOffset;
-                    bd += h;
-                    bd += rowDataOffset;
-                    aLo = READ_TEXTURE_U16(ad + sizeof(Texture));
-                    aLo = (u8)aLo;
-                    bLo = READ_TEXTURE_U16(bd + sizeof(Texture));
-                    bLo = (u8)bLo;
-                    pixelA = READ_TEXTURE_U16(ad + sizeof(Texture) + 0x20);
-                    aHi = (pixelA & 0xff00) >> 8;
-                    aHi = (u8)aHi;
-                    pixelB = READ_TEXTURE_U16(bd + sizeof(Texture) + 0x20);
-                    bHi = (pixelB & 0xff00) >> 8;
-                    bHi = (u8)bHi;
-                    ct = (u8*)dst + pixelColumnOffset;
-                    ct += tileColumnOffset;
-                    ct += h;
-                    cd = ct + sizeof(Texture);
-                    WRITE_TEXTURE_U16(cd + rowDataOffset, (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8)));
-                    WRITE_TEXTURE_U16(cd + src1->width * w * 2 + 0x20,
-                                      ((u8)(((int)(aHi * wA) >> 8) + ((int)(bHi * wB) >> 8)) << 8) |
-                                          (u8)(((int)(wA * (u8)pixelA) >> 8) + ((int)(wB * (u8)pixelB) >> 8)));
+                    u8 *sourcePixelA, *sourcePixelB, *destinationTile, *destinationRow;
+                    int redA, redB, greenA, greenB;
+                    sourcePixelA = (u8*)src1 + pixelColumnOffset;
+                    tileColumnOffset = (x >> 2) * 0x40;
+                    sourcePixelA += tileColumnOffset;
+                    sourcePixelA += rowInTile;
+                    rowDataOffset = (int)rowWidth * tileRow * 2;
+                    sourcePixelA += rowDataOffset;
+                    sourcePixelB = (u8*)src2 + pixelColumnOffset;
+                    sourcePixelB += tileColumnOffset;
+                    sourcePixelB += rowInTile;
+                    sourcePixelB += rowDataOffset;
+                    redA = *(u16*)(sourcePixelA + sizeof(Texture));
+                    redA = (u8)redA;
+                    redB = *(u16*)(sourcePixelB + sizeof(Texture));
+                    redB = (u8)redB;
+                    pixelA = *(u16*)(sourcePixelA + sizeof(Texture) + 0x20);
+                    greenA = (pixelA & 0xff00) >> 8;
+                    greenA = (u8)greenA;
+                    pixelB = *(u16*)(sourcePixelB + sizeof(Texture) + 0x20);
+                    greenB = (pixelB & 0xff00) >> 8;
+                    greenB = (u8)greenB;
+                    destinationTile = (u8*)dst + pixelColumnOffset;
+                    destinationTile += tileColumnOffset;
+                    destinationTile += rowInTile;
+                    destinationRow = destinationTile + sizeof(Texture);
+                    /* Retail writes the red byte with zero alpha. */
+                    *(u16*)(destinationRow + rowDataOffset) =
+                        (u8)(((int)(redA * weightA) >> 8) + ((int)(redB * weightB) >> 8));
+                    *(u16*)(destinationRow + src1->width * tileRow * 2 + 0x20) =
+                        ((u8)(((int)(greenA * weightA) >> 8) + ((int)(greenB * weightB) >> 8)) << 8) |
+                        (u8)(((int)(weightA * (u8)pixelA) >> 8) + ((int)(weightB * (u8)pixelB) >> 8));
                 }
             }
         }
         DCStoreRange((u8*)dst + sizeof(Texture), dst->dataSize);
     }
 }
-
-#undef READ_TEXTURE_U16
-#undef WRITE_TEXTURE_U16
 
 void updateHeavyFogTexture(int intensity) {
     u8* cache;
@@ -258,15 +254,15 @@ void updateHeavyFogTexture(int intensity) {
 }
 
 Camera* gNewShadowCurrentViewSlot;
-u32 gNewShadowReflectionSmallTexture;
+Texture* gNewShadowReflectionSmallTexture;
 Texture* gNewShadowCausticTexture;
-u32 gNewShadowReflectionTexture2;
-u32 gNewShadowDiskTexture;
-u32 gNewShadowSmallDiskTexture;
-u32 gNewShadowBumpTexture;
-u32 gNewShadowWhirlpoolTexture;
+Texture* gNewShadowReflectionTexture2;
+Texture* gNewShadowDiskTexture;
+Texture* gNewShadowSmallDiskTexture;
+Texture* gNewShadowBumpTexture;
+Texture* gNewShadowWhirlpoolTexture;
 Texture* gNewShadowHeatHazeTexture;
-u32 gNewShadowSnowFlashTexture;
+Texture* gNewShadowSnowFlashTexture;
 Texture* gNewShadowRadialTexture;
 Texture* gNewShadowDistortionTexture;
 Texture* gNewShadowHeavyFogTexture;
@@ -276,10 +272,10 @@ f32 gNewShadowReflectionScrollX;
 f32 gNewShadowReflectionScrollY;
 f32 gNewShadowDistortionWaveOffset;
 u16 gNewShadowDistortionWavePhase;
-u32 gNewShadowRampTexture;
-u32 gNewShadowInverseRampTexture;
-u32 gNewShadowReflectionGradientTexture;
-u32 gNewShadowFalloffTexture;
+Texture* gNewShadowRampTexture;
+Texture* gNewShadowInverseRampTexture;
+Texture* gNewShadowReflectionGradientTexture;
+Texture* gNewShadowFalloffTexture;
 u8 gNewShadowFrameIndex;
 int gNewShadowLightAngleY;
 int gNewShadowLightAngleX;
@@ -297,8 +293,8 @@ extern Texture* gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
 extern Texture* gNewShadowCastTextures[NEW_SHADOW_MAX_CAST_TEXTURES];
 extern NewShadowCastSlot gNewShadowCastSlots[NEW_SHADOW_MAX_CASTERS];
 extern NewShadowCaster gNewShadowCasterTable[NEW_SHADOW_MAX_QUEUED_CASTERS];
-extern Texture* gNewShadowNoiseTexFrames[0x10];
-extern f32 gNewShadowPlacements[0x112];
+extern Texture* gNewShadowNoiseTexFrames[NEW_SHADOW_NOISE_FRAME_COUNT];
+extern NewShadowNoiseData gNewShadowNoiseData;
 SurfaceSfxTable gSurfaceSfxTable = {
     {
         {0x0346, 0x0346, 0x0346, 0x0347, 0x0348, 0x0349, 0x034A, 0x034B, 0x0346, 0x034C},
@@ -326,18 +322,6 @@ extern inline float sqrtf(float x) {
     }
     return x;
 }
-
-extern const f32 lbl_803DED38;
-extern const f32 lbl_803DED40;
-extern const f32 lbl_803DEDC0;
-extern const f32 lbl_803DEDD0;
-extern const f32 lbl_803DEDE0;
-extern const f32 lbl_803DEDF0;
-extern const f32 lbl_803DEDF4;
-extern const f32 lbl_803DEDFC;
-extern const f32 lbl_803DEE14;
-extern const f32 lbl_803DEE18;
-extern const f32 lbl_803DEE1C;
 
 static inline void boxBlurRow(u8* row, u8* blurred, int size, int window) {
     u32 sum;
@@ -939,10 +923,10 @@ void newshadows_getShadowTextureTable4x8(Texture*** tableOut, int* columnsOut, i
 
 void newshadows_getNoiseTextureFrames(Texture*** tableOut, int* frameCountOut) {
     *tableOut = gNewShadowNoiseTexFrames;
-    *frameCountOut = 0x10;
+    *frameCountOut = NEW_SHADOW_NOISE_FRAME_COUNT;
 }
 
-void newshadows_getSnowFlashTexture(u32* p) {
+void newshadows_getSnowFlashTexture(Texture** p) {
     *p = gNewShadowSnowFlashTexture;
 }
 void newshadows_getHeatHazeTexture(Texture** p) {
@@ -970,21 +954,21 @@ void* newshadows_allocTexture512(void) {
     DCFlushRange((char*)tex + sizeof(Texture), tex->dataSize);
     return tex;
 }
-void newshadows_getRampTexture(u32* out) {
+void newshadows_getRampTexture(Texture** out) {
     *out = gNewShadowRampTexture;
 }
 
-u32 newshadows_getSmallDiskTexture(void) {
+Texture* newshadows_getSmallDiskTexture(void) {
     return gNewShadowSmallDiskTexture;
 }
-void newshadows_getDiskTexture(u32* out) {
+void newshadows_getDiskTexture(Texture** out) {
     *out = gNewShadowDiskTexture;
 }
-void newshadows_getReflectionDepthTexture(u32* p) {
+void newshadows_getReflectionDepthTexture(Texture** p) {
     *p = gNewShadowReflectionTexture2;
 }
-void newshadows_getCausticTexture(u32* p) {
-    *p = (u32)gNewShadowCausticTexture;
+void newshadows_getCausticTexture(Texture** p) {
+    *p = gNewShadowCausticTexture;
 }
 
 void getObjectShadowDrawParams(GameObject* obj, Texture** outTexture, f32* outScale, int* outX, int* outY) {
@@ -1000,12 +984,12 @@ f32 newshadows_getDistortionWaveOffset(void) {
 }
 
 void newshadows_loadBumpTexture(int texMapId) {
-    GXLoadTexObj(textureGetGXTexObj((Texture*)gNewShadowBumpTexture), texMapId);
+    GXLoadTexObj(textureGetGXTexObj(gNewShadowBumpTexture), texMapId);
 }
 
 void newshadows_loadWhirlpoolTexture(int id) {
     register int idCopy = id;
-    Texture* p = (Texture*)gNewShadowWhirlpoolTexture;
+    Texture* p = gNewShadowWhirlpoolTexture;
     if (p->preloaded != 0) {
         struct _GXTexObj* obj = textureGetGXTexObj(p);
         GXLoadTexObjPreLoaded(obj, textureGetGXTexRegion(p), idCopy);
@@ -1024,25 +1008,25 @@ void newshadows_loadReflectionColorTexture(int id) {
         GXLoadTexObj(textureGetGXTexObj(p), idCopy);
     }
 }
-u32 newshadows_getReflectionColorTexture(void) {
-    return (u32)gNewShadowReflectionTexture;
+Texture* newshadows_getReflectionColorTexture(void) {
+    return gNewShadowReflectionTexture;
 }
 
 NewShadowEntry gNewShadowEntries[0x294 / sizeof(NewShadowEntry)];
-u32 newshadows_getReflectionGradientTexture(void) {
+Texture* newshadows_getReflectionGradientTexture(void) {
     return gNewShadowReflectionGradientTexture;
 }
 
-u32 newshadows_getInverseRampTexture(void) {
+Texture* newshadows_getInverseRampTexture(void) {
     return gNewShadowInverseRampTexture;
 }
-u32 newshadows_getFalloffTexture(void) {
+Texture* newshadows_getFalloffTexture(void) {
     return gNewShadowFalloffTexture;
 }
 
 void newshadows_loadSmallReflectionTexture(int id) {
     register int idCopy = id;
-    Texture* p = (Texture*)gNewShadowReflectionSmallTexture;
+    Texture* p = gNewShadowReflectionSmallTexture;
     if (p->preloaded != 0) {
         struct _GXTexObj* obj = textureGetGXTexObj(p);
         GXLoadTexObjPreLoaded(obj, textureGetGXTexRegion(p), idCopy);
@@ -1056,9 +1040,9 @@ void newshadows_drawReflectionTexture(void) {
     GXSetTexCopySrc(0, 0, 0x50, 0x3c);
     GXSetTexCopyDst(0x50, 0x3c, GX_TF_RGB565, GX_FALSE);
     GXCopyTex((char*)gNewShadowReflectionSmallTexture + sizeof(Texture), GX_TRUE);
-    if (((Texture*)gNewShadowReflectionSmallTexture)->preloaded != 0) {
-        GXTexObj* obj = textureGetGXTexObj((Texture*)gNewShadowReflectionSmallTexture);
-        GXPreLoadEntireTexture(obj, textureGetGXTexRegion((Texture*)gNewShadowReflectionSmallTexture));
+    if (gNewShadowReflectionSmallTexture->preloaded != 0) {
+        GXTexObj* obj = textureGetGXTexObj(gNewShadowReflectionSmallTexture);
+        GXPreLoadEntireTexture(obj, textureGetGXTexRegion(gNewShadowReflectionSmallTexture));
     }
 }
 
@@ -1073,11 +1057,11 @@ void newshadows_captureReflectionTextures(void) {
         GXTexObj* obj = textureGetGXTexObj(gNewShadowReflectionTexture);
         GXPreLoadEntireTexture(obj, textureGetGXTexRegion(gNewShadowReflectionTexture));
     }
-    if (((Texture*)gNewShadowReflectionTexture2)->preloaded != 0) {
-        GXTexObj* obj = textureGetGXTexObj((Texture*)gNewShadowReflectionTexture2);
-        GXPreLoadEntireTexture(obj, textureGetGXTexRegion((Texture*)gNewShadowReflectionTexture2));
+    if (gNewShadowReflectionTexture2->preloaded != 0) {
+        GXTexObj* obj = textureGetGXTexObj(gNewShadowReflectionTexture2);
+        GXPreLoadEntireTexture(obj, textureGetGXTexRegion(gNewShadowReflectionTexture2));
     }
-    if (gNewShadowReflectionTexture->preloaded == 0 || ((Texture*)gNewShadowReflectionTexture2)->preloaded == 0) {
+    if (gNewShadowReflectionTexture->preloaded == 0 || gNewShadowReflectionTexture2->preloaded == 0) {
         GXInvalidateTexAll();
     }
     GXPixModeSync();
@@ -1089,10 +1073,10 @@ void newshadows_beginFrame(void) {
         gNewShadowReflectionScrollX = 0.0084f * timeDelta + gNewShadowReflectionScrollX;
         gNewShadowReflectionScrollY = 0.003f * timeDelta + gNewShadowReflectionScrollY;
         if (gNewShadowReflectionScrollX > 256.0f) {
-            gNewShadowReflectionScrollX = gNewShadowReflectionScrollX - 256.0f;
+            gNewShadowReflectionScrollX -= 256.0f;
         }
         if (gNewShadowReflectionScrollY > 256.0f) {
-            gNewShadowReflectionScrollY = gNewShadowReflectionScrollY - 256.0f;
+            gNewShadowReflectionScrollY -= 256.0f;
         }
     }
     gNewShadowCasterCount = 0;
@@ -1124,10 +1108,6 @@ void newshadows_getReflectionScrollOffsets(f32* outScrollX, f32* outScrollY) {
     *outScrollY = gNewShadowReflectionScrollY;
 }
 
-/* Builds the animated water-noise assets: scatters up to 50 non-overlapping random
-   placements ([0]=lifetime 8..16 frames, [1..2]=pos, [3]=outer size, [4]=inner size),
-   renders 16 noise animation frames through evalNoisePlacements, then the caustic texture. */
-
 void newshadows_releaseTextureEntry(void* textureEntry) {
     int i;
     for (i = 0; i < NEW_SHADOW_ENTRY_CAPACITY; ++i) {
@@ -1144,131 +1124,128 @@ void newshadows_freeDistortionTexture(void) {
 }
 
 void newshadows_createDistortionTexture(void) {
-    int yhi;
-    int ylo;
-    int y, x;
-    f32 dirX, dirY;
-    f32 dist;
-    f32 s;
-    f32 t;
-    f32 normY;
+    int tileColumnOffset;
+    int columnPixelOffset;
+    int x, y;
+    f32 directionY, directionX;
+    f32 radius;
+    f32 strength;
+    f32 normalizedX;
     gNewShadowDistortionTexture = textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
-    for (y = 0; y < 0x100; y++) {
-        x = 0;
-        yhi = (y >> 2) * 0x20;
-        ylo = (y & 3) * 2;
-        for (; x < 0x100; x++) {
-            u8* rowBase;
-            u8* tileRow;
+    for (x = 0; x < 0x100; x++) {
+        y = 0;
+        tileColumnOffset = (x >> 2) * 0x20;
+        columnPixelOffset = (x & 3) * 2;
+        for (; y < 0x100; y++) {
+            u8* columnBase;
+            u8* tileBase;
             u8* texel;
-            rowBase = (u8*)gNewShadowDistortionTexture;
-            rowBase += ylo;
-            tileRow = rowBase + yhi;
-            tileRow += (x & 3) * 8;
-            texel = tileRow + (x >> 2) * 0x800;
-            dirY = y - 127.5f;
-            dirX = x - 127.5f;
-            dist = sqrtf(dirY * dirY + dirX * dirX);
-            normY = dirY / dist;
-            dirX /= dist;
-            if (dist <= 112.0f) {
-                t = 2.0f * (100.799995f - 0.9f * dist);
-                s = t * 0.00390625f;
-            } else {
-                s = 0.0f;
-            }
-            normY *= s;
-            dirX *= s;
-            normY = lbl_803DEDC0 * normY + 128.0f;
-            dirX = lbl_803DEDC0 * dirX + 128.0f;
-            ((NewShadowVectorTexel*)(texel + 0x60))->packedXY = (u16)((int)dirX | (((int)normY & 0xffff) << 8));
+            columnBase = (u8*)gNewShadowDistortionTexture;
+            columnBase += columnPixelOffset;
+            tileBase = columnBase + tileColumnOffset;
+            tileBase += (y & 3) * 8;
+            texel = tileBase + (y >> 2) * 0x800;
+            directionX = x - 127.5f;
+            directionY = y - 127.5f;
+            radius = sqrtf(directionX * directionX + directionY * directionY);
+            normalizedX = directionX / radius;
+            directionY /= radius;
+            strength = radius <= 112.0f ? (2.0f * (0.9f * 112.0f - 0.9f * radius)) / 256.0f : 0.0f;
+            normalizedX *= strength;
+            directionY *= strength;
+            normalizedX = 127.0f * normalizedX + 128.0f;
+            directionY = 127.0f * directionY + 128.0f;
+            *(u16*)(texel + sizeof(Texture)) = (u16)((int)directionY | (((int)normalizedX & 0xffff) << 8));
         }
     }
     DCFlushRange(gNewShadowDistortionTexture + 1, gNewShadowDistortionTexture->dataSize);
 }
-/* Sample the animated noise field built from gNewShadowPlacements: sums the
-   contribution of every active placement at texel (px,pz) for animation frame
-   `frame`. out2 = sparkle intensity (0..1), out1 = accumulated shift term. */
-static void evalNoisePlacements(f32 px, f32 pz, f32 frame, f32* placements, int count, f32* out1, f32* out2) {
-    f32* place;
+/* Sample the animated noise field built from gNewShadowNoiseData: sums the
+   contribution of every active placement at texel (sampleX,sampleZ) for animation frame
+   `frame`. outIntensity = sparkle intensity (0..1), outShift = accumulated shift term. */
+static void evalNoisePlacements(f32 sampleX, f32 sampleZ, f32 frame, const NewShadowNoisePlacement* placements,
+                                int count, f32* outShift, f32* outIntensity) {
+    const NewShadowNoisePlacement* place;
     int i;
-    f32 acc5;
-    f32 acc6;
+    f32 intensity;
+    f32 shift;
 
-    acc5 = acc6 = 0.0f;
+    intensity = shift = 0.0f;
     place = placements;
-    for (i = 0; i < count; i++, place += 5) {
-        f32 over = 0.0f;
-        if (frame < place[0]) {
-            f32 mx, mz, t, s0, tmp, p2lo, sq, ratio, frac, depth;
-            t = 0.25f + (place[0] - frame) / place[0];
-            if (t > 1.0f) {
-                t = 1.0f;
+    for (i = 0; i < count; i++, place++) {
+        f32 verticalOffset = 0.0f;
+        if (frame < place->frameCount) {
+            f32 distanceX, distanceZ, remainingLife, fade, wrappedDistance, wrappedZ, distance, phase, radiusProgress,
+                radius;
+            remainingLife = 0.25f + (place->frameCount - frame) / place->frameCount;
+            if (remainingLife > 1.0f) {
+                remainingLife = 1.0f;
             }
-            s0 = sqrtf(t);
+            fade = sqrtf(remainingLife);
 
-            mx = __fabsf(place[1] - px);
-            tmp = __fabsf((1.0f + place[1]) - px);
-            if (tmp < mx) {
-                mx = tmp;
+            distanceX = __fabsf(place->x - sampleX);
+            wrappedDistance = __fabsf((1.0f + place->x) - sampleX);
+            if (wrappedDistance < distanceX) {
+                distanceX = wrappedDistance;
             }
-            tmp = __fabsf((place[1] - 1.0f) - px);
-            if (tmp < mx) {
-                mx = tmp;
+            wrappedDistance = __fabsf((place->x - 1.0f) - sampleX);
+            if (wrappedDistance < distanceX) {
+                distanceX = wrappedDistance;
             }
 
-            mz = __fabsf(place[2] - pz);
-            if (pz > place[2]) {
-                over = pz - place[2];
+            distanceZ = __fabsf(place->z - sampleZ);
+            if (sampleZ > place->z) {
+                verticalOffset = sampleZ - place->z;
             }
-            tmp = __fabsf((1.0f + place[2]) - pz);
-            if (tmp < mz) {
-                mz = tmp;
-                over = 0.0f;
+            wrappedDistance = __fabsf((1.0f + place->z) - sampleZ);
+            if (wrappedDistance < distanceZ) {
+                distanceZ = wrappedDistance;
+                verticalOffset = 0.0f;
             }
-            p2lo = place[2] - 1.0f;
-            tmp = __fabsf(p2lo - pz);
-            if (tmp < mz) {
-                mz = tmp;
-                if (pz > p2lo) {
-                    over = pz - p2lo;
+            wrappedZ = place->z - 1.0f;
+            wrappedDistance = __fabsf(wrappedZ - sampleZ);
+            if (wrappedDistance < distanceZ) {
+                distanceZ = wrappedDistance;
+                if (sampleZ > wrappedZ) {
+                    verticalOffset = sampleZ - wrappedZ;
                 }
             }
 
-            sq = sqrtf(mx * mx + mz * mz);
+            distance = sqrtf(distanceX * distanceX + distanceZ * distanceZ);
 
-            ratio = frame / place[0];
-            frac = sqrtf(ratio);
-            depth = place[3] - frac * (place[3] - place[4]);
-            if (sq <= depth) {
-                f32 sqd = sq / depth;
-                f32 g;
-                sqd = 1.0f - sqd;
-                g = sqrtf(sqd);
-                acc5 = s0 * g + acc5;
-                over = over / depth;
-                acc6 = acc6 + over;
-                acc6 = lbl_803DED38 * (1.0f - frame * lbl_803DEDD0) + acc6;
+            phase = frame / place->frameCount;
+            radiusProgress = sqrtf(phase);
+            radius = place->startRadius - radiusProgress * (place->startRadius - place->endRadius);
+            if (distance <= radius) {
+                f32 radialWeight = distance / radius;
+                f32 falloff;
+                radialWeight = 1.0f - radialWeight;
+                falloff = sqrtf(radialWeight);
+                intensity = fade * falloff + intensity;
+                verticalOffset /= radius;
+                shift += verticalOffset;
+                shift = 0.5f * (1.0f - frame / 16.0f) + shift;
             }
         }
     }
-    if (acc5 > 1.0f) {
-        acc5 = 1.0f;
+    if (intensity > 1.0f) {
+        intensity = 1.0f;
     }
-    if (acc6 > 1.0f) {
-        acc6 = 1.0f;
+    if (shift > 1.0f) {
+        shift = 1.0f;
     }
-    *out1 = lbl_803DED40 * acc6 + 0.4375f;
-    *out2 = acc5;
+    *outShift = 0.125f * shift + 0.4375f;
+    *outIntensity = intensity;
 }
+/* Scatter periodic noise placements, render their animation, then the caustic texture. */
 void newshadows_initProceduralTextures(void) {
     u8 savedHeap;
     int placementAttempts;
-    int row;
+    int x;
     f32* placementZ;
-    f32* otherPlacement;
+    NewShadowNoisePlacement* otherPlacement;
     f32* placementRadius;
-    f32* placement;
+    NewShadowNoisePlacement* placement;
     f32* placementX;
     u8 overlaps;
     int otherIndex;
@@ -1278,53 +1255,51 @@ void newshadows_initProceduralTextures(void) {
     savedHeap = mmSetForceHeap3Only(1);
     placedCount = 0;
     placementAttempts = 0;
-    placement = gNewShadowPlacements;
-    while (placedCount < 0x32 && placementAttempts < 10000u) {
-        placement[0] = randomGetRange(8, 0x10);
-        placement[3] = 0.01f * randomGetRange(5, 10);
-        placement[4] = placement[3] * (0.01f * randomGetRange(0x14, 0x32));
+    placement = gNewShadowNoiseData.placements;
+    while (placedCount < NEW_SHADOW_MAX_NOISE_PLACEMENTS && placementAttempts < 10000u) {
+        placement->frameCount = randomGetRange(8, 0x10);
+        placement->startRadius = 0.01f * randomGetRange(5, 10);
+        placement->endRadius = placement->startRadius * (0.01f * randomGetRange(0x14, 0x32));
         placementAttempts = 0;
-        placementX = &placement[1];
-        placementZ = &placement[2];
-        placementRadius = &placement[4];
+        placementX = &placement->x;
+        placementZ = &placement->z;
+        placementRadius = &placement->endRadius;
         do {
             *placementX = 0.001f * randomGetRange(0, 999);
             *placementZ = 0.001f * randomGetRange(0, 999);
             overlaps = 0;
             otherIndex = 0;
-            otherPlacement = gNewShadowPlacements;
+            otherPlacement = gNewShadowNoiseData.placements;
             while (otherIndex < placedCount && !overlaps) {
-                f32 xDistance, zDistance, wrappedDistance;
-                xDistance = __fabsf(*placementX - otherPlacement[1]);
-                wrappedDistance = __fabsf((1.0f + *placementX) - otherPlacement[1]);
+                f32 xDistance, zDistance, wrappedDistance, distance;
+                xDistance = __fabsf(*placementX - otherPlacement->x);
+                wrappedDistance = __fabsf((1.0f + *placementX) - otherPlacement->x);
                 if (wrappedDistance < xDistance) {
                     xDistance = wrappedDistance;
                 }
-                wrappedDistance = __fabsf((*placementX - 1.0f) - otherPlacement[1]);
+                wrappedDistance = __fabsf((*placementX - 1.0f) - otherPlacement->x);
                 if (wrappedDistance < xDistance) {
                     xDistance = wrappedDistance;
                 }
-                zDistance = __fabsf(*placementZ - otherPlacement[2]);
-                wrappedDistance = __fabsf((1.0f + *placementZ) - otherPlacement[2]);
+                zDistance = __fabsf(*placementZ - otherPlacement->z);
+                wrappedDistance = __fabsf((1.0f + *placementZ) - otherPlacement->z);
                 if (wrappedDistance < zDistance) {
                     zDistance = wrappedDistance;
                 }
-                wrappedDistance = __fabsf((*placementZ - 1.0f) - otherPlacement[2]);
+                wrappedDistance = __fabsf((*placementZ - 1.0f) - otherPlacement->z);
                 if (wrappedDistance < zDistance) {
                     zDistance = wrappedDistance;
                 }
-                wrappedDistance = zDistance * zDistance;
-                zDistance = xDistance * xDistance + wrappedDistance;
-                zDistance = sqrtf(zDistance);
-                if (zDistance < *placementRadius + otherPlacement[3]) {
+                distance = sqrtf(xDistance * xDistance + zDistance * zDistance);
+                if (distance < *placementRadius + otherPlacement->startRadius) {
                     overlaps = 1;
                 }
-                otherPlacement += 5;
+                otherPlacement++;
                 otherIndex++;
             }
             placementAttempts++;
         } while (overlaps && placementAttempts < 10000u);
-        placement += 5;
+        placement++;
         placedCount++;
     }
 
@@ -1332,29 +1307,31 @@ void newshadows_initProceduralTextures(void) {
         u32 noisePlacementCount = placedCount;
 
         frame = 0;
-        for (; frame < 0x10; frame++) {
+        for (; frame < NEW_SHADOW_NOISE_FRAME_COUNT; frame++) {
             gNewShadowNoiseTexFrames[frame] = textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
-            for (row = 0; row < 0x40; row++) {
-                int rowPixelOffset;
-                int column, h;
-                column = 0;
-                h = (row >> 2) * 0x20;
-                rowPixelOffset = (row & 3) * 2;
-                for (; column < 0x40; column++) {
-                    int highByte, lowByte;
-                    int texelAddress = (int)gNewShadowNoiseTexFrames[frame] + h + rowPixelOffset;
+            for (x = 0; x < 0x40; x++) {
+                int pixelInRowOffset;
+                int y, tileColumnOffset;
+                y = 0;
+                tileColumnOffset = (x >> 2) * 0x20;
+                pixelInRowOffset = (x & 3) * 2;
+                for (; y < 0x40; y++) {
+                    int intensityByte, shiftByte;
+                    u8* pixelBase = (u8*)gNewShadowNoiseTexFrames[frame] + pixelInRowOffset;
+                    u8* tileBase = pixelBase + tileColumnOffset;
+                    u8* texel;
                     f32 shift, intensity;
-                    f32 rowCoord, columnCoord;
-                    texelAddress += (column & 3) * 8;
-                    texelAddress += (column >> 2) * 0x200;
-                    rowCoord = row * lbl_803DEDE0;
-                    columnCoord = column * lbl_803DEDE0;
-                    evalNoisePlacements(rowCoord, columnCoord, frame, gNewShadowPlacements, noisePlacementCount, &shift,
-                                        &intensity);
-                    highByte = 255.0f * intensity;
-                    highByte = (highByte & 0xffff) << 8;
-                    lowByte = 255.0f * shift;
-                    ((NewShadowVectorTexel*)(texelAddress + 0x60))->packedXY = highByte | lowByte;
+                    f32 sampleX, sampleZ;
+                    tileBase += (y & 3) * 8;
+                    texel = tileBase + (y >> 2) * 0x200;
+                    sampleX = x / 64.0f;
+                    sampleZ = y / 64.0f;
+                    evalNoisePlacements(sampleX, sampleZ, frame, gNewShadowNoiseData.placements, noisePlacementCount,
+                                        &shift, &intensity);
+                    intensityByte = 255.0f * intensity;
+                    intensityByte = (intensityByte & 0xffff) << 8;
+                    shiftByte = 255.0f * shift;
+                    *(u16*)(texel + sizeof(Texture)) = intensityByte | shiftByte;
                 }
             }
             DCFlushRange(gNewShadowNoiseTexFrames[frame] + 1, gNewShadowNoiseTexFrames[frame]->dataSize);
@@ -1362,30 +1339,31 @@ void newshadows_initProceduralTextures(void) {
     }
 
     gNewShadowCausticTexture = textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
-    for (row = 0; row < 0x40; row++) {
-        int column;
-        int h, rowPixelOffset;
-        f32 rowPhase;
-        column = 0;
-        h = (row >> 2) * 0x20;
-        rowPixelOffset = (row & 3) * 2;
-        rowPhase = 0.0981875f * row;
-        for (; column < 0x40; column++) {
-            f32 columnPhase, wave, carrier, productValue, waveValue;
-            int highByte, lowByte;
-            u8* texel = (u8*)gNewShadowCausticTexture + rowPixelOffset;
-            texel += h;
-            texel += (column & 3) * 8;
-            texel += (column >> 2) * 0x200;
-            columnPhase = 0.39275f * column;
-            wave = mathCosfHighPrecision(0.5f * mathSinfHighPrecision(columnPhase) + rowPhase);
-            carrier = mathCosfHighPrecision(columnPhase);
+    for (x = 0; x < 0x40; x++) {
+        int y;
+        int tileColumnOffset, pixelInRowOffset;
+        f32 xPhase;
+        y = 0;
+        tileColumnOffset = (x >> 2) * 0x20;
+        pixelInRowOffset = (x & 3) * 2;
+        xPhase = (6.284f / 64.0f) * x;
+        for (; y < 0x40; y++) {
+            f32 yPhase, wave, carrier, productValue, waveValue;
+            int productByte, waveByte;
+            u8* pixelBase = (u8*)gNewShadowCausticTexture + pixelInRowOffset;
+            u8* tileBase = pixelBase + tileColumnOffset;
+            u8* texel;
+            tileBase += (y & 3) * 8;
+            texel = tileBase + (y >> 2) * 0x200;
+            yPhase = (6.284f / 16.0f) * y;
+            wave = mathCosfHighPrecision(0.5f * mathSinfHighPrecision(yPhase) + xPhase);
+            carrier = mathCosfHighPrecision(yPhase);
             productValue = wave * carrier;
             productValue = 127.0f * productValue + 127.0f;
             waveValue = 127.0f * wave + 127.0f;
-            lowByte = waveValue;
-            highByte = productValue;
-            ((NewShadowVectorTexel*)(texel + 0x60))->packedXY = lowByte | ((highByte & 0xffff) << 8);
+            waveByte = waveValue;
+            productByte = productValue;
+            *(u16*)(texel + sizeof(Texture)) = waveByte | ((productByte & 0xffff) << 8);
         }
     }
     DCFlushRange(gNewShadowCausticTexture + 1, gNewShadowCausticTexture->dataSize);
@@ -1395,11 +1373,11 @@ void newshadows_initProceduralTextures(void) {
     mmSetForceHeap3Only(savedHeap);
 }
 
-f32 gNewShadowPlacements[0x112];
+NewShadowNoiseData gNewShadowNoiseData;
 Texture* gNewShadowCastTextures[NEW_SHADOW_MAX_CAST_TEXTURES];
 NewShadowCastSlot gNewShadowCastSlots[NEW_SHADOW_MAX_CASTERS];
 NewShadowCaster gNewShadowCasterTable[NEW_SHADOW_MAX_QUEUED_CASTERS];
-Texture* gNewShadowNoiseTexFrames[0x10];
+Texture* gNewShadowNoiseTexFrames[NEW_SHADOW_NOISE_FRAME_COUNT];
 Texture* gNewShadowTextureTable[8][4];
 Texture* gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
 
@@ -1424,11 +1402,11 @@ static inline void fillDiskTexture(void) {
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x80;
             off2 = off + sizeof(Texture);
-            dx = cy * lbl_803DEDD0;
+            dx = cy / 16.0f;
             dz = (f32)j - 16.0f;
-            dz = dz * lbl_803DEDD0;
-            dx = dx * lbl_803DEDF0;
-            dz = dz * lbl_803DEDF0;
+            dz /= 16.0f;
+            dx = dx * 1.1f;
+            dz = dz * 1.1f;
             d2 = dx * dx + dz * dz;
             base[off2] = 255.0f * ((d2 > 1.0f) ? 0.0f : (1.0f - d2));
         }
@@ -1456,11 +1434,11 @@ static inline void fillSmallDiskTexture(void) {
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x40;
             off2 = off + sizeof(Texture);
-            dx = cy * lbl_803DED40;
+            dx = cy / 8.0f;
             dz = (f32)j - 8.0f;
-            dz = dz * lbl_803DED40;
-            dx = dx * lbl_803DEDF4;
-            dz = dz * lbl_803DEDF4;
+            dz /= 8.0f;
+            dx = dx * 1.2f;
+            dz = dz * 1.2f;
             d2 = dx * dx + dz * dz;
             if (d2 > 1.0f) {
                 d2 = 0.0f;
@@ -1473,21 +1451,15 @@ static inline void fillSmallDiskTexture(void) {
 }
 
 static inline void fillRampTexture(void) {
-    int i;
-    for (i = 0; i < 0x100; i++) {
-        u8* t;
-        t = (u8*)gNewShadowRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture)] = i;
-        t = (u8*)gNewShadowRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture) + 8] = i;
-        t = (u8*)gNewShadowRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture) + 0x10] = i;
-        t = (u8*)gNewShadowRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture) + 0x18] = i;
+    int x, y;
+    for (x = 0; x < 256; x++) {
+        for (y = 0; y < 4; y++) {
+            u8* texel = (u8*)gNewShadowRampTexture + (x & 7);
+            texel += (x >> 3) * 32;
+            texel += (y & 3) * 8;
+            texel += (y >> 2) * 1024;
+            texel[sizeof(Texture)] = x;
+        }
     }
 }
 
@@ -1513,15 +1485,15 @@ static inline void fillFalloffTexture(void) {
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x200;
             off2 = off + sizeof(Texture);
-            dy = cy * lbl_803DEDE0;
-            cx = ((f32)j - 64.0f) * lbl_803DEDE0;
+            dy = cy / 64.0f;
+            cx = ((f32)j - 64.0f) / 64.0f;
             d2 = sqrtf(dy * dy + cx * cx);
-            if (d2 < lbl_803DED38) {
+            if (d2 < 0.5f) {
                 val = 0xa0;
             } else if (d2 > 1.0f) {
                 val = 0;
             } else {
-                val = 160.0f * (1.0f - (d2 - lbl_803DED38) / lbl_803DED38);
+                val = 160.0f * (1.0f - (d2 - 0.5f) / 0.5f);
             }
             base[off2] = val;
         }
@@ -1549,7 +1521,7 @@ static inline void fillLightningTexture(void) {
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x80;
             off2 = off + sizeof(Texture);
-            v = sqrtf(__fabsf(c0 * lbl_803DEDD0));
+            v = sqrtf(__fabsf(c0 / 16.0f));
             v = sqrtf(v);
             base[off2] = 255.0f * (1.0f - v);
         }
@@ -1565,7 +1537,7 @@ static inline void fillRingTexture(void) {
         int rowoff;
         int lowoff;
         f32 cy2;
-        cy = ((f32)i - 64.0f) * lbl_803DEDE0;
+        cy = ((f32)i - 64.0f) / 64.0f;
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
@@ -1579,16 +1551,16 @@ static inline void fillRingTexture(void) {
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x200;
             off2 = off + sizeof(Texture);
-            cx = ((f32)j - 64.0f) * lbl_803DEDE0;
+            cx = ((f32)j - 64.0f) / 64.0f;
             d2 = sqrtf(cx * cx + cy2);
             if (d2 < 0.25f || d2 > 0.75f) {
                 d2 = 0.0f;
             } else {
                 f32 t = 2.0f * (d2 - 0.25f);
-                if (t > lbl_803DED38) {
-                    d2 = -(2.0f * (t - lbl_803DED38) - 1.0f);
+                if (t > 0.5f) {
+                    d2 = -(2.0f * (t - 0.5f) - 1.0f);
                 } else {
-                    d2 = -(2.0f * (lbl_803DED38 - t) - 1.0f);
+                    d2 = -(2.0f * (0.5f - t) - 1.0f);
                 }
                 d2 = sqrtf(d2);
             }
@@ -1598,21 +1570,32 @@ static inline void fillRingTexture(void) {
 }
 
 static inline void fillInverseRampTexture(void) {
-    int i;
-    for (i = 0; i < 0x100; i++) {
-        u8* t;
-        t = (u8*)gNewShadowInverseRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture)] = (u8)(255 - i);
-        t = (u8*)gNewShadowInverseRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture) + 8] = (u8)(255 - i);
-        t = (u8*)gNewShadowInverseRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture) + 0x10] = (u8)(255 - i);
-        t = (u8*)gNewShadowInverseRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture) + 0x18] = (u8)(255 - i);
+    int x, y;
+    for (x = 0; x < 256; x++) {
+        for (y = 0; y < 4; y++) {
+            u8* texel = (u8*)gNewShadowInverseRampTexture + (x & 7);
+            texel += (x >> 3) * 32;
+            texel += (y & 3) * 8;
+            texel += (y >> 2) * 1024;
+            texel[sizeof(Texture)] = 255 - x;
+        }
+    }
+}
+
+static inline void fillReflectionGradientTexture(void) {
+    int x, y;
+    for (x = 0; x < 4; x++) {
+        f32 horizontal = x / 3.0f - 0.5f;
+        for (y = 0; y < 4; y++) {
+            u8* texel = (u8*)gNewShadowReflectionGradientTexture + (x & 3) * 2;
+            int packedHorizontal;
+            texel += (x >> 2) * 0x20;
+            texel += (y & 3) * 8;
+            texel += (y >> 2) * 0x20;
+            packedHorizontal = ((int)(255.0f * horizontal + 128.0f) & 0xff) << 8;
+            *(u16*)(texel + sizeof(Texture)) =
+                (u16)(packedHorizontal | ((int)(255.0f * (y / 3.0f - 0.5f) + 128.0f) & 0xff));
+        }
     }
 }
 
@@ -1646,18 +1629,18 @@ void allocLotsOfTextures(void) {
     DCFlushRange(renderTargets[0] + 1, renderTargets[0]->dataSize);
 
     gNewShadowReflectionTexture = textureAlloc(0x140, 0xf0, 4, 0, 0, 0, 0, 1, 1);
-    gNewShadowReflectionSmallTexture = (int)textureAlloc(0x50, 0x3c, 4, 0, 0, 0, 0, 1, 1);
-    gNewShadowReflectionTexture2 = (int)textureAlloc(0x140, 0xf0, 1, 0, 0, 0, 0, 1, 1);
+    gNewShadowReflectionSmallTexture = textureAlloc(0x50, 0x3c, 4, 0, 0, 0, 0, 1, 1);
+    gNewShadowReflectionTexture2 = textureAlloc(0x140, 0xf0, 1, 0, 0, 0, 0, 1, 1);
 
-    gNewShadowDiskTexture = (int)textureAlloc(0x20, 0x20, 1, 0, 0, 0, 0, 1, 1);
+    gNewShadowDiskTexture = textureAlloc(0x20, 0x20, 1, 0, 0, 0, 0, 1, 1);
     fillDiskTexture();
-    DCFlushRange((Texture*)gNewShadowDiskTexture + 1, ((Texture*)gNewShadowDiskTexture)->dataSize);
+    DCFlushRange(gNewShadowDiskTexture + 1, gNewShadowDiskTexture->dataSize);
 
-    gNewShadowSmallDiskTexture = (int)textureAlloc(0x10, 0x10, 1, 0, 0, 0, 0, 1, 1);
+    gNewShadowSmallDiskTexture = textureAlloc(0x10, 0x10, 1, 0, 0, 0, 0, 1, 1);
     fillSmallDiskTexture();
-    DCFlushRange((Texture*)gNewShadowSmallDiskTexture + 1, ((Texture*)gNewShadowSmallDiskTexture)->dataSize);
+    DCFlushRange(gNewShadowSmallDiskTexture + 1, gNewShadowSmallDiskTexture->dataSize);
 
-    gNewShadowBumpTexture = (int)textureAlloc(0x40, 0x40, 5, 0, 0, 0, 0, 1, 1);
+    gNewShadowBumpTexture = textureAlloc(0x40, 0x40, 5, 0, 0, 0, 0, 1, 1);
     {
         f32 mx = 0.0f;
         for (i = 0; i < 0x40; i++) {
@@ -1670,16 +1653,16 @@ void allocLotsOfTextures(void) {
                 f32 d1, d2, cc2, d3, n1, b;
                 f64 n2, n3;
                 f32 a;
-                rc = fi * lbl_803DEDFC;
-                rc2 = fi2 * lbl_803DEDFC;
-                cc = ((f32)j - 32.0f) * lbl_803DEDFC;
-                cc = cc * cc;
+                rc = fi / 32.0f;
+                rc2 = fi2 / 32.0f;
+                cc = ((f32)j - 32.0f) / 32.0f;
+                cc *= cc;
                 d1 = sqrtf(rc * rc + cc);
                 d2 = sqrtf(rc2 * rc2 + cc);
                 cc2 = (f32)(j + 1) - 32.0f;
-                cc2 = cc2 * lbl_803DEDFC;
-                cc2 = cc2 * cc2;
-                rc = fi * lbl_803DEDFC;
+                cc2 /= 32.0f;
+                cc2 *= cc2;
+                rc = fi / 32.0f;
                 d3 = sqrtf(rc * rc + cc2);
                 n1 = -mathCosfHighPrecision(18.852f * d1);
                 n2 = __fabs(mathCosfHighPrecision(18.852f * d2));
@@ -1705,30 +1688,30 @@ void allocLotsOfTextures(void) {
                 fj = j - 32.0f;
                 fj2 = (f32)(j + 1) - 32.0f;
                 for (; i < 0x40; i++) {
-                    int dst = gNewShadowBumpTexture + lowoff;
+                    u8* dst = (u8*)gNewShadowBumpTexture + lowoff;
                     f32 cc, d1, d2, cc2, d3, n1, n2, n3, a, b, rowCoord;
                     f32 c;
                     int bi, ci, ai;
-                    rowCoord = fj * lbl_803DEDFC;
-                    rc2 = fj2 * lbl_803DEDFC;
+                    rowCoord = fj / 32.0f;
+                    rc2 = fj2 / 32.0f;
                     dst += bumpRowOff;
                     dst += (i & 3) * 8;
                     dst += (i >> 2) * 0x200;
                     cc = (f32)i - 32.0f;
-                    cc = cc * lbl_803DEDFC;
-                    cc = cc * cc;
+                    cc /= 32.0f;
+                    cc *= cc;
                     d1 = sqrtf(rowCoord * rowCoord + cc);
                     d2 = sqrtf(rc2 * rc2 + cc);
                     cc2 = (f32)(i + 1) - 32.0f;
-                    cc2 = cc2 * lbl_803DEDFC;
-                    cc2 = cc2 * cc2;
-                    rowCoord = fj * lbl_803DEDFC;
+                    cc2 /= 32.0f;
+                    cc2 *= cc2;
+                    rowCoord = fj / 32.0f;
                     d3 = sqrtf(rowCoord * rowCoord + cc2);
                     n1 = -mathCosfHighPrecision(18.852f * d1);
                     n2 = -mathCosfHighPrecision(18.852f * d2);
                     n3 = -mathCosfHighPrecision(18.852f * d3);
-                    a = inv * (lbl_803DEDC0 * (n1 - n2)) + lbl_803DEDC0;
-                    b = inv * (lbl_803DEDC0 * (n1 - n3)) + lbl_803DEDC0;
+                    a = inv * (127.0f * (n1 - n2)) + 127.0f;
+                    b = inv * (127.0f * (n1 - n3)) + 127.0f;
                     if (d1 < 1.0f) {
                         d1 = sqrtf(1.0f - d1);
                     } else {
@@ -1738,8 +1721,8 @@ void allocLotsOfTextures(void) {
                     if (c > 15.0f) {
                         c = 15.0f;
                     }
-                    a = a * lbl_803DEDFC;
-                    b = b * lbl_803DEDD0;
+                    a /= 32.0f;
+                    b /= 16.0f;
                     bi = (int)b & 0xf;
                     ci = ((u16)(int)c & 0xf) << 4;
                     ai = ((u16)(int)a & 7) << 12;
@@ -1748,23 +1731,23 @@ void allocLotsOfTextures(void) {
             }
         }
     }
-    DCFlushRange((Texture*)gNewShadowBumpTexture + 1, ((Texture*)gNewShadowBumpTexture)->dataSize);
+    DCFlushRange(gNewShadowBumpTexture + 1, gNewShadowBumpTexture->dataSize);
 
-    gNewShadowWhirlpoolTexture = (u32)textureLoadAsset(0x5b0);
+    gNewShadowWhirlpoolTexture = textureLoadAsset(0x5b0);
     gNewShadowHeatHazeTexture = textureLoadAsset(0x600);
-    gNewShadowSnowFlashTexture = (u32)textureLoadAsset(0xc18);
+    gNewShadowSnowFlashTexture = textureLoadAsset(0xc18);
 
-    gNewShadowRampTexture = (int)textureAlloc(0x100, 4, 1, 0, 0, 0, 0, 0, 0);
+    gNewShadowRampTexture = textureAlloc(0x100, 4, 1, 0, 0, 0, 0, 0, 0);
     fillRampTexture();
-    DCFlushRange((Texture*)gNewShadowRampTexture + 1, ((Texture*)gNewShadowRampTexture)->dataSize);
+    DCFlushRange(gNewShadowRampTexture + 1, gNewShadowRampTexture->dataSize);
 
-    gNewShadowInverseRampTexture = (int)textureAlloc(0x100, 4, 1, 0, 0, 0, 0, 1, 1);
+    gNewShadowInverseRampTexture = textureAlloc(0x100, 4, 1, 0, 0, 0, 0, 1, 1);
     fillInverseRampTexture();
-    DCFlushRange((Texture*)gNewShadowInverseRampTexture + 1, ((Texture*)gNewShadowInverseRampTexture)->dataSize);
+    DCFlushRange(gNewShadowInverseRampTexture + 1, gNewShadowInverseRampTexture->dataSize);
 
-    gNewShadowFalloffTexture = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
+    gNewShadowFalloffTexture = textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
     fillFalloffTexture();
-    DCFlushRange((Texture*)gNewShadowFalloffTexture + 1, ((Texture*)gNewShadowFalloffTexture)->dataSize);
+    DCFlushRange(gNewShadowFalloffTexture + 1, gNewShadowFalloffTexture->dataSize);
 
     gNewShadowRadialTexture = textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x80; i++) {
@@ -1778,12 +1761,12 @@ void allocLotsOfTextures(void) {
         for (; j < 0x80; j++) {
             u8* base = (u8*)gNewShadowRadialTexture;
             int off2;
-            f32 cyScaled = cy * lbl_803DEDE0;
+            f32 cyScaled = cy / 64.0f;
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x200;
             off2 = off + sizeof(Texture);
-            cx = __fabsf(((f32)j - 64.0f) * lbl_803DEDE0);
-            cx = cx * cx;
+            cx = __fabsf(((f32)j - 64.0f) / 64.0f);
+            cx *= cx;
             d2 = sqrtf(__fabsf(cyScaled) * __fabsf(cyScaled) + cx);
             v = 1.0f - d2;
             if (v < 0.0f) {
@@ -1806,30 +1789,9 @@ void allocLotsOfTextures(void) {
     fillRingTexture();
     DCFlushRange((u8*)gNewShadowRingTexture + sizeof(Texture), gNewShadowRingTexture->dataSize);
 
-    gNewShadowReflectionGradientTexture = (int)textureAlloc(4, 4, 3, 0, 0, 0, 0, 1, 1);
-    for (i = 0; i < 4; i++) {
-        f32 x = i / 3.0f;
-        int hi;
-        int t;
-        u16 v;
-        x -= lbl_803DED38;
-        t = gNewShadowReflectionGradientTexture + (i & 3) * 2;
-        t += (i >> 2) * 0x20;
-        hi = ((int)(255.0f * x + 128.0f) & 0xff) << 8;
-        *(u16*)(t + sizeof(Texture)) = (u16)(hi | ((int)lbl_803DED38 & 0xff));
-        t = gNewShadowReflectionGradientTexture + (i & 3) * 2;
-        t += (i >> 2) * 0x20;
-        *(u16*)(t + sizeof(Texture) + 8) = (u16)(hi | ((int)lbl_803DEE14 & 0xff));
-        t = gNewShadowReflectionGradientTexture + (i & 3) * 2;
-        t += (i >> 2) * 0x20;
-        *(u16*)(t + sizeof(Texture) + 0x10) = (u16)(hi | ((int)lbl_803DEE18 & 0xff));
-        v = (u16)(hi | ((int)lbl_803DEE1C & 0xff));
-        t = gNewShadowReflectionGradientTexture + (i & 3) * 2;
-        t += (i >> 2) * 0x20;
-        *(u16*)(t + sizeof(Texture) + 0x18) = v;
-    }
-    DCFlushRange((Texture*)gNewShadowReflectionGradientTexture + 1,
-                 ((Texture*)gNewShadowReflectionGradientTexture)->dataSize);
+    gNewShadowReflectionGradientTexture = textureAlloc(4, 4, 3, 0, 0, 0, 0, 1, 1);
+    fillReflectionGradientTexture();
+    DCFlushRange(gNewShadowReflectionGradientTexture + 1, gNewShadowReflectionGradientTexture->dataSize);
 
     frameTexture = textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
     memset(frameTexture + 1, 0, frameTexture->dataSize);

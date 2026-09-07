@@ -145,7 +145,7 @@ void wctemplebri_free(void) {
 }
 
 void wctemplebri_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) {
-    WCTempleBriState* state = (obj)->extra;
+    WCTempleBriState* state = obj->extra;
 
     if (visible == 0 || state->active == 0) {
         return;

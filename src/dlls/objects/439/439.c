@@ -201,10 +201,10 @@ void sc_musictree_update(GameObject* obj) {
         return;
     }
     if (state->proximityCooldown > 0.0f) {
-        state->proximityCooldown = state->proximityCooldown - timeDelta;
+        state->proximityCooldown -= timeDelta;
     }
     if (state->animationStep > 0.0025f) {
-        state->animationStep = state->animationStep - 0.001f;
+        state->animationStep -= 0.001f;
     }
     if (((state->flags & SC_MUSIC_TREE_FLAG_SATELLITES) != 0) && (obj->userData2 != 0)) {
         for (i = 0, ambientEffectCursor = (int*)state, pathPointCursor = (int*)state;
@@ -237,12 +237,12 @@ void sc_musictree_update(GameObject* obj) {
                 SC_MUSIC_TREE_HIT_EFFECT_BLUE, SFXTRIG_swdtest222, &state->hitEffectCooldown);
         }
         if (state->hitCooldown >= 0.0f) {
-            state->hitCooldown = state->hitCooldown - timeDelta;
+            state->hitCooldown -= timeDelta;
         }
         if ((hitType != 0) && (hitType != OBJHITREACT_COLLISION_SKIP_REACTION) && (state->hitCooldown <= 0.0f)) {
             if ((state->flags & (SC_MUSIC_TREE_FLAG_PRIORITY_HIT | SC_MUSIC_TREE_FLAG_SATELLITES)) != 0) {
-                effectParams.posX = effectParams.posX + playerMapOffsetX;
-                effectParams.posZ = effectParams.posZ + playerMapOffsetZ;
+                effectParams.posX += playerMapOffsetX;
+                effectParams.posZ += playerMapOffsetZ;
                 objDoHitParticleFx((void*)obj, 0.014f, &effectParams, 1, 0);
                 Obj_SetModelColorFadeRecursive(obj, 0xF, 0xC8, 0, 0, 1);
                 sc_musictree_handleHitObject(obj, state, state->flags & SC_MUSIC_TREE_FLAG_BURST_TYPE_MASK);
@@ -293,7 +293,7 @@ void sc_musictree_update(GameObject* obj) {
                                        80.0f * state->effectScale, 1);
                 state->proximityCooldown = 340.0f;
             }
-            state->proximityBurstTimer = state->proximityBurstTimer - timeDelta;
+            state->proximityBurstTimer -= timeDelta;
             if (state->proximityBurstTimer <= 0.0f) {
                 f32* rotatedBurstVector;
                 *(rotatedBurstVector = &effectParams.posX) = 0.0f;
@@ -333,7 +333,7 @@ void sc_musictree_init(GameObject* obj, ScMusicTreePlacement* placement) {
     ObjAnim_AdvanceCurrentMove(obj, 1.0f, 1.0f, &animEvents);
     ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (s32)(15.0f * state->effectScale), -5, 0xFF);
     if ((state->flags & SC_MUSIC_TREE_FLAG_SATELLITES) != 0) {
-        state->flags = state->flags | SC_MUSIC_TREE_FLAG_HIT_ACTIVE;
+        state->flags |= SC_MUSIC_TREE_FLAG_HIT_ACTIVE;
     }
 }
 

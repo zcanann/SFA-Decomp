@@ -109,7 +109,7 @@ void chuka_update(GameObject* obj)
         height = data->barHeight;
         if (height != 0)
         {
-            (obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
         break;
     case 1:
@@ -120,11 +120,10 @@ void chuka_update(GameObject* obj)
         height = data->barHeight;
         if (height != 0)
         {
-            (obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if ((obj)->anim.rotZ != 0)
-        {
-            (obj)->anim.rotZ = 0;
+        if (obj->anim.rotZ != 0) {
+            obj->anim.rotZ = 0;
         }
         break;
     case 2:
@@ -135,11 +134,10 @@ void chuka_update(GameObject* obj)
         height = data->barHeight;
         if (height != 0)
         {
-            (obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if ((obj)->anim.rotZ != 0)
-        {
-            (obj)->anim.rotZ = 0;
+        if (obj->anim.rotZ != 0) {
+            obj->anim.rotZ = 0;
         }
         break;
     case 3:
@@ -150,11 +148,10 @@ void chuka_update(GameObject* obj)
         height = data->barHeight;
         if (height != 0)
         {
-            (obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if ((obj)->anim.rotZ != 0x3fff)
-        {
-            (obj)->anim.rotZ = 0x7fff;
+        if (obj->anim.rotZ != 0x3fff) {
+            obj->anim.rotZ = 0x7fff;
         }
         break;
     case 4:
@@ -165,11 +162,10 @@ void chuka_update(GameObject* obj)
         height = data->barHeight;
         if (height != 0)
         {
-            (obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if ((obj)->anim.rotZ != 0x3fff)
-        {
-            (obj)->anim.rotZ = 0x7fff;
+        if (obj->anim.rotZ != 0x3fff) {
+            obj->anim.rotZ = 0x7fff;
         }
         break;
     default:
@@ -180,11 +176,10 @@ void chuka_update(GameObject* obj)
         height = data->barHeight;
         if (height != 0)
         {
-            (obj)->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if ((obj)->anim.rotZ != 0)
-        {
-            (obj)->anim.rotZ = 0;
+        if (obj->anim.rotZ != 0) {
+            obj->anim.rotZ = 0;
         }
         break;
     }

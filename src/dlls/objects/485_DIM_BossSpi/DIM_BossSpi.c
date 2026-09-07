@@ -76,7 +76,7 @@ void DIMbossspit_updateBurst(GameObject* obj) {
             (*gPartfxInterface)
                 ->spawnObject(obj, DIMBOSSSPIT_PARTFX_BURST_START, NULL, DIMBOSSSPIT_PARTFX_MODE,
                               DIMBOSSSPIT_PARTFX_MODEL_NONE, NULL);
-            i = i + 1;
+            i += 1;
         } while (i < DIMBOSSSPIT_BURST_START_PARTICLE_COUNT);
         (*gPartfxInterface)
             ->spawnObject(obj, DIMBOSSSPIT_PARTFX_BURST_FLASH, NULL, DIMBOSSSPIT_PARTFX_MODE,
@@ -189,7 +189,7 @@ void DIMbossspit_update(GameObject* obj) {
             (*gPartfxInterface)
                 ->spawnObject(obj, DIMBOSSSPIT_PARTFX_FLIGHT_TRAIL, NULL, DIMBOSSSPIT_PARTFX_MODE,
                               DIMBOSSSPIT_PARTFX_MODEL_NONE, NULL);
-            i = i + 1;
+            i += 1;
         } while (i < DIMBOSSSPIT_FLIGHT_TRAIL_PARTICLE_COUNT);
         if (((ObjHitsPriorityState*)obj->anim.hitReactState)->contactFlags != 0) {
             obj->anim.localPosX = ((ObjHitsPriorityState*)obj->anim.hitReactState)->contactPosX;

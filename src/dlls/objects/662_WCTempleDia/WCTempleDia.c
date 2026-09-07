@@ -57,7 +57,7 @@ int wctempledia_interactCallback(GameObject* obj, int unused, ObjSeqState* animU
     {
         f32 scaled = 0.01f;
         f32 cs = state->currentSpeed;
-        scaled = scaled * -cs;
+        scaled *= -cs;
         state->currentSpeed = scaled * timeDelta + cs;
     }
     obj->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)obj->anim.rotZ);
@@ -91,7 +91,7 @@ void wctempledia_update(GameObject* obj) {
     int i;
     WCTempleDiaState* state;
     WCTempleDiaSetup* setup;
-    GameObject* go = (GameObject*)obj;
+    GameObject* go = obj;
     int j;
     int k;
 

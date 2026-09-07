@@ -62,9 +62,9 @@ void exploded_initDebrisState(GameObject* obj, ExplodedPlacement* placement, int
         rotatedCenter[1] = state->localCenter.y;
         rotatedCenter[2] = state->localCenter.z;
         vecRotateYXZ(&obj->anim.rotX, rotatedCenter);
-        rotatedCenter[0] = rotatedCenter[0] * obj->anim.rootMotionScale;
-        rotatedCenter[1] = rotatedCenter[1] * obj->anim.rootMotionScale;
-        rotatedCenter[2] = rotatedCenter[2] * obj->anim.rootMotionScale;
+        rotatedCenter[0] *= obj->anim.rootMotionScale;
+        rotatedCenter[1] *= obj->anim.rootMotionScale;
+        rotatedCenter[2] *= obj->anim.rootMotionScale;
     }
 
     state->unknown67 = EXPLODED_FULL_ALPHA;
@@ -167,10 +167,10 @@ int exploded_stepDebrisPhysics(GameObject* obj, ExplodedState* state) {
             state->spinVelocity.x = t;
             state->spin.x = t;
             obj->anim.velocityY = t;
-            state->acceleration.x = state->acceleration.x * (k = 0.3f);
-            obj->anim.velocityX = obj->anim.velocityX * k;
-            state->acceleration.z = state->acceleration.z * k;
-            obj->anim.velocityZ = obj->anim.velocityZ * k;
+            state->acceleration.x *= (k = 0.3f);
+            obj->anim.velocityX *= k;
+            state->acceleration.z *= k;
+            obj->anim.velocityZ *= k;
             speed = (obj->anim.velocityX >= t) ? obj->anim.velocityX : -obj->anim.velocityX;
             if (speed < 0.15f) {
                 speed = (obj->anim.velocityZ >= 0.0f) ? obj->anim.velocityZ : -obj->anim.velocityZ;
@@ -182,8 +182,8 @@ int exploded_stepDebrisPhysics(GameObject* obj, ExplodedState* state) {
         if (obj->anim.velocityY < 0.0f) {
             f32 k2;
             obj->anim.velocityY = 0.5f * -obj->anim.velocityY;
-            obj->anim.velocityX = obj->anim.velocityX * (k2 = 0.3f);
-            obj->anim.velocityZ = obj->anim.velocityZ * k2;
+            obj->anim.velocityX *= (k2 = 0.3f);
+            obj->anim.velocityZ *= k2;
             state->acceleration.y = -0.07f;
             state->spinVelocity.z = -state->spinVelocity.z;
         }
@@ -199,9 +199,9 @@ int exploded_stepDebrisPhysics(GameObject* obj, ExplodedState* state) {
     worldAfter[0] = worldBefore[0] - worldAfter[0];
     worldAfter[1] = worldBefore[1] - worldAfter[1];
     worldAfter[2] = worldBefore[2] - worldAfter[2];
-    obj->anim.localPosX = obj->anim.localPosX + worldAfter[0];
-    obj->anim.localPosY = obj->anim.localPosY + worldAfter[1];
-    obj->anim.localPosZ = obj->anim.localPosZ + worldAfter[2];
+    obj->anim.localPosX += worldAfter[0];
+    obj->anim.localPosY += worldAfter[1];
+    obj->anim.localPosZ += worldAfter[2];
     obj->anim.localPosX = obj->anim.velocityX * timeDelta + obj->anim.localPosX;
     obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
     obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;

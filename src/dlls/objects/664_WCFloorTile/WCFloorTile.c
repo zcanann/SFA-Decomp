@@ -91,7 +91,7 @@ void wcfloortile_update(GameObject* obj)
         }
         break;
     case WCFLOORTILE_PHASE_FALLING:
-        state->shakeTime = state->shakeTime + timeDelta;
+        state->shakeTime += timeDelta;
         if (state->shakeTime > 120.0f)
         {
             state->flags |= 3;

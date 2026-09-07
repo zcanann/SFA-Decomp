@@ -87,9 +87,9 @@ void wmsun_updateGlare(GameObject* obj)
         len = sqrtf(dz * dz + (dx * dx + dy * dy));
         if (len != 0.0f)
         {
-            dx = dx / len;
-            dy = dy / len;
-            dz = dz / len;
+            dx /= len;
+            dy /= len;
+            dz /= len;
         }
         dot = dz * sun.z + (dx * sun.x + dy * sun.y);
         prod = (dz * dz + (dx * dx + dy * dy)) * (denom = sun.z * sun.z + (sun.x * sun.x + sun.y * sun.y));
@@ -114,9 +114,9 @@ void wmsun_updateGlare(GameObject* obj)
             hlen = sqrtf(hz * hz + (dot * dot + hy));
             if (hlen != 0.0f)
             {
-                dot = dot / hlen;
-                hy = hy / hlen;
-                hz = hz / hlen;
+                dot /= hlen;
+                hy /= hlen;
+                hz /= hlen;
             }
             len = dir.y;
             f = dir.z;
@@ -154,10 +154,10 @@ void wmsun_updateGlare(GameObject* obj)
                 {
                     gWmSunGlareDamping = gWmSunGlareDamping - (gWmSunGlareIntensity - 0.2f) / 20.0f;
                 }
-                g.intensity = 0.0005f * (f32)randomGetRange(0, 0x1e) + g.intensity;
+                g.intensity = 0.0005f * randomGetRange(0, 0x1e) + g.intensity;
                 if (gWmSunGlareIntensity > 0.05f)
                 {
-                    gWmSunGlareIntensity = gWmSunGlareIntensity - 0.0002f;
+                    gWmSunGlareIntensity -= 0.0002f;
                 }
                 g.ang[2] = 0;
                 g.ang[1] = 0;
@@ -220,7 +220,7 @@ void wmsun_free(GameObject* obj)
 
 void wmsun_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 {
-    WmSunState* state = (obj)->extra;
+    WmSunState* state = obj->extra;
     if (vis != 0 && state->renderEnabled != 0)
     {
         lightmapObjectRenderBegin(p2, 0x10000);
@@ -236,7 +236,7 @@ void wmsun_hitDetect(void)
 void wmsun_update(GameObject* obj)
 {
     ObjAnimComponent* objAnim;
-    WmSunState* state = (obj)->extra;
+    WmSunState* state = obj->extra;
     s16 thresh;
     s16 mult;
     f32 spd;
@@ -249,7 +249,7 @@ void wmsun_update(GameObject* obj)
     thresh = 0;
     mult = 1;
     spd = 0.0f;
-    if ((obj)->anim.romDefNo == WMSUN_SEQID_CRYSTAL) /* WM_Crystal */
+    if (obj->anim.romDefNo == WMSUN_SEQID_CRYSTAL) /* WM_Crystal */
     {
         if (mainGetBit(0x38f) != 0)
         {
@@ -295,8 +295,8 @@ void wmsun_update(GameObject* obj)
             if (state->riseStep < thresh)
             {
                 state->riseStep = state->riseStep + framesThisStep * mult;
-                (obj)->anim.rootMotionScale = -(spd * timeDelta - (obj)->anim.rootMotionScale);
-                (obj)->anim.localPosY = 50.0f * (spd * timeDelta) + (obj)->anim.localPosY;
+                obj->anim.rootMotionScale = -(spd * timeDelta - obj->anim.rootMotionScale);
+                obj->anim.localPosY = 50.0f * (spd * timeDelta) + obj->anim.localPosY;
             }
             else if (mainGetBit(0x222) != 0 && mainGetBit(GAMEBIT_WM_FinaleQuakeActive) == 0)
             {
@@ -310,7 +310,7 @@ void wmsun_update(GameObject* obj)
                 CameraShake_SetOffset(0.8f * ((f32)(state->riseStep - 0x960) / 2400.0f));
                 mainSetBits(0x370, 1);
             }
-            (obj)->anim.rotX += state->riseStep;
+            obj->anim.rotX += state->riseStep;
             if (state->renderEnabled == 0)
             {
                 Obj_FreeObject(obj);
@@ -318,8 +318,7 @@ void wmsun_update(GameObject* obj)
         }
         return;
     }
-    if ((obj)->anim.romDefNo == 0x2c2)
-    {
+    if (obj->anim.romDefNo == 0x2c2) {
         if (mainGetBit(0x38f) != 0)
         {
             curAlpha = objAnim->alpha;
@@ -397,8 +396,8 @@ void wmsun_update(GameObject* obj)
     }
     else
     {
-        (obj)->anim.rotZ += state->spinStep;
-        (obj)->anim.rotX += state->riseStep;
+        obj->anim.rotZ += state->spinStep;
+        obj->anim.rotX += state->riseStep;
         if (mainGetBit(GAMEBIT_WM_FinaleQuakeActive) != 0 && objAnim->bankIndex == 0)
         {
             if (lbl_803DDCAA == 0)

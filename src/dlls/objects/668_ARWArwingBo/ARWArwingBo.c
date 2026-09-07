@@ -167,9 +167,9 @@ void arwarwingbo_update(GameObject* obj)
 
 void arwarwingbo_init(GameObject* obj, ArwingBombSetup* setup)
 {
-    (obj)->anim.rotX = (s16)(setup->rotX << 8);
-    (obj)->anim.rotY = (s16)(setup->rotY << 8);
-    (obj)->anim.rotZ = (s16)(setup->rotZ << 8);
+    obj->anim.rotX = (s16)(setup->rotX << 8);
+    obj->anim.rotY = (s16)(setup->rotY << 8);
+    obj->anim.rotZ = (s16)(setup->rotZ << 8);
     objAddObjectType(obj, ARWARWINGBO_OBJGROUP);
 }
 
@@ -183,16 +183,16 @@ void arwarwingbo_initialise(void)
 
 void arwarwingbo_setActiveVisible(GameObject* obj, u8 active, u8 visible)
 {
-    ArwingBombState* state = (obj)->extra;
+    ArwingBombState* state = obj->extra;
     if (active != 0)
     {
         Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
         state->control.active = 1;
-        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     }
     else
     {
         state->control.active = 0;
-        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
 }

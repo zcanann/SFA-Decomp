@@ -72,7 +72,7 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     cfg.velocityZ = 0.0f;
     cfg.scale = 0.0f;
     cfg.lifetimeFrames = 0;
-    cfg.quadVertex3Pad06 = -1;
+    cfg.impactEffectId = -1;
     cfg.initialAlpha = 0xff;
     cfg.linkGroup = 0;
     cfg.textureId = 0;
@@ -115,7 +115,7 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80480100;
         cfg.renderFlags = 0x2000000;
-        cfg.quadVertex3Pad06 = 0x5e9;
+        cfg.impactEffectId = 0x5e9;
         cfg.textureId = 0x26c;
         break;
     case 0x5e9:
@@ -376,7 +376,7 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.lifetimeFrames = 0xb4;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80080110;
-        cfg.quadVertex3Pad06 = 0x398;
+        cfg.impactEffectId = 0x398;
         cfg.textureId = 0xc0d;
         break;
     case 0x398:
@@ -865,9 +865,9 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.velocityZ = 0.003f * (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.initialAlpha = 0xff;
         if (spawnParams != 0) {
-            cfg.startPosX = cfg.startPosX + spawnParams->posX;
-            cfg.startPosY = cfg.startPosY + spawnParams->posY;
-            cfg.startPosZ = cfg.startPosZ + spawnParams->posZ;
+            cfg.startPosX += spawnParams->posX;
+            cfg.startPosY += spawnParams->posY;
+            cfg.startPosZ += spawnParams->posZ;
         }
         cfg.scale = 0.00088f * (f32)(s32)randomGetRange(0xa, 0x14);
         cfg.lifetimeFrames = 0x55;
@@ -938,15 +938,15 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         es.scale = 0.003f * (f32)(s32)randomGetRange(0, 0x258) + 1.5f;
         cfg.velocityY = 0.001f * (f32)(s32)randomGetRange(0, 0xc8) + 1.0f;
         cfg.velocityX = 0.015f * (f32)(s32)randomGetRange(0, 0x14) + 0.1f;
-        cfg.velocityY = cfg.velocityY * es.scale;
-        cfg.velocityX = cfg.velocityX * es.scale;
+        cfg.velocityY *= es.scale;
+        cfg.velocityX *= es.scale;
         cfg.scale = 6e-05f * (f32)(s32)randomGetRange(0, 0xa) + 0.0048f;
         cfg.lifetimeFrames = randomGetRange(0xb4, 0xc8);
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x3000120;
         cfg.renderFlags = 0x200800;
         cfg.textureId = 0xc0a;
-        cfg.quadVertex3Pad06 = 0x385;
+        cfg.impactEffectId = 0x385;
         break;
     case 0x388:
         cfg.startPosX = (f32)(s32)randomGetRange(0, 0x10);
@@ -970,7 +970,7 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.scale = 0.0002f * (f32)(s32)randomGetRange(0, 0xa) + 0.0028945f;
         cfg.lifetimeFrames = randomGetRange(0x78, 0x8c);
         cfg.initialAlpha = 0xff;
-        cfg.quadVertex3Pad06 = 0x385;
+        cfg.impactEffectId = 0x385;
         cfg.renderFlags = 0x200000;
         cfg.behaviorFlags = 0x1001100;
         cfg.textureId = 0xc0a;
@@ -985,7 +985,7 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.scale = 0.0002f * (f32)(s32)randomGetRange(0, 0xa) + 0.0028945f;
         cfg.lifetimeFrames = randomGetRange(0x78, 0x8c);
         cfg.initialAlpha = 0xff;
-        cfg.quadVertex3Pad06 = 0x385;
+        cfg.impactEffectId = 0x385;
         cfg.renderFlags = 0x200000;
         cfg.behaviorFlags = 0x81000120;
         cfg.textureId = 0xc0a;
@@ -1017,15 +1017,15 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     default:
         return -1;
     }
-    cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
+    cfg.behaviorFlags |= spawnFlags;
     if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
         cfg.behaviorFlags ^= 2;
     }
     if ((cfg.behaviorFlags & 1) != 0) {
         if ((spawnFlags & 0x200000) != 0) {
-            cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
-            cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
-            cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
+            cfg.startPosX += cfg.sourcePosX;
+            cfg.startPosY += cfg.sourcePosY;
+            cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != 0) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;

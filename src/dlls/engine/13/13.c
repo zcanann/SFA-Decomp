@@ -77,13 +77,13 @@ void playerShadow_scatterFootfallEffects(PlayerShadowTriHit* hits, int count, f3
             sc = 0.1f * len;
             if (len != 0.0f)
             {
-                dx = dx / len;
-                dy = dy / len;
-                dz = dz / len;
+                dx /= len;
+                dy /= len;
+                dz /= len;
             }
-            dx = dx * sc;
-            dy = dy * sc;
-            dz = dz * sc;
+            dx *= sc;
+            dy *= sc;
+            dz *= sc;
             data.posX = 0.0f;
             data.posY = 0.0f;
             data.posZ = 0.0f;
@@ -260,38 +260,38 @@ void playerShadow_renderObject(GameObject* obj)
         break;
     }
 
-    verts[0][0] = (obj)->anim.localPosX - radius;
-    verts[0][1] = (obj)->anim.localPosY + height;
-    verts[0][2] = (obj)->anim.localPosZ - radius;
-    verts[1][0] = (obj)->anim.localPosX - radius;
-    verts[1][1] = (obj)->anim.localPosY + height;
-    verts[1][2] = (obj)->anim.localPosZ + radius;
-    verts[2][0] = (obj)->anim.localPosX + radius;
-    verts[2][1] = (obj)->anim.localPosY + height;
-    verts[2][2] = (obj)->anim.localPosZ + radius;
-    verts[3][0] = (obj)->anim.localPosX + radius;
-    verts[3][1] = (obj)->anim.localPosY + height;
-    verts[3][2] = (obj)->anim.localPosZ - radius;
-    verts[4][0] = (obj)->anim.localPosX - radius;
-    verts[4][1] = (obj)->anim.localPosY - height;
-    verts[4][2] = (obj)->anim.localPosZ - radius;
-    verts[5][0] = (obj)->anim.localPosX - radius;
-    verts[5][1] = (obj)->anim.localPosY - height;
-    verts[5][2] = (obj)->anim.localPosZ + radius;
-    verts[6][0] = (obj)->anim.localPosX + radius;
-    verts[6][1] = (obj)->anim.localPosY - height;
-    verts[6][2] = (obj)->anim.localPosZ + radius;
-    verts[7][0] = (obj)->anim.localPosX + radius;
-    verts[7][1] = (obj)->anim.localPosY - height;
-    verts[7][2] = (obj)->anim.localPosZ - radius;
+    verts[0][0] = obj->anim.localPosX - radius;
+    verts[0][1] = obj->anim.localPosY + height;
+    verts[0][2] = obj->anim.localPosZ - radius;
+    verts[1][0] = obj->anim.localPosX - radius;
+    verts[1][1] = obj->anim.localPosY + height;
+    verts[1][2] = obj->anim.localPosZ + radius;
+    verts[2][0] = obj->anim.localPosX + radius;
+    verts[2][1] = obj->anim.localPosY + height;
+    verts[2][2] = obj->anim.localPosZ + radius;
+    verts[3][0] = obj->anim.localPosX + radius;
+    verts[3][1] = obj->anim.localPosY + height;
+    verts[3][2] = obj->anim.localPosZ - radius;
+    verts[4][0] = obj->anim.localPosX - radius;
+    verts[4][1] = obj->anim.localPosY - height;
+    verts[4][2] = obj->anim.localPosZ - radius;
+    verts[5][0] = obj->anim.localPosX - radius;
+    verts[5][1] = obj->anim.localPosY - height;
+    verts[5][2] = obj->anim.localPosZ + radius;
+    verts[6][0] = obj->anim.localPosX + radius;
+    verts[6][1] = obj->anim.localPosY - height;
+    verts[6][2] = obj->anim.localPosZ + radius;
+    verts[7][0] = obj->anim.localPosX + radius;
+    verts[7][1] = obj->anim.localPosY - height;
+    verts[7][2] = obj->anim.localPosZ - radius;
 
     hitDetect_calcSweptSphereBounds(&hitData, &verts[0][0], &verts[4][0], radii, 4);
     trackIntersectBroadphase(obj, &hitData, 0x84, 0);
     trackGetTriangleBuffer(&hitCount, &hitTable);
     hitTableValue = (PlayerShadowTriHit*)hitTable;
     trackGetGridOrigin(&tileInfo);
-    playerShadow_scatterFootfallEffects(hitTableValue, hitCount, (obj)->anim.localPosX - tileInfo[0],
-                (obj)->anim.localPosZ - tileInfo[2], obj);
+    playerShadow_scatterFootfallEffects(hitTableValue, hitCount, obj->anim.localPosX - tileInfo[0],
+                                        obj->anim.localPosZ - tileInfo[2], obj);
 }
 
 void playerShadow_func03_nop(void)

@@ -536,7 +536,7 @@ void objSetHintTextIdx(GameObject* obj, u16 idx) {
     if (idx > 4) {
         idx = 0;
     }
-    (obj)->hintTextIdx = idx;
+    obj->hintTextIdx = idx;
 }
 
 void Obj_ResetActiveHitVolumeBounds(GameObject* obj) {
@@ -711,7 +711,7 @@ void mapSetupPlayer(void) {
             } else {
                 obj = loadCharacter((s16*)&spawn, 1, -1, -1, 0, 0);
                 if (obj != 0) {
-                    Obj_RegisterObject((GameObject*)obj, 1);
+                    Obj_RegisterObject(obj, 1);
                     OSReport((char*)(base + 0x5c), obj->anim.modelInstance->name);
                 }
             }
@@ -835,7 +835,7 @@ static void objFreeObjdef(u8* obj, int flag) {
             shadowVolumesSetDirty(1);
         }
         if (((ObjAnimComponent*)obj)->modelState->shadowTexture != NULL) {
-            curTex = (void*)newshadows_getSmallDiskTexture();
+            curTex = newshadows_getSmallDiskTexture();
             tex = ((ObjAnimComponent*)obj)->modelState->shadowTexture;
             if (tex != curTex) {
                 if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) {
@@ -1003,7 +1003,7 @@ u8* loadObjectFile(int id) {
         if (n > -1) {
             buf->modLines = (struct MapHitLine*)loadModLines(n, &modLine);
             buf->modLineCount = modLine;
-            intersectModLineBuild((IntersectModLineObject*)buf);
+            intersectModLineBuild(buf);
         }
         gObjFileBufferTable[id] = (u8*)buf;
         gObjFileRefCount[id] = 1;
@@ -1576,13 +1576,13 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     tmpl.anim.rootMotionScale = modelDef->rootMotionScaleBase;
     tmpl.anim.flags = 2;
     if (modelDef->flags & OBJDEF_FLAG_TRANSLUCENT) {
-        tmpl.anim.flags = tmpl.anim.flags | 0x80;
+        tmpl.anim.flags |= 0x80;
     }
     if (modelDef->flags & OBJDEF_FLAG_FORCE_ALPHA_SORT) {
-        tmpl.objectFlags = tmpl.objectFlags | 0x80;
+        tmpl.objectFlags |= 0x80;
     }
     if (flags & 4) {
-        tmpl.anim.flags = tmpl.anim.flags | 0x2000;
+        tmpl.anim.flags |= 0x2000;
     }
     tmpl.anim.localPosX = ((ObjPlacement*)data)->posX;
     tmpl.anim.localPosY = ((ObjPlacement*)data)->posY;

@@ -152,13 +152,13 @@ void Tricky_resumeAfterCommand(GameObject* obj, EnemyState* state) {
 
     state->actionId = 1;
     if (((state->controlFlags & 0x1000) != 0) && ((state->prevControlFlags & 0x1000) == 0)) {
-        obj->anim.flags = obj->anim.flags & ~OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         moveId = state->moveId0;
         state->animPlaySpeed = 1.0f / (60.0f * state->moveSpeedScale0);
         state->rootMotionFlags = 1;
         ObjAnim_SetCurrentMove(obj, moveId, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
         if (obj->anim.hitReactState != NULL) {
-            hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+            hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
             hitState->suppressOutgoingHits = 0;
         }
         state->flags2E8 |= 4;
@@ -170,7 +170,7 @@ void Tricky_resumeAfterCommand(GameObject* obj, EnemyState* state) {
         state->rootMotionFlags = 0;
         ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
         if (obj->anim.hitReactState != NULL) {
-            hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+            hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
             hitState->suppressOutgoingHits = 0;
         }
         state->controlFlags &= 0xffffef7f;
@@ -199,22 +199,22 @@ void tricky_handleDefeat(GameObject* obj, EnemyState* state) {
             trickyImpress((GameObject*)tricky);
         }
         if ((state->flags2E4 & 0x40000000) == 0) {
-            if (((EnemyPlacement*)setup)->gameBit != -1) {
-                gameBitIncrement(((EnemyPlacement*)setup)->gameBit);
+            if (setup->gameBit != -1) {
+                gameBitIncrement(setup->gameBit);
             }
-            if (((EnemyPlacement*)setup)->gameBit2 != -1) {
-                mainSetBits(((EnemyPlacement*)setup)->gameBit2, 0);
+            if (setup->gameBit2 != -1) {
+                mainSetBits(setup->gameBit2, 0);
             }
         }
         state->trackedObj = NULL;
         ObjHits_DisableObject(obj);
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         moveId = state->moveId1;
         state->animPlaySpeed = 1.0f / (60.0f * state->moveSpeedScale1);
         state->rootMotionFlags = 1;
         ObjAnim_SetCurrentMove(obj, moveId, 0.0f, 0);
-        if ((void*)(obj)->anim.hitReactState != NULL) {
-            hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+        if ((void*)obj->anim.hitReactState != NULL) {
+            hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
             hitState->suppressOutgoingHits = 0;
         }
         state->flags2E8 |= 1;
@@ -223,15 +223,15 @@ void tricky_handleDefeat(GameObject* obj, EnemyState* state) {
             if ((state->flags2E4 & 0x100000) != 0) {
                 baddie_spawnRewardDrops(obj, (int)state, state->spawnBits, 0, 4);
             } else {
-                spawnBits = ((EnemyPlacement*)setup)->droppedItemId & 0xf00;
+                spawnBits = setup->droppedItemId & 0xf00;
                 if (spawnBits != 0) {
                     baddie_spawnRewardDrops(obj, (int)state, spawnBits, 0, 1);
                 }
-                spawnBits = ((EnemyPlacement*)setup)->droppedItemId & 0xf000;
+                spawnBits = setup->droppedItemId & 0xf000;
                 if (spawnBits != 0) {
                     baddie_spawnRewardDrops(obj, (int)state, spawnBits, 0, 2);
                 }
-                spawnBits = ((EnemyPlacement*)setup)->droppedItemId & 0xff;
+                spawnBits = setup->droppedItemId & 0xff;
                 if (spawnBits != 0) {
                     baddie_spawnRewardDrops(obj, (int)state, spawnBits, 0, 3);
                 }
@@ -244,24 +244,23 @@ void tricky_handleDefeat(GameObject* obj, EnemyState* state) {
     state->particleScale = 1.0f + (f32)(0xff - obj->anim.alpha) / 255.0f;
     if (obj->anim.alpha < 5) {
         if ((state->flags2E4 & 0x40000000) != 0) {
-            if (((EnemyPlacement*)setup)->gameBit != -1) {
-                gameBitIncrement(((EnemyPlacement*)setup)->gameBit);
+            if (setup->gameBit != -1) {
+                gameBitIncrement(setup->gameBit);
             }
-            if (((EnemyPlacement*)setup)->gameBit2 != -1) {
-                mainSetBits(((EnemyPlacement*)setup)->gameBit2, 0);
+            if (setup->gameBit2 != -1) {
+                mainSetBits(setup->gameBit2, 0);
             }
         }
         state->particleScale = 0.0f;
         state->controlFlags = 0;
-        obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         obj->anim.alpha = 0;
         obj->userData1 = 1;
         if ((u32)((ObjPlacement*)setup)->ident == 0xFFFFFFFF) {
             Obj_FreeObject(obj);
         } else {
-            if (((EnemyPlacement*)setup)->respawnDelay != 0) {
-                (*gMapEventInterface)
-                    ->addTime(((ObjPlacement*)setup)->ident, 60.0f * (f32)((EnemyPlacement*)setup)->respawnDelay);
+            if (setup->respawnDelay != 0) {
+                (*gMapEventInterface)->addTime(((ObjPlacement*)setup)->ident, 60.0f * (f32)setup->respawnDelay);
             }
             state->controlFlags &= ~0x800;
             state->flags2E8 &= ~3;
@@ -367,7 +366,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit) {
                 dp[0] = obj->anim.worldPosX - hitPos.x;
                 dp[1] = obj->anim.worldPosY - hitPos.y;
                 dp[2] = obj->anim.worldPosZ - hitPos.z;
-                diff = (u16)getAngle(-dp[0], -dp[2]) - (u16)(obj)->anim.rotX;
+                diff = (u16)getAngle(-dp[0], -dp[2]) - (u16)obj->anim.rotX;
                 if (diff > 0x8000) {
                     diff -= 0xffff;
                 }
@@ -662,7 +661,7 @@ int baddie_spawnRewardDrops(GameObject* obj, int state, int spawnBits, u32 useAl
     setup->color[1] = parentSetup->color[1];
     setup->color[3] = parentSetup->color[3];
     nearest = objSetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
-    gBaddieRewardObject = (GameObject*)nearest;
+    gBaddieRewardObject = nearest;
     if ((nearest->anim.romDefNo == TRICKY_OBJ_APPLE) || (nearest->anim.romDefNo == TRICKY_CHILD_OBJ_ENERGY_EGG)) {
         ((void (*)(GameObject*, f32, f32, f32))nearest->anim.dll[0][11])(nearest, 0.0f, 1.0f, 0.0f);
     }
@@ -687,7 +686,7 @@ void baddieInstantiateWeapon(GameObject* obj, EnemyState* state) {
             if (state->weaponRomDefNo > 0) {
                 setup = Obj_AllocObjectSetup(0x20, state->weaponRomDefNo);
                 setup->color[1] |= parentSetup->unk5 & 0x18;
-                child = objSetupObject((ObjPlacement*)setup, 4, obj->anim.mapEventSlot, -1, obj->anim.parent);
+                child = objSetupObject(setup, 4, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 ObjLink_AttachChild(obj, child, 0);
                 state->spawnedWeaponRomDefNo = state->weaponRomDefNo;
             }
@@ -1197,7 +1196,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state) {
         }
     }
     if (state->actionId != state->prevActionId) {
-        state->controlFlags = state->controlFlags | BADDIE_CONTROL_JUST_TRIGGERED;
+        state->controlFlags |= BADDIE_CONTROL_JUST_TRIGGERED;
     } else {
         state->controlFlags = state->controlFlags & 0x7fffffff;
     }
@@ -1564,7 +1563,7 @@ void sidekickToy_updateCurveTargetLatch(GameObject* obj) {
     EnemyState* state = obj->extra;
     u8* data = *(u8**)state;
     if ((state->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0) {
-        if (baddie_canSeeTarget(obj, (EnemyState*)state, &obj->anim.worldPosX, data + 0x68) != 0) {
+        if (baddie_canSeeTarget(obj, state, &obj->anim.worldPosX, data + 0x68) != 0) {
             return;
         }
     }
@@ -1615,10 +1614,10 @@ int enemy_findNearbyEnemies(GameObject* obj, f32 radius, u8 flags, int max, Enem
                 }
                 diff = diff - ((int)ang & 0xffffU);
                 if ((int)diff > 0x8000) {
-                    diff = diff - 0xffff;
+                    diff -= 0xffff;
                 }
                 if ((int)diff < -0x8000) {
-                    diff = diff + 0xffff;
+                    diff += 0xffff;
                 }
                 ang = (short)((diff & 0xffff) >> 0xd);
                 state->controlFlags &= ~gEnemySelfAngleFlagClearMask[ang];
@@ -1628,7 +1627,7 @@ int enemy_findNearbyEnemies(GameObject* obj, f32 radius, u8 flags, int max, Enem
             }
         }
     } else {
-        radius = radius * radius;
+        radius *= radius;
         arr = (GameObject**)objGetAllOfType(ENEMY_OBJGROUP, &count);
         if (count != 0) {
             i = 0;
@@ -1655,10 +1654,10 @@ int enemy_findNearbyEnemies(GameObject* obj, f32 radius, u8 flags, int max, Enem
                         }
                         diff = diff - ((int)ang & 0xffffU);
                         if ((int)diff > 0x8000) {
-                            diff = diff - 0xffff;
+                            diff -= 0xffff;
                         }
                         if ((int)diff < -0x8000) {
-                            diff = diff + 0xffff;
+                            diff += 0xffff;
                         }
                         ang = (short)((diff & 0xffff) >> 0xd);
                         state->controlFlags &= ~gEnemySelfAngleFlagClearMask[ang];
@@ -1705,8 +1704,8 @@ void enemy_getCurveParams(GameObject* obj, int* outIdx, f32* outA, f32* outB) {
     if (obj != NULL) {
         state = obj->extra;
         if (state != NULL) {
-            *outA = (f32)(u32)(state)->curveParamA / 255.0f;
-            *outB = (f32)(u32)(state)->curveParamB;
+            *outA = (f32)(u32)state->curveParamA / 255.0f;
+            *outB = (f32)(u32)state->curveParamB;
             *outIdx = state->curveIndex;
             return;
         }
@@ -1870,9 +1869,9 @@ f32 sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 tx, f32 ty, f32 tz
         obj->anim.velocityZ = maxVel;
     }
     if (drag != 0.0f) {
-        obj->anim.velocityX = obj->anim.velocityX * powfBitEstimate(drag, timeDelta);
-        obj->anim.velocityY = obj->anim.velocityY * powfBitEstimate(drag, timeDelta);
-        obj->anim.velocityZ = obj->anim.velocityZ * powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityX *= powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityY *= powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityZ *= powfBitEstimate(drag, timeDelta);
     }
     return dy;
 }
@@ -1905,8 +1904,8 @@ f32 sidekickToy_accelerateTowardTargetXZ(GameObject* obj, f32 tx, f32 ty, f32 tz
         obj->anim.velocityZ = maxVel;
     }
     if (drag != 0.0f) {
-        obj->anim.velocityX = obj->anim.velocityX * powfBitEstimate(drag, timeDelta);
-        obj->anim.velocityZ = obj->anim.velocityZ * powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityX *= powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityZ *= powfBitEstimate(drag, timeDelta);
     }
     return dy;
 }
@@ -2004,7 +2003,7 @@ void baddieSetMove(GameObject* obj, void* state, u8 moveId, f32 rateScale, u8 mo
     enemyState->animPlaySpeed = 1.0f / (60.0f * rateScale);
     enemyState->rootMotionFlags = stateByte;
     ObjAnim_SetCurrentMove(obj, moveId, 0.0f, moveControlFlags);
-    hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if (hitState != NULL) {
         hitState->suppressOutgoingHits = 0;
     }
@@ -2063,9 +2062,9 @@ void enemy_free(GameObject* obj, int flag) {
     for (i = 0; i < n; i++) {
         child = obj->childObjs[0];
         if (child != NULL) {
-            ObjLink_DetachChild(obj, (GameObject*)child);
+            ObjLink_DetachChild(obj, child);
             if (flag == 0 || (child->objectFlags & 0x10) == 0) {
-                Obj_FreeObject((GameObject*)child);
+                Obj_FreeObject(child);
             }
         }
     }
@@ -2170,7 +2169,7 @@ void enemy_update(GameObject* obj) {
         state->trackedObj = Obj_GetPlayerObject();
     }
     state->prevControlFlags = state->controlFlags;
-    baddieInstantiateWeapon(obj, (EnemyState*)state);
+    baddieInstantiateWeapon(obj, state);
     flags = state->controlFlags;
     if ((flags & 1) != 0 && (flags & 2) == 0) {
         if (((EnemyPlacement*)setup)->triggerSequenceId == -1) {
@@ -2265,7 +2264,7 @@ void enemy_update(GameObject* obj) {
     }
     if ((state->controlFlags & 0x8000) != 0) {
         setHudForceShowMask(0);
-        (*gPathControlInterface)->attachObject(obj, &((EnemyState*)state)->flags);
+        (*gPathControlInterface)->attachObject(obj, &state->flags);
         state->controlFlags &= ~0x8003;
         if ((state->flags2E4 & 0x20000) != 0) {
             s2 = (EnemyPlacement*)obj->anim.placementData;
@@ -2294,10 +2293,10 @@ void enemy_update(GameObject* obj) {
     }
     baddie_updateWhileFrozen(obj, (u8*)state, 0);
     if ((state->controlFlags & 0x1800) == 0) {
-        baddieTurnTowardTarget(obj, (EnemyState*)state);
-        baddie_updateEngagementState(obj, (EnemyState*)state);
+        baddieTurnTowardTarget(obj, state);
+        baddie_updateEngagementState(obj, state);
     }
-    enemyObjAnimUpdate((short*)obj, (EnemyState*)state);
+    enemyObjAnimUpdate((short*)obj, state);
 }
 
 void enemy_init(GameObject* obj, u8* setup, int flag) {
@@ -2412,7 +2411,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag) {
             pinPon_init(obj, state);
             break;
         case ENEMY_RACHNOP_OBJ:
-            rachnopInit((GameObject*)obj, state);
+            rachnopInit(obj, state);
             break;
         case ENEMY_SPITTINGEBA_OBJ:
             spittingEbaInit((int)obj, (int)state);

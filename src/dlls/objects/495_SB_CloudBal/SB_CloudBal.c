@@ -127,7 +127,7 @@ void SB_CloudBall_update(GameObject* obj) {
         obj->anim.previousLocalPosX = obj->anim.localPosX;
         obj->anim.previousLocalPosY = obj->anim.localPosY;
         obj->anim.previousLocalPosZ = obj->anim.localPosZ;
-        obj->anim.rootMotionScale = SB_CLOUD_BALL_RANDOM_SCALE * (f32)randomGetRange(SB_CLOUD_BALL_RANDOM_RANGE_MIN,
+        obj->anim.rootMotionScale = SB_CLOUD_BALL_RANDOM_SCALE * randomGetRange(SB_CLOUD_BALL_RANDOM_RANGE_MIN,
                                                                                      SB_CLOUD_BALL_RANDOM_RANGE_MAX) +
                                     SB_CLOUD_BALL_RANDOM_SCALE_BASE;
         if (state->launched == 0) {
@@ -146,7 +146,7 @@ void SB_CloudBall_update(GameObject* obj) {
         obj->anim.localPosX = state->positionX;
         obj->anim.localPosY = state->positionY;
         obj->anim.localPosZ = state->positionZ;
-        obj->userData1 = obj->userData1 - framesThisStep;
+        obj->userData1 -= framesThisStep;
         if (obj->userData1 < 0 || (player != NULL && (player->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0)) {
             if (state->fadeTimer == zero) {
                 obj->anim.alpha = 0;

@@ -3,7 +3,8 @@
 
 Build build/GSAE01/src/main/zlb.o first. This executes the complete functions,
 including their own tables, on fixed/dynamic streams and a stored-copy witness.
-Checks also cover the stack pointer, nonvolatile GPRs, and CR2-CR4 on return.
+Checks also cover mutable Huffman tables, the stack pointer, nonvolatile GPRs,
+and CR2-CR4 on return.
 The stored witness deliberately preserves retail's overlapping-halfword LEN bug;
 it is not an RFC1951 conformance test. No source or build config is modified.
 """
@@ -19,6 +20,7 @@ import subprocess
 import zlib
 
 from orig.dol_vtables import DolFile, load_function_symbols
+from orig.dll_catalog import load_symbols
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -100,12 +102,23 @@ def main() -> None:
     dol = DolFile(ROOT / "orig/GSAE01/sys/main.dol")
     retail_entry = next(fn.address for fn in load_function_symbols(ROOT / "config/GSAE01/symbols.txt")
                         if fn.name == "zlbDecompress")
+    table_symbols = {
+        symbol.name: (address, symbol.size)
+        for address, symbol in load_symbols(ROOT / "config/GSAE01/symbols.txt").items()
+        if symbol.name.startswith("gInflate") and symbol.section in ("bss", "sbss")
+    }
+    if len(table_symbols) != 12 or any(size is None or size <= 0 for _, size in table_symbols.values()):
+        raise RuntimeError("Missing retail Huffman table sizes")
+    missing_tables = table_symbols.keys() - symbols.keys()
+    if missing_tables:
+        raise RuntimeError("Source object is missing tables: " + ", ".join(sorted(missing_tables)))
     retail_segments = [(s.address, dol.data[s.offset:s.offset + s.size]) for s in dol.sections]
     images = [("retail", retail_entry, retail_segments, 0, 0),
               ("source", word(data, 24), elf_segments,
                symbols.get("_SDA_BASE_", 0), symbols.get("_SDA2_BASE_", 0))]
     results = []
     for name, compressed, expected in cases():
+        retail_tables = None
         for version, entry, segments, sda1, sda2 in images:
             emulator = uc.Uc(uc.UC_ARCH_PPC, uc.UC_MODE_32 | uc.UC_MODE_BIG_ENDIAN)
             emulator.mem_map(0x80000000, 0x1800000)
@@ -132,8 +145,16 @@ def main() -> None:
                                     (ppc.UC_PPC_REG_6, DESTINATION + 0x30000), (ppc.UC_PPC_REG_LR, RETURN)):
                 emulator.reg_write(register, value)
             emulator.emu_start(entry, RETURN, count=3000000)
+            tables = {
+                table: bytes(emulator.mem_read(address if version == "retail" else symbols[table], size))
+                for table, (address, size) in table_symbols.items()
+            }
+            if version == "retail":
+                retail_tables = tables
+            different_tables = [table for table in tables if tables[table] != retail_tables[table]]
             actual = bytes(emulator.mem_read(DESTINATION, len(expected) + 16))
             row = {"case": name, "version": version,
+                   "tables_checked": len(tables), "different_tables": different_tables,
                    "returned": emulator.reg_read(ppc.UC_PPC_REG_PC) == RETURN,
                    "return_value": emulator.reg_read(ppc.UC_PPC_REG_3),
                    "output_correct": actual[:len(expected)] == expected,
@@ -146,7 +167,7 @@ def main() -> None:
             print(json.dumps(row))
     (output / "results.json").write_text(json.dumps(results, indent=2) + "\n")
     if not all(r["returned"] and r["return_value"] == 0 and r["output_correct"] and r["canary_intact"]
-               and r["callee_saved_intact"]
+               and r["callee_saved_intact"] and not r["different_tables"]
                for r in results):
         raise SystemExit(1)
 

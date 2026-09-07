@@ -165,9 +165,9 @@ int dbshSymbol_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animU
     if (state->playerSfxTimer < 0.0f) {
         if (state->spinSpeed < 0.0f) {
             state->playerSfxTimer =
-                (f32)randomGetRange(DBSH_SYMBOL_SFX_TIMER_SHORT_MIN, DBSH_SYMBOL_SFX_TIMER_SHORT_MAX);
+                randomGetRange(DBSH_SYMBOL_SFX_TIMER_SHORT_MIN, DBSH_SYMBOL_SFX_TIMER_SHORT_MAX);
         } else {
-            state->playerSfxTimer = (f32)randomGetRange(DBSH_SYMBOL_SFX_TIMER_LONG_MIN, DBSH_SYMBOL_SFX_TIMER_LONG_MAX);
+            state->playerSfxTimer = randomGetRange(DBSH_SYMBOL_SFX_TIMER_LONG_MIN, DBSH_SYMBOL_SFX_TIMER_LONG_MAX);
         }
         Sfx_PlayFromObject(player, SFXTRIG_literun116_var);
     }
@@ -175,9 +175,9 @@ int dbshSymbol_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animU
     if (state->objectSfxTimer < 0.0f) {
         if (state->spinSpeed > 0.0f) {
             state->objectSfxTimer =
-                (f32)randomGetRange(DBSH_SYMBOL_SFX_TIMER_SHORT_MIN, DBSH_SYMBOL_SFX_TIMER_SHORT_MAX);
+                randomGetRange(DBSH_SYMBOL_SFX_TIMER_SHORT_MIN, DBSH_SYMBOL_SFX_TIMER_SHORT_MAX);
         } else {
-            state->objectSfxTimer = (f32)randomGetRange(DBSH_SYMBOL_SFX_TIMER_LONG_MIN, DBSH_SYMBOL_SFX_TIMER_LONG_MAX);
+            state->objectSfxTimer = randomGetRange(DBSH_SYMBOL_SFX_TIMER_LONG_MIN, DBSH_SYMBOL_SFX_TIMER_LONG_MAX);
         }
         Sfx_PlayFromObject(obj, SFXTRIG_spotfox03);
     }

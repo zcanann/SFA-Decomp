@@ -45,7 +45,7 @@ void dimmagicbridge_updateVertexWave(GameObject* obj, u8* stateBytes) {
         s16* currentVertex = ObjModel_GetCurrentVertexCoords(model, vertexIndex);
         s16* baseVertex = ObjModel_GetBaseVertexCoords(modelFile, vertexIndex);
         int wavePosition = (u16)(int)(phaseScale * ((f32)(int)currentVertex[2] / state->minVertexY));
-        wavePosition = wavePosition + state->wavePhase;
+        wavePosition += state->wavePhase;
         if (*baseVertex > 0) {
             *currentVertex =
                 256.0f * mathSinf((3.1415927f * (f32)wavePosition) / 32768.0f) + (f32)(int)*baseVertex;
@@ -55,7 +55,7 @@ void dimmagicbridge_updateVertexWave(GameObject* obj, u8* stateBytes) {
         }
     }
     DCStoreRange((void*)ObjModel_GetCurrentVertexCoords(model, 0), vertexCount * 6);
-    (obj)->anim.alpha = state->segmentGlow[1];
+    obj->anim.alpha = state->segmentGlow[1];
 }
 
 void dimmagicbridge_scrollTextureChannels(GameObject* obj, u8* stateBytes) {
@@ -79,12 +79,12 @@ void dimmagicbridge_scrollTextureChannels(GameObject* obj, u8* stateBytes) {
     }
     phase = (s32)state->wavePhase + framesThisStep * 0x100;
     if (phase > 0xffff) {
-        phase = phase - 0xffff;
+        phase -= 0xffff;
     }
     state->wavePhase = phase;
     phase = (s32)state->wavePhaseB + framesThisStep * 0x80;
     if (phase > 0xffff) {
-        phase = phase - 0xffff;
+        phase -= 0xffff;
     }
     state->wavePhaseB = phase;
 }
@@ -92,7 +92,7 @@ void dimmagicbridge_scrollTextureChannels(GameObject* obj, u8* stateBytes) {
 int dimmagicbridge_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     int segmentIndex;
     int glowIndex;
-    u8* stateBytes = (obj)->extra;
+    u8* stateBytes = obj->extra;
     DimMagicBridgeState* state = (DimMagicBridgeState*)stateBytes;
     animUpdate->movementState = 0;
     animUpdate->flags &= ~OBJSEQ_FLAG_TEXTURE_ANIM_TRACKS;
@@ -152,7 +152,7 @@ void dimmagicbridge_update(GameObject* obj) {
     DimMagicBridgeState* state;
     void* player;
     player = Obj_GetPlayerObject();
-    state = (obj)->extra;
+    state = obj->extra;
     dimmagicbridge_scrollTextureChannels(obj, (u8*)state);
     dimmagicbridge_updateVertexWave(obj, (u8*)state);
     if (state->ignited == 0) {

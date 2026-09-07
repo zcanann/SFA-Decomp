@@ -97,7 +97,7 @@ void dimbossfire_update(GameObject* obj) {
     } else {
         state->cooldownTimer -= timeDelta;
         if (state->cooldownTimer <= 0.0f) {
-            state->cooldownTimer = (f32)randomGetRange(DIMBOSSFIRE_COOLDOWN_MIN, DIMBOSSFIRE_COOLDOWN_MAX);
+            state->cooldownTimer = randomGetRange(DIMBOSSFIRE_COOLDOWN_MIN, DIMBOSSFIRE_COOLDOWN_MAX);
             state->flags |= DIMBOSSFIRE_FLAG_START_BURST;
             state->activeTimer = gDimbossfireActiveDurations[state->durationIndex];
             state->initialActiveTimer = state->activeTimer;
@@ -121,7 +121,7 @@ void dimbossfire_update(GameObject* obj) {
                     } else {
                         (*gPartfxInterface)->spawnObject(obj, DIMBOSSFIRE_PARTFX_BURST_GREEN, NULL, 2, -1, NULL);
                     }
-                    burstIndex = burstIndex + 1;
+                    burstIndex += 1;
                 } while (burstIndex < DIMBOSSFIRE_BURST_COUNT);
             }
             player = Obj_GetPlayerObject();
@@ -182,7 +182,7 @@ void dimbossfire_init(GameObject* obj, u32 placementAddress, int isAltVariant) {
     ObjHitbox_SetSphereRadius(&obj->anim, 0);
     ObjHits_DisableObject(obj);
     if (isAltVariant == 0) {
-        state->cooldownTimer = (f32)randomGetRange(DIMBOSSFIRE_COOLDOWN_MIN, DIMBOSSFIRE_COOLDOWN_MAX);
+        state->cooldownTimer = randomGetRange(DIMBOSSFIRE_COOLDOWN_MIN, DIMBOSSFIRE_COOLDOWN_MAX);
         durationIndex = randomGetRange(0, 9);
         state->durationIndex = durationIndex;
     }

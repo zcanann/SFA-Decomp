@@ -1,6 +1,7 @@
-#ifndef MAIN_DLL_DLL_024D_BOSSDRAKOR_H_
-#define MAIN_DLL_DLL_024D_BOSSDRAKOR_H_
+#ifndef DLLS_OBJECTS_589_BOSSDRAKOR_H_
+#define DLLS_OBJECTS_589_BOSSDRAKOR_H_
 
+#include "dlls/object_descriptor.h"
 #include "types.h"
 #include "game/objects/object.h"
 #include "main/byte_flags.h"
@@ -13,8 +14,7 @@
 
 #define BOSSDRAKOR_OBJGROUP 0x45
 
-typedef struct BossdrakorPlacement
-{
+typedef struct BossdrakorPlacement {
     ObjPlacement base;
     u8 pad18[0x19 - 0x18];
     u8 curveAdvanceStep;
@@ -23,8 +23,7 @@ typedef struct BossdrakorPlacement
     s16 defeatedGameBit;
 } BossdrakorPlacement;
 
-typedef struct BossDrakorState
-{
+typedef struct BossDrakorState {
     f32 curveAdvanceStep;
     u8 pad04[8];
     int unk0C;
@@ -40,7 +39,7 @@ typedef struct BossDrakorState
         Vec3f homePos;
     };
     RomCurveWalker curveWalker; /* 0x28: the rom-curve walker this boss follows */
-    ObjSoundState soundState; /* 0x130 */
+    ObjSoundState soundState;   /* 0x130 */
     ModelLightStruct* lightObj; /* 0x160 */
     f32 moveSpeed;
     int moveState; /* 0x168 */
@@ -66,7 +65,6 @@ STATIC_ASSERT(offsetof(BossDrakorState, curveWalker) == 0x28);
 STATIC_ASSERT(offsetof(BossDrakorState, soundState) == 0x130);
 STATIC_ASSERT(sizeof(BossDrakorState) == 0x1a4);
 
-
 extern f32 gBossDrakorMissileTargetScatterFactor;
 extern f32 gBossDrakorMissileInitialSpeedFactor;
 extern f32 gBossDrakorThornbushSpawnHealth;
@@ -76,8 +74,7 @@ extern s16 gBossDrakorJawAnglePerTick;
 
 extern int gBossDrakorMoveStateTable[];
 extern int gBossDrakorMoveSpeedTable[];
-typedef struct BossDrakorTuning
-{
+typedef struct BossDrakorTuning {
     int turnMoveStates[5];
     f32 unk14[9];
     int unk38[9];
@@ -94,6 +91,7 @@ STATIC_ASSERT(offsetof(BossDrakorTuning, missileLeadFactors) == 0x68);
 STATIC_ASSERT(offsetof(BossDrakorTuning, airMeterThresholds) == 0x74);
 
 extern BossDrakorTuning gBossDrakorTurnMoveStates;
+extern ObjectDescriptor gBossDrakorObjDescriptor;
 
 void bossdrakor_release(void);
 void bossdrakor_initialise(void);

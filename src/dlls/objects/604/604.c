@@ -241,7 +241,7 @@ void snowclaw_updateMountAttack(GameObject* obj, GameObject* mount)
     int moveId;
     int delay;
 
-    inner = (obj)->extra;
+    inner = obj->extra;
     movePhase = SNOWCLAW_MOUNT_INTERFACE(mount)->getNormalizedSpeed(mount, &moveStep);
     moveStep = gSnowClawMoveStepScaleBase + 2.0f * (movePhase * gSnowClawMoveStepScaleBase);
     SNOWCLAW_MOUNT_INTERFACE(mount)->func12(mount, &mountPhase, &mountFlag);
@@ -251,21 +251,16 @@ void snowclaw_updateMountAttack(GameObject* obj, GameObject* mount)
         magnitude = -magnitude;
     }
 
-    if (mountFlag != 0 && (obj)->anim.currentMove == inner->moveIdBase)
-    {
+    if (mountFlag != 0 && obj->anim.currentMove == inner->moveIdBase) {
         Object_ObjAnimSetSecondaryBlendMove(&obj->anim, inner->moveIdBase + 1,
                                             magnitude);
-    }
-    else
-    {
+    } else {
         Object_ObjAnimSetSecondaryBlendMove(&obj->anim, inner->moveIdBase + 2,
                                             magnitude);
     }
 
-    if (ObjAnim_AdvanceCurrentMove(obj, moveStep, (f32)framesThisStep,
-                                                                    NULL) != 0 &&
-        (obj)->anim.currentMove != inner->moveIdBase)
-    {
+    if (ObjAnim_AdvanceCurrentMove(obj, moveStep, (f32)framesThisStep, NULL) != 0 &&
+        obj->anim.currentMove != inner->moveIdBase) {
         inner->unk30 = 0.006f;
         delay = inner->attackDelay;
         if (delay < 1)
@@ -374,7 +369,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
         if (animFlags & OBJANIM_FLAG_HIDDEN)
         {
             sub->anim.flags = animFlags & ~OBJANIM_FLAG_HIDDEN;
-            SNOWCLAW_MOUNT_INTERFACE(sub)->setRiderMode((GameObject*)sub, 2);
+            SNOWCLAW_MOUNT_INTERFACE(sub)->setRiderMode(sub, 2);
         }
     }
     if (seq->runState == 2)
@@ -408,7 +403,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
                 s->prevPosX = s->posX;
                 s->prevPosY = s->posY;
                 s->prevPosZ = s->posZ;
-                SNOWCLAW_MOUNT_INTERFACE(sub)->setRiderMode((GameObject*)sub, 2);
+                SNOWCLAW_MOUNT_INTERFACE(sub)->setRiderMode(sub, 2);
                 ObjAnim_SetCurrentMove(obj, s->moveIdBase, 0.0f, 1);
                 {
                     ObjModelState* gx = obj->anim.modelState;
@@ -424,7 +419,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
             sub = s->mount;
             if (sub != 0)
             {
-                SNOWCLAW_MOUNT_INTERFACE(sub)->setRiderMode((GameObject*)sub, 0);
+                SNOWCLAW_MOUNT_INTERFACE(sub)->setRiderMode(sub, 0);
                 seq->flags |= 4;
             }
             break;
@@ -470,8 +465,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
         }
         s->dropIndexApplied = s->dropIndex;
     }
-    if (sub != 0 && SNOWCLAW_MOUNT_INTERFACE(sub)->getRiderMode((GameObject*)sub) == 2)
-    {
+    if (sub != 0 && SNOWCLAW_MOUNT_INTERFACE(sub)->getRiderMode(sub) == 2) {
         seq->flags &= ~3;
     }
     return 0;
@@ -508,8 +502,7 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
     dist = 5000.0f;
     s = obj->extra;
     mount = s->mount;
-    if ((obj)->anim.alpha < 5)
-    {
+    if (obj->anim.alpha < 5) {
         s->particleAlpha = 0.0f;
     }
     found = 0;
@@ -522,13 +515,13 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
     }
     if (found != 0)
     {
-        (obj)->anim.flags |= 8;
+        obj->anim.flags |= 8;
         vis = objUpdateOpacity(mount);
         snowclaw_syncMountTransform(obj, mount, p2, p3, p4, p5, vis, s->mountAlpha, 1);
     }
     else
     {
-        (obj)->anim.flags &= ~8;
+        obj->anim.flags &= ~8;
     }
     if (vis != 0 && s->mountAlpha != 0)
     {
@@ -537,9 +530,7 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
         {
             obj->anim.renderAlpha = s->mountAlpha;
         }
-        if ((obj)->childCount == 0 && (obj)->anim.romDefNo == SNOWCLAW_SEQID_CR_SNOWCLAW &&
-            s->b0 != 0)
-        {
+        if (obj->childCount == 0 && obj->anim.romDefNo == SNOWCLAW_SEQID_CR_SNOWCLAW && s->b0 != 0) {
             near = objGetNearestTypeTo(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
             if (near != NULL && SNOWCLAW_TARGET_INTERFACE(near)->getState(near) != 0 &&
                 SNOWCLAW_TARGET_INTERFACE(near)->setState(near, 0) != 0)
@@ -555,8 +546,7 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
         {
             if (s->particleAlpha != zero)
             {
-                s->particleAlpha =
-                    1.0f + (f32)(s32)(0xff - (obj)->anim.alpha) / 255.0f;
+                s->particleAlpha = 1.0f + (f32)(s32)(0xff - obj->anim.alpha) / 255.0f;
             }
             else
             {
@@ -626,13 +616,13 @@ void snowclaw_hitDetect(GameObject* obj)
                 s->particleAlpha = 1.0f;
                 s->velX =
                     0.1f * mathSinf(3.1415927f * (f32)obj->anim.rotX / 32768.0f);
-                s->velY = 0.01f * (f32)randomGetRange(0x28, 0x64);
+                s->velY = 0.01f * randomGetRange(0x28, 0x64);
                 s->velZ =
                     0.1f * mathCosf(3.1415927f * (f32)obj->anim.rotX / 32768.0f);
                 player = playerGetFocusObject(Obj_GetPlayerObject());
                 if (player != 0)
                 {
-                    int* sub3 = (player)->extra;
+                    int* sub3 = player->extra;
                     if (sub3 != 0)
                     {
                         *(f32*)((char*)sub3 + 0x4c4) = 3000.0f;
@@ -809,20 +799,18 @@ void snowclaw_init(GameObject* obj, SnowclawPlacement* placement)
     SnowclawState* inner;
 
     table = (u8*)(int)gSnowClawMoveTable;
-    (obj)->animEventCallback = snowclaw_animEventCallback;
-    if ((obj)->anim.modelState != NULL)
-    {
-        (obj)->anim.modelState->flags |= OBJ_MODEL_STATE_UNREAD_4000;
-        (obj)->anim.modelState->shadowTintA = 0x64;
-        (obj)->anim.modelState->shadowTintB = 0x96;
+    obj->animEventCallback = snowclaw_animEventCallback;
+    if (obj->anim.modelState != NULL) {
+        obj->anim.modelState->flags |= OBJ_MODEL_STATE_UNREAD_4000;
+        obj->anim.modelState->shadowTintA = 0x64;
+        obj->anim.modelState->shadowTintB = 0x96;
     }
-    inner = (obj)->extra;
+    inner = obj->extra;
     inner->mount = NULL;
     inner->dropIndex = placement->dropIndex;
     inner->health = 4;
     inner->hitCooldown = -1;
-    switch ((obj)->anim.romDefNo)
-    {
+    switch (obj->anim.romDefNo) {
     case 0x16d:
     case 0x170:
     default:

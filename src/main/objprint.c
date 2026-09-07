@@ -1,5 +1,4 @@
 #define OBJHITS_SETTERS_S16
-#define OBJHITS_STATE_INDEX_S8
 #include "main/frame_timing.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
@@ -307,7 +306,7 @@ void objKfAnimUpdate(GameObject* obj, ObjKfAnimState* state) {
                 ObjModel_SetBlendChannelTargets(model, 2, model->blendChannels[2].morphTargetB, kfval - 1,
                                                 1.0f / gObjMouthBlendFrames, 0);
             }
-            state->timer = state->timer + state->timerStep;
+            state->timer += state->timerStep;
         }
     }
 }
@@ -377,7 +376,7 @@ int* objGetLookAtJointKeys(void) {
 
 ObjTextureRuntimeSlot* objFindTexture(GameObject* obj, int target, int unusedMaterialIndex) {
     ObjTextureRuntimeSlot* result = NULL;
-    ObjDef* modelDef = (obj)->anim.modelInstance;
+    ObjDef* modelDef = obj->anim.modelInstance;
     if (modelDef != NULL) {
         int count;
         ObjTextureSlotDef* entries = modelDef->textureSlotDefs;
@@ -389,7 +388,7 @@ ObjTextureRuntimeSlot* objFindTexture(GameObject* obj, int target, int unusedMat
             count = modelDef->textureSlotCount;
             for (i = 0; i < count; i++) {
                 if (target == entries[i].tag) {
-                    result = &(obj)->anim.textureSlots[i];
+                    result = &obj->anim.textureSlots[i];
                 }
             }
         }
@@ -405,7 +404,7 @@ void objGetJointWorldPosition(GameObject* obj, int key, f32* outPosition) {
     int joint;
     ObjModelJointMatrix* model;
 
-    table = (void*)(obj)->anim.modelInstance;
+    table = (void*)obj->anim.modelInstance;
     i = 0;
     n = (s32)(u32)table->jointCount;
     for (k = 0; k < n; k++) {
@@ -443,7 +442,7 @@ s16* objFindJointPoseVector(GameObject* obj, int key) {
             jointData = (u8*)modelDef->jointData;
             if ((int)*(u8*)(jointData + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
                 (s32) * (u8*)(jointData + entryIdx) == key) {
-                result = (s16*)((char*)(obj)->anim.jointPoseData + vecOffset);
+                result = (s16*)((char*)obj->anim.jointPoseData + vecOffset);
             }
             entryIdx += OBJPRINT_MODEL_COUNT(modelDef) + 1;
             vecOffset += 0x12;
@@ -1049,7 +1048,7 @@ void characterAimHeadAtTarget(GameObject* obj, void* tgt, void* state, int limit
     void* m[1];
 
     found[0] = NULL;
-    m[0] = (void*)(obj)->anim.modelInstance;
+    m[0] = (void*)obj->anim.modelInstance;
     if (m[0] != NULL) {
         int iv[2];
         int n;
@@ -1061,7 +1060,7 @@ void characterAimHeadAtTarget(GameObject* obj, void* tgt, void* state, int limit
             u8* entries = (u8*)((ObjDef*)m[0])->jointData;
             if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + iv[0] + 1) != 0xff &&
                 (int)*(u8*)(entries + iv[0]) == 0) {
-                found[0] = (s16*)((char*)(obj)->anim.jointPoseData + iv[1]);
+                found[0] = (s16*)((char*)obj->anim.jointPoseData + iv[1]);
             }
             iv[0] += ((ObjDef*)m[0])->modelCount + 1;
             iv[1] += 0x12;
@@ -1072,9 +1071,9 @@ void characterAimHeadAtTarget(GameObject* obj, void* tgt, void* state, int limit
             found[0][1] = found[0][1] >> 1;
             found[0][0] = found[0][0] >> 1;
         } else {
-            f32 dx = (obj)->anim.localPosX - ((GameObject*)tgt)->anim.localPosX;
-            f32 dz = (obj)->anim.localPosZ - ((GameObject*)tgt)->anim.localPosZ;
-            f32 dy = (obj)->anim.localPosY - ((GameObject*)tgt)->anim.localPosY;
+            f32 dx = obj->anim.localPosX - ((GameObject*)tgt)->anim.localPosX;
+            f32 dz = obj->anim.localPosZ - ((GameObject*)tgt)->anim.localPosZ;
+            f32 dy = obj->anim.localPosY - ((GameObject*)tgt)->anim.localPosY;
             f32 dist = sqrtf(dx * dx + dz * dz);
             ObjJointTrackChannel* channel;
             s16* ap;
@@ -1083,7 +1082,7 @@ void characterAimHeadAtTarget(GameObject* obj, void* tgt, void* state, int limit
             int i;
             f32 prodB;
 
-            ang[0] = (s16)getAngle(dx, dz) - (u16)(obj)->anim.rotX;
+            ang[0] = (s16)getAngle(dx, dz) - (u16)obj->anim.rotX;
             if (ang[0] > 0x8000) {
                 ang[0] = (s16)(ang[0] - 0xffff);
             }
@@ -1148,9 +1147,9 @@ void characterSetHeadYawToTarget(GameObject* obj, GameObject* target, CharacterE
 
     found = objFindJointVecByKey(obj, 0);
     if (found != NULL) {
-        state->headYaw = (s16)((s16)getAngle((obj)->anim.localPosX - target->anim.localPosX,
-                                             (obj)->anim.localPosZ - target->anim.localPosZ) -
-                               (obj)->anim.rotX);
+        state->headYaw = (s16)((s16)getAngle(obj->anim.localPosX - target->anim.localPosX,
+                                             obj->anim.localPosZ - target->anim.localPosZ) -
+                               obj->anim.rotX);
         maxAngle = (s16)(182.04f * maxAngle);
         if (state->headYaw > maxAngle) {
             state->headYaw = maxAngle;
@@ -1309,8 +1308,8 @@ void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg
                 va[1] = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1].pos[1];
                 va[2] = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1].pos[2];
                 PSMTXMultVec(jm, vp, vp);
-                vp->x = vp->x + playerMapOffsetX;
-                va[2] = va[2] + playerMapOffsetZ;
+                vp->x += playerMapOffsetX;
+                va[2] += playerMapOffsetZ;
                 *(f32*)(q + 0x6c) = vp->x;
                 *(f32*)(q + 0x74) = va[1];
                 *(f32*)(q + 0x7c) = va[2];
@@ -1323,8 +1322,8 @@ void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg
                 vb.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))->pos[1];
                 vb.z = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))->pos[2];
                 PSMTXMultVec(mtx2, &vb, &vb);
-                vb.x = vb.x + playerMapOffsetX;
-                vb.z = vb.z + playerMapOffsetZ;
+                vb.x += playerMapOffsetX;
+                vb.z += playerMapOffsetZ;
                 *(f32*)(q + 0x54) = vb.x;
                 *(f32*)(q + 0x5c) = vb.y;
                 *(f32*)(q + 0x64) = vb.z;
@@ -1342,9 +1341,9 @@ void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg
             va[1] = *(f32*)(r + 0x74);
             va[2] = *(f32*)(r + 0x7c);
             STAFF_INTERFACE(staff)->updateSwipe(staff, (GameObject*)obj, &vb);
-            va[0] = va[0] - vb.x;
-            va[1] = va[1] - vb.y;
-            va[2] = va[2] - vb.z;
+            va[0] -= vb.x;
+            va[1] -= vb.y;
+            va[2] -= vb.z;
             staff->anim.rotX = getAngle(va[0], va[2]);
             {
                 f32 dx = va[0] * va[0];

@@ -65,7 +65,7 @@ ObjectDescriptor gArwingAndrossStuffObjDescriptor = {
 
 void arwprojectile_createLinkedEffect(GameObject* obj, u8 enable)
 {
-    ArwProjectileState* state = (obj)->extra;
+    ArwProjectileState* state = obj->extra;
     if (enable == 0)
         return;
     if (state->light != NULL)
@@ -76,24 +76,16 @@ void arwprojectile_createLinkedEffect(GameObject* obj, u8 enable)
     modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
     modelLightStruct_setPosition(state->light, 0.0f, 0.0f, 0.0f);
     modelLightStruct_setFieldBC(state->light, 1);
-    if ((obj)->anim.romDefNo == ARW_SEQID_INVINCIBLE)
-    {
+    if (obj->anim.romDefNo == ARW_SEQID_INVINCIBLE) {
         modelLightStruct_setDiffuseColor(state->light, 0xff, 0x14, 0x50, 0);
-    }
-    else if ((&obj->anim)->bankIndex == 0)
-    {
+    } else if ((&obj->anim)->bankIndex == 0) {
         modelLightStruct_setDiffuseColor(state->light, 0x3c, 0xff, 0x5a, 0);
-    }
-    else
-    {
+    } else {
         modelLightStruct_setDiffuseColor(state->light, 0x3c, 0x5a, 0xff, 0);
     }
-    if ((obj)->anim.romDefNo == ARW_SEQID_RAPIDFIRE_LASER)
-    {
+    if (obj->anim.romDefNo == ARW_SEQID_RAPIDFIRE_LASER) {
         modelLightStruct_setDistanceAttenuation(state->light, 60.0f, 80.0f);
-    }
-    else
-    {
+    } else {
         modelLightStruct_setDistanceAttenuation(state->light, 100.0f, 120.0f);
     }
     modelLightStruct_setAffectsAabbLightSelection(state->light, 1);
@@ -139,7 +131,7 @@ int arwingandrossstuff_getObjectTypeId(void)
 
 void arwingandrossstuff_free(GameObject* obj)
 {
-    ArwProjectileState* state = (obj)->extra;
+    ArwProjectileState* state = obj->extra;
 
     objFreeObjectType(obj, ARWINGANDROSSSTUFF_OBJGROUP);
     if (state->light != NULL)
@@ -159,8 +151,8 @@ void arwingandrossstuff_render(GameObject* obj, int p2, int p3, int p4, int p5, 
 void arwingandrossstuff_hitDetect(GameObject* obj)
 {
     Vec3f d, v, w;
-    ObjAnimComponent* objAnim = &(obj)->anim;
-    ArwProjectileState* state = (obj)->extra;
+    ObjAnimComponent* objAnim = &obj->anim;
+    ArwProjectileState* state = obj->extra;
     GameObject* arwing = getArwing();
     ObjAnimComponent* arwingAnim = &arwing->anim;
 
@@ -171,7 +163,7 @@ void arwingandrossstuff_hitDetect(GameObject* obj)
 
         if (ObjHits_GetPriorityHit(obj, &hit, 0, &vol) != 0)
         {
-            spawnExplosion((GameObject*)obj, 100.0f, 1, 0, 0, 1, 0, 0, 3);
+            spawnExplosion(obj, 100.0f, 1, 0, 0, 1, 0, 0, 3);
             objAnim->flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_DisableObject(obj);
             state->despawnTimer = 40.0f;
@@ -205,7 +197,7 @@ void arwingandrossstuff_hitDetect(GameObject* obj)
                 d.y = objAnim->localPosY - arwingAnim->localPosY;
                 d.z = objAnim->localPosZ - arwingAnim->localPosZ;
                 PSVECNormalize((const Vec*)&d, (Vec*)&d);
-                C_VECHalfAngle((const Vec*)&objAnim->velocityX, (const Vec*)&d, (Vec*)&objAnim->velocityX);
+                C_VECReflect((const Vec*)&objAnim->velocityX, (const Vec*)&d, (Vec*)&objAnim->velocityX);
                 objAnim->velocityX *= state->deflectSpeedScale;
                 objAnim->velocityY *= state->deflectSpeedScale;
                 objAnim->velocityZ *= state->deflectSpeedScale;
@@ -300,14 +292,13 @@ void arwingandrossstuff_update(GameObject* obj)
 
 void arwingandrossstuff_init(GameObject* obj, ArwProjectileSetup* setup)
 {
-    ArwProjectileState* state = (obj)->extra;
+    ArwProjectileState* state = obj->extra;
     ObjHitsPriorityState* hitState;
 
-    (obj)->anim.rotX = (s16)(setup->rotXByte << 8);
-    (obj)->anim.rotY = (s16)(setup->rotYByte << 8);
-    (obj)->anim.alpha = 1;
-    switch ((obj)->anim.romDefNo)
-    {
+    obj->anim.rotX = (s16)(setup->rotXByte << 8);
+    obj->anim.rotY = (s16)(setup->rotYByte << 8);
+    obj->anim.alpha = 1;
+    switch (obj->anim.romDefNo) {
     case ARW_SEQID_ANDROSS_ASTEROID:
         state->rotZSpeed = randomGetRange(-0x1f4, 0x1f4);
         state->rotYSpeed = randomGetRange(-0x1f4, 0x1f4);
@@ -340,7 +331,7 @@ void arwingandrossstuff_init(GameObject* obj, ArwProjectileSetup* setup)
         state->param0.particleKind = 2;
         break;
     }
-    hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if (hitState != NULL)
     {
         hitState->trackContactMask = 1;

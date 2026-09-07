@@ -101,7 +101,7 @@ void battleDroidUpdate(GameObject* obj, void* state)
 void battleDroidUpdateAttack(GameObject* obj, void* state)
 {
     f32* pos = (f32*)((EnemyState*)state)->trackedObj;
-    baddieTurnTowardPoint((GameObject*)obj, state, pos[3], pos[5], 0xf, 0);
+    baddieTurnTowardPoint(obj, state, pos[3], pos[5], 0xf, 0);
 }
 
 void battleDroidInit(GameObject* unused, char* p)

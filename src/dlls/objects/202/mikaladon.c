@@ -118,7 +118,7 @@ void mikaladon_updateWhileFrozen(GameObject* obj, u8* state, GameObject* attacke
     {
         return;
     }
-    Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_dn_boar1_c_248);
+    Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_248);
     ((EnemyState*)state)->current = 0;
     ((EnemyState*)state)->flags2E4 |= 0x20;
     ((EnemyState*)state)->flags2E8 |= 0x8;

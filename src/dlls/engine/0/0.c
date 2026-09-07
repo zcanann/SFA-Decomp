@@ -23,9 +23,7 @@
 #include "main/dll/cmenu.h"
 #include "main/dll/maybeTemplate.h"
 #include "main/dll/dll_0000_gameui.h"
-#define GAMETEXT_COLOR_U8_ARGS
 #include "main/gametext_color_api.h"
-#undef GAMETEXT_COLOR_U8_ARGS
 #include "main/dll/cmenu_item_table.h"
 #include "dlls/objects/196_Tricky.h"
 #include "main/pause_menu_api.h"
@@ -864,7 +862,7 @@ int pauseMenuHoloRenderFn(int* this, int* p2, int p3) {
     Mtx mtex;
     Mtx m3;
     GameUiIndirectMatrix indmtx;
-    int tex2;
+    Texture* tex2;
     GXColor chanCol = sPauseMenuHoloChanColor;
     void *op, *layer, *tex0;
     f32 sval;
@@ -934,8 +932,8 @@ int pauseMenuHoloRenderFn(int* this, int* p2, int p3) {
     mtex[2][3] = 1.0f;
     GXLoadTexMtxImm((const f32(*)[4])mtex, 0x24, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
-    newshadows_getDiskTexture((u32*)&tex2);
-    selectTexture((Texture*)((void*)tex2), 1);
+    newshadows_getDiskTexture(&tex2);
+    selectTexture(tex2, 1);
     GXSetTevKAlphaSel(GX_TEVSTAGE2, GX_TEV_KASEL_K0_A);
     GXSetTevKColor(GX_KCOLOR0, *(GXColor*)&gTrickyHudIconKColor);
     GXSetTevDirect(GX_TEVSTAGE2);
@@ -1627,7 +1625,7 @@ void drawViewFinderHud(void) {
             headingIndex = (int)((f32)gViewFinderCamAngle / angleUnitsPerDegree);
             headingOffset = gViewFinderCamAngle - headingIndex * angleUnitsPerDegree;
             tickSpacing = viewScale * (angleUnitsPerDegree / lbl_803DBAE8);
-            headingOffset = headingOffset / lbl_803DBAE8;
+            headingOffset /= lbl_803DBAE8;
             tickX = (f32)(320.0 + headingOffset * viewScale);
             heading = -headingIndex;
             while (tickX > 0.0f) {
@@ -1733,7 +1731,7 @@ void hudDrawTimedElement(int unused, void* element) {
     if (e->framesLeft < 0) {
         return;
     }
-    e->framesLeft = e->framesLeft - framesThisStep;
+    e->framesLeft -= framesThisStep;
     if (e->framesLeft < 0) {
         textureFree((Texture*)e->texture);
         e->texture = 0;
@@ -2059,11 +2057,11 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
         previousCurrent++;
     }
     previewFirstWidth = gameUiMagicPreviewWidth(previousCurrent);
-    seg1 = seg1 - previewFirstWidth;
+    seg1 -= previewFirstWidth;
     rem1 = gameUiClampMagicWidth(previousCurrent - 8, middleCapacity);
-    seg2 = seg2 - rem1;
+    seg2 -= rem1;
     previousCurrent = gameUiClampMagicWidth((previousCurrent - 8) - middleCapacity, 8);
-    seg4 = seg4 - previousCurrent;
+    seg4 -= previousCurrent;
     if (seg1 != 0) {
         tex = hudTextures[0x31];
         if (flags) {
@@ -2573,7 +2571,7 @@ void pauseMenuDrawStatus(void) {
     statusSlot = 0;
     statuses[HUD_STATUS_UNKNOWN_6] = 0;
     if ((gHudStatsSnapshotPending & 1) != 0) {
-        gHudStatsSnapshotPending = gHudStatsSnapshotPending & ~1;
+        gHudStatsSnapshotPending &= ~1;
         for (statusSlot = 0; statusSlot < HUD_STATUS_COUNT; statusSlot++) {
             int initialValue = statuses[statusSlot];
             ((int*)(base + 0xB30))[statusSlot] = ((int*)(base + 0xB74))[statusSlot] = initialValue;
@@ -2787,10 +2785,10 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
         }
         k = gCMenuSelIndex - sel;
         if (k < 0) {
-            k = k + gCMenuItemCount;
+            k += gCMenuItemCount;
         }
         if (k >= gCMenuItemCount) {
-            k = k - gCMenuItemCount;
+            k -= gCMenuItemCount;
         }
         fade = cMenuFadeCounter;
         for (i = 0; i < GCMENU_ITEM_ICON_COUNT; i++) {
@@ -2809,7 +2807,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
             }
             k++;
             if (k >= gCMenuItemCount) {
-                k = k - gCMenuItemCount;
+                k -= gCMenuItemCount;
             }
         }
         GXSetScissor(0, 0, 0x280, 0x1E0);
@@ -3971,7 +3969,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         pauseMenuDoSave();
         alpha = 255.0f * gPauseMenuOpenAmount;
         gPauseMenuMapSwivelCos = mathCosf(3.1415927f * gPauseMenuMapSwivelAngle / 32768.0f);
-        gPauseMenuHoloTime = gPauseMenuHoloTime + timeDelta;
+        gPauseMenuHoloTime += timeDelta;
         gPauseMenuHoloRotZ =
             (u16)(gPauseMenuHoloRotZAmp * mathCosfHighPrecision(gPauseMenuHoloTime * gPauseMenuHoloWobbleFreqZ));
         gPauseMenuHoloRotX =
@@ -4038,7 +4036,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         pauseMenuDoSave();
         alpha = 255.0f * gPauseMenuOpenAmount;
         gPauseMenuMapSwivelCos = mathCosf(3.1415927f * gPauseMenuMapSwivelAngle / 32768.0f);
-        gPauseMenuHoloTime = gPauseMenuHoloTime + timeDelta;
+        gPauseMenuHoloTime += timeDelta;
         gPauseMenuHoloRotZ =
             (u16)(gPauseMenuHoloRotZAmp * mathCosfHighPrecision(gPauseMenuHoloTime * gPauseMenuHoloWobbleFreqZ));
         gPauseMenuHoloRotX =
@@ -4117,7 +4115,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         pauseMenuDoSave();
         alpha = 255.0f * gPauseMenuOpenAmount;
         gPauseMenuMapSwivelCos = mathCosf(3.1415927f * gPauseMenuMapSwivelAngle / 32768.0f);
-        gPauseMenuHoloTime = gPauseMenuHoloTime + timeDelta;
+        gPauseMenuHoloTime += timeDelta;
         gPauseMenuHoloRotZ =
             (u16)(gPauseMenuHoloRotZAmp * mathCosfHighPrecision(gPauseMenuHoloTime * gPauseMenuHoloWobbleFreqZ));
         gPauseMenuHoloRotX =
@@ -4220,7 +4218,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         break;
     case 11:
         gPauseMenuMapSwivelCos = mathCosf(3.1415927f * gPauseMenuMapSwivelAngle / 32768.0f);
-        gPauseMenuHoloTime = gPauseMenuHoloTime + timeDelta;
+        gPauseMenuHoloTime += timeDelta;
         gPauseMenuHoloRotZ =
             (u16)(gPauseMenuHoloRotZAmp * mathCosfHighPrecision(gPauseMenuHoloTime * gPauseMenuHoloWobbleFreqZ));
         gPauseMenuHoloRotX =
@@ -6259,7 +6257,7 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
                 taskPartial = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
                 taskCount += mainGetBit(GAMEBIT_ITEM_SpellStone2_Used);
                 taskCount += mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
-                taskCount = taskCount + taskPartial;
+                taskCount += taskPartial;
                 if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got)) {
                     taskCount++;
                 }

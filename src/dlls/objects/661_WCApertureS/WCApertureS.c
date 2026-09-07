@@ -98,7 +98,7 @@ const f32 gWcAperturesZero[] = {0.0f};
 
 void wcapertures_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    WCAperturesState* state = (obj)->extra;
+    WCAperturesState* state = obj->extra;
     ModelLight* light;
 
     if (visible != 0)
@@ -216,10 +216,10 @@ void wcapertures_update(GameObject* obj)
 void wcapertures_init(GameObject* obj, WCAperturesSetup* setup)
 {
     ObjAnimComponent* objAnim = &obj->anim;
-    WCAperturesState* state = (obj)->extra;
+    WCAperturesState* state = obj->extra;
 
-    (obj)->anim.rotX = (s16)(setup->type << 8);
-    (obj)->animEventCallback = wcapertures_interactCallback;
+    obj->anim.rotX = (s16)(setup->type << 8);
+    obj->animEventCallback = wcapertures_interactCallback;
     objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
         objAnim->bankIndex = 0;

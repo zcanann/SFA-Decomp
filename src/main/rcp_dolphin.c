@@ -282,8 +282,7 @@ void Rcp_UpdateDistortionTextures(void)
             tex = (Texture*)((RcpDistortSlot*)slots[0])[i].texture;
             if (tex->preloaded != 0)
             {
-                GXPreLoadEntireTexture(textureGetGXTexObj((Texture*)tex),
-                                       textureGetGXTexRegion((Texture*)tex));
+                GXPreLoadEntireTexture(textureGetGXTexObj(tex), textureGetGXTexRegion(tex));
             }
         }
     }
@@ -321,8 +320,7 @@ void Rcp_UpdateDistortionTextures(void)
             tex = (Texture*)((RcpDistortSlot*)slots[0])[i].texture;
             if (tex->preloaded != 0)
             {
-                GXPreLoadEntireTexture(textureGetGXTexObj((Texture*)tex),
-                                       textureGetGXTexRegion((Texture*)tex));
+                GXPreLoadEntireTexture(textureGetGXTexObj(tex), textureGetGXTexRegion(tex));
             }
         }
     }
@@ -439,7 +437,7 @@ void Rcp_InitDistortionEffects(void)
         slot->mode = 1;
         if (pairIdx != 0)
         {
-            gRcpDistortSlotIndex = gRcpDistortSlotIndex + 1;
+            gRcpDistortSlotIndex += 1;
         }
         i++;
     } while (i < 6);

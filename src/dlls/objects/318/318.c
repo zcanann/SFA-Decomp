@@ -40,9 +40,9 @@ void DIMBossIceSmash_initLaunchState(GameObject* obj, DimBossIceSmashState* stat
         vz = obj->anim.localPosZ - (f32)placement->homingTargetZ;
         len = sqrtf(vz * vz + (vx * vx + vy * vy));
         if (len != 0.0f) {
-            vx = vx / len;
-            vy = vy / len;
-            vz = vz / len;
+            vx /= len;
+            vy /= len;
+            vz /= len;
         }
         obj->anim.velocityX = spd * vx;
         obj->anim.velocityY = spd * vy;
@@ -215,9 +215,9 @@ void DIMBossIceSmash_update(GameObject* obj) {
                     len = sqrtf(nz * nz + (nx * nx + ny * ny));
                     if (len != 0.0f) {
                         inv = 1.0f / len;
-                        nx = nx * inv;
-                        ny = ny * inv;
-                        nz = nz * inv;
+                        nx *= inv;
+                        ny *= inv;
+                        nz *= inv;
                     }
                     fx = state->path.segmentHits.planes[0][0];
                     fy = state->path.segmentHits.planes[0][1];
@@ -226,13 +226,13 @@ void DIMBossIceSmash_update(GameObject* obj) {
                     obj->anim.velocityX = fx * dot;
                     obj->anim.velocityY = fy * dot;
                     obj->anim.velocityZ = fz * dot;
-                    obj->anim.velocityX = obj->anim.velocityX - nx;
-                    obj->anim.velocityY = obj->anim.velocityY - ny;
-                    obj->anim.velocityZ = obj->anim.velocityZ - nz;
-                    obj->anim.velocityY = obj->anim.velocityY * len;
+                    obj->anim.velocityX -= nx;
+                    obj->anim.velocityY -= ny;
+                    obj->anim.velocityZ -= nz;
+                    obj->anim.velocityY *= len;
                     obj->anim.velocityY *= 0.75f;
-                    obj->anim.velocityX = obj->anim.velocityX * len;
-                    obj->anim.velocityZ = obj->anim.velocityZ * len;
+                    obj->anim.velocityX *= len;
+                    obj->anim.velocityZ *= len;
                     obj->anim.velocityX *= (ff = 0.9f);
                     obj->anim.velocityZ *= ff;
                 }

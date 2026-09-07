@@ -64,11 +64,11 @@ int dimlavasmash_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
 
     (void)unused;
 
-    state = (obj)->extra;
-    def = (DimLavaSmashPlacement*)(obj)->anim.placementData;
+    state = obj->extra;
+    def = (DimLavaSmashPlacement*)obj->anim.placementData;
     if (state->phase == DIM_LAVA_SMASH_PHASE_WAITING) {
         if (mainGetBit(def->gateGameBit) != 0) {
-            hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+            hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
             hitState->flags |= OBJHITS_PRIORITY_STATE_ENABLED;
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0) {
                 if (hit->anim.romDefNo == DIM_LAVA_PROJECTILE_SEQUENCE_ID) {

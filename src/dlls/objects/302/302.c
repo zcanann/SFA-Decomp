@@ -40,7 +40,7 @@ void CFLightWall_init(GameObject* obj, CFLightWallPlacement* placement) {
         if (!obj->anim.rootMotionScale) {
             obj->anim.rootMotionScale = CFLIGHTWALL_DEFAULT_SCALE;
         }
-        obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
+        obj->anim.rootMotionScale *= obj->anim.modelInstance->rootMotionScaleBase;
     }
     obj->objectFlags |= OBJECT_OBJFLAG_UPDATE_DISABLED | OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }

@@ -166,13 +166,13 @@ void dimsnowball_update(GameObject* obj) {
     obj->anim.localPosX = x[1] + dy1 * (x[2] - x[1]);
     obj->anim.localPosY = y[1] + dy1 * (y[2] - y[1]);
     obj->anim.localPosZ = z[1] + dy1 * (z[2] - z[1]);
-    obj->anim.localPosX = obj->anim.localPosX + state->target->anim.localPosX;
-    obj->anim.localPosY = obj->anim.localPosY + state->target->anim.localPosY;
-    obj->anim.localPosZ = obj->anim.localPosZ + state->target->anim.localPosZ;
+    obj->anim.localPosX += state->target->anim.localPosX;
+    obj->anim.localPosY += state->target->anim.localPosY;
+    obj->anim.localPosZ += state->target->anim.localPosZ;
     obj->anim.velocityX = oneOverTimeDelta * (obj->anim.localPosX - obj->anim.previousLocalPosX);
     obj->anim.velocityY = oneOverTimeDelta * (obj->anim.localPosY - obj->anim.previousLocalPosY);
     obj->anim.velocityZ = oneOverTimeDelta * (obj->anim.localPosZ - obj->anim.previousLocalPosZ);
-    state->pathPointIndex = state->pathPointIndex + frames;
+    state->pathPointIndex += frames;
     if (state->jingleCooldown > 0) {
         state->jingleCooldown -= frames;
     }

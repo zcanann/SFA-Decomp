@@ -688,12 +688,23 @@ three `srwi`...). Written literally in C it forces all six components live simul
 MWCC spills the function apart: **0.000%**, 192 instructions against retail's 120. Retail can
 hold six live only because they sit in dedicated registers.
 
-**"Indexed, not walked" has a documented counter-site.** The law says respell a source cursor as
-in-loop indexing so strength reduction owns the IV. It went the **wrong way twice**:
-`subtitleStop` **97.717 -> 71.935** (retail genuinely wants the source-level pointer IV), and
-`worldplanet_update` **99.031 -> 98.871** with `tbl->flightPathObjectIds[i]` replacing pointer
-punning. At the latter site the residual is the **base** being held rather than the index, so no
-indexing spelling reaches it. Check which of base/index retail keeps before applying the law.
+**"Indexed, not walked" depends on the recovered storage model.** The law says respell a source
+cursor as in-loop indexing so strength reduction owns the IV. `subtitleStop` regressed
+**97.717 -> 71.935** (retail wants the source-level pointer IV). An earlier `worldplanet_update`
+probe also regressed **99.031 -> 98.871** when replacing pointer punning with
+`tbl->flightPathObjectIds[i]`, but the conclusion that no indexing spelling could work was too
+strong. **Correction, 2026-09-06:** the three member arrays were incorrectly grouped into one
+struct. Independent array definitions reproduce the indexed loads and later address computation,
+while MWCC still shares a common base register. The update improves **99.15179 -> 99.66199**
+with that storage correction and direct indexing, then **99.69388** with an inlined spawn helper.
+Check both the retained base/index and the source-level data boundaries before applying the law.
+The completed match also replaces packed input storage with scalar bytes, reuses one object
+pointer across disjoint lifetimes, restores the orbit angle's 16-bit type, and names the shared
+byte offset and angle-entry pointer. These changes resolve the spill and register assignments
+without a compiler-profile change. Two floating-point operand swaps still passed objdiff's
+100% report because the raw instructions held identical relocation placeholders; resolved
+relocations and the source-linked retail checksum caught them. See
+[WORLDplanet matching evidence](WORLDplanet_matching.md) for the complete result.
 
 **Address *shape* is not a knob; address *position* is.** `we + 1` vs `&we[1]`, and `&vb[0]` vs
 `vb`, are **exactly inert**. But naming an address hoists its computation: `tp =
@@ -936,6 +947,12 @@ costs more in alignment than it recovers.
 > it moved. Canonical detail: `docs/data_axis.md`.
 
 **The axis is OPEN for `.sdata2` emission order.** The short form, each point measured:
+
+> **September 6, 2026 correction:** The reachability caps below are historical,
+> not stopping rules. [DLL 625 now matches and links completely](DrakorHoverpad_matching.md)
+> with ordinary static helpers and automatic inlining. Their compilation emits
+> constants before the first surviving call-site use; explicit `inline` helpers
+> behave differently. Retail first-use order alone cannot prove a pool unreachable.
 
 - **Anonymity does NO work.** `audio_sfx` `.sdata2` is entirely anonymous `@N` and locals on our
   side, retail's all named and global — retail even carries two symbols at `0x0c`/`0x0e` we never

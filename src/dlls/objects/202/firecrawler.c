@@ -492,7 +492,7 @@ void crawlerPlayMoveEventFx(GameObject* obj, u8* state) {
     CrawlerSubDesc* entry = d[enemyState->userData2].p;
     u8 i;
 
-    gCrawlerHitSfxTimer = gCrawlerHitSfxTimer - timeDelta;
+    gCrawlerHitSfxTimer -= timeDelta;
 
     for (i = 0; i <= 12; i++) {
         if ((enemyState->animEventMask & (1 << i)) != 0) {
@@ -556,7 +556,7 @@ void crawler_onHit(GameObject* obj, u8* state, GameObject* attacker, int cmd, in
         if (cmd == 0x11) {
             return;
         }
-        if ((obj)->anim.romDefNo == FIRECRAWLER_SEQID_FIRECRAWLER) {
+        if (obj->anim.romDefNo == FIRECRAWLER_SEQID_FIRECRAWLER) {
             if (gCrawlerHitSfxTimer <= 0.0f && attacker != NULL) {
                 switch (attacker->anim.romDefNo) {
                 case 0x416:
@@ -576,8 +576,8 @@ void crawler_onHit(GameObject* obj, u8* state, GameObject* attacker, int cmd, in
         return;
     }
 
-    if (idx == 1 && (obj)->childObjs[0] != NULL) {
-        firepipe_clearLinkedUpdateFlag((obj)->childObjs[0]);
+    if (idx == 1 && obj->childObjs[0] != NULL) {
+        firepipe_clearLinkedUpdateFlag(obj->childObjs[0]);
     }
     enemyState->familyData.crawler.flagsD &= ~0x40;
     enemyState->flags2E8 &= ~0x40;
@@ -595,10 +595,10 @@ void crawler_onHit(GameObject* obj, u8* state, GameObject* attacker, int cmd, in
         }
         baddieSetMove(obj, state, tbl[step].moveId, tbl[step].spd, 0, tbl[step].mask & 0xff);
         enemyState->familyData.crawler.flagsC = tbl[step].flagC;
-        (obj)->hitVolumeIndex = enemyState->familyData.crawler.flagsC & 1;
+        obj->hitVolumeIndex = enemyState->familyData.crawler.flagsC & 1;
         enemyState->familyData.crawler.reactStep = tbl[step].next9;
         enemyState->flags2E8 |= 8;
-        if ((obj)->anim.romDefNo == FIRECRAWLER_SEQID_FIRECRAWLER) {
+        if (obj->anim.romDefNo == FIRECRAWLER_SEQID_FIRECRAWLER) {
             if (gCrawlerHitSfxTimer <= 0.0f && attacker != NULL) {
                 switch (attacker->anim.romDefNo) {
                 case 0x416:
@@ -631,13 +631,13 @@ void crawler_onHit(GameObject* obj, u8* state, GameObject* attacker, int cmd, in
         u8 v;
         baddieSetMove(obj, state, tbl[1].moveId, tbl[1].spd, 0, tbl[1].mask & 0xff);
         enemyState->familyData.crawler.flagsC = tbl[1].flagC;
-        (obj)->hitVolumeIndex = enemyState->familyData.crawler.flagsC & 1;
+        obj->hitVolumeIndex = enemyState->familyData.crawler.flagsC & 1;
         enemyState->familyData.crawler.reactStep = tbl[1].next9;
         v = enemyState->userData2;
         if (v == 0) {
             enemyState->crawler.emergeTimer = 6.0f * (f32)enemyState->hitStunFrames;
             enemyState->flags2E8 |= 8;
-            if ((obj)->anim.romDefNo == FIRECRAWLER_SEQID_FIRECRAWLER) {
+            if (obj->anim.romDefNo == FIRECRAWLER_SEQID_FIRECRAWLER) {
                 if (gCrawlerHitSfxTimer <= 0.0f && attacker != NULL) {
                     switch (attacker->anim.romDefNo) {
                     case 0x416:
@@ -658,7 +658,7 @@ void crawler_onHit(GameObject* obj, u8* state, GameObject* attacker, int cmd, in
         }
         if (v == 1) {
             enemyState->crawler.emergeTimer = 2.0f * (f32)enemyState->hitStunFrames;
-            if ((obj)->anim.romDefNo == FIRECRAWLER_SEQID_FIRECRAWLER) {
+            if (obj->anim.romDefNo == FIRECRAWLER_SEQID_FIRECRAWLER) {
                 if (gCrawlerHitSfxTimer <= 0.0f && attacker != NULL) {
                     switch (attacker->anim.romDefNo) {
                     case 0x416:
@@ -681,7 +681,7 @@ void crawler_onHit(GameObject* obj, u8* state, GameObject* attacker, int cmd, in
     }
 
     if (cmd != 0x11) {
-        if ((obj)->anim.romDefNo == FIRECRAWLER_SEQID_FIRECRAWLER) {
+        if (obj->anim.romDefNo == FIRECRAWLER_SEQID_FIRECRAWLER) {
             if (gCrawlerHitSfxTimer <= 0.0f && attacker != NULL) {
                 switch (attacker->anim.romDefNo) {
                 case 0x416:
@@ -760,10 +760,10 @@ void crawler_updateC(GameObject* obj, u8* state) {
                 dp[2] = obj->anim.worldPosZ - gCrawlerNearbyObjectBuffer[0].obj->anim.worldPosZ;
                 rel = (getAngle(-dp[0], -dp[2]) & 0xffff) - ((int)obj->anim.rotX & 0xffffu);
                 if (rel > 0x8000) {
-                    rel = rel - 0xffff;
+                    rel -= 0xffff;
                 }
                 if (rel < -0x8000) {
-                    rel = rel + 0xffff;
+                    rel += 0xffff;
                 }
                 oct = ((u32)rel & 0xffff) >> 13;
                 if (oct == 3 || oct == 4) {
@@ -835,10 +835,10 @@ void crawler_updateC(GameObject* obj, u8* state) {
                     dp2[2] = obj->anim.worldPosZ - base->posZ;
                     rel2 = (getAngle(-dp2[0], -dp2[2]) & 0xffff) - ((int)obj->anim.rotX & 0xffffu);
                     if (rel2 > 0x8000) {
-                        rel2 = rel2 - 0xffff;
+                        rel2 -= 0xffff;
                     }
                     if (rel2 < -0x8000) {
-                        rel2 = rel2 + 0xffff;
+                        rel2 += 0xffff;
                     }
                     oct2 = ((u32)rel2 & 0xffff) >> 13;
                     i = oct2;
@@ -945,10 +945,10 @@ void crawler_updateB(GameObject* obj, u8* state) {
                 dp[2] = obj->anim.worldPosZ - gCrawlerNearbyObjectBuffer[0].obj->anim.worldPosZ;
                 rel = (getAngle(-dp[0], -dp[2]) & 0xffff) - ((int)obj->anim.rotX & 0xffffu);
                 if (rel > 0x8000) {
-                    rel = rel - 0xffff;
+                    rel -= 0xffff;
                 }
                 if (rel < -0x8000) {
-                    rel = rel + 0xffff;
+                    rel += 0xffff;
                 }
                 oct = ((u32)rel & 0xffff) >> 13;
                 if (oct != 0 && oct < 7) {

@@ -142,12 +142,11 @@ float atanf_fast(float value) {
 }
 
 float atanf(float value) {
-    float absoluteValue = __fabsf(value);
-    double reduced;
+    double reduced = __fabsf(value);
     double squared;
     float result;
 
-    if (absoluteValue <= sArcOneF) {
+    if (reduced <= sArcOneF) {
         squared = value * value;
         return (
             float)(value *
@@ -182,13 +181,8 @@ float atanf(float value) {
                     sAtanCoeff1));
     }
 
-    /* Unsequenced modification and access of `reduced`: undefined behaviour in C.
-       MWCC evaluates the assignment first, so retail computes squared = reduced * reduced.
-       Required for the byte match -- splitting it into two statements assigns absoluteValue
-       and reduced to swapped FPRs (f30/f29) and breaks atanf. Compilers that evaluate the
-       left operand first read `reduced` uninitialised and return NaN for every |value| > 1;
-       non-MWCC consumers must patch this locally. */
-    squared = reduced * (reduced = sArcOneD / absoluteValue);
+    reduced = sArcOneD / reduced;
+    squared = reduced * reduced;
     result =
         (float)(sArcHalfPiD -
                 reduced *

@@ -191,10 +191,10 @@ void PaymentKiosk_update(GameObject* obj) {
         if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0) {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         }
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         break;
     case PAYMENT_KIOSK_STATE_PAID:
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         break;
     }
     state->promptState = PAYMENT_KIOSK_PROMPT_NONE;
@@ -213,7 +213,7 @@ void PaymentKiosk_init(GameObject* obj, const PaymentKioskPlacement* placement) 
     self->anim.rotX = (s16)((s32)setup->rotXByte << 8);
     state->payState = PAYMENT_KIOSK_STATE_RESOLVE;
     self->objectFlags = (u16)(self->objectFlags | (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED));
-    self->anim.resetHitboxFlags = self->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+    self->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     textVariant = (self->anim.romDefNo == PAYMENT_KIOSK_SP_WELL_SEQUENCE_ID) ? PAYMENT_KIOSK_TEXT_VARIANT_SP_WELL
                                                                           : PAYMENT_KIOSK_TEXT_VARIANT_PAYPOINT;
     state->textVariant = textVariant;

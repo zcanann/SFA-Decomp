@@ -272,7 +272,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
     cfg.velocityZ = 0.0f;
     cfg.scale = 0.0f;
     cfg.lifetimeFrames = 0;
-    cfg.quadVertex3Pad06 = 0xffffffff;
+    cfg.impactEffectId = 0xffffffff;
     cfg.initialAlpha = 0xff;
     cfg.linkGroup = 0;
     cfg.textureId = 0;
@@ -859,7 +859,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.renderFlags = 0x2000000;
         cfg.textureId = 0xc0e;
         cfg.initialAlpha = 0xff;
-        cfg.quadVertex3Pad06 = 0x548;
+        cfg.impactEffectId = 0x548;
         cfg.sourceVecX = 200;
         cfg.sourceVecY = 0;
         cfg.sourceVecX = 0;
@@ -1374,7 +1374,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.behaviorFlags = 0x588008;
         cfg.renderFlags = 0x10000;
         cfg.textureId = 0x23b;
-        cfg.quadVertex3Pad06 = 4;
+        cfg.impactEffectId = 4;
         break;
     case 0x4:
         cfg.velocityY = 0.004f * (f32)(s32)randomGetRange(10, 0x14);
@@ -1639,7 +1639,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.linkGroup = 0x20;
         cfg.scale = 0.016f;
         cfg.lifetimeFrames = 0x50;
-        cfg.quadVertex3Pad06 = 0x67;
+        cfg.impactEffectId = 0x67;
         cfg.behaviorFlags = 0x400000;
         cfg.textureId = 0x156;
         break;
@@ -1746,7 +1746,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.scale = 0.04f;
         cfg.lifetimeFrames = 400;
         cfg.linkGroup = 0;
-        cfg.quadVertex3Pad06 = 0x4e;
+        cfg.impactEffectId = 0x4e;
         cfg.behaviorFlags = 0x20100;
         cfg.textureId = 0xdf;
         cfg.sourcePosX = 0.0f;
@@ -1772,7 +1772,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.scale = 0.012f;
         cfg.lifetimeFrames = 0x78;
         cfg.linkGroup = 0;
-        cfg.quadVertex3Pad06 = 0x4b;
+        cfg.impactEffectId = 0x4b;
         cfg.behaviorFlags = 0x70000;
         cfg.textureId = randomGetRange(0, 3) + 0xdd;
         cfg.sourcePosX = 0.0f;
@@ -1845,9 +1845,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                     cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.localPosY;
                     cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.localPosZ;
                 } else {
-                    cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
-                    cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
-                    cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
+                    cfg.startPosX += cfg.sourcePosX;
+                    cfg.startPosY += cfg.sourcePosY;
+                    cfg.startPosZ += cfg.sourcePosZ;
                 }
             }
             (*gExpgfxInterface)->spawnEffect(&cfg, 0, state.effectId, 0);
@@ -1885,7 +1885,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             cfg.startPosY = 60.0f;
             cfg.startPosZ = -20.0f + (f32)(s32)randomGetRange(0, 0x78);
             cfg.scale = 0.01f * (f32)(s32)randomGetRange(1, 8);
-            cfg.behaviorFlags = cfg.behaviorFlags | 8;
+            cfg.behaviorFlags |= 8;
             cfg.renderFlags |= 0x1000000;
         } else if (state.effectId == 0x44) {
             *state.startPos = 110.0f;
@@ -1897,7 +1897,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         }
         cfg.linkGroup = 0x20;
         cfg.textureId = 0x5f;
-        cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
+        cfg.behaviorFlags |= spawnFlags;
         if ((cfg.behaviorFlags & 1) != 0) {
             if (cfg.attachedSource != NULL) {
                 *state.startPos = *state.startPos + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
@@ -1905,8 +1905,8 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
             } else {
                 *state.startPos = *state.startPos + cfg.sourcePosX;
-                cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
-                cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
+                cfg.startPosY += cfg.sourcePosY;
+                cfg.startPosZ += cfg.sourcePosZ;
             }
         }
         if (state.effectId == 0x3e || state.effectId == 0x3f) {
@@ -2031,7 +2031,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.velocityY = 0.07f * (f32)(s32)randomGetRange(4, 10);
         cfg.scale = 0.00005f * (f32)(s32)randomGetRange(0x28, 0x50);
         cfg.lifetimeFrames = 0x15e;
-        cfg.quadVertex3Pad06 = 0x85;
+        cfg.impactEffectId = 0x85;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80400201;
         cfg.textureId = 0xdf;
@@ -2445,7 +2445,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.scale = 0.0011f;
         cfg.lifetimeFrames = 0x104;
         cfg.behaviorFlags = 0x1000202;
-        cfg.quadVertex3Pad06 = 0x1e;
+        cfg.impactEffectId = 0x1e;
         *state.startPos = 0.0f;
         cfg.startPosY = 100.0f;
         cfg.startPosZ = 0.0f;
@@ -2848,7 +2848,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord0 = 0x6574;
                 cfg.colorWord1 = 0x9f9;
                 cfg.colorWord2 = 0xffff;
-                cfg.renderFlags = cfg.renderFlags | 0x20;
+                cfg.renderFlags |= 0x20;
             } else if (variantU == '\x02') {
                 cfg.overrideColor0 = 0xff65;
                 cfg.overrideColor1 = 0xd23c;
@@ -2856,7 +2856,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord0 = 0xffc4;
                 cfg.colorWord1 = 0xdc81;
                 cfg.colorWord2 = 0x2603;
-                cfg.renderFlags = cfg.renderFlags | 0x20;
+                cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.2f;
             } else if (variantU == '\x03') {
                 cfg.overrideColor0 = 0xfebe;
@@ -2865,7 +2865,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord0 = 0xfd2c;
                 cfg.colorWord1 = 0x8e5;
                 cfg.colorWord2 = 0x1f5;
-                cfg.renderFlags = cfg.renderFlags | 0x20;
+                cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.1f;
             }
         }
@@ -2897,7 +2897,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord0 = 0x6574;
                 cfg.colorWord1 = 0x9f9;
                 cfg.colorWord2 = 0xffff;
-                cfg.renderFlags = cfg.renderFlags | 0x20;
+                cfg.renderFlags |= 0x20;
                 cfg.scale *= 0.7f;
             } else if (variantU == '\x02') {
                 cfg.overrideColor0 = 0xff65;
@@ -2906,7 +2906,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord0 = 0xffc4;
                 cfg.colorWord1 = 0xdc81;
                 cfg.colorWord2 = 0x2603;
-                cfg.renderFlags = cfg.renderFlags | 0x20;
+                cfg.renderFlags |= 0x20;
             } else if (variantU == '\x03') {
                 cfg.overrideColor0 = 0xfebe;
                 cfg.overrideColor1 = 0x5cb2;
@@ -2914,7 +2914,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord0 = 0xfd2c;
                 cfg.colorWord1 = 0x8e5;
                 cfg.colorWord2 = 0x1f5;
-                cfg.renderFlags = cfg.renderFlags | 0x20;
+                cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.4f;
             } else if (variantU == '\x04') {
                 cfg.overrideColor0 = 0xffff;
@@ -2923,7 +2923,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord0 = 0;
                 cfg.colorWord1 = 0xffff;
                 cfg.colorWord2 = 0;
-                cfg.renderFlags = cfg.renderFlags | 0x20;
+                cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.7f;
             } else if (variantU == '\x05') {
                 cfg.overrideColor0 = 0xffff;
@@ -2932,7 +2932,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord0 = 0xffff;
                 cfg.colorWord1 = 0;
                 cfg.colorWord2 = 0;
-                cfg.renderFlags = cfg.renderFlags | 0x20;
+                cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.7f;
             } else if (variantU == '\x06') {
                 cfg.overrideColor0 = 0xffff;
@@ -2941,7 +2941,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord0 = 0xffff;
                 cfg.colorWord1 = 0x7fff;
                 cfg.colorWord2 = 0;
-                cfg.renderFlags = cfg.renderFlags | 0x20;
+                cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.7f;
             } else if (variantU == '\a') {
                 cfg.overrideColor0 = 0xffff;
@@ -2950,7 +2950,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord0 = 0xffff;
                 cfg.colorWord1 = 0xffff;
                 cfg.colorWord2 = 0;
-                cfg.renderFlags = cfg.renderFlags | 0x20;
+                cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.7f;
             } else if (variantU == '\b') {
                 cfg.overrideColor0 = 0xffff;
@@ -2959,7 +2959,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord0 = 0;
                 cfg.colorWord1 = 0xffff;
                 cfg.colorWord2 = 0xffff;
-                cfg.renderFlags = cfg.renderFlags | 0x20;
+                cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.7f;
             }
         }
@@ -3217,15 +3217,15 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
     default:
         return -1;
     }
-    cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
+    cfg.behaviorFlags |= spawnFlags;
     if ((cfg.behaviorFlags & 1) != 0 && (cfg.behaviorFlags & 2) != 0) {
         cfg.behaviorFlags ^= 2;
     }
     if ((cfg.behaviorFlags & 1) != 0) {
         if ((spawnFlags & 0x200000) != 0) {
-            cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
-            cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
-            cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
+            cfg.startPosX += cfg.sourcePosX;
+            cfg.startPosY += cfg.sourcePosY;
+            cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != NULL) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
@@ -3431,8 +3431,8 @@ void partfx_release(void) {
     i = 0x14;
     p = gPartfxResourceTimeouts + 0x14;
     while ((s8)i != 0) {
-        p = p - 1;
-        i = i - 1;
+        p -= 1;
+        i -= 1;
         *p = 0;
     }
     if (gPartfxResourceModule00 != NULL) {
@@ -3524,8 +3524,8 @@ void partfx_initialise(void) {
     i = 0x14;
     p = gPartfxResourceTimeouts + 0x14;
     while ((s8)i != 0) {
-        p = p - 1;
-        i = i - 1;
+        p -= 1;
+        i -= 1;
         *p = 0;
     }
     gPartfxCachedResourceCount = 0;

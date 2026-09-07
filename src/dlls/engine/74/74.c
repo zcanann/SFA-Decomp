@@ -109,8 +109,8 @@ void CameraModeShipBattle_update(CameraObject* camera) {
     } else if (lateralStep < -3.0f) {
         lateralStep = -3.0f;
     }
-    lateralStep = lateralStep * timeDelta;
-    state->lateralOffset = state->lateralOffset + lateralStep;
+    lateralStep *= timeDelta;
+    state->lateralOffset += lateralStep;
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    (GameObject*)camera->anim.parent);

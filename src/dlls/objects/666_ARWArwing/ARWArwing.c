@@ -186,7 +186,7 @@ void arwarwing_readControls(GameObject* obj, ArwingState* state)
         f32 zero = 0.0f;
         knockX = -aw->knockVelX;
         knockY = -aw->knockVelZ;
-        aw->damageFlashTimer = aw->damageFlashTimer - timeDelta;
+        aw->damageFlashTimer -= timeDelta;
         knockBlend = sDamageStickBlendRamp[(int)aw->damageFlashTimer];
         if (aw->damageFlashTimer <= zero)
         {
@@ -218,8 +218,8 @@ void arwarwing_readControls(GameObject* obj, ArwingState* state)
             aw->barrelRollAngle = obj->anim.rotZ;
             aw->barrelRollDirection = aw->barrelRollSpeed;
             aw->barrelRollSpeedScale = 1.0f;
-            aw->maxSpeedX = aw->maxSpeedX * aw->barrelRollMaxSpeedScale;
-            aw->accelX = aw->accelX * aw->barrelRollAccelScale;
+            aw->maxSpeedX *= aw->barrelRollMaxSpeedScale;
+            aw->accelX *= aw->barrelRollAccelScale;
             arwarwingbo_setActiveVisible((GameObject*)(aw->bombObj), 1, 0);
         }
         else if ((btn & PAD_TRIGGER_L) != 0)
@@ -229,8 +229,8 @@ void arwarwing_readControls(GameObject* obj, ArwingState* state)
             aw->barrelRollAngle = obj->anim.rotZ;
             aw->barrelRollDirection = -aw->barrelRollSpeed;
             aw->barrelRollSpeedScale = 1.0f;
-            aw->maxSpeedX = aw->maxSpeedX * aw->barrelRollMaxSpeedScale;
-            aw->accelX = aw->accelX * aw->barrelRollAccelScale;
+            aw->maxSpeedX *= aw->barrelRollMaxSpeedScale;
+            aw->accelX *= aw->barrelRollAccelScale;
             arwarwingbo_setActiveVisible((GameObject*)(aw->bombObj), 1, 1);
         }
     }
@@ -409,19 +409,19 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
         arwing->velTargetZ = 0.0f;
     }
     PSVECSubtract((const Vec*)&arwing->velTargetX, (const Vec*)&arwing->velX, (Vec*)accel);
-    accel[0] = accel[0] * arwing->accelX;
-    accel[1] = accel[1] * arwing->accelY;
-    accel[2] = accel[2] * arwing->accelZ;
+    accel[0] *= arwing->accelX;
+    accel[1] *= arwing->accelY;
+    accel[2] *= arwing->accelZ;
     accel[2] = accel[2] < arwing->minAccelZ ? arwing->minAccelZ : (accel[2] > arwing->maxAccelZ ? arwing->maxAccelZ : accel[2]);
     PSVECScale((const Vec*)accel, (Vec*)accel, timeDelta);
     PSVECAdd((const Vec*)&arwing->velX, (const Vec*)accel, (Vec*)&arwing->velX);
-    objMove((GameObject*)obj, arwing->velX * timeDelta, arwing->velY * timeDelta, arwing->velZ * timeDelta);
+    objMove(obj, arwing->velX * timeDelta, arwing->velY * timeDelta, arwing->velZ * timeDelta);
 
     angDelta = arwing->rotXTarget - (u16)arwing->rotXCur;
     if (angDelta > 0x8000)
-        angDelta = angDelta - 0xffff;
+        angDelta -= 0xffff;
     if (angDelta < -0x8000)
-        angDelta = angDelta + 0xffff;
+        angDelta += 0xffff;
     rateStep = (int)(f32)((int)((f32)angDelta * arwing->rotXGain) - arwing->rotXRate);
     rateStep = (rateStep < -0x32) ? -0x32 : ((rateStep > 0x32) ? 0x32 : rateStep);
     arwing->rotXRate = (int)((f32)rateStep * timeDelta + (f32)((ArwingState*)arwing)->rotXRate);
@@ -431,7 +431,7 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
     if (angDelta > 0x8000)
         angDelta = angDelta - 0xffff;
     if (angDelta < -0x8000)
-        angDelta = angDelta + 0xffff;
+        angDelta += 0xffff;
     rateStep = (int)(f32)((int)((f32)angDelta * arwing->rotYGain) - arwing->rotYRate);
     rateStep = (rateStep < -0x32) ? -0x32 : ((rateStep > 0x32) ? 0x32 : rateStep);
     arwing->rotYRate = (int)((f32)rateStep * timeDelta + (f32)((ArwingState*)arwing)->rotYRate);
@@ -441,7 +441,7 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
     if (angDelta > 0x8000)
         angDelta = angDelta - 0xffff;
     if (angDelta < -0x8000)
-        angDelta = angDelta + 0xffff;
+        angDelta += 0xffff;
     rateStep = (int)((f32)(int)((f32)angDelta * arwing->rotZGain) - arwing->rotZRate);
     rateStep = (rateStep < -0x64) ? -0x64 : ((rateStep > 0x64) ? 0x64 : rateStep);
     arwing->rotZRate = rateStep * timeDelta + ((ArwingState*)arwing)->rotZRate;
@@ -451,9 +451,9 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
     {
         angDelta = arwing->rotZTrimTarget - (u16)arwing->rotZTrimCur;
         if (angDelta > 0x8000)
-            angDelta = angDelta - 0xffff;
+            angDelta -= 0xffff;
         if (angDelta < -0x8000)
-            angDelta = angDelta + 0xffff;
+            angDelta += 0xffff;
         arwing->rotZTrimCur =
             (int)(timeDelta * ((f32)angDelta * arwing->rotZTrimGain) + (f32)((ArwingState*)arwing)->rotZTrimCur);
         if ((f32)arwing->rotZTrimCur > arwing->rotZBlendThreshold || arwing->rotZTrimCur < -arwing->rotZBlendThreshold)
@@ -547,14 +547,14 @@ void arwarwing_spawnBomb(GameObject* obj, ArwingState* state, int side)
     else
         ObjPath_GetPointWorldPosition(obj, 6, &px, &py, &pz, 0);
     setup = (ArwingBombSetup*)Obj_AllocObjectSetup(0x20, ARWARWING_CHILD_OBJ_BOMB_PROJECTILE);
-    ((ArwingBombSetup*)setup)->head.posX = px;
-    ((ArwingBombSetup*)setup)->head.posY = py;
-    ((ArwingBombSetup*)setup)->head.posZ = pz;
-    ((ArwingBombSetup*)setup)->yaw = obj->anim.rotX >> 8;
-    ((ArwingBombSetup*)setup)->pitch = obj->anim.rotY >> 8;
-    ((ArwingBombSetup*)setup)->roll = obj->anim.rotZ >> 8;
-    ((ArwingBombSetup*)setup)->head.color[0] = 1;
-    ((ArwingBombSetup*)setup)->head.color[1] = 1;
+    setup->head.posX = px;
+    setup->head.posY = py;
+    setup->head.posZ = pz;
+    setup->yaw = obj->anim.rotX >> 8;
+    setup->pitch = obj->anim.rotY >> 8;
+    setup->roll = obj->anim.rotZ >> 8;
+    setup->head.color[0] = 1;
+    setup->head.color[1] = 1;
     arwing->activeBombObj = loadObjectAtObject(obj, &setup->base);
     arwprojectile_setParamScalar(arwing->activeBombObj, arwing->bombProjectileParam);
     arwprojectile_launchForward(arwing->activeBombObj, arwing->bombProjectileLifetime);
@@ -753,7 +753,7 @@ void arwarwing_handlePathDamage(GameObject* obj, ArwingState* state)
             state->mode = ARWING_MODE_EXPLODE;
             state->modeTimer = 240.0f;
             obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            spawnExplosion((GameObject*)obj, 100.0f, 1, 0, 1, 1, 0, 1, 0);
+            spawnExplosion(obj, 100.0f, 1, 0, 1, 1, 0, 1, 0);
             return;
         }
         if ((dmg & 1) && (s8)pathControl->segmentHits.surfaceTypes[0] == 8)
@@ -771,9 +771,7 @@ void arwarwing_handlePathDamage(GameObject* obj, ArwingState* state)
             state->modeTimer = 80.0f;
             Sfx_PlayFromObject(obj, SFXTRIG_barrelblow11);
             Music_Trigger(MUSICTRIG_dark_ice_boss_1, 1);
-        }
-        else if ((s8)((ArwingState*)(obj)->extra)->health <= 3)
-        {
+        } else if ((s8)((ArwingState*)obj->extra)->health <= 3) {
             Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_bomb_pickup);
         }
         Sfx_PlayFromObject(obj, SFXTRIG_wmap_select);
@@ -809,12 +807,11 @@ void arwarwing_handleObjectDamage(GameObject* obj, ArwingState* state)
             state->mode = ARWING_MODE_EXPLODE;
             state->modeTimer = 240.0f;
             obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            spawnExplosion((GameObject*)obj, 100.0f, 1, 0, 1, 1, 0, 1, 0);
+            spawnExplosion(obj, 100.0f, 1, 0, 1, 1, 0, 1, 0);
         }
         else
         {
-            if (((GameObject*)hitObj)->anim.romDefNo == 0x6ae && state->mode == ARWING_MODE_BARRELROLL)
-            {
+            if (hitObj->anim.romDefNo == 0x6ae && state->mode == ARWING_MODE_BARRELROLL) {
                 Sfx_PlayFromObject(obj, SFXTRIG_ar_blaunch16);
                 return;
             }
@@ -1721,13 +1718,12 @@ void arwarwing_update(GameObject* obj)
             state->mode = ARWING_MODE_EXPLODE;
             state->modeTimer = 240.0f;
             obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
-            spawnExplosion((GameObject*)obj, 100.0f, 1, 0, 1, 1, 0, 1, 0);
+            spawnExplosion(obj, 100.0f, 1, 0, 1, 1, 0, 1, 0);
         }
         state->rotZCur = lbl_803E6F6C * timeDelta + (f32)state->rotZCur;
         obj->anim.rotZ = (s16)state->rotZCur;
         state->velY = state->velY - 0.1f * timeDelta;
-        objMove((GameObject*)obj, state->velX * timeDelta, state->velY * timeDelta,
-                state->velZ * timeDelta);
+        objMove(obj, state->velX * timeDelta, state->velY * timeDelta, state->velZ * timeDelta);
         arwarwing_clampToFlightBounds(obj, state);
         state->thrusterL->anim.flags |= OBJANIM_FLAG_HIDDEN;
         state->thrusterR->anim.flags |= OBJANIM_FLAG_HIDDEN;

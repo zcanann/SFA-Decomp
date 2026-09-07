@@ -68,7 +68,7 @@ int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer, vo
                 player->audioBuffer[1].buffer = (s16*)nextAudioBuffer;
                 player->audioBuffer[1].curPtr = (s16*)nextAudioBuffer;
                 player->audioBuffer[1].validSample = 0;
-                nextAudioBuffer = nextAudioBuffer + audioBufferSize;
+                nextAudioBuffer += audioBufferSize;
                 player->audioBuffer[2].buffer = (s16*)nextAudioBuffer;
                 player->audioBuffer[2].curPtr = (s16*)nextAudioBuffer;
                 player->audioBuffer[2].validSample = 0;

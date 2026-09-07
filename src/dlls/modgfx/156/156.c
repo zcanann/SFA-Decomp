@@ -173,13 +173,13 @@ void dll_9C_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     packet.flags |= spawnFlags;
     if ((packet.flags & 1) != 0) {
         if ((void*)sourceObj != NULL) {
-            packet.position[0] = packet.position[0] + sourceObj->anim.worldPosX;
-            packet.position[1] = packet.position[1] + sourceObj->anim.worldPosY;
-            packet.position[2] = packet.position[2] + sourceObj->anim.worldPosZ;
+            packet.position[0] += sourceObj->anim.worldPosX;
+            packet.position[1] += sourceObj->anim.worldPosY;
+            packet.position[2] += sourceObj->anim.worldPosZ;
         } else {
-            packet.position[0] = packet.position[0] + spawnParams->posX;
-            packet.position[1] = packet.position[1] + spawnParams->posY;
-            packet.position[2] = packet.position[2] + spawnParams->posZ;
+            packet.position[0] += spawnParams->posX;
+            packet.position[1] += spawnParams->posY;
+            packet.position[2] += spawnParams->posZ;
         }
     }
     (*gModgfxInterface)

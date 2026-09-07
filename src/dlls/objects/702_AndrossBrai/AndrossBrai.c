@@ -44,7 +44,7 @@ void androssbrain_setState(GameObject* obj, AndrossBrainMode newState, u8 force)
     {
         return;
     }
-    state = (obj)->extra;
+    state = obj->extra;
     if (state->brainState != ANDROSSBRAIN_DEFEATED || force != 0)
     {
         state->brainState = newState;
@@ -84,7 +84,7 @@ void AndrossBrain_hitDetect(void)
 
 void AndrossBrain_update(GameObject* obj)
 {
-    AndrossBrainState* state = (obj)->extra;
+    AndrossBrainState* state = obj->extra;
     u8 stateChanged = 0;
     GameObject* hitObj;
     int sphereIdx;
@@ -105,9 +105,9 @@ void AndrossBrain_update(GameObject* obj)
     ObjHits_EnableObject(obj);
     if (state->andross != NULL)
     {
-        (obj)->anim.localPosX = state->andross->anim.localPosX;
-        (obj)->anim.localPosY = state->andross->anim.localPosY;
-        (obj)->anim.localPosZ = state->andross->anim.localPosZ;
+        obj->anim.localPosX = state->andross->anim.localPosX;
+        obj->anim.localPosY = state->andross->anim.localPosY;
+        obj->anim.localPosZ = state->andross->anim.localPosZ;
     }
     currentState = state->brainState;
     if ((s8)currentState != state->prevState)
@@ -122,8 +122,8 @@ void AndrossBrain_update(GameObject* obj)
         {
             (*gGameUIInterface)->airMeterSetShutdown();
         }
-        (obj)->anim.rotX = state->andross->anim.rotX;
-        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.rotX = state->andross->anim.rotX;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         break;
     case ANDROSSBRAIN_VULNERABLE:
         if (stateChanged != 0)
@@ -158,7 +158,7 @@ void AndrossBrain_update(GameObject* obj)
                 }
             }
         }
-        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         break;
     case ANDROSSBRAIN_DEFEATED:
         if (stateChanged != 0)
@@ -166,7 +166,7 @@ void AndrossBrain_update(GameObject* obj)
             androssligh_setState((GameObject*)state->lightning, ANDROSSLIGH_DONE, 0);
             (*gGameUIInterface)->airMeterSetShutdown();
         }
-        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         andross_setPartSignal((GameObject*)state->andross, ANDROSS_SIGNAL_BRAIN_DEFEATED);
         break;
     }
@@ -174,7 +174,7 @@ void AndrossBrain_update(GameObject* obj)
 
 void AndrossBrain_init(GameObject* obj)
 {
-    AndrossBrainState* state = (obj)->extra;
+    AndrossBrainState* state = obj->extra;
 
     state->health = BRAIN_MAX_HEALTH;
     ObjHits_SetTargetMask(obj, 4);

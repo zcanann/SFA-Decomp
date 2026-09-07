@@ -132,7 +132,7 @@ void dll_73_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[8].flags = 0x15;
     commands[8].tex = &resourceData[offsetof(Dll73EffectResourceView, allVertexIndices)];
     commands[8].mode = 8;
-    commands[8].x = (f32)randomGetRange(0x64, 0xff);
+    commands[8].x = randomGetRange(0x64, 0xff);
     commands[8].y = 255.0f;
     commands[8].z = 255.0f;
     commands[9].layer = 2;
@@ -146,7 +146,7 @@ void dll_73_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[10].flags = 0x15;
     commands[10].tex = &resourceData[offsetof(Dll73EffectResourceView, allVertexIndices)];
     commands[10].mode = 8;
-    commands[10].x = (f32)randomGetRange(0x64, 0xff);
+    commands[10].x = randomGetRange(0x64, 0xff);
     commands[10].y = 255.0f;
     commands[10].z = 255.0f;
     commands[11].layer = 3;

@@ -1,5 +1,3 @@
-#define OBJHITS_STATE_INDEX_S8
-#define TEX_SETSHADER_U8
 #include "main/map_block.h"
 #include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
@@ -21,7 +19,6 @@
 #include "main/model_render_instrs_api.h"
 #include "main/objHitReact.h"
 #include "main/objhits.h"
-#undef OBJHITS_STATE_INDEX_S8
 #include "main/objtype.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
@@ -42,11 +39,7 @@
 #include "main/newshadows_shadow_api.h"
 #include "dolphin/mtx/vec.h"
 #define TRACK_BBOX_FLAGS_S8
-#define TRACK_BBOX_MASK_TYPE s8
-#define TRACK_BBOX_ARG10_TYPE s8
 #include "main/track_bbox_api.h"
-#undef TRACK_BBOX_ARG10_TYPE
-#undef TRACK_BBOX_MASK_TYPE
 #undef TRACK_BBOX_FLAGS_S8
 #include "main/dll/player_api.h"
 #include "main/pause_menu_api.h"
@@ -529,7 +522,7 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
     s16 savedRotX;
     s16 savedRotZ;
     s16 savedRotY;
-    u32 diskTexture;
+    Texture* diskTexture;
     MtxPtr viewMtx;
     u32 i;
 
@@ -576,7 +569,7 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
             projectionScale = obj->anim.hitboxScale * obj->anim.rootMotionScale;
         if (modelState->shadowRenderResource != OBJECT_SHADOW_MESH_UNCACHED ||
             (diskTexture = newshadows_getSmallDiskTexture(),
-             (u32)modelState->shadowCastSlot->texture == diskTexture))
+             modelState->shadowCastSlot->texture == diskTexture))
         {
             GXColor color = *(GXColor*)shadowColor;
             objectShadow_setupProjectedTexture(modelState->shadowCastSlot, &color, worldMtx);
@@ -659,7 +652,7 @@ static int objShadowGetFadedAlpha(GameObject* obj, u8 param) {
     f32 inv;
     ObjDef* p;
 
-    p = (ObjDef*)((obj)->anim.modelInstance);
+    p = (ObjDef*)(obj->anim.modelInstance);
     if (p->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) {
         lo = 1000;
         hi = 2000;
@@ -667,8 +660,7 @@ static int objShadowGetFadedAlpha(GameObject* obj, u8 param) {
         lo = 400;
         hi = 500;
     }
-    inv = (Camera_DistanceToCurrentViewPosition((obj)->anim.worldPosX, (obj)->anim.worldPosY, (obj)->anim.worldPosZ) -
-           lo) /
+    inv = (Camera_DistanceToCurrentViewPosition(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ) - lo) /
           (f32)(hi - lo);
     if (inv < 0.0f) {
         inv = 0.0f;
@@ -867,7 +859,7 @@ int shadowInit(GameObject* obj, u32 arena, int flags)
     }
     else
     {
-        modelState->shadowTexture = (void*)newshadows_getSmallDiskTexture();
+        modelState->shadowTexture = newshadows_getSmallDiskTexture();
     }
     if (obj->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_BIG_BOX)
     {

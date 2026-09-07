@@ -368,7 +368,7 @@ void sky2ApplyFog(int obj) {
         setFogColorCallback(obj, (u8)s->colorR, (u8)s->colorG, (u8)s->colorB, 55);
         s = (SkySlotAnim*)gSky2States[0];
         if (s->fogNear == s->fogFar) {
-            s->fogNear = s->fogNear - 20.0f;
+            s->fogNear -= 20.0f;
         }
         s = (SkySlotAnim*)gSky2States[0];
         if (s->fogNear > s->fogFar) {
@@ -630,7 +630,7 @@ void sky2_run(void) {
                     ((SkySlotAnim*)*pp)->wobbleStep = 0.05f * randomGetRange(1, 10);
                 } else if (p->b314 == 1) {
                     offset = p->wobbleOffset;
-                    sa = sa + offset;
+                    sa += offset;
                     p->wobbleOffset = offset + p->wobbleStep;
                     p = (SkySlotAnim*)*pp;
                     if (p->wobbleOffset > p->wobbleAmp) {
@@ -638,7 +638,7 @@ void sky2_run(void) {
                     }
                 } else {
                     offset = p->wobbleOffset;
-                    sa = sa + offset;
+                    sa += offset;
                     p->wobbleOffset = offset - p->wobbleStep;
                     p = (SkySlotAnim*)*pp;
                     value = p->wobbleOffset;

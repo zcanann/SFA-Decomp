@@ -67,7 +67,7 @@ void drgenerator_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
 
 void drgenerator_hitDetect(GameObject* obj)
 {
-    DrgeneratorState* state = (obj)->extra;
+    DrgeneratorState* state = obj->extra;
     DrgeneratorPlacement* placement = (DrgeneratorPlacement*)obj->anim.placementData;
     f32 hitPosZ;
     f32 hitPosY;
@@ -100,20 +100,17 @@ void drgenerator_hitDetect(GameObject* obj)
     }
     state->flags.b0 = 1;
     mainSetBits(placement->completionGameBit, 1);
-    if ((obj)->anim.romDefNo == DRGENERATOR_OBJ &&
-        (found = (void*)objGetNearestTypeTo(TIMER_OBJECT_GROUP, obj, NULL)) != NULL)
-    {
+    if (obj->anim.romDefNo == DRGENERATOR_OBJ &&
+        (found = (void*)objGetNearestTypeTo(TIMER_OBJECT_GROUP, obj, NULL)) != NULL) {
         timer_addDuration((GameObject*)found, state->timerDuration);
-    }
-    else
-    {
+    } else {
         ObjHits_DisableObject(obj);
     }
 }
 
 void drgenerator_update(GameObject* obj)
 {
-    DrgeneratorState* state = (obj)->extra;
+    DrgeneratorState* state = obj->extra;
     DrgeneratorPlacement* placement = (DrgeneratorPlacement*)obj->anim.placementData;
     int n;
     if (state->flags.b4 == 0 && mainGetBit(0x9b9) != 0)
@@ -124,8 +121,7 @@ void drgenerator_update(GameObject* obj)
     {
         if (state->flags.b3 == 0 && mainGetBit(placement->watchGameBit) == 0)
         {
-            if ((obj)->anim.romDefNo != DRGENERATOR_WALL_OBJ)
-            {
+            if (obj->anim.romDefNo != DRGENERATOR_WALL_OBJ) {
                 (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
             }
             state->flags.b3 = 1;
@@ -135,8 +131,7 @@ void drgenerator_update(GameObject* obj)
         }
         if (state->flags.b3 != 0 && mainGetBit(placement->watchGameBit) != 0)
         {
-            if ((obj)->anim.romDefNo != DRGENERATOR_WALL_OBJ)
-            {
+            if (obj->anim.romDefNo != DRGENERATOR_WALL_OBJ) {
                 (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
             }
             state->flags.b3 = 0;
@@ -157,12 +152,11 @@ void drgenerator_update(GameObject* obj)
 
 void drgenerator_init(GameObject* obj, DrgeneratorPlacement* placement)
 {
-    DrgeneratorState* state = (obj)->extra;
+    DrgeneratorState* state = obj->extra;
     f32 fv;
-    if ((obj)->anim.romDefNo == DRGENERATOR_WALL_OBJ)
-    {
+    if (obj->anim.romDefNo == DRGENERATOR_WALL_OBJ) {
         ObjTextureRuntimeSlot* t;
-        (obj)->animEventCallback = drgenerator_SeqFn;
+        obj->animEventCallback = drgenerator_SeqFn;
         t = objFindTexture(obj, 0, 0);
         if (t != 0)
         {
@@ -173,14 +167,14 @@ void drgenerator_init(GameObject* obj, DrgeneratorPlacement* placement)
     ObjHits_EnableObject(obj);
     if (mainGetBit(placement->completionGameBit) != 0)
     {
-        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
     }
     objAddObjectType(obj, DRGENERATOR_OBJGROUP);
     *(int*)state = 0;
     state->flags.b3 = 1;
-    (obj)->anim.rotX = (s16)(placement->initialYaw << 8);
+    obj->anim.rotX = (s16)(placement->initialYaw << 8);
     {
         int duration = placement->timerMinutes;
         switch (duration)
@@ -191,7 +185,7 @@ void drgenerator_init(GameObject* obj, DrgeneratorPlacement* placement)
         }
         state->timerDuration = duration;
     }
-    state->timerDuration = state->timerDuration * 0x3c;
+    state->timerDuration *= 0x3c;
     state->unk124 = 0.018f;
     if (mainGetBit(0x9b9) != 0)
     {
@@ -203,9 +197,9 @@ void drgenerator_init(GameObject* obj, DrgeneratorPlacement* placement)
         state->flags.b4 = 0;
     }
     fv = 0.0f;
-    (obj)->anim.velocityZ = fv;
-    (obj)->anim.velocityY = fv;
-    (obj)->anim.velocityX = fv;
+    obj->anim.velocityZ = fv;
+    obj->anim.velocityY = fv;
+    obj->anim.velocityX = fv;
 }
 
 void drgenerator_release(void)

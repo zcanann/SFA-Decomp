@@ -70,7 +70,7 @@ void CameraModeForceBehind_update(CameraObject* camera) {
         yaw = yaw - 0xffff;
     }
     if (yaw < -0x8000) {
-        yaw = yaw + 0xffff;
+        yaw += 0xffff;
     }
     camera->anim.rotX = (f32)(s32)camera->anim.rotX + interpolate((f32)yaw, gCamForceBehindEaseRate[0], timeDelta);
 
@@ -79,7 +79,7 @@ void CameraModeForceBehind_update(CameraObject* camera) {
         pitch = pitch - 0xffff;
     }
     if (pitch < -0x8000) {
-        pitch = pitch + 0xffff;
+        pitch += 0xffff;
     }
     camera->anim.rotY = (f32)(s32)camera->anim.rotY + interpolate((f32)pitch, gCamForceBehindEaseRate[0], timeDelta);
 
@@ -92,7 +92,7 @@ void CameraModeForceBehind_update(CameraObject* camera) {
         f32 verticalOffset = radius * pitchVerticalScale;
         f32 horizontalRadius = radius * pitchHorizontalScale;
         f32 xOffset = horizontalRadius * yawZ;
-        horizontalRadius = horizontalRadius * yawX;
+        horizontalRadius *= yawX;
         camera->anim.worldPosX = targetX + xOffset;
         camera->anim.worldPosY = targetY + verticalOffset;
         camera->anim.worldPosZ = targetZ + horizontalRadius;

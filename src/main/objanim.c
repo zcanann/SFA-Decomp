@@ -51,7 +51,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
     } else {
         blendFrameLength = (float)state->blendFrameData->frameLength;
         if (blendFrameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-            blendFrameLength = blendFrameLength - OBJANIM_PROGRESS_ONE;
+            blendFrameLength -= OBJANIM_PROGRESS_ONE;
         }
         if (blendFrameLength != state->frameLength) {
             state->eventState = 0;
@@ -295,7 +295,7 @@ int Object_ObjAnimSetMove(void* objAnimHandle, int moveId, f32 moveProgress, u8 
     state->frameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
     state->frameLength = (float)state->moveFrameData->frameLength;
     if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-        state->frameLength = state->frameLength - OBJANIM_PROGRESS_ONE;
+        state->frameLength -= OBJANIM_PROGRESS_ONE;
     }
     frameStep = moveData->frameControl & OBJANIM_FRAME_STEP_MASK;
     if (frameStep != 0) {
@@ -905,7 +905,7 @@ int ObjAnim_SetCurrentMove(void* objAnimHandle, int moveId, f32 moveProgress, u8
     state->frameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
     state->frameLength = (float)state->moveFrameData->frameLength;
     if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-        state->frameLength = state->frameLength - OBJANIM_PROGRESS_ONE;
+        state->frameLength -= OBJANIM_PROGRESS_ONE;
     }
     frameStep = moveData->frameControl & OBJANIM_FRAME_STEP_MASK;
     if ((frameStep != 0) && ((moveControlFlags & OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN) == 0)) {

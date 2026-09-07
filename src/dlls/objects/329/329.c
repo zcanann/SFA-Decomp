@@ -183,13 +183,13 @@ void windLift_updateRider(GameObject* obj, GameObject* rider, WindLiftSlot* slot
                 if (forceFactor < 0.0f) {
                     forceFactor = 0.0f;
                 }
-                forceFactor = forceFactor * forceFactor;
+                forceFactor *= forceFactor;
             } else {
                 forceFactor = 0.01f;
             }
         }
         slot->speedDelta = accelerationScale * forceFactor - 0.18f;
-        slot->riseSpeed = slot->riseSpeed + slot->speedDelta;
+        slot->riseSpeed += slot->speedDelta;
         if (slot->riseSpeed > 8.0f) {
             slot->riseSpeed = 8.0f;
         }
@@ -319,7 +319,7 @@ void windLift_update(GameObject* obj) {
             }
         }
         objects = (u32*)objGetAllOfType(WINDLIFT_RIDER_OBJECT_GROUP, &objectCount);
-        objectCount = objectCount + 1;
+        objectCount += 1;
         if (objectCount > WINDLIFT_SLOT_COUNT) {
             objectCount = WINDLIFT_SLOT_COUNT;
         }

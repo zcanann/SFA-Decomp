@@ -89,7 +89,7 @@ void dim2conveyor_update(GameObject* obj) {
 
     Sfx_PlayFromObject(obj, SFXTRIG_mv_liftloop);
     if (state->musicHoldTimer != 0) {
-        state->musicHoldTimer = state->musicHoldTimer - 1;
+        state->musicHoldTimer -= 1;
         if (state->musicHoldTimer == 0) {
             Music_Trigger(DIM2CONVEYOR_MUSIC_TRACK_ID, 0);
         }
@@ -97,7 +97,7 @@ void dim2conveyor_update(GameObject* obj) {
     switch (((const Dim2ConveyorPlacement*)obj->anim.placementData)->base.ident) {
     case DIM2CONVEYOR_DUAL_DIRECTION_MAP_ID:
         if (mainGetBit(DIM2CONVEYOR_GAMEBIT_DIRECTION_SWAP_ENABLED) != 0) {
-            state->directionSwapTimer = state->directionSwapTimer + timeDelta;
+            state->directionSwapTimer += timeDelta;
             if (state->directionSwapTimer > 100.0f) {
                 if (mainGetBit(DIM2CONVEYOR_GAMEBIT_NEGATIVE_DIRECTION) != 0) {
                     mainSetBits(DIM2CONVEYOR_GAMEBIT_POSITIVE_DIRECTION, 1);

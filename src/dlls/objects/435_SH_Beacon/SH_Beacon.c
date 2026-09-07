@@ -34,9 +34,9 @@ f32 gShBeaconHitEffectCooldown;
 
 int sh_beacon_sequenceCallback(GameObject* obj) {
     ShBeaconState* state = obj->extra;
-    state->pulseTimer = state->pulseTimer + timeDelta;
+    state->pulseTimer += timeDelta;
     if (state->pulseTimer >= 20.0f) {
-        state->pulseTimer = state->pulseTimer - 20.0f;
+        state->pulseTimer -= 20.0f;
         if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
             objfx_spawnPulseBurst(obj, obj->anim.rootMotionScale, 0, 2, 0, NULL);
         }
@@ -98,9 +98,9 @@ void sh_beacon_update(GameObject* obj) {
         /* fall through */
     case SH_BEACON_MODE_IGNITING:
         ignitingState = obj->extra;
-        ignitingState->pulseTimer = ignitingState->pulseTimer + timeDelta;
+        ignitingState->pulseTimer += timeDelta;
         if (ignitingState->pulseTimer >= 20.0f) {
-            ignitingState->pulseTimer = ignitingState->pulseTimer - 20.0f;
+            ignitingState->pulseTimer -= 20.0f;
             if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
                 objfx_spawnPulseBurst(obj, obj->anim.rootMotionScale, 0, 2, 0, NULL);
             }
@@ -112,16 +112,16 @@ void sh_beacon_update(GameObject* obj) {
             state->flags.loopSoundActive = 1;
         }
         if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
-            state->pulseModeTimer = state->pulseModeTimer + timeDelta;
+            state->pulseModeTimer += timeDelta;
             if (state->pulseModeTimer > 10.0f) {
                 pulseMode = 2;
-                state->pulseModeTimer = state->pulseModeTimer - 10.0f;
+                state->pulseModeTimer -= 10.0f;
             } else {
                 pulseMode = 0;
             }
-            state->pulseSpawnTimer = state->pulseSpawnTimer + timeDelta;
+            state->pulseSpawnTimer += timeDelta;
             if (state->pulseSpawnTimer > 2.0f) {
-                state->pulseSpawnTimer = state->pulseSpawnTimer - 2.0f;
+                state->pulseSpawnTimer -= 2.0f;
                 objfx_spawnPulseBurst(obj, obj->anim.rootMotionScale, 2, pulseMode, 0, NULL);
             }
         }
@@ -149,7 +149,7 @@ void sh_beacon_update(GameObject* obj) {
         }
     }
     if (state->fadeTimer > 0.0f) {
-        state->fadeTimer = state->fadeTimer - timeDelta;
+        state->fadeTimer -= timeDelta;
         if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
             objfx_spawnPulseBurst(obj, 0.6f * obj->anim.rootMotionScale, 3, 0, 0, NULL);
         }

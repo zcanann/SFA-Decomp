@@ -84,12 +84,12 @@ void CameraModeClimb_update(CameraObject* camera) {
     } else {
         value = lbl_803E19A0;
     }
-    value = value * (gCameraModeClimbState->heightAdjustRate * timeDelta);
-    camera->anim.worldPosY = camera->anim.worldPosY + value;
+    value *= (gCameraModeClimbState->heightAdjustRate * timeDelta);
+    camera->anim.worldPosY += value;
     distance = gCameraModeClimbState->targetDistance;
-    distance = distance - gCameraModeClimbState->smoothedDistance;
-    distance = distance * (gCamClimbDistanceSmoothRate * timeDelta);
-    gCameraModeClimbState->smoothedDistance = gCameraModeClimbState->smoothedDistance + distance;
+    distance -= gCameraModeClimbState->smoothedDistance;
+    distance *= (gCamClimbDistanceSmoothRate * timeDelta);
+    gCameraModeClimbState->smoothedDistance += distance;
     trigValue = mathSinf((gCamClimbPi * (f32)(s32)target->anim.rotX) / gCamClimbHalfCircleBinaryAngle);
     traceFrom[0] = gCamClimbTraceOrbitRadius * trigValue + target->anim.worldPosX;
     traceFrom[1] = target->anim.worldPosY;
@@ -115,7 +115,7 @@ void CameraModeClimb_update(CameraObject* camera) {
         angleDelta = angleDelta - 0xffff;
     }
     if (angleDelta < -0x8000) {
-        angleDelta = angleDelta + 0xffff;
+        angleDelta += 0xffff;
     }
     camera->anim.rotX += angleDelta;
     value = camera->anim.worldPosY - (target->anim.worldPosY + (f32)(u32)(u16)gCameraModeClimbState->relativePosition);
@@ -123,10 +123,10 @@ void CameraModeClimb_update(CameraObject* camera) {
     angleDelta = angle & 0xffff;
     angleDelta -= (u16)camera->anim.rotY;
     if (angleDelta > 0x8000) {
-        angleDelta = angleDelta - 0xffff;
+        angleDelta -= 0xffff;
     }
     if (angleDelta < -0x8000) {
-        angleDelta = angleDelta + 0xffff;
+        angleDelta += 0xffff;
     }
     camera->anim.rotY += (angleDelta * framesThisStep) / 6;
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,

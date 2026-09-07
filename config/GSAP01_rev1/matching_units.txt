@@ -753,7 +753,6 @@ dolphin/thp/THPDec.c
 main/audio_sfx.c
 main/boot_logo.c
 main/curves.c
-main/gametext_measurebyid.c
 main/lightmap_initmapblocks.c
 main/math_80292d3c.c
 main/math_8029312c.c

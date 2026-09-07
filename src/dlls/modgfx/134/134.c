@@ -56,9 +56,9 @@ void dll_86_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[1].flags = 0;
     commands[1].tex = NULL;
     commands[1].mode = 0x400000;
-    commands[1].x = (f32)randomGetRange(-0x64, 0x64);
+    commands[1].x = randomGetRange(-0x64, 0x64);
     commands[1].y = 0.0f;
-    commands[1].z = (f32)randomGetRange(-0x4b0, -0x320);
+    commands[1].z = randomGetRange(-0x4b0, -0x320);
     randomX = commands[1].x;
     copiedY = commands[1].y;
     commands[2].layer = 1;
@@ -85,7 +85,7 @@ void dll_86_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     packet.modeByte = 0;
     packet.sourceObj = sourceObj;
     packet.sourceMode = variant;
-    randomX = (f32)randomGetRange(-0x64, 0x64);
+    randomX = randomGetRange(-0x64, 0x64);
     packet.position[0] = randomX;
     packet.position[1] = 0.0f;
     packet.position[2] = 0.0f;

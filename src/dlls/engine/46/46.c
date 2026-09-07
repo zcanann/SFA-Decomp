@@ -203,17 +203,17 @@ int moveLibAdvanceHermite(GameObject* obj, const MoveLibWaypointDef* def, MoveLi
         buf[1] = state->startTangent.x;
         buf[2] = state->end.x;
         buf[3] = state->endTangent.x;
-        (obj)->anim.localPosX = Curve_EvalHermite(buf, *phaseOut, 0);
+        obj->anim.localPosX = Curve_EvalHermite(buf, *phaseOut, 0);
         buf[0] = state->start.y;
         buf[1] = state->startTangent.y;
         buf[2] = state->end.y;
         buf[3] = state->endTangent.y;
-        (obj)->anim.localPosY = Curve_EvalHermite(buf, *phaseOut, 0);
+        obj->anim.localPosY = Curve_EvalHermite(buf, *phaseOut, 0);
         buf[0] = state->start.z;
         buf[1] = state->startTangent.z;
         buf[2] = state->end.z;
         buf[3] = state->endTangent.z;
-        (obj)->anim.localPosZ = Curve_EvalHermite(buf, *phaseOut, 0);
+        obj->anim.localPosZ = Curve_EvalHermite(buf, *phaseOut, 0);
     }
     return ret;
 }
@@ -253,9 +253,9 @@ int dll_2E_advanceAlongRoute(GameObject* obj, RomCurveWalker* route, f32 phase, 
         {
             hit = (*gRomCurveInterface)->goNextPoint(route);
         }
-        (obj)->anim.localPosX = route->posX;
-        (obj)->anim.localPosY = route->posY;
-        (obj)->anim.localPosZ = route->posZ;
+        obj->anim.localPosX = route->posX;
+        obj->anim.localPosY = route->posY;
+        obj->anim.localPosZ = route->posZ;
         if (hit != 0)
         {
             *flags |= MOVELIB_CURVE_WALK_DONE;
@@ -264,18 +264,17 @@ int dll_2E_advanceAlongRoute(GameObject* obj, RomCurveWalker* route, f32 phase, 
     ObjAnim_SampleRootCurvePhase(&obj->anim, phase, rootOut);
     if (*flags & 1)
     {
-        if (trackGetNearestGroundOffset(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &ground,
-                                 0) == 0)
-        {
-            (obj)->anim.localPosY -= ground;
+        if (trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &ground,
+                                        0) == 0) {
+            obj->anim.localPosY -= ground;
         }
     }
     if (moved != 0 && (*flags & 0x2) != 0)
     {
-        int targetAngle = (s16)(getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
-                                         (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ) +
+        int targetAngle = (s16)(getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
+                                         obj->anim.localPosZ - obj->anim.previousLocalPosZ) +
                                 0x8000);
-        (obj)->anim.rotX = (s16)((obj)->anim.rotX + ((targetAngle - (obj)->anim.rotX) >> 3));
+        obj->anim.rotX = (s16)(obj->anim.rotX + ((targetAngle - obj->anim.rotX) >> 3));
     }
     return hit;
 }
@@ -332,7 +331,7 @@ int dll_2E_moveToTarget(GameObject* obj, const MoveLibTarget* target, f32 speed,
         }
         if (delta < -0x8000)
         {
-            delta = delta + 0xffff;
+            delta += 0xffff;
         }
         obj->anim.rotX = (f32) * (s16*)obj + (0.5f + delta) * (speed * timeDelta) / dist;
     }
@@ -350,9 +349,9 @@ int dll_2E_moveToTarget(GameObject* obj, const MoveLibTarget* target, f32 speed,
         }
         if (delta < -0x8000)
         {
-            delta = delta + 0xffff;
+            delta += 0xffff;
         }
-        speed = speed * -mathCosf(3.1415927f * delta / 32768.0f);
+        speed *= -mathCosf(3.1415927f * delta / 32768.0f);
         ObjAnim_SampleRootCurvePhase(&obj->anim, speed, out);
     }
     return 0;
@@ -388,13 +387,13 @@ int dll_2E_updateSequenceTurn(GameObject* obj, ObjSeqState* seq, MoveLibState* s
     if (mode == 4)
     {
         s->setupFlag = 0x50;
-        seq->flags = seq->flags & ~8;
-        seq->flags = seq->flags & ~2;
+        seq->flags &= ~8;
+        seq->flags &= ~2;
         s->phase = MOVELIB_PHASE_SETUP;
         seq->movementState = 5;
         if ((s->modeBits & 2) == 0)
         {
-            seq->flags = seq->flags & ~4;
+            seq->flags &= ~4;
         }
         seq->freeCallback = (ObjAnimSequenceFreeCallback)moveLibSeqFreeCallback;
         return 0;
@@ -428,7 +427,7 @@ int dll_2E_updateSequenceTurn(GameObject* obj, ObjSeqState* seq, MoveLibState* s
             if (s->phase == MOVELIB_PHASE_FINISH)
             {
                 s16* v;
-                seq->flags = seq->flags | 8;
+                seq->flags |= 8;
                 v = objFindJointPoseVector(obj, 0);
                 if (v != NULL)
                 {
@@ -437,7 +436,7 @@ int dll_2E_updateSequenceTurn(GameObject* obj, ObjSeqState* seq, MoveLibState* s
                 }
                 s->phase = MOVELIB_PHASE_IDLE;
                 seq->movementState = 0;
-                seq->flags = seq->flags | 4;
+                seq->flags |= 4;
                 return 0;
             }
             return 0;
@@ -469,12 +468,12 @@ void dll_2E_setTargetFromPathPoint(GameObject* obj, MoveLibState* s, int point)
         s->startOffsetY = v.y0;
         cB = cA * v.z0 + v.z1;
         s->startOffsetZ = cB * cC;
-        s->startOffsetX -= (obj)->anim.localPosX;
-        s->startOffsetY -= (obj)->anim.localPosY;
-        s->startOffsetZ -= (obj)->anim.localPosZ;
-        v.ang[0] = (s16) - (obj)->anim.rotZ;
-        v.ang[1] = (s16) - (obj)->anim.rotY;
-        v.ang[2] = (s16) - (obj)->anim.rotX;
+        s->startOffsetX -= obj->anim.localPosX;
+        s->startOffsetY -= obj->anim.localPosY;
+        s->startOffsetZ -= obj->anim.localPosZ;
+        v.ang[0] = (s16)-obj->anim.rotZ;
+        v.ang[1] = (s16)-obj->anim.rotY;
+        v.ang[2] = (s16)-obj->anim.rotX;
         vecRotateZXY(v.ang, &s->startOffsetX);
         s->needsReinit = 0;
     }
@@ -796,11 +795,11 @@ int moveLibTurnToFaceTarget(GameObject* obj, GameObject* targetObj, int* turning
             turnAmount = yawDelta;
             if (turnAmount > 0)
             {
-                turnAmount = turnAmount / 0x14;
+                turnAmount /= 0x14;
             }
             else
             {
-                turnAmount = turnAmount / 0x14;
+                turnAmount /= 0x14;
             }
             turnDelta = turnAmount;
         }

@@ -72,7 +72,7 @@ int Effect4_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     cfg.velocityZ = (0.0f);
     cfg.scale = (0.0f);
     cfg.lifetimeFrames = 0;
-    cfg.quadVertex3Pad06 = -1;
+    cfg.impactEffectId = -1;
     cfg.initialAlpha = 0xff;
     cfg.linkGroup = 0;
     cfg.textureId = 0;
@@ -119,9 +119,9 @@ int Effect4_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.initialAlpha = 0xe1;
         cfg.behaviorFlags = 0x400110;
         if (randomGetRange(0, 2) == 0) {
-            cfg.renderFlags = cfg.renderFlags | 0x100;
+            cfg.renderFlags |= 0x100;
         } else {
-            cfg.renderFlags = cfg.renderFlags | 0x400;
+            cfg.renderFlags |= 0x400;
         }
         cfg.textureId = 0x4f9;
         break;
@@ -422,7 +422,7 @@ int Effect4_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.scale = (0.0032f);
         cfg.lifetimeFrames = randomGetRange(0x28, 0x50);
         cfg.initialAlpha = 0xff;
-        cfg.quadVertex3Pad06 = 0x1a2;
+        cfg.impactEffectId = 0x1a2;
         cfg.behaviorFlags = 0x2000104;
         cfg.renderFlags = 0x200;
         cfg.textureId = 0x7b;
@@ -461,7 +461,7 @@ int Effect4_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.scale = (0.0004f) * (f32)(s32)randomGetRange(0, 0xa) + (0.000945f);
         cfg.lifetimeFrames = randomGetRange(0xbe, 0xfa);
         cfg.initialAlpha = 0x9b;
-        cfg.quadVertex3Pad06 = 0x281;
+        cfg.impactEffectId = 0x281;
         cfg.behaviorFlags = 0x81488000;
         randPick = randomGetRange(0, 2);
         if (randPick == 0) {
@@ -505,7 +505,7 @@ int Effect4_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.scale = (0.0004f) * (f32)(s32)randomGetRange(0, 0xa) + (0.000945f);
         cfg.lifetimeFrames = randomGetRange(0xbe, 0xfa);
         cfg.initialAlpha = 0x9b;
-        cfg.quadVertex3Pad06 = 0x281;
+        cfg.impactEffectId = 0x281;
         cfg.behaviorFlags = 0x81488000;
         randPick = randomGetRange(0, 2);
         if (randPick == 0) {
@@ -540,7 +540,7 @@ int Effect4_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.scale = (0.016f);
         cfg.lifetimeFrames = randomGetRange(0, 0xfa) + 0x96;
         cfg.linkGroup = 0;
-        cfg.quadVertex3Pad06 = 0x1a8;
+        cfg.impactEffectId = 0x1a8;
         cfg.behaviorFlags = 0x80490008;
         cfg.textureId = 0x167;
         break;
@@ -587,7 +587,7 @@ int Effect4_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.initialAlpha = 0xff;
         cfg.lifetimeFrames = 0x64;
         cfg.linkGroup = 0x10;
-        cfg.quadVertex3Pad06 = 0x1b4;
+        cfg.impactEffectId = 0x1b4;
         cfg.behaviorFlags = 0x480200;
         cfg.renderFlags = 0x100000;
         cfg.textureId = 0x159;
@@ -865,15 +865,15 @@ int Effect4_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     default:
         return -1;
     }
-    cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
+    cfg.behaviorFlags |= spawnFlags;
     if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
         cfg.behaviorFlags ^= 2;
     }
     if ((cfg.behaviorFlags & 1) != 0) {
         if ((spawnFlags & 0x200000) != 0) {
-            cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
-            cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
-            cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
+            cfg.startPosX += cfg.sourcePosX;
+            cfg.startPosY += cfg.sourcePosY;
+            cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != 0) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;

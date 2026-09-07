@@ -165,7 +165,7 @@ void lavaball1be_update(GameObject* obj) {
         obj->anim.rotX = obj->anim.rotX + framesThisStep * DIM_LAVA_DEBRIS_ROTATION_X_STEP;
         obj->anim.rotY = obj->anim.rotY + framesThisStep * DIM_LAVA_DEBRIS_ROTATION_Y_STEP;
         lavaball1be_applyDebrisGravity(obj);
-        obj->userData1 = obj->userData1 - framesThisStep;
+        obj->userData1 -= framesThisStep;
         if (obj->userData1 < 0) {
             Obj_FreeObject(obj);
         }
@@ -180,8 +180,8 @@ void lavaball1be_update(GameObject* obj) {
             if (state->explosionCooldown != 0) {
                 state->explosionCooldown--;
             }
-            obj->anim.rotX = obj->anim.rotX + (frameCount << 6);
-            obj->anim.rotY = obj->anim.rotY - (frameCount << 9);
+            obj->anim.rotX += (frameCount << 6);
+            obj->anim.rotY -= (frameCount << 9);
             obj->anim.velocityY = DIM_LAVA_GRAVITY * deltaTime + obj->anim.velocityY;
             objMove(obj, obj->anim.velocityX * deltaTime, obj->anim.velocityY * deltaTime,
                     obj->anim.velocityZ * deltaTime);

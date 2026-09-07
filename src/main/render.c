@@ -140,11 +140,11 @@ u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsSta
     predictor = predictorHeader;
     {
         int header = *(u8*)compressed;
-        compressed = compressed + 1;
+        compressed += 1;
         stepIndex = (header & 0xf) << 3;
     }
     initialOutputBit = modelRenderInstrsState_getBit(output);
-    bitStride = bitStride - bitWidth;
+    bitStride -= bitWidth;
     packedShift = 0x10 - bitWidth;
 
     for (i = sampleCount / 2; i > 0; i--) {
@@ -302,8 +302,8 @@ int modelRenderCopyPackedSamples(ModelRenderInstrsState* src, ModelRenderInstrsS
         sByte = sbit >> 3;
         sp = (u8*)src->instrs + sByte;
         val = sp[0] << 16;
-        val = val | (sp[1] << 8);
-        val = val | sp[2];
+        val |= (sp[1] << 8);
+        val |= sp[2];
         src->bit = sbit + bw;
         packed = mask & (val >> (sbit & 7));
         curBit = dst->bit;
@@ -862,8 +862,8 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
     addrB = posA + curB;
     curB = addrB;
     end = RENDER_PACKED_ADDRESS(outPosition + 3);
-    framePhase = framePhase - floorf(framePhase);
-    framePhase = framePhase * gModelRenderSubframeScale[0];
+    framePhase -= floorf(framePhase);
+    framePhase *= gModelRenderSubframeScale[0];
     frac = (int)framePhase;
 
     render_copyPackedU64Head(&bufA, posA);
@@ -887,12 +887,12 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
             tmp = 64 - nib;
             vA = bufA >> (tmp & 0xFFFFFFFF);
             tmp = bufB >> (tmp & 0xFFFFFFFF);
-            tmp = tmp - vA;
+            tmp -= vA;
             tmp = tmp << 50;
             for (i = 50; i != 0; i--) {
                 *q /= 2;
             }
-            tmp = tmp * frac;
+            tmp *= frac;
             for (i = 14; i != 0; i--) {
                 *q /= 2;
             }
@@ -940,8 +940,8 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
                 tmp = 64 - nib3;
                 vA = bufA >> (tmp & 0xFFFFFFFF);
                 tmp = bufB >> (tmp & 0xFFFFFFFF);
-                tmp = tmp - vA;
-                tmp = tmp * frac;
+                tmp -= vA;
+                tmp *= frac;
                 for (i = 14; i != 0; i--) {
                     *q /= 2;
                 }

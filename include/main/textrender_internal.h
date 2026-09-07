@@ -11,7 +11,6 @@
 STATIC_ASSERT(offsetof(GameTextBox, style) == 0x13);
 STATIC_ASSERT(offsetof(GameTextBox, alpha) == 0x1E);
 STATIC_ASSERT(sizeof(TextFont) == 0x28);
-STATIC_ASSERT(sizeof(GameTextDef) == 0xc);
 STATIC_ASSERT(offsetof(TextFont, status) == 0x1c);
 
 typedef struct
@@ -34,32 +33,13 @@ STATIC_ASSERT(offsetof(GameTextLoadSlot, sourceId) == 0x4b);
 
 typedef struct
 {
-    f32 fadeElapsed[8];
-    f32 fadeTimers[8];
-    GameTextDef fallbackDefs[8];
-    char* fallbackBufPtrs[8];
-    char fallbackBufs[8][0x40];
-    u8 pad02c0[0xc0];
-    char path[0x40];
-    char commandStringBuffer[0x800];
-    GameTextSlot commands[0x80];
-    TextFont fonts[4];
-    GameTextLoadSlot loadSlots[8];
-} GameTextRuntime;
-STATIC_ASSERT(offsetof(GameTextRuntime, fallbackDefs) == 0x40);
-STATIC_ASSERT(offsetof(GameTextRuntime, fallbackBufPtrs) == 0xa0);
-STATIC_ASSERT(offsetof(GameTextRuntime, fallbackBufs) == 0xc0);
-STATIC_ASSERT(offsetof(GameTextRuntime, path) == 0x380);
-STATIC_ASSERT(offsetof(GameTextRuntime, commandStringBuffer) == 0x3c0);
-STATIC_ASSERT(offsetof(GameTextRuntime, commands) == 0xbc0);
-STATIC_ASSERT(offsetof(GameTextRuntime, fonts) == 0x15c0);
-STATIC_ASSERT(offsetof(GameTextRuntime, loadSlots) == 0x1660);
-
-typedef struct
-{
     u32 code;
     u16 r, g, b, a;
 } SubtitleCmd;
+
+#define SUBTITLE_CONTROL_COMMAND_COUNT 16
+STATIC_ASSERT(sizeof(SubtitleCmd) == 0xc);
+extern SubtitleCmd sSubtitleCtrlCmdScratch[SUBTITLE_CONTROL_COMMAND_COUNT];
 
 /*
  * In-string formatting control codes (Unicode PUA, 0xe000..0xf8ff) and the
@@ -83,12 +63,13 @@ typedef struct
 #define TEXT_ALIGN_JUSTIFY 3
 
 
-/* Per-glyph font id stored in TextGlyph.lang (characterStruct.font). Id 1 is unused. */
+/* Per-glyph font id stored in TextGlyph.font. Id 1 is unused. */
 #define GAMETEXT_FONT_JAPANESE 0
 #define GAMETEXT_FONT_ICON     2
 #define GAMETEXT_FONT_FLAG     3
 #define GAMETEXT_FONT_LATIN    4
 #define GAMETEXT_FONT_FACE     5
+#define GAMETEXT_FONT_SYSTEM   6
 
 /* Loaded font slot: gGameTextCharsets[] index, one per load purpose/directory. */
 #define GAMETEXT_SLOT_DIALOGUE 0 /* various directories */
@@ -96,10 +77,6 @@ typedef struct
 #define GAMETEXT_SLOT_ERROR    2 /* Boot */
 #define GAMETEXT_SLOT_HUD      3 /* Link */
 
-#define GAMETEXT_PATH_BUFFER_OFFSET           0x380
-#define GAMETEXT_COMMAND_STRING_BUFFER_OFFSET 0x3c0
-#define GAMETEXT_FONT_SLOT_OFFSET             0x1610
-#define GAMETEXT_LOAD_SLOTS_OFFSET            0x1660
 #define GAMETEXT_LOAD_SLOT_COUNT              8
 #define GAMETEXT_PENDING_SOURCE_COUNT         4
 #define GAMETEXT_INVALID_DIR                  0xff
@@ -155,12 +132,8 @@ extern Texture* gGameTextBoxFrameTextures[];
 extern int curGameTextDir;
 extern int gGameTextShadowOffsetX;
 extern int gGameTextShadowOffsetY;
-extern u8 gGameTextBase[];
-extern u8* gGameTextLastEntry;
 extern char* gCurTextBuffer;
 extern int gGameTextBufferIndex;
-extern const f32 gGameTextFadeLimit;
-extern char gGameTextFontData[];
 extern char sGameTextBlankFormat[5];
 extern char sGameTextSequencePathFormat[];
 extern GameTextLoadSlot curGameTexts[GAMETEXT_LOAD_SLOT_COUNT];
@@ -171,7 +144,6 @@ int GameText_CountPrintableChars(u8* str);
 int GameText_FindControlCodeArgs(u8* str, u32 target, int* out);
 void loadGameTextSequence(int sequenceSlotDir, int sequenceId);
 
-extern u8 sGameTextFallbackBufSlots[];
 extern f32 gSubtitleCurTime;
 extern u16 gGameTextSjisGlyphTable[];
 extern char sGameTextMapPathFormat[];

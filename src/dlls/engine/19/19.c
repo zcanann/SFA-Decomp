@@ -477,11 +477,11 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v)
             {
                 slot = &base[j];
                 slot->vx = randomGetRange(-250, 250);
-                slot->vx = slot->vx * scale;
+                slot->vx *= scale;
                 slot->vz = randomGetRange(-250, 250);
-                slot->vz = slot->vz * scale;
+                slot->vz *= scale;
                 slot->vy = randomGetRange(200, 300);
-                slot->vy = slot->vy * scale;
+                slot->vy *= scale;
                 slot->parentIdx = idx;
                 slot->x = src->x;
                 slot->y = src->y;

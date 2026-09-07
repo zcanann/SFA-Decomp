@@ -244,8 +244,8 @@ void ObjHits_ConvertHitPositionToWorld(GameObject* object, f32* position) {
     if (object->anim.parent != NULL) {
         return;
     }
-    position[0] = position[0] + playerMapOffsetX;
-    position[2] = position[2] + playerMapOffsetZ;
+    position[0] += playerMapOffsetX;
+    position[2] += playerMapOffsetZ;
 }
 
 void Rcp_DisableDistortionFilter(void) {
@@ -532,7 +532,7 @@ int objShouldUnload(GameObject* obj) {
             return 1;
         }
         found = 0;
-        bx = bx + (bz << 4);
+        bx += (bz << 4);
         tp = gMapBlockLayerTables;
         for (k = 0; k < MAP_BLOCK_LAYER_COUNT; k++) {
             if ((*tp)[bx] >= 0) {
@@ -1523,7 +1523,7 @@ void beginLoadingMap(void) {
     gMapSavedPlayerOffsetX = playerMapOffsetX;
     gMapSavedPlayerOffsetZ = playerMapOffsetZ;
     gShaderCurMapEventId = -1;
-    gShaderGameTextLoadedMapId = gShaderGameTextLoadedMapId - 1;
+    gShaderGameTextLoadedMapId -= 1;
     gMapCurRomListSlot = -1;
     curMapLayer = characterPosition->mapLayer;
     renderFlags &= 0x82008;
@@ -1603,10 +1603,10 @@ void beginLoadingMap(void) {
             SaveGameEnvState* e2 = saveGameGetEnvState();
             if (enabled) {
                 renderFlags |= 0x50;
-                e2->envFlags = e2->envFlags | 9;
+                e2->envFlags |= 9;
             } else {
                 renderFlags &= ~0x50;
-                e2->envFlags = e2->envFlags & ~9;
+                e2->envFlags &= ~9;
             }
         }
         if (environmentState->envFlags & 8) {
@@ -1618,10 +1618,10 @@ void beginLoadingMap(void) {
             SaveGameEnvState* e3 = saveGameGetEnvState();
             if (enabled) {
                 renderFlags |= 0x40;
-                e3->envFlags = e3->envFlags | 8;
+                e3->envFlags |= 8;
             } else {
                 renderFlags &= ~0x40;
-                e3->envFlags = e3->envFlags & ~8;
+                e3->envFlags &= ~8;
             }
         }
         if (environmentState->envFlags & 0x20) {
@@ -2050,10 +2050,10 @@ void doPendingMapLoads(void) {
                             int* blockIndex;
                             for (blockIndex = gMapBlockIndexList; gMapBlockIndexList != 0 && *blockIndex != -1;) {
                                 blockIndex++;
-                                gMapBlockIndexCount = gMapBlockIndexCount + 1;
+                                gMapBlockIndexCount += 1;
                             }
                         }
-                        gMapBlockIndexCount = gMapBlockIndexCount - 1;
+                        gMapBlockIndexCount -= 1;
                         /* Vestigial grid walk over each layer's cell table: writes only dead locals. */
                         for (i = 0; i < 5; i++) {
                             cellGrid = (char*)*eBase;
@@ -2362,8 +2362,8 @@ void mapFillCellEntry(int gridX, int gridZ, MapCellEntry* out, int layer) {
             *(s8*)(activeFlags + slot * 8) = 1;
         }
         mapBounds = (MapBounds*)gShaderMapRomBuffers[1] + id;
-        gridZ = gridZ - mapBounds->minZ;
-        gridX = gridX - mapBounds->minX;
+        gridZ -= mapBounds->minZ;
+        gridX -= mapBounds->minX;
         cell = grid->cells[gridX + gridZ * grid->sizeX];
         out->cellIndex = (cell >> 0x11) & 0x3f;
         out->romListIndex = (cell >> 0x17) & 0xff;
@@ -2825,15 +2825,15 @@ int objUpdateOpacity(GameObject* obj) {
         alpha = 255;
         near = range - 100.0f;
         if (d > near) {
-            range = range - near;
-            d = d - near;
+            range -= near;
+            d -= near;
             alpha = (int)(255.0f * (1.0f - d / range));
         }
         Camera_ProjectWorldSphere(obj->anim.worldPosX - playerMapOffsetX, obj->anim.worldPosY,
                                   obj->anim.worldPosZ - playerMapOffsetZ,
                                   obj->anim.hitboxScale * obj->anim.rootMotionScale, &o1, &o2, &o3, &sz, &o5, &o6);
         sz = __fabsf(sz);
-        sz = sz * gMapBlockWorldSize;
+        sz *= gMapBlockWorldSize;
         if (sz < 10.0f) {
             obj->anim.renderAlpha = 0;
             return 0;
@@ -2934,7 +2934,7 @@ void mapDebugRender(int* state) {
             v = gMapCellRenderInstrBits;
             n = v >> 3;
             if (v & 7) {
-                n = n + 1;
+                n += 1;
             }
             modelRenderInstrsState_init((ModelRenderInstrsState*)state, (void*)(gMapCellRenderInstrsTable + n * cell),
                                         v, v);

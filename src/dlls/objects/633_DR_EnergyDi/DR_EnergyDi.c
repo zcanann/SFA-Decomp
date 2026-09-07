@@ -47,7 +47,7 @@ void DR_EnergyDisc_hitDetect(void)
 void DR_EnergyDisc_update(GameObject* obj)
 {
     ObjTextureRuntimeSlot* texture;
-    DrEnergyDiscState* state = (obj)->extra;
+    DrEnergyDiscState* state = obj->extra;
     DrenergydiscPlacement* setup = (DrenergydiscPlacement*)obj->anim.placementData;
 
     if (mainGetBit(setup->activeGameBit) != 0)

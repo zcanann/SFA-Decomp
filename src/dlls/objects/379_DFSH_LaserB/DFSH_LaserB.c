@@ -131,7 +131,7 @@ void dfshLaserBeam_update(GameObject* obj) {
     beamPlane = -(obj->anim.localPosX * beamDirectionX + obj->anim.localPosZ * beamDirectionZ);
     player = Obj_GetPlayerObject();
 
-    state->damageCooldown = state->damageCooldown - framesThisStep;
+    state->damageCooldown -= framesThisStep;
     if (state->damageCooldown < 0) {
         state->damageCooldown = 0;
     }

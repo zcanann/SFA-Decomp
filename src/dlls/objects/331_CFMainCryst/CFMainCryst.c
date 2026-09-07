@@ -240,7 +240,7 @@ void cfMainCrystal_updateBeams(GameObject* obj) {
         if (state->chargeTimer >= CFMAINCRYSTAL_CHARGE_FIRE_FRAMES) {
             f32 chargeProgress = (f32)(state->chargeTimer - CFMAINCRYSTAL_CHARGE_FIRE_FRAMES);
             CfMainCrystalBeam* beam;
-            chargeProgress = chargeProgress / CFMAINCRYSTAL_CHARGE_BEAM_FRAME_DIVISOR;
+            chargeProgress /= CFMAINCRYSTAL_CHARGE_BEAM_FRAME_DIVISOR;
             beam = &state->beams[index];
             beam->active = 1;
             beam->colorR = 0;

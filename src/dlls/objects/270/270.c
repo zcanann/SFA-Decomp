@@ -141,7 +141,7 @@ void DeathSeq_update(GameObject* obj) {
         f32 cameraVerticalOffset = state->cameraDistance * sinPitch;
         f32 cameraHorizontalOffset = state->cameraDistance * cosPitch;
         cosYaw = cameraHorizontalOffset * cosYaw;
-        cameraHorizontalOffset = cameraHorizontalOffset * sinYaw;
+        cameraHorizontalOffset *= sinYaw;
         camera->yaw = DEATH_SEQ_CAMERA_YAW;
         camera->pitch = DEATH_SEQ_CAMERA_PITCH;
         objectOffsetX =

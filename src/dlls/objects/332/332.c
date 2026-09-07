@@ -370,7 +370,7 @@ void babyCloudRunner_update(GameObject* obj) {
             objFreeObjectType(obj, BABYCLOUDRUNNER_PRIMARY_OBJECT_GROUP);
             obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         } else {
-            obj->userData1 = obj->userData1 - 1;
+            obj->userData1 -= 1;
         }
     } else {
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
@@ -529,7 +529,7 @@ void babyCloudRunner_init(GameObject* obj, BabyCloudRunnerPlacement* placement) 
     if (mainGetBit(placement->runnerGameBit) != 0) {
         ObjHits_DisableObject(obj);
         obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
-        state->captureFlags = state->captureFlags & ~BABYCLOUDRUNNER_CAPTURE_ACTIVE;
+        state->captureFlags &= ~BABYCLOUDRUNNER_CAPTURE_ACTIVE;
         Obj_RemoveFromUpdateList(obj);
         objFreeObjectType(obj, BABYCLOUDRUNNER_PRIMARY_OBJECT_GROUP);
     } else {

@@ -76,9 +76,9 @@ int dll500_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animUpdat
     if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
         spawnParams.scale = DLL1F4_PARTICLE_SCALE;
         spawnParams.arg3 = DLL1F4_PARTICLE_ARG3;
-        spawnParams.posX = spawnParams.posX - obj->anim.worldPosX;
-        spawnParams.posY = spawnParams.posY - obj->anim.worldPosY;
-        spawnParams.posZ = spawnParams.posZ - obj->anim.worldPosZ;
+        spawnParams.posX -= obj->anim.worldPosX;
+        spawnParams.posY -= obj->anim.worldPosY;
+        spawnParams.posZ -= obj->anim.worldPosZ;
         for (frameIndex = 0; frameIndex < framesThisStep; frameIndex++) {
             (*gPartfxInterface)
                 ->spawnObject(obj, DLL1F4_BODY_PARTICLE_ID, &spawnParams, DLL1F4_BODY_PARTICLE_MODE, -1, NULL);
@@ -120,13 +120,13 @@ void dll500_update(GameObject* obj) {
         ObjPath_GetPointWorldPosition(obj, DLL1F4_PATH_POINT_INDEX, &spawnParams.posX, &spawnParams.posY,
                                       &spawnParams.posZ, 1);
         if (obj->anim.parent != NULL) {
-            spawnParams.posX = spawnParams.posX - obj->anim.worldPosX;
-            spawnParams.posY = spawnParams.posY - obj->anim.worldPosY;
-            spawnParams.posZ = spawnParams.posZ - obj->anim.worldPosZ;
+            spawnParams.posX -= obj->anim.worldPosX;
+            spawnParams.posY -= obj->anim.worldPosY;
+            spawnParams.posZ -= obj->anim.worldPosZ;
         } else {
-            spawnParams.posX = spawnParams.posX - obj->anim.localPosX;
-            spawnParams.posY = spawnParams.posY - obj->anim.localPosY;
-            spawnParams.posZ = spawnParams.posZ - obj->anim.localPosZ;
+            spawnParams.posX -= obj->anim.localPosX;
+            spawnParams.posY -= obj->anim.localPosY;
+            spawnParams.posZ -= obj->anim.localPosZ;
         }
         for (frameIndex = 0; frameIndex < framesThisStep; frameIndex++) {
             (*gPartfxInterface)

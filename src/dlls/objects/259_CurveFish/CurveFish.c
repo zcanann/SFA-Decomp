@@ -136,7 +136,7 @@ void CurveFish_update(GameObject* obj) {
                 state->speed = boostedMaxSpeed;
             }
         } else {
-            speedDelta = (f32)randomGetRange(-placementReloaded->speedChange, placementReloaded->speedChange << 1);
+            speedDelta = randomGetRange(-placementReloaded->speedChange, placementReloaded->speedChange << 1);
             state->speed += (speedDelta * timeDelta) / CURVEFISH_SPEED_SCALE;
             if (state->speed < 0.0f) {
                 state->speed = 0.0f;

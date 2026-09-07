@@ -80,7 +80,7 @@ void SwarmBaddie_updateMovement(GameObject* obj, SwarmBaddieState* state) {
         obj->anim.velocityZ = step * (curve->posZ - obj->anim.localPosZ) + obj->anim.velocityZ;
     }
 
-    obj->anim.velocityX = obj->anim.velocityX * (step = 0.9f);
+    obj->anim.velocityX *= (step = 0.9f);
     obj->anim.velocityY *= step;
     obj->anim.velocityZ *= step;
 

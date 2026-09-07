@@ -78,11 +78,11 @@ void dll_1D6_update(GameObject* obj) {
     if ((state->flags & DLL1D6_STATE_FLAG_DOWN_PHASE) != 0) {
         if ((state->flags & DLL1D6_STATE_FLAG_BOB_ACTIVE) == 0) {
             state->flags |= DLL1D6_STATE_FLAG_BOB_ACTIVE;
-            state->bobPhase = (f32)randomGetRange(20, 40);
-            state->bobRate = (f32)randomGetRange(6, 10) / 20.0f;
+            state->bobPhase = randomGetRange(20, 40);
+            state->bobRate = randomGetRange(6, 10) / 20.0f;
         }
         state->downTimer -= framesThisStep;
-        state->dizzyTimer = state->dizzyTimer - framesThisStep;
+        state->dizzyTimer -= framesThisStep;
         if (state->dizzyTimer <= 0) {
             Sfx_PlayFromObject(obj, SFXTRIG_en_trpopn_c_9f);
         }
@@ -124,7 +124,7 @@ void dll_1D6_update(GameObject* obj) {
         int nextOffsetT = negatedOffsetT + 256;
 
         if ((s16)nextOffsetT > 2048) {
-            nextOffsetT = nextOffsetT - 2048;
+            nextOffsetT -= 2048;
         }
         texture->offsetT = -nextOffsetT;
     }
@@ -134,7 +134,7 @@ void dll_1D6_update(GameObject* obj) {
         int nextOffsetT = negatedOffsetT + 160;
 
         if ((s16)nextOffsetT > 2048) {
-            nextOffsetT = nextOffsetT - 2048;
+            nextOffsetT -= 2048;
         }
         texture->offsetT = -nextOffsetT;
     }
@@ -154,7 +154,7 @@ void dll_1D6_update(GameObject* obj) {
             playerLocalY = -playerLocalY;
         }
         if (playerLocalY < 50.0f) {
-            playerLocalZ = playerLocalZ * playerLocalZ;
+            playerLocalZ *= playerLocalZ;
             if (playerLocalZ <= state->hitRangeSqA) {
                 int* modelRow;
                 f32 hitLimit;
@@ -178,7 +178,7 @@ void dll_1D6_update(GameObject* obj) {
             state->bobRate = -(f32)randomGetRange(6, 10) / 20.0f;
             state->bobPhase = 40.0f;
         } else if (state->bobPhase < 20.0f) {
-            state->bobRate = (f32)randomGetRange(6, 10) / 20.0f;
+            state->bobRate = randomGetRange(6, 10) / 20.0f;
             state->bobPhase = 20.0f;
         }
     }
@@ -211,9 +211,9 @@ void dll_1D6_init(GameObject* obj, const Dll1D6PlacementView* placement) {
         f32 k = 0.0f;
 
         state->hitRangeSqA = k * obj->anim.rootMotionScale;
-        state->hitRangeSqA = state->hitRangeSqA * state->hitRangeSqA;
+        state->hitRangeSqA *= state->hitRangeSqA;
         state->hitRangeSqB = k * obj->anim.rootMotionScale;
-        state->hitRangeSqB = state->hitRangeSqB * state->hitRangeSqB;
+        state->hitRangeSqB *= state->hitRangeSqB;
     }
     state->flags = mainGetBit(DLL1D6_HIT_ENABLE_GAMEBIT) ? DLL1D6_STATE_FLAG_HIT_ENABLED : 0;
     for (i = 0; i < DLL1D6_ACTION_SLOT_COUNT; i++) {

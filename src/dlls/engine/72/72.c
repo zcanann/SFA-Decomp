@@ -96,20 +96,20 @@ void CameraModeStatic_update(CameraObject* camera) {
             pitch = getAngle(dy, sqrtf(dx * dx + dz * dz)) & 0xffff;
             angle = (pitch - (int)placement->cameraModeRotation.pitch) - (u32)(u16)camera->anim.rotY;
             if (angle > 0x8000) {
-                angle = angle + -0xffff;
+                angle += -0xffff;
             }
             if (angle < -0x8000) {
-                angle = angle + 0xffff;
+                angle += 0xffff;
             }
             camera->anim.rotY += (int)(angle * framesThisStep) >> 3;
         }
         if ((placement->modeFlags & CAMERA_MODE_STATIC_TRACK_ROLL) != 0) {
             rollDelta = camera->anim.rotZ - (u32)(u16)target->anim.rotZ;
             if (rollDelta > 0x8000) {
-                rollDelta = rollDelta + -0xffff;
+                rollDelta += -0xffff;
             }
             if (rollDelta < -0x8000) {
-                rollDelta = rollDelta + 0xffff;
+                rollDelta += 0xffff;
             }
             camera->anim.rotZ += (int)(rollDelta * framesThisStep) >> 3;
         }

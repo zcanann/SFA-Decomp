@@ -42,7 +42,7 @@ void TrickyGuardSpot_update(GameObject* obj) {
     if (tricky != NULL) {
         if (TRICKY_INTERFACE(tricky)->isGuarding(tricky) != 0) {
             if (Vec_xzDistance(&obj->anim.worldPosX, &tricky->anim.worldPosX) < (f32)(s32)placement->triggerRadius) {
-                state->guardTimer = state->guardTimer - framesThisStep;
+                state->guardTimer -= framesThisStep;
                 stateFlags->trickyInRange = 1;
             }
         }

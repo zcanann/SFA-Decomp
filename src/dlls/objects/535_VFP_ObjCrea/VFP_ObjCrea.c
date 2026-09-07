@@ -84,10 +84,10 @@ void VFP_ObjCreator_update(GameObject* obj)
             setupBuf->base.color[0] = 2;
             setupBuf->base.color[1] = 1;
             setupBuf->base.posX =
-                obj->anim.localPosX + (f32)randomGetRange(-state->spawnRadius, state->spawnRadius);
+                obj->anim.localPosX + randomGetRange(-state->spawnRadius, state->spawnRadius);
             setupBuf->base.posY = obj->anim.localPosY;
             setupBuf->base.posZ =
-                obj->anim.localPosZ + (f32)randomGetRange(-state->spawnRadius, state->spawnRadius);
+                obj->anim.localPosZ + randomGetRange(-state->spawnRadius, state->spawnRadius);
             setupBuf->unk20 = 0x50;
             setupBuf->unk1E = (s16)(randomGetRange(0, 2) + 0x16a);
             setupBuf->unk22 = -1;
@@ -101,9 +101,9 @@ void VFP_ObjCreator_update(GameObject* obj)
             {
                 break;
             }
-            spawned->anim.velocityY = 0.01f * (f32)randomGetRange(0, 10) + 0.1f;
-            spawned->anim.velocityX = 0.2f * (f32)randomGetRange(-10, 10);
-            spawned->anim.velocityZ = 0.2f * (f32)randomGetRange(-10, 10);
+            spawned->anim.velocityY = 0.01f * randomGetRange(0, 10) + 0.1f;
+            spawned->anim.velocityX = 0.2f * randomGetRange(-10, 10);
+            spawned->anim.velocityZ = 0.2f * randomGetRange(-10, 10);
         }
         break;
     case VFP_OBJCREATOR_PROJECTILE_MODE:

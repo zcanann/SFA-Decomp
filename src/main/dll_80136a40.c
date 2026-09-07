@@ -355,16 +355,16 @@ int debugPrintDrawRecord(void* context, u8* p)
                 }
             }
             debugPrintXpos = *p++;
-            debugPrintXpos = debugPrintXpos | (*p++ << 8);
+            debugPrintXpos |= (*p++ << 8);
             debugPrintYpos = *p++;
-            debugPrintYpos = debugPrintYpos | (*p++ << 8);
+            debugPrintYpos |= (*p++ << 8);
             gDebugRectStartX = debugPrintXpos;
             gDebugRectStartY = debugPrintYpos;
             break;
         }
         case 0x86:
             gDebugTabWidth = *p++;
-            gDebugTabWidth = gDebugTabWidth | (*p++ << 8);
+            gDebugTabWidth |= (*p++ << 8);
             break;
         case 0x20:
             w = 6;
@@ -390,7 +390,7 @@ int debugPrintDrawRecord(void* context, u8* p)
                     }
                     x1 = x + 2;
                     x0 = x0 * (sc = gDebugScaleX + gDebugScaleBiasX);
-                    x1 = x1 * sc;
+                    x1 *= sc;
                     y0 = y0 * (sc = gDebugScaleY + gDebugScaleBiasY);
                     y1 = y1 * sc;
                     debugPrintFillRect(x0, y0, x1, y1);
@@ -509,7 +509,7 @@ static inline void debugDrawLogRect(void)
         x0 *= (sc = gDebugScaleX + gDebugScaleBiasX);
         x1 *= sc;
         y0 = y0 * (sc = gDebugScaleY + gDebugScaleBiasY);
-        y1 = y1 * sc;
+        y1 *= sc;
         col.r = gDebugTextColorR;
         col.g = gDebugTextColorG;
         col.b = gDebugTextColorB;

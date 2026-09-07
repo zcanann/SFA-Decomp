@@ -203,8 +203,8 @@ static void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount
                 audioPtr = gAttractMoviePlayer.curAudioBuffer->curPtr;
                 for (remain = 0; remain < process; remain = remain + 1) {
                     if (gAttractMoviePlayer.rampCount != 0) {
-                        gAttractMoviePlayer.rampCount = gAttractMoviePlayer.rampCount + -1;
-                        gAttractMoviePlayer.curVolume = gAttractMoviePlayer.curVolume + gAttractMoviePlayer.deltaVolume;
+                        gAttractMoviePlayer.rampCount += -1;
+                        gAttractMoviePlayer.curVolume += gAttractMoviePlayer.deltaVolume;
                     } else {
                         gAttractMoviePlayer.curVolume = gAttractMoviePlayer.targetVolume;
                     }
@@ -225,11 +225,11 @@ static void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount
                         mixed = S16_MAX;
                     }
                     dst[1] = mixed;
-                    dst = dst + 2;
-                    src = src + 2;
-                    audioPtr = audioPtr + 2;
+                    dst += 2;
+                    src += 2;
+                    audioPtr += 2;
                 }
-                cnt = cnt - process;
+                cnt -= process;
                 gAttractMoviePlayer.curAudioBuffer->validSample =
                     gAttractMoviePlayer.curAudioBuffer->validSample - process;
                 gAttractMoviePlayer.curAudioBuffer->curPtr = audioPtr;
@@ -266,8 +266,8 @@ static void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount
             audioPtr = gAttractMoviePlayer.curAudioBuffer->curPtr;
             for (remain = 0; remain < validSamples; remain = remain + 1) {
                 if (gAttractMoviePlayer.rampCount != 0) {
-                    gAttractMoviePlayer.rampCount = gAttractMoviePlayer.rampCount + -1;
-                    gAttractMoviePlayer.curVolume = gAttractMoviePlayer.curVolume + gAttractMoviePlayer.deltaVolume;
+                    gAttractMoviePlayer.rampCount += -1;
+                    gAttractMoviePlayer.curVolume += gAttractMoviePlayer.deltaVolume;
                 } else {
                     gAttractMoviePlayer.curVolume = gAttractMoviePlayer.targetVolume;
                 }
@@ -288,10 +288,10 @@ static void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount
                     mixed = S16_MAX;
                 }
                 dst[1] = mixed;
-                dst = dst + 2;
-                audioPtr = audioPtr + 2;
+                dst += 2;
+                audioPtr += 2;
             }
-            cnt = cnt - validSamples;
+            cnt -= validSamples;
             gAttractMoviePlayer.curAudioBuffer->validSample =
                 gAttractMoviePlayer.curAudioBuffer->validSample - validSamples;
             gAttractMoviePlayer.curAudioBuffer->curPtr = audioPtr;
