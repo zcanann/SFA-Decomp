@@ -1,5 +1,146 @@
 # Expgfx Source Recovery
 
+## Native storage and current EN match (2026-09-07)
+
+Expgfx now reaches **99.99813% fuzzy match**, with **45 of 46 functions exact**.
+The allocator is complete. The remaining update difference is 18 instruction
+bytes: stack displacements for eight spilled values. The unit stays
+`NonMatching` until its source-linked DOL passes the retail checksum.
+
+| Measure | Previous | Current |
+| --- | ---: | ---: |
+| Unit fuzzy match | 99.88683% | 99.99813% |
+| Exact functions | 44 / 46 | 45 / 46 |
+| `expgfxGetSlot` | 95.89899% | 100% |
+| `expgfx_updateActivePools` | 99.88024% | 99.99222% |
+| Update instructions | 2,311 | 2,313 |
+| Exact data bytes | 6,660 | 6,660 |
+
+### Emission and ownership
+
+The Dinosaur Planet reference's `src/dlls/engine/13_expgfx/expgfx.c` uses
+independent pool arrays and puts its constructor before its gameplay functions.
+That source lineage, the reverse retail function order, and the successful
+save-game recovery support GC/1.3 deferred emission here. The unit uses the
+existing `cflags_dll_noopt_noautoinline_deferred` profile: the compiler remains
+GC/1.3, with `nopeephole,noschedule` and `noauto`. There is no TU split or
+per-function compiler setting.
+
+Ordinary function definitions and tentative BSS definitions are ordered for
+MWCC's reverse deferred emission. Complete definitions are available at code
+generation, allowing MWCC to synthesize its shared BSS base. The two synthetic
+`ExpgfxRuntimeDataLayout` and `ExpgfxStaticDataLayout` overlays and their offset
+macros are removed.
+
+The 0x1340-byte BSS span now has these independent definitions:
+
+| Offset | Definition | Size |
+| --- | --- | ---: |
+| 0x0000 | resource entries | 0x200 |
+| 0x0200 | pool bounds | 0x780 |
+| 0x0980 | effect table entries | 0x500 |
+| 0x0E80 | pool source modes | 0x50 |
+| 0x0ED0 | tracked source pointers | 0x140 |
+| 0x1010 | two source-frame masks | 0x10 |
+| 0x1020 | plane-offset set IDs | 0x50 |
+| 0x1070 | active counts | 0x50 |
+| 0x10C0 | active-slot masks | 0x140 |
+| 0x1200 | slot-pool bases | 0x140 |
+
+The old crystal-burst struct incorrectly combined four amplitude scalars with
+independent quad templates. Separate amplitude and template arrays recover
+MWCC's shared data base in the quad initializer and update. Each used template
+has four vertices, as established by its consumers. The unreferenced repeated
+template bytes remain opaque. Likewise, the frame-flag array has 80 entries;
+the following 32 unused bytes are retained separately. The predecessor's two
+triangle records explain that latter byte pattern without inventing an EN
+consumer.
+
+Diagnostic strings are literals at their call sites. Deferred generation and
+string reuse reproduce their retail order and preserve all initialized bytes.
+The active symbol config records the recovered array boundaries; source paths
+and TU section boundaries remain unchanged.
+
+### Functions
+
+`expgfxGetSlot` uses ordinary indexed searches over the native arrays. MWCC
+performs the retail unrolling and emits all 198 instructions exactly. The
+manual five-way search, cached mask snapshots, and extra pointer cursors are
+gone. Both free-slot searches share their loop counter.
+
+`expgfx_resetAllPools` also uses indexed arrays. Its inline resource cleanup
+indexes entries instead of incrementing the entry argument. That distinction
+preserves the retail register allocation and all 116 instructions.
+
+The update keeps the active pool index separate from the texture/resource
+address. It uses that index for both the active-mask lookup and final pool
+writeback, allowing the compiler to share the byte-offset calculation. The
+byte-buffer local retains its two nonoverlapping roles in the next-pool scan
+and cache writeback. Splitting those roles currently creates an extra store.
+All arithmetic, branches, instruction counts, and register operands now agree.
+
+The earlier trail-vector recovery, narrowed ambient-color products, and direct
+`s16` rotation-speed conversions are retained. The three rotation products
+still require the direct floating-point-to-halfword spelling; an intermediate
+`int` cast introduces sign-extension instructions.
+
+A full source-link audit exposed a pre-existing false exact report in
+`objfx_spawnFrameTimedHitPulse`: objdiff normalized two reversed SDA load
+relocations. A direct truth test of the floating-point frame timer recovers
+retail's timer-first, zero-second load order. The linked-byte comparison
+verifies this correction.
+
+### Remaining stack layout
+
+Only these eight stack locations differ in `expgfx_updateActivePools`:
+
+| Value | Retail offset | Current offset |
+| --- | ---: | ---: |
+| pool byte offset | 316 | 344 |
+| cache writeback buffer | 320 | 340 |
+| maximum-X pointer | 324 | 336 |
+| current pool index | 328 | 332 |
+| ambient blue plus one | 332 | 316 |
+| ambient green plus one | 336 | 320 |
+| ambient red plus one | 340 | 324 |
+| active-mask pointer | 344 | 328 |
+
+The 18 affected loads/stores differ only in their displacement byte. Native
+array access was the structural breakthrough; changing declaration scopes,
+scan helpers, or merging the pool index back into the resource address has not
+resolved the final layout without other regressions. No forced stack record,
+volatile storage, or compiler override is retained.
+
+### Validation
+
+- `ninja all_source` and the normal matching build pass, including the strict
+  retail checksum. Expgfx's normal matching link still uses its retail object.
+- A diagnostic source link produces a DOL of the same size as retail and differs
+  at exactly the 18 displacement bytes listed above, all inside the update.
+  Every other linked byte agrees, verifying the new BSS offsets, initialized
+  data, anonymous literals, relocations, and the other 45 functions. Its strict
+  checksum fails as expected; the unit is restored to `NonMatching` afterward.
+- All allocated non-text section bytes, sizes, and alignments are preserved.
+  Named array offsets and sizes are checked independently of zero-filled BSS
+  section equality. Objdiff reports all 6,660 data bytes exact.
+- The two slot-layout tests pass. They exercise the production quad-write
+  sequence over 100 random slots and verify metadata and simulation bytes are
+  preserved. The harness now stops at the native global declarations instead
+  of the removed overlay macro.
+- Formatting is a separate change, verified to preserve the complete object.
+  TU and owning-header `clang-format --dry-run --Werror` checks pass.
+
+Useful commands:
+
+```sh
+python3 configure.py --matching
+# Each Ninja invocation must have a 30-second timeout.
+ninja all_source
+ninja
+python3 tools/unitfuzzy.py dlls/engine/10_expgfx/expgfx.c
+python3 -m unittest discover -s tools -p test_expgfx_slot_layout.py
+```
+
 ## Spawn and Slot Contract (2026-09-06)
 
 The EN `expgfx_addremove` entry at `8009F2CC` consumes the same 0x64-byte
@@ -37,111 +178,3 @@ endpoints. Geometry initialization writes only XYZ and ST, preserving metadata.
 
 The update's local rotation/scale/translation record is the existing 0x18-byte
 `MatrixTransform`, not a separate Expgfx-specific transform type.
-
-### Verification
-
-- Expgfx raw object SHA-256 remains
-  `093414280ff1e5dc993b4b79c1d75520073cf817778c6da6fb4706e4312d090e`.
-- All 21 producer object hashes are unchanged by the shared field rename.
-- Expgfx remains 44/46 exact functions, 99.83384 fuzzy overall; no new matched
-  bytes are claimed for this source recovery.
-- `python -m unittest discover -s tools -p test_expgfx_slot_layout.py` checks the
-  metadata aliases and runs the production quad-write sequence over 100 random
-  slots, verifying every byte outside XYZ/ST is preserved.
-- `ninja all_source` and the strict EN retail DOL checksum both pass. Expgfx
-  remains NonMatching; the checksum uses its retail object, not reconstructed C.
-
-## Runtime Storage Remains Unresolved
-
-The existing runtime overlay spans six separately defined BSS objects. Native
-arrays declared before the functions reorder BSS by first use: resource entries
-are followed by masks rather than bounds. Definitions after all uses preserve
-the retail offsets but lose shared-base addressing and regress codegen. A single
-typed aggregate preserves byte offsets but also regresses several exact functions.
-None of those storage probes is retained. Zero-filled section equality alone
-misses the first-use layout problem; compare named symbol offsets as well.
-
-## Active Pool Update Matching (2026-09-07)
-
-`expgfx_updateActivePools` improves from 99.65975% to 99.86511%. The complete
-unit improves from 99.83384% to 99.883194%, with 44 of 46 functions exact.
-The unit remains NonMatching.
-
-The stretched-trail calculation now uses `Vec` records for the previous
-position, source position, source-relative direction, backwards displacement,
-and cross-product normal. The attraction distances have their own names and
-no longer share locals with the cross-product lanes. `motionScale` retains
-the existing shared lifetime for the attraction ratio and inverse trail scale.
-Its declaration precedes `ambientScale`: the verified FPR graph shows why
-that order allows the two values to use retail's f22 and f23, respectively.
-
-Direct compound assignments recover the two damped velocity components.
-Explicitly narrowing each interpolated color before multiplying by ambient
-intensity recovers all six retail integer-product operand orders. These
-changes preserve the existing calculations and the slot layout.
-
-### Verification and Remaining Differences
-
-- Only `expgfx_updateActivePools` changes function bytes. All 45 other function
-  bodies, allocated non-text sections, named-symbol offsets, and relocation
-  destinations are unchanged. Anonymous literal names are normalized only for
-  the relocation comparison; their section offsets are compared.
-- The reconstructed update still has 2,311 instructions against retail's
-  2,313. Mnemonic-aligned comparison falls from two missing instructions plus
-  98 operand differences to two missing instructions plus 30 operand
-  differences. All floating-point instructions now agree.
-- The remaining update differences concern the active-pool scan, spilled
-  pointer/index locations, the intermediate mask-pointer store and copy, and
-  three integer products that advance source rotation.
-- `expgfxGetSlot` stays at 95.89899%. Dinosaur Planet's
-  `src/dlls/engine/13_expgfx/expgfx.c` confirms the broad allocation logic,
-  but its platform-specific implementation does not resolve the EN register
-  allocation. Native search loops and alternate mask snapshots regressed the
-  current match and are not retained.
-- LLDB captures reproduce the ordinary raw object before inspecting IR and
-  replaying register coloring. The slot capture required support for backend
-  opcode `0x2E` (`sthx`); validation checks all three registers and the exact
-  emitted instruction, with corrupted-encoding regression cases.
-- Both `ninja all_source` and the strict EN retail checksum pass. The checksum
-  continues to use the retail Expgfx object. The two slot-layout tests and all
-  33 backend-IR tests pass.
-
-## Rotation Increments and Signed Bounds Index (2026-09-07)
-
-`expgfx_updateActivePools` improves from 99.86511% to 99.88024%, and the
-complete unit from 99.883194% to 99.88683%. Expgfx remains NonMatching with
-44 of 46 exact functions.
-
-The three source-rotation increments now convert their floating-point speeds
-directly to `s16` before multiplying by the frame count and accumulating into
-halfword angles. GC/1.3 emits the existing `fctiwz` conversion without an extra
-sign-extension instruction, and all three integer products now use the retail
-operand order. Casting to `int` and then narrowing is a different compiler
-expression and introduces extra instructions.
-
-The bounds lookup explicitly interprets the shared pool/resource scratch value
-as an `int` pool index. This recovers retail's use of r15 for the bounds-stride
-multiplication. The distinction is compiler-significant: this build defines
-`s32` as `signed long`, and substituting that cast does not recover the same
-instruction. The shared scratch lifetime remains intact.
-
-### Verification
-
-- Exactly four instructions change: the bounds-stride multiplication and three
-  rotation products. All four now equal their retail instructions.
-- All 45 other function bodies, allocated non-text sections, named-symbol
-  offsets, and relocation records remain byte-identical. The full object changes
-  by seven bytes and retains its section sizes.
-- Object SHA-256:
-  `28cc232a3adf2734c70623569146761b363a6f8e2dc8b0be58baf21c8a27aa5d`.
-- The update still has 2,311 instructions against retail's 2,313. Its remaining
-  mnemonic-aligned differences are two missing instructions and 26 operand
-  differences, down from two and 30. The remaining work concerns pool scanning,
-  bounds-pointer calculation, and spilled pool/cache/mask/ambient temporaries.
-- `expgfxGetSlot` remains 95.89899%. Native and inline-helper searches, alternative
-  counter lifetimes, mask snapshots, and pointer representations did not improve
-  that function. Splitting the update's pool/resource scratch, forcing addressable
-  mask storage, and changing scan helpers also regressed the update; none is kept.
-- `ninja all_source`, the strict EN retail checksum, both slot-layout tests, and
-  the TU/header formatting checks pass. The strict checksum still links the
-  retail Expgfx object.

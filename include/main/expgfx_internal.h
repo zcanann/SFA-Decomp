@@ -8,8 +8,6 @@
 #define EXPGFX_POOL_COUNT                        0x50
 #define EXPGFX_POOL_RESET_BATCH_SIZE             8
 #define EXPGFX_POOL_GROUP_COUNT                  (EXPGFX_POOL_COUNT / EXPGFX_POOL_RESET_BATCH_SIZE)
-#define EXPGFX_POOL_SEARCH_BATCH_SIZE            5
-#define EXPGFX_POOL_SEARCH_BATCH_COUNT           (EXPGFX_POOL_COUNT / EXPGFX_POOL_SEARCH_BATCH_SIZE)
 #define EXPGFX_SLOTS_PER_POOL                    0x19
 #define EXPGFX_SLOT_SIZE                         0xA0
 #define EXPGFX_POOL_BYTES                        (EXPGFX_SLOTS_PER_POOL * EXPGFX_SLOT_SIZE)
@@ -35,26 +33,6 @@
 #define EXPGFX_SLOT_TABLE_INDEX_MASK             0x7F
 #define EXPGFX_BYTE_VALUE_MASK                   0xff
 #define EXPGFX_SEQUENCE_COUNTER_MAX              30000
-
-#define EXPGFX_RESOURCE_TABLE_OFFSET             0x000
-#define EXPGFX_POOL_BOUNDS_OFFSET                0x200
-#define EXPGFX_EXPTAB_OFFSET                     0x980
-#define EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET    0x988
-#define EXPGFX_EXPTAB_REFCOUNT_OFFSET            0x98C
-#define EXPGFX_POOL_SOURCE_MODES_OFFSET          0xE80
-#define EXPGFX_POOL_SOURCE_IDS_OFFSET            0xED0
-#define EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET 0x1010
-#define EXPGFX_POOL_PLANE_OFFSET_SET_IDS_OFFSET  0x1020
-#define EXPGFX_POOL_ACTIVE_COUNTS_OFFSET         0x1070
-#define EXPGFX_POOL_ACTIVE_MASKS_OFFSET          0x10C0
-#define EXPGFX_SLOT_POOL_BASES_OFFSET            0x1200
-
-#define EXPGFX_STATIC_POOL_SLOT_TYPE_IDS_OFFSET         0x30
-#define EXPGFX_STATIC_POOL_FRAME_FLAGS_OFFSET           0xD0
-#define EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET            0x150
-#define EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET            0x168
-#define EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET 0x358
-#define EXPGFX_STATIC_NO_TEXTURE_STRING_OFFSET          0x384
 
 /*
  * Flag names describe observed behavior in expgfx_addremove and drawGlow. Keep
@@ -143,7 +121,7 @@
 #define EXPGFX_SOURCE_SEQID_MATCH_ALL         0xD4
 #define EXPGFX_QUAD_TEXCOORD_MAX              0x80
 #define EXPGFX_QUEUE_DEPTH_SLOT_TYPE_MASK     0x21
-#define EXPGFX_STATIC_PLANE_OFFSET_SET_COUNT  (EXPGFX_STATIC_POOL_SLOT_TYPE_IDS_OFFSET / sizeof(ExpgfxPlaneOffsets))
+#define EXPGFX_STATIC_PLANE_OFFSET_SET_COUNT  2
 
 typedef struct ExpgfxBounds {
     float minX;
@@ -237,63 +215,6 @@ typedef struct ExpgfxResourceHandle {
 
 STATIC_ASSERT(offsetof(ExpgfxResourceHandle, refCount) == 0x0E);
 STATIC_ASSERT(offsetof(ExpgfxResourceHandle, linkGroup) == 0x14);
-
-/*
- * Recovered shape of the static expgfx data blob. The warning strings and
- * quad templates sit in the same source corridor as the exptab diagnostics,
- * so keeping the layout together makes future offset-to-field promotion
- * less error-prone.
- */
-typedef struct ExpgfxStaticDataLayout {
-    ExpgfxPlaneOffsets planeOffsetSets[EXPGFX_STATIC_PLANE_OFFSET_SET_COUNT];
-    s16 poolSlotTypeIds[EXPGFX_POOL_COUNT];
-    u8 poolFrameFlags[EXPGFX_POOL_COUNT];
-    u8 pad120[EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET - (EXPGFX_STATIC_POOL_FRAME_FLAGS_OFFSET + EXPGFX_POOL_COUNT)];
-    Vec3s quadTemplateA[4];
-    Vec3s quadTemplateB[4];
-    u8 pad180[EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET -
-              (EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET + sizeof(Vec3s) * 4)];
-    char mismatchInAddRemoveString[EXPGFX_STATIC_NO_TEXTURE_STRING_OFFSET -
-                                   EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET];
-    char noTextureString[1];
-} ExpgfxStaticDataLayout;
-
-STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, poolSlotTypeIds) == EXPGFX_STATIC_POOL_SLOT_TYPE_IDS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, poolFrameFlags) == EXPGFX_STATIC_POOL_FRAME_FLAGS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, quadTemplateA) == EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, quadTemplateB) == EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, mismatchInAddRemoveString) ==
-              EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET);
-
-/*
- * Retail diagnostics call the 0x980 table "exptab". This layout captures the
- * surrounding runtime pool state that expgfxRemove, expgfxGetSlot, and
- * expgfx_addremove currently access through offsets.
- */
-typedef struct ExpgfxRuntimeDataLayout {
-    ExpgfxResourceEntry resourceTable[EXPGFX_RESOURCE_TABLE_COUNT];
-    ExpgfxBounds poolBounds[EXPGFX_POOL_COUNT];
-    ExpgfxTableEntry expTab[EXPGFX_EXPTAB_ENTRY_COUNT];
-    u8 poolSourceModes[EXPGFX_POOL_COUNT];
-    u32 poolSourceIds[EXPGFX_POOL_COUNT];
-    s64 trackedSourceFrameMasks[2];
-    u8 poolPlaneOffsetSetIds[EXPGFX_POOL_COUNT];
-    s8 poolActiveCounts[EXPGFX_POOL_COUNT];
-    u32 poolActiveMasks[EXPGFX_POOL_COUNT];
-    u32 slotPoolBases[EXPGFX_POOL_COUNT];
-} ExpgfxRuntimeDataLayout;
-
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, resourceTable) == EXPGFX_RESOURCE_TABLE_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolBounds) == EXPGFX_POOL_BOUNDS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, expTab) == EXPGFX_EXPTAB_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolSourceModes) == EXPGFX_POOL_SOURCE_MODES_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolSourceIds) == EXPGFX_POOL_SOURCE_IDS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, trackedSourceFrameMasks) == EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolPlaneOffsetSetIds) == EXPGFX_POOL_PLANE_OFFSET_SET_IDS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolActiveCounts) == EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolActiveMasks) == EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, slotPoolBases) == EXPGFX_SLOT_POOL_BASES_OFFSET);
-STATIC_ASSERT(sizeof(ExpgfxRuntimeDataLayout) == 0x1340);
 
 typedef union ExpgfxSlotStateBits {
     u8 value;
@@ -412,29 +333,26 @@ STATIC_ASSERT(offsetof(ExpgfxSlot, endColorG) == 0x8D);
 STATIC_ASSERT(offsetof(ExpgfxSlot, endColorB) == 0x8E);
 STATIC_ASSERT(offsetof(ExpgfxSlot, renderX) == 0x90);
 
-#define EXPGFX_STATIC_DATA  ((ExpgfxStaticDataLayout*)gExpgfxStaticData)
-#define EXPGFX_RUNTIME_DATA ((ExpgfxRuntimeDataLayout*)gExpgfxRuntimeData)
-
-extern ExpgfxPlaneOffsets gExpgfxStaticData[];
-extern u8 gExpgfxRuntimeData[];
-extern ExpgfxTableEntry gExpgfxTableEntries[];
-extern ObjAnimComponent* gExpgfxTrackedPoolSourceIds[];
-extern u64 gExpgfxTrackedSourceFrameMasks[];
-extern s16 gExpgfxStaticPoolSlotTypeIds[];
-extern u8 gExpgfxStaticPoolFrameFlags[];
-extern u32 gExpgfxSlotActiveMasks[];
-extern u32 gExpgfxSlotPoolBases[];
+extern ExpgfxPlaneOffsets gExpgfxStaticData[EXPGFX_STATIC_PLANE_OFFSET_SET_COUNT];
+extern ExpgfxResourceEntry gExpgfxResourceEntries[EXPGFX_RESOURCE_TABLE_COUNT];
+extern ExpgfxBounds gExpgfxPoolBounds[EXPGFX_POOL_COUNT];
+extern u8 gExpgfxPoolSourceModes[EXPGFX_POOL_COUNT];
+extern u8 gExpgfxPoolPlaneOffsetSetIds[EXPGFX_POOL_COUNT];
+extern s8 gExpgfxPoolActiveCounts[EXPGFX_POOL_COUNT];
+extern Vec3s gExpgfxQuadTemplateA[4];
+extern Vec3s gExpgfxQuadTemplateB[4];
+extern ExpgfxTableEntry gExpgfxTableEntries[EXPGFX_EXPTAB_ENTRY_COUNT];
+extern ObjAnimComponent* gExpgfxTrackedPoolSourceIds[EXPGFX_POOL_COUNT];
+extern u64 gExpgfxTrackedSourceFrameMasks[2];
+extern s16 gExpgfxStaticPoolSlotTypeIds[EXPGFX_POOL_COUNT];
+extern u8 gExpgfxStaticPoolFrameFlags[EXPGFX_POOL_COUNT];
+extern u32 gExpgfxSlotActiveMasks[EXPGFX_POOL_COUNT];
+extern u32 gExpgfxSlotPoolBases[EXPGFX_POOL_COUNT];
 extern int gExpgfxTextureFreeInProgress;
 extern s16 gExpgfxSequenceCounter;
 extern u8 gExpgfxFrameParityBit;
 extern u8 gExpgfxUpdatingActivePools;
 extern u8 gExpgfxRenderResetPending;
 extern int gExpgfxLastAddedSlot;
-extern char sExpgfxAddToTableUsageOverflow[];
-extern char sExpgfxExpTabIsFull[];
-extern char sExpgfxInvalidTabIndex[];
-extern char sExpgfxMismatchInAddRemove[];
-extern char sExpgfxScaleOverflow[];
-extern char sExpgfxNoTexture[];
 
 #endif /* MAIN_EXPGFX_INTERNAL_H_ */

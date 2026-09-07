@@ -26,7 +26,7 @@ class ExpgfxSlotLayoutTests(unittest.TestCase):
             raise unittest.SkipTest("clang is required for the slot-layout harness")
         header = (ROOT / "include/main/expgfx_internal.h").read_text()
         first = header.index("typedef union ExpgfxSlotStateBits")
-        last = header.index("#define EXPGFX_STATIC_DATA", first)
+        last = header.index("extern ExpgfxPlaneOffsets", first)
         declarations = header[first:last]
         first = header.index("typedef union ExpgfxFloatWord")
         last = header.index("} ExpgfxFloatWord;", first) + len("} ExpgfxFloatWord;")

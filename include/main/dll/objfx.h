@@ -76,12 +76,6 @@ typedef struct ObjFxRandomBurstTable
     ObjFxRandomBurstEntry entries[13];
 } ObjFxRandomBurstTable;
 
-typedef struct ObjFxCrystalBurstTable
-{
-    f32 amps[4];
-    s16 dirs[12][3];
-} ObjFxCrystalBurstTable;
-
 typedef struct ObjFxColorTable
 {
     u16 values[15];
@@ -115,7 +109,7 @@ extern const ObjFxU16Table7 gObjFxMaskedHitSpawnIdTbl;
 extern const ObjFxU16Table11 gObjFxHitEffectParamTbl2;
 extern const ObjFxRandomBurstTable gObjFxRandomBurstTbl;
 extern const ObjFxColorTable gObjFxCrystalSparkleTbl;
-extern ObjFxCrystalBurstTable gObjFxCrystalAmpTbl;
+extern f32 gObjFxCrystalAmplitudes[4];
 extern s16 gObjFxCrystalSpinSpeed[4];
 typedef struct ObjFxLightColor {
     u8 r;
