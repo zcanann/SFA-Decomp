@@ -393,6 +393,38 @@ Formatting produces no source diff and preserves the complete object; no separat
 formatting commit is needed. The shared text-rendering header edit is limited to
 removing the two obsolete format-array declarations.
 
+## Shared immediate charset selection (2026-09-07)
+
+`gameTextRun` improves from 90.539894% to 91.27128%. The queued charset
+command now shares the private inline `gameTextSelectCharset` helper with
+`gameTextSetCharset`. It selects the font record, records the charset, and
+performs the existing clear-color rectangle and reveal reset for charset 2.
+The helper name and boundary are reconstructed source structure, not recovered
+original symbols.
+
+Retail captures the command argument once and keeps it across the global
+font/charset stores. The previous source reread `cmd->arg0` twice after those
+stores. Passing the value into the inline helper removes the two extra `lwz`
+instructions while preserving the retail value lifetime. A local captured
+argument produces the same runner code; the shared helper also removes the
+duplicate immediate-selection implementation. The runner shrinks from 1,472
+to 1,464 bytes; retail is 1,504 bytes, with independent addressing and loop
+differences still unresolved.
+
+Only the runner's instruction bytes change. `gameTextSetCharset` remains
+exact at 212 bytes, and all other function bodies and allocated non-text
+sections remain unchanged. Named data-symbol layouts are preserved, as are
+relocations outside the changed runner and its internal jump-table targets.
+All 44 previously exact functions remain exact. Unit fuzzy matching increases
+from 97.61308% to 97.66155%.
+
+All 16 gametext tests pass, including 402 load scenarios at each of host `-O0`
+and `-O2`. The TU and canonical API header pass the formatting check without
+additional formatting changes; a rebuild preserves the complete object bytes.
+`ninja all_source` and strict `ninja` pass after matching configuration, with
+30-second timeouts, and the matching DOL remains byte-identical to retail.
+The unit remains `NonMatching`; the checksum uses its retail object.
+
 ## Exact renderer initialization (2026-09-07)
 
 `gameTextInitRendererState` now matches all 492 retail bytes. The fallback loop

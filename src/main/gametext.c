@@ -1350,6 +1350,16 @@ static inline u32 lookupSjisGlyph(int c) {
     return 0;
 }
 
+static inline void gameTextSelectCharset(int charset) {
+    gameTextFonts = &gGameTextCharsets[charset];
+    gameTextCharset = charset;
+    if (charset == 2) {
+        GXColor color = gGameTextClearColor;
+        hudDrawRect(0, 0, 0xa00, 0x780, color);
+        gGameTextRevealActive = 0;
+    }
+}
+
 void gameTextRun(void) {
     GameTextLoadSlot* loadSlot;
     TextFont* pending;
@@ -1360,7 +1370,6 @@ void gameTextRun(void) {
     int dirId;
     int languageId;
     GameTextBox* textBox;
-    GXColor color;
     f32 fadeLimit;
     f32 zero;
 
@@ -1538,13 +1547,7 @@ void gameTextRun(void) {
             break;
         }
         case GAMETEXT_COMMAND_SET_CHARSET:
-            gameTextFonts = &gGameTextCharsets[cmd->arg0];
-            gameTextCharset = cmd->arg0;
-            if (cmd->arg0 == 2) {
-                color = gGameTextClearColor;
-                hudDrawRect(0, 0, 0xa00, 0x780, color);
-                gGameTextRevealActive = 0;
-            }
+            gameTextSelectCharset(cmd->arg0);
             break;
         }
         cmd++;
@@ -1595,13 +1598,7 @@ int getCurGameText(void) {
 
 void gameTextSetCharset(int charset, int flags) {
     if (gameTextDrawFunc != NULL || (flags & 1)) {
-        gameTextFonts = &gGameTextCharsets[charset];
-        gameTextCharset = charset;
-        if (charset == 2) {
-            GXColor color = gGameTextClearColor;
-            hudDrawRect(0, 0, 0xa00, 0x780, color);
-            gGameTextRevealActive = 0;
-        }
+        gameTextSelectCharset(charset);
     }
     if (gameTextDrawFunc == NULL || (flags & 2)) {
         int i = gGameTextCommandCount;
