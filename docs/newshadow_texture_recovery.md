@@ -281,3 +281,30 @@ as covered by those image tests.
 
 Both `ninja all_source` and the strict retail DOL checksum pass after integration
 with current staging. All resolved relocation destinations are unchanged.
+
+## Exact shadow renderer (2026-09-07)
+
+`renderShadows` now matches all 2,596 retail code bytes. Three source details
+close its remaining differences:
+
+- The projection scale has its own `shadowScale` local instead of reusing the
+  light direction's Z component. MWCC can reuse the dead direction register for
+  the scale, matching the projection calls without extending an unrelated local.
+- The viewport extent is `u32`, consistent with its nonnegative texture-width
+  sources, GX scissor arguments, and the retail unsigned float conversion for
+  `GXSetViewport`. This also preserves the retail scissor argument evaluation.
+- A private inline `shadowSquare` helper expresses the two separately rounded
+  products used for horizontal length. Its calls retain the two `fmuls` and
+  produce the retail addition operand order before the inline square root.
+  Combining the products into one expression would permit a fused operation.
+
+Only 16 instruction bytes in the renderer change. Every other function body,
+all named symbol layouts, every allocated non-text section, and resolved
+relocation destinations are unchanged. The unit advances from 39 to 40 exact
+functions out of 44, with 2,596 additional matched code bytes and all 16,668 data
+bytes still exact. Its fuzzy score rises from 98.643875% to 98.67453%.
+The common compiler and complete TU profile remain unchanged.
+
+`ninja all_source` and the strict retail DOL checksum both pass. The TU remains
+`NonMatching` because four other bodies are incomplete, so its new exact-function
+credit comes from objdiff; the checksum separately validates integration.

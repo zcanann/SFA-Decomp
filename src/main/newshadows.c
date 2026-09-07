@@ -1194,6 +1194,10 @@ void queueObjectShadow(GameObject* obj) {
     }
 }
 
+static inline f32 shadowSquare(f32 x) {
+    return x * x;
+}
+
 void renderShadows(int unused0, int unused1, int unused2) {
     NewShadowCaster* casterPtr;
     f32* mc54p;
@@ -1213,6 +1217,7 @@ void renderShadows(int unused0, int unused1, int unused2) {
     void* layerTables;
     u32 blocks;
     f32 sCamZ, savedFovY, vAx, vAz, orthoHalf;
+    f32 shadowScale;
     int slotIdx, texIdx;
     s8 casterIdx;
     int w;
@@ -1271,7 +1276,7 @@ void renderShadows(int unused0, int unused1, int unused2) {
         castSlot = &gNewShadowCastSlots[(u8)slotIdx];
         castSlot->alpha = alpha;
         if ((u8)texIdx < NEW_SHADOW_MAX_CAST_TEXTURES && (kind = casterPtr->flags) != 0) {
-            int screenW;
+            u32 screenW;
             if ((u8)texIdx < 3) {
                 w = 0x100;
                 orthoHalf = 0.5f;
@@ -1321,9 +1326,9 @@ void renderShadows(int unused0, int unused1, int unused2) {
             dirZ = -vAz;
             gNewShadowLightAngleX = (u16)getAngle(dirX, vAz);
             {
-                f32 sqA = vAx * vAx;
-                f32 sqB = vAz * vAz;
-                gNewShadowLightAngleY = (u16)getAngle(sqrtf(sqB + sqA), vAy) - 0x3fc8;
+                f32 sqA = shadowSquare(vAx);
+                f32 sqB = shadowSquare(vAz);
+                gNewShadowLightAngleY = (u16)getAngle(sqrtf(sqA + sqB), vAy) - 0x3fc8;
             }
             slot->pitch = gNewShadowLightAngleY;
             slot->yaw = gNewShadowLightAngleX;
@@ -1351,18 +1356,18 @@ void renderShadows(int unused0, int unused1, int unused2) {
                 slot->x += gMapSavedPlayerOffsetX;
                 slot->z += gMapSavedPlayerOffsetZ;
             }
-            vAz = modelState->shadowScale;
-            vAx = -vAz;
+            shadowScale = modelState->shadowScale;
+            vAx = -shadowScale;
             if (obj->anim.parent != NULL) {
                 slot->x += playerMapOffsetX;
                 slot->z += playerMapOffsetZ;
             }
             GXSetScissor(2, 2, screenW - 4, screenW - 4);
             GXSetViewport(0.0f, 0.0f, (f32)(u32)screenW, (f32)(u32)screenW, 0.0f, 1.0f);
-            C_MTXOrtho(mOrtho, vAx, vAz, vAx, vAz, 1.0f, 1025.0f);
+            C_MTXOrtho(mOrtho, vAx, shadowScale, vAx, shadowScale, 1.0f, 1025.0f);
             GXSetProjection(mOrtho, GX_ORTHOGRAPHIC);
             Camera_UpdateViewMatrices();
-            C_MTXLightOrtho((MtxPtr)castSlot->textureMtx, vAz, vAx, vAx, vAz, orthoHalf, orthoHalf, orthoHalf,
+            C_MTXLightOrtho((MtxPtr)castSlot->textureMtx, shadowScale, vAx, vAx, shadowScale, orthoHalf, orthoHalf, orthoHalf,
                             orthoHalf);
             {
                 viewMtx = (MtxPtr)Camera_GetViewMatrix();
