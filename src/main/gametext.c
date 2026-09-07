@@ -833,7 +833,7 @@ static void gameTextLoadCancelCallback(s32 result, DVDCommandBlock* block) {
 
 void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     int textureIndex;
-    u16* textureCursor;
+    u16* loadedResource;
     u32 bitsPerPixel;
     int stringDataSize;
     GameTextStringTable* stringTable;
@@ -845,18 +845,17 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     GameTextTableHeader* tableHeader;
     u16* textureDataStart;
     GameTextGlyphTable* resource;
-    TextGlyph* glyphs;
     u16 textureFormat;
     GameTextDef* definitions;
     int stringCount;
     int* stringPointers;
-    int remainingUnits;
+    TextFont* charset;
     u32 tableBytes;
     u16* compactedResource;
-    u16* loadedResource;
+    u16* textureCursor;
     int relocationDelta;
     int* relocatedStringPointers;
-    TextFont* charset;
+    int remainingUnits;
 
     DCStoreRange(loadSlot->loadHandle, loadSlot->loadedSize);
     if (loadSlot->sourceId == GAMETEXT_SLOT_CUTSCENE) {
@@ -875,9 +874,8 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
         loadSlot->state = 6;
         return;
     }
-    glyphs = resource->glyphs;
-    charset->glyphs = glyphs;
-    tableHeader = (GameTextTableHeader*)(glyphs + charset->glyphCount);
+    charset->glyphs = resource->glyphs;
+    tableHeader = (GameTextTableHeader*)((char*)(resource + 1) + charset->glyphCount * sizeof(TextGlyph));
     charset->entryCount = tableHeader->entryCount;
     stringDataSize = tableHeader->stringDataSize;
     definitions = (GameTextDef*)(tableHeader + 1);
@@ -888,7 +886,7 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     for (i = 0; i < charset->entryCount; i++) {
         charset->entries[i].strings = (char**)(stringPointers + (int)charset->entries[i].strings);
     }
-    stringData = (u8*)(stringPointers + stringCount);
+    stringData = (u8*)stringTable + (stringCount * sizeof(*stringPointers) + sizeof(*stringTable));
     {
         int j;
         for (j = 0; j < stringCount; j++) {
@@ -1671,7 +1669,10 @@ void gameTextLoadDir(int dirId) {
     }
 }
 
-void gameTextSetColor(int r, int g, int b, int a) {
+/* Byte parameters retain the public int prototype through default argument promotion. */
+void gameTextSetColor(r, g, b, a)
+u8 r, g, b, a;
+{
     if (gameTextDrawFunc != NULL) {
         gGameTextColorR = r;
         gGameTextColorG = g;
