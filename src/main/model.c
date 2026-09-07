@@ -1528,54 +1528,27 @@ void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA,
     cacheQueueWait(0);
 }
 
-void model_multMtxs(u8* model, f32* out)
+void model_multMtxs(ObjModel* model, f32* worldMtx)
 {
-    ModelFileHeader* hdr = ((ObjModel*)model)->file;
+    ModelFileHeader* file = model->file;
     u32 i;
-    for (i = 0; i < hdr->jointCount; i++)
+    for (i = 0; i < file->jointCount; i++)
     {
-        int j = i;
-        ModelFileHeader* h = ((ObjModel*)model)->file;
-        u32 cnt = h->jointCount;
-        int lim;
-        MtxPtr base;
-        if (cnt != 0)
-        {
-            lim = cnt + h->extraJointCount;
-        }
-        else
-        {
-            lim = 1;
-        }
-        if (j >= lim)
-        {
-            j = 0;
-        }
-        base = (MtxPtr)((ObjModel*)model)->jointMatrices[((ObjModel*)model)->bufferFlags & 1];
-        PSMTXConcat((MtxPtr)out, base + j * 4, base + j * 4);
+        MtxPtr jointMtx = modelGetBoneMtx(model, i);
+        PSMTXConcat((MtxPtr)worldMtx, jointMtx, jointMtx);
     }
 }
 void modelInitBoneMtxs(ObjModel* model, f32* outReordered) {
-    ModelFileHeader* file;
+    ModelFileHeader* file = model->file;
     u32 i;
-    ROMtxPtr reorderCursor[1];
-    int boneByteOff[1];
-    MtxPtr mtx;
-    ModelBone* bone;
-    Mtx transMtx;
+    Mtx skinMtx;
 
-    file = model->file;
-    i = 0;
-    boneByteOff[0] = 0;
-    reorderCursor[0] = (ROMtxPtr)outReordered;
-    for (; i < file->jointCount; i++) {
-        mtx = modelGetBoneMtx(model, i);
-        bone = (ModelBone*)(file->jointData + boneByteOff[0]);
-        PSMTXTrans(transMtx, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
-        PSMTXConcat(mtx, transMtx, transMtx);
-        PSMTXReorder(transMtx, reorderCursor[0]);
-        reorderCursor[0] += 4;
-        boneByteOff[0] += 0x1c;
+    for (i = 0; i < file->jointCount; i++) {
+        MtxPtr jointMtx = modelGetBoneMtx(model, i);
+        ModelBone* bone = &((ModelBone*)file->jointData)[i];
+        PSMTXTrans(skinMtx, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
+        PSMTXConcat(jointMtx, skinMtx, skinMtx);
+        PSMTXReorder(skinMtx, ((ROMtx*)outReordered)[i]);
     }
 }
 

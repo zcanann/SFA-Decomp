@@ -2292,7 +2292,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
             joff += 0x10;
         }
         if (did != 0) {
-            model_multMtxs((u8*)am, wm);
+            model_multMtxs((ObjModel*)am, wm);
         }
     }
     modelInitMtxs((ModelFileHeader*)m, (ObjModel*)am);
