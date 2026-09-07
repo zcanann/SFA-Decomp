@@ -65,6 +65,7 @@ def inspect(snapshots, obj, functions, require_graph=False, unit=UNIT, required_
         initial_graph = None
         choices = []
         colors = []
+        simplification_replayed = False
         for stage in stages:
             validate_snapshot(stage)
             if "coloring_graph" in stage:
@@ -76,10 +77,17 @@ def inspect(snapshots, obj, functions, require_graph=False, unit=UNIT, required_
                     coloring_order(stage["coloring_graph"])
                     validate_rewrite(stage, stages[-1])
                     if initial_graph is not None:
-                        if register_class == 4:
+                        if "simplification_policy" in initial_graph:
+                            policy = initial_graph["simplification_policy"]
+                            choices = replay_simplification(initial_graph["coloring_graph"], stage["coloring_graph"],
+                                                            policy["available"], policy["temporary_cutoff"])
+                            simplification_replayed = True
+                        elif register_class == 4:
+                            # Read GPR captures made before the shared policy was recorded.
                             choices = replay_simplification(initial_graph["coloring_graph"], stage["coloring_graph"],
                                                             initial_graph["available_gprs"], initial_graph["original_gpr_count"])
-                        elif "color_policy" not in initial_graph:
+                            simplification_replayed = True
+                        if register_class == 3 and "color_policy" not in initial_graph:
                             raise ValueError(f"missing FPR coloring policy for {name}")
                         if "color_policy" in initial_graph:
                             colors = replay_coloring(initial_graph["coloring_graph"], stage["coloring_graph"],
@@ -106,7 +114,8 @@ def inspect(snapshots, obj, functions, require_graph=False, unit=UNIT, required_
                 "history": instruction_history(stages, instructions[current_index]) if current_index is not None else [],
             })
         result[name] = {"stages": len(stages), "instructions": instructions, "differences": differences,
-                        "high_degree_removals": choices, "color_decisions": colors, "register_class": register_class}
+                        "high_degree_removals": choices, "simplification_replayed": simplification_replayed,
+                        "color_decisions": colors, "register_class": register_class}
     return result
 
 
@@ -162,8 +171,8 @@ def main():
     parser.add_argument("--output", type=Path, default=OUTPUT)
     parser.add_argument("--function", action="append")
     parser.add_argument("--instruction", type=int, action="append", help="Current ELF instruction index; repeat to inspect")
-    parser.add_argument("--graph", action="store_true", help="Capture a register graph and replay physical coloring; GPRs also replay simplification")
-    parser.add_argument("--register-class", choices=("gpr", "fpr"), help="Graph class (default: gpr); FPRs replay physical coloring and validate rewritten operands")
+    parser.add_argument("--graph", action="store_true", help="Capture a register graph and replay simplification, physical coloring, and rewritten operands")
+    parser.add_argument("--register-class", choices=("gpr", "fpr"), help="Graph class (default: gpr)")
     parser.add_argument("--register", type=int, action="append", help="Virtual register graph index; requires --graph when capturing")
     parser.add_argument("--read", type=Path, help="Inspect a previous trace and its adjacent traced.o without compiling")
     args = parser.parse_args()
@@ -218,6 +227,10 @@ def main():
             print(f"  {snapshot['stage']}: {len(graph)} nodes; coloring prefix {order[:8]}")
             for register in args.register or []:
                 print("  " + describe_node(graph, register, colored=colored, register_class=item["register_class"]))
+        if item["simplification_replayed"]:
+            print(f"  Replayed simplification: {len(item['high_degree_removals'])} high-degree removals")
+        elif graphs:
+            print("  Simplification was not replayed: legacy capture has no simplification policy")
         if item["high_degree_removals"]:
             print("  Replayed high-degree removals:", item["high_degree_removals"])
         if item["color_decisions"]:

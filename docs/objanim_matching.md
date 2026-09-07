@@ -57,6 +57,51 @@ typed accesses can restore their instruction forms, but leave a different
 integer-register exchange. These observations narrow the expression and cursor
 lifetimes to investigate; they do not establish that clean source cannot match.
 
+## Frontend and allocator follow-up
+
+A second investigation leaves the source and match percentage unchanged.
+`mwcc_frontend_trace.py` exposes the distinction between the two closest
+expressions through all 73 captured frontend stages:
+
+- The current shared sample cursor keeps the complete move product assigned
+  to the named `moveDistanceDelta` local. The blend product is substituted
+  into the final weighted sum.
+- Staging the raw move-sample difference creates an anonymous frontend local
+  for that difference. The scale multiply is then substituted into the final
+  sum, after the separate blend-cursor assignment. This explains the otherwise
+  exact variant's one misplaced address calculation.
+- Direct typed blend accesses let the move product become an expression
+  temporary and reproduce the retail FP registers and instruction order.
+  Their shared blend address becomes a backend temporary, exchanging `r8`
+  and `r9` at ten integer operands. This variant is also not retained.
+
+The allocator tracer now captures and replays FPR simplification, as well as
+physical coloring and operand rewriting. The GC/1.3 executable establishes
+the policy without changing compiler behavior:
+
+| Compiler location | Observed role |
+| --- | --- |
+| VA `0x4FCB70` | Counts unblocked registers using the active class's physical count and mask |
+| VA `0x506D58` | Copies the active class's original virtual-register count into the shared cutoff at `0x5DD948` |
+| VA `0x507070` | Simplifies either register class using those inputs |
+| VA `0x50712C`, `0x507164` | Compare candidates against that same cutoff during high-degree selection |
+
+The live ObjAnim FPR capture has 32 available registers and cutoff 116. Replay
+reproduces the entire simplification order and all 84 physical-color choices,
+with zero high-degree removals. The corresponding GPR capture reproduces all
+115 choices. Both ordinary/instrumented objects retain the hash above.
+An independent `playerState25` FPR capture also reproduces simplification and
+all 105 color choices, with zero retail differences and unchanged instrumented
+output. These captures validate the allocator model; they do not establish
+the original ObjAnim expression spelling.
+
+Legacy traces still load. Reports explicitly distinguish an unreplayed legacy
+FPR simplification from a verified replay with zero high-degree removals.
+Storage, precision, cursor-type, and inline-helper experiments did not improve
+the current source. Further work should target an expression temporary for the
+complete move product while preserving the retail blend-address ordering and
+integer allocation.
+
 ## Reproduction and validation
 
 ```sh
@@ -65,6 +110,10 @@ python3 tools/strucdiff.py main/main/objanim ObjAnim_SampleRootCurvePhase
 python3 tools/tricky_backend_trace.py --unit main/main/objanim \
   --function ObjAnim_SampleRootCurvePhase --graph --register-class fpr \
   --output build/flag_probe/objanim_fpr
+python3 tools/mwcc_frontend_trace.py --unit main/main/objanim \
+  --function ObjAnim_SampleRootCurvePhase \
+  --output build/flag_probe/objanim_frontend
+python3 -m unittest discover -s tools -p 'test_tricky_backend*.py'
 python3 configure.py --matching
 # Bound each Ninja invocation to 30 seconds.
 ninja all_source

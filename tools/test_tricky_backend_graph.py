@@ -2,7 +2,7 @@ import copy
 import struct
 import unittest
 
-from tricky_backend_graph import (capture_color_policy, capture_graph, coloring_order, describe_node,
+from tricky_backend_graph import (capture_color_policy, capture_graph, capture_simplification_policy, coloring_order, describe_node,
                                  replay_coloring, replay_simplification, validate_graph, validate_rewrite)
 
 
@@ -38,6 +38,25 @@ def simplification_fixture(removal_order, weights=(10, 5)):
 
 
 class BackendGraphTests(unittest.TestCase):
+    def test_simplification_uses_class_mask_and_shared_cutoff(self):
+        values = {
+            0x1E6784: struct.pack("<i", 32), 0x1E6788: struct.pack("<i", 32),
+            0x1E2C50: bytes([0] * 31 + [1]), 0x1E2C70: bytes([1] + [0] * 31),
+            0x1DD948: struct.pack("<h", 150),
+        }
+        def memory(address, size):
+            return values[address - 0x400000][:size]
+        for register_class, available in [(3, list(range(31))), (4, list(range(1, 32)))]:
+            with self.subTest(register_class=register_class):
+                self.assertEqual(capture_simplification_policy(memory, 0x400000, register_class),
+                                 {"available": available, "temporary_cutoff": 150})
+        values[0x1E6784] = struct.pack("<i", 31)
+        with self.assertRaisesRegex(ValueError, "physical register count"):
+            capture_simplification_policy(memory, 0x400000, 3)
+        values[0x1E6784] = b""
+        with self.assertRaisesRegex(ValueError, "short simplification policy"):
+            capture_simplification_policy(memory, 0x400000, 3)
+
     def test_fpr_capture_uses_its_own_banks_and_shared_saved_state(self):
         values = {
             0x1E6580: struct.pack("<i", 2), 0x1E0D70: struct.pack("<2i", 0, 1),
@@ -171,10 +190,11 @@ class BackendGraphTests(unittest.TestCase):
     def test_replay_rejects_invalid_available_set_and_count(self):
         before, after = simplification_fixture([32, 33])
         for available in ([], [28, 28], [-1], [32]):
-            with self.subTest(available=available), self.assertRaisesRegex(ValueError, "available GPR"):
+            with self.subTest(available=available), self.assertRaisesRegex(ValueError, "available register"):
                 replay_simplification(before, after, available, 34)
-        with self.assertRaisesRegex(ValueError, "incompatible"):
-            replay_simplification(before, after, [28, 29], 35)
+        for cutoff in (-1, 31, 35):
+            with self.subTest(cutoff=cutoff), self.assertRaisesRegex(ValueError, "incompatible"):
+                replay_simplification(before, after, [28, 29], cutoff)
 
     def rewrite_fixture(self, register):
         return {"blocks": [{"instructions": [{"address": 1, "words": [0, 0, 2, 0, 0, 0, 0, 3,
