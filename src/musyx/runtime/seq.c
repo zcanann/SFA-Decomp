@@ -593,7 +593,8 @@ void seqStop(u32 seqId) {
                 seqActiveRoot = voice->next;
             }
 
-            KillNotes(voice);
+            KillNotes(&seqInstance[slot]);
+            voice = &seqInstance[slot];
             ResetNotes(voice);
             break;
         case SYNTH_SEQUENCE_STATE_PAUSED:
@@ -692,30 +693,25 @@ void seqMute(u32 seqId, u32 mask1, u32 mask2) {
 }
 
 void seqVolume(u8 volume, u16 time, u32 seqId, u8 mode) {
-    u8* trackVolume;
-    SynthVoice* voice;
-    u32 voiceIndex;
-    u32 studioIndex;
-    u32 pub_id;
+    u32 trackIndex;
+    u32 slot;
+    u32 publicId;
 
-    pub_id = seqId;
-    studioIndex = seqGetPrivateIdInline(seqId);
+    publicId = seqId;
+    slot = seqGetPrivateIdInline(seqId);
 
-    if (studioIndex != SYNTH_HANDLE_INVALID) {
-        if ((studioIndex & SYNTH_HANDLE_QUEUED_FLAG) == 0) {
-            voice = &seqInstance[studioIndex];
-            synthVolume(volume, time, voice->defaultVolumeGroup, mode, pub_id);
-            trackVolume = voice->trackVolumeGroup;
-            voiceIndex = 0;
+    if (slot != SYNTH_HANDLE_INVALID) {
+        if ((slot & SYNTH_HANDLE_QUEUED_FLAG) == 0) {
+            synthVolume(volume, time, seqInstance[slot].defaultVolumeGroup, mode, publicId);
+            trackIndex = 0;
             do {
-                if (*trackVolume != voice->defaultVolumeGroup) {
-                    synthVolume(volume, time, *trackVolume, 0, SYNTH_HANDLE_INVALID);
+                if (seqInstance[slot].trackVolumeGroup[trackIndex] != seqInstance[slot].defaultVolumeGroup) {
+                    synthVolume(volume, time, seqInstance[slot].trackVolumeGroup[trackIndex], 0, SYNTH_HANDLE_INVALID);
                 }
-                trackVolume++;
-                voiceIndex++;
-            } while (voiceIndex < SYNTH_SEQUENCE_TRACK_COUNT);
+                trackIndex++;
+            } while (trackIndex < SYNTH_SEQUENCE_TRACK_COUNT);
         } else {
-            seqId = studioIndex & SYNTH_HANDLE_ID_MASK;
+            seqId = slot & SYNTH_HANDLE_ID_MASK;
             switch (mode & 0xF) {
             case 0:
                 seqInstance[seqId].syncCrossInfo.vol2 = volume;

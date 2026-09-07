@@ -89,6 +89,19 @@ raises the sequencer from 21/26 to 23/26 exact functions. The other retail funct
 remain unchanged; `seqStop`, `seqVolume`, and `seqInit` remain non-exact. The
 unused `ClearNotes` wrapper changes register allocation but retains its size.
 
+A follow-up against `e0e9f031c2` restores `seqStop` (464 bytes; formerly
+84.940%) and `seqVolume` (412 bytes; formerly 94.272%). Passing the indexed
+sequence to `KillNotes` and recomputing the local voice pointer afterward
+recovers the stop routine's retail lifetimes. Volume control indexes the native
+track-volume array directly, retaining the distinct loads used for comparison
+and the `synthVolume` argument without a manually advanced pointer.
+These add 876 matched code bytes, bringing the sequencer to 25/26 exact retail
+functions. The corrected frames also restore all 260 bytes of `extab` and
+`extabindex`, so every data section now matches. All other retail function bodies,
+ordinary data bytes, and data-symbol layouts are unchanged. `seqInit` remains at 97.643%, with matching instruction order
+and a swapped pair of register assignments; bounded local/helper declaration
+order probes did not improve it and were discarded.
+
 `python tools/test_musyx_sequence_runtime.py` checks PPC BSS layout and runs
 143 host scenarios at both O0 and O2 (286 executions): initialization,
 active/paused list removal, note recycling, direct/deferred speed and mute,
