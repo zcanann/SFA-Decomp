@@ -167,27 +167,30 @@ void waterfx_drawSplashBurst(WaterParticle* s)
     for (; i < 8; i++)
     {
         f32 bandPhase;
-        f32 ph;
-        f32 life = s->life;
         f32 dd;
         f32 lim;
         f32 sc;
         f32 fade;
         f32 alpha;
+        struct {
+            f32 life;
+            f32 phase;
+        } band;
+        band.life = s->life;
         bandPhase = WATERFX_PHASE_START + WATERFX_BAND_OFFSET_SCALE * ((f32)i / WATERFX_BAND_COUNT);
-        ph = bandPhase * life;
-        dd = ph - 0.5f;
+        band.phase = bandPhase * band.life;
+        dd = band.phase - 0.5f;
         fade = -(WATERFX_FADE_CURVE_SCALE * (dd * dd) - 1.0f);
         lim = WATERFX_BAND_LIMIT_BASE + WATERFX_BAND_OFFSET_SCALE * ((f32)i / WATERFX_BAND_COUNT);
-        if (life < lim)
+        if (band.life < lim)
         {
             alpha = 1.0f;
         }
         else
         {
-            alpha = (1.0f - life) / (1.0f - lim);
+            alpha = (1.0f - band.life) / (1.0f - lim);
         }
-        sc = 2.0f * ph + 1.0f;
+        sc = 2.0f * band.phase + 1.0f;
         PSMTXScale(mtxB, sc, 1.0f, sc);
         PSMTXTrans(mtxC, 0.0f, 2.0f * fade, 0.0f);
         PSMTXConcat(mtxC, mtxB, mtxD);
@@ -495,17 +498,12 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v)
 
 void waterfx_render(int obj, int renderParam)
 {
-    int poolOffset;
-    int descriptorOffset;
-    WaterEntry7* e;
-    WaterParticle* s;
-    WaterDrop* d;
-    WaterEntry* g;
-    int i;
-    int vertexOffset;
-    int j;
-    f32 thr;
-    MatrixTransform dp;
+    int triangleIndex;
+    int rippleIndex;
+    u8* particle;
+    int index;
+    f32 lifeLimit;
+    MatrixTransform transform;
     if (gWaterfxRippleCount != 0 || gWaterfxWakeCount != 0 || gWaterfxSplashCount != 0 ||
         gWaterfxDropCount != 0)
     {
@@ -514,27 +512,28 @@ void waterfx_render(int obj, int renderParam)
         {
             setupReflectionBumpDistortTev(gWaterfxRippleTexture);
         }
-        for (i = 0, poolOffset = 0; i < WATERFX_POOL_SIZE; poolOffset += 0x1c, i++)
+        for (rippleIndex = 0; rippleIndex < WATERFX_POOL_SIZE; rippleIndex++)
         {
-            e = (WaterEntry7*)(gWaterfxRipplePool + poolOffset);
-            if (e->active != 0)
+            particle = (u8*)&((WaterEntry7*)gWaterfxRipplePool)[rippleIndex];
+            if (((WaterEntry7*)particle)->active != 0)
             {
-                setTextColor((void*)obj, 0xff, 0xff, 0xff, (u8)e->active);
-                dp.x = e->x;
-                dp.y = e->y;
-                dp.z = e->z;
-                dp.scale = e->scale;
-                dp.rotX = e->rot;
-                dp.rotZ = 0;
-                dp.rotY = 0;
-                Camera_LoadModelViewMatrix(obj, renderParam, &dp, 1.0f, WATERFX_ZERO,
+                setTextColor((void*)obj, 0xff, 0xff, 0xff, (u8)((WaterEntry7*)particle)->active);
+                transform.x = ((WaterEntry7*)particle)->x;
+                transform.y = ((WaterEntry7*)particle)->y;
+                transform.z = ((WaterEntry7*)particle)->z;
+                transform.scale = ((WaterEntry7*)particle)->scale;
+                transform.rotX = ((WaterEntry7*)particle)->rot;
+                transform.rotZ = 0;
+                transform.rotY = 0;
+                Camera_LoadModelViewMatrix(obj, renderParam, &transform, 1.0f, WATERFX_ZERO,
                                            NULL);
                 loadReflectionTexMtxs();
-                lightmapDrawTriangleList(gWaterfxRippleVtx + i * 0x40,
-                                  gWaterfxRippleVtxDesc + i * 0x20, 2);
+                triangleIndex = rippleIndex * 2;
+                lightmapDrawTriangleList((u8*)&((WaterVtx*)gWaterfxRippleVtx)[triangleIndex * 2],
+                                  (u8*)&((WaterVtxDesc*)gWaterfxRippleVtxDesc)[triangleIndex], 2);
             }
         }
-        j = 0;
+        index = 0;
         if (gWaterfxSplashCount != 0)
         {
             setupWaterReflectionTev(gWaterfxSplashTexture0, gWaterfxSplashTexture1);
@@ -547,28 +546,28 @@ void waterfx_render(int obj, int renderParam)
             GXSetVtxDesc(GX_VA_CLR0, GX_INDEX16);
             GXSetVtxDesc(GX_VA_TEX0, GX_INDEX16);
         }
-        for (poolOffset = 0, thr = 1.0f; j < WATERFX_MAX_SPLASHES; poolOffset += 0x3c, j++)
+        for (lifeLimit = 1.0f; index < WATERFX_MAX_SPLASHES; index++)
         {
-            s = (WaterParticle*)(gWaterfxSplashPool + poolOffset);
-            if (s->life < thr)
+            particle = (u8*)&((WaterParticle*)gWaterfxSplashPool)[index];
+            if (((WaterParticle*)particle)->life < lifeLimit)
             {
-                waterfx_drawSplashBurst(s);
+                waterfx_drawSplashBurst((WaterParticle*)particle);
             }
         }
         if (gWaterfxDropCount != 0)
         {
             waterfx_setupSplashDropPointRender();
         }
-        for (i = 0, poolOffset = 0; i < WATERFX_POOL_SIZE; poolOffset += 0x1c, i++)
+        for (index = 0; index < WATERFX_POOL_SIZE; index++)
         {
-            d = (WaterDrop*)(gWaterfxDropPool + poolOffset);
-            if (d->parentIdx != -1)
+            particle = (u8*)&((WaterDrop*)gWaterfxDropPool)[index];
+            if (((WaterDrop*)particle)->parentIdx != -1)
             {
                 f32 vx, vy, vz;
                 GXBegin(GX_POINTS, GX_VTXFMT2, 1);
-                vz = d->z - playerMapOffsetZ;
-                vy = d->y;
-                vx = d->x - playerMapOffsetX;
+                vz = ((WaterDrop*)particle)->z - playerMapOffsetZ;
+                vy = ((WaterDrop*)particle)->y;
+                vx = ((WaterDrop*)particle)->x - playerMapOffsetX;
                 GXWGFifo.f32 = vx;
                 GXWGFifo.f32 = vy;
                 GXWGFifo.f32 = vz;
@@ -578,26 +577,27 @@ void waterfx_render(int obj, int renderParam)
         {
             setupReflectionDistortTev(gWaterfxWakeTexture);
         }
-        for (poolOffset = 0, j = 0, descriptorOffset = 0, vertexOffset = 0;
-             j < WATERFX_POOL_SIZE;
-             j++, descriptorOffset += 0x20, poolOffset += 0x1c, vertexOffset += 0x40)
+        for (index = 0;
+             index < WATERFX_POOL_SIZE;
+             index++)
         {
-            g = (WaterEntry*)(gWaterfxWakePool + poolOffset);
-            if (g->active != 0 && g->f18 == 0)
+            particle = (u8*)&((WaterEntry*)gWaterfxWakePool)[index];
+            if (((WaterEntry*)particle)->active != 0 && ((WaterEntry*)particle)->f18 == 0)
             {
-                setTextColor((void*)obj, 0xff, 0xff, 0xff, (u8)g->active);
-                dp.x = g->x;
-                dp.y = g->y;
-                dp.z = g->z;
-                dp.scale = g->scale;
-                dp.rotX = g->rot;
-                dp.rotZ = 0;
-                dp.rotY = 0;
-                Camera_LoadModelViewMatrix(obj, renderParam, &dp, 1.0f, WATERFX_ZERO,
+                setTextColor((void*)obj, 0xff, 0xff, 0xff, (u8)((WaterEntry*)particle)->active);
+                transform.x = ((WaterEntry*)particle)->x;
+                transform.y = ((WaterEntry*)particle)->y;
+                transform.z = ((WaterEntry*)particle)->z;
+                transform.scale = ((WaterEntry*)particle)->scale;
+                transform.rotX = ((WaterEntry*)particle)->rot;
+                transform.rotZ = 0;
+                transform.rotY = 0;
+                Camera_LoadModelViewMatrix(obj, renderParam, &transform, 1.0f, WATERFX_ZERO,
                                            NULL);
                 loadReflectionTexMtxs();
-                lightmapDrawTriangleList(gWaterfxWakeVtx + vertexOffset,
-                                  gWaterfxWakeVtxDesc + descriptorOffset, 2);
+                triangleIndex = index * 2;
+                lightmapDrawTriangleList((u8*)&((WaterVtx*)gWaterfxWakeVtx)[triangleIndex * 2],
+                                  (u8*)&((WaterVtxDesc*)gWaterfxWakeVtxDesc)[triangleIndex], 2);
             }
         }
         Rcp_ResetRenderState();

@@ -856,6 +856,11 @@ that comparison is the screen. Sub-finding, a further confirmation of the wide-b
 STILL scored worse (**99.428 -> 99.279**) — an emission-order fix inside an unresolved rotation
 costs more in alignment than it recovers.
 
+**2026-09-07 correction:** `waterfx_render` now matches through native indexed
+traversal, a shared particle pointer, and a shared splash/drop/wake counter.
+The old comma-order probe measured only one incomplete reconstruction. See
+[water effects matching](waterfx_matching.md).
+
 ## Gate reminders that cost real score today
 
 - **ALWAYS read `fn_flag_probe`'s positive controls before treating a `-` column as a closed flag axis.**

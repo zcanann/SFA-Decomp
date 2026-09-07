@@ -3684,6 +3684,10 @@ register lost (-0.05) outweighs each structure cell gained (+0.01). Instances:
 - waterfx_render: retail's for-header comma order (`poolOffset += 0x1c, descriptorOffset +=
   0x20, vertexOffset += 0x40, j++`, init `j = 0` first) converges all four latch immediates
   positionally; fuzzy 99.428 -> 99.279.
+  **Resolved 2026-09-07:** native indexed particle/geometry traversal and shared
+  cursor/counter lifetimes now match the entire function and TU. The comma-order
+  experiment did not establish a source-inaccessible rotation; see
+  [water effects matching](waterfx_matching.md).
 - Vortex_init: dropping the `GameObject* o = obj` alias converges retail's prologue save order
   (mr r3-save before r4-save); homes recolour cyclically, 99.415 -> 98.772.
 - mapProcessRomList: retail folds the ADDR16-style HA onto the runtime base
