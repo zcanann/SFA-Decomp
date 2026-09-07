@@ -33,3 +33,53 @@ that register exchange is resolved.
 
 Validation: objdiff, isolated full-section link comparison, formatting with an
 unchanged raw object, `ninja all_source`, and the strict matching DOL checksum.
+
+## GC/1.3 allocator trace
+
+The remaining exchange is reproducible under LLDB using the compiler backend
+capture tool. The instrumented and ordinary objects have identical SHA-256
+`f6bff8a34073cbfff90a6e30a4f42d15fd1a5f3f25f2e4eabe9777cd7c7a8990`.
+This observation applies to the source at `db7dce19e3`, not every subsequent
+revision; virtual register numbers are capture-specific.
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/main/object \
+  --function loadCharacter --graph \
+  --output build/flag_probe/object_loader_backend
+python3 tools/tricky_backend_trace.py \
+  --read build/flag_probe/object_loader_backend/trace.json \
+  --function loadCharacter --register 36 --register 50
+```
+
+The capture aligns all 653 instructions across 19 recorded stages and validates
+both graph simplification and physical coloring. It reports 21 differing
+instructions, all explained by the parent/flags exchange. The coloring prefix
+is object (virtual 44, r31), model definition (54, r30), parent (36, r29), then
+model flags (50, r28).
+
+The distinction arises before physical coloring:
+
+| Value | Removal kind | Degree at removal | Low-degree threshold | Weight |
+| --- | --- | ---: | ---: | ---: |
+| Model flags, virtual 50 | Low-degree sweep | 27 | <29 | 68 |
+| Parent, virtual 36 | High-degree selection | 37 | <29 | 3 |
+
+The flags' remaining active virtual neighbors are only the parent, object, and
+model definition. The parent has additional fixed-color neighbors from calls
+before and after the flags' live range. In particular, several distinct nodes
+already occupying r3 or r4 contribute separately to simplification's degree,
+although they block only one physical register each during coloring. Removal
+order is reversed for coloring, giving the parent first choice of r29. The
+trace tool now reports each requested register's removal degree and groups its
+fixed-color neighbors, so this distinction can be inspected without another
+ad hoc replay script. These are compiler heuristic weights, not runtime counts.
+
+Read-only comparison with `../dinosaur-planet/src/object.c` finds the related
+`objSetupObjectActual` loader, including model-flag acquisition, DLL-state,
+event-data, weapon-data, and visibility-radius helpers. That lineage supports
+investigating helper boundaries, but is not proof of the EN GameCube source.
+Extracting those stages individually and in combinations did not resolve the
+exchange. Local lifetime reuse, declaration order, and equivalent callback
+access forms also did not improve the baseline. Regressing experiments were
+removed. Isolated compiler-version comparisons likewise did not supply a
+match; the active game compiler remains GC/1.3.

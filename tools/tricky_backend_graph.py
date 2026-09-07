@@ -268,12 +268,15 @@ def validate_rewrite(before, final):
     return checked
 
 
-def replay_simplification(before, after, available, temporary_cutoff):
+def replay_simplification(before, after, available, temporary_cutoff, *, steps=None):
     """Replay VA 0x507070 using live initial degrees and the computed weights.
 
     Weights are computed once at VA 0x57AB40 after the first low-degree sweep,
     without changing graph edges. This verifies worklist formation, not the
     subsequent physical-color choice, and never modifies compiler state.
+    If supplied, steps receives every removal only after replay validates.
+    Fixed color aliases remain separate degree contributions; grouping them
+    here explains pressure without changing the compiler's graph algorithm.
     """
     validate_graph(before, colored=False)
     actual = coloring_order(after)
@@ -287,9 +290,22 @@ def replay_simplification(before, after, available, temporary_cutoff):
         raise ValueError("initial graph already has processed nodes")
     degree = [n["prefix"][5] for n in before]
     removed = {i for i, n in enumerate(before) if n["prefix"][7] & 4}
-    order, choices = [], []
+    order, choices, removals = [], [], []
 
-    def remove(register):
+    def remove(register, kind):
+        if steps is not None:
+            fixed = {}
+            active = []
+            for neighbor in before[register]["neighbors"]:
+                node = before[neighbor]
+                color = node["prefix"][6]
+                if 0 <= color < 32:
+                    fixed.setdefault(color, []).append(neighbor)
+                elif neighbor >= 32 and neighbor not in removed:
+                    active.append(neighbor)
+            removals.append({"register": register, "kind": kind, "degree": degree[register],
+                             "threshold": len(available), "weight": after[register]["prefix"][3],
+                             "active_neighbors": active, "fixed_colors": fixed})
         removed.add(register)
         order.append(register)
         for neighbor in before[register]["neighbors"]:
@@ -302,7 +318,7 @@ def replay_simplification(before, after, available, temporary_cutoff):
             if register in removed:
                 continue
             if degree[register] < len(available):
-                remove(register)
+                remove(register, "low-degree")
                 changed = True
             else:
                 remaining.append(register)
@@ -317,7 +333,9 @@ def replay_simplification(before, after, available, temporary_cutoff):
                     Fraction(after[register]["prefix"][3], degree[register]) if register < temporary_cutoff else 0)
         selected = min(reversed(remaining), key=priority)
         choices.append({"register": selected, "degree": degree[selected], "weight": after[selected]["prefix"][3]})
-        remove(selected)
+        remove(selected, "high-degree")
     if order[::-1] != actual or degree != [n["prefix"][5] for n in after]:
         raise ValueError("replayed simplification disagrees with the live compiler graph")
+    if steps is not None:
+        steps.extend(removals)
     return choices

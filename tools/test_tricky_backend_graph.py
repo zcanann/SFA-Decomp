@@ -166,6 +166,37 @@ class BackendGraphTests(unittest.TestCase):
         self.assertEqual(replay_simplification(before, after, [28, 29], 34), [])
         self.assertEqual(coloring_order(after), [33, 32])
 
+    def test_removal_steps_preserve_fixed_alias_pressure(self):
+        before, after = simplification_fixture([32, 33])
+        # Both aliases occupy r3 but contribute separately to the degree.
+        for graph in (before, after):
+            for register in (34, 35):
+                graph.append({"address": 0x1000 + 64 * register,
+                              "prefix": [0, 0, 0, 0, register, 1, 3, 4, 1], "neighbors": [32]})
+                graph[32]["neighbors"].append(register)
+                graph[32]["prefix"][5] += 1
+                graph[32]["prefix"][8] += 1
+        after[34]["prefix"][5] = after[35]["prefix"][5] = 0
+        original = copy.deepcopy(before)
+        steps = []
+        self.assertEqual(replay_simplification(before, after, [3, 28, 29, 30], 36, steps=steps), [])
+        self.assertEqual(steps[0], {"register": 32, "kind": "low-degree", "degree": 3,
+                                   "threshold": 4, "weight": 10, "active_neighbors": [33],
+                                   "fixed_colors": {3: [34, 35]}})
+        self.assertEqual(steps[1]["active_neighbors"], [])
+        self.assertEqual(before, original)
+
+    def test_removal_steps_include_high_degree_choice_and_reject_partial_replay(self):
+        before, after = simplification_fixture([33, 32])
+        steps = []
+        replay_simplification(before, after, [28], 34, steps=steps)
+        self.assertEqual([(s["register"], s["kind"], s["degree"]) for s in steps],
+                         [(33, "high-degree", 1), (32, "low-degree", 0)])
+        steps = []
+        with self.assertRaisesRegex(ValueError, "disagrees"):
+            replay_simplification(before, after, [28, 29], 34, steps=steps)
+        self.assertEqual(steps, [])
+
     def test_high_degree_cost_and_descending_id_tie(self):
         for weights, selected in [((10, 5), 33), ((5, 10), 32), ((5, 5), 33)]:
             before, after = simplification_fixture([selected, 65 - selected], weights)

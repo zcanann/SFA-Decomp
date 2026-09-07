@@ -64,6 +64,7 @@ def inspect(snapshots, obj, functions, require_graph=False, unit=UNIT, required_
         paired_graphs = require_graph or any(not stage.get("graph_colored", True) for stage in graphs)
         initial_graph = None
         choices = []
+        simplification_steps = []
         colors = []
         simplification_replayed = False
         for stage in stages:
@@ -80,12 +81,14 @@ def inspect(snapshots, obj, functions, require_graph=False, unit=UNIT, required_
                         if "simplification_policy" in initial_graph:
                             policy = initial_graph["simplification_policy"]
                             choices = replay_simplification(initial_graph["coloring_graph"], stage["coloring_graph"],
-                                                            policy["available"], policy["temporary_cutoff"])
+                                                            policy["available"], policy["temporary_cutoff"],
+                                                            steps=simplification_steps)
                             simplification_replayed = True
                         elif register_class == 4:
                             # Read GPR captures made before the shared policy was recorded.
                             choices = replay_simplification(initial_graph["coloring_graph"], stage["coloring_graph"],
-                                                            initial_graph["available_gprs"], initial_graph["original_gpr_count"])
+                                                            initial_graph["available_gprs"], initial_graph["original_gpr_count"],
+                                                            steps=simplification_steps)
                             simplification_replayed = True
                         if register_class == 3 and "color_policy" not in initial_graph:
                             raise ValueError(f"missing FPR coloring policy for {name}")
@@ -115,6 +118,7 @@ def inspect(snapshots, obj, functions, require_graph=False, unit=UNIT, required_
             })
         result[name] = {"stages": len(stages), "instructions": instructions, "differences": differences,
                         "high_degree_removals": choices, "simplification_replayed": simplification_replayed,
+                        "simplification_steps": simplification_steps,
                         "color_decisions": colors, "register_class": register_class}
     return result
 
@@ -229,6 +233,11 @@ def main():
                 print("  " + describe_node(graph, register, colored=colored, register_class=item["register_class"]))
         if item["simplification_replayed"]:
             print(f"  Replayed simplification: {len(item['high_degree_removals'])} high-degree removals")
+            for step in item["simplification_steps"]:
+                if step["register"] in (args.register or []):
+                    print(f"  {kind} {step['register']} removal: {step['kind']}; "
+                          f"degree={step['degree']}; low-degree threshold=<{step['threshold']}; "
+                          f"active neighbors={step['active_neighbors']}; fixed colors={step['fixed_colors']}")
         elif graphs:
             print("  Simplification was not replayed: legacy capture has no simplification policy")
         if item["high_degree_removals"]:
