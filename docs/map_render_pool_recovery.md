@@ -354,3 +354,35 @@ Formatting preserves the probe object byte-for-byte. The data and literal
 audits, `ninja all_source`, and strict retail checksum gate all pass; each
 Ninja invocation is bounded to 30 seconds. The strict build continues to
 link the retail shader object.
+
+## Cached queue addressing in object rendering (2026-09-07)
+
+`renderObjects` now uses its cached byte base for both object-shadow queue
+entries and the deferred-object list. The entry stores use the complete byte
+offset, expressed with `sizeof(LightSortEntry)` and `offsetof(LightSortEntry,
+type)`, and increment the queue count directly. The deferred store writes a
+`GameObject*` using the existing pool-relative list view. The local model-state
+pointer uses `ObjModelState`, and the sort/deferred indices have explicit names.
+
+These accesses retain the proven common BSS base. Direct native-global accesses
+rematerialize queue addresses; ordinary cached typed-array indexing instead
+emits indexed stores and changes constant-load order. The selected byte-offset
+expressions recover the retail instruction sequence without changing ownership
+of the separate queue, sort-key, and deferred-list globals.
+
+The function improves from 94.86842% to 99.73684% and shrinks from 472 to the
+retail 456 bytes. All 114 instruction kinds now agree. Only three commuted
+`add` operand pairs differ, at the deferred and two shadow entry addresses.
+The surrounding tests, calls, stores, increments, and control flow match.
+
+All other 144 function bodies remain byte-identical. Their relocation locations
+relative to each function and resolved destinations remain unchanged, as do all
+non-text section bytes and named data layouts. The changed function loses four
+redundant queue-address relocations; its remaining relocation targets and kinds
+are preserved. Subsequent function symbols move back sixteen bytes. The TU
+reaches 99.62221% fuzzy, retains 139/145 exact functions, and keeps all 40,656
+assigned data bytes exact.
+
+The data and literal-sequence audits pass. Formatting is separate and preserves
+the raw object. `ninja all_source` and the strict retail checksum gate pass with
+30-second bounds; the TU remains `NonMatching` and the strict link uses retail.

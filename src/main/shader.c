@@ -3521,57 +3521,49 @@ void getVisibleObjects(s8* opacity) {
 }
 
 static void renderObjects(s8* opacity) {
-    u32* kp;
-    int i;
-    u32 flags;
-    int idx;
+    u32* sortKey;
+    int sortIndex;
+    u32 objectFlags;
+    int objectIndex;
     GameObject* obj;
-    int* p;
-    int slot;
+    ObjModelState* modelState;
+    int deferredIndex;
     GameObject** objects;
-    LightmapDrawQueue* qbase;
-    LightmapDrawQueue* dq;
+    u8* queueBase;
 
-    qbase = (LightmapDrawQueue*)gLightmapDrawQueue.entries;
+    queueBase = (u8*)gLightmapDrawQueue.entries;
     objects = ObjList_GetObjects((int*)0, 0);
-    for (i = 1, kp = (u32*)((u8*)qbase + 0x8818) + 1; i < gVisibleObjectSortKeyCount; kp++, i++) {
-        idx = *kp & 0x3ff;
-        obj = objects[idx];
-        flags = obj->anim.modelInstance->flags;
-        if ((flags & OBJDEF_FLAG_DEFERRED_RENDER) != 0 ||
+    for (sortIndex = 1, sortKey = (u32*)(queueBase + 0x8818) + 1; sortIndex < gVisibleObjectSortKeyCount; sortKey++, sortIndex++) {
+        objectIndex = *sortKey & 0x3ff;
+        obj = objects[objectIndex];
+        objectFlags = obj->anim.modelInstance->flags;
+        if ((objectFlags & OBJDEF_FLAG_DEFERRED_RENDER) != 0 ||
             ((obj->anim.modelInstance->renderFlags & OBJDEF_RENDERFLAG_DEFERRED_RENDER) != 0)) {
-            if (opacity[idx] != 0 && gLightmapDeferredObjectCount < 0x14) {
-                slot = gLightmapDeferredObjectCount;
-                gLightmapDeferredObjectCount = slot + 1;
-                dq = (LightmapDrawQueue*)&((u32*)qbase)[slot];
-                dq->deferred[0] = (u32)obj;
+            if (opacity[objectIndex] != 0 && gLightmapDeferredObjectCount < 0x14) {
+                deferredIndex = gLightmapDeferredObjectCount;
+                gLightmapDeferredObjectCount = deferredIndex + 1;
+                *(GameObject**)(queueBase + (deferredIndex * (int)sizeof(GameObject*) + offsetof(LightmapDrawQueue, deferred))) = obj;
             }
         } else {
-            if ((flags & OBJDEF_FLAG_RUNTIME_BATCHABLE) == 0) {
+            if ((objectFlags & OBJDEF_FLAG_RUNTIME_BATCHABLE) == 0) {
                 (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, obj);
             }
             objRender(0, 0, 0, 0, obj, 1);
-            p = (int*)obj->anim.modelState;
-            if (p != NULL && obj->anim.modelState->shadowCastSlot != NULL) {
-                int qi;
+            modelState = obj->anim.modelState;
+            if (modelState != NULL && obj->anim.modelState->shadowCastSlot != NULL) {
                 u32 shadowKind;
-
                 renderShadowType3(obj, 0x13, 0);
                 shadowKind = 2;
-                qi = gLightmapDrawQueueCount;
-                gLightmapDrawQueue.entries[qi].type = shadowKind;
-                gLightmapDrawQueueCount = qi + 1;
+                *(u32*)(queueBase + (gLightmapDrawQueueCount * (int)sizeof(LightSortEntry) + offsetof(LightSortEntry, type))) = shadowKind;
+                gLightmapDrawQueueCount += 1;
             } else if (obj->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH &&
                        (obj->anim.flags & OBJANIM_FLAG_HIDDEN) == 0 &&
                        (obj->anim.modelState->flags & OBJ_MODEL_STATE_SHADOW_VISIBLE)) {
-                int qi;
                 u32 shadowKind;
-
                 renderShadowType3(obj, 0x13, 0);
                 shadowKind = 3;
-                qi = gLightmapDrawQueueCount;
-                gLightmapDrawQueue.entries[qi].type = shadowKind;
-                gLightmapDrawQueueCount = qi + 1;
+                *(u32*)(queueBase + (gLightmapDrawQueueCount * (int)sizeof(LightSortEntry) + offsetof(LightSortEntry, type))) = shadowKind;
+                gLightmapDrawQueueCount += 1;
             }
         }
     }
