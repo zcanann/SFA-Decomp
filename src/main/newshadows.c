@@ -621,71 +621,74 @@ static inline void fillRampTexture(void) {
     }
 }
 
+static inline void shadowScaleDiskCoordinates(f32* x, f32* y, f32 scale) {
+    *x *= scale;
+    *y *= scale;
+}
+
 static inline void fillSmallDiskTexture(void) {
-    int j;
-    int i;
-    f32 cy;
-    u8* base;
-    for (i = 0; i < 0x10; i++) {
-        int rowoff;
-        int lowoff;
-        j = 0;
-        rowoff = (i >> 3) * 0x20;
-        lowoff = i & 7;
-        cy = i - 8.0f;
-        lowoff += rowoff;
-        for (; j < 0x10; j++) {
-            int off;
-            int off2;
-            f32 dx, dz, d2;
-            base = (u8*)gNewShadowSmallDiskTexture;
-            off = lowoff + (j & 3) * 8;
-            off += (j >> 2) * 0x40;
-            off2 = off + sizeof(Texture);
-            dx = cy / 8.0f;
-            dz = (f32)j - 8.0f;
-            dz /= 8.0f;
-            dx = dx * 1.2f;
-            dz = dz * 1.2f;
-            d2 = dx * dx + dz * dz;
-            if (d2 > 1.0f) {
-                d2 = 0.0f;
+    int y;
+    int x;
+    f32 centeredX;
+    u8* textureBytes;
+    for (x = 0; x < 0x10; x++) {
+        int tileColumnOffset;
+        int columnOffset;
+        y = 0;
+        tileColumnOffset = (x >> 3) * 0x20;
+        columnOffset = x & 7;
+        centeredX = x - 8.0f;
+        columnOffset += tileColumnOffset;
+        for (; y < 0x10; y++) {
+            int texelOffset;
+            int payloadOffset;
+            f32 normalizedX, normalizedY, radialValue;
+            textureBytes = (u8*)gNewShadowSmallDiskTexture;
+            texelOffset = columnOffset + (y & 3) * 8;
+            texelOffset += (y >> 2) * 0x40;
+            payloadOffset = texelOffset + sizeof(Texture);
+            normalizedX = centeredX / 8.0f;
+            normalizedY = (f32)y - 8.0f;
+            normalizedY /= 8.0f;
+            shadowScaleDiskCoordinates(&normalizedX, &normalizedY, 1.2f);
+            radialValue = normalizedX * normalizedX + normalizedY * normalizedY;
+            if (radialValue > 1.0f) {
+                radialValue = 0.0f;
             } else {
-                d2 = sqrtf(1.0f - d2);
+                radialValue = sqrtf(1.0f - radialValue);
             }
-            base[off2] = 255.0f * d2;
+            textureBytes[payloadOffset] = 255.0f * radialValue;
         }
     }
 }
 
 static inline void fillDiskTexture(void) {
-    int j;
-    int i;
-    f32 cy;
-    u8* base;
-    for (i = 0; i < 0x20; i++) {
-        int rowoff;
-        int lowoff;
-        j = 0;
-        rowoff = (i >> 3) * 0x20;
-        lowoff = i & 7;
-        cy = i - 16.0f;
-        lowoff += rowoff;
-        for (; j < 0x20; j++) {
-            int off;
-            int off2;
-            f32 dx, dz, d2;
-            base = (u8*)gNewShadowDiskTexture;
-            off = lowoff + (j & 3) * 8;
-            off += (j >> 2) * 0x80;
-            off2 = off + sizeof(Texture);
-            dx = cy / 16.0f;
-            dz = (f32)j - 16.0f;
-            dz /= 16.0f;
-            dx = dx * 1.1f;
-            dz = dz * 1.1f;
-            d2 = dx * dx + dz * dz;
-            base[off2] = 255.0f * ((d2 > 1.0f) ? 0.0f : (1.0f - d2));
+    int y;
+    int x;
+    f32 centeredX;
+    u8* textureBytes;
+    for (x = 0; x < 0x20; x++) {
+        int tileColumnOffset;
+        int columnOffset;
+        y = 0;
+        tileColumnOffset = (x >> 3) * 0x20;
+        columnOffset = x & 7;
+        centeredX = x - 16.0f;
+        columnOffset += tileColumnOffset;
+        for (; y < 0x20; y++) {
+            int texelOffset;
+            int payloadOffset;
+            f32 normalizedX, normalizedY, radiusSquared;
+            textureBytes = (u8*)gNewShadowDiskTexture;
+            texelOffset = columnOffset + (y & 3) * 8;
+            texelOffset += (y >> 2) * 0x80;
+            payloadOffset = texelOffset + sizeof(Texture);
+            normalizedX = centeredX / 16.0f;
+            normalizedY = (f32)y - 16.0f;
+            normalizedY /= 16.0f;
+            shadowScaleDiskCoordinates(&normalizedX, &normalizedY, 1.1f);
+            radiusSquared = normalizedX * normalizedX + normalizedY * normalizedY;
+            textureBytes[payloadOffset] = 255.0f * ((radiusSquared > 1.0f) ? 0.0f : (1.0f - radiusSquared));
         }
     }
 }

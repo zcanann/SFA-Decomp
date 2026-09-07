@@ -308,3 +308,42 @@ The common compiler and complete TU profile remain unchanged.
 `ninja all_source` and the strict retail DOL checksum both pass. The TU remains
 `NonMatching` because four other bodies are incomplete, so its new exact-function
 credit comes from objdiff; the checksum separately validates integration.
+
+## Disk-coordinate scaling (2026-09-07)
+
+The 32x32 and 16x16 disk fills now share the private inline
+`shadowScaleDiskCoordinates` helper. It scales the two already-normalized
+coordinates in place, preserving the distinct 1.1 and 1.2 factors. This boundary
+keeps the outer-coordinate normalization and scaling inside the pixel loop,
+recovering the retail multiply order without external constants or compiler
+changes. A by-value helper still permits the unwanted loop-invariant motion;
+moving normalization into the helper also changes instruction scheduling.
+
+The allocator now emits all 1,487 retail instructions instead of 1,485. The
+mnemonic-aligned differences fall from sixteen to six, all six remaining in
+the final reflection-gradient address scheduling. The large disk still has a
+floating-point register swap, and the small disk's inline square-root scratch
+uses a different stack offset. Other register differences remain throughout
+the allocator; this is a partial match.
+
+The disk locals now name texture X/Y coordinates, normalized coordinates,
+tile-column offsets, and radial values. In the I8 layout, the outer loop walks
+X and the inner loop walks Y. The large disk uses a linear falloff in squared
+radius, while the small disk takes its square root. Their original clamping,
+truncation, payload addressing, and cache-flush callers are unchanged.
+
+Against `af76c4d6ea`, `allocLotsOfTextures` improves from 97.19906% to 97.90518%,
+and the TU from 98.67453% to 98.86959%. All other 43 function bodies and their
+function-relative relocation targets are unchanged. The two following text
+functions move by eight bytes, and their jump-table targets follow them.
+All 16,668 allocated data bytes, data-symbol layouts, and logical data relocation
+targets are unchanged. The TU remains `NonMatching`, with 40/44 exact functions.
+
+The existing shadow pixel harness now covers both complete disk images:
+1,280 I8 texels, their tile placement, and header/trailing guards. Its five
+tests pass; removing the helper's Y scaling makes both disk cases fail.
+The host tests use scalar float rounding with contraction disabled, not PPC
+emulation; the retail instruction comparison separately checks the generated
+multiply/add sequence. Full source compilation and the strict retail checksum
+pass. The active source and internal header pass the formatter check. Formatting
+produces no additional source diff and preserves the complete semantic object.
