@@ -346,7 +346,7 @@ extern u16 gViewFinderCamAngle;
 extern char sTrickyDebugXCoordFormat[];
 
 int pauseMenuHoloRenderFn(int* this, int* p2, int p3);
-void hudDrawCounter(int id, s16 value, s16 target, u8 alpha, int timer, int* yPos, u8 showTarget);
+void hudDrawCounter(int id, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget);
 char sHudCounterFmt02d[] = "%02d";
 char sHudCounterFmt03d[] = "%03d";
 char lbl_803DBB58[] = "%d";
@@ -2093,7 +2093,7 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     }
 }
 
-void hudDrawCounter(int idx, s16 value, s16 target, u8 alpha, int timer, int* yPos, u8 showTarget) {
+void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget) {
     int prevCharset;
     void* tex;
     CounterText buf1;

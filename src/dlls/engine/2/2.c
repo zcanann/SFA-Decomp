@@ -1414,8 +1414,6 @@ void ObjSeq_runBgCmds(void) {
     u8* base;
     ObjSeqRunBgState* state;
     ObjSeqQueuedBgCmd* cmd;
-    ObjSeqQueuedBgCmd* keepWalk;
-    ObjSeqQueuedBgCmd* keepBase;
     int count;
     int i;
     int index;
@@ -1477,8 +1475,6 @@ void ObjSeq_runBgCmds(void) {
     count = gObjSeqBgCmdCount;
     keepCount = 0;
     cmd = (ObjSeqQueuedBgCmd*)(base + 0x2a80) + count;
-    keepBase = keepBuf;
-    keepWalk = keepBase;
     while (count > 0) {
         cmd--;
         count--;
@@ -1532,16 +1528,14 @@ void ObjSeq_runBgCmds(void) {
         }
 
         if (ok == 0) {
-            keepWalk->index = index;
-            keepWalk++;
+            keepBuf[keepCount].index = index;
             keepBuf[keepCount++].xrot = xrot;
         }
     }
 
     for (i = 0; i < keepCount; i++) {
-        ((ObjSeqQueuedBgCmd*)(base + 0x2a80))[i].index = keepBase->index;
-        ((ObjSeqQueuedBgCmd*)(base + 0x2a80))[i].xrot = keepBase->xrot;
-        keepBase++;
+        ((ObjSeqQueuedBgCmd*)(base + 0x2a80))[i].index = keepBuf[i].index;
+        ((ObjSeqQueuedBgCmd*)(base + 0x2a80))[i].xrot = keepBuf[i].xrot;
     }
     gObjSeqBgCmdCount = keepCount;
 }
