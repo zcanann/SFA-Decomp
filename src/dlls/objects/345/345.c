@@ -30,7 +30,7 @@ int blasted_activateMapLayer(GameObject* obj, int mapLayerId) {
         int shaderIndex;
         int polygonGroupIndex;
         for (polygonGroupIndex = 0; polygonGroupIndex < block->polyGroupCount; polygonGroupIndex++) {
-            MapTriGroup* polygonGroup = mapBlockGetPolygonGroup(block, polygonGroupIndex);
+            CollisionPolygonGroup* polygonGroup = mapBlockGetPolygonGroup(block, polygonGroupIndex);
             if (mapLayerId == mapBlockGetPolygonGroupType(polygonGroup)) {
                 polygonGroup->flags |= BLASTED_POLYGON_GROUP_DISABLE_FLAGS;
             }

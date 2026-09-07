@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/texture.h"
+#include "main/collision_polygon.h"
 #include "dolphin/mtx.h"
 
 typedef struct GameObject GameObject;
@@ -154,6 +155,14 @@ STATIC_ASSERT(sizeof(ModelFuzzScaleDef) == 0x10);
 STATIC_ASSERT(offsetof(ModelFuzzScaleDef, pivot) == 0);
 STATIC_ASSERT(offsetof(ModelFuzzScaleDef, scaleDivisor) == 0x0C);
 
+typedef struct ModelCollisionTriangle {
+    u16 vertexIndices[3];
+    u8 unk06[2];
+} ModelCollisionTriangle;
+
+STATIC_ASSERT(sizeof(ModelCollisionTriangle) == 8);
+STATIC_ASSERT(offsetof(ModelCollisionTriangle, vertexIndices) == 0);
+
 /*
  * ModelFileHeader - in-place header of a loaded .MOD model file. Offset
  * fields are patched to pointers by ObjModel_RelocateModelData /
@@ -190,8 +199,8 @@ typedef struct ModelFileHeader {
         u8* hitVolumes;      /* 0x18-byte ModelHitSphereDef records */
         void* hitReactTable; /* animation-bank hit-reaction rows */
     };
-    u8* collisionTriangles; /* 0x5c: 8-byte triangle vertex-index records (hit-detect mesh) */
-    u8* collisionBlocks;    /* 0x60: 0x14-byte spatial blocks (AABB + triangle range), collisionBlockCount entries */
+    ModelCollisionTriangle* collisionTriangles;
+    CollisionPolygonGroup* collisionBlocks;
     union {
         u8* animationModelPtrs;
         u8** moveData;
@@ -216,7 +225,7 @@ typedef struct ModelFileHeader {
     u8 unkBC[0xC];
     ModelVtxAnimChunk* normalAnimEntries;
     u8* normalAnimBase;
-    u8* displayLists; /* 0x1c-stride entries, displayListCount + shadowDisplayListCount */
+    struct ModelDisplayListEntry* displayLists; /* primary group followed by shadow group */
     u8* instrs;
     u16 instrsBitLenWords; /* 0xD8: render-instruction stream length; *8 gives bit length (see objprint_dolphin render-instr readers) */
     u8 unkDA[2];
@@ -272,6 +281,9 @@ STATIC_ASSERT(offsetof(ModelFileHeader, jointData) == 0x3C);
 STATIC_ASSERT(offsetof(ModelFileHeader, jointFuzzScales) == 0x40);
 STATIC_ASSERT(offsetof(ModelFileHeader, vertexFuzzScale) == 0x44);
 STATIC_ASSERT(offsetof(ModelFileHeader, extraJointDefs) == 0x54);
+STATIC_ASSERT(offsetof(ModelFileHeader, collisionTriangles) == 0x5C);
+STATIC_ASSERT(offsetof(ModelFileHeader, collisionBlocks) == 0x60);
+STATIC_ASSERT(offsetof(ModelFileHeader, displayLists) == 0xD0);
 STATIC_ASSERT(offsetof(ModelFileHeader, hitVolumes) == 0x58);
 STATIC_ASSERT(offsetof(ModelFileHeader, hitReactTable) == 0x58);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveData) == 0x64);
@@ -294,6 +306,8 @@ typedef struct ModelDisplayListEntry {
 } ModelDisplayListEntry;
 
 STATIC_ASSERT(sizeof(ModelDisplayListEntry) == 0x1C);
+STATIC_ASSERT(offsetof(ModelDisplayListEntry, dlist) == 0);
+STATIC_ASSERT(offsetof(ModelDisplayListEntry, dlistSize) == 4);
 
 /* ModelFileHeader.hitVolumes entry: joint-space sphere transformed by the
  * joint matrix each update (objUpdateHitSpheres). */

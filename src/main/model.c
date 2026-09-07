@@ -1730,16 +1730,16 @@ void* loadAnimation(ModelFileHeader* hdr, s16 id, int b, u8* bufout) {
     return animLoadFromTable((u8*)hdr, id, (s16)b, bufout);
 }
 
-void* modelFileGetCollisionTriangle(u8* modelFile, int index) {
-    return ((ModelFileHeader*)modelFile)->collisionTriangles + index * 8;
+ModelCollisionTriangle* modelFileGetCollisionTriangle(ModelFileHeader* modelFile, int index) {
+    return &modelFile->collisionTriangles[index];
 }
 
-void* modelFileGetCollisionBlock(u8* modelFile, int index) {
-    return ((ModelFileHeader*)modelFile)->collisionBlocks + index * 0x14;
+CollisionPolygonGroup* modelFileGetCollisionBlock(ModelFileHeader* modelFile, int index) {
+    return &modelFile->collisionBlocks[index];
 }
 
-void* modelFileGetDisplayList(u8* modelFile, int displayListIndex) {
-    return ((ModelFileHeader*)modelFile)->displayLists + displayListIndex * 0x1c;
+ModelDisplayListEntry* modelFileGetDisplayList(ModelFileHeader* modelFile, int displayListIndex) {
+    return &modelFile->displayLists[displayListIndex];
 }
 
 void ObjModel_CopyJointTranslation(u8* modelBytes, int jointIndex, f32* out) {
@@ -2059,7 +2059,7 @@ void ObjModel_RelocateModelData(u8* m) {
         ((ModelFileHeader*)m)->instrs = m + *(u32*)&((ModelFileHeader*)m)->instrs;
     }
     if (*(u32*)&((ModelFileHeader*)m)->displayLists) {
-        ((ModelFileHeader*)m)->displayLists = m + *(u32*)&((ModelFileHeader*)m)->displayLists;
+        ((ModelFileHeader*)m)->displayLists = (ModelDisplayListEntry*)(m + *(u32*)&((ModelFileHeader*)m)->displayLists);
     }
     if (*(u32*)&((ModelFileHeader*)m)->morphTargetPtrs) {
         ((ModelFileHeader*)m)->morphTargetPtrs = (u8**)(m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs);
@@ -2082,17 +2082,17 @@ void ObjModel_RelocateModelData(u8* m) {
         ((ModelFileHeader*)m)->renderOps = (Shader*)(m + *(u32*)&((ModelFileHeader*)m)->renderOps);
     }
     for (i = 0; i < ((ModelFileHeader*)m)->displayListCount + ((ModelFileHeader*)m)->shadowDisplayListCount; i++) {
-        *(u8**)(((ModelFileHeader*)m)->displayLists + i * 0x1c) =
-            m + *(u32*)(((ModelFileHeader*)m)->displayLists + i * 0x1c);
+        ((ModelFileHeader*)m)->displayLists[i].dlist =
+            m + *(u32*)&((ModelFileHeader*)m)->displayLists[i].dlist;
     }
     for (i = 0; i < ((ModelFileHeader*)m)->morphTargetCount; i++) {
         ((ModelFileHeader*)m)->morphTargetPtrs[i] = m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs[i];
     }
     if (*(u32*)&((ModelFileHeader*)m)->collisionTriangles) {
-        ((ModelFileHeader*)m)->collisionTriangles = m + *(u32*)&((ModelFileHeader*)m)->collisionTriangles;
+        ((ModelFileHeader*)m)->collisionTriangles = (ModelCollisionTriangle*)(m + *(u32*)&((ModelFileHeader*)m)->collisionTriangles);
     }
     if (*(u32*)&((ModelFileHeader*)m)->collisionBlocks) {
-        ((ModelFileHeader*)m)->collisionBlocks = m + *(u32*)&((ModelFileHeader*)m)->collisionBlocks;
+        ((ModelFileHeader*)m)->collisionBlocks = (CollisionPolygonGroup*)(m + *(u32*)&((ModelFileHeader*)m)->collisionBlocks);
     }
 }
 

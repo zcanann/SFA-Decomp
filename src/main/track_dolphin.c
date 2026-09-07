@@ -1,5 +1,6 @@
 #include "main/track_line.h"
 #include "main/map_block.h"
+#include "main/track_dolphin_map_api.h"
 #include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_depth_read_api.h"
@@ -133,8 +134,6 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
 extern u8 gTrackGridOrigin[0x104];
 
 TrackBlockDescriptor gTrackBlockDescriptors[20];
-
-u32 trackGetPackedSurfaceType(int* obj);
 
 int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z);
 
@@ -2429,7 +2428,7 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
     int minYi, maxYi;
     int j2;
     int k22;
-    u8* blk;
+    CollisionPolygonGroup* group;
     s16 *xs, *ys, *zs;
     ModelFileHeader* hdr;
     int deg;
@@ -2492,11 +2491,9 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
     flag4 = flags & 4;
 
     for (; i < count; i++) {
-        s16* bs;
         u32 bf;
-        blk = modelFileGetCollisionBlock((u8*)hdr, i);
-        bs = (s16*)blk;
-        bf = *(u32*)(blk + 0x10);
+        group = modelFileGetCollisionBlock(hdr, i);
+        bf = group->flags;
 
         if (bf & 0x100000) {
             continue;
@@ -2504,29 +2501,29 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
         if ((bf & 0x8000000) && flag20 == 0) {
             continue;
         }
-        if (x0 > bs[2] * scale) {
+        if (x0 > group->maxX * scale) {
             continue;
         }
-        if (x1 < bs[1] * scale) {
+        if (x1 < group->minX * scale) {
             continue;
         }
-        if (y0 > bs[4] * scale) {
+        if (y0 > group->maxY * scale) {
             continue;
         }
-        if (y1 < bs[3] * scale) {
+        if (y1 < group->minY * scale) {
             continue;
         }
-        if (z0 > bs[6] * scale) {
+        if (z0 > group->maxZ * scale) {
             continue;
         }
-        if (z1 < bs[5] * scale) {
+        if (z1 < group->minZ * scale) {
             continue;
         }
 
-        tEnd = *(u16*)(blk + 0x14);
-        t = *(u16*)blk;
+        tEnd = group[1].firstTri;
+        t = group->firstTri;
         for (; t < tEnd; t++) {
-            u16* twn = modelFileGetCollisionTriangle((u8*)hdr, t);
+            ModelCollisionTriangle* triangle = modelFileGetCollisionTriangle(hdr, t);
             u16* tw;
             f32 tMinX, tMaxX, tMinY, tMaxY, tMinZ, tMaxZ;
             u8* vout;
@@ -2541,7 +2538,7 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
             tMaxY = tMaxX;
             tMinZ = tMinX;
             tMaxZ = tMaxX;
-            for (j = 0, tw = twn, vout = (u8*)cur; j < 3; j++) {
+            for (j = 0, tw = triangle->vertexIndices, vout = (u8*)cur; j < 3; j++) {
                 s16* v = ObjModel_GetBaseVertexCoords(hdr, *tw);
                 f32 fx, fy, fz;
                 if (hdr->flags & 0x800) {
@@ -2677,7 +2674,7 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
                 }
             }
 
-            *(s8*)&((TrackTriangle*)cur)->surfaceType = (u8)trackGetPackedSurfaceType((int*)blk);
+            *(s8*)&((TrackTriangle*)cur)->surfaceType = (u8)trackGetPackedSurfaceType(group);
             ((TrackTriangle*)cur)->minMaxY = (u8)((maxYi << 4) | minYi);
             ((TrackTriangle*)cur)->flags = 10;
             ((TrackTriangle*)cur)->flags |= 8;
@@ -2875,7 +2872,7 @@ u8 doEdges;
         triEnd = (u32)tri0 + blk->polyGroupCount * 0x14;
         mask16 = mask;
         for (; (u32)tri < triEnd; tri += 0x14) {
-            u32 tf = ((MapTriGroup*)tri)->flags;
+            u32 tf = ((CollisionPolygonGroup*)tri)->flags;
             int t0;
             u8 type;
             u8* vq;
@@ -2903,31 +2900,31 @@ u8 doEdges;
                 }
                 type = 2;
             }
-            if (((MapTriGroup*)tri)->minY + blk->collisionYOffset > y1) {
+            if (((CollisionPolygonGroup*)tri)->minY + blk->collisionYOffset > y1) {
                 continue;
             }
-            if (((MapTriGroup*)tri)->maxY + blk->collisionYOffset < y0) {
+            if (((CollisionPolygonGroup*)tri)->maxY + blk->collisionYOffset < y0) {
                 continue;
             }
-            if (((MapTriGroup*)tri)->minX > relx1) {
+            if (((CollisionPolygonGroup*)tri)->minX > relx1) {
                 continue;
             }
-            if (((MapTriGroup*)tri)->maxX < relx0) {
+            if (((CollisionPolygonGroup*)tri)->maxX < relx0) {
                 continue;
             }
-            if (((MapTriGroup*)tri)->minZ > relz1) {
+            if (((CollisionPolygonGroup*)tri)->minZ > relz1) {
                 continue;
             }
-            if (((MapTriGroup*)tri)->maxZ < relz0) {
+            if (((CollisionPolygonGroup*)tri)->maxZ < relz0) {
                 continue;
             }
             if (tf & 4) {
                 type |= 8;
             }
-            typeb = trackGetPackedSurfaceType((int*)tri);
-            t0 = ((MapTriGroup*)tri)->firstTri;
+            typeb = trackGetPackedSurfaceType((CollisionPolygonGroup*)tri);
+            t0 = ((CollisionPolygonGroup*)tri)->firstTri;
             vq = (u8*)(bb + t0 * 8);
-            vEnd = ((MapTriGroup*)tri)[1].firstTri;
+            vEnd = ((CollisionPolygonGroup*)tri)[1].firstTri;
             vertp = (f32*)(u32)verts;
             for (; t0 < vEnd; t0++, vq += 8) {
                 u8* vo;
@@ -3074,7 +3071,7 @@ u8 doEdges;
                     }
                 }
                 {
-                    u32 tf2 = ((MapTriGroup*)tri)->flags;
+                    u32 tf2 = ((CollisionPolygonGroup*)tri)->flags;
                     u8 t2;
                     if (tf2 & 8) {
                         t2 = 0xe;

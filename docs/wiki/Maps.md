@@ -401,7 +401,7 @@ fills in nearly every remaining offset the wiki lists for this struct, matching 
 | Wiki offset/field | Confirmed here |
 |---|---|
 | 0x4C `GCpolygons` | `fn_800606DC(obj, idx)` = `obj[0x4C/4] + idx*8` — stride 8 matches `MapTriIndex` (`track_dolphin.c`: `u16 vert[3]` + `u16 cellMask`), the exact v0/v1/v2/subBlocks layout the wiki gives for `GCpolygons`. |
-| 0x50 `polygonGroups` | `mapBlockFn_800606ec(obj, idx)` = `obj[0x50/4] + idx*0x14` — stride 0x14 matches `MapTriGroup` (`firstTri`,minX..maxZ bbox, `flags`), the wiki's Polygon Groups record size. |
+| 0x50 `polygonGroups` | `mapBlockFn_800606ec(obj, idx)` = `obj[0x50/4] + idx*0x14` — stride 0x14 matches `CollisionPolygonGroup` (`firstTri`,minX..maxZ bbox, `flags`), the wiki's Polygon Groups record size. |
 | 0x58 `vertexPositions` | `setupToRenderMapBlock` (`track_dolphin.c`): `GXSetArray(GX_VA_POS, *(void**)(block+0x58), 6)` — stride 6 = `vec3s`. Also `map_block.h`'s `vertices` field. |
 | 0x5C `vertexColors` | same function: `GXSetArray(GX_VA_CLR0, *(void**)(block+0x5C), 2)` — stride 2 = `u16` (RGBA4444). |
 | 0x60 `vertexTexCoords` | same function: `GXSetArray(GX_VA_TEX0/TEX1, *(void**)(block+0x60), 4)` — stride 4 = `vec2s`. |
@@ -453,7 +453,7 @@ this codebase's runtime code repurposes that exact byte range for its own bookke
 
 - `TrackTriangle` (`track_dolphin.c:493`) is the runtime (unpacked) form of a `GCpolygons` entry;
   its `surfaceType` field is explicitly commented "copied into intersect-line records".
-  `MapTriIndex`/`MapTriGroup` (same file) are the packed on-disk forms, matching `GCpolygons` and
+  `MapTriIndex` (`map_block.h`)/`CollisionPolygonGroup` (`collision_polygon.h`) are the packed on-disk forms, matching `GCpolygons` and
   Polygon Groups byte-for-byte (see table above).
 - `PlayerState.surfaceType` (`dll/player.c`, switch at line 11132) confirms several of the wiki's
   Surface Type semantics against actual gameplay-effect code: `case 3` (Snow) reduces target speed;
@@ -538,7 +538,7 @@ faithfully stores NULL and must not "fix" the link.
        s32 flags;               /* runtime reuse of on-disk Mtx43; tested & 0x2000, & 0x20 */
        u8 pad34[0x4C - 0x34];
        MapTriIndex* gcPolygons;  /* 0x4C, stride 8, count = nPolygons @0x98 */
-       MapTriGroup* polygonGroups; /* 0x50, stride 0x14, count = polyGroupCount @0x9A */
+       CollisionPolygonGroup* polygonGroups; /* 0x50, stride 0x14, count = polyGroupCount @0x9A */
        u32* textures;           /* 0x54 */
        s32 vertices;            /* 0x58, stride 6 */
        u16* vertexColors;       /* 0x5C, stride 2 */
@@ -570,10 +570,9 @@ faithfully stores NULL and must not "fix" the link.
    } MapBlockData;
    ```
 
-   (`MapTriIndex`/`MapTriGroup`/`MapShader`/`MapBlockBoundsRec` already exist, just scattered
-   across `track_dolphin.c`/`tex_dolphin.c` rather than a shared header — unifying them would also
-   resolve the current situation where `tex_dolphin.c` re-declares its own narrower
-   `MapBlockData`.)
+   (`MapTriIndex`, `MapShader`, and `MapBlockBoundsRec` now live in `map_block.h`.
+   `CollisionPolygonGroup` is shared with model collision data through
+   `collision_polygon.h`; use these canonical headers for further recovery.)
 
 2. Rename `map_block.h`'s `layerCount` (0xA2) to something like `shaderCount` — as currently
    spelled, it reads as a duplicate of `MapShader.layerCount` (0x41, the wiki's per-shader
@@ -584,7 +583,7 @@ faithfully stores NULL and must not "fix" the link.
    (rather than transcribing the wiki's full, partly-speculative list verbatim):
 
    ```c
-   /* Collision surface type (MapTriGroup/GCpolygons Polygon Group +0x11; see
+   /* Collision surface type (CollisionPolygonGroup/GCpolygons Polygon Group +0x11; see
       docs/wiki/Maps.md "Surface Types" for the full, less-certain wiki list). Only
       values with confirmed gameplay effect in dll/player.c are named here. */
    typedef enum SurfaceType

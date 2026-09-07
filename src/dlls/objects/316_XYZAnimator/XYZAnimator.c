@@ -61,8 +61,8 @@ void XyzAnimator_captureGeometry(XyzAnimatorPlacement* placement, XyzAnimatorSta
         mapEntry = (u16*)mapBlockGetPolygonGroup(blockAddress, blockIndex);
         t = mapBlockGetPolygonGroupType(mapEntry);
         if ((int)placement->blockLayer == t) {
-            *(s16*)(state->posABuffer + groupDataOffset[0]) = ((MapTriGroup*)mapEntry)->minY;
-            *(s16*)(state->posBBuffer + groupDataOffset[0]) = ((MapTriGroup*)mapEntry)->maxY;
+            *(s16*)(state->posABuffer + groupDataOffset[0]) = ((CollisionPolygonGroup*)mapEntry)->minY;
+            *(s16*)(state->posBBuffer + groupDataOffset[0]) = ((CollisionPolygonGroup*)mapEntry)->maxY;
             groupDataOffset[0] += 2;
             triangleEnd = mapEntry[10];
             triangle = *mapEntry;
@@ -157,9 +157,9 @@ void XyzAnimator_applyToMapBlock(XyzAnimatorPlacement* placement, XyzAnimatorSta
         mapEntry = (u16*)mapBlockGetPolygonGroup(blockAddress, polygonGroupIndex);
         polygonGroupType = mapBlockGetPolygonGroupType(mapEntry);
         if ((int)placement->blockLayer == polygonGroupType) {
-            ((MapTriGroup*)mapEntry)->minY =
+            ((CollisionPolygonGroup*)mapEntry)->minY =
                 (s16)(state->offsetY + (f32) * (s16*)(state->posABuffer + groupDataOffset[0]));
-            ((MapTriGroup*)mapEntry)->maxY =
+            ((CollisionPolygonGroup*)mapEntry)->maxY =
                 (s16)(state->offsetY + (f32) * (s16*)(state->posBBuffer + groupDataOffset[0]));
             groupDataOffset[0] += 2;
             triangleEnd = mapEntry[10];
@@ -212,7 +212,7 @@ void XyzAnimator_update(GameObject* obj) {
     XyzAnimatorPlacement* placement = (XyzAnimatorPlacement*)obj->anim.placementData;
     XyzAnimatorState* state = (XyzAnimatorState*)obj->extra;
     MapBlockData* blockAddress;
-    MapTriGroup* polygonGroup;
+    CollisionPolygonGroup* polygonGroup;
     int polygonGroupIndex;
     int completedAxes;
     u8* bufferAddress;

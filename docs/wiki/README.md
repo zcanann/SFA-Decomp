@@ -101,7 +101,7 @@ Concrete, high-confidence naming/enum/struct opportunities the agents surfaced w
 - Fill include/main/map_block.h's MapBlockData padding (0x34-0x58, 0x5C-0x90) with the now-confirmed fields: gcPolygons(0x4C)/polygonGroups(0x50)/textures(0x54)/vertexColors(0x5C)/vertexTexCoords(0x60)/shaders(0x64)/displayLists(0x68)/hits(0x70)/renderInstrsMain,Transp,Water(0x78/0x7C/0x80) plus their counts(0x84/0x86/0x88, 0x98)
 - Rename map_block.h's `layerCount` (0xA2) to `shaderCount` (it bounds the shaders[] array, per fn_8006070C in dll_0134_texscroll2.c) to stop it colliding in name with MapShader.layerCount (0x41, the per-shader nLayers) in tex_dolphin.c
 - Rename map_block.h's `edgeCount` (0xA1) to `dlistCount`/`nDlists` (it bounds the displayLists[] array per MapBlock_init's fixup loop and fn_800606FC, matching the wiki's nDlists) while keeping a note that dll_013C_xyzanimator.c's EdgeVerts view of the same array is a valid alternate interpretation
-- Unify the scattered MapTriIndex/MapTriGroup (track_dolphin.c) and MapShader/MapBlockBoundsRec (tex_dolphin.c) typedefs into map_block.h so tex_dolphin.c's narrower duplicate MapBlockData declaration can be retired
+- Map records now use `map_block.h`; model and map polygon groups share `CollisionPolygonGroup` in `collision_polygon.h`. Keep consumer layouts tied to those canonical definitions.
 - Add a SurfaceType enum (SURFACE_GENERIC/GRASS/SAND/SNOW/INSTANT_DEATH/ICE/WATER/LAVA/CONVEYOR/METAL) for the confirmed-behavior subset of PlayerState.surfaceType values used in dll/player.c's switch, replacing bare case 3/8/13/26/29 literals
 
 ### Models

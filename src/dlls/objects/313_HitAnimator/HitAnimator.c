@@ -12,7 +12,7 @@
 void HitAnimator_applyBlockState(MapBlockData* block, GameObject* obj, HitAnimatorState* state,
                                  HitAnimatorPlacement* placement) {
     int index;
-    MapTriGroup* polygonGroup;
+    CollisionPolygonGroup* polygonGroup;
 
     if ((placement->setupFlags & HIT_ANIMATOR_SETUP_SKIP_POLYGONS) == 0) {
         for (index = 0; index < block->polyGroupCount; index++) {

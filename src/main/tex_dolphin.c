@@ -1,4 +1,5 @@
 #include "main/map_block.h"
+#include "main/track_dolphin_map_api.h"
 #include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_depth_read_api.h"
@@ -1231,18 +1232,18 @@ void trackUnpackVector(s16* in, f32* out) {
  * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
  * cursor. */
 
-u32 trackGetPackedSurfaceType(int* obj) {
-    u32 v = obj[4];
+u32 trackGetPackedSurfaceType(CollisionPolygonGroup* group) {
+    u32 v = group->flags;
     v &= 0x00FF0000;
     return v >> 16;
 }
 
 int mapBlockGetPolygonGroupType(void* obj) {
-    return (((MapTriGroup*)obj)->flags & 0xff000000) >> 24;
+    return (((CollisionPolygonGroup*)obj)->flags & 0xff000000) >> 24;
 }
 
 int mapBlockCountTrianglesByType(MapBlockData* block, int type) {
-    MapTriGroup* entry;
+    CollisionPolygonGroup* entry;
     int offset;
     int total;
     int i;
@@ -1251,7 +1252,7 @@ int mapBlockCountTrianglesByType(MapBlockData* block, int type) {
     offset = 0;
     count = block->polyGroupCount;
     for (i = 0; i < count; i++) {
-        entry = (MapTriGroup*)((u8*)block->polygonGroups + offset);
+        entry = (CollisionPolygonGroup*)((u8*)block->polygonGroups + offset);
         if (type == (int)((entry->flags & 0xff000000) >> 24)) {
             total += entry[1].firstTri - entry->firstTri;
         }
@@ -1264,8 +1265,8 @@ void* mapBlockGetPolygon(MapBlockData* obj, int idx) {
     return (char*)obj->gcPolygons + idx * 8;
 }
 
-MapTriGroup* mapBlockGetPolygonGroup(MapBlockData* obj, int idx) {
-    return (MapTriGroup*)obj->polygonGroups + idx;
+CollisionPolygonGroup* mapBlockGetPolygonGroup(MapBlockData* obj, int idx) {
+    return (CollisionPolygonGroup*)obj->polygonGroups + idx;
 }
 
 MapBlockBoundsRec* mapBlockGetDisplayListBounds(MapBlockData* obj, int idx) {

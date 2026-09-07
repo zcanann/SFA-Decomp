@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/model.h"
+#include "main/collision_polygon.h"
 
 typedef union MapTextureRef
 {
@@ -44,26 +45,6 @@ typedef struct MapHitLine
 
 STATIC_ASSERT(sizeof(MapHitLine) == 0x14);
 
-/* MapTriGroup -- 0x14-byte per-block triangle group header streamed from the
- * map block (blk+0x50 table).  Holds the first index into the block's 8-byte
- * MapTriIndex list plus s16 bounds; the list is closed by the NEXT group's
- * firstTri, so walkers read group[1].firstTri as their end bound. */
-typedef struct MapTriGroup
-{
-    u16 firstTri; /* 0x00 first MapTriIndex this group owns */
-    s16 minX;     /* 0x02 bounds in block-local units */
-    s16 maxX;     /* 0x04 */
-    s16 minY;     /* 0x06 */
-    s16 maxY;     /* 0x08 */
-    s16 minZ;     /* 0x0a */
-    s16 maxZ;     /* 0x0c */
-    u8 pad0E[2];  /* 0x0e */
-    u32 flags;    /* 0x10 surface kind/filter bits */
-} MapTriGroup;
-
-STATIC_ASSERT(offsetof(MapTriGroup, flags) == 0x10);
-STATIC_ASSERT(sizeof(MapTriGroup) == 0x14);
-
 /* MapTriIndex -- 8-byte triangle: three vertex indices into the block's
  * packed s16 vertex pool plus a 16-bit x/z grid-cell coverage mask. */
 typedef struct MapTriIndex
@@ -92,7 +73,7 @@ typedef struct MapBlockData {
     f32 transform[3][4];
     u8 pad3C[0x4C - 0x3C];
     void* gcPolygons; /* 0x4C: MapTriIndex[] collision mesh (stride 8), count = nPolygons @0x98 */
-    void* polygonGroups; /* 0x50: MapTriGroup[] (stride 0x14), count = polyGroupCount @0x9A */
+    void* polygonGroups; /* 0x50: CollisionPolygonGroup[] (stride 0x14), count = polyGroupCount @0x9A */
     MapTextureRef* textures; /* 0x54: file IDs converted to texture pointers after loading */
     u8* vertices; /* 0x58: base of the packed VertexS16 array (stride 6) */
     void* vertexColors; /* 0x5C: RGBA4444 (stride 2) */

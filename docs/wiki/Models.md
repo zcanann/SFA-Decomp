@@ -254,7 +254,7 @@ All offsets below were cross-checked against `include/main/model.h` (`ModelFileH
 | 0xf2 nTextures | `textureCount` | exact |
 | 0xf3 nBones, "# mtxs at Model->mtxs" | `jointCount` | exact; also `ObjHitsModelFileHeader.jointCount` in `objhits.h` at the same offset |
 | 0xf4 nVtxGroups, "added to nBones if nonzero" | `extraJointCount` | **confirmed behaviorally**: `modelGetBoneMtx` (`model.c:2610`) computes `lim = jointCount + extraJointCount` when `jointCount != 0` — exactly the wiki's described rule |
-| 0xf5 nDlists | unnamed (`unkF5` in the field list, not in the current header's named members) | **confirmed**: `model.c:415` relocation loop bound is `unkF5 + shadowDisplayListCount`, and `objprint_dolphin.c:2135` uses `unkF5` as the index *base* for the second display-list group — i.e. `unkF5` is the primary/first-group display-list count, matching the wiki's `nDlists` |
+| 0xf5 nDlists | `displayListCount` | primary group count and the shadow group's index base; relocation processes `displayListCount + shadowDisplayListCount` records |
 | 0xf6 "?" | `shadowDisplayListCount` ("count of the 2nd display-list group (shadow)") | this repo resolves what the wiki left unknown at 0xf6 |
 | 0xf7 nHitSpheres | `ObjHitsModelFileHeader.hitVolumeCount` in `objhits.h` (`STATIC_ASSERT(... == 0xF7)`) | exact, cross-file confirmation |
 | 0xf8 nShaders | `renderOpCount` | exact, consistent with the `renderOps`/`shaderInit` match above |
@@ -282,7 +282,7 @@ All offsets below were cross-checked against `include/main/model.h` (`ModelFileH
 ```
 This matches the wiki's opcode table op-for-op (opcode 1 = select texture/shader with a 6-bit index, opcode 2 = call display list with an 8-bit index, opcode 3 = vertex descriptors, opcode 4 = `renderOpMatrix` with a 4-bit count + 8-bit indices, opcode 5 = end of script). The bit-cursor implementation is `MtxBitStream` (`data` + `pos`), walked by `modelLoadMtxsToGx` (opcode 4), `ModelHeader_setupPosTexFmt` (opcode 3), and the display-list/shader dispatch in `modelDoRenderInstrs`/`modelDoAltRenderInstrs`. Opcode 0 (wiki: "unused, same as 4") wasn't specifically checked here.
 
-**DisplayListPtr → `displayLists`.** `0x1c`-byte stride (`model.c:42`: `displayLists + displayListIndex * 0x1c`) matches the wiki's implied `DisplayListPtr` size. `GXCallDisplayList(*(void**)dl, *(u16*)(dl + 4))` (`objprint_dolphin.c:1878`, `:2136`, `:2560`) reads exactly `offset`(0x00) and `size`(0x04) and nothing else in every call site checked — confirms the wiki's "only offset and size seem to be actually used".
+**DisplayListPtr → `displayLists`.** The model header and getter now use native `ModelDisplayListEntry` records, size 0x1c. Relocation fixes each record's `dlist` pointer; rendering reads that pointer and `dlistSize` at +4. The remaining 0x16 bytes remain opaque. The primary group is followed by the shadow group, whose renderer adds `displayListCount` to its local display-list index. See [model geometry tables](../model_geometry_tables.md).
 
 **Shader/materials → `renderOps` / `ObjModelRenderOp`.** `src/main/objprint_dolphin.c` has a partial `ObjModelRenderOp` struct (`textureId`@0x18, `unk1C`, `unk24`, `envTextureId`@0x34, `flags`@0x3c) for the `0x44`-byte records the wiki calls `Shader`/materials. Not a full field-for-field reconstruction, but the same array, same per-entry stride, same role (bound by render-instruction opcode 1).
 

@@ -1896,7 +1896,7 @@ static void modelDoAltRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, int
             bs.pos = pos + 8;
             idx = (w >> (pos & 7)) & 0xff;
         }
-        dl = modelFileGetDisplayList(m, idx);
+        dl = modelFileGetDisplayList((ModelFileHeader*)m, idx);
         GXCallDisplayList(dl->dlist, dl->dlistSize);
     }
 }
@@ -2113,7 +2113,8 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
             w |= p[1] << 8;
             w |= p[2] << 16;
             bs.pos = pos + 8;
-            dl = modelFileGetDisplayList(m, ((ModelFileHeader*)m)->displayListCount + ((w >> (pos & 7)) & 0xff));
+            dl = modelFileGetDisplayList((ModelFileHeader*)m,
+                                         ((ModelFileHeader*)m)->displayListCount + ((w >> (pos & 7)) & 0xff));
             GXCallDisplayList(dl->dlist, dl->dlistSize);
         } break;
         case 4:
@@ -2451,7 +2452,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
                 w |= *(u8*)pAddr << 8;
                 w |= *(u8*)(pAddr + 1) << 16;
                 bs.pos = pos + 8;
-                dl = modelFileGetDisplayList(m, (w >> (pos & 7)) & 0xff);
+                dl = modelFileGetDisplayList((ModelFileHeader*)m, (w >> (pos & 7)) & 0xff);
                 GXCallDisplayList(dl->dlist, dl->dlistSize);
             } else {
                 bs.pos += 8;
