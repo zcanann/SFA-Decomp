@@ -905,8 +905,7 @@ void curves_advanceCollision(GameObject* curveObj, CurvesCollisionState* state, 
             while (indices.point < (int)(collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK)) {
                 destinationPoint = &collision->localPointWorld[0][indices.component];
                 sourcePoint = &collision->localPointPositions[indices.component];
-                Matrix_TransformPoint(m1a, sourcePoint[0], sourcePoint[1], sourcePoint[2],
-                                      destinationPoint,
+                Matrix_TransformPoint(m1a, sourcePoint[0], sourcePoint[1], sourcePoint[2], destinationPoint,
                                       &collision->localPointWorld[0][indices.component + 1],
                                       &collision->localPointWorld[0][indices.component + 2]);
                 indices.component += 3;
@@ -916,12 +915,11 @@ void curves_advanceCollision(GameObject* curveObj, CurvesCollisionState* state, 
             if (curveObj->anim.parentAnim != NULL) {
                 if ((curveObj->anim.parentAnim->hitboxTransformState != NULL) &&
                     (ObjHits_IsObjectEnabled(curveObj->anim.parentAnim) != 0)) {
-                    index =
-                        (curveObj->anim.parentAnim->hitboxTransformState->activeMatrixIndex + 2) * 0x10;
-                    Matrix_TransformPoint(
-                        &curveObj->anim.parentAnim->hitboxTransformState->matrices[0][0][0] + index,
-                        curveObj->anim.localPosX, curveObj->anim.localPosY, curveObj->anim.localPosZ,
-                        &curveObj->anim.worldPosX, &curveObj->anim.worldPosY, &curveObj->anim.worldPosZ);
+                    index = (curveObj->anim.parentAnim->hitboxTransformState->activeMatrixIndex + 2) * 0x10;
+                    Matrix_TransformPoint(&curveObj->anim.parentAnim->hitboxTransformState->matrices[0][0][0] + index,
+                                          curveObj->anim.localPosX, curveObj->anim.localPosY, curveObj->anim.localPosZ,
+                                          &curveObj->anim.worldPosX, &curveObj->anim.worldPosY,
+                                          &curveObj->anim.worldPosZ);
                 } else {
                     Obj_TransformLocalPointToWorld(curveObj->anim.localPosX, curveObj->anim.localPosY,
                                                    curveObj->anim.localPosZ, &curveObj->anim.worldPosX,
@@ -1051,8 +1049,7 @@ void curves_advanceCollision(GameObject* curveObj, CurvesCollisionState* state, 
             while (indices.point < (int)(collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK)) {
                 destinationPoint = &collision->localPointWorld[0][indices.component];
                 sourcePoint = &collision->localPointPositions[indices.component];
-                Matrix_TransformPoint(m2a, sourcePoint[0], sourcePoint[1], sourcePoint[2],
-                                      destinationPoint,
+                Matrix_TransformPoint(m2a, sourcePoint[0], sourcePoint[1], sourcePoint[2], destinationPoint,
                                       &collision->localPointWorld[0][indices.component + 1],
                                       &collision->localPointWorld[0][indices.component + 2]);
                 indices.component += 3;
@@ -1062,9 +1059,12 @@ void curves_advanceCollision(GameObject* curveObj, CurvesCollisionState* state, 
             copyCursor = (u8*)collision;
             one = CURVES_ONE;
             for (; index < (int)(collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK); index++) {
-                *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointTarget[0][0])) = *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointWorld[0][0]));
-                *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointTarget[0][1])) = one + *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointWorld[0][1]));
-                *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointTarget[0][2])) = *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointWorld[0][2]));
+                *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointTarget[0][0])) =
+                    *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointWorld[0][0]));
+                *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointTarget[0][1])) =
+                    one + *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointWorld[0][1]));
+                *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointTarget[0][2])) =
+                    *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointWorld[0][2]));
                 copyCursor += sizeof(collision->localPointWorld[0]);
             }
             trackInvalidateDynamicSlotsForObject(curveObj);
@@ -1133,9 +1133,12 @@ void curves_advanceCollision(GameObject* curveObj, CurvesCollisionState* state, 
             copyCursor = (u8*)collision;
             one = CURVES_ONE;
             for (; index < (int)(collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK); index++) {
-                *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointTarget[0][0])) = *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointWorld[0][0]));
-                *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointTarget[0][1])) = one + *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointWorld[0][1]));
-                *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointTarget[0][2])) = *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointWorld[0][2]));
+                *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointTarget[0][0])) =
+                    *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointWorld[0][0]));
+                *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointTarget[0][1])) =
+                    one + *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointWorld[0][1]));
+                *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointTarget[0][2])) =
+                    *(f32*)(copyCursor + offsetof(CurvesCollisionState, localPointWorld[0][2]));
                 copyCursor += sizeof(collision->localPointWorld[0]);
             }
             trackInvalidateDynamicSlotsForObject(curveObj);
@@ -1145,8 +1148,7 @@ void curves_advanceCollision(GameObject* curveObj, CurvesCollisionState* state, 
         if ((curveObj->anim.parentAnim->hitboxTransformState != NULL) &&
             (ObjHits_IsObjectEnabled(curveObj->anim.parentAnim) != 0)) {
             index = (u32)curveObj->anim.parentAnim->hitboxTransformState->activeMatrixIndex * 0x10;
-            Matrix_TransformPoint(&curveObj->anim.parentAnim->hitboxTransformState->matrices[0][0][0] +
-                                      index,
+            Matrix_TransformPoint(&curveObj->anim.parentAnim->hitboxTransformState->matrices[0][0][0] + index,
                                   curveObj->anim.worldPosX, curveObj->anim.worldPosY, curveObj->anim.worldPosZ,
                                   &curveObj->anim.localPosX, &curveObj->anim.localPosY, &curveObj->anim.localPosZ);
         } else {
