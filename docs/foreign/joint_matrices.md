@@ -12,7 +12,8 @@ compiler output have not been conclusively distinguished.
 The follow-up [actual compiler audit](joint_matrices_compiler.md) identifies a
 concrete obstruction in stock GC/1.3's ordinary C frame generator and verifies
 that function-level assembly can emit the observed shape. Original authorship
-remains unresolved.
+remains unresolved. The live source is now that function-level assembly; see
+[Assembly recovery](#assembly-recovery) at the end.
 
 ## Dinosaur Planet supplies the corresponding implementation
 
@@ -234,3 +235,43 @@ Generated results and the test ELF go under `build/joint-matrices-emulation/`.
 Both default and experimental configurations pass `ninja all_source` and a
 fresh strict checksum check after this recovery; the retail DOL SHA-1 remains
 `e750e8e894707a52446118a4b84f1b58b677b269`.
+
+## Assembly recovery
+
+2026-09-07. `modelAnimBuildJointMatrices` is now a Metrowerks function-level
+`asm` body inside `src/main/render.c`, the form the compiler audit above
+verified for the retail frame sizes, private `bl` helpers, `mcrxr`/`addme.`
+and paired-single instructions. This is how an assembly routine that sits
+inside a C translation unit is represented in Metrowerks projects: the SDK's
+`PSMTXConcat` and `OSCache.c` routines in this tree use the same form. The
+internal entries carry names (`@blendJoints`, `@buildRotation`,
+`@decodeInterpolated`, `@decodePaired`, `@singlePose`, `@hierarchy`,
+`@epilogue`); other branch targets keep address-derived labels.
+
+The island's private data is declared in C beside it and lands where retail
+has it. `render.c` now owns the ranges dtk had left to auto-generated units:
+`.sdata` `0x803DB1E0..0x803DB1E8` (the output work pointer and its slot),
+`.sbss` `0x803DC7A0..0x803DC7B0` (the bone table pointer and
+`gModelRootRotX/Y/Z`), `.bss` `0x80335840..0x80335940` (the register/
+conversion scratch block) and `.sdata2` `0x803DE500..0x803DE548` (the (0, 1)
+pair, seven scalar constants and the nine sine/cosine Taylor coefficients,
+followed by the existing `gModelRenderSubframeScale`). The whole-DOL scan in
+this recovery found no other function referencing those ranges. GC/1.3 places
+a zero-initialised aggregate in `.sdata`, uninitialised objects in `.sbss` in
+reverse declaration order, and `static const` scalars referenced from an asm
+body in `.sdata2` in first-reference order after earlier array objects and
+before later ones; the retail layout follows those rules exactly, which is
+consistent with an `asm` function compiled inside this unit, without proving
+it.
+
+Verification: with relocations applied against `config/GSAE01/symbols.txt`,
+all 0x130C bytes of the assembled function equal the retail bytes, and the
+`.sdata`, `.sdata2` and `.data` sections of the unit are byte-identical to
+the carve (`report.json` data 100%). Stock DTK still carves the range as
+`gap_03_80006C6C_text` with a `type:label` symbol, so objdiff does not score
+the function in the default configuration; `--joint-matrices-nocfa` remains
+the way to see it paired. `render.c` stays `NonMatching` because
+`modelRenderInterpolateRootTransform` is unmatched. The C draft, previously
+the live body, is archived as `joint_matrices_c.c` and remains the readable
+description of the algorithm; `tools/joint_matrices_emulation_probe.py` still
+links the compiled render object and can be used as a behaviour check.

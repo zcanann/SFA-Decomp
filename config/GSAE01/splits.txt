@@ -17,7 +17,10 @@ main/render.c:
 	.text       start:0x800066E0 end:0x80008DF4
 	.rodata     start:0x802C18C0 end:0x802C1A68
 	.data       start:0x802C2D60 end:0x802C4F08
-	.sdata2     start:0x803DE544 end:0x803DE548
+	.bss        start:0x80335840 end:0x80335940
+	.sdata      start:0x803DB1E0 end:0x803DB1E8
+	.sbss       start:0x803DC7A0 end:0x803DC7B0
+	.sdata2     start:0x803DE500 end:0x803DE548
 
 main/audio.c:
 	.text       start:0x80008DF4 end:0x8000B4D0
@@ -225,7 +228,7 @@ main/pi_pathsearch.c:
 	.text       start:0x8004AA24 end:0x8004B658
 	.sdata2     start:0x803DEAA8 end:0x803DEAB0
 
-main/zlb.c:
+main/zlb.s:
 	.text       start:0x8004B658 end:0x8004BF88
 	.rodata     start:0x802C1C50 end:0x802C1D50
 	.data       start:0x8030C880 end:0x8030CEE0

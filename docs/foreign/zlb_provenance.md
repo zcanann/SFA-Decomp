@@ -4,8 +4,9 @@
 mixed C/assembly, and an unavailable or modified compiler remain hypotheses.
 The evidence below weakens the specific stock-GCC attribution; it does not
 establish that the whole function was handwritten. The old claim that `mcrxr`
-proves GCC/SN ProDG provenance is withdrawn. The live reconstruction continues
-to use ProDG 3.5 and remains `NonMatching`.
+proves GCC/SN ProDG provenance is withdrawn. The live source is now the
+assembled unit `src/main/zlb.s` (see [Assembly recovery](#assembly-recovery)
+below); the ProDG C reconstruction is archived in `zlb_decompress_gcc.c`.
 
 This investigation started at `e0cff4c0f6` and uses EN v1.0 retail, function
 `0x8004B658..0x8004BF88` (2,352 bytes / 588 instructions). The DOL SHA-256 is
@@ -273,3 +274,30 @@ PYTHONPATH=build/zlb-provenance/python-deps python3 tools/zlb_emulation_probe.py
 `--object` can select another ProDG object for the negative control. Output is
 written under `build/zlb-emulation/`; failed output/canary checks exit nonzero.
 Neither tool changes source, compiler defaults, target symbols, or splits.
+
+## Assembly recovery
+
+2026-09-07. The unit is handled the way decompilation projects handle
+retail-authored assembly: as an assembly source file, not as C that a
+compiler is asked to reproduce. `src/main/zlb.s` is assembled by the project's
+GNU `as` through the same `.s` build rule as the two Metrowerks TRK units
+(`src/dolphin/TRK_MINNOW_DOLPHIN/__exception.s` and `targsupp.s`), is listed
+as `Matching`, and links into the retail-checksummed DOL. The transcription
+uses the retail instruction stream with symbolic operands, named local labels
+for the block loop, stored/fixed/dynamic paths, table construction, symbol
+decode and match copy, and the Huffman tables as typed data. `report.json`
+scores `main/zlb` at 100% code (2,352 bytes) and 100% data (100,816 bytes);
+the `.text`, `.rodata` and `.data` sections are byte-identical to the retail
+carve.
+
+The ProDG path is no longer part of the build: `configure.py` lost the
+`--zlb-toolchain` and `--prodg-version` options and the `prodg` custom rule.
+`tools/zlb_provenance.py` still drives the installed ProDG binaries directly
+for experiments and now defaults `--source` to the archived C draft.
+`tools/zlb_emulation_probe.py` keeps comparing `build/GSAE01/src/main/zlb.o`
+with retail, which now exercises the assembled object.
+
+This is assembly recovery, as the earlier section asked for. It does not
+establish authorship: an assembler source, macro-generated assembly and an
+unavailable compiler remain possible. The C draft above remains the readable
+description of the algorithm.

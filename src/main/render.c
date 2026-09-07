@@ -325,468 +325,1357 @@ int modelRenderCopyPackedSamples(ModelRenderInstrsState* src, ModelRenderInstrsS
     }
 }
 
-typedef struct RenderJointQuaternion {
-    f32 w, x, y, z;
-} RenderJointQuaternion;
+s16 gModelRootRotZ;
+s16 gModelRootRotY;
+s16 gModelRootRotX;
+static const ModelBone* sJointMatrixBones;
+static struct {
+    void* work;
+    int* slot;
+} sJointMatrixOutput = {NULL, NULL};
+static u8 sJointMatrixScratch[0x100];
+static const f32 sJointPairZeroOne[2] = {0.0f, 1.0f};
+static const f32 sJointZero = 0.0f;
+static const f32 sJointPhaseScale = 16384.0f;
+static const f32 sJointOne = 1.0f;
+static const f32 sJointTwo = 2.0f;
+static const f32 sJointHalfScaleUnit = 0.001953125f;
+static const f32 sJointScaleUnit = 0.0009765625f;
+static const f32 sJointCosCoef8 = 2.65546059e-42f;
+static const f32 sJointCosCoef6 = -2.63291104e-31f;
+static const f32 sJointCosCoef4 = 1.3751435e-20f;
+static const f32 sJointCosCoef2 = -2.87243285e-10f;
+static const f32 sJointCosCoef0 = 1.0f;
+static const f32 sJointSinCoef7 = -8.84440041e-37f;
+static const f32 sJointSinCoef5 = 6.59063581e-26f;
+static const f32 sJointSinCoef3 = -2.29492142e-15f;
+static const f32 sJointSinCoef1 = 2.39684487e-05f;
 
-/* The animation passes reuse each matrix slot for two interleaved poses. */
-typedef union RenderJointWork {
-    f32 matrix[4][4];
-    RenderJointQuaternion quaternion[2];
-    struct {
-        u8 pad00[0x1C];
-        s16 rotation[2][3];
-        u16 scale[2][3];
-        s16 translation[2][3];
-    } pose;
-} RenderJointWork;
-
-STATIC_ASSERT(sizeof(RenderJointWork) == 0x40);
-STATIC_ASSERT(offsetof(RenderJointWork, pose.rotation) == 0x1C);
-STATIC_ASSERT(offsetof(RenderJointWork, pose.scale) == 0x28);
-STATIC_ASSERT(offsetof(RenderJointWork, pose.translation) == 0x34);
-
-typedef struct RenderJointBitstream {
-    const u8* frame[2];
-    u32 bits[2];
-    int consumed;
-} RenderJointBitstream;
-
-extern s16 gModelRootRotX;
-extern s16 gModelRootRotY;
-extern s16 gModelRootRotZ;
-
-static inline u32 render_jointReadWord(const u8* data) {
-    return (u32)data[0] << 24 | (u32)data[1] << 16 | (u32)data[2] << 8 | data[3];
+// clang-format off
+asm void modelAnimBuildJointMatrices(int* out, u8* dst, void* animState, u8* jointData, int jointCount, u8* jointScratch,
+                                     int flags, int mode) {
+    nofralloc
+    mflr r0
+    stwu r1, -0xfc(r1)
+    stw r0, 0x100(r1)
+    stfd f31, 0xf4(r1)
+    stfd f30, 0xec(r1)
+    stfd f29, 0xe4(r1)
+    stfd f28, 0xdc(r1)
+    stfd f27, 0xd4(r1)
+    stfd f26, 0xcc(r1)
+    stfd f25, 0xc4(r1)
+    stfd f24, 0xbc(r1)
+    stfd f23, 0xb4(r1)
+    stfd f22, 0xac(r1)
+    stfd f21, 0xa4(r1)
+    stfd f20, 0x9c(r1)
+    stfd f19, 0x94(r1)
+    stfd f18, 0x8c(r1)
+    stfd f17, 0x84(r1)
+    stfd f16, 0x7c(r1)
+    stfd f15, 0x74(r1)
+    stfd f14, 0x6c(r1)
+    stmw r14, 0x24(r1)
+    stw r3, sJointMatrixOutput+4(r13)
+    lwz r3, 0x0(r3)
+    stw r3, sJointMatrixOutput(r13)
+    stw r6, sJointMatrixBones(r13)
+    lfs f30, sJointZero(r2)
+    lis r11, lbl_802C3564@ha
+    addi r11, r11, lbl_802C3564@l
+    addi r11, r11, 0x1c
+    addi r15, r11, 0x6
+    andi. r17, r10, 0x40
+    bne @cachePass
+    mr r17, r10
+    andi. r17, r17, 0x1
+    beq @L_80006D08
+    mr r11, r3
+    addi r11, r11, 0x1c
+    b @L_80006D38
+@L_80006D08:
+    stw r11, 0x8(r1)
+    lwz r6, 0x34(r5)
+    lwz r12, 0x2c(r5)
+    lha r20, 0x4c(r5)
+    lfs f4, 0x4(r5)
+    mr r31, r11
+    bl @decodeInterpolated
+    lwz r11, 0x8(r1)
+    lha r14, 0x58(r5)
+    mr r24, r11
+    cmpwi r14, 0x0
+    ble @singlePose
+@L_80006D38:
+    mr r17, r10
+    andi. r17, r17, 0x2
+    beq @L_80006D50
+    mr r15, r3
+    addi r15, r15, 0x22
+    b @L_80006D74
+@L_80006D50:
+    stw r11, 0x8(r1)
+    lwz r6, 0x38(r5)
+    lwz r12, 0x30(r5)
+    lha r20, 0x4e(r5)
+    lfs f4, 0x8(r5)
+    mr r31, r15
+    addi r8, r8, 0x2
+    bl @decodeInterpolated
+    lwz r11, 0x8(r1)
+@L_80006D74:
+    psq_l f20, 0x58(r5), 1, 5
+    lha r16, 0x58(r5)
+    lfs f21, sJointPhaseScale(r2)
+    fdivs f28, f20, f21
+    mr r31, r11
+    mr r12, r15
+    bl @blendJoints
+    b @epilogue
+@cachePass:
+    lwz r6, 0x34(r5)
+    lwz r12, 0x2c(r5)
+    lha r20, 0x4c(r5)
+    lfs f28, 0x4(r5)
+    stw r11, 0x8(r1)
+    mr r31, r11
+    bl @decodePaired
+    lwz r31, 0x8(r1)
+    mr r12, r15
+    psq_st f28, 0xc(r1), 1, 3
+    psq_l f4, 0xc(r1), 1, 3
+    fsubs f28, f28, f4
+    lfs f21, sJointPhaseScale(r2)
+    fmuls f21, f21, f28
+    psq_st f21, 0xc(r1), 1, 3
+    lha r16, 0xc(r1)
+    li r19, 0x4
+    mr r10, r19
+    bl @blendJoints
+    lis r11, lbl_802C3564@ha
+    addi r11, r11, lbl_802C3564@l
+    addi r11, r11, 0x1c
+    addi r15, r11, 0x6
+    lwz r6, 0x38(r5)
+    lwz r12, 0x30(r5)
+    lha r20, 0x4e(r5)
+    lfs f4, 0x8(r5)
+    mr r31, r15
+    bl @decodeInterpolated
+    psq_l f20, 0x58(r5), 1, 5
+    lha r16, 0x58(r5)
+    lfs f21, sJointPhaseScale(r2)
+    fdivs f28, f20, f21
+    li r19, 0x1
+    mr r10, r19
+    mr r31, r3
+    addi r31, r31, 0x1c
+    mr r12, r15
+    bl @blendJoints
+    b @epilogue
+@blendJoints:
+    mflr r29
+    mr r19, r10
+    andi. r18, r19, 0x20
+    beq @L_80006E5C
+    lha r11, gModelRootRotX(r13)
+    sth r11, 0x0(r12)
+    lha r11, gModelRootRotY(r13)
+    sth r11, 0x2(r12)
+    lha r11, gModelRootRotZ(r13)
+    sth r11, 0x4(r12)
+@L_80006E5C:
+    mr r21, r31
+    lwz r22, sJointMatrixBones(r13)
+    mr r11, r7
+    andi. r18, r19, 0xc
+    beq @L_80006E84
+    mr r21, r3
+    addi r21, r21, 0x1c
+    andi. r18, r18, 0x8
+    beq @L_80006E84
+    addi r21, r21, 0x6
+@L_80006E84:
+    li r23, 0x800
+    li r14, 0x7fc
+    lfs f31, sJointOne(r2)
+    lfs f29, sJointTwo(r2)
+    fsubs f27, f31, f28
+    mulli r18, r11, 0x1c
+    add r20, r18, r22
+@L_80006EA0:
+    lbz r18, 0x3(r22)
+    slwi r17, r18, 6
+    add r24, r12, r17
+    lbz r18, 0x2(r22)
+    slwi r15, r18, 6
+    add r25, r31, r15
+    add r26, r21, r15
+    andi. r18, r19, 0xf
+    li r11, 0x2
+    beq @L_80006EF4
+    lbz r18, 0x1(r22)
+    andi. r18, r18, 0x7f
+    slwi r15, r18, 6
+    add r26, r21, r15
+    andi. r18, r19, 0x3
+    beq @L_80006EF4
+    andi. r18, r18, 0x1
+    beq @L_80006EF0
+    add r25, r31, r15
+    b @L_80006EF4
+@L_80006EF0:
+    add r24, r12, r15
+@L_80006EF4:
+    lhz r18, 0xc(r24)
+    cmpwi r18, 0x0
+    bne @L_80006F04
+    ori r18, r18, 0x400
+@L_80006F04:
+    lhz r15, 0xc(r25)
+    cmpwi r15, 0x0
+    bne @L_80006F14
+    ori r15, r15, 0x400
+@L_80006F14:
+    subf r18, r15, r18
+    mullw r18, r18, r16
+    srawi r18, r18, 14
+    add r18, r18, r15
+    sth r18, 0xc(r26)
+    lha r15, 0x18(r25)
+    addi r25, r25, 0x2
+    andi. r18, r19, 0x10
+    addi r24, r24, 0x2
+    bne @L_80006F50
+    lha r18, 0x16(r24)
+    subf r18, r15, r18
+    mullw r18, r18, r16
+    srawi r18, r18, 14
+    add r15, r15, r18
+@L_80006F50:
+    sth r15, 0x18(r26)
+    addi r26, r26, 0x2
+    mcrxr cr0
+    cmpwi r11, 0x0
+    addme r11, r11
+    bne @L_80006EF4
+    addi r22, r22, 0x1c
+    cmpw r22, r20
+    bne @L_80006EA0
+    lis r27, gRenderSinTable@ha
+    addi r27, r27, gRenderSinTable@l
+    mr r11, r7
+    lwz r22, sJointMatrixBones(r13)
+    mr r28, r9
+@L_80006F88:
+    lbz r25, 0x2(r22)
+    slwi r17, r25, 6
+    add r24, r21, r17
+    mr r18, r10
+    andi. r15, r18, 0x1
+    beq @L_80006FC8
+    lbz r25, 0x1(r22)
+    andi. r25, r25, 0x7f
+    slwi r17, r25, 6
+    add r16, r17, r3
+    add r24, r21, r17
+    lfs f20, 0x0(r16)
+    lfs f21, 0x4(r16)
+    lfs f25, 0x8(r16)
+    lfs f26, 0xc(r16)
+    b @L_80006FF0
+@L_80006FC8:
+    add r25, r31, r17
+    bl @buildRotation
+    fmuls f14, f7, f18
+    fadds f20, f10, f11
+    fmuls f15, f8, f19
+    fsubs f21, f12, f13
+    fmuls f16, f6, f19
+    fadds f25, f14, f15
+    fmuls f17, f9, f18
+    fsubs f26, f16, f17
+@L_80006FF0:
+    lbz r25, 0x3(r22)
+    slwi r17, r25, 6
+    mr r18, r10
+    andi. r15, r18, 0x2
+    beq @L_8000702C
+    lbz r25, 0x1(r22)
+    andi. r25, r25, 0x7f
+    slwi r17, r25, 6
+    add r16, r17, r3
+    addi r16, r16, 0x10
+    lfs f4, 0x0(r16)
+    lfs f5, 0x4(r16)
+    lfs f6, 0x8(r16)
+    lfs f7, 0xc(r16)
+    b @L_80007054
+@L_8000702C:
+    add r25, r12, r17
+    bl @buildRotation
+    fmuls f14, f7, f18
+    fadds f4, f10, f11
+    fmuls f15, f8, f19
+    fsubs f5, f12, f13
+    fmuls f16, f6, f19
+    fadds f6, f14, f15
+    fmuls f17, f9, f18
+    fsubs f7, f16, f17
+@L_80007054:
+    fmuls f10, f20, f4
+    fmuls f11, f21, f5
+    fmuls f12, f25, f6
+    fadds f10, f10, f11
+    fmuls f13, f26, f7
+    fadds f10, f10, f12
+    fmuls f20, f20, f27
+    fadds f10, f10, f13
+    fmuls f21, f21, f27
+    fcmpo cr0, f10, f30
+    fmuls f25, f25, f27
+    bge @L_80007094
+    fsubs f4, f30, f4
+    fsubs f5, f30, f5
+    fsubs f6, f30, f6
+    fsubs f7, f30, f7
+@L_80007094:
+    fmuls f26, f26, f27
+    fmuls f4, f4, f28
+    lbz r20, 0x1(r22)
+    slwi r20, r20, 24
+    srawi r20, r20, 24
+    and. r20, r20, r28
+    bge @L_800070C4
+    mcrxr cr0
+    addme. r11, r11
+    addi r22, r22, 0x1c
+    bne @L_80006F88
+    b @hierarchy
+@L_800070C4:
+    andi. r20, r20, 0x7f
+    fmuls f5, f5, f28
+    fadds f10, f20, f4
+    fmuls f6, f6, f28
+    fadds f11, f21, f5
+    fmuls f7, f7, f28
+    fadds f12, f25, f6
+    fmuls f0, f11, f29
+    fadds f13, f26, f7
+    mr r18, r10
+    andi. r17, r18, 0xc
+    beq @L_8000713C
+    lbz r25, 0x1(r22)
+    andi. r25, r25, 0x7f
+    slwi r17, r25, 6
+    mr r25, r3
+    andi. r18, r18, 0x8
+    beq @L_80007110
+    addi r25, r25, 0x10
+@L_80007110:
+    add r17, r17, r25
+    stfs f10, 0x0(r17)
+    stfs f11, 0x4(r17)
+    stfs f12, 0x8(r17)
+    stfs f13, 0xc(r17)
+    mcrxr cr0
+    addme. r11, r11
+    addi r22, r22, 0x1c
+    bne @L_80006F88
+    mtlr r29
+    blr
+@L_8000713C:
+    fmuls f1, f12, f29
+    slwi r20, r20, 6
+    lwz r15, sJointMatrixOutput(r13)
+    add r15, r15, r20
+    lfs f2, sJointHalfScaleUnit(r2)
+    psq_l f6, 0x18(r24), 1, 5
+    lfs f7, 0x4(r22)
+    fmuls f6, f6, f2
+    fadds f3, f6, f7
+    psq_l f6, 0x1a(r24), 1, 5
+    lfs f7, 0x8(r22)
+    fmuls f8, f6, f2
+    fadds f8, f8, f7
+    psq_l f6, 0x1c(r24), 1, 5
+    lfs f7, 0xc(r22)
+    fmuls f6, f6, f2
+    lhz r18, 0xc(r24)
+    lhz r16, 0xe(r24)
+    lhz r25, 0x10(r24)
+    stfs f3, 0xc(r15)
+    fmuls f2, f13, f29
+    fadds f6, f6, f7
+    fmuls f3, f10, f0
+    stfs f6, 0x2c(r15)
+    fmuls f4, f10, f1
+    stfs f8, 0x1c(r15)
+    fmuls f5, f10, f2
+    fmuls f6, f11, f0
+    fmuls f7, f11, f1
+    fmuls f8, f11, f2
+    fadds f20, f7, f5
+    fmuls f17, f13, f2
+    fsubs f21, f8, f4
+    fmuls f15, f12, f1
+    fadds f25, f8, f4
+    fmuls f16, f12, f2
+    fadds f19, f15, f17
+    fsubs f19, f31, f19
+    fsubs f26, f16, f3
+    fadds f10, f6, f15
+    fsubs f10, f31, f10
+    fadds f4, f16, f3
+    fsubs f2, f7, f5
+    fadds f3, f6, f17
+    fsubs f3, f31, f3
+    lfs f1, sJointScaleUnit(r2)
+    cmpwi r18, 0x0
+    bne @L_80007244
+    stfs f19, 0x0(r15)
+    stfs f20, 0x4(r15)
+    stfs f21, 0x8(r15)
+    cmpwi r16, 0x0
+    bne @L_80007270
+@L_80007210:
+    stfs f2, 0x4(r15)
+    stfs f3, 0x14(r15)
+    stfs f4, 0x24(r15)
+    cmpwi r25, 0x0
+    bne @L_8000729C
+@L_80007224:
+    stfs f25, 0x8(r15)
+    stfs f26, 0x18(r15)
+    stfs f10, 0x28(r15)
+@L_80007230:
+    mcrxr cr0
+    addme. r11, r11
+    addi r22, r22, 0x1c
+    bne @L_80006F88
+    b @hierarchy
+@L_80007244:
+    sth r18, 0xc(r1)
+    psq_l f0, 0xc(r1), 1, 3
+    fmuls f0, f0, f1
+    fmuls f19, f19, f0
+    stfs f19, 0x0(r15)
+    fmuls f20, f20, f0
+    stfs f20, 0x10(r15)
+    fmuls f21, f21, f0
+    stfs f21, 0x20(r15)
+    cmpwi r16, 0x0
+    beq @L_80007210
+@L_80007270:
+    sth r16, 0xc(r1)
+    psq_l f0, 0xc(r1), 1, 3
+    fmuls f0, f0, f1
+    fmuls f2, f2, f0
+    stfs f2, 0x4(r15)
+    fmuls f3, f3, f0
+    stfs f3, 0x14(r15)
+    fmuls f4, f4, f0
+    stfs f4, 0x24(r15)
+    cmpwi r25, 0x0
+    beq @L_80007224
+@L_8000729C:
+    sth r25, 0xc(r1)
+    psq_l f0, 0xc(r1), 1, 3
+    fmuls f0, f0, f1
+    fmuls f25, f25, f0
+    stfs f25, 0x8(r15)
+    fmuls f26, f26, f0
+    stfs f26, 0x18(r15)
+    fmuls f10, f10, f0
+    stfs f10, 0x28(r15)
+    b @L_80007230
+@buildRotation:
+    mflr r0
+    stwu r1, -0x34(r1)
+    stw r0, 0x38(r1)
+    stfs f23, 0x10(r1)
+    stfs f24, 0x14(r1)
+    stfs f25, 0x18(r1)
+    stfs f26, 0x1c(r1)
+    stfs f27, 0x20(r1)
+    stfs f28, 0x24(r1)
+    stfs f29, 0x28(r1)
+    stfs f30, 0x2c(r1)
+    stfs f31, 0x30(r1)
+    lfs f31, sJointCosCoef8(r2)
+    lfs f30, sJointCosCoef6(r2)
+    lfs f29, sJointCosCoef4(r2)
+    lfs f28, sJointCosCoef2(r2)
+    lfs f27, sJointCosCoef0(r2)
+    lfs f26, sJointSinCoef7(r2)
+    lfs f25, sJointSinCoef5(r2)
+    lfs f24, sJointSinCoef3(r2)
+    lfs f23, sJointSinCoef1(r2)
+    lha r16, 0x0(r25)
+    srawi r16, r16, 1
+    slwi r15, r16, 2
+    sth r15, 0xc(r1)
+    psq_l f9, 0xc(r1), 1, 5
+    fmuls f8, f9, f9
+    fmadds f7, f8, f26, f25
+    fmadds f7, f8, f7, f24
+    fmadds f7, f8, f7, f23
+    fmuls f7, f9, f7
+    fmadds f6, f8, f31, f30
+    fmadds f6, f8, f6, f29
+    fmadds f6, f8, f6, f28
+    fmadds f6, f8, f6, f27
+    addi r15, r16, 0x2000
+    andi. r15, r15, 0xc000
+    beq @L_80007378
+    cmpwi r15, 0x4000
+    beq @L_80007384
+    cmplwi r15, 0x8000
+    beq @L_80007390
+    fneg f1, f6
+    fmr f0, f7
+    b @L_80007398
+@L_80007378:
+    fmr f1, f7
+    fmr f0, f6
+    b @L_80007398
+@L_80007384:
+    fmr f1, f6
+    fneg f0, f7
+    b @L_80007398
+@L_80007390:
+    fneg f1, f7
+    fneg f0, f6
+@L_80007398:
+    lha r16, 0x2(r25)
+    srawi r16, r16, 1
+    slwi r15, r16, 2
+    sth r15, 0xc(r1)
+    psq_l f9, 0xc(r1), 1, 5
+    fmuls f8, f9, f9
+    fmadds f7, f8, f26, f25
+    fmadds f7, f8, f7, f24
+    fmadds f7, f8, f7, f23
+    fmuls f7, f9, f7
+    fmadds f6, f8, f31, f30
+    fmadds f6, f8, f6, f29
+    fmadds f6, f8, f6, f28
+    fmadds f6, f8, f6, f27
+    addi r15, r16, 0x2000
+    andi. r15, r15, 0xc000
+    beq @L_800073F8
+    cmpwi r15, 0x4000
+    beq @L_80007404
+    cmplwi r15, 0x8000
+    beq @L_80007410
+    fneg f3, f6
+    fmr f2, f7
+    b @L_80007418
+@L_800073F8:
+    fmr f3, f7
+    fmr f2, f6
+    b @L_80007418
+@L_80007404:
+    fmr f3, f6
+    fneg f2, f7
+    b @L_80007418
+@L_80007410:
+    fneg f3, f7
+    fneg f2, f6
+@L_80007418:
+    lha r16, 0x4(r25)
+    srawi r16, r16, 1
+    slwi r15, r16, 2
+    sth r15, 0xc(r1)
+    psq_l f9, 0xc(r1), 1, 5
+    fmuls f8, f9, f9
+    fmadds f7, f8, f26, f25
+    fmadds f7, f8, f7, f24
+    fmadds f7, f8, f7, f23
+    fmuls f7, f9, f7
+    fmadds f6, f8, f31, f30
+    fmadds f6, f8, f6, f29
+    fmadds f6, f8, f6, f28
+    fmadds f6, f8, f6, f27
+    addi r15, r16, 0x2000
+    andi. r15, r15, 0xc000
+    beq @L_80007478
+    cmpwi r15, 0x4000
+    beq @L_80007484
+    cmplwi r15, 0x8000
+    beq @L_80007490
+    fneg f19, f6
+    fmr f18, f7
+    b @L_80007498
+@L_80007478:
+    fmr f19, f7
+    fmr f18, f6
+    b @L_80007498
+@L_80007484:
+    fmr f19, f6
+    fneg f18, f7
+    b @L_80007498
+@L_80007490:
+    fneg f19, f7
+    fneg f18, f6
+@L_80007498:
+    fmuls f6, f0, f2
+    fmuls f7, f0, f3
+    fmuls f8, f1, f2
+    fmuls f9, f1, f3
+    fmuls f10, f6, f18
+    fmuls f11, f9, f19
+    fmuls f12, f8, f18
+    fmuls f13, f7, f19
+    lfs f23, 0x10(r1)
+    lfs f24, 0x14(r1)
+    lfs f25, 0x18(r1)
+    lfs f26, 0x1c(r1)
+    lfs f27, 0x20(r1)
+    lfs f28, 0x24(r1)
+    lfs f29, 0x28(r1)
+    lfs f30, 0x2c(r1)
+    lfs f31, 0x30(r1)
+    lwz r0, 0x38(r1)
+    mtlr r0
+    addi r1, r1, 0x34
+    blr
+@decodeInterpolated:
+    mr r22, r31
+    addi r14, r6, 0x4
+    lbz r16, 0x0(r6)
+    add r20, r20, r12
+    psq_st f4, 0xc(r1), 1, 3
+    psq_l f6, 0xc(r1), 1, 3
+    fsubs f4, f4, f6
+    lfs f5, sJointPhaseScale(r2)
+    fmuls f6, f4, f5
+    psq_st f6, 0xc(r1), 1, 3
+    lhz r29, 0xc(r1)
+    slwi r19, r16, 1
+    add r16, r16, r19
+    li r23, 0x20
+    lwz r19, 0x0(r12)
+    lwz r28, 0x0(r20)
+    li r27, 0x0
+    li r18, 0x3
+@L_80007534:
+    lhz r26, 0x0(r14)
+    andi. r17, r26, 0xf
+    andi. r25, r26, 0xfff0
+    cmpwi r17, 0x0
+    beq @L_800075B0
+    add r27, r27, r17
+    cmpwi r27, 0x20
+    ble @L_8000757C
+    subf r27, r17, r27
+    srwi r19, r27, 3
+    add r12, r12, r19
+    add r20, r20, r19
+    andi. r27, r27, 0x7
+    lwz r19, 0x0(r12)
+    lwz r28, 0x0(r20)
+    slw r19, r19, r27
+    slw r28, r28, r27
+    add r27, r27, r17
+@L_8000757C:
+    subf r24, r17, r23
+    srw r30, r19, r24
+    srw r24, r28, r24
+    subf r24, r30, r24
+    slwi r24, r24, 18
+    srawi r24, r24, 18
+    mullw r24, r24, r29
+    srawi r24, r24, 14
+    add r30, r30, r24
+    slwi r30, r30, 2
+    add r25, r25, r30
+    slw r19, r19, r17
+    slw r28, r28, r17
+@L_800075B0:
+    sth r25, 0x0(r31)
+    addi r14, r14, 0x2
+    stw r14, 0xc(r1)
+    li r14, 0x0
+    sth r14, 0xc(r31)
+    sth r14, 0x18(r31)
+    lwz r14, 0xc(r1)
+    andi. r25, r26, 0x10
+    bne @L_80007624
+@L_800075D4:
+    mcrxr cr0
+    addme. r18, r18
+    bne @L_800075E8
+    li r18, 0x3
+    addi r31, r31, 0x3a
+@L_800075E8:
+    addi r31, r31, 0x2
+    mcrxr cr0
+    addme. r16, r16
+    bne @L_80007534
+    mr r19, r8
+@L_800075FC:
+    lhz r25, 0x0(r19)
+    cmpwi r25, 0x1000
+    beqlr
+    add r25, r25, r22
+    lha r30, 0x0(r25)
+    lha r24, 0x4(r19)
+    add r30, r30, r24
+    sth r30, 0x0(r25)
+    addi r19, r19, 0x8
+    b @L_800075FC
+@L_80007624:
+    lhz r26, 0x0(r14)
+    andi. r17, r26, 0x10
+    beq @L_800076B8
+    andi. r25, r26, 0xffc0
+    andi. r11, r26, 0x20
+    andi. r17, r26, 0xf
+    beq @L_800076A0
+    add r27, r27, r17
+    cmpwi r27, 0x20
+    ble @L_80007674
+    subf r27, r17, r27
+    srwi r19, r27, 3
+    add r12, r12, r19
+    add r20, r20, r19
+    andi. r27, r27, 0x7
+    lwz r19, 0x0(r12)
+    lwz r28, 0x0(r20)
+    slw r19, r19, r27
+    slw r28, r28, r27
+    add r27, r27, r17
+@L_80007674:
+    subf r24, r17, r23
+    srw r30, r19, r24
+    srw r24, r28, r24
+    subf r24, r30, r24
+    mullw r24, r24, r29
+    srawi r24, r24, 14
+    add r30, r30, r24
+    slwi r30, r30, 1
+    add r25, r25, r30
+    slw r19, r19, r17
+    slw r28, r28, r17
+@L_800076A0:
+    sth r25, 0xc(r31)
+    addi r14, r14, 0x2
+    lhz r26, 0x0(r14)
+    cmpwi r11, 0x0
+    bne @L_800076B8
+    b @L_800075D4
+@L_800076B8:
+    andi. r25, r26, 0xfff0
+    andi. r17, r26, 0xf
+    beq @L_8000772C
+    add r27, r27, r17
+    cmpwi r27, 0x20
+    ble @L_800076F8
+    subf r27, r17, r27
+    srwi r19, r27, 3
+    add r12, r12, r19
+    add r20, r20, r19
+    andi. r27, r27, 0x7
+    lwz r19, 0x0(r12)
+    lwz r28, 0x0(r20)
+    slw r19, r19, r27
+    slw r28, r28, r27
+    add r27, r27, r17
+@L_800076F8:
+    subf r24, r17, r23
+    srw r30, r19, r24
+    srw r24, r28, r24
+    subf r24, r30, r24
+    slwi r24, r24, 16
+    srawi r24, r24, 16
+    mullw r24, r24, r29
+    srawi r24, r24, 14
+    add r30, r30, r24
+    rlwinm r30, r30, 0, 0, 31
+    add r25, r25, r30
+    slw r19, r19, r17
+    slw r28, r28, r17
+@L_8000772C:
+    sth r25, 0x18(r31)
+    addi r14, r14, 0x2
+    b @L_800075D4
+@decodePaired:
+    mr r22, r31
+    addi r14, r6, 0x4
+    lbz r16, 0x0(r6)
+    add r20, r20, r12
+    slwi r19, r16, 1
+    add r16, r16, r19
+    li r23, 0x20
+    lwz r19, 0x0(r12)
+    lwz r28, 0x0(r20)
+    li r27, 0x0
+    li r18, 0x3
+@L_80007764:
+    lhz r25, 0x0(r14)
+    andi. r17, r25, 0xf
+    bne @L_8000777C
+    sth r25, 0x0(r31)
+    sth r25, 0x6(r31)
+    b @L_800077E0
+@L_8000777C:
+    andi. r25, r25, 0xfff0
+    add r27, r27, r17
+    cmpwi r27, 0x20
+    ble @L_800077B4
+    subf r27, r17, r27
+    srwi r19, r27, 3
+    add r12, r12, r19
+    add r20, r20, r19
+    andi. r27, r27, 0x7
+    lwz r19, 0x0(r12)
+    lwz r28, 0x0(r20)
+    slw r19, r19, r27
+    slw r28, r28, r27
+    add r27, r27, r17
+@L_800077B4:
+    subf r24, r17, r23
+    srw r30, r19, r24
+    srw r24, r28, r24
+    slwi r30, r30, 2
+    add r30, r30, r25
+    slwi r24, r24, 2
+    add r24, r24, r25
+    slw r19, r19, r17
+    slw r28, r28, r17
+    sth r30, 0x0(r31)
+    sth r24, 0x6(r31)
+@L_800077E0:
+    addi r14, r14, 0x2
+    stw r14, 0xc(r1)
+    li r14, 0x0
+    sth r14, 0xc(r31)
+    sth r14, 0x12(r31)
+    sth r14, 0x18(r31)
+    sth r14, 0x1e(r31)
+    lwz r14, 0xc(r1)
+    andi. r25, r25, 0x10
+    bne @L_80007864
+@L_80007808:
+    mcrxr cr0
+    addme. r18, r18
+    bne @L_8000781C
+    li r18, 0x3
+    addi r31, r31, 0x3a
+@L_8000781C:
+    addi r31, r31, 0x2
+    mcrxr cr0
+    addme. r16, r16
+    bne @L_80007764
+    mr r19, r8
+@L_80007830:
+    lhz r25, 0x0(r19)
+    cmpwi r25, 0x1000
+    beqlr
+    add r25, r25, r22
+    lha r30, 0x0(r25)
+    lha r24, 0x4(r19)
+    add r30, r30, r24
+    sth r30, 0x0(r25)
+    lha r30, 0x6(r25)
+    add r30, r30, r24
+    sth r30, 0x6(r25)
+    addi r19, r19, 0x8
+    b @L_80007830
+@L_80007864:
+    lhz r25, 0x0(r14)
+    andi. r17, r25, 0x10
+    beq @L_80007900
+    andi. r11, r25, 0x20
+    andi. r17, r25, 0xf
+    bne @L_80007888
+    sth r25, 0xc(r31)
+    sth r25, 0x12(r31)
+    b @L_800078EC
+@L_80007888:
+    andi. r25, r25, 0xffc0
+    add r27, r27, r17
+    cmpwi r27, 0x20
+    ble @L_800078C0
+    subf r27, r17, r27
+    srwi r19, r27, 3
+    add r12, r12, r19
+    add r20, r20, r19
+    andi. r27, r27, 0x7
+    lwz r19, 0x0(r12)
+    lwz r28, 0x0(r20)
+    slw r19, r19, r27
+    slw r28, r28, r27
+    add r27, r27, r17
+@L_800078C0:
+    subf r24, r17, r23
+    srw r30, r19, r24
+    srw r24, r28, r24
+    slwi r30, r30, 1
+    add r30, r30, r25
+    slwi r24, r24, 1
+    add r24, r24, r25
+    slw r19, r19, r17
+    slw r28, r28, r17
+    sth r30, 0xc(r31)
+    sth r24, 0x12(r31)
+@L_800078EC:
+    addi r14, r14, 0x2
+    lhz r25, 0x0(r14)
+    cmpwi r11, 0x0
+    bne @L_80007900
+    b @L_80007808
+@L_80007900:
+    andi. r17, r25, 0xf
+    bne @L_80007914
+    sth r25, 0x18(r31)
+    sth r25, 0x1e(r31)
+    b @L_80007978
+@L_80007914:
+    andi. r25, r25, 0xfff0
+    add r27, r27, r17
+    cmpwi r27, 0x20
+    ble @L_8000794C
+    subf r27, r17, r27
+    srwi r19, r27, 3
+    add r12, r12, r19
+    add r20, r20, r19
+    andi. r27, r27, 0x7
+    lwz r19, 0x0(r12)
+    lwz r28, 0x0(r20)
+    slw r19, r19, r27
+    slw r28, r28, r27
+    add r27, r27, r17
+@L_8000794C:
+    subf r24, r17, r23
+    srw r30, r19, r24
+    srw r24, r28, r24
+    rlwinm r30, r30, 0, 0, 31
+    add r30, r30, r25
+    rlwinm r24, r24, 0, 0, 31
+    add r24, r24, r25
+    slw r19, r19, r17
+    slw r28, r28, r17
+    sth r30, 0x18(r31)
+    sth r24, 0x1e(r31)
+@L_80007978:
+    addi r14, r14, 0x2
+    b @L_80007808
+@singlePose:
+    lwz r22, sJointMatrixBones(r13)
+    lwz r6, sJointMatrixOutput(r13)
+    mr r25, r7
+    mulli r25, r25, 0x1c
+    add r30, r25, r22
+    mr r25, r9
+    li r27, 0x200
+    li r19, 0x400
+    li r20, 0x600
+    lfs f21, sJointScaleUnit(r2)
+    lfs f29, sJointHalfScaleUnit(r2)
+    li r14, 0x7fc
+    li r23, 0x800
+    lis r31, gRenderSinTable@ha
+    addi r31, r31, gRenderSinTable@l
+@singlePoseJoint:
+    lbz r15, 0x1(r22)
+    slwi r15, r15, 24
+    srawi r15, r15, 24
+    and. r15, r15, r25
+    bge @L_800079E4
+    addi r22, r22, 0x1c
+    nop
+    cmpw r22, r30
+    bne @singlePoseJoint
+    b @hierarchy
+@L_800079E4:
+    slwi r18, r15, 6
+    lbz r15, 0x2(r22)
+    add r3, r18, r6
+    slwi r11, r15, 6
+    add r28, r24, r11
+    lis r18, sJointMatrixScratch@ha
+    addi r18, r18, sJointMatrixScratch@l
+    stfs f23, 0x0(r18)
+    stfs f24, 0x4(r18)
+    stfs f25, 0x8(r18)
+    stfs f26, 0xc(r18)
+    stfs f27, 0x10(r18)
+    stfs f28, 0x14(r18)
+    stfs f29, 0x18(r18)
+    stfs f30, 0x1c(r18)
+    stfs f31, 0x20(r18)
+    lfs f31, sJointCosCoef8(r2)
+    lfs f30, sJointCosCoef6(r2)
+    lfs f29, sJointCosCoef4(r2)
+    lfs f28, sJointCosCoef2(r2)
+    lfs f27, sJointCosCoef0(r2)
+    lfs f26, sJointSinCoef7(r2)
+    lfs f25, sJointSinCoef5(r2)
+    lfs f24, sJointSinCoef3(r2)
+    lfs f23, sJointSinCoef1(r2)
+    lhz r16, 0x0(r28)
+    slwi r15, r16, 2
+    sth r15, 0x24(r18)
+    psq_l f9, 0x24(r18), 1, 5
+    fmuls f8, f9, f9
+    fmadds f7, f8, f26, f25
+    fmadds f7, f8, f7, f24
+    fmadds f7, f8, f7, f23
+    fmuls f7, f9, f7
+    fmadds f6, f8, f31, f30
+    fmadds f6, f8, f6, f29
+    fmadds f6, f8, f6, f28
+    fmadds f6, f8, f6, f27
+    addi r15, r16, 0x2000
+    andi. r15, r15, 0xc000
+    beq @L_80007AA4
+    cmpwi r15, 0x4000
+    beq @L_80007AB0
+    cmplwi r15, 0x8000
+    beq @L_80007ABC
+    fneg f1, f6
+    fmr f0, f7
+    b @L_80007AC4
+@L_80007AA4:
+    fmr f1, f7
+    fmr f0, f6
+    b @L_80007AC4
+@L_80007AB0:
+    fmr f1, f6
+    fneg f0, f7
+    b @L_80007AC4
+@L_80007ABC:
+    fneg f1, f7
+    fneg f0, f6
+@L_80007AC4:
+    lhz r16, 0x2(r28)
+    slwi r15, r16, 2
+    sth r15, 0x24(r18)
+    psq_l f9, 0x24(r18), 1, 5
+    fmuls f8, f9, f9
+    fmadds f7, f8, f26, f25
+    fmadds f7, f8, f7, f24
+    fmadds f7, f8, f7, f23
+    fmuls f7, f9, f7
+    fmadds f6, f8, f31, f30
+    fmadds f6, f8, f6, f29
+    fmadds f6, f8, f6, f28
+    fmadds f6, f8, f6, f27
+    addi r15, r16, 0x2000
+    andi. r15, r15, 0xc000
+    beq @L_80007B20
+    cmpwi r15, 0x4000
+    beq @L_80007B2C
+    cmplwi r15, 0x8000
+    beq @L_80007B38
+    fneg f3, f6
+    fmr f2, f7
+    b @L_80007B40
+@L_80007B20:
+    fmr f3, f7
+    fmr f2, f6
+    b @L_80007B40
+@L_80007B2C:
+    fmr f3, f6
+    fneg f2, f7
+    b @L_80007B40
+@L_80007B38:
+    fneg f3, f7
+    fneg f2, f6
+@L_80007B40:
+    lhz r16, 0x4(r28)
+    slwi r15, r16, 2
+    sth r15, 0x24(r18)
+    psq_l f9, 0x24(r18), 1, 5
+    fmuls f8, f9, f9
+    fmadds f7, f8, f26, f25
+    fmadds f7, f8, f7, f24
+    fmadds f7, f8, f7, f23
+    fmuls f7, f9, f7
+    fmadds f6, f8, f31, f30
+    fmadds f6, f8, f6, f29
+    fmadds f6, f8, f6, f28
+    fmadds f6, f8, f6, f27
+    addi r15, r16, 0x2000
+    andi. r15, r15, 0xc000
+    beq @L_80007B9C
+    cmpwi r15, 0x4000
+    beq @L_80007BA8
+    cmplwi r15, 0x8000
+    beq @L_80007BB4
+    fneg f5, f6
+    fmr f4, f7
+    b @L_80007BBC
+@L_80007B9C:
+    fmr f5, f7
+    fmr f4, f6
+    b @L_80007BBC
+@L_80007BA8:
+    fmr f5, f6
+    fneg f4, f7
+    b @L_80007BBC
+@L_80007BB4:
+    fneg f5, f7
+    fneg f4, f6
+@L_80007BBC:
+    lfs f23, 0x0(r18)
+    lfs f24, 0x4(r18)
+    lfs f25, 0x8(r18)
+    lfs f26, 0xc(r18)
+    lfs f27, 0x10(r18)
+    lfs f28, 0x14(r18)
+    lfs f29, 0x18(r18)
+    lfs f30, 0x1c(r18)
+    lfs f31, 0x20(r18)
+    psq_l f6, 0x18(r28), 1, 5
+    lfs f7, 0x4(r22)
+    fmuls f6, f6, f29
+    fadds f6, f7, f6
+    stfs f6, 0xc(r3)
+    psq_l f6, 0x1a(r28), 1, 5
+    lfs f7, 0x8(r22)
+    fmuls f6, f6, f29
+    fadds f6, f7, f6
+    stfs f6, 0x1c(r3)
+    psq_l f6, 0x1c(r28), 1, 5
+    lfs f7, 0xc(r22)
+    fmuls f6, f6, f29
+    fadds f6, f7, f6
+    fmuls f7, f0, f5
+    stfs f6, 0x2c(r3)
+    fmuls f6, f1, f5
+    fmuls f8, f1, f4
+    fmuls f9, f0, f4
+    fmuls f12, f2, f4
+    lhz r15, 0xc(r28)
+    fmuls f13, f2, f5
+    cmpwi r15, 0x0
+    bne @L_80007CB8
+    stfs f12, 0x0(r3)
+    fsubs f14, f30, f3
+    stfs f13, 0x10(r3)
+@L_80007C4C:
+    fmuls f15, f8, f3
+    stfs f14, 0x20(r3)
+    fsubs f15, f15, f7
+    lhz r15, 0xe(r28)
+    fmuls f16, f6, f3
+    cmpwi r15, 0x0
+    bne @L_80007CF8
+    stfs f15, 0x4(r3)
+    fadds f16, f16, f9
+    fmuls f17, f1, f2
+    stfs f16, 0x14(r3)
+@L_80007C78:
+    fmuls f18, f9, f3
+    stfs f17, 0x24(r3)
+    fadds f18, f18, f6
+    lhz r15, 0x10(r28)
+    fmuls f19, f7, f3
+    cmpwi r15, 0x0
+    bne @L_80007D3C
+    stfs f18, 0x8(r3)
+    fsubs f19, f19, f8
+    fmuls f20, f0, f2
+    stfs f19, 0x18(r3)
+    addi r22, r22, 0x1c
+    stfs f20, 0x28(r3)
+    cmpw r22, r30
+    bne @singlePoseJoint
+    b @hierarchy
+@L_80007CB8:
+    sth r15, 0xc(r1)
+    psq_l f10, 0xc(r1), 1, 3
+    fmuls f10, f10, f21
+    fsubs f14, f30, f3
+    fmuls f12, f12, f10
+    stfs f12, 0x0(r3)
+    fmuls f13, f13, f10
+    lhz r15, 0xe(r28)
+    fmuls f14, f14, f10
+    stfs f13, 0x10(r3)
+    cmpwi r15, 0x0
+    beq @L_80007C4C
+    fmuls f15, f8, f3
+    stfs f14, 0x20(r3)
+    fsubs f15, f15, f7
+    fmuls f16, f6, f3
+@L_80007CF8:
+    sth r15, 0xc(r1)
+    psq_l f10, 0xc(r1), 1, 3
+    fmuls f10, f10, f21
+    fadds f16, f16, f9
+    fmuls f15, f15, f10
+    fmuls f17, f1, f2
+    stfs f15, 0x4(r3)
+    fmuls f16, f16, f10
+    lhz r15, 0x10(r28)
+    fmuls f17, f17, f10
+    stfs f16, 0x14(r3)
+    cmpwi r15, 0x0
+    beq @L_80007C78
+    fmuls f18, f9, f3
+    stfs f17, 0x24(r3)
+    fadds f18, f18, f6
+    fmuls f19, f7, f3
+@L_80007D3C:
+    sth r15, 0xc(r1)
+    psq_l f10, 0xc(r1), 1, 3
+    fmuls f10, f10, f21
+    fsubs f19, f19, f8
+    fmuls f18, f18, f10
+    fmuls f20, f0, f2
+    stfs f18, 0x8(r3)
+    fmuls f19, f19, f10
+    stfs f19, 0x18(r3)
+    fmuls f20, f20, f10
+    addi r22, r22, 0x1c
+    stfs f20, 0x28(r3)
+    cmpw r22, r30
+    bne @singlePoseJoint
+@hierarchy:
+    lis r21, sJointPairZeroOne@ha
+    addi r21, r21, sJointPairZeroOne@l
+    psq_l f18, 0x0(r21), 0, 0
+    mr r21, r10
+    andi. r21, r21, 0xc
+    bne @epilogue
+    mr r26, r4
+    lis r21, lbl_802C3564+0x1900@ha
+    addi r21, r21, lbl_802C3564+0x1900@l
+    mr r17, r21
+    lwz r30, sJointMatrixOutput(r13)
+    lwz r25, sJointMatrixBones(r13)
+    mr r22, r9
+    lbz r19, 0x1(r25)
+    slwi r19, r19, 24
+    srawi r19, r19, 24
+    andi. r23, r19, 0x7f
+    and r19, r19, r22
+    mr r27, r7
+    slwi r20, r27, 6
+    add r20, r20, r30
+    slwi r20, r23, 6
+    add r28, r20, r30
+    cmpwi r19, 0x0
+    bge @L_80007DF0
+    li r23, -0x5
+    mcrxr cr0
+    addme. r27, r27
+    addi r25, r25, 0x1c
+    bne @L_80007DF8
+    b @epilogue
+@L_80007DF0:
+    lfs f21, 0x0(r28)
+    b @L_80007E4C
+@L_80007DF8:
+    lbz r19, 0x1(r25)
+    slwi r19, r19, 24
+    srawi r19, r19, 24
+    and. r19, r19, r22
+    bge @L_80007E24
+    li r23, -0x1
+    mcrxr cr0
+    addme. r27, r27
+    addi r25, r25, 0x1c
+    bne @L_80007DF8
+    b @epilogue
+@L_80007E24:
+    slwi r20, r19, 6
+    add r28, r20, r30
+    add r17, r21, r19
+    lbz r20, 0x0(r25)
+    cmpw r20, r23
+    mr r23, r19
+    beq @L_80007E68
+    lfs f21, 0x0(r28)
+    slwi r26, r20, 6
+    add r26, r26, r30
+@L_80007E4C:
+    psq_l f0, 0x0(r26), 0, 0
+    psq_l f1, 0x8(r26), 0, 0
+    psq_l f2, 0x10(r26), 0, 0
+    psq_l f3, 0x18(r26), 0, 0
+    psq_l f4, 0x20(r26), 0, 0
+    psq_l f5, 0x28(r26), 0, 0
+    b @L_80007E80
+@L_80007E68:
+    ps_mr f0, f12
+    ps_mr f1, f13
+    ps_mr f2, f14
+    ps_mr f3, f15
+    ps_mr f4, f16
+    ps_mr f5, f17
+@L_80007E80:
+    psq_l f6, 0x0(r28), 0, 0
+    psq_l f7, 0x8(r28), 0, 0
+    psq_l f8, 0x10(r28), 0, 0
+    psq_l f9, 0x18(r28), 0, 0
+    psq_l f10, 0x20(r28), 0, 0
+    psq_l f11, 0x28(r28), 0, 0
+    ps_muls0 f12, f6, f0
+    ps_muls0 f13, f7, f0
+    ps_muls0 f14, f6, f2
+    ps_muls0 f15, f7, f2
+    ps_muls0 f16, f6, f4
+    ps_muls0 f17, f7, f4
+    ps_madds1 f12, f8, f0, f12
+    ps_madds1 f13, f9, f0, f13
+    ps_madds1 f14, f8, f2, f14
+    ps_madds1 f15, f9, f2, f15
+    ps_madds1 f16, f8, f4, f16
+    ps_madds1 f17, f9, f4, f17
+    ps_madds0 f12, f10, f1, f12
+    ps_madds0 f13, f11, f1, f13
+    ps_madds0 f14, f10, f3, f14
+    ps_madds0 f15, f11, f3, f15
+    ps_madds0 f16, f10, f5, f16
+    ps_madds0 f17, f11, f5, f17
+    ps_madds1 f13, f18, f1, f13
+    ps_madds1 f15, f18, f3, f15
+    ps_madds1 f17, f18, f5, f17
+    psq_st f12, 0x0(r28), 0, 0
+    psq_st f13, 0x8(r28), 0, 0
+    psq_st f14, 0x10(r28), 0, 0
+    psq_st f15, 0x18(r28), 0, 0
+    psq_st f16, 0x20(r28), 0, 0
+    psq_st f17, 0x28(r28), 0, 0
+    lbz r19, 0x0(r17)
+    mcrxr cr0
+    addme r27, r27
+    addi r25, r25, 0x1c
+    cmpwi r27, 0x0
+    bne @L_80007DF8
+@epilogue:
+    lwz r0, 0x100(r1)
+    mtlr r0
+    lmw r14, 0x24(r1)
+    lfd f31, 0xf4(r1)
+    lfd f30, 0xec(r1)
+    lfd f29, 0xe4(r1)
+    lfd f28, 0xdc(r1)
+    lfd f27, 0xd4(r1)
+    lfd f26, 0xcc(r1)
+    lfd f25, 0xc4(r1)
+    lfd f24, 0xbc(r1)
+    lfd f23, 0xb4(r1)
+    lfd f22, 0xac(r1)
+    lfd f21, 0xa4(r1)
+    lfd f20, 0x9c(r1)
+    lfd f19, 0x94(r1)
+    lfd f18, 0x8c(r1)
+    lfd f17, 0x84(r1)
+    lfd f16, 0x7c(r1)
+    lfd f15, 0x74(r1)
+    lfd f14, 0x6c(r1)
+    addi r1, r1, 0xfc
+    blr
 }
+// clang-format on
 
-static inline void render_jointReadBits(RenderJointBitstream* stream, int width, int* first, int* second) {
-    int advance;
-    if (stream->consumed + width > 32) {
-        advance = stream->consumed >> 3;
-        stream->frame[0] += advance;
-        stream->frame[1] += advance;
-        stream->consumed &= 7;
-        stream->bits[0] = render_jointReadWord(stream->frame[0]) << stream->consumed;
-        stream->bits[1] = render_jointReadWord(stream->frame[1]) << stream->consumed;
-    }
-    *first = stream->bits[0] >> (32 - width);
-    *second = stream->bits[1] >> (32 - width);
-    stream->bits[0] <<= width;
-    stream->bits[1] <<= width;
-    stream->consumed += width;
-}
-
-static inline u16 render_jointPhase(f32 phase) {
-    /* GQR3 stores an unsigned halfword, saturating before truncation. */
-    if (phase <= 0.0f) {
-        return 0;
-    }
-    if (phase >= 65535.0f) {
-        return 65535;
-    }
-    return (u16)phase;
-}
-
-static inline int render_jointComponent(RenderJointBitstream* stream, u16 command, int shift, int fraction, int paired,
-                                        int* second) {
-    int firstDelta, secondDelta, difference;
-    int width = command & 0xF;
-    int base = command & (shift == 1 ? 0xFFC0 : 0xFFF0);
-    if (width == 0) {
-        /* The paired decoder retains the flag bits in constant scale words. */
-        *second = paired ? command : base;
-        return *second;
-    }
-    render_jointReadBits(stream, width, &firstDelta, &secondDelta);
-    if (paired) {
-        *second = base + (secondDelta << shift);
-        return base + (firstDelta << shift);
-    }
-    difference = secondDelta - firstDelta;
-    if (shift == 2) {
-        difference = (s16)((u32)difference << 2) >> 2;
-    } else if (shift == 0) {
-        difference = (s16)difference;
-    }
-    firstDelta += (difference * fraction) >> 14;
-    return base + firstDelta * (1 << shift);
-}
-
-static void render_jointDecode(RenderJointWork* work, int channel, const ObjAnimFrameHeader* header, const u8* frame,
-                               s16 stride, f32 phase, const s16* adjustments, int paired) {
-    RenderJointBitstream stream;
-    const u16* command = header->trackDescriptors;
-    int fraction = render_jointPhase((phase - render_jointPhase(phase)) * 16384.0f);
-    int count = header->jointCount;
-    int joint, axis, second;
-    u16 rotation, scale;
-    stream.frame[0] = frame;
-    stream.frame[1] = frame + stride;
-    stream.bits[0] = render_jointReadWord(stream.frame[0]);
-    stream.bits[1] = render_jointReadWord(stream.frame[1]);
-    stream.consumed = 0;
-    for (joint = 0; joint < count; joint++) {
-        for (axis = 0; axis < 3; axis++) {
-            rotation = *command++;
-            work[joint].pose.rotation[channel][axis] =
-                render_jointComponent(&stream, rotation, 2, fraction, paired, &second);
-            work[joint].pose.scale[channel][axis] = 0;
-            work[joint].pose.translation[channel][axis] = 0;
-            if (paired) {
-                work[joint].pose.rotation[1][axis] = second;
-                work[joint].pose.scale[1][axis] = 0;
-                work[joint].pose.translation[1][axis] = 0;
-            }
-            if (rotation & 0x10) {
-                scale = *command;
-                if (scale & 0x10) {
-                    command++;
-                    work[joint].pose.scale[channel][axis] =
-                        render_jointComponent(&stream, scale, 1, fraction, paired, &second);
-                    if (paired) {
-                        work[joint].pose.scale[1][axis] = second;
-                    }
-                    if (!(scale & 0x20)) {
-                        continue;
-                    }
-                }
-                work[joint].pose.translation[channel][axis] =
-                    render_jointComponent(&stream, *command++, 0, fraction, paired, &second);
-                if (paired) {
-                    work[joint].pose.translation[1][axis] = second;
-                }
-            }
-        }
-    }
-    while ((u16)adjustments[0] != 0x1000) {
-        s16* value = (s16*)((u8*)work->pose.rotation[channel] + (u16)adjustments[0]);
-        *value += adjustments[2];
-        if (paired) {
-            value[3] += adjustments[2];
-        }
-        adjustments += 4;
-    }
-}
-
-static inline void render_jointSinCos(int angle, f32* sine, f32* cosine) {
-    f32 x = (s16)(angle * 4);
-    f32 square = x * x;
-    f32 s, c;
-    /* Coefficients in the retail pool at 803DE520..803DE540. */
-    s = square * -8.844400411022846e-37f + 6.590635807686931e-26f;
-    s = square * s + -2.2949214211376474e-15f;
-    s = square * s + 2.396844865870662e-05f;
-    s = x * s;
-    c = square * 2.6554605898955283e-42f + -2.6329110382853367e-31f;
-    c = square * c + 1.37514350128194e-20f;
-    c = square * c + -2.872432847134121e-10f;
-    c = square * c + 1.0f;
-    switch ((angle + 0x2000) & 0xC000) {
-    case 0:
-        *sine = s;
-        *cosine = c;
-        break;
-    case 0x4000:
-        *sine = c;
-        *cosine = -s;
-        break;
-    case 0x8000:
-        *sine = -s;
-        *cosine = -c;
-        break;
-    default:
-        *sine = -c;
-        *cosine = s;
-        break;
-    }
-}
-
-static inline void render_jointQuaternion(const s16* rotation, RenderJointQuaternion* result) {
-    f32 sx, cx, sy, cy, sz, cz;
-    f32 cc, cs, sc, ss;
-    render_jointSinCos(rotation[0] >> 1, &sx, &cx);
-    render_jointSinCos(rotation[1] >> 1, &sy, &cy);
-    render_jointSinCos(rotation[2] >> 1, &sz, &cz);
-    cc = cx * cy;
-    cs = cx * sy;
-    sc = sx * cy;
-    ss = sx * sy;
-    result->w = cc * cz + ss * sz;
-    result->x = sc * cz - cs * sz;
-    result->y = cs * cz + sc * sz;
-    result->z = cc * sz - ss * cz;
-}
-
-static inline void render_jointStoreMatrix(RenderJointWork* output, const ModelBone* bone, const RenderJointWork* pose,
-                                           int channel, f32 rotation[3][3], int blended) {
-    int axis, row;
-    u16 scale[3];
-    s16 translation[3];
-    /* Output may overlap the pose. Consume all packed components first. */
-    for (axis = 0; axis < 3; axis++) {
-        scale[axis] = pose->pose.scale[channel][axis];
-        translation[axis] = pose->pose.translation[channel][axis];
-    }
-    for (axis = 0; axis < 3; axis++) {
-        output->matrix[axis][3] = translation[axis] * (1.0f / 512.0f) + bone->head[axis];
-    }
-    for (axis = 0; axis < 3; axis++) {
-        if (scale[axis] != 0) {
-            f32 factor = scale[axis] * (1.0f / 1024.0f);
-            for (row = 0; row < 3; row++) {
-                output->matrix[row][axis] = rotation[row][axis] * factor;
-            }
-        } else if (blended && axis == 0) {
-            /* Retail 800071FC stores this unscaled column across the first row. */
-            output->matrix[0][0] = rotation[0][0];
-            output->matrix[0][1] = rotation[1][0];
-            output->matrix[0][2] = rotation[2][0];
-        } else {
-            for (row = 0; row < 3; row++) {
-                output->matrix[row][axis] = rotation[row][axis];
-            }
-        }
-    }
-}
-
-static inline void render_jointBlend(RenderJointWork* output, const ModelBone* bones, int count, RenderJointWork* first,
-                                     int firstChannel, RenderJointWork* second, int secondChannel, int fraction,
-                                     f32 weight, int flags, int mode) {
-    RenderJointWork* blended = first;
-    int blendedChannel = firstChannel;
-    int joint, axis, firstIndex, secondIndex, blendIndex, index;
-    int firstScale, secondScale, translation;
-    f32 inverseWeight = 1.0f - weight;
-    f32 dot, xx, xy, xz, yy, yz, zz, wx, wy, wz;
-    f32 rotation[3][3];
-    RenderJointQuaternion a, b, q;
-    if (mode & 0x20) {
-        second[0].pose.rotation[secondChannel][0] = gModelRootRotX;
-        second[0].pose.rotation[secondChannel][1] = gModelRootRotY;
-        second[0].pose.rotation[secondChannel][2] = gModelRootRotZ;
-    }
-    if (mode & 0xC) {
-        blended = output;
-        blendedChannel = (mode & 8) != 0;
-    }
-    for (joint = 0; joint < count; joint++) {
-        firstIndex = bones[joint].idx[1];
-        secondIndex = bones[joint].idx[2];
-        blendIndex = firstIndex;
-        if (mode & 0xF) {
-            blendIndex = bones[joint].idx[0] & 0x7F;
-            if (mode & 1) {
-                firstIndex = blendIndex;
-            } else if (mode & 2) {
-                secondIndex = blendIndex;
-            }
-        }
-        for (axis = 0; axis < 3; axis++) {
-            firstScale = first[firstIndex].pose.scale[firstChannel][axis];
-            secondScale = second[secondIndex].pose.scale[secondChannel][axis];
-            if (firstScale == 0) {
-                firstScale = 1024;
-            }
-            if (secondScale == 0) {
-                secondScale = 1024;
-            }
-            blended[blendIndex].pose.scale[blendedChannel][axis] =
-                firstScale + (((secondScale - firstScale) * fraction) >> 14);
-            translation = first[firstIndex].pose.translation[firstChannel][axis];
-            if (!(mode & 0x10)) {
-                translation +=
-                    ((second[secondIndex].pose.translation[secondChannel][axis] - translation) * fraction) >> 14;
-            }
-            blended[blendIndex].pose.translation[blendedChannel][axis] = translation;
-        }
-    }
-    for (joint = 0; joint < count; joint++) {
-        firstIndex = bones[joint].idx[1];
-        secondIndex = bones[joint].idx[2];
-        blendIndex = firstIndex;
-        index = bones[joint].idx[0] & 0x7F;
-        if (mode & 1) {
-            a = output[index].quaternion[0];
-            blendIndex = index;
-        } else {
-            render_jointQuaternion(first[firstIndex].pose.rotation[firstChannel], &a);
-        }
-        if (mode & 2) {
-            b = output[index].quaternion[1];
-        } else {
-            render_jointQuaternion(second[secondIndex].pose.rotation[secondChannel], &b);
-        }
-        dot = a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z;
-        if (dot < 0.0f) {
-            b.w = -b.w;
-            b.x = -b.x;
-            b.y = -b.y;
-            b.z = -b.z;
-        }
-        if (((s8)bones[joint].idx[0] & flags) < 0) {
-            continue;
-        }
-        q.w = a.w * inverseWeight + b.w * weight;
-        q.x = a.x * inverseWeight + b.x * weight;
-        q.y = a.y * inverseWeight + b.y * weight;
-        q.z = a.z * inverseWeight + b.z * weight;
-        if (mode & 0xC) {
-            output[index].quaternion[(mode & 8) != 0] = q;
-            continue;
-        }
-        xx = q.x * (q.x * 2.0f);
-        xy = q.x * (q.y * 2.0f);
-        xz = q.x * (q.z * 2.0f);
-        yy = q.y * (q.y * 2.0f);
-        yz = q.y * (q.z * 2.0f);
-        zz = q.z * (q.z * 2.0f);
-        wx = q.w * (q.x * 2.0f);
-        wy = q.w * (q.y * 2.0f);
-        wz = q.w * (q.z * 2.0f);
-        rotation[0][0] = 1.0f - (yy + zz);
-        rotation[1][0] = xy + wz;
-        rotation[2][0] = xz - wy;
-        rotation[0][1] = xy - wz;
-        rotation[1][1] = 1.0f - (xx + zz);
-        rotation[2][1] = yz + wx;
-        rotation[0][2] = xz + wy;
-        rotation[1][2] = yz - wx;
-        rotation[2][2] = 1.0f - (xx + yy);
-        render_jointStoreMatrix(&output[index & flags], &bones[joint], &blended[blendIndex], blendedChannel, rotation,
-                                1);
-    }
-}
-
-static inline void render_jointSinglePose(RenderJointWork* output, const ModelBone* bones, int count,
-                                          const RenderJointWork* pose, int flags) {
-    int joint, index;
-    f32 sx, cx, sy, cy, sz, cz;
-    f32 cxsz, sxsz, sxcz, cxcz;
-    f32 rotation[3][3];
-    const s16* angles;
-    for (joint = 0; joint < count; joint++) {
-        index = (s8)bones[joint].idx[0] & flags;
-        if (index < 0) {
-            continue;
-        }
-        angles = pose[bones[joint].idx[1]].pose.rotation[0];
-        render_jointSinCos(angles[0], &sx, &cx);
-        render_jointSinCos(angles[1], &sy, &cy);
-        render_jointSinCos(angles[2], &sz, &cz);
-        cxsz = cx * sz;
-        sxsz = sx * sz;
-        sxcz = sx * cz;
-        cxcz = cx * cz;
-        rotation[0][0] = cy * cz;
-        rotation[1][0] = cy * sz;
-        rotation[2][0] = 0.0f - sy;
-        rotation[0][1] = sxcz * sy - cxsz;
-        rotation[1][1] = sxsz * sy + cxcz;
-        rotation[2][1] = sx * cy;
-        rotation[0][2] = cxcz * sy + sxsz;
-        rotation[1][2] = cxsz * sy - sxcz;
-        rotation[2][2] = cx * cy;
-        render_jointStoreMatrix(&output[index], &bones[joint], &pose[bones[joint].idx[1]], 0, rotation, 0);
-    }
-}
-
-static void render_jointHierarchy(RenderJointWork* output, const f32 root[4][4], const ModelBone* bones, int count,
-                                  int flags) {
-    f32 result[3][4];
-    f32 parent[3][4];
-    int joint, index, previous = -5, row, col;
-    const f32(*source)[4];
-    for (joint = 0; joint < count; joint++) {
-        index = (s8)bones[joint].idx[0] & flags;
-        if (index < 0) {
-            previous = joint == 0 ? -5 : -1;
-            continue;
-        }
-        if (joint == 0 || (u8)bones[joint].parent != previous) {
-            source = joint == 0 ? root : output[(u8)bones[joint].parent].matrix;
-            for (row = 0; row < 3; row++) {
-                for (col = 0; col < 4; col++) {
-                    parent[row][col] = source[row][col];
-                }
-            }
-        }
-        if (joint == 0) {
-            index = bones[joint].idx[0] & 0x7F;
-        }
-        previous = index;
-        for (row = 0; row < 3; row++) {
-            for (col = 0; col < 4; col++) {
-                f32 value = output[index].matrix[0][col] * parent[row][0];
-                value = output[index].matrix[1][col] * parent[row][1] + value;
-                value = output[index].matrix[2][col] * parent[row][2] + value;
-                if (col == 3) {
-                    value += parent[row][3];
-                }
-                result[row][col] = value;
-            }
-        }
-        for (row = 0; row < 3; row++) {
-            for (col = 0; col < 4; col++) {
-                output[index].matrix[row][col] = result[row][col];
-                parent[row][col] = result[row][col];
-            }
-        }
-    }
-}
-
-void modelAnimBuildJointMatrices(int* out, u8* dst, void* animState, u8* jointData, int jointCount, u8* jointScratch,
-                                 int flags, int mode) {
-    RenderJointWork* output = *(RenderJointWork**)out;
-    RenderJointWork* work = (RenderJointWork*)lbl_802C3564;
-    RenderJointWork* first = work;
-    RenderJointWork* second = work;
-    ObjAnimState* anim = animState;
-    const ModelBone* bones = (const ModelBone*)jointData;
-    const s16* adjustments = (const s16*)jointScratch;
-    int fraction = (s16)anim->eventCountdown;
-    f32 weight = fraction / 16384.0f;
-    if (mode & 0x40) {
-        render_jointDecode(work, 0, anim->frameData[0], anim->frameStreamCursors[0], anim->frameStreamStrides[0],
-                           anim->framePhases[0], adjustments, 1);
-        weight = anim->framePhases[0] - render_jointPhase(anim->framePhases[0]);
-        render_jointBlend(output, bones, jointCount, work, 0, work, 1, (s16)render_jointPhase(16384.0f * weight),
-                          weight, flags, 4);
-        /* A masked final joint exits the retail cache pass through the outer epilogue. */
-        if (((s8)bones[jointCount - 1].idx[0] & flags) < 0) {
-            return;
-        }
-        render_jointDecode(work, 1, anim->frameData[1], anim->frameStreamCursors[1], anim->frameStreamStrides[1],
-                           anim->framePhases[1], adjustments, 0);
-        weight = fraction / 16384.0f;
-        mode = 1;
-        first = output;
-    } else {
-        if (mode & 1) {
-            first = output;
-        } else {
-            render_jointDecode(work, 0, anim->frameData[0], anim->frameStreamCursors[0], anim->frameStreamStrides[0],
-                               anim->framePhases[0], adjustments, 0);
-            if (fraction <= 0) {
-                render_jointSinglePose(output, bones, jointCount, work, flags);
-                if (!(mode & 0xC)) {
-                    render_jointHierarchy(output, (const f32(*)[4])dst, bones, jointCount, flags);
-                }
-                return;
-            }
-        }
-        if (mode & 2) {
-            second = output;
-        } else {
-            render_jointDecode(work, 1, anim->frameData[1], anim->frameStreamCursors[1], anim->frameStreamStrides[1],
-                               anim->framePhases[1], adjustments + 1, 0);
-        }
-    }
-    render_jointBlend(output, bones, jointCount, first, 0, second, 1, fraction, weight, flags, mode);
-    if (!(mode & 0xC)) {
-        render_jointHierarchy(output, (const f32(*)[4])dst, bones, jointCount, flags);
-    }
-}
 
 typedef u64 RenderPackedAddress;
 

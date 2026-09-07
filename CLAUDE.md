@@ -7,6 +7,10 @@ retail binary. Main lib compiled with MWCC GC/2.0; audio/MSL with 1.2.5n.
 - Recover the **plausible 2002 C** a Rare dev would have written. Inline `asm{}` is banned outside
   `src/dolphin/`. Inside SDK code, the only exception is paired-single `psq_l`/`psq_st` when MWCC has
   no intrinsic and a known-good donor or original binary proves the sequence. A clean-C 90% beats an asm 100%.
+  The two retail assembly islands are handled as decomp projects handle authored asm, not as C to be
+  matched: `src/main/zlb.s` is an assembled TU and `modelAnimBuildJointMatrices` in `src/main/render.c`
+  is an MWCC function-level `asm` body, both byte-verified (`docs/foreign/`). Adding a third needs the
+  same provenance case.
 - Match % truth = `report.json` `fuzzy_match_percent`. Diff tools locate divergence; they don't certify it.
 - **Fresh eyes.** This file is deliberately tiny and is **not** a catalogue of techniques or solved
   cases — that omission is on purpose. If a fix isn't here, that means nothing: read the target asm and

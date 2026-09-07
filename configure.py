@@ -143,22 +143,6 @@ parser.add_argument(
     help="disable progress calculation",
 )
 parser.add_argument(
-    "--zlb-toolchain",
-    dest="zlb_toolchain",
-    type=str,
-    choices=["prodg", "mwcc"],
-    default="prodg",
-    help="compiler for src/main/zlb.c; mwcc is a diagnostic comparison path "
-    "only (retail compiler provenance is unresolved)",
-)
-parser.add_argument(
-    "--prodg-version",
-    dest="prodg_version",
-    type=str,
-    default="3.5",
-    help="ProDG release under build/compilers/ProDG when --zlb-toolchain=prodg",
-)
-parser.add_argument(
     "--joint-matrices-nocfa",
     action="store_true",
     help="experimental EN joint-matrix function bounds (run tools/dtk_nocfa.py first)",
@@ -255,40 +239,6 @@ if matching_units_path.is_file():
     config.reconfig_deps.append(matching_units_path)
 
 config.scratch_preset_id = None
-
-prodg_compilers = Path(args.compilers) if args.compilers else Path("build/compilers")
-prodg_binutils = Path(args.binutils) if args.binutils else Path("build/binutils")
-prodg_as = prodg_binutils / ("powerpc-eabi-as.exe" if is_windows() else "powerpc-eabi-as")
-prodg_dir = prodg_compilers / "ProDG" / args.prodg_version
-if is_windows():
-    prodg_wrapper = ""
-    prodg_shell = "cmd /c "
-else:
-    prodg_wrapper = f"{args.wrapper} " if args.wrapper else "build/tools/wibo "
-    prodg_shell = ""
-prodg_implicit = [
-    str(prodg_compilers) if args.compilers is None else str(prodg_dir / "cc1.exe"),
-    str(prodg_binutils) if args.binutils is None else str(prodg_as),
-    *([prodg_wrapper.strip()] if prodg_wrapper else []),
-]
-config.custom_build_rules = [
-    {
-        "name": "prodg",
-        "command": f"{prodg_shell}{prodg_wrapper}{prodg_dir / 'cpp.exe'} -Iinclude -P $in $basefile.i"
-        f" && {prodg_wrapper}{prodg_dir / 'cc1.exe'} $basefile.i"
-        " -quiet -O1 -fno-common -frerun-loop-opt -frerun-cse-after-loop -o $basefile.s"
-        f" && {prodg_as} -mgekko $basefile.s -o $out",
-        "description": "PRODG $out",
-    },
-]
-
-if args.zlb_toolchain == "prodg":
-    zlb_object_kwargs = {
-        "custom_rule": "prodg",
-        "custom_rule_implicit": prodg_implicit,
-    }
-else:
-    zlb_object_kwargs = {}
 
 cflags_base = [
     "-nodefaults",
@@ -1856,7 +1806,7 @@ config.libs = [
             Object(NonMatching, "main/pi_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_zerodata, "-inline", "noauto"]),
             Object(NonMatching, "main/pi_videoinit.c", cflags=[*cflags_dll_noopt_nocse_noloopinv_nolifetimes_noprop_zerodata, "-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "main/pi_pathsearch.c", cflags=[*cflags_dll_noopt_noloopinv_zerodata, "-inline", "noauto"]),
-            Object(NonMatching, "main/zlb.c", cflags=cflags_base, **zlb_object_kwargs),
+            Object(Matching, "main/zlb.s"),
             Object(Matching, "main/shader_dolphin.c"),
             Object(MatchingFor("GSAE01"), "main/boot_logo.c"),
             Object(NonMatching, "main/rcp_dolphin.c", cflags=cflags_dll_noopt_noautoinline),

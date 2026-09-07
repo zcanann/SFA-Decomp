@@ -207,7 +207,7 @@ def is_c_source(path):
     # ONLY compiled .cpp; every other C-shaped file the build does not compile
     # is screened out by the liveness check in walk(), which asks
     # tools/source_coverage_audit.py -- build.ninja plus group #includes --
-    # rather than trusting the extension.  The two assembled .s units stay
+    # rather than trusting the extension.  The assembled .s units stay
     # outside: a C-shape screen has nothing to say about assembly.  Every
     # never-compiled source is outside SCAN_ROOTS, so the GATING population
     # of the file-type gap is 0 either way.

@@ -166,7 +166,7 @@ asset.c           (19) main/gameloop.c + main/pi_dolphin.c       [BODY] DP asset
     LoadObject/LoadDLL/EnqueueLoad/QueueTick/RomLoad ~ SFA animationLoad / loadAsset /
     loadAssetFileById / loadTextureFile / getTabEntry / doQueuedLoads / loadDataFiles.
 acache.c           (4) main/gameloop.c  (cacheAllocAndCopy)      [?]
-rarezip.c          (6) main/zlb.c                                [BODY] the Rare zip/ZLB decompressor
+rarezip.c          (6) main/zlb.s                                [BODY] the Rare zip/ZLB decompressor
                                                                  (SFA's is FOREIGN-COMPILER, do not touch)
 print.c           (26) main/dll_80136a40.c                       [BODY] DP diPrintf/sprintf/strcpy
 di_cpu.c          (17) main/dll_80136a40.c                       [L1 14]  == SFA debugPrintf /
