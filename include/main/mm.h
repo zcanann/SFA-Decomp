@@ -8,8 +8,8 @@ int roundUpTo4(int value);
 int roundUpTo8(int value);
 int roundUpTo16(int value);
 int roundUpTo32(int value);
-void mm_free(void *ptr);
-void *mmAlloc(int size, int type, int flag);
+void mm_free(void* ptr);
+void* mmAlloc(int size, int type, int flag);
 void* getCache(void);
 void cacheQueueWait(int sync);
 void copyToCache(void* dst, void* src, u32 count);
@@ -19,7 +19,6 @@ void AtomicSList_Push(void** list, void* node);
 void* AtomicSList_Pop(void** list);
 int printHeapStats(int mode);
 void* stackCreate(int count, int size);
-
 
 void mmFree(void* p);
 void mmFreeDeferred(void* p);
