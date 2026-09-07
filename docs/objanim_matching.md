@@ -168,3 +168,96 @@ ninja
 Both full-build checks pass. Because the TU remains `NonMatching`, the strict
 checksum validates the matching build's retail fallback for this unit; it does
 not claim that the seven remaining source differences are exact.
+
+## Cross-architecture and register-role comparison (2026-09-07)
+
+The sibling `../dinosaur-planet` checkout supplies both reconstructed C and the
+ROM-backed MIPS assembly for `objGetAnimChange`. The 270 annotated instruction
+words in `asm/objanim.s` were checked against their file offsets in
+`baserom.z64`; all agree. The function occupies `0x8002493C..0x80024D74`
+(exclusive end), and its 1,080 instruction bytes have SHA-256
+`35087f98f06f518373a8b2481c3281e2093d7ee2b511855e7f30a4a3dd35fdbb`.
+The C contains explicitly marked matching artifacts and is not original source.
+
+| Operation | Dinosaur Planet ROM | SFA EN retail |
+| --- | --- | --- |
+| Function size | 270 instructions, 1,080 bytes | 285 instructions, 1,140 bytes |
+| Blend-weight denominator | 1023.0f | 16384.0f |
+| Signed sample conversion | `lh`, `mtc1`, `cvt.s.w` | `lha`, `xoris`, stack word stores, `lfd`, `fsubs` |
+| Loop addressing | Carries a move-sample pointer and byte offset, advances both by two, resets on wrap | Recomputes the doubled index and move address after wrap handling |
+| Blended delta | Two sample differences, separate scale/weight multiplies and additions | Same two differences; contracts one weighted multiply/add into `fmadds` |
+| Instruction order | Interleaves blend loads with move conversion/multiply | Completes the move product before calculating the blend address |
+
+Both binaries support the same cumulative-distance search and signed sample
+interpretation. Their address induction, scheduling, floating-point contraction,
+ABI and object layouts differ. The MIPS register names and load scheduling do
+not establish the GC source cursor lifetimes, and importing its arithmetic
+spelling does not solve the match.
+
+### Closed mapped interference graphs
+
+New LLDB captures independently reproduce the baseline object hash above.
+A second source override replaces only the blended loop's cursor reassignment
+and blend calculation with the following header-relative access:
+
+```c
+blendDistanceDelta = blendScale *
+    ((f32)((ObjAnimRootCurveAxis*)(blendSamples - 1))->samples[sampleIndex + 1] -
+     ((ObjAnimRootCurveAxis*)(blendSamples - 1))->samples[sampleIndex]);
+```
+
+This is a diagnostic variant, not a retained source change. `blendSamples`
+already points past the selected axis's presence marker; subtracting one
+halfword recovers its header. Unlike a cast at `blendSamples` itself, this
+spelling emits the retail `add`/`lha` sequence. It has all retail FP operands
+and ten GPR operand differences. Its instrumented and ordinary objects share
+SHA-256 `f90b5a41153858e08cdaf30399eede248a0fea7a0fb55d86c904f5d7fd83c9a8`.
+
+`tools/mwcc_register_compare.py` follows emitted instruction records back to
+pre-rewrite virtual operands, checks whether their correspondence is one-to-one,
+and compares the captured interference edges under that correspondence. It
+first reuses the object-hash, IR/ELF alignment, simplification and physical-color
+replay checks. It requires equal opcode streams; it does not prove semantic
+equivalence or compare different architectures.
+
+| Class | Mapped nodes, including fixed registers | Partition conflicts | Mapped edge differences | Unmapped neighboring nodes |
+| --- | ---: | ---: | ---: | ---: |
+| GPR | 122 | 0 | 0 | 0 |
+| FPR | 105 | 0 | 0 | 0 |
+
+Thus the mapped graphs are closed and have identical interference, despite
+different virtual numbering and physical choices. The exact changed roles are:
+
+| Role | Baseline virtual / physical | Typed-view virtual / physical |
+| --- | --- | --- |
+| Move product | 46 / f12 | 98 / f11 |
+| FP conversion bias | 92 / f11 | 91 / f12 |
+| Blend address | 47 / r9 | 133 / r8 |
+| Doubled sample index | 126 / r9 | 125 / r8 |
+| Integer conversion high word | 129 / r8 | 128 / r9 |
+
+The address mismatch is not a spill or increased register pressure. The desired
+FP result comes with promoting the named move product to an expression temporary;
+the unwanted GPR result comes with promoting the named blend address to an
+expression temporary. Both captures replay with zero high-degree removals. This
+separates numbering/order sensitivity from changed interference, rather than
+inferring it solely from similar assembly. A source spelling that retains the
+named blend address also has to preserve its position after the move multiply;
+the tested separate-cursor and inline-helper variants still move it earlier.
+
+The local captures and comparison JSON are under `build/objanim_lldb/`. Given
+fresh baseline and typed-view captures of each register class, reproduce the
+comparison with:
+
+```sh
+python3 tools/mwcc_register_compare.py \
+  build/objanim_lldb/gpr/trace.json build/objanim_lldb/typed_gpr/trace.json \
+  --function ObjAnim_SampleRootCurvePhase
+python3 tools/mwcc_register_compare.py \
+  build/objanim_lldb/fpr/trace.json build/objanim_lldb/typed_fpr/trace.json \
+  --function ObjAnim_SampleRootCurvePhase
+python3 -m unittest discover -s tools -p 'test_mwcc_register_compare.py'
+```
+
+No tested source variant improves the existing objdiff score. The TU remains
+`NonMatching`, 99.97990% fuzzy, with 12/13 functions and all data exact.
