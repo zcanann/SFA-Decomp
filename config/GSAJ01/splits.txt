@@ -256,30 +256,12 @@ main/texture.c:
 	.sdata2     start:0x803DECB8 end:0x803DECD0
 
 main/shader.c:
-	.text       start:0x80054F84 end:0x8005AB90
+	.text       start:0x80054F84 end:0x800610B4
 	.rodata     start:0x802C1F58 end:0x802C1FA8
-	.data       start:0x8030E5D0 end:0x8030E93C
-	.bss        start:0x8037E1E0 end:0x803869F8
-	.sdata      start:0x803DB740 end:0x803DB750
+	.data       start:0x8030E5D0 end:0x8030E988
+	.bss        start:0x8037E1E0 end:0x80387AD0
+	.sdata      start:0x803DB740 end:0x803DB768
 	.sbss       start:0x803DCEE8 end:0x803DCFF8
-
-main/lightmap.c:
-	.text       start:0x8005AB90 end:0x8005CA6C
-	.bss        start:0x803869F8 end:0x803879F8
-	.sdata      start:0x803DB750 end:0x803DB758
-
-main/lightmap_initmapblocks.c:
-	.text       start:0x8005CA6C end:0x8005CD44
-
-main/lightmap_draw.c:
-	.text       start:0x8005CD44 end:0x8005DF7C
-	.data       start:0x8030E93C end:0x8030E964
-
-main/tex_dolphin.c:
-	.text       start:0x8005DF7C end:0x800610B4
-	.data       start:0x8030E964 end:0x8030E988
-	.bss        start:0x803879F8 end:0x80387AD0
-	.sdata      start:0x803DB758 end:0x803DB768
 
 main/shadow_dolphin.c:
 	.text       start:0x800610B4 end:0x80062D80

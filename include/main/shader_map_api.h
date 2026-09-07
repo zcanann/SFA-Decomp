@@ -11,6 +11,4 @@ int mapBlockIsInViewFrustum(int bx, int bz, struct MapBlockData* block);
 void loadMapForCameraPos(float x, float y, float z);
 MapTextureOverride* mapTextureOverrideGetEntry(int idx);
 
-extern const f32 gMapBlockWorldSize;
-
 #endif /* MAIN_SHADER_MAP_API_H_ */

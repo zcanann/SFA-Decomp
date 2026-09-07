@@ -804,7 +804,6 @@ main/camera.c
 main/curves.c
 main/fileio.c
 main/gametext.c
-main/lightmap_initmapblocks.c
 main/modellight.c
 main/obj_movelib.c
 main/objlib.c

@@ -1,5 +1,10 @@
 # Lightmap draw source recovery (2026-09-07)
 
+**Follow-up:** [Map-rendering pool recovery](map_render_pool_recovery.md) reunites
+the five fragments and reproduces the complete shared pool. All 29 drawing
+functions stay exact; the larger TU remains `NonMatching` while its other code
+differences are recovered. The results below describe the preceding carve.
+
 All 29 functions in the current `main/lightmap_draw.c` carve now match EN
 GSAE01: 4,664 code bytes and the assigned 40-byte jump table are exact in
 objdiff. The fuzzy score improves from 99.92710% to 100%.

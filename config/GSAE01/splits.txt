@@ -258,30 +258,13 @@ main/texture.c:
 	.sdata2     start:0x803DEB98 end:0x803DEBB0
 
 main/shader.c:
-	.text       start:0x80054F64 end:0x8005AB70
+	.text       start:0x80054F64 end:0x80061094
 	.rodata     start:0x802C1E58 end:0x802C1EA8
-	.data       start:0x8030E4B0 end:0x8030E81C
-	.bss        start:0x8037E0C0 end:0x803868D8
-	.sdata      start:0x803DB620 end:0x803DB630
+	.data       start:0x8030E4B0 end:0x8030E864
+	.bss        start:0x8037E0C0 end:0x803879B0
+	.sdata      start:0x803DB620 end:0x803DB648
 	.sbss       start:0x803DCDC8 end:0x803DCED4
-
-main/lightmap.c:
-	.text       start:0x8005AB70 end:0x8005CA4C
-	.bss        start:0x803868D8 end:0x803878D8
-	.sdata      start:0x803DB630 end:0x803DB638
-
-main/lightmap_initmapblocks.c:
-	.text       start:0x8005CA4C end:0x8005CD24
-
-main/lightmap_draw.c:
-	.text       start:0x8005CD24 end:0x8005DF5C
-	.data       start:0x8030E81C end:0x8030E844
-
-main/tex_dolphin.c:
-	.text       start:0x8005DF5C end:0x80061094
-	.data       start:0x8030E844 end:0x8030E864
-	.bss        start:0x803878D8 end:0x803879B0
-	.sdata      start:0x803DB638 end:0x803DB648
+	.sdata2     start:0x803DEBB0 end:0x803DEC58
 
 main/shadow_dolphin.c:
 	.text       start:0x80061094 end:0x80062D60

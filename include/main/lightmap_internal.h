@@ -2,7 +2,8 @@
 #define MAIN_LIGHTMAP_INTERNAL_H_
 
 #include "main/dll/ppcwgpipe_struct.h"
-#include "types.h"
+#include "global.h"
+#include <stddef.h>
 
 typedef struct EnvironmentUpdateInterface {
     void (*create)(void);
@@ -14,10 +15,10 @@ extern EnvironmentUpdateInterface** gEnvironmentUpdateInterface;
 
 /*
  * One 0x10-stride row of gLightmapDrawQueue, the render/shadow queue shared by
- * lightmap.c, lightmap_draw.c and tex_dolphin.c. lightmap_draw.c sorts the rows
- * by key; mapBlockRender_callList writes type (4/5 = object shadow,
- * 6 = indirect lightmap) into the row it queues, and lightmap.c writes the
- * object-shadow kinds 0..3 and 7 into the same field.
+ * the map-rendering unit in shader.c. lightmap_sortTransparentDrawQueue sorts
+ * the rows by key; mapBlockRender_callList writes type (4/5 = object shadow,
+ * 6 = indirect lightmap), and renderObjects writes the object-shadow kinds
+ * into the same field.
  */
 typedef struct {
     u32 a;
@@ -25,6 +26,16 @@ typedef struct {
     u32 key;
     u32 type;
 } LightSortEntry;
+
+/* The queue flushes at 1,000 entries. The following bytes remain unidentified. */
+typedef struct MapRenderQueueStorage {
+    LightSortEntry entries[1000];
+    u8 opaqueTail[0xC8];
+} MapRenderQueueStorage;
+
+STATIC_ASSERT(sizeof(LightSortEntry) == 0x10);
+STATIC_ASSERT(offsetof(MapRenderQueueStorage, opaqueTail) == 0x3E80);
+STATIC_ASSERT(sizeof(MapRenderQueueStorage) == 0x3F48);
 
 typedef struct MapLayerBuffers {
     u8 reserved[0x41cc];

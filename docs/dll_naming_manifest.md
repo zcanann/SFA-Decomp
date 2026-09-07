@@ -1221,6 +1221,12 @@ optimization flags do not invalidate the retail boundary evidence. The older
 `MWTrace` entry was not a separate unit in the active EN split at recovery time.
 Historical measurements below are retained as experiments, not provenance.
 
+The shader/lightmap verdict is likewise superseded by
+[map-rendering pool recovery](map_render_pool_recovery.md). The five fragments
+are now one GC/1.3 TU with an exact shared pool and native data layout. Remaining
+code regressions under its common profile keep it `NonMatching`; they do not
+justify retaining the artificial file boundaries.
+
 8690 distinct `.sdata2` addresses are referenced from `.text`; **18** are
 referenced from more than one object, forming **four** candidate groups,
 each of which is a *contiguous* run in `.text` order.  All four were
