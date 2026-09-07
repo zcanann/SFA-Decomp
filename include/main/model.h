@@ -10,6 +10,7 @@
 typedef struct GameObject GameObject;
 typedef struct ObjAnimState ObjAnimState;
 struct ObjAnimCachedMove;
+struct ObjAnimMoveData;
 
 typedef struct ShaderLayer {
     union {
@@ -203,10 +204,7 @@ typedef struct ModelFileHeader {
     };
     ModelCollisionTriangle* collisionTriangles;
     CollisionPolygonGroup* collisionBlocks;
-    union {
-        u8* animationModelPtrs;
-        u8** moveData;
-    };
+    struct ObjAnimMoveData** moveData;
     u8* animationDataSection;
     union {
         u8* animationHeaderBuffer; /* per-joint s16 table */

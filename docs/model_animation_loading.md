@@ -10,7 +10,7 @@ The loader has two distinct resource paths:
 
 - With `MODEL_FLAG_CACHED_ANIMATIONS`, the caller's buffer retains the
   `MODANIM.BIN` ID list, padded to eight bytes. Animations are subsequently
-  fetched through the move-cache path. `animationModelPtrs` is cleared.
+  fetched through the move-cache path. `moveData` is cleared.
 - Otherwise, the ID list temporarily uses `gModelResourceBuffer`. The caller's
   buffer holds an animation-pointer table followed by eight-byte-aligned
   `AMAP.BIN` data. Each non-sentinel ID acquires an animation cache reference;
@@ -37,3 +37,35 @@ and buffer cursor. Anonymous symbol names change without changing normalized
 relocation destinations. Separate formatting preserves the complete object.
 The strict retail checksum and `all_source` builds validate the canonical
 declaration and its direct caller.
+
+## Shared move-resource ownership
+
+`ModelFileHeader.moveData` now points directly to an array of
+`ObjAnimMoveData*`. The former byte-pointer alias `animationModelPtrs` is
+removed. Loading, playback, root-curve sampling, and release all use the same
+field; byte casts remain where a consumer walks the packed frame stream or
+uses the release loop's existing byte offset.
+
+The first byte of `ObjAnimMoveData` is a runtime `refCount`, not padding.
+`modelLoadAnimations`, `loadAnimation`, and the initial-move loading macro
+set it to 1 after decompression and increment it on a shared-cache hit.
+Load-failure cleanup and `ObjModel_Release` decrement that same byte and
+remove/free the cache entry when the narrowed result is nonpositive as an
+`s8`. Storage remains `u8`, preserving both wraparound and the signed release
+test. The field is unused for private `ObjAnimCachedMove` resources, which
+are loaded directly into their owner's buffer and do not acquire these
+shared-cache references. Its new offset assertion pins it to byte zero;
+the six-byte prefix and all following fields retain their existing layout.
+
+The initial-move macro is named `MODEL_LOAD_INITIAL_MOVE` instead of the
+misleading `LOADCOLOR_BLOCK`. It reads the canonical animation-ID array and
+model ID fields. Cache pointers and loader locals identify animation
+resources, sizes, file offsets, and cache slots; the existing scratch aliases
+and parameter reuse remain where they preserve generated code.
+
+All 1,002 source objects remain byte-identical after both the recovery and
+formatting. This includes every model and animation function, their data,
+symbol layouts, and relocations; match scores are unchanged. `ninja all_source`
+and the strict retail checksum build both pass. Formatting the active model
+source and canonical headers passes the dry-run check; only the model source
+needs a separate formatting diff.

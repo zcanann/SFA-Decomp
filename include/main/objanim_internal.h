@@ -397,7 +397,7 @@ typedef ObjDef ObjModelInstance;
 
 /* Six-byte move prefix; frameCommands starts with an ObjAnimFrameHeader. */
 typedef struct ObjAnimMoveData {
-    u8 pad00;
+    u8 refCount; /* Shared-resource references; unused for a private cached move. */
     s8 frameControl;
     s16 frameStreamOffset;
     s16 rootCurveOffset;
@@ -822,6 +822,7 @@ STATIC_ASSERT(offsetof(ObjDef, fallbackHitSphereRadius) == 0x8F);
 STATIC_ASSERT(offsetof(ObjDef, secondaryHitboxShapeFlags) == 0x90);
 
 STATIC_ASSERT(sizeof(ObjAnimMoveData) == OBJANIM_FRAME_COMMANDS_OFFSET);
+STATIC_ASSERT(offsetof(ObjAnimMoveData, refCount) == 0x00);
 STATIC_ASSERT(offsetof(ObjAnimMoveData, frameControl) == 0x01);
 STATIC_ASSERT(offsetof(ObjAnimMoveData, rootCurveOffset) == 0x04);
 STATIC_ASSERT(offsetof(ObjAnimMoveData, frameStreamOffset) == 0x02);
@@ -950,7 +951,7 @@ static inline ObjAnimMoveData* ObjAnim_GetMoveData(ObjAnimDef* animDef, ObjAnimS
     if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
         return &state->moveCache[slot]->moveData;
     }
-    return (ObjAnimMoveData*)animDef->moveData[slot];
+    return animDef->moveData[slot];
 }
 
 static inline ObjAnimMoveData* ObjAnim_GetCurrentMoveData(ObjAnimDef* animDef, ObjAnimState* state) {
@@ -961,7 +962,7 @@ static inline ObjAnimMoveData* ObjAnim_GetBlendMoveData(ObjAnimDef* animDef, Obj
     if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
         return &state->blendMoveCache[slot]->moveData;
     }
-    return (ObjAnimMoveData*)animDef->moveData[slot];
+    return animDef->moveData[slot];
 }
 
 static inline ObjAnimMoveData* ObjAnim_GetCurrentBlendMoveData(ObjAnimDef* animDef, ObjAnimState* state) {
