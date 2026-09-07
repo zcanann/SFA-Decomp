@@ -1609,7 +1609,8 @@ void objUpdateHitSpheres(ObjModel* model, ModelFileHeader* file, GameObject* tar
     }
 }
 
-void ObjModel_SampleJointTransform(ObjModel* model, int animState, int frameSource, f32 phase, f32 rootMotionScale, f32* outPos, s16* outRot) {
+void ObjModel_SampleJointTransform(ObjModel* model, int animState, int frameSource, f32 phase, f32 rootMotionScale,
+                                   f32* outPos, s16* outRot) {
     ObjAnimState* state;
     ObjAnimFrameHeader* savedFrameData;
     s16 translationSamples[3];
@@ -1660,7 +1661,8 @@ void ObjModel_SampleJointTransform(ObjModel* model, int animState, int frameSour
         if (state->frameType != 0 && frameIndexF == state->frameLength - 1.0f) {
             state->frameStreamStrides[0] = (s16)(-frameStride * frameIndex);
         }
-        state->frameStreamCursors[0] = animationData + ((ObjAnimMoveData*)animationData)->frameStreamOffset + frameStride * frameIndex;
+        state->frameStreamCursors[0] =
+            animationData + ((ObjAnimMoveData*)animationData)->frameStreamOffset + frameStride * frameIndex;
     }
     modelRenderInterpolateRootTransform(state, translationSamples, outRot);
     state->moveFrameData = savedFrameData;
