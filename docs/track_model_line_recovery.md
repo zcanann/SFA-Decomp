@@ -46,3 +46,27 @@ the old pointer-to-pointer reinterpretation.
 No flags, splits, symbol configuration or matching classifications change.
 The source build and strict retail-DOL gate are both required. This is source
 and type recovery with a small fuzzy regression, not a code-byte matching gain.
+
+## September 7: Typed sorting and range-clear addressing
+
+The builder now sorts and marks consumed entries through `IntersectLine.kind`,
+uses `sizeof(IntersectLine)` and `sizeof(Vec)` for its line/point storage, and
+names the candidate, selected, and emitted line indices. The shared engine pool
+retains its existing integer storage. The `sizeof` terms explicitly retain
+signed arithmetic so the existing allocation-size zero test keeps its retail
+`cmpwi`. The signed byte access used to toggle line flags also remains: an
+unsigned compound assignment changes the retail sign-extension instruction.
+
+A local byte pointer inside each range-clear iteration gives MWCC the retail
+base-plus-index addressing. It preserves the reload of the definition's range
+pointer before each byte store and removes all sixteen operand differences in
+that loop. The builder improves from 99.57101% to 99.82249%; only the earlier
+adjacency loop's `li` versus `mr` initialization remains different. The typed
+sort and size expressions are byte-neutral.
+
+The complete object comparison changes seventeen instruction bytes only in
+`intersectModLineBuild`. All other 29 function bodies, symbol layouts, relocation
+records, and non-text bytes remain identical. The TU reaches 99.67222% fuzzy,
+retains 23/30 exact functions, and keeps all 2,040 data bytes exact. Formatting
+is committed separately and preserves the raw object hash. Both `all_source`
+and the strict retail checksum gate pass; the TU remains `NonMatching`.
