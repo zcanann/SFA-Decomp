@@ -32,8 +32,6 @@ class GameTextLoadSlotTests(unittest.TestCase):
             start, end = find_function_body(source, name)
             declaration = source.rfind('\n', 0, source.rfind(name, 0, start)) + 1
             bodies.append(source[declaration:end + 1])
-        formats = '\n'.join(re.search(r'char ' + name + r'\[\] = [^;]+;', source).group()
-                            for name in ('sGameTextMapPathFormat', 'sGameTextSequencePathFormat'))
         fixture = r'''
 #include <assert.h>
 #include <stdio.h>
@@ -47,7 +45,7 @@ typedef struct DVDCommandBlock { int identity; } DVDCommandBlock;
 typedef struct DVDFileInfo { DVDCommandBlock cb; } DVDFileInfo;
 typedef void (*DVDCallback)(s32, DVDFileInfo*);
 typedef void (*DVDCBCallback)(s32, DVDCommandBlock*);
-''' + records + '\n' + constants + '\n' + formats + r'''
+''' + records + '\n' + constants + r'''
 static GameTextLoadSlot curGameTexts[GAMETEXT_LOAD_SLOT_COUNT];
 static TextFont gGameTextCharsets[GAMETEXT_PENDING_SOURCE_COUNT];
 static LanguageName sLanguageNameTable[6] = {

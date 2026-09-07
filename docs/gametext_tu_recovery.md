@@ -328,3 +328,67 @@ formatting-only diff.
 
 The runtime and load-slot suites, 432 parser emulation comparisons, the strict
 retail checksum, and `ninja all_source` all pass for this checkpoint.
+
+## Deferred emission and diagnostic literals (2026-09-07)
+
+The native-array emission blocker above is resolved without restoring an
+aggregate. Ordinary function definitions are ordered for reverse deferred
+emission, with the existing native storage definitions before the bodies.
+GC/1.3, disabled automatic inlining, and the optimization settings remain;
+the TU now uses the existing deferred variant of that profile. All eleven BSS
+objects and every remaining named non-text symbol retain their physical offsets.
+
+The decisive initialized-data evidence is the interleaving of literals and
+compiler-generated jump tables. Keeping the named parser-message aggregate and
+path-format arrays with deferred emission moves them ahead of both tables.
+Writing the six diagnostic messages and two path formats as ordinary call-site
+string literals instead emits every string at its exact retail address:
+
+| EN address | Literal / span |
+| --- | --- |
+| `802C9E04` | `<uninitialised>` |
+| `802C9E14` | `<loading>` |
+| `802C9E20` | `<file empty!>` |
+| `802C9E30` | `<no file!>` |
+| `802C9E3C` | `<%d's not in %s>` |
+| `802C9E50` | `<%d, doesn't have phrase %d>` |
+| `802C9E70` | `gametext/%s/%s.bin` |
+| `802C9EC4` | `gametext/Sequences/%d_%s.bin` |
+
+The compiler supplies each alignment gap and pools repeated uses. The six
+messages occupy the same 108-byte span, without a padded struct, named dummy
+strings, or explicit placement. The renderer's 48-byte jump table precedes that
+span; the command runner's 64-byte jump table remains between the two path
+formats. All allocated non-text section bytes, lengths, and alignments match the
+preceding source object, including the 12,361-byte `.data` extent. This combined
+code/storage evidence supports deferred emission and literal diagnostics as a
+plausible reconstruction; it does not establish a historical build command.
+The existing retail symbol labels remain address anchors for the literal pool.
+Their removed public array declarations have no remaining source consumers.
+
+`loadGameTextSequence` becomes exact (588 bytes), raising the unit from 41/54
+to 42/54 exact functions. Fuzzy matching improves from 96.46448% to 97.420944%.
+`gameTextGet` improves from 89.454544% to 97.30303%, and initialization from
+86.162605% to 98.60162%. All previously exact functions remain exact. Seven
+functions change code generation; `gameTextGetPhrase` has a small remaining
+regression (98.9375% to 98.5875%) as native shared-array addressing replaces
+its independent map-name-table address. The unit remains `NonMatching`.
+
+The runtime fixture now classifies diagnostic formats by string content rather
+than the addresses of fields in the removed aggregate. The loader fixture uses
+the production bodies' literals. The compiled-resource checks compare the
+literal spans directly at retail addresses and retain the named-resource extent
+checks. All sixteen gametext tests pass, including 402 load-lifecycle scenarios
+at each of host `-O0` and `-O2`. Existing parser, fallback-ring, text measurement,
+color, and texture-resource checks remain enabled.
+
+`ninja all_source` and the strict matching checksum both pass with 30-second
+limits. The resulting DOL is byte-identical to retail. The matching link still
+uses this incomplete unit's retail object, so the checksum does not establish
+source-linked correctness. Objdiff confirms that no other unit's match measures
+change; the separately checked data bytes and symbol offsets preserve storage.
+
+The TU and canonical API header pass `clang-format --dry-run --Werror`.
+Formatting produces no source diff and preserves the complete object; no separate
+formatting commit is needed. The shared text-rendering header edit is limited to
+removing the two obsolete format-array declarations.

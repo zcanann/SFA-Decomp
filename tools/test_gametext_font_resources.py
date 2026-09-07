@@ -20,7 +20,6 @@ RESOURCES = {
     "sDiscStatusGlyphs": (0x802C9880, 43 * 16),
     "sDiscLoadingMessage": (0x802C9D58, 11),
     "sDiscStatusMessageTable": (0x802C9D64, 7 * 12),
-    "sGameTextParserMessages": (0x802C9E04, 108),
 }
 
 
@@ -100,6 +99,13 @@ class GameTextFontResourceTests(unittest.TestCase):
             data = self.source_read(address, size)
             self.assertEqual(data[-1:], b"\0")
             self.assertNotIn(0, data[:-1])
+
+    def test_parser_and_path_literal_positions(self):
+        # These literals are interleaved with compiler-generated jump tables.
+        # Verify their complete retail spans without requiring named C arrays.
+        for address, size in ((0x802C9E04, 108), (0x802C9E70, 20), (0x802C9EC4, 29)):
+            with self.subTest(address=f"{address:08X}"):
+                self.assertEqual(self.source_read(address, size), self.retail_read(address, size))
 
 
 if __name__ == "__main__":

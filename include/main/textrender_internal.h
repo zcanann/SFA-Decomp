@@ -126,7 +126,6 @@ extern int gGameTextShadowOffsetY;
 extern char* gCurTextBuffer;
 extern int gGameTextBufferIndex;
 extern char sGameTextBlankFormat[5];
-extern char sGameTextSequencePathFormat[];
 extern GameTextLoadSlot curGameTexts[GAMETEXT_LOAD_SLOT_COUNT];
 
 int GameText_CountPrintableChars(u8* str);
@@ -136,7 +135,6 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId);
 
 extern f32 gSubtitleCurTime;
 extern u16 gGameTextSjisGlyphTable[];
-extern char sGameTextMapPathFormat[];
 extern int gGameTextFontTexRowPitch;
 extern TextFont gGameTextCharsets[];
 extern GXColor gGameTextClearColor;
