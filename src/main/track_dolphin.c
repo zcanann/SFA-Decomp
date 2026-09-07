@@ -1048,8 +1048,10 @@ void intersectModLineBuild(ObjDef* definition) {
         return;
     }
     definition->intersectionLines =
-        mmAlloc(gIntersectLineCount * (int)sizeof(IntersectLine) + gIntersectPointCount * (int)sizeof(Vec) + 0x28, 0xffff00ff, 0);
-    definition->intersectionPoints = (f32*)((u8*)definition->intersectionLines + gIntersectLineCount * (int)sizeof(IntersectLine));
+        mmAlloc(gIntersectLineCount * (int)sizeof(IntersectLine) + gIntersectPointCount * (int)sizeof(Vec) + 0x28,
+                0xffff00ff, 0);
+    definition->intersectionPoints =
+        (f32*)((u8*)definition->intersectionLines + gIntersectLineCount * (int)sizeof(IntersectLine));
     definition->intersectionSegmentRanges =
         (TrackModelLineRange*)((u8*)definition->intersectionPoints + gIntersectPointCount * (int)sizeof(Vec));
     {
@@ -1111,7 +1113,8 @@ void intersectModLineBuild(ObjDef* definition) {
                 }
             }
         }
-        memcpy(&definition->intersectionLines[outputLineIndex], &((IntersectLine*)gIntersectLinePool)[bestLineIndex], sizeof(IntersectLine));
+        memcpy(&definition->intersectionLines[outputLineIndex], &((IntersectLine*)gIntersectLinePool)[bestLineIndex],
+               sizeof(IntersectLine));
         ((IntersectLine*)gIntersectLinePool)[bestLineIndex].kind = 0x14;
     }
     if (previousGroup != -1) {
