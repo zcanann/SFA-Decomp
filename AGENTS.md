@@ -376,6 +376,12 @@ C for a higher match score; a clean-C 90% match is better than an asm 100% match
 Inline pragmas are banned. `#pragma` of any kind must not appear inline in `src/main/` or `src/track/`
 source; pragmas may only be configured at the TU level via `configure.py` cflags.
 
+User-authorized exception (2026-09-07): `subtitleUpdateAndDraw` in
+`src/main/subtitle.c` may use `optimization_level 2`, restoring the TU's level 1
+afterward. This is a matching workaround after source-level investigation, not
+evidence of the original optimization policy. See `docs/subtitle_matching.md`.
+The exception does not authorize pragmas in other functions or units.
+
 ## Cheap clean-C pre-checks
 
 Try these one-line source rewrites first; sometimes they're enough on their own:

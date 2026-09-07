@@ -1,12 +1,32 @@
-# Subtitle matching frontier
+# Subtitle matching
 
-Measured on 2026-09-07 with the current common GC/1.3 compiler, starting from
-staging `d446e6dd2f`. This investigation does **not** complete the TU:
-`main/subtitle.c` remains NonMatching at 99.11308% fuzzy similarity, with three
-of four functions and all 3,104 data bytes exact. No source or compiler-profile
-change from the probes is retained.
+Completed on 2026-09-07 with the common GC/1.3 compiler and a user-authorized
+per-function optimization exception. All four functions (1,804 code bytes) and
+all 3,104 data bytes match EN v1.0. `main/subtitle.c` is MatchingFor GSAE01.
 
-## Current mismatch
+`subtitleUpdateAndDraw` uses `#pragma optimization_level 2`; the source restores
+the TU's configured level 1 immediately afterward. The other three functions
+retain their existing profile. This is a matching workaround, **not evidence
+that the original source contained a pragma**. The user authorized this fallback
+after requesting further source-level investigation. The exception is recorded
+in AGENTS.md and does not apply to other functions or units.
+
+The final source-only probes tested an inline renderer, passing both tables to
+that renderer, an incremented timestamp pointer, and signed/unsigned inline
+output accessors. None recovered the retail renderer. The inline renderer
+emitted 136 instructions with 22 differing rows, versus the baseline's 137 with
+16; the timestamp pointer emitted 138 with 19. The output accessors retained
+the baseline mismatch. The three existing exact functions remained exact.
+
+Validation: `python3 configure.py --matching`, `ninja all_source`, the strict
+`ninja` checksum target, and an objdiff whole-unit report. The matching link uses
+the compiled subtitle object, and the resulting DOL equals the retail EN v1.0
+DOL (SHA-1 `e750e8e894707a52446118a4b84f1b58b677b269`).
+
+The investigation below records the original baseline, starting from staging
+`d446e6dd2f`, before accepting this exception.
+
+## Baseline mismatch
 
 `subtitleUpdateAndDraw` emits 137 instructions against retail's 134. Its three
 extra instructions are in line-table indexing, not the subtitle-command loop:
@@ -44,7 +64,7 @@ already absent at level 1. Higher levels recover the renderer but remove
 retail loads in the builder, and level 3 also transforms its loops. Peephole
 optimization merges a builder pointer move and comparison into `mr.`, and
 removes the renderer's four retail color-narrowing instructions. These are
-concrete regressions, so no profile switch is accepted.
+concrete regressions, so no whole-TU profile switch is accepted.
 
 ## Source and storage checks
 
@@ -60,10 +80,11 @@ blocks/lines/times order and total size. It regresses the builder from 240 to
 `textrender_drawbox.c` also initializes the block table, so an eventual storage
 change must audit that consumer as well.
 
-The confirmed TU remains intact. The alternative-profile matches provide
-transformations to investigate, not permission to split it or introduce
-per-function pragmas. A useful next experiment must account for both the
-renderer’s shared index and the builder's repeated loads under one profile.
+The confirmed TU remains intact. Alternative-profile matches alone do not
+justify splitting it or introducing per-function pragmas; the retained pragma
+is an explicit user-authorized exception. Replacing it with ordinary source
+would require accounting for both the renderer’s shared index and the builder's
+repeated loads under one profile.
 
 ## Reproduction
 

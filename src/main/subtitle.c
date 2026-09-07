@@ -163,6 +163,8 @@ void mainLoopDoGameText(void) {
     }
 }
 
+/* Matching exception: see docs/subtitle_matching.md. */
+#pragma optimization_level 2
 void subtitleUpdateAndDraw(int unused) {
     int savedCharset;
     SubtitleCmd* commands;
@@ -218,3 +220,4 @@ void subtitleUpdateAndDraw(int unused) {
         }
     }
 }
+#pragma optimization_level 1
