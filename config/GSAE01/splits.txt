@@ -214,7 +214,7 @@ main/pi_dolphin.c:
 	.sbss       start:0x803DCC70 end:0x803DCD18
 
 main/boot_logo.c:
-	.data       start:0x802CC6A0 end:0x8030C6A0
+	.data       start:0x802CC6A0 end:0x8030C858
 
 main/pi_videoinit.c:
 	.text       start:0x80049B2C end:0x8004AA24

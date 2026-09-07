@@ -10,3 +10,19 @@
  * `extract:`), emitting a gitignored gLoadingScreenTextures.inc that we only #include here.
  */
 #include "gLoadingScreenTextures.inc"
+
+/* GPU diagnostics follow the FIFO-sized boot allocation. The error handlers
+ * reach these strings relative to that allocation, so config retains their
+ * individual symbols despite the absence of direct references. */
+char sGpuHangSuspectedMessage[] = "Suspected graphics hang or infinite loop";
+char sGpuHangStatusFormat[] = "GP status %d%d%d%d%d%d --> ";
+char sGpuHangXfStallMessage[] = "GP hang due to XF stall bug.";
+char sGpuHangUnterminatedMessage[] = "GP hang due to unterminated primitive";
+char sGpuHangIllegalInstructionMessage[] = "GP hang due to illegal instruction.";
+char sGpuHangWaitingMessage[] = "GP appears to be not hung (waiting for input).";
+char sGpuHangUnknownMessage[] = "GP is in unknown state.";
+char sGpuHangXfStallLog[] = "GP hang due to XF stall bug.\n";
+char sGpuHangUnterminatedLog[] = "GP hang due to unterminated primitive.\n";
+char sGpuHangIllegalInstructionLog[] = "GP hang due to illegal instruction.\n";
+char sGpuHangWaitingLog[] = "GP appears to be not hung (waiting for input).\n";
+char sGpuHangUnknownLog[] = "GP is in unknown state.\n";

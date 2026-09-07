@@ -12,6 +12,20 @@ name: main
 # Retain the priority-sort table even though code addresses it through the
 # containing vidListNodes storage rather than by this symbol directly.
 force_active:
+  # GPU error handlers reach these strings through offsets from the boot
+  # texture/FIFO base, so their individual symbols have no direct relocations.
+  - sGpuHangSuspectedMessage
+  - sGpuHangStatusFormat
+  - sGpuHangXfStallMessage
+  - sGpuHangUnterminatedMessage
+  - sGpuHangIllegalInstructionMessage
+  - sGpuHangWaitingMessage
+  - sGpuHangUnknownMessage
+  - sGpuHangXfStallLog
+  - sGpuHangUnterminatedLog
+  - sGpuHangIllegalInstructionLog
+  - sGpuHangWaitingLog
+  - sGpuHangUnknownLog
   - voicePrioritySortLinks
   # dlls/objects/599_DR_EarthWar/DR_EarthWar.c: the retail link retained these
   # two unreferenced .data tables that follow gDREarthWarriorRowIndices;
