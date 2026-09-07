@@ -686,27 +686,16 @@ re-derive it: inside one statement pair `if (x < K1) x = K2;`, MWCC mints K2 *be
 assignment's literal precedes the compare's — so a phantom probe that needs K1-first must spell
 K1 in an earlier plain-arithmetic statement. Verdicts:
 
-- **`objects/332` — GATE PASSED; the paragraph above is superseded and the probe set has now
-  been run there.** The divergence is not a pure rotation: retail's `[0.0f, pad, signed-bias,
-  1.0f]` head precedes fn1's `[0.01, 0.07, 0.5]` run, and a lone `10.0f` sits between fn1's and
-  `turnTowardTarget`'s runs; referrers exclude every function positioned at each mint point, and
-  the head bias is undeclarable by construction. Probes on the byte-exact fn1: dead `0.0f` local
-  inert; dead `(f32)` conversion inert (**a dead conversion is eliminated before codegen and
-  mints no bias** — measured here); a *live* `f32 zero = 0.0f;` used at both clamp sites is
-  propagation-folded back — pool AND `.text` both unchanged, so even the surviving-local
-  spelling cannot re-order the mint. Three uncalled statics (one minting `0.0f`+signed
-  conversion, one `1.0f`, one `10.0f` before `turnTowardTarget`) take `.sdata2` **byte-exact to
-  the carve (68/68, hole at 0x04 included)** with every function's bytes unchanged. At least one
-  code-bearing lost body is forced (the bias); the `1.0f`/`10.0f` slots are individually
-  body-or-const undecidable. `turnTowardTarget`'s 98.86 residual is independent (its own slots
-  agree). Owner call to land, same conjectural-text caveat as `engine/7`.
-  **2026-09-07 update:** called animation-restart and capture-query helpers now
-  recover the zero/bias prefix under GC/1.3 automatic inlining with all 14 retail
-  functions byte-exact. Their out-of-line copies are linker-stripped; no uncalled
-  placeholder body is needed for that prefix. The 68-byte pool is now 88.2353%
-  exact, with `1.0f` and `10.0f` placement still unresolved. See
-  [BabyCloudRunner_matching.md](BabyCloudRunner_matching.md) for the current
-  evidence and validation limits.
+- **`objects/332` — RECOVERED (2026-09-07, GC/1.3).** Four called private helpers
+  reproduce the complete 68-byte pool with all 14 retail functions byte-exact.
+  Animation restart and capture-query helpers emit the zero/bias prefix; model
+  rendering emits the early `1.0f`; curve following emits `10.0f` between burrow
+  animation and target turning. The caller supplies movement speed and pitch
+  factor, preserving the later `5.0f` and `0.2f` positions. All nine calls inline,
+  and the linker strips the four out-of-line copies while retaining their pool.
+  This supersedes the earlier conjectural-uncalled-body verdict. The unit is
+  `MatchingFor("GSAE01")`; both `all_source` and the strict checksum pass with its
+  C object linked. See [BabyCloudRunner_matching.md](BabyCloudRunner_matching.md).
 - **`main/object` — GATE PASSED.** Retail mints the *signed* bias at 0x28, between
   `Obj_TickModelColorFadeRecursive`'s run and `objApplyVelocity`'s `0.5f`, with referrers
   (`mapSetupPlayer`, `Obj_UpdateObject`, `loadCharacter`) all later; every function positioned

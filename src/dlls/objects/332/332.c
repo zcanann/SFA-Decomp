@@ -98,6 +98,10 @@ static int babyCloudRunner_canCapture(GameObject* obj) {
     return found;
 }
 
+static void babyCloudRunner_renderModel(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5) {
+    objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
+}
+
 int babyCloudRunner_updateBurrowAnimation(GameObject* obj) {
     f32 speed;
     BabyCloudRunnerState* state = obj->extra;
@@ -130,6 +134,12 @@ int babyCloudRunner_updateBurrowAnimation(GameObject* obj) {
     }
     ObjAnim_AdvanceCurrentMove(obj, speed, timeDelta, 0);
     return 1;
+}
+
+static void babyCloudRunner_followCurve(GameObject* obj, BabyCloudRunnerState* state, f32 advanceStep, f32 speed, f32 pitchFactor) {
+    Obj_UpdateRomCurveFollowVelocity(obj, &state->curveWalker, advanceStep, 10.0f * advanceStep, speed, 1);
+    Obj_SmoothTurnAnglesTowardVelocity(obj, &obj->anim.velocity, BABYCLOUDRUNNER_TURN_FRAMES, 10.0f, pitchFactor);
+    objMove(obj, obj->anim.velocityX, obj->anim.velocityY, obj->anim.velocityZ);
 }
 
 void babyCloudRunner_turnTowardTarget(GameObject* obj, GameObject* target, BabyCloudRunnerState* state, int playMove) {
@@ -320,7 +330,7 @@ void babyCloudRunner_render(GameObject* obj, int renderArg2, int renderArg3, int
                             s8 visible) {
     s32 isVisible = visible;
     if (isVisible != 0) {
-        objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
+        babyCloudRunner_renderModel(obj, renderArg2, renderArg3, renderArg4, renderArg5);
     }
 }
 
@@ -385,9 +395,7 @@ void babyCloudRunner_update(GameObject* obj) {
             if (state->runnerState == BABYCLOUDRUNNER_STATE_FOLLOW_CURVE ||
                 state->runnerState == BABYCLOUDRUNNER_STATE_CHASED) {
                 f32 speed = state->curveSpeed;
-                Obj_UpdateRomCurveFollowVelocity(obj, &state->curveWalker, speed, 10.0f * speed, 5.0f * speed, 1);
-                Obj_SmoothTurnAnglesTowardVelocity(obj, &obj->anim.velocity, BABYCLOUDRUNNER_TURN_FRAMES, 10.0f, 0.2f);
-                objMove(obj, obj->anim.velocityX, obj->anim.velocityY, obj->anim.velocityZ);
+                babyCloudRunner_followCurve(obj, state, speed, 5.0f * speed, 0.2f);
                 if (state->runnerState == BABYCLOUDRUNNER_STATE_FOLLOW_CURVE) {
                     if (state->runnerIndex != -1 && mainGetBit(state->runnerIndex + GAMEBIT_CFRelated0B2A) != 0) {
                         state->runnerState = BABYCLOUDRUNNER_STATE_CHASED;
