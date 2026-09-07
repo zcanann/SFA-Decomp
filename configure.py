@@ -1375,7 +1375,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/259_CurveFish/CurveFish.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/260_SmallBasket/SmallBasket.c", cflags=cflags_dll_noopt_noprop),
             Object(MatchingFor("GSAE01"), "dlls/objects/261_LargeCrate/LargeCrate.c"),
-            Object(NonMatching, "dlls/objects/262/262.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/262/262.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/263/263.c", cflags=cflags_dll_noopt_nocse_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/264_EndObject/EndObject.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/265/265.c"),

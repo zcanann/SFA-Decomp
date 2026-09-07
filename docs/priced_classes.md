@@ -2515,8 +2515,12 @@ collision flag's `li` before global optimization. Its virtual register is outsid
 the late value-numbering pass's immediate-commoning range. Reusing a collision
 result lifetime reaches `mr`, but coalescing removes it and regresses the rest of
 the function. The earlier source-inaccessibility conclusion is too strong; see
-[the Scarab capture and source recovery](Scarab_matching.md). The instruction
-remains unmatched.
+[the Scarab capture and source recovery](Scarab_matching.md). The subsequent
+`ScarabContactState` reconstruction groups the selected ground-hit index and
+collision flag, preserving their complete field lifetimes. Late value numbering
+creates the copy and coalescing retains it. All seven functions and all data now
+match, and the strict retail checksum passes with DLL 262 linked from C. This
+case is resolved without changing compiler flags or introducing a pool anchor.
 
 **PRICED, and it is a re-classification, not a new class.** These 17 rows belong with #108/#110, not
 with the operation bucket. The rule §14 should be read with: **a multiset delta made entirely of `li`
@@ -3017,7 +3021,7 @@ outright. All 21 are attributed; the bucket sums to 19 032 B with nothing left o
 
 | row | bytes | mechanism | priced at |
 |---|---|---|---|
-| `Scarab_update` (262) | 3 476 | allocator remat, `mr` where we emit `li` | §23b |
+| `Scarab_update` (262) | 3 476 | Resolved: contact-state lifetimes preserve the late value-numbering zero copy | §23b correction; [full match](Scarab_matching.md) |
 | `errorThreadFunc` (dll_80136a40) | 2 776 | scheduler transposes two adjacent `addi` | §29d, NEW |
 | `curves_advanceCollision` (engine/21) | 2 472 | allocator remat `li`/`mr` | §23b |
 | `videoInit` (pi_videoinit) | 2 132 | `mfmsr`/`mtmsr`/`mfhid0`/`mthid0`, no intrinsic | §5 island |

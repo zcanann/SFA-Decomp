@@ -1,10 +1,35 @@
 # Scarab (object DLL 262)
 
-EN v1.0, GC/1.3, 2026-09-07. The unit remains `NonMatching`: six of seven
-functions are exact and all 240 assigned data bytes match. `Scarab_update`
-has one differing instruction in 3,476 bytes (99.930954%). Whole-unit text
-is 99.95461% fuzzy matched. The canonical collision records and direct
-expressions from the cleanup remain in place.
+EN v1.0, GC/1.3, 2026-09-07. All seven functions (5,288 text bytes) and
+all 240 assigned data bytes match. The unit is `MatchingFor("GSAE01")` and
+links from C. The TU boundary and compiler flags are unchanged.
+
+## Matching contact state
+
+`ScarabContactState` groups the update's selected ground-hit index and collision
+flag. Both fields are initialized explicitly, index first, and keep their
+existing roles through tumbling, slope avoidance, and the stunned ground query.
+This models transient query state; it does not claim an extra-state allocation
+or an original type name from the Dinosaur Planet reference.
+
+The grouped fields resolve the former instruction-26 difference at `0x80184998`:
+`mr r30,r31` replaces `li r30,0`. The other 868 update instructions are unchanged.
+The other six functions, all allocated data bytes, section sizes, alignments,
+and named symbol layouts are unchanged. Compiler-generated literal names may
+renumber, but their linked destinations and bytes remain exact.
+
+A GC/1.3 LLDB trace observes the copy appearing after the second value-numbering
+pass as `gpr65 <- gpr67`. Coalescing redirects its source to `gpr43` while retaining
+the copy; physical allocation yields `r30 <- r31`. The capture has 20 stages,
+869 aligned final instructions, no retail differences, and 201 replayed physical
+color decisions. Ordinary and instrumented objects are identical. Unlike the
+earlier scalar-reuse probes, this form preserves both complete field lifetimes.
+
+The diagnostic C-substitution link reproduces every allocated section of the
+matching ELF, including addresses and bytes. Both `ninja all_source` and the
+strict matching checksum build pass with the source object selected.
+
+The following sections record the earlier recovery and diagnostic controls.
 
 ## Collection helper
 
@@ -48,10 +73,10 @@ remain `.rodata+0` and `.rodata+12`. The complete object SHA256 is
 Both build gates pass. A diagnostic source-substitution link still differs
 from retail only at the four bytes `0x80184998` through `0x8018499B`.
 
-## Remaining zero initialization
+## Earlier scalar zero initialization
 
-At instruction 26 of `Scarab_update`, retail emits `mr r30,r31`; the current
-compiler emits `li r30,0`. The earlier `li r31,0` and its store initializing
+At instruction 26 of `Scarab_update`, retail emits `mr r30,r31`; the scalar
+baseline emits `li r30,0`. The earlier `li r31,0` and its store initializing
 the ground-hit pointer are exact. Dinosaur Planet's source and MIPS assembly
 both support separately initialized scalar ground-index and collision locals;
 they do not support restoring the former one-element index array.

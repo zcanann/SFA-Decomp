@@ -31,6 +31,12 @@ typedef enum ScarabMoneyKind {
     SCARAB_MONEY_RAIN = 3,
 } ScarabMoneyKind;
 
+/* Transient ground selection and collision response used by Scarab_update. */
+typedef struct ScarabContactState {
+    int bestGroundHitIndex;
+    int collisionDetected;
+} ScarabContactState;
+
 /* Basket and crate spawners allocate the complete 0x24-byte placement record. */
 typedef struct ScarabPlacement {
     ObjPlacement base; /* 0x00 */
