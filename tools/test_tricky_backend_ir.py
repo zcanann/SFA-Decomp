@@ -173,9 +173,10 @@ class BackendIRTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "opcode alignment"):
             validate_alignment(data, ["stw r31,0(r3)", "mr r4,r7", "blr"], code)
 
-    def test_hcurves_indexed_store_encodings(self):
+    def test_indexed_store_encodings(self):
         cases = [
             (0x2A, "stbx r4,r3,r0", reg(4, 1), 0, 0x7C8301AE),
+            (0x2E, "sthx r5,r3,r0", reg(5, 1), 0, 0x7CA3032E),
             (0x33, "stwx r31,r3,r29", reg(31, 1), 29, 0x7FE3E92E),
             (0x98, "stfsx f1,r3,r0", reg(1, 1, 3), 0, 0x7C23052E),
         ]
