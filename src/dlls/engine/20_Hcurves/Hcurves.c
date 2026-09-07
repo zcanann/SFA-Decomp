@@ -997,6 +997,25 @@ int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patc
     }
     return walkGroupIndex;
 }
+/* Returns the first rejecting X/Z plane, or the plane count when all contain the point. */
+static inline u8 objfsaFindRejectingPatchPlane(ObjfsaPatch* patch, float* point) {
+    f32 z;
+    f32 x;
+    u8 planeIndex;
+    u8 normalComponentIndex;
+    z = point[2];
+    x = point[0];
+    for (normalComponentIndex = planeIndex = 0; planeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT;
+         planeIndex++, normalComponentIndex += 2) {
+        if (patch->planeOffsets[planeIndex] + (x * (f32)patch->normalComponents[normalComponentIndex] +
+                                               z * (f32)patch->normalComponents[normalComponentIndex + 1]) >
+            0.0f) {
+            break;
+        }
+    }
+    return planeIndex;
+}
+
 int Objfsa_GetPatchGroupIdAtPoint(float* point) {
     int patchIndex;
     ObjfsaPatch* patch;
@@ -1005,21 +1024,7 @@ int Objfsa_GetPatchGroupIdAtPoint(float* point) {
         f32 y = point[1];
         patch = &gObjfsaPatches[patchIndex];
         if (y < patch->maxY && y > patch->minY) {
-            f32 x;
-            f32 z;
-            u8 planeIndex;
-            u8 normalComponentIndex;
-            z = point[2];
-            x = point[0];
-            for (normalComponentIndex = planeIndex = 0; planeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT;
-                 planeIndex++, normalComponentIndex += 2) {
-                if (patch->planeOffsets[planeIndex] + (x * (f32)patch->normalComponents[normalComponentIndex] +
-                                                       z * (f32)patch->normalComponents[normalComponentIndex + 1]) >
-                    0.0f) {
-                    break;
-                }
-            }
-            if (planeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
+            if (objfsaFindRejectingPatchPlane(patch, point) == OBJFSA_PATCHGROUP_PATCH_COUNT) {
                 return patch->groupId;
             }
         }
