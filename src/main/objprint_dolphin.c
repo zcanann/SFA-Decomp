@@ -185,7 +185,6 @@ void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model) {
     Mtx ma;
     Mtx mb;
     Mtx trans;
-    int off;
     int i;
     ModelFileHeader* modelDef;
     u8* modelBytes;
@@ -193,27 +192,27 @@ void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model) {
     modelDef = def;
     modelBytes = (u8*)model;
 
-    for (i = 0, off = 0; i < modelDef->extraJointCount; i++) {
+    for (i = 0; i < modelDef->extraJointCount; i++) {
         MtxPtr out;
         MtxPtr m2;
         MtxPtr m1;
         ModelBone* jd;
-        u8* grp;
+        ModelExtraJointDef* group;
         f32 w;
         f32 wi;
 
-        grp = modelDef->extraJointDefs + off;
+        group = &modelDef->extraJointDefs[i];
         out = (MtxPtr)ObjModel_GetJointMatrix(modelBytes, i + modelDef->jointCount);
-        m1 = (MtxPtr)ObjModel_GetJointMatrix(modelBytes, grp[0]);
-        m2 = (MtxPtr)ObjModel_GetJointMatrix(modelBytes, grp[1]);
+        m1 = (MtxPtr)ObjModel_GetJointMatrix(modelBytes, group->jointA);
+        m2 = (MtxPtr)ObjModel_GetJointMatrix(modelBytes, group->jointB);
 
-        w = (f32)grp[2] / 4.0f;
+        w = (f32)group->weightA / 4.0f;
         wi = 1.0f - w;
 
-        jd = (ModelBone*)((char*)modelDef->jointData + grp[0] * 0x1c);
+        jd = &((ModelBone*)modelDef->jointData)[group->jointA];
         PSMTXTrans(trans, -jd->tail[0], -jd->tail[1], -jd->tail[2]);
         PSMTXConcat(m1, trans, ma);
-        jd = (ModelBone*)((char*)modelDef->jointData + grp[1] * 0x1c);
+        jd = &((ModelBone*)modelDef->jointData)[group->jointB];
         PSMTXTrans(trans, -jd->tail[0], -jd->tail[1], -jd->tail[2]);
         PSMTXConcat(m2, trans, mb);
 
@@ -229,7 +228,6 @@ void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model) {
         out[2][1] = ma[2][1] * w + mb[2][1] * wi;
         out[2][2] = ma[2][2] * w + mb[2][2] * wi;
         out[2][3] = ma[2][3] * w + mb[2][3] * wi;
-        off += 4;
     }
 }
 
@@ -2130,7 +2128,6 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
 extern u8 gObjGxTexMtxIdTable[12];
 
 static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 passMask) {
-    int joff;
     f32 fm[16];
     f32 sm[16];
     f32 wm[16];
@@ -2274,28 +2271,26 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
         int j;
         f32 one;
         j = 0;
-        joff = 0;
         one = 1.0f;
         for (; j < ((ModelFileHeader*)m)->jointCount; j++) {
             f32* jm;
 
-            sc = (f32)gObjFuzzStep * (fade / *(f32*)(((ModelFileHeader*)m)->jointBlendData + joff + 0xc)) + one;
+            sc = (f32)gObjFuzzStep * (fade / ((ModelFileHeader*)m)->jointFuzzScales[j].scaleDivisor) + one;
             jm = (f32*)ObjModel_GetJointMatrix((u8*)am, j);
             PSMTXScale((MtxPtr)sm, sc, sc, sc);
             if (lbl_803DCC35 == 0) {
                 {
-                    char* jp = (char*)((ModelFileHeader*)m)->jointBlendData + joff;
-                    PSMTXTrans((MtxPtr)tm, -*(f32*)jp, -*(f32*)(jp + 4), -*(f32*)(jp + 8));
+                    ModelFuzzScaleDef* jointFuzz = &((ModelFileHeader*)m)->jointFuzzScales[j];
+                    PSMTXTrans((MtxPtr)tm, -jointFuzz->pivot[0], -jointFuzz->pivot[1], -jointFuzz->pivot[2]);
                 }
                 PSMTXConcat((MtxPtr)sm, (MtxPtr)tm, (MtxPtr)sm);
                 {
-                    char* jp = (char*)((ModelFileHeader*)m)->jointBlendData + joff;
-                    PSMTXTrans((MtxPtr)tm, *(f32*)jp, *(f32*)(jp + 4), *(f32*)(jp + 8));
+                    ModelFuzzScaleDef* jointFuzz = &((ModelFileHeader*)m)->jointFuzzScales[j];
+                    PSMTXTrans((MtxPtr)tm, jointFuzz->pivot[0], jointFuzz->pivot[1], jointFuzz->pivot[2]);
                 }
                 PSMTXConcat((MtxPtr)tm, (MtxPtr)sm, (MtxPtr)sm);
             }
             PSMTXConcat((MtxPtr)jm, (MtxPtr)sm, (MtxPtr)jm);
-            joff += 0x10;
         }
         if (did != 0) {
             model_multMtxs((ObjModel*)am, wm);
@@ -2311,14 +2306,16 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
     }
     if (((ModelFileHeader*)m)->vertexAnimEntries != NULL) {
         if (fuzzPass || fuzzShadowPass || (passMaskCopy & 8)) {
-            sc2 =
-                1.0f + (1.5f * ((f32)(gObjFuzzLayerIndex + 1) * fade)) / ((ModelFileHeader*)m)->vertexAnimScaleDivisor;
-            PSMTXTrans((MtxPtr)tm, -((ModelFileHeader*)m)->vertexAnimPivot[0],
-                       -((ModelFileHeader*)m)->vertexAnimPivot[1], -((ModelFileHeader*)m)->vertexAnimPivot[2]);
+            sc2 = 1.0f + (1.5f * ((f32)(gObjFuzzLayerIndex + 1) * fade)) /
+                             ((ModelFileHeader*)m)->vertexFuzzScale.scaleDivisor;
+            PSMTXTrans((MtxPtr)tm, -((ModelFileHeader*)m)->vertexFuzzScale.pivot[0],
+                       -((ModelFileHeader*)m)->vertexFuzzScale.pivot[1],
+                       -((ModelFileHeader*)m)->vertexFuzzScale.pivot[2]);
             PSMTXScale((MtxPtr)sm, sc2, sc2, sc2);
             PSMTXConcat((MtxPtr)sm, (MtxPtr)tm, (MtxPtr)sm);
-            PSMTXTrans((MtxPtr)tm, ((ModelFileHeader*)m)->vertexAnimPivot[0], ((ModelFileHeader*)m)->vertexAnimPivot[1],
-                       ((ModelFileHeader*)m)->vertexAnimPivot[2]);
+            PSMTXTrans((MtxPtr)tm, ((ModelFileHeader*)m)->vertexFuzzScale.pivot[0],
+                       ((ModelFileHeader*)m)->vertexFuzzScale.pivot[1],
+                       ((ModelFileHeader*)m)->vertexFuzzScale.pivot[2]);
             PSMTXConcat((MtxPtr)tm, (MtxPtr)sm, (MtxPtr)sm);
             PSMTXConcat((MtxPtr)wm, (MtxPtr)sm, (MtxPtr)t2m);
             PSMTXConcat((MtxPtr)vm, (MtxPtr)t2m, (MtxPtr)fm);

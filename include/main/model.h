@@ -131,6 +131,29 @@ STATIC_ASSERT(offsetof(ModelVtxAnimJob, chunks) == 0x0C);
 STATIC_ASSERT(offsetof(ModelVtxAnimChunk, srcDataOffset) == 0x60);
 STATIC_ASSERT(offsetof(ModelVtxAnimChunk, vtxCount) == 0x70);
 
+/* Each extra joint blends two inverse-bind-adjusted joint matrices. */
+typedef struct ModelExtraJointDef {
+    u8 jointA;
+    u8 jointB;
+    u8 weightA; /* quarter units; the second weight is 1 - weightA / 4 */
+    u8 unk03;
+} ModelExtraJointDef;
+
+STATIC_ASSERT(sizeof(ModelExtraJointDef) == 4);
+STATIC_ASSERT(offsetof(ModelExtraJointDef, jointA) == 0);
+STATIC_ASSERT(offsetof(ModelExtraJointDef, jointB) == 1);
+STATIC_ASSERT(offsetof(ModelExtraJointDef, weightA) == 2);
+
+/* Fuzz shell expansion about a pivot, for a joint or the vertex-animation path. */
+typedef struct ModelFuzzScaleDef {
+    f32 pivot[3];
+    f32 scaleDivisor;
+} ModelFuzzScaleDef;
+
+STATIC_ASSERT(sizeof(ModelFuzzScaleDef) == 0x10);
+STATIC_ASSERT(offsetof(ModelFuzzScaleDef, pivot) == 0);
+STATIC_ASSERT(offsetof(ModelFuzzScaleDef, scaleDivisor) == 0x0C);
+
 /*
  * ModelFileHeader - in-place header of a loaded .MOD model file. Offset
  * fields are patched to pointers by ObjModel_RelocateModelData /
@@ -160,10 +183,9 @@ typedef struct ModelFileHeader {
     u8* texCoords; /* GX_VA_TEX0/TEX1 array, stride 4 */
     Shader* renderOps;
     u8* jointData;
-    u8* jointBlendData; /* 0x40: per-joint blend/pivot table (stride joff); [+0..8]=pivot XYZ (PSMTXTrans to/from origin for scale-fuzz), [+0xc]=scale divisor; passed to ObjModel_BlendVertexStream; offset->ptr relocated on load */
-    f32 vertexAnimPivot[3];
-    f32 vertexAnimScaleDivisor;
-    u8* extraJointDefs; /* 0x54: extraJointCount 3-byte records {jointA, jointB, weight*4}; modelCalcVtxGroupMtxs blends the two joint matrices into the extra joint at jointCount+i; offset->ptr relocated on load */
+    ModelFuzzScaleDef* jointFuzzScales; /* one record per joint */
+    ModelFuzzScaleDef vertexFuzzScale;
+    ModelExtraJointDef* extraJointDefs;
     union {
         u8* hitVolumes;      /* 0x18-byte ModelHitSphereDef records */
         void* hitReactTable; /* animation-bank hit-reaction rows */
@@ -247,6 +269,9 @@ STATIC_ASSERT(offsetof(ModelFileHeader, normalAnimJob) == 0xac);
 STATIC_ASSERT(offsetof(ModelFileHeader, modelId) == 0x04);
 STATIC_ASSERT(offsetof(ModelFileHeader, modNo) == 0x04);
 STATIC_ASSERT(offsetof(ModelFileHeader, jointData) == 0x3C);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointFuzzScales) == 0x40);
+STATIC_ASSERT(offsetof(ModelFileHeader, vertexFuzzScale) == 0x44);
+STATIC_ASSERT(offsetof(ModelFileHeader, extraJointDefs) == 0x54);
 STATIC_ASSERT(offsetof(ModelFileHeader, hitVolumes) == 0x58);
 STATIC_ASSERT(offsetof(ModelFileHeader, hitReactTable) == 0x58);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveData) == 0x64);

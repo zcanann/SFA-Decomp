@@ -231,8 +231,8 @@ All offsets below were cross-checked against `include/main/model.h` (`ModelFileH
 | 0x34 texCoords | `unk34` | offset match; confirmed used as a texcoord-presence check (`objprint_dolphin.c:1571`, gates `GX_VA_TEX0/1MTXIDX` setup) |
 | 0x38 shaders (materials) | `renderOps` | **name mismatch, strong behavioral match**: `renderOps + i*0x44` is passed straight to `shaderInit()` (`model.c:590`), and the count field at 0xf8 (`renderOpCount`) lines up with the wiki's `nShaders` at the same offset — this repo's "renderOps" is the wiki's "Shader\*"/materials array |
 | 0x3c bones | `jointData` | exact; also independently reconstructed in `include/main/objhits.h` as `ObjHitsModelFileHeader.joints` at the same offset (`STATIC_ASSERT(... == 0x3C)`) |
-| 0x40 boneQuats | `unk40` | offset match, not yet confirmed by usage |
-| 0x54 vtxGroups | `unk54` | offset match; only seen relocated (`model.c:362`), not otherwise exercised in reviewed code |
+| 0x40 boneQuats | `jointFuzzScales` | per-joint 0x10-byte pivot/scale-divisor records used by fuzz shell expansion |
+| 0x54 vtxGroups | `extraJointDefs` | four-byte records consumed by `modelCalcVtxGroupMtxs`: two joint indices, first-joint weight in quarter units, and an unknown byte |
 | 0x58 hitspheres | `unk58` in `model.h`; independently reconstructed as `ObjHitsModelFileHeader.hitVolumes` (`ObjHitsModelHitVolume*`) in `objhits.h` | exact offset, cross-file confirmation (see HitSphere section) |
 | 0x64 pAltIndBuf | `animationModelPtrs` | offset match, name differs |
 | 0x68 pAnimBuf | `animationDataSection` | offset match, semantically consistent |
@@ -286,7 +286,7 @@ This matches the wiki's opcode table op-for-op (opcode 1 = select texture/shader
 
 **Shader/materials → `renderOps` / `ObjModelRenderOp`.** `src/main/objprint_dolphin.c` has a partial `ObjModelRenderOp` struct (`textureId`@0x18, `unk1C`, `unk24`, `envTextureId`@0x34, `flags`@0x3c) for the `0x44`-byte records the wiki calls `Shader`/materials. Not a full field-for-field reconstruction, but the same array, same per-entry stride, same role (bound by render-instruction opcode 1).
 
-**ModelVtxGroup.** Present at the correct header offset (`unk54`) but not deeply exercised in the code paths reviewed here — no bone0/bone1/weight field usage found (`not found`).
+**ModelVtxGroup.** `ModelExtraJointDef` now models the four-byte retail record at `extraJointDefs`. The first two bytes select joints; the third byte divided by four is the first joint's weight, with `1 - weight` applied to the second. The last byte remains unknown. The output matrix goes to `jointCount + groupIndex`. See [model render records](../model_render_records.md).
 
 **astruct_54 / fine-skinning region (wiki 0x88-0xc8).** Retail relocation and renderer calls establish two embedded jobs (`vertexAnimJob`, `normalAnimJob`), their native chunk arrays (`vertexAnimEntries`, `normalAnimEntries`), and weight-stream bases (`vertexAnimBase`, `normalAnimBase`). See [cached model animation jobs](../model_cached_stream_jobs.md) for the field offsets and output-table contract. These cover the region described by the wiki's "fine skinning config/pieces/weights"; unknown bytes have not been reconciled field-by-field.
 
