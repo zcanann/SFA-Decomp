@@ -102,6 +102,51 @@ the current source. Further work should target an expression temporary for the
 complete move product while preserving the retail blend-address ordering and
 integer allocation.
 
+## Reduced expression-order case
+
+`tools/objanim_expression_order.py` builds the isolated kernel in
+`tools/fixtures/objanim_expression_order.c` with the configured ObjAnim compiler
+command. This is a compiler reproducer, not proposed retail source. A
+straight-line pair of curve calculations does not reproduce the problem.
+Keeping the sample-index wrap, reused cursor, and earlier progress use produces
+the same tradeoff in 104 instructions, without animation objects or headers:
+
+| Variant | Conversion bias | Move product | Multiply index | Blend address index |
+| --- | --- | --- | ---: | ---: |
+| Named product | `f11` | `f12` | 57 | 58 |
+| Staged raw difference | `f12` | `f11` | 58 | 57 |
+
+The new `mwcc_frontend_trace.py --propagation` option records the decisive
+first-pass events. In the named kernel, assigning the blend cursor at frontend
+node 145 invalidates the available move-product expression from node 135.
+In the staged kernel, that assignment instead invalidates the raw-difference
+expression (132 at 150); the move-product expression from 140 is substituted
+at use 176. The full game function shows the same named-product invalidation
+at nodes 765 and 775. These are observed node IDs within the captured pass,
+not source symbols or stable compiler-wide identifiers.
+
+This establishes the dependency that blocks propagation, rather than merely
+observing the resulting allocator order. The hooks cover the expression
+replacement at VA `0x46F182`, destination invalidation at `0x46F26B`, and
+dependency invalidation at `0x46F2FB`. Events retain `available_before` because
+clearing an already-unavailable candidate is not a new invalidation.
+`after_stage` indexes the preceding entry in `stages.json`; node IDs must be
+interpreted against that pass's listing. The event file is hashed in the trace
+manifest, and the ordinary/instrumented object identity gate still applies.
+
+Both reduced cases reproduce their instruction order under instrumentation;
+the full function retains its existing object hash. Inline helpers, scoped
+constant locals, and preserving/reusing scale inputs did not close the gap.
+No new game-source spelling was retained. The source match remains 99.97990%.
+
+```sh
+python3 tools/objanim_expression_order.py --trace
+python3 tools/mwcc_frontend_trace.py --unit main/main/objanim \
+  --function ObjAnim_SampleRootCurvePhase --propagation \
+  --output build/flag_probe/objanim_propagation
+python3 -m unittest discover -s tools -p 'test_mwcc_frontend_trace.py'
+```
+
 ## Reproduction and validation
 
 ```sh

@@ -21,11 +21,16 @@ ROOT = Path(__file__).resolve().parents[1]
 OPEN = 0x454030
 DUMP = 0x454320
 DUMP_RETURN = 0x454368
+PROPAGATION_HOOKS = {
+    0x46F182: b"\x53",                  # PUSH EBX before replacing an expression use
+    0x46F26B: b"\xe8\x60\xb1\x0b\x00",  # clear candidate after assigning its destination
+    0x46F2FB: b"\x0f\xb7\x47\x04",      # clear candidate after assigning a dependency
+}
 _state = None
 
 
 class State:
-    def __init__(self, debugger, wanted, pid_file):
+    def __init__(self, debugger, wanted, pid_file, propagation=False):
         import lldb
 
         self.api = lldb
@@ -35,6 +40,8 @@ class State:
         self.wanted = set(wanted)
         self.stages = []
         self.failure = None
+        self.propagation = propagation
+        self.events = []
         if self.read(DUMP_RETURN, 1) != b"\xc3":
             raise ValueError("unexpected frontend listing return")
         for address, expected in [(OPEN, b"\x57"), (DUMP, b"\x80\x7c\x24\x08\x00\x74\x41")]:
@@ -42,6 +49,12 @@ class State:
                 raise ValueError(f"unexpected frontend hook bytes at {address:#x}")
             bp = self.target.BreakpointCreateByAddress(address)
             bp.SetScriptCallbackFunction("mwcc_frontend_trace.on_breakpoint")
+        if propagation:
+            for address, expected in PROPAGATION_HOOKS.items():
+                if self.read(address, len(expected)) != expected:
+                    raise ValueError(f"unexpected propagation hook bytes at {address:#x}")
+                bp = self.target.BreakpointCreateByAddress(address)
+                bp.SetScriptCallbackFunction("mwcc_frontend_trace.on_breakpoint")
 
     def read(self, address, size):
         error = self.api.SBError()
@@ -66,11 +79,50 @@ class State:
             raise ValueError("invalid frontend listing string")
         return value
 
+    def trace_propagation(self, frame, sp):
+        pc = frame.GetPC()
+        function = self.word(0x5E6610)
+        name = self.string(self.word(function + 0xA) + 0xA) if function else "Init-code"
+        if name in self.wanted:
+            entry = frame.FindRegister("rbp" if pc == 0x46F182 else "rdi").GetValueAsUnsigned() & 0xFFFFFFFF
+            use = frame.FindRegister("rbx").GetValueAsUnsigned() & 0xFFFFFFFF
+            index = int.from_bytes(self.read(entry + 4, 2), "little")
+            available = self.word(0x5E6CA0)
+            word_index = index // 32
+            active = word_index < self.word(available) and bool(
+                self.word(available + 4 + 4 * word_index) & (1 << (index % 32)))
+            self.events.append({
+                "function": name, "after_stage": len(self.stages) - 1,
+                "kind": {0x46F182: "replace_expression", 0x46F26B: "assign_destination",
+                         0x46F2FB: "assign_dependency"}[pc],
+                "definition": int.from_bytes(self.read(self.word(entry) + 8, 2), "little"),
+                "use": int.from_bytes(self.read(use + 8, 2), "little"),
+                "available_before": active,
+            })
+        # LLDB sees Wibo as x86-64. Emulate these exact guest instructions
+        # so a stepped PUSH/CALL cannot write an eight-byte return address.
+        if pc in (0x46F182, 0x46F26B):
+            value = frame.FindRegister("rbx").GetValueAsUnsigned() & 0xFFFFFFFF if pc == 0x46F182 else pc + 5
+            self.write(sp - 4, struct.pack("<I", value))
+            if not frame.FindRegister("rsp").SetValueFromCString(str(sp - 4)):
+                raise ValueError("cannot emulate propagation hook stack write")
+            destination = pc + 1 if pc == 0x46F182 else 0x52A3D0
+        else:
+            edi = frame.FindRegister("rdi").GetValueAsUnsigned() & 0xFFFFFFFF
+            value = int.from_bytes(self.read(edi + 4, 2), "little")
+            if not frame.FindRegister("rax").SetValueFromCString(str(value)):
+                raise ValueError("cannot emulate propagation hook MOVZX")
+            destination = pc + 4
+        if not frame.SetPC(destination):
+            raise ValueError("cannot resume propagation hook")
+
     def stopped(self, frame):
         sp = frame.FindRegister("rsp").GetValueAsUnsigned()
         if not 4 <= sp <= 0xFFFFFFFB:
             raise ValueError("frontend stack is outside the 32-bit guest")
-        if frame.GetPC() == OPEN:
+        if frame.GetPC() in PROPAGATION_HOOKS and self.propagation:
+            self.trace_propagation(frame, sp)
+        elif frame.GetPC() == OPEN:
             # The caller hard-codes this listing-only gate to zero. Enable it
             # before the compiler opens <source>.log, then emulate PUSH EDI.
             self.write(0x5E7401, b"\x01")
@@ -94,9 +146,9 @@ class State:
             raise ValueError("unrecognized frontend hook")
 
 
-def install(debugger, wanted, pid_file):
+def install(debugger, wanted, pid_file, propagation=False):
     global _state
-    _state = State(debugger, wanted, pid_file)
+    _state = State(debugger, wanted, pid_file, propagation)
 
 
 def on_breakpoint(frame, location, internal_dict):
@@ -119,6 +171,8 @@ def finish(debugger, result):
     if found != _state.wanted:
         raise ValueError(f"missing frontend final stages: {_state.wanted - found}")
     Path(result).write_text(json.dumps(_state.stages, indent=2))
+    if _state.propagation:
+        Path(result).with_name("propagation.json").write_text(json.dumps(_state.events, indent=2) + "\n")
 
 
 def main():
@@ -132,6 +186,7 @@ def main():
     parser.add_argument("--function", required=True, action="append")
     parser.add_argument("--source", type=Path)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--propagation", action="store_true", help="Trace expression replacements and the assignments that invalidate propagation candidates")
     parser.add_argument("--timeout", type=float, default=60, help="LLDB deadline in seconds (maximum 60)")
     args = parser.parse_args()
     if sys.platform != "darwin":
@@ -148,7 +203,8 @@ def main():
     stages = output / "stages.json"
     pid = output / "guest.pid"
     manifest = output / "manifest.json"
-    for artifact in [stages, pid, manifest]:
+    propagation = output / "propagation.json"
+    for artifact in [stages, pid, manifest, propagation]:
         artifact.unlink(missing_ok=True)
     shutil.copyfile(original, source)
     source.with_suffix(".log").unlink(missing_ok=True)
@@ -168,7 +224,7 @@ def main():
         "settings set target.disable-aslr false",
         "breakpoint set --func-regex loadPEFromSource", "run", "breakpoint disable 1", "thread step-out",
         "command script import " + json.dumps(str(Path(__file__).resolve())),
-        f"script mwcc_frontend_trace.install(lldb.debugger, {args.function!r}, {str(pid)!r})",
+        f"script mwcc_frontend_trace.install(lldb.debugger, {args.function!r}, {str(pid)!r}, {args.propagation!r})",
         "continue", f"script mwcc_frontend_trace.finish(lldb.debugger, {str(stages)!r})",
     ]
     debugger = shutil.which("lldb")
@@ -198,13 +254,19 @@ def main():
     if not listing.is_file() or not listing.stat().st_size:
         raise ValueError("compiler did not produce a frontend listing")
     object_hash = hashlib.sha256(after).hexdigest()
-    manifest.write_text(json.dumps({
+    provenance = {
         "schema": 1, "unit": args.unit, "functions": sorted(set(args.function)),
         "compiler_sha256": COMPILER_SHA256, "object_sha256": object_hash,
         "source": str(original), "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
         "command": command, "stages": str(stages), "listing": str(listing),
         "listing_sha256": hashlib.sha256(listing.read_bytes()).hexdigest(),
-    }, indent=2) + "\n")
+    }
+    if args.propagation:
+        events = json.loads(propagation.read_text())
+        provenance["propagation"] = str(propagation)
+        provenance["propagation_sha256"] = hashlib.sha256(propagation.read_bytes()).hexdigest()
+        print("Captured propagation events:", len(events))
+    manifest.write_text(json.dumps(provenance, indent=2) + "\n")
     print("Instrumented/ordinary raw object SHA256:", object_hash)
     print("Captured frontend stages:", len(json.loads(stages.read_text())))
     print("Frontend listing:", source.with_suffix(".log"))
