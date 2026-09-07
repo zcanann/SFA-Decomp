@@ -49,6 +49,10 @@ Run these in order. Each one can end the round without a build.
    `shadowVolumeBeginFrame` and `camcontrol_applyState` (byte-exact cells that crater siblings;
    both residuals proven pure home swaps at identical stream — rotation confirmed at cell level,
    source lane closed; worklist rows carry the detail). Two caveats, both measured:
+   **2026-09-07 correction:** `camcontrol_applyState` now matches with compound
+   subtraction and direct field clamping together. Either edit alone is inert;
+   the combined edit matches all 43 functions with unchanged flags
+   ([evidence](camcontrol_matching.md)). Its source-lane closure is superseded.
    - **Cell evidence is spelling-conditioned — re-verify the cell at HEAD before spending
      spellings.** `camcontrol_applyState`'s byte-exact `+nopropagation` cell reproduces ONLY
      against the pre-`792fbf6e2d` `clamped` spelling; the current literal spelling's noprop cell
