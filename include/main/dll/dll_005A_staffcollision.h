@@ -20,7 +20,7 @@ STATIC_ASSERT(offsetof(StaffCollisionColorArgs, blue) == 0x0C);
 STATIC_ASSERT(sizeof(StaffCollisionColorArgs) == 0x10);
 
 typedef s16 (*StaffCollisionSpawnFn)(GameObject* sourceObj, int mode, PartFxSpawnParams* spawnParams, u32 spawnFlags,
-                                      int unusedModelId, const StaffCollisionColorArgs* colorArgs);
+                                     int unusedModelId, const StaffCollisionColorArgs* colorArgs);
 
 typedef struct StaffCollisionInterface {
     ResourceDescriptorCallback reserved;
@@ -52,6 +52,6 @@ extern StaffCollisionResourceDescriptor gStaffCollisionResourceDescriptor;
 
 /* Returns the last spawn result, or zero when the spawn count is nonpositive. */
 s16 StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* spawnParams, u32 spawnFlags,
-                          int unusedModelId, const StaffCollisionColorArgs* colorArgs);
+                         int unusedModelId, const StaffCollisionColorArgs* colorArgs);
 
 #endif /* MAIN_DLL_DLL_005A_STAFFCOLLISION_H_ */

@@ -70,7 +70,7 @@ StaffCollisionEffectResource gStaffCollisionEffectResourceData = {
 };
 
 s16 StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* spawnParams, u32 spawnFlags,
-                          int unusedModelId, const StaffCollisionColorArgs* colorArgs) {
+                         int unusedModelId, const StaffCollisionColorArgs* colorArgs) {
     MatrixTransform transform;
     StaffCollisionSpawnPacket packet;
     GfxCmd commandStorage[32];
@@ -193,11 +193,14 @@ s16 StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* spa
                 packet.position[2] += spawnParams->posZ;
             }
         }
-        spawnHandle = (*gModgfxInterface)
-            ->spawnEffect(
-                &packet, 0, mode != 0 ? 4 : 3,
-                mode != 0 ? (void*)resources[0]->alternateVertices : (void*)resources[0]->defaultVertices, mode != 0 ? 2 : 1,
-                mode != 0 ? (void*)resources[0]->alternateTriangleIndices : (void*)gStaffCollisionDefaultTriangles, 0, 0);
+        spawnHandle =
+            (*gModgfxInterface)
+                ->spawnEffect(&packet, 0, mode != 0 ? 4 : 3,
+                              mode != 0 ? (void*)resources[0]->alternateVertices : (void*)resources[0]->defaultVertices,
+                              mode != 0 ? 2 : 1,
+                              mode != 0 ? (void*)resources[0]->alternateTriangleIndices
+                                        : (void*)gStaffCollisionDefaultTriangles,
+                              0, 0);
     }
     return spawnHandle;
 }
