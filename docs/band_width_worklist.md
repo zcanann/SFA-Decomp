@@ -259,7 +259,7 @@ Width >=5 saved band, identical mnemonic stream: the rotation-offset model — e
 
 | fn | unit | size | fuzzy | ndiff | struc | band | #nm | recorded mechanism |
 |---|---|---|---|---|---|---|---|---|
-| trackSweepCircleAgainstPoint | main/track_dolphin | 656 | 99.939 | 2 | 0 | 3G/7F | 7 | track-objhits-coloring-walls (T==C, derived to ground) |
+| trackSweepCircleAgainstPoint | main/track_dolphin | 656 | 100 | 0 | 0 | 3G/7F | 7 | Resolved 2026-09-07: square the X-distance temporary in place, then form quadratic C directly; see [circle sweep matching](track_circle_sweep_matching.md). |
 | debugPrintfxy | main/dll_80136a40 | 424 | 99.387 | 2 | 1 | 7G/0F | 4 | signature: struc 0, band >=5, no recorded lever site |
 | trickyGuard | dlls/objects/196_Tricky/tricky | 2276 | 99.947 | 6 | 0 | 7G/0F | 6 | near100-band-census-2026-08-01 (16 dead ends) |
 | RomCurve_findShortestPathLink | dlls/engine/20_Hcurves/Hcurves_romcurve | 1572 | 99.911 | 6 | 0 | 15G/1F | 1 | refreshed-flip-frontier 08-02 (width noted per fn) |

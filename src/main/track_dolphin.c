@@ -240,7 +240,7 @@ int trackSweepSphereAgainstEdge(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, 
                                 f32* outDist, f32 epsArg);
 
 int trackSweepCircleAgainstPoint(f32* x, f32* z, f32 centerX, f32 centerZ, f32 radius, s8 resolveCollision) {
-    f32 startDeltaZ, startDeltaX, timeA, startDistanceSq, startX, startZ, moveX, moveZ, quadraticB, negB;
+    f32 startDeltaZ, startDeltaX, timeA, startDeltaXSq, startX, startZ, moveX, moveZ, quadraticB, negB;
     f32 separation, sqrtDiscriminant, denominator, separationX, timeB, hitTime, hitX, hitZ;
     f32 separationZ, planeOffset, normalX, penetration, discriminant, quadraticC, normalZ;
     f32 motionLengthSq, fourMotionLengthSq;
@@ -251,14 +251,14 @@ int trackSweepCircleAgainstPoint(f32* x, f32* z, f32 centerX, f32 centerZ, f32 r
 
     startX = x[0];
     startDeltaX = startX - centerX;
-    startDistanceSq = startDeltaX * startDeltaX;
+    startDeltaXSq = startDeltaX;
+    startDeltaXSq *= startDeltaXSq;
     startZ = z[0];
     startDeltaZ = startZ - centerZ;
     {
         f32 deltaZSq = startDeltaZ * startDeltaZ;
-        startDistanceSq += deltaZSq;
+        quadraticC = (startDeltaXSq + deltaZSq) - radius * radius;
     }
-    quadraticC = startDistanceSq - radius * radius;
     if (quadraticC < 0.0f) {
         if (resolveCollision != 0) {
             x[1] = startX + gTrackResolvePushX;
