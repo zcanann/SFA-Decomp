@@ -1363,6 +1363,7 @@ static inline void mapReleaseBlockReference(int blockIndex) {
         if (gMapBlockRefCounts[blockIndex] == 0) {
             int shaderOffset;
             Shader* shader;
+            int textureIndex;
             int index;
             ShaderLayer* shaderLayer;
             int layerIndex;
@@ -1389,8 +1390,8 @@ static inline void mapReleaseBlockReference(int blockIndex) {
                     }
                 }
             }
-            for (index = 0; index < block->textureCount; index++) {
-                textureFree(block->textures[index].texture);
+            for (textureIndex = 0; textureIndex < block->textureCount; textureIndex++) {
+                textureFree(block->textures[textureIndex].texture);
             }
             if (block->auxData != NULL) {
                 mm_free(block->auxData);
@@ -1895,8 +1896,6 @@ void doPendingMapLoads(void) {
     char** aBase;
     char* cellGrid;
     int row;
-    int n;
-    int gridPass;
     MapLoadRec recs[300];
     int rectA[4], rectB[4], rectC[4], rectD[4];
 
@@ -2107,13 +2106,9 @@ void doPendingMapLoads(void) {
                         /* Vestigial grid walk over each layer's cell table: writes only dead locals. */
                         for (i = 0; i < 5; i++) {
                             cellGrid = (char*)*eBase;
-                            row = 0;
-                            for (gridPass = 0; gridPass < 2; gridPass++) {
-                                for (col = 0; col < 7; col++) {
-                                    for (n = 0; n < 16; n++) {
-                                        cellGrid += 12;
-                                    }
-                                    row++;
+                            for (row = 0; row < 16; row++) {
+                                for (col = 0; col < 16; col++) {
+                                    cellGrid += sizeof(MapCellEntry);
                                 }
                             }
                             eBase++;

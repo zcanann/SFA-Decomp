@@ -4,7 +4,7 @@ The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
 All 40,656 assigned data bytes match. The common GC/1.3 invocation produces
-137/145 exact functions and a 99.55977% instruction fuzzy score; the TU remains
+137/145 exact functions and a 99.56559% instruction fuzzy score; the TU remains
 `NonMatching` because eight functions still differ.
 
 This supersedes the constant-pool blocker in
@@ -134,6 +134,21 @@ instructions to twelve register-operand differences. `doPendingMapLoads` rises
 from 98.458015% to 98.65522%. The two callers preserve the existing release order,
 including clearing the slot before callbacks and freeing the block last. All
 other function bytes and the assigned data remain unchanged.
+
+A later pass gives the texture-release loop its own counter, declared before
+its shader-loop counterpart. This recovers the four texture-counter operands in
+`unloadMap`, leaving eight differences from the shader byte cursor and layer
+cursor register swap. `unloadMap` reaches 99.67532%, and `doPendingMapLoads`
+reaches 98.71247%, with every other function body unchanged.
+
+The pending-load path also restores ordinary 16-by-16 loops for its vestigial
+cell-grid walk. GC/1.3 performs the chunking itself and emits the retail
+`1344`-byte and seven-row increments; the previous manually chunked source
+emitted `1152` and six. The pointer and row registers still differ. This removes
+two unused loop locals and raises `doPendingMapLoads` to 98.71501%. Both build
+gates pass, all 120 native data-symbol layouts remain exact, and all forty
+literal-consumer value sequences remain unchanged. Formatting preserves the raw
+compiled object.
 
 `sceneDraw` now reads the queue count through an explicit `const int*` view
 when advancing it after each render-pass entry. As in the cloud renderer's
