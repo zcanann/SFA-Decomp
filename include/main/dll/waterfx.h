@@ -5,8 +5,7 @@
 #include "main/dll/waterfx_interface.h"
 #include "main/texture.h"
 
-typedef struct WaterVtx
-{
+typedef struct WaterVtx {
     s16 x;
     s16 y;
     s16 z;
@@ -17,8 +16,7 @@ typedef struct WaterVtx
     u8 a;
 } WaterVtx;
 
-typedef struct WaterEntry
-{
+typedef struct WaterEntry {
     f32 x;
     f32 y;
     f32 z;
@@ -30,8 +28,7 @@ typedef struct WaterEntry
     u8 pad19[3];
 } WaterEntry;
 
-typedef struct WaterParticle
-{
+typedef struct WaterParticle {
     f32 x;
     f32 y;
     f32 z;
@@ -43,8 +40,7 @@ typedef struct WaterParticle
     u8 pad39[3];
 } WaterParticle;
 
-typedef struct WaterEntry7
-{
+typedef struct WaterEntry7 {
     f32 x;
     f32 y;
     f32 z;
@@ -56,8 +52,7 @@ typedef struct WaterEntry7
     u8 pad1a[2];
 } WaterEntry7;
 
-typedef struct WaterDrop
-{
+typedef struct WaterDrop {
     f32 x;
     f32 y;
     f32 z;
@@ -68,8 +63,7 @@ typedef struct WaterDrop
     u8 pad19[3];
 } WaterDrop;
 
-typedef struct WaterVtxDesc
-{
+typedef struct WaterVtxDesc {
     u8 pad0;
     u8 b1;
     u8 b2;
