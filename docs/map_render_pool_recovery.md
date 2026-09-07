@@ -4,7 +4,7 @@ The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
 All 40,656 assigned data bytes match. The common GC/1.3 invocation produces
-139/145 exact functions and a 99.5749% instruction fuzzy score; the TU remains
+139/145 exact functions and a 99.577324% instruction fuzzy score; the TU remains
 `NonMatching` because six functions still differ.
 
 This supersedes the constant-pool blocker in
@@ -330,3 +330,27 @@ The data and literal-sequence audits pass, as do `ninja all_source` and the
 strict retail checksum gate with 30-second timeouts. Formatting preserves
 the probe object byte-for-byte. The strict build continues to use the retail
 shader object.
+
+
+## Explicit layer traversal during block release (2026-09-07)
+
+`mapReleaseBlockReference` now walks shader layers with an explicit byte cursor.
+The cursor retains the retail shader-base bias; each iteration obtains its
+`ShaderLayer*` through canonical `offsetof(Shader, layers)`, and advances by
+`sizeof(ShaderLayer)`. Initializing the layer index before the pointer, and
+advancing the pointer before the index, preserves retail instruction order.
+The shader pointer, layer cursor, and shader byte offset declaration order
+then recovers the layer cursor's target register.
+
+`unloadMap` improves from 99.67532% to 99.77273%, reducing its eight differing
+instructions to five. Its remaining mismatch swaps the shader pointer and
+shader byte offset registers. The shared helper also improves
+`doPendingMapLoads` from 98.77226% to 98.79135%. All other function bytes,
+assigned data bytes, named symbol layouts, and relocation locations, kinds,
+addends, and target offsets remain unchanged. The TU remains `NonMatching`
+with 139/145 exact functions and a 99.577324% fuzzy score.
+
+Formatting preserves the probe object byte-for-byte. The data and literal
+audits, `ninja all_source`, and strict retail checksum gate all pass; each
+Ninja invocation is bounded to 30 seconds. The strict build continues to
+link the retail shader object.

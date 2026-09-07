@@ -1366,11 +1366,11 @@ static inline void mapReleaseBlockReference(int blockIndex) {
     if (blockIndex >= 0) {
         gMapBlockRefCounts[blockIndex]--;
         if (gMapBlockRefCounts[blockIndex] == 0) {
-            int shaderOffset;
             Shader* shader;
+            u8* layerCursor;
+            int shaderOffset;
             int textureIndex;
             int index;
-            ShaderLayer* shaderLayer;
             int layerIndex;
             u32 scrollSlot;
             MapBlockData* block;
@@ -1382,8 +1382,10 @@ static inline void mapReleaseBlockReference(int blockIndex) {
             shaderOffset = 0;
             for (; index < block->shaderCount; shaderOffset += sizeof(Shader), index++) {
                 shader = (Shader*)((u8*)block->shaders + shaderOffset);
-                for (layerIndex = 0; layerIndex < shader->layerCount; layerIndex++) {
-                    shaderLayer = &shader->layers[layerIndex];
+                layerIndex = 0;
+                layerCursor = (u8*)shader;
+                for (; layerIndex < shader->layerCount; layerCursor += sizeof(ShaderLayer), layerIndex++) {
+                    ShaderLayer* shaderLayer = (ShaderLayer*)(layerCursor + offsetof(Shader, layers));
                     scrollSlot = shaderLayer->scrollMtx;
                     if (scrollSlot != 0xff) {
                         if (gMapTextureScrolls[scrollSlot].refCount != 0) {
