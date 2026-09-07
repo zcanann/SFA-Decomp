@@ -1342,7 +1342,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/226/226.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/227/227.c", section_alignments={".data": 4}),
             Object(MatchingFor("GSAE01"), "dlls/objects/228/228.c", cflags=cflags_dll_noopt_nocse),
-            Object(NonMatching, "dlls/objects/229/229.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/229/229.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/230_ReStartMark/ReStartMark.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/231/231.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/232_Checkpoint4/Checkpoint4.c"),

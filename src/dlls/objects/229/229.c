@@ -524,12 +524,12 @@ void Shield_update(GameObject* obj) {
         obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
     {
-        int i;
-        f32* omniAlphaCursor;
-        f32* alphaCursor;
         s16* stateS16;
         f32* omniScaleCursor;
         f32* stateF32;
+        f32* omniAlphaCursor;
+        f32* alphaCursor;
+        int i;
         i = 0;
         stateS16 = (s16*)state;
         omniScaleCursor = tableCursor[0] + SHIELD_OMNI_SCALE_TABLE_OFFSET;
@@ -540,12 +540,12 @@ void Shield_update(GameObject* obj) {
             stateS16[SHIELD_SEGMENT_PHASE_S16_INDEX] = (s16)((f32)stateS16[SHIELD_SEGMENT_RATE_S16_INDEX] * timeDelta +
                                                              stateS16[SHIELD_SEGMENT_PHASE_S16_INDEX]);
             if (obj->anim.romDefNo == SHIELD_SEQID_OMNI_SHIELD) {
-                f32 wave = fsin16((u16)stateS16[SHIELD_SEGMENT_PHASE_S16_INDEX]);
+                f32 wave = fsin16(stateS16[SHIELD_SEGMENT_PHASE_S16_INDEX] & 0xffff);
                 wave = wave / 4.0f + 1.0f;
                 stateF32[SHIELD_SEGMENT_SCALE_F32_INDEX] = *omniScaleCursor * wave;
                 stateF32[SHIELD_SEGMENT_ALPHA_F32_INDEX] = *omniAlphaCursor;
             } else {
-                f32 wave = fsin16((u16)stateS16[SHIELD_SEGMENT_PHASE_S16_INDEX]);
+                f32 wave = fsin16(stateS16[SHIELD_SEGMENT_PHASE_S16_INDEX] & 0xffff);
                 f32 sum = 1.0f + wave;
                 wave = sum / 2.0f;
                 stateF32[SHIELD_SEGMENT_SCALE_F32_INDEX] = *tableCursor[0] * wave;
