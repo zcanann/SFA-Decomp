@@ -1814,7 +1814,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/698_MCLightning/MCLightning.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/699_GF_LevelCon/GF_LevelCon.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/700_Andross/Andross.c", cflags=cflags_dll_noopt_noautoinline_alwaysinline),
-            Object(NonMatching, "dlls/objects/701/701.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/701/701.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "dlls/objects/702_AndrossBrai/AndrossBrai.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/703_AndrossLigh/AndrossLigh.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/704/704.c"),
