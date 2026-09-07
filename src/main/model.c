@@ -428,127 +428,120 @@ void modelAnimResetState(void* m, void* data) {
         channel->prevBlendCacheSlot = channel->moveCacheSlot;
     }
 }
-int modelLoadAnimations(void* model, int id, void* animBase) {
-    int tabBase;
-    u8* buf = animBase;
-    int* tbl;
-    u8* hdr = model;
-    int sz;
-    int hdrOff[1];
-    int animOff;
+int modelLoadAnimations(ModelFileHeader* file, int modelId, void* animBase) {
+    int modelAnimOffset;
+    u8* bufferCursor = animBase;
+    s16* offsetTable;
+    int modelAnimBytes;
+    int animationOffset;
     int groupSlot;
     int i;
     int animIdx;
-    int padBytes;
+    int bufferBytes;
     int animId;
-    int dataOff;
-    int listIdx;
-    u8* atlasEntry;
+    int amapOffset;
+    int cacheIndex;
+    u8* cacheEntry;
     int unusedSize;
-    int sz2;
-    u8* atlasHdr;
-    u8* atlasPtr;
+    int animationBytes;
+    u8* animation;
+    u8* loadedAnimation;
     u8 newRefCount;
 
-    padBytes = 0;
-    tbl = gModelAnimOffsetTable;
-    fileLoadToBufferOffset(MLDF_FILEID_MODANIM_TAB, tbl, id << 1, 0x10);
-    tabBase = *(s16*)tbl;
-    if (((ModelFileHeader*)hdr)->animationCount == 0) {
+    bufferBytes = 0;
+    offsetTable = (s16*)gModelAnimOffsetTable;
+    fileLoadToBufferOffset(MLDF_FILEID_MODANIM_TAB, offsetTable, modelId << 1, 0x10);
+    modelAnimOffset = offsetTable[0];
+    if (file->animationCount == 0) {
         return 0;
     }
-    sz = (((ModelFileHeader*)hdr)->animationCount << 1) + 8;
-    if (sz > 0x800) {
-        debugPrintf(sModelAnimationBufferOverflowWarning, sz);
+    modelAnimBytes = (file->animationCount << 1) + 8;
+    if (modelAnimBytes > 0x800) {
+        debugPrintf(sModelAnimationBufferOverflowWarning, modelAnimBytes);
     }
-    fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (id & ~3) << 2, 0x20);
-    ((ModelFileHeader*)hdr)->animationDataFileOffset = gModelAnimOffsetTable[id & 3];
-    dataOff = gModelAnimOffsetTable[id & 3];
-    id = gModelAnimOffsetTable[(id & 3) + 1] - dataOff;
-    if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) {
-        ((ModelFileHeader*)hdr)->animationHeaderBuffer = buf;
-        while (sz & 7) {
-            sz++;
+    fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (modelId & ~3) << 2, 0x20);
+    file->animationDataFileOffset = gModelAnimOffsetTable[modelId & 3];
+    amapOffset = gModelAnimOffsetTable[modelId & 3];
+    modelId = gModelAnimOffsetTable[(modelId & 3) + 1] - amapOffset;
+    if (file->flags & MODEL_FLAG_VERTEX_ANIM_AREA) {
+        file->animationHeaderBuffer = bufferCursor;
+        while (modelAnimBytes & 7) {
+            modelAnimBytes++;
         }
-        padBytes = sz;
-        buf += sz;
-        fileLoadToBufferOffset(MLDF_FILEID_MODANIM_BIN, ((ModelFileHeader*)hdr)->animationHeaderBuffer, tabBase, sz);
+        bufferBytes = modelAnimBytes;
+        bufferCursor += modelAnimBytes;
+        fileLoadToBufferOffset(MLDF_FILEID_MODANIM_BIN, file->animationHeaderBuffer, modelAnimOffset, modelAnimBytes);
     } else {
-        fileLoadToBufferOffset(MLDF_FILEID_MODANIM_BIN, gModelResourceBuffer, tabBase, sz);
-        ((ModelFileHeader*)hdr)->animationHeaderBuffer = (u8*)gModelResourceBuffer;
+        fileLoadToBufferOffset(MLDF_FILEID_MODANIM_BIN, gModelResourceBuffer, modelAnimOffset, modelAnimBytes);
+        file->animationHeaderBuffer = (u8*)gModelResourceBuffer;
     }
-    hdrOff[0] = 0;
     groupSlot = 0;
-    {
-        u8* slot = hdr + groupSlot++ * 2;
-        *(s16*)(slot + 0x70) = (s16)hdrOff[0];
-    }
+    file->animGroupBaseIndices[groupSlot++] = 0;
     i = 0;
-    for (; i < (int)((ModelFileHeader*)hdr)->animationCount; i++) {
-        if (*(s16*)(((ModelFileHeader*)hdr)->animationHeaderBuffer + hdrOff[0]) == -1) {
-            ((ModelFileHeader*)hdr)->animGroupBaseIndices[groupSlot++] = (s16)(i + 1);
+    for (; i < (int)file->animationCount; i++) {
+        if (file->cachedAnimIds[i] == OBJANIM_MISSING_MOVE_ID) {
+            file->animGroupBaseIndices[groupSlot++] = (s16)(i + 1);
         }
-        hdrOff[0] += 2;
     }
-    if ((((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) == 0) {
-        ((ModelFileHeader*)hdr)->animationHeaderBuffer = NULL;
-        ((ModelFileHeader*)hdr)->animationModelPtrs = buf;
-        buf += ((ModelFileHeader*)hdr)->animationCount * (int)sizeof(u8*);
-        padBytes += ((ModelFileHeader*)hdr)->animationCount * (int)sizeof(u8*);
-        while (padBytes & 7) {
-            buf++;
-            padBytes++;
+    if ((file->flags & MODEL_FLAG_VERTEX_ANIM_AREA) == 0) {
+        file->animationHeaderBuffer = NULL;
+        file->animationModelPtrs = bufferCursor;
+        bufferCursor += file->animationCount * (int)sizeof(u8*);
+        bufferBytes += file->animationCount * (int)sizeof(u8*);
+        while (bufferBytes & 7) {
+            bufferCursor++;
+            bufferBytes++;
         }
-        ((ModelFileHeader*)hdr)->animationDataSection = buf;
-        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, ((ModelFileHeader*)hdr)->animationDataSection,
-                               ((ModelFileHeader*)hdr)->animationDataFileOffset, id);
+        file->animationDataSection = bufferCursor;
+        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, file->animationDataSection,
+                               file->animationDataFileOffset, modelId);
         animIdx = 0;
         do {
-            animId = *(s16*)((u8*)gModelResourceBuffer + animIdx * 2);
-            if (animId != -1) {
-                if ((getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) && *(u16*)(hdr + 4) != 1 &&
-                    *(u16*)(hdr + 4) != 3) {
-                    atlasPtr = 0;
+            animId = gModelResourceBuffer[animIdx];
+            if (animId != OBJANIM_MISSING_MOVE_ID) {
+                if ((getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) && file->modelId != 1 &&
+                    file->modelId != 3) {
+                    loadedAnimation = 0;
                 } else {
-                    if (ModelList_getHeader(gModelAnimCacheList, animId, &atlasHdr) == 0) {
-                        animOff = gModelAnimDataOffsetTable[animId];
-                        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, animOff, 0, &sz2, animId, 1);
-                        atlasHdr = mmAlloc(sz2, 10, 0);
-                        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, atlasHdr, animOff, sz2, &unusedSize, animId,
+                    if (ModelList_getHeader(gModelAnimCacheList, animId, &animation) == 0) {
+                        animationOffset = gModelAnimDataOffsetTable[animId];
+                        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, animationOffset, 0, &animationBytes, animId, 1);
+                        animation = mmAlloc(animationBytes, 10, 0);
+                        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, animation, animationOffset, animationBytes, &unusedSize, animId,
                                                   0);
-                        *atlasHdr = 1;
-                        modelInitModelList(gModelAnimCacheList, animId, &atlasHdr);
+                        *animation = 1;
+                        modelInitModelList(gModelAnimCacheList, animId, &animation);
                     } else {
-                        *atlasHdr += 1;
+                        *animation += 1;
                     }
-                    atlasPtr = atlasHdr;
+                    loadedAnimation = animation;
                 }
-                ((u8**)((ModelFileHeader*)hdr)->animationModelPtrs)[animIdx] = atlasPtr;
-                if (((u8**)((ModelFileHeader*)hdr)->animationModelPtrs)[animIdx] == 0) {
+                ((u8**)file->animationModelPtrs)[animIdx] = loadedAnimation;
+                if (((u8**)file->animationModelPtrs)[animIdx] == 0) {
                     int relIdx;
 
                     relIdx = 0;
                     for (; relIdx < animIdx; relIdx++) {
-                        atlasEntry = ((u8**)((ModelFileHeader*)hdr)->animationModelPtrs)[relIdx];
-                        if (atlasEntry != 0) {
-                            newRefCount = (*atlasEntry -= 1);
+                        cacheEntry = ((u8**)file->animationModelPtrs)[relIdx];
+                        if (cacheEntry != 0) {
+                            newRefCount = (*cacheEntry -= 1);
                             if ((s8)newRefCount <= 0) {
-                                model_findIdxInModelList(gModelAnimCacheList, &atlasEntry, &listIdx);
-                                model_adjustModelList(gModelAnimCacheList, listIdx);
-                                mm_free(atlasEntry);
+                                model_findIdxInModelList(gModelAnimCacheList, &cacheEntry, &cacheIndex);
+                                model_adjustModelList(gModelAnimCacheList, cacheIndex);
+                                mm_free(cacheEntry);
                             }
                         }
                     }
-                    ((ModelFileHeader*)hdr)->animationModelPtrs = NULL;
+                    file->animationModelPtrs = NULL;
                     return 1;
                 }
             } else {
-                ((u8**)((ModelFileHeader*)hdr)->animationModelPtrs)[animIdx] = NULL;
+                ((u8**)file->animationModelPtrs)[animIdx] = NULL;
             }
             animIdx++;
-        } while (animIdx < (int)((ModelFileHeader*)hdr)->animationCount);
+        } while (animIdx < (int)file->animationCount);
     } else {
-        ((ModelFileHeader*)hdr)->animationModelPtrs = NULL;
+        file->animationModelPtrs = NULL;
     }
     return 0;
 }
@@ -2228,7 +2221,7 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize) {
             off[0] += 4;
         }
         ObjModel_ResolveRenderOpTextures(header);
-        modelLoadAnimations(header, realId[0], header + ((ModelFileHeader*)header)->dataSize);
+        modelLoadAnimations((ModelFileHeader*)header, realId[0], header + ((ModelFileHeader*)header)->dataSize);
         modelInitModelList(gModelList, realId[0], &header);
     } else {
         (*header)++;
