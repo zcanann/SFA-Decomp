@@ -113,3 +113,53 @@ The strict retail checksum and `ninja all_source` pass. These checks establish
 buildability and layout, not runtime coverage of the walkers. The retail NULL
 stores to the active map and the traversable-route X step's use of the Z origin
 are preserved.
+
+## Native cache arrays and deferred emission (2026-09-07)
+
+The aggregate above was a provisional ownership view. It is now replaced by
+five ordinary definitions: `gVoxMapsSlotOrigins[6]`, `gVoxMapsSlotAges[6]`,
+`gVoxMapsBlockIds[6]`, `gVoxMapsActiveState`, and `gVoxMapsBuffers[6]`.
+Their offsets and sizes are exactly the table above, with the active state's
+three fields retaining their established `VoxState` layout. No external aliases,
+manual shared-base pointer, padding objects, or section directives are needed.
+The total BSS extent remains 0x74 bytes plus four bytes of link alignment.
+
+EN's timer and route walkers address the age array and active state directly,
+while initialization and cache replacement use a common base spanning the
+arrays. This combination, together with initialization following its consumers
+in retail text, supports deferred emission of ordinary definitions in reverse
+source order. It is evidence for this reconstruction, not proof of a historical
+build command. The existing GC/1.3 compiler, optimization settings, automatic
+inlining, and TU boundaries remain; only deferred emission is added. The compiler
+creates its own shared BSS base and preserves all five physical offsets.
+Without deferred emission, definitions before the functions allocate arrays in
+first-reference order; definitions after them preserve layout but lose the
+shared base. Neither intermediate form is retained.
+
+The reset routine now indexes the five native arrays directly, removing all
+five one-element pointer arrays and their staged initialization. Its complete
+156-byte function is unchanged. Initialization likewise uses indexed native
+arrays and remains exact. The oldest-slot loop uses its signed integer index
+directly; the previous unsigned copy caused five unnecessary address additions
+with native storage. Existing age sentinels, six-slot capacity, signed block
+IDs, and the retail NULL assignments to the active map remain unchanged.
+
+Three functions become exact: `voxmaps_updateTimers` (160 bytes),
+`voxmaps_traceLine` (1,060 bytes), and `voxmaps_traceTraversableRoute`
+(1,204 bytes). All 22 previously exact functions remain exact. The unit improves
+from 99.524765% to 99.665924%, with 25/28 exact functions and 2,424 additional
+matched code bytes. All 604 data bytes remain exact. The three remaining
+functions have the retail instruction counts; their residuals are register
+allocation differences. The unit remains `NonMatching`.
+
+Validation: `ninja all_source` and the strict matching checksum both pass with
+30-second timeouts. The generated DOL is byte-identical to retail. All allocated
+non-text sections retain their bytes, extents, and alignment; every pre-existing
+non-text symbol outside the replaced aggregate retains its exact layout. The
+five new BSS symbol offsets are audited independently of objdiff. The matching
+link still uses the retail object for this incomplete unit, so its checksum does
+not establish runtime coverage of the reconstructed cache-loader code.
+
+The TU and canonical header pass `clang-format --dry-run --Werror`.
+Running the formatter produces no source diff and preserves the complete object,
+so no separate formatting commit is required.

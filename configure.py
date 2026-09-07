@@ -1830,7 +1830,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/audio_stream.c"),
             Object(MatchingFor("GSAE01"), "main/camera.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "main/curves.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/voxmaps.c"),
+            Object(NonMatching, "main/voxmaps.c", extra_cflags=["-inline", "deferred"]),
             Object(Matching, "main/modelEngine.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/pad.c", cflags=[*cflags_dll_noopt_nocse, "-inline", "deferred"]),
             Object(Matching, "main/fileio.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
