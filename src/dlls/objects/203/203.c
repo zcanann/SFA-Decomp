@@ -45,19 +45,19 @@ int dll_CB_stateHandler5(GameObject* obj, GroundBaddieState* state) {
         neutralInput = 0.0f;
         state->baddie.moveInputX = neutralInput;
         state->baddie.moveInputZ = neutralInput;
-        memcpy(routePath, &obj->anim.localPosX, sizeof(routePath->destPos));
-        memcpy((void*)objectState->routeNav.curPos, &((GameObject*)state->baddie.targetObj)->anim.localPosX,
-               sizeof(routePath->curPos));
+        memcpy(routePath, &obj->anim.localPosX, sizeof(routePath->startPos));
+        memcpy((void*)objectState->routeNav.goalPos, &((GameObject*)state->baddie.targetObj)->anim.localPosX,
+               sizeof(routePath->goalPos));
         voxmaps_updateRoutePath(&objectState->routeNav, &objectState->routeState);
         if (state->baddie.targetDistance < 50.0f && objectState->subMode == DLL_CB_SUBMODE_TARGET) {
             return 5;
         }
-        if (routePath->flag25 == 0) {
+        if (routePath->useDirectSteering == 0) {
             (*gPlayerInterface)
-                ->moveTowardPoint(obj, state, routePath->tgtPos[0], routePath->tgtPos[2], 0.0f, 0.0f, 60.0f);
+                ->moveTowardPoint(obj, state, routePath->waypointPos[0], routePath->waypointPos[2], 0.0f, 0.0f, 60.0f);
         } else {
             (*gPlayerInterface)
-                ->moveTowardPoint(obj, state, routePath->tgtPos[0], routePath->tgtPos[2], 15.0f, 30.0f, 60.0f);
+                ->moveTowardPoint(obj, state, routePath->waypointPos[0], routePath->waypointPos[2], 15.0f, 30.0f, 60.0f);
         }
     } else {
         (*gPlayerInterface)->setState(obj, state, 0);

@@ -280,12 +280,12 @@ int iceBaddie_stateHandlerB06(GameObject* obj, GroundBaddieState* state) {
     state->baddie.moveInputX = neutralBlend;
     state->baddie.moveInputZ = neutralBlend;
     memcpy(route, &obj->anim.localPosX, 0xc);
-    memcpy((void*)objectState->routeNav.curPos, (void*)&((GameObject*)state->baddie.targetObj)->anim.localPosX, 0xc);
+    memcpy((void*)objectState->routeNav.goalPos, (void*)&((GameObject*)state->baddie.targetObj)->anim.localPosX, 0xc);
     voxmaps_updateRoutePath(&objectState->routeNav, &objectState->routeState);
-    if (route->flag25 == 0) {
-        (*gPlayerInterface)->moveTowardPoint(obj, state, route->tgtPos[0], route->tgtPos[2], 0.0f, 0.0f, 60.0f);
+    if (route->useDirectSteering == 0) {
+        (*gPlayerInterface)->moveTowardPoint(obj, state, route->waypointPos[0], route->waypointPos[2], 0.0f, 0.0f, 60.0f);
     } else {
-        (*gPlayerInterface)->moveTowardPoint(obj, state, route->tgtPos[0], route->tgtPos[2], 15.0f, 30.0f, 60.0f);
+        (*gPlayerInterface)->moveTowardPoint(obj, state, route->waypointPos[0], route->waypointPos[2], 15.0f, 30.0f, 60.0f);
     }
     if (state->baddie.stateTimer > 0x78 &&
         (*gBaddieControlInterface)->shouldDropTarget(obj, state, objectState->aggroRange, 1) != 0) {

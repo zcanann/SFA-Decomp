@@ -269,8 +269,8 @@ void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, Gro
     }
     if (b1 == 0 && (flags & 0x20) == 0) {
         voxmaps_allocRouteWork(&state->routeState);
-        state->routeNav.maxIters = 4;
-        state->routeNav.budget = 20;
+        state->routeNav.maxSearchIterations = 4;
+        state->routeNav.nodesPerUpdate = 20;
     }
     if ((flags & 0x10) != 0) {
         if (state->path == NULL && (flags & 0x20) == 0) {
@@ -728,7 +728,7 @@ int dll_19_func10(GameObject* obj, GroundBaddieState* state, int moveArg0, int m
     f32 dx, dz, dist;
     f32 zero;
 
-    if (state->routeNav.flag25 != 0) {
+    if (state->routeNav.useDirectSteering != 0) {
         state->baddie.heldButtons = 0;
         state->baddie.pressedButtons = 0;
         state->baddie.cameraYaw = 0;

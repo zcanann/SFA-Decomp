@@ -73,14 +73,6 @@ typedef struct VoxState {
     VoxMapFile* activeMap;
 } VoxState;
 
-typedef struct VoxBoxArg {
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 pad6;
-    u16 cost;
-} VoxBoxArg;
-
 typedef struct RouteNode {
     s16 x;
     s16 y;
@@ -89,9 +81,15 @@ typedef struct RouteNode {
     u16 gCost;
     u8 parentNodeIndex;
     u8 nextNodeIndex;
-    u8 flag;
+    u8 expanded;
     u8 unkD;
 } RouteNode;
+
+STATIC_ASSERT(offsetof(RouteNode, gCost) == 0x8);
+STATIC_ASSERT(offsetof(RouteNode, parentNodeIndex) == 0xa);
+STATIC_ASSERT(offsetof(RouteNode, nextNodeIndex) == 0xb);
+STATIC_ASSERT(offsetof(RouteNode, expanded) == 0xc);
+STATIC_ASSERT(sizeof(RouteNode) == 0xe);
 
 typedef struct RouteState {
     RouteNode* nodes;
@@ -103,7 +101,7 @@ typedef struct RouteState {
     s16 startX;
     s16 startY;
     s16 startZ;
-    int cur;
+    int currentNodeIndex;
     s16 nodeCount;
     s16 queueCount;
     s16 pathCount;
@@ -113,15 +111,29 @@ typedef struct RouteState {
     u8 pad27;
 } RouteState;
 
+STATIC_ASSERT(offsetof(RouteState, currentNodeIndex) == 0x18);
+STATIC_ASSERT(offsetof(RouteState, nodeCount) == 0x1c);
+STATIC_ASSERT(offsetof(RouteState, queueCount) == 0x1e);
+STATIC_ASSERT(sizeof(RouteState) == 0x28);
+
 typedef struct RouteNav {
-    f32 destPos[3];
-    f32 curPos[3];
-    f32 tgtPos[3];
-    u8 navState;
-    u8 flag25;
-    u8 maxIters;
-    u8 budget;
+    f32 startPos[3];
+    f32 goalPos[3];
+    f32 waypointPos[3];
+    u8 searchIteration;
+    u8 useDirectSteering;
+    u8 maxSearchIterations;
+    u8 nodesPerUpdate;
 } RouteNav;
+
+STATIC_ASSERT(offsetof(RouteNav, startPos) == 0);
+STATIC_ASSERT(offsetof(RouteNav, goalPos) == 0xc);
+STATIC_ASSERT(offsetof(RouteNav, waypointPos) == 0x18);
+STATIC_ASSERT(offsetof(RouteNav, searchIteration) == 0x24);
+STATIC_ASSERT(offsetof(RouteNav, useDirectSteering) == 0x25);
+STATIC_ASSERT(offsetof(RouteNav, maxSearchIterations) == 0x26);
+STATIC_ASSERT(offsetof(RouteNav, nodesPerUpdate) == 0x27);
+STATIC_ASSERT(sizeof(RouteNav) == 0x28);
 
 extern int gVoxMapsSlotTimers[];
 extern struct GameObject* gVoxMapsTransformObj;
@@ -151,8 +163,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj);
 int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, u8 skipFirst);
 int voxmaps_traceWorldLine(void* startPos, void* endPos);
 void voxmaps_traceScaledVectorEnd(f32* out, void* origin, f32* dir, f32 scale);
-void voxmaps_expandRouteNeighbors(RouteState* state, VoxBoxArg* box, int parentNodeIndex);
-void voxmaps_visitRouteNeighbor(RouteState* state, VoxBoxArg* srcBox, int parentNodeIndex, u16 count, s16* box);
+void voxmaps_expandRouteNeighbors(RouteState* state, RouteNode* parentNode, int parentNodeIndex);
+void voxmaps_visitRouteNeighbor(RouteState* state, RouteNode* parentNode, int parentNodeIndex, u16 count, s16* box);
 int voxmaps_processRouteQueue(RouteState* state, int count);
 int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state);
 int voxmaps_buildRouteWaypoints(RouteState* state, int maxPathPoints);

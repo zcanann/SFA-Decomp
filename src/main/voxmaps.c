@@ -28,7 +28,6 @@ typedef struct VoxRouteWork {
     f32 pathPoints[VOXMAPS_PATH_POINT_CAPACITY][3];
 } VoxRouteWork;
 
-STATIC_ASSERT(sizeof(RouteNode) == 0xe);
 STATIC_ASSERT(offsetof(VoxRouteWork, queue) == 0xaf0);
 STATIC_ASSERT(offsetof(VoxRouteWork, pathPoints) == 0xe10);
 STATIC_ASSERT(sizeof(VoxRouteWork) == 0xe88);
@@ -57,23 +56,23 @@ static inline void heapSiftUp(CurveHeapNode* q, int i) {
     q[i].value = val;
 }
 
-static inline int voxmaps_findRouteNode(RouteState* state, s16* box, int* flagOut) {
+static inline int voxmaps_findRouteNode(RouteState* state, s16* box, int* expandedOut) {
     s16 bz = box[2];
     s16 bx = box[0];
     int foundIdx;
     for (foundIdx = 0; foundIdx < state->nodeCount; foundIdx++) {
         RouteNode* nn = &state->nodes[foundIdx];
         if (nn->x == bx && nn->z == bz) {
-            *flagOut = nn->flag;
+            *expandedOut = nn->expanded;
             return foundIdx;
         }
     }
     return -1;
 }
 
-void voxmaps_visitRouteNeighbor(struct RouteState* state, VoxBoxArg* srcBox, int parentNodeIndex, u16 count, s16* box) {
+void voxmaps_visitRouteNeighbor(struct RouteState* state, RouteNode* parentNode, int parentNodeIndex, u16 count, s16* box) {
     int foundIdx;
-    int savedFlag;
+    int savedExpanded;
     int foundSlot;
     int shiftLo;
     CurveHeapNode* q;
@@ -244,10 +243,10 @@ void voxmaps_visitRouteNeighbor(struct RouteState* state, VoxBoxArg* srcBox, int
 
     box[1] = (s16)(box[1] + chosen);
 
-    foundIdx = voxmaps_findRouteNode(state, box, &savedFlag);
+    foundIdx = voxmaps_findRouteNode(state, box, &savedExpanded);
     nodeCount = state->nodeCount;
 
-    if (foundIdx >= 0 && savedFlag == 0) {
+    if (foundIdx >= 0 && savedExpanded == 0) {
         routeNode = &state->nodes[foundIdx];
         if (count >= routeNode->gCost) {
             return;
@@ -327,24 +326,24 @@ void voxmaps_visitRouteNeighbor(struct RouteState* state, VoxBoxArg* srcBox, int
     }
 }
 
-void voxmaps_expandRouteNeighbors(RouteState* state, VoxBoxArg* box, int parentNodeIndex) {
+void voxmaps_expandRouteNeighbors(RouteState* state, RouteNode* parentNode, int parentNodeIndex) {
     s16 neighbor[3];
-    u16 nextCost = box->cost + 1;
-    neighbor[0] = box->x;
-    neighbor[1] = box->y;
-    neighbor[2] = box->z;
+    u16 nextCost = parentNode->gCost + 1;
+    neighbor[0] = parentNode->x;
+    neighbor[1] = parentNode->y;
+    neighbor[2] = parentNode->z;
     neighbor[0] += 2;
-    voxmaps_visitRouteNeighbor(state, box, parentNodeIndex, nextCost, neighbor);
+    voxmaps_visitRouteNeighbor(state, parentNode, parentNodeIndex, nextCost, neighbor);
     neighbor[0] -= 4;
-    neighbor[1] = box->y;
-    voxmaps_visitRouteNeighbor(state, box, parentNodeIndex, nextCost, neighbor);
+    neighbor[1] = parentNode->y;
+    voxmaps_visitRouteNeighbor(state, parentNode, parentNodeIndex, nextCost, neighbor);
     neighbor[0] += 2;
     neighbor[2] += 2;
-    neighbor[1] = box->y;
-    voxmaps_visitRouteNeighbor(state, box, parentNodeIndex, nextCost, neighbor);
+    neighbor[1] = parentNode->y;
+    voxmaps_visitRouteNeighbor(state, parentNode, parentNodeIndex, nextCost, neighbor);
     neighbor[2] -= 4;
-    neighbor[1] = box->y;
-    voxmaps_visitRouteNeighbor(state, box, parentNodeIndex, nextCost, neighbor);
+    neighbor[1] = parentNode->y;
+    voxmaps_visitRouteNeighbor(state, parentNode, parentNodeIndex, nextCost, neighbor);
 }
 
 int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut) {
@@ -547,7 +546,7 @@ int voxmaps_buildRouteWaypoints(RouteState* state, int maxPathPoints) {
     if (maxPathPoints < 0) {
         maxPathPoints = 10;
     }
-    nodeIndex = state->cur;
+    nodeIndex = state->currentNodeIndex;
     routeNode = &state->nodes[nodeIndex];
     routeNode->nextNodeIndex = 0xff;
     while ((parentIndex = routeNode->parentNodeIndex) != 0xffu) {
@@ -616,25 +615,25 @@ int voxmaps_buildRouteWaypoints(RouteState* state, int maxPathPoints) {
 
 int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state) {
     RouteNode* node;
-    int navState;
+    int searchIteration;
     int ret;
-    int flag = 0;
+    int useDirectSteering = 0;
     int i;
     s16 out[3];
 
-    navState = nav->navState;
+    searchIteration = nav->searchIteration;
     ret = 0;
-    if (navState == 0) {
+    if (searchIteration == 0) {
         int pathDirect[1];
 
         state->queueCount = 0;
         state->nodeCount = 0;
         for (i = 0; i < VOXMAPS_ROUTE_NODE_CAPACITY; i++) {
             state->queue[i].priority = 0;
-            state->nodes[i].flag = 0;
+            state->nodes[i].expanded = 0;
         }
-        voxmaps_worldToGrid(nav->destPos, &state->startX);
-        voxmaps_worldToGrid(nav->curPos, &state->tgtX);
+        voxmaps_worldToGrid(nav->startPos, &state->startX);
+        voxmaps_worldToGrid(nav->goalPos, &state->tgtX);
         state->startX &= ~1;
         state->startZ &= ~1;
         state->tgtX &= ~1;
@@ -673,63 +672,63 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state) {
             pathDirect[0] = 0;
         }
         if (pathDirect[0] != 0) {
-            nav->tgtPos[0] = nav->curPos[0];
-            nav->tgtPos[1] = nav->curPos[1];
-            nav->tgtPos[2] = nav->curPos[2];
+            nav->waypointPos[0] = nav->goalPos[0];
+            nav->waypointPos[1] = nav->goalPos[1];
+            nav->waypointPos[2] = nav->goalPos[2];
             ret = 1;
-            flag = 1;
+            useDirectSteering = 1;
         } else {
-            navState = 1;
+            searchIteration = 1;
         }
     }
 
-    if (navState != 0) {
+    if (searchIteration != 0) {
         int r;
         ret = 1;
-        r = voxmaps_processRouteQueue(state, nav->budget);
+        r = voxmaps_processRouteQueue(state, nav->nodesPerUpdate);
         switch (r) {
         case 0:
-            if (navState++ >= nav->maxIters) {
-                navState = 0;
+            if (searchIteration++ >= nav->maxSearchIterations) {
+                searchIteration = 0;
                 if (voxmaps_buildRouteWaypoints(state, 1) != 0) {
-                    nav->tgtPos[0] = state->pathPoints[0];
-                    nav->tgtPos[1] = state->pathPoints[1];
-                    nav->tgtPos[2] = state->pathPoints[2];
+                    nav->waypointPos[0] = state->pathPoints[0];
+                    nav->waypointPos[1] = state->pathPoints[1];
+                    nav->waypointPos[2] = state->pathPoints[2];
                 } else {
-                    nav->tgtPos[0] = nav->curPos[0];
-                    nav->tgtPos[1] = nav->curPos[1];
-                    nav->tgtPos[2] = nav->curPos[2];
-                    flag = 1;
+                    nav->waypointPos[0] = nav->goalPos[0];
+                    nav->waypointPos[1] = nav->goalPos[1];
+                    nav->waypointPos[2] = nav->goalPos[2];
+                    useDirectSteering = 1;
                 }
             }
             ret = 1;
             break;
         case 1:
-            navState = 0;
+            searchIteration = 0;
             if (voxmaps_buildRouteWaypoints(state, 1) != 0) {
-                nav->tgtPos[0] = state->pathPoints[0];
-                nav->tgtPos[1] = state->pathPoints[1];
-                nav->tgtPos[2] = state->pathPoints[2];
+                nav->waypointPos[0] = state->pathPoints[0];
+                nav->waypointPos[1] = state->pathPoints[1];
+                nav->waypointPos[2] = state->pathPoints[2];
             } else {
-                nav->tgtPos[0] = nav->curPos[0];
-                nav->tgtPos[1] = nav->curPos[1];
-                nav->tgtPos[2] = nav->curPos[2];
-                flag = 1;
+                nav->waypointPos[0] = nav->goalPos[0];
+                nav->waypointPos[1] = nav->goalPos[1];
+                nav->waypointPos[2] = nav->goalPos[2];
+                useDirectSteering = 1;
             }
             ret = 1;
             break;
         case -1:
-            navState = 0;
-            nav->tgtPos[0] = nav->destPos[0];
-            nav->tgtPos[1] = nav->destPos[1];
-            nav->tgtPos[2] = nav->destPos[2];
-            flag = 1;
+            searchIteration = 0;
+            nav->waypointPos[0] = nav->startPos[0];
+            nav->waypointPos[1] = nav->startPos[1];
+            nav->waypointPos[2] = nav->startPos[2];
+            useDirectSteering = 1;
             break;
         }
     }
 
-    nav->navState = navState;
-    nav->flag25 = flag;
+    nav->searchIteration = searchIteration;
+    nav->useDirectSteering = useDirectSteering;
     return ret;
 }
 int voxmaps_processRouteQueue(RouteState* state, int count) {
@@ -751,13 +750,13 @@ int voxmaps_processRouteQueue(RouteState* state, int count) {
         }
         if (nodeIdx >= 0) {
             node = state->nodes + nodeIdx;
-            state->cur = nodeIdx;
+            state->currentNodeIndex = nodeIdx;
             if (node->x == state->tgtX && node->z == state->tgtZ) {
                 done = 1;
                 ret = 1;
             } else {
-                node->flag = 1;
-                voxmaps_expandRouteNeighbors(state, (VoxBoxArg*)node, nodeIdx);
+                node->expanded = 1;
+                voxmaps_expandRouteNeighbors(state, node, nodeIdx);
             }
         } else {
             done = 1;

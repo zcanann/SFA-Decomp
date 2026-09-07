@@ -1248,7 +1248,7 @@ anonymous literal numbering:
 | Kooshy, slot 202 | 55 | Same form. |
 | HoodedZyck, slot 202 | 52 | Same form. |
 | Engine 15 | 207 | `GameObject`/`BaddieState` parameters in the definitions and owning header; `flags0`, `curvesCollision`, no unsigned suffixes. |
-| Engine 25 | 108 | Typed parameters and header; embedded `baddie`, `routeNav.flag25`; the three weapon bytes at 0x407 are named with an offset assertion. |
+| Engine 25 | 108 | Typed parameters and header; embedded `baddie`, `routeNav.useDirectSteering`; the three weapon bytes at 0x407 are named with an offset assertion. |
 | Engine 2 | 289 | `ObjSeqState` parameters, prototypes and locals; `targetObj` and `conditionOpcodes` fields. |
 | Engine 7 | 192 | `NC_CLOUD` macros yield `NewCloud` pointers; typed slot cursor, run-loop local and flake-update parameter. |
 | Trigger, slot 294 | 62 | `TriggerState`/`TriggerPlacement` locals and init parameter, `status` compound updates. |

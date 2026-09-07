@@ -34,3 +34,38 @@ functions exact; reset remains 156 bytes and exact. The strict retail DOL
 checksum and `ninja all_source` both pass. The retail NULL stores to `activeMap` remain:
 the packed records describe the loaded assets, but the retail route walkers
 still do not receive those loaded maps.
+
+## Route search API
+
+The queue processor passes a `RouteNode` directly to neighbor expansion. Retail
+loads its accumulated cost from +0x08 and its coordinates from +0x00/+0x02/+0x04.
+The removed `VoxBoxArg` overlay described this same prefix but mislabeled the
+heuristic cost at +0x06 as padding. Both neighbor functions now accept the
+canonical node; the unused parent-pointer parameter in the visitor remains in
+the ABI.
+
+`RouteNode.expanded` is cleared when a search starts and set immediately before
+expanding a popped, non-goal node. An existing node can have its cost and parent
+updated only while this byte is zero. `RouteState.currentNodeIndex` records the
+last popped node and seeds waypoint reconstruction. These are the meanings
+previously hidden behind `flag` and `cur`.
+
+The ground-baddie callers in object slots 202 and 203 establish the navigation
+record's position roles:
+
+| Offset | Field | Evidence |
+| --- | --- | --- |
+| 0x00 | `startPos` | Filled from the moving object's position; initializes the search start. |
+| 0x0c | `goalPos` | Filled from the target object's position; initializes the search goal. |
+| 0x18 | `waypointPos` | Output consumed by `moveTowardPoint`. |
+| 0x24 | `searchIteration` | Zero starts a search; pending updates increment it. |
+| 0x25 | `useDirectSteering` | Selects direct/fallback movement rather than a reconstructed intermediate waypoint. |
+| 0x26 | `maxSearchIterations` | Compared against the pending-search iteration before returning a partial route. |
+| 0x27 | `nodesPerUpdate` | Passed as the queue-processing budget. |
+
+The previous `destPos`/`curPos` names reversed the apparent input roles. A direct
+trace copies the goal to the output; exhausted search copies the start instead.
+Both paths set `useDirectSteering`, so that flag must not be interpreted as
+“goal reached” or “route found.” Engine slot 25 initializes the iteration limit
+to four and the per-update node budget to twenty, and also consumes the movement
+flag. All three consumers use the same canonical names.
