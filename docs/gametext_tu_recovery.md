@@ -483,3 +483,39 @@ unchanged. The gametext tests, `ninja all_source`, and the strict checksum pass;
 both Ninja invocations have 30-second limits. The TU remains `NonMatching`, so
 the checksum still uses its retail object. Formatting is recorded separately
 and preserves the complete generated object.
+
+## Fixed-point scale commands (2026-09-07)
+
+The scale command's big-endian 16-bit argument encodes 1.0 as `0x100`.
+Measurement, rendering, and wrapping now share the private inline
+`gameTextDecodeScale`, which converts the signed working integer to float and
+divides by `256.0f`. The helper name is reconstructed; the conversion and its
+three consumers are evidenced by retail instructions.
+
+MWCC folds the division into multiplication by the same `0.00390625f`
+literal already present in the retail pool. Unlike the previous explicit
+reciprocal multiplication, this spelling finishes the integer-to-float
+conversion before loading the reciprocal. Each consumer's ten-instruction
+conversion block now matches retail, including the floating-point registers
+and multiplication operand order. An inline helper that retained the old
+multiplication was byte-neutral and did not fix the block.
+
+| Function | Before | After |
+| --- | ---: | ---: |
+| `gameTextMeasureString` | 94.35599% | 94.58253% |
+| `textRenderStr` | 97.02047% | 97.21638% |
+| `gameTextWrapLines` | 95.55773% | 96.45098% |
+
+Unit fuzzy matching rises from 97.66155% to 97.78159%; all 44 exact functions
+remain exact. Only these three function bodies change, with no size changes.
+All allocated non-text sections and named-symbol layouts are unchanged. Each
+function retains its relocation destinations and counts; only the two literal
+load positions within each conversion block move.
+
+The compiled production helper was checked over all 65,536 encoded values at
+host `-O0` and `-O2`, with bit-identical results to the previous conversion.
+All 16 gametext tests pass. Formatting the TU and canonical API header preserves
+the complete object. `ninja all_source` and strict `ninja` pass after matching
+configuration with 30-second timeouts, and the matching DOL is byte-identical
+to retail. The unit remains `NonMatching`, so its retail object supplies the
+matching link while the remaining source differences are recovered.

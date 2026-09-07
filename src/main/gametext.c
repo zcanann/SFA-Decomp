@@ -1961,6 +1961,11 @@ SubtitleCmd* subtitleParseControlCmds(char* str, int* count) {
     }
 }
 
+/* Scale commands encode 1.0 as 0x100. */
+static inline f32 gameTextDecodeScale(int scale256) {
+    return (f32)scale256 / 256.0f;
+}
+
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang) {
     int byteOff;
     u32 ch;
@@ -2008,7 +2013,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
             }
             switch (ch) {
             case TEXT_CTRL_SCALE:
-                scale = params[0] * 0.00390625f;
+                scale = gameTextDecodeScale(params[0]);
                 break;
             case TEXT_CTRL_FONT:
                 glyphLang = params[0];
@@ -2163,7 +2168,7 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
             }
             switch (ch) {
             case TEXT_CTRL_SCALE:
-                gGameTextScale = params[0] * 0.00390625f;
+                gGameTextScale = gameTextDecodeScale(params[0]);
                 break;
             case TEXT_CTRL_FONT:
                 glyphLang = params[0];
@@ -2539,7 +2544,7 @@ char** gameTextWrapLines(char* str, f32 width, f32 height, int* outCount, f32* o
             sel = 1;
             switch (ch) {
             case TEXT_CTRL_SCALE:
-                height = (f32)(int)params[0] * 0.00390625f;
+                height = gameTextDecodeScale(params[0]);
                 break;
             case TEXT_CTRL_FONT:
                 langIdx = params[0];
