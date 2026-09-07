@@ -54,9 +54,6 @@ f32 gScarabReturnHeadingScale = 1.0f;
 
 f32 gScarabSweptHitInfo[4];
 
-const Vec3f sScarabStartInit = {0.0f, 0.0f, 0.0f};
-const Vec3f sScarabEndInit = {0.0f, 0.0f, 0.0f};
-
 typedef struct ScarabCollisionResults {
     f32 hitInfo[4][4]; /* 0x00 */
     f32 radii[4];      /* 0x40 */
@@ -283,14 +280,14 @@ void Scarab_update(GameObject* obj) {
     ScarabCollisionScratch collisionScratch;
     PartFxSpawnParams rotation;
     TrackQueryBounds sweepBounds;
-    Vec3f startPosition;
-    Vec3f endPosition;
+    int bestGroundHitIndex = 0;
+    TrackGroundHit** groundHits = NULL;
+    Vec3f startPosition = {0.0f, 0.0f, 0.0f};
+    Vec3f endPosition = {0.0f, 0.0f, 0.0f};
+    int collisionDetected = 0;
     Vec homeDirection;
-    TrackGroundHit** groundHits;
     u32 message;
     f32 animationPhase;
-    int bestGroundHitIndex;
-    int collisionDetected;
     GameObject* player;
     ScarabState* state;
     s8 behaviorState;
@@ -306,11 +303,6 @@ void Scarab_update(GameObject* obj) {
     int hitIndex;
     u8 hitMask;
 
-    bestGroundHitIndex = 0;
-    groundHits = NULL;
-    startPosition = sScarabStartInit;
-    endPosition = sScarabEndInit;
-    collisionDetected = bestGroundHitIndex;
     state = obj->extra;
     player = Obj_GetPlayerObject();
     if ((state->pickupFlags & SCARAB_PICKUP_PENDING) != 0) {

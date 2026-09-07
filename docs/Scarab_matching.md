@@ -30,6 +30,23 @@ the reconstructed object for the retail object differs only at
 `0x80184998` through `0x8018499B`. All section addresses and lengths,
 including the complete linked constant pool, match retail.
 
+## Frame query initializers
+
+Dinosaur Planet initializes its two `Vec3f` query endpoints locally, between
+the ground-index and collision-flag declarations. The corresponding EN
+initializers now use that local form, replacing two exported zero-vector
+definitions and their later assignments. No other source consumes those
+definitions. Their target pool labels remain in the symbol config with
+local scope.
+
+This recovery preserves all seven function bodies and every allocated
+section's bytes, size, and alignment. Only the two former global symbols
+and anonymous relocation names change; the initializer relocation targets
+remain `.rodata+0` and `.rodata+12`. The complete object SHA256 is
+`030b14ff068ffd446194b5e36a1d0c080e476fc22850425d24d5f3815e59bfa0`.
+Both build gates pass. A diagnostic source-substitution link still differs
+from retail only at the four bytes `0x80184998` through `0x8018499B`.
+
 ## Remaining zero initialization
 
 At instruction 26 of `Scarab_update`, retail emits `mr r30,r31`; the current
