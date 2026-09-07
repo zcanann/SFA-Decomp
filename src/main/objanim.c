@@ -44,12 +44,12 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
         state->blendCacheSlot = moveIndex;
         moveData = (ObjAnimMoveData*)animDef->moveData[state->blendCacheSlot];
     }
-    state->blendFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
+    state->blendFrameData = (ObjAnimFrameHeader*)moveData->frameCommands;
     blendFrameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
     if (blendFrameType != state->frameType) {
         state->eventState = 0;
     } else {
-        blendFrameLength = (float)state->blendFrameData->frameLength;
+        blendFrameLength = (float)state->blendFrameData->frameCount;
         if (blendFrameType == OBJANIM_FRAME_TYPE_CLAMPED) {
             blendFrameLength -= OBJANIM_PROGRESS_ONE;
         }
@@ -291,9 +291,9 @@ int Object_ObjAnimSetMove(void* objAnimHandle, int moveId, f32 moveProgress, u8 
         state->moveCacheSlot = moveId;
         moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
     }
-    state->moveFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
+    state->moveFrameData = (ObjAnimFrameHeader*)moveData->frameCommands;
     state->frameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
-    state->frameLength = (float)state->moveFrameData->frameLength;
+    state->frameLength = (float)state->moveFrameData->frameCount;
     if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
         state->frameLength -= OBJANIM_PROGRESS_ONE;
     }
@@ -901,9 +901,9 @@ int ObjAnim_SetCurrentMove(void* objAnimHandle, int moveId, f32 moveProgress, u8
         state->moveCacheSlot = moveId;
         moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
     }
-    state->moveFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
+    state->moveFrameData = (ObjAnimFrameHeader*)moveData->frameCommands;
     state->frameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
-    state->frameLength = (float)state->moveFrameData->frameLength;
+    state->frameLength = (float)state->moveFrameData->frameCount;
     if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
         state->frameLength -= OBJANIM_PROGRESS_ONE;
     }

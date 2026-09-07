@@ -177,7 +177,7 @@ void modelAnimUpdateChannels(ModelFileHeader* file, ObjAnimState* work, int chan
             mtxSlotRow = file->animationDataSection + work->cacheSlots[i] * (((file->jointCount - 1) & ~7) + 8);
             frameStream = ((u8**)file->animationModelPtrs)[work->cacheSlots[i]];
         }
-        frameStride = ((u8*)work->frameData[i])[2];
+        frameStride = work->frameData[i]->frameStride;
         boneIdx = 0;
         boneByteOff = 0;
         while (boneIdx < file->jointCount) {
@@ -195,7 +195,7 @@ void modelAnimUpdateChannels(ModelFileHeader* file, ObjAnimState* work, int chan
         if (work->frameTypes[i] != 0 && frameIdxF == work->frameLengths[i] - 1.0f) {
             work->frameStreamStrides[i] = (s16)(-frameStride * frameIdx);
         }
-        streamOff = *(s16*)(frameStream + 2);
+        streamOff = ((ObjAnimMoveData*)frameStream)->frameStreamOffset;
         work->frameStreamCursors[i] = frameStream + streamOff + frameStride * frameIdx;
     }
 }
@@ -410,9 +410,9 @@ void modelAnimResetState(void* m, void* data) {
         } else {
             mdl = ((u8**)((ModelFileHeader*)hdr)->animationModelPtrs)[channel->moveCacheSlot];
         }
-        channel->moveFrameData = (ObjAnimFrameCommand*)(mdl + 6);
+        channel->moveFrameData = (ObjAnimFrameHeader*)((ObjAnimMoveData*)mdl)->frameCommands;
         channel->frameType = (s8)(*(u8*)(mdl + 1) & 0xf0);
-        channel->frameLength = (f32)((u8*)channel->moveFrameData)[1];
+        channel->frameLength = (f32)channel->moveFrameData->frameCount;
         if (channel->frameType == 0) {
             channel->frameLength -= 1.0f;
         }
@@ -1609,12 +1609,12 @@ void objUpdateHitSpheres(ObjModel* model, ModelFileHeader* file, GameObject* tar
     }
 }
 
-void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s, f32* outPos, s16* outRot) {
-    ObjAnimState* ch;
-    ObjAnimFrameCommand* saved;
-    s16 srot[3];
-    int bv;
-    u8* anim;
+void ObjModel_SampleJointTransform(ObjModel* model, int animState, int frameSource, f32 phase, f32 rootMotionScale, f32* outPos, s16* outRot) {
+    ObjAnimState* state;
+    ObjAnimFrameHeader* savedFrameData;
+    s16 translationSamples[3];
+    int frameStride;
+    u8* animationData;
 
     if (model->file->animationCount == 0) {
         f32 z = 0.0f;
@@ -1625,63 +1625,57 @@ void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s
         outRot[1] = 0;
         outRot[2] = 0;
     }
-    if (b != 0) {
-        ch = model->animStateB;
+    if (animState != 0) {
+        state = model->animStateB;
     } else {
-        ch = model->animStateA;
+        state = model->animStateA;
     }
-    saved = ch->moveFrameData;
-    {
-        /* the four frame-data pointers (move/prevMove/blend/prevBlend) are
-           indexed as one array here; the selected one is swapped into the
-           moveFrameData slot for modelRenderInterpolateRootTransform, then restored */
-        ObjAnimFrameCommand** p = &ch->moveFrameData;
-        ch->moveFrameData = p[idx];
-    }
+    savedFrameData = state->moveFrameData;
+    state->moveFrameData = state->frameData[frameSource];
     if (model->file->flags & MODEL_FLAG_VERTEX_ANIM_AREA) {
-        if (idx > 1) {
-            u8** q = ch->blendMoveCache;
-            u16* p = &ch->moveCacheSlot;
-            anim = q[p[idx]] + 0x80;
+        if (frameSource > 1) {
+            u8** cache = state->blendMoveCache;
+            u16* cacheSlots = state->cacheSlots;
+            animationData = cache[cacheSlots[frameSource]] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
         } else {
-            u8** q = ch->moveCache;
-            u16* p = &ch->moveCacheSlot;
-            anim = q[p[idx]] + 0x80;
+            u8** cache = state->moveCache;
+            u16* cacheSlots = state->cacheSlots;
+            animationData = cache[cacheSlots[frameSource]] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
         }
     } else {
-        u16* p = &ch->moveCacheSlot;
-        anim = ((u8**)model->file->animationModelPtrs)[p[idx]];
+        u16* cacheSlots = state->cacheSlots;
+        animationData = ((u8**)model->file->animationModelPtrs)[cacheSlots[frameSource]];
     }
-    ch->framePhase = t * ch->frameLength;
-    bv = ((u8*)ch->moveFrameData)[2];
+    state->framePhase = phase * state->frameLength;
+    frameStride = state->moveFrameData->frameStride;
     {
-        f32 fr = ch->framePhase;
-        int n = fr;
-        f32 fcv = n;
-        if (fcv != fr) {
-            ch->frameStreamStrides[0] = bv;
+        f32 framePhase = state->framePhase;
+        int frameIndex = framePhase;
+        f32 frameIndexF = frameIndex;
+        if (frameIndexF != framePhase) {
+            state->frameStreamStrides[0] = frameStride;
         } else {
-            ch->frameStreamStrides[0] = 0;
+            state->frameStreamStrides[0] = 0;
         }
-        if (ch->frameType != 0 && fcv == ch->frameLength - 1.0f) {
-            ch->frameStreamStrides[0] = (s16)(-bv * n);
+        if (state->frameType != 0 && frameIndexF == state->frameLength - 1.0f) {
+            state->frameStreamStrides[0] = (s16)(-frameStride * frameIndex);
         }
-        ch->frameStreamCursors[0] = anim + *(s16*)(anim + 2) + bv * n;
+        state->frameStreamCursors[0] = animationData + ((ObjAnimMoveData*)animationData)->frameStreamOffset + frameStride * frameIndex;
     }
-    modelRenderInterpolateRootTransform(ch, srot, outRot);
-    ch->moveFrameData = saved;
+    modelRenderInterpolateRootTransform(state, translationSamples, outRot);
+    state->moveFrameData = savedFrameData;
     {
-        f32 k = 0.001953125f;
-        outPos[0] = k * srot[0];
-        outPos[1] = k * srot[1];
-        outPos[2] = k * srot[2];
+        f32 translationScale = 0.001953125f;
+        outPos[0] = translationScale * translationSamples[0];
+        outPos[1] = translationScale * translationSamples[1];
+        outPos[2] = translationScale * translationSamples[2];
     }
     outPos[0] = outPos[0] + ((ModelBone*)model->file->jointData)->head[0];
     outPos[1] = outPos[1] + ((ModelBone*)model->file->jointData)->head[1];
     outPos[2] = outPos[2] + ((ModelBone*)model->file->jointData)->head[2];
-    outPos[0] *= s;
-    outPos[1] *= s;
-    outPos[2] *= s;
+    outPos[0] *= rootMotionScale;
+    outPos[1] *= rootMotionScale;
+    outPos[2] *= rootMotionScale;
 }
 
 void* animLoadFromTable(u8* hdr, int id, int idx, u8* out) {

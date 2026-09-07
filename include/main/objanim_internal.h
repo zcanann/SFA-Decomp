@@ -17,10 +17,14 @@ typedef struct Texture Texture;
 struct IntersectLine;
 struct TrackModelLineRange;
 
-typedef struct ObjAnimFrameCommand {
-  u8 opcode;
-  u8 frameLength;
-} ObjAnimFrameCommand;
+/* Fixed frame header followed by variable-length packed track descriptors. */
+typedef struct ObjAnimFrameHeader {
+  u8 jointCount;
+  u8 frameCount;
+  u8 frameStride;
+  u8 pad03;
+  u16 trackDescriptors[];
+} ObjAnimFrameHeader;
 
 typedef s16 ObjAnimPackedEvent;
 
@@ -183,12 +187,12 @@ typedef struct ObjAnimState {
   };
   union {
     struct {
-      ObjAnimFrameCommand *moveFrameData;
-      ObjAnimFrameCommand *prevMoveFrameData;
-      ObjAnimFrameCommand *blendFrameData;
-      ObjAnimFrameCommand *prevBlendFrameData;
+      ObjAnimFrameHeader *moveFrameData;
+      ObjAnimFrameHeader *prevMoveFrameData;
+      ObjAnimFrameHeader *blendFrameData;
+      ObjAnimFrameHeader *prevBlendFrameData;
     };
-    ObjAnimFrameCommand *frameData[4];
+    ObjAnimFrameHeader *frameData[4];
   };
   union {
     struct {
@@ -390,12 +394,13 @@ typedef struct ObjDef {
 
 typedef ObjDef ObjModelInstance;
 
+/* Six-byte move prefix; frameCommands starts with an ObjAnimFrameHeader. */
 typedef struct ObjAnimMoveData {
   u8 pad00;
   s8 frameControl;
-  u8 pad02[OBJANIM_MOVE_ROOT_CURVE_OFFSET - 2];
+  s16 frameStreamOffset;
   s16 rootCurveOffset;
-  u8 frameCommands[1];
+  u8 frameCommands[];
 } ObjAnimMoveData;
 
 typedef ObjModel ObjAnimBank;
@@ -577,7 +582,11 @@ typedef struct ObjAnimEventList {
   s8 triggerCount;
 } ObjAnimEventList;
 
-STATIC_ASSERT(offsetof(ObjAnimFrameCommand, frameLength) == 0x01);
+STATIC_ASSERT(sizeof(ObjAnimFrameHeader) == 0x04);
+STATIC_ASSERT(offsetof(ObjAnimFrameHeader, jointCount) == 0x00);
+STATIC_ASSERT(offsetof(ObjAnimFrameHeader, frameCount) == 0x01);
+STATIC_ASSERT(offsetof(ObjAnimFrameHeader, frameStride) == 0x02);
+STATIC_ASSERT(offsetof(ObjAnimFrameHeader, trackDescriptors) == 0x04);
 
 STATIC_ASSERT(offsetof(ObjAnimDef, flags) == 0x02);
 STATIC_ASSERT(offsetof(ObjAnimDef, modNo) == 0x04);
@@ -597,10 +606,12 @@ STATIC_ASSERT(offsetof(ObjAnimState, prevFrameLength) == 0x18);
 STATIC_ASSERT(offsetof(ObjAnimState, moveCache) == 0x1C);
 STATIC_ASSERT(offsetof(ObjAnimState, blendMoveCache) == 0x24);
 STATIC_ASSERT(offsetof(ObjAnimState, frameStreamCursor) == 0x2C);
+STATIC_ASSERT(offsetof(ObjAnimState, frameData) == 0x34);
 STATIC_ASSERT(offsetof(ObjAnimState, moveFrameData) == 0x34);
 STATIC_ASSERT(offsetof(ObjAnimState, prevMoveFrameData) == 0x38);
 STATIC_ASSERT(offsetof(ObjAnimState, blendFrameData) == 0x3C);
 STATIC_ASSERT(offsetof(ObjAnimState, prevBlendFrameData) == 0x40);
+STATIC_ASSERT(offsetof(ObjAnimState, cacheSlots) == 0x44);
 STATIC_ASSERT(offsetof(ObjAnimState, moveCacheSlot) == 0x44);
 STATIC_ASSERT(offsetof(ObjAnimState, prevMoveCacheSlot) == 0x46);
 STATIC_ASSERT(offsetof(ObjAnimState, blendCacheSlot) == 0x48);
@@ -800,9 +811,10 @@ STATIC_ASSERT(offsetof(ObjDef, modelLightMaskIndex) == 0x8D);
 STATIC_ASSERT(offsetof(ObjDef, fallbackHitSphereRadius) == 0x8F);
 STATIC_ASSERT(offsetof(ObjDef, secondaryHitboxShapeFlags) == 0x90);
 
-STATIC_ASSERT(sizeof(ObjAnimMoveData) == 0x08);
+STATIC_ASSERT(sizeof(ObjAnimMoveData) == OBJANIM_FRAME_COMMANDS_OFFSET);
 STATIC_ASSERT(offsetof(ObjAnimMoveData, frameControl) == 0x01);
 STATIC_ASSERT(offsetof(ObjAnimMoveData, rootCurveOffset) == 0x04);
+STATIC_ASSERT(offsetof(ObjAnimMoveData, frameStreamOffset) == 0x02);
 STATIC_ASSERT(offsetof(ObjAnimMoveData, frameCommands) == OBJANIM_FRAME_COMMANDS_OFFSET);
 
 STATIC_ASSERT(sizeof(ObjAnimBank) == 0x64);

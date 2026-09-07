@@ -413,12 +413,12 @@ static inline int render_jointComponent(RenderJointBitstream* stream, u16 comman
     return base + firstDelta * (1 << shift);
 }
 
-static void render_jointDecode(RenderJointWork* work, int channel, const ObjAnimFrameCommand* header, const u8* frame,
+static void render_jointDecode(RenderJointWork* work, int channel, const ObjAnimFrameHeader* header, const u8* frame,
                                s16 stride, f32 phase, const s16* adjustments, int paired) {
     RenderJointBitstream stream;
-    const u16* command = (const u16*)((const u8*)header + 4);
+    const u16* command = header->trackDescriptors;
     int fraction = render_jointPhase((phase - render_jointPhase(phase)) * 16384.0f);
-    int count = header->opcode;
+    int count = header->jointCount;
     int joint, axis, second;
     u16 rotation, scale;
     stream.frame[0] = frame;
@@ -855,7 +855,7 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
     outPos = RENDER_PACKED_ADDRESS(outRotation);
     curB = anim->frameStreamStride;
     posA = RENDER_PACKED_ADDRESS(anim->frameStreamCursor);
-    tp = RENDER_PACKED_ADDRESS(anim->moveFrameData) + 4;
+    tp = RENDER_PACKED_ADDRESS(anim->moveFrameData) + offsetof(ObjAnimFrameHeader, trackDescriptors);
     q = &tmp;
     maskConst = 0xFFF0;
 
