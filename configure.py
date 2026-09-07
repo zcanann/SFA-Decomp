@@ -1251,7 +1251,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/modgfx/149/149.c"),
             Object(MatchingFor("GSAE01"), "dlls/modgfx/150/150.c"),
             Object(MatchingFor("GSAE01"), "dlls/modgfx/151/151.c"),
-            Object(NonMatching, "dlls/modgfx/152/152.c"),
+            Object(MatchingFor("GSAE01"), "dlls/modgfx/152/152.c"),
             Object(MatchingFor("GSAE01"), "dlls/modgfx/153/153.c"),
             Object(MatchingFor("GSAE01"), "dlls/modgfx/154/154.c", cflags=cflags_dll_noopt_noprop),
             Object(MatchingFor("GSAE01"), "dlls/modgfx/155/155.c"),

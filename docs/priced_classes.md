@@ -3079,7 +3079,11 @@ Every row below was opened because of what it is worth in bytes, not what it rea
   guard) is worse. **This row refutes §15's sufficiency test**: the slid instruction *is* one the
   source text names — `rows = y + 0x4c` — and it is still a scheduler slot. "The slid instruction
   is one the source names" is NECESSARY, not sufficient.
-* **`dll_98_spawnEffect`** (modgfx/152, 1 040 B, 99.76923). Retail writes
+* **`dll_98_spawnEffect`** (modgfx/152, 1 040 B, 99.76923).
+  **Resolved 2026-09-07:** the complete TU now matches with separate native resource
+  arrays and unchanged GC/1.3 flags; see [evidence](layered_effect_matching.md).
+  The following measurements describe the former fabricated resource overlay.
+  Retail writes
   `resource->sequenceParams[1]`, **reloads it with `lha`**, and stores it to `[2]`; we re-extend the
   register with `extsh`. **Eight spellings**: no cast, `(s16)` cast, an `int` temp feeding both
   stores, a `u8*` pun on the read, a `u8*` pun on the write, and both chained-assignment

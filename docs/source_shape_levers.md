@@ -592,7 +592,7 @@ functions clean**. Only five carry any delta, and all five are dispositioned:
 |---|---|---|---|
 | −4 | 0 | `DR_LaserCan::drlasercannon_aimAtTarget` | resolved 2026-09-04: restore N64-backed signed array and clamp loop; now 100% (see [evidence](DR_LaserCan_matching.md)) |
 | 0 | −1 | `shader::doPendingMapLoads` | flag-closed; local-removal refuted **−3.8** |
-| +1 | 0 | `modgfx/152::dll_98_spawnEffect` | store-forwarding residual, closed at compiler level |
+| +1 | 0 | `modgfx/152::dll_98_spawnEffect` | resolved 2026-09-07: native resource arrays recover the generated data pool; whole TU 100% ([evidence](layered_effect_matching.md)) |
 | +1 | 0 | `objects/332::babyCloudRunner_turnTowardTarget` | lever fires structurally, **score-neutral**, declined |
 | +1 | 0 | `player::playerSetMoveBlendFromPlane` | caller-protected |
 
@@ -613,7 +613,7 @@ A different instruction population and a different error class (a field declared
 |---|---|---|
 | `main/zlb::zlbDecompress` | +2 `lhz`, +1 plain `lbz` | ProDG toolchain wall (`configure.py --zlb-toolchain`) |
 | `shader::doPendingMapLoads` | −1 signed `lbz` | **same site** as its store-side Δ−1; already closed |
-| `modgfx/152::dll_98_spawnEffect` | −1 `lha` | **same site** as its store-side +1 `extsh`; already closed |
+| `modgfx/152::dll_98_spawnEffect` | −1 `lha` | resolved 2026-09-07 with the native resource array definitions; same site as the store-side row |
 
 The two non-toolchain deltas are **not signedness at all** — they are the rematerialize-vs-hold
 class surfacing in the load population (retail re-loads memory; we hold and re-extend), consistent

@@ -6,62 +6,100 @@
 #include "main/dll/modgfx_types.h"
 #include "main/vecmath.h"
 
-typedef struct Dll98EffectResourceView {
-    ModgfxEffectVertex primaryVertices[18];
-    ModgfxEffectVertex invertedVertices[18];
-    s16 triangles[16][3];
-    u8 opaque1C8[0x14];
-    s16 allVertexIndices[18];
-    u8 opaque200[0x14];
-    s16 sequenceParams[7];
-    s16 opaqueTail;
-} Dll98EffectResourceView;
-
-STATIC_ASSERT(offsetof(Dll98EffectResourceView, primaryVertices) == 0x000);
-STATIC_ASSERT(offsetof(Dll98EffectResourceView, invertedVertices) == 0x0B4);
-STATIC_ASSERT(offsetof(Dll98EffectResourceView, triangles) == 0x168);
-STATIC_ASSERT(offsetof(Dll98EffectResourceView, opaque1C8) == 0x1C8);
-STATIC_ASSERT(offsetof(Dll98EffectResourceView, allVertexIndices) == 0x1DC);
-STATIC_ASSERT(offsetof(Dll98EffectResourceView, opaque200) == 0x200);
-STATIC_ASSERT(offsetof(Dll98EffectResourceView, sequenceParams) == 0x214);
-STATIC_ASSERT(offsetof(Dll98EffectResourceView, opaqueTail) == 0x222);
-STATIC_ASSERT(sizeof(Dll98EffectResourceView) == 0x224);
-
-extern u32 gDll98EffectResourceData[sizeof(Dll98EffectResourceView) / sizeof(u32)];
+ModgfxEffectVertex gDll98PrimaryVertices[18] = {
+    {0, 0, 1000, 0, 0},
+    {-707, 0, 707, 15, 0},
+    {-1000, 0, 0, 31, 0},
+    {-707, 0, -707, 47, 0},
+    {0, 0, -1000, 63, 0},
+    {707, 0, -707, 79, 0},
+    {1000, 0, 0, 95, 0},
+    {707, 0, 707, 111, 0},
+    {0, 0, 1000, 127, 0},
+    {0, 2000, 1000, 0, 31},
+    {-707, 2000, 707, 15, 31},
+    {-1000, 2000, 0, 31, 31},
+    {-707, 2000, -707, 47, 31},
+    {0, 2000, -1000, 63, 31},
+    {707, 2000, -707, 79, 31},
+    {1000, 2000, 0, 95, 31},
+    {707, 2000, 707, 111, 31},
+    {0, 2000, 1000, 127, 31},
+};
+ModgfxEffectVertex gDll98InvertedVertices[18] = {
+    {0, 0, 1000, 0, 0},
+    {-707, 0, 707, 15, 0},
+    {-1000, 0, 0, 31, 0},
+    {-707, 0, -707, 47, 0},
+    {0, 0, -1000, 63, 0},
+    {707, 0, -707, 79, 0},
+    {1000, 0, 0, 95, 0},
+    {707, 0, 707, 111, 0},
+    {0, 0, 1000, 127, 0},
+    {0, -2000, 1000, 0, 31},
+    {-707, -2000, 707, 15, 31},
+    {-1000, -2000, 0, 31, 31},
+    {-707, -2000, -707, 47, 31},
+    {0, -2000, -1000, 63, 31},
+    {707, -2000, -707, 79, 31},
+    {1000, -2000, 0, 95, 31},
+    {707, -2000, 707, 111, 31},
+    {0, -2000, 1000, 127, 31},
+};
+s16 gDll98Triangles[16][3] = {
+    {0, 1, 10},
+    {0, 10, 9},
+    {1, 2, 11},
+    {1, 11, 10},
+    {2, 3, 12},
+    {2, 12, 11},
+    {3, 4, 13},
+    {3, 13, 12},
+    {4, 5, 14},
+    {4, 14, 13},
+    {5, 6, 15},
+    {5, 15, 14},
+    {6, 7, 16},
+    {6, 16, 15},
+    {7, 8, 17},
+    {7, 17, 16},
+};
+u8 gDll98Opaque1C8[0x14] = {0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 0};
+s16 gDll98AllVertexIndices[18] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
+u8 gDll98Opaque200[0x14] = {0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15, 0, 16, 0, 17, 0, 0};
+s16 gDll98SequenceParams[7] = {0, 100, 100, 0, 0, 0, 0};
 
 void dll_98_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 spawnFlags, int unused,
                         int invertY) {
     ModgfxSpawnPacket packet;
-    u8* resourceData = (u8*)(int)gDll98EffectResourceData;
-    Dll98EffectResourceView* resource = (Dll98EffectResourceView*)resourceData;
     GfxCmd* commands;
     int effectId;
-    resource->sequenceParams[1] = randomGetRange(0, 0x1E) + 0x1E;
-    resource->sequenceParams[2] = (s32)resource->sequenceParams[1];
+    gDll98SequenceParams[1] = randomGetRange(0, 0x1E) + 0x1E;
+    gDll98SequenceParams[2] = gDll98SequenceParams[1];
     commands = packet.entries;
     commands[0].layer = 0;
     commands[0].flags = 0x12;
-    commands[0].tex = &resourceData[offsetof(Dll98EffectResourceView, allVertexIndices)];
+    commands[0].tex = gDll98AllVertexIndices;
     commands[0].mode = 0x4;
     commands[0].x = 0.0f;
     commands[0].y = 0.0f;
     commands[0].z = 0.0f;
     commands[1].layer = 0;
     commands[1].flags = 0x12;
-    commands[1].tex = &resourceData[offsetof(Dll98EffectResourceView, allVertexIndices)];
+    commands[1].tex = gDll98AllVertexIndices;
     commands[1].mode = 0x2;
     commands[1].z = commands[1].x = 0.22f;
     commands[1].y = 0.3f;
     commands[2].layer = 1;
     commands[2].flags = 0x12;
-    commands[2].tex = &resourceData[offsetof(Dll98EffectResourceView, allVertexIndices)];
+    commands[2].tex = gDll98AllVertexIndices;
     commands[2].mode = 0x4;
     commands[2].x = 255.0f;
     commands[2].y = 0.0f;
     commands[2].z = 0.0f;
     commands[3].layer = 1;
     commands[3].flags = 0x12;
-    commands[3].tex = &resourceData[offsetof(Dll98EffectResourceView, allVertexIndices)];
+    commands[3].tex = gDll98AllVertexIndices;
     commands[3].mode = 0x400000;
     commands[3].x = 0.0f;
     if ((u32)invertY != 0) {
@@ -72,7 +110,7 @@ void dll_98_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[3].z = 0.0f;
     commands[4].layer = 1;
     commands[4].flags = 0x12;
-    commands[4].tex = &resourceData[offsetof(Dll98EffectResourceView, allVertexIndices)];
+    commands[4].tex = gDll98AllVertexIndices;
     commands[4].mode = 0x4000;
     commands[4].x = 0.0f;
     if ((u32)invertY != 0) {
@@ -83,14 +121,14 @@ void dll_98_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[4].z = 0.0f;
     commands[5].layer = 2;
     commands[5].flags = 0x12;
-    commands[5].tex = &resourceData[offsetof(Dll98EffectResourceView, allVertexIndices)];
+    commands[5].tex = gDll98AllVertexIndices;
     commands[5].mode = 0x4;
     commands[5].x = 0.0f;
     commands[5].y = 0.0f;
     commands[5].z = 0.0f;
     commands[6].layer = 2;
     commands[6].flags = 0x12;
-    commands[6].tex = &resourceData[offsetof(Dll98EffectResourceView, allVertexIndices)];
+    commands[6].tex = gDll98AllVertexIndices;
     commands[6].mode = 0x400000;
     commands[6].x = 0.0f;
     if ((u32)invertY != 0) {
@@ -101,7 +139,7 @@ void dll_98_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[6].z = 0.0f;
     commands[7].layer = 2;
     commands[7].flags = 0x12;
-    commands[7].tex = &resourceData[offsetof(Dll98EffectResourceView, allVertexIndices)];
+    commands[7].tex = gDll98AllVertexIndices;
     commands[7].mode = 0x4000;
     commands[7].x = 0.0f;
     if ((u32)invertY != 0) {
@@ -112,7 +150,7 @@ void dll_98_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[7].z = 0.0f;
     commands[8].layer = 2;
     commands[8].flags = 0x12;
-    commands[8].tex = &resourceData[offsetof(Dll98EffectResourceView, allVertexIndices)];
+    commands[8].tex = gDll98AllVertexIndices;
     commands[8].mode = 0x2;
     commands[8].x = 1.0f;
     commands[8].y = 1.0f;
@@ -138,13 +176,13 @@ void dll_98_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     packet.textureFrameTimer = 0x10;
     packet.flags = 0x4080400;
     packet.commandCount = (GfxCmd*)((u8*)commands + sizeof(GfxCmd) * 9) - commands;
-    packet.sequenceParams[0] = resource->sequenceParams[0];
-    packet.sequenceParams[1] = resource->sequenceParams[1];
-    packet.sequenceParams[2] = resource->sequenceParams[2];
-    packet.sequenceParams[3] = resource->sequenceParams[3];
-    packet.sequenceParams[4] = resource->sequenceParams[4];
-    packet.sequenceParams[5] = resource->sequenceParams[5];
-    packet.sequenceParams[6] = resource->sequenceParams[6];
+    packet.sequenceParams[0] = gDll98SequenceParams[0];
+    packet.sequenceParams[1] = gDll98SequenceParams[1];
+    packet.sequenceParams[2] = gDll98SequenceParams[2];
+    packet.sequenceParams[3] = gDll98SequenceParams[3];
+    packet.sequenceParams[4] = gDll98SequenceParams[4];
+    packet.sequenceParams[5] = gDll98SequenceParams[5];
+    packet.sequenceParams[6] = gDll98SequenceParams[6];
     packet.commands = (GfxCmd*)((u8*)&packet + offsetof(ModgfxSpawnPacket, entries));
     packet.flags |= spawnFlags;
     if ((packet.flags & 1) != 0) {
@@ -167,9 +205,9 @@ void dll_98_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     }
     (*gModgfxInterface)
         ->spawnEffect(&packet, 0, 0x12,
-                      (u32)invertY != 0 ? &resourceData[offsetof(Dll98EffectResourceView, invertedVertices)]
-                                        : (u8*)(int)gDll98EffectResourceData,
-                      0x10, &resourceData[offsetof(Dll98EffectResourceView, triangles)], effectId, 0);
+                      (u32)invertY != 0 ? gDll98InvertedVertices
+                                        : gDll98PrimaryVertices,
+                      0x10, gDll98Triangles, effectId, 0);
 }
 
 void dll_98_release(void) {
@@ -178,23 +216,6 @@ void dll_98_release(void) {
 void dll_98_initialise(void) {
 }
 
-u32 gDll98EffectResourceData[sizeof(Dll98EffectResourceView) / sizeof(u32)] = {
-    0x00000000, 0x03e80000, 0x0000fd3d, 0x000002c3, 0x000f0000, 0xfc180000, 0x0000001f, 0x0000fd3d, 0x0000fd3d,
-    0x002f0000, 0x00000000, 0xfc18003f, 0x000002c3, 0x0000fd3d, 0x004f0000, 0x03e80000, 0x0000005f, 0x000002c3,
-    0x000002c3, 0x006f0000, 0x00000000, 0x03e8007f, 0x00000000, 0x07d003e8, 0x0000001f, 0xfd3d07d0, 0x02c3000f,
-    0x001ffc18, 0x07d00000, 0x001f001f, 0xfd3d07d0, 0xfd3d002f, 0x001f0000, 0x07d0fc18, 0x003f001f, 0x02c307d0,
-    0xfd3d004f, 0x001f03e8, 0x07d00000, 0x005f001f, 0x02c307d0, 0x02c3006f, 0x001f0000, 0x07d003e8, 0x007f001f,
-    0x00000000, 0x03e80000, 0x0000fd3d, 0x000002c3, 0x000f0000, 0xfc180000, 0x0000001f, 0x0000fd3d, 0x0000fd3d,
-    0x002f0000, 0x00000000, 0xfc18003f, 0x000002c3, 0x0000fd3d, 0x004f0000, 0x03e80000, 0x0000005f, 0x000002c3,
-    0x000002c3, 0x006f0000, 0x00000000, 0x03e8007f, 0x00000000, 0xf83003e8, 0x0000001f, 0xfd3df830, 0x02c3000f,
-    0x001ffc18, 0xf8300000, 0x001f001f, 0xfd3df830, 0xfd3d002f, 0x001f0000, 0xf830fc18, 0x003f001f, 0x02c3f830,
-    0xfd3d004f, 0x001f03e8, 0xf8300000, 0x005f001f, 0x02c3f830, 0x02c3006f, 0x001f0000, 0xf83003e8, 0x007f001f,
-    0x00000001, 0x000a0000, 0x000a0009, 0x00010002, 0x000b0001, 0x000b000a, 0x00020003, 0x000c0002, 0x000c000b,
-    0x00030004, 0x000d0003, 0x000d000c, 0x00040005, 0x000e0004, 0x000e000d, 0x00050006, 0x000f0005, 0x000f000e,
-    0x00060007, 0x00100006, 0x0010000f, 0x00070008, 0x00110007, 0x00110010, 0x00000001, 0x00020003, 0x00040005,
-    0x00060007, 0x00080000, 0x00000001, 0x00020003, 0x00040005, 0x00060007, 0x00080009, 0x000a000b, 0x000c000d,
-    0x000e000f, 0x00100011, 0x0009000a, 0x000b000c, 0x000d000e, 0x000f0010, 0x00110000, 0x00000064, 0x00640000,
-    0x00000000, 0x00000000};
 Dll98ResourceDescriptor gDll98ResourceDescriptor = {
     {0x00000000, 0x00000000, 0x00000000, 0x00030000},
     dll_98_initialise,

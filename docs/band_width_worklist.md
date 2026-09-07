@@ -106,9 +106,13 @@ then size descending.
 
 MWCC GC/1.3+ elides a redundant load/store-forward whenever the address's provenance is a compile-time symbol; retail reloads. No source spelling reaches the reload.
 
+**2026-09-07 correction:** that closure does not cover native global layout.
+DLL 152 now matches after recovering its separate resource arrays and letting
+MWCC generate the shared data base; see the resolved row below.
+
 | fn | unit | size | fuzzy | ndiff | struc | band | #nm | recorded mechanism |
 |---|---|---|---|---|---|---|---|---|
-| dll_98_spawnEffect | dlls/modgfx/152/152 | 1040 | 99.769 | 1 | 1 | 6G/0F | 1 | store-forward vs reload (7 spellings walled; spellfuzz.py depth-2 grammar over the defect neighbourhood: 121 legal variants incl. chain/`(s32)(a=x)`/temp-park/fresh-temp, every one still forwards — the chain spellings drop the second `extsh` and go one instruction SHORT (259/260) without producing the `lha`) |
+| dll_98_spawnEffect | dlls/modgfx/152/152 | 1040 | 100 | 0 | 0 | 6G/0F | 0 | Resolved 2026-09-07: separate native resource arrays restore MWCC's generated data pool and retail reload; the whole TU matches with unchanged compiler flags. The earlier store-forwarding closure applied to the fabricated blob overlay. See [evidence](layered_effect_matching.md). |
 | mathSinCosf | main/sincosf | 320 | 98.750 | 1 | 1 | 2G/5F | 1 | un-elided parameter-home fmr copy; profile already maximal |
 | mathTanf | dolphin/MSL_C/PPCEABI/bare/H/math_8029454c | 148 | 97.297 | 1 | 1 | 0G/4F | 1 | un-elided parameter-home fmr copy; profile already maximal |
 | gameUiLoadResources | dlls/engine/0/0 | 896 | 100.000 | 0 | 0 | 7G/3F | 12 | Resolved 2026-09-04: GC/1.3 reproduces retail pointer reloads; corrected color declarations preserve the whole TU's existing matches. See engine_0_matching.md. |
