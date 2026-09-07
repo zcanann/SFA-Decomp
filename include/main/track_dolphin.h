@@ -75,8 +75,9 @@ STATIC_ASSERT(offsetof(TrackBlockDescriptor, firstTriangle) == 4);
 STATIC_ASSERT(offsetof(TrackBlockDescriptor, currentCollisionMatrix) == 0x0C);
 STATIC_ASSERT(sizeof(TrackShadowTriangle) == 0x14);
 
-int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, f32* rayOrigin, f32* rayDirection, f32 maxDistance, f32* hitPointOut, f32* planeOut, f32 unusedClearance,
-                                f32* hitDistanceOut, f32 unusedEpsilon);
+int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, f32* rayOrigin, f32* rayDirection, f32 maxDistance,
+                                f32* hitPointOut, f32* planeOut, f32 unusedClearance, f32* hitDistanceOut,
+                                f32 unusedEpsilon);
 
 TrackBlockDescriptor* trackGetBlockDescriptors(u32* outCount);
 

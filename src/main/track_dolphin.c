@@ -237,7 +237,6 @@ void Obj_SetParent(GameObject* obj, GameObject* newParent, int updateLocalTransf
 int trackSweepCircleAgainstPoint(f32* x, f32* z, f32 centerX, f32 centerZ, f32 radius, s8 resolveCollision);
 int trackResolveSurfacePenetration(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type);
 
-
 int trackSweepCircleAgainstPoint(f32* x, f32* z, f32 centerX, f32 centerZ, f32 radius, s8 resolveCollision) {
     f32 startDeltaZ, startDeltaX, timeA, startDeltaXSq, startX, startZ, moveX, moveZ, quadraticB, negB;
     f32 separation, sqrtDiscriminant, denominator, separationX, timeB, hitTime, hitX, hitZ;
@@ -1769,8 +1768,9 @@ int trackResolveSurfacePenetration(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 
     return 1;
 }
 
-int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, f32* rayOrigin, f32* rayDirection, f32 maxDistance, f32* hitPointOut, f32* planeOut, f32 unusedClearance,
-                                f32* hitDistanceOut, f32 unusedEpsilon) {
+int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, f32* rayOrigin, f32* rayDirection, f32 maxDistance,
+                                f32* hitPointOut, f32* planeOut, f32 unusedClearance, f32* hitDistanceOut,
+                                f32 unusedEpsilon) {
     f32 crossNormal[3];
     f32 startOffset[3];
     f32 scratch[3];
@@ -1819,7 +1819,10 @@ int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, f32* rayOrigin, f32*
                 sphereCenter[2] = rayOrigin[2] + sphereCenter[2];
                 {
                     f32 edgeStartYProduct = edge->direction[1] * edge->start[1];
-                    edgeDistance = (sphereCenter[0] * edge->direction[0] + sphereCenter[1] * edge->direction[1] + sphereCenter[2] * edge->direction[2]) - (edgeStartYProduct + edge->direction[0] * edge->start[0] + edge->direction[2] * edge->start[2]);
+                    edgeDistance =
+                        (sphereCenter[0] * edge->direction[0] + sphereCenter[1] * edge->direction[1] +
+                         sphereCenter[2] * edge->direction[2]) -
+                        (edgeStartYProduct + edge->direction[0] * edge->start[0] + edge->direction[2] * edge->start[2]);
                 }
                 if (edgeDistance >= zero) {
                     if (edgeDistance <= edge->length) {
@@ -1835,7 +1838,8 @@ int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, f32* rayOrigin, f32*
                         Vec3_Normalize(planeOut);
                         {
                             f32 dotY = sphereCenter[1] * planeOut[1];
-                            planeOut[3] = edge->radius - (dotY + sphereCenter[0] * planeOut[0] + sphereCenter[2] * planeOut[2]);
+                            planeOut[3] =
+                                edge->radius - (dotY + sphereCenter[0] * planeOut[0] + sphereCenter[2] * planeOut[2]);
                         }
                         /* Preserve the byte view: native array copies remove retail stack stores. */
                         hitPointOut[0] = *(f32*)((u8*)sphereCenter + 0);
@@ -2091,7 +2095,8 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                             edge.end[2] = tri->vz[k];
                             PSVECSubtract((Vec*)vbp, (Vec*)edge.start, (Vec*)evecp);
                             edge.length = Vec3_Normalize(evecp);
-                            if (trackSweepSphereAgainstEdge(&edge, ws, dir, mag, hitpt, plane, clearance, &frac, 0.0f)) {
+                            if (trackSweepSphereAgainstEdge(&edge, ws, dir, mag, hitpt, plane, clearance, &frac,
+                                                            0.0f)) {
                                 hit = 1;
                                 goto hitCheck;
                             }
@@ -2245,9 +2250,11 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         cur[0] -= offX;
                         cur[2] -= offZ;
                     }
-                    radiusDistance = contactPlane[3] + (cur[2] * contactPlane[2] + (cur[0] * contactPlane[0] + cur[1] * contactPlane[1]));
+                    radiusDistance = contactPlane[3] +
+                                     (cur[2] * contactPlane[2] + (cur[0] * contactPlane[0] + cur[1] * contactPlane[1]));
                     radiusDistance -= radius;
-                    trackResolveSurfacePenetration(collisionStart, cur, collisionContact, contactPlane, radiusDistance, clearance, type);
+                    trackResolveSurfacePenetration(collisionStart, cur, collisionContact, contactPlane, radiusDistance,
+                                                   clearance, type);
                     if (objmtx != 0) {
                         Matrix_TransformPoint(descSave->currentCollisionMatrix, cur[0], cur[1], cur[2], &cur[0],
                                               &cur[1], &cur[2]);
