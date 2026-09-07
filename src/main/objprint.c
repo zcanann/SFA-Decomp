@@ -798,7 +798,7 @@ s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8*
     s16 src[2];
     s16 dst[2];
     GameObject* go = obj;
-    s16* found[1];
+    s16* found;
     s16* sp2;
     f32 dx, dy, dz, dist;
     int i;
@@ -834,30 +834,8 @@ s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8*
 
     i = 0;
     while (i < 10) {
-        int key;
-        void* m[1];
-
-        key = gObjLookAtJointKeys[i];
-        found[0] = NULL;
-        m[0] = (void*)go->anim.modelInstance;
-        if (m[0] != NULL) {
-            int iv[2];
-            int n;
-            int j;
-            iv[0] = 0;
-            iv[1] = 0;
-            n = ((ObjDef*)m[0])->jointCount;
-            for (j = 0; j < n; j++) {
-                u8* entries = (u8*)((ObjDef*)m[0])->jointData;
-                if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(go) + iv[0] + 1) != 0xff &&
-                    key == (int)*(u8*)(entries + iv[0])) {
-                    found[0] = (s16*)(go->anim.jointPoseData + iv[1]);
-                }
-                iv[0] += ((ObjDef*)m[0])->modelCount + 1;
-                iv[1] += sizeof(ObjJointPose);
-            }
-        }
-        if (found[0] == NULL) {
+        found = objFindJointVecByKey(go, gObjLookAtJointKeys[i]);
+        if (found == NULL) {
             int t = ret;
             t = (t >= 0) ? t : -t;
             return (s16)(t < 0x100);
@@ -889,12 +867,12 @@ s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8*
 
         if (p4 != NULL) {
             ((ObjJointTrackPair*)p4)->yaw.angle = dst[0];
-            characterTrackJointYaw((s16*)p4, found[0]);
+            characterTrackJointYaw((s16*)p4, found);
             ((ObjJointTrackPair*)p4)->pitch.angle = dst[1];
-            characterTrackJointPitch((s16*)&((ObjJointTrackPair*)p4)->pitch, found[0], 10.0f, 500.0f);
+            characterTrackJointPitch((s16*)&((ObjJointTrackPair*)p4)->pitch, found, 10.0f, 500.0f);
             p4 += 0x60;
         } else {
-            s16* fv = found[0];
+            s16* fv = found;
             s16 d1 = (s16)((s16)((fv[1] + dst[0]) >> 1) - fv[1]);
             s16 lim;
             s16 d2;
@@ -918,7 +896,7 @@ s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8*
         }
 
         if (i == 0) {
-            ret -= found[0][1];
+            ret -= found[1];
         }
         i++;
     }

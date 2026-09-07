@@ -41,3 +41,21 @@ object-allocation, and objprint objects. The complete objdiff report is
 unchanged; the blend-table builder remains 1,264 bytes at 100%. Both the
 strict retail checksum and `all_source` pass. This recovery does not alter
 the separate private-ABI joint-matrix reconstruction.
+
+## Aiming lookup reuse
+
+`objJointTracksAimAtTarget` uses the existing `objFindJointVecByKey` inline
+helper for the same packed binding scan. Both select the last matching key
+whose active-bank index is not 0xff and return null when the model or binding
+is absent. Replacing the duplicated scan also allows its one-element result
+array to become an ordinary pointer.
+
+Under GC/1.3 this fixes the five register differences in the lookup, improving
+the 1,332-byte function from 99.81982% to 99.90991%. Its instruction sequence
+and size already matched retail. Five operand differences remain in the
+pitch-rate clamp; they exchange the limit and doubled-divisor registers.
+The other 39 function bodies, allocated data, named symbol layouts, and
+resolved relocation destinations are unchanged. One anonymous float literal
+is renumbered without moving its storage or changing its six references.
+Both `ninja all_source` and the strict retail checksum build pass. Formatting
+already passes and leaves the compiled object unchanged.
