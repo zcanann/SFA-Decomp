@@ -44,9 +44,9 @@ f32 gModelChainJitterScale;
 
 u16 gModelMorphChunkVertexLimit = 0x2A0;
 #define MODEL_MORPH_VERTEX_INDEX_MASK 0x1fff
-#define MODEL_MORPH_HAS_X 0x2000
-#define MODEL_MORPH_HAS_Y 0x4000
-#define MODEL_MORPH_HAS_Z 0x8000
+#define MODEL_MORPH_HAS_X             0x2000
+#define MODEL_MORPH_HAS_Y             0x4000
+#define MODEL_MORPH_HAS_Z             0x8000
 void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
 #define LOADCOLOR_BLOCK(SLOT)                                                                                          \
     {                                                                                                                  \
@@ -94,7 +94,8 @@ static inline void* modelGetBoneMtx(ObjModel* model, int idx);
 void ObjModel_TransformVerticesWithTranslation(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
 void ObjModel_TransformVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
 void ObjModel_TransformQuadVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
-void modelBlendMorphTargetChunk(u8* baseVertices, u8* outVertices, u16 vertexCount, u16** targetA, u16** targetB, int weightB, u16 firstVertex) {
+void modelBlendMorphTargetChunk(u8* baseVertices, u8* outVertices, u16 vertexCount, u16** targetA, u16** targetB,
+                                int weightB, u16 firstVertex) {
     u16* a = *targetA;
     u16* b = *targetB;
     int i = 0;
@@ -112,8 +113,10 @@ void modelBlendMorphTargetChunk(u8* baseVertices, u8* outVertices, u16 vertexCou
                 b = modelReadMorphDelta(b, &bx, &by, &bz);
                 a = modelReadMorphDelta(a, &ax, &ay, &az);
                 *(u16*)outVertices = (((u32)ax * weightA + (u32)bx * (u32)weightB) >> 16) + *(s16*)baseVertices;
-                *(u16*)(outVertices + 2) = (((u32)ay * weightA + (u32)by * (u32)weightB) >> 16) + *(s16*)(baseVertices + 2);
-                *(u16*)(outVertices + 4) = (((u32)az * weightA + (u32)bz * (u32)weightB) >> 16) + *(s16*)(baseVertices + 4);
+                *(u16*)(outVertices + 2) =
+                    (((u32)ay * weightA + (u32)by * (u32)weightB) >> 16) + *(s16*)(baseVertices + 2);
+                *(u16*)(outVertices + 4) =
+                    (((u32)az * weightA + (u32)bz * (u32)weightB) >> 16) + *(s16*)(baseVertices + 4);
             } else {
                 a = modelReadMorphDelta(a, &ax, &ay, &az);
                 *(u16*)outVertices = (((u32)ax * weightA) >> 16) + *(s16*)baseVertices;
@@ -1199,7 +1202,8 @@ void modelBlendMorphTargets(u8* srcVtx, u8* dstVtx, u16 vtxCount, u16* targetA, 
                 nextChunk = vtxCount;
             }
             nextCacheBlocks = (u32)(nextChunk * 6 + 0x1f & 0xffe0) >> 5;
-            copyToCache(cache + (bufIdx ^ 1) * 0x2000, srcVtx + (vtxPos + gModelMorphChunkVertexLimit) * 6, nextCacheBlocks);
+            copyToCache(cache + (bufIdx ^ 1) * 0x2000, srcVtx + (vtxPos + gModelMorphChunkVertexLimit) * 6,
+                        nextCacheBlocks);
             sync = 1;
         }
         cacheQueueWait(sync);
