@@ -217,3 +217,40 @@ The TU remains `NonMatching`. The existing capsule-normal host tests,
 `ninja all_source`, and strict retail checksum pass; the host tests cover the
 neighboring geometry routine, while the instruction comparison proves this
 dispatcher's match. Formatting is a separate, byte-neutral commit.
+
+## Work-slot invalidation and frame-contact reset
+
+`ObjHitbox_SetStateIndex` now delegates its work-slot scan to the private
+`ObjHits_InvalidateObjectWorkSlots` helper. A state change invalidates only
+active slots whose object pointer matches the caller. An unchanged state still
+returns before the scan. The model-count clamp and its original branch order
+are retained, while `modelCount` and the helper's `slotIndex` replace the
+former local shared between those two roles.
+
+This boundary recovers the retail slot-address and byte-stride registers:
+`r7` and `r9`, respectively. All 35 instructions (140 bytes) now match. The
+diagnostic compiler reproduces the ordinary object and successfully replays
+GPR simplification, coloring, and final instruction operands. Merely extracting
+an indexed slot getter does not match. No compiler settings change.
+
+The slot's canonical header now asserts its 60-byte size, active-counter
+offset zero, and object-pointer offset eight. Retail allocates
+3,000 bytes for fifty slots; both the invalidation and tick loops use the same
+60-byte stride. The remaining bytes stay opaque.
+
+The adjacent frame-contact reset also has one private helper shared by the
+main object and qualifying attached object. `ObjHits_ResetFrameContacts` clears
+the applied-response bit, contact flags and partner pointer, and sets the
+contact-volume sentinel. It uses the existing `hitObject` field instead of an
+integer-pointer cast over the state prefix. All its caller's instruction bytes
+are unchanged. Adding the helper renumbers three later anonymous literal names;
+their bytes, locations, and relocation destinations are unchanged.
+
+Against `ac1324bc62`, ObjHits rises from 48/54 to 49/54 exact functions and
+99.7642% to 99.770355% fuzzy match. Only the state-index setter changes function
+bytes. All allocated non-text sections, named layouts, and normalized relocation
+destinations remain unchanged. The TU remains `NonMatching` for five other
+functions and its literal-pool ordering. Full source compilation, the strict
+retail checksum, and the formatter checks pass. Formatting produces no further
+source changes and preserves the final semantic object byte for byte. Rebuilding
+the header's consumers changes no other source object.

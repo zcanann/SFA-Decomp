@@ -1959,6 +1959,13 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
     }
 }
 
+static inline void ObjHits_ResetFrameContacts(ObjHitsPriorityState* state) {
+    state->flags &= ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
+    state->contactFlags = 0;
+    state->contactHitVolume = -1;
+    state->hitObject = NULL;
+}
+
 void ObjHits_Update(int objectCount) {
     u8 skeletonScratchB[1036];
     u8 skeletonScratchC[1040];
@@ -2015,17 +2022,11 @@ void ObjHits_Update(int objectCount) {
                     entrySlot++;
                     gObjHitsSweepEntryPtrs[slotCount++]->maxX = listObj->anim.worldPosX + listState->sweepRadiusX;
                 }
-                listState->flags &= ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
-                listState->contactFlags = 0;
-                listState->contactHitVolume = -1;
-                *(int*)listState = 0;
+                ObjHits_ResetFrameContacts(listState);
                 attachedObj = listObj->childObjs[0];
                 if ((attachedObj != 0) && (attachedObj->anim.classId == 0x2d)) {
                     listState = ObjAnim_GetPriorityHitState(&attachedObj->anim);
-                    listState->flags &= ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
-                    listState->contactFlags = 0;
-                    listState->contactHitVolume = -1;
-                    *(int*)listState = 0;
+                    ObjHits_ResetFrameContacts(listState);
                 }
             }
             objectList++;
@@ -2346,14 +2347,25 @@ u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitS
 char sObjHitReactHitstateFrameString[] = "hitstate frame=%f\n";
 char sObjHitReactSphereOverflowString[] = "objHitReact.c: sphere overflow! %d\n";
 
-void ObjHitbox_SetStateIndex(GameObject* object, ObjHitReactState* hitStatePtr, int stateIndex) {
-    ObjHitsPriorityState* priorityState;
-    int modelOrSlotIndex;
+static inline void ObjHits_InvalidateObjectWorkSlots(GameObject* object) {
+    int slotIndex;
     ObjHitsPriorityWorkSlot* workSlot;
 
-    modelOrSlotIndex = object->anim.modelInstance->modelCount;
-    if (stateIndex >= modelOrSlotIndex) {
-        stateIndex = modelOrSlotIndex - 1;
+    for (slotIndex = 0; (s16)slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex++) {
+        workSlot = &gObjHitsPriorityHitStates[slotIndex];
+        if ((workSlot->active != 0) && (workSlot->object == object)) {
+            workSlot->active = 0;
+        }
+    }
+}
+
+void ObjHitbox_SetStateIndex(GameObject* object, ObjHitReactState* hitStatePtr, int stateIndex) {
+    ObjHitsPriorityState* priorityState;
+    int modelCount;
+
+    modelCount = object->anim.modelInstance->modelCount;
+    if (stateIndex >= modelCount) {
+        stateIndex = modelCount - 1;
     } else if (stateIndex < 0) {
         stateIndex = 0;
     }
@@ -2361,12 +2373,7 @@ void ObjHitbox_SetStateIndex(GameObject* object, ObjHitReactState* hitStatePtr, 
     if (priorityState->stateIndex == stateIndex) {
         return;
     }
-    for (modelOrSlotIndex = 0; (s16)modelOrSlotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; modelOrSlotIndex++) {
-        workSlot = &gObjHitsPriorityHitStates[modelOrSlotIndex];
-        if ((workSlot->active != 0) && (workSlot->object == object)) {
-            workSlot->active = 0;
-        }
-    }
+    ObjHits_InvalidateObjectWorkSlots(object);
     priorityState->stateIndex = stateIndex;
     return;
 }

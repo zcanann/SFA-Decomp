@@ -104,6 +104,10 @@ typedef struct ObjHitsPriorityWorkSlot {
     u8 pad0C[OBJHITS_PRIORITY_WORK_SLOT_SIZE - 0x0C];
 } ObjHitsPriorityWorkSlot;
 
+STATIC_ASSERT(sizeof(ObjHitsPriorityWorkSlot) == OBJHITS_PRIORITY_WORK_SLOT_SIZE);
+STATIC_ASSERT(offsetof(ObjHitsPriorityWorkSlot, active) == OBJHITS_PRIORITY_WORK_SLOT_ACTIVE_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsPriorityWorkSlot, object) == OBJHITS_PRIORITY_WORK_SLOT_OBJ_OFFSET);
+
 /*
  * The skeleton collectors fill a 0x48-byte hit record and terminate the list
  * by writing -1 to pointIndexA. Response code then walks the same records to
