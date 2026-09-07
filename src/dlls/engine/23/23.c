@@ -396,10 +396,14 @@ int insertHighScore(u8 slot, u8 flag, u32 score, u8* initials) {
             for (i = SAVE_SCORE_ENTRY_COUNT - 1; i > rank; i--) {
                 ((SaveData*)saveData)->scores[slot][i].score = ((SaveData*)saveData)->scores[slot][i - 1].score;
                 ((SaveData*)saveData)->scores[slot][i].flag = ((SaveData*)saveData)->scores[slot][i - 1].flag;
-                ((SaveData*)saveData)->scores[slot][i].initials[0] = ((SaveData*)saveData)->scores[slot][i - 1].initials[0];
-                ((SaveData*)saveData)->scores[slot][i].initials[1] = ((SaveData*)saveData)->scores[slot][i - 1].initials[1];
-                ((SaveData*)saveData)->scores[slot][i].initials[2] = ((SaveData*)saveData)->scores[slot][i - 1].initials[2];
-                ((SaveData*)saveData)->scores[slot][i].initials[3] = ((SaveData*)saveData)->scores[slot][i - 1].initials[3];
+                ((SaveData*)saveData)->scores[slot][i].initials[0] =
+                    ((SaveData*)saveData)->scores[slot][i - 1].initials[0];
+                ((SaveData*)saveData)->scores[slot][i].initials[1] =
+                    ((SaveData*)saveData)->scores[slot][i - 1].initials[1];
+                ((SaveData*)saveData)->scores[slot][i].initials[2] =
+                    ((SaveData*)saveData)->scores[slot][i - 1].initials[2];
+                ((SaveData*)saveData)->scores[slot][i].initials[3] =
+                    ((SaveData*)saveData)->scores[slot][i - 1].initials[3];
             }
 
             ((SaveData*)saveData)->scores[slot][rank].score = score;
