@@ -124,6 +124,25 @@ the 4x-unrolled transient-bit scan into `lbz` displacements; 3 rewrites probed i
 **Tell.** Target: single `mr`/base + arithmetic-progression displacements across unroll copies.
 Ours: identical base plus one surplus `addi` per copy.
 
+**2026-09-07 Hcurves retest: the unroll shape is reachable from source.** Under
+the current GC/1.3 profile, `Objfsa_UpdateWalkGroupPatches` has 1,197 instructions
+against retail's 1,194. Replacing its aggregate-derived active-group and
+walk-group accesses with the existing native `gObjfsaWalkGroupActive` and
+`gObjfsaWalkGroups` arrays yields 1,194 instructions and zero mnemonic-stream
+differences, including all 32 clear-loop stores on one base. The relevant uses
+are the active-array `memset`, the active-byte store, the current walk-group
+lookup, and the two exit-group lookups. The one-element `patchBase` local can
+also become a scalar without changing this native-array result. No compiler
+flag change is needed.
+
+This candidate is not retained: same-mnemonic operand differences rise from
+72 to 231, mostly because the shared base and the subsequent GPR lifetimes
+receive different registers. Converting individual accesses alone does not
+produce the combined result. A clear-loop inline helper and a reversed
+deferred-emission control do not improve it. The next source-recovery avenue
+is therefore native storage plus allocation/lifetime recovery; the older
+claim that this unroll shape is intrinsically unreachable is too strong.
+
 ## 4. Large-constant-HI never CSE'd across a call (compiler-side; GC/2.0 AND GC/1.3)
 
 **Mechanism.** MWCC never CSEs the `lis` half of a large constant across a call. Retail hoists
