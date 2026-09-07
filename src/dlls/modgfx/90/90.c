@@ -69,16 +69,19 @@ StaffCollisionEffectResource gStaffCollisionEffectResourceData = {
     {0, 0},
 };
 
-void StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+s16 StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                           int unusedModelId, const StaffCollisionColorArgs* colorArgs) {
     MatrixTransform transform;
     StaffCollisionSpawnPacket packet;
     GfxCmd commandStorage[32];
     GfxCmd* commands = commandStorage;
-    int spawnCount;
-    StaffCollisionEffectResource* resource = &gStaffCollisionEffectResourceData;
+    StaffCollisionEffectResource* resources[1];
     s16 colorR, colorG, colorB;
     int spawnIndex;
+    int spawnCount;
+    s16 spawnHandle;
+    resources[0] = &gStaffCollisionEffectResourceData;
+    spawnHandle = 0;
     colorR = 0xff;
     colorG = 0xff;
     colorB = 0xff;
@@ -165,13 +168,13 @@ void StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* sp
         packet.byte5A = 0;
         packet.textureFrameTimer = 0x10;
         packet.commandCount = 4;
-        packet.sequenceParams[0] = resource->sequenceParams[0];
-        packet.sequenceParams[1] = resource->sequenceParams[1];
-        packet.sequenceParams[2] = resource->sequenceParams[2];
-        packet.sequenceParams[3] = resource->sequenceParams[3];
-        packet.sequenceParams[4] = resource->sequenceParams[4];
-        packet.sequenceParams[5] = resource->sequenceParams[5];
-        packet.sequenceParams[6] = resource->sequenceParams[6];
+        packet.sequenceParams[0] = resources[0]->sequenceParams[0];
+        packet.sequenceParams[1] = resources[0]->sequenceParams[1];
+        packet.sequenceParams[2] = resources[0]->sequenceParams[2];
+        packet.sequenceParams[3] = resources[0]->sequenceParams[3];
+        packet.sequenceParams[4] = resources[0]->sequenceParams[4];
+        packet.sequenceParams[5] = resources[0]->sequenceParams[5];
+        packet.sequenceParams[6] = resources[0]->sequenceParams[6];
         packet.commands = commandStorage;
         packet.flags = 0x2000490;
         packet.flags |= spawnFlags;
@@ -190,12 +193,13 @@ void StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* sp
                 packet.position[2] += spawnParams->posZ;
             }
         }
-        (*gModgfxInterface)
+        spawnHandle = (*gModgfxInterface)
             ->spawnEffect(
                 &packet, 0, mode != 0 ? 4 : 3,
-                mode != 0 ? (void*)resource->alternateVertices : (void*)resource->defaultVertices, mode != 0 ? 2 : 1,
-                mode != 0 ? (void*)resource->alternateTriangleIndices : (void*)gStaffCollisionDefaultTriangles, 0, 0);
+                mode != 0 ? (void*)resources[0]->alternateVertices : (void*)resources[0]->defaultVertices, mode != 0 ? 2 : 1,
+                mode != 0 ? (void*)resources[0]->alternateTriangleIndices : (void*)gStaffCollisionDefaultTriangles, 0, 0);
     }
+    return spawnHandle;
 }
 
 StaffCollisionResourceDescriptor gStaffCollisionResourceDescriptor = {

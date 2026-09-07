@@ -1189,7 +1189,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/engine/88/88.c"),
 
             Object(MatchingFor("GSAE01"), "dlls/modgfx/89/89.c"),
-            Object(NonMatching, "dlls/modgfx/90/90.c"),
+            Object(MatchingFor("GSAE01"), "dlls/modgfx/90/90.c"),
             Object(MatchingFor("GSAE01"), "dlls/modgfx/91/91.c"),
             Object(MatchingFor("GSAE01"), "dlls/modgfx/92/92.c"),
             Object(MatchingFor("GSAE01"), "dlls/modgfx/93/93.c"),

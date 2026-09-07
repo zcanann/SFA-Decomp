@@ -2475,6 +2475,9 @@ materialise it (`Scarab_update`, `curves_advanceCollision`, `intersectModLineBui
 `textRenderStr`, `mapScreenDrawHud`, `trickyBallMove`, `trackIntersect`, `objDrawShadowCasterMesh`,
 `updateEnvironment`, `hudDrawButtons`, `renderSunAndMoon`, `headDisplayDraw`, `unloadMap`,
 `gameTextInitBoxTextures`) and 2 the other way (`boneParticleEffect_update`, `StaffCollision_spawn`).
+**Correction, 2026-09-07:** `StaffCollision_spawn` now matches completely. Its entry
+zero initializes the return value for an empty spawn loop; it is not an alternative
+spelling of the resource-pointer copy. See [the matching analysis](staffcollision_matching.md).
 Rematerialising a constant changes the opcode without changing the operation, so the histogram
 mis-files the whole family.
 

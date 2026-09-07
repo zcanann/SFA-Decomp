@@ -284,7 +284,7 @@ Width >=5 saved band, identical mnemonic stream: the rotation-offset model — e
 | trickyUpdateMovementState | dlls/objects/196_Tricky/tricky | 8764 | 99.922 | 34 | 0 | 11G/2F | 6 | transposition pass 08-03: pure r28<->r29 swap, didMove K-init vs objectWalkGroup call-copy; probed decl swap, init-as-statement, embedded call assignment, s8/int retype (stream-rejected), init reposition (stream-rejected) — all inert; no source knob found |
 | tricky_SeqFn | dlls/objects/196_Tricky/tricky | 1168 | 99.384 | 35 | 0 | 8G/0F | 6 | surplus-queue tricky walls (5 exhaustive sweeps flat) |
 | addShaderLayerStages | main/objprint_dolphin | 1128 | 99.184 | 38 | 0 | 13G/0F | 6 | signature: struc 0, band >=5, no recorded lever site |
-| StaffCollision_spawn | dlls/modgfx/90/90 | 1408 | 99.219 | 39 | 1 | 17G/7F | 1 | web-class-pun-effect (width 17 + copy-class flip / width 9) |
+| StaffCollision_spawn | dlls/modgfx/90/90 | 1408 | 100.000 | 0 | 0 | 17G/7F | 0 | RESOLVED 2026-09-07: restore the s16 spawn result, use the neighboring resource-table pattern, and place spawnCount after spawnIndex; see staffcollision_matching.md |
 | dll_0B_updateActiveEffects | dlls/engine/11/11 | 3420 | 99.749 | 40 | 0 | 13G/0F | 3 | signature: struc 0, band >=5, no recorded lever site |
 | ObjHits_CheckSkeletonPair | main/objhits | 1116 | 99.247 | 41 | 0 | 5G/0F | 9 | objhits GROUND pass 08-03: all 9 T==C recolours, no lever site |
 | objSetupRenderOpGxState | main/objprint_dolphin | 1976 | 99.524 | 43 | 0 | 13G/0F | 6 | signature: struc 0, band >=5, no recorded lever site |
