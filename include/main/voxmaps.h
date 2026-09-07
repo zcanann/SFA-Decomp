@@ -71,8 +71,6 @@ typedef struct VoxPos {
     s16 z;
 } VoxPos;
 
-
-
 typedef struct RouteNode {
     s16 x;
     s16 y;
