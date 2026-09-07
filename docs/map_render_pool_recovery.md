@@ -4,7 +4,7 @@ The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
 All 40,656 assigned data bytes match. The common GC/1.3 invocation produces
-139/145 exact functions and a 99.577324% instruction fuzzy score; the TU remains
+139/145 exact functions and a 99.62423% instruction fuzzy score; the TU remains
 `NonMatching` because six functions still differ.
 
 This supersedes the constant-pool blocker in
@@ -460,3 +460,24 @@ The formatted source and header reproduce the complete pre-change shader
 object byte-for-byte. All-source compilation, the strict retail checksum,
 formatting, and the data audit pass. This recovers structure without changing
 the retained 139/145 exact functions or the TU's 99.62221% score.
+
+
+## Frustum aspect temporary reuse (2026-09-07)
+
+`updateVisibleGeometry` now reuses the tangent-ratio temporary for the
+aspect-scaled squared ratio before the square root and arctangent. This recovers
+the retail `f1` constant load, `f0` multiplication result, and fused multiply-add
+operands. The arithmetic and evaluation order are unchanged.
+
+Only three instruction words change, at function offsets `0x178`, `0x17C`, and
+`0x180`. All other function bytes, non-text section contents, and named symbol
+layouts remain identical. Thirty-one text relocations receive renumbered
+anonymous literal labels; their locations, types, addends, destination sections,
+and destination offsets are unchanged. All forty literal-consumer sequences
+and the complete data audit pass.
+
+The function improves from 87.2018% to 87.3139%, and the TU reaches 99.62423%
+with 139/145 functions exact. The unresolved frustum differences concern plane
+indexing and its associated saved registers and frame layout. Formatting
+preserves the selected probe object byte-for-byte. Both thirty-second-bounded
+build gates pass; the TU remains `NonMatching` and the strict link uses retail.

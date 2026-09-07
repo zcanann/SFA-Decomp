@@ -3197,8 +3197,8 @@ static void updateVisibleGeometry(void) {
     ratio = fsin16HighPrecision(fov) / tt;
     ratio2 = ratio * ratio;
     ff = 1.333333f;
-    tt = ff * ratio2;
-    tt = atanf(sqrtf(ff * tt + ratio2));
+    ratio = ff * ratio2;
+    tt = atanf(sqrtf(ff * ratio + ratio2));
     ff = mathSinfHighPrecision(tt);
     ss = mathCosfHighPrecision(tt);
     Matrix_TransformPoint(m, ss, 0.0f, -ff, &ox, &oy, &oz);
