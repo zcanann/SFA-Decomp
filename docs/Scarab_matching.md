@@ -93,8 +93,8 @@ it does not reproduce retail's allocation.
 Separate query-result locals, ground-loop index reuse, scalar widths,
 declaration initializers, a shared closest-hit reduction, and the collection
 helper do not resolve the remaining instruction. Diagnostic changes to
-lifetimes, propagation, CSE, optimization level, deferred inlining, and
-language mode also fail to produce an exact unit. Production compiler flags
+lifetimes, propagation, CSE, optimization level, and deferred inlining also
+fail to produce an exact unit. Production compiler flags
 and TU boundaries are unchanged. These observations describe the tested
 source forms, not a proof that matching clean C is impossible.
 
@@ -200,3 +200,27 @@ reuse still reaches a copy which coalescing removes (868 instructions,
 99.75835%). Separating tumbling and slope flags instead adds an initialization
 and changes the saved-register range (870 instructions, 98.37745%). Neither
 variant is retained.
+
+## Zero-copy controls
+
+Exact GC/1.3 game functions provide positive controls for the remaining copy.
+`GameUI_releaseMenuResources`, `Obj_ResetObjectSystem`, and
+`Obj_FlushDeferredFreeList` acquire their zero copies after the second
+value-numbering pass. Their copied destinations are anonymous registers
+inside that pass's eligibility range. In `Obj_FlushDeferredFreeList`, the
+named loop counter remains a separate `li`, outside the range. Ordinary and
+instrumented objects agree byte for byte, and the captured register graphs
+and physical coloring replay successfully. Indexed stores in these controls
+are supported by the backend validator's checked `stwx` mapping.
+
+Using Scarab's collision scalar as the stunned ground-loop ordinal, without
+a second loop initialization, also retains the required entry copy. It loses
+the retail `li r6,0` and carries the ordinal in `r30`, however: 868 instructions,
+99.86766%. This diagnostic is not retained. It demonstrates a distinct
+lifetime constraint rather than resolving the function.
+
+A shared `const int zero = 0`, used for both entry initializations or throughout
+the update, leaves every function and allocated section byte unchanged.
+`static const int` and `static const f32` initializers do likewise. The remaining
+instruction is still `li r30,0`; only anonymous symbol names are renumbered.
+These constants are not retained because they do not help the match.

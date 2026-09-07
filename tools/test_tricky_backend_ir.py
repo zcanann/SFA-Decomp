@@ -136,6 +136,18 @@ class BackendIRTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "register alignment"):
             validate_alignment(fixture(), ["li r6,0", "mr r4,r7", "blr"], bytes.fromhex("38e00000 7ce43b78 4e800020"))
 
+    def test_indexed_word_store_checks_all_three_registers(self):
+        data = fixture()
+        store = data["blocks"][0]["instructions"][0]["words"]
+        store[8:] = [0x33 | (3 << 16)] + list(struct.unpack("<9I", reg(31, 1) + reg(3, 1) + reg(29, 1)))
+        code = bytes.fromhex("7fe3e92e 7ce43b78 4e800020")
+        self.assertEqual(len(validate_alignment(data, ["stwx r31,r3,r29", "mr r4,r7", "blr"], code)), 3)
+        for instruction in ("stwx r30,r3,r29", "stwx r31,r4,r29", "stwx r31,r3,r28"):
+            with self.subTest(instruction=instruction), self.assertRaisesRegex(ValueError, "register alignment"):
+                validate_alignment(data, [instruction, "mr r4,r7", "blr"], code)
+        with self.assertRaisesRegex(ValueError, "opcode alignment"):
+            validate_alignment(data, ["stw r31,0(r3)", "mr r4,r7", "blr"], code)
+
     def test_branch_hex_addresses_are_not_float_registers(self):
         data = fixture()
         data["blocks"][0]["instructions"][1]["words"][8] = 0x05 | (1 << 16)
