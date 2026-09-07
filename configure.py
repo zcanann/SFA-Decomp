@@ -1354,7 +1354,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/238_EffectBox/EffectBox.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/239/239.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "dlls/objects/240_WarpPoint/WarpPoint.c"),
-            Object(NonMatching, "dlls/objects/241_InvHit/InvHit.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/241_InvHit/InvHit.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/242_iceblast/iceblast.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/243_flameblast/flameblast.c", cflags=cflags_dll_noopt_nocse_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/244/244.c"),
