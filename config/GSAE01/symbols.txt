@@ -21048,7 +21048,6 @@ lbl_803E3ECC = .sdata2:0x803E3ECC; // type:object size:0x4 scope:local align:4 d
 lbl_803E3ED0 = .sdata2:0x803E3ED0; // type:object size:0x4 scope:local align:4 data:float
 lbl_803E3ED8 = .sdata2:0x803E3ED8; // type:object size:0x8 align:8 data:double
 gWarpPadTriggerDist = .sdata2:0x803E3EE0; // type:object size:0x4 align:4 data:float
-lbl_803E3EE4 = .sdata2:0x803E3EE4; // type:object size:0x4 align:4 data:float
 lbl_803E3EE8 = .sdata2:0x803E3EE8; // type:object size:0x4 align:4 data:float
 lbl_803E3EEC = .sdata2:0x803E3EEC; // type:object size:0x4 align:4 data:float
 lbl_803E3EF0 = .sdata2:0x803E3EF0; // type:object size:0x4 align:4 data:float
