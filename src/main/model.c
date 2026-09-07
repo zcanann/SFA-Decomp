@@ -493,22 +493,22 @@ int modelLoadAnimations(ModelFileHeader* file, int modelId, void* animBase) {
             bufferBytes++;
         }
         file->animationDataSection = bufferCursor;
-        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, file->animationDataSection,
-                               file->animationDataFileOffset, modelId);
+        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, file->animationDataSection, file->animationDataFileOffset,
+                               modelId);
         animIdx = 0;
         do {
             animId = gModelResourceBuffer[animIdx];
             if (animId != OBJANIM_MISSING_MOVE_ID) {
-                if ((getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) && file->modelId != 1 &&
-                    file->modelId != 3) {
+                if ((getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) && file->modelId != 1 && file->modelId != 3) {
                     loadedAnimation = 0;
                 } else {
                     if (ModelList_getHeader(gModelAnimCacheList, animId, &animation) == 0) {
                         animationOffset = gModelAnimDataOffsetTable[animId];
-                        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, animationOffset, 0, &animationBytes, animId, 1);
+                        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, animationOffset, 0, &animationBytes,
+                                                  animId, 1);
                         animation = mmAlloc(animationBytes, 10, 0);
-                        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, animation, animationOffset, animationBytes, &unusedSize, animId,
-                                                  0);
+                        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, animation, animationOffset, animationBytes,
+                                                  &unusedSize, animId, 0);
                         *animation = 1;
                         modelInitModelList(gModelAnimCacheList, animId, &animation);
                     } else {
