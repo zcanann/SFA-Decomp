@@ -4,6 +4,7 @@
 #include "types.h"
 #include "main/map_block.h"
 
+MapTriIndex* mapBlockGetPolygon(MapBlockData* block, int index);
 CollisionPolygonGroup* mapBlockGetPolygonGroup(MapBlockData* block, int index);
 int mapBlockGetPolygonGroupType(void* entry);
 u32 trackGetPackedSurfaceType(CollisionPolygonGroup* group);

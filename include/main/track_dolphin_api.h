@@ -59,7 +59,6 @@ void mapBlockRender_setVtxDcrs(u8 doSetup, struct MapBlockData* block, struct Sh
                                ModelRenderInstrsState* state);
 void initTextures(void);
 void mapClearBlockEdgeFlags(void);
-void* mapBlockGetPolygon(MapBlockData* obj, int idx);
 void mapBlockGpuRecoveryHook(void);
 void* mapBlockGetUnused00Value(struct MapBlockData* block);
 struct MapBlockData* MapBlock_loadFromFile(int blockId);

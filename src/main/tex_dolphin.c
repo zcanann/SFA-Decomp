@@ -1256,17 +1256,17 @@ int mapBlockCountTrianglesByType(MapBlockData* block, int type) {
         if (type == (int)((entry->flags & 0xff000000) >> 24)) {
             total += entry[1].firstTri - entry->firstTri;
         }
-        offset += 0x14;
+        offset += sizeof(CollisionPolygonGroup);
     }
     return total;
 }
 
-void* mapBlockGetPolygon(MapBlockData* obj, int idx) {
-    return (char*)obj->gcPolygons + idx * 8;
+MapTriIndex* mapBlockGetPolygon(MapBlockData* obj, int idx) {
+    return &obj->gcPolygons[idx];
 }
 
 CollisionPolygonGroup* mapBlockGetPolygonGroup(MapBlockData* obj, int idx) {
-    return (CollisionPolygonGroup*)obj->polygonGroups + idx;
+    return &obj->polygonGroups[idx];
 }
 
 MapBlockBoundsRec* mapBlockGetDisplayListBounds(MapBlockData* obj, int idx) {

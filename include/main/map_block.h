@@ -54,6 +54,8 @@ typedef struct MapTriIndex
 } MapTriIndex;
 
 STATIC_ASSERT(sizeof(MapTriIndex) == 0x8);
+STATIC_ASSERT(offsetof(MapTriIndex, vert) == 0);
+STATIC_ASSERT(offsetof(MapTriIndex, cellMask) == 6);
 
 typedef enum MapBlockFlag {
     MAP_BLOCK_FLAG_LOADED = 0x0008,
@@ -72,8 +74,8 @@ typedef struct MapBlockData {
     u32 size;
     f32 transform[3][4];
     u8 pad3C[0x4C - 0x3C];
-    void* gcPolygons; /* 0x4C: MapTriIndex[] collision mesh (stride 8), count = nPolygons @0x98 */
-    void* polygonGroups; /* 0x50: CollisionPolygonGroup[] (stride 0x14), count = polyGroupCount @0x9A */
+    MapTriIndex* gcPolygons; /* 0x4C: collision triangles, count = nPolygons */
+    CollisionPolygonGroup* polygonGroups; /* 0x50: count = polyGroupCount */
     MapTextureRef* textures; /* 0x54: file IDs converted to texture pointers after loading */
     u8* vertices; /* 0x58: base of the packed VertexS16 array (stride 6) */
     void* vertexColors; /* 0x5C: RGBA4444 (stride 2) */
@@ -106,6 +108,8 @@ typedef struct MapBlockData {
     u8 padA3;
 } MapBlockData;
 
+STATIC_ASSERT(offsetof(MapBlockData, gcPolygons) == 0x4C);
+STATIC_ASSERT(offsetof(MapBlockData, polygonGroups) == 0x50);
 STATIC_ASSERT(offsetof(MapBlockData, hitCount) == 0x9C);
 STATIC_ASSERT(offsetof(MapBlockData, transform) == 0x0C);
 STATIC_ASSERT(offsetof(MapBlockData, minY) == 0x8A);

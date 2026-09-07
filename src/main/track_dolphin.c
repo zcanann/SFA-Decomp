@@ -2724,7 +2724,7 @@ u8 doEdges;
     int relx0, relz0, relx1, relz1;
     int i;
     int vEnd;
-    u32 triEnd;
+    CollisionPolygonGroup* groupEnd;
     u8 typeb;
     u32 bb;
     u32 dmaflip;
@@ -2806,12 +2806,12 @@ u8 doEdges;
     for (; i < count; i++) {
         MapBlockData* blk;
         int vb;
-        u8* tri;
+        CollisionPolygonGroup* group;
         s16 mask;
         s16 bit;
         int pos;
         int dxoff, dzoff;
-        u8* tri0;
+        CollisionPolygonGroup* groups;
 
         bb = offA;
         vb = offB;
@@ -2867,15 +2867,15 @@ u8 doEdges;
             }
             bit = bit << 1;
         }
-        tri0 = blk->polygonGroups;
-        tri = tri0;
-        triEnd = (u32)tri0 + blk->polyGroupCount * 0x14;
+        groups = blk->polygonGroups;
+        group = groups;
+        groupEnd = groups + blk->polyGroupCount;
         mask16 = mask;
-        for (; (u32)tri < triEnd; tri += 0x14) {
-            u32 tf = ((CollisionPolygonGroup*)tri)->flags;
+        for (; group < groupEnd; group++) {
+            u32 tf = group->flags;
             int t0;
             u8 type;
-            u8* vq;
+            MapTriIndex* triangle;
 
             if ((tf & 0x10) && f40) {
                 continue;
@@ -2900,33 +2900,33 @@ u8 doEdges;
                 }
                 type = 2;
             }
-            if (((CollisionPolygonGroup*)tri)->minY + blk->collisionYOffset > y1) {
+            if (group->minY + blk->collisionYOffset > y1) {
                 continue;
             }
-            if (((CollisionPolygonGroup*)tri)->maxY + blk->collisionYOffset < y0) {
+            if (group->maxY + blk->collisionYOffset < y0) {
                 continue;
             }
-            if (((CollisionPolygonGroup*)tri)->minX > relx1) {
+            if (group->minX > relx1) {
                 continue;
             }
-            if (((CollisionPolygonGroup*)tri)->maxX < relx0) {
+            if (group->maxX < relx0) {
                 continue;
             }
-            if (((CollisionPolygonGroup*)tri)->minZ > relz1) {
+            if (group->minZ > relz1) {
                 continue;
             }
-            if (((CollisionPolygonGroup*)tri)->maxZ < relz0) {
+            if (group->maxZ < relz0) {
                 continue;
             }
             if (tf & 4) {
                 type |= 8;
             }
-            typeb = trackGetPackedSurfaceType((CollisionPolygonGroup*)tri);
-            t0 = ((CollisionPolygonGroup*)tri)->firstTri;
-            vq = (u8*)(bb + t0 * 8);
-            vEnd = ((CollisionPolygonGroup*)tri)[1].firstTri;
+            typeb = trackGetPackedSurfaceType(group);
+            t0 = group->firstTri;
+            triangle = (MapTriIndex*)(bb + t0 * sizeof(MapTriIndex));
+            vEnd = group[1].firstTri;
             vertp = (f32*)(u32)verts;
-            for (; t0 < vEnd; t0++, vq += 8) {
+            for (; t0 < vEnd; t0++, triangle++) {
                 u8* vo;
                 s16* vp;
                 f32* vf;
@@ -2936,13 +2936,13 @@ u8 doEdges;
                 int j;
                 f32 mag;
 
-                if ((mask16 & ((MapTriIndex*)vq)->cellMask & 0xff) == 0) {
+                if ((mask16 & triangle->cellMask & 0xff) == 0) {
                     continue;
                 }
-                if ((mask16 & ((MapTriIndex*)vq)->cellMask & 0xff00) == 0) {
+                if ((mask16 & triangle->cellMask & 0xff00) == 0) {
                     continue;
                 }
-                vp = (s16*)(vb + ((MapTriIndex*)vq)->vert[0] * 6);
+                vp = (s16*)(vb + triangle->vert[0] * 6);
                 minX = vp[0] >> 3;
                 maxX = minX;
                 minY = (vp[1] >> 3) + blk->collisionYOffset;
@@ -2958,7 +2958,7 @@ u8 doEdges;
                 maxYi = 0;
                 minYi = 0;
                 j = 1;
-                tw = &((MapTriIndex*)vq)->vert[1];
+                tw = &triangle->vert[1];
                 vo = (u8*)(cur + 2);
                 vf = verts;
                 for (; j < 3; j++) {
@@ -3071,7 +3071,7 @@ u8 doEdges;
                     }
                 }
                 {
-                    u32 tf2 = ((CollisionPolygonGroup*)tri)->flags;
+                    u32 tf2 = group->flags;
                     u8 t2;
                     if (tf2 & 8) {
                         t2 = 0xe;
