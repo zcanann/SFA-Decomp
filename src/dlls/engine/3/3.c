@@ -69,120 +69,118 @@ s32 Checkpoint_advanceRoute(CheckpointCursor* out, CheckpointNavState* o, f32 di
 
 s32 Checkpoint_buildControlPoints(CheckpointRouteEntry* checkpoint, s32 linkIndex, f32* outX, f32* outY, f32* outZ,
                                   u8 mode, f32 lateralOffset, f32 verticalOffset) {
+    struct { f32* xPoints; f32* yPoints; f32* zPoints; s32 pointIndex; } cursor;
+    struct { CheckpointRouteEntry* start; CheckpointRouteEntry* end; } segment;
     f32 startSideX;
     f32 endSideX;
     f32 startSideZ;
     f32 endNegSin;
     f32 endSideZ;
     s32 routeIndex;
-    f32* zPoints;
-    f32* xPoints;
-    f32* yPoints;
     f32 startNegSin;
     f32 startNegCos;
-    CheckpointRouteEntry* nextCheckpoint;
     f32 endNegCos;
     f32 startWidthScale;
     f32 endWidthScale;
-    s32 pointIndex;
     s32 result;
     s32 outputCount;
 
+    segment.start = checkpoint;
     result = 1;
-    if (checkpoint == NULL) {
+    if (segment.start == NULL) {
         return 0;
     }
-    nextCheckpoint = Checkpoint_find(checkpoint->forwardLinkIds[linkIndex], &routeIndex);
-    if (nextCheckpoint == NULL) {
-        nextCheckpoint = Checkpoint_find(checkpoint->forwardLinkIds[1 - linkIndex], &routeIndex);
+    segment.end = Checkpoint_find(segment.start->forwardLinkIds[linkIndex], &routeIndex);
+    if (segment.end == NULL) {
+        segment.end = Checkpoint_find(segment.start->forwardLinkIds[1 - linkIndex], &routeIndex);
         result = 2;
     }
-    if (nextCheckpoint == NULL) {
+    if (segment.end == NULL) {
         return 0;
     }
 
-    startNegSin = -mathSinf(3.1415927f * (checkpoint->heading << 8) / 32768.0f);
-    startNegCos = -mathCosf(3.1415927f * (checkpoint->heading << 8) / 32768.0f);
-    endNegSin = -mathSinf(3.1415927f * (nextCheckpoint->heading << 8) / 32768.0f);
-    endNegCos = -mathCosf(3.1415927f * (nextCheckpoint->heading << 8) / 32768.0f);
-    startWidthScale = 0.011111111f * checkpoint->width;
-    endWidthScale = 0.011111111f * nextCheckpoint->width;
+    startNegSin = -mathSinf(3.1415927f * (segment.start->heading << 8) / 32768.0f);
+    startNegCos = -mathCosf(3.1415927f * (segment.start->heading << 8) / 32768.0f);
+    endNegSin = -mathSinf(3.1415927f * (segment.end->heading << 8) / 32768.0f);
+    endNegCos = -mathCosf(3.1415927f * (segment.end->heading << 8) / 32768.0f);
+    startWidthScale = 0.011111111f * segment.start->width;
+    endWidthScale = 0.011111111f * segment.end->width;
 
     /* Each axis stores two endpoints followed by their Hermite tangents. */
     if (mode == 1) {
         outputCount = 0;
-        pointIndex = 0;
-        xPoints = outX;
-        yPoints = outY;
-        zPoints = outZ;
+        cursor.pointIndex = 0;
+        cursor.xPoints = outX;
+        cursor.yPoints = outY;
+        cursor.zPoints = outZ;
         startSideX = startWidthScale * startNegCos;
         endSideX = endWidthScale * endNegCos;
         startSideZ = startWidthScale * -startNegSin;
         endSideZ = endWidthScale * -endNegSin;
         while (outputCount < 0x10) {
-            xPoints[0] = checkpoint->sideOffsets[pointIndex] * startSideX + checkpoint->posX;
-            xPoints[1] = nextCheckpoint->sideOffsets[pointIndex] * endSideX + nextCheckpoint->posX;
-            xPoints[2] =
-                2.0f * (checkpoint->tangentScale * mathSinf(3.1415927f * (checkpoint->tangentHeading << 8) / 32768.0f));
-            xPoints[3] = 2.0f * (nextCheckpoint->tangentScale *
-                                 mathSinf(3.1415927f * (nextCheckpoint->tangentHeading << 8) / 32768.0f));
-            yPoints[0] = startWidthScale * checkpoint->heightOffsets[pointIndex] + checkpoint->posY;
-            yPoints[1] = endWidthScale * nextCheckpoint->heightOffsets[pointIndex] + nextCheckpoint->posY;
-            yPoints[2] = 0.0f;
-            yPoints[3] = 0.0f;
-            zPoints[0] = checkpoint->sideOffsets[pointIndex] * startSideZ + checkpoint->posZ;
-            zPoints[1] = nextCheckpoint->sideOffsets[pointIndex] * endSideZ + nextCheckpoint->posZ;
-            zPoints[2] =
-                2.0f * (checkpoint->tangentScale * mathCosf(3.1415927f * (checkpoint->tangentHeading << 8) / 32768.0f));
-            zPoints[3] = 2.0f * (nextCheckpoint->tangentScale *
-                                 mathCosf(3.1415927f * (nextCheckpoint->tangentHeading << 8) / 32768.0f));
-            pointIndex += 1;
-            xPoints += 4;
-            yPoints += 4;
-            zPoints += 4;
+            cursor.xPoints[0] = segment.start->sideOffsets[cursor.pointIndex] * startSideX + segment.start->posX;
+            cursor.xPoints[1] = segment.end->sideOffsets[cursor.pointIndex] * endSideX + segment.end->posX;
+            cursor.xPoints[2] =
+                2.0f * (segment.start->tangentScale * mathSinf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
+            cursor.xPoints[3] = 2.0f * (segment.end->tangentScale *
+                                 mathSinf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
+            cursor.yPoints[0] = startWidthScale * segment.start->heightOffsets[cursor.pointIndex] + segment.start->posY;
+            cursor.yPoints[1] = endWidthScale * segment.end->heightOffsets[cursor.pointIndex] + segment.end->posY;
+            cursor.yPoints[2] = 0.0f;
+            cursor.yPoints[3] = 0.0f;
+            cursor.zPoints[0] = segment.start->sideOffsets[cursor.pointIndex] * startSideZ + segment.start->posZ;
+            cursor.zPoints[1] = segment.end->sideOffsets[cursor.pointIndex] * endSideZ + segment.end->posZ;
+            cursor.zPoints[2] =
+                2.0f * (segment.start->tangentScale * mathCosf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
+            cursor.zPoints[3] = 2.0f * (segment.end->tangentScale *
+                                 mathCosf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
+            cursor.pointIndex += 1;
+            cursor.xPoints += 4;
+            cursor.yPoints += 4;
+            cursor.zPoints += 4;
             outputCount += 4;
         }
     } else if (mode == 0) {
-        outX[0] = lateralOffset * (startWidthScale * startNegCos) + checkpoint->posX;
-        outX[1] = lateralOffset * (endWidthScale * endNegCos) + nextCheckpoint->posX;
+        outX[0] = lateralOffset * (startWidthScale * startNegCos) + segment.start->posX;
+        outX[1] = lateralOffset * (endWidthScale * endNegCos) + segment.end->posX;
         outX[2] =
-            2.0f * (checkpoint->tangentScale * mathSinf(3.1415927f * (checkpoint->tangentHeading << 8) / 32768.0f));
-        outX[3] = 2.0f * (nextCheckpoint->tangentScale *
-                          mathSinf(3.1415927f * (nextCheckpoint->tangentHeading << 8) / 32768.0f));
-        outY[0] = startWidthScale * verticalOffset + checkpoint->posY;
-        outY[1] = endWidthScale * verticalOffset + nextCheckpoint->posY;
+            2.0f * (segment.start->tangentScale * mathSinf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
+        outX[3] = 2.0f * (segment.end->tangentScale *
+                          mathSinf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
+        outY[0] = startWidthScale * verticalOffset + segment.start->posY;
+        outY[1] = endWidthScale * verticalOffset + segment.end->posY;
         {
             f32 zero = 0.0f;
             outY[2] = zero;
             outY[3] = zero;
         }
-        outZ[0] = lateralOffset * (startWidthScale * -startNegSin) + checkpoint->posZ;
-        outZ[1] = lateralOffset * (endWidthScale * -endNegSin) + nextCheckpoint->posZ;
+        outZ[0] = lateralOffset * (startWidthScale * -startNegSin) + segment.start->posZ;
+        outZ[1] = lateralOffset * (endWidthScale * -endNegSin) + segment.end->posZ;
         outZ[2] =
-            2.0f * (checkpoint->tangentScale * mathCosf(3.1415927f * (checkpoint->tangentHeading << 8) / 32768.0f));
-        outZ[3] = 2.0f * (nextCheckpoint->tangentScale *
-                          mathCosf(3.1415927f * (nextCheckpoint->tangentHeading << 8) / 32768.0f));
+            2.0f * (segment.start->tangentScale * mathCosf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
+        outZ[3] = 2.0f * (segment.end->tangentScale *
+                          mathCosf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
     } else {
-        pointIndex = mode - 2;
-        outX[0] = checkpoint->sideOffsets[pointIndex] * (startWidthScale * startNegCos) + checkpoint->posX;
-        outX[1] = nextCheckpoint->sideOffsets[pointIndex] * (endWidthScale * endNegCos) + nextCheckpoint->posX;
+        cursor.pointIndex = mode - 2;
+        outX[0] = segment.start->sideOffsets[cursor.pointIndex] * (startWidthScale * startNegCos) + segment.start->posX;
+        outX[1] = segment.end->sideOffsets[cursor.pointIndex] * (endWidthScale * endNegCos) + segment.end->posX;
         outX[2] =
-            2.0f * (checkpoint->tangentScale * mathSinf(3.1415927f * (checkpoint->tangentHeading << 8) / 32768.0f));
-        outX[3] = 2.0f * (nextCheckpoint->tangentScale *
-                          mathSinf(3.1415927f * (nextCheckpoint->tangentHeading << 8) / 32768.0f));
-        outY[0] = startWidthScale * checkpoint->heightOffsets[pointIndex] + checkpoint->posY;
-        outY[1] = endWidthScale * nextCheckpoint->heightOffsets[pointIndex] + nextCheckpoint->posY;
+            2.0f * (segment.start->tangentScale * mathSinf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
+        outX[3] = 2.0f * (segment.end->tangentScale *
+                          mathSinf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
+        outY[0] = startWidthScale * segment.start->heightOffsets[cursor.pointIndex] + segment.start->posY;
+        outY[1] = endWidthScale * segment.end->heightOffsets[cursor.pointIndex] + segment.end->posY;
         {
             f32 zero = 0.0f;
             outY[2] = zero;
             outY[3] = zero;
         }
-        outZ[0] = checkpoint->sideOffsets[pointIndex] * (startWidthScale * -startNegSin) + checkpoint->posZ;
-        outZ[1] = nextCheckpoint->sideOffsets[pointIndex] * (endWidthScale * -endNegSin) + nextCheckpoint->posZ;
+        outZ[0] = segment.start->sideOffsets[cursor.pointIndex] * (startWidthScale * -startNegSin) + segment.start->posZ;
+        outZ[1] = segment.end->sideOffsets[cursor.pointIndex] * (endWidthScale * -endNegSin) + segment.end->posZ;
         outZ[2] =
-            2.0f * (checkpoint->tangentScale * mathCosf(3.1415927f * (checkpoint->tangentHeading << 8) / 32768.0f));
-        outZ[3] = 2.0f * (nextCheckpoint->tangentScale *
-                          mathCosf(3.1415927f * (nextCheckpoint->tangentHeading << 8) / 32768.0f));
+            2.0f * (segment.start->tangentScale * mathCosf(3.1415927f * (segment.start->tangentHeading << 8) / 32768.0f));
+        outZ[3] = 2.0f * (segment.end->tangentScale *
+                          mathCosf(3.1415927f * (segment.end->tangentHeading << 8) / 32768.0f));
     }
     return result;
 }

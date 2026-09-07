@@ -1772,6 +1772,10 @@ group the constant with the scaled index instead and costs **99.40678**.
   the s32->double bias, then pi, then 32768.0f, then 2.0f (exactly the loop body's first-use
   order), and we hoist 2.0f first and the bias third. The other 73 hunks are a parameter-home
   permutation. COLOURING.
+  **Resolved 2026-09-07:** the current instruction sequence is exact. Local
+  segment-endpoint and output-cursor records recover the register assignment
+  and complete the TU under its unchanged profile. See
+  [checkpoint matching](checkpoint_matching.md).
 - **`playerUpdate`** *(195_Player, owner-hot under C73 — analysed read-only, not edited)* — an
   argument-setup `mr` that retail emits seven instructions earlier, inside an `r29`<->`r30` swap
   that accounts for essentially the whole 1.57 gap. COLOURING.
