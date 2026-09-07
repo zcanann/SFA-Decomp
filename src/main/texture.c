@@ -274,69 +274,69 @@ void* getLoadedTexture(int key) {
     return NULL;
 }
 
-void textureUpdateAnimationFrame(const Texture* texture, u32* node, s32* cnt) {
-    u32 a, b, c;
+void textureUpdateAnimationFrame(const Texture* texture, u32* animationFlags, s32* frameFixed) {
+    u32 reverse, pingPong, randomStart;
     u32 flags;
     int roll;
-    int flag2;
+    int reflected;
 
-    flags = node[0];
-    a = flags & 0x80000;
-    b = flags & 0x40000;
-    c = flags & 0x20000;
-    if (c != 0) {
-        if (b == 0) {
+    flags = *animationFlags;
+    reverse = flags & TEXTURE_ANIM_REVERSE;
+    pingPong = flags & TEXTURE_ANIM_PING_PONG;
+    randomStart = flags & TEXTURE_ANIM_RANDOM_START;
+    if (randomStart != 0) {
+        if (pingPong == 0) {
             roll = randomGetRange(0, 0x3e8);
             if (roll > 0x3d9) {
-                node[0] &= ~0x80000;
-                node[0] |= 0x40000;
+                *animationFlags &= ~TEXTURE_ANIM_REVERSE;
+                *animationFlags |= TEXTURE_ANIM_PING_PONG;
             }
-        } else if (a == 0) {
-            *cnt += texture->animationFrameStep * framesThisStep;
-            if (*cnt >= texture->animationFrameCount) {
-                *cnt = texture->animationFrameCount * 2 - 1 - *cnt;
-                if (*cnt < 0) {
-                    *cnt = 0;
-                    node[0] &= ~0xc0000;
+        } else if (reverse == 0) {
+            *frameFixed += texture->animationFrameStep * framesThisStep;
+            if (*frameFixed >= texture->animationFrameCountFixed) {
+                *frameFixed = texture->animationFrameCountFixed * 2 - 1 - *frameFixed;
+                if (*frameFixed < 0) {
+                    *frameFixed = 0;
+                    *animationFlags &= ~(TEXTURE_ANIM_REVERSE | TEXTURE_ANIM_PING_PONG);
                 } else {
-                    node[0] |= 0x80000;
+                    *animationFlags |= TEXTURE_ANIM_REVERSE;
                 }
             }
         } else {
-            *cnt -= texture->animationFrameStep * framesThisStep;
-            if (*cnt < 0) {
-                *cnt = 0;
-                node[0] &= ~0xc0000;
+            *frameFixed -= texture->animationFrameStep * framesThisStep;
+            if (*frameFixed < 0) {
+                *frameFixed = 0;
+                *animationFlags &= ~(TEXTURE_ANIM_REVERSE | TEXTURE_ANIM_PING_PONG);
             }
         }
-    } else if (b != 0) {
-        if (a == 0) {
-            *cnt += texture->animationFrameStep * framesThisStep;
+    } else if (pingPong != 0) {
+        if (reverse == 0) {
+            *frameFixed += texture->animationFrameStep * framesThisStep;
         } else {
-            *cnt -= texture->animationFrameStep * framesThisStep;
+            *frameFixed -= texture->animationFrameStep * framesThisStep;
         }
         do {
-            flag2 = 0;
-            if (*cnt < 0) {
-                *cnt = -*cnt;
-                node[0] &= ~0x80000;
-                flag2 = 1;
+            reflected = 0;
+            if (*frameFixed < 0) {
+                *frameFixed = -*frameFixed;
+                *animationFlags &= ~TEXTURE_ANIM_REVERSE;
+                reflected = 1;
             }
-            if (*cnt >= texture->animationFrameCount) {
-                *cnt = texture->animationFrameCount * 2 - 1 - *cnt;
-                node[0] |= 0x80000;
-                flag2 = 1;
+            if (*frameFixed >= texture->animationFrameCountFixed) {
+                *frameFixed = texture->animationFrameCountFixed * 2 - 1 - *frameFixed;
+                *animationFlags |= TEXTURE_ANIM_REVERSE;
+                reflected = 1;
             }
-        } while (flag2 != 0);
-    } else if (a == 0) {
-        *cnt += texture->animationFrameStep * framesThisStep;
-        while (*cnt >= texture->animationFrameCount) {
-            *cnt -= texture->animationFrameCount;
+        } while (reflected != 0);
+    } else if (reverse == 0) {
+        *frameFixed += texture->animationFrameStep * framesThisStep;
+        while (*frameFixed >= texture->animationFrameCountFixed) {
+            *frameFixed -= texture->animationFrameCountFixed;
         }
     } else {
-        *cnt -= texture->animationFrameStep * framesThisStep;
-        while (*cnt < 0) {
-            *cnt += texture->animationFrameCount;
+        *frameFixed -= texture->animationFrameStep * framesThisStep;
+        while (*frameFixed < 0) {
+            *frameFixed += texture->animationFrameCountFixed;
         }
     }
 }
@@ -345,7 +345,7 @@ void textureSetAnimationFrameStep(Texture* texture, u16 frameStep) {
     texture->animationFrameStep = frameStep;
 }
 
-void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* forcedTexture, int flags, int packed,
+void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* forcedTexture, int flags, int packedFrame,
                                      int unused0, int unused1) {
     int i;
     int idx, count;
@@ -353,15 +353,15 @@ void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* f
     Texture* current;
     Texture* result;
     Texture* walk;
-    u16 animationFrameCount;
+    u16 animationFrameCountFixed;
 
     if (texture == NULL) {
         return;
     }
-    idx = packed >> 16;
-    animationFrameCount = texture->animationFrameCount;
-    if (animationFrameCount != 0) {
-        count = animationFrameCount >> 8;
+    idx = packedFrame >> 16;
+    animationFrameCountFixed = texture->animationFrameCountFixed;
+    if (animationFrameCountFixed != 0) {
+        count = animationFrameCountFixed >> 8;
     } else {
         count = 0;
     }
@@ -375,11 +375,11 @@ void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* f
         if (node != NULL) {
             current = node;
         }
-        if (flags & 0x40) {
-            if (flags & 0x80000) {
+        if (flags & TEXTURE_ANIM_SELECT_NEXT) {
+            if (flags & TEXTURE_ANIM_REVERSE) {
                 idx--;
                 if (idx < 0) {
-                    if (flags & 0x40000) {
+                    if (flags & TEXTURE_ANIM_PING_PONG) {
                         idx += 2;
                     } else {
                         idx = 0;
@@ -388,7 +388,7 @@ void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* f
             } else {
                 idx++;
                 if (idx >= count) {
-                    if (flags & 0x40000) {
+                    if (flags & TEXTURE_ANIM_PING_PONG) {
                         idx -= 2;
                     } else {
                         idx = count - 1;
@@ -654,7 +654,7 @@ void* textureLoad(int texId, u8 useHandle) {
                 }
                 return gLoadedTextures[0].texture;
             } else {
-                firstTex->animationFrameCount = frameCountFixed;
+                firstTex->animationFrameCountFixed = frameCountFixed;
                 frameIndex = frameCount;
                 continue;
             }
@@ -681,9 +681,9 @@ void* textureLoad(int texId, u8 useHandle) {
         prevTex = buf;
         if (frameIndex == 0) {
             firstTex = buf;
-            buf->animationFrameCount = frameCountFixed;
+            buf->animationFrameCountFixed = frameCountFixed;
         } else {
-            buf->animationFrameCount = 1;
+            buf->animationFrameCountFixed = 1;
         }
     }
     walk = firstTex;
@@ -726,15 +726,15 @@ void* textureLoad(int texId, u8 useHandle) {
     return firstTex;
 }
 
-Texture* textureGetAnimationFrame(Texture* texture, int n) {
-    int limit = texture->animationFrameCount;
+Texture* textureGetAnimationFrame(Texture* texture, int frameFixed) {
+    int limit = texture->animationFrameCountFixed;
     int i;
-    if (n >= limit) {
-        n = limit - 1;
+    if (frameFixed >= limit) {
+        frameFixed = limit - 1;
     }
-    n >>= 8;
-    for (i = 0; i < n; i++) {
-        texture = *(Texture**)texture;
+    frameFixed >>= 8;
+    for (i = 0; i < frameFixed; i++) {
+        texture = texture->nextAnimationFrame;
     }
     return texture;
 }
@@ -749,7 +749,7 @@ void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT,
     obj->format = fmt;
     obj->width = w;
     obj->height = h;
-    obj->animationFrameCount = 1;
+    obj->animationFrameCountFixed = 1;
     obj->refCount = 0;
     obj->wrapS = wrapS;
     obj->wrapT = wrapT;

@@ -800,7 +800,7 @@ void updateEnvironment(int mode) {
         for (; i < 80; i++) {
             textureOverride = (MapTextureOverride*)((u8*)gMapTextureOverrides + byteOffset);
             if (textureOverride->refCount != 0 && (texture = textureOverride->texture) != NULL &&
-                texture->animationFrameCount != 0x100 && texture->animationFrameStep != 0) {
+                texture->animationFrameCountFixed != 0x100 && texture->animationFrameStep != 0) {
                 textureUpdateAnimationFrame(texture, &textureOverride->flags, &textureOverride->frame);
             }
             byteOffset += sizeof(MapTextureOverride);

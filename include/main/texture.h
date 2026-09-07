@@ -4,6 +4,11 @@
 #include "global.h"
 #include "dolphin/gx/GXStruct.h"
 
+#define TEXTURE_ANIM_SELECT_NEXT  0x40
+#define TEXTURE_ANIM_RANDOM_START 0x20000
+#define TEXTURE_ANIM_PING_PONG    0x40000
+#define TEXTURE_ANIM_REVERSE      0x80000
+
 /*
  * Texture - the in-memory texture record managed by texture.c
  * (LoadedTextureEntry.texture points at one; textureLoad/textureFree
@@ -29,10 +34,10 @@ typedef struct Texture {
     u16 width;
     u16 height;
     u16 refCount;
-    u16 animationFrameCount;
+    u16 animationFrameCountFixed; /* Head: frame count in 8.8; non-head/allocated textures use 1. */
     u8 unk12[2];
     union {
-        u16 animationFrameStep;
+        u16 animationFrameStep; /* 8.8 increment per frame. */
         u16 expgfxLinkGroup;
     };
     u8 format;
@@ -58,7 +63,7 @@ typedef struct Texture {
 
 STATIC_ASSERT(offsetof(Texture, nextAnimationFrame) == 0x00);
 STATIC_ASSERT(offsetof(Texture, width) == 0xA);
-STATIC_ASSERT(offsetof(Texture, animationFrameCount) == 0x10);
+STATIC_ASSERT(offsetof(Texture, animationFrameCountFixed) == 0x10);
 STATIC_ASSERT(offsetof(Texture, animationFrameStep) == 0x14);
 STATIC_ASSERT(offsetof(Texture, minLod) == 0x1C);
 STATIC_ASSERT(offsetof(Texture, maxLod) == 0x1D);
@@ -86,5 +91,11 @@ void* textureLoadAsset(int asset);
 void textureFree(Texture* texture);
 void selectTextureWithSecondary(Texture* texture, int mapId);
 void selectTexture(Texture* texture, int mapId);
+
+void textureUpdateAnimationFrame(const Texture* texture, u32* animationFlags, s32* frameFixed);
+void textureSetAnimationFrameStep(Texture* texture, u16 frameStep);
+Texture* textureGetAnimationFrame(Texture* texture, int frameFixed);
+void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* forcedTexture, int flags,
+                                     int packedFrame, int unused0, int unused1);
 
 #endif

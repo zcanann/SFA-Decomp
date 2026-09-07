@@ -757,7 +757,7 @@ int dll_0B_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
         GXLoadPosMtxImm(mtxA, GX_PNMTX0);
         texture = ((PartfxEffectState*)p[slot])->textureResource;
         if (texture != NULL) {
-            textureFrameCount = (u8)(texture->animationFrameCount >> 8);
+            textureFrameCount = (u8)(texture->animationFrameCountFixed >> 8);
         }
         if (texture != NULL && ((PartfxEffectState*)p[slot])->textureFrameTimer != 0) {
             ((PartfxEffectState*)p[slot])->textureFrameStep -= 1;

@@ -7774,7 +7774,7 @@ void GameUI_initialise(void) {
     p = textureLoadAsset(GAMEUI_TEXTURE_BLINK);
     gGameUiBlinkTexture = p;
     p->animationFrameStep = 40;
-    gGameUiBlinkAnimFlags = 0x80000;
+    gGameUiBlinkAnimFlags = TEXTURE_ANIM_REVERSE;
     gGameUiBlinkAnimFrame = 0;
     gHudItemInfoPopup.framesLeft = -1;
     gHudItemInfoPopup.itemCount = 0;

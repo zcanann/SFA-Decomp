@@ -27,11 +27,7 @@ void Rcp_DisableHeatEffect(void);
 void Rcp_EnableHeatEffect(void);
 void setMotionBlur(u8 enabled, f32 amount);
 void warpToMap(int idx, s8 transType);
-void textureSetAnimationFrameStep(Texture* texture, u16 frameStep);
-void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* forcedTexture, int flags, int packed,
-                                     int unused0, int unused1);
 void Rcp_ResetRenderState(void);
-void textureUpdateAnimationFrame(const Texture* texture, u32* flags, s32* frame);
 void addTexLayerStage(Texture* texture, f32 (*texMtx)[4], int mode);
 void addTexLayerStageKColor(Texture* texture, f32 (*texMtx)[4], int mode, GXColor* color);
 void addTexLayerStageKAlpha(Texture* texture, f32 (*texMtx)[4], int mode, GXColor* color);
@@ -40,7 +36,6 @@ void addTexLayerStageSwizzled(Texture* texture, f32 (*texMtx)[4], int mode, GXCo
 void addVertexColorKAlphaStage(GXColor* color);
 void addKColorModulateStage(GXColor* color);
 void addColorFadeStage(GXColor* color);
-Texture* textureGetAnimationFrame(Texture* texture, int frame);
 
 /* Pending warp destination saved by warpToMap from the map-warp tab entry and
  * applied to the player position on map reload (vec3 + a map-layer s16 and a
