@@ -49,10 +49,12 @@ track-volume array. State names now distinguish active and paused sequences.
 The empty placeholder and unassigned duplicate queue helpers are removed.
 Layout assertions cover the allocations and recovered offsets.
 
-The real, called `ClearNotes` helper precedes `ResetNotes`; MWCC's first-use
-BSS emission then places all three native arrays correctly. Its out-of-line
-body is 236 bytes, followed by alignment padding, and is dead-stripped from
-the link. No section placement directive or substitute aggregate is used.
+The out-of-line `ClearNotes` helper precedes `ResetNotes`; MWCC's first-use
+BSS emission then places all three native arrays correctly. It and `seqInit`
+share `ClearNotesInline`, allowing initialization to inline the same loop while
+retaining the original helper and storage order. Its out-of-line body is 236
+bytes, followed by alignment padding, and is dead-stripped from the link. No
+section placement directive or substitute aggregate is used.
 
 ## Match And Verification
 
@@ -71,12 +73,21 @@ their contents. Both the strict DOL checksum and `ninja all_source` pass;
 the merged unit remains `NonMatching`, so the strict link uses its retail
 object and is not proof that the reconstructed C matches.
 
-The compiler remains MusyX's GC/1.2.5n with `-inline auto` and
-`-fp_contract off`. The merger permits three `seqGetPrivateId` calls in
-`seqCrossFade` and `HandleMasterTrack` in `HandleTrackEvents` to inline where
-retail calls out of line. Blanket `noauto` inhibits other needed inlining;
-it is not retained. Recovering plausible source with the mixed retail call
-topology remains open, as do the pre-existing local/type artifacts.
+The compiler remains MusyX's GC/1.2.5n with `-fp_contract off`. Explicit
+inlining (`-inline noauto`) now preserves the three retail `seqGetPrivateId`
+calls in `seqCrossFade` and the `HandleMasterTrack` call in `HandleTrackEvents`.
+The existing inline helpers remain inline; `ClearNotesInline` supplies the
+initializer's required inline loop without dropping the leading helper or
+changing BSS ownership. No translation-unit boundary changes are needed.
+
+Direct section-member accesses avoid a redundant master-track pointer reload
+in `HandleTrackEvents`. Initializing its section pointer before its loop flag
+also recovers the retail entry sequence. Against `cb471962ab`, both
+`seqCrossFade` (1,332 bytes; formerly 74.015%) and `HandleTrackEvents` (628 bytes;
+formerly 65.217%) are now exact. This restores 1,960 matched code bytes and
+raises the sequencer from 21/26 to 23/26 exact functions. The other retail function bodies
+remain unchanged; `seqStop`, `seqVolume`, and `seqInit` remain non-exact. The
+unused `ClearNotes` wrapper changes register allocation but retains its size.
 
 `python tools/test_musyx_sequence_runtime.py` checks PPC BSS layout and runs
 143 host scenarios at both O0 and O2 (286 executions): initialization,

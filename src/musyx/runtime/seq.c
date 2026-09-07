@@ -30,7 +30,7 @@ u16 seqMIDIPriority[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
 #define SYNTH_CALLBACK_ACTIVE_LIST_COUNT    2
 #define SYNTH_CALLBACK_COMPLETED_LIST_INDEX 2
 
-static void ClearNotes(void) {
+static inline void ClearNotesInline(void) {
     SynthCallbackLink* prev;
     SynthCallbackLink* callback;
     u32 i;
@@ -46,6 +46,10 @@ static void ClearNotes(void) {
         prev = callback;
     }
     prev->next = NULL;
+}
+
+static void ClearNotes(void) {
+    ClearNotesInline();
 }
 
 void ResetNotes(SynthVoice* voice) {
@@ -1404,8 +1408,8 @@ u32 HandleTrackEvents(u8 voice, u32 param) {
     u32 flag;
     SynthTimeWord unusedTime;
 
-    flag = 0;
     vp = &cseq->section[voice];
+    flag = 0;
     while ((vp->eventList == NULL ? 0 : vp->eventList->time) <= vp->time[vp->timeIndex].high) {
         SynthSequenceEvent* ev = vp->eventList;
         if (ev != NULL && (vp->eventList = ev->next) != NULL) {
@@ -1420,9 +1424,8 @@ u32 HandleTrackEvents(u8 voice, u32 param) {
             vp->time[vp->timeIndex].high = ((SynthArrangement*)cseq->arrbase)->loopPoint[voice];
             vp->time[vp->timeIndex].low = vp->time[vp->timeIndex ^ 1].low;
             {
-                SynthSequenceQueue* section = &cseq->section[voice];
-                if (section->masterTrackBase != NULL) {
-                    section->masterTrackCursor = section->masterTrackBase;
+                if (cseq->section[voice].masterTrackBase != NULL) {
+                    cseq->section[voice].masterTrackCursor = cseq->section[voice].masterTrackBase;
                     HandleMasterTrack(voice);
                     SetTickDelta(&cseq->section[voice], param);
                 }
@@ -1606,6 +1609,6 @@ void seqInit(void) {
     }
     seqInstance[i - 1].next = NULL;
 
-    ClearNotes();
+    ClearNotesInline();
     seq_next_id = 0;
 }

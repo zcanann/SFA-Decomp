@@ -1037,7 +1037,7 @@ config.libs = [
         ],
         "progress_category": "third_party",
         "objects": [
-            Object(NonMatching, "musyx/runtime/seq.c", extra_cflags=["-fp_contract", "off"]),
+            Object(NonMatching, "musyx/runtime/seq.c", extra_cflags=["-fp_contract", "off", "-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "musyx/runtime/mcmd_data.c"),
             Object(MatchingFor("GSAE01"), "musyx/runtime/synth.c", extra_cflags=["-fp_contract", "off"]),
             Object(MatchingFor("GSAE01"), "musyx/runtime/synth_control.c"),

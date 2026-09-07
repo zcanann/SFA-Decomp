@@ -51,7 +51,7 @@ class SequenceRuntimeTests(unittest.TestCase):
         records = re.sub(r'^STATIC_ASSERT[^\n]*\n', '', records, flags=re.M)
         records = queue[queue.index('typedef struct SynthPage'):queue.index('u32 seqStartPlay')] + records
         bodies = '\n'.join(function(source, name) for name in (
-            'ClearNotes', 'ResetNotes', 'KillNotes', 'seqStop', 'seqSpeed', 'seqMute', 'seqVolume', 'seqInit',
+            'ClearNotesInline', 'ClearNotes', 'ResetNotes', 'KillNotes', 'seqStop', 'seqSpeed', 'seqMute', 'seqVolume', 'seqInit',
             'resolveHandle', 'seqCrossFade', 'HandleTrackEvents'))
         resolver = function(header, 'seqGetPrivateIdInline')
         cls.temporary = tempfile.TemporaryDirectory(prefix='sfa-sequencer-')
