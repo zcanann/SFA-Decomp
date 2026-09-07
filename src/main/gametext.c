@@ -1362,6 +1362,11 @@ static inline void gameTextSelectCharset(int charset) {
     }
 }
 
+static inline void gameTextApplyWindowPosition(int index, int x, int y) {
+    gTextBoxes[index].cursorX = x;
+    gTextBoxes[index].cursorY = y;
+}
+
 void gameTextRun(void) {
     GameTextLoadSlot* loadSlot;
     TextFont* pending;
@@ -1479,9 +1484,7 @@ void gameTextRun(void) {
             break;
         }
         case GAMETEXT_COMMAND_SET_WINDOW_POSITION: {
-            int t1 = cmd->arg2;
-            gTextBoxes[cmd->arg0].cursorX = (s16)cmd->arg1;
-            gTextBoxes[cmd->arg0].cursorY = t1;
+            gameTextApplyWindowPosition(cmd->arg0, cmd->arg1, cmd->arg2);
             break;
         }
         case GAMETEXT_COMMAND_TICK_REVEAL:
@@ -1691,14 +1694,13 @@ void gameTextSetColor(r, g, b, a) u8 r, g, b, a;
 
 void gameTextSetWindowStrPos(int idx, int x, int y) {
     if (gameTextDrawFunc != NULL) {
-        gTextBoxes[idx].cursorX = x;
-        gTextBoxes[idx].cursorY = y;
+        gameTextApplyWindowPosition(idx, x, y);
     } else {
         int i = gGameTextCommandCount;
         GameTextSlot* cmd;
         gGameTextCommandCount = i + 1;
         cmd = &gGameTextCommandSlots[i];
-        cmd->opcode = 4;
+        cmd->opcode = GAMETEXT_COMMAND_SET_WINDOW_POSITION;
         cmd->arg0 = idx;
         cmd->arg1 = x;
         cmd->arg2 = y;

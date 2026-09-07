@@ -448,6 +448,37 @@ fixture executes the new production helper as part of its complete initializatio
 checks; all sixteen gametext tests pass, including both sets of 402 load-lifecycle
 scenarios. The unit remains `NonMatching` pending its other eleven functions.
 
+## Shared window-position application (2026-09-07)
+
+The immediate branch of `gameTextSetWindowStrPos` and the queued
+`GAMETEXT_COMMAND_SET_WINDOW_POSITION` handler now share the private inline
+`gameTextApplyWindowPosition` helper. The queued call captures the window index
+and both coordinates before either cursor store. This removes the old second
+read of `cmd->arg0` and its repeated address calculation, matching retail's
+single argument capture. The signed halfword conversions and store order are
+retained. The setter also uses the existing symbolic command ID when queuing.
+
+The helper deliberately indexes the canonical window array. An explicit local
+window pointer was tested: it improves the runner less and regresses the exact
+immediate setter. Extracting the unrelated per-frame flag-clear loop leaves the
+runner's differences unchanged and is not retained.
+
+Against `ee4b8668ed`, `gameTextRun` improves from 91.27128% to 91.79521%, shrinking
+from 1,464 to 1,456 bytes. Retail remains 1,504 bytes; independent shared-array
+addressing and loop differences are unresolved. The immediate setter retains
+all 25 exact instructions. No other function body changes, and all 53 other
+functions retain their function-relative relocation targets. The runner's
+fourteen affected jump-table targets follow the eight-byte code reduction;
+allocated non-text bytes and named data layouts are unchanged.
+
+The TU rises from 97.81967% to 97.8544% fuzzy matching and remains `NonMatching`,
+with 44/54 exact functions. All sixteen existing gametext tests, full source
+compilation, and the strict retail checksum pass. Those host fixtures cover
+resources, load lifecycles, fallback handling, colors, and measurement; the
+queued position handler is assessed by its retail instruction comparison.
+The source and canonical API header pass the formatter check. Formatting adds
+no diff and preserves the complete semantic object.
+
 `ninja all_source` and the strict retail checksum both pass with 30-second
 limits. The resulting DOL remains byte-identical to retail; the complete unit
 still links its retail object until the remaining functions are recovered.
