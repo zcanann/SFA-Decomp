@@ -2034,11 +2034,13 @@ void ObjModel_RelocateModelData(u8* m) {
             ((ModelFileHeader*)m)->unk1C = m + *(u32*)&((ModelFileHeader*)m)->unk1C;
         }
         if (*(u32*)&((ModelFileHeader*)m)->jointFuzzScales) {
-            ((ModelFileHeader*)m)->jointFuzzScales = (ModelFuzzScaleDef*)(m + *(u32*)&((ModelFileHeader*)m)->jointFuzzScales);
+            ((ModelFileHeader*)m)->jointFuzzScales =
+                (ModelFuzzScaleDef*)(m + *(u32*)&((ModelFileHeader*)m)->jointFuzzScales);
         }
     }
     if (*(u32*)&((ModelFileHeader*)m)->extraJointDefs) {
-        ((ModelFileHeader*)m)->extraJointDefs = (ModelExtraJointDef*)(m + *(u32*)&((ModelFileHeader*)m)->extraJointDefs);
+        ((ModelFileHeader*)m)->extraJointDefs =
+            (ModelExtraJointDef*)(m + *(u32*)&((ModelFileHeader*)m)->extraJointDefs);
     }
     if (*(u32*)&((ModelFileHeader*)m)->textureIds) {
         *(u8**)&((ModelFileHeader*)m)->textureIds = m + *(u32*)&((ModelFileHeader*)m)->textureIds;
