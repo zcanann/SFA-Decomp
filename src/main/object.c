@@ -282,6 +282,10 @@ void Obj_TickModelColorFadeRecursive(GameObject* obj) {
     }
 }
 
+static f32 objPlacementRangeToWorld(int range) {
+    return (f32)(range << 3);
+}
+
 int objGetFlagsE5_2(u8* obj) {
     return ((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE;
 }
@@ -1317,6 +1321,29 @@ void Obj_RemoveFromUpdateList(GameObject* obj) {
     }
 }
 
+static void objInitCullScale(GameObject* obj) {
+    int modelPtr;
+    f32 max;
+    int i;
+    u32 cullScale;
+
+    max = 10.0f;
+    i = 0;
+    for (; i < obj->anim.modelInstance->modelCount; i++) {
+        modelPtr = (int)obj->anim.modelBanks[i];
+        if (modelPtr != 0) {
+            if ((f32)modelFileHeaderGetCullDistance(*(ModelFileHeader**)modelPtr) > max) {
+                max = modelFileHeaderGetCullDistance(*(ModelFileHeader**)modelPtr);
+            }
+        }
+    }
+    cullScale = obj->anim.modelInstance->cullDistScale;
+    if (cullScale != 0) {
+        max = max * ((10.0f * cullScale) / 255.0f);
+    }
+    obj->anim.hitboxScale = max;
+}
+
 void modelInitBones(f32 scale, void* model) {
     f32* srcP;
     int off;
@@ -1529,7 +1556,6 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     GameObject tmpl;
     GameObject* tp;
     s16 seq;
-    int modelPtr;
     u8* def;
     int fnFlags;
     int (*fp)(void*);
@@ -1547,9 +1573,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     u8 n;
     u16 modelFlags;
     u8 renderFlags;
-    f32 max;
     s16 seq2[1];
-    u32 cullScale;
     int size;
     int dllStateSize;
     int alignedCursor;
@@ -1598,8 +1622,8 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     tmpl.anim.alpha = 0xff;
     tmpl.msgQueue = NULL;
     tmpl.sphereMapIntensity = 0xff;
-    tmpl.anim.loadDistance = (f32)(int)(((ObjPlacement*)data)->loadRange << 3);
-    tmpl.anim.cullDistance2 = (f32)(int)(((ObjPlacement*)data)->unk07 << 3);
+    tmpl.anim.loadDistance = objPlacementRangeToWorld(((ObjPlacement*)data)->loadRange);
+    tmpl.anim.cullDistance2 = objPlacementRangeToWorld(((ObjPlacement*)data)->unk07);
     n = (((ObjPlacement*)data)->mapActFlagsHi & 0x18) >> 3;
     tmpl.lightColorSlot = n;
     if (n == 0) {
@@ -1752,21 +1776,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     if ((loadFlags & OBJLOAD_FLAG_HAS_SHADOW) && modelDef->shadowType != OBJ_SHADOW_TYPE_NONE) {
         cursor = shadowInit(obj, cursor, 0);
     }
-    max = 10.0f;
-    i = 0;
-    for (; i < obj->anim.modelInstance->modelCount; i++) {
-        modelPtr = (int)obj->anim.modelBanks[i];
-        if (modelPtr != 0) {
-            if ((f32)modelFileHeaderGetCullDistance(*(ModelFileHeader**)modelPtr) > max) {
-                max = modelFileHeaderGetCullDistance(*(ModelFileHeader**)modelPtr);
-            }
-        }
-    }
-    cullScale = obj->anim.modelInstance->cullDistScale;
-    if (cullScale != 0) {
-        max = max * ((10.0f * cullScale) / 255.0f);
-    }
-    obj->anim.hitboxScale = max;
+    objInitCullScale(obj);
     if (modelDef->hitboxStateCount != 0) {
         cursor = ObjHits_AllocObjectState(obj, cursor);
         if ((s8)modelDef->primaryHitboxShapeFlags & 8) {
