@@ -223,3 +223,61 @@ test does not claim to validate the real noise sampler or trig approximation.
 NonMatching, the DOL gate protects integration; the object comparison is the
 evidence for its own generated code and data. Formatting is verified in a
 separate commit by raw hashes of the affected objects.
+
+## Native shadow storage (2026-09-07)
+
+The earlier BSS experiment is resolved with deferred emission and reverse
+ordinary-function definition order. The common GC/1.3 compiler, optimization
+profile including `nodead`, disabled automatic inlining, and TU boundaries
+remain. Every native array is defined before the function bodies, in the order
+that preserves the existing physical allocations. MWCC generates its own shared
+BSS base. The synthetic `NewShadowData` view is removed from the internal header.
+Rendering and allocation now name the caster, cast-slot, cast-texture, and frame-
+texture arrays directly, including the cast-slot index's evidenced byte narrowing.
+
+| BSS offset | Native storage | Bytes |
+| --- | --- | ---: |
+| `0000` | 33 entry records | 660 |
+| `0294` | Three frame-texture pointers | 12 |
+| `02A0` | 8 by 4 texture-pointer table | 128 |
+| `0320` | Sixteen noise-frame pointers | 64 |
+| `0360` | 300 queued casters | 3600 |
+| `1170` | 100 cast slots | 10400 |
+| `3A10` | Eight cast-texture pointers | 32 |
+| `3A30` | Existing noise records and opaque tail | 1096 |
+
+The combined view previously obscured the texture and noise-frame tables inside
+a padding span. The native definitions, the retail common-base instructions,
+and initialization following consumers in text support this emission model.
+All pre-existing named symbol offsets, sizes, linkage, and every allocated
+non-text section's bytes, extent, and alignment are unchanged. The compiler adds
+only its internal zero-size `...bss.0` base symbol.
+
+The allocation routine initializes 33 records, which independently confirms the
+660-byte array extent. Its manually expanded sixteen-record writes and tail loop
+are now one loop in a private inline helper setting each entry's `isActive`
+and `state` bytes. The helper keeps the loop index local to initialization and
+preserves all 5,940 instruction bytes of the allocation routine. Layout
+assertions cover the 20-byte record, both byte offsets, and complete array size.
+The release routine deliberately retains the retail 37-record byte scan. Its
+last four `isActive` accesses reach texture-table bytes at offsets 0x04, 0x18,
+0x2c, and 0x40 within `gNewShadowTextureTable`; initialization does not own or
+clear those as extra entries. The proven byte-field loads/stores and complete
+release-function code are retained, with the overrun documented at the source.
+The allocation is not enlarged to conceal it.
+
+All 39 previously exact functions remain exact. Rendering improves slightly
+from 99.730354% to 99.745766%; only two instruction bytes in `renderShadows`
+change. Every other function's instruction bytes are unchanged, including
+`allocLotsOfTextures` at 97.19906%. The whole-unit fuzzy score improves from
+98.64202% to 98.643875%, while all 16,668 data bytes remain exact. This is
+native-storage and source-structure recovery, with no additional exact function.
+The unit remains `NonMatching`.
+
+The four blend/fill/distortion tests and the noise-generation test pass. Their
+scope remains the generated images and lifecycle described above; the entry
+loop is validated by the byte-identical allocation routine rather than claimed
+as covered by those image tests.
+
+Both `ninja all_source` and the strict retail DOL checksum pass after integration
+with current staging. All resolved relocation destinations are unchanged.

@@ -13,6 +13,10 @@ typedef struct NewShadowEntry {
     u8 pad12[0x2];
 } NewShadowEntry;
 
+STATIC_ASSERT(sizeof(NewShadowEntry) == 0x14);
+STATIC_ASSERT(offsetof(NewShadowEntry, isActive) == 0x10);
+STATIC_ASSERT(offsetof(NewShadowEntry, state) == 0x11);
+
 typedef struct {
     GameObject* obj;
     f32 scale;
@@ -56,15 +60,6 @@ STATIC_ASSERT(sizeof(NewShadowNoiseData) == 0x448);
 
 typedef ProjectedShadowTexture NewShadowCastSlot;
 
-typedef struct {
-    NewShadowEntry entries[0x21];
-    Texture* frameTextures[NEW_SHADOW_FRAME_COUNT];
-    u8 pad2A0[0x360 - 0x2A0];
-    NewShadowCaster casters[NEW_SHADOW_MAX_QUEUED_CASTERS];
-    NewShadowCastSlot castSlots[NEW_SHADOW_MAX_CASTERS];
-    Texture* castTextures[NEW_SHADOW_MAX_CAST_TEXTURES];
-} NewShadowData;
-
-#define NEW_SHADOW_ENTRY_CAPACITY 0x25
+#define NEW_SHADOW_ENTRY_CAPACITY 0x21
 
 #endif /* MAIN_NEWSHADOWS_INTERNAL_H_ */
