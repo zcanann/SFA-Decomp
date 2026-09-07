@@ -22,8 +22,7 @@ f32 gScreenTransitionHoldTimer;
 f32 gScreenTransitionAlphaStep;
 f32 screenTransitionAlpha;
 
-static inline void screenTransitionFadeBlack(void)
-{
+static inline void screenTransitionFadeBlack(void) {
     GXColor col;
     u32 sx;
     u32 sy;
@@ -39,8 +38,7 @@ static inline void screenTransitionFadeBlack(void)
     GXSetScissor(sx, sy, sw, sh);
 }
 
-static inline void screenTransitionFadeColor(u8 r, u8 g, u8 b)
-{
+static inline void screenTransitionFadeColor(u8 r, u8 g, u8 b) {
     GXColor col;
     u32 sx;
     u32 sy;
@@ -63,8 +61,7 @@ static inline void screenTransitionFadeColor(u8 r, u8 g, u8 b)
  * transition alpha; when it covers the viewport this falls back to a plain fade.
  * The fallback passes (r, b, g), as in retail; this renderer is called with white.
  */
-void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
-{
+void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b) {
     u8 maxAlpha;
     u32 verticalWalked;
     u32 horizontalFade;
@@ -110,13 +107,10 @@ void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     width = viewWidth & 0xffff;
     viewHeight = vb - vy;
     height = viewHeight & 0xffff;
-    if (screenTransitionAlpha > SCREEN_TRANSITION_ALPHA_MIDPOINT)
-    {
+    if (screenTransitionAlpha > SCREEN_TRANSITION_ALPHA_MIDPOINT) {
         maxAlpha = 0xff;
         wipeAmount = (int)(screenTransitionAlpha - SCREEN_TRANSITION_ALPHA_MIDPOINT);
-    }
-    else
-    {
+    } else {
         maxAlpha = SCREEN_TRANSITION_ALPHA_SCALE * screenTransitionAlpha;
         wipeAmount = 0;
     }
@@ -124,12 +118,9 @@ void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     wipeSpan = wipeAmount & 0xffff;
     conv = (f32)(int)(wipeSpan * halfWidth);
     bandHalfWidth = (u16)(conv / 128.0f);
-    if (bandHalfWidth == halfWidth)
-    {
+    if (bandHalfWidth == halfWidth) {
         screenTransitionFadeColor(r, b, g);
-    }
-    else
-    {
+    } else {
         horizontalFade = (halfWidth - bandHalfWidth) & 0xffff;
         right = (halfWidth + bandHalfWidth) & 0xffff;
         left = ((halfWidth - 1) - bandHalfWidth) & 0xffff;
@@ -140,16 +131,14 @@ void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         col.a = maxAlpha;
         hudDrawRect(vx + left + 1, vy, vx + right, vb, col);
         horizontalStrip = (int)horizontalFade / ((int)halfWidth / 6);
-        if (horizontalStrip == 0)
-        {
+        if (horizontalStrip == 0) {
             horizontalStrip = 1;
         }
         horizontalWalked = 0;
         alphaSpan = maxAlpha;
         horizontalStep = horizontalStrip;
         horizontalLimit = horizontalFade - horizontalStep;
-        while ((horizontalDistance = horizontalWalked & 0xffff) < horizontalLimit)
-        {
+        while ((horizontalDistance = horizontalWalked & 0xffff) < horizontalLimit) {
             col.r = 0xff;
             col.g = 0xff;
             col.b = 0xff;
@@ -178,15 +167,13 @@ void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         col.a = maxAlpha;
         hudDrawRect(vx, vy + top + 1, vr, vy + bottom, col);
         verticalStrip = (int)verticalFade / (int)((u32)halfHeight >> 3);
-        if (verticalStrip == 0)
-        {
+        if (verticalStrip == 0) {
             verticalStrip = 1;
         }
         verticalWalked = 0;
         verticalStep = verticalStrip;
         verticalLimit = verticalFade - verticalStep;
-        while ((verticalDistance = verticalWalked & 0xffff) < verticalLimit)
-        {
+        while ((verticalDistance = verticalWalked & 0xffff) < verticalLimit) {
             col.r = 0xff;
             col.g = 0xff;
             col.b = 0xff;
@@ -207,23 +194,19 @@ void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     }
 }
 
-void setScreenTransitionPause(u32 pause)
-{
+void setScreenTransitionPause(u32 pause) {
     screenTransitionPause = pause;
 }
 
-u8 screenTransition_isDone(void)
-{
+u8 screenTransition_isDone(void) {
     return gScreenTransitionDone;
 }
 
-f32 screenTransition_getAlpha(void)
-{
+f32 screenTransition_getAlpha(void) {
     return screenTransitionAlpha;
 }
 
-void screenTransition_fadeFrom(int duration, int type, f32 from)
-{
+void screenTransition_fadeFrom(int duration, int type, f32 from) {
     screenTransitionAlpha = SCREEN_TRANSITION_ALPHA_MAX * from;
     gScreenTransitionAlphaStep = -(SCREEN_TRANSITION_FADE_STEP * from) / duration;
     gScreenTransitionHoldTimer = 0.0f;
@@ -231,13 +214,11 @@ void screenTransition_fadeFrom(int duration, int type, f32 from)
     gScreenTransitionDelay = 1;
 }
 
-int isScreenTransitionActive(void)
-{
+int isScreenTransitionActive(void) {
     return SCREEN_TRANSITION_ALPHA_MAX == screenTransitionAlpha;
 }
 
-void screenTransition_holdThenFadeIn(int duration, int type)
-{
+void screenTransition_holdThenFadeIn(int duration, int type) {
     screenTransitionAlpha = SCREEN_TRANSITION_ALPHA_MAX;
     gScreenTransitionAlphaStep = -SCREEN_TRANSITION_FADE_STEP / duration;
     gScreenTransitionHoldTimer = 0.0f;
@@ -245,10 +226,8 @@ void screenTransition_holdThenFadeIn(int duration, int type)
     gScreenTransitionDelay = 5;
 }
 
-void screenTransition_fadeIn(int duration, int type)
-{
-    if (gScreenTransitionAlphaStep >= 0.0f || screenTransitionAlpha == 0.0f)
-    {
+void screenTransition_fadeIn(int duration, int type) {
+    if (gScreenTransitionAlphaStep >= 0.0f || screenTransitionAlpha == 0.0f) {
         screenTransitionAlpha = SCREEN_TRANSITION_ALPHA_MAX;
     }
     gScreenTransitionAlphaStep = -SCREEN_TRANSITION_FADE_STEP / duration;
@@ -257,10 +236,8 @@ void screenTransition_fadeIn(int duration, int type)
     gScreenTransitionDelay = 1;
 }
 
-void screenTransition_fadeOut(int duration, int type)
-{
-    if (gScreenTransitionAlphaStep <= 0.0f || SCREEN_TRANSITION_ALPHA_MAX == screenTransitionAlpha)
-    {
+void screenTransition_fadeOut(int duration, int type) {
+    if (gScreenTransitionAlphaStep <= 0.0f || SCREEN_TRANSITION_ALPHA_MAX == screenTransitionAlpha) {
         screenTransitionAlpha = 0.0f;
     }
     gScreenTransitionAlphaStep = SCREEN_TRANSITION_FADE_STEP / duration;
@@ -269,69 +246,52 @@ void screenTransition_fadeOut(int duration, int type)
     gScreenTransitionDelay = 0;
 }
 
-void screenTransition_update(int p1, int p2, int p3)
-{
-    if (gScreenTransitionDelay != 0)
-    {
+void screenTransition_update(int p1, int p2, int p3) {
+    if (gScreenTransitionDelay != 0) {
         gScreenTransitionDelay--;
-    }
-    else
-    {
-        if (screenTransitionPause == 0 && gScreenTransitionHoldTimer >= SCREEN_TRANSITION_HOLD_DURATION)
-        {
+    } else {
+        if (screenTransitionPause == 0 && gScreenTransitionHoldTimer >= SCREEN_TRANSITION_HOLD_DURATION) {
             (*gScreenTransitionInterface)->step(0x1e, gScreenTransitionType);
             gScreenTransitionHoldTimer = 0.0f;
         }
         screenTransitionAlpha = gScreenTransitionAlphaStep * timeDelta + screenTransitionAlpha;
-        if (screenTransitionAlpha < 0.0f)
-        {
+        if (screenTransitionAlpha < 0.0f) {
             screenTransitionAlpha = 0.0f;
             gScreenTransitionDone = 1;
-            if (gScreenTransitionType == SCREEN_TRANSITION_HUD)
-            {
+            if (gScreenTransitionType == SCREEN_TRANSITION_HUD) {
                 setHudOpacity(0xff);
             }
             return;
         }
-        if (screenTransitionAlpha > SCREEN_TRANSITION_ALPHA_MAX)
-        {
+        if (screenTransitionAlpha > SCREEN_TRANSITION_ALPHA_MAX) {
             screenTransitionAlpha = SCREEN_TRANSITION_ALPHA_MAX;
             gScreenTransitionDone = 1;
-            if (screenTransitionPause == 0)
-            {
+            if (screenTransitionPause == 0) {
                 gScreenTransitionHoldTimer += timeDelta;
             }
-            if (gScreenTransitionType != SCREEN_TRANSITION_HUD)
-            {
+            if (gScreenTransitionType != SCREEN_TRANSITION_HUD) {
                 setHudOpacity(0xff);
             }
-        }
-        else
-        {
+        } else {
             gScreenTransitionDone = 0;
         }
     }
-    if (gDvdErrorPauseActive != 0)
-    {
+    if (gDvdErrorPauseActive != 0) {
         return;
     }
-    switch (gScreenTransitionType)
-    {
-    case SCREEN_TRANSITION_BLACK:
-    {
+    switch (gScreenTransitionType) {
+    case SCREEN_TRANSITION_BLACK: {
         screenTransitionFadeBlack();
         break;
     }
-    case SCREEN_TRANSITION_WHITE:
-    {
+    case SCREEN_TRANSITION_WHITE: {
         screenTransitionFadeColor(0xff, 0xff, 0xff);
         break;
     }
     case SCREEN_TRANSITION_WHITE_WIPE:
         screenTransition_drawWhiteWipe(p1, p2, p3, 0xff, 0xff, 0xff);
         break;
-    case SCREEN_TRANSITION_RED:
-    {
+    case SCREEN_TRANSITION_RED: {
         screenTransitionFadeColor(0xff, 0, 0);
         break;
     }

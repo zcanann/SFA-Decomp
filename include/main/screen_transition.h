@@ -18,7 +18,7 @@ typedef int (*ScreenTransitionFinishedFn)(void);
 typedef f32 (*ScreenTransitionProgressFn)(void);
 
 typedef struct ScreenTransitionInterface {
-    void *unused00;
+    void* unused00;
     ScreenTransitionInitFn init;
     ScreenTransitionStepFn start;
     ScreenTransitionStepFn step;
@@ -34,7 +34,7 @@ STATIC_ASSERT(offsetof(ScreenTransitionInterface, stepWithBlend) == 0x10);
 STATIC_ASSERT(offsetof(ScreenTransitionInterface, isFinished) == 0x14);
 STATIC_ASSERT(offsetof(ScreenTransitionInterface, getProgress) == 0x18);
 
-extern ScreenTransitionInterface **gScreenTransitionInterface;
+extern ScreenTransitionInterface** gScreenTransitionInterface;
 
 void setScreenTransitionPause(u32 pause);
 int isScreenTransitionActive(void);
