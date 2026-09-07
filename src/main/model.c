@@ -48,32 +48,34 @@ u16 gModelMorphChunkVertexLimit = 0x2A0;
 #define MODEL_MORPH_HAS_Y             0x4000
 #define MODEL_MORPH_HAS_Z             0x8000
 void* animLoadFromTable(u8* hdr, int idx, int a, ObjAnimCachedMove* b);
-#define MODEL_LOAD_INITIAL_MOVE(SLOT)                                                                                          \
+#define MODEL_LOAD_INITIAL_MOVE(SLOT)                                                                                  \
     {                                                                                                                  \
-        int animationId;                                                                                                       \
-        u32 cacheAddress;                                                                                                         \
-        int animationOffset;                                                                                                       \
+        int animationId;                                                                                               \
+        u32 cacheAddress;                                                                                              \
+        int animationOffset;                                                                                           \
         int unusedSize;                                                                                                \
-        int animationBytes;                                                                                                        \
-        ObjAnimMoveData* animation;                                                                                                        \
+        int animationBytes;                                                                                            \
+        ObjAnimMoveData* animation;                                                                                    \
                                                                                                                        \
-        cacheAddress = (u32)(SLOT);                                                                                               \
-        animationId = ((ModelFileHeader*)hdr)->cachedAnimIds[0];                                                   \
-        if ((getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) == 0 || ((ModelFileHeader*)hdr)->modelId == 1 ||                      \
-            ((ModelFileHeader*)hdr)->modelId == 3) {                                                                                   \
-            if (cacheAddress == 0) {                                                                                              \
-                if (ModelList_getHeader(gModelAnimCacheList, animationId, &animation) == 0) {                                         \
-                    animationOffset = gModelAnimDataOffsetTable[animationId];                                                              \
-                    loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, animationOffset, 0, &animationBytes, animationId, 1);                         \
-                    animation = mmAlloc(animationBytes, 10, 0);                                                                           \
-                    loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, animation, animationOffset, animationBytes, &unusedSize, animationId, 0);               \
-                    animation->refCount = 1;                                                                                           \
-                    modelInitModelList(gModelAnimCacheList, animationId, &animation);                                                 \
+        cacheAddress = (u32)(SLOT);                                                                                    \
+        animationId = ((ModelFileHeader*)hdr)->cachedAnimIds[0];                                                       \
+        if ((getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) == 0 || ((ModelFileHeader*)hdr)->modelId == 1 ||      \
+            ((ModelFileHeader*)hdr)->modelId == 3) {                                                                   \
+            if (cacheAddress == 0) {                                                                                   \
+                if (ModelList_getHeader(gModelAnimCacheList, animationId, &animation) == 0) {                          \
+                    animationOffset = gModelAnimDataOffsetTable[animationId];                                          \
+                    loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, animationOffset, 0, &animationBytes,          \
+                                              animationId, 1);                                                         \
+                    animation = mmAlloc(animationBytes, 10, 0);                                                        \
+                    loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, animation, animationOffset, animationBytes,      \
+                                              &unusedSize, animationId, 0);                                            \
+                    animation->refCount = 1;                                                                           \
+                    modelInitModelList(gModelAnimCacheList, animationId, &animation);                                  \
                 } else {                                                                                               \
-                    animation->refCount += 1;                                                                                          \
+                    animation->refCount += 1;                                                                          \
                 }                                                                                                      \
             } else {                                                                                                   \
-                animLoadFromTable(hdr, animationId, 0, (ObjAnimCachedMove*)cacheAddress);                                                 \
+                animLoadFromTable(hdr, animationId, 0, (ObjAnimCachedMove*)cacheAddress);                              \
             }                                                                                                          \
         }                                                                                                              \
     }
@@ -1728,7 +1730,8 @@ void* loadAnimation(ModelFileHeader* file, s16 animationId, int moveIndex, ObjAn
             animationOffset = gModelAnimDataOffsetTable[animationId];
             loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, animationOffset, 0, &animationBytes, cacheId, 1);
             animation = newAnimation = mmAlloc(animationBytes, 10, 0);
-            loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, newAnimation, animationOffset, animationBytes, &unusedSize, cacheId, 0);
+            loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, newAnimation, animationOffset, animationBytes,
+                                      &unusedSize, cacheId, 0);
             animation->refCount = 1;
             modelInitModelList(gModelAnimCacheList, animationId, &animation);
         } else {
