@@ -70,7 +70,8 @@ static inline int voxmaps_findRouteNode(RouteState* state, s16* box, int* expand
     return -1;
 }
 
-void voxmaps_visitRouteNeighbor(struct RouteState* state, RouteNode* parentNode, int parentNodeIndex, u16 count, s16* box) {
+void voxmaps_visitRouteNeighbor(struct RouteState* state, RouteNode* parentNode, int parentNodeIndex, u16 count,
+                                s16* box) {
     int foundIdx;
     int savedExpanded;
     int foundSlot;
