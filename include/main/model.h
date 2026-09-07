@@ -111,10 +111,10 @@ typedef struct ModelVtxAnimChunk {
     u8 mtxIdxA; /* 0x6C: * 0x30 into the reordered matrix array */
     u8 mtxIdxB; /* 0x6D */
     u8 unk6E;
-    u8 weightBlocks;   /* 0x6F */
+    u8 weightBlocks;  /* 0x6F */
     u16 vtxCount;     /* 0x70 */
     u8 dstByteOffset; /* 0x72 */
-    u8 vtxBlocks;      /* 0x73 */
+    u8 vtxBlocks;     /* 0x73 */
 } ModelVtxAnimChunk;  /* 0x74 */
 
 STATIC_ASSERT(sizeof(ModelVtxAnimChunk) == 0x74);
@@ -391,7 +391,8 @@ typedef struct ObjModel {
     ModelRenderOpTextureRefs* textureRefs;
     void* renderCallback;
     void* postRenderCallback;
-    s32* vertexAnimData; /* 0x40: per-entry s32 array (file->vertexAnimJob.chunkCount), filled from vertexAnimEntries[i]+0x60 */
+    s32*
+        vertexAnimData; /* 0x40: per-entry s32 array (file->vertexAnimJob.chunkCount), filled from vertexAnimEntries[i]+0x60 */
     s32*
         blendAnimData; /* 0x44: per-entry s32 array (file->normalAnimJob.chunkCount), filled from normalBuf + blendAnimEntries[i]+0x60 */
     u8* hitVolumeSphereBuffers[2]; /* 0x48: double-buffered runtime hit spheres */
