@@ -1765,10 +1765,10 @@ void ObjHits_DetectObjectPair(GameObject* objA, GameObject* objB) {
 void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, ObjHitsSkeletonHit* hits, void* scratchB,
                                void* scratchC, void* scratchD, void* scratchE, int depth) {
     ObjModel* model;
-    f32 outAxial;
+    f32 inverseDistanceSum;
     ObjHitsPriorityState* objAState;
     u8 shapeFlags;
-    int hitCount;
+    int hasHits;
     f32 ratio;
     f32 responseX;
     f32 responseY;
@@ -1780,8 +1780,8 @@ void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, ObjHitsSkelet
     Vec point3D;
     Vec pointXZ;
 
-    objBState = (ObjHitsPriorityState*)objB->anim.hitReactState;
-    objAState = (ObjHitsPriorityState*)objA->anim.hitReactState;
+    objBState = ObjAnim_GetPriorityHitState(&objB->anim);
+    objAState = ObjAnim_GetPriorityHitState(&objA->anim);
     if (*(s8*)&objAState->resetHitboxMode != 0 || *(s8*)&objBState->resetHitboxMode != 0 ||
         objBState->activeHitboxMode != 0 || objAState->activeHitboxMode != 0) {
         return;
@@ -1793,15 +1793,15 @@ void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, ObjHitsSkelet
         point.y = objB->anim.worldPosY;
         point.z = objB->anim.worldPosZ - playerMapOffsetZ;
         point3D = point;
-        hitCount = ObjHits_CollectSkeletonHits3D(&point3D.x, objBState->primaryRadius, model->skeletonJointData, model,
-                                                 hits, &bestHit, &outAxial);
-        if (hitCount != 0) {
+        hasHits = ObjHits_CollectSkeletonHits3D(&point3D.x, objBState->primaryRadius, model->skeletonJointData, model,
+                                                 hits, &bestHit, &inverseDistanceSum);
+        if (hasHits != 0) {
             ratio = (objB->anim.hitboxScale * objB->anim.rootMotionScale) /
                     (objA->anim.hitboxScale * objA->anim.rootMotionScale);
 
             ObjHits_CalcSkeletonResponse3D(&point.x, objBState->primaryRadius, objB, hits, model->skeletonJointData,
                                            model->file, bestHit,
-                                           (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), outAxial, response);
+                                           (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), inverseDistanceSum, response);
             response[0] = ((responseX = response[0]) < -10.0f) ? -10.0f : ((responseX > 10.0f) ? 10.0f : responseX);
             responseY = response[1];
             response[1] = (responseY < -10.0f) ? -10.0f : ((responseY > 10.0f) ? 10.0f : responseY);
@@ -1814,16 +1814,16 @@ void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, ObjHitsSkelet
         point.y = objB->anim.worldPosY;
         point.z = objB->anim.worldPosZ - playerMapOffsetZ;
         pointXZ = point;
-        hitCount = ObjHits_CollectSkeletonHitsXZ(&pointXZ.x, objBState->primaryRadius, model->skeletonJointData, model,
+        hasHits = ObjHits_CollectSkeletonHitsXZ(&pointXZ.x, objBState->primaryRadius, model->skeletonJointData, model,
                                                  hits, &bestHit, point.y + objBState->primaryCapsuleOffsetB,
-                                                 point.y + objBState->primaryCapsuleOffsetA, &outAxial);
-        if (hitCount != 0) {
+                                                 point.y + objBState->primaryCapsuleOffsetA, &inverseDistanceSum);
+        if (hasHits != 0) {
             ratio = (objB->anim.hitboxScale * objB->anim.rootMotionScale) /
                     (objA->anim.hitboxScale * objB->anim.rootMotionScale);
 
             ObjHits_CalcSkeletonResponseXZ(&point.x, objBState->primaryRadius, objB, hits, model->skeletonJointData,
                                            model->file, bestHit,
-                                           (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), outAxial, response);
+                                           (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), inverseDistanceSum, response);
             response[0] = ((responseX = response[0]) < -10.0f) ? -10.0f : ((responseX > 10.0f) ? 10.0f : responseX);
             responseY = response[1];
             response[1] = (responseY < -10.0f) ? -10.0f : ((responseY > 10.0f) ? 10.0f : responseY);
