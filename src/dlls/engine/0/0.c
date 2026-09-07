@@ -4790,22 +4790,22 @@ void timeListDraw(int unused1, int unused2, int unused3) {
 
     {
         s16 ang;
-        u8 pulse;
-        u8 a, b;
+        int pulseBrightness;
+        int firstPromptBrightness, secondPromptBrightness;
         gTimeListPulseAngle += gTimeListPulseAngleStep;
         ang = gTimeListPulseAngle;
-        pulse = gTimeListPulseAmplitude * fsin16Precise((u16)ang) + gTimeListPulseBias;
+        pulseBrightness = gTimeListPulseAmplitude * fsin16Precise((u16)ang) + gTimeListPulseBias;
         if (gTimeListPromptSelection == 1) {
-            a = pulse;
-            b = 0xff;
+            firstPromptBrightness = pulseBrightness;
+            secondPromptBrightness = 0xff;
         } else {
-            a = 0xff;
-            b = pulse;
+            firstPromptBrightness = 0xff;
+            secondPromptBrightness = pulseBrightness;
         }
         gameTextShowAt(0x2f7, 0, 5);
-        gameTextSetColor(a, a, a, 0xff);
+        gameTextSetColor(firstPromptBrightness, firstPromptBrightness, firstPromptBrightness, 0xff);
         gameTextShow(0x2f8);
-        gameTextSetColor(b, b, b, 0xff);
+        gameTextSetColor(secondPromptBrightness, secondPromptBrightness, secondPromptBrightness, 0xff);
         gameTextShow(0x2fb);
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
     }
