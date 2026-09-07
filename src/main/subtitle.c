@@ -99,7 +99,7 @@ static void subtitleBuildLineTable(void) {
                     if (foundNextTimestamp != 0) {
                         for (position = scanLine; position >= lineIndex; position--) {
                             gSubtitleTimes[position] = gSubtitleTimes[position + 1] -
-                                                     intervalSeconds * (gSubtitleTimes[position] / totalCharacters);
+                                                       intervalSeconds * (gSubtitleTimes[position] / totalCharacters);
                         }
                         break;
                     }
