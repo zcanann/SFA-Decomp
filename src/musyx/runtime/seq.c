@@ -1191,9 +1191,9 @@ SynthSequenceEvent* HandleEvent(SynthSequenceEvent* event, u8 voice, u32* flag) 
         sv = cseq;
         seq = sv->arrbase;
         pattern = &sv->pattern[event->trackId];
-        pat =
-            (SynthSeqPattern*)(*(u32*)(((SynthArrangement*)seq)->patternTableOffset + (u32)seq + tEntry->kind.patternIndex * 4) +
-                               (u32)seq);
+        pat = (SynthSeqPattern*)(*(u32*)(((SynthArrangement*)seq)->patternTableOffset + (u32)seq +
+                                         tEntry->kind.patternIndex * 4) +
+                                 (u32)seq);
         pattern->noteData = (u8*)(pat + 1);
         pattern->lastTime = 0;
         pattern->baseTime = tEntry->time;

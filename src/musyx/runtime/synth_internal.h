@@ -159,7 +159,6 @@ typedef struct SynthSequenceQueue {
 STATIC_ASSERT(sizeof(SynthSequenceQueue) == 0x38);
 STATIC_ASSERT(offsetof(SynthSequenceQueue, speed) == 0x32);
 
-
 typedef struct SynthStartRequest {
     u32 seqId1;
     u16 time1;
