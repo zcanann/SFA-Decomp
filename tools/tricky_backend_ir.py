@@ -24,12 +24,12 @@ MNEMONICS = {
     0x31: "stw", 0x32: "stwu", 0x33: "stwx", 0x3C: "add", 0x3F: "addi",
     0x42: "addis", 0x44: "addze", 0x47: "mulhw", 0x49: "mulli", 0x4A: "mullw", 0x4B: "neg",
     0x4C: "subf", 0x4F: "subfic", 0x52: "cmpwi", 0x53: "cmpw",
-    0x54: "cmplwi", 0x55: "cmplw", 0x58: "ori", 0x59: "oris", 0x5A: "xori",
+    0x54: "cmplwi", 0x55: "cmplw", 0x56: "andi.", 0x58: "ori", 0x59: "oris", 0x5A: "xori",
     0x5B: "xoris", 0x5C: "and", 0x5D: "or", 0x5E: "xor", 0x64: "extsb",
     0x65: "extsh", 0x66: "cntlzw", 0x67: "clrlwi clrrwi rlwinm slwi srwi",
     0x69: "rlwimi", 0x6A: "slw", 0x6C: "srawi", 0x6D: "sraw", 0x70: "crset", 0x73: "cror",
     0x75: "crclr", 0x78: "mtctr", 0x79: "mtlr", 0x81: "mflr", 0x82: "mfcr",
-    0x89: "li", 0x8A: "lis", 0x8B: "mr", 0x8E: "lfs",
+    0x89: "li", 0x8A: "lis", 0x8B: "mr", 0x8D: "not", 0x8E: "lfs",
     0x90: "lfsx", 0x92: "lfd", 0x96: "stfs", 0x9A: "stfd", 0x9E: "fmr",
     0xA0: "fneg", 0xA2: "fadd", 0xA3: "fadds", 0xA4: "fsub", 0xA5: "fsubs", 0xA6: "fmul", 0xA7: "fmuls",
     0xA8: "fdiv", 0xA9: "fdivs", 0xAA: "fmadd", 0xAB: "fmadds", 0xAD: "fmsubs", 0xAF: "fnmadds",
@@ -200,7 +200,7 @@ def emitted_instructions(snapshot):
 
 
 def validate_alignment(snapshot, assembly, code):
-    """Check opcodes, explicit GPR/FPR operands, and exact li/lis/mr encodings.
+    """Check opcodes, explicit registers, and exact load/move/bit-mask encodings.
 
     This is deliberately not a complete PowerPC emitter or relocation decoder.
     Unsupported opcodes fail closed rather than silently aligning a shifted trace.
@@ -228,7 +228,7 @@ def validate_alignment(snapshot, assembly, code):
             if registers != printed:
                 raise ValueError(f"register alignment failed at {index}: {asm}")
         expected = None
-        if op in (0x89, 0x8A, 0x8B) and len(args) < 2:
+        if op in (0x89, 0x8A, 0x8B, 0x8D) and len(args) < 2:
             raise ValueError("missing load/move operands")
         if op == 0x89 and (args[0]["kind"] != 0 or args[1]["kind"] not in (2, 3)):
             raise ValueError("invalid immediate load operands")
@@ -244,11 +244,21 @@ def validate_alignment(snapshot, assembly, code):
             else:
                 # Symbol operands remain opaque; relocations own the low halfword.
                 actual &= 0xFFFF0000
-        elif op == 0x8B:
+        elif op in (0x8B, 0x8D):
             dest, source = args[:2]
             if any(a["kind"] != 0 or a["register_class"] != 4 or not 0 <= a["number"] < 32 for a in (dest, source)):
                 raise ValueError("invalid emitted move registers")
-            expected = (31 << 26) | (source["number"] << 21) | (dest["number"] << 16) | (source["number"] << 11) | (444 << 1)
+            extended = 444 if op == 0x8B else 124  # mr = or; not = nor.
+            expected = (31 << 26) | (source["number"] << 21) | (dest["number"] << 16) | (source["number"] << 11) | (extended << 1)
+        elif op == 0x56:
+            if len(args) != 4:
+                raise ValueError("invalid immediate mask operands")
+            dest, source, mask, condition = args
+            if (any(a["kind"] != 0 or a["register_class"] != 4 or not 0 <= a["number"] < 32 for a in (dest, source))
+                    or mask["kind"] != 2 or not 0 <= mask["value"] <= 0xFFFF
+                    or condition["kind"] != 0 or condition["register_class"] != 1 or condition["number"] != 0):
+                raise ValueError("invalid immediate mask operands")
+            expected = (28 << 26) | (source["number"] << 21) | (dest["number"] << 16) | mask["value"]
         if expected is not None and expected != actual:
             raise ValueError(f"operand encoding failed at {index}: {asm}")
     return instructions

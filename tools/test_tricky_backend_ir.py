@@ -136,6 +136,31 @@ class BackendIRTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "register alignment"):
             validate_alignment(fixture(), ["li r6,0", "mr r4,r7", "blr"], bytes.fromhex("38e00000 7ce43b78 4e800020"))
 
+    def test_savegame_mask_and_complement_encodings(self):
+        data = fixture()
+        mask = data["blocks"][0]["instructions"][0]["words"]
+        mask[8:] = [0x56 | (4 << 16)] + list(struct.unpack(
+            "<12I", reg(8) + reg(8, 5) + immediate(1) + reg(0, register_class=1)))
+        complement = data["blocks"][1]["instructions"][0]["words"]
+        complement[8:] = [0x8D | (2 << 16)] + list(struct.unpack("<6I", reg(6) + reg(0, 5)))
+        asm = ["andi. r8,r8,1", "not r6,r0", "blr"]
+        code = bytes.fromhex("71080001 7c0600f8 4e800020")
+        self.assertEqual(len(validate_alignment(data, asm, code)), 3)
+        for offset in (0, 4):
+            for bit in (0, 16, 21, 26):
+                corrupt = bytearray(code)
+                word = int.from_bytes(corrupt[offset:offset + 4], "big") ^ (1 << bit)
+                corrupt[offset:offset + 4] = word.to_bytes(4, "big")
+                with self.subTest(offset=offset, bit=bit), self.assertRaisesRegex(ValueError, "operand encoding"):
+                    validate_alignment(data, asm, corrupt)
+        with self.assertRaisesRegex(ValueError, "register alignment"):
+            validate_alignment(data, ["andi. r8,r9,1", *asm[1:]], code)
+        with self.assertRaisesRegex(ValueError, "opcode alignment"):
+            validate_alignment(data, ["ori r8,r8,1", *asm[1:]], code)
+        mask[-2] = 1  # andi. always defines CR0.
+        with self.assertRaisesRegex(ValueError, "invalid immediate mask"):
+            validate_alignment(data, asm, code)
+
     def test_indexed_word_store_checks_all_three_registers(self):
         data = fixture()
         store = data["blocks"][0]["instructions"][0]["words"]
