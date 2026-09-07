@@ -77,12 +77,12 @@ void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
         }                                                                                                              \
     }
 extern s16 gModelJointScratchBuffer[0xa0];
-#define BLENDTBL_ENTRY(FIELD, OFF)                                                                                         \
-    if (poseAdjustments->FIELD != 0) {                                                                                         \
+#define BLENDTBL_ENTRY(FIELD, OFF)                                                                                     \
+    if (poseAdjustments->FIELD != 0) {                                                                                 \
         gModelJointScratchBuffer[outPos++] = (s16)(offA + (OFF));                                                      \
         gModelJointScratchBuffer[outPos++] = (s16)(offB + (OFF));                                                      \
-        gModelJointScratchBuffer[outPos++] = poseAdjustments->FIELD;                                                           \
-        gModelJointScratchBuffer[outPos++] = poseAdjustments->FIELD;                                                           \
+        gModelJointScratchBuffer[outPos++] = poseAdjustments->FIELD;                                                   \
+        gModelJointScratchBuffer[outPos++] = poseAdjustments->FIELD;                                                   \
     }
 extern char sModelAnimationBufferOverflowWarning[];
 extern Vec gModelJitterAxis;
@@ -1883,10 +1883,8 @@ static void ObjModel_BuildAnimBlendTable(ObjAnimComponent* objAnim, ObjAnimState
         rowA = channel->moveCache[channel->moveCacheSlot];
         rowB = channel->moveCache[channel->prevMoveCacheSlot];
     } else {
-        rowA = file->animationDataSection +
-               channel->moveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
-        rowB = file->animationDataSection +
-               channel->prevMoveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
+        rowA = file->animationDataSection + channel->moveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
+        rowB = file->animationDataSection + channel->prevMoveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
     }
     modelDef = objAnim->modelInstance;
     defOff = 0;
