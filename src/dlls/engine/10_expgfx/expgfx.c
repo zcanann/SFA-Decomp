@@ -2616,7 +2616,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         trailNormal.x = trailDelta.y * trailDirection.z - trailDelta.z * trailDirection.y;
                         trailNormal.y = -(trailDelta.x * trailDirection.z - trailDelta.z * trailDirection.x);
                         trailNormal.z = trailDelta.x * trailDirection.y - trailDelta.y * trailDirection.x;
-                        normSq = trailNormal.z * trailNormal.z + (trailNormal.x * trailNormal.x + trailNormal.y * trailNormal.y);
+                        normSq = trailNormal.z * trailNormal.z +
+                                 (trailNormal.x * trailNormal.x + trailNormal.y * trailNormal.y);
                         if (normSq != 0.0f) {
                             norm = sqrtf(normSq);
                         } else {
@@ -3442,7 +3443,7 @@ static inline void renderParticlesBody(void) {
                     queuePosition[1] = 0.5f * (poolBounds->minY + poolBounds->maxY);
                     queuePosition[2] = 0.5f * (poolBounds->minZ + poolBounds->maxZ) - playerMapOffsetZ;
                 }
-                PSMTXMultVec((float(*)[4])currentMatrix, (Vec*)queuePosition, (Vec*)queuePosition);
+                PSMTXMultVec((float (*)[4])currentMatrix, (Vec*)queuePosition, (Vec*)queuePosition);
                 if (*poolSourceIds != 0) {
                     queuePosition[2] = queuePosition[2] - (float)(*poolSlotTypeIds & EXPGFX_QUEUE_DEPTH_SLOT_TYPE_MASK);
                 }
