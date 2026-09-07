@@ -92,7 +92,6 @@ STATIC_ASSERT(sizeof(SaveGameData) == 0xF70);
 #define SAVEGAME_CHARACTER_POSITION_OFFSET    0x684
 #define SAVEGAME_COMPLETION_SCORE_MAX         0xbb
 #define SAVE_SCORE_FILE_STRIDE                0x28
-#define SAVE_SCORE_TABLE_OFFSET               0x1c
 /* number of on-disk save-game slots */
 #define SAVEGAME_SLOT_COUNT              3
 #define SAVEGAME_MAP_COUNT               0x78
@@ -112,11 +111,6 @@ typedef struct SaveGameRomListPosition {
     f32 z;
     u32 objectId;
 } SaveGameRomListPosition;
-
-typedef struct SaveScoreFile {
-    u8 pad0[SAVE_SCORE_TABLE_OFFSET];
-    SaveScoreEntry entries[SAVE_SCORE_ENTRY_COUNT];
-} SaveScoreFile;
 
 #define SAVEGAME_CHARACTER_POSITION(save)                                                                              \
     (&((SaveGameCharacterPosition*)((save) +                                                                           \
@@ -182,10 +176,12 @@ static inline s8 saveGame_findTransientMapBit(int mapId, int shift, const SaveGa
 static inline void saveGame_addTransientMapBit(int mapId, int shift, SaveGameRecord* record) {
     int i;
     MapBitTransient* transient;
+    MapBitTransient* cursor;
 
-    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++) {
-        if (record->transientMapBits[i].mapId == -1) {
-            (transient = &record->transientMapBits[i])->mapId = mapId;
+    for (i = 0, cursor = record->transientMapBits; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, cursor++) {
+        if (cursor->mapId == -1) {
+            record->transientMapBits[i].mapId = mapId;
+            transient = &record->transientMapBits[i];
             transient->shift = shift;
             transient->timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
             return;
@@ -385,35 +381,33 @@ int trySaveGame(int slot) {
 }
 
 void* getHighScoreEntry(u8 fileIdx, u8 rank) {
-    return &((SaveScoreFile*)(saveData + fileIdx * SAVE_SCORE_FILE_STRIDE))->entries[rank];
+    return &((SaveData*)saveData)->scores[fileIdx][rank];
 }
 
 int insertHighScore(u8 slot, u8 flag, u32 score, u8* initials) {
     int rank;
-    SaveScoreFile* file;
     int off;
     int i;
 
     rank = 0;
     off = slot * SAVE_SCORE_FILE_STRIDE;
-    file = (SaveScoreFile*)(saveData + off);
     for (; rank < SAVE_SCORE_ENTRY_COUNT; rank++) {
-        if (score > file->entries[rank].score) {
+        if (score > ((SaveData*)saveData)->scores[slot][rank].score) {
             for (i = SAVE_SCORE_ENTRY_COUNT - 1; i > rank; i--) {
-                file->entries[i].score = file->entries[i - 1].score;
-                file->entries[i].flag = file->entries[i - 1].flag;
-                file->entries[i].initials[0] = file->entries[i - 1].initials[0];
-                file->entries[i].initials[1] = file->entries[i - 1].initials[1];
-                file->entries[i].initials[2] = file->entries[i - 1].initials[2];
-                file->entries[i].initials[3] = file->entries[i - 1].initials[3];
+                ((SaveData*)saveData)->scores[slot][i].score = ((SaveData*)saveData)->scores[slot][i - 1].score;
+                ((SaveData*)saveData)->scores[slot][i].flag = ((SaveData*)saveData)->scores[slot][i - 1].flag;
+                ((SaveData*)saveData)->scores[slot][i].initials[0] = ((SaveData*)saveData)->scores[slot][i - 1].initials[0];
+                ((SaveData*)saveData)->scores[slot][i].initials[1] = ((SaveData*)saveData)->scores[slot][i - 1].initials[1];
+                ((SaveData*)saveData)->scores[slot][i].initials[2] = ((SaveData*)saveData)->scores[slot][i - 1].initials[2];
+                ((SaveData*)saveData)->scores[slot][i].initials[3] = ((SaveData*)saveData)->scores[slot][i - 1].initials[3];
             }
 
-            file->entries[rank].score = score;
-            file->entries[rank].flag = flag;
-            ((SaveScoreFile*)((int)saveData + off))->entries[rank].initials[0] = initials[0];
-            ((SaveScoreFile*)((int)saveData + off))->entries[rank].initials[1] = initials[1];
-            ((SaveScoreFile*)((int)saveData + off))->entries[rank].initials[2] = initials[2];
-            ((SaveScoreFile*)((int)saveData + off))->entries[rank].initials[3] = initials[3];
+            ((SaveData*)saveData)->scores[slot][rank].score = score;
+            ((SaveData*)saveData)->scores[slot][rank].flag = flag;
+            ((SaveData*)((int)saveData + off))->scores[0][rank].initials[0] = initials[0];
+            ((SaveData*)((int)saveData + off))->scores[0][rank].initials[1] = initials[1];
+            ((SaveData*)((int)saveData + off))->scores[0][rank].initials[2] = initials[2];
+            ((SaveData*)((int)saveData + off))->scores[0][rank].initials[3] = initials[3];
             return rank;
         }
     }
