@@ -1,6 +1,6 @@
 # Subtitle storage recovery
 
-The current source uses three native arrays and an exact line-table builder; see
+The current source uses three native arrays with exact building and block release; see
 [Native arrays and deferred emission](#native-arrays-and-deferred-emission-2026-09-07).
 The earlier aggregate experiment below records the evidence leading to that model.
 
@@ -172,3 +172,37 @@ Both `ninja all_source` and the strict checksum gate pass, and the linked EN
 DOL is byte-identical to retail. Subtitle remains `NonMatching` because its
 update and stop bodies still differ; the builder's exact credit comes from
 objdiff, with the DOL gate checking integration separately.
+
+## Exact block release (2026-09-07)
+
+`subtitleStop` now matches all 184 retail code bytes. A private inline
+`subtitleReleaseBlocks` helper owns the active-state clear and allocation-release
+loop. Its four locals keep the free delay, slot index, cursor, and zero sentinel
+separate. The compiler initializes the cursor directly in its retail register,
+removing the former extra pointer move. The outer wrapper retains the active
+state guard and saved-directory restoration.
+
+Retail calls `subtitleStop` from `subtitleUpdateAndDraw`. With the release helper,
+automatic inlining instead expands the smaller outer wrapper into the draw
+routine, producing 159 instructions versus retail's 134. Disabling automatic
+inlining for the complete TU retains that call while still expanding the
+explicit inline release helper. The previous source under the same `noauto`
+control has unchanged function bytes and allocated data, so this setting is
+supported by the call topology rather than an aggregate score comparison.
+GC/1.3, level 1, deferred emission and all other optimization switches remain.
+
+Only the stop function's instruction bytes change. The other three bodies,
+all 3,104 data bytes, data-symbol layouts and per-function relocation destinations
+are preserved. The builder moves four bytes earlier in the generated text
+because the stop function shrinks; no data allocation moves. Exact-function
+credit rises from 2/4 to 3/4, adding 184 matched code bytes. Aggregate fuzzy
+match rises from 98.79157% to 99.11308%; the draw routine remains at 97.01492%.
+
+All seven subtitle tests pass, including the existing 278 host calls. Their
+stop cases still check the inactive path, clearing active state before freeing,
+null slots, free-delay restoration, saved-directory loading, and intentionally
+stale line/time storage. The loop continues to reload the global block count.
+
+Both `ninja all_source` and the strict retail checksum pass. Subtitle remains
+`NonMatching` until the draw routine is exact; object comparisons establish the
+new stop match, and the byte-identical retail DOL validates integration.

@@ -116,14 +116,11 @@ static void subtitleBuildLineTable(void) {
     }
 }
 
-void subtitleStop(void) {
+static inline void subtitleReleaseBlocks(void) {
+    int oldDelay;
+    int blockIndex;
     void** blockSlot;
     int zero;
-    int blockIndex;
-    int oldDelay;
-    int savedDir;
-
-    if (gSubtitleActive != 0) {
         zero = 0;
         gSubtitleActive = zero;
         blockIndex = 0;
@@ -138,6 +135,14 @@ void subtitleStop(void) {
             blockSlot++;
             blockIndex++;
         }
+
+}
+
+void subtitleStop(void) {
+    int savedDir;
+
+    if (gSubtitleActive != 0) {
+        subtitleReleaseBlocks();
 
         savedDir = gGameTextSavedDir;
         if (savedDir != -1) {
