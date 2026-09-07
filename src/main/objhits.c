@@ -1794,14 +1794,14 @@ void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, ObjHitsSkelet
         point.z = objB->anim.worldPosZ - playerMapOffsetZ;
         point3D = point;
         hasHits = ObjHits_CollectSkeletonHits3D(&point3D.x, objBState->primaryRadius, model->skeletonJointData, model,
-                                                 hits, &bestHit, &inverseDistanceSum);
+                                                hits, &bestHit, &inverseDistanceSum);
         if (hasHits != 0) {
             ratio = (objB->anim.hitboxScale * objB->anim.rootMotionScale) /
                     (objA->anim.hitboxScale * objA->anim.rootMotionScale);
 
-            ObjHits_CalcSkeletonResponse3D(&point.x, objBState->primaryRadius, objB, hits, model->skeletonJointData,
-                                           model->file, bestHit,
-                                           (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), inverseDistanceSum, response);
+            ObjHits_CalcSkeletonResponse3D(
+                &point.x, objBState->primaryRadius, objB, hits, model->skeletonJointData, model->file, bestHit,
+                (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), inverseDistanceSum, response);
             response[0] = ((responseX = response[0]) < -10.0f) ? -10.0f : ((responseX > 10.0f) ? 10.0f : responseX);
             responseY = response[1];
             response[1] = (responseY < -10.0f) ? -10.0f : ((responseY > 10.0f) ? 10.0f : responseY);
@@ -1815,15 +1815,15 @@ void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, ObjHitsSkelet
         point.z = objB->anim.worldPosZ - playerMapOffsetZ;
         pointXZ = point;
         hasHits = ObjHits_CollectSkeletonHitsXZ(&pointXZ.x, objBState->primaryRadius, model->skeletonJointData, model,
-                                                 hits, &bestHit, point.y + objBState->primaryCapsuleOffsetB,
-                                                 point.y + objBState->primaryCapsuleOffsetA, &inverseDistanceSum);
+                                                hits, &bestHit, point.y + objBState->primaryCapsuleOffsetB,
+                                                point.y + objBState->primaryCapsuleOffsetA, &inverseDistanceSum);
         if (hasHits != 0) {
             ratio = (objB->anim.hitboxScale * objB->anim.rootMotionScale) /
                     (objA->anim.hitboxScale * objB->anim.rootMotionScale);
 
-            ObjHits_CalcSkeletonResponseXZ(&point.x, objBState->primaryRadius, objB, hits, model->skeletonJointData,
-                                           model->file, bestHit,
-                                           (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), inverseDistanceSum, response);
+            ObjHits_CalcSkeletonResponseXZ(
+                &point.x, objBState->primaryRadius, objB, hits, model->skeletonJointData, model->file, bestHit,
+                (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), inverseDistanceSum, response);
             response[0] = ((responseX = response[0]) < -10.0f) ? -10.0f : ((responseX > 10.0f) ? 10.0f : responseX);
             responseY = response[1];
             response[1] = (responseY < -10.0f) ? -10.0f : ((responseY > 10.0f) ? 10.0f : responseY);
