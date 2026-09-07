@@ -102,7 +102,7 @@ s32 Link_getItemState(int idx);
 void Link_setOpacity(u8 v);
 void Link_setSelected(int v);
 s32 Link_getSelected(void);
-void Link_render(void);
+void Link_render(int context);
 void Link_free(void);
 void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage, int unused1, int unused2,
                 int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen, int selectedBlue);
@@ -389,26 +389,26 @@ s32 Link_getSelected(void)
     return linkSelected;
 }
 
-void Link_render(void)
+void Link_render(int context)
 {
     LinkMenuItem* item;
     int i;
     int slotIndex;
-    LinkMenuItem* drawItem;
-    int textureIndex;
     int opacity;
+    int textureIndex;
+    int x;
     int alpha;
     s16 red;
     s16 green;
     s16 blue;
     u16 textId;
-    int x;
+    LinkMenuItem* drawItem;
     int y;
     s8 timer;
 
     for (i = 0; i < gLinkItemCount; i++)
     {
-        item = (LinkMenuItem*)&gLinkMenuItems[i];
+        item = &gLinkMenuItems[i];
         drawItem = item;
 
         if ((item->flags & LINK_FLAG_HIDDEN) == 0)
@@ -425,7 +425,7 @@ void Link_render(void)
             {
                 if (item->state != -1)
                 {
-                    drawItem = (LinkMenuItem*)&gLinkMenuItems[item->state];
+                    drawItem = &gLinkMenuItems[item->state];
                 }
 
                 if ((drawItem->flags & LINK_FLAG_DRAW_SLOTS) != 0)
@@ -458,7 +458,7 @@ void Link_render(void)
                 }
                 else
                 {
-                    alpha = (((int)((u32)opacity >> 31)) + opacity) >> 1;
+                    alpha = opacity / 2;
                 }
                 ((TextSlot*)gameTextGetBox(drawItem->boxId))->alpha = alpha;
 
@@ -486,13 +486,13 @@ void Link_render(void)
                         {
                             alpha = linkItemOpacity * 256 >> 8;
                         }
-                        gameTextSetColor((u8)red, (u8)green, (u8)blue, (u8)alpha);
+                        gameTextSetColor(red & 0xff, green & 0xff, blue & 0xff, alpha & 0xff);
                     }
                     else
                     {
                         gameTextSetColor((u8)gLinkBaseColorR, (u8)gLinkBaseColorG,
                                          (u8)gLinkBaseColorB,
-                                         (u8)((((int)((u32)opacity >> 31)) + opacity) >> 1));
+                                         (u8)(opacity / 2));
                     }
                 }
                 else

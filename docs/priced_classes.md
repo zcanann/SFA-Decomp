@@ -3217,6 +3217,13 @@ tree; the skew inside the mismatching rows is a **selection effect**, not a comp
 
 ### 30d. Yield, and the sweeps behind the zero
 
+**`Link_render` resolved 2026-09-07:** four byte masks in the interpolated-color
+call and a changed local declaration order together recover all 28 differing
+instructions under the unchanged GC/1.3 profile. Neither change alone matches.
+The masks remove four excluded call-argument nodes from the interference graph;
+see [the compiler evidence](link_render_matching.md). Slot 60 now matches in full.
+The historical sweeps below did not exhaust this combination.
+
 **Zero bytes recovered.** `expr_sweep --assoc` over 18 of the 19 rows (`playerBuildLedgeClimbProbe`
 left alone, owner-hot): **420 semantically-cleared operand-order rewrites across 16 rows, 0 hits**;
 the other two rows have **nothing to sweep**, which is not the same reading as "cleared". Over 13
