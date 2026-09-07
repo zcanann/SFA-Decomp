@@ -5,6 +5,7 @@
 #include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/model.h"
+#include "main/joint_pose.h"
 #include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
 #include "main/asset_load.h"
@@ -1434,7 +1435,7 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags) {
     }
     if (modelDef->jointCount != 0) {
         r = roundUpTo4(size);
-        size = r + modelDef->jointCount * 0x12;
+        size = r + modelDef->jointCount * sizeof(ObjJointPose);
     }
     if (modelDef->textureSlotCount != 0) {
         r = roundUpTo4(size);
@@ -1775,7 +1776,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     if (modelDef->jointCount != 0) {
         alignedCursor = roundUpTo4(cursor);
         obj->anim.jointPoseData = (u8*)alignedCursor;
-        cursor = alignedCursor + modelDef->jointCount * 0x12;
+        cursor = alignedCursor + modelDef->jointCount * sizeof(ObjJointPose);
     }
     if (modelDef->textureSlotCount != 0) {
         alignedCursor = roundUpTo4(cursor);

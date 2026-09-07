@@ -3,6 +3,7 @@
 
 #include "game/objects/object.h"
 #include "main/objtexture.h"
+#include "main/joint_pose.h"
 
 #define OBJPRINT_OBJECT(obj)            ((ObjAnimComponent*)(obj))
 #define OBJPRINT_MODEL_INSTANCE(obj)    (OBJPRINT_OBJECT(obj)->modelInstance)
@@ -13,17 +14,6 @@
 #define OBJPRINT_JOINT_COUNT(model)     (((ObjDef*)(model))->jointCount)
 
 /*
- * Per-joint pose scratch written by the head/eye/tail tracking helpers in
- * this file: anim.jointPoseData is an array of these, one per jointData
- * record, stride 0x12.  v[0]/v[1]/v[2] of each vector are the s16 angle
- * deltas (pitch/yaw/roll) applied on top of the animated joint.
- */
-typedef struct
-{
-    s16 v[9];
-} ObjJointPose18;
-
-/*
  * ObjDef.jointData (+0x10) is a packed joint-binding table scanned by every
  * finder loop in this file: jointCount (+0x5A) records, each
  * (1 + modelCount (+0x55)) bytes:
@@ -31,10 +21,10 @@ typedef struct
  *                        at gObjLookAtJointKeys used by objJointTracksAimAtTarget)
  *   byte 1 + bankIndex - joint index in that bank's model, 0xFF = the joint
  *                        does not exist in that bank
- * The record's ordinal selects the matching ObjJointPose18 in
- * anim.jointPoseData (poseOffset advances by 0x12 per record).  The stride
- * is runtime-variable, so the record cannot be a fixed C struct; the raw
- * byte walk below is the original access pattern.
+ * The record's ordinal selects the matching ObjJointPose in
+ * anim.jointPoseData, whose records have a fixed 0x12-byte stride. The
+ * joint-binding stride is runtime-variable, so those binding records use
+ * a raw byte walk.
  */
 static inline s16* objFindJointVecByKey(GameObject* obj, int key)
 {
@@ -53,7 +43,7 @@ static inline s16* objFindJointVecByKey(GameObject* obj, int key)
             if ((int)*(u8*)(table->jointData + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
                 (int)*(u8*)(table->jointData + i) == key)
             {
-                found = (s16*)&((ObjJointPose18*)(obj)->anim.jointPoseData)[k];
+                found = (s16*)&((ObjJointPose*)(obj)->anim.jointPoseData)[k];
             }
             i = i + table->modelCount + 1;
         }

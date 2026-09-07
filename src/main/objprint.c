@@ -82,13 +82,13 @@ typedef struct PlayerBlinkState {
     u8 amount; /* 0x2d */
 } PlayerBlinkState;
 
-static inline ObjJointPose18* playerEyeAnim_FindJoint(ObjAnimComponent* objAnim, int tag) {
+static inline ObjJointPose* playerEyeAnim_FindJoint(ObjAnimComponent* objAnim, int tag) {
     int jointCount;
     u8* jointData;
     int poseOffset;
     int jointDataOffset;
     ObjModelInstance* model;
-    ObjJointPose18* joint;
+    ObjJointPose* joint;
 
     joint = NULL;
     model = objAnim->modelInstance;
@@ -99,10 +99,10 @@ static inline ObjJointPose18* playerEyeAnim_FindJoint(ObjAnimComponent* objAnim,
             jointData = (u8*)model->jointData;
             if (((int)*(u8*)(jointData + objAnim->bankIndex + jointDataOffset + 1) != 0xff) &&
                 ((int)jointData[jointDataOffset] == tag)) {
-                joint = (ObjJointPose18*)(objAnim->jointPoseData + poseOffset);
+                joint = (ObjJointPose*)(objAnim->jointPoseData + poseOffset);
             }
             jointDataOffset += model->modelCount + 1;
-            poseOffset += 0x12;
+            poseOffset += sizeof(ObjJointPose);
         }
     }
     return joint;
@@ -218,10 +218,10 @@ void playerUpdateBlinkAnimation(void* obj, void* blinkState, u16 flags) {
     wave = 0.25f * mathCosfHighPrecision(phase);
     wave = wave * bs->amount / 255.0f;
     rotation = (32768.0f * (leftScale * wave)) / 3.142f;
-    playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_LEFT_JOINT_TAG)->v[1] = rotation;
+    playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_LEFT_JOINT_TAG)->rotation[1] = rotation;
 
     rotation = (32768.0f * (rightScale * wave)) / 3.142f;
-    playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_RIGHT_JOINT_TAG)->v[1] = -rotation;
+    playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_RIGHT_JOINT_TAG)->rotation[1] = -rotation;
 }
 
 void objSetLookAtFlip(int mode, u8 enabled) {
@@ -445,7 +445,7 @@ s16* objFindJointPoseVector(GameObject* obj, int key) {
                 result = (s16*)((char*)obj->anim.jointPoseData + vecOffset);
             }
             entryIdx += OBJPRINT_MODEL_COUNT(modelDef) + 1;
-            vecOffset += 0x12;
+            vecOffset += sizeof(ObjJointPose);
         }
     }
     return result;
@@ -853,7 +853,7 @@ s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8*
                     found[0] = (s16*)(go->anim.jointPoseData + iv[1]);
                 }
                 iv[0] += ((ObjDef*)m[0])->modelCount + 1;
-                iv[1] += 0x12;
+                iv[1] += sizeof(ObjJointPose);
             }
         }
         if (found[0] == NULL) {
@@ -1063,7 +1063,7 @@ void characterAimHeadAtTarget(GameObject* obj, void* tgt, void* state, int limit
                 found[0] = (s16*)((char*)obj->anim.jointPoseData + iv[1]);
             }
             iv[0] += ((ObjDef*)m[0])->modelCount + 1;
-            iv[1] += 0x12;
+            iv[1] += sizeof(ObjJointPose);
         }
     }
     if (found[0] != NULL) {

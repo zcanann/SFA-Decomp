@@ -6,6 +6,7 @@
 #include "main/shader_api.h"
 #include "main/debug.h"
 #include "main/model.h"
+#include "main/joint_pose.h"
 #include "main/objmodel.h"
 #include "main/model_engine.h"
 #include "main/model_runtime_api.h"
@@ -76,12 +77,12 @@ void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
         }                                                                                                              \
     }
 extern s16 gModelJointScratchBuffer[0xa0];
-#define BLENDTBL_ENTRY(K, OFF)                                                                                         \
-    if (poseWeights[K] != 0) {                                                                                         \
+#define BLENDTBL_ENTRY(FIELD, OFF)                                                                                         \
+    if (poseAdjustments->FIELD != 0) {                                                                                         \
         gModelJointScratchBuffer[outPos++] = (s16)(offA + (OFF));                                                      \
         gModelJointScratchBuffer[outPos++] = (s16)(offB + (OFF));                                                      \
-        gModelJointScratchBuffer[outPos++] = poseWeights[K];                                                           \
-        gModelJointScratchBuffer[outPos++] = poseWeights[K];                                                           \
+        gModelJointScratchBuffer[outPos++] = poseAdjustments->FIELD;                                                           \
+        gModelJointScratchBuffer[outPos++] = poseAdjustments->FIELD;                                                           \
     }
 extern char sModelAnimationBufferOverflowWarning[];
 extern Vec gModelJitterAxis;
@@ -1865,8 +1866,7 @@ extern s16 gModelRootRotX;
 extern s16 gModelRootRotY;
 extern s16 gModelRootRotZ;
 
-static void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr) {
-    ObjAnimComponent* objAnim;
+static void ObjModel_BuildAnimBlendTable(ObjAnimComponent* objAnim, ObjAnimState* channel, ModelFileHeader* file) {
     int poseOff;
     ObjModelInstance* modelDef;
     int defOff;
@@ -1875,20 +1875,19 @@ static void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr) {
     int offA;
     int offB;
     int outPos;
-    s16* poseWeights;
+    ObjJointPose* poseAdjustments;
     u8* rowA;
     u8* rowB;
 
-    if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) {
-        rowA = *(u8**)((u8*)(channel + 0x1c) + ((ObjAnimState*)channel)->moveCacheSlot * 4);
-        rowB = *(u8**)((u8*)(channel + 0x1c) + ((ObjAnimState*)channel)->prevMoveCacheSlot * 4);
+    if (file->flags & MODEL_FLAG_VERTEX_ANIM_AREA) {
+        rowA = channel->moveCache[channel->moveCacheSlot];
+        rowB = channel->moveCache[channel->prevMoveCacheSlot];
     } else {
-        rowA = ((ModelFileHeader*)hdr)->animationDataSection +
-               ((ObjAnimState*)channel)->moveCacheSlot * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
-        rowB = ((ModelFileHeader*)hdr)->animationDataSection +
-               ((ObjAnimState*)channel)->prevMoveCacheSlot * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
+        rowA = file->animationDataSection +
+               channel->moveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
+        rowB = file->animationDataSection +
+               channel->prevMoveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
     }
-    objAnim = (ObjAnimComponent*)obj;
     modelDef = objAnim->modelInstance;
     defOff = 0;
     outPos = 0;
@@ -1897,21 +1896,21 @@ static void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr) {
     for (; i < modelDef->jointCount; i++) {
         jointRemap = *(u8*)(modelDef->jointData + defOff + objAnim->bankIndex + 1);
         if (jointRemap != 0xff) {
-            poseWeights = (s16*)(objAnim->jointPoseData + poseOff);
+            poseAdjustments = (ObjJointPose*)(objAnim->jointPoseData + poseOff);
             offA = *(s8*)(rowA + jointRemap) << 6;
             offB = *(s8*)(rowB + jointRemap) << 6;
-            BLENDTBL_ENTRY(0, 0)
-            BLENDTBL_ENTRY(1, 2)
-            BLENDTBL_ENTRY(2, 4)
-            BLENDTBL_ENTRY(3, 0xc)
-            BLENDTBL_ENTRY(4, 0xe)
-            BLENDTBL_ENTRY(5, 0x10)
-            BLENDTBL_ENTRY(6, 0x18)
-            BLENDTBL_ENTRY(7, 0x1a)
-            BLENDTBL_ENTRY(8, 0x1c)
+            BLENDTBL_ENTRY(rotation[0], 0)
+            BLENDTBL_ENTRY(rotation[1], 2)
+            BLENDTBL_ENTRY(rotation[2], 4)
+            BLENDTBL_ENTRY(scale[0], 0xc)
+            BLENDTBL_ENTRY(scale[1], 0xe)
+            BLENDTBL_ENTRY(scale[2], 0x10)
+            BLENDTBL_ENTRY(translation[0], 0x18)
+            BLENDTBL_ENTRY(translation[1], 0x1a)
+            BLENDTBL_ENTRY(translation[2], 0x1c)
         }
         defOff += modelDef->modelCount + 1;
-        poseOff += 0x12;
+        poseOff += sizeof(ObjJointPose);
     }
     gModelJointScratchBuffer[outPos++] = 0x1000;
     gModelJointScratchBuffer[outPos] = 0x1000;
@@ -1923,7 +1922,7 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
     f32 pos[3];
     s16 rot[3];
 
-    ObjModel_BuildAnimBlendTable((u8*)obj, (u8*)model->animStateA, (u8*)blend);
+    ObjModel_BuildAnimBlendTable(&obj->anim, model->animStateA, blend);
     model->bufferFlags ^= 1;
     ch = model->animStateA;
     if (ch->moveControlFlags & 4) {
@@ -1948,7 +1947,7 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
         modelAnimEvalChannels((u8*)dst, model, (ObjAnimState*)model->animStateA, obj->anim.currentMoveProgress, 0x7f);
         ch2 = model->animStateB;
         if (ch2 != NULL && obj->anim.activeMove > -1) {
-            ObjModel_BuildAnimBlendTable((u8*)obj, (u8*)model->animStateB, (u8*)blend);
+            ObjModel_BuildAnimBlendTable(&obj->anim, model->animStateB, blend);
             modelAnimEvalChannels((u8*)dst, model, (ObjAnimState*)model->animStateB, obj->anim.activeMoveProgress, -1);
         }
     }

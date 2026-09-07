@@ -514,7 +514,7 @@ typedef struct ObjAnimComponent {
   struct ObjAnimEventTable *eventTable;
   ObjModelState *modelState;
   ObjectInterfaceHandle dll;
-  u8 *jointPoseData;
+  u8 *jointPoseData; /* ObjJointPose array, one record per modelInstance joint binding */
   ObjTextureRuntimeSlot *textureSlots;
   ObjHitVolumeRuntimeTransform *hitVolumeTransforms;
   ObjHitVolumeRuntimeBounds *hitVolumeBounds;
