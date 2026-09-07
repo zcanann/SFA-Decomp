@@ -2644,7 +2644,7 @@ void gameTextInit(void) {
 
 void gameTextInitRendererState(void) {
     Texture** texture;
-    char(*fallbackBuffer)[GAMETEXT_FALLBACK_BUFFER_SIZE];
+    char (*fallbackBuffer)[GAMETEXT_FALLBACK_BUFFER_SIZE];
     char** fallbackString;
     GameTextDef* fallbackDef;
     GameTextBox* textWindow;
@@ -2779,8 +2779,7 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
     slot->languageId = curLanguage;
     slot->active = 1;
     slot->sourceId = GAMETEXT_SEQUENCE_SOURCE_ID;
-    sprintf(sGameTextPath, sGameTextSequencePathFormat, sequenceId,
-            language->name);
+    sprintf(sGameTextPath, sGameTextSequencePathFormat, sequenceId, language->name);
     setFileInfo(&slot->fileInfo);
     slot->loadHandle = loadFileByPathAsync(sGameTextPath, &slot->loadedSize, 1, gameTextLoadCompleteCallback);
     setFileInfo(NULL);
