@@ -347,7 +347,8 @@ static void trackDolphin_buildShadowVolumePlanes(GameObject* unusedObject, Vec3f
         planes[0].normal.x = -nrm.x;
         planes[0].normal.y = -nrm.y;
         planes[0].normal.z = -nrm.z;
-        planes[0].distance = -(planes[0].normal.x * corners[3].x + planes[0].normal.y * corners[3].y + planes[0].normal.z * corners[3].z);
+        planes[0].distance = -(planes[0].normal.x * corners[3].x + planes[0].normal.y * corners[3].y +
+                               planes[0].normal.z * corners[3].z);
     }
 
     {
@@ -367,7 +368,8 @@ static void trackDolphin_buildShadowVolumePlanes(GameObject* unusedObject, Vec3f
         planes[1].normal.x = -nrm.x;
         planes[1].normal.y = -nrm.y;
         planes[1].normal.z = -nrm.z;
-        planes[1].distance = -(planes[1].normal.x * corners[5].x + planes[1].normal.y * corners[5].y + planes[1].normal.z * corners[5].z);
+        planes[1].distance = -(planes[1].normal.x * corners[5].x + planes[1].normal.y * corners[5].y +
+                               planes[1].normal.z * corners[5].z);
     }
 
     {
@@ -387,7 +389,8 @@ static void trackDolphin_buildShadowVolumePlanes(GameObject* unusedObject, Vec3f
         planes[2].normal.x = -nrm.x;
         planes[2].normal.y = -nrm.y;
         planes[2].normal.z = -nrm.z;
-        planes[2].distance = -(planes[2].normal.x * corners[4].x + planes[2].normal.y * corners[4].y + planes[2].normal.z * corners[4].z);
+        planes[2].distance = -(planes[2].normal.x * corners[4].x + planes[2].normal.y * corners[4].y +
+                               planes[2].normal.z * corners[4].z);
     }
 
     {
@@ -407,7 +410,8 @@ static void trackDolphin_buildShadowVolumePlanes(GameObject* unusedObject, Vec3f
         planes[3].normal.x = -nrm.x;
         planes[3].normal.y = -nrm.y;
         planes[3].normal.z = -nrm.z;
-        planes[3].distance = -(planes[3].normal.x * corners[0].x + planes[3].normal.y * corners[0].y + planes[3].normal.z * corners[0].z);
+        planes[3].distance = -(planes[3].normal.x * corners[0].x + planes[3].normal.y * corners[0].y +
+                               planes[3].normal.z * corners[0].z);
     }
 
     {
@@ -427,7 +431,8 @@ static void trackDolphin_buildShadowVolumePlanes(GameObject* unusedObject, Vec3f
         planes[4].normal.x = -nrm.x;
         planes[4].normal.y = -nrm.y;
         planes[4].normal.z = -nrm.z;
-        planes[4].distance = -(planes[4].normal.x * corners[7].x + planes[4].normal.y * corners[7].y + planes[4].normal.z * corners[7].z);
+        planes[4].distance = -(planes[4].normal.x * corners[7].x + planes[4].normal.y * corners[7].y +
+                               planes[4].normal.z * corners[7].z);
     }
 
     {
@@ -447,12 +452,13 @@ static void trackDolphin_buildShadowVolumePlanes(GameObject* unusedObject, Vec3f
         planes[5].normal.x = -nrm.x;
         planes[5].normal.y = -nrm.y;
         planes[5].normal.z = -nrm.z;
-        planes[5].distance = -(planes[5].normal.x * corners[0].x + planes[5].normal.y * corners[0].y + planes[5].normal.z * corners[0].z);
+        planes[5].distance = -(planes[5].normal.x * corners[0].x + planes[5].normal.y * corners[0].y +
+                               planes[5].normal.z * corners[0].z);
     }
 }
 
-static int cullVisibleShadowTriangles(GameObject* obj, Vec3f* unusedCorners, ShadowVolumePlane* unusedPlanes, int count, Vec3f* vertices,
-                                      Vec3f* outVertices, TrackShadowTriangle* triangles, int limit) {
+static int cullVisibleShadowTriangles(GameObject* obj, Vec3f* unusedCorners, ShadowVolumePlane* unusedPlanes, int count,
+                                      Vec3f* vertices, Vec3f* outVertices, TrackShadowTriangle* triangles, int limit) {
     int vertexIndex = 0;
     int outCount = 0;
     int i = 0;
@@ -693,8 +699,8 @@ int objShadowRender(GameObject* obj, int renderMode, int unused, int frameCount)
         gShadowTrackTriangleCount = idxOut;
         gShadowTrackGridOrigin = (int)vtx;
         trackDolphin_buildShadowVolumePlanes(obj, boxCorners, (ShadowVolumePlane*)planeWorkspace);
-        cullVisibleShadowTriangles(obj, boxCorners, (ShadowVolumePlane*)planeWorkspace, idxOut, gShadowVolumeBuffer, cache,
-                                   (TrackShadowTriangle*)gShadowDrawScratch, 0x555);
+        cullVisibleShadowTriangles(obj, boxCorners, (ShadowVolumePlane*)planeWorkspace, idxOut, gShadowVolumeBuffer,
+                                   cache, (TrackShadowTriangle*)gShadowDrawScratch, 0x555);
     }
     objDrawShadowCasterMesh(cache, modelState, obj, gShadowVisibleCount, &drawScratch, boxCorners, yOff);
     return 0;
