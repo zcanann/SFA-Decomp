@@ -121,21 +121,20 @@ static inline void subtitleReleaseBlocks(void) {
     int blockIndex;
     void** blockSlot;
     int zero;
-        zero = 0;
-        gSubtitleActive = zero;
-        blockIndex = 0;
-        blockSlot = &gSubtitleBlocks[0];
-        while (blockIndex < gSubtitleBlockCount) {
-            if (*blockSlot != NULL) {
-                oldDelay = mmSetFreeDelay(0);
-                mm_free(*blockSlot);
-                mmSetFreeDelay(oldDelay);
-                *blockSlot = (void*)zero;
-            }
-            blockSlot++;
-            blockIndex++;
+    zero = 0;
+    gSubtitleActive = zero;
+    blockIndex = 0;
+    blockSlot = &gSubtitleBlocks[0];
+    while (blockIndex < gSubtitleBlockCount) {
+        if (*blockSlot != NULL) {
+            oldDelay = mmSetFreeDelay(0);
+            mm_free(*blockSlot);
+            mmSetFreeDelay(oldDelay);
+            *blockSlot = (void*)zero;
         }
-
+        blockSlot++;
+        blockIndex++;
+    }
 }
 
 void subtitleStop(void) {
