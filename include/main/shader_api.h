@@ -1,6 +1,7 @@
 #ifndef MAIN_SHADER_API_H_
 #define MAIN_SHADER_API_H_
 
+#include <stddef.h>
 #include "global.h"
 #include "main/camera.h"
 #include "main/map_romlist_page.h"
@@ -30,6 +31,7 @@ typedef struct MapCellEntry
 } MapCellEntry;
 
 STATIC_ASSERT(sizeof(MapCellEntry) == 0xC);
+STATIC_ASSERT(offsetof(MapCellEntry, romListIndex) == 0x09);
 
 /* MAPINFO.bin per-record map type (curMapType / getCurMapType()). */
 typedef enum MapType

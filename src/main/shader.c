@@ -1532,10 +1532,10 @@ const PlayerFrustumPlaneScales sPlayerFrustumPlaneScales = {{0.0f, -25.0f, -25.0
 
 void beginLoadingMap(void) {
     char* base;
-    int i;
-    int j;
-    s8* a;
-    s8* b;
+    int layerIndex;
+    int entryIndex;
+    s8* blockIndices;
+    MapCellEntry* cellEntries;
     int currentCharacter;
     SaveGameCharacterPosition* characterPosition;
     f32 positionX, positionY, positionZ;
@@ -1552,17 +1552,17 @@ void beginLoadingMap(void) {
     }
     (*gObjectTriggerInterface)->onMapSetup();
     trackInitCollisionBuffers();
-    for (i = 0; i < 5; i++) {
-        a = ((s8**)(base + 0x41F4))[i];
-        b = ((s8**)(base + 0x41E0))[i];
-        for (j = 0; j < 256; j++) {
-            a[j] = -1;
-            b[j * 12 + 9] = -1;
+    for (layerIndex = 0; layerIndex < MAP_BLOCK_LAYER_COUNT; layerIndex++) {
+        blockIndices = ((s8**)(base + (int)offsetof(MapLayerBuffers, blockIndices)))[layerIndex];
+        cellEntries = ((MapCellEntry**)(base + (int)offsetof(MapLayerBuffers, cellEntries)))[layerIndex];
+        for (entryIndex = 0; entryIndex < 256; entryIndex++) {
+            blockIndices[entryIndex] = -1;
+            cellEntries[entryIndex].romListIndex = -1;
         }
     }
-    for (j = 0; j < 64; j++) {
-        *(s16*)((char*)gMapBlockIds + j * 2) = -1;
-        gMapBlocks[j] = NULL;
+    for (entryIndex = 0; entryIndex < 64; entryIndex++) {
+        gMapBlockIds[entryIndex] = -1;
+        gMapBlocks[entryIndex] = NULL;
     }
     gMapBlockCount = 0;
     gShaderRomListSlotCount = 0;
@@ -3936,14 +3936,14 @@ void initMapBlocks(void) {
     gMapBlockIds = mmAlloc(0x80, 5, 0);
     gMapBlockRefCounts = mmAlloc(0x40, 5, 0);
     gMapInfoBuffer = mmAlloc(0xd48, 5, 0);
-    buffers->blockIndices[0] = mmAlloc(0x500, 5, 0);
-    buffers->blockDescriptors[0] = mmAlloc(0x3c00, 5, 0);
-    buffers->cellStates[0] = mmAlloc(0x500, 5, 0);
+    buffers->blockIndices[0] = mmAlloc(MAP_BLOCK_LAYER_COUNT * 256 * sizeof(s8), 5, 0);
+    buffers->cellEntries[0] = mmAlloc(MAP_BLOCK_LAYER_COUNT * 256 * sizeof(MapCellEntry), 5, 0);
+    buffers->cellStates[0] = mmAlloc(MAP_BLOCK_LAYER_COUNT * 256 * sizeof(s8), 5, 0);
 
     for (i = 1; i < MAP_BLOCK_LAYER_COUNT; i++) {
-        buffers->blockIndices[i] = buffers->blockIndices[i - 1] + 0x100;
-        buffers->blockDescriptors[i] = buffers->blockDescriptors[i - 1] + 0xc00;
-        buffers->cellStates[i] = buffers->cellStates[i - 1] + 0x100;
+        buffers->blockIndices[i] = buffers->blockIndices[i - 1] + 256;
+        buffers->cellEntries[i] = buffers->cellEntries[i - 1] + 256;
+        buffers->cellStates[i] = buffers->cellStates[i - 1] + 256;
     }
 
     loadAssetFileById(&gMapsTab, MLDF_FILEID_MAPS_TAB);

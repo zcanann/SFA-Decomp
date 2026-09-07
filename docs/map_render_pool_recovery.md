@@ -386,3 +386,30 @@ assigned data bytes exact.
 The data and literal-sequence audits pass. Formatting is separate and preserves
 the raw object. `ninja all_source` and the strict retail checksum gate pass with
 30-second bounds; the TU remains `NonMatching` and the strict link uses retail.
+
+## Typed map-layer allocation and reset (2026-09-07)
+
+`MapLayerBuffers` now describes the types of the three already-owned pointer
+tables. Its `cellEntries` member points to `MapCellEntry` records; `blockIndices`
+and `cellStates` use the signed-byte types of the corresponding native globals.
+The address view does not merge or resize those globals. Assertions fix their
+pool-relative offsets at 0x41E0, 0x41F4, and 0x41CC respectively.
+
+`initMapBlocks` allocates five layers of 256 entries for each table and advances
+the typed pointers by 256 entries per layer. This preserves the existing 0x500
+byte-index allocation, 0x3C00 cell-record allocation, and 0x500 state allocation.
+`beginLoadingMap` uses the same record type and explicitly sets each cell's
+`romListIndex` to -1 alongside its signed block index. The reset leaves the
+other cell fields untouched. The canonical cell definition asserts that this
+byte is at offset 0x09 within the existing twelve-byte record. The block-ID
+reset also uses its native halfword array.
+
+The cached common BSS base remains necessary. Its table accesses use signed
+`offsetof` expressions, preserving the integer expression types accepted by
+the existing compiler profile. No compiler options or storage definitions
+change. Both initialization functions remain exact, and the complete shader
+object is byte-for-byte identical before and after this recovery. Rebuilding
+the shared headers leaves all 1,002 source object hashes unchanged.
+
+Formatting is separate. Data and literal-load audits, `ninja all_source`, and
+the strict retail checksum gate pass, with each Ninja run bounded to 30 seconds.
