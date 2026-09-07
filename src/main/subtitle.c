@@ -159,7 +159,8 @@ static void subtitleBuildLineTable(void) {
             position = timeCode[2] / 60;
             table->times[gSubtitleLineCount] = (f32)(timeCode[1] + timeCode[0] * 60 + position);
         }
-        wrappedLines = gameTextWrapLines(sourceString, (f32)(u32)textBox->maxWidth, textBox->scale, &wrappedLineCount, NULL);
+        wrappedLines =
+            gameTextWrapLines(sourceString, (f32)(u32)textBox->maxWidth, textBox->scale, &wrappedLineCount, NULL);
         if (wrappedLines != NULL) {
             for (lineIndex = 0; lineIndex < wrappedLineCount; lineIndex++) {
                 table->lines[gSubtitleLineCount++] = wrappedLines[lineIndex];
@@ -194,7 +195,8 @@ static void subtitleBuildLineTable(void) {
                     totalCharacters += count;
                     if (foundNextTimestamp != 0) {
                         for (position = scanLine; position >= lineIndex; position--) {
-                            table->times[position] = table->times[position + 1] - intervalSeconds * (table->times[position] / totalCharacters);
+                            table->times[position] = table->times[position + 1] -
+                                                     intervalSeconds * (table->times[position] / totalCharacters);
                         }
                         break;
                     }
