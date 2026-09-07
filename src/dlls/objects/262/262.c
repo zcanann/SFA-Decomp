@@ -340,15 +340,12 @@ void Scarab_update(GameObject* obj) {
                 hitResults.queryTypes[0] = 0;
                 hitDetect_calcSweptSphereBounds(&sweepBounds, &startPosition.x, &endPosition.x, hitResults.radii, 1);
                 trackIntersectBroadphase(obj, &sweepBounds, 0, 1);
-                hitCount =
-                    trackGetIntersect(obj, &startPosition.x, &endPosition.x, 1, &hitResults, 0);
+                hitCount = trackGetIntersect(obj, &startPosition.x, &endPosition.x, 1, &hitResults, 0);
                 obj->anim.localPosX = endPosition.x;
                 obj->anim.localPosY = endPosition.y;
                 obj->anim.localPosZ = endPosition.z;
                 if (hitCount != 0) {
-                    Scarab_applyOrientation(
-                        obj, NULL, SCARAB_ORIENTATION_DIRECTION,
-                        hitResults.planes[0]);
+                    Scarab_applyOrientation(obj, NULL, SCARAB_ORIENTATION_DIRECTION, hitResults.planes[0]);
                 }
             }
             if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == SCARAB_TRIGGER_HIT_KIND) {
@@ -447,8 +444,7 @@ void Scarab_update(GameObject* obj) {
                     heading = gScarabGroundHeadingScale * heading + 32768.0f;
                     obj->anim.rotX = heading;
                     obj->anim.localPosX =
-                        timeDelta * (8.0f * groundHits[bestGroundHitIndex]->normalX) +
-                        obj->anim.localPosX;
+                        timeDelta * (8.0f * groundHits[bestGroundHitIndex]->normalX) + obj->anim.localPosX;
                     obj->anim.localPosZ =
                         timeDelta * (8.0f * groundHits[bestGroundHitIndex]->normalZ) + obj->anim.localPosZ;
                     obj->anim.velocityX = groundHits[bestGroundHitIndex]->normalX;
@@ -470,8 +466,7 @@ void Scarab_update(GameObject* obj) {
                 hitDetect_calcSweptSphereBounds(&sweepBounds, &obj->anim.previousLocalPosX, &obj->anim.localPosX,
                                                 hitResults.radii, 1);
                 trackIntersectBroadphase(obj, &sweepBounds, 0, 1);
-                hitMask = trackGetIntersect(obj, &obj->anim.previousLocalPosX, &obj->anim.localPosX, 1,
-                                            &hitResults, 0);
+                hitMask = trackGetIntersect(obj, &obj->anim.previousLocalPosX, &obj->anim.localPosX, 1, &hitResults, 0);
                 if (collisionDetected != 0 ||
                     Vec_distance(&obj->anim.worldPosX, &((ObjPlacement*)obj->anim.placementData)->posX) > 300.0f ||
                     ((hitMask & 1) != 0 && (hitMask & 0x10) == 0)) {
