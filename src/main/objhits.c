@@ -83,10 +83,9 @@ static inline f32 ObjHits_LengthSquared(f32 x, f32 y, f32 z) {
     return x * x + y * y + z * z;
 }
 
-static inline int ObjHits_JointPassesHorizontalCull(const Vec* jointPos, const Vec* parentPos,
-                                                  f32 doubledPointX, f32 doubledPointZ,
-                                                  ModelJointWork* jointData, int joint, f32 diameter,
-                                                  f32 jointRadius, f32 parentRadius) {
+static inline int ObjHits_JointPassesHorizontalCull(const Vec* jointPos, const Vec* parentPos, f32 doubledPointX,
+                                                    f32 doubledPointZ, ModelJointWork* jointData, int joint,
+                                                    f32 diameter, f32 jointRadius, f32 parentRadius) {
     f32 deltaZ;
     f32 deltaX;
     f32 limit;
@@ -170,8 +169,8 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointD
             parentRadius = radii[parent];
             if ((!(jointPos.y - jointRadius > yMax) || !(parentPos.y - parentRadius > yMax)) &&
                 (!(jointPos.y + jointRadius < yMin) || !(parentPos.y + parentRadius < yMin))) {
-                if (ObjHits_JointPassesHorizontalCull(&jointPos, &parentPos, doubledPointX, doubledPointZ,
-                                                     jointData, joint, diameter, jointRadius, parentRadius)) {
+                if (ObjHits_JointPassesHorizontalCull(&jointPos, &parentPos, doubledPointX, doubledPointZ, jointData,
+                                                      joint, diameter, jointRadius, parentRadius)) {
                     axisDir.x = parentPos.x - jointPos.x;
                     axisDir.y = parentPos.y - jointPos.y;
                     axisDir.z = parentPos.z - jointPos.z;
@@ -289,8 +288,8 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointD
             parentRadius = radii[parent];
             jointData->touchedJoints[joint] = 1;
             jointData->touchedJoints[parent] = 1;
-            if (ObjHits_JointPassesHorizontalCull(&jointPos, &parentPos, doubledPointX, doubledPointZ,
-                                                 jointData, joint, diameter, jointRadius, parentRadius)) {
+            if (ObjHits_JointPassesHorizontalCull(&jointPos, &parentPos, doubledPointX, doubledPointZ, jointData, joint,
+                                                  diameter, jointRadius, parentRadius)) {
                 axisDir.x = parentPos.x - jointPos.x;
                 axisDir.y = parentPos.y - jointPos.y;
                 axisDir.z = parentPos.z - jointPos.z;
