@@ -1003,7 +1003,7 @@ void voxmaps_visitRouteNeighbor(struct RouteState* state, RouteNode* parentNode,
     int dxh;
     int dzh;
     int nodeCount;
-    int key;
+    u16 key;
     int dx;
     int dz;
     int shiftHi;

@@ -192,3 +192,34 @@ Both `ninja all_source` and the strict matching checksum pass with 30-second
 limits. The linked DOL remains byte-identical to retail; as above, the unit's
 `NonMatching` status means that check uses its retail object. Objdiff confirms
 that no other unit's match measures change.
+
+## Neighbor priority width (2026-09-08)
+
+The neighbor visitor now keeps its accumulated heap key as `u16`, matching the
+node's cost fields, the explicit truncation at each assignment, and the queue
+helpers' priority parameters. This removes the unnecessary 32-bit local between
+the truncated sum and the helper calls. All 2,296 bytes of
+`voxmaps_visitRouteNeighbor` now match with the existing GC/1.3 profile.
+
+The TU advances from 26/28 to 27/28 exact functions, and from 99.870766% to
+99.94525% similarity. All 604 data bytes remain exact. The only remaining
+function is `voxmaps_updateActiveMap`: 776 bytes, 99.24227% similarity, with 25
+register/operand differences across 194 instructions. It remains `NonMatching`.
+
+A verified backend capture (`tools/tricky_backend_trace.py`, unit
+`main/main/voxmaps`, function `voxmaps_updateActiveMap`, `--graph`) reproduces
+ordinary compilation byte-for-byte. Its 112-node GPR graph has no high-degree
+simplification removals. The differences lie in the cache-hit index/result
+registers and zero store, then the ROM-list index, scaled slot, buffer address,
+and saved free-delay registers in the replacement path. Local declaration
+reordering, narrower cache-index temporaries, scoped pointer aliases, and
+extracted search/free helpers did not improve the baseline in this pass. These
+experiments are not retained and do not establish that the source search is
+exhausted.
+
+Validation: the complete objdiff report preserves every other function's match;
+`ninja all_source` and strict matching `ninja` pass under 30-second timeouts.
+The DOL SHA-1 remains `e750e8e894707a52446118a4b84f1b58b677b269`, using the
+retail object for this still-incomplete TU. Formatting checks pass for the source
+and canonical header; running clang-format introduces no changes and preserves
+the raw source-object hash.
