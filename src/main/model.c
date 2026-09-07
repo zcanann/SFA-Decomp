@@ -1017,8 +1017,7 @@ static void modelChainApplyDampingAndJitter(ObjModel* model, ModelFileHeader* un
     i = 0;
     while (i < entry->nodeCount + 1) {
         ObjModelChainNode* node = &entry->nodes[i];
-        node->posDelta.x =
-            node->posDelta.x * chain->damping + gModelJitterAxis.x * amp;
+        node->posDelta.x = node->posDelta.x * chain->damping + gModelJitterAxis.x * amp;
         node->posDelta.y = gModelJitterAxis.y * amp + (node->posDelta.y * chain->damping + chain->gravityY);
         node->posDelta.z = node->posDelta.z * chain->damping + gModelJitterAxis.z * amp;
         i++;
@@ -1052,8 +1051,7 @@ static void modelChainInitNodesFromJoints(ObjModel* model, ModelFileHeader* file
             s32* jointIdxArr = entry->desc->jointIndices;
             lastJointIdx = jointIdxArr[entry->nodeCount - 1];
         }
-        PSMTXMultVec(modelGetBoneMtx(model, lastJointIdx), &lastNode->localOffset,
-                     &lastNode->pos);
+        PSMTXMultVec(modelGetBoneMtx(model, lastJointIdx), &lastNode->localOffset, &lastNode->pos);
     }
 }
 
@@ -1069,8 +1067,7 @@ void ObjModelChain_Update(ObjModel* model, ModelFileHeader* file, ObjModelChain*
             }
             if (getHudHiddenFrameCount() == 0) {
                 modelChainApplyDampingAndJitter(model, file, chain, &chain->entries[i]);
-                modelChainUpdateNodes(model, file, chain, &chain->entries[i], callback,
-                                      i);
+                modelChainUpdateNodes(model, file, chain, &chain->entries[i], callback, i);
             } else {
                 modelChainUpdateNodesPassive(model, file, chain, &chain->entries[i]);
             }
@@ -1128,8 +1125,8 @@ ObjModelChain* ObjModelChain_Alloc(void* models, int count) {
     for (; i < count; i++) {
         ((ObjModelChainEntry*)((u8*)state->entries + off))->desc = *desc;
         ((ObjModelChainEntry*)((u8*)state->entries + off))->nodeCount = (*desc)->nodeCount;
-        ((ObjModelChainEntry*)((u8*)state->entries + off))->nodes =
-            mmAlloc((((ObjModelChainEntry*)((u8*)state->entries + off))->nodeCount + 1) * sizeof(ObjModelChainNode), 0x1a, 0);
+        ((ObjModelChainEntry*)((u8*)state->entries + off))->nodes = mmAlloc(
+            (((ObjModelChainEntry*)((u8*)state->entries + off))->nodeCount + 1) * sizeof(ObjModelChainNode), 0x1a, 0);
         desc++;
         off += sizeof(ObjModelChainEntry);
     }
