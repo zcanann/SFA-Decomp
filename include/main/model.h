@@ -370,19 +370,19 @@ STATIC_ASSERT(offsetof(ObjModelJointMatrix, translationZ) == 0x2C);
 typedef struct ObjModelBlendChannel {
     f32 weight;
     f32 previousWeight; /* weight observed by the preceding blend-channel apply pass */
-    f32 weightRate;  /* 0x08: per-dt weight delta (weight += weightRate * dt) */
-    s8 morphTargetA; /* 0x0C: index into morphTargetPtrs[] for blend source A (-1 = none) */
-    s8 morphTargetB; /* 0x0D: index into morphTargetPtrs[] for blend source B (-1 = none) */
+    f32 weightRate;     /* 0x08: per-dt weight delta (weight += weightRate * dt) */
+    s8 morphTargetA;    /* 0x0C: index into morphTargetPtrs[] for blend source A (-1 = none) */
+    s8 morphTargetB;    /* 0x0D: index into morphTargetPtrs[] for blend source B (-1 = none) */
     u8 flags;
     u8 unk0F;
 } ObjModelBlendChannel;
 
 /* ObjModelBlendChannel.flags */
-#define BLENDCHAN_FLAG_MANUAL       0x01 /* weight is manual; skip auto-advance */
-#define BLENDCHAN_FLAG_RESET_WEIGHT 0x02 /* reset weight to base pending */
-#define BLENDCHAN_FLAG_DIRTY       0x04 /* refresh this buffer, then request another refresh */
-#define BLENDCHAN_FLAG_REFRESH_NEXT        0x08 /* second vertex-buffer refresh pending */
-#define BLENDCHAN_FLAG_KEEP_WEIGHT 0x10 /* retain weight when changing targets */
+#define BLENDCHAN_FLAG_MANUAL         0x01 /* weight is manual; skip auto-advance */
+#define BLENDCHAN_FLAG_RESET_WEIGHT   0x02 /* reset weight to base pending */
+#define BLENDCHAN_FLAG_DIRTY          0x04 /* refresh this buffer, then request another refresh */
+#define BLENDCHAN_FLAG_REFRESH_NEXT   0x08 /* second vertex-buffer refresh pending */
+#define BLENDCHAN_FLAG_KEEP_WEIGHT    0x10 /* retain weight when changing targets */
 #define BLENDCHAN_FLAG_ALLOW_NEGATIVE 0x20 /* permit weights down to -1 instead of zero */
 
 STATIC_ASSERT(sizeof(ObjModelBlendChannel) == 0x10);

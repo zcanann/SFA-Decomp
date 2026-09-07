@@ -1442,13 +1442,16 @@ int ObjModel_NeedsBlendChannelUpdate(ObjModel* model) {
         return 0;
     }
     ch = model->blendChannels;
-    if (ch[0].weight != ch[0].previousWeight || (ch[0].flags & (BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY | BLENDCHAN_FLAG_REFRESH_NEXT))) {
+    if (ch[0].weight != ch[0].previousWeight ||
+        (ch[0].flags & (BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY | BLENDCHAN_FLAG_REFRESH_NEXT))) {
         return 1;
     }
-    if (ch[1].weight != ch[1].previousWeight || (ch[1].flags & (BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY | BLENDCHAN_FLAG_REFRESH_NEXT))) {
+    if (ch[1].weight != ch[1].previousWeight ||
+        (ch[1].flags & (BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY | BLENDCHAN_FLAG_REFRESH_NEXT))) {
         return 1;
     }
-    if (ch[2].weight != ch[2].previousWeight || (ch[2].flags & (BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY | BLENDCHAN_FLAG_REFRESH_NEXT))) {
+    if (ch[2].weight != ch[2].previousWeight ||
+        (ch[2].flags & (BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY | BLENDCHAN_FLAG_REFRESH_NEXT))) {
         return 1;
     }
     return 0;
@@ -1505,9 +1508,12 @@ void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b,
 
 void ObjModel_ClearBlendChannels(ObjModel* model) {
     if (model->file->morphTargetPtrs != NULL) {
-        ObjModel_SetBlendChannelTargets(model, 0, -1, -1, 0.0f, BLENDCHAN_FLAG_MANUAL | BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY);
-        ObjModel_SetBlendChannelTargets(model, 1, -1, -1, 0.0f, BLENDCHAN_FLAG_MANUAL | BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY);
-        ObjModel_SetBlendChannelTargets(model, 2, -1, -1, 0.0f, BLENDCHAN_FLAG_MANUAL | BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY);
+        ObjModel_SetBlendChannelTargets(model, 0, -1, -1, 0.0f,
+                                        BLENDCHAN_FLAG_MANUAL | BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY);
+        ObjModel_SetBlendChannelTargets(model, 1, -1, -1, 0.0f,
+                                        BLENDCHAN_FLAG_MANUAL | BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY);
+        ObjModel_SetBlendChannelTargets(model, 2, -1, -1, 0.0f,
+                                        BLENDCHAN_FLAG_MANUAL | BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY);
     }
 }
 
