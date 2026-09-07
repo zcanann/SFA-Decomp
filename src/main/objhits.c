@@ -920,36 +920,36 @@ void ObjHitbox_UpdateRotatedBounds(ObjAnimComponent* objAnim, int advanceMatrix)
     return;
 }
 
-int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcObj, char checkA, char checkB, u32 mask,
-                            u32 volMask) {
-    ObjHitsContactScratchEntry* contact;
-    int countA;
-    int countB;
+int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcObj, char recordHits, char applyResponse, u32 hitMask,
+                            u32 sweepMask) {
+    ObjHitsContactScratchEntry* nextContact;
+    int sphereCountA;
+    int sphereCountB;
     ObjHitsPriorityState* stateA;
     int idxA;
-    ObjHitsContactScratchEntry* cw;
-    char modeB;
-    float* sphB;
-    float* curSphA;
-    float* curDefA;
-    float* spheresA;
-    float* spheresB;
-    float* defA;
-    ModelHitSphereDef* volA;
-    ModelHitSphereDef* volB;
+    ObjHitsContactScratchEntry* writeContact;
+    char isCapsuleB;
+    ObjModelHitSphere* sphereB;
+    ObjModelHitSphere* sphereA;
+    ObjModelHitSphere* previousSphereA;
+    ObjModelHitSphere* activeSpheresA;
+    ObjModelHitSphere* activeSpheresB;
+    ObjModelHitSphere* previousSpheresA;
+    ModelHitSphereDef* volumeDefsA;
+    ModelHitSphereDef* volumeDefsB;
     ObjHitsPriorityState* stateSrc;
-    s64 volBits;
+    s64 sweepSphereMask;
     ObjHitsContactScratchEntry* contactBase;
-    int count;
-    char modeA;
-    char miss;
+    int contactCount;
+    char isCapsuleA;
+    char skipSweep;
     s64 maskB;
-    ModelHitSphereDef* vol;
-    float* pb2;
-    ObjModel* modelBank;
+    ModelHitSphereDef* volumeDef;
+    ObjModelHitSphere* contactSphereB;
+    ObjModel* model;
     ModelFileHeader* modelFile;
     s64 maskA;
-    ObjHitsContactScratchEntry* cr;
+    ObjHitsContactScratchEntry* readContact;
     int result;
     s64 bitA;
     s64 bitB;
@@ -968,7 +968,7 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
     float dys;
     float dzs;
     float dsq;
-    float radA2;
+    float sphereRadiusA;
     float xA;
     float yA;
     float zA;
@@ -999,10 +999,10 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
     float bestZ;
     float bestDepth;
     float invLenSq;
-    float defs[8];
-    float sphs[8];
-    u8 volB0[24];
-    u8 volA0[24];
+    ObjModelHitSphere fallbackPreviousSpheres[2];
+    ObjModelHitSphere fallbackSpheres[2];
+    ModelHitSphereDef fallbackVolumeDefB;
+    ModelHitSphereDef fallbackVolumeDefA;
 
     result = 0;
     stateA = (ObjHitsPriorityState*)(&objA->anim)->hitReactState;
@@ -1016,16 +1016,16 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
         (*(s8*)&stateB->resetHitboxMode != 0 || stateB->activeHitboxMode != 0)) {
         return 0;
     }
-    modeA = 0;
-    modeB = 0;
-    if ((checkA != 0 && (stateA->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) ||
-        (checkB != 0 && stateA->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES)) {
-        modelBank = ObjHits_GetActiveModel(objA);
-        modelFile = modelBank->file;
-        countA = modelFile->hitVolumeCount;
-        spheresA = (f32*)modelBank->activeHitVolumeSpheres;
-        defA = (f32*)modelBank->hitVolumeSphereBuffers[((modelBank->bufferFlags >> 2) & 1) ^ 1];
-        volA = (ModelHitSphereDef*)modelFile->hitVolumes;
+    isCapsuleA = 0;
+    isCapsuleB = 0;
+    if ((recordHits != 0 && (stateA->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) ||
+        (applyResponse != 0 && stateA->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES)) {
+        model = ObjHits_GetActiveModel(objA);
+        modelFile = model->file;
+        sphereCountA = modelFile->hitVolumeCount;
+        activeSpheresA = (ObjModelHitSphere*)model->activeHitVolumeSpheres;
+        previousSpheresA = (ObjModelHitSphere*)model->hitVolumeSphereBuffers[((model->bufferFlags >> 2) & 1) ^ 1];
+        volumeDefsA = (ModelHitSphereDef*)modelFile->hitVolumes;
         if (srcObj != objA) {
             radiusA = stateSrc->secondaryRadiusXZ;
         } else {
@@ -1035,58 +1035,58 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
             return 0;
         }
     } else {
-        countA = 1;
-        spheresA = sphs;
-        defA = defs;
-        volA = (ModelHitSphereDef*)volA0;
+        sphereCountA = 1;
+        activeSpheresA = fallbackSpheres;
+        previousSpheresA = fallbackPreviousSpheres;
+        volumeDefsA = &fallbackVolumeDefA;
         if (stateA->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) {
-            modeA = 1;
+            isCapsuleA = 1;
         }
         radiusA = stateA->secondaryRadius;
-        sphs[0] = radiusA;
-        sphs[1] = objA->anim.worldPosX - playerMapOffsetX;
-        sphs[2] = objA->anim.worldPosY;
-        sphs[3] = objA->anim.worldPosZ - playerMapOffsetZ;
-        defs[0] = radiusA;
-        defs[1] = stateA->worldPosX - playerMapOffsetX;
-        defs[2] = stateA->worldPosY;
-        defs[3] = stateA->worldPosZ - playerMapOffsetZ;
-        volA->sphereIndex = 0;
-        volA->maskBit = 0;
-        volA->linkedSpheres = 0;
+        fallbackSpheres[0].radius = radiusA;
+        fallbackSpheres[0].pos[0] = objA->anim.worldPosX - playerMapOffsetX;
+        fallbackSpheres[0].pos[1] = objA->anim.worldPosY;
+        fallbackSpheres[0].pos[2] = objA->anim.worldPosZ - playerMapOffsetZ;
+        fallbackPreviousSpheres[0].radius = radiusA;
+        fallbackPreviousSpheres[0].pos[0] = stateA->worldPosX - playerMapOffsetX;
+        fallbackPreviousSpheres[0].pos[1] = stateA->worldPosY;
+        fallbackPreviousSpheres[0].pos[2] = stateA->worldPosZ - playerMapOffsetZ;
+        volumeDefsA->sphereIndex = 0;
+        volumeDefsA->maskBit = 0;
+        volumeDefsA->linkedSpheres = 0;
     }
-    if ((checkA != 0 && (stateB->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) ||
-        (checkB != 0 && stateB->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES)) {
-        modelBank = ObjHits_GetActiveModel(objB);
-        modelFile = modelBank->file;
-        countB = modelFile->hitVolumeCount;
-        spheresB = (f32*)modelBank->activeHitVolumeSpheres;
-        volB = (ModelHitSphereDef*)modelFile->hitVolumes;
+    if ((recordHits != 0 && (stateB->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) ||
+        (applyResponse != 0 && stateB->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES)) {
+        model = ObjHits_GetActiveModel(objB);
+        modelFile = model->file;
+        sphereCountB = modelFile->hitVolumeCount;
+        activeSpheresB = (ObjModelHitSphere*)model->activeHitVolumeSpheres;
+        volumeDefsB = (ModelHitSphereDef*)modelFile->hitVolumes;
         radiusB = stateB->secondaryRadiusXZ;
         if ((objB->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) {
             return 0;
         }
     } else {
-        countB = 1;
-        spheresB = &sphs[4];
-        volB = (ModelHitSphereDef*)volB0;
+        sphereCountB = 1;
+        activeSpheresB = &fallbackSpheres[1];
+        volumeDefsB = &fallbackVolumeDefB;
         if (stateB->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) {
-            modeB = 1;
+            isCapsuleB = 1;
         }
         radiusB = stateB->secondaryRadius;
-        sphs[4] = radiusB;
-        sphs[5] = objB->anim.worldPosX - playerMapOffsetX;
-        sphs[6] = objB->anim.worldPosY;
-        sphs[7] = objB->anim.worldPosZ - playerMapOffsetZ;
-        defs[4] = sphs[0];
-        defs[5] = stateA->worldPosX - playerMapOffsetX;
-        defs[6] = stateA->worldPosY;
-        defs[7] = stateA->worldPosZ - playerMapOffsetZ;
-        volB->sphereIndex = 0;
-        volB->maskBit = 0;
-        volB->linkedSpheres = 0;
+        fallbackSpheres[1].radius = radiusB;
+        fallbackSpheres[1].pos[0] = objB->anim.worldPosX - playerMapOffsetX;
+        fallbackSpheres[1].pos[1] = objB->anim.worldPosY;
+        fallbackSpheres[1].pos[2] = objB->anim.worldPosZ - playerMapOffsetZ;
+        fallbackPreviousSpheres[1].radius = fallbackSpheres[0].radius;
+        fallbackPreviousSpheres[1].pos[0] = stateA->worldPosX - playerMapOffsetX;
+        fallbackPreviousSpheres[1].pos[1] = stateA->worldPosY;
+        fallbackPreviousSpheres[1].pos[2] = stateA->worldPosZ - playerMapOffsetZ;
+        volumeDefsB->sphereIndex = 0;
+        volumeDefsB->maskBit = 0;
+        volumeDefsB->linkedSpheres = 0;
     }
-    if (countA > 64 || countB > 64) {
+    if (sphereCountA > 64 || sphereCountB > 64) {
         debugPrintf(sObjHitsTooManyHitSpheresWarning);
     }
     dxs = objA->anim.worldPosX - objB->anim.worldPosX;
@@ -1098,52 +1098,52 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
     }
     maskA = 0;
     maskB = 0;
-    volBits = 0;
+    sweepSphereMask = 0;
     i = 0;
-    vol = volA;
-    for (; i < countA; i++) {
-        if (i == vol->sphereIndex) {
-            if ((mask & 1 << vol->maskBit) != 0) {
+    volumeDef = volumeDefsA;
+    for (; i < sphereCountA; i++) {
+        if (i == volumeDef->sphereIndex) {
+            if ((hitMask & 1 << volumeDef->maskBit) != 0) {
                 maskA |= 1 << i;
             }
-            if ((volMask & 1 << vol->maskBit) != 0) {
-                volBits |= 1 << i;
+            if ((sweepMask & 1 << volumeDef->maskBit) != 0) {
+                sweepSphereMask |= 1 << i;
             }
         }
-        vol++;
+        volumeDef++;
     }
     j = 0;
-    vol = volB;
-    for (; j < countB; j++) {
-        if (j == vol->sphereIndex) {
+    volumeDef = volumeDefsB;
+    for (; j < sphereCountB; j++) {
+        if (j == volumeDef->sphereIndex) {
             maskB |= 1 << j;
         }
-        vol++;
+        volumeDef++;
     }
     contactBase = gObjHitsContactScratch;
     bestDepth = -1.0f;
-    count = 1;
-    while (count != 0) {
-        count = 0;
+    contactCount = 1;
+    while (contactCount != 0) {
+        contactCount = 0;
         i = 0;
-        curSphA = spheresA;
-        curDefA = defA;
-        contact = contactBase;
-        for (; i < countA; i++) {
+        sphereA = activeSpheresA;
+        previousSphereA = previousSpheresA;
+        nextContact = contactBase;
+        for (; i < sphereCountA; i++) {
             bitA = 1 << i;
             if ((maskA & bitA) != 0) {
-                radA2 = curSphA[0];
-                xA = curSphA[1];
-                yA = curSphA[2];
-                zA = curSphA[3];
-                miss = 1;
-                if ((volBits & bitA) != 0) {
-                    miss = 0;
+                sphereRadiusA = sphereA->radius;
+                xA = sphereA->pos[0];
+                yA = sphereA->pos[1];
+                zA = sphereA->pos[2];
+                skipSweep = 1;
+                if ((sweepSphereMask & bitA) != 0) {
+                    skipSweep = 0;
                 }
-                if (miss == 0) {
-                    dax = curDefA[1];
-                    day = curDefA[2];
-                    daz = curDefA[3];
+                if (skipSweep == 0) {
+                    dax = previousSphereA->pos[0];
+                    day = previousSphereA->pos[1];
+                    daz = previousSphereA->pos[2];
                     ax = xA - dax;
                     ay = yA - day;
                     az = zA - daz;
@@ -1151,37 +1151,37 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
                     if (lenSq > 0.0f) {
                         invLenSq = 1.0f / lenSq;
                     } else {
-                        miss = 1;
+                        skipSweep = 1;
                     }
                 }
                 j = 0;
-                sphB = spheresB;
-                cw = contact;
-                minA = yA - radA2;
-                maxA = yA + radA2;
-                for (; j < countB; j++) {
+                sphereB = activeSpheresB;
+                writeContact = nextContact;
+                minA = yA - sphereRadiusA;
+                maxA = yA + sphereRadiusA;
+                for (; j < sphereCountB; j++) {
                     bitB = 1 << j;
                     if ((maskB & bitB) != 0) {
                         hit = 0;
-                        if ((i == 0 && modeA != 0) || (j == 0 && modeB != 0)) {
-                            if (modeA != 0) {
+                        if ((i == 0 && isCapsuleA != 0) || (j == 0 && isCapsuleB != 0)) {
+                            if (isCapsuleA != 0) {
                                 lo = yA + stateA->secondaryCapsuleOffsetA;
                                 hi = yA + stateA->secondaryCapsuleOffsetB;
-                                blo = sphB[2] - sphB[0];
-                                bhi = sphB[2] + sphB[0];
+                                blo = sphereB->pos[1] - sphereB->radius;
+                                bhi = sphereB->pos[1] + sphereB->radius;
                             } else {
                                 lo = minA;
                                 hi = maxA;
-                                blo = stateB->secondaryCapsuleOffsetA + sphB[2];
-                                bhi = stateB->secondaryCapsuleOffsetB + sphB[2];
+                                blo = stateB->secondaryCapsuleOffsetA + sphereB->pos[1];
+                                bhi = stateB->secondaryCapsuleOffsetB + sphereB->pos[1];
                             }
                             if ((!(blo < lo) || !(bhi < lo)) && (!(blo > hi) || !(bhi > hi))) {
-                                sumSq = radA2 + sphB[0];
+                                sumSq = sphereRadiusA + sphereB->radius;
                                 sumSq *= sumSq;
-                                dxs = xA - sphB[1];
+                                dxs = xA - sphereB->pos[0];
                                 dsq = dxs * dxs;
                                 if (dsq < sumSq) {
-                                    dzs = zA - sphB[3];
+                                    dzs = zA - sphereB->pos[2];
                                     dsq = dzs * dzs + dsq;
                                     if (dsq < sumSq) {
                                         dys = 0.0f;
@@ -1190,15 +1190,15 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
                                 }
                             }
                         } else {
-                            sumSq = (radA2 + sphB[0]) * (radA2 + sphB[0]);
-                            if (miss != 0) {
-                                dxs = xA - sphB[1];
+                            sumSq = (sphereRadiusA + sphereB->radius) * (sphereRadiusA + sphereB->radius);
+                            if (skipSweep != 0) {
+                                dxs = xA - sphereB->pos[0];
                                 dsq = dxs * dxs;
                                 if (dsq < sumSq) {
-                                    dys = yA - sphB[2];
+                                    dys = yA - sphereB->pos[1];
                                     dsq = dys * dys + dsq;
                                     if (dsq < sumSq) {
-                                        dzs = zA - sphB[3];
+                                        dzs = zA - sphereB->pos[2];
                                         dsq = dzs * dzs + dsq;
                                         if (dsq < sumSq) {
                                             hit = 1;
@@ -1206,9 +1206,9 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
                                     }
                                 }
                             } else {
-                                cx = dax - sphB[1];
-                                cy = day - sphB[2];
-                                cz = daz - sphB[3];
+                                cx = dax - sphereB->pos[0];
+                                cy = day - sphereB->pos[1];
+                                cz = daz - sphereB->pos[2];
                                 cc = (cz * cz + (cx * cx + (cy * cy))) - sumSq;
                                 bb = cz * az + (cx * ax + (cy * ay));
                                 if (!(bb > 0.0f) || !(cc > 0.0f)) {
@@ -1228,8 +1228,8 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
                                 }
                             }
                         }
-                        if (hit != 0 && count < 64) {
-                            if (checkB != 0) {
+                        if (hit != 0 && contactCount < 64) {
+                            if (applyResponse != 0) {
                                 if (dsq > 0.0f) {
                                     bb = sqrtf(sumSq);
                                     dsq = sqrtf(dsq);
@@ -1238,9 +1238,9 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
                                     } else {
                                         sumSq = 0.0f;
                                     }
-                                    cw->depth = sumSq;
-                                    cw->responseX = dxs * sumSq;
-                                    cw->responseZ = dzs * sumSq;
+                                    writeContact->depth = sumSq;
+                                    writeContact->responseX = dxs * sumSq;
+                                    writeContact->responseZ = dzs * sumSq;
                                 }
                             } else {
                                 sumSq = sqrtf(dzs * dzs + (dxs * dxs + (dys * dys)));
@@ -1249,33 +1249,33 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
                                     dys /= sumSq;
                                     dzs /= sumSq;
                                 }
-                                sb0 = sphB[0];
-                                cw->contactOffsetX = dxs * sb0;
-                                cw->contactOffsetY = dys * sb0;
-                                cw->contactOffsetZ = dzs * sb0;
+                                sb0 = sphereB->radius;
+                                writeContact->contactOffsetX = dxs * sb0;
+                                writeContact->contactOffsetY = dys * sb0;
+                                writeContact->contactOffsetZ = dzs * sb0;
                             }
-                            cw->sphereIndexA = i;
-                            cw->sphereIndexB = j;
-                            cw++;
-                            contact++;
-                            count += 1;
+                            writeContact->sphereIndexA = i;
+                            writeContact->sphereIndexB = j;
+                            writeContact++;
+                            nextContact++;
+                            contactCount += 1;
                         }
                     }
-                    sphB += 4;
+                    sphereB++;
                 }
             }
-            curSphA += 4;
-            curDefA += 4;
+            sphereA++;
+            previousSphereA++;
         }
         maskA = 0;
         maskB = 0;
         k = 0;
-        cr = contactBase;
-        for (; k < count; k++) {
-            idxA = cr->sphereIndexA;
-            hit = cr->sphereIndexB;
-            linkA = volA[idxA].linkedSpheres;
-            linkB = volB[hit].linkedSpheres;
+        readContact = contactBase;
+        for (; k < contactCount; k++) {
+            idxA = readContact->sphereIndexA;
+            hit = readContact->sphereIndexB;
+            linkA = volumeDefsA[idxA].linkedSpheres;
+            linkB = volumeDefsB[hit].linkedSpheres;
             link = linkA;
             while (link != 0) {
                 maskA |= 1 << (idxA + (u16)((link & 0xf000) >> 12));
@@ -1287,18 +1287,18 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
                 link = link << 4;
             }
             if (linkA == 0 && linkB == 0) {
-                if (checkA != 0) {
-                    pb2 = &spheresB[hit * 4];
-                    cx = pb2[1] + cr->contactOffsetX;
+                if (recordHits != 0) {
+                    contactSphereB = &activeSpheresB[hit];
+                    cx = contactSphereB->pos[0] + readContact->contactOffsetX;
                     ObjHits_RecordPositionHit(objB, objA, stateSrc->hitVolumePriority, (u8)stateSrc->hitVolumeId, hit,
-                                              cx, (modeB != 0) ? spheresA[idxA * 4 + 2] : pb2[2] + cr->contactOffsetY,
-                                              pb2[3] + cr->contactOffsetZ);
+                                              cx, (isCapsuleB != 0) ? activeSpheresA[idxA].pos[1] : contactSphereB->pos[1] + readContact->contactOffsetY,
+                                              contactSphereB->pos[2] + readContact->contactOffsetZ);
                     result = 1;
-                } else if (checkB != 0) {
-                    if (cr->depth > bestDepth) {
-                        bestDepth = cr->depth;
-                        bestX = cr->responseX;
-                        bestZ = cr->responseZ;
+                } else if (applyResponse != 0) {
+                    if (readContact->depth > bestDepth) {
+                        bestDepth = readContact->depth;
+                        bestX = readContact->responseX;
+                        bestZ = readContact->responseZ;
                     }
                 }
             } else if (linkA == 0) {
@@ -1306,10 +1306,10 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
             } else if (linkB == 0) {
                 maskB |= 1 << hit;
             }
-            cr++;
+            readContact++;
         }
     }
-    if (checkA != 0 && result != 0) {
+    if (recordHits != 0 && result != 0) {
         if ((stateA->flags & 0x80) != 0) {
             react = ObjAnim_GetPriorityHitState(&objA->anim);
             if (react != 0) {
@@ -1324,7 +1324,7 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
         }
         return 1;
     }
-    if (checkB != 0) {
+    if (applyResponse != 0) {
         if (bestDepth > 0.0f) {
             if (objA == srcObj) {
                 ObjHits_RecordObjectHit(objB, objA, stateSrc->objectPairPriority, stateSrc->objectPairHitVolume, hit);

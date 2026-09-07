@@ -166,8 +166,8 @@ int ObjHits_TestTaperedCapsule3D(float* point, float pointRadius, float baseRadi
 void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount);
 void ObjHits_TickPriorityHitCooldowns(void);
 void ObjHitbox_UpdateRotatedBounds(ObjAnimComponent* objAnim, int advanceMatrix);
-int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcObj, char checkA, char checkB, u32 mask,
-                            u32 volMask);
+int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcObj, char recordHits, char applyResponse, u32 hitMask,
+                            u32 sweepMask);
 void ObjHits_OnPlayerHitVolumeMiss(GameObject* objA, GameObject* objB, GameObject* attachment, void* state,
                                    void* attachmentState, f32 dt);
 void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObject* attA, GameObject* attB, f32 dt);

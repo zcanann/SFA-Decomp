@@ -324,3 +324,39 @@ are unchanged. The helper renumbers later anonymous literal names without
 moving their storage. Full source compilation and the strict retail checksum
 pass. Formatting is a separate commit and preserves the semantic object byte
 for byte; the active source and canonical header pass the formatter check.
+
+## Canonical hit-volume query records
+
+`ObjHits_CheckHitVolumes` now uses `ObjModelHitSphere` throughout its active
+sphere arrays, previous-frame array, walking cursors, and selected contact
+sphere. Its two eight-float fallback arrays are explicit pairs of the same
+16-byte record. The two 24-byte fallback definition buffers are real
+`ModelHitSphereDef` locals, retaining their declaration order and the original
+partial initialization. Both canonical layouts and their field offsets already
+have assertions in `main/model.h`.
+
+The public parameter names now distinguish `recordHits` from `applyResponse`,
+and `hitMask` from `sweepMask`. The latter selects which A-side spheres use the
+previous-position sweep test; it is not a second count of hit volumes. The
+former `miss` local is `skipSweep`, and the misleading `radA2` local is
+`sphereRadiusA`. Named contact read/write cursors and fallback records make the
+linked-sphere refinement passes visible without changing their structure.
+
+All five callers retain their existing arguments, and the header changes only
+parameter names. The fallback previous array retains its second record's
+initialization from A's state and first fallback radius. No attempt is made to
+normalize that asymmetry, change the shift widths used by the sphere masks, or
+simplify the collision arithmetic.
+
+Against `a622044034`, the complete ObjHits object is byte-identical, including
+all 54 function bodies, data, symbol names and offsets, and relocations.
+Descriptor typing, sphere typing, and the combined change each independently
+preserve the raw object. The function remains 99.38196% fuzzy matching, and the
+TU remains `NonMatching`. Replacing its initial priority-state casts with
+canonical accessors was also tested and regressed register allocation; those
+rewrites are not retained.
+
+Full source compilation and the strict retail checksum pass. Rebuilding the
+public header's consumers changes no source-object hash. The active source and
+header pass the formatter check, and the separate formatting commit preserves
+the complete object bytes.
