@@ -76,9 +76,9 @@ typedef struct ScarabSweepSphere {
 } ScarabSweepSphere;
 
 typedef struct ScarabCollisionScratch {
-    TrackLineIntersectResult bboxHit;     /* 0x00 */
-    u8 hitResults[0x40];      /* 0x54 */
-    ScarabSweepSphere sphere; /* 0x94 */
+    TrackLineIntersectResult bboxHit; /* 0x00 */
+    u8 hitResults[0x40];              /* 0x54 */
+    ScarabSweepSphere sphere;         /* 0x94 */
 } ScarabCollisionScratch;
 
 STATIC_ASSERT(offsetof(ScarabCollisionResults, hitInfo) == 0x0);
@@ -94,8 +94,7 @@ STATIC_ASSERT(offsetof(ScarabSweepSphere, flags) == 0x14);
 STATIC_ASSERT(offsetof(ScarabSweepSphere, pad15) == 0x15);
 STATIC_ASSERT(sizeof(ScarabSweepSphere) == 0x30);
 STATIC_ASSERT(offsetof(ScarabCollisionScratch, bboxHit) == 0x0);
-STATIC_ASSERT(offsetof(ScarabCollisionScratch, sphere) ==
-              offsetof(ScarabCollisionScratch, hitResults) + 0x40);
+STATIC_ASSERT(offsetof(ScarabCollisionScratch, sphere) == offsetof(ScarabCollisionScratch, hitResults) + 0x40);
 
 static inline void Scarab_collect(GameObject* obj, GameObject* player, ScarabState* state) {
     u8 moneyValues[4] = {1, 5, 10, 50};
