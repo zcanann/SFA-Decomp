@@ -1844,7 +1844,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/gameloop_main.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
             Object(NonMatching, "main/vecmath.c", cflags=cflags_dll_noopt_nostrength),
             Object(MatchingFor("GSAE01"), "main/vecmath_vec3.c"),
-            Object(NonMatching, "main/mm.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
+            Object(MatchingFor("GSAE01"), "main/mm.c", cflags=cflags_dll_noopt_noautoinline_deferred),
             Object(NonMatching, "main/model.c", cflags=[*cflags_dll_noopt_noloopinv, "-inline", "noauto"]),
             Object(NonMatching, "main/object.c"),
             Object(MatchingFor("GSAE01"), "main/skystars.c"),

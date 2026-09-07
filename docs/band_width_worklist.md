@@ -5,6 +5,12 @@ tree fuzzy 99.81795, **205 sub-100 functions**. This replaces the old band-width
 the fixed `tools/structscan.py` now reloc-masks and pool-canonicalises the diff, so `ndiff` below
 is REAL differing instruction words (an `@N`-vs-`lbl_` pool naming difference no longer counts).
 
+Update 2026-09-07: both memory-manager rows below are resolved. Native arrays,
+deferred emission, and recovered pointer lifetimes bring `mmFreeTick` and
+`mmFreeDeferred` to 100%; the complete TU passes the retail checksum.
+See [memory manager matching](mm_matching.md). Their old classifications below
+are historical and do not constrain further source recovery.
+
 ## Rotation class CLOSED WITH MECHANISM (2026-08-03 corpus mining)
 
 The saved-band rotation offset is set by the inline-boundary value count, dose-saturating at one,

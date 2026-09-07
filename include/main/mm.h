@@ -21,14 +21,14 @@ int printHeapStats(int mode);
 void* stackCreate(int count, int size);
 
 
-/* extern-cleanup: defining-file public prototypes */
 void mmFree(void* p);
 void mmFreeDeferred(void* p);
 void mmInit(void);
+void* mmInitRegion(u8* buf, int size, int numSlots);
 
 int mmSetFreeDelay(int v);
-int testAndSet_onlyUseHeaps1and2(int v);
-int testAndSet_onlyUseHeap3(int v);
+int mmSetForceHeaps1and2Only(int v);
+int mmSetForceHeap3Only(int v);
 int mmGetRegionForPtr(u8* ptr);
 int getHeapItemSize(void* ptr);
 void mmFreeTick(int arg);
