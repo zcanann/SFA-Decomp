@@ -1410,8 +1410,9 @@ void mapClearBlockEdgeFlags(void) {
     }
 }
 
-int collectShadowTrackTriangles(GameObject* obj, TrackTriangle* triangles, TrackShadowTriangle* planesOut, Vec3f* verticesOut, int unusedTriangleCount,
-                                f32 offX, f32 offZ, int unusedRenderMode, int kindSelector) {
+int collectShadowTrackTriangles(GameObject* obj, TrackTriangle* triangles, TrackShadowTriangle* planesOut,
+                                Vec3f* verticesOut, int unusedTriangleCount, f32 offX, f32 offZ, int unusedRenderMode,
+                                int kindSelector) {
     int j;
     f32 localMatrix[12];
     TrackBlockDescriptor* desc = trackGetBlockDescriptors((u32*)&j);
@@ -1439,16 +1440,13 @@ int collectShadowTrackTriangles(GameObject* obj, TrackTriangle* triangles, Track
             while (j < desc[1].firstTriangle && triangleCount < 0x4b0 && vertexCount < 0xe10) {
                 if (triangleFlag & triangles[j].flags) {
                     verticesOut[0].x = __OSs16tof32(&triangles[j].vx[0]) - fx;
-                    verticesOut[0].y =
-                        __OSs16tof32(&triangles[j].vy[0]) - obj->anim.localPosY;
+                    verticesOut[0].y = __OSs16tof32(&triangles[j].vy[0]) - obj->anim.localPosY;
                     verticesOut[0].z = __OSs16tof32(&triangles[j].vz[0]) - fz;
                     verticesOut[1].x = __OSs16tof32(&triangles[j].vx[1]) - fx;
-                    verticesOut[1].y =
-                        __OSs16tof32(&triangles[j].vy[1]) - obj->anim.localPosY;
+                    verticesOut[1].y = __OSs16tof32(&triangles[j].vy[1]) - obj->anim.localPosY;
                     verticesOut[1].z = __OSs16tof32(&triangles[j].vz[1]) - fz;
                     verticesOut[2].x = __OSs16tof32(&triangles[j].vx[2]) - fx;
-                    verticesOut[2].y =
-                        __OSs16tof32(&triangles[j].vy[2]) - obj->anim.localPosY;
+                    verticesOut[2].y = __OSs16tof32(&triangles[j].vy[2]) - obj->anim.localPosY;
                     verticesOut[2].z = __OSs16tof32(&triangles[j].vz[2]) - fz;
                     outputTriangle->normal.x = triangles[j].planeN[0];
                     outputTriangle->normal.y = triangles[j].planeN[1];
@@ -1506,7 +1504,8 @@ int collectShadowTrackTriangles(GameObject* obj, TrackTriangle* triangles, Track
                 j++;
             }
             if (firstVertex < vertexCount) {
-                PSMTXMultVecArray((MtxPtr)localMatrix, (Vec*)firstOutputVertex, (Vec*)firstOutputVertex, vertexCount - firstVertex);
+                PSMTXMultVecArray((MtxPtr)localMatrix, (Vec*)firstOutputVertex, (Vec*)firstOutputVertex,
+                                  vertexCount - firstVertex);
             }
         }
     }
