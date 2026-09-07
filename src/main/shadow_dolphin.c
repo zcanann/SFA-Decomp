@@ -575,7 +575,8 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
         modelState->shadowRenderResource->vertexCount = triangleCount * 3;
         vertexIndex = 0;
         meshVertexScale = 20.0f;
-        for (streamIndex = 0; vertexIndex < modelState->shadowRenderResource->vertexCount; vertexIndex++, streamIndex += 3) {
+        for (streamIndex = 0; vertexIndex < modelState->shadowRenderResource->vertexCount;
+             vertexIndex++, streamIndex += 3) {
             modelState->shadowRenderResource->coordinates[streamIndex + 0] = meshVertexScale * vertices[vertexIndex].x;
             modelState->shadowRenderResource->coordinates[streamIndex + 1] = meshVertexScale * vertices[vertexIndex].y;
             modelState->shadowRenderResource->coordinates[streamIndex + 2] = meshVertexScale * vertices[vertexIndex].z;
@@ -583,8 +584,11 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
     }
     if (modelState->shadowRenderResource != OBJECT_SHADOW_MESH_UNCACHED) {
         GXBegin(GX_TRIANGLES, GX_VTXFMT0, modelState->shadowRenderResource->vertexCount & 0xffff);
-        for (vertexIndex = 0, streamIndex = 0; vertexIndex < modelState->shadowRenderResource->vertexCount; vertexIndex++, streamIndex += 3) {
-            GXPosition3s16(modelState->shadowRenderResource->coordinates[streamIndex + 0], modelState->shadowRenderResource->coordinates[streamIndex + 1], modelState->shadowRenderResource->coordinates[streamIndex + 2]);
+        for (vertexIndex = 0, streamIndex = 0; vertexIndex < modelState->shadowRenderResource->vertexCount;
+             vertexIndex++, streamIndex += 3) {
+            GXPosition3s16(modelState->shadowRenderResource->coordinates[streamIndex + 0],
+                           modelState->shadowRenderResource->coordinates[streamIndex + 1],
+                           modelState->shadowRenderResource->coordinates[streamIndex + 2]);
         }
     } else {
         int triangleIndex;
