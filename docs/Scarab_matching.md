@@ -1,9 +1,11 @@
 # Scarab (object DLL 262)
 
-EN v1.0, GC/1.3, 2026-09-07. The unit remains `NonMatching`: six of seven
-functions are exact, all 240 assigned data bytes match, and `Scarab_update`
-has one differing instruction in 3,476 bytes (99.930954%). Whole-unit text
-is 99.95461% fuzzy matched.
+EN v1.0, GC/1.3, 2026-09-07. The unit remains `NonMatching`: five of seven
+functions are exact and all 240 assigned data bytes match. `Scarab_update`
+has two differing instructions in 3,476 bytes (99.91945%);
+`Scarab_applyOrientation` has one in 492 bytes (99.9187%). Whole-unit text
+is 99.93948% fuzzy matched. The cleanup below intentionally accepts two
+equivalent floating-point comparison differences to remove redundant locals.
 
 ## Collection helper
 
@@ -39,8 +41,8 @@ definitions and their later assignments. No other source consumes those
 definitions. Their target pool labels remain in the symbol config with
 local scope.
 
-This recovery preserves all seven function bodies and every allocated
-section's bytes, size, and alignment. Only the two former global symbols
+Before the expression cleanup, this recovery preserved all seven function
+bodies and every allocated section's bytes, size, and alignment. Only the two former global symbols
 and anonymous relocation names change; the initializer relocation targets
 remain `.rodata+0` and `.rodata+12`. The complete object SHA256 is
 `030b14ff068ffd446194b5e36a1d0c080e476fc22850425d24d5f3815e59bfa0`.
@@ -132,3 +134,46 @@ EN rev1, JP, PAL, and PAL rev1 all retain `mr r30,r31` at the corresponding
 instruction 26. This corroborates the instruction's retail identity without
 establishing the missing source form. None of the diagnostic scalar, alias,
 aggregate, guard, or optimizer variants is retained.
+
+## Direct collision records and expressions
+
+The former `ScarabCollisionScratch` joined two independent stack locals:
+`TrackLineIntersectResult` at update-frame offset `0x7C`, and `TrackHitResults`
+at `0xD0`. The latter already owns the plane array, radii, surface bytes, query
+bytes, and object pointers. Both records now use their canonical types, with
+normal field access such as `hitResults.radii` and `hitResults.planes[0]`.
+The three private collision overlays and their duplicate assertions are gone.
+
+This is supported by the EN collision callee, not just a matching stack shape.
+`trackGetIntersect` writes its result count at `+0x6C` (`0x80067998`) and mask
+at `+0x6E` (`0x80067B64`); its object slots start at `+0x5C`. The collision
+helper's former `solidFlags` array therefore contains hit-object pointers.
+It now uses `TrackHitResults.objects` and the complete `0x70`-byte record.
+The helper remains byte-exact, including its frame size and stack accesses.
+Canonical result layout assertions remain beside the shared definition in
+`include/main/track_hit_results.h`.
+
+The cleanup also removes constant-only scopes and locals, assignments inside
+normalization and movement expressions, vector-address casts, and unnecessary
+contact-byte pointer casts. The orientation helper accesses `ScarabState`
+fields directly. Inlining the rise, bounce, movement, and knockback constants
+and replacing the sphere aliases preserve instructions. Direct plane access
+through the old wrapper introduced an extra pointer copy; using separate
+canonical locals removes that copy and reproduces retail's stack offsets.
+
+Removing the zero temporaries changes only the operand order of two `fcmpu`
+instructions: `0x801846A4` in `Scarab_applyOrientation` and `0x80184DE4` in
+`Scarab_update`. Their equality/unordered tests are equivalent. The original
+`li r30,0` versus `mr r30,r31` difference at `0x80184998` remains. Relative
+to the pre-cleanup object, exactly four instruction bytes change; section
+sizes, alignment, data bytes, named symbols, and relocation destinations are
+unchanged. Anonymous literal names are renumbered. The normal object SHA256
+is `db55c4874fe91c6ea3aa0b7d0f990611c56ec15ea3f03f37c4a8132bb0c261ba`.
+
+Both `ninja all_source` and the strict retail checksum gate pass. A diagnostic
+link substituting the cleaned source object differs from retail at exactly
+eight bytes across the three instructions above; every allocated section
+retains its address and length, and all other bytes match.
+
+These cleaner forms are the new baseline. The previous higher percentage
+does not establish the discarded expressions as original source.

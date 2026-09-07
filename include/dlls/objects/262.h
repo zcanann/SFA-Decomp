@@ -5,8 +5,6 @@
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
 
-typedef struct TrackGroundHit TrackGroundHit;
-
 #define SCARAB_PLACEMENT_SIZE 0x24
 #define SCARAB_STATE_SIZE     0x34
 
