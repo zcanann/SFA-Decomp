@@ -2145,8 +2145,7 @@ void* gameTextGet(int textId) {
     cachedEntry = sGameTextFallbackDefs + GAMETEXT_FALLBACK_COUNT;
     while (cachedEntry--, slotIndex-- != 0) {
         if (cachedEntry->identifier == textId) {
-            zero = 0.0f;
-            sGameTextFallbackElapsedFrames[slotIndex] = zero;
+            zero = sGameTextFallbackElapsedFrames[slotIndex] = 0.0f;
             cachedRequestDelta = &sGameTextFallbackRequestDelta[slotIndex];
             if (zero < 120.0f) {
                 f32 requestDelta = zero + timeDelta;
