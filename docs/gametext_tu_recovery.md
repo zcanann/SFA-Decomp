@@ -301,3 +301,8 @@ measurement, and color suites also pass.
 Both `ninja all_source` and the strict retail checksum gate pass. Gametext remains
 `NonMatching`; these gates establish buildability, not runtime equivalence of
 its reconstructed C.
+
+The subsequent [resource-parser recovery](gametext_resource_parser.md) corrects
+the overlapping message-header record, introduces native glyph/texture headers,
+and replaces the font-record pointer cast with real texture-array indexing. It
+also provides compiled-versus-retail PPC execution checks for this parser.

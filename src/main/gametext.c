@@ -2273,17 +2273,35 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot);
 
 SubtitleCmd* subtitleParseControlCmds(char* str, int* count);
 
+typedef struct GameTextGlyphTable {
+    int count;
+    TextGlyph glyphs[];
+} GameTextGlyphTable;
+STATIC_ASSERT(sizeof(GameTextGlyphTable) == 4);
+STATIC_ASSERT(offsetof(GameTextGlyphTable, glyphs) == 4);
+
 typedef struct GameTextTableHeader {
-    u32 unk0;
     u16 entryCount;
-    u16 textureOffset;
+    u16 stringDataSize;
 } GameTextTableHeader;
-STATIC_ASSERT(sizeof(GameTextTableHeader) == 8);
+STATIC_ASSERT(sizeof(GameTextTableHeader) == 4);
+STATIC_ASSERT(offsetof(GameTextTableHeader, stringDataSize) == 2);
 
 typedef struct GameTextStringTable {
     int count;
     int offsets[];
 } GameTextStringTable;
+
+typedef struct GameTextTextureHeader {
+    u16 format;
+    u16 bitsPerPixel;
+    u16 width;
+    u16 height;
+} GameTextTextureHeader;
+STATIC_ASSERT(sizeof(GameTextTextureHeader) == 8);
+STATIC_ASSERT(offsetof(GameTextTextureHeader, bitsPerPixel) == 2);
+STATIC_ASSERT(offsetof(GameTextTextureHeader, width) == 4);
+STATIC_ASSERT(offsetof(GameTextTextureHeader, height) == 6);
 
 typedef struct GameTextDiscDef {
     u16 identifier;
@@ -3013,149 +3031,150 @@ void gameTextBuildSystemFontAtlas(void) {
 /* Install a completed language/charset load, upload its textures, and compact
    the relocatable text tables. */
 void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
-    int** textureSlot;
-    u16* p;
-    u32 bpp;
-    int ofs;
+    int textureIndex;
+    u16* textureCursor;
+    u32 bitsPerPixel;
+    int stringDataSize;
     GameTextStringTable* stringTable;
-    u32 w;
-    u32 h;
+    u32 width;
+    u32 height;
     int i;
-    u8* txt;
-    int* texHdr;
-    GameTextTableHeader* hdr;
-    u16* texStart;
-    int* data;
-    u16 kind;
-    u8* entries;
-    int numStrings;
-    int* strs;
-    int n;
-    u32 size;
-    u16* newBuf;
-    u16* old;
-    int delta;
-    int* strs2;
-    TextFont* cs;
+    u8* stringData;
+    int* paddingBlock;
+    GameTextTableHeader* tableHeader;
+    u16* textureDataStart;
+    GameTextGlyphTable* resource;
+    u16 textureFormat;
+    GameTextDef* definitions;
+    int stringCount;
+    int* stringPointers;
+    int remainingUnits;
+    u32 tableBytes;
+    u16* compactedResource;
+    u16* loadedResource;
+    int relocationDelta;
+    int* relocatedStringPointers;
+    TextFont* charset;
 
     DCStoreRange(loadSlot->loadHandle, loadSlot->loadedSize);
-    if (loadSlot->sourceId == 1) {
-        cs = &gGameTextCharsets[1];
-    } else if (loadSlot->sourceId == 3) {
-        cs = &gGameTextCharsets[3];
+    if (loadSlot->sourceId == GAMETEXT_SLOT_CUTSCENE) {
+        charset = &gGameTextCharsets[GAMETEXT_SLOT_CUTSCENE];
+    } else if (loadSlot->sourceId == GAMETEXT_SLOT_HUD) {
+        charset = &gGameTextCharsets[GAMETEXT_SLOT_HUD];
     } else {
-        cs = &gGameTextCharsets[0];
+        charset = &gGameTextCharsets[GAMETEXT_SLOT_DIALOGUE];
         curGameTextDir = loadSlot->dirId;
         curLanguage = loadSlot->languageId;
     }
-    data = loadSlot->loadHandle;
-    cs->glyphCount = data[0];
-    if (cs->glyphCount == 0) {
-        cs->status = 3;
+    resource = loadSlot->loadHandle;
+    charset->glyphCount = resource->count;
+    if (charset->glyphCount == 0) {
+        charset->status = 3;
         loadSlot->state = 6;
         return;
     }
-    cs->glyphs = (TextGlyph*)(data + 1);
-    hdr = (GameTextTableHeader*)((u8*)data + cs->glyphCount * 16);
-    cs->entryCount = hdr->entryCount;
-    ofs = hdr->textureOffset;
-    entries = (u8*)(hdr + 1);
-    cs->entries = (GameTextDef*)entries;
-    stringTable = (GameTextStringTable*)(entries + cs->entryCount * 12);
-    numStrings = stringTable->count;
-    strs = stringTable->offsets;
-    for (i = 0; i < cs->entryCount; i++) {
-        cs->entries[i].strings = (char**)(strs + (int)cs->entries[i].strings);
+    charset->glyphs = resource->glyphs;
+    tableHeader = (GameTextTableHeader*)(resource->glyphs + charset->glyphCount);
+    charset->entryCount = tableHeader->entryCount;
+    stringDataSize = tableHeader->stringDataSize;
+    definitions = (GameTextDef*)(tableHeader + 1);
+    charset->entries = definitions;
+    stringTable = (GameTextStringTable*)(definitions + charset->entryCount);
+    stringCount = stringTable->count;
+    stringPointers = stringTable->offsets;
+    for (i = 0; i < charset->entryCount; i++) {
+        charset->entries[i].strings = (char**)(stringPointers + (int)charset->entries[i].strings);
     }
-    txt = (u8*)(numStrings * 4 + (u32)stringTable->offsets);
+    stringData = (u8*)(stringTable->offsets + stringCount);
     {
         int j;
-        for (j = 0; j < numStrings; j++) {
-            strs[j] = strs[j] + (int)txt;
+        for (j = 0; j < stringCount; j++) {
+            stringPointers[j] = stringPointers[j] + (int)stringData;
         }
     }
-    texHdr = (int*)(txt + ofs);
-    p = (u16*)((u8*)texHdr + texHdr[0]);
-    p += 2;
-    texStart = p;
-    textureSlot = (int**)cs;
+    paddingBlock = (int*)(stringData + stringDataSize);
+    textureCursor = (u16*)((u8*)paddingBlock + paddingBlock[0]);
+    textureCursor += 2;
+    textureDataStart = textureCursor;
+    textureIndex = 0;
     while (1) {
-        kind = p[0];
-        bpp = p[1];
-        w = p[2];
-        h = p[3];
-        p += 4;
-        if (w == 0 && h == 0) {
+        GameTextTextureHeader* textureHeader = (GameTextTextureHeader*)textureCursor;
+        textureFormat = textureHeader->format;
+        bitsPerPixel = textureHeader->bitsPerPixel;
+        width = textureHeader->width;
+        height = textureHeader->height;
+        textureCursor = (u16*)(textureHeader + 1);
+        if (width == 0 && height == 0) {
             break;
         }
-        switch (kind) {
+        switch (textureFormat) {
         case 1:
-            kind = 5;
+            textureFormat = GX_TF_RGB5A3;
             break;
         case 2:
-            kind = 0;
+            textureFormat = GX_TF_I4;
             break;
         }
-        if (textureSlot[4] != NULL) {
+        if (charset->textures[textureIndex] != NULL) {
             mmSetFreeDelay(0);
-            mm_free(textureSlot[4]);
+            mm_free(charset->textures[textureIndex]);
             mmSetFreeDelay(2);
         }
-        textureSlot[4] = (int*)textureAlloc(w, h, kind, 0, 0, 0, 0, 1, 1);
-        if (textureSlot[4] != NULL) {
-            if (bpp == 4) {
-                u8* src8 = (u8*)p;
-                u8* dst8 = (u8*)textureSlot[4] + 0x60;
-                n = (int)(w * h) >> 1;
-                while (n--) {
+        charset->textures[textureIndex] = textureAlloc(width, height, textureFormat, 0, 0, 0, 0, 1, 1);
+        if (charset->textures[textureIndex] != NULL) {
+            if (bitsPerPixel == 4) {
+                u8* src8 = (u8*)textureCursor;
+                u8* dst8 = textureGetImageData(charset->textures[textureIndex]);
+                remainingUnits = (int)(width * height) >> 1;
+                while (remainingUnits--) {
                     *dst8++ = *src8++;
                 }
-                DCFlushRange((u8*)textureSlot[4] + 0x60, ((Texture*)textureSlot[4])->dataSize);
+                DCFlushRange(textureGetImageData(charset->textures[textureIndex]), charset->textures[textureIndex]->dataSize);
             } else {
-                u16* src16 = p;
-                u16* dst16 = (u16*)((u8*)textureSlot[4] + 0x60);
-                n = w * h;
-                while (n--) {
+                u16* src16 = textureCursor;
+                u16* dst16 = textureGetImageData(charset->textures[textureIndex]);
+                remainingUnits = width * height;
+                while (remainingUnits--) {
                     *dst16++ = *src16++;
                 }
-                DCFlushRange((u8*)textureSlot[4] + 0x60, ((Texture*)textureSlot[4])->dataSize);
+                DCFlushRange(textureGetImageData(charset->textures[textureIndex]), charset->textures[textureIndex]->dataSize);
             }
         }
         {
-            u32 area = w * h;
-            p += (int)(area * bpp) >> 4;
+            u32 area = width * height;
+            textureCursor += (int)(area * bitsPerPixel) >> 4;
         }
-        textureSlot += 1;
+        textureIndex++;
     }
-    size = (u32)((u8*)texStart - (u8*)loadSlot->loadHandle);
-    newBuf = mmAlloc(size, 0x1a, 0);
-    n = size >> 1;
+    tableBytes = (u32)((u8*)textureDataStart - (u8*)loadSlot->loadHandle);
+    compactedResource = mmAlloc(tableBytes, 0x1a, 0);
+    remainingUnits = tableBytes >> 1;
     {
-        u16* d = newBuf;
-        u16* s;
-        old = loadSlot->loadHandle;
-        s = old;
-        delta = (u8*)newBuf - (u8*)old;
-        while (n--) {
-            *d++ = *s++;
+        u16* destination = compactedResource;
+        u16* source;
+        loadedResource = loadSlot->loadHandle;
+        source = loadedResource;
+        relocationDelta = (u8*)compactedResource - (u8*)loadedResource;
+        while (remainingUnits--) {
+            *destination++ = *source++;
         }
     }
-    cs->glyphs = (TextGlyph*)((u8*)cs->glyphs + delta);
-    cs->entries = (GameTextDef*)((u8*)cs->entries + delta);
-    for (i = 0; i < cs->entryCount; i++) {
-        int ev = (int)cs->entries[i].strings;
-        cs->entries[i].strings = (char**)(ev + delta);
+    charset->glyphs = (TextGlyph*)((u8*)charset->glyphs + relocationDelta);
+    charset->entries = (GameTextDef*)((u8*)charset->entries + relocationDelta);
+    for (i = 0; i < charset->entryCount; i++) {
+        int phrasePointers = (int)charset->entries[i].strings;
+        charset->entries[i].strings = (char**)(phrasePointers + relocationDelta);
     }
-    strs2 = (int*)((u8*)strs + delta);
-    for (i = 0; i < numStrings; i++) {
-        strs2[i] += delta;
+    relocatedStringPointers = (int*)((u8*)stringPointers + relocationDelta);
+    for (i = 0; i < stringCount; i++) {
+        relocatedStringPointers[i] += relocationDelta;
     }
     mmSetFreeDelay(0);
     mm_free(loadSlot->loadHandle);
     loadSlot->loadHandle = NULL;
     mmSetFreeDelay(2);
-    loadSlot->loadHandle = newBuf;
-    cs->status = 2;
+    loadSlot->loadHandle = compactedResource;
+    charset->status = 2;
     loadSlot->state = 3;
 }
 
