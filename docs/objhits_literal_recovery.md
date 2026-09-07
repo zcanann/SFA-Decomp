@@ -144,3 +144,42 @@ The host suite checks the neighboring capsule calculation, not these collectors;
 the instruction comparisons establish the collector improvements. The TU remains
 `NonMatching`, and its unresolved literal-pool ordering is unchanged. Formatting
 the active source and canonical header leaves the complete object unchanged.
+
+## Shared horizontal joint cull: both collectors exact
+
+The remaining register differences above are resolved by sharing the complete
+midpoint cull in `ObjHits_JointPassesHorizontalCull`. Both callers compare the
+horizontal squared distance from the doubled query point to the sum of the two
+joint positions against the square of the query diameter, joint length, and
+larger joint diameter. The XZ collector retains its preceding vertical-range
+test. Strict comparison, arithmetic association, endpoint radii, and joint-length
+loads are preserved. The private helper name and boundary are reconstructed,
+not recovered historical symbols.
+
+The helper owns the two delta temporaries and radius-limit calculation that
+were duplicated in the collectors. Declaring `deltaZ` before `deltaX`, while
+still calculating X before Z, gives the retail FPR allocation. With X declared
+first, each collector still differs in four operands; the helper extraction
+and declaration order are both needed. Moving the original locals into an
+inner scope is byte-neutral, and grouping them into a record or reusing the
+root-distance locals does not resolve the mismatch.
+
+A diagnostic compiler capture reproduces the ordinary object byte for byte.
+Its baseline 3D graph colors the endpoint-X values before the two caller-owned
+delta values, giving the latter `f6`/`f7` instead of retail's `f4`/`f5`. The
+matching helper capture verifies all 247 3D instructions and all 281 XZ
+instructions with zero retail differences. The captured FPR simplification and
+coloring both replay successfully, without high-degree removals. No compiler
+file or production flag is modified.
+
+Against `ca11c15ec0`, both collectors become 100% exact: 988 and 1,124 bytes,
+respectively. ObjHits rises from 45/54 to 47/54 exact functions, gaining 2,112
+bytes of exact-code credit; its fuzzy score moves from 99.73111% to 99.74958%.
+The other 52 function bodies, all allocated data bytes, every named symbol
+layout, and relocation destinations are unchanged. The TU remains
+`NonMatching` for its other residuals and literal-pool ordering.
+
+The existing capsule-normal tests, `ninja all_source`, and strict retail
+checksum pass. Formatting is a separate commit and preserves the complete
+object bytes. The compiler trace can be reproduced with
+`python3 tools/tricky_backend_trace.py --unit main/main/objhits --function ObjHits_CollectSkeletonHits3D --function ObjHits_CollectSkeletonHitsXZ --graph --register-class fpr --output /tmp/objhits-cull-trace`.

@@ -83,6 +83,28 @@ static inline f32 ObjHits_LengthSquared(f32 x, f32 y, f32 z) {
     return x * x + y * y + z * z;
 }
 
+static inline int ObjHits_JointPassesHorizontalCull(const Vec* jointPos, const Vec* parentPos,
+                                                  f32 doubledPointX, f32 doubledPointZ,
+                                                  ModelJointWork* jointData, int joint, f32 diameter,
+                                                  f32 jointRadius, f32 parentRadius) {
+    f32 deltaZ;
+    f32 deltaX;
+    f32 limit;
+    f32 maxJointDiameter;
+
+    deltaX = (parentPos->x + jointPos->x) - doubledPointX;
+    deltaZ = (parentPos->z + jointPos->z) - doubledPointZ;
+    limit = jointData->jointLengths[joint];
+    if (jointRadius > parentRadius) {
+        maxJointDiameter = jointRadius + jointRadius;
+    } else {
+        maxJointDiameter = parentRadius + parentRadius;
+    }
+    limit = diameter + (limit + maxJointDiameter);
+    limit *= limit;
+    return ObjHits_LengthSquared(deltaX, 0.0f, deltaZ) < limit;
+}
+
 int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointData, ObjModel* model,
                                   ObjHitsSkeletonHit* hits, ObjHitsSkeletonHit** outBest, f32 yMax, f32 yMin,
                                   f32* outAccum) {
@@ -101,10 +123,6 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointD
     float dz;
     float jointRadius;
     float parentRadius;
-    float doubledMidpointDeltaX;
-    float doubledMidpointDeltaZ;
-    float maxJointDiameter;
-    float broadPhaseLimit;
     float jointLength;
     float inverseJointLength;
     float distanceMagnitude;
@@ -152,17 +170,8 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointD
             parentRadius = radii[parent];
             if ((!(jointPos.y - jointRadius > yMax) || !(parentPos.y - parentRadius > yMax)) &&
                 (!(jointPos.y + jointRadius < yMin) || !(parentPos.y + parentRadius < yMin))) {
-                doubledMidpointDeltaX = (parentPos.x + jointPos.x) - doubledPointX;
-                doubledMidpointDeltaZ = (parentPos.z + jointPos.z) - doubledPointZ;
-                broadPhaseLimit = jointData->jointLengths[joint];
-                if (jointRadius > parentRadius) {
-                    maxJointDiameter = jointRadius + jointRadius;
-                } else {
-                    maxJointDiameter = parentRadius + parentRadius;
-                }
-                broadPhaseLimit = diameter + (broadPhaseLimit + maxJointDiameter);
-                broadPhaseLimit *= broadPhaseLimit;
-                if (ObjHits_LengthSquared(doubledMidpointDeltaX, 0.0f, doubledMidpointDeltaZ) < broadPhaseLimit) {
+                if (ObjHits_JointPassesHorizontalCull(&jointPos, &parentPos, doubledPointX, doubledPointZ,
+                                                     jointData, joint, diameter, jointRadius, parentRadius)) {
                     axisDir.x = parentPos.x - jointPos.x;
                     axisDir.y = parentPos.y - jointPos.y;
                     axisDir.z = parentPos.z - jointPos.z;
@@ -236,10 +245,6 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointD
     float dz;
     float jointRadius;
     float parentRadius;
-    float doubledMidpointDeltaX;
-    float doubledMidpointDeltaZ;
-    float maxJointDiameter;
-    float broadPhaseLimit;
     float inverseJointLength;
     float distanceMagnitude;
     Vec jointPos;
@@ -284,17 +289,8 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointD
             parentRadius = radii[parent];
             jointData->touchedJoints[joint] = 1;
             jointData->touchedJoints[parent] = 1;
-            doubledMidpointDeltaX = (parentPos.x + jointPos.x) - doubledPointX;
-            doubledMidpointDeltaZ = (parentPos.z + jointPos.z) - doubledPointZ;
-            broadPhaseLimit = jointData->jointLengths[joint];
-            if (jointRadius > parentRadius) {
-                maxJointDiameter = jointRadius + jointRadius;
-            } else {
-                maxJointDiameter = parentRadius + parentRadius;
-            }
-            broadPhaseLimit = diameter + (broadPhaseLimit + maxJointDiameter);
-            broadPhaseLimit *= broadPhaseLimit;
-            if (ObjHits_LengthSquared(doubledMidpointDeltaX, 0.0f, doubledMidpointDeltaZ) < broadPhaseLimit) {
+            if (ObjHits_JointPassesHorizontalCull(&jointPos, &parentPos, doubledPointX, doubledPointZ,
+                                                 jointData, joint, diameter, jointRadius, parentRadius)) {
                 axisDir.x = parentPos.x - jointPos.x;
                 axisDir.y = parentPos.y - jointPos.y;
                 axisDir.z = parentPos.z - jointPos.z;
