@@ -700,6 +700,13 @@ K1 in an earlier plain-arithmetic statement. Verdicts:
   code-bearing lost body is forced (the bias); the `1.0f`/`10.0f` slots are individually
   body-or-const undecidable. `turnTowardTarget`'s 98.86 residual is independent (its own slots
   agree). Owner call to land, same conjectural-text caveat as `engine/7`.
+  **2026-09-07 update:** called animation-restart and capture-query helpers now
+  recover the zero/bias prefix under GC/1.3 automatic inlining with all 14 retail
+  functions byte-exact. Their out-of-line copies are linker-stripped; no uncalled
+  placeholder body is needed for that prefix. The 68-byte pool is now 88.2353%
+  exact, with `1.0f` and `10.0f` placement still unresolved. See
+  [BabyCloudRunner_matching.md](BabyCloudRunner_matching.md) for the current
+  evidence and validation limits.
 - **`main/object` — GATE PASSED.** Retail mints the *signed* bias at 0x28, between
   `Obj_TickModelColorFadeRecursive`'s run and `objApplyVelocity`'s `0.5f`, with referrers
   (`mapSetupPlayer`, `Obj_UpdateObject`, `loadCharacter`) all later; every function positioned
