@@ -75,8 +75,7 @@ static const IndStageInitData sIndStageInitData = {
      {{{GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO}},
       {{GX_CS_SCALE_4, GX_CS_SCALE_4, GX_CS_SCALE_4, GX_CS_SCALE_2, GX_CS_SCALE_1, GX_CS_SCALE_1, GX_CS_SCALE_1}}},
      {{{GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO}},
-      {{GX_CS_SCALE_4, GX_CS_SCALE_2, GX_CS_SCALE_1, GX_CS_SCALE_1, GX_CS_SCALE_1, GX_CS_SCALE_1, GX_CS_SCALE_1}}}}
-};
+      {{GX_CS_SCALE_4, GX_CS_SCALE_2, GX_CS_SCALE_1, GX_CS_SCALE_1, GX_CS_SCALE_1, GX_CS_SCALE_1, GX_CS_SCALE_1}}}}};
 static const IndMtxInit sIndMtxZeroInit = {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}};
 
 f32 gWaterReflectionIndTexMtx[3][2][3] = {{{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, -0.5f}},
@@ -2814,7 +2813,8 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
         GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
         GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXC, GX_CC_ONE, stage0ColorInputs.values[stage_idx]);
         GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-        GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, stage0ColorScales.values[stage_idx], GX_FALSE, GX_TEVPREV);
+        GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, stage0ColorScales.values[stage_idx], GX_FALSE,
+                        GX_TEVPREV);
         GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
         stage_base = 1;
     }
