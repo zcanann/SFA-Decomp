@@ -1118,7 +1118,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/engine/18/18.c"),
             Object(NonMatching, "dlls/engine/19/19.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "dlls/engine/20_Hcurves/Hcurves.c"),
-            Object(NonMatching, "dlls/engine/20_Hcurves/Hcurves_romcurve.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/engine/20_Hcurves/Hcurves_romcurve.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "dlls/engine/21/21.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "dlls/engine/22/22.c", cflags=cflags_dll_noopt_noautoinline_level3),
             Object(NonMatching, "dlls/engine/23/23.c", cflags=cflags_dll_noopt_noautoinline),
