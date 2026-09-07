@@ -22,6 +22,11 @@ separate axis lifetimes and native half-extents resolve
 [screen transitions](screen_transition_matching.md). These recoveries supersede
 the source-unreachable classifications below.
 
+Update 2026-09-07: `renderSunAndMoon` is resolved at 100%, completing engine
+slot 5. A shared phase local and the recovered inline slot-flag getter remove
+the remaining floating-point register differences and duplicate zero load.
+See [sky matching](sky_matching.md); the historical row below is superseded.
+
 ## Rotation class CLOSED WITH MECHANISM (2026-08-03 corpus mining)
 
 The saved-band rotation offset is set by the inline-boundary value count, dose-saturating at one,

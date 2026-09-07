@@ -415,7 +415,7 @@ void skySetSlotFlag80(int flags, u8 mode)
     }
 }
 
-u8 skyGetSlotFlag80(int slot)
+static inline u8 skyReadSlotFlag80(int slot)
 {
     SkyState* sky;
 
@@ -425,6 +425,11 @@ u8 skyGetSlotFlag80(int slot)
         return sky->lights[slot].flags.unused80;
     }
     return 0;
+}
+
+u8 skyGetSlotFlag80(int slot)
+{
+    return skyReadSlotFlag80(slot);
 }
 
 int skyGetSlotBlendAlpha(int slot)
@@ -1324,80 +1329,78 @@ void skyUpdateShadowLightDirection(void)
 
 void renderSunAndMoon(int a, int b, int c, int d, int visible)
 {
-    SkyRotQ q1;
-    f32 moonTC;
-    f32 vec[3];
+    SkyRotQ sunRotation;
+    f32 direction[3];
     Vec sunDir;
     Vec moonDir;
-    int v;
-    Camera* cam;
-    f32 far;
+    int transitionTimer;
+    Camera* camera;
+    f32 savedFarPlane;
     f32 yaw;
     f32 riseScale;
-    f32 sunT;
-    f32 moonT;
-    SkyRotQ q2;
-    u8 vis;
+    f32 phase;
+    f32 moonTime;
+    SkyRotQ moonRotation;
     ObjModel* model;
     SkyState* sky;
 
-    cam = Camera_GetCurrent();
+    camera = Camera_GetCurrent();
     sunDir = gSkyBaseSunDirection;
     moonDir = gSkyBaseMoonDirection;
-    v = 0;
-    q1.x = 0.0f;
-    q1.y = 0.0f;
-    q1.z = 0.0f;
-    q1.w = 1.0f;
-    q1.rz = 0;
-    q1.ry = 0;
-    q1.rx = 0;
-    q2.x = 0.0f;
-    q2.y = 0.0f;
-    q2.z = 0.0f;
-    q2.w = 1.0f;
-    q2.rz = 0;
-    q2.ry = 0;
-    q2.rx = 0;
-    (*gSkyInterface)->getTransitionTimer(&v);
-    if (cam != NULL && gSkyState != NULL)
+    transitionTimer = 0;
+    sunRotation.x = 0.0f;
+    sunRotation.y = 0.0f;
+    sunRotation.z = 0.0f;
+    sunRotation.w = 1.0f;
+    sunRotation.rz = 0;
+    sunRotation.ry = 0;
+    sunRotation.rx = 0;
+    moonRotation.x = 0.0f;
+    moonRotation.y = 0.0f;
+    moonRotation.z = 0.0f;
+    moonRotation.w = 1.0f;
+    moonRotation.rz = 0;
+    moonRotation.ry = 0;
+    moonRotation.rx = 0;
+    (*gSkyInterface)->getTransitionTimer(&transitionTimer);
+    if (camera != NULL && gSkyState != NULL)
     {
-        far = Camera_GetFarPlane();
+        savedFarPlane = Camera_GetFarPlane();
         Camera_SetFarPlane(15000.0f, 0);
         Camera_RebuildProjectionMatrix();
         sky = (SkyState*)gSkyState;
-        sunT = (sky->timeOfDay - 18000.0f) / 57600.0f;
-        if (sunT < 0.0f)
+        phase = (sky->timeOfDay - 18000.0f) / 57600.0f;
+        if (phase < 0.0f)
         {
-            sunT = 0.0f;
+            phase = 0.0f;
         }
-        else if (sunT > 1.0f)
+        else if (phase > 1.0f)
         {
-            sunT = 1.0f;
+            phase = 1.0f;
         }
-        if (sunT < 0.1f)
+        if (phase < 0.1f)
         {
-            if (sunT < 0.0f)
+            if (phase < 0.0f)
             {
                 gSkySunAlpha = 0;
             }
             else
             {
-                *(s16*)&gSkySunAlpha = (2550.0f * sunT);
+                *(s16*)&gSkySunAlpha = (2550.0f * phase);
             }
         }
         else
         {
-            if (sunT > 0.9f)
+            if (phase > 0.9f)
             {
-                if (sunT > 1.0f)
+                if (phase > 1.0f)
                 {
                     gSkySunAlpha = 0;
                 }
                 else
                 {
                     *(s16*)&gSkySunAlpha =
-                        (2550.0f * (0.1f - (sunT - 0.9f)));
+                        (2550.0f * (0.1f - (phase - 0.9f)));
                 }
             }
             else
@@ -1405,7 +1408,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
                 gSkySunAlpha = 0xff;
             }
         }
-        sunT *= 32676.0f;
+        phase *= 32676.0f;
         riseScale = (sky->timeOfDay - 18000.0f) / 28800.0f;
         if (riseScale < 0.0f)
         {
@@ -1416,69 +1419,69 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             riseScale = 1.0f - (riseScale - 1.0f);
         }
         riseScale = -(0.55f * riseScale - 1.0f);
-        vec[0] = 2.0f * sunDir.x;
-        vec[1] = 2.0f * sunDir.y;
-        vec[2] = 2.0f * sunDir.z;
+        direction[0] = 2.0f * sunDir.x;
+        direction[1] = 2.0f * sunDir.y;
+        direction[2] = 2.0f * sunDir.z;
         yaw = sky->sunYaw;
-        q1.rx = sunT;
-        vecRotateZXY(&q1.rx, vec);
-        q1.w = 1.0f;
-        q1.rz = yaw;
-        q1.ry = 0;
-        q1.rx = 0;
-        vecRotateZXY(&q1.rx, vec);
-        gSkySunDirection[0] = vec[0];
-        gSkySunDirection[1] = vec[1];
-        gSkySunDirection[2] = vec[2];
-        gSkySunObject->anim.localPosX = cam->worldX + (f32)(s16)(int)vec[0];
-        gSkySunObject->anim.localPosY = cam->worldY + (f32)(s16)(int)vec[1];
-        gSkySunObject->anim.localPosZ = cam->worldZ + (f32)(s16)(int)vec[2];
+        sunRotation.rx = phase;
+        vecRotateZXY(&sunRotation.rx, direction);
+        sunRotation.w = 1.0f;
+        sunRotation.rz = yaw;
+        sunRotation.ry = 0;
+        sunRotation.rx = 0;
+        vecRotateZXY(&sunRotation.rx, direction);
+        gSkySunDirection[0] = direction[0];
+        gSkySunDirection[1] = direction[1];
+        gSkySunDirection[2] = direction[2];
+        gSkySunObject->anim.localPosX = camera->worldX + (f32)(s16)direction[0];
+        gSkySunObject->anim.localPosY = camera->worldY + (f32)(s16)direction[1];
+        gSkySunObject->anim.localPosZ = camera->worldZ + (f32)(s16)direction[2];
         gSkySunObject->anim.rootMotionScale = 400.0f * riseScale;
-        *(s16*)gSkySunObject = 0x10000 - cam->yaw;
-        gSkySunObject->anim.rotY = cam->pitch;
+        gSkySunObject->anim.rotX = 0x10000 - camera->yaw;
+        gSkySunObject->anim.rotY = camera->pitch;
         gSkySunObject->anim.rotZ = 0;
         gSkySunObject->anim.renderAlpha = *(s16*)&gSkySunAlpha;
-        moonT = ((SkyState*)gSkyState)->timeOfDay;
-        if (moonT >= 75600.0f)
+        moonTime = ((SkyState*)gSkyState)->timeOfDay;
+        if (moonTime >= 75600.0f)
         {
-            moonT -= 75600.0f;
+            moonTime -= 75600.0f;
         }
         else
         {
-            moonT += 10800.0f;
+            moonTime += 10800.0f;
         }
-        moonTC = moonT / 28800.0f;
-        if (moonTC < 0.0f)
+        phase = moonTime / 28800.0f;
+        if (phase < 0.0f)
         {
-            moonTC = 0.0f;
+            phase = 0.0f;
         }
-        else if (moonTC > 1.0f)
+        else if (phase > 1.0f)
         {
-            moonTC = 1.0f;
+            phase = 1.0f;
         }
-        if (moonTC < 0.1f)
+        if (phase < 0.1f)
         {
-            if (moonTC < 0.0f)
+            if (phase < 0.0f)
             {
                 gSkyMoonAlpha = 0;
             }
             else
             {
-                *(s16*)&gSkyMoonAlpha = (2550.0f * moonTC);
+                *(s16*)&gSkyMoonAlpha = (2550.0f * phase);
             }
         }
         else
         {
-            if (moonTC > 0.9f)
+            if (phase > 0.9f)
             {
-                if (moonTC > 1.0f)
+                if (phase > 1.0f)
                 {
                     gSkyMoonAlpha = 0;
                 }
                 else
                 {
                     *(s16*)&gSkyMoonAlpha =
-                        (2550.0f * (0.1f - (moonTC - 0.9f)));
+                        (2550.0f * (0.1f - (phase - 0.9f)));
                 }
             }
             else
@@ -1486,8 +1489,8 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
                 gSkyMoonAlpha = 0xff;
             }
         }
-        moonTC *= 32676.0f;
-        riseScale = moonT / 14400.0f;
+        phase *= 32676.0f;
+        riseScale = moonTime / 14400.0f;
         if (riseScale < 0.0f)
         {
             riseScale = 0.0f;
@@ -1497,35 +1500,30 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             riseScale = 1.0f - (riseScale - 1.0f);
         }
         riseScale = -(0.55f * riseScale - 1.0f);
-        vec[0] = 2.0f * moonDir.x;
-        vec[1] = 2.0f * moonDir.y;
-        vec[2] = 2.0f * moonDir.z;
-        q2.rx = moonTC;
-        vecRotateZXY(&q2.rx, vec);
-        q2.w = 1.0f;
-        q2.rz = yaw;
-        q2.ry = 0;
-        q2.rx = 0;
-        vecRotateZXY(&q2.rx, vec);
-        gSkyMoonDirection[0] = vec[0];
-        gSkyMoonDirection[1] = vec[1];
-        gSkyMoonDirection[2] = vec[2];
-        gSkyMoonObject->anim.localPosX = cam->worldX + (f32)(s16)(int)vec[0];
-        gSkyMoonObject->anim.localPosY = cam->worldY + (f32)(s16)(int)vec[1];
-        gSkyMoonObject->anim.localPosZ = cam->worldZ + (f32)(s16)(int)vec[2];
+        direction[0] = 2.0f * moonDir.x;
+        direction[1] = 2.0f * moonDir.y;
+        direction[2] = 2.0f * moonDir.z;
+        moonRotation.rx = phase;
+        vecRotateZXY(&moonRotation.rx, direction);
+        moonRotation.w = 1.0f;
+        moonRotation.rz = yaw;
+        moonRotation.ry = 0;
+        moonRotation.rx = 0;
+        vecRotateZXY(&moonRotation.rx, direction);
+        gSkyMoonDirection[0] = direction[0];
+        gSkyMoonDirection[1] = direction[1];
+        gSkyMoonDirection[2] = direction[2];
+        gSkyMoonObject->anim.localPosX = camera->worldX + (f32)(s16)direction[0];
+        gSkyMoonObject->anim.localPosY = camera->worldY + (f32)(s16)direction[1];
+        gSkyMoonObject->anim.localPosZ = camera->worldZ + (f32)(s16)direction[2];
         gSkyMoonObject->anim.rootMotionScale = 400.0f * riseScale;
-        gSkyMoonObject->anim.rotX = 0x10000 - cam->yaw;
-        gSkyMoonObject->anim.rotY = cam->pitch;
-        vis = 0;
+        gSkyMoonObject->anim.rotX = 0x10000 - camera->yaw;
+        gSkyMoonObject->anim.rotY = camera->pitch;
         gSkyMoonObject->anim.rotZ = 0;
         gSkyMoonObject->anim.renderAlpha = *(s16*)&gSkyMoonAlpha;
         if (gSkySunObject->anim.renderAlpha != 0)
         {
-            if (gSkyState != NULL)
-            {
-                vis = ((SkyState*)gSkyState)->lights[2].flags.unused80;
-            }
-            if (vis == 0 && (u8)visible != 0)
+            if (skyReadSlotFlag80(2) == 0 && (u8)visible != 0)
             {
                 model = Obj_GetActiveModel(gSkySunObject);
                 model->bufferFlags &= ~8;
@@ -1534,22 +1532,14 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         }
         if (gSkyMoonObject->anim.renderAlpha != 0)
         {
-            if (gSkyState != NULL)
-            {
-                vis = ((SkyState*)gSkyState)->lights[2].flags.unused80;
-            }
-            else
-            {
-                vis = 0;
-            }
-            if (vis == 0 && (u8)visible != 0)
+            if (skyReadSlotFlag80(2) == 0 && (u8)visible != 0)
             {
                 model = Obj_GetActiveModel(gSkyMoonObject);
                 model->bufferFlags &= ~8;
                 objRender(a, b, c, d, gSkyMoonObject, 1);
             }
         }
-        Camera_SetFarPlane(far, 0);
+        Camera_SetFarPlane(savedFarPlane, 0);
         Camera_RebuildProjectionMatrix();
     }
 }
