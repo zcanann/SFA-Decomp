@@ -3163,7 +3163,8 @@ int cMenuSetItems(CMenuItemDef* itemsArg, char useTricky) {
                         *(int*)((char*)hud + wordOffset + offsetof(CMenuHud, usedBits)) = item->usedGameBit;
                         *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, itemFlags)) = ownedState;
                         *(s16*)((char*)hud + halfwordOffset[0] + offsetof(CMenuHud, textIds)) = item->nameTextId;
-                        *(s16*)((char*)hud + halfwordOffset[0] + offsetof(CMenuHud, auxiliaryValues)) = item->auxiliaryValue;
+                        *(s16*)((char*)hud + halfwordOffset[0] + offsetof(CMenuHud, auxiliaryValues)) =
+                            item->auxiliaryValue;
                         *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, auxiliaryBytes)) = item->auxiliaryByte;
                         *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, closeMode)) = item->closeMode;
                         if (item->activeGameBit < 0 || mainGetBit(item->activeGameBit) == 0) {
@@ -3185,7 +3186,8 @@ int cMenuSetItems(CMenuItemDef* itemsArg, char useTricky) {
                     *(int*)((char*)hud + wordOffset + offsetof(CMenuHud, usedBits)) = item->usedGameBit;
                     *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, itemFlags)) = ownedState;
                     *(s16*)((char*)hud + halfwordOffset[0] + offsetof(CMenuHud, textIds)) = item->nameTextId;
-                    *(s16*)((char*)hud + halfwordOffset[0] + offsetof(CMenuHud, auxiliaryValues)) = item->auxiliaryValue;
+                    *(s16*)((char*)hud + halfwordOffset[0] + offsetof(CMenuHud, auxiliaryValues)) =
+                        item->auxiliaryValue;
                     *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, auxiliaryBytes)) = item->auxiliaryByte;
                     *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, closeMode)) = item->closeMode;
                     if (item->activeGameBit < 0 || mainGetBit(item->activeGameBit) == 0) {
