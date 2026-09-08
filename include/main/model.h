@@ -215,7 +215,7 @@ typedef struct ModelFileHeader {
     s32* textureIds; /* file texture ids, patched to texture ptrs on load */
     u8 flags24;      /* 0x08 = NBT triplets instead of single packed normals */
     u8 unk25[3];
-    u8* vertices;  /* 6 bytes each, vertexCount */
+    u8* vertices;  /* vertexCount s16 XYZ records; scale selected by MODEL_FLAG_INTEGER_VERTEX_COORDS */
     u8* normals;   /* 3 or 9 bytes each, normalCount */
     u8* colors;    /* GX_VA_CLR0 array, stride 2 */
     u8* texCoords; /* GX_VA_TEX0/TEX1 array, stride 4 */
@@ -284,6 +284,8 @@ typedef struct ModelFileHeader {
 #define MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS 0x10
 #define MODEL_FLAG_CACHED_ANIMATIONS      0x40
 #define MODEL_FLAG_NO_DEPTH_TEST          0x400
+/* Set: integer s16 XYZ; clear: signed s16 XYZ with eight fractional bits. */
+#define MODEL_FLAG_INTEGER_VERTEX_COORDS  0x800
 #define MODEL_FLAG_ALPHA_Z_UPDATE         0x2000
 #define MODEL_FLAG_ALT_POINTER_LAYOUT     0x8000
 

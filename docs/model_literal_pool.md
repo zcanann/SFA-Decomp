@@ -1,7 +1,7 @@
 # Model literal ownership
 
 `Model_GetVertexPosition` now divides packed coordinates by `256.0f` when
-header flag `0x800` is clear. The former external `gModelVertexScale` declaration
+`MODEL_FLAG_INTEGER_VERTEX_COORDS` (`0x800`) is clear. The former external `gModelVertexScale` declaration
 hid a constant owned by the same translation unit. Its EN retail load at
 `80026EA0` reads `3B800000` from `803DE864`, exactly 1/256. The set-flag branch
 still converts signed halfwords without scaling.
@@ -70,3 +70,6 @@ data span and its pool score; all function scores and other units are unchanged.
 All 1,003 other EN source objects and 987 other objects per secondary target
 retain their raw hashes. The strict EN retail checksum passes. Formatting
 checks pass for the model source and canonical header with no formatting diff.
+
+The shared flag and serialized coordinate audit are documented in
+[Model vertex coordinate encoding](model_vertex_coordinates.md).

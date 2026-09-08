@@ -161,3 +161,9 @@ The existing host probes also pass 22 blend-channel cases, 144 matrix-preparatio
 scenarios, and 135 sparse morph scenarios at both `-O0` and `-O2`. The morph PPC
 probe passes its 16 decoder cases and 135 scenarios against compiled and retail
 code. All four `all_source` builds and the strict EN retail checksum pass.
+
+The base vertex flag, both coordinate readers, and the complete archive
+coordinate census are documented in
+[Model vertex coordinate encoding](model_vertex_coordinates.md). The catalog
+now also reports unskinned model coordinates; its original skinning statistics
+are unchanged.

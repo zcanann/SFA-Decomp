@@ -69,6 +69,36 @@ class ModelSkinningCatalogTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             inspect_model(data)
 
+    def test_signed_vertex_coordinate_encodings(self):
+        for flags, expected in (
+                (0x400, [[-128.0, 127.99609375], [-2.0, 1.0], [-0.00390625, 0.0]]),
+                (0xc00, [[-32768.0, 32767.0], [-512.0, 256.0], [-1.0, 0.0]])):
+            with self.subTest(flags=flags):
+                data = bytearray(0xfc + 12)
+                struct.pack_into('>H', data, 2, flags)
+                struct.pack_into('>H', data, 0xe4, 2)
+                struct.pack_into('>I', data, 0x28, 0xfc)
+                struct.pack_into('>6h', data, 0xfc, -32768, 256, -1, 32767, -512, 0)
+                coordinates = inspect_model(data)['vertex_coordinates']
+                self.assertEqual(coordinates['count'], 2)
+                self.assertEqual(coordinates['flags'], flags)
+                self.assertEqual(coordinates['raw_bounds'], [[-32768, 32767], [-512, 256], [-1, 0]])
+                self.assertEqual(coordinates['local_bounds'], expected)
+
+    def test_invalid_vertex_spans(self):
+        for offset in (0, 0xfc, 0xfffffffc):
+            with self.subTest(offset=offset):
+                data = bytearray(0xfc + 5)
+                struct.pack_into('>H', data, 0xe4, 1)
+                struct.pack_into('>I', data, 0x28, offset)
+                with self.assertRaises(ValueError):
+                    inspect_model(data)
+
+    def test_empty_vertex_stream_does_not_dereference_offset(self):
+        data = bytearray(0xfc)
+        struct.pack_into('>I', data, 0x28, 0xffffffff)
+        self.assertEqual(inspect_model(data)['vertex_coordinates']['local_bounds'], [])
+
     def test_unskinned_model(self):
         self.assertEqual(inspect_model(bytes(0xfc))['jobs'], [])
 

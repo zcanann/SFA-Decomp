@@ -1256,7 +1256,7 @@ void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out) 
     s16* vertex;
 
     vertex = (s16*)(model->vertices + vertexIndex * 6);
-    if ((model->flags & 0x800) != 0) {
+    if ((model->flags & MODEL_FLAG_INTEGER_VERTEX_COORDS) != 0) {
         out[0] = vertex[0];
         out[1] = vertex[1];
         out[2] = vertex[2];

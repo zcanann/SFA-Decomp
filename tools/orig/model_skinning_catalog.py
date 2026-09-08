@@ -56,9 +56,27 @@ def unpack_model(record):
     raise ValueError(f'Unknown model archive magic {magic:#x}')
 
 
+def inspect_vertex_coordinates(data):
+    """Decode base vertices, before instance scale or skinning transforms."""
+    span(data, 0, 0xfc)
+    flags, count, offset = half(data, 2), half(data, 0xe4), word(data, 0x28)
+    fraction_bits = 0 if flags & 0x800 else 8
+    raw_bounds = []
+    if count:
+        if offset < 0xfc:
+            raise ValueError('Vertex coordinates overlap the model header')
+        coordinates = list(struct.iter_unpack('>3h', span(data, offset, count * 6)))
+        raw_bounds = [[min(v[axis] for v in coordinates), max(v[axis] for v in coordinates)]
+                      for axis in range(3)]
+    return {'flags': flags, 'count': count, 'offset': offset, 'fraction_bits': fraction_bits,
+            'raw_bounds': raw_bounds,
+            'local_bounds': [[v / (1 << fraction_bits) for v in bounds] for bounds in raw_bounds]}
+
+
 def inspect_model(data):
     span(data, 0, 0xfc)
-    result = {'normal_triplets': bool(data[0x24] & 8), 'jobs': []}
+    result = {'normal_triplets': bool(data[0x24] & 8),
+              'vertex_coordinates': inspect_vertex_coordinates(data), 'jobs': []}
     for kind, job, entry_field, base_field, stream_field in (
             ('position', 0x88, 0xa4, 0xa8, 0x28), ('normal', 0xac, 0xc8, 0xcc, 0x2c)):
         count = half(data, job + 2)
@@ -133,7 +151,11 @@ def catalog(version):
         return [min(values), max(values)] if values else []
 
     summary = {'archives': len(archives), 'model_references': sum(a['entries'] for a in archives),
-        'unique_models': len(models), 'unique_skinned_models': sum(bool(m['jobs']) for m in models.values()),
+        'unique_models': len(models),
+        'vertex_fraction_bits': dict(sorted(Counter(m['vertex_coordinates']['fraction_bits']
+                                                   for m in models.values()).items())),
+        'unique_model_vertices': sum(m['vertex_coordinates']['count'] for m in models.values()),
+        'unique_skinned_models': sum(bool(m['jobs']) for m in models.values()),
         'skinned_references': len(references), 'jobs': len(jobs), 'chunks': len(chunks),
         'counts': dict(sorted(Counter(c['count'] for c in chunks).items())),
         'scales': dict(sorted(Counter(j['scale'] for j in jobs).items())),
@@ -150,7 +172,9 @@ def catalog(version):
         'stream_slack_range': extent('stream_slack'),
         'weight_slack_range': extent('weight_slack')}
     return {'version': version, 'summary': summary, 'archives': archives,
-            'skinned_references': references, 'models': {k: v for k, v in models.items() if v['jobs']}}
+            'skinned_references': references,
+            'model_coordinates': {k: v['vertex_coordinates'] for k, v in models.items()},
+            'models': {k: v for k, v in models.items() if v['jobs']}}
 
 
 def main():

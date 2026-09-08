@@ -2465,7 +2465,7 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
             for (j = 0, tw = triangle->vertexIndices, vout = (u8*)cur; j < 3; j++) {
                 s16* v = ObjModel_GetBaseVertexCoords(hdr, *tw);
                 f32 fx, fy, fz;
-                if (hdr->flags & 0x800) {
+                if (hdr->flags & MODEL_FLAG_INTEGER_VERTEX_COORDS) {
                     fx = v[0] * scale;
                     fy = v[1] * scale;
                     fz = v[2] * scale;
