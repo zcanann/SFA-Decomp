@@ -12,14 +12,20 @@ float powfCoreHighPrecision(float base, float power) {
     register int baseExponent;
     register int resultExponent;
     register int integerPower;
-    float result;
-    float normalizedBase;
+    union {
+        float value;
+        u32 bits;
+    } result;
+    union {
+        float value;
+        u32 bits;
+    } normalizedBase;
 
     if (base) {
         baseBits = *(u32*)&base;
         baseExponent = (s16)(((baseBits >> 23) & 0xFF) - 127);
-        *(u32*)&normalizedBase = (baseBits & 0x7FFFFF) | 0x3F800000;
-        logValue = normalizedBase - 1.0;
+        normalizedBase.bits = (baseBits & 0x7FFFFF) | 0x3F800000;
+        logValue = normalizedBase.value - 1.0;
         log2Mantissa =
             logValue *
             (logValue *
@@ -67,7 +73,7 @@ float powfCoreHighPrecision(float base, float power) {
         fractionalExponent = logValue - resultExponentAsDouble;
 
         if (fractionalExponent) {
-            result = (float)(fractionalExponent *
+            result.value = (float)(fractionalExponent *
                                  (fractionalExponent *
                                       (fractionalExponent *
                                            (fractionalExponent *
@@ -88,17 +94,18 @@ float powfCoreHighPrecision(float base, float power) {
                                   0.693147180559909) +
                              0.9999999999999999);
         } else {
-            result = 1.0f;
+            result.value = 1.0f;
         }
 
         if ((int)(baseBits & 0x80000000)) {
             integerPower = power;
             if (integerPower & 1) {
-                result = -result;
+                result.value = -result.value;
             }
         }
-        *(u32*)&result += resultExponent << 23;
-        return result;
+        /* Apply the signed exponent through binary32 word arithmetic. */
+        result.bits += (u32)resultExponent << 23;
+        return result.value;
     }
     if (power) {
         return 0.0f;
@@ -111,35 +118,42 @@ float powfCoreFast(float base, register float power) {
     float baseExponentAsFloat;
     register u32 baseBits;
     register int integerPower;
-    float result;
-    float logValue;
+    union {
+        float value;
+        u32 bits;
+    } result;
+    union {
+        float value;
+        u32 bits;
+    } logValue;
     s16 baseExponent;
     s16 resultExponent;
 
     if (base) {
         baseBits = *(u32*)&base;
         baseExponent = ((baseBits >> 23) & 0xFF) - 127;
-        *(u32*)&logValue = (baseBits & 0x7FFFFF) | 0x3F800000;
-        logValue = logValue - 1.0f;
-        logValue = logValue * (logValue * (0.15544586f * logValue + -0.5729206f) + 1.4172995f) + 0.00072527403f;
+        logValue.bits = (baseBits & 0x7FFFFF) | 0x3F800000;
+        logValue.value = logValue.value - 1.0f;
+        logValue.value = logValue.value * (logValue.value * (0.15544586f * logValue.value + -0.5729206f) + 1.4172995f) + 0.00072527403f;
         baseExponentAsFloat = fastCastS16ToFloat(&baseExponent);
-        logValue = power * (logValue + baseExponentAsFloat);
-        fastCastFloatToS16(logValue, &resultExponent);
+        logValue.value = power * (logValue.value + baseExponentAsFloat);
+        fastCastFloatToS16(logValue.value, &resultExponent);
         resultExponentAsFloat = fastCastS16ToFloat(&resultExponent);
-        logValue = logValue - resultExponentAsFloat;
-        if (logValue) {
-            result = (logValue * (0.3431449f * logValue + 0.6519048f) + 1.0023681f);
+        logValue.value = logValue.value - resultExponentAsFloat;
+        if (logValue.value) {
+            result.value = (logValue.value * (0.3431449f * logValue.value + 0.6519048f) + 1.0023681f);
         } else {
-            result = 1.0f;
+            result.value = 1.0f;
         }
         if ((int)(baseBits & 0x80000000)) {
             integerPower = power;
             if (integerPower & 1) {
-                result = -result;
+                result.value = -result.value;
             }
         }
-        *(u32*)&result += resultExponent << 23;
-        return result;
+        /* Apply the signed exponent through binary32 word arithmetic. */
+        result.bits += (u32)resultExponent << 23;
+        return result.value;
     }
     if (power) {
         return 0.0f;
@@ -151,8 +165,14 @@ float powfCoreFast(float base, register float power) {
 #pragma optimize_for_size on
 float powfBitEstimate(float base, float exponentValue) {
     u32 baseBits;
-    float result;
-    float normalizedMantissa;
+    union {
+        float value;
+        u32 bits;
+    } result;
+    union {
+        float value;
+        u32 bits;
+    } normalizedMantissa;
     s16 exponent;
     float exponentAsFloat;
     int integerPower;
@@ -160,19 +180,19 @@ float powfBitEstimate(float base, float exponentValue) {
     if (base) {
         baseBits = *(u32*)&base;
         exponent = (s16)(((baseBits >> 23) & 0xFF) - 128);
-        *(u32*)&normalizedMantissa = (baseBits & 0x7FFFFF) | 0x3F800000;
+        normalizedMantissa.bits = (baseBits & 0x7FFFFF) | 0x3F800000;
         exponentAsFloat = fastCastS16ToFloat(&exponent);
-        normalizedMantissa = (8388608.0f * exponentValue) * (normalizedMantissa + exponentAsFloat);
-        *(u32*)&result = (u32)(int)normalizedMantissa + 0x3F800000;
+        normalizedMantissa.value = (8388608.0f * exponentValue) * (normalizedMantissa.value + exponentAsFloat);
+        result.bits = (u32)(int)normalizedMantissa.value + 0x3F800000;
 
         if (baseBits & 0x80000000) {
             integerPower = exponentValue;
             if (integerPower & 1) {
-                *(u32*)&result ^= 0x80000000;
+                result.bits ^= 0x80000000;
             }
         }
 
-        return result;
+        return result.value;
     }
 
     if (exponentValue) {

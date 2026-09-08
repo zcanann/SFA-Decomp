@@ -341,3 +341,48 @@ not a claim to have recovered the original source syntax. The separate pool and
 function-boundary evidence remains in [the retail audit](math_boundary_audit.md).
 Reproduce the load checks with `tools/pool_value_sequence.py`, selecting each
 source path above and each verified `--version`.
+
+
+## Explicit binary32 storage in the power routines (2026-09-08)
+
+The three power approximations now model their local normalized mantissas and
+results as unions of `float value` and `u32 bits`. This replaces incompatible
+pointer accesses over six float locals while retaining the same storage and
+expression order. The two polynomial cores add `(u32)resultExponent << 23` to
+the result word: conversion to unsigned before shifting expresses the retail
+32-bit wraparound even for negative exponents. It does not introduce a clamp,
+a numeric multiplication, or a library power call.
+
+EN supplies direct instruction evidence for these views:
+
+- `powfCoreHighPrecision` at `802927A4` masks the base's mantissa, inserts
+  `0x3F800000`, and stores a word at `802927E8` before reading it as a float.
+  At `80292980..80292990`, it reads the result as a word, shifts the signed
+  exponent by 23, adds the words, and reads the stored result as a float.
+- `powfCoreFast` at `802929CC` performs the same mantissa construction. Its
+  signed halfword exponent is loaded at `80292AF8` before the word shift/add.
+  The existing fast-cast calls and their quantization-register contract remain.
+- `powfBitEstimate` at `80292B44` scales its exponent estimate by 8,388,608,
+  converts to an integer, and adds the binary32 representation of one.
+  Its negative-base correction toggles the result's sign bit with `xoris`
+  at `80292BEC`, matching the union's word XOR.
+
+For ordinary normal inputs, the mantissa construction produces a value in
+`[1, 2)`. The polynomial cores approximate the logarithm and fractional power
+before modifying the exponent word. The bit estimate uses the mantissa itself
+as a linear log estimate; its subtraction of 128 accounts for the leading one.
+All three retain the zero-base branch and the negative-base sign rule based on
+the truncated power's parity. These are the existing approximation contracts,
+not libm special-case handling or newly established accuracy guarantees.
+
+The input parameter's existing word view remains. Moving it into a separate
+local union changes the observed parameter spill/reload and register allocation;
+that probe is not retained. The local union spelling establishes an explicit
+storage interpretation, not the original author's exact C syntax.
+
+Every source object is byte-identical in EN, EN rev1, JP, and PAL rev1; fresh
+objdiff reports are unchanged. Each DOL passes its configured SHA-1. All four
+`all_source` builds and the strict EN checksum pass within 30 seconds. The
+complete power object retains its seven function bodies, 324-byte literal pool,
+symbols and relocations. Formatting is committed separately and checked for
+unchanged object output. This recovery claims no additional matched bytes.
