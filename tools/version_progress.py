@@ -1359,6 +1359,41 @@ def port_coherent_units(
     )
 
 
+def paired_functions(
+    split: PortedRange, matches: dict[int, FunctionSymbol]
+) -> list[tuple[FunctionSymbol, FunctionSymbol]]:
+    """Pair a coherent code range without letting one insertion hide other names.
+
+    Unequal function counts forbid whole-range ordinal pairing. Unique binary
+    anchors can still bound equal-count interior runs. Do not extrapolate past
+    the first/last anchor or pair across reordered anchors or unequal runs.
+    """
+    if split.source.section not in CODE_SECTIONS:
+        return []
+    source, target = split.source_functions, split.target_functions
+    if len(source) == len(target):
+        return list(zip(source, target))
+    target_indices = {function.address: index for index, function in enumerate(target)}
+    anchors = [
+        (index, target_indices[match.address])
+        for index, function in enumerate(source)
+        if (match := matches.get(function.address)) is not None
+        and match.address in target_indices
+    ]
+    pairs = {index: target_index for index, target_index in anchors}
+    if all(left[1] < right[1] for left, right in zip(anchors, anchors[1:])):
+        for (left_source, left_target), (right_source, right_target) in zip(
+            anchors, anchors[1:]
+        ):
+            if right_source - left_source == right_target - left_target:
+                for offset in range(1, right_source - left_source):
+                    pairs[left_source + offset] = left_target + offset
+    return [
+        (source[index], target[target_index])
+        for index, target_index in sorted(pairs.items())
+    ]
+
+
 def build_symbol_mappings(
     ported: list[PortedRange], matches: dict[int, FunctionSymbol]
 ) -> dict[str, dict[str, str]]:
@@ -1367,17 +1402,7 @@ def build_symbol_mappings(
         mappings: dict[str, str] = {}
         target_names: set[str] = set()
         source_names: set[str] = set()
-        if split.source.section in CODE_SECTIONS and len(split.source_functions) == len(
-            split.target_functions
-        ):
-            function_pairs = zip(split.source_functions, split.target_functions)
-        else:
-            function_pairs = (
-                (source_function, target_function)
-                for source_function in split.source_functions
-                if (target_function := matches.get(source_function.address)) is not None
-                and split.target_start <= target_function.address < split.target_end
-            )
+        function_pairs = paired_functions(split, matches)
         for source_function, target_function in function_pairs:
             if (
                 target_function.name in target_names
@@ -1462,8 +1487,8 @@ def render_projected_symbols(
 
     Source symbols in coherently mapped non-code ranges carry the object sizes
     needed to keep split boundaries legal.  Target function boundaries remain
-    authoritative; only uniquely matched functions receive their canonical EN
-    names.
+    authoritative; canonical EN names come from unique matches or coherent
+    equal-count function runs.
     """
 
     return render_projected_symbol_texts(
@@ -1571,15 +1596,7 @@ def render_projected_symbol_texts(
     for split in ported:
         if split.source.section not in CODE_SECTIONS:
             continue
-        if len(split.source_functions) == len(split.target_functions):
-            function_pairs = zip(split.source_functions, split.target_functions)
-        else:
-            function_pairs = (
-                (source_function, target_function)
-                for source_function in split.source_functions
-                if (target_function := matches.get(source_function.address)) is not None
-                and split.target_start <= target_function.address < split.target_end
-            )
+        function_pairs = paired_functions(split, matches)
         for source_function, target_function in function_pairs:
             desired_by_address[target_function.address] = source_function.name
 

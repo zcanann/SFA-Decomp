@@ -780,6 +780,7 @@ dolphin/pad/Pad.c
 dolphin/pad/Padclamp.c
 dolphin/thp/THPAudio.c
 dolphin/thp/THPDec.c
+dolphin/vi/vi.c
 main/audio_sfx.c
 main/boot_logo.c
 main/curves.c

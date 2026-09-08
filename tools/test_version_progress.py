@@ -1,4 +1,4 @@
-"""Exercise packed data boundaries in cross-version binary context matching."""
+"""Exercise cross-version boundaries, function pairing, and stable projection."""
 from pathlib import Path
 import hashlib
 import struct
@@ -9,10 +9,11 @@ from unittest.mock import patch
 from contextlib import redirect_stderr
 from io import StringIO
 
-from orig.dol_xrefs import DolSection
+from orig.dol_xrefs import DolSection, FunctionSymbol
 from version_progress import (SymbolSpan, SplitRange, VersionProjection, build_boundary_map,
                               symbol_span_index, verified_dol, project_symbol_snapshot,
-                              project_version, build_symbol_mappings, main)
+                              project_version, build_symbol_mappings, paired_functions,
+                              PortedRange, render_projected_symbol_texts, main)
 
 
 def dol(data, address):
@@ -62,6 +63,72 @@ class PackedBoundaryTests(unittest.TestCase):
         self.target = dol(bytes(128), 0x80020000)
         direct, _ = self.match(34)
         self.assertNotIn(0x80010022, direct)
+
+
+class AnchoredFunctionPairTests(unittest.TestCase):
+    def make_range(self):
+        source = tuple(FunctionSymbol(f's{i}', 'text', 0x1000 + i * 8, 8) for i in range(8))
+        target = tuple(FunctionSymbol(f't{i}', 'text', 0x2000 + i * 8, 8) for i in range(9))
+        return PortedRange(SplitRange('example.c', 'text', 0x1000, 0x1040),
+                           0x2000, 0x2048, source, target)
+
+    def test_insertion_only_blocks_its_own_anchor_interval(self):
+        split = self.make_range()
+        # Prefix/suffix are unanchored; t4 is inserted between s3 and s4.
+        anchors = {split.source_functions[i].address: split.target_functions[j]
+                   for i, j in [(1, 1), (3, 3), (4, 5), (6, 7)]}
+        pairs = [(a.name, b.name) for a, b in paired_functions(split, anchors)]
+        self.assertEqual(pairs, [('s1', 't1'), ('s2', 't2'), ('s3', 't3'),
+                                 ('s4', 't5'), ('s5', 't6'), ('s6', 't7')])
+        self.assertEqual(build_symbol_mappings([split], anchors),
+                         {'example.c': {target: source for source, target in pairs}})
+
+    def test_unequal_interior_run_stays_unpaired_in_both_directions(self):
+        split = self.make_range()
+        for reverse in (False, True):
+            with self.subTest(deletion=reverse):
+                source, target = split.source_functions, split.target_functions
+                indices = [(1, 1), (4, 5)]
+                if reverse:
+                    source, target = target, source
+                    indices = [(b, a) for a, b in indices]
+                source_range = SplitRange(
+                    "example.c", "text", source[0].address, source[-1].address + 8
+                )
+                window = PortedRange(source_range, target[0].address,
+                                     target[-1].address + 8, source, target)
+                anchors = {source[a].address: target[b] for a, b in indices}
+                self.assertEqual(paired_functions(window, anchors),
+                                 [(source[a], target[b]) for a, b in indices])
+
+    def test_rendering_and_fallbacks_use_the_same_anchored_pairs(self):
+        split = self.make_range()
+        anchors = {split.source_functions[i].address: split.target_functions[j]
+                   for i, j in [(1, 1), (3, 3), (4, 5), (6, 7)]}
+        text = ''.join(f'{f.name} = .text:0x{f.address:08X}; // type:function size:0x8\n'
+                       for f in split.target_functions)
+        rendered, renamed, conflicts, _ = render_projected_symbol_texts('', text, [split], anchors)
+        self.assertEqual(renamed, 6)
+        self.assertEqual(conflicts, 0)
+        for old, new in build_symbol_mappings([split], anchors)['example.c'].items():
+            self.assertNotIn(f'{old} =', rendered)
+            self.assertIn(f'{new} =', rendered)
+        for name in ('t0', 't4', 't8'):
+            self.assertIn(f'{name} =', rendered)
+
+    def test_reordered_anchors_do_not_infer_ordinal_pairs(self):
+        split = self.make_range()
+        anchors = {split.source_functions[i].address: split.target_functions[j]
+                   for i, j in [(1, 1), (3, 3), (4, 2), (6, 4)]}
+        self.assertEqual([(a.name, b.name) for a, b in paired_functions(split, anchors)],
+                         [('s1', 't1'), ('s3', 't3'), ('s4', 't2'), ('s6', 't4')])
+
+    def test_no_or_single_anchor_cannot_infer_neighbors(self):
+        split = self.make_range()
+        self.assertEqual(paired_functions(split, {}), [])
+        anchor = {split.source_functions[3].address: split.target_functions[4]}
+        self.assertEqual(paired_functions(split, anchor),
+                         [(split.source_functions[3], split.target_functions[4])])
 
 
 class RetailIdentityTests(unittest.TestCase):
