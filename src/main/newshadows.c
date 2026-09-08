@@ -1548,8 +1548,7 @@ void renderObjectShadowTexture(GameObject* obj) {
         GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
         GXSetTexCopyDst(0x80, 0x80, GX_CTF_B8, GX_FALSE);
         GXCopyTex(gNewShadowFrameTextures[gNewShadowFrameIndex] + 1, GX_TRUE);
-        boxBlurTexture(gNewShadowFrameTextures[(gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT], 0x80, 0x10,
-                       0);
+        boxBlurTexture(gNewShadowFrameTextures[(gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT], 0x80, 0x10, 0);
         obj->anim.modelState->shadowScale = 1.0f / sc;
     } else {
         obj->anim.modelState->shadowScale = 0.0f;
