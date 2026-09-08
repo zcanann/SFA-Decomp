@@ -87,6 +87,25 @@ def resource_layout(data):
             'texture_start': texture_start, 'textures': textures}
 
 
+def padding_summary(layouts):
+    """Describe padded sibling resources without assuming they share an extent."""
+    groups = {}
+    for path, layout in layouts:
+        if not layout.get('empty'):
+            groups.setdefault(path.parent, []).append(layout)
+    padded = [items for items in groups.values()
+              if len(items) > 1 and any(item['padding_size'] for item in items)]
+    shared = [items for items in padded if len({item['texture_start'] for item in items}) == 1]
+    maximum = [items for items in shared
+               if max(item['texture_start'] - item['padding_size'] for item in items)
+               == items[0]['texture_start']]
+    sizes = [item['padding_size'] for _, item in layouts if item.get('padding_size')]
+    values = sorted({value for _, item in layouts for value in item.get('padding_values', [])})
+    return {'padded_files': len(sizes), 'padded_sibling_groups': len(padded),
+            'shared_texture_start_groups': len(shared), 'maximum_prefix_groups': len(maximum),
+            'padding_size_range': [min(sizes), max(sizes)] if sizes else [], 'padding_byte_values': values}
+
+
 def synthetic_resource(strings=3, textures=2, dimensions=None):
     text = b''.join(b'A' * (i + 1) + b'\0' for i in range(strings))
     text += bytes((-len(text)) % 4)
@@ -249,10 +268,13 @@ def main():
         if not files:
             parser.error('no resource files found under --audit-root')
         shapes = Counter()
+        layouts = []
         for path in files:
             layout = resource_layout(path.read_bytes())
+            layouts.append((path, layout))
             shapes['empty' if layout.get('empty') else f"{len(layout['textures'])} textures"] += 1
         print(f'Audited {len(files)} resource extents: {dict(shapes)}')
+        print(f'Padding: {padding_summary(layouts)}')
     config = (ROOT / 'config/GSAE01/symbols.txt').read_text()
     retail_symbols = {name: (section, int(address, 16)) for name, section, address in
                       re.findall(r'^(\w+) = (\.\w+):(0x[0-9A-Fa-f]+);', config, re.M)}

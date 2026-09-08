@@ -625,3 +625,63 @@ python3 tools/gametext_maintenance_probe.py
 `ninja all_source` and the strict checksum pass after matching configuration,
 each within its 30-second limit. All 1,001 other source objects retain their
 bytes. The TU remains `NonMatching` and the matching link uses retail.
+
+## Language-family metadata padding (2026-09-07)
+
+The parser now represents the skipped block after string data as
+`GameTextPaddingBlock`: a four-byte byte count followed by a variable-length
+byte span. Size and payload-offset assertions sit beside the private definition.
+The string-offset table also gains assertions for its four-byte count header
+and the following offset array.
+
+EN v1.0 `gameTextFinalizeLoad` offsets `0x1E8` through `0x1F4` locate this
+block, load its count, add that count to the block address, then advance four
+more bytes. Thus the count excludes its own header. The source retains those
+two advances and derives the header skip from the record and cursor types.
+Combining both advances into one expression changes generated instructions.
+At offsets `0x41C` through `0x430`, retail allocates the distance from the
+resource start to this first texture header; the padding stays in that compacted
+metadata allocation.
+
+The locally available sibling-region resources explain the shared extent:
+
+| Resource set | Files audited | Padded files | Padded map families | Languages per family | Padding bytes |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| EN rev1 | 1,216 | 360 | 72 | 6 | 880–18,016 |
+| JP | 1,216 | 360 | 72 | 6 | 880–18,180 |
+| PAL | 1,020 | 288 | 72 | 5 | 12–4,508 |
+
+Every padded span contains `0xEE`. Within every one of these map families,
+all languages reach the same first-texture offset, exactly the largest
+unpadded metadata extent among those languages. This also equalizes the
+compacted allocation size for a family. For example, EN rev1 `CRFort` reaches
+offset 13,660 in every language: English has 6,676 padding bytes, German has
+6,456, and Japanese has zero. Texture starts span every four-byte residue
+modulo 32; the shared language extent determines this padding.
+
+These files corroborate the format; their counts and contents are not EN v1.0
+asset claims. The local EN v1.0 gametext directory is absent, and its executable
+remains the authority for the parser's accesses and code comparison.
+
+`gametext_parser_probe.py --audit-root` now reports padded sibling groups,
+shared texture offsets, and whether those offsets equal the maximum unpadded
+prefix. It excludes single-file directories from shared-group claims and
+distinguishes unequal offsets or uniformly overpadded groups. Reproduce the
+EN rev1 audit and execute its English/Japanese CRFort files through both EN v1.0
+retail and compiled parsers with:
+
+```sh
+python3 tools/gametext_parser_probe.py \
+  --audit-root orig/GSAE01_rev1/files/gametext \
+  --resources orig/GSAE01_rev1/files/gametext/CRFort/English.bin \
+              orig/GSAE01_rev1/files/gametext/CRFort/Japanese.bin
+```
+
+All 384 compiled/retail comparisons pass, including allocation failures and
+relocated metadata. All sixteen existing gametext tests pass. The complete
+gametext object is byte-identical; this is format and source recovery with
+unchanged match scores.
+The final EN `all_source` and strict checksum builds pass within their
+30-second limits; all 1,002 source objects and all objdiff unit measures
+retain their baseline values. EN rev1, JP, and PAL rev1 also build from the
+shared source with the same complete gametext object bytes.

@@ -735,6 +735,15 @@ typedef struct GameTextStringTable {
     int count;
     int offsets[];
 } GameTextStringTable;
+STATIC_ASSERT(sizeof(GameTextStringTable) == 4);
+STATIC_ASSERT(offsetof(GameTextStringTable, offsets) == 4);
+
+typedef struct GameTextPaddingBlock {
+    s32 byteCount;
+    u8 bytes[];
+} GameTextPaddingBlock;
+STATIC_ASSERT(sizeof(GameTextPaddingBlock) == 4);
+STATIC_ASSERT(offsetof(GameTextPaddingBlock, bytes) == 4);
 
 typedef struct GameTextTextureHeader {
     u16 format;
@@ -841,7 +850,7 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     u32 height;
     int i;
     u8* stringData;
-    int* paddingBlock;
+    GameTextPaddingBlock* paddingBlock;
     GameTextTableHeader* tableHeader;
     u16* textureDataStart;
     GameTextGlyphTable* resource;
@@ -893,9 +902,9 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
             stringPointers[j] = stringPointers[j] + (int)stringData;
         }
     }
-    paddingBlock = (int*)(stringData + stringDataSize);
-    textureCursor = (u16*)((u8*)paddingBlock + paddingBlock[0]);
-    textureCursor += 2;
+    paddingBlock = (GameTextPaddingBlock*)(stringData + stringDataSize);
+    textureCursor = (u16*)((u8*)paddingBlock + paddingBlock->byteCount);
+    textureCursor += sizeof(*paddingBlock) / sizeof(*textureCursor);
     textureDataStart = textureCursor;
     textureIndex = 0;
     while (1) {
