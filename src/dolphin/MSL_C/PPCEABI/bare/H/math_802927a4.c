@@ -62,7 +62,11 @@ float powfCoreHighPrecision(float base, float power) {
         resultExponentAsDouble = (double)resultExponent;
         fractionalExponent = logValue - resultExponentAsDouble;
 
-        result = (fractionalExponent != lbl_803E7B68) ? (float)(fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (lbl_803E7BC0 * fractionalExponent + lbl_803E7BB8) + lbl_803E7BB0) + lbl_803E7BA8) + lbl_803E7BA0) + lbl_803E7B98) + lbl_803E7B90) + lbl_803E7B88) + lbl_803E7B80) + lbl_803E7B78) + lbl_803E7B70) : lbl_803E7BC8;
+        if (fractionalExponent != lbl_803E7B68) {
+            result = (float)(fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (lbl_803E7BC0 * fractionalExponent + lbl_803E7BB8) + lbl_803E7BB0) + lbl_803E7BA8) + lbl_803E7BA0) + lbl_803E7B98) + lbl_803E7B90) + lbl_803E7B88) + lbl_803E7B80) + lbl_803E7B78) + lbl_803E7B70);
+        } else {
+            result = lbl_803E7BC8;
+        }
 
         if ((int)(baseBits & 0x80000000)) {
             integerPower = power;
@@ -100,7 +104,11 @@ float powfCoreFast(float base, register float power) {
         fastCastFloatToS16(logValue, &resultExponent);
         resultExponentAsFloat = fastCastS16ToFloat(&resultExponent);
         logValue = logValue - resultExponentAsFloat;
-        result = (logValue != lbl_803E7AB8) ? (logValue * (0.3431449f * logValue + 0.6519048f) + 1.0023681f) : lbl_803E7BC8;
+        if (logValue != lbl_803E7AB8) {
+            result = (logValue * (0.3431449f * logValue + 0.6519048f) + 1.0023681f);
+        } else {
+            result = lbl_803E7BC8;
+        }
         if ((int)(baseBits & 0x80000000)) {
             integerPower = power;
             if (integerPower & 1) {

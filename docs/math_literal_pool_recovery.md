@@ -33,6 +33,40 @@ This checks the sign-handling rewrite, not the real quadrant reducer or overall
 trigonometric accuracy. Formatting preserves the raw object. EN `all_source`
 and the strict retail checksum gates pass with 30-second limits.
 
+## Shared power-function result selection under GC/1.3
+
+The high-precision and fast power cores now assign their fractional-exponent
+approximation through `if`/`else`. Each former ternary required an additional
+saved FPR under GC/1.3. Explicit assignments remove its four save/restore
+instructions while adding one branch-local result store, reducing each function
+by three instructions. The comparisons, polynomial expressions and their
+precision, negative-base sign handling, and final exponent-bit adjustment are
+unchanged.
+
+| Function | Before | After | Retail / new instructions |
+| --- | ---: | ---: | ---: |
+| `powfCoreHighPrecision` | 84.253624% | 86.71739% | 138 / 147 |
+| `powfCoreFast` | 81.76596% | 85.489365% | 94 / 103 |
+
+These results hold for EN v1.0, EN revision 1, JP, and PAL revision 1, using
+SHA-1-verified DOLs with identical address-normalized retail bodies. The four
+builds emit the same complete source object. The other five function bodies,
+all allocated non-text bytes and named layouts, and every function's ordered
+relocation destinations are unchanged. Later text symbols move back 24 bytes;
+the local vector calls continue to resolve to those same functions. The existing
+44-byte literal pool is preserved. No compiler settings, splits, or matching
+classifications change; the unit remains `NonMatching`.
+
+A temporary host harness compares 4,514 input pairs through both complete power
+cores: 9,028 bit-identical before/after results at each of `-O0` and `-O2`.
+It covers zero bases, positive and negative bases, integral and fractional
+powers, and fractional-exponent branch boundaries. It uses retail coefficient
+values and host casts in place of the fast conversion helpers, with strict
+aliasing disabled for the existing float/word accesses. This is a differential
+check of the rewrite, not PowerPC conversion emulation or a libm accuracy claim.
+Formatting is separate and preserves the raw object. EN `all_source` and the
+strict retail checksum gates pass with 30-second limits.
+
 ## September 6: Three complete pools under GC/1.3
 
 The following units now use ordinary typed numeric literals instead of late
