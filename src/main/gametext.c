@@ -1968,7 +1968,8 @@ static inline f32 gameTextDecodeScale(int scale256) {
     return (f32)scale256 / 256.0f;
 }
 
-void gameTextMeasureString(u8* str, f32 scale, f32* outWidth, f32* outZero, f32* outMaxFontWidth, f32* outMaxLineHeight, int fontId) {
+void gameTextMeasureString(u8* str, f32 scale, f32* outWidth, f32* outZero, f32* outMaxFontWidth, f32* outMaxLineHeight,
+                           int fontId) {
     int byteOffset;
     u32 codePoint;
     int encodedLength;
