@@ -1752,7 +1752,8 @@ void ObjHits_DetectObjectPair(GameObject* objA, GameObject* objB) {
                 if (hasVerticalSpan != 0) {
                     storedSeparation.y = 0.0f;
                 }
-                value = sqrtf(storedSeparation.x * storedSeparation.x + storedSeparation.y * storedSeparation.y + storedSeparation.z * storedSeparation.z);
+                value = sqrtf(storedSeparation.x * storedSeparation.x + storedSeparation.y * storedSeparation.y +
+                              storedSeparation.z * storedSeparation.z);
                 if (value > 0.0f) {
                     offsetX = storedSeparation.x / value;
                     offsetY = storedSeparation.y / value;
