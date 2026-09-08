@@ -199,8 +199,7 @@ void Vec_scale(const Vec* input, Vec* output, float scale) {
 }
 
 float Vec_lengthSquared(const Vec* input) {
-    return input->z * input->z +
-           (input->x * input->x + input->y * input->y);
+    return input->z * input->z + (input->x * input->x + input->y * input->y);
 }
 
 #pragma optimization_level 0
