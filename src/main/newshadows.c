@@ -143,7 +143,7 @@ typedef union ShadowBlurRow {
     u32 words[38];
 } ShadowBlurRow;
 
-static void boxBlurTexture(u8* texData, int size, int window, u32 fill);
+static void boxBlurTexture(Texture* texture, int size, int window, u32 fill);
 
 static void sortShadowEntriesDescending(NewShadowCaster* arr, int count);
 
@@ -1548,7 +1548,7 @@ void renderObjectShadowTexture(GameObject* obj) {
         GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
         GXSetTexCopyDst(0x80, 0x80, GX_CTF_B8, GX_FALSE);
         GXCopyTex(gNewShadowFrameTextures[gNewShadowFrameIndex] + 1, GX_TRUE);
-        boxBlurTexture((u8*)gNewShadowFrameTextures[(gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT], 0x80, 0x10,
+        boxBlurTexture(gNewShadowFrameTextures[(gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT], 0x80, 0x10,
                        0);
         obj->anim.modelState->shadowScale = 1.0f / sc;
     } else {
@@ -1563,13 +1563,13 @@ void renderObjectShadowTexture(GameObject* obj) {
     obj->anim.modelState->shadowOffsetY -= 64.0f * obj->anim.modelState->shadowScale;
 }
 
-static void boxBlurTexture(u8* texData, int size, int window, u32 fill) {
+static void boxBlurTexture(Texture* texture, int size, int window, u32 fill) {
     ShadowBlurOutput blurred;
     ShadowBlurRow row;
     u8* data;
     u32 i;
 
-    data = texData + sizeof(Texture);
+    data = (u8*)(texture + 1);
     if (window % 8 == 0) {
         u32 y = 0;
 
@@ -1649,7 +1649,7 @@ static void boxBlurTexture(u8* texData, int size, int window, u32 fill) {
         }
     } else {
         u32 y = 0;
-        u16 fillHalfword = fill;
+        fill &= 0xffff;
 
         for (; y < size; y++) {
             u16* tile = (u16*)(data + (y & 3) * 8 + (y >> 2) * 4 * size);
@@ -1658,7 +1658,7 @@ static void boxBlurTexture(u8* texData, int size, int window, u32 fill) {
             u32 x;
 
             for (i = 0; i < (window >> 2); i++) {
-                dst[0] = fillHalfword;
+                dst[0] = fill;
                 dst++;
             }
             src = tile;
@@ -1671,7 +1671,7 @@ static void boxBlurTexture(u8* texData, int size, int window, u32 fill) {
                 src += 16;
             }
             for (i = 0; i < (window >> 2); i++) {
-                dst[0] = fillHalfword;
+                dst[0] = fill;
                 dst++;
             }
             boxBlurRow(row.bytes, blurred.bytes, size, window);
@@ -1696,7 +1696,7 @@ static void boxBlurTexture(u8* texData, int size, int window, u32 fill) {
                 u32 yOffset;
 
                 for (i = 0; i < (window >> 2); i++) {
-                    dst[0] = fillHalfword;
+                    dst[0] = fill;
                     dst++;
                 }
                 bufferPtr = row.bytes + (window >> 1);
@@ -1711,7 +1711,7 @@ static void boxBlurTexture(u8* texData, int size, int window, u32 fill) {
                 }
                 dst = (u16*)(row.bytes + (size + (window >> 1)));
                 for (i = 0; i < (window >> 2); i++) {
-                    dst[0] = fillHalfword;
+                    dst[0] = fill;
                     dst++;
                 }
                 boxBlurRow(row.bytes, blurred.bytes, size, window);

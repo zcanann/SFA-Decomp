@@ -1,5 +1,40 @@
 # Shadow blur compiler trace
 
+## Recovered fill lifetime
+
+The halfword path now masks the original `fill` parameter with `fill &= 0xffff`
+instead of introducing a separate `u16` local. This preserves the low-halfword
+padding semantics while recovering retail's narrowing position and registers:
+`clrlwi r30,r6,16` follows the window calculation, and the window-end address
+uses `r31`. The private blur API now takes `Texture*`, matching its sole caller
+and the header followed by I8 pixel storage; that type correction is object-byte
+neutral relative to the masking change.
+
+`boxBlurTexture` improves from 99.166664% to 99.45059%, with 1,356 instructions
+on both sides. Mnemonic alignment differences fall from two to zero and operand
+differences from 160 to 125. The TU improves from 98.86959% to 98.94111%; 40 of
+44 functions remain exact. The other 43 function bodies, non-text sections,
+named-symbol layouts, and relocation targets are unchanged. The remaining
+column-pass register differences still prevent a complete function match.
+
+`tools/shadow_blur_probe.py` executes both compiled and retail PPC against an
+independent untiled, separable box-filter reference. Its 360 cases cover square
+sizes 8 through 128, windows 4/8/12/16/20/24, three padding patterns, and zero,
+white, random, and impulse images. It checks tiled pixel output, header and
+image guards, cache-flush arguments, and callee-preserved registers. The game's
+128-pixel, 16-wide, zero-fill call is included. The suite passes; deliberately
+reducing the source mask to eight bits makes it fail. Invalid sizes or windows
+are outside this probe's scope.
+
+Run after building the source object, using Python with `unicorn` and
+`pyelftools` installed:
+
+```sh
+python3 tools/shadow_blur_probe.py
+```
+
+## Baseline trace
+
 At `8287f6d51d`, `boxBlurTexture` has 1,356 retail and source instructions and
 99.166664% fuzzy similarity. The first 349 instructions match. Later column
 passes have register exchanges, and the halfword path narrows the fill value
@@ -28,7 +63,7 @@ instruction. Signed/unsigned mnemonic swaps and incorrect division registers
 are rejected. The backend suite passes 72 tests, with seven optional capture
 fixtures skipped.
 
-## Observed allocation
+## Baseline allocation
 
 The completed capture contains 17 stages and a 524-node GPR graph. All 1,356
 final records align with the emitted object. Simplification and 485 physical
@@ -63,5 +98,5 @@ python3 tools/tricky_backend_trace.py --unit main/main/newshadows \
 ```
 
 The tool retains its ordinary-versus-instrumented whole-object hash gate.
-This diagnostic change modifies no game source, compiler profile or match flag.
+The original diagnostic change modified no game source, compiler profile or match flag.
 `ninja all_source` and the strict retail checksum pass with 30-second limits.
