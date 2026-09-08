@@ -3964,8 +3964,8 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         if (timer != zero) {
             randomWidth = randomGetRange(0, 0x1e) * 2;
             randomHeight = randomGetRange(0, 0x1e) * 2;
-            pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff,
-                                       (u8)(panelAlpha / 2), 0x230, 0x190, randomHeight, randomWidth);
+            pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)(panelAlpha / 2),
+                                       0x230, 0x190, randomHeight, randomWidth);
             model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
             objRender(0, 0, 0, 0, gGameUiCommCubeObjects[1], 1);
             model->bufferFlags &= ~0x8;
@@ -4577,9 +4577,9 @@ void pauseMenuDrawGrid(s16 alpha) {
     pauseMenuDrawGridCell((u8)gPauseMenuGridCursor, alpha, 0);
     {
         f32 base = lbl_803DBAC0;
-        pauseMenuDrawGridCell(
-            (u8)gPauseMenuGridCursor,
-            alpha * (base + base * mathSinf(3.1415927f * (500.0f * gPauseMenuHoloTime) / 32768.0f)), 4);
+        pauseMenuDrawGridCell((u8)gPauseMenuGridCursor,
+                              alpha * (base + base * mathSinf(3.1415927f * (500.0f * gPauseMenuHoloTime) / 32768.0f)),
+                              4);
     }
     {
         int n = alpha * (0x200 - gPauseMenuSlideOut);
