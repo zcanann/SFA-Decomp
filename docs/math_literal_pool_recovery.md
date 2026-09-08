@@ -1,5 +1,38 @@
 # Game math literal-pool recovery
 
+## Shared sine/cosine sign handling under GC/1.3
+
+`mathSinCosf` now conditionally negates the existing approximation in switch
+cases zero and two. The previous self-selecting ternaries made GC/1.3 introduce two
+additional floating-point temporaries, six register copies/branches, and eight
+associated save/restore instructions. The source now uses the same conditional
+assignment shape as the other two quadrant cases.
+
+The condition deliberately remains `!(angle >= gSinCosZero)`: replacing it with
+`angle < gSinCosZero` would change the unordered/NaN case. Polynomial evaluation,
+coefficient types, quadrant selection, and output-store order are unchanged.
+
+The shared source improves **38.6375% to 54.6375%**, shrinking from **109 to 95
+instructions**, against retail's 80. This result is identical for EN v1.0,
+EN revision 1, JP, and PAL revision 1. Each DOL passes its configured SHA-1;
+their address-normalized retail function bodies agree. All four builds emit
+the same before and after objects. PAL revision 0 is not claimed here because
+the local file at its path does not have that target's configured hash.
+
+Among allocated sections, only `.text` changes. All allocated non-text bytes,
+layouts, and named constants are preserved, including the complete 32-byte
+coefficient pool. The TU remains `NonMatching`; remaining differences include
+the current compiler's prologue/epilogue. Compiler profiles and regional
+matching classifications are unchanged.
+
+A temporary host differential harness compares 2,560 before/after calls at
+each of `-O0` and `-O2`, with bit-identical outputs. It supplies quadrant and
+reduced-angle values to exercise every switch path, ignored quadrant bits,
+positive/negative zero, subnormals, infinities, NaNs, and aliased output pointers.
+This checks the sign-handling rewrite, not the real quadrant reducer or overall
+trigonometric accuracy. Formatting preserves the raw object. EN `all_source`
+and the strict retail checksum gates pass with 30-second limits.
+
 ## September 6: Three complete pools under GC/1.3
 
 The following units now use ordinary typed numeric literals instead of late
