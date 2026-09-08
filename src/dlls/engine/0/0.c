@@ -4047,11 +4047,9 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
                 if (gPauseMenuCurHintText != 0 && gPauseMenuCurHintText->count >= 2) {
                     textY = 0x96;
                     for (stringIndex = 1; stringIndex < gPauseMenuCurHintText->count; stringIndex++) {
-                        gameTextShowStr(gPauseMenuCurHintText->strings[stringIndex], 0x79, 0xf0,
-                                        textY);
-                        gameTextMeasureStringBoundsAt(gPauseMenuCurHintText->strings[stringIndex],
-                                                      0x79, 0, 0, &measureLeft, &measureRight, &measureTop,
-                                                      &measureBottom);
+                        gameTextShowStr(gPauseMenuCurHintText->strings[stringIndex], 0x79, 0xf0, textY);
+                        gameTextMeasureStringBoundsAt(gPauseMenuCurHintText->strings[stringIndex], 0x79, 0, 0,
+                                                      &measureLeft, &measureRight, &measureTop, &measureBottom);
                         lineHeight = gGameTextFontMetrics[sLanguageNameTable[getCurLanguage()].fontId].lineHeight;
                         textHeight = measureBottom - measureTop;
                         textY += (textHeight > lineHeight)
