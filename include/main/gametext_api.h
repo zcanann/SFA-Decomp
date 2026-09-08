@@ -6,8 +6,7 @@
 
 typedef struct TextDisplayState TextDisplayState;
 
-typedef struct NpcDialoguePhraseState
-{
+typedef struct NpcDialoguePhraseState {
     TextDisplayState display;
     char* phraseBuffer;
 } NpcDialoguePhraseState;

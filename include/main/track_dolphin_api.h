@@ -7,11 +7,6 @@
 #include "main/model_render_instrs_api.h"
 #include "main/track_dolphin_map_api.h"
 
-STATIC_ASSERT(offsetof(TrackHitResults, triangleFlags) == 0x58);
-STATIC_ASSERT(offsetof(TrackHitResults, objects) == 0x5C);
-STATIC_ASSERT(offsetof(TrackHitResults, hitCount) == 0x6C);
-STATIC_ASSERT(offsetof(TrackHitResults, hitMask) == 0x6E);
-
 struct Shader;
 struct MapBlockData;
 enum HitQueryMask
@@ -38,8 +33,8 @@ int trackGetNearestGroundOffsetAndNormal(GameObject* obj, f32 x, f32 y, f32 z, f
                                          f32* outNormal, int queryMask);
 int trackGetNearestGroundOffset(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundOffset, int queryMask);
 int trackGetHeight(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsOut, int mode, int queryMask);
-int trackGetIntersect(GameObject* contactSource, f32* startPoints, f32* endPoints, int pointCount, void* results,
-                        int flags);
+int trackGetIntersect(GameObject* contactSource, f32* startPoints, f32* endPoints, int pointCount, void* resultStorage,
+                        int unusedFlags);
 void hitDetect_calcSweptSphereBounds(TrackQueryBounds* boundsOut, f32* startPoints, f32* endPoints, f32* radii,
                                      int pointCount);
 void trackIntersectBroadphase(GameObject* obj, TrackQueryBounds* bounds, u32 mask, int flags);
@@ -59,7 +54,6 @@ void mapBlockRender_setVtxDcrs(u8 doSetup, struct MapBlockData* block, struct Sh
                                ModelRenderInstrsState* state);
 void initTextures(void);
 void mapClearBlockEdgeFlags(void);
-void* mapBlockGetPolygon(MapBlockData* obj, int idx);
 void mapBlockGpuRecoveryHook(void);
 void* mapBlockGetUnused00Value(struct MapBlockData* block);
 struct MapBlockData* MapBlock_loadFromFile(int blockId);
@@ -70,14 +64,12 @@ void renderMapBlock(struct MapBlockData* block, u8 type);
 void shadowBeginFrame(void);
 void shadowVolumeBeginFrame(void);
 void trackInvalidateDynamicSlotsForObject(GameObject* target);
-void objDrawGroundShadow(GameObject* obj, ObjModel* model);
 int findSurfaceInYRange(GameObject* obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
                         GameObject** outSurfaceObj);
 void renderGlows(void);
 void MapBlock_init(struct MapBlockData* block);
 void MapBlock_initHits(struct MapBlockData* block, int index);
 int mapBlockCountTrianglesByType(struct MapBlockData* block, int type);
-void buildShadowVolumeBox(f32* direction, f32* out, f32 lowerScale);
 int trackGetHeightAboveGround(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int queryMask);
 extern int gIntersectLinePool;
 extern f32* gIntersectPoints;

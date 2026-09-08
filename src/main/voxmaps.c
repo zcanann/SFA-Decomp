@@ -1,3 +1,4 @@
+#include "main/voxmaps.h"
 #include "main/curve.h"
 #include "main/debug.h"
 #include "main/lightmap_api.h"
@@ -7,7 +8,6 @@
 #include "main/pi_dolphin.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/shader_api.h"
-#include "main/voxmaps.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/os/OSReport.h"
@@ -15,10 +15,12 @@
 #include "main/table_file.h"
 #include "string.h"
 
-#define VOXMAP_SLOT_COUNT           6
 #define VOXMAPS_ROUTE_NODE_CAPACITY 200
 #define VOXMAPS_PATH_POINT_CAPACITY 10
 #define VOXMAPS_SCRATCH_BUFFER_SIZE 640
+#define VOXMAPS_UNUSED_BLOCK_ID     (-2)
+#define VOXMAPS_MAX_SLOT_AGE        0x3FFFFFFF
+#define VOXMAPS_UNUSED_SLOT_AGE     0x40000000
 
 typedef struct VoxRouteWork {
     RouteNode nodes[VOXMAPS_ROUTE_NODE_CAPACITY];
@@ -26,10 +28,6 @@ typedef struct VoxRouteWork {
     f32 pathPoints[VOXMAPS_PATH_POINT_CAPACITY][3];
 } VoxRouteWork;
 
-STATIC_ASSERT(sizeof(VoxMapFile) == 0x2c);
-STATIC_ASSERT(offsetof(VoxMaps, activeMap) == 0x58);
-STATIC_ASSERT(sizeof(VoxMaps) == 0x74);
-STATIC_ASSERT(sizeof(RouteNode) == 0xe);
 STATIC_ASSERT(offsetof(VoxRouteWork, queue) == 0xaf0);
 STATIC_ASSERT(offsetof(VoxRouteWork, pathPoints) == 0xe10);
 STATIC_ASSERT(sizeof(VoxRouteWork) == 0xe88);
@@ -44,376 +42,752 @@ int gVoxMapsMaxMapIndex;
 Texture* gVoxMapsLargeTextures[2];
 Texture* gVoxMapsSmallTextures[2];
 
-static inline void heapSiftUp(CurveHeapNode* q, int i)
-{
-    u16 key = q[i].priority;
-    u16 val = q[i].value;
-    int parent;
-    q[0].priority = 0xFFFF;
-    while (q[(parent = i >> 1)].priority <= key)
-    {
-        q[i].value = q[parent].value;
-        q[i].priority = q[parent].priority;
-        i = parent;
-    }
-    q[i].priority = key;
-    q[i].value = val;
+static inline void heapSiftUp(CurveHeapNode* q, int i);
+static inline void voxmaps_queueNode(RouteState* state, u16 nodeIndex, u16 priority);
+static inline void voxmaps_reprioritizeNode(RouteState* state, u16 nodeIndex, u16 priority);
+
+static inline int voxmaps_findRouteNode(RouteState* state, s16* box, int* expandedOut);
+
+char sVoxmapsRouteNodesListOverflow[] = "VOXMAPS: route nodes list overflow\n";
+
+char sVoxMapsDebugStrings[380] =
+    "Childnode Null\n\000overflow in 'genVoxelCircle'\n\000\000\000VOXMAP: attempt to load invalid object voxmap "
+    "'%d'\n\000VOXMAP: Size overflow on object voxmap load->Ignoring defined voxmap\n\000\000\000<voxLoadVoxMapActual> "
+    " Warning voxRomTab is NULL\n\000\000\000VOXMAP: Size overflow on load->Ignoring defined "
+    "voxmap\n\000<voxLoadVoxMapActual>  Warning uncompressedSize is 0\n\000\000\000 WARNING: Voxmap has no mem "
+    "available \n";
+
+VoxMapFile* gVoxMapsBuffers[VOXMAP_SLOT_COUNT];
+VoxState gVoxMapsActiveState;
+int gVoxMapsBlockIds[VOXMAP_SLOT_COUNT];
+int gVoxMapsSlotAges[VOXMAP_SLOT_COUNT];
+VoxMapSlotOrigin gVoxMapsSlotOrigins[VOXMAP_SLOT_COUNT];
+
+void Stack_Free(RingBufferQueue* stack) {
+    mm_free(stack);
 }
 
-static inline int voxmaps_findRouteNode(RouteState* state, s16* box, int* flagOut)
-{
-    s16 bz = box[2];
-    s16 bx = box[0];
-    int foundIdx;
-    for (foundIdx = 0; foundIdx < state->nodeCount; foundIdx++)
-    {
-        RouteNode* nn = &state->nodes[foundIdx];
-        if (nn->x == bx && nn->z == bz)
-        {
-            *flagOut = nn->flag;
-            return foundIdx;
-        }
+void Stack_Push(RingBufferQueue* stack, void* src) {
+    memcpy((u8*)stack->data + stack->writeIndex * stack->elemSize, src, stack->elemSize);
+    if (++stack->writeIndex == stack->capacity) {
+        stack->writeIndex = 0;
     }
-    return -1;
+    stack->count++;
 }
 
-void voxmaps_visitRouteNeighbor(struct RouteState* state, VoxBoxArg* srcBox, int parentNodeIndex, u16 count, s16* box)
-{
-    int foundIdx;
-    int savedFlag;
-    int foundSlot;
-    int shiftLo;
-    CurveHeapNode* q;
-    RouteNode* routeNode;
-    u8 occ[3][4];
-    int dxh;
-    int dzh;
-    int nodeCount;
-    int key;
-    int oldp;
-    int dx;
-    int dz;
-    int shiftHi;
-    int z6lo;
-    int z6hi;
-    u8* p;
-    int bitmapCol;
-    int blocked;
-    int voxX;
-    int voxZ;
-    VoxState* vs;
-    int shift;
-    int dir;
-    int next;
-    int chosen;
-    int sumNext;
-    int sumCur;
+void Stack_Pop(RingBufferQueue* stack, void* dst) {
+    if (--stack->writeIndex < 0) {
+        stack->writeIndex = stack->capacity - 1;
+    }
+    memcpy(dst, (u8*)stack->data + stack->writeIndex * stack->elemSize, stack->elemSize);
+    stack->count--;
+}
+
+BOOL Stack_IsFull(RingBufferQueue* stack) {
+    return stack->count == stack->capacity - 1;
+}
+
+BOOL Stack_IsEmpty(RingBufferQueue* stack) {
+    return stack->count == 0;
+}
+
+void Queue_Init(RingBufferQueue* queue, void* data, int capacity, int elemSize) {
+    queue->data = data;
+    queue->count = 0;
+    queue->capacity = capacity;
+    queue->elemSize = elemSize;
+    queue->writeIndex = 0;
+    queue->readIndex = 0;
+}
+
+void Queue_Push(RingBufferQueue* queue, void* src) {
+    memcpy((u8*)queue->data + queue->writeIndex * queue->elemSize, src, queue->elemSize);
+    if (++queue->writeIndex == queue->capacity) {
+        queue->writeIndex = 0;
+    }
+    queue->count++;
+}
+
+void Queue_Pop(RingBufferQueue* queue, void* dst) {
+    memcpy(dst, (u8*)queue->data + queue->readIndex * queue->elemSize, queue->elemSize);
+    if (++queue->readIndex == queue->capacity) {
+        queue->readIndex = 0;
+    }
+    queue->count--;
+}
+
+void Queue_Peek(RingBufferQueue* queue, void* dst) {
+    memcpy(dst, (u8*)queue->data + queue->readIndex * queue->elemSize, queue->elemSize);
+}
+
+BOOL Queue_IsEmpty(RingBufferQueue* queue) {
+    return queue->count == 0;
+}
+
+int Queue_GetCount(RingBufferQueue* queue) {
+    return queue->count;
+}
+
+void voxmaps_initialise(void) {
     int i;
-    int slot;
-    int ySlot;
 
-    VoxMapFile* map;
-
-    if (box[0] == state->tgtX && box[2] == state->tgtZ)
-    {
-        s16 idx = state->nodeCount;
-        if (idx == VOXMAPS_ROUTE_NODE_CAPACITY)
-        {
-            debugPrintf(sVoxmapsRouteNodesListOverflow);
-        }
-        else
-        {
-            routeNode = &state->nodes[state->nodeCount++];
-            routeNode->x = box[0];
-            routeNode->y = box[1];
-            routeNode->z = box[2];
-            routeNode->gCost = count;
-            routeNode->parentNodeIndex = (u8)(u16)parentNodeIndex;
-            dxh = routeNode->x - state->tgtX;
-            dzh = routeNode->z - state->tgtZ;
-            routeNode->hCost = (u16)(2.0f * sqrtf((f32)(dxh * dxh + dzh * dzh)));
-        }
-        q = state->queue;
-        q[++state->queueCount].value = idx;
-        q[state->queueCount].priority = 0xFFFE;
-        heapSiftUp(q, state->queueCount);
-    }
-
-    vs = &gVoxMapsRouteState;
-    dx = box[0] - vs->originX;
-    dz = box[2] - vs->originZ;
-    if ((dx >> 6) != 0 || (dz >> 6) != 0)
-    {
-        voxmaps_updateActiveMap((VoxPos*)box);
-        dx = box[0] - vs->originX;
-        dz = box[2] - vs->originZ;
-    }
-    map = gVoxMapsRouteState.activeMap;
-    if (map == NULL)
-    {
-        return;
-    }
-
-    voxX = (dx & 0x3f) >> 2;
-    voxZ = (dz & 0x3f) >> 2;
-    shift = voxX & 7;
-    shiftLo = (dx & 3) << 1;
-    shiftHi = shiftLo + 2;
-    z6lo = dz & 3;
-    z6hi = z6lo + 1;
+    loadAssetFileById(&gVoxMapsMapList, MLDF_FILEID_VOXOBJ_TAB);
     i = 0;
-    p = &occ[0][0];
-    bitmapCol = (voxZ << 1) + (voxX >> 3);
+    while (gVoxMapsMapList[i] != -1) {
+        i++;
+    }
+    gVoxMapsMaxMapIndex = i - 1;
+    gVoxMapsScratchBuffer = mmAlloc(VOXMAPS_SCRATCH_BUFFER_SIZE, 16, 0);
 
-    for (; i < 3; i++)
-    {
-        ySlot = i + box[1];
-        ySlot -= 1;
-        if (ySlot < map->minY)
-        {
-            ySlot = 0;
-        }
-        else if (ySlot >= map->maxY)
-        {
-            ySlot = (map->maxY - 1) - map->minY;
-        }
-        else
-        {
-            ySlot -= map->minY;
-        }
-        if (((map->bitmap[(ySlot << 5) | bitmapCol] >> shift) & 1) != 0u)
-        {
-            u8* node = voxmaps_getRouteNode(map->rowCounts, map->nodeBase, map->bitmap, voxX, ySlot, voxZ);
-            p[0] = (node[z6lo] >> shiftLo) & 3;
-            p[1] = (node[z6lo] >> shiftHi) & 3;
-            p[2] = (node[z6hi] >> shiftLo) & 3;
-            p[3] = (node[z6hi] >> shiftHi) & 3;
-        }
-        else
-        {
-            p[0] = 0;
-            p[1] = 0;
-            p[2] = 0;
-            p[3] = 0;
-        }
-        p += 4;
+    for (i = 0; i < VOXMAP_SLOT_COUNT; i++) {
+        gVoxMapsBuffers[i] = NULL;
+        gVoxMapsBlockIds[i] = VOXMAPS_UNUSED_BLOCK_ID;
+        gVoxMapsSlotAges[i] = VOXMAPS_UNUSED_SLOT_AGE;
+        gVoxMapsSlotInUse[i] = 0;
+        gVoxMapsSlotOrigins[i].gridX = 0;
+        gVoxMapsSlotOrigins[i].gridZ = 0;
     }
 
-    if (state->mode26 != 0)
-    {
-        if ((occ[1][0] & 2) || (occ[1][1] & 2) || (occ[1][2] & 2) || (occ[1][3] & 2))
-        {
-            blocked = 1;
+    gVoxMapsScratchBufferPtr = gVoxMapsScratchBuffer;
+    gVoxMapsTransformObj = 0;
+    gVoxMapsLargeTextures[0] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
+    gVoxMapsLargeTextures[1] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
+    gVoxMapsSmallTextures[0] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
+    gVoxMapsSmallTextures[1] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
+}
+
+void voxmaps_resetLoadedMaps(void) {
+    int i;
+    for (i = 0; i < VOXMAP_SLOT_COUNT; i++) {
+        if (gVoxMapsBuffers[i] != NULL) {
+            mm_free(gVoxMapsBuffers[i]);
+            gVoxMapsBuffers[i] = NULL;
         }
-        dir = -1;
-    }
-    else
-    {
-        dir = 1;
-    }
-
-    for (; dir >= 0; dir--)
-    {
-        next = dir + 1;
-        blocked = 0;
-        chosen = dir;
-        if ((occ[dir][0] & 2) || (occ[dir][1] & 2) || (occ[dir][2] & 2) || (occ[dir][3] & 2))
-        {
-            blocked = 1;
-            dir = 0;
-        }
-        if (!blocked)
-        {
-            if ((occ[next][0] & 2) || (occ[next][1] & 2) || (occ[next][2] & 2) || (occ[next][3] & 2))
-            {
-                blocked = 1;
-                dir = 0;
-            }
-        }
-        if (!blocked)
-        {
-            u8* rc = occ[dir];
-            sumCur = rc[0];
-            {
-                u8* rn = occ[next];
-                sumNext = rn[0];
-                sumCur += rc[1];
-                sumNext += rn[1];
-                sumCur += rc[2];
-                sumNext += rn[2];
-                sumCur += rc[3];
-                sumNext += rn[3];
-            }
-            if (next == 2 && sumNext == 0)
-            {
-                blocked = 1;
-            }
-            else
-            {
-                if (next == 1)
-                {
-                    if (sumCur >= sumNext)
-                    {
-                        chosen--;
-                    }
-                    else
-                    {
-                        sumCur = sumNext;
-                    }
-                }
-                else
-                {
-                    if (sumCur > sumNext)
-                    {
-                        chosen--;
-                    }
-                    else
-                    {
-                        sumCur = sumNext;
-                    }
-                }
-                if (sumCur <= 1)
-                {
-                    blocked = 1;
-                }
-                else
-                {
-                    dir = 0;
-                }
-            }
-        }
-    }
-
-    if (blocked != 0)
-    {
-        return;
-    }
-
-    box[1] = (s16)(box[1] + chosen);
-
-    foundIdx = voxmaps_findRouteNode(state, box, &savedFlag);
-    nodeCount = state->nodeCount;
-
-    if (foundIdx >= 0 && savedFlag == 0)
-    {
-        routeNode = &state->nodes[foundIdx];
-        if (count >= routeNode->gCost)
-        {
-            return;
-        }
-        routeNode->parentNodeIndex = parentNodeIndex;
-        routeNode->gCost = count;
-        key = (u16)(routeNode->hCost + routeNode->gCost);
-        {
-            s16 qcnt = state->queueCount;
-            q = state->queue;
-            for (slot = 0; slot <= qcnt; slot++)
-            {
-                if ((u16)foundIdx == q[slot].value)
-                {
-                    foundSlot = slot;
-                    slot = state->queueCount + 1;
-                }
-            }
-            oldp = q[foundSlot].priority;
-            q[foundSlot].priority = key;
-            if (key < oldp)
-            {
-                CurveHeap_SiftDown(q, qcnt, foundSlot);
-            }
-            else if (key > oldp)
-            {
-                u16 upKey = q[foundSlot].priority;
-                u16 upVal = q[foundSlot].value;
-                int parent;
-                q[0].priority = 0xFFFF;
-                while (q[(parent = foundSlot >> 1)].priority <= upKey)
-                {
-                    q[foundSlot].value = q[parent].value;
-                    q[foundSlot].priority = q[parent].priority;
-                    foundSlot = parent;
-                }
-                q[foundSlot].priority = upKey;
-                q[foundSlot].value = upVal;
-            }
-        }
-        return;
-    }
-
-    if (foundIdx >= 0)
-    {
-        return;
-    }
-
-    if (nodeCount == VOXMAPS_ROUTE_NODE_CAPACITY)
-    {
-        debugPrintf(sVoxmapsRouteNodesListOverflow);
-        routeNode = NULL;
-    }
-    else
-    {
-        routeNode = &state->nodes[state->nodeCount++];
-        routeNode->x = box[0];
-        routeNode->y = box[1];
-        routeNode->z = box[2];
-        routeNode->gCost = count;
-        routeNode->parentNodeIndex = (u8)(u16)parentNodeIndex;
-        dxh = routeNode->x - state->tgtX;
-        dzh = routeNode->z - state->tgtZ;
-        routeNode->hCost = (u16)(2.0f * sqrtf((f32)(dxh * dxh + dzh * dzh)));
-    }
-
-    if (routeNode == NULL)
-    {
-        debugPrintf(sVoxMapsDebugStrings);
-        return;
-    }
-
-    if (routeNode->hCost > state->minHCost)
-    {
-        key = (u16)(routeNode->hCost + routeNode->gCost);
-        q = state->queue;
-        q[++state->queueCount].value = nodeCount;
-        q[state->queueCount].priority = 0xFFFF - key;
-        heapSiftUp(q, state->queueCount);
-    }
-    else
-    {
-        if (routeNode->hCost < state->minHCost)
-        {
-            state->minHCost = routeNode->hCost;
-        }
-        key = (u16)(routeNode->hCost + routeNode->gCost);
-        q = state->queue;
-        q[++state->queueCount].value = nodeCount;
-        q[state->queueCount].priority = 0xFFFF - key;
-        heapSiftUp(q, state->queueCount);
+        gVoxMapsBlockIds[i] = VOXMAPS_UNUSED_BLOCK_ID;
+        gVoxMapsSlotAges[i] = VOXMAPS_UNUSED_SLOT_AGE;
+        gVoxMapsSlotInUse[i] = 0;
+        gVoxMapsSlotOrigins[i].gridX = 0;
+        gVoxMapsSlotOrigins[i].gridZ = 0;
     }
 }
 
-void voxmaps_expandRouteNeighbors(RouteState* state, VoxBoxArg* box, int parentNodeIndex)
-{
-    s16 neighbor[3];
-    u16 nextCost = box->cost + 1;
-    neighbor[0] = box->x;
-    neighbor[1] = box->y;
-    neighbor[2] = box->z;
-    neighbor[0] += 2;
-    voxmaps_visitRouteNeighbor(state, box, parentNodeIndex, nextCost, neighbor);
-    neighbor[0] -= 4;
-    neighbor[1] = box->y;
-    voxmaps_visitRouteNeighbor(state, box, parentNodeIndex, nextCost, neighbor);
-    neighbor[0] += 2;
-    neighbor[2] += 2;
-    neighbor[1] = box->y;
-    voxmaps_visitRouteNeighbor(state, box, parentNodeIndex, nextCost, neighbor);
-    neighbor[2] -= 4;
-    neighbor[1] = box->y;
-    voxmaps_visitRouteNeighbor(state, box, parentNodeIndex, nextCost, neighbor);
+void voxmaps_updateTimers(void) {
+    int* p = gVoxMapsSlotAges;
+    int i;
+    for (i = 0; i < VOXMAP_SLOT_COUNT; i++) {
+        if (*p < VOXMAPS_MAX_SLOT_AGE) {
+            (*p)++;
+        }
+        p++;
+    }
 }
 
-int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut)
-{
+VoxMapFile* voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8) {
+    char* msg = sVoxmapsRouteNodesListOverflow;
+    int count;
+    int size;
+    int entry;
+    VoxMapFile* hdr;
+
+    if (getTableFileEntry(MLDF_FILEID_VOXMAP_TAB_A, mapArg, &entry) == 0) {
+        OSReport(msg + 0xd0);
+        return NULL;
+    }
+    loadVoxMaps(entry, &count, &size);
+    if (count <= 0) {
+        return NULL;
+    }
+    if (size > 30720) {
+        debugPrintf(msg + 0x104);
+        return NULL;
+    }
+    if (size <= 0) {
+        OSReport(msg + 0x13c);
+        return NULL;
+    }
+    hdr = mmAlloc(size, 16, 0);
+    if (hdr == NULL) {
+        OSReport(msg + 0x174);
+        return NULL;
+    }
+    loadAndDecompressDataFile(MLDF_FILEID_VOXMAP_BIN_A, hdr, entry, count, 0, 0, 0);
+    if (hdr == NULL) {
+        OSReport(msg + 0x174);
+        return NULL;
+    }
+    hdr->rowCounts += (int)hdr;
+    hdr->bitmap += (int)hdr;
+    hdr->nodeBase = (VoxMapNode*)((int)hdr->nodeBase + (int)hdr);
+    hdr->f20 += (int)hdr;
+    hdr->f28 += (int)hdr;
+    hdr->f18 += (int)hdr;
+    return hdr;
+}
+
+int* voxmaps_updateActiveMap(VoxPos* obj) {
+    int* worldOrigins;
+    int gridX;
+    int gridZ;
+    int cellIndex;
+    int romListIndex;
+    int previousFreeDelay;
+    int bestTimer;
+    int slot;
+    int foundSlot;
+    int blockId;
+    int bestSlot;
+    int zWorldOffset;
+    MapCellEntry* cell;
+    VoxMapSlotOrigin* origin;
+
+    worldOrigins = gVoxMapsActiveState.blockOriginWorld;
+    zWorldOffset = obj->z * 10 + 5 - gMapBlockOriginWorldZ;
+
+    gridX = fastFloorf((f32)(obj->x * 10 + 5 - gMapBlockOriginWorldX) / 6.4e+02f);
+    gridZ = fastFloorf((f32)zWorldOffset / 6.4e+02f);
+
+    worldOrigins[0] = gMapBlockOriginWorldX + gridX * 640;
+    worldOrigins[1] = gMapBlockOriginWorldZ + gridZ * 640;
+    for (slot = 0; slot < 2; slot++) {
+        gVoxMapsActiveState.blockOriginGrid[slot] = gVoxMapsActiveState.blockOriginWorld[slot] / 10;
+    }
+
+    blockId = -1;
+    if (mapGetBlockAtPos(gridX, gridZ, 0) != NULL) {
+        cell = mapGetCellEntry(gridX, gridZ);
+        blockId = cell->blockId;
+    }
+    if (blockId != -1) {
+        foundSlot = -1;
+        for (slot = 0; slot < VOXMAP_SLOT_COUNT; slot++) {
+            if (blockId == gVoxMapsBlockIds[slot]) {
+                foundSlot = slot;
+                slot = VOXMAP_SLOT_COUNT;
+            }
+        }
+        if (foundSlot != -1) {
+            gVoxMapsSlotAges[foundSlot] = 0;
+            gVoxMapsActiveState.activeMap = NULL;
+        } else {
+            bestSlot = -1;
+            bestTimer = -1;
+            for (slot = 0; slot < VOXMAP_SLOT_COUNT; slot++) {
+                if (gVoxMapsSlotInUse[slot] == 0 && gVoxMapsSlotAges[slot] > bestTimer) {
+                    bestSlot = slot;
+                    bestTimer = gVoxMapsSlotAges[slot];
+                }
+            }
+            cellIndex = cell->cellIndex;
+            romListIndex = cell->romListIndex;
+            if (gVoxMapsBuffers[bestSlot] != NULL) {
+                previousFreeDelay = mmSetFreeDelay(0);
+                mm_free(gVoxMapsBuffers[bestSlot]);
+                mmSetFreeDelay(previousFreeDelay);
+            }
+            gVoxMapsBuffers[bestSlot] = voxLoadVoxMapActual(blockId, bestSlot, romListIndex, cellIndex);
+            gVoxMapsBlockIds[bestSlot] = blockId;
+            gVoxMapsSlotAges[bestSlot] = 0;
+            origin = &gVoxMapsSlotOrigins[bestSlot];
+            origin->gridX = gVoxMapsActiveState.blockOriginGrid[0];
+            origin->gridZ = gVoxMapsActiveState.blockOriginGrid[1];
+            gVoxMapsActiveState.activeMap = NULL;
+        }
+    } else {
+        gVoxMapsActiveState.activeMap = NULL;
+    }
+    return gVoxMapsActiveState.blockOriginWorld;
+}
+
+/* Rank the occupancy bitmap: count set bits in the (ySlot) row up to the cell at
+ * (tileX, tileZ), then index nodeBase by that running count. The per-row base count
+ * is packed into rowCounts (low/high nibble depending on which 8-tile half tileZ is
+ * in), then popcount adds every occupied cell before the target column. */
+u8* voxmaps_getRouteNode(u8* rowCounts, VoxMapNode* nodeBase, u8* bitmap, int tileX, int ySlot, int tileZ) {
+    int count;
+    int hdrRow = ySlot * 2 + ySlot;
+    u8* cur;
+    u8* end;
+    u8 bits;
+
+    if ((tileZ >> 3) != 0) {
+        count = (u32)rowCounts[hdrRow + 1] >> 4;
+        count |= rowCounts[hdrRow + 2] << 4;
+        cur = bitmap + (ySlot * 32 | 0x10);
+    } else {
+        count = rowCounts[hdrRow];
+        count |= (rowCounts[hdrRow + 1] & 0xf) << 8;
+        cur = bitmap + ySlot * 32;
+    }
+    {
+        int tileZByte = tileZ * 2;
+        end = bitmap + (ySlot * 32 | (tileZByte + (tileX >> 3)));
+    }
+    while (cur < end) {
+        bits = *cur;
+        while (bits != 0) {
+            bits &= bits - 1;
+            count++;
+        }
+        cur++;
+    }
+    bits = *cur;
+    bits &= (u8)((u32)0xff >> (8 - (tileX & 7)));
+    while (bits != 0) {
+        bits &= bits - 1;
+        count++;
+    }
+    return nodeBase[count].rows;
+}
+
+void voxmaps_gridToWorld(f32* out, s16* grid) {
+    int v;
+    v = grid[0] * 10 + 5;
+    out[0] = v;
+    v = grid[1] * 10 + 5;
+    out[1] = v;
+    v = grid[2] * 10 + 5;
+    out[2] = v;
+    if (gVoxMapsTransformObj != 0) {
+        Obj_TransformLocalPointToWorld(out[0], out[1], out[2], out, &out[1], &out[2],
+                                       (GameObject*)gVoxMapsTransformObj);
+    }
+}
+
+void voxmaps_worldToGrid(f32* in, s16* out) {
+    f32 sx, sy, sz;
+    int ix, iy, iz;
+    sx = in[0];
+    sy = in[1];
+    sz = in[2];
+    if (gVoxMapsTransformObj != 0) {
+        Obj_TransformWorldPointToLocal(sx, sy, sz, &sx, &sy, &sz, (GameObject*)gVoxMapsTransformObj);
+    }
+    ix = sx;
+    iy = sy;
+    iz = sz;
+    if (sx < 0.0f) {
+        ix -= 10;
+    }
+    if (sy < 0.0f) {
+        iy -= 10;
+    }
+    if (sz < 0.0f) {
+        iz -= 10;
+    }
+    out[0] = ix / 10;
+    out[1] = iy / 10;
+    out[2] = iz / 10;
+}
+
+int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, u8 skipFirst) {
+    int stepZ, twiceDx, twiceDy, twiceDz;
+    int errXY, errXZ, errYZ;
+    int stepsRemaining;
+    int localX64, ySlot, localZ64, tileX, tileZ;
+    int routeNodeDirty;
+    VoxMapFile* cachedMap;
+    VoxState* st;
+    int oldTile;
+    u8 first;
+    VoxPos cur = *start;
+    VoxPos found;
+    unsigned int skip;
+    int stepX, stepY;
+    int dx, dy, dz;
+    u8* routeNode;
+
+    stepX = 1;
+    dx = end->x - cur.x;
+    if (dx < 0) {
+        stepX = -1;
+        dx = -dx;
+    }
+    stepY = 1;
+    dy = end->y - cur.y;
+    if (dy < 0) {
+        stepY = -1;
+        dy = -dy;
+    }
+    stepZ = 1;
+    dz = end->z - cur.z;
+    if (dz < 0) {
+        stepZ = -1;
+        dz = -dz;
+    }
+
+    twiceDx = dx * 2;
+    errXY = dy - dx;
+    twiceDy = dy * 2;
+    errXZ = dz - dx;
+    twiceDz = dz * 2;
+    errYZ = dy - dz;
+    stepsRemaining = dx + dy + dz;
+
+    voxmaps_updateActiveMap(&cur);
+
+    st = &gVoxMapsActiveState;
+    localX64 = (cur.x - st->blockOriginGrid[0]) & 0x3f;
+    tileX = localX64 >> 2;
+    localZ64 = (cur.z - st->blockOriginGrid[1]) & 0x3f;
+    tileZ = localZ64 >> 2;
+    found = cur;
+    cachedMap = NULL;
+    first = 1;
+    skip = skipFirst;
+
+    while (stepsRemaining-- != 0) {
+        if (skip != 0 && first != 0) {
+            first = 0;
+        } else {
+            VoxMapFile* map = st->activeMap;
+            if (map != NULL) {
+                if (map != cachedMap || cur.y != found.y) {
+                    int y = cur.y;
+                    if (y < map->minY) {
+                        ySlot = 0;
+                    } else if (y >= map->maxY) {
+                        ySlot = (map->maxY - 1) - map->minY;
+                    } else {
+                        ySlot = y - map->minY;
+                    }
+                    routeNodeDirty = 1;
+                    cachedMap = map;
+                    found.y = y;
+                }
+                {
+                    u8* bitmap = map->bitmap;
+                    unsigned int bit = (bitmap[(ySlot << 5) | ((tileZ << 1) + (tileX >> 3))] >> (tileX & 7)) & 1;
+                    if (bit != 0) {
+                        unsigned int occ;
+                        if (routeNodeDirty != 0) {
+                            routeNode =
+                                voxmaps_getRouteNode(map->rowCounts, map->nodeBase, bitmap, tileX, ySlot, tileZ);
+                            routeNodeDirty = 0;
+                        }
+                        occ = (routeNode[localZ64 & 3] >> ((localX64 & 3) << 1)) & 3;
+                        if (occ != 0) {
+                            if (occOut != NULL) {
+                                *occOut = occ;
+                            }
+                            if (coordOut != NULL) {
+                                *coordOut = found;
+                            }
+                            return 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (errXY < 0) {
+            if (errXZ < 0) {
+                found.x = cur.x;
+                cur.x = (s16)(cur.x + stepX);
+                errXY += twiceDy;
+                errXZ += twiceDz;
+                oldTile = tileX;
+                if (((cur.x - st->blockOriginGrid[0]) >> 6) != 0) {
+                    voxmaps_updateActiveMap(&cur);
+                    cachedMap = NULL;
+                }
+                localX64 = (cur.x - st->blockOriginGrid[0]) & 0x3f;
+                tileX = localX64 >> 2;
+                if (tileX != oldTile) {
+                    routeNodeDirty = 1;
+                }
+            } else {
+                found.z = cur.z;
+                cur.z = (s16)(cur.z + stepZ);
+                errXZ -= twiceDx;
+                errYZ += twiceDy;
+                oldTile = tileZ;
+                if (((cur.z - st->blockOriginGrid[1]) >> 6) != 0) {
+                    voxmaps_updateActiveMap(&cur);
+                    cachedMap = NULL;
+                }
+                localZ64 = (cur.z - st->blockOriginGrid[1]) & 0x3f;
+                tileZ = localZ64 >> 2;
+                if (tileZ != oldTile) {
+                    routeNodeDirty = 1;
+                }
+            }
+        } else {
+            if (errYZ < 0) {
+                found.z = cur.z;
+                cur.z = (s16)(cur.z + stepZ);
+                errXZ -= twiceDx;
+                errYZ += twiceDy;
+                oldTile = tileZ;
+                if (((cur.z - st->blockOriginGrid[1]) >> 6) != 0) {
+                    voxmaps_updateActiveMap(&cur);
+                    cachedMap = NULL;
+                }
+                localZ64 = (cur.z - st->blockOriginGrid[1]) & 0x3f;
+                tileZ = localZ64 >> 2;
+                if (tileZ != oldTile) {
+                    routeNodeDirty = 1;
+                }
+            } else {
+                found.y = cur.y;
+                cur.y = (s16)(cur.y + stepY);
+                errXY -= twiceDx;
+                errYZ -= twiceDz;
+            }
+        }
+    }
+
+    if (coordOut != NULL) {
+        *coordOut = *end;
+    }
+    return 1;
+}
+
+void voxmaps_allocRouteWork(RouteState* state) {
+    state->nodes = mmAlloc(sizeof(VoxRouteWork), 0x10, 0);
+    state->queue = ((VoxRouteWork*)state->nodes)->queue;
+    state->pathPoints = (f32*)((u8*)state->queue + sizeof(((VoxRouteWork*)0)->queue));
+}
+
+void voxmaps_freeRouteWork(RouteState* state) {
+    if (state->nodes != NULL) {
+        mm_free(state->nodes);
+        state->nodes = NULL;
+    }
+}
+
+int voxmaps_processRouteQueue(RouteState* state, int count) {
+    CurveHeapNode* queue;
+    int nodeIdx;
+    int done = 0;
+    int ret = 0;
+    RouteNode* node;
+
+    while (!done && count != 0) {
+        queue = state->queue;
+        if (state->queueCount == 0) {
+            nodeIdx = -1;
+        } else {
+            nodeIdx = queue[1].value;
+            queue[1].priority = queue[state->queueCount].priority;
+            queue[1].value = queue[state->queueCount--].value;
+            CurveHeap_SiftDown(queue, state->queueCount, 1);
+        }
+        if (nodeIdx >= 0) {
+            node = state->nodes + nodeIdx;
+            state->currentNodeIndex = nodeIdx;
+            if (node->x == state->tgtX && node->z == state->tgtZ) {
+                done = 1;
+                ret = 1;
+            } else {
+                node->expanded = 1;
+                voxmaps_expandRouteNeighbors(state, node, nodeIdx);
+            }
+        } else {
+            done = 1;
+            ret = -1;
+        }
+        count--;
+    }
+    return ret;
+}
+
+int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state) {
+    RouteNode* node;
+    int searchIteration;
+    int ret;
+    int useDirectSteering = 0;
+    int i;
+    s16 out[3];
+
+    searchIteration = nav->searchIteration;
+    ret = 0;
+    if (searchIteration == 0) {
+        int pathDirect[1];
+
+        state->queueCount = 0;
+        state->nodeCount = 0;
+        for (i = 0; i < VOXMAPS_ROUTE_NODE_CAPACITY; i++) {
+            state->queue[i].priority = 0;
+            state->nodes[i].expanded = 0;
+        }
+        voxmaps_worldToGrid(nav->startPos, &state->startX);
+        voxmaps_worldToGrid(nav->goalPos, &state->tgtX);
+        state->startX &= ~1;
+        state->startZ &= ~1;
+        state->tgtX &= ~1;
+        state->tgtZ &= ~1;
+        if (voxmaps_traceTraversableRoute(&state->startX, &state->tgtX, out) != 0) {
+            pathDirect[0] = 1;
+        } else {
+            int count;
+            state->minHCost = 0x2710;
+            count = state->nodeCount;
+            if (count == VOXMAPS_ROUTE_NODE_CAPACITY) {
+                debugPrintf(sVoxmapsRouteNodesListOverflow);
+                node = NULL;
+            } else {
+                int dx, dz, d2;
+                node = &state->nodes[state->nodeCount++];
+                node->x = out[0];
+                node->y = out[1];
+                node->z = out[2];
+                node->gCost = 0;
+                node->parentNodeIndex = 0xff;
+                dx = node->x - state->tgtX;
+                dz = node->z - state->tgtZ;
+                d2 = dx * dx + dz * dz;
+                node->hCost = (u16)(2.0f * sqrtf((f32)d2));
+            }
+            {
+                u16 cost = node->hCost + node->gCost;
+                voxmaps_queueNode(state, state->nodeCount - 1, 0xffff - cost);
+                state->pathCount = 0;
+            }
+            pathDirect[0] = 0;
+        }
+        if (pathDirect[0] != 0) {
+            nav->waypointPos[0] = nav->goalPos[0];
+            nav->waypointPos[1] = nav->goalPos[1];
+            nav->waypointPos[2] = nav->goalPos[2];
+            ret = 1;
+            useDirectSteering = 1;
+        } else {
+            searchIteration = 1;
+        }
+    }
+
+    if (searchIteration != 0) {
+        int r;
+        ret = 1;
+        r = voxmaps_processRouteQueue(state, nav->nodesPerUpdate);
+        switch (r) {
+        case 0:
+            if (searchIteration++ >= nav->maxSearchIterations) {
+                searchIteration = 0;
+                if (voxmaps_buildRouteWaypoints(state, 1) != 0) {
+                    nav->waypointPos[0] = state->pathPoints[0];
+                    nav->waypointPos[1] = state->pathPoints[1];
+                    nav->waypointPos[2] = state->pathPoints[2];
+                } else {
+                    nav->waypointPos[0] = nav->goalPos[0];
+                    nav->waypointPos[1] = nav->goalPos[1];
+                    nav->waypointPos[2] = nav->goalPos[2];
+                    useDirectSteering = 1;
+                }
+            }
+            ret = 1;
+            break;
+        case 1:
+            searchIteration = 0;
+            if (voxmaps_buildRouteWaypoints(state, 1) != 0) {
+                nav->waypointPos[0] = state->pathPoints[0];
+                nav->waypointPos[1] = state->pathPoints[1];
+                nav->waypointPos[2] = state->pathPoints[2];
+            } else {
+                nav->waypointPos[0] = nav->goalPos[0];
+                nav->waypointPos[1] = nav->goalPos[1];
+                nav->waypointPos[2] = nav->goalPos[2];
+                useDirectSteering = 1;
+            }
+            ret = 1;
+            break;
+        case -1:
+            searchIteration = 0;
+            nav->waypointPos[0] = nav->startPos[0];
+            nav->waypointPos[1] = nav->startPos[1];
+            nav->waypointPos[2] = nav->startPos[2];
+            useDirectSteering = 1;
+            break;
+        }
+    }
+
+    nav->searchIteration = searchIteration;
+    nav->useDirectSteering = useDirectSteering;
+    return ret;
+}
+
+int voxmaps_buildRouteWaypoints(RouteState* state, int maxPathPoints) {
+    f32 waypoint[3];
+    RouteNode startNode;
+    RouteNode* segmentStart;
+    int pathCount;
+    RouteNode* candidate;
+    RouteNode* lastVisibleNode;
+    int parentIndex;
+    int nodeIndex;
+    RouteNode* routeNode;
+
+    if (maxPathPoints < 0) {
+        maxPathPoints = 10;
+    }
+    nodeIndex = state->currentNodeIndex;
+    routeNode = &state->nodes[nodeIndex];
+    routeNode->nextNodeIndex = 0xff;
+    while ((parentIndex = routeNode->parentNodeIndex) != 0xffu) {
+        routeNode = &state->nodes[parentIndex];
+        routeNode->nextNodeIndex = nodeIndex;
+        nodeIndex = parentIndex;
+    }
+
+    startNode.x = state->startX;
+    startNode.y = state->startY;
+    startNode.z = state->startZ;
+    startNode.nextNodeIndex = nodeIndex;
+    if (routeNode->nextNodeIndex == 0xff) {
+        candidate = NULL;
+    } else {
+        candidate = &state->nodes[routeNode->nextNodeIndex];
+    }
+    lastVisibleNode = routeNode;
+    segmentStart = &startNode;
+    pathCount = 0;
+
+    while (pathCount < maxPathPoints && candidate != NULL) {
+        if (segmentStart->x != candidate->x || segmentStart->z != candidate->z) {
+            if (voxmaps_traceTraversableRoute((s16*)candidate, (s16*)segmentStart, NULL) == 0) {
+                waypoint[0] = (f32)(lastVisibleNode->x * 10 + 5);
+                waypoint[1] = (f32)(lastVisibleNode->y * 10 + 5);
+                waypoint[2] = (f32)(lastVisibleNode->z * 10 + 5);
+                if (gVoxMapsTransformObj != 0) {
+                    Obj_TransformLocalPointToWorld(waypoint[0], waypoint[1], waypoint[2], &waypoint[0], &waypoint[1],
+                                                   &waypoint[2], (GameObject*)gVoxMapsTransformObj);
+                }
+                state->pathPoints[pathCount * 3 + 0] = (f32)((int)waypoint[0] + 5);
+                state->pathPoints[pathCount * 3 + 1] = (f32)(int)waypoint[1];
+                state->pathPoints[pathCount++ * 3 + 2] = (f32)((int)waypoint[2] + 5);
+                segmentStart = candidate;
+            }
+        }
+        lastVisibleNode = candidate;
+        if (candidate->nextNodeIndex == 0xff) {
+            candidate = NULL;
+        } else {
+            candidate = &state->nodes[candidate->nextNodeIndex];
+        }
+    }
+
+    if (pathCount < maxPathPoints) {
+        waypoint[0] = (f32)(lastVisibleNode->x * 10 + 5);
+        waypoint[1] = (f32)(lastVisibleNode->y * 10 + 5);
+        waypoint[2] = (f32)(lastVisibleNode->z * 10 + 5);
+        if (gVoxMapsTransformObj != 0) {
+            Obj_TransformLocalPointToWorld(waypoint[0], waypoint[1], waypoint[2], &waypoint[0], &waypoint[1],
+                                           &waypoint[2], (GameObject*)gVoxMapsTransformObj);
+        }
+        state->pathPoints[pathCount * 3 + 0] = (f32)((int)waypoint[0] + 5);
+        state->pathPoints[pathCount * 3 + 1] = (f32)(int)waypoint[1];
+        state->pathPoints[pathCount++ * 3 + 2] = (f32)((int)waypoint[2] + 5);
+        if (pathCount >= 10) {
+            pathCount = 10;
+        }
+    }
+
+    state->pathCount = pathCount;
+    state->pad22 = 0;
+    return pathCount;
+}
+
+int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut) {
     int shiftLo;
     VoxPos cur = *(VoxPos*)dest;
     VoxState* st;
@@ -450,15 +824,13 @@ int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut)
 
     xstep = 2;
     dx = ((VoxPos*)start)->x - cur.x;
-    if (dx < 0)
-    {
+    if (dx < 0) {
         xstep = -2;
         dx = -dx;
     }
     zstep = 2;
     dz = ((VoxPos*)start)->z - cur.z;
-    if (dz < 0)
-    {
+    if (dz < 0) {
         zstep = -2;
         dz = -dz;
     }
@@ -470,51 +842,40 @@ int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut)
 
     voxmaps_updateActiveMap(&cur);
 
-    st = &gVoxMapsRouteState;
-    voxX6 = (cur.x - st->originX) & 0x3f;
+    st = &gVoxMapsActiveState;
+    voxX6 = (cur.x - st->blockOriginGrid[0]) & 0x3f;
     voxX = voxX6 >> 2;
-    voxZ6 = (cur.z - st->originZ) & 0x3f;
+    voxZ6 = (cur.z - st->blockOriginGrid[1]) & 0x3f;
     voxZ = voxZ6 >> 2;
     voxXand7 = voxX & 7;
     shiftLo = (voxX6 & 3) << 1;
     shiftHi = shiftLo + 2;
     found = cur;
 
-    while (steps-- != 0)
-    {
+    while (steps-- != 0) {
         map = st->activeMap;
-        if (map != NULL)
-        {
+        if (map != NULL) {
             z6lo = voxZ6 & 3;
             z6hi = z6lo + 1;
-            for (row = 0, p = &buf[0][0], bitmapCol = (voxZ << 1) + (voxX >> 3); row < 3; row++)
-            {
+            for (row = 0, p = &buf[0][0], bitmapCol = (voxZ << 1) + (voxX >> 3); row < 3; row++) {
                 int y = row + cur.y;
                 int minY;
                 int maxY;
 
-                if (--y < (minY = map->minY))
-                {
+                if (--y < (minY = map->minY)) {
                     slot = 0;
-                }
-                else if (y >= (maxY = map->maxY))
-                {
+                } else if (y >= (maxY = map->maxY)) {
                     slot = (maxY - 1) - minY;
-                }
-                else
-                {
+                } else {
                     slot = y - minY;
                 }
-                if (((map->bitmap[(slot << 5) | bitmapCol] >> voxXand7) & 1u) != 0u)
-                {
+                if (((map->bitmap[(slot << 5) | bitmapCol] >> voxXand7) & 1u) != 0u) {
                     node = voxmaps_getRouteNode(map->rowCounts, map->nodeBase, map->bitmap, voxX, slot, voxZ);
                     p[0] = (node[z6lo] >> shiftLo) & 3;
                     p[1] = (node[z6lo] >> shiftHi) & 3;
                     p[2] = (node[z6hi] >> shiftLo) & 3;
                     p[3] = (node[z6hi] >> shiftHi) & 3;
-                }
-                else
-                {
+                } else {
                     p[0] = 0;
                     p[1] = 0;
                     p[2] = 0;
@@ -524,24 +885,19 @@ int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut)
             }
 
             i = 1;
-            while (i >= 0)
-            {
+            while (i >= 0) {
                 next = i + 1;
                 blocked = 0;
                 adj = i;
-                if ((buf[i][0] & 2) || (buf[i][1] & 2) || (buf[i][2] & 2) || (buf[i][3] & 2))
-                {
+                if ((buf[i][0] & 2) || (buf[i][1] & 2) || (buf[i][2] & 2) || (buf[i][3] & 2)) {
                     blocked = 1;
                 }
-                if (!blocked)
-                {
-                    if ((buf[next][0] & 2) || (buf[next][1] & 2) || (buf[next][2] & 2) || (buf[next][3] & 2))
-                    {
+                if (!blocked) {
+                    if ((buf[next][0] & 2) || (buf[next][1] & 2) || (buf[next][2] & 2) || (buf[next][3] & 2)) {
                         blocked = 1;
                     }
                 }
-                if (!blocked)
-                {
+                if (!blocked) {
                     u8* q;
                     sumA = *(u8*)&buf[i][0];
                     q = buf[next];
@@ -552,32 +908,25 @@ int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut)
                     sumB += q[2];
                     sumA += buf[i][3];
                     sumB += q[3];
-                    if (next == 2 && sumB == 0)
-                    {
+                    if (next == 2 && sumB == 0) {
                         blocked = 1;
-                    }
-                    else
-                    {
-                        if (next == 1)
-                        {
-                            if (sumA >= sumB)
+                    } else {
+                        if (next == 1) {
+                            if (sumA >= sumB) {
                                 adj--;
-                            else
+                            } else {
                                 sumA = sumB;
-                        }
-                        else
-                        {
-                            if (sumA > sumB)
+                            }
+                        } else {
+                            if (sumA > sumB) {
                                 adj--;
-                            else
+                            } else {
                                 sumA = sumB;
+                            }
                         }
-                        if (sumA <= 1)
-                        {
+                        if (sumA <= 1) {
                             blocked = 1;
-                        }
-                        else
-                        {
+                        } else {
                             i = 0;
                         }
                     }
@@ -585,10 +934,8 @@ int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut)
                 i--;
             }
 
-            if (blocked)
-            {
-                if (lastReachableOut != NULL)
-                {
+            if (blocked) {
+                if (lastReachableOut != NULL) {
                     *(VoxPos*)lastReachableOut = found;
                 }
                 return 0;
@@ -596,938 +943,327 @@ int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut)
             found.y = cur.y = (s16)(cur.y + adj);
         }
 
-        if (err < 0)
-        {
+        if (err < 0) {
             found.x = cur.x;
             cur.x = (s16)(cur.x + xstep);
             err += dz2;
-            if (((cur.x - st->originX) >> 6) != 0)
-            {
+            if (((cur.x - st->blockOriginGrid[0]) >> 6) != 0) {
                 voxmaps_updateActiveMap(&cur);
             }
-            voxX6 = (cur.x - st->originZ) & 0x3f;
+            voxX6 = (cur.x - st->blockOriginGrid[1]) & 0x3f;
             voxX = voxX6 >> 2;
             voxXand7 = voxX & 7;
             shiftLo = (voxX6 & 3) << 1;
             shiftHi = shiftLo + 2;
-        }
-        else
-        {
+        } else {
             found.z = cur.z;
             cur.z = (s16)(cur.z + zstep);
             err -= dx2;
-            if (((cur.z - st->originZ) >> 6) != 0)
-            {
+            if (((cur.z - st->blockOriginGrid[1]) >> 6) != 0) {
                 voxmaps_updateActiveMap(&cur);
             }
-            voxZ6 = (cur.z - st->originZ) & 0x3f;
+            voxZ6 = (cur.z - st->blockOriginGrid[1]) & 0x3f;
             voxZ = voxZ6 >> 2;
         }
     }
 
-    if (lastReachableOut != NULL)
-    {
+    if (lastReachableOut != NULL) {
         *(VoxPos*)lastReachableOut = *(VoxPos*)start;
     }
     return 1;
 }
 
-int voxmaps_buildRouteWaypoints(RouteState* state, int maxPathPoints)
-{
-    f32 waypoint[3];
-    RouteNode startNode;
-    RouteNode* segmentStart;
-    int pathCount;
-    RouteNode* candidate;
-    RouteNode* lastVisibleNode;
-    int parentIndex;
-    int nodeIndex;
+void voxmaps_expandRouteNeighbors(RouteState* state, RouteNode* parentNode, int parentNodeIndex) {
+    s16 neighbor[3];
+    u16 nextCost = parentNode->gCost + 1;
+    neighbor[0] = parentNode->x;
+    neighbor[1] = parentNode->y;
+    neighbor[2] = parentNode->z;
+    neighbor[0] += 2;
+    voxmaps_visitRouteNeighbor(state, parentNode, parentNodeIndex, nextCost, neighbor);
+    neighbor[0] -= 4;
+    neighbor[1] = parentNode->y;
+    voxmaps_visitRouteNeighbor(state, parentNode, parentNodeIndex, nextCost, neighbor);
+    neighbor[0] += 2;
+    neighbor[2] += 2;
+    neighbor[1] = parentNode->y;
+    voxmaps_visitRouteNeighbor(state, parentNode, parentNodeIndex, nextCost, neighbor);
+    neighbor[2] -= 4;
+    neighbor[1] = parentNode->y;
+    voxmaps_visitRouteNeighbor(state, parentNode, parentNodeIndex, nextCost, neighbor);
+}
+
+void voxmaps_visitRouteNeighbor(struct RouteState* state, RouteNode* parentNode, int parentNodeIndex, u16 count,
+                                s16* box) {
+    int foundIdx;
+    int savedExpanded;
+    int shiftLo;
     RouteNode* routeNode;
-
-    if (maxPathPoints < 0)
-    {
-        maxPathPoints = 10;
-    }
-    nodeIndex = state->cur;
-    routeNode = &state->nodes[nodeIndex];
-    routeNode->nextNodeIndex = 0xff;
-    while ((parentIndex = routeNode->parentNodeIndex) != 0xffu)
-    {
-        routeNode = &state->nodes[parentIndex];
-        routeNode->nextNodeIndex = nodeIndex;
-        nodeIndex = parentIndex;
-    }
-
-    startNode.x = state->startX;
-    startNode.y = state->startY;
-    startNode.z = state->startZ;
-    startNode.nextNodeIndex = nodeIndex;
-    if (routeNode->nextNodeIndex == 0xff)
-    {
-        candidate = NULL;
-    }
-    else
-    {
-        candidate = &state->nodes[routeNode->nextNodeIndex];
-    }
-    lastVisibleNode = routeNode;
-    segmentStart = &startNode;
-    pathCount = 0;
-
-    while (pathCount < maxPathPoints && candidate != NULL)
-    {
-        if (segmentStart->x != candidate->x || segmentStart->z != candidate->z)
-        {
-            if (voxmaps_traceTraversableRoute((s16*)candidate, (s16*)segmentStart, NULL) == 0)
-            {
-                waypoint[0] = (f32)(lastVisibleNode->x * 10 + 5);
-                waypoint[1] = (f32)(lastVisibleNode->y * 10 + 5);
-                waypoint[2] = (f32)(lastVisibleNode->z * 10 + 5);
-                if (gVoxMapsTransformObj != 0)
-                {
-                    Obj_TransformLocalPointToWorld(waypoint[0], waypoint[1], waypoint[2], &waypoint[0], &waypoint[1], &waypoint[2],
-                                                   (GameObject*)gVoxMapsTransformObj);
-                }
-                state->pathPoints[pathCount * 3 + 0] = (f32)((int)waypoint[0] + 5);
-                state->pathPoints[pathCount * 3 + 1] = (f32)(int)waypoint[1];
-                state->pathPoints[pathCount++ * 3 + 2] = (f32)((int)waypoint[2] + 5);
-                segmentStart = candidate;
-            }
-        }
-        lastVisibleNode = candidate;
-        if (candidate->nextNodeIndex == 0xff)
-        {
-            candidate = NULL;
-        }
-        else
-        {
-            candidate = &state->nodes[candidate->nextNodeIndex];
-        }
-    }
-
-    if (pathCount < maxPathPoints)
-    {
-        waypoint[0] = (f32)(lastVisibleNode->x * 10 + 5);
-        waypoint[1] = (f32)(lastVisibleNode->y * 10 + 5);
-        waypoint[2] = (f32)(lastVisibleNode->z * 10 + 5);
-        if (gVoxMapsTransformObj != 0)
-        {
-            Obj_TransformLocalPointToWorld(waypoint[0], waypoint[1], waypoint[2], &waypoint[0], &waypoint[1], &waypoint[2],
-                                           (GameObject*)gVoxMapsTransformObj);
-        }
-        state->pathPoints[pathCount * 3 + 0] = (f32)((int)waypoint[0] + 5);
-        state->pathPoints[pathCount * 3 + 1] = (f32)(int)waypoint[1];
-        state->pathPoints[pathCount++ * 3 + 2] = (f32)((int)waypoint[2] + 5);
-        if (pathCount >= 10)
-        {
-            pathCount = 10;
-        }
-    }
-
-    state->pathCount = pathCount;
-    state->pad22 = 0;
-    return pathCount;
-}
-
-int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
-{
-    RouteNode* node;
-    int navState;
-    int ret;
-    int flag = 0;
+    u8 occ[3][4];
+    int dxh;
+    int dzh;
+    int nodeCount;
+    u16 key;
+    int dx;
+    int dz;
+    int shiftHi;
+    int z6lo;
+    int z6hi;
+    u8* p;
+    int bitmapCol;
+    int blocked;
+    int voxX;
+    int voxZ;
+    VoxState* vs;
+    int shift;
+    int dir;
+    int next;
+    int chosen;
+    int sumNext;
+    int sumCur;
     int i;
-    s16 out[3];
+    int ySlot;
 
-    navState = nav->navState;
-    ret = 0;
-    if (navState == 0)
-    {
-        int pathDirect[1];
+    VoxMapFile* map;
 
-        state->queueCount = 0;
-        state->nodeCount = 0;
-        for (i = 0; i < VOXMAPS_ROUTE_NODE_CAPACITY; i++)
-        {
-            state->queue[i].priority = 0;
-            state->nodes[i].flag = 0;
+    if (box[0] == state->tgtX && box[2] == state->tgtZ) {
+        s16 idx = state->nodeCount;
+        if (idx == VOXMAPS_ROUTE_NODE_CAPACITY) {
+            debugPrintf(sVoxmapsRouteNodesListOverflow);
+        } else {
+            routeNode = &state->nodes[state->nodeCount++];
+            routeNode->x = box[0];
+            routeNode->y = box[1];
+            routeNode->z = box[2];
+            routeNode->gCost = count;
+            routeNode->parentNodeIndex = (u8)(u16)parentNodeIndex;
+            dxh = routeNode->x - state->tgtX;
+            dzh = routeNode->z - state->tgtZ;
+            routeNode->hCost = (u16)(2.0f * sqrtf((f32)(dxh * dxh + dzh * dzh)));
         }
-        voxmaps_worldToGrid(nav->destPos, &state->startX);
-        voxmaps_worldToGrid(nav->curPos, &state->tgtX);
-        state->startX &= ~1;
-        state->startZ &= ~1;
-        state->tgtX &= ~1;
-        state->tgtZ &= ~1;
-        if (voxmaps_traceTraversableRoute(&state->startX, &state->tgtX, out) != 0)
-        {
-            pathDirect[0] = 1;
-        }
-        else
-        {
-            int count;
-            state->minHCost = 0x2710;
-            count = state->nodeCount;
-            if (count == VOXMAPS_ROUTE_NODE_CAPACITY)
-            {
-                debugPrintf(sVoxmapsRouteNodesListOverflow);
-                node = NULL;
-            }
-            else
-            {
-                int dx, dz, d2;
-                node = &state->nodes[state->nodeCount++];
-                node->x = out[0];
-                node->y = out[1];
-                node->z = out[2];
-                node->gCost = 0;
-                node->parentNodeIndex = 0xff;
-                dx = node->x - state->tgtX;
-                dz = node->z - state->tgtZ;
-                d2 = dx * dx + dz * dz;
-                node->hCost = (u16)(2.0f * sqrtf((f32)d2));
-            }
-            {
-                u16 cost = node->hCost + node->gCost;
-                CurveHeapNode* queue = state->queue;
+        voxmaps_queueNode(state, idx, 0xFFFE);
+    }
 
-                queue[++state->queueCount].value = (u16)(state->nodeCount - 1);
-                queue[state->queueCount].priority = (u16)(0xffff - cost);
-                heapSiftUp(queue, state->queueCount);
-                state->pathCount = 0;
+    vs = &gVoxMapsActiveState;
+    dx = box[0] - vs->blockOriginGrid[0];
+    dz = box[2] - vs->blockOriginGrid[1];
+    if ((dx >> 6) != 0 || (dz >> 6) != 0) {
+        voxmaps_updateActiveMap((VoxPos*)box);
+        dx = box[0] - vs->blockOriginGrid[0];
+        dz = box[2] - vs->blockOriginGrid[1];
+    }
+    map = gVoxMapsActiveState.activeMap;
+    if (map == NULL) {
+        return;
+    }
+
+    voxX = (dx & 0x3f) >> 2;
+    voxZ = (dz & 0x3f) >> 2;
+    shift = voxX & 7;
+    shiftLo = (dx & 3) << 1;
+    shiftHi = shiftLo + 2;
+    z6lo = dz & 3;
+    z6hi = z6lo + 1;
+    i = 0;
+    p = &occ[0][0];
+    bitmapCol = (voxZ << 1) + (voxX >> 3);
+
+    for (; i < 3; i++) {
+        ySlot = i + box[1];
+        ySlot -= 1;
+        if (ySlot < map->minY) {
+            ySlot = 0;
+        } else if (ySlot >= map->maxY) {
+            ySlot = (map->maxY - 1) - map->minY;
+        } else {
+            ySlot -= map->minY;
+        }
+        if (((map->bitmap[(ySlot << 5) | bitmapCol] >> shift) & 1) != 0u) {
+            u8* node = voxmaps_getRouteNode(map->rowCounts, map->nodeBase, map->bitmap, voxX, ySlot, voxZ);
+            p[0] = (node[z6lo] >> shiftLo) & 3;
+            p[1] = (node[z6lo] >> shiftHi) & 3;
+            p[2] = (node[z6hi] >> shiftLo) & 3;
+            p[3] = (node[z6hi] >> shiftHi) & 3;
+        } else {
+            p[0] = 0;
+            p[1] = 0;
+            p[2] = 0;
+            p[3] = 0;
+        }
+        p += 4;
+    }
+
+    if (state->mode26 != 0) {
+        if ((occ[1][0] & 2) || (occ[1][1] & 2) || (occ[1][2] & 2) || (occ[1][3] & 2)) {
+            blocked = 1;
+        }
+        dir = -1;
+    } else {
+        dir = 1;
+    }
+
+    for (; dir >= 0; dir--) {
+        next = dir + 1;
+        blocked = 0;
+        chosen = dir;
+        if ((occ[dir][0] & 2) || (occ[dir][1] & 2) || (occ[dir][2] & 2) || (occ[dir][3] & 2)) {
+            blocked = 1;
+            dir = 0;
+        }
+        if (!blocked) {
+            if ((occ[next][0] & 2) || (occ[next][1] & 2) || (occ[next][2] & 2) || (occ[next][3] & 2)) {
+                blocked = 1;
+                dir = 0;
             }
-            pathDirect[0] = 0;
         }
-        if (pathDirect[0] != 0)
-        {
-            nav->tgtPos[0] = nav->curPos[0];
-            nav->tgtPos[1] = nav->curPos[1];
-            nav->tgtPos[2] = nav->curPos[2];
-            ret = 1;
-            flag = 1;
-        }
-        else
-        {
-            navState = 1;
+        if (!blocked) {
+            u8* rc = occ[dir];
+            sumCur = rc[0];
+            {
+                u8* rn = occ[next];
+                sumNext = rn[0];
+                sumCur += rc[1];
+                sumNext += rn[1];
+                sumCur += rc[2];
+                sumNext += rn[2];
+                sumCur += rc[3];
+                sumNext += rn[3];
+            }
+            if (next == 2 && sumNext == 0) {
+                blocked = 1;
+            } else {
+                if (next == 1) {
+                    if (sumCur >= sumNext) {
+                        chosen--;
+                    } else {
+                        sumCur = sumNext;
+                    }
+                } else {
+                    if (sumCur > sumNext) {
+                        chosen--;
+                    } else {
+                        sumCur = sumNext;
+                    }
+                }
+                if (sumCur <= 1) {
+                    blocked = 1;
+                } else {
+                    dir = 0;
+                }
+            }
         }
     }
 
-    if (navState != 0)
-    {
-        int r;
-        ret = 1;
-        r = voxmaps_processRouteQueue(state, nav->budget);
-        switch (r)
-        {
-        case 0:
-            if (navState++ >= nav->maxIters)
-            {
-                navState = 0;
-                if (voxmaps_buildRouteWaypoints(state, 1) != 0)
-                {
-                    nav->tgtPos[0] = state->pathPoints[0];
-                    nav->tgtPos[1] = state->pathPoints[1];
-                    nav->tgtPos[2] = state->pathPoints[2];
-                }
-                else
-                {
-                    nav->tgtPos[0] = nav->curPos[0];
-                    nav->tgtPos[1] = nav->curPos[1];
-                    nav->tgtPos[2] = nav->curPos[2];
-                    flag = 1;
-                }
-            }
-            ret = 1;
-            break;
-        case 1:
-            navState = 0;
-            if (voxmaps_buildRouteWaypoints(state, 1) != 0)
-            {
-                nav->tgtPos[0] = state->pathPoints[0];
-                nav->tgtPos[1] = state->pathPoints[1];
-                nav->tgtPos[2] = state->pathPoints[2];
-            }
-            else
-            {
-                nav->tgtPos[0] = nav->curPos[0];
-                nav->tgtPos[1] = nav->curPos[1];
-                nav->tgtPos[2] = nav->curPos[2];
-                flag = 1;
-            }
-            ret = 1;
-            break;
-        case -1:
-            navState = 0;
-            nav->tgtPos[0] = nav->destPos[0];
-            nav->tgtPos[1] = nav->destPos[1];
-            nav->tgtPos[2] = nav->destPos[2];
-            flag = 1;
-            break;
-        }
+    if (blocked != 0) {
+        return;
     }
 
-    nav->navState = navState;
-    nav->flag25 = flag;
-    return ret;
+    box[1] = (s16)(box[1] + chosen);
+
+    foundIdx = voxmaps_findRouteNode(state, box, &savedExpanded);
+    nodeCount = state->nodeCount;
+
+    if (foundIdx >= 0 && savedExpanded == 0) {
+        routeNode = &state->nodes[foundIdx];
+        if (count >= routeNode->gCost) {
+            return;
+        }
+        routeNode->parentNodeIndex = parentNodeIndex;
+        routeNode->gCost = count;
+        key = (u16)(routeNode->hCost + routeNode->gCost);
+        voxmaps_reprioritizeNode(state, foundIdx, key);
+        return;
+    }
+
+    if (foundIdx >= 0) {
+        return;
+    }
+
+    if (nodeCount == VOXMAPS_ROUTE_NODE_CAPACITY) {
+        debugPrintf(sVoxmapsRouteNodesListOverflow);
+        routeNode = NULL;
+    } else {
+        routeNode = &state->nodes[state->nodeCount++];
+        routeNode->x = box[0];
+        routeNode->y = box[1];
+        routeNode->z = box[2];
+        routeNode->gCost = count;
+        routeNode->parentNodeIndex = (u8)(u16)parentNodeIndex;
+        dxh = routeNode->x - state->tgtX;
+        dzh = routeNode->z - state->tgtZ;
+        routeNode->hCost = (u16)(2.0f * sqrtf((f32)(dxh * dxh + dzh * dzh)));
+    }
+
+    if (routeNode == NULL) {
+        debugPrintf(sVoxMapsDebugStrings);
+        return;
+    }
+
+    if (routeNode->hCost > state->minHCost) {
+        key = (u16)(routeNode->hCost + routeNode->gCost);
+        voxmaps_queueNode(state, nodeCount, 0xFFFF - key);
+    } else {
+        if (routeNode->hCost < state->minHCost) {
+            state->minHCost = routeNode->hCost;
+        }
+        key = (u16)(routeNode->hCost + routeNode->gCost);
+        voxmaps_queueNode(state, nodeCount, 0xFFFF - key);
+    }
 }
-int voxmaps_processRouteQueue(RouteState* state, int count)
-{
+
+static inline int voxmaps_findRouteNode(RouteState* state, s16* box, int* expandedOut) {
+    s16 bz = box[2];
+    s16 bx = box[0];
+    int foundIdx;
+    for (foundIdx = 0; foundIdx < state->nodeCount; foundIdx++) {
+        RouteNode* nn = &state->nodes[foundIdx];
+        if (nn->x == bx && nn->z == bz) {
+            *expandedOut = nn->expanded;
+            return foundIdx;
+        }
+    }
+    return -1;
+}
+
+static inline void heapSiftUp(CurveHeapNode* q, int i) {
+    u16 key = q[i].priority;
+    u16 val = q[i].value;
+    int parent;
+    q[0].priority = 0xFFFF;
+    while (q[(parent = i >> 1)].priority <= key) {
+        q[i].value = q[parent].value;
+        q[i].priority = q[parent].priority;
+        i = parent;
+    }
+    q[i].priority = key;
+    q[i].value = val;
+}
+
+static inline void voxmaps_queueNode(RouteState* state, u16 nodeIndex, u16 priority) {
+    CurveHeapNode* queue = state->queue;
+    queue[++state->queueCount].value = nodeIndex;
+    queue[state->queueCount].priority = priority;
+    heapSiftUp(queue, state->queueCount);
+}
+
+static inline void voxmaps_reprioritizeNode(RouteState* state, u16 nodeIndex, u16 priority) {
     CurveHeapNode* queue;
-    int nodeIdx;
-    int done = 0;
-    int ret = 0;
-    RouteNode* node;
-
-    while (!done && count != 0)
-    {
-        queue = state->queue;
-        if (state->queueCount == 0)
-        {
-            nodeIdx = -1;
-        }
-        else
-        {
-            nodeIdx = queue[1].value;
-            queue[1].priority = queue[state->queueCount].priority;
-            queue[1].value = queue[state->queueCount--].value;
-            CurveHeap_SiftDown(queue, state->queueCount, 1);
-        }
-        if (nodeIdx >= 0)
-        {
-            node = state->nodes + nodeIdx;
-            state->cur = nodeIdx;
-            if (node->x == state->tgtX && node->z == state->tgtZ)
-            {
-                done = 1;
-                ret = 1;
-            }
-            else
-            {
-                node->flag = 1;
-                voxmaps_expandRouteNeighbors(state, (VoxBoxArg*)node, nodeIdx);
-            }
-        }
-        else
-        {
-            done = 1;
-            ret = -1;
-        }
-        count--;
-    }
-    return ret;
-}
-
-void voxmaps_freeRouteWork(RouteState* state)
-{
-    if (state->nodes != NULL)
-    {
-        mm_free(state->nodes);
-        state->nodes = NULL;
-    }
-}
-
-void voxmaps_allocRouteWork(RouteState* state)
-{
-    state->nodes = mmAlloc(sizeof(VoxRouteWork), 0x10, 0);
-    state->queue = ((VoxRouteWork*)state->nodes)->queue;
-    state->pathPoints = (f32*)((u8*)state->queue + sizeof(((VoxRouteWork*)0)->queue));
-}
-
-int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, u8 skipFirst)
-{
-    int stepZ, twiceDx, twiceDy, twiceDz;
-    int errXY, errXZ, errYZ;
-    int stepsRemaining;
-    int localX64, ySlot, localZ64, tileX, tileZ;
-    int routeNodeDirty;
-    VoxMapFile* cachedMap;
-    VoxState* st;
-    int oldTile;
-    u8 first;
-    VoxPos cur = *start;
-    VoxPos found;
-    unsigned int skip;
-    int stepX, stepY;
-    int dx, dy, dz;
-    u8* routeNode;
-
-    stepX = 1;
-    dx = end->x - cur.x;
-    if (dx < 0)
-    {
-        stepX = -1;
-        dx = -dx;
-    }
-    stepY = 1;
-    dy = end->y - cur.y;
-    if (dy < 0)
-    {
-        stepY = -1;
-        dy = -dy;
-    }
-    stepZ = 1;
-    dz = end->z - cur.z;
-    if (dz < 0)
-    {
-        stepZ = -1;
-        dz = -dz;
-    }
-
-    twiceDx = dx * 2;
-    errXY = dy - dx;
-    twiceDy = dy * 2;
-    errXZ = dz - dx;
-    twiceDz = dz * 2;
-    errYZ = dy - dz;
-    stepsRemaining = dx + dy + dz;
-
-    voxmaps_updateActiveMap(&cur);
-
-    st = &gVoxMapsRouteState;
-    localX64 = (cur.x - st->originX) & 0x3f;
-    tileX = localX64 >> 2;
-    localZ64 = (cur.z - st->originZ) & 0x3f;
-    tileZ = localZ64 >> 2;
-    found = cur;
-    cachedMap = NULL;
-    first = 1;
-    skip = skipFirst;
-
-    while (stepsRemaining-- != 0)
-    {
-        if (skip != 0 && first != 0)
-        {
-            first = 0;
-        }
-        else
-        {
-            VoxMapFile* map = st->activeMap;
-            if (map != NULL)
-            {
-                if (map != cachedMap || cur.y != found.y)
-                {
-                    int y = cur.y;
-                    if (y < map->minY)
-                    {
-                        ySlot = 0;
-                    }
-                    else if (y >= map->maxY)
-                    {
-                        ySlot = (map->maxY - 1) - map->minY;
-                    }
-                    else
-                    {
-                        ySlot = y - map->minY;
-                    }
-                    routeNodeDirty = 1;
-                    cachedMap = map;
-                    found.y = y;
-                }
-                {
-                    u8* bitmap = map->bitmap;
-                    unsigned int bit = (bitmap[(ySlot << 5) | ((tileZ << 1) + (tileX >> 3))] >> (tileX & 7)) & 1;
-                    if (bit != 0)
-                    {
-                        unsigned int occ;
-                        if (routeNodeDirty != 0)
-                        {
-                            routeNode =
-                                voxmaps_getRouteNode(map->rowCounts, map->nodeBase, bitmap, tileX, ySlot, tileZ);
-                            routeNodeDirty = 0;
-                        }
-                        occ = (routeNode[localZ64 & 3] >> ((localX64 & 3) << 1)) & 3;
-                        if (occ != 0)
-                        {
-                            if (occOut != NULL)
-                            {
-                                *occOut = occ;
-                            }
-                            if (coordOut != NULL)
-                            {
-                                *coordOut = found;
-                            }
-                            return 0;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (errXY < 0)
-        {
-            if (errXZ < 0)
-            {
-                found.x = cur.x;
-                cur.x = (s16)(cur.x + stepX);
-                errXY += twiceDy;
-                errXZ += twiceDz;
-                oldTile = tileX;
-                if (((cur.x - st->originX) >> 6) != 0)
-                {
-                    voxmaps_updateActiveMap(&cur);
-                    cachedMap = NULL;
-                }
-                localX64 = (cur.x - st->originX) & 0x3f;
-                tileX = localX64 >> 2;
-                if (tileX != oldTile)
-                {
-                    routeNodeDirty = 1;
-                }
-            }
-            else
-            {
-                found.z = cur.z;
-                cur.z = (s16)(cur.z + stepZ);
-                errXZ -= twiceDx;
-                errYZ += twiceDy;
-                oldTile = tileZ;
-                if (((cur.z - st->originZ) >> 6) != 0)
-                {
-                    voxmaps_updateActiveMap(&cur);
-                    cachedMap = NULL;
-                }
-                localZ64 = (cur.z - st->originZ) & 0x3f;
-                tileZ = localZ64 >> 2;
-                if (tileZ != oldTile)
-                {
-                    routeNodeDirty = 1;
-                }
-            }
-        }
-        else
-        {
-            if (errYZ < 0)
-            {
-                found.z = cur.z;
-                cur.z = (s16)(cur.z + stepZ);
-                errXZ -= twiceDx;
-                errYZ += twiceDy;
-                oldTile = tileZ;
-                if (((cur.z - st->originZ) >> 6) != 0)
-                {
-                    voxmaps_updateActiveMap(&cur);
-                    cachedMap = NULL;
-                }
-                localZ64 = (cur.z - st->originZ) & 0x3f;
-                tileZ = localZ64 >> 2;
-                if (tileZ != oldTile)
-                {
-                    routeNodeDirty = 1;
-                }
-            }
-            else
-            {
-                found.y = cur.y;
-                cur.y = (s16)(cur.y + stepY);
-                errXY -= twiceDx;
-                errYZ -= twiceDz;
-            }
-        }
-    }
-
-    if (coordOut != NULL)
-    {
-        *coordOut = *end;
-    }
-    return 1;
-}
-void voxmaps_worldToGrid(f32* in, s16* out)
-{
-    f32 sx, sy, sz;
-    int ix, iy, iz;
-    sx = in[0];
-    sy = in[1];
-    sz = in[2];
-    if (gVoxMapsTransformObj != 0)
-    {
-        Obj_TransformWorldPointToLocal(sx, sy, sz, &sx, &sy, &sz, (GameObject*)gVoxMapsTransformObj);
-    }
-    ix = sx;
-    iy = sy;
-    iz = sz;
-    if (sx < 0.0f)
-    {
-        ix -= 10;
-    }
-    if (sy < 0.0f)
-    {
-        iy -= 10;
-    }
-    if (sz < 0.0f)
-    {
-        iz -= 10;
-    }
-    out[0] = ix / 10;
-    out[1] = iy / 10;
-    out[2] = iz / 10;
-}
-
-void voxmaps_gridToWorld(f32* out, s16* grid)
-{
-    int v;
-    v = grid[0] * 10 + 5;
-    out[0] = v;
-    v = grid[1] * 10 + 5;
-    out[1] = v;
-    v = grid[2] * 10 + 5;
-    out[2] = v;
-    if (gVoxMapsTransformObj != 0)
-    {
-        Obj_TransformLocalPointToWorld(out[0], out[1], out[2], out, &out[1], &out[2],
-                                       (GameObject*)gVoxMapsTransformObj);
-    }
-}
-/* Rank the occupancy bitmap: count set bits in the (ySlot) row up to the cell at
- * (tileX, tileZ), then index nodeBase by that running count. The per-row base count
- * is packed into rowCounts (low/high nibble depending on which 8-tile half tileZ is
- * in), then popcount adds every occupied cell before the target column. */
-u8* voxmaps_getRouteNode(u8* rowCounts, int* nodeBase, u8* bitmap, int tileX, int ySlot, int tileZ)
-{
-    int count;
-    int hdrRow = ySlot * 2 + ySlot;
-    u8* cur;
-    u8* end;
-    u8 bits;
-
-    if ((tileZ >> 3) != 0)
-    {
-        count = (u32)rowCounts[hdrRow + 1] >> 4;
-        count |= rowCounts[hdrRow + 2] << 4;
-        cur = bitmap + (ySlot * 32 | 0x10);
-    }
-    else
-    {
-        count = rowCounts[hdrRow];
-        count |= (rowCounts[hdrRow + 1] & 0xf) << 8;
-        cur = bitmap + ySlot * 32;
-    }
-    {
-        int tileZByte = tileZ * 2;
-        end = bitmap + (ySlot * 32 | (tileZByte + (tileX >> 3)));
-    }
-    while (cur < end)
-    {
-        bits = *cur;
-        while (bits != 0)
-        {
-            bits &= bits - 1;
-            count++;
-        }
-        cur++;
-    }
-    bits = *cur;
-    bits &= (u8)((u32)0xff >> (8 - (tileX & 7)));
-    while (bits != 0)
-    {
-        bits &= bits - 1;
-        count++;
-    }
-    return (u8*)(nodeBase + count);
-}
-int* voxmaps_updateActiveMap(VoxPos* obj)
-{
-    VoxMaps* vm = &gVoxMaps;
-    int* worldOrigins;
-    int gridX;
-    int gridZ;
-    int cellIndex;
-    int romListIndex;
-    int previousFreeDelay;
-    int bestTimer;
     int slot;
     int foundSlot;
-    int blockId;
-    int bestSlot;
-    int zWorldOffset;
-    MapCellEntry* cell;
-    VoxMapSlotOrigin* origin;
-
-    worldOrigins = vm->blockOriginWorld;
-    zWorldOffset = obj->z * 10 + 5 - gMapBlockOriginWorldZ;
-
-    gridX = fastFloorf((f32)(obj->x * 10 + 5 - gMapBlockOriginWorldX) / 6.4e+02f);
-    gridZ = fastFloorf((f32)zWorldOffset / 6.4e+02f);
-
-    worldOrigins[0] = gMapBlockOriginWorldX + gridX * 640;
-    worldOrigins[1] = gMapBlockOriginWorldZ + gridZ * 640;
-    for (slot = 0; slot < 2; slot++)
-    {
-        vm->blockOriginGrid[slot] = vm->blockOriginWorld[slot] / 10;
-    }
-
-    blockId = -1;
-    if (mapGetBlockAtPos(gridX, gridZ, 0) != NULL)
-    {
-        cell = mapGetCellEntry(gridX, gridZ);
-        blockId = cell->blockId;
-    }
-    if (blockId != -1)
-    {
-        foundSlot = -1;
-        for (slot = 0; slot < VOXMAP_SLOT_COUNT; slot++)
-        {
-            if (blockId == vm->blockId[slot])
-            {
-                foundSlot = slot;
-                slot = VOXMAP_SLOT_COUNT;
-            }
-        }
-        if (foundSlot != -1)
-        {
-            vm->timer[foundSlot] = 0;
-            vm->activeMap = NULL;
-        }
-        else
-        {
-            bestSlot = -1;
-            bestTimer = -1;
-            for (slot = 0; slot < VOXMAP_SLOT_COUNT; slot++)
-            {
-                u32 s = slot;
-                if (gVoxMapsSlotInUse[s] == 0 && vm->timer[s] > bestTimer)
-                {
-                    bestSlot = s;
-                    bestTimer = vm->timer[s];
-                }
-            }
-            cellIndex = cell->cellIndex;
-            romListIndex = cell->romListIndex;
-            if (vm->mapBuffer[bestSlot] != NULL)
-            {
-                previousFreeDelay = mmSetFreeDelay(0);
-                mm_free(vm->mapBuffer[bestSlot]);
-                mmSetFreeDelay(previousFreeDelay);
-            }
-            vm->mapBuffer[bestSlot] = voxLoadVoxMapActual(blockId, bestSlot, romListIndex, cellIndex);
-            vm->blockId[bestSlot] = blockId;
-            vm->timer[bestSlot] = 0;
-            origin = &vm->slotOrigin[bestSlot];
-            origin->gridX = vm->blockOriginGrid[0];
-            origin->gridZ = vm->blockOriginGrid[1];
-            vm->activeMap = NULL;
+    int previousPriority;
+    s16 queueCount = state->queueCount;
+    queue = state->queue;
+    for (slot = 0; slot <= queueCount; slot++) {
+        if (nodeIndex == queue[slot].value) {
+            foundSlot = slot;
+            slot = state->queueCount + 1;
         }
     }
-    else
-    {
-        vm->activeMap = NULL;
-    }
-    return vm->blockOriginWorld;
-}
-
-VoxMapFile* voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
-{
-    char* msg = sVoxmapsRouteNodesListOverflow;
-    int count;
-    int size;
-    int entry;
-    VoxMapFile* hdr;
-
-    if (getTableFileEntry(MLDF_FILEID_VOXMAP_TAB_A, mapArg, &entry) == 0)
-    {
-        OSReport(msg + 0xd0);
-        return NULL;
-    }
-    loadVoxMaps(entry, &count, &size);
-    if (count <= 0)
-    {
-        return NULL;
-    }
-    if (size > 30720)
-    {
-        debugPrintf(msg + 0x104);
-        return NULL;
-    }
-    if (size <= 0)
-    {
-        OSReport(msg + 0x13c);
-        return NULL;
-    }
-    hdr = mmAlloc(size, 16, 0);
-    if (hdr == NULL)
-    {
-        OSReport(msg + 0x174);
-        return NULL;
-    }
-    loadAndDecompressDataFile(MLDF_FILEID_VOXMAP_BIN_A, hdr, entry, count, 0, 0, 0);
-    if (hdr == NULL)
-    {
-        OSReport(msg + 0x174);
-        return NULL;
-    }
-    hdr->rowCounts += (int)hdr;
-    hdr->bitmap += (int)hdr;
-    hdr->nodeBase = (int*)((int)hdr->nodeBase + (int)hdr);
-    hdr->f20 += (int)hdr;
-    hdr->f28 += (int)hdr;
-    hdr->f18 += (int)hdr;
-    return hdr;
-}
-
-void voxmaps_updateTimers(void)
-{
-    int* p = gVoxMapsSlotTimers;
-    int i;
-    for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
-    {
-        if (*p < 0x3FFFFFFF)
-        {
-            (*p)++;
-        }
-        p++;
+    previousPriority = queue[foundSlot].priority;
+    queue[foundSlot].priority = priority;
+    if (priority < previousPriority) {
+        CurveHeap_SiftDown(queue, queueCount, foundSlot);
+    } else if (priority > previousPriority) {
+        heapSiftUp(queue, foundSlot);
     }
 }
-
-void voxmaps_resetLoadedMaps(void)
-{
-    void** mapBuffer[1];
-    int* blockId[1];
-    int* timer[1];
-    u8* slotInUse[1];
-    VoxMapSlotOrigin* slotOrigin[1];
-    int i;
-
-    mapBuffer[0] = 0;
-    blockId[0] = 0;
-    timer[0] = 0;
-    slotInUse[0] = 0;
-    slotOrigin[0] = gVoxMaps.slotOrigin;
-    for (i = 0, mapBuffer[0] = (void**)(slotOrigin[0] + 23), blockId[0] = (int*)(slotOrigin[0] + 12),
-        timer[0] = (int*)(slotOrigin[0] + 6), slotInUse[0] = gVoxMapsSlotInUse;
-         i < VOXMAP_SLOT_COUNT; i++)
-    {
-        if (*mapBuffer[0] != NULL)
-        {
-            mm_free(*mapBuffer[0]);
-            *mapBuffer[0] = NULL;
-        }
-        *blockId[0] = -2;
-        *timer[0] = 0x40000000;
-        *slotInUse[0] = 0;
-        slotOrigin[0]->gridX = 0;
-        slotOrigin[0]->gridZ = 0;
-        mapBuffer[0]++;
-        blockId[0]++;
-        timer[0]++;
-        slotInUse[0]++;
-        slotOrigin[0]++;
-    }
-}
-
-void voxmaps_initialise(void)
-{
-    VoxMaps* mgr = &gVoxMaps;
-    int i;
-
-    loadAssetFileById(&gVoxMapsMapList, MLDF_FILEID_VOXOBJ_TAB);
-    i = 0;
-    while (gVoxMapsMapList[i] != -1)
-    {
-        i++;
-    }
-    gVoxMapsMaxMapIndex = i - 1;
-    gVoxMapsScratchBuffer = mmAlloc(VOXMAPS_SCRATCH_BUFFER_SIZE, 16, 0);
-
-    for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
-    {
-        mgr->mapBuffer[i] = NULL;
-        mgr->blockId[i] = -2;
-        mgr->timer[i] = 0x40000000;
-        gVoxMapsSlotInUse[i] = 0;
-        mgr->slotOrigin[i].gridX = 0;
-        mgr->slotOrigin[i].gridZ = 0;
-    }
-
-    gVoxMapsScratchBufferPtr = gVoxMapsScratchBuffer;
-    gVoxMapsTransformObj = 0;
-    gVoxMapsLargeTextures[0] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
-    gVoxMapsLargeTextures[1] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
-    gVoxMapsSmallTextures[0] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
-    gVoxMapsSmallTextures[1] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
-}
-
-int Queue_GetCount(RingBufferQueue* queue)
-{
-    return queue->count;
-}
-
-BOOL Queue_IsEmpty(RingBufferQueue* queue)
-{
-    return queue->count == 0;
-}
-
-void Queue_Peek(RingBufferQueue* queue, void* dst)
-{
-    memcpy(dst, (u8*)queue->data + queue->readIndex * queue->elemSize, queue->elemSize);
-}
-
-void Queue_Pop(RingBufferQueue* queue, void* dst)
-{
-    memcpy(dst, (u8*)queue->data + queue->readIndex * queue->elemSize, queue->elemSize);
-    if (++queue->readIndex == queue->capacity)
-    {
-        queue->readIndex = 0;
-    }
-    queue->count--;
-}
-
-void Queue_Push(RingBufferQueue* queue, void* src)
-{
-    memcpy((u8*)queue->data + queue->writeIndex * queue->elemSize, src, queue->elemSize);
-    if (++queue->writeIndex == queue->capacity)
-    {
-        queue->writeIndex = 0;
-    }
-    queue->count++;
-}
-
-void Queue_Init(RingBufferQueue* queue, void* data, int capacity, int elemSize)
-{
-    queue->data = data;
-    queue->count = 0;
-    queue->capacity = capacity;
-    queue->elemSize = elemSize;
-    queue->writeIndex = 0;
-    queue->readIndex = 0;
-}
-
-BOOL Stack_IsEmpty(RingBufferQueue* stack)
-{
-    return stack->count == 0;
-}
-
-BOOL Stack_IsFull(RingBufferQueue* stack)
-{
-    return stack->count == stack->capacity - 1;
-}
-
-void Stack_Pop(RingBufferQueue* stack, void* dst)
-{
-    if (--stack->writeIndex < 0)
-    {
-        stack->writeIndex = stack->capacity - 1;
-    }
-    memcpy(dst, (u8*)stack->data + stack->writeIndex * stack->elemSize, stack->elemSize);
-    stack->count--;
-}
-
-void Stack_Push(RingBufferQueue* stack, void* src)
-{
-    memcpy((u8*)stack->data + stack->writeIndex * stack->elemSize, src, stack->elemSize);
-    if (++stack->writeIndex == stack->capacity)
-    {
-        stack->writeIndex = 0;
-    }
-    stack->count++;
-}
-
-void Stack_Free(RingBufferQueue* stack)
-{
-    mm_free(stack);
-}
-
-char sVoxmapsRouteNodesListOverflow[] = "VOXMAPS: route nodes list overflow\n";
-
-char sVoxMapsDebugStrings[380] =
-    "Childnode Null\n\000overflow in 'genVoxelCircle'\n\000\000\000VOXMAP: attempt to load invalid object voxmap "
-    "'%d'\n\000VOXMAP: Size overflow on object voxmap load->Ignoring defined voxmap\n\000\000\000<voxLoadVoxMapActual> "
-    " Warning voxRomTab is NULL\n\000\000\000VOXMAP: Size overflow on load->Ignoring defined "
-    "voxmap\n\000<voxLoadVoxMapActual>  Warning uncompressedSize is 0\n\000\000\000 WARNING: Voxmap has no mem "
-    "available \n";

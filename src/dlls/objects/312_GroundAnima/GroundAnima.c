@@ -113,7 +113,7 @@ static void GroundAnimator_gatherVertices(GameObject* obj, GroundAnimatorState* 
     state->animatedGroupCount = 0;
     radiusSquared = state->falloffRadius * state->falloffRadius;
     for (polygonGroupIndex = 0; polygonGroupIndex < block->polyGroupCount; polygonGroupIndex++) {
-        MapTriGroup* polygonGroup = mapBlockGetPolygonGroup(block, polygonGroupIndex);
+        CollisionPolygonGroup* polygonGroup = mapBlockGetPolygonGroup(block, polygonGroupIndex);
 
         if (placement->animatorId == mapBlockGetPolygonGroupType(polygonGroup)) {
             for (polygonIndex = polygonGroup->firstTri; polygonIndex < polygonGroup[1].firstTri; polygonIndex++) {
@@ -161,7 +161,7 @@ void GroundAnimator_free(GameObject* obj, int onlySelf) {
         if (block != NULL) {
             animatedVertexIndex = 0;
             for (polygonGroupIndex = 0; polygonGroupIndex < block->polyGroupCount; polygonGroupIndex++) {
-                MapTriGroup* polygonGroup = mapBlockGetPolygonGroup(block, polygonGroupIndex);
+                CollisionPolygonGroup* polygonGroup = mapBlockGetPolygonGroup(block, polygonGroupIndex);
 
                 if (placement->animatorId == mapBlockGetPolygonGroupType(polygonGroup)) {
                     for (polygonIndex = polygonGroup->firstTri; polygonIndex < polygonGroup[1].firstTri;
@@ -318,7 +318,7 @@ void GroundAnimator_update(GameObject* obj) {
             }
             for (animatedGroupIndex = 0, animatedVertexIndex = 0; animatedGroupIndex < state->animatedGroupCount;
                  animatedGroupIndex++) {
-                MapTriGroup* polygonGroup =
+                CollisionPolygonGroup* polygonGroup =
                     mapBlockGetPolygonGroup(block, state->animatedGroupIndices[animatedGroupIndex]);
 
                 for (polygonIndex = polygonGroup->firstTri; polygonIndex < polygonGroup[1].firstTri; polygonIndex++) {

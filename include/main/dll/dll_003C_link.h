@@ -3,12 +3,11 @@
 
 #include "global.h"
 
-typedef void (*LinkSetupFn)(void* items, int count, int selected, void* defaultMessage, int unused1,
-                            int unused2, int baseRed, int baseGreen, int baseBlue, int selectedRed,
-                            int selectedGreen, int selectedBlue);
+typedef void (*LinkSetupFn)(void* items, int count, int selected, void* defaultMessage, int unused1, int unused2,
+                            int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen,
+                            int selectedBlue);
 
-typedef struct LinkInterfaceVTable
-{
+typedef struct LinkInterfaceVTable {
     void (*reserved)(void);
     LinkSetupFn setup;
     void (*free)(void);
@@ -25,8 +24,7 @@ typedef struct LinkInterfaceVTable
     void (*resetTimers)(void);
 } LinkInterfaceVTable;
 
-typedef struct LinkInterface
-{
+typedef struct LinkInterface {
     LinkInterfaceVTable* vtable;
 } LinkInterface;
 

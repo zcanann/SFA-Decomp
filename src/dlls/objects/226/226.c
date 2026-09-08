@@ -732,7 +732,7 @@ void staff_setHitReactValue(GameObject* obj, s32 value) {
 }
 
 void staff_func10(GameObject* obj, s32 value) {
-    ((StaffState*)obj->extra)->fieldB2 = value;
+    ((StaffState*)obj->extra)->orientationSegmentIndex = value;
 }
 
 void staff_func0F(void) {
@@ -911,7 +911,7 @@ void staff_init(GameObject* obj) {
     StaffSwipeSlot* slot;
     int i;
     state->unkAA = 1;
-    state->unkB0 = 2;
+    state->geometrySegmentCount = 2;
     state->moveSpeed = -1.0f;
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if (hitState != NULL) {

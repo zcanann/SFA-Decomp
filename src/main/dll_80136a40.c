@@ -7,13 +7,15 @@
  *     exception type, DSISR/SRR0, the stack trace and a full GPR/SPR
  *     register window straight into the external framebuffers, flipping
  *     them forever in a hang loop.
- *   - The debug text subsystem: an in-memory record log (debugPrintf /
- *     debugPrintfxy / debugPrintSetColor write tagged records into
- *     debugLogBuffer) replayed by debugPrintDraw, which lays the log out
+ *   - The debug text subsystem: an in-memory record log (debugPrintf and
+ *     debugPrintSetColor write tagged records into debugLogBuffer) replayed
+ *     by debugPrintDraw, which lays the log out
  *     twice (measure then draw) and rasterizes glyphs through
  *     debugPrintDrawGlyph (per-glyph texture select + textRenderChar) and
  *     debugPrintDrawRecord (record interpreter: color/tab/newline/position tags).
+ *     debugPrintfxy instead draws the bitmap font into both external framebuffers.
  */
+#include "main/dll/dll_80136a40.h"
 #include "main/texture.h"
 #include "track/intersect_api.h"
 #include "main/frame_timing.h"
@@ -30,7 +32,6 @@
 #include "dolphin/gx/GXTev.h"
 #include "stdarg.h"
 #include "dolphin/gx/GXCull.h"
-#include "main/dll/dll_80136a40.h"
 #include "dlls/objects/201_Baddie.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "dolphin/os/OSCache.h"
@@ -108,7 +109,45 @@ u8 gDebugGlyphMetricsTable[192] = {
     0x66, 0x6B, 0x6C, 0x70, 0x72, 0x77, 0x79, 0x7C, 0x7E, 0x82, 0x84, 0x89, 0x8B, 0x92, 0x94, 0x99, 0x9B, 0xA0,
     0xA2, 0xA6, 0xA8, 0xAB, 0xAD, 0xAE, 0xB0, 0xB3, 0xB5, 0xB9, 0xB5, 0xB9,
 };
-u8 gDebugFontGlyphs[580] = {
+/* View of the existing packed font/diagnostic block. String extents include
+ * their trailing alignment bytes; the unused glyph-tail bytes stay opaque. */
+typedef struct DebugFontErrorDataView {
+    u8 glyphRows[0x5a - 0x21 + 1][5];
+    u8 unknownGlyphTail[0x1e];
+    char threadFormat[0x14];
+    char exceptionLabel[0xc];
+    char systemReset[0x10];
+    char machineCheck[0x10];
+    char alignment[0xc];
+    char performanceMonitor[0x14];
+    char systemManagementInterrupt[0x1c];
+    char memoryProtection[0x18];
+    char unknownError[0x10];
+    char stackTraceLabel[0xc];
+    char stackDepthFormat[0x14];
+    char stackWordsFormat[0xc];
+    char registersLabel[0x1c];
+    char registerWordsFormat[0x18];
+} DebugFontErrorDataView;
+
+STATIC_ASSERT(sizeof(DebugFontErrorDataView) == 0x244);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, unknownGlyphTail) == 0x122);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, threadFormat) == 0x140);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, exceptionLabel) == 0x154);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, systemReset) == 0x160);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, machineCheck) == 0x170);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, alignment) == 0x180);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, performanceMonitor) == 0x18c);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, systemManagementInterrupt) == 0x1a0);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, memoryProtection) == 0x1bc);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, unknownError) == 0x1d4);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, stackTraceLabel) == 0x1e4);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, stackDepthFormat) == 0x1f0);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, stackWordsFormat) == 0x204);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, registersLabel) == 0x210);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, registerWordsFormat) == 0x22c);
+
+u8 gDebugFontAndErrorData[0x244] = {
     12,  12,  12,  0,   12,  51,  51,  0,   0,   0,   38,  63,  38,  63,  38,  44,  14,  46,  44,  14,  51,  40,  29,
     10,  51,  29,  51,  45,  51,  62,  12,  12,  0,   0,   0,   14,  3,   3,   3,   14,  28,  48,  48,  48,  28,  0,
     12,  63,  29,  55,  0,   12,  63,  12,  0,   0,   0,   0,   13,  3,   0,   0,   63,  0,   0,   0,   0,   0,   0,
@@ -129,7 +168,7 @@ u8 gDebugFontGlyphs[580] = {
     110, 116, 0,   0,   0,   80,  101, 114, 102, 111, 114, 109, 97,  110, 99,  101, 32,  109, 111, 110, 105, 116, 111,
     114, 0,   83,  121, 115, 116, 101, 109, 32,  109, 97,  110, 97,  103, 101, 109, 101, 110, 116, 32,  105, 110, 116,
     101, 114, 114, 117, 112, 116, 0,   77,  101, 109, 111, 114, 121, 32,  80,  114, 111, 116, 101, 99,  116, 105, 111,
-    110, 32,  69,  114,  114, 111, 114, 0,   85,  110, 107, 110, 111, 119, 110, 32,  101, 114, 114, 111, 114, 0,   0,
+    110, 32,  69,  114, 114, 111, 114, 0,   85,  110, 107, 110, 111, 119, 110, 32,  101, 114, 114, 111, 114, 0,   0,
     0,   83,  116, 97,  99,  107, 32,  116, 114, 97,  99,  101, 0,   83,  116, 97,  99,  107, 32,  37,  120, 59,  32,
     100, 101, 112, 116, 104, 32,  37,  100, 0,   0,   9,   37,  48,  56,  120, 9,   37,  48,  56,  120, 0,   0,   71,
     101, 110, 101, 114, 97,  108, 32,  80,  117, 114, 112, 111, 115, 101, 32,  82,  101, 103, 105, 115, 116, 101, 114,
@@ -137,14 +176,12 @@ u8 gDebugFontGlyphs[580] = {
     120, 0,   0,   0,   0,
 };
 void errDisplayHandler(OSError error, OSContext* context, u32 dsisr, u32 dar);
-typedef struct ErrStackFrame
-{
+typedef struct ErrStackFrame {
     struct ErrStackFrame* previous;
     u32 returnAddress;
 } ErrStackFrame;
 
-static inline void errDisplayFillBackdrop(void)
-{
+static inline void errDisplayFillBackdrop(void) {
     int xcb;
     int row;
     int x;
@@ -152,11 +189,9 @@ static inline void errDisplayFillBackdrop(void)
 
     x = 0;
     xcb = x;
-    do
-    {
+    do {
         row = 0;
-        for (n = 0; n < 60; n++)
-        {
+        for (n = 0; n < 60; n++) {
             *(u16*)(xcb + (int)debugDrawFrameBuffer + row) = 0x1080;
             *(u16*)(xcb + (int)debugDrawFrameBuffer + row + 0x500) = 0x1080;
             *(u16*)(xcb + (int)debugDrawFrameBuffer + row + 0xA00) = 0x1080;
@@ -176,53 +211,38 @@ int debugPrintDrawGlyph(void* unused, int c);
 int debugPrintDrawRecord(void* context, u8* p);
 void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused);
 
-int debugPrintDrawGlyph(void* unused, int c)
-{
+int debugPrintDrawGlyph(void* unused, int c) {
     u8* tbl;
     u8 first;
     int px;
     int py;
 
-    if (c <= 0x3f)
-    {
-        if (gDebugCurrentFontSet != 0)
-        {
-            if (gDebugDrawPass != 0)
-            {
+    if (c <= 0x3f) {
+        if (gDebugCurrentFontSet != 0) {
+            if (gDebugDrawPass != 0) {
                 selectTexture((Texture*)((char*)gDebugFontTex0), 0);
                 gDebugGlyphUScale = 1.0f / (32.0f * (f32)((Texture*)gDebugFontTex0)->width);
-                gDebugGlyphVScale =
-                    1.0f / (32.0f * (f32)((Texture*)gDebugFontTex0)->height);
+                gDebugGlyphVScale = 1.0f / (32.0f * (f32)((Texture*)gDebugFontTex0)->height);
             }
             gDebugCurrentFontSet = 0;
         }
         c -= 0x21;
-    }
-    else if (c <= 0x5f)
-    {
-        if (gDebugCurrentFontSet != 1)
-        {
-            if (gDebugDrawPass != 0)
-            {
+    } else if (c <= 0x5f) {
+        if (gDebugCurrentFontSet != 1) {
+            if (gDebugDrawPass != 0) {
                 selectTexture((Texture*)((char*)gDebugFontTex1), 0);
                 gDebugGlyphUScale = 1.0f / (32.0f * (f32)((Texture*)gDebugFontTex1)->width);
-                gDebugGlyphVScale =
-                    1.0f / (32.0f * (f32)((Texture*)gDebugFontTex1)->height);
+                gDebugGlyphVScale = 1.0f / (32.0f * (f32)((Texture*)gDebugFontTex1)->height);
             }
             gDebugCurrentFontSet = 1;
         }
         c -= 0x40;
-    }
-    else if (c <= 0x7f)
-    {
-        if (gDebugCurrentFontSet != 2)
-        {
-            if (gDebugDrawPass != 0)
-            {
+    } else if (c <= 0x7f) {
+        if (gDebugCurrentFontSet != 2) {
+            if (gDebugDrawPass != 0) {
                 selectTexture((Texture*)((char*)gDebugFontTex2), 0);
                 gDebugGlyphUScale = 1.0f / (32.0f * (f32)((Texture*)gDebugFontTex2)->width);
-                gDebugGlyphVScale =
-                    1.0f / (32.0f * (f32)((Texture*)gDebugFontTex2)->height);
+                gDebugGlyphVScale = 1.0f / (32.0f * (f32)((Texture*)gDebugFontTex2)->height);
             }
             gDebugCurrentFontSet = 2;
         }
@@ -231,13 +251,11 @@ int debugPrintDrawGlyph(void* unused, int c)
     tbl = gDebugGlyphMetricsTable + gDebugCurrentFontSet * 0x40;
     first = tbl[c * 2];
     c = tbl[c * 2 + 1] - first + 1;
-    if (gDebugDrawPass != 0)
-    {
+    if (gDebugDrawPass != 0) {
         px = (int)((f32)debugPrintXpos * (gDebugScaleX + gDebugScaleBiasX));
         py = (int)((f32)debugPrintYpos * (gDebugScaleY + gDebugScaleBiasY));
         gxSetDebugTextMode();
-        textRenderChar(px << 2, py << 2,
-                       (int)(4.0f * ((f32)c * (gDebugScaleX + gDebugScaleBiasX) + px)),
+        textRenderChar(px << 2, py << 2, (int)(4.0f * ((f32)c * (gDebugScaleX + gDebugScaleBiasX) + px)),
                        (int)(4.0f * (10.0f * (gDebugScaleY + gDebugScaleBiasY) + py)),
                        (f32)(first << 5) * gDebugGlyphUScale, 0.0f, gDebugGlyphUScale * (f32)((first + c) << 5),
                        320.0f * gDebugGlyphVScale);
@@ -245,8 +263,7 @@ int debugPrintDrawGlyph(void* unused, int c)
     return c;
 }
 
-static inline void debugPrintFillRect(int x1, int y1, int x2, int y2)
-{
+static inline void debugPrintFillRect(int x1, int y1, int x2, int y2) {
     GXColor color;
 
     color.r = gDebugTextColorR;
@@ -256,28 +273,24 @@ static inline void debugPrintFillRect(int x1, int y1, int x2, int y2)
     hudDrawRect(x1, y1, x2, y2, color);
 }
 
-int debugPrintDrawRecord(void* context, u8* p)
-{
+int debugPrintDrawRecord(void* context, u8* p) {
     u8* start = p;
     u8 c;
     GXColor textColorSource;
 
-    while ((c = *p++) != 0)
-    {
+    while ((c = *p++) != 0) {
         int w;
         f32 sc;
         int rm;
         w = 0;
-        switch (c)
-        {
+        switch (c) {
         case 0x83:
             gDebugFixedWidthMode = 0;
             break;
         case 0x84:
             gDebugFixedWidthMode = 1;
             break;
-        case 0x81:
-        {
+        case 0x81: {
             u8 red;
             u8 green;
             u8 blue;
@@ -287,8 +300,7 @@ int debugPrintDrawRecord(void* context, u8* p)
             blue = p[2];
             alpha = p[3];
             p += 4;
-            if (gDebugDrawPass != 0)
-            {
+            if (gDebugDrawPass != 0) {
                 textColorSource.r = red;
                 textColorSource.g = green;
                 textColorSource.b = blue;
@@ -297,8 +309,7 @@ int debugPrintDrawRecord(void* context, u8* p)
             }
             break;
         }
-        case 0x87:
-        {
+        case 0x87: {
             u8 biasY;
             gDebugScaleBiasX = p[0];
             biasY = p[1];
@@ -306,8 +317,7 @@ int debugPrintDrawRecord(void* context, u8* p)
             gDebugScaleBiasY = biasY;
             break;
         }
-        case 0x85:
-        {
+        case 0x85: {
             u8 red;
             u8 green;
             u8 blue;
@@ -317,8 +327,7 @@ int debugPrintDrawRecord(void* context, u8* p)
             blue = p[2];
             alpha = p[3];
             p += 4;
-            if (gDebugDrawPass == 0)
-            {
+            if (gDebugDrawPass == 0) {
                 gDebugTextColorR = red;
                 gDebugTextColorG = green;
                 gDebugTextColorB = blue;
@@ -327,23 +336,19 @@ int debugPrintDrawRecord(void* context, u8* p)
             }
             break;
         }
-        case 0x82:
-        {
+        case 0x82: {
             u32 y1;
             u32 x;
             u32 y0;
             u32 x1;
             u32 x0;
-            if (gDebugDrawPass == 0)
-            {
+            if (gDebugDrawPass == 0) {
                 y1 = debugPrintYpos + 0xa;
                 x = debugPrintXpos;
                 x0 = gDebugRectStartX;
                 y0 = gDebugRectStartY;
-                if ((((x - x0) == 0) | ((y1 - y0) == 0)) == 0)
-                {
-                    if (x0 >= 2)
-                    {
+                if ((((x - x0) == 0) | ((y1 - y0) == 0)) == 0) {
+                    if (x0 >= 2) {
                         x0 -= 2;
                     }
                     x1 = x + 2;
@@ -369,23 +374,19 @@ int debugPrintDrawRecord(void* context, u8* p)
         case 0x20:
             w = 6;
             break;
-        case 0xa:
-        {
+        case 0xa: {
             u32 y1;
             u32 x;
             u32 x0;
             u32 x1;
             u32 y0;
-            if (gDebugDrawPass == 0)
-            {
+            if (gDebugDrawPass == 0) {
                 y1 = debugPrintYpos + 0xa;
                 x = debugPrintXpos;
                 x0 = gDebugRectStartX;
                 y0 = gDebugRectStartY;
-                if ((((x - x0) == 0) | ((y1 - y0) == 0)) == 0)
-                {
-                    if (x0 >= 2)
-                    {
+                if ((((x - x0) == 0) | ((y1 - y0) == 0)) == 0) {
+                    if (x0 >= 2) {
                         x0 -= 2;
                     }
                     x1 = x + 2;
@@ -404,12 +405,9 @@ int debugPrintDrawRecord(void* context, u8* p)
         }
         case 9:
             rm = debugPrintXpos % gDebugTabWidth;
-            if (rm == 0)
-            {
+            if (rm == 0) {
                 w = gDebugTabWidth;
-            }
-            else
-            {
+            } else {
                 w = gDebugTabWidth - rm;
             }
             break;
@@ -417,28 +415,23 @@ int debugPrintDrawRecord(void* context, u8* p)
             w = debugPrintDrawGlyph(context, c);
             break;
         }
-        if (gDebugFixedWidthMode != 0 && c >= 0x20 && c <= 0x7f)
-        {
+        if (gDebugFixedWidthMode != 0 && c >= 0x20 && c <= 0x7f) {
             w = 7;
         }
         debugPrintXpos += w;
-        if (debugPrintXpos * (sc = gDebugScaleX + gDebugScaleBiasX) > gDebugScreenWidth - 0x10)
-        {
+        if (debugPrintXpos * (sc = gDebugScaleX + gDebugScaleBiasX) > gDebugScreenWidth - 0x10) {
             u32 y1;
             u32 x;
             u32 x0;
             u32 x1;
             u32 y0;
-            if (gDebugDrawPass == 0)
-            {
+            if (gDebugDrawPass == 0) {
                 y1 = debugPrintYpos + 0xa;
                 x = debugPrintXpos;
                 y0 = gDebugRectStartY;
                 x0 = gDebugRectStartX;
-                if ((((x - x0) == 0) | ((y1 - y0) == 0)) == 0)
-                {
-                    if (x0 >= 2)
-                    {
+                if ((((x - x0) == 0) | ((y1 - y0) == 0)) == 0) {
+                    if (x0 >= 2) {
                         x0 -= 2;
                     }
                     x1 = x + 2;
@@ -457,13 +450,13 @@ int debugPrintDrawRecord(void* context, u8* p)
     }
     return p - start;
 }
-void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
-{
+void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a) {
     int n;
     n = gDebugRecordCount + 1;
     gDebugRecordCount = n;
-    if (n > 0xfa)
+    if (n > 0xfa) {
         return;
+    }
     *debugLogEnd++ = 0x81;
     *debugLogEnd++ = r;
     *debugLogEnd++ = g;
@@ -471,8 +464,7 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
     *debugLogEnd++ = a;
     *debugLogEnd++ = 0;
 }
-void debugPrintReset(void)
-{
+void debugPrintReset(void) {
     u32 xp;
     u32 yp;
     debugLogEnd = debugLogBuffer;
@@ -485,8 +477,7 @@ void debugPrintReset(void)
 /* Lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
  * the passes when the log produced any extent. */
-static inline void debugDrawLogRect(void)
-{
+static inline void debugDrawLogRect(void) {
     u32 y1;
     u32 x;
     u32 x1;
@@ -499,10 +490,8 @@ static inline void debugDrawLogRect(void)
     x = debugPrintXpos;
     y0 = gDebugRectStartY;
     x0 = gDebugRectStartX;
-    if ((((x - x0) == 0) | ((y1 - y0) == 0)) == 0)
-    {
-        if (x0 >= 2)
-        {
+    if ((((x - x0) == 0) | ((y1 - y0) == 0)) == 0) {
+        if (x0 >= 2) {
             x0 -= 2;
         }
         x1 = x + 2;
@@ -517,8 +506,7 @@ static inline void debugDrawLogRect(void)
         hudDrawRect(x0, y0, x1, y1, col);
     }
 }
-void debugPrintDraw(void* context)
-{
+void debugPrintDraw(void* context) {
     u8* p;
     u16 ty, tx;
     int pass;
@@ -531,24 +519,18 @@ void debugPrintDraw(void* context)
     gDebugScreenWidth = res;
     GXSetScissor(0, 0, (u16)res, gDebugScreenHeight);
     sw = gDebugScreenWidth;
-    if (sw <= 0x140)
-    {
+    if (sw <= 0x140) {
         gDebugPrintOriginX = 0x10;
         gDebugMarginRight = sw - 0x10;
-    }
-    else
-    {
+    } else {
         gDebugPrintOriginX = 0x20;
         gDebugMarginRight = sw - 0x20;
     }
     sh = gDebugScreenHeight;
-    if (sh <= 0xf0)
-    {
+    if (sh <= 0xf0) {
         gDebugPrintOriginY = 0x10;
         gDebugMarginBottom = sh - 0x10;
-    }
-    else
-    {
+    } else {
         gDebugPrintOriginY = 0x20;
         gDebugMarginBottom = sh - 0x20;
     }
@@ -563,8 +545,7 @@ void debugPrintDraw(void* context)
     gDebugFixedWidthMode = pass;
     gDebugRectStartX = tx;
     gDebugRectStartY = ty;
-    for (; p != debugLogEnd;)
-    {
+    for (; p != debugLogEnd;) {
         gDebugDrawPass = pass;
         p += debugPrintDrawRecord(context, p);
     }
@@ -575,8 +556,7 @@ void debugPrintDraw(void* context)
     gDebugCurrentFontSet = 0xffffffff;
     gDebugFixedWidthMode = 0;
     pass = 1;
-    for (; p != debugLogEnd;)
-    {
+    for (; p != debugLogEnd;) {
         gDebugDrawPass = pass;
         p += debugPrintDrawRecord(context, p);
     }
@@ -587,23 +567,19 @@ void debugPrintDraw(void* context)
 /* When b->_54 carries the spawn flag, build a particle descriptor on the stack from a's heading
  * and the delta to b's position, then emit it 20 times via the partfx
  * interface and clear the flag. */
-void debugPrintf(char* fmt, ...)
-{
+void debugPrintf(char* fmt, ...) {
     va_list args;
 
-    if ((int)((u8*)debugLogEnd - debugLogBuffer) <= 0x1000)
-    {
+    if ((int)((u8*)debugLogEnd - debugLogBuffer) <= 0x1000) {
         va_start(args, fmt);
         vsprintf((char*)debugLogEnd, fmt, args);
     }
 }
 
-void logPrintf(char* fmt, ...)
-{
+void logPrintf(char* fmt, ...) {
 }
 
-void debugPrintInit(void)
-{
+void debugPrintInit(void) {
     getScreenResolution();
     gDebugScaleX = 1.5f;
     gDebugScaleY = 1.5f;
@@ -615,11 +591,8 @@ void debugPrintInit(void)
     debugLogEnd = debugLogBuffer;
 }
 
-/* Title-screen system init. Calls getScreenResolution, primes the two float counters, clears
- * two state bytes, acquires three sized buffers (605/1/2 bytes) and primes the
- * debugLogEnd cursor to the start of the 0x1100-byte arena. */
-void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused)
-{
+/* Draw five glyph rows into paired framebuffer scanlines. */
+void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused) {
     int c1;
     int i;
     int a0;
@@ -631,13 +604,11 @@ void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused)
     int row1;
     int row0;
 
-    if (enableDebugText != 0)
-    {
+    if (enableDebugText != 0) {
         i = 0;
         row1 = (y + 1) * 0x280;
         row0 = y * 0x280;
-        for (; i < 5; i++)
-        {
+        for (; i < 5; i++) {
             bit = 0;
             c0 = x + row0;
             a0 = c0;
@@ -645,10 +616,8 @@ void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused)
             c1 = row1 + x;
             a2 = c1;
             a3 = c1 + 1;
-            for (; bit < 8; bit++)
-            {
-                if (((1 << bit) & grid[i]) != 0)
-                {
+            for (; bit < 8; bit++) {
+                if (((1 << bit) & grid[i]) != 0) {
                     debugDrawFrameBuffer[a0] = 0xC080;
                     debugDrawFrameBuffer[a1] = 0xC080;
                     debugDrawFrameBuffer[a2] = 0xC080;
@@ -706,8 +675,10 @@ void debugPrintfxy(int x, int y, char* fmt, ...) {
                 }
                 if (*character[0] >= 0x21 && *character[0] <= 0x5a) {
                     debugDrawFrameBuffer = externalFrameBuffer0;
-                    debugTextDrawToFrameBuffer(drawX, drawY, glyphRows = gDebugFontGlyphs + (*character[0] - 0x21) * 5,
-                                               -1);
+                    debugTextDrawToFrameBuffer(
+                        drawX, drawY,
+                        glyphRows = ((DebugFontErrorDataView*)gDebugFontAndErrorData)->glyphRows[*character[0] - 0x21],
+                        -1);
                     debugDrawFrameBuffer = externalFrameBuffer1;
                     debugTextDrawToFrameBuffer(drawX, drawY, glyphRows, -1);
                     drawX += 0xf;
@@ -719,8 +690,7 @@ void debugPrintfxy(int x, int y, char* fmt, ...) {
     }
 }
 
-void errDisplayInstallHandlers(void)
-{
+void errDisplayInstallHandlers(void) {
     OSSetErrorHandler(OS_ERROR_SYSTEM_RESET, (OSErrorHandler)errDisplayHandler);
     OSSetErrorHandler(OS_ERROR_MACHINE_CHECK, (OSErrorHandler)errDisplayHandler);
     OSSetErrorHandler(OS_ERROR_DSI, (OSErrorHandler)errDisplayHandler);
@@ -735,12 +705,10 @@ void errDisplayInstallHandlers(void)
 
 void reportAllocFail(int region0SizeKb, int region0FreeKb, int region1SizeKb, int region1FreeKb, int region2SizeKb,
                      int region2FreeKb, int memoryState, int tickCount, int requestedSize, int largestFree0,
-                     int largestFree1)
-{
+                     int largestFree1) {
 }
-void* errorThreadFunc(void* unused)
-{
-    char* strs = (char*)gDebugFontGlyphs;
+void* errorThreadFunc(void* unused) {
+    DebugFontErrorDataView* messages = (DebugFontErrorDataView*)gDebugFontAndErrorData;
     void* (*self[1])(void*);
     int y;
     u32* sp;
@@ -757,8 +725,7 @@ void* errorThreadFunc(void* unused)
     sp = NULL;
     depth = 0;
     hold = 0xb4;
-    if (enableDebugText != 0)
-    {
+    if (enableDebugText != 0) {
         debugDrawFrameBuffer = externalFrameBuffer0;
         debugFrameBuffer = externalFrameBuffer1;
         lvl = OSDisableInterrupts();
@@ -768,21 +735,18 @@ void* errorThreadFunc(void* unused)
         __GXAbortWaitPECopyDone();
         OSRestoreInterrupts(lvl);
         self[0] = errorThreadFunc;
-        while (1)
-        {
-            if (enableDebugText != 0)
-            {
+        while (1) {
+            if (enableDebugText != 0) {
                 errDisplayFillBackdrop();
             }
-            debugPrintfxy(0x10, 0x15, strs + 0x140, self[0]);
-            debugPrintfxy(0x10, 0x2a, strs + 0x154);
-            switch (gErrExceptionType)
-            {
+            debugPrintfxy(0x10, 0x15, messages->threadFormat, self[0]);
+            debugPrintfxy(0x10, 0x2a, messages->exceptionLabel);
+            switch (gErrExceptionType) {
             case 0:
-                debugPrintfxy(0xa0, 0x2a, strs + 0x160);
+                debugPrintfxy(0xa0, 0x2a, messages->systemReset);
                 break;
             case 1:
-                debugPrintfxy(0xa0, 0x2a, strs + 0x170);
+                debugPrintfxy(0xa0, 0x2a, messages->machineCheck);
                 break;
             case 2:
                 debugPrintfxy(0xa0, 0x2a, sErrDSI);
@@ -791,27 +755,25 @@ void* errorThreadFunc(void* unused)
                 debugPrintfxy(0xa0, 0x2a, sErrISI);
                 break;
             case 5:
-                debugPrintfxy(0xa0, 0x2a, strs + 0x180);
+                debugPrintfxy(0xa0, 0x2a, messages->alignment);
                 break;
             case 0xb:
-                debugPrintfxy(0x9b, 0x2a, strs + 0x18c);
+                debugPrintfxy(0x9b, 0x2a, messages->performanceMonitor);
                 break;
             case 0xd:
-                debugPrintfxy(0xa0, 0x2a, strs + 0x1a0);
+                debugPrintfxy(0xa0, 0x2a, messages->systemManagementInterrupt);
                 break;
             case 0xf:
-                debugPrintfxy(0xa0, 0x2a, strs + 0x1bc);
+                debugPrintfxy(0xa0, 0x2a, messages->memoryProtection);
                 break;
             default:
-                debugPrintfxy(0x9b, 0x2a, strs + 0x1d4);
+                debugPrintfxy(0x9b, 0x2a, messages->unknownError);
                 break;
             }
-            if (enableDebugText != 0)
-            {
+            if (enableDebugText != 0) {
                 h = 0x9100;
                 h2 = 0x8e80;
-                for (n = 0x280; n != 0; n--)
-                {
+                for (n = 0x280; n != 0; n--) {
                     debugDrawFrameBuffer[h] = 0xc080;
                     debugDrawFrameBuffer[h2] = 0xc080;
                     h++;
@@ -820,31 +782,27 @@ void* errorThreadFunc(void* unused)
             }
             debugPrintfxy(0x10, 0x3f, sErrFmtPC, gErrContext->srr0);
             debugPrintfxy(0x10, 0x4b, sErrFmtSP, gErrContext->gpr[1]);
-            if (enableDebugText != 0)
-            {
+            if (enableDebugText != 0) {
                 h = 0xe380;
                 h2 = 0xe100;
-                for (n = 0xf0; n != 0; n--)
-                {
+                for (n = 0xf0; n != 0; n--) {
                     debugDrawFrameBuffer[h] = 0xc080;
                     debugDrawFrameBuffer[h2] = 0xc080;
                     h++;
                     h2++;
                 }
             }
-            debugPrintfxy(0x10, 0x60, strs + 0x1e4);
+            debugPrintfxy(0x10, 0x60, messages->stackTraceLabel);
             y = 0x6c;
             frame = ((ErrStackFrame*)gErrContext->gpr[1])->previous;
             stackLines = 0;
-            while (frame != (ErrStackFrame*)-1 && stackLines++ != 8)
-            {
+            while (frame != (ErrStackFrame*)-1 && stackLines++ != 8) {
                 debugPrintfxy(0x10, y, sErrFmtStackAddress, frame->returnAddress);
                 y += 0xc;
                 frame = frame->previous;
             }
             y += (8 - stackLines) * 0xc;
-            if (enableDebugText != 0)
-            {
+            if (enableDebugText != 0) {
                 int lineRows;
                 int lineOffset;
                 int previousLineOffset;
@@ -852,77 +810,67 @@ void* errorThreadFunc(void* unused)
                 lineRows = y + 0x4c;
                 lineOffset = lineRows * 0x280;
                 previousLineOffset = (y + 0x4b) * 0x280;
-                for (n = 0x280; n != 0; n--)
-                {
+                for (n = 0x280; n != 0; n--) {
                     debugDrawFrameBuffer[lineOffset] = 0xc080;
-                    if (lineRows > 0)
-                    {
+                    if (lineRows > 0) {
                         debugDrawFrameBuffer[previousLineOffset] = 0xc080;
                     }
                     lineOffset++;
                     previousLineOffset++;
                 }
             }
-            if (enableDebugText != 0)
-            {
+            if (enableDebugText != 0) {
                 int b = 0x12700;
                 u16 rowColor = 0xc080;
                 int rows = y + 0x4c;
-                while (rows > 0x3b)
-                {
+                while (rows > 0x3b) {
                     *(u16*)((char*)debugDrawFrameBuffer + b + 0x1e0) = rowColor;
                     b += 0x500;
                     rows--;
                 }
             }
             y += 0x51;
-            if (sp == NULL)
-            {
+            if (sp == NULL) {
                 sp = (u32*)gErrContext->gpr[1];
                 depth = 0;
-            }
-            else if (hold-- == 0)
-            {
+            } else if (hold-- == 0) {
                 hold = 0xb4;
                 sp = (u32*)*sp;
                 depth++;
-                if (sp == (u32*)0xffffffff)
-                {
+                if (sp == (u32*)0xffffffff) {
                     sp = (u32*)gErrContext->gpr[1];
                     depth = 0;
                 }
             }
-            debugPrintfxy(0x100, 0x3f, strs + 0x1f0, sp, depth);
-            debugPrintfxy(0x100, 0x4b, strs + 0x204, sp[-1], sp[-2]);
-            debugPrintfxy(0x100, 0x57, strs + 0x204, sp[-3], sp[-4]);
-            debugPrintfxy(0x100, 0x63, strs + 0x204, sp[-5], sp[-6]);
-            debugPrintfxy(0x100, 0x6f, strs + 0x204, sp[-7], sp[-8]);
-            debugPrintfxy(0x100, 0x7b, strs + 0x204, sp[-9], sp[-10]);
-            debugPrintfxy(0x100, 0x87, strs + 0x204, sp[-0xb], sp[-0xc]);
-            debugPrintfxy(0x100, 0x93, strs + 0x204, sp[-0xd], sp[-0xe]);
-            debugPrintfxy(0x100, 0x9f, strs + 0x204, sp[-0xf], sp[-0x10]);
-            debugPrintfxy(0x100, 0xab, strs + 0x204, sp[-0x11], sp[-0x12]);
-            debugPrintfxy(0x100, 0xb7, strs + 0x204, sp[-0x13], sp[-0x14]);
-            debugPrintfxy(0x100, 0xc3, strs + 0x204, sp[-0x15], sp[-0x16]);
-            debugPrintfxy(0x100, 0xcf, strs + 0x204, sp[-0x17], sp[-0x18]);
-            debugPrintfxy(0x100, 0xdb, strs + 0x204, sp[-0x19], sp[-0x1a]);
-            debugPrintfxy(0x100, 0xe7, strs + 0x204, sp[-0x1b], sp[-0x1c]);
-            debugPrintfxy(0x100, 0xf3, strs + 0x204, sp[-0x1d], sp[-0x1e]);
-            debugPrintfxy(0x100, 0xff, strs + 0x204, sp[-0x1f], sp[-0x20]);
-            debugPrintfxy(0x10, y, strs + 0x210);
-            for (r = 0; (u8)r < 0x20; r += 8)
-            {
+            debugPrintfxy(0x100, 0x3f, messages->stackDepthFormat, sp, depth);
+            debugPrintfxy(0x100, 0x4b, messages->stackWordsFormat, sp[-1], sp[-2]);
+            debugPrintfxy(0x100, 0x57, messages->stackWordsFormat, sp[-3], sp[-4]);
+            debugPrintfxy(0x100, 0x63, messages->stackWordsFormat, sp[-5], sp[-6]);
+            debugPrintfxy(0x100, 0x6f, messages->stackWordsFormat, sp[-7], sp[-8]);
+            debugPrintfxy(0x100, 0x7b, messages->stackWordsFormat, sp[-9], sp[-10]);
+            debugPrintfxy(0x100, 0x87, messages->stackWordsFormat, sp[-0xb], sp[-0xc]);
+            debugPrintfxy(0x100, 0x93, messages->stackWordsFormat, sp[-0xd], sp[-0xe]);
+            debugPrintfxy(0x100, 0x9f, messages->stackWordsFormat, sp[-0xf], sp[-0x10]);
+            debugPrintfxy(0x100, 0xab, messages->stackWordsFormat, sp[-0x11], sp[-0x12]);
+            debugPrintfxy(0x100, 0xb7, messages->stackWordsFormat, sp[-0x13], sp[-0x14]);
+            debugPrintfxy(0x100, 0xc3, messages->stackWordsFormat, sp[-0x15], sp[-0x16]);
+            debugPrintfxy(0x100, 0xcf, messages->stackWordsFormat, sp[-0x17], sp[-0x18]);
+            debugPrintfxy(0x100, 0xdb, messages->stackWordsFormat, sp[-0x19], sp[-0x1a]);
+            debugPrintfxy(0x100, 0xe7, messages->stackWordsFormat, sp[-0x1b], sp[-0x1c]);
+            debugPrintfxy(0x100, 0xf3, messages->stackWordsFormat, sp[-0x1d], sp[-0x1e]);
+            debugPrintfxy(0x100, 0xff, messages->stackWordsFormat, sp[-0x1f], sp[-0x20]);
+            debugPrintfxy(0x10, y, messages->registersLabel);
+            for (r = 0; (u8)r < 0x20; r += 8) {
                 rr = r & 0xff;
                 debugPrintfxy(0xc, y + 0xc, sErrFmtRegisterRange, rr, rr + 7);
                 rp = &gErrContext->gpr[rr];
-                debugPrintfxy(0x10, y + 0x18, strs + 0x22c, gErrContext->gpr[(u8)r], rp[1],
-                              rp[2], rp[3]);
+                debugPrintfxy(0x10, y + 0x18, messages->registerWordsFormat, gErrContext->gpr[(u8)r], rp[1], rp[2],
+                              rp[3]);
                 y += 0x24;
                 rp = &gErrContext->gpr[rr];
-                debugPrintfxy(0x10, y, strs + 0x22c, rp[4], rp[5], rp[6], rp[7]);
+                debugPrintfxy(0x10, y, messages->registerWordsFormat, rp[4], rp[5], rp[6], rp[7]);
             }
-            if (enableDebugText != 0)
-            {
+            if (enableDebugText != 0) {
                 DCStoreRange(debugDrawFrameBuffer, 0x96000);
                 debugDrawFrameBuffer =
                     (debugDrawFrameBuffer == externalFrameBuffer0) ? externalFrameBuffer1 : externalFrameBuffer0;
@@ -934,14 +882,11 @@ void* errorThreadFunc(void* unused)
             }
         }
     }
-    while (1)
-    {
-        if (enableDebugText != 0)
-        {
+    while (1) {
+        if (enableDebugText != 0) {
             errDisplayFillBackdrop();
         }
-        if (enableDebugText != 0)
-        {
+        if (enableDebugText != 0) {
             DCStoreRange(debugDrawFrameBuffer, 0x96000);
             debugDrawFrameBuffer =
                 (debugDrawFrameBuffer == externalFrameBuffer0) ? externalFrameBuffer1 : externalFrameBuffer0;
@@ -955,8 +900,7 @@ void* errorThreadFunc(void* unused)
 
 /* Stash 4 args to four globals and resume
  * the thread at &gErrDisplayThread. */
-void errDisplayHandler(OSError error, OSContext* context, u32 dsisr, u32 dar)
-{
+void errDisplayHandler(OSError error, OSContext* context, u32 dsisr, u32 dar) {
     gErrExceptionType = error;
     gErrContext = context;
     gErrDsisr = dsisr;

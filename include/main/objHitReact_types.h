@@ -7,70 +7,68 @@
 typedef struct ObjHitReactEntry ObjHitReactEntry;
 typedef struct ObjModel ObjAnimBank;
 typedef struct ObjAnimComponent ObjAnimComponent;
-typedef struct ObjHitbox ObjHitbox;
 
 typedef struct ObjHitReactMoveEntry {
-  s16 moveId;
-  s16 firstEntryByteOffset;
-  s16 entryByteCount;
+    s16 moveId;
+    s16 firstEntryByteOffset;
+    s16 entryByteCount;
 } ObjHitReactMoveEntry;
 
 extern char sObjHitReactHitstateFrameString[];
 extern char sObjHitReactSphereOverflowString[];
 extern char sObjHitReactResetString[7];
 extern int gObjHitReactResetObjectCount;
-extern ObjAnimComponent **gObjHitReactResetObjects;
+extern ObjAnimComponent** gObjHitReactResetObjects;
 
-#define OBJHITREACT_MAX_RESET_OBJECTS 0x32
-#define OBJHITREACT_REACTION_STATE_MASK 0xff
-#define OBJHITREACT_ENTRY_COUNT_MASK 0xff
-#define OBJHITREACT_REACTION_STATE_INACTIVE 0
-#define OBJHITREACT_REACTION_STATE_ACTIVE 1
-#define OBJHITREACT_COLLISION_SKIP_REACTION 0x11
-#define OBJHITREACT_NO_SFX_ID -1
-#define OBJHITREACT_NO_REACTION_ANIM -1
-#define OBJHITREACT_HIT_FX_MODE_EFFECT 1
-#define OBJHITREACT_HIT_EFFECT_ID 0x5A
+#define OBJHITREACT_MAX_RESET_OBJECTS         0x32
+#define OBJHITREACT_REACTION_STATE_MASK       0xff
+#define OBJHITREACT_ENTRY_COUNT_MASK          0xff
+#define OBJHITREACT_REACTION_STATE_INACTIVE   0
+#define OBJHITREACT_REACTION_STATE_ACTIVE     1
+#define OBJHITREACT_COLLISION_SKIP_REACTION   0x11
+#define OBJHITREACT_NO_SFX_ID                 -1
+#define OBJHITREACT_NO_REACTION_ANIM          -1
+#define OBJHITREACT_HIT_FX_MODE_EFFECT        1
+#define OBJHITREACT_HIT_EFFECT_ID             0x5A
 #define OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT 1
-#define OBJHITREACT_HIT_EFFECT_PARENT_NONE 0
-#define OBJHITREACT_HIT_EFFECT_MODE 1
-#define OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS 0x401
-#define OBJHITREACT_HIT_EFFECT_NO_SOURCE -1
-#define OBJHITREACT_ALT_EFFECT_COUNT 1
-#define OBJHITREACT_RESET_FRAME_COUNT 0x400
-#define OBJHITREACT_ENTRY_TAB_FILE_ID MLDF_FILEID_OBJHITS_BIN
-#define OBJHITREACT_ENTRY_ARENA_BYTES 300
-#define OBJHITREACT_ACTIVE_HITBOX_MODE 1
-#define OBJHITREACT_SHAPE_RESET_UPDATE 0x08
-#define OBJHITREACT_RESET_HITBOX_MODE 2
-#define OBJHITREACT_DISABLED_HITBOX_MODE 0x64
-#define OBJHITREACT_MOVE_ID_END -1
-#define OBJHITREACT_MOVE_ENTRY_SHORT_COUNT 3
+#define OBJHITREACT_HIT_EFFECT_PARENT_NONE    0
+#define OBJHITREACT_HIT_EFFECT_MODE           1
+#define OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS    0x401
+#define OBJHITREACT_HIT_EFFECT_NO_SOURCE      -1
+#define OBJHITREACT_ALT_EFFECT_COUNT          1
+#define OBJHITREACT_ENTRY_TAB_FILE_ID         MLDF_FILEID_OBJHITS_BIN
+#define OBJHITREACT_ENTRY_ARENA_BYTES         300
+#define OBJHITREACT_ACTIVE_HITBOX_MODE        1
+#define OBJHITREACT_SHAPE_RESET_UPDATE        0x08
+#define OBJHITREACT_RESET_HITBOX_MODE         2
+#define OBJHITREACT_DISABLED_HITBOX_MODE      0x64
+#define OBJHITREACT_MOVE_ID_END               -1
+#define OBJHITREACT_MOVE_ENTRY_SHORT_COUNT    3
 
 typedef struct ObjHitReactState {
-  int activeHit;
-  s16 activeEntryByteCount;
-  s16 entryBufferByteCapacity;
-  ObjHitReactEntry *entries;
-  u8 pad0C[0x58 - 0x0C];
-  s16 resetFrameCount;
-  u8 pad5A[0x60 - 0x5A];
-  s16 flags;
-  u8 shapeFlags;
-  u8 pad63[0xAE - 0x63];
-  u8 activeHitboxMode;
-  u8 resetHitboxMode;
+    int activeHit;
+    s16 activeEntryByteCount;
+    s16 entryBufferByteCapacity;
+    ObjHitReactEntry* entries;
+    u8 pad0C[0x58 - 0x0C];
+    s16 nearestPairDistance; /* Same field as ObjHitsPriorityState.nearestPairDistance. */
+    u8 pad5A[0x60 - 0x5A];
+    s16 flags;
+    u8 shapeFlags;
+    u8 pad63[0xAE - 0x63];
+    u8 activeHitboxMode;
+    u8 resetHitboxMode;
 } ObjHitReactState;
 
 struct ObjHitReactEntry {
-  s16 primaryHitSfxId;
-  s16 secondaryHitSfxId;
-  s16 reactionMoveId;
-  s16 unk06;
-  u8 hitEffectMode;
-  u8 pad09[3];
-  f32 reactionStepScale;
-  u8 pad10[4];
+    s16 primaryHitSfxId;
+    s16 secondaryHitSfxId;
+    s16 reactionMoveId;
+    s16 unk06;
+    u8 hitEffectMode;
+    u8 pad09[3];
+    f32 reactionStepScale;
+    u8 pad10[4];
 };
 
 STATIC_ASSERT(sizeof(ObjHitReactMoveEntry) == 0x06);
@@ -83,7 +81,7 @@ STATIC_ASSERT(offsetof(ObjHitReactState, activeHit) == 0x00);
 STATIC_ASSERT(offsetof(ObjHitReactState, activeEntryByteCount) == 0x04);
 STATIC_ASSERT(offsetof(ObjHitReactState, entryBufferByteCapacity) == 0x06);
 STATIC_ASSERT(offsetof(ObjHitReactState, entries) == 0x08);
-STATIC_ASSERT(offsetof(ObjHitReactState, resetFrameCount) == 0x58);
+STATIC_ASSERT(offsetof(ObjHitReactState, nearestPairDistance) == 0x58);
 STATIC_ASSERT(offsetof(ObjHitReactState, flags) == 0x60);
 STATIC_ASSERT(offsetof(ObjHitReactState, shapeFlags) == 0x62);
 STATIC_ASSERT(offsetof(ObjHitReactState, activeHitboxMode) == 0xAE);
@@ -97,12 +95,12 @@ STATIC_ASSERT(offsetof(ObjHitReactEntry, hitEffectMode) == 0x08);
 STATIC_ASSERT(offsetof(ObjHitReactEntry, reactionStepScale) == 0x0C);
 
 void ObjHitReact_ResetActiveObjects(int objectCount);
-int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,u32 arena);
-void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int objType,
-                                 ObjHitReactState *hitState,int moveId,int async);
-u32 ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
-                          u32 entryArena,ObjAnimComponent *objAnim);
+int ObjHitbox_AllocRotatedBounds(ObjAnimComponent* objAnim, u32 arena);
+void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, int objType, ObjHitReactState* hitState,
+                                 int moveId, int async);
+u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitState, u32 entryArena,
+                          ObjAnimComponent* objAnim);
 void ObjHitReact_UpdateResetObjects(void);
-ObjAnimComponent **ObjHitReact_GetResetObjects(int *outObjectCount);
+ObjAnimComponent** ObjHitReact_GetResetObjects(int* outObjectCount);
 
 #endif /* MAIN_OBJHITREACT_TYPES_H_ */

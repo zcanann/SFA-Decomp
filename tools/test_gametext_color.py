@@ -76,7 +76,9 @@ EXPORT int readState(int* out) {
 }
 ''')
         library = directory / ("color.dll" if sys.platform == "win32" else "color.so")
-        command = [compiler, "-shared", "-O2", "-Wall", "-Werror", "-fno-builtin",
+        # The production definition uses pre-C23 promoted byte parameters.
+        command = [compiler, "-std=c17", "-shared", "-O2", "-Wall", "-Werror",
+                   "-Wno-deprecated-non-prototype", "-fno-builtin",
                    "-I", str(ROOT / "include"), str(fixture), "-o", str(library)]
         if sys.platform == "win32":
             command += ["-fuse-ld=lld", "-nostdlib", "-Wl,/noentry"]

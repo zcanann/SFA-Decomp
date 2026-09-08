@@ -27,7 +27,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
     if (moveIndex < 0) {
         moveIndex = 0;
     }
-    if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+    if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
         if (state->lastBlendMoveIndex != moveIndex) {
             state->blendCacheSlot = state->blendToggle;
             state->prevBlendCacheSlot = (u16)(OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle);
@@ -39,17 +39,17 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
                                    state->blendMoveCache[state->blendCacheSlot], animDef);
             state->lastBlendMoveIndex = moveIndex;
         }
-        moveData = (ObjAnimMoveData*)(state->blendMoveCache[state->blendCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+        moveData = &state->blendMoveCache[state->blendCacheSlot]->moveData;
     } else {
         state->blendCacheSlot = moveIndex;
-        moveData = (ObjAnimMoveData*)animDef->moveData[state->blendCacheSlot];
+        moveData = animDef->moveData[state->blendCacheSlot];
     }
-    state->blendFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
+    state->blendFrameData = (ObjAnimFrameHeader*)moveData->frameCommands;
     blendFrameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
     if (blendFrameType != state->frameType) {
         state->eventState = 0;
     } else {
-        blendFrameLength = (float)state->blendFrameData->frameLength;
+        blendFrameLength = (float)state->blendFrameData->frameCount;
         if (blendFrameType == OBJANIM_FRAME_TYPE_CLAMPED) {
             blendFrameLength -= OBJANIM_PROGRESS_ONE;
         }
@@ -275,7 +275,7 @@ int Object_ObjAnimSetMove(void* objAnimHandle, int moveId, f32 moveProgress, u8 
     moveChanged = previousMove != moveId;
     objAnim->activeMove = moveId;
     moveId = ObjAnim_ResolveMoveIndex(animDef, moveId);
-    if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+    if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
         if (moveChanged != 0) {
             state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
             state->moveCacheSlot = state->blendToggle;
@@ -286,14 +286,14 @@ int Object_ObjAnimSetMove(void* objAnimHandle, int moveId, f32 moveProgress, u8 
             ObjAnim_LoadCachedMove((int)animDef->cachedAnimIds[moveId], (int)(s16)moveId,
                                    state->moveCache[state->moveCacheSlot], animDef);
         }
-        moveData = (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+        moveData = &state->moveCache[state->moveCacheSlot]->moveData;
     } else {
         state->moveCacheSlot = moveId;
-        moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
+        moveData = animDef->moveData[state->moveCacheSlot];
     }
-    state->moveFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
+    state->moveFrameData = (ObjAnimFrameHeader*)moveData->frameCommands;
     state->frameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
-    state->frameLength = (float)state->moveFrameData->frameLength;
+    state->frameLength = (float)state->moveFrameData->frameCount;
     if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
         state->frameLength -= OBJANIM_PROGRESS_ONE;
     }
@@ -350,7 +350,7 @@ static inline s16* ObjAnim_FindFirstRootTranslationAxis(ObjAnimRootCurve* curve)
 
     axis = ObjAnim_GetRootCurveAxisData(curve);
     for (axisIndex = 0; axisIndex < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT; axisIndex++) {
-        if (*axis != 0) {
+        if (((ObjAnimRootCurveAxis*)axis)->hasSamples != 0) {
             return axis;
         }
         axis++;
@@ -359,7 +359,7 @@ static inline s16* ObjAnim_FindFirstRootTranslationAxis(ObjAnimRootCurve* curve)
 }
 
 static inline s16 ObjAnim_ReadRootAxisSample(s16* axis, int sampleIndex) {
-    return ObjAnim_ReadPackedS16(&axis[sampleIndex + 1]);
+    return ((ObjAnimRootCurveAxis*)axis)->samples[sampleIndex];
 }
 
 int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float* phaseOut) {
@@ -369,7 +369,7 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     ObjAnimBank* bank;
     f32 segmentStartDistance;
     ObjAnimMoveData* moveData;
-    ObjAnimState* state;
+    ObjAnimDef* animDef;
     ObjModelInstance* model;
     s16* moveSamples;
     s16* blendSamples;
@@ -392,7 +392,7 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     f32 rootMotionScale;
     int hasFirstAxis;
     int foundPhase;
-    ObjAnimDef* animDef;
+    ObjAnimState* state;
 
     bank = ObjAnim_GetActiveBank(objAnim);
     animDef = bank->animDef;
@@ -409,21 +409,20 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     if (state->eventState != 0) {
         blendWeight = state->eventState / 16384.0f;
         moveWeight = OBJANIM_PROGRESS_ONE - blendWeight;
-        if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
-            moveData =
-                (ObjAnimMoveData*)(state->blendMoveCache[state->blendCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+        if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
+            moveData = &state->blendMoveCache[state->blendCacheSlot]->moveData;
         } else {
-            moveData = (ObjAnimMoveData*)animDef->moveData[state->blendCacheSlot];
+            moveData = animDef->moveData[state->blendCacheSlot];
         }
         if (moveData->rootCurveOffset != 0) {
             blendSamples = (s16*)ObjAnim_GetMoveDataRootCurve(moveData);
             blendScale = ((ObjAnimRootCurve*)blendSamples)->scale * rootMotionScale;
-            blendSamples += OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET / sizeof(*blendSamples);
-            if (*blendSamples == 0) {
+            blendSamples += offsetof(ObjAnimRootCurve, axisData) / sizeof(*blendSamples);
+            if (((ObjAnimRootCurveAxis*)blendSamples)->hasSamples == 0) {
                 blendSamples++;
-                if (*blendSamples == 0) {
+                if (((ObjAnimRootCurveAxis*)blendSamples)->hasSamples == 0) {
                     blendSamples++;
-                    if (*blendSamples == 0) {
+                    if (((ObjAnimRootCurveAxis*)blendSamples)->hasSamples == 0) {
                         blendSamples = NULL;
                     }
                 }
@@ -434,19 +433,19 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
         }
     }
 
-    if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
-        moveData = (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+    if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
+        moveData = &state->moveCache[state->moveCacheSlot]->moveData;
     } else {
-        moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
+        moveData = animDef->moveData[state->moveCacheSlot];
     }
     if (moveData->rootCurveOffset != 0) {
         moveSamples = (s16*)ObjAnim_GetMoveDataRootCurve(moveData);
 
         moveRootScale = ((ObjAnimRootCurve*)moveSamples)->scale * rootMotionScale;
         segmentCount = ((ObjAnimRootCurve*)moveSamples)->sampleCount - 1;
-        moveSamples += OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET / sizeof(*moveSamples);
+        moveSamples += offsetof(ObjAnimRootCurve, axisData) / sizeof(*moveSamples);
         hasFirstAxis = 0;
-        axisMarker = *moveSamples;
+        axisMarker = ((ObjAnimRootCurveAxis*)moveSamples)->hasSamples;
         if (axisMarker != 0) {
             hasFirstAxis = 1;
         }
@@ -454,12 +453,12 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
             moveSamples++;
         }
         if (hasFirstAxis == 0) {
-            axisMarker = *moveSamples;
+            axisMarker = ((ObjAnimRootCurveAxis*)moveSamples)->hasSamples;
             if (axisMarker == 0) {
                 moveSamples++;
             }
         }
-        axisMarker = *moveSamples;
+        axisMarker = ((ObjAnimRootCurveAxis*)moveSamples)->hasSamples;
         if (axisMarker != 0) {
             moveSamples++;
             segmentOffset = segmentCount * 2;
@@ -701,17 +700,17 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
         }
     }
 
-    if ((bank->animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
-        moveData = (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+    if ((bank->animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
+        moveData = &state->moveCache[state->moveCacheSlot]->moveData;
     } else {
-        moveData = (ObjAnimMoveData*)bank->animDef->moveData[state->moveCacheSlot];
+        moveData = bank->animDef->moveData[state->moveCacheSlot];
     }
     if (moveData->rootCurveOffset != 0) {
         events->rootCurveValid = 1;
         axis = (s16*)ObjAnim_GetMoveDataRootCurve(moveData);
         rootScale = ((ObjAnimRootCurve*)axis)->scale * objAnim->rootMotionScale;
         segmentCount = ((ObjAnimRootCurve*)axis)->sampleCount - 1;
-        axis += OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET / sizeof(*axis);
+        axis += offsetof(ObjAnimRootCurve, axisData) / sizeof(*axis);
         sampleSpan = segmentCount;
         previousScaledSample = sampleSpan * previousProgress;
         previousSampleIndex = previousScaledSample;
@@ -724,15 +723,14 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
         if (state->eventState != 0) {
             blendWeight = state->eventState / 16384.0f;
             moveWeight = OBJANIM_PROGRESS_ONE - blendWeight;
-            if ((bank->animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
-                moveData =
-                    (ObjAnimMoveData*)(state->blendMoveCache[state->blendCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+            if ((bank->animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
+                moveData = &state->blendMoveCache[state->blendCacheSlot]->moveData;
             } else {
-                moveData = (ObjAnimMoveData*)bank->animDef->moveData[state->blendCacheSlot];
+                moveData = bank->animDef->moveData[state->blendCacheSlot];
             }
             blendCurve = ObjAnim_GetMoveDataRootCurve(moveData);
             blendAxis = (s16*)blendCurve;
-            blendAxis += 3;
+            blendAxis += offsetof(ObjAnimRootCurve, axisData) / sizeof(*blendAxis);
         } else {
             blendWeight = 0.0f;
             moveWeight = OBJANIM_PROGRESS_ONE;
@@ -740,7 +738,7 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
 
         axisIndex = 0;
         do {
-            if (*axis != 0) {
+            if (((ObjAnimRootCurveAxis*)axis)->hasSamples != 0) {
                 axis++;
                 if (blendAxis != NULL) {
                     blendAxis++;
@@ -885,7 +883,7 @@ int ObjAnim_SetCurrentMove(void* objAnimHandle, int moveId, f32 moveProgress, u8
     if (moveId < 0) {
         moveId = 0;
     }
-    if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+    if ((animDef->flags & MODEL_FLAG_CACHED_ANIMATIONS) != 0) {
         if (moveChanged != 0) {
             state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
             state->moveCacheSlot = state->blendToggle;
@@ -896,14 +894,14 @@ int ObjAnim_SetCurrentMove(void* objAnimHandle, int moveId, f32 moveProgress, u8
             ObjAnim_LoadCachedMove((int)animDef->cachedAnimIds[moveId], (int)(s16)moveId,
                                    state->moveCache[state->moveCacheSlot], animDef);
         }
-        moveData = (ObjAnimMoveData*)(state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+        moveData = &state->moveCache[state->moveCacheSlot]->moveData;
     } else {
         state->moveCacheSlot = moveId;
-        moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
+        moveData = animDef->moveData[state->moveCacheSlot];
     }
-    state->moveFrameData = (ObjAnimFrameCommand*)moveData->frameCommands;
+    state->moveFrameData = (ObjAnimFrameHeader*)moveData->frameCommands;
     state->frameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
-    state->frameLength = (float)state->moveFrameData->frameLength;
+    state->frameLength = (float)state->moveFrameData->frameCount;
     if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
         state->frameLength -= OBJANIM_PROGRESS_ONE;
     }

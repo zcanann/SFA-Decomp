@@ -236,7 +236,7 @@ int DR_EarthWarrior_stateHandler03(GameObject* obj, BaddieState* baddie) {
         if (state->sub.mountState == VEHICLE_Mounted) {
             state->sub.energy -= 1;
             if (state->sub.energy <= 0) {
-                state->sub.maxSpeed = lbl_803DC76C;
+                state->sub.maxSpeed = gDREarthWarriorExhaustedSpeed;
                 CameraShake_Enable();
                 CameraShake_SetOffset(1.0f);
                 playerAddHealth(Obj_GetPlayerObject(), -1);
@@ -1093,6 +1093,8 @@ s32 gEarthWarriorTailChainJointIndices[4] = {0x17, 0x18, 0x19, 0x1A};
 
 ObjModelChainDesc gEarthWarriorTailChain = {gEarthWarriorTailChainJointIndices, 4};
 ObjModelChainDesc* gEarthWarriorTailChainDesc = &gEarthWarriorTailChain;
+
+f32 gDREarthWarriorExhaustedSpeed = 3.0f;
 
 ObjectDescriptor24WithPadding gDR_EarthWarriorObjDescriptor = {
     {

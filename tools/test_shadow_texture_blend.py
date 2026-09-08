@@ -98,9 +98,12 @@ class ShadowTextureBlendTests(unittest.TestCase):
         source = (ROOT / "src/main/newshadows.c").read_text()
         start, end = find_function_body(source, "blendTextures")
         fills = []
-        for helper in ("fillRampTexture", "fillInverseRampTexture", "fillReflectionGradientTexture"):
+        for helper in ("fillRampTexture", "fillInverseRampTexture", "fillReflectionGradientTexture",
+                       "fillDiskTexture", "fillSmallDiskTexture"):
             first, last = find_function_body(source, helper)
             fills.append("static void " + helper + "(void) " + source[first:last + 1])
+        first, last = find_function_body(source, "shadowScaleDiskCoordinates")
+        disk_scale = source[first:last + 1]
         first, last = find_function_body(source, "newshadows_createDistortionTexture")
         distortion = source[first:last + 1]
         cls.temporary = tempfile.TemporaryDirectory(prefix="sfa-shadow-blend-")
@@ -147,6 +150,11 @@ EXPORT void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
 static Texture* gNewShadowRampTexture;
 static Texture* gNewShadowInverseRampTexture;
 static Texture* gNewShadowReflectionGradientTexture;
+static Texture* gNewShadowDiskTexture;
+static Texture* gNewShadowSmallDiskTexture;
+float sqrtf(float);
+static void shadowScaleDiskCoordinates(f32* x, f32* y, f32 scale)
+''' + disk_scale + r'''
 ''' + "\n".join(fills) + r'''
 EXPORT void fillRamp(Texture* texture) {
     gNewShadowRampTexture = texture;
@@ -160,6 +168,14 @@ EXPORT void fillReflectionGradient(Texture* texture) {
     gNewShadowReflectionGradientTexture = texture;
     fillReflectionGradientTexture();
 }
+EXPORT void fillDisk(Texture* texture) {
+    gNewShadowDiskTexture = texture;
+    fillDiskTexture();
+}
+EXPORT void fillSmallDisk(Texture* texture) {
+    gNewShadowSmallDiskTexture = texture;
+    fillSmallDiskTexture();
+}
 static Texture* gNewShadowDistortionTexture;
 static Texture* allocation;
 static int allocationValid;
@@ -170,7 +186,6 @@ static Texture* textureAlloc(int width, int height, int format, int a, int b,
     return allocation;
 }
 void DCFlushRange(void* address, unsigned int size) { DCStoreRange(address, size); }
-float sqrtf(float);
 static void newshadows_createDistortionTexture(void)
 ''' + distortion + r'''
 EXPORT int fillDistortion(Texture* texture) {
@@ -198,12 +213,42 @@ EXPORT int fillDistortion(Texture* texture) {
         cls.library.blendTextures.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_float, ctypes.c_void_p]
         cls.library.blendTextures.restype = None
         cls.library.getFlushAddress.restype = ctypes.c_void_p
-        for name in ("fillRamp", "fillInverseRamp", "fillReflectionGradient"):
+        for name in ("fillRamp", "fillInverseRamp", "fillReflectionGradient", "fillDisk", "fillSmallDisk"):
             function = getattr(cls.library, name)
             function.argtypes = [ctypes.c_void_p]
             function.restype = None
         cls.library.fillDistortion.argtypes = [ctypes.c_void_p]
         cls.library.fillDistortion.restype = ctypes.c_int
+
+    def test_disk_profiles_and_tiling(self):
+        def f32(value):
+            return ctypes.c_float(value).value
+
+        for name, size, scale, square_root in (
+            ("fillDisk", 32, 1.1, False),
+            ("fillSmallDisk", 16, 1.2, True),
+        ):
+            with self.subTest(fill=name):
+                payload_size = size * size
+                storage = (ctypes.c_ubyte * (HEADER_SIZE + payload_size + 32))()
+                ctypes.memset(storage, 0xCD, len(storage))
+                getattr(self.library, name)(ctypes.addressof(storage))
+                self.assertEqual(bytes(storage[:HEADER_SIZE]), bytes([0xCD]) * HEADER_SIZE)
+                self.assertEqual(bytes(storage[-32:]), bytes([0xCD]) * 32)
+                pixels = bytes(storage[HEADER_SIZE:HEADER_SIZE + payload_size])
+                half_extent = size / 2
+                for y in range(size):
+                    for x in range(size):
+                        dx = f32(((x - half_extent) / half_extent) * f32(scale))
+                        dy = f32(((y - half_extent) / half_extent) * f32(scale))
+                        radius_squared = f32(f32(dx * dx) + f32(dy * dy))
+                        intensity = max(0.0, f32(1.0 - radius_squared))
+                        if square_root:
+                            intensity = f32(math.sqrt(intensity))
+                        expected = int(f32(255.0 * intensity))
+                        tile = (y // 4) * (size // 8) + x // 8
+                        offset = tile * 32 + (y % 4) * 8 + x % 8
+                        self.assertEqual(pixels[offset], expected, (x, y))
 
     def test_distortion_field(self):
         payload_size = 256 * 256 * 2

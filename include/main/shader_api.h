@@ -1,6 +1,7 @@
 #ifndef MAIN_SHADER_API_H_
 #define MAIN_SHADER_API_H_
 
+#include <stddef.h>
 #include "global.h"
 #include "main/camera.h"
 #include "main/map_romlist_page.h"
@@ -18,11 +19,15 @@ extern MapRomListPage* gLoadedRomListPages[ROM_LIST_PAGE_COUNT];
 
 typedef MapRomListPage MapRomList;
 
-typedef struct MapCellEntry
-{
-    s16 mapId;
-    s16 adjacentMapId1;
-    s16 adjacentMapId2;
+typedef struct MapCellEntry {
+    union {
+        struct {
+            s16 mapId;
+            s16 adjacentMapId1;
+            s16 adjacentMapId2;
+        };
+        s16 mapIds[3];
+    };
     s16 blockId;
     s8 cellIndex;
     s8 romListIndex;
@@ -30,15 +35,20 @@ typedef struct MapCellEntry
 } MapCellEntry;
 
 STATIC_ASSERT(sizeof(MapCellEntry) == 0xC);
+STATIC_ASSERT(offsetof(MapCellEntry, mapIds) == 0x00);
+STATIC_ASSERT(sizeof(((MapCellEntry*)0)->mapIds) == 0x06);
+STATIC_ASSERT(offsetof(MapCellEntry, mapId) == 0x00);
+STATIC_ASSERT(offsetof(MapCellEntry, adjacentMapId1) == 0x02);
+STATIC_ASSERT(offsetof(MapCellEntry, adjacentMapId2) == 0x04);
+STATIC_ASSERT(offsetof(MapCellEntry, romListIndex) == 0x09);
 
 /* MAPINFO.bin per-record map type (curMapType / getCurMapType()). */
-typedef enum MapType
-{
-    MAPTYPE_NORMAL        = 0, /* normal outdoor map */
-    MAPTYPE_SUBMAP        = 1, /* normal submap (dungeon/indoor) */
+typedef enum MapType {
+    MAPTYPE_NORMAL = 0,        /* normal outdoor map */
+    MAPTYPE_SUBMAP = 1,        /* normal submap (dungeon/indoor) */
     MAPTYPE_UNLOAD_UNUSED = 2, /* unused: unloads all objects immediately on load */
     MAPTYPE_SUBMAP_UNUSED = 3, /* unused: same as MAPTYPE_UNLOAD_UNUSED; only frontend2 has this */
-    MAPTYPE_NO_HUD        = 4, /* hides PDA HUD; title screen + Arwing maps; no player object spawned */
+    MAPTYPE_NO_HUD = 4,        /* hides PDA HUD; title screen + Arwing maps; no player object spawned */
 } MapType;
 
 MapCellEntry* mapGetCellEntry(int x, int z);
@@ -59,7 +69,8 @@ void goToPrevMapLayer(void);
 void buildPlayerRelativeFrustumPlanes(void);
 s32 getCurMapLayer(void);
 void mapUnloadRomListPage(int pageIndex);
-void mapGetBlockGridRects(int gridX, int gridZ, int* rectA, int* rectB, int* rectC, int* rectD, int layer, int useVisGrid, int slot);
+void mapGetBlockGridRects(int gridX, int gridZ, int* rectA, int* rectB, int* rectC, int* rectD, int layer,
+                          int useVisGrid, int slot);
 int mapTextureOverrideAcquire(Texture* texture, u32 flags, int type);
 void mapTextureOverrideRelease(Texture* texture, int type);
 s16* mapBlockFindTextureOverrideIndex(struct MapBlockData* block, int textureSlot);
@@ -83,8 +94,7 @@ extern u8 gMapBlockCount;
 extern int gMapBlockIndexCount;
 extern int* gMapBlockIndexList;
 extern f32 gSunFlareFade;
-typedef struct SunOcclusionSample
-{
+typedef struct SunOcclusionSample {
     int x;
     int y;
 } SunOcclusionSample;

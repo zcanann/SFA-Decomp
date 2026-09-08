@@ -14,9 +14,8 @@
  * game bits are managed across init/free/hitDetect.
  *
  * CloudRunnerState (its 'extra' block, 0xbc8 bytes) lives in
- * cloudrunner_state.h; the two structs below are this DLL's private
- * overlays for the placement record and for the few extra fields the
- * shared struct does not yet name.
+ * cloudrunner_state.h; the placement record and movement parameters are
+ * declared in dll_0258_drcloudrunner.h.
  */
 #include "main/audio/sfx_play_api.h"
 #include "dlls/objects/common/vehicle.h"
@@ -81,16 +80,20 @@ void DR_CloudRunner_setupPath(GameObject* obj, CloudRunnerState* state, int mode
     moveMode = mode;
     if (moveMode == 1) {
         (*gPathControlInterface)->init(pathState, 0, 0x42087, 0);
-        (*gPathControlInterface)->setLocalPointCollision(pathState, 1, &base->pathCollisionA, &lbl_803DC774, 8);
-        (*gPathControlInterface)->setup(pathState, 1, &base->pathPointsA, &lbl_803DC770, &stk);
+        (*gPathControlInterface)
+            ->setLocalPointCollision(pathState, 1, &base->pathCollisionA, &gDRCloudRunnerMode1LocalRadius, 8);
+        (*gPathControlInterface)->setup(pathState, 1, &base->pathPointsA, &gDRCloudRunnerMode1SegmentRadius, &stk);
     } else if (moveMode == 2) {
         (*gPathControlInterface)->init(pathState, 3, 0x42087, 0);
-        (*gPathControlInterface)->setLocalPointCollision(pathState, 2, &base->pathCollisionB, &lbl_803DC77C, 8);
-        (*gPathControlInterface)->setup(pathState, 1, &base->pathPointsB, &lbl_803DC778, &stk);
+        /* The second radius reads the following mode-0 segment-radius word. */
+        (*gPathControlInterface)
+            ->setLocalPointCollision(pathState, 2, &base->pathCollisionB, &gDRCloudRunnerMode2LocalRadius, 8);
+        (*gPathControlInterface)->setup(pathState, 1, &base->pathPointsB, &gDRCloudRunnerMode2SegmentRadius, &stk);
     } else if (moveMode == 0) {
         (*gPathControlInterface)->init(pathState, 3, 0x42087, 0);
-        (*gPathControlInterface)->setLocalPointCollision(pathState, 2, &base->pathCollisionC, &lbl_803DC784, 8);
-        (*gPathControlInterface)->setup(pathState, 1, &base->pathPointsC, &lbl_803DC780, &stk);
+        (*gPathControlInterface)
+            ->setLocalPointCollision(pathState, 2, &base->pathCollisionC, &gDRCloudRunnerMode0LocalRadii, 8);
+        (*gPathControlInterface)->setup(pathState, 1, &base->pathPointsC, &gDRCloudRunnerMode0SegmentRadius, &stk);
     }
     (*gPathControlInterface)->attachObject(obj, pathState);
 }
@@ -508,7 +511,7 @@ int DR_CloudRunner_stateHandler05(GameObject* obj, CloudRunnerState* baddie, f32
     }
     {
         s16 lim2;
-        if (inner->rollAngle > (lim2 = *(s16*)((char*)&gDRCloudRunnerRollAngleLimits + (idx & 0xfffffffe)))) {
+        if (inner->rollAngle > (lim2 = gDRCloudRunnerRollAngleLimits[idx / 2])) {
             inner->rollAngle = lim2;
         } else {
             int neg = -lim2;
@@ -866,7 +869,7 @@ void DR_CloudRunner_getCameraPosition(GameObject* obj, f32* a, f32* b, f32* c) {
     v.rotZ = src->anim.rotZ;
     v.scale = 1.0f;
     setMatrixFromObjectPos(matrix, &v);
-    Matrix_TransformPoint(matrix, 0.0f, lbl_803DC78C, lbl_803DC790, a, b, c);
+    Matrix_TransformPoint(matrix, 0.0f, gDRCloudRunnerCameraOffsetY, gDRCloudRunnerCameraOffsetZ, a, b, c);
 }
 
 int DR_CloudRunner_getDismountSide(GameObject* obj) {
@@ -1131,6 +1134,18 @@ DRCloudRunnerMoveParams gDRCloudRunnerMoveParamTable = {
     {0.0f, 0.7f, 1.0f},
     {0.02f, 0.02f, 0.04f, 0.01f},
 };
+
+f32 gDRCloudRunnerMode1SegmentRadius = 40.0f;
+f32 gDRCloudRunnerMode1LocalRadius = 40.0f;
+f32 gDRCloudRunnerMode2SegmentRadius = 20.0f;
+f32 gDRCloudRunnerMode2LocalRadius = 20.0f;
+f32 gDRCloudRunnerMode0SegmentRadius = 0.0f;
+f32 gDRCloudRunnerMode0LocalRadii[2] = {15.0f, 15.0f};
+f32 gDRCloudRunnerCameraOffsetY = 16.0f;
+f32 gDRCloudRunnerCameraOffsetZ = -16.0f;
+s16 gDRCloudRunnerRollAngleLimits[3] = {0x071c, 0x0e38, 0x38e3};
+s16 gDRCloudRunnerDefaultRotX = 0x4000;
+s16 gDRCloudRunnerHeadingAngleOffset = -0x8000;
 
 ObjectDescriptor24 gDR_CloudRunnerObjDescriptor = {
     0,

@@ -2,6 +2,41 @@
 
 Target: EN GSAE01, `src/dlls/engine/24/24.c`, common game GC/1.3 profile.
 
+## Complete Match — 2026-09-07
+
+All eight retail functions (2,748 text bytes) and all 1,936 assigned data bytes
+now match. The unit is `MatchingFor("GSAE01")`; its boundaries and existing
+GC/1.3 optimization profile are unchanged. The earlier checkpoints below
+record the path to this result and no longer describe outstanding differences.
+
+Native indexed corner and buffer arrays replace five explicit cursors. MWCC
+regenerates the retail induction variables, including the saved draw-buffer
+base. Matrix selection combines the active matrix bank and joint-table lookup
+in one expression, preserving both the initial base load and the sixteen-row
+stride. These changes reduce the update function to three operand differences.
+
+The three plane cases now call one inline `boneParticleScaleCorner` helper.
+It shares the XY scale for each corner and retains the independent Z scale.
+Its inlined expansion reproduces all three remaining multiply operand orders,
+completing the 441-instruction renderer.
+
+`boneParticleClearTranslation` resets the transform position before each joint.
+The existing automatic-inlining profile expands this actual call and emits a
+20-byte private fallback body before the update function. The linker discards
+that body; its zero literal is shared with the inline expansion and occupies
+the first pool slot. The complete pool is now the retail sequence:
+`0, 500, -1, -500, 1, 20.02, 8, 0.0495`. Explicitly marking this helper `inline`
+suppresses the fallback emission and moves zero back to the fourth slot.
+The old unused drift-reset helper remains absent. These helper names describe
+the reconstructed operations; they are not claimed as recovered original names.
+
+Validation: all eight retail function bodies, `.data`, and `.sdata2` are
+byte-identical to the target objects. `bone_particle_data_audit.py` passes,
+including the seven-buffer extent and alignment checks. `ninja all_source`
+and the strict source-linked retail checksum both pass, retaining DOL SHA1
+`e750e8e894707a52446118a4b84f1b58b677b269`. Formatting is committed separately
+and checked for complete object-byte equality.
+
 ## Retail Data
 
 The renderer at `0x800A433C` uses one compiler-generated data-pool base. Separate

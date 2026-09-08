@@ -59,7 +59,7 @@ class ActiveCompilerProfileTests(unittest.TestCase):
     def test_game_code_uses_gc13(self):
         self.assertEqual(self.config.compiler_version, "GC/1.3")
         for name, obj in self.objects.items():
-            if obj.options["progress_category"] == "game" and name != "main/zlb.c":
+            if obj.options["progress_category"] == "game" and not name.endswith(".s"):
                 with self.subTest(source=name):
                     self.assertEqual(obj.options["mw_version"], "GC/1.3")
 
@@ -92,8 +92,11 @@ class ActiveCompilerProfileTests(unittest.TestCase):
                 self.assertEqual(self.objects[name].options["mw_version"], compiler)
                 self.assertTrue(self.objects[name].completed)
 
-    def test_prodg_and_linker_remain_independent(self):
-        self.assertEqual(self.objects["main/zlb.c"].options["custom_rule"], "prodg")
+    def test_zlb_is_an_assembled_game_unit(self):
+        obj = self.objects["main/zlb.s"]
+        self.assertEqual(obj.options["progress_category"], "game")
+        self.assertIsNone(obj.options["custom_rule"])
+        self.assertTrue(obj.completed)
         self.assertEqual(self.config.linker_version, "GC/1.3.2")
 
     def test_vector_reflection_preserves_separate_rounding(self):

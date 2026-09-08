@@ -1015,6 +1015,17 @@ def main() -> None:
     parser = build_argument_parser()
     args = parser.parse_args()
 
+    missing_debug = [
+        path for path in (args.debug_symbols, args.debug_splits, args.debug_srcfiles)
+        if not path.is_file()
+    ]
+    if missing_debug:
+        print(
+            "Optional debug inputs unavailable; source-order and window-size context may be incomplete: "
+            + ", ".join(str(path) for path in missing_debug),
+            file=sys.stderr,
+        )
+
     groups = build_groups(
         dol=args.dol,
         symbols=args.symbols,

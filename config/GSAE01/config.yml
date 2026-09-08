@@ -12,6 +12,20 @@ name: main
 # Retain the priority-sort table even though code addresses it through the
 # containing vidListNodes storage rather than by this symbol directly.
 force_active:
+  # GPU error handlers reach these strings through offsets from the boot
+  # texture/FIFO base, so their individual symbols have no direct relocations.
+  - sGpuHangSuspectedMessage
+  - sGpuHangStatusFormat
+  - sGpuHangXfStallMessage
+  - sGpuHangUnterminatedMessage
+  - sGpuHangIllegalInstructionMessage
+  - sGpuHangWaitingMessage
+  - sGpuHangUnknownMessage
+  - sGpuHangXfStallLog
+  - sGpuHangUnterminatedLog
+  - sGpuHangIllegalInstructionLog
+  - sGpuHangWaitingLog
+  - sGpuHangUnknownLog
   - voicePrioritySortLinks
   # dlls/objects/599_DR_EarthWar/DR_EarthWar.c: the retail link retained these
   # two unreferenced .data tables that follow gDREarthWarriorRowIndices;
@@ -117,6 +131,14 @@ force_active:
   - lbl_803DB1EC
   - sAudioUnused0
   - sAudioUnused1
+  # dlls/engine/53/53.c: retain the unreferenced .sdata word between the
+  # info-start slot and texture IDs; retail keeps it and the following
+  # texture IDs and format strings depend on its four-byte footprint.
+  - lbl_803DBA00
+  # dlls/engine/5/5.c: retain the unused final .sbss word and the retail
+  # 60-byte .data color table when linking the complete sky TU from source.
+  - sSkyUnusedD
+  - sSkyUnusedColors
   # Placeholders for retail objects the carve leaves unnamed, in units that are
   # still NonMatching. Nothing references them, so mwld would dead-strip them
   # the moment their unit is linked from our object, shortening .sbss/.sdata and
@@ -127,8 +149,6 @@ force_active:
   - lbl_803DD54C
   # dlls/engine/2/2.c
   - lbl_803DB74C
-  # dlls/engine/5/5.c
-  - sSkyUnusedD
   # main/voxmaps.c
   - lbl_803DC8E4
   # main/pi_dolphin.c

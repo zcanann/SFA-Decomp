@@ -12,8 +12,7 @@
  * everything else is padded.
  */
 
-typedef struct SeqByte136
-{
+typedef struct SeqByte136 {
     u8 modelSlot : 4;
     u8 pad3 : 1;
     u8 mapEvent : 1;
@@ -34,29 +33,29 @@ typedef int (*ObjSeqTurnToFacePlayerFn)(struct GameObject* obj, struct ObjSeqSta
 struct ObjAnimComponent;
 
 typedef struct ObjectTriggerInterface {
-    void *unusedSlot02;
+    void* unusedSlot02;
     void (*onMapSetup)(void);
     void (*addBgCommand)(int index, int xrot, int yrot);
     void (*setFlag)(int index, int value);
     int (*getBool)(int index);
-    int (*update)(u8 *obj, f32 timeStep);
+    int (*update)(u8* obj, f32 timeStep);
     void (*updateCamera)(void);
-    void (*loadAnimData)(u8 *seq, u8 *obj);
-    void (*initState)(u8 *seq);
-    void (*freeState)(u8 *seq);
+    void (*loadAnimData)(u8* seq, u8* obj);
+    void (*initState)(u8* seq);
+    void (*freeState)(u8* seq);
     void (*run)(void);
-    int (*resolveAndAssignTargetObject)(u8 *obj);
+    int (*resolveAndAssignTargetObject)(u8* obj);
     int (*func14Ret0)(void);
     int (*func15Ret1)(void);
     int (*getGlobal4)(void);
     void (*setGlobal4)(int value);
     int (*func18Ret0)(void);
     void (*func19Nop)(void);
-    int (*runSequence)(int seqIndex, void *obj, int flags);
+    int (*runSequence)(int seqIndex, void* obj, int flags);
     void (*endSequence)(int seqIndex);
     void (*setCamVars)(int camA, int camB, int camC, int camD);
     void (*preempt)(int obj, int triggerId);
-    void (*yield)(ObjSeqState *seq, int value);
+    void (*yield)(ObjSeqState* seq, int value);
     u8 (*getGlobal3)(void);
     void (*setGlobal3)(u8 value);
     s16 (*getGlobal1)(void);
@@ -65,12 +64,12 @@ typedef struct ObjectTriggerInterface {
     void (*setGlobal2)(s16 value);
     void (*setXrot)(int index, int xrot);
     ObjSeqTurnToFacePlayerFn turnToFacePlayer;
-    int (*setObjects)(int a, struct GameObject *b, int c);
+    int (*setObjects)(int a, struct GameObject* b, int c);
     int (*setOverridePos)(f32 x, f32 y, f32 z);
     int (*setRunSequenceWorldSpace)(int unused, int mode);
 } ObjectTriggerInterface;
 
-extern ObjectTriggerInterface **gObjectTriggerInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 int ObjSeq_takeXrotChanged(int index);
 
@@ -117,12 +116,12 @@ typedef struct ObjSeqCommand {
 } ObjSeqCommand;
 
 struct ObjSeqState {
-    void *targetObj;
+    void* targetObj;
     f32 posStepX;
     f32 posStepY;
     f32 posStepZ;
     f32 unk10;
-    s16 rotStepX;  /* added to obj rotation each step */
+    s16 rotStepX; /* added to obj rotation each step */
     s16 rotStepY;
     s16 rotStepZ;
     s16 heading;
@@ -130,8 +129,8 @@ struct ObjSeqState {
     f32 fade;
     f32 posOffsetDecay; /* posOffsetScale -= posOffsetDecay * timeDelta */
     s32 curveId;
-    void *curveInterp; /* RomCurveInterpState* */
-    s16 sfxTimer[4]; /* slot 3 = -1 while looped sfx active */
+    void* curveInterp; /* RomCurveInterpState* */
+    s16 sfxTimer[4];   /* slot 3 = -1 while looped sfx active */
     s16 sfxId[4];
     f32 posOffsetX; /* seqObj pos = posOffset * posOffsetScale + base */
     f32 posOffsetY;
@@ -156,33 +155,33 @@ struct ObjSeqState {
     s16 flags;
     s16 savedFlags; /* snapshot of flags, restored on state transitions */
     u8 unk72[2];
-    s32 savedFrame; /* saved frame value restored into curFrame */
+    s32 savedFrame;        /* saved frame value restored into curFrame */
     s8 useRootMotionSpeed; /* 0x78: script-toggled; when set (and isCameraSeq==0) movement speed comes from ObjAnim_SampleRootCurvePhase (root-motion) instead of the track-9 speed curve */
     s8 targetAttached;
     u8 groundSnapEnabled; /* 0x7A: script-toggled; when set, the seq object is snapped to the detected floor (trackGetNearestGroundOffset / RomCurveInterp_EvaluateOffsetPosition ground adjust) */
     s8 isCameraSeq; /* 0x7B: set when placement targetType==3 (camera): FOV track clamped 35..125, gObjSeqCameraSourceObj assigned, object movement/root-motion suppressed */
     s8 pendingConditionId; /* 1-based; ObjSeq_EvaluateCondition(pendingConditionId-1), cleared when satisfied */
     s8 unk7D;
-    u8 runState; /* 0=inactive, 1=running, 2=start/setup, 3=defer-attach-to-parent */
+    u8 runState;   /* 0=inactive, 1=running, 2=start/setup, 3=defer-attach-to-parent */
     u8 stateFlags; /* bit 1 set on jump, bit 2/4 = pending transitions */
     u8 curEventId;
     u8 eventIds[0xA];
     u8 eventCount;
     u8 moveBlendParam; /* (cmd>>8)&0xf0; scaled and passed as ObjAnim_SetCurrentMove blend arg */
-    u8 texId5; /* texture id for objFindTexture channel 5 (<<8 into textureId) */
-    u8 texId4; /* texture id for objFindTexture channel 4 (<<8 into textureId) */
+    u8 texId5;         /* texture id for objFindTexture channel 5 (<<8 into textureId) */
+    u8 texId4;         /* texture id for objFindTexture channel 4 (<<8 into textureId) */
     u8 unk8F;
     u8 sequenceControlFlags;
     u8 unk91[3];
-    u8 *cmds;        /* 4-byte command records */
-    u8 *animEntries; /* 8-byte anim records */
+    u8* cmds;        /* 4-byte command records */
+    u8* animEntries; /* 8-byte anim records */
     s16 trackAnimStart[19];
     s16 trackRunLength[19];
     ObjAnimSequenceFreeCallback freeCallback;
     ObjAnimSequenceConditionCallback conditionCallback;
     ObjAnimEventList animEvents;
     s32 targetObjId; /* object id resolved via ObjList_FindObjectById into targetObj */
-    void *callbackContext;
+    void* callbackContext;
     s16 baseRotY; /* base rotation added to interpolated curve angle (vec[1]) */
     s16 baseRotX; /* base rotation added to interpolated curve angle (vec[0]) */
     s16 conditionFrames[10];
@@ -232,14 +231,14 @@ enum SeqActionOpcode {
 /* Condition codes dispatched by ObjSeq_EvaluateCondition's switch in objseq.c;
  * 0, 15 and any other value fall through to "always true". */
 enum ObjSeqConditionCode {
-    OBJSEQ_COND_SEQCOUNTER_LT1 = 1,  /* seqCounter <= 0 */
+    OBJSEQ_COND_SEQCOUNTER_LT1 = 1, /* seqCounter <= 0 */
     OBJSEQ_COND_SEQCOUNTER_GT0 = 2,
     OBJSEQ_COND_DAYTIME = 3,
     OBJSEQ_COND_NIGHTTIME = 4,
-    OBJSEQ_COND_BOOL_EQ0 = 5,   /* gObjSeqBoolFlags[slot] == 0 */
-    OBJSEQ_COND_BOOL_EQ1 = 6,   /* gObjSeqBoolFlags[slot] == 1 */
-    OBJSEQ_COND_VAR1_EQ0 = 7,   /* gObjSeqCondFlags[slot] == 0 */
-    OBJSEQ_COND_VAR1_NE0 = 8,   /* gObjSeqCondFlags[slot] != 0 */
+    OBJSEQ_COND_BOOL_EQ0 = 5, /* gObjSeqBoolFlags[slot] == 0 */
+    OBJSEQ_COND_BOOL_EQ1 = 6, /* gObjSeqBoolFlags[slot] == 1 */
+    OBJSEQ_COND_VAR1_EQ0 = 7, /* gObjSeqCondFlags[slot] == 0 */
+    OBJSEQ_COND_VAR1_NE0 = 8, /* gObjSeqCondFlags[slot] != 0 */
     OBJSEQ_COND_GLOBAL1_LE0 = 9,
     OBJSEQ_COND_GLOBAL1_GT0 = 10,
     OBJSEQ_COND_GLOBAL2_LE0 = 11,

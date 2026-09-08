@@ -12,8 +12,8 @@
 #include "main/mm.h"
 #include "main/vecmath.h"
 
-s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount, s16* vertexData, int colorCount,
-                       s16* colorData, int textureAssetId, void* textureResource);
+s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount, s16* vertexData, int triangleCount,
+                       s16* triangleIndices, int textureAssetId, void* textureResource);
 void dll_0B_updateActiveEffects(void);
 void dll_0B_releaseAll(void);
 void dll_0B_freeSourceEffects(void* source);

@@ -775,7 +775,6 @@ dolphin/vi/vi.c
 main/audio_sfx.c
 main/boot_logo.c
 main/curves.c
-main/lightmap_initmapblocks.c
 main/modellight.c
 main/obj_movelib.c
 main/objlib.c
@@ -825,13 +824,9 @@ musyx/runtime/snd_synth_api.c
 musyx/runtime/synth.c
 musyx/runtime/synth_ac.c
 musyx/runtime/synth_adsr.c
-musyx/runtime/synth_callback.c
-musyx/runtime/synth_channel.c
 musyx/runtime/synth_control.c
-musyx/runtime/synth_handle.c
 musyx/runtime/synth_job_init.c
 musyx/runtime/synth_jobs.c
-musyx/runtime/synth_seq_events.c
 musyx/runtime/synth_vsamples.c
 musyx/runtime/voice.c
 track/intersect_mtx44.c

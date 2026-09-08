@@ -1,3 +1,4 @@
+#include "main/dll_000A_expgfx.h"
 #include "dlls/objects/458_DIMExplosio.h"
 #include "main/dll/partfx_interface.h"
 #include "dolphin/mtx.h"
@@ -12,7 +13,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "sys/objects/lifecycle.h"
 #include "main/camera.h"
-#include "main/dll_000A_expgfx.h"
 #include "main/dll/waterfx_interface.h"
 #include "main/expgfx_internal.h"
 #include "game/objects/object.h"
@@ -84,70 +84,31 @@ typedef struct ExpgfxBillboardAngles {
 #define EXPGFX_BOUNDS_INIT_MAX   -3.4028235e38f
 #define EXPGFX_U16_TO_UNIT_SCALE (1.0f / 65535.0f)
 
-static inline ExpgfxTableEntry* Expgfx_GetTableEntry(int tableIndex) {
-    return &EXPGFX_RUNTIME_DATA->expTab[tableIndex];
-}
+u32 gExpgfxSlotPoolBases[EXPGFX_POOL_COUNT];
+u32 gExpgfxSlotActiveMasks[EXPGFX_POOL_COUNT];
+s8 gExpgfxPoolActiveCounts[EXPGFX_POOL_COUNT];
+u8 gExpgfxPoolPlaneOffsetSetIds[EXPGFX_POOL_COUNT];
+u64 gExpgfxTrackedSourceFrameMasks[2];
+ObjAnimComponent* gExpgfxTrackedPoolSourceIds[EXPGFX_POOL_COUNT];
+u8 gExpgfxPoolSourceModes[EXPGFX_POOL_COUNT];
+ExpgfxTableEntry gExpgfxTableEntries[EXPGFX_EXPTAB_ENTRY_COUNT];
+ExpgfxBounds gExpgfxPoolBounds[EXPGFX_POOL_COUNT];
+ExpgfxResourceEntry gExpgfxResourceEntries[EXPGFX_RESOURCE_TABLE_COUNT];
+static inline ExpgfxTableEntry* Expgfx_GetTableEntry(int tableIndex);
 
-static inline u32 Expgfx_GetSlotTableIndex(const ExpgfxSlot* slot) {
-    return ((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK;
-}
+static inline u32 Expgfx_GetSlotTableIndex(const ExpgfxSlot* slot);
 
-static inline void Expgfx_SetSlotTableIndex(ExpgfxSlot* slot, u8 tableIndex) {
-    slot->encodedTableIndex = (tableIndex << 1) | (slot->encodedTableIndex & 1);
-}
+static inline void Expgfx_SetSlotTableIndex(ExpgfxSlot* slot, u8 tableIndex);
 
-static inline ExpgfxSlot* Expgfx_GetSlot(int poolIndex, int slotIndex) {
-    return (ExpgfxSlot*)(gExpgfxSlotPoolBases[poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
-}
+static inline ExpgfxSlot* Expgfx_GetSlot(int poolIndex, int slotIndex);
 
-static inline ExpgfxPlaneOffsets* Expgfx_GetPlaneOffsets(int setIndex) {
-    return &gExpgfxStaticData[setIndex];
-}
+static inline ExpgfxPlaneOffsets* Expgfx_GetPlaneOffsets(int setIndex);
 
-#define EXPGFX_POOL_ACTIVE_MASK_PTR(runtime, poolIndex)                                                                \
-    ((u32*)((u8*)(runtime)->poolActiveMasks + (poolIndex) * sizeof(u32)))
-
-/*
- * viewfinder - camera zoom control for the photo/viewfinder mode.
- *
- * Maintains the shared zoom scalar gExpgfxNearFadeDepth, derived by scaling a
- * base reference value by the inverse of the current
- * camera FOV. viewFinderSetZoomTo50 snaps it to a fixed preset.
- * The result is consumed elsewhere (dll_000A_expgfx)
- * as a view-projection W threshold gating effect rendering.
- *
- * Driven from the player viewfinder/camera-mode code (player.c,
- * dll_0044_cameramodeviewfinder.c).
- */
+/* Viewfinder zoom also supplies the particle near-fade depth. */
 
 static const ObjFxU16Table3 objFxHitEffectIdTbl = {{0x0000, 0x07DD, 0x07DE}};
 
-void viewFinderSetZoom(f32 zoom) {
-    gExpgfxNearFadeDepth = -3000.0f / zoom;
-}
-
-void viewFinderSetZoomTo50(void) {
-    gExpgfxNearFadeDepth = 50.0f;
-}
-
-/*
- * objfx - object particle / light effect spawners (part of the
- * fx_800944A0 DLL, sharing its tables and float pool).
- *
- * Each routine builds an ObjFxParticleParams / ObjFxParticleFlags block and
- * hands it to the global particle interface (gPartfxInterface->spawnObject) or the
- * bone-attached effect interface (gBoneParticleEffectInterface), keyed by
- * a small caller-supplied selector that indexes the effect-id tables at
- * gObjFxCrystalSparkleTbl / gObjFxHitEffectParamTbl / etc. Coverage: crystal sparkle
- * (objfx_spawnCrystalOrbitEffects), generic hit/impact bursts, directional /
- * arced / box scatter bursts, the A-button glow, projectile trails, item
- * pickup sparkles, and dynamic lights (objParticleFn / objLightFn driving
- * modelLightStruct_*). objfx_shakeCameraByDistance / spawnExplosion / DIMexplosionFn add a
- * distance-attenuated camera shake + rumble and spawn the shared explosion
- * object (type 0x24, id 0x253). The numerous 0x3xx/0x7xx literals are
- * particle-effect resource ids; the float lbl_803DFxxx symbols are tuning
- * constants in the DLL's shared .sdata2 pool.
- */
+/* Object effects share this unit's particle tables. */
 
 ExpgfxPlaneOffsets gExpgfxStaticData[EXPGFX_STATIC_PLANE_OFFSET_SET_COUNT] = {
     {{-5.0f, 50.0f, 50.0f, 50.0f, 50.0f, 50.0f}},
@@ -160,30 +121,19 @@ s16 gExpgfxStaticPoolSlotTypeIds[80] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0, 0, 0, 0, 0,
 };
 
-u8 gExpgfxStaticPoolFrameFlags[112] = {
-    0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 64, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-};
+u8 gExpgfxStaticPoolFrameFlags[EXPGFX_POOL_COUNT] = {0};
 
-/* Crystal burst amplitude scales + spawn direction table (referenced by objfx.c). */
-ObjFxCrystalBurstTable gObjFxCrystalAmpTbl = {
-    {0.5f, 0.55f, 0.65f, 0.7f},
-    {
-        {-1000, 0, 1000},
-        {1000, 0, 1000},
-        {1000, 0, -1000},
-        {-1000, 0, -1000},
-        {-1000, -1000, 0},
-        {1000, -1000, 0},
-        {1000, 1000, 0},
-        {-1000, 1000, 0},
-        {-1000, -1000, 0},
-        {1000, -1000, 0},
-        {1000, 1000, 0},
-        {-1000, 1000, 0},
-    },
-};
+/* Unused EN data; the predecessor retains two triangle records here. */
+u8 gExpgfxUnusedTriangleData[32] = {64, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                    64, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+/* Crystal amplitudes and independent particle quad templates. */
+f32 gObjFxCrystalAmplitudes[4] = {0.5f, 0.55f, 0.65f, 0.7f};
+Vec3s gExpgfxQuadTemplateA[4] = {{-1000, 0, 1000}, {1000, 0, 1000}, {1000, 0, -1000}, {-1000, 0, -1000}};
+Vec3s gExpgfxQuadTemplateB[4] = {{-1000, -1000, 0}, {1000, -1000, 0}, {1000, 1000, 0}, {-1000, 1000, 0}};
+/* Repeats template B in retail; no active consumer is known. */
+u8 gExpgfxUnusedTemplateData[24] = {0xFC, 0x18, 0xFC, 0x18, 0x00, 0x00, 0x03, 0xE8, 0xFC, 0x18, 0x00, 0x00,
+                                    0x03, 0xE8, 0x03, 0xE8, 0x00, 0x00, 0xFC, 0x18, 0x03, 0xE8, 0x00, 0x00};
 
 /* Light RGB triplets per fx type (referenced by objfx.c). */
 ObjFxLightColor gObjFxLightColorTbl[12] = {
@@ -250,1340 +200,11 @@ const ObjFxRandomBurstTable gObjFxRandomBurstTbl = {{{0x000, 0},
 
 #define OBJFX_OBJFLAG_PARENT_SLACK 0x1000
 
-void objfx_spawnCrystalOrbitEffects(GameObject* obj, s16* work, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff,
-                                    u8 flags) {
-    ObjFxParticleParams params;
-    int crystalIdx;
-    int angleStep;
-    int spawnFlags;
-    f32 wave;
-
-    for (crystalIdx = 0; crystalIdx < 4; crystalIdx++) {
-        work[0x12 + crystalIdx] = (65535.0f / period + (f32)(crystalIdx * randomGetRange(120, 127)));
-        wave = work[0x12 + crystalIdx];
-        work[0xe + crystalIdx] = (wave * timeDelta + work[0xe + crystalIdx]);
-        wave = fsin16((u16)work[0xe + crystalIdx]);
-        wave = (1.0f + wave) / 2.0f;
-        {
-            f32 amp = gObjFxCrystalAmpTbl.amps[crystalIdx];
-            *(f32*)((char*)work + 0xc + crystalIdx * 4) = amp * wave;
-        }
-
-        work[0x16 + crystalIdx] = (timeDelta * gObjFxCrystalSpinSpeed[crystalIdx] + work[0x16 + crystalIdx]);
-        *(u16*)work = work[0x16 + crystalIdx];
-        *(f32*)((char*)work + 8) = *(f32*)((char*)work + 0xc + crystalIdx * 4);
-
-        for (angleStep = 0; angleStep < 0xffff; angleStep += 0x7fff) {
-            params.position[0] = *(f32*)((char*)work + 8) * xMul + xOff;
-            params.position[1] = *(f32*)((char*)work + 8) * yMul + yOff;
-            params.position[2] = 0.0f;
-            *(u16*)work += 0x7fff;
-            vecRotateZXY(work, params.position);
-            params.position[0] += obj->anim.localPosX;
-            params.position[1] += obj->anim.localPosY;
-            params.position[2] += obj->anim.localPosZ;
-            params.scale = 1.0f;
-            spawnFlags = 0x200001;
-            if (flags != 0) {
-                spawnFlags |= 0x20000000;
-            }
-            (*gPartfxInterface)->spawnObject(obj, 0x7ec, &params, spawnFlags, -1, NULL);
-        }
-    }
-}
-
-void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, f32 mult, u8 flagByte) {
-    ObjFxParticleParams params;
-    ObjFxRandomBurstTable burstTbl = gObjFxRandomBurstTbl;
-    u16 randAngles[3];
-    int i;
-    f32 unitRand;
-    u8 frameCount;
-
-    if (framesThisStep > 3) {
-        frameCount = 3;
-    } else {
-        frameCount = framesThisStep;
-    }
-    for (i = 0; i < frameCount * count; i++) {
-        unitRand = randomGetRange(0, 1000) / 1000.0f;
-        randAngles[0] = randomGetRange(0, 0xffff);
-        randAngles[1] = randomGetRange(0, 0xffff);
-        randAngles[2] = randomGetRange(0, 0xffff);
-        params.position[0] = mult * (1.0f - unitRand * (unitRand * unitRand));
-        params.position[1] = 0.0f;
-        params.position[2] = 0.0f;
-        vecRotateZXY((s16*)randAngles, params.position);
-        if (origin != NULL) {
-            params.position[0] += ((PartFxSpawnParams*)origin)->posX;
-            params.position[1] += ((PartFxSpawnParams*)origin)->posY;
-            params.position[2] += ((PartFxSpawnParams*)origin)->posZ;
-        }
-        params.effectParam = burstTbl.entries[type].effectParam;
-        params.pad00[1] = burstTbl.entries[type].extraParam;
-        params.pad00[2] = flagByte;
-        params.scale = 1.0f;
-        if (type >= 9 && type <= 0xb) {
-            if (type == 0xb || type == 0xa) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7e3, &params, 2, -1, NULL);
-            }
-            if (type == 0xb || type == 9) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7e4, &params, 2, -1, NULL);
-            }
-        } else {
-            (*gPartfxInterface)->spawnObject(obj, 0x7e2, &params, 2, -1, NULL);
-        }
-    }
-}
-
-void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d) {
-    StaffCollisionColorArgs emitterArgs;
-    ObjFxParticleEmitter emitter;
-    StaffCollisionInterface** partfxIface;
-    emitter.scale = 1.0f;
-    emitter.rotZ = 0;
-    emitter.rotY = 0;
-    emitter.rotX = 0;
-    emitter.x = pos[0];
-    emitter.y = pos[1];
-    emitter.z = pos[2];
-    partfxIface = Resource_Acquire(0x5a, 1);
-    emitterArgs.count = a;
-    emitterArgs.red = b;
-    emitterArgs.green = c;
-    emitterArgs.blue = d;
-    (*partfxIface)->spawn(NULL, 1, (PartFxSpawnParams*)&emitter, 0x401, -1, &emitterArgs);
-}
-
-void objfx_spawnHitEffectBurst(void* obj, f32 scale, u8 idSel, u8 paramSel, u8 count, GameObject* origin) {
-    ObjFxParticleParams params;
-    ObjFxU16Table11 table = gObjFxHitEffectParamTbl2;
-    ObjFxU16Table3 effectIds = objFxHitEffectIdTbl;
-    int i;
-    if (idSel == 0 || paramSel == 0) {
-        return;
-    }
-    params.scale = scale;
-    params.effectParam = table.values[paramSel];
-    if (origin != NULL) {
-        params.position[0] = origin->anim.localPosX;
-        params.position[1] = origin->anim.localPosY;
-        params.position[2] = origin->anim.localPosZ;
-    } else {
-        params.position[0] = 0.0f;
-        params.position[1] = 0.0f;
-        params.position[2] = 0.0f;
-    }
-    for (i = 0; i < count; i++) {
-        (*gPartfxInterface)->spawnObject(obj, effectIds.values[idSel], &params, 2, -1, NULL);
-    }
-}
-
-void objfx_spawnMaskedHitEffect(void* obj, f32 scale, u8 type, u8 mode, u8 mask, void* origin) {
-    ObjFxParticleParams params;
-    ObjFxU16Table11 effectParamTbl = gObjFxHitEffectParamTbl;
-    ObjFxU16Table7 spawnIdTbl = gObjFxMaskedHitSpawnIdTbl;
-    if (type == 0 || mode == 0) {
-        return;
-    }
-    if ((mask & (u16)(int)gExpgfxFrameTimerA) == 0) {
-        return;
-    }
-    params.scale = scale;
-    params.effectParam = effectParamTbl.values[mode];
-    if (origin != NULL) {
-        params.position[0] = ((GameObject*)origin)->anim.localPosX;
-        params.position[1] = ((GameObject*)origin)->anim.localPosY;
-        params.position[2] = ((GameObject*)origin)->anim.localPosZ;
-    } else {
-        params.position[0] = 0.0f;
-        params.position[1] = 0.0f;
-        params.position[2] = 0.0f;
-    }
-    (*gPartfxInterface)->spawnObject(obj, spawnIdTbl.values[type], &params, 2, -1, NULL);
-}
-
-void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mult, void* origin,
-                                 int flags) {
-    ObjFxParticleParams params;
-    ObjFxU16Table9 effectParams = *(ObjFxU16Table9*)((char*)&gObjFxCrystalSparkleTbl + 0xd0);
-    ObjFxU16Table8 spawnIds = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xe4);
-    ObjFxU16Table8 paramC = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xf4);
-    ObjFxU16Table8 paramD = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x104);
-    u16 rvec[3];
-    int i;
-    f32 radialT;
-
-    params.scale = scale;
-    params.effectParam = effectParams.values[kind];
-    params.pad00[1] = 0x3c;
-    for (i = 0; i < 4; i++) {
-        if (randomGetRange(0, 0x63) >= chance) {
-            continue;
-        }
-        radialT = randomGetRange(0, 1000) / 1000.0f;
-        switch (mode) {
-        case 1:
-            rvec[0] = randomGetRange(0, 0xffff);
-            rvec[1] = randomGetRange(0, 0xffff);
-            rvec[2] = randomGetRange(0, 0xffff);
-            params.position[0] = mult * (1.0f - radialT * (radialT * radialT));
-            break;
-        case 2:
-            rvec[0] = 0;
-            rvec[1] = randomGetRange(0, 0xffff);
-            rvec[2] = 0;
-            params.position[0] = mult * (1.0f - radialT * (radialT * radialT));
-            break;
-        case 3:
-            rvec[0] = randomGetRange(0, 0xffff);
-            rvec[1] = 0;
-            rvec[2] = 0;
-            params.position[0] = mult * (1.0f - radialT * (radialT * radialT));
-            break;
-        case 4:
-            rvec[0] = 0;
-            rvec[1] = 0;
-            rvec[2] = randomGetRange(0, 0xffff);
-            params.position[0] = mult * (1.0f - radialT * (radialT * radialT));
-            break;
-        case 5:
-            rvec[0] = randomGetRange(0x7fff, 0xffff);
-            rvec[1] = 0;
-            rvec[2] = randomGetRange(0, 0xffff);
-            params.position[0] = mult * (1.0f - radialT * (radialT * radialT));
-            break;
-        case 6:
-            rvec[0] = randomGetRange(0, 0xffff);
-            rvec[1] = randomGetRange(0, 0xffff);
-            rvec[2] = randomGetRange(0, 0xffff);
-            params.position[0] = radialT * mult;
-            break;
-        case 7:
-            rvec[0] = randomGetRange(0, 0xffff);
-            rvec[1] = randomGetRange(0, 0xffff);
-            rvec[2] = randomGetRange(0, 0xffff);
-            params.position[0] = mult * (1.0f - radialT * (radialT * (radialT * (radialT * radialT))));
-            break;
-        }
-        params.position[1] = 0.0f;
-        params.position[2] = 0.0f;
-        vecRotateZXY((s16*)rvec, params.position);
-        if (origin != NULL) {
-            params.position[0] += ((GameObject*)origin)->anim.localPosX;
-            params.position[1] += ((GameObject*)origin)->anim.localPosY;
-            params.position[2] += ((GameObject*)origin)->anim.localPosZ;
-        }
-        params.pad00[2] = paramC.values[idx];
-        params.pad00[0] = paramD.values[idx];
-        (*gPartfxInterface)->spawnObject(obj, spawnIds.values[idx], &params, flags | 2, -1, NULL);
-    }
-}
-
 #define OBJ_FX_PI 3.1415927f
-
-void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int chance, f32 angBase, f32 lo, f32 hi,
-                           void* origin, int flags) {
-    ObjFxParticleParams params;
-    ObjFxU16Table9 effectParams = *(ObjFxU16Table9*)((char*)&gObjFxCrystalSparkleTbl + 0x8c);
-    ObjFxU16Table8 spawnIds = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xa0);
-    ObjFxU16Table8 paramC = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xb0);
-    ObjFxU16Table8 paramD = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xc0);
-    u16 rvec[3];
-    int i;
-    f32 range;
-    f32 radialT;
-    f32 angularT;
-
-    params.scale = scale;
-    params.effectParam = effectParams.values[kind];
-    params.pad00[1] = 0x3c;
-    for (i = 0; i < 4; i++) {
-        u16 val;
-        f32 a;
-        if (randomGetRange(0, 0x63) >= (u8)chance) {
-            continue;
-        }
-        rvec[0] = randomGetRange(0, 0xffff);
-        rvec[1] = 0;
-        rvec[2] = 0;
-        radialT = randomGetRange(1, 1000) / 1000.0f;
-        angularT = randomGetRange(0, 1000) / 1000.0f;
-        params.position[1] = 0.0f;
-        params.position[2] = 0.0f;
-        switch (mode) {
-        case 1:
-            params.position[0] = 1.0f - radialT * radialT;
-            break;
-        case 2:
-            angularT *= (angularT * angularT);
-            params.position[0] = 1.0f - radialT * radialT;
-            break;
-        case 3:
-            angularT = 1.0f - angularT * (angularT * angularT);
-            params.position[0] = 1.0f - radialT * radialT;
-            break;
-        case 4:
-            val = (u16)(int)(65535.0f * angularT);
-            a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
-            angularT = 0.5f * (1.0f + mathCosf(a));
-            params.position[0] = 1.0f - radialT * radialT;
-            break;
-        case 5:
-            val = (u16)(int)(65535.0f * angularT);
-            a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
-            angularT = 0.5f * (1.0f + mathSinf(a));
-            params.position[0] = 1.0f - radialT * radialT;
-            break;
-        case 6:
-            params.position[0] = radialT * radialT;
-            break;
-        case 7:
-            params.position[0] = 1.0f - radialT * (radialT * (radialT * (radialT * radialT)));
-            break;
-        }
-        range = angBase - lo;
-        params.position[0] *= (angularT * range + lo);
-        vecRotateZXY((s16*)rvec, params.position);
-        {
-            f32 t = angularT - 0.5f;
-            params.position[1] = t * hi;
-        }
-        if (origin != NULL) {
-            params.position[0] += ((GameObject*)origin)->anim.localPosX;
-            params.position[1] += ((GameObject*)origin)->anim.localPosY;
-            params.position[2] += ((GameObject*)origin)->anim.localPosZ;
-        }
-        params.pad00[2] = paramC.values[idx];
-        params.pad00[0] = paramD.values[idx];
-        (*gPartfxInterface)->spawnObject(obj, spawnIds.values[idx], &params, flags | 2, -1, NULL);
-    }
-}
-
-void objfx_spawnBoxBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mulX, f32 mulY, f32 mulZ,
-                         void* origin, int flags) {
-    ObjFxParticleParams params;
-    ObjFxU16Table9 effectParams = *(ObjFxU16Table9*)((char*)&gObjFxCrystalSparkleTbl + 0x48);
-    ObjFxU16Table8 spawnIds = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x5c);
-    ObjFxU16Table8 paramC = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x6c);
-    ObjFxU16Table8 paramD = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x7c);
-    int i;
-
-    params.scale = scale;
-    params.effectParam = effectParams.values[kind];
-    params.pad00[1] = 0x3c;
-    for (i = 0; i < 4; i++) {
-        u16 val;
-        f32 a;
-        if (randomGetRange(0, 0x63) >= chance) {
-            continue;
-        }
-        params.position[0] = randomGetRange(0, 1000) / 1000.0f;
-        params.position[1] = randomGetRange(0, 1000) / 1000.0f;
-        params.position[2] = randomGetRange(0, 1000) / 1000.0f;
-        switch (mode) {
-        case 1:
-            params.position[0] -= 0.5f;
-            params.position[1] -= 0.5f;
-            params.position[2] -= 0.5f;
-            break;
-        case 2:
-            params.position[0] -= 0.5f;
-            params.position[1] = params.position[1] * (params.position[1] * params.position[1]) - 0.5f;
-            params.position[2] -= 0.5f;
-            break;
-        case 3:
-            params.position[0] -= 0.5f;
-            params.position[1] = (1.0f - params.position[1] * (params.position[1] * params.position[1])) - 0.5f;
-            params.position[2] -= 0.5f;
-            break;
-        case 4:
-            params.position[0] -= 0.5f;
-            val = (u16)(int)(65535.0f * params.position[1]);
-            a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
-            params.position[1] = 0.5f * mathCosf(a);
-            params.position[2] -= 0.5f;
-            break;
-        case 5:
-            params.position[0] -= 0.5f;
-            val = (u16)(int)(65535.0f * params.position[1]);
-            a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
-            params.position[1] = 0.5f * mathSinf(a);
-            params.position[2] -= 0.5f;
-            break;
-        case 6:
-            params.position[0] -= 0.5f;
-            params.position[1] -= 0.5f;
-            params.position[2] -= 0.5f;
-            break;
-        case 7:
-            params.position[0] -= 0.5f;
-            params.position[1] -= 0.5f;
-            params.position[2] -= 0.5f;
-            break;
-        }
-        params.position[0] *= mulX;
-        params.position[1] *= mulY;
-        params.position[2] *= mulZ;
-        if (origin != NULL) {
-            params.position[0] += ((GameObject*)origin)->anim.localPosX;
-            params.position[1] += ((GameObject*)origin)->anim.localPosY;
-            params.position[2] += ((GameObject*)origin)->anim.localPosZ;
-        }
-        params.pad00[2] = paramC.values[idx];
-        params.pad00[0] = paramD.values[idx];
-        (*gPartfxInterface)->spawnObject(obj, spawnIds.values[idx], &params, flags | 2, -1, NULL);
-    }
-}
-
-void objShowButtonGlow(void* obj, f32 intensity, u8 glowKind) {
-    ObjFxParticleParams params;
-    int i;
-
-    params.scale = intensity;
-    if (glowKind == 0) {
-        return;
-    }
-    switch (glowKind) {
-    case 1:
-        params.effectParam = 0xc8c;
-        for (i = 0; i < 0x28; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7c8, &params, 1, -1, NULL);
-        }
-        params.effectParam = 1;
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
-        break;
-    case 2:
-        params.effectParam = 0xc8d;
-        for (i = 0; i < 0x28; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7c8, &params, 1, -1, NULL);
-        }
-        params.effectParam = 0;
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
-        break;
-    case 3:
-        params.effectParam = 0xc8e;
-        for (i = 0; i < 0x28; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7c8, &params, 1, -1, NULL);
-        }
-        params.effectParam = 2;
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
-        break;
-    case 4:
-        params.effectParam = 0;
-        for (i = 0; i < 0x14; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7f2, &params, 1, -1, NULL);
-        }
-        break;
-    }
-}
-
-void objfx_spawnFrameTimedHitPulse(GameObject* obj, f32 scale, u8 type, u8 variant, f32 yOffset) {
-    ObjFxS32Table5 variantTbl = gObjFxPulseVariantTbl;
-    ObjFxS32Table5 countTbl = gObjFxHitPulseTbl.counts;
-    f32 offset[3];
-    int frame;
-    if (type == 0) {
-        return;
-    }
-    if (variant == 0 || variant >= 5) {
-        return;
-    }
-    {
-        if (gExpgfxFrameTimerB != 0.0f) {
-            frame = 0;
-        } else {
-            frame = countTbl.values[variant] & 0xff;
-        }
-        offset[0] = 0.0f;
-        offset[1] = yOffset;
-        offset[2] = 0.0f;
-        switch (type) {
-        case 1:
-            objfx_spawnPulseBurst(obj, scale, (u8)variantTbl.values[variant], frame, 0, offset);
-            break;
-        }
-    }
-}
-
-void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mode, f32 sizeParam, void* light) {
-    ObjFxParticleParams params;
-    f32 lightOffset[6];
-    f32 ndc[3];
-    s32 screenPos[3];
-    int i;
-    int depth;
-    u8 frameCount;
-
-    if (framesThisStep > 3) {
-        frameCount = 3;
-    } else {
-        frameCount = framesThisStep;
-    }
-    params.scale = scale;
-    if (sizeParam <= 0.001f) {
-        sizeParam = 0.001f;
-    }
-    params.position[0] = sizeParam;
-    if ((u8)type != 0) {
-        switch ((u8)type) {
-        case 1:
-            params.effectParam = 0x159;
-            params.pad00[2] = 1;
-            for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7be, &params, 2, -1, light);
-            }
-            break;
-        case 2:
-            params.effectParam = 0x159;
-            params.pad00[2] = 0;
-            for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7be, &params, 2, -1, light);
-            }
-            break;
-        case 3:
-            params.effectParam = 0x8e;
-            for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7c0, &params, 2, -1, light);
-            }
-            break;
-        case 4: {
-            int flags = 2;
-            if ((obj->anim.flags & 0x40080) != 0) {
-                flags |= 0x20000000;
-            }
-            params.effectParam = 0xc0e;
-            params.pad00[2] = 0;
-            for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7eb, &params, flags, -1, light);
-            }
-            break;
-        }
-        }
-    }
-
-    if ((u8)mode != 0) {
-        if (light != NULL) {
-            lightOffset[3] = ((GameObject*)light)->anim.localPosX;
-            lightOffset[4] = ((GameObject*)light)->anim.localPosY;
-            lightOffset[5] = ((GameObject*)light)->anim.localPosZ;
-            vecRotateZXY((s16*)obj, &lightOffset[3]);
-            Camera_ProjectWorldPointWithOffset(
-                obj->anim.worldPosX + lightOffset[3] - playerMapOffsetX, obj->anim.worldPosY + lightOffset[4],
-                obj->anim.worldPosZ + lightOffset[5] - playerMapOffsetZ, 10.0f, &ndc[2], &ndc[1], &ndc[0]);
-        } else {
-            Camera_ProjectWorldPointWithOffset(obj->anim.worldPosX - playerMapOffsetX, obj->anim.worldPosY,
-                                               obj->anim.worldPosZ - playerMapOffsetZ, 10.0f, &ndc[2], &ndc[1],
-                                               &ndc[0]);
-        }
-        Camera_ClipToScreen(ndc[2], ndc[1], ndc[0], &screenPos[2], &screenPos[1], &screenPos[0]);
-        depth = depthReadRequestPoll(screenPos[2], screenPos[1], obj);
-        if (screenPos[0] > depth) {
-            switch ((u8)mode) {
-            case 1:
-                mode = 4;
-                break;
-            case 2:
-                mode = 5;
-                break;
-            case 3:
-                mode = 6;
-                break;
-            }
-        }
-        switch ((u8)mode) {
-        case 1:
-            if ((u8)type == 1) {
-                params.effectParam = 0xc75;
-            } else {
-                params.effectParam = 0xc74;
-            }
-            for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7bf, &params, 2, -1, light);
-            }
-            break;
-        case 2:
-            params.effectParam = 0x605;
-            for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7bf, &params, 2, -1, light);
-            }
-            break;
-        case 3:
-            if ((u8)type == 1) {
-                params.effectParam = 0xc75;
-            } else {
-                params.effectParam = 0xc74;
-            }
-            for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7c1, &params, 2, -1, light);
-            }
-            break;
-        case 4:
-            if ((u8)type == 1) {
-                params.effectParam = 0xc75;
-            } else {
-                params.effectParam = 0xc74;
-            }
-            for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7c4, &params, 2, -1, light);
-            }
-            break;
-        case 5:
-            params.effectParam = 0x605;
-            for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7c4, &params, 2, -1, light);
-            }
-            break;
-        case 6:
-            if ((u8)type == 1) {
-                params.effectParam = 0xc75;
-            } else {
-                params.effectParam = 0xc74;
-            }
-            for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7c5, &params, 2, -1, light);
-            }
-            break;
-        }
-    }
-}
-
-void objfx_spawnFlaggedTrailBurst(void* obj, f32 fval, u8 mode, int f6val, int f4val, void* origin) {
-    ObjFxParticleFlags params;
-    int i;
-    u8 count;
-
-    if (framesThisStep > 3) {
-        count = 3;
-    } else {
-        count = framesThisStep;
-    }
-    params.effectParam = f6val;
-    params.f4 = f4val;
-    params.scale = fval;
-    if (mode == 0) {
-        return;
-    }
-    switch (mode) {
-    case 1:
-        params.a = 0;
-        params.b = 0;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
-        }
-        break;
-    case 2:
-        params.a = 1;
-        params.b = 0;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
-        }
-        break;
-    case 3:
-        params.a = 0;
-        params.b = 1;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
-        }
-        break;
-    case 4:
-        params.a = 1;
-        params.b = 1;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
-        }
-        break;
-    }
-}
-
-void objfx_spawnPulseBurst(void* obj, f32 scale, int type, int count, int mode, f32* vec) {
-    ObjFxParticleParams params;
-    int j;
-    int i;
-    int pulseEffectId;
-    int typeByte;
-    u8 frameCount;
-
-    if (framesThisStep > 3) {
-        frameCount = 3;
-    } else {
-        frameCount = framesThisStep;
-    }
-
-    params.scale = scale;
-    if (vec != NULL) {
-        params.position[0] = vec[0];
-        params.position[1] = vec[1];
-        params.position[2] = vec[2];
-    } else {
-        f32 z = 0.0f;
-        params.position[0] = z;
-        params.position[1] = z;
-        params.position[2] = z;
-    }
-
-    typeByte = (u8)type;
-    switch (typeByte) {
-    case 3:
-        params.scale *= 2.25f;
-        pulseEffectId = 1968;
-        break;
-    case 9:
-    case 10:
-        mode = 0;
-        count = 0;
-        break;
-    case 12:
-    case 13:
-    case 14:
-        mode = 0;
-        if ((u8)count != 0) {
-            count = 8;
-        }
-        break;
-    default:
-        pulseEffectId = 1967;
-        break;
-    }
-
-    if ((u8)count != 0) {
-        switch ((u8)count) {
-        case 1:
-            params.effectParam = -20536;
-            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
-            break;
-        case 2:
-            params.effectParam = 10000;
-            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
-            break;
-        case 3:
-            params.effectParam = 500;
-            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
-            break;
-        case 4:
-            params.effectParam = -1;
-            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
-            break;
-        case 5:
-            params.effectParam = 32767;
-            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
-            break;
-        case 6:
-            params.effectParam = 10000;
-            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
-            break;
-        case 7:
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
-            break;
-        case 8:
-            if (params.scale < 0.5f) {
-                params.scale = 0.5f;
-            }
-            params.pad00[2] = 90;
-            for (i = 0; i < frameCount * 2; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 1981, &params, 1, -1, NULL);
-            }
-            break;
-        }
-    }
-
-    if ((u8)mode != 0) {
-        switch ((u8)mode) {
-        case 1:
-            params.effectParam = 127;
-            (*gPartfxInterface)->spawnObject(obj, pulseEffectId, &params, 1, -1, NULL);
-            break;
-        case 2:
-            params.effectParam = 192;
-            (*gPartfxInterface)->spawnObject(obj, pulseEffectId, &params, 1, -1, NULL);
-            break;
-        case 3:
-            params.effectParam = 255;
-            (*gPartfxInterface)->spawnObject(obj, pulseEffectId, &params, 1, -1, NULL);
-            break;
-        }
-    }
-
-    params.scale = scale;
-    if ((u8)type != 0) {
-        switch (typeByte) {
-        case 1:
-            params.effectParam = 3085;
-            for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1960, &params, 1, -1, NULL);
-            }
-            break;
-        case 2:
-            params.effectParam = 3082;
-            for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1961, &params, 1, -1, NULL);
-            }
-            break;
-        case 3:
-            params.effectParam = 3082;
-            for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1962, &params, 1, -1, NULL);
-            }
-            break;
-        case 4:
-            params.effectParam = 3086;
-            for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1963, &params, 1, -1, NULL);
-            }
-            break;
-        case 5:
-            params.effectParam = 132;
-            for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1963, &params, 1, -1, NULL);
-            }
-            break;
-        case 6:
-            params.effectParam = 3087;
-            for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1963, &params, 1, -1, NULL);
-            }
-            break;
-        case 7:
-            params.effectParam = 100;
-            for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1964, &params, 1, -1, NULL);
-            }
-            break;
-        case 8:
-            params.effectParam = 3198;
-            for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1964, &params, 1, -1, NULL);
-            }
-            break;
-        case 9:
-            if (params.scale < 0.5f) {
-                params.scale = 0.5f;
-            }
-            for (j = 0; j < frameCount * 2; j++) {
-                params.effectParam = 0;
-                (*gPartfxInterface)->spawnObject(obj, 1973, &params, 1, -1, NULL);
-                params.effectParam = 1;
-                (*gPartfxInterface)->spawnObject(obj, 1973, &params, 1, -1, NULL);
-            }
-            break;
-        case 10:
-            if (params.scale < 0.5f) {
-                params.scale = 0.5f;
-            }
-            for (j = 0; j < frameCount * 2; j++) {
-                params.effectParam = 0;
-                (*gPartfxInterface)->spawnObject(obj, 1974, &params, 1, -1, NULL);
-                params.effectParam = 1;
-                (*gPartfxInterface)->spawnObject(obj, 1974, &params, 1, -1, NULL);
-            }
-            break;
-        case 11:
-            params.effectParam = 100;
-            for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1964, &params, 1, -1, NULL);
-            }
-            break;
-        case 12:
-            if (params.scale < 0.25f) {
-                params.scale = 0.25f;
-            }
-            params.pad00[2] = 50;
-            for (j = 0; j < frameCount * 2; j++) {
-                params.effectParam = 0;
-                (*gPartfxInterface)->spawnObject(obj, 1979, &params, 1, -1, NULL);
-                params.effectParam = 1;
-                (*gPartfxInterface)->spawnObject(obj, 1979, &params, 1, -1, NULL);
-            }
-            break;
-        case 13:
-            if (params.scale < 0.5f) {
-                params.scale = 0.5f;
-            }
-            params.pad00[2] = 90;
-            for (j = 0; j < frameCount * 2; j++) {
-                params.effectParam = 0;
-                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
-                params.effectParam = 1;
-                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
-            }
-            break;
-        case 14:
-            if (params.scale < 0.5f) {
-                params.scale = 0.5f;
-            }
-            params.pad00[2] = 240;
-            for (j = 0; j < frameCount * 2; j++) {
-                params.effectParam = 0;
-                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
-                params.effectParam = 1;
-                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
-            }
-            break;
-        }
-    }
-}
-void projectileDoParticleFx(void* obj, f32 scaleArg, int mode) {
-    ObjFxParticleParams params;
-    f32 tailScale;
-    f32 scale;
-    int i;
-
-    switch (mode) {
-    case 0:
-        i = 10;
-        scale = 0.5f;
-        for (; i < 20; i += 2) {
-            params.effectParam = i;
-            params.scale = scale;
-            (*gPartfxInterface)->spawnObject(obj, 0x7a0, &params, 1, -1, NULL);
-        }
-        tailScale = 0.3f;
-        break;
-    case 1:
-        i = 10;
-        scale = 1.0f;
-        for (; i < 20; i += 2) {
-            params.effectParam = i;
-            params.scale = scale;
-            (*gPartfxInterface)->spawnObject(obj, 0x7a0, &params, 1, -1, NULL);
-        }
-        for (i = 0; i < 20; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7a0, NULL, 1, -1, NULL);
-        }
-        tailScale = 1.0f;
-        break;
-    case 2:
-        i = 10;
-        scale = 1.0f;
-        for (; i < 20; i += 2) {
-            params.effectParam = i;
-            params.scale = scale;
-            (*gPartfxInterface)->spawnObject(obj, 0x7a1, &params, 1, -1, NULL);
-        }
-        for (i = 0; i < 20; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7a1, NULL, 1, -1, NULL);
-        }
-        tailScale = 1.0f;
-        break;
-    case 3:
-        i = 10;
-        scale = 0.5f;
-        for (; i < 20; i += 2) {
-            params.effectParam = i;
-            params.scale = scale;
-            (*gPartfxInterface)->spawnObject(obj, 0x7a6, &params, 1, -1, NULL);
-        }
-        tailScale = 0.3f;
-        break;
-    case 4:
-        i = 10;
-        scale = 1.0f;
-        for (; i < 20; i += 2) {
-            params.effectParam = i;
-            params.scale = scale;
-            (*gPartfxInterface)->spawnObject(obj, 0x7a6, &params, 1, -1, NULL);
-        }
-        for (i = 0; i < 20; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7a6, NULL, 1, -1, NULL);
-        }
-        tailScale = 1.0f;
-        break;
-    case 6:
-        i = 10;
-        scale = 0.5f;
-        for (; i < 20; i += 2) {
-            params.effectParam = i;
-            params.scale = scale;
-            (*gPartfxInterface)->spawnObject(obj, 0x7a1, &params, 1, -1, NULL);
-        }
-        tailScale = 0.3f;
-        break;
-    default:
-        return;
-    }
-    (*gPartfxInterface)->spawnObject(obj, 0x79f, NULL, 1, -1, &tailScale);
-}
-
-void itemPickupDoParticleFx(void* obj, f32 scale, int mode, u8 count) {
-    ObjFxParticleParams params;
-    int i;
-
-    params.scale = scale;
-    if (mode == 0) {
-        return;
-    }
-    switch (mode) {
-    case 1:
-        params.effectParam = 0x79;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
-        }
-        break;
-    case 2:
-        params.effectParam = 0xc13;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
-        }
-        break;
-    case 3:
-        params.effectParam = 0x71;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
-        }
-        break;
-    case 4:
-        params.effectParam = 0xdb;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
-        }
-        break;
-    case 5:
-        params.effectParam = 0x77;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
-        }
-        break;
-    case 6:
-        params.effectParam = 0x7b;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
-        }
-        break;
-    case 7:
-        params.effectParam = 0xda;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
-        }
-        break;
-    case 8:
-        params.effectParam = 0xdd;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7cc, &params, 1, -1, NULL);
-        }
-        break;
-    case 10:
-        params.effectParam = 0xde;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7cc, &params, 1, -1, NULL);
-        }
-        break;
-    case 9:
-        params.effectParam = 0xdf;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7cc, &params, 1, -1, NULL);
-        }
-        break;
-    default:
-        params.effectParam = 0x5c;
-        for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
-        }
-        break;
-    }
-}
-
-void objDoParticleFx(GameObject* obj, f32 scale, int type, f32 extraScale, ModelLightStruct* light) {
-    ObjFxParticleParams params;
-    f32 lightYOffset = 40.0f;
-    ObjFxColorTable colorTbl = gObjFxCrystalSparkleTbl;
-    u8* rPtr;
-    u8* gPtr;
-    u8* bPtr;
-
-    params.scale = scale;
-    params.pad00[0] = 0;
-    params.pad00[2] = 0;
-    params.pad00[1] = 0;
-    params.effectParam = 0xc0a;
-    if ((u8)type) {
-        switch (type & 0xff) {
-        case 1:
-            params.position[0] = scale * randomGetRange(-10, 10);
-            params.position[1] = scale * randomGetRange(-10, 10);
-            params.position[2] = scale * randomGetRange(-10, 10);
-            (*gPartfxInterface)->spawnObject(obj, 0x32f, &params, 2, -1, &extraScale);
-            break;
-        case 2:
-            params.position[0] = scale * randomGetRange(-10, 10);
-            params.position[1] = scale * randomGetRange(-10, 10);
-            params.position[2] = scale * randomGetRange(-10, 10);
-            (*gPartfxInterface)->spawnObject(obj, 0x330, &params, 2, -1, &extraScale);
-            break;
-        case 3:
-            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x32f, &extraScale, 0x19, NULL);
-            break;
-        case 4:
-            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x330, &extraScale, 0x19, NULL);
-            break;
-        case 5:
-            params.effectParam = 0xc0a;
-            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cd, &extraScale, 0x32, &params);
-            break;
-        case 6:
-            params.effectParam = 0xc0d;
-            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7ce, &extraScale, 0x50, &params);
-            break;
-        case 7:
-            params.effectParam = 0x605;
-            params.pad00[2] = 1;
-            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &extraScale, 0x19, &params);
-            lightYOffset = 0.0f;
-            break;
-        case 8:
-            params.effectParam = 0x605;
-            params.pad00[2] = 0;
-            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &extraScale, 0x19, &params);
-            lightYOffset = 0.0f;
-            break;
-        }
-    }
-
-    if (light != NULL) {
-        modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
-        modelLightStruct_setPosition(light, obj->anim.worldPosX, obj->anim.worldPosY + lightYOffset,
-                                     obj->anim.worldPosZ);
-        rPtr = (u8*)&colorTbl;
-        gPtr = (u8*)&colorTbl + 1;
-        bPtr = (u8*)&colorTbl + 2;
-        modelLightStruct_setDiffuseColor(light, rPtr[(u8)type * 3], gPtr[(u8)type * 3], bPtr[(u8)type * 3], 0xff);
-        modelLightStruct_setSpecularColor(light, rPtr[(u8)type * 3], gPtr[(u8)type * 3], bPtr[(u8)type * 3], 0xff);
-        modelLightStruct_setDistanceAttenuation(light, 50.0f, 75.0f);
-        lightSetField4D(light, 0);
-        modelLightStruct_setEnabled(light, 1, 0.0f);
-        modelLightStruct_setEnabled(light, 0, 1.0f);
-        modelLightStruct_startColorFade(light, 0, 0);
-        modelLightStruct_setAffectsAabbLightSelection(light, 1);
-    }
-}
-
-void objDoHitParticleFx(void* obj, f32 scale, void* origin, u8 type, void* light) {
-    u8 spawnArgs[16];
-    u8 remaining;
-
-    if (type != 0) {
-        switch (type) {
-        case 1:
-            spawnArgs[0] = 1;
-            for (remaining = 10; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, spawnArgs);
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
-            }
-            for (remaining = 4; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
-            }
-            break;
-        case 2:
-            spawnArgs[0] = 2;
-            for (remaining = 13; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, spawnArgs);
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
-            }
-            for (remaining = 6; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
-            }
-            break;
-        case 3:
-            spawnArgs[0] = 3;
-            for (remaining = 30; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, spawnArgs);
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
-            }
-            for (remaining = 8; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
-            }
-            break;
-        case 4:
-            for (remaining = 7; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x328, origin, 0x200001, -1, NULL);
-            }
-            break;
-        case 5:
-            spawnArgs[0] = 4;
-            for (remaining = 10; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
-            }
-            for (remaining = 4; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
-            }
-            break;
-        case 6:
-            spawnArgs[0] = 5;
-            for (remaining = 10; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
-            }
-            for (remaining = 4; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
-            }
-            break;
-        case 7:
-            spawnArgs[0] = 6;
-            for (remaining = 10; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
-            }
-            for (remaining = 4; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
-            }
-            break;
-        case 8:
-            spawnArgs[0] = 7;
-            for (remaining = 10; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
-            }
-            for (remaining = 4; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
-            }
-            break;
-        case 9:
-            spawnArgs[0] = 8;
-            for (remaining = 10; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
-            }
-            for (remaining = 4; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
-            }
-            break;
-        }
-    }
-
-    if (light != NULL) {
-        modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
-        modelLightStruct_setPosition(light, ((GameObject*)origin)->anim.localPosX,
-                                     10.0f + ((GameObject*)origin)->anim.localPosY,
-                                     ((GameObject*)origin)->anim.localPosZ);
-        modelLightStruct_setDiffuseColor(light, gObjFxLightColorTbl[type].r, gObjFxLightColorTbl[type].g,
-                                         gObjFxLightColorTbl[type].b, 0xff);
-        modelLightStruct_setSpecularColor(light, gObjFxLightColorTbl[type].r, gObjFxLightColorTbl[type].g,
-                                          gObjFxLightColorTbl[type].b, 0xff);
-        modelLightStruct_setDistanceAttenuation(light, 40.0f, 55.0f);
-        lightSetField4D(light, 0);
-        modelLightStruct_setEnabled(light, 1, 0.0f);
-        modelLightStruct_setEnabled(light, 0, 0.5f);
-        modelLightStruct_startColorFade(light, 0, 0);
-        modelLightStruct_setAffectsAabbLightSelection(light, 1);
-    }
-}
-
-void objfx_shakeCameraByDistance(GameObject* obj, f32 shakeRange) {
-    GameObject* player = Obj_GetPlayerObject();
-    if (player == NULL) {
-        return;
-    }
-    if (player->objectFlags & OBJFX_OBJFLAG_PARENT_SLACK) {
-        return;
-    }
-    {
-        f32 dist = Camera_DistanceToCurrentViewPosition(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ);
-        if (dist <= shakeRange) {
-            f32 falloff = 1.0f - dist / shakeRange;
-            CameraShake_StartDampened(5.0f * falloff, 10.0f * falloff, 4.0f);
-            doRumble(22.0f * falloff);
-        }
-    }
-}
-
-void spawnDimExplosion(u8* src, f32 x, f32 y, f32 z, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 flag10, u8 doShake,
-                       u8 flag20, u8 f1cinit) {
-    DimExplosionPlacement* setup;
-    u8 canSetupObject;
-
-    canSetupObject = Obj_CanSetupObject();
-    if (canSetupObject > 0) {
-        setup = (DimExplosionPlacement*)Obj_AllocObjectSetup(sizeof(DimExplosionPlacement), DIM_EXPLOSION_OBJECT_ID);
-        setup->base.color[0] = 2;
-        setup->base.color[1] = 1;
-        setup->base.posX = x;
-        setup->base.posY = y;
-        setup->base.posZ = z;
-        setup->sfxKind = kind;
-        setup->scaleParam = (s16)(256.0f * scale);
-        setup->configFlags = f1cinit;
-        if (flag4 != 0) {
-            setup->configFlags |= DIM_EXPLOSION_CONFIG_HAS_GRAVITY;
-        }
-        if (flag8 != 0) {
-            setup->configFlags |= DIM_EXPLOSION_CONFIG_HAS_RAYS;
-        }
-        if (flag10 != 0) {
-            setup->configFlags |= DIM_EXPLOSION_CONFIG_SPAWNS_DEBRIS;
-        }
-        if (flag20 != 0) {
-            setup->configFlags |= DIM_EXPLOSION_CONFIG_HAS_LIGHT;
-        }
-        if (doShake != 0) {
-            GameObject* player = Obj_GetPlayerObject();
-            if (player != NULL && (player->objectFlags & OBJFX_OBJFLAG_PARENT_SLACK) == 0) {
-                f32 d = Camera_DistanceToCurrentViewPosition(((ObjAnimComponent*)src)->worldPosX,
-                                                             ((ObjAnimComponent*)src)->worldPosY,
-                                                             ((ObjAnimComponent*)src)->worldPosZ);
-                if (d <= 300.0f) {
-                    f32 t = 1.0f - d / 300.0f;
-                    CameraShake_StartDampened(5.0f * t, 10.0f * t, 4.0f);
-                    doRumble(22.0f * t);
-                }
-            }
-        }
-        objSetupObject(&setup->base, 5, ((ObjAnimComponent*)src)->mapEventSlot, -1, NULL);
-    }
-}
-
-void spawnExplosion(GameObject* src, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 flag10, u8 doShake, u8 flag20,
-                    u8 f1cinit) {
-    DimExplosionPlacement* setup;
-    u8 canSetupObject;
-
-    canSetupObject = Obj_CanSetupObject();
-    if (canSetupObject > 0) {
-        setup = (DimExplosionPlacement*)Obj_AllocObjectSetup(sizeof(DimExplosionPlacement), DIM_EXPLOSION_OBJECT_ID);
-        setup->base.color[0] = 2;
-        setup->base.color[1] = 1;
-        setup->base.posX = src->anim.worldPosX;
-        setup->base.posY = src->anim.worldPosY;
-        setup->base.posZ = src->anim.worldPosZ;
-        setup->sfxKind = kind;
-        setup->scaleParam = (s16)(256.0f * scale);
-        setup->configFlags = f1cinit;
-        if (flag4 != 0) {
-            setup->configFlags |= DIM_EXPLOSION_CONFIG_HAS_GRAVITY;
-        }
-        if (flag8 != 0) {
-            setup->configFlags |= DIM_EXPLOSION_CONFIG_HAS_RAYS;
-        }
-        if (flag10 != 0) {
-            setup->configFlags |= DIM_EXPLOSION_CONFIG_SPAWNS_DEBRIS;
-        }
-        if (flag20 != 0) {
-            setup->configFlags |= DIM_EXPLOSION_CONFIG_HAS_LIGHT;
-        }
-        if (doShake != 0) {
-            GameObject* player = Obj_GetPlayerObject();
-            if (player != NULL && (player->objectFlags & OBJFX_OBJFLAG_PARENT_SLACK) == 0) {
-                f32 d =
-                    Camera_DistanceToCurrentViewPosition(src->anim.worldPosX, src->anim.worldPosY, src->anim.worldPosZ);
-                if (d <= 300.0f) {
-                    f32 t = 1.0f - d / 300.0f;
-                    CameraShake_StartDampened(5.0f * t, 10.0f * t, 4.0f);
-                    doRumble(22.0f * t);
-                }
-            }
-        }
-        objSetupObject(&setup->base, 5, src->anim.mapEventSlot, -1, NULL);
-    }
-}
 
 /*
  * Texture-resource cache for the expgfx (explosion/effect graphics) system.
- * EXPGFX_RUNTIME_DATA->resourceTable holds EXPGFX_RESOURCE_TABLE_COUNT entries,
+ * gExpgfxResourceEntries holds EXPGFX_RESOURCE_TABLE_COUNT entries,
  * each caching one loaded texture by resourceId.
  *
  * expgfx_updateResourceEntries ages every live entry by framesThisStep and
@@ -1594,103 +215,6 @@ void spawnExplosion(GameObject* src, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 
  * lowest-scoring entry and reloads. A texture whose refCount has reached
  * EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT is treated as busy and rejected.
  */
-
-void expgfx_updateResourceEntries(int unused) {
-    ExpgfxResourceEntry* entry;
-    int i;
-
-    for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
-        entry = &EXPGFX_RUNTIME_DATA->resourceTable[i];
-        if (entry->resourceId != 0) {
-            entry->evictionScore -= framesThisStep;
-            if (entry->evictionScore <= 0) {
-                entry->resourceId = 0;
-                entry->evictionScore = 0;
-                entry->reserved = 0;
-                gExpgfxTextureFreeInProgress = 1;
-                textureFree((Texture*)((u8*)entry->resource));
-                gExpgfxTextureFreeInProgress = 0;
-                entry->resource = NULL;
-            }
-        }
-    }
-}
-
-int expgfx_acquireResourceEntry(int resourceId) {
-    int i;
-    int minIndex;
-    int minEvictionScore;
-    ExpgfxResourceEntry* entry;
-    ExpgfxResourceHandle* resourceHandle;
-    u8 canSetupObject;
-
-    i = 0;
-    for (; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
-        entry = &EXPGFX_RUNTIME_DATA->resourceTable[i];
-        if (entry->resource != NULL && resourceId == entry->resourceId) {
-            resourceHandle =
-                (ExpgfxResourceHandle*)((ExpgfxRuntimeDataLayout*)(int)gExpgfxRuntimeData)->resourceTable[i].resource;
-            if (resourceHandle != NULL && resourceHandle->refCount >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
-                return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
-            }
-            EXPGFX_RUNTIME_DATA->resourceTable[i].evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
-            return (s16)i;
-        }
-    }
-    for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
-        entry = &EXPGFX_RUNTIME_DATA->resourceTable[i];
-        if (entry->resource == NULL) {
-            ((ExpgfxRuntimeDataLayout*)(int)gExpgfxRuntimeData)->resourceTable[i].resource =
-                textureLoadAsset(resourceId);
-            resourceHandle =
-                (ExpgfxResourceHandle*)((ExpgfxRuntimeDataLayout*)(int)gExpgfxRuntimeData)->resourceTable[i].resource;
-            if (resourceHandle != NULL && resourceHandle->refCount >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
-                gExpgfxTextureFreeInProgress = 1;
-                if (resourceHandle != NULL) {
-                    textureFree((Texture*)((u8*)resourceHandle));
-                }
-                gExpgfxTextureFreeInProgress = 0;
-                ((ExpgfxRuntimeDataLayout*)(int)gExpgfxRuntimeData)->resourceTable[i].resource = NULL;
-                return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
-            }
-            if (resourceHandle != NULL) {
-                EXPGFX_RUNTIME_DATA->resourceTable[i].evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
-                EXPGFX_RUNTIME_DATA->resourceTable[i].resourceId = resourceId;
-                return (s16)i;
-            }
-            return EXPGFX_RESOURCE_ACQUIRE_LOAD_FAILED;
-        }
-    }
-    canSetupObject = Obj_CanSetupObject();
-    if (canSetupObject == 0) {
-        return EXPGFX_RESOURCE_ACQUIRE_LOADING_UNLOCKED;
-    }
-    minEvictionScore = EXPGFX_RESOURCE_EVICTION_SCAN_INITIAL;
-    minIndex = 0;
-    for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
-        entry = &EXPGFX_RUNTIME_DATA->resourceTable[i];
-        if (entry->evictionScore < minEvictionScore) {
-            minEvictionScore = entry->evictionScore;
-            minIndex = i;
-        }
-    }
-    gExpgfxTextureFreeInProgress = 1;
-    resourceHandle =
-        (ExpgfxResourceHandle*)((ExpgfxRuntimeDataLayout*)(int)gExpgfxRuntimeData)->resourceTable[minIndex].resource;
-    if (resourceHandle != NULL) {
-        textureFree((Texture*)((u8*)resourceHandle));
-    }
-    gExpgfxTextureFreeInProgress = 0;
-    ((ExpgfxRuntimeDataLayout*)(int)gExpgfxRuntimeData)->resourceTable[minIndex].resource = NULL;
-    ((ExpgfxRuntimeDataLayout*)(int)gExpgfxRuntimeData)->resourceTable[minIndex].resource =
-        textureLoadAsset(resourceId);
-    if (((ExpgfxRuntimeDataLayout*)(int)gExpgfxRuntimeData)->resourceTable[minIndex].resource != NULL) {
-        EXPGFX_RUNTIME_DATA->resourceTable[minIndex].evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
-        EXPGFX_RUNTIME_DATA->resourceTable[minIndex].resourceId = resourceId;
-        return (s16)minIndex;
-    }
-    return EXPGFX_RESOURCE_ACQUIRE_RELOAD_FAILED;
-}
 
 int gExpgfxSlotType1Average;
 int gExpgfxSlotType1Sum;
@@ -1709,61 +233,91 @@ s16 gExpgfxSequenceCounter;
 
 f32 gExpgfxNearFadeDepth = -50.0f;
 
-void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot) {
-    ExpgfxRuntimeDataLayout* runtime;
-    int activeBit[1];
-    void** resources[1];
-    ExpgfxSlot* slot;
-    u32 inactiveBitMask;
+static inline void expgfxRemoveAllBody(void);
 
-    runtime = EXPGFX_RUNTIME_DATA;
-    resources[0] = NULL;
-    activeBit[0] = 1 << slotIndex;
-    if ((activeBit[0] & runtime->poolActiveMasks[poolIndex]) == 0) {
-        return;
-    }
+static inline void expgfxSetSlotResult(s16* poolIndexOut, s16* slotIndexOut, s16 poolIndex, s16 slotIndex);
 
-    slot = (ExpgfxSlot*)(slotPoolBase + slotIndex * EXPGFX_SLOT_SIZE);
-    slot->behaviorFlags = 0;
+static inline void renderParticlesBody(void);
 
-    if (skipTextureFree == 0) {
-        resources[0] = &runtime->expTab[0].resource;
+static inline void expgfx_clearResourceTable(ExpgfxResourceEntry* resourceEntry);
 
-        if (resources[0][Expgfx_GetSlotTableIndex(slot) * 4] != 0) {
-            gExpgfxTextureFreeInProgress = 1;
-            textureFree((Texture*)(void*)resources[0][Expgfx_GetSlotTableIndex(slot) * 4]);
-            gExpgfxTextureFreeInProgress = 0;
+static inline void expgfx_clearResourceTable(ExpgfxResourceEntry* resourceEntry) {
+    int resourceIndex;
+    for (resourceIndex = 0; resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT; resourceIndex++) {
+        gExpgfxTextureFreeInProgress = 1;
+        if (resourceEntry[resourceIndex].resource != NULL) {
+            textureFree((Texture*)(resourceEntry[resourceIndex].resource));
         }
+        gExpgfxTextureFreeInProgress = 0;
+        resourceEntry[resourceIndex].resource = NULL;
+        resourceEntry[resourceIndex].resourceId = 0;
+        resourceEntry[resourceIndex].evictionScore = 0;
+        resourceEntry[resourceIndex].reserved = 0;
+    }
+}
 
-        {
-            u32 tableIndex = Expgfx_GetSlotTableIndex(slot);
+static inline void renderParticlesBody(void) {
+    float queuePosition[3];
+    f32* currentMatrix;
+    int poolIndex;
+    u32* slotPoolBases;
+    register s16* poolSlotTypeIds;
+    u32* poolSourceIds;
+    ExpgfxBounds* poolBounds;
+    u8* poolPlaneOffsetSetIds;
+    u8* poolSourceModes;
+    s8* poolActiveCounts;
+    ExpgfxPoolSourcePosition* sourcePosition;
+    ExpgfxPlaneOffsets* planeOffsets;
 
-            if (runtime->expTab[tableIndex].refCount != 0) {
-                runtime->expTab[tableIndex].refCount--;
-                if (runtime->expTab[tableIndex].refCount == 0) {
-                    resources[0][tableIndex * 4] = 0;
-                    runtime->expTab[tableIndex].sourceId = 0;
+    currentMatrix = Camera_GetViewMatrix();
+    poolIndex = 0;
+    poolActiveCounts = gExpgfxPoolActiveCounts;
+    poolSourceModes = gExpgfxPoolSourceModes;
+    poolPlaneOffsetSetIds = gExpgfxPoolPlaneOffsetSetIds;
+    poolBounds = gExpgfxPoolBounds;
+    poolSourceIds = ((u32*)gExpgfxTrackedPoolSourceIds);
+    poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
+    slotPoolBases = gExpgfxSlotPoolBases;
+    do {
+        if ((*poolActiveCounts != 0) && (*poolSourceModes == EXPGFX_POOL_SOURCE_MODE_STANDALONE)) {
+            planeOffsets = Expgfx_GetPlaneOffsets(*poolPlaneOffsetSetIds);
+            if ((u8)frustumTestAabbWithPlaneOffsets(
+                    (double)(poolBounds->minX - playerMapOffsetX), (double)(poolBounds->maxX - playerMapOffsetX),
+                    (double)poolBounds->minY, (double)poolBounds->maxY, (double)(poolBounds->minZ - playerMapOffsetZ),
+                    (double)(poolBounds->maxZ - playerMapOffsetZ), planeOffsets->offsets) != 0) {
+                sourcePosition = (ExpgfxPoolSourcePosition*)*poolSourceIds;
+                if (sourcePosition != (ExpgfxPoolSourcePosition*)0x0) {
+                    queuePosition[0] = sourcePosition->x - playerMapOffsetX;
+                    queuePosition[1] = sourcePosition->y;
+                    queuePosition[2] = sourcePosition->z - playerMapOffsetZ;
+                } else {
+                    queuePosition[0] = 0.5f * (poolBounds->minX + poolBounds->maxX) - playerMapOffsetX;
+                    queuePosition[1] = 0.5f * (poolBounds->minY + poolBounds->maxY);
+                    queuePosition[2] = 0.5f * (poolBounds->minZ + poolBounds->maxZ) - playerMapOffsetZ;
                 }
-            } else {
-                debugPrintf(sExpgfxMismatchInAddRemove);
+                PSMTXMultVec((float (*)[4])currentMatrix, (Vec*)queuePosition, (Vec*)queuePosition);
+                if (*poolSourceIds != 0) {
+                    queuePosition[2] = queuePosition[2] - (float)(*poolSlotTypeIds & EXPGFX_QUEUE_DEPTH_SLOT_TYPE_MASK);
+                }
+                lightmap_queueExternalRenderEntry(*slotPoolBases, poolIndex, queuePosition);
             }
         }
-    }
+        poolActiveCounts += 1;
+        poolSourceModes += 1;
+        poolPlaneOffsetSetIds += 1;
+        poolBounds += 1;
+        poolSourceIds += 1;
+        poolSlotTypeIds += 1;
+        slotPoolBases += 1;
+        poolIndex += 1;
+    } while (poolIndex < EXPGFX_POOL_COUNT);
+    return;
+}
 
-    slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-    if ((u8)flushSlot != 0) {
-        DCFlushRange(slot, EXPGFX_SLOT_SIZE);
-    }
-
-    {
-        u32 currentMaskValue = runtime->poolActiveMasks[poolIndex];
-        inactiveBitMask = ~activeBit[0];
-        runtime->poolActiveMasks[poolIndex] = currentMaskValue & inactiveBitMask;
-    }
-    runtime->poolActiveCounts[poolIndex]--;
-    if (runtime->poolActiveCounts[poolIndex] == 0) {
-        gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
-    }
+static inline void expgfxSetSlotResult(s16* poolIndexOut, s16* slotIndexOut, s16 poolIndex, s16 slotIndex) {
+    *slotIndexOut = slotIndex;
+    *poolIndexOut = poolIndex;
 }
 
 static inline void expgfxRemoveAllBody(void) {
@@ -1777,13 +331,11 @@ static inline void expgfxRemoveAllBody(void) {
     s8* poolActiveCountPtrs;
     u32* poolActiveMasks;
     u32* slotPoolBases;
-    ExpgfxRuntimeDataLayout* runtime;
 
-    runtime = EXPGFX_RUNTIME_DATA;
     poolIndex = 0;
-    slotPoolBases = runtime->slotPoolBases;
-    poolActiveMasks = runtime->poolActiveMasks;
-    poolActiveCountPtrs = runtime->poolActiveCounts;
+    slotPoolBases = gExpgfxSlotPoolBases;
+    poolActiveMasks = gExpgfxSlotActiveMasks;
+    poolActiveCountPtrs = gExpgfxPoolActiveCounts;
     poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
 
     while (poolIndex < EXPGFX_POOL_COUNT) {
@@ -1792,16 +344,18 @@ static inline void expgfxRemoveAllBody(void) {
         while (slotIndex < EXPGFX_SLOTS_PER_POOL) {
             activeBit = 1 << slotIndex;
             if ((activeBit & *poolActiveMasks) != 0) {
-                if (((ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16))->resource != 0 &&
-                    ((ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16))->resource != 0) {
+                if (((ExpgfxTableEntry*)((u8*)gExpgfxTableEntries + Expgfx_GetSlotTableIndex(slot) * 16))->resource !=
+                        0 &&
+                    ((ExpgfxTableEntry*)((u8*)gExpgfxTableEntries + Expgfx_GetSlotTableIndex(slot) * 16))->resource !=
+                        0) {
                     gExpgfxTextureFreeInProgress = 1;
-                    textureFree((Texture*)((void*)((ExpgfxTableEntry*)((u8*)runtime->expTab +
+                    textureFree((Texture*)((void*)((ExpgfxTableEntry*)((u8*)gExpgfxTableEntries +
                                                                        Expgfx_GetSlotTableIndex(slot) * 16))
                                                ->resource));
                     gExpgfxTextureFreeInProgress = 0;
                 }
 
-                expTabEntry = (ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16);
+                expTabEntry = (ExpgfxTableEntry*)((u8*)gExpgfxTableEntries + Expgfx_GetSlotTableIndex(slot) * 16);
                 refCountPtr = &expTabEntry->refCount;
                 if (*refCountPtr != 0) {
                     (*refCountPtr)--;
@@ -1810,7 +364,7 @@ static inline void expgfxRemoveAllBody(void) {
                         expTabEntry->sourceId = 0;
                     }
                 } else {
-                    debugPrintf(sExpgfxMismatchInAddRemove);
+                    debugPrintf("expgfx.c: mismatch in add/remove in exptab\n");
                 }
 
                 slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
@@ -1832,1256 +386,566 @@ static inline void expgfxRemoveAllBody(void) {
     }
 }
 
-void expgfxRemoveAll(void) {
-    expgfxRemoveAllBody();
+static inline ExpgfxPlaneOffsets* Expgfx_GetPlaneOffsets(int setIndex) {
+    return &gExpgfxStaticData[setIndex];
 }
 
-static inline void expgfxSetSlotResult(s16* poolIndexOut, s16* slotIndexOut, s16 poolIndex, s16 slotIndex) {
-    *slotIndexOut = slotIndex;
-    *poolIndexOut = poolIndex;
+static inline ExpgfxSlot* Expgfx_GetSlot(int poolIndex, int slotIndex) {
+    return (ExpgfxSlot*)(gExpgfxSlotPoolBases[poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
 }
 
-int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, u32 sourceId) {
-    ExpgfxRuntimeDataLayout* runtime;
-    short foundPoolIndex;
+static inline void Expgfx_SetSlotTableIndex(ExpgfxSlot* slot, u8 tableIndex) {
+    slot->encodedTableIndex = (tableIndex << 1) | (slot->encodedTableIndex & 1);
+}
+
+static inline u32 Expgfx_GetSlotTableIndex(const ExpgfxSlot* slot) {
+    return ((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK;
+}
+
+static inline ExpgfxTableEntry* Expgfx_GetTableEntry(int tableIndex) {
+    return &gExpgfxTableEntries[tableIndex];
+}
+
+void expgfx_initialise(void) {
+    u32* poolActiveMasks;
     s8* poolActiveCounts;
-    int searchIndex;
-    short found;
-    int slotTypeVal;
-    u32* sourceIdWalk;
-    s16* poolSlotTypeIds;
-    s8* activeCountWalk;
-    int batchGroup;
-    runtime = EXPGFX_RUNTIME_DATA;
-    foundPoolIndex = EXPGFX_INVALID_POOL_INDEX;
-    found = 0;
-    searchIndex = 0;
-    sourceIdWalk = runtime->poolSourceIds;
-    poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
-    poolActiveCounts = runtime->poolActiveCounts;
-    activeCountWalk = poolActiveCounts;
-    slotTypeVal = slotType;
-    for (batchGroup = 0; batchGroup < EXPGFX_POOL_SEARCH_BATCH_COUNT; sourceIdWalk += EXPGFX_POOL_SEARCH_BATCH_SIZE,
-        activeCountWalk += EXPGFX_POOL_SEARCH_BATCH_SIZE, poolSlotTypeIds++, searchIndex++, batchGroup++) {
-        if ((sourceId == sourceIdWalk[0]) && (slotTypeVal == *poolSlotTypeIds) &&
-            (activeCountWalk[0] < EXPGFX_SLOTS_PER_POOL)) {
-            foundPoolIndex = searchIndex;
-            found = 1;
-            break;
-        }
-        poolSlotTypeIds = (s16*)(poolSlotTypeIds + 1);
-        searchIndex++;
-        if ((sourceId == sourceIdWalk[1]) && (slotTypeVal == *poolSlotTypeIds) &&
-            (activeCountWalk[1] < EXPGFX_SLOTS_PER_POOL)) {
-            foundPoolIndex = searchIndex;
-            found = 1;
-            break;
-        }
-        poolSlotTypeIds = (s16*)(poolSlotTypeIds + 1);
-        searchIndex++;
-        if ((sourceId == sourceIdWalk[2]) && (slotTypeVal == *poolSlotTypeIds) &&
-            (activeCountWalk[2] < EXPGFX_SLOTS_PER_POOL)) {
-            foundPoolIndex = searchIndex;
-            found = 1;
-            break;
-        }
-        poolSlotTypeIds = (s16*)(poolSlotTypeIds + 1);
-        searchIndex++;
-        if ((sourceId == sourceIdWalk[3]) && (slotTypeVal == *poolSlotTypeIds) &&
-            (activeCountWalk[3] < EXPGFX_SLOTS_PER_POOL)) {
-            foundPoolIndex = searchIndex;
-            found = 1;
-            break;
-        }
-        poolSlotTypeIds = (s16*)(poolSlotTypeIds + 1);
-        searchIndex++;
-        if ((sourceId == sourceIdWalk[4]) && (slotTypeVal == *poolSlotTypeIds) &&
-            (activeCountWalk[4] < EXPGFX_SLOTS_PER_POOL)) {
-            foundPoolIndex = searchIndex;
-            found = 1;
-            break;
-        }
+    s16* poolSlotTypeIds[1];
+    u32* slotPoolBases[1];
+    int poolIndex[1];
+    int groupCount;
+
+    poolActiveMasks = gExpgfxSlotActiveMasks;
+    poolActiveCounts = gExpgfxPoolActiveCounts;
+    slotPoolBases[0] = NULL;
+    poolSlotTypeIds[0] = gExpgfxStaticPoolSlotTypeIds;
+    for (groupCount = EXPGFX_POOL_GROUP_COUNT; groupCount != 0; groupCount--) {
+        poolIndex[0] = 0;
+        *poolActiveMasks = poolIndex[0];
+        *poolActiveCounts = poolIndex[0];
+        *poolSlotTypeIds[0] = EXPGFX_INVALID_SLOT_TYPE;
+        poolActiveMasks[1] = poolIndex[0];
+        poolActiveCounts[1] = poolIndex[0];
+        poolSlotTypeIds[0][1] = EXPGFX_INVALID_SLOT_TYPE;
+        poolActiveMasks[2] = poolIndex[0];
+        poolActiveCounts[2] = poolIndex[0];
+        poolSlotTypeIds[0][2] = EXPGFX_INVALID_SLOT_TYPE;
+        poolActiveMasks[3] = poolIndex[0];
+        poolActiveCounts[3] = poolIndex[0];
+        poolSlotTypeIds[0][3] = EXPGFX_INVALID_SLOT_TYPE;
+        poolActiveMasks[4] = poolIndex[0];
+        poolActiveCounts[4] = poolIndex[0];
+        poolSlotTypeIds[0][4] = EXPGFX_INVALID_SLOT_TYPE;
+        poolActiveMasks[5] = poolIndex[0];
+        poolActiveCounts[5] = poolIndex[0];
+        poolSlotTypeIds[0][5] = EXPGFX_INVALID_SLOT_TYPE;
+        poolActiveMasks[6] = poolIndex[0];
+        poolActiveCounts[6] = poolIndex[0];
+        poolSlotTypeIds[0][6] = EXPGFX_INVALID_SLOT_TYPE;
+        poolActiveMasks[7] = poolIndex[0];
+        poolActiveCounts[7] = poolIndex[0];
+        poolSlotTypeIds[0][7] = EXPGFX_INVALID_SLOT_TYPE;
+        poolActiveMasks += 8;
+        poolActiveCounts += 8;
+        poolSlotTypeIds[0] += 8;
     }
 
-    if (found) {
-        u32 currentMask;
-        int slotIndex;
-        u32 activeBit;
-        u32* activeMaskPtr;
-        int chosenPool;
-
-        slotIndex = 0;
-        chosenPool = foundPoolIndex;
-        activeMaskPtr = EXPGFX_POOL_ACTIVE_MASK_PTR(runtime, chosenPool);
-        currentMask = *activeMaskPtr;
-        for (; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
-            activeBit = 1u << slotIndex;
-            if ((activeBit & currentMask) == 0) {
-                expgfxSetSlotResult(poolIndexOut, slotIndexOut, foundPoolIndex, slotIndex);
-                *activeMaskPtr |= activeBit;
-                runtime->poolActiveCounts[chosenPool]++;
-                return 1;
-            }
-        }
-    }
-
-    found = 0;
-    if (preferredPoolIndex == EXPGFX_INVALID_POOL_INDEX) {
-        for (searchIndex = 0; searchIndex < EXPGFX_POOL_COUNT - 1; poolActiveCounts++, searchIndex++) {
-            if (*poolActiveCounts <= 0) {
-                foundPoolIndex = searchIndex;
-                found = 1;
-                runtime->poolActiveCounts[searchIndex] = 0;
-                break;
-            }
-        }
-    } else if (preferredPoolIndex != EXPGFX_INVALID_POOL_INDEX) {
-        searchIndex = preferredPoolIndex;
-        if (runtime->poolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL) {
-            foundPoolIndex = preferredPoolIndex;
-            found = 1;
-        }
-    }
-
-    if (found) {
-        u32 currentMask;
-        u32 activeBit;
-        u32* activeMaskPtr;
-        int slotIndex;
-        int chosenPool;
-
-        slotIndex = 0;
-        chosenPool = foundPoolIndex;
-        activeMaskPtr = EXPGFX_POOL_ACTIVE_MASK_PTR(runtime, chosenPool);
-        currentMask = *activeMaskPtr;
-        for (; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
-            activeBit = 1u << slotIndex;
-            if ((activeBit & currentMask) == 0) {
-                expgfxSetSlotResult(poolIndexOut, slotIndexOut, foundPoolIndex, slotIndex);
-                *activeMaskPtr |= activeBit;
-                gExpgfxStaticPoolSlotTypeIds[searchIndex] = slotType;
-                runtime->poolActiveCounts[chosenPool]++;
-                return 1;
-            }
-        }
-        return EXPGFX_INVALID_POOL_INDEX;
-    }
-
-    return EXPGFX_INVALID_POOL_INDEX;
+    slotPoolBases[0] = gExpgfxSlotPoolBases;
+    do {
+        *slotPoolBases[0] = (u32)mmAlloc(EXPGFX_POOL_BYTES, EXPGFX_POOL_ALLOC_HEAP, 0);
+        memset((void*)*slotPoolBases[0], 0, EXPGFX_POOL_BYTES);
+        DCFlushRange((void*)*slotPoolBases[0], EXPGFX_POOL_BYTES);
+        slotPoolBases[0]++;
+        poolIndex[0]++;
+    } while (poolIndex[0] < EXPGFX_POOL_COUNT);
+    memset(gExpgfxTableEntries, 0, EXPGFX_EXPTAB_BYTES);
+    return;
 }
 
-void expgfx_initSlotQuad(void* slotPtr) {
-    ExpgfxStaticDataLayout* staticData;
-    ExpgfxSlot* slot;
-    ExpgfxTableEntry* entry;
-    ExpgfxQuadVertex* quad;
-    Vec3s* quadTemplate;
-    void* resource;
+void expgfx_release(void) {
+    int poolIndex;
+
+    expgfxRemoveAll();
+    poolIndex = 0;
+    do {
+        mm_free((void*)gExpgfxSlotPoolBases[poolIndex]);
+        poolIndex += 1;
+    } while (poolIndex < EXPGFX_POOL_COUNT);
+    return;
+}
+
+void expgfx_onMapSetup(void) {
+    ExpgfxResourceEntry* resourceEntry;
+    u64* trackedFrameMasks;
+    u32* poolActiveMasks[1];
+    s8* poolActiveCounts[1];
+    s16* poolSlotTypeIds[1];
+    u8* poolFrameFlags[1];
+    u8* poolSourceModes;
+    u32* poolSourceIds;
+    int poolIndex;
+
+    expgfxRemoveAll();
+
+    poolActiveMasks[0] = gExpgfxSlotActiveMasks;
+    poolActiveCounts[0] = gExpgfxPoolActiveCounts;
+    poolSlotTypeIds[0] = gExpgfxStaticPoolSlotTypeIds;
+    poolFrameFlags[0] = gExpgfxStaticPoolFrameFlags;
+    poolSourceModes = gExpgfxPoolSourceModes;
+    poolSourceIds = ((u32*)gExpgfxTrackedPoolSourceIds);
+
+    for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
+        *poolActiveMasks[0] = 0;
+        *poolActiveCounts[0] = 0;
+        *poolSlotTypeIds[0] = EXPGFX_INVALID_SLOT_TYPE;
+        *poolFrameFlags[0] = EXPGFX_SOURCE_FRAME_STATE_NONE;
+        *poolSourceModes = EXPGFX_POOL_SOURCE_MODE_STANDALONE;
+        *poolSourceIds = 0;
+
+        poolActiveMasks[0]++;
+        poolActiveCounts[0]++;
+        poolSlotTypeIds[0]++;
+        poolFrameFlags[0]++;
+        poolSourceModes++;
+        poolSourceIds++;
+    }
+
+    trackedFrameMasks = gExpgfxTrackedSourceFrameMasks;
+    trackedFrameMasks[0] = 0;
+    trackedFrameMasks[1] = 0;
+
+    gExpgfxTextureFreeInProgress = 1;
+    poolIndex = 0;
+    resourceEntry = gExpgfxResourceEntries;
+    while (poolIndex < EXPGFX_RESOURCE_TABLE_COUNT) {
+        if (resourceEntry->resource != NULL) {
+            textureFree((Texture*)(resourceEntry->resource));
+        }
+        resourceEntry->resource = NULL;
+        resourceEntry->resourceId = 0;
+        resourceEntry->evictionScore = 0;
+        resourceEntry->reserved = 0;
+        resourceEntry++;
+        poolIndex++;
+    }
+    gExpgfxTextureFreeInProgress = 0;
+}
+
+int expgfx_addremove(EffectSpawnConfig* config, int preferredPoolIndex, int slotType, int planeOffsetSetId) {
     u32 behaviorFlags;
+    ExpgfxSlot* slot;
+    ObjAnimComponent* attachedSource;
+    ExpgfxResourceHandle* resourceHandle;
+    GameObject* playerObj;
     s16 texT1;
+    int expTabIndex;
+    int attachedTableKey;
+    short poolIndex;
+    short slotIndex;
     s16 texT0;
     s16 texS1;
     s16 texS0;
-    f32 step;
-    slot = (ExpgfxSlot*)slotPtr;
-    staticData = EXPGFX_STATIC_DATA;
-    entry = gExpgfxTableEntries;
-    entry += ((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK;
-    resource = entry->resource;
+    short resourceTableIndex;
+    f32 scaleVal;
+    u32 sourceModeValue;
 
-    slot->stateBits.bits.frameParity = 0;
-    slot->stateBits.bits.quadReady = 1;
+    ExpgfxQuadVertex* quadVertices;
 
-    behaviorFlags = slot->behaviorFlags;
-    if ((behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0) {
-        quadTemplate = staticData->quadTemplateA;
-    } else {
-        quadTemplate = staticData->quadTemplateB;
+    poolIndex = 0;
+    slotIndex = 0;
+    texT1 = 0;
+    texT0 = 0;
+    texS1 = 0;
+    texS0 = 0;
+    if (getHudHiddenFrameCount() != 0) {
+        return EXPGFX_INVALID_POOL_INDEX;
     }
+    if (expgfxGetSlot(&poolIndex, &slotIndex, slotType, preferredPoolIndex, (u32)(int)config->attachedSource) ==
+        EXPGFX_INVALID_POOL_INDEX) {
+        return EXPGFX_INVALID_POOL_INDEX;
+    }
+    {
+        int poolIdx = poolIndex;
 
-    if ((behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0 &&
-        slot->velocityY < EXPGFX_Y_VELOCITY_POSITIVE_LIMIT) {
-        if ((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
-            slot->velocityY < EXPGFX_Y_VELOCITY_POSITIVE_LIMIT) {
-            slot->velocityY -= EXPGFX_Y_VELOCITY_FAST_STEP * timeDelta;
-        } else {
-            slot->velocityY -= EXPGFX_Y_VELOCITY_SLOW_STEP * timeDelta;
+        if (poolIdx < EXPGFX_POOL_COUNT) {
+            ((u32*)gExpgfxTrackedPoolSourceIds)[poolIdx] = (int)config->attachedSource;
         }
-    } else if ((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
-               slot->velocityY > EXPGFX_Y_VELOCITY_NEGATIVE_LIMIT) {
-        slot->velocityY += EXPGFX_Y_VELOCITY_FAST_STEP * timeDelta;
-    } else if ((behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0 &&
-               slot->velocityY > EXPGFX_Y_VELOCITY_NEGATIVE_LIMIT) {
-        slot->velocityY += EXPGFX_Y_VELOCITY_SLOW_STEP * timeDelta;
+        if (poolIdx < EXPGFX_POOL_COUNT && (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0) {
+            gExpgfxTrackedSourceFrameMasks[poolIdx & 1] |= (s64)(1 << (poolIdx >> 1));
+        } else {
+            gExpgfxTrackedSourceFrameMasks[poolIdx & 1] &= (s64) ~(1 << (poolIdx >> 1));
+        }
+        slot = (ExpgfxSlot*)gExpgfxSlotPoolBases[poolIdx];
+        slot += slotIndex;
+        quadVertices = slot->quad;
+        gExpgfxSequenceCounter++;
+        if (gExpgfxSequenceCounter > EXPGFX_SEQUENCE_COUNTER_MAX) {
+            gExpgfxSequenceCounter = 0;
+        }
+        slot->sequenceId = gExpgfxSequenceCounter;
+        slot->behaviorFlags = config->behaviorFlags;
+        slot->renderFlags = config->renderFlags;
+        slot->stateBits.bits.initPhase = 0;
+
+        resourceTableIndex = expgfx_acquireResourceEntry(config->textureId);
+        if (resourceTableIndex < 0) {
+            expgfxRemove((void*)gExpgfxSlotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
+            return EXPGFX_INVALID_POOL_INDEX;
+        }
+        resourceHandle = gExpgfxResourceEntries[resourceTableIndex].resource;
+        if (resourceHandle != NULL) {
+            if (resourceHandle->refCount >= EXPGFX_REFCOUNT_OVERFLOW) {
+                expgfxRemove((void*)gExpgfxSlotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
+                return EXPGFX_INVALID_POOL_INDEX;
+            }
+            resourceHandle->refCount++;
+            resourceHandle->linkGroup = config->linkGroup;
+        } else {
+            expgfxRemove((void*)gExpgfxSlotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
+            return EXPGFX_INVALID_POOL_INDEX;
+        }
+
+        behaviorFlags = slot->behaviorFlags;
+        if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0) {
+            texS1 = 0;
+            texS0 = 0;
+        }
+        if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_T) != 0) {
+            texT1 = 0;
+            texT0 = 0;
+        }
+
+        attachedSource = (ObjAnimComponent*)config->attachedSource;
+        attachedTableKey = 0;
+        if (attachedSource == NULL) {
+            slot->sourcePosX.value = config->sourcePosX;
+            slot->sourcePosY.value = config->sourcePosY;
+            slot->sourcePosZ.value = config->sourcePosZ;
+            slot->sourceScale.value = config->sourceScale;
+            slot->sourceVecZ = config->sourceVecZ;
+            slot->sourceVecY = config->sourceVecY;
+            slot->sourceVecX = config->sourceVecX;
+        } else if ((behaviorFlags & EXPGFX_BEHAVIOR_COPY_ATTACHED_SOURCE) != 0) {
+            slot->sourcePosX.value = attachedSource->worldPosX;
+            slot->sourcePosY.value = attachedSource->worldPosY;
+            slot->sourcePosZ.value = attachedSource->worldPosZ;
+            slot->sourceScale.value = attachedSource->rootMotionScale;
+            slot->sourceVecZ = attachedSource->rotZ;
+            slot->sourceVecY = attachedSource->rotY;
+            slot->sourceVecX = attachedSource->rotX;
+            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_A) != 0 ||
+                (slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0) {
+                config->velocityX += attachedSource->velocityX;
+                config->velocityY += attachedSource->velocityY;
+                config->velocityZ += attachedSource->velocityZ;
+            }
+
+            if (attachedSource != NULL) {
+                attachedTableKey = attachedSource->parentAddress;
+            }
+            attachedSource = NULL;
+        }
+
+        expTabIndex = expgfx_addToTable((u32)resourceHandle, (u32)attachedSource, attachedTableKey, config->textureId);
+        if ((short)expTabIndex == EXPGFX_INVALID_TABLE_INDEX) {
+            debugPrintf("expgfx.c: invalid tabindex\n");
+            expgfxRemove((void*)gExpgfxSlotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
+            return EXPGFX_INVALID_POOL_INDEX;
+        }
+        ((struct {
+             u8 tableIndex : 7;
+             u8 lowBit : 1;
+         }*)&slot->encodedTableIndex)
+            ->tableIndex = (u8)expTabIndex;
+
+        slot->posX.value = slot->startPosX.value = config->startPosX;
+        slot->posY.value = slot->startPosY.value = config->startPosY;
+        slot->posZ.value = slot->startPosZ.value = config->startPosZ;
+        slot->velocityX = config->velocityX;
+        slot->velocityY = config->velocityY;
+        slot->velocityZ = config->velocityZ;
+        slot->initialAlpha = config->initialAlpha;
+        slot->impactEffectId = config->impactEffectId;
+        slot->lifetimeFrame = config->lifetimeFrames;
+        slot->lifetimeFrameLimit = config->lifetimeFrames;
+
+        if (config->scale > 1.0f) {
+            debugPrintf("expgfx.c: scale overflow\n");
+        }
+        scaleVal = 65535.0f * config->scale;
+
+        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
+            slot->scaleCurrent = 0;
+            slot->scaleStep = (scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
+            slot->scaleTarget = scaleVal;
+        } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
+            slot->scaleCurrent = scaleVal;
+            slot->scaleStep = (scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
+            slot->scaleTarget = scaleVal;
+        } else {
+            slot->scaleCurrent = scaleVal;
+            slot->scaleTarget = slot->scaleCurrent;
+            slot->scaleStep = 0;
+        }
+
+        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 ||
+            (slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_B) != 0) {
+            slot->sourcePosX.value = config->sourcePosX;
+            slot->sourcePosY.value = config->sourcePosY;
+            slot->sourcePosZ.value = config->sourcePosZ;
+            slot->sourceScale.value = config->sourceScale;
+            slot->sourceVecZ = config->sourceVecZ;
+            slot->sourceVecY = config->sourceVecY;
+            slot->sourceVecX = config->sourceVecX;
+        }
+        slot->stateBits.bits.frameParity = gExpgfxFrameParityBit;
+
+        if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0) {
+            slot->renderFlags ^= EXPGFX_RENDER_BACKDATE_MOTION;
+            slot->posX.value = slot->velocityX * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posX.value;
+            slot->posY.value = slot->velocityY * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posY.value;
+            slot->posZ.value = slot->velocityZ * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posZ.value;
+            slot->velocityX *= -1.0f;
+            slot->velocityY *= -1.0f;
+            slot->velocityZ *= -1.0f;
+        }
+
+        if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_ACTOR) != 0) {
+            f32 dx;
+            f32 dz;
+            f32 distSq;
+            playerObj = (GameObject*)Obj_GetPlayerObject();
+            slot->renderFlags ^= EXPGFX_RENDER_AIM_AT_ACTOR;
+            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
+                dx = playerObj->anim.worldPosX - slot->startPosX.value;
+                dz = playerObj->anim.worldPosZ - slot->startPosZ.value;
+                distSq = dx * dx + dz * dz;
+                if (distSq < 3600.0f && playerObj->anim.velocityX != 0.0f && 0.0f != playerObj->anim.velocityZ) {
+                    slot->velocityX = slot->velocityX + dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
+                    slot->velocityY = slot->velocityY + ((30.0f + playerObj->anim.worldPosY) - slot->startPosY.value) /
+                                                            (f32)(s32)((int)slot->lifetimeFrame << 1);
+                    slot->velocityZ = slot->velocityZ + (playerObj->anim.worldPosZ - slot->startPosZ.value) /
+                                                            (f32)(s32)((int)slot->lifetimeFrame << 1);
+                }
+            } else {
+                dx = playerObj->anim.worldPosX - (slot->startPosX.value + attachedSource->localPosX);
+                dz = playerObj->anim.worldPosZ - (slot->startPosZ.value + attachedSource->localPosZ);
+                distSq = dx * dx + dz * dz;
+                if (distSq < 3600.0f && playerObj->anim.velocityX != 0.0f && 0.0f != playerObj->anim.velocityZ) {
+                    slot->velocityX = slot->velocityX - dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
+                    slot->velocityY = slot->velocityY - ((30.0f + playerObj->anim.worldPosY) -
+                                                         (slot->startPosY.value + attachedSource->localPosY)) /
+                                                            (f32)(s32)((int)slot->lifetimeFrame << 1);
+                    slot->velocityZ = slot->velocityZ - (playerObj->anim.worldPosZ -
+                                                         (slot->startPosZ.value + attachedSource->localPosZ)) /
+                                                            (f32)(s32)((int)slot->lifetimeFrame << 1);
+                }
+            }
+        }
+
+        if (resourceTableIndex == 1) {
+            gExpgfxSlotType1Count += 1;
+            gExpgfxSlotType1Average = gExpgfxSlotType1Sum / gExpgfxSlotType1Count;
+        }
+
+        slot->endColorR = (u8)((int)config->colorWord0 >> 8);
+        slot->endColorG = (u8)((int)config->colorWord1 >> 8);
+        slot->endColorB = (u8)((int)config->colorWord2 >> 8);
+
+        if ((config->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
+            slot->startColorR = (u8)((int)config->overrideColor0 >> 8);
+            slot->startColorG = (u8)((int)config->overrideColor1 >> 8);
+            slot->startColorB = (u8)((int)config->overrideColor2 >> 8);
+        }
+
+        quadVertices[0].colorR = 0xff;
+        quadVertices[0].colorG = 0xff;
+        quadVertices[0].colorB = 0xff;
+
+        quadVertices[0].texS = texS0;
+        quadVertices[0].texT = texT0;
+        quadVertices[1].texS = texS1;
+        quadVertices[1].texT = texT0;
+        quadVertices[2].texS = texS1;
+        quadVertices[2].texT = texT1;
+        quadVertices[3].texS = texS0;
+        quadVertices[3].texT = texT1;
+
+        if ((slot->renderFlags & EXPGFX_RENDER_INIT_QUAD) != 0) {
+            expgfx_initSlotQuad(slot);
+        }
+
+        {
+            int modePoolIndex;
+
+            if ((config->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0) {
+                sourceModeValue = 1;
+            } else {
+                sourceModeValue = 0;
+            }
+            sourceModeValue = (u8)sourceModeValue;
+            modePoolIndex = poolIndex;
+            gExpgfxPoolSourceModes[modePoolIndex] = sourceModeValue;
+            if (gExpgfxPoolSourceModes[modePoolIndex] != 0 &&
+                (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) == 0) {
+                gExpgfxPoolSourceModes[modePoolIndex]++;
+            }
+            gExpgfxPoolPlaneOffsetSetIds[modePoolIndex] = (u8)planeOffsetSetId;
+        }
+
+        DCFlushRange(slot, EXPGFX_SLOT_SIZE);
+        gExpgfxLastAddedSlot = (int)slot;
+        return slot->sequenceId;
+    }
+}
+
+void expgfx_updateFrameState(int sourceMode, int sourceId) {
+    int renderMode;
+    int poolIndex;
+    f32 frameStep;
+    f32 frameValue;
+
+    renderMode = renderModeSetOrGet(EXPGFX_INVALID_SLOT_TYPE);
+    if ((short)renderMode != 1) {
+        frameValue = gExpgfxFrameTimerA + (frameStep = timeDelta);
+        gExpgfxFrameTimerA = frameValue;
+        if (frameValue >= 1024.0f) {
+            gExpgfxFrameTimerA = 0.0f;
+        }
+        frameValue = gExpgfxFrameTimerB + frameStep;
+        gExpgfxFrameTimerB = frameValue;
+        if (frameValue >= 10.0f) {
+            gExpgfxFrameTimerB = 0.0f;
+        }
+        frameValue = gExpgfxFrameTimerC + frameStep;
+        gExpgfxFrameTimerC = frameValue;
+        if (frameValue >= 1.0f) {
+            gExpgfxFrameTimerC = 0.0f;
+        }
+        gExpgfxUpdatingActivePools = 1;
+        expgfx_updateActivePools((u8)sourceMode, sourceId, 0);
+        gExpgfxUpdatingActivePools = 0;
+        poolIndex = EXPGFX_POOL_COUNT;
+        while ((u8)poolIndex > 0) {
+            poolIndex--;
+            gExpgfxStaticPoolFrameFlags[(u8)poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
+        }
+        (*gPartfxInterface)->updateFrameState(0);
+        gExpgfxRenderResetPending = 1;
+    }
+    return;
+}
+
+void expgfx_resetAllPools(void) {
+    u16* refCountPtr;
+    int activeBit;
+    int poolIndex;
+    ExpgfxResourceEntry* resourceEntry;
+    ExpgfxTableEntry* tableEntry;
+    int slotIndex;
+    ExpgfxSlot* slot;
+    poolIndex = 0;
+
+    while (poolIndex < EXPGFX_POOL_COUNT) {
+        slot = (ExpgfxSlot*)gExpgfxSlotPoolBases[poolIndex];
+        for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
+            activeBit = 1 << slotIndex;
+            if ((activeBit & gExpgfxSlotActiveMasks[poolIndex]) != 0) {
+                if (((ExpgfxTableEntry*)((u8*)gExpgfxTableEntries + Expgfx_GetSlotTableIndex(slot) * 16))->resource !=
+                    0) {
+                    gExpgfxTextureFreeInProgress = 1;
+                    textureFree((Texture*)((void*)((ExpgfxTableEntry*)((u8*)gExpgfxTableEntries +
+                                                                       Expgfx_GetSlotTableIndex(slot) * 16))
+                                               ->resource));
+                    gExpgfxTextureFreeInProgress = 0;
+                }
+
+                tableEntry = (ExpgfxTableEntry*)((u8*)gExpgfxTableEntries + Expgfx_GetSlotTableIndex(slot) * 16);
+                refCountPtr = &tableEntry->refCount;
+                if (*refCountPtr != 0) {
+                    (*refCountPtr)--;
+                    if (*refCountPtr == 0) {
+                        tableEntry->resource = NULL;
+                        tableEntry->sourceId = 0;
+                    }
+                } else {
+                    debugPrintf("expgfx.c: mismatch in add/remove in exptab\n");
+                }
+
+                slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
+                gExpgfxSlotActiveMasks[poolIndex] &= ~activeBit;
+            }
+
+            slot = (ExpgfxSlot*)((u8*)slot + EXPGFX_SLOT_SIZE);
+        }
+
+        gExpgfxPoolActiveCounts[poolIndex] = 0;
+        gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
+        ((u32*)gExpgfxTrackedPoolSourceIds)[poolIndex] = 0;
+        gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
+        DCFlushRange((void*)gExpgfxSlotPoolBases[poolIndex], EXPGFX_POOL_BYTES);
+
+        poolIndex++;
     }
 
-    slot->posX.value += slot->velocityX * (step = EXPGFX_SLOT_MOTION_STEP);
-    slot->posY.value += slot->velocityY * step;
-    slot->posZ.value += slot->velocityZ * step;
-
-    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
-        slot->scaleCurrent = (f32)slot->scaleStep * step + (f32)slot->scaleCurrent;
-    } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
-        slot->scaleCurrent = (f32)slot->scaleCurrent - (f32)slot->scaleStep * step;
+    resourceEntry = gExpgfxResourceEntries;
+    {
+        expgfx_clearResourceTable(resourceEntry);
     }
+}
 
-    if (resource == 0) {
-        debugPrintf(staticData->noTextureString);
+void expgfx_free(u32 sourceId) {
+    s8* poolActiveCounts[1];
+    int slotIndex;
+    ExpgfxTableEntry* tableEntry;
+    u32* slotPoolBases[1];
+    u32* poolSourceIds[1];
+    int poolIndex;
+    ExpgfxSlot* slot;
+
+    if (sourceId == 0) {
         return;
     }
 
-    texT0 = 0;
-    texT1 = 0;
-    texS0 = 0;
-    texS1 = 0;
-    if (resource != 0) {
-        texS0 = EXPGFX_QUAD_TEXCOORD_MAX;
-        texT0 = EXPGFX_QUAD_TEXCOORD_MAX;
-        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0) {
-            texS1 = EXPGFX_QUAD_TEXCOORD_MAX;
-            texS0 = 0;
-        }
-        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_T) != 0) {
-            texT1 = EXPGFX_QUAD_TEXCOORD_MAX;
-            texT0 = 0;
-        }
-    }
+    poolIndex = 0;
+    slotPoolBases[0] = gExpgfxSlotPoolBases;
+    poolSourceIds[0] = ((u32*)gExpgfxTrackedPoolSourceIds);
+    poolActiveCounts[0] = gExpgfxPoolActiveCounts;
 
-    quad = slot->quad;
-    quad[0].x = quadTemplate[0].x;
-    quad[0].y = quadTemplate[0].y;
-    quad[0].z = quadTemplate[0].z;
-    quad[0].texS = texS0;
-    quad[0].texT = texT0;
-    quad[1].x = quadTemplate[1].x;
-    quad[1].y = quadTemplate[1].y;
-    quad[1].z = quadTemplate[1].z;
-    quad[1].texS = texS1;
-    quad[1].texT = texT0;
-    quad[2].x = quadTemplate[2].x;
-    quad[2].y = quadTemplate[2].y;
-    quad[2].z = quadTemplate[2].z;
-    quad[2].texS = texS1;
-    quad[2].texT = texT1;
-    quad[3].x = quadTemplate[3].x;
-    quad[3].y = quadTemplate[3].y;
-    quad[3].z = quadTemplate[3].z;
-    quad[3].texS = texS0;
-    quad[3].texT = texT1;
-}
-
-void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameState) {
-    ExpgfxBounds* bounds;
-    ExpgfxRuntimeDataLayout* runtime;
-    int nextActivePool;
-    int scanIdx;
-    f32* maxXPtr;
-    f32* minYPtr;
-    f32* maxYPtr;
-    f32* minZPtr;
-    f32* maxZPtr;
-    u32 poolOrResource;
-    int sky;
-    ExpgfxStaticDataLayout* staticData;
-    s16 slotIdx;
-    ExpgfxSlot* slot;
-    Vec3s* quadTemplate;
-    s16 texT1;
-    s16 texT0;
-    s16 texS1;
-    s16 texS0;
-    GameObject* player;
-    GameObject* tricky;
-    u8* nextCacheBuf;
-    s8* activeCountScan;
-    int curPool;
-    u32* maskPtr;
-    u8* curPoolBuf;
-    ObjAnimComponent* srcObj;
-    u8 cacheQueued;
-    int ambRPlus1;
-    int ambGPlus1;
-    int ambBPlus1;
-    ExpgfxSlot* curCacheBuf;
-    void* cache;
-    u8 ambientScaled[3]; /* BGR order: [2]=R, [1]=G, [0]=B */
-    MatrixTransform rotParams;
-    f32 workVec[3];
-    f32 skyLightDir[3];
-    f32 rotatedPos[3];
-    f32 srcWorldPos[3];
-    u8 ambB8;
-    u8 ambG8;
-    u8 ambR8;
-    f32 boundsMax;
-    f32 boundsMin;
-    f32 trailPrevX;
-    f32 trailPrevY;
-    f32 trailPrevZ;
-    f32 workB; /* player dist-sq; reused as cross-product lane in the trail block */
-    f32 workA; /* tricky dist-sq; reused as cross-product lane in the trail block */
-    f32 ambientScale;
-    f32 attractRatio; /* attract speed ratio; reused as cross-product Z lane and trail inv-scale */
-    f32 trickySpeed;
-    f32 playerRange;
-    f32 dirX;
-    f32 dirY;
-    f32 dirZ;
-    staticData = EXPGFX_STATIC_DATA;
-    runtime = EXPGFX_RUNTIME_DATA;
-    attractRatio = 1.0f;
-    trickySpeed = 0.0f;
-    playerRange = trickySpeed;
-    player = Obj_GetPlayerObject();
-    tricky = getTrickyObject();
-    cache = getCache();
-    gExpgfxPhaseAngleA += (u16)(120.0f * timeDelta);
-    gExpgfxPhaseAngleB += (u16)(480.0f * timeDelta);
-    sky = skyGetCurrentLightIndex();
-    skyGetSunLightDirection(sky, &skyLightDir[0], &skyLightDir[1], &skyLightDir[2]);
-    PSMTXMultVec((void*)Camera_GetViewRotationMatrix(), (void*)skyLightDir, (void*)skyLightDir);
-    ambientScale = -skyLightDir[2];
-    if (ambientScale < 0.75f) {
-        ambientScale = 0.75f;
-    }
-    skyGetSunColor(sky, &ambR8, &ambG8, &ambB8);
-    ambientScaled[2] = (f32)ambR8 * ambientScale;
-    ambientScaled[1] = (f32)ambG8 * ambientScale;
-    ambientScaled[0] = (f32)ambB8 * ambientScale;
-
-    activeCountScan = runtime->poolActiveCounts;
-    for (scanIdx = 0; scanIdx < EXPGFX_POOL_COUNT || (scanIdx = -1, 0); scanIdx++) {
-        switch (activeCountScan[scanIdx]) {
-        case 0:
-            continue;
-        }
-        break;
-    }
-    poolOrResource = scanIdx;
-    if ((s32)poolOrResource != -1) {
-        u8 cacheParity;
-
-        copyToCache(cache, (void*)runtime->slotPoolBases[poolOrResource], EXPGFX_POOL_CACHE_LINE_COUNT);
-        cacheParity = 1;
-        curCacheBuf = (ExpgfxSlot*)(cache);
-        Camera_GetCurrent();
-        if (tricky != NULL) {
-            trickySpeed = trickyGetSpeed(tricky);
-        }
-        if (player != NULL) {
-            playerRange = playerGetAnimSpeed(player);
-        }
-        cacheQueued = 0;
-        ambRPlus1 = ambientScaled[2] + 1;
-        ambGPlus1 = ambientScaled[1] + 1;
-        ambBPlus1 = ambientScaled[0] + 1;
-        boundsMin = EXPGFX_BOUNDS_INIT_MIN;
-        boundsMax = EXPGFX_BOUNDS_INIT_MAX;
-        while ((s32)poolOrResource > -1) {
-            curPoolBuf = (u8*)runtime + poolOrResource * sizeof(ExpgfxBounds);
-            bounds = (ExpgfxBounds*)(curPoolBuf + EXPGFX_POOL_BOUNDS_OFFSET);
-            bounds->minX = boundsMin;
-            maxXPtr = &bounds->maxX;
-            *maxXPtr = boundsMax;
-            minYPtr = &bounds->minY;
-            *minYPtr = boundsMin;
-            maxYPtr = &bounds->maxY;
-            *maxYPtr = boundsMax;
-            minZPtr = &bounds->minZ;
-            *minZPtr = boundsMin;
-            maxZPtr = &bounds->maxZ;
-            *maxZPtr = boundsMax;
-            curPool = poolOrResource;
-            scanIdx = curPool + 1;
-            curPoolBuf = (u8*)runtime + scanIdx;
-            activeCountScan = (s8*)curPoolBuf;
-            activeCountScan += EXPGFX_POOL_ACTIVE_COUNTS_OFFSET;
-            for (; scanIdx < EXPGFX_POOL_COUNT || (scanIdx = -1, 0); scanIdx++) {
-                switch (*activeCountScan) {
-                case 0:
-                    activeCountScan++;
-                    continue;
-                }
-                break;
-            }
-            nextActivePool = scanIdx;
-            slot = curCacheBuf;
-            if (nextActivePool > -1) {
-                nextCacheBuf = (u8*)cache + cacheParity * 0x1000;
-                copyToCache(nextCacheBuf, (void*)*(u32*)((u8*)runtime->slotPoolBases + nextActivePool * 4),
-                            EXPGFX_POOL_CACHE_LINE_COUNT);
-                curCacheBuf = (ExpgfxSlot*)(nextCacheBuf);
-                cacheQueued = 1;
-            }
-            cacheParity ^= 1;
-            cacheQueueWait(cacheQueued);
-            slot--;
-            slotIdx = 0;
-            maskPtr = (u32*)((u8*)runtime + curPool * 4);
-            maskPtr = (u32*)((u8*)maskPtr + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
-            curPoolBuf = (u8*)cache + cacheParity * 0x1000;
-            for (; slotIdx < EXPGFX_SLOTS_PER_POOL; slotIdx++) {
-                ExpgfxQuadVertex* quad;
-                ExpgfxTableEntry* entry;
-                u32 phase;
-
-                slot++;
-                if ((1 << slotIdx & *maskPtr) == 0) {
-                    continue;
-                }
-                if (slot->sequenceId == EXPGFX_INVALID_SEQUENCE_ID) {
-                    continue;
-                }
-                entry = (ExpgfxTableEntry*)((u8*)runtime->expTab +
+    while (poolIndex < EXPGFX_POOL_COUNT) {
+        slot = (ExpgfxSlot*)*slotPoolBases[0];
+        if (sourceId == *poolSourceIds[0]) {
+            for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
+                if (slot != NULL) {
+                    tableEntry =
+                        (ExpgfxTableEntry*)((u8*)gExpgfxTableEntries +
                                             (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16);
-                srcObj = (ObjAnimComponent*)entry->sourceId;
-                poolOrResource = (u32)entry->resource;
-                slot->stateBits.bits.frameParity = 0;
-                slot->stateBits.bits.quadReady = 1;
-                if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_HOLD_LIFETIME_TIMER) == 0) {
-                    slot->lifetimeFrame -= framesThisStep;
-                }
-                phase = slot->stateBits.bits.initPhase;
-                if (phase == 2) {
-                    slot->stateBits.bits.initPhase = 1;
-                    continue;
-                }
-                if (phase == 1) {
-                    expgfxRemove((u32)curPoolBuf, curPool, slotIdx, 0, 0);
-                    continue;
-                }
-                if (slot->lifetimeFrame <= 0 || slot->lifetimeFrame > slot->lifetimeFrameLimit) {
-                    slot->stateBits.bits.initPhase = 2;
-                    continue;
-                }
-                if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0) {
-                    quadTemplate = staticData->quadTemplateA;
-                } else {
-                    quadTemplate = staticData->quadTemplateB;
-                }
-                if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
-                    (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0) {
-                    rotParams.x = 0.0f;
-                    rotParams.y = 0.0f;
-                    rotParams.z = 0.0f;
-                    rotParams.scale = 1.0f;
-                    rotParams.rotZ = (f32)slot->sourceVecZ * timeDelta;
-                    rotParams.rotY = (f32)slot->sourceVecY * timeDelta;
-                    rotParams.rotX = (f32)slot->sourceVecX * timeDelta;
-                    vecRotateZXY(&rotParams.rotX, &slot->posX.value);
-                }
-                if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) != 0) {
-                    workB = 1000000.0f;
-                    workA = workB;
-                    if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_PLAYER) != 0 && player != NULL &&
-                        srcObj != NULL && playerRange > 0.2f) {
-                        workVec[0] = player->anim.worldPosX - (slot->startPosX.value + srcObj->localPosX);
-                        workVec[2] = player->anim.worldPosZ - (slot->startPosZ.value + srcObj->localPosZ);
-                        workB = workVec[0] * workVec[0] + workVec[2] * workVec[2];
-                        attractRatio = playerRange / workB;
-                    }
-                    if (workB > 300.0f && (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0 &&
-                        tricky != NULL && srcObj != NULL && trickySpeed > 0.2f) {
-                        workVec[0] = tricky->anim.worldPosX - (slot->startPosX.value + srcObj->localPosX);
-                        workVec[2] = tricky->anim.worldPosZ - (slot->startPosZ.value + srcObj->localPosZ);
-                        workA = workVec[0] * workVec[0] + workVec[2] * workVec[2];
-                        attractRatio = trickySpeed / workB;
-                    }
-                    if (workA < workB) {
-                        workB = workA;
-                    }
-                    if (workB < 300.0f) {
-                        if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_PLAYER) != 0) {
-                            slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_PLAYER;
-                        }
-                        if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0) {
-                            slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_TRICKY;
-                        }
-                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED) != 0) {
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED;
-                        }
-                        slot->lifetimeFrame = randomGetRange(0, 0x28) + 0xdc;
-                        slot->lifetimeFrameLimit = randomGetRange(0, 0x28) + 0xdc;
-                        slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
-                        slot->renderFlags |= EXPGFX_RENDER_IMPACT_POSITION_LOCKED;
-                        slot->velocityX = -workVec[0] * attractRatio;
-                        slot->velocityZ = -workVec[2] * attractRatio;
-                    }
-                } else {
-                    if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_A) != 0) {
-                        slot->velocityX += 0.01f * slot->velocityX;
-                        slot->velocityY += 0.01f * slot->velocityY;
-                        slot->velocityZ += 0.01f * slot->velocityZ;
-                    } else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_B) != 0) {
-                        slot->velocityX += 0.02f * slot->velocityX;
-                        slot->velocityY += 0.02f * slot->velocityY;
-                        slot->velocityZ += 0.02f * slot->velocityZ;
-                    } else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_C) != 0) {
-                        slot->velocityX += 0.04f * slot->velocityX;
-                        slot->velocityY += 0.04f * slot->velocityY;
-                        slot->velocityZ += 0.04f * slot->velocityZ;
-                    } else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_DAMP) != 0) {
-                        slot->velocityX = 0.99f * slot->velocityX;
-                        slot->velocityY = 0.99f * slot->velocityY;
-                        slot->velocityZ = 0.99f * slot->velocityZ;
-                    }
-                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0 &&
-                        slot->velocityY < EXPGFX_Y_VELOCITY_POSITIVE_LIMIT) {
-                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
-                            slot->velocityY < EXPGFX_Y_VELOCITY_POSITIVE_LIMIT) {
-                            slot->velocityY -= EXPGFX_Y_VELOCITY_FAST_STEP * timeDelta;
-                        } else {
-                            slot->velocityY -= EXPGFX_Y_VELOCITY_SLOW_STEP * timeDelta;
-                        }
-                    } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
-                               slot->velocityY > EXPGFX_Y_VELOCITY_NEGATIVE_LIMIT) {
-                        slot->velocityY += EXPGFX_Y_VELOCITY_FAST_STEP * timeDelta;
-                    } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0 &&
-                               slot->velocityY > EXPGFX_Y_VELOCITY_NEGATIVE_LIMIT) {
-                        slot->velocityY += EXPGFX_Y_VELOCITY_SLOW_STEP * timeDelta;
-                    }
-                    if ((slot->renderFlags & EXPGFX_RENDER_IMPACT_POSITION_LOCKED) != 0) {
-                        if (slot->velocityY * timeDelta + slot->posY.value < 0.0f) {
-                            slot->velocityX = 0.0f;
-                            slot->velocityY = 0.0f;
-                            slot->velocityZ = 0.0f;
-                            slot->sourceVecX = 0;
-                            slot->sourceVecY = 0;
-                            slot->sourceVecZ = 0;
-                            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) != 0) {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B;
-                            }
-                            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0) {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A;
-                            }
-                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED;
-                            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0) {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_FAST_Y_RESPONSE;
-                            }
-                            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0) {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY;
-                            }
-                            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0) {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER;
-                            }
-                            slot->renderFlags ^= EXPGFX_RENDER_IMPACT_POSITION_LOCKED;
-                        }
-                    }
-                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_MASK) != 0 &&
-                        slot->velocityY * timeDelta + slot->posY.value < 0.0f) {
-                        u32 rnd;
-                        f32 fade;
-
-                        rnd = randomGetRange(0, 5);
-                        fade = (f32)(int)rnd;
-                        fade = -(0.01f * fade + 0.25f);
-                        slot->velocityY *= fade;
-                        if (slot->velocityY > 0.3f) {
-                            slot->velocityY = 0.3f;
-                        }
-                        rotParams.scale = 1.0f;
-                        rotParams.rotZ = 0;
-                        rotParams.rotY = 0;
-                        rotParams.rotX = 0;
-                        if (srcObj != NULL) {
-                            rotParams.x = slot->posX.value + srcObj->localPosX;
-                            rotParams.y = slot->posY.value + srcObj->localPosY;
-                            rotParams.z = slot->posZ.value + srcObj->localPosZ;
-                        } else {
-                            rotParams.x = slot->posX.value + slot->sourcePosX.value;
-                            rotParams.y = slot->posY.value + slot->sourcePosY.value;
-                            rotParams.z = slot->posZ.value + slot->sourcePosZ.value;
-                        }
-                        gExpgfxFrameParityBit = 1;
-                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT) != 0 &&
-                            (slot->renderFlags & EXPGFX_RENDER_IMPACT_POSITION_LOCKED) == 0) {
-                            slot->velocityX *= EXPGFX_SLOT_MOTION_STEP;
-                            slot->velocityZ *= EXPGFX_SLOT_MOTION_STEP;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT;
-                            if (slot->impactEffectId != -1) {
-                                (*gPartfxInterface)
-                                    ->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
-                                slot->impactEffectId = -1;
-                            }
-                        } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1) != 0) {
-                            slot->velocityX *= 0.5f;
-                            slot->velocityZ *= 0.5f;
-                            slot->scaleCurrent *= 0.65f;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
-                        } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2) != 0) {
-                            slot->velocityX *= 0.5f;
-                            slot->velocityZ *= 0.5f;
-                            slot->scaleCurrent *= 0.65f;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
-                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
-                        } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3) != 0) {
-                            slot->velocityX *= 0.5f;
-                            slot->velocityZ *= 0.5f;
-                            slot->scaleCurrent *= 0.65f;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
-                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
-                            if (slot->impactEffectId != -1) {
-                                (*gPartfxInterface)
-                                    ->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
-                            }
-                            slot->impactEffectId = -1;
-                        } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4) != 0) {
-                            {
-                                f32 v;
-                                f32 st;
-                                v = slot->velocityX;
-                                st = EXPGFX_SLOT_MOTION_STEP;
-                                slot->velocityX = v * (st - v);
-                                v = slot->velocityZ;
-                                slot->velocityZ = v * (st - v);
-                            }
-                            slot->scaleCurrent *= 0.65f;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4;
-                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
-                            if (slot->impactEffectId != -1) {
-                                (*gPartfxInterface)
-                                    ->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
-                            }
-                        }
-                        gExpgfxFrameParityBit = 0;
-                    } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT) != 0 &&
-                               slot->velocityY * timeDelta + slot->posY.value < 0.0f) {
-                        if (slot->impactEffectId != -1) {
-                            rotParams.scale = 1.0f;
-                            rotParams.rotZ = 0;
-                            rotParams.rotY = 0;
-                            rotParams.rotX = 0;
-                            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
-                                rotParams.x = slot->posX.value;
-                                rotParams.y = 0.0f;
-                                rotParams.z = slot->posZ.value;
-                            } else if (srcObj != NULL) {
-                                rotParams.x = slot->posX.value + srcObj->worldPosX;
-                                rotParams.y = srcObj->worldPosY;
-                                rotParams.z = slot->posZ.value + srcObj->worldPosZ;
-                            } else {
-                                rotParams.x = slot->posX.value;
-                                rotParams.y = 0.0f;
-                                rotParams.z = slot->posZ.value;
-                            }
-                            gExpgfxFrameParityBit = 1;
-                            (*gWaterfxInterface)->spawnRipple(rotParams.x, rotParams.y, rotParams.z, 0, 0.0f, 4);
-                            (*gWaterfxInterface)
-                                ->spawnSplashBurst(NULL, rotParams.x, rotParams.y, rotParams.z,
-                                                   EXPGFX_SLOT_MOTION_STEP);
-                            if (srcObj != NULL && coordsToMapCell(srcObj->localPosX, srcObj->localPosZ) == 0x10) {
-                                Sfx_PlayFromObject((GameObject*)srcObj, SFXTRIG_blkscrp6);
-                            }
-                            slot->impactEffectId = -1;
-                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT;
-                            slot->lifetimeFrame = 0;
-                            gExpgfxFrameParityBit = 0;
-                        }
-                    } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_MASK) == 0 &&
-                               (slot->behaviorFlags & EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT) == 0 &&
-                               slot->impactEffectId != -1) {
-                        rotParams.scale = 1.0f;
-                        rotParams.rotZ = 0;
-                        rotParams.rotY = 0;
-                        rotParams.rotX = 0;
-                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
-                            rotParams.x = slot->posX.value;
-                            rotParams.y = slot->posY.value;
-                            rotParams.z = slot->posZ.value;
-                        } else if (srcObj != NULL) {
-                            rotParams.x = slot->posX.value + srcObj->worldPosX;
-                            rotParams.y = slot->posY.value + srcObj->worldPosY;
-                            rotParams.z = slot->posZ.value + srcObj->worldPosZ;
-                        } else {
-                            rotParams.x = slot->posX.value;
-                            rotParams.y = slot->posY.value;
-                            rotParams.z = slot->posZ.value;
-                        }
-                        gExpgfxFrameParityBit = 1;
-                        (*gPartfxInterface)->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, NULL);
-                        gExpgfxFrameParityBit = 0;
-                    }
-                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0 && randomGetRange(0, 4) == 1) {
-                        slot->velocityX += 0.045f - randomGetRange(0, 9) / 100.0f;
-                        slot->velocityZ += 0.045f - randomGetRange(0, 9) / 100.0f;
-                    }
-                    if ((slot->renderFlags & EXPGFX_RENDER_RANDOM_VELOCITY_BURST) != 0 && randomGetRange(0, 10) == 1) {
-                        if (slot->lifetimeFrameLimit > (f32)slot->lifetimeFrame) {
-                            slot->velocityX += 0.0004f * randomGetRange(-800, 800) + 0.02f;
-                            slot->velocityY += 0.0004f * randomGetRange(-800, 800) + 0.02f;
-                            slot->velocityZ += 0.0004f * randomGetRange(-800, 800) + 0.02f;
-                        }
-                    }
-                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH) != 0) {
-                        if (0.25f * slot->lifetimeFrameLimit > (f32)slot->lifetimeFrame) {
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH;
-                            slot->velocityX *= -3.0f;
-                            slot->velocityY *= -3.0f;
-                            slot->velocityZ *= -3.0f;
-                        }
-                    }
-                    if ((slot->renderFlags & EXPGFX_RENDER_STRETCHED_TRAIL) != 0) {
-                        trailPrevX = slot->posX.value;
-                        trailPrevY = slot->posY.value;
-                        trailPrevZ = slot->posZ.value;
-                    }
-                    slot->posX.value += slot->velocityX * timeDelta;
-                    slot->posY.value += slot->velocityY * timeDelta;
-                    slot->posZ.value += slot->velocityZ * timeDelta;
-                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
-                        slot->scaleCurrent = (f32)slot->scaleStep * timeDelta + (f32)slot->scaleCurrent;
-                    } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
-                        slot->scaleCurrent = slot->scaleCurrent - slot->scaleStep * framesThisStep;
+                    if (tableEntry->sourceId == sourceId) {
+                        expgfxRemove((void*)*slotPoolBases[0], poolIndex, slotIndex, 0, 1);
                     }
                 }
-                quad = slot->quad;
-                if (poolOrResource == 0) {
-                    debugPrintf(staticData->noTextureString);
-                } else {
-                    GameObject* attached;
-
-                    texT0 = 0;
-                    texT1 = 0;
-                    texS0 = 0;
-                    texS1 = 0;
-                    if (poolOrResource != 0) {
-                        texS0 = 0x80;
-                        texT0 = 0x80;
-                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0) {
-                            texS1 = 0x80;
-                            texS0 = 0;
-                        }
-                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_T) != 0) {
-                            texT1 = 0x80;
-                            texT0 = 0;
-                        }
-                    }
-                    if ((slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
-                        int colR;
-                        int colG;
-                        int colB;
-                        f32 ratio;
-
-                        ratio = (f32)slot->lifetimeFrame / slot->lifetimeFrameLimit;
-                        colR = (int)(ratio * (f32)(slot->startColorR - slot->endColorR) + slot->endColorR);
-                        colG = (int)(ratio * (f32)(slot->startColorG - slot->endColorG) + slot->endColorG);
-                        colB = (int)(ratio * (f32)(slot->startColorB - slot->endColorB) + slot->endColorB);
-                        if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_DIRECT) != 0) {
-                            quad[0].colorR = (s16)colR * (ambR8 + 1) >> 8;
-                            quad[0].colorG = (s16)colG * (ambG8 + 1) >> 8;
-                            quad[0].colorB = (s16)colB * (ambB8 + 1) >> 8;
-                        } else if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_SCALED) != 0) {
-                            quad[0].colorR = (s16)colR * ambRPlus1 >> 8;
-                            quad[0].colorG = (s16)colG * ambGPlus1 >> 8;
-                            quad[0].colorB = (s16)colB * ambBPlus1 >> 8;
-                        } else {
-                            quad[0].colorR = colR;
-                            quad[0].colorG = colG;
-                            quad[0].colorB = colB;
-                        }
-                    } else if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_DIRECT) != 0) {
-                        quad[0].colorR = ambR8;
-                        quad[0].colorG = ambG8;
-                        quad[0].colorB = ambB8;
-                    } else if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_SCALED) != 0) {
-                        quad[0].colorR = ambientScaled[2];
-                        quad[0].colorG = ambientScaled[1];
-                        quad[0].colorB = ambientScaled[0];
-                    }
-                    if ((slot->renderFlags & EXPGFX_RENDER_STRETCHED_TRAIL) != 0) {
-                        f32 sx;
-                        f32 sy;
-                        f32 sz;
-                        f32 prevDX;
-                        f32 prevDY;
-                        f32 prevDZ;
-                        f32 normSq;
-                        f32 norm;
-                        f32 axisX;
-                        f32 axisY;
-                        f32 axisZ;
-
-                        sx = 0.0f;
-                        sy = sx;
-                        sz = sx;
-                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) == 0) {
-                            if (srcObj != NULL) {
-                                sx = srcObj->worldPosX;
-                                sy = srcObj->worldPosY;
-                                sz = srcObj->worldPosZ;
-                            } else {
-                                sx = slot->sourcePosX.value;
-                                sy = slot->sourcePosY.value;
-                                sz = slot->sourcePosZ.value;
-                            }
-                        }
-                        dirX = sx - slot->posX.value;
-                        dirY = sy - slot->posY.value;
-                        dirZ = sz - slot->posZ.value;
-                        prevDX = trailPrevX - slot->posX.value;
-                        prevDY = trailPrevY - slot->posY.value;
-                        prevDZ = trailPrevZ - slot->posZ.value;
-                        workA = dirZ * prevDY - prevDZ * dirY;
-                        workB = -(prevDX * dirZ - prevDZ * dirX);
-                        attractRatio = dirY * prevDX - prevDY * dirX;
-                        normSq = attractRatio * attractRatio + (workA * workA + workB * workB);
-                        if (normSq != 0.0f) {
-                            norm = sqrtf(normSq);
-                        } else {
-                            norm = 1.0f;
-                        }
-                        axisX = 250.0f * (workA / norm);
-                        axisY = 250.0f * (workB / norm);
-                        axisZ = 250.0f * (attractRatio / norm);
-                        attractRatio = 2.0f / (EXPGFX_U16_TO_UNIT_SCALE * (f32)slot->scaleTarget);
-                        quad[0].x = (s16)axisX;
-                        quad[0].y = (s16)axisY;
-                        quad[0].z = (s16)axisZ;
-                        quad[0].texS = texS0;
-                        quad[0].texT = texT0;
-                        quad[1].x = attractRatio * (slot->posX.value - trailPrevX) + axisX;
-                        quad[1].y = attractRatio * (slot->posY.value - trailPrevY) + axisY;
-                        quad[1].z = attractRatio * (slot->posZ.value - trailPrevZ) + axisZ;
-                        quad[1].texS = texS1;
-                        quad[1].texT = texT0;
-                        quad[2].x = attractRatio * (slot->posX.value - trailPrevX) - axisX;
-                        quad[2].y = attractRatio * (slot->posY.value - trailPrevY) - axisY;
-                        quad[2].z = attractRatio * (slot->posZ.value - trailPrevZ) - axisZ;
-                        quad[2].texS = texS1;
-                        quad[2].texT = texT1;
-                        quad[3].x = -(s16)axisX;
-                        quad[3].y = -(s16)axisY;
-                        quad[3].z = -(s16)axisZ;
-                        quad[3].texS = texS0;
-                        quad[3].texT = texT1;
-                    } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) != 0 &&
-                               (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0) {
-                        rotParams.x = 0.0f;
-                        rotParams.y = 0.0f;
-                        rotParams.z = 0.0f;
-                        slot->sourceVecX = slot->sourceVecX + (int)slot->sourcePosX.value * framesThisStep;
-                        slot->sourceVecY = slot->sourceVecY + (int)slot->sourcePosY.value * framesThisStep;
-                        slot->sourceVecZ = slot->sourceVecZ + (int)slot->sourcePosZ.value * framesThisStep;
-                        rotParams.scale = 1.0f;
-                        workVec[0] = (f32)quadTemplate[0].x;
-                        workVec[1] = (f32)quadTemplate[0].y;
-                        workVec[2] = (f32)quadTemplate[0].z;
-                        rotParams.rotZ = 0;
-                        rotParams.rotY = 0;
-                        rotParams.rotX = slot->sourceVecX;
-                        vecRotateZXY(&rotParams.rotX, workVec);
-                        rotParams.rotZ = slot->sourceVecY;
-                        rotParams.rotY = slot->sourceVecZ;
-                        rotParams.rotX = 0;
-                        vecRotateZXY(&rotParams.rotX, workVec);
-                        quad[0].x = workVec[0];
-                        quad[0].y = workVec[1];
-                        quad[0].z = workVec[2];
-                        quad[0].texS = texS0;
-                        quad[0].texT = texT0;
-                        workVec[0] = (f32)quadTemplate[1].x;
-                        workVec[1] = (f32)quadTemplate[1].y;
-                        workVec[2] = (f32)quadTemplate[1].z;
-                        rotParams.rotZ = 0;
-                        rotParams.rotY = 0;
-                        rotParams.rotX = slot->sourceVecX;
-                        vecRotateZXY(&rotParams.rotX, workVec);
-                        rotParams.rotZ = slot->sourceVecY;
-                        rotParams.rotY = slot->sourceVecZ;
-                        rotParams.rotX = 0;
-                        vecRotateZXY(&rotParams.rotX, workVec);
-                        quad[1].x = workVec[0];
-                        quad[1].y = workVec[1];
-                        quad[1].z = workVec[2];
-                        quad[1].texS = texS1;
-                        quad[1].texT = texT0;
-                        workVec[0] = (f32)quadTemplate[2].x;
-                        workVec[1] = (f32)quadTemplate[2].y;
-                        workVec[2] = (f32)quadTemplate[2].z;
-                        rotParams.rotZ = 0;
-                        rotParams.rotY = 0;
-                        rotParams.rotX = slot->sourceVecX;
-                        vecRotateZXY(&rotParams.rotX, workVec);
-                        rotParams.rotZ = slot->sourceVecY;
-                        rotParams.rotY = slot->sourceVecZ;
-                        rotParams.rotX = 0;
-                        vecRotateZXY(&rotParams.rotX, workVec);
-                        quad[2].x = workVec[0];
-                        quad[2].y = workVec[1];
-                        quad[2].z = workVec[2];
-                        quad[2].texS = texS1;
-                        quad[2].texT = texT1;
-                        workVec[0] = (f32)quadTemplate[3].x;
-                        workVec[1] = (f32)quadTemplate[3].y;
-                        workVec[2] = (f32)quadTemplate[3].z;
-                        rotParams.rotZ = 0;
-                        rotParams.rotY = 0;
-                        rotParams.rotX = slot->sourceVecX;
-                        vecRotateZXY(&rotParams.rotX, workVec);
-                        rotParams.rotZ = slot->sourceVecY;
-                        rotParams.rotY = slot->sourceVecZ;
-                        rotParams.rotX = 0;
-                        vecRotateZXY(&rotParams.rotX, workVec);
-                        quad[3].x = workVec[0];
-                        quad[3].y = workVec[1];
-                        quad[3].z = workVec[2];
-                        quad[3].texS = texS0;
-                        quad[3].texT = texT1;
-                    } else if ((slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
-                        quad[0].x = quadTemplate[0].x;
-                        quad[0].y = quadTemplate[0].y;
-                        quad[0].z = quadTemplate[0].z;
-                        quad[0].texS = texS0;
-                        quad[0].texT = texT0;
-                        quad[1].x = quadTemplate[1].x;
-                        quad[1].y = quadTemplate[1].y;
-                        quad[1].z = quadTemplate[1].z;
-                        quad[1].texS = texS1;
-                        quad[1].texT = texT0;
-                        quad[2].x = quadTemplate[2].x;
-                        quad[2].y = quadTemplate[2].y;
-                        quad[2].z = quadTemplate[2].z;
-                        quad[2].texS = texS1;
-                        quad[2].texT = texT1;
-                        quad[3].x = quadTemplate[3].x;
-                        quad[3].y = quadTemplate[3].y;
-                        quad[3].z = quadTemplate[3].z;
-                        quad[3].texS = texS0;
-                        quad[3].texT = texT1;
-                    } else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SCALE_Y8) != 0) {
-                        quad[0].x = quadTemplate[0].x;
-                        quad[0].y = quadTemplate[0].y;
-                        quad[0].y <<= 3;
-                        quad[0].z = quadTemplate[0].z;
-                        quad[0].texS = texS0;
-                        quad[0].texT = texT0;
-                        quad[1].x = quadTemplate[1].x;
-                        quad[1].y = quadTemplate[1].y;
-                        quad[1].y <<= 3;
-                        quad[1].z = quadTemplate[1].z;
-                        quad[1].texS = texS1;
-                        quad[1].texT = texT0;
-                        quad[2].x = quadTemplate[2].x;
-                        quad[2].y = quadTemplate[2].y;
-                        quad[2].y <<= 3;
-                        quad[2].z = quadTemplate[2].z;
-                        quad[2].texS = texS1;
-                        quad[2].texT = texT1;
-                        quad[3].x = quadTemplate[3].x;
-                        quad[3].y = quadTemplate[3].y;
-                        quad[3].y <<= 3;
-                        quad[3].z = quadTemplate[3].z;
-                        quad[3].texS = texS0;
-                        quad[3].texT = texT1;
-                    } else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SWAP_XZ_SCALE_Z32) != 0) {
-                        quad[0].z = quadTemplate[0].x;
-                        quad[0].z <<= 5;
-                        quad[0].y = quadTemplate[0].y;
-                        quad[0].x = quadTemplate[0].z;
-                        quad[0].texS = texS0;
-                        quad[0].texT = texT0;
-                        quad[1].z = quadTemplate[1].x;
-                        quad[1].z <<= 5;
-                        quad[1].y = quadTemplate[1].y;
-                        quad[1].x = quadTemplate[1].z;
-                        quad[1].texS = texS1;
-                        quad[1].texT = texT0;
-                        quad[2].z = quadTemplate[2].x;
-                        quad[2].z <<= 5;
-                        quad[2].y = quadTemplate[2].y;
-                        quad[2].x = quadTemplate[2].z;
-                        quad[2].texS = texS1;
-                        quad[2].texT = texT1;
-                        quad[3].z = quadTemplate[3].x;
-                        quad[3].z <<= 5;
-                        quad[3].y = quadTemplate[3].y;
-                        quad[3].x = quadTemplate[3].z;
-                        quad[3].texS = texS0;
-                        quad[3].texT = texT1;
-                    } else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SCALE_X32) != 0) {
-                        quad[0].x = quadTemplate[0].x;
-                        quad[0].x <<= 5;
-                        quad[0].y = quadTemplate[0].y;
-                        quad[0].z = quadTemplate[0].z;
-                        quad[0].texS = texS0;
-                        quad[0].texT = texT0;
-                        quad[1].x = quadTemplate[1].x;
-                        quad[1].x <<= 5;
-                        quad[1].y = quadTemplate[1].y;
-                        quad[1].z = quadTemplate[1].z;
-                        quad[1].texS = texS1;
-                        quad[1].texT = texT0;
-                        quad[2].x = quadTemplate[2].x;
-                        quad[2].x <<= 5;
-                        quad[2].y = quadTemplate[2].y;
-                        quad[2].z = quadTemplate[2].z;
-                        quad[2].texS = texS1;
-                        quad[2].texT = texT1;
-                        quad[3].x = quadTemplate[3].x;
-                        quad[3].x <<= 5;
-                        quad[3].y = quadTemplate[3].y;
-                        quad[3].z = quadTemplate[3].z;
-                        quad[3].texS = texS0;
-                        quad[3].texT = texT1;
-                    } else {
-                        quad[0].x = quadTemplate[0].x;
-                        quad[0].y = quadTemplate[0].y;
-                        quad[0].z = quadTemplate[0].z;
-                        quad[0].texS = texS0;
-                        quad[0].texT = texT0;
-                        quad[1].x = quadTemplate[1].x;
-                        quad[1].y = quadTemplate[1].y;
-                        quad[1].z = quadTemplate[1].z;
-                        quad[1].texS = texS1;
-                        quad[1].texT = texT0;
-                        quad[2].x = quadTemplate[2].x;
-                        quad[2].y = quadTemplate[2].y;
-                        quad[2].z = quadTemplate[2].z;
-                        quad[2].texS = texS1;
-                        quad[2].texT = texT1;
-                        quad[3].x = quadTemplate[3].x;
-                        quad[3].y = quadTemplate[3].y;
-                        quad[3].z = quadTemplate[3].z;
-                        quad[3].texS = texS0;
-                        quad[3].texT = texT1;
-                    }
-                    attached =
-                        (GameObject*)((ExpgfxTableEntry*)((u8*)runtime->expTab + (((u32)slot->encodedTableIndex >> 1) &
-                                                                                  EXPGFX_SLOT_TABLE_INDEX_MASK) *
-                                                                                     16))
-                            ->attachedTableKey;
-                    rotParams.x = 0.0f;
-                    rotParams.y = 0.0f;
-                    rotParams.z = 0.0f;
-                    rotParams.scale = 1.0f;
-                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
-                        (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0) {
-                        rotParams.x = slot->posX.value;
-                        rotParams.y = slot->posY.value;
-                        rotParams.z = slot->posZ.value;
-                    }
-                    rotParams.rotZ = 0;
-                    rotParams.rotY = 0;
-                    rotParams.rotX = 0;
-                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0 &&
-                        (slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0) {
-                        if (srcObj != NULL) {
-                            rotParams.rotX = srcObj->rotX;
-                            rotParams.rotY = srcObj->rotY;
-                            rotParams.rotZ = srcObj->rotZ;
-                        } else {
-                            rotParams.rotX = slot->sourceVecX;
-                            rotParams.rotY = slot->sourceVecY;
-                            rotParams.rotZ = slot->sourceVecZ;
-                        }
-                    }
-                    rotatedPos[0] = slot->posX.value;
-                    rotatedPos[1] = slot->posY.value;
-                    rotatedPos[2] = slot->posZ.value;
-                    if ((rotParams.rotX | rotParams.rotY | rotParams.rotZ) != 0) {
-                        vecRotateZXY(&rotParams.rotX, rotatedPos);
-                    }
-                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) == 0) {
-                        if (srcObj != NULL) {
-                            srcWorldPos[0] = srcObj->worldPosX;
-                            srcWorldPos[1] = srcObj->worldPosY;
-                            srcWorldPos[2] = srcObj->worldPosZ;
-                        } else {
-                            srcWorldPos[0] = slot->sourcePosX.value;
-                            srcWorldPos[1] = slot->sourcePosY.value;
-                            srcWorldPos[2] = slot->sourcePosZ.value;
-                            if (attached != NULL) {
-                                Obj_RotateLocalOffsetByYaw(&slot->sourcePosX.value, srcWorldPos,
-                                                           attached->anim.transformMatrixIndex);
-                            }
-                        }
-                    } else {
-                        srcWorldPos[0] = 0.0f;
-                        srcWorldPos[1] = 0.0f;
-                        srcWorldPos[2] = 0.0f;
-                    }
-                    rotParams.rotZ = 0;
-                    rotParams.rotY = 0;
-                    rotParams.rotX = 0;
-                    rotParams.x = srcWorldPos[0] + rotatedPos[0];
-                    rotParams.y = srcWorldPos[1] + rotatedPos[1];
-                    rotParams.z = srcWorldPos[2] + rotatedPos[2];
-                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
-                        (slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0 &&
-                        (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0) {
-                        rotParams.x += slot->sourcePosX.value;
-                        rotParams.y += slot->sourcePosY.value;
-                        rotParams.z += slot->sourcePosZ.value;
-                    }
-                    slot->renderX = rotParams.x;
-                    slot->renderY = rotParams.y;
-                    slot->renderZ = rotParams.z;
-                    if (rotParams.x < bounds->minX) {
-                        bounds->minX = rotParams.x;
-                    }
-                    if (rotParams.x > *maxXPtr) {
-                        *maxXPtr = rotParams.x;
-                    }
-                    if (rotParams.y < *minYPtr) {
-                        *minYPtr = rotParams.y;
-                    }
-                    if (rotParams.y > *maxYPtr) {
-                        *maxYPtr = rotParams.y;
-                    }
-                    if (rotParams.z < *minZPtr) {
-                        *minZPtr = rotParams.z;
-                    }
-                    if (rotParams.z > *maxZPtr) {
-                        *maxZPtr = rotParams.z;
-                    }
+                slot = (ExpgfxSlot*)((u8*)slot + EXPGFX_SLOT_SIZE);
+                if (*poolActiveCounts[0] == 0) {
+                    gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
                 }
             }
-            memcpyToCache((void*)*(u32*)((u8*)runtime->slotPoolBases + curPool * 4), curPoolBuf,
-                          EXPGFX_POOL_CACHE_LINE_COUNT);
-            cacheQueued = 1;
-            poolOrResource = nextActivePool;
-        }
-        cacheQueueWait(0);
-    }
-}
-
-u8 gExpgfxRuntimeData[0x980];
-
-char sExpgfxMismatchInAddRemove[] = "expgfx.c: mismatch in add/remove in exptab\n";
-
-char sExpgfxNoTexture[11] = "notexture \n";
-
-char sExpgfxAddToTableUsageOverflow[] = "expgfx.c: addToTable usage overflow\n";
-
-char sExpgfxExpTabIsFull[] = "expgfx.c: exptab is FULL\n";
-
-char sExpgfxInvalidTabIndex[] = "expgfx.c: invalid tabindex\n";
-
-char sExpgfxScaleOverflow[] = "expgfx.c: scale overflow\n";
-
-int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s16 resourceId) {
-    ExpgfxTableEntry* entry;
-    int tableIndex;
-    int freeIndex;
-
-    for (tableIndex = 0; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++) {
-        entry = &gExpgfxTableEntries[tableIndex];
-        if ((entry->refCount != 0) && ((u32)entry->resource == resourceHandle) && (entry->sourceId == sourceId) &&
-            (entry->attachedTableKey == attachedTableKey)) {
-            if (gExpgfxTableEntries[tableIndex].refCount >= EXPGFX_REFCOUNT_OVERFLOW) {
-                debugPrintf(sExpgfxAddToTableUsageOverflow);
-                return EXPGFX_INVALID_TABLE_INDEX;
-            }
-            gExpgfxTableEntries[tableIndex].refCount++;
-            return (s16)tableIndex;
-        }
-    }
-
-    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeIndex++) {
-        if (gExpgfxTableEntries[freeIndex].refCount == 0) {
-            gExpgfxTableEntries[freeIndex].refCount = 1;
-            gExpgfxTableEntries[freeIndex].resource = (void*)resourceHandle;
-            gExpgfxTableEntries[freeIndex].sourceId = sourceId;
-            gExpgfxTableEntries[freeIndex].attachedTableKey = attachedTableKey;
-            gExpgfxTableEntries[freeIndex].resourceId = resourceId;
-            return (s16)freeIndex;
-        }
-    }
-
-    debugPrintf(sExpgfxExpTabIsFull);
-    return EXPGFX_INVALID_TABLE_INDEX;
-}
-
-int expgfx_updateSourceFrameFlags(void* sourceObject) {
-    int result;
-    s16 poolIndex;
-
-    result = EXPGFX_SOURCE_FRAME_STATE_NONE;
-    lbl_803DD253 = 0;
-
-    for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
-        if ((((ObjAnimComponent*)sourceObject)->romDefNo == EXPGFX_SOURCE_SEQID_MATCH_ALL) ||
-            (gExpgfxTrackedPoolSourceIds[poolIndex] == sourceObject)) {
-            s64 frameBit;
-
-            frameBit = 1 << (poolIndex >> 1);
-            if ((frameBit & gExpgfxTrackedSourceFrameMasks[poolIndex & 1]) != 0) {
-                gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_B;
-                if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_A) {
-                    result = EXPGFX_SOURCE_FRAME_STATE_MIXED;
-                } else {
-                    result = EXPGFX_SOURCE_FRAME_STATE_B;
-                }
-            } else {
-                gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_A;
-                if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_B) {
-                    result = EXPGFX_SOURCE_FRAME_STATE_MIXED;
-                } else {
-                    result = EXPGFX_SOURCE_FRAME_STATE_A;
-                }
-            }
-        } else {
+            *poolSourceIds[0] = 0;
             gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
         }
-    }
 
-    return result;
+        slotPoolBases[0]++;
+        poolSourceIds[0]++;
+        poolActiveCounts[0]++;
+        poolIndex++;
+    }
 }
 
-void expgfx_ownerFree3(u32 sourceId) {
+void expgfx_free2(u32 sourceId) {
     expgfx_free(sourceId);
     return;
 }
 
-void expgfx_func0B_nop(void) {
-}
-
-void expgfx_func0A_nop(void) {
-}
-
-int expgfx_func09(void) {
-    return 0;
-}
-
-void expgfx_renderSourcePools(int sourceId, int sourceMode) {
-    ExpgfxRuntimeDataLayout* runtime;
-    ExpgfxPlaneOffsets* planeOffsets;
-    s8* poolActiveCounts;
-    u32* poolSourceIds;
-    u8* poolSourceModes;
-    u8* poolPlaneOffsetSetIds;
-    ExpgfxBounds* poolBounds;
-    u32* slotPoolBases;
-    int poolIndex;
-
-    runtime = EXPGFX_RUNTIME_DATA;
-    poolIndex = 0;
-    poolActiveCounts = runtime->poolActiveCounts;
-    poolSourceIds = runtime->poolSourceIds;
-    poolSourceModes = runtime->poolSourceModes;
-    poolPlaneOffsetSetIds = runtime->poolPlaneOffsetSetIds;
-    poolBounds = runtime->poolBounds;
-    slotPoolBases = runtime->slotPoolBases;
-
-    while (poolIndex < EXPGFX_POOL_COUNT) {
-        if ((*poolActiveCounts != 0) && (*poolSourceIds == sourceId) &&
-            (*poolSourceModes == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET)) {
-            planeOffsets = Expgfx_GetPlaneOffsets(*poolPlaneOffsetSetIds);
-            if ((u8)frustumTestAabbWithPlaneOffsets(poolBounds->minX - playerMapOffsetX,
-                                                    poolBounds->maxX - playerMapOffsetX, poolBounds->minY,
-                                                    poolBounds->maxY, poolBounds->minZ - playerMapOffsetZ,
-                                                    poolBounds->maxZ - playerMapOffsetZ, planeOffsets->offsets) != 0) {
-                drawGlow(*slotPoolBases, poolIndex);
-            }
-        }
-        poolActiveCounts++;
-        poolSourceIds++;
-        poolSourceModes++;
-        poolPlaneOffsetSetIds++;
-        poolBounds++;
-        slotPoolBases++;
-        poolIndex++;
-    }
+void renderParticles(void) {
+    renderParticlesBody();
 }
 
 void drawGlow(u32 slotPoolBase, int poolIndex) {
@@ -3408,662 +1272,2635 @@ void drawGlow(u32 slotPoolBase, int poolIndex) {
     }
 }
 
-static inline void renderParticlesBody(void) {
-    float queuePosition[3];
-    f32* currentMatrix;
-    int poolIndex;
-    u32* slotPoolBases;
-    ExpgfxRuntimeDataLayout* runtime;
-    register s16* poolSlotTypeIds;
-    u32* poolSourceIds;
-    ExpgfxBounds* poolBounds;
-    u8* poolPlaneOffsetSetIds;
-    u8* poolSourceModes;
-    s8* poolActiveCounts;
-    ExpgfxPoolSourcePosition* sourcePosition;
+void expgfx_renderSourcePools(int sourceId, int sourceMode) {
     ExpgfxPlaneOffsets* planeOffsets;
+    s8* poolActiveCounts;
+    u32* poolSourceIds;
+    u8* poolSourceModes;
+    u8* poolPlaneOffsetSetIds;
+    ExpgfxBounds* poolBounds;
+    u32* slotPoolBases;
+    int poolIndex;
 
-    runtime = EXPGFX_RUNTIME_DATA;
-    currentMatrix = Camera_GetViewMatrix();
     poolIndex = 0;
-    poolActiveCounts = runtime->poolActiveCounts;
-    poolSourceModes = runtime->poolSourceModes;
-    poolPlaneOffsetSetIds = runtime->poolPlaneOffsetSetIds;
-    poolBounds = runtime->poolBounds;
-    poolSourceIds = runtime->poolSourceIds;
-    poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
-    slotPoolBases = runtime->slotPoolBases;
-    do {
-        if ((*poolActiveCounts != 0) && (*poolSourceModes == EXPGFX_POOL_SOURCE_MODE_STANDALONE)) {
+    poolActiveCounts = gExpgfxPoolActiveCounts;
+    poolSourceIds = ((u32*)gExpgfxTrackedPoolSourceIds);
+    poolSourceModes = gExpgfxPoolSourceModes;
+    poolPlaneOffsetSetIds = gExpgfxPoolPlaneOffsetSetIds;
+    poolBounds = gExpgfxPoolBounds;
+    slotPoolBases = gExpgfxSlotPoolBases;
+
+    while (poolIndex < EXPGFX_POOL_COUNT) {
+        if ((*poolActiveCounts != 0) && (*poolSourceIds == sourceId) &&
+            (*poolSourceModes == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET)) {
             planeOffsets = Expgfx_GetPlaneOffsets(*poolPlaneOffsetSetIds);
-            if ((u8)frustumTestAabbWithPlaneOffsets(
-                    (double)(poolBounds->minX - playerMapOffsetX), (double)(poolBounds->maxX - playerMapOffsetX),
-                    (double)poolBounds->minY, (double)poolBounds->maxY, (double)(poolBounds->minZ - playerMapOffsetZ),
-                    (double)(poolBounds->maxZ - playerMapOffsetZ), planeOffsets->offsets) != 0) {
-                sourcePosition = (ExpgfxPoolSourcePosition*)*poolSourceIds;
-                if (sourcePosition != (ExpgfxPoolSourcePosition*)0x0) {
-                    queuePosition[0] = sourcePosition->x - playerMapOffsetX;
-                    queuePosition[1] = sourcePosition->y;
-                    queuePosition[2] = sourcePosition->z - playerMapOffsetZ;
-                } else {
-                    queuePosition[0] = 0.5f * (poolBounds->minX + poolBounds->maxX) - playerMapOffsetX;
-                    queuePosition[1] = 0.5f * (poolBounds->minY + poolBounds->maxY);
-                    queuePosition[2] = 0.5f * (poolBounds->minZ + poolBounds->maxZ) - playerMapOffsetZ;
-                }
-                PSMTXMultVec((float(*)[4])currentMatrix, (Vec*)queuePosition, (Vec*)queuePosition);
-                if (*poolSourceIds != 0) {
-                    queuePosition[2] = queuePosition[2] - (float)(*poolSlotTypeIds & EXPGFX_QUEUE_DEPTH_SLOT_TYPE_MASK);
-                }
-                lightmap_queueExternalRenderEntry(*slotPoolBases, poolIndex, queuePosition);
+            if ((u8)frustumTestAabbWithPlaneOffsets(poolBounds->minX - playerMapOffsetX,
+                                                    poolBounds->maxX - playerMapOffsetX, poolBounds->minY,
+                                                    poolBounds->maxY, poolBounds->minZ - playerMapOffsetZ,
+                                                    poolBounds->maxZ - playerMapOffsetZ, planeOffsets->offsets) != 0) {
+                drawGlow(*slotPoolBases, poolIndex);
             }
         }
-        poolActiveCounts += 1;
-        poolSourceModes += 1;
-        poolPlaneOffsetSetIds += 1;
-        poolBounds += 1;
-        poolSourceIds += 1;
-        poolSlotTypeIds += 1;
-        slotPoolBases += 1;
-        poolIndex += 1;
-    } while (poolIndex < EXPGFX_POOL_COUNT);
-    return;
+        poolActiveCounts++;
+        poolSourceIds++;
+        poolSourceModes++;
+        poolPlaneOffsetSetIds++;
+        poolBounds++;
+        slotPoolBases++;
+        poolIndex++;
+    }
 }
 
-void renderParticles(void) {
-    renderParticlesBody();
+int expgfx_func09(void) {
+    return 0;
 }
 
-void expgfx_free2(u32 sourceId) {
+void expgfx_func0A_nop(void) {
+}
+
+void expgfx_func0B_nop(void) {
+}
+
+void expgfx_ownerFree3(u32 sourceId) {
     expgfx_free(sourceId);
     return;
 }
 
-void expgfx_free(u32 sourceId) {
-    s8* poolActiveCounts[1];
-    int slotIndex;
-    ExpgfxTableEntry* tableEntry;
-    u32* slotPoolBases[1];
-    ExpgfxRuntimeDataLayout* runtime;
-    u32* poolSourceIds[1];
-    int poolIndex;
-    ExpgfxSlot* slot;
+int expgfx_updateSourceFrameFlags(void* sourceObject) {
+    int result;
+    s16 poolIndex;
 
-    runtime = EXPGFX_RUNTIME_DATA;
-    if (sourceId == 0) {
-        return;
-    }
+    result = EXPGFX_SOURCE_FRAME_STATE_NONE;
+    lbl_803DD253 = 0;
 
-    poolIndex = 0;
-    slotPoolBases[0] = runtime->slotPoolBases;
-    poolSourceIds[0] = runtime->poolSourceIds;
-    poolActiveCounts[0] = runtime->poolActiveCounts;
+    for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
+        if ((((ObjAnimComponent*)sourceObject)->romDefNo == EXPGFX_SOURCE_SEQID_MATCH_ALL) ||
+            (gExpgfxTrackedPoolSourceIds[poolIndex] == sourceObject)) {
+            s64 frameBit;
 
-    while (poolIndex < EXPGFX_POOL_COUNT) {
-        slot = (ExpgfxSlot*)*slotPoolBases[0];
-        if (sourceId == *poolSourceIds[0]) {
-            for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
-                if (slot != NULL) {
-                    tableEntry =
-                        (ExpgfxTableEntry*)((u8*)runtime->expTab +
-                                            (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16);
-                    if (tableEntry->sourceId == sourceId) {
-                        expgfxRemove(*slotPoolBases[0], poolIndex, slotIndex, 0, 1);
-                    }
+            frameBit = 1 << (poolIndex >> 1);
+            if ((frameBit & gExpgfxTrackedSourceFrameMasks[poolIndex & 1]) != 0) {
+                gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_B;
+                if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_A) {
+                    result = EXPGFX_SOURCE_FRAME_STATE_MIXED;
+                } else {
+                    result = EXPGFX_SOURCE_FRAME_STATE_B;
                 }
-                slot = (ExpgfxSlot*)((u8*)slot + EXPGFX_SLOT_SIZE);
-                if (*poolActiveCounts[0] == 0) {
-                    gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
+            } else {
+                gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_A;
+                if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_B) {
+                    result = EXPGFX_SOURCE_FRAME_STATE_MIXED;
+                } else {
+                    result = EXPGFX_SOURCE_FRAME_STATE_A;
                 }
             }
-            *poolSourceIds[0] = 0;
+        } else {
             gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
         }
-
-        slotPoolBases[0]++;
-        poolSourceIds[0]++;
-        poolActiveCounts[0]++;
-        poolIndex++;
     }
+
+    return result;
 }
 
-static inline void expgfx_clearResourceTable(ExpgfxResourceEntry* resourceEntry) {
-    int resourceIndex;
-    for (resourceIndex = 0; resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT; resourceEntry++, resourceIndex++) {
-        gExpgfxTextureFreeInProgress = 1;
-        if (resourceEntry->resource != NULL) {
-            textureFree((Texture*)(resourceEntry->resource));
-        }
-        gExpgfxTextureFreeInProgress = 0;
-        resourceEntry->resource = NULL;
-        resourceEntry->resourceId = 0;
-        resourceEntry->evictionScore = 0;
-        resourceEntry->reserved = 0;
-    }
-}
+int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s16 resourceId) {
+    ExpgfxTableEntry* entry;
+    int tableIndex;
+    int freeIndex;
 
-void expgfx_resetAllPools(void) {
-    u16* refCountPtr;
-    u32* poolActiveMasks[1];
-    s8* poolActiveCounts[1];
-    s16* poolSlotTypeIds[1];
-    u32* poolSourceIds[1];
-    u8* poolFrameFlags[1];
-    int activeBit;
-    int poolIndex;
-    ExpgfxResourceEntry* resourceEntry;
-    ExpgfxTableEntry* tableEntry;
-    ExpgfxStaticDataLayout* staticData;
-    u32* slotPoolBases[1];
-    ExpgfxRuntimeDataLayout* runtime[1];
-    int slotIndex;
-    ExpgfxSlot* slot;
-    staticData = EXPGFX_STATIC_DATA;
-    slotPoolBases[0] = NULL;
-    poolActiveMasks[0] = NULL;
-    poolActiveCounts[0] = NULL;
-    poolSlotTypeIds[0] = NULL;
-    poolSourceIds[0] = NULL;
-    poolFrameFlags[0] = NULL;
-    runtime[0] = EXPGFX_RUNTIME_DATA;
-    poolIndex = 0;
-    slotPoolBases[0] = runtime[0]->slotPoolBases;
-    poolActiveMasks[0] = runtime[0]->poolActiveMasks;
-    poolActiveCounts[0] = runtime[0]->poolActiveCounts;
-    poolSlotTypeIds[0] = staticData->poolSlotTypeIds;
-    poolSourceIds[0] = runtime[0]->poolSourceIds;
-    poolFrameFlags[0] = staticData->poolFrameFlags;
-
-    while (poolIndex < EXPGFX_POOL_COUNT) {
-        slot = (ExpgfxSlot*)*slotPoolBases[0];
-        for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
-            activeBit = 1 << slotIndex;
-            if ((activeBit & *poolActiveMasks[0]) != 0) {
-                if (((ExpgfxTableEntry*)((u8*)runtime[0]->expTab + Expgfx_GetSlotTableIndex(slot) * 16))->resource !=
-                    0) {
-                    gExpgfxTextureFreeInProgress = 1;
-                    textureFree((Texture*)((void*)((ExpgfxTableEntry*)((u8*)runtime[0]->expTab +
-                                                                       Expgfx_GetSlotTableIndex(slot) * 16))
-                                               ->resource));
-                    gExpgfxTextureFreeInProgress = 0;
-                }
-
-                tableEntry = (ExpgfxTableEntry*)((u8*)runtime[0]->expTab + Expgfx_GetSlotTableIndex(slot) * 16);
-                refCountPtr = &tableEntry->refCount;
-                if (*refCountPtr != 0) {
-                    (*refCountPtr)--;
-                    if (*refCountPtr == 0) {
-                        tableEntry->resource = NULL;
-                        tableEntry->sourceId = 0;
-                    }
-                } else {
-                    debugPrintf(staticData->mismatchInAddRemoveString);
-                }
-
-                slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-                *poolActiveMasks[0] &= ~activeBit;
+    for (tableIndex = 0; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++) {
+        entry = &gExpgfxTableEntries[tableIndex];
+        if ((entry->refCount != 0) && ((u32)entry->resource == resourceHandle) && (entry->sourceId == sourceId) &&
+            (entry->attachedTableKey == attachedTableKey)) {
+            if (gExpgfxTableEntries[tableIndex].refCount >= EXPGFX_REFCOUNT_OVERFLOW) {
+                debugPrintf("expgfx.c: addToTable usage overflow\n");
+                return EXPGFX_INVALID_TABLE_INDEX;
             }
-
-            slot = (ExpgfxSlot*)((u8*)slot + EXPGFX_SLOT_SIZE);
+            gExpgfxTableEntries[tableIndex].refCount++;
+            return (s16)tableIndex;
         }
-
-        *poolActiveCounts[0] = 0;
-        *poolSlotTypeIds[0] = EXPGFX_INVALID_SLOT_TYPE;
-        *poolSourceIds[0] = 0;
-        *poolFrameFlags[0] = EXPGFX_SOURCE_FRAME_STATE_NONE;
-        DCFlushRange((void*)*slotPoolBases[0], EXPGFX_POOL_BYTES);
-
-        slotPoolBases[0]++;
-        poolActiveMasks[0]++;
-        poolActiveCounts[0]++;
-        poolSlotTypeIds[0]++;
-        poolSourceIds[0]++;
-        poolFrameFlags[0]++;
-        poolIndex++;
     }
 
-    resourceEntry = runtime[0]->resourceTable;
-    {
-        expgfx_clearResourceTable(resourceEntry);
+    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeIndex++) {
+        if (gExpgfxTableEntries[freeIndex].refCount == 0) {
+            gExpgfxTableEntries[freeIndex].refCount = 1;
+            gExpgfxTableEntries[freeIndex].resource = (void*)resourceHandle;
+            gExpgfxTableEntries[freeIndex].sourceId = sourceId;
+            gExpgfxTableEntries[freeIndex].attachedTableKey = attachedTableKey;
+            gExpgfxTableEntries[freeIndex].resourceId = resourceId;
+            return (s16)freeIndex;
+        }
     }
+
+    debugPrintf("expgfx.c: exptab is FULL\n");
+    return EXPGFX_INVALID_TABLE_INDEX;
 }
 
-void expgfx_updateFrameState(int sourceMode, int sourceId) {
-    int renderMode;
-    int poolIndex;
-    f32 frameStep;
-    f32 frameValue;
-
-    renderMode = renderModeSetOrGet(EXPGFX_INVALID_SLOT_TYPE);
-    if ((short)renderMode != 1) {
-        frameValue = gExpgfxFrameTimerA + (frameStep = timeDelta);
-        gExpgfxFrameTimerA = frameValue;
-        if (frameValue >= 1024.0f) {
-            gExpgfxFrameTimerA = 0.0f;
-        }
-        frameValue = gExpgfxFrameTimerB + frameStep;
-        gExpgfxFrameTimerB = frameValue;
-        if (frameValue >= 10.0f) {
-            gExpgfxFrameTimerB = 0.0f;
-        }
-        frameValue = gExpgfxFrameTimerC + frameStep;
-        gExpgfxFrameTimerC = frameValue;
-        if (frameValue >= 1.0f) {
-            gExpgfxFrameTimerC = 0.0f;
-        }
-        gExpgfxUpdatingActivePools = 1;
-        expgfx_updateActivePools((u8)sourceMode, sourceId, 0);
-        gExpgfxUpdatingActivePools = 0;
-        poolIndex = EXPGFX_POOL_COUNT;
-        while ((u8)poolIndex > 0) {
-            poolIndex--;
-            gExpgfxStaticPoolFrameFlags[(u8)poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
-        }
-        (*gPartfxInterface)->updateFrameState(0);
-        gExpgfxRenderResetPending = 1;
-    }
-    return;
-}
-
-int expgfx_addremove(EffectSpawnConfig* config, int preferredPoolIndex, int slotType, int planeOffsetSetId) {
-    u32 behaviorFlags;
+void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameState) {
+    u32* maskPtr;
+    int ambRPlus1;
+    int ambGPlus1;
+    int ambBPlus1;
+    int curPool;
+    f32* maxXPtr;
+    s8* activeCountScan;
+    u8* curPoolBuf;
+    int poolByteOffset;
+    ExpgfxBounds* bounds;
+    int nextActivePool;
+    int scanIdx;
+    f32* minYPtr;
+    f32* maxYPtr;
+    f32* minZPtr;
+    f32* maxZPtr;
+    s32 activePool;
+    int sky;
+    s16 slotIdx;
     ExpgfxSlot* slot;
-    ObjAnimComponent* attachedSource;
-    ExpgfxResourceHandle* resourceHandle;
-    ExpgfxRuntimeDataLayout* runtime;
-    GameObject* playerObj;
+    Vec3s* quadTemplate;
     s16 texT1;
-    int expTabIndex;
-    int attachedTableKey;
-    short poolIndex;
-    short slotIndex;
     s16 texT0;
     s16 texS1;
     s16 texS0;
-    short resourceTableIndex;
-    f32 scaleVal;
-    u32 sourceModeValue;
-
-    ExpgfxQuadVertex* quadVertices;
-
-    runtime = EXPGFX_RUNTIME_DATA;
-    poolIndex = 0;
-    slotIndex = 0;
-    texT1 = 0;
-    texT0 = 0;
-    texS1 = 0;
-    texS0 = 0;
-    if (getHudHiddenFrameCount() != 0) {
-        return EXPGFX_INVALID_POOL_INDEX;
+    GameObject* player;
+    GameObject* tricky;
+    u8* nextCacheBuf;
+    ObjAnimComponent* srcObj;
+    u8 cacheQueued;
+    ExpgfxSlot* curCacheBuf;
+    void* cache;
+    u8 ambientScaled[3]; /* BGR order: [2]=R, [1]=G, [0]=B */
+    MatrixTransform rotParams;
+    f32 workVec[3];
+    f32 skyLightDir[3];
+    f32 rotatedPos[3];
+    f32 srcWorldPos[3];
+    u8 ambB8;
+    u8 ambG8;
+    u8 ambR8;
+    Vec trailPrev;
+    f32 boundsMax;
+    f32 boundsMin;
+    f32 nearestDistanceSq;
+    f32 trickyDistanceSq;
+    f32 motionScale; /* attraction speed ratio, then inverse trail scale */
+    f32 ambientScale;
+    f32 trickySpeed;
+    f32 playerRange;
+    motionScale = 1.0f;
+    trickySpeed = 0.0f;
+    playerRange = trickySpeed;
+    player = Obj_GetPlayerObject();
+    tricky = getTrickyObject();
+    cache = getCache();
+    gExpgfxPhaseAngleA += (u16)(120.0f * timeDelta);
+    gExpgfxPhaseAngleB += (u16)(480.0f * timeDelta);
+    sky = skyGetCurrentLightIndex();
+    skyGetSunLightDirection(sky, &skyLightDir[0], &skyLightDir[1], &skyLightDir[2]);
+    PSMTXMultVec((void*)Camera_GetViewRotationMatrix(), (void*)skyLightDir, (void*)skyLightDir);
+    ambientScale = -skyLightDir[2];
+    if (ambientScale < 0.75f) {
+        ambientScale = 0.75f;
     }
-    if (expgfxGetSlot(&poolIndex, &slotIndex, slotType, preferredPoolIndex, (u32)(int)config->attachedSource) ==
-        EXPGFX_INVALID_POOL_INDEX) {
-        return EXPGFX_INVALID_POOL_INDEX;
+    skyGetSunColor(sky, &ambR8, &ambG8, &ambB8);
+    ambientScaled[2] = (f32)ambR8 * ambientScale;
+    ambientScaled[1] = (f32)ambG8 * ambientScale;
+    ambientScaled[0] = (f32)ambB8 * ambientScale;
+
+    for (scanIdx = 0; scanIdx < EXPGFX_POOL_COUNT || (scanIdx = -1, 0); scanIdx++) {
+        switch (gExpgfxPoolActiveCounts[scanIdx]) {
+        case 0:
+            continue;
+        }
+        break;
     }
-    {
-        int poolIdx = poolIndex;
+    activePool = scanIdx;
+    if (activePool != -1) {
+        u8 cacheParity;
 
-        if (poolIdx < EXPGFX_POOL_COUNT) {
-            runtime->poolSourceIds[poolIdx] = (int)config->attachedSource;
+        copyToCache(cache, (void*)gExpgfxSlotPoolBases[activePool], EXPGFX_POOL_CACHE_LINE_COUNT);
+        cacheParity = 1;
+        curCacheBuf = (ExpgfxSlot*)(cache);
+        Camera_GetCurrent();
+        if (tricky != NULL) {
+            trickySpeed = trickyGetSpeed(tricky);
         }
-        if (poolIdx < EXPGFX_POOL_COUNT && (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0) {
-            runtime->trackedSourceFrameMasks[poolIdx & 1] |= (s64)(1 << (poolIdx >> 1));
-        } else {
-            runtime->trackedSourceFrameMasks[poolIdx & 1] &= (s64) ~(1 << (poolIdx >> 1));
+        if (player != NULL) {
+            playerRange = playerGetAnimSpeed(player);
         }
-        slot = (ExpgfxSlot*)runtime->slotPoolBases[poolIdx];
-        slot += slotIndex;
-        quadVertices = slot->quad;
-        gExpgfxSequenceCounter++;
-        if (gExpgfxSequenceCounter > EXPGFX_SEQUENCE_COUNTER_MAX) {
-            gExpgfxSequenceCounter = 0;
-        }
-        slot->sequenceId = gExpgfxSequenceCounter;
-        slot->behaviorFlags = config->behaviorFlags;
-        slot->renderFlags = config->renderFlags;
-        slot->stateBits.bits.initPhase = 0;
-
-        resourceTableIndex = expgfx_acquireResourceEntry(config->textureId);
-        if (resourceTableIndex < 0) {
-            expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
-            return EXPGFX_INVALID_POOL_INDEX;
-        }
-        resourceHandle = runtime->resourceTable[resourceTableIndex].resource;
-        if (resourceHandle != NULL) {
-            if (resourceHandle->refCount >= EXPGFX_REFCOUNT_OVERFLOW) {
-                expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
-                return EXPGFX_INVALID_POOL_INDEX;
+        cacheQueued = 0;
+        ambRPlus1 = ambientScaled[2] + 1;
+        ambGPlus1 = ambientScaled[1] + 1;
+        ambBPlus1 = ambientScaled[0] + 1;
+        boundsMin = EXPGFX_BOUNDS_INIT_MIN;
+        boundsMax = EXPGFX_BOUNDS_INIT_MAX;
+        while (activePool > -1) {
+            bounds = &gExpgfxPoolBounds[activePool];
+            bounds->minX = boundsMin;
+            maxXPtr = &bounds->maxX;
+            *maxXPtr = boundsMax;
+            minYPtr = &bounds->minY;
+            *minYPtr = boundsMin;
+            maxYPtr = &bounds->maxY;
+            *maxYPtr = boundsMax;
+            minZPtr = &bounds->minZ;
+            *minZPtr = boundsMin;
+            maxZPtr = &bounds->maxZ;
+            *maxZPtr = boundsMax;
+            curPool = activePool;
+            scanIdx = curPool + 1;
+            activeCountScan = &gExpgfxPoolActiveCounts[scanIdx];
+            for (; scanIdx < EXPGFX_POOL_COUNT || (scanIdx = -1, 0); scanIdx++) {
+                switch (*activeCountScan) {
+                case 0:
+                    activeCountScan++;
+                    continue;
+                }
+                break;
             }
-            resourceHandle->refCount++;
-            resourceHandle->linkGroup = config->linkGroup;
-        } else {
-            expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
-            return EXPGFX_INVALID_POOL_INDEX;
-        }
+            nextActivePool = scanIdx;
+            slot = curCacheBuf;
+            if (nextActivePool > -1) {
+                nextCacheBuf = (u8*)cache + cacheParity * 0x1000;
+                copyToCache(nextCacheBuf, (void*)*(u32*)((u8*)gExpgfxSlotPoolBases + nextActivePool * 4),
+                            EXPGFX_POOL_CACHE_LINE_COUNT);
+                curCacheBuf = (ExpgfxSlot*)(nextCacheBuf);
+                cacheQueued = 1;
+            }
+            cacheParity ^= 1;
+            cacheQueueWait(cacheQueued);
+            slot--;
+            slotIdx = 0;
+            poolByteOffset = activePool * sizeof(gExpgfxSlotActiveMasks[0]);
+            maskPtr = (u32*)((u8*)gExpgfxSlotActiveMasks + poolByteOffset);
+            curPoolBuf = (u8*)cache + cacheParity * 0x1000;
+            for (; slotIdx < EXPGFX_SLOTS_PER_POOL; slotIdx++) {
+                ExpgfxQuadVertex* quad;
+                ExpgfxTableEntry* entry;
+                u32 phase;
+                u32 resourceHandle;
 
-        behaviorFlags = slot->behaviorFlags;
-        if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0) {
-            texS1 = 0;
+                slot++;
+                if ((1 << slotIdx & *maskPtr) == 0) {
+                    continue;
+                }
+                if (slot->sequenceId == EXPGFX_INVALID_SEQUENCE_ID) {
+                    continue;
+                }
+                entry = (ExpgfxTableEntry*)((u8*)gExpgfxTableEntries +
+                                            (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16);
+                srcObj = (ObjAnimComponent*)entry->sourceId;
+                resourceHandle = (u32)entry->resource;
+                slot->stateBits.bits.frameParity = 0;
+                slot->stateBits.bits.quadReady = 1;
+                if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_HOLD_LIFETIME_TIMER) == 0) {
+                    slot->lifetimeFrame -= framesThisStep;
+                }
+                phase = slot->stateBits.bits.initPhase;
+                if (phase == 2) {
+                    slot->stateBits.bits.initPhase = 1;
+                    continue;
+                }
+                if (phase == 1) {
+                    expgfxRemove(curPoolBuf, curPool, slotIdx, 0, 0);
+                    continue;
+                }
+                if (slot->lifetimeFrame <= 0 || slot->lifetimeFrame > slot->lifetimeFrameLimit) {
+                    slot->stateBits.bits.initPhase = 2;
+                    continue;
+                }
+                if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0) {
+                    quadTemplate = gExpgfxQuadTemplateA;
+                } else {
+                    quadTemplate = gExpgfxQuadTemplateB;
+                }
+                if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
+                    (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0) {
+                    rotParams.x = 0.0f;
+                    rotParams.y = 0.0f;
+                    rotParams.z = 0.0f;
+                    rotParams.scale = 1.0f;
+                    rotParams.rotZ = (f32)slot->sourceVecZ * timeDelta;
+                    rotParams.rotY = (f32)slot->sourceVecY * timeDelta;
+                    rotParams.rotX = (f32)slot->sourceVecX * timeDelta;
+                    vecRotateZXY(&rotParams.rotX, &slot->posX.value);
+                }
+                if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) != 0) {
+                    nearestDistanceSq = 1000000.0f;
+                    trickyDistanceSq = nearestDistanceSq;
+                    if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_PLAYER) != 0 && player != NULL &&
+                        srcObj != NULL && playerRange > 0.2f) {
+                        workVec[0] = player->anim.worldPosX - (slot->startPosX.value + srcObj->localPosX);
+                        workVec[2] = player->anim.worldPosZ - (slot->startPosZ.value + srcObj->localPosZ);
+                        nearestDistanceSq = workVec[0] * workVec[0] + workVec[2] * workVec[2];
+                        motionScale = playerRange / nearestDistanceSq;
+                    }
+                    if (nearestDistanceSq > 300.0f && (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0 &&
+                        tricky != NULL && srcObj != NULL && trickySpeed > 0.2f) {
+                        workVec[0] = tricky->anim.worldPosX - (slot->startPosX.value + srcObj->localPosX);
+                        workVec[2] = tricky->anim.worldPosZ - (slot->startPosZ.value + srcObj->localPosZ);
+                        trickyDistanceSq = workVec[0] * workVec[0] + workVec[2] * workVec[2];
+                        motionScale = trickySpeed / nearestDistanceSq;
+                    }
+                    if (trickyDistanceSq < nearestDistanceSq) {
+                        nearestDistanceSq = trickyDistanceSq;
+                    }
+                    if (nearestDistanceSq < 300.0f) {
+                        if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_PLAYER) != 0) {
+                            slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_PLAYER;
+                        }
+                        if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0) {
+                            slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_TRICKY;
+                        }
+                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED) != 0) {
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED;
+                        }
+                        slot->lifetimeFrame = randomGetRange(0, 0x28) + 0xdc;
+                        slot->lifetimeFrameLimit = randomGetRange(0, 0x28) + 0xdc;
+                        slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
+                        slot->renderFlags |= EXPGFX_RENDER_IMPACT_POSITION_LOCKED;
+                        slot->velocityX = -workVec[0] * motionScale;
+                        slot->velocityZ = -workVec[2] * motionScale;
+                    }
+                } else {
+                    if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_A) != 0) {
+                        slot->velocityX += 0.01f * slot->velocityX;
+                        slot->velocityY += 0.01f * slot->velocityY;
+                        slot->velocityZ += 0.01f * slot->velocityZ;
+                    } else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_B) != 0) {
+                        slot->velocityX += 0.02f * slot->velocityX;
+                        slot->velocityY += 0.02f * slot->velocityY;
+                        slot->velocityZ += 0.02f * slot->velocityZ;
+                    } else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_C) != 0) {
+                        slot->velocityX += 0.04f * slot->velocityX;
+                        slot->velocityY += 0.04f * slot->velocityY;
+                        slot->velocityZ += 0.04f * slot->velocityZ;
+                    } else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_DAMP) != 0) {
+                        slot->velocityX = 0.99f * slot->velocityX;
+                        slot->velocityY = 0.99f * slot->velocityY;
+                        slot->velocityZ = 0.99f * slot->velocityZ;
+                    }
+                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0 &&
+                        slot->velocityY < EXPGFX_Y_VELOCITY_POSITIVE_LIMIT) {
+                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
+                            slot->velocityY < EXPGFX_Y_VELOCITY_POSITIVE_LIMIT) {
+                            slot->velocityY -= EXPGFX_Y_VELOCITY_FAST_STEP * timeDelta;
+                        } else {
+                            slot->velocityY -= EXPGFX_Y_VELOCITY_SLOW_STEP * timeDelta;
+                        }
+                    } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
+                               slot->velocityY > EXPGFX_Y_VELOCITY_NEGATIVE_LIMIT) {
+                        slot->velocityY += EXPGFX_Y_VELOCITY_FAST_STEP * timeDelta;
+                    } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0 &&
+                               slot->velocityY > EXPGFX_Y_VELOCITY_NEGATIVE_LIMIT) {
+                        slot->velocityY += EXPGFX_Y_VELOCITY_SLOW_STEP * timeDelta;
+                    }
+                    if ((slot->renderFlags & EXPGFX_RENDER_IMPACT_POSITION_LOCKED) != 0) {
+                        if (slot->velocityY * timeDelta + slot->posY.value < 0.0f) {
+                            slot->velocityX = 0.0f;
+                            slot->velocityY = 0.0f;
+                            slot->velocityZ = 0.0f;
+                            slot->sourceVecX = 0;
+                            slot->sourceVecY = 0;
+                            slot->sourceVecZ = 0;
+                            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) != 0) {
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B;
+                            }
+                            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0) {
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A;
+                            }
+                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED;
+                            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0) {
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_FAST_Y_RESPONSE;
+                            }
+                            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0) {
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY;
+                            }
+                            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0) {
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER;
+                            }
+                            slot->renderFlags ^= EXPGFX_RENDER_IMPACT_POSITION_LOCKED;
+                        }
+                    }
+                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_MASK) != 0 &&
+                        slot->velocityY * timeDelta + slot->posY.value < 0.0f) {
+                        u32 rnd;
+                        f32 fade;
+
+                        rnd = randomGetRange(0, 5);
+                        fade = (f32)(int)rnd;
+                        fade = -(0.01f * fade + 0.25f);
+                        slot->velocityY *= fade;
+                        if (slot->velocityY > 0.3f) {
+                            slot->velocityY = 0.3f;
+                        }
+                        rotParams.scale = 1.0f;
+                        rotParams.rotZ = 0;
+                        rotParams.rotY = 0;
+                        rotParams.rotX = 0;
+                        if (srcObj != NULL) {
+                            rotParams.x = slot->posX.value + srcObj->localPosX;
+                            rotParams.y = slot->posY.value + srcObj->localPosY;
+                            rotParams.z = slot->posZ.value + srcObj->localPosZ;
+                        } else {
+                            rotParams.x = slot->posX.value + slot->sourcePosX.value;
+                            rotParams.y = slot->posY.value + slot->sourcePosY.value;
+                            rotParams.z = slot->posZ.value + slot->sourcePosZ.value;
+                        }
+                        gExpgfxFrameParityBit = 1;
+                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT) != 0 &&
+                            (slot->renderFlags & EXPGFX_RENDER_IMPACT_POSITION_LOCKED) == 0) {
+                            slot->velocityX *= EXPGFX_SLOT_MOTION_STEP;
+                            slot->velocityZ *= EXPGFX_SLOT_MOTION_STEP;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT;
+                            if (slot->impactEffectId != -1) {
+                                (*gPartfxInterface)
+                                    ->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
+                                slot->impactEffectId = -1;
+                            }
+                        } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1) != 0) {
+                            slot->velocityX *= 0.5f;
+                            slot->velocityZ *= 0.5f;
+                            slot->scaleCurrent *= 0.65f;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
+                        } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2) != 0) {
+                            slot->velocityX *= 0.5f;
+                            slot->velocityZ *= 0.5f;
+                            slot->scaleCurrent *= 0.65f;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
+                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
+                        } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3) != 0) {
+                            slot->velocityX *= 0.5f;
+                            slot->velocityZ *= 0.5f;
+                            slot->scaleCurrent *= 0.65f;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
+                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
+                            if (slot->impactEffectId != -1) {
+                                (*gPartfxInterface)
+                                    ->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
+                            }
+                            slot->impactEffectId = -1;
+                        } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4) != 0) {
+                            slot->velocityX *= EXPGFX_SLOT_MOTION_STEP - slot->velocityX;
+                            slot->velocityZ *= EXPGFX_SLOT_MOTION_STEP - slot->velocityZ;
+                            slot->scaleCurrent *= 0.65f;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4;
+                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
+                            if (slot->impactEffectId != -1) {
+                                (*gPartfxInterface)
+                                    ->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
+                            }
+                        }
+                        gExpgfxFrameParityBit = 0;
+                    } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT) != 0 &&
+                               slot->velocityY * timeDelta + slot->posY.value < 0.0f) {
+                        if (slot->impactEffectId != -1) {
+                            rotParams.scale = 1.0f;
+                            rotParams.rotZ = 0;
+                            rotParams.rotY = 0;
+                            rotParams.rotX = 0;
+                            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
+                                rotParams.x = slot->posX.value;
+                                rotParams.y = 0.0f;
+                                rotParams.z = slot->posZ.value;
+                            } else if (srcObj != NULL) {
+                                rotParams.x = slot->posX.value + srcObj->worldPosX;
+                                rotParams.y = srcObj->worldPosY;
+                                rotParams.z = slot->posZ.value + srcObj->worldPosZ;
+                            } else {
+                                rotParams.x = slot->posX.value;
+                                rotParams.y = 0.0f;
+                                rotParams.z = slot->posZ.value;
+                            }
+                            gExpgfxFrameParityBit = 1;
+                            (*gWaterfxInterface)->spawnRipple(rotParams.x, rotParams.y, rotParams.z, 0, 0.0f, 4);
+                            (*gWaterfxInterface)
+                                ->spawnSplashBurst(NULL, rotParams.x, rotParams.y, rotParams.z,
+                                                   EXPGFX_SLOT_MOTION_STEP);
+                            if (srcObj != NULL && coordsToMapCell(srcObj->localPosX, srcObj->localPosZ) == 0x10) {
+                                Sfx_PlayFromObject((GameObject*)srcObj, SFXTRIG_blkscrp6);
+                            }
+                            slot->impactEffectId = -1;
+                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT;
+                            slot->lifetimeFrame = 0;
+                            gExpgfxFrameParityBit = 0;
+                        }
+                    } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_MASK) == 0 &&
+                               (slot->behaviorFlags & EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT) == 0 &&
+                               slot->impactEffectId != -1) {
+                        rotParams.scale = 1.0f;
+                        rotParams.rotZ = 0;
+                        rotParams.rotY = 0;
+                        rotParams.rotX = 0;
+                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
+                            rotParams.x = slot->posX.value;
+                            rotParams.y = slot->posY.value;
+                            rotParams.z = slot->posZ.value;
+                        } else if (srcObj != NULL) {
+                            rotParams.x = slot->posX.value + srcObj->worldPosX;
+                            rotParams.y = slot->posY.value + srcObj->worldPosY;
+                            rotParams.z = slot->posZ.value + srcObj->worldPosZ;
+                        } else {
+                            rotParams.x = slot->posX.value;
+                            rotParams.y = slot->posY.value;
+                            rotParams.z = slot->posZ.value;
+                        }
+                        gExpgfxFrameParityBit = 1;
+                        (*gPartfxInterface)->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, NULL);
+                        gExpgfxFrameParityBit = 0;
+                    }
+                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0 && randomGetRange(0, 4) == 1) {
+                        slot->velocityX += 0.045f - randomGetRange(0, 9) / 100.0f;
+                        slot->velocityZ += 0.045f - randomGetRange(0, 9) / 100.0f;
+                    }
+                    if ((slot->renderFlags & EXPGFX_RENDER_RANDOM_VELOCITY_BURST) != 0 && randomGetRange(0, 10) == 1) {
+                        if (slot->lifetimeFrameLimit > (f32)slot->lifetimeFrame) {
+                            slot->velocityX += 0.0004f * randomGetRange(-800, 800) + 0.02f;
+                            slot->velocityY += 0.0004f * randomGetRange(-800, 800) + 0.02f;
+                            slot->velocityZ += 0.0004f * randomGetRange(-800, 800) + 0.02f;
+                        }
+                    }
+                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH) != 0) {
+                        if (0.25f * slot->lifetimeFrameLimit > (f32)slot->lifetimeFrame) {
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH;
+                            slot->velocityX *= -3.0f;
+                            slot->velocityY *= -3.0f;
+                            slot->velocityZ *= -3.0f;
+                        }
+                    }
+                    if ((slot->renderFlags & EXPGFX_RENDER_STRETCHED_TRAIL) != 0) {
+                        trailPrev.x = slot->posX.value;
+                        trailPrev.y = slot->posY.value;
+                        trailPrev.z = slot->posZ.value;
+                    }
+                    slot->posX.value += slot->velocityX * timeDelta;
+                    slot->posY.value += slot->velocityY * timeDelta;
+                    slot->posZ.value += slot->velocityZ * timeDelta;
+                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
+                        slot->scaleCurrent = (f32)slot->scaleStep * timeDelta + (f32)slot->scaleCurrent;
+                    } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
+                        slot->scaleCurrent = slot->scaleCurrent - slot->scaleStep * framesThisStep;
+                    }
+                }
+                quad = slot->quad;
+                if (resourceHandle == 0) {
+                    debugPrintf("notexture \n");
+                } else {
+                    GameObject* attached;
+
+                    texT0 = 0;
+                    texT1 = 0;
+                    texS0 = 0;
+                    texS1 = 0;
+                    if (resourceHandle != 0) {
+                        texS0 = 0x80;
+                        texT0 = 0x80;
+                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0) {
+                            texS1 = 0x80;
+                            texS0 = 0;
+                        }
+                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_T) != 0) {
+                            texT1 = 0x80;
+                            texT0 = 0;
+                        }
+                    }
+                    if ((slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
+                        int colR;
+                        int colG;
+                        int colB;
+                        f32 ratio;
+
+                        ratio = (f32)slot->lifetimeFrame / slot->lifetimeFrameLimit;
+                        colR = (int)(ratio * (f32)(slot->startColorR - slot->endColorR) + slot->endColorR);
+                        colG = (int)(ratio * (f32)(slot->startColorG - slot->endColorG) + slot->endColorG);
+                        colB = (int)(ratio * (f32)(slot->startColorB - slot->endColorB) + slot->endColorB);
+                        if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_DIRECT) != 0) {
+                            colR = (s16)colR;
+                            quad[0].colorR = colR * (ambR8 + 1) >> 8;
+                            colG = (s16)colG;
+                            quad[0].colorG = colG * (ambG8 + 1) >> 8;
+                            colB = (s16)colB;
+                            quad[0].colorB = colB * (ambB8 + 1) >> 8;
+                        } else if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_SCALED) != 0) {
+                            colR = (s16)colR;
+                            quad[0].colorR = colR * ambRPlus1 >> 8;
+                            colG = (s16)colG;
+                            quad[0].colorG = colG * ambGPlus1 >> 8;
+                            colB = (s16)colB;
+                            quad[0].colorB = colB * ambBPlus1 >> 8;
+                        } else {
+                            quad[0].colorR = colR;
+                            quad[0].colorG = colG;
+                            quad[0].colorB = colB;
+                        }
+                    } else if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_DIRECT) != 0) {
+                        quad[0].colorR = ambR8;
+                        quad[0].colorG = ambG8;
+                        quad[0].colorB = ambB8;
+                    } else if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_SCALED) != 0) {
+                        quad[0].colorR = ambientScaled[2];
+                        quad[0].colorG = ambientScaled[1];
+                        quad[0].colorB = ambientScaled[0];
+                    }
+                    if ((slot->renderFlags & EXPGFX_RENDER_STRETCHED_TRAIL) != 0) {
+                        Vec trailNormal;
+                        Vec trailDelta;
+                        Vec trailDirection;
+                        Vec trailSource;
+                        f32 normSq;
+                        f32 norm;
+                        f32 axisX;
+                        f32 axisY;
+                        f32 axisZ;
+
+                        trailSource.x = 0.0f;
+                        trailSource.y = trailSource.x;
+                        trailSource.z = trailSource.x;
+                        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) == 0) {
+                            if (srcObj != NULL) {
+                                trailSource.x = srcObj->worldPosX;
+                                trailSource.y = srcObj->worldPosY;
+                                trailSource.z = srcObj->worldPosZ;
+                            } else {
+                                trailSource.x = slot->sourcePosX.value;
+                                trailSource.y = slot->sourcePosY.value;
+                                trailSource.z = slot->sourcePosZ.value;
+                            }
+                        }
+                        trailDirection.x = trailSource.x - slot->posX.value;
+                        trailDirection.y = trailSource.y - slot->posY.value;
+                        trailDirection.z = trailSource.z - slot->posZ.value;
+                        trailDelta.x = trailPrev.x - slot->posX.value;
+                        trailDelta.y = trailPrev.y - slot->posY.value;
+                        trailDelta.z = trailPrev.z - slot->posZ.value;
+                        trailNormal.x = trailDelta.y * trailDirection.z - trailDelta.z * trailDirection.y;
+                        trailNormal.y = -(trailDelta.x * trailDirection.z - trailDelta.z * trailDirection.x);
+                        trailNormal.z = trailDelta.x * trailDirection.y - trailDelta.y * trailDirection.x;
+                        normSq = trailNormal.z * trailNormal.z +
+                                 (trailNormal.x * trailNormal.x + trailNormal.y * trailNormal.y);
+                        if (normSq != 0.0f) {
+                            norm = sqrtf(normSq);
+                        } else {
+                            norm = 1.0f;
+                        }
+                        axisX = 250.0f * (trailNormal.x / norm);
+                        axisY = 250.0f * (trailNormal.y / norm);
+                        axisZ = 250.0f * (trailNormal.z / norm);
+                        motionScale = 2.0f / (EXPGFX_U16_TO_UNIT_SCALE * (f32)slot->scaleTarget);
+                        quad[0].x = (s16)axisX;
+                        quad[0].y = (s16)axisY;
+                        quad[0].z = (s16)axisZ;
+                        quad[0].texS = texS0;
+                        quad[0].texT = texT0;
+                        quad[1].x = motionScale * (slot->posX.value - trailPrev.x) + axisX;
+                        quad[1].y = motionScale * (slot->posY.value - trailPrev.y) + axisY;
+                        quad[1].z = motionScale * (slot->posZ.value - trailPrev.z) + axisZ;
+                        quad[1].texS = texS1;
+                        quad[1].texT = texT0;
+                        quad[2].x = motionScale * (slot->posX.value - trailPrev.x) - axisX;
+                        quad[2].y = motionScale * (slot->posY.value - trailPrev.y) - axisY;
+                        quad[2].z = motionScale * (slot->posZ.value - trailPrev.z) - axisZ;
+                        quad[2].texS = texS1;
+                        quad[2].texT = texT1;
+                        quad[3].x = -(s16)axisX;
+                        quad[3].y = -(s16)axisY;
+                        quad[3].z = -(s16)axisZ;
+                        quad[3].texS = texS0;
+                        quad[3].texT = texT1;
+                    } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) != 0 &&
+                               (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0) {
+                        rotParams.x = 0.0f;
+                        rotParams.y = 0.0f;
+                        rotParams.z = 0.0f;
+                        slot->sourceVecX += (s16)slot->sourcePosX.value * framesThisStep;
+                        slot->sourceVecY += (s16)slot->sourcePosY.value * framesThisStep;
+                        slot->sourceVecZ += (s16)slot->sourcePosZ.value * framesThisStep;
+                        rotParams.scale = 1.0f;
+                        workVec[0] = (f32)quadTemplate[0].x;
+                        workVec[1] = (f32)quadTemplate[0].y;
+                        workVec[2] = (f32)quadTemplate[0].z;
+                        rotParams.rotZ = 0;
+                        rotParams.rotY = 0;
+                        rotParams.rotX = slot->sourceVecX;
+                        vecRotateZXY(&rotParams.rotX, workVec);
+                        rotParams.rotZ = slot->sourceVecY;
+                        rotParams.rotY = slot->sourceVecZ;
+                        rotParams.rotX = 0;
+                        vecRotateZXY(&rotParams.rotX, workVec);
+                        quad[0].x = workVec[0];
+                        quad[0].y = workVec[1];
+                        quad[0].z = workVec[2];
+                        quad[0].texS = texS0;
+                        quad[0].texT = texT0;
+                        workVec[0] = (f32)quadTemplate[1].x;
+                        workVec[1] = (f32)quadTemplate[1].y;
+                        workVec[2] = (f32)quadTemplate[1].z;
+                        rotParams.rotZ = 0;
+                        rotParams.rotY = 0;
+                        rotParams.rotX = slot->sourceVecX;
+                        vecRotateZXY(&rotParams.rotX, workVec);
+                        rotParams.rotZ = slot->sourceVecY;
+                        rotParams.rotY = slot->sourceVecZ;
+                        rotParams.rotX = 0;
+                        vecRotateZXY(&rotParams.rotX, workVec);
+                        quad[1].x = workVec[0];
+                        quad[1].y = workVec[1];
+                        quad[1].z = workVec[2];
+                        quad[1].texS = texS1;
+                        quad[1].texT = texT0;
+                        workVec[0] = (f32)quadTemplate[2].x;
+                        workVec[1] = (f32)quadTemplate[2].y;
+                        workVec[2] = (f32)quadTemplate[2].z;
+                        rotParams.rotZ = 0;
+                        rotParams.rotY = 0;
+                        rotParams.rotX = slot->sourceVecX;
+                        vecRotateZXY(&rotParams.rotX, workVec);
+                        rotParams.rotZ = slot->sourceVecY;
+                        rotParams.rotY = slot->sourceVecZ;
+                        rotParams.rotX = 0;
+                        vecRotateZXY(&rotParams.rotX, workVec);
+                        quad[2].x = workVec[0];
+                        quad[2].y = workVec[1];
+                        quad[2].z = workVec[2];
+                        quad[2].texS = texS1;
+                        quad[2].texT = texT1;
+                        workVec[0] = (f32)quadTemplate[3].x;
+                        workVec[1] = (f32)quadTemplate[3].y;
+                        workVec[2] = (f32)quadTemplate[3].z;
+                        rotParams.rotZ = 0;
+                        rotParams.rotY = 0;
+                        rotParams.rotX = slot->sourceVecX;
+                        vecRotateZXY(&rotParams.rotX, workVec);
+                        rotParams.rotZ = slot->sourceVecY;
+                        rotParams.rotY = slot->sourceVecZ;
+                        rotParams.rotX = 0;
+                        vecRotateZXY(&rotParams.rotX, workVec);
+                        quad[3].x = workVec[0];
+                        quad[3].y = workVec[1];
+                        quad[3].z = workVec[2];
+                        quad[3].texS = texS0;
+                        quad[3].texT = texT1;
+                    } else if ((slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
+                        quad[0].x = quadTemplate[0].x;
+                        quad[0].y = quadTemplate[0].y;
+                        quad[0].z = quadTemplate[0].z;
+                        quad[0].texS = texS0;
+                        quad[0].texT = texT0;
+                        quad[1].x = quadTemplate[1].x;
+                        quad[1].y = quadTemplate[1].y;
+                        quad[1].z = quadTemplate[1].z;
+                        quad[1].texS = texS1;
+                        quad[1].texT = texT0;
+                        quad[2].x = quadTemplate[2].x;
+                        quad[2].y = quadTemplate[2].y;
+                        quad[2].z = quadTemplate[2].z;
+                        quad[2].texS = texS1;
+                        quad[2].texT = texT1;
+                        quad[3].x = quadTemplate[3].x;
+                        quad[3].y = quadTemplate[3].y;
+                        quad[3].z = quadTemplate[3].z;
+                        quad[3].texS = texS0;
+                        quad[3].texT = texT1;
+                    } else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SCALE_Y8) != 0) {
+                        quad[0].x = quadTemplate[0].x;
+                        quad[0].y = quadTemplate[0].y;
+                        quad[0].y <<= 3;
+                        quad[0].z = quadTemplate[0].z;
+                        quad[0].texS = texS0;
+                        quad[0].texT = texT0;
+                        quad[1].x = quadTemplate[1].x;
+                        quad[1].y = quadTemplate[1].y;
+                        quad[1].y <<= 3;
+                        quad[1].z = quadTemplate[1].z;
+                        quad[1].texS = texS1;
+                        quad[1].texT = texT0;
+                        quad[2].x = quadTemplate[2].x;
+                        quad[2].y = quadTemplate[2].y;
+                        quad[2].y <<= 3;
+                        quad[2].z = quadTemplate[2].z;
+                        quad[2].texS = texS1;
+                        quad[2].texT = texT1;
+                        quad[3].x = quadTemplate[3].x;
+                        quad[3].y = quadTemplate[3].y;
+                        quad[3].y <<= 3;
+                        quad[3].z = quadTemplate[3].z;
+                        quad[3].texS = texS0;
+                        quad[3].texT = texT1;
+                    } else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SWAP_XZ_SCALE_Z32) != 0) {
+                        quad[0].z = quadTemplate[0].x;
+                        quad[0].z <<= 5;
+                        quad[0].y = quadTemplate[0].y;
+                        quad[0].x = quadTemplate[0].z;
+                        quad[0].texS = texS0;
+                        quad[0].texT = texT0;
+                        quad[1].z = quadTemplate[1].x;
+                        quad[1].z <<= 5;
+                        quad[1].y = quadTemplate[1].y;
+                        quad[1].x = quadTemplate[1].z;
+                        quad[1].texS = texS1;
+                        quad[1].texT = texT0;
+                        quad[2].z = quadTemplate[2].x;
+                        quad[2].z <<= 5;
+                        quad[2].y = quadTemplate[2].y;
+                        quad[2].x = quadTemplate[2].z;
+                        quad[2].texS = texS1;
+                        quad[2].texT = texT1;
+                        quad[3].z = quadTemplate[3].x;
+                        quad[3].z <<= 5;
+                        quad[3].y = quadTemplate[3].y;
+                        quad[3].x = quadTemplate[3].z;
+                        quad[3].texS = texS0;
+                        quad[3].texT = texT1;
+                    } else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SCALE_X32) != 0) {
+                        quad[0].x = quadTemplate[0].x;
+                        quad[0].x <<= 5;
+                        quad[0].y = quadTemplate[0].y;
+                        quad[0].z = quadTemplate[0].z;
+                        quad[0].texS = texS0;
+                        quad[0].texT = texT0;
+                        quad[1].x = quadTemplate[1].x;
+                        quad[1].x <<= 5;
+                        quad[1].y = quadTemplate[1].y;
+                        quad[1].z = quadTemplate[1].z;
+                        quad[1].texS = texS1;
+                        quad[1].texT = texT0;
+                        quad[2].x = quadTemplate[2].x;
+                        quad[2].x <<= 5;
+                        quad[2].y = quadTemplate[2].y;
+                        quad[2].z = quadTemplate[2].z;
+                        quad[2].texS = texS1;
+                        quad[2].texT = texT1;
+                        quad[3].x = quadTemplate[3].x;
+                        quad[3].x <<= 5;
+                        quad[3].y = quadTemplate[3].y;
+                        quad[3].z = quadTemplate[3].z;
+                        quad[3].texS = texS0;
+                        quad[3].texT = texT1;
+                    } else {
+                        quad[0].x = quadTemplate[0].x;
+                        quad[0].y = quadTemplate[0].y;
+                        quad[0].z = quadTemplate[0].z;
+                        quad[0].texS = texS0;
+                        quad[0].texT = texT0;
+                        quad[1].x = quadTemplate[1].x;
+                        quad[1].y = quadTemplate[1].y;
+                        quad[1].z = quadTemplate[1].z;
+                        quad[1].texS = texS1;
+                        quad[1].texT = texT0;
+                        quad[2].x = quadTemplate[2].x;
+                        quad[2].y = quadTemplate[2].y;
+                        quad[2].z = quadTemplate[2].z;
+                        quad[2].texS = texS1;
+                        quad[2].texT = texT1;
+                        quad[3].x = quadTemplate[3].x;
+                        quad[3].y = quadTemplate[3].y;
+                        quad[3].z = quadTemplate[3].z;
+                        quad[3].texS = texS0;
+                        quad[3].texT = texT1;
+                    }
+                    attached = (GameObject*)((ExpgfxTableEntry*)((u8*)gExpgfxTableEntries +
+                                                                 (((u32)slot->encodedTableIndex >> 1) &
+                                                                  EXPGFX_SLOT_TABLE_INDEX_MASK) *
+                                                                     16))
+                                   ->attachedTableKey;
+                    rotParams.x = 0.0f;
+                    rotParams.y = 0.0f;
+                    rotParams.z = 0.0f;
+                    rotParams.scale = 1.0f;
+                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
+                        (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0) {
+                        rotParams.x = slot->posX.value;
+                        rotParams.y = slot->posY.value;
+                        rotParams.z = slot->posZ.value;
+                    }
+                    rotParams.rotZ = 0;
+                    rotParams.rotY = 0;
+                    rotParams.rotX = 0;
+                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0 &&
+                        (slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0) {
+                        if (srcObj != NULL) {
+                            rotParams.rotX = srcObj->rotX;
+                            rotParams.rotY = srcObj->rotY;
+                            rotParams.rotZ = srcObj->rotZ;
+                        } else {
+                            rotParams.rotX = slot->sourceVecX;
+                            rotParams.rotY = slot->sourceVecY;
+                            rotParams.rotZ = slot->sourceVecZ;
+                        }
+                    }
+                    rotatedPos[0] = slot->posX.value;
+                    rotatedPos[1] = slot->posY.value;
+                    rotatedPos[2] = slot->posZ.value;
+                    if ((rotParams.rotX | rotParams.rotY | rotParams.rotZ) != 0) {
+                        vecRotateZXY(&rotParams.rotX, rotatedPos);
+                    }
+                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) == 0) {
+                        if (srcObj != NULL) {
+                            srcWorldPos[0] = srcObj->worldPosX;
+                            srcWorldPos[1] = srcObj->worldPosY;
+                            srcWorldPos[2] = srcObj->worldPosZ;
+                        } else {
+                            srcWorldPos[0] = slot->sourcePosX.value;
+                            srcWorldPos[1] = slot->sourcePosY.value;
+                            srcWorldPos[2] = slot->sourcePosZ.value;
+                            if (attached != NULL) {
+                                Obj_RotateLocalOffsetByYaw(&slot->sourcePosX.value, srcWorldPos,
+                                                           attached->anim.transformMatrixIndex);
+                            }
+                        }
+                    } else {
+                        srcWorldPos[0] = 0.0f;
+                        srcWorldPos[1] = 0.0f;
+                        srcWorldPos[2] = 0.0f;
+                    }
+                    rotParams.rotZ = 0;
+                    rotParams.rotY = 0;
+                    rotParams.rotX = 0;
+                    rotParams.x = srcWorldPos[0] + rotatedPos[0];
+                    rotParams.y = srcWorldPos[1] + rotatedPos[1];
+                    rotParams.z = srcWorldPos[2] + rotatedPos[2];
+                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
+                        (slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0 &&
+                        (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0) {
+                        rotParams.x += slot->sourcePosX.value;
+                        rotParams.y += slot->sourcePosY.value;
+                        rotParams.z += slot->sourcePosZ.value;
+                    }
+                    slot->renderX = rotParams.x;
+                    slot->renderY = rotParams.y;
+                    slot->renderZ = rotParams.z;
+                    if (rotParams.x < bounds->minX) {
+                        bounds->minX = rotParams.x;
+                    }
+                    if (rotParams.x > *maxXPtr) {
+                        *maxXPtr = rotParams.x;
+                    }
+                    if (rotParams.y < *minYPtr) {
+                        *minYPtr = rotParams.y;
+                    }
+                    if (rotParams.y > *maxYPtr) {
+                        *maxYPtr = rotParams.y;
+                    }
+                    if (rotParams.z < *minZPtr) {
+                        *minZPtr = rotParams.z;
+                    }
+                    if (rotParams.z > *maxZPtr) {
+                        *maxZPtr = rotParams.z;
+                    }
+                }
+            }
+            memcpyToCache((void*)*(u32*)((u8*)gExpgfxSlotPoolBases + poolByteOffset), curPoolBuf,
+                          EXPGFX_POOL_CACHE_LINE_COUNT);
+            cacheQueued = 1;
+            activePool = nextActivePool;
+        }
+        cacheQueueWait(0);
+    }
+}
+
+void expgfx_initSlotQuad(void* slotPtr) {
+    ExpgfxSlot* slot;
+    ExpgfxTableEntry* entry;
+    ExpgfxQuadVertex* quad;
+    Vec3s* quadTemplate;
+    void* resource;
+    u32 behaviorFlags;
+    s16 texT1;
+    s16 texT0;
+    s16 texS1;
+    s16 texS0;
+    f32 step;
+    slot = (ExpgfxSlot*)slotPtr;
+    entry = gExpgfxTableEntries;
+    entry += ((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK;
+    resource = entry->resource;
+
+    slot->stateBits.bits.frameParity = 0;
+    slot->stateBits.bits.quadReady = 1;
+
+    behaviorFlags = slot->behaviorFlags;
+    if ((behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0) {
+        quadTemplate = gExpgfxQuadTemplateA;
+    } else {
+        quadTemplate = gExpgfxQuadTemplateB;
+    }
+
+    if ((behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0 &&
+        slot->velocityY < EXPGFX_Y_VELOCITY_POSITIVE_LIMIT) {
+        if ((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
+            slot->velocityY < EXPGFX_Y_VELOCITY_POSITIVE_LIMIT) {
+            slot->velocityY -= EXPGFX_Y_VELOCITY_FAST_STEP * timeDelta;
+        } else {
+            slot->velocityY -= EXPGFX_Y_VELOCITY_SLOW_STEP * timeDelta;
+        }
+    } else if ((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
+               slot->velocityY > EXPGFX_Y_VELOCITY_NEGATIVE_LIMIT) {
+        slot->velocityY += EXPGFX_Y_VELOCITY_FAST_STEP * timeDelta;
+    } else if ((behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0 &&
+               slot->velocityY > EXPGFX_Y_VELOCITY_NEGATIVE_LIMIT) {
+        slot->velocityY += EXPGFX_Y_VELOCITY_SLOW_STEP * timeDelta;
+    }
+
+    slot->posX.value += slot->velocityX * (step = EXPGFX_SLOT_MOTION_STEP);
+    slot->posY.value += slot->velocityY * step;
+    slot->posZ.value += slot->velocityZ * step;
+
+    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
+        slot->scaleCurrent = (f32)slot->scaleStep * step + (f32)slot->scaleCurrent;
+    } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
+        slot->scaleCurrent = (f32)slot->scaleCurrent - (f32)slot->scaleStep * step;
+    }
+
+    if (resource == 0) {
+        debugPrintf("notexture \n");
+        return;
+    }
+
+    texT0 = 0;
+    texT1 = 0;
+    texS0 = 0;
+    texS1 = 0;
+    if (resource != 0) {
+        texS0 = EXPGFX_QUAD_TEXCOORD_MAX;
+        texT0 = EXPGFX_QUAD_TEXCOORD_MAX;
+        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0) {
+            texS1 = EXPGFX_QUAD_TEXCOORD_MAX;
             texS0 = 0;
         }
-        if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_T) != 0) {
-            texT1 = 0;
+        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_T) != 0) {
+            texT1 = EXPGFX_QUAD_TEXCOORD_MAX;
             texT0 = 0;
         }
+    }
 
-        attachedSource = (ObjAnimComponent*)config->attachedSource;
-        attachedTableKey = 0;
-        if (attachedSource == NULL) {
-            slot->sourcePosX.value = config->sourcePosX;
-            slot->sourcePosY.value = config->sourcePosY;
-            slot->sourcePosZ.value = config->sourcePosZ;
-            slot->sourceScale.value = config->sourceScale;
-            slot->sourceVecZ = config->sourceVecZ;
-            slot->sourceVecY = config->sourceVecY;
-            slot->sourceVecX = config->sourceVecX;
-        } else if ((behaviorFlags & EXPGFX_BEHAVIOR_COPY_ATTACHED_SOURCE) != 0) {
-            slot->sourcePosX.value = attachedSource->worldPosX;
-            slot->sourcePosY.value = attachedSource->worldPosY;
-            slot->sourcePosZ.value = attachedSource->worldPosZ;
-            slot->sourceScale.value = attachedSource->rootMotionScale;
-            slot->sourceVecZ = attachedSource->rotZ;
-            slot->sourceVecY = attachedSource->rotY;
-            slot->sourceVecX = attachedSource->rotX;
-            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_A) != 0 ||
-                (slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0) {
-                config->velocityX += attachedSource->velocityX;
-                config->velocityY += attachedSource->velocityY;
-                config->velocityZ += attachedSource->velocityZ;
-            }
+    quad = slot->quad;
+    quad[0].x = quadTemplate[0].x;
+    quad[0].y = quadTemplate[0].y;
+    quad[0].z = quadTemplate[0].z;
+    quad[0].texS = texS0;
+    quad[0].texT = texT0;
+    quad[1].x = quadTemplate[1].x;
+    quad[1].y = quadTemplate[1].y;
+    quad[1].z = quadTemplate[1].z;
+    quad[1].texS = texS1;
+    quad[1].texT = texT0;
+    quad[2].x = quadTemplate[2].x;
+    quad[2].y = quadTemplate[2].y;
+    quad[2].z = quadTemplate[2].z;
+    quad[2].texS = texS1;
+    quad[2].texT = texT1;
+    quad[3].x = quadTemplate[3].x;
+    quad[3].y = quadTemplate[3].y;
+    quad[3].z = quadTemplate[3].z;
+    quad[3].texS = texS0;
+    quad[3].texT = texT1;
+}
 
-            if (attachedSource != NULL) {
-                attachedTableKey = attachedSource->parentAddress;
-            }
-            attachedSource = NULL;
+int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, u32 sourceId) {
+    int searchIndex;
+    int slotIndex;
+    short foundPoolIndex;
+    short found;
+    foundPoolIndex = EXPGFX_INVALID_POOL_INDEX;
+    found = 0;
+    searchIndex = 0;
+    for (; searchIndex < EXPGFX_POOL_COUNT; searchIndex++) {
+        if ((sourceId == (u32)gExpgfxTrackedPoolSourceIds[searchIndex]) &&
+            (slotType == gExpgfxStaticPoolSlotTypeIds[searchIndex]) &&
+            (gExpgfxPoolActiveCounts[searchIndex] < EXPGFX_SLOTS_PER_POOL)) {
+            foundPoolIndex = searchIndex;
+            found = 1;
+            break;
         }
-
-        expTabIndex = expgfx_addToTable((u32)resourceHandle, (u32)attachedSource, attachedTableKey, config->textureId);
-        if ((short)expTabIndex == EXPGFX_INVALID_TABLE_INDEX) {
-            debugPrintf(sExpgfxInvalidTabIndex);
-            expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
-            return EXPGFX_INVALID_POOL_INDEX;
-        }
-        ((struct {
-             u8 tableIndex : 7;
-             u8 lowBit : 1;
-         }*)&slot->encodedTableIndex)
-            ->tableIndex = (u8)expTabIndex;
-
-        slot->posX.value = slot->startPosX.value = config->startPosX;
-        slot->posY.value = slot->startPosY.value = config->startPosY;
-        slot->posZ.value = slot->startPosZ.value = config->startPosZ;
-        slot->velocityX = config->velocityX;
-        slot->velocityY = config->velocityY;
-        slot->velocityZ = config->velocityZ;
-        slot->initialAlpha = config->initialAlpha;
-        slot->impactEffectId = config->impactEffectId;
-        slot->lifetimeFrame = config->lifetimeFrames;
-        slot->lifetimeFrameLimit = config->lifetimeFrames;
-
-        if (config->scale > 1.0f) {
-            debugPrintf(sExpgfxScaleOverflow);
-        }
-        scaleVal = 65535.0f * config->scale;
-
-        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
-            slot->scaleCurrent = 0;
-            slot->scaleStep = (scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
-            slot->scaleTarget = scaleVal;
-        } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
-            slot->scaleCurrent = scaleVal;
-            slot->scaleStep = (scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
-            slot->scaleTarget = scaleVal;
-        } else {
-            slot->scaleCurrent = scaleVal;
-            slot->scaleTarget = slot->scaleCurrent;
-            slot->scaleStep = 0;
-        }
-
-        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 ||
-            (slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_B) != 0) {
-            slot->sourcePosX.value = config->sourcePosX;
-            slot->sourcePosY.value = config->sourcePosY;
-            slot->sourcePosZ.value = config->sourcePosZ;
-            slot->sourceScale.value = config->sourceScale;
-            slot->sourceVecZ = config->sourceVecZ;
-            slot->sourceVecY = config->sourceVecY;
-            slot->sourceVecX = config->sourceVecX;
-        }
-        slot->stateBits.bits.frameParity = gExpgfxFrameParityBit;
-
-        if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0) {
-            slot->renderFlags ^= EXPGFX_RENDER_BACKDATE_MOTION;
-            slot->posX.value = slot->velocityX * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posX.value;
-            slot->posY.value = slot->velocityY * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posY.value;
-            slot->posZ.value = slot->velocityZ * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posZ.value;
-            slot->velocityX *= -1.0f;
-            slot->velocityY *= -1.0f;
-            slot->velocityZ *= -1.0f;
-        }
-
-        if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_ACTOR) != 0) {
-            f32 dx;
-            f32 dz;
-            f32 distSq;
-            playerObj = (GameObject*)Obj_GetPlayerObject();
-            slot->renderFlags ^= EXPGFX_RENDER_AIM_AT_ACTOR;
-            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
-                dx = playerObj->anim.worldPosX - slot->startPosX.value;
-                dz = playerObj->anim.worldPosZ - slot->startPosZ.value;
-                distSq = dx * dx + dz * dz;
-                if (distSq < 3600.0f && playerObj->anim.velocityX != 0.0f && 0.0f != playerObj->anim.velocityZ) {
-                    slot->velocityX = slot->velocityX + dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
-                    slot->velocityY = slot->velocityY + ((30.0f + playerObj->anim.worldPosY) - slot->startPosY.value) /
-                                                            (f32)(s32)((int)slot->lifetimeFrame << 1);
-                    slot->velocityZ = slot->velocityZ + (playerObj->anim.worldPosZ - slot->startPosZ.value) /
-                                                            (f32)(s32)((int)slot->lifetimeFrame << 1);
-                }
-            } else {
-                dx = playerObj->anim.worldPosX - (slot->startPosX.value + attachedSource->localPosX);
-                dz = playerObj->anim.worldPosZ - (slot->startPosZ.value + attachedSource->localPosZ);
-                distSq = dx * dx + dz * dz;
-                if (distSq < 3600.0f && playerObj->anim.velocityX != 0.0f && 0.0f != playerObj->anim.velocityZ) {
-                    slot->velocityX = slot->velocityX - dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
-                    slot->velocityY = slot->velocityY - ((30.0f + playerObj->anim.worldPosY) -
-                                                         (slot->startPosY.value + attachedSource->localPosY)) /
-                                                            (f32)(s32)((int)slot->lifetimeFrame << 1);
-                    slot->velocityZ = slot->velocityZ - (playerObj->anim.worldPosZ -
-                                                         (slot->startPosZ.value + attachedSource->localPosZ)) /
-                                                            (f32)(s32)((int)slot->lifetimeFrame << 1);
-                }
+    }
+    if (found) {
+        for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
+            if ((gExpgfxSlotActiveMasks[foundPoolIndex] & (1u << slotIndex)) == 0) {
+                *slotIndexOut = slotIndex;
+                *poolIndexOut = foundPoolIndex;
+                gExpgfxSlotActiveMasks[foundPoolIndex] |= 1u << slotIndex;
+                gExpgfxPoolActiveCounts[foundPoolIndex]++;
+                return 1;
             }
         }
-
-        if (resourceTableIndex == 1) {
-            gExpgfxSlotType1Count += 1;
-            gExpgfxSlotType1Average = gExpgfxSlotType1Sum / gExpgfxSlotType1Count;
+    }
+    found = 0;
+    if (preferredPoolIndex == EXPGFX_INVALID_POOL_INDEX) {
+        for (searchIndex = 0; searchIndex < EXPGFX_POOL_COUNT - 1; searchIndex++) {
+            if (gExpgfxPoolActiveCounts[searchIndex] <= 0) {
+                foundPoolIndex = searchIndex;
+                found = 1;
+                gExpgfxPoolActiveCounts[searchIndex] = 0;
+                break;
+            }
         }
-
-        slot->endColorR = (u8)((int)config->colorWord0 >> 8);
-        slot->endColorG = (u8)((int)config->colorWord1 >> 8);
-        slot->endColorB = (u8)((int)config->colorWord2 >> 8);
-
-        if ((config->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
-            slot->startColorR = (u8)((int)config->overrideColor0 >> 8);
-            slot->startColorG = (u8)((int)config->overrideColor1 >> 8);
-            slot->startColorB = (u8)((int)config->overrideColor2 >> 8);
+    } else if (preferredPoolIndex != EXPGFX_INVALID_POOL_INDEX) {
+        searchIndex = preferredPoolIndex;
+        if (gExpgfxPoolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL) {
+            foundPoolIndex = preferredPoolIndex;
+            found = 1;
         }
+    }
+    if (found) {
+        for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
+            if ((gExpgfxSlotActiveMasks[foundPoolIndex] & (1u << slotIndex)) == 0) {
+                *slotIndexOut = slotIndex;
+                *poolIndexOut = foundPoolIndex;
+                gExpgfxSlotActiveMasks[foundPoolIndex] |= 1u << slotIndex;
+                gExpgfxStaticPoolSlotTypeIds[searchIndex] = slotType;
+                gExpgfxPoolActiveCounts[foundPoolIndex]++;
+                return 1;
+            }
+        }
+        return EXPGFX_INVALID_POOL_INDEX;
+    }
+    return EXPGFX_INVALID_POOL_INDEX;
+}
 
-        quadVertices[0].colorR = 0xff;
-        quadVertices[0].colorG = 0xff;
-        quadVertices[0].colorB = 0xff;
+void expgfxRemoveAll(void) {
+    expgfxRemoveAllBody();
+}
 
-        quadVertices[0].texS = texS0;
-        quadVertices[0].texT = texT0;
-        quadVertices[1].texS = texS1;
-        quadVertices[1].texT = texT0;
-        quadVertices[2].texS = texS1;
-        quadVertices[2].texT = texT1;
-        quadVertices[3].texS = texS0;
-        quadVertices[3].texT = texT1;
+void expgfxRemove(void* slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot) {
+    int activeBit[1];
+    void** resources[1];
+    ExpgfxSlot* slot;
+    u32 inactiveBitMask;
 
-        if ((slot->renderFlags & EXPGFX_RENDER_INIT_QUAD) != 0) {
-            expgfx_initSlotQuad(slot);
+    resources[0] = NULL;
+    activeBit[0] = 1 << slotIndex;
+    if ((activeBit[0] & gExpgfxSlotActiveMasks[poolIndex]) == 0) {
+        return;
+    }
+
+    slot = (ExpgfxSlot*)((u8*)slotPoolBase + slotIndex * EXPGFX_SLOT_SIZE);
+    slot->behaviorFlags = 0;
+
+    if (skipTextureFree == 0) {
+        resources[0] = &gExpgfxTableEntries[0].resource;
+
+        if (resources[0][Expgfx_GetSlotTableIndex(slot) * 4] != 0) {
+            gExpgfxTextureFreeInProgress = 1;
+            textureFree((Texture*)(void*)resources[0][Expgfx_GetSlotTableIndex(slot) * 4]);
+            gExpgfxTextureFreeInProgress = 0;
         }
 
         {
-            int modePoolIndex;
+            u32 tableIndex = Expgfx_GetSlotTableIndex(slot);
 
-            if ((config->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0) {
-                sourceModeValue = 1;
+            if (gExpgfxTableEntries[tableIndex].refCount != 0) {
+                gExpgfxTableEntries[tableIndex].refCount--;
+                if (gExpgfxTableEntries[tableIndex].refCount == 0) {
+                    resources[0][tableIndex * 4] = 0;
+                    gExpgfxTableEntries[tableIndex].sourceId = 0;
+                }
             } else {
-                sourceModeValue = 0;
+                debugPrintf("expgfx.c: mismatch in add/remove in exptab\n");
             }
-            sourceModeValue = (u8)sourceModeValue;
-            modePoolIndex = poolIndex;
-            runtime->poolSourceModes[modePoolIndex] = sourceModeValue;
-            if (runtime->poolSourceModes[modePoolIndex] != 0 &&
-                (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) == 0) {
-                runtime->poolSourceModes[modePoolIndex]++;
-            }
-            runtime->poolPlaneOffsetSetIds[modePoolIndex] = (u8)planeOffsetSetId;
         }
+    }
 
+    slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
+    if ((u8)flushSlot != 0) {
         DCFlushRange(slot, EXPGFX_SLOT_SIZE);
-        gExpgfxLastAddedSlot = (int)slot;
-        return slot->sequenceId;
+    }
+
+    {
+        u32 currentMaskValue = gExpgfxSlotActiveMasks[poolIndex];
+        inactiveBitMask = ~activeBit[0];
+        gExpgfxSlotActiveMasks[poolIndex] = currentMaskValue & inactiveBitMask;
+    }
+    gExpgfxPoolActiveCounts[poolIndex]--;
+    if (gExpgfxPoolActiveCounts[poolIndex] == 0) {
+        gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
     }
 }
 
-void expgfx_onMapSetup(void) {
-    ExpgfxRuntimeDataLayout* runtime[1];
-    ExpgfxResourceEntry* resourceEntry;
-    s64* trackedFrameMasks;
-    u32* poolActiveMasks[1];
-    s8* poolActiveCounts[1];
-    s16* poolSlotTypeIds[1];
-    u8* poolFrameFlags[1];
-    u8* poolSourceModes;
-    u32* poolSourceIds;
-    int poolIndex;
+int expgfx_acquireResourceEntry(int resourceId) {
+    int i;
+    int minIndex;
+    int minEvictionScore;
+    ExpgfxResourceEntry* entry;
+    ExpgfxResourceHandle* resourceHandle;
+    u8 canSetupObject;
 
-    runtime[0] = EXPGFX_RUNTIME_DATA;
-    expgfxRemoveAll();
-
-    poolActiveMasks[0] = runtime[0]->poolActiveMasks;
-    poolActiveCounts[0] = runtime[0]->poolActiveCounts;
-    poolSlotTypeIds[0] = gExpgfxStaticPoolSlotTypeIds;
-    poolFrameFlags[0] = gExpgfxStaticPoolFrameFlags;
-    poolSourceModes = runtime[0]->poolSourceModes;
-    poolSourceIds = runtime[0]->poolSourceIds;
-
-    for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
-        *poolActiveMasks[0] = 0;
-        *poolActiveCounts[0] = 0;
-        *poolSlotTypeIds[0] = EXPGFX_INVALID_SLOT_TYPE;
-        *poolFrameFlags[0] = EXPGFX_SOURCE_FRAME_STATE_NONE;
-        *poolSourceModes = EXPGFX_POOL_SOURCE_MODE_STANDALONE;
-        *poolSourceIds = 0;
-
-        poolActiveMasks[0]++;
-        poolActiveCounts[0]++;
-        poolSlotTypeIds[0]++;
-        poolFrameFlags[0]++;
-        poolSourceModes++;
-        poolSourceIds++;
-    }
-
-    trackedFrameMasks = runtime[0]->trackedSourceFrameMasks;
-    trackedFrameMasks[0] = 0;
-    trackedFrameMasks[1] = 0;
-
-    gExpgfxTextureFreeInProgress = 1;
-    poolIndex = 0;
-    resourceEntry = runtime[0]->resourceTable;
-    while (poolIndex < EXPGFX_RESOURCE_TABLE_COUNT) {
-        if (resourceEntry->resource != NULL) {
-            textureFree((Texture*)(resourceEntry->resource));
+    i = 0;
+    for (; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
+        entry = &gExpgfxResourceEntries[i];
+        if (entry->resource != NULL && resourceId == entry->resourceId) {
+            resourceHandle = (ExpgfxResourceHandle*)gExpgfxResourceEntries[i].resource;
+            if (resourceHandle != NULL && resourceHandle->refCount >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
+                return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
+            }
+            gExpgfxResourceEntries[i].evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
+            return (s16)i;
         }
-        resourceEntry->resource = NULL;
-        resourceEntry->resourceId = 0;
-        resourceEntry->evictionScore = 0;
-        resourceEntry->reserved = 0;
-        resourceEntry++;
-        poolIndex++;
+    }
+    for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
+        entry = &gExpgfxResourceEntries[i];
+        if (entry->resource == NULL) {
+            gExpgfxResourceEntries[i].resource = textureLoadAsset(resourceId);
+            resourceHandle = (ExpgfxResourceHandle*)gExpgfxResourceEntries[i].resource;
+            if (resourceHandle != NULL && resourceHandle->refCount >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
+                gExpgfxTextureFreeInProgress = 1;
+                if (resourceHandle != NULL) {
+                    textureFree((Texture*)((u8*)resourceHandle));
+                }
+                gExpgfxTextureFreeInProgress = 0;
+                gExpgfxResourceEntries[i].resource = NULL;
+                return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
+            }
+            if (resourceHandle != NULL) {
+                gExpgfxResourceEntries[i].evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
+                gExpgfxResourceEntries[i].resourceId = resourceId;
+                return (s16)i;
+            }
+            return EXPGFX_RESOURCE_ACQUIRE_LOAD_FAILED;
+        }
+    }
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0) {
+        return EXPGFX_RESOURCE_ACQUIRE_LOADING_UNLOCKED;
+    }
+    minEvictionScore = EXPGFX_RESOURCE_EVICTION_SCAN_INITIAL;
+    minIndex = 0;
+    for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
+        entry = &gExpgfxResourceEntries[i];
+        if (entry->evictionScore < minEvictionScore) {
+            minEvictionScore = entry->evictionScore;
+            minIndex = i;
+        }
+    }
+    gExpgfxTextureFreeInProgress = 1;
+    resourceHandle = (ExpgfxResourceHandle*)gExpgfxResourceEntries[minIndex].resource;
+    if (resourceHandle != NULL) {
+        textureFree((Texture*)((u8*)resourceHandle));
     }
     gExpgfxTextureFreeInProgress = 0;
+    gExpgfxResourceEntries[minIndex].resource = NULL;
+    gExpgfxResourceEntries[minIndex].resource = textureLoadAsset(resourceId);
+    if (gExpgfxResourceEntries[minIndex].resource != NULL) {
+        gExpgfxResourceEntries[minIndex].evictionScore = EXPGFX_RESOURCE_EVICTION_RESET;
+        gExpgfxResourceEntries[minIndex].resourceId = resourceId;
+        return (s16)minIndex;
+    }
+    return EXPGFX_RESOURCE_ACQUIRE_RELOAD_FAILED;
 }
 
-void expgfx_release(void) {
-    int poolIndex;
+void expgfx_updateResourceEntries(int unused) {
+    ExpgfxResourceEntry* entry;
+    int i;
 
-    expgfxRemoveAll();
-    poolIndex = 0;
-    do {
-        mm_free((void*)gExpgfxSlotPoolBases[poolIndex]);
-        poolIndex += 1;
-    } while (poolIndex < EXPGFX_POOL_COUNT);
-    return;
+    for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
+        entry = &gExpgfxResourceEntries[i];
+        if (entry->resourceId != 0) {
+            entry->evictionScore -= framesThisStep;
+            if (entry->evictionScore <= 0) {
+                entry->resourceId = 0;
+                entry->evictionScore = 0;
+                entry->reserved = 0;
+                gExpgfxTextureFreeInProgress = 1;
+                textureFree((Texture*)((u8*)entry->resource));
+                gExpgfxTextureFreeInProgress = 0;
+                entry->resource = NULL;
+            }
+        }
+    }
 }
 
-void expgfx_initialise(void) {
-    ExpgfxRuntimeDataLayout* runtime;
-    u32* poolActiveMasks;
-    s8* poolActiveCounts;
-    s16* poolSlotTypeIds[1];
-    u32* slotPoolBases[1];
-    int poolIndex[1];
-    int groupCount;
+void spawnExplosion(GameObject* src, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 flag10, u8 doShake, u8 flag20,
+                    u8 f1cinit) {
+    DimExplosionPlacement* setup;
+    u8 canSetupObject;
 
-    runtime = EXPGFX_RUNTIME_DATA;
-    poolActiveMasks = runtime->poolActiveMasks;
-    poolActiveCounts = runtime->poolActiveCounts;
-    slotPoolBases[0] = NULL;
-    poolSlotTypeIds[0] = gExpgfxStaticPoolSlotTypeIds;
-    for (groupCount = EXPGFX_POOL_GROUP_COUNT; groupCount != 0; groupCount--) {
-        poolIndex[0] = 0;
-        *poolActiveMasks = poolIndex[0];
-        *poolActiveCounts = poolIndex[0];
-        *poolSlotTypeIds[0] = EXPGFX_INVALID_SLOT_TYPE;
-        poolActiveMasks[1] = poolIndex[0];
-        poolActiveCounts[1] = poolIndex[0];
-        poolSlotTypeIds[0][1] = EXPGFX_INVALID_SLOT_TYPE;
-        poolActiveMasks[2] = poolIndex[0];
-        poolActiveCounts[2] = poolIndex[0];
-        poolSlotTypeIds[0][2] = EXPGFX_INVALID_SLOT_TYPE;
-        poolActiveMasks[3] = poolIndex[0];
-        poolActiveCounts[3] = poolIndex[0];
-        poolSlotTypeIds[0][3] = EXPGFX_INVALID_SLOT_TYPE;
-        poolActiveMasks[4] = poolIndex[0];
-        poolActiveCounts[4] = poolIndex[0];
-        poolSlotTypeIds[0][4] = EXPGFX_INVALID_SLOT_TYPE;
-        poolActiveMasks[5] = poolIndex[0];
-        poolActiveCounts[5] = poolIndex[0];
-        poolSlotTypeIds[0][5] = EXPGFX_INVALID_SLOT_TYPE;
-        poolActiveMasks[6] = poolIndex[0];
-        poolActiveCounts[6] = poolIndex[0];
-        poolSlotTypeIds[0][6] = EXPGFX_INVALID_SLOT_TYPE;
-        poolActiveMasks[7] = poolIndex[0];
-        poolActiveCounts[7] = poolIndex[0];
-        poolSlotTypeIds[0][7] = EXPGFX_INVALID_SLOT_TYPE;
-        poolActiveMasks += 8;
-        poolActiveCounts += 8;
-        poolSlotTypeIds[0] += 8;
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0) {
+        setup = (DimExplosionPlacement*)Obj_AllocObjectSetup(sizeof(DimExplosionPlacement), DIM_EXPLOSION_OBJECT_ID);
+        setup->base.color[0] = 2;
+        setup->base.color[1] = 1;
+        setup->base.posX = src->anim.worldPosX;
+        setup->base.posY = src->anim.worldPosY;
+        setup->base.posZ = src->anim.worldPosZ;
+        setup->sfxKind = kind;
+        setup->scaleParam = (s16)(256.0f * scale);
+        setup->configFlags = f1cinit;
+        if (flag4 != 0) {
+            setup->configFlags |= DIM_EXPLOSION_CONFIG_HAS_GRAVITY;
+        }
+        if (flag8 != 0) {
+            setup->configFlags |= DIM_EXPLOSION_CONFIG_HAS_RAYS;
+        }
+        if (flag10 != 0) {
+            setup->configFlags |= DIM_EXPLOSION_CONFIG_SPAWNS_DEBRIS;
+        }
+        if (flag20 != 0) {
+            setup->configFlags |= DIM_EXPLOSION_CONFIG_HAS_LIGHT;
+        }
+        if (doShake != 0) {
+            GameObject* player = Obj_GetPlayerObject();
+            if (player != NULL && (player->objectFlags & OBJFX_OBJFLAG_PARENT_SLACK) == 0) {
+                f32 d =
+                    Camera_DistanceToCurrentViewPosition(src->anim.worldPosX, src->anim.worldPosY, src->anim.worldPosZ);
+                if (d <= 300.0f) {
+                    f32 t = 1.0f - d / 300.0f;
+                    CameraShake_StartDampened(5.0f * t, 10.0f * t, 4.0f);
+                    doRumble(22.0f * t);
+                }
+            }
+        }
+        objSetupObject(&setup->base, 5, src->anim.mapEventSlot, -1, NULL);
+    }
+}
+
+void spawnDimExplosion(u8* src, f32 x, f32 y, f32 z, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 flag10, u8 doShake,
+                       u8 flag20, u8 f1cinit) {
+    DimExplosionPlacement* setup;
+    u8 canSetupObject;
+
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0) {
+        setup = (DimExplosionPlacement*)Obj_AllocObjectSetup(sizeof(DimExplosionPlacement), DIM_EXPLOSION_OBJECT_ID);
+        setup->base.color[0] = 2;
+        setup->base.color[1] = 1;
+        setup->base.posX = x;
+        setup->base.posY = y;
+        setup->base.posZ = z;
+        setup->sfxKind = kind;
+        setup->scaleParam = (s16)(256.0f * scale);
+        setup->configFlags = f1cinit;
+        if (flag4 != 0) {
+            setup->configFlags |= DIM_EXPLOSION_CONFIG_HAS_GRAVITY;
+        }
+        if (flag8 != 0) {
+            setup->configFlags |= DIM_EXPLOSION_CONFIG_HAS_RAYS;
+        }
+        if (flag10 != 0) {
+            setup->configFlags |= DIM_EXPLOSION_CONFIG_SPAWNS_DEBRIS;
+        }
+        if (flag20 != 0) {
+            setup->configFlags |= DIM_EXPLOSION_CONFIG_HAS_LIGHT;
+        }
+        if (doShake != 0) {
+            GameObject* player = Obj_GetPlayerObject();
+            if (player != NULL && (player->objectFlags & OBJFX_OBJFLAG_PARENT_SLACK) == 0) {
+                f32 d = Camera_DistanceToCurrentViewPosition(((ObjAnimComponent*)src)->worldPosX,
+                                                             ((ObjAnimComponent*)src)->worldPosY,
+                                                             ((ObjAnimComponent*)src)->worldPosZ);
+                if (d <= 300.0f) {
+                    f32 t = 1.0f - d / 300.0f;
+                    CameraShake_StartDampened(5.0f * t, 10.0f * t, 4.0f);
+                    doRumble(22.0f * t);
+                }
+            }
+        }
+        objSetupObject(&setup->base, 5, ((ObjAnimComponent*)src)->mapEventSlot, -1, NULL);
+    }
+}
+
+void objfx_shakeCameraByDistance(GameObject* obj, f32 shakeRange) {
+    GameObject* player = Obj_GetPlayerObject();
+    if (player == NULL) {
+        return;
+    }
+    if (player->objectFlags & OBJFX_OBJFLAG_PARENT_SLACK) {
+        return;
+    }
+    {
+        f32 dist = Camera_DistanceToCurrentViewPosition(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ);
+        if (dist <= shakeRange) {
+            f32 falloff = 1.0f - dist / shakeRange;
+            CameraShake_StartDampened(5.0f * falloff, 10.0f * falloff, 4.0f);
+            doRumble(22.0f * falloff);
+        }
+    }
+}
+
+void objDoHitParticleFx(void* obj, f32 scale, void* origin, u8 type, void* light) {
+    u8 spawnArgs[16];
+    u8 remaining;
+
+    if (type != 0) {
+        switch (type) {
+        case 1:
+            spawnArgs[0] = 1;
+            for (remaining = 10; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+            }
+            for (remaining = 4; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+            }
+            break;
+        case 2:
+            spawnArgs[0] = 2;
+            for (remaining = 13; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+            }
+            for (remaining = 6; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+            }
+            break;
+        case 3:
+            spawnArgs[0] = 3;
+            for (remaining = 30; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+            }
+            for (remaining = 8; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+            }
+            break;
+        case 4:
+            for (remaining = 7; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x328, origin, 0x200001, -1, NULL);
+            }
+            break;
+        case 5:
+            spawnArgs[0] = 4;
+            for (remaining = 10; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+            }
+            for (remaining = 4; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+            }
+            break;
+        case 6:
+            spawnArgs[0] = 5;
+            for (remaining = 10; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+            }
+            for (remaining = 4; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+            }
+            break;
+        case 7:
+            spawnArgs[0] = 6;
+            for (remaining = 10; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+            }
+            for (remaining = 4; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+            }
+            break;
+        case 8:
+            spawnArgs[0] = 7;
+            for (remaining = 10; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+            }
+            for (remaining = 4; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+            }
+            break;
+        case 9:
+            spawnArgs[0] = 8;
+            for (remaining = 10; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+            }
+            for (remaining = 4; remaining != 0; remaining--) {
+                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+            }
+            break;
+        }
     }
 
-    slotPoolBases[0] = runtime->slotPoolBases;
-    do {
-        *slotPoolBases[0] = (u32)mmAlloc(EXPGFX_POOL_BYTES, EXPGFX_POOL_ALLOC_HEAP, 0);
-        memset((void*)*slotPoolBases[0], 0, EXPGFX_POOL_BYTES);
-        DCFlushRange((void*)*slotPoolBases[0], EXPGFX_POOL_BYTES);
-        slotPoolBases[0]++;
-        poolIndex[0]++;
-    } while (poolIndex[0] < EXPGFX_POOL_COUNT);
-    memset(runtime->expTab, 0, EXPGFX_EXPTAB_BYTES);
-    return;
+    if (light != NULL) {
+        modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
+        modelLightStruct_setPosition(light, ((GameObject*)origin)->anim.localPosX,
+                                     10.0f + ((GameObject*)origin)->anim.localPosY,
+                                     ((GameObject*)origin)->anim.localPosZ);
+        modelLightStruct_setDiffuseColor(light, gObjFxLightColorTbl[type].r, gObjFxLightColorTbl[type].g,
+                                         gObjFxLightColorTbl[type].b, 0xff);
+        modelLightStruct_setSpecularColor(light, gObjFxLightColorTbl[type].r, gObjFxLightColorTbl[type].g,
+                                          gObjFxLightColorTbl[type].b, 0xff);
+        modelLightStruct_setDistanceAttenuation(light, 40.0f, 55.0f);
+        lightSetField4D(light, 0);
+        modelLightStruct_setEnabled(light, 1, 0.0f);
+        modelLightStruct_setEnabled(light, 0, 0.5f);
+        modelLightStruct_startColorFade(light, 0, 0);
+        modelLightStruct_setAffectsAabbLightSelection(light, 1);
+    }
 }
 
-u32 gExpgfxSlotPoolBases[0x50];
-u32 gExpgfxSlotActiveMasks[0x50];
-u64 gExpgfxTrackedSourceFrameMasks[0xB0 / sizeof(u64)];
-ObjAnimComponent* gExpgfxTrackedPoolSourceIds[0x50];
-ExpgfxTableEntry gExpgfxTableEntries[0x550 / sizeof(ExpgfxTableEntry)];
+void objDoParticleFx(GameObject* obj, f32 scale, int type, f32 extraScale, ModelLightStruct* light) {
+    ObjFxParticleParams params;
+    f32 lightYOffset = 40.0f;
+    ObjFxColorTable colorTbl = gObjFxCrystalSparkleTbl;
+    u8* rPtr;
+    u8* gPtr;
+    u8* bPtr;
+
+    params.scale = scale;
+    params.pad00[0] = 0;
+    params.pad00[2] = 0;
+    params.pad00[1] = 0;
+    params.effectParam = 0xc0a;
+    if ((u8)type) {
+        switch (type & 0xff) {
+        case 1:
+            params.position[0] = scale * randomGetRange(-10, 10);
+            params.position[1] = scale * randomGetRange(-10, 10);
+            params.position[2] = scale * randomGetRange(-10, 10);
+            (*gPartfxInterface)->spawnObject(obj, 0x32f, &params, 2, -1, &extraScale);
+            break;
+        case 2:
+            params.position[0] = scale * randomGetRange(-10, 10);
+            params.position[1] = scale * randomGetRange(-10, 10);
+            params.position[2] = scale * randomGetRange(-10, 10);
+            (*gPartfxInterface)->spawnObject(obj, 0x330, &params, 2, -1, &extraScale);
+            break;
+        case 3:
+            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x32f, &extraScale, 0x19, NULL);
+            break;
+        case 4:
+            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x330, &extraScale, 0x19, NULL);
+            break;
+        case 5:
+            params.effectParam = 0xc0a;
+            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cd, &extraScale, 0x32, &params);
+            break;
+        case 6:
+            params.effectParam = 0xc0d;
+            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7ce, &extraScale, 0x50, &params);
+            break;
+        case 7:
+            params.effectParam = 0x605;
+            params.pad00[2] = 1;
+            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &extraScale, 0x19, &params);
+            lightYOffset = 0.0f;
+            break;
+        case 8:
+            params.effectParam = 0x605;
+            params.pad00[2] = 0;
+            (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &extraScale, 0x19, &params);
+            lightYOffset = 0.0f;
+            break;
+        }
+    }
+
+    if (light != NULL) {
+        modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
+        modelLightStruct_setPosition(light, obj->anim.worldPosX, obj->anim.worldPosY + lightYOffset,
+                                     obj->anim.worldPosZ);
+        rPtr = (u8*)&colorTbl;
+        gPtr = (u8*)&colorTbl + 1;
+        bPtr = (u8*)&colorTbl + 2;
+        modelLightStruct_setDiffuseColor(light, rPtr[(u8)type * 3], gPtr[(u8)type * 3], bPtr[(u8)type * 3], 0xff);
+        modelLightStruct_setSpecularColor(light, rPtr[(u8)type * 3], gPtr[(u8)type * 3], bPtr[(u8)type * 3], 0xff);
+        modelLightStruct_setDistanceAttenuation(light, 50.0f, 75.0f);
+        lightSetField4D(light, 0);
+        modelLightStruct_setEnabled(light, 1, 0.0f);
+        modelLightStruct_setEnabled(light, 0, 1.0f);
+        modelLightStruct_startColorFade(light, 0, 0);
+        modelLightStruct_setAffectsAabbLightSelection(light, 1);
+    }
+}
+
+void itemPickupDoParticleFx(void* obj, f32 scale, int mode, u8 count) {
+    ObjFxParticleParams params;
+    int i;
+
+    params.scale = scale;
+    if (mode == 0) {
+        return;
+    }
+    switch (mode) {
+    case 1:
+        params.effectParam = 0x79;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+        }
+        break;
+    case 2:
+        params.effectParam = 0xc13;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+        }
+        break;
+    case 3:
+        params.effectParam = 0x71;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+        }
+        break;
+    case 4:
+        params.effectParam = 0xdb;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+        }
+        break;
+    case 5:
+        params.effectParam = 0x77;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+        }
+        break;
+    case 6:
+        params.effectParam = 0x7b;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+        }
+        break;
+    case 7:
+        params.effectParam = 0xda;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+        }
+        break;
+    case 8:
+        params.effectParam = 0xdd;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7cc, &params, 1, -1, NULL);
+        }
+        break;
+    case 10:
+        params.effectParam = 0xde;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7cc, &params, 1, -1, NULL);
+        }
+        break;
+    case 9:
+        params.effectParam = 0xdf;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7cc, &params, 1, -1, NULL);
+        }
+        break;
+    default:
+        params.effectParam = 0x5c;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+        }
+        break;
+    }
+}
+
+void projectileDoParticleFx(void* obj, f32 scaleArg, int mode) {
+    ObjFxParticleParams params;
+    f32 tailScale;
+    f32 scale;
+    int i;
+
+    switch (mode) {
+    case 0:
+        i = 10;
+        scale = 0.5f;
+        for (; i < 20; i += 2) {
+            params.effectParam = i;
+            params.scale = scale;
+            (*gPartfxInterface)->spawnObject(obj, 0x7a0, &params, 1, -1, NULL);
+        }
+        tailScale = 0.3f;
+        break;
+    case 1:
+        i = 10;
+        scale = 1.0f;
+        for (; i < 20; i += 2) {
+            params.effectParam = i;
+            params.scale = scale;
+            (*gPartfxInterface)->spawnObject(obj, 0x7a0, &params, 1, -1, NULL);
+        }
+        for (i = 0; i < 20; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7a0, NULL, 1, -1, NULL);
+        }
+        tailScale = 1.0f;
+        break;
+    case 2:
+        i = 10;
+        scale = 1.0f;
+        for (; i < 20; i += 2) {
+            params.effectParam = i;
+            params.scale = scale;
+            (*gPartfxInterface)->spawnObject(obj, 0x7a1, &params, 1, -1, NULL);
+        }
+        for (i = 0; i < 20; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7a1, NULL, 1, -1, NULL);
+        }
+        tailScale = 1.0f;
+        break;
+    case 3:
+        i = 10;
+        scale = 0.5f;
+        for (; i < 20; i += 2) {
+            params.effectParam = i;
+            params.scale = scale;
+            (*gPartfxInterface)->spawnObject(obj, 0x7a6, &params, 1, -1, NULL);
+        }
+        tailScale = 0.3f;
+        break;
+    case 4:
+        i = 10;
+        scale = 1.0f;
+        for (; i < 20; i += 2) {
+            params.effectParam = i;
+            params.scale = scale;
+            (*gPartfxInterface)->spawnObject(obj, 0x7a6, &params, 1, -1, NULL);
+        }
+        for (i = 0; i < 20; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7a6, NULL, 1, -1, NULL);
+        }
+        tailScale = 1.0f;
+        break;
+    case 6:
+        i = 10;
+        scale = 0.5f;
+        for (; i < 20; i += 2) {
+            params.effectParam = i;
+            params.scale = scale;
+            (*gPartfxInterface)->spawnObject(obj, 0x7a1, &params, 1, -1, NULL);
+        }
+        tailScale = 0.3f;
+        break;
+    default:
+        return;
+    }
+    (*gPartfxInterface)->spawnObject(obj, 0x79f, NULL, 1, -1, &tailScale);
+}
+
+void objfx_spawnPulseBurst(void* obj, f32 scale, int type, int count, int mode, f32* vec) {
+    ObjFxParticleParams params;
+    int j;
+    int i;
+    int pulseEffectId;
+    int typeByte;
+    u8 frameCount;
+
+    if (framesThisStep > 3) {
+        frameCount = 3;
+    } else {
+        frameCount = framesThisStep;
+    }
+
+    params.scale = scale;
+    if (vec != NULL) {
+        params.position[0] = vec[0];
+        params.position[1] = vec[1];
+        params.position[2] = vec[2];
+    } else {
+        f32 z = 0.0f;
+        params.position[0] = z;
+        params.position[1] = z;
+        params.position[2] = z;
+    }
+
+    typeByte = (u8)type;
+    switch (typeByte) {
+    case 3:
+        params.scale *= 2.25f;
+        pulseEffectId = 1968;
+        break;
+    case 9:
+    case 10:
+        mode = 0;
+        count = 0;
+        break;
+    case 12:
+    case 13:
+    case 14:
+        mode = 0;
+        if ((u8)count != 0) {
+            count = 8;
+        }
+        break;
+    default:
+        pulseEffectId = 1967;
+        break;
+    }
+
+    if ((u8)count != 0) {
+        switch ((u8)count) {
+        case 1:
+            params.effectParam = -20536;
+            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
+            break;
+        case 2:
+            params.effectParam = 10000;
+            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
+            break;
+        case 3:
+            params.effectParam = 500;
+            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
+            break;
+        case 4:
+            params.effectParam = -1;
+            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            break;
+        case 5:
+            params.effectParam = 32767;
+            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            break;
+        case 6:
+            params.effectParam = 10000;
+            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            break;
+        case 7:
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            break;
+        case 8:
+            if (params.scale < 0.5f) {
+                params.scale = 0.5f;
+            }
+            params.pad00[2] = 90;
+            for (i = 0; i < frameCount * 2; i++) {
+                (*gPartfxInterface)->spawnObject(obj, 1981, &params, 1, -1, NULL);
+            }
+            break;
+        }
+    }
+
+    if ((u8)mode != 0) {
+        switch ((u8)mode) {
+        case 1:
+            params.effectParam = 127;
+            (*gPartfxInterface)->spawnObject(obj, pulseEffectId, &params, 1, -1, NULL);
+            break;
+        case 2:
+            params.effectParam = 192;
+            (*gPartfxInterface)->spawnObject(obj, pulseEffectId, &params, 1, -1, NULL);
+            break;
+        case 3:
+            params.effectParam = 255;
+            (*gPartfxInterface)->spawnObject(obj, pulseEffectId, &params, 1, -1, NULL);
+            break;
+        }
+    }
+
+    params.scale = scale;
+    if ((u8)type != 0) {
+        switch (typeByte) {
+        case 1:
+            params.effectParam = 3085;
+            for (j = 0; j < frameCount; j++) {
+                (*gPartfxInterface)->spawnObject(obj, 1960, &params, 1, -1, NULL);
+            }
+            break;
+        case 2:
+            params.effectParam = 3082;
+            for (j = 0; j < frameCount; j++) {
+                (*gPartfxInterface)->spawnObject(obj, 1961, &params, 1, -1, NULL);
+            }
+            break;
+        case 3:
+            params.effectParam = 3082;
+            for (j = 0; j < frameCount; j++) {
+                (*gPartfxInterface)->spawnObject(obj, 1962, &params, 1, -1, NULL);
+            }
+            break;
+        case 4:
+            params.effectParam = 3086;
+            for (j = 0; j < frameCount; j++) {
+                (*gPartfxInterface)->spawnObject(obj, 1963, &params, 1, -1, NULL);
+            }
+            break;
+        case 5:
+            params.effectParam = 132;
+            for (j = 0; j < frameCount; j++) {
+                (*gPartfxInterface)->spawnObject(obj, 1963, &params, 1, -1, NULL);
+            }
+            break;
+        case 6:
+            params.effectParam = 3087;
+            for (j = 0; j < frameCount; j++) {
+                (*gPartfxInterface)->spawnObject(obj, 1963, &params, 1, -1, NULL);
+            }
+            break;
+        case 7:
+            params.effectParam = 100;
+            for (j = 0; j < frameCount; j++) {
+                (*gPartfxInterface)->spawnObject(obj, 1964, &params, 1, -1, NULL);
+            }
+            break;
+        case 8:
+            params.effectParam = 3198;
+            for (j = 0; j < frameCount; j++) {
+                (*gPartfxInterface)->spawnObject(obj, 1964, &params, 1, -1, NULL);
+            }
+            break;
+        case 9:
+            if (params.scale < 0.5f) {
+                params.scale = 0.5f;
+            }
+            for (j = 0; j < frameCount * 2; j++) {
+                params.effectParam = 0;
+                (*gPartfxInterface)->spawnObject(obj, 1973, &params, 1, -1, NULL);
+                params.effectParam = 1;
+                (*gPartfxInterface)->spawnObject(obj, 1973, &params, 1, -1, NULL);
+            }
+            break;
+        case 10:
+            if (params.scale < 0.5f) {
+                params.scale = 0.5f;
+            }
+            for (j = 0; j < frameCount * 2; j++) {
+                params.effectParam = 0;
+                (*gPartfxInterface)->spawnObject(obj, 1974, &params, 1, -1, NULL);
+                params.effectParam = 1;
+                (*gPartfxInterface)->spawnObject(obj, 1974, &params, 1, -1, NULL);
+            }
+            break;
+        case 11:
+            params.effectParam = 100;
+            for (j = 0; j < frameCount; j++) {
+                (*gPartfxInterface)->spawnObject(obj, 1964, &params, 1, -1, NULL);
+            }
+            break;
+        case 12:
+            if (params.scale < 0.25f) {
+                params.scale = 0.25f;
+            }
+            params.pad00[2] = 50;
+            for (j = 0; j < frameCount * 2; j++) {
+                params.effectParam = 0;
+                (*gPartfxInterface)->spawnObject(obj, 1979, &params, 1, -1, NULL);
+                params.effectParam = 1;
+                (*gPartfxInterface)->spawnObject(obj, 1979, &params, 1, -1, NULL);
+            }
+            break;
+        case 13:
+            if (params.scale < 0.5f) {
+                params.scale = 0.5f;
+            }
+            params.pad00[2] = 90;
+            for (j = 0; j < frameCount * 2; j++) {
+                params.effectParam = 0;
+                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
+                params.effectParam = 1;
+                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
+            }
+            break;
+        case 14:
+            if (params.scale < 0.5f) {
+                params.scale = 0.5f;
+            }
+            params.pad00[2] = 240;
+            for (j = 0; j < frameCount * 2; j++) {
+                params.effectParam = 0;
+                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
+                params.effectParam = 1;
+                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
+            }
+            break;
+        }
+    }
+}
+
+void objfx_spawnFlaggedTrailBurst(void* obj, f32 fval, u8 mode, int f6val, int f4val, void* origin) {
+    ObjFxParticleFlags params;
+    int i;
+    u8 count;
+
+    if (framesThisStep > 3) {
+        count = 3;
+    } else {
+        count = framesThisStep;
+    }
+    params.effectParam = f6val;
+    params.f4 = f4val;
+    params.scale = fval;
+    if (mode == 0) {
+        return;
+    }
+    switch (mode) {
+    case 1:
+        params.a = 0;
+        params.b = 0;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
+        }
+        break;
+    case 2:
+        params.a = 1;
+        params.b = 0;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
+        }
+        break;
+    case 3:
+        params.a = 0;
+        params.b = 1;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
+        }
+        break;
+    case 4:
+        params.a = 1;
+        params.b = 1;
+        for (i = 0; i < count; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
+        }
+        break;
+    }
+}
+
+void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mode, f32 sizeParam, void* light) {
+    ObjFxParticleParams params;
+    f32 lightOffset[6];
+    f32 ndc[3];
+    s32 screenPos[3];
+    int i;
+    int depth;
+    u8 frameCount;
+
+    if (framesThisStep > 3) {
+        frameCount = 3;
+    } else {
+        frameCount = framesThisStep;
+    }
+    params.scale = scale;
+    if (sizeParam <= 0.001f) {
+        sizeParam = 0.001f;
+    }
+    params.position[0] = sizeParam;
+    if ((u8)type != 0) {
+        switch ((u8)type) {
+        case 1:
+            params.effectParam = 0x159;
+            params.pad00[2] = 1;
+            for (i = 0; i < frameCount; i++) {
+                (*gPartfxInterface)->spawnObject(obj, 0x7be, &params, 2, -1, light);
+            }
+            break;
+        case 2:
+            params.effectParam = 0x159;
+            params.pad00[2] = 0;
+            for (i = 0; i < frameCount; i++) {
+                (*gPartfxInterface)->spawnObject(obj, 0x7be, &params, 2, -1, light);
+            }
+            break;
+        case 3:
+            params.effectParam = 0x8e;
+            for (i = 0; i < frameCount; i++) {
+                (*gPartfxInterface)->spawnObject(obj, 0x7c0, &params, 2, -1, light);
+            }
+            break;
+        case 4: {
+            int flags = 2;
+            if ((obj->anim.flags & 0x40080) != 0) {
+                flags |= 0x20000000;
+            }
+            params.effectParam = 0xc0e;
+            params.pad00[2] = 0;
+            for (i = 0; i < frameCount; i++) {
+                (*gPartfxInterface)->spawnObject(obj, 0x7eb, &params, flags, -1, light);
+            }
+            break;
+        }
+        }
+    }
+
+    if ((u8)mode != 0) {
+        if (light != NULL) {
+            lightOffset[3] = ((GameObject*)light)->anim.localPosX;
+            lightOffset[4] = ((GameObject*)light)->anim.localPosY;
+            lightOffset[5] = ((GameObject*)light)->anim.localPosZ;
+            vecRotateZXY((s16*)obj, &lightOffset[3]);
+            Camera_ProjectWorldPointWithOffset(
+                obj->anim.worldPosX + lightOffset[3] - playerMapOffsetX, obj->anim.worldPosY + lightOffset[4],
+                obj->anim.worldPosZ + lightOffset[5] - playerMapOffsetZ, 10.0f, &ndc[2], &ndc[1], &ndc[0]);
+        } else {
+            Camera_ProjectWorldPointWithOffset(obj->anim.worldPosX - playerMapOffsetX, obj->anim.worldPosY,
+                                               obj->anim.worldPosZ - playerMapOffsetZ, 10.0f, &ndc[2], &ndc[1],
+                                               &ndc[0]);
+        }
+        Camera_ClipToScreen(ndc[2], ndc[1], ndc[0], &screenPos[2], &screenPos[1], &screenPos[0]);
+        depth = depthReadRequestPoll(screenPos[2], screenPos[1], obj);
+        if (screenPos[0] > depth) {
+            switch ((u8)mode) {
+            case 1:
+                mode = 4;
+                break;
+            case 2:
+                mode = 5;
+                break;
+            case 3:
+                mode = 6;
+                break;
+            }
+        }
+        switch ((u8)mode) {
+        case 1:
+            if ((u8)type == 1) {
+                params.effectParam = 0xc75;
+            } else {
+                params.effectParam = 0xc74;
+            }
+            for (i = 0; i < frameCount; i++) {
+                (*gPartfxInterface)->spawnObject(obj, 0x7bf, &params, 2, -1, light);
+            }
+            break;
+        case 2:
+            params.effectParam = 0x605;
+            for (i = 0; i < frameCount; i++) {
+                (*gPartfxInterface)->spawnObject(obj, 0x7bf, &params, 2, -1, light);
+            }
+            break;
+        case 3:
+            if ((u8)type == 1) {
+                params.effectParam = 0xc75;
+            } else {
+                params.effectParam = 0xc74;
+            }
+            for (i = 0; i < frameCount; i++) {
+                (*gPartfxInterface)->spawnObject(obj, 0x7c1, &params, 2, -1, light);
+            }
+            break;
+        case 4:
+            if ((u8)type == 1) {
+                params.effectParam = 0xc75;
+            } else {
+                params.effectParam = 0xc74;
+            }
+            for (i = 0; i < frameCount; i++) {
+                (*gPartfxInterface)->spawnObject(obj, 0x7c4, &params, 2, -1, light);
+            }
+            break;
+        case 5:
+            params.effectParam = 0x605;
+            for (i = 0; i < frameCount; i++) {
+                (*gPartfxInterface)->spawnObject(obj, 0x7c4, &params, 2, -1, light);
+            }
+            break;
+        case 6:
+            if ((u8)type == 1) {
+                params.effectParam = 0xc75;
+            } else {
+                params.effectParam = 0xc74;
+            }
+            for (i = 0; i < frameCount; i++) {
+                (*gPartfxInterface)->spawnObject(obj, 0x7c5, &params, 2, -1, light);
+            }
+            break;
+        }
+    }
+}
+
+void objfx_spawnFrameTimedHitPulse(GameObject* obj, f32 scale, u8 type, u8 variant, f32 yOffset) {
+    ObjFxS32Table5 variantTbl = gObjFxPulseVariantTbl;
+    ObjFxS32Table5 countTbl = gObjFxHitPulseTbl.counts;
+    f32 offset[3];
+    int frame;
+    if (type == 0) {
+        return;
+    }
+    if (variant == 0 || variant >= 5) {
+        return;
+    }
+    {
+        if (gExpgfxFrameTimerB) {
+            frame = 0;
+        } else {
+            frame = countTbl.values[variant] & 0xff;
+        }
+        offset[0] = 0.0f;
+        offset[1] = yOffset;
+        offset[2] = 0.0f;
+        switch (type) {
+        case 1:
+            objfx_spawnPulseBurst(obj, scale, (u8)variantTbl.values[variant], frame, 0, offset);
+            break;
+        }
+    }
+}
+
+void objShowButtonGlow(void* obj, f32 intensity, u8 glowKind) {
+    ObjFxParticleParams params;
+    int i;
+
+    params.scale = intensity;
+    if (glowKind == 0) {
+        return;
+    }
+    switch (glowKind) {
+    case 1:
+        params.effectParam = 0xc8c;
+        for (i = 0; i < 0x28; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7c8, &params, 1, -1, NULL);
+        }
+        params.effectParam = 1;
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        break;
+    case 2:
+        params.effectParam = 0xc8d;
+        for (i = 0; i < 0x28; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7c8, &params, 1, -1, NULL);
+        }
+        params.effectParam = 0;
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        break;
+    case 3:
+        params.effectParam = 0xc8e;
+        for (i = 0; i < 0x28; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7c8, &params, 1, -1, NULL);
+        }
+        params.effectParam = 2;
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        break;
+    case 4:
+        params.effectParam = 0;
+        for (i = 0; i < 0x14; i++) {
+            (*gPartfxInterface)->spawnObject(obj, 0x7f2, &params, 1, -1, NULL);
+        }
+        break;
+    }
+}
+
+void objfx_spawnBoxBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mulX, f32 mulY, f32 mulZ,
+                         void* origin, int flags) {
+    ObjFxParticleParams params;
+    ObjFxU16Table9 effectParams = *(ObjFxU16Table9*)((char*)&gObjFxCrystalSparkleTbl + 0x48);
+    ObjFxU16Table8 spawnIds = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x5c);
+    ObjFxU16Table8 paramC = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x6c);
+    ObjFxU16Table8 paramD = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x7c);
+    int i;
+
+    params.scale = scale;
+    params.effectParam = effectParams.values[kind];
+    params.pad00[1] = 0x3c;
+    for (i = 0; i < 4; i++) {
+        u16 val;
+        f32 a;
+        if (randomGetRange(0, 0x63) >= chance) {
+            continue;
+        }
+        params.position[0] = randomGetRange(0, 1000) / 1000.0f;
+        params.position[1] = randomGetRange(0, 1000) / 1000.0f;
+        params.position[2] = randomGetRange(0, 1000) / 1000.0f;
+        switch (mode) {
+        case 1:
+            params.position[0] -= 0.5f;
+            params.position[1] -= 0.5f;
+            params.position[2] -= 0.5f;
+            break;
+        case 2:
+            params.position[0] -= 0.5f;
+            params.position[1] = params.position[1] * (params.position[1] * params.position[1]) - 0.5f;
+            params.position[2] -= 0.5f;
+            break;
+        case 3:
+            params.position[0] -= 0.5f;
+            params.position[1] = (1.0f - params.position[1] * (params.position[1] * params.position[1])) - 0.5f;
+            params.position[2] -= 0.5f;
+            break;
+        case 4:
+            params.position[0] -= 0.5f;
+            val = (u16)(int)(65535.0f * params.position[1]);
+            a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
+            params.position[1] = 0.5f * mathCosf(a);
+            params.position[2] -= 0.5f;
+            break;
+        case 5:
+            params.position[0] -= 0.5f;
+            val = (u16)(int)(65535.0f * params.position[1]);
+            a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
+            params.position[1] = 0.5f * mathSinf(a);
+            params.position[2] -= 0.5f;
+            break;
+        case 6:
+            params.position[0] -= 0.5f;
+            params.position[1] -= 0.5f;
+            params.position[2] -= 0.5f;
+            break;
+        case 7:
+            params.position[0] -= 0.5f;
+            params.position[1] -= 0.5f;
+            params.position[2] -= 0.5f;
+            break;
+        }
+        params.position[0] *= mulX;
+        params.position[1] *= mulY;
+        params.position[2] *= mulZ;
+        if (origin != NULL) {
+            params.position[0] += ((GameObject*)origin)->anim.localPosX;
+            params.position[1] += ((GameObject*)origin)->anim.localPosY;
+            params.position[2] += ((GameObject*)origin)->anim.localPosZ;
+        }
+        params.pad00[2] = paramC.values[idx];
+        params.pad00[0] = paramD.values[idx];
+        (*gPartfxInterface)->spawnObject(obj, spawnIds.values[idx], &params, flags | 2, -1, NULL);
+    }
+}
+
+void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int chance, f32 angBase, f32 lo, f32 hi,
+                           void* origin, int flags) {
+    ObjFxParticleParams params;
+    ObjFxU16Table9 effectParams = *(ObjFxU16Table9*)((char*)&gObjFxCrystalSparkleTbl + 0x8c);
+    ObjFxU16Table8 spawnIds = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xa0);
+    ObjFxU16Table8 paramC = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xb0);
+    ObjFxU16Table8 paramD = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xc0);
+    u16 rvec[3];
+    int i;
+    f32 range;
+    f32 radialT;
+    f32 angularT;
+
+    params.scale = scale;
+    params.effectParam = effectParams.values[kind];
+    params.pad00[1] = 0x3c;
+    for (i = 0; i < 4; i++) {
+        u16 val;
+        f32 a;
+        if (randomGetRange(0, 0x63) >= (u8)chance) {
+            continue;
+        }
+        rvec[0] = randomGetRange(0, 0xffff);
+        rvec[1] = 0;
+        rvec[2] = 0;
+        radialT = randomGetRange(1, 1000) / 1000.0f;
+        angularT = randomGetRange(0, 1000) / 1000.0f;
+        params.position[1] = 0.0f;
+        params.position[2] = 0.0f;
+        switch (mode) {
+        case 1:
+            params.position[0] = 1.0f - radialT * radialT;
+            break;
+        case 2:
+            angularT *= (angularT * angularT);
+            params.position[0] = 1.0f - radialT * radialT;
+            break;
+        case 3:
+            angularT = 1.0f - angularT * (angularT * angularT);
+            params.position[0] = 1.0f - radialT * radialT;
+            break;
+        case 4:
+            val = (u16)(int)(65535.0f * angularT);
+            a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
+            angularT = 0.5f * (1.0f + mathCosf(a));
+            params.position[0] = 1.0f - radialT * radialT;
+            break;
+        case 5:
+            val = (u16)(int)(65535.0f * angularT);
+            a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
+            angularT = 0.5f * (1.0f + mathSinf(a));
+            params.position[0] = 1.0f - radialT * radialT;
+            break;
+        case 6:
+            params.position[0] = radialT * radialT;
+            break;
+        case 7:
+            params.position[0] = 1.0f - radialT * (radialT * (radialT * (radialT * radialT)));
+            break;
+        }
+        range = angBase - lo;
+        params.position[0] *= (angularT * range + lo);
+        vecRotateZXY((s16*)rvec, params.position);
+        {
+            f32 t = angularT - 0.5f;
+            params.position[1] = t * hi;
+        }
+        if (origin != NULL) {
+            params.position[0] += ((GameObject*)origin)->anim.localPosX;
+            params.position[1] += ((GameObject*)origin)->anim.localPosY;
+            params.position[2] += ((GameObject*)origin)->anim.localPosZ;
+        }
+        params.pad00[2] = paramC.values[idx];
+        params.pad00[0] = paramD.values[idx];
+        (*gPartfxInterface)->spawnObject(obj, spawnIds.values[idx], &params, flags | 2, -1, NULL);
+    }
+}
+
+void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mult, void* origin,
+                                 int flags) {
+    ObjFxParticleParams params;
+    ObjFxU16Table9 effectParams = *(ObjFxU16Table9*)((char*)&gObjFxCrystalSparkleTbl + 0xd0);
+    ObjFxU16Table8 spawnIds = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xe4);
+    ObjFxU16Table8 paramC = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xf4);
+    ObjFxU16Table8 paramD = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x104);
+    u16 rvec[3];
+    int i;
+    f32 radialT;
+
+    params.scale = scale;
+    params.effectParam = effectParams.values[kind];
+    params.pad00[1] = 0x3c;
+    for (i = 0; i < 4; i++) {
+        if (randomGetRange(0, 0x63) >= chance) {
+            continue;
+        }
+        radialT = randomGetRange(0, 1000) / 1000.0f;
+        switch (mode) {
+        case 1:
+            rvec[0] = randomGetRange(0, 0xffff);
+            rvec[1] = randomGetRange(0, 0xffff);
+            rvec[2] = randomGetRange(0, 0xffff);
+            params.position[0] = mult * (1.0f - radialT * (radialT * radialT));
+            break;
+        case 2:
+            rvec[0] = 0;
+            rvec[1] = randomGetRange(0, 0xffff);
+            rvec[2] = 0;
+            params.position[0] = mult * (1.0f - radialT * (radialT * radialT));
+            break;
+        case 3:
+            rvec[0] = randomGetRange(0, 0xffff);
+            rvec[1] = 0;
+            rvec[2] = 0;
+            params.position[0] = mult * (1.0f - radialT * (radialT * radialT));
+            break;
+        case 4:
+            rvec[0] = 0;
+            rvec[1] = 0;
+            rvec[2] = randomGetRange(0, 0xffff);
+            params.position[0] = mult * (1.0f - radialT * (radialT * radialT));
+            break;
+        case 5:
+            rvec[0] = randomGetRange(0x7fff, 0xffff);
+            rvec[1] = 0;
+            rvec[2] = randomGetRange(0, 0xffff);
+            params.position[0] = mult * (1.0f - radialT * (radialT * radialT));
+            break;
+        case 6:
+            rvec[0] = randomGetRange(0, 0xffff);
+            rvec[1] = randomGetRange(0, 0xffff);
+            rvec[2] = randomGetRange(0, 0xffff);
+            params.position[0] = radialT * mult;
+            break;
+        case 7:
+            rvec[0] = randomGetRange(0, 0xffff);
+            rvec[1] = randomGetRange(0, 0xffff);
+            rvec[2] = randomGetRange(0, 0xffff);
+            params.position[0] = mult * (1.0f - radialT * (radialT * (radialT * (radialT * radialT))));
+            break;
+        }
+        params.position[1] = 0.0f;
+        params.position[2] = 0.0f;
+        vecRotateZXY((s16*)rvec, params.position);
+        if (origin != NULL) {
+            params.position[0] += ((GameObject*)origin)->anim.localPosX;
+            params.position[1] += ((GameObject*)origin)->anim.localPosY;
+            params.position[2] += ((GameObject*)origin)->anim.localPosZ;
+        }
+        params.pad00[2] = paramC.values[idx];
+        params.pad00[0] = paramD.values[idx];
+        (*gPartfxInterface)->spawnObject(obj, spawnIds.values[idx], &params, flags | 2, -1, NULL);
+    }
+}
+
+void objfx_spawnMaskedHitEffect(void* obj, f32 scale, u8 type, u8 mode, u8 mask, void* origin) {
+    ObjFxParticleParams params;
+    ObjFxU16Table11 effectParamTbl = gObjFxHitEffectParamTbl;
+    ObjFxU16Table7 spawnIdTbl = gObjFxMaskedHitSpawnIdTbl;
+    if (type == 0 || mode == 0) {
+        return;
+    }
+    if ((mask & (u16)(int)gExpgfxFrameTimerA) == 0) {
+        return;
+    }
+    params.scale = scale;
+    params.effectParam = effectParamTbl.values[mode];
+    if (origin != NULL) {
+        params.position[0] = ((GameObject*)origin)->anim.localPosX;
+        params.position[1] = ((GameObject*)origin)->anim.localPosY;
+        params.position[2] = ((GameObject*)origin)->anim.localPosZ;
+    } else {
+        params.position[0] = 0.0f;
+        params.position[1] = 0.0f;
+        params.position[2] = 0.0f;
+    }
+    (*gPartfxInterface)->spawnObject(obj, spawnIdTbl.values[type], &params, 2, -1, NULL);
+}
+
+void objfx_spawnHitEffectBurst(void* obj, f32 scale, u8 idSel, u8 paramSel, u8 count, GameObject* origin) {
+    ObjFxParticleParams params;
+    ObjFxU16Table11 table = gObjFxHitEffectParamTbl2;
+    ObjFxU16Table3 effectIds = objFxHitEffectIdTbl;
+    int i;
+    if (idSel == 0 || paramSel == 0) {
+        return;
+    }
+    params.scale = scale;
+    params.effectParam = table.values[paramSel];
+    if (origin != NULL) {
+        params.position[0] = origin->anim.localPosX;
+        params.position[1] = origin->anim.localPosY;
+        params.position[2] = origin->anim.localPosZ;
+    } else {
+        params.position[0] = 0.0f;
+        params.position[1] = 0.0f;
+        params.position[2] = 0.0f;
+    }
+    for (i = 0; i < count; i++) {
+        (*gPartfxInterface)->spawnObject(obj, effectIds.values[idSel], &params, 2, -1, NULL);
+    }
+}
+
+void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d) {
+    StaffCollisionColorArgs emitterArgs;
+    ObjFxParticleEmitter emitter;
+    StaffCollisionInterface** partfxIface;
+    emitter.scale = 1.0f;
+    emitter.rotZ = 0;
+    emitter.rotY = 0;
+    emitter.rotX = 0;
+    emitter.x = pos[0];
+    emitter.y = pos[1];
+    emitter.z = pos[2];
+    partfxIface = Resource_Acquire(0x5a, 1);
+    emitterArgs.count = a;
+    emitterArgs.red = b;
+    emitterArgs.green = c;
+    emitterArgs.blue = d;
+    (*partfxIface)->spawn(NULL, 1, (PartFxSpawnParams*)&emitter, 0x401, -1, &emitterArgs);
+}
+
+void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, f32 mult, u8 flagByte) {
+    ObjFxParticleParams params;
+    ObjFxRandomBurstTable burstTbl = gObjFxRandomBurstTbl;
+    u16 randAngles[3];
+    int i;
+    f32 unitRand;
+    u8 frameCount;
+
+    if (framesThisStep > 3) {
+        frameCount = 3;
+    } else {
+        frameCount = framesThisStep;
+    }
+    for (i = 0; i < frameCount * count; i++) {
+        unitRand = randomGetRange(0, 1000) / 1000.0f;
+        randAngles[0] = randomGetRange(0, 0xffff);
+        randAngles[1] = randomGetRange(0, 0xffff);
+        randAngles[2] = randomGetRange(0, 0xffff);
+        params.position[0] = mult * (1.0f - unitRand * (unitRand * unitRand));
+        params.position[1] = 0.0f;
+        params.position[2] = 0.0f;
+        vecRotateZXY((s16*)randAngles, params.position);
+        if (origin != NULL) {
+            params.position[0] += ((PartFxSpawnParams*)origin)->posX;
+            params.position[1] += ((PartFxSpawnParams*)origin)->posY;
+            params.position[2] += ((PartFxSpawnParams*)origin)->posZ;
+        }
+        params.effectParam = burstTbl.entries[type].effectParam;
+        params.pad00[1] = burstTbl.entries[type].extraParam;
+        params.pad00[2] = flagByte;
+        params.scale = 1.0f;
+        if (type >= 9 && type <= 0xb) {
+            if (type == 0xb || type == 0xa) {
+                (*gPartfxInterface)->spawnObject(obj, 0x7e3, &params, 2, -1, NULL);
+            }
+            if (type == 0xb || type == 9) {
+                (*gPartfxInterface)->spawnObject(obj, 0x7e4, &params, 2, -1, NULL);
+            }
+        } else {
+            (*gPartfxInterface)->spawnObject(obj, 0x7e2, &params, 2, -1, NULL);
+        }
+    }
+}
+
+void objfx_spawnCrystalOrbitEffects(GameObject* obj, s16* work, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff,
+                                    u8 flags) {
+    ObjFxParticleParams params;
+    int crystalIdx;
+    int angleStep;
+    int spawnFlags;
+    f32 wave;
+
+    for (crystalIdx = 0; crystalIdx < 4; crystalIdx++) {
+        work[0x12 + crystalIdx] = (65535.0f / period + (f32)(crystalIdx * randomGetRange(120, 127)));
+        wave = work[0x12 + crystalIdx];
+        work[0xe + crystalIdx] = (wave * timeDelta + work[0xe + crystalIdx]);
+        wave = fsin16((u16)work[0xe + crystalIdx]);
+        wave = (1.0f + wave) / 2.0f;
+        {
+            f32 amp = gObjFxCrystalAmplitudes[crystalIdx];
+            *(f32*)((char*)work + 0xc + crystalIdx * 4) = amp * wave;
+        }
+
+        work[0x16 + crystalIdx] = (timeDelta * gObjFxCrystalSpinSpeed[crystalIdx] + work[0x16 + crystalIdx]);
+        *(u16*)work = work[0x16 + crystalIdx];
+        *(f32*)((char*)work + 8) = *(f32*)((char*)work + 0xc + crystalIdx * 4);
+
+        for (angleStep = 0; angleStep < 0xffff; angleStep += 0x7fff) {
+            params.position[0] = *(f32*)((char*)work + 8) * xMul + xOff;
+            params.position[1] = *(f32*)((char*)work + 8) * yMul + yOff;
+            params.position[2] = 0.0f;
+            *(u16*)work += 0x7fff;
+            vecRotateZXY(work, params.position);
+            params.position[0] += obj->anim.localPosX;
+            params.position[1] += obj->anim.localPosY;
+            params.position[2] += obj->anim.localPosZ;
+            params.scale = 1.0f;
+            spawnFlags = 0x200001;
+            if (flags != 0) {
+                spawnFlags |= 0x20000000;
+            }
+            (*gPartfxInterface)->spawnObject(obj, 0x7ec, &params, spawnFlags, -1, NULL);
+        }
+    }
+}
+
+void viewFinderSetZoomTo50(void) {
+    gExpgfxNearFadeDepth = 50.0f;
+}
+
+void viewFinderSetZoom(f32 zoom) {
+    gExpgfxNearFadeDepth = -3000.0f / zoom;
+}

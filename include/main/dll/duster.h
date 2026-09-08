@@ -17,12 +17,4 @@ void spittingEbaUpdateTimeOfDay(int obj,int state);
 void spittingEbaInit(u32 unused,int state);
 void wbInit(u32 unused,int state);
 
-enum
-{
-    DUSTER_WALL_PLANE_OFFSET = offsetof(EnemyState, wallPlane),
-    DUSTER_WALL_NORMAL_X_OFFSET = offsetof(EnemyState, wallPlane.normal[0]),
-    DUSTER_WALL_NORMAL_Y_OFFSET = offsetof(EnemyState, wallPlane.normal[1]),
-    DUSTER_WALL_NORMAL_Z_OFFSET = offsetof(EnemyState, wallPlane.normal[2])
-};
-
 #endif /* MAIN_DLL_DUSTER_H_ */

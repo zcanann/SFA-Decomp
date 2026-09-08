@@ -223,3 +223,127 @@ test does not claim to validate the real noise sampler or trig approximation.
 NonMatching, the DOL gate protects integration; the object comparison is the
 evidence for its own generated code and data. Formatting is verified in a
 separate commit by raw hashes of the affected objects.
+
+## Native shadow storage (2026-09-07)
+
+The earlier BSS experiment is resolved with deferred emission and reverse
+ordinary-function definition order. The common GC/1.3 compiler, optimization
+profile including `nodead`, disabled automatic inlining, and TU boundaries
+remain. Every native array is defined before the function bodies, in the order
+that preserves the existing physical allocations. MWCC generates its own shared
+BSS base. The synthetic `NewShadowData` view is removed from the internal header.
+Rendering and allocation now name the caster, cast-slot, cast-texture, and frame-
+texture arrays directly, including the cast-slot index's evidenced byte narrowing.
+
+| BSS offset | Native storage | Bytes |
+| --- | --- | ---: |
+| `0000` | 33 entry records | 660 |
+| `0294` | Three frame-texture pointers | 12 |
+| `02A0` | 8 by 4 texture-pointer table | 128 |
+| `0320` | Sixteen noise-frame pointers | 64 |
+| `0360` | 300 queued casters | 3600 |
+| `1170` | 100 cast slots | 10400 |
+| `3A10` | Eight cast-texture pointers | 32 |
+| `3A30` | Existing noise records and opaque tail | 1096 |
+
+The combined view previously obscured the texture and noise-frame tables inside
+a padding span. The native definitions, the retail common-base instructions,
+and initialization following consumers in text support this emission model.
+All pre-existing named symbol offsets, sizes, linkage, and every allocated
+non-text section's bytes, extent, and alignment are unchanged. The compiler adds
+only its internal zero-size `...bss.0` base symbol.
+
+The allocation routine initializes 33 records, which independently confirms the
+660-byte array extent. Its manually expanded sixteen-record writes and tail loop
+are now one loop in a private inline helper setting each entry's `isActive`
+and `state` bytes. The helper keeps the loop index local to initialization and
+preserves all 5,940 instruction bytes of the allocation routine. Layout
+assertions cover the 20-byte record, both byte offsets, and complete array size.
+The release routine deliberately retains the retail 37-record byte scan. Its
+last four `isActive` accesses reach texture-table bytes at offsets 0x04, 0x18,
+0x2c, and 0x40 within `gNewShadowTextureTable`; initialization does not own or
+clear those as extra entries. The proven byte-field loads/stores and complete
+release-function code are retained, with the overrun documented at the source.
+The allocation is not enlarged to conceal it.
+
+All 39 previously exact functions remain exact. Rendering improves slightly
+from 99.730354% to 99.745766%; only two instruction bytes in `renderShadows`
+change. Every other function's instruction bytes are unchanged, including
+`allocLotsOfTextures` at 97.19906%. The whole-unit fuzzy score improves from
+98.64202% to 98.643875%, while all 16,668 data bytes remain exact. This is
+native-storage and source-structure recovery, with no additional exact function.
+The unit remains `NonMatching`.
+
+The four blend/fill/distortion tests and the noise-generation test pass. Their
+scope remains the generated images and lifecycle described above; the entry
+loop is validated by the byte-identical allocation routine rather than claimed
+as covered by those image tests.
+
+Both `ninja all_source` and the strict retail DOL checksum pass after integration
+with current staging. All resolved relocation destinations are unchanged.
+
+## Exact shadow renderer (2026-09-07)
+
+`renderShadows` now matches all 2,596 retail code bytes. Three source details
+close its remaining differences:
+
+- The projection scale has its own `shadowScale` local instead of reusing the
+  light direction's Z component. MWCC can reuse the dead direction register for
+  the scale, matching the projection calls without extending an unrelated local.
+- The viewport extent is `u32`, consistent with its nonnegative texture-width
+  sources, GX scissor arguments, and the retail unsigned float conversion for
+  `GXSetViewport`. This also preserves the retail scissor argument evaluation.
+- A private inline `shadowSquare` helper expresses the two separately rounded
+  products used for horizontal length. Its calls retain the two `fmuls` and
+  produce the retail addition operand order before the inline square root.
+  Combining the products into one expression would permit a fused operation.
+
+Only 16 instruction bytes in the renderer change. Every other function body,
+all named symbol layouts, every allocated non-text section, and resolved
+relocation destinations are unchanged. The unit advances from 39 to 40 exact
+functions out of 44, with 2,596 additional matched code bytes and all 16,668 data
+bytes still exact. Its fuzzy score rises from 98.643875% to 98.67453%.
+The common compiler and complete TU profile remain unchanged.
+
+`ninja all_source` and the strict retail DOL checksum both pass. The TU remains
+`NonMatching` because four other bodies are incomplete, so its new exact-function
+credit comes from objdiff; the checksum separately validates integration.
+
+## Disk-coordinate scaling (2026-09-07)
+
+The 32x32 and 16x16 disk fills now share the private inline
+`shadowScaleDiskCoordinates` helper. It scales the two already-normalized
+coordinates in place, preserving the distinct 1.1 and 1.2 factors. This boundary
+keeps the outer-coordinate normalization and scaling inside the pixel loop,
+recovering the retail multiply order without external constants or compiler
+changes. A by-value helper still permits the unwanted loop-invariant motion;
+moving normalization into the helper also changes instruction scheduling.
+
+The allocator now emits all 1,487 retail instructions instead of 1,485. The
+mnemonic-aligned differences fall from sixteen to six, all six remaining in
+the final reflection-gradient address scheduling. The large disk still has a
+floating-point register swap, and the small disk's inline square-root scratch
+uses a different stack offset. Other register differences remain throughout
+the allocator; this is a partial match.
+
+The disk locals now name texture X/Y coordinates, normalized coordinates,
+tile-column offsets, and radial values. In the I8 layout, the outer loop walks
+X and the inner loop walks Y. The large disk uses a linear falloff in squared
+radius, while the small disk takes its square root. Their original clamping,
+truncation, payload addressing, and cache-flush callers are unchanged.
+
+Against `af76c4d6ea`, `allocLotsOfTextures` improves from 97.19906% to 97.90518%,
+and the TU from 98.67453% to 98.86959%. All other 43 function bodies and their
+function-relative relocation targets are unchanged. The two following text
+functions move by eight bytes, and their jump-table targets follow them.
+All 16,668 allocated data bytes, data-symbol layouts, and logical data relocation
+targets are unchanged. The TU remains `NonMatching`, with 40/44 exact functions.
+
+The existing shadow pixel harness now covers both complete disk images:
+1,280 I8 texels, their tile placement, and header/trailing guards. Its five
+tests pass; removing the helper's Y scaling makes both disk cases fail.
+The host tests use scalar float rounding with contraction disabled, not PPC
+emulation; the retail instruction comparison separately checks the generated
+multiply/add sequence. Full source compilation and the strict retail checksum
+pass. The active source and internal header pass the formatter check. Formatting
+produces no additional source diff and preserves the complete semantic object.

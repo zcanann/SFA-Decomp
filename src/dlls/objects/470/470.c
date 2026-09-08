@@ -88,7 +88,7 @@ void dll_1D6_update(GameObject* obj) {
         }
         if (state->downTimer <= 0) {
             model = dll1d6_getActiveModel(obj);
-            ObjModel_SetBlendChannelTargets(model, 0, -1, 0, 0.1f, 16);
+            ObjModel_SetBlendChannelTargets(model, 0, -1, 0, 0.1f, BLENDCHAN_FLAG_KEEP_WEIGHT);
             state->upTimer = placement->upTimer;
             if (state->upTimer < 15) {
                 state->upTimer = 15;
@@ -108,7 +108,7 @@ void dll_1D6_update(GameObject* obj) {
         }
         state->upTimer -= framesThisStep;
         if (state->upTimer <= 0) {
-            ObjModel_SetBlendChannelTargets(model, 0, -1, 0, -0.1f, 16);
+            ObjModel_SetBlendChannelTargets(model, 0, -1, 0, -0.1f, BLENDCHAN_FLAG_KEEP_WEIGHT);
             state->downTimer = placement->downTimer;
             if (state->downTimer < 15) {
                 state->downTimer = 15;

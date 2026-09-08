@@ -231,17 +231,17 @@ All offsets below were cross-checked against `include/main/model.h` (`ModelFileH
 | 0x34 texCoords | `unk34` | offset match; confirmed used as a texcoord-presence check (`objprint_dolphin.c:1571`, gates `GX_VA_TEX0/1MTXIDX` setup) |
 | 0x38 shaders (materials) | `renderOps` | **name mismatch, strong behavioral match**: `renderOps + i*0x44` is passed straight to `shaderInit()` (`model.c:590`), and the count field at 0xf8 (`renderOpCount`) lines up with the wiki's `nShaders` at the same offset — this repo's "renderOps" is the wiki's "Shader\*"/materials array |
 | 0x3c bones | `jointData` | exact; also independently reconstructed in `include/main/objhits.h` as `ObjHitsModelFileHeader.joints` at the same offset (`STATIC_ASSERT(... == 0x3C)`) |
-| 0x40 boneQuats | `unk40` | offset match, not yet confirmed by usage |
-| 0x54 vtxGroups | `unk54` | offset match; only seen relocated (`model.c:362`), not otherwise exercised in reviewed code |
+| 0x40 boneQuats | `jointFuzzScales` | per-joint 0x10-byte pivot/scale-divisor records used by fuzz shell expansion |
+| 0x54 vtxGroups | `extraJointDefs` | four-byte records consumed by `modelCalcVtxGroupMtxs`: two joint indices, first-joint weight in quarter units, and an unknown byte |
 | 0x58 hitspheres | `unk58` in `model.h`; independently reconstructed as `ObjHitsModelFileHeader.hitVolumes` (`ObjHitsModelHitVolume*`) in `objhits.h` | exact offset, cross-file confirmation (see HitSphere section) |
 | 0x64 pAltIndBuf | `animationModelPtrs` | offset match, name differs |
 | 0x68 pAnimBuf | `animationDataSection` | offset match, semantically consistent |
 | 0x6c pModAnim | `animationHeaderBuffer` ("per-joint s16 table") | offset match |
 | 0x70 animIdxs (ushort[8]) | `unk70[0x10]` | exact size match (16 bytes) |
 | 0x80 amapTabEntry | `animationDataFileOffset` | offset match |
-| 0xae "word ? maybe #normals" | `blendAnimCount` (u16) | offset match — and see the 0xc8 pairing below |
-| 0xc8 bCopyNormalsOnLoad, "field AE = how many" | `blendAnimEntries` (`STATIC_ASSERT(... == 0xC8)`) | **the wiki's own cross-reference ("field AE = how many") matches this repo's independent pairing of `blendAnimCount`@0xAE with `blendAnimEntries`@0xC8** — strong confirmation the two efforts found the same count/pointer relationship, even though the semantic name differs (wiki guesses normals-copy-on-load; we call it a blend-anim table) |
-| 0xcc "pointer ?" | `blendAnimBase` | offset match |
+| 0xae "word ? maybe #normals" | `normalAnimJob.chunkCount` (u16) | offset match — and see the 0xc8 pairing below |
+| 0xc8 bCopyNormalsOnLoad, "field AE = how many" | `normalAnimEntries` (`STATIC_ASSERT(... == 0xC8)`) | The wiki count/pointer pairing agrees with the retail relocation loop: `normalAnimJob.chunkCount` at 0xAE counts 0x74-byte chunks at `normalAnimEntries`. The normal stream consumes those chunks and writes to the instance normal buffer. |
+| 0xcc "pointer ?" | `normalAnimBase` | offset match |
 | 0xd0 dlists | `displayLists` | exact; `GXCallDisplayList(*(void**)dl, *(u16*)(dl+4))` (`objprint_dolphin.c:1878` etc.) reads only `offset`(0x00)+`size`(0x04) — matches the wiki's "only offset and size seem to be actually used" note precisely |
 | 0xd4 renderInstrs | `instrs` | exact; see Render Instructions section below |
 | 0xd8 nRenderInstrs (# bytes) | `unkD8[4]`, used as `*(u16*)(m+0xd8) << 3` (bit length) | matches "# bytes" (× 8 = bits) |
@@ -254,14 +254,20 @@ All offsets below were cross-checked against `include/main/model.h` (`ModelFileH
 | 0xf2 nTextures | `textureCount` | exact |
 | 0xf3 nBones, "# mtxs at Model->mtxs" | `jointCount` | exact; also `ObjHitsModelFileHeader.jointCount` in `objhits.h` at the same offset |
 | 0xf4 nVtxGroups, "added to nBones if nonzero" | `extraJointCount` | **confirmed behaviorally**: `modelGetBoneMtx` (`model.c:2610`) computes `lim = jointCount + extraJointCount` when `jointCount != 0` — exactly the wiki's described rule |
-| 0xf5 nDlists | unnamed (`unkF5` in the field list, not in the current header's named members) | **confirmed**: `model.c:415` relocation loop bound is `unkF5 + shadowDisplayListCount`, and `objprint_dolphin.c:2135` uses `unkF5` as the index *base* for the second display-list group — i.e. `unkF5` is the primary/first-group display-list count, matching the wiki's `nDlists` |
+| 0xf5 nDlists | `displayListCount` | primary group count and the shadow group's index base; relocation processes `displayListCount + shadowDisplayListCount` records |
 | 0xf6 "?" | `shadowDisplayListCount` ("count of the 2nd display-list group (shadow)") | this repo resolves what the wiki left unknown at 0xf6 |
 | 0xf7 nHitSpheres | `ObjHitsModelFileHeader.hitVolumeCount` in `objhits.h` (`STATIC_ASSERT(... == 0xF7)`) | exact, cross-file confirmation |
 | 0xf8 nShaders | `renderOpCount` | exact, consistent with the `renderOps`/`shaderInit` match above |
 | 0xf9 nPtrsDC | `morphTargetCount` | offset match; paired with `morphTargetPtrs`@0xdc same as the wiki pairs `nPtrsDC` with `ptrs_0xdc` |
 | 0xfa nTexMtxs | not a named field in `ModelFileHeader`, but **confirmed by usage**: `objprint_dolphin.c:1583` loops `for (i = 0; i < hdr[0xfa]; i++)` while setting up `GX_VA_TEXnMTXIDX` descriptors — this is exactly a texture-matrix count | ready to name (see below) |
 
-**ModelDataFlags2 bits.** Two of the six wiki bits have named `#define`s in `include/main/model.h`: `MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS` (0x10) and `MODEL_FLAG_VERTEX_ANIM_AREA` (0x40). The wiki's interpretation of these bits ("copy vertices on load" / "use local MODANIM.TAB") differs from this repo's current comments; usage in `model.c` (toggling around vertex-anim-area setup, `model.c:460-2179`) is consistent with "there is a second vertex-anim data area selected by this bit" but doesn't clearly confirm either exact wording. Treat both as plausible, not settled.
+**ModelDataFlags2 bits.** `MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS` (0x10) and
+`MODEL_FLAG_CACHED_ANIMATIONS` (0x40) are defined in `include/main/model.h`.
+The `0x40` bit selects the cached animation-ID path, typed per-state move caches,
+and their joint-matrix-slot prefixes. The earlier `VERTEX_ANIM_AREA` name was
+misleading; the recovered loader and consumers establish this animation-cache
+contract. The wiki's exact interpretation of the separate `0x10` bit remains a
+separate question.
 
 **ModelDataFlags24.** `MODEL_FLAGS24_NORMALS_9BYTE` (0x8) in `include/main/model.h` matches the wiki's "08 = use 9 normals instead of 3" exactly, including the bit value.
 
@@ -282,13 +288,13 @@ All offsets below were cross-checked against `include/main/model.h` (`ModelFileH
 ```
 This matches the wiki's opcode table op-for-op (opcode 1 = select texture/shader with a 6-bit index, opcode 2 = call display list with an 8-bit index, opcode 3 = vertex descriptors, opcode 4 = `renderOpMatrix` with a 4-bit count + 8-bit indices, opcode 5 = end of script). The bit-cursor implementation is `MtxBitStream` (`data` + `pos`), walked by `modelLoadMtxsToGx` (opcode 4), `ModelHeader_setupPosTexFmt` (opcode 3), and the display-list/shader dispatch in `modelDoRenderInstrs`/`modelDoAltRenderInstrs`. Opcode 0 (wiki: "unused, same as 4") wasn't specifically checked here.
 
-**DisplayListPtr → `displayLists`.** `0x1c`-byte stride (`model.c:42`: `displayLists + displayListIndex * 0x1c`) matches the wiki's implied `DisplayListPtr` size. `GXCallDisplayList(*(void**)dl, *(u16*)(dl + 4))` (`objprint_dolphin.c:1878`, `:2136`, `:2560`) reads exactly `offset`(0x00) and `size`(0x04) and nothing else in every call site checked — confirms the wiki's "only offset and size seem to be actually used".
+**DisplayListPtr → `displayLists`.** The model header and getter now use native `ModelDisplayListEntry` records, size 0x1c. Relocation fixes each record's `dlist` pointer; rendering reads that pointer and `dlistSize` at +4. The remaining 0x16 bytes remain opaque. The primary group is followed by the shadow group, whose renderer adds `displayListCount` to its local display-list index. See [model geometry tables](../model_geometry_tables.md).
 
 **Shader/materials → `renderOps` / `ObjModelRenderOp`.** `src/main/objprint_dolphin.c` has a partial `ObjModelRenderOp` struct (`textureId`@0x18, `unk1C`, `unk24`, `envTextureId`@0x34, `flags`@0x3c) for the `0x44`-byte records the wiki calls `Shader`/materials. Not a full field-for-field reconstruction, but the same array, same per-entry stride, same role (bound by render-instruction opcode 1).
 
-**ModelVtxGroup.** Present at the correct header offset (`unk54`) but not deeply exercised in the code paths reviewed here — no bone0/bone1/weight field usage found (`not found`).
+**ModelVtxGroup.** `ModelExtraJointDef` now models the four-byte retail record at `extraJointDefs`. The first two bytes select joints; the third byte divided by four is the first joint's weight, with `1 - weight` applied to the second. The last byte remains unknown. The output matrix goes to `jointCount + groupIndex`. See [model render records](../model_render_records.md).
 
-**astruct_54 / fine-skinning region (wiki 0x88-0xc8).** This repo's independent reconstruction of the same byte range names it as vertex/blend animation tables (`vertexAnimCount`, `vertexAnimEntriesRaw`, `vertexAnimEntries`, `vertexAnimBase`, `blendAnimCount`, `blendAnimEntriesRaw`, `blendAnimEntries`, `blendAnimBase`) rather than the wiki's "fine skinning config/pieces/weights" theory. Both describe animated-vertex-blending machinery in the same region; the two interpretations haven't been reconciled field-by-field here.
+**astruct_54 / fine-skinning region (wiki 0x88-0xc8).** Retail relocation and renderer calls establish two embedded jobs (`vertexAnimJob`, `normalAnimJob`), their native chunk arrays (`vertexAnimEntries`, `normalAnimEntries`), and weight-stream bases (`vertexAnimBase`, `normalAnimBase`). See [cached model animation jobs](../model_cached_stream_jobs.md) for the field offsets and output-table contract. These cover the region described by the wiki's "fine skinning config/pieces/weights"; unknown bytes have not been reconciled field-by-field.
 
 ## Ready-to-adopt code
 
@@ -298,7 +304,7 @@ Nothing here is applied to any header — for a maintainer to lift into `include
 /* ModelFileHeader.flags (ModelDataFlags2) bits not yet named in model.h */
 #define MODEL_FLAG_NO_ANIMATIONS       0x0002
 /* 0x0010 = MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS (already defined) */
-/* 0x0040 = MODEL_FLAG_VERTEX_ANIM_AREA (already defined) */
+/* 0x0040 = MODEL_FLAG_CACHED_ANIMATIONS (already defined) */
 #define MODEL_FLAG_NO_DEPTH_TEST       0x0400
 #define MODEL_FLAG_ALPHA_Z_UPDATE      0x2000
 #define MODEL_FLAG_ALT_POINTER_LAYOUT  0x8000

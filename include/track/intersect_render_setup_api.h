@@ -15,8 +15,10 @@ void gxTevAddTextureFrameBlendStages(void);
 void setupReflectionIndirectTev(u8 flag);
 void objectShadow_setupSwappedProjectedTexture(ProjectedShadowTexture* shadow, GXColor* color, f32 mtx[3][4]);
 void objectShadow_setupProjectedTexture(ProjectedShadowTexture* shadow, GXColor* color, f32 mtx[3][4]);
-void objectShadow_setupProjectedTextureDepthFade(ProjectedShadowTexture* shadow, GXColor* color, f32 mtx[3][4], f32 depth);
-void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, GXColor* color, f32 mtx[3][4], f32 scale);
+void objectShadow_setupProjectedTextureDepthFade(ProjectedShadowTexture* shadow, GXColor* color, f32 mtx[3][4],
+                                                 f32 depth);
+void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, GXColor* color, f32 mtx[3][4],
+                                               f32 scale);
 /*
  * Closes out the TEV pipeline configuration that drawViewFinderAperture etc. open:
  * pushes the current ind-stage / chan-ctrl / tex-gen counts in

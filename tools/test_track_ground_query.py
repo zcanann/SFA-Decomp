@@ -40,7 +40,7 @@ class TrackGroundQueryTests(unittest.TestCase):
             "gTrackBlockDescriptors", "gTrackGroundHits", "gTrackGroundHitOrder",
             "gActiveTrackBlockCount", "gTrackGroundHitCount", "gTrackGroundHitWriteCursor",
             "gTrackGroundHitPtrs", "gTrackTriangleBuffer"))
-        triangle = re.search(r"^struct TrackTriangle \{.*?^\};", source, re.M | re.S).group()
+        triangle = record(track, "TrackTriangle")
         cls.temporary = tempfile.TemporaryDirectory(prefix="sfa-ground-query-")
         cls.addClassCleanup(cls.temporary.cleanup)
         directory = Path(cls.temporary.name)

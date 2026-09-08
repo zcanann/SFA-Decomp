@@ -1,5 +1,10 @@
 # Sequencer Speed Source Recovery
 
+This records the earlier fragment-based checkpoint. The later
+[sequencer TU recovery](musyx_sequencer_tu_recovery.md) removes its
+`SynthVoiceRuntime` overlay and artificial splits in favor of native arrays;
+the below object hashes and exactness claims describe that earlier state.
+
 `seqSpeed` and the immediate-speed branch of `seqCrossFade` both store a
 16-bit speed at sixteen addresses separated by `0x38`. Relative to `seqNote`,
 the first address is `0x291A + slot * 0x1868`. These are the existing

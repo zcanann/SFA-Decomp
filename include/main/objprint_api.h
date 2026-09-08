@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "game/objects/object.h"
+#include "main/objprint_character_api.h"
 
 typedef struct ModelFileHeader ModelFileHeader;
 typedef struct ObjModel ObjModel;
@@ -21,8 +22,8 @@ void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model);
 void staffUpdateSegmentTransforms(GameObject* staff, GameObject* obj, ObjModel* model, int a, int b, int c);
 void objModelClearJointVectors(GameObject* obj);
 int characterTrackJointList(GameObject* obj, int* keys, int count, u8* channels);
-s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* targetPos, u8* channels, s16* speeds,
-                              f32 yOffset, int unused, int basePitch);
+s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* targetPos, ObjJointTrackPair* channels,
+                              s16* speeds, f32 yOffset, int unused, int basePitch);
 void objJointTracksSetAngles(u8* channelData, int count, s16 yaw, s16 pitch);
 void characterDecayJointVecs(GameObject* obj, int* keys, int count);
 void objJointTracksCaptureCurrentAngles(GameObject* obj, int* keys, int count, u8* channels);

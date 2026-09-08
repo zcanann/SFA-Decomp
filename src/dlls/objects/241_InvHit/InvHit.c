@@ -13,7 +13,7 @@
  *      ground via trackGetHeight.
  *   5  like 3 but gated on the player having a lock-on target.
  *   6  fixed primary-radius hit volume.
- *   7  self-free once the owner's hit list no longer references it.
+ *   7  self-free when the owner's hit list references it.
  * InvHit_free releases the expgfx source for mode 4.
  */
 #include "dlls/objects/241_InvHit.h"
@@ -94,14 +94,17 @@ ObjectDescriptor gInvHitObjDescriptor = {
 };
 
 void InvHit_update(GameObject* obj) {
-    InvHitState* state = obj->extra;
+    GameObject* victim;
     GameObject* target;
+    ObjHitsPriorityState* hitState;
+    ObjHitsPriorityState* ownerHitState;
+    InvHitState* state = obj->extra;
     obj->anim.previousLocalPosX = obj->anim.localPosX;
     obj->anim.previousLocalPosY = obj->anim.localPosY;
     obj->anim.previousLocalPosZ = obj->anim.localPosZ;
     switch (state->mode) {
     case INVHIT_MODE_PROXIMITY_DAMAGE: {
-        GameObject* victim = Obj_GetPlayerObject();
+        victim = Obj_GetPlayerObject();
         while (victim != NULL) {
             f32 deltaX = obj->anim.localPosX - victim->anim.localPosX;
             f32 deltaY = obj->anim.localPosY - victim->anim.localPosY;
@@ -142,9 +145,10 @@ void InvHit_update(GameObject* obj) {
         ObjList_ContainsObject((GameObject*)obj->userData1);
         break;
     case INVHIT_MODE_SELF_FREE: {
-        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
-        ObjHitsPriorityState* ownerHitState = (ObjHitsPriorityState*)((GameObject*)obj->userData1)->anim.hitReactState;
         int ownerHitIndex;
+
+        hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+        ownerHitState = (ObjHitsPriorityState*)((GameObject*)obj->userData1)->anim.hitReactState;
 
         for (ownerHitIndex = 0; ownerHitIndex < ownerHitState->priorityHitCount; ownerHitIndex++) {
             if ((GameObject*)ownerHitState->hitObjects[ownerHitIndex] == obj) {
@@ -155,7 +159,6 @@ void InvHit_update(GameObject* obj) {
         break;
     }
     case INVHIT_MODE_HOMING_PROJECTILE: {
-        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         TrackGroundHit** hits[2];
         f32 anchorDeltaX;
         f32 anchorDeltaZ;
@@ -164,6 +167,7 @@ void InvHit_update(GameObject* obj) {
         f32 groundThreshold;
         int groundHitIndex;
 
+        hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         obj->userData2 -= framesThisStep;
         if (hitState->lastHitObject != 0) {
             hitState->flags = 0;

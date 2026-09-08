@@ -3,6 +3,7 @@
 #include "musyx/synth_channel_scale.h"
 #include "musyx/synth_job_init.h"
 #include "musyx/synth_virtual_sample.h"
+#include "musyx/snd_groups.h"
 #include "musyx/synth_control.h"
 #include "musyx/snd_synth_api.h"
 #include "musyx/synth_voice.h"

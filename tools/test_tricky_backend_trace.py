@@ -38,6 +38,7 @@ class BackendTraceTests(unittest.TestCase):
             stack.enter_context(patch.object(trace.strucdiff, "analyse", return_value=([], [], [], 0, 0)))
             result = trace.inspect([initial, colored, final], Path("unused.o"), ["trickyDigTunnel"], require_graph=True)
             self.assertEqual(len(result["trickyDigTunnel"]["color_decisions"]), 2)
+            self.assertTrue(result["trickyDigTunnel"]["simplification_replayed"])
             for snapshot in (initial, colored):
                 snapshot["register_class"] = 3
             del initial["available_gprs"], initial["original_gpr_count"]
@@ -46,6 +47,14 @@ class BackendTraceTests(unittest.TestCase):
             self.assertEqual(result["trickyDigTunnel"]["register_class"], 3)
             self.assertEqual(result["trickyDigTunnel"]["high_degree_removals"], [])
             self.assertEqual(len(result["trickyDigTunnel"]["color_decisions"]), 2)
+            self.assertFalse(result["trickyDigTunnel"]["simplification_replayed"])
+            initial["simplification_policy"] = {"available": [28, 29], "temporary_cutoff": 34}
+            result = trace.inspect([initial, colored, final], Path("unused.o"), ["trickyDigTunnel"], require_graph=True)
+            self.assertTrue(result["trickyDigTunnel"]["simplification_replayed"])
+            initial["simplification_policy"]["available"] = [28]
+            with self.assertRaisesRegex(ValueError, "replayed simplification disagrees"):
+                trace.inspect([initial, colored, final], Path("unused.o"), ["trickyDigTunnel"], require_graph=True)
+            initial["simplification_policy"]["available"] = [28, 29]
             with self.assertRaisesRegex(ValueError, "missing requested register class"):
                 trace.inspect([initial, colored, final], Path("unused.o"), ["trickyDigTunnel"],
                               require_graph=True, required_register_class=4)

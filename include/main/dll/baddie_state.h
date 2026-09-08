@@ -262,7 +262,7 @@ STATIC_ASSERT(sizeof(GroundBaddiePlacement) == 0x34);
  */
 typedef struct GroundBaddieState {
     BaddieState baddie;
-    RouteNav routeNav; /* 0x35c: route destination/current/target and update budget */
+    RouteNav routeNav; /* 0x35c: route start/goal/waypoint and search budget */
     RouteState routeState; /* 0x384: allocated route nodes, heap, and recovered path */
     CharacterEyeAnimState eyeAnimState; /* 0x3ac: head-aim / eye-blink record (characterDoEyeAnims / characterSetHeadYawToTarget) */
     u8 pad3D4[0x3DC - 0x3D4];

@@ -119,6 +119,8 @@ def parse_debug_srcfiles(path: Path) -> set[str]:
 
 def parse_debug_split_text_ranges(path: Path) -> dict[str, tuple[int, int]]:
     ranges: dict[str, tuple[int, int]] = {}
+    if not path.is_file():
+        return ranges
     current_path: str | None = None
     current_text: tuple[int, int] | None = None
 

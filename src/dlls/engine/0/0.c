@@ -346,7 +346,7 @@ extern u16 gViewFinderCamAngle;
 extern char sTrickyDebugXCoordFormat[];
 
 int pauseMenuHoloRenderFn(int* this, int* p2, int p3);
-void hudDrawCounter(int id, s16 value, s16 target, u8 alpha, int timer, int* yPos, u8 showTarget);
+void hudDrawCounter(int id, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget);
 char sHudCounterFmt02d[] = "%02d";
 char sHudCounterFmt03d[] = "%03d";
 char lbl_803DBB58[] = "%d";
@@ -2093,7 +2093,7 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     }
 }
 
-void hudDrawCounter(int idx, s16 value, s16 target, u8 alpha, int timer, int* yPos, u8 showTarget) {
+void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget) {
     int prevCharset;
     void* tex;
     CounterText buf1;
@@ -2854,7 +2854,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
                 icon = 0x5A;
                 break;
             }
-            drawTexture(((void**)(base + 0x1C0))[icon], 575.0f, 102.0f, (u8)(fade * gCMenuHighlightFade / 0xFF), 0x100);
+            drawTexture(((void**)(base + 0x1C0))[icon], 575.0f, 102.0f, (u8)(fade* gCMenuHighlightFade / 0xFF), 0x100);
         }
     }
     if (hudYButtonItemIconTexture != NULL && gHudYButtonItemTextureCache != yButtonItemTextureId) {
@@ -4790,22 +4790,22 @@ void timeListDraw(int unused1, int unused2, int unused3) {
 
     {
         s16 ang;
-        u8 pulse;
-        u8 a, b;
+        int pulseBrightness;
+        int firstPromptBrightness, secondPromptBrightness;
         gTimeListPulseAngle += gTimeListPulseAngleStep;
         ang = gTimeListPulseAngle;
-        pulse = gTimeListPulseAmplitude * fsin16Precise((u16)ang) + gTimeListPulseBias;
+        pulseBrightness = gTimeListPulseAmplitude * fsin16Precise((u16)ang) + gTimeListPulseBias;
         if (gTimeListPromptSelection == 1) {
-            a = pulse;
-            b = 0xff;
+            firstPromptBrightness = pulseBrightness;
+            secondPromptBrightness = 0xff;
         } else {
-            a = 0xff;
-            b = pulse;
+            firstPromptBrightness = 0xff;
+            secondPromptBrightness = pulseBrightness;
         }
         gameTextShowAt(0x2f7, 0, 5);
-        gameTextSetColor(a, a, a, 0xff);
+        gameTextSetColor(firstPromptBrightness, firstPromptBrightness, firstPromptBrightness, 0xff);
         gameTextShow(0x2f8);
-        gameTextSetColor(b, b, b, 0xff);
+        gameTextSetColor(secondPromptBrightness, secondPromptBrightness, secondPromptBrightness, 0xff);
         gameTextShow(0x2fb);
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
     }
@@ -7774,7 +7774,7 @@ void GameUI_initialise(void) {
     p = textureLoadAsset(GAMEUI_TEXTURE_BLINK);
     gGameUiBlinkTexture = p;
     p->animationFrameStep = 40;
-    gGameUiBlinkAnimFlags = 0x80000;
+    gGameUiBlinkAnimFlags = TEXTURE_ANIM_REVERSE;
     gGameUiBlinkAnimFrame = 0;
     gHudItemInfoPopup.framesLeft = -1;
     gHudItemInfoPopup.itemCount = 0;
@@ -7784,6 +7784,7 @@ void GameUI_initialise(void) {
     airMeter = 0;
 }
 
+int gPauseMenuPlayerMapCell;
 int gPauseMenuSavedTextDir;
 int gGameUiCurHintTextMap;
 short gCMenuOpenAnim;

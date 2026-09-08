@@ -6288,7 +6288,8 @@ void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state) {
     Obj_GetActiveModel(obj);
     if (state->blendPending) {
         model = Obj_GetActiveModel(obj);
-        ObjModel_SetBlendChannelTargets(model, 1, -1, 0x1a, 0.0f, 0x21);
+        ObjModel_SetBlendChannelTargets(model, 1, -1, 0x1a, 0.0f,
+                                        BLENDCHAN_FLAG_MANUAL | BLENDCHAN_FLAG_ALLOW_NEGATIVE);
         state->blendWeight = 10.0f;
         ObjModel_SetBlendChannelWeight(model, 0, 0.0f);
         state->blendPending = 0;

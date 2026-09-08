@@ -845,7 +845,6 @@ int curves_findNearObj(GameObject* obj, int* curveTypes, int typeCount, int acti
 #define OBJFSA_WG(GRP) ((ObjfsaWalkGroup*)((char*)patchBase[0] + (GRP) * OBJFSA_PATCHGROUP_STRIDE + 0x3000))
 
 int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unused2, int* previousCurveId) {
-    f32* queueDistanceBase;
     RomCurveDef* queueCurve;
     int directIndex;
     int directSlot;
@@ -879,7 +878,6 @@ int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unus
     candidateCount = 0;
     directSlot = 0;
     for (; directSlot < ROMCURVE_LINK_COUNT; directSlot++) {
-        queueDistanceBase = queueDistances;
         directLinkId = startCurve->linkIds[directSlot];
         if (directLinkId <= -1) {
             continue;
@@ -895,10 +893,10 @@ int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unus
             continue;
         }
 
-        distance = (directCurve->z - startCurve->z) * (directCurve->z - startCurve->z);
-        queueDistances[0] = (directCurve->x - startCurve->x) * (directCurve->x - startCurve->x) +
-                            (directCurve->y - startCurve->y) * (directCurve->y - startCurve->y) + distance;
         queueCount = 0;
+        distance = (directCurve->z - startCurve->z) * (directCurve->z - startCurve->z);
+        queueDistances[queueCount] = (directCurve->x - startCurve->x) * (directCurve->x - startCurve->x) +
+                                     (directCurve->y - startCurve->y) * (directCurve->y - startCurve->y) + distance;
         queueIndices[queueCount++] = directIndex;
         visited[directIndex] = 1;
 
@@ -934,7 +932,7 @@ int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unus
                                     (queueCurve->y - linkCurve->y) * (queueCurve->y - linkCurve->y));
 
                     insertIndex = 0;
-                    while (insertIndex < queueCount && queueDistanceBase[insertIndex] > linkDistance) {
+                    while (insertIndex < queueCount && queueDistances[insertIndex] > linkDistance) {
                         insertIndex++;
                     }
                     for (j = queueCount; j > insertIndex; j--) {

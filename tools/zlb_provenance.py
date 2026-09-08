@@ -193,7 +193,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--compile", action="store_true", help="compile the installed-toolchain matrix")
     parser.add_argument("--fetch-gcc", action="store_true", help="download and audit upstream GCC backends")
-    parser.add_argument("--source", type=Path, default=ROOT / "src/main/zlb.c")
+    parser.add_argument("--source", type=Path, default=ROOT / "docs/foreign/zlb_decompress_gcc.c")
     parser.add_argument("--output", type=Path, default=ROOT / "build/zlb-provenance")
     args = parser.parse_args()
     output = args.output.resolve()

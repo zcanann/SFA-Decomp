@@ -5,6 +5,7 @@
 #include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/model.h"
+#include "main/joint_pose.h"
 #include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
 #include "main/asset_load.h"
@@ -281,6 +282,10 @@ void Obj_TickModelColorFadeRecursive(GameObject* obj) {
     }
 }
 
+static f32 objPlacementRangeToWorld(int range) {
+    return (f32)(range << 3);
+}
+
 int objGetFlagsE5_2(u8* obj) {
     return ((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE;
 }
@@ -524,7 +529,7 @@ GameObject* loadObjectAtObject(GameObject* src, ObjPlacement* setup) {
         OSReport(sObjSetupObjectLoadingLockedWarning, -1);
         obj = NULL;
     } else {
-        obj = loadCharacter((s16*)setup, 5, type, -1, objF30, 0);
+        obj = loadCharacter(setup, 5, type, -1, objF30, 0);
         if (obj != NULL) {
             Obj_RegisterObject(obj, 5);
             OSReport(sObjDebugStrings, obj->anim.modelInstance->name);
@@ -709,7 +714,7 @@ void mapSetupPlayer(void) {
                 OSReport((char*)(base + 0x20), -1);
                 obj = 0;
             } else {
-                obj = loadCharacter((s16*)&spawn, 1, -1, -1, 0, 0);
+                obj = loadCharacter((ObjPlacement*)&spawn, 1, -1, -1, 0, 0);
                 if (obj != 0) {
                     Obj_RegisterObject(obj, 1);
                     OSReport((char*)(base + 0x5c), obj->anim.modelInstance->name);
@@ -1316,6 +1321,29 @@ void Obj_RemoveFromUpdateList(GameObject* obj) {
     }
 }
 
+static void objInitCullScale(GameObject* obj) {
+    int modelPtr;
+    f32 max;
+    int i;
+    u32 cullScale;
+
+    max = 10.0f;
+    i = 0;
+    for (; i < obj->anim.modelInstance->modelCount; i++) {
+        modelPtr = (int)obj->anim.modelBanks[i];
+        if (modelPtr != 0) {
+            if ((f32)modelFileHeaderGetCullDistance(*(ModelFileHeader**)modelPtr) > max) {
+                max = modelFileHeaderGetCullDistance(*(ModelFileHeader**)modelPtr);
+            }
+        }
+    }
+    cullScale = obj->anim.modelInstance->cullDistScale;
+    if (cullScale != 0) {
+        max = max * ((10.0f * cullScale) / 255.0f);
+    }
+    obj->anim.hitboxScale = max;
+}
+
 void modelInitBones(f32 scale, void* model) {
     f32* srcP;
     int off;
@@ -1434,7 +1462,7 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags) {
     }
     if (modelDef->jointCount != 0) {
         r = roundUpTo4(size);
-        size = r + modelDef->jointCount * 0x12;
+        size = r + modelDef->jointCount * sizeof(ObjJointPose);
     }
     if (modelDef->textureSlotCount != 0) {
         r = roundUpTo4(size);
@@ -1521,18 +1549,18 @@ void Obj_RegisterObject(GameObject* obj, int flags) {
     }
 }
 
-void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused) {
+GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objectIndex, GameObject* parent,
+                          int unused) {
     int id;
     int offsets[20];
     void* models[20];
     GameObject tmpl;
     GameObject* tp;
     s16 seq;
-    int modelPtr;
     u8* def;
-    int fnFlags;
-    int (*fp)(void*);
-    int (*fp2)(void*, int);
+    int callbackFlags;
+    int (*getModelLoadFlags)(GameObject*);
+    int (*getExtraSize)(GameObject*, int);
     int loadFlags;
     int idx;
     int i;
@@ -1546,15 +1574,13 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     u8 n;
     u16 modelFlags;
     u8 renderFlags;
-    f32 max;
     s16 seq2[1];
-    u32 cullScale;
     int size;
     int dllStateSize;
     int alignedCursor;
     int j;
 
-    seq = *data;
+    seq = data->objectId;
     if (flags & 2) {
         id = seq;
     } else {
@@ -1568,7 +1594,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     def = loadObjectFile(id);
     tmpl.anim.modelInstance = (ObjModelInstance*)def;
     if (def == NULL || (int)def == -1) {
-        debugPrintf(sObjUnknownTypeUsingDummyObjectWarning, id, *data, tmpl.anim.romDefNo);
+        debugPrintf(sObjUnknownTypeUsingDummyObjectWarning, id, data->objectId, tmpl.anim.romDefNo);
         return NULL;
     }
     modelDef = (ObjModelInstance*)def;
@@ -1584,22 +1610,22 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     if (flags & 4) {
         tmpl.anim.flags |= 0x2000;
     }
-    tmpl.anim.localPosX = ((ObjPlacement*)data)->posX;
-    tmpl.anim.localPosY = ((ObjPlacement*)data)->posY;
-    tmpl.anim.localPosZ = ((ObjPlacement*)data)->posZ;
+    tmpl.anim.localPosX = data->posX;
+    tmpl.anim.localPosY = data->posY;
+    tmpl.anim.localPosZ = data->posZ;
     tmpl.anim.defId = id;
-    tmpl.anim.placementData = data;
+    tmpl.anim.placementData = (s16*)data;
     tmpl.anim.romDefNo = seq;
-    tmpl.romListBit = arg3;
-    tmpl.anim.mapEventSlot = arg2;
+    tmpl.romListBit = objectIndex;
+    tmpl.anim.mapEventSlot = mapLayer;
     tmpl.anim.activeMove = -1;
     tmpl.seqIndex = -1;
     tmpl.anim.alpha = 0xff;
     tmpl.msgQueue = NULL;
     tmpl.sphereMapIntensity = 0xff;
-    tmpl.anim.loadDistance = (f32)(int)(((ObjPlacement*)data)->loadRange << 3);
-    tmpl.anim.cullDistance2 = (f32)(int)(((ObjPlacement*)data)->unk07 << 3);
-    n = (((ObjPlacement*)data)->mapActFlagsHi & 0x18) >> 3;
+    tmpl.anim.loadDistance = objPlacementRangeToWorld(data->loadRange);
+    tmpl.anim.cullDistance2 = objPlacementRangeToWorld(data->unk07);
+    n = (data->mapActFlagsHi & 0x18) >> 3;
     tmpl.lightColorSlot = n;
     if (n == 0) {
         tmpl.lightColorSlot = tmpl.anim.modelInstance->defaultModelVariant;
@@ -1614,20 +1640,23 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     switch (tmpl.anim.romDefNo) {
     case OBJECT_SEQID_SABRE:
     case OBJECT_SEQID_KRYSTAL:
-        fnFlags = 0x1cb;
+        callbackFlags = 0x1cb;
         break;
     default:
-        if (tmpl.anim.dll != NULL && (int)(fp = *(int (**)(void*))((char*)*tmpl.anim.dll + 0x18)) != -1 && fp != NULL) {
-            fnFlags = fp(tp);
+        if (tmpl.anim.dll != NULL &&
+            (int)(getModelLoadFlags = (int (*)(GameObject*))((ObjectInterface*)*tmpl.anim.dll)->getObjectTypeId) !=
+                -1 &&
+            getModelLoadFlags != NULL) {
+            callbackFlags = getModelLoadFlags(tp);
         } else {
-            fnFlags = 0;
+            callbackFlags = 0;
         }
         break;
     }
     if (modelDef->flags & OBJDEF_FLAG_RELATED_TO_MODELS) {
-        loadFlags = fnFlags & ~1;
+        loadFlags = callbackFlags & ~1;
     } else {
-        loadFlags = fnFlags | 1;
+        loadFlags = callbackFlags | 1;
     }
     if (modelDef->shadowType != OBJ_SHADOW_TYPE_NONE) {
         loadFlags |= OBJLOAD_FLAG_HAS_SHADOW;
@@ -1657,7 +1686,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             total += size;
         }
     }
-    base = objGetTotalDataSize(tp, def, data, loadFlags);
+    base = objGetTotalDataSize(tp, def, (s16*)data, loadFlags);
     allocSize = base + total;
     obj = mmAlloc(allocSize, 0xe, 0);
     memcpy(obj, &tmpl, sizeof(GameObject));
@@ -1716,8 +1745,9 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         dllStateSize = 0x8e0;
         break;
     default:
-        if (obj->anim.dll != NULL && (fp2 = *(int (**)(void*, int))((char*)*obj->anim.dll + 0x1c)) != NULL) {
-            dllStateSize = fp2(obj, cursor);
+        if (obj->anim.dll != NULL &&
+            (getExtraSize = (int (*)(GameObject*, int))((ObjectInterface*)*obj->anim.dll)->getExtraSize) != NULL) {
+            dllStateSize = getExtraSize(obj, cursor);
         } else {
             dllStateSize = 0;
         }
@@ -1751,31 +1781,17 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     if ((loadFlags & OBJLOAD_FLAG_HAS_SHADOW) && modelDef->shadowType != OBJ_SHADOW_TYPE_NONE) {
         cursor = shadowInit(obj, cursor, 0);
     }
-    max = 10.0f;
-    i = 0;
-    for (; i < obj->anim.modelInstance->modelCount; i++) {
-        modelPtr = (int)obj->anim.modelBanks[i];
-        if (modelPtr != 0) {
-            if ((f32)modelFileHeaderGetCullDistance(*(ModelFileHeader**)modelPtr) > max) {
-                max = modelFileHeaderGetCullDistance(*(ModelFileHeader**)modelPtr);
-            }
-        }
-    }
-    cullScale = obj->anim.modelInstance->cullDistScale;
-    if (cullScale != 0) {
-        max = max * ((10.0f * cullScale) / 255.0f);
-    }
-    obj->anim.hitboxScale = max;
+    objInitCullScale(obj);
     if (modelDef->hitboxStateCount != 0) {
         cursor = ObjHits_AllocObjectState(obj, cursor);
         if ((s8)modelDef->primaryHitboxShapeFlags & 8) {
-            cursor = ObjHitbox_AllocRotatedBounds((ObjHitbox*)obj, cursor);
+            cursor = ObjHitbox_AllocRotatedBounds(&obj->anim, cursor);
         }
     }
     if (modelDef->jointCount != 0) {
         alignedCursor = roundUpTo4(cursor);
         obj->anim.jointPoseData = (u8*)alignedCursor;
-        cursor = alignedCursor + modelDef->jointCount * 0x12;
+        cursor = alignedCursor + modelDef->jointCount * sizeof(ObjJointPose);
     }
     if (modelDef->textureSlotCount != 0) {
         alignedCursor = roundUpTo4(cursor);
@@ -1813,7 +1829,7 @@ GameObject* objSetupObject(ObjPlacement* data, int flags, int mapLayer, int objI
         OSReport(sObjSetupObjectLoadingLockedWarning, objIndex);
         return NULL;
     }
-    obj = loadCharacter((s16*)data, flags, mapLayer, objIndex, parent, 0);
+    obj = loadCharacter(data, flags, mapLayer, objIndex, parent, 0);
     if (obj != NULL) {
         Obj_RegisterObject(obj, flags);
         OSReport(sObjDebugStrings, obj->anim.modelInstance->name);
@@ -1984,7 +2000,7 @@ void Obj_UpdateModelBlendStates(void) {
                 if (m != 0) {
                     m->bufferFlags &= ~8;
                     if (m->file->morphTargetCount != 0) {
-                        ObjModel_AdvanceBlendChannels((u8*)m, timeDelta);
+                        ObjModel_AdvanceBlendChannels(m, timeDelta);
                     }
                 }
             }
@@ -2006,7 +2022,7 @@ void Obj_UpdateModelBlendStates(void) {
                                     bp = 0;
                                 }
                                 if (c0 == 0 || (bp != 0 && ((ObjSeqState*)bp)->movementState == 0)) {
-                                    ObjModel_AdvanceBlendChannels((u8*)m, timeDelta);
+                                    ObjModel_AdvanceBlendChannels(m, timeDelta);
                                 }
                             }
                         }

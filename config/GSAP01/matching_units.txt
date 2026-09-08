@@ -587,7 +587,6 @@ dolphin/si/SISamplingRate.c
 dolphin/thp/THPAudio.c
 main/audio_sfx.c
 main/boot_logo.c
-main/lightmap_initmapblocks.c
 main/math_80292d3c.c
 main/math_8029312c.c
 main/objlib.c
@@ -634,12 +633,8 @@ musyx/runtime/snd_service.c
 musyx/runtime/snd_synth_api.c
 musyx/runtime/synth.c
 musyx/runtime/synth_adsr.c
-musyx/runtime/synth_callback.c
-musyx/runtime/synth_channel.c
 musyx/runtime/synth_control.c
-musyx/runtime/synth_handle.c
 musyx/runtime/synth_job_init.c
-musyx/runtime/synth_seq_events.c
 musyx/runtime/synth_vsamples.c
 musyx/runtime/voice.c
 track/intersect_mtx44.c

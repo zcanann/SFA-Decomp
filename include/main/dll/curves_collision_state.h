@@ -30,14 +30,14 @@ typedef struct CurvesCollisionState {
     GameObject* contactObj;      /* 0x0D8 latest trace hit forwarded to ObjHits_AddContactObject */
     f32* localPointPositions;
     f32* localPointRadii;
-    f32 localPointWorld[4][3];  /* 0x0E4 localPointPositions transformed to world */
-    f32 localPointTarget[4][3]; /* 0x114 raised copies; bbox-swept against localPointWorld */
-    TrackLineIntersectResult localHit;      /* 0x144 trackGetLineIntersect result for the local points */
-    s16 tiltPitch;       /* 0x198 smoothed toward tiltPitchTarget */
-    s16 tiltRoll;        /* 0x19A */
-    s16 tiltPitchTarget; /* 0x19C from surface normal */
-    s16 tiltRollTarget;  /* 0x19E */
-    f32 surfaceNormalX;  /* 0x1A0 */
+    f32 localPointWorld[4][3];         /* 0x0E4 localPointPositions transformed to world */
+    f32 localPointTarget[4][3];        /* 0x114 raised copies; bbox-swept against localPointWorld */
+    TrackLineIntersectResult localHit; /* 0x144 trackGetLineIntersect result for the local points */
+    s16 tiltPitch;                     /* 0x198 smoothed toward tiltPitchTarget */
+    s16 tiltRoll;                      /* 0x19A */
+    s16 tiltPitchTarget;               /* 0x19C from surface normal */
+    s16 tiltRollTarget;                /* 0x19E */
+    f32 surfaceNormalX;                /* 0x1A0 */
     f32 surfaceNormalY;
     f32 surfaceNormalZ;
     f32 resultFloorGap;         /* 0x1AC latest-point copies of the arrays below */

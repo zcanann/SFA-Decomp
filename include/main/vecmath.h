@@ -4,8 +4,7 @@
 #include "global.h"
 #include "main/vecmath_distance_api.h"
 
-typedef struct MatrixTransform
-{
+typedef struct MatrixTransform {
     s16 rotX;
     s16 rotY;
     s16 rotZ;
@@ -18,11 +17,11 @@ typedef struct MatrixTransform
 
 STATIC_ASSERT(sizeof(MatrixTransform) == 0x18);
 
-void Vec3_ScaleAdd(const f32 *base, const f32 *vector, f32 scale, f32 *out);
-f32 Vec3_Length(const f32 *vector);
-void Vec3_Cross(f32 *lhs, f32 *rhs, f32 *out);
-void Vec3_ReflectAgainstNormal(f32 *normal, f32 *velocity, f32 *out);
-f32 Vec3_Normalize(f32 *vector);
+void Vec3_ScaleAdd(const f32* base, const f32* vector, f32 scale, f32* out);
+f32 Vec3_Length(const f32* vector);
+void Vec3_Cross(f32* lhs, f32* rhs, f32* out);
+void Vec3_ReflectAgainstNormal(f32* normal, f32* velocity, f32* out);
+f32 Vec3_Normalize(f32* vector);
 void basisVectorsToEulerAngles(f32* a, f32* b, s16* out0, s16* out1, s16* out2);
 f32 getXZDistanceSquared(f32* a, f32* b);
 void mtx44ScaleRow1(f32* matrix, f32 scale);
@@ -30,10 +29,10 @@ void mtx44Transpose(f32* src, f32* dst);
 void Matrix_TransformPoint(const f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
 void Matrix_TransformVector(const f32* matrix, const f32* vector, f32* out);
 void copyMatrix44(f32* src, f32* dst);
-void mtxRotateByVec3s(f32 *mtx, const void *transform);
+void mtxRotateByVec3s(f32* mtx, const void* transform);
 void mtx44_multSafe(f32* lhs, f32* rhs, f32* out);
-void setMatrixFromObjectPos(f32 *mtx, const MatrixTransform *transform);
-int RandomTimer_UpdateRangeTrigger(void *timer, f32 lo, f32 hi);
+void setMatrixFromObjectPos(f32* mtx, const MatrixTransform* transform);
+int RandomTimer_UpdateRangeTrigger(void* timer, f32 lo, f32 hi);
 int randomGetRange(int min, int max);
 int getAngle(f32 deltaX, f32 deltaZ);
 int sin16(s16 angle);

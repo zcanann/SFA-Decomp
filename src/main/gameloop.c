@@ -159,7 +159,7 @@ static void loadAsset(AssetReq* req) {
         break;
     case 4:
         *(void**)req->dest =
-            loadCharacter((s16*)req->arg18, req->arg1c, req->arg24, req->arg20, (void*)req->arg14, req->arg28);
+            loadCharacter((ObjPlacement*)req->arg18, req->arg1c, req->arg24, req->arg20, (GameObject*)req->arg14, req->arg28);
         break;
     case 3:
         *(void**)req->dest = (void*)textureLoad(req->resourceId, 0);
@@ -172,7 +172,7 @@ static void loadAsset(AssetReq* req) {
         break;
     case 7:
         *(void**)req->dest =
-            loadAnimation((ModelFileHeader*)req->arg24, req->resourceId, (s16)req->argC, (u8*)req->arg20);
+            loadAnimation((ModelFileHeader*)req->arg24, req->resourceId, (s16)req->argC, (ObjAnimCachedMove*)req->arg20);
         break;
     }
 }
@@ -183,7 +183,7 @@ void doNothing_startOfFrame(void) {
 }
 extern AssetReq gGameLoopAssetReq;
 
-void animationLoad(void** out, int animId, int moveIndex, u8* cache, ObjAnimDef* animDef) {
+void animationLoad(void** out, int animId, int moveIndex, ObjAnimCachedMove* cache, ObjAnimDef* animDef) {
     gGameLoopAssetReq.pending = 1;
     gGameLoopAssetReq.type = 7;
     gGameLoopAssetReq.resourceId = (s16)animId;

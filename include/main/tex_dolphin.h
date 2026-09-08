@@ -18,6 +18,4 @@ struct Shader* mapBlockRender_setShader(u8 doSetup, struct MapBlockData* blockDa
 void mapBlockRender_callList(u8 passSelect, u32 visArg, struct MapBlockData* block, struct Shader* shader,
                              ModelRenderInstrsState* state, float* mtx);
 
-extern const f32 gTrackPackedCoordScale;
-
 #endif /* MAIN_TEX_DOLPHIN_H_ */

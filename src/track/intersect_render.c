@@ -51,20 +51,32 @@ typedef struct {
 } IndMtxInit;
 
 typedef struct {
+    GXTevColorArg values[7];
+} ProjectedShadowColorInputs;
+
+typedef struct {
+    GXTevScale values[7];
+} ProjectedShadowColorScales;
+
+typedef struct {
+    ProjectedShadowColorInputs inputs;
+    ProjectedShadowColorScales scales;
+} ProjectedShadowStageModes;
+
+typedef struct {
     IndMtxInit ind;
-    u32 blk[6][7];
+    ProjectedShadowStageModes stages[3];
 } IndStageInitData;
 
-static const IndStageInitData sIndStageInitData = {{{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}},
-                                                   {{0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
-                                                    {2, 2, 2, 2, 2, 1, 0},
-                                                    {0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
-                                                    {2, 2, 2, 1, 0, 0, 0},
-                                                    {0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
-                                                    {2, 1, 0, 0, 0, 0, 0}}};
+static const IndStageInitData sIndStageInitData = {
+    {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}},
+    {{{{GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO}},
+      {{GX_CS_SCALE_4, GX_CS_SCALE_4, GX_CS_SCALE_4, GX_CS_SCALE_4, GX_CS_SCALE_4, GX_CS_SCALE_2, GX_CS_SCALE_1}}},
+     {{{GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO}},
+      {{GX_CS_SCALE_4, GX_CS_SCALE_4, GX_CS_SCALE_4, GX_CS_SCALE_2, GX_CS_SCALE_1, GX_CS_SCALE_1, GX_CS_SCALE_1}}},
+     {{{GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO}},
+      {{GX_CS_SCALE_4, GX_CS_SCALE_2, GX_CS_SCALE_1, GX_CS_SCALE_1, GX_CS_SCALE_1, GX_CS_SCALE_1, GX_CS_SCALE_1}}}}};
 static const IndMtxInit sIndMtxZeroInit = {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}};
-
-extern GXColor gProjectedShadowFogColor;
 
 f32 gWaterReflectionIndTexMtx[3][2][3] = {{{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, -0.5f}},
                                           {{0.0f, 0.8f, 0.0f}, {0.0f, 0.0f, 0.8f}},
@@ -104,8 +116,6 @@ static const GXColor sColorFilterKColor0 = {0x42, 0x42, 0x42, 0};
 static const GXColor sColorFilterKColor1 = {0x6E, 0x6E, 0x6E, 0};
 static const GXColor sColorFilterKColor2 = {0x14, 0x14, 0x14, 0};
 static const GXColor sColorFilterTevColor = {0x0A, 0x0A, 0x0A, 255};
-
-extern u32 gProjectedShadowFogColorBits;
 
 void gxSetPeControl_ZCompLoc_(u8 zCompLoc) {
     if (gGxZCompLocCached != zCompLoc || gGxZCompLocValid == 0) {
@@ -190,7 +200,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot) {
     newshadows_loadReflectionColorTexture(1);
     tex2 = textureIdxToPtr(renderOp->auxTextureIndex);
     wrapBit = (tex2->maxLod - tex2->minLod > 0) ? GX_TRUE : GX_FALSE;
-    GXInitTexObj((void*)tex2->gxTexObj, (u8*)tex2 + sizeof(Texture), tex2->width, tex2->height, tex2->format, GX_REPEAT,
+    GXInitTexObj(&tex2->gxTexObj, (u8*)tex2 + sizeof(Texture), tex2->width, tex2->height, tex2->format, GX_REPEAT,
                  GX_REPEAT, wrapBit);
     selectTexture((Texture*)tex2, 2);
     GXLoadTexMtxImm(gCameraLightPerspectiveScaledMatrix, GX_PTTEXMTX6, GX_MTX3x4);
@@ -2672,13 +2682,12 @@ void objectShadow_setupProjectedTextureDepthFade(ProjectedShadowTexture* shadow,
     Vec v;
     GXColor c;
     Texture* handle;
-    GXColor kc;
+    GXColor fogColor = {0, 0, 0, 0};
     f32 z;
     f32 d;
     f32 q;
     u8 t;
 
-    kc = gProjectedShadowFogColor;
     PSMTXConcat(shadow->textureMtx, mtx, m58);
     GXLoadTexMtxImm(m58, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
@@ -2730,7 +2739,7 @@ void objectShadow_setupProjectedTextureDepthFade(ProjectedShadowTexture* shadow,
     GXSetNumChans(0);
     GXSetNumTexGens(2);
     GXSetNumTevStages(2);
-    GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, kc);
+    GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fogColor);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_ZERO, GX_BL_INVSRCCLR, GX_LO_NOOP);
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
         gGxZModeValid == 0) {
@@ -2749,36 +2758,24 @@ void objectShadow_setupProjectedTextureDepthFade(ProjectedShadowTexture* shadow,
 }
 
 void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, GXColor* colorPtr, Mtx mtx, f32 scale) {
-    typedef struct {
-        u32 w[7];
-    } Blk28;
     Mtx mtx_110;
     Mtx mtx_e0;
-    Blk28 buf_c4;
-    Blk28 buf_a8;
-    Blk28 buf_8c;
-    Blk28 buf_70;
-    Blk28 buf_54;
-    Blk28 buf_38;
-    StageCountTable stab;
+    ProjectedShadowColorInputs stage0ColorInputs = sIndStageInitData.stages[0].inputs;
+    ProjectedShadowColorScales stage0ColorScales = sIndStageInitData.stages[0].scales;
+    ProjectedShadowColorInputs stage1ColorInputs = sIndStageInitData.stages[1].inputs;
+    ProjectedShadowColorScales stage1ColorScales = sIndStageInitData.stages[1].scales;
+    ProjectedShadowColorInputs stage2ColorInputs = sIndStageInitData.stages[2].inputs;
+    ProjectedShadowColorScales stage2ColorScales = sIndStageInitData.stages[2].scales;
+    StageCountTable stab = sProjectedShadowStageCounts;
     GXColor temp;
     GXColor color2;
     f32 vec3[3];
     Texture* handle;
-    GXColor fog_var;
+    GXColor fogColor = {0, 0, 0, 0};
     int stage_idx;
     u32 stage_count;
     int stage_base;
     f32 f31_val;
-
-    buf_c4 = *(Blk28*)&sIndStageInitData.blk[0];
-    buf_a8 = *(Blk28*)&sIndStageInitData.blk[1];
-    buf_8c = *(Blk28*)&sIndStageInitData.blk[2];
-    buf_70 = *(Blk28*)&sIndStageInitData.blk[3];
-    buf_54 = *(Blk28*)&sIndStageInitData.blk[4];
-    buf_38 = *(Blk28*)&sIndStageInitData.blk[5];
-    stab = sProjectedShadowStageCounts;
-    *(u32*)&fog_var = gProjectedShadowFogColorBits;
 
     PSMTXConcat(shadow->textureMtx, mtx, mtx_110);
     GXLoadTexMtxImm(mtx_110, GX_TEXMTX0, GX_MTX2x4);
@@ -2814,9 +2811,10 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
         GXSetTevDirect(GX_TEVSTAGE0);
         GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP1);
         GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
-        GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXC, GX_CC_ONE, buf_c4.w[stage_idx]);
+        GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXC, GX_CC_ONE, stage0ColorInputs.values[stage_idx]);
         GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-        GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, buf_a8.w[stage_idx], GX_FALSE, GX_TEVPREV);
+        GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, stage0ColorScales.values[stage_idx], GX_FALSE,
+                        GX_TEVPREV);
         GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
         stage_base = 1;
     }
@@ -2825,9 +2823,9 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
         GXSetTevDirect(stage_base);
         GXSetTevSwapMode(stage_base, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevOrder(stage_base, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-        GXSetTevColorIn(stage_base, GX_CC_ZERO, GX_CC_CPREV, GX_CC_ONE, buf_8c.w[stage_idx]);
+        GXSetTevColorIn(stage_base, GX_CC_ZERO, GX_CC_CPREV, GX_CC_ONE, stage1ColorInputs.values[stage_idx]);
         GXSetTevAlphaIn(stage_base, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-        GXSetTevColorOp(stage_base, GX_TEV_ADD, GX_TB_ZERO, buf_70.w[stage_idx], GX_FALSE, GX_TEVPREV);
+        GXSetTevColorOp(stage_base, GX_TEV_ADD, GX_TB_ZERO, stage1ColorScales.values[stage_idx], GX_FALSE, GX_TEVPREV);
         GXSetTevAlphaOp(stage_base, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
         stage_base++;
     }
@@ -2836,9 +2834,9 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
         GXSetTevDirect(stage_base);
         GXSetTevSwapMode(stage_base, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevOrder(stage_base, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-        GXSetTevColorIn(stage_base, GX_CC_ZERO, GX_CC_CPREV, GX_CC_ONE, buf_54.w[stage_idx]);
+        GXSetTevColorIn(stage_base, GX_CC_ZERO, GX_CC_CPREV, GX_CC_ONE, stage2ColorInputs.values[stage_idx]);
         GXSetTevAlphaIn(stage_base, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-        GXSetTevColorOp(stage_base, GX_TEV_ADD, GX_TB_ZERO, buf_38.w[stage_idx], GX_FALSE, GX_TEVPREV);
+        GXSetTevColorOp(stage_base, GX_TEV_ADD, GX_TB_ZERO, stage2ColorScales.values[stage_idx], GX_FALSE, GX_TEVPREV);
         GXSetTevAlphaOp(stage_base, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
         stage_base++;
     }
@@ -2896,7 +2894,7 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
     GXSetNumTexGens(2);
     GXSetNumTevStages((stage_count + 2));
 
-    GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fog_var);
+    GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fogColor);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_ZERO, GX_BL_INVSRCCLR, GX_LO_NOOP);
 
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||

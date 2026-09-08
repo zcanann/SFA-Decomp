@@ -17,6 +17,31 @@ def register_kind(register_class):
     return ("FPR", "f") if register_class == 3 else ("GPR", "r")
 
 
+def capture_simplification_policy(memory, base, register_class=4):
+    """Read the active class's inputs to VA 0x507070.
+
+    VA 0x4FCB70 counts unblocked physical registers in the class-specific
+    mask. The high-degree comparisons at 0x50712C and 0x507164 both read
+    0x5DD948 directly, even for FPRs. VA 0x506D58 initializes that shared
+    slot from the active class's original node count; later spill
+    temporaries have IDs at or above this cutoff.
+    """
+    register_kind(register_class)
+    def read(offset, size):
+        data = memory(base + offset, size)
+        if len(data) != size:
+            raise ValueError("short simplification policy read")
+        return data
+
+    count = int.from_bytes(read(0x1E6778 + 4 * register_class, 4), "little", signed=True)
+    if count != 32:
+        raise ValueError("unsupported physical register count")
+    return {
+        "available": [i for i, blocked in enumerate(read(0x1E2BF0 + 32 * register_class, count)) if not blocked],
+        "temporary_cutoff": int.from_bytes(read(0x1DD948, 2), "little", signed=True),
+    }
+
+
 def capture_color_policy(memory, base, register_class=4):
     """Read the selected class's banks/reset state consumed by VA 0x506F50.
 
@@ -137,13 +162,8 @@ def capture_graph_snapshot(memory, base, name, colored, register_class=4):
     snapshot["graph_colored"] = colored
     snapshot["register_class"] = register_class
     snapshot["coloring_graph"] = capture_graph(memory, base, colored, register_class)
-    # The original-count slot is independently established only for GPRs.
-    # FPR captures validate physical coloring and rewrite, without claiming
-    # to replay the high-degree simplification/spill policy.
-    if register_class == 4:
-        snapshot["available_gprs"] = [i for i, blocked in enumerate(memory(base + 0x1E2C70, 32)) if not blocked]
-        snapshot["original_gpr_count"] = int.from_bytes(memory(base + 0x1DD948, 2), "little", signed=True)
     if not colored:
+        snapshot["simplification_policy"] = capture_simplification_policy(memory, base, register_class)
         snapshot["color_policy"] = capture_color_policy(memory, base, register_class)
     return snapshot
 
@@ -248,28 +268,44 @@ def validate_rewrite(before, final):
     return checked
 
 
-def replay_simplification(before, after, available, original_count):
+def replay_simplification(before, after, available, temporary_cutoff, *, steps=None):
     """Replay VA 0x507070 using live initial degrees and the computed weights.
 
     Weights are computed once at VA 0x57AB40 after the first low-degree sweep,
     without changing graph edges. This verifies worklist formation, not the
     subsequent physical-color choice, and never modifies compiler state.
+    If supplied, steps receives every removal only after replay validates.
+    Fixed color aliases remain separate degree contributions; grouping them
+    here explains pressure without changing the compiler's graph algorithm.
     """
     validate_graph(before, colored=False)
     actual = coloring_order(after)
-    if len(before) != len(after) or not 32 <= original_count <= len(before):
+    if len(before) != len(after) or not 32 <= temporary_cutoff <= len(before):
         raise ValueError("incompatible simplification snapshots")
     if not available or len(set(available)) != len(available) or any(not 0 <= r < 32 for r in available):
-        raise ValueError("invalid available GPR set")
+        raise ValueError("invalid available register set")
     if any(a["neighbors"] != b["neighbors"] for a, b in zip(before, after)):
         raise ValueError("graph edges changed during simplification")
     if any(n["prefix"][7] & 2 for n in before):
         raise ValueError("initial graph already has processed nodes")
     degree = [n["prefix"][5] for n in before]
     removed = {i for i, n in enumerate(before) if n["prefix"][7] & 4}
-    order, choices = [], []
+    order, choices, removals = [], [], []
 
-    def remove(register):
+    def remove(register, kind):
+        if steps is not None:
+            fixed = {}
+            active = []
+            for neighbor in before[register]["neighbors"]:
+                node = before[neighbor]
+                color = node["prefix"][6]
+                if 0 <= color < 32:
+                    fixed.setdefault(color, []).append(neighbor)
+                elif neighbor >= 32 and neighbor not in removed:
+                    active.append(neighbor)
+            removals.append({"register": register, "kind": kind, "degree": degree[register],
+                             "threshold": len(available), "weight": after[register]["prefix"][3],
+                             "active_neighbors": active, "fixed_colors": fixed})
         removed.add(register)
         order.append(register)
         for neighbor in before[register]["neighbors"]:
@@ -282,7 +318,7 @@ def replay_simplification(before, after, available, original_count):
             if register in removed:
                 continue
             if degree[register] < len(available):
-                remove(register)
+                remove(register, "low-degree")
                 changed = True
             else:
                 remaining.append(register)
@@ -293,11 +329,13 @@ def replay_simplification(before, after, available, original_count):
         # The compiler prepends nodes to its candidate list, so equal costs
         # favor the higher ID. Newly generated spill temporaries use FLT_MAX.
         def priority(register):
-            return (register >= original_count,
-                    Fraction(after[register]["prefix"][3], degree[register]) if register < original_count else 0)
+            return (register >= temporary_cutoff,
+                    Fraction(after[register]["prefix"][3], degree[register]) if register < temporary_cutoff else 0)
         selected = min(reversed(remaining), key=priority)
         choices.append({"register": selected, "degree": degree[selected], "weight": after[selected]["prefix"][3]})
-        remove(selected)
+        remove(selected, "high-degree")
     if order[::-1] != actual or degree != [n["prefix"][5] for n in after]:
         raise ValueError("replayed simplification disagrees with the live compiler graph")
+    if steps is not None:
+        steps.extend(removals)
     return choices

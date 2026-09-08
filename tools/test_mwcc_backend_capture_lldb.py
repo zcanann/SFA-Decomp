@@ -1,6 +1,10 @@
 from pathlib import Path
+import os
+import select
+import shutil
 import signal
 import subprocess
+import sys
 import tempfile
 from types import SimpleNamespace
 import unittest
@@ -78,6 +82,59 @@ class LldbCaptureTests(unittest.TestCase):
                 kill.assert_not_called()
                 killpg.assert_called_once_with(1234, signal.SIGKILL)
                 process.wait.assert_called_once()
+
+    def test_timeout_stops_descendant_debugserver_before_debugger_without_guest_pid(self):
+        snapshot = """1234 1 /usr/bin/lldb
+2200 1234 /usr/bin/helper
+2201 2200 /Library/Apple/usr/libexec/oah/debugserver
+2202 1234 /tmp/unrelated-child
+3300 1 /Library/Apple/usr/libexec/oah/debugserver
+"""
+        calls = []
+        with tempfile.TemporaryDirectory() as directory:
+            process = Mock(pid=1234)
+            with patch.object(capture.subprocess, "run", side_effect=[
+                    SimpleNamespace(stdout=snapshot),
+                    SimpleNamespace(stdout="2200 /Library/Apple/usr/libexec/oah/debugserver\n")]), \
+                    patch.object(capture.os, "kill", side_effect=lambda *args: calls.append(("pid", *args))), \
+                    patch.object(capture.os, "killpg", side_effect=lambda *args: calls.append(("group", *args))):
+                capture._stop_timed_out_capture(process, Path(directory) / "missing.pid",
+                                                ["compiler", "-o", "/tmp/unique/traced"])
+            self.assertEqual(calls, [("pid", 2201, signal.SIGKILL), ("group", 1234, signal.SIGKILL)])
+            process.wait.assert_called_once()
+
+    def test_debugserver_cleanup_rejects_changed_process_identity(self):
+        for current in ["", "1 /usr/libexec/debugserver\n", "1234 /tmp/another-program\n"]:
+            with self.subTest(current=current), \
+                    patch.object(capture.subprocess, "run", side_effect=[
+                        SimpleNamespace(stdout="2201 1234 /usr/libexec/debugserver\n"),
+                        SimpleNamespace(stdout=current)]), \
+                    patch.object(capture.os, "kill") as kill:
+                capture._stop_capture_debugservers(1234)
+                kill.assert_not_called()
+
+    @unittest.skipUnless(sys.platform == "darwin", "native macOS process-tree integration")
+    def test_live_separate_session_debugserver_is_reaped(self):
+        with tempfile.TemporaryDirectory(prefix="sfa-debugserver-cleanup-") as directory:
+            executable = Path(directory) / "debugserver"
+            shutil.copyfile("/bin/sleep", executable)
+            executable.chmod(0o755)
+            script = ("import subprocess,sys; "
+                      "p=subprocess.Popen([sys.argv[1],'10'],start_new_session=True); "
+                      "print(p.pid,flush=True); p.wait()")
+            process = subprocess.Popen([sys.executable, "-c", script, str(executable)],
+                                       stdout=subprocess.PIPE, text=True, start_new_session=True)
+            try:
+                self.assertTrue(select.select([process.stdout], [], [], 3)[0], "child did not start")
+                self.assertGreater(int(process.stdout.readline()), 1)
+                capture._stop_capture_debugservers(process.pid)
+                self.assertEqual(process.wait(timeout=3), 0)
+            finally:
+                if process.poll() is None:
+                    capture._stop_capture_debugservers(process.pid)
+                    os.killpg(process.pid, signal.SIGKILL)
+                    process.wait()
+                process.stdout.close()
 
 
 if __name__ == "__main__":

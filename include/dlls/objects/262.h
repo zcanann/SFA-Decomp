@@ -5,8 +5,6 @@
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
 
-typedef struct TrackGroundHit TrackGroundHit;
-
 #define SCARAB_PLACEMENT_SIZE 0x24
 #define SCARAB_STATE_SIZE     0x34
 
@@ -32,6 +30,12 @@ typedef enum ScarabMoneyKind {
     SCARAB_MONEY_GOLD = 2,
     SCARAB_MONEY_RAIN = 3,
 } ScarabMoneyKind;
+
+/* Transient ground selection and collision response used by Scarab_update. */
+typedef struct ScarabContactState {
+    int bestGroundHitIndex;
+    int collisionDetected;
+} ScarabContactState;
 
 /* Basket and crate spawners allocate the complete 0x24-byte placement record. */
 typedef struct ScarabPlacement {

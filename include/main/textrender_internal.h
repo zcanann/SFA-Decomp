@@ -5,6 +5,7 @@
 #include "dolphin/gx/GXStruct.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_internal.h"
+#include "main/subtitle.h"
 #include "main/textrender_api.h"
 #include "main/texture.h"
 
@@ -92,18 +93,9 @@ extern Texture* gGameTextBoxCornerTexture;
 extern Texture* gGameTextBoxBgTexture;
 extern Texture* gGameTextBoxEdgeTexture;
 
-#define SUBTITLE_LINE_COUNT 256
-
 #define TEXTRENDER_TEXTURE_SUBTITLE_BOX_LEFT  0x43b
 #define TEXTRENDER_TEXTURE_SUBTITLE_BOX_MID   0x43e
 #define TEXTRENDER_TEXTURE_SUBTITLE_BOX_RIGHT 0x43d
-
-typedef struct SubtitleLineTable
-{
-    void* blocks[SUBTITLE_LINE_COUNT];
-    char* lines[SUBTITLE_LINE_COUNT];
-    f32 times[SUBTITLE_LINE_COUNT];
-} SubtitleLineTable;
 
 extern int gGameTextSequenceMode;
 extern int gSubtitleActive;
@@ -118,7 +110,6 @@ extern int gSubtitleBlockCount;
 extern int gSubtitleLineIndex;
 extern int gSubtitleElapsedFrames;
 extern int gSubtitleLineCount;
-extern void* gSubtitleLineTable[0x100];
 extern int gGameTextSavedDir;
 extern s16 gGameTextTaskTextAllowList[12];
 extern int gGameTextBoxCornerInset;
@@ -135,18 +126,15 @@ extern int gGameTextShadowOffsetY;
 extern char* gCurTextBuffer;
 extern int gGameTextBufferIndex;
 extern char sGameTextBlankFormat[5];
-extern char sGameTextSequencePathFormat[];
 extern GameTextLoadSlot curGameTexts[GAMETEXT_LOAD_SLOT_COUNT];
-extern f32 gSubtitleLineTimes[0x100];
-extern char* gSubtitleLineStrs[0x100];
 
 int GameText_CountPrintableChars(u8* str);
+SubtitleCmd* subtitleParseControlCmds(char* str, int* count);
 int GameText_FindControlCodeArgs(u8* str, u32 target, int* out);
 void loadGameTextSequence(int sequenceSlotDir, int sequenceId);
 
 extern f32 gSubtitleCurTime;
 extern u16 gGameTextSjisGlyphTable[];
-extern char sGameTextMapPathFormat[];
 extern int gGameTextFontTexRowPitch;
 extern TextFont gGameTextCharsets[];
 extern GXColor gGameTextClearColor;

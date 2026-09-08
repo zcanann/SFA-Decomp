@@ -3,13 +3,16 @@
 
 #include "types.h"
 
+/* Region 0 places large allocations toward its low-address end. */
+#define MM_REGION0_LARGE_ALLOCATION_THRESHOLD 0x33450
+
 int alignUp2(int value);
 int roundUpTo4(int value);
 int roundUpTo8(int value);
 int roundUpTo16(int value);
 int roundUpTo32(int value);
-void mm_free(void *ptr);
-void *mmAlloc(int size, int type, int flag);
+void mm_free(void* ptr);
+void* mmAlloc(int size, int type, int flag);
 void* getCache(void);
 void cacheQueueWait(int sync);
 void copyToCache(void* dst, void* src, u32 count);
@@ -20,15 +23,14 @@ void* AtomicSList_Pop(void** list);
 int printHeapStats(int mode);
 void* stackCreate(int count, int size);
 
-
-/* extern-cleanup: defining-file public prototypes */
 void mmFree(void* p);
 void mmFreeDeferred(void* p);
 void mmInit(void);
+void* mmInitRegion(u8* buf, int size, int numSlots);
 
 int mmSetFreeDelay(int v);
-int testAndSet_onlyUseHeaps1and2(int v);
-int testAndSet_onlyUseHeap3(int v);
+int mmSetForceHeaps1and2Only(int v);
+int mmSetForceHeap3Only(int v);
 int mmGetRegionForPtr(u8* ptr);
 int getHeapItemSize(void* ptr);
 void mmFreeTick(int arg);

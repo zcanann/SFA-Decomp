@@ -45,8 +45,7 @@ STATIC_ASSERT(offsetof(ObjfsaPatch, maxY) == 0x20);
 STATIC_ASSERT(offsetof(ObjfsaPatch, minY) == 0x22);
 STATIC_ASSERT(offsetof(ObjfsaPatch, groupId) == 0x24);
 
-typedef struct ObjfsaWalkGroup
-{
+typedef struct ObjfsaWalkGroup {
     ObjfsaPatchPlane planes[OBJFSA_PATCHGROUP_PATCH_COUNT];
     f32 planeOffsets[OBJFSA_PATCHGROUP_PATCH_COUNT];
     s16 maxY;
@@ -57,8 +56,7 @@ typedef struct ObjfsaWalkGroup
 extern ObjfsaPatch gObjfsaPatches[256];
 extern ObjfsaWalkGroup gObjfsaWalkGroups[OBJFSA_WALKGROUP_COUNT];
 
-typedef struct ObjfsaStorage
-{
+typedef struct ObjfsaStorage {
     ObjfsaPatch patches[256];
     ObjfsaWalkGroup walkGroups[OBJFSA_WALKGROUP_COUNT];
     u8 activeWalkGroups[OBJFSA_WALKGROUP_COUNT];
@@ -70,8 +68,7 @@ STATIC_ASSERT(sizeof(ObjfsaStorage) == 0x4D00);
 
 /* Type 0x26 curve records carry the walk-group outline after the common
  * RomCurveDef prefix.  Each linked edge has a pair of X/Z corner offsets. */
-typedef struct ObjfsaWalkCurveDef
-{
+typedef struct ObjfsaWalkCurveDef {
     u8 pad00[3];
     u8 walkGroup;
     s8 firstEdge[4];

@@ -241,23 +241,34 @@ recommended.** Applying that brief mechanically would have put an overlapping si
 
 ## 4. Two standing stop-rules
 
-### `.sbss2` is unpartitioned by construction
+### `.sbss2` remains unpartitioned; native initializers can emit it
 
-**`.sbss2` has ZERO spans in `config/GSAE01/splits.txt` project-wide.** The splitter partitions
-`.init .text .ctors .dtors .rodata .data .bss .sdata .sbss .sdata2 extab extabindex` — `.sbss2` is
-not in the list.
+As of `733eb4a0aa`, `.sbss2` has no per-source spans in
+`config/GSAE01/splits.txt`. The 56-byte retail block remains an anonymous carve.
+This is an unresolved layout constraint, not a restriction imposed by the C
+compiler and not proof that the original source declared external constants.
 
-Consequences, both absolute:
-- **No TU can own or emit any `.sbss2` byte.** Every `.sbss2` symbol is a cross-TU extern *by
-  construction*, never a "definitional gap in this unit". Defining one emits data the carved
-  retail object does not contain.
-- **`.sbss2` is not in the `total_data` denominator**, so it can never move a score either way.
+The GC/1.3 follow-up replaces four external zero-color loads with ordinary
+`GXColor fogColor = {0, 0, 0, 0}` initializers in `tex_dolphin.c` and
+`intersect_render.c`. Each TU emits two four-byte anonymous `.sbss2` constants
+with eight-byte section alignment. All raw function bytes remain identical;
+the four load relocations now refer to native constants instead of external
+symbols. Every previously allocated data section and named data-symbol position
+is unchanged. This disproves the earlier claim that these zero-word loads could
+only be written as externs.
 
-Worked case: `lbl_803E8450`/`lbl_803E8454` in `intersect_render` are dangling externs into `.sbss2`,
-read once each. Retail genuinely emits an **sda21 load of a zero word**, so a plain literal cannot
-reproduce them — they are *not* the banned-`lbl_`-const purge shape. They are real zero-valued const
-objects that no TU is allowed to define. Leave them; do not value-name them (`gZero…` names what a
-value *is*, not what it *does*).
+It does **not** prove retail pool placement. The compiler's local constant order
+and section alignment do not reproduce the four existing address labels in the
+unpartitioned retail block. Neither TU gains a matched-data span from this
+change, and both remain NonMatching. The strict retail checksum therefore does
+not validate placement of these new source constants. Resolve the layout from
+independent evidence before assigning `.sbss2` splits or claiming a linked match;
+do not insert padding or named constant anchors to manufacture the order.
+
+The same source pass types the projected-shadow channel's six seven-word tables
+as three stages of `GXTevColorArg` inputs and `GXTevScale` values. Native structure
+initializers replace the stack-offset-named word-copy buffers and their casts.
+The original table bytes and all their consumers' instruction bytes are retained.
 
 ### The `284` precedent — if the DOL moves, stop
 

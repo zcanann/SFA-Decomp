@@ -259,7 +259,7 @@ void selectTextureWithSecondary(Texture* texture, int mapId)
     void* base;
     if (texture == NULL)
         return;
-    base = texture->gxTexObj;
+    base = &texture->gxTexObj;
     if (texture->preloaded != 0)
     {
         GXLoadTexObjPreLoaded(base, (GXTexRegion*)texture->tmemAddr, mapId);
@@ -280,7 +280,7 @@ void selectTexture(Texture* texture, int mapId)
     void* base;
     if (texture == NULL)
         return;
-    base = texture->gxTexObj;
+    base = &texture->gxTexObj;
     if (texture->preloaded != 0)
     {
         GXLoadTexObjPreLoaded(base, (GXTexRegion*)texture->tmemAddr, mapId);
@@ -513,7 +513,7 @@ void setupCausticBaseTevStages(void* viewMtx)
     newshadows_getCausticTexture(&obj7c);
     if (obj7c != NULL)
     {
-        void* obj = obj7c->gxTexObj;
+        void* obj = &obj7c->gxTexObj;
         if (obj7c->preloaded != 0)
         {
             GXLoadTexObjPreLoaded((GXTexObj*)obj, (GXTexRegion*)obj7c->tmemAddr, GX_TEXMAP2);
@@ -542,7 +542,7 @@ void setupCausticBaseTevStages(void* viewMtx)
     newshadows_getRampTexture(&obj80);
     if (obj80 != NULL)
     {
-        void* obj = obj80->gxTexObj;
+        void* obj = &obj80->gxTexObj;
         if (obj80->preloaded != 0)
         {
             GXLoadTexObjPreLoaded((GXTexObj*)obj, (GXTexRegion*)obj80->tmemAddr, GX_TEXMAP3);
@@ -614,7 +614,7 @@ void addShadowFalloffTevStages(void)
     id = gRcpNextTexMap;
     if (obj1 != NULL)
     {
-        void* obj = obj1->gxTexObj;
+        void* obj = &obj1->gxTexObj;
         if (obj1->preloaded != 0)
         {
             GXLoadTexObjPreLoaded((GXTexObj*)obj, (GXTexRegion*)obj1->tmemAddr, id);
@@ -668,7 +668,7 @@ void addShadowFalloffTevStages(void)
     id = gRcpNextTexMap;
     if (obj2 != NULL)
     {
-        void* obj = obj2->gxTexObj;
+        void* obj = &obj2->gxTexObj;
         if (obj2->preloaded != 0)
         {
             GXLoadTexObjPreLoaded((GXTexObj*)obj, (GXTexRegion*)obj2->tmemAddr, id);
@@ -738,7 +738,7 @@ void addWavyCausticTevStage(void)
     id = gRcpNextTexMap + 1;
     if (tex != NULL)
     {
-        GXTexObj* obj = (GXTexObj*)tex->gxTexObj;
+        GXTexObj* obj = &tex->gxTexObj;
         if (tex->preloaded != 0)
         {
             GXLoadTexObjPreLoaded(obj, (GXTexRegion*)tex->tmemAddr, id);
@@ -1633,7 +1633,7 @@ void addSignedOverlayTexStage(u8* texSrc, void* texMtx, u8* color)
         int id = gRcpNextTexMap;
         if (texSrc != NULL)
         {
-            GXTexObj* obj = (GXTexObj*)((Texture*)texSrc)->gxTexObj;
+            GXTexObj* obj = &((Texture*)texSrc)->gxTexObj;
             if (((Texture*)texSrc)->preloaded != 0)
             {
                 GXLoadTexObjPreLoaded(obj, (GXTexRegion*)((Texture*)texSrc)->tmemAddr, id);
@@ -1742,7 +1742,7 @@ void addCastShadowTevStages(u8* objInst)
     id = gRcpNextTexMap;
     if (src != NULL)
     {
-        void* obj = src->gxTexObj;
+        void* obj = &src->gxTexObj;
         if (src->preloaded != 0)
         {
             GXLoadTexObjPreLoaded((GXTexObj*)obj, (GXTexRegion*)src->tmemAddr, id);
@@ -1756,7 +1756,7 @@ void addCastShadowTevStages(u8* objInst)
     obj2 = *(Texture**)(objInst + 0x60);
     if (obj2 != NULL)
     {
-        void* obj = obj2->gxTexObj;
+        void* obj = &obj2->gxTexObj;
         if (obj2->preloaded != 0)
         {
             GXLoadTexObjPreLoaded((GXTexObj*)obj, (GXTexRegion*)obj2->tmemAddr, id);
@@ -1890,7 +1890,7 @@ void addProjectedLightTevStage(u8* texSrc, void* texMtx, int stageMode, int comp
     texmap = gRcpNextTexMap;
     if (texSrc != NULL)
     {
-        GXTexObj* tex = (GXTexObj*)((Texture*)texSrc)->gxTexObj;
+        GXTexObj* tex = &((Texture*)texSrc)->gxTexObj;
         if (((Texture*)texSrc)->preloaded != 0)
         {
             GXLoadTexObjPreLoaded(tex, (GXTexRegion*)((Texture*)texSrc)->tmemAddr, texmap);
@@ -2221,7 +2221,7 @@ void addTexLayerStagesLit(void* p1, void* mtx)
         int id = gRcpNextTexMap;
         if (p1 != 0)
         {
-            GXTexObj* obj = (GXTexObj*)((Texture*)p1)->gxTexObj;
+            GXTexObj* obj = &((Texture*)p1)->gxTexObj;
             if (((Texture*)p1)->preloaded != 0)
             {
                 GXLoadTexObjPreLoaded(obj, (GXTexRegion*)((Texture*)p1)->tmemAddr, id);

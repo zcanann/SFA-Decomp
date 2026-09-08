@@ -104,6 +104,19 @@ static f32 gBoneParticleJointZScales[35] = {0.75f,  1.0f,   0.772f, 0.967f, 0.96
                                             0.555f, 0.465f, 0.375f, 0.75f,  0.54f,  0.615f, 0.51f,  0.458f, 0.397f,
                                             0.75f,  0.488f, 0.945f, 0.75f,  0.75f,  0.862f, 0.558f, 0.75f};
 
+static inline void boneParticleScaleCorner(MatrixTransform* out, const Vec3f* corner, u32 jointId) {
+    f32 xyScale;
+    out->x = corner->x * (xyScale = gBoneParticleJointXYScales[jointId]);
+    out->y = corner->y * xyScale;
+    out->z = corner->z * gBoneParticleJointZScales[jointId];
+}
+
+static void boneParticleClearTranslation(MatrixTransform* transform) {
+    transform->x = 0.0f;
+    transform->y = 0.0f;
+    transform->z = 0.0f;
+}
+
 /* Per-bone particle vertex update + draw. */
 void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
     MatrixTransform transform;
@@ -114,15 +127,9 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
     u32 jointId;
     u32 plane;
     MtxPtr jointMatrix;
-    const Vec3f* cornersYZ;
-    const Vec3f* cornersXZ;
-    const Vec3f* cornersXY;
-    LightmapVertex** updateBufferCursor;
-    LightmapVertex** drawBufferCursor;
     int bufferIndex;
     f32 jointPositionScale;
     f32 one;
-    f32 zero;
     f32 jointX;
     f32 jointY;
     f32 jointZ;
@@ -154,28 +161,22 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
         Sfx_PlayFromObject(obj, SFXTRIG_id_282);
     }
     bufferIndex = 0;
-    drawBufferCursor = gBoneParticleEffectBuffers;
-    updateBufferCursor = gBoneParticleEffectBuffers;
     for (; bufferIndex < BONE_PARTICLE_EFFECT_BUFFER_COUNT; bufferIndex++) {
         if (bufferIndex != 5) {
             gBoneParticleStageIndex = bufferIndex;
             vertexBase = 0;
             jointSlot = 0;
-            zero = (0.0f);
             one = (1.0f);
             jointPositionScale = 20.02f;
             while (jointSlot < 5) {
-                transform.x = zero;
-                transform.y = zero;
-                transform.z = zero;
+                boneParticleClearTranslation(&transform);
                 transform.scale = one;
                 transform.rotZ = 0;
                 transform.rotY = 0;
                 transform.rotX = 0;
-                jointMatrix = (MtxPtr)model->jointMatrices[model->bufferFlags & 1];
-                jointId = gBoneParticleJointIds[gBoneParticleStageIndex][jointSlot];
                 /* Retail advances by 16 matrix rows per joint in this renderer. */
-                jointMatrix += jointId << 4;
+                jointMatrix = (MtxPtr)model->jointMatrices[model->bufferFlags & 1] +
+                              ((jointId = gBoneParticleJointIds[gBoneParticleStageIndex][jointSlot]) << 4);
                 jointX = jointMatrix[3][0] + playerMapOffsetX;
                 jointY = jointMatrix[3][1];
                 jointZ = jointMatrix[3][2] + playerMapOffsetZ;
@@ -192,46 +193,35 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
                 Matrix_TransformPoint((f32*)jointMatrix, transform.x, transform.y, transform.z, &transform.x,
                                       &transform.y, &transform.z);
                 cornerIndex = 0;
-                cornersYZ = gBoneParticleCornersYZ;
-                cornersXZ = gBoneParticleCornersXZ;
-                cornersXY = gBoneParticleCornersXY;
                 while (cornerIndex < 4) {
-                    f32 xyScale;
                     jointId = gBoneParticleJointIds[gBoneParticleStageIndex][jointSlot];
                     plane = gBoneParticleJointPlanes[jointId];
                     if (plane == 0) {
-                        transform.x = cornersYZ->x * (xyScale = gBoneParticleJointXYScales[jointId]);
-                        transform.y = cornersYZ->y * xyScale;
-                        transform.z = cornersYZ->z * gBoneParticleJointZScales[jointId];
+                        boneParticleScaleCorner(&transform, &gBoneParticleCornersYZ[cornerIndex], jointId);
                     } else if (plane == 1) {
-                        transform.x = cornersXZ->x * (xyScale = gBoneParticleJointXYScales[jointId]);
-                        transform.y = cornersXZ->y * xyScale;
-                        transform.z = cornersXZ->z * gBoneParticleJointZScales[jointId];
+                        boneParticleScaleCorner(&transform, &gBoneParticleCornersXZ[cornerIndex], jointId);
                     } else if (plane == 2) {
-                        transform.x = cornersXY->x * (xyScale = gBoneParticleJointXYScales[jointId]);
-                        transform.y = cornersXY->y * xyScale;
-                        transform.z = cornersXY->z * gBoneParticleJointZScales[jointId];
+                        boneParticleScaleCorner(&transform, &gBoneParticleCornersXY[cornerIndex], jointId);
                     }
                     Matrix_TransformPoint((f32*)jointMatrix, transform.x, transform.y, transform.z, &transform.x,
                                           &transform.y, &transform.z);
                     transform.x += playerMapOffsetX;
                     transform.z += playerMapOffsetZ;
-                    (*updateBufferCursor)[cornerIndex + vertexBase].x = jointX + (transform.x - obj->anim.localPosX);
-                    (*updateBufferCursor)[cornerIndex + vertexBase].y = jointY + (transform.y - obj->anim.localPosY);
-                    (*updateBufferCursor)[cornerIndex + vertexBase].z = jointZ + (transform.z - obj->anim.localPosZ);
-                    (*updateBufferCursor)[cornerIndex + vertexBase].a = 0x9b;
-                    (*updateBufferCursor)[cornerIndex + vertexBase].t =
+                    gBoneParticleEffectBuffers[bufferIndex][cornerIndex + vertexBase].x =
+                        jointX + (transform.x - obj->anim.localPosX);
+                    gBoneParticleEffectBuffers[bufferIndex][cornerIndex + vertexBase].y =
+                        jointY + (transform.y - obj->anim.localPosY);
+                    gBoneParticleEffectBuffers[bufferIndex][cornerIndex + vertexBase].z =
+                        jointZ + (transform.z - obj->anim.localPosZ);
+                    gBoneParticleEffectBuffers[bufferIndex][cornerIndex + vertexBase].a = 0x9b;
+                    gBoneParticleEffectBuffers[bufferIndex][cornerIndex + vertexBase].t =
                         (s16)(gBoneParticleInitVertices[cornerIndex + vertexBase].t - (gBoneParticleScrollOffset << 2));
-                    cornersYZ++;
-                    cornersXZ++;
-                    cornersXY++;
                     cornerIndex += 1;
                 }
                 vertexBase += 4;
                 jointSlot += 1;
             }
         }
-        updateBufferCursor += 1;
     }
     transform.x = obj->anim.localPosX;
     transform.y = obj->anim.localPosY;
@@ -266,8 +256,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
         int i;
         i = 0;
         do {
-            lightmapDrawTriangleList(*drawBufferCursor, (u8*)gBoneParticleTriangles, 0x20);
-            drawBufferCursor += 1;
+            lightmapDrawTriangleList(gBoneParticleEffectBuffers[i], (u8*)gBoneParticleTriangles, 0x20);
             i += 1;
         } while (i < BONE_PARTICLE_EFFECT_BUFFER_COUNT);
     }

@@ -732,11 +732,9 @@ void camcontrol_applyState(CamcontrolCameraState* camera) {
     }
     gCamcontrolFovY = camera->fovY;
     if (camera->blendProgress > 0.0f) {
-        f32 prog;
-
-        camera->blendProgress = -(camera->blendStep * timeDelta - camera->blendProgress);
-        prog = camera->blendProgress;
-        camera->blendProgress = (prog < 0.0f) ? 0.0f : ((prog > 1.0f) ? 1.0f : prog);
+        camera->blendProgress -= camera->blendStep * timeDelta;
+        camera->blendProgress =
+            (camera->blendProgress < 0.0f) ? 0.0f : ((camera->blendProgress > 1.0f) ? 1.0f : camera->blendProgress);
         if (gCamcontrolCamera->blendCurveMode == 2) {
             mag = 1.0f - camera->blendProgress * camera->blendProgress * camera->blendProgress;
         } else if (gCamcontrolCamera->blendCurveMode == 1) {

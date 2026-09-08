@@ -39,7 +39,7 @@ here that the target section already says.
 | **149 of the 204 sub-100 rows are within THREE instruction-equivalents of exact, and they hold 59% of the code gap.** Rank the frontier by bytes, not by fuzzy: the largest rows are among the closest, and the whole-instruction bucket that §5 named without pricing is 21 rows / 19 032 B, attributed to the byte. | §29 | `Effect3_spawnObject` forfeits **7 796 B for 15 register operands**; `Scarab_update` **3 476 B for one instruction**. Eight rows worked off the byte ranking, **33 spellings, yield 0** — including the six-permutation proof that a parameter home is not reachable from the declaration list, and the `errorThreadFunc` row that **refutes §15's sufficiency test**: the slid instruction is one the source names and nine spellings are still inert. |
 | **objdiff charges per OPERAND, and a displacement is not free.** 0.05 instruction-equivalents per differing register, **0.01 per differing immediate/displacement**, 1.00 per differing mnemonic or inserted instruction, **0.000 for a relocation name at an equal address**. And `matched_code` is a threshold counter, so the cheapest class in fuzzy forfeits exactly as many bytes as the dearest: `matched_code = total_code − Σ(sub-100 function sizes) − Σ(unscored sizes)`, to the byte. | §28 | The 205 sub-100 rows at `34c954cf62`: 92 pure-register rows give `loss/register` = 0.0500 with min equal to max; 8 pure-immediate rows give 0.0100; 110 rows fit the model exactly and **84 of them carry relocation-name differences weighted at 0.000** — the first positive control for class #70 being free. | 
 | **A 100.0-everywhere unit that still will not flip fails at the LINK, not at the sha1, and the undefined-symbol list names the sibling TU it belongs to.** Read it before assuming a layout bug. | §23a | The census re-run from scratch at 920 `complete_units`: six members, four link and fail sha1 (one dead-strip, three `.sdata2`), two fail to link — `gametext` on a compiler-minted int->double pair the carve exports as `lbl_803DE6F0/F8`, `voice` on three `static`s that `vid_init.h`/`voice_conv.h` declare `extern`. `shader_dolphin` cured with two `force_active` arms: 920 -> 921. |
-| **A multiset delta made entirely of `li` against `mr` is rematerialisation — an allocator decision wearing an operation's clothes.** Subtract it before working §14's operation bucket. | §23b | 17 of the 67 operation rows. `curves_advanceCollision` writes one preamble five times and our own build emits `mr` at four sites and `li` at the fifth, at retail's own register assignment. 45 lab compiles (9 spellings x 5 `-opt` settings) and 5 in-tree spellings of `Scarab_update` are all `li`. The only construct that defeats the fold is the banned 4-byte-aggregate respelling. Operation bucket worth opening: **50, not 67**. |
+| **A multiset delta made entirely of `li` against `mr` is rematerialisation — an allocator decision wearing an operation's clothes.** Subtract it before working §14's operation bucket. | §23b | 17 of the 67 operation rows. `curves_advanceCollision` writes one preamble five times and our own build emits `mr` at four sites and `li` at the fifth, at retail's own register assignment. 45 lab compiles (9 spellings x 5 `-opt` settings) and 5 in-tree spellings of `Scarab_update` are all `li`. These were historical probe limits, not source-impossibility proofs: both `Scarab_update` and `curves_advanceCollision` now match through coherent source reconstruction; see the corrections in §23b. |
 | **Every sub-100 code row is one of three kinds, and the kinds are decidable without reading any source.** Same opcode sequence, different registers = colouring. Same opcode multiset, different sequence = order. Different multiset = a different operation, which only the source text chooses. | §14 | `tools/a71_mnhist_scan.py` + the partition in §14 over all 213 sub-100 rows at `97746b6bd3`: **136 colouring / 10 order / 67 operation**, no fourth kind and no reloc-only row. |
 | **The order bucket is not a third kind.** Every "order" row is one (at most two) instructions out of place inside a register permutation, so open one only when the slid instruction is the one the source text names. | §15 | All 10 order rows of §14 worked one at a time: mnemonic-sequence delta is 1 for eight of them and 2 for the other two. One paid (`renderShadows` 99.69954 -> 99.71494, the two squares of a magnitude named in retail's order); the nine that did not slid a parameter home, a rematerialised constant, a LICM hoist or a scheduler's delay-slot filler. |
 | **The carve's symbol table is an oracle no score reads.** `.bss` order is free evidence of the source's use order (§11), and a name that contradicts the carve at the same offset is a naming defect that every gate is blind to. | §16 | `tools/bss_order_scan.py` over all 1013 source objects: **21** `.bss` sections ordered differently than the carve and **109** name divergences. Exactly ONE object says `lbl_` where the carve has a recovered name — `597.c`'s `lbl_803E5AE0`, already `sSnowBikePathPointParams` in `config/GSAE01/symbols.txt`: renaming it is byte-identical across all five sections, deleting it costs `matched_data` −396 and `matched_code` −1364. |
@@ -123,6 +123,25 @@ the 4x-unrolled transient-bit scan into `lbz` displacements; 3 rewrites probed i
 
 **Tell.** Target: single `mr`/base + arithmetic-progression displacements across unroll copies.
 Ours: identical base plus one surplus `addi` per copy.
+
+**2026-09-07 Hcurves retest: the unroll shape is reachable from source.** Under
+the current GC/1.3 profile, `Objfsa_UpdateWalkGroupPatches` has 1,197 instructions
+against retail's 1,194. Replacing its aggregate-derived active-group and
+walk-group accesses with the existing native `gObjfsaWalkGroupActive` and
+`gObjfsaWalkGroups` arrays yields 1,194 instructions and zero mnemonic-stream
+differences, including all 32 clear-loop stores on one base. The relevant uses
+are the active-array `memset`, the active-byte store, the current walk-group
+lookup, and the two exit-group lookups. The one-element `patchBase` local can
+also become a scalar without changing this native-array result. No compiler
+flag change is needed.
+
+This candidate is not retained: same-mnemonic operand differences rise from
+72 to 231, mostly because the shared base and the subsequent GPR lifetimes
+receive different registers. Converting individual accesses alone does not
+produce the combined result. A clear-loop inline helper and a reversed
+deferred-emission control do not improve it. The next source-recovery avenue
+is therefore native storage plus allocation/lifetime recovery; the older
+claim that this unroll shape is intrinsically unreachable is too strong.
 
 ## 4. Large-constant-HI never CSE'd across a call (compiler-side; GC/2.0 AND GC/1.3)
 
@@ -288,8 +307,10 @@ Window `cd782d6179` -> `5b120c0545`: tree 99.81533 -> 99.81422, matched_data 119
   permutations (all 98.333), explicit base-pointer local (96.667), block-scope `effect`
   initialiser (96.575).
 - **engine/9.** Retail issues two back-to-back `lfs` of `gCloudActionGlareQuadSize` for the
-  third quad vertex; without `volatile` our build value-numbers them into one. No non-volatile
-  spelling forces a reload of a plain global that the compiler has already proven unchanged.
+  third quad vertex; ordinary array reads let the frontend combine them. **Resolved
+  2026-09-07:** explicit const-qualified horizontal reads preserve both loads without
+  volatile storage. The TU now matches and source-links completely; see
+  [Cloud rendering match](cloud_render_matching.md) for the compiler trace and checksum.
 - **MMP_moonroc.** Seeding `spacingClear = 1` before the loop makes it live ACROSS the loop,
   costing one extra callee-saved GPR (`_savegpr_26` vs retail `_savegpr_27`); the `goto` wrote
   the flag on both exit paths and needed none. Probed: assign-on-both-paths 98.606,
@@ -686,31 +707,25 @@ re-derive it: inside one statement pair `if (x < K1) x = K2;`, MWCC mints K2 *be
 assignment's literal precedes the compare's — so a phantom probe that needs K1-first must spell
 K1 in an earlier plain-arithmetic statement. Verdicts:
 
-- **`objects/332` — GATE PASSED; the paragraph above is superseded and the probe set has now
-  been run there.** The divergence is not a pure rotation: retail's `[0.0f, pad, signed-bias,
-  1.0f]` head precedes fn1's `[0.01, 0.07, 0.5]` run, and a lone `10.0f` sits between fn1's and
-  `turnTowardTarget`'s runs; referrers exclude every function positioned at each mint point, and
-  the head bias is undeclarable by construction. Probes on the byte-exact fn1: dead `0.0f` local
-  inert; dead `(f32)` conversion inert (**a dead conversion is eliminated before codegen and
-  mints no bias** — measured here); a *live* `f32 zero = 0.0f;` used at both clamp sites is
-  propagation-folded back — pool AND `.text` both unchanged, so even the surviving-local
-  spelling cannot re-order the mint. Three uncalled statics (one minting `0.0f`+signed
-  conversion, one `1.0f`, one `10.0f` before `turnTowardTarget`) take `.sdata2` **byte-exact to
-  the carve (68/68, hole at 0x04 included)** with every function's bytes unchanged. At least one
-  code-bearing lost body is forced (the bias); the `1.0f`/`10.0f` slots are individually
-  body-or-const undecidable. `turnTowardTarget`'s 98.86 residual is independent (its own slots
-  agree). Owner call to land, same conjectural-text caveat as `engine/7`.
-- **`main/object` — GATE PASSED.** Retail mints the *signed* bias at 0x28, between
-  `Obj_TickModelColorFadeRecursive`'s run and `objApplyVelocity`'s `0.5f`, with referrers
-  (`mapSetupPlayer`, `Obj_UpdateObject`, `loadCharacter`) all later; every function positioned
-  there is byte-exact and none converts. A bias cannot be declared (§12), and the dead-conversion
-  probe (in `objGetFlagsE5_2`) is inert — so the minter was code-bearing and stripped. Second
-  ghost group: `loadCharacter`'s `10.0f, 255.0f` minted ahead of `modelInitBones`' `0.01/0.1`
-  (body-or-const undecidable alone). Two uncalled statics (`(f32)v` signed; `v*10.0f` then
-  255-clamp) reproduce the carve pool **byte-exact through 84 of 88 bytes, the remainder being
-  the carve's linker 8-align tail word** (the tolerated PAD class, `tricky`/Transporter
-  precedent), `.text` unchanged everywhere. `loadCharacter` at 99.76 is the unit's only
-  non-exact fn and owns no disputed slot.
+- **`objects/332` — RECOVERED (2026-09-07, GC/1.3).** Four called private helpers
+  reproduce the complete 68-byte pool with all 14 retail functions byte-exact.
+  Animation restart and capture-query helpers emit the zero/bias prefix; model
+  rendering emits the early `1.0f`; curve following emits `10.0f` between burrow
+  animation and target turning. The caller supplies movement speed and pitch
+  factor, preserving the later `5.0f` and `0.2f` positions. All nine calls inline,
+  and the linker strips the four out-of-line copies while retaining their pool.
+  This supersedes the earlier conjectural-uncalled-body verdict. The unit is
+  `MatchingFor("GSAE01")`; both `all_source` and the strict checksum pass with its
+  C object linked. See [BabyCloudRunner_matching.md](BabyCloudRunner_matching.md).
+- **`main/object` — CALLED HELPERS RECOVERED (2026-09-07, GC/1.3).**
+  `objPlacementRangeToWorld` emits the signed bias at 0x28, and
+  `objInitCullScale` emits 10/255 before `modelInitBones`' 0.01/0.1.
+  All three calls inline; both out-of-line bodies strip. The complete 84-byte
+  source pool plus linker alignment reproduces all allocated retail data in
+  an isolated source-object link. Only 26 text bytes differ, from the remaining
+  parent/load-flags register exchange in `loadCharacter` (99.80858%). This
+  supersedes the earlier uncalled-static probe; the TU remains NonMatching.
+  See [object_matching.md](object_matching.md).
 - **`track/intersect_render` — GATE PASSED, the cleanest specimen.** Retail mints `[-0.5f, 0.5f,
   pad, unsigned-bias]` at 0x54-0x60, between `doColorFilter` and `doDistortionFilter`; first
   live loader of the `-0.5f` is `drawSnowFlashOverlay` (function 57), of the bias
@@ -1372,6 +1387,10 @@ optimiser will propagate away:
   the loop preamble to the top of the function changes **nothing** - not one pool byte, not one
   `.text` byte - because the assignment is propagated and the load is re-materialised at the
   three `vtx.x = zero;` uses.
+  **Resolved 2026-09-07:** a called translation-reset helper, automatically
+  inlined under the unchanged profile, owns the first zero literal. Native
+  indexed traversal and shared corner scaling complete the code match.
+  See [bone-particle matching](bone_particle_matching.md).
 - `main/vecmath` wants `interpolate`'s `0.0f` ahead of its `1.0f`, with retail's code an exact
   match for the `if (t <= 1.0f) { ... } return 0.0f;` shape we already have. `f32 result = 0.0f;`
   plus a single exit reaches the pool order but costs the function 100 -> 87.08; `f32 result =
@@ -1751,6 +1770,10 @@ group the constant with the scaled index instead and costs **99.40678**.
   the s32->double bias, then pi, then 32768.0f, then 2.0f (exactly the loop body's first-use
   order), and we hoist 2.0f first and the bias third. The other 73 hunks are a parameter-home
   permutation. COLOURING.
+  **Resolved 2026-09-07:** the current instruction sequence is exact. Local
+  segment-endpoint and output-cursor records recover the register assignment
+  and complete the TU under its unchanged profile. See
+  [checkpoint matching](checkpoint_matching.md).
 - **`playerUpdate`** *(195_Player, owner-hot under C73 — analysed read-only, not edited)* — an
   argument-setup `mr` that retail emits seven instructions earlier, inside an `r29`<->`r30` swap
   that accounts for essentially the whole 1.57 gap. COLOURING.
@@ -2479,6 +2502,9 @@ materialise it (`Scarab_update`, `curves_advanceCollision`, `intersectModLineBui
 `textRenderStr`, `mapScreenDrawHud`, `trickyBallMove`, `trackIntersect`, `objDrawShadowCasterMesh`,
 `updateEnvironment`, `hudDrawButtons`, `renderSunAndMoon`, `headDisplayDraw`, `unloadMap`,
 `gameTextInitBoxTextures`) and 2 the other way (`boneParticleEffect_update`, `StaffCollision_spawn`).
+**Correction, 2026-09-07:** `StaffCollision_spawn` now matches completely. Its entry
+zero initializes the return value for an empty spawn loop; it is not an alternative
+spelling of the resource-pointer copy. See [the matching analysis](staffcollision_matching.md).
 Rematerialising a constant changes the opcode without changing the operation, so the histogram
 mis-files the whole family.
 
@@ -2497,6 +2523,15 @@ Retail emits `mr` for the fourth line at all five sites. **Our build emits `mr` 
 (`li r29,0; mr r28,r29; mr r27,r31`), so it is not even a colouring difference. One source text, two
 code generations, in one function, under one compile. Nothing the source says can select between them.
 
+**2026-09-07 correction for `curves_advanceCollision`:** all 31 functions and
+all data in engine DLL 21 now match. Indexed source/destination pointers let
+MWCC regenerate the byte-stride induction variables, including the first copy.
+The reconstruction removes the explicit source byte offset and one-element
+output cursor array. A backend capture places the old first scalar destination
+outside the late value-numbering pass's immediate-commoning range; the apparent
+first-definition wall was not a source impossibility. See
+[the source and validation](curves_collision_matching.md).
+
 **The probes, for the record.** `Scarab_update` is the cleanest specimen in the family: the *only*
 instruction that differs in the whole function is `mr r30,r31` against `li r30,0` for
 `collisionDetected = bestGroundHitIndex;`, with `li r31,0` and the `stw r31` of `groundHits = NULL`
@@ -2513,6 +2548,18 @@ compile-time constant unconditionally; the `mr` is chosen downstream.
 The one construct that does defeat the fold is an *aggregate* source — `pointIndices[1] =
 pointIndices[0]` gets `mr` because the operand is an array element — and that is precisely the
 4-byte-aggregate respelling `docs/HACK_AUDIT.md` bans by shape. So the family has no legal lever.
+
+**2026-09-07 correction for `Scarab_update`:** a GC/1.3 LLDB trace observes the
+collision flag's `li` before global optimization. Its virtual register is outside
+the late value-numbering pass's immediate-commoning range. Reusing a collision
+result lifetime reaches `mr`, but coalescing removes it and regresses the rest of
+the function. The earlier source-inaccessibility conclusion is too strong; see
+[the Scarab capture and source recovery](Scarab_matching.md). The subsequent
+`ScarabContactState` reconstruction groups the selected ground-hit index and
+collision flag, preserving their complete field lifetimes. Late value numbering
+creates the copy and coalescing retains it. All seven functions and all data now
+match, and the strict retail checksum passes with DLL 262 linked from C. This
+case is resolved without changing compiler flags or introducing a pool anchor.
 
 **PRICED, and it is a re-classification, not a new class.** These 17 rows belong with #108/#110, not
 with the operation bucket. The rule §14 should be read with: **a multiset delta made entirely of `li`
@@ -2611,6 +2658,8 @@ second, orphaned one. **Eight callee spellings measured**: positive-`if`-wraps-l
 95.834), and three that are EXACTLY byte-identical to baseline (explicit trailing `return;`,
 `!ptr` test, `*p` instead of `p[0]`). Inliner block-layout bookkeeping; the baseline is the
 best reachable shape.
+
+**Resolved 2026-09-07:** engine DLL 11 now matches all 33 functions and its complete assigned data. Native buffer traversal, a shared copy cursor, and distinct sequence-address expressions resolve this case. The render and update functions are also exact; the obsolete literal-pool alignment override is removed. See [particle-effects matching](partfx_matching.md). The following records the earlier frontier.
 
 **`dll_0B_spawnEffect`** (engine/11, 98.982, NEW). Two hunks: one allocator-forged
 (`mr r9,r6` vs `li r10,0` — retail copies a register that already holds zero), and one CSE
@@ -3013,7 +3062,7 @@ outright. All 21 are attributed; the bucket sums to 19 032 B with nothing left o
 
 | row | bytes | mechanism | priced at |
 |---|---|---|---|
-| `Scarab_update` (262) | 3 476 | allocator remat, `mr` where we emit `li` | §23b |
+| `Scarab_update` (262) | 3 476 | Resolved: contact-state lifetimes preserve the late value-numbering zero copy | §23b correction; [full match](Scarab_matching.md) |
 | `errorThreadFunc` (dll_80136a40) | 2 776 | scheduler transposes two adjacent `addi` | §29d, NEW |
 | `curves_advanceCollision` (engine/21) | 2 472 | allocator remat `li`/`mr` | §23b |
 | `videoInit` (pi_videoinit) | 2 132 | `mfmsr`/`mtmsr`/`mfhid0`/`mthid0`, no intrinsic | §5 island |
@@ -3068,7 +3117,11 @@ Every row below was opened because of what it is worth in bytes, not what it rea
   guard) is worse. **This row refutes §15's sufficiency test**: the slid instruction *is* one the
   source text names — `rows = y + 0x4c` — and it is still a scheduler slot. "The slid instruction
   is one the source names" is NECESSARY, not sufficient.
-* **`dll_98_spawnEffect`** (modgfx/152, 1 040 B, 99.76923). Retail writes
+* **`dll_98_spawnEffect`** (modgfx/152, 1 040 B, 99.76923).
+  **Resolved 2026-09-07:** the complete TU now matches with separate native resource
+  arrays and unchanged GC/1.3 flags; see [evidence](layered_effect_matching.md).
+  The following measurements describe the former fabricated resource overlay.
+  Retail writes
   `resource->sequenceParams[1]`, **reloads it with `lha`**, and stores it to `[2]`; we re-extend the
   register with `extsh`. **Eight spellings**: no cast, `(s16)` cast, an `int` temp feeding both
   stores, a `u8*` pun on the read, a `u8*` pun on the write, and both chained-assignment
@@ -3173,6 +3226,11 @@ whole stream, i.e. the verification arm fires.
 
 ### 30b. `Effect3_spawnObject` — the PARAM-HOME row worked to exhaustion (7 796 B, 0.75 loss)
 
+**Resolved 2026-09-07:** the source now matches at 100% with the unchanged GC/1.3
+profile. Direct float-to-`s16` casts and removal of the parameter alias change the
+allocator graph while preserving the instruction shape. The historical probes below
+did not exhaust that combination; see [the measured explanation](effect3_matching.md).
+
 Every axis measured inert (home map unchanged in all of them): **7 declaration orders** of the
 three-local block including A91 split forms; **4 parameter-list orders**; **5 parameter retypes**
 (`u32`->`int` flags, `int`->`u32` id, `u8`->`int` modelId, and two that do not compile);
@@ -3196,6 +3254,13 @@ function in the tree with at least two homes: **retail 1 228 of 1 471 (83.48 %) 
 tree; the skew inside the mismatching rows is a **selection effect**, not a compiler difference.
 
 ### 30d. Yield, and the sweeps behind the zero
+
+**`Link_render` resolved 2026-09-07:** four byte masks in the interpolated-color
+call and a changed local declaration order together recover all 28 differing
+instructions under the unchanged GC/1.3 profile. Neither change alone matches.
+The masks remove four excluded call-argument nodes from the interference graph;
+see [the compiler evidence](link_render_matching.md). Slot 60 now matches in full.
+The historical sweeps below did not exhaust this combination.
 
 **Zero bytes recovered.** `expr_sweep --assoc` over 18 of the 19 rows (`playerBuildLedgeClimbProbe`
 left alone, owner-hot): **420 semantically-cleared operand-order rewrites across 16 rows, 0 hits**;
@@ -3627,6 +3692,10 @@ register lost (-0.05) outweighs each structure cell gained (+0.01). Instances:
 - waterfx_render: retail's for-header comma order (`poolOffset += 0x1c, descriptorOffset +=
   0x20, vertexOffset += 0x40, j++`, init `j = 0` first) converges all four latch immediates
   positionally; fuzzy 99.428 -> 99.279.
+  **Resolved 2026-09-07:** native indexed particle/geometry traversal and shared
+  cursor/counter lifetimes now match the entire function and TU. The comma-order
+  experiment did not establish a source-inaccessible rotation; see
+  [water effects matching](waterfx_matching.md).
 - Vortex_init: dropping the `GameObject* o = obj` alias converges retail's prologue save order
   (mr r3-save before r4-save); homes recolour cyclically, 99.415 -> 98.772.
 - mapProcessRomList: retail folds the ADDR16-style HA onto the runtime base

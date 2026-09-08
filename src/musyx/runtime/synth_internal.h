@@ -69,6 +69,32 @@ typedef struct SynthChannelState {
     u8 unk31[0x38 - 0x31];
 } SynthChannelState;
 
+typedef struct SynthTrackEntry {
+    u32 time;
+    u8 programChange;
+    u8 volume;
+    u8 reserved[2];
+    union {
+        u16 command;
+        u16 patternIndex;
+    } kind;
+    union {
+        u16 jumpIndex;
+        struct {
+            s8 transpose;
+            s8 velocityAdd;
+        } pattern;
+    } argument;
+} SynthTrackEntry;
+
+STATIC_ASSERT(sizeof(SynthTrackEntry) == 0xc);
+STATIC_ASSERT(offsetof(SynthTrackEntry, programChange) == 0x4);
+STATIC_ASSERT(offsetof(SynthTrackEntry, volume) == 0x5);
+STATIC_ASSERT(offsetof(SynthTrackEntry, kind) == 0x8);
+STATIC_ASSERT(offsetof(SynthTrackEntry, argument) == 0xa);
+STATIC_ASSERT(offsetof(SynthTrackEntry, argument.pattern.transpose) == 0xa);
+STATIC_ASSERT(offsetof(SynthTrackEntry, argument.pattern.velocityAdd) == 0xb);
+
 typedef struct SynthTrackCursor {
     u8* base;
     void* current;
@@ -98,7 +124,7 @@ struct SynthSequenceState {
     u32 lastTime;
     u32 baseTime;
     u8* noteData;
-    void* patternInfo;
+    SynthTrackEntry* patternInfo;
     SynthSequenceStream pitchBend;
     SynthSequenceStream modulation;
     u8 midi;
@@ -132,13 +158,6 @@ typedef struct SynthSequenceQueue {
 
 STATIC_ASSERT(sizeof(SynthSequenceQueue) == 0x38);
 STATIC_ASSERT(offsetof(SynthSequenceQueue, speed) == 0x32);
-
-typedef struct SynthTrackCommand {
-    u32 value0;
-    u32 value1;
-    u16 command;
-    u16 arg;
-} SynthTrackCommand;
 
 typedef struct SynthStartRequest {
     u32 seqId1;
@@ -196,17 +215,15 @@ typedef struct SynthVoice {
     SynthSequenceQueue section[SYNTH_VOICE_NOTE_COUNT];
 } SynthVoice;
 
-typedef struct SynthVoiceRuntime {
-    SynthCallbackLink callbacks[SYNTH_CALLBACK_COUNT];
-    SynthVoice voices[SYNTH_MAX_VOICES];
-    u16 voiceNotes[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
-} SynthVoiceRuntime;
-
+STATIC_ASSERT(sizeof(SynthCallbackLink) == 0x14);
 STATIC_ASSERT(sizeof(SynthVoice) == 0x1868);
-STATIC_ASSERT(offsetof(SynthVoiceRuntime, voices) == 0x1400);
-STATIC_ASSERT(offsetof(SynthVoiceRuntime, voices[0].section[0].speed) == 0x291A);
-STATIC_ASSERT(offsetof(SynthVoiceRuntime, voices[0].syncCrossInfo.speed2) == 0x22D8);
-STATIC_ASSERT(offsetof(SynthVoiceRuntime, voices[0].syncCrossInfo.flags) == 0x22DA);
+STATIC_ASSERT(offsetof(SynthVoice, section) == 0x14E8);
+STATIC_ASSERT(offsetof(SynthVoice, section[0].speed) == 0x151A);
+STATIC_ASSERT(offsetof(SynthVoice, syncCrossInfo) == 0xEB4);
+STATIC_ASSERT(offsetof(SynthVoice, syncCrossInfo.speed2) == 0xED8);
+STATIC_ASSERT(offsetof(SynthVoice, syncCrossInfo.flags) == 0xEDA);
+STATIC_ASSERT(offsetof(SynthVoice, syncSeqIdPtr) == 0xEDC);
+STATIC_ASSERT(offsetof(SynthVoice, syncActive) == 0xEE0);
 
 extern SynthCallbackLink seqNote[SYNTH_CALLBACK_COUNT];
 extern u8 synthJobTableIndex;
@@ -222,15 +239,11 @@ extern SynthVoice* seqActiveRoot;
 extern SynthVoice* seqPausedRoot;
 extern u32 seq_next_id;
 
-#define SYNTH_VOICE_RUNTIME() ((SynthVoiceRuntime*)(void*)seqNote)
-
 void synthSetBpm(int bpm, u8 set, u8 section);
 int synthGetTicksPerSecond(McmdVoiceState* slot);
 SynthSequenceEvent* GenerateNextTrackEvent(u8 channel);
 void InsertGlobalEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event);
 SynthSequenceEvent* HandleEvent(SynthSequenceEvent* event, u8 groupIndex, u32* output);
-void synthInitChannelEventQueues(void);
-void synthRefreshChannelEventQueue(u8 groupIndex);
 u32 HandleTrackEvents(u8 groupIndex, u32 delta);
 void ResetNotes(SynthVoice* voice);
 SynthCallbackLink* AllocateNote(s32 triggerValue, u8 controllerIndex);

@@ -16,25 +16,25 @@ COMPILER_SHA256 = "4e502c38465500d4fda8d966b268151a6c74c730508e3d9b7efd23d1a6083
 # Verified by aligning captured FINAL CODE streams with their emitted ELF
 # instructions. Multiple spellings are PPC disassembler aliases/prediction bits.
 MNEMONICS = {
-    0x00: "b", 0x01: "bl", 0x05: "beq+ beq- bgt+ bgt- blt+ blt-",
-    0x08: "bge+ bge- ble+ ble- bne+ bne-", 0x0B: "bdnz+ bdnz-",
+    0x00: "b", 0x01: "bl", 0x05: "beq+ beq- bgt+ bgt- blt+ blt- beqlr-",
+    0x08: "bge+ bge- ble+ ble- bne+ bne- bgelr-", 0x0B: "bdnz+ bdnz-",
     0x11: "blr", 0x12: "bctr", 0x13: "bctrl", 0x15: "lbz",
     0x17: "lbzx", 0x19: "lhz", 0x1B: "lhzx", 0x1D: "lha", 0x1F: "lhax",
-    0x22: "lwz", 0x24: "lwzx", 0x28: "stb", 0x2C: "sth",
-    0x31: "stw", 0x32: "stwu", 0x3C: "add", 0x3F: "addi",
-    0x42: "addis", 0x44: "addze", 0x47: "mulhw", 0x49: "mulli", 0x4A: "mullw", 0x4B: "neg",
+    0x22: "lwz", 0x24: "lwzx", 0x28: "stb", 0x2A: "stbx", 0x2C: "sth", 0x2E: "sthx",
+    0x31: "stw", 0x32: "stwu", 0x33: "stwx", 0x3C: "add", 0x3F: "addi",
+    0x42: "addis", 0x44: "addze", 0x45: "divw", 0x47: "mulhw", 0x49: "mulli", 0x4A: "mullw", 0x4B: "neg",
     0x4C: "subf", 0x4F: "subfic", 0x52: "cmpwi", 0x53: "cmpw",
-    0x54: "cmplwi", 0x55: "cmplw", 0x58: "ori", 0x59: "oris", 0x5A: "xori",
-    0x5B: "xoris", 0x5C: "and", 0x5D: "or", 0x5E: "xor", 0x64: "extsb",
+    0x54: "cmplwi", 0x55: "cmplw", 0x56: "andi.", 0x58: "ori", 0x59: "oris", 0x5A: "xori",
+    0x5B: "xoris", 0x5C: "and", 0x5D: "or", 0x5E: "xor", 0x62: "andc", 0x64: "extsb",
     0x65: "extsh", 0x66: "cntlzw", 0x67: "clrlwi clrrwi rlwinm slwi srwi",
-    0x69: "rlwimi", 0x6A: "slw", 0x6C: "srawi", 0x6D: "sraw", 0x70: "crset", 0x73: "cror",
+    0x69: "rlwimi", 0x6A: "slw", 0x6B: "srw", 0x6C: "srawi", 0x6D: "sraw", 0x70: "crset", 0x73: "cror",
     0x75: "crclr", 0x78: "mtctr", 0x79: "mtlr", 0x81: "mflr", 0x82: "mfcr",
-    0x89: "li", 0x8A: "lis", 0x8B: "mr", 0x8E: "lfs",
-    0x90: "lfsx", 0x92: "lfd", 0x96: "stfs", 0x9A: "stfd", 0x9E: "fmr",
+    0x89: "li", 0x8A: "lis", 0x8B: "mr", 0x8D: "not", 0x8E: "lfs",
+    0x90: "lfsx", 0x92: "lfd", 0x96: "stfs", 0x98: "stfsx", 0x9A: "stfd", 0x9E: "fmr",
     0xA0: "fneg", 0xA2: "fadd", 0xA3: "fadds", 0xA4: "fsub", 0xA5: "fsubs", 0xA6: "fmul", 0xA7: "fmuls",
     0xA8: "fdiv", 0xA9: "fdivs", 0xAA: "fmadd", 0xAB: "fmadds", 0xAD: "fmsubs", 0xAF: "fnmadds",
     0xB0: "fnmsub", 0xB1: "fnmsubs", 0xB5: "frsp", 0xB7: "fctiwz",
-    0xB8: "fcmpu", 0xB9: "fcmpo", 0x193: "psq_l", 0x197: "psq_st",
+    0xB8: "fcmpu", 0xB9: "fcmpo", 0x193: "psq_l", 0x195: "psq_lx", 0x197: "psq_st",
 }
 
 
@@ -200,7 +200,7 @@ def emitted_instructions(snapshot):
 
 
 def validate_alignment(snapshot, assembly, code):
-    """Check opcodes, explicit GPR/FPR operands, and exact li/lis/mr encodings.
+    """Check opcodes, registers, and exact load/move/store/mask/division encodings.
 
     This is deliberately not a complete PowerPC emitter or relocation decoder.
     Unsupported opcodes fail closed rather than silently aligning a shifted trace.
@@ -228,7 +228,7 @@ def validate_alignment(snapshot, assembly, code):
             if registers != printed:
                 raise ValueError(f"register alignment failed at {index}: {asm}")
         expected = None
-        if op in (0x89, 0x8A, 0x8B) and len(args) < 2:
+        if op in (0x89, 0x8A, 0x8B, 0x8D) and len(args) < 2:
             raise ValueError("missing load/move operands")
         if op == 0x89 and (args[0]["kind"] != 0 or args[1]["kind"] not in (2, 3)):
             raise ValueError("invalid immediate load operands")
@@ -244,11 +244,39 @@ def validate_alignment(snapshot, assembly, code):
             else:
                 # Symbol operands remain opaque; relocations own the low halfword.
                 actual &= 0xFFFF0000
-        elif op == 0x8B:
+        elif op in (0x8B, 0x8D):
             dest, source = args[:2]
             if any(a["kind"] != 0 or a["register_class"] != 4 or not 0 <= a["number"] < 32 for a in (dest, source)):
                 raise ValueError("invalid emitted move registers")
-            expected = (31 << 26) | (source["number"] << 21) | (dest["number"] << 16) | (source["number"] << 11) | (444 << 1)
+            extended = 444 if op == 0x8B else 124  # mr = or; not = nor.
+            expected = (31 << 26) | (source["number"] << 21) | (dest["number"] << 16) | (source["number"] << 11) | (extended << 1)
+        elif op in (0x2A, 0x2E, 0x33, 0x98):
+            classes = (3 if op == 0x98 else 4, 4, 4)
+            if len(args) != 3 or any(
+                    a["kind"] != 0 or a["register_class"] != cls or not 0 <= a["number"] < 32
+                    for a, cls in zip(args, classes)):
+                raise ValueError("invalid indexed store operands")
+            source, base, index_register = args
+            extended = {0x2A: 215, 0x2E: 407, 0x33: 151, 0x98: 663}[op]
+            expected = ((31 << 26) | (source["number"] << 21) | (base["number"] << 16)
+                        | (index_register["number"] << 11) | (extended << 1))
+        elif op == 0x45:
+            if len(args) != 3 or any(
+                    a["kind"] != 0 or a["register_class"] != 4 or not 0 <= a["number"] < 32
+                    for a in args):
+                raise ValueError("invalid signed division operands")
+            dest, dividend, divisor = args
+            expected = ((31 << 26) | (dest["number"] << 21) | (dividend["number"] << 16)
+                        | (divisor["number"] << 11) | (491 << 1))
+        elif op == 0x56:
+            if len(args) != 4:
+                raise ValueError("invalid immediate mask operands")
+            dest, source, mask, condition = args
+            if (any(a["kind"] != 0 or a["register_class"] != 4 or not 0 <= a["number"] < 32 for a in (dest, source))
+                    or mask["kind"] != 2 or not 0 <= mask["value"] <= 0xFFFF
+                    or condition["kind"] != 0 or condition["register_class"] != 1 or condition["number"] != 0):
+                raise ValueError("invalid immediate mask operands")
+            expected = (28 << 26) | (source["number"] << 21) | (dest["number"] << 16) | mask["value"]
         if expected is not None and expected != actual:
             raise ValueError(f"operand encoding failed at {index}: {asm}")
     return instructions

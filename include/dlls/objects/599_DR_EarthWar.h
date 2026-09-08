@@ -263,7 +263,7 @@ extern const EWColorTable gDREarthWarriorColors;
 extern s32 gEarthWarriorTailChainJointIndices[4];
 extern ObjModelChainDesc gEarthWarriorTailChain;
 extern ObjModelChainDesc* gEarthWarriorTailChainDesc;
-extern f32 lbl_803DC76C;
+extern f32 gDREarthWarriorExhaustedSpeed;
 extern ObjectDescriptor24WithPadding gDR_EarthWarriorObjDescriptor;
 
 #endif /* DLLS_OBJECTS_599_DR_EARTHWAR_H_ */

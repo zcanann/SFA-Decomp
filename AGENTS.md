@@ -94,6 +94,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 - Use `python tools/orig/source_layout.py` when you want one address-ordered per-file skeleton that interleaves retail-backed anchor windows with the short-gap file estimates so you can start claiming source boundaries directly, or `--broad-exact-layout` when you want that same layout view to include larger exact-debug corridor windows, or `--materialize-all` to emit ready layout briefs under `docs/orig/source_layout_briefs/`.
 - Use `python tools/orig/source_functions.py` when you want a tighter report of retail-labeled function candidates such as `setBlendMove` / `Init` with their current EN xref clusters.
 - Use `python tools/orig/source_worklist.py` when you want one prioritized queue of retail-backed boundary jobs, or `--materialize-all` to emit ready markdown packets under `docs/orig/source_worklist_packets/` for handoff.
+  Missing optional debug references are reported on stderr; retail EN source tags and xrefs remain available, but debug-backed size and source-order estimates may be absent.
 - Use `python tools/orig/source_blueprints.py` when you want one address-ordered neighborhood view that merges anchor windows and short gap packets, or `--materialize-all` to emit ready neighborhood briefs under `docs/orig/source_blueprint_briefs/`.
 - Use `python tools/orig/source_reference_hints.py` when retail EN evidence names a file but you want clearly-labeled reference-project path, function, DLL, or object hints without promoting them to source-truth.
 - Use `python tools/sdk_import_probe.py` when testing candidate SDK source files against current EN windows by compiled size, function-count shape, or assigned-split audits before changing `splits.txt`.
@@ -370,10 +371,25 @@ exception is paired-single `psq_l` / `psq_st` when MWCC has no intrinsic and a
 known-good donor or original binary proves the sequence. Do not trade plausible
 C for a higher match score; a clean-C 90% match is better than an asm 100% match.
 
+Narrow evidence-backed exception (2026-09-07), under the active goal's allowance
+for compelling evidence: `modelBlendMorphTargetChunk` and `modelReadMorphDelta`
+in `src/main/model.c` preserve the retail decoder's private register interface.
+Its cursor and multiple results use non-EABI registers, and the parent owns
+callee-save preservation across four direct calls. This establishes an assembly
+interface, not definitive original-language provenance. Retain the portable C
+reference and run both morph probes; see `docs/model_morph_targets.md`.
+This exception does not authorize assembly in other functions.
+
 ## Pragmas
 
 Inline pragmas are banned. `#pragma` of any kind must not appear inline in `src/main/` or `src/track/`
 source; pragmas may only be configured at the TU level via `configure.py` cflags.
+
+User-authorized exception (2026-09-07): `subtitleUpdateAndDraw` in
+`src/main/subtitle.c` may use `optimization_level 2`, restoring the TU's level 1
+afterward. This is a matching workaround after source-level investigation, not
+evidence of the original optimization policy. See `docs/subtitle_matching.md`.
+The exception does not authorize pragmas in other functions or units.
 
 ## Cheap clean-C pre-checks
 

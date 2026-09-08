@@ -256,30 +256,12 @@ main/texture.c:
 	.sdata2     start:0x803E03A0 end:0x803E03B8
 
 main/shader.c:
-	.text       start:0x80055148 end:0x8005AD54
+	.text       start:0x80055148 end:0x80061278
 	.rodata     start:0x802C2698 end:0x802C26E8
-	.data       start:0x8030FB50 end:0x8030FEBC
-	.bss        start:0x8037F860 end:0x80388078
-	.sdata      start:0x803DCE10 end:0x803DCE20
+	.data       start:0x8030FB50 end:0x8030FF08
+	.bss        start:0x8037F860 end:0x80389150
+	.sdata      start:0x803DCE10 end:0x803DCE38
 	.sbss       start:0x803DE5C8 end:0x803DE6D8
-
-main/lightmap.c:
-	.text       start:0x8005AD54 end:0x8005CC30
-	.bss        start:0x80388078 end:0x80389078
-	.sdata      start:0x803DCE20 end:0x803DCE28
-
-main/lightmap_initmapblocks.c:
-	.text       start:0x8005CC30 end:0x8005CF08
-
-main/lightmap_draw.c:
-	.text       start:0x8005CF08 end:0x8005E140
-	.data       start:0x8030FEBC end:0x8030FEE4
-
-main/tex_dolphin.c:
-	.text       start:0x8005E140 end:0x80061278
-	.data       start:0x8030FEE4 end:0x8030FF08
-	.bss        start:0x80389078 end:0x80389150
-	.sdata      start:0x803DCE28 end:0x803DCE38
 
 main/shadow_dolphin.c:
 	.text       start:0x80061278 end:0x80062F44
@@ -4580,34 +4562,12 @@ dolphin/amcstubs/AmcExi2Stubs.c:
 dolphin/odenotstub/odenotstub.c:
 	.text       start:0x8026C784 end:0x8026C78C
 
-musyx/runtime/synth_callback.c:
-	extab       start:0x80005620 end:0x80005630
-	extabindex  start:0x80005CC0 end:0x80005CD8
-	.text       start:0x8026C78C end:0x8026CCC0
-	.bss        start:0x803B0CF0 end:0x803B20F0
-
-musyx/runtime/synth_queue.c:
-	extab       start:0x80005630 end:0x80005650
-	extabindex  start:0x80005CD8 end:0x80005D08
-	.text       start:0x8026CCC0 end:0x8026DE68
-	.bss        start:0x803B20F0 end:0x803BE530
-
-musyx/runtime/synth_channel.c:
-	.text       start:0x8026DE68 end:0x8026DF1C
-
-musyx/runtime/synth_handle.c:
-	extab       start:0x80005650 end:0x80005660
-	extabindex  start:0x80005D08 end:0x80005D20
-	.text       start:0x8026DF1C end:0x8026E690
-
-musyx/runtime/synth_seq_events.c:
-	.text       start:0x8026E690 end:0x8026E91C
-
-musyx/runtime/synth_seq_dispatch.c:
-	extab       start:0x80005660 end:0x80005688
-	extabindex  start:0x80005D20 end:0x80005D5C
-	.text       start:0x8026E91C end:0x8026FD74
+musyx/runtime/seq.c:
+	extab       start:0x80005620 end:0x80005688
+	extabindex  start:0x80005CC0 end:0x80005D5C
+	.text       start:0x8026C78C end:0x8026FD74
 	.data       start:0x80330520 end:0x80330570
+	.bss        start:0x803B0CF0 end:0x803BE530
 	.sbss       start:0x803DFA18 end:0x803DFA38
 	.sdata2     start:0x803E8FB0 end:0x803E8FC8
 

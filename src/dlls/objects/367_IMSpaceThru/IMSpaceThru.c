@@ -67,7 +67,8 @@ void imSpaceThruster_update(GameObject* obj) {
         switch (state->phase) {
         case IM_SPACE_THRUSTER_PHASE_OFF:
             if (thrusterMode == 1) {
-                ObjModel_SetBlendChannelTargets(imSpaceThruster_getActiveModel(obj), 0, -1, 0, -0.2f, 0x10);
+                ObjModel_SetBlendChannelTargets(imSpaceThruster_getActiveModel(obj), 0, -1, 0, -0.2f,
+                                                BLENDCHAN_FLAG_KEEP_WEIGHT);
                 obj->anim.alpha = 0xFF;
                 state->phase = IM_SPACE_THRUSTER_PHASE_ON;
             } else {
@@ -81,7 +82,8 @@ void imSpaceThruster_update(GameObject* obj) {
             break;
         case IM_SPACE_THRUSTER_PHASE_ON:
             if (thrusterMode == 0) {
-                ObjModel_SetBlendChannelTargets(imSpaceThruster_getActiveModel(obj), 0, -1, 0, 0.2f, 0x10);
+                ObjModel_SetBlendChannelTargets(imSpaceThruster_getActiveModel(obj), 0, -1, 0, 0.2f,
+                                                BLENDCHAN_FLAG_KEEP_WEIGHT);
                 state->blendTimer = 0xB4;
                 obj->anim.alpha = 0xA4;
                 state->phase = IM_SPACE_THRUSTER_PHASE_FADE_OUT;

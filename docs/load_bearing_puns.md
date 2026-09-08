@@ -200,6 +200,13 @@ Worked examples, all now proven rather than argued:
   `gObjFxHitPulseTbl` (12 sites), `589_BossDrakor` `gBossDrakorMoveStateTable +
   0x84…0x98` → `gBossDrakorTurnMoveStates` (6 sites). Every count matches.
 
+The `pad.c` case above was resolved on 2026-09-07. Native array definitions
+available during deferred emission let MWCC generate the shared BSS base;
+indexed initialization and update loops now match without cross-global
+pointer offsets. See [controller input matching](pad_matching.md). The old
+relocation count described the earlier reconstruction, not a required source
+representation.
+
 `.sbss` cases are the sharpest: SDA21 is one relocation per access, so the
 counts are site-exact.
 

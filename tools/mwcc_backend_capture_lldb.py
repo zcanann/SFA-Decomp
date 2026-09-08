@@ -164,8 +164,51 @@ def _finish(debugger):
     Path(_state.job["result"]).write_text(json.dumps(_state.snapshots))
 
 
+def _stop_capture_debugservers(debugger_pid):
+    """Stop descendant debug servers before killing LLDB can orphan them.
+
+    Rosetta launches debugserver with --setsid, so killing LLDB's process
+    group does not reach it. Restrict cleanup to the live descendant tree;
+    never infer ownership from a debugserver name or working directory alone.
+    """
+    try:
+        output = subprocess.run(["ps", "-axo", "pid=,ppid=,comm="],
+                                capture_output=True, text=True, timeout=2).stdout
+        processes = {}
+        for line in output.splitlines():
+            fields = line.split(None, 2)
+            if len(fields) == 3 and fields[0].isdigit() and fields[1].isdigit():
+                processes[int(fields[0])] = (int(fields[1]), fields[2])
+        descendants = {debugger_pid: 0}
+        while True:
+            children = {pid: descendants[parent] + 1
+                        for pid, (parent, _) in processes.items()
+                        if pid not in descendants and parent in descendants}
+            if not children:
+                break
+            descendants.update(children)
+        for pid in sorted(descendants, key=descendants.get, reverse=True):
+            if pid == debugger_pid:
+                continue
+            parent, executable = processes[pid]
+            if Path(executable).name != "debugserver":
+                continue
+            # Recheck before signaling: a departed/reparented process no
+            # longer has the ownership proof from the initial snapshot.
+            current = subprocess.run(["ps", "-p", str(pid), "-o", "ppid=,comm="],
+                                     capture_output=True, text=True, timeout=2).stdout.split(None, 1)
+            if len(current) == 2 and current[0] == str(parent) and current[1].strip() == executable:
+                try:
+                    os.kill(pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+
+
 def _stop_timed_out_capture(process, pid_file, command):
-    """Kill only the recorded guest with this capture's unique output path."""
+    """Stop owned debug servers, the output-verified guest, and LLDB."""
+    _stop_capture_debugservers(process.pid)
     try:
         pid = int(pid_file.read_text())
         if pid <= 1:

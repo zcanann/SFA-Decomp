@@ -329,36 +329,32 @@ def main() -> int:
 
     cfg = names[0] if names and names[0] == "as-configured" else None
 
-    # POSITIVE CONTROLS -- printed by default and deliberately hard to skip.
-    # A profile that breaks every already-matching function tells you nothing
-    # about the functions you are probing: its "-" cells are the tool failing,
-    # not the flag axis closing.  Reading this row is what distinguishes a real
-    # closure from a vacuous one.
+    # Existing matches measure the cost of an alternative profile. Losing them
+    # does not invalidate a successful compile or an exact function comparison;
+    # keeping only one does not make a whole-TU change safe either.
     controls = [s for s in symbols if results[s].get(cfg) == "MATCH"] if cfg else []
-    unsound: list[str] = []
     if controls:
         kept = {n: sum(1 for s in controls if results[s].get(n) == "MATCH") for n in names}
-        unsound = [n for n in names if n != cfg and kept[n] == 0]
         print(f"\n{'CONTROLS kept':{width}}" +
               "".join(f"{f'{kept[n]}/{len(controls)}':>16}" for n in names))
-        print(f"  ({len(controls)} functions match as-configured; a profile that keeps none of "
-              f"them is UNSOUND on this unit and its column is uninformative)")
-        if unsound:
-            print(f"  UNSOUND profiles (0 controls kept, results ignored): {', '.join(unsound)}")
-            if len(unsound) == len([n for n in names if n != cfg]):
-                print("  *** EVERY alternative profile is UNSOUND here: this unit's flag axis is "
-                      "UNPROBED, not closed.  Do not read the '-' cells as evidence. ***")
+        for n in names:
+            if n == cfg:
+                continue
+            lost = [s for s in controls if results[s].get(n) != "MATCH"]
+            if lost:
+                print(f"  {n} loses existing matches: {', '.join(lost)}")
 
-    sound = [n for n in names if n != cfg and n not in unsound]
+    alternatives = [n for n in names if n != cfg]
     gained = [s for s in symbols
               if results[s].get(cfg) != "MATCH"
-              and any(results[s].get(n) == "MATCH" for n in sound)]
+              and any(results[s].get(n) == "MATCH" for n in alternatives)]
     if gained:
-        print("\nfunctions a DIFFERENT (and SOUND) profile would fix "
-              "(=> per-TU flag is wrong, or the unit merges TUs and needs a split):")
+        print("\nFunctions exact under an alternative profile (whole-TU review required):")
         for s in gained:
-            wins = [n for n in sound if results[s].get(n) == "MATCH"]
+            wins = [n for n in alternatives if results[s].get(n) == "MATCH"]
             print(f"  {s:{width}} <- {','.join(wins)}")
+        print("  These results identify transformations to inspect; they do not prove source "
+              "recovery is exhausted, the configured profile is wrong, or a TU split is valid.")
     return 0
 
 

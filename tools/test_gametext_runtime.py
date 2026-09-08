@@ -57,9 +57,9 @@ class GameTextRuntimeHostTests(unittest.TestCase):
         private_arrays = '\n'.join(line.removeprefix('extern ') for line in headers.splitlines()
                                    if line.startswith('extern ') and re.search(
                                        r'\b(sGameText(Fallback|Path|CommandString)|gGameText(LastEntry|FallbackRequestDelta)|sSubtitleCtrlCmdScratch)', line))
-        messages = re.search(r'struct GameTextParserMessages\s*\{[^}]*\}', source).group() + ';'
         bodies = []
-        for name, prefix in (('gameTextInitRendererState', 'void'),
+        for name, prefix in (('gameTextResetFont', 'static inline void'),
+                             ('gameTextInitRendererState', 'void'),
                              ('gameTextSelectFallbackBuffer', 'static inline void'),
                              ('gameTextGet', 'void*'), ('gameTextGetPhrase', 'void*'),
                              ('gameTextGetStr', 'void*'), ('subtitleParseControlCmds', 'SubtitleCmd*')):
@@ -88,7 +88,7 @@ int _fltused;
 #else
 #define EXPORT
 #endif
-''' + records + '\n' + constants + '\n' + private_arrays + '\n' + messages + r'''
+''' + records + '\n' + constants + '\n' + private_arrays + r'''
 static TextFont gGameTextCharsets[4], *gameTextFonts;
 static GameTextBox gTextBoxes[GAMETEXT_BOX_COUNT];
 static int gameTextCharset, curLanguage, curGameTextDir, gGameTextLastLanguage, gGameTextLastDir;
@@ -101,7 +101,6 @@ static char *gCurTextBuffer, *gGameTextCommandStringCursor;
 static f32 timeDelta;
 static char* sMapDirectoryNameTable[] = {"test"};
 static char sGameTextBlankFormat[] = "";
-static struct GameTextParserMessages sGameTextParserMessages;
 static int atlasCalls, storeSize, formatKind, allocatedSize, copiedSize, argCount;
 static union { void* alignment; u8 bytes[256]; } allocation;
 static void gameTextBuildSystemFontAtlas(void) { atlasCalls++; }
@@ -110,10 +109,14 @@ static void* mmAlloc(int size, int tag, int flags) {
     allocatedSize = size;
     return allocation.bytes;
 }
+static int equalFormat(const char* a, const char* b) {
+    while (*a && *a == *b) { a++; b++; }
+    return *a == *b;
+}
 static int sprintf(char* destination, const char* format, ...) {
     formatKind = format == sGameTextBlankFormat ? 0 :
-                 format == sGameTextParserMessages.notInFile ? 1 :
-                 format == sGameTextParserMessages.noPhrase ? 2 : 3;
+                 equalFormat(format, "<%d's not in %s>") ? 1 :
+                 equalFormat(format, "<%d, doesn't have phrase %d>") ? 2 : 3;
     destination[0] = (char)('A' + formatKind);
     destination[1] = 0;
     return 1;

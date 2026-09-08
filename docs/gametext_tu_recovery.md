@@ -250,3 +250,336 @@ or applying placement directives is not a solution.
 
 Both `ninja all_source` and the strict retail checksum gate pass. The TU remains
 `NonMatching`, so the strict link does not validate the changed source codegen.
+
+## Shared load-slot search
+
+The three manually expanded eight-slot searches in `gameTextRun`,
+`loadGameTextSequence`, and `gameTextLoadForCurMap` now call one private inline
+helper. It walks `curGameTexts` in ascending address order, returns the first
+record whose `active` byte is zero, and returns null after eight occupied records.
+GC/1.3 expands the ordinary countdown loop into the retail eight-test shape. In
+the sequence loader, replacing only the expanded expression with this helper
+preserves every function byte. A separate typed `LanguageName*` local replaces
+its manually shifted byte offset and keeps the language selection before the
+heap/state calls, as in retail.
+
+The EN sequence search at `8001A540..8001A5E0` tests byte `0x4A` and advances by
+`0x4C` seven times; its final fallthrough supplies a null pointer. The subsequent
+store at `8001A5E4` is unconditional. The sequence loader therefore still requires
+a free slot, while the map loader leaves its directory/language request pending
+when all slots are occupied. Cancellation does not immediately make an active
+slot reusable, even when the cancellation callback runs synchronously. Existing
+completed allocations can be freed and reused by the same request. These
+differences remain explicit at the callers; the search does not reserve or clear
+the selected slot.
+
+| Function | Before fuzzy | After fuzzy | Source bytes before / after |
+| --- | --- | --- | --- |
+| `gameTextRun` | 85.86702% | 88.14096% | 1524 / 1516 |
+| `loadGameTextSequence` | 91.82993% | 92.03401% | 608 / 608 |
+| `gameTextLoadForCurMap` | 89.66082% | 91.47369% | 700 / 700 |
+
+The TU rises from 96.3321% to 96.54275%, retaining 41/54 exact functions and the
+same exact code/data credit. Only these three functions change instruction
+bytes. All non-text section bytes and named storage offsets remain unchanged.
+The command runner's sixteen jump-table relocations keep the same destination
+function and move their case offsets back eight bytes with the shortened search.
+The 51 other functions keep their instruction bytes. Formatting is recorded
+separately and preserves the complete generated object.
+
+`python3 tools/test_gametext_load_slots.py` executes the production helper, both
+loaders, and both DVD callbacks, with allocation and file-I/O mocks. At each of
+`-O0` and `-O2`, 402 scenarios cover all 256 occupancy masks (including non-boolean
+active bytes), each free-slot position in both loaders and all six languages,
+pending map requests, completed-buffer reuse, both cancellation timings, DVD
+success/failure and unknown callback records, and rejected state/language/map
+requests. A seven-slot mutation fails the suite. The sequence-loader null access
+is reviewed in retail assembly rather than executed on the host; the complete
+command runner is not executed by this harness. The existing runtime, font,
+measurement, and color suites also pass.
+
+Both `ninja all_source` and the strict retail checksum gate pass. Gametext remains
+`NonMatching`; these gates establish buildability, not runtime equivalence of
+its reconstructed C.
+
+The subsequent [resource-parser recovery](gametext_resource_parser.md) corrects
+the overlapping message-header record, introduces native glyph/texture headers,
+and replaces the font-record pointer cast with real texture-array indexing. It
+also provides compiled-versus-retail PPC execution checks for this parser.
+
+## Bounded initialization loops
+
+`gameTextInitRendererState` now expresses its reverse traversal with integer
+indices. The former comma-expression conditions decremented pointers once more
+when the count reached zero, forming pointers before their arrays even though
+the body did not dereference them. The recovered C now addresses only valid
+elements: all 148 windows, eight fallback records and their two pointer levels,
+four charsets, and three textures per charset. The final negative value belongs
+only to the integer loop counter.
+
+The existing runtime suite checks every initialized element and preserves
+unrelated window state. The initializer remains 532 bytes and moves slightly
+from 86.333336% to 86.162605% fuzzy. Together with the parser's local-table-base
+improvement, gametext rises from 96.39944% to 96.416885%, retaining 41/54 exact
+functions and unchanged exact-code/data credit. Only those two functions change
+instruction bytes; all non-text section bytes and named storage offsets remain
+unchanged. The TU and its canonical header pass clang-format without a
+formatting-only diff.
+
+The runtime and load-slot suites, 432 parser emulation comparisons, the strict
+retail checksum, and `ninja all_source` all pass for this checkpoint.
+
+## Deferred emission and diagnostic literals (2026-09-07)
+
+The native-array emission blocker above is resolved without restoring an
+aggregate. Ordinary function definitions are ordered for reverse deferred
+emission, with the existing native storage definitions before the bodies.
+GC/1.3, disabled automatic inlining, and the optimization settings remain;
+the TU now uses the existing deferred variant of that profile. All eleven BSS
+objects and every remaining named non-text symbol retain their physical offsets.
+
+The decisive initialized-data evidence is the interleaving of literals and
+compiler-generated jump tables. Keeping the named parser-message aggregate and
+path-format arrays with deferred emission moves them ahead of both tables.
+Writing the six diagnostic messages and two path formats as ordinary call-site
+string literals instead emits every string at its exact retail address:
+
+| EN address | Literal / span |
+| --- | --- |
+| `802C9E04` | `<uninitialised>` |
+| `802C9E14` | `<loading>` |
+| `802C9E20` | `<file empty!>` |
+| `802C9E30` | `<no file!>` |
+| `802C9E3C` | `<%d's not in %s>` |
+| `802C9E50` | `<%d, doesn't have phrase %d>` |
+| `802C9E70` | `gametext/%s/%s.bin` |
+| `802C9EC4` | `gametext/Sequences/%d_%s.bin` |
+
+The compiler supplies each alignment gap and pools repeated uses. The six
+messages occupy the same 108-byte span, without a padded struct, named dummy
+strings, or explicit placement. The renderer's 48-byte jump table precedes that
+span; the command runner's 64-byte jump table remains between the two path
+formats. All allocated non-text section bytes, lengths, and alignments match the
+preceding source object, including the 12,361-byte `.data` extent. This combined
+code/storage evidence supports deferred emission and literal diagnostics as a
+plausible reconstruction; it does not establish a historical build command.
+The existing retail symbol labels remain address anchors for the literal pool.
+Their removed public array declarations have no remaining source consumers.
+
+`loadGameTextSequence` becomes exact (588 bytes), raising the unit from 41/54
+to 42/54 exact functions. Fuzzy matching improves from 96.46448% to 97.420944%.
+`gameTextGet` improves from 89.454544% to 97.30303%, and initialization from
+86.162605% to 98.60162%. All previously exact functions remain exact. Seven
+functions change code generation; `gameTextGetPhrase` has a small remaining
+regression (98.9375% to 98.5875%) as native shared-array addressing replaces
+its independent map-name-table address. The unit remains `NonMatching`.
+
+The runtime fixture now classifies diagnostic formats by string content rather
+than the addresses of fields in the removed aggregate. The loader fixture uses
+the production bodies' literals. The compiled-resource checks compare the
+literal spans directly at retail addresses and retain the named-resource extent
+checks. All sixteen gametext tests pass, including 402 load-lifecycle scenarios
+at each of host `-O0` and `-O2`. Existing parser, fallback-ring, text measurement,
+color, and texture-resource checks remain enabled.
+
+`ninja all_source` and the strict matching checksum both pass with 30-second
+limits. The resulting DOL is byte-identical to retail. The matching link still
+uses this incomplete unit's retail object, so the checksum does not establish
+source-linked correctness. Objdiff confirms that no other unit's match measures
+change; the separately checked data bytes and symbol offsets preserve storage.
+
+The TU and canonical API header pass `clang-format --dry-run --Werror`.
+Formatting produces no source diff and preserves the complete object; no separate
+formatting commit is needed. The shared text-rendering header edit is limited to
+removing the two obsolete format-array declarations.
+
+## Shared immediate charset selection (2026-09-07)
+
+`gameTextRun` improves from 90.539894% to 91.27128%. The queued charset
+command now shares the private inline `gameTextSelectCharset` helper with
+`gameTextSetCharset`. It selects the font record, records the charset, and
+performs the existing clear-color rectangle and reveal reset for charset 2.
+The helper name and boundary are reconstructed source structure, not recovered
+original symbols.
+
+Retail captures the command argument once and keeps it across the global
+font/charset stores. The previous source reread `cmd->arg0` twice after those
+stores. Passing the value into the inline helper removes the two extra `lwz`
+instructions while preserving the retail value lifetime. A local captured
+argument produces the same runner code; the shared helper also removes the
+duplicate immediate-selection implementation. The runner shrinks from 1,472
+to 1,464 bytes; retail is 1,504 bytes, with independent addressing and loop
+differences still unresolved.
+
+Only the runner's instruction bytes change. `gameTextSetCharset` remains
+exact at 212 bytes, and all other function bodies and allocated non-text
+sections remain unchanged. Named data-symbol layouts are preserved, as are
+relocations outside the changed runner and its internal jump-table targets.
+All 44 previously exact functions remain exact. Unit fuzzy matching increases
+from 97.61308% to 97.66155%.
+
+All 16 gametext tests pass, including 402 load scenarios at each of host `-O0`
+and `-O2`. The TU and canonical API header pass the formatting check without
+additional formatting changes; a rebuild preserves the complete object bytes.
+`ninja all_source` and strict `ninja` pass after matching configuration, with
+30-second timeouts, and the matching DOL remains byte-identical to retail.
+The unit remains `NonMatching`; the checksum uses its retail object.
+
+## Exact renderer initialization (2026-09-07)
+
+`gameTextInitRendererState` now matches all 492 retail bytes. The fallback loop
+indexes the native string, definition, and backing-buffer arrays directly. Its
+separately staged string/definition pointers had changed the three generated
+cursor registers. The final current-buffer lookup uses `gGameTextLastEntry`
+after assigning it, reproducing the retail pointer lifetime.
+
+The private inline `gameTextResetFont` owns the repeated font-record reset,
+including all three texture slots. The outer initializer walks the four fonts
+and calls it. This boundary reproduces the retail allocation of the font cursor,
+texture cursor, and inner loop counter. No out-of-line helper is emitted.
+All reverse loops remain bounded integer-index loops; no pointer is formed
+before an array to drive termination.
+
+Only the initializer's instruction bytes change. Every other function, named
+symbol layout, and allocated non-text section remains unchanged. The unit rises
+from 42/54 to 43/54 exact functions and from 97.420944% to 97.45126%, adding 492
+matched code bytes. No compiler setting or TU boundary changes. The runtime
+fixture executes the new production helper as part of its complete initialization
+checks; all sixteen gametext tests pass, including both sets of 402 load-lifecycle
+scenarios. The unit remains `NonMatching` pending its other eleven functions.
+
+## Shared window-position application (2026-09-07)
+
+The immediate branch of `gameTextSetWindowStrPos` and the queued
+`GAMETEXT_COMMAND_SET_WINDOW_POSITION` handler now share the private inline
+`gameTextApplyWindowPosition` helper. The queued call captures the window index
+and both coordinates before either cursor store. This removes the old second
+read of `cmd->arg0` and its repeated address calculation, matching retail's
+single argument capture. The signed halfword conversions and store order are
+retained. The setter also uses the existing symbolic command ID when queuing.
+
+The helper deliberately indexes the canonical window array. An explicit local
+window pointer was tested: it improves the runner less and regresses the exact
+immediate setter. Extracting the unrelated per-frame flag-clear loop leaves the
+runner's differences unchanged and is not retained.
+
+Against `ee4b8668ed`, `gameTextRun` improves from 91.27128% to 91.79521%, shrinking
+from 1,464 to 1,456 bytes. Retail remains 1,504 bytes; independent shared-array
+addressing and loop differences are unresolved. The immediate setter retains
+all 25 exact instructions. No other function body changes, and all 53 other
+functions retain their function-relative relocation targets. The runner's
+fourteen affected jump-table targets follow the eight-byte code reduction;
+allocated non-text bytes and named data layouts are unchanged.
+
+The TU rises from 97.81967% to 97.8544% fuzzy matching and remains `NonMatching`,
+with 44/54 exact functions. All sixteen existing gametext tests, full source
+compilation, and the strict retail checksum pass. Those host fixtures cover
+resources, load lifecycles, fallback handling, colors, and measurement; the
+queued position handler is assessed by its retail instruction comparison.
+The source and canonical API header pass the formatter check. Formatting adds
+no diff and preserves the complete semantic object.
+
+`ninja all_source` and the strict retail checksum both pass with 30-second
+limits. The resulting DOL remains byte-identical to retail; the complete unit
+still links its retail object until the remaining functions are recovered.
+
+## Promoted color parameters and parser address expressions (2026-09-07)
+
+This pass builds on the deferred-emission and exact-initialization changes
+above. It raises the TU from 97.45126% to 97.61308% fuzzy and from 43 to 44
+exact functions, retaining the current compiler profile and source order.
+
+`gameTextSetColor` uses an old-style C definition with `u8` parameters.
+Default argument promotion makes this compatible with the public `int`
+prototype while preserving the byte types inside the function. This removes
+four redundant conversions before the direct byte stores and reproduces all
+104 retail bytes. Queued integer fields still receive narrowed channels, and
+callers retain their generated bytes. The host color harness explicitly selects
+C17 and permits the deprecated definition syntax; its 1,028 cases continue to
+check both modes, including out-of-range inputs.
+
+The resource parser derives each following block from its own header and
+record sizes. Its message header remains after the four-byte glyph count and
+the complete glyph array; it does not overlap the last glyph. Grouping the
+string-table extent preserves the separate header-size addition in retail.
+Removing the obsolete glyph-pointer local and adjusting declaration order
+brings `gameTextFinalizeLoad` from 98.095474% to 99.34673%, with the exact
+1,592-byte instruction count. Remaining differences are register operands.
+All 360 synthetic compiled-versus-retail PPC comparisons pass, including
+texture allocation failures, copy tails, relocated data, and ABI checks.
+
+Only these two function bodies change. Allocated non-text section bytes,
+named storage layouts, and normalized data relocation destinations remain
+unchanged. The gametext tests, `ninja all_source`, and the strict checksum pass;
+both Ninja invocations have 30-second limits. The TU remains `NonMatching`, so
+the checksum still uses its retail object. Formatting is recorded separately
+and preserves the complete generated object.
+
+## Fixed-point scale commands (2026-09-07)
+
+The scale command's big-endian 16-bit argument encodes 1.0 as `0x100`.
+Measurement, rendering, and wrapping now share the private inline
+`gameTextDecodeScale`, which converts the signed working integer to float and
+divides by `256.0f`. The helper name is reconstructed; the conversion and its
+three consumers are evidenced by retail instructions.
+
+MWCC folds the division into multiplication by the same `0.00390625f`
+literal already present in the retail pool. Unlike the previous explicit
+reciprocal multiplication, this spelling finishes the integer-to-float
+conversion before loading the reciprocal. Each consumer's ten-instruction
+conversion block now matches retail, including the floating-point registers
+and multiplication operand order. An inline helper that retained the old
+multiplication was byte-neutral and did not fix the block.
+
+| Function | Before | After |
+| --- | ---: | ---: |
+| `gameTextMeasureString` | 94.35599% | 94.58253% |
+| `textRenderStr` | 97.02047% | 97.21638% |
+| `gameTextWrapLines` | 95.55773% | 96.45098% |
+
+Unit fuzzy matching rises from 97.66155% to 97.78159%; all 44 exact functions
+remain exact. Only these three function bodies change, with no size changes.
+All allocated non-text sections and named-symbol layouts are unchanged. Each
+function retains its relocation destinations and counts; only the two literal
+load positions within each conversion block move.
+
+The compiled production helper was checked over all 65,536 encoded values at
+host `-O0` and `-O2`, with bit-identical results to the previous conversion.
+All 16 gametext tests pass. Formatting the TU and canonical API header preserves
+the complete object. `ninja all_source` and strict `ninja` pass after matching
+configuration with 30-second timeouts, and the matching DOL is byte-identical
+to retail. The unit remains `NonMatching`, so its retail object supplies the
+matching link while the remaining source differences are recovered.
+
+
+## System-font glyph-count lifetime (2026-09-07)
+
+`gameTextBuildSystemFontAtlas` captures the selected charset's glyph count once,
+uses that value to initialize the system-font metrics, and then copies it into
+the independent countdown variable. These two locals describe different roles:
+the original count stays fixed while the loop consumes the remaining count.
+The capture follows texture allocation, preserving the original callback order.
+
+Retail keeps the initial count in `r3` across the metric stores and copies it
+to `r22` afterward. The previous source instead reloaded `charset->glyphCount`.
+Capturing directly into the countdown variable removed that reload but moved
+the register copy too early. A separate `glyphCount` local retains the retail
+lifetime and reproduces the load, narrowing operation, and final register copy.
+The intervening stores belong to the separate font-metrics array and do not
+change the charset's count.
+
+The function rises from 96.123634% to 96.90909%; the unit rises from 97.78159%
+to 97.81967%. Exactly three instruction words change, with the existing
+1,088-byte source function size retained against 1,100 retail bytes. Every
+other function, all allocated non-text sections, named-symbol layouts, and
+relocation records are unchanged. This does not add an exact function.
+
+The 16 existing gametext tests pass, covering neighboring text behavior and
+storage layout; they do not execute the atlas builder. The atlas change is
+verified directly against the retail instructions and the complete object
+diff. Formatting the active TU and canonical API header produces no changes
+and preserves the whole object. The unit remains `NonMatching`.
+
+Matching configuration, `ninja all_source`, and strict `ninja` pass with
+30-second timeouts (`main.dol: OK`). The matching link continues to use this
+unit's retail object.

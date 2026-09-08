@@ -101,11 +101,11 @@ Concrete, high-confidence naming/enum/struct opportunities the agents surfaced w
 - Fill include/main/map_block.h's MapBlockData padding (0x34-0x58, 0x5C-0x90) with the now-confirmed fields: gcPolygons(0x4C)/polygonGroups(0x50)/textures(0x54)/vertexColors(0x5C)/vertexTexCoords(0x60)/shaders(0x64)/displayLists(0x68)/hits(0x70)/renderInstrsMain,Transp,Water(0x78/0x7C/0x80) plus their counts(0x84/0x86/0x88, 0x98)
 - Rename map_block.h's `layerCount` (0xA2) to `shaderCount` (it bounds the shaders[] array, per fn_8006070C in dll_0134_texscroll2.c) to stop it colliding in name with MapShader.layerCount (0x41, the per-shader nLayers) in tex_dolphin.c
 - Rename map_block.h's `edgeCount` (0xA1) to `dlistCount`/`nDlists` (it bounds the displayLists[] array per MapBlock_init's fixup loop and fn_800606FC, matching the wiki's nDlists) while keeping a note that dll_013C_xyzanimator.c's EdgeVerts view of the same array is a valid alternate interpretation
-- Unify the scattered MapTriIndex/MapTriGroup (track_dolphin.c) and MapShader/MapBlockBoundsRec (tex_dolphin.c) typedefs into map_block.h so tex_dolphin.c's narrower duplicate MapBlockData declaration can be retired
+- Map records now use `map_block.h`; model and map polygon groups share `CollisionPolygonGroup` in `collision_polygon.h`. Keep consumer layouts tied to those canonical definitions.
 - Add a SurfaceType enum (SURFACE_GENERIC/GRASS/SAND/SNOW/INSTANT_DEATH/ICE/WATER/LAVA/CONVEYOR/METAL) for the confirmed-behavior subset of PlayerState.surfaceType values used in dll/player.c's switch, replacing bare case 3/8/13/26/29 literals
 
 ### Models
-- Add ModelDataFlags2 #defines (MODEL_FLAG_NO_ANIMATIONS 0x2, MODEL_FLAG_NO_DEPTH_TEST 0x400, MODEL_FLAG_ALPHA_Z_UPDATE 0x2000, MODEL_FLAG_ALT_POINTER_LAYOUT 0x8000) to include/main/model.h alongside the existing MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS/MODEL_FLAG_VERTEX_ANIM_AREA
+- Add ModelDataFlags2 #defines (MODEL_FLAG_NO_ANIMATIONS 0x2, MODEL_FLAG_NO_DEPTH_TEST 0x400, MODEL_FLAG_ALPHA_Z_UPDATE 0x2000, MODEL_FLAG_ALT_POINTER_LAYOUT 0x8000) to include/main/model.h alongside the existing MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS/MODEL_FLAG_CACHED_ANIMATIONS
 - Add MODEL_FLAGS24_VERY_BRIGHT 0x02 next to the existing MODEL_FLAGS24_NORMALS_9BYTE in model.h
 - Add MODEL_SHADERFLAGS_USE_OBJ_COLOR 0x0002 for ModelFileHeader.shaderFlags bit 2, confirmed via objprint_dolphin.c:1791 gObjOverrideColor path
 - Add a ModelRenderInstrOpcode enum (values 0-5) for the instrs bitstream opcodes, matching the existing prose comment in objprint_dolphin.c near line 862 almost verbatim

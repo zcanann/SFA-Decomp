@@ -1,4 +1,5 @@
 #define OBJHITS_SETTERS_S16
+#include "main/objprint_api.h"
 #include "main/frame_timing.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
@@ -82,13 +83,13 @@ typedef struct PlayerBlinkState {
     u8 amount; /* 0x2d */
 } PlayerBlinkState;
 
-static inline ObjJointPose18* playerEyeAnim_FindJoint(ObjAnimComponent* objAnim, int tag) {
+static inline ObjJointPose* playerEyeAnim_FindJoint(ObjAnimComponent* objAnim, int tag) {
     int jointCount;
     u8* jointData;
     int poseOffset;
     int jointDataOffset;
     ObjModelInstance* model;
-    ObjJointPose18* joint;
+    ObjJointPose* joint;
 
     joint = NULL;
     model = objAnim->modelInstance;
@@ -99,10 +100,10 @@ static inline ObjJointPose18* playerEyeAnim_FindJoint(ObjAnimComponent* objAnim,
             jointData = (u8*)model->jointData;
             if (((int)*(u8*)(jointData + objAnim->bankIndex + jointDataOffset + 1) != 0xff) &&
                 ((int)jointData[jointDataOffset] == tag)) {
-                joint = (ObjJointPose18*)(objAnim->jointPoseData + poseOffset);
+                joint = (ObjJointPose*)(objAnim->jointPoseData + poseOffset);
             }
             jointDataOffset += model->modelCount + 1;
-            poseOffset += 0x12;
+            poseOffset += sizeof(ObjJointPose);
         }
     }
     return joint;
@@ -218,10 +219,10 @@ void playerUpdateBlinkAnimation(void* obj, void* blinkState, u16 flags) {
     wave = 0.25f * mathCosfHighPrecision(phase);
     wave = wave * bs->amount / 255.0f;
     rotation = (32768.0f * (leftScale * wave)) / 3.142f;
-    playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_LEFT_JOINT_TAG)->v[1] = rotation;
+    playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_LEFT_JOINT_TAG)->rotation[1] = rotation;
 
     rotation = (32768.0f * (rightScale * wave)) / 3.142f;
-    playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_RIGHT_JOINT_TAG)->v[1] = -rotation;
+    playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_RIGHT_JOINT_TAG)->rotation[1] = -rotation;
 }
 
 void objSetLookAtFlip(int mode, u8 enabled) {
@@ -445,7 +446,7 @@ s16* objFindJointPoseVector(GameObject* obj, int key) {
                 result = (s16*)((char*)obj->anim.jointPoseData + vecOffset);
             }
             entryIdx += OBJPRINT_MODEL_COUNT(modelDef) + 1;
-            vecOffset += 0x12;
+            vecOffset += sizeof(ObjJointPose);
         }
     }
     return result;
@@ -790,14 +791,14 @@ void characterUpdateHeadLook(GameObject* obj, CharacterEyeAnimState* state, f32 
         state->headTrackMode = (s16)(state->headTrackMode | (flag << 8));
     }
 }
-s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8* p4, s16* spd, f32 yOff, int unused,
-                              int basePitch);
-s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8* p4, s16* spd, f32 yOff, int unused,
-                              int basePitch) {
+s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, ObjJointTrackPair* tracks, s16* spd,
+                              f32 yOff, int unused, int basePitch);
+s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, ObjJointTrackPair* tracks, s16* spd,
+                              f32 yOff, int unused, int basePitch) {
     s16 src[2];
     s16 dst[2];
     GameObject* go = obj;
-    s16* found[1];
+    s16* found;
     s16* sp2;
     f32 dx, dy, dz, dist;
     int i;
@@ -833,30 +834,8 @@ s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8*
 
     i = 0;
     while (i < 10) {
-        int key;
-        void* m[1];
-
-        key = gObjLookAtJointKeys[i];
-        found[0] = NULL;
-        m[0] = (void*)go->anim.modelInstance;
-        if (m[0] != NULL) {
-            int iv[2];
-            int n;
-            int j;
-            iv[0] = 0;
-            iv[1] = 0;
-            n = ((ObjDef*)m[0])->jointCount;
-            for (j = 0; j < n; j++) {
-                u8* entries = (u8*)((ObjDef*)m[0])->jointData;
-                if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(go) + iv[0] + 1) != 0xff &&
-                    key == (int)*(u8*)(entries + iv[0])) {
-                    found[0] = (s16*)(go->anim.jointPoseData + iv[1]);
-                }
-                iv[0] += ((ObjDef*)m[0])->modelCount + 1;
-                iv[1] += 0x12;
-            }
-        }
-        if (found[0] == NULL) {
+        found = objFindJointVecByKey(go, gObjLookAtJointKeys[i]);
+        if (found == NULL) {
             int t = ret;
             t = (t >= 0) ? t : -t;
             return (s16)(t < 0x100);
@@ -886,14 +865,14 @@ s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8*
             }
         }
 
-        if (p4 != NULL) {
-            ((ObjJointTrackPair*)p4)->yaw.angle = dst[0];
-            characterTrackJointYaw((s16*)p4, found[0]);
-            ((ObjJointTrackPair*)p4)->pitch.angle = dst[1];
-            characterTrackJointPitch((s16*)&((ObjJointTrackPair*)p4)->pitch, found[0], 10.0f, 500.0f);
-            p4 += 0x60;
+        if (tracks != NULL) {
+            tracks->yaw.angle = dst[0];
+            characterTrackJointYaw((s16*)&tracks->yaw, found);
+            tracks->pitch.angle = dst[1];
+            characterTrackJointPitch((s16*)&tracks->pitch, found, 10.0f, 500.0f);
+            tracks++;
         } else {
-            s16* fv = found[0];
+            s16* fv = found;
             s16 d1 = (s16)((s16)((fv[1] + dst[0]) >> 1) - fv[1]);
             s16 lim;
             s16 d2;
@@ -917,7 +896,7 @@ s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8*
         }
 
         if (i == 0) {
-            ret -= found[0][1];
+            ret -= found[1];
         }
         i++;
     }
@@ -1063,7 +1042,7 @@ void characterAimHeadAtTarget(GameObject* obj, void* tgt, void* state, int limit
                 found[0] = (s16*)((char*)obj->anim.jointPoseData + iv[1]);
             }
             iv[0] += ((ObjDef*)m[0])->modelCount + 1;
-            iv[1] += 0x12;
+            iv[1] += sizeof(ObjJointPose);
         }
     }
     if (found[0] != NULL) {
@@ -1253,7 +1232,10 @@ void characterHeadLookCalm(GameObject* obj, s16* state, f32 value) {
     }
 }
 
-void objSetGlowColor(int red, int green, int blue, u8 alpha) {
+/* The byte alpha parameter retains the public int API through default promotion. */
+void objSetGlowColor(red, green, blue, alpha) int red, green, blue;
+u8 alpha;
+{
     gObjGlowColorRed = red;
     gObjGlowColorGreen = green;
     gObjGlowColorBlue = blue;
@@ -1270,85 +1252,88 @@ void objSetColorFilter(s16 red, s16 green, s16 blue) {
 
 #define OBJPRINT_ATTACH_POINTS(staff) ((char*)OBJPRINT_MODEL_INSTANCE(staff)->attachPoints)
 
-void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg, int a, int b, int c) {
-    f32 va[3];
-    Vec vb;
-    int k;
-    char* q;
-    Vec* vp;
-    Vec* vp0;
-    int i;
-    char* base;
+void staffUpdateSegmentTransforms(GameObject* staffArg, GameObject* objArg, ObjModel* modelArg, int a, int b, int c) {
+    Vec pointB;
+    Vec pointA;
+    int attachmentIndex;
+    char* segmentBytes;
+    Vec* pointBPtr;
+    Vec* pointBStorage;
+    int segmentIndex;
+    char* stateBytes;
     ObjModel* model;
-    int obj;
+    int ownerAddress;
     GameObject* staff;
 
     staff = (GameObject*)staffArg;
-    obj = (int)objArg;
+    ownerAddress = (int)objArg;
     model = (ObjModel*)modelArg;
 
     if (OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount >= 2 && staff->anim.classId == 0x2d) {
-        int off;
-        base = (char*)staff->extra;
-        i = 0;
-        k = 1;
-        off = 0x18;
-        q = base;
-        vp0 = (Vec*)va;
-        vp = vp0;
+        int attachmentOffset;
+        stateBytes = (char*)staff->extra;
+        segmentIndex = 0;
+        attachmentIndex = 1;
+        attachmentOffset = sizeof(ObjAttachPoint);
+        segmentBytes = stateBytes;
+        pointBStorage = &pointB;
+        pointBPtr = pointBStorage;
 
-        while (i < *(s16*)(base + 0xb0)) {
-            if (k < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
-                MtxPtr jm;
-                int joint;
-                joint = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1]
-                            .joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
-                jm = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, joint);
-                vp->x = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1].pos[0];
-                va[1] = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1].pos[1];
-                va[2] = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1].pos[2];
-                PSMTXMultVec(jm, vp, vp);
-                vp->x += playerMapOffsetX;
-                va[2] += playerMapOffsetZ;
-                *(f32*)(q + 0x6c) = vp->x;
-                *(f32*)(q + 0x74) = va[1];
-                *(f32*)(q + 0x7c) = va[2];
+        while (segmentIndex < ((StaffState*)stateBytes)->geometrySegmentCount) {
+            if (attachmentIndex < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
+                MtxPtr jointMatrixB;
+                int jointIndexB;
+                jointIndexB = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1]
+                                  .joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
+                jointMatrixB = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, jointIndexB);
+                pointBPtr->x = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1].pos[0];
+                pointB.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1].pos[1];
+                pointB.z = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1].pos[2];
+                PSMTXMultVec(jointMatrixB, pointBPtr, pointBPtr);
+                pointBPtr->x += playerMapOffsetX;
+                pointB.z += playerMapOffsetZ;
+                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointBX)) = pointBPtr->x;
+                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointBY)) = pointB.y;
+                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointBZ)) = pointB.z;
             }
-            if (k < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
-                ObjAttachPoint* row = (ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off);
-                int idx2 = row->joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
-                MtxPtr mtx2 = (MtxPtr)(idx2 * 0x40 + *(int*)((u8*)model + ((model->bufferFlags & 1) * 4) + 0xc));
-                vb.x = row->pos[0];
-                vb.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))->pos[1];
-                vb.z = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))->pos[2];
-                PSMTXMultVec(mtx2, &vb, &vb);
-                vb.x += playerMapOffsetX;
-                vb.z += playerMapOffsetZ;
-                *(f32*)(q + 0x54) = vb.x;
-                *(f32*)(q + 0x5c) = vb.y;
-                *(f32*)(q + 0x64) = vb.z;
+            if (attachmentIndex < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
+                ObjAttachPoint* attachmentA = (ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset);
+                int jointIndexA = attachmentA->joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
+                MtxPtr jointMatrixA =
+                    (MtxPtr)(jointIndexA * (int)sizeof(ObjModelJointMatrix) +
+                             *(int*)((u8*)model + ((model->bufferFlags & 1) * sizeof(model->jointMatrices[0])) +
+                                     offsetof(ObjModel, jointMatrices)));
+                pointA.x = attachmentA->pos[0];
+                pointA.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))->pos[1];
+                pointA.z = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))->pos[2];
+                PSMTXMultVec(jointMatrixA, &pointA, &pointA);
+                pointA.x += playerMapOffsetX;
+                pointA.z += playerMapOffsetZ;
+                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointAX)) = pointA.x;
+                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointAY)) = pointA.y;
+                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointAZ)) = pointA.z;
             }
-            k += 2;
-            off += 0x30;
-            q += 4;
-            i++;
-            vp = vp0;
+            attachmentIndex += 2;
+            attachmentOffset += 2 * sizeof(ObjAttachPoint);
+            segmentBytes += sizeof(f32);
+            segmentIndex++;
+            pointBPtr = pointBStorage;
         }
 
-        if (*(s16*)(base + 0xb0) != 0) {
-            char* r = base + *(s16*)(base + 0xb2) * 4;
-            va[0] = *(f32*)(r + 0x6c);
-            va[1] = *(f32*)(r + 0x74);
-            va[2] = *(f32*)(r + 0x7c);
-            STAFF_INTERFACE(staff)->updateSwipe(staff, (GameObject*)obj, &vb);
-            va[0] -= vb.x;
-            va[1] -= vb.y;
-            va[2] -= vb.z;
-            staff->anim.rotX = getAngle(va[0], va[2]);
+        if (((StaffState*)stateBytes)->geometrySegmentCount != 0) {
+            char* orientationBytes = stateBytes + ((StaffState*)stateBytes)->orientationSegmentIndex * (int)sizeof(f32);
+            pointB.x = *(f32*)(orientationBytes + offsetof(StaffState, geometryPointBX));
+            pointB.y = *(f32*)(orientationBytes + offsetof(StaffState, geometryPointBY));
+            pointB.z = *(f32*)(orientationBytes + offsetof(StaffState, geometryPointBZ));
+            STAFF_INTERFACE(staff)->updateSwipe(staff, (GameObject*)ownerAddress, &pointA);
+            pointB.x -= pointA.x;
+            pointB.y -= pointA.y;
+            pointB.z -= pointA.z;
+            staff->anim.rotX = getAngle(pointB.x, pointB.z);
             {
-                f32 dx = va[0] * va[0];
-                f32 dz = va[2] * va[2];
-                staff->anim.rotY = (s16)(-getAngle(va[1], sqrtf(dx + dz)) + 0x4000);
+                f32 dx = pointB.x * pointB.x;
+                f32 dz = pointB.z * pointB.z;
+                staff->anim.rotY = (s16)(-getAngle(pointB.y, sqrtf(dx + dz)) + 0x4000);
             }
             staff->anim.rotZ = 0;
         }
@@ -1430,7 +1415,7 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag) {
     for (i = 0; i < obj->childCount; i++) {
         GameObject* staff = obj->childObjs[i];
         if (staff->anim.classId == 0x2d) {
-            staffUpdateSegmentTransforms((int)staff, obj, (int)staff->anim.modelBanks[staff->anim.bankIndex], a, b, c);
+            staffUpdateSegmentTransforms(staff, obj, staff->anim.modelBanks[staff->anim.bankIndex], a, b, c);
         }
     }
 }
