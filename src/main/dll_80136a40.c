@@ -55,7 +55,7 @@ char sErrFmtRegisterRange[] = "%d - %d";
 #define DEBUG_FRAMEBUFFER_WIDTH 640
 #define DEBUG_GLYPH_ROWS        5
 #define DEBUG_GLYPH_BITS        8
-#define DEBUG_TEXT_COLOR       0xC080
+#define DEBUG_TEXT_COLOR        0xC080
 
 /* Binary commands embedded in the NUL-terminated debug log. Payload bytes may
  * contain zero; position and tab width use little-endian 16-bit values. */
