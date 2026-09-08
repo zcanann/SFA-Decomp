@@ -94,3 +94,36 @@ overflowing input, or hardware framebuffer writes.
 A full `ninja all_source` rebuild and a fresh strict DOL checksum check pass.
 The unit remains `NonMatching`: the checksum uses its retail object, while
 the exact formatter result is independently checked against the source object.
+
+## Shared log-rectangle recovery
+
+The reposition, newline, and screen-wrap paths in `debugPrintDrawRecord` now
+reuse `debugDrawLogRect`, the existing helper used by `debugPrintDraw`. That
+helper in turn reuses `debugPrintFillRect` for the current RGBA color. Three
+copies of the bounds calculation and their unused locals are removed, without
+adding another abstraction or changing the TU compiler profile.
+
+The helper retains the unsigned coordinate arithmetic, zero-extent rejection,
+two-pixel horizontal padding, ten-pixel height extension, per-axis scale/bias,
+and truncation at each scaled coordinate. The wrap boundary remains strictly
+greater than the screen width minus sixteen, and record boundaries still draw
+only on pass zero.
+
+`debugPrintDrawRecord` improves from **99.791664% to 99.90131%**, with 456 retail
+instructions, no structural differences, and **17 to 9** differing words.
+The residual is a register exchange in the wrap path. All thirteen other
+function bodies remain byte-identical, including the exact `debugPrintDraw`
+and `debugPrintfxy`. Non-text sections, named symbol layouts and data
+relocations are unchanged. The only changed resolved text relocations are
+the two X/Y start-coordinate load pairs, now in retail order. Anonymous
+literal names change, but their physical destinations do not.
+
+`tools/test_debug_record_rectangles.py` compiles the production record decoder
+and both rectangle helpers at host `-O0` and `-O2`. It checks padding around
+zero, one, and two; empty extents; fractional scales; newline/reposition/wrap
+dispatch; both passes; exact wrap thresholds; current RGBA color including
+zero-valued payload bytes; scale-bias commands; consumed record length; and
+cursor updates. Glyph widths and drawing calls are mocks, not a font/GX
+emulation. Inputs stay within the defined float-to-unsigned conversion range.
+Changing the left padding from two pixels to one in memory fails all three
+rectangle tests. Both debug test suites and both build gates pass.
