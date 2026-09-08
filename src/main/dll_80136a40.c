@@ -675,7 +675,8 @@ void debugPrintfxy(int x, int y, char* fmt, ...) {
                     debugDrawFrameBuffer = externalFrameBuffer0;
                     debugTextDrawToFrameBuffer(
                         drawX, drawY,
-                        glyphRows = ((DebugFontErrorDataView*)gDebugFontAndErrorData)->glyphRows[text[characterIndex] - 0x21],
+                        glyphRows =
+                            ((DebugFontErrorDataView*)gDebugFontAndErrorData)->glyphRows[text[characterIndex] - 0x21],
                         -1);
                     debugDrawFrameBuffer = externalFrameBuffer1;
                     debugTextDrawToFrameBuffer(drawX, drawY, glyphRows, -1);
