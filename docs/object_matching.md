@@ -110,3 +110,41 @@ covered by that complete node comparison. Thus the typed interface improves
 source recovery but does not explain or resolve the remaining allocation
 exchange. Further tests of return paths, model-call temporaries, loop indices,
 allocation signedness, and flag-expression forms produced no code-match gain.
+
+## Trailing constant-pool alignment
+
+The `.sdata2` claim now ends at the actual 84-byte pool, leaving the following
+four zero bytes as an automatic alignment gap before `objanim.c`. The former
+four-byte anonymous float symbol at that gap is removed. The next unit's start
+and eight-byte alignment remain unchanged; no source constant or padding array
+is added.
+
+| Version | Object pool start | Pool end / gap start | Next unit start |
+| --- | --- | --- | --- |
+| EN | `803DE888` | `803DE8DC` | `803DE8E0` |
+| EN rev1 | `803DF508` | `803DF55C` | `803DF560` |
+| JP | `803DE9A8` | `803DE9FC` | `803DEA00` |
+| PAL rev1 | `803E0250` | `803E02A4` | `803E02A8` |
+
+Each configured DOL hash is verified. The complete 88-byte retail windows are
+identical across these versions, and the first 84 bytes equal each compiled
+source pool. `tools/retail_pool_audit.py src/main/object.c --version <version>`
+finds 41 direct loads in each version, all ending at or before the new boundary,
+with no outside direct-load consumers. The EN assembly before recarving contains
+the trailing symbol's definition and no references to it. This access audit is limited to the
+supported direct loads; the source and isolated-link checks supply independent
+layout evidence.
+
+An EN link substituting the current compiled object preserves every allocated
+data section, including the entire linked `.sdata2`. Its only existing retail
+differences are the 26 text bytes in `loadCharacter` described above. Repeating
+that substitution after the boundary repair preserves every allocated section
+of the preceding diagnostic link, including text.
+
+The secondary split claims are refreshed with `version_progress.py --write`;
+only this pool end changes in each version. All source objects remain
+byte-identical, as do every retail function and relocation in the recarved
+object. Objdiff now reports this pool as 100%, adding 84 matched data bytes per
+version while removing four alignment bytes from its total. Other units and
+function scores are unchanged. All four `all_source` builds and the strict EN
+checksum pass. `object.c` remains `NonMatching` because of `loadCharacter`.

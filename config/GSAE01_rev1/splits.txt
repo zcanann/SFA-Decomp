@@ -170,7 +170,7 @@ main/object.c:
 	.bss        start:0x80341508 end:0x80341558
 	.sdata      start:0x803DC0A8 end:0x803DC0B0
 	.sbss       start:0x803DD7F0 end:0x803DD848
-	.sdata2     start:0x803DF508 end:0x803DF560
+	.sdata2     start:0x803DF508 end:0x803DF55C
 
 main/objanim.c:
 	.text       start:0x8002EC4C end:0x80030780

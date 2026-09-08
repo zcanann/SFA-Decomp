@@ -16026,7 +16026,6 @@ lbl_803DF54C = .sdata2:0x803DF54C; // type:object size:0x4 align:4 data:float
 lbl_803DF550 = .sdata2:0x803DF550; // type:object size:0x4 align:4 data:float
 lbl_803DF554 = .sdata2:0x803DF554; // type:object size:0x4 align:4 data:float
 lbl_803DF558 = .sdata2:0x803DF558; // type:object size:0x4 align:4 data:float
-lbl_803DF55C = .sdata2:0x803DF55C; // type:object size:0x4 align:4 data:float
 gObjAnimProgressOne = .sdata2:0x803DF560; // type:object size:0x4 align:4 data:float
 lbl_803DF564 = .sdata2:0x803DF564; // type:object size:0x4 align:4 data:float
 gObjAnimU32ToDoubleBias = .sdata2:0x803DF568; // type:object size:0x8 align:8 data:double
