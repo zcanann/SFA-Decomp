@@ -11,15 +11,18 @@ const float gSinCosCosCoeff2 = -0.30842426f;
 const float gSinCosCosCoeff4 = 0.015849913f;
 const float gSinCosCosCoeff6 = -0.000318879f;
 
-
 void mathSinCosf(float angle, float* outSin, float* outCos) {
     u16 quadrant;
     float reducedAngle = trigReduceQuadrant(&quadrant, angle);
     float reducedSquared = reducedAngle * reducedAngle;
     float sinApprox =
-        reducedAngle * (reducedSquared * (*(const float*)&gSinCosSinCoeff5 * reducedSquared + *(const float*)&gSinCosSinCoeff3) + *(const float*)&gSinCosSinCoeff1);
+        reducedAngle *
+        (reducedSquared * (*(const float*)&gSinCosSinCoeff5 * reducedSquared + *(const float*)&gSinCosSinCoeff3) +
+         *(const float*)&gSinCosSinCoeff1);
     float cosApprox =
-        reducedSquared * (reducedSquared * (*(const float*)&gSinCosCosCoeff6 * reducedSquared + *(const float*)&gSinCosCosCoeff4) + *(const float*)&gSinCosCosCoeff2) +
+        reducedSquared *
+            (reducedSquared * (*(const float*)&gSinCosCosCoeff6 * reducedSquared + *(const float*)&gSinCosCosCoeff4) +
+             *(const float*)&gSinCosCosCoeff2) +
         *(const float*)&gSinCosCosCoeff0;
 
     switch (quadrant & 6) {

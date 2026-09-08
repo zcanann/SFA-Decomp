@@ -10,16 +10,16 @@ const float sTanReducedCoeff3 = 0.16370797157287598f;
 const float sTanReducedCoeff5 = 0.03238091617822647f;
 const float sTanReducedCoeff7 = 0.018663575872778893f;
 
-
 float mathTanf(float angle) {
     u16 evenOctant;
     float quarterPiRemainder = trigReduceQuadrant(&evenOctant, angle);
     float remainderSquared = quarterPiRemainder * quarterPiRemainder;
-    float tangent =
-        quarterPiRemainder *
-        (((*(const float*)&sTanReducedCoeff7 * remainderSquared + *(const float*)&sTanReducedCoeff5) * remainderSquared + *(const float*)&sTanReducedCoeff3) *
-             remainderSquared +
-         *(const float*)&sTanReducedCoeff1);
+    float tangent = quarterPiRemainder *
+                    (((*(const float*)&sTanReducedCoeff7 * remainderSquared + *(const float*)&sTanReducedCoeff5) *
+                          remainderSquared +
+                      *(const float*)&sTanReducedCoeff3) *
+                         remainderSquared +
+                     *(const float*)&sTanReducedCoeff1);
 
     if (evenOctant & 2) {
         tangent = *(const float*)&sTanNegativeOne / tangent;
