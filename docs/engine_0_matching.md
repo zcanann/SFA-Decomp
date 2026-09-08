@@ -1089,3 +1089,50 @@ python3 tools/mwcc_frontend_trace.py --unit main/dlls/engine/0/0 \
 The unit remains **99.97473%**, with **116/118** functions exact. This
 investigation changes documentation only; it does not establish a 100% match
 or authorize compiler, pragma, assembly, or TU-boundary workarounds.
+
+
+## September 8: retail-register projection tool
+
+`tools/mwcc_retail_registers.py` projects retail GPR operands onto a verified
+GC/1.3 backend capture. It requires matching instruction counts and mnemonics,
+constrains fixed aliases, and handles commutative ADD operands together. It
+checks the resulting assignment against the complete interference graph while
+retaining current colors for unmapped registers. This is an allocation
+diagnostic, not an object-equality, immediate, or relocation check.
+
+For the current map-HUD capture, virtual 50 holds panel top in r23 and must
+use r27 (four instructions); virtual 59 holds opacity in r27 and must use r23
+(21 instructions). That retail assignment introduces **no interference
+collision**, including with unmapped graph nodes. The residual does not
+require additional registers. These numbers identify current compiler
+records, not original source variables.
+
+The C-menu projection also has no interference collision. Nine virtual
+registers require different colors. Treating its four commuted ADD input
+pairs positionally would incorrectly claim that the HUD base and item count
+need split virtual registers; the joint operand constraints resolve those
+apparent conflicts.
+
+A source-shape experiment explicitly inlines the adjacent `drawHudBox` body
+at all four map panel sites. It preserves all 864 instruction mnemonics and
+their order, but exchanges opacity and revealed-height registers and scores
+99.826385%, so it is not retained. This supports investigating shared box
+rendering without proving an original inlining policy. No tested source form
+improves the current **99.97473%** unit baseline.
+
+Reproduce the captures and projections with:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/dlls/engine/0/0 \
+    --function cMenuSetItems --function mapScreenDrawHud --graph \
+    --output build/flag_probe/engine0_retail_constraints
+python3 tools/mwcc_retail_registers.py \
+    build/flag_probe/engine0_retail_constraints/trace.json --function cMenuSetItems
+python3 tools/mwcc_retail_registers.py \
+    build/flag_probe/engine0_retail_constraints/trace.json --function mapScreenDrawHud
+```
+
+Seven focused projection tests cover commuted inputs, conflicting roles,
+ambiguous assignments, fixed aliases, interference collisions, structural
+drift, and D-form zero bases. Both required EN builds pass, and the built DOL
+retains the retail SHA1. Game source and compiler configuration are unchanged.
