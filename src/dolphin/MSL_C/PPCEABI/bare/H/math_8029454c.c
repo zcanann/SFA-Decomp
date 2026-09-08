@@ -13,10 +13,11 @@ float mathTanf(float angle) {
     u16 evenOctant;
     float quarterPiRemainder = trigReduceQuadrant(&evenOctant, angle);
     float remainderSquared = quarterPiRemainder * quarterPiRemainder;
-    float tangent = quarterPiRemainder *
-                    (((sTanReducedCoeff7 * remainderSquared + sTanReducedCoeff5) * remainderSquared + sTanReducedCoeff3) *
-                         remainderSquared +
-                     sTanReducedCoeff1);
+    float tangent =
+        quarterPiRemainder *
+        (((sTanReducedCoeff7 * remainderSquared + sTanReducedCoeff5) * remainderSquared + sTanReducedCoeff3) *
+             remainderSquared +
+         sTanReducedCoeff1);
 
     if (evenOctant & 2) {
         tangent = sTanNegativeOne / tangent;
