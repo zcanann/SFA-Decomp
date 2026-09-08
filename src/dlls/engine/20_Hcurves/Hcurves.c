@@ -44,8 +44,8 @@ u8 gObjfsaWalkGroupActive[0xB8];
         normalX = normalX / normalLength;                                                                              \
         normalZ = normalZ / normalLength;                                                                              \
     }                                                                                                                  \
-    (P).planes[K].normalX = Objfsa_PackPlaneNormal(normalX);                                                                 \
-    (P).planes[K].normalZ = Objfsa_PackPlaneNormal(normalZ);                                                                 \
+    (P).planes[K].normalX = Objfsa_PackPlaneNormal(normalX);                                                           \
+    (P).planes[K].normalZ = Objfsa_PackPlaneNormal(normalZ);                                                           \
     (P).planeOffsets[K] = -((f32)(P).planes[K].normalX * (XA) + (f32)(P).planes[K].normalZ * (ZA))
 #define OBJFSA_NEWPATCH (patchBase[0][gObjfsaPatchCount])
 #define OBJFSA_NEWPATCH_S16(F)                                                                                         \
@@ -60,8 +60,8 @@ u8 gObjfsaWalkGroupActive[0xB8];
         normalX = normalX / normalLength;                                                                              \
         normalZ = normalZ / normalLength;                                                                              \
     }                                                                                                                  \
-    plane->normalX = Objfsa_PackPlaneNormal(normalX);                                                                        \
-    plane->normalZ = Objfsa_PackPlaneNormal(normalZ);                                                                        \
+    plane->normalX = Objfsa_PackPlaneNormal(normalX);                                                                  \
+    plane->normalZ = Objfsa_PackPlaneNormal(normalZ);                                                                  \
     *(planeOffset) = -(plane->normalX * (XA) + plane->normalZ * (ZA))
 
 static inline f32 RomCurveNode_GetHermiteTangent(RomCurveDef** nodePtr, int angleOffset, int useCos);
