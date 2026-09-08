@@ -6150,17 +6150,19 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
         return;
     }
     if (gWorldMapVoiceoverTimer != 0) {
-        int panelTop;
         int panelLeft;
         int panelBottom;
         u8* hintCandidates;
         s16 voiceoverTimer;
         s16 revealedHeight;
-        s16 panelAlpha, panelX, panelY;
+        int panelTop;
+        int panelAlpha;
+        s16 panelX;
+        s16 panelY;
         int height;
         voiceoverTimer = gWorldMapVoiceoverTimer;
         panelAlpha = voiceoverTimer;
-        panelAlpha *= 0xf;
+        panelAlpha = (s16)(panelAlpha * 0xf);
         if (panelAlpha > 0xff) {
             panelAlpha = 0xff;
         }
@@ -6295,22 +6297,20 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, 475.0f, 200.0f, panelAlpha, 0x100, 5, 5, 2);
         {
             int row;
-            int shimmerAlpha;
             f32 shimmer;
             f32 shimmerScale;
             row = 0;
-            shimmerAlpha = panelAlpha;
             shimmerScale = 0.02f;
             for (; row < 0x96; row += 4) {
                 int alpha0, alpha1, rawAlpha;
                 shimmer = shimmerScale * fsin16Approx((u16)(row * 0x7d0 + gGameUiShimmerFrame * 0xfa0)) +
                           shimmerScale * fsin16Approx((u16)(row * 0xd48 + gGameUiShimmerFrame * 0x1838));
-                rawAlpha = (int)((s16)shimmerAlpha * (0.4f + shimmer));
+                rawAlpha = (int)((s16)panelAlpha * (0.4f + shimmer));
                 alpha0 = rawAlpha < 0 ? 0 : rawAlpha;
                 drawPartialTexture(((HudTextures*)hudTextures)->tex150, 480.0f, row + 0x32,
                                    alpha0 > 0xff ? 0xff : alpha0, 0x100, 0x82, 2, randomGetRange(0, 0x1e) << 1,
                                    randomGetRange(0, 0x1e) << 1);
-                rawAlpha = (int)((s16)shimmerAlpha * (0.3f + shimmer));
+                rawAlpha = (int)((s16)panelAlpha * (0.3f + shimmer));
                 alpha1 = rawAlpha < 0 ? 0 : rawAlpha;
                 drawPartialTexture(((HudTextures*)hudTextures)->tex150, 480.0f, row + 0x34,
                                    alpha1 > 0xff ? 0xff : alpha1, 0x100, 0x82, 2, randomGetRange(0, 0x1e) << 1,

@@ -1008,3 +1008,30 @@ renumbering. Every regional input DOL passes its configured SHA1 check. Strict
 matching `ninja` and `ninja all_source` pass with 30-second timeouts, and the
 built EN DOL retains the retail SHA1. The TU remains `NonMatching`; no regional
 whole-object match is claimed.
+
+## September 8: map HUD opacity conversion placement
+
+`mapScreenDrawHud` improves from **99.76852% to 99.85532%** under the
+unchanged GC/1.3 profile. The complete EN unit improves from **99.97074%
+to 99.97473%** and remains `NonMatching`; this is not a 100% result.
+
+Hold panel opacity in an integer, explicitly preserving the signed-short
+wrap after multiplication by 15. The shimmer uses that same opacity directly,
+removing its redundant snapshot. Keep the signed-short interpretation at the
+shimmer multiplication. This places the extension at retail instruction 504
+and preserves all 864 instruction mnemonics and their order. Declaration
+order retains the surrounding frame registers. The remaining difference is
+that opacity and the panel top exchange r23/r27: 25 differing instruction
+words, compared with six positional differences from the former moved
+instruction. Objdiff scores the new sequence higher despite that positional
+count. `cMenuSetItems` remains 98.84106%, with 55 differing words.
+
+Every regional input DOL passes its configured SHA1 check. All five versions
+show the same map-HUD improvement and change exactly 65 instruction bytes,
+confined to this function. The other 117 function bodies, allocated data,
+section sizes and alignment, and named symbol layouts remain unchanged.
+The two texture-base relocations and the shimmer-scale relocation move back
+one instruction with their loads; their targets are unchanged. Other relocation
+differences are anonymous-symbol renumbering.
+No regional whole-object manifest is promoted. Both required EN builds and
+formatting checks pass. Formatting introduces no additional diff.
