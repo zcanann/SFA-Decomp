@@ -27,6 +27,7 @@ class DebugPrintfxyTests(unittest.TestCase):
         function = re.search(r"^void debugPrintfxy\(.*?^\}", source, re.M | re.S).group()
         view = re.search(r"typedef struct DebugFontErrorDataView \{.*?\} DebugFontErrorDataView;",
                          source, re.S).group()
+        constants = re.search(r"^#define DEBUG_GLYPH_ROWS .*$", source, re.M).group()
         cls.temporary = tempfile.TemporaryDirectory(prefix="sfa-debug-printfxy-")
         cls.addClassCleanup(cls.temporary.cleanup)
         directory = Path(cls.temporary.name)
@@ -40,7 +41,7 @@ typedef unsigned short u16;
 #else
 #define EXPORT
 #endif
-''' + view + r'''
+''' + constants + '\n' + view + r'''
 static u8 gDebugFontAndErrorData[sizeof(DebugFontErrorDataView)];
 static u16 frameBuffers[3];
 static u16* externalFrameBuffer0 = &frameBuffers[0];

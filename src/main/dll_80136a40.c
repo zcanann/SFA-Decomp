@@ -52,6 +52,10 @@ char sErrFmtRegisterRange[] = "%d - %d";
 
 /* debug font glyph-atlas texture asset (gDebugFontTex0) */
 #define DEBUG_FONT_TEXTURE0_ID 0x25D
+#define DEBUG_FRAMEBUFFER_WIDTH 640
+#define DEBUG_GLYPH_ROWS 5
+#define DEBUG_GLYPH_BITS 8
+#define DEBUG_GLYPH_COLOR 0xC080
 
 u16 gErrExceptionType;
 OSContext* gErrContext;
@@ -112,7 +116,7 @@ u8 gDebugGlyphMetricsTable[192] = {
 /* View of the existing packed font/diagnostic block. String extents include
  * their trailing alignment bytes; the unused glyph-tail bytes stay opaque. */
 typedef struct DebugFontErrorDataView {
-    u8 glyphRows[0x5a - 0x21 + 1][5];
+    u8 glyphRows[0x5a - 0x21 + 1][DEBUG_GLYPH_ROWS];
     u8 unknownGlyphTail[0x1e];
     char threadFormat[0x14];
     char exceptionLabel[0xc];
@@ -530,47 +534,45 @@ void debugPrintInit(void) {
     debugLogEnd = debugLogBuffer;
 }
 
-/* Draw five glyph rows into paired framebuffer scanlines. */
+/* Each set bit paints two overlapping horizontal pixels on both scanlines.
+ * The final bit reaches a ninth pixel; retain the retail eight-pixel cache range. */
 void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused) {
-    int c1;
-    int i;
-    int a0;
-    int a1;
-    int a2;
-    int a3;
-    int c0;
-    int bit;
-    int row1;
-    int row0;
+    int pixelOffsets[2][2];
+    int bottomRowStart;
+    int glyphRow;
+    int topRowStart;
+    int glyphBit;
+    int bottomRowOffset;
+    int topRowOffset;
 
     if (enableDebugText != 0) {
-        i = 0;
-        row1 = (y + 1) * 0x280;
-        row0 = y * 0x280;
-        for (; i < 5; i++) {
-            bit = 0;
-            c0 = x + row0;
-            a0 = c0;
-            a1 = c0 + 1;
-            c1 = row1 + x;
-            a2 = c1;
-            a3 = c1 + 1;
-            for (; bit < 8; bit++) {
-                if (((1 << bit) & grid[i]) != 0) {
-                    debugDrawFrameBuffer[a0] = 0xC080;
-                    debugDrawFrameBuffer[a1] = 0xC080;
-                    debugDrawFrameBuffer[a2] = 0xC080;
-                    debugDrawFrameBuffer[a3] = 0xC080;
+        glyphRow = 0;
+        bottomRowOffset = (y + 1) * DEBUG_FRAMEBUFFER_WIDTH;
+        topRowOffset = y * DEBUG_FRAMEBUFFER_WIDTH;
+        for (; glyphRow < DEBUG_GLYPH_ROWS; glyphRow++) {
+            glyphBit = 0;
+            topRowStart = x + topRowOffset;
+            pixelOffsets[0][0] = topRowStart;
+            pixelOffsets[0][1] = topRowStart + 1;
+            bottomRowStart = bottomRowOffset + x;
+            pixelOffsets[1][0] = bottomRowStart;
+            pixelOffsets[1][1] = bottomRowStart + 1;
+            for (; glyphBit < DEBUG_GLYPH_BITS; glyphBit++) {
+                if (((1 << glyphBit) & grid[glyphRow]) != 0) {
+                    debugDrawFrameBuffer[pixelOffsets[0][0]] = DEBUG_GLYPH_COLOR;
+                    debugDrawFrameBuffer[pixelOffsets[0][1]] = DEBUG_GLYPH_COLOR;
+                    debugDrawFrameBuffer[pixelOffsets[1][0]] = DEBUG_GLYPH_COLOR;
+                    debugDrawFrameBuffer[pixelOffsets[1][1]] = DEBUG_GLYPH_COLOR;
                 }
-                a0++;
-                a1++;
-                a2++;
-                a3++;
+                pixelOffsets[0][0]++;
+                pixelOffsets[0][1]++;
+                pixelOffsets[1][0]++;
+                pixelOffsets[1][1]++;
             }
-            DCStoreRange(debugDrawFrameBuffer + c0, 0x10);
-            DCStoreRange(debugDrawFrameBuffer + c1, 0x10);
-            row0 += 0x500;
-            row1 += 0x500;
+            DCStoreRange(debugDrawFrameBuffer + topRowStart, DEBUG_GLYPH_BITS * sizeof(u16));
+            DCStoreRange(debugDrawFrameBuffer + bottomRowStart, DEBUG_GLYPH_BITS * sizeof(u16));
+            topRowOffset += 2 * DEBUG_FRAMEBUFFER_WIDTH;
+            bottomRowOffset += 2 * DEBUG_FRAMEBUFFER_WIDTH;
         }
     }
 }
@@ -645,6 +647,17 @@ void reportAllocFail(int region0SizeKb, int region0FreeKb, int region1SizeKb, in
                      int region2FreeKb, int memoryState, int tickCount, int requestedSize, int largestFree0,
                      int largestFree1) {
 }
+
+static inline void errorDrawHorizontalRule(int row, int width) {
+    int column;
+    for (column = 0; column < width; column++) {
+        debugDrawFrameBuffer[row * DEBUG_FRAMEBUFFER_WIDTH + column] = 0xc080;
+        if (row > 0) {
+            debugDrawFrameBuffer[(row - 1) * DEBUG_FRAMEBUFFER_WIDTH + column] = 0xc080;
+        }
+    }
+}
+
 void* errorThreadFunc(void* unused) {
     DebugFontErrorDataView* messages = (DebugFontErrorDataView*)gDebugFontAndErrorData;
     void* (*self[1])(void*);
@@ -652,10 +665,8 @@ void* errorThreadFunc(void* unused) {
     u32* sp;
     int depth;
     int hold;
-    int h, h2;
     ErrStackFrame* frame;
     int stackLines;
-    int n;
     u8 lvl;
     u32 r, rr;
     u32* rp;
@@ -709,26 +720,12 @@ void* errorThreadFunc(void* unused) {
                 break;
             }
             if (enableDebugText != 0) {
-                h = 0x9100;
-                h2 = 0x8e80;
-                for (n = 0x280; n != 0; n--) {
-                    debugDrawFrameBuffer[h] = 0xc080;
-                    debugDrawFrameBuffer[h2] = 0xc080;
-                    h++;
-                    h2++;
-                }
+                errorDrawHorizontalRule(58, 640);
             }
             debugPrintfxy(0x10, 0x3f, sErrFmtPC, gErrContext->srr0);
             debugPrintfxy(0x10, 0x4b, sErrFmtSP, gErrContext->gpr[1]);
             if (enableDebugText != 0) {
-                h = 0xe380;
-                h2 = 0xe100;
-                for (n = 0xf0; n != 0; n--) {
-                    debugDrawFrameBuffer[h] = 0xc080;
-                    debugDrawFrameBuffer[h2] = 0xc080;
-                    h++;
-                    h2++;
-                }
+                errorDrawHorizontalRule(91, 240);
             }
             debugPrintfxy(0x10, 0x60, messages->stackTraceLabel);
             y = 0x6c;
@@ -741,21 +738,7 @@ void* errorThreadFunc(void* unused) {
             }
             y += (8 - stackLines) * 0xc;
             if (enableDebugText != 0) {
-                int lineRows;
-                int lineOffset;
-                int previousLineOffset;
-
-                lineRows = y + 0x4c;
-                lineOffset = lineRows * 0x280;
-                previousLineOffset = (y + 0x4b) * 0x280;
-                for (n = 0x280; n != 0; n--) {
-                    debugDrawFrameBuffer[lineOffset] = 0xc080;
-                    if (lineRows > 0) {
-                        debugDrawFrameBuffer[previousLineOffset] = 0xc080;
-                    }
-                    lineOffset++;
-                    previousLineOffset++;
-                }
+                errorDrawHorizontalRule(y + 0x4c, 640);
             }
             if (enableDebugText != 0) {
                 int b = 0x12700;
