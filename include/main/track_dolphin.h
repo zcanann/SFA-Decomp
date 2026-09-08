@@ -52,9 +52,7 @@ typedef struct TrackTriangle {
     s16 vy[3];      /* 0x16 vertex y coords */
     s16 vz[3];      /* 0x1c vertex z coords */
     u8 pad22[2];    /* 0x22 */
-    f32 edgeN0[3];  /* 0x24 edge 0 outward normal */
-    f32 edgeN1[3];  /* 0x30 edge 1 outward normal */
-    f32 edgeN2[3];  /* 0x3c edge 2 outward normal */
+    Vec3f edgeNormals[3]; /* 0x24 outward normals, one per triangle edge */
     u8 surfaceType; /* 0x48 copied into intersect-line records */
     s8 flags;       /* 0x49 0x10 = disabled, 0x4 = force */
     u8 minMaxY;     /* 0x4a lo/hi nibble: s16 index (base 0xb) of min/max height */
@@ -66,9 +64,9 @@ STATIC_ASSERT(offsetof(TrackTriangle, planeN) == 0x04);
 STATIC_ASSERT(offsetof(TrackTriangle, vx) == 0x10);
 STATIC_ASSERT(offsetof(TrackTriangle, vy) == 0x16);
 STATIC_ASSERT(offsetof(TrackTriangle, vz) == 0x1C);
-STATIC_ASSERT(offsetof(TrackTriangle, edgeN0) == 0x24);
-STATIC_ASSERT(offsetof(TrackTriangle, edgeN1) == 0x30);
-STATIC_ASSERT(offsetof(TrackTriangle, edgeN2) == 0x3C);
+STATIC_ASSERT(offsetof(TrackTriangle, edgeNormals[0]) == 0x24);
+STATIC_ASSERT(offsetof(TrackTriangle, edgeNormals[1]) == 0x30);
+STATIC_ASSERT(offsetof(TrackTriangle, edgeNormals[2]) == 0x3C);
 STATIC_ASSERT(offsetof(TrackTriangle, flags) == 0x49);
 STATIC_ASSERT(sizeof(TrackBlockDescriptor) == 0x18);
 STATIC_ASSERT(offsetof(TrackBlockDescriptor, firstTriangle) == 4);

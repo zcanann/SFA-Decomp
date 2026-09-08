@@ -2010,19 +2010,19 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         if (hitpt[1] > tri->vy[tri->minMaxY >> 4] + clearance) {
                             continue;
                         }
-                        edge0[0] = tri->edgeN0[0];
-                        edge0[1] = tri->edgeN0[1];
-                        edge0[2] = tri->edgeN0[2];
+                        edge0[0] = tri->edgeNormals[0].x;
+                        edge0[1] = tri->edgeNormals[0].y;
+                        edge0[2] = tri->edgeNormals[0].z;
                         edge0[3] = -(tri->vz[0] * edge0[2] + (tri->vx[0] * edge0[0] + tri->vy[0] * edge0[1])) +
                                    PSVECDotProduct((Vec*)edge0, (Vec*)hitpt);
-                        edge1[0] = tri->edgeN1[0];
-                        edge1[1] = tri->edgeN1[1];
-                        edge1[2] = tri->edgeN1[2];
+                        edge1[0] = tri->edgeNormals[1].x;
+                        edge1[1] = tri->edgeNormals[1].y;
+                        edge1[2] = tri->edgeNormals[1].z;
                         edge1[3] = -(tri->vz[1] * edge1[2] + (tri->vx[1] * edge1[0] + tri->vy[1] * edge1[1])) +
                                    PSVECDotProduct((Vec*)edge1p, (Vec*)hitpt);
-                        edge2[0] = tri->edgeN2[0];
-                        edge2[1] = tri->edgeN2[1];
-                        edge2[2] = tri->edgeN2[2];
+                        edge2[0] = tri->edgeNormals[2].x;
+                        edge2[1] = tri->edgeNormals[2].y;
+                        edge2[2] = tri->edgeNormals[2].z;
                         edge2[3] = -(tri->vz[2] * edge2[2] + (tri->vx[2] * edge2[0] + tri->vy[2] * edge2[1])) +
                                    PSVECDotProduct((Vec*)edge2p, (Vec*)hitpt);
                         b = 0;
@@ -2043,19 +2043,19 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         }
                         tri->edgeOutBits = b;
                     } else if (dS >= negativeClearance && radius > 0.0f) {
-                        edge0[0] = tri->edgeN0[0];
-                        edge0[1] = tri->edgeN0[1];
-                        edge0[2] = tri->edgeN0[2];
+                        edge0[0] = tri->edgeNormals[0].x;
+                        edge0[1] = tri->edgeNormals[0].y;
+                        edge0[2] = tri->edgeNormals[0].z;
                         edge0[3] = -(tri->vz[0] * edge0[2] + (tri->vx[0] * edge0[0] + tri->vy[0] * edge0[1])) +
                                    PSVECDotProduct((Vec*)edge0, (Vec*)ws);
-                        edge1[0] = tri->edgeN1[0];
-                        edge1[1] = tri->edgeN1[1];
-                        edge1[2] = tri->edgeN1[2];
+                        edge1[0] = tri->edgeNormals[1].x;
+                        edge1[1] = tri->edgeNormals[1].y;
+                        edge1[2] = tri->edgeNormals[1].z;
                         edge1[3] = -(tri->vz[1] * edge1[2] + (tri->vx[1] * edge1[0] + tri->vy[1] * edge1[1])) +
                                    PSVECDotProduct((Vec*)edge1p, (Vec*)ws);
-                        edge2[0] = tri->edgeN2[0];
-                        edge2[1] = tri->edgeN2[1];
-                        edge2[2] = tri->edgeN2[2];
+                        edge2[0] = tri->edgeNormals[2].x;
+                        edge2[1] = tri->edgeNormals[2].y;
+                        edge2[2] = tri->edgeNormals[2].z;
                         edge2[3] = -(tri->vz[2] * edge2[2] + (tri->vx[2] * edge2[0] + tri->vy[2] * edge2[1])) +
                                    PSVECDotProduct((Vec*)edge2p, (Vec*)ws);
                         b = 0;
@@ -2343,12 +2343,12 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
     int t;
     int tEnd;
     int minYi, maxYi;
-    int j2;
-    int k22;
+    int edgeIndex;
+    int normalComponentIndex;
     CollisionPolygonGroup* group;
     s16 *xs, *ys, *zs;
     ModelFileHeader* hdr;
-    int deg;
+    int degenerateEdge;
     int flag20;
     int flag8;
     int i;
@@ -2551,15 +2551,15 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
 
             {
                 f32 eps;
-                k22 = 0;
-                deg = 0;
-                j2 = 0;
+                normalComponentIndex = 0;
+                degenerateEdge = 0;
+                edgeIndex = 0;
                 xw = xs;
                 yw = ys;
                 zw = zs;
                 eps = 0.0f;
-                for (; j2 < 3; j2++) {
-                    int k = j2 + 1;
+                for (; edgeIndex < 3; edgeIndex++) {
+                    int k = edgeIndex + 1;
                     f32 px, py, pz;
                     if (k > 2) {
                         k = 0;
@@ -2577,16 +2577,16 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
                         ey *= inv2;
                         ez *= inv2;
                     } else {
-                        deg = 1;
+                        degenerateEdge = 1;
                     }
-                    *(f32*)(cur + k22++ * 4 + 0x24) = ex;
-                    *(f32*)(cur + k22++ * 4 + 0x24) = ey;
-                    *(f32*)(cur + k22++ * 4 + 0x24) = ez;
+                    *(f32*)(cur + normalComponentIndex++ * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = ex;
+                    *(f32*)(cur + normalComponentIndex++ * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = ey;
+                    *(f32*)(cur + normalComponentIndex++ * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = ez;
                     xw++;
                     yw++;
                     zw++;
                 }
-                if (deg) {
+                if (degenerateEdge) {
                     continue;
                 }
             }
@@ -2969,9 +2969,9 @@ u8 doEdges;
                         if (m > eps) {
                             m = one / m;
                             PSVECScale(&edgeNormal, &edgeNormal, m);
-                            *(f32*)(cur + (normalComponentIndex++) * 4 + 0x24) = edgeNormal.x;
-                            *(f32*)(cur + (normalComponentIndex++) * 4 + 0x24) = edgeNormal.y;
-                            *(f32*)(cur + (normalComponentIndex++) * 4 + 0x24) = edgeNormal.z;
+                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = edgeNormal.x;
+                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = edgeNormal.y;
+                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = edgeNormal.z;
                         } else {
                             degenerateEdge = 1;
                             break;
