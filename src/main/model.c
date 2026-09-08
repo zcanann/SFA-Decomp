@@ -2567,7 +2567,8 @@ static inline f32 modelQuantizationFactor(u32 encodedScale) {
     return factor.value;
 }
 
-void ObjModel_TransformVerticesWithTranslation(u8* matrixA, u8* matrixB, u8* weightPairs, u8* source, u8* destination, int count) {
+void ObjModel_TransformVerticesWithTranslation(u8* matrixA, u8* matrixB, u8* weightPairs, u8* source, u8* destination,
+                                               int count) {
     f32* a = (f32*)matrixA;
     f32* b = (f32*)matrixB;
     u8* weights = weightPairs;
@@ -2588,8 +2589,10 @@ void ObjModel_TransformVerticesWithTranslation(u8* matrixA, u8* matrixB, u8* wei
         z = __OSs16tof32(&input[2]) * loadFactor;
         input += 3;
         outputX = (b[0] * x + b[9] + b[3] * y + b[6] * z) * weightB + (a[0] * x + a[9] + a[3] * y + a[6] * z) * weightA;
-        outputY = (b[1] * x + b[10] + b[4] * y + b[7] * z) * weightB + (a[1] * x + a[10] + a[4] * y + a[7] * z) * weightA;
-        outputZ = (b[2] * x + b[11] + b[5] * y + b[8] * z) * weightB + (a[2] * x + a[11] + a[5] * y + a[8] * z) * weightA;
+        outputY =
+            (b[1] * x + b[10] + b[4] * y + b[7] * z) * weightB + (a[1] * x + a[10] + a[4] * y + a[7] * z) * weightA;
+        outputZ =
+            (b[2] * x + b[11] + b[5] * y + b[8] * z) * weightB + (a[2] * x + a[11] + a[5] * y + a[8] * z) * weightA;
         output[0] = __OSf32tos16(outputX * storeFactor);
         output[1] = __OSf32tos16(outputY * storeFactor);
         output[2] = __OSf32tos16(outputZ * storeFactor);
@@ -2597,7 +2600,8 @@ void ObjModel_TransformVerticesWithTranslation(u8* matrixA, u8* matrixB, u8* wei
     }
 }
 
-void ObjModel_TransformVerticesLinear(u8* matrixA, u8* matrixB, u8* weightPairs, u8* source, u8* destination, int count) {
+void ObjModel_TransformVerticesLinear(u8* matrixA, u8* matrixB, u8* weightPairs, u8* source, u8* destination,
+                                      int count) {
     f32* a = (f32*)matrixA;
     f32* b = (f32*)matrixB;
     u8* weights = weightPairs;
@@ -2626,7 +2630,8 @@ void ObjModel_TransformVerticesLinear(u8* matrixA, u8* matrixB, u8* weightPairs,
         output += 3;
     }
 }
-void ObjModel_TransformNormalTriplets(u8* matrixA, u8* matrixB, u8* weightPairs, u8* source, u8* destination, int count) {
+void ObjModel_TransformNormalTriplets(u8* matrixA, u8* matrixB, u8* weightPairs, u8* source, u8* destination,
+                                      int count) {
     f32* a = (f32*)matrixA;
     f32* b = (f32*)matrixB;
     u8* weights = weightPairs;
