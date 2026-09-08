@@ -691,7 +691,7 @@ int modelGetAmapSize(int modelId, int amapFlag, int animCount) {
         }
         index = modelId & 3;
         fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (modelId & ~3) << 2,
-                           sizeof(((ModelAnimationOffsetScratch*)0)->animationMapOffsets));
+                               sizeof(((ModelAnimationOffsetScratch*)0)->animationMapOffsets));
         amapSize = gModelAnimOffsetTable[index + 1] - gModelAnimOffsetTable[index];
         totalSize += amapSize;
     }
