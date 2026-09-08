@@ -317,11 +317,10 @@ int pushable_updateMagicGem(GameObject* obj, PushableState* state) {
     if (state->blinkPhase >= state->blinkInterval) {
         state->blinkStep *= PUSHABLE_MAGIC_GEM_NEGATE;
     } else if (state->blinkPhase < PUSHABLE_ZERO) {
-        state->blinkInterval =
-            PUSHABLE_MAGIC_GEM_BLINK_INTERVAL_SCALE *
-            randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_WAIT_MIN, PUSHABLE_MAGIC_GEM_BLINK_WAIT_MAX);
-        state->blinkStep = state->blinkInterval /
-                           randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_TIME_MIN, PUSHABLE_MAGIC_GEM_BLINK_TIME_MAX);
+        state->blinkInterval = PUSHABLE_MAGIC_GEM_BLINK_INTERVAL_SCALE *
+                               randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_WAIT_MIN, PUSHABLE_MAGIC_GEM_BLINK_WAIT_MAX);
+        state->blinkStep =
+            state->blinkInterval / randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_TIME_MIN, PUSHABLE_MAGIC_GEM_BLINK_TIME_MAX);
         state->blinkPhase = PUSHABLE_ZERO;
     }
     if (texture != NULL) {
@@ -363,8 +362,8 @@ void pushable_initMagicGem(GameObject* obj, PushableState* state) {
     state->eyeDriftSpeedY = sharedValue;
     state->blinkInterval = PUSHABLE_MAGIC_GEM_BLINK_INTERVAL_SCALE *
                            randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_WAIT_MIN, PUSHABLE_MAGIC_GEM_BLINK_WAIT_MAX);
-    state->blinkStep = state->blinkInterval /
-                       randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_TIME_MIN, PUSHABLE_MAGIC_GEM_BLINK_TIME_MAX);
+    state->blinkStep =
+        state->blinkInterval / randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_TIME_MIN, PUSHABLE_MAGIC_GEM_BLINK_TIME_MAX);
     sharedValue = PUSHABLE_ZERO;
     state->blinkPhase = sharedValue;
     state->gameBit = placement->gameBit;
@@ -716,8 +715,7 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         trackIntersectBroadphase(NULL, &sweep, 0x208, 1);
         blocked = trackGetIntersect(NULL, probeStart, probeEnd, 1, &hitResults, 8);
         if (blocked == 0) {
-            blocked =
-                trackGetLineIntersect(probeStart, probeEnd, collisionRadii[0], 0, NULL, obj, 1, -1, 0xff, 0);
+            blocked = trackGetLineIntersect(probeStart, probeEnd, collisionRadii[0], 0, NULL, obj, 1, -1, 0xff, 0);
         }
         if (blocked != 0) {
             f32 pushAmount;
@@ -738,8 +736,7 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         trackIntersectBroadphase(NULL, &sweep, 0x208, 1);
         blocked = trackGetIntersect(NULL, probeStart, probeEnd, 1, &hitResults, 8);
         if (blocked == 0) {
-            blocked =
-                trackGetLineIntersect(probeStart, probeEnd, collisionRadii[0], 0, NULL, obj, 1, -1, 0xff, 0);
+            blocked = trackGetLineIntersect(probeStart, probeEnd, collisionRadii[0], 0, NULL, obj, 1, -1, 0xff, 0);
         }
         if (blocked != 0) {
             f32 pushAmount;
@@ -760,8 +757,7 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         trackIntersectBroadphase(NULL, &sweep, 0x208, 1);
         blocked = trackGetIntersect(NULL, probeStart, probeEnd, 1, &hitResults, 8);
         if (blocked == 0) {
-            blocked =
-                trackGetLineIntersect(probeStart, probeEnd, collisionRadii[0], 0, NULL, obj, 1, -1, 0xff, 0);
+            blocked = trackGetLineIntersect(probeStart, probeEnd, collisionRadii[0], 0, NULL, obj, 1, -1, 0xff, 0);
         }
         if (blocked != 0) {
             f32 pushAmount;
