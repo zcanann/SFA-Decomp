@@ -1,22 +1,24 @@
 /* CRFuelTank (DLL 607): CloudRunner fuel-tank object callbacks. */
 
+#include "dlls/objects/607_CRFuelTank.h"
+
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/crfueltank.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/maketex_timer_api.h"
 #include "main/objhits.h"
 #include "sys/objects.h"
 
-#define CRFUELTANK_HIT_VOLUME_SLOT 0x1d
+#define CRFUELTANK_HIT_PRIORITY 0x1d
+#define CRFUELTANK_RESPAWN_FRAMES 0x708
 
 /* only the CloudRunner snowbike detonates a fuel tank; retail OBJECTS.bin name
    "CRSnowBike" (DLL 0x255) */
 #define CRFUELTANK_TRIGGER_OBJ 0x38c
 
-static inline int crfueltank_animFrame(CrFuelTankDef* def)
+static inline int crfueltank_hitVolumeId(CrFuelTankPlacementPrefix* def)
 {
-    return def->idleFrameCount / 10;
+    return def->hitVolumeIdTimes10 / 10;
 }
 
 int crfueltank_getExtraSize(void)
@@ -41,12 +43,12 @@ void crfueltank_render(void)
 
 void crfueltank_hitDetect(GameObject* obj)
 {
-    CrFuelTankDef* def;
+    CrFuelTankPlacementPrefix* def;
     ObjHitsPriorityState* hitState;
     GameObject* hitObj;
 
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
-    def = (CrFuelTankDef*)obj->anim.placementData;
+    def = (CrFuelTankPlacementPrefix*)obj->anim.placementData;
     if ((hitState != NULL) && (hitState->lastHitObject != 0))
     {
         hitObj = (GameObject*)hitState->lastHitObject;
@@ -56,9 +58,9 @@ void crfueltank_hitDetect(GameObject* obj)
             Sfx_PlayFromObject(Obj_GetPlayerObject(), SFXTRIG_ar_barrel16);
             obj->anim.alpha = 0xfa;
             obj->userData2 = 1;
-            if (def->hitEvent != -1)
+            if (def->hitGameBit != -1)
             {
-                mainSetBits(def->hitEvent, 1);
+                mainSetBits(def->hitGameBit, 1);
             }
             obj->anim.velocityX = hitObj->anim.velocityX;
             obj->anim.velocityY = 0.07f + hitObj->anim.velocityY;
@@ -70,14 +72,14 @@ void crfueltank_hitDetect(GameObject* obj)
 
 void crfueltank_update(GameObject* obj)
 {
-    CrFuelTankDef* def;
+    CrFuelTankPlacementPrefix* def;
     CrFuelTankState* state;
 
-    def = (CrFuelTankDef*)obj->anim.placementData;
+    def = (CrFuelTankPlacementPrefix*)obj->anim.placementData;
     state = obj->extra;
-    if (timerIsActive(&state->timer) != 0)
+    if (timerIsActive(&state->respawnTimer) != 0)
     {
-        if (timerCountDown(&state->timer) != 0)
+        if (timerCountDown(&state->respawnTimer) != 0)
         {
             ObjHits_EnableObject(obj);
             obj->anim.flags = (s16)(obj->anim.flags & ~OBJANIM_FLAG_HIDDEN);
@@ -89,27 +91,27 @@ void crfueltank_update(GameObject* obj)
         if (obj->anim.alpha < 0xff)
         {
             obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
-            s16toFloat(&state->timer, 0x708);
+            s16toFloat(&state->respawnTimer, CRFUELTANK_RESPAWN_FRAMES);
         }
         else
         {
-            ObjHits_SetHitVolumeSlot(&obj->anim, CRFUELTANK_HIT_VOLUME_SLOT, crfueltank_animFrame(def), 0);
+            ObjHits_SetHitVolumeSlot(&obj->anim, CRFUELTANK_HIT_PRIORITY, crfueltank_hitVolumeId(def), 0);
         }
     }
     return;
 }
 
-void crfueltank_init(GameObject* obj, CrFuelTankDef* def)
+void crfueltank_init(GameObject* obj, CrFuelTankPlacementPrefix* def)
 {
     CrFuelTankState* state;
 
     state = obj->extra;
     ObjHits_EnableObject(obj);
-    ObjHits_SetHitVolumeSlot(&obj->anim, CRFUELTANK_HIT_VOLUME_SLOT, crfueltank_animFrame(def), 0);
-    storeZeroToFloatParam(&state->timer);
-    if ((def->hitEvent != -1) && (mainGetBit(def->hitEvent) != 0))
+    ObjHits_SetHitVolumeSlot(&obj->anim, CRFUELTANK_HIT_PRIORITY, crfueltank_hitVolumeId(def), 0);
+    storeZeroToFloatParam(&state->respawnTimer);
+    if ((def->hitGameBit != -1) && (mainGetBit(def->hitGameBit) != 0))
     {
-        s16toFloat(&state->timer, 0x708);
+        s16toFloat(&state->respawnTimer, CRFUELTANK_RESPAWN_FRAMES);
         ObjHits_DisableObject(obj);
         obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
         obj->anim.alpha = 0;

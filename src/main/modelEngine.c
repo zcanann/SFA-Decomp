@@ -1,6 +1,7 @@
 #include "main/dll/dll_0018_boneparticleeffect.h"
 #include "dlls/objects/625_DrakorHoverpad.h"
 #include "dlls/objects/597_SnowBike.h"
+#include "dlls/objects/607_CRFuelTank.h"
 #include "dlls/objects/589_BossDrakor.h"
 #include "dlls/objects/226.h"
 #include "dlls/objects/201_Baddie.h"
@@ -558,7 +559,7 @@ extern ResourceDescriptor gARWBlockerObjDescriptor, gARWBombCollObjDescriptor, g
     gARWProximitObjDescriptor;
 extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor;
 extern ResourceDescriptor gChukaObjDescriptor;
-extern ResourceDescriptor gCrCloudRaceObjDescriptor, gCrFuelTankObjDescriptor;
+extern ResourceDescriptor gCrCloudRaceObjDescriptor;
 extern ResourceDescriptor gDBHoleControl1ObjDescriptor, gDFP_LevelControlObjDescriptor,
     gDFP_ObjCreatorObjDescriptor, gDFP_TorchObjDescriptor;
 extern ResourceDescriptor gDIM_trickyObjDescriptor, gDR_CloudRunnerObjDescriptor;
@@ -1819,7 +1820,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gSnowClawObjDescriptor,
     &gCrCloudRaceObjDescriptor,
     &gSpellStoneObjDescriptor,
-    &gCrFuelTankObjDescriptor,
+    (ResourceDescriptor*)&gCrFuelTankObjDescriptor,
     &gProximityMineObjDescriptor,
     (ResourceDescriptor*)&gDrLaserCannonObjDescriptor,
     &gDrakorMissileObjDescriptor,
