@@ -1549,8 +1549,7 @@ void drawViewFinderHud(void) {
         f32 viewScale;
         drawViewFinderSegment(580.0f, -(310.0f * gViewFinderFadeLevel) + 410.0f, 580.0f, 410.0f, 1.0f,
                               255.0f * gViewFinderFadeLevel);
-        drawViewFinderSegment(580.0f, reticleY, 580.0f, 8.0f + reticleY, 6.0f,
-                              255.0f * gViewFinderFadeLevel);
+        drawViewFinderSegment(580.0f, reticleY, 580.0f, 8.0f + reticleY, 6.0f, 255.0f * gViewFinderFadeLevel);
         viewScale = 0.57735 / mathTanf((f32)(3.1415927f * fovY / 360.0));
         sprintf(buf, sTrickyDebugXCoordFormat, viewScale);
         gameTextSetColor(0, 0xff, 0, 255.0f * gViewFinderFadeLevel);
@@ -1561,15 +1560,21 @@ void drawViewFinderHud(void) {
             for (; gridX < 640.0f; gridX += 10.0f) {
                 {
                     u8 alpha = 80.0f * gViewFinderFadeLevel;
-                    drawViewFinderSegment(gridX,(f32)(gViewFinderBaseY + (479.5 + getViewFinderWaveOffset(gridX))),10.0f+gridX,(f32)(gViewFinderBaseY + (479.5 + getViewFinderWaveOffset(10.0f + gridX))),1.0f,alpha);
+                    drawViewFinderSegment(
+                        gridX, (f32)(gViewFinderBaseY + (479.5 + getViewFinderWaveOffset(gridX))), 10.0f + gridX,
+                        (f32)(gViewFinderBaseY + (479.5 + getViewFinderWaveOffset(10.0f + gridX))), 1.0f, alpha);
                 }
                 {
                     u8 alpha = 80.0f * gViewFinderFadeLevel;
-                    drawViewFinderSegment(gridX,(f32)(gViewFinderBaseY + (480.5 + getViewFinderWaveOffset(gridX))),10.0f+gridX,(f32)(gViewFinderBaseY + (480.5 + getViewFinderWaveOffset(10.0f + gridX))),1.0f,alpha);
+                    drawViewFinderSegment(
+                        gridX, (f32)(gViewFinderBaseY + (480.5 + getViewFinderWaveOffset(gridX))), 10.0f + gridX,
+                        (f32)(gViewFinderBaseY + (480.5 + getViewFinderWaveOffset(10.0f + gridX))), 1.0f, alpha);
                 }
                 {
                     u8 alpha = 255.0f * gViewFinderFadeLevel;
-                    drawViewFinderSegment(gridX,gViewFinderBaseY + (480.0f + getViewFinderWaveOffset(gridX)),10.0f+gridX,gViewFinderBaseY + (480.0f + getViewFinderWaveOffset(10.0f + gridX)),1.0f,alpha);
+                    drawViewFinderSegment(
+                        gridX, gViewFinderBaseY + (480.0f + getViewFinderWaveOffset(gridX)), 10.0f + gridX,
+                        gViewFinderBaseY + (480.0f + getViewFinderWaveOffset(10.0f + gridX)), 1.0f, alpha);
                 }
             }
         }
@@ -1666,8 +1671,10 @@ void drawViewFinderHud(void) {
                 {
                     alpha = (f32)(u8)tickAlpha * gViewFinderFadeLevel;
                     drawViewFinderSegment(tickX, gViewFinderBaseY + (480.0f + getViewFinderWaveOffset(tickX)),
-                       (f32)(0.98 * (tickX - 320.0) + 320.0),
-                       gViewFinderBaseY + ((f32)((u8)tickHeight + 0x1e0) + getViewFinderWaveOffset(tickX)), 1.0f, alpha);
+                                          (f32)(0.98 * (tickX - 320.0) + 320.0),
+                                          gViewFinderBaseY +
+                                              ((f32)((u8)tickHeight + 0x1e0) + getViewFinderWaveOffset(tickX)),
+                                          1.0f, alpha);
                 }
             }
         }
@@ -2819,7 +2826,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
                 icon = 0x5A;
                 break;
             }
-            drawTexture(((void**)(base + 0x1C0))[icon], 575.0f, 102.0f, (u8)(fade* gCMenuHighlightFade / 0xFF), 0x100);
+            drawTexture(((void**)(base + 0x1C0))[icon], 575.0f, 102.0f, (u8)(fade * gCMenuHighlightFade / 0xFF), 0x100);
         }
     }
     if (hudYButtonItemIconTexture != NULL && gHudYButtonItemTextureCache != yButtonItemTextureId) {
