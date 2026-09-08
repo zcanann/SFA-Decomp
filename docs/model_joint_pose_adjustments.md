@@ -76,3 +76,30 @@ the retail positive limit uses r7 and the doubled divisor r6, whereas the
 current compiler exchanges those registers. The staff segment transform also
 retains its existing expression-order and register differences. No compiler
 profile or matching status changes accompany this recovery.
+
+## Exact pitch-rate clamp
+
+The final five operand differences are resolved by keeping the pitch-rate
+limit as `s16` and converting the floating-point product directly to that
+type. The prior source converted through `s32` and stored the narrowed result
+in an `int`. These are not interchangeable inputs to MWCC's optimizer even
+though the emitted conversion and sign extension were already correct.
+Changing only the local's type is byte-neutral; removing only the intermediate
+cast leaves seven operand differences. The direct conversion into the native
+halfword local reproduces all 333 retail instructions under the unchanged
+GC/1.3 profile. The local is named `pitchRateLimit` to distinguish it from
+the subsequent frame-scaled pitch adjustment.
+
+`objJointTracksAimAtTarget` becomes 100% exact (1,332 bytes), taking the TU
+to 39/40 exact functions. Only the five register-operand words change;
+all other function bodies, allocated non-text sections, and named symbol
+positions are unchanged. Six relocations rename one anonymous float literal
+without changing their offsets, types, addends, or physical destinations.
+No helper, forced storage, inline assembly, or compiler override is added.
+
+The target comparison covers the whole compiled function, including its
+conversion behavior and both clamp bounds. No new host runtime test is claimed
+for out-of-range float-to-halfword conversion: host C conversion semantics are
+not a substitute for the matched Gekko instructions. Both `ninja all_source`
+and the strict retail checksum target pass with thirty-second limits. The TU
+remains `NonMatching` because `staffUpdateSegmentTransforms` is not yet exact.

@@ -876,7 +876,7 @@ s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, Obj
             s16 d1 = (s16)((s16)((fv[1] + dst[0]) >> 1) - fv[1]);
             s16 lim;
             s16 d2;
-            int t2;
+            s16 pitchRateLimit;
             int lim3;
 
             lim = (d1 < framesThisStep * ((s16)(s32)(182.04f * (f32)-spd[i]) / gObjLookAtTurnRateDivisor))
@@ -885,11 +885,11 @@ s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, Obj
                              ? framesThisStep * ((s16)(s32)(182.04f * (f32)spd[i]) / gObjLookAtTurnRateDivisor)
                              : d1);
             d2 = (s16)((s16)((fv[0] + dst[1]) >> 1) - fv[0]);
-            t2 = (s16)(s32)(182.04f * (f32)sp2[i]);
-            lim3 = (d2 < framesThisStep * (-t2 / (gObjLookAtTurnRateDivisor << 1)))
-                       ? framesThisStep * (-t2 / (gObjLookAtTurnRateDivisor << 1))
-                       : ((d2 > framesThisStep * (t2 / (gObjLookAtTurnRateDivisor << 1)))
-                              ? framesThisStep * (t2 / (gObjLookAtTurnRateDivisor << 1))
+            pitchRateLimit = (s16)(182.04f * (f32)sp2[i]);
+            lim3 = (d2 < framesThisStep * (-pitchRateLimit / (gObjLookAtTurnRateDivisor << 1)))
+                       ? framesThisStep * (-pitchRateLimit / (gObjLookAtTurnRateDivisor << 1))
+                       : ((d2 > framesThisStep * (pitchRateLimit / (gObjLookAtTurnRateDivisor << 1)))
+                              ? framesThisStep * (pitchRateLimit / (gObjLookAtTurnRateDivisor << 1))
                               : d2);
             fv[0] += (s16)lim3;
             fv[1] += lim;
