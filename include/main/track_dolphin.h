@@ -46,17 +46,17 @@ typedef struct TrackShadowTriangle {
  * (x0 x1 x2 / y0 y1 y2 / z0 z1 z2), which the hit-detect code reads both
  * by field and as an s16 index off the record base. */
 typedef struct TrackTriangle {
-    f32 planeD;     /* 0x00 plane equation constant */
-    f32 planeN[3];  /* 0x04 plane normal xyz */
-    s16 vx[3];      /* 0x10 vertex x coords */
-    s16 vy[3];      /* 0x16 vertex y coords */
-    s16 vz[3];      /* 0x1c vertex z coords */
-    u8 pad22[2];    /* 0x22 */
+    f32 planeD;           /* 0x00 plane equation constant */
+    f32 planeN[3];        /* 0x04 plane normal xyz */
+    s16 vx[3];            /* 0x10 vertex x coords */
+    s16 vy[3];            /* 0x16 vertex y coords */
+    s16 vz[3];            /* 0x1c vertex z coords */
+    u8 pad22[2];          /* 0x22 */
     Vec3f edgeNormals[3]; /* 0x24 outward normals, one per triangle edge */
-    u8 surfaceType; /* 0x48 copied into intersect-line records */
-    s8 flags;       /* 0x49 0x10 = disabled, 0x4 = force */
-    u8 minMaxY;     /* 0x4a lo/hi nibble: s16 index (base 0xb) of min/max height */
-    u8 edgeOutBits; /* 0x4b per-edge outside bits from last query */
+    u8 surfaceType;       /* 0x48 copied into intersect-line records */
+    s8 flags;             /* 0x49 0x10 = disabled, 0x4 = force */
+    u8 minMaxY;           /* 0x4a lo/hi nibble: s16 index (base 0xb) of min/max height */
+    u8 edgeOutBits;       /* 0x4b per-edge outside bits from last query */
 } TrackTriangle;
 
 STATIC_ASSERT(sizeof(TrackTriangle) == 0x4C);

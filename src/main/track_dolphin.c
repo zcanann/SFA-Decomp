@@ -2969,9 +2969,12 @@ u8 doEdges;
                         if (m > eps) {
                             m = one / m;
                             PSVECScale(&edgeNormal, &edgeNormal, m);
-                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = edgeNormal.x;
-                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = edgeNormal.y;
-                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = edgeNormal.z;
+                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) +
+                                    offsetof(TrackTriangle, edgeNormals)) = edgeNormal.x;
+                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) +
+                                    offsetof(TrackTriangle, edgeNormals)) = edgeNormal.y;
+                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) +
+                                    offsetof(TrackTriangle, edgeNormals)) = edgeNormal.z;
                         } else {
                             degenerateEdge = 1;
                             break;
