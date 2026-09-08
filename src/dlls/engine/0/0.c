@@ -3207,9 +3207,9 @@ int cMenuSetItems(CMenuItemDef* itemsArg, char useTricky) {
         u8* auxiliaryBytes;
         u8* closeModes;
         u8* enabledFlags;
-        int yButtonAction;
-        int itemMask;
         int actionMask;
+        int yButtonAction;
+        s32 itemMask;
 
         getTrickyObject();
         itemMask = gTrickyHudItemMask;

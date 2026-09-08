@@ -856,3 +856,32 @@ The final EN audit also incorporates staging `cd2d38b211`: its new
 `highScoreScreenDraw` match remains exact, and the map change still touches
 only those 22 instruction bytes. Strict retail checksum and `all_source`
 builds pass with the unchanged compiler configuration.
+
+## September 8: C-menu Tricky mask registers
+
+`cMenuSetItems` improves from **98.75828% to 98.84106%**, with differing
+instruction words falling from **60 to 55**. Its extent remains **1,208 bytes /
+302 instructions** under the unchanged GC/1.3 profile. It is **not yet exact**.
+
+The Tricky branch captures its item mask in an `s32` local, declared after
+`actionMask` and `yButtonAction`. That spelling restores retail's item mask in
+r10, action mask in r0, and Y-button action in r9. The signed 32-bit snapshot
+preserves the full mask and the -1 sentinel. Only nine instruction bytes change,
+all in this function. The other 117 function bodies, allocated data, section
+layouts, and named symbol offsets remain unchanged. Relocation targets also
+remain unchanged after ignoring compiler-generated anonymous-symbol renumbering.
+
+The residual concerns the shared saved-register allocation and four commuted
+address additions. Compiler tracing reproduces the baseline allocation and
+shows that alias propagation replaces several named locals with generated
+values. Simple declaration swaps therefore do not directly control their final
+registers. An ordinary indexed version removes the one-element halfword-offset
+array and retains all 302 instructions, but the tested forms regress matching;
+none is retained. Earlier history confirms that the array was a July matching
+workaround, not recovered layout evidence.
+
+Validation: objdiff confirms the improvement; strict matching `ninja` and
+`ninja all_source` pass with 30-second timeouts. The TU and API header pass
+formatting checks, with no formatting-only change required. Secondary DOLs are
+absent from their configured paths in this checkout; regional manifests remain
+unchanged.
