@@ -297,7 +297,7 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags) {
                 return FALSE;
             }
             startOffset = ((s32)ctrl->loopFrame + ctrl->frameOffset) - ctrl->dataOffset;
-            CreateVideoDecodeThread(0xf, startOffset);
+            CreateVideoDecodeThread(0xf, (void*)startOffset);
             if (ctrl->audioExists != 0) {
                 CreateAudioDecodeThread(0xc, (void*)startOffset);
             }

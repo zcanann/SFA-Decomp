@@ -3,6 +3,7 @@
 
 #include "dolphin/os.h"
 #include "dolphin/dvd.h"
+#include "main/thp_video_decode.h"
 
 BOOL movieLoad(const char* fileName, void* param2);
 void AttractMovieAudio_Shutdown(void);
@@ -14,10 +15,5 @@ OSMessage PopReadedBuffer(void);
 void ReadThreadCancel(void);
 void ReadThreadStart(void);
 BOOL CreateReadThread(OSPriority priority);
-OSMessage PopDecodedTextureSet(s32 flags);
-void PushFreeTextureSet(OSMessage msg);
-void VideoDecodeThreadCancel(void);
-void VideoDecodeThreadStart(void);
-BOOL CreateVideoDecodeThread(OSPriority priority, u32 onMemoryArg);
 
 #endif /* MAIN_DLL_FRONT_PICMENU_H_ */

@@ -2,6 +2,7 @@
 #define MAIN_DLL_FRONT_ATTRACT_MOVIE_H_
 
 #include "types.h"
+#include "global.h"
 #include "dolphin/dvd.h"
 #include "dolphin/thp/THPFile.h"
 #include "dolphin/thp/THPInfo.h"
@@ -27,6 +28,10 @@ typedef struct AttractMovieReadBuffer {
     u8 *ptr;
     s32 frameNumber;
 } AttractMovieReadBuffer;
+
+STATIC_ASSERT(sizeof(AttractMovieReadBuffer) == 8);
+STATIC_ASSERT(offsetof(AttractMovieReadBuffer, ptr) == 0);
+STATIC_ASSERT(offsetof(AttractMovieReadBuffer, frameNumber) == 4);
 
 typedef struct AttractMovieTextureSet {
     u8 *yTexture;
