@@ -426,7 +426,7 @@ member). No row is misfiled — every row has a live ledger/memory anchor.
 | textureLoad | main/texture | 1932 | 98.882 | 33 | 4 | 17G/0F | 3 | priced 24b (same mechanism as loadTextureFiles: orphan inline preheaders at tail) + width-17 recolour mass; verified |
 | pauseMenuDrawStatus | dlls/engine/0/0 | 2064 | 100 | 0 | 0 | 6G/2F | 0 | **Resolved 2026-09-08:** a signed snapshot-array index closes the last r0/r3 swap. All 2,064 bytes match under unchanged compiler flags; see [analysis](engine_0_matching.md). |
 | unloadMap | main/shader | 616 | 97.922 | 43 | 1 | 10G/0F | 8 | priced 23b li/mr remat family (named member) + width-10 recolour mass; verified |
-| mapScreenDrawHud | dlls/engine/0/0 | 3456 | 99.757 | 29 | 1 | 12G/5F | 14 | Panel frame and hint selection exact; residual confined to shimmer counter seeds and GPR allocation |
+| mapScreenDrawHud | dlls/engine/0/0 | 3456 | 99.769 | 6 | 1 | 12G/5F | 14 | All registers exact; only the signed opacity extension is five instructions early |
 | headDisplayDraw | dlls/engine/0/0 | 1920 | 100.000 | 0 | 0 | 12G/5F | 14 | Exact in all five versions: derived shimmer phases, stored-alpha capture, and shared coordinate temporaries |
 | playerStateMoving | dlls/objects/195_Player/player | 4880 | 99.746 | 51 | 0 | 4G/3F | 22 | player-cluster coloring walls (named member: all f3/f4, f29/f30, scratch perm); verified |
 | cMenuSetItems | dlls/engine/0/0 | 1208 | 98.841 | 55 | 0 | 10G/0F | 14 | GC/1.3 rechecked 2026-09-08: signed 32-bit Tricky item-mask snapshot and declaration order restore five mask-register instructions; 55 register differences remain. See [analysis](engine_0_matching.md). |

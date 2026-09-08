@@ -969,3 +969,42 @@ python3 tools/tricky_backend_trace.py --unit main/dlls/engine/0/0 \
 The follow-up leaves all game source unchanged. Strict retail checksum,
 `ninja all_source`, formatting checks, and the exact `pauseMenuDraw` byte check
 pass. Both Ninja invocations use 30-second timeouts.
+
+## September 8: map HUD register allocation recovered
+
+`mapScreenDrawHud` improves from **99.75694% to 99.76852%** in all five
+retail versions. Its 3,456-byte extent is unchanged. All register choices now
+match; the sole residual is `extsh r0,r23` at source instruction index 499
+instead of retail index 504. Moving that instruction five positions later
+makes the complete instruction streams identical. This produces six differing
+words in a positional comparison, down from 29; objdiff represents the moved
+instruction as one removal and one insertion. The function is not yet exact.
+
+The shimmer follows the matching `headDisplayDraw` pattern: derive both phases
+from the row, look up its texture directly, and evaluate the random offsets in
+the draw arguments. An integer snapshot of the short panel opacity preserves
+the earlier frame and hint registers. The wave calculation still interprets
+that snapshot as a signed short. The width is also held in an integer, with
+its signed-short interpretation retained at the frame uses. Those width
+conversions enable r28 before MWCC colors the derived phase counters, restoring
+r28/r29 instead of r29/r30. Removing either lifetime/conversion distinction
+regresses the combined allocation.
+
+The remaining placement problem is separate from register allocation. Moving
+the opacity snapshot into the loop restores the late conversion but changes
+the long-lived panel register and frame bases. Explicit phase arrays, alternate
+loop forms, local reuse, and indexed task-hint access have not recovered both
+properties together. These experiments are not retained. The newly matching
+`pauseMenuDraw` indexed-loop change was integrated and checked as a reference.
+
+Live tracing reproduces the ordinary object byte-for-byte and replays all 263
+GPR color choices, with no high-degree simplification step. Its aligned retail
+diff contains only the displaced extension. Against staging `87e2a1a40b`, each
+regional source object changes exactly 53 instruction bytes, all in this
+function. The other 117 function bodies, allocated data, and named symbol
+layouts are unchanged. Three relocations move with the texture-base setup and
+amplitude load; the remaining relocation differences are anonymous-symbol
+renumbering. Every regional input DOL passes its configured SHA1 check. Strict
+matching `ninja` and `ninja all_source` pass with 30-second timeouts, and the
+built EN DOL retains the retail SHA1. The TU remains `NonMatching`; no regional
+whole-object match is claimed.
