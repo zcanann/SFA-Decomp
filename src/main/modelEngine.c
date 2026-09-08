@@ -2,6 +2,7 @@
 #include "dlls/objects/625_DrakorHoverpad.h"
 #include "dlls/objects/597_SnowBike.h"
 #include "dlls/objects/607_CRFuelTank.h"
+#include "dlls/objects/608_ProximityMine.h"
 #include "dlls/objects/589_BossDrakor.h"
 #include "dlls/objects/226.h"
 #include "dlls/objects/201_Baddie.h"
@@ -574,7 +575,7 @@ extern ResourceDescriptor gEarthWalkerObjDescriptor;
 extern ResourceDescriptor gFireFlyObjDescriptor, gFireObjDescriptor;
 extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor, gKtRexFloorSwitchObjDescriptor,
     gKtRexLevelObjDescriptor, gKytesMumObjDescriptor;
-extern ResourceDescriptor gProjectedLightObjDescriptor, gProximityMineObjDescriptor;
+extern ResourceDescriptor gProjectedLightObjDescriptor;
 extern ResourceDescriptor gRingObjDescriptor;
 extern ResourceDescriptor gSPDrapeObjDescriptor, gSPitembeamObjDescriptor, gSeqPointObjDescriptor;
 extern ResourceDescriptor gDFP_RotatePObjDescriptor, gShopItemObjDescriptor, gShopKeeperObjDescriptor,
@@ -1821,7 +1822,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gCrCloudRaceObjDescriptor,
     &gSpellStoneObjDescriptor,
     (ResourceDescriptor*)&gCrFuelTankObjDescriptor,
-    &gProximityMineObjDescriptor,
+    (ResourceDescriptor*)&gProximityMineObjDescriptor,
     (ResourceDescriptor*)&gDrLaserCannonObjDescriptor,
     &gDrakorMissileObjDescriptor,
     (ResourceDescriptor*)&gGmMazeWellObjDescriptor,

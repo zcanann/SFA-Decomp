@@ -1,6 +1,7 @@
 /* DLL 604: SnowClaw-family object callbacks. */
 
 #include "dlls/objects/364.h"
+#include "dlls/objects/608_ProximityMine.h"
 #include "dlls/objects/common/vehicle.h"
 #include "main/audio/sfx.h"
 #include "main/dll/objfx_api.h"
@@ -36,8 +37,6 @@ f32 gSnowClawMoveStepScaleBase = 0.006f;
 
 /* object group queried to find this object's target */
 #define SNOWCLAW_TARGET_OBJGROUP 0x1e
-/* drop-bomb child spawned by snowclaw_spawnDropBomb (obj id 0x5ff) */
-#define SNOWCLAW_CHILD_OBJ_DROP_BOMB 0x5ff
 
 /* rider-variant seqIds (retail OBJECTS.bin names) */
 #define SNOWCLAW_SEQID_IM_SNOWCLAW  0x16d /* "IMSnowClaw" (DLL 0x25C) */
@@ -124,18 +123,7 @@ typedef struct
     u32 w[4];
 } SnowClawPulse4;
 
-/* Spawn-setup buffer for the snowclaw drop-bomb child (obj id 0x5ff):
- * ObjPlacement head (pos/color) plus the class-specific aim/launch fields the
- * parent seeds at +0x18 (see the target stb/sth). */
-typedef struct SnowClawBombSetup
-{
-    ObjPlacement head; /* 0x00: pos/color/mapId */
-    s8 aimYaw;         /* 0x18 */
-    s8 launchMode;   /* 0x19: bomb launch/aim mode (switched on to pick launchAngle: 0=default drop, 1=aim at player) */
-    s16 launchAngle; /* 0x1a */
-} SnowClawBombSetup;
-
-int gSnowClawDropBombAngle;
+int gSnowClawDropBombAngle; /* Timed-mode detonation delay, initialized to 150 frames. */
 
 s32 gSnowClawMoveTable[12] = {905, 909, 906, 910, 1235, 1236, 365, 364, 368, 367, 1000, 1002};
 
@@ -184,23 +172,24 @@ ObjectDescriptor gSnowClawObjDescriptor = {
 void snowclaw_spawnDropBomb(GameObject* obj, GameObject* owner, int launchMode, int userData1Value)
 {
     GameObject* player;
-    SnowClawBombSetup* setup;
+    ProximityMinePlacement* setup;
     GameObject* spawned;
 
     player = Obj_GetPlayerObject();
     if ((u8)Obj_CanSetupObject() != 0)
     {
-        setup = (SnowClawBombSetup*)Obj_AllocObjectSetup(0x24, SNOWCLAW_CHILD_OBJ_DROP_BOMB);
-        setup->head.objectId = SNOWCLAW_CHILD_OBJ_DROP_BOMB;
-        setup->head.color[0] = 2;
-        setup->head.color[2] = 0xff;
-        setup->head.color[1] = 1;
-        setup->head.color[3] = 0xff;
-        setup->launchMode = launchMode;
-        setup->head.posX = obj->anim.localPosX;
-        setup->head.posY = 4.0f + obj->anim.localPosY;
-        setup->head.posZ = obj->anim.localPosZ;
-        setup->aimYaw =
+        setup = (ProximityMinePlacement*)Obj_AllocObjectSetup(sizeof(ProximityMinePlacement),
+                                                             PROXIMITYMINE_CR_DROP_BOMB_OBJ);
+        setup->base.objectId = PROXIMITYMINE_CR_DROP_BOMB_OBJ;
+        setup->base.color[0] = 2;
+        setup->base.color[2] = 0xff;
+        setup->base.color[1] = 1;
+        setup->base.color[3] = 0xff;
+        setup->mode = launchMode;
+        setup->base.posX = obj->anim.localPosX;
+        setup->base.posY = 4.0f + obj->anim.localPosY;
+        setup->base.posZ = obj->anim.localPosZ;
+        setup->rotationHighByte =
             (s8)(u8)((((getAngle(player->anim.localPosX - obj->anim.localPosX,
                                  player->anim.localPosZ - obj->anim.localPosZ) &
                         0xffff) >>
@@ -210,17 +199,17 @@ void snowclaw_spawnDropBomb(GameObject* obj, GameObject* owner, int launchMode, 
         Sfx_PlayFromObject(obj, SFXTRIG_id_2e4);
         switch ((u8)launchMode)
         {
-        case 0:
-            setup->launchAngle = gSnowClawDropBombAngle;
+        case PROXIMITYMINE_SPAWN_TIMED:
+            setup->parameter.detonationDelay = gSnowClawDropBombAngle;
             break;
-        case 1:
-            setup->launchAngle =
+        case PROXIMITYMINE_SPAWN_LAUNCHED:
+            setup->parameter.launchRotation =
                 (s16)(getAngle(player->anim.localPosX - obj->anim.localPosX,
                                player->anim.localPosZ - obj->anim.localPosZ) +
                       0x8000);
             break;
         }
-        spawned = loadObjectAtObject(obj, &setup->head);
+        spawned = loadObjectAtObject(obj, &setup->base);
         if (spawned != NULL)
         {
             spawned->userData1 = (u8)userData1Value;
