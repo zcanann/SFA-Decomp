@@ -102,7 +102,7 @@ typedef struct ModelVtxAnimJob {
     u8 unk00[2];
     u16 chunkCount; /* 0x02 */
     u8 unk04[2];
-    u8 quantShift; /* 0x06: GQR7 scale for the s16/s8 streams */
+    u8 quantShift; /* 0x06: low six bits: signed GQR7 scale for s16/s8 streams */
     u8 unk07[5];
     struct ModelVtxAnimChunk* chunks; /* 0x0C */
 } ModelVtxAnimJob;

@@ -10,6 +10,11 @@ the active goal's explicit allowance for compelling evidence. It does not
 replace the scalar vertex arithmetic with assembly or establish that those
 reconstructions are equivalent to the retail paired-single kernels.
 
+The subsequent [scalar skinning recovery](model_skinning.md) corrects signed
+load/store scales and arithmetic order, with a compiled-versus-retail probe.
+The byte-identity and size results below describe the earlier register-access
+change itself.
+
 ## Evidence and scope
 
 EN retail `setGQR6` at `8002A3C4` is exactly `mtspr GQR6,r3; blr`.
