@@ -17,6 +17,7 @@
  * primes the message queues (InitAllMessageQueue) and installs the
  * retrace callback.
  */
+#include "main/thp_read.h"
 #include "global.h"
 #include "dolphin/ai.h"
 #include "dolphin/os.h"
@@ -344,8 +345,8 @@ static void InitAllMessageQueue(void) {
 
     player = &gAttractMoviePlayer;
     if (player->isOnMemory == 0) {
-        for (i = 0; i < 10; i++) {
-            PushFreeReadBuffer((OSMessage)&player->readBuffer[i]);
+        for (i = 0; i < ATTRACT_MOVIE_READ_BUFFER_COUNT; i++) {
+            PushFreeReadBuffer(&player->readBuffer[i]);
         }
     }
 

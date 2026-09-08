@@ -7,6 +7,8 @@
 #include "dolphin/thp/THPFile.h"
 #include "dolphin/thp/THPInfo.h"
 
+#define ATTRACT_MOVIE_READ_BUFFER_COUNT 10
+
 #define ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE 0x280
 #define ATTRACT_MOVIE_AUDIO_DMA_BUFFER_COUNT 2
 #define ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES \
@@ -100,7 +102,7 @@ typedef struct AttractMoviePlayer {
         AttractMovieTextureSet *dispTextureSet;
         AttractMovieAudioBuffer *curAudioBuffer;
     };
-    AttractMovieReadBuffer readBuffer[10];
+    AttractMovieReadBuffer readBuffer[ATTRACT_MOVIE_READ_BUFFER_COUNT];
     AttractMovieTextureSet textureSet[3];
     AttractMovieAudioBuffer audioBuffer[3];
     u8 pad1A4[4];

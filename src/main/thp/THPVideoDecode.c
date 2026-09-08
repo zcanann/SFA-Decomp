@@ -2,6 +2,7 @@
  * THPVideoDecode - attract-movie video decoder thread and message queues.
  */
 #include "main/thp_video_decode.h"
+#include "main/thp_read.h"
 #include "main/dll/FRONT/attract_movie.h"
 #include "main/dll/FRONT/picmenu.h"
 #include "dolphin/os/OSInterrupt.h"
@@ -189,7 +190,7 @@ static void* AttractMovieVideo_Decoder(void* unused) {
                         AttractMovieVideo_Decode(msg);
                     }
                 }
-                PushFreeReadBuffer((OSMessage)msg);
+                PushFreeReadBuffer(msg);
                 {
                     u32 intr = OSDisableInterrupts();
                     player->videoDecodeCount += 1;
@@ -203,7 +204,7 @@ static void* AttractMovieVideo_Decoder(void* unused) {
             msg = PopReadedBuffer();
         }
         AttractMovieVideo_Decode(msg);
-        PushFreeReadBuffer((OSMessage)msg);
+        PushFreeReadBuffer(msg);
     }
 }
 
