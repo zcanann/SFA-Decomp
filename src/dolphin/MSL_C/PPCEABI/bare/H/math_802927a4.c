@@ -186,21 +186,21 @@ float powfBitEstimate(float base, float exponentValue) {
 
 #pragma optimization_level 0
 #pragma peephole off
-void Vec_normalize(void* input, void* output) {
+void Vec_normalize(const Vec* input, Vec* output) {
     Vec_scale(input, output, invSqrt(Vec_lengthSquared(input)));
 }
 #pragma optimization_level reset
 
 #pragma peephole on
-void Vec_scale(void* input, void* output, float scale) {
-    ((Vec*)output)->x = ((const Vec*)input)->x * scale;
-    ((Vec*)output)->y = ((const Vec*)input)->y * scale;
-    ((Vec*)output)->z = ((const Vec*)input)->z * scale;
+void Vec_scale(const Vec* input, Vec* output, float scale) {
+    output->x = input->x * scale;
+    output->y = input->y * scale;
+    output->z = input->z * scale;
 }
 
-float Vec_lengthSquared(void* input) {
-    return ((const Vec*)input)->z * ((const Vec*)input)->z +
-           (((const Vec*)input)->x * ((const Vec*)input)->x + ((const Vec*)input)->y * ((const Vec*)input)->y);
+float Vec_lengthSquared(const Vec* input) {
+    return input->z * input->z +
+           (input->x * input->x + input->y * input->y);
 }
 
 #pragma optimization_level 0

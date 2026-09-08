@@ -606,16 +606,16 @@ void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 near, 
 void modelLightStruct_setDirection(ModelLightStruct* s, f32 x, f32 y, f32 z) {
     f32* view;
     if (s->owner != NULL) {
-        s->localDirX = x;
-        s->localDirY = y;
-        s->localDirZ = z;
-        Vec_normalize(&s->localDirX, &s->localDirX);
-        Obj_TransformLocalVectorByWorldMatrix(s->owner, &s->localDirX, &s->worldDirX);
+        s->localDirection.x = x;
+        s->localDirection.y = y;
+        s->localDirection.z = z;
+        Vec_normalize(&s->localDirection, &s->localDirection);
+        Obj_TransformLocalVectorByWorldMatrix(s->owner, &s->localDirection.x, &s->worldDirection.x);
     } else {
-        s->worldDirX = x;
-        s->worldDirY = y;
-        s->worldDirZ = z;
-        Vec_normalize(&s->worldDirX, &s->worldDirX);
+        s->worldDirection.x = x;
+        s->worldDirection.y = y;
+        s->worldDirection.z = z;
+        Vec_normalize(&s->worldDirection, &s->worldDirection);
     }
     view = Camera_GetViewMatrix();
     if (s->transformMode == 0) {
@@ -716,17 +716,17 @@ ModelLightStruct* objAllocLight(void* owner) {
 
     if (light->owner != NULL) {
         zero = 0.0f;
-        light->localDirX = zero;
-        light->localDirY = zero;
-        light->localDirZ = 1.0f;
-        Vec_normalize(&light->localDirX, &light->localDirX);
-        Obj_TransformLocalVectorByWorldMatrix(light->owner, &light->localDirX, &light->worldDirX);
+        light->localDirection.x = zero;
+        light->localDirection.y = zero;
+        light->localDirection.z = 1.0f;
+        Vec_normalize(&light->localDirection, &light->localDirection);
+        Obj_TransformLocalVectorByWorldMatrix(light->owner, &light->localDirection.x, &light->worldDirection.x);
     } else {
         zero = 0.0f;
-        light->worldDirX = zero;
-        light->worldDirY = zero;
-        light->worldDirZ = 1.0f;
-        Vec_normalize(&light->worldDirX, &light->worldDirX);
+        light->worldDirection.x = zero;
+        light->worldDirection.y = zero;
+        light->worldDirection.z = 1.0f;
+        Vec_normalize(&light->worldDirection, &light->worldDirection);
     }
 
     view = Camera_GetViewMatrix();
@@ -821,7 +821,7 @@ static void modelLightStruct_loadDiffuseGXLight(ModelLightStruct* light, GameObj
         } else {
             GXInitLightPos(&light->diffuseLightObj, light->viewX, light->viewY, light->viewZ);
         }
-        GXInitLightDir(&light->diffuseLightObj, light->viewDirX, light->viewDirY, light->viewDirZ);
+        GXInitLightDir(&light->diffuseLightObj, light->viewDirection.x, light->viewDirection.y, light->viewDirection.z);
         if (obj != NULL && (obj->anim.modelInstance->flags & OBJDEF_FLAG_DIFFERENT_LIGHT_COLOR) == 0) {
             GXColor color;
             f32 amt;
@@ -898,7 +898,7 @@ void modelLightStruct_loadChannelLight(int channel, ModelLightStruct* light, Gam
         case 3:
             break;
         case 4:
-            GXInitSpecularDir(&light->specularLightObj, light->viewDirX, light->viewDirY, light->viewDirZ);
+            GXInitSpecularDir(&light->specularLightObj, light->viewDirection.x, light->viewDirection.y, light->viewDirection.z);
             break;
         }
         color = *(GXColor*)light->specularColor;
@@ -1193,7 +1193,7 @@ void updateLights(void) {
             }
 
             if (light->owner != NULL) {
-                Obj_TransformLocalVectorByWorldMatrix(light->owner, &light->localDirX, &light->worldDirX);
+                Obj_TransformLocalVectorByWorldMatrix(light->owner, &light->localDirection.x, &light->worldDirection.x);
             }
             if (light->transformMode == 0) {
                 PSMTXMultVecSR((MtxPtr)view, &light->worldDirection, &light->viewDirection);

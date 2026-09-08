@@ -126,3 +126,23 @@ ownership, unclaimed and foreign data, unnamed code, repeated loads, outside
 consumers of automatic gaps, invalid startup patterns and hash rejection.
 All 21 pool-audit tests pass. EN `all_source` and the strict retail checksum
 also pass, each within its 30-second limit (20.87 and 24.07 seconds).
+
+## Vector helper type recovery
+
+The shared vector API now uses `const Vec*` inputs and `Vec*` outputs. Its
+lighting consumers pass their existing local/world direction vectors directly;
+the redundant scalar direction aliases are removed, with offsets asserted at
+`0x28`, `0x34` and `0x40`. In-place normalization and the original squared-length
+expression order are preserved.
+
+`Vec_normalize` is another example of a misleadingly low aggregate score:
+**75.52941%**, despite both retail and source having 17 instructions. EN retail
+at `80292C30` and the reconstructed body both retain the input in r31, preserve
+the output pointer on the stack, and call `Vec_lengthSquared`, `invSqrt`, then
+`Vec_scale`. The differences are the frame size (24 versus 32 bytes), stack
+slot offsets, and prologue/epilogue instruction ordering. Its two vector callees
+already match exactly. There is no constant pool involved in these helpers.
+
+The type recovery leaves every existing source object byte-identical in all
+four hash-verified targets, including the exact lighting TU; it does not claim
+a score increase or establish a different compiler profile.

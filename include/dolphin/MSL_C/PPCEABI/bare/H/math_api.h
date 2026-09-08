@@ -2,6 +2,7 @@
 #define DOLPHIN_MSL_C_PPCEABI_BARE_H_MATH_API_H_
 
 #include "types.h"
+#include "dolphin/mtx/vec_types.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 
@@ -15,9 +16,9 @@ float sqrtf(float x);
 float expf(float x);
 float fabsf(float x);
 float powfBitEstimate(float base, float exponentValue);
-void Vec_normalize(void* input, void* output);
-void Vec_scale(void* input, void* output, float scale);
-float Vec_lengthSquared(void* input);
+void Vec_normalize(const Vec* input, Vec* output);
+void Vec_scale(const Vec* input, Vec* output, float scale);
+float Vec_lengthSquared(const Vec* input);
 float trigReduceQuadrant(u16* quadrant, float angle);
 float acosf_fast(float x);
 float atanf_fast(float x);
