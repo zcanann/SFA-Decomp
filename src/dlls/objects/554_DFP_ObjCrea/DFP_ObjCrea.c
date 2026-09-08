@@ -15,40 +15,33 @@
 #define DFPOBJCREATOR_MODE_PERIODIC_WATER 7
 #define DFPOBJCREATOR_CHILD_LINGER_FRAMES 220
 
-int DFP_ObjCreator_getExtraSize(void)
-{
+int DFP_ObjCreator_getExtraSize(void) {
     return sizeof(DfpObjCreatorState);
 }
-int DFP_ObjCreator_getObjectTypeId(void)
-{
+int DFP_ObjCreator_getObjectTypeId(void) {
     return 0x0;
 }
 
-void DFP_ObjCreator_free(GameObject* obj, int flag)
-{
+void DFP_ObjCreator_free(GameObject* obj, int flag) {
     DfpObjCreatorState* state = obj->extra;
-    if (flag == 0)
-    {
-        if (state->ownedObj != NULL)
-        {
+    if (flag == 0) {
+        if (state->ownedObj != NULL) {
             Obj_FreeObject(state->ownedObj);
             state->ownedObj = NULL;
         }
     }
 }
 
-void DFP_ObjCreator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible == 0)
+void DFP_ObjCreator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) {
+    if (visible == 0) {
         return;
+    }
 }
 
-void DFP_ObjCreator_hitDetect(void)
-{
+void DFP_ObjCreator_hitDetect(void) {
 }
 
-void DFP_ObjCreator_update(GameObject* obj)
-{
+void DFP_ObjCreator_update(GameObject* obj) {
 
     DfpObjCreatorPlacementPrefix* data = (DfpObjCreatorPlacementPrefix*)obj->anim.placementData;
     DfpObjCreatorState* state = obj->extra;
@@ -57,14 +50,11 @@ void DFP_ObjCreator_update(GameObject* obj)
     u8 canSetupObject;
 
     canSetupObject = Obj_CanSetupObject();
-    if (canSetupObject > 0)
-    {
-        switch (data->behaviorMode)
-        {
+    if (canSetupObject > 0) {
+        switch (data->behaviorMode) {
         case DFPOBJCREATOR_MODE_PERIODIC_WATER:
             state->spawnTimer -= (s16)timeDelta;
-            if (state->spawnTimer <= 0 && mainGetBit(state->gameBit) != 0)
-            {
+            if (state->spawnTimer <= 0 && mainGetBit(state->gameBit) != 0) {
                 state->spawnTimer = state->spawnPeriod;
                 setup = (CFCratePlacement*)Obj_AllocObjectSetup(sizeof(CFCratePlacement), CFCRATE_OBJ_DFP_WATER_HI);
                 setup->base.posX = data->base.posX;
@@ -85,8 +75,7 @@ void DFP_ObjCreator_update(GameObject* obj)
     }
 }
 
-void DFP_ObjCreator_init(GameObject* obj, DfpObjCreatorPlacementPrefix* def)
-{
+void DFP_ObjCreator_init(GameObject* obj, DfpObjCreatorPlacementPrefix* def) {
     DfpObjCreatorState* state = obj->extra;
     obj->anim.rotX = (s16)((s32)def->parameter.rotationHighByte << 8);
     state->gameBit = def->gameBit;
@@ -97,12 +86,10 @@ void DFP_ObjCreator_init(GameObject* obj, DfpObjCreatorPlacementPrefix* def)
     state->unk16 = 100;
 }
 
-void DFP_ObjCreator_release(void)
-{
+void DFP_ObjCreator_release(void) {
 }
 
-void DFP_ObjCreator_initialise(void)
-{
+void DFP_ObjCreator_initialise(void) {
 }
 
 ObjectDescriptor gDFP_ObjCreatorObjDescriptor = {

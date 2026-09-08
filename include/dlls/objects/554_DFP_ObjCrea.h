@@ -7,8 +7,7 @@
 
 /* EN accesses establish this prefix through byte 0x20. The complete EN
  * record extent is unverified; secondary romlists use 0x24-byte records. */
-typedef struct DfpObjCreatorPlacementPrefix
-{
+typedef struct DfpObjCreatorPlacementPrefix {
     ObjPlacement base;
     s16 gameBit;
     s16 behaviorMode;
@@ -22,8 +21,7 @@ typedef struct DfpObjCreatorPlacementPrefix
 } DfpObjCreatorPlacementPrefix;
 
 /* DFP_ObjCreator_getExtraSize returns 0x1C in retail EN. */
-typedef struct DfpObjCreatorState
-{
+typedef struct DfpObjCreatorState {
     GameObject* ownedObj; /* freed on final destruction; no assignment in this TU */
     u8 unk04[8];
     s16 gameBit;
