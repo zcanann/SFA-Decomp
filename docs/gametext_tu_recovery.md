@@ -726,3 +726,11 @@ classification changes; the EN all-source and strict checksum gates pass with
 renderer color-mode byte and replace measurement's raw font-record arithmetic
 with typed access. All function bytes, data, normalized relocations and match
 scores remain unchanged across the four verified retail versions.
+
+## Line-wrap parameters and buffer contract (2026-09-08)
+
+The line wrapper now names its scale, maximum line height, scan/copy offsets,
+and line-table roles directly, with typed font metrics and native element
+sizes. A PPC probe executes retail and source through 151 cases and records
+the trailing-space case that returns a counted but null final line pointer.
+See [the line-wrapping contract](gametext_line_wrapping.md).

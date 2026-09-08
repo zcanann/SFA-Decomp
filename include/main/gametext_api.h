@@ -21,7 +21,8 @@ void gameTextMeasureStringBoundsAt(char* str, int boxIdx, int x, int y, int* out
                                    int* outMaxY);
 void gameTextMeasureById(int id, int x, int y, int* outMinX, int* outMaxX, int* outMinY, int* outMaxY);
 
-char** gameTextWrapLines(char* str, f32 width, f32 height, int* outCount, f32* outLineH);
+/* A height output selects string-store allocation; otherwise the caller owns a heap block. */
+char** gameTextWrapLines(char* str, f32 maxWidth, f32 scale, int* outLineCount, f32* outMaxLineHeight);
 
 extern char* sMapDirectoryNameTable[74];
 
