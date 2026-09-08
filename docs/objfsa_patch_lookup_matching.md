@@ -81,3 +81,54 @@ compiler settings, split claims, or literal-pool ordering change.
 ```sh
 python3 tools/objfsa_patch_reset_probe.py
 ```
+
+
+## Plane-normal packing and the literal pool
+
+`Objfsa_PackPlaneNormal` now expresses the shared conversion from a normalized
+floating-point plane component to signed 16-bit storage: multiply by 32767.0f
+and truncate. Both plane-construction macros call it for X and Z, giving sixteen
+inlined conversions across the four walk-group and four new-patch edges. The
+normalization, destination fields and plane-offset computation are unchanged.
+
+Its ordinary static definition precedes `Objfsa_UpdateWalkGroupPatches` under
+the existing GC/1.3 automatic-inlining profile. This emits the normal scale at
+`.sdata2 + 0x34`, before the updater's 14.0f and 10.0f corner scales. The previous
+source emitted these three floats in the order 14, 10, 32767. The full 72-byte
+pool now matches retail without named scalar anchors, padding, compiler flags
+or split changes. The helper's name and exact original source arrangement are
+reconstructed; the pool ordering is supporting evidence, not original-source
+proof.
+
+All nineteen existing function bodies retain identical instruction bytes.
+Their 228 ordered literal loads retain the same values and widths, and
+non-pool relocation destinations and named data layouts are unchanged. The
+helper also emits a 32-byte standalone local body; all sixteen calls inline
+and no retained original function references that body. An EN diagnostic
+source-link comparison confirms that the linker strips it. All named symbol
+addresses and sizes and all allocated section sizes remain unchanged. Its only
+text differences are ten literal-load displacements, each still loading the
+same four-byte value; the only data differences are the reordered pool floats.
+
+The complete pool and its direct r2 consumers are checked against each
+configured, SHA-1-verified retail DOL. No outside direct consumer overlaps
+this unit's pool:
+
+| Version | Pool start |
+| --- | --- |
+| GSAE01 | `803E05C8` |
+| GSAE01_rev1 | `803E1248` |
+| GSAJ01 | `803E06E8` |
+| GSAP01_rev1 | `803E1F90` |
+
+The audit does not cover arbitrary materialized pointers
+or indexed loads. Each verified version gains 72 matched data bytes; PAL
+rev0 is excluded because the locally available DOL fails its configured hash.
+All four `all_source` builds pass, and the EN strict retail checksum passes
+using the retail object for this still-NonMatching unit. The remaining
+patch-update code mismatch is unchanged.
+
+```sh
+python3 tools/pool_value_sequence.py src/dlls/engine/20_Hcurves/Hcurves.c --version GSAE01
+python3 tools/retail_pool_audit.py src/dlls/engine/20_Hcurves/Hcurves.c --version GSAE01
+```
