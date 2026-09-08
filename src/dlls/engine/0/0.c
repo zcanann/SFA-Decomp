@@ -3717,7 +3717,8 @@ void headDisplayDraw(void) {
             clampedAlpha = waveAlpha < 0 ? 0 : waveAlpha;
 
             drawPartialTexture(hudTextures[84], 490.0f, (f32)(value = panelY + y),
-                               clampedAlpha > 0xff ? 0xff : clampedAlpha, 0x100, 0x78, 2, randomGetRange(0, 0x1e) << 1, randomGetRange(0, 0x1e) << 1);
+                               clampedAlpha > 0xff ? 0xff : clampedAlpha, 0x100, 0x78, 2, randomGetRange(0, 0x1e) << 1,
+                               randomGetRange(0, 0x1e) << 1);
             clampedAlpha = (int)((f32)(s16)panelAlpha * (0.3f + wave));
             if (clampedAlpha < 0) {
                 clampedAlpha = 0;
