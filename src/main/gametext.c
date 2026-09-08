@@ -1431,24 +1431,15 @@ void gameTextRun(void) {
         loadSlot++;
     } while (i-- != 0);
 
-    i = GAMETEXT_FALLBACK_COUNT;
-    {
-        f32* elapsed;
-        GameTextDef* entry;
-        f32* requestDelta;
-        requestDelta = sGameTextFallbackRequestDelta + GAMETEXT_FALLBACK_COUNT;
-        elapsed = sGameTextFallbackElapsedFrames + GAMETEXT_FALLBACK_COUNT;
-        entry = sGameTextFallbackDefs + GAMETEXT_FALLBACK_COUNT;
-        zero = 0.0f;
-        fadeLimit = 120.0f;
-        while (requestDelta--, elapsed--, entry--, i-- != 0) {
-            if (*requestDelta > zero) {
-                *elapsed += timeDelta;
-                if (*elapsed > fadeLimit) {
-                    *requestDelta = zero;
-                    *elapsed = zero;
-                    sprintf(*entry->strings, sGameTextBlankFormat);
-                }
+    zero = 0.0f;
+    fadeLimit = 120.0f;
+    for (i = GAMETEXT_FALLBACK_COUNT; i-- != 0;) {
+        if (sGameTextFallbackRequestDelta[i] > zero) {
+            sGameTextFallbackElapsedFrames[i] += timeDelta;
+            if (sGameTextFallbackElapsedFrames[i] > fadeLimit) {
+                sGameTextFallbackRequestDelta[i] = zero;
+                sGameTextFallbackElapsedFrames[i] = zero;
+                sprintf(*sGameTextFallbackDefs[i].strings, sGameTextBlankFormat);
             }
         }
     }
@@ -1564,11 +1555,9 @@ void gameTextRun(void) {
     gGameTextCommandCount = 0;
     gGameTextCommandStringCursor = sGameTextCommandStringBuffer;
 
-    i = GAMETEXT_BOX_COUNT;
-    textBox = &gTextBoxes[GAMETEXT_BOX_COUNT];
-    while (textBox--, i-- != 0) {
-        textBox->cursorX = 0;
-        textBox->cursorY = 0;
+    for (i = GAMETEXT_BOX_COUNT; i-- != 0;) {
+        gTextBoxes[i].cursorX = 0;
+        gTextBoxes[i].cursorY = 0;
     }
     gCurTextBox = NULL;
 }

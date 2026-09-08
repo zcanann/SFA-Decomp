@@ -583,3 +583,45 @@ and preserves the whole object. The unit remains `NonMatching`.
 Matching configuration, `ninja all_source`, and strict `ninja` pass with
 30-second timeouts (`main.dol: OK`). The matching link continues to use this
 unit's retail object.
+
+## Bounded per-frame array walks (2026-09-07)
+
+The runner's fallback-expiry and final window-reset loops now use bounded
+reverse indices into their owning arrays. The previous comma conditions
+decremented their cursors even on the terminating iteration, forming pointers
+before the arrays. No such pointer is needed to express either operation.
+The eight fallback records still expire in reverse order only when a positive
+request has accumulated more than 120 frames; all 148 windows still reset.
+
+`gameTextRun` improves from 91.79521% to 91.848404%, retaining 364 source
+instructions against 376 retail instructions. Same-mnemonic operand differences
+fall from 115 to 112; 23 mnemonic-alignment differences remain. The final reset
+now uses retail's counter and cursor registers. Other register assignments
+change within the runner, but its arithmetic, memory-operation order, and
+instruction count are preserved.
+
+The TU rises from 97.8544% to 97.857925% with 44/54 functions exact. All 53 other
+function bodies, allocated non-text bytes, named-symbol layouts, and normalized
+relocation targets remain unchanged. The source and canonical API header pass
+the formatter check with no additional diff; rebuilding preserves the selected
+object bytes.
+
+`tools/gametext_maintenance_probe.py` executes compiled and retail runners
+against an independent state oracle over 64 idle-frame cases. It covers zero,
+positive and negative requests, expiry threshold crossings, first and last
+entries, mixed active masks, both font-timer states, complete window records,
+neighboring guards, blanking-call order, the sound stop, and preserved registers.
+Unicorn executes scalar PPC; the existing Gekko adapter supplies paired-single
+register saves and restores. Loading and queued commands are disabled. Changing
+the expiry comparison to `>=` or skipping the last window makes the probe fail.
+All sixteen existing gametext tests also pass.
+
+Run with Python containing `unicorn` and `pyelftools`, after compiling the TU:
+
+```sh
+python3 tools/gametext_maintenance_probe.py
+```
+
+`ninja all_source` and the strict checksum pass after matching configuration,
+each within its 30-second limit. All 1,001 other source objects retain their
+bytes. The TU remains `NonMatching` and the matching link uses retail.
