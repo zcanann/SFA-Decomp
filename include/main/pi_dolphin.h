@@ -15,7 +15,6 @@ void mapsLoadTabOffsets(int firstWord, s32* offsets, int count);
 
 /* extern-cleanup: defining-file public prototypes */
 void setDisplayCopyFilter(void);
-void gxDisableGpuHangRecovery(void);
 void allocSomething32bytes(void);
 void initViewport(void);
 void tvInit(void);

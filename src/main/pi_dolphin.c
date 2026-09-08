@@ -10,6 +10,7 @@
 #include "sys/objects.h"
 #include "dolphin/gx/GXMisc.h"
 #include "main/pi_dolphin.h"
+#include "main/gpu_hang.h"
 #include "main/newshadows.h"
 #include "main/mm.h"
 #include "main/model.h"
@@ -1710,7 +1711,6 @@ s32 mapCheckCurBlocks(int v) {
 char sMapAssetPathFormats[0x78] =
     "%s/animcurv.bin\0%s/animcurv.tab\0%s/voxmap.bin\0\0\0warlock/voxmap.bin\0\0%s/voxmap.tab\0\0"
     "\0%s/mod%d.zlb.bin\0\0\0\0%s/mod%d.tab";
-void gxSetGPMetricsEnabled(int);
 
 void* mapLoadDataFile(int mapId, int fileId) {
     struct MldfNames* nm = (struct MldfNames*)sResourceFileNameAudioTab;
@@ -4204,21 +4204,21 @@ void videoBreakPointCallback(void);
 void gpuErrorHandler(u32 retraceCount) {
     char* strs = (char*)gLoadingScreenTextures;
     VideoFlipToken token;
-    u32 botClks;
-    u32 botPerf0;
-    u32 botClks2;
-    u32 botPerf1;
-    u32 topClks;
-    u32 topPerf0;
-    u32 topClks2;
-    u32 topPerf1;
-    u8 cmdRdy;
-    u8 readIdle;
-    u8 fifoErr;
-    u32 xfStuck;
-    u32 cmdStuck;
-    u32 rdIdle;
-    u32 cmdIdle;
+    u32 xfTopBefore;
+    u32 xfBottomBefore;
+    u32 setupReadyBefore;
+    u32 rasterReadyBefore;
+    u32 xfTopAfter;
+    u32 xfBottomAfter;
+    u32 setupReadyAfter;
+    u32 rasterReadyAfter;
+    GXBool fifoReadIdle;
+    GXBool commandIdle;
+    GXBool unusedStatus;
+    u32 xfTopUnchanged;
+    u32 xfBottomUnchanged;
+    u32 setupReadyAdvanced;
+    u32 rasterReadyAdvanced;
 
     if (gFlipTokenHeldForDisplayedFb != 0 && gFrameBufferFlipped != 0) {
         Queue_Pop(&gVideoFlipQueue, &token);
@@ -4252,21 +4252,21 @@ void gpuErrorHandler(u32 retraceCount) {
     }
     if (enableDebugText != 0 && gVideoWaitThread != NULL && (u32)gGpuStallRetraceCount > 600) {
         debugPrintfxy(0x32, 100, strs + 0x40000);
-        GXReadXfRasMetric(&botPerf0, &botClks, &botPerf1, &botClks2);
-        GXReadXfRasMetric(&topPerf0, &topClks, &topPerf1, &topClks2);
-        xfStuck = (topClks - botClks) == 0;
-        cmdStuck = (topPerf0 - botPerf0) == 0;
-        rdIdle = (topClks2 - botClks2) != 0;
-        cmdIdle = (topPerf1 - botPerf1) != 0;
-        GXGetGPStatus(&fifoErr, &fifoErr, &cmdRdy, &readIdle, &fifoErr);
-        debugPrintfxy(0x32, 0x78, strs + 0x4002c, cmdRdy, readIdle, xfStuck, cmdStuck, rdIdle, cmdIdle);
-        if (cmdStuck == 0 && rdIdle != 0) {
+        GXReadXfRasMetric(&xfBottomBefore, &xfTopBefore, &rasterReadyBefore, &setupReadyBefore);
+        GXReadXfRasMetric(&xfBottomAfter, &xfTopAfter, &rasterReadyAfter, &setupReadyAfter);
+        xfTopUnchanged = (xfTopAfter - xfTopBefore) == 0;
+        xfBottomUnchanged = (xfBottomAfter - xfBottomBefore) == 0;
+        setupReadyAdvanced = (setupReadyAfter - setupReadyBefore) != 0;
+        rasterReadyAdvanced = (rasterReadyAfter - rasterReadyBefore) != 0;
+        GXGetGPStatus(&unusedStatus, &unusedStatus, &fifoReadIdle, &commandIdle, &unusedStatus);
+        debugPrintfxy(0x32, 0x78, strs + 0x4002c, fifoReadIdle, commandIdle, xfTopUnchanged, xfBottomUnchanged, setupReadyAdvanced, rasterReadyAdvanced);
+        if (xfBottomUnchanged == 0 && setupReadyAdvanced != 0) {
             debugPrintfxy(0x32, 0x8c, strs + 0x40048);
-        } else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0) {
+        } else if (xfTopUnchanged == 0 && xfBottomUnchanged != 0 && setupReadyAdvanced != 0) {
             debugPrintfxy(0x32, 0x8c, strs + 0x40068);
-        } else if (readIdle == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0) {
+        } else if (commandIdle == 0 && xfTopUnchanged != 0 && xfBottomUnchanged != 0 && setupReadyAdvanced != 0) {
             debugPrintfxy(0x32, 0x8c, strs + 0x40090);
-        } else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 && cmdIdle != 0) {
+        } else if (fifoReadIdle != 0 && commandIdle != 0 && xfTopUnchanged != 0 && xfBottomUnchanged != 0 && setupReadyAdvanced != 0 && rasterReadyAdvanced != 0) {
             debugPrintfxy(0x32, 0x8c, strs + 0x400b4);
         } else {
             debugPrintfxy(0x32, 0x8c, strs + 0x400e4);
@@ -4274,7 +4274,6 @@ void gpuErrorHandler(u32 retraceCount) {
         debugPrintfxy(0x32, 0xa0, sProgramCounterFormat, gVideoWaitThread->context.srr0);
     }
 }
-void logGpuHang(void);
 
 void videoSwapFrameBuffers(u32 retraceCount) {
     u16 sync;
@@ -4317,7 +4316,7 @@ void videoSwapFrameBuffers(u32 retraceCount) {
             Queue_Peek(&gVideoFlipQueue, &token);
             GXEnableBreakPt(token.fifoWritePointer);
         }
-        gxSetGPMetricsEnabled(1);
+        videoSetGpuHangMetricsEnabled(1);
     }
 }
 
