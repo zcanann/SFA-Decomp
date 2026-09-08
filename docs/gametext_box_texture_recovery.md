@@ -11,9 +11,9 @@ Replace the imported expansion of 48 halfword stores and its byte-offset
 temporaries with four nested loops: tile row, tile column, texel row, texel
 column. A `u16*` source-row view keeps the row origin separate from the column
 index, matching retail's row-base-plus-column addressing. Each destination
-advances by one halfword. Separate row counters and destination cursors describe
-the two independently allocated images; the inner coordinates and row view are
-reused.
+advances by one halfword. Both images now use `gameTextTileBoxTexture`, a private
+inline routine parameterized by image width. The source-row view is read-only;
+allocation, pointer publication, and cache flushing remain in the caller.
 
 The existing profile disabled both strength reduction and propagation. That
 profile was fitted to the already-expanded source: removing either restriction
@@ -31,14 +31,20 @@ their original settings.
 
 ## Matching and checks
 
-- Fuzzy code match: **96.66239% -> 98.290596%**.
+- Fuzzy code match: **96.66239% -> 98.290596% -> 98.76068%**.
 - Target and current length: **234 instructions / 936 bytes**.
-- Operand differences: **136 -> 59**; one structural difference remains, the
-  edge loop's initial `li` versus retail's `mr`. Register allocation is not yet
-  exact, so the unit remains `NonMatching`.
+- The shared inline routine reduces operand differences from **59 to 26**.
+  It fixes the edge loop's initial `li` versus retail's `mr`, but introduces two
+  `mr` versus `li` differences in the corner loop. The net objdiff improvement
+  accompanies removal of the duplicated algorithm; the unit remains
+  `NonMatching`.
 - All allocated data and named symbol layouts are unchanged. The resulting raw
   object SHA256 is
-  `c5c87d290e941289d0e726a9019c3ac5fcfc63b02b7506a5bbc296d06e93d166`.
+  `1617af8e533c1197192041aae336d33d47045bf96c1270a9d3b5bbb57494abec`.
+- EN, EN rev1, JP, and PAL rev1 have identical normalized retail function bodies
+  after input DOL checksum verification. All four source builds emit the same
+  object and improve from **98.290596% to 98.76068%**. Relocations are unchanged.
+  No compiler settings, splits, or matching manifests change.
 
 `python -m unittest discover -s tools -p test_gametext_box_textures.py` compiles
 the production TU with host-native texture storage and controlled allocator,

@@ -7,17 +7,27 @@ Texture* gGameTextBoxBgTexture;
 Texture* gGameTextBoxCornerTexture;
 Texture* gGameTextBoxEdgeTexture;
 
+static inline void gameTextTileBoxTexture(u16* dst, const u16* src, int width) {
+    const u16* sourceRow;
+    int tileRow;
+    int tileColumn, texelX, texelY;
+    for (tileRow = 0; tileRow < width / 4; tileRow++) {
+        for (tileColumn = 0; tileColumn < width / 4; tileColumn++) {
+            for (texelY = 0; texelY < 4; texelY++) {
+                sourceRow = src + (tileRow * 4 + texelY) * width;
+                for (texelX = 0; texelX < 4; texelX++) {
+                    *dst++ = sourceRow[tileColumn * 4 + texelX];
+                }
+            }
+        }
+    }
+}
+
 void gameTextInitBoxTextures(void) {
     Texture** textureSlot;
     s16* textureAsset;
     int assetCount;
     Texture* texture;
-    u16* sourceRow;
-    u16* cornerDst;
-    int cornerTileRow;
-    u16* edgeDst;
-    int edgeTileRow;
-    int tileColumn, texelX, texelY;
 
     assetCount = 1;
     textureAsset = &gGameTextBoxTexAssets + 1;
@@ -28,31 +38,11 @@ void gameTextInitBoxTextures(void) {
 
     texture = textureAlloc(16, 16, GX_TF_RGB5A3, 0, 0, 0, 0, 1, 1);
     gGameTextBoxCornerTexture = texture;
-    cornerDst = (u16*)(texture + 1);
-    for (cornerTileRow = 0; cornerTileRow < 4; cornerTileRow++) {
-        for (tileColumn = 0; tileColumn < 4; tileColumn++) {
-            for (texelY = 0; texelY < 4; texelY++) {
-                sourceRow = gGameTextBoxCornerTexSrc + (cornerTileRow * 4 + texelY) * 16;
-                for (texelX = 0; texelX < 4; texelX++) {
-                    *cornerDst++ = sourceRow[tileColumn * 4 + texelX];
-                }
-            }
-        }
-    }
+    gameTextTileBoxTexture((u16*)(texture + 1), gGameTextBoxCornerTexSrc, 16);
     DCFlushRange(gGameTextBoxCornerTexture + 1, 512);
 
     texture = textureAlloc(20, 20, GX_TF_RGB5A3, 0, 0, 0, 0, 1, 1);
     gGameTextBoxEdgeTexture = texture;
-    edgeDst = (u16*)(texture + 1);
-    for (edgeTileRow = 0; edgeTileRow < 5; edgeTileRow++) {
-        for (tileColumn = 0; tileColumn < 5; tileColumn++) {
-            for (texelY = 0; texelY < 4; texelY++) {
-                sourceRow = gGameTextBoxEdgeTexSrc + (edgeTileRow * 4 + texelY) * 20;
-                for (texelX = 0; texelX < 4; texelX++) {
-                    *edgeDst++ = sourceRow[tileColumn * 4 + texelX];
-                }
-            }
-        }
-    }
+    gameTextTileBoxTexture((u16*)(texture + 1), gGameTextBoxEdgeTexSrc, 20);
     DCFlushRange(gGameTextBoxEdgeTexture + 1, 800);
 }
