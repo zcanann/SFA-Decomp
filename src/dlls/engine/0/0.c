@@ -3183,8 +3183,7 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky) {
     }
 
     for (i = 0; i < CMENU_ITEM_SLOT_COUNT; i++) {
-        if (previousTextureIds[i] >= 0 && previousTextureIds[i] != hud->itemSlots[i] &&
-            hud->itemTextures[i] != NULL) {
+        if (previousTextureIds[i] >= 0 && previousTextureIds[i] != hud->itemSlots[i] && hud->itemTextures[i] != NULL) {
             textureFree(hud->itemTextures[i]);
             hud->itemTextures[i] = NULL;
         }
