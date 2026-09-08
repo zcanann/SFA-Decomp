@@ -2094,6 +2094,9 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
 }
 
 void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget) {
+    /* Retail forwards the full alpha word here. Restore intersect_render.c's
+     * signature over this TU's legacy narrow HUD declaration. */
+    extern void drawTexture(void* texture, f32 x, f32 y, int alpha, int scale);
     int prevCharset;
     void* tex;
     CounterText buf1;
