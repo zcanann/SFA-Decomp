@@ -171,9 +171,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--baseline", required=True, help="Git revision containing the reference function")
     parser.add_argument("--cases", type=int, default=10000)
+    parser.add_argument("--cc", default="clang", help="Host C compiler executable")
+    parser.add_argument("--timeout", type=float, default=30,
+                        help="Time limit in seconds for compilation and execution separately")
     args = parser.parse_args()
     if args.cases < 1:
         parser.error("--cases must be positive")
+    if not 0 < args.timeout < float("inf"):
+        parser.error("--timeout must be finite and positive")
     old = subprocess.check_output(["git", "show", f"{args.baseline}:{SOURCE}"], cwd=ROOT, text=True)
     current = (ROOT / SOURCE).read_text()
     harness = "\n".join([PRELUDE, layouts(), FIXTURE, function(old, "baseline"),
@@ -182,10 +187,15 @@ def main():
         source = Path(directory) / "probe.c"
         executable = Path(directory) / "probe"
         source.write_text(harness)
-        subprocess.run(["clang", "-std=c99", "-O1", "-Wall", "-Wextra", "-Werror",
-                        "-fsanitize=address,undefined", f"-DCASE_COUNT={args.cases}",
-                        str(source), "-o", str(executable)], check=True)
-        subprocess.run([str(executable)], check=True)
+        phase = "compilation"
+        try:
+            subprocess.run([args.cc, "-std=c99", "-O1", "-Wall", "-Wextra", "-Werror",
+                            "-fsanitize=address,undefined", f"-DCASE_COUNT={args.cases}",
+                            str(source), "-o", str(executable)], check=True, timeout=args.timeout)
+            phase = "execution"
+            subprocess.run([str(executable)], check=True, timeout=args.timeout)
+        except subprocess.TimeoutExpired:
+            parser.exit(1, f"C-menu differential probe {phase} timed out after {args.timeout:g} seconds\n")
 
 
 if __name__ == "__main__":

@@ -3142,7 +3142,11 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky) {
             hud->auxiliaryValues[itemCount] = items[i].auxiliaryValue;
             hud->auxiliaryBytes[itemCount] = items[i].auxiliaryByte;
             hud->closeMode[itemCount] = items[i].closeMode;
-            hud->enabled[itemCount] = items[i].activeGameBit < 0 || mainGetBit(items[i].activeGameBit) == 0;
+            if (items[i].activeGameBit < 0 || mainGetBit(items[i].activeGameBit) == 0) {
+                hud->enabled[itemCount] = 1;
+            } else {
+                hud->enabled[itemCount] = 0;
+            }
             itemCount++;
         }
     } else {
@@ -3152,33 +3156,32 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky) {
 
         getTrickyObject();
         itemMask = gTrickyHudItemMask;
-        if (itemMask == -1) {
-            if (yButtonState == 2) {
-                yButtonState = 0;
-                yButtonItemTextureId = -1;
-            }
-        } else {
+        if (itemMask != -1) {
             actionMask = gTrickyHudActionMask;
             yButtonAction = yButtonItem;
             for (i = 0; items[i].ownedGameBit >= 0; i++) {
-                if ((actionMask & items[i].ownedGameBit) == 0) {
-                    if (yButtonState == 2 && yButtonAction == items[i].activeGameBit) {
-                        yButtonState = 0;
-                        yButtonItemTextureId = -1;
+                if ((actionMask & items[i].ownedGameBit) != 0) {
+                    hud->itemSlots[itemCount] = items[i].iconTextureId;
+                    hud->itemFlags[itemCount] = 1;
+                    hud->ownedBits[itemCount] = items[i].activeGameBit;
+                    hud->textIds[itemCount] = items[i].nameTextId;
+                    hud->auxiliaryValues[itemCount] = items[i].auxiliaryValue;
+                    hud->auxiliaryBytes[itemCount] = items[i].auxiliaryByte;
+                    hud->closeMode[itemCount] = items[i].closeMode;
+                    if ((itemMask & items[i].ownedGameBit) != 0) {
+                        hud->enabled[itemCount] = 1;
+                    } else {
+                        hud->enabled[itemCount] = 0;
                     }
-                    continue;
+                    itemCount++;
+                } else if (yButtonState == 2 && yButtonAction == items[i].activeGameBit) {
+                    yButtonState = 0;
+                    yButtonItemTextureId = -1;
                 }
-
-                hud->itemSlots[itemCount] = items[i].iconTextureId;
-                hud->itemFlags[itemCount] = 1;
-                hud->ownedBits[itemCount] = items[i].activeGameBit;
-                hud->textIds[itemCount] = items[i].nameTextId;
-                hud->auxiliaryValues[itemCount] = items[i].auxiliaryValue;
-                hud->auxiliaryBytes[itemCount] = items[i].auxiliaryByte;
-                hud->closeMode[itemCount] = items[i].closeMode;
-                hud->enabled[itemCount] = (itemMask & items[i].ownedGameBit) != 0;
-                itemCount++;
             }
+        } else if (yButtonState == 2) {
+            yButtonState = 0;
+            yButtonItemTextureId = -1;
         }
     }
 

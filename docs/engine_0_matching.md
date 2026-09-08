@@ -1180,3 +1180,56 @@ under AddressSanitizer and UndefinedBehaviorSanitizer. It includes full-width
 ownership values, several negative table terminators, and empty/full-capacity
 lists. This complements the focused assertions above; it does not establish
 retail runtime or PPC ABI equivalence.
+
+## 2026-09-08: C-menu branch order and enabled stores
+
+The readable indexed implementation now follows retail's branch order for
+Tricky menus: process a valid item mask first, then handle the unavailable
+mask; append an allowed action first, then invalidate the Y-button selection
+for a disallowed action. Inventory filtering and its shared slot setup remain
+intact. No byte-offset counters or duplicated inventory fill are restored.
+
+Both inventory and Tricky paths assign the enabled byte through explicit
+`if`/`else` stores. Retail's corresponding branches each materialize and store
+0 or 1; the previous Boolean-expression assignment joined before storing.
+These source forms account for a measurable part of the instruction gap:
+
+| Source shape | EN `cMenuSetItems` |
+| --- | ---: |
+| Indexed source reset | 53.566227% |
+| Explicit enabled stores | 55.97351% |
+| Allowed Tricky action first | 63.16225% |
+| Valid Tricky item mask first | 66.21192% |
+
+Source size grows from 964 to 976 bytes, against 1,208 retail bytes. The
+compiler uses one fewer saved GPR: `_savegpr_23`/`_restgpr_23` become the
+corresponding helpers starting at r24. All other relocation destinations and
+counts are unchanged after accounting for shifted function positions and
+reordered references within the changed function. Every other function body,
+allocated data section, and named data layout remains unchanged.
+
+The same gain holds for EN v1.0, EN revision 1, JP and PAL revision 1. Each
+retail input passes its configured SHA-1, and the normalized retail function
+signatures agree. All four source functions have SHA-256
+`f8bd6ac5f906e15dffd23f63c8bc2ce139d1adc21006bd52b92e0da1683a9405`.
+The EN/JP unit rises from 99.24733% to 99.4505%; EN revision 1/PAL revision 1
+rises from 91.74408% to 91.94694%. Other function scores are unchanged, and
+this adds no newly exact function. Compiler profiles, split boundaries and
+`NonMatching` classifications remain unchanged.
+
+The focused `test_cmenu_set_items.py` assertions pass at host `-O0` and `-O2`.
+The differential fixture against `987632f5ed` passes all 10,000 cases under
+UndefinedBehaviorSanitizer, comparing return values, complete HUD/global state
+and ordered engine calls. The local ARM64 AddressSanitizer runtime deadlocks
+in its initialization before `main`; a sampled stack shows reentrant sanitizer
+initialization while enumerating the shared cache. This run therefore does
+not claim an ASan pass. The probe now accepts `--cc` and applies a configurable
+30-second limit separately to compilation and execution. Its observed startup
+hang also verifies the new timeout exits with a clear error and terminates the
+child. The default still requests both address and undefined sanitizers.
+
+All four `all_source` builds pass in 20.06, 20.53, 20.04 and 21.03 seconds,
+respectively. Final EN `all_source` and strict checksum builds pass in 19.65
+and 20.79 seconds; the linked DOL retains SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`. Formatting is separate and
+preserves the complete generated object.
