@@ -421,7 +421,7 @@ member). No row is misfiled — every row has a live ledger/memory anchor.
 | GameUI_release | dlls/engine/0/0 | 336 | 98.929 | 14 | 0 | 7G/0F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
 | pauseMenuDrawStatusPage | dlls/engine/0/0 | 2692 | 99.911 | 12 | 0 | 8G/5F | 12 | Updated 2026-09-04: recovered missing sprintf capacity argument and original spellstone sum; alpha register differences remain. |
 | pauseMenuDrawGridCell | dlls/engine/0/0 | 1012 | 99.506 | 22 | 0 | 12G/7F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
-| drawArwingHud | dlls/engine/0/0 | 1064 | 99.944 | 3 | 0 | 10G/1F | 14 | Bomb-slot promotion uses r24 instead of retail r22; opacity narrowing recovered |
+| drawArwingHud | dlls/engine/0/0 | 1064 | 100.000 | 0 | 0 | 10G/1F | 14 | Exact: health-pip expressions computed at use sites restore the bomb-index register |
 | hudDrawCommunicatorAlert | dlls/engine/0/0 | 632 | 100.000 | 0 | 0 | — | — | RESOLVED 2026-09-04: u16 texture-scale API view, repeated draw expressions, and segment-derived fade; see [engine_0_matching.md](engine_0_matching.md) |
 | textureLoad | main/texture | 1932 | 98.882 | 33 | 4 | 17G/0F | 3 | priced 24b (same mechanism as loadTextureFiles: orphan inline preheaders at tail) + width-17 recolour mass; verified |
 | pauseMenuDrawStatus | dlls/engine/0/0 | 2064 | 100 | 0 | 0 | 6G/2F | 0 | **Resolved 2026-09-08:** a signed snapshot-array index closes the last r0/r3 swap. All 2,064 bytes match under unchanged compiler flags; see [analysis](engine_0_matching.md). |

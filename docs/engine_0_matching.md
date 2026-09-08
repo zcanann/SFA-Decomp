@@ -566,3 +566,34 @@ and PAL rev1. All five input DOL hashes are verified. The TU stays
 `NonMatching`, so no whole-object progress-manifest claim is added.
 Validation also includes the strict EN checksum target, `ninja all_source`,
 and formatting checks on the TU and its API header.
+
+
+## September 8: Arwing HUD exact
+
+`drawArwingHud` now matches all **1,064 bytes / 266 instructions**,
+closing the three-word bomb-index mismatch above. The health loop computes
+`maxHealth >> 2` in its condition and `(health & 3) + 0x12` where it selects
+the partial-health texture. Removing both corresponding locals reproduces
+the retail register allocation; removing either alone does not. MWCC still
+hoists both calculations, preserving the original instruction order and
+single computations. The bomb loop itself needs no change.
+
+The already-exact `hudDrawStatusBarsAndCounters` in this same TU provided
+the useful source pattern: compute the pip limit in the loop condition and
+the partial frame in its selection branch. This combined with the recovered
+opacity narrowing resolves the mismatch under the unchanged GC/1.3 profile.
+
+Objdiff reports **100%** for the function. Exact functions rise from
+**110 to 111 / 118**, and exact code rises from 57,996 to
+**59,060 / 75,188 bytes**. Only three bytes in `drawArwingHud` change;
+all other 117 function bodies, allocated data bytes and layouts, named
+symbol layouts, and resolved relocations remain unchanged. Anonymous
+literal symbols are renumbered. All 9,960 assigned data bytes remain exact.
+The complete TU remains `NonMatching` because other functions still differ.
+
+Validation: `python3 tools/fnbytes.py 0 drawArwingHud --md5` reports the
+identical target/current MD5 `04f2aec1ff494198dc7dcaca536305c5`.
+After `python3 configure.py --matching`, strict default `ninja` and
+`ninja all_source` pass with 30-second timeouts. Formatting checks cover
+the active TU and its API header and preserve identical object bytes.
+Secondary DOLs remain unavailable, so no regional manifest is promoted.

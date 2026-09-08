@@ -3834,8 +3834,6 @@ void drawArwingHud(int unused1, int unused2, int unused3) {
     int rings;
     u32 ringSlot;
     u32 i;
-    int partialFrame;
-    int maxPips;
     u32 pip;
     u8 texIdx;
 
@@ -3861,15 +3859,13 @@ void drawArwingHud(int unused1, int unused2, int unused3) {
         }
         i = 0;
         fullPips = health >> 2;
-        partialFrame = (health & 3) + 0x12;
-        maxPips = maxHealth >> 2;
-        for (; (int)(pip = i & 0xff) < maxPips; i++) {
+        for (; (int)(pip = i & 0xff) < (maxHealth >> 2); i++) {
             if ((int)pip < fullPips) {
                 texIdx = 0x16;
             } else if ((int)pip > fullPips) {
                 texIdx = 0x12;
             } else {
-                texIdx = partialFrame;
+                texIdx = (health & 3) + 0x12;
             }
             drawTexture(hudTextures[texIdx], (f32)(int)(pip * 0x21 + 0x1e), 31.0f, (u8)arwingHudAlpha, 0x100);
         }
