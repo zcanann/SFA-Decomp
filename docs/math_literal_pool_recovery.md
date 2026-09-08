@@ -178,6 +178,47 @@ exponential definitions before their users duplicates 32 bytes instead. Neither
 probe is retained. These are placement/compiler-pooling obstacles, not evidence
 for changing the coefficients or forcing padding into the source.
 
+### Exponential and floor source contracts
+
+The exponential result now has an explicit local union containing its float
+value and unsigned binary32 word. `exp2f` first approximates `2^fraction` with
+the existing degree-four polynomial, then adds the signed integer exponent
+to the exponent bits through an unsigned shift. This replaces dereferencing
+an incompatible `u32*` over a float local. The native union emits the identical
+complete object before any symbol renaming.
+
+Fourteen consumed constants now have shared names in the source and the four
+verified version configs. The names distinguish the exponential underflow
+threshold, zero/one and fractional polynomial coefficients from the floor
+routine's independent pool. The log2(e) conversion record retains its eight-byte
+extent: only its first word is consumed, and its zero tail remains unexplained.
+The separate unreferenced trailing floor word is also retained without assigning
+it a role. No constant definition moves or changes type or value.
+
+Regional names are assigned by offsets within the byte-identical 72-byte retail
+pool, not by the address suffix of an old anonymous label. Some EN-style labels
+still identify unrelated native-address constants in secondary configs. Those
+unrelated records retain their names; the new semantic names identify the actual
+math pool at EN rev1 `803E8610`, JP `803E7A98`, and PAL rev1 `803E9370` (EN
+`803E7978`). All existing addresses, extents, and symbol attributes are preserved.
+
+The floor thresholds describe two conversion paths: absolute values below
+65,536 use unsigned-halfword fast casts; values below 8,388,608 use integer
+conversion. Negative fractional values then receive the demonstrated correction.
+Larger magnitudes return the input. This is the retail approximation's contract,
+not a replacement with host `floorf` or a claim about every exceptional input.
+Likewise, the exponential's explicit early return below -127 and its unchecked
+exponent-word adjustment are preserved rather than replaced with host `exp2f`.
+
+Apparently redundant float-address views in `expf` and `fastFloorf` remain:
+removing them changes the generated object with the current compiler. The
+existing per-function optimization pragmas and fast-cast assembly are unchanged.
+All eight function bodies, allocated section bytes/layouts, and relocation
+destinations are identical in EN, EN rev1, JP, and PAL rev1, modulo the fourteen
+symbol names. Every other source object and all objdiff scores are unchanged.
+The data placement mismatch described above remains. Each input DOL passes its
+configured hash; all four `all_source` builds and the strict EN checksum pass.
+
 ## Tangent units and the bitwise log estimate
 
 The tangent helper's locals now distinguish an even octant count from the
