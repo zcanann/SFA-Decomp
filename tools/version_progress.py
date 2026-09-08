@@ -1450,6 +1450,22 @@ def projected_symbol_name(name: str, target_address: int) -> str:
     return f"{match.group('prefix')}_{target_address:08X}"
 
 
+def source_data_identifiers(splits: list[SplitRange], root: Path = Path("src")) -> set[str]:
+    """Keep legacy data names used by shared C, without treating comments as uses."""
+    token = re.compile(
+        r'//[^\n]*|/\*[\s\S]*?\*/|"(?:\\.|[^"\\])*"|'
+        r"'(?:\\.|[^'\\])*'|(?P<symbol>\blbl_[0-9A-Fa-f]{8}\b)"
+    )
+    names: set[str] = set()
+    for unit in sorted({item.unit for item in splits}):
+        path = root / unit
+        if path.suffix not in {".c", ".cpp", ".cc", ".cxx"} or not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        names.update(match.group("symbol") for match in token.finditer(text) if match.group("symbol"))
+    return names
+
+
 def containing_range(
     ranges: list[PortedRange], address: int, *, target: bool
 ) -> PortedRange | None:
@@ -1501,7 +1517,9 @@ def render_projected_symbol_texts(
     target_text: str,
     ported: list[PortedRange],
     matches: dict[int, FunctionSymbol],
+    canonical_data_names: set[str] | None = None,
 ) -> tuple[str, int, int, int]:
+    canonical_data_names = canonical_data_names or set()
     source_lines = source_text.splitlines()
     target_lines = target_text.splitlines()
     claimed_by_section: dict[str, list[PortedRange]] = defaultdict(list)
@@ -1567,6 +1585,7 @@ def render_projected_symbol_texts(
                     continue
         records.append((section, address, ordinal, line))
 
+    data_name_fallbacks: dict[int, str] = {}
     inserted = 0
     for ordinal, line in enumerate(source_lines):
         match = SYMBOL_LINE_RE.match(line)
@@ -1582,6 +1601,9 @@ def render_projected_symbol_texts(
             continue
         target_address = item.target_start + (address - item.source.start)
         target_name = projected_symbol_name(match.group(1), target_address)
+        if match.group(1) in canonical_data_names and target_name != match.group(1):
+            data_name_fallbacks[len(records)] = target_name
+            target_name = match.group(1)
         records.append(
             (
                 section,
@@ -1591,6 +1613,26 @@ def render_projected_symbol_texts(
             )
         )
         inserted += 1
+
+    # Source-used names can collide with a regional label outside the mapped
+    # range, or with another name that had to retain its regional spelling.
+    # Fall back without overwriting either owner; repeat to handle such chains.
+    data_conflicts = 0
+    while data_name_fallbacks:
+        owners: dict[str, set[int]] = defaultdict(set)
+        for _, address, _, line in records:
+            record = SYMBOL_LINE_RE.match(line)
+            assert record is not None
+            owners[record.group(1)].add(address)
+        conflicting = [index for index in data_name_fallbacks
+                       if len(owners[SYMBOL_LINE_RE.match(records[index][3]).group(1)]) > 1]
+        if not conflicting:
+            break
+        for index in conflicting:
+            section, address, ordinal, line = records[index]
+            records[index] = (section, address, ordinal,
+                              rewrite_symbol_line(line, name=data_name_fallbacks.pop(index)))
+            data_conflicts += 1
 
     desired_by_address: dict[int, str] = {}
     for split in ported:
@@ -1608,7 +1650,7 @@ def render_projected_symbol_texts(
 
     rewritten_records: list[tuple[str, int, int, str]] = []
     renamed = 0
-    conflicts = 0
+    conflicts = data_conflicts
     for section, address, ordinal, line in records:
         match = SYMBOL_LINE_RE.match(line)
         assert match is not None
@@ -1664,6 +1706,7 @@ class VersionProjection:
 def project_symbol_snapshot(
     source_dol: DolFile, source_splits: list[SplitRange], source_symbols: str,
     target_dol: DolFile, target_symbols: str,
+    canonical_data_names: set[str] | None = None,
 ) -> VersionProjection:
     source_functions = parse_function_symbols(source_symbols)
     target_functions = parse_function_symbols(target_symbols)
@@ -1713,7 +1756,7 @@ def project_symbol_snapshot(
         target_symbol_spans,
     )
     symbols, renamed, conflicts, symbol_delta = render_projected_symbol_texts(
-        source_symbols, target_symbols, ported, matches
+        source_symbols, target_symbols, ported, matches, canonical_data_names
     )
     return VersionProjection(
         ported=ported, matches=matches, rejected=rejected,
@@ -1728,6 +1771,7 @@ def project_symbol_snapshot(
 def project_version(
     source_dol: DolFile, source_splits: list[SplitRange], source_symbols: str,
     target_dol: DolFile, target_symbols: str, *, max_passes: int = 8,
+    canonical_data_names: set[str] | None = None,
 ) -> VersionProjection:
     """Refine symbol boundaries before publishing one internally consistent result.
 
@@ -1739,7 +1783,7 @@ def project_version(
     renamed = symbol_delta = 0
     for iteration in range(1, max_passes + 1):
         result = project_symbol_snapshot(
-            source_dol, source_splits, source_symbols, target_dol, target_symbols
+            source_dol, source_splits, source_symbols, target_dol, target_symbols, canonical_data_names
         )
         renamed += result.renamed
         symbol_delta += result.symbol_delta
@@ -1791,6 +1835,7 @@ def main() -> int:
         projection = project_version(
             source_dol, source_splits, (source_root / "symbols.txt").read_text(encoding="utf-8"),
             target_dol, (target_root / "symbols.txt").read_text(encoding="utf-8"),
+            canonical_data_names=source_data_identifiers(source_splits),
         )
     except ValueError as error:
         parser.error(str(error))
@@ -1857,7 +1902,7 @@ def main() -> int:
         print(f"Renamed {renamed} functions in {target_root / 'symbols.txt'}")
         print(f"Projected non-code symbols (net {symbol_delta:+d} entries)")
         if conflicts:
-            print(f"Preserved {conflicts} function names with canonical-name conflicts")
+            print(f"Preserved {conflicts} regional symbol names with canonical-name conflicts")
     if args.write_matching:
         report_path = Path("build") / args.target / "report.json"
         report = json.loads(report_path.read_text(encoding="utf-8"))

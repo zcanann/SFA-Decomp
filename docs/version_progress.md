@@ -208,3 +208,51 @@ reordered anchors, unanchored edges, and agreement between rendering and
 fallback pairing. EN source and compiler profiles are unchanged. Its final
 `all_source` and strict retail checksum checks passed in 21.92 and 22.55
 seconds, and its complete objdiff report is unchanged.
+
+## Preserve shared C data identifiers
+
+Address-derived names such as `lbl_8038D77C` can still be actual identifiers in
+shared C. Previously the projector rewrote every such data name to contain the
+regional address, even when the compiled source continued to export the EN
+name. This left otherwise equivalent objects with unpaired data symbols. For
+example, EN rev1's `shadow_dolphin` had identical allocated section bytes and
+normalized relocations to EN, but its 24,208-byte BSS section scored 99.60344%
+and its 88-byte small BSS section scored 43.52941%; neither section contributed
+any fully matched data bytes.
+
+The projector now scans configured shared C/C++ units for legacy `lbl_` tokens,
+ignoring comments and string/character literals. Within an already-projected,
+equal-sized non-code range, those identifiers retain their source spelling at
+the projected regional address. The suffix remains an EN identifier, not an
+assertion about the regional address. Labels absent from shared source retain
+the regional spelling. Existing name owners take priority: a conflict falls
+back to the regional label, including chains where one fallback creates another
+conflict. The token scan establishes the source name only; the existing retail
+boundary and ownership checks establish its regional location.
+
+No source code, compiler flags, section boundaries, symbol addresses, symbol
+sizes, or function pairings change. After decomp-toolkit refreshes its normal
+annotations, the symbol configs differ only in names. The five new regression
+tests cover source-token detection, projected addresses, repeated projection,
+unequal ranges, existing owners and chained conflicts; all 19 projector tests
+pass.
+
+All four verified targets build with identical source objects (1,004 in EN and
+988 per secondary target), and every function's report is unchanged. The data
+gains recognize the existing shared source:
+
+| Target | Units with improved data scores | Additional matched data | Exact units |
+| --- | ---: | ---: | ---: |
+| EN rev1 | 27 | 47,616 bytes | 878 → 895 |
+| JP | 29 | 47,712 bytes | 911 → 933 |
+| PAL rev1 | 25 | 47,456 bytes | 847 → 859 |
+
+All 1,461 named data symbols shared by the source and retail objects in the
+newly selected units agree in section, offset and size. No old manifest entry
+is removed.
+
+The largest common gains are `shadow_dolphin` (24,296 bytes), engine slot 2
+(16,280), and the menu TU (3,624). EN's report is unchanged. Exact-unit manifests
+are regenerated using the existing requirement that every applicable code and
+data score be 100%; no exception is added for the MSL constructor pointer or
+MusyX's discarded helper exception records.

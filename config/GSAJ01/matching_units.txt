@@ -11,9 +11,13 @@ Runtime.PPCEABI.H/runtime.c
 dlls/engine/10_expgfx/expgfx.c
 dlls/engine/11/11.c
 dlls/engine/12/12.c
+dlls/engine/13/13.c
+dlls/engine/14/14.c
 dlls/engine/16/16.c
+dlls/engine/17/17.c
 dlls/engine/18/18.c
 dlls/engine/19/19.c
+dlls/engine/1_camcontrol/camcontrol.c
 dlls/engine/2/maketex.c
 dlls/engine/20_Hcurves/Hcurves_romcurve.c
 dlls/engine/21/21.c
@@ -22,6 +26,7 @@ dlls/engine/23/23.c
 dlls/engine/24/24.c
 dlls/engine/25/25.c
 dlls/engine/26/26.c
+dlls/engine/27/27.c
 dlls/engine/28/28.c
 dlls/engine/29/29.c
 dlls/engine/30/30.c
@@ -46,6 +51,10 @@ dlls/engine/47/47.c
 dlls/engine/48/48.c
 dlls/engine/49/49.c
 dlls/engine/5/5.c
+dlls/engine/52_n_attractmode/n_attractmode.c
+dlls/engine/53/53.c
+dlls/engine/54/54.c
+dlls/engine/55/55.c
 dlls/engine/56/56.c
 dlls/engine/57/57.c
 dlls/engine/58/58.c
@@ -81,6 +90,7 @@ dlls/engine/85/85.c
 dlls/engine/86/86.c
 dlls/engine/87/87.c
 dlls/engine/88/88.c
+dlls/engine/9/9.c
 dlls/modgfx/100/100.c
 dlls/modgfx/101/101.c
 dlls/modgfx/102/102.c
@@ -163,6 +173,7 @@ dlls/modgfx/96/96.c
 dlls/modgfx/97/97.c
 dlls/modgfx/98/98.c
 dlls/modgfx/99/99.c
+dlls/objects/195_Player/player.c
 dlls/objects/197/197.c
 dlls/objects/198_AnimatedObj/AnimatedObj.c
 dlls/objects/199_DIM2RoofRub/DIM2RoofRub.c
@@ -379,6 +390,7 @@ dlls/objects/395_CClevcontro/CClevcontro.c
 dlls/objects/396_MMSH_Shrine/MMSH_Shrine.c
 dlls/objects/397_MMSH_Scales/MMSH_Scales.c
 dlls/objects/398_MMSH_WaterS/MMSH_WaterS.c
+dlls/objects/399_ECSH_Shrine/ECSH_Shrine.c
 dlls/objects/400_ECSH_Cup/ECSH_Cup.c
 dlls/objects/401_ECSH_Creato/ECSH_Creato.c
 dlls/objects/402_GPSH_Shrine/GPSH_Shrine.c
@@ -411,6 +423,7 @@ dlls/objects/428_SH_queenear/SH_queenear.c
 dlls/objects/429_SH_thorntai/SHthorntail.c
 dlls/objects/430_SH_LevelCon/SH_LevelCon.c
 dlls/objects/431_SH_swaplift/SH_swaplift.c
+dlls/objects/432_SH_swapston/SH_swapston.c
 dlls/objects/433_SH_staff/SH_staff.c
 dlls/objects/434_SH_staffHaz/SH_staffHaz.c
 dlls/objects/435_SH_Beacon/SH_Beacon.c
@@ -443,6 +456,7 @@ dlls/objects/462/462.c
 dlls/objects/463/463.c
 dlls/objects/464_DIM_tricky/DIM_tricky.c
 dlls/objects/465_DIMTruthHor/DIMTruthHor.c
+dlls/objects/466_WORLDplanet/WORLDplanet.c
 dlls/objects/467/467.c
 dlls/objects/468_WORLDAstero/WORLDAstero.c
 dlls/objects/469_DIM2Conveyo/DIM2Conveyo.c
@@ -502,6 +516,7 @@ dlls/objects/522_WM_GeneralS/WM_GeneralS.c
 dlls/objects/523_FireFly/FireFly.c
 dlls/objects/524_WM_spiritpl/WM_spiritpl.c
 dlls/objects/525_WM_seqpoint/WM_seqpoint.c
+dlls/objects/526_WM_sun/WM_sun.c
 dlls/objects/527_WM_SpiritSe/WM_SpiritSe.c
 dlls/objects/528_WM_Planets/WM_Planets.c
 dlls/objects/529/529.c
@@ -583,6 +598,7 @@ dlls/objects/605_CRCloudRace/CRCloudRace.c
 dlls/objects/606/606.c
 dlls/objects/607_CRFuelTank/CRFuelTank.c
 dlls/objects/608/608.c
+dlls/objects/609_DR_LaserCan/DR_LaserCan.c
 dlls/objects/610/610.c
 dlls/objects/611_GM_MazeWell/GM_MazeWell.c
 dlls/objects/612/612.c
@@ -677,6 +693,7 @@ dlls/objects/700_Andross/Andross.c
 dlls/objects/701/701.c
 dlls/objects/702_AndrossBrai/AndrossBrai.c
 dlls/objects/703_AndrossLigh/AndrossLigh.c
+dlls/objects/704/704.c
 dlls/projgfx/171/171.c
 dlls/projgfx/172/172.c
 dlls/projgfx/173/173.c
@@ -842,7 +859,9 @@ main/boot_logo.c
 main/camera.c
 main/curves.c
 main/fileio.c
+main/gameloop.c
 main/gameloop_buttonobj.c
+main/gameloop_main.c
 main/mm.c
 main/modellight.c
 main/obj_movelib.c
@@ -850,6 +869,8 @@ main/objlib.c
 main/pad.c
 main/pi_pathsearch.c
 main/rand.c
+main/shader_dolphin.c
+main/shadow_dolphin.c
 main/skystars.c
 main/subtitle.c
 main/texture.c
@@ -907,6 +928,7 @@ musyx/runtime/synth_job_init.c
 musyx/runtime/synth_jobs.c
 musyx/runtime/synth_vsamples.c
 musyx/runtime/voice.c
+track/intersect.c
 track/intersect_memcard.c
 track/intersect_mtx44.c
 track/intersect_screenmath.c

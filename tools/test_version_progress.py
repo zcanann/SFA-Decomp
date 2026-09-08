@@ -14,11 +14,65 @@ from version_progress import (SymbolSpan, SplitRange, VersionProjection, build_b
                               symbol_span_index, verified_dol, project_symbol_snapshot,
                               project_version, build_symbol_mappings, paired_functions,
                               PortedRange, render_projected_symbol_texts, main)
+from version_progress import source_data_identifiers
 
 
 def dol(data, address):
     return SimpleNamespace(path=Path('synthetic.dol'), data=data,
                            sections=[DolSection(13, 0, address, len(data))])
+
+
+class CanonicalDataNameTests(unittest.TestCase):
+    source = ('lbl_80300000 = .bss:0x80300000; // type:object size:0x4\n'
+              'lbl_80300004 = .bss:0x80300004; // type:object size:0x4\n')
+    target = ('lbl_80400000 = .bss:0x80400000; // type:object size:0x4\n'
+              'lbl_80400004 = .bss:0x80400004; // type:object size:0x4\n')
+
+    def ranges(self, size=8):
+        return [PortedRange(SplitRange('example.c', 'bss', 0x80300000, 0x80300008),
+                            0x80400000, 0x80400000 + size, (), ())]
+
+    def test_shared_identifier_keeps_its_name_and_projected_address(self):
+        result, *_ = render_projected_symbol_texts(
+            self.source, self.target, self.ranges(), {}, {'lbl_80300000'})
+        self.assertIn('lbl_80300000 = .bss:0x80400000;', result)
+        self.assertIn('lbl_80400004 = .bss:0x80400004;', result)
+        repeated, *_ = render_projected_symbol_texts(
+            self.source, result, self.ranges(), {}, {'lbl_80300000'})
+        self.assertEqual(result, repeated)
+
+    def test_unequal_range_does_not_infer_data_identity(self):
+        result, *_ = render_projected_symbol_texts(
+            self.source, self.target, self.ranges(12), {}, {'lbl_80300000'})
+        self.assertEqual(result, self.target)
+
+    def test_conflicting_existing_owner_keeps_both_regional_names(self):
+        target = self.target + 'lbl_80300000 = .bss:0x80300000; // type:object size:0x4\n'
+        result, _, conflicts, _ = render_projected_symbol_texts(
+            self.source, target, self.ranges(), {}, {'lbl_80300000'})
+        self.assertIn('lbl_80300000 = .bss:0x80300000;', result)
+        self.assertIn('lbl_80400000 = .bss:0x80400000;', result)
+        self.assertEqual(conflicts, 1)
+
+    def test_identifier_scan_ignores_comments_and_strings(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'example.c').write_text(
+                'int lbl_80300000;\n/* lbl_80300004 */\n// lbl_80300008\n'
+                'char* message = "lbl_8030000C \\\" lbl_80300010";\n'
+                'void f(void) { lbl_80300000 = lbl_80300014; }\n')
+            splits = [self.ranges()[0].source, SplitRange('missing.c', 'data', 0, 4)]
+            self.assertEqual(source_data_identifiers(splits, root), {'lbl_80300000', 'lbl_80300014'})
+
+    def test_name_conflicts_propagate_without_duplicate_owners(self):
+        ranges = [PortedRange(self.ranges()[0].source, 0x80300004, 0x8030000C, (), ())]
+        target = ('lbl_80300000 = .bss:0x80300000; // type:object size:0x4\n'
+                  'lbl_80300004 = .bss:0x80300004; // type:object size:0x4\n'
+                  'lbl_80300008 = .bss:0x80300008; // type:object size:0x4\n')
+        result, _, conflicts, _ = render_projected_symbol_texts(
+            self.source, target, ranges, {}, {'lbl_80300000', 'lbl_80300004'})
+        self.assertEqual(result, target)
+        self.assertEqual(conflicts, 2)
 
 
 class PackedBoundaryTests(unittest.TestCase):

@@ -1,3 +1,12 @@
+> **Cross-version naming correction (2026-09-08):** Zero-filled bytes alone do
+> not guarantee a 100% BSS report when source data symbols fail to pair.
+> Regional projection used to rename legacy identifiers still exported by the
+> shared C. Preserving those source-used names at their verified regional
+> offsets recovers data pairing without changing bytes. See
+> [the cross-version audit](version_progress.md#preserve-shared-c-data-identifiers).
+> This is distinct from permuting already-paired zero-filled symbols and does
+> not invalidate the initialized-pool byte differences documented below.
+
 # The data axis — the pool side was reopened, then worked to a close
 
 > **STATUS 2026-08-03.** The correction below reopened this axis by proving `.sdata2` is scored by
