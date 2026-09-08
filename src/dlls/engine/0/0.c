@@ -2426,10 +2426,14 @@ GameUIDllInterface GameUI_funcs = {
 char sTrickyDebugXCoordFormat[] = " x %.2f\n";
 char sTemplateProgressCounterFormat[] = "%02d/%02d";
 
+static inline void hudSnapshotStatus(int value, int* previous, int* displayed, f32* timer) {
+    *displayed = value;
+    *previous = value;
+    *timer = -30.0f;
+}
+
 void pauseMenuDrawStatus(void) {
-    int statusOffset;
     TrickyStats* trickyStats;
-    f32* opacity;
     u8* base;
     CMenuHud* hud;
     int magicDelta;
@@ -2519,21 +2523,21 @@ void pauseMenuDrawStatus(void) {
             case HUD_STATUS_FIREFLIES:
             case HUD_STATUS_MOON_SEEDS:
             case HUD_STATUS_FUEL_CELLS:
-                if ((((f32*)(base + 0xAFC))[animationSlot] >= 0.0f &&
+                if ((((f32*)(base + offsetof(CMenuHud, statusOpacity)))[animationSlot] >= 0.0f &&
                      ((player->objectFlags & TRICKY_OBJFLAG_PARENT_SLACK) == 0) && (pauseMenuState == 0) &&
                      (airMeter == NULL) && (getHudHiddenFrameCount() == 0) &&
                      ((*gCameraInterface)->getMode() != CAMERA_MODE_VIEWFINDER_RESOURCE_ID)) ||
                     ((animationSlot == HUD_STATUS_SCARABS) && ((gHudForceShowMask & 2) != 0))) {
-                    flashThreshold = 8.5f * timeDelta + ((f32*)(base + 0xAC8))[animationSlot];
-                    ((f32*)(base + 0xAC8))[animationSlot] = flashThreshold;
+                    flashThreshold = 8.5f * timeDelta + ((f32*)(base + offsetof(CMenuHud, statusAnimation)))[animationSlot];
+                    ((f32*)(base + offsetof(CMenuHud, statusAnimation)))[animationSlot] = flashThreshold;
                     if (flashThreshold > 255.0f) {
-                        ((f32*)(base + 0xAC8))[animationSlot] = 255.0f;
+                        ((f32*)(base + offsetof(CMenuHud, statusAnimation)))[animationSlot] = 255.0f;
                     }
                 } else {
-                    flashThreshold = -(8.5f * timeDelta - ((f32*)(base + 0xAC8))[animationSlot]);
-                    ((f32*)(base + 0xAC8))[animationSlot] = flashThreshold;
+                    flashThreshold = -(8.5f * timeDelta - ((f32*)(base + offsetof(CMenuHud, statusAnimation)))[animationSlot]);
+                    ((f32*)(base + offsetof(CMenuHud, statusAnimation)))[animationSlot] = flashThreshold;
                     if (flashThreshold < 0.0f) {
-                        ((f32*)(base + 0xAC8))[animationSlot] = 0.0f;
+                        ((f32*)(base + offsetof(CMenuHud, statusAnimation)))[animationSlot] = 0.0f;
                     }
                 }
                 break;
@@ -2545,9 +2549,7 @@ void pauseMenuDrawStatus(void) {
     if ((gHudStatsSnapshotPending & 1) != 0) {
         gHudStatsSnapshotPending &= ~1;
         for (statusSlot = 0; statusSlot < HUD_STATUS_COUNT; statusSlot++) {
-            int initialValue = statuses[statusSlot];
-            ((int*)(base + 0xB30))[statusSlot] = ((int*)(base + 0xB74))[statusSlot] = initialValue;
-            ((f32*)(base + 0xAFC))[statusSlot] = -30.0f;
+            hudSnapshotStatus(statuses[statusSlot], &((int*)(base + offsetof(CMenuHud, statusPrevious)))[statusSlot], &((int*)(base + offsetof(CMenuHud, statusValue)))[statusSlot], &((f32*)(base + offsetof(CMenuHud, statusOpacity)))[statusSlot]);
         }
         if ((mainGetBit(GAMEBIT_ITEM_BombSpore_ShowCount) != 0) || (statuses[HUD_STATUS_BOMB_SPORES] != 0)) {
             hud->statusOpacity[HUD_STATUS_BOMB_SPORES] = 0.1f;
@@ -2572,16 +2574,14 @@ void pauseMenuDrawStatus(void) {
         flashThreshold = 150.0f;
         for (; statusSlot < HUD_STATUS_COUNT; statusSlot++) {
             statusIndex = statusSlot;
-            statusOffset = statusIndex * sizeof(int);
-            opacity = ((f32*)(base + 0xAFC)) + statusIndex;
-            previousOpacity = *opacity;
+            previousOpacity = ((f32*)(base + offsetof(CMenuHud, statusOpacity)))[statusIndex];
             nextOpacity = previousOpacity - timeDelta;
-            *opacity = nextOpacity;
+            ((f32*)(base + offsetof(CMenuHud, statusOpacity)))[statusIndex] = nextOpacity;
             if ((previousOpacity > flashThreshold) && (nextOpacity <= flashThreshold)) {
                 switch (statusIndex) {
                 case HUD_STATUS_SCARABS:
                     Sfx_PlayFromObject(0, SFXTRIG_scabshort32);
-                    displayedValuePtr = (int*)(base + 0xB74) + statusIndex;
+                    displayedValuePtr = (int*)(base + offsetof(CMenuHud, statusValue)) + statusIndex;
                     displayedValue = *displayedValuePtr;
                     statusValue = statuses[statusIndex];
                     if (displayedValue > statusValue) {
@@ -2590,16 +2590,16 @@ void pauseMenuDrawStatus(void) {
                         *displayedValuePtr = displayedValue + 1;
                     }
                     if (*displayedValuePtr != statusValue) {
-                        *opacity = 155.0f;
+                        ((f32*)(base + offsetof(CMenuHud, statusOpacity)))[statusIndex] = 155.0f;
                     }
                     break;
                 default:
-                    ((int*)(base + 0xB74))[statusIndex] = *(int*)((u8*)statuses + statusOffset);
+                    ((int*)(base + offsetof(CMenuHud, statusValue)))[statusIndex] = statuses[statusIndex];
                     break;
                 }
             }
-            if (*(int*)((u8*)statuses + statusOffset) != 0) {
-                if (((u8*)(base + 0xB64))[statusIndex] == 0) {
+            if (statuses[statusIndex] != 0) {
+                if (((u8*)(base + offsetof(CMenuHud, statusGameBitSet)))[statusIndex] == 0) {
                     showCountBit = 0;
                     switch (statusSlot) {
                     case HUD_STATUS_SCARABS:
@@ -2623,14 +2623,14 @@ void pauseMenuDrawStatus(void) {
                     }
                     if (showCountBit != 0) {
                         mainSetBits(showCountBit, 1);
-                        ((u8*)(base + 0xB64))[statusIndex] = 1;
+                        ((u8*)(base + offsetof(CMenuHud, statusGameBitSet)))[statusIndex] = 1;
                     }
                 }
             }
-            if (*(int*)((u8*)statuses + statusOffset) != ((int*)(base + 0xB30))[statusIndex]) {
-                ((int*)(base + 0xB30))[statusIndex] = *(int*)((u8*)statuses + statusOffset);
-                if (*opacity <= 150.0f) {
-                    *opacity = 180.0f - timeDelta;
+            if (statuses[statusIndex] != ((int*)(base + offsetof(CMenuHud, statusPrevious)))[statusIndex]) {
+                ((int*)(base + offsetof(CMenuHud, statusPrevious)))[statusIndex] = statuses[statusIndex];
+                if (((f32*)(base + offsetof(CMenuHud, statusOpacity)))[statusIndex] <= 150.0f) {
+                    ((f32*)(base + offsetof(CMenuHud, statusOpacity)))[statusIndex] = 180.0f - timeDelta;
                 }
             }
             switch (statusSlot) {
@@ -2640,13 +2640,13 @@ void pauseMenuDrawStatus(void) {
             case HUD_STATUS_FIREFLIES:
             case HUD_STATUS_MOON_SEEDS:
             case HUD_STATUS_FUEL_CELLS:
-                if ((previousOpacity > 0.0f) && (*opacity <= 0.0f)) {
-                    *opacity = 0.1f;
+                if ((previousOpacity > 0.0f) && (((f32*)(base + offsetof(CMenuHud, statusOpacity)))[statusIndex] <= 0.0f)) {
+                    ((f32*)(base + offsetof(CMenuHud, statusOpacity)))[statusIndex] = 0.1f;
                 }
                 break;
             default:
-                if (*opacity < -30.0f) {
-                    *opacity = -30.0f;
+                if (((f32*)(base + offsetof(CMenuHud, statusOpacity)))[statusIndex] < -30.0f) {
+                    ((f32*)(base + offsetof(CMenuHud, statusOpacity)))[statusIndex] = -30.0f;
                 }
                 break;
             }

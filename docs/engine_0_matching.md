@@ -441,3 +441,40 @@ compiler profile, flags, and retail boundary.
 Validation includes regional objdiff reports, the strict EN checksum build,
 `ninja all_source`, and formatting checks on the TU and its API header.
 Formatting is committed separately and checked for identical object bytes.
+
+## September 8: status-update register recovery
+
+At staging `74978326cd`, `pauseMenuDrawStatus` improves from **99.64147%
+to 99.92248%** under the unchanged GC/1.3 profile. Differing instruction
+words fall from **34 to 8**, with all 516 instructions retained. **The
+function is not yet exact.**
+
+The animated-update loop now indexes the local status array directly and
+repeats the opacity-array access instead of carrying a named opacity pointer.
+This removes the obsolete byte-offset local and reproduces the complete
+retail register allocation in that loop. The inline `hudSnapshotStatus`
+helper groups the displayed value, previous value, and timer initialization;
+its scalar argument also restores the snapshot loop's remainder copy.
+The existing byte base remains necessary for code generation, with its
+field offsets now derived from `offsetof(CMenuHud, ...)`.
+
+The remaining differences are instructions 270, 272–274, 276–277, and
+279–280: the first unrolled snapshot copy uses r3 for the scaled index
+and r0 for the loaded value, where retail uses r0 and r3 respectively.
+A live optimizer trace validates the generated instruction stream and
+register coloring. The source probes included direct and factored stores,
+index and counter forms, pointer lifetimes, local declaration order, and
+aggregate status layouts; none tested eliminates this last swap. This is
+a description of the remaining mismatch, not proof of a compiler limitation
+or the historical source spelling.
+
+All other 117 function bodies, allocated data-section bytes and layouts,
+named symbol layouts, and resolved relocations retain their baseline values.
+Anonymous literal names are renumbered. Objdiff still reports all 9,960
+assigned data bytes exact. The unit remains `NonMatching`.
+
+Validation: `python3 configure.py --matching`, strict default `ninja`, and
+`ninja all_source` pass, with each Ninja invocation limited to 30 seconds.
+The strict retail checksum uses the retail object for this nonmatching unit
+and does not establish a source match. Secondary DOLs are unavailable in
+this checkout, so no regional progress manifest is promoted.
