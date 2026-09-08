@@ -2,20 +2,23 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
-extern const float sExp2UnderflowThreshold;
-extern const float sExp2Zero;
-extern const float sExp2One;
-extern const float sExp2FractionCoeff0;
-extern const float sExp2FractionCoeff1;
-extern const float sExp2FractionCoeff2;
-extern const float sExp2FractionCoeff3;
-extern const float sExp2FractionCoeff4;
-extern const float sExpLog2EWithTail[2];
 extern const float sFastFloorU16Limit;
 extern const float sFastFloorZero;
 extern const float sFastFloorNegativeOne;
 extern const float sFastFloorIntegerLimit;
 extern const float sFastFloorOne;
+
+/* Address-based reads below retain the named coefficient pool without duplicate literals. */
+const float sExp2UnderflowThreshold = -127.0f;
+const float sExp2Zero = 0.0f;
+const float sExp2One = 1.0f;
+const float sExp2FractionCoeff0 = 1.0000035762786865f;
+const float sExp2FractionCoeff1 = 0.692969560623169f;
+const float sExp2FractionCoeff2 = 0.24162131547927856f;
+const float sExp2FractionCoeff3 = 0.05171773582696915f;
+const float sExp2FractionCoeff4 = 0.013683983124792576f;
+/* Only the first word is consumed; retain the zero tail without assigning it a role. */
+const float sExpLog2EWithTail[2] = {1.4426950216293335f, 0.0f};
 
 float fabsf(float value) {
     double magnitude = __fabs(value);
@@ -55,27 +58,27 @@ float exp2f(float value) {
         u32 bits;
     } result;
 
-    if (value < sExp2UnderflowThreshold) {
-        return sExp2Zero;
+    if (value < *(const float*)&sExp2UnderflowThreshold) {
+        return *(const float*)&sExp2Zero;
     }
 
     fastCastFloatToS16(value, &exponent);
     integerPart = fastCastS16ToFloat(&exponent);
     fraction = value - integerPart;
 
-    if (fraction != sExp2Zero) {
-        if (value < sExp2Zero) {
+    if (fraction != *(const float*)&sExp2Zero) {
+        if (value < *(const float*)&sExp2Zero) {
             exponent--;
-            fraction += sExp2One;
+            fraction += *(const float*)&sExp2One;
         }
 
         result.value =
-            (((sExp2FractionCoeff4 * fraction + sExp2FractionCoeff3) * fraction + sExp2FractionCoeff2) * fraction +
-             sExp2FractionCoeff1) *
+            (((*(const float*)&sExp2FractionCoeff4 * fraction + *(const float*)&sExp2FractionCoeff3) * fraction + *(const float*)&sExp2FractionCoeff2) * fraction +
+             *(const float*)&sExp2FractionCoeff1) *
                 fraction +
-            sExp2FractionCoeff0;
+            *(const float*)&sExp2FractionCoeff0;
     } else {
-        result.value = sExp2One;
+        result.value = *(const float*)&sExp2One;
     }
 
     /* Scale the fractional approximation by adjusting its binary32 exponent. */
@@ -89,16 +92,6 @@ float expf(float value) {
     return exp2f(sExpLog2EWithTail[0] * *(float*)&value);
 }
 
-const float sExp2UnderflowThreshold = -127.0f;
-const float sExp2Zero = 0.0f;
-const float sExp2One = 1.0f;
-const float sExp2FractionCoeff0 = 1.0000035762786865f;
-const float sExp2FractionCoeff1 = 0.692969560623169f;
-const float sExp2FractionCoeff2 = 0.24162131547927856f;
-const float sExp2FractionCoeff3 = 0.05171773582696915f;
-const float sExp2FractionCoeff4 = 0.013683983124792576f;
-/* Only the first word is consumed; retain the zero tail without assigning it a role. */
-const float sExpLog2EWithTail[2] = {1.4426950216293335f, 0.0f};
 
 float fastCastS16ToFloat(const s16* input) {
     register const s16* ptr = input;

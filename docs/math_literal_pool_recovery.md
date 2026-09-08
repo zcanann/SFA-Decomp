@@ -168,8 +168,8 @@ Those historical local scripts may not persist in other checkouts. The shared
 `tools/pool_value_sequence.py` audit now supports version selection and a merged
 `.sdata,.sdata2` scan; see `docs/pool_value_sequence.md`.
 
-The current `math_float_helpers` object places the exponential constants in
-40 bytes of `.sdata` and the floor constants in 32 bytes of `.sdata2`. A merged
+Before the named-pool recovery below, `math_float_helpers` placed the exponential
+constants in 40 bytes of `.sdata` and the floor constants in 32 bytes of `.sdata2`. A merged
 scan confirms identical complete SDA21 value sequences for `exp2f`, `expf`, and
 `fastFloorf` in EN, EN rev1, JP, and PAL rev1 after DOL checksum verification.
 The values are already correct. Literal substitution moves the floor constants
@@ -216,8 +216,8 @@ existing per-function optimization pragmas and fast-cast assembly are unchanged.
 All eight function bodies, allocated section bytes/layouts, and relocation
 destinations are identical in EN, EN rev1, JP, and PAL rev1, modulo the fourteen
 symbol names. Every other source object and all objdiff scores are unchanged.
-The data placement mismatch described above remains. Each input DOL passes its
-configured hash; all four `all_source` builds and the strict EN checksum pass.
+The data placement mismatch described above remained at that checkpoint. Each
+input DOL passes its configured hash; all four `all_source` builds and the strict EN checksum pass.
 
 ## Tangent units and the bitwise log estimate
 
@@ -244,3 +244,49 @@ target's aggregate report measures remain unchanged. Literal and local-constant
 probes move the tangent coefficients into `.sdata2` but place the negative-one
 and zero values after the polynomial coefficients; that incorrect order is not
 retained. The source's 24-byte pool placement remains unresolved.
+
+## Complete exponential/floor pool from named constants (2026-09-08)
+
+The exponential definitions now precede their consumers. This lets GC/1.3 place
+those 40 bytes in `.sdata2`, adjoining the floor constants and the compiler's
+integer-conversion bias. The complete **72-byte** section matches retail in EN,
+EN rev1, JP, and PAL rev1. No split, coefficient value, symbol name, compiler
+profile, pragma, or matching classification changes.
+
+Moving the definitions alone produces a 104-byte section: scalar constant
+propagation emits another 32 bytes of anonymous literals and changes two
+instruction bytes in `exp2f`. The exponential now uses the address-based
+constant access idiom already present in `fastFloorf`, retaining `const` on the
+pointer view. These reads preserve the named constants without duplicate
+literals. Plain scalar access, `*&constant`, and `(&constant)[0]` all retain the
+duplication; the explicit pointer view matters to this compiler. This is an
+observed declaration/access model, not proof of the original source spelling.
+The floating objects are read through their own type without discarding const
+or introducing aliasing between incompatible types.
+
+The nine exponential definitions retain offsets 0 through 32 in their new
+section. The floor definitions begin at offset 40, their unused zero word is
+at 60, and the anonymous eight-byte conversion bias is at 64. The unused tail
+words stay unexplained. All named consumed constants agree with their regional
+retail offsets; the unused address-labeled floor word is compared by position
+and bytes because its retail label is region-specific.
+
+All eight function bodies remain byte-identical. Every source relocation is
+checked at its instruction offset, retaining its loaded width, payload and
+intended offset within the retail pool; non-pool destinations are unchanged.
+The source and retail functions consume the same 19 SDA21 values in the same
+order. The full section bytes are independently compared with each SHA-1-verified
+DOL, including unused words and alignment. Reproduce the load-sequence check
+for each version with:
+
+```sh
+python tools/pool_value_sequence.py \
+  src/dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c --version GSAE01
+```
+
+Objdiff credits **72 additional matched data bytes in each verified version**,
+raising this TU's data match from zero to 100%. Code fuzzy remains 70.99383%
+and one of eight functions is exact; the unit stays `NonMatching`. Every other
+source object and every other objdiff unit remains unchanged. All four
+`all_source` builds and the strict EN retail checksum pass with 30-second
+limits. Formatting is checked separately for unchanged object output.
