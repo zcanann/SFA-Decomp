@@ -3885,8 +3885,8 @@ void drawArwingHud(int unused1, int unused2, int unused3) {
         if (arwing->anim.mapEventSlot != 0x26) {
             drawTexture(hudTextures[61], 6e+02f, 31.0f, (u8)arwingHudAlpha, 0x100);
             for (ringSlot = 0; (int)(ringSlot & 0xff) < rings; ringSlot++) {
-                drawTexture(hudTextures[60], (f32)(int)(0x244 - (ringSlot & 0xff) * 0x14), 30.0f,
-                            (u8)arwingHudAlpha, 0x100);
+                drawTexture(hudTextures[60], (f32)(int)(0x244 - (ringSlot & 0xff) * 0x14), 30.0f, (u8)arwingHudAlpha,
+                            0x100);
             }
             for (; (int)(pip = ringSlot & 0xff) < req; ringSlot++) {
                 drawTexture(hudTextures[59], (f32)(int)(0x244 - pip * 0x14), 30.0f, (u8)arwingHudAlpha, 0x100);
