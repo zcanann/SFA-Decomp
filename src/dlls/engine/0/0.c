@@ -3901,7 +3901,6 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
     GameObject* player;
     ObjModel* model;
     s32 x;
-    s32 stringOffset;
     s32 randomWidth;
     s32 randomHeight;
     s16 panelAlpha;
@@ -4047,12 +4046,10 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
             if (gPauseMenuPlayerMapCell == gCurTaskHintMapId) {
                 if (gPauseMenuCurHintText != 0 && gPauseMenuCurHintText->count >= 2) {
                     textY = 0x96;
-                    stringIndex = 1;
-                    stringOffset = 4;
-                    while (stringIndex < gPauseMenuCurHintText->count) {
-                        gameTextShowStr(*(void**)((u8*)gPauseMenuCurHintText->strings + stringOffset), 0x79, 0xf0,
+                    for (stringIndex = 1; stringIndex < gPauseMenuCurHintText->count; stringIndex++) {
+                        gameTextShowStr(gPauseMenuCurHintText->strings[stringIndex], 0x79, 0xf0,
                                         textY);
-                        gameTextMeasureStringBoundsAt(*(void**)((u8*)gPauseMenuCurHintText->strings + stringOffset),
+                        gameTextMeasureStringBoundsAt(gPauseMenuCurHintText->strings[stringIndex],
                                                       0x79, 0, 0, &measureLeft, &measureRight, &measureTop,
                                                       &measureBottom);
                         lineHeight = gGameTextFontMetrics[sLanguageNameTable[getCurLanguage()].fontId].lineHeight;
@@ -4060,8 +4057,6 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
                         textY += (textHeight > lineHeight)
                                      ? textHeight
                                      : gGameTextFontMetrics[sLanguageNameTable[getCurLanguage()].fontId].lineHeight;
-                        stringOffset += 4;
-                        stringIndex++;
                     }
                 }
             } else {

@@ -3612,6 +3612,13 @@ undefined externals (the carve-only-reference latent-LINKFAIL class).
 
 ## 34. Structural respellings cannot reach the reuse-regime tie-break — NOTPERM/NONFUNC measured closed (2026-08-05, C113, at `529d615fce`)
 
+**Update (2026-09-08, GC/1.3):** `pauseMenuDraw` is now exact. Replacing a manually
+maintained string byte offset with ordinary array indexing lets MWCC derive the
+induction counter. The loop instructions stay identical, but its changed coloring
+order restores opacity allocation in another switch arm. The historical results
+below do not rule out missing induction relationships elsewhere in a function.
+See [the exact renderer analysis](engine_0_matching.md#september-8-pause-menu-renderer-exact).
+
 The one lever the exhausted order axes left standing — "a structural fix RESETS colouring" — was
 aimed at the NOTPERM (42 / 58 820 B) and NONFUNC (35 / 67 448 B) buckets. It resets the
 allocation; it does not reach retail's answer. A structural respelling of a reuse-regime row lands

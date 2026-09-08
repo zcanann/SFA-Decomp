@@ -885,3 +885,43 @@ Validation: objdiff confirms the improvement; strict matching `ninja` and
 formatting checks, with no formatting-only change required. Secondary DOLs are
 absent from their configured paths in this checkout; regional manifests remain
 unchanged.
+
+## September 8: pause-menu renderer exact
+
+`pauseMenuDraw` now matches all **4,564 bytes / 1,141 instructions** under
+GC/1.3, improving from **99.982475% to 100%**. Target/current function MD5:
+`8a39b00d03abe18374ca86ea2726baae`.
+
+The task-hint loop now indexes `gPauseMenuCurHintText->strings[stringIndex]`
+instead of maintaining a second byte-offset local and casting through `u8*`.
+MWCC derives the four-byte induction counter itself and emits the same loop
+instructions. This also restores r29 for the confirmation-page opacity in
+another switch arm. A `while` loop with the indexed accesses gives the same
+exact object code; the retained `for` loop keeps the index update together.
+
+Live captures reproduce ordinary object bytes and replay all 262 GPR color
+choices. Before the change, the confirmation opacity (virtual GPR 59) is
+colored before the manual string-offset counter (48), while only r31 and r30
+have been enabled. With indexed accesses, the derived counter (83) is colored
+before opacity (58), enabling r29 first. Opacity then reuses r29. These IDs
+identify the captured reconstructed IR, not retail source-variable names.
+No compiler setting, function signature, or TU boundary changes.
+
+Against staging `7d07e70e7a`, only **five instruction bytes** change, all in
+the four former opacity-register mismatches. The other 117 functions, all
+allocated data bytes and layouts, named symbol offsets, and resolved
+relocation targets remain unchanged. Anonymous literal names are renumbered.
+Exact functions rise from **115 to 116 / 118**, exact code from **65,960 to
+70,524 / 75,188 bytes**; all **9,960** assigned data bytes remain exact.
+The complete TU remains `NonMatching`.
+
+All five input DOLs match their configured SHA1s. The four secondary inputs
+were available in the sibling `sfa` checkout. JP also reports 100% in objdiff
+and has the same exact raw function MD5 as EN v1.0. EN rev1 and both PAL
+versions contain a larger 4,652-byte renderer and remain unmatched by this
+source; no regional source difference is inferred merely from that size.
+Objdiff and raw function-byte comparison both confirm the EN v1.0 match.
+Strict matching `ninja`, `ninja all_source`, and formatting checks pass, with Ninja calls limited to
+30 seconds. Formatting is committed separately and preserves the complete
+object bytes. The complete TU remains nonmatching in every version, so no
+regional whole-object progress manifest is promoted.
