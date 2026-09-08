@@ -3620,8 +3620,6 @@ void headDisplayDraw(void) {
     int viewportY;
     int clampedAlpha;
     int waveAlpha;
-    int noiseX;
-    int noiseY;
     int wavePhaseB;
     int drawY;
     int lineOffset;
@@ -3717,18 +3715,16 @@ void headDisplayDraw(void) {
                    0.02f * fsin16Approx((int)(u16)(wavePhaseA + gGameUiShimmerFrame * 0x1838));
             waveAlpha = (int)((f32)(s16)panelAlpha * (0.4f + wave));
             clampedAlpha = waveAlpha < 0 ? 0 : waveAlpha;
-            noiseX = randomGetRange(0, 0x1e) << 1;
-            noiseY = randomGetRange(0, 0x1e) << 1;
+
             drawPartialTexture(hudTextures[84], 490.0f, (f32)(drawY = width + lineOffset),
-                               clampedAlpha > 0xff ? 0xff : clampedAlpha, 0x100, 0x78, 2, noiseY, noiseX);
+                               clampedAlpha > 0xff ? 0xff : clampedAlpha, 0x100, 0x78, 2, randomGetRange(0, 0x1e) << 1, randomGetRange(0, 0x1e) << 1);
             clampedAlpha = (int)((f32)(s16)panelAlpha * (0.3f + wave));
             if (clampedAlpha < 0) {
                 clampedAlpha = 0;
             }
-            noiseX = randomGetRange(0, 0x1e) << 1;
-            noiseY = randomGetRange(0, 0x1e) << 1;
+
             drawPartialTexture(hudTextures[84], 490.0f, (f32)(drawY + 2), clampedAlpha > 0xff ? 0xff : clampedAlpha,
-                               0x100, 0x78, 2, noiseY, noiseX);
+                               0x100, 0x78, 2, randomGetRange(0, 0x1e) << 1, randomGetRange(0, 0x1e) << 1);
             wavePhaseA += 0x3520;
             wavePhaseB += 0x1f40;
         }

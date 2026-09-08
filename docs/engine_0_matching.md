@@ -532,3 +532,37 @@ Validation: objdiff, the strict default `ninja` after
 invocation is limited to 30 seconds. Formatting checks cover the active TU
 and its API header, with identical object bytes after formatting. Secondary
 DOLs are unavailable in this checkout, so no regional manifest is promoted.
+
+
+## September 8: head-display noise sampling
+
+`headDisplayDraw` improves from **99.302086% to 99.677086%** on EN v1.0,
+reducing 40 differing instruction words to **nine**. It retains the retail
+**1,920 bytes / 480 instructions**; this is not a complete match.
+
+Each noise-strip draw now obtains its two texture offsets in the call
+arguments. MWCC evaluates them in the same order as the previous explicit
+`noiseX` and `noiseY` assignments and passes the same samples to the same
+arguments. Removing the named offset lifetimes restores retail's registers
+for the model-table lookup, both opacity clamps, and most of the border.
+The four random calls, their bounds, and the strip coordinates are preserved.
+
+Only this function's instruction bytes change (41 bytes). All other
+function bytes and objdiff scores, allocated data contents and layouts,
+named symbol offsets, and resolved relocations are unchanged. Formatting
+is committed separately and checked for an identical complete object.
+
+Two residual words initialize the wave counters with `li` where retail
+copies the zero scanline offset with `mr`. A fresh GC/1.3 backend capture
+confirms that these explicit counters are outside late value numbering's
+immediate-commoning range. Deriving the phases from the scanline index can
+produce the copies, but the tested forms regress allocation elsewhere.
+The other seven words concern the border's upper Y coordinate (`r27`
+versus retail `r23`) and one cached texture-table address (`r23` versus
+retail `r24`). No compiler flag, pragma, boundary, or API change is retained.
+
+Regional source builds score 99.677086% in JP and 99.675% in EN rev1, PAL,
+and PAL rev1. All five input DOL hashes are verified. The TU stays
+`NonMatching`, so no whole-object progress-manifest claim is added.
+Validation also includes the strict EN checksum target, `ninja all_source`,
+and formatting checks on the TU and its API header.
