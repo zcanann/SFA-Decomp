@@ -854,8 +854,9 @@ static inline u8 objfsaFindRejectingPatchPlane(ObjfsaPatch* patch, float* point)
     u8 normalComponentIndex;
     z = point[2];
     x = point[0];
-    for (normalComponentIndex = planeIndex = 0; planeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT;
-         planeIndex++, normalComponentIndex += 2) {
+    planeIndex = 0;
+    normalComponentIndex = planeIndex;
+    for (; planeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT; planeIndex++, normalComponentIndex += 2) {
         if (patch->planeOffsets[planeIndex] + (x * (f32)patch->normalComponents[normalComponentIndex] +
                                                z * (f32)patch->normalComponents[normalComponentIndex + 1]) >
             0.0f) {
