@@ -31,6 +31,25 @@
 #include "main/vecmath.h"
 #include "dolphin/os/OSFastCast.h"
 
+typedef union ModelAnimationOffsetScratch {
+    s16 modelAnimationOffsets[8];
+    int animationMapOffsets[8];
+    struct {
+        u8 prefix[0x10];
+        u8 tail[0x20];
+    } opaque;
+} ModelAnimationOffsetScratch;
+
+typedef struct ModelResourceScratch {
+    s16 ids[0x400];
+    ModelAnimationOffsetScratch offsets;
+} ModelResourceScratch;
+
+STATIC_ASSERT(sizeof(ModelAnimationOffsetScratch) == 0x30);
+STATIC_ASSERT(sizeof(ModelResourceScratch) == 0x830);
+STATIC_ASSERT(offsetof(ModelResourceScratch, offsets) == 0x800);
+STATIC_ASSERT(offsetof(ModelResourceScratch, offsets.opaque.tail) == 0x810);
+
 static u32 sGQR7Config;
 int gModelTabEntryCount;
 s16* gModelResourceBuffer;
@@ -538,7 +557,7 @@ void modelAnimResetState(void* m, void* data) {
 int modelLoadAnimations(ModelFileHeader* file, int modelId, void* animBase) {
     int modelAnimOffset;
     u8* bufferCursor = animBase;
-    s16* offsetTable;
+    ModelAnimationOffsetScratch* offsetTable;
     int modelAnimBytes;
     int animationOffset;
     int groupSlot;
@@ -556,17 +575,19 @@ int modelLoadAnimations(ModelFileHeader* file, int modelId, void* animBase) {
     u8 newRefCount;
 
     bufferBytes = 0;
-    offsetTable = (s16*)gModelAnimOffsetTable;
-    fileLoadToBufferOffset(MLDF_FILEID_MODANIM_TAB, offsetTable, modelId << 1, 0x10);
-    modelAnimOffset = offsetTable[0];
+    offsetTable = (ModelAnimationOffsetScratch*)gModelAnimOffsetTable;
+    fileLoadToBufferOffset(MLDF_FILEID_MODANIM_TAB, offsetTable->modelAnimationOffsets, modelId << 1,
+                           sizeof(offsetTable->modelAnimationOffsets));
+    modelAnimOffset = offsetTable->modelAnimationOffsets[0];
     if (file->animationCount == 0) {
         return 0;
     }
     modelAnimBytes = (file->animationCount << 1) + 8;
-    if (modelAnimBytes > 0x800) {
+    if (modelAnimBytes > (int)sizeof(((ModelResourceScratch*)0)->ids)) {
         debugPrintf(sModelAnimationBufferOverflowWarning, modelAnimBytes);
     }
-    fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (modelId & ~3) << 2, 0x20);
+    fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (modelId & ~3) << 2,
+                           sizeof(((ModelAnimationOffsetScratch*)0)->animationMapOffsets));
     file->animationDataFileOffset = gModelAnimOffsetTable[modelId & 3];
     amapOffset = gModelAnimOffsetTable[modelId & 3];
     modelId = gModelAnimOffsetTable[(modelId & 3) + 1] - amapOffset;
@@ -669,7 +690,8 @@ int modelGetAmapSize(int modelId, int amapFlag, int animCount) {
             totalSize++;
         }
         index = modelId & 3;
-        fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (modelId & ~3) << 2, 0x20);
+        fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (modelId & ~3) << 2,
+                           sizeof(((ModelAnimationOffsetScratch*)0)->animationMapOffsets));
         amapSize = gModelAnimOffsetTable[index + 1] - gModelAnimOffsetTable[index];
         totalSize += amapSize;
     }
@@ -2344,14 +2366,14 @@ void* loadModelInstance(int resourceId, int arg, void* buffer) {
 }
 
 void ObjModel_InitResourceCaches(void) {
-    void* m;
+    ModelResourceScratch* scratch;
     int* p;
     gModelList = allocModelStruct(0x8c, (int)sizeof(u8*));
     gModelAnimCacheList = allocModelStruct(0xc4, (int)sizeof(u8*));
-    m = mmAlloc(0x830, 0xa, 0);
-    gModelResourceBuffer = m;
-    gModelAnimOffsetTable = (int*)((u8*)m + 0x800);
-    lbl_803DCB5C = (int*)((u8*)m + 0x810);
+    scratch = mmAlloc(sizeof(*scratch), 0xa, 0);
+    gModelResourceBuffer = scratch->ids;
+    gModelAnimOffsetTable = scratch->offsets.animationMapOffsets;
+    lbl_803DCB5C = (int*)scratch->offsets.opaque.tail;
     p = getCurrentDataFile(MLDF_FILEID_MODELS_TAB_A);
     if (p == NULL) {
         return;
