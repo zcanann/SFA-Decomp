@@ -1162,7 +1162,7 @@ def port_coherent_units(
         accepted.extend(candidates)
 
     # Retain short, invariant, zero-filled alignment gaps outside both objects.
-    # decomp-toolkit lets the linker provide these bytes; extending a packed
+    # decomp-toolkit lets the linker provide these bytes; extending an object
     # section instead changes its size and can absorb padding into its last symbol.
     alignment_gaps: set[tuple[str, int, int]] = set()
     next_source_range: dict[tuple[str, str, int], SplitRange] = {}
@@ -1187,8 +1187,6 @@ def port_coherent_units(
         source_gap = after.start - before.source.end
         target_gap = target_after_start - before.target_end
         if not (0 < source_gap == target_gap <= 7):
-            continue
-        if before.target_end % 4 == 0:
             continue
         if symbol_overlaps_range(
             source_detailed_spans,
@@ -1238,9 +1236,8 @@ def port_coherent_units(
         rejected_units["unaligned auto-unit boundary"].update(reject_units)
         accepted = [item for item in accepted if item.source.unit not in reject_units]
 
-    # A single word between two claimed ranges is linker padding owned by the
-    # preceding object, not a viable standalone auto unit.  Carry it with that
-    # object just as decomp-toolkit does for the active EN layout.
+    # Preserve the legacy treatment of remaining four-byte corridors, but do
+    # not extend an object across an invariant gap proven outside the source TU.
     extensions: dict[tuple[str, str, int], int] = {}
     by_section = defaultdict(list)
     for item in accepted:
@@ -1248,7 +1245,8 @@ def port_coherent_units(
     for ranges in by_section.values():
         ranges.sort(key=lambda item: item.target_start)
         for before, after in zip(ranges, ranges[1:]):
-            if after.target_start - before.target_end == 4:
+            gap = (before.source.section, before.target_end, after.target_start)
+            if after.target_start - before.target_end == 4 and gap not in alignment_gaps:
                 extensions[
                     (
                         before.source.unit,

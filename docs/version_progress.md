@@ -297,3 +297,55 @@ do not represent newly recovered source bytes. No existing exact manifest
 entry is removed. All four `all_source` builds and the strict EN retail
 checksum pass within the 30-second limit. EN's complete report and all 1,004
 source-object hashes are unchanged.
+
+## Preserve word-aligned object extents
+
+The THP reader exposed the same boundary problem for four-byte gaps. EN emits a
+four-byte `gPicMenuReadThreadCreated` section ending at `803DD68C`, followed by a
+four-byte gap before the video decoder's `.sbss`. The regional projector extended
+that section to eight bytes in every secondary target. PAL additionally named
+the trailing word `lbl_803DF04C`, causing its reader data report to miss the exact
+match. The reader code and real flag were already exact.
+
+The short-gap check now applies to word-aligned ends too. When both versions
+have the same one-to-seven-byte gap outside the source TU, the gap is zero-filled
+(or uninitialized BSS), no semantic symbol overlaps it, and both immediate
+neighbors survive projection, preserve it outside both objects. The later
+four-byte extension pass must respect that evidence. Its legacy behavior for
+other, unproven four-byte corridors remains unchanged; this change does not infer
+ownership for those corridors. No match score or source-object size participates
+in the boundary decision.
+
+The audit finds exactly these corrections:
+
+| Target | Section ends corrected | Padding removed | Unmatched data reduction | Exact source units |
+| --- | ---: | ---: | ---: | ---: |
+| EN rev1 | 313 | 1,252 bytes | 597 bytes | 905 → 906 |
+| JP | 314 | 1,256 bytes | 400 bytes | 943 → 943 |
+| PAL rev1 | 313 | 1,252 bytes | 696 bytes | 868 → 877 |
+
+Every changed end moves back exactly four bytes. Starts, text ranges, neighboring
+object addresses, and the set of claimed units/ranges are unchanged. Each removed
+word has an equivalent gap in EN and the secondary version, with no overlapping
+semantic symbol. Most are `.sdata2` alignment gaps; the correction also applies to
+`.data`, `.rodata`, `.sdata`, `.bss`, and `.sbss`.
+
+The exact-unit additions are KytesMum in EN rev1 and PAL; PAL also gains engine
+slot 72, SPShopKeepe, ARWArwing, OSArena, SISamplingRate, and the THP reader, audio
+decoder, and video decoder. No old exact entry is removed. Equal-sized ranges also
+allow the existing symbol projector to recover canonical data identities, such
+as the voxel-map storage and subtitle state, without a new naming heuristic.
+
+The raw matched-data totals decrease by 655, 856, and 556 bytes respectively:
+previously counted padding has been removed from the totals. The table's
+unmatched-data reductions include both corrected ownership accounting and better
+symbol pairing. They are not newly reconstructed source bytes. Every function
+report and all 988 compiled source-object hashes per secondary target are
+unchanged. All 590 common named data symbols checked in exact sections of
+improved units agree with retail in section, offset, and size.
+
+Three additional regression tests cover the four-byte boundary, zero/size/symbol
+evidence in both versions, and loss of the immediate neighbor. All 26 projector
+tests pass. All four `all_source` builds and the strict EN retail checksum pass;
+EN's complete report and all 1,004 source-object hashes are unchanged. Secondary
+validation covers projected objects, not full regional DOL relinks.

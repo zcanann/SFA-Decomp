@@ -76,11 +76,12 @@ BSS objects agree with the retail section offsets and sizes in every version.
 
 Function reports and aggregate match scores are unchanged. The reader's 716 code
 bytes remain exact in every version. EN remains fully exact with 5100 data bytes;
-EN rev1 and JP retain their existing complete status. PAL retains its existing
-`.sbss` mismatch: the regional projection includes an extra four-byte trailing
-word named `lbl_803DF04C`, while source emits only the four-byte thread-created
-flag. The regional projector's single-word gap folding is separate from this
-reader recovery; no split extent is changed here.
+EN rev1 and JP retained their existing complete status in the reader recovery.
+That pass also exposed a PAL `.sbss` mismatch: the regional projection included
+an extra four-byte trailing word named `lbl_803DF04C`, while source emitted only
+the four-byte thread-created flag. The subsequent [word-gap projection fix](version_progress.md#preserve-word-aligned-object-extents)
+restores the four-byte section extent and makes the PAL reader fully exact too.
+No split extent changed in the reader source-recovery commit itself.
 
 The strict EN matching link and retail checksum pass. Secondary builds validate
 projected objects, not full regional DOL relinks.

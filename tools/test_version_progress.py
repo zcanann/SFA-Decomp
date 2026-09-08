@@ -77,25 +77,27 @@ class CanonicalDataNameTests(unittest.TestCase):
 
 
 class AlignmentGapTests(unittest.TestCase):
-    def project(self, source_gap=bytes(6), target_gap=bytes(6), spans=(), missing_neighbor=False):
+    def project(self, source_gap=bytes(6), target_gap=bytes(6), spans=(), missing_neighbor=False,
+                object_size=2, source_spans=()):
         def image(address, gap):
-            data = b'\xff\xff' + gap + bytes(16)
+            data = b'\xff' * object_size + gap + bytes(16)
             return SimpleNamespace(path=Path('synthetic.dol'), data=data, sections=[
                 DolSection(index, 0, address if section == 'sdata' else 0,
                            len(data) if section == 'sdata' else 0)
                 for section, index in SECTION_INDEX.items()])
         source, target = image(0x80010000, source_gap), image(0x80020000, target_gap)
-        next_source, next_target = 0x80010002 + len(source_gap), 0x80020002 + len(target_gap)
-        splits = [SplitRange('first.c', 'sdata', 0x80010000, 0x80010002),
+        source_end, target_end = 0x80010000 + object_size, 0x80020000 + object_size
+        next_source, next_target = source_end + len(source_gap), target_end + len(target_gap)
+        splits = [SplitRange('first.c', 'sdata', 0x80010000, source_end),
                   SplitRange('next.c', 'sdata', next_source, next_source + 8)]
-        mappings = {'sdata': {0x80010000: 0x80020000, 0x80010002: 0x80020002,
+        mappings = {'sdata': {0x80010000: 0x80020000, source_end: target_end,
                              next_source: next_target, next_source + 8: next_target + 8}}
         if missing_neighbor:
             splits += [SplitRange('next.c', 'data', 0x80300000, 0x80300004),
                        SplitRange('last.c', 'sdata', next_source + 8, next_source + 16)]
             mappings['sdata'][next_source + 16] = next_target + 16
         return port_coherent_units(splits, [], [], mappings, {}, {}, source, target,
-                                   {}, {'sdata': tuple(spans)})
+                                   {'sdata': tuple(source_spans)}, {'sdata': tuple(spans)})
 
     def test_padding_remains_outside_packed_object(self):
         ported, rejected, gaps, *_ = self.project()
@@ -123,6 +125,33 @@ class AlignmentGapTests(unittest.TestCase):
         ported, rejected, gaps, *_ = self.project(missing_neighbor=True)
         self.assertEqual([p.source.unit for p in ported], ['last.c'])
         self.assertEqual(rejected['unaligned auto-unit boundary'], 1)
+        self.assertEqual(gaps, 0)
+
+    def test_word_padding_preserves_the_source_object_extent(self):
+        ported, rejected, gaps, *_ = self.project(
+            object_size=4, source_gap=bytes(4), target_gap=bytes(4))
+        self.assertFalse(rejected)
+        self.assertEqual(gaps, 1)
+        self.assertEqual([(p.target_start, p.target_end) for p in ported],
+                         [(0x80020000, 0x80020004), (0x80020008, 0x80020010)])
+
+    def test_word_gap_needs_matching_zero_bytes_and_no_named_storage(self):
+        for kwargs in ({'source_gap': b'\1' + bytes(3)},
+                       {'target_gap': b'\1' + bytes(3)},
+                       {'source_gap': bytes(8)},
+                       {'source_spans': [SymbolSpan('sourceState', 'sdata', 0x80010004, 0x80010008)]},
+                       {'spans': [SymbolSpan('targetState', 'sdata', 0x80020004, 0x80020008)]}):
+            with self.subTest(kwargs=kwargs):
+                options = dict(object_size=4, source_gap=bytes(4), target_gap=bytes(4))
+                options.update(kwargs)
+                ported, rejected, gaps, *_ = self.project(**options)
+                self.assertEqual(gaps, 0)
+
+    def test_rejected_neighbor_leaves_word_gap_in_unknown_corridor(self):
+        ported, rejected, gaps, *_ = self.project(
+            object_size=4, source_gap=bytes(4), target_gap=bytes(4), missing_neighbor=True)
+        self.assertEqual([p.source.unit for p in ported], ['first.c', 'last.c'])
+        self.assertEqual(ported[0].target_end, 0x80020004)
         self.assertEqual(gaps, 0)
 
 

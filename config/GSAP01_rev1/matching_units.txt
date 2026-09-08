@@ -53,6 +53,7 @@ dlls/engine/68/68.c
 dlls/engine/69/69.c
 dlls/engine/70/70.c
 dlls/engine/71/71.c
+dlls/engine/72/72.c
 dlls/engine/73/73.c
 dlls/engine/74/74.c
 dlls/engine/75/75.c
@@ -565,6 +566,7 @@ dlls/objects/608/608.c
 dlls/objects/609_DR_LaserCan/DR_LaserCan.c
 dlls/objects/610/610.c
 dlls/objects/612/612.c
+dlls/objects/614_KytesMum/KytesMum.c
 dlls/objects/615/615.c
 dlls/objects/616_DR_CageCont/DR_CageCont.c
 dlls/objects/617_ExplodePlan/ExplodePlan.c
@@ -593,6 +595,7 @@ dlls/objects/641_DR_EarthCal/DR_EarthCal.c
 dlls/objects/642_BarrelGener/BarrelGener.c
 dlls/objects/643_DR_BarrelGr/DR_BarrelGr.c
 dlls/objects/645_SPShop/SPShop.c
+dlls/objects/646_SPShopKeepe/SPShopKeepe.c
 dlls/objects/647_SPScarab/SPScarab.c
 dlls/objects/648_SPDrape/SPDrape.c
 dlls/objects/649_SPitembeam/SPitembeam.c
@@ -610,6 +613,7 @@ dlls/objects/662_WCTempleDia/WCTempleDia.c
 dlls/objects/663_WCTempleBri/WCTempleBri.c
 dlls/objects/664_WCFloorTile/WCFloorTile.c
 dlls/objects/665/665.c
+dlls/objects/666_ARWArwing/ARWArwing.c
 dlls/objects/667/667.c
 dlls/objects/668_ARWArwingBo/ARWArwingBo.c
 dlls/objects/669_ARWArwingGu/ARWArwingGu.c
@@ -778,6 +782,7 @@ dolphin/mtx/vec.c
 dolphin/odenotstub/odenotstub.c
 dolphin/os/OSAlarm.c
 dolphin/os/OSAlloc.c
+dolphin/os/OSArena.c
 dolphin/os/OSAudioSystem.c
 dolphin/os/OSCache.c
 dolphin/os/OSContext.c
@@ -795,6 +800,7 @@ dolphin/os/OSTime.c
 dolphin/os/__ppc_eabi_init.c
 dolphin/pad/Pad.c
 dolphin/pad/Padclamp.c
+dolphin/si/SISamplingRate.c
 dolphin/thp/THPAudio.c
 dolphin/thp/THPDec.c
 dolphin/vi/vi.c
@@ -812,7 +818,10 @@ main/shadow_dolphin.c
 main/skystars.c
 main/subtitle.c
 main/texture.c
+main/thp/THPRead.c
+main/thp/THPVideoDecode.c
 main/thp/attractmovie.c
+main/thp/dll_3b.c
 main/thp/dll_3e.c
 main/thp/n_options.c
 main/thp/picmenu.c
