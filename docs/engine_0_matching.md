@@ -597,3 +597,49 @@ After `python3 configure.py --matching`, strict default `ninja` and
 `ninja all_source` pass with 30-second timeouts. Formatting checks cover
 the active TU and its API header and preserve identical object bytes.
 Secondary DOLs remain unavailable, so no regional manifest is promoted.
+
+
+## September 8: pause-menu renderer residual audit
+
+`pauseMenuDraw` remains **99.95618%**, with **8 differing instruction words
+out of 1,141 / 4,564 bytes**, under the current GC/1.3 compiler and unchanged
+TU flags. No source variant from this pass is retained. This rechecks the
+older GC/2.0-era findings in `docs/priced_classes.md` section 34 against the
+active compiler; it does not establish that a source match is impossible.
+
+| Instruction indices | Remaining difference |
+| --- | --- |
+| 58, 132 | Map-page opacity uses r28 instead of r29 |
+| 530, 622, 656, 727 | Confirmation-page opacity uses r31 instead of r29 |
+| 1064, 1106 | Final token-prompt additions reverse the two source operands |
+
+The live compiler trace reproduces the ordinary object and replays all 263
+GPR color choices without a spill or high-degree removal. The two opacity
+values are independent live ranges. Declaration order, scalar type changes,
+branch-local variables, and inline hologram helpers do not recover the
+retail allocation. Output-parameter helpers add stack traffic. The terminal
+text updates still exhibit the documented fold: naming the measured height
+or calculating the final position directly lets propagation remove the
+preceding spacing update; compound assignment preserves that instruction
+but retains the wrong operand order. Integer-width, cast, cursor-helper,
+and measurement-helper variants did not improve the match.
+
+The matching-object scan found related patterns in THP decoding,
+`voxmaps_traceLine`, and `CameraModeStaffAnim_subdividePathAngles`, but none
+has the same terminal two-term integer addition and following offset call.
+Those are comparison leads, not evidence for pointer or wider coordinate
+types here. The retail source-leak inventory yielded no pause-menu source.
+
+Reproduce the current diagnostic capture with:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/dlls/engine/0/0 \
+    --function pauseMenuDraw --graph --instruction 58 --instruction 530 \
+    --instruction 1064 --instruction 1106 --output build/flag_probe/pause_menu_draw
+```
+
+Target function MD5: `8a39b00d03abe18374ca86ea2726baae`.
+Current function MD5: `fba550f4ccad52cdca4f9d4e713101c6`.
+The entire original source object was restored byte-for-byte after probing.
+Strict `ninja` and `ninja all_source` pass with 30-second timeouts, and
+formatting checks pass for the active TU and its API header.
