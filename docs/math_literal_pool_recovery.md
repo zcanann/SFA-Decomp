@@ -119,3 +119,17 @@ Local probes and relocation audits are under `build/flag_probe/`:
 `math_literal_pool_probe.py`, `angle_vec_literal_probe.py` and
 `math_literal_pool_audit.py`. The baseline audit uses `git show HEAD:<source>`;
 pin it to the pre-change revision when rerunning after this checkpoint.
+
+Those historical local scripts may not persist in other checkouts. The shared
+`tools/pool_value_sequence.py` audit now supports version selection and a merged
+`.sdata,.sdata2` scan; see `docs/pool_value_sequence.md`.
+
+The current `math_float_helpers` object places the exponential constants in
+40 bytes of `.sdata` and the floor constants in 32 bytes of `.sdata2`. A merged
+scan confirms identical complete SDA21 value sequences for `exp2f`, `expf`, and
+`fastFloorf` in EN, EN rev1, JP, and PAL rev1 after DOL checksum verification.
+The values are already correct. Literal substitution moves the floor constants
+four bytes earlier or deduplicates its zero/one values; moving the named
+exponential definitions before their users duplicates 32 bytes instead. Neither
+probe is retained. These are placement/compiler-pooling obstacles, not evidence
+for changing the coefficients or forcing padding into the source.

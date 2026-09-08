@@ -1127,6 +1127,12 @@ There is a one-command test that closes it, and the answer is that the premise i
 
 ### The value-sequence oracle
 
+The historical results below used consecutive distinct values: repeated equal
+loads were silently collapsed. The current tool retains every supported SDA21
+load at its actual width by default; `--collapse-repeats` explicitly reproduces
+the weaker historical comparison. See `docs/pool_value_sequence.md` for version
+selection and comparisons across multiple small-data sections.
+
 For each function, walk its `.text` in address order and write down the **value** of every
 `.sdata2` word it references, in that order. Do it for our object and for the retail carve, and
 compare the two sequences. If they are equal, the two objects' code asks for exactly the same
