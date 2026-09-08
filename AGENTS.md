@@ -1,7 +1,7 @@
 # AGENTS.md - SFA-Decomp Runbook
 
 > **Active compiler experiment (scope corrected 2026-09-06):** Only game-category
-> MWCC C/C++ units use the common GC/1.3 `config.compiler_version`. The ten older
+> MWCC C/C++ units use the common GC/1.3 `config.compiler_version`. The older
 > game math units are included, including the four under `dolphin/MSL_C/` that
 > explicitly select the game compiler. Keep `main/zlb.c` on its ProDG toolchain.
 > Dolphin SDK, MSL, MusyX, and compiler runtime retain their pre-migration compiler

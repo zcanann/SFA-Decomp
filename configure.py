@@ -1833,6 +1833,7 @@ config.libs = [
 
             Object(MatchingFor("GSAE01"), "main/rand.c", cflags=cflags_game, extra_cflags=["-O0"], progress_category="game"),
             Object(NonMatching, "main/math_80292d3c.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-inline", "auto", *msl_math_extra], progress_category="game"),
+            Object(NonMatching, "main/reciprocal.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", *msl_math_extra], progress_category="game"),
             Object(NonMatching, "main/trig_float_helpers.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", *msl_math_extra], progress_category="game"),
             Object(NonMatching, "main/math_8029312c.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-inline", "auto", *msl_math_extra], progress_category="game"),
             Object(NonMatching, "main/acosf.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", "-sym", "on", *msl_math_extra], progress_category="game"),

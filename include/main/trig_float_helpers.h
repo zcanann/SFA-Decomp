@@ -3,7 +3,6 @@
 
 #include "types.h"
 
-float fastReciprocal(float value);
 void angleToVec2Fast(int angle, float* sinOut, float* cosOut);
 void angleToVec2Precise(int angle, float* sinOut, float* cosOut);
 

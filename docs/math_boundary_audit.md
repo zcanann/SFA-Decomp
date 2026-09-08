@@ -5,6 +5,9 @@ September 8, 2026; source baseline `51367a241e`, GC/1.3 game compiler.
 Follow-up: [the complete power pool is now recovered](math_literal_pool_recovery.md#complete-power-function-pool).
 The tables below describe the pre-recovery claims; the power unit's 280-byte
 gap has since been claimed with an exact literal pool and unchanged code.
+The [reciprocal boundary repair](reciprocal_boundary_recovery.md) also separates
+the reciprocal helper from the three angle-vector approximations and recovers
+its four-byte constant without changing their compiler profiles or code.
 
 The remaining low math scores are not evidence that donor MSL implementations
 generally failed. All **28 active MSL units outside the four game-category math

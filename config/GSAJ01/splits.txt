@@ -5083,8 +5083,12 @@ main/rand.c:
 	.text       start:0x80292EB0 end:0x80292EDC
 	.sbss       start:0x803DE530 end:0x803DE538
 
+main/reciprocal.c:
+	.text       start:0x80292EDC end:0x80292F10
+	.sdata2     start:0x803E7D38 end:0x803E7D40
+
 main/trig_float_helpers.c:
-	.text       start:0x80292EDC end:0x8029321C
+	.text       start:0x80292F10 end:0x8029321C
 	.sdata2     start:0x803E7D40 end:0x803E7D90
 
 main/math_8029312c.c:
