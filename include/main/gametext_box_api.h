@@ -3,8 +3,7 @@
 
 #include "global.h"
 
-typedef struct GameTextBox
-{
+typedef struct GameTextBox {
     u16 unk00;
     u16 maxWidth;
     u16 unk04;
