@@ -271,10 +271,15 @@ separate question.
 
 **ModelDataFlags24.** `MODEL_FLAGS24_NORMALS_9BYTE` (0x8) in `include/main/model.h` matches the wiki's "08 = use 9 normals instead of 3" exactly, including the bit value.
 
-**Bone.** No named `Bone`/`ModelBone` struct exists yet in this repo — `jointData` is walked as a raw `u8*` with a hardcoded `0x1c`-byte stride (`model.c`: `modelInitBoneMtxs`, `modelInitBoneMtxs2`, `modelGetBoneMtx`'s callers). That stride matches the wiki's implied Bone size (`parent`(1) + `idx[3]`(3) + `head`(12) + `tail`(12) = 0x1c) exactly. Two additional confirmations:
-  - `bone + 0x10` (the wiki's `tail`) is read and negated into `PSMTXTrans` as the bone's rest-pose translation for skinning (`model.c:2644-2649`) — **this contradicts the wiki's claim that tail "doesn't appear to have any function in-game"**; in this repo's matched code it's the inverse bind-pose translation used every frame.
-  - `bone + 0x02` (the wiki's `idx[1]`) is written from a per-joint animation type-tag byte in `model.c:1411` (`*(u8*)(i + jointData + jointOff + 2) = *jointTypeSrc;`, `jointOff` stepping by `0x1c`) — consistent with the wiki's "matrix idxs to write".
-  - `ObjHitsModelJointInfo` (`include/main/objhits.h`) independently reconstructs `s8 parentJoint` at offset 0 of a `0x1c`-stride array (`STATIC_ASSERT(sizeof(ObjHitsModelJointInfo) == 0x1C)`) — matches the wiki's `parent` field at the same offset and stride.
+**Bone.** The canonical `ModelBone` in `include/main/model.h` has the proven
+0x1C-byte stride, signed parent at `+0`, output-matrix index/flags at `+1`, two
+animation-channel matrix slots at `+2/+3`, head translation at `+4`, and bind
+translation at `+0x10`. The matrix builder uses the channel slots as input pose
+indices and the low seven output-index bits for output/cache selection. Its
+signed mask test gives the output byte's high bit a conditional skip role.
+The tail is negated into `PSMTXTrans` for inverse-bind preparation every frame;
+it has an active runtime purpose. See [model matrix preparation](../model_matrix_preparation.md)
+for the producer/reader evidence and validation.
 
 **HitSphere → `ObjHitsModelHitVolume` (`include/main/objhits.h`).** Total size matches exactly (`0x18` both sides). The back half matches closely: `linkedSpheres` (u16 @0x14), `sphereIndex` (s8 @0x16), `maskBit` (s8 @0x17) line up offset-for-offset with the wiki's "always 0?" (0x14), "always equals sphere's index in the list" (0x16), and "same as 0x16" (0x17) fields — and `objhits.c:2270` (`if (i == hitVolume->sphereIndex)`) literally confirms "always equals the sphere's index in the list". `linkedSpheres` turns out to be a nibble-packed chain of linked hit-volume indices (`objhits.c:2273` onward), not just "always 0" — it's 0 in the common (unlinked) case, matching the wiki's small sample. The front of the struct is less certain: this repo names `radius`/`x`/`y`/`z` at offsets 0x00-0x0f (no separate "bone" field), where the wiki proposes `bone`(short@0x00)/`?`(short@0x02) before `radius`(float@0x04)/`pos`(vec3f@0x08). The reviewed code paths in `objhits.c` don't clearly exercise `radius`/`x`/`y`/`z` by name, so this discrepancy is unresolved — flagging it rather than asserting either layout is wrong.
 

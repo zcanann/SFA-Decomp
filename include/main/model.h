@@ -372,12 +372,19 @@ STATIC_ASSERT(offsetof(ObjModelHitSphere, pos) == 0x04);
 /* ModelFileHeader.jointData entry (wiki: Bone). tail is the inverse bind-pose
  * translation, negated into PSMTXTrans every frame by modelInitBoneMtxs. */
 typedef struct ModelBone {
-    s8 parent;   /* parent bone index, -1 = none */
-    u8 idx[3];   /* matrix indices to write; high bit is a flag */
+    s8 parent; /* parent bone index, -1 = none */
+    u8 outputMatrixIndexFlags; /* low seven bits select output; high bit participates in the skip mask */
+    u8 animationMatrixSlots[2]; /* current slots for the two animation channels */
     f32 head[3]; /* translation */
     f32 tail[3]; /* bind translation */
 } ModelBone;
 
+STATIC_ASSERT(offsetof(ModelBone, parent) == 0x00);
+STATIC_ASSERT(offsetof(ModelBone, outputMatrixIndexFlags) == 0x01);
+STATIC_ASSERT(offsetof(ModelBone, animationMatrixSlots) == 0x02);
+STATIC_ASSERT(offsetof(ModelBone, animationMatrixSlots[1]) == 0x03);
+STATIC_ASSERT(offsetof(ModelBone, head) == 0x04);
+STATIC_ASSERT(offsetof(ModelBone, tail) == 0x10);
 STATIC_ASSERT(sizeof(ModelBone) == 0x1C);
 
 typedef struct ObjModelJointMatrix {

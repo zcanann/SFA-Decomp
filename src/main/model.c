@@ -306,7 +306,7 @@ void modelAnimUpdateChannels(ModelFileHeader* file, ObjAnimState* work, int chan
         boneIdx = 0;
         boneByteOff = 0;
         while (boneIdx < file->jointCount) {
-            (file->jointData + boneByteOff)[offsetof(ModelBone, idx) + i + 1] = mtxSlotRow[boneIdx];
+            (file->jointData + boneByteOff)[offsetof(ModelBone, animationMatrixSlots) + i] = mtxSlotRow[boneIdx];
             boneByteOff += sizeof(ModelBone);
             boneIdx++;
         }

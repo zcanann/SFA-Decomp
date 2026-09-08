@@ -255,11 +255,11 @@ static inline void render_jointBlend(RenderJointWork* output, const ModelBone* b
         blendedChannel = (mode & 8) != 0;
     }
     for (joint = 0; joint < count; joint++) {
-        firstIndex = bones[joint].idx[1];
-        secondIndex = bones[joint].idx[2];
+        firstIndex = bones[joint].animationMatrixSlots[0];
+        secondIndex = bones[joint].animationMatrixSlots[1];
         blendIndex = firstIndex;
         if (mode & 0xF) {
-            blendIndex = bones[joint].idx[0] & 0x7F;
+            blendIndex = bones[joint].outputMatrixIndexFlags & 0x7F;
             if (mode & 1) {
                 firstIndex = blendIndex;
             } else if (mode & 2) {
@@ -286,10 +286,10 @@ static inline void render_jointBlend(RenderJointWork* output, const ModelBone* b
         }
     }
     for (joint = 0; joint < count; joint++) {
-        firstIndex = bones[joint].idx[1];
-        secondIndex = bones[joint].idx[2];
+        firstIndex = bones[joint].animationMatrixSlots[0];
+        secondIndex = bones[joint].animationMatrixSlots[1];
         blendIndex = firstIndex;
-        index = bones[joint].idx[0] & 0x7F;
+        index = bones[joint].outputMatrixIndexFlags & 0x7F;
         if (mode & 1) {
             a = output[index].quaternion[0];
             blendIndex = index;
@@ -308,7 +308,7 @@ static inline void render_jointBlend(RenderJointWork* output, const ModelBone* b
             b.y = -b.y;
             b.z = -b.z;
         }
-        if (((s8)bones[joint].idx[0] & flags) < 0) {
+        if (((s8)bones[joint].outputMatrixIndexFlags & flags) < 0) {
             continue;
         }
         q.w = a.w * inverseWeight + b.w * weight;
@@ -350,11 +350,11 @@ static inline void render_jointSinglePose(RenderJointWork* output, const ModelBo
     f32 rotation[3][3];
     const s16* angles;
     for (joint = 0; joint < count; joint++) {
-        index = (s8)bones[joint].idx[0] & flags;
+        index = (s8)bones[joint].outputMatrixIndexFlags & flags;
         if (index < 0) {
             continue;
         }
-        angles = pose[bones[joint].idx[1]].pose.rotation[0];
+        angles = pose[bones[joint].animationMatrixSlots[0]].pose.rotation[0];
         render_jointSinCos(angles[0], &sx, &cx);
         render_jointSinCos(angles[1], &sy, &cy);
         render_jointSinCos(angles[2], &sz, &cz);
@@ -371,7 +371,7 @@ static inline void render_jointSinglePose(RenderJointWork* output, const ModelBo
         rotation[0][2] = cxcz * sy + sxsz;
         rotation[1][2] = cxsz * sy - sxcz;
         rotation[2][2] = cx * cy;
-        render_jointStoreMatrix(&output[index], &bones[joint], &pose[bones[joint].idx[1]], 0, rotation, 0);
+        render_jointStoreMatrix(&output[index], &bones[joint], &pose[bones[joint].animationMatrixSlots[0]], 0, rotation, 0);
     }
 }
 
@@ -382,7 +382,7 @@ static void render_jointHierarchy(RenderJointWork* output, const f32 root[4][4],
     int joint, index, previous = -5, row, col;
     const f32(*source)[4];
     for (joint = 0; joint < count; joint++) {
-        index = (s8)bones[joint].idx[0] & flags;
+        index = (s8)bones[joint].outputMatrixIndexFlags & flags;
         if (index < 0) {
             previous = joint == 0 ? -5 : -1;
             continue;
@@ -396,7 +396,7 @@ static void render_jointHierarchy(RenderJointWork* output, const f32 root[4][4],
             }
         }
         if (joint == 0) {
-            index = bones[joint].idx[0] & 0x7F;
+            index = bones[joint].outputMatrixIndexFlags & 0x7F;
         }
         previous = index;
         for (row = 0; row < 3; row++) {
@@ -437,7 +437,7 @@ void modelAnimBuildJointMatrices(int* out, u8* dst, void* animState, u8* jointDa
         render_jointBlend(output, bones, jointCount, work, 0, work, 1, (s16)render_jointPhase(16384.0f * weight),
                           weight, flags, 4);
         /* A masked final joint exits the retail cache pass through the outer epilogue. */
-        if (((s8)bones[jointCount - 1].idx[0] & flags) < 0) {
+        if (((s8)bones[jointCount - 1].outputMatrixIndexFlags & flags) < 0) {
             return;
         }
         render_jointDecode(work, 1, anim->frameData[1], anim->frameStreamCursors[1], anim->frameStreamStrides[1],

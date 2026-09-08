@@ -53,3 +53,45 @@ the test models the SDK matrix operations in C and does not validate the
 32-bit layout of pointer-bearing owners or Gekko floating-point rounding.
 Target code generation is checked separately with objdiff and the matching
 checksum build; `ninja all_source` checks the typed API across consumers.
+
+
+## Bone output index and animation slots
+
+`ModelBone` now distinguishes the packed output-matrix index/flags at `+1`
+from the two animation-matrix slots at `+2` and `+3`. The former `idx[3]`
+spelling grouped different roles and suggested that every byte carried a flag.
+The signed parent remains at `+0`, head translation at `+4`, and bind translation
+at `+0x10`; the complete record stays 0x1C bytes. All offsets and the total size
+are asserted beside the canonical definition.
+
+EN `modelAnimUpdateChannels` copies joint-matrix-slot bytes from either a cached
+move's prefix or the resident animation map into `+2 + channel`. Three callers
+pass two channels; the remaining call selects one or two. This establishes a
+two-element slot array independently of the gap before the head vector. The
+producer keeps its existing byte cursor and uses `offsetof` on the recovered
+array. Native struct-member indexing changes the already-exact code generation.
+
+The retail matrix builder at `80006C6C` supplies the corresponding readers:
+
+- The blended pass reads `+2` for the first pose and `+3` for the second, scaling
+  each slot by 64 bytes to index the packed pose/matrix workspace.
+- Reads at `+1` select output and cached-quaternion slots through the low seven
+  bits. Other paths sign-extend the byte, combine it with the caller's mask,
+  and skip a bone when the result is negative. The high bit is therefore kept
+  with the output index; it is not described as an unconditional disable flag.
+- The single-pose path reads its animation slot from `+2`; the hierarchy pass
+  continues to use the parent byte and output-matrix index.
+
+The archived C reconstruction in `docs/foreign/joint_matrices_c.c` uses the same
+canonical fields. Its existing signed casts and mask operations are preserved;
+the live matrix-builder assembly is unchanged. This archived reconstruction is
+supporting explanation, while the EN instruction accesses establish the layout.
+
+The archived C also compiles against the current canonical header using the
+render TU's compiler command. The existing matrix-preparation test passes all
+144 scenarios at both host optimization levels. All source objects remain byte-identical in EN, EN rev1,
+JP, and PAL rev1, with unchanged fresh objdiff reports. All four full source
+builds and the strict EN retail checksum pass under 30-second timeouts.
+Formatting of the active model source/header is committed separately and checked
+for unchanged generated output. This is shared structure recovery; no new match
+credit is claimed.
