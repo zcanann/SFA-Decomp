@@ -3,15 +3,23 @@
 ## Current frontier (2026-09-07)
 
 The current TU uses GC/1.3 with `-opt nopeephole,noschedule`; strength reduction
-is enabled. At `71762b97bc`, 11/14 functions and all assigned data match exactly.
-See [the recovery record](debug_font_error_data.md) for the indexed formatter,
-shared log rectangles and horizontal error-display separators.
+is enabled. After shared unsigned pixel writes and separator cursor recovery,
+11/14 functions and all assigned data match exactly, with 99.76295% TU fuzzy.
+See [the recovery record](debug_font_error_data.md) for validation across EN,
+EN revision 1, JP, and PAL revision 1.
 
 | Function | Similarity | Retail / source instructions |
 | --- | ---: | ---: |
 | `debugPrintDrawRecord` | 99.90131% | 456 / 456 |
-| `debugTextDrawToFrameBuffer` | 81.385414% | 96 / 90 |
-| `errorThreadFunc` | 86.35591% | 694 / 748 |
+| `debugTextDrawToFrameBuffer` | 97.65625% | 96 / 96 |
+| `errorThreadFunc` | 99.71614% | 694 / 694 |
+
+The crash thread now has no structural differences. Its 35 differing words
+exchange the cached font-block and self-address registers, apart from two
+vertical-rule initializations emitted in reverse order. A scalar local for the
+diagnostic self-address fixes that register exchange but introduces an extra
+copy; it is not retained. Inlining a font-data view at each use instead of
+caching the view worsens the instruction stream and is also not retained.
 
 The record decoder has nine differing words: the wrap rectangle exchanges
 `r24` and `r25` for its top and right coordinates. Reordering the shared helper's
@@ -19,12 +27,13 @@ coordinate declarations either worsens this or also regresses the exact
 `debugPrintDraw`. Separate X/Y scale locals and an explicit wrap-scale local
 leave the result unchanged.
 
-**Inspect callers before accepting a raster improvement.** A paired-scanline
-inline helper with an indexed five-row caller raises the rasterizer alone to
-87.09375% (95 instructions). It also makes MWCC inline the rasterizer into
+**Inspect callers before accepting a raster improvement.** Before the unsigned
+pixel writer, a paired-scanline inline helper with an indexed five-row caller
+raised the rasterizer alone to 87.09375% (95 instructions). It also made MWCC
+inline the rasterizer into
 `debugPrintfxy`, losing that exact function and reducing whole-TU similarity
 from 94.26345% to 89.16091%. Expanding that row body directly into the glyph loop
-preserves the formatter's calls but scores only 79.03125% for the rasterizer.
+preserved the formatter's calls but scored only 79.03125% for the rasterizer.
 Neither variant is retained. Further recovery must account for the compiler's
 inlining decisions as well as its induction variables and register allocation.
 

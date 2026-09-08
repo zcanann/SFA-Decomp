@@ -261,3 +261,38 @@ and footprints crossing a scanline boundary, preserving the lack of clipping.
 The complete guarded framebuffer and all ten cache-store requests are checked
 at host `-O0` and `-O2`; all eleven debug tests pass. These are host execution
 checks, not PowerPC cache or display-hardware emulation.
+
+## Shared crash-screen separator pixels
+
+The three horizontal separators now advance signed pixel indices for the current
+and preceding scanlines, then pass them through the same unsigned pixel writer
+as glyphs. The helper and fixed color are named `debugDrawTextPixel` and
+`DEBUG_TEXT_COLOR` to reflect both consumers. Their names and source boundary
+are reconstructed; no compiler settings change.
+
+Both parts matter under GC/1.3: routing the old column-indexed loop through the
+writer grows the crash thread to 728 instructions, while advancing the two
+pixel indices reproduces retail's loop structure. The current-row write still
+precedes the previous-row write, the preceding row is conditional on `row > 0`,
+and the width countdown and all caller-side enable guards are preserved.
+
+`errorThreadFunc` improves from **90.148415% to 99.71614%**, shrinking from
+**717 to 694 instructions**, exactly retail's length. Structural differences
+fall from 101 to zero, and operand differences from 83 to 35. The residual is
+the font-block/self-address register exchange and the order of two vertical-rule
+initializations. Whole-TU fuzzy matching rises **96.39239% to 99.76295%**;
+eleven of fourteen functions remain exact.
+
+EN v1.0, EN revision 1, JP, and PAL revision 1 have SHA-1-verified inputs and
+identical address-normalized retail crash-thread bodies. All four builds produce
+the same resulting source object. The thirteen sibling function bodies, every
+function's ordered relocation destinations, and all allocated non-text bytes
+and named layouts are unchanged. The following handler moves back 92 bytes;
+all 10,272 assigned data bytes remain exact. The TU remains `NonMatching`.
+
+All eleven debug tests pass at host `-O0` and `-O2`. The existing guarded-pixel
+checks cover all three real separator calls, zero width, row zero, the bottom
+row, and eighty randomized row/width pairs. Mutating the preceding-row stride
+from one pixel to two fails the framebuffer comparison. Formatting preserves
+the raw object; `ninja all_source` and the strict retail checksum gate pass
+with 30-second bounds.

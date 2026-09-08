@@ -55,7 +55,7 @@ char sErrFmtRegisterRange[] = "%d - %d";
 #define DEBUG_FRAMEBUFFER_WIDTH 640
 #define DEBUG_GLYPH_ROWS        5
 #define DEBUG_GLYPH_BITS        8
-#define DEBUG_GLYPH_COLOR       0xC080
+#define DEBUG_TEXT_COLOR       0xC080
 
 /* Binary commands embedded in the NUL-terminated debug log. Payload bytes may
  * contain zero; position and tab width use little-endian 16-bit values. */
@@ -544,8 +544,8 @@ void debugPrintInit(void) {
     debugLogEnd = debugLogBuffer;
 }
 
-static inline void debugDrawGlyphPixel(u32 pixelIndex) {
-    debugDrawFrameBuffer[pixelIndex] = DEBUG_GLYPH_COLOR;
+static inline void debugDrawTextPixel(u32 pixelIndex) {
+    debugDrawFrameBuffer[pixelIndex] = DEBUG_TEXT_COLOR;
 }
 
 /* Each set bit paints two overlapping horizontal pixels on both scanlines.
@@ -573,10 +573,10 @@ void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused) {
             pixelOffsets[1][1] = bottomRowStart + 1;
             for (; glyphBit < DEBUG_GLYPH_BITS; glyphBit++) {
                 if (((1 << glyphBit) & grid[glyphRow]) != 0) {
-                    debugDrawGlyphPixel(pixelOffsets[0][0]);
-                    debugDrawGlyphPixel(pixelOffsets[0][1]);
-                    debugDrawGlyphPixel(pixelOffsets[1][0]);
-                    debugDrawGlyphPixel(pixelOffsets[1][1]);
+                    debugDrawTextPixel(pixelOffsets[0][0]);
+                    debugDrawTextPixel(pixelOffsets[0][1]);
+                    debugDrawTextPixel(pixelOffsets[1][0]);
+                    debugDrawTextPixel(pixelOffsets[1][1]);
                 }
                 pixelOffsets[0][0]++;
                 pixelOffsets[0][1]++;
@@ -663,11 +663,14 @@ void reportAllocFail(int region0SizeKb, int region0FreeKb, int region1SizeKb, in
 }
 
 static inline void errorDrawHorizontalRule(int row, int width) {
-    int column;
-    for (column = 0; width != 0; width--, column++) {
-        debugDrawFrameBuffer[row * DEBUG_FRAMEBUFFER_WIDTH + column] = 0xc080;
+    int previousPixel;
+    int pixel;
+    pixel = row * DEBUG_FRAMEBUFFER_WIDTH;
+    previousPixel = (row - 1) * DEBUG_FRAMEBUFFER_WIDTH;
+    for (; width != 0; width--, pixel++, previousPixel++) {
+        debugDrawTextPixel(pixel);
         if (row > 0) {
-            debugDrawFrameBuffer[(row - 1) * DEBUG_FRAMEBUFFER_WIDTH + column] = 0xc080;
+            debugDrawTextPixel(previousPixel);
         }
     }
 }
