@@ -3937,7 +3937,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         break;
     case 3:
         pauseMenuDoSave();
-        alpha = 255.0f * gPauseMenuOpenAmount;
+        panelAlpha = 255.0f * gPauseMenuOpenAmount;
         gPauseMenuMapSwivelCos = mathCosf(3.1415927f * gPauseMenuMapSwivelAngle / 32768.0f);
         gPauseMenuHoloTime += timeDelta;
         gPauseMenuHoloRotZ =
@@ -3955,7 +3955,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         model = Obj_GetActiveModel(gGameUiCommCubeObjects[0]);
         objRender(0, 0, 0, 0, gGameUiCommCubeObjects[0], 1);
         model->bufferFlags &= ~0x8;
-        panelAlpha = (f32)(s16)alpha * gPauseMenuMapSwivelCos;
+        panelAlpha *= gPauseMenuMapSwivelCos;
         {
             f64 tmp = (double)panelAlpha * (512.0 - (double)gPauseMenuSlideOut);
             x = (s32)(tmp / 512.0);
@@ -4213,52 +4213,52 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
             gameTextShowAt(0x43a, 0, 0xb4);
             break;
         case 1: {
-            s32 textX;
+            s32 tokenTextY;
             s16* taskTextIds;
             gameTextShowAt(0x440, 0, 0x78);
             gameTextMeasureById(0x440, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
-            textX = (tokenBottom - tokenTop) + 5;
+            tokenTextY = (tokenBottom - tokenTop) + 5;
             {
                 u8* thresholds = &statusTable->tokens[0].thresh;
                 sprintf(tokenCountText, lbl_803DBB58, thresholds[gPauseMenuTokenIndex * 8]);
             }
-            gameTextShowStr(tokenCountText, 0x79, 0, textX + 0x78);
+            gameTextShowStr(tokenCountText, 0x79, 0, tokenTextY + 0x78);
             gameTextMeasureStringBoundsAt(tokenCountText, 0x79, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             {
-                s32 textWidth = tokenBottom - tokenTop;
-                textX = textWidth + textX;
+                s32 tokenLineHeight = tokenBottom - tokenTop;
+                tokenTextY = tokenLineHeight + tokenTextY;
             }
-            textX += 5;
-            gameTextShowAt(0x441, 0, textX + 0x78);
+            tokenTextY += 5;
+            gameTextShowAt(0x441, 0, tokenTextY + 0x78);
             gameTextMeasureById(0x441, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
-            textX += tokenBottom - tokenTop;
+            tokenTextY += tokenBottom - tokenTop;
             taskTextIds = &statusTable->tokens[0].alt;
-            gameTextShowAt(taskTextIds[gPauseMenuTokenIndex * 4], 0, textX + 0x78);
+            gameTextShowAt(taskTextIds[gPauseMenuTokenIndex * 4], 0, tokenTextY + 0x78);
             gameTextMeasureById(taskTextIds[gPauseMenuTokenIndex * 4], 0, 0, &tokenLeft, &tokenRight, &tokenTop,
                                 &tokenBottom);
             {
-                s32 textWidth = tokenBottom - tokenTop;
-                textX = textWidth + textX;
+                s32 tokenLineHeight = tokenBottom - tokenTop;
+                tokenTextY = tokenLineHeight + tokenTextY;
             }
-            textX += 0xa;
-            gameTextShowAt(0x442, 0, textX + 0x78);
+            tokenTextY += 0xa;
+            gameTextShowAt(0x442, 0, tokenTextY + 0x78);
             gameTextMeasureById(0x442, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
-            textX += tokenBottom - tokenTop;
-            gameTextShowAt(0x43a, 0, textX + 0x82);
+            tokenTextY += (tokenBottom - tokenTop) + 0xa;
+            gameTextShowAt(0x43a, 0, tokenTextY + 0x78);
             break;
         }
         case 2: {
             s16* taskTextIds;
-            s32 textX;
+            s32 tokenTextY;
             gameTextShowAt(0x443, 0, 0xa0);
             gameTextMeasureById(0x443, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
-            textX = (tokenBottom - tokenTop) + 5;
+            tokenTextY = (tokenBottom - tokenTop) + 5;
             taskTextIds = &statusTable->tokens[0].alt;
-            gameTextShowAt(taskTextIds[gPauseMenuTokenIndex * 4], 0, textX + 0xa0);
+            gameTextShowAt(taskTextIds[gPauseMenuTokenIndex * 4], 0, tokenTextY + 0xa0);
             gameTextMeasureById(taskTextIds[gPauseMenuTokenIndex * 4], 0, 0, &tokenLeft, &tokenRight, &tokenTop,
                                 &tokenBottom);
-            textX += tokenBottom - tokenTop;
-            gameTextShowAt(0x444, 0, textX + 0xaa);
+            tokenTextY += (tokenBottom - tokenTop) + 0xa;
+            gameTextShowAt(0x444, 0, tokenTextY + 0xa0);
             break;
         }
         }

@@ -718,3 +718,43 @@ allocated data section, named symbol offset, and relocation is unchanged.
 Engine 0 now has **113 / 118 exact functions** and remains `NonMatching` as a TU;
 no whole-object regional progress claim is made. Compiler profiles and confirmed
 TU boundaries are unchanged.
+
+
+## September 8: pause-menu line advances and map opacity recovered
+
+`pauseMenuDraw` improves from **99.95618% to 99.982475%** under the unchanged
+GC/1.3 profile. The token-prompt additions and map-page opacity now match;
+**four confirmation-page opacity instructions remain different** at indices
+530, 622, 656, and 727 (r31 instead of r29). This is not a complete match.
+
+The final line advances include the ten-pixel gap in the compound update:
+`tokenTextY += (tokenBottom - tokenTop) + 0xa`. The subsequent draw keeps
+its page's base Y coordinate (`0x78` or `0xa0`). This produces the retail
+operand order while retaining the preceding spacing instruction. It closes
+the terminal-add limitation described in the earlier audit and in
+`priced_classes.md` section 34b. The cursor and measured-height locals are
+also named for their vertical roles.
+
+The grid-cell recovery in staging `1cbe6abafe` established the signed-short
+opacity API. With that prerequisite, the map page initializes `panelAlpha`
+from the menu fade and updates it with `panelAlpha *= gPauseMenuMapSwivelCos`.
+The compound update preserves one opacity lifetime through the swivel
+calculation and restores r29 at both formerly mismatched map-page sites.
+The original integer-opacity reconstruction could not use this form without
+changing the narrowing and call code.
+
+Only four instruction words change. The other 117 functions, all allocated
+data bytes and layouts, named symbol offsets, and resolved relocation targets
+are unchanged. Anonymous literal symbols are renumbered. All 9,960 assigned data bytes remain exact; the TU remains
+`NonMatching`. Current function MD5 is `b22232e71239bc7310b5cb530ebf156b`;
+retail remains `8a39b00d03abe18374ca86ea2726baae`.
+
+Live compiler graph captures and source variants covering local lifetimes,
+narrowing, inline helpers, and expression forms did not close the remaining
+confirmation-page allocation. No unrelated scratch reuse or unsuccessful
+experiment is retained.
+
+Strict matching `ninja`, `ninja all_source`, and formatting checks pass.
+Formatting preserves the complete object bytes. Secondary target DOLs are
+not present at their configured paths in this checkout, so no regional
+progress manifest is promoted.

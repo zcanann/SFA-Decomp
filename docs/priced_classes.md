@@ -3637,6 +3637,11 @@ rows disclosed (`GameUI_release`, `mapBlockRender_setShader`: no parseable candi
 
 ### 34b. The `+=` / assignment fold law (probe-verified with the unit's own cmdline, `-opt nopeephole,noschedule`)
 
+**Update (2026-09-08, GC/1.3):** The terminal `pauseMenuDraw` additions now match by including
+the line gap in `y += (bottom - top) + 10` and retaining the page base in the draw call.
+The dead-after limitation below describes the older tested forms, not an impossibility; see
+[the recovered line advances](engine_0_matching.md#september-8-pause-menu-line-advances-and-map-opacity-recovered).
+
 - MWCC canonicalises `x = (a-b) + x` back to accumulator-first (`add rX,rX,r0`); a NAMED addend
   (`x = w + x`) preserves source operand order (`add rX,r0,rX`) — but only while `x` is live-out.
 - At a dead-after site, ANY assignment-form update folds: the pending constant chain (`x += 10`
