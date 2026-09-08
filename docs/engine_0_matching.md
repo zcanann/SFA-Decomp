@@ -1171,3 +1171,12 @@ required 30-second timeouts.
 The shared source also compiles for JP, PAL, EN rev1, and PAL rev1; each
 input DOL was verified against its configured SHA1. Before/after object
 comparisons in all four show the same isolated function change and sizes.
+
+A separate differential probe, `python3 tools/cmenu_set_items_probe.py --baseline
+6b1ba5bc2c`, compares the old and current C functions with the canonical item/HUD
+layouts and stubbed engine services. All 10,000 deterministic cases produce
+identical return values, complete HUD/global state, and ordered call traces
+under AddressSanitizer and UndefinedBehaviorSanitizer. It includes full-width
+ownership values, several negative table terminators, and empty/full-capacity
+lists. This complements the focused assertions above; it does not establish
+retail runtime or PPC ABI equivalence.
