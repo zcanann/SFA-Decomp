@@ -347,3 +347,46 @@ emulation; the retail instruction comparison separately checks the generated
 multiply/add sequence. Full source compilation and the strict retail checksum
 pass. The active source and internal header pass the formatter check. Formatting
 produces no additional source diff and preserves the complete semantic object.
+
+## Shared blend-row lifetime across retail versions
+
+The RGB565 and RGBA8 paths now share `tileRow` and `rowInTile`, rather than
+declaring separate copies of those same row-offset roles in each branch.
+Width and height remain dimensions; no unrelated local is reused for an offset.
+The format-dependent row calculations, pixel addressing, channel arithmetic,
+and explicit width reload after the RGBA8 red store are unchanged.
+
+Fresh before/after objects show the same improvement in `GSAE01`,
+`GSAE01_rev1`, `GSAJ01`, `GSAP01`, and `GSAP01_rev1`:
+
+- `blendTextures`: 93.78788% to 94.242424%, still 924 bytes / 231 instructions.
+- Identical mnemonic sequence; register-operand differences fall from 152 to 144.
+- TU fuzzy agreement: 98.94111% to 98.96062%; still 40/44 exact functions.
+- All other 43 function bodies, non-text section bytes, named-symbol layouts,
+  and resolved relocation destinations are unchanged in every version.
+
+The five retail instruction bodies are byte-identical. This is a universal
+partial code gain, not a newly exact function; no compiler profile, match flag,
+data ownership, or version-dependent source is changed.
+
+`tools/shadow_blend_probe.py` executes compiled and retail PPC against an
+independent row-major pixel oracle, using GX tile serialization. Each version
+passes 690 cases covering both formats, empty images, rectangular dimensions
+through 16x16, eight finite weights (including wrapped values outside [0, 1]),
+aliased sources, in-place destinations, null inputs, and format/dimension
+mismatches. Texture headers, image guards, cache-store arguments, nonvolatile
+registers, and unchanged source allocations are checked. The source loader
+relocates only the selected function and its literal pool; register-save helpers
+execute from the selected retail DOL, whose SHA-1 must match its configured hash
+before emulation. Only the cache-store call is intercepted.
+
+Six oracle unit tests pin separate per-source truncation, 255/256 endpoint
+behavior, wrapped weights, cleared RGBA8 alpha, channel expansion, and plane/tile
+order. A deliberately opaque-alpha source mutation is rejected by the emulator
+probe. This does not test partial tiles, non-finite weights, overlapping headers,
+or whole-game execution. The non-EN builds remain progress-only.
+
+```sh
+python tools/shadow_blend_probe.py --version GSAE01
+python -m unittest discover -s tools -p test_shadow_blend_probe.py
+```

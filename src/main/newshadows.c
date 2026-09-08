@@ -1788,6 +1788,8 @@ void updateHeavyFogTexture(int intensity) {
 }
 
 void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst) {
+    u32 tileRow;
+    u32 rowInTile;
     u32 format;
     u32 width;
     u32 height;
@@ -1837,8 +1839,6 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst) {
         weightB = (0xff - weightA) & 0xff;
         if (format == GX_TF_RGB565) {
             int y, x;
-            u32 tileRow;
-            u32 rowInTile;
             for (y = 0; y < src1->height; y++) {
                 u8* sourcePixelA;
                 u8* sourcePixelB;
@@ -1887,8 +1887,6 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst) {
             }
         } else {
             int y, x;
-            u32 tileRow;
-            u32 rowInTile;
             for (y = 0; y < src1->height; y++) {
                 u32 rowWidth;
                 x = 0;
