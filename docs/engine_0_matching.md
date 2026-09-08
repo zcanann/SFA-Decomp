@@ -1136,3 +1136,38 @@ Seven focused projection tests cover commuted inputs, conflicting roles,
 ambiguous assignments, fixed aliases, interference collisions, structural
 drift, and D-form zero bases. Both required EN builds pass, and the built DOL
 retains the retail SHA1. Game source and compiler configuration are unchanged.
+
+## 2026-09-08: rebuild C-menu item setup as readable source
+
+`cMenuSetItems` now uses indexed item tables and HUD arrays, guard clauses for
+unowned/consumed items, and one inventory-slot fill shared by staff and other
+items. The one-element offset accumulator, byte-address arithmetic, cursor
+pointers, and duplicated inventory setup are removed. This is a deliberate
+source-quality reset, not evidence that the original source had this exact
+control-flow spelling.
+
+Preserved behavior includes the staff preselection exception, byte truncation
+of ownership counts, Tricky command-mask/action-ID interpretation, untouched
+Tricky active/used-bit arrays, the `getTrickyObject` call, and freeing all
+replaced textures before checking file flags and loading replacements. Only
+`ownedBits[0]` is reset for an empty menu; the remaining entries are preserved.
+
+The function shrinks from 1,208 to 964 bytes. Its EN objdiff score changes from
+98.84106% to 53.56623% (whole unit: 99.97473% to 99.24733%). Other function bytes
+and allocated data sections are unchanged. The unit remains `NonMatching`.
+Matching work should proceed from understandable source and retail evidence,
+without reinstating offset counters solely to recover register allocation.
+
+`python3 tools/test_cmenu_set_items.py` exercises the actual function body at
+host `-O0` and `-O2`: filtering, preselection, ownership counts, command
+availability, Y-button invalidation, texture retention/replacement/load
+failure, file-flag gating, and empty/full menus. The same assertions also pass
+against the prior implementation. These checks cover observable behavior;
+they do not establish complete equivalence to retail execution.
+
+EN `ninja all_source` and the strict matching checksum build pass under the
+required 30-second timeouts.
+
+The shared source also compiles for JP, PAL, EN rev1, and PAL rev1; each
+input DOL was verified against its configured SHA1. Before/after object
+comparisons in all four show the same isolated function change and sizes.
