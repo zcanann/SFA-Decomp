@@ -13,6 +13,7 @@ dlls/engine/11/11.c
 dlls/engine/12/12.c
 dlls/engine/13/13.c
 dlls/engine/14/14.c
+dlls/engine/15/15.c
 dlls/engine/16/16.c
 dlls/engine/17/17.c
 dlls/engine/18/18.c
@@ -51,6 +52,7 @@ dlls/engine/47/47.c
 dlls/engine/48/48.c
 dlls/engine/49/49.c
 dlls/engine/5/5.c
+dlls/engine/51/51.c
 dlls/engine/52_n_attractmode/n_attractmode.c
 dlls/engine/53/53.c
 dlls/engine/54/54.c
@@ -179,6 +181,7 @@ dlls/objects/198_AnimatedObj/AnimatedObj.c
 dlls/objects/199_DIM2RoofRub/DIM2RoofRub.c
 dlls/objects/200_DepthOfFieldPoint/DepthOfFieldPoint.c
 dlls/objects/201_Baddie/Baddie.c
+dlls/objects/202/202.c
 dlls/objects/202/baddiewhirlpool.c
 dlls/objects/202/battledroid.c
 dlls/objects/202/firecrawler.c
@@ -365,6 +368,7 @@ dlls/objects/369_IMSpaceRing/IMSpaceRing.c
 dlls/objects/370_LINKB_levco/LINKB_levco.c
 dlls/objects/371_LINK_levcon/LINK_levcon.c
 dlls/objects/372_CCriverflow/CCriverflow.c
+dlls/objects/373_DFropenode/DFropenode.c
 dlls/objects/374_DFSH_Door1S/DFSH_Door1S.c
 dlls/objects/375/375.c
 dlls/objects/376_DFSH_Shrine/DFSH_Shrine.c
@@ -440,6 +444,7 @@ dlls/objects/445/445.c
 dlls/objects/446/446.c
 dlls/objects/447_DIMLavaBall/DIMLavaBall.c
 dlls/objects/448_DIMLogFire/DIMLogFire.c
+dlls/objects/449_DIMSnowBall/DIMSnowBall.c
 dlls/objects/450_DIMSnowBall/DIMSnowBall.c
 dlls/objects/451_DIMGate/DIMGate.c
 dlls/objects/452_DIMIceWall/DIMIceWall.c
@@ -594,6 +599,7 @@ dlls/objects/600_DR_CloudRun/DR_CloudRun.c
 dlls/objects/601_SB_Cloudrun/SB_Cloudrun.c
 dlls/objects/602_StaticCamer/StaticCamer.c
 dlls/objects/603_MSPlantingS/MSPlantingS.c
+dlls/objects/604/604.c
 dlls/objects/605_CRCloudRace/CRCloudRace.c
 dlls/objects/606/606.c
 dlls/objects/607_CRFuelTank/CRFuelTank.c
@@ -835,6 +841,7 @@ dolphin/os/OSAudioSystem.c
 dolphin/os/OSCache.c
 dolphin/os/OSContext.c
 dolphin/os/OSError.c
+dolphin/os/OSFont.c
 dolphin/os/OSInterrupt.c
 dolphin/os/OSLink.c
 dolphin/os/OSMemory.c
@@ -855,6 +862,7 @@ dolphin/thp/THPDec.c
 dolphin/vi/vi.c
 main/audio.c
 main/audio_sfx.c
+main/audio_stream.c
 main/boot_logo.c
 main/camera.c
 main/curves.c
@@ -863,6 +871,7 @@ main/gameloop.c
 main/gameloop_buttonobj.c
 main/gameloop_main.c
 main/mm.c
+main/modelEngine.c
 main/modellight.c
 main/obj_movelib.c
 main/objlib.c
@@ -914,6 +923,7 @@ musyx/runtime/sal_dsp_irq.c
 musyx/runtime/sal_dsp_irqinit.c
 musyx/runtime/sal_studio.c
 musyx/runtime/seq.c
+musyx/runtime/snd3dgroup.c
 musyx/runtime/snd_core.c
 musyx/runtime/snd_groups.c
 musyx/runtime/snd_midictrl.c

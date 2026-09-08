@@ -44,7 +44,7 @@ main/audio_stream.c:
 	.data       start:0x802C6538 end:0x802C6580
 	.bss        start:0x803378A0 end:0x80337CF0
 	.sdata      start:0x803DBEB0 end:0x803DBEC0
-	.sbss       start:0x803DD4C8 end:0x803DD500
+	.sbss       start:0x803DD4C8 end:0x803DD4FA
 	.sdata2     start:0x803DF250 end:0x803DF270
 
 main/camera.c:
@@ -249,7 +249,7 @@ main/rcp_dolphin.c:
 	.data       start:0x8030DBE8 end:0x8030DC18
 	.bss        start:0x80378620 end:0x8037ED08
 	.sdata      start:0x803DC260 end:0x803DC268
-	.sbss       start:0x803DDA18 end:0x803DDA28
+	.sbss       start:0x803DDA18 end:0x803DDA26
 	.sdata2     start:0x803DF7C8 end:0x803DF818
 
 main/texture.c:
@@ -404,7 +404,7 @@ dlls/engine/11/11.c:
 
 dlls/engine/12/12.c:
 	.text       start:0x800A3CCC end:0x800A3D7C
-	.data       start:0x803108E0 end:0x803109A8
+	.data       start:0x803108E0 end:0x803109A2
 
 dlls/engine/13/13.c:
 	.text       start:0x800A3D7C end:0x800A45C4
@@ -423,7 +423,7 @@ dlls/engine/24/24.c:
 
 dlls/engine/14/14.c:
 	.text       start:0x800A5080 end:0x800AF914
-	.data       start:0x80311120 end:0x803111F8
+	.data       start:0x80311120 end:0x803111F6
 	.bss        start:0x8039CF40 end:0x8039CF80
 	.sdata      start:0x803DC400 end:0x803DC410
 	.sbss       start:0x803DDF40 end:0x803DDFA8
@@ -590,7 +590,7 @@ dlls/engine/4/4.c:
 dlls/engine/15/15.c:
 	.text       start:0x800D82AC end:0x800DA058
 	.data       start:0x80311FF8 end:0x80312070
-	.sbss       start:0x803DE0B0 end:0x803DE0D8
+	.sbss       start:0x803DE0B0 end:0x803DE0D1
 	.sdata2     start:0x803E11F0 end:0x803E1248
 
 dlls/engine/16/16.c:
@@ -1345,7 +1345,7 @@ dlls/engine/50/50.c:
 dlls/engine/51/51.c:
 	.text       start:0x801161BC end:0x801163B8
 	.data       start:0x8031ADF0 end:0x8031AE28
-	.sbss       start:0x803DE278 end:0x803DE290
+	.sbss       start:0x803DE278 end:0x803DE28B
 	.sdata2     start:0x803E2988 end:0x803E2990
 
 dlls/engine/52_n_attractmode/n_attractmode.c:
@@ -1368,7 +1368,7 @@ main/thp/n_options.c:
 
 main/thp/dll_3e.c:
 	.text       start:0x80118714 end:0x80118F30
-	.sbss       start:0x803DE2E4 end:0x803DE308
+	.sbss       start:0x803DE2E4 end:0x803DE301
 
 main/thp/attractmovie.c:
 	.text       start:0x80118F30 end:0x801192A8
@@ -1637,7 +1637,7 @@ dlls/objects/202/202.c:
 	.text       start:0x8015B3BC end:0x8015DF94
 	.data       start:0x803209D0 end:0x80320AF8
 	.bss        start:0x803AD188 end:0x803AD1E0
-	.sbss       start:0x803DE6F8 end:0x803DE700
+	.sbss       start:0x803DE6F8 end:0x803DE6FA
 	.sdata2     start:0x803E3998 end:0x803E3A58
 
 dlls/objects/206/206.c:
@@ -2601,7 +2601,7 @@ dlls/objects/448_DIMLogFire/DIMLogFire.c:
 dlls/objects/449_DIMSnowBall/DIMSnowBall.c:
 	.text       start:0x801B1388 end:0x801B199C
 	.data       start:0x80324800 end:0x80325FA0
-	.sdata      start:0x803DCB50 end:0x803DCB58
+	.sdata      start:0x803DCB50 end:0x803DCB52
 	.sdata2     start:0x803E54E0 end:0x803E54F8
 
 dlls/objects/450_DIMSnowBall/DIMSnowBall.c:
@@ -2795,7 +2795,7 @@ dlls/objects/373_DFropenode/DFropenode.c:
 	.text       start:0x801C11AC end:0x801C2C94
 	.rodata     start:0x802C2AD8 end:0x802C2B38
 	.data       start:0x80326A40 end:0x80326B60
-	.sdata      start:0x803DCBA8 end:0x803DCBC8
+	.sdata      start:0x803DCBA8 end:0x803DCBC2
 	.sdata2     start:0x803E5A78 end:0x803E5AC8
 
 dlls/objects/374_DFSH_Door1S/DFSH_Door1S.c:
@@ -3589,7 +3589,7 @@ dlls/objects/563_DFP_Statue1/DFP_Statue1.c:
 
 dlls/objects/564_DFP_PerchSw/DFP_PerchSw.c:
 	.text       start:0x80208AC4 end:0x80208B40
-	.data       start:0x8032A750 end:0x8032A7B8
+	.data       start:0x8032A750 end:0x8032A7B1
 
 dlls/objects/565_DFP_TargetB/DFP_TargetB.c:
 	.text       start:0x80208B40 end:0x80209614
@@ -3684,7 +3684,7 @@ dlls/objects/467/467.c:
 
 dlls/objects/604/604.c:
 	.text       start:0x8020F88C end:0x80210D38
-	.rodata     start:0x802C2CA0 end:0x802C2CD0
+	.rodata     start:0x802C2CA0 end:0x802C2CCA
 	.data       start:0x8032AF68 end:0x8032B020
 	.sdata      start:0x803DCE80 end:0x803DCE90
 	.sbss       start:0x803DE9B8 end:0x803DE9C0
@@ -4240,7 +4240,7 @@ dolphin/os/OSCache.c:
 
 dolphin/os/OSContext.c:
 	.text       start:0x80242758 end:0x80242FC0
-	.data       start:0x8032D428 end:0x8032D600
+	.data       start:0x8032D428 end:0x8032D5FF
 
 dolphin/os/OSError.c:
 	.text       start:0x80242FC0 end:0x80243308
@@ -4250,8 +4250,8 @@ dolphin/os/OSError.c:
 
 dolphin/os/OSFont.c:
 	.text       start:0x80243308 end:0x80243E74
-	.data       start:0x8032D920 end:0x8032E430
-	.sdata      start:0x803DD1B0 end:0x803DD1B8
+	.data       start:0x8032D920 end:0x8032E42A
+	.sdata      start:0x803DD1B0 end:0x803DD1B2
 	.sbss       start:0x803DEAA8 end:0x803DEAB8
 	.sdata2     start:0x803E82A8 end:0x803E82B0
 
@@ -4710,7 +4710,7 @@ musyx/runtime/snd3dgroup.c:
 	extabindex  start:0x80006314 end:0x80006368
 	.text       start:0x802801A8 end:0x802818C4
 	.bss        start:0x803CD520 end:0x803CE3C0
-	.sbss       start:0x803DEFD0 end:0x803DEFF0
+	.sbss       start:0x803DEFD0 end:0x803DEFEE
 	.sdata2     start:0x803E8518 end:0x803E8560
 
 musyx/runtime/snd_core.c:
@@ -4977,7 +4977,7 @@ dolphin/TRK_MINNOW_DOLPHIN/targcont.c:
 
 dolphin/TRK_MINNOW_DOLPHIN/target_options.c:
 	.text       start:0x8028DAAC end:0x8028DAC8
-	.bss        start:0x803DB710 end:0x803DB718
+	.bss        start:0x803DB710 end:0x803DB711
 
 dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
 	.text       start:0x8028DAC8 end:0x8028DC08

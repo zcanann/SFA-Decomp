@@ -15,6 +15,7 @@ from version_progress import (SymbolSpan, SplitRange, VersionProjection, build_b
                               project_version, build_symbol_mappings, paired_functions,
                               PortedRange, render_projected_symbol_texts, main)
 from version_progress import source_data_identifiers
+from version_progress import port_coherent_units, SECTION_INDEX
 
 
 def dol(data, address):
@@ -73,6 +74,56 @@ class CanonicalDataNameTests(unittest.TestCase):
             self.source, target, ranges, {}, {'lbl_80300000', 'lbl_80300004'})
         self.assertEqual(result, target)
         self.assertEqual(conflicts, 2)
+
+
+class AlignmentGapTests(unittest.TestCase):
+    def project(self, source_gap=bytes(6), target_gap=bytes(6), spans=(), missing_neighbor=False):
+        def image(address, gap):
+            data = b'\xff\xff' + gap + bytes(16)
+            return SimpleNamespace(path=Path('synthetic.dol'), data=data, sections=[
+                DolSection(index, 0, address if section == 'sdata' else 0,
+                           len(data) if section == 'sdata' else 0)
+                for section, index in SECTION_INDEX.items()])
+        source, target = image(0x80010000, source_gap), image(0x80020000, target_gap)
+        next_source, next_target = 0x80010002 + len(source_gap), 0x80020002 + len(target_gap)
+        splits = [SplitRange('first.c', 'sdata', 0x80010000, 0x80010002),
+                  SplitRange('next.c', 'sdata', next_source, next_source + 8)]
+        mappings = {'sdata': {0x80010000: 0x80020000, 0x80010002: 0x80020002,
+                             next_source: next_target, next_source + 8: next_target + 8}}
+        if missing_neighbor:
+            splits += [SplitRange('next.c', 'data', 0x80300000, 0x80300004),
+                       SplitRange('last.c', 'sdata', next_source + 8, next_source + 16)]
+            mappings['sdata'][next_source + 16] = next_target + 16
+        return port_coherent_units(splits, [], [], mappings, {}, {}, source, target,
+                                   {}, {'sdata': tuple(spans)})
+
+    def test_padding_remains_outside_packed_object(self):
+        ported, rejected, gaps, *_ = self.project()
+        self.assertFalse(rejected)
+        self.assertEqual(gaps, 1)
+        self.assertEqual([(p.target_start, p.target_end) for p in ported],
+                         [(0x80020000, 0x80020002), (0x80020008, 0x80020010)])
+
+    def test_nonzero_or_changed_gap_is_not_alignment_evidence(self):
+        for kwargs in ({'source_gap': b'\1' + bytes(5)},
+                       {'target_gap': b'\1' + bytes(5)}, {'target_gap': bytes(2)}):
+            with self.subTest(kwargs=kwargs):
+                ported, rejected, gaps, *_ = self.project(**kwargs)
+                self.assertEqual([p.source.unit for p in ported], ['next.c'])
+                self.assertEqual(rejected['unaligned auto-unit boundary'], 1)
+                self.assertEqual(gaps, 0)
+
+    def test_named_gap_storage_is_not_absorbed(self):
+        ported, rejected, gaps, *_ = self.project(
+            spans=[SymbolSpan('reservedState', 'sdata', 0x80020004, 0x80020006)])
+        self.assertEqual([p.source.unit for p in ported], ['next.c'])
+        self.assertEqual(gaps, 0)
+
+    def test_rejected_neighbor_does_not_hide_an_unaligned_unknown_corridor(self):
+        ported, rejected, gaps, *_ = self.project(missing_neighbor=True)
+        self.assertEqual([p.source.unit for p in ported], ['last.c'])
+        self.assertEqual(rejected['unaligned auto-unit boundary'], 1)
+        self.assertEqual(gaps, 0)
 
 
 class PackedBoundaryTests(unittest.TestCase):

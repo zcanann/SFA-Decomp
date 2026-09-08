@@ -1161,10 +1161,10 @@ def port_coherent_units(
             continue
         accepted.extend(candidates)
 
-    # Fold only short, invariant, zero-filled alignment gaps into the preceding
-    # object before auditing auto-unit alignment.  This is linker padding, not
-    # a standalone translation unit.
-    extensions: dict[tuple[str, str, int], int] = {}
+    # Retain short, invariant, zero-filled alignment gaps outside both objects.
+    # decomp-toolkit lets the linker provide these bytes; extending a packed
+    # section instead changes its size and can absorb padding into its last symbol.
+    alignment_gaps: set[tuple[str, int, int]] = set()
     next_source_range: dict[tuple[str, str, int], SplitRange] = {}
     source_ranges_by_section: dict[str, list[SplitRange]] = defaultdict(list)
     for split in source_splits:
@@ -1210,25 +1210,11 @@ def port_coherent_units(
             target_dol, section, before.target_end, target_after_start
         ):
             continue
-        extensions[
-            (before.source.unit, section, before.source.start)
-        ] = target_after_start
-    folded_padding_ranges = len(extensions)
-    accepted = [
-        replace(
-            item,
-            target_end=extensions.get(
-                (item.source.unit, item.source.section, item.source.start),
-                item.target_end,
-            ),
-        )
-        for item in accepted
-    ]
+        alignment_gaps.add((section, before.target_end, target_after_start))
 
-    # Leaving an unclaimed corridor makes decomp-toolkit synthesize an auto
-    # unit.  Its endpoints must be word aligned even when the neighboring real
-    # TU owns a packed byte-sized BSS tail.  Drop the adjacent projected TU in
-    # that rare case so the auto corridor begins at the next safe boundary.
+    # Unknown corridors need word-aligned auto units. Proven alignment gaps
+    # between accepted neighbors need no auto unit; a rejected neighbor must
+    # not make a wider unknown corridor inherit that exemption.
     while True:
         reject_units: set[str] = set()
         by_section: dict[str, list[PortedRange]] = defaultdict(list)
@@ -1238,6 +1224,9 @@ def port_coherent_units(
             ranges.sort(key=lambda item: item.target_start)
             for before, after in zip(ranges, ranges[1:]):
                 if before.target_end >= after.target_start:
+                    continue
+                gap = (before.source.section, before.target_end, after.target_start)
+                if gap in alignment_gaps:
                     continue
                 if before.target_end % 4:
                     reject_units.add(before.source.unit)
@@ -1338,6 +1327,7 @@ def port_coherent_units(
 
     # A coherent projection must never assign the same target bytes twice.
     previous_end: dict[str, int] = {}
+    preserved_alignment_gaps = 0
     for split in sorted(
         accepted, key=lambda item: (item.source.section, item.target_start)
     ):
@@ -1346,11 +1336,17 @@ def port_coherent_units(
                 f"Projected {split.source.unit} overlaps a prior "
                 f"{split.source.section} range at 0x{split.target_start:08X}"
             )
+        gap = (
+            split.source.section,
+            previous_end.get(split.source.section, 0),
+            split.target_start,
+        )
+        preserved_alignment_gaps += gap in alignment_gaps
         previous_end[split.source.section] = split.target_end
     return (
         accepted,
         dict(sorted(rejected.items())),
-        folded_padding_ranges,
+        preserved_alignment_gaps,
         exact_symbol_range_remaps,
         {
             reason: tuple(sorted(units))
@@ -1691,7 +1687,7 @@ class VersionProjection:
     ported: list[PortedRange]
     matches: dict[int, FunctionSymbol]
     rejected: dict[str, int]
-    folded_padding_ranges: int
+    preserved_alignment_gaps: int
     exact_symbol_range_remaps: int
     rejected_units: dict[str, tuple[str, ...]]
     anchor_counts: dict[str, tuple[int, int]]
@@ -1740,7 +1736,7 @@ def project_symbol_snapshot(
     (
         ported,
         rejected,
-        folded_padding_ranges,
+        preserved_alignment_gaps,
         exact_symbol_range_remaps,
         rejected_units,
     ) = port_coherent_units(
@@ -1760,7 +1756,7 @@ def project_symbol_snapshot(
     )
     return VersionProjection(
         ported=ported, matches=matches, rejected=rejected,
-        folded_padding_ranges=folded_padding_ranges,
+        preserved_alignment_gaps=preserved_alignment_gaps,
         exact_symbol_range_remaps=exact_symbol_range_remaps,
         rejected_units=rejected_units, anchor_counts=anchor_counts,
         snapped_boundaries=snapped_boundaries, symbols=symbols,
@@ -1844,7 +1840,7 @@ def main() -> int:
     anchor_counts = projection.anchor_counts
     snapped_boundaries = projection.snapped_boundaries
     exact_symbol_range_remaps = projection.exact_symbol_range_remaps
-    folded_padding_ranges = projection.folded_padding_ranges
+    preserved_alignment_gaps = projection.preserved_alignment_gaps
     mappings = build_symbol_mappings(ported, matches)
     split_text = render_splits(target_header, ported)
     mapping_text = json.dumps(mappings, indent=2, sort_keys=True) + "\n"
@@ -1872,7 +1868,7 @@ def main() -> int:
         f"{mapped_symbols} symbol mappings, "
         f"{snapped_boundaries} proven symbol-edge snaps, "
         f"{exact_symbol_range_remaps} exact symbol-range remaps, "
-        f"{folded_padding_ranges} folded padding ranges"
+        f"{preserved_alignment_gaps} preserved alignment gaps"
     )
     print(f"  Symbol refinement stabilized in {projection.passes} passes")
     for section, counts in anchor_counts.items():
