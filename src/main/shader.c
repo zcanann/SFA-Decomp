@@ -3152,8 +3152,8 @@ static inline void GXPosition1x8(const u8 x) {
     GXWGFifo.u8 = x;
 }
 
-static inline u8 appendViewFrustumPlane(u8 planeIndex, f32 cameraX, f32 cameraY, f32 cameraZ, f32 normalX,
-                                      f32 normalY, f32 normalZ) {
+static inline u8 appendViewFrustumPlane(u8 planeIndex, f32 cameraX, f32 cameraY, f32 cameraZ, f32 normalX, f32 normalY,
+                                        f32 normalZ) {
     f32 distance;
     gViewFrustumPlanes[planeIndex].normalX = normalX;
     gViewFrustumPlanes[planeIndex].normalY = normalY;
@@ -4251,7 +4251,7 @@ void mapBlockRenderMain(MapBlockBoundsRec* bounds, MapBlockData* block, float* v
         *(int*)&state.bit = state.bit + 8;
     }
     state.bit += 4;
-    mapBlockRender_drawLightmapIndirectPasses(block, shader, &state, (float (*)[4])viewMtx);
+    mapBlockRender_drawLightmapIndirectPasses(block, shader, &state, (float(*)[4])viewMtx);
 }
 void mapBlockRenderWater(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx) {
     ModelRenderInstrsState state;
