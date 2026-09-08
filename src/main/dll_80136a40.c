@@ -51,11 +51,11 @@ char sErrFmtStackAddress[] = "\t%x";
 char sErrFmtRegisterRange[] = "%d - %d";
 
 /* debug font glyph-atlas texture asset (gDebugFontTex0) */
-#define DEBUG_FONT_TEXTURE0_ID 0x25D
+#define DEBUG_FONT_TEXTURE0_ID  0x25D
 #define DEBUG_FRAMEBUFFER_WIDTH 640
-#define DEBUG_GLYPH_ROWS 5
-#define DEBUG_GLYPH_BITS 8
-#define DEBUG_GLYPH_COLOR 0xC080
+#define DEBUG_GLYPH_ROWS        5
+#define DEBUG_GLYPH_BITS        8
+#define DEBUG_GLYPH_COLOR       0xC080
 
 u16 gErrExceptionType;
 OSContext* gErrContext;
