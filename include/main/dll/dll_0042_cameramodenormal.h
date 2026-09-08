@@ -250,8 +250,8 @@ STATIC_ASSERT(sizeof(CameraModeNormalDescriptor) == 0x40);
 extern CameraModeNormalState* gCameraModeNormalState;
 extern CameraModeNormalDescriptor gCameraModeNormalDescriptor;
 
-int camcontrol_traceMove(f32* fromPos, f32* toPos, f32* outPos, TrackHitResults* traceWork, char traceMode, u8 runTrace, u8 runBbox,
-                         f32 radius);
+int camcontrol_traceMove(f32* fromPos, f32* toPos, f32* outPos, TrackHitResults* traceWork, char traceMode, u8 runTrace,
+                         u8 runBbox, f32 radius);
 u8 camcontrol_traceFromTarget(f32* fromPos, GameObject* target, f32* outPos, void* unused);
 u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAnim, f32* outPos, s16* outRotY);
 void camcontrol_onTargetTraceBlocked(int unused);
