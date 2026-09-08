@@ -57,6 +57,18 @@ char sErrFmtRegisterRange[] = "%d - %d";
 #define DEBUG_GLYPH_BITS        8
 #define DEBUG_GLYPH_COLOR       0xC080
 
+/* Binary commands embedded in the NUL-terminated debug log. Payload bytes may
+ * contain zero; position and tab width use little-endian 16-bit values. */
+enum DebugLogCommand {
+    DEBUG_LOG_SET_GLYPH_COLOR = 0x81, /* RGBA bytes, applied on the glyph pass. */
+    DEBUG_LOG_SET_POSITION = 0x82, /* X low/high, Y low/high. */
+    DEBUG_LOG_PROPORTIONAL_WIDTH = 0x83,
+    DEBUG_LOG_FIXED_WIDTH = 0x84,
+    DEBUG_LOG_SET_RECT_COLOR = 0x85, /* RGBA bytes, applied on the rectangle pass. */
+    DEBUG_LOG_SET_TAB_WIDTH = 0x86, /* Width low/high. */
+    DEBUG_LOG_SET_SCALE_BIAS = 0x87 /* Unsigned X/Y bytes. */
+};
+
 u16 gErrExceptionType;
 OSContext* gErrContext;
 u32 gErrDsisr;
@@ -212,7 +224,7 @@ static inline void errDisplayFillBackdrop(void) {
 }
 
 int debugPrintDrawGlyph(void* unused, int c);
-int debugPrintDrawRecord(void* context, u8* p);
+int debugPrintDrawRecord(void* context, u8* cursor);
 void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused);
 
 int debugPrintDrawGlyph(void* unused, int c) {
@@ -302,32 +314,32 @@ static inline void debugDrawLogRect(void) {
     }
 }
 
-int debugPrintDrawRecord(void* context, u8* p) {
-    u8* start = p;
-    u8 c;
+int debugPrintDrawRecord(void* context, u8* cursor) {
+    u8* recordStart = cursor;
+    u8 recordByte;
     GXColor textColorSource;
 
-    while ((c = *p++) != 0) {
-        int w;
-        int rm;
-        w = 0;
-        switch (c) {
-        case 0x83:
+    while ((recordByte = *cursor++) != 0) {
+        int advanceX;
+        int tabRemainder;
+        advanceX = 0;
+        switch (recordByte) {
+        case DEBUG_LOG_PROPORTIONAL_WIDTH:
             gDebugFixedWidthMode = 0;
             break;
-        case 0x84:
+        case DEBUG_LOG_FIXED_WIDTH:
             gDebugFixedWidthMode = 1;
             break;
-        case 0x81: {
+        case DEBUG_LOG_SET_GLYPH_COLOR: {
             u8 red;
             u8 green;
             u8 blue;
             u8 alpha;
-            red = p[0];
-            green = p[1];
-            blue = p[2];
-            alpha = p[3];
-            p += 4;
+            red = cursor[0];
+            green = cursor[1];
+            blue = cursor[2];
+            alpha = cursor[3];
+            cursor += 4;
             if (gDebugDrawPass != 0) {
                 textColorSource.r = red;
                 textColorSource.g = green;
@@ -337,24 +349,24 @@ int debugPrintDrawRecord(void* context, u8* p) {
             }
             break;
         }
-        case 0x87: {
+        case DEBUG_LOG_SET_SCALE_BIAS: {
             u8 biasY;
-            gDebugScaleBiasX = p[0];
-            biasY = p[1];
-            p += 2;
+            gDebugScaleBiasX = cursor[0];
+            biasY = cursor[1];
+            cursor += 2;
             gDebugScaleBiasY = biasY;
             break;
         }
-        case 0x85: {
+        case DEBUG_LOG_SET_RECT_COLOR: {
             u8 red;
             u8 green;
             u8 blue;
             u8 alpha;
-            red = p[0];
-            green = p[1];
-            blue = p[2];
-            alpha = p[3];
-            p += 4;
+            red = cursor[0];
+            green = cursor[1];
+            blue = cursor[2];
+            alpha = cursor[3];
+            cursor += 4;
             if (gDebugDrawPass == 0) {
                 gDebugTextColorR = red;
                 gDebugTextColorG = green;
@@ -364,24 +376,24 @@ int debugPrintDrawRecord(void* context, u8* p) {
             }
             break;
         }
-        case 0x82: {
+        case DEBUG_LOG_SET_POSITION: {
             if (gDebugDrawPass == 0) {
                 debugDrawLogRect();
             }
-            debugPrintXpos = *p++;
-            debugPrintXpos |= (*p++ << 8);
-            debugPrintYpos = *p++;
-            debugPrintYpos |= (*p++ << 8);
+            debugPrintXpos = *cursor++;
+            debugPrintXpos |= (*cursor++ << 8);
+            debugPrintYpos = *cursor++;
+            debugPrintYpos |= (*cursor++ << 8);
             gDebugRectStartX = debugPrintXpos;
             gDebugRectStartY = debugPrintYpos;
             break;
         }
-        case 0x86:
-            gDebugTabWidth = *p++;
-            gDebugTabWidth |= (*p++ << 8);
+        case DEBUG_LOG_SET_TAB_WIDTH:
+            gDebugTabWidth = *cursor++;
+            gDebugTabWidth |= (*cursor++ << 8);
             break;
         case 0x20:
-            w = 6;
+            advanceX = 6;
             break;
         case 0xa: {
             if (gDebugDrawPass == 0) {
@@ -394,21 +406,21 @@ int debugPrintDrawRecord(void* context, u8* p) {
             break;
         }
         case 9:
-            rm = debugPrintXpos % gDebugTabWidth;
-            if (rm == 0) {
-                w = gDebugTabWidth;
+            tabRemainder = debugPrintXpos % gDebugTabWidth;
+            if (tabRemainder == 0) {
+                advanceX = gDebugTabWidth;
             } else {
-                w = gDebugTabWidth - rm;
+                advanceX = gDebugTabWidth - tabRemainder;
             }
             break;
         default:
-            w = debugPrintDrawGlyph(context, c);
+            advanceX = debugPrintDrawGlyph(context, recordByte);
             break;
         }
-        if (gDebugFixedWidthMode != 0 && c >= 0x20 && c <= 0x7f) {
-            w = 7;
+        if (gDebugFixedWidthMode != 0 && recordByte >= 0x20 && recordByte <= 0x7f) {
+            advanceX = 7;
         }
-        debugPrintXpos += w;
+        debugPrintXpos += advanceX;
         if (debugPrintXpos * (gDebugScaleX + gDebugScaleBiasX) > gDebugScreenWidth - 0x10) {
             if (gDebugDrawPass == 0) {
                 debugDrawLogRect();
@@ -419,7 +431,7 @@ int debugPrintDrawRecord(void* context, u8* p) {
             gDebugRectStartY = debugPrintYpos;
         }
     }
-    return p - start;
+    return cursor - recordStart;
 }
 void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a) {
     int n;
@@ -428,7 +440,7 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a) {
     if (n > 0xfa) {
         return;
     }
-    *debugLogEnd++ = 0x81;
+    *debugLogEnd++ = DEBUG_LOG_SET_GLYPH_COLOR;
     *debugLogEnd++ = r;
     *debugLogEnd++ = g;
     *debugLogEnd++ = b;
@@ -507,9 +519,7 @@ void debugPrintDraw(void* context) {
     gDebugRecordCount = 0;
 }
 
-/* When b->_54 carries the spawn flag, build a particle descriptor on the stack from a's heading
- * and the delta to b's position, then emit it 20 times via the partfx
- * interface and clear the flag. */
+/* Append a formatted record at the current debug-log write position. */
 void debugPrintf(char* fmt, ...) {
     va_list args;
 

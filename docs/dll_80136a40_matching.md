@@ -1,5 +1,39 @@
 # dll_80136a40 (debug display) — residual analysis
 
+## Current frontier (2026-09-07)
+
+The current TU uses GC/1.3 with `-opt nopeephole,noschedule`; strength reduction
+is enabled. At `71762b97bc`, 11/14 functions and all assigned data match exactly.
+See [the recovery record](debug_font_error_data.md) for the indexed formatter,
+shared log rectangles and horizontal error-display separators.
+
+| Function | Similarity | Retail / source instructions |
+| --- | ---: | ---: |
+| `debugPrintDrawRecord` | 99.90131% | 456 / 456 |
+| `debugTextDrawToFrameBuffer` | 81.385414% | 96 / 90 |
+| `errorThreadFunc` | 86.35591% | 694 / 748 |
+
+The record decoder has nine differing words: the wrap rectangle exchanges
+`r24` and `r25` for its top and right coordinates. Reordering the shared helper's
+coordinate declarations either worsens this or also regresses the exact
+`debugPrintDraw`. Separate X/Y scale locals and an explicit wrap-scale local
+leave the result unchanged.
+
+**Inspect callers before accepting a raster improvement.** A paired-scanline
+inline helper with an indexed five-row caller raises the rasterizer alone to
+87.09375% (95 instructions). It also makes MWCC inline the rasterizer into
+`debugPrintfxy`, losing that exact function and reducing whole-TU similarity
+from 94.26345% to 89.16091%. Expanding that row body directly into the glyph loop
+preserves the formatter's calls but scores only 79.03125% for the rasterizer.
+Neither variant is retained. Further recovery must account for the compiler's
+inlining decisions as well as its induction variables and register allocation.
+
+## Historical measurements with strength reduction disabled
+
+The remainder records the earlier `nostrength` experiment. Its residual counts
+and closed probe conclusions are specific to that profile, not the current
+source or compiler settings.
+
 Unit `main/dll_80136a40.c`, GC/1.3, `-opt nopeephole,noschedule,nostrength`. Four functions
 remain below 100%, 27 differing instruction words in total; every other function and every
 data section is byte-exact. All findings below were measured with the GC/1.3 dump-hook tracer,

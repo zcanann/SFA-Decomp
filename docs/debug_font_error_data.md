@@ -165,3 +165,33 @@ PowerPC cache-line rounding, GPU scanout or the exception thread itself.
 Both `ninja all_source` and the strict retail DOL checksum pass. The TU remains
 `NonMatching`, so the checksum validates integration through its retail object;
 the source improvement is measured separately by objdiff.
+
+## Debug-log command protocol
+
+The decoder and glyph-color writer now share a private `DebugLogCommand` enum.
+Decoder locals distinguish the record start, byte cursor, current byte,
+horizontal advance and tab remainder. The recovered byte format is:
+
+| Byte | Command | Payload |
+| --- | --- | --- |
+| `81` | Glyph color | Four RGBA bytes; applied on the glyph pass |
+| `82` | Position | Little-endian 16-bit X and Y |
+| `83` | Proportional width | None |
+| `84` | Fixed width | None; printable bytes advance seven pixels |
+| `85` | Rectangle color | Four RGBA bytes; applied on pass zero |
+| `86` | Tab width | Little-endian 16-bit width |
+| `87` | Scale bias | Unsigned X and Y bytes |
+
+Payload zero bytes do not terminate a record. Proportional spaces advance six
+pixels, while other glyph advances come from the atlas metrics. Tabs advance
+to the next multiple of the configured width, including a full tab when already
+aligned. Position, newline and screen wrap close the current rectangle on pass
+zero. The enum names describe the observed decoder and writer; they do not
+claim recovered original identifiers.
+
+The existing host harness now also checks both width modes, a 256-pixel tab
+payload containing zero, aligned and unaligned tabs, and glyph-color payloads
+containing zero on both passes. Ten debug tests pass at host `-O0` and `-O2`.
+The production object is byte-identical before and after this recovery,
+including after formatting, so no additional matching credit is claimed.
+Both full build gates pass.

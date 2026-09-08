@@ -28,6 +28,7 @@ class DebugRecordRectangleTests(unittest.TestCase):
                  "gDebugScaleBiasX", "gDebugScaleBiasY", "gDebugTextColorR", "gDebugTextColorG",
                  "gDebugTextColorB", "gDebugTextColorA", "gDebugTabWidth", "gDebugPrintOriginX",
                  "gDebugScreenWidth")
+        commands = re.search(r"enum DebugLogCommand \{.*?\};", source, re.S).group()
         globals_source = "\n".join(re.search(r"^\w+ " + name + r"(?: = [^;]+)?;", source, re.M).group()
                                    for name in names)
         functions = "\n".join(re.search(r"^(?:static inline void|int) " + name + r"\([^;{}]*\) \{.*?^\}",
@@ -50,8 +51,9 @@ int _fltused;
 #else
 #define EXPORT
 #endif
-''' + globals_source + r'''
+''' + commands + '\n' + globals_source + r'''
 static int rectangles[32][8], rectangleCount, glyphCount, colorCount;
+static int glyphColorCount, glyphColor[5];
 static void hudDrawRect(int x0, int y0, int x1, int y1, GXColor color) {
     int i = rectangleCount++;
     if (i >= 32) return;
@@ -62,10 +64,16 @@ static void hudDrawRect(int x0, int y0, int x1, int y1, GXColor color) {
 }
 static int debugPrintDrawGlyph(void* context, int c) { glyphCount++; return 5; }
 static void setTextColor(void* context, int r, int g, int b, int a) { colorCount++; }
-static void GXSetTevColor(int reg, GXColor color) { }
+static void GXSetTevColor(int reg, GXColor color) {
+    glyphColorCount++;
+    glyphColor[0] = reg;
+    glyphColor[1] = color.r; glyphColor[2] = color.g;
+    glyphColor[3] = color.b; glyphColor[4] = color.a;
+}
 ''' + functions + r'''
 EXPORT void prepare(int x, int y, int left, int top, int pass, float sx, float sy, int screenWidth) {
     rectangleCount = glyphCount = colorCount = 0;
+    glyphColorCount = 0;
     debugPrintXpos = x; debugPrintYpos = y;
     gDebugRectStartX = left; gDebugRectStartY = top;
     gDebugDrawPass = pass;
@@ -90,7 +98,10 @@ EXPORT int state(int field) {
     case 3: return gDebugRectStartY;
     case 4: return glyphCount;
     case 5: return colorCount;
+    case 6: return glyphColorCount;
+    case 7: return gDebugTabWidth;
     }
+    if (field >= 8 && field < 13) return glyphColor[field - 8];
     return -1;
 }
 ''')
@@ -176,6 +187,34 @@ EXPORT int state(int field) {
             record = b"\x87\x02\x01\n\0"
             self.assertEqual(library.drawRecord(record), len(record))
             self.check_rectangles(library, self.rectangle(40, 20, 16, 20, 3, 2))
+
+    def test_width_modes_and_little_endian_tab_payload(self):
+        for library in self.libraries:
+            for draw_pass in (0, 1):
+                library.prepare(16, 20, 16, 20, draw_pass, 1.0, 1.0, 2048)
+                record = b"\x84A \x83A \0"
+                self.assertEqual(library.drawRecord(record), len(record))
+                self.assertEqual(library.state(0), 16 + 7 + 7 + 5 + 6)
+                self.assertEqual(library.state(4), 2)
+                # A zero low byte belongs to the payload, not the record terminator.
+                library.prepare(16, 20, 16, 20, draw_pass, 1.0, 1.0, 2048)
+                record = b"\x86\0\x01\t\t\0"
+                self.assertEqual(library.drawRecord(record), len(record))
+                self.assertEqual(library.state(7), 256)
+                self.assertEqual(library.state(0), 512)
+
+    def test_glyph_color_is_applied_only_on_glyph_pass(self):
+        for library in self.libraries:
+            for draw_pass in (0, 1):
+                library.prepare(16, 20, 16, 20, draw_pass, 1.0, 1.0, 640)
+                record = b"\x81\0\x80\xff\0A\0"
+                self.assertEqual(library.drawRecord(record), len(record))
+                self.assertEqual(library.state(6), draw_pass)
+                if draw_pass:
+                    self.assertEqual([library.state(i) for i in range(8, 13)], [1, 0, 128, 255, 0])
+                self.assertEqual(library.state(5), 0)
+                self.assertEqual(library.state(4), 1)
+                self.assertEqual(library.state(0), 21)
 
 
 if __name__ == "__main__":
