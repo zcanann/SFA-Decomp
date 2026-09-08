@@ -162,7 +162,7 @@ main/model.c:
 	.bss        start:0x803420A0 end:0x80342208
 	.sdata      start:0x803DCDF0 end:0x803DCDF8
 	.sbss       start:0x803DE508 end:0x803DE530
-	.sdata2     start:0x803E01DC end:0x803E0250
+	.sdata2     start:0x803E01E0 end:0x803E024C
 
 main/object.c:
 	.text       start:0x8002A748 end:0x8002ECE8

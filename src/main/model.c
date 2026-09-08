@@ -1213,8 +1213,6 @@ void ObjModelChain_AdvancePhase(ObjModelChain* chain) {
     }
 }
 
-extern const f32 gModelVertexScale;
-
 void ObjModelChain_Free(ObjModelChain* chain) {
     int i;
     for (i = 0; i < chain->count; i++) {
@@ -1263,9 +1261,9 @@ void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out) 
         out[1] = vertex[1];
         out[2] = vertex[2];
     } else {
-        out[0] = vertex[0] * gModelVertexScale;
-        out[1] = vertex[1] * gModelVertexScale;
-        out[2] = vertex[2] * gModelVertexScale;
+        out[0] = vertex[0] / 256.0f;
+        out[1] = vertex[1] / 256.0f;
+        out[2] = vertex[2] / 256.0f;
     }
 }
 

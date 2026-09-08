@@ -1223,6 +1223,11 @@ report:
 | `dlls/engine/68/68` | 1 | 0 | 1 | `firstPersonDoControls` 100.0 -> 94.512 (+128 data) |
 | `dlls/objects/704/704` | 1 | 0 | 1 | `titleScreenDrawMenuFrame` 99.776 -> 99.488 |
 
+Current model correction: division by `256.0f` emits the native vertex-scale
+literal while preserving the exact function instructions. The historical
+multiplication result above is not a permanent cost; see
+[Model literal ownership](model_literal_pool.md).
+
 `b93a5f226d` landed the 15 free ones: tree fuzzy 99.811850 -> 99.811966, matched_data held,
 0 REGRESSED, 2 IMPROVED, and the missing-word count in those three units halved (engine/0
 18 -> 8, newshadows 13 -> 9, model 9 -> 3). **Section 9's per-unit table is an upper bound on
