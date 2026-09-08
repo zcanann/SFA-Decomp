@@ -551,7 +551,7 @@ void ObjModelChain_SetEnabled(ObjModelChain* chain, u8 enabled);
 void ObjModelChain_AdvancePhase(ObjModelChain* chain);
 void ObjModelChain_Free(ObjModelChain* chain);
 
-void setGQR6_2(int a, int b, int c, int d);
+void setGQR6_2(int loadScale, int loadType, int storeScale, int storeType);
 void modelBlendMorphTargets(u8* srcVtx, u8* dstVtx, u16 vtxCount, u16* targetA, u16* targetB, int blendScale);
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c);
 void modelAnimResetState(void* m, void* data);

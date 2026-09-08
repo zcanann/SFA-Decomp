@@ -258,7 +258,12 @@ different claims and this list used to conflate them.**
   in `main/render`, 96.682, 2 212 B, and it is one of the live 205 sub-100 rows.** A lane that
   greps the old name finds nothing and either drops the island or works it unaware.
   Island total: **6 488 B of `matched_code`, 1.9% of the code gap.**
-- **`setGQR6` / `setGQR7` — no `mtgqr` intrinsic (priced at 50.000, measured 2026-08-03).**
+- **Historical `setGQR6` / `setGQR7` price — superseded 2026-09-08.**
+  [The hardware-state recovery](model_quantization_registers.md) replaces the empty setter and
+  RAM shadow with actual register accesses under a narrowly documented evidence-backed
+  exception. Both setters now match; the scalar kernels read live GQR7. The old restriction
+  and its measured cost are retained below as history, not the current implementation.
+  **No `mtgqr` intrinsic (priced at 50.000, measured 2026-08-03).**
   Retail is two instructions, `mtgqr N,r3` and `blr`; MWCC GC/2.0 exposes no intrinsic for the
   GQR write and inline `asm{}` is banned in `src/main`, so the body can only be empty or a lie.
   `6b383c0b7f` deleted `setGQR6`'s write-only `sGQR6Config` shadow — correctly, it was fabricated

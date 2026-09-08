@@ -381,6 +381,15 @@ interface, not definitive original-language provenance. Retain the portable C
 reference and run both morph probes; see `docs/model_morph_targets.md`.
 This exception does not authorize assembly in other functions.
 
+Narrow hardware-access exception (2026-09-08), under the same compelling-evidence
+allowance: `setGQR6`, `setGQR7`, and the private inline `modelGetGQR7` in
+`src/main/model.c` may use one `mtspr` or `mfspr` instruction each. Retail setters
+write actual quantization registers consumed by the vertex kernels; a RAM shadow
+does not implement that contract. The inline reader lets the existing scalar
+reconstructions use live register state without fabricated storage. This does
+not authorize replacing their C arithmetic with assembly or claim those kernels
+match retail. See `docs/model_quantization_registers.md`.
+
 ## Pragmas
 
 Inline pragmas are banned. `#pragma` of any kind must not appear inline in `src/main/` or `src/track/`

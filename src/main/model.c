@@ -50,7 +50,6 @@ STATIC_ASSERT(sizeof(ModelResourceScratch) == 0x830);
 STATIC_ASSERT(offsetof(ModelResourceScratch, offsets) == 0x800);
 STATIC_ASSERT(offsetof(ModelResourceScratch, offsets.opaque.tail) == 0x810);
 
-static u32 sGQR7Config;
 int gModelTabEntryCount;
 s16* gModelResourceBuffer;
 int* gModelAnimOffsetTable;
@@ -109,7 +108,7 @@ extern s16 gModelJointScratchBuffer[0xa0];
 extern char sModelAnimationBufferOverflowWarning[];
 extern Vec gModelJitterAxis;
 
-void setGQR7Packed(int a, int b, int c, int d);
+void setGQR7Packed(int loadScale, int loadType, int storeScale, int storeType);
 asm void modelReadMorphDelta(void);
 static inline void* modelGetBoneMtx(ObjModel* model, int idx);
 void ObjModel_TransformVerticesWithTranslation(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
@@ -2547,13 +2546,22 @@ void ObjModel_BlendVertexStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, s3
     }
 }
 
+/* Scalar reconstruction reads the same live quantization state as retail psq instructions. */
+static inline u32 modelGetGQR7(void) {
+    register u32 config;
+    asm {
+        mfspr config, GQR7
+    }
+    return config;
+}
+
 void ObjModel_TransformVerticesWithTranslation(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count) {
     f32* ma = (f32*)m1;
     f32* mb = (f32*)m2;
     u8* w = src;
     s16* in = (s16*)d1;
     s16* out = (s16*)d2;
-    f32 scale = (f32)(1 << ((sGQR7Config >> 24) & 0x3f));
+    f32 scale = (f32)(1 << ((modelGetGQR7() >> 24) & 0x3f));
     f32 invScale = 1.0f / scale;
     f32 x, y, z, w0, w1, ox, oy, oz;
     int i;
@@ -2582,7 +2590,7 @@ void ObjModel_TransformVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, i
     u8* w = src;
     s8* in = (s8*)d1;
     s8* out = (s8*)d2;
-    f32 scale = (f32)(1 << ((sGQR7Config >> 24) & 0x3f));
+    f32 scale = (f32)(1 << ((modelGetGQR7() >> 24) & 0x3f));
     f32 invScale = 1.0f / scale;
     f32 x, y, z, w0, w1, ox, oy, oz;
     int i;
@@ -2610,7 +2618,7 @@ void ObjModel_TransformQuadVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d
     u8* w = src;
     s8* in = (s8*)d1;
     s8* out = (s8*)d2;
-    f32 scale = (f32)(1 << ((sGQR7Config >> 24) & 0x3f));
+    f32 scale = (f32)(1 << ((modelGetGQR7() >> 24) & 0x3f));
     f32 invScale = 1.0f / scale;
     f32 x, y, z, w0, w1, ox, oy, oz;
     int i;
@@ -2636,18 +2644,23 @@ void ObjModel_TransformQuadVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d
     }
 }
 
-void setGQR6(u32 v) {
+void setGQR6(register u32 config) {
+    asm {
+        mtspr GQR6, config
+    }
 }
 
-void setGQR7(u32 v) {
-    sGQR7Config = v;
+void setGQR7(register u32 config) {
+    asm {
+        mtspr GQR7, config
+    }
 }
-void setGQR7Packed(int a, int b, int c, int d) {
-    setGQR7((((a << 8) + b) << 16) | ((c << 8) + d));
+void setGQR7Packed(int loadScale, int loadType, int storeScale, int storeType) {
+    setGQR7((((loadScale << 8) + loadType) << 16) | ((storeScale << 8) + storeType));
 }
 
-void setGQR6_2(int a, int b, int c, int d) {
-    setGQR6((((a << 8) + b) << 16) | ((c << 8) + d));
+void setGQR6_2(int loadScale, int loadType, int storeScale, int storeType) {
+    setGQR6((((loadScale << 8) + loadType) << 16) | ((storeScale << 8) + storeType));
 }
 void ObjModel_UnpackResourcePayload(u8* src, int srcSize, u8* dst, int dstSize) {
     ModelRenderInstrsState dstState;
