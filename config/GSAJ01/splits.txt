@@ -5073,7 +5073,7 @@ main/acosf.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/math_802927a4.c:
 	.text       start:0x80292894 end:0x80292E2C
-	.sdata2     start:0x803E7CF0 end:0x803E7D20
+	.sdata2     start:0x803E7BD8 end:0x803E7D20
 
 main/math_80292d3c.c:
 	.text       start:0x80292E2C end:0x80292EB0

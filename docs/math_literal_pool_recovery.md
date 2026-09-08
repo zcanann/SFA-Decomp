@@ -4,6 +4,46 @@ The [retail boundary audit](math_boundary_audit.md) also covers direct loads
 outside current object claims, including the external power coefficients and
 reciprocal constant, across four verified versions.
 
+## Complete power-function pool
+
+`math_802927a4.c` now emits its complete **324-byte** `.sdata2` pool using
+ordinary float and double literals. This replaces 35 unresolved scalar `extern`
+declarations and recovers the 280-byte prefix previously left in an automatic
+gap. The EN claim now begins at `803E7AB8` and retains its end at `803E7BFC`.
+The compiler supplies both four-byte alignment holes; no padding declarations,
+section attributes or synthetic coefficient arrays are added.
+
+Floating truth tests (`if (base)`, `if (fractionalExponent)`, and the equivalent
+remaining checks) preserve the former zero comparisons, including signed zero
+and unordered inputs. Spelling these as explicit comparisons with a literal zero
+makes GC/1.3 reverse some compare operands and change load order. The truth-test
+form keeps **all seven function bodies byte-identical**, with unchanged sizes,
+named-symbol layouts and every function's objdiff score. Code fuzzy remains
+83.927376%; this is data recovery, not another exact function.
+
+Every one of the source's **60 EN constant-load relocations** retains its
+instruction offset, destination address, width and retail payload after moving
+from external symbols to local literals. All other relocations retain their
+destinations. A scan of the extracted EN retail objects finds all 49 relocations
+to the 35 former external symbols in this TU alone, and the source/header search
+finds no other consumers. The `.text` bytes are unchanged; `.sdata2` grows from
+44 to 324 bytes, preserving the old 44-byte suffix exactly.
+
+The same source emits the identical complete object in EN v1.0, EN revision 1,
+JP and PAL revision 1, each checked against its configured retail SHA-1. The
+324 emitted pool bytes agree with each DOL. The secondary projection retains its
+existing additional four bytes of trailing linker alignment, which objdiff
+accepts: reported matched data rises **44 to 324 bytes in EN** and **48 to 328
+bytes in each verified secondary version**. All four units retain 100% data
+agreement and their previous code scores. The units remain `NonMatching`.
+
+`version_progress.py --write` refreshes the three verified secondary split
+claims. Unrelated symbol-file regeneration changes are discarded. PAL revision
+0 remains excluded because the local file fails that version's configured hash.
+All four `all_source` builds pass under their 30-second limits. Formatting is
+committed separately and preserves the raw object hash:
+`8dcff2a62455de4830b94f5386cfcf2b8fc21db37ba6b1e972179813ba17935e`.
+
 ## Shared sine/cosine sign handling under GC/1.3
 
 `mathSinCosf` now conditionally negates the existing approximation in switch
