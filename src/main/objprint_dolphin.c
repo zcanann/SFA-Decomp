@@ -1041,7 +1041,8 @@ static void modelLoadMtxsToGx(ModelFileHeader* hdr, int* model, ModelRenderInstr
     }
 }
 
-static void renderOpMatrix(u8* hdr, int* model, ModelRenderInstrsState* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip) {
+static void renderOpMatrix(u8* hdr, int* model, ModelRenderInstrsState* bs, f32* m1, f32* mtx, u8 nrm, u8 tex,
+                           u8 skip) {
     u8* posMtxIds[1];
     char* cache;
     posMtxIds[0] = gObjGxPosMtxIdTable;
@@ -1182,8 +1183,8 @@ static void ModelHeader_setupPosTexFmt(u8* hdr, int* model, ModelRenderInstrsSta
 }
 
 static void modelRenderFn_setVtxDescr(ModelFileHeader* modelHeader, Shader* shader,
-                                      ModelRenderOpTextureRefs* textureRefs, ModelRenderInstrsState* bitStream, u8 passMask,
-                                      u8* usesNormalMatrix, u8* usesTextureMatrix) {
+                                      ModelRenderOpTextureRefs* textureRefs, ModelRenderInstrsState* bitStream,
+                                      u8 passMask, u8* usesNormalMatrix, u8* usesTextureMatrix) {
     int nextMatrixAttr;
     int previousMatrixAttr;
     int textureCoordIndex;
@@ -1822,8 +1823,7 @@ static void modelDoAltRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, int
         }
         ((ObjModel*)am)->bufferFlags |= 8;
     }
-    modelRenderInstrsState_init(&bs, ((ModelFileHeader*)m)->instrs,
-                                ((ModelFileHeader*)m)->instrsBitLenWords << 3,
+    modelRenderInstrsState_init(&bs, ((ModelFileHeader*)m)->instrs, ((ModelFileHeader*)m)->instrsBitLenWords << 3,
                                 ((ModelFileHeader*)m)->instrsBitLenWords << 3);
     if (((ModelFileHeader*)m)->shaderFlags & MODEL_SHADERFLAGS_USE_OBJ_COLOR) {
         if (gObjOverrideColorPending != 0) {
@@ -1974,18 +1974,16 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
         if (did != 0) {
             u8* vtx;
             if (((ObjModel*)am)->vtxBufDirty != 0) {
-                vtx = (u8*)((int*)((char*)am + offsetof(ObjModel, vtxBuf)))
-                    [(((ObjModel*)am)->bufferFlags >> 1) & 1];
+                vtx = (u8*)((int*)((char*)am + offsetof(ObjModel, vtxBuf)))[(((ObjModel*)am)->bufferFlags >> 1) & 1];
             } else {
                 vtx = (u8*)((ModelFileHeader*)m)->vertices;
             }
-            ObjModel_BlendVertexStream((u8*)gObjBoneMtxBuffer, &((ModelFileHeader*)m)->vertexAnimJob, vtx,
-                                       ((ObjModel*)am)->vertexAnimOffsets,
-                                       (u8*)((int*)((char*)am + offsetof(ObjModel, vtxBuf)))
-                                           [(((ObjModel*)am)->bufferFlags >> 1) & 1]);
+            ObjModel_BlendVertexStream(
+                (u8*)gObjBoneMtxBuffer, &((ModelFileHeader*)m)->vertexAnimJob, vtx, ((ObjModel*)am)->vertexAnimOffsets,
+                (u8*)((int*)((char*)am + offsetof(ObjModel, vtxBuf)))[(((ObjModel*)am)->bufferFlags >> 1) & 1]);
             ObjModel_BlendNormalStream((u8*)gObjBoneMtxBuffer, &((ModelFileHeader*)m)->normalAnimJob,
-                                       (u8*)(int)((ModelFileHeader*)m)->normals,
-                                       ((ObjModel*)am)->normalAnimOutputs, ((ModelFileHeader*)m)->flags24 & 8);
+                                       (u8*)(int)((ModelFileHeader*)m)->normals, ((ObjModel*)am)->normalAnimOutputs,
+                                       ((ModelFileHeader*)m)->flags24 & 8);
         }
         if (((ModelFileHeader*)m)->hitVolumeCount != 0) {
             objUpdateHitSpheres((ObjModel*)am, (ModelFileHeader*)m, obj, NULL, obj2);
@@ -2001,8 +1999,7 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
         ((ObjModel*)am)->bufferFlags |= 8;
     }
     modelInitMtxs((ModelFileHeader*)m, (ObjModel*)am);
-    modelRenderInstrsState_init(&bs, ((ModelFileHeader*)m)->instrs,
-                                ((ModelFileHeader*)m)->instrsBitLenWords << 3,
+    modelRenderInstrsState_init(&bs, ((ModelFileHeader*)m)->instrs, ((ModelFileHeader*)m)->instrsBitLenWords << 3,
                                 ((ModelFileHeader*)m)->instrsBitLenWords << 3);
     if (((ModelFileHeader*)m)->vertexAnimEntries != NULL) {
         PSMTXConcat((MtxPtr)vm, (MtxPtr)wm, (MtxPtr)cm);

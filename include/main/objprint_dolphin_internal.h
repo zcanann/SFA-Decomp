@@ -6,8 +6,7 @@
 
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
 
-typedef struct IndTexMtx23
-{
+typedef struct IndTexMtx23 {
     f32 m[2][3];
 } IndTexMtx23;
 
