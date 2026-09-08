@@ -3152,17 +3152,26 @@ static inline void GXPosition1x8(const u8 x) {
     GXWGFifo.u8 = x;
 }
 
+static inline u8 appendViewFrustumPlane(u8 planeIndex, f32 cameraX, f32 cameraY, f32 cameraZ, f32 normalX,
+                                      f32 normalY, f32 normalZ) {
+    f32 distance;
+    gViewFrustumPlanes[planeIndex].normalX = normalX;
+    gViewFrustumPlanes[planeIndex].normalY = normalY;
+    gViewFrustumPlanes[planeIndex].normalZ = normalZ;
+    distance = -(cameraZ * normalZ + (cameraX * normalX + cameraY * normalY));
+    gViewFrustumPlanes[planeIndex++].distance = distance;
+    return planeIndex;
+}
+
 static void updateVisibleGeometry(void) {
     Camera* cam;
-    int n;
+    u8 planeCount;
     f32 tt, ff, ss;
     f32 scale;
     f32 xx, yy, zz;
     f32 ratio, ratio2;
     u16 fov;
     f32 ox, oy, oz;
-    f32 dd;
-    f32* pw;
     MatrixTransform st;
     f32 m[16];
 
@@ -3185,13 +3194,8 @@ static void updateVisibleGeometry(void) {
     st.rotZ = cam->worldRoll;
     setMatrixFromObjectPos(m, &st);
     Matrix_TransformPoint(m, 0.0f, 0.0f, -1.0f, &ox, &oy, &oz);
-    n = 0;
-    gViewFrustumPlanes[n].normalX = ox;
-    gViewFrustumPlanes[n].normalY = oy;
-    gViewFrustumPlanes[n].normalZ = oz;
-    dd = -(zz * oz + (xx * ox + yy * oy));
-    pw = &gViewFrustumPlanes[0].distance;
-    pw[n * 5] = dd;
+    planeCount = 0;
+    planeCount = appendViewFrustumPlane(planeCount, xx, yy, zz, ox, oy, oz);
     fov = (int)(182.05f * scale) & 0xffff;
     tt = fcos16HighPrecision(fov);
     ratio = fsin16HighPrecision(fov) / tt;
@@ -3202,30 +3206,14 @@ static void updateVisibleGeometry(void) {
     ff = mathSinfHighPrecision(tt);
     ss = mathCosfHighPrecision(tt);
     Matrix_TransformPoint(m, ss, 0.0f, -ff, &ox, &oy, &oz);
-    n++;
-    gViewFrustumPlanes[n].normalX = ox;
-    gViewFrustumPlanes[n].normalY = oy;
-    gViewFrustumPlanes[n].normalZ = oz;
-    pw[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    planeCount = appendViewFrustumPlane(planeCount, xx, yy, zz, ox, oy, oz);
     Matrix_TransformPoint(m, -ss, 0.0f, -ff, &ox, &oy, &oz);
-    n++;
-    gViewFrustumPlanes[n].normalX = ox;
-    gViewFrustumPlanes[n].normalY = oy;
-    gViewFrustumPlanes[n].normalZ = oz;
-    pw[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    planeCount = appendViewFrustumPlane(planeCount, xx, yy, zz, ox, oy, oz);
     Matrix_TransformPoint(m, 0.0f, -ss, -ff, &ox, &oy, &oz);
-    n++;
-    gViewFrustumPlanes[n].normalX = ox;
-    gViewFrustumPlanes[n].normalY = oy;
-    gViewFrustumPlanes[n].normalZ = oz;
-    pw[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    planeCount = appendViewFrustumPlane(planeCount, xx, yy, zz, ox, oy, oz);
     Matrix_TransformPoint(m, 0.0f, ss, -ff, &ox, &oy, &oz);
-    n++;
-    gViewFrustumPlanes[n].normalX = ox;
-    gViewFrustumPlanes[n].normalY = oy;
-    gViewFrustumPlanes[n].normalZ = oz;
-    pw[n * 5] = -(zz * oz + (xx * ox + yy * oy));
-    frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
+    planeCount = appendViewFrustumPlane(planeCount, xx, yy, zz, ox, oy, oz);
+    frustumPlanes_updateAabbCornerIndices(gViewFrustumPlanes, planeCount);
 }
 
 MapBlockData* mapGetBlock(int i) {

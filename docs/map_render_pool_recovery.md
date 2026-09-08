@@ -471,6 +471,37 @@ at 99.73684% and the TU at 99.62221%. Fresh-staging all-source compilation and
 the strict retail checksum gate pass with 30-second bounds; shader still links
 its retail object.
 
+## Shared view-frustum plane construction (2026-09-07)
+
+`updateVisibleGeometry` now matches all 223 retail instructions (892 bytes)
+in EN, EN revision 1, JP, PAL, and PAL revision 1. The same GC/1.3 source
+raises each shader unit from 99.62504% to 99.85385%, with 140/145 functions
+exact instead of 139/145. The five retail instruction bodies are identical;
+each input DOL was verified against its configured SHA-1.
+
+The private `appendViewFrustumPlane` helper writes the three normal fields,
+computes the existing negative camera-position dot product in the same order,
+stores the distance, and returns the next plane index. The caller builds its
+five planes in the original order and passes the resulting count to the
+corner-index update. The helper uses the canonical `FrustumPlane` fields,
+removing the flattened `pw[n * 5]` access across separate records.
+
+Advancing a narrow counter at the distance store recovers retail's `li`/`mulli`
+index formation and indexed stores. A full-width counter instead remains live
+across transformation calls and needs an extra saved register. Both byte and
+halfword counter probes reproduce the target; `u8` fits the five-entry count,
+but matching does not uniquely establish its original typedef. The helper name
+and boundary are reconstructed source structure, not recovered original names.
+
+Only this function's bytes change, growing from 824 to the retail 892 bytes.
+All 144 other function bodies, allocated non-text bytes, and non-text named
+symbol layouts are unchanged in all versions. Subsequent text symbols move by
+68 bytes. Relocations retain their function-relative locations outside the
+changed function and their resolved destinations throughout the object,
+including data jump tables. No globals, sections, compiler flags, or TU
+boundaries change. The shader TU remains `NonMatching` because five other
+functions still differ; regional progress manifests are not promoted to exact.
+
 ## Map-cell neighbourhood ID view (2026-09-07)
 
 `mapLoadUnloadObjects` reads three contiguous signed halfwords at byte offset
