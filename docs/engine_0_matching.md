@@ -925,3 +925,47 @@ Strict matching `ninja`, `ninja all_source`, and formatting checks pass, with Ni
 30 seconds. Formatting is committed separately and preserves the complete
 object bytes. The complete TU remains nonmatching in every version, so no
 regional whole-object progress manifest is promoted.
+
+
+## September 8: C-menu ownership-result allocation follow-up
+
+`cMenuSetItems` remains **98.84106%**, with **55 differing instruction words**
+out of 302. No source variant from this follow-up is retained. The current
+function MD5 is `194f641c328fd08166633ae98827044f`; retail is
+`7eb6f94325c7ebd28a4cf64d74a42ed0`.
+
+The backend trace reproduces the ordinary object byte-for-byte and replays all
+**166 GPR color choices**, with **207 graph nodes** and no high-degree removals.
+In the capture based on staging `87e2a1a40b`, the initial ownership-bit call emits
+`r3 -> virtual 118 -> ownedState (45)`. Copy propagation removes the named
+`ownedState` assignment, leaving virtual 118. It is first in the coloring order
+and enables r31. Retail instead keeps this value in r26, while its item count
+uses r31. The current item count uses r24. These virtual IDs describe this
+reconstructed compilation, not original source variables.
+
+This explains why moving or block-scoping the `ownedState` declaration, matching
+its type to `mainGetBit`'s unsigned return, or assigning it in the condition does
+not change the function bytes. Reusing the clearing-loop counter for this result
+also leaves the function bytes unchanged. Extracting the duplicated fill blocks
+into an explicit inline helper likewise reproduces the baseline instruction
+bytes; helper extraction alone does not repair the allocation.
+
+Replacing the manual halfword/word offsets with indexed accesses can preserve
+all 302 instructions but changes allocation without improving the match. Removing
+the one-element array by making it a scalar introduces an extra instruction in
+the tested spelling. These are observations about the tested forms, not evidence
+that the array represents original storage or that cleaner indexing is exhausted.
+The earlier pause-menu result remains a counterexample to categorical claims that
+source structure cannot affect an otherwise register-only residual.
+
+Reproduce the allocation capture with:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/dlls/engine/0/0 \
+    --function cMenuSetItems --graph --instruction 77 \
+    --output build/flag_probe/cmenu_ownership_trace
+```
+
+The follow-up leaves all game source unchanged. Strict retail checksum,
+`ninja all_source`, formatting checks, and the exact `pauseMenuDraw` byte check
+pass. Both Ninja invocations use 30-second timeouts.
