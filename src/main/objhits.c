@@ -1880,8 +1880,7 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
             currentSpheres = (ObjModelHitSphere*)model->hitVolumeSphereBuffers[sphereBits];
             previousSpheres = (ObjModelHitSphere*)model->hitVolumeSphereBuffers[sphereBits ^ 1];
             pointCount = 0;
-            for (volumeIndex = 0; volumeIndex < (int)(u32)modelFile->hitVolumeCount;
-                 volumeIndex++) {
+            for (volumeIndex = 0; volumeIndex < (int)(u32)modelFile->hitVolumeCount; volumeIndex++) {
                 hitVolume = &((ModelHitSphereDef*)modelFile->hitVolumes)[volumeIndex];
                 if ((volumeIndex == hitVolume->sphereIndex) && ((hitMask & 1 << hitVolume->maskBit) != 0)) {
                     sphereBits = hitVolume->linkedSpheres;
