@@ -1567,10 +1567,12 @@ static void boxBlurTexture(Texture* texture, int size, int window, u32 fill) {
     ShadowBlurRow row;
     u8* data;
     u32 i;
+    u8* columnCursor;
+    u32 y;
 
     data = (u8*)(texture + 1);
     if (window % 8 == 0) {
-        u32 y = 0;
+        y = 0;
 
         for (; y < size; y++) {
             u32* tile = (u32*)(data + (y & 3) * 8 + (y >> 2) * 4 * size);
@@ -1608,19 +1610,20 @@ static void boxBlurTexture(Texture* texture, int size, int window, u32 fill) {
             u32 x;
 
             for (x = 0; x < size; x++) {
-                u8* col = data + (x & 7) + (x >> 3) * 32;
-                u32* dst = row.words;
+                u32* dst;
                 u8* texturePtr;
                 u8* bufferPtr;
                 u32 yOffset;
                 u32 paddingWord;
 
+                columnCursor = data + (x & 7) + (x >> 3) * 32;
+                dst = row.words;
                 for (paddingWord = 0; paddingWord < (window >> 3); paddingWord++) {
                     dst[0] = fill;
                     dst++;
                 }
                 bufferPtr = row.bytes + (window >> 1);
-                texturePtr = col;
+                texturePtr = columnCursor;
                 for (yOffset = 0; yOffset < size; yOffset += 4) {
                     bufferPtr[0] = texturePtr[0];
                     bufferPtr[1] = texturePtr[8];
@@ -1637,17 +1640,17 @@ static void boxBlurTexture(Texture* texture, int size, int window, u32 fill) {
                 boxBlurRow(row.bytes, blurred.bytes, size, window);
                 bufferPtr = blurred.bytes;
                 for (yOffset = 0; yOffset < size; yOffset += 4) {
-                    col[0] = bufferPtr[0];
-                    col[8] = bufferPtr[1];
-                    col[16] = bufferPtr[2];
-                    col[24] = bufferPtr[3];
+                    columnCursor[0] = bufferPtr[0];
+                    columnCursor[8] = bufferPtr[1];
+                    columnCursor[16] = bufferPtr[2];
+                    columnCursor[24] = bufferPtr[3];
                     bufferPtr += 4;
-                    col += (size >> 3) * 32;
+                    columnCursor += (size >> 3) * 32;
                 }
             }
         }
     } else {
-        u32 y = 0;
+        y = 0;
         fill &= 0xffff;
 
         for (; y < size; y++) {
@@ -1688,18 +1691,19 @@ static void boxBlurTexture(Texture* texture, int size, int window, u32 fill) {
             u32 x;
 
             for (x = 0; x < size; x++) {
-                u8* col = data + (x & 7) + (x >> 3) * 32;
-                u16* dst = row.halfwords;
+                u16* dst;
                 u8* texturePtr;
                 u8* bufferPtr;
                 u32 yOffset;
 
+                columnCursor = data + (x & 7) + (x >> 3) * 32;
+                dst = row.halfwords;
                 for (i = 0; i < (window >> 2); i++) {
                     dst[0] = fill;
                     dst++;
                 }
                 bufferPtr = row.bytes + (window >> 1);
-                texturePtr = col;
+                texturePtr = columnCursor;
                 for (yOffset = 0; yOffset < size; yOffset += 4) {
                     bufferPtr[0] = texturePtr[0];
                     bufferPtr[1] = texturePtr[8];
@@ -1716,12 +1720,12 @@ static void boxBlurTexture(Texture* texture, int size, int window, u32 fill) {
                 boxBlurRow(row.bytes, blurred.bytes, size, window);
                 bufferPtr = blurred.bytes;
                 for (yOffset = 0; yOffset < size; yOffset += 4) {
-                    col[0] = bufferPtr[0];
-                    col[8] = bufferPtr[1];
-                    col[16] = bufferPtr[2];
-                    col[24] = bufferPtr[3];
+                    columnCursor[0] = bufferPtr[0];
+                    columnCursor[8] = bufferPtr[1];
+                    columnCursor[16] = bufferPtr[2];
+                    columnCursor[24] = bufferPtr[3];
                     bufferPtr += 4;
-                    col += (size >> 3) * 32;
+                    columnCursor += (size >> 3) * 32;
                 }
             }
         }

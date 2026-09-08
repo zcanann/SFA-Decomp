@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Check the compiled I8 shadow blur against retail and an untiled box-filter oracle.
 
-Requires optional unicorn and pyelftools packages plus the EN DOL. Cache flushes
-are recorded, not emulated. No retail code or image bytes are embedded here.
+Requires optional unicorn and pyelftools packages plus the selected retail DOL.
+Cache flushes are recorded, not emulated. No retail code or image bytes are embedded here.
 """
 from io import BytesIO
 from pathlib import Path
@@ -11,7 +11,7 @@ import random
 import re
 import struct
 
-from orig.dol_tables import DolFile
+from version_progress import read_dol_range, verified_dol
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -74,7 +74,7 @@ def reference(image, size, window, fill):
     return [columns[x][y] for y in range(size) for x in range(size)]
 
 
-def execute(segments, entry, symbols, payload, size, window, fill):
+def execute(segments, entry, symbols, bases, payload, size, window, fill):
     import unicorn as uc
     from unicorn import ppc_const as ppc
 
@@ -97,7 +97,7 @@ def execute(segments, entry, symbols, payload, size, window, fill):
     saved = {index: 0xCAFE0000 + index for index in range(14, 32)}
     for index, value in saved.items():
         put(index, value)
-    for index, value in ((1, STACK), (2, 0x803E6500), (13, 0x803E31E0),
+    for index, value in ((1, STACK), (2, bases[2]), (13, bases[13]),
                          (3, TEXTURE), (4, size), (5, window), (6, fill)):
         put(index, value)
     emulator.reg_write(ppc.UC_PPC_REG_CR, 0x13579024)
@@ -116,7 +116,7 @@ def execute(segments, entry, symbols, payload, size, window, fill):
     finally:
         emulator.hook_del(hook)
     assert emulator.reg_read(ppc.UC_PPC_REG_PC) == RETURN, 'blur exceeded its instruction budget'
-    assert get(1) == STACK and get(2) == 0x803E6500 and get(13) == 0x803E31E0
+    assert get(1) == STACK and get(2) == bases[2] and get(13) == bases[13]
     assert all(get(index) == value for index, value in saved.items()), 'callee-saved GPR changed'
     assert emulator.reg_read(ppc.UC_PPC_REG_CR) & 0x00FFF000 == 0x13579024 & 0x00FFF000
     assert bytes(emulator.mem_read(TEXTURE - 32, 32 + HEADER_SIZE)) == b'\xA5' * 32 + header
@@ -127,15 +127,25 @@ def execute(segments, entry, symbols, payload, size, window, fill):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--object', type=Path, default=ROOT / 'build/GSAE01/src/main/newshadows.o')
+    parser.add_argument('--version', default='GSAE01',
+                        choices=['GSAE01', 'GSAE01_rev1', 'GSAJ01', 'GSAP01', 'GSAP01_rev1'])
+    parser.add_argument('--object', type=Path)
     args = parser.parse_args()
-    config = (ROOT / 'config/GSAE01/symbols.txt').read_text()
+    path = args.object or ROOT / 'build' / args.version / 'src/main/newshadows.o'
+    config = (ROOT / 'config' / args.version / 'symbols.txt').read_text()
     symbols = {name: int(address, 16) for name, address in
                re.findall(r'^(\w+) = \.\w+:(0x[0-9A-Fa-f]+);', config, re.M)}
-    dol = DolFile(ROOT / 'orig/GSAE01/sys/main.dol')
+    dol = verified_dol(ROOT / 'orig' / args.version / 'sys/main.dol',
+                       ROOT / 'config' / args.version / 'config.yml')
+    bases = {}
+    for offset, register in ((8, 2), (16, 13)):
+        high, low = struct.unpack('>II', read_dol_range(dol, symbols['__init_registers'] + offset, 8))
+        assert high >> 16 == 0x3C00 | (register << 5)
+        assert low >> 16 == 0x6000 | (register << 5) | register
+        bases[register] = ((high & 0xFFFF) << 16) | (low & 0xFFFF)
     retail = [(section.address, dol.data[section.offset:section.offset + section.size])
               for section in dol.sections]
-    compiled = retail + [(SOURCE_CODE, source_code(args.object, symbols))]
+    compiled = retail + [(SOURCE_CODE, source_code(path, symbols))]
     rng = random.Random(0x8006A028)
     cases = 0
     for size in (8, 16, 32, 64, 128):
@@ -151,11 +161,11 @@ def main():
                     payload = tiled(image, size)
                     expected = tiled(reference(image, size, window, fill), size)
                     for segments, entry in ((retail, symbols['boxBlurTexture']), (compiled, SOURCE_CODE)):
-                        actual = execute(segments, entry, symbols, payload, size, window, fill)
+                        actual = execute(segments, entry, symbols, bases, payload, size, window, fill)
                         assert actual == expected, (size, window, hex(fill), entry)
                     cases += 1
         print(f'{size}x{size}: retail, compiled source and oracle agree', flush=True)
-    print(f'PASS: {cases} image cases; both padding widths, tile layout, guards, cache flush and ABI')
+    print(f'{args.version}: PASS {cases} image cases; both padding widths, tile layout, guards, cache flush and ABI')
 
 
 if __name__ == '__main__':

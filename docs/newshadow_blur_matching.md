@@ -1,5 +1,34 @@
 # Shadow blur compiler trace
 
+## Shared row and column lifetimes
+
+The word and halfword paths now share their same-role row counter and texture
+column cursor. The row buffer and output-buffer cursors remain local to their
+passes. The source still gathers and scatters I8 columns in four-pixel groups,
+with the same padding, window arithmetic, and in-place two-pass ordering.
+
+Under the existing GC/1.3 profile, this raises `boxBlurTexture` from 99.45059%
+to 99.57596% in EN, EN revision 1, JP, PAL, and PAL revision 1. All 1,356
+instruction mnemonics remain exact; operand differences fall from 125 to 97.
+Each TU reaches 98.992195%, still with 40/44 exact functions. This is a partial
+matching improvement, not a new exact function or a regional exact-unit claim.
+
+Only the blur's instruction bytes change. The other 43 function bodies,
+allocated non-text bytes, named-symbol layouts, and resolved relocations are
+unchanged in all five versions. Their retail blur instruction bodies are
+identical. No compiler flags, data declarations, or version branches change.
+
+The execution probe now accepts `--version`, verifies that DOL against its
+configured SHA-1, and decodes its `r2`/`r13` bases from `__init_registers`.
+It uses the selected version's actual register-save helpers and cache-flush
+address for both retail and relocated source execution. All 360 cases pass
+per version (1,800 total), including both padding widths, tiled output, guards,
+flush arguments, and preserved GPR/CR fields. For example:
+
+```sh
+python3 tools/shadow_blur_probe.py --version GSAJ01
+```
+
 ## Recovered fill lifetime
 
 The halfword path now masks the original `fill` parameter with `fill &= 0xffff`
