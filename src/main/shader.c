@@ -3544,8 +3544,7 @@ static void renderObjects(s8* opacity) {
             if (opacity[objectIndex] != 0 && gLightmapDeferredObjectCount < 0x14) {
                 deferredIndex = gLightmapDeferredObjectCount;
                 gLightmapDeferredObjectCount = deferredIndex + 1;
-                *(GameObject**)(queueBase + (deferredIndex * (int)sizeof(GameObject*) +
-                                             offsetof(LightmapDrawQueue, deferred))) = obj;
+                ((GameObject**)(queueBase + offsetof(MapDeferredObjectListView, deferred)))[deferredIndex] = obj;
             }
         } else {
             if ((objectFlags & OBJDEF_FLAG_RUNTIME_BATCHABLE) == 0) {
@@ -3753,7 +3752,7 @@ void sceneDraw(void) {
         doHeatEffect(heatEffectIntensity & 0xff);
     }
     i = 0;
-    deferred = (GameObject**)(q + 0x4114);
+    deferred = ((MapDeferredObjectListView*)q)->deferred;
     for (; i < gLightmapDeferredObjectCount; i++) {
         (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, deferred[i]);
         objRender(0, 0, 0, 0, deferred[i], 1);

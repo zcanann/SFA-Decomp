@@ -4,7 +4,7 @@ The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
 All 40,656 assigned data bytes match. The common GC/1.3 invocation produces
-139/145 exact functions and a 99.62423% instruction fuzzy score; the TU remains
+139/145 exact functions and a 99.62504% instruction fuzzy score; the TU remains
 `NonMatching` because six functions still differ.
 
 This supersedes the constant-pool blocker in
@@ -354,6 +354,35 @@ Formatting preserves the probe object byte-for-byte. The data and literal
 audits, `ninja all_source`, and strict retail checksum gate all pass; each
 Ninja invocation is bounded to 30 seconds. The strict build continues to
 link the retail shader object.
+
+## Typed deferred-object list (2026-09-07)
+
+`renderObjects` indexes the deferred list as object pointers from its cached
+queue base. This reproduces retail's base-first address addition and improves
+the function from **99.73684% to 99.82456%**. Its 114-instruction size is unchanged;
+the remaining two differences are operand order in the object-shadow entry
+stores. Whole-TU fuzzy similarity rises from 99.62423% to 99.62504%, retaining
+139/145 exact functions.
+
+The old `LightmapDrawQueue` view misleadingly exposed twenty raw words after
+padding. `MapDeferredObjectListView` now describes the actual twenty object
+pointers and asserts their `0x4114` base-relative offset and `0x50` extent.
+It is explicitly an address view: `gLightmapDeferredObjects` remains a separate
+BSS allocation, and the actual render queue retains its `0x3F48` storage size.
+The count limit, pointer stores, native BSS symbol and `sceneDraw` consumer
+establish this layout. The exact consumer now uses the same view instead of
+a literal offset.
+
+The producer keeps a narrow pointer-array cast at the cached byte-base access.
+Directly indexing the view member there makes MWCC use an indexed store with
+an extra address calculation, unlike retail. No broader pointer lifetime or
+allocation is introduced.
+
+Only one instruction word changes in the complete object. Every other function,
+all non-text section contents, named layouts and resolved relocations remain
+unchanged. The data and literal audit passes, as do the full source build and
+strict retail checksum with 30-second timeouts. Formatting preserves the raw
+object. The TU remains `NonMatching`, so the strict link still uses retail.
 
 ## Cached queue addressing in object rendering (2026-09-07)
 
