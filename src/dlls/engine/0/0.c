@@ -458,7 +458,7 @@ typedef struct SmallText {
 
 void hudDrawCommunicatorAlert(int a, int b, int c);
 void pauseMenuDrawTaskHintPanel(void* obj, u8 v);
-void pauseMenuDrawGrid(int v);
+void pauseMenuDrawGrid(s16 v);
 extern u8 gPauseMenuTokenConfirmFlag;
 extern u16 gPauseMenuTitleFadeCounter;
 extern u16 gWorldMapVoiceoverTimer;
@@ -3896,7 +3896,7 @@ void drawArwingHud(int unused1, int unused2, int unused3) {
  */
 
 void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
-    s32 alpha;
+    s16 alpha;
     PauseTbl* statusTable;
     GameObject* player;
     ObjModel* model;
@@ -3904,7 +3904,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
     s32 stringOffset;
     s32 randomWidth;
     s32 randomHeight;
-    s32 panelAlpha;
+    s16 panelAlpha;
     s32 stringIndex;
     s32 textY;
     f32 timer;
@@ -3955,9 +3955,9 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         model = Obj_GetActiveModel(gGameUiCommCubeObjects[0]);
         objRender(0, 0, 0, 0, gGameUiCommCubeObjects[0], 1);
         model->bufferFlags &= ~0x8;
-        panelAlpha = (s32)((f32)(s16)alpha * gPauseMenuMapSwivelCos);
+        panelAlpha = (f32)(s16)alpha * gPauseMenuMapSwivelCos;
         {
-            f64 tmp = (double)(s16)panelAlpha * (512.0 - (double)gPauseMenuSlideOut);
+            f64 tmp = (double)panelAlpha * (512.0 - (double)gPauseMenuSlideOut);
             x = (s32)(tmp / 512.0);
         }
         timer = gameTextGetTimer();
@@ -3965,7 +3965,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
             randomWidth = randomGetRange(0, 0x1e) * 2;
             randomHeight = randomGetRange(0, 0x1e) * 2;
             pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff,
-                                       (u8)((s16)panelAlpha / 2), 0x230, 0x190, randomHeight, randomWidth);
+                                       (u8)(panelAlpha / 2), 0x230, 0x190, randomHeight, randomWidth);
             model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
             objRender(0, 0, 0, 0, gGameUiCommCubeObjects[1], 1);
             model->bufferFlags &= ~0x8;
@@ -4287,8 +4287,8 @@ void pauseMenuDrawStatusPage(GameObject* player) {
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     s8 i8;
     s32 hintCount;
-    s32 ty2;
-    s32 ty1;
+    s16 frontGridAlpha;
+    s16 gridAlpha;
     s32 alpha;
     s32 ty;
     ObjModel* model;
@@ -4334,9 +4334,9 @@ void pauseMenuDrawStatusPage(GameObject* player) {
         return;
     }
 
-    ty1 = (s32)((f32)(s16)alpha * gPauseMenuMapSwivelCos);
+    gridAlpha = (f32)(s16)alpha * gPauseMenuMapSwivelCos;
     {
-        f64 tmp = (double)(s16)ty1 * (512.0 - (double)gPauseMenuSlideOut);
+        f64 tmp = (double)gridAlpha * (512.0 - (double)gPauseMenuSlideOut);
         ty = (s32)(tmp / 512.0);
     }
     pauseMenuDrawSideRails(ty);
@@ -4348,7 +4348,7 @@ void pauseMenuDrawStatusPage(GameObject* player) {
             gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex170, 200.0f, 405.0f, px, ty, 0x100, 0xf0, 4, 0);
         }
         gPauseMenuActiveGrid = (GridEntry*)gPauseMenuStatusBackGrid;
-        pauseMenuDrawGrid(ty1);
+        pauseMenuDrawGrid(gridAlpha);
     } else {
         MapEventInterface* mapEvents = *gMapEventInterface;
         char buf[0x38];
@@ -4360,9 +4360,9 @@ void pauseMenuDrawStatusPage(GameObject* player) {
         info = mapEvents->getCurCharacterState();
         hintCount = ((u16)getNextTaskHintText() * 0x64 / 0xbb) & 0xff;
         playRatio = SaveGame_getPlayTime() / 60.0f;
-        ty2 = (s32)((f32)(s16)ty1 * gPauseMenuMapSwivelCos);
+        frontGridAlpha = (f32)gridAlpha * gPauseMenuMapSwivelCos;
         {
-            f64 tmp = (double)(s16)ty2 * (512.0 - (double)gPauseMenuSlideOut);
+            f64 tmp = (double)(s16)frontGridAlpha * (512.0 - (double)gPauseMenuSlideOut);
             ty = (s32)(tmp / 512.0);
         }
         pauseMenuDrawTaskHintPanel(player, ty);
@@ -4436,7 +4436,7 @@ void pauseMenuDrawStatusPage(GameObject* player) {
                              0x100 - gPauseMenuSlideOut, ty, 0x100, 0);
         hudDrawMagicBar((u8)ty, 0x100 - gPauseMenuSlideOut, 1);
         gPauseMenuActiveGrid = gPauseMenuStatusGrid;
-        pauseMenuDrawGrid(ty2);
+        pauseMenuDrawGrid(frontGridAlpha);
     }
 
     model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
@@ -4479,7 +4479,7 @@ void pauseMenuDrawSideRails(s32 alpha) {
 /* Pause-menu, map, dialogue, and C-menu functions. */
 
 /* Forward declarations. */
-void pauseMenuDrawGridCell(u8 i, int alpha, int flag);
+void pauseMenuDrawGridCell(u8 i, s16 alpha, int flag);
 void timeListDraw(int unused1, int unused2, int unused3);
 void highScoreScreenDraw(int p1, int p2, int p3);
 int pauseMenuUpdateMapScroll(void);
@@ -4544,7 +4544,7 @@ void pauseMenuDrawTaskHintPanel(void* unused, u8 alpha) {
 /* Pause-menu grid renderer: draws all cells
  * (selection last), the breathing selected cell, header/footer text, and the
  * flashing corner cursor. */
-void pauseMenuDrawGrid(int alpha) {
+void pauseMenuDrawGrid(s16 alpha) {
     f32 cursorScale = 320.0f;
     gameTextSetDrawFunc(pauseMenuTextDrawFn);
     gPauseMenuTextScale = 1.5f;
@@ -4579,10 +4579,10 @@ void pauseMenuDrawGrid(int alpha) {
         f32 base = lbl_803DBAC0;
         pauseMenuDrawGridCell(
             (u8)gPauseMenuGridCursor,
-            (s16)alpha * (base + base * mathSinf(3.1415927f * (500.0f * gPauseMenuHoloTime) / 32768.0f)), 4);
+            alpha * (base + base * mathSinf(3.1415927f * (500.0f * gPauseMenuHoloTime) / 32768.0f)), 4);
     }
     {
-        int n = (s16)alpha * (0x200 - gPauseMenuSlideOut);
+        int n = alpha * (0x200 - gPauseMenuSlideOut);
         gameTextSetColor(0xff, 0xff, 0xff, (double)n / 512.0);
     }
     gPauseMenuTextZ = (s16)(0x100 - gPauseMenuSlideOut);
@@ -4598,7 +4598,7 @@ void pauseMenuDrawGrid(int alpha) {
     }
     if (gPauseMenuSlideOut != 0) {
         s16 tx;
-        int n = (s16)alpha * gPauseMenuSlideOut;
+        int n = alpha * gPauseMenuSlideOut;
         gameTextSetColor(0xff, 0xff, 0xff, (double)n / 512.0);
         gPauseMenuTextZ = (s16)(gPauseMenuSlideOut - 0xff);
         if (gPauseMenuActiveGrid == gPauseMenuMapTables.entries) {
@@ -4630,7 +4630,7 @@ void pauseMenuDrawGrid(int alpha) {
         if (ph & 0x20) {
             ph = (s16)(ph ^ 0x3f);
         }
-        cursorAlpha = (s16)(ph * ((s16)alpha * 0xc0 / 0x100 + 0x40) / 31);
+        cursorAlpha = (s16)(ph * (alpha * 0xc0 / 0x100 + 0x40) / 31);
         tex = (HudTextures*)hudTextures;
         pauseMenuDrawElement(tex->tex80, (f32)(s16)x1, (f32)(s16)y1, 0x100, (u8)cursorAlpha, (w16 = w), 0);
         gameUiDrawTextureRegion(tex->tex80, x2, (f32)(s16)y1, 0x100, (u8)cursorAlpha, w16, 0x12, 0xa, 1);
@@ -4645,50 +4645,49 @@ void pauseMenuDrawGrid(int alpha) {
  * texture offset along the entry's trail vector, fading via the scaled
  * alpha. The selected cell on the main grid breathes (sin pulse) and slides
  * toward the panel edge while gPauseMenuSlideOut runs. */
-void pauseMenuDrawGridCell(u8 i, int alpha, int flag) {
-    s8 cnt;
+void pauseMenuDrawGridCell(u8 i, s16 alpha, int flag) {
+    s8 trailStep;
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
-    int div15;
-    int scaled;
-    int v;
-    s16 ofs;
-    f32 quarter;
-    f32 spd;
+    s16 cellAlpha;
+    s16 fadedAlpha;
+    s16 depth;
+    f32 scale;
     f32 x;
     f32 y;
-    f64 k2128;
-    f64 k2108;
-    f64 t;
+    f64 inverseScale;
+    f64 half;
+    f64 fadeProduct;
 
-    t = (f64)(s16)alpha * (512.0 - gPauseMenuSlideOut);
-    scaled = (s32)(t / 512.0);
+    fadeProduct = (f64)alpha * (512.0 - gPauseMenuSlideOut);
+    fadedAlpha = fadeProduct / 512.0;
     if (gPauseMenuActiveGrid[i].id < 0) {
         return;
     }
-    cnt = gPauseMenuActiveGrid[i].count;
-    div15 = (s16)scaled / 15;
-    quarter = 256.0f;
-    for (; cnt >= 0; cnt -= 4) {
-        spd = quarter * gPauseMenuActiveGrid[i].f10;
+    trailStep = gPauseMenuActiveGrid[i].count;
+    for (; trailStep >= 0; trailStep -= 4) {
+        scale = 256.0f * gPauseMenuActiveGrid[i].f10;
         x = gPauseMenuActiveGrid[i].x;
         y = gPauseMenuActiveGrid[i].y;
-        ofs = gPauseMenuActiveGrid[i].ofs6 - cnt;
+        depth = gPauseMenuActiveGrid[i].ofs6 - trailStep;
         if (i != gPauseMenuGridCursor || gPauseMenuActiveGrid == gPauseMenuMapTables.entries) {
             s16 idv = gPauseMenuActiveGrid[i].id;
             if (idv == 0x4a || idv == 0x4c) {
-                v = (s16)((s32)gPauseMenuHoloTime & 0x1f);
-                v = (s16)(((v & 0x10) ? (s16)(v ^ 0x1f) : v) * div15);
+                cellAlpha = (s16)((s32)gPauseMenuHoloTime & 0x1f);
+                if (cellAlpha & 0x10) {
+                    cellAlpha ^= 0x1f;
+                }
+                cellAlpha *= (fadedAlpha / 15);
             } else {
-                v = scaled;
+                cellAlpha = fadedAlpha;
             }
-            ofs -= gPauseMenuSlideOut;
+            depth -= gPauseMenuSlideOut;
         } else {
             f32 dx;
             f32 dy;
             f32 pr;
-            v = alpha;
-            spd = (f32)(spd * (1.0 + gPauseMenuSlideOut / 800.0));
-            spd += 20.0f * mathSinf(3.1415927f * (500.0f * gPauseMenuHoloTime) / 32768.0f) + 40.0f;
+            cellAlpha = alpha;
+            scale = (f32)(scale * (1.0 + gPauseMenuSlideOut / 800.0));
+            scale += 20.0f * mathSinf(3.1415927f * (500.0f * gPauseMenuHoloTime) / 32768.0f) + 40.0f;
             dx = 320.0f - x;
             pr = dx * gPauseMenuSlideOut;
             x = (f32)(pr / 512.0 + x);
@@ -4698,12 +4697,12 @@ void pauseMenuDrawGridCell(u8 i, int alpha, int flag) {
         }
         {
             f32 prod;
-            k2108 = 0.5;
-            k2128 = 0.00390625;
-            prod = spd * gPauseMenuActiveGrid[i].trailX;
-            x -= k2108 * (prod * k2128);
-            prod = spd * gPauseMenuActiveGrid[i].trailY;
-            y -= k2108 * (prod * k2128);
+            half = 0.5;
+            inverseScale = 0.00390625;
+            prod = scale * gPauseMenuActiveGrid[i].trailX;
+            x -= half * (prod * inverseScale);
+            prod = scale * gPauseMenuActiveGrid[i].trailY;
+            y -= half * (prod * inverseScale);
         }
         if (gPauseMenuActiveGrid == (GridEntry*)gPauseMenuStatusBackGrid) {
             int idv = gPauseMenuActiveGrid[i].id;
@@ -4713,14 +4712,14 @@ void pauseMenuDrawGridCell(u8 i, int alpha, int flag) {
 
             textureId = (s16*)((u8*)&hud->texIds358[0] + idv * 2);
             if (*textureId == 0xbf0) {
-                ofs -= 0x14;
+                depth -= 0x14;
             }
             texture = (void**)((u8*)&hud->textures3A8[0] + idv * 4);
             tex = *texture;
             if (tex == 0) {
                 continue;
             }
-            pauseMenuDrawElement(tex, x, y, ofs, (u8)v, spd, flag);
+            pauseMenuDrawElement(tex, x, y, depth, (u8)cellAlpha, scale, flag);
         } else {
             int idv = gPauseMenuActiveGrid[i].id;
             int* t1c0;
@@ -4728,10 +4727,10 @@ void pauseMenuDrawGridCell(u8 i, int alpha, int flag) {
                 continue;
             }
             if (idv == 0x25) {
-                ofs -= 0x14;
+                depth -= 0x14;
             }
             t1c0 = (int*)((u8*)&hud->hudTextures[0] + idv * 4);
-            pauseMenuDrawElement((void*)*t1c0, x, y, ofs, (u8)v, spd, flag);
+            pauseMenuDrawElement((void*)*t1c0, x, y, depth, (u8)cellAlpha, scale, flag);
         }
     }
 }

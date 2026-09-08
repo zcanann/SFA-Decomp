@@ -690,3 +690,31 @@ Target/current function MD5 is `5f90aa03deb9c029ec57996869a95603`.
 Validation includes all five regional function comparisons, the strict
 EN checksum target, and `ninja all_source` with 30-second build timeouts.
 Formatting is committed separately and verified to preserve object bytes.
+
+
+## September 8: pause-menu grid cell exact
+
+`pauseMenuDrawGridCell` now matches all **1,012 bytes / 253 instructions**
+in all five retail targets. Every input DOL was checked against its configured
+SHA1. EN function MD5 is `76477c5a4a040f94730f162fbe0292a3`.
+
+The remaining 16 instruction differences came from opacity types and lifetimes.
+The cell opacity and faded opacity are signed shorts. Converting the fade
+expression directly from double to short, reflecting the pulse with `^=`, and
+multiplying it in place reproduce the retail lifetime. Computing the `/ 15`
+factor at its use site and declaring the cell opacity before the faded opacity
+restore the remaining register choices.
+
+The short alpha contract extends through `pauseMenuDrawGrid` and its callers.
+Their float-derived opacity locals also need direct conversion to short;
+retaining an intermediate `s32` cast adds narrowing instructions. Removing the
+redundant short casts in the relevant caller expressions preserves their
+original conversion lifetimes. `gridAlpha` and `frontGridAlpha` now describe the
+status page's two opacity stages, replacing misleading `ty1` / `ty2` names.
+
+Across all five versions, full object comparisons show exactly **18 changed
+instruction bytes**, all in `pauseMenuDrawGridCell`. Every other function,
+allocated data section, named symbol offset, and relocation is unchanged.
+Engine 0 now has **113 / 118 exact functions** and remains `NonMatching` as a TU;
+no whole-object regional progress claim is made. Compiler profiles and confirmed
+TU boundaries are unchanged.

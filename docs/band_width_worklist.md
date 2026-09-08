@@ -420,7 +420,7 @@ member). No row is misfiled — every row has a live ledger/memory anchor.
 | gameTextFinalizeLoad | main/textrender_run | 1592 | 99.837 | 12 | 0 | 11G/0F | 4 | add-canon words closed by biased-base form C (value-use member decay: `numStrings * 4 + (u32)stringTable->offsets` emits base-first add + trailing addi; the priced-15 verdict predated the lever); residual is the coloured hdr-sum + one scratch swap, probed and walled |
 | GameUI_release | dlls/engine/0/0 | 336 | 98.929 | 14 | 0 | 7G/0F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
 | pauseMenuDrawStatusPage | dlls/engine/0/0 | 2692 | 99.911 | 12 | 0 | 8G/5F | 12 | Updated 2026-09-04: recovered missing sprintf capacity argument and original spellstone sum; alpha register differences remain. |
-| pauseMenuDrawGridCell | dlls/engine/0/0 | 1012 | 99.506 | 22 | 0 | 12G/7F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
+| pauseMenuDrawGridCell | dlls/engine/0/0 | 1012 | 100.000 | 0 | 0 | 12G/7F | 14 | Exact in all five versions: signed-short opacity through the grid caller chain and in-place pulse arithmetic |
 | drawArwingHud | dlls/engine/0/0 | 1064 | 100.000 | 0 | 0 | 10G/1F | 14 | Exact: health-pip expressions computed at use sites restore the bomb-index register |
 | hudDrawCommunicatorAlert | dlls/engine/0/0 | 632 | 100.000 | 0 | 0 | — | — | RESOLVED 2026-09-04: u16 texture-scale API view, repeated draw expressions, and segment-derived fade; see [engine_0_matching.md](engine_0_matching.md) |
 | textureLoad | main/texture | 1932 | 98.882 | 33 | 4 | 17G/0F | 3 | priced 24b (same mechanism as loadTextureFiles: orphan inline preheaders at tail) + width-17 recolour mass; verified |
