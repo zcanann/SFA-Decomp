@@ -3874,27 +3874,27 @@ void drawArwingHud(int unused1, int unused2, int unused3) {
             } else {
                 texIdx = partialFrame;
             }
-            drawTexture(hudTextures[texIdx], (f32)(int)(pip * 0x21 + 0x1e), 31.0f, (int)arwingHudAlpha & 0xff, 0x100);
+            drawTexture(hudTextures[texIdx], (f32)(int)(pip * 0x21 + 0x1e), 31.0f, (u8)arwingHudAlpha, 0x100);
         }
         for (bombSlot = 0; bombSlot < 3; bombSlot++) {
-            drawTexture(hudTextures[56], (f32)(bombSlot * 0x1c + 0x1e), 66.0f, (int)arwingHudAlpha & 0xff, 0x100);
+            drawTexture(hudTextures[56], (f32)(bombSlot * 0x1c + 0x1e), 66.0f, (u8)arwingHudAlpha, 0x100);
             if ((int)bombSlot < bombs) {
-                drawTexture(hudTextures[57], (f32)(bombSlot * 0x1c + 0x23), 72.0f, (int)arwingHudAlpha & 0xff, 0x100);
+                drawTexture(hudTextures[57], (f32)(bombSlot * 0x1c + 0x23), 72.0f, (u8)arwingHudAlpha, 0x100);
             }
         }
         if (arwing->anim.mapEventSlot != 0x26) {
-            drawTexture(hudTextures[61], 6e+02f, 31.0f, (int)arwingHudAlpha & 0xff, 0x100);
+            drawTexture(hudTextures[61], 6e+02f, 31.0f, (u8)arwingHudAlpha, 0x100);
             for (ringSlot = 0; (int)(ringSlot & 0xff) < rings; ringSlot++) {
                 drawTexture(hudTextures[60], (f32)(int)(0x244 - (ringSlot & 0xff) * 0x14), 30.0f,
-                            (int)arwingHudAlpha & 0xff, 0x100);
+                            (u8)arwingHudAlpha, 0x100);
             }
             for (; (int)(pip = ringSlot & 0xff) < req; ringSlot++) {
-                drawTexture(hudTextures[59], (f32)(int)(0x244 - pip * 0x14), 30.0f, (int)arwingHudAlpha & 0xff, 0x100);
+                drawTexture(hudTextures[59], (f32)(int)(0x244 - pip * 0x14), 30.0f, (u8)arwingHudAlpha, 0x100);
             }
-            drawTexture(hudTextures[58], (f32)(int)(0x23c - pip * 0x14), 31.0f, (int)arwingHudAlpha & 0xff, 0x100);
+            drawTexture(hudTextures[58], (f32)(int)(0x23c - pip * 0x14), 31.0f, (u8)arwingHudAlpha, 0x100);
             sprintf(score.text, sHeadDisplayScoreFmt, arwarwing_getScore(arwing));
         }
-        gameTextSetColor(0xff, 0xff, 0xff, (int)arwingHudAlpha & 0xff);
+        gameTextSetColor(0xff, 0xff, 0xff, (u8)arwingHudAlpha);
         gameTextShowStr(score.text, 0x93, 0x23a, 0x41);
         headDisplayDraw();
     }

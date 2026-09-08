@@ -501,3 +501,34 @@ Validation: `python3 tools/fnbytes.py 0 pauseMenuDrawStatus --md5` reports
 identical target/current function MD5 `ef3b8eb59db5cd73e25fa09f20ac5ecb`.
 After `python3 configure.py --matching`, strict `ninja` and
 `ninja all_source` both pass with 30-second timeouts.
+
+
+## September 8: Arwing HUD opacity narrowing
+
+`drawArwingHud` improves from **99.56767% to 99.94361%** against staging
+`590a45c8ec`, reducing differing instruction words from **22 to 3** while
+retaining all **1,064 bytes / 266 instructions**. It is not yet exact.
+The opacity arguments now explicitly narrow the signed 16-bit fade value
+to `u8`, consistent with the HUD draw interface. This recovers the retail
+register allocation for the health-pip calculations and texture/conversion
+bases without changing the unit's GC/1.3 profile.
+
+Only the promoted bomb-slot index remains different: instructions 131,
+132, and 144 use r24 where retail uses r22. The spacing multiply is already
+shared exactly as in retail. A captured MWCC optimizer/register-allocation
+trace reproduces the ordinary build and shows the index being colored
+before r22 becomes available. Tested signedness, declaration and scope
+changes, explicit index/spacing locals, shared scratch variables, texture
+lookup forms, and inline loop helpers either retain the mismatch or add
+other differences. These experiments do not establish a compiler limitation
+or the historical source spelling; none is retained in source.
+
+Only this function's bytes change (33 bytes). All other function bodies,
+allocated data-section bytes and layouts, named symbol layouts, and resolved
+relocations retain their baseline values. The unit remains `NonMatching`.
+
+Validation: objdiff, the strict default `ninja` after
+`python3 configure.py --matching`, and `ninja all_source` pass; each Ninja
+invocation is limited to 30 seconds. Formatting checks cover the active TU
+and its API header, with identical object bytes after formatting. Secondary
+DOLs are unavailable in this checkout, so no regional manifest is promoted.
