@@ -1035,3 +1035,57 @@ one instruction with their loads; their targets are unchanged. Other relocation
 differences are anonymous-symbol renumbering.
 No regional whole-object manifest is promoted. Both required EN builds and
 formatting checks pass. Formatting introduces no additional diff.
+
+
+## September 8: LLDB opacity lifetime partition
+
+Rechecked staging `310015b5b6` with live macOS LLDB/Wibo captures. The
+ordinary and instrumented objects have identical SHA256
+`1cf8c909f22172743c8531236b32fbb9ef230cd6cfc4ad7617e5182e120d84d7`.
+All 263 GPR color choices replay successfully. There are no high-degree
+removals, and the 25 differing instruction words remain the r23/r27 swap.
+
+The frontend explains why moving `panelAlpha`'s declaration does not directly
+move the clamped value. Between the last `IRO_EvaluateConditionals` listing
+and `Before RebuildCondExpressions`, its post-multiply/clamp lifetime becomes
+an anonymous temporary. This is the same lifetime-partition interval observed
+in [Scarab](Scarab_matching.md#frontend-investigation). The earlier assignment
+from `voiceoverTimer` retains the named local. In the current backend capture,
+the clamped temporary is virtual GPR 59, assigned r27 at color-order index 7;
+`panelTop` is virtual GPR 50, assigned r23 at index 12. These are reconstructed
+compiler identities, not original source-variable names.
+
+A diagnostic source variant using the former short opacity directly in the
+shimmer loop restores the late extension but extends that local's interference
+through the loop setup. It becomes the first colored node and takes r31.
+The former integer snapshot instead ended the short local's lifetime before
+that setup, but emitted its extension at the snapshot assignment. That
+extension already existed there in `BEFORE GLOBAL OPTIMIZATION`; its early
+placement was not caused by the backend scheduler.
+
+Declaring the opacity separately, changing the clamp form, extracting a small
+inline opacity helper, reusing earlier dead locals for the hint result, and spelling the
+shimmer phases as explicit counters did not produce an exact function.
+Counterfactual register-ID permutations were checked against the captured
+allocator policy before testing source candidates; such predictions assume
+unchanged interference and are not evidence that a C rewrite preserves it.
+No source variant from this investigation is retained.
+
+The C-menu capture reproduces the previously documented 166 color choices and
+55 differing words. A cleaner indexed variant can remove the one-element
+offset array while retaining all 302 instructions, but still misallocates the
+ownership call result and regresses the function. Reassociating the enabled-byte
+address can also allow CSE to remove four retail additions. Neither is retained.
+
+Reproduce the current map capture and frontend listing with:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/dlls/engine/0/0 \
+    --function mapScreenDrawHud --graph --output build/zero_lldb/current
+python3 tools/mwcc_frontend_trace.py --unit main/dlls/engine/0/0 \
+    --function mapScreenDrawHud --output build/zero_lldb/frontend
+```
+
+The unit remains **99.97473%**, with **116/118** functions exact. This
+investigation changes documentation only; it does not establish a 100% match
+or authorize compiler, pragma, assembly, or TU-boundary workarounds.
