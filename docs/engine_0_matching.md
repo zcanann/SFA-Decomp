@@ -789,3 +789,28 @@ produces no formatting diff, its dry-run checks pass for the TU and API header,
 and the rebuilt object is byte-identical to the pre-format object. Secondary
 DOLs are absent from their configured paths in this checkout, so no regional
 progress manifest is promoted.
+
+## September 8: high-score screen exact
+
+`highScoreScreenDraw` now matches all **1,276 bytes / 319 instructions**
+under the unchanged GC/1.3 profile. Target/current function MD5 is
+`f37a0bd456e6d75f6a2aca9e9c530e25`.
+
+The pulse brightness is an `int`, matching the integer color API. The former
+`u8` local introduced an extra byte-narrowing instruction before the score-row
+loop and changed its register allocation. Recovering the local's native integer
+width removes that instruction and restores the retail registers throughout.
+
+Only this function's body changes; the other 117 function bodies and all
+allocated data remain byte-identical. Named text symbols after the removed
+instruction shift back four bytes. Relocations retain their targets after that
+offset adjustment and compiler-generated anonymous-symbol renumbering. Objdiff
+now reports **115 / 118** exact functions and **65,960 / 75,188** exact code
+bytes, with all **9,960** assigned data bytes still exact. The TU remains
+`NonMatching`.
+
+Validation: objdiff reports 100%; strict matching `ninja` and
+`ninja all_source` pass with 30-second timeouts. `clang-format -i` produces
+no formatting diff, the TU and API header pass its dry-run checks, and a fresh
+compile preserves the pre-format object bytes. Secondary DOLs remain absent
+from their configured paths in this checkout; regional manifests are unchanged.

@@ -4808,7 +4808,7 @@ void highScoreScreenDraw(int p1, int p2, int p3) {
     s16 h;
     int top;
     int left;
-    u8 pulse;
+    int pulse;
     char buf[0x20];
 
     gHighScorePulseAngle += gHighScorePulseAngleStep;
