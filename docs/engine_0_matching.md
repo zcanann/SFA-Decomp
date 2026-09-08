@@ -758,3 +758,34 @@ Strict matching `ninja`, `ninja all_source`, and formatting checks pass.
 Formatting preserves the complete object bytes. Secondary target DOLs are
 not present at their configured paths in this checkout, so no regional
 progress manifest is promoted.
+
+
+## September 8: status page exact
+
+`pauseMenuDrawStatusPage` now matches all **2,692 bytes / 673 instructions**
+under the unchanged GC/1.3 profile. Target/current function MD5 is
+`73ab2159e70e74b52402c74cbd035d25`.
+
+The opening fade and the two swivel stages use one signed-short opacity
+updated with `alpha *= gPauseMenuMapSwivelCos`. The existing explicit short
+view in the slide-fade calculation preserves its conversion lifetime. The
+noise texture obtains both random offsets directly in the draw-call arguments;
+MWCC preserves their retail evaluation order and argument positions. Together
+these spellings restore r28 for the initial opacity without changing any
+instruction count, call, constant, or compiler setting.
+
+This builds on the signed-short grid API recovered in `1cbe6abafe`. After
+updating onto staging `185a55a610`, only **three instruction bytes** change,
+all in the status page. Every other 117 function body, allocated data section,
+named symbol layout, and relocation remains unchanged. The already-exact grid
+and grid-cell renderers are preserved. Exact functions rise from **113 to
+114 / 118**, and exact code rises from **61,992 to 64,684 / 75,188 bytes**.
+All **9,960** assigned data bytes remain exact; the complete TU remains
+`NonMatching`.
+
+Validation: objdiff reports 100%; strict matching `ninja` and
+`ninja all_source` pass with 30-second timeouts. Running `clang-format -i`
+produces no formatting diff, its dry-run checks pass for the TU and API header,
+and the rebuilt object is byte-identical to the pre-format object. Secondary
+DOLs are absent from their configured paths in this checkout, so no regional
+progress manifest is promoted.

@@ -4287,9 +4287,7 @@ void pauseMenuDrawStatusPage(GameObject* player) {
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     s8 i8;
     s32 hintCount;
-    s16 frontGridAlpha;
-    s16 gridAlpha;
-    s32 alpha;
+    s16 alpha;
     s32 ty;
     ObjModel* model;
     PauseMenuCharacterState* info;
@@ -4319,10 +4317,8 @@ void pauseMenuDrawStatusPage(GameObject* player) {
 
     timer = gameTextGetTimer();
     if (timer != zero) {
-        s32 rnd1 = randomGetRange(0, 0x1e) * 2;
-        s32 rnd2 = randomGetRange(0, 0x1e) * 2;
         pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)((s16)alpha / 2),
-                                   0x230, 0x190, rnd2, rnd1);
+                                   0x230, 0x190, randomGetRange(0, 0x1e) * 2, randomGetRange(0, 0x1e) * 2);
         model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
         objRender(0, 0, 0, 0, gGameUiCommCubeObjects[1], 1);
         model->bufferFlags &= ~0x8;
@@ -4334,9 +4330,9 @@ void pauseMenuDrawStatusPage(GameObject* player) {
         return;
     }
 
-    gridAlpha = (f32)(s16)alpha * gPauseMenuMapSwivelCos;
+    alpha *= gPauseMenuMapSwivelCos;
     {
-        f64 tmp = (double)gridAlpha * (512.0 - (double)gPauseMenuSlideOut);
+        f64 tmp = (double)(s16)alpha * (512.0 - (double)gPauseMenuSlideOut);
         ty = (s32)(tmp / 512.0);
     }
     pauseMenuDrawSideRails(ty);
@@ -4348,7 +4344,7 @@ void pauseMenuDrawStatusPage(GameObject* player) {
             gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex170, 200.0f, 405.0f, px, ty, 0x100, 0xf0, 4, 0);
         }
         gPauseMenuActiveGrid = (GridEntry*)gPauseMenuStatusBackGrid;
-        pauseMenuDrawGrid(gridAlpha);
+        pauseMenuDrawGrid(alpha);
     } else {
         MapEventInterface* mapEvents = *gMapEventInterface;
         char buf[0x38];
@@ -4360,9 +4356,9 @@ void pauseMenuDrawStatusPage(GameObject* player) {
         info = mapEvents->getCurCharacterState();
         hintCount = ((u16)getNextTaskHintText() * 0x64 / 0xbb) & 0xff;
         playRatio = SaveGame_getPlayTime() / 60.0f;
-        frontGridAlpha = (f32)gridAlpha * gPauseMenuMapSwivelCos;
+        alpha *= gPauseMenuMapSwivelCos;
         {
-            f64 tmp = (double)(s16)frontGridAlpha * (512.0 - (double)gPauseMenuSlideOut);
+            f64 tmp = (double)(s16)alpha * (512.0 - (double)gPauseMenuSlideOut);
             ty = (s32)(tmp / 512.0);
         }
         pauseMenuDrawTaskHintPanel(player, ty);
@@ -4436,7 +4432,7 @@ void pauseMenuDrawStatusPage(GameObject* player) {
                              0x100 - gPauseMenuSlideOut, ty, 0x100, 0);
         hudDrawMagicBar((u8)ty, 0x100 - gPauseMenuSlideOut, 1);
         gPauseMenuActiveGrid = gPauseMenuStatusGrid;
-        pauseMenuDrawGrid(frontGridAlpha);
+        pauseMenuDrawGrid(alpha);
     }
 
     model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
