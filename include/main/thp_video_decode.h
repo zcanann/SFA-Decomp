@@ -6,7 +6,7 @@
 #include "dolphin/os/OSThread.h"
 
 #define THP_VIDEO_BUFFER_COUNT 3
-#define THP_VIDEO_STACK_SIZE 0x1000
+#define THP_VIDEO_STACK_SIZE   0x1000
 
 typedef struct AttractMovieVideoMessageStorage {
     OSMessage decoded[THP_VIDEO_BUFFER_COUNT];
