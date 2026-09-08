@@ -1871,31 +1871,24 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
             int volumeIndex;
             ModelFileHeader* modelFile;
             ModelHitSphereDef* hitVolume;
-            int definitionOffset;
             ObjModelHitSphere* currentSpheres;
             ObjModelHitSphere* previousSpheres;
-            ObjModelHitSphere* currentSphereCursor;
-            ObjModelHitSphere* previousSphereCursor;
 
-            model = ObjHits_GetActiveModel(objB);
+            model = (ObjModel*)objB->anim.banks[objB->anim.bankIndex];
             modelFile = model->file;
             sphereBits = model->bufferFlags >> 2 & 1;
             currentSpheres = (ObjModelHitSphere*)model->hitVolumeSphereBuffers[sphereBits];
             previousSpheres = (ObjModelHitSphere*)model->hitVolumeSphereBuffers[sphereBits ^ 1];
             pointCount = 0;
-            definitionOffset = 0;
-            currentSphereCursor = currentSpheres;
-            previousSphereCursor = previousSpheres;
             for (volumeIndex = 0; volumeIndex < (int)(u32)modelFile->hitVolumeCount;
-                 definitionOffset += sizeof(ModelHitSphereDef), currentSphereCursor++, previousSphereCursor++,
-                volumeIndex = volumeIndex + 1) {
-                hitVolume = (ModelHitSphereDef*)(modelFile->hitVolumes + definitionOffset);
+                 volumeIndex++) {
+                hitVolume = &((ModelHitSphereDef*)modelFile->hitVolumes)[volumeIndex];
                 if ((volumeIndex == hitVolume->sphereIndex) && ((hitMask & 1 << hitVolume->maskBit) != 0)) {
                     sphereBits = hitVolume->linkedSpheres;
                     if (sphereBits != 0) {
                         for (; (u16)sphereBits != 0; sphereBits = (u16)((sphereBits & 0xffff) << 4)) {
                             linkedSphereIndex = (((u16)sphereBits & 0xf000) >> 0xc) + volumeIndex & 0xffff;
-                            if (pointCount < 4) {
+                            if (pointCount < TRACK_HIT_MAX_POINTS) {
                                 ObjModelHitSphere* currentSphere;
                                 ObjModelHitSphere* previousSphere;
                                 int sphereOffset = linkedSphereIndex * sizeof(ObjModelHitSphere);
@@ -1914,14 +1907,14 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
                             }
                         }
                     } else {
-                        if (pointCount < 4) {
-                            endPoints[pointCount].x = playerMapOffsetX + currentSphereCursor->pos[0];
-                            endPoints[pointCount].y = currentSphereCursor->pos[1];
-                            endPoints[pointCount].z = playerMapOffsetZ + currentSphereCursor->pos[2];
-                            startPoints[pointCount].x = playerMapOffsetX + previousSphereCursor->pos[0];
-                            startPoints[pointCount].y = previousSphereCursor->pos[1];
-                            startPoints[pointCount].z = playerMapOffsetZ + previousSphereCursor->pos[2];
-                            hitResults.radii[pointCount] = currentSphereCursor->radius;
+                        if (pointCount < TRACK_HIT_MAX_POINTS) {
+                            endPoints[pointCount].x = playerMapOffsetX + currentSpheres[volumeIndex].pos[0];
+                            endPoints[pointCount].y = currentSpheres[volumeIndex].pos[1];
+                            endPoints[pointCount].z = playerMapOffsetZ + currentSpheres[volumeIndex].pos[2];
+                            startPoints[pointCount].x = playerMapOffsetX + previousSpheres[volumeIndex].pos[0];
+                            startPoints[pointCount].y = previousSpheres[volumeIndex].pos[1];
+                            startPoints[pointCount].z = playerMapOffsetZ + previousSpheres[volumeIndex].pos[2];
+                            hitResults.radii[pointCount] = currentSpheres[volumeIndex].radius;
                             hitResults.surfaceTypes[pointCount] = -1;
                             hitResults.queryTypes[pointCount] = 7;
                             pointCount += 1;

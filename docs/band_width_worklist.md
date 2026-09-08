@@ -27,6 +27,12 @@ slot 5. A shared phase local and the recovered inline slot-flag getter remove
 the remaining floating-point register differences and duplicate zero load.
 See [sky matching](sky_matching.md); the historical row below is superseded.
 
+Update 2026-09-07: `ObjHits_CheckTrackContact` improves from 98.764046% to
+99.625465% through native sphere indexing and direct active-bank lookup under
+the unchanged GC/1.3 profile. Its 267 mnemonics now match, with 18 operand
+differences remaining. The old no-lever classification below is historical;
+see [track-contact selection](objhits_track_contact.md).
+
 ## Rotation class CLOSED WITH MECHANISM (2026-08-03 corpus mining)
 
 The saved-band rotation offset is set by the inline-boundary value count, dose-saturating at one,
