@@ -6184,9 +6184,12 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
         drawScaledTexture(((HudTextures*)hudTextures)->tex30, panelX, panelY, panelAlpha, 0x100, (s16)width, height, 0);
         drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (panelBottom = panelY + height), panelAlpha,
                           0x100, (s16)width, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, panelX + (s16)width, panelY, panelAlpha, 0x100, 5, height, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + (s16)width, panelBottom, panelAlpha, 0x100, 5, 5, 3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + (s16)width, panelTop, panelAlpha, 0x100, 5, 5, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, panelX + (s16)width, panelY, panelAlpha, 0x100, 5, height,
+                          1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + (s16)width, panelBottom, panelAlpha, 0x100, 5, 5,
+                          3);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + (s16)width, panelTop, panelAlpha, 0x100, 5, 5,
+                          1);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelLeft, panelBottom, panelAlpha, 0x100, 5, 5, 2);
         gTextBoxes[12].height = revealedHeight;
         {
@@ -6304,12 +6307,14 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
                           shimmerScale * fsin16Approx((u16)(row * 0xd48 + gGameUiShimmerFrame * 0x1838));
                 rawAlpha = (int)((s16)shimmerAlpha * (0.4f + shimmer));
                 alpha0 = rawAlpha < 0 ? 0 : rawAlpha;
-                drawPartialTexture(((HudTextures*)hudTextures)->tex150, 480.0f, row + 0x32, alpha0 > 0xff ? 0xff : alpha0, 0x100, 0x82, 2,
-                                   randomGetRange(0, 0x1e) << 1, randomGetRange(0, 0x1e) << 1);
+                drawPartialTexture(((HudTextures*)hudTextures)->tex150, 480.0f, row + 0x32,
+                                   alpha0 > 0xff ? 0xff : alpha0, 0x100, 0x82, 2, randomGetRange(0, 0x1e) << 1,
+                                   randomGetRange(0, 0x1e) << 1);
                 rawAlpha = (int)((s16)shimmerAlpha * (0.3f + shimmer));
                 alpha1 = rawAlpha < 0 ? 0 : rawAlpha;
-                drawPartialTexture(((HudTextures*)hudTextures)->tex150, 480.0f, row + 0x34, alpha1 > 0xff ? 0xff : alpha1, 0x100, 0x82, 2,
-                                   randomGetRange(0, 0x1e) << 1, randomGetRange(0, 0x1e) << 1);
+                drawPartialTexture(((HudTextures*)hudTextures)->tex150, 480.0f, row + 0x34,
+                                   alpha1 > 0xff ? 0xff : alpha1, 0x100, 0x82, 2, randomGetRange(0, 0x1e) << 1,
+                                   randomGetRange(0, 0x1e) << 1);
             }
         }
         gameTextShowAt(0x3dd, 0x64, 0x15e);
