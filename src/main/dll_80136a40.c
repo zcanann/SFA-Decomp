@@ -544,6 +544,10 @@ void debugPrintInit(void) {
     debugLogEnd = debugLogBuffer;
 }
 
+static inline void debugDrawGlyphPixel(u32 pixelIndex) {
+    debugDrawFrameBuffer[pixelIndex] = DEBUG_GLYPH_COLOR;
+}
+
 /* Each set bit paints two overlapping horizontal pixels on both scanlines.
  * The final bit reaches a ninth pixel; retain the retail eight-pixel cache range. */
 void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused) {
@@ -569,10 +573,10 @@ void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused) {
             pixelOffsets[1][1] = bottomRowStart + 1;
             for (; glyphBit < DEBUG_GLYPH_BITS; glyphBit++) {
                 if (((1 << glyphBit) & grid[glyphRow]) != 0) {
-                    debugDrawFrameBuffer[pixelOffsets[0][0]] = DEBUG_GLYPH_COLOR;
-                    debugDrawFrameBuffer[pixelOffsets[0][1]] = DEBUG_GLYPH_COLOR;
-                    debugDrawFrameBuffer[pixelOffsets[1][0]] = DEBUG_GLYPH_COLOR;
-                    debugDrawFrameBuffer[pixelOffsets[1][1]] = DEBUG_GLYPH_COLOR;
+                    debugDrawGlyphPixel(pixelOffsets[0][0]);
+                    debugDrawGlyphPixel(pixelOffsets[0][1]);
+                    debugDrawGlyphPixel(pixelOffsets[1][0]);
+                    debugDrawGlyphPixel(pixelOffsets[1][1]);
                 }
                 pixelOffsets[0][0]++;
                 pixelOffsets[0][1]++;

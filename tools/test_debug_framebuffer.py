@@ -28,6 +28,7 @@ class DebugFramebufferTests(unittest.TestCase):
         source = (ROOT / "src/main/dll_80136a40.c").read_text()
         constants = "\n".join(re.findall(r"^#define DEBUG_(?:FRAMEBUFFER|GLYPH)_.*$", source, re.M))
         glyph = re.search(r"^void debugTextDrawToFrameBuffer\([^;\n]*\) \{.*?^\}", source, re.M | re.S).group()
+        pixel = re.search(r"^static inline void debugDrawGlyphPixel\(.*?^\}", source, re.M | re.S).group()
         rule = re.search(r"^static inline void errorDrawHorizontalRule\(.*?^\}", source, re.M | re.S).group()
         calls = re.findall(r"^            if \(enableDebugText != 0\) \{\n"
                            r"                errorDrawHorizontalRule\([^;]+\);\n            \}", source, re.M)
@@ -41,6 +42,7 @@ class DebugFramebufferTests(unittest.TestCase):
 #include <stddef.h>
 typedef unsigned char u8;
 typedef unsigned short u16;
+typedef unsigned int u32;
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
 #else
@@ -57,7 +59,7 @@ static void DCStoreRange(void* address, unsigned int size) {
     }
     flushCount++;
 }
-''' + constants + "\n" + glyph + "\n" + rule + r'''
+''' + constants + "\n" + pixel + "\n" + glyph + "\n" + rule + r'''
 EXPORT void runGlyph(int enabled, int x, int y, u8* grid) {
     enableDebugText = enabled;
     flushCount = 0;
@@ -115,7 +117,9 @@ EXPORT void runCrashRules(int enabled, int y) {
         patterns = [[0] * 5, [255] * 5, [1, 2, 4, 8, 128]]
         patterns += [[1 << bit] * 5 for bit in range(8)]
         for library in self.libraries:
-            for x, y in ((0, 0), (17, 23), (631, 470)):
+            # Negative columns and row crossings remain valid linear framebuffer
+            # indices here; the retail glyph writer does not clip at scanlines.
+            for x, y in ((0, 0), (17, 23), (631, 470), (-4, 1), (639, 10)):
                 for rows in patterns:
                     grid = (ctypes.c_ubyte * 5)(*rows)
                     pixels = {(x + bit + dx, y + row * 2 + dy)

@@ -223,3 +223,41 @@ extracts the actual guarded call sites to check both stack-layout endpoints
 and zero/nonzero enable values. Omitting the preceding row or shortening the
 240-pixel call fails the checks. All eleven debug tests pass at host `-O0` and
 `-O2`, alongside `ninja all_source` and the strict retail checksum gate.
+
+## Shared unsigned glyph-pixel boundary
+
+The glyph rasterizer now calls a private inline pixel writer with a `u32`
+linear pixel index. The four caller-side footprint indices remain signed.
+This models a type boundary at the repeated write operation, rather than
+changing the coordinate API or forcing the compiler's loop settings.
+The helper name and original helper boundary are inferred, not leaked symbols.
+
+With the existing GC/1.3 profile, the unsigned parameter preserves both the
+pixel-index and byte-offset inductions seen in retail's two-bit unroll. A
+signed helper produces the previous object bytes; making the footprint array
+unsigned produces only 90 instructions and does not recover the pattern.
+An explicit unsigned cast at each write produces the same result as the
+retained helper. The helper centralizes that contract at one native array access.
+
+All five verified retail versions share the same 384-byte function body.
+In each version, `debugTextDrawToFrameBuffer` rises from **81.385414% to
+97.65625%**, with **90 to 96 instructions**, matching retail's length.
+Mnemonic-alignment differences fall from thirteen to two and operand
+differences from sixty to four. The remaining differences exchange the X
+coordinate and lower-row-offset registers and move the glyph-pointer copy.
+The save/restore calls now cover r25 through r31, as in retail, rather than
+r26 through r31.
+
+Whole-TU matching improves from **95.599495% to 96.39239%** in every version.
+All thirteen sibling function bodies, all allocated non-text section bytes,
+their named layouts, and all 10,272 assigned data bytes remain unchanged.
+Function-relative relocation destinations are unchanged except for the
+corrected register-save/restore pair. Later function addresses advance by
+24 bytes; no new exact function is claimed (eleven of fourteen remain exact).
+
+The framebuffer harness extracts and compiles the production pixel helper.
+Its glyph cases now also include negative columns with valid linear offsets
+and footprints crossing a scanline boundary, preserving the lack of clipping.
+The complete guarded framebuffer and all ten cache-store requests are checked
+at host `-O0` and `-O2`; all eleven debug tests pass. These are host execution
+checks, not PowerPC cache or display-hardware emulation.
