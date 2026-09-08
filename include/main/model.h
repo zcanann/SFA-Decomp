@@ -285,9 +285,9 @@ typedef struct ModelFileHeader {
 #define MODEL_FLAG_CACHED_ANIMATIONS      0x40
 #define MODEL_FLAG_NO_DEPTH_TEST          0x400
 /* Set: integer s16 XYZ; clear: signed s16 XYZ with eight fractional bits. */
-#define MODEL_FLAG_INTEGER_VERTEX_COORDS  0x800
-#define MODEL_FLAG_ALPHA_Z_UPDATE         0x2000
-#define MODEL_FLAG_ALT_POINTER_LAYOUT     0x8000
+#define MODEL_FLAG_INTEGER_VERTEX_COORDS 0x800
+#define MODEL_FLAG_ALPHA_Z_UPDATE        0x2000
+#define MODEL_FLAG_ALT_POINTER_LAYOUT    0x8000
 
 /* ModelFileHeader.flags24 bits */
 #define MODEL_FLAGS24_VERY_BRIGHT 0x02
