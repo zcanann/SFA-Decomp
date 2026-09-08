@@ -8,6 +8,7 @@
 #include "dolphin/os/OSStopwatch.h"
 #include "main/model_engine.h"
 #include "main/pi_dolphin_api.h"
+#include "main/video_flip.h"
 
 void piRomLoadSection(int romOffset, int mapIndex, void* destBuf);
 void mapsLoadTabOffsets(int firstWord, s32* offsets, int count);
@@ -54,11 +55,9 @@ extern char* lbl_803DCCE0;
 extern void* gGxFifoBase;
 extern void* renderFrameBuffer;
 extern void* displayFrameBuffer;
-extern char gVideoFlipWaitQueue;
 extern int gDispCopyYScaleLines;
 extern GXColor gEfbCopyClearColor;
 extern u8 gDispCopyFilterWeights[8];
-extern char gVideoFlipQueueBuffer[10 * 3 * sizeof(void*)];
 extern f32 gFrameElapsedMs;
 extern f32 gFrameStepRemainder;
 extern u8 gGpuHangRecoveryEnabled;
@@ -72,7 +71,6 @@ extern int sMapFileNameIndexRemapTable[];
 extern GXFifoObj* gGxFifoObj;
 extern OSThread* gVideoWaitThread;
 extern OSStopwatch gFrameStopwatch;
-extern RingBufferQueue gVideoFlipQueue;
 extern u8 gLoadingScreenTextures[];
 
 #endif /* MAIN_PI_DOLPHIN_H_ */

@@ -90,8 +90,7 @@ void* gGxFifoBase;
 GXFifoObj* gGxFifoObj;
 void* renderFrameBuffer;
 void* displayFrameBuffer;
-static u32 sPiUnused4;
-char gVideoFlipWaitQueue;
+OSThreadQueue gVideoFlipWaitQueue;
 f32 gFrameElapsedMs;
 u32 gViewportJitterField;
 int gDispCopyYScaleLines;
@@ -4204,7 +4203,7 @@ void videoBreakPointCallback(void);
 
 void gpuErrorHandler(u32 retraceCount) {
     char* strs = (char*)gLoadingScreenTextures;
-    void* tok[3];
+    VideoFlipToken token;
     u32 botClks;
     u32 botPerf0;
     u32 botClks2;
@@ -4222,15 +4221,15 @@ void gpuErrorHandler(u32 retraceCount) {
     u32 cmdIdle;
 
     if (gFlipTokenHeldForDisplayedFb != 0 && gFrameBufferFlipped != 0) {
-        Queue_Pop(&gVideoFlipQueue, tok);
+        Queue_Pop(&gVideoFlipQueue, &token);
         gGpuStallRetraceCount = 0;
-        OSWakeupThread((OSThreadQueue*)&gVideoFlipWaitQueue);
+        OSWakeupThread(&gVideoFlipWaitQueue);
         if (Queue_IsEmpty(&gVideoFlipQueue) != 0) {
             GXDisableBreakPt();
             gGxBreakPtEnabled = 0;
         } else {
-            Queue_Peek(&gVideoFlipQueue, tok);
-            GXEnableBreakPt(tok[0]);
+            Queue_Peek(&gVideoFlipQueue, &token);
+            GXEnableBreakPt(token.fifoWritePointer);
             gGxBreakPtEnabled = 1;
         }
         gFlipTokenHeldForDisplayedFb = 0;
@@ -4279,7 +4278,7 @@ void logGpuHang(void);
 
 void videoSwapFrameBuffers(u32 retraceCount) {
     u16 sync;
-    void* tok[3];
+    VideoFlipToken token;
     GXFifoObj fifo;
 
     gRetraceCountSinceFlip += 1;
@@ -4308,23 +4307,23 @@ void videoSwapFrameBuffers(u32 retraceCount) {
         GXSetGPFifo(&fifo);
         gGxFifoObj = GXInit(gGxFifoBase, gGxFifoSize);
         if (Queue_IsEmpty(&gVideoFlipQueue) == 0) {
-            Queue_Pop(&gVideoFlipQueue, tok);
+            Queue_Pop(&gVideoFlipQueue, &token);
         }
-        OSWakeupThread((OSThreadQueue*)&gVideoFlipWaitQueue);
+        OSWakeupThread(&gVideoFlipWaitQueue);
         if (Queue_IsEmpty(&gVideoFlipQueue) != 0) {
             GXDisableBreakPt();
             gGxBreakPtEnabled = 0;
         } else {
-            Queue_Peek(&gVideoFlipQueue, tok);
-            GXEnableBreakPt(tok[0]);
+            Queue_Peek(&gVideoFlipQueue, &token);
+            GXEnableBreakPt(token.fifoWritePointer);
         }
         gxSetGPMetricsEnabled(1);
     }
 }
 
 void videoBreakPointCallback(void) {
-    void* peek[3];
-    void* tok[3];
+    VideoFlipToken peek;
+    VideoFlipToken token;
     int i;
 
     if (gAttractMovieState == 2 || gAttractMovieState == 3) {
@@ -4339,26 +4338,26 @@ void videoBreakPointCallback(void) {
     }
     gDepthReadResultCount = gDepthReadPendingCount;
     gDepthReadPendingCount = 0;
-    if (peek[2] == displayFrameBuffer) {
+    if (peek.frameBuffer == displayFrameBuffer) {
         gFlipTokenHeldForDisplayedFb = 1;
         gFrameBufferFlipped = 0;
     } else {
-        Queue_Pop(&gVideoFlipQueue, tok);
+        Queue_Pop(&gVideoFlipQueue, &token);
         gGpuStallRetraceCount = 0;
-        OSWakeupThread((OSThreadQueue*)&gVideoFlipWaitQueue);
+        OSWakeupThread(&gVideoFlipWaitQueue);
         if (Queue_IsEmpty(&gVideoFlipQueue) != 0) {
             GXDisableBreakPt();
             gGxBreakPtEnabled = 0;
         } else {
-            Queue_Peek(&gVideoFlipQueue, tok);
-            GXEnableBreakPt(tok[0]);
+            Queue_Peek(&gVideoFlipQueue, &token);
+            GXEnableBreakPt(token.fifoWritePointer);
             gGxBreakPtEnabled = 1;
         }
     }
 }
 
 RingBufferQueue gVideoFlipQueue;
-char gVideoFlipQueueBuffer[0x78];
+VideoFlipToken gVideoFlipQueueBuffer[VIDEO_FLIP_QUEUE_CAPACITY];
 OSStopwatch gFrameStopwatch;
 s16 gObjMapBlockInfo[0x9C];
 u32 gResourceFileBuffers[0x58];

@@ -1,3 +1,4 @@
+#include "main/video_flip.h"
 #include "dolphin/os/OSReport.h"
 #include "dolphin/PPCArch.h"
 #include "dolphin/mtx.h"
@@ -122,8 +123,8 @@ void videoInit(void* unusedRenderMode, int unusedArg) {
     GXInitFifoLimits(gGxFifoObj, gGxFifoSize - 0x4000, (gGxFifoSize * 3) >> 2);
     GXSetCPUFifo(gGxFifoObj);
     GXSetGPFifo(gGxFifoObj);
-    Queue_Init(&gVideoFlipQueue, gVideoFlipQueueBuffer, 10, 3 * sizeof(void*));
-    OSInitThreadQueue((OSThreadQueue*)&gVideoFlipWaitQueue);
+    Queue_Init(&gVideoFlipQueue, gVideoFlipQueueBuffer, VIDEO_FLIP_QUEUE_CAPACITY, sizeof(VideoFlipToken));
+    OSInitThreadQueue(&gVideoFlipWaitQueue);
     VISetPreRetraceCallback(videoSwapFrameBuffers);
     VISetPostRetraceCallback(gpuErrorHandler);
     GXSetBreakPtCallback(videoBreakPointCallback);
@@ -238,18 +239,18 @@ extern volatile PPCWGPipe GXWGFifo : (0xCC008000);
 int GXFlush_(u8 visible, int unused) {
     void* fifo_get;
     void* fifo_put;
-    void* item[3];
+    VideoFlipToken token;
     int s;
     void* next;
     gxSetZMode_(1, GX_LEQUAL, 1);
     GXSetAlphaUpdate(GX_TRUE);
     GXFlush();
     GXGetFifoPtrs(gGxFifoObj, &fifo_get, &fifo_put);
-    item[0] = fifo_put;
-    item[1] = 0;
-    item[2] = renderFrameBuffer;
+    token.fifoWritePointer = fifo_put;
+    token.reserved = 0;
+    token.frameBuffer = renderFrameBuffer;
     s = OSDisableInterrupts();
-    Queue_Push(&gVideoFlipQueue, item);
+    Queue_Push(&gVideoFlipQueue, &token);
     if (gGxBreakPtEnabled == 0) {
         GXEnableBreakPt(fifo_put);
         gGxBreakPtEnabled = 1;
@@ -384,7 +385,7 @@ void waitNextFrame(void) {
     }
     if ((u32)Queue_GetCount(&gVideoFlipQueue) > 1) {
         gGpuStallRetraceCount = 0;
-        OSSleepThread((OSThreadQueue*)&gVideoFlipWaitQueue);
+        OSSleepThread(&gVideoFlipWaitQueue);
     }
     OSRestoreInterrupts(lvl);
     Camera_ApplyFullViewport();
