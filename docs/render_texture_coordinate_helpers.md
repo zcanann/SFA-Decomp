@@ -86,8 +86,8 @@ setup loads the second at `80077B10`. The claimed EN span is
 `803E8450..803E8458`. Every verified version has the same order and the same
 function-relative load offsets (channel +420, depth fade +56). Scanning direct
 r2 loads finds only those two consumers. An EN relocation scan across all
-extracted objects also finds exactly these two references, both in this TU. These records lie in zero-initialized
-BSS, not in file-backed DOL data; validation checks the zero ELF section,
+extracted objects also finds exactly these two references, both in this TU.
+These records lie in zero-initialized BSS, not in file-backed DOL data; validation checks the zero ELF section,
 relocations, runtime load addresses and final checksum rather than pretending
 to read BSS bytes from the DOL file.
 
@@ -110,6 +110,6 @@ target pass with this unit linked from source. The same source and data layout
 pass in EN rev1, JP and PAL rev1, including full `all_source` builds, before
 adding the unit to their matching manifests. All four reports show 65/65 exact
 functions (54,200 bytes) and 628/628 exact data bytes. Other source objects and
-unit reports are unchanged, apart from the divided automatic `.sbss2` gap. The change recovers 236 pool bytes plus eight previously unclaimed
-zero bytes per verified version and makes the complete render unit eligible
+unit reports are unchanged, apart from the divided automatic `.sbss2` gap.
+The change recovers 236 pool bytes plus eight previously unclaimed zero bytes per verified version and makes the complete render unit eligible
 for source linking.

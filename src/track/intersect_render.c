@@ -2685,8 +2685,8 @@ void objectShadow_setupProjectedTexture(ProjectedShadowTexture* shadow, GXColor*
 }
 
 static void projectedShadowInitChannelFogColor(GXColor* color) {
- const GXColor initial = {0,0,0,0};
- *color=initial;
+    const GXColor initial = {0, 0, 0, 0};
+    *color = initial;
 }
 
 void objectShadow_setupProjectedTextureDepthFade(ProjectedShadowTexture* shadow, GXColor* colorPtr, Mtx mtx,
