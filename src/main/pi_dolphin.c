@@ -4259,14 +4259,16 @@ void gpuErrorHandler(u32 retraceCount) {
         setupReadyAdvanced = (setupReadyAfter - setupReadyBefore) != 0;
         rasterReadyAdvanced = (rasterReadyAfter - rasterReadyBefore) != 0;
         GXGetGPStatus(&unusedStatus, &unusedStatus, &fifoReadIdle, &commandIdle, &unusedStatus);
-        debugPrintfxy(0x32, 0x78, strs + 0x4002c, fifoReadIdle, commandIdle, xfTopUnchanged, xfBottomUnchanged, setupReadyAdvanced, rasterReadyAdvanced);
+        debugPrintfxy(0x32, 0x78, strs + 0x4002c, fifoReadIdle, commandIdle, xfTopUnchanged, xfBottomUnchanged,
+                      setupReadyAdvanced, rasterReadyAdvanced);
         if (xfBottomUnchanged == 0 && setupReadyAdvanced != 0) {
             debugPrintfxy(0x32, 0x8c, strs + 0x40048);
         } else if (xfTopUnchanged == 0 && xfBottomUnchanged != 0 && setupReadyAdvanced != 0) {
             debugPrintfxy(0x32, 0x8c, strs + 0x40068);
         } else if (commandIdle == 0 && xfTopUnchanged != 0 && xfBottomUnchanged != 0 && setupReadyAdvanced != 0) {
             debugPrintfxy(0x32, 0x8c, strs + 0x40090);
-        } else if (fifoReadIdle != 0 && commandIdle != 0 && xfTopUnchanged != 0 && xfBottomUnchanged != 0 && setupReadyAdvanced != 0 && rasterReadyAdvanced != 0) {
+        } else if (fifoReadIdle != 0 && commandIdle != 0 && xfTopUnchanged != 0 && xfBottomUnchanged != 0 &&
+                   setupReadyAdvanced != 0 && rasterReadyAdvanced != 0) {
             debugPrintfxy(0x32, 0x8c, strs + 0x400b4);
         } else {
             debugPrintfxy(0x32, 0x8c, strs + 0x400e4);

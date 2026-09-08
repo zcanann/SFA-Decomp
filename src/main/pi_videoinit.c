@@ -302,14 +302,17 @@ void logGpuHang(void) {
     setupReadyAdvanced = (setupReadyAfter - setupReadyBefore) != 0;
     rasterReadyAdvanced = (rasterReadyAfter - rasterReadyBefore) != 0;
     GXGetGPStatus(&unusedStatus, &unusedStatus, &fifoReadIdle, &commandIdle, &unusedStatus);
-    OSReport(strs + 0x4002c, fifoReadIdle, commandIdle, xfTopUnchanged, xfBottomUnchanged, setupReadyAdvanced, rasterReadyAdvanced);
+    OSReport(strs + 0x4002c, fifoReadIdle, commandIdle, xfTopUnchanged, xfBottomUnchanged, setupReadyAdvanced,
+             rasterReadyAdvanced);
     if (xfBottomUnchanged == 0 && setupReadyAdvanced != 0) {
         OSReport(strs + 0x400fc);
     } else if (xfTopUnchanged == 0 && xfBottomUnchanged != 0 && setupReadyAdvanced != 0) {
         OSReport(strs + 0x4011c);
-    } else if ((commandIdleSnapshot = commandIdle) == 0 && xfTopUnchanged != 0 && xfBottomUnchanged != 0 && setupReadyAdvanced != 0) {
+    } else if ((commandIdleSnapshot = commandIdle) == 0 && xfTopUnchanged != 0 && xfBottomUnchanged != 0 &&
+               setupReadyAdvanced != 0) {
         OSReport(strs + 0x40144);
-    } else if (fifoReadIdle != 0 && commandIdleSnapshot != 0 && xfTopUnchanged != 0 && xfBottomUnchanged != 0 && setupReadyAdvanced != 0 && rasterReadyAdvanced != 0) {
+    } else if (fifoReadIdle != 0 && commandIdleSnapshot != 0 && xfTopUnchanged != 0 && xfBottomUnchanged != 0 &&
+               setupReadyAdvanced != 0 && rasterReadyAdvanced != 0) {
         OSReport(strs + 0x4016c);
     } else {
         OSReport(strs + 0x4019c);
