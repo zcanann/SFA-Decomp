@@ -2619,13 +2619,9 @@ int flags;
 u8 doEdges;
 {
     MapBlockData* cells[16];
-    f32 e2[3];
-    f32 e1[3];
-    f32 e0[3];
-    f32 verts2[3];
-    f32 verts[3];
-    f32 v0[3];
-    f32 en[3];
+    Vec edgeVectors[3];
+    Vec triangleVertices[3];
+    Vec edgeNormal;
     u32 offA;
     int* firstp;
     int last;
@@ -2645,7 +2641,7 @@ u8 doEdges;
     u8 typeb;
     u32 bb;
     u32 dmaflip;
-    f32* vertp;
+    Vec* secondVertex;
     MapBlockData** p1;
     int* q1;
     MapBlockData** p2;
@@ -2842,11 +2838,11 @@ u8 doEdges;
             t0 = group->firstTri;
             triangle = (MapTriIndex*)(bb + t0 * sizeof(MapTriIndex));
             vEnd = group[1].firstTri;
-            vertp = (f32*)(u32)verts;
+            secondVertex = &triangleVertices[1];
             for (; t0 < vEnd; t0++, triangle++) {
                 u8* vo;
                 s16* vp;
-                f32* vf;
+                Vec* vertexCursor;
                 u8 maxYi, minYi;
                 u16* tw;
                 int minX, maxX, minY, maxY, minZ, maxZ;
@@ -2869,15 +2865,15 @@ u8 doEdges;
                 ((TrackTriangle*)cur)->vx[0] = minX + dxoff;
                 ((TrackTriangle*)cur)->vy[0] = minY;
                 ((TrackTriangle*)cur)->vz[0] = minZ + dzoff;
-                v0[0] = __OSs16tof32(&((TrackTriangle*)cur)->vx[0]);
-                v0[1] = __OSs16tof32(&((TrackTriangle*)cur)->vy[0]);
-                v0[2] = __OSs16tof32(&((TrackTriangle*)cur)->vz[0]);
+                triangleVertices[0].x = __OSs16tof32(&((TrackTriangle*)cur)->vx[0]);
+                triangleVertices[0].y = __OSs16tof32(&((TrackTriangle*)cur)->vy[0]);
+                triangleVertices[0].z = __OSs16tof32(&((TrackTriangle*)cur)->vz[0]);
                 maxYi = 0;
                 minYi = 0;
                 j = 1;
                 tw = &triangle->vert[1];
                 vo = (u8*)(cur + 2);
-                vf = verts;
+                vertexCursor = &triangleVertices[1];
                 for (; j < 3; j++) {
                     int x, yy, z;
                     vp = (s16*)(vb + *tw * 6);
@@ -2904,12 +2900,12 @@ u8 doEdges;
                     ((TrackTriangle*)vo)->vx[0] = x + dxoff;
                     ((TrackTriangle*)vo)->vy[0] = yy;
                     ((TrackTriangle*)vo)->vz[0] = z + dzoff;
-                    vf[0] = __OSs16tof32(((TrackTriangle*)vo)->vx);
-                    vf[1] = __OSs16tof32(((TrackTriangle*)vo)->vy);
-                    vf[2] = __OSs16tof32(((TrackTriangle*)vo)->vz);
+                    vertexCursor->x = __OSs16tof32(((TrackTriangle*)vo)->vx);
+                    vertexCursor->y = __OSs16tof32(((TrackTriangle*)vo)->vy);
+                    vertexCursor->z = __OSs16tof32(((TrackTriangle*)vo)->vz);
                     tw++;
                     vo += 2;
-                    vf += 3;
+                    vertexCursor++;
                 }
                 if (minY > y1) {
                     continue;
@@ -2930,9 +2926,9 @@ u8 doEdges;
                     continue;
                 }
 
-                PSVECSubtract((Vec*)v0, (Vec*)vertp, (Vec*)e0);
-                PSVECSubtract((Vec*)vertp, (Vec*)verts2, (Vec*)e1);
-                PSVECCrossProduct((Vec*)e0, (Vec*)e1, (Vec*)(cur + 4));
+                PSVECSubtract(&triangleVertices[0], secondVertex, &edgeVectors[0]);
+                PSVECSubtract(secondVertex, &triangleVertices[2], &edgeVectors[1]);
+                PSVECCrossProduct(&edgeVectors[0], &edgeVectors[1], (Vec*)(cur + 4));
                 mag = PSVECMag((Vec*)(cur + 4));
                 if (!(mag > 0.0f)) {
                     continue;
@@ -2954,36 +2950,36 @@ u8 doEdges;
                         continue;
                     }
                 }
-                ((TrackTriangle*)cur)->planeD = -PSVECDotProduct((Vec*)(cur + 4), (Vec*)v0);
+                ((TrackTriangle*)cur)->planeD = -PSVECDotProduct((Vec*)(cur + 4), &triangleVertices[0]);
                 if (doEdges) {
-                    int k22, deg, j2;
-                    f32* ep;
+                    int normalComponentIndex, degenerateEdge, edgeIndex;
+                    Vec* edgeCursor;
                     f32 one, eps;
-                    PSVECSubtract((Vec*)verts2, (Vec*)v0, (Vec*)e2);
-                    k22 = 0;
-                    deg = 0;
-                    j2 = 0;
-                    ep = e0;
+                    PSVECSubtract(&triangleVertices[2], &triangleVertices[0], &edgeVectors[2]);
+                    normalComponentIndex = 0;
+                    degenerateEdge = 0;
+                    edgeIndex = 0;
+                    edgeCursor = edgeVectors;
                     eps = 0.0f;
                     one = 1.0f;
                     do {
                         f32 m;
-                        PSVECCrossProduct((Vec*)(cur + 4), (Vec*)ep, (Vec*)en);
-                        m = PSVECMag((Vec*)en);
+                        PSVECCrossProduct((Vec*)(cur + 4), edgeCursor, &edgeNormal);
+                        m = PSVECMag(&edgeNormal);
                         if (m > eps) {
                             m = one / m;
-                            PSVECScale((Vec*)en, (Vec*)en, m);
-                            *(f32*)(cur + (k22++) * 4 + 0x24) = en[0];
-                            *(f32*)(cur + (k22++) * 4 + 0x24) = en[1];
-                            *(f32*)(cur + (k22++) * 4 + 0x24) = en[2];
+                            PSVECScale(&edgeNormal, &edgeNormal, m);
+                            *(f32*)(cur + (normalComponentIndex++) * 4 + 0x24) = edgeNormal.x;
+                            *(f32*)(cur + (normalComponentIndex++) * 4 + 0x24) = edgeNormal.y;
+                            *(f32*)(cur + (normalComponentIndex++) * 4 + 0x24) = edgeNormal.z;
                         } else {
-                            deg = 1;
+                            degenerateEdge = 1;
                             break;
                         }
-                        ep += 3;
-                        j2++;
-                    } while (j2 < 3);
-                    if (deg) {
+                        edgeCursor++;
+                        edgeIndex++;
+                    } while (edgeIndex < 3);
+                    if (degenerateEdge) {
                         continue;
                     }
                 }
