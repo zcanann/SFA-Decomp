@@ -2,12 +2,14 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
-extern const float sTanNegativeOne;
-extern const float sTanZero;
-extern const float sTanReducedCoeff1;
-extern const float sTanReducedCoeff3;
-extern const float sTanReducedCoeff5;
-extern const float sTanReducedCoeff7;
+/* Address-based reads retain these named constants without duplicate literals. */
+const float sTanNegativeOne = -1.0f;
+const float sTanZero = 0.0f;
+const float sTanReducedCoeff1 = 0.785224974155426f;
+const float sTanReducedCoeff3 = 0.16370797157287598f;
+const float sTanReducedCoeff5 = 0.03238091617822647f;
+const float sTanReducedCoeff7 = 0.018663575872778893f;
+
 
 float mathTanf(float angle) {
     u16 evenOctant;
@@ -15,15 +17,15 @@ float mathTanf(float angle) {
     float remainderSquared = quarterPiRemainder * quarterPiRemainder;
     float tangent =
         quarterPiRemainder *
-        (((sTanReducedCoeff7 * remainderSquared + sTanReducedCoeff5) * remainderSquared + sTanReducedCoeff3) *
+        (((*(const float*)&sTanReducedCoeff7 * remainderSquared + *(const float*)&sTanReducedCoeff5) * remainderSquared + *(const float*)&sTanReducedCoeff3) *
              remainderSquared +
-         sTanReducedCoeff1);
+         *(const float*)&sTanReducedCoeff1);
 
     if (evenOctant & 2) {
-        tangent = sTanNegativeOne / tangent;
+        tangent = *(const float*)&sTanNegativeOne / tangent;
     }
 
-    if (angle >= sTanZero) {
+    if (angle >= *(const float*)&sTanZero) {
         return tangent;
     }
     return -tangent;
@@ -48,10 +50,3 @@ float log2fBitEstimate(float value) {
     exponentAsFloat = fastCastS16ToFloat(&exponent);
     return normalizedMantissa.value + exponentAsFloat;
 }
-
-const float sTanNegativeOne = -1.0f;
-const float sTanZero = 0.0f;
-const float sTanReducedCoeff1 = 0.785224974155426f;
-const float sTanReducedCoeff3 = 0.16370797157287598f;
-const float sTanReducedCoeff5 = 0.03238091617822647f;
-const float sTanReducedCoeff7 = 0.018663575872778893f;

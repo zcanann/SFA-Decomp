@@ -154,8 +154,9 @@ retail apart from its prologue and epilogue. GC/1.3 emits paired-single saves
 and restores absent from retail. Changing only `-proc gekko` to `-proc 750`
 does not remove them; that ineffective flag experiment is not retained.
 
-Literal-only probes of `trig`, `acosf`, `sincosf` and `math_8029454c` emit pools
-in different orders from retail. None is landed here. `math_float_helpers`
+The initial literal-only probes of `trig`, `acosf`, `sincosf` and
+`math_8029454c` emitted pools in different orders from retail. Those probes
+were not retained; the named-pool recovery below resolves their placement. `math_float_helpers`
 also takes addresses of some named scalars, so a blanket literal substitution
 does not compile. Those uses require source recovery beyond this substitution.
 
@@ -243,7 +244,8 @@ destinations remain unchanged in each source object. Every function score and
 target's aggregate report measures remain unchanged. Literal and local-constant
 probes move the tangent coefficients into `.sdata2` but place the negative-one
 and zero values after the polynomial coefficients; that incorrect order is not
-retained. The source's 24-byte pool placement remains unresolved.
+retained at that checkpoint. The named-pool recovery below resolves the
+24-byte tangent pool's placement.
 
 ## Complete exponential/floor pool from named constants (2026-09-08)
 
@@ -290,3 +292,52 @@ and one of eight functions is exact; the unit stays `NonMatching`. Every other
 source object and every other objdiff unit remains unchanged. All four
 `all_source` builds and the strict EN retail checksum pass with 30-second
 limits. Formatting is checked separately for unchanged object output.
+
+
+## Complete named trigonometric pools (2026-09-08)
+
+The exponential/floor declaration model also recovers all four remaining
+trigonometric constant pools. Each TU defines its existing named constants
+before the functions, in the original definition order, and reads them through
+same-type `const` pointer views. The redundant forward declarations are removed.
+GC/1.3 emits the same bytes directly into `.sdata2`, without additional literal
+copies. The existing float/double distinctions and all polynomial grouping are
+preserved; no arrays, padding declarations, section attributes, compiler changes,
+or version-specific source branches are introduced.
+
+| TU | Newly matched bytes | Unchanged functions | Ordered constant loads |
+| --- | ---: | ---: | ---: |
+| `acosf` | 248 | 8 | 143 |
+| `trig` | 192 | 8 | 138 |
+| `sincosf` | 32 | 1 | 11 |
+| `math_8029454c` | 24 | 2 | 6 |
+| Total | **496** | **19** | **298** |
+
+These results hold for EN, EN rev1, JP, and PAL rev1. For every version, the
+complete section bytes agree with the SHA-1-verified retail DOL, including the
+inverse-trigonometric pool's double-alignment gaps. Each named constant retains
+its offset, size, linkage, and visibility, with only its source section changing
+from `.sdata` to `.sdata2`; its new location agrees with its regional retail
+symbol. No symbol configs or split claims change.
+
+Every function instruction is byte-identical. All relocation records are
+compared at their exact instruction offsets, preserving constant name, pool
+offset, load width, and payload. Non-pool relocation destinations remain
+unchanged. The 298 source constant-load values also match retail's per-function
+sequences. This checks placement independently of objdiff's byte accounting;
+no runtime arithmetic rewrite needs a new approximation oracle.
+
+All four units now have 100% data matching. Their code scores remain unchanged,
+and the units remain `NonMatching`; the unmatched save/restore and other code
+sequences still need recovery. Every unrelated source object and objdiff unit
+is unchanged. All four full source builds and the strict EN retail checksum
+pass with 30-second limits. Formatting is committed separately. All function
+bytes, allocated sections, symbols and relocations remain identical in all four
+versions; only the existing `-sym on` debug `.line` records change to track the
+new source line numbers. All other ELF section contents are checked unchanged.
+
+The address-based spelling is a compiler-observed way to preserve named pools,
+not a claim to have recovered the original source syntax. The separate pool and
+function-boundary evidence remains in [the retail audit](math_boundary_audit.md).
+Reproduce the load checks with `tools/pool_value_sequence.py`, selecting each
+source path above and each verified `--version`.

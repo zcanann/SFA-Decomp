@@ -8,6 +8,9 @@ gap has since been claimed with an exact literal pool and unchanged code.
 The [reciprocal boundary repair](reciprocal_boundary_recovery.md) also separates
 the reciprocal helper from the three angle-vector approximations and recovers
 its four-byte constant without changing their compiler profiles or code.
+The subsequent [named trigonometric pools](math_literal_pool_recovery.md#complete-named-trigonometric-pools-2026-09-08)
+and exponential/floor pool now match retail data without changing function
+instructions or redrawing their existing boundaries.
 
 The remaining low math scores are not evidence that donor MSL implementations
 generally failed. All **28 active MSL units outside the four game-category math
