@@ -17,7 +17,10 @@ main/render.c:
 	.text       start:0x800066E0 end:0x80008DF4
 	.rodata     start:0x802C2240 end:0x802C23E8
 	.data       start:0x802C36E0 end:0x802C5888
-	.sdata2     start:0x803DFF04 end:0x803DFF08
+	.bss        start:0x803371A0 end:0x803372A0
+	.sdata      start:0x803DCB40 end:0x803DCB48
+	.sbss       start:0x803DE160 end:0x803DE170
+	.sdata2     start:0x803DFEC0 end:0x803DFF08
 
 main/audio.c:
 	.text       start:0x80008DF4 end:0x8000B4F0
@@ -63,6 +66,7 @@ main/curves.c:
 main/voxmaps.c:
 	.text       start:0x80011014 end:0x80013A08
 	.data       start:0x802C6AE0 end:0x802C6C80
+	.bss        start:0x8033A100 end:0x8033A178
 	.sbss       start:0x803DE278 end:0x803DE2A8
 	.sdata2     start:0x803E0060 end:0x803E0078
 
@@ -179,6 +183,7 @@ main/objhits.c:
 	.data       start:0x802CC5B0 end:0x802CC630
 	.bss        start:0x80342258 end:0x80344258
 	.sdata      start:0x803DCE00 end:0x803DCE10
+	.sbss       start:0x803DE588 end:0x803DE5B0
 	.sdata2     start:0x803E02D8 end:0x803E0330
 
 main/objlib.c:
@@ -212,7 +217,7 @@ main/pi_dolphin.c:
 	.sbss       start:0x803DE630 end:0x803DE6D8
 
 main/boot_logo.c:
-	.data       start:0x802CDE80 end:0x8030DE80
+	.data       start:0x802CDE80 end:0x8030E038
 
 main/pi_videoinit.c:
 	.text       start:0x80049D44 end:0x8004AC08
@@ -223,7 +228,7 @@ main/pi_pathsearch.c:
 	.text       start:0x8004AC08 end:0x8004B83C
 	.sdata2     start:0x803E0470 end:0x803E0478
 
-main/zlb.c:
+main/zlb.s:
 	.text       start:0x8004B83C end:0x8004C16C
 	.rodata     start:0x802C25D0 end:0x802C26D0
 	.data       start:0x8030E060 end:0x8030E6C0
@@ -262,6 +267,7 @@ main/shader.c:
 	.bss        start:0x8037FA20 end:0x80389310
 	.sdata      start:0x803DCFD0 end:0x803DCFF8
 	.sbss       start:0x803DE788 end:0x803DE898
+	.sdata2     start:0x803E0578 end:0x803E0620
 
 main/shadow_dolphin.c:
 	.text       start:0x80061278 end:0x80062F44
@@ -1334,7 +1340,7 @@ dlls/engine/50/50.c:
 	.data       start:0x8031B9D8 end:0x8031BA00
 	.bss        start:0x803A5D98 end:0x803A5DA8
 	.sbss       start:0x803DEFA8 end:0x803DEFB8
-	.sdata2     start:0x803E36B0 end:0x803E36B8
+	.sdata2     start:0x803E36B0 end:0x803E36D0
 
 dlls/engine/51/51.c:
 	.text       start:0x8011634C end:0x80116548
@@ -1425,7 +1431,7 @@ dlls/engine/0/0.c:
 	.data       start:0x8031C7B0 end:0x8031DAF8
 	.bss        start:0x803AA150 end:0x803AADB8
 	.sdata      start:0x803DD3F0 end:0x803DD570
-	.sbss       start:0x803DF0E8 end:0x803DF2A0
+	.sbss       start:0x803DF0E8 end:0x803DF2A8
 	.sdata2     start:0x803E37C8 end:0x803E3BB0
 
 dlls/engine/59/59.c:
@@ -2789,7 +2795,7 @@ dlls/objects/373_DFropenode/DFropenode.c:
 	.text       start:0x801C13FC end:0x801C2EE4
 	.rodata     start:0x802C2CD8 end:0x802C2D38
 	.data       start:0x80327780 end:0x803278A0
-	.sdata      start:0x803DD900 end:0x803DD918
+	.sdata      start:0x803DD900 end:0x803DD920
 	.sdata2     start:0x803E67C0 end:0x803E6810
 
 dlls/objects/374_DFSH_Door1S/DFSH_Door1S.c:
@@ -4668,14 +4674,15 @@ musyx/runtime/synth_adsr.c:
 musyx/runtime/synth_vsamples.c:
 	extab       start:0x800059C0 end:0x800059E0
 	extabindex  start:0x80006230 end:0x80006260
-	.text       start:0x8027B628 end:0x8027BD9C
+	.text       start:0x8027B628 end:0x8027BD90
 	.bss        start:0x803CCBF0 end:0x803CD540
 
 musyx/runtime/snd_groups.c:
 	extab       start:0x800059E0 end:0x80005A08
 	extabindex  start:0x80006260 end:0x8000629C
-	.text       start:0x8027BD9C end:0x8027C374
+	.text       start:0x8027BD90 end:0x8027C374
 	.bss        start:0x803CD540 end:0x803CDB40
+	.sbss       start:0x803DFCC8 end:0x803DFCD0
 
 musyx/runtime/sal_studio.c:
 	extab       start:0x80005A08 end:0x80005A30
@@ -5033,6 +5040,9 @@ dolphin/MSL_C/PPCEABI/bare/H/printf.c:
 	.sdata      start:0x803DE000 end:0x803DE008
 	.sdata2     start:0x803E9338 end:0x803E9340
 
+dolphin/MSL_C/PPCEABI/bare/H/float.c:
+	.sdata      start:0x803DE008 end:0x803DE010
+
 dolphin/MSL_C/PPCEABI/bare/H/string.c:
 	.text       start:0x80291F54 end:0x80292230
 
@@ -5075,7 +5085,7 @@ main/rand.c:
 
 main/trig_float_helpers.c:
 	.text       start:0x8029375C end:0x80293A9C
-	.sdata2     start:0x803E9610 end:0x803E9614
+	.sdata2     start:0x803E9618 end:0x803E9668
 
 main/math_8029312c.c:
 	.text       start:0x80293A9C end:0x80293BA4
@@ -5170,7 +5180,7 @@ dlls/objects/599_DR_EarthWar/DR_EarthWar.c:
 	.rodata     start:0x802C3628 end:0x802C3680
 	.data       start:0x80336B58 end:0x80337050
 	.bss        start:0x803DCAD0 end:0x803DCB20
-	.sdata      start:0x803DE120 end:0x803DE12C
+	.sdata      start:0x803DE120 end:0x803DE130
 	.sbss       start:0x803DFE90 end:0x803DFE98
 	.sdata2     start:0x803E9CD0 end:0x803E9D90
 
@@ -5179,5 +5189,6 @@ dlls/objects/600_DR_CloudRun/DR_CloudRun.c:
 	.rodata     start:0x802C3680 end:0x802C36CC
 	.data       start:0x80337050 end:0x8033719D
 	.bss        start:0x803DCB20 end:0x803DCB40
+	.sdata      start:0x803DE130 end:0x803DE15E
 	.sbss       start:0x803DFE98 end:0x803DFEA4
 	.sdata2     start:0x803E9D90 end:0x803E9E20

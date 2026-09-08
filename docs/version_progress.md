@@ -26,8 +26,9 @@ inferred boundary.
 
 These projected targets are report-only for now. They do not yet assign enough
 data and relocation-coupled sections to relink their retail DOLs, so
-`--matching` is intentionally rejected for non-EN versions. Their linked
-percentage remains zero. EN v1.0 remains the only strict checksum target.
+`--matching` is intentionally rejected for non-EN versions. Their reported
+linked percentage reflects selected exact source objects, not a verified
+regional relink. EN v1.0 remains the only strict checksum target.
 
 Regenerate a target after the EN splits change:
 
@@ -57,3 +58,44 @@ code and data scores are all 100% are listed. `symbol_mappings.json` remains a
 fallback for the few canonical-name conflicts; most pairing is encoded directly
 in the target symbol file. The default EN build and its completion flags are
 unchanged.
+
+## Shared-source refresh (2026-09-07)
+
+The projector now preserves a data boundary's byte offset within its matched
+word, including when checking target symbol edges. Previously a halfword end
+could round down two bytes: CloudRunner's EN rev1 `.sdata` ended at
+`0x803DD404` instead of `0x803DD406`, leaving its final halfword unsplit and
+preventing the regional build. Unique-context and symbol-crossing checks
+remain required. Five regression tests cover packed boundaries, ambiguous
+contexts, symbol edges, and retail identity; run them with
+`python3 -m unittest discover -s tools -p test_version_progress.py`.
+
+Both input DOLs must now match the SHA-1 in their respective `config.yml`
+before the tool writes projections or exact-unit manifests. The local file
+under `orig/GSAP01/sys/` is actually PAL rev1; a verified copy at the correct
+`orig/GSAP01_rev1/sys/main.dol` path enabled that target. PAL rev0 has no
+verified local input, so its existing configuration and completion claims
+were left unchanged.
+
+Fresh whole-source builds and objdiff reports produced these manifests:
+
+| Target | Previous exact units | Current exact units | Added | Removed | Matched code |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| EN rev1 | 832 | 878 | 56 | 10 | 92.748% |
+| JP | 864 | 911 | 60 | 13 | 94.624% |
+| PAL rev1 | 811 | 846 | 42 | 7 | 92.316% |
+
+These are refreshed claims for existing shared source, not that many newly
+decompiled functions. Removed entries include stale pre-migration game math
+claims and superseded source paths. No compiler profiles or regional source
+guards changed. The projections also carry current EN section ownership and
+canonical symbol names into each target.
+
+The recent shared functions have identical scores across EN v1.0 and all
+three refreshed targets: `boxBlurTexture` 99.451%, `gameTextRun` 91.848%, and
+`gameTextFinalizeLoad` 99.347%. The complete `newshadows` and `gametext`
+compiled objects are byte-identical across those four builds. The parser's
+recovered padding record preserves its existing code generation.
+
+The refresh also includes the incoming shared `powf` match: all three
+regional reports show its complete code and data at 100%.

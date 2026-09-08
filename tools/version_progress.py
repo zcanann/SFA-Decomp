@@ -109,6 +109,22 @@ def read_dol_range(dol: DolFile, start: int, size: int) -> bytes:
     raise ValueError(f"Range 0x{start:08X}-0x{start + size:08X} is outside {dol.path}")
 
 
+def verified_dol(path: Path, config_path: Path) -> DolFile:
+    """Require the configured retail identity before projecting any boundaries."""
+    match = re.search(
+        r"^hash:[ \t]*(?P<quote>['\"]?)(?P<hash>[0-9a-fA-F]{40})(?P=quote)[ \t]*(?:#.*)?$",
+        config_path.read_text(encoding="utf-8"), re.MULTILINE,
+    )
+    if match is None:
+        raise ValueError(f"Missing or unsupported retail SHA-1 in {config_path}")
+    dol = DolFile(path)
+    actual = hashlib.sha1(dol.data).hexdigest()
+    expected = match.group("hash").lower()
+    if actual != expected:
+        raise ValueError(f"Retail hash mismatch for {path}: expected {expected}, got {actual}")
+    return dol
+
+
 def function_signature(dol: DolFile, function: FunctionSymbol) -> bytes:
     raw = read_dol_range(dol, function.address, function.size)
     if len(raw) % 4:
@@ -291,6 +307,7 @@ def build_boundary_map(
             if boundary in direct:
                 continue
             source_index = (boundary - source_range.address) // 4
+            byte_phase = (boundary - source_range.address) % 4
             candidates: list[int] = []
             if 0 <= source_index <= len(source_words) - context_words:
                 source_context = source_words[
@@ -308,7 +325,7 @@ def build_boundary_map(
                     and not boundary_crosses_symbol(
                         target_all_symbol_span_index,
                         section,
-                        target_range.address + target_index_value * 4,
+                        target_range.address + target_index_value * 4 + byte_phase,
                     )
                 ):
                     candidates.append(target_index_value)
@@ -328,12 +345,15 @@ def build_boundary_map(
                     and not boundary_crosses_symbol(
                         target_all_symbol_span_index,
                         section,
-                        target_range.address + (target_index_value + context_words) * 4,
+                        target_range.address + (target_index_value + context_words) * 4 + byte_phase,
                     )
                 ):
                     candidates.append(target_index_value + context_words)
             if candidates and len(set(candidates)) == 1:
-                direct[boundary] = target_range.address + candidates[0] * 4
+                # Word contexts locate the containing word, not necessarily
+                # the boundary itself: packed strings and halfwords may end
+                # one, two, or three bytes into that word.
+                direct[boundary] = target_range.address + candidates[0] * 4 + byte_phase
 
     # Discard the rare repeated-code anchor that would make the global mapping
     # run backwards.  Source and target object order is otherwise preserved.
@@ -1618,8 +1638,11 @@ def main() -> int:
 
     source_root = Path("config") / args.source
     target_root = Path("config") / args.target
-    source_dol = DolFile(Path("orig") / args.source / "sys" / "main.dol")
-    target_dol = DolFile(Path("orig") / args.target / "sys" / "main.dol")
+    try:
+        source_dol = verified_dol(Path("orig") / args.source / "sys" / "main.dol", source_root / "config.yml")
+        target_dol = verified_dol(Path("orig") / args.target / "sys" / "main.dol", target_root / "config.yml")
+    except (ValueError, FileNotFoundError) as error:
+        parser.error(str(error))
     source_functions = load_function_symbols(source_root / "symbols.txt")
     target_functions = load_function_symbols(target_root / "symbols.txt")
     target_header, _ = load_splits(target_root / "splits.txt")

@@ -68,6 +68,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 - Reference projects are evidence, not truth. Match version, compiler behavior, ABI, and surrounding code before borrowing anything.
 
 ## Working Style
+- Prioritize source changes shared across retail versions. Check promising changes against available secondary targets and carry verified exact objects into their progress manifests. Verify each input DOL against its configured hash; introduce regional source differences only when the binaries establish different behavior.
 - Start from one promising function, object, data block, or subsystem.
 - Work outward aggressively if the blocker is adjacent code, missing types, unknown globals, constructor patterns, SDK reuse, or bad file boundaries.
 - Do not get trapped in local optima. If a path stops yielding structure, switch level: inspect related code, assets, rodata, strings, object layouts, SDK analogs, or write tooling.
