@@ -177,3 +177,29 @@ four bytes earlier or deduplicates its zero/one values; moving the named
 exponential definitions before their users duplicates 32 bytes instead. Neither
 probe is retained. These are placement/compiler-pooling obstacles, not evidence
 for changing the coefficients or forcing padding into the source.
+
+## Tangent units and the bitwise log estimate
+
+The tangent helper's locals now distinguish an even octant count from the
+remainder in **pi/4 units** returned by `trigReduceQuadrant`. Its four odd-power
+coefficients are named `sTanReducedCoeff1/3/5/7`; they approximate the tangent
+of the scaled remainder, not a polynomial taking radians directly. Bit 1 of
+the even octant count selects the negative reciprocal. The final comparison
+still preserves the original unordered-input sign path.
+
+`log2fBitEstimate` now constructs its normalized mantissa through an explicit
+float/word union. For normal inputs and the usual fast-cast register setup,
+its expression is the raw exponent minus 127 plus the mantissa fraction. The
+source subtracts 128 because the constructed float already includes a leading
+one. It ignores the input sign and does not implement libm special cases:
+zero produces -127, infinity produces 128, and NaN payload bits participate in
+the finite estimate. The public declarations record those contracts.
+
+The six constant identifiers are propagated to all four verified symbol
+configs without moving data or changing sizes. All function instructions,
+allocated section bytes, symbol layouts after renaming, and relocation
+destinations remain unchanged in each source object. Every function score and
+target's aggregate report measures remain unchanged. Literal and local-constant
+probes move the tangent coefficients into `.sdata2` but place the negative-one
+and zero values after the polynomial coefficients; that incorrect order is not
+retained. The source's 24-byte pool placement remains unresolved.
