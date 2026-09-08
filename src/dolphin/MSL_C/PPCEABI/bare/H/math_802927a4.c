@@ -73,7 +73,9 @@ float powfCoreHighPrecision(float base, float power) {
         fractionalExponent = logValue - resultExponentAsDouble;
 
         if (fractionalExponent) {
-            result.value = (float)(fractionalExponent *
+            result.value =
+                (float)(fractionalExponent *
+                            (fractionalExponent *
                                  (fractionalExponent *
                                       (fractionalExponent *
                                            (fractionalExponent *
@@ -81,18 +83,17 @@ float powfCoreHighPrecision(float base, float power) {
                                                      (fractionalExponent *
                                                           (fractionalExponent *
                                                                (fractionalExponent *
-                                                                    (fractionalExponent *
-                                                                         (9.926346441109975e-09 * fractionalExponent +
-                                                                          9.472326685984924e-08) +
-                                                                     1.3310673239175234e-06) +
-                                                                1.5244851723158107e-05) +
-                                                           0.00015403947598618592) +
-                                                      0.0013333543997684197) +
-                                                 0.00961812940579326) +
-                                            0.055504108628658844) +
-                                       0.24022650696122427) +
-                                  0.693147180559909) +
-                             0.9999999999999999);
+                                                                    (9.926346441109975e-09 * fractionalExponent +
+                                                                     9.472326685984924e-08) +
+                                                                1.3310673239175234e-06) +
+                                                           1.5244851723158107e-05) +
+                                                      0.00015403947598618592) +
+                                                 0.0013333543997684197) +
+                                            0.00961812940579326) +
+                                       0.055504108628658844) +
+                                  0.24022650696122427) +
+                             0.693147180559909) +
+                        0.9999999999999999);
         } else {
             result.value = 1.0f;
         }
@@ -134,7 +135,8 @@ float powfCoreFast(float base, register float power) {
         baseExponent = ((baseBits >> 23) & 0xFF) - 127;
         logValue.bits = (baseBits & 0x7FFFFF) | 0x3F800000;
         logValue.value = logValue.value - 1.0f;
-        logValue.value = logValue.value * (logValue.value * (0.15544586f * logValue.value + -0.5729206f) + 1.4172995f) + 0.00072527403f;
+        logValue.value = logValue.value * (logValue.value * (0.15544586f * logValue.value + -0.5729206f) + 1.4172995f) +
+                         0.00072527403f;
         baseExponentAsFloat = fastCastS16ToFloat(&baseExponent);
         logValue.value = power * (logValue.value + baseExponentAsFloat);
         fastCastFloatToS16(logValue.value, &resultExponent);
