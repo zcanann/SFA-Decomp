@@ -313,6 +313,7 @@ track/intersect_render.c:
 	.rodata     start:0x802C1FA8 end:0x802C2080
 	.data       start:0x8030EB30 end:0x8030EBD8
 	.sdata2     start:0x803DEFC0 end:0x803DF0AC
+	.sbss2      start:0x803E8570 end:0x803E8578
 
 track/intersect_memcard.c:
 	.text       start:0x8007D690 end:0x8007E79C

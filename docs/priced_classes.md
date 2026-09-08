@@ -736,7 +736,11 @@ K1 in an earlier plain-arithmetic statement. Verdicts:
   parent/load-flags register exchange in `loadCharacter` (99.80858%). This
   supersedes the earlier uncalled-static probe; the TU remains NonMatching.
   See [object_matching.md](object_matching.md).
-- **`track/intersect_render` — GATE PASSED, the cleanest specimen.** Retail mints `[-0.5f, 0.5f,
+- **`track/intersect_render` — CALLED HELPERS RECOVERED (2026-09-08).**
+  [Texture-coordinate helpers](render_texture_coordinate_helpers.md) now recover
+  the complete pool while preserving all 65 existing function bodies. The two
+  helpers inline at five real call sites. The following records the earlier
+  uncalled-body probe, superseded by this source recovery. Retail mints `[-0.5f, 0.5f,
   pad, unsigned-bias]` at 0x54-0x60, between `doColorFilter` and `doDistortionFilter`; first
   live loader of the `-0.5f` is `drawSnowFlashOverlay` (function 57), of the bias
   `moonFxRenderCallback`; every function in the unit is byte-exact (unit `.text` 100.0). The

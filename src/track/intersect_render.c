@@ -788,6 +788,15 @@ static inline f32 distortSqrtf(f32 x) {
     return y;
 }
 
+static void renderTextureCenterTranslation(Mtx matrix, int inverse) {
+    f32 center = inverse ? -0.5f : 0.5f;
+    PSMTXTrans(matrix, center, center, 0.0f);
+}
+
+static f32 renderTextureFrameOffset(u32 frame, f32 period) {
+    return frame / period;
+}
+
 void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle) {
     Mtx mtx_d0;
     Mtx mtx_a0;
@@ -851,7 +860,7 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle) {
         PSMTXScale(mtx_70, s / proj2, s / proj1, 0.0f);
     }
     PSMTXConcat(mtx_70, mtx_a0, mtx_d0);
-    PSMTXTrans(mtx_a0, 0.5f, 0.5f, 0.0f);
+    renderTextureCenterTranslation(mtx_a0, 0);
     PSMTXConcat(mtx_a0, mtx_d0, mtx_d0);
     GXLoadTexMtxImm(mtx_d0, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
@@ -898,7 +907,7 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle) {
     PSMTXRotRad(mtx_d0, 'z', angle);
     PSMTXConcat(mtx_70, mtx_a0, mtx_70);
     PSMTXConcat(mtx_d0, mtx_70, mtx_d0);
-    PSMTXTrans(mtx_a0, 0.5f, 0.5f, 0.0f);
+    renderTextureCenterTranslation(mtx_a0, 0);
     PSMTXConcat(mtx_a0, mtx_d0, mtx_d0);
     GXLoadTexMtxImm(mtx_d0, GX_TEXMTX1, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
@@ -1431,7 +1440,7 @@ int moonFxRenderCallback(u8* obj, void** objB, int slot) {
     tex = (Texture*)textureIdxToPtr(*(int*)Shader_getLayer((void*)op, 0));
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     gMoonFxDayNo = mainGetBit(0x2ba);
-    tx = gMoonFxDayNo / 30.0f;
+    tx = renderTextureFrameOffset(gMoonFxDayNo, 30.0f);
     PSMTXTrans(mtx, tx, 0.0f, 0.0f);
     GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
@@ -2675,6 +2684,11 @@ void objectShadow_setupProjectedTexture(ProjectedShadowTexture* shadow, GXColor*
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
+static void projectedShadowInitChannelFogColor(GXColor* color) {
+ const GXColor initial = {0,0,0,0};
+ *color=initial;
+}
+
 void objectShadow_setupProjectedTextureDepthFade(ProjectedShadowTexture* shadow, GXColor* colorPtr, Mtx mtx,
                                                  f32 depth) {
     Mtx m58;
@@ -2771,12 +2785,13 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
     GXColor color2;
     f32 vec3[3];
     Texture* handle;
-    GXColor fogColor = {0, 0, 0, 0};
+    GXColor fogColor;
     int stage_idx;
     u32 stage_count;
     int stage_base;
     f32 f31_val;
 
+    projectedShadowInitChannelFogColor(&fogColor);
     PSMTXConcat(shadow->textureMtx, mtx, mtx_110);
     GXLoadTexMtxImm(mtx_110, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
@@ -3423,7 +3438,7 @@ void drawSnowFlashOverlay(f32 s1, u8 flashAlpha, void* vec, f32 s2, u8 alpha0, u
     PSMTXConcat(mtx_28, mtx_58, mtx_58);
     PSMTXRotRad(mtx_28, 'z', angle);
     PSMTXConcat(mtx_58, mtx_28, mtx_58);
-    PSMTXTrans(mtx_28, -0.5f, -0.5f, 0.0f);
+    renderTextureCenterTranslation(mtx_28, 1);
     PSMTXConcat(mtx_58, mtx_28, mtx_58);
     GXLoadTexMtxImm(mtx_58, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
@@ -3435,7 +3450,7 @@ void drawSnowFlashOverlay(f32 s1, u8 flashAlpha, void* vec, f32 s2, u8 alpha0, u
     PSMTXConcat(mtx_28, mtx_58, mtx_58);
     PSMTXRotRad(mtx_28, 'z', 0.5f * angle);
     PSMTXConcat(mtx_58, mtx_28, mtx_58);
-    PSMTXTrans(mtx_28, -0.5f, -0.5f, 0.0f);
+    renderTextureCenterTranslation(mtx_28, 1);
     PSMTXConcat(mtx_58, mtx_28, mtx_58);
     GXLoadTexMtxImm(mtx_58, GX_TEXMTX1, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
