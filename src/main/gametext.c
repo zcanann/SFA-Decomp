@@ -682,7 +682,7 @@ int curGameTextDir;
 int gGameTextLastDir;
 int lbl_803DC9D4;
 int lbl_803DC9D0;
-void* gCurTextBox;
+GameTextBox* gCurTextBox;
 int lbl_803DC9C8;
 char* gGameTextCommandStringCursor;
 int gGameTextRenderingById;
@@ -1496,7 +1496,7 @@ void gameTextRun(void) {
         case GAMETEXT_COMMAND_SHOW_TIME_STRING: {
             int strId = cmd->arg0;
             if (gCurTextBox != NULL) {
-                gameTextRenderStrs((char*)strId, ((u8*)gCurTextBox - (u8*)gTextBoxes) / 0x20);
+                gameTextRenderStrs((char*)strId, gCurTextBox - gTextBoxes);
             }
             break;
         }
@@ -1732,7 +1732,7 @@ void gameTextResetCursor(int flags) {
     }
 }
 
-void* gameTextGet(int textId) {
+GameTextDef* gameTextGet(int textId) {
     TextFont* fonts;
     GameTextDef* entry;
     int count;
@@ -2414,7 +2414,7 @@ static inline TextGlyph* findGlyph(u32 ch, int glyphLang) {
     return NULL;
 }
 
-void gameTextSetWindow(u8* textBox) {
+void gameTextSetWindow(GameTextBox* textBox) {
     int i;
     GameTextSlot* cmd;
     int idx;
@@ -2430,11 +2430,11 @@ void gameTextSetWindow(u8* textBox) {
         i = gGameTextCommandCount;
         gGameTextCommandCount = i + 1;
         cmd = &gGameTextCommandSlots[i];
-        idx = (textBox - (u8*)gTextBoxes) / 0x20;
+        idx = textBox - gTextBoxes;
         if (idx == 0xff) {
             gCurTextBox = NULL;
         } else {
-            gCurTextBox = (u8*)gTextBoxes + idx * 0x20;
+            gCurTextBox = &gTextBoxes[idx];
         }
         cmd->opcode = 8;
         cmd->arg0 = idx;
@@ -2444,7 +2444,7 @@ void gameTextSetWindow(u8* textBox) {
 void gameTextSetWindowById(int boxId) {
     int i = gGameTextCommandCount;
     GameTextSlot* cmd;
-    void* box;
+    GameTextBox* box;
 
     gGameTextCommandCount = i + 1;
     cmd = &gGameTextCommandSlots[i];
@@ -2470,11 +2470,11 @@ static inline int ctrlCharLen(u32 c) {
     return 0;
 }
 
-void* gameTextGetCurBox(void) {
+GameTextBox* gameTextGetCurBox(void) {
     return gCurTextBox;
 }
 
-void* gameTextGetBox(int box) {
+GameTextBox* gameTextGetBox(int box) {
     return &gTextBoxes[box];
 }
 
@@ -2831,7 +2831,7 @@ void gameTextShowAt(int textId, int cursorX, int cursorY) {
 }
 
 void gameTextRenderById(int textId, int cursorX, int cursorY) {
-    GameTextDef* def = (GameTextDef*)gameTextGet(textId);
+    GameTextDef* def = gameTextGet(textId);
     TextSlot* slot;
     u8 savedRed = gGameTextColorR;
     u8 savedGreen = gGameTextColorG;

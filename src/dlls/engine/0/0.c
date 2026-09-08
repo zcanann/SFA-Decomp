@@ -7064,9 +7064,9 @@ void gameUiUpdateNpcDialogue(void) {
             gNpcDialoguePageTimer = (f32)(s32)gNpcDialoguePageFrames;
             gNpcDialoguePhraseState.display.charIndex++;
             {
-                u16* end = gameTextGet(curGameText);
-                if (gNpcDialoguePhraseState.display.charIndex >= end[1]) {
-                    gNpcDialoguePhraseState.display.charIndex = end[1] - 1;
+                GameTextDef* entry = gameTextGet(curGameText);
+                if (gNpcDialoguePhraseState.display.charIndex >= entry->count) {
+                    gNpcDialoguePhraseState.display.charIndex = entry->count - 1;
                     gNpcDialogueActive = 0;
                 }
             }

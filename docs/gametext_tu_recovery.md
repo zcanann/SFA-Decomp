@@ -685,3 +685,37 @@ The final EN `all_source` and strict checksum builds pass within their
 30-second limits; all 1,002 source objects and all objdiff unit measures
 retain their baseline values. EN rev1, JP, and PAL rev1 also build from the
 shared source with the same complete gametext object bytes.
+
+## Public text-record and window lookup contracts
+
+`gametext_lookup.h` now owns the twelve-byte `GameTextDef` and the typed
+`gameTextGet` API. Its assertions retain the string-table pointer at `+8`
+and record the phrase count at `+2` and box ID at `+4`. Every lookup return
+path supplies either a loaded definition or a fallback definition; the current
+hint wrapper now exposes that same return type. The compatibility text-render
+header includes the public record header, while the private font header no
+longer owns the definition.
+
+The box getters, window setter, and current-window pointer use `GameTextBox`.
+The setter computes its index with native record subtraction and selects the
+record with native array indexing. Its existing null and `0xFF` behavior is
+preserved. Box size and field assertions live beside the canonical definition.
+
+Consumers now express the NPC phrase limit, copyright ID/box lookup, options
+alpha, and progressive-scan horizontal alignment through the recovered fields.
+The minimap's truncated `MinimapTextBox` overlay is removed. Its misnamed
+`cursorX`, `cursorY`, and `clipWidth` fields were actually `maxWidth`, `height`,
+and `width`; the halfword at zero remains `unk00`, used here as a width cap,
+pending broader evidence for its meaning. Shared consumers receive only the
+necessary type and access edits.
+
+`gameTextGetStr` and `gameTextGetPhrase` retain their heterogeneous return
+contract: retail error paths return a fallback record, while successful paths
+return a string. This change does not silently reinterpret those error returns.
+
+The sixteen existing gametext tests pass, including 402 load scenarios at each
+host optimization level. Before/after full-source builds preserve every object
+byte in EN and the three SHA-1-verified secondary targets. Formatting is separate
+and byte-neutral. No match credit, storage layout, compiler profile, or regional
+classification changes; the EN all-source and strict checksum gates pass with
+30-second limits.

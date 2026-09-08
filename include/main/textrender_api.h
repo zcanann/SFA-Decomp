@@ -2,9 +2,9 @@
 #define MAIN_TEXTRENDER_API_H_
 
 #include "types.h"
+#include "main/gametext_lookup.h"
 #include "main/subtitle.h"
 
-struct GameTextDef;
 struct GameTextBox;
 
 typedef enum GameTextCommand {
@@ -49,11 +49,10 @@ void* gameTextGetStr(int textId);
 void gameTextResetCursor(int flags);
 void gameTextSetCursor(u16 x, u16 y, int flags);
 void gameTextSetDrawFunc(void* drawFunc);
-void gameTextSetWindow(u8* textBox);
+void gameTextSetWindow(struct GameTextBox* textBox);
 void gameTextSetWindowById(int boxId);
 f32 gameTextGetTimer(void);
 void gameTextRun(void);
-void* gameTextGet(int textId);
 void gameTextLoadDir(int dirId);
 int gameTextSaveDir(int x);
 void gameTextLoadForCurMap(int sourceId);

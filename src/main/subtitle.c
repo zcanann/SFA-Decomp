@@ -48,7 +48,7 @@ static void subtitleBuildLineTable(void) {
         savedCharset = gameTextGetCharset();
         gameTextSetCharset(1, 1);
     }
-    text = (GameTextDef*)gameTextGet(gGameTextPendingTextId);
+    text = gameTextGet(gGameTextPendingTextId);
     textBox = &gTextBoxes[10];
     gSubtitleLineCount = 0;
     gSubtitleBlockCount = 0;

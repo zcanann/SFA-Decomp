@@ -1,8 +1,8 @@
 #ifndef MAIN_DLL_DLL_0011_SCREENS_API_H_
 #define MAIN_DLL_DLL_0011_SCREENS_API_H_
 
-#include "types.h"
+#include "main/gametext_lookup.h"
 
-void* saveGameGetCurHint(void);
+GameTextDef* saveGameGetCurHint(void);
 
 #endif /* MAIN_DLL_DLL_0011_SCREENS_API_H_ */

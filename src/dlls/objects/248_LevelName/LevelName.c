@@ -122,7 +122,7 @@ void LevelName_init(GameObject* obj, LevelNamePlacement* placement) {
 
     state = obj->extra;
     obj->animEventCallback = LevelName_SeqFn;
-    textDef = (GameTextDef*)gameTextGet(placement->textId);
+    textDef = gameTextGet(placement->textId);
     state->text = *textDef->strings;
     state->holdDuration = LEVELNAME_BANNER_HOLD_DURATION;
     state->textDef = textDef;
