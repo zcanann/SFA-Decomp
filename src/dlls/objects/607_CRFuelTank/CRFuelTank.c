@@ -1,6 +1,7 @@
 /* CRFuelTank (DLL 607): CloudRunner fuel-tank object callbacks. */
 
 #include "dlls/objects/607_CRFuelTank.h"
+#include "dlls/objects/597_SnowBike.h"
 
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
@@ -11,10 +12,6 @@
 
 #define CRFUELTANK_HIT_PRIORITY 0x1d
 #define CRFUELTANK_RESPAWN_FRAMES 0x708
-
-/* only the CloudRunner snowbike detonates a fuel tank; retail OBJECTS.bin name
-   "CRSnowBike" (DLL 0x255) */
-#define CRFUELTANK_TRIGGER_OBJ 0x38c
 
 static inline int crfueltank_hitVolumeId(CrFuelTankPlacementPrefix* def)
 {
@@ -52,7 +49,7 @@ void crfueltank_hitDetect(GameObject* obj)
     if ((hitState != NULL) && (hitState->lastHitObject != 0))
     {
         hitObj = (GameObject*)hitState->lastHitObject;
-        if (hitObj->anim.romDefNo == CRFUELTANK_TRIGGER_OBJ)
+        if (hitObj->anim.romDefNo == SNOWBIKE_CR_BIKE_OBJ)
         {
             ObjHits_DisableObject(obj);
             Sfx_PlayFromObject(Obj_GetPlayerObject(), SFXTRIG_ar_barrel16);

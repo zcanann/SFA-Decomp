@@ -43,8 +43,14 @@ EN-evidenced reader view through +0x1E, with field-offset assertions and no clai
 of a complete record size. It must not determine an allocation or copy extent.
 This removes the unsupported full-size assertion while keeping the proven reads.
 
-The preexisting 0x38C snowbike trigger ID remains local. Slot 597 also uses that
-ID privately; choosing a shared owner and migrating that family is separate work.
+The shared CloudRunner snowbike object ID, `SNOWBIKE_CR_BIKE_OBJ` (0x38C),
+is defined in slot 597's canonical header. Its owner, the fuel-tank collision
+callback, and all four player consumers use that definition. EN rev1 and JP
+`OBJINDEX[0x38C]` both select definition 0x10D, named `CRSnowBike`, with DLL 597.
+This indirection matters: direct definition 0x38C is `WM_rock`. The EN callbacks
+compare `romDefNo` against 0x38C. Unrelated sound, effect, text, assertion-line,
+and structure-offset values are excluded from the migration. The dedicated
+shared-ID change preserves the original unsuffixed integer type and all objects.
 The inline division helper, tested casts and predicates, and final descriptor
 position are retained.
 
