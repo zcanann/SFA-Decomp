@@ -97,6 +97,32 @@ STATIC_ASSERT(sizeof(ModelRenderOpTextureRefs) == 0x0C);
 STATIC_ASSERT(offsetof(ModelRenderOpTextureRefs, texture1) == 0x04);
 STATIC_ASSERT(offsetof(ModelRenderOpTextureRefs, swapSelector) == 0x08);
 
+/* Quantized normal and two-matrix weight records used by the skinning streams. */
+typedef struct ModelPackedNormal {
+    s8 x;
+    s8 y;
+    s8 z;
+} ModelPackedNormal;
+
+typedef struct ModelNormalTriplet {
+    ModelPackedNormal vectors[3];
+} ModelNormalTriplet;
+
+typedef struct ModelSkinWeightPair {
+    u8 matrixA;
+    u8 matrixB;
+} ModelSkinWeightPair;
+
+STATIC_ASSERT(sizeof(ModelPackedNormal) == 3);
+STATIC_ASSERT(offsetof(ModelPackedNormal, x) == 0);
+STATIC_ASSERT(offsetof(ModelPackedNormal, y) == 1);
+STATIC_ASSERT(offsetof(ModelPackedNormal, z) == 2);
+STATIC_ASSERT(sizeof(ModelNormalTriplet) == 9);
+STATIC_ASSERT(offsetof(ModelNormalTriplet, vectors) == 0);
+STATIC_ASSERT(sizeof(ModelSkinWeightPair) == 2);
+STATIC_ASSERT(offsetof(ModelSkinWeightPair, matrixA) == 0);
+STATIC_ASSERT(offsetof(ModelSkinWeightPair, matrixB) == 1);
+
 /* Jobs and chunk records for the cached vertex and normal blend streams. */
 typedef struct ModelVtxAnimJob {
     u8 unk00[2];
@@ -187,7 +213,7 @@ typedef struct ModelFileHeader {
     u8* unk18;
     u8* unk1C;
     s32* textureIds; /* file texture ids, patched to texture ptrs on load */
-    u8 flags24;      /* bit 8 = 9-byte (else 3-byte) entries at normals */
+    u8 flags24;      /* 0x08 = NBT triplets instead of single packed normals */
     u8 unk25[3];
     u8* vertices;  /* 6 bytes each, vertexCount */
     u8* normals;   /* 3 or 9 bytes each, normalCount */
@@ -220,11 +246,11 @@ typedef struct ModelFileHeader {
     ModelVtxAnimJob vertexAnimJob;
     u8 unk98[0xC];
     ModelVtxAnimChunk* vertexAnimEntries;
-    u8* vertexAnimBase;
+    u8* vertexWeightData;
     ModelVtxAnimJob normalAnimJob;
     u8 unkBC[0xC];
     ModelVtxAnimChunk* normalAnimEntries;
-    u8* normalAnimBase;
+    u8* normalWeightData;
     struct ModelDisplayListEntry* displayLists; /* primary group followed by shadow group */
     u8* instrs;
     u16 instrsBitLenWords; /* 0xD8: render-instruction stream length; *8 gives bit length (see objprint_dolphin render-instr readers) */
@@ -263,8 +289,8 @@ typedef struct ModelFileHeader {
 
 /* ModelFileHeader.flags24 bits */
 #define MODEL_FLAGS24_VERY_BRIGHT 0x02
-/* set = 9-byte (else 3-byte) entries at normals */
-#define MODEL_FLAGS24_NORMALS_9BYTE 0x8
+/* Selects GX_VA_NBT and ModelNormalTriplet entries instead of single normals. */
+#define MODEL_FLAGS24_NBT_NORMALS 0x8
 
 /* ModelFileHeader.shaderFlags bit: set = use object color override (gObjOverrideColor) */
 #define MODEL_SHADERFLAGS_USE_OBJ_COLOR 0x2

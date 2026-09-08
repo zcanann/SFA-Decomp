@@ -715,10 +715,10 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     }
     if (((ModelFileHeader*)hdr)->normalAnimEntries != 0) {
         int normalStride;
-        if (((ModelFileHeader*)hdr)->flags24 & MODEL_FLAGS24_NORMALS_9BYTE) {
-            normalStride = 9;
+        if (((ModelFileHeader*)hdr)->flags24 & MODEL_FLAGS24_NBT_NORMALS) {
+            normalStride = sizeof(ModelNormalTriplet);
         } else {
-            normalStride = 3;
+            normalStride = sizeof(ModelPackedNormal);
         }
         sizes[0] += ((ModelFileHeader*)hdr)->normalCount * normalStride + 0x40;
     }
@@ -830,10 +830,10 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c) {
         *(int*)&((ObjModel*)out2)->vtxBuf[0] = end;
     }
     if (((ModelFileHeader*)p)->normalAnimEntries != NULL) {
-        if (((ModelFileHeader*)p)->flags24 & MODEL_FLAGS24_NORMALS_9BYTE) {
-            normalStride = 9;
+        if (((ModelFileHeader*)p)->flags24 & MODEL_FLAGS24_NBT_NORMALS) {
+            normalStride = sizeof(ModelNormalTriplet);
         } else {
-            normalStride = 3;
+            normalStride = sizeof(ModelPackedNormal);
         }
         pos = roundUpTo32(pos);
         *(int*)&((ObjModel*)out2)->normalBuf = pos;
@@ -2140,17 +2140,17 @@ void ObjModel_RelocateAnimData(ModelFileHeader* file, ObjModel* model) {
     file->vertexAnimJob.chunks = file->vertexAnimEntries;
     for (i = 0; i < file->vertexAnimJob.chunkCount; i++) {
         model->vertexAnimOffsets[i] = file->vertexAnimEntries[i].srcDataOffset;
-        if (file->vertexAnimEntries[i].weightStream < file->vertexAnimBase) {
+        if (file->vertexAnimEntries[i].weightStream < file->vertexWeightData) {
             file->vertexAnimEntries[i].weightStream =
-                file->vertexAnimBase + (u32)file->vertexAnimEntries[i].weightStream;
+                file->vertexWeightData + (u32)file->vertexAnimEntries[i].weightStream;
         }
     }
     file->normalAnimJob.chunks = file->normalAnimEntries;
     for (i = 0; i < file->normalAnimJob.chunkCount; i++) {
         model->normalAnimOutputs[i] = model->normalBuf + file->normalAnimEntries[i].srcDataOffset;
-        if (file->normalAnimEntries[i].weightStream < file->normalAnimBase) {
+        if (file->normalAnimEntries[i].weightStream < file->normalWeightData) {
             file->normalAnimEntries[i].weightStream =
-                file->normalAnimBase + (u32)file->normalAnimEntries[i].weightStream;
+                file->normalWeightData + (u32)file->normalAnimEntries[i].weightStream;
         }
     }
 }
@@ -2203,15 +2203,15 @@ void ObjModel_RelocateModelData(u8* m) {
         ((ModelFileHeader*)m)->vertexAnimEntries =
             (ModelVtxAnimChunk*)(m + *(u32*)&((ModelFileHeader*)m)->vertexAnimEntries);
     }
-    if (*(u32*)&((ModelFileHeader*)m)->vertexAnimBase) {
-        ((ModelFileHeader*)m)->vertexAnimBase = m + *(u32*)&((ModelFileHeader*)m)->vertexAnimBase;
+    if (*(u32*)&((ModelFileHeader*)m)->vertexWeightData) {
+        ((ModelFileHeader*)m)->vertexWeightData = m + *(u32*)&((ModelFileHeader*)m)->vertexWeightData;
     }
     if (*(u32*)&((ModelFileHeader*)m)->normalAnimEntries) {
         ((ModelFileHeader*)m)->normalAnimEntries =
             (ModelVtxAnimChunk*)(m + *(u32*)&((ModelFileHeader*)m)->normalAnimEntries);
     }
-    if (*(u32*)&((ModelFileHeader*)m)->normalAnimBase) {
-        ((ModelFileHeader*)m)->normalAnimBase = m + *(u32*)&((ModelFileHeader*)m)->normalAnimBase;
+    if (*(u32*)&((ModelFileHeader*)m)->normalWeightData) {
+        ((ModelFileHeader*)m)->normalWeightData = m + *(u32*)&((ModelFileHeader*)m)->normalWeightData;
     }
     if (*(u32*)&((ModelFileHeader*)m)->renderOps) {
         ((ModelFileHeader*)m)->renderOps = (Shader*)(m + *(u32*)&((ModelFileHeader*)m)->renderOps);
@@ -2571,9 +2571,9 @@ void ObjModel_TransformVerticesWithTranslation(u8* matrixA, u8* matrixB, u8* wei
                                                int count) {
     f32* a = (f32*)matrixA;
     f32* b = (f32*)matrixB;
-    u8* weights = weightPairs;
-    s16* input = (s16*)source;
-    s16* output = (s16*)destination;
+    ModelSkinWeightPair* weights = (ModelSkinWeightPair*)weightPairs;
+    S16Vec* input = (S16Vec*)source;
+    S16Vec* output = (S16Vec*)destination;
     u32 quantization = modelGetGQR7();
     f32 storeFactor = modelQuantizationFactor(quantization >> 8);
     f32 loadFactor = 1.0f / modelQuantizationFactor(quantization >> 24);
@@ -2581,22 +2581,22 @@ void ObjModel_TransformVerticesWithTranslation(u8* matrixA, u8* matrixB, u8* wei
     int vertex;
 
     for (vertex = 0; vertex < count; vertex++) {
-        weightA = __OSu8tof32(weights) * (1.0f / 128.0f);
-        weightB = __OSu8tof32(weights + 1) * (1.0f / 128.0f);
-        weights += 2;
-        x = __OSs16tof32(&input[0]) * loadFactor;
-        y = __OSs16tof32(&input[1]) * loadFactor;
-        z = __OSs16tof32(&input[2]) * loadFactor;
-        input += 3;
+        weightA = __OSu8tof32(&weights->matrixA) * (1.0f / 128.0f);
+        weightB = __OSu8tof32(&weights->matrixB) * (1.0f / 128.0f);
+        weights++;
+        x = __OSs16tof32(&input->x) * loadFactor;
+        y = __OSs16tof32(&input->y) * loadFactor;
+        z = __OSs16tof32(&input->z) * loadFactor;
+        input++;
         outputX = (b[0] * x + b[9] + b[3] * y + b[6] * z) * weightB + (a[0] * x + a[9] + a[3] * y + a[6] * z) * weightA;
         outputY =
             (b[1] * x + b[10] + b[4] * y + b[7] * z) * weightB + (a[1] * x + a[10] + a[4] * y + a[7] * z) * weightA;
         outputZ =
             (b[2] * x + b[11] + b[5] * y + b[8] * z) * weightB + (a[2] * x + a[11] + a[5] * y + a[8] * z) * weightA;
-        output[0] = __OSf32tos16(outputX * storeFactor);
-        output[1] = __OSf32tos16(outputY * storeFactor);
-        output[2] = __OSf32tos16(outputZ * storeFactor);
-        output += 3;
+        output->x = __OSf32tos16(outputX * storeFactor);
+        output->y = __OSf32tos16(outputY * storeFactor);
+        output->z = __OSf32tos16(outputZ * storeFactor);
+        output++;
     }
 }
 
@@ -2604,9 +2604,9 @@ void ObjModel_TransformVerticesLinear(u8* matrixA, u8* matrixB, u8* weightPairs,
                                       int count) {
     f32* a = (f32*)matrixA;
     f32* b = (f32*)matrixB;
-    u8* weights = weightPairs;
-    s8* input = (s8*)source;
-    s8* output = (s8*)destination;
+    ModelSkinWeightPair* weights = (ModelSkinWeightPair*)weightPairs;
+    ModelPackedNormal* input = (ModelPackedNormal*)source;
+    ModelPackedNormal* output = (ModelPackedNormal*)destination;
     u32 quantization = modelGetGQR7();
     f32 storeFactor = modelQuantizationFactor(quantization >> 8);
     f32 loadFactor = 1.0f / modelQuantizationFactor(quantization >> 24);
@@ -2614,29 +2614,29 @@ void ObjModel_TransformVerticesLinear(u8* matrixA, u8* matrixB, u8* weightPairs,
     int vertex;
 
     for (vertex = 0; vertex < count; vertex++) {
-        weightA = __OSu8tof32(weights) * (1.0f / 128.0f);
-        weightB = __OSu8tof32(weights + 1) * (1.0f / 128.0f);
-        weights += 2;
-        x = __OSs8tof32(&input[0]) * loadFactor;
-        y = __OSs8tof32(&input[1]) * loadFactor;
-        z = __OSs8tof32(&input[2]) * loadFactor;
-        input += 3;
+        weightA = __OSu8tof32(&weights->matrixA) * (1.0f / 128.0f);
+        weightB = __OSu8tof32(&weights->matrixB) * (1.0f / 128.0f);
+        weights++;
+        x = __OSs8tof32(&input->x) * loadFactor;
+        y = __OSs8tof32(&input->y) * loadFactor;
+        z = __OSs8tof32(&input->z) * loadFactor;
+        input++;
         outputX = (b[0] * x + b[3] * y + b[6] * z) * weightB + (a[0] * x + a[3] * y + a[6] * z) * weightA;
         outputY = (b[1] * x + b[4] * y + b[7] * z) * weightB + (a[1] * x + a[4] * y + a[7] * z) * weightA;
         outputZ = (b[2] * x + b[5] * y + b[8] * z) * weightB + (a[2] * x + a[5] * y + a[8] * z) * weightA;
-        output[0] = __OSf32tos8(outputX * storeFactor);
-        output[1] = __OSf32tos8(outputY * storeFactor);
-        output[2] = __OSf32tos8(outputZ * storeFactor);
-        output += 3;
+        output->x = __OSf32tos8(outputX * storeFactor);
+        output->y = __OSf32tos8(outputY * storeFactor);
+        output->z = __OSf32tos8(outputZ * storeFactor);
+        output++;
     }
 }
 void ObjModel_TransformNormalTriplets(u8* matrixA, u8* matrixB, u8* weightPairs, u8* source, u8* destination,
                                       int count) {
     f32* a = (f32*)matrixA;
     f32* b = (f32*)matrixB;
-    u8* weights = weightPairs;
-    s8* input = (s8*)source;
-    s8* output = (s8*)destination;
+    ModelSkinWeightPair* weights = (ModelSkinWeightPair*)weightPairs;
+    ModelPackedNormal* input = (ModelPackedNormal*)source;
+    ModelPackedNormal* output = (ModelPackedNormal*)destination;
     u32 quantization = modelGetGQR7();
     f32 storeFactor = modelQuantizationFactor(quantization >> 8);
     f32 loadFactor = 1.0f / modelQuantizationFactor(quantization >> 24);
@@ -2645,21 +2645,21 @@ void ObjModel_TransformNormalTriplets(u8* matrixA, u8* matrixB, u8* weightPairs,
     int vector;
 
     for (vertex = 0; vertex < count; vertex++) {
-        weightA = __OSu8tof32(weights) * (1.0f / 128.0f);
-        weightB = __OSu8tof32(weights + 1) * (1.0f / 128.0f);
-        weights += 2;
+        weightA = __OSu8tof32(&weights->matrixA) * (1.0f / 128.0f);
+        weightB = __OSu8tof32(&weights->matrixB) * (1.0f / 128.0f);
+        weights++;
         for (vector = 0; vector < 3; vector++) {
-            x = __OSs8tof32(&input[0]) * loadFactor;
-            y = __OSs8tof32(&input[1]) * loadFactor;
-            z = __OSs8tof32(&input[2]) * loadFactor;
-            input += 3;
+            x = __OSs8tof32(&input->x) * loadFactor;
+            y = __OSs8tof32(&input->y) * loadFactor;
+            z = __OSs8tof32(&input->z) * loadFactor;
+            input++;
             outputX = (b[0] * x + b[3] * y + b[6] * z) * weightB + (a[0] * x + a[3] * y + a[6] * z) * weightA;
             outputY = (b[1] * x + b[4] * y + b[7] * z) * weightB + (a[1] * x + a[4] * y + a[7] * z) * weightA;
             outputZ = (b[2] * x + b[5] * y + b[8] * z) * weightB + (a[2] * x + a[5] * y + a[8] * z) * weightA;
-            output[0] = __OSf32tos8(outputX * storeFactor);
-            output[1] = __OSf32tos8(outputY * storeFactor);
-            output[2] = __OSf32tos8(outputZ * storeFactor);
-            output += 3;
+            output->x = __OSf32tos8(outputX * storeFactor);
+            output->y = __OSf32tos8(outputY * storeFactor);
+            output->z = __OSf32tos8(outputZ * storeFactor);
+            output++;
         }
     }
 }

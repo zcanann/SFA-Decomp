@@ -19,12 +19,65 @@ stream mode. The new name describes that demonstrated contract without assigning
 individual normal/binormal/tangent roles to the three vectors. The wrapper's
 mode parameter is correspondingly named `normalTriplets`.
 
+The EN renderer selects `GX_VA_NBT` for header flag `0x08`, now named
+`MODEL_FLAGS24_NBT_NORMALS`. The canonical `ModelPackedNormal` (three signed
+bytes), `ModelNormalTriplet` (three such vectors), and `ModelSkinWeightPair`
+(two unsigned bytes) describe the shared stream records, with size and offset
+assertions. Allocation and GX array stride setup use those sizes. Individual
+NBT vector ordering remains unnamed. The scalar kernels use typed local views
+without changing their byte-pointer API.
+
 Each matrix is a reordered `ROMtx`: four consecutive XYZ columns, with translation
 in the final column. The two weight bytes are loaded through GQR6 as unsigned
 values scaled by `2^-7`, established by `ObjModel_InitRenderBuffers`. They are not
 assumed to sum to 128. Normal and position wrappers configure GQR7 for signed
 8-bit and signed 16-bit streams respectively. Scalar fast casts depend on the
 SDK's initialized GQR2/GQR4/GQR5 defaults.
+
+## Serialized asset cross-check
+
+`tools/orig/model_skinning_catalog.py` follows the EN loader's flagged model
+table entries, FACEFEED/ZLB or raw envelopes, header offsets, and 0x74-byte
+chunk records. The outer compressed read envelope can include padding beyond
+the inner ZLB extent; both extents are checked separately. Stream and weight
+transfers must contain all declared records. The tool verifies the configured
+DOL checksum and records archive hashes to identify the inspected assets.
+
+```
+python3 tools/orig/model_skinning_catalog.py GSAE01_rev1 --output /tmp/skinning-rev1.json
+python3 tools/orig/model_skinning_catalog.py GSAJ01 --output /tmp/skinning-jp.json
+python3 -m unittest discover -s tools -p test_model_skinning_catalog.py
+```
+
+The available EN rev1 and JP extractions each contain 53 model archives and
+827 unique decompressed models, with 3,325 and 3,317 references respectively.
+Their 51 unique skinned model payloads are byte-identical, accounting for 175
+and 176 references respectively and 2,016 chunks per extraction. Every skinned
+model has position and normal jobs. Position scales
+are 8 and normal scales are 6; five normal jobs use nine-byte NBT records and
+46 use three-byte records. Counts range from 3 to 300. Transfer slack ranges
+from 0 to 31 stream bytes and 0 to 30 weight bytes.
+
+Of the 25,062 weight pairs in those unique skinned models, 24,643 sum to 128.
+The other 419 are `0xCD, 0xCD`, occur only as trailing entries in 287 chunks of
+count three, and all have zero-filled position/normal records. This is evidence
+of padding to a minimum count, not a universal normalization invariant. The
+catalog preserves their indices and checks the associated records; it does not
+discard them or assume their output is unused by rendering.
+
+The chunk's opaque 0x60-byte prefix, word at 0x68, and byte at 0x6E are zero in
+all inspected records. No source consumer establishes a layout for that prefix,
+so it remains opaque. Relocation and cache-loader consumers separately establish
+that header fields 0xA8/0xCC are weight storage bases, now named
+`vertexWeightData`/`normalWeightData`. EN's extracted asset directory is empty:
+these secondary files corroborate the EN code contract but do not establish
+the contents of missing EN assets.
+
+The shared type/name cleanup preserves every compiled source object byte for
+byte in EN, EN rev1, JP, and PAL rev1; objdiff scores are unchanged. All four
+`all_source` builds and the strict EN retail checksum pass. The five catalog
+tests cover raw/compressed envelopes, outer padding, truncated or inconsistent
+extents, NBT records, signed scales, and trailing weight evidence.
 
 ## Quantization and rounding corrections
 

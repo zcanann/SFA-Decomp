@@ -1264,7 +1264,7 @@ static void modelRenderFn_setVtxDescr(ModelFileHeader* modelHeader, Shader* shad
             bitStream->bit = pos + 1;
             index16 = (w >> (pos & 7)) & 1;
         }
-        if (modelHeader->flags24 & 8) {
+        if (modelHeader->flags24 & MODEL_FLAGS24_NBT_NORMALS) {
             GXSetVtxDesc(GX_VA_NBT, index16 ? GX_INDEX16 : GX_INDEX8);
         } else {
             GXSetVtxDesc(GX_VA_NRM, index16 ? GX_INDEX16 : GX_INDEX8);
@@ -1983,7 +1983,7 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
                 (u8*)((int*)((char*)am + offsetof(ObjModel, vtxBuf)))[(((ObjModel*)am)->bufferFlags >> 1) & 1]);
             ObjModel_BlendNormalStream((u8*)gObjBoneMtxBuffer, &((ModelFileHeader*)m)->normalAnimJob,
                                        (u8*)(int)((ModelFileHeader*)m)->normals, ((ObjModel*)am)->normalAnimOutputs,
-                                       ((ModelFileHeader*)m)->flags24 & 8);
+                                       ((ModelFileHeader*)m)->flags24 & MODEL_FLAGS24_NBT_NORMALS);
         }
         if (((ModelFileHeader*)m)->hitVolumeCount != 0) {
             objUpdateHitSpheres((ObjModel*)am, (ModelFileHeader*)m, obj, NULL, obj2);
@@ -2247,7 +2247,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* owner, ModelFileHea
                                            activeModel->vtxBuf[(activeModel->bufferFlags >> 1) & 1]);
                 ObjModel_BlendNormalStream((u8*)gObjBoneMtxBuffer, &modelFile->normalAnimJob, (u8*)modelFile->normals,
                                            activeModel->normalAnimOutputs,
-                                           modelFile->flags24 & MODEL_FLAGS24_NORMALS_9BYTE);
+                                           modelFile->flags24 & MODEL_FLAGS24_NBT_NORMALS);
             }
         }
         if (modelFile->hitVolumeCount != 0) {
@@ -2392,10 +2392,10 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* owner, ModelFileHea
         }
     }
     GXSetArray(GX_VA_POS, activeModel->vtxBuf[(activeModel->bufferFlags >> 1) & 1], 6);
-    if (modelFile->flags24 & MODEL_FLAGS24_NORMALS_9BYTE) {
-        GXSetArray(GX_VA_NRM, activeModel->normalBuf, 9);
+    if (modelFile->flags24 & MODEL_FLAGS24_NBT_NORMALS) {
+        GXSetArray(GX_VA_NRM, activeModel->normalBuf, sizeof(ModelNormalTriplet));
     } else {
-        GXSetArray(GX_VA_NRM, activeModel->normalBuf, 3);
+        GXSetArray(GX_VA_NRM, activeModel->normalBuf, sizeof(ModelPackedNormal));
     }
     GXSetArray(GX_VA_CLR0, modelFile->colors, 2);
     GXSetArray(GX_VA_TEX0, modelFile->texCoords, 4);
