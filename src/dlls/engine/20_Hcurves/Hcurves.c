@@ -39,29 +39,29 @@ u8 gObjfsaWalkGroupActive[0xB8];
 
 #define OBJFSA_CORNER(BASE, OFF, POSOFF) (f32)((f32) * (s8*)(OFF) * scale + *(f32*)((BASE) + (POSOFF)))
 #define OBJFSA_SET_PLANE(P, K, XA, ZA)                                                                                 \
-    normalLength = sqrtf(normalX * normalX + normalZ * normalZ);                                                                                \
-    if (normalLength) {                                                                                                         \
-        normalX = normalX / normalLength;                                                                                               \
-        normalZ = normalZ / normalLength;                                                                                               \
+    normalLength = sqrtf(normalX * normalX + normalZ * normalZ);                                                       \
+    if (normalLength) {                                                                                                \
+        normalX = normalX / normalLength;                                                                              \
+        normalZ = normalZ / normalLength;                                                                              \
     }                                                                                                                  \
-    (P).planes[K].normalX = (s16)(32767.0f * normalX);                                                                     \
-    (P).planes[K].normalZ = (s16)(32767.0f * normalZ);                                                                     \
+    (P).planes[K].normalX = (s16)(32767.0f * normalX);                                                                 \
+    (P).planes[K].normalZ = (s16)(32767.0f * normalZ);                                                                 \
     (P).planeOffsets[K] = -((f32)(P).planes[K].normalX * (XA) + (f32)(P).planes[K].normalZ * (ZA))
 #define OBJFSA_NEWPATCH (patchBase[0][gObjfsaPatchCount])
 #define OBJFSA_NEWPATCH_S16(F)                                                                                         \
     (*(s16*)((gObjfsaPatchCount * sizeof(ObjfsaPatch) + offsetof(ObjfsaPatch, F)) + (int)patchBase[0]))
 #define OBJFSA_SET_NEWPATCH_PLANE(K, DXE, DZE, XA, ZA)                                                                 \
-    plane = &OBJFSA_NEWPATCH.planes[K];                                                                                   \
-    planeOffset = &OBJFSA_NEWPATCH.planeOffsets[K];                                                                             \
-    normalX = (DXE);                                                                                                       \
-    normalZ = (DZE);                                                                                                       \
-    normalLength = sqrtf(normalX * normalX + normalZ * normalZ);                                                                                \
-    if (normalLength) {                                                                                                         \
-        normalX = normalX / normalLength;                                                                                               \
-        normalZ = normalZ / normalLength;                                                                                               \
+    plane = &OBJFSA_NEWPATCH.planes[K];                                                                                \
+    planeOffset = &OBJFSA_NEWPATCH.planeOffsets[K];                                                                    \
+    normalX = (DXE);                                                                                                   \
+    normalZ = (DZE);                                                                                                   \
+    normalLength = sqrtf(normalX * normalX + normalZ * normalZ);                                                       \
+    if (normalLength) {                                                                                                \
+        normalX = normalX / normalLength;                                                                              \
+        normalZ = normalZ / normalLength;                                                                              \
     }                                                                                                                  \
-    plane->normalX = (s16)(32767.0f * normalX);                                                                               \
-    plane->normalZ = (s16)(32767.0f * normalZ);                                                                               \
+    plane->normalX = (s16)(32767.0f * normalX);                                                                        \
+    plane->normalZ = (s16)(32767.0f * normalZ);                                                                        \
     *(planeOffset) = -(plane->normalX * (XA) + plane->normalZ * (ZA))
 
 static inline f32 RomCurveNode_GetHermiteTangent(RomCurveDef** nodePtr, int angleOffset, int useCos);
@@ -1133,10 +1133,12 @@ void Objfsa_UpdateWalkGroupPatches(void) {
                 walkGroup->maxY = (s16)(2.0f * curve->maxYExtent + curve->y);
                 walkGroup->minY = (s16) - (2.0f * curve->minYExtent - curve->y);
 
-                for (edgeIndex = 0, edgeSlotCursor = (char*)curve; edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT; edgeIndex++) {
+                for (edgeIndex = 0, edgeSlotCursor = (char*)curve; edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT;
+                     edgeIndex++) {
                     walkGroup->patchIndices[edgeIndex] = 0;
                     linkId = (s32*)(edgeSlotCursor + offsetof(ObjfsaWalkCurveDef, linkIds));
-                    if (*linkId > -1 && (linkedCurve = (ObjfsaWalkCurveDef*)(*gRomCurveInterface)->getById(*linkId)) != 0) {
+                    if (*linkId > -1 &&
+                        (linkedCurve = (ObjfsaWalkCurveDef*)(*gRomCurveInterface)->getById(*linkId)) != 0) {
                         groupA = curve->walkGroup;
                         groupB = linkedCurve->walkGroup;
                         if (groupA < groupB) {
@@ -1158,7 +1160,8 @@ void Objfsa_UpdateWalkGroupPatches(void) {
 
                         if (walkGroup->patchIndices[edgeIndex] == 0) {
                             returnEdgeIndex = 0;
-                            if (curve->id != linkedCurve->linkIds[0] && (returnEdgeIndex = 1, curve->id != linkedCurve->linkIds[1]) &&
+                            if (curve->id != linkedCurve->linkIds[0] &&
+                                (returnEdgeIndex = 1, curve->id != linkedCurve->linkIds[1]) &&
                                 (returnEdgeIndex = 2, curve->id != linkedCurve->linkIds[2]) &&
                                 (returnEdgeIndex = 3, curve->id != linkedCurve->linkIds[3])) {
                                 returnEdgeIndex = 4;
@@ -1235,7 +1238,8 @@ void Objfsa_UpdateWalkGroupPatches(void) {
 
             exitMoveCount = 0;
             exitSourcePatch = exitPatch = patch;
-            while (objfsaExitOutside(firstWalkGroup, exitPatch->exit0X, exitPatch->exit0Z) && objfsaExitOutside(secondWalkGroup, exitPatch->exit0X, exitPatch->exit0Z)) {
+            while (objfsaExitOutside(firstWalkGroup, exitPatch->exit0X, exitPatch->exit0Z) &&
+                   objfsaExitOutside(secondWalkGroup, exitPatch->exit0X, exitPatch->exit0Z)) {
                 patch->exit0X = (s16)(patch->exit0X + exitDeltaX / exitStepDivisor);
                 patch->exit0Z = (s16)(patch->exit0Z + exitDeltaZ / exitStepDivisor);
                 if (exitMoveCount++ == 100) {
@@ -1245,7 +1249,8 @@ void Objfsa_UpdateWalkGroupPatches(void) {
             }
 
             exitMoveCount = 0;
-            while (objfsaExitOutside(firstWalkGroup, exitPatch->exit1X, exitPatch->exit1Z) && objfsaExitOutside(secondWalkGroup, exitPatch->exit1X, exitPatch->exit1Z)) {
+            while (objfsaExitOutside(firstWalkGroup, exitPatch->exit1X, exitPatch->exit1Z) &&
+                   objfsaExitOutside(secondWalkGroup, exitPatch->exit1X, exitPatch->exit1Z)) {
                 exitPatch->exit1X = (s16)(exitSourcePatch->exit1X - exitDeltaX / exitStepDivisor);
                 exitPatch->exit1Z = (s16)(exitPatch->exit1Z - exitDeltaZ / exitStepDivisor);
                 if (exitMoveCount++ == 100) {
