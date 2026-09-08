@@ -1,5 +1,9 @@
 # Game math literal-pool recovery
 
+The [retail boundary audit](math_boundary_audit.md) also covers direct loads
+outside current object claims, including the external power coefficients and
+reciprocal constant, across four verified versions.
+
 ## Shared sine/cosine sign handling under GC/1.3
 
 `mathSinCosf` now conditionally negates the existing approximation in switch
