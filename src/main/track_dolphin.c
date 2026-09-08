@@ -235,7 +235,8 @@ void Obj_SetParent(GameObject* obj, GameObject* newParent, int updateLocalTransf
 }
 
 int trackSweepCircleAgainstPoint(f32* x, f32* z, f32 centerX, f32 centerZ, f32 radius, s8 resolveCollision);
-int trackResolveSurfacePenetration(const f32* startPosition, f32* position, const f32* contactPosition, const f32* plane, f32 radiusDistance, f32 clearance, u8 responseMode);
+int trackResolveSurfacePenetration(const f32* startPosition, f32* position, const f32* contactPosition,
+                                   const f32* plane, f32 radiusDistance, f32 clearance, u8 responseMode);
 
 int trackSweepCircleAgainstPoint(f32* x, f32* z, f32 centerX, f32 centerZ, f32 radius, s8 resolveCollision) {
     f32 startDeltaZ, startDeltaX, timeA, startDeltaXSq, startX, startZ, moveX, moveZ, quadraticB, negB;
@@ -1661,13 +1662,15 @@ static inline void trackProjectOntoOffsetPlane(f32* position, const f32* plane, 
     position[0] -= radiusDistance * plane[0];
     position[1] -= radiusDistance * plane[1];
     position[2] -= radiusDistance * plane[2];
-    planeCorrection = clearance - (plane[3] + (position[2] * plane[2] + (position[1] * plane[1] + position[0] * plane[0])));
+    planeCorrection =
+        clearance - (plane[3] + (position[2] * plane[2] + (position[1] * plane[1] + position[0] * plane[0])));
     position[0] += planeCorrection * plane[0];
     position[1] += planeCorrection * plane[1];
     position[2] += planeCorrection * plane[2];
 }
 
-int trackResolveSurfacePenetration(const f32* startPosition, f32* position, const f32* contactPosition, const f32* plane, f32 radiusDistance, f32 clearance, u8 responseMode) {
+int trackResolveSurfacePenetration(const f32* startPosition, f32* position, const f32* contactPosition,
+                                   const f32* plane, f32 radiusDistance, f32 clearance, u8 responseMode) {
     f32 displacement[3];
     f32 horizontalNormal[3];
 
@@ -1681,8 +1684,11 @@ int trackResolveSurfacePenetration(const f32* startPosition, f32* position, cons
         displacement[1] = position[1] - startPosition[1];
         displacement[2] = position[2] - startPosition[2];
         Vec3_Normalize(displacement);
-        contactDistance = (plane[3] + (position[2] * plane[2] + (position[0] * plane[0] + position[1] * plane[1]))) - clearance;
-        startDistance = (plane[3] + (startPosition[2] * plane[2] + (startPosition[0] * plane[0] + startPosition[1] * plane[1]))) - clearance;
+        contactDistance =
+            (plane[3] + (position[2] * plane[2] + (position[0] * plane[0] + position[1] * plane[1]))) - clearance;
+        startDistance =
+            (plane[3] + (startPosition[2] * plane[2] + (startPosition[0] * plane[0] + startPosition[1] * plane[1]))) -
+            clearance;
         if (startDistance != contactDistance) {
             intersectionFraction = startDistance / (startDistance - contactDistance);
         } else {
@@ -1711,11 +1717,13 @@ int trackResolveSurfacePenetration(const f32* startPosition, f32* position, cons
 
                 normalX = plane[0];
                 normalZ = plane[2];
-                clearance = clearance - (plane[3] + (position[2] * normalZ + (normalX * position[0] + position[1] * plane[1])));
+                clearance =
+                    clearance - (plane[3] + (position[2] * normalZ + (normalX * position[0] + position[1] * plane[1])));
                 if (clearance > 0.0f) {
                     f32 normalXSquared = normalX * normalX;
                     f32 normalZSquared = normalZ * normalZ;
-                    f32 correction = mathCosfHighPrecision(atan2fHighPrecision(plane[1], sqrtf(normalXSquared + normalZSquared)));
+                    f32 correction =
+                        mathCosfHighPrecision(atan2fHighPrecision(plane[1], sqrtf(normalXSquared + normalZSquared)));
                     if (0.0f != correction) {
                         clearance /= correction;
                     }
@@ -1749,11 +1757,13 @@ int trackResolveSurfacePenetration(const f32* startPosition, f32* position, cons
 
                 normalX = plane[0];
                 normalZ = plane[2];
-                clearance = clearance - (plane[3] + (position[2] * normalZ + (normalX * position[0] + position[1] * plane[1])));
+                clearance =
+                    clearance - (plane[3] + (position[2] * normalZ + (normalX * position[0] + position[1] * plane[1])));
                 if (clearance > 0.0f) {
                     f32 normalXSquared = normalX * normalX;
                     f32 normalZSquared = normalZ * normalZ;
-                    f32 correction = mathSinfHighPrecision(atan2fHighPrecision(plane[1], sqrtf(normalXSquared + normalZSquared)));
+                    f32 correction =
+                        mathSinfHighPrecision(atan2fHighPrecision(plane[1], sqrtf(normalXSquared + normalZSquared)));
                     correction = clearance / correction;
                     position[1] += correction;
                 }
