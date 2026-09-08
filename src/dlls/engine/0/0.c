@@ -523,12 +523,16 @@ typedef struct ArwingScoreText {
     char text[5];
 } ArwingScoreText;
 
-static inline void drawViewFinderSegment(f32 startX, f32 startY, f32 endX, f32 endY, f32 directionX, f32 directionY,
-                                         f32 thickness, u8 alpha) {
+static inline f32 getViewFinderWaveOffset(f32 x) {
+    f32 scale = 3.1415927f;
+    f32 phase = 320.0f - x;
+    return lbl_803DBAE4 * mathCosf(scale * (phase * lbl_803DBAE0) / 32768.0f);
+}
+
+static inline void drawViewFinderSegment(f32 startX, f32 startY, f32 endX, f32 endY, f32 thickness, u8 alpha) {
     GXColor color;
     GXColor lineColor;
     s16 angle;
-    f32 radians;
     f32 sine;
     f32 cosine;
 
@@ -536,10 +540,10 @@ static inline void drawViewFinderSegment(f32 startX, f32 startY, f32 endX, f32 e
 
     color = gViewFinderLineColor;
     color.a = alpha;
-    angle = getAngle(directionX, directionY);
-    radians = 3.1415927f * angle / 32768.0f;
-    sine = mathSinf(radians);
-    cosine = mathCosf(radians);
+    angle = getAngle(endX - startX, endY - startY);
+
+    sine = mathSinf(3.1415927f * angle / 32768.0f);
+    cosine = mathCosf(3.1415927f * angle / 32768.0f);
     lineColor = color;
     drawViewFinderLine(startX + (thickness * cosine), startY - (thickness * sine), startX - (thickness * cosine),
                        startY + (thickness * sine), endX - (thickness * cosine), endY + (thickness * sine),
@@ -1540,15 +1544,12 @@ void drawViewFinderHud(void) {
 
     {
         char buf[56];
-        f64 waveBaseOffset;
-        f32 gridX, wavePhase, nextWavePhase, nextGridX;
-        f32 angleDivisor, gridSpacing, waveCenterX, angleScale, gridAlpha;
+        f32 gridX;
         f32 reticleY = (f32)(302.0 * ((fovY - 5.0) / 60.0) + 100.0);
-        f32 reticleTopY = -(310.0f * gViewFinderFadeLevel) + 410.0f;
         f32 viewScale;
-        drawViewFinderSegment(580.0f, reticleTopY, 580.0f, 410.0f, 0.0f, 410.0f - reticleTopY, 1.0f,
+        drawViewFinderSegment(580.0f, -(310.0f * gViewFinderFadeLevel) + 410.0f, 580.0f, 410.0f, 1.0f,
                               255.0f * gViewFinderFadeLevel);
-        drawViewFinderSegment(580.0f, reticleY, 580.0f, 8.0f + reticleY, 0.0f, (8.0f + reticleY) - reticleY, 6.0f,
+        drawViewFinderSegment(580.0f, reticleY, 580.0f, 8.0f + reticleY, 6.0f,
                               255.0f * gViewFinderFadeLevel);
         viewScale = 0.57735 / mathTanf((f32)(3.1415927f * fovY / 360.0));
         sprintf(buf, sTrickyDebugXCoordFormat, viewScale);
@@ -1557,48 +1558,18 @@ void drawViewFinderHud(void) {
 
         {
             gridX = 0.0f;
-            gridAlpha = 80.0f;
-            angleScale = 3.1415927f;
-            waveCenterX = 320.0f;
-            gridSpacing = 10.0f;
-            angleDivisor = 32768.0f;
-            waveBaseOffset = 479.5;
-            for (; gridX < 640.0f; gridX += gridSpacing) {
+            for (; gridX < 640.0f; gridX += 10.0f) {
                 {
-                    f32 cosine;
-                    f32 currentY, nextY;
-                    u8 alpha = gridAlpha * gViewFinderFadeLevel;
-                    nextGridX = gridSpacing + gridX;
-                    nextWavePhase = waveCenterX - nextGridX;
-                    cosine = lbl_803DBAE4 * mathCosf(angleScale * (nextWavePhase * lbl_803DBAE0) / angleDivisor);
-                    nextY = (f32)(gViewFinderBaseY + (waveBaseOffset + cosine));
-                    wavePhase = waveCenterX - gridX;
-                    cosine = lbl_803DBAE4 * mathCosf(angleScale * (wavePhase * lbl_803DBAE0) / angleDivisor);
-                    currentY = (f32)(gViewFinderBaseY + (waveBaseOffset + cosine));
-                    drawViewFinderSegment(gridX, currentY, nextGridX, nextY, nextGridX - gridX, nextY - currentY, 1.0f,
-                                          alpha);
+                    u8 alpha = 80.0f * gViewFinderFadeLevel;
+                    drawViewFinderSegment(gridX,(f32)(gViewFinderBaseY + (479.5 + getViewFinderWaveOffset(gridX))),10.0f+gridX,(f32)(gViewFinderBaseY + (479.5 + getViewFinderWaveOffset(10.0f + gridX))),1.0f,alpha);
                 }
                 {
-                    f32 cosine;
-                    u8 alpha = gridAlpha * gViewFinderFadeLevel;
-                    f32 currentY, nextY;
-                    cosine = lbl_803DBAE4 * mathCosf(angleScale * (nextWavePhase * lbl_803DBAE0) / angleDivisor);
-                    nextY = (f32)(gViewFinderBaseY + (480.5 + cosine));
-                    cosine = lbl_803DBAE4 * mathCosf(angleScale * (wavePhase * lbl_803DBAE0) / angleDivisor);
-                    currentY = (f32)(gViewFinderBaseY + (480.5 + cosine));
-                    drawViewFinderSegment(gridX, currentY, nextGridX, nextY, nextGridX - gridX, nextY - currentY, 1.0f,
-                                          alpha);
+                    u8 alpha = 80.0f * gViewFinderFadeLevel;
+                    drawViewFinderSegment(gridX,(f32)(gViewFinderBaseY + (480.5 + getViewFinderWaveOffset(gridX))),10.0f+gridX,(f32)(gViewFinderBaseY + (480.5 + getViewFinderWaveOffset(10.0f + gridX))),1.0f,alpha);
                 }
                 {
-                    f32 cosine;
-                    u8 alpha = (f32)(f64)255.0f * gViewFinderFadeLevel;
-                    f32 currentY, nextY;
-                    cosine = lbl_803DBAE4 * mathCosf(angleScale * (nextWavePhase * lbl_803DBAE0) / angleDivisor);
-                    nextY = gViewFinderBaseY + (480.0f + cosine);
-                    cosine = lbl_803DBAE4 * mathCosf(angleScale * (wavePhase * lbl_803DBAE0) / angleDivisor);
-                    currentY = gViewFinderBaseY + (480.0f + cosine);
-                    drawViewFinderSegment(gridX, currentY, nextGridX, nextY, nextGridX - gridX, nextY - currentY, 1.0f,
-                                          alpha);
+                    u8 alpha = 255.0f * gViewFinderFadeLevel;
+                    drawViewFinderSegment(gridX,gViewFinderBaseY + (480.0f + getViewFinderWaveOffset(gridX)),10.0f+gridX,gViewFinderBaseY + (480.0f + getViewFinderWaveOffset(10.0f + gridX)),1.0f,alpha);
                 }
             }
         }
@@ -1607,9 +1578,7 @@ void drawViewFinderHud(void) {
             int minorLabelAlpha, headingIndex, heading;
             f32 angleUnitsPerDegree;
             int t;
-            f32 currentY, nextY, tickSpacing;
-            f32 cosine;
-            f32 tickX, headingOffset;
+            f32 tickX, headingOffset, tickSpacing;
             f64 fadeAmount, headingDivision;
             f64 minorLabelFadeScale;
             f64 majorLabelFadeScale;
@@ -1638,6 +1607,7 @@ void drawViewFinderHud(void) {
                 heading += 0x168;
             }
             for (; tickX < 640.0f; tickX += tickSpacing) {
+                u8 alpha;
                 u8 textAlpha = 0xff;
                 int tickAlpha = 0xff;
                 int tickHeight = 0xf;
@@ -1688,24 +1658,16 @@ void drawViewFinderHud(void) {
                 heading++;
                 if (textAlpha != 0) {
                     f32 sn;
-                    f32 phase;
-                    f32 scale;
                     gameTextSetColor(0, 0xff, 0, (f32)textAlpha * gViewFinderFadeLevel);
-                    scale = 3.1415927f;
-                    phase = 320.0f - tickX;
-                    sn = lbl_803DBAE4 * mathCosf(scale * (phase * lbl_803DBAE0) / 32768.0f);
+                    sn = getViewFinderWaveOffset(tickX);
                     gameTextShowStr(buf, 0x93, (int)(0.98 * (tickX - 320.0) + 320.0),
                                     (int)(gViewFinderBaseY + (495.0f + sn)));
                 }
                 {
-                    u8 alpha = (f32)(u8)tickAlpha * gViewFinderFadeLevel;
-                    f32 phase = 320.0f - tickX;
-                    cosine = lbl_803DBAE4 * mathCosf(3.1415927f * (phase * lbl_803DBAE0) / 32768.0f);
-                    nextY = gViewFinderBaseY + ((f32)((u8)tickHeight + 0x1e0) + cosine);
-                    cosine = lbl_803DBAE4 * mathCosf(3.1415927f * (phase * lbl_803DBAE0) / 32768.0f);
-                    currentY = gViewFinderBaseY + (480.0f + cosine);
-                    drawViewFinderSegment(tickX, currentY, (f32)(0.98 * (tickX - 320.0) + 320.0), nextY,
-                                          (f32)(0.98 * (tickX - 320.0) + 320.0) - tickX, nextY - currentY, 1.0f, alpha);
+                    alpha = (f32)(u8)tickAlpha * gViewFinderFadeLevel;
+                    drawViewFinderSegment(tickX, gViewFinderBaseY + (480.0f + getViewFinderWaveOffset(tickX)),
+                       (f32)(0.98 * (tickX - 320.0) + 320.0),
+                       gViewFinderBaseY + ((f32)((u8)tickHeight + 0x1e0) + getViewFinderWaveOffset(tickX)), 1.0f, alpha);
                 }
             }
         }

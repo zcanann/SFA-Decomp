@@ -411,3 +411,33 @@ An opacity aggregate has the same problem. None is retained. Typed C-menu source
 cursors preserve all 302 instructions but worsen the residual from 60 to 68
 words. Separating the grid-cell pulse phase and changing its argument widths
 also fail to improve matching. Source and compiler settings remain unchanged.
+
+
+## September 8: viewfinder HUD exact
+
+`drawViewFinderHud` now matches all **4,980 bytes / 1,245 instructions**,
+up from 99.518074% and 105 differing instruction words. The same source
+scores **100% in all five retail targets**: EN v1.0, EN rev1, JP, PAL, and
+PAL rev1. Every input DOL was verified against its configured SHA1 before
+those regional comparisons. The TU remains `NonMatching`; its other
+residual functions prevent claiming an exact whole object in any manifest.
+
+The curved compass lines and heading ticks share a float wave-offset
+helper. Their endpoint expressions pass directly to the segment helper,
+which derives its direction from those endpoints. This lets MWCC recover
+the retail common expressions and floating-point register allocation.
+The segment helper repeats the angle-to-radians expression in its sine
+and cosine calls; the compiler shares the calculation. Computing the
+sliding reticle coordinate in the draw call removes the last register
+swap. The tick spacing follows the tick position in the declaration list,
+and the tick alpha scratch is declared before the text alpha.
+
+Only this function's instruction bytes change: 135 bytes within the same
+4,980-byte extent. All other function bytes and objdiff scores, allocated
+data bytes and section layouts, and named symbol offsets remain unchanged.
+Anonymous symbols are renumbered. The whole TU retains its common GC/1.3
+compiler profile, flags, and retail boundary.
+
+Validation includes regional objdiff reports, the strict EN checksum build,
+`ninja all_source`, and formatting checks on the TU and its API header.
+Formatting is committed separately and checked for identical object bytes.
