@@ -195,3 +195,31 @@ containing zero on both passes. Ten debug tests pass at host `-O0` and `-O2`.
 The production object is byte-identical before and after this recovery,
 including after formatting, so no additional matching credit is claimed.
 Both full build gates pass.
+
+## Separator countdown refinement
+
+On top of `620b501643`, the shared separator loop retains an indexed column
+but counts down its remaining width. This recovers more of retail's unrolling
+without changing compiler flags. The one-element `self` array is removed;
+the diagnostic now prints `errorThreadFunc` directly. All call-site enable
+guards and the preceding-row condition remain intact. Width is nonnegative
+at every real call site, as required by the countdown loop.
+
+`errorThreadFunc` improves from **86.35591% to 90.148415%**, shrinking from 748
+to 717 instructions against retail's 694. Structural differences drop from
+115 to 101, while operand differences increase from 47 to 83. Whole-TU fuzzy
+similarity rises from **94.26345% to 95.599495%**. Eleven of fourteen functions
+remain exact; this is a partial-match gain, not a new exact function.
+
+The other thirteen function bodies and their relative relocations are unchanged,
+as are all non-text sections and their named layouts and resolved relocations.
+The crash thread's external call order is unchanged. Its shorter body moves
+the following handler's text address by 124 bytes. The source object SHA-256 is
+`ce7d69124398f30ea1136f606b6242c8beeb4ef49d0472fcc463a000d75b199d`.
+
+The framebuffer harness now builds and unloads its DLLs on Windows as well as
+supporting the existing POSIX path. It adds 80 randomized separator cases and
+extracts the actual guarded call sites to check both stack-layout endpoints
+and zero/nonzero enable values. Omitting the preceding row or shortening the
+240-pixel call fails the checks. All eleven debug tests pass at host `-O0` and
+`-O2`, alongside `ninja all_source` and the strict retail checksum gate.

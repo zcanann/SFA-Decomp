@@ -660,7 +660,7 @@ void reportAllocFail(int region0SizeKb, int region0FreeKb, int region1SizeKb, in
 
 static inline void errorDrawHorizontalRule(int row, int width) {
     int column;
-    for (column = 0; column < width; column++) {
+    for (column = 0; width != 0; width--, column++) {
         debugDrawFrameBuffer[row * DEBUG_FRAMEBUFFER_WIDTH + column] = 0xc080;
         if (row > 0) {
             debugDrawFrameBuffer[(row - 1) * DEBUG_FRAMEBUFFER_WIDTH + column] = 0xc080;
@@ -670,7 +670,6 @@ static inline void errorDrawHorizontalRule(int row, int width) {
 
 void* errorThreadFunc(void* unused) {
     DebugFontErrorDataView* messages = (DebugFontErrorDataView*)gDebugFontAndErrorData;
-    void* (*self[1])(void*);
     int y;
     u32* sp;
     int depth;
@@ -693,12 +692,11 @@ void* errorThreadFunc(void* unused) {
         GXSetBreakPtCallback(NULL);
         __GXAbortWaitPECopyDone();
         OSRestoreInterrupts(lvl);
-        self[0] = errorThreadFunc;
         while (1) {
             if (enableDebugText != 0) {
                 errDisplayFillBackdrop();
             }
-            debugPrintfxy(0x10, 0x15, messages->threadFormat, self[0]);
+            debugPrintfxy(0x10, 0x15, messages->threadFormat, errorThreadFunc);
             debugPrintfxy(0x10, 0x2a, messages->exceptionLabel);
             switch (gErrExceptionType) {
             case 0:

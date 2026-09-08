@@ -5,9 +5,11 @@ or PowerPC cache-line rounding.
 """
 import ctypes
 from pathlib import Path
+import random
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -27,6 +29,10 @@ class DebugFramebufferTests(unittest.TestCase):
         constants = "\n".join(re.findall(r"^#define DEBUG_(?:FRAMEBUFFER|GLYPH)_.*$", source, re.M))
         glyph = re.search(r"^void debugTextDrawToFrameBuffer\([^;\n]*\) \{.*?^\}", source, re.M | re.S).group()
         rule = re.search(r"^static inline void errorDrawHorizontalRule\(.*?^\}", source, re.M | re.S).group()
+        calls = re.findall(r"^            if \(enableDebugText != 0\) \{\n"
+                           r"                errorDrawHorizontalRule\([^;]+\);\n            \}", source, re.M)
+        if len(calls) != 3:
+            raise AssertionError("Re-audit the three crash-display rule call sites")
         cls.temporary = tempfile.TemporaryDirectory(prefix="sfa-debug-framebuffer-")
         cls.addClassCleanup(cls.temporary.cleanup)
         directory = Path(cls.temporary.name)
@@ -35,8 +41,13 @@ class DebugFramebufferTests(unittest.TestCase):
 #include <stddef.h>
 typedef unsigned char u8;
 typedef unsigned short u16;
-u16 storage[640 * 480 + 64];
-int flushes[10][2], flushCount;
+#ifdef _WIN32
+#define EXPORT __declspec(dllexport)
+#else
+#define EXPORT
+#endif
+EXPORT u16 storage[640 * 480 + 64];
+EXPORT int flushes[10][2], flushCount;
 static u16* debugDrawFrameBuffer = storage + 32;
 static int enableDebugText;
 static void DCStoreRange(void* address, unsigned int size) {
@@ -47,27 +58,40 @@ static void DCStoreRange(void* address, unsigned int size) {
     flushCount++;
 }
 ''' + constants + "\n" + glyph + "\n" + rule + r'''
-void runGlyph(int enabled, int x, int y, u8* grid) {
+EXPORT void runGlyph(int enabled, int x, int y, u8* grid) {
     enableDebugText = enabled;
     flushCount = 0;
     debugTextDrawToFrameBuffer(x, y, grid, -1);
 }
-void runRule(int row, int width) {
+EXPORT void runRule(int row, int width) {
     flushCount = 0;
     errorDrawHorizontalRule(row, width);
 }
-''')
+EXPORT void runCrashRules(int enabled, int y) {
+    enableDebugText = enabled;
+    flushCount = 0;
+''' + "\n".join(calls) + "\n}\n")
         cls.libraries = []
         for optimization in ("-O0", "-O2"):
-            library = directory / (optimization[1:] + ".so")
-            subprocess.run([compiler, "-shared", "-fPIC", optimization, str(fixture),
-                            "-o", str(library)], check=True, timeout=30)
+            library = directory / (optimization[1:] + (".dll" if sys.platform == "win32" else ".so"))
+            command = [compiler, "-shared", optimization, "-fno-builtin", str(fixture), "-o", str(library)]
+            if sys.platform == "win32":
+                command += ["-fuse-ld=lld", "-nostdlib", "-Wl,/noentry"]
+            else:
+                command += ["-fPIC"]
+            subprocess.run(command, check=True, timeout=30)
             handle = ctypes.CDLL(str(library))
+            if sys.platform == "win32":
+                kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+                kernel.FreeLibrary.argtypes = [ctypes.c_void_p]
+                cls.addClassCleanup(kernel.FreeLibrary, handle._handle)
             handle.runGlyph.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int,
                                        ctypes.POINTER(ctypes.c_ubyte)]
             handle.runGlyph.restype = None
             handle.runRule.argtypes = [ctypes.c_int, ctypes.c_int]
             handle.runRule.restype = None
+            handle.runCrashRules.argtypes = [ctypes.c_int, ctypes.c_int]
+            handle.runCrashRules.restype = None
             cls.libraries.append(handle)
 
     def check_pixels(self, library, draw, pixels, flushes):
@@ -104,11 +128,23 @@ void runRule(int row, int width) {
     def test_horizontal_rule_footprints(self):
         # Retail call sites use rows 58, 91 and the stack-dependent lower separator.
         cases = [(58, 640), (91, 240), (280, 640), (479, 640), (0, 640), (0, 1), (58, 0)]
+        rng = random.Random(0x9100)
+        cases += [(rng.randrange(HEIGHT), rng.randrange(WIDTH + 1)) for _ in range(80)]
         for library in self.libraries:
             for row, width in cases:
                 rows = (row - 1, row) if row else (0,)
                 pixels = {(x, y) for y in rows for x in range(width)}
                 self.check_pixels(library, lambda: library.runRule(row, width), pixels, [])
+
+    def test_crash_display_call_sites(self):
+        for library in self.libraries:
+            for enabled in (0, 1, 255):
+                for stack_y in (192, 204):
+                    pixels = set()
+                    if enabled:
+                        for row, width in ((58, 640), (91, 240), (stack_y + 76, 640)):
+                            pixels.update((x, y) for y in (row - 1, row) for x in range(width))
+                    self.check_pixels(library, lambda: library.runCrashRules(enabled, stack_y), pixels, [])
 
 
 if __name__ == "__main__":
