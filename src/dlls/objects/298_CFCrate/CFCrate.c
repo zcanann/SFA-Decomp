@@ -62,7 +62,6 @@ typedef enum CFCrateObjectId {
     CFCRATE_OBJ_DFP_INNER_RI = 0x6FD,  /* DFP_InnerRi */
     CFCRATE_OBJ_DFP_OUTER_RI = 0x6FE,  /* DFP_OuterRi */
     CFCRATE_OBJ_VFP_NEWBALL = 0x708,   /* VFP_newball */
-    CFCRATE_OBJ_DFP_WATER_HI = 0x71B,  /* DFP_WaterHi */
     CFCRATE_OBJ_DFP_PLACE_PL = 0x726,  /* DFP_PlacePl */
     CFCRATE_OBJ_VFP_WARDING = 0x729,   /* VFP_Warding */
     CFCRATE_OBJ_WM_KRAZOAST_A = 0x78B, /* WM_krazoast */
@@ -348,7 +347,7 @@ void CFCrate_init(GameObject* obj, CFCratePlacement* placement) {
         obj->anim.rotX = (s16)(placement->initialRotX << CFCRATE_ROTATION_BYTE_SHIFT);
         break;
     case CFCRATE_OBJ_DFP_WATER_HI:
-        state->lingerTimer = placement->param1A;
+        state->lingerTimer = placement->lingerFrames;
         break;
     case CFCRATE_OBJ_VFP_LIFTGRA:
         obj->anim.rotX = (s16)(placement->initialRotX << CFCRATE_ROTATION_BYTE_SHIFT);

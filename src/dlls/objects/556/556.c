@@ -25,7 +25,6 @@
  */
 #include "main/dll/dll22cstate_struct.h"
 #include "sys/objects.h"
-#include "main/dll/dfpobjcreatorstate_struct.h"
 #include "main/dll/dbholecontrol1state_struct.h"
 #include "main/dll/dfptorchstate_struct.h"
 #include "main/dll/drakorenergystate_struct.h"
@@ -47,7 +46,6 @@
 
 
 
-STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 
