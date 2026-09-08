@@ -52,18 +52,77 @@ float powfCoreHighPrecision(float base, float power) {
     float normalizedBase;
 
     if (base != lbl_803E7AB8) {
-        baseBits = *(u32 *)&base;
+        baseBits = *(u32*)&base;
         baseExponent = (s16)(((baseBits >> 23) & 0xFF) - 127);
-        *(u32 *)&normalizedBase = (baseBits & 0x7FFFFF) | 0x3F800000;
+        *(u32*)&normalizedBase = (baseBits & 0x7FFFFF) | 0x3F800000;
         logValue = normalizedBase - lbl_803E7AC0;
-        log2Mantissa = logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (lbl_803E7B60 * logValue + lbl_803E7B58) + lbl_803E7B50) + lbl_803E7B48) + lbl_803E7B40) + lbl_803E7B38) + lbl_803E7B30) + lbl_803E7B28) + lbl_803E7B20) + lbl_803E7B18) + lbl_803E7B10) + lbl_803E7B08) + lbl_803E7B00) + lbl_803E7AF8) + lbl_803E7AF0) + lbl_803E7AE8) + lbl_803E7AE0) + lbl_803E7AD8) + lbl_803E7AD0) + lbl_803E7AC8);
+        log2Mantissa =
+            logValue *
+            (logValue *
+                 (logValue *
+                      (logValue *
+                           (logValue *
+                                (logValue *
+                                     (logValue *
+                                          (logValue *
+                                               (logValue *
+                                                    (logValue *
+                                                         (logValue *
+                                                              (logValue *
+                                                                   (logValue *
+                                                                        (logValue *
+                                                                             (logValue *
+                                                                                  (logValue *
+                                                                                       (logValue *
+                                                                                            (logValue *
+                                                                                                 (logValue *
+                                                                                                      (lbl_803E7B60 *
+                                                                                                           logValue +
+                                                                                                       lbl_803E7B58) +
+                                                                                                  lbl_803E7B50) +
+                                                                                             lbl_803E7B48) +
+                                                                                        lbl_803E7B40) +
+                                                                                   lbl_803E7B38) +
+                                                                              lbl_803E7B30) +
+                                                                         lbl_803E7B28) +
+                                                                    lbl_803E7B20) +
+                                                               lbl_803E7B18) +
+                                                          lbl_803E7B10) +
+                                                     lbl_803E7B08) +
+                                                lbl_803E7B00) +
+                                           lbl_803E7AF8) +
+                                      lbl_803E7AF0) +
+                                 lbl_803E7AE8) +
+                            lbl_803E7AE0) +
+                       lbl_803E7AD8) +
+                  lbl_803E7AD0) +
+             lbl_803E7AC8);
         logValue = power * (log2Mantissa + (double)baseExponent);
         resultExponent = logValue;
         resultExponentAsDouble = (double)resultExponent;
         fractionalExponent = logValue - resultExponentAsDouble;
 
         if (fractionalExponent != lbl_803E7B68) {
-            result = (float)(fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (lbl_803E7BC0 * fractionalExponent + lbl_803E7BB8) + lbl_803E7BB0) + lbl_803E7BA8) + lbl_803E7BA0) + lbl_803E7B98) + lbl_803E7B90) + lbl_803E7B88) + lbl_803E7B80) + lbl_803E7B78) + lbl_803E7B70);
+            result =
+                (float)(fractionalExponent *
+                            (fractionalExponent *
+                                 (fractionalExponent *
+                                      (fractionalExponent *
+                                           (fractionalExponent *
+                                                (fractionalExponent *
+                                                     (fractionalExponent *
+                                                          (fractionalExponent *
+                                                               (fractionalExponent *
+                                                                    (lbl_803E7BC0 * fractionalExponent + lbl_803E7BB8) +
+                                                                lbl_803E7BB0) +
+                                                           lbl_803E7BA8) +
+                                                      lbl_803E7BA0) +
+                                                 lbl_803E7B98) +
+                                            lbl_803E7B90) +
+                                       lbl_803E7B88) +
+                                  lbl_803E7B80) +
+                             lbl_803E7B78) +
+                        lbl_803E7B70);
         } else {
             result = lbl_803E7BC8;
         }
@@ -74,7 +133,7 @@ float powfCoreHighPrecision(float base, float power) {
                 result = -result;
             }
         }
-        *(u32 *)&result += resultExponent << 23;
+        *(u32*)&result += resultExponent << 23;
         return result;
     }
     if (power != lbl_803E7AB8) {
@@ -94,9 +153,9 @@ float powfCoreFast(float base, register float power) {
     s16 resultExponent;
 
     if (base != lbl_803E7AB8) {
-        baseBits = *(u32 *)&base;
+        baseBits = *(u32*)&base;
         baseExponent = ((baseBits >> 23) & 0xFF) - 127;
-        *(u32 *)&logValue = (baseBits & 0x7FFFFF) | 0x3F800000;
+        *(u32*)&logValue = (baseBits & 0x7FFFFF) | 0x3F800000;
         logValue = logValue - lbl_803E7BC8;
         logValue = logValue * (logValue * (0.15544586f * logValue + -0.5729206f) + 1.4172995f) + 0.00072527403f;
         baseExponentAsFloat = fastCastS16ToFloat(&baseExponent);
@@ -115,7 +174,7 @@ float powfCoreFast(float base, register float power) {
                 result = -result;
             }
         }
-        *(u32 *)&result += resultExponent << 23;
+        *(u32*)&result += resultExponent << 23;
         return result;
     }
     if (power != lbl_803E7AB8) {
@@ -135,17 +194,17 @@ float powfBitEstimate(float base, float exponentValue) {
     int integerPower;
 
     if (base != lbl_803E7AB8) {
-        baseBits = *(u32 *)&base;
+        baseBits = *(u32*)&base;
         exponent = (s16)(((baseBits >> 23) & 0xFF) - 128);
-        *(u32 *)&normalizedMantissa = (baseBits & 0x7FFFFF) | 0x3F800000;
+        *(u32*)&normalizedMantissa = (baseBits & 0x7FFFFF) | 0x3F800000;
         exponentAsFloat = fastCastS16ToFloat(&exponent);
         normalizedMantissa = (8388608.0f * exponentValue) * (normalizedMantissa + exponentAsFloat);
-        *(u32 *)&result = (u32)(int)normalizedMantissa + 0x3F800000;
+        *(u32*)&result = (u32)(int)normalizedMantissa + 0x3F800000;
 
         if (baseBits & 0x80000000) {
             integerPower = exponentValue;
             if (integerPower & 1) {
-                *(u32 *)&result ^= 0x80000000;
+                *(u32*)&result ^= 0x80000000;
             }
         }
 
