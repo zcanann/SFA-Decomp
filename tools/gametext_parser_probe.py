@@ -129,7 +129,7 @@ def synthetic_resource(strings=3, textures=2, dimensions=None):
     return data + bytes(8)
 
 
-def link_source(obj, directory, retail_symbols):
+def link_source(obj, directory, retail_symbols, entry='gameTextFinalizeLoad'):
     from elftools.elf.elffile import ELFFile
 
     prefix = ROOT / 'build/binutils/powerpc-eabi-'
@@ -139,17 +139,17 @@ def link_source(obj, directory, retail_symbols):
     for line in undefined.splitlines():
         name = line.split()[-1]
         value = retail_symbols.get(name)
-        if value and value[0] == '.text':
+        if value and value[0] in ('.text', '.init'):
             definitions.append(f'--defsym={name}={value[1]}')
         else:
-            # Only the parser is entered. Unrelated external data needs SDA
-            # placement for linking, but is never part of a parser fixture.
+            # External data needs SDA placement for linking. Each probe must
+            # initialize any stubs reached by its selected entry point.
             data_stubs.append(f'.global {name}\n{name}:\n.skip 8\n')
     stub = directory / 'globals.s'
     stub.write_text('.section .sbss,"aw",@nobits\n.balign 4\n' + ''.join(data_stubs))
     subprocess.run([assembler, str(stub), '-o', str(directory / 'globals.o')], check=True, timeout=30)
     output = directory / 'gametext.elf'
-    subprocess.run([linker, '-Ttext=0x81000000', '-e', 'gameTextFinalizeLoad', *definitions,
+    subprocess.run([linker, '-Ttext=0x81000000', '-e', entry, *definitions,
                     str(obj), str(directory / 'globals.o'), '-o', str(output)], check=True, timeout=30)
     elf = ELFFile(BytesIO(output.read_bytes()))
     segments = [(segment['p_vaddr'], segment.data()) for segment in elf.iter_segments()
