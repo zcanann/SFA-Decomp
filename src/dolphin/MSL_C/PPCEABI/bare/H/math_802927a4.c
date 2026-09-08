@@ -3,7 +3,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/math_8029312c.h"
 
-
 float powfCoreHighPrecision(float base, float power) {
     register double logValue;
     register double fractionalExponent;
@@ -68,9 +67,7 @@ float powfCoreHighPrecision(float base, float power) {
         fractionalExponent = logValue - resultExponentAsDouble;
 
         if (fractionalExponent) {
-            result =
-                (float)(fractionalExponent *
-                            (fractionalExponent *
+            result = (float)(fractionalExponent *
                                  (fractionalExponent *
                                       (fractionalExponent *
                                            (fractionalExponent *
@@ -78,16 +75,18 @@ float powfCoreHighPrecision(float base, float power) {
                                                      (fractionalExponent *
                                                           (fractionalExponent *
                                                                (fractionalExponent *
-                                                                    (9.926346441109975e-09 * fractionalExponent + 9.472326685984924e-08) +
-                                                                1.3310673239175234e-06) +
-                                                           1.5244851723158107e-05) +
-                                                      0.00015403947598618592) +
-                                                 0.0013333543997684197) +
-                                            0.00961812940579326) +
-                                       0.055504108628658844) +
-                                  0.24022650696122427) +
-                             0.693147180559909) +
-                        0.9999999999999999);
+                                                                    (fractionalExponent *
+                                                                         (9.926346441109975e-09 * fractionalExponent +
+                                                                          9.472326685984924e-08) +
+                                                                     1.3310673239175234e-06) +
+                                                                1.5244851723158107e-05) +
+                                                           0.00015403947598618592) +
+                                                      0.0013333543997684197) +
+                                                 0.00961812940579326) +
+                                            0.055504108628658844) +
+                                       0.24022650696122427) +
+                                  0.693147180559909) +
+                             0.9999999999999999);
         } else {
             result = 1.0f;
         }
