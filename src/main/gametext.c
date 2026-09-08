@@ -1968,66 +1968,65 @@ static inline f32 gameTextDecodeScale(int scale256) {
     return (f32)scale256 / 256.0f;
 }
 
-void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang) {
-    int byteOff;
-    u32 ch;
-    int charLen;
-    int n2;
-    int i;
-    u8* p;
-    TextGlyph* g;
-    u8* tbl;
+void gameTextMeasureString(u8* str, f32 scale, f32* outWidth, f32* outZero, f32* outMaxFontWidth, f32* outMaxLineHeight, int fontId) {
+    int byteOffset;
+    u32 codePoint;
+    int encodedLength;
+    int argumentCount;
+    int argumentIndex;
+    TextGlyph* glyph;
+    const FontMetrics* metrics;
     f32 width;
-    f32 mAdv;
-    f32 mH;
-    int params[8];
+    f32 scaledFontWidth;
+    f32 scaledLineHeight;
+    int arguments[8];
 
-    byteOff = 0;
+    byteOffset = 0;
     width = 0.0f;
     if (str == NULL) {
         return;
     }
-    if (glyphLang == -1) {
-        if (gameTextCharset == 2) {
-            glyphLang = 6;
+    if (fontId == -1) {
+        if (gameTextCharset == GAMETEXT_SLOT_ERROR) {
+            fontId = GAMETEXT_FONT_SYSTEM;
         } else {
-            glyphLang = sLanguageNameTable[curLanguage].fontId;
+            fontId = sLanguageNameTable[curLanguage].fontId;
         }
     }
-    tbl = (u8*)gGameTextFontMetrics + glyphLang * 16;
-    if (glyphLang != GAMETEXT_FONT_FACE) {
-        if (outMaxAdv != NULL) {
-            *outMaxAdv = (f32)(u32)((FontMetrics*)tbl)->maxWidth * scale;
+    metrics = &gGameTextFontMetrics[fontId];
+    if (fontId != GAMETEXT_FONT_FACE) {
+        if (outMaxFontWidth != NULL) {
+            *outMaxFontWidth = (f32)(u32)metrics->maxWidth * scale;
         }
-        if (outMaxH != NULL) {
-            *outMaxH = (f32)(u32)((FontMetrics*)tbl)->lineHeight * scale;
+        if (outMaxLineHeight != NULL) {
+            *outMaxLineHeight = (f32)(u32)metrics->lineHeight * scale;
         }
     }
 
-    while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0) {
-        byteOff += charLen;
-        if (ch >= 0xe000 && ch <= 0xf8ff) {
-            n2 = ctrlCharLen(ch);
-            for (i = 0; i < n2; i++) {
-                int hi = str[byteOff++];
-                int lo = str[byteOff++];
-                params[i] = (hi << 8) | lo;
+    while ((codePoint = utf8GetNextChar(str + byteOffset, &encodedLength)) != 0) {
+        byteOffset += encodedLength;
+        if (codePoint >= 0xe000 && codePoint <= 0xf8ff) {
+            argumentCount = ctrlCharLen(codePoint);
+            for (argumentIndex = 0; argumentIndex < argumentCount; argumentIndex++) {
+                int hi = str[byteOffset++];
+                int lo = str[byteOffset++];
+                arguments[argumentIndex] = (hi << 8) | lo;
             }
-            switch (ch) {
+            switch (codePoint) {
             case TEXT_CTRL_SCALE:
-                scale = gameTextDecodeScale(params[0]);
+                scale = gameTextDecodeScale(arguments[0]);
                 break;
             case TEXT_CTRL_FONT:
-                glyphLang = params[0];
-                tbl = (u8*)gGameTextFontMetrics + glyphLang * 16;
-                if (glyphLang != GAMETEXT_FONT_FACE) {
-                    mAdv = (f32)(u32)((FontMetrics*)tbl)->maxWidth * scale;
-                    if (outMaxAdv != NULL && mAdv > *outMaxAdv) {
-                        *outMaxAdv = mAdv;
+                fontId = arguments[0];
+                metrics = &gGameTextFontMetrics[fontId];
+                if (fontId != GAMETEXT_FONT_FACE) {
+                    scaledFontWidth = (f32)(u32)metrics->maxWidth * scale;
+                    if (outMaxFontWidth != NULL && scaledFontWidth > *outMaxFontWidth) {
+                        *outMaxFontWidth = scaledFontWidth;
                     }
-                    mH = (f32)(u32)((FontMetrics*)tbl)->lineHeight * scale;
-                    if (outMaxH != NULL && mH > *outMaxH) {
-                        *outMaxH = mH;
+                    scaledLineHeight = (f32)(u32)metrics->lineHeight * scale;
+                    if (outMaxLineHeight != NULL && scaledLineHeight > *outMaxLineHeight) {
+                        *outMaxLineHeight = scaledLineHeight;
                     }
                 }
                 break;
@@ -2035,18 +2034,15 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
             continue;
         }
 
-        g = findGlyph(ch, glyphLang);
-        if (g == NULL) {
+        glyph = findGlyph(codePoint, fontId);
+        if (glyph == NULL || fontId == GAMETEXT_FONT_FACE) {
             continue;
         }
-        if (glyphLang == GAMETEXT_FONT_FACE) {
-            continue;
-        }
-        width = scale * (f32)(g->advanceX + (g->width + g->offsetX)) + width;
+        width += scale * (f32)(glyph->advanceX + (glyph->width + glyph->offsetX));
     }
 
-    if (outW != NULL) {
-        *outW = width;
+    if (outWidth != NULL) {
+        *outWidth = width;
     }
     if (outZero != NULL) {
         *outZero = 0.0f;
@@ -2352,7 +2348,7 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
                     curTexPage = g->page;
                     tex = gameTextFonts->textures[g->page];
                     selectTexture(tex, 0);
-                    if (gGameTextFontMetrics[g->font].unk06 == 1) {
+                    if (gGameTextFontMetrics[g->font].colorMode == GAMETEXT_FONT_COLOR_TEXTURE) {
                         if (mode != 0) {
                             setTextColor(0, 0, 0, 0, gGameTextColorA);
                         } else {

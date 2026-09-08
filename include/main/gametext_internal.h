@@ -73,17 +73,24 @@ typedef struct LanguageName {
     u8 pad5[3];
 } LanguageName;
 
+#define GAMETEXT_FONT_COLOR_TEXTURE 1
+
 typedef struct FontMetrics {
     u16 glyphCount;
     u8 unk02[2];
     u8 unk04;
     u8 unk05;
-    u8 unk06;
+    u8 colorMode; /* Texture RGB for mode 1; text RGB for other values. */
     u8 pad07;
     u16 maxWidth;
     u16 lineHeight;
     u8 padc[4];
 } FontMetrics;
+
+STATIC_ASSERT(sizeof(FontMetrics) == 0x10);
+STATIC_ASSERT(offsetof(FontMetrics, colorMode) == 0x6);
+STATIC_ASSERT(offsetof(FontMetrics, maxWidth) == 0x8);
+STATIC_ASSERT(offsetof(FontMetrics, lineHeight) == 0xa);
 
 typedef struct CtrlCharEntry {
     u32 key;

@@ -41,7 +41,7 @@ extern GameTextSlot lbl_8033A540[];
 #define gGameTextCommandSlots lbl_8033A540
 
 void subtitleStart(int x);
-void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
+void gameTextMeasureString(u8* str, f32 scale, f32* outWidth, f32* outZero, f32* outMaxFontWidth, f32* outMaxLineHeight, int fontId);
 int subtitleIsActive(void);
 int setSubtitlesEnabled(int enabled);
 void* gameTextGetPhrase(int textId, int phraseIndex);

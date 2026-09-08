@@ -719,3 +719,10 @@ byte in EN and the three SHA-1-verified secondary targets. Formatting is separat
 and byte-neutral. No match credit, storage layout, compiler profile, or regional
 classification changes; the EN all-source and strict checksum gates pass with
 30-second limits.
+
+## Typed font measurement (2026-09-08)
+
+[Font metrics and string measurement](gametext_font_metrics.md) recover the
+renderer color-mode byte and replace measurement's raw font-record arithmetic
+with typed access. All function bytes, data, normalized relocations and match
+scores remain unchanged across the four verified retail versions.
