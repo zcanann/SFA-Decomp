@@ -47,3 +47,50 @@ This is data recovery with unchanged match credit.
 Both `ninja all_source` and the strict retail DOL checksum pass. The TU remains
 `NonMatching`; its preserved source output is verified by object comparison,
 while the matching DOL checks integration using the retail object.
+
+## Indexed formatter recovery
+
+`debugPrintfxy` now uses one signed character index and an unsigned-byte text
+buffer. The pre-increment loop starts its index at -1; it never constructs a
+pointer before the buffer. This replaces two artificial one-element pointer
+arrays and their manually synchronized cursors.
+
+With the TU's `nostrength` restriction removed, GC/1.3 generates both retail
+cursor inductions from the indexed loop and matches all **106 instructions /
+424 bytes**. Keeping `nostrength` produces indexed loads instead; a conventional
+post-increment `for` loop produces one cursor, also unlike retail. No assembly,
+per-function profile, compiler-version override, or section directive is added.
+The rest of the existing TU profile remains provisional.
+
+This is an explicit temporary regression in fuzzy similarity, not an aggregate
+similarity win. All ten previously exact functions remain byte-identical, and
+the new exact formatter increases the TU to 11/14 exact functions. The other
+two affected functions still contain manually advanced framebuffer offsets:
+
+| Function | Before | After | Retail / new instructions |
+| --- | ---: | ---: | ---: |
+| `debugPrintfxy` | 99.386795% | 100% | 106 / 106 |
+| `debugTextDrawToFrameBuffer` | 97.65625% | 81.385414% | 96 / 90 |
+| `errorThreadFunc` | 99.95389% | 85.09943% | 694 / 767 |
+
+Whole-TU fuzzy similarity changes from 99.78832% to 93.79543%. All allocated
+non-text section bytes, sizes and alignments, and non-text named symbol layouts
+are unchanged; all 10,272 assigned data bytes remain exact. The remaining
+framebuffer loops need source recovery under this common profile, not a
+function-specific rollback of strength reduction. Straight indexed scanline
+helpers and dead-store/propagation flag probes did not recover their matches
+and are not retained.
+
+`python -m unittest discover -s tools -p test_debug_printfxy.py` tests the
+production formatter and font view at host `-O0` and `-O2`. It covers disabled
+and empty input, every nonzero byte, lowercase folding, tabs including negative
+starting coordinates, newlines, spaces, embedded termination, a 255-byte input,
+64 randomized strings, both framebuffer dispatches, and restoration of the
+original framebuffer. Changing space advance from eight to nine in memory
+fails both layout tests. Formatting is mocked as a `%s` copy and rasterization
+as recorded glyph calls; these tests do not validate MSL variadic formatting,
+overflowing input, or hardware framebuffer writes.
+
+A full `ninja all_source` rebuild and a fresh strict DOL checksum check pass.
+The unit remains `NonMatching`: the checksum uses its retail object, while
+the exact formatter result is independently checked against the source object.

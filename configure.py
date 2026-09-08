@@ -1828,7 +1828,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/thp/picmenu.c", cflags=cflags_dll_noopt_noinline, section_alignments={".sdata2": 4}),
             Object(MatchingFor("GSAE01"), "main/thp/THPRead.c"),
             Object(MatchingFor("GSAE01"), "main/thp/THPVideoDecode.c"),
-            Object(NonMatching, "main/dll_80136a40.c", cflags=cflags_dll_noopt_nostrength),
+            Object(NonMatching, "main/dll_80136a40.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/obj_movelib.c", cflags=cflags_dll_noopt_nocse),
 
             Object(MatchingFor("GSAE01"), "main/rand.c", cflags=cflags_game, extra_cflags=["-O0"], progress_category="game"),

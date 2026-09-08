@@ -643,22 +643,20 @@ void debugPrintfxy(int x, int y, char* fmt, ...) {
     int drawY;
     u16* savedFrameBuffer;
     int lineStartX = x;
-    u8* endCursor[1];
-    u8* character[1];
+    int characterIndex;
     u8* glyphRows;
     va_list args;
-    char text[256];
+    u8 text[256];
 
     if (enableDebugText != 0) {
         drawX = lineStartX;
         drawY = y;
         va_start(args, fmt);
-        vsprintf(text, fmt, args);
+        vsprintf((char*)text, fmt, args);
         savedFrameBuffer = debugDrawFrameBuffer;
-        endCursor[0] = (u8*)&text[-1];
-        character[0] = (u8*)text - 1;
-        while (character[0]++, *++endCursor[0] != 0) {
-            switch (*character[0]) {
+        characterIndex = -1;
+        while (text[++characterIndex] != 0) {
+            switch (text[characterIndex]) {
             case 0xa:
                 drawY += 0xc;
                 drawX = lineStartX;
@@ -670,14 +668,14 @@ void debugPrintfxy(int x, int y, char* fmt, ...) {
                 drawX += 8;
                 break;
             default:
-                if (*character[0] >= 0x61 && *character[0] <= 0x7a) {
-                    *character[0] -= 0x20;
+                if (text[characterIndex] >= 0x61 && text[characterIndex] <= 0x7a) {
+                    text[characterIndex] -= 0x20;
                 }
-                if (*character[0] >= 0x21 && *character[0] <= 0x5a) {
+                if (text[characterIndex] >= 0x21 && text[characterIndex] <= 0x5a) {
                     debugDrawFrameBuffer = externalFrameBuffer0;
                     debugTextDrawToFrameBuffer(
                         drawX, drawY,
-                        glyphRows = ((DebugFontErrorDataView*)gDebugFontAndErrorData)->glyphRows[*character[0] - 0x21],
+                        glyphRows = ((DebugFontErrorDataView*)gDebugFontAndErrorData)->glyphRows[text[characterIndex] - 0x21],
                         -1);
                     debugDrawFrameBuffer = externalFrameBuffer1;
                     debugTextDrawToFrameBuffer(drawX, drawY, glyphRows, -1);
