@@ -39,19 +39,32 @@ This dependency-free data TU therefore does not import those incomplete
 declarations. Consumers retain the incomplete declarations and their original
 address-based access. No forced section or synthetic float literal is involved.
 
-## Verification and remaining work
+## Universal instruction match
 
-- `powf` instruction bytes are unchanged: 479 instructions, 99.78079% objdiff,
-  with twelve operand differences in the three inlined log2 paths.
+- The logarithm's interpolated and exact-table return paths have separate
+  exponent-conversion and biased-result temporaries. The exponential similarly
+  separates its polynomial correction from the final mantissa accumulator.
+  Keeping these as ordinary float assignments and compound additions resolves
+  the twelve recurring operand differences in the three inlined paths.
+- `powf` now matches all 479 instructions (1,916 bytes) in every available retail
+  version: `GSAE01`, `GSAE01_rev1`, `GSAJ01`, `GSAP01`, and `GSAP01_rev1`.
+  Each fresh target/source objdiff also reports all 624 data bytes exact. No
+  version-dependent source or compiler-profile changes are involved.
 - Its complete 624-byte data ownership now matches, including the newly owned
   eight-byte correction pair. Relocations to the new table symbols and local
   data-section base resolve to the same retail addresses.
+- PAL rev1's previously unclaimed pair at `0x803DE010` is now assigned to this
+  TU. Retail contains `0x3ED20000, 0x3D054765`, matching the compiled pair, and
+  the six SDA references have the same roles as the other four versions.
 - The eight-byte MSL `float.c` unit is fully matching and linked from source.
-- `all_source` and the strict DOL checksum pass. No compiler version changes.
+- EN links `exponentialsf.c` from source; `all_source` and the strict DOL
+  checksum pass. The other four versions remain progress-only builds, so their
+  per-object results are not claims of whole-game source-link validation.
 
 The pre-existing `sconst_type` section pragma for the automatic local
 coefficient-array template is still unresolved. Removing it preserves every
 instruction byte but moves that template to `.sdata2`; C++ mode and older
 GC/1.1/1.2.5 do not independently recover the retail placement. This cleanup
 does not claim to have solved that remaining source-layout problem or the
-per-function optimization pragmas.
+pre-existing per-function optimization pragmas. None was added or changed for
+the universal instruction match.
