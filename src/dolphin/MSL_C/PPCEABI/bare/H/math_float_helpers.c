@@ -2,9 +2,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
-
-
-
 extern const float sExp2UnderflowThreshold;
 extern const float sExp2Zero;
 extern const float sExp2One;
@@ -20,14 +17,12 @@ extern const float sFastFloorNegativeOne;
 extern const float sFastFloorIntegerLimit;
 extern const float sFastFloorOne;
 
-float fabsf(float value)
-{
+float fabsf(float value) {
     double magnitude = __fabs(value);
     return magnitude;
 }
 
-float fastCastU16ToFloat(const u16* input)
-{
+float fastCastU16ToFloat(const u16* input) {
     register const u16* ptr = input;
     register float result;
 
@@ -39,8 +34,7 @@ float fastCastU16ToFloat(const u16* input)
     return result;
 }
 
-void fastCastFloatToU16(float value, u16* output)
-{
+void fastCastFloatToU16(float value, u16* output) {
     register u16* ptr = output;
     register float input = value;
 
@@ -52,8 +46,7 @@ void fastCastFloatToU16(float value, u16* output)
 
 #pragma optimization_level 0
 #pragma optimize_for_size on
-float exp2f(float value)
-{
+float exp2f(float value) {
     s16 exponent;
     float integerPart;
     float fraction;
@@ -76,8 +69,11 @@ float exp2f(float value)
             fraction += sExp2One;
         }
 
-        result.value = (((sExp2FractionCoeff4 * fraction + sExp2FractionCoeff3) * fraction + sExp2FractionCoeff2) * fraction + sExp2FractionCoeff1)
-               * fraction + sExp2FractionCoeff0;
+        result.value =
+            (((sExp2FractionCoeff4 * fraction + sExp2FractionCoeff3) * fraction + sExp2FractionCoeff2) * fraction +
+             sExp2FractionCoeff1) *
+                fraction +
+            sExp2FractionCoeff0;
     } else {
         result.value = sExp2One;
     }
@@ -89,8 +85,7 @@ float exp2f(float value)
 #pragma optimize_for_size reset
 #pragma optimization_level reset
 
-float expf(float value)
-{
+float expf(float value) {
     return exp2f(sExpLog2EWithTail[0] * *(float*)&value);
 }
 
@@ -105,8 +100,7 @@ const float sExp2FractionCoeff4 = 0.013683983124792576f;
 /* Only the first word is consumed; retain the zero tail without assigning it a role. */
 const float sExpLog2EWithTail[2] = {1.4426950216293335f, 0.0f};
 
-float fastCastS16ToFloat(const s16* input)
-{
+float fastCastS16ToFloat(const s16* input) {
     register const s16* ptr = input;
     register float result;
 
@@ -118,8 +112,7 @@ float fastCastS16ToFloat(const s16* input)
     return result;
 }
 
-void fastCastFloatToS16(float value, s16* output)
-{
+void fastCastFloatToS16(float value, s16* output) {
     register s16* ptr = output;
     register float input = value;
 
@@ -138,8 +131,7 @@ const float lbl_803E79B4 = 0.0f;
 
 #pragma optimization_level 0
 #pragma optimize_for_size on
-float fastFloorf(float value)
-{
+float fastFloorf(float value) {
     float absoluteValue;
     float roundedValue;
     u16 shortValue;
