@@ -128,8 +128,12 @@ def scan_strings(dol: DolFile) -> list[DolString]:
 def load_function_symbols(path: Path | None) -> list[FunctionSymbol]:
     if path is None or not path.is_file():
         return []
+    return parse_function_symbols(path.read_text(encoding="utf-8", errors="replace"))
+
+
+def parse_function_symbols(text: str) -> list[FunctionSymbol]:
     functions: list[FunctionSymbol] = []
-    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+    for line in text.splitlines():
         match = SYMBOL_FUNCTION_RE.match(line)
         if match is None:
             continue

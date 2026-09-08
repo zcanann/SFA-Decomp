@@ -5,9 +5,14 @@ import struct
 import tempfile
 from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
+from contextlib import redirect_stderr
+from io import StringIO
 
 from orig.dol_xrefs import DolSection
-from version_progress import SymbolSpan, build_boundary_map, symbol_span_index, verified_dol
+from version_progress import (SymbolSpan, SplitRange, VersionProjection, build_boundary_map,
+                              symbol_span_index, verified_dol, project_symbol_snapshot,
+                              project_version, build_symbol_mappings, main)
 
 
 def dol(data, address):
@@ -75,6 +80,83 @@ class RetailIdentityTests(unittest.TestCase):
             config.write_text('hash: unknown\n')
             with self.assertRaisesRegex(ValueError, 'Missing or unsupported'):
                 verified_dol(path, config)
+
+
+class ProjectionRefinementTests(unittest.TestCase):
+    def setUp(self):
+        code = struct.pack('>8I', *([0x38600001] * 7 + [0x4E800020]))
+        other = struct.pack('>8I', *([0x4E800020] * 8))
+
+        def image(address, text):
+            data = text + bytes(8)
+            section = DolSection(1, 0, address, len(text))
+            return SimpleNamespace(path=Path('synthetic.dol'), data=data,
+                                   text_sections=[section], sections=[section,
+                                   DolSection(12, len(text), address + 0x1000, 4),
+                                   DolSection(13, len(text) + 4, address + 0x2000, 4)] +
+                                   [DolSection(i, len(data), address + 0x3000 + i * 0x100, 0)
+                                    for i in (0, 7, 8, 9, 10, 11, 14)])
+
+        self.source = image(0x80010000, code)
+        self.target = image(0x80020000, code + other)
+        self.splits = [SplitRange('example.c', 'text', 0x80010000, 0x80010020)]
+        self.source_symbols = 'canonical = .text:0x80010000; // type:function size:0x20\n'
+        self.target_symbols = 'legacy = .text:0x80020000; // type:function size:0x20\n'
+
+    def project(self, target_symbols=None):
+        return project_version(self.source, self.splits, self.source_symbols,
+                               self.target, self.target_symbols if target_symbols is None else target_symbols)
+
+    def test_renames_and_fallbacks_describe_the_same_snapshot(self):
+        first = project_symbol_snapshot(self.source, self.splits, self.source_symbols,
+                                        self.target, self.target_symbols)
+        self.assertEqual(build_symbol_mappings(first.ported, first.matches),
+                         {'example.c': {'legacy': 'canonical'}})
+        result = self.project()
+        self.assertIn('canonical = .text:0x80020000;', result.symbols)
+        self.assertEqual(build_symbol_mappings(result.ported, result.matches), {})
+        self.assertEqual(result.renamed, 1)
+        self.assertGreater(result.passes, 1)
+        repeated = self.project(result.symbols)
+        self.assertEqual(repeated.passes, 1)
+        self.assertEqual(repeated.symbols, result.symbols)
+        self.assertEqual(repeated.ported, result.ported)
+
+    def test_unclaimed_name_conflict_keeps_a_real_fallback(self):
+        result = self.project(self.target_symbols +
+                              'canonical = .text:0x80020020; // type:function size:0x20\n')
+        self.assertIn('legacy = .text:0x80020000;', result.symbols)
+        self.assertEqual(build_symbol_mappings(result.ported, result.matches),
+                         {'example.c': {'legacy': 'canonical'}})
+        self.assertEqual(result.conflicts, 1)
+
+    @staticmethod
+    def snapshot(symbols):
+        return VersionProjection([], {}, {}, 0, 0, {}, {}, 0, symbols, 0, 0, 0)
+
+    def test_cycle_and_pass_limit_are_rejected(self):
+        with patch('version_progress.project_symbol_snapshot',
+                   side_effect=[self.snapshot('changed'), self.snapshot(self.target_symbols)]):
+            with self.assertRaisesRegex(ValueError, 'cycles'):
+                self.project()
+        with patch('version_progress.project_symbol_snapshot',
+                   side_effect=[self.snapshot('first'), self.snapshot('second')]):
+            with self.assertRaisesRegex(ValueError, 'did not stabilize in 2 passes'):
+                project_version(self.source, self.splits, self.source_symbols,
+                                self.target, self.target_symbols, max_passes=2)
+
+    def test_failed_projection_does_not_publish_partial_configuration(self):
+        args = SimpleNamespace(source='EN', target='JP', write=True, write_matching=False, verbose=False)
+        with patch('argparse.ArgumentParser.parse_args', return_value=args), \
+                patch('version_progress.verified_dol'), \
+                patch('version_progress.load_splits', return_value=([], [])), \
+                patch('pathlib.Path.read_text', return_value=''), \
+                patch('version_progress.project_version', side_effect=ValueError('unstable')), \
+                patch('version_progress.write_lf_text') as write, redirect_stderr(StringIO()):
+            with self.assertRaises(SystemExit) as error:
+                main()
+            self.assertEqual(error.exception.code, 2)
+            write.assert_not_called()
 
 
 if __name__ == '__main__':

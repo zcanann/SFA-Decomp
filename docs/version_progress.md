@@ -99,3 +99,51 @@ recovered padding record preserves its existing code generation.
 
 The refresh also includes the incoming shared `powf` match: all three
 regional reports show its complete code and data at 100%.
+
+## Consistent projection in one invocation
+
+`version_progress.py` now refines projected symbol metadata in memory until
+it stops changing, then publishes splits, symbols, and fallback mappings from
+that same final snapshot. Previously the tool built mappings against the old
+names and wrote splits before rendering the new symbols. A second invocation
+could remove stale fallback entries and change boundaries using symbol extents
+that the first invocation had just recovered.
+
+The historical EN rev1 configuration demonstrates the boundary dependency:
+the first pass placed the BossDrakor/slot 590 `.data` boundary at
+`0x8032AD18`; the refined result places it at `0x8032AD30`. PAL rev1 similarly
+moves from `0x8032BA58` to `0x8032BA70`. Both numbered TUs remain present.
+The existing unique symbol-chain and direct-text-reference ownership checks
+establish these refinements; the change adds no new matching heuristic or
+version-specific boundary override.
+
+Starting from the pre-refresh symbol files and from the current files now
+produces identical final symbols and ranges for EN rev1, JP, and PAL rev1.
+The historical inputs stabilize in two passes within one invocation. The final
+splits agree with the already-reviewed configurations, preserving the corrected
+data ownership without requiring users to run the command twice. Fallbacks
+still retain real canonical-name conflicts with unclaimed functions.
+
+Symbol parsing and rendering accept in-memory text snapshots; their file-based
+entry points remain available. The function parser returns the same complete
+records for all four verified targets. A cycle or failure to stabilize within
+eight passes rejects the projection before any configuration is written, as
+does a projection/rendering error. This is a pre-publication validation gate,
+not an atomic filesystem transaction if a later write itself fails.
+
+Nine projector regression tests cover packed boundaries, retail identity,
+end-to-end canonical renaming, retained conflicts, stable repetition, cycles,
+the pass limit, and suppression of partial publication on projection failure.
+The three source-worklist tests also pass. Run the projector tests with:
+
+```sh
+python3 -m unittest discover -s tools -p test_version_progress.py
+```
+
+Restoring the old single-pass behavior makes the canonical-renaming regression
+fail because its fallback still names the removed symbol. Full regional builds,
+fresh reports, and exact-unit manifest audits pass: EN rev1 retains 878 exact
+units, JP 911, and PAL rev1 846. All generated configuration files are unchanged
+after the builds restore toolkit annotations. EN `all_source` and the strict
+retail checksum also pass within their 30-second limits. This fixes repeatable
+regional generation; it does not claim new game-code matches.

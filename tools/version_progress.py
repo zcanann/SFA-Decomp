@@ -20,7 +20,7 @@ from collections import defaultdict
 from dataclasses import dataclass, replace
 from pathlib import Path
 
-from orig.dol_xrefs import DolFile, FunctionSymbol, load_function_symbols
+from orig.dol_xrefs import DolFile, FunctionSymbol, load_function_symbols, parse_function_symbols
 
 
 CODE_SECTIONS = {"init", "text"}
@@ -474,9 +474,13 @@ def build_all_boundary_maps(
 
 
 def load_symbol_spans(path: Path) -> dict[str, tuple[SymbolSpan, ...]]:
+    return parse_symbol_spans(path.read_text(encoding="utf-8"))
+
+
+def parse_symbol_spans(text: str) -> dict[str, tuple[SymbolSpan, ...]]:
     spans: dict[str, list[SymbolSpan]] = defaultdict(list)
     size_re = re.compile(r"\bsize:0x([0-9A-Fa-f]+)\b")
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in text.splitlines():
         match = SYMBOL_LINE_RE.match(line)
         size_match = size_re.search(line)
         if match is None or size_match is None:
@@ -1462,8 +1466,19 @@ def render_projected_symbols(
     names.
     """
 
-    source_lines = source_path.read_text(encoding="utf-8").splitlines()
-    target_lines = target_path.read_text(encoding="utf-8").splitlines()
+    return render_projected_symbol_texts(
+        source_path.read_text(encoding="utf-8"), target_path.read_text(encoding="utf-8"), ported, matches
+    )
+
+
+def render_projected_symbol_texts(
+    source_text: str,
+    target_text: str,
+    ported: list[PortedRange],
+    matches: dict[int, FunctionSymbol],
+) -> tuple[str, int, int, int]:
+    source_lines = source_text.splitlines()
+    target_lines = target_text.splitlines()
     claimed_by_section: dict[str, list[PortedRange]] = defaultdict(list)
     ranges_by_section: dict[str, list[PortedRange]] = defaultdict(list)
     for item in ported:
@@ -1612,47 +1627,34 @@ def render_projected_symbols(
     )
 
 
-def write_lf_text(path: Path, text: str) -> None:
-    with path.open("w", encoding="utf-8", newline="\n") as stream:
-        stream.write(text)
+@dataclass(frozen=True)
+class VersionProjection:
+    ported: list[PortedRange]
+    matches: dict[int, FunctionSymbol]
+    rejected: dict[str, int]
+    folded_padding_ranges: int
+    exact_symbol_range_remaps: int
+    rejected_units: dict[str, tuple[str, ...]]
+    anchor_counts: dict[str, tuple[int, int]]
+    snapped_boundaries: int
+    symbols: str
+    renamed: int
+    conflicts: int
+    symbol_delta: int
+    passes: int = 1
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("target", help="target version under config/ and orig/")
-    parser.add_argument(
-        "--source", default="GSAE01", help="source version (default: GSAE01)"
-    )
-    parser.add_argument(
-        "--write", action="store_true", help="write target splits and mappings"
-    )
-    parser.add_argument(
-        "--write-matching",
-        action="store_true",
-        help="write exact source units from the target's current report",
-    )
-    parser.add_argument(
-        "--verbose", action="store_true", help="list rejected translation units"
-    )
-    args = parser.parse_args()
-
-    source_root = Path("config") / args.source
-    target_root = Path("config") / args.target
-    try:
-        source_dol = verified_dol(Path("orig") / args.source / "sys" / "main.dol", source_root / "config.yml")
-        target_dol = verified_dol(Path("orig") / args.target / "sys" / "main.dol", target_root / "config.yml")
-    except (ValueError, FileNotFoundError) as error:
-        parser.error(str(error))
-    source_functions = load_function_symbols(source_root / "symbols.txt")
-    target_functions = load_function_symbols(target_root / "symbols.txt")
-    target_header, _ = load_splits(target_root / "splits.txt")
-    _, source_splits = load_splits(source_root / "splits.txt")
-
+def project_symbol_snapshot(
+    source_dol: DolFile, source_splits: list[SplitRange], source_symbols: str,
+    target_dol: DolFile, target_symbols: str,
+) -> VersionProjection:
+    source_functions = parse_function_symbols(source_symbols)
+    target_functions = parse_function_symbols(target_symbols)
     matches = unique_function_matches(
         source_dol, source_functions, target_dol, target_functions
     )
-    source_symbol_spans = load_symbol_spans(source_root / "symbols.txt")
-    target_symbol_spans = load_symbol_spans(target_root / "symbols.txt")
+    source_symbol_spans = parse_symbol_spans(source_symbols)
+    target_symbol_spans = parse_symbol_spans(target_symbols)
     target_named_symbol_span_index = symbol_span_index(target_symbol_spans)
     target_all_symbol_span_index = symbol_span_index(
         target_symbol_spans, include_address_symbols=True
@@ -1693,6 +1695,94 @@ def main() -> int:
         source_symbol_spans,
         target_symbol_spans,
     )
+    symbols, renamed, conflicts, symbol_delta = render_projected_symbol_texts(
+        source_symbols, target_symbols, ported, matches
+    )
+    return VersionProjection(
+        ported=ported, matches=matches, rejected=rejected,
+        folded_padding_ranges=folded_padding_ranges,
+        exact_symbol_range_remaps=exact_symbol_range_remaps,
+        rejected_units=rejected_units, anchor_counts=anchor_counts,
+        snapped_boundaries=snapped_boundaries, symbols=symbols,
+        renamed=renamed, conflicts=conflicts, symbol_delta=symbol_delta,
+    )
+
+
+def project_version(
+    source_dol: DolFile, source_splits: list[SplitRange], source_symbols: str,
+    target_dol: DolFile, target_symbols: str, *, max_passes: int = 8,
+) -> VersionProjection:
+    """Refine symbol boundaries before publishing one internally consistent result.
+
+    Coherent ranges reveal finer target symbol extents. Those extents can unlock
+    the existing binary-chain and ownership checks on the next pass. All passes
+    remain in memory; unstable projections must not partially update configs.
+    """
+    seen = {target_symbols}
+    renamed = symbol_delta = 0
+    for iteration in range(1, max_passes + 1):
+        result = project_symbol_snapshot(
+            source_dol, source_splits, source_symbols, target_dol, target_symbols
+        )
+        renamed += result.renamed
+        symbol_delta += result.symbol_delta
+        if result.symbols == target_symbols:
+            return replace(result, renamed=renamed, symbol_delta=symbol_delta, passes=iteration)
+        if result.symbols in seen:
+            raise ValueError("Regional symbol projection cycles; no configuration written")
+        seen.add(result.symbols)
+        target_symbols = result.symbols
+    raise ValueError(
+        f"Regional symbol projection did not stabilize in {max_passes} passes; no configuration written"
+    )
+
+
+def write_lf_text(path: Path, text: str) -> None:
+    with path.open("w", encoding="utf-8", newline="\n") as stream:
+        stream.write(text)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("target", help="target version under config/ and orig/")
+    parser.add_argument(
+        "--source", default="GSAE01", help="source version (default: GSAE01)"
+    )
+    parser.add_argument(
+        "--write", action="store_true", help="write target splits and mappings"
+    )
+    parser.add_argument(
+        "--write-matching",
+        action="store_true",
+        help="write exact source units from the target's current report",
+    )
+    parser.add_argument(
+        "--verbose", action="store_true", help="list rejected translation units"
+    )
+    args = parser.parse_args()
+
+    source_root = Path("config") / args.source
+    target_root = Path("config") / args.target
+    try:
+        source_dol = verified_dol(Path("orig") / args.source / "sys" / "main.dol", source_root / "config.yml")
+        target_dol = verified_dol(Path("orig") / args.target / "sys" / "main.dol", target_root / "config.yml")
+    except (ValueError, FileNotFoundError) as error:
+        parser.error(str(error))
+    target_header, _ = load_splits(target_root / "splits.txt")
+    _, source_splits = load_splits(source_root / "splits.txt")
+    try:
+        projection = project_version(
+            source_dol, source_splits, (source_root / "symbols.txt").read_text(encoding="utf-8"),
+            target_dol, (target_root / "symbols.txt").read_text(encoding="utf-8"),
+        )
+    except ValueError as error:
+        parser.error(str(error))
+    ported, matches = projection.ported, projection.matches
+    rejected, rejected_units = projection.rejected, projection.rejected_units
+    anchor_counts = projection.anchor_counts
+    snapped_boundaries = projection.snapped_boundaries
+    exact_symbol_range_remaps = projection.exact_symbol_range_remaps
+    folded_padding_ranges = projection.folded_padding_ranges
     mappings = build_symbol_mappings(ported, matches)
     split_text = render_splits(target_header, ported)
     mapping_text = json.dumps(mappings, indent=2, sort_keys=True) + "\n"
@@ -1722,6 +1812,7 @@ def main() -> int:
         f"{exact_symbol_range_remaps} exact symbol-range remaps, "
         f"{folded_padding_ranges} folded padding ranges"
     )
+    print(f"  Symbol refinement stabilized in {projection.passes} passes")
     for section, counts in anchor_counts.items():
         boundaries = {
             address
@@ -1741,12 +1832,8 @@ def main() -> int:
     if args.write:
         write_lf_text(target_root / "splits.txt", split_text)
         write_lf_text(target_root / "symbol_mappings.json", mapping_text)
-        canonical_symbols, renamed, conflicts, symbol_delta = render_projected_symbols(
-            source_root / "symbols.txt",
-            target_root / "symbols.txt",
-            ported,
-            matches,
-        )
+        canonical_symbols = projection.symbols
+        renamed, conflicts, symbol_delta = projection.renamed, projection.conflicts, projection.symbol_delta
         write_lf_text(target_root / "symbols.txt", canonical_symbols)
         print(f"Wrote {target_root / 'splits.txt'}")
         print(f"Wrote {target_root / 'symbol_mappings.json'}")
