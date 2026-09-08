@@ -110,9 +110,9 @@ static inline float log2_kernel(float value) {
         biasedExponent = exponentValue;
         biasedExponent += 1.375f;
         return biasedExponent + (sLog2MantissaTable[tableIndex] +
-                                           (delta + (sLog2EMinusOne[0] * delta +
-                                                     (sLog2EMinusOne[1] * delta +
-                                                      (delta * delta) * (delta * coefficients[1] + coefficients[0])))));
+                                 (delta + (sLog2EMinusOne[0] * delta +
+                                           (sLog2EMinusOne[1] * delta +
+                                            (delta * delta) * (delta * coefficients[1] + coefficients[0])))));
     } else {
         float exponentValue;
         float biasedExponent;
