@@ -814,6 +814,7 @@ main/objlib.c
 main/pad.c
 main/pi_pathsearch.c
 main/rand.c
+main/rcp_dolphin.c
 main/shadow_dolphin.c
 main/skystars.c
 main/subtitle.c

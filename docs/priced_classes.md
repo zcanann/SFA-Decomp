@@ -349,6 +349,11 @@ without a genuinely new lever. The DOL still holds because every affected unit w
 
 ## 6b. Same class in two `src/main` units: `trig` + `rcp_dolphin` (purge-priced, measured 2026-08-02)
 
+**2026-09-08 follow-up:** The [distortion pool recovery](rcp_distortion_pool_recovery.md)
+now emits the exact `rcp_dolphin` pool using named scalar constants and same-type
+address reads. Its function instructions are unchanged. The unresolved verdict
+below records the earlier probes and is superseded by that result.
+
 `4461d0aa45` removed eight `const T x[1] = {V}` anchors — five sin/cos approximation
 coefficients from `src/main/trig.c`, three distortion constants from `src/main/rcp_dolphin.c`,
 demoting `rcp_dolphin`. The commit measured and stated `matched_data -272` (trig -192,

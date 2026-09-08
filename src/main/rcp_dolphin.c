@@ -33,6 +33,11 @@
 #include "track/intersect_hud_color_api.h"
 #include "main/shader_init_api.h"
 
+/* Address-based reads preserve the shared named distortion coefficients. */
+const f32 sRcpDistortRadiusScale = 2.146452f;
+const f32 sRcpDistortFalloffPower = 2.520326f;
+const f32 sRcpDistortStrengthScale = 255.0f;
+
 u8 gRcpDistortSlotIndex;
 u8 gRcpDistortGroup;
 void* gRcpDistortTexture;
@@ -421,15 +426,15 @@ void Rcp_InitDistortionEffects(void)
     gRcpDistortSlotIndex = i = 0;
     cfg = &gRcpDistortConfigs[0].radius;
     slots = gRcpDistortSlots;
-    radiusScale = 2.146452f;
-    strengthScale = 255.0f;
+    radiusScale = *(const f32*)&sRcpDistortRadiusScale;
+    strengthScale = *(const f32*)&sRcpDistortStrengthScale;
     do
     {
         strength = cfg[i * 2 + 1];
         (slot = &slots[gRcpDistortSlotIndex])->colR = 0xff;
         slot->colG = 0xff;
         slot->colB = 0xff;
-        falloff = radiusScale / powfCoreHighPrecision(cfg[i * 2], 2.520326f);
+        falloff = radiusScale / powfCoreHighPrecision(cfg[i * 2], *(const f32*)&sRcpDistortFalloffPower);
         slot = &slots[gRcpDistortSlotIndex];
         pairIdx = i & 1;
         slot->params[pairIdx] = falloff;
