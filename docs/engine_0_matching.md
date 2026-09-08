@@ -643,3 +643,50 @@ Current function MD5: `fba550f4ccad52cdca4f9d4e713101c6`.
 The entire original source object was restored byte-for-byte after probing.
 Strict `ninja` and `ninja all_source` pass with 30-second timeouts, and
 formatting checks pass for the active TU and its API header.
+
+
+## September 8: head display exact
+
+`headDisplayDraw` now matches all **1,920 bytes / 480 instructions** in
+EN v1.0, improving from **99.677086% to 100%** and closing the nine-word
+residual above. All five supported retail versions now report 100% for
+this function.
+
+The matching source derives the two shimmer phases from the four-pixel
+scanline offset (`y * 3400` and `y * 2000`). MWCC emits the retail induction
+counters and their initial zero copies. The fade value is captured from
+its signed-halfword store expression:
+`panelAlpha = gHeadDisplayFadeAlpha = clampedAlpha;`.
+This preserves the desired alpha and dimension registers alongside the
+derived counters.
+
+Two shared integer temporaries retain their successive roles. `y` holds
+the viewport Y selection, then the scanline offset, then the border's top
+coordinate. `value` holds the clamped height and then each strip's Y
+coordinate; its initial height comparison keeps the unsigned cast.
+Splitting these lifetimes changes allocation. The old local `width` is
+named `panelY`, reflecting its actual use as the panel's vertical origin.
+No compiler setting, API declaration, or TU boundary changes.
+
+The same-TU Arwing fix supplied the useful combined-expression approach;
+the exact `ObjModel_RelocateAnimData` loop and `drawHudBox` supplied counter
+and border examples. The final change preserves the sine-call order,
+random samples, opacity calculations, and border geometry.
+
+Regional comparison establishes one real viewport difference: EN v1.0
+and JP load `GXRModeObj.xfbHeight` at offset 8; EN rev1 and both PAL builds
+load `efbHeight` at offset 6. A version condition selects that field.
+Every input DOL is verified against its configured retail SHA1. The
+complete TU remains `NonMatching`, so no whole-object regional progress
+manifest is promoted.
+
+Only 20 instruction bytes change in the EN object and diagnostic source
+link. The other 117 functions, allocated data bytes and layouts, named
+symbol offsets, and resolved relocations are unchanged; anonymous literal
+names are renumbered. Exact functions rise to **112 / 118**, exact code to
+**60,980 / 75,188 bytes**, and all **9,960** assigned data bytes remain exact.
+Target/current function MD5 is `5f90aa03deb9c029ec57996869a95603`.
+
+Validation includes all five regional function comparisons, the strict
+EN checksum target, and `ninja all_source` with 30-second build timeouts.
+Formatting is committed separately and verified to preserve object bytes.

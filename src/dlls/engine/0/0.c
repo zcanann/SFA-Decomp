@@ -3613,17 +3613,13 @@ typedef struct HeadDisplayEntry {
 
 void headDisplayDraw(void) {
     s16 panelAlpha;
-    int wavePhaseA;
-    u32 width;
-    u32 height;
+    u32 panelY;
+    u32 panelHeight;
     u8 panelType;
-    int viewportY;
+    int y;
     int clampedAlpha;
     int waveAlpha;
-    int wavePhaseB;
-    int drawY;
-    int lineOffset;
-    u32 clampedHeight;
+    int value;
     f32 wave;
     f32 cameraOrigin;
     if (gHeadDisplayActive != 0) {
@@ -3653,30 +3649,29 @@ void headDisplayDraw(void) {
         } else if (clampedAlpha > 0xff) {
             clampedAlpha = 0xff;
         }
-        panelAlpha = clampedAlpha;
-        gHeadDisplayFadeAlpha = panelAlpha;
-        clampedHeight = gHeadDisplayPanelHeight;
-        if (clampedHeight > 0x6e) {
-            clampedHeight = 0x6e;
+        panelAlpha = gHeadDisplayFadeAlpha = clampedAlpha;
+        value = gHeadDisplayPanelHeight;
+        if ((u32)value > 0x6e) {
+            value = 0x6e;
         }
-        gHeadDisplayPanelHeight = clampedHeight;
-        width = gHeadDisplayPanelWidth;
-        height = (u16)clampedHeight;
+        gHeadDisplayPanelHeight = value;
+        panelY = gHeadDisplayPanelWidth;
+        panelHeight = (u16)value;
         panelType = gHeadDisplayEntryTable[gHeadDisplayEntryIdx * HEADREC_STRIDE + HEADREC_PANEL_TYPE];
         switch (panelType) {
         default:
         case 1:
-            viewportY = 0x19a;
+            y = 0x19a;
             break;
         case 3:
-            viewportY = 0x195;
+            y = 0x195;
             break;
         case 2:
-            viewportY = 0x186;
+            y = 0x186;
             break;
         }
-        GXSetScissor(0x1ea, width, 0x78, height);
-        drawRect(490.0f, (f32)(int)width, 0x78, height);
+        GXSetScissor(0x1ea, panelY, 0x78, panelHeight);
+        drawRect(490.0f, (f32)(int)panelY, 0x78, panelHeight);
         gGameUiSavedFovY = Camera_GetFovY();
         Camera_SetFovY(43.0f);
         Camera_SetCurrentViewIndex(1);
@@ -3687,8 +3682,13 @@ void headDisplayDraw(void) {
         Camera_SetCurrentViewRotation(0x8000, 0, 0);
         Camera_UpdateViewMatrices();
         Camera_RebuildProjectionMatrix();
-        GXSetViewport(230.0f, viewportY - 240.0f, (f32)(u32)gRenderModeObj->fbWidth,
-                      (f32)(u32)gRenderModeObj->xfbHeight, 0.0f, 1.0f);
+        GXSetViewport(230.0f, y - 240.0f, (f32)(u32)gRenderModeObj->fbWidth,
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
+                      (f32)(u32)gRenderModeObj->xfbHeight,
+#else
+                      (f32)(u32)gRenderModeObj->efbHeight,
+#endif
+                      0.0f, 1.0f);
         if (gHeadDisplayModelObjs[panelType] != NULL) {
             ObjAnim_AdvanceCurrentMove(gHeadDisplayModelObjs[panelType], gPauseMenuPanelAnims.speeds[panelType],
                                        timeDelta, NULL);
@@ -3709,34 +3709,31 @@ void headDisplayDraw(void) {
         Camera_ApplyFullViewport();
         GXSetScissor(0, 0, 0x280, 0x1e0);
         gGameUiShimmerFrame += 1;
-        wavePhaseA = wavePhaseB = lineOffset = 0;
-        for (; lineOffset < (int)height; lineOffset += 4) {
-            wave = 0.02f * fsin16Approx((int)(u16)(wavePhaseB + gGameUiShimmerFrame * 0xfa0)) +
-                   0.02f * fsin16Approx((int)(u16)(wavePhaseA + gGameUiShimmerFrame * 0x1838));
+        y = 0;
+        for (; y < (int)panelHeight; y += 4) {
+            wave = 0.02f * fsin16Approx((int)(u16)(y * 0x7d0 + gGameUiShimmerFrame * 0xfa0)) +
+                   0.02f * fsin16Approx((int)(u16)(y * 0xd48 + gGameUiShimmerFrame * 0x1838));
             waveAlpha = (int)((f32)(s16)panelAlpha * (0.4f + wave));
             clampedAlpha = waveAlpha < 0 ? 0 : waveAlpha;
 
-            drawPartialTexture(hudTextures[84], 490.0f, (f32)(drawY = width + lineOffset),
-                               clampedAlpha > 0xff ? 0xff : clampedAlpha, 0x100, 0x78, 2, randomGetRange(0, 0x1e) << 1,
-                               randomGetRange(0, 0x1e) << 1);
+            drawPartialTexture(hudTextures[84], 490.0f, (f32)(value = panelY + y),
+                               clampedAlpha > 0xff ? 0xff : clampedAlpha, 0x100, 0x78, 2, randomGetRange(0, 0x1e) << 1, randomGetRange(0, 0x1e) << 1);
             clampedAlpha = (int)((f32)(s16)panelAlpha * (0.3f + wave));
             if (clampedAlpha < 0) {
                 clampedAlpha = 0;
             }
 
-            drawPartialTexture(hudTextures[84], 490.0f, (f32)(drawY + 2), clampedAlpha > 0xff ? 0xff : clampedAlpha,
+            drawPartialTexture(hudTextures[84], 490.0f, (f32)(value + 2), clampedAlpha > 0xff ? 0xff : clampedAlpha,
                                0x100, 0x78, 2, randomGetRange(0, 0x1e) << 1, randomGetRange(0, 0x1e) << 1);
-            wavePhaseA += 0x3520;
-            wavePhaseB += 0x1f40;
         }
-        drawTexture(hudTextures[10], 485.0f, (s16)width - 5, panelAlpha, 0x100);
-        drawScaledTexture(hudTextures[13], 490.0f, (s16)width - 5, panelAlpha, 0x100, 0x78, 5, 0);
-        drawScaledTexture(hudTextures[11], 485.0f, (s16)width, panelAlpha, 0x100, 5, (s16)height, 0);
-        drawScaledTexture(hudTextures[13], 490.0f, (s16)width + (s16)(int)height, panelAlpha, 0x100, 0x78, 5, 2);
-        drawScaledTexture(hudTextures[11], 610.0f, (s16)width, panelAlpha, 0x100, 5, (s16)height, 1);
-        drawScaledTexture(hudTextures[10], 610.0f, (s16)width + (s16)(int)height, panelAlpha, 0x100, 5, 5, 3);
-        drawScaledTexture(hudTextures[10], 610.0f, (s16)width - 5, panelAlpha, 0x100, 5, 5, 1);
-        drawScaledTexture(hudTextures[10], 485.0f, (s16)width + (s16)(int)height, panelAlpha, 0x100, 5, 5, 2);
+        drawTexture(hudTextures[10], 485.0f, (y = (s16)panelY - 5), panelAlpha, 0x100);
+        drawScaledTexture(hudTextures[13], 490.0f, y, panelAlpha, 0x100, 0x78, 5, 0);
+        drawScaledTexture(hudTextures[11], 485.0f, (s16)panelY, panelAlpha, 0x100, 5, (s16)panelHeight, 0);
+        drawScaledTexture(hudTextures[13], 490.0f, (s16)panelY + (s16)(int)panelHeight, panelAlpha, 0x100, 0x78, 5, 2);
+        drawScaledTexture(hudTextures[11], 610.0f, (s16)panelY, panelAlpha, 0x100, 5, (s16)panelHeight, 1);
+        drawScaledTexture(hudTextures[10], 610.0f, (s16)panelY + (s16)(int)panelHeight, panelAlpha, 0x100, 5, 5, 3);
+        drawScaledTexture(hudTextures[10], 610.0f, y, panelAlpha, 0x100, 5, 5, 1);
+        drawScaledTexture(hudTextures[10], 485.0f, (s16)panelY + (s16)(int)panelHeight, panelAlpha, 0x100, 5, 5, 2);
     }
 }
 
