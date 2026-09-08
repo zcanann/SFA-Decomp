@@ -61,12 +61,12 @@ char sErrFmtRegisterRange[] = "%d - %d";
  * contain zero; position and tab width use little-endian 16-bit values. */
 enum DebugLogCommand {
     DEBUG_LOG_SET_GLYPH_COLOR = 0x81, /* RGBA bytes, applied on the glyph pass. */
-    DEBUG_LOG_SET_POSITION = 0x82, /* X low/high, Y low/high. */
+    DEBUG_LOG_SET_POSITION = 0x82,    /* X low/high, Y low/high. */
     DEBUG_LOG_PROPORTIONAL_WIDTH = 0x83,
     DEBUG_LOG_FIXED_WIDTH = 0x84,
     DEBUG_LOG_SET_RECT_COLOR = 0x85, /* RGBA bytes, applied on the rectangle pass. */
-    DEBUG_LOG_SET_TAB_WIDTH = 0x86, /* Width low/high. */
-    DEBUG_LOG_SET_SCALE_BIAS = 0x87 /* Unsigned X/Y bytes. */
+    DEBUG_LOG_SET_TAB_WIDTH = 0x86,  /* Width low/high. */
+    DEBUG_LOG_SET_SCALE_BIAS = 0x87  /* Unsigned X/Y bytes. */
 };
 
 u16 gErrExceptionType;
