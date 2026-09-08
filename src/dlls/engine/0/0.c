@@ -6184,14 +6184,15 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
         panelY = gTextBoxes[12].y;
         height = revealedHeight;
         width = gTextBoxes[12].maxWidth;
-        drawTexture(((HudTextures*)hudTextures)->tex28, (panelLeft = panelX - 5), (panelTop = panelY - 5), panelAlpha, 0x100);
+        drawTexture(((HudTextures*)hudTextures)->tex28, (panelLeft = panelX - 5), (panelTop = panelY - 5), panelAlpha,
+                    0x100);
         drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, panelTop, panelAlpha, 0x100, width, 5, 0);
         drawScaledTexture(((HudTextures*)hudTextures)->tex2C, panelLeft, panelY, panelAlpha, 0x100, 5, height, 0);
         drawScaledTexture(((HudTextures*)hudTextures)->tex30, panelX, panelY, panelAlpha, 0x100, width, height, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (panelBottom = panelY + height), panelAlpha, 0x100, width, 5, 2);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (panelBottom = panelY + height), panelAlpha,
+                          0x100, width, 5, 2);
         drawScaledTexture(((HudTextures*)hudTextures)->tex2C, panelX + width, panelY, panelAlpha, 0x100, 5, height, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + width, panelBottom, panelAlpha, 0x100, 5, 5,
-                          3);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + width, panelBottom, panelAlpha, 0x100, 5, 5, 3);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + width, panelTop, panelAlpha, 0x100, 5, 5, 1);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelLeft, panelBottom, panelAlpha, 0x100, 5, 5, 2);
         gTextBoxes[12].height = revealedHeight;
@@ -6221,7 +6222,8 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
                     }
                 }
                 firstAvailableHint = (s8)hintIndex;
-                taskCount = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) + mainGetBit(GAMEBIT_ITEM_SpellStone2_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
+                taskCount = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) +
+                            mainGetBit(GAMEBIT_ITEM_SpellStone2_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
                 if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got)) {
                     taskCount++;
                 }
