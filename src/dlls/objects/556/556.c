@@ -1,63 +1,23 @@
 /*
- * DLL 0x22C (dll22c) - a vertically-moving placed object (Dll22CState,
- * extraSize 0x10).
- *
- * init seeds the state from the placement record (rotX, two game bits,
- * raise height, an init flag) and sinks the object by 1228.0f.
- * The update state-machine (dll_22C_update) drives a rise/hold/fall cycle
- * relative to the player:
- *   mode 0  armed - once gameBit is set and the player is within
- *           230.0f, rise by timeDelta to posY+60.0f,
- *           looping SFX 0x116 on object channel 8 -> mode 1.
- *   mode 1  -> mode 2 with a 100-frame hold (pauseTimer).
- *   mode 2  after the hold, pick descend (mode 3) or ascend (mode 4)
- *           by the player's Y vs placement posY (SFX 0x1cb).
- *   mode 3  fall by timeDelta to posY-1228.0f, then hold (mode 2).
- *   mode 4  rise by timeDelta to posY+60.0f, then hold (mode 2).
- *
- * Render (dll_22C_render) draws via objRenderModelAndHitVolumes; hitDetect,
- * release, initialise and the SeqFn are stubs. dll_22C_free frees the
- * object's expgfx source. The remaining handlers are descriptor
- * callbacks (getExtraSize=0x10, getObjectTypeId=0).
- *
- * The STATIC_ASSERTs below pin sibling-DLL control-record layouts that
- * this family of DLLs shares.
+ * DLL slot 556 (0x22C): a placed object that rises from placement Y - 1228
+ * to placement Y + 60, then alternates endpoints according to the player.
+ * Each completed move pauses for 100 frames. Activation mode 1 bypasses
+ * the initial gamebit gate, retaining the 230-unit proximity check.
  */
-#include "main/dll/dll22cstate_struct.h"
+#include "dlls/objects/556.h"
+
 #include "sys/objects.h"
-#include "main/dll/dbholecontrol1state_struct.h"
-#include "main/dll/dfptorchstate_struct.h"
-#include "main/dll/drakorenergystate_struct.h"
-#include "main/dll/blastflags4_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
-#include "main/dll/dll_022C_dll22c.h"
 #include "main/object_render.h"
-#include "dlls/object_descriptor.h"
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/render_lactions_api.h"
-
-
-
-
-
-STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
-
-STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
-
-
-
-STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
-
-STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
-
-STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
 /* Dll22CState.mode rise/hold/fall cycle (see file-header comment). */
 #define DLL22C_MODE_ARMED      0 /* wait for gameBit + player proximity, then rise -> HOLD_SETUP */
@@ -73,7 +33,7 @@ int dll_22C_SeqFn(void)
 }
 int dll_22C_getExtraSize_ret_16(void)
 {
-    return 0x10;
+    return sizeof(Dll22CState);
 }
 int dll_22C_getObjectTypeId(void)
 {
@@ -100,7 +60,7 @@ void dll_22C_update(GameObject* obj)
 {
     GameObject* object = obj;
     ObjPlacement* placement = object->anim.placement;
-    Dll22CState* blob = object->extra;
+    Dll22CState* state = object->extra;
     GameObject* player;
     int pauseTimer;
     f32 dist;
@@ -112,10 +72,10 @@ void dll_22C_update(GameObject* obj)
     {
         return;
     }
-    switch (blob->mode)
+    switch (state->mode)
     {
     case DLL22C_MODE_ARMED:
-        if (mainGetBit(blob->gameBit) != 0 && blob->raiseMode != 1 &&
+        if (mainGetBit(state->gameBit) != 0 && state->activationMode != 1 &&
             Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < 230.0f)
         {
             if (object->anim.localPosY < 60.0f + placement->posY)
@@ -123,18 +83,18 @@ void dll_22C_update(GameObject* obj)
                 if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_id_116);
-                    blob->sfxLatch = 1;
+                    state->sfxLatch = 1;
                 }
                 object->anim.localPosY += timeDelta;
                 if (object->anim.localPosY >= 60.0f + placement->posY)
                 {
                     object->anim.localPosY = 60.0f + placement->posY;
-                    blob->mode = DLL22C_MODE_HOLD_SETUP;
+                    state->mode = DLL22C_MODE_HOLD_SETUP;
                     Sfx_StopObjectChannel(obj, 8);
                 }
             }
         }
-        else if (blob->raiseMode == 1)
+        else if (state->activationMode == 1)
         {
             if (Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX) < 230.0f)
             {
@@ -146,24 +106,24 @@ void dll_22C_update(GameObject* obj)
                     if (object->anim.localPosY >= heightOffset + placement->posY)
                     {
                         object->anim.localPosY = heightOffset + placement->posY;
-                        blob->mode = DLL22C_MODE_HOLD_SETUP;
+                        state->mode = DLL22C_MODE_HOLD_SETUP;
                     }
                 }
             }
         }
         break;
     case DLL22C_MODE_HOLD_SETUP:
-        blob->mode = DLL22C_MODE_HOLD;
-        blob->pauseTimer = 0x64;
+        state->mode = DLL22C_MODE_HOLD;
+        state->pauseTimer = 0x64;
         break;
     case DLL22C_MODE_HOLD:
-        pauseTimer = blob->pauseTimer;
+        pauseTimer = state->pauseTimer;
         if (pauseTimer != 0)
         {
-            blob->pauseTimer -= (s16)timeDelta;
-            if (blob->pauseTimer <= 0)
+            state->pauseTimer -= (s16)timeDelta;
+            if (state->pauseTimer <= 0)
             {
-                blob->pauseTimer = 0;
+                state->pauseTimer = 0;
             }
         }
         else
@@ -173,20 +133,20 @@ void dll_22C_update(GameObject* obj)
             {
                 if (object->anim.localPosY == 60.0f + placement->posY)
                 {
-                    blob->mode = DLL22C_MODE_DESCEND;
+                    state->mode = DLL22C_MODE_DESCEND;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                     {
                         Sfx_PlayFromObject(obj, SFXTRIG_liftloop);
-                        blob->sfxLatch = 1;
+                        state->sfxLatch = 1;
                     }
                 }
                 else if (object->anim.localPosY == placement->posY - 1228.0f)
                 {
-                    blob->mode = DLL22C_MODE_ASCEND;
+                    state->mode = DLL22C_MODE_ASCEND;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                     {
                         Sfx_PlayFromObject(obj, SFXTRIG_liftloop);
-                        blob->sfxLatch = 1;
+                        state->sfxLatch = 1;
                     }
                 }
             }
@@ -194,18 +154,18 @@ void dll_22C_update(GameObject* obj)
             {
                 if (player->anim.localPosY < placement->posY)
                 {
-                    blob->mode = DLL22C_MODE_DESCEND;
-                    if (blob->sfxLatch == 1)
+                    state->mode = DLL22C_MODE_DESCEND;
+                    if (state->sfxLatch == 1)
                     {
-                        blob->sfxLatch = 0;
+                        state->sfxLatch = 0;
                     }
                 }
                 else if (player->anim.localPosY > placement->posY)
                 {
-                    blob->mode = DLL22C_MODE_ASCEND;
-                    if (blob->sfxLatch == 1)
+                    state->mode = DLL22C_MODE_ASCEND;
+                    if (state->sfxLatch == 1)
                     {
-                        blob->sfxLatch = 0;
+                        state->sfxLatch = 0;
                     }
                 }
             }
@@ -218,9 +178,9 @@ void dll_22C_update(GameObject* obj)
             if (object->anim.localPosY <= placement->posY - heightOffset)
             {
                 object->anim.localPosY = placement->posY - heightOffset;
-                blob->mode = DLL22C_MODE_HOLD;
+                state->mode = DLL22C_MODE_HOLD;
                 Sfx_StopObjectChannel(obj, 8);
-                blob->pauseTimer = 0x64;
+                state->pauseTimer = 0x64;
             }
             Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX);
         }
@@ -228,8 +188,8 @@ void dll_22C_update(GameObject* obj)
         {
             Sfx_StopObjectChannel(obj, 8);
             Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX);
-            blob->mode = DLL22C_MODE_HOLD;
-            blob->pauseTimer = 0x64;
+            state->mode = DLL22C_MODE_HOLD;
+            state->pauseTimer = 0x64;
         }
         break;
     case DLL22C_MODE_ASCEND:
@@ -241,16 +201,16 @@ void dll_22C_update(GameObject* obj)
             if (object->anim.localPosY >= heightOffset + placement->posY)
             {
                 object->anim.localPosY = heightOffset + placement->posY;
-                blob->mode = DLL22C_MODE_HOLD;
-                blob->pauseTimer = 0x64;
+                state->mode = DLL22C_MODE_HOLD;
+                state->pauseTimer = 0x64;
                 Sfx_StopObjectChannel(obj, 8);
             }
             Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX);
         }
         else
         {
-            blob->mode = DLL22C_MODE_HOLD;
-            blob->pauseTimer = 0x64;
+            state->mode = DLL22C_MODE_HOLD;
+            state->pauseTimer = 0x64;
             Sfx_StopObjectChannel(obj, 8);
             Vec_xzDistance(&object->anim.worldPosX, &player->anim.worldPosX);
         }
@@ -258,19 +218,19 @@ void dll_22C_update(GameObject* obj)
     }
 }
 
-void dll_22C_init(GameObject* obj, char* def)
+void dll_22C_init(GameObject* obj, Dll22CPlacementPrefix* def)
 {
     Dll22CState* state;
-    Dll22CMapData* md = (Dll22CMapData*)def;
+    Dll22CPlacementPrefix* placement = def;
 
     state = obj->extra;
     obj->animEventCallback = dll_22C_SeqFn;
-    obj->anim.rotX = (s16)(md->rotXByte << 8);
+    obj->anim.rotX = (s16)(placement->rotationHighByte << 8);
     state->mode = DLL22C_MODE_ARMED;
-    state->gameBit = md->gameBit;
-    state->gameBit2 = md->gameBit2;
-    state->raiseHeight = md->raiseHeight;
-    state->raiseMode = md->raiseMode;
+    state->gameBit = placement->gameBit;
+    state->gameBit2 = placement->gameBit2;
+    state->placementValue1A = placement->parameter1A;
+    state->activationMode = placement->activationMode;
     obj->anim.localPosY -= 1228.0f;
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }

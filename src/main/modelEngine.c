@@ -1,5 +1,6 @@
 #include "main/dll/dll_0018_boneparticleeffect.h"
 #include "dlls/objects/554_DFP_ObjCrea.h"
+#include "dlls/objects/556.h"
 #include "dlls/objects/625_DrakorHoverpad.h"
 #include "dlls/objects/597_SnowBike.h"
 #include "dlls/objects/607_CRFuelTank.h"
@@ -613,7 +614,7 @@ extern ResourceDescriptor Dummy3A_funcs, GameUI_funcs, Menu_funcs, Link_funcs, T
     Minimap_funcs, dll_3F_funcs;
 extern ResourceDescriptor gCreditsDescriptor, gWarpStoneUiDescriptor;
 extern ResourceDescriptor gWM_VConsoleNullResourceDescriptor, gGCRobotBlastObjDescriptor;
-extern ResourceDescriptor gDll22CObjDescriptor, Dummy245, Dummy246, Dummy244, Dummy247, Dummy248, Dummy24A, Dummy24B;
+extern ResourceDescriptor Dummy245, Dummy246, Dummy244, Dummy247, Dummy248, Dummy24A, Dummy24B;
 extern ResourceDescriptor Dummy24C_funcs, gDll27BNullResourceDescriptor, gDll27DNullResourceDescriptor,
     gDll29EObjDescriptor;
 extern ResourceDescriptor gDll212NullResourceDescriptor, gWM_TransTopNullResourceDescriptor,
@@ -1771,7 +1772,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gDFP_LevelControlObjDescriptor,
     (ResourceDescriptor*)&gDFP_ObjCreatorObjDescriptor,
     &gDFP_TorchObjDescriptor,
-    &gDll22CObjDescriptor,
+    (ResourceDescriptor*)&gDll22CObjDescriptor,
     (ResourceDescriptor*)&gDFP_seqpointObjDescriptor,
     (ResourceDescriptor*)&gDoorswitchObjDescriptor,
     (ResourceDescriptor*)&gDfpfloorbarObjDescriptor,
