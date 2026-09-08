@@ -478,3 +478,26 @@ Validation: `python3 configure.py --matching`, strict default `ninja`, and
 The strict retail checksum uses the retail object for this nonmatching unit
 and does not establish a source match. Secondary DOLs are unavailable in
 this checkout, so no regional progress manifest is promoted.
+
+## September 8: status-update exact
+
+`pauseMenuDrawStatus` now matches all **2,064 bytes / 516 instructions**,
+closing the eight-word snapshot-copy mismatch above. The snapshot loop
+reads its local status array through a signed `int snapshotIndex` copied
+from the byte-sized slot counter. The destination addresses continue to
+use that counter. This restores r0 for the scaled index and r3 for the
+first loaded value in the unrolled copy, without adding instructions.
+An unsigned index alias does not reproduce the result.
+
+Objdiff reports **100%** for the function under the unchanged GC/1.3
+profile. Exact functions rise from **109 to 110 / 118**, and exact code
+rises from 55,932 to **57,996 / 75,188 bytes**. All other 117 function
+bodies, data-section bytes and layouts, named symbol layouts, and resolved
+relocations retain their baseline values. All 9,960 assigned data bytes
+remain exact. The complete TU still has other nonmatching functions and
+remains `NonMatching`; no whole-object regional manifest is promoted.
+
+Validation: `python3 tools/fnbytes.py 0 pauseMenuDrawStatus --md5` reports
+identical target/current function MD5 `ef3b8eb59db5cd73e25fa09f20ac5ecb`.
+After `python3 configure.py --matching`, strict `ninja` and
+`ninja all_source` both pass with 30-second timeouts.

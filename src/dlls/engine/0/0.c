@@ -2551,7 +2551,8 @@ void pauseMenuDrawStatus(void) {
     if ((gHudStatsSnapshotPending & 1) != 0) {
         gHudStatsSnapshotPending &= ~1;
         for (statusSlot = 0; statusSlot < HUD_STATUS_COUNT; statusSlot++) {
-            hudSnapshotStatus(statuses[statusSlot], &((int*)(base + offsetof(CMenuHud, statusPrevious)))[statusSlot],
+            int snapshotIndex = statusSlot;
+            hudSnapshotStatus(statuses[snapshotIndex], &((int*)(base + offsetof(CMenuHud, statusPrevious)))[statusSlot],
                               &((int*)(base + offsetof(CMenuHud, statusValue)))[statusSlot],
                               &((f32*)(base + offsetof(CMenuHud, statusOpacity)))[statusSlot]);
         }
