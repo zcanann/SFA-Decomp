@@ -7,20 +7,18 @@
 
 /* EN reads establish this prefix through the halfword at 0x20.
  * The complete placement record size is not yet verified. */
-typedef struct Dll22CPlacementPrefix
-{
+typedef struct Dll22CPlacementPrefix {
     ObjPlacement base;
     s8 rotationHighByte;
     u8 unk19;
-    s16 parameter1A; /* converted to float and stored; no state reader in this TU */
+    s16 parameter1A;    /* converted to float and stored; no state reader in this TU */
     s16 activationMode; /* truncated to a byte; 1 bypasses the activation gamebit */
     s16 gameBit2;
     s16 gameBit;
 } Dll22CPlacementPrefix;
 
 /* dll_22C_getExtraSize_ret_16 returns the complete 0x10-byte allocation. */
-typedef struct Dll22CState
-{
+typedef struct Dll22CState {
     f32 placementValue1A; /* initialized only; motion uses fixed endpoint offsets */
     s16 mode;
     s16 gameBit;
