@@ -9,7 +9,8 @@ compares instruction words positionally, and reports:
     ndiff   words that differ at all
     struc   of those, how many changed MNEMONIC, plus any length difference
 
-A low ndiff with struc == 0 is a register/operand permutation.  A low ndiff with
+A low ndiff with struc == 0 is an operand-level difference; inspect data bases
+and relocation targets as well as register allocation. A low ndiff with
 struc > 0 is a real shape difference, which is where the source levers apply.
 #nm is how many functions in the unit still differ, so #nm == 1 means matching
 this one function flips the whole unit.
@@ -19,8 +20,11 @@ reloc-affected bitfield masked out and the reloc target reduced to a canonical
 token (anonymous @N constants, lbl_* labels and section symbols all become
 POOL), so an @N-vs-lbl_ pool naming difference or a baked-vs-relocated field
 (carved target objects bake the final bits, ours carry the reloc) no longer
-counts as a differing word.  A reloc against a genuinely different named symbol
-still counts.  --raw restores the old raw-byte comparison.
+counts as a differing word. Non-data named targets still differ. Data-target
+identity is deliberately outside this coarse shape comparison; objdiff and
+resolved relocation audits remain necessary. Big-endian 16-bit relocations
+may identify the immediate at instruction+2 rather than the instruction word.
+--raw restores the old raw-byte comparison.
 """
 import argparse
 import difflib
@@ -59,6 +63,14 @@ DATA_SECTIONS = {".data", ".sdata", ".sdata2", ".rodata", ".bss", ".sbss", ".sbs
 _symsec_cache = {}
 
 
+def relocation_belongs_to_instruction(instruction_address, relocation_address, relocation_type):
+    """Match either a word relocation or a big-endian immediate-halfword relocation."""
+    if relocation_address == instruction_address:
+        return True
+    return (relocation_address == instruction_address + 2
+            and RELOC_MASKS.get(relocation_type) == 0xFFFF)
+
+
 def sym_sections(obj):
     """symbol name -> section, from the object's symbol table."""
     if obj in _symsec_cache:
@@ -91,7 +103,8 @@ def words(obj, sym, raw=False):
             got.append([m.group(2), m.group(3), None, None, int(m.group(1), 16)])
             continue
         m = RELOC_RE.match(line)
-        if m and got and got[-1][4] == int(m.group(1), 16):
+        if m and got and relocation_belongs_to_instruction(
+                got[-1][4], int(m.group(1), 16), m.group(2)):
             got[-1][2] = m.group(2)
             got[-1][3] = m.group(3)
     secs = None

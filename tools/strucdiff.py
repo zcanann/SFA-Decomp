@@ -6,6 +6,8 @@ word, so a long register-recolour run defeats difflib's alignment and every
 shifted row is reported as a mnemonic change.  Aligning on mnemonics alone
 separates the two populations: STRUC counts real stream differences (a defect
 reachable from source), recolour counts same-mnemonic operand differences.
+The historical "recolour" label also includes immediates and relocation targets;
+it does not by itself establish a register-allocation mismatch.
 
     python3 tools/strucdiff.py <unit> <symbol> [context]
 """
@@ -34,7 +36,8 @@ def text_lines(obj, sym):
             got.append([int(m.group(1), 16), m.group(3).strip(), ""])
             continue
         m = RELOC_RE.match(line)
-        if m and got and got[-1][0] == int(m.group(1), 16):
+        if m and got and S.relocation_belongs_to_instruction(
+                got[-1][0], int(m.group(1), 16), m.group(2)):
             got[-1][2] = m.group(3)
     return ["%s%s" % (t, ("  <" + r + ">") if r else "") for _, t, r in got]
 
