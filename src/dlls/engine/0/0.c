@@ -3084,8 +3084,7 @@ int cMenuCountAvailableEntries(CMenuItemDef* items, s8 useTricky) {
 /*
  * In-game C-menu (radial item ring) and Tricky HUD overlay rendering.
  *
- * cMenuSetItems walks a placement-style item table (8
- * shorts per entry) gated by game bits, populating the parallel cMenu
+ * cMenuSetItems filters CMenuItemDef tables by game bits, populating the parallel cMenu
  * arrays at lbl_803A87F0 (ids/words/state/flags/textures) and loading
  * per-item textures. The "useTricky" path filters entries through the
  * Tricky HUD item/action masks instead.
@@ -3102,149 +3101,149 @@ int cMenuCountAvailableEntries(CMenuItemDef* items, s8 useTricky) {
 #define CMENU_OBJFLAG_PARENT_SLACK 0x1000
 
 /* Number of slots in the parallel cMenu item arrays at lbl_803A87F0
-   (ids/words/state/flags/textures); matches the s16 saved[64] snapshot. */
+   (ids/words/state/flags/textures); matches the previousTextureIds snapshot. */
 #define CMENU_ITEM_SLOT_COUNT 64
 
 int cMenuSetItems(CMenuItemDef* itemsArg, char useTricky) {
-    s16* items = (s16*)itemsArg;
-    s16* stP;
-    s16* src;
-    int halfOff[1];
-    s16* ids;
-    s16* dst;
-    int count;
-    int* wordP;
-    CMenuHud* base;
-    u8* flP;
-    int wordOff;
-    s16* w1;
-    s16* w2;
-    s16* w3;
-    u8* w4;
-    int active;
-    void** texW;
-    void** texP2;
+    const CMenuItemDef* itemTable = itemsArg;
+    s16* textIds;
+    const CMenuItemDef* item;
+    int halfwordOffset[1];
+    s16* textureIds;
+    s16* previousTextureId;
+    int itemCount;
+    int* ownedBits;
+    CMenuHud* hud;
+    u8* itemFlags;
+    int wordOffset;
+    s16* textureIdCursor;
+    s16* previousTextureIdCursor;
+    s16* textIdCursor;
+    u8* itemFlagCursor;
+    int ownedState;
+    Texture** textureCursor;
+    Texture** textures;
     int i;
-    s16 saved[CMENU_ITEM_SLOT_COUNT];
+    s16 previousTextureIds[CMENU_ITEM_SLOT_COUNT];
 
-    base = (CMenuHud*)lbl_803A87F0;
-    ids = base->itemSlots;
-    w1 = ids;
-    dst = saved;
-    w2 = dst;
-    stP = base->textIds;
-    w3 = stP;
-    flP = base->itemFlags;
-    w4 = flP;
+    hud = (CMenuHud*)lbl_803A87F0;
+    textureIds = hud->itemSlots;
+    textureIdCursor = textureIds;
+    previousTextureId = previousTextureIds;
+    previousTextureIdCursor = previousTextureId;
+    textIds = hud->textIds;
+    textIdCursor = textIds;
+    itemFlags = hud->itemFlags;
+    itemFlagCursor = itemFlags;
     for (i = 0; i < CMENU_ITEM_SLOT_COUNT; i++) {
-        *w2 = *w1;
-        *w1 = -1;
-        halfOff[0] = 0;
-        *w3 = halfOff[0];
-        *w4 = 1;
-        w1++;
-        w2++;
-        w3++;
-        w4++;
+        *previousTextureIdCursor = *textureIdCursor;
+        *textureIdCursor = -1;
+        halfwordOffset[0] = 0;
+        *textIdCursor = halfwordOffset[0];
+        *itemFlagCursor = 1;
+        textureIdCursor++;
+        previousTextureIdCursor++;
+        textIdCursor++;
+        itemFlagCursor++;
     }
-    count = 0;
-    wordOff = 0;
-    wordP = base->ownedBits;
-    *wordP = -1;
+    itemCount = 0;
+    wordOffset = 0;
+    ownedBits = hud->ownedBits;
+    *ownedBits = -1;
     if (useTricky == 0) {
         gCMenuForcedSelIndex = -1;
-        for (src = items; *src > -1; src += 8) {
-            active = mainGetBit(*src);
-            if (active != 0) {
-                if (items == (s16*)gCMenuStaffAbilities) {
-                    if (src[1] < 0 || mainGetBit(src[1]) == 0) {
-                        *(s16*)((char*)base + halfOff[0] + 0x948) = src[3];
-                        *(int*)((char*)base + wordOff + 0x848) = src[0];
-                        *(int*)((char*)base + wordOff + 0x748) = src[2];
-                        *(int*)((char*)base + wordOff + 0x648) = src[1];
-                        *(u8*)((char*)base + count + 0x448) = active;
-                        *(s16*)((char*)base + halfOff[0] + 0x548) = src[6];
-                        *(s16*)((char*)base + halfOff[0] + 0x5c8) = src[5];
-                        *(u8*)((char*)base + count + 0x508) = *(u8*)(src + 7);
-                        *(u8*)((char*)base + count + 0x4c8) = ((u8*)src)[0xf];
-                        if (src[2] < 0 || mainGetBit(src[2]) == 0) {
-                            *(u8*)(count + 0x488 + (char*)base) = 1;
+        for (item = itemTable; item->ownedGameBit > -1; item++) {
+            ownedState = mainGetBit(item->ownedGameBit);
+            if (ownedState != 0) {
+                if (itemTable == gCMenuStaffAbilities) {
+                    if (item->usedGameBit < 0 || mainGetBit(item->usedGameBit) == 0) {
+                        *(s16*)((char*)hud + halfwordOffset[0] + offsetof(CMenuHud, itemSlots)) = item->iconTextureId;
+                        *(int*)((char*)hud + wordOffset + offsetof(CMenuHud, ownedBits)) = item->ownedGameBit;
+                        *(int*)((char*)hud + wordOffset + offsetof(CMenuHud, activeBits)) = item->activeGameBit;
+                        *(int*)((char*)hud + wordOffset + offsetof(CMenuHud, usedBits)) = item->usedGameBit;
+                        *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, itemFlags)) = ownedState;
+                        *(s16*)((char*)hud + halfwordOffset[0] + offsetof(CMenuHud, textIds)) = item->nameTextId;
+                        *(s16*)((char*)hud + halfwordOffset[0] + offsetof(CMenuHud, auxiliaryValues)) = item->auxiliaryValue;
+                        *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, auxiliaryBytes)) = item->auxiliaryByte;
+                        *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, closeMode)) = item->closeMode;
+                        if (item->activeGameBit < 0 || mainGetBit(item->activeGameBit) == 0) {
+                            *(u8*)(itemCount + offsetof(CMenuHud, enabled) + (char*)hud) = 1;
                         } else {
-                            *(u8*)(count + 0x488 + (char*)base) = 0;
+                            *(u8*)(itemCount + offsetof(CMenuHud, enabled) + (char*)hud) = 0;
                         }
-                        count++;
-                        wordOff += 4;
-                        halfOff[0] += 2;
+                        itemCount++;
+                        wordOffset += 4;
+                        halfwordOffset[0] += 2;
                     }
-                } else if (src[1] < 0 || mainGetBit(src[1]) == 0) {
-                    if (gCMenuPreselectOwnedBit != 0 && gCMenuPreselectOwnedBit == *src) {
-                        gCMenuForcedSelIndex = count;
+                } else if (item->usedGameBit < 0 || mainGetBit(item->usedGameBit) == 0) {
+                    if (gCMenuPreselectOwnedBit != 0 && gCMenuPreselectOwnedBit == item->ownedGameBit) {
+                        gCMenuForcedSelIndex = itemCount;
                     }
-                    *(s16*)((char*)base + halfOff[0] + 0x948) = src[3];
-                    *(int*)((char*)base + wordOff + 0x848) = src[0];
-                    *(int*)((char*)base + wordOff + 0x748) = src[2];
-                    *(int*)((char*)base + wordOff + 0x648) = src[1];
-                    *(u8*)((char*)base + count + 0x448) = active;
-                    *(s16*)((char*)base + halfOff[0] + 0x548) = src[6];
-                    *(s16*)((char*)base + halfOff[0] + 0x5c8) = src[5];
-                    *(u8*)((char*)base + count + 0x508) = *(u8*)(src + 7);
-                    *(u8*)((char*)base + count + 0x4c8) = ((u8*)src)[0xf];
-                    if (src[2] < 0 || mainGetBit(src[2]) == 0) {
-                        *(u8*)(count + 0x488 + (char*)base) = 1;
+                    *(s16*)((char*)hud + halfwordOffset[0] + offsetof(CMenuHud, itemSlots)) = item->iconTextureId;
+                    *(int*)((char*)hud + wordOffset + offsetof(CMenuHud, ownedBits)) = item->ownedGameBit;
+                    *(int*)((char*)hud + wordOffset + offsetof(CMenuHud, activeBits)) = item->activeGameBit;
+                    *(int*)((char*)hud + wordOffset + offsetof(CMenuHud, usedBits)) = item->usedGameBit;
+                    *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, itemFlags)) = ownedState;
+                    *(s16*)((char*)hud + halfwordOffset[0] + offsetof(CMenuHud, textIds)) = item->nameTextId;
+                    *(s16*)((char*)hud + halfwordOffset[0] + offsetof(CMenuHud, auxiliaryValues)) = item->auxiliaryValue;
+                    *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, auxiliaryBytes)) = item->auxiliaryByte;
+                    *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, closeMode)) = item->closeMode;
+                    if (item->activeGameBit < 0 || mainGetBit(item->activeGameBit) == 0) {
+                        *(u8*)(itemCount + offsetof(CMenuHud, enabled) + (char*)hud) = 1;
                     } else {
-                        *(u8*)(count + 0x488 + (char*)base) = 0;
+                        *(u8*)(itemCount + offsetof(CMenuHud, enabled) + (char*)hud) = 0;
                     }
-                    count++;
-                    wordOff += 4;
-                    halfOff[0] += 2;
+                    itemCount++;
+                    wordOffset += 4;
+                    halfwordOffset[0] += 2;
                 }
             }
         }
     } else {
-        s16* idsW;
-        s16* aW;
-        u8* cW;
-        u8* dW;
-        u8* eW;
-        int yItem;
+        s16* nextTextureId;
+        s16* auxiliaryValues;
+        u8* auxiliaryBytes;
+        u8* closeModes;
+        u8* enabledFlags;
+        int yButtonAction;
         int itemMask;
         int actionMask;
 
         getTrickyObject();
         itemMask = gTrickyHudItemMask;
         if (itemMask != -1) {
-            src = items;
-            idsW = ids;
-            aW = base->auxiliaryValues;
-            cW = base->auxiliaryBytes;
-            dW = base->closeMode;
-            eW = base->enabled;
+            item = itemTable;
+            nextTextureId = textureIds;
+            auxiliaryValues = hud->auxiliaryValues;
+            auxiliaryBytes = hud->auxiliaryBytes;
+            closeModes = hud->closeMode;
+            enabledFlags = hud->enabled;
             actionMask = gTrickyHudActionMask;
-            yItem = yButtonItem;
-            for (; *src > -1; src += 8) {
-                if ((actionMask & *src) != 0) {
-                    *idsW = src[3];
-                    *flP = 1;
-                    *wordP = src[2];
-                    *stP = src[6];
-                    *aW = src[5];
-                    *cW = *(u8*)(src + 7);
-                    *dW = ((u8*)src)[0xf];
-                    if ((itemMask & *src) != 0) {
-                        *eW = 1;
+            yButtonAction = yButtonItem;
+            for (; item->ownedGameBit > -1; item++) {
+                if ((actionMask & item->ownedGameBit) != 0) {
+                    *nextTextureId = item->iconTextureId;
+                    *itemFlags = 1;
+                    *ownedBits = item->activeGameBit;
+                    *textIds = item->nameTextId;
+                    *auxiliaryValues = item->auxiliaryValue;
+                    *auxiliaryBytes = item->auxiliaryByte;
+                    *closeModes = item->closeMode;
+                    if ((itemMask & item->ownedGameBit) != 0) {
+                        *enabledFlags = 1;
                     } else {
-                        *eW = 0;
+                        *enabledFlags = 0;
                     }
-                    idsW++;
-                    flP++;
-                    wordP++;
-                    stP++;
-                    aW++;
-                    cW++;
-                    dW++;
-                    eW++;
-                    count++;
-                } else if (yButtonState == 2 && yItem == src[2]) {
+                    nextTextureId++;
+                    itemFlags++;
+                    ownedBits++;
+                    textIds++;
+                    auxiliaryValues++;
+                    auxiliaryBytes++;
+                    closeModes++;
+                    enabledFlags++;
+                    itemCount++;
+                } else if (yButtonState == 2 && yButtonAction == item->activeGameBit) {
                     yButtonState = 0;
                     yButtonItemTextureId = -1;
                 }
@@ -3257,31 +3256,31 @@ int cMenuSetItems(CMenuItemDef* itemsArg, char useTricky) {
         }
     }
     i = 0;
-    w1 = ids;
-    texP2 = (void**)base->itemTextures;
-    texW = texP2;
+    textureIdCursor = textureIds;
+    textures = hud->itemTextures;
+    textureCursor = textures;
     do {
-        if (*dst > -1 && *dst != *w1 && *texW != 0) {
-            textureFree((Texture*)(*texW));
-            *texW = 0;
+        if (*previousTextureId > -1 && *previousTextureId != *textureIdCursor && *textureCursor != 0) {
+            textureFree(*textureCursor);
+            *textureCursor = 0;
         }
-        dst++;
-        w1++;
-        texW++;
+        previousTextureId++;
+        textureIdCursor++;
+        textureCursor++;
         i++;
     } while (i < CMENU_ITEM_SLOT_COUNT);
     if (getLoadedFileFlags(0) == 0) {
         i = 0;
         do {
-            if (*ids > -1 && *texP2 == 0) {
-                *texP2 = textureLoadAsset(*ids);
+            if (*textureIds > -1 && *textures == 0) {
+                *textures = textureLoadAsset(*textureIds);
             }
-            ids++;
-            texP2++;
+            textureIds++;
+            textures++;
             i++;
         } while (i < CMENU_ITEM_SLOT_COUNT);
     }
-    return count;
+    return itemCount;
 }
 int cMenuRingModelRenderFn(GameObject* obj, int block, int idx) {
     Shader* renderOp;
