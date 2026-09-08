@@ -38,25 +38,21 @@ extern OSMessageQueue gPicMenuFreeReadBufferQueue;
 
 s32 gPicMenuReadThreadCreated;
 
-void PushReadedBuffer2(AttractMovieReadBuffer* buffer)
-{
+void PushReadedBuffer2(AttractMovieReadBuffer* buffer) {
     OSSendMessage(&gPicMenuReadedBuffer2Queue, buffer, OS_MESSAGE_BLOCK);
 }
 
-AttractMovieReadBuffer* PopReadedBuffer2(void)
-{
+AttractMovieReadBuffer* PopReadedBuffer2(void) {
     AttractMovieReadBuffer* buffer;
     OSReceiveMessage(&gPicMenuReadedBuffer2Queue, &buffer, OS_MESSAGE_BLOCK);
     return buffer;
 }
 
-void PushFreeReadBuffer(AttractMovieReadBuffer* buffer)
-{
+void PushFreeReadBuffer(AttractMovieReadBuffer* buffer) {
     OSSendMessage(&gPicMenuFreeReadBufferQueue, buffer, OS_MESSAGE_BLOCK);
 }
 
-AttractMovieReadBuffer* PopReadedBuffer(void)
-{
+AttractMovieReadBuffer* PopReadedBuffer(void) {
     AttractMovieReadBuffer* buffer;
     OSReceiveMessage(&gPicMenuReadedBufferQueue, &buffer, OS_MESSAGE_BLOCK);
     return buffer;
@@ -78,7 +74,8 @@ static void* THPRead_Reader(void* unused) {
         OSMessage received;
         s32 readResult;
 
-        OSReceiveMessage((OSMessageQueue*)(base + offsetof(AttractMovieReadThreadLayout, freeQueue)), &received, OS_MESSAGE_BLOCK);
+        OSReceiveMessage((OSMessageQueue*)(base + offsetof(AttractMovieReadThreadLayout, freeQueue)), &received,
+                         OS_MESSAGE_BLOCK);
         readBuffer = (AttractMovieReadBuffer*)received;
 
         readResult = DVDReadPrio(&gAttractMoviePlayer.fileInfo, readBuffer->ptr, frameSize, readOffset, 2);
@@ -93,7 +90,8 @@ static void* THPRead_Reader(void* unused) {
         }
 
         readBuffer->frameNumber = frameNumber;
-        OSSendMessage((OSMessageQueue*)(base + offsetof(AttractMovieReadThreadLayout, readQueue)), (OSMessage)readBuffer, OS_MESSAGE_BLOCK);
+        OSSendMessage((OSMessageQueue*)(base + offsetof(AttractMovieReadThreadLayout, readQueue)),
+                      (OSMessage)readBuffer, OS_MESSAGE_BLOCK);
 
         readOffset += frameSize;
         frameSize = *(u32*)readBuffer->ptr;
@@ -114,36 +112,37 @@ static void* THPRead_Reader(void* unused) {
     }
 }
 
-void ReadThreadCancel(void)
-{
-    if (gPicMenuReadThreadCreated != 0)
-    {
+void ReadThreadCancel(void) {
+    if (gPicMenuReadThreadCreated != 0) {
         OSCancelThread(&gPicMenuReadThread);
         gPicMenuReadThreadCreated = 0;
     }
 }
 
-void ReadThreadStart(void)
-{
-    if (gPicMenuReadThreadCreated != 0)
-    {
+void ReadThreadStart(void) {
+    if (gPicMenuReadThreadCreated != 0) {
         OSResumeThread(&gPicMenuReadThread);
     }
 }
 
-BOOL CreateReadThread(OSPriority priority)
-{
+BOOL CreateReadThread(OSPriority priority) {
     char* base = gPicMenuReadThreadStack;
     char* stackTop = base + THP_READ_STACK_SIZE;
 
-    if (!OSCreateThread((OSThread*)(base + offsetof(AttractMovieReadThreadLayout, thread)), THPRead_Reader, NULL, stackTop, THP_READ_STACK_SIZE, priority, 1))
-    {
+    if (!OSCreateThread((OSThread*)(base + offsetof(AttractMovieReadThreadLayout, thread)), THPRead_Reader, NULL,
+                        stackTop, THP_READ_STACK_SIZE, priority, 1)) {
         return 0;
     }
 
-    OSInitMessageQueue((OSMessageQueue*)(base + offsetof(AttractMovieReadThreadLayout, freeQueue)), (void*)(base + offsetof(AttractMovieReadThreadLayout, freeMessages)), ATTRACT_MOVIE_READ_BUFFER_COUNT);
-    OSInitMessageQueue((OSMessageQueue*)(base + offsetof(AttractMovieReadThreadLayout, readQueue)), (void*)(base + offsetof(AttractMovieReadThreadLayout, readMessages)), ATTRACT_MOVIE_READ_BUFFER_COUNT);
-    OSInitMessageQueue((OSMessageQueue*)(base + offsetof(AttractMovieReadThreadLayout, audioDecodedQueue)), (void*)(base + offsetof(AttractMovieReadThreadLayout, audioDecodedMessages)), ATTRACT_MOVIE_READ_BUFFER_COUNT);
+    OSInitMessageQueue((OSMessageQueue*)(base + offsetof(AttractMovieReadThreadLayout, freeQueue)),
+                       (void*)(base + offsetof(AttractMovieReadThreadLayout, freeMessages)),
+                       ATTRACT_MOVIE_READ_BUFFER_COUNT);
+    OSInitMessageQueue((OSMessageQueue*)(base + offsetof(AttractMovieReadThreadLayout, readQueue)),
+                       (void*)(base + offsetof(AttractMovieReadThreadLayout, readMessages)),
+                       ATTRACT_MOVIE_READ_BUFFER_COUNT);
+    OSInitMessageQueue((OSMessageQueue*)(base + offsetof(AttractMovieReadThreadLayout, audioDecodedQueue)),
+                       (void*)(base + offsetof(AttractMovieReadThreadLayout, audioDecodedMessages)),
+                       ATTRACT_MOVIE_READ_BUFFER_COUNT);
     gPicMenuReadThreadCreated = 1;
     return 1;
 }
