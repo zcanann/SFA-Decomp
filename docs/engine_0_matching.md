@@ -814,3 +814,45 @@ Validation: objdiff reports 100%; strict matching `ninja` and
 no formatting diff, the TU and API header pass its dry-run checks, and a fresh
 compile preserves the pre-format object bytes. Secondary DOLs remain absent
 from their configured paths in this checkout; regional manifests are unchanged.
+
+## September 8: map HUD frame and hint selection recovered
+
+`mapScreenDrawHud` improves from **99.64699% to 99.75694%** in every retail
+target, with **47 -> 29 differing instruction words** out of 864. It is not
+fully matching yet. All remaining differences are inside the shimmer loop,
+at instruction indices 499–599; the panel frames, hint selection, and steady
+map layout are exact.
+
+The opening frame captures its left, top, and bottom coordinates at their
+first draw uses. Keeping these signed integer coordinates distinct from the
+short panel dimensions restores the retail width and edge registers. The hint
+candidate pointer belongs beside these panel locals; its original wider scope
+had selected the register vacated by the width instead of the retail register.
+
+The spell-stone count is one addition expression, as in the already-matching
+`drawWorldMapHud` and the status-page source. MWCC preserves the four retail
+call positions while emitting the final addition in the correct operand order.
+The manually accumulated `taskPartial` temporary is unnecessary.
+
+The remaining shimmer differences are one `li` versus `mr` initialization and
+register choices for the two phase accumulators, integer-to-float constants,
+clamped opacity, and random texture offset. Deriving both phases from the row
+and evaluating the random offsets in the draw arguments recovers the retail
+counter initialization, but moves the long-lived panel opacity and frame
+texture bases to different registers. Those changes are not retained. Live
+GC/1.3 graph replay confirms low-degree simplification throughout, with no
+spill or weighted high-degree choice. Declaration-order experiments alone
+have not resolved the combined lifetime problem.
+
+Validation was performed after integrating staging `63bd53e6c0`, preserving
+the new status-page match. Every regional input DOL matches its configured
+SHA1. In each of the five source objects, exactly **22 instruction bytes**
+change, all in `mapScreenDrawHud`; the other 117 functions, allocated data,
+and named symbol offsets are unchanged. Relocation differences are solely
+anonymous-symbol renumbering. The TU remains `NonMatching`, and no regional
+whole-object progress claim is made.
+
+The final EN audit also incorporates staging `cd2d38b211`: its new
+`highScoreScreenDraw` match remains exact, and the map change still touches
+only those 22 instruction bytes. Strict retail checksum and `all_source`
+builds pass with the unchanged compiler configuration.

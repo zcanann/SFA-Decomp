@@ -6153,11 +6153,14 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, u8 alpha, u8 flag) {
  * map layout with location labels. */
 void mapScreenDrawHud(int unused1, int unused2, int unused3) {
     s16 width;
-    u8* hintCandidates;
     if (pauseMenuState != 0) {
         return;
     }
     if (gWorldMapVoiceoverTimer != 0) {
+        int panelTop;
+        int panelLeft;
+        int panelBottom;
+        u8* hintCandidates;
         s16 voiceoverTimer;
         s16 revealedHeight;
         s16 panelAlpha, panelX, panelY;
@@ -6181,22 +6184,22 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
         panelY = gTextBoxes[12].y;
         height = revealedHeight;
         width = gTextBoxes[12].maxWidth;
-        drawTexture(((HudTextures*)hudTextures)->tex28, panelX - 5, panelY - 5, panelAlpha, 0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, panelY - 5, panelAlpha, 0x100, width, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, panelX - 5, panelY, panelAlpha, 0x100, 5, height, 0);
+        drawTexture(((HudTextures*)hudTextures)->tex28, (panelLeft = panelX - 5), (panelTop = panelY - 5), panelAlpha, 0x100);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, panelTop, panelAlpha, 0x100, width, 5, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, panelLeft, panelY, panelAlpha, 0x100, 5, height, 0);
         drawScaledTexture(((HudTextures*)hudTextures)->tex30, panelX, panelY, panelAlpha, 0x100, width, height, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, panelY + height, panelAlpha, 0x100, width, 5, 2);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (panelBottom = panelY + height), panelAlpha, 0x100, width, 5, 2);
         drawScaledTexture(((HudTextures*)hudTextures)->tex2C, panelX + width, panelY, panelAlpha, 0x100, 5, height, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + width, panelY + height, panelAlpha, 0x100, 5, 5,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + width, panelBottom, panelAlpha, 0x100, 5, 5,
                           3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + width, panelY - 5, panelAlpha, 0x100, 5, 5, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX - 5, panelY + height, panelAlpha, 0x100, 5, 5, 2);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + width, panelTop, panelAlpha, 0x100, 5, 5, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelLeft, panelBottom, panelAlpha, 0x100, 5, 5, 2);
         gTextBoxes[12].height = revealedHeight;
         {
             s8 firstAvailableHint;
             s8 progressHint;
             u8 hasLateGameHint;
-            int taskCount, taskPartial;
+            int taskCount;
             int hint;
             {
                 int candidateIndex;
@@ -6218,11 +6221,7 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
                     }
                 }
                 firstAvailableHint = (s8)hintIndex;
-                taskCount = mainGetBit(GAMEBIT_ITEM_SpellStone3_Got);
-                taskPartial = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
-                taskCount += mainGetBit(GAMEBIT_ITEM_SpellStone2_Used);
-                taskCount += mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
-                taskCount += taskPartial;
+                taskCount = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) + mainGetBit(GAMEBIT_ITEM_SpellStone2_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
                 if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got)) {
                     taskCount++;
                 }
