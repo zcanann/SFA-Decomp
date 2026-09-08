@@ -73,7 +73,9 @@ float exp2f(float value) {
         }
 
         result.value =
-            (((*(const float*)&sExp2FractionCoeff4 * fraction + *(const float*)&sExp2FractionCoeff3) * fraction + *(const float*)&sExp2FractionCoeff2) * fraction +
+            (((*(const float*)&sExp2FractionCoeff4 * fraction + *(const float*)&sExp2FractionCoeff3) * fraction +
+              *(const float*)&sExp2FractionCoeff2) *
+                 fraction +
              *(const float*)&sExp2FractionCoeff1) *
                 fraction +
             *(const float*)&sExp2FractionCoeff0;
@@ -91,7 +93,6 @@ float exp2f(float value) {
 float expf(float value) {
     return exp2f(sExpLog2EWithTail[0] * *(float*)&value);
 }
-
 
 float fastCastS16ToFloat(const s16* input) {
     register const s16* ptr = input;
