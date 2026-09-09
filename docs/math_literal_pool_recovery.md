@@ -727,3 +727,53 @@ All four full source builds show the same gains and preserve every other source
 object (990 EN objects, 987 in each secondary version) and every unrelated
 objdiff unit. All four `all_source` builds and the strict EN retail checksum
 pass within their 30-second limits. The math unit remains `NonMatching`.
+
+## Inverse-square-root input lifetime (2026-09-09)
+
+`invSqrt` now reuses its input for the half-value after taking the reciprocal
+square-root estimate. The separate `halfValue` local disappears. The estimate
+still receives the original input, its explicit float conversion is unchanged,
+and the Newton refinement keeps the same multiplication/subtraction grouping.
+The two square-root functions still need their original input for the final
+multiplication and retain their separate half-value locals.
+
+With the unchanged GC/1.3 profile, `invSqrt` improves from **74.75% to 91.5%**.
+It emits 16 instructions instead of 20, matching retail's instruction count.
+Removing the local removes four save/restore instructions and reduces the frame
+from 48 to 32 bytes. The half-value now occupies f1 instead of f30; the ordered
+arithmetic operations, estimate, rounding and constant loads are unchanged.
+The TU improves from **81.63636% to 85.69697%**, with all twelve data bytes exact.
+
+This remains a partial match. Retail saves f30 and f31 as doubles, while the
+new object uses double and paired-single save/restore operations for f31.
+Two save/restore mnemonic differences and four operand differences remain.
+The simpler input lifetime improves the required compiler's output; it does
+not establish the original author's local declarations or resolve the older
+math family's compiler provenance. No flags, pragmas, splits or completion
+classifications change.
+
+All five hash-verified retail DOLs have the same three function bodies after
+normalizing only r2-relative float-load displacements. Each complete function
+is a unique anchor in its DOL, and every load resolves to the same offset in
+the identical twelve-byte zero/half/three-halves pool. All five source builds
+show the same gain. Both other functions, all allocated non-text sections and
+every unrelated source object remain byte-identical. Each version passes
+`all_source` and the native strict checksum; the incomplete TU still links
+from its retail object. Formatting makes no changes.
+
+A host differential harness checks **2,871,680 results at each of O0 and O2**,
+comparing output bits and the original input delivered to the estimate. It
+combines every binary32 exponent with selected mantissas and signs, 200,000
+random input words, and fourteen estimate cases per input. Those cases include
+an ordinary reciprocal square root, rounding boundaries, signed zeros,
+subnormals, extreme values, infinities, NaNs and random binary64 estimates.
+All before/after results agree. Contraction is disabled on the host; supplied
+estimates test the changed input lifetime without claiming to emulate Gekko's
+estimate accuracy or floating exception flags. Target instruction comparison
+independently verifies that the fused refinement is preserved.
+
+Two analogous conversion-result probes were rejected: consuming the signed
+fast-cast result directly in `log2fBitEstimate` reduces its match from 77.875%
+to 67.166664%, and doing so in `powfBitEstimate` reduces 85.67796% to 78.89831%.
+Both original sources and objects are restored. Scratch sources, reports,
+retail audits and host checks are under `/tmp/sfa-math-result-locals/`.
