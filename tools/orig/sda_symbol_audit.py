@@ -17,7 +17,8 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from version_progress import (
     load_splits, retail_sda_base, sda_reference_pairs as reference_pairs,
-    parse_function_symbols, parse_symbol_spans, projected_symbol_name, verified_dol,
+    parse_function_symbols, parse_symbol_spans, projected_symbol_name,
+    read_dol_range, verified_dol,
 )
 
 
@@ -62,6 +63,16 @@ def audit(source_version, target_version):
                 "targets": [{"address": a, "references": witnesses}
                             for a, witnesses in sorted(targets.items())],
             })
+            if section == "sdata" and len(targets) == 1:
+                try:
+                    rows[-1]["initialized_bytes_equal"] = (
+                        read_dol_range(source, span.start, span.size)
+                        == read_dol_range(target, next(iter(targets)), span.size)
+                    )
+                except ValueError:
+                    # A move into zero storage is an identity/layout question,
+                    # not permission to read unrelated file bytes as its value.
+                    rows[-1]["initialized_bytes_equal"] = None
     return rows
 
 
@@ -93,7 +104,9 @@ def main():
             target = row["configured_target_address"]
             configured = f"0x{target:08X}" if target is not None else "absent"
             actual = ", ".join(f"0x{t['address']:08X} ({len(t['references'])} refs)" for t in row["targets"])
-            print(f"{row['symbol']}: {row['status']}; configured={configured}; retail={actual}")
+            initializer = (f"; raw initialized bytes equal={row['initialized_bytes_equal']}"
+                           if "initialized_bytes_equal" in row else "")
+            print(f"{row['symbol']}: {row['status']}; configured={configured}; retail={actual}{initializer}")
     return 0
 
 

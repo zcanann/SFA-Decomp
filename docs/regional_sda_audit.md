@@ -1,4 +1,4 @@
-# Regional small-BSS recovery
+# Regional small-data recovery
 
 The PAL THP wrapper's 29 unmatched data bytes exposed an incorrect assumption in
 `tools/version_progress.py`: it translated every `.sbss` address by the difference
@@ -77,11 +77,11 @@ strict EN link reproduces retail.
 All 1,853 corroborated EN rev1, 1,857 JP and 1,839 PAL `.sbss` symbol addresses now
 agree with the retail operands; unanchored symbols remain explicitly unverified.
 JP also gains semantic names for previously anonymous, unowned small-data spans.
-The existing large `.bss` origin projection and initialized `.sdata` discrepancies
-are separate audit work. PAL rev0's local artifact fails its configured retail hash
+The existing large `.bss` origin projection remains separate audit work.
+Initialized `.sdata` is covered in the follow-up below. PAL rev0's local artifact fails its configured retail hash
 and was not used or regenerated.
 
-## Matching and validation
+## Small-BSS matching and validation
 
 PAL gains 205 matched data bytes: track handling 72, the THP wrapper 29, save-select
 48, menu polling 16, OS interrupt handling 24, and serial-interface handling 16.
@@ -108,4 +108,68 @@ python3 tools/orig/sda_symbol_audit.py GSAP01_rev1 --section sbss
 python3 tools/orig/sda_symbol_audit.py GSAP01_rev1 --unit main/thp/dll_3e.c --all --json
 python3 -m unittest discover -s tools -p test_sda_symbol_audit.py
 python3 -m unittest discover -s tools -p test_version_progress.py
+```
+
+## Initialized-data follow-up
+
+Raw operands exposed 86 initialized-small-data discrepancies in PAL, 12 in EN
+rev1 and four in JP. The projector now restores individual symbols only when a
+unique operand-backed destination also contains identical initialization bytes.
+Whole TU ranges additionally require a directly referenced start, consistent
+interior operand offsets and identical bytes throughout. Repeated float values
+alone are not enough to choose a boundary.
+
+PAL's fourteen effect phase pools occupy `803DD160..803DD240`, sixteen bytes per
+unit in order: 26, 27, 29, 30, 31, 32, 33, 34, 35, 41, 42, 43, 44, 45. The old
+boundaries drifted four, then eight bytes through repeated 0.1/0.3 initializers.
+The following engine-23 range starts at `803DD240`; its regional width differs
+from EN and is retained. Recovered timing names include `timeDelta` at `803DCDCC`.
+PAL's game-loop initialized storage remains 24 bytes versus EN's 32.
+
+Equal TU width also does not establish an identical internal layout. Both options
+ranges are eight bytes, but PAL `gOptionsActivePanel` occupies `803DD3ED`, five
+bytes after the range start. The preceding bytes are `00 01 03 05 02`; their role
+remains unknown. The renderer now refuses linear symbol replacement when observed
+operand offsets contradict it.
+
+An EN address-style source name can collide with an unrelated regional label at
+that same numeric address. The projector preserves that regional storage and uses
+the imported symbol's regional address label instead. Two such collisions remain
+reported as name mismatches in each of EN rev1 and JP; they are not permission to
+rename unrelated save-select/player storage. The final audit reports 875 exact
+EN rev1, 896 exact JP and 870 exact PAL initialized-data addresses, with 170, 149
+and 177 unanchored symbols respectively. PAL has no remaining corroborated address
+mismatches. These counts do not verify unanchored globals or relocated pointer
+initializers: pointer targets require their own relocation checks.
+
+### Effect flags and raw relocation verification
+
+Five assignments in engine slots 27, 32, 33 and 45 cast `randomChanceOneIn` to a
+behavior mask. Its EN address happens to equal `0x80080100`, but all four verified
+retail versions store that same literal mask even when the RNG function moves.
+The source now combines the existing `EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER`,
+`EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH` and `EXPGFX_BEHAVIOR_ALPHA_PULSE` flags.
+Each version blocks relocation discovery at just those five eight-byte lis/addi
+ranges. Genuine RNG calls retain their relocations.
+
+Resolving every source code relocation for all fourteen units reproduces
+**127,120 retail text bytes through 5,435 relocations per version**. Resolving their
+initialized sections also reproduces **5,560 bytes through 562 data relocations
+per version**, including descriptors and jump tables. Both comparisons are exact
+without instruction or symbol normalization in EN, EN rev1, JP and PAL rev1.
+
+Ten PAL units newly pass the complete objdiff gate: 26, 27, 29, 30, 31, 32, 33, 34,
+35 and 45. Together they add 160 matched data bytes; game-loop initialized data
+adds another 24, for **+184 PAL matched data bytes**. Matched code and total code/data
+denominators do not change. EN, EN rev1 and JP report totals are unchanged.
+
+All four source builds and the strict EN retail checksum pass. Only the four
+source objects containing the flag fixes change per version; the other 987 EN and
+984-per-secondary objects remain byte-identical. The 54 projection/audit tests
+pass. PAL rev0 remains excluded because its local artifact fails the configured
+retail hash.
+
+```sh
+python3 tools/orig/sda_symbol_audit.py GSAP01_rev1 --section sdata
+python3 tools/orig/sda_symbol_audit.py GSAP01_rev1 --section sdata --all --json
 ```

@@ -7,7 +7,8 @@ import unittest
 from orig.dol_xrefs import DolSection, FunctionSymbol
 from orig.sda_symbol_audit import reference_pairs, retail_sda_base
 from version_progress import (SplitRange, PortedRange, recover_sbss_layout,
-                              parse_symbol_spans, render_projected_symbol_texts)
+                              recover_sdata_layout, parse_symbol_spans,
+                              render_projected_symbol_texts, replace_projected_section_symbols)
 
 
 def image(base, bodies):
@@ -129,6 +130,69 @@ class SdaLayoutTests(unittest.TestCase):
                          0x1010, 0x1018, (), ())], {}, {name})
         self.assertEqual([(s.name, s.start) for s in parse_symbol_spans(result)["sbss"]],
                          [(name, 0x1010)])
+
+
+class InitializedSdaLayoutTests(unittest.TestCase):
+    def setUp(self):
+        self.values = struct.pack(">4I", 0x3DCCCCCD, 0x3E99999A, 0x3DCCCCCD, 0x3E99999A)
+        self.source = SimpleNamespace(path=Path("source.dol"), data=self.values,
+                                      sections=[DolSection(13, 0, 0x1000, 16)])
+        self.target = SimpleNamespace(path=Path("target.dol"), data=self.values + b"next",
+                                      sections=[DolSection(13, 0, 0x2000, 20)])
+        self.source_symbols = "".join(
+            f"phase{i} = .sdata:0x{0x1000 + i * 4:08X}; // type:object size:0x4\n"
+            for i in range(4))
+        self.target_symbols = "lbl_00002000 = .sdata:0x00002000; // type:object size:0x14\n"
+        self.references = {0x1000 + i * 4: {0x2000 + i * 4: [{}]} for i in range(4)}
+        self.splits = [SplitRange("effect.c", "sdata", 0x1000, 0x1010)]
+
+    def project(self):
+        return recover_sdata_layout(self.source, self.target, self.splits,
+            self.source_symbols, self.target_symbols, self.references, set())
+
+    def test_operand_and_complete_bytes_recover_four_float_boundary(self):
+        boundaries, symbols = self.project()
+        self.assertEqual(boundaries, {0x1000: 0x2000, 0x1010: 0x2010})
+        self.assertEqual([(s.name, s.start) for s in parse_symbol_spans(symbols)["sdata"]],
+                         [(f"phase{i}", 0x2000 + i * 4) for i in range(4)])
+
+    def test_repeated_initializers_without_operand_evidence_prove_nothing(self):
+        self.references = {}
+        self.assertEqual(self.project(), ({}, self.target_symbols))
+
+    def test_changed_initializer_blocks_whole_range_but_not_other_names(self):
+        self.target.data = b"diff" + self.target.data[4:]
+        boundaries, symbols = self.project()
+        self.assertFalse(boundaries)
+        self.assertNotIn("phase0", symbols)
+        self.assertIn("phase1", symbols)
+
+    def test_interior_operand_shift_cannot_be_hidden_by_repeated_float_values(self):
+        self.references[0x1008] = {0x2000: [{}]}
+        with self.assertRaisesRegex(ValueError, "overlap"):
+            self.project()
+
+    def test_conflicting_reference_does_not_choose_a_matching_value(self):
+        self.references[0x1000][0x2008] = [{}]
+        boundaries, symbols = self.project()
+        self.assertFalse(boundaries)
+        self.assertNotIn("phase0", symbols)
+
+    def test_equal_width_does_not_override_an_independently_moved_global(self):
+        source = "active = .sdata:0x00001000; // type:object size:0x1\n"
+        target = "active = .sdata:0x00002005; // type:object size:0x1\n"
+        result, *_ = render_projected_symbol_texts(source, target,
+            [PortedRange(SplitRange("options.c", "sdata", 0x1000, 0x1008),
+                         0x2000, 0x2008, (), ())], {}, set(), {0x1000: {0x2005: [{}]}})
+        self.assertEqual(parse_symbol_spans(result)["sdata"][0].start, 0x2005)
+
+    def test_source_used_address_name_does_not_erase_unrelated_regional_label(self):
+        target = "lbl_00001000 = .sdata:0x00001000; // type:object size:0x4\n"
+        line = "lbl_00001000 = .sdata:0x00002000; // type:object size:0x4\n"
+        result = replace_projected_section_symbols(target, "sdata", [
+            (0x2000, 0x2004, "lbl_00001000", line.rstrip())])
+        self.assertEqual([(s.name, s.start) for s in parse_symbol_spans(result)["sdata"]],
+                         [("lbl_00001000", 0x1000), ("lbl_00002000", 0x2000)])
 
 
 if __name__ == "__main__":

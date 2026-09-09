@@ -437,7 +437,7 @@ dlls/engine/26/26.c:
 	.text       start:0x800AF9F4 end:0x800B3508
 	.data       start:0x80311E08 end:0x80311E30
 	.bss        start:0x8039DC80 end:0x8039DC98
-	.sdata      start:0x803DD160 end:0x803DD174
+	.sdata      start:0x803DD160 end:0x803DD170
 	.sbss       start:0x803DECE0 end:0x803DECF0
 	.sdata2     start:0x803E10E8 end:0x803E1238
 
@@ -445,7 +445,7 @@ dlls/engine/27/27.c:
 	.text       start:0x800B3508 end:0x800B7264
 	.data       start:0x80311E30 end:0x80311FD4
 	.bss        start:0x8039DC98 end:0x8039DCB0
-	.sdata      start:0x803DD174 end:0x803DD184
+	.sdata      start:0x803DD170 end:0x803DD180
 	.sbss       start:0x803DECF0 end:0x803DED08
 	.sdata2     start:0x803E1238 end:0x803E1398
 
@@ -458,21 +458,21 @@ dlls/engine/28/28.c:
 dlls/engine/29/29.c:
 	.text       start:0x800B90E8 end:0x800BC5B0
 	.data       start:0x80312070 end:0x80312184
-	.sdata      start:0x803DD184 end:0x803DD194
+	.sdata      start:0x803DD180 end:0x803DD190
 	.sbss       start:0x803DED08 end:0x803DED18
 	.sdata2     start:0x803E1450 end:0x803E15A8
 
 dlls/engine/30/30.c:
 	.text       start:0x800BC5B0 end:0x800BD7A8
 	.data       start:0x80312188 end:0x803121F0
-	.sdata      start:0x803DD194 end:0x803DD1A4
+	.sdata      start:0x803DD190 end:0x803DD1A0
 	.sbss       start:0x803DED18 end:0x803DED28
 	.sdata2     start:0x803E15A8 end:0x803E1648
 
 dlls/engine/31/31.c:
 	.text       start:0x800BD7A8 end:0x800BE3A0
 	.data       start:0x803121F0 end:0x80312248
-	.sdata      start:0x803DD1A4 end:0x803DD1B4
+	.sdata      start:0x803DD1A0 end:0x803DD1B0
 	.sbss       start:0x803DED28 end:0x803DED38
 	.sdata2     start:0x803E1648 end:0x803E16A0
 
@@ -480,7 +480,7 @@ dlls/engine/32/32.c:
 	.text       start:0x800BE3A0 end:0x800BFCE4
 	.data       start:0x80312248 end:0x80312320
 	.bss        start:0x8039DCC8 end:0x8039DCE0
-	.sdata      start:0x803DD1B4 end:0x803DD1C4
+	.sdata      start:0x803DD1B0 end:0x803DD1C0
 	.sbss       start:0x803DED38 end:0x803DED48
 	.sdata2     start:0x803E16A0 end:0x803E1760
 
@@ -488,7 +488,7 @@ dlls/engine/33/33.c:
 	.text       start:0x800BFCE4 end:0x800C1538
 	.data       start:0x80312320 end:0x803123A8
 	.bss        start:0x8039DCE0 end:0x8039DCF8
-	.sdata      start:0x803DD1C4 end:0x803DD1D4
+	.sdata      start:0x803DD1C0 end:0x803DD1D0
 	.sbss       start:0x803DED48 end:0x803DED58
 	.sdata2     start:0x803E1760 end:0x803E17F0
 
@@ -496,7 +496,7 @@ dlls/engine/34/34.c:
 	.text       start:0x800C1538 end:0x800C2C88
 	.data       start:0x803123A8 end:0x80312430
 	.bss        start:0x8039DCF8 end:0x8039DD10
-	.sdata      start:0x803DD1D4 end:0x803DD1E4
+	.sdata      start:0x803DD1D0 end:0x803DD1E0
 	.sbss       start:0x803DED58 end:0x803DED68
 	.sdata2     start:0x803E17F0 end:0x803E1880
 
@@ -504,7 +504,7 @@ dlls/engine/35/35.c:
 	.text       start:0x800C2C88 end:0x800C4BD0
 	.data       start:0x80312430 end:0x803124EC
 	.bss        start:0x8039DD10 end:0x8039DD28
-	.sdata      start:0x803DD1E4 end:0x803DD1F8
+	.sdata      start:0x803DD1E0 end:0x803DD1F0
 	.sbss       start:0x803DED68 end:0x803DED78
 	.sdata2     start:0x803E1880 end:0x803E1900
 
@@ -530,7 +530,7 @@ dlls/engine/41/41.c:
 	.text       start:0x800C8374 end:0x800C94AC
 	.data       start:0x80312658 end:0x80312708
 	.bss        start:0x8039DD70 end:0x8039DD88
-	.sdata      start:0x803DD1F8 end:0x803DD208
+	.sdata      start:0x803DD1F0 end:0x803DD200
 	.sbss       start:0x803DED78 end:0x803DED88
 	.sdata2     start:0x803E1A70 end:0x803E1AD8
 
@@ -549,28 +549,28 @@ dlls/engine/38/38.c:
 dlls/engine/42/42.c:
 	.text       start:0x800CAC9C end:0x800CB9FC
 	.data       start:0x803127B0 end:0x80312804
-	.sdata      start:0x803DD208 end:0x803DD218
+	.sdata      start:0x803DD200 end:0x803DD210
 	.sbss       start:0x803DED88 end:0x803DED98
 	.sdata2     start:0x803E1B80 end:0x803E1BE8
 
 dlls/engine/43/43.c:
 	.text       start:0x800CB9FC end:0x800CD2C8
 	.data       start:0x80312808 end:0x803128A4
-	.sdata      start:0x803DD218 end:0x803DD228
+	.sdata      start:0x803DD210 end:0x803DD220
 	.sbss       start:0x803DED98 end:0x803DEDA8
 	.sdata2     start:0x803E1BE8 end:0x803E1CA0
 
 dlls/engine/44/44.c:
 	.text       start:0x800CD2C8 end:0x800CD79C
 	.data       start:0x803128A8 end:0x803128D0
-	.sdata      start:0x803DD228 end:0x803DD238
+	.sdata      start:0x803DD220 end:0x803DD230
 	.sbss       start:0x803DEDA8 end:0x803DEDB8
 	.sdata2     start:0x803E1CA0 end:0x803E1CD8
 
 dlls/engine/45/45.c:
 	.text       start:0x800CD79C end:0x800D589C
 	.data       start:0x803128D0 end:0x80312AB4
-	.sdata      start:0x803DD238 end:0x803DD248
+	.sdata      start:0x803DD230 end:0x803DD240
 	.sbss       start:0x803DEDB8 end:0x803DEDC8
 	.sdata2     start:0x803E1CD8 end:0x803E1EA0
 
@@ -632,7 +632,7 @@ dlls/engine/23/23.c:
 	.rodata     start:0x802C2AF0 end:0x802C2AFC
 	.data       start:0x80312F80 end:0x80313240
 	.bss        start:0x803A48E0 end:0x803A5B78
-	.sdata      start:0x803DD248 end:0x803DD250
+	.sdata      start:0x803DD240 end:0x803DD250
 	.sbss       start:0x803DEE38 end:0x803DEE50
 	.sdata2     start:0x803E2090 end:0x803E20A0
 

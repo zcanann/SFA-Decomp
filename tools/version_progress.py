@@ -1633,6 +1633,7 @@ def render_projected_symbol_texts(
     ported: list[PortedRange],
     matches: dict[int, FunctionSymbol],
     canonical_data_names: set[str] | None = None,
+    data_references: dict | None = None,
 ) -> tuple[str, int, int, int]:
     canonical_data_names = canonical_data_names or set()
     source_lines = source_text.splitlines()
@@ -1645,6 +1646,14 @@ def render_projected_symbol_texts(
             if (
                 item.source.end - item.source.start
                 == item.target_end - item.target_start
+                and not (
+                    data_references is not None
+                    and item.source.section in {"sdata", "sbss"}
+                    and any(target - address != item.target_start - item.source.start
+                            for address, targets in data_references.items()
+                            if item.source.start <= address < item.source.end
+                            for target in targets)
+                )
             ):
                 ranges_by_section[item.source.section].append(item)
     for ranges in [*claimed_by_section.values(), *ranges_by_section.values()]:
@@ -1819,6 +1828,108 @@ class VersionProjection:
     passes: int = 1
 
 
+def recover_sdata_layout(
+    source_dol: DolFile, target_dol: DolFile, source_splits: list[SplitRange],
+    source_symbols: str, target_symbols: str, references: dict,
+    canonical_data_names: set[str],
+) -> tuple[dict[int, int], str]:
+    """Recover initialized small data only with operand AND byte evidence.
+
+    Individual names can survive a changed TU width. A whole range can move
+    only when its start is directly referenced, every observed interior operand
+    keeps its offset, and its complete initialization bytes agree with retail.
+    Repeated scalar values alone cannot establish identity or ownership.
+    """
+    section = dol_section(target_dol, "sdata")
+    start, end = section.address, section.address + section.size
+
+    def project(address, size):
+        targets = references.get(address, {})
+        if len(targets) != 1:
+            return None
+        mapped = next(iter(targets))
+        if not start <= mapped < mapped + size <= end:
+            return None
+        if any(target - source != mapped - address
+               for source, destinations in references.items() if address <= source < address + size
+               for target in destinations):
+            return None
+        if read_dol_range(source_dol, address, size) != read_dol_range(target_dol, mapped, size):
+            return None
+        return mapped
+
+    proposals: dict[int, set[int]] = defaultdict(set)
+    for split in source_splits:
+        if split.section != "sdata" or split.start == split.end:
+            continue
+        mapped = project(split.start, split.end - split.start)
+        if mapped is not None:
+            proposals[split.start].add(mapped)
+            proposals[split.end].add(mapped + split.end - split.start)
+    boundaries = {edge: next(iter(values)) for edge, values in proposals.items() if len(values) == 1}
+
+    replacements = []
+    for line in source_symbols.splitlines():
+        match = SYMBOL_LINE_RE.match(line)
+        size_match = re.search(r"\bsize:0x([0-9A-Fa-f]+)", line)
+        if match is None or match.group(2) != "sdata" or size_match is None:
+            continue
+        address, size = int(match.group(3), 16), int(size_match.group(1), 16)
+        mapped = project(address, size)
+        if mapped is None:
+            continue
+        name = (match.group(1) if match.group(1) in canonical_data_names
+                else projected_symbol_name(match.group(1), mapped))
+        replacements.append((mapped, mapped + size, name,
+                             rewrite_symbol_line(line, name=name, address=mapped)))
+    replacements.sort()
+    if any(a[1] > b[0] for a, b in zip(replacements, replacements[1:])):
+        raise ValueError("Retail initialized SDA projections overlap; no configuration written")
+    return boundaries, replace_projected_section_symbols(target_symbols, "sdata", replacements)
+
+
+def replace_projected_section_symbols(target_symbols, section, replacements):
+    """Replace witnessed identities while retaining untouched target storage."""
+    # A legacy EN identifier can coincide with an unrelated regional address
+    # label. Keep that regional record unless this pass independently replaces
+    # its storage too; give the imported identifier its normal regional fallback.
+    existing = [match for line in target_symbols.splitlines()
+                if (match := SYMBOL_LINE_RE.match(line)) and match.group(2) == section]
+    adjusted = []
+    for start, end, name, line in replacements:
+        label = ADDRESS_SYMBOL_RE.match(name)
+        if label is not None and int(name.rsplit("_", 1)[1], 16) != start:
+            collisions = [int(m.group(3), 16) for m in existing if m.group(1) == name
+                          and int(m.group(3), 16) == int(name.rsplit("_", 1)[1], 16)]
+            if any(not any(a <= address < b for a, b, _, _ in replacements) for address in collisions):
+                name = projected_symbol_name(name, start)
+                line = rewrite_symbol_line(line, name=name)
+        adjusted.append((start, end, name, line))
+    replacements = adjusted
+    names = {item[2] for item in replacements}
+    new_lines = [(item[0], item[3]) for item in replacements]
+    result = []
+    insertion = None
+    for line in target_symbols.splitlines():
+        match = SYMBOL_LINE_RE.match(line)
+        if match is None or match.group(2) != section:
+            result.append(line)
+            continue
+        if insertion is None:
+            insertion = len(result)
+        address = int(match.group(3), 16)
+        size_match = re.search(r"\bsize:0x([0-9A-Fa-f]+)", line)
+        size = int(size_match.group(1), 16) if size_match else 1
+        if match.group(1) in names or any(
+            start < address + size and address < end for start, end, _, _ in replacements
+        ):
+            continue
+        new_lines.append((address, line))
+    insertion = len(result) if insertion is None else insertion
+    result[insertion:insertion] = [line for _, line in sorted(new_lines)]
+    return "\n".join(result) + "\n"
+
+
 def recover_sbss_layout(
     source_dol: DolFile, target_dol: DolFile, source_splits: list[SplitRange],
     source_symbols: str, target_symbols: str, references: dict,
@@ -1910,28 +2021,7 @@ def recover_sbss_layout(
     replacements.sort()
     if any(before[1] > after[0] for before, after in zip(replacements, replacements[1:])):
         raise ValueError("Retail SDA symbol projections overlap; no configuration written")
-    names = {item[2] for item in replacements}
-    new_lines = [(item[0], item[3]) for item in replacements]
-    result = []
-    insertion = None
-    for line in target_symbols.splitlines():
-        match = SYMBOL_LINE_RE.match(line)
-        if match is None or match.group(2) != "sbss":
-            result.append(line)
-            continue
-        if insertion is None:
-            insertion = len(result)
-        address = int(match.group(3), 16)
-        size_match = re.search(r"\bsize:0x([0-9A-Fa-f]+)", line)
-        size = int(size_match.group(1), 16) if size_match else 1
-        if match.group(1) in names or any(
-            start < address + size and address < end for start, end, _, _ in replacements
-        ):
-            continue
-        new_lines.append((address, line))
-    insertion = len(result) if insertion is None else insertion
-    result[insertion:insertion] = [line for _, line in sorted(new_lines)]
-    return boundaries, "\n".join(result) + "\n"
+    return boundaries, replace_projected_section_symbols(target_symbols, "sbss", replacements)
 
 
 def project_symbol_snapshot(
@@ -1944,9 +2034,16 @@ def project_symbol_snapshot(
     matches = unique_function_matches(
         source_dol, source_functions, target_dol, target_functions
     )
-    sbss_boundaries = None
-    if any(split.section == "sbss" for split in source_splits):
+    sbss_boundaries = sdata_boundaries = None
+    references = None
+    if any(split.section in {"sbss", "sdata"} for split in source_splits):
         references = sda_reference_pairs(source_dol, source_functions, target_dol, target_functions)
+    if any(split.section == "sdata" for split in source_splits):
+        sdata_boundaries, target_symbols = recover_sdata_layout(
+            source_dol, target_dol, source_splits, source_symbols, target_symbols,
+            references, canonical_data_names or set(),
+        )
+    if any(split.section == "sbss" for split in source_splits):
         sbss_boundaries, target_symbols = recover_sbss_layout(
             source_dol, target_dol, source_splits, source_symbols, target_symbols,
             references, canonical_data_names or set(),
@@ -1969,6 +2066,14 @@ def project_symbol_snapshot(
         boundary_maps["sbss"] = sbss_boundaries
         anchor_counts["sbss"] = (
             sum(edge in references for edge in sbss_boundaries), len(sbss_boundaries)
+        )
+    if sdata_boundaries is not None:
+        boundary_maps["sdata"].update(sdata_boundaries)
+        direct_count, _ = anchor_counts["sdata"]
+        source_edges = {edge for split in source_splits if split.section == "sdata"
+                        for edge in (split.start, split.end)}
+        anchor_counts["sdata"] = (
+            direct_count, sum(edge in boundary_maps["sdata"] for edge in source_edges)
         )
     boundary_maps, snapped_boundaries = snap_symbol_boundaries(
         source_splits,
@@ -1999,7 +2104,7 @@ def project_symbol_snapshot(
         target_symbol_spans,
     )
     symbols, renamed, conflicts, symbol_delta = render_projected_symbol_texts(
-        source_symbols, target_symbols, ported, matches, canonical_data_names
+        source_symbols, target_symbols, ported, matches, canonical_data_names, references
     )
     return VersionProjection(
         ported=ported, matches=matches, rejected=rejected,

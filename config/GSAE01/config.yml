@@ -259,6 +259,18 @@ clean_extab: false
 # address materializations. The original
 # compiler emitted plain immediates (MWCC never folds extern+const into reloc addends).
 block_relocations:
+# Effect behavior mask 0x80080100: suppress only these lis/addi sites.
+# Real calls to randomChanceOneIn retain their relocations.
+- source: 0x800B434C
+  end: 0x800B4354
+- source: 0x800BF360
+  end: 0x800BF368
+- source: 0x800C0F78
+  end: 0x800C0F80
+- source: 0x800D3224
+  end: 0x800D322C
+- source: 0x800D3434
+  end: 0x800D343C
 - target: 0x80018000
   end: 0x80018004
 - target: 0x80380209

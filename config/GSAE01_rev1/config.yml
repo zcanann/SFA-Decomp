@@ -97,6 +97,18 @@ clean_extab: false
 # Effect opcode and flag literals are shared across the retail builds. Their
 # values overlap the DOL address space but are plain immediates, not pointers.
 block_relocations:
+# Effect behavior mask 0x80080100: suppress only these lis/addi sites.
+# Real calls to randomChanceOneIn retain their relocations.
+- source: 0x800B45D8
+  end: 0x800B45E0
+- source: 0x800BF5EC
+  end: 0x800BF5F4
+- source: 0x800C1204
+  end: 0x800C120C
+- source: 0x800D34B0
+  end: 0x800D34B8
+- source: 0x800D36C0
+  end: 0x800D36C8
 - target: 0x80380209
   end: 0x8038020A
 - target: 0x80100100

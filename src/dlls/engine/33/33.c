@@ -6,6 +6,7 @@
 #include "main/maketex_random_api.h"
 #include "main/dll/dll_0021_effect8.h"
 #include "main/vecmath.h"
+#include "main/expgfx_internal.h"
 
 f32 gModgfxSineWaveA;
 f32 gModgfxSineWaveB;
@@ -409,7 +410,7 @@ int Effect8_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
             cfg.overrideColor2 = 0x3caf;
         }
         cfg.renderFlags = 0x20;
-        cfg.behaviorFlags = (u32)randomChanceOneIn;
+        cfg.behaviorFlags = EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER | EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH | EXPGFX_BEHAVIOR_ALPHA_PULSE;
         cfg.textureId = 0x62;
         cfg.initialAlpha = 0xa0;
         break;
