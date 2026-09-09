@@ -586,3 +586,50 @@ boundaries, with invalid host casts excluded. Fast-cast stubs use ordinary
 signed-16 conversions; the hardware quantization contract is unchanged. Local
 sources, reports, retail audit and harness are under
 `/tmp/sfa-tan-exp-temporaries/`.
+
+## Inverse-trigonometric accumulators (2026-09-08)
+
+The inverse-trig TU now retains the input magnitude and its reduced argument in
+one local. The three arcsine/arccosine routines seed their polynomial accumulator
+with the square-root result; fast arctangent uses its squared reduced argument
+as the polynomial accumulator. The three `atan2` variants keep their axis ratio
+and subsequent first-quadrant angle in one scalar. These are successive phases
+of the same calculations, with unchanged operation grouping and scalar types.
+The high-precision `atan2` still divides two floats before promotion to double.
+Fast arctangent still computes both signed results before selecting one.
+
+| Function | Before fuzzy | After fuzzy | Generated instructions before → after |
+| --- | ---: | ---: | ---: |
+| `asinf` | 45.863636% | 62.454544% | 60 → 52 |
+| `acosf_fast` | 45.863636% | 62.454544% | 60 → 52 |
+| `acosf` | 60.300000% | 72.466670% | 76 → 68 |
+| `atanf_fast` | 29.288889% | 45.955555% | 69 → 61 |
+| `atan2f_fast` | 63.183334% | 68.350000% | 71 → 67 |
+| `atan2f` | 63.882355% | 68.735290% | 85 → 81 |
+| `atan2fHighPrecision` | 79.533330% | 82.283330% | 137 → 133 |
+
+Removing eleven scalar temporaries eliminates 44 instructions under GC/1.3.
+All seven functions remain `NonMatching`; simpler source lifetimes are not proof
+of the original author's declarations. `atanf` retains its previous instruction
+bytes and score. Named constant positions, the complete 248-byte pool and all
+other non-text sections are unchanged. Ordered relocation destinations retain
+their identities, kinds, addends and data offsets. All eight functions' ordered
+constant-load values still agree with retail.
+
+The eight retail functions have equal normalized instructions across EN, EN
+revision 1, JP and PAL revision 1, and the complete pool agrees across their
+hash-verified DOLs. EN text remains `80291F44..802927A4` and the pool remains
+`803E79C0..803E7AB8`. All four versions show the same seven score gains; every
+other objdiff unit and every other source object in the current build census is
+unchanged. All four `all_source` builds and the strict EN checksum pass within
+30-second limits. No splits, compiler profiles or expected hashes change.
+
+The host differential harness produces **854,126 bit-identical before/after
+results** at each of O0 and O2. It exercises a dense interval spanning the
+reduction thresholds, random float words and pairs, signed zeros, subnormals,
+extreme finite values, infinities and quiet NaNs. Strict aliasing and host
+contraction are disabled; square root and reciprocal dependencies are stubbed
+with ordinary host operations. This checks the changed local lifetimes and
+control flow, not the accuracy of the target's estimate instructions or floating
+exception flags. Local variants, host harness, object/report comparisons and
+retail audit are under `/tmp/sfa-arc-accumulators/`.
