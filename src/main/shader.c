@@ -4251,7 +4251,7 @@ void mapBlockRenderMain(MapBlockBoundsRec* bounds, MapBlockData* block, float* v
         *(int*)&state.bit = state.bit + 8;
     }
     state.bit += 4;
-    mapBlockRender_drawLightmapIndirectPasses(block, shader, &state, (float(*)[4])viewMtx);
+    mapBlockRender_drawLightmapIndirectPasses(block, shader, &state, (float (*)[4])viewMtx);
 }
 void mapBlockRenderWater(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx) {
     ModelRenderInstrsState state;
@@ -5182,7 +5182,6 @@ Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRende
     }
     return shader;
 }
-
 
 static inline void GXPosition3f32(const f32 x, const f32 y, const f32 z) {
     GXWGFifo.f32 = x;
