@@ -190,3 +190,37 @@ extract:
 force_active:
   - sWarpedRingRotAxes
   - sWarpedRingIndMtx
+
+# Retail startup/BSS bounds establish these linker-generated addresses.
+# symbols_known skips signature recovery; keep the linker formulas external.
+add_relocations:
+- source: .text:0x8028D158
+  type: hi
+  target: _db_stack_addr
+- source: .text:0x8028D15C
+  type: l
+  target: _db_stack_addr
+- source: .text:0x80240D3C
+  type: ha
+  target: __ArenaLo
+- source: .text:0x80240D40
+  type: l
+  target: __ArenaLo
+- source: .text:0x80240D74
+  type: ha
+  target: _stack_addr
+- source: .text:0x80240D78
+  type: l
+  target: _stack_addr
+- source: .text:0x80246428
+  type: ha
+  target: _stack_addr
+- source: .text:0x8024642C
+  type: l
+  target: _stack_addr
+- source: .init:0x80003278
+  type: hi
+  target: _stack_addr
+- source: .init:0x8000327C
+  type: l
+  target: _stack_addr

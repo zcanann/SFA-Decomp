@@ -12,19 +12,11 @@ static s32 Retry(s32 chan);
 static void UnlockedCallback(s32 chan, s32 result);
 BOOL OnReset(BOOL f);
 
-typedef struct CARDResetFunctionInfo {
-    OSResetFunctionInfo info;
-    u32 padding[4];
-} CARDResetFunctionInfo;
-
-static CARDResetFunctionInfo ResetFunctionInfo = {
-    {
-        OnReset,
-        127,
-        NULL,
-        NULL,
-    },
-    { 0 },
+static OSResetFunctionInfo ResetFunctionInfo = {
+    OnReset,
+    127,
+    NULL,
+    NULL,
 };
 
 void __CARDDefaultApiCallback(s32 chan, s32 result) {}
@@ -504,7 +496,7 @@ void CARDInit(void) {
     }
     __CARDSetDiskID((void*)OSPhysicalToCached(0));
 
-    OSRegisterResetFunction(&ResetFunctionInfo.info);
+    OSRegisterResetFunction(&ResetFunctionInfo);
 }
 
 void __CARDSetDiskID(const DVDDiskID* id) {

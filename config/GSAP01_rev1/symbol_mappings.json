@@ -1,8 +1,1 @@
-{
-  "dolphin/card/CARDBios.c": {
-    "fn_8025F8EC": "OnReset"
-  },
-  "dolphin/si/SIBios.c": {
-    "fn_80253260": "AlarmHandler"
-  }
-}
+{}

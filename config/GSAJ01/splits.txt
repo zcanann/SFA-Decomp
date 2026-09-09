@@ -4219,7 +4219,7 @@ dolphin/base/PPCArch.c:
 
 dolphin/os/OS.c:
 	.text       start:0x802404C8 end:0x80240E24
-	.data       start:0x8032C480 end:0x8032C6C0
+	.data       start:0x8032C480 end:0x8032C63B
 	.bss        start:0x803AD440 end:0x803AD490
 	.sbss       start:0x803DDEF8 end:0x803DDF28
 
@@ -4239,6 +4239,7 @@ dolphin/os/OSArena.c:
 
 dolphin/os/OSAudioSystem.c:
 	.text       start:0x80241800 end:0x80241A94
+	.data       start:0x8032C640 end:0x8032C6C0
 
 dolphin/os/OSCache.c:
 	.text       start:0x80241A94 end:0x80242150
@@ -4509,7 +4510,7 @@ dolphin/gx/GXPerf.c:
 
 dolphin/card/CARDBios.c:
 	.text       start:0x8025DF70 end:0x8025F0BC
-	.data       start:0x8032ECE0 end:0x8032ED00
+	.data       start:0x8032ECE0 end:0x8032ECF0
 	.bss        start:0x803AF300 end:0x803AF540
 
 dolphin/card/CARDUnlock.c:

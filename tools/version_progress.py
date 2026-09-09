@@ -1820,19 +1820,35 @@ def render_projected_symbol_texts(
                               rewrite_symbol_line(line, name=data_name_fallbacks.pop(index)))
             data_conflicts += 1
 
+    source_locals = set()
+    for line in source_lines:
+        match = SYMBOL_LINE_RE.match(line)
+        if match and re.search(r"\bscope:local\b", match.group(4)):
+            source_locals.add((match.group(2), int(match.group(3), 16)))
+    unit_ranges: dict[str, list[PortedRange]] = defaultdict(list)
+    for split in ported:
+        unit_ranges[split.source.unit].append(split)
     desired_by_address: dict[int, str] = {}
+    desired_units: dict[int, str] = {}
+    local_owners: dict[int, str] = {}
     for split in ported:
         if split.source.section not in CODE_SECTIONS:
             continue
         function_pairs = paired_functions(split, matches)
         for source_function, target_function in function_pairs:
             desired_by_address[target_function.address] = source_function.name
+            desired_units[target_function.address] = split.source.unit
+            if (split.source.section, source_function.address) in source_locals:
+                local_owners[target_function.address] = split.source.unit
 
-    occupied: dict[str, set[int]] = defaultdict(set)
-    for _, address, _, line in records:
+    occupied: dict[str, set[tuple[str, int]]] = defaultdict(set)
+    private_symbols = set()
+    for section, address, _, line in records:
         match = SYMBOL_LINE_RE.match(line)
         assert match is not None
-        occupied[match.group(1)].add(address)
+        occupied[match.group(1)].add((section, address))
+        if address in local_owners or re.search(r"\bscope:local\b", match.group(4)):
+            private_symbols.add((section, address))
 
     rewritten_records: list[tuple[str, int, int, str]] = []
     renamed = 0
@@ -1848,13 +1864,29 @@ def render_projected_symbol_texts(
         if canonical is None:
             rewritten_records.append((section, address, ordinal, line))
             continue
-        if any(owner != address for owner in occupied.get(canonical, set())):
+        owners = occupied.get(canonical, set()) - {(section, address)}
+        local_unit = local_owners.get(address)
+        # Private callbacks can share a name across complete TUs, including
+        # with a public callback elsewhere. Same-TU collisions still block.
+        owners = {(owner_section, owner) for owner_section, owner in owners
+                  if (local_unit is None and (owner_section, owner) not in private_symbols)
+                  or any(split.source.section == owner_section
+                         and split.target_start <= owner < split.target_end
+                         for split in unit_ranges[desired_units[address]])}
+        if owners:
             rewritten_records.append((section, address, ordinal, line))
             conflicts += 1
             continue
         if name != canonical:
             line = rewrite_symbol_line(line, name=canonical)
+            occupied[name].discard((section, address))
+            occupied[canonical].add((section, address))
             renamed += 1
+        if local_unit is not None:
+            if re.search(r"\bscope:\w+", line):
+                line = re.sub(r"\bscope:\w+", "scope:local", line)
+            else:
+                line += " scope:local"
         rewritten_records.append((section, address, ordinal, line))
 
     rewritten_records.sort(

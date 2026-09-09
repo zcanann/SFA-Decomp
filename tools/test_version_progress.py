@@ -216,6 +216,78 @@ class CanonicalDataNameTests(unittest.TestCase):
         self.assertEqual(conflicts, 2)
 
 
+class PrivateFunctionNameTests(unittest.TestCase):
+    def render(self, scope='local', collision_section='text', same_unit=False,
+               collision_scope=''):
+        source_function = FunctionSymbol('Callback', 'text', 0x80010000, 8)
+        target_function = FunctionSymbol('fn_80020000', 'text', 0x80020000, 8)
+        source = (f'Callback = .text:0x80010000; // type:function size:0x8 scope:{scope}\n')
+        target = ('fn_80020000 = .text:0x80020000; // type:function size:0x8 scope:global\n'
+                  f'Callback = .{collision_section}:0x80020008; // '
+                  f'type:{"function" if collision_section == "text" else "object"} '
+                  f'size:0x8 {collision_scope}\n')
+        ranges = [PortedRange(SplitRange('first.c', 'text', 0x80010000, 0x80010008),
+                              0x80020000, 0x80020008, (source_function,), (target_function,))]
+        # Unequal data widths preserve the existing target object during rendering.
+        ranges.append(PortedRange(SplitRange('first.c' if same_unit else 'second.c',
+                                             collision_section, 0x80010008, 0x8001000C),
+                                  0x80020008, 0x80020010, (), ()))
+        result = render_projected_symbol_texts(source, target, ranges, {})
+        return result, source, ranges
+
+    def test_private_names_can_repeat_in_separate_units_with_local_linkage(self):
+        (result, renamed, conflicts, _), source, ranges = self.render()
+        self.assertIn('Callback = .text:0x80020000; // type:function size:0x8 scope:local', result)
+        self.assertEqual(renamed, 1)
+        self.assertEqual(conflicts, 0)
+        self.assertEqual(render_projected_symbol_texts(source, result, ranges, {})[0], result)
+
+    def test_private_name_cannot_collide_with_same_unit_function_or_data(self):
+        for section in ('text', 'data'):
+            with self.subTest(section=section):
+                (result, renamed, conflicts, _), *_ = self.render(
+                    collision_section=section, same_unit=True)
+                self.assertIn('fn_80020000 =', result)
+                self.assertEqual(renamed, 0)
+                self.assertEqual(conflicts, 1)
+
+    def test_public_name_keeps_global_collision_check(self):
+        (result, renamed, conflicts, _), *_ = self.render(scope='global')
+        self.assertIn('fn_80020000 =', result)
+        self.assertEqual(renamed, 0)
+        self.assertEqual(conflicts, 1)
+
+    def test_public_name_can_coexist_with_other_units_private_symbol(self):
+        for same_unit in (False, True):
+            with self.subTest(same_unit=same_unit):
+                (result, renamed, conflicts, _), *_ = self.render(
+                    scope='global', collision_scope='scope:local', same_unit=same_unit)
+                self.assertEqual(renamed, 0 if same_unit else 1)
+                self.assertEqual(conflicts, 1 if same_unit else 0)
+
+    def test_source_private_linkage_resolves_collision_in_either_record_order(self):
+        for private_first in (False, True):
+            with self.subTest(private_first=private_first):
+                source, target, ranges = [], [], []
+                for i in range(2):
+                    private = (i == 0) == private_first
+                    a, b = 0x80010000 + i * 8, 0x80020000 + i * 8
+                    name = 'Callback' if private else f'fn_{b:08X}'
+                    source.append(f'Callback = .text:0x{a:08X}; // type:function size:0x8 '
+                                  f'scope:{"local" if private else "global"}\n')
+                    target.append(f'{name} = .text:0x{b:08X}; // type:function size:0x8\n')
+                    ranges.append(PortedRange(SplitRange(f'unit{i}.c', 'text', a, a + 8),
+                                              b, b + 8,
+                                              (FunctionSymbol('Callback', 'text', a, 8),),
+                                              (FunctionSymbol(name, 'text', b, 8),)))
+                result, renamed, conflicts, _ = render_projected_symbol_texts(
+                    ''.join(source), ''.join(target), ranges, {})
+                self.assertEqual(renamed, 1)
+                self.assertEqual(conflicts, 0)
+                self.assertEqual(result.count('Callback ='), 2)
+                self.assertEqual(result.count('scope:local'), 1)
+
+
 class AlignmentGapTests(unittest.TestCase):
     def project(self, source_gap=bytes(6), target_gap=bytes(6), spans=(), missing_neighbor=False,
                 object_size=2, source_spans=()):

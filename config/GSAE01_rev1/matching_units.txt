@@ -764,6 +764,7 @@ dolphin/axfx/reverb_std_callback.c
 dolphin/axfx/reverb_std_create.c
 dolphin/base/PPCArch.c
 dolphin/base/PPCArch_weak.c
+dolphin/card/CARDBios.c
 dolphin/card/CARDBlock.c
 dolphin/card/CARDCheck.c
 dolphin/card/CARDCreate.c
@@ -813,6 +814,7 @@ dolphin/mtx/mtxvec.c
 dolphin/mtx/psmtx.c
 dolphin/mtx/vec.c
 dolphin/odenotstub/odenotstub.c
+dolphin/os/OS.c
 dolphin/os/OSAlarm.c
 dolphin/os/OSAlloc.c
 dolphin/os/OSArena.c
@@ -831,10 +833,12 @@ dolphin/os/OSReset.c
 dolphin/os/OSResetSW.c
 dolphin/os/OSStopwatch.c
 dolphin/os/OSSync.c
+dolphin/os/OSThread.c
 dolphin/os/OSTime.c
 dolphin/os/__ppc_eabi_init.c
 dolphin/pad/Pad.c
 dolphin/pad/Padclamp.c
+dolphin/si/SIBios.c
 dolphin/si/SISamplingRate.c
 dolphin/thp/THPAudio.c
 dolphin/thp/THPDec.c

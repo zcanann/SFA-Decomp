@@ -122,3 +122,37 @@ extract:
 - symbol: gLoadingScreenTextures
   binary: gLoadingScreenTextures.bin
   header: gLoadingScreenTextures.inc
+
+# Retail startup/BSS bounds establish these linker-generated addresses.
+# symbols_known skips signature recovery; keep the linker formulas external.
+add_relocations:
+- source: .text:0x8028D228
+  type: hi
+  target: _db_stack_addr
+- source: .text:0x8028D22C
+  type: l
+  target: _db_stack_addr
+- source: .text:0x80240E4C
+  type: ha
+  target: __ArenaLo
+- source: .text:0x80240E50
+  type: l
+  target: __ArenaLo
+- source: .text:0x80240E84
+  type: ha
+  target: _stack_addr
+- source: .text:0x80240E88
+  type: l
+  target: _stack_addr
+- source: .text:0x80246538
+  type: ha
+  target: _stack_addr
+- source: .text:0x8024653C
+  type: l
+  target: _stack_addr
+- source: .init:0x80003278
+  type: hi
+  target: _stack_addr
+- source: .init:0x8000327C
+  type: l
+  target: _stack_addr
