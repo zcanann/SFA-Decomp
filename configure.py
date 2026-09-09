@@ -976,7 +976,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/w_pow.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/w_sqrt.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.c"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/trigf.c", mw_version="GC/1.2.5", extra_cflags=["-lang=c++"]),
+            Object(MatchingFor("GSAE01", "GSAE01_rev1", "GSAJ01", "GSAP01_rev1"), "dolphin/MSL_C/PPCEABI/bare/H/trigf.c", mw_version="GC/1.2.5", extra_cflags=["-lang=c++"]),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c", mw_version=config.compiler_version, extra_cflags=["-inline", "off", *msl_math_extra], progress_category="game"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_802927a4.c", mw_version=config.compiler_version, cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", "-use_lmw_stmw", "on", *msl_math_extra], progress_category="game"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_80293da4.c", mw_version=config.compiler_version, cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", *msl_math_extra], progress_category="game"),

@@ -49,3 +49,40 @@ source artifact establishes that it is the literal historical spelling.
 
 Formatting is checked separately from source recovery, with raw object hashes
 compared before and after formatting.
+
+## Cross-version completion (2026-09-08)
+
+The same recovered source is now marked matching for EN rev1, JP and PAL rev1.
+The automatic matching manifest had omitted it because objdiff leaves the
+unnamed four-byte constructor entry unscored. The explicit `MatchingFor` list
+records the independently checked exception and survives manifest regeneration.
+PAL rev0 remains excluded: its local artifact fails its configured retail hash.
+
+| Version | Constructor entry | Generated initializer |
+| --- | --- | --- |
+| EN | `802C1884` | `80294B88` |
+| EN rev1 | `802C2004` | `802952E8` |
+| JP | `802C1984` | `80294C78` |
+| PAL rev1 | `802C2204` | `802954F8` |
+
+Each hash-verified DOL stores the listed initializer address in the listed
+constructor entry. Source and extracted objects have identical bytes, sizes
+and alignment for all five allocated sections: 1004 text bytes and 60 data
+bytes. The constructor relocation is the same `R_PPC_ADDR32` reference to
+text offset 956, with zero addend. The source object's writable flag on
+`.sdata2` differs from the extraction's flag, as it already does in matching EN;
+this is not an additional regional difference.
+
+The three regional symbol configs now mark the compiler-generated initializer
+local, agreeing with EN and MWCC. A scan of their extracted object relocations
+finds only the owning constructor entry referencing this symbol; no external
+consumer depends on global linkage. The synthetic reference label remains an
+extraction annotation and is not added to source.
+
+Full source builds and source-object hash comparisons pass for all four
+versions. Fresh objdiff reports preserve the six exact functions and 56 scored
+data bytes; only the three secondary targets gain completion credit (1004 code
+bytes and 60 data bytes each). EN remains unchanged and passes its strict
+retail checksum. Secondary targets currently support progress reports only;
+`configure.py` rejects their `--matching` mode, so no secondary full-link
+checksum claim is made.
