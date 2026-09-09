@@ -81,10 +81,10 @@ described above. Other full-manifest probes remain diagnostic:
   `lbl_803DC684` are multiply defined by `player.o` and `53.o`.
 - JP (952 units) links but loses 480 text bytes and 216 data bytes, shifting
   later sections. Its combined manifest has not been certified.
-- PAL rev1 (913 units) preserves all section addresses and sizes but differs
-  in one instruction: `pathSearchExpandNode+0x14C` at `8004B2D0` stores through
-  displacement `81C8` instead of retail `9B80`. The destination needs a separate
-  regional small-data identity audit.
+- PAL rev1 (913 units) initially preserved all section addresses and sizes but
+  differed in one pointer store. The subsequent
+  [path-search identity repair](pathsearch_pointer_identity.md) makes its
+  entire manifest reproduce retail too.
 
 Reproduce a manifest check with `tools/verify_source_link.py VERSION`, passing
 each non-comment source unit from that version's `matching_units.txt` after

@@ -253,7 +253,7 @@ void pathSearchExpandNode(PathSearch* search, PathSearchNode* node, int idx) {
                     break;
                 }
                 default:
-                    lbl_803DCD08 = (char*)linked;
+                    gPathSearchLastNonTrickyPoint = (char*)linked;
                     break;
                 }
             }

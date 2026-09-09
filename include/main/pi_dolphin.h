@@ -38,7 +38,7 @@ extern int gPendingDvdReadCount;
 extern u8 gVideoRetracePending;
 extern int gModelsArchiveLoadCount;
 extern void* lbl_803DCD10;
-extern char* lbl_803DCD08;
+extern char* gPathSearchLastNonTrickyPoint;
 extern s16 gForceNextLoadSync;
 extern u8 gLoadFilesInitDone;
 
