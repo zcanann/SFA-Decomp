@@ -500,7 +500,7 @@
 #include "main/dll/DR/dll_0281_drearthcal.h"
 #include "main/dll/dll_0299.h"
 #include "dlls/objects/689_CmbSrc.h"
-#include "main/dll/dll_02B2_dustmotesou.h"
+#include "dlls/objects/690_DustMoteSou.h"
 #include "main/dll/dll_02B4_cntcounter.h"
 #include "main/dll/dll_02B6_cnthitobjec.h"
 #include "main/dll/dll_02B7_mcupgrade.h"

@@ -3589,8 +3589,8 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chan
     }
 }
 
-void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int chance, f32 angBase, f32 lo, f32 hi,
-                           void* origin, int flags) {
+void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int chance, f32 radiusEnd, f32 radiusStart,
+                           f32 height, void* origin, int flags) {
     ObjFxParticleParams params;
     ObjFxU16Table9 effectParams = *(ObjFxU16Table9*)((char*)&gObjFxCrystalSparkleTbl + 0x8c);
     ObjFxU16Table8 spawnIds = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xa0);
@@ -3600,7 +3600,7 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int c
     int i;
     f32 range;
     f32 radialT;
-    f32 angularT;
+    f32 heightT;
 
     params.scale = scale;
     params.effectParam = effectParams.values[kind];
@@ -3615,7 +3615,7 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int c
         rvec[1] = 0;
         rvec[2] = 0;
         radialT = randomGetRange(1, 1000) / 1000.0f;
-        angularT = randomGetRange(0, 1000) / 1000.0f;
+        heightT = randomGetRange(0, 1000) / 1000.0f;
         params.position[1] = 0.0f;
         params.position[2] = 0.0f;
         switch (mode) {
@@ -3623,23 +3623,23 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int c
             params.position[0] = 1.0f - radialT * radialT;
             break;
         case 2:
-            angularT *= (angularT * angularT);
+            heightT *= (heightT * heightT);
             params.position[0] = 1.0f - radialT * radialT;
             break;
         case 3:
-            angularT = 1.0f - angularT * (angularT * angularT);
+            heightT = 1.0f - heightT * (heightT * heightT);
             params.position[0] = 1.0f - radialT * radialT;
             break;
         case 4:
-            val = (u16)(int)(65535.0f * angularT);
+            val = (u16)(int)(65535.0f * heightT);
             a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
-            angularT = 0.5f * (1.0f + mathCosf(a));
+            heightT = 0.5f * (1.0f + mathCosf(a));
             params.position[0] = 1.0f - radialT * radialT;
             break;
         case 5:
-            val = (u16)(int)(65535.0f * angularT);
+            val = (u16)(int)(65535.0f * heightT);
             a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
-            angularT = 0.5f * (1.0f + mathSinf(a));
+            heightT = 0.5f * (1.0f + mathSinf(a));
             params.position[0] = 1.0f - radialT * radialT;
             break;
         case 6:
@@ -3649,12 +3649,12 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int c
             params.position[0] = 1.0f - radialT * (radialT * (radialT * (radialT * radialT)));
             break;
         }
-        range = angBase - lo;
-        params.position[0] *= (angularT * range + lo);
+        range = radiusEnd - radiusStart;
+        params.position[0] *= (heightT * range + radiusStart);
         vecRotateZXY((s16*)rvec, params.position);
         {
-            f32 t = angularT - 0.5f;
-            params.position[1] = t * hi;
+            f32 t = heightT - 0.5f;
+            params.position[1] = t * height;
         }
         if (origin != NULL) {
             params.position[0] += ((GameObject*)origin)->anim.localPosX;
