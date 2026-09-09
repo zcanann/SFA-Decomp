@@ -103,11 +103,11 @@ float acosf(float value) {
     reduced = *(const float*)&sArcHalf - *(const float*)&sArcHalf * reduced;
     polynomial = sqrtfHighPrecision(reduced);
     polynomial = polynomial * (reduced * (reduced * (reduced * (reduced * (*(const float*)&sArcSinCoeff11 * reduced +
-                                                                     *(const float*)&sArcSinCoeff9) +
-                                                          *(const float*)&sArcSinCoeff7) +
-                                               *(const float*)&sArcSinCoeff5) +
-                                    *(const float*)&sArcSinCoeff3) +
-                         *(const float*)&sArcOneF);
+                                                                           *(const float*)&sArcSinCoeff9) +
+                                                                *(const float*)&sArcSinCoeff7) +
+                                                     *(const float*)&sArcSinCoeff5) +
+                                          *(const float*)&sArcSinCoeff3) +
+                               *(const float*)&sArcOneF);
     if (value >= *(const float*)&sArcZero) {
         return *(const float*)&sArcTwo * polynomial;
     }
@@ -245,14 +245,12 @@ float atan2f_fast(float y, float x) {
     if (absoluteX > absoluteY) {
         angle = absoluteY / absoluteX;
         ratioSquared = angle * angle;
-        angle =
-            angle * (*(const float*)&sAtan2FastCoeff3 * ratioSquared + *(const float*)&sAtan2FastCoeff1);
+        angle = angle * (*(const float*)&sAtan2FastCoeff3 * ratioSquared + *(const float*)&sAtan2FastCoeff1);
     } else {
         angle = absoluteX / absoluteY;
         ratioSquared = angle * angle;
-        angle =
-            *(const float*)&sArcHalfPiF -
-            angle * (*(const float*)&sAtan2FastCoeff3 * ratioSquared + *(const float*)&sAtan2FastCoeff1);
+        angle = *(const float*)&sArcHalfPiF -
+                angle * (*(const float*)&sAtan2FastCoeff3 * ratioSquared + *(const float*)&sAtan2FastCoeff1);
     }
 
     quadrantSigns = (((const FloatWord*)&y)->bits & 0x80000000) | ((((const FloatWord*)&x)->bits & 0x80000000) >> 1);
@@ -278,18 +276,20 @@ float atan2f(float y, float x) {
     if (absoluteX > absoluteY) {
         angle = absoluteY / absoluteX;
         ratioSquared = angle * angle;
-        angle = angle * (ratioSquared * (ratioSquared * (*(const float*)&sAtan2Coeff7 * ratioSquared +
-                                                                          *(const float*)&sAtan2Coeff5) +
-                                                          *(const float*)&sAtan2Coeff3) +
-                                          *(const float*)&sAtan2Coeff1);
+        angle =
+            angle * (ratioSquared *
+                         (ratioSquared * (*(const float*)&sAtan2Coeff7 * ratioSquared + *(const float*)&sAtan2Coeff5) +
+                          *(const float*)&sAtan2Coeff3) +
+                     *(const float*)&sAtan2Coeff1);
     } else {
         angle = absoluteX / absoluteY;
         ratioSquared = angle * angle;
-        angle = *(const float*)&sArcHalfPiF -
-                             angle * (ratioSquared * (ratioSquared * (*(const float*)&sAtan2Coeff7 * ratioSquared +
-                                                                          *(const float*)&sAtan2Coeff5) +
-                                                          *(const float*)&sAtan2Coeff3) +
-                                          *(const float*)&sAtan2Coeff1);
+        angle =
+            *(const float*)&sArcHalfPiF -
+            angle * (ratioSquared *
+                         (ratioSquared * (*(const float*)&sAtan2Coeff7 * ratioSquared + *(const float*)&sAtan2Coeff5) +
+                          *(const float*)&sAtan2Coeff3) +
+                     *(const float*)&sAtan2Coeff1);
     }
 
     quadrantSigns = (float_bits(&y) & 0x80000000) | ((float_bits(&x) & 0x80000000) >> 1);
@@ -315,39 +315,38 @@ float atan2fHighPrecision(float y, float x) {
     if (absoluteX >= absoluteY) {
         angle = absoluteY / absoluteX;
         ratioSquared = angle * angle;
-        angle =
-            angle *
-            (ratioSquared *
-                 (ratioSquared *
-                      (ratioSquared *
-                           (ratioSquared *
-                                (ratioSquared *
-                                     (ratioSquared *
-                                          (ratioSquared *
-                                               (ratioSquared *
-                                                    (ratioSquared *
-                                                         (ratioSquared *
-                                                              (ratioSquared *
-                                                                   (ratioSquared *
-                                                                        (ratioSquared *
-                                                                             (ratioSquared *
-                                                                                  (*(const double*)&sAtanCoeff31 *
-                                                                                       ratioSquared +
-                                                                                   *(const double*)&sAtanCoeff29) +
-                                                                              *(const double*)&sAtanCoeff27) +
-                                                                         *(const double*)&sAtanCoeff25) +
-                                                                    *(const double*)&sAtanCoeff23) +
-                                                               *(const double*)&sAtanCoeff21) +
-                                                          *(const double*)&sAtanCoeff19) +
-                                                     *(const double*)&sAtanCoeff17) +
-                                                *(const double*)&sAtanCoeff15) +
-                                           *(const double*)&sAtanCoeff13) +
-                                      *(const double*)&sAtanCoeff11) +
-                                 *(const double*)&sAtanCoeff9) +
-                            *(const double*)&sAtanCoeff7) +
-                       *(const double*)&sAtanCoeff5) +
-                  *(const double*)&sAtanCoeff3) +
-             *(const double*)&sAtanCoeff1);
+        angle = angle *
+                (ratioSquared *
+                     (ratioSquared *
+                          (ratioSquared *
+                               (ratioSquared *
+                                    (ratioSquared *
+                                         (ratioSquared *
+                                              (ratioSquared *
+                                                   (ratioSquared *
+                                                        (ratioSquared *
+                                                             (ratioSquared *
+                                                                  (ratioSquared *
+                                                                       (ratioSquared *
+                                                                            (ratioSquared *
+                                                                                 (ratioSquared *
+                                                                                      (*(const double*)&sAtanCoeff31 *
+                                                                                           ratioSquared +
+                                                                                       *(const double*)&sAtanCoeff29) +
+                                                                                  *(const double*)&sAtanCoeff27) +
+                                                                             *(const double*)&sAtanCoeff25) +
+                                                                        *(const double*)&sAtanCoeff23) +
+                                                                   *(const double*)&sAtanCoeff21) +
+                                                              *(const double*)&sAtanCoeff19) +
+                                                         *(const double*)&sAtanCoeff17) +
+                                                    *(const double*)&sAtanCoeff15) +
+                                               *(const double*)&sAtanCoeff13) +
+                                          *(const double*)&sAtanCoeff11) +
+                                     *(const double*)&sAtanCoeff9) +
+                                *(const double*)&sAtanCoeff7) +
+                           *(const double*)&sAtanCoeff5) +
+                      *(const double*)&sAtanCoeff3) +
+                 *(const double*)&sAtanCoeff1);
     } else {
         angle = absoluteX / absoluteY;
         ratioSquared = angle * angle;
