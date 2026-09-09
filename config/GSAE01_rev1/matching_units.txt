@@ -63,6 +63,7 @@ dlls/engine/61/61.c
 dlls/engine/62/62.c
 dlls/engine/63/63.c
 dlls/engine/64/64.c
+dlls/engine/65/65.c
 dlls/engine/66/66.c
 dlls/engine/67/67.c
 dlls/engine/68/68.c
