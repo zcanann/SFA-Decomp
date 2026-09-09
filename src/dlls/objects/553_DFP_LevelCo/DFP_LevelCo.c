@@ -27,8 +27,8 @@ u8 gDFPLevelControlInitialiseAct1 = 1;
 u8 gDFPLevelControlInitialiseAct2 = 1;
 s16 gDFPLevelControlSafeFloorTiles[9] = {1, 2, 3, 0, 0, 0, 0, 0, 0};
 
-#define DFP_LEVEL_CONTROL_OBJECT_TYPE     0x9
-#define DFP_LEVEL_CONTROL_MSG_ZAP_PLAYER  0x60005
+#define DFP_LEVEL_CONTROL_OBJECT_TYPE    0x9
+#define DFP_LEVEL_CONTROL_MSG_ZAP_PLAYER 0x60005
 
 #define DFP_LEVEL_CONTROL_SFX_TRIGGER_D5D 0xd5d
 #define DFP_LEVEL_CONTROL_SFX_TRIGGER_D59 0xd59
@@ -219,12 +219,9 @@ void DFP_LevelControl_update(GameObject* obj) {
         break;
     }
 
-    GameBitLatch_Update(&state->musicLatch, 2, -1, -1, GAMEBIT_OFP_MusicLatch,
-                        MUSICTRIG_mmpassalien);
-    GameBitLatch_UpdateInverted(&state->musicLatch, 4, -1, -1, GAMEBIT_OFP_MusicLatch,
-                                MUSICTRIG_blizzard);
-    GameBitLatch_UpdateInverted(&state->musicLatch, 1, -1, -1, GAMEBIT_OFP_MusicLatch,
-                                MUSICTRIG_trex_hit);
+    GameBitLatch_Update(&state->musicLatch, 2, -1, -1, GAMEBIT_OFP_MusicLatch, MUSICTRIG_mmpassalien);
+    GameBitLatch_UpdateInverted(&state->musicLatch, 4, -1, -1, GAMEBIT_OFP_MusicLatch, MUSICTRIG_blizzard);
+    GameBitLatch_UpdateInverted(&state->musicLatch, 1, -1, -1, GAMEBIT_OFP_MusicLatch, MUSICTRIG_trex_hit);
     mainSetBits(GAMEBIT_VFP_MusicLatch, 0);
 }
 
