@@ -465,7 +465,7 @@
 #include "main/dll/DF/dll_0234_dfperchwitch.h"
 #include "dlls/objects/547_VFP_corepla.h"
 #include "dlls/objects/565_DFP_TargetB.h"
-#include "main/dll/baddie/dll_022F_dfpfloorbar.h"
+#include "dlls/objects/559_DFP_floorba.h"
 #include "dlls/objects/575_DB_egg.h"
 #include "main/dll/dll_025A_staticcamera.h"
 #include "main/dll/dll_025B_msplantings.h"
