@@ -7,8 +7,7 @@
 
 /* EN accesses establish this prefix through the halfword at 0x20.
  * The complete placement record size is not yet verified. */
-typedef struct DfpFloorbarPlacementPrefix
-{
+typedef struct DfpFloorbarPlacementPrefix {
     ObjPlacement base;
     s8 rotationHighByte;
     u8 rowIndex;
@@ -26,8 +25,7 @@ STATIC_ASSERT(offsetof(DfpFloorbarPlacementPrefix, placementGameBit1E) == 0x1E);
 STATIC_ASSERT(offsetof(DfpFloorbarPlacementPrefix, initialLoweredGameBit) == 0x20);
 
 /* DFP_Floorbar_getExtraSize returns the complete 0x0C-byte allocation. */
-typedef struct DfpFloorbarState
-{
+typedef struct DfpFloorbarState {
     s16 placementGameBit1E; /* initialized only; no reader in this TU */
     s16 initialLoweredGameBit;
     u8 lowered;
