@@ -32,28 +32,6 @@
 #include "main/vecmath.h"
 #include "sys/objects.h"
 
-typedef struct ECSHShrineWordPair {
-    u32 first;
-    u32 second;
-} ECSHShrineWordPair;
-
-typedef struct ECSHShrineCupPosition {
-    f32 x;
-    f32 z;
-} ECSHShrineCupPosition;
-
-typedef struct ECSHShrinePuzzleScratch {
-    f32 cupPositions[12];
-    s16 cupSlotMap[6];
-    s16 nextCupSlotMap[6];
-} ECSHShrinePuzzleScratch;
-
-STATIC_ASSERT(offsetof(ECSHShrinePuzzleScratch, cupPositions) == 0x00);
-STATIC_ASSERT(offsetof(ECSHShrinePuzzleScratch, cupSlotMap) == 0x30);
-STATIC_ASSERT(offsetof(ECSHShrinePuzzleScratch, nextCupSlotMap) == 0x3C);
-STATIC_ASSERT(sizeof(ECSHShrinePuzzleScratch) == 0x48);
-STATIC_ASSERT(sizeof(ECSHShrineCupPosition) == 0x08);
-
 #define ECSH_SHRINE_CAMERA_MODE_STATIC 0x48
 
 #define ECSH_SHRINE_ENVFX_A 0x221
@@ -177,7 +155,6 @@ typedef enum ECSHShrinePhase {
 
 GameObject* gECSHShrineActiveObject;
 int lbl_803DDBC0;
-extern u32 lbl_803E8470;
 
 ECSHShrineCupPosition gECSHShrineCupPositions[ECSH_SHRINE_CUP_COUNT] = {0};
 
@@ -447,13 +424,13 @@ void ecshShrine_hitDetect(void) {
  *   used as round-entry/exit and 5 as the guess-resolution state.
  */
 void ecshShrine_update(GameObject* obj) {
-    f32 cupPositionSwap[2];
     int messageArgC;
     int messageArgA;
     int messageArgB;
-    ECSHShrinePuzzleScratch* puzzle;
-    ECSHShrineState* state;
-    GameObject* player;
+    ECSHShrinePuzzleScratch* puzzle = (ECSHShrinePuzzleScratch*)gECSHShrineCupPositions;
+    ECSHShrineState* state = obj->extra;
+    GameObject* player = Obj_GetPlayerObject();
+    ECSHShrineCupPosition cupPositionSwap = {0.0f, 0.0f};
     u8 byteValue;
     int shufflePattern;
     int cupIndex;
@@ -461,10 +438,6 @@ void ecshShrine_update(GameObject* obj) {
     f32 zero;
     f32 timerValue;
 
-    puzzle = (ECSHShrinePuzzleScratch*)gECSHShrineCupPositions;
-    state = obj->extra;
-    player = Obj_GetPlayerObject();
-    *(ECSHShrineWordPair*)&cupPositionSwap[0] = *(ECSHShrineWordPair*)(void*)&lbl_803E8470;
     if (state->introTextLatch == 0) {
         byteValue = mainGetBit(GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER);
         state->introTextLatch = byteValue;
@@ -656,27 +629,27 @@ void ecshShrine_update(GameObject* obj) {
                             puzzle->cupSlotMap[1] = puzzle->cupSlotMap[3];
                             puzzle->cupSlotMap[3] = swapSlot;
                         } else if (shufflePattern == 6) {
-                            cupPositionSwap[0] = puzzle->cupPositions[2];
-                            cupPositionSwap[1] = puzzle->cupPositions[3];
+                            cupPositionSwap.x = puzzle->cupPositions[2];
+                            cupPositionSwap.z = puzzle->cupPositions[3];
                             puzzle->cupPositions[2] = puzzle->cupPositions[4];
                             puzzle->cupPositions[3] = puzzle->cupPositions[5];
                             puzzle->cupPositions[4] = puzzle->cupPositions[8];
                             puzzle->cupPositions[5] = puzzle->cupPositions[9];
                             puzzle->cupPositions[8] = puzzle->cupPositions[10];
                             puzzle->cupPositions[9] = puzzle->cupPositions[11];
-                            puzzle->cupPositions[10] = cupPositionSwap[0];
-                            puzzle->cupPositions[11] = cupPositionSwap[1];
+                            puzzle->cupPositions[10] = cupPositionSwap.x;
+                            puzzle->cupPositions[11] = cupPositionSwap.z;
                         } else if (shufflePattern == 7) {
-                            cupPositionSwap[0] = puzzle->cupPositions[10];
-                            cupPositionSwap[1] = puzzle->cupPositions[11];
+                            cupPositionSwap.x = puzzle->cupPositions[10];
+                            cupPositionSwap.z = puzzle->cupPositions[11];
                             puzzle->cupPositions[10] = puzzle->cupPositions[8];
                             puzzle->cupPositions[11] = puzzle->cupPositions[9];
                             puzzle->cupPositions[8] = puzzle->cupPositions[4];
                             puzzle->cupPositions[9] = puzzle->cupPositions[5];
                             puzzle->cupPositions[4] = puzzle->cupPositions[2];
                             puzzle->cupPositions[5] = puzzle->cupPositions[3];
-                            puzzle->cupPositions[2] = cupPositionSwap[0];
-                            puzzle->cupPositions[3] = cupPositionSwap[1];
+                            puzzle->cupPositions[2] = cupPositionSwap.x;
+                            puzzle->cupPositions[3] = cupPositionSwap.z;
                         }
                     }
                     break;

@@ -449,7 +449,7 @@ any of them is acted on.
 | 0x18C | MMSH_Shrine | COMPLETE | dlls/objects/396_MMSH_Shrine/MMSH_Shrine.c | = (canonical) | — |
 | 0x18D | MMSH_Scales | COMPLETE | dlls/objects/397_MMSH_Scales/MMSH_Scales.c | = (canonical) | — |
 | 0x18E | MMSH_WaterS | COMPLETE | dlls/objects/398_MMSH_WaterS/MMSH_WaterS.c | = (canonical) | — |
-| 0x18F | ECSH_Shrine | COMPLETE | dlls/objects/399_ECSH_Shrine/ECSH_Shrine.c | = (canonical) | — |
+| 0x18F | ECSH_Shrine | COMPLETE | dlls/objects/399_ECSH_Shrine/ECSH_Shrine.c | = (canonical) | Exact 16-function TU with canonical position and scratch layouts, native cup-position initializer, and 400 exact data bytes across all four verified versions; descriptor order and generated path preserved |
 | 0x190 | ECSH_Cup | COMPLETE | dlls/objects/400_ECSH_Cup/ECSH_Cup.c | = (canonical) | — |
 | 0x191 | ECSH_Creato | COMPLETE | dlls/objects/401_ECSH_Creato/ECSH_Creato.c | = (canonical) | — |
 | 0x192 | GPSH_Shrine | COMPLETE | dlls/objects/402_GPSH_Shrine/GPSH_Shrine.c | = (canonical) | — |

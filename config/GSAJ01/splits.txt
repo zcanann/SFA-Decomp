@@ -2853,6 +2853,7 @@ dlls/objects/399_ECSH_Shrine/ECSH_Shrine.c:
 	.data       start:0x80326328 end:0x80326444
 	.sbss       start:0x803DDCE0 end:0x803DDCE8
 	.sdata2     start:0x803E50B0 end:0x803E5114
+	.sbss2      start:0x803E8590 end:0x803E8598
 
 dlls/objects/401_ECSH_Creato/ECSH_Creato.c:
 	.text       start:0x801C6EFC end:0x801C71E0
