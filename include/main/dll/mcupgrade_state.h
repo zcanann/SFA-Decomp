@@ -16,7 +16,9 @@ typedef enum McStaffEffectEvent {
 } McStaffEffectEvent;
 
 typedef struct McUpgradeSetup {
-    u8 pad00[0x1E];
+    u8 pad00[0x1A];
+    s16 dialogueTextId;
+    u8 pad1C[2];
     s16 collectedGameBit;
 } McUpgradeSetup;
 
@@ -25,6 +27,7 @@ typedef struct McUpgradeMaSetup {
     s16 collectedGameBit;
 } McUpgradeMaSetup;
 
+STATIC_ASSERT(offsetof(McUpgradeSetup, dialogueTextId) == 0x1A);
 STATIC_ASSERT(offsetof(McUpgradeSetup, collectedGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(McUpgradeMaSetup, collectedGameBit) == 0x1A);
 
