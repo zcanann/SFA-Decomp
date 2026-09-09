@@ -456,6 +456,7 @@
 #include "dlls/objects/196_Tricky.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/CF/laser.h"
+#include "dlls/objects/552.h"
 #include "dlls/objects/567_DFPSpPl.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "dlls/objects/294.h"
@@ -591,7 +592,7 @@ extern ResourceDescriptor gTitleScreenObjDescriptor, gTrickyCurveObjDescriptor;
 extern ResourceDescriptor gVFPDragHeadObjDescriptor, gVFPLiftObjDescriptor, gVFP_Block1ObjDescriptor;
 extern ResourceDescriptor gVFP_LaddersObjDescriptor, gVFP_LevelControlObjDescriptor,
     gVFP_MiniFireObjDescriptor, gVFP_ObjCreatorObjDescriptor, gVFP_PlatformObjDescriptor,
-    gVFP_SpellPlaceObjDescriptor, gVFP_flamepointObjDescriptor;
+    gVFP_flamepointObjDescriptor;
 extern ResourceDescriptor gVFP_lavapoolObjDescriptor, gVFP_lavastarObjDescriptor, gVFP_statueballObjDescriptor,
     gVortexObjDescriptor, gWCBouncyCraObjDescriptor;
 extern ResourceDescriptor gWCLevelContObjDescriptor,
@@ -1770,7 +1771,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gVFP_flamepointObjDescriptor,
     &gVFP_lavapoolObjDescriptor,
     &gVFP_lavastarObjDescriptor,
-    &gVFP_SpellPlaceObjDescriptor,
+    (ResourceDescriptor*)&gVFP_SpellPlaceObjDescriptor,
     (ResourceDescriptor*)&gDFP_LevelControlObjDescriptor,
     (ResourceDescriptor*)&gDFP_ObjCreatorObjDescriptor,
     (ResourceDescriptor*)&gDFP_TorchObjDescriptor,

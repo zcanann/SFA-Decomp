@@ -1,23 +1,24 @@
-/* DLL 0x0228 */
-#include "main/dll/CF/laser.h"
+/*
+ * Volcano Force Point Temple SpellStone placement (DLL 552). Using the required
+ * fire SpellStone completes the placement, clears its activation bit, and
+ * disables interaction. Map acts select the first or second SpellStone.
+ */
+#include "dlls/objects/552.h"
+
+#include "main/gamebit_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 #include "main/objprint_render_api.h"
 
-int VFP_SpellPlace_getExtraSize(void);
-int VFP_SpellPlace_getObjectTypeId(void);
-void VFP_SpellPlace_free(void);
-void VFP_SpellPlace_render(void);
-void VFP_SpellPlace_hitDetect(void);
-void VFP_SpellPlace_update(GameObject* spellPlace);
-void VFP_SpellPlace_init(GameObject* spellPlace, s8* def);
-void VFP_SpellPlace_release(void);
-void VFP_SpellPlace_initialise(void);
+
+#define VFP_SPPL_ACT_FIRST_STONE 1
+#define VFP_SPPL_ACT_SECOND_STONE 2
+#define VFP_SPPL_ROTATION_BYTE_SHIFT 8
 
 int VFP_SpellPlace_getExtraSize(void)
 {
-    return sizeof(LaserState);
+    return sizeof(VfpSpellPlaceState);
 }
 
 int VFP_SpellPlace_getObjectTypeId(void)
@@ -39,11 +40,11 @@ void VFP_SpellPlace_hitDetect(void)
 
 void VFP_SpellPlace_update(GameObject* spellPlace)
 {
-    LaserState* state;
-    u8 mode;
+    VfpSpellPlaceState* state;
+    u8 mapAct;
 
-    if (((LaserState*)spellPlace->extra)->completionLatched == 0 &&
-        mainGetBit((int)((LaserState*)spellPlace->extra)->activationGameBit) != 0)
+    if (((VfpSpellPlaceState*)spellPlace->extra)->completionLatched == 0 &&
+        mainGetBit((int)((VfpSpellPlaceState*)spellPlace->extra)->activationGameBit) != 0)
     {
         spellPlace->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     }
@@ -54,12 +55,12 @@ void VFP_SpellPlace_update(GameObject* spellPlace)
     objUpdateHitVolumeTransforms(spellPlace);
     if (spellPlace->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED)
     {
-        mode = (*gMapEventInterface)->getMapAct((int)spellPlace->anim.mapEventSlot);
-        switch (mode)
+        mapAct = (*gMapEventInterface)->getMapAct((int)spellPlace->anim.mapEventSlot);
+        switch (mapAct)
         {
-        case LASEROBJ_MODE_SEQUENCE_A:
+        case VFP_SPPL_ACT_FIRST_STONE:
             state = spellPlace->extra;
-            if ((*gGameUIInterface)->isItemBeingUsed(LASEROBJ_MAIN_SEQUENCE_A_EVENT) != 0)
+            if ((*gGameUIInterface)->isItemBeingUsed(GAMEBIT_ITEM_FireSpellStone1_Got) != 0)
             {
                 mainSetBits(state->completionGameBit, 1);
                 mainSetBits(state->activationGameBit, 0);
@@ -67,9 +68,9 @@ void VFP_SpellPlace_update(GameObject* spellPlace)
                 spellPlace->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             }
             break;
-        case LASEROBJ_MODE_SEQUENCE_B:
+        case VFP_SPPL_ACT_SECOND_STONE:
             state = spellPlace->extra;
-            if ((*gGameUIInterface)->isItemBeingUsed(LASEROBJ_MAIN_SEQUENCE_B_EVENT) != 0)
+            if ((*gGameUIInterface)->isItemBeingUsed(GAMEBIT_ITEM_FireSpellStone2_Got) != 0)
             {
                 mainSetBits(state->completionGameBit, 1);
                 mainSetBits(state->activationGameBit, 0);
@@ -81,17 +82,15 @@ void VFP_SpellPlace_update(GameObject* spellPlace)
     }
 }
 
-void VFP_SpellPlace_init(GameObject* spellPlace, s8* def)
+void VFP_SpellPlace_init(GameObject* spellPlace, VfpSpellPlacePlacementPrefix* mapData)
 {
-    LaserObjectMapData* mapData;
-    LaserState* state;
+    VfpSpellPlaceState* state;
 
-    mapData = (LaserObjectMapData*)def;
     state = spellPlace->extra;
     state->completionGameBit = mapData->completionGameBit;
     state->activationGameBit = mapData->activationGameBit;
     state->completionLatched = 0;
-    spellPlace->anim.rotX = (s16)(mapData->yawByte << LASEROBJ_YAW_BYTE_SHIFT);
+    spellPlace->anim.rotX = (s16)(mapData->rotationXByte << VFP_SPPL_ROTATION_BYTE_SHIFT);
     if (mainGetBit(state->completionGameBit) != 0)
     {
         state->completionLatched = 1;
@@ -113,14 +112,14 @@ ObjectDescriptor gVFP_SpellPlaceObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)VFP_SpellPlace_initialise,
-    (ObjectDescriptorCallback)VFP_SpellPlace_release,
+    VFP_SpellPlace_initialise,
+    VFP_SpellPlace_release,
     0,
     (ObjectDescriptorCallback)VFP_SpellPlace_init,
     (ObjectDescriptorCallback)VFP_SpellPlace_update,
-    (ObjectDescriptorCallback)VFP_SpellPlace_hitDetect,
-    (ObjectDescriptorCallback)VFP_SpellPlace_render,
-    (ObjectDescriptorCallback)VFP_SpellPlace_free,
+    VFP_SpellPlace_hitDetect,
+    VFP_SpellPlace_render,
+    VFP_SpellPlace_free,
     (ObjectDescriptorCallback)VFP_SpellPlace_getObjectTypeId,
-    (ObjectDescriptorExtraSizeCallback)VFP_SpellPlace_getExtraSize,
+    VFP_SpellPlace_getExtraSize,
 };

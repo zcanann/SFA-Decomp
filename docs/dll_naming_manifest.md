@@ -1072,6 +1072,7 @@ more as they are recovered.
 | 0x211 | dlls/objects/529/529.c | include/dlls/objects/529.h |
 | 0x220 | dlls/objects/544/544.c | include/dlls/objects/544.h |
 | 0x223 | dlls/objects/547_VFP_corepla/VFP_corepla.c | include/dlls/objects/547_VFP_corepla.h |
+| 0x228 | dlls/objects/552/552.c | include/dlls/objects/552.h |
 | 0x22D | dlls/objects/557_DFP_seqpoin/DFP_seqpoin.c | include/dlls/objects/557_DFP_seqpoin.h |
 | 0x22F | dlls/objects/559_DFP_floorba/DFP_floorba.c | include/main/dll/baddie/dll_022F_dfpfloorbar.h |
 | 0x232 | dlls/objects/562_DFP_RotateP/DFP_RotateP.c | include/dlls/objects/562_DFP_RotateP.h |

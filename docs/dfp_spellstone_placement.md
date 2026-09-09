@@ -31,11 +31,11 @@ map acts and transitions. It preserves the byte narrowing of the current act,
 signed game-bit loads, interaction flag operations, repeated state loads and
 all initialization behavior. No new gameplay behavior is introduced.
 
-The legacy header retains the types and constants still used by slot 552's
-separate spellstone-placement object, plus slot 566's unsupported laser API.
-Only slot 567's declarations and exclusive constants are removed. The shared
-object registry gains the canonical header and the descriptor rename; it is
-not reformatted.
+This recovery initially retained the legacy types and constants used by slot
+552, plus slot 566's unsupported laser API. The subsequent
+[fire SpellStone recovery](vfp_spellstone_placement.md) removes the remaining
+spellstone declarations from that header. The shared registry changes for
+slot 567 remain limited to its canonical include and descriptor rename.
 
 The EN TU is `0x802090A8..0x8020930C`, containing nine functions and 612 code
 bytes. Its only assigned data is the 56-byte descriptor at `0x80329C48`.
