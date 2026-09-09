@@ -4,6 +4,7 @@ const f32 axfx_reverb_std_handle_f32_0p3 = 0.3f;
 const f32 axfx_reverb_std_handle_f32_0p6 = 0.6f;
 const double axfx_reverb_std_handle_i2f_magic = 4503601774854144.0;
 
+// clang-format off
 asm static void HandleReverb2(register s32* sptr, register AXFX_REVSTD_WORK* rv) {
     nofralloc
 	stwu r1, -144(r1)
@@ -264,6 +265,7 @@ L_0000090C:
 	addi r1, r1, 144
 	blr
 }
+// clang-format on
 
 void ReverbSTDCallback(s32* left, s32* right, s32* surround, AXFX_REVSTD_WORK* rv) {
     HandleReverb2(left, rv);
