@@ -7,8 +7,7 @@
 
 /* Reader view only: the full EN placement extent is not established.
  * Do not use sizeof this prefix to allocate or copy placements. */
-typedef struct BrokenPipePlacementPrefix
-{
+typedef struct BrokenPipePlacementPrefix {
     ObjPlacement base;
     u8 rotZ;
     u8 rotY;
@@ -17,8 +16,7 @@ typedef struct BrokenPipePlacementPrefix
 } BrokenPipePlacementPrefix;
 
 /* brokenpipe_getExtraSize returns the required four-byte state size. */
-typedef struct BrokenPipeState
-{
+typedef struct BrokenPipeState {
     f32 hitEffectCooldown; /* Frame cooldown maintained by the priority-hit helper. */
 } BrokenPipeState;
 
