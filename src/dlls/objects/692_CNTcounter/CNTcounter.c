@@ -1,17 +1,18 @@
 /*
- * CNTcounter (DLL 0x2B4) - a generic countdown object.
- * Reads an initial count and two game bits from placement data: one bit
- * that, when set, decrements the counter (the bit's value is used as the
- * decrement amount and then cleared), and one bit set when the counter
- * reaches zero. Optionally shows the current count on the HUD.
+ * CNTcounter (DLL 692) is a game-bit-driven counter. A nonzero input starts
+ * an idle counter without clearing that input. A later active update consumes
+ * the input's value as a decrement and clears it. Reaching zero sets the done
+ * game bit; initialization and restarting do not reset that completion bit.
+ * The optional shared HUD number is written before consuming the decrement.
  */
-#include "main/dll/dll_02B4_cntcounter.h"
+#include "dlls/objects/692_CNTcounter.h"
+#include "game/objects/object.h"
 #include "main/gamebits.h"
 #include "main/model_engine.h"
 
 int CntCounter_getExtraSize(void)
 {
-    return 8;
+    return sizeof(CntCounterState);
 }
 
 int CntCounter_getObjectTypeId(void)
@@ -39,20 +40,20 @@ void CntCounter_hitDetect(void)
 void CntCounter_update(GameObject* obj)
 {
     CntCounterState* state = obj->extra;
-    CntCounterSetup* setup = (CntCounterSetup*)obj->anim.placementData;
+    CntCounterPlacementPrefix* setup = (CntCounterPlacementPrefix*)obj->anim.placementData;
 
     if (state->remainingCount != 0)
     {
-        int bit;
+        int decrementAmount;
         if (state->displayHud != 0)
         {
             hudNumberSet(state->remainingCount);
         }
-        bit = mainGetBit(setup->decrementGameBit);
-        if (bit != 0)
+        decrementAmount = mainGetBit(setup->countInputGameBit);
+        if (decrementAmount != 0)
         {
-            mainSetBits(setup->decrementGameBit, 0);
-            state->remainingCount -= bit;
+            mainSetBits(setup->countInputGameBit, 0);
+            state->remainingCount -= decrementAmount;
             if (state->remainingCount <= 0)
             {
                 state->remainingCount = 0;
@@ -67,7 +68,7 @@ void CntCounter_update(GameObject* obj)
     }
     else
     {
-        if (mainGetBit(setup->decrementGameBit) != 0)
+        if (mainGetBit(setup->countInputGameBit) != 0)
         {
             state->displayHud = setup->displayHud;
             state->remainingCount = setup->initialCount;
@@ -95,14 +96,14 @@ ObjectDescriptor gCNTcounterObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)CntCounter_initialise,
-    (ObjectDescriptorCallback)CntCounter_release,
+    CntCounter_initialise,
+    CntCounter_release,
     0,
     (ObjectDescriptorCallback)CntCounter_init,
     (ObjectDescriptorCallback)CntCounter_update,
-    (ObjectDescriptorCallback)CntCounter_hitDetect,
-    (ObjectDescriptorCallback)CntCounter_render,
+    CntCounter_hitDetect,
+    CntCounter_render,
     (ObjectDescriptorCallback)CntCounter_free,
     (ObjectDescriptorCallback)CntCounter_getObjectTypeId,
-    (ObjectDescriptorExtraSizeCallback)CntCounter_getExtraSize,
+    CntCounter_getExtraSize,
 };

@@ -502,7 +502,7 @@
 #include "dlls/objects/689_CmbSrc.h"
 #include "dlls/objects/690_DustMoteSou.h"
 #include "dlls/objects/691.h"
-#include "main/dll/dll_02B4_cntcounter.h"
+#include "dlls/objects/692_CNTcounter.h"
 #include "main/dll/dll_02B6_cnthitobjec.h"
 #include "main/dll/dll_02B7_mcupgrade.h"
 #include "main/dll/dll_02B8_mcupgradema.h"
