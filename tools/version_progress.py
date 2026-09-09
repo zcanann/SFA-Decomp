@@ -1118,7 +1118,9 @@ def port_coherent_units(
     target_dol: DolFile,
     source_detailed_spans: dict[str, tuple[SymbolSpan, ...]],
     target_detailed_spans: dict[str, tuple[SymbolSpan, ...]],
+    initialized_sda_ranges: dict[SplitRange, tuple[int, int]] | None = None,
 ) -> tuple[list[PortedRange], dict[str, int], int, int, dict[str, tuple[str, ...]]]:
+    initialized_sda_ranges = initialized_sda_ranges or {}
     source_by_section: dict[str, list[FunctionSymbol]] = defaultdict(list)
     target_by_section: dict[str, list[FunctionSymbol]] = defaultdict(list)
     for function in source_functions:
@@ -1222,15 +1224,36 @@ def port_coherent_units(
     rejected_units: dict[str, set[str]] = defaultdict(set)
     exact_symbol_range_remaps = 0
     accepted: list[PortedRange] = []
+    witnessed_ends: set[SplitRange] = set()
     for unit, ranges in by_unit.items():
         candidates: list[PortedRange] = []
         reason: str | None = None
+        code_unchanged = True
+        # A changed TU may add constants around an otherwise identical pool.
+        # Do not replace its inferred extent using only the surviving EN bytes.
+        if any(split in initialized_sda_ranges for split in ranges):
+            for split in ranges:
+                if split.section not in CODE_SECTIONS or split.start == split.end:
+                    continue
+                section_map = boundary_maps.get(split.section, {})
+                start, end = section_map.get(split.start), section_map.get(split.end)
+                if (start is None or end is None or end - start != split.end - split.start
+                        or normalized_span_signature(source_dol, SymbolSpan(unit, split.section, split.start, split.end))
+                        != normalized_span_signature(target_dol, SymbolSpan(unit, split.section, start, end))):
+                    code_unchanged = False
+                    break
         for split in ranges:
             if split.start == split.end:
                 continue
             section_map = boundary_maps.get(split.section, {})
             target_start = section_map.get(split.start)
             target_end = section_map.get(split.end)
+            witnessed_range = initialized_sda_ranges.get(split) if code_unchanged else None
+            if witnessed_range is not None:
+                # One EN edge can become two regional edges when a revision
+                # inserts storage between independently witnessed whole pools.
+                target_start, target_end = witnessed_range
+                witnessed_ends.add(split)
             if target_start is None or target_end is None:
                 reason = "unmapped section boundary"
                 break
@@ -1239,7 +1262,8 @@ def port_coherent_units(
                 break
             source_size = split.end - split.start
             target_size = target_end - target_start
-            if split.section not in CODE_SECTIONS and split.section not in ZERO_SECTIONS:
+            if (witnessed_range is None and split.section not in CODE_SECTIONS
+                    and split.section not in ZERO_SECTIONS):
                 key = (split.unit, split.section, split.start)
                 chain_homolog = exact_chain_overrides.get(key)
                 source_exact = source_exact_split_spans.get(key)
@@ -1401,7 +1425,8 @@ def port_coherent_units(
         ranges.sort(key=lambda item: item.target_start)
         for before, after in zip(ranges, ranges[1:]):
             gap = (before.source.section, before.target_end, after.target_start)
-            if after.target_start - before.target_end == 4 and gap not in alignment_gaps:
+            if (after.target_start - before.target_end == 4 and gap not in alignment_gaps
+                    and before.source not in witnessed_ends):
                 extensions[
                     (
                         before.source.unit,
@@ -1962,13 +1987,15 @@ def recover_sdata_layout(
     source_dol: DolFile, target_dol: DolFile, source_splits: list[SplitRange],
     source_symbols: str, target_symbols: str, references: dict,
     canonical_data_names: set[str], *, section_name: str = "sdata",
-) -> tuple[dict[int, int], str]:
+) -> tuple[dict[int, int], str, dict[SplitRange, tuple[int, int]]]:
     """Recover initialized small data only with operand AND byte evidence.
 
     Individual names can survive a changed TU width. A whole range can move
     only when its start is directly referenced, every observed interior operand
     keeps its offset, and its complete initialization bytes agree with retail.
     Repeated scalar values alone cannot establish identity or ownership.
+    Keep whole-pool extents separately: a shared source edge can have different
+    target destinations on its two sides when a revision inserts another pool.
     """
     if section_name not in ("sdata", "sdata2"):
         raise ValueError("Initialized SDA section must be sdata or sdata2")
@@ -1991,11 +2018,13 @@ def recover_sdata_layout(
         return mapped
 
     proposals: dict[int, set[int]] = defaultdict(set)
+    ranges: dict[SplitRange, tuple[int, int]] = {}
     for split in source_splits:
         if split.section != section_name or split.start == split.end:
             continue
         mapped = project(split.start, split.end - split.start)
         if mapped is not None:
+            ranges[split] = (mapped, mapped + split.end - split.start)
             proposals[split.start].add(mapped)
             proposals[split.end].add(mapped + split.end - split.start)
     boundaries = {edge: next(iter(values)) for edge, values in proposals.items() if len(values) == 1}
@@ -2021,7 +2050,7 @@ def recover_sdata_layout(
                            f"{b[2]} 0x{b[0]:08X}..0x{b[1]:08X}" for a, b in overlaps[:3])
         raise ValueError(f"Retail initialized SDA projections overlap in {section_name}: {detail}; "
                          "no configuration written")
-    return boundaries, replace_projected_section_symbols(target_symbols, section_name, replacements)
+    return boundaries, replace_projected_section_symbols(target_symbols, section_name, replacements), ranges
 
 
 def replace_projected_section_symbols(target_symbols, section, replacements):
@@ -2175,14 +2204,16 @@ def project_symbol_snapshot(
         source_dol, target_dol, source_splits, source_symbols, target_symbols, matches
     )
     sbss_boundaries = sdata_boundaries = None
+    initialized_sda_ranges: dict[SplitRange, tuple[int, int]] = {}
     references = None
     if any(split.section in {"sbss", "sdata"} for split in source_splits):
         references = sda_reference_pairs(source_dol, source_functions, target_dol, target_functions)
     if any(split.section == "sdata" for split in source_splits):
-        sdata_boundaries, target_symbols = recover_sdata_layout(
+        sdata_boundaries, target_symbols, ranges = recover_sdata_layout(
             source_dol, target_dol, source_splits, source_symbols, target_symbols,
             references, canonical_data_names or set(),
         )
+        initialized_sda_ranges.update(ranges)
     if any(split.section == "sbss" for split in source_splits):
         sbss_boundaries, target_symbols = recover_sbss_layout(
             source_dol, target_dol, source_splits, source_symbols, target_symbols,
@@ -2194,10 +2225,11 @@ def project_symbol_snapshot(
         constant_references = sda_reference_pairs(
             source_dol, source_functions, target_dol, target_functions, register=2
         )
-        sdata2_boundaries, target_symbols = recover_sdata_layout(
+        sdata2_boundaries, target_symbols, ranges = recover_sdata_layout(
             source_dol, target_dol, source_splits, source_symbols, target_symbols,
             constant_references, canonical_data_names or set(), section_name="sdata2",
         )
+        initialized_sda_ranges.update(ranges)
     source_symbol_spans = parse_symbol_spans(source_symbols)
     target_symbol_spans = parse_symbol_spans(target_symbols)
     target_named_symbol_span_index = symbol_span_index(target_symbol_spans)
@@ -2268,6 +2300,7 @@ def project_symbol_snapshot(
         target_dol,
         source_symbol_spans,
         target_symbol_spans,
+        initialized_sda_ranges,
     )
     symbols, renamed, conflicts, symbol_delta = render_projected_symbol_texts(
         source_symbols, target_symbols, ported, matches, canonical_data_names,

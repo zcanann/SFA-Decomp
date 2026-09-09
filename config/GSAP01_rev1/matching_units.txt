@@ -834,6 +834,7 @@ main/boot_logo.c
 main/curves.c
 main/gameloop_buttonobj.c
 main/modelEngine.c
+main/modellight.c
 main/obj_movelib.c
 main/objlib.c
 main/pad.c

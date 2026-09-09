@@ -8,7 +8,8 @@ from orig.dol_xrefs import DolSection, FunctionSymbol
 from orig.sda_symbol_audit import reference_pairs, retail_sda_base
 from version_progress import (SplitRange, PortedRange, recover_sbss_layout,
                               recover_sdata_layout, parse_symbol_spans,
-                              render_projected_symbol_texts, replace_projected_section_symbols, preserves_sda_base)
+                              render_projected_symbol_texts, replace_projected_section_symbols, preserves_sda_base,
+                              port_coherent_units, symbol_span_index, SECTION_INDEX)
 
 
 def image(base, bodies, register=13):
@@ -186,30 +187,33 @@ class InitializedSdaLayoutTests(unittest.TestCase):
             self.source_symbols, self.target_symbols, self.references, set())
 
     def test_operand_and_complete_bytes_recover_four_float_boundary(self):
-        boundaries, symbols = self.project()
+        boundaries, symbols, ranges = self.project()
         self.assertEqual(boundaries, {0x1000: 0x2000, 0x1010: 0x2010})
+        self.assertEqual(ranges, {self.splits[0]: (0x2000, 0x2010)})
         self.assertEqual([(s.name, s.start) for s in parse_symbol_spans(symbols)["sdata"]],
                          [(f"phase{i}", 0x2000 + i * 4) for i in range(4)])
 
     def test_initialized_r2_section_uses_the_same_operand_and_byte_gate(self):
         self.source.sections = [DolSection(14, 0, 0x1000, 16)]
         self.target.sections = [DolSection(14, 0, 0x2000, 20)]
-        boundaries, symbols = recover_sdata_layout(
+        boundaries, symbols, ranges = recover_sdata_layout(
             self.source, self.target, [SplitRange("effect.c", "sdata2", 0x1000, 0x1010)],
             self.source_symbols.replace(".sdata:", ".sdata2:"),
             self.target_symbols.replace(".sdata:", ".sdata2:"), self.references, set(),
             section_name="sdata2")
         self.assertEqual(boundaries, {0x1000: 0x2000, 0x1010: 0x2010})
         self.assertEqual(len(parse_symbol_spans(symbols)["sdata2"]), 4)
+        self.assertEqual(ranges, {SplitRange("effect.c", "sdata2", 0x1000, 0x1010): (0x2000, 0x2010)})
 
     def test_repeated_initializers_without_operand_evidence_prove_nothing(self):
         self.references = {}
-        self.assertEqual(self.project(), ({}, self.target_symbols))
+        self.assertEqual(self.project(), ({}, self.target_symbols, {}))
 
     def test_changed_initializer_blocks_whole_range_but_not_other_names(self):
         self.target.data = b"diff" + self.target.data[4:]
-        boundaries, symbols = self.project()
+        boundaries, symbols, ranges = self.project()
         self.assertFalse(boundaries)
+        self.assertFalse(ranges)
         self.assertNotIn("phase0", symbols)
         self.assertIn("phase1", symbols)
 
@@ -220,9 +224,72 @@ class InitializedSdaLayoutTests(unittest.TestCase):
 
     def test_conflicting_reference_does_not_choose_a_matching_value(self):
         self.references[0x1000][0x2008] = [{}]
-        boundaries, symbols = self.project()
+        boundaries, symbols, ranges = self.project()
         self.assertFalse(boundaries)
+        self.assertFalse(ranges)
         self.assertNotIn("phase0", symbols)
+
+    def test_touching_source_pools_keep_separate_edges_around_target_insertions(self):
+        for section in ("sdata", "sdata2"):
+            for gap in (b"new!", b"new pool"):
+                with self.subTest(section=section, gap_size=len(gap)):
+                    self.source.sections = [
+                        DolSection(i, 0, 0x1000 if i == SECTION_INDEX[section] else 0,
+                                   16 if i == SECTION_INDEX[section] else 0)
+                        for i in SECTION_INDEX.values()]
+                    self.target.data = self.values[:8] + gap + self.values[8:]
+                    self.target.sections = [
+                        DolSection(i, 0, 0x2000 if i == SECTION_INDEX[section] else 0,
+                                   len(self.target.data) if i == SECTION_INDEX[section] else 0)
+                        for i in SECTION_INDEX.values()]
+                    splits = [SplitRange("a.c", section, 0x1000, 0x1008),
+                              SplitRange("b.c", section, 0x1008, 0x1010)]
+                    refs = {0x1000 + i * 4: {0x2000 + i * 4 + (len(gap) if i >= 2 else 0): [{}]}
+                            for i in range(4)}
+                    source_symbols = self.source_symbols.replace(".sdata:", f".{section}:")
+                    boundaries, symbols, ranges = recover_sdata_layout(
+                        self.source, self.target, splits, source_symbols, "", refs, set(),
+                        section_name=section)
+                    self.assertNotIn(0x1008, boundaries)
+                    self.assertEqual(ranges, {splits[0]: (0x2000, 0x2008),
+                                             splits[1]: (0x2008 + len(gap), 0x2010 + len(gap))})
+                    # A global edge map chooses the following pool's start and
+                    # would wrongly widen the preceding pool across the insertion.
+                    boundaries[0x1008] = 0x2008 + len(gap)
+                    spans = parse_symbol_spans(symbols)
+                    index = symbol_span_index(spans)
+                    ported, rejected, *_ = port_coherent_units(
+                        splits, [], [], {section: boundaries}, index, index,
+                        self.source, self.target, parse_symbol_spans(source_symbols), spans, ranges)
+                    self.assertFalse(rejected)
+                    self.assertEqual([(p.target_start, p.target_end) for p in ported],
+                                     [(0x2000, 0x2008), (0x2008 + len(gap), 0x2010 + len(gap))])
+
+    def test_changed_code_keeps_a_regionally_extended_pool(self):
+        self.source.data = self.values + struct.pack(">I", 0x4E800020)
+        self.target.data = self.values[:8] + b"new!" + self.values[8:] + struct.pack(">II", 0x38600000, 0x4E800020)
+        self.source.sections = [DolSection(i, 0, 0x1000 if i == 13 else 0, 16 if i == 13 else 0)
+                                for i in SECTION_INDEX.values() if i != 1]
+        self.source.sections.append(DolSection(1, 16, 0x80001000, 4))
+        self.target.sections = [DolSection(i, 0, 0x2000 if i == 13 else 0, 20 if i == 13 else 0)
+                                for i in SECTION_INDEX.values() if i != 1]
+        self.target.sections.append(DolSection(1, 20, 0x80002000, 8))
+        splits = [SplitRange("a.c", "sdata", 0x1000, 0x1008),
+                  SplitRange("b.c", "sdata", 0x1008, 0x1010),
+                  SplitRange("a.c", "text", 0x80001000, 0x80001004)]
+        refs = {0x1000 + i * 4: {0x2000 + i * 4 + (4 if i >= 2 else 0): [{}]} for i in range(4)}
+        boundaries, symbols, ranges = recover_sdata_layout(
+            self.source, self.target, splits, self.source_symbols, "", refs, set())
+        self.assertEqual(ranges[splits[0]], (0x2000, 0x2008))
+        boundaries[0x1008] = 0x200C
+        spans = parse_symbol_spans(symbols)
+        index = symbol_span_index(spans)
+        ported, rejected, *_ = port_coherent_units(
+            splits, [], [], {"sdata": boundaries, "text": {0x80001000: 0x80002000, 0x80001004: 0x80002008}},
+            index, index, self.source, self.target, parse_symbol_spans(self.source_symbols), spans, ranges)
+        self.assertFalse(rejected)
+        pool = next(p for p in ported if p.source == splits[0])
+        self.assertEqual((pool.target_start, pool.target_end), (0x2000, 0x200C))
 
     def test_equal_width_does_not_override_an_independently_moved_global(self):
         source = "active = .sdata:0x00001000; // type:object size:0x1\n"
