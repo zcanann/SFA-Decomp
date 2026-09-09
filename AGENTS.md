@@ -113,6 +113,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 - Use `python tools/orig/constructor_packets.py` when a store-backed DOL vtable/callback-table hit should become a non-built `src/main/unknown/constructors/` packet for class-boundary or hierarchy recovery.
 - Use `python tools/orig/romlist_params.py` when recovering object placement structs, param widths, or variable-length romlist families from retail data.
 - Use `python tools/orig/resource_registry_audit.py <version>` when regional resource names or descriptor splits look wrong. It checks retail registry pointers and callback correspondence without changing ownership; review complete neighboring units before applying its findings.
+- Use `python tools/orig/sda_symbol_audit.py <version> --section sbss` when regional small-data names or zero-storage boundaries look wrong. It reads retail SDA bases and paired instruction operands; normalized objdiff relocations and equal section widths cannot establish global addresses.
 - Write small custom tools and scripts under the tools/ folder when the repo lacks the visibility needed to move quickly.
 
 ## Rules

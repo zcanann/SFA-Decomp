@@ -604,7 +604,7 @@ dlls/engine/16/16.c:
 dlls/engine/18/18.c:
 	.text       start:0x800D9ED4 end:0x800D9F08
 	.data       start:0x803115F8 end:0x80311638
-	.sbss       start:0x803DD578 end:0x803DD580
+	.sbss       start:0x803DD578 end:0x803DD57C
 
 dlls/engine/20_Hcurves/Hcurves.c:
 	.text       start:0x800D9F08 end:0x800DD668

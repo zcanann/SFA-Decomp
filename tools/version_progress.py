@@ -239,6 +239,78 @@ def dol_section(dol: DolFile, section: str):
     return next(item for item in dol.sections if item.index == index)
 
 
+def retail_sda_base(dol) -> int:
+    """Read the unique lis r13 / ori r13 startup pair, without linked ELF hints."""
+    section = dol_section(dol, "init")
+    words = struct.unpack(f">{section.size // 4}I",
+                          read_dol_range(dol, section.address, section.size))
+    candidates = [((high & 0xFFFF) << 16) | (low & 0xFFFF)
+                  for high, low in zip(words, words[1:])
+                  if high & 0xFFFF0000 == 0x3DA00000
+                  and low & 0xFFFF0000 == 0x61AD0000]
+    if len(candidates) != 1:
+        raise ValueError(f"Expected one retail r13 startup pair in {dol.path}")
+    return candidates[0]
+
+
+def sda_reference_pairs(source, source_functions, target, target_functions) -> dict:
+    source_base, target_base = retail_sda_base(source), retail_sda_base(target)
+    left, right = defaultdict(list), defaultdict(list)
+    for dol, functions, signatures in ((source, source_functions, left),
+                                        (target, target_functions, right)):
+        for function in functions:
+            if function.section in CODE_SECTIONS:
+                signatures[(function.section, function_signature(dol, function))].append(function)
+    pairs = {}
+    for signature, functions in left.items():
+        targets = right.get(signature, [])
+        if len(functions) != 1 or len(targets) != 1:
+            continue
+        pairs[functions[0].address] = (functions[0], targets[0], "unique function")
+    # Tiny setters and getters repeat. Their order is usable only when BOTH
+    # enclosing functions are independently unique and the complete intervening
+    # sequence has the same function count and instruction shapes.
+    for section in CODE_SECTIONS:
+        source_run = sorted((f for f in source_functions if f.section == section),
+                            key=lambda f: f.address)
+        target_run = sorted((f for f in target_functions if f.section == section),
+                            key=lambda f: f.address)
+        target_indices = {f.address: i for i, f in enumerate(target_run)}
+        anchors = [i for i, f in enumerate(source_run) if f.address in pairs]
+        for before, after in zip(anchors, anchors[1:]):
+            first = target_indices[pairs[source_run[before].address][1].address]
+            last = target_indices[pairs[source_run[after].address][1].address]
+            if last - first != after - before or after - before < 2:
+                continue
+            a_run, b_run = source_run[before:after + 1], target_run[first:last + 1]
+            if any(a.address + a.size != b.address
+                   for run in (a_run, b_run) for a, b in zip(run, run[1:])):
+                continue
+            if not all(function_signature(source, a) == function_signature(target, b)
+                       for a, b in zip(a_run, b_run)):
+                continue
+            for a, b in zip(a_run[1:-1], b_run[1:-1]):
+                pairs[a.address] = (a, b, "unique enclosing functions")
+    refs = defaultdict(lambda: defaultdict(list))
+    for a, b, evidence in pairs.values():
+        source_words = struct.unpack(f">{a.size // 4}I", read_dol_range(source, a.address, a.size))
+        target_words = struct.unpack(f">{b.size // 4}I", read_dol_range(target, b.address, b.size))
+        for offset, (x, y) in enumerate(zip(source_words, target_words)):
+            # addi and non-updating scalar loads/stores. Updating r13 is not
+            # an ABI small-data access; logical-immediate operands are unsigned.
+            if x >> 26 not in {14, *range(32, 56, 2)} or (x >> 16) & 31 != 13:
+                continue
+            source_address = source_base + struct.unpack(">h", struct.pack(">H", x & 0xFFFF))[0]
+            target_address = target_base + struct.unpack(">h", struct.pack(">H", y & 0xFFFF))[0]
+            refs[source_address][target_address].append({
+                "source_function": a.name, "target_function": b.name,
+                "source_instruction": a.address + offset * 4,
+                "target_instruction": b.address + offset * 4,
+                "match_evidence": evidence,
+            })
+    return {address: dict(targets) for address, targets in refs.items()}
+
+
 def sbss2_bounds(dol: DolFile) -> tuple[int, int] | None:
     """Bound the final zero-filled tail using the DOL header, not file bytes.
 
@@ -470,21 +542,15 @@ def build_all_boundary_maps(
             sum(boundary in inferred for boundary in boundaries),
         )
 
-    # These zero-filled spans have no bytes to anchor, but their total widths
-    # are invariant across the retail versions.  Their positions are pinned by
-    # the initialized sections on either side.
+    # Retain the existing large-BSS origin projection. Small BSS is handled
+    # separately with retail SDA operands: equal section widths do not imply
+    # equal internal layout, particularly in PAL and EN rev1.
     zero_section_origins = {
         "bss": (
             dol_section(source_dol, "data").address
             + dol_section(source_dol, "data").size,
             dol_section(target_dol, "data").address
             + dol_section(target_dol, "data").size,
-        ),
-        "sbss": (
-            dol_section(source_dol, "sdata").address
-            + dol_section(source_dol, "sdata").size,
-            dol_section(target_dol, "sdata").address
-            + dol_section(target_dol, "sdata").size,
         ),
     }
     for section, (source_origin, target_origin) in zero_section_origins.items():
@@ -1613,6 +1679,7 @@ def render_projected_symbol_texts(
         if (
             address_name_match is not None
             and int(match.group(1).rsplit("_", 1)[1], 16) != address
+            and match.group(1) not in canonical_data_names
         ):
             removed += 1
             continue
@@ -1752,6 +1819,121 @@ class VersionProjection:
     passes: int = 1
 
 
+def recover_sbss_layout(
+    source_dol: DolFile, target_dol: DolFile, source_splits: list[SplitRange],
+    source_symbols: str, target_symbols: str, references: dict,
+    canonical_data_names: set[str],
+) -> tuple[dict[int, int], str]:
+    """Project small BSS from operand anchors, preserving local layout changes.
+
+    Infer edges between operands with the same address delta. At a layout
+    transition, bound ownership by the surviving, individually mapped symbols.
+    Changed-layout TUs need individually anchored symbols; their whole section
+    must not overwrite those identities with a constant offset on later passes.
+    """
+    def bounds(dol):
+        section = dol_section(dol, "sdata")
+        return section.address + section.size, dol_section(dol, "sdata2").address
+
+    source_start, source_end = bounds(source_dol)
+    target_start, target_end = bounds(target_dol)
+    if any(len(targets) != 1 or not target_start <= next(iter(targets)) < target_end
+           for address, targets in references.items() if source_start <= address < source_end):
+        raise ValueError("Conflicting or migrated retail SDA storage requires an explicit layout audit")
+    anchors = {
+        address: next(iter(targets)) for address, targets in references.items()
+        if source_start <= address < source_end and len(targets) == 1
+        and target_start <= next(iter(targets)) < target_end
+    }
+    anchors[source_start] = target_start
+    anchors[source_end] = target_end
+    addresses = sorted(anchors)
+    if any(anchors[a] >= anchors[b] for a, b in zip(addresses, addresses[1:])):
+        raise ValueError("Retail SDA storage changes order; no configuration written")
+
+    def project(address):
+        if address in anchors:
+            return anchors[address]
+        index = bisect.bisect_left(addresses, address)
+        if 0 < index < len(addresses):
+            before, after = addresses[index - 1:index + 1]
+            if anchors[before] - before == anchors[after] - after:
+                return address + anchors[before] - before
+        return None
+
+    proposals: dict[int, set[int]] = defaultdict(set)
+    source_spans = parse_symbol_spans(source_symbols).get("sbss", ())
+    for split in source_splits:
+        if split.section != "sbss":
+            continue
+        owned = [span for span in source_spans if split.start <= span.start < split.end]
+        mapped_spans = [(span, project(span.start)) for span in owned]
+        mapped_spans = [(span, address) for span, address in mapped_spans if address is not None]
+        for edge in (split.start, split.end):
+            mapped = project(edge)
+            if mapped is None and mapped_spans:
+                # Do not resurrect an unanchored leading/trailing global in a
+                # changed-layout TU (e.g. the removed walk-group checksum).
+                # Claim only the bounded storage of the surviving symbols.
+                mapped = (min(address for _, address in mapped_spans) if edge == split.start
+                          else max(address + span.size for span, address in mapped_spans))
+            if mapped is not None and target_start <= mapped <= target_end:
+                proposals[edge].add(mapped)
+    boundaries = {edge: next(iter(values)) for edge, values in proposals.items()
+                  if len(values) == 1}
+
+    # Rebuild only evidenced symbol spans. Stale projected names must not veto
+    # the instruction evidence or collide with the same identity at its real
+    # address. Target-only storage outside these spans remains untouched.
+    replacements: list[tuple[int, int, str, str]] = []
+    for line in source_symbols.splitlines():
+        match = SYMBOL_LINE_RE.match(line)
+        size_match = re.search(r"\bsize:0x([0-9A-Fa-f]+)", line)
+        if match is None or match.group(2) != "sbss" or size_match is None:
+            continue
+        address = int(match.group(3), 16)
+        size = int(size_match.group(1), 16)
+        mapped = project(address)
+        if mapped is None or not target_start <= mapped < mapped + size <= target_end:
+            continue
+        if any(target - source != mapped - address
+               for source, targets in references.items() if address <= source < address + size
+               for target in targets):
+            continue
+        next_anchor = bisect.bisect_left(addresses, address + size)
+        if next_anchor < len(addresses) and mapped + size > anchors[addresses[next_anchor]]:
+            continue
+        name = (match.group(1) if match.group(1) in canonical_data_names
+                else projected_symbol_name(match.group(1), mapped))
+        replacements.append((mapped, mapped + size, name,
+                             rewrite_symbol_line(line, name=name, address=mapped)))
+    replacements.sort()
+    if any(before[1] > after[0] for before, after in zip(replacements, replacements[1:])):
+        raise ValueError("Retail SDA symbol projections overlap; no configuration written")
+    names = {item[2] for item in replacements}
+    new_lines = [(item[0], item[3]) for item in replacements]
+    result = []
+    insertion = None
+    for line in target_symbols.splitlines():
+        match = SYMBOL_LINE_RE.match(line)
+        if match is None or match.group(2) != "sbss":
+            result.append(line)
+            continue
+        if insertion is None:
+            insertion = len(result)
+        address = int(match.group(3), 16)
+        size_match = re.search(r"\bsize:0x([0-9A-Fa-f]+)", line)
+        size = int(size_match.group(1), 16) if size_match else 1
+        if match.group(1) in names or any(
+            start < address + size and address < end for start, end, _, _ in replacements
+        ):
+            continue
+        new_lines.append((address, line))
+    insertion = len(result) if insertion is None else insertion
+    result[insertion:insertion] = [line for _, line in sorted(new_lines)]
+    return boundaries, "\n".join(result) + "\n"
+
+
 def project_symbol_snapshot(
     source_dol: DolFile, source_splits: list[SplitRange], source_symbols: str,
     target_dol: DolFile, target_symbols: str,
@@ -1762,6 +1944,13 @@ def project_symbol_snapshot(
     matches = unique_function_matches(
         source_dol, source_functions, target_dol, target_functions
     )
+    sbss_boundaries = None
+    if any(split.section == "sbss" for split in source_splits):
+        references = sda_reference_pairs(source_dol, source_functions, target_dol, target_functions)
+        sbss_boundaries, target_symbols = recover_sbss_layout(
+            source_dol, target_dol, source_splits, source_symbols, target_symbols,
+            references, canonical_data_names or set(),
+        )
     source_symbol_spans = parse_symbol_spans(source_symbols)
     target_symbol_spans = parse_symbol_spans(target_symbols)
     target_named_symbol_span_index = symbol_span_index(target_symbol_spans)
@@ -1776,6 +1965,11 @@ def project_symbol_snapshot(
         matches,
         target_all_symbol_span_index,
     )
+    if sbss_boundaries is not None:
+        boundary_maps["sbss"] = sbss_boundaries
+        anchor_counts["sbss"] = (
+            sum(edge in references for edge in sbss_boundaries), len(sbss_boundaries)
+        )
     boundary_maps, snapped_boundaries = snap_symbol_boundaries(
         source_splits,
         boundary_maps,
