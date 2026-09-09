@@ -674,8 +674,8 @@ void ShopKeeper_startScarabGame(GameObject* obj)
     if ((state->flags9D4 & SHOPKEEPER_FLAG_PURCHASED) != 0)
     {
         GameObject* target;
-        gameTimerInit(0x11, 0x1e);
-        timerSetToCountUp();
+        gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_DISPLAY, 0x1e);
+        gameTimerResume();
         setTrickyHudShowNearestInfo(1);
         mainSetBits(GAMEBIT_SHOP_ScarabGameRunning, 1);
         target = state->vendorObj;

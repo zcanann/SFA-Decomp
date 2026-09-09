@@ -26,7 +26,6 @@
 #define DBSH_SYMBOL_PARTNER_SEQUENCE_ID 0x20F
 #define DBSH_SYMBOL_SPIN_COMPLETE       0x7EF4
 
-#define DBSH_SYMBOL_TIMER_ID       0x1D
 #define DBSH_SYMBOL_TIMER_DURATION 0x3C
 #define DBSH_SYMBOL_YIELD_REASON   0xBD
 
@@ -79,8 +78,10 @@ int dbshSymbol_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animU
     animUpdate->movementState = 0;
     for (i = 0; i < animUpdate->eventCount; i++) {
         if (animUpdate->eventIds[i] == DBSH_SYMBOL_ANIM_EVENT_START) {
-            gameTimerInit(DBSH_SYMBOL_TIMER_ID, DBSH_SYMBOL_TIMER_DURATION);
-            timerSetToCountUp();
+            gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND |
+                          GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
+                          DBSH_SYMBOL_TIMER_DURATION);
+            gameTimerResume();
             state->flags.sequenceInactive = 0;
             obj->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
         }

@@ -11,7 +11,7 @@
 #include "main/objfx.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
-#include "main/dll/dll_02B5_timer.h"
+#include "dlls/objects/693_Timer.h"
 #include "main/gamebits_api.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
@@ -102,7 +102,7 @@ void drgenerator_hitDetect(GameObject* obj)
     mainSetBits(placement->completionGameBit, 1);
     if (obj->anim.romDefNo == DRGENERATOR_OBJ &&
         (found = (void*)objGetNearestTypeTo(TIMER_OBJECT_GROUP, obj, NULL)) != NULL) {
-        timer_addDuration((GameObject*)found, state->timerDuration);
+        timer_addDuration((GameObject*)found, state->timerDurationFrames);
     } else {
         ObjHits_DisableObject(obj);
     }
@@ -176,16 +176,16 @@ void drgenerator_init(GameObject* obj, DrgeneratorPlacement* placement)
     state->flags.b3 = 1;
     obj->anim.rotX = (s16)(placement->initialYaw << 8);
     {
-        int duration = placement->timerMinutes;
+        int duration = placement->timerSeconds;
         switch (duration)
         {
         case 0:
             duration = 0x14;
             break;
         }
-        state->timerDuration = duration;
+        state->timerDurationFrames = duration;
     }
-    state->timerDuration *= 0x3c;
+    state->timerDurationFrames *= 0x3c;
     state->unk124 = 0.018f;
     if (mainGetBit(0x9b9) != 0)
     {

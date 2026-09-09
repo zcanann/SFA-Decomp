@@ -38,8 +38,7 @@
 #define NW_LEVEL_CONTROL_DAY_NIGHT_MUSIC_ID 0x1A
 #define NW_LEVEL_CONTROL_TIMER_END_MUSIC_ID 0xAF
 #define NW_LEVEL_CONTROL_TRIGGER_ID         0x1EE
-#define NW_LEVEL_CONTROL_TIMER_ID           0x15
-#define NW_LEVEL_CONTROL_SECONDS_PER_MINUTE 60.0f
+#define NW_LEVEL_CONTROL_FRAMES_PER_SECOND 60.0f
 
 #define NW_LEVEL_CONTROL_FLAG_TIMER_START_PENDING 0x01
 #define NW_LEVEL_CONTROL_FLAG_TIMER_RUNNING       0x02
@@ -106,7 +105,7 @@ int nwLevelControl_advanceSequenceTable(NwLevelControlState* state) {
         state->sequenceId = data->sequenceIds[state->tableIndex];
         state->nextMode = data->nextModes[state->tableIndex];
         state->tableIndex++;
-        state->timerMinutes = 30;
+        state->timerSeconds = 30;
         return 1;
     }
 
@@ -116,7 +115,7 @@ int nwLevelControl_advanceSequenceTable(NwLevelControlState* state) {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             state->mode = NW_LEVEL_CONTROL_MODE_WAIT_PARENT_SLACK;
             state->sequenceId = data->sequenceIds[state->tableIndex - 1];
-            state->timerMinutes = 0;
+            state->timerSeconds = 0;
             return 2;
         }
     }
@@ -229,7 +228,7 @@ void nwLevelControl_update(GameObject* obj) {
         case NW_LEVEL_CONTROL_MODE_WALK_TABLE:
             sequenceResult = nwLevelControl_advanceSequenceTable(state);
             if (sequenceResult != 0) {
-                state->timerMinutes = 50;
+                state->timerSeconds = 50;
                 state->flags |= NW_LEVEL_CONTROL_FLAG_TIMER_START_PENDING;
             }
             break;
@@ -257,8 +256,9 @@ void nwLevelControl_update(GameObject* obj) {
                 if ((stateFlags & NW_LEVEL_CONTROL_FLAG_TIMER_START_PENDING) != 0) {
                     state->flags = stateFlags & ~NW_LEVEL_CONTROL_FLAG_TIMER_START_PENDING;
                     state->flags |= NW_LEVEL_CONTROL_FLAG_TIMER_RUNNING;
-                    gameTimerInit(NW_LEVEL_CONTROL_TIMER_ID, (u32)state->timerMinutes);
-                    timerSetToCountUp();
+                    gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND | GAME_TIMER_DISPLAY,
+                                  (u32)state->timerSeconds);
+                    gameTimerResume();
                     (*gMapEventInterface)->savePoint(&player->anim.localPosX, (int)player->anim.rotX, 0, 0);
                 } else if ((stateFlags & NW_LEVEL_CONTROL_FLAG_TIMER_COMPLETE) != 0) {
                     state->flags = stateFlags & ~NW_LEVEL_CONTROL_FLAG_TIMER_RUNNING;
@@ -267,10 +267,11 @@ void nwLevelControl_update(GameObject* obj) {
                     Music_Trigger(NW_LEVEL_CONTROL_TIMER_END_MUSIC_ID, 0);
                     mainSetBits(GAMEBIT_SnowHornArtifact19F, 1);
                 } else {
-                    int extra = (int)(gameTimerGetValue() / NW_LEVEL_CONTROL_SECONDS_PER_MINUTE);
+                    int extra = (int)(gameTimerGetValue() / NW_LEVEL_CONTROL_FRAMES_PER_SECOND);
                     gameTimerStop();
-                    gameTimerInit(NW_LEVEL_CONTROL_TIMER_ID, (u32)state->timerMinutes + extra);
-                    timerSetToCountUp();
+                    gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND | GAME_TIMER_DISPLAY,
+                                  (u32)state->timerSeconds + extra);
+                    gameTimerResume();
                 }
                 (*gObjectTriggerInterface)->runSequence(state->sequenceId, obj, -1);
                 state->mode = state->nextMode;

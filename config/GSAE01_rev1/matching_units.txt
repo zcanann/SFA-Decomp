@@ -661,6 +661,7 @@ dlls/objects/689_CmbSrc/CmbSrc.c
 dlls/objects/690_DustMoteSou/DustMoteSou.c
 dlls/objects/691/691.c
 dlls/objects/692_CNTcounter/CNTcounter.c
+dlls/objects/693_Timer/Timer.c
 dlls/objects/694_CNThitObjec/CNThitObjec.c
 dlls/objects/695_MCUpgrade/MCUpgrade.c
 dlls/objects/696_MCUpgradeMa/MCUpgradeMa.c

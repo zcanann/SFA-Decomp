@@ -44,8 +44,9 @@ void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state)
     switch (state->mode)
     {
     case WCLEVELCTL_MODE_TREX_INIT:
-        gameTimerInit(0x1d, 0x50);
-        timerSetToCountUp();
+        gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND | GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
+                      0x50);
+        gameTimerResume();
         state->mode = WCLEVELCTL_MODE_TREX_ACTIVE;
         break;
     case WCLEVELCTL_MODE_TREX_ACTIVE:
@@ -207,8 +208,10 @@ void wclevelcont_updateAct1State(GameObject* obj, WcLevelControlState* state)
     case WCLEVELCTL_MODE_PUZZLE_A:
         if (state->completionFlags & WCLEVELCTL_FLAG_TRIGGERED)
         {
-            gameTimerInit(0x1d, 0x3c);
-            timerSetToCountUp();
+            gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND |
+                          GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
+                          0x3c);
+            gameTimerResume();
             mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 1);
             mainSetBits(0xedd, 1);
         }
@@ -246,8 +249,10 @@ void wclevelcont_updateAct1State(GameObject* obj, WcLevelControlState* state)
     case WCLEVELCTL_MODE_PUZZLE_B:
         if (state->completionFlags & WCLEVELCTL_FLAG_TRIGGERED)
         {
-            gameTimerInit(0x1d, 0x50);
-            timerSetToCountUp();
+            gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND |
+                          GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
+                          0x50);
+            gameTimerResume();
             mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 1);
             mainSetBits(0xedc, 1);
         }

@@ -1,23 +1,17 @@
 /*
- * Timer (DLL 0x2B5) - a countdown-timer object with two modes.
- *
- * mode TIMER_MODE_GLOBAL drives the on-screen game timer (gameTimerInit /
- * timerSetToCountUp / gameTimerStop) for a placement-set duration in minutes;
- * mode TIMER_MODE_EFFECT instead runs a pulsing point-light/glow whose
- * texture animates as the countdown progresses.
- *
- * The countdown is armed by the placement's startGameBit (or by
- * timer_forceStart setting the manual flag), and on expiry sets
- * expiredGameBit and raises state->flags.expired. timer_addDuration extends a
- * running timer.
+ * Timer (DLL 693) counts nominal frames from a placement duration in seconds.
+ * Mode 1 controls the shared HUD countdown; mode 2 animates a point-light glow.
+ * Clearing the start bit cancels an unforced run. Both cancellation and natural
+ * expiry latch ended, but only natural expiry writes the completion game bit.
+ * Starting again does not clear that latch. Free always stops the global timer.
  */
+#include "dlls/objects/693_Timer.h"
+#include "game/objects/object.h"
 #include "main/frame_timing.h"
 #include "main/model_light.h"
 #include "main/objtexture.h"
-#include "main/dll/dll_02B5_timer.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render.h"
-#include "dlls/object_descriptor.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/game_timer_control_api.h"
 #include "main/gamebits_api.h"
@@ -31,41 +25,36 @@ f32 gTimerTextureScrollScale = 5.0f;
 #define TIMER_MODE_GLOBAL 1
 #define TIMER_MODE_EFFECT 2
 
-/* placement mapId excluded from the count-not-started footstep cue */
-#define TIMER_MAP_NO_FOOTSTEP 0x466ED
+/* Placement identity excluded from the global-mode cancellation sound. */
+#define TIMER_SILENT_CANCEL_IDENT 0x466ED
 
-/* gameTimerInit timer id used by the global-mode timer */
-#define GAME_TIMER_ID 29
 
-/* point-light struct fields gating the glow render (untyped here) */
-#define LIGHT_FIELD_2F8_OFFSET 0x2f8
-#define LIGHT_FIELD_4C_OFFSET  0x4c
 
-void timer_addDuration(GameObject* obj, int duration)
+void timer_addDuration(GameObject* obj, int durationFrames)
 {
     TimerState* state = obj->extra;
-    if (timerIsActive(&state->countdownTimer) != 0)
+    if (timerIsActive(&state->remainingFrames) != 0)
     {
-        state->countdownTimer += duration;
+        state->remainingFrames += durationFrames;
         if (state->mode == TIMER_MODE_GLOBAL)
         {
-            gameTimerInit(GAME_TIMER_ID, (int)(state->countdownTimer / 60.0f));
-            timerSetToCountUp();
+            gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND | GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY, (int)(state->remainingFrames / 60.0f));
+            gameTimerResume();
         }
     }
 }
 
-void timer_clearManualFlags(GameObject* obj)
+void timer_clearStartAndEndFlags(GameObject* obj)
 {
     TimerState* state = obj->extra;
-    state->flags.manual = 0;
-    state->flags.expired = 0;
+    state->flags.startOverride = 0;
+    state->flags.ended = 0;
 }
 
 void timer_forceStart(GameObject* obj)
 {
     TimerState* state = obj->extra;
-    state->flags.manual = 1;
+    state->flags.startOverride = 1;
 }
 
 int timer_isEffectMode(GameObject* obj)
@@ -74,10 +63,10 @@ int timer_isEffectMode(GameObject* obj)
     return state->mode == TIMER_MODE_EFFECT;
 }
 
-int timer_hasExpired(GameObject* obj)
+int timer_hasEnded(GameObject* obj)
 {
     TimerState* state = obj->extra;
-    return state->flags.expired;
+    return state->flags.ended;
 }
 
 int timer_getExtraSize(void)
@@ -100,8 +89,8 @@ void timer_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     TimerState* state = obj->extra;
     ModelLight* light = state->lightSlot;
-    if (light != NULL && *(u8*)((char*)light + LIGHT_FIELD_2F8_OFFSET) != 0 &&
-        *(u8*)((char*)light + LIGHT_FIELD_4C_OFFSET) != 0)
+    if (light != NULL && light->glowType != 0 &&
+        light->enabled != 0)
     {
         queueGlowRender(light);
     }
@@ -113,41 +102,49 @@ void timer_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 void timer_update(GameObject* obj)
 {
     int textureId[1];
-    int expiredThisFrame;
+    int endedThisFrame;
     TimerFlags* flags;
     TimerState* state;
-    TimerSetup* setup;
+    TimerPlacementPrefix* setup;
     state = obj->extra;
-    setup = (TimerSetup*)obj->anim.placementData;
+    setup = (TimerPlacementPrefix*)obj->anim.placementData;
     flags = &state->flags;
 
-    if (timerIsActive(&state->countdownTimer) != 0)
+    if (timerIsActive(&state->remainingFrames) != 0)
     {
-        expiredThisFrame = 0;
-        if (flags->manual == 0 && (void*)mainGetBit(setup->startGameBit) == NULL)
+        endedThisFrame = 0;
+        if (flags->startOverride == 0 && (void*)mainGetBit(setup->startGameBit) == NULL)
         {
-            storeZeroToFloatParam(&state->countdownTimer);
+            storeZeroToFloatParam(&state->remainingFrames);
             if (state->mode == TIMER_MODE_GLOBAL)
             {
-                switch (((TimerSetup*)obj->anim.placementData)->base.ident) {
-                case TIMER_MAP_NO_FOOTSTEP:
+                switch (((TimerPlacementPrefix*)obj->anim.placementData)->base.ident) {
+                case TIMER_SILENT_CANCEL_IDENT:
                     break;
                 default:
                     Sfx_PlayFromObject(obj, SFXTRIG_mpick1_b);
                     break;
                 }
             }
-            expiredThisFrame = 1;
+            endedThisFrame = 1;
         }
-        if (timerCountDown(&state->countdownTimer) != 0)
+        if (timerCountDown(&state->remainingFrames) != 0)
         {
             mainSetBits(setup->expiredGameBit, 1);
             mainSetBits(setup->startGameBit, 0);
-            expiredThisFrame = 1;
+            endedThisFrame = 1;
         }
-        if (expiredThisFrame != 0)
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+        /* These revisions compare the disabled mask (0 or 2) with 1. */
+        if (state->mode == TIMER_MODE_GLOBAL && isGameTimerDisabled() == 1) {
+            mainSetBits(setup->expiredGameBit, 1);
+            mainSetBits(setup->startGameBit, 0);
+            endedThisFrame = 1;
+        }
+#endif
+        if (endedThisFrame != 0)
         {
-            flags->expired = 1;
+            flags->ended = 1;
             switch (state->mode)
             {
             case TIMER_MODE_GLOBAL:
@@ -161,24 +158,24 @@ void timer_update(GameObject* obj)
                 modelLightStruct_freeSlot(&state->lightSlot);
                 break;
             }
-            flags->manual = 0;
+            flags->startOverride = 0;
             return;
         }
     }
     else
     {
-        if ((void*)mainGetBit(setup->startGameBit) != NULL || flags->manual != 0)
+        if ((void*)mainGetBit(setup->startGameBit) != NULL || flags->startOverride != 0)
         {
-            storeZeroToFloatParam(&state->countdownTimer);
-            if (setup->durationMinutes != 0)
+            storeZeroToFloatParam(&state->remainingFrames);
+            if (setup->durationSeconds != 0)
             {
-                s16toFloat(&state->countdownTimer, (s16)(setup->durationMinutes * 60));
+                s16toFloat(&state->remainingFrames, (s16)(setup->durationSeconds * 60));
             }
             switch (state->mode)
             {
             case TIMER_MODE_GLOBAL:
-                gameTimerInit(GAME_TIMER_ID, setup->durationMinutes);
-                timerSetToCountUp();
+                gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND | GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY, setup->durationSeconds);
+                gameTimerResume();
                 break;
             case TIMER_MODE_EFFECT:
                 state->lightSlot = modelLightStruct_createPointLight(obj, 255, 0, 0, 0);
@@ -191,11 +188,11 @@ void timer_update(GameObject* obj)
             }
         }
     }
-    if (state->mode == TIMER_MODE_EFFECT && timerIsActive(&state->countdownTimer) != 0)
+    if (state->mode == TIMER_MODE_EFFECT && timerIsActive(&state->remainingFrames) != 0)
     {
         ModelLight* light = state->lightSlot;
-        f32 progress = (f32)(setup->durationMinutes * 60) / state->countdownTimer;
-        int scroll = (int)(progress * gTimerTextureScrollScale);
+        f32 durationRatio = (f32)(setup->durationSeconds * 60) / state->remainingFrames;
+        int scroll = (int)(durationRatio * gTimerTextureScrollScale);
         ObjTextureRuntimeSlot* texPtr = objFindTexture(obj, 0, 0);
         if (texPtr != 0)
         {
@@ -208,6 +205,7 @@ void timer_update(GameObject* obj)
         }
         if (light != NULL)
         {
+            /* Retail reads the uninitialized local if the texture lookup failed. */
             scroll = textureId[0] >> 8;
         }
         else
@@ -216,13 +214,13 @@ void timer_update(GameObject* obj)
         }
         if (state->lightSlot != NULL)
         {
-            if (scroll == 1 && scroll != flags->flag20)
+            if (scroll == 1 && scroll != flags->previousGlowPhaseBit)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_barrel_timerbeep);
             }
             modelLightStruct_setEnabled(state->lightSlot, (u8)scroll, 0.0f);
         }
-        flags->flag20 = scroll;
+        flags->previousGlowPhaseBit = scroll;
     }
     if (state->lightSlot != NULL)
     {
@@ -230,19 +228,19 @@ void timer_update(GameObject* obj)
     }
 }
 
-void timer_init(GameObject* obj, TimerSetup* setup)
+void timer_init(GameObject* obj, TimerPlacementPrefix* setup)
 {
     TimerState* state = obj->extra;
-    TimerSetup* setupData = setup;
+    TimerPlacementPrefix* setupData = setup;
 
-    storeZeroToFloatParam(&state->countdownTimer);
+    storeZeroToFloatParam(&state->remainingFrames);
     state->mode = setupData->mode;
-    state->lightScale = 0.04f;
-    state->flags.expired = 0;
-    state->flags.manual = 0;
+    state->initialized08 = 0.04f;
+    state->flags.ended = 0;
+    state->flags.startOverride = 0;
     state->lightSlot = NULL;
     objAddObjectType(obj, TIMER_OBJECT_GROUP);
-    state->flags.flag20 = 0;
+    state->flags.previousGlowPhaseBit = 0;
 }
 
 ObjectDescriptor gTimerObjDescriptor = {
@@ -259,5 +257,5 @@ ObjectDescriptor gTimerObjDescriptor = {
     (ObjectDescriptorCallback)timer_render,
     (ObjectDescriptorCallback)timer_free,
     0,
-    (ObjectDescriptorExtraSizeCallback)timer_getExtraSize,
+    timer_getExtraSize,
 };

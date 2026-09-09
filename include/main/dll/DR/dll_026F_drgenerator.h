@@ -12,7 +12,7 @@ typedef struct DrgeneratorPlacement
     ObjPlacement base;
     s8 initialYaw;
     u8 pad19;
-    s16 timerMinutes;
+    s16 timerSeconds;
     u8 pad1C[0x1E - 0x1C];
     s16 completionGameBit; /* 0x1E: completion game bit set when destroyed */
     s16 watchGameBit;      /* 0x20: game bit toggling the generator enabled state */
@@ -22,7 +22,7 @@ typedef struct DrgeneratorPlacement
 STATIC_ASSERT(offsetof(DrgeneratorPlacement, completionGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(DrgeneratorPlacement, watchGameBit) == 0x20);
 STATIC_ASSERT(offsetof(DrgeneratorPlacement, initialYaw) == 0x18);
-STATIC_ASSERT(offsetof(DrgeneratorPlacement, timerMinutes) == 0x1A);
+STATIC_ASSERT(offsetof(DrgeneratorPlacement, timerSeconds) == 0x1A);
 STATIC_ASSERT(sizeof(DrgeneratorPlacement) == 0x28);
 
 typedef struct DrgeneratorState
@@ -30,12 +30,12 @@ typedef struct DrgeneratorState
     u8 pad0[0x124 - 0x0];
     f32 unk124;
     u8 pad128[0x198 - 0x128];
-    s16 timerDuration; /* 0x198: timer duration handed to a linked timer object */
+    s16 timerDurationFrames; /* 0x198: nominal frames handed to a linked timer object */
     u8 hitsRemaining;  /* 0x19A: remaining hit count */
     BitFlags8 flags;
 } DrgeneratorState;
 
-STATIC_ASSERT(offsetof(DrgeneratorState, timerDuration) == 0x198);
+STATIC_ASSERT(offsetof(DrgeneratorState, timerDurationFrames) == 0x198);
 STATIC_ASSERT(offsetof(DrgeneratorState, hitsRemaining) == 0x19A);
 STATIC_ASSERT(offsetof(DrgeneratorState, flags) == 0x19B);
 STATIC_ASSERT(sizeof(DrgeneratorState) == 0x19C);

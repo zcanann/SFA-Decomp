@@ -503,6 +503,7 @@
 #include "dlls/objects/690_DustMoteSou.h"
 #include "dlls/objects/691.h"
 #include "dlls/objects/692_CNTcounter.h"
+#include "dlls/objects/693_Timer.h"
 #include "main/dll/dll_02B6_cnthitobjec.h"
 #include "main/dll/dll_02B7_mcupgrade.h"
 #include "main/dll/dll_02B8_mcupgradema.h"
@@ -558,9 +559,9 @@ char sModelEngineTimerDotText[] = ".";
 
 #define RESOURCE_DESCRIPTOR_COUNT 0x2c1
 
-/* gModelEngineTimerState bits (roles from accessor fns: timerSetToCountUp,
+/* gModelEngineTimerState bits (roles from accessor fns: gameTimerResume,
  * isGameTimerDisabled, gameTimerIsRunning). */
-#define MODELENGINE_TIMER_COUNTDOWN 1
+#define MODELENGINE_TIMER_PAUSED    1
 #define MODELENGINE_TIMER_DISABLED  2
 #define MODELENGINE_TIMER_RUNNING   4
 
@@ -591,7 +592,6 @@ extern ResourceDescriptor gDFP_RotatePObjDescriptor, gShopItemObjDescriptor, gSh
     gShopObjDescriptor;
 extern ResourceDescriptor gSnowClawObjDescriptor;
 extern ResourceDescriptor gSpellStoneObjDescriptor;
-extern ResourceDescriptor gTimerObjDescriptor;
 extern ResourceDescriptor gTitleScreenObjDescriptor, gTrickyCurveObjDescriptor;
 extern ResourceDescriptor gVFPDragHeadObjDescriptor, gVFPLiftObjDescriptor, gVFP_Block1ObjDescriptor;
 extern ResourceDescriptor gVFP_LaddersObjDescriptor, gVFP_LevelControlObjDescriptor,
@@ -901,21 +901,21 @@ void gameTimerRun(void* context)
     f32 dt = timeDelta;
     u8 colorFlag = 0;
     TextSlot* box = gameTextGetBox(0xD);
-    int hours;
     int minutes;
+    int seconds;
     int hundredths;
     u16 boxY;
     char clamped;
-    int totalSecs;
-    int mins;
+    int wholeFrames;
+    int wholeSeconds;
 
-    if ((gModelEngineTimerState & MODELENGINE_TIMER_COUNTDOWN) || getHudHiddenFrameCount() != 0)
+    if ((gModelEngineTimerState & MODELENGINE_TIMER_PAUSED) || getHudHiddenFrameCount() != 0)
     {
         dt = 0.0f;
     }
 
     clamped = 0;
-    if ((gModelEngineTimerFlags & 1) != 0)
+    if ((gModelEngineTimerFlags & GAME_TIMER_COUNT_DOWN) != 0)
     {
         gModelEngineTimerValue -= dt;
         if (gModelEngineTimerValue <= 0.0f)
@@ -944,7 +944,7 @@ void gameTimerRun(void* context)
 
     if (clamped)
     {
-        if ((gModelEngineTimerFlags & 8) != 0)
+        if ((gModelEngineTimerFlags & GAME_TIMER_END_SOUND) != 0)
         {
             Sfx_PlayFromObject(0, SFXTRIG_sc_lockon22);
         }
@@ -952,12 +952,18 @@ void gameTimerRun(void* context)
         gModelEngineTimerState |= MODELENGINE_TIMER_DISABLED;
     }
 
-    if ((gModelEngineTimerFlags & 4) != 0)
+    if ((gModelEngineTimerFlags & GAME_TIMER_LOOP_SOUND) != 0)
     {
         f32 panByte;
         f32 volume;
-        Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_sc_commsbleep_28c);
-        if ((gModelEngineTimerFlags & 1) != 0)
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+        if (dt) {
+#endif
+            Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_sc_commsbleep_28c);
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+        }
+#endif
+        if ((gModelEngineTimerFlags & GAME_TIMER_COUNT_DOWN) != 0)
         {
             panByte = (f32)(0x7F - ((int)(80.0f * (gModelEngineTimerValue / gModelEngineTimerDuration)) & 0xFF));
             volume = 1.3f - 0.6f * (gModelEngineTimerValue / gModelEngineTimerDuration);
@@ -970,12 +976,12 @@ void gameTimerRun(void* context)
         Sfx_SetObjectSfxVolume(0, SFXTRIG_sc_commsbleep_28c, panByte, volume);
     }
 
-    if ((gModelEngineTimerFlags & 0x10) != 0 && pauseMenuState == 0 && getHudHiddenFrameCount() == 0)
+    if ((gModelEngineTimerFlags & GAME_TIMER_DISPLAY) != 0 && pauseMenuState == 0 && getHudHiddenFrameCount() == 0)
     {
-        totalSecs = gModelEngineTimerValue;
-        mins = totalSecs / 60;
-        hours = mins / 60;
-        minutes = mins - hours * 60;
+        wholeFrames = gModelEngineTimerValue;
+        wholeSeconds = wholeFrames / 60;
+        minutes = wholeSeconds / 60;
+        seconds = wholeSeconds - minutes * 60;
         hundredths = (int)(100.0f * (gModelEngineTimerValue / 60.0f));
         hundredths = hundredths - hundredths / 100 * 100;
 
@@ -992,19 +998,19 @@ void gameTimerRun(void* context)
         gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
         }
 
-        sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, hours / 10);
-        gameTextShowStr(gModelEngineTextBuf, 0xD, 5, 3);
-        sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, hours % 10);
-        gameTextShowStr(gModelEngineTextBuf, 0xD, gModelEngineTimerDigitPairXOffset + 5, 3);
         sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, minutes / 10);
-        gameTextShowStr(gModelEngineTextBuf, 0xD, gModelEngineTimerFieldXStride + 5, 3);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, 5, 3);
         sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, minutes % 10);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, gModelEngineTimerDigitPairXOffset + 5, 3);
+        sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, seconds / 10);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, gModelEngineTimerFieldXStride + 5, 3);
+        sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, seconds % 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, 5 + gModelEngineTimerFieldXStride + gModelEngineTimerDigitPairXOffset, 3);
         sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, hundredths / 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, gModelEngineTimerFieldXStride * 2 + 5, 3);
         sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, hundredths % 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, 5 + gModelEngineTimerFieldXStride * 2 + gModelEngineTimerDigitPairXOffset, 3);
-        if (minutes & 1)
+        if (seconds & 1)
         {
             gameTextShowStr(sModelEngineTimerColonText, 0xD, gModelEngineTimerColonX, 3);
             gameTextShowStr(sModelEngineTimerDotText, 0xD, gModelEngineTimerDotX, 3);
@@ -1013,7 +1019,7 @@ void gameTimerRun(void* context)
 }
 
 f32 gameTimerGetElapsedMilliseconds(void) {
-    if ((gModelEngineTimerFlags & 1) != 0) {
+    if ((gModelEngineTimerFlags & GAME_TIMER_COUNT_DOWN) != 0) {
         return 1000.0f * ((gModelEngineTimerDuration - gModelEngineTimerValue) / 60.0f);
     }
     return 1000.0f * (gModelEngineTimerValue / 60.0f);
@@ -1035,29 +1041,29 @@ void gameTimerStop(void)
     gModelEngineTimerState |= MODELENGINE_TIMER_DISABLED;
 }
 
-void timerSetToCountUp(void)
+void gameTimerResume(void)
 {
-    if ((gModelEngineTimerState & MODELENGINE_TIMER_COUNTDOWN) != 0)
+    if ((gModelEngineTimerState & MODELENGINE_TIMER_PAUSED) != 0)
     {
-        gModelEngineTimerState &= ~MODELENGINE_TIMER_COUNTDOWN;
+        gModelEngineTimerState &= ~MODELENGINE_TIMER_PAUSED;
     }
 }
 
-void gameTimerInit(s8 flags, int minutes)
+void gameTimerInit(s8 flags, int durationSeconds)
 {
     gModelEngineTimerFlags = flags;
-    if ((flags & 1) != 0)
+    if ((flags & GAME_TIMER_COUNT_DOWN) != 0)
     {
-        gModelEngineTimerValue = minutes * 60;
+        gModelEngineTimerValue = durationSeconds * 60;
     }
     else
     {
         gModelEngineTimerValue = 0.0f;
     }
-    gModelEngineTimerDuration = minutes * 60;
-    gModelEngineTimerState |= MODELENGINE_TIMER_COUNTDOWN;
+    gModelEngineTimerDuration = durationSeconds * 60;
+    gModelEngineTimerState |= MODELENGINE_TIMER_PAUSED;
     gModelEngineTimerState &= ~MODELENGINE_TIMER_DISABLED;
-    if ((flags & 3) != 0)
+    if ((flags & (GAME_TIMER_COUNT_DOWN | GAME_TIMER_COUNT_UP)) != 0)
     {
         gModelEngineTimerState |= MODELENGINE_TIMER_RUNNING;
     }
@@ -1916,7 +1922,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gDustMoteSouObjDescriptor,
     (ResourceDescriptor*)&gVortexObjDescriptor,
     (ResourceDescriptor*)&gCNTcounterObjDescriptor,
-    &gTimerObjDescriptor,
+    (ResourceDescriptor*)&gTimerObjDescriptor,
     (ResourceDescriptor*)&gCNThitObjecObjDescriptor,
     (ResourceDescriptor*)&gMCUpgradeObjDescriptor,
     (ResourceDescriptor*)&gMCUpgradeMaObjDescriptor,

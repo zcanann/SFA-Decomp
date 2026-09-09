@@ -25,9 +25,8 @@
 #define DFP_ROTATEP_EFFECT_RING_ROT_STEP    0x3FFF
 
 #define DFP_ROTATEP_COMPLETE_RING_COUNT     4
-#define DFP_ROTATEP_TIMER_ID                0x1D
-#define DFP_ROTATEP_TIMER_SHORT_FRAMES      0x96
-#define DFP_ROTATEP_TIMER_LONG_FRAMES       0xB4
+#define DFP_ROTATEP_TIMER_SHORT_SECONDS      0x96
+#define DFP_ROTATEP_TIMER_LONG_SECONDS       0xB4
 #define DFP_ROTATEP_MODE_SINGLE             1
 #define DFP_ROTATEP_GAMEBIT_SINGLE_COMPLETE 0x9F7
 #define DFP_ROTATEP_SFX_COMPLETE            0x7E
@@ -298,13 +297,17 @@ void DFP_RotateP_update(GameObject* obj)
                     mode = (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);
                     if (mode == DFP_ROTATEP_MODE_SINGLE)
                     {
-                        gameTimerInit(DFP_ROTATEP_TIMER_ID, DFP_ROTATEP_TIMER_SHORT_FRAMES);
+                        gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND |
+                                      GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
+                                      DFP_ROTATEP_TIMER_SHORT_SECONDS);
                     }
                     else
                     {
-                        gameTimerInit(DFP_ROTATEP_TIMER_ID, DFP_ROTATEP_TIMER_LONG_FRAMES);
+                        gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND |
+                                      GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
+                                      DFP_ROTATEP_TIMER_LONG_SECONDS);
                     }
-                    timerSetToCountUp();
+                    gameTimerResume();
                 }
             }
             if (isGameTimerDisabled() != 0)

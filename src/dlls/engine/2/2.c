@@ -2284,13 +2284,13 @@ int objSeqExecCmd06(GameObject* obj, GameObject* sourceObj, ObjSeqState* seq, in
         }
         break;
     case 10:
-        gameTimerInit(0x12, cmdArg);
+        gameTimerInit(GAME_TIMER_COUNT_UP | GAME_TIMER_DISPLAY, cmdArg);
         break;
     case 11:
-        gameTimerInit(0x11, cmdArg);
+        gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_DISPLAY, cmdArg);
         break;
     case 12:
-        timerSetToCountUp();
+        gameTimerResume();
         break;
     case 37:
         gameTimerStop();

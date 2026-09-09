@@ -106,14 +106,16 @@ void sc_levelcontrol_applyAnimEventState(GameObject* obj, u8 animEventState) {
         mainSetBits(0x2b8, 1);
         mainSetBits(0x4bd, 0);
         mainSetBits(0x85, 0);
-        gameTimerInit(0x1d, 0x96);
+        gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND | GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
+                      0x96);
         Music_Trigger(MUSICTRIG_CRF_Suspense, 1);
-        timerSetToCountUp();
+        gameTimerResume();
     } else if (mode == 3) {
-        gameTimerInit(0x1d, 0x3c);
+        gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND | GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
+                      0x3c);
         state->animEventState = 0;
         Music_Trigger(MUSICTRIG_trex_chase, 1);
-        timerSetToCountUp();
+        gameTimerResume();
     } else if (mode == 6) {
         Music_Trigger(MUSICTRIG_CRF_Suspense, 0);
         state->animEventState = 0;
