@@ -315,8 +315,7 @@ void Camera_UpdateShakeAndFarPlane(void) {
         phaseScale = 65535.0f * camera->shakeFrequency;
         sinePhase = (3.1415927f * (phaseScale * shakeTime)) / 32768.0f;
         camera->shakeOffsetY = camera->shakeAmplitude * expTerm * mathCosf(sinePhase);
-        if ((camera->shakeOffsetY < 0.1f) &&
-            (camera->shakeOffsetY > -0.1f)) {
+        if ((camera->shakeOffsetY < 0.1f) && (camera->shakeOffsetY > -0.1f)) {
             camera->shakeOffsetY = 0.0f;
             camera->shakeMode = -1;
         }
@@ -810,11 +809,10 @@ void Camera_ApplyFullViewport(void) {
     GXRenderModeObj* renderMode = gRenderModeObj;
 
     if (renderMode->field_rendering != 0) {
-        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), 0.0f,
-                            1.0f, gViewportJitterField);
+        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), 0.0f, 1.0f,
+                            gViewportJitterField);
     } else {
-        GXSetViewport(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), 0.0f,
-                      1.0f);
+        GXSetViewport(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), 0.0f, 1.0f);
     }
 }
 
@@ -822,8 +820,8 @@ void Camera_ApplyEffectDepthViewport(void) {
     GXRenderModeObj* renderMode = gRenderModeObj;
 
     if (renderMode->field_rendering != 0) {
-        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.075f),
-                            1.0f, gViewportJitterField);
+        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.075f), 1.0f,
+                            gViewportJitterField);
     } else {
         GXSetViewport(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.075f),
                       gCameraEffectViewportFarZ);
@@ -834,8 +832,8 @@ void Camera_ApplyTransparentViewport(void) {
     GXRenderModeObj* renderMode = gRenderModeObj;
 
     if (renderMode->field_rendering != 0) {
-        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.01f),
-                            1.0f, gViewportJitterField);
+        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.01f), 1.0f,
+                            gViewportJitterField);
     } else {
         GXSetViewport(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.01f), 1.0f);
     }
@@ -845,8 +843,8 @@ void Camera_ApplyDecalViewport(void) {
     GXRenderModeObj* renderMode = gRenderModeObj;
 
     if (renderMode->field_rendering != 0) {
-        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.05f),
-                            1.0f, gViewportJitterField);
+        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.05f), 1.0f,
+                            gViewportJitterField);
     } else {
         GXSetViewport(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.05f), 1.0f);
     }
