@@ -51,13 +51,13 @@ char sErrFmtStackAddress[] = "\t%x";
 char sErrFmtRegisterRange[] = "%d - %d";
 
 /* debug font glyph-atlas texture asset (gDebugFontTex0) */
-#define DEBUG_FONT_TEXTURE0_ID  0x25D
-#define DEBUG_FRAMEBUFFER_WIDTH 640
+#define DEBUG_FONT_TEXTURE0_ID   0x25D
+#define DEBUG_FRAMEBUFFER_WIDTH  640
 #define DEBUG_FRAMEBUFFER_HEIGHT 480
-#define DEBUG_BACKDROP_COLOR    0x1080
-#define DEBUG_GLYPH_ROWS        5
-#define DEBUG_GLYPH_BITS        8
-#define DEBUG_TEXT_COLOR        0xC080
+#define DEBUG_BACKDROP_COLOR     0x1080
+#define DEBUG_GLYPH_ROWS         5
+#define DEBUG_GLYPH_BITS         8
+#define DEBUG_TEXT_COLOR         0xC080
 
 /* Binary commands embedded in the NUL-terminated debug log. Payload bytes may
  * contain zero; position and tab width use little-endian 16-bit values. */
