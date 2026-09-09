@@ -86,6 +86,27 @@ static inline void videoConfigureProcessor(void) {
     }
 }
 
+static void videoClampTimeDelta(void) {
+    if (gDvdErrorPauseActive != 0) {
+        timeDelta = 0.0f;
+    }
+    if (timeDelta > 6.0f) {
+        timeDelta = 6.0f;
+    }
+}
+
+static void videoUpdateInverseTimeDelta(f32 dt) {
+    if (dt > 0.1f) {
+        oneOverTimeDelta = 1.0f / dt;
+    } else {
+        oneOverTimeDelta = 1.0f;
+    }
+}
+
+static void videoUpdateFrameRemainder(f32 dt, u32 frames) {
+    gFrameStepRemainder = (dt + gFrameStepRemainder) - (f32)frames;
+}
+
 void initViewport(void) {
     C_MTXOrtho(hudMatrix, 0.0f, 480.0f, 0.0f, 640.0f, 1.0f, 100.0f);
 }
@@ -129,7 +150,11 @@ void videoInit(void* unusedRenderMode, int unusedArg) {
     VISetPreRetraceCallback(videoSwapFrameBuffers);
     VISetPostRetraceCallback(gpuErrorHandler);
     GXSetBreakPtCallback(videoBreakPointCallback);
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
     GXSetViewport(0.0f, 0.0f, gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, 0.0f, 1.0f);
+#else
+    GXSetViewport(0.0f, 0.0f, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight, 0.0f, 1.0f);
+#endif
     GXSetFieldMode(gRenderModeObj->field_rendering, gRenderModeObj->xfbHeight < gRenderModeObj->viHeight);
     GXSetScissor(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
     GXSetDispCopyDst(gRenderModeObj->fbWidth, gDispCopyYScaleLines);
@@ -227,11 +252,15 @@ void videoSetEfbCopyClearColor(u8 r, u8 g, u8 b) {
 
 void setDisplayCopyFilter(void) {
     GXRenderModeObj* renderMode = gRenderModeObj;
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+    GXSetCopyFilter(renderMode->aa, renderMode->sample_pattern, GX_TRUE, gDispCopyFilterWeights);
+#else
     if (renderMode == &GXNtsc480Prog || renderMode->field_rendering != 0) {
         GXSetCopyFilter(renderMode->aa, renderMode->sample_pattern, GX_FALSE, renderMode->vfilter);
     } else {
         GXSetCopyFilter(renderMode->aa, renderMode->sample_pattern, GX_TRUE, gDispCopyFilterWeights);
     }
+#endif
 }
 
 #include "main/dll/ppcwgpipe_struct.h"
@@ -359,22 +388,13 @@ void waitNextFrame(void) {
     OSResetStopwatch(&gFrameStopwatch);
     OSStartStopwatch(&gFrameStopwatch);
     timeDelta = 60.0f * (0.001f * gFrameElapsedMs);
-    if (gDvdErrorPauseActive != 0) {
-        timeDelta = 0.0f;
-    }
-    if (timeDelta > 6.0f) {
-        timeDelta = 6.0f;
-    }
+    videoClampTimeDelta();
     dt = timeDelta;
-    if (dt > 0.1f) {
-        oneOverTimeDelta = 1.0f / dt;
-    } else {
-        oneOverTimeDelta = 1.0f;
-    }
+    videoUpdateInverseTimeDelta(dt);
     step = (int)(dt + gFrameStepRemainder);
     framesThisStep = step;
     frames = step & 0xff;
-    gFrameStepRemainder = (dt + gFrameStepRemainder) - (f32)frames;
+    videoUpdateFrameRemainder(dt, frames);
     framesThisStepUnclamped = step;
     if (frames < 1) {
         framesThisStep = 1;

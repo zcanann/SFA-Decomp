@@ -1794,7 +1794,7 @@ config.libs = [
             Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/objprint_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_nolifetimes_zerodata, "-inline", "noauto"]),
             Object(NonMatching, "main/pi_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_zerodata, "-inline", "noauto"]),
-            Object(NonMatching, "main/pi_videoinit.c", cflags=[*cflags_dll_noopt_nocse_noloopinv_nolifetimes_noprop_zerodata, "-inline", "noauto"]),
+            Object(MatchingFor("GSAE01"), "main/pi_videoinit.c", cflags=cflags_dll_noopt_nocse_noloopinv_nolifetimes_noprop_zerodata),
             Object(MatchingFor("GSAE01"), "main/pi_pathsearch.c", cflags=[*cflags_dll_noopt_noloopinv_zerodata, "-inline", "noauto"]),
             Object(Matching, "main/zlb.s"),
             Object(Matching, "main/shader_dolphin.c"),

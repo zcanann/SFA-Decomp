@@ -883,6 +883,7 @@ main/obj_movelib.c
 main/objlib.c
 main/pad.c
 main/pi_pathsearch.c
+main/pi_videoinit.c
 main/rand.c
 main/rcp_dolphin.c
 main/shader_dolphin.c
