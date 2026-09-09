@@ -7,8 +7,7 @@
 
 /* EN accesses establish this prefix through the halfword at 0x1C.
  * The complete placement record size is not yet verified. */
-typedef struct DfpWallbarPlacementPrefix
-{
+typedef struct DfpWallbarPlacementPrefix {
     ObjPlacement base;
     s8 rotationHighByte;
     u8 rowIndex;
@@ -17,8 +16,7 @@ typedef struct DfpWallbarPlacementPrefix
 } DfpWallbarPlacementPrefix;
 
 /* chuka_getExtraSize returns the complete 0x0C-byte allocation. */
-typedef struct DfpWallbarState
-{
+typedef struct DfpWallbarState {
     f32 initialLocalPosY; /* initialized only; no reader in this TU */
     GameObject* levelController;
     u8 rowIndex;
