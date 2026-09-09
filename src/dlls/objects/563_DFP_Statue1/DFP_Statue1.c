@@ -27,8 +27,7 @@
 #define GAMEBIT_DFP_STATUE1_VARIANT_C 0x670
 #define GAMEBIT_DFP_STATUE1_VARIANT_D 0x9f5
 
-u32 dfpstatue1_SeqFn(GameObject* obj, u32 unused, ObjSeqState* animUpdate)
-{
+u32 dfpstatue1_SeqFn(GameObject* obj, u32 unused, ObjSeqState* animUpdate) {
     int event;
     DfpStatue1State* state;
     int i;
@@ -36,11 +35,9 @@ u32 dfpstatue1_SeqFn(GameObject* obj, u32 unused, ObjSeqState* animUpdate)
     state = obj->extra;
     animUpdate->flags = -1;
     animUpdate->movementState = 0;
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
+    for (i = 0; i < animUpdate->eventCount; i++) {
         event = animUpdate->eventIds[i];
-        switch (event)
-        {
+        switch (event) {
         case DFP_STATUE1_EVENT_ACTIVATE:
             mainSetBits(state->activationGameBit + 5, 1);
             break;
@@ -49,8 +46,7 @@ u32 dfpstatue1_SeqFn(GameObject* obj, u32 unused, ObjSeqState* animUpdate)
             state->deactivationPending = 1;
             break;
         case DFP_STATUE1_EVENT_VARIANT:
-            switch (state->activationGameBit)
-            {
+            switch (state->activationGameBit) {
             case DFP_STATUE1_BASE_VARIANT_A:
                 mainSetBits(GAMEBIT_DFP_STATUE1_VARIANT_A, 1);
                 state->effectTimer = DFP_STATUE1_VARIANT_TIMER_FRAMES;
@@ -75,34 +71,30 @@ u32 dfpstatue1_SeqFn(GameObject* obj, u32 unused, ObjSeqState* animUpdate)
     return 0;
 }
 
-void dfpstatue1_updateState(GameObject* obj)
-{
+void dfpstatue1_updateState(GameObject* obj) {
     DfpStatue1State* state;
     s16 activationRequested;
 
     state = obj->extra;
     activationRequested = mainGetBit(state->activationGameBit);
-    if ((state->sequenceActive == 0) && (activationRequested != 0) && (mainGetBit(DFP_ROTATEP_GAMEBIT_RING_ACTIVE) != 0))
-    {
+    if ((state->sequenceActive == 0) && (activationRequested != 0) &&
+        (mainGetBit(DFP_ROTATEP_GAMEBIT_RING_ACTIVE) != 0)) {
         (*gObjectTriggerInterface)->runSequence(0, obj, 0xffffffff);
         state->sequenceActive = 1;
     }
-    if ((state->deactivationPending != 0) && (state->sequenceActive != 0) && (mainGetBit(DFP_ROTATEP_GAMEBIT_RING_ACTIVE) != 0))
-    {
+    if ((state->deactivationPending != 0) && (state->sequenceActive != 0) &&
+        (mainGetBit(DFP_ROTATEP_GAMEBIT_RING_ACTIVE) != 0)) {
         mainSetBits(state->activationGameBit, 0);
         (*gObjectTriggerInterface)->runSequence(1, obj, 0xffffffff);
         state->sequenceActive = 0;
         state->deactivationPending = 0;
     }
-    if (state->effectTimer != 0)
-    {
+    if (state->effectTimer != 0) {
         state->effectTimer = (float)state->effectTimer - timeDelta;
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_treadlpc);
-        if (state->effectTimer <= 0)
-        {
+        if (state->effectTimer <= 0) {
             state->effectTimer = 0;
-            switch (state->activationGameBit)
-            {
+            switch (state->activationGameBit) {
             case DFP_STATUE1_BASE_VARIANT_A:
                 mainSetBits(GAMEBIT_DFP_STATUE1_VARIANT_A, 0);
                 break;
@@ -120,34 +112,27 @@ void dfpstatue1_updateState(GameObject* obj)
     }
 }
 
-int DFP_Statue1_getExtraSize(void)
-{
+int DFP_Statue1_getExtraSize(void) {
     return sizeof(DfpStatue1State);
 }
-int DFP_Statue1_getObjectTypeId(void)
-{
+int DFP_Statue1_getObjectTypeId(void) {
     return 0x0;
 }
 
-void DFP_Statue1_free(void)
-{
+void DFP_Statue1_free(void) {
 }
 
-void DFP_Statue1_render(void)
-{
+void DFP_Statue1_render(void) {
 }
 
-void DFP_Statue1_hitDetect(void)
-{
+void DFP_Statue1_hitDetect(void) {
 }
 
-void DFP_Statue1_update(GameObject* obj)
-{
+void DFP_Statue1_update(GameObject* obj) {
     dfpstatue1_updateState(obj);
 }
 
-void DFP_Statue1_init(GameObject* obj, DfpStatue1PlacementPrefix* mapData)
-{
+void DFP_Statue1_init(GameObject* obj, DfpStatue1PlacementPrefix* mapData) {
     DfpStatue1State* state = obj->extra;
     s16 rotationX = (s16)(mapData->rotationXByte << 8);
 
@@ -156,8 +141,7 @@ void DFP_Statue1_init(GameObject* obj, DfpStatue1PlacementPrefix* mapData)
     state->unknown07 = mapData->unknown19;
     state->unknown00 = mapData->unknown1E;
     state->activationGameBit = mapData->activationGameBit;
-    if (mainGetBit((int)state->activationGameBit) != 0)
-    {
+    if (mainGetBit((int)state->activationGameBit) != 0) {
         state->sequenceActive = 1;
     }
     state->effectTimer = 0;
@@ -165,12 +149,10 @@ void DFP_Statue1_init(GameObject* obj, DfpStatue1PlacementPrefix* mapData)
     obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN;
 }
 
-void DFP_Statue1_release(void)
-{
+void DFP_Statue1_release(void) {
 }
 
-void DFP_Statue1_initialise(void)
-{
+void DFP_Statue1_initialise(void) {
 }
 
 ObjectDescriptor gDfpstatue1ObjDescriptor = {
