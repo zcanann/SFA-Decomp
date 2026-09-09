@@ -5,9 +5,6 @@
 
 float powfCoreHighPrecision(float base, float power) {
     register double logValue;
-    register double fractionalExponent;
-    register double log2Mantissa;
-    register double resultExponentAsDouble;
     register u32 baseBits;
     register int baseExponent;
     register int resultExponent;
@@ -26,7 +23,7 @@ float powfCoreHighPrecision(float base, float power) {
         baseExponent = (s16)(((baseBits >> 23) & 0xFF) - 127);
         normalizedBase.bits = (baseBits & 0x7FFFFF) | 0x3F800000;
         logValue = normalizedBase.value - 1.0;
-        log2Mantissa =
+        logValue =
             logValue *
             (logValue *
                  (logValue *
@@ -67,23 +64,24 @@ float powfCoreHighPrecision(float base, float power) {
                        0.480898347574289) +
                   -0.7213475204586257) +
              1.4426950408891204);
-        logValue = power * (log2Mantissa + (double)baseExponent);
+        /* Convert the base logarithm to the result exponent. */
+        logValue = power * (logValue + (double)baseExponent);
         resultExponent = logValue;
-        resultExponentAsDouble = (double)resultExponent;
-        fractionalExponent = logValue - resultExponentAsDouble;
+        /* Retain the fractional part for the exp2 polynomial. */
+        logValue = logValue - (double)resultExponent;
 
-        if (fractionalExponent) {
+        if (logValue) {
             result.value =
-                (float)(fractionalExponent *
-                            (fractionalExponent *
-                                 (fractionalExponent *
-                                      (fractionalExponent *
-                                           (fractionalExponent *
-                                                (fractionalExponent *
-                                                     (fractionalExponent *
-                                                          (fractionalExponent *
-                                                               (fractionalExponent *
-                                                                    (9.926346441109975e-09 * fractionalExponent +
+                (float)(logValue *
+                            (logValue *
+                                 (logValue *
+                                      (logValue *
+                                           (logValue *
+                                                (logValue *
+                                                     (logValue *
+                                                          (logValue *
+                                                               (logValue *
+                                                                    (9.926346441109975e-09 * logValue +
                                                                      9.472326685984924e-08) +
                                                                 1.3310673239175234e-06) +
                                                            1.5244851723158107e-05) +
@@ -115,8 +113,6 @@ float powfCoreHighPrecision(float base, float power) {
 }
 
 float powfCoreFast(float base, register float power) {
-    float resultExponentAsFloat;
-    float baseExponentAsFloat;
     register u32 baseBits;
     register int integerPower;
     union {
@@ -137,11 +133,9 @@ float powfCoreFast(float base, register float power) {
         logValue.value = logValue.value - 1.0f;
         logValue.value = logValue.value * (logValue.value * (0.15544586f * logValue.value + -0.5729206f) + 1.4172995f) +
                          0.00072527403f;
-        baseExponentAsFloat = fastCastS16ToFloat(&baseExponent);
-        logValue.value = power * (logValue.value + baseExponentAsFloat);
+        logValue.value = power * (logValue.value + fastCastS16ToFloat(&baseExponent));
         fastCastFloatToS16(logValue.value, &resultExponent);
-        resultExponentAsFloat = fastCastS16ToFloat(&resultExponent);
-        logValue.value = logValue.value - resultExponentAsFloat;
+        logValue.value = logValue.value - fastCastS16ToFloat(&resultExponent);
         if (logValue.value) {
             result.value = (logValue.value * (0.3431449f * logValue.value + 0.6519048f) + 1.0023681f);
         } else {

@@ -507,3 +507,49 @@ and values with unrelated upper bits. Fast-cast is modeled as ordinary signed
 verifies both the removed temporary and the explicit low-16-bit input handling.
 Local sources, controls, full object/report comparisons and verified retail audit
 are under `/tmp/sfa-trig-double-seed/`.
+
+## Power polynomial accumulators and conversion results (2026-09-08)
+
+The high-precision core now uses one double accumulator for the mantissa
+polynomial, scaled result exponent and fractional exponent. Its integer exponent
+is retained separately before subtracting the explicit double conversion.
+Comments mark the transitions between those phases. The fast core consumes the
+two `fastCastS16ToFloat` results directly in their addition and subtraction,
+removing two float locals used only to hold call results. Conversion-call order,
+coefficient types, polynomial grouping, zero tests, negative-base parity and the
+final binary32 exponent-word arithmetic are preserved.
+
+| Function | Before fuzzy | After fuzzy | Generated instructions before → after | Retail instructions |
+| --- | ---: | ---: | ---: | ---: |
+| `powfCoreHighPrecision` | 86.717390% | 93.818840% | 147 → 135 | 138 |
+| `powfCoreFast` | 85.489365% | 88.787230% | 103 → 93 | 94 |
+
+The change removes five scalar temporaries and 22 instructions under the current
+GC/1.3 compiler. Both functions remain `NonMatching`; shorter code is not an
+exact match, and these simpler local lifetimes are not a claim about the original
+author's declarations. No compiler flags, pragmas, splits or expected checksums
+change. The five other functions in this TU retain their previous instruction
+bytes and scores, including the bit-estimate power variant and vector helpers.
+
+EN, EN revision 1, JP and PAL revision 1 have the same two gains. Their
+checksum-verified retail TUs and both signed fast-cast helpers have equal
+normalized instructions. The 324-byte pool also agrees across all four inputs.
+All non-text source sections and named data positions remain unchanged. The
+ordered 60 constant-load destinations retain their kinds, addends and pool
+offsets, and their values still agree with retail. Ordered call identities are
+unchanged; the source-local `Vec_scale` and `Vec_lengthSquared` offsets move
+naturally with the two shorter preceding functions, and both relocations are
+checked against the helpers' actual new symbol offsets. Every unrelated source
+object and objdiff unit remains unchanged. All four source builds and the strict
+EN checksum pass within 30-second limits.
+
+The host differential harness compares 14,756 input pairs through both cores,
+producing **29,512 bit-identical before/after results** at each of O0 and O2.
+Coverage includes zero-base rules, negative-base parity, integer/fractional powers,
+subnormals, extreme finite bases, infinity/NaN base encodings and random base
+words with bounded powers. The powers are kept within defined integer-conversion
+ranges. Fast-cast stubs use ordinary signed-16 conversions, and strict aliasing is
+disabled for the existing parameter word views. This is a before/after behavior
+check, not an IEEE libm accuracy claim or an emulation of quantization registers.
+Local variant controls, objects, complete reports, retail audit and host harness
+are under `/tmp/sfa-power-accumulators/`.
