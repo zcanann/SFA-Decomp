@@ -39,7 +39,6 @@
 #define DIM_EXPLOSION_TEXTURE_COUNT      4
 
 void* gExplosionTextures[DIM_EXPLOSION_TEXTURE_COUNT];
-extern int lbl_803E8468;
 f32 gExplosionDebrisSpeedScale;
 f32 gExplosionDebrisAlphaScale;
 f32 gExplosionDebrisColorScale;
@@ -52,7 +51,7 @@ const DimExplosionTextureTable gExplosionTexTable = {{0x5e1, 0x5f7, 0x5f8, 0x5f9
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
-static const int sExplosionQuadColorA[] = {-1};
+static const GXColor sExplosionQuadColorA = {255, 255, 255, 255};
 static const f32 sExplosionBaseScale[] = {1.0f};
 static const f32 sExplosionLifeScale[] = {15.0f};
 static const f32 sExplosionFadeInExponent[] = {10.0f};
@@ -196,10 +195,10 @@ void explosion_free(GameObject* obj) {
 }
 
 void explosion_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
-    u32 colA;
-    u32 colB;
-    u32 colA2;
-    u32 colB2;
+    GXColor tintColor = sExplosionQuadColorA;
+    GXColor additiveColor = {0, 0, 0, 0};
+    GXColor tintColorArg;
+    GXColor additiveColorArg;
     Mtx mE;
     Mtx m4;
     Mtx m3;
@@ -208,8 +207,6 @@ void explosion_render(GameObject* obj, int renderArg2, int renderArg3, int rende
     DimExplosionState* state;
     ObjModel* model;
     int i;
-    colA = sExplosionQuadColorA[0];
-    colB = lbl_803E8468;
     state = obj->extra;
     model = Obj_GetActiveModel(obj);
     if (visible != 0) {
@@ -221,7 +218,7 @@ void explosion_render(GameObject* obj, int renderArg2, int renderArg3, int rende
             if (state->flames[i].active != 0) {
                 void** tex;
                 int k;
-                u8 cv;
+                u8 flickerIntensity;
                 Obj_BuildWorldTransformMatrix(obj, (f32*)mE, 0);
                 PSMTXRotRad(m1, 'z', (f32)((6.2832 * (f64)(int)state->flames[i].spinAngle) / 65536.0));
                 PSMTXRotRad(m3, 'x',
@@ -237,24 +234,24 @@ void explosion_render(GameObject* obj, int renderArg2, int renderArg3, int rende
                 PSMTXConcat(mE, m4, mE);
                 PSMTXConcat((MtxPtr)Camera_GetViewMatrix(), mE, mE);
                 GXLoadPosMtxImm((const f32(*)[4])mE, GX_PNMTX0);
-                ((u8*)&colA)[3] = state->flames[i].alpha;
-                cv = gExplosionDebrisColorScale *
+                tintColor.a = state->flames[i].alpha;
+                flickerIntensity = gExplosionDebrisColorScale *
                      (sExplosionColorMax[0] * expf((sExplosionFlickerExponent[0] *
                                                     ((f32)state->flames[i].lifetime - (f32)state->flames[i].age)) /
                                                    (f32)state->flames[i].lifetime));
-                ((u8*)&colB)[0] = cv;
-                ((u8*)&colB)[1] = cv;
-                ((u8*)&colB)[2] = cv;
-                ((u8*)&colB)[3] = cv;
+                additiveColor.r = flickerIntensity;
+                additiveColor.g = flickerIntensity;
+                additiveColor.b = flickerIntensity;
+                additiveColor.a = flickerIntensity;
                 explosion_computeColor((f32)state->flames[i].age, (f32)state->flames[i].lifetime, state->modelKind,
-                                       (u8*)&colA);
+                                       (u8*)&tintColor);
                 tex = (void**)gExplosionTextures[state->modelKind];
                 for (k = 0; k < state->flames[i].textureVariant; k++) {
                     tex = (void**)*tex;
                 }
-                colB2 = colB;
-                colA2 = colA;
-                setupAdditiveTintedTexture(tex, &colA2, &colB2);
+                additiveColorArg = additiveColor;
+                tintColorArg = tintColor;
+                setupAdditiveTintedTexture(tex, (u32*)&tintColorArg, (u32*)&additiveColorArg);
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
                 {
                     f32 fc, fb, fa;

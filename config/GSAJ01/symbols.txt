@@ -24831,6 +24831,6 @@ lbl_803E8570 = .sbss2:0x803E8570; // type:object size:0x4 data:4byte
 lbl_803E8574 = .sbss2:0x803E8574; // type:object size:0x4 data:4byte
 sSkyBackdropFogColorInit = .sbss2:0x803E8578; // type:object size:0x4 data:byte
 sSkyBestIndicesInit = .sbss2:0x803E8580; // type:object size:0x3 data:byte
-lbl_803E8588 = .sbss2:0x803E8588; // type:object size:0x8 data:4byte
+sExplosionAdditiveColorInit = .sbss2:0x803E8588; // type:object size:0x4 data:4byte
 lbl_803E8590 = .sbss2:0x803E8590; // type:object size:0x4 data:4byte
 lbl_803E8594 = .sbss2:0x803E8594; // type:object size:0x4 data:4byte

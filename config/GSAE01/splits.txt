@@ -2663,6 +2663,7 @@ dlls/objects/458_DIMExplosio/DIMExplosio.c:
 	.bss        start:0x803AC960 end:0x803AC970
 	.sbss       start:0x803DDB58 end:0x803DDB78
 	.sdata2     start:0x803E4928 end:0x803E49D0
+	.sbss2      start:0x803E8468 end:0x803E846C
 
 dlls/objects/459_DIMWoodDoor/DIMWoodDoor.c:
 	.text       start:0x801B57BC end:0x801B5A28
