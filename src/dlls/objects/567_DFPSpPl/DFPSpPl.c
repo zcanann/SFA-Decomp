@@ -11,63 +11,52 @@
 #include "main/mapEventTypes.h"
 #include "main/objprint_render_api.h"
 
-#define DFP_SPPL_ACT_FIRST_STONE 1
-#define DFP_SPPL_ACT_SECOND_STONE 2
-#define DFP_SPPL_ROTATION_BYTE_SHIFT 8
-#define DFP_SPPL_THORNTAIL_MAP_SLOT 7
-#define DFP_SPPL_WALLED_CITY_MAP_SLOT 0xd
-#define DFP_SPPL_THORNTAIL_COMPLETED_ACT 8
+#define DFP_SPPL_ACT_FIRST_STONE           1
+#define DFP_SPPL_ACT_SECOND_STONE          2
+#define DFP_SPPL_ROTATION_BYTE_SHIFT       8
+#define DFP_SPPL_THORNTAIL_MAP_SLOT        7
+#define DFP_SPPL_WALLED_CITY_MAP_SLOT      0xd
+#define DFP_SPPL_THORNTAIL_COMPLETED_ACT   8
 #define DFP_SPPL_WALLED_CITY_COMPLETED_ACT 2
 
-int DFPSpPl_getExtraSize(void)
-{
+int DFPSpPl_getExtraSize(void) {
     return sizeof(DfpSpellPlaceState);
 }
 
-int DFPSpPl_getObjectTypeId(void)
-{
+int DFPSpPl_getObjectTypeId(void) {
     return 0;
 }
 
-void DFPSpPl_free(void)
-{
+void DFPSpPl_free(void) {
 }
 
-void DFPSpPl_render(void)
-{
+void DFPSpPl_render(void) {
 }
 
-void DFPSpPl_hitDetect(void)
-{
+void DFPSpPl_hitDetect(void) {
 }
 
-void DFPSpPl_update(GameObject* obj)
-{
+void DFPSpPl_update(GameObject* obj) {
     DfpSpellPlaceState* state;
     u32 activationGameBitSet;
     int itemUsed;
     int mapAct;
 
     if ((((DfpSpellPlaceState*)obj->extra)->completionLatched == '\0') &&
-        (activationGameBitSet = mainGetBit((int)((DfpSpellPlaceState*)obj->extra)->activationGameBit), activationGameBitSet != 0))
-    {
+        (activationGameBitSet = mainGetBit((int)((DfpSpellPlaceState*)obj->extra)->activationGameBit),
+         activationGameBitSet != 0)) {
         obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
-    }
-    else
-    {
+    } else {
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     }
     objUpdateHitVolumeTransforms(obj);
-    if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
-    {
+    if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0) {
         mapAct = (u8)(*gMapEventInterface)->getMapAct((int)obj->anim.mapEventSlot);
-        switch (mapAct)
-        {
+        switch (mapAct) {
         case DFP_SPPL_ACT_FIRST_STONE:
             state = obj->extra;
             itemUsed = (*gGameUIInterface)->isItemBeingUsed(GAMEBIT_ITEM_WaterSpellStone1_Got);
-            if (itemUsed != 0)
-            {
+            if (itemUsed != 0) {
                 mainSetBits((int)state->completionGameBit, 1);
                 mainSetBits((int)state->activationGameBit, 0);
                 state->completionLatched = 1;
@@ -77,8 +66,7 @@ void DFPSpPl_update(GameObject* obj)
         case DFP_SPPL_ACT_SECOND_STONE:
             state = obj->extra;
             itemUsed = (*gGameUIInterface)->isItemBeingUsed(GAMEBIT_ITEM_WaterSpellStone2_Got);
-            if (itemUsed != 0)
-            {
+            if (itemUsed != 0) {
                 mainSetBits((int)state->completionGameBit, 1);
                 mainSetBits((int)state->activationGameBit, 0);
                 state->completionLatched = 1;
@@ -92,8 +80,7 @@ void DFPSpPl_update(GameObject* obj)
     return;
 }
 
-void DFPSpPl_init(GameObject* obj, DfpSpellPlacePlacementPrefix* mapData)
-{
+void DFPSpPl_init(GameObject* obj, DfpSpellPlacePlacementPrefix* mapData) {
     DfpSpellPlaceState* state;
     u32 completionGameBitSet;
 
@@ -103,8 +90,7 @@ void DFPSpPl_init(GameObject* obj, DfpSpellPlacePlacementPrefix* mapData)
     state->completionLatched = 0;
     obj->anim.rotX = (s16)(mapData->rotationXByte << DFP_SPPL_ROTATION_BYTE_SHIFT);
     completionGameBitSet = mainGetBit((int)state->completionGameBit);
-    if (completionGameBitSet != 0)
-    {
+    if (completionGameBitSet != 0) {
         state->completionLatched = 1;
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     }
@@ -112,12 +98,10 @@ void DFPSpPl_init(GameObject* obj, DfpSpellPlacePlacementPrefix* mapData)
     return;
 }
 
-void DFPSpPl_release(void)
-{
+void DFPSpPl_release(void) {
 }
 
-void DFPSpPl_initialise(void)
-{
+void DFPSpPl_initialise(void) {
 }
 
 ObjectDescriptor gDFPSpPlObjDescriptor = {
