@@ -110,8 +110,8 @@ void WarpstoneUI_showUI(int arg) {
         gameTextShowAt(0x3dd, 200, gWarpStoneUiMenuTextPosY);
         if (gWarpStoneUiMenuActive == 0) {
             itemCount =
-                WarpstoneUI_getMenuItems(gWarpStoneUiMenuItemTemplates, gWarpStoneUiMenuItems,
-                                         gWarpStoneUiEntryTable, WARPSTONE_UI_ENTRY_COUNT, gWarpStoneUiSelectedIndices);
+                WarpstoneUI_getMenuItems(gWarpStoneUiMenuItemTemplates, gWarpStoneUiMenuItems, gWarpStoneUiEntryTable,
+                                         WARPSTONE_UI_ENTRY_COUNT, gWarpStoneUiSelectedIndices);
             gTitleMenuLinkInterface->vtable->setup(gWarpStoneUiMenuItems, itemCount, 0, NULL, 0, 0, 0x14, 200, 0xff,
                                                    0xff, 0xff, 0xff);
             gWarpStoneUiMenuActive = 1;
@@ -163,18 +163,12 @@ void WarpstoneUI_initialise(void) {
 }
 
 TitleMenuTextEntry gWarpStoneUiMenuItemTemplates[WARPSTONE_UI_ENTRY_COUNT] = {
-    {0x34C, 0x2F, 350, 82, 0, 400, 52, {0, 0}, -1, 280, 0x0280, {0, 0},
-     -1, 1, -1, -1, -1, {0}, 0, {0, 0, 0}},
-    {0x34D, 0x30, 350, 208, 0, 400, 160, {0, 0}, -1, 280, 0x0280, {0, 0},
-     2, 4, -1, -1, -1, {0}, 0, {0, 0, 0}},
-    {0x429, 0x31, 350, 250, 0, 400, 160, {0, 0}, -1, 280, 0x0280, {0, 0},
-     3, 5, -1, -1, -1, {0}, 0, {0, 0, 0}},
-    {0x34F, 0x32, 350, 292, 0, 400, 160, {0, 0}, -1, 280, 0x0280, {0, 0},
-     4, 6, -1, -1, -1, {0}, 0, {0, 0, 0}},
-    {0x350, 0x33, 350, 334, 0, 400, 160, {0, 0}, -1, 280, 0x0280, {0, 0},
-     5, 7, -1, -1, -1, {0}, 0, {0, 0, 0}},
-    {0x351, 0x34, 350, 376, 0, 400, 160, {0, 0}, -1, 280, 0x0280, {0, 0},
-     6, 8, -1, -1, -1, {0}, 0, {0, 0, 0}},
+    {0x34C, 0x2F, 350, 82, 0, 400, 52, {0, 0}, -1, 280, 0x0280, {0, 0}, -1, 1, -1, -1, -1, {0}, 0, {0, 0, 0}},
+    {0x34D, 0x30, 350, 208, 0, 400, 160, {0, 0}, -1, 280, 0x0280, {0, 0}, 2, 4, -1, -1, -1, {0}, 0, {0, 0, 0}},
+    {0x429, 0x31, 350, 250, 0, 400, 160, {0, 0}, -1, 280, 0x0280, {0, 0}, 3, 5, -1, -1, -1, {0}, 0, {0, 0, 0}},
+    {0x34F, 0x32, 350, 292, 0, 400, 160, {0, 0}, -1, 280, 0x0280, {0, 0}, 4, 6, -1, -1, -1, {0}, 0, {0, 0, 0}},
+    {0x350, 0x33, 350, 334, 0, 400, 160, {0, 0}, -1, 280, 0x0280, {0, 0}, 5, 7, -1, -1, -1, {0}, 0, {0, 0, 0}},
+    {0x351, 0x34, 350, 376, 0, 400, 160, {0, 0}, -1, 280, 0x0280, {0, 0}, 6, 8, -1, -1, -1, {0}, 0, {0, 0, 0}},
 };
 
 ResourceDescriptorCallbacks8 gWarpStoneUiDescriptor = {

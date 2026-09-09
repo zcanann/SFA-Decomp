@@ -3,8 +3,7 @@
 
 #include "global.h"
 
-typedef struct
-{
+typedef struct {
     s16 bit;
     u8 mapAct;
     u8 b3; /* unused/padding */
@@ -13,8 +12,6 @@ typedef struct
 STATIC_ASSERT(sizeof(WarpstoneEntry) == 4);
 STATIC_ASSERT(offsetof(WarpstoneEntry, bit) == 0);
 STATIC_ASSERT(offsetof(WarpstoneEntry, mapAct) == 2);
-
-
 
 void WarpstoneUI_setState(int val);
 void WarpstoneUI_showUI(int arg);
