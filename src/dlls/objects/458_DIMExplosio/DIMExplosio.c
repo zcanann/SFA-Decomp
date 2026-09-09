@@ -235,10 +235,11 @@ void explosion_render(GameObject* obj, int renderArg2, int renderArg3, int rende
                 PSMTXConcat((MtxPtr)Camera_GetViewMatrix(), mE, mE);
                 GXLoadPosMtxImm((const f32(*)[4])mE, GX_PNMTX0);
                 tintColor.a = state->flames[i].alpha;
-                flickerIntensity = gExplosionDebrisColorScale *
-                     (sExplosionColorMax[0] * expf((sExplosionFlickerExponent[0] *
-                                                    ((f32)state->flames[i].lifetime - (f32)state->flames[i].age)) /
-                                                   (f32)state->flames[i].lifetime));
+                flickerIntensity =
+                    gExplosionDebrisColorScale *
+                    (sExplosionColorMax[0] * expf((sExplosionFlickerExponent[0] *
+                                                   ((f32)state->flames[i].lifetime - (f32)state->flames[i].age)) /
+                                                  (f32)state->flames[i].lifetime));
                 additiveColor.r = flickerIntensity;
                 additiveColor.g = flickerIntensity;
                 additiveColor.b = flickerIntensity;
@@ -340,9 +341,9 @@ void explosion_update(GameObject* obj) {
                                 (sExplosionChildOffsetStep[0] * randomGetRange(-5, 3) + sExplosionBaseScale[0]);
                             childOffset.y = sExplosionZero[0];
                             childOffset.z = sExplosionZero[0];
-                            PSMTXRotRad(spawnMtx, 'z',
-                                        (f32)(sExplosionPi[0] *
-                                              (f64)(randomGetRange(0, 0xffff) / sExplosionAngleScale[0])));
+                            PSMTXRotRad(
+                                spawnMtx, 'z',
+                                (f32)(sExplosionPi[0] * (f64)(randomGetRange(0, 0xffff) / sExplosionAngleScale[0])));
                             PSMTXConcat((MtxPtr)Camera_GetInverseViewRotationMatrix(), spawnMtx, spawnMtx);
                             PSMTXMultVecSR(spawnMtx, &childOffset, &childOffset);
                             childOffset.x += state->flames[i].posX;
