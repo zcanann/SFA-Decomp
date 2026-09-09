@@ -1,8 +1,6 @@
 
 #include "dolphin/os/__os.h"
 
-const u32 lbl_803E7610 = 0x2ABE003D;
-const u32 lbl_803E7614 = 0x003D003D;
 
 static OSFontHeader* FontData;
 static u8* SheetImage;
@@ -346,8 +344,6 @@ static void ReadROM(void* buf, int length, int offset) {
     }
 }
 
-extern const u32 lbl_803E7610;
-extern const u32 lbl_803E7614;
 
 static inline u32 GetFontSize(u8* buf) {
     if (buf[0] == 'Y' && buf[1] == 'a' && buf[2] == 'y') {
@@ -388,12 +384,9 @@ u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
             int column;
             int x;
             int y;
-            u16 glyph[4];
+            u16 glyphRows[4] = {0x2ABE, 0x003D, 0x003D, 0x003D};
 
-            *(u32*)&glyph[0] = *(u32*)&lbl_803E7610;
-            *(u32*)&glyph[2] = *(u32*)&lbl_803E7614;
-
-            fontCode = GetFontCode(0x54);
+            fontCode = GetFontCode('T');
             sheet = fontCode / CharsInSheet;
             numChars = fontCode - (sheet * CharsInSheet);
             row = numChars / FontData->sheetColumn;
@@ -410,7 +403,7 @@ u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
                 ptr += ((row + y) % 8) * 2;
                 ptr += ((column + x) % 8) / 4;
 
-                *(u16*)ptr = glyph[y - 4];
+                *(u16*)ptr = glyphRows[y - 4];
             }
         }
     }
