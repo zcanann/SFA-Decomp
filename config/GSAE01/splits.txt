@@ -162,7 +162,7 @@ main/model.c:
 	.bss        start:0x80340740 end:0x803408A8
 	.sdata      start:0x803DB440 end:0x803DB448
 	.sbss       start:0x803DCB48 end:0x803DCB70
-	.sdata2     start:0x803DE814 end:0x803DE888
+	.sdata2     start:0x803DE818 end:0x803DE884
 
 main/object.c:
 	.text       start:0x8002A5D4 end:0x8002EB54
@@ -170,7 +170,7 @@ main/object.c:
 	.bss        start:0x803408A8 end:0x803408F8
 	.sdata      start:0x803DB448 end:0x803DB450
 	.sbss       start:0x803DCB70 end:0x803DCBC8
-	.sdata2     start:0x803DE888 end:0x803DE8E0
+	.sdata2     start:0x803DE888 end:0x803DE8DC
 
 main/objanim.c:
 	.text       start:0x8002EB54 end:0x80030688
@@ -313,6 +313,7 @@ track/intersect_render.c:
 	.rodata     start:0x802C1EA8 end:0x802C1F80
 	.data       start:0x8030EA10 end:0x8030EAB8
 	.sdata2     start:0x803DEEA0 end:0x803DEF8C
+	.sbss2      start:0x803E8450 end:0x803E8458
 
 track/intersect_memcard.c:
 	.text       start:0x8007D670 end:0x8007E77C
@@ -5083,7 +5084,7 @@ main/acosf.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/math_802927a4.c:
 	.text       start:0x802927A4 end:0x80292D3C
-	.sdata2     start:0x803E7BD0 end:0x803E7BFC
+	.sdata2     start:0x803E7AB8 end:0x803E7BFC
 
 main/math_80292d3c.c:
 	.text       start:0x80292D3C end:0x80292DC0
@@ -5093,8 +5094,12 @@ main/rand.c:
 	.text       start:0x80292DC0 end:0x80292DEC
 	.sbss       start:0x803DE410 end:0x803DE414
 
+main/reciprocal.c:
+	.text       start:0x80292DEC end:0x80292E20
+	.sdata2     start:0x803E7C18 end:0x803E7C1C
+
 main/trig_float_helpers.c:
-	.text       start:0x80292DEC end:0x8029312C
+	.text       start:0x80292E20 end:0x8029312C
 	.sdata2     start:0x803E7C20 end:0x803E7C70
 
 main/math_8029312c.c:

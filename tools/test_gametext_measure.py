@@ -21,7 +21,8 @@ class GameTextMeasureTests(unittest.TestCase):
         if not compiler:
             raise unittest.SkipTest("clang is required for the source-body harness")
         source = (ROOT / "src/main/gametext.c").read_text()
-        header = (ROOT / "include/main/gametext_internal.h").read_text()
+        header = "\n".join((ROOT / path).read_text() for path in (
+            "include/main/gametext_lookup.h", "include/main/gametext_internal.h"))
         definitions = "\n".join(re.search(r"typedef struct " + name + r" \{.*?\} " + name + ";",
                                           header, re.S).group() for name in ("GameTextDef", "TextFont"))
         functions = []

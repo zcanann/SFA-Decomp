@@ -9,8 +9,6 @@
 #include "main/textrender_api.h"
 #include "main/texture.h"
 
-STATIC_ASSERT(offsetof(GameTextBox, style) == 0x13);
-STATIC_ASSERT(offsetof(GameTextBox, alpha) == 0x1E);
 STATIC_ASSERT(sizeof(TextFont) == 0x28);
 STATIC_ASSERT(offsetof(TextFont, status) == 0x1c);
 

@@ -50,7 +50,7 @@ void CameraModeClimb_update(CameraObject* camera) {
     f32 distance;
     f32 traceFrom[3];
     f32 traceOut[3];
-    CamcontrolTraceWork traceWork;
+    TrackHitResults traceWork;
 
     target = (GameObject*)camera->anim.targetObj;
     if (gCameraModeClimbState->transitionTimer != 0) {
@@ -99,7 +99,7 @@ void CameraModeClimb_update(CameraObject* camera) {
     camera->anim.worldPosX = gCameraModeClimbState->smoothedDistance * trigValue + traceFrom[0];
     trigValue = mathCosf((gCamClimbPi * (f32)(s32)target->anim.rotX) / gCamClimbHalfCircleBinaryAngle);
     camera->anim.worldPosZ = gCameraModeClimbState->smoothedDistance * trigValue + traceFrom[2];
-    camcontrol_traceMove(traceFrom, &camera->anim.worldPosX, traceOut, (u8*)&traceWork, 3, 1, 1,
+    camcontrol_traceMove(traceFrom, &camera->anim.worldPosX, traceOut, &traceWork, 3, 1, 1,
                          gCamClimbTraceRadius);
     camera->anim.worldPosX = traceOut[0];
     camera->anim.worldPosY = traceOut[1];

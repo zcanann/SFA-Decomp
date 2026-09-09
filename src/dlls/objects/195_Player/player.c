@@ -2,6 +2,7 @@
 
 #include "main/dll/player.h"
 #include "dlls/object_descriptor.h"
+#include "dlls/objects/597_SnowBike.h"
 
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
@@ -593,7 +594,7 @@ PlayerAnimSpeedTuning gPlayerAnimSpeedThresholds = {
     {0.005f, 0.1f, 0.08f, 0.55f, 0.53f, 2.3993998f},
     {{0.0f, 0.0f, 0.0f}, {0.0f, 17.0f, 0.0f}},
     {0.0f, 5.0f, 0.0f},
-    {114, 908, 399, 1046, 1049, 140, 1156, 1048, 1812},
+    {114, SNOWBIKE_CR_BIKE_OBJ, 399, 1046, 1049, 140, 1156, 1048, 1812},
     {1156, 1049, 1048, 1812},
     {0.002f, 0.003f, 0.0015f, 0.008f},
     {0.0022f, 0.002f, 0.0015f, 0.008f},
@@ -6136,7 +6137,7 @@ int playerState19(GameObject* obj, PlayerState* state) {
         VEHICLE_INTERFACE(sub)->getRiderPosition(sub, (f32*)((char*)obj + 0xc), (f32*)((char*)obj + 0x10),
                                                  (f32*)((char*)obj + 0x14));
         switch (sub->anim.romDefNo) {
-        case 0x38c:
+        case SNOWBIKE_CR_BIKE_OBJ:
         case 0x72:
             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x64, 0xff);
             break;
@@ -6362,7 +6363,7 @@ int playerStateMountBike(GameObject* obj, PlayerState* state, f32 fv) {
             }
             (*gCameraInterface)->setMode(0x45, 1, 0, 0, NULL, 0, 0xff);
             break;
-        case 0x38c:
+        case SNOWBIKE_CR_BIKE_OBJ:
             inner->moveSequence = (s16*)(base + 0x3f0);
             inner->moveSequenceFlags = 3;
             (*gCameraInterface)->setFocus((void*)sub, 0);
@@ -14645,7 +14646,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag) {
                     seq->flags &= ~4;
                     switch (((GameObject*)va)->anim.romDefNo) {
                     case 0x72:
-                    case 0x38c:
+                    case SNOWBIKE_CR_BIKE_OBJ:
                         Music_Trigger(MUSICTRIG_drako_2, 1);
                         mainSetBits(0xc1f, 0);
                         ((PlayerState*)inner)->moveSequence = (s16*)(tbl + 0x3f0);

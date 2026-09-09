@@ -7,6 +7,7 @@
 #include "main/objseq.h"
 
 #define CFCRATE_OBJ_SCALESSWORD 0x1B8
+#define CFCRATE_OBJ_DFP_WATER_HI 0x71B
 
 /*
  * Every retail EN placement for this family has a fixed 0x0C-byte parameter
@@ -16,7 +17,10 @@ typedef struct CFCratePlacement {
     ObjPlacement base; /* 0x00 */
     s8 initialRotX;    /* 0x18: shifted left by eight */
     u8 bankIndex;      /* 0x19 */
-    s16 param1A;       /* 0x1A: object-specific */
+    union {
+        s16 param1A;      /* 0x1A: object-specific */
+        s16 lingerFrames; /* 0x1A: DFP_WaterHi lifetime */
+    };
     s16 param1C;       /* 0x1C: object-specific */
     s16 gameBitA;      /* 0x1E: unused by this TU */
     s16 gameBitB;      /* 0x20 */
@@ -57,6 +61,7 @@ STATIC_ASSERT(offsetof(CFCratePlacement, base) == 0x00);
 STATIC_ASSERT(offsetof(CFCratePlacement, initialRotX) == 0x18);
 STATIC_ASSERT(offsetof(CFCratePlacement, bankIndex) == 0x19);
 STATIC_ASSERT(offsetof(CFCratePlacement, param1A) == 0x1A);
+STATIC_ASSERT(offsetof(CFCratePlacement, lingerFrames) == 0x1A);
 STATIC_ASSERT(offsetof(CFCratePlacement, param1C) == 0x1C);
 STATIC_ASSERT(offsetof(CFCratePlacement, gameBitA) == 0x1E);
 STATIC_ASSERT(offsetof(CFCratePlacement, gameBitB) == 0x20);

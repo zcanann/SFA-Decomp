@@ -40,16 +40,6 @@
 #include "main/maketex.h"
 #include "sys/objects/lifecycle.h"
 
-typedef struct PushableCollisionProbe {
-    f32 radii[4];   /* 0x00 */
-    s8 unk10;       /* 0x10 */
-    u8 pad11[3];    /* 0x11 */
-    u8 unk14;       /* 0x14 */
-    u8 pad15[0x17]; /* 0x15 */
-    s16 unk2C;      /* 0x2C */
-    s16 pad2E;      /* 0x2E */
-} PushableCollisionProbe;
-
 /* object group this object joins while active */
 #define PUSHABLE_OBJECT_GROUP   5
 #define PUSHABLE_OBJECT_TYPE_ID 0x48
@@ -170,15 +160,6 @@ typedef struct PushableCollisionProbe {
 #define PUSHABLE_ANGLE_60_DEGREES       0x3C
 #define PUSHABLE_ANGLE_120_DEGREES      0x78
 #define PUSHABLE_ANGLE_150_DEGREES      0x96
-
-STATIC_ASSERT(offsetof(PushableCollisionProbe, radii) == 0x0);
-STATIC_ASSERT(offsetof(PushableCollisionProbe, unk10) == 0x10);
-STATIC_ASSERT(offsetof(PushableCollisionProbe, pad11) == 0x11);
-STATIC_ASSERT(offsetof(PushableCollisionProbe, unk14) == 0x14);
-STATIC_ASSERT(offsetof(PushableCollisionProbe, pad15) == 0x15);
-STATIC_ASSERT(offsetof(PushableCollisionProbe, unk2C) == 0x2C);
-STATIC_ASSERT(offsetof(PushableCollisionProbe, pad2E) == 0x2E);
-STATIC_ASSERT(sizeof(PushableCollisionProbe) == 0x30);
 
 int gPushableSavedIdentCount;
 int gPushableSavedIdents[0x28];
@@ -336,11 +317,10 @@ int pushable_updateMagicGem(GameObject* obj, PushableState* state) {
     if (state->blinkPhase >= state->blinkInterval) {
         state->blinkStep *= PUSHABLE_MAGIC_GEM_NEGATE;
     } else if (state->blinkPhase < PUSHABLE_ZERO) {
-        state->blinkInterval =
-            PUSHABLE_MAGIC_GEM_BLINK_INTERVAL_SCALE *
-            randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_WAIT_MIN, PUSHABLE_MAGIC_GEM_BLINK_WAIT_MAX);
-        state->blinkStep = state->blinkInterval /
-                           randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_TIME_MIN, PUSHABLE_MAGIC_GEM_BLINK_TIME_MAX);
+        state->blinkInterval = PUSHABLE_MAGIC_GEM_BLINK_INTERVAL_SCALE *
+                               randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_WAIT_MIN, PUSHABLE_MAGIC_GEM_BLINK_WAIT_MAX);
+        state->blinkStep =
+            state->blinkInterval / randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_TIME_MIN, PUSHABLE_MAGIC_GEM_BLINK_TIME_MAX);
         state->blinkPhase = PUSHABLE_ZERO;
     }
     if (texture != NULL) {
@@ -382,8 +362,8 @@ void pushable_initMagicGem(GameObject* obj, PushableState* state) {
     state->eyeDriftSpeedY = sharedValue;
     state->blinkInterval = PUSHABLE_MAGIC_GEM_BLINK_INTERVAL_SCALE *
                            randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_WAIT_MIN, PUSHABLE_MAGIC_GEM_BLINK_WAIT_MAX);
-    state->blinkStep = state->blinkInterval /
-                       randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_TIME_MIN, PUSHABLE_MAGIC_GEM_BLINK_TIME_MAX);
+    state->blinkStep =
+        state->blinkInterval / randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_TIME_MIN, PUSHABLE_MAGIC_GEM_BLINK_TIME_MAX);
     sharedValue = PUSHABLE_ZERO;
     state->blinkPhase = sharedValue;
     state->gameBit = placement->gameBit;
@@ -686,7 +666,7 @@ int pushable_isWithinCullDistance(GameObject* obj, GameObject* other) {
 }
 
 int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f32 pushZ) {
-    PushableCollisionProbe* collisionProbe;
+    f32* collisionRadii;
     PushableState* state;
     char pushDirection;
     GameObject* player;
@@ -696,8 +676,7 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
     f32* localPoint;
     f32* delta;
     int historyEntryCount;
-    PushableCollisionProbe collisionProbeStorage;
-    char hitBuffer[64];
+    TrackHitResults hitResults;
     f32 transformMtx[16];
     f32 worldPoints[12];
     f32 deltas[12];
@@ -721,10 +700,10 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
     probeStart[0] = target->anim.localPosX;
     probeStart[1] = PUSHABLE_PROBE_HEIGHT + target->anim.localPosY;
     probeStart[2] = target->anim.localPosZ;
-    (collisionProbe = &collisionProbeStorage)->radii[0] = PUSHABLE_FORWARD_PROBE_DISTANCE;
-    collisionProbe->unk10 = -1;
-    collisionProbe->unk14 = 3;
-    collisionProbe->unk2C = 0;
+    (collisionRadii = hitResults.radii)[0] = PUSHABLE_FORWARD_PROBE_DISTANCE;
+    hitResults.surfaceTypes[0] = -1;
+    hitResults.queryTypes[0] = 3;
+    hitResults.hitCount = 0;
     blocked = 0;
     if (pushX > PUSHABLE_ZERO) {
         probeEnd[0] =
@@ -732,12 +711,11 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         probeEnd[1] = probeStart[1];
         probeEnd[2] =
             PUSHABLE_FORWARD_PROBE_DISTANCE * mathCosf(PUSHABLE_PI * state->yaw / PUSHABLE_HALF_TURN) + probeStart[2];
-        hitDetect_calcSweptSphereBounds(&sweep, probeStart, probeEnd, collisionProbe->radii, 1);
+        hitDetect_calcSweptSphereBounds(&sweep, probeStart, probeEnd, collisionRadii, 1);
         trackIntersectBroadphase(NULL, &sweep, 0x208, 1);
-        blocked = trackGetIntersect(NULL, probeStart, probeEnd, 1, &hitBuffer, 8);
+        blocked = trackGetIntersect(NULL, probeStart, probeEnd, 1, &hitResults, 8);
         if (blocked == 0) {
-            blocked =
-                trackGetLineIntersect(probeStart, probeEnd, collisionProbe->radii[0], 0, NULL, obj, 1, -1, 0xff, 0);
+            blocked = trackGetLineIntersect(probeStart, probeEnd, collisionRadii[0], 0, NULL, obj, 1, -1, 0xff, 0);
         }
         if (blocked != 0) {
             f32 pushAmount;
@@ -754,12 +732,11 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         probeEnd[2] =
             PUSHABLE_SIDE_PROBE_DISTANCE * mathCosf(PUSHABLE_PI * (f32)(state->yaw + 0x4000) / PUSHABLE_HALF_TURN) +
             probeStart[2];
-        hitDetect_calcSweptSphereBounds(&sweep, probeStart, probeEnd, collisionProbe->radii, 1);
+        hitDetect_calcSweptSphereBounds(&sweep, probeStart, probeEnd, collisionRadii, 1);
         trackIntersectBroadphase(NULL, &sweep, 0x208, 1);
-        blocked = trackGetIntersect(NULL, probeStart, probeEnd, 1, &hitBuffer, 8);
+        blocked = trackGetIntersect(NULL, probeStart, probeEnd, 1, &hitResults, 8);
         if (blocked == 0) {
-            blocked =
-                trackGetLineIntersect(probeStart, probeEnd, collisionProbe->radii[0], 0, NULL, obj, 1, -1, 0xff, 0);
+            blocked = trackGetLineIntersect(probeStart, probeEnd, collisionRadii[0], 0, NULL, obj, 1, -1, 0xff, 0);
         }
         if (blocked != 0) {
             f32 pushAmount;
@@ -776,12 +753,11 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         probeEnd[2] =
             PUSHABLE_SIDE_PROBE_DISTANCE * mathCosf(PUSHABLE_PI * (f32)(state->yaw - 0x4000) / PUSHABLE_HALF_TURN) +
             probeStart[2];
-        hitDetect_calcSweptSphereBounds(&sweep, probeStart, probeEnd, collisionProbe->radii, 1);
+        hitDetect_calcSweptSphereBounds(&sweep, probeStart, probeEnd, collisionRadii, 1);
         trackIntersectBroadphase(NULL, &sweep, 0x208, 1);
-        blocked = trackGetIntersect(NULL, probeStart, probeEnd, 1, &hitBuffer, 8);
+        blocked = trackGetIntersect(NULL, probeStart, probeEnd, 1, &hitResults, 8);
         if (blocked == 0) {
-            blocked =
-                trackGetLineIntersect(probeStart, probeEnd, collisionProbe->radii[0], 0, NULL, obj, 1, -1, 0xff, 0);
+            blocked = trackGetLineIntersect(probeStart, probeEnd, collisionRadii[0], 0, NULL, obj, 1, -1, 0xff, 0);
         }
         if (blocked != 0) {
             f32 pushAmount;

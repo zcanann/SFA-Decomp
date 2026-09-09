@@ -97,12 +97,38 @@ STATIC_ASSERT(sizeof(ModelRenderOpTextureRefs) == 0x0C);
 STATIC_ASSERT(offsetof(ModelRenderOpTextureRefs, texture1) == 0x04);
 STATIC_ASSERT(offsetof(ModelRenderOpTextureRefs, swapSelector) == 0x08);
 
+/* Quantized normal and two-matrix weight records used by the skinning streams. */
+typedef struct ModelPackedNormal {
+    s8 x;
+    s8 y;
+    s8 z;
+} ModelPackedNormal;
+
+typedef struct ModelNormalTriplet {
+    ModelPackedNormal vectors[3];
+} ModelNormalTriplet;
+
+typedef struct ModelSkinWeightPair {
+    u8 matrixA;
+    u8 matrixB;
+} ModelSkinWeightPair;
+
+STATIC_ASSERT(sizeof(ModelPackedNormal) == 3);
+STATIC_ASSERT(offsetof(ModelPackedNormal, x) == 0);
+STATIC_ASSERT(offsetof(ModelPackedNormal, y) == 1);
+STATIC_ASSERT(offsetof(ModelPackedNormal, z) == 2);
+STATIC_ASSERT(sizeof(ModelNormalTriplet) == 9);
+STATIC_ASSERT(offsetof(ModelNormalTriplet, vectors) == 0);
+STATIC_ASSERT(sizeof(ModelSkinWeightPair) == 2);
+STATIC_ASSERT(offsetof(ModelSkinWeightPair, matrixA) == 0);
+STATIC_ASSERT(offsetof(ModelSkinWeightPair, matrixB) == 1);
+
 /* Jobs and chunk records for the cached vertex and normal blend streams. */
 typedef struct ModelVtxAnimJob {
     u8 unk00[2];
     u16 chunkCount; /* 0x02 */
     u8 unk04[2];
-    u8 quantShift; /* 0x06: GQR7 scale for the s16/s8 streams */
+    u8 quantShift; /* 0x06: low six bits: signed GQR7 scale for s16/s8 streams */
     u8 unk07[5];
     struct ModelVtxAnimChunk* chunks; /* 0x0C */
 } ModelVtxAnimJob;
@@ -187,9 +213,9 @@ typedef struct ModelFileHeader {
     u8* unk18;
     u8* unk1C;
     s32* textureIds; /* file texture ids, patched to texture ptrs on load */
-    u8 flags24;      /* bit 8 = 9-byte (else 3-byte) entries at normals */
+    u8 flags24;      /* 0x08 = NBT triplets instead of single packed normals */
     u8 unk25[3];
-    u8* vertices;  /* 6 bytes each, vertexCount */
+    u8* vertices;  /* vertexCount s16 XYZ records; scale selected by MODEL_FLAG_INTEGER_VERTEX_COORDS */
     u8* normals;   /* 3 or 9 bytes each, normalCount */
     u8* colors;    /* GX_VA_CLR0 array, stride 2 */
     u8* texCoords; /* GX_VA_TEX0/TEX1 array, stride 4 */
@@ -220,11 +246,11 @@ typedef struct ModelFileHeader {
     ModelVtxAnimJob vertexAnimJob;
     u8 unk98[0xC];
     ModelVtxAnimChunk* vertexAnimEntries;
-    u8* vertexAnimBase;
+    u8* vertexWeightData;
     ModelVtxAnimJob normalAnimJob;
     u8 unkBC[0xC];
     ModelVtxAnimChunk* normalAnimEntries;
-    u8* normalAnimBase;
+    u8* normalWeightData;
     struct ModelDisplayListEntry* displayLists; /* primary group followed by shadow group */
     u8* instrs;
     u16 instrsBitLenWords; /* 0xD8: render-instruction stream length; *8 gives bit length (see objprint_dolphin render-instr readers) */
@@ -258,13 +284,15 @@ typedef struct ModelFileHeader {
 #define MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS 0x10
 #define MODEL_FLAG_CACHED_ANIMATIONS      0x40
 #define MODEL_FLAG_NO_DEPTH_TEST          0x400
-#define MODEL_FLAG_ALPHA_Z_UPDATE         0x2000
-#define MODEL_FLAG_ALT_POINTER_LAYOUT     0x8000
+/* Set: integer s16 XYZ; clear: signed s16 XYZ with eight fractional bits. */
+#define MODEL_FLAG_INTEGER_VERTEX_COORDS 0x800
+#define MODEL_FLAG_ALPHA_Z_UPDATE        0x2000
+#define MODEL_FLAG_ALT_POINTER_LAYOUT    0x8000
 
 /* ModelFileHeader.flags24 bits */
 #define MODEL_FLAGS24_VERY_BRIGHT 0x02
-/* set = 9-byte (else 3-byte) entries at normals */
-#define MODEL_FLAGS24_NORMALS_9BYTE 0x8
+/* Selects GX_VA_NBT and ModelNormalTriplet entries instead of single normals. */
+#define MODEL_FLAGS24_NBT_NORMALS 0x8
 
 /* ModelFileHeader.shaderFlags bit: set = use object color override (gObjOverrideColor) */
 #define MODEL_SHADERFLAGS_USE_OBJ_COLOR 0x2
@@ -344,12 +372,19 @@ STATIC_ASSERT(offsetof(ObjModelHitSphere, pos) == 0x04);
 /* ModelFileHeader.jointData entry (wiki: Bone). tail is the inverse bind-pose
  * translation, negated into PSMTXTrans every frame by modelInitBoneMtxs. */
 typedef struct ModelBone {
-    s8 parent;   /* parent bone index, -1 = none */
-    u8 idx[3];   /* matrix indices to write; high bit is a flag */
-    f32 head[3]; /* translation */
-    f32 tail[3]; /* bind translation */
+    s8 parent;                  /* parent bone index, -1 = none */
+    u8 outputMatrixIndexFlags;  /* low seven bits select output; high bit participates in the skip mask */
+    u8 animationMatrixSlots[2]; /* current slots for the two animation channels */
+    f32 head[3];                /* translation */
+    f32 tail[3];                /* bind translation */
 } ModelBone;
 
+STATIC_ASSERT(offsetof(ModelBone, parent) == 0x00);
+STATIC_ASSERT(offsetof(ModelBone, outputMatrixIndexFlags) == 0x01);
+STATIC_ASSERT(offsetof(ModelBone, animationMatrixSlots) == 0x02);
+STATIC_ASSERT(offsetof(ModelBone, animationMatrixSlots[1]) == 0x03);
+STATIC_ASSERT(offsetof(ModelBone, head) == 0x04);
+STATIC_ASSERT(offsetof(ModelBone, tail) == 0x10);
 STATIC_ASSERT(sizeof(ModelBone) == 0x1C);
 
 typedef struct ObjModelJointMatrix {
@@ -551,7 +586,7 @@ void ObjModelChain_SetEnabled(ObjModelChain* chain, u8 enabled);
 void ObjModelChain_AdvancePhase(ObjModelChain* chain);
 void ObjModelChain_Free(ObjModelChain* chain);
 
-void setGQR6_2(int a, int b, int c, int d);
+void setGQR6_2(int loadScale, int loadType, int storeScale, int storeType);
 void modelBlendMorphTargets(u8* srcVtx, u8* dstVtx, u16 vtxCount, u16* targetA, u16* targetB, int blendScale);
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c);
 void modelAnimResetState(void* m, void* data);

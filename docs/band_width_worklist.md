@@ -27,6 +27,12 @@ slot 5. A shared phase local and the recovered inline slot-flag getter remove
 the remaining floating-point register differences and duplicate zero load.
 See [sky matching](sky_matching.md); the historical row below is superseded.
 
+Update 2026-09-07: `ObjHits_CheckTrackContact` improves from 98.764046% to
+99.625465% through native sphere indexing and direct active-bank lookup under
+the unchanged GC/1.3 profile. Its 267 mnemonics now match, with 18 operand
+differences remaining. The old no-lever classification below is historical;
+see [track-contact selection](objhits_track_contact.md).
+
 ## Rotation class CLOSED WITH MECHANISM (2026-08-03 corpus mining)
 
 The saved-band rotation offset is set by the inline-boundary value count, dose-saturating at one,
@@ -265,7 +271,7 @@ Width >=5 saved band, identical mnemonic stream: the rotation-offset model — e
 | RomCurve_findShortestPathLink | dlls/engine/20_Hcurves/Hcurves_romcurve | 1572 | 99.911 | 6 | 0 | 15G/1F | 1 | refreshed-flip-frontier 08-02 (width noted per fn) |
 | ObjHitbox_SetStateIndex | main/objhits | 140 | 98.857 | 6 | 0 | 0G/0F | 9 | objhits GROUND pass 08-03: all 9 T==C recolours, no lever site |
 | waterfx_drawSplashBurst | dlls/engine/19/19 | 664 | 100 | 0 | 0 | 5G/12F | 0 | **Resolved 2026-09-07:** local lifetime/phase record recovers floating-point allocation. [Matching analysis](waterfx_matching.md). |
-| pauseMenuDraw | dlls/engine/0/0 | 4564 | 99.956 | 8 | 0 | 5G/0F | 14 | flag-probed 2026-08-03: no profile; 6 sites = width-5 pressure recolour (merge probe re-rotates), 2 = add-canon folded by copy-prop at single-use sites |
+| pauseMenuDraw | dlls/engine/0/0 | 4564 | 100 | 0 | 0 | 5G/0F | 0 | **Resolved 2026-09-08:** indexed task-hint strings let MWCC derive the offset counter and restore confirmation opacity allocation. [Matching analysis](engine_0_matching.md#september-8-pause-menu-renderer-exact). |
 | expgfx_addremove | dlls/engine/10_expgfx/expgfx | 2576 | 100.0 | 0 | 0 | 10G/0F | 4 | SOLVED: saved-register-redefinition tell — retail redefines r24 (extsh from acquireResourceEntry result) and the final compare reads the resource-table index, not slotType; fix = separate short local declared into the dead home. The struc-0 signature HID a semantic mis-decompilation; screen other struc-0 rows for double-defined saved homes |
 | ObjHits_CollectSkeletonHitsXZ | main/objhits | 1124 | 99.786 | 8 | 0 | 15G/7F | 9 | objhits GROUND pass 08-03: all 9 T==C recolours, no lever site |
 | InvHit_update | dlls/objects/241_InvHit/InvHit | 1024 | 99.844 | 8 | 0 | 5G/3F | 1 | refreshed-flip-frontier 08-02 (width noted per fn) |
@@ -413,17 +419,17 @@ member). No row is misfiled — every row has a live ledger/memory anchor.
 | objDrawShadowCasterMesh | main/shadow_dolphin | 1132 | 100 | 0 | 0 | 7G/2F | 0 | **Resolved 2026-09-07:** packed component traversal and shared stream-index lifetime match the full function under unchanged flags. [Matching analysis](shadow_dolphin_matching.md). |
 | gameTextFinalizeLoad | main/textrender_run | 1592 | 99.837 | 12 | 0 | 11G/0F | 4 | add-canon words closed by biased-base form C (value-use member decay: `numStrings * 4 + (u32)stringTable->offsets` emits base-first add + trailing addi; the priced-15 verdict predated the lever); residual is the coloured hdr-sum + one scratch swap, probed and walled |
 | GameUI_release | dlls/engine/0/0 | 336 | 98.929 | 14 | 0 | 7G/0F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
-| pauseMenuDrawStatusPage | dlls/engine/0/0 | 2692 | 99.911 | 12 | 0 | 8G/5F | 12 | Updated 2026-09-04: recovered missing sprintf capacity argument and original spellstone sum; alpha register differences remain. |
-| pauseMenuDrawGridCell | dlls/engine/0/0 | 1012 | 99.506 | 22 | 0 | 12G/7F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
-| drawArwingHud | dlls/engine/0/0 | 1064 | 99.436 | 27 | 0 | 10G/1F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
+| pauseMenuDrawStatusPage | dlls/engine/0/0 | 2692 | 100.000 | 0 | 0 | 8G/5F | 0 | **Resolved 2026-09-08:** one signed-short opacity updated in place and inline noise samples restore all 673 instructions; see [analysis](engine_0_matching.md). |
+| pauseMenuDrawGridCell | dlls/engine/0/0 | 1012 | 100.000 | 0 | 0 | 12G/7F | 14 | Exact in all five versions: signed-short opacity through the grid caller chain and in-place pulse arithmetic |
+| drawArwingHud | dlls/engine/0/0 | 1064 | 100.000 | 0 | 0 | 10G/1F | 14 | Exact: health-pip expressions computed at use sites restore the bomb-index register |
 | hudDrawCommunicatorAlert | dlls/engine/0/0 | 632 | 100.000 | 0 | 0 | — | — | RESOLVED 2026-09-04: u16 texture-scale API view, repeated draw expressions, and segment-derived fade; see [engine_0_matching.md](engine_0_matching.md) |
 | textureLoad | main/texture | 1932 | 98.882 | 33 | 4 | 17G/0F | 3 | priced 24b (same mechanism as loadTextureFiles: orphan inline preheaders at tail) + width-17 recolour mass; verified |
-| pauseMenuDrawStatus | dlls/engine/0/0 | 2064 | 99.641 | 34 | 0 | 6G/2F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
+| pauseMenuDrawStatus | dlls/engine/0/0 | 2064 | 100 | 0 | 0 | 6G/2F | 0 | **Resolved 2026-09-08:** a signed snapshot-array index closes the last r0/r3 swap. All 2,064 bytes match under unchanged compiler flags; see [analysis](engine_0_matching.md). |
 | unloadMap | main/shader | 616 | 97.922 | 43 | 1 | 10G/0F | 8 | priced 23b li/mr remat family (named member) + width-10 recolour mass; verified |
-| mapScreenDrawHud | dlls/engine/0/0 | 3456 | 99.647 | 47 | 1 | 12G/5F | 14 | engine0-hud-walls cluster + priced 23b li/mr member; verified |
-| headDisplayDraw | dlls/engine/0/0 | 1920 | 98.802 | 47 | 4 | 12G/5F | 14 | MISLABELED as reused int locals: wavePhaseA/B are STRENGTH-REDUCED DERIVED IVs (retail's +0x3520/+0x1f40 = 4x lineOffset*3400 / *2000); spelling them so mints both and the second CSEs. STRUC 4->2 but 98.542 — merging viewportY to make lineOffset=0 a redefinition removes a value and rotates the width-12 band. Shape now known exactly; priced by rotation, not spelling |
+| mapScreenDrawHud | dlls/engine/0/0 | 3456 | 99.855 | 25 | 0 | 12G/5F | 14 | Exact instruction sequence; panel opacity and top edge exchange r23/r27 |
+| headDisplayDraw | dlls/engine/0/0 | 1920 | 100.000 | 0 | 0 | 12G/5F | 14 | Exact in all five versions: derived shimmer phases, stored-alpha capture, and shared coordinate temporaries |
 | playerStateMoving | dlls/objects/195_Player/player | 4880 | 99.746 | 51 | 0 | 4G/3F | 22 | player-cluster coloring walls (named member: all f3/f4, f29/f30, scratch perm); verified |
-| cMenuSetItems | dlls/engine/0/0 | 1208 | 98.758 | 60 | 0 | 10G/0F | 14 | engine0-hud-walls cluster; priced 27's slot_oracle caveat names it (one swap rotates a full 6-cycle — band-membership rotation, not a decl key); verified |
+| cMenuSetItems | dlls/engine/0/0 | 1208 | 66.212 | — | — | — | — | **Shared branch recovery 2026-09-08:** indexed arrays and shared inventory fill retained; explicit enabled stores and valid Tricky paths first recover retail branch order. Source emits 976 bytes. 10,000 UBSan differential cases pass; local ASan startup is blocked. See [analysis](engine_0_matching.md). |
 | expgfxGetSlot | dlls/engine/10_expgfx/expgfx | 792 | 95.899 | 63 | 4 | 4G/0F | 4 | expgfx-addregroup + unroll wall; priced 15 names it (the `li 1`/mask-load slide at both unrolled sites, PRICED pending owner); verified — r11/r28/r29 temp-routing perm across the unrolled block |
 | hudDrawButtons | dlls/engine/0/0 | 3684 | 99.194 | 69 | 0 | 13G/0F | 14 | engine0-hud-walls cluster + priced 23b li/mr member; verified |
 | hudDrawMagicBar | dlls/engine/0/0 | 2472 | 99.288 | 75 | 0 | 12G/0F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |

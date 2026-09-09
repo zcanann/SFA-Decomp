@@ -5,13 +5,15 @@
 #include "global.h"
 #include "main/dll/DR/dr_types.h"
 #include "main/objanim_internal.h"
+#include "main/track_hit_results.h"
 
 /*
  * CameraObject - the camera's object record, passed around the CAM/
  * mode handlers as "cam" (short* / u8* / int spellings). It shares the
- * ObjAnimComponent head (0x00..0xAF) and the u16 word at 0xB0 with
+ * transform prefix (0x00..0x33) and the u16 word at 0xB0 with
  * GameObject, but it is a SIBLING of GameObject, NOT a view of it:
- * the tails DIVERGE at 0xB4. Never cast CameraObject* <-> GameObject*.
+ * collision results occupy 0x34..0xA3, and the tails differ from 0xB4.
+ * Never cast CameraObject* <-> GameObject*.
  *  - 0xB4: f32 fov here (11 CAM sites; dll_5B's zoom/fovTarget locals)
  *    vs s16 unkB4 on GameObject (anim.c/baddieControl/objseq).
  *  - 0xB8: f32 probePos[0] here - initialized from worldPosX
@@ -42,6 +44,10 @@ typedef struct CameraObject {
             u8 padB2[2];
         };
         struct {
+            u8 padCollisionResults[0x34];
+            TrackHitResults collisionResults;
+        };
+        struct {
             u8 padSavedLocalPos[0xA8];
             Vec3f savedLocalPos; /* local-position snapshot used by normal-camera mode transitions */
         };
@@ -56,9 +62,9 @@ typedef struct CameraObject {
     u8 padE5[0xF4 - 0xE5];
     f32 blendProgress;
     u8 padF8[0x11C - 0xF8];
-    void *targetObj; /* GameObject*: current focus/track target */
+    void* targetObj; /* GameObject*: current focus/track target */
     u8 pad120[4];
-    void *currentTarget;
+    void* currentTarget;
     u8 pad128[4];
     f32 boundHitZLower; /* 0x12C: Z of the nearest below-camera vertical-bound collision hit (hits[i][2]); reset with boundHitZUpper */
     f32 boundHitZUpper; /* 0x130: Z of the nearest above-camera vertical-bound collision hit (hits[i][2]) */
@@ -75,6 +81,13 @@ typedef struct CameraObject {
     int unk148;
 } CameraObject;
 
+STATIC_ASSERT(offsetof(CameraObject, collisionResults) == 0x34);
+STATIC_ASSERT(offsetof(CameraObject, collisionResults.radii) == 0x74);
+STATIC_ASSERT(offsetof(CameraObject, collisionResults.surfaceTypes) == 0x84);
+STATIC_ASSERT(offsetof(CameraObject, collisionResults.queryTypes) == 0x88);
+STATIC_ASSERT(offsetof(CameraObject, collisionResults.hitCount) == 0xA0);
+STATIC_ASSERT(offsetof(CameraObject, collisionResults.hitMask) == 0xA2);
+STATIC_ASSERT(offsetof(CameraObject, anim.targetObj) == 0xA4);
 STATIC_ASSERT(offsetof(CameraObject, fov) == 0xB4);
 STATIC_ASSERT(offsetof(CameraObject, savedLocalPos) == 0xA8);
 STATIC_ASSERT(offsetof(CameraObject, probePosX) == 0xB8);

@@ -2,9 +2,12 @@
 #define MAIN_DLL_FRONT_ATTRACT_MOVIE_H_
 
 #include "types.h"
+#include "global.h"
 #include "dolphin/dvd.h"
 #include "dolphin/thp/THPFile.h"
 #include "dolphin/thp/THPInfo.h"
+
+#define ATTRACT_MOVIE_READ_BUFFER_COUNT 10
 
 #define ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE 0x280
 #define ATTRACT_MOVIE_AUDIO_DMA_BUFFER_COUNT 2
@@ -27,6 +30,10 @@ typedef struct AttractMovieReadBuffer {
     u8 *ptr;
     s32 frameNumber;
 } AttractMovieReadBuffer;
+
+STATIC_ASSERT(sizeof(AttractMovieReadBuffer) == 8);
+STATIC_ASSERT(offsetof(AttractMovieReadBuffer, ptr) == 0);
+STATIC_ASSERT(offsetof(AttractMovieReadBuffer, frameNumber) == 4);
 
 typedef struct AttractMovieTextureSet {
     u8 *yTexture;
@@ -95,7 +102,7 @@ typedef struct AttractMoviePlayer {
         AttractMovieTextureSet *dispTextureSet;
         AttractMovieAudioBuffer *curAudioBuffer;
     };
-    AttractMovieReadBuffer readBuffer[10];
+    AttractMovieReadBuffer readBuffer[ATTRACT_MOVIE_READ_BUFFER_COUNT];
     AttractMovieTextureSet textureSet[3];
     AttractMovieAudioBuffer audioBuffer[3];
     u8 pad1A4[4];

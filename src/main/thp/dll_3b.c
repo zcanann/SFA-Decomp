@@ -1,4 +1,5 @@
 #include "main/dll/FRONT/dll_3B.h"
+#include "main/thp_read.h"
 #include "dolphin/os.h"
 #include "main/dll/FRONT/picmenu.h"
 #include "dolphin/os/OSThread.h"
@@ -50,14 +51,14 @@ void PushFreeAudioBuffer(void* message)
     OSSendMessage(&gAttractMovieFreeAudioQueueAndStack.queue, message, OS_MESSAGE_NOBLOCK);
 }
 
-static void AttractMovieAudio_Decode(void* readBufferArg) {
+static void AttractMovieAudio_Decode(AttractMovieReadBuffer* readBufferArg) {
     u32* audioFrameSizes;
     AttractMovieReadBuffer* readBuffer;
     AttractMovieAudioBuffer* audioBuf[1];
     u8* audioFrame;
     u32 track;
 
-    readBuffer = (AttractMovieReadBuffer*)readBufferArg;
+    readBuffer = readBufferArg;
     audioFrameSizes = (u32*)(readBuffer->ptr + THP_FRAME_HEADER_SIZE);
     audioFrame = readBuffer->ptr + (gAttractMoviePlayer.compInfo.mNumComponents * sizeof(u32)) + THP_FRAME_HEADER_SIZE;
     {
@@ -114,7 +115,7 @@ static void* AudioDecoderForOnMemory(void* param) {
 }
 
 static void* AudioDecoder(void* param) {
-    void* token;
+    AttractMovieReadBuffer* token;
 
     (void)param;
     while (true) {

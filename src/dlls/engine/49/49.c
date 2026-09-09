@@ -83,17 +83,6 @@ typedef union MinimapColor
     GXColor channels;
 } MinimapColor;
 
-typedef struct MinimapTextBox
-{
-    u16 width;
-    u16 cursorX;
-    u8 pad04[4];
-    u16 clipWidth;
-    u16 cursorY;
-    u8 pad0C[10];
-    s16 y;
-} MinimapTextBox;
-
 MinimapRow gMinimapRowsMap1050[1] = {
     {-10240, -6400, 8320, 16640, -32768, 32767, 0x95, 0, 0, 1050, 0},
 };
@@ -247,7 +236,7 @@ int Minimap_update(void)
     u8 j;
     int n;
     int boxTargetWidth;
-    MinimapTextBox* box;
+    GameTextBox* box;
     int savedCharset;
     int boxW;
     int boxH;
@@ -443,7 +432,7 @@ int Minimap_update(void)
                 gMinimapBoxWidth -= framesThisStep * 8;
                 gMinimapBoxWidth = (gMinimapBoxWidth > boxTargetWidth) ? gMinimapBoxWidth : boxTargetWidth;
             }
-            box->clipWidth = (u16)(gMinimapBoxWidth - 8);
+            box->width = (u16)(gMinimapBoxWidth - 8);
             gMinimapBoxY = 0x1b8 - gMinimapBoxHeight;
             box->y = gMinimapBoxY;
             drawHudBox(0x32, gMinimapBoxY, gMinimapBoxWidth, gMinimapBoxHeight, gMinimapFadeAlpha & 0xff, 1);
@@ -555,14 +544,14 @@ int Minimap_update(void)
                 }
                 else
                 {
-                    gameTextSetCursor(box->cursorX, box->cursorY, 1);
+                    gameTextSetCursor(box->maxWidth, box->height, 1);
                     gameTextResetCursor(1);
                     n = gMinimapBoxWidth;
-                    box->clipWidth = (u16)((n > 2) ? n : 2);
-                    box->clipWidth = (box->clipWidth < box->width) ? box->clipWidth : box->width;
+                    box->width = (u16)((n > 2) ? n : 2);
+                    box->width = (box->width < box->unk00) ? box->width : box->unk00;
                     n = gMinimapBoxHeight;
-                    box->cursorY = (u16)((n > 2) ? n : 2);
-                    gameTextSetCursor(box->width, box->cursorY, 2);
+                    box->height = (u16)((n > 2) ? n : 2);
+                    gameTextSetCursor(box->unk00, box->height, 2);
                     gameTextSetColor(0, 0xff, 0, gMinimapFadeAlpha & 0xff);
                     savedCharset = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
@@ -576,14 +565,14 @@ int Minimap_update(void)
                 if (gMinimapRadarTarget == NULL)
                 {
                     Minimap_drawCompassNeedle();
-                    gameTextSetCursor(box->cursorX, box->cursorY, 1);
+                    gameTextSetCursor(box->maxWidth, box->height, 1);
                     gameTextResetCursor(1);
                     n = gMinimapBoxWidth;
-                    box->clipWidth = (u16)((n > 2) ? n : 2);
-                    box->clipWidth = (box->clipWidth < box->width) ? box->clipWidth : box->width;
+                    box->width = (u16)((n > 2) ? n : 2);
+                    box->width = (box->width < box->unk00) ? box->width : box->unk00;
                     n = gMinimapBoxHeight;
-                    box->cursorY = (u16)((n > 2) ? n : 2);
-                    gameTextSetCursor(box->width, box->cursorY, 2);
+                    box->height = (u16)((n > 2) ? n : 2);
+                    gameTextSetCursor(box->unk00, box->height, 2);
                     gameTextSetColor(0, 0xff, 0, gMinimapFadeAlpha & 0xff);
                     savedCharset = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
@@ -597,11 +586,11 @@ int Minimap_update(void)
                 {
                     if (gMinimapAreaNameDelay == 0)
                     {
-                        gameTextSetCursor(box->cursorX, box->cursorY, 1);
+                        gameTextSetCursor(box->maxWidth, box->height, 1);
                         gameTextResetCursor(1);
-                        box->clipWidth = gMinimapBoxWidth;
-                        box->cursorY = gMinimapBoxHeight;
-                        gameTextSetCursor(box->cursorX, box->cursorY, 2);
+                        box->width = gMinimapBoxWidth;
+                        box->height = gMinimapBoxHeight;
+                        gameTextSetCursor(box->maxWidth, box->height, 2);
                         gameTextSetColor(0, 0xff, 0, gMinimapAreaNameAlpha & 0xff);
                         gameTextShow(gMinimapAreaNameId + 10000);
                         gameTextResetCursor(2);
@@ -610,14 +599,14 @@ int Minimap_update(void)
                 else if (gMinimapEnabled != 0)
                 {
                     Minimap_drawCompassNeedle();
-                    gameTextSetCursor(box->cursorX, box->cursorY, 1);
+                    gameTextSetCursor(box->maxWidth, box->height, 1);
                     gameTextResetCursor(1);
                     n = gMinimapBoxWidth;
-                    box->clipWidth = (u16)((n > 2) ? n : 2);
-                    box->clipWidth = (box->clipWidth < box->width) ? box->clipWidth : box->width;
+                    box->width = (u16)((n > 2) ? n : 2);
+                    box->width = (box->width < box->unk00) ? box->width : box->unk00;
                     n = gMinimapBoxHeight;
-                    box->cursorY = (u16)((n > 2) ? n : 2);
-                    gameTextSetCursor(box->width, box->cursorY, 2);
+                    box->height = (u16)((n > 2) ? n : 2);
+                    gameTextSetCursor(box->unk00, box->height, 2);
                     gameTextSetColor(0, 0xff, 0, gMinimapFadeAlpha & 0xff);
                     savedCharset = gameTextGetCharset();
                     gameTextSetCharset(3, 3);

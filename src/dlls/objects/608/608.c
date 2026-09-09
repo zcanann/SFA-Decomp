@@ -1,7 +1,7 @@
 /* DLL 608: ProximityMine-family object callbacks. */
+#include "dlls/objects/608_ProximityMine.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/objfx_api.h"
-#include "main/proximitymine.h"
 #include "main/frame_timing.h"
 #include "sys/objects.h"
 #include "main/object_render.h"
@@ -31,14 +31,14 @@ f32 gProximityMineLaunchDistDivisor = 15.0f;
 f32 gProximityMineLaunchSpeedBias = 0.5f;
 f32 gProximityMineExplosionRadiusScale = 0.5f;
 
-#define PROXIMITYMINE_PARTFX 0x51c
+#define PROXIMITYMINE_PARTFX       0x51c
+#define PROXIMITYMINE_HIT_PRIORITY 13
 
 /* the proximity-triggered variant; the same code also drives contact-only mines
    spawned under other ids. retail OBJECTS.bin name "ProximityMi" (DLL 0x260) */
 #define PROXIMITYMINE_OBJ 0x789
 
-void ProximityMine_expire(GameObject* obj)
-{
+void ProximityMine_expire(GameObject* obj) {
     ProximityMineState* state;
     f32 zeroVelocity;
 
@@ -50,230 +50,191 @@ void ProximityMine_expire(GameObject* obj)
     zeroVelocity = 0.0f;
     obj->anim.velocityX = zeroVelocity;
     obj->anim.velocityZ = zeroVelocity;
-    storeZeroToFloatParam(&state->renderTimer);
-    s16toFloat(&state->renderTimer, 10);
+    storeZeroToFloatParam(&state->destructionTimer);
+    s16toFloat(&state->destructionTimer, 10);
     state->mode = PROXIMITYMINE_MODE_EXPIRED;
     ObjHits_EnableObject(obj);
     ObjHits_MarkObjectPositionDirty(&obj->anim);
-    storeZeroToFloatParam(&state->resetTimer);
+    storeZeroToFloatParam(&state->detonationTimer);
     objfx_shakeCameraByDistance(obj, 200.0f);
     {
-        f32 triggerRadiusDelta = state->triggerDistance - 30.0f;
-        spawnExplosion(obj, 60.0f + triggerRadiusDelta * gProximityMineExplosionRadiusScale, 1, 1, 0, 1, 0, 1,
-                       0);
+        f32 explosionRadiusDelta = state->explosionRadius - 30.0f;
+        spawnExplosion(obj, 60.0f + explosionRadiusDelta * gProximityMineExplosionRadiusScale, 1, 1, 0, 1, 0, 1, 0);
     }
-    ObjHitbox_SetCapsuleBounds(&obj->anim, state->triggerDistance, -5, 10);
-    ObjHits_SetHitVolumeSlot(&obj->anim, PROXIMITYMINE_HIT_VOLUME_SLOT, 1, 0);
+    ObjHitbox_SetCapsuleBounds(&obj->anim, state->explosionRadius, -5, 10);
+    ObjHits_SetHitVolumeSlot(&obj->anim, PROXIMITYMINE_HIT_PRIORITY, 1, 0);
     ObjHits_EnableObject(obj);
-    if (state->effectHandle != NULL)
-    {
-        modelLightStruct_freeSlot(&state->effectHandle);
+    if (state->glowLight != NULL) {
+        modelLightStruct_freeSlot(&state->glowLight);
     }
 }
 
-int ProximityMine_getExtraSize(void)
-{
+int ProximityMine_getExtraSize(void) {
     return sizeof(ProximityMineState);
 }
 
-int ProximityMine_getObjectTypeId(void)
-{
+int ProximityMine_getObjectTypeId(void) {
     return 0;
 }
 
-void ProximityMine_free(GameObject* obj)
-{
+void ProximityMine_free(GameObject* obj) {
     ProximityMineState* state;
 
     state = obj->extra;
-    if (state->effectHandle != NULL)
-    {
-        modelLightStruct_freeSlot(&state->effectHandle);
+    if (state->glowLight != NULL) {
+        modelLightStruct_freeSlot(&state->glowLight);
     }
     return;
 }
 
-void ProximityMine_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5)
-{
+void ProximityMine_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5) {
     int mapBlock;
     ModelLightStruct* effect;
     ProximityMineState* state;
 
     state = obj->extra;
-    if (obj->ownerObj != NULL)
-    {
-        state->targetObj = obj->ownerObj;
+    if (obj->ownerObj != NULL) {
+        state->attachmentObj = obj->ownerObj;
         obj->ownerObj = NULL;
     }
-    if (timerIsActive(&state->renderTimer) != 0 ||
+    if (timerIsActive(&state->destructionTimer) != 0 ||
         (mapBlock = objPosToMapBlockIdx((double)obj->anim.localPosX, (double)obj->anim.localPosY,
-                                        (double)obj->anim.localPosZ)) == -1)
-    {
+                                        (double)obj->anim.localPosZ)) == -1) {
         return;
     }
-    effect = state->effectHandle;
-    if ((effect != NULL) && (effect->glowType != 0) && (effect->enabled != 0))
-    {
+    effect = state->glowLight;
+    if ((effect != NULL) && (effect->glowType != 0) && (effect->enabled != 0)) {
         queueGlowRender(effect);
     }
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     return;
 }
 
-void ProximityMine_hitDetect(GameObject* obj)
-{
+void ProximityMine_hitDetect(GameObject* obj) {
     f32 zeroVelocity;
     int hit;
     int hitFlag;
     ObjHitsPriorityState* hitState;
     ProximityMineState* state;
 
-    if (timerIsActive(&((ProximityMineState*)obj->extra)->renderTimer) == 0)
-    {
+    if (timerIsActive(&((ProximityMineState*)obj->extra)->destructionTimer) == 0) {
         hit = ObjHits_GetPriorityHit(obj, 0, 0, 0);
         hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         hitFlag = hitState->contactFlags;
-        if ((hitFlag != 0) || (hit != 0) || (hitState->lastHitObject != 0))
-        {
+        if ((hitFlag != 0) || (hit != 0) || (hitState->lastHitObject != 0)) {
             state = obj->extra;
             zeroVelocity = 0.0f;
             obj->anim.velocityY = zeroVelocity;
             obj->anim.velocityX = zeroVelocity;
             obj->anim.velocityZ = zeroVelocity;
             state->mode = PROXIMITYMINE_MODE_EXPIRED;
-            storeZeroToFloatParam(&state->resetTimer);
-            s16toFloat(&state->resetTimer, 1);
-            s16toFloat(&state->renderTimer, 10);
+            storeZeroToFloatParam(&state->detonationTimer);
+            s16toFloat(&state->detonationTimer, 1);
+            s16toFloat(&state->destructionTimer, 10);
         }
     }
     return;
 }
 
-void ProximityMine_update(GameObject* obj)
-{
+void ProximityMine_update(GameObject* obj) {
     f32 groundY;
     MatrixTransform params;
     ProximityMineState* state;
 
     state = obj->extra;
-    if (state->effectHandle != NULL)
-    {
-        modelLightStruct_updateGlowAlpha(state->effectHandle);
+    if (state->glowLight != NULL) {
+        modelLightStruct_updateGlowAlpha(state->glowLight);
     }
-    if (obj->ownerObj != NULL)
-    {
-        state->targetObj = obj->ownerObj;
+    if (obj->ownerObj != NULL) {
+        state->attachmentObj = obj->ownerObj;
         obj->ownerObj = NULL;
     }
-    if (timerIsActive(&state->lifespanTimer) != 0)
-    {
-        obj->anim.rootMotionScale += state->scaleStep * timeDelta;
-        if (state->targetObj != NULL)
-        {
-            if (objUpdateOpacity(state->targetObj) != 0)
-            {
-                ObjPath_GetPointWorldPosition(state->targetObj, obj->userData1, &obj->anim.localPosX,
+    if (timerIsActive(&state->growthTimer) != 0) {
+        obj->anim.rootMotionScale += state->growthScaleStep * timeDelta;
+        if (state->attachmentObj != NULL) {
+            if (objUpdateOpacity(state->attachmentObj) != 0) {
+                ObjPath_GetPointWorldPosition(state->attachmentObj, obj->userData1, &obj->anim.localPosX,
                                               &obj->anim.localPosY, &obj->anim.localPosZ, 0);
-            }
-            else
-            {
-                obj->anim.localPosX = state->targetObj->anim.localPosX;
-                obj->anim.localPosY = state->targetObj->anim.localPosY;
-                obj->anim.localPosZ = state->targetObj->anim.localPosZ;
+            } else {
+                obj->anim.localPosX = state->attachmentObj->anim.localPosX;
+                obj->anim.localPosY = state->attachmentObj->anim.localPosY;
+                obj->anim.localPosZ = state->attachmentObj->anim.localPosZ;
             }
         }
-        if (timerCountDown(&state->lifespanTimer) != 0)
-        {
-            if (state->mode == PROXIMITYMINE_MODE_ARMED)
-            {
-                trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY,
-                                     obj->anim.localPosZ, &groundY, 0);
+        if (timerCountDown(&state->growthTimer) != 0) {
+            if (state->mode == PROXIMITYMINE_MODE_ARMED) {
+                trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
+                                            &groundY, 0);
                 obj->anim.localPosY -= groundY;
                 Sfx_PlayFromObject(obj, SFXTRIG_id_2e6);
                 Sfx_PlayFromObject(obj, SFXTRIG_id_2e8);
-            }
-            else
-            {
+            } else {
                 Sfx_PlayFromObject(obj, SFXTRIG_id_2e7);
                 Sfx_PlayFromObject(obj, SFXTRIG_id_2e9);
             }
         }
-        if (state->effectHandle == NULL)
-        {
+        if (state->glowLight == NULL) {
             int brightness;
             ObjTextureRuntimeSlot* tex;
 
-            state->effectHandle = modelLightStruct_createPointLight(obj, 0xff, 0, 0, 0);
+            state->glowLight = modelLightStruct_createPointLight(obj, 0xff, 0, 0, 0);
             tex = objFindTexture(obj, 0, 0);
-            if (tex != NULL)
-            {
+            if (tex != NULL) {
                 tex->textureId = (tex->textureId + 0x10) % 512;
                 brightness = tex->textureId >> 8;
-            }
-            else
-            {
+            } else {
                 brightness = 0;
             }
-            if (state->effectHandle != NULL)
-            {
-                state->effectHandle->enabled = brightness;
-                modelLightStruct_setupGlow(state->effectHandle, 0, 0xff, 0, 0, gProximityMineGlowAlpha, gProximityMineGlowScale);
+            if (state->glowLight != NULL) {
+                state->glowLight->enabled = brightness;
+                modelLightStruct_setupGlow(state->glowLight, 0, 0xff, 0, 0, gProximityMineGlowAlpha,
+                                           gProximityMineGlowScale);
                 {
-                    ModelLightStruct* fx = state->effectHandle;
+                    ModelLightStruct* fx = state->glowLight;
                     modelLightStruct_setPosition(fx, 0.0f, obj->anim.hitboxScale, 0.0f);
                 }
             }
         }
-    }
-    else
-    {
-        if (timerIsActive(&state->resetTimer) != 0)
-        {
+    } else {
+        if (timerIsActive(&state->detonationTimer) != 0) {
             Sfx_PlayFromObject(obj, SFXTRIG_id_ef);
-            if (state->effectHandle == NULL)
-            {
-                state->effectHandle = modelLightStruct_createPointLight(obj, 0xff, 0, 0, 0);
-                if (state->effectHandle != NULL)
-                {
-                    modelLightStruct_setupGlow(state->effectHandle, 0, 0xff, 0, 0, gProximityMineResetGlowAlpha, gProximityMineResetGlowScale);
+            if (state->glowLight == NULL) {
+                state->glowLight = modelLightStruct_createPointLight(obj, 0xff, 0, 0, 0);
+                if (state->glowLight != NULL) {
+                    modelLightStruct_setupGlow(state->glowLight, 0, 0xff, 0, 0, gProximityMineResetGlowAlpha,
+                                               gProximityMineResetGlowScale);
                     {
-                        ModelLightStruct* fx = state->effectHandle;
+                        ModelLightStruct* fx = state->glowLight;
                         modelLightStruct_setPosition(fx, 0.0f, obj->anim.hitboxScale, 0.0f);
                     }
                 }
             }
-            if (timerCountDown(&state->resetTimer) != 0)
-            {
+            if (timerCountDown(&state->detonationTimer) != 0) {
                 ProximityMine_expire(obj);
                 return;
             }
         }
-        switch (state->mode)
-        {
-        case PROXIMITYMINE_MODE_WAITING:
-        {
+        switch (state->mode) {
+        case PROXIMITYMINE_MODE_WAITING: {
             f32 trigger;
             GameObject* player;
 
-            trigger = ((ProximityMineDef*)obj->anim.placementData)->parameter;
+            trigger = ((ProximityMinePlacement*)obj->anim.placementData)->parameter.proximityDistance;
             player = Obj_GetPlayerObject();
-            if (Vec_distance(&obj->anim.worldPosX, &player->anim.worldPosX) < trigger)
-            {
+            if (Vec_distance(&obj->anim.worldPosX, &player->anim.worldPosX) < trigger) {
                 state->mode = PROXIMITYMINE_MODE_ARMED;
-                s16toFloat(&state->resetTimer, 0x78);
+                s16toFloat(&state->detonationTimer, 0x78);
             }
             break;
         }
         case PROXIMITYMINE_MODE_EXPIRED:
             Sfx_StopObjectChannel(obj, 0x40);
-            if (timerCountDown(&state->renderTimer) != 0)
-            {
+            if (timerCountDown(&state->destructionTimer) != 0) {
                 Obj_FreeObject(obj);
                 return;
             }
             break;
-        case PROXIMITYMINE_MODE_LAUNCHING:
-        {
+        case PROXIMITYMINE_MODE_LAUNCHING: {
             f32 dist;
             f32 zero;
             GameObject* player;
@@ -296,8 +257,7 @@ void ProximityMine_update(GameObject* obj)
             Sfx_PlayFromObject(obj, SFXTRIG_id_f0);
         }
         case PROXIMITYMINE_MODE_FLIGHT:
-            if (timerCountDown(&state->launchTimer) != 0)
-            {
+            if (timerCountDown(&state->flightTimer) != 0) {
                 f32 zero;
 
                 state = obj->extra;
@@ -306,13 +266,12 @@ void ProximityMine_update(GameObject* obj)
                 obj->anim.velocityX = zero;
                 obj->anim.velocityZ = zero;
                 state->mode = PROXIMITYMINE_MODE_EXPIRED;
-                storeZeroToFloatParam(&state->resetTimer);
-                s16toFloat(&state->resetTimer, 1);
-                s16toFloat(&state->renderTimer, 10);
+                storeZeroToFloatParam(&state->detonationTimer);
+                s16toFloat(&state->detonationTimer, 1);
+                s16toFloat(&state->destructionTimer, 10);
                 return;
             }
-            if (obj->anim.velocityY > -10.0f)
-            {
+            if (obj->anim.velocityY > -10.0f) {
                 obj->anim.velocityY += -0.12f * timeDelta;
             }
             obj->anim.rotX += framesThisStep << 10;
@@ -325,30 +284,23 @@ void ProximityMine_update(GameObject* obj)
             obj->anim.worldPosZ = obj->anim.localPosZ;
         case PROXIMITYMINE_MODE_ARMED:
             (*gPartfxInterface)->spawnObject(obj, PROXIMITYMINE_PARTFX, NULL, 1, -1, NULL);
-            if (timerCountDown(&state->bounceTimer) != 0)
-            {
+            if (timerCountDown(&state->hitEnableTimer) != 0) {
                 ObjHits_EnableObject(obj);
             }
-            ObjHits_SetHitVolumeSlot(&obj->anim, PROXIMITYMINE_HIT_VOLUME_SLOT, 1, 0);
-            if (state->effectHandle != NULL)
-            {
-                if ((state->effectHandle->enabled != 0) && (state->effectVisible == 0))
-                {
+            ObjHits_SetHitVolumeSlot(&obj->anim, PROXIMITYMINE_HIT_PRIORITY, 1, 0);
+            if (state->glowLight != NULL) {
+                if ((state->glowLight->enabled != 0) && (state->previousGlowEnabled == 0)) {
                     Sfx_PlayFromObject(obj, SFXTRIG_gal_prophitbird);
                 }
-                state->effectVisible = state->effectHandle->enabled;
-            }
-            else
-            {
-                state->effectVisible = 0;
+                state->previousGlowEnabled = state->glowLight->enabled;
+            } else {
+                state->previousGlowEnabled = 0;
             }
             break;
         }
-        if (timerIsActive(&state->renderTimer) == 0)
-        {
+        if (timerIsActive(&state->destructionTimer) == 0) {
             if (objPosToMapBlockIdx((double)obj->anim.localPosX, (double)obj->anim.localPosY,
-                                    (double)obj->anim.localPosZ) == -1)
-            {
+                                    (double)obj->anim.localPosZ) == -1) {
                 f32 zero;
 
                 state = obj->extra;
@@ -357,77 +309,72 @@ void ProximityMine_update(GameObject* obj)
                 obj->anim.velocityX = zero;
                 obj->anim.velocityZ = zero;
                 state->mode = PROXIMITYMINE_MODE_EXPIRED;
-                storeZeroToFloatParam(&state->resetTimer);
-                s16toFloat(&state->resetTimer, 1);
-                s16toFloat(&state->renderTimer, 10);
+                storeZeroToFloatParam(&state->detonationTimer);
+                s16toFloat(&state->detonationTimer, 1);
+                s16toFloat(&state->destructionTimer, 10);
             }
         }
     }
 }
 
-void ProximityMine_init(GameObject* obj, ProximityMineDef* def)
-{
+void ProximityMine_init(GameObject* obj, ProximityMinePlacement* def) {
     s8 mode;
     ProximityMineState* state;
 
     state = obj->extra;
-    if (obj->anim.romDefNo == PROXIMITYMINE_OBJ)
-    {
+    if (obj->anim.romDefNo == PROXIMITYMINE_OBJ) {
         def->mode = PROXIMITYMINE_SPAWN_PROXIMITY;
     }
     obj->anim.rotX = 0;
     ObjHits_DisableObject(obj);
     state->mode = PROXIMITYMINE_MODE_EXPIRED;
-    storeZeroToFloatParam(&state->renderTimer);
-    storeZeroToFloatParam(&state->resetTimer);
-    storeZeroToFloatParam(&state->bounceTimer);
-    s16toFloat(&state->bounceTimer, 0x14);
-    storeZeroToFloatParam(&state->launchTimer);
-    storeZeroToFloatParam(&state->initTimer);
-    s16toFloat(&state->initTimer, 5);
-    obj->anim.rotX = def->angleSeed << 8;
-    storeZeroToFloatParam(&state->lifespanTimer);
-    s16toFloat(&state->lifespanTimer, (s16)gProximityMineLifespanFrames);
-    state->flashMode = 0;
-    state->triggerDistance = 30.0f;
-    state->effectVisible = 0;
+    storeZeroToFloatParam(&state->destructionTimer);
+    storeZeroToFloatParam(&state->detonationTimer);
+    storeZeroToFloatParam(&state->hitEnableTimer);
+    s16toFloat(&state->hitEnableTimer, 0x14);
+    storeZeroToFloatParam(&state->flightTimer);
+    storeZeroToFloatParam(&state->unkTimer24);
+    s16toFloat(&state->unkTimer24, 5);
+    obj->anim.rotX = def->rotationHighByte << 8;
+    storeZeroToFloatParam(&state->growthTimer);
+    s16toFloat(&state->growthTimer, (s16)gProximityMineLifespanFrames);
+    state->unk2E = 0;
+    state->explosionRadius = 30.0f;
+    state->previousGlowEnabled = 0;
     mode = def->mode;
-    switch (mode)
-    {
+    switch (mode) {
     case PROXIMITYMINE_SPAWN_TIMED:
-        s16toFloat(&state->resetTimer, def->parameter);
+        s16toFloat(&state->detonationTimer, def->parameter.detonationDelay);
         state->mode = PROXIMITYMINE_MODE_ARMED;
         Obj_SetActiveModelIndex(obj, 1);
         obj->anim.rootMotionScale *= 0.25f;
         break;
     case PROXIMITYMINE_SPAWN_LAUNCHED:
-        s16toFloat(&state->launchTimer, 800);
-        s16toFloat(&state->resetTimer, 800);
-        obj->anim.rotX = def->parameter;
+        s16toFloat(&state->flightTimer, 800);
+        s16toFloat(&state->detonationTimer, 800);
+        obj->anim.rotX = def->parameter.launchRotation;
         state->mode = PROXIMITYMINE_MODE_LAUNCHING;
         obj->anim.rootMotionScale *= 0.25f;
         break;
     case PROXIMITYMINE_SPAWN_PROXIMITY:
-        storeZeroToFloatParam(&state->lifespanTimer);
+        storeZeroToFloatParam(&state->growthTimer);
         state->mode = PROXIMITYMINE_MODE_WAITING;
         ObjHits_EnableObject(obj);
-        state->triggerDistance = (f32)(s32)def->parameter;
-        storeZeroToFloatParam(&state->bounceTimer);
+        state->explosionRadius = (f32)(s32)def->parameter.proximityDistance;
+        storeZeroToFloatParam(&state->hitEnableTimer);
         break;
     }
-    state->scaleStep = (3.0f * obj->anim.rootMotionScale) / gProximityMineLifespanFrames;
-    state->targetObj = NULL;
-    state->effectHandle = NULL;
+    state->growthScaleStep = (3.0f * obj->anim.rootMotionScale) / gProximityMineLifespanFrames;
+    state->attachmentObj = NULL;
+    state->glowLight = NULL;
     return;
 }
 
-void ProximityMine_release(void)
-{
+void ProximityMine_release(void) {
     return;
 }
 
-void ProximityMine_initialise(void)
-{
+void ProximityMine_initialise(void) {
     return;
 }
 

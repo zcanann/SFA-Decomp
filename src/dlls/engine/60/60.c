@@ -374,7 +374,7 @@ void Link_render(int context) {
                 } else {
                     alpha = opacity / 2;
                 }
-                ((TextSlot*)gameTextGetBox(drawItem->boxId))->alpha = alpha;
+                gameTextGetBox(drawItem->boxId)->alpha = alpha;
 
                 if ((drawItem->flags & LINK_FLAG_DRAW_BLACK_SHADOW) != 0) {
                     gameTextSetColor(0, 0, 0, (u8)(((gLinkPulse + 1) * linkItemOpacity) >> 8));

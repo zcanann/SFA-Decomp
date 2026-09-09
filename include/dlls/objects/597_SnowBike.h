@@ -14,6 +14,9 @@
 #include "main/objseq.h"
 #include "main/vecmath.h"
 
+/* OBJINDEX object ID for the CloudRunner snowbike (DLL 597). */
+#define SNOWBIKE_CR_BIKE_OBJ 0x38c
+
 typedef struct SnowBikeFlags {
     u8 airborne : 1;       /* 0x80 */
     u8 accelerating : 1;   /* 0x40 */

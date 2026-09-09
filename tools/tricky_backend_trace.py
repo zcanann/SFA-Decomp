@@ -1,4 +1,4 @@
-"""Trace residual instructions through GC/1.3's optimizer on Windows or macOS.
+"""Trace residual instructions through GC/1.3's optimizer on Windows, macOS or Linux.
 
 The capture is diagnostic only: a private compiler process's disabled dump hook
 is intercepted, and its complete output object must equal an ordinary compile.
@@ -127,6 +127,8 @@ def run_capture(source, directory, functions, graph=False, unit=UNIT, register_c
     register_kind(register_class)
     if sys.platform == "darwin":
         from mwcc_backend_capture_lldb import capture
+    elif sys.platform.startswith("linux"):
+        from mwcc_backend_capture_gdb import capture
     else:
         from tricky_backend_capture_win import capture
 
@@ -206,8 +208,8 @@ def main():
                          require_graph=args.graph or bool(document.get("graph_requested")), unit=unit,
                          required_register_class=required)
     else:
-        if sys.platform not in ("win32", "darwin"):
-            parser.error("capture requires Windows or macOS; --read works without a debugger")
+        if sys.platform not in ("win32", "darwin") and not sys.platform.startswith("linux"):
+            parser.error("capture requires Windows, macOS or Linux; --read works without a debugger")
         unit = args.unit or UNIT
         if unit != UNIT and not args.function:
             parser.error("other units require at least one --function")

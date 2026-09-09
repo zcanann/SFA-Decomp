@@ -235,7 +235,8 @@ void Obj_SetParent(GameObject* obj, GameObject* newParent, int updateLocalTransf
 }
 
 int trackSweepCircleAgainstPoint(f32* x, f32* z, f32 centerX, f32 centerZ, f32 radius, s8 resolveCollision);
-int trackResolveSurfacePenetration(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type);
+int trackResolveSurfacePenetration(const f32* startPosition, f32* position, const f32* contactPosition,
+                                   const f32* plane, f32 radiusDistance, f32 clearance, u8 responseMode);
 
 int trackSweepCircleAgainstPoint(f32* x, f32* z, f32 centerX, f32 centerZ, f32 radius, s8 resolveCollision) {
     f32 startDeltaZ, startDeltaX, timeA, startDeltaXSq, startX, startZ, moveX, moveZ, quadraticB, negB;
@@ -1656,92 +1657,96 @@ int trackGetHeight(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsO
     return gTrackGroundHitCount;
 }
 
-int trackResolveSurfacePenetration(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type) {
+static inline void trackProjectOntoOffsetPlane(f32* position, const f32* plane, f32 radiusDistance, f32 clearance) {
+    f32 planeCorrection;
+    position[0] -= radiusDistance * plane[0];
+    position[1] -= radiusDistance * plane[1];
+    position[2] -= radiusDistance * plane[2];
+    planeCorrection =
+        clearance - (plane[3] + (position[2] * plane[2] + (position[1] * plane[1] + position[0] * plane[0])));
+    position[0] += planeCorrection * plane[0];
+    position[1] += planeCorrection * plane[1];
+    position[2] += planeCorrection * plane[2];
+}
+
+int trackResolveSurfacePenetration(const f32* startPosition, f32* position, const f32* contactPosition,
+                                   const f32* plane, f32 radiusDistance, f32 clearance, u8 responseMode) {
     f32 displacement[3];
     f32 horizontalNormal[3];
 
-    if (type == 3) {
-        f32 fa, scale;
-        f32 fb;
-        b[0] = c[0];
-        b[1] = c[1];
-        b[2] = c[2];
-        displacement[0] = b[0] - a[0];
-        displacement[1] = b[1] - a[1];
-        displacement[2] = b[2] - a[2];
+    if (responseMode == 3) {
+        f32 startDistance, intersectionFraction;
+        f32 contactDistance;
+        position[0] = contactPosition[0];
+        position[1] = contactPosition[1];
+        position[2] = contactPosition[2];
+        displacement[0] = position[0] - startPosition[0];
+        displacement[1] = position[1] - startPosition[1];
+        displacement[2] = position[2] - startPosition[2];
         Vec3_Normalize(displacement);
-        fb = (p[3] + (b[2] * p[2] + (b[0] * p[0] + b[1] * p[1]))) - y;
-        fa = (p[3] + (a[2] * p[2] + (a[0] * p[0] + a[1] * p[1]))) - y;
-        if (fa != fb) {
-            scale = fa / (fa - fb);
+        contactDistance =
+            (plane[3] + (position[2] * plane[2] + (position[0] * plane[0] + position[1] * plane[1]))) - clearance;
+        startDistance =
+            (plane[3] + (startPosition[2] * plane[2] + (startPosition[0] * plane[0] + startPosition[1] * plane[1]))) -
+            clearance;
+        if (startDistance != contactDistance) {
+            intersectionFraction = startDistance / (startDistance - contactDistance);
         } else {
-            scale = 0.0f;
+            intersectionFraction = 0.0f;
         }
-        displacement[0] = b[0] - a[0];
-        displacement[1] = b[1] - a[1];
-        displacement[2] = b[2] - a[2];
-        b[0] = displacement[0] * scale;
-        b[1] = displacement[1] * scale;
-        b[2] = displacement[2] * scale;
-        b[0] += a[0];
-        b[1] += a[1];
-        b[2] += a[2];
+        displacement[0] = position[0] - startPosition[0];
+        displacement[1] = position[1] - startPosition[1];
+        displacement[2] = position[2] - startPosition[2];
+        position[0] = displacement[0] * intersectionFraction;
+        position[1] = displacement[1] * intersectionFraction;
+        position[2] = displacement[2] * intersectionFraction;
+        position[0] += startPosition[0];
+        position[1] += startPosition[1];
+        position[2] += startPosition[2];
         return 1;
     }
     {
-        f32 p1 = *(f32*)(p + 1);
-        if (p1 < 0.707f && p1 > -0.707f) {
-            switch (type) {
+        f32 normalY = *(const f32*)(plane + 1);
+        if (normalY < 0.707f && normalY > -0.707f) {
+            switch (responseMode) {
             case 1:
             case 8:
             case 0xa: {
                 f32 normalZ;
                 f32 normalX;
 
-                normalX = p[0];
-                normalZ = p[2];
-                y = y - (p[3] + (b[2] * normalZ + (normalX * b[0] + b[1] * p[1])));
-                if (y > 0.0f) {
-                    f32 px = normalX * normalX;
-                    f32 pz = normalZ * normalZ;
-                    f32 d = mathCosfHighPrecision(atan2fHighPrecision(p[1], sqrtf(px + pz)));
-                    if (0.0f != d) {
-                        y /= d;
+                normalX = plane[0];
+                normalZ = plane[2];
+                clearance =
+                    clearance - (plane[3] + (position[2] * normalZ + (normalX * position[0] + position[1] * plane[1])));
+                if (clearance > 0.0f) {
+                    f32 normalXSquared = normalX * normalX;
+                    f32 normalZSquared = normalZ * normalZ;
+                    f32 correction =
+                        mathCosfHighPrecision(atan2fHighPrecision(plane[1], sqrtf(normalXSquared + normalZSquared)));
+                    if (0.0f != correction) {
+                        clearance /= correction;
                     }
-                    horizontalNormal[0] = p[0];
+                    horizontalNormal[0] = plane[0];
                     horizontalNormal[1] = 0.0f;
-                    horizontalNormal[2] = p[2];
+                    horizontalNormal[2] = plane[2];
                     Vec3_Normalize(horizontalNormal);
-                    b[0] = y * horizontalNormal[0] + b[0];
-                    b[2] = y * horizontalNormal[2] + b[2];
+                    position[0] = clearance * horizontalNormal[0] + position[0];
+                    position[2] = clearance * horizontalNormal[2] + position[2];
                 }
                 break;
             }
             default: {
-                f32 t;
-                b[0] -= f1p * p[0];
-                b[1] -= f1p * p[1];
-                b[2] -= f1p * p[2];
-                t = y - (p[3] + (b[2] * p[2] + (b[1] * p[1] + b[0] * p[0])));
-                b[0] += t * p[0];
-                b[1] += t * p[1];
-                b[2] += t * p[2];
+                trackProjectOntoOffsetPlane(position, plane, radiusDistance, clearance);
                 break;
             }
             }
         } else {
-            int switchType = type;
+            int switchType = responseMode;
             switch (switchType) {
             case 5:
             case 8: {
-                f32 t;
-                b[0] -= f1p * p[0];
-                b[1] -= f1p * p[1];
-                b[2] -= f1p * p[2];
-                t = y - (p[3] + (b[2] * p[2] + (b[1] * p[1] + b[0] * p[0])));
-                b[0] += t * p[0];
-                b[1] += t * p[1];
-                b[2] += t * p[2];
+                trackProjectOntoOffsetPlane(position, plane, radiusDistance, clearance);
                 break;
             }
             case 9:
@@ -1750,15 +1755,17 @@ int trackResolveSurfacePenetration(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 
                 f32 normalZ;
                 f32 normalX;
 
-                normalX = p[0];
-                normalZ = p[2];
-                y = y - (p[3] + (b[2] * normalZ + (normalX * b[0] + b[1] * p[1])));
-                if (y > 0.0f) {
-                    f32 px = normalX * normalX;
-                    f32 pz = normalZ * normalZ;
-                    f32 d = mathSinfHighPrecision(atan2fHighPrecision(p[1], sqrtf(px + pz)));
-                    d = y / d;
-                    b[1] += d;
+                normalX = plane[0];
+                normalZ = plane[2];
+                clearance =
+                    clearance - (plane[3] + (position[2] * normalZ + (normalX * position[0] + position[1] * plane[1])));
+                if (clearance > 0.0f) {
+                    f32 normalXSquared = normalX * normalX;
+                    f32 normalZSquared = normalZ * normalZ;
+                    f32 correction =
+                        mathSinfHighPrecision(atan2fHighPrecision(plane[1], sqrtf(normalXSquared + normalZSquared)));
+                    correction = clearance / correction;
+                    position[1] += correction;
                 }
                 break;
             }
@@ -2010,19 +2017,19 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         if (hitpt[1] > tri->vy[tri->minMaxY >> 4] + clearance) {
                             continue;
                         }
-                        edge0[0] = tri->edgeN0[0];
-                        edge0[1] = tri->edgeN0[1];
-                        edge0[2] = tri->edgeN0[2];
+                        edge0[0] = tri->edgeNormals[0].x;
+                        edge0[1] = tri->edgeNormals[0].y;
+                        edge0[2] = tri->edgeNormals[0].z;
                         edge0[3] = -(tri->vz[0] * edge0[2] + (tri->vx[0] * edge0[0] + tri->vy[0] * edge0[1])) +
                                    PSVECDotProduct((Vec*)edge0, (Vec*)hitpt);
-                        edge1[0] = tri->edgeN1[0];
-                        edge1[1] = tri->edgeN1[1];
-                        edge1[2] = tri->edgeN1[2];
+                        edge1[0] = tri->edgeNormals[1].x;
+                        edge1[1] = tri->edgeNormals[1].y;
+                        edge1[2] = tri->edgeNormals[1].z;
                         edge1[3] = -(tri->vz[1] * edge1[2] + (tri->vx[1] * edge1[0] + tri->vy[1] * edge1[1])) +
                                    PSVECDotProduct((Vec*)edge1p, (Vec*)hitpt);
-                        edge2[0] = tri->edgeN2[0];
-                        edge2[1] = tri->edgeN2[1];
-                        edge2[2] = tri->edgeN2[2];
+                        edge2[0] = tri->edgeNormals[2].x;
+                        edge2[1] = tri->edgeNormals[2].y;
+                        edge2[2] = tri->edgeNormals[2].z;
                         edge2[3] = -(tri->vz[2] * edge2[2] + (tri->vx[2] * edge2[0] + tri->vy[2] * edge2[1])) +
                                    PSVECDotProduct((Vec*)edge2p, (Vec*)hitpt);
                         b = 0;
@@ -2043,19 +2050,19 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         }
                         tri->edgeOutBits = b;
                     } else if (dS >= negativeClearance && radius > 0.0f) {
-                        edge0[0] = tri->edgeN0[0];
-                        edge0[1] = tri->edgeN0[1];
-                        edge0[2] = tri->edgeN0[2];
+                        edge0[0] = tri->edgeNormals[0].x;
+                        edge0[1] = tri->edgeNormals[0].y;
+                        edge0[2] = tri->edgeNormals[0].z;
                         edge0[3] = -(tri->vz[0] * edge0[2] + (tri->vx[0] * edge0[0] + tri->vy[0] * edge0[1])) +
                                    PSVECDotProduct((Vec*)edge0, (Vec*)ws);
-                        edge1[0] = tri->edgeN1[0];
-                        edge1[1] = tri->edgeN1[1];
-                        edge1[2] = tri->edgeN1[2];
+                        edge1[0] = tri->edgeNormals[1].x;
+                        edge1[1] = tri->edgeNormals[1].y;
+                        edge1[2] = tri->edgeNormals[1].z;
                         edge1[3] = -(tri->vz[1] * edge1[2] + (tri->vx[1] * edge1[0] + tri->vy[1] * edge1[1])) +
                                    PSVECDotProduct((Vec*)edge1p, (Vec*)ws);
-                        edge2[0] = tri->edgeN2[0];
-                        edge2[1] = tri->edgeN2[1];
-                        edge2[2] = tri->edgeN2[2];
+                        edge2[0] = tri->edgeNormals[2].x;
+                        edge2[1] = tri->edgeNormals[2].y;
+                        edge2[2] = tri->edgeNormals[2].z;
                         edge2[3] = -(tri->vz[2] * edge2[2] + (tri->vx[2] * edge2[0] + tri->vy[2] * edge2[1])) +
                                    PSVECDotProduct((Vec*)edge2p, (Vec*)ws);
                         b = 0;
@@ -2343,12 +2350,12 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
     int t;
     int tEnd;
     int minYi, maxYi;
-    int j2;
-    int k22;
+    int edgeIndex;
+    int normalComponentIndex;
     CollisionPolygonGroup* group;
     s16 *xs, *ys, *zs;
     ModelFileHeader* hdr;
-    int deg;
+    int degenerateEdge;
     int flag20;
     int flag8;
     int i;
@@ -2458,7 +2465,7 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
             for (j = 0, tw = triangle->vertexIndices, vout = (u8*)cur; j < 3; j++) {
                 s16* v = ObjModel_GetBaseVertexCoords(hdr, *tw);
                 f32 fx, fy, fz;
-                if (hdr->flags & 0x800) {
+                if (hdr->flags & MODEL_FLAG_INTEGER_VERTEX_COORDS) {
                     fx = v[0] * scale;
                     fy = v[1] * scale;
                     fz = v[2] * scale;
@@ -2551,15 +2558,15 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
 
             {
                 f32 eps;
-                k22 = 0;
-                deg = 0;
-                j2 = 0;
+                normalComponentIndex = 0;
+                degenerateEdge = 0;
+                edgeIndex = 0;
                 xw = xs;
                 yw = ys;
                 zw = zs;
                 eps = 0.0f;
-                for (; j2 < 3; j2++) {
-                    int k = j2 + 1;
+                for (; edgeIndex < 3; edgeIndex++) {
+                    int k = edgeIndex + 1;
                     f32 px, py, pz;
                     if (k > 2) {
                         k = 0;
@@ -2577,16 +2584,16 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
                         ey *= inv2;
                         ez *= inv2;
                     } else {
-                        deg = 1;
+                        degenerateEdge = 1;
                     }
-                    *(f32*)(cur + k22++ * 4 + 0x24) = ex;
-                    *(f32*)(cur + k22++ * 4 + 0x24) = ey;
-                    *(f32*)(cur + k22++ * 4 + 0x24) = ez;
+                    *(f32*)(cur + normalComponentIndex++ * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = ex;
+                    *(f32*)(cur + normalComponentIndex++ * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = ey;
+                    *(f32*)(cur + normalComponentIndex++ * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = ez;
                     xw++;
                     yw++;
                     zw++;
                 }
-                if (deg) {
+                if (degenerateEdge) {
                     continue;
                 }
             }
@@ -2619,13 +2626,9 @@ int flags;
 u8 doEdges;
 {
     MapBlockData* cells[16];
-    f32 e2[3];
-    f32 e1[3];
-    f32 e0[3];
-    f32 verts2[3];
-    f32 verts[3];
-    f32 v0[3];
-    f32 en[3];
+    Vec edgeVectors[3];
+    Vec triangleVertices[3];
+    Vec edgeNormal;
     u32 offA;
     int* firstp;
     int last;
@@ -2645,7 +2648,7 @@ u8 doEdges;
     u8 typeb;
     u32 bb;
     u32 dmaflip;
-    f32* vertp;
+    Vec* secondVertex;
     MapBlockData** p1;
     int* q1;
     MapBlockData** p2;
@@ -2842,11 +2845,11 @@ u8 doEdges;
             t0 = group->firstTri;
             triangle = (MapTriIndex*)(bb + t0 * sizeof(MapTriIndex));
             vEnd = group[1].firstTri;
-            vertp = (f32*)(u32)verts;
+            secondVertex = &triangleVertices[1];
             for (; t0 < vEnd; t0++, triangle++) {
                 u8* vo;
                 s16* vp;
-                f32* vf;
+                Vec* vertexCursor;
                 u8 maxYi, minYi;
                 u16* tw;
                 int minX, maxX, minY, maxY, minZ, maxZ;
@@ -2869,15 +2872,15 @@ u8 doEdges;
                 ((TrackTriangle*)cur)->vx[0] = minX + dxoff;
                 ((TrackTriangle*)cur)->vy[0] = minY;
                 ((TrackTriangle*)cur)->vz[0] = minZ + dzoff;
-                v0[0] = __OSs16tof32(&((TrackTriangle*)cur)->vx[0]);
-                v0[1] = __OSs16tof32(&((TrackTriangle*)cur)->vy[0]);
-                v0[2] = __OSs16tof32(&((TrackTriangle*)cur)->vz[0]);
+                triangleVertices[0].x = __OSs16tof32(&((TrackTriangle*)cur)->vx[0]);
+                triangleVertices[0].y = __OSs16tof32(&((TrackTriangle*)cur)->vy[0]);
+                triangleVertices[0].z = __OSs16tof32(&((TrackTriangle*)cur)->vz[0]);
                 maxYi = 0;
                 minYi = 0;
                 j = 1;
                 tw = &triangle->vert[1];
                 vo = (u8*)(cur + 2);
-                vf = verts;
+                vertexCursor = &triangleVertices[1];
                 for (; j < 3; j++) {
                     int x, yy, z;
                     vp = (s16*)(vb + *tw * 6);
@@ -2904,12 +2907,12 @@ u8 doEdges;
                     ((TrackTriangle*)vo)->vx[0] = x + dxoff;
                     ((TrackTriangle*)vo)->vy[0] = yy;
                     ((TrackTriangle*)vo)->vz[0] = z + dzoff;
-                    vf[0] = __OSs16tof32(((TrackTriangle*)vo)->vx);
-                    vf[1] = __OSs16tof32(((TrackTriangle*)vo)->vy);
-                    vf[2] = __OSs16tof32(((TrackTriangle*)vo)->vz);
+                    vertexCursor->x = __OSs16tof32(((TrackTriangle*)vo)->vx);
+                    vertexCursor->y = __OSs16tof32(((TrackTriangle*)vo)->vy);
+                    vertexCursor->z = __OSs16tof32(((TrackTriangle*)vo)->vz);
                     tw++;
                     vo += 2;
-                    vf += 3;
+                    vertexCursor++;
                 }
                 if (minY > y1) {
                     continue;
@@ -2930,9 +2933,9 @@ u8 doEdges;
                     continue;
                 }
 
-                PSVECSubtract((Vec*)v0, (Vec*)vertp, (Vec*)e0);
-                PSVECSubtract((Vec*)vertp, (Vec*)verts2, (Vec*)e1);
-                PSVECCrossProduct((Vec*)e0, (Vec*)e1, (Vec*)(cur + 4));
+                PSVECSubtract(&triangleVertices[0], secondVertex, &edgeVectors[0]);
+                PSVECSubtract(secondVertex, &triangleVertices[2], &edgeVectors[1]);
+                PSVECCrossProduct(&edgeVectors[0], &edgeVectors[1], (Vec*)(cur + 4));
                 mag = PSVECMag((Vec*)(cur + 4));
                 if (!(mag > 0.0f)) {
                     continue;
@@ -2954,36 +2957,39 @@ u8 doEdges;
                         continue;
                     }
                 }
-                ((TrackTriangle*)cur)->planeD = -PSVECDotProduct((Vec*)(cur + 4), (Vec*)v0);
+                ((TrackTriangle*)cur)->planeD = -PSVECDotProduct((Vec*)(cur + 4), &triangleVertices[0]);
                 if (doEdges) {
-                    int k22, deg, j2;
-                    f32* ep;
+                    int normalComponentIndex, degenerateEdge, edgeIndex;
+                    Vec* edgeCursor;
                     f32 one, eps;
-                    PSVECSubtract((Vec*)verts2, (Vec*)v0, (Vec*)e2);
-                    k22 = 0;
-                    deg = 0;
-                    j2 = 0;
-                    ep = e0;
+                    PSVECSubtract(&triangleVertices[2], &triangleVertices[0], &edgeVectors[2]);
+                    normalComponentIndex = 0;
+                    degenerateEdge = 0;
+                    edgeIndex = 0;
+                    edgeCursor = edgeVectors;
                     eps = 0.0f;
                     one = 1.0f;
                     do {
                         f32 m;
-                        PSVECCrossProduct((Vec*)(cur + 4), (Vec*)ep, (Vec*)en);
-                        m = PSVECMag((Vec*)en);
+                        PSVECCrossProduct((Vec*)(cur + 4), edgeCursor, &edgeNormal);
+                        m = PSVECMag(&edgeNormal);
                         if (m > eps) {
                             m = one / m;
-                            PSVECScale((Vec*)en, (Vec*)en, m);
-                            *(f32*)(cur + (k22++) * 4 + 0x24) = en[0];
-                            *(f32*)(cur + (k22++) * 4 + 0x24) = en[1];
-                            *(f32*)(cur + (k22++) * 4 + 0x24) = en[2];
+                            PSVECScale(&edgeNormal, &edgeNormal, m);
+                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) +
+                                    offsetof(TrackTriangle, edgeNormals)) = edgeNormal.x;
+                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) +
+                                    offsetof(TrackTriangle, edgeNormals)) = edgeNormal.y;
+                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) +
+                                    offsetof(TrackTriangle, edgeNormals)) = edgeNormal.z;
                         } else {
-                            deg = 1;
+                            degenerateEdge = 1;
                             break;
                         }
-                        ep += 3;
-                        j2++;
-                    } while (j2 < 3);
-                    if (deg) {
+                        edgeCursor++;
+                        edgeIndex++;
+                    } while (edgeIndex < 3);
+                    if (degenerateEdge) {
                         continue;
                     }
                 }

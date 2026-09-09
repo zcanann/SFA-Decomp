@@ -2,9 +2,9 @@
 #define MAIN_TEXTRENDER_API_H_
 
 #include "types.h"
+#include "main/gametext_lookup.h"
 #include "main/subtitle.h"
 
-struct GameTextDef;
 struct GameTextBox;
 
 typedef enum GameTextCommand {
@@ -41,7 +41,8 @@ extern GameTextSlot lbl_8033A540[];
 #define gGameTextCommandSlots lbl_8033A540
 
 void subtitleStart(int x);
-void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
+void gameTextMeasureString(u8* str, f32 scale, f32* outWidth, f32* outZero, f32* outMaxFontWidth, f32* outMaxLineHeight,
+                           int fontId);
 int subtitleIsActive(void);
 int setSubtitlesEnabled(int enabled);
 void* gameTextGetPhrase(int textId, int phraseIndex);
@@ -49,11 +50,10 @@ void* gameTextGetStr(int textId);
 void gameTextResetCursor(int flags);
 void gameTextSetCursor(u16 x, u16 y, int flags);
 void gameTextSetDrawFunc(void* drawFunc);
-void gameTextSetWindow(u8* textBox);
+void gameTextSetWindow(struct GameTextBox* textBox);
 void gameTextSetWindowById(int boxId);
 f32 gameTextGetTimer(void);
 void gameTextRun(void);
-void* gameTextGet(int textId);
 void gameTextLoadDir(int dirId);
 int gameTextSaveDir(int x);
 void gameTextLoadForCurMap(int sourceId);

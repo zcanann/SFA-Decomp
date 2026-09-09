@@ -217,7 +217,7 @@ void gameTextDrawBox(struct GameTextDef* strPtr, int boxId, GameTextBox* box) {
     s16 savedY;
     s16 savedX;
     u16 boxFlags;
-    u8* window;
+    GameTextBox* window;
     int cornerCenterY;
     int cornerCenterX;
     int cornerHalfHeight;

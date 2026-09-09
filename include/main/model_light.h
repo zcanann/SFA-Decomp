@@ -34,30 +34,9 @@ typedef struct ModelLightStruct {
         };
         Vec3f viewPos;
     };
-    union {
-        struct {
-            f32 localDirX;
-            f32 localDirY;
-            f32 localDirZ;
-        };
-        Vec3f localDirection;
-    };
-    union {
-        struct {
-            f32 worldDirX;
-            f32 worldDirY;
-            f32 worldDirZ;
-        };
-        Vec3f worldDirection;
-    };
-    union {
-        struct {
-            f32 viewDirX;
-            f32 viewDirY;
-            f32 viewDirZ;
-        };
-        Vec3f viewDirection;
-    };
+    Vec3f localDirection;
+    Vec3f worldDirection;
+    Vec3f viewDirection;
     u8 enabled;
     u8 field4D;
     u8 pad4e[0x50 - 0x4e];
@@ -126,6 +105,9 @@ typedef struct ModelLightStruct {
     u8 pad2fd[0x300 - 0x2fd];
 } ModelLightStruct;
 
+STATIC_ASSERT(offsetof(ModelLightStruct, localDirection) == 0x28);
+STATIC_ASSERT(offsetof(ModelLightStruct, worldDirection) == 0x34);
+STATIC_ASSERT(offsetof(ModelLightStruct, viewDirection) == 0x40);
 STATIC_ASSERT(offsetof(ModelLightStruct, diffuseLightObj) == 0x68);
 STATIC_ASSERT(offsetof(ModelLightStruct, specularLightObj) == 0xc0);
 STATIC_ASSERT(sizeof(ModelLightStruct) == 0x300);

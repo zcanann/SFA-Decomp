@@ -47,7 +47,7 @@ class GameTextRuntimeHostTests(unittest.TestCase):
             raise unittest.SkipTest('clang is required for source-body tests')
         source = (ROOT / 'src/main/gametext.c').read_text()
         headers = '\n'.join((ROOT / path).read_text() for path in (
-            'include/main/gametext_internal.h', 'include/main/gametext_box_api.h',
+            'include/main/gametext_lookup.h', 'include/main/gametext_internal.h', 'include/main/gametext_box_api.h',
             'include/main/textrender_internal.h'))
         records = '\n'.join(re.search(r'typedef struct(?: ' + name + r')?\s*\{[^}]*\} '
                                       + name + ';', headers).group()
@@ -61,7 +61,7 @@ class GameTextRuntimeHostTests(unittest.TestCase):
         for name, prefix in (('gameTextResetFont', 'static inline void'),
                              ('gameTextInitRendererState', 'void'),
                              ('gameTextSelectFallbackBuffer', 'static inline void'),
-                             ('gameTextGet', 'void*'), ('gameTextGetPhrase', 'void*'),
+                             ('gameTextGet', 'GameTextDef*'), ('gameTextGetPhrase', 'void*'),
                              ('gameTextGetStr', 'void*'), ('subtitleParseControlCmds', 'SubtitleCmd*')):
             start, end = find_function_body(source, name)
             declaration = source.rfind(prefix + ' ' + name, 0, start)
@@ -96,7 +96,8 @@ static int gGameTextMeasureOnly, gGameTextCommandCount, gGameTextBufferIndex;
 static int gGameTextShadowOffsetX, gGameTextShadowOffsetY, gGameTextShadowEnabled;
 static u8 gGameTextColorR, gGameTextColorG, gGameTextColorB, gGameTextColorA;
 static u8 gGameTextShadowColorR, gGameTextShadowColorG, gGameTextShadowColorB, lbl_803DC980;
-static void *gCurTextBox, *gGameTextStringStore;
+static GameTextBox* gCurTextBox;
+static void* gGameTextStringStore;
 static char *gCurTextBuffer, *gGameTextCommandStringCursor;
 static f32 timeDelta;
 static char* sMapDirectoryNameTable[] = {"test"};

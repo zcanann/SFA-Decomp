@@ -29,3 +29,6 @@ Linux
 - Install [ninja](https://github.com/ninja-build/ninja/wiki/Pre-built-Ninja-packages).
 
 [wibo](https://github.com/decompals/wibo), a minimal 32-bit Windows binary wrapper, will be automatically downloaded and used.
+
+Compiler tracing (`tools/tricky_backend_trace.py`) additionally needs `gdb` with Python support and the
+`pyelftools` Python package; on Linux the trace runs the compiler under gdb through wibo.

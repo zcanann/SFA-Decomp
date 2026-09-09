@@ -258,7 +258,12 @@ different claims and this list used to conflate them.**
   in `main/render`, 96.682, 2 212 B, and it is one of the live 205 sub-100 rows.** A lane that
   greps the old name finds nothing and either drops the island or works it unaware.
   Island total: **6 488 B of `matched_code`, 1.9% of the code gap.**
-- **`setGQR6` / `setGQR7` — no `mtgqr` intrinsic (priced at 50.000, measured 2026-08-03).**
+- **Historical `setGQR6` / `setGQR7` price — superseded 2026-09-08.**
+  [The hardware-state recovery](model_quantization_registers.md) replaces the empty setter and
+  RAM shadow with actual register accesses under a narrowly documented evidence-backed
+  exception. Both setters now match; the scalar kernels read live GQR7. The old restriction
+  and its measured cost are retained below as history, not the current implementation.
+  **No `mtgqr` intrinsic (priced at 50.000, measured 2026-08-03).**
   Retail is two instructions, `mtgqr N,r3` and `blr`; MWCC GC/2.0 exposes no intrinsic for the
   GQR write and inline `asm{}` is banned in `src/main`, so the body can only be empty or a lie.
   `6b383c0b7f` deleted `setGQR6`'s write-only `sGQR6Config` shadow — correctly, it was fabricated
@@ -343,6 +348,11 @@ zero relocations against it and a duplicate of its value elsewhere in the pool.*
 without a genuinely new lever. The DOL still holds because every affected unit was demoted.
 
 ## 6b. Same class in two `src/main` units: `trig` + `rcp_dolphin` (purge-priced, measured 2026-08-02)
+
+**2026-09-08 follow-up:** The [distortion pool recovery](rcp_distortion_pool_recovery.md)
+now emits the exact `rcp_dolphin` pool using named scalar constants and same-type
+address reads. Its function instructions are unchanged. The unresolved verdict
+below records the earlier probes and is superseded by that result.
 
 `4461d0aa45` removed eight `const T x[1] = {V}` anchors — five sin/cos approximation
 coefficients from `src/main/trig.c`, three distortion constants from `src/main/rcp_dolphin.c`,
@@ -726,7 +736,11 @@ K1 in an earlier plain-arithmetic statement. Verdicts:
   parent/load-flags register exchange in `loadCharacter` (99.80858%). This
   supersedes the earlier uncalled-static probe; the TU remains NonMatching.
   See [object_matching.md](object_matching.md).
-- **`track/intersect_render` — GATE PASSED, the cleanest specimen.** Retail mints `[-0.5f, 0.5f,
+- **`track/intersect_render` — CALLED HELPERS RECOVERED (2026-09-08).**
+  [Texture-coordinate helpers](render_texture_coordinate_helpers.md) now recover
+  the complete pool while preserving all 65 existing function bodies. The two
+  helpers inline at five real call sites. The following records the earlier
+  uncalled-body probe, superseded by this source recovery. Retail mints `[-0.5f, 0.5f,
   pad, unsigned-bias]` at 0x54-0x60, between `doColorFilter` and `doDistortionFilter`; first
   live loader of the `-0.5f` is `drawSnowFlashOverlay` (function 57), of the bias
   `moonFxRenderCallback`; every function in the unit is byte-exact (unit `.text` 100.0). The
@@ -1127,6 +1141,12 @@ There is a one-command test that closes it, and the answer is that the premise i
 
 ### The value-sequence oracle
 
+The historical results below used consecutive distinct values: repeated equal
+loads were silently collapsed. The current tool retains every supported SDA21
+load at its actual width by default; `--collapse-repeats` explicitly reproduces
+the weaker historical comparison. See `docs/pool_value_sequence.md` for version
+selection and comparisons across multiple small-data sections.
+
 For each function, walk its `.text` in address order and write down the **value** of every
 `.sdata2` word it references, in that order. Do it for our object and for the retail carve, and
 compare the two sequences. If they are equal, the two objects' code asks for exactly the same
@@ -1211,6 +1231,11 @@ report:
 | `dlls/engine/5/5` | 2 | 0 | 2 | `renderSunAndMoon` |
 | `dlls/engine/68/68` | 1 | 0 | 1 | `firstPersonDoControls` 100.0 -> 94.512 (+128 data) |
 | `dlls/objects/704/704` | 1 | 0 | 1 | `titleScreenDrawMenuFrame` 99.776 -> 99.488 |
+
+Current model correction: division by `256.0f` emits the native vertex-scale
+literal while preserving the exact function instructions. The historical
+multiplication result above is not a permanent cost; see
+[Model literal ownership](model_literal_pool.md).
 
 `b93a5f226d` landed the 15 free ones: tree fuzzy 99.811850 -> 99.811966, matched_data held,
 0 REGRESSED, 2 IMPROVED, and the missing-word count in those three units halved (engine/0
@@ -3606,6 +3631,13 @@ undefined externals (the carve-only-reference latent-LINKFAIL class).
 
 ## 34. Structural respellings cannot reach the reuse-regime tie-break — NOTPERM/NONFUNC measured closed (2026-08-05, C113, at `529d615fce`)
 
+**Update (2026-09-08, GC/1.3):** `pauseMenuDraw` is now exact. Replacing a manually
+maintained string byte offset with ordinary array indexing lets MWCC derive the
+induction counter. The loop instructions stay identical, but its changed coloring
+order restores opacity allocation in another switch arm. The historical results
+below do not rule out missing induction relationships elsewhere in a function.
+See [the exact renderer analysis](engine_0_matching.md#september-8-pause-menu-renderer-exact).
+
 The one lever the exhausted order axes left standing — "a structural fix RESETS colouring" — was
 aimed at the NOTPERM (42 / 58 820 B) and NONFUNC (35 / 67 448 B) buckets. It resets the
 allocation; it does not reach retail's answer. A structural respelling of a reuse-regime row lands
@@ -3630,6 +3662,11 @@ rows disclosed (`GameUI_release`, `mapBlockRender_setShader`: no parseable candi
 **0 improvements**. The float-side zero (§33c) now has a measured integer twin.
 
 ### 34b. The `+=` / assignment fold law (probe-verified with the unit's own cmdline, `-opt nopeephole,noschedule`)
+
+**Update (2026-09-08, GC/1.3):** The terminal `pauseMenuDraw` additions now match by including
+the line gap in `y += (bottom - top) + 10` and retaining the page base in the draw call.
+The dead-after limitation below describes the older tested forms, not an impossibility; see
+[the recovered line advances](engine_0_matching.md#september-8-pause-menu-line-advances-and-map-opacity-recovered).
 
 - MWCC canonicalises `x = (a-b) + x` back to accumulator-first (`add rX,rX,r0`); a NAMED addend
   (`x = w + x`) preserves source operand order (`add rX,r0,rX`) — but only while `x` is live-out.

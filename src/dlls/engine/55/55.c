@@ -587,7 +587,7 @@ void OptionsScreen_render(int arg)
     if (panel->selectionTextId != 0xffff)
     {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        *(u8*)((char*)gameTextGetBox(*(u8*)((char*)gameTextGet(panel->selectionTextId) + 4)) + 0x1e) = fade;
+        gameTextGetBox(gameTextGet(panel->selectionTextId)->boxId)->alpha = fade;
         gameTextShow(panel->selectionTextId);
     }
     if (panel->headingTextId != 0xffff)

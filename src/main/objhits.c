@@ -1636,139 +1636,137 @@ static inline f32 ObjHits_SweepPointDistance(GameObject* otherObject, ObjHitsPri
 
 void ObjHits_DetectObjectPair(GameObject* objA, GameObject* objB) {
     ObjHitsPriorityState* stateA;
-    f32 cy;
-    f32 cz;
-    int distInt;
-    f32 segSq;
-    f32 dist;
-    f32 sumRadius;
+    Vec storedSeparation;
+    Vec toOther;
+    int integerDistance;
+    f32 sweepValue;
+    f32 distance;
+    f32 combinedRadius;
     f32 radiusA;
-    f32 dx;
-    f32 dy;
-    f32 dz;
+    f32 offsetX;
+    f32 offsetY;
+    f32 offsetZ;
     f32 radiusB;
-    f32 nx;
-    f32 ny;
-    f32 nz;
-    f32 yA;
-    f32 yB;
-    f32 tmp;
+    f32 spanHeightA;
+    f32 spanHeightB;
+    f32 value;
     ObjHitsPriorityState* stateB;
-    f32 sx;
-    char vertical;
-    int distClamped;
-    f32 cx;
-    f32 sy;
-    f32 sz;
+    f32 movementX;
+    char hasVerticalSpan;
+    int clampedDistance;
+    f32 movementY;
+    f32 movementZ;
 
     stateA = (ObjHitsPriorityState*)objA->anim.hitReactState;
     stateB = (ObjHitsPriorityState*)objB->anim.hitReactState;
     if (stateA->activeHitboxMode != 0 || stateB->activeHitboxMode != 0) {
         return;
     }
-    dx = objB->anim.worldPosX - objA->anim.worldPosX;
-    yB = objB->anim.worldPosY;
-    yA = objA->anim.worldPosY;
-    dy = yB - yA;
-    dz = objB->anim.worldPosZ - objA->anim.worldPosZ;
+    offsetX = objB->anim.worldPosX - objA->anim.worldPosX;
+    spanHeightB = objB->anim.worldPosY;
+    spanHeightA = objA->anim.worldPosY;
+    offsetY = spanHeightB - spanHeightA;
+    offsetZ = objB->anim.worldPosZ - objA->anim.worldPosZ;
     radiusA = stateA->primaryRadius;
     radiusB = stateB->primaryRadius;
-    vertical = 0;
+    hasVerticalSpan = 0;
     if (((stateB->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) ||
         ((stateA->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0)) {
-        if (dy > 0.0f) {
+        if (offsetY > 0.0f) {
             if ((stateA->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
-                yA += stateA->primaryCapsuleOffsetB;
+                spanHeightA += stateA->primaryCapsuleOffsetB;
             } else {
-                yA += radiusA;
+                spanHeightA += radiusA;
             }
             if ((stateB->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
-                tmp = yB + stateB->primaryCapsuleOffsetA;
+                value = spanHeightB + stateB->primaryCapsuleOffsetA;
             } else {
-                tmp = yB - radiusB;
+                value = spanHeightB - radiusB;
             }
-            if (tmp > yA) {
+            if (value > spanHeightA) {
                 return;
             }
         } else {
             if ((stateB->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
-                yB += stateB->primaryCapsuleOffsetB;
+                spanHeightB += stateB->primaryCapsuleOffsetB;
             } else {
-                yB += radiusB;
+                spanHeightB += radiusB;
             }
             if ((stateA->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
-                tmp = yA + stateA->primaryCapsuleOffsetA;
+                value = spanHeightA + stateA->primaryCapsuleOffsetA;
             } else {
-                tmp = yA - radiusA;
+                value = spanHeightA - radiusA;
             }
-            if (tmp > yB) {
+            if (value > spanHeightB) {
                 return;
             }
         }
-        dy = 0.0f;
-        vertical = 1;
+        offsetY = 0.0f;
+        hasVerticalSpan = 1;
     }
-    dist = dx * dx + dy * dy + dz * dz;
-    if (dist) {
-        dist = sqrtf(dist);
+    distance = offsetX * offsetX + offsetY * offsetY + offsetZ * offsetZ;
+    if (distance) {
+        distance = sqrtf(distance);
     }
-    distInt = (int)(f32)(int)dist;
-    distClamped = distInt;
-    if (distInt > OBJHITS_PAIR_DISTANCE_LIMIT) {
-        distClamped = OBJHITS_PAIR_DISTANCE_LIMIT;
+    integerDistance = (int)(f32)(int)distance;
+    clampedDistance = integerDistance;
+    if (integerDistance > OBJHITS_PAIR_DISTANCE_LIMIT) {
+        clampedDistance = OBJHITS_PAIR_DISTANCE_LIMIT;
     }
-    if (distClamped <= stateA->nearestPairDistance) {
-        stateA->nearestPairDistance = distClamped;
+    if (clampedDistance <= stateA->nearestPairDistance) {
+        stateA->nearestPairDistance = clampedDistance;
     }
-    if (distInt > OBJHITS_PAIR_DISTANCE_LIMIT) {
-        distInt = OBJHITS_PAIR_DISTANCE_LIMIT;
+    if (integerDistance > OBJHITS_PAIR_DISTANCE_LIMIT) {
+        integerDistance = OBJHITS_PAIR_DISTANCE_LIMIT;
     }
-    if (distInt <= stateB->nearestPairDistance) {
-        stateB->nearestPairDistance = distInt;
+    if (integerDistance <= stateB->nearestPairDistance) {
+        stateB->nearestPairDistance = integerDistance;
     }
     if ((stateB->flags & OBJHITS_PRIORITY_STATE_ENABLED) != 0) {
-        sumRadius = radiusB + radiusA;
-        sx = objA->anim.worldPosX - stateA->worldPosX;
-        sy = objA->anim.worldPosY - stateA->worldPosY;
-        sz = objA->anim.worldPosZ - stateA->worldPosZ;
-        if (vertical != 0) {
-            sy = 0.0f;
+        combinedRadius = radiusB + radiusA;
+        movementX = objA->anim.worldPosX - stateA->worldPosX;
+        movementY = objA->anim.worldPosY - stateA->worldPosY;
+        movementZ = objA->anim.worldPosZ - stateA->worldPosZ;
+        if (hasVerticalSpan != 0) {
+            movementY = 0.0f;
         }
-        segSq = sx * sx + sy * sy + sz * sz;
-        if (segSq > 1.0f) {
-            cx = objB->anim.worldPosX - stateA->worldPosX;
-            cz = objB->anim.worldPosZ - stateA->worldPosZ;
-            cy = objB->anim.worldPosY - stateA->worldPosY;
-            segSq = (sx * cx + sy * cy + sz * cz) / segSq;
-            if ((segSq >= 0.0f) && (segSq <= 1.0f)) {
-                dist = ObjHits_SweepPointDistance(objB, stateA, sx, sy, sz, segSq);
+        /* Reused below as the closest-point fraction along A's movement. */
+        sweepValue = movementX * movementX + movementY * movementY + movementZ * movementZ;
+        if (sweepValue > 1.0f) {
+            toOther.x = objB->anim.worldPosX - stateA->worldPosX;
+            toOther.z = objB->anim.worldPosZ - stateA->worldPosZ;
+            toOther.y = objB->anim.worldPosY - stateA->worldPosY;
+            sweepValue = (movementX * toOther.x + movementY * toOther.y + movementZ * toOther.z) / sweepValue;
+            if ((sweepValue >= 0.0f) && (sweepValue <= 1.0f)) {
+                distance = ObjHits_SweepPointDistance(objB, stateA, movementX, movementY, movementZ, sweepValue);
             }
         }
-        if ((dist < sumRadius) && (dist > 0.0f)) {
+        if ((distance < combinedRadius) && (distance > 0.0f)) {
             ObjHits_RecordObjectHit(objB, objA, stateA->objectPairPriority, stateA->objectPairHitVolume, 0);
             ObjHits_RecordObjectHit(objA, objB, stateB->objectPairPriority, stateB->objectPairHitVolume, 0);
             if (((stateB->flags & OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE) == 0) &&
                 ((stateA->flags & OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE) == 0)) {
-                nx = stateB->worldPosX - stateA->worldPosX;
-                ny = stateB->worldPosY - stateA->worldPosY;
-                nz = stateB->worldPosZ - stateA->worldPosZ;
-                if (vertical != 0) {
-                    ny = 0.0f;
+                storedSeparation.x = stateB->worldPosX - stateA->worldPosX;
+                storedSeparation.y = stateB->worldPosY - stateA->worldPosY;
+                storedSeparation.z = stateB->worldPosZ - stateA->worldPosZ;
+                if (hasVerticalSpan != 0) {
+                    storedSeparation.y = 0.0f;
                 }
-                tmp = sqrtf(nx * nx + ny * ny + nz * nz);
-                if (tmp > 0.0f) {
-                    dx = nx / tmp;
-                    dy = ny / tmp;
-                    dz = nz / tmp;
+                value = sqrtf(storedSeparation.x * storedSeparation.x + storedSeparation.y * storedSeparation.y +
+                              storedSeparation.z * storedSeparation.z);
+                if (value > 0.0f) {
+                    offsetX = storedSeparation.x / value;
+                    offsetY = storedSeparation.y / value;
+                    offsetZ = storedSeparation.z / value;
                 } else {
-                    dx /= dist;
-                    dy /= dist;
-                    dz /= dist;
+                    offsetX /= distance;
+                    offsetY /= distance;
+                    offsetZ /= distance;
                 }
-                dx *= (sumRadius - dist);
-                dy *= (sumRadius - dist);
-                dz *= (sumRadius - dist);
-                ObjHits_ApplyPairResponse(objA, objB, dx, dy, dz, 0);
+                offsetX *= (combinedRadius - distance);
+                offsetY *= (combinedRadius - distance);
+                offsetZ *= (combinedRadius - distance);
+                ObjHits_ApplyPairResponse(objA, objB, offsetX, offsetY, offsetZ, 0);
             }
         }
     }
@@ -1871,31 +1869,23 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
             int volumeIndex;
             ModelFileHeader* modelFile;
             ModelHitSphereDef* hitVolume;
-            int definitionOffset;
             ObjModelHitSphere* currentSpheres;
             ObjModelHitSphere* previousSpheres;
-            ObjModelHitSphere* currentSphereCursor;
-            ObjModelHitSphere* previousSphereCursor;
 
-            model = ObjHits_GetActiveModel(objB);
+            model = (ObjModel*)objB->anim.banks[objB->anim.bankIndex];
             modelFile = model->file;
             sphereBits = model->bufferFlags >> 2 & 1;
             currentSpheres = (ObjModelHitSphere*)model->hitVolumeSphereBuffers[sphereBits];
             previousSpheres = (ObjModelHitSphere*)model->hitVolumeSphereBuffers[sphereBits ^ 1];
             pointCount = 0;
-            definitionOffset = 0;
-            currentSphereCursor = currentSpheres;
-            previousSphereCursor = previousSpheres;
-            for (volumeIndex = 0; volumeIndex < (int)(u32)modelFile->hitVolumeCount;
-                 definitionOffset += sizeof(ModelHitSphereDef), currentSphereCursor++, previousSphereCursor++,
-                volumeIndex = volumeIndex + 1) {
-                hitVolume = (ModelHitSphereDef*)(modelFile->hitVolumes + definitionOffset);
+            for (volumeIndex = 0; volumeIndex < (int)(u32)modelFile->hitVolumeCount; volumeIndex++) {
+                hitVolume = &((ModelHitSphereDef*)modelFile->hitVolumes)[volumeIndex];
                 if ((volumeIndex == hitVolume->sphereIndex) && ((hitMask & 1 << hitVolume->maskBit) != 0)) {
                     sphereBits = hitVolume->linkedSpheres;
                     if (sphereBits != 0) {
                         for (; (u16)sphereBits != 0; sphereBits = (u16)((sphereBits & 0xffff) << 4)) {
                             linkedSphereIndex = (((u16)sphereBits & 0xf000) >> 0xc) + volumeIndex & 0xffff;
-                            if (pointCount < 4) {
+                            if (pointCount < TRACK_HIT_MAX_POINTS) {
                                 ObjModelHitSphere* currentSphere;
                                 ObjModelHitSphere* previousSphere;
                                 int sphereOffset = linkedSphereIndex * sizeof(ObjModelHitSphere);
@@ -1914,14 +1904,14 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
                             }
                         }
                     } else {
-                        if (pointCount < 4) {
-                            endPoints[pointCount].x = playerMapOffsetX + currentSphereCursor->pos[0];
-                            endPoints[pointCount].y = currentSphereCursor->pos[1];
-                            endPoints[pointCount].z = playerMapOffsetZ + currentSphereCursor->pos[2];
-                            startPoints[pointCount].x = playerMapOffsetX + previousSphereCursor->pos[0];
-                            startPoints[pointCount].y = previousSphereCursor->pos[1];
-                            startPoints[pointCount].z = playerMapOffsetZ + previousSphereCursor->pos[2];
-                            hitResults.radii[pointCount] = currentSphereCursor->radius;
+                        if (pointCount < TRACK_HIT_MAX_POINTS) {
+                            endPoints[pointCount].x = playerMapOffsetX + currentSpheres[volumeIndex].pos[0];
+                            endPoints[pointCount].y = currentSpheres[volumeIndex].pos[1];
+                            endPoints[pointCount].z = playerMapOffsetZ + currentSpheres[volumeIndex].pos[2];
+                            startPoints[pointCount].x = playerMapOffsetX + previousSpheres[volumeIndex].pos[0];
+                            startPoints[pointCount].y = previousSpheres[volumeIndex].pos[1];
+                            startPoints[pointCount].z = playerMapOffsetZ + previousSpheres[volumeIndex].pos[2];
+                            hitResults.radii[pointCount] = currentSpheres[volumeIndex].radius;
                             hitResults.surfaceTypes[pointCount] = -1;
                             hitResults.queryTypes[pointCount] = 7;
                             pointCount += 1;

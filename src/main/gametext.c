@@ -682,7 +682,7 @@ int curGameTextDir;
 int gGameTextLastDir;
 int lbl_803DC9D4;
 int lbl_803DC9D0;
-void* gCurTextBox;
+GameTextBox* gCurTextBox;
 int lbl_803DC9C8;
 char* gGameTextCommandStringCursor;
 int gGameTextRenderingById;
@@ -735,6 +735,15 @@ typedef struct GameTextStringTable {
     int count;
     int offsets[];
 } GameTextStringTable;
+STATIC_ASSERT(sizeof(GameTextStringTable) == 4);
+STATIC_ASSERT(offsetof(GameTextStringTable, offsets) == 4);
+
+typedef struct GameTextPaddingBlock {
+    s32 byteCount;
+    u8 bytes[];
+} GameTextPaddingBlock;
+STATIC_ASSERT(sizeof(GameTextPaddingBlock) == 4);
+STATIC_ASSERT(offsetof(GameTextPaddingBlock, bytes) == 4);
 
 typedef struct GameTextTextureHeader {
     u16 format;
@@ -841,7 +850,7 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     u32 height;
     int i;
     u8* stringData;
-    int* paddingBlock;
+    GameTextPaddingBlock* paddingBlock;
     GameTextTableHeader* tableHeader;
     u16* textureDataStart;
     GameTextGlyphTable* resource;
@@ -893,9 +902,9 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
             stringPointers[j] = stringPointers[j] + (int)stringData;
         }
     }
-    paddingBlock = (int*)(stringData + stringDataSize);
-    textureCursor = (u16*)((u8*)paddingBlock + paddingBlock[0]);
-    textureCursor += 2;
+    paddingBlock = (GameTextPaddingBlock*)(stringData + stringDataSize);
+    textureCursor = (u16*)((u8*)paddingBlock + paddingBlock->byteCount);
+    textureCursor += sizeof(*paddingBlock) / sizeof(*textureCursor);
     textureDataStart = textureCursor;
     textureIndex = 0;
     while (1) {
@@ -1431,24 +1440,15 @@ void gameTextRun(void) {
         loadSlot++;
     } while (i-- != 0);
 
-    i = GAMETEXT_FALLBACK_COUNT;
-    {
-        f32* elapsed;
-        GameTextDef* entry;
-        f32* requestDelta;
-        requestDelta = sGameTextFallbackRequestDelta + GAMETEXT_FALLBACK_COUNT;
-        elapsed = sGameTextFallbackElapsedFrames + GAMETEXT_FALLBACK_COUNT;
-        entry = sGameTextFallbackDefs + GAMETEXT_FALLBACK_COUNT;
-        zero = 0.0f;
-        fadeLimit = 120.0f;
-        while (requestDelta--, elapsed--, entry--, i-- != 0) {
-            if (*requestDelta > zero) {
-                *elapsed += timeDelta;
-                if (*elapsed > fadeLimit) {
-                    *requestDelta = zero;
-                    *elapsed = zero;
-                    sprintf(*entry->strings, sGameTextBlankFormat);
-                }
+    zero = 0.0f;
+    fadeLimit = 120.0f;
+    for (i = GAMETEXT_FALLBACK_COUNT; i-- != 0;) {
+        if (sGameTextFallbackRequestDelta[i] > zero) {
+            sGameTextFallbackElapsedFrames[i] += timeDelta;
+            if (sGameTextFallbackElapsedFrames[i] > fadeLimit) {
+                sGameTextFallbackRequestDelta[i] = zero;
+                sGameTextFallbackElapsedFrames[i] = zero;
+                sprintf(*sGameTextFallbackDefs[i].strings, sGameTextBlankFormat);
             }
         }
     }
@@ -1496,7 +1496,7 @@ void gameTextRun(void) {
         case GAMETEXT_COMMAND_SHOW_TIME_STRING: {
             int strId = cmd->arg0;
             if (gCurTextBox != NULL) {
-                gameTextRenderStrs((char*)strId, ((u8*)gCurTextBox - (u8*)gTextBoxes) / 0x20);
+                gameTextRenderStrs((char*)strId, gCurTextBox - gTextBoxes);
             }
             break;
         }
@@ -1564,11 +1564,9 @@ void gameTextRun(void) {
     gGameTextCommandCount = 0;
     gGameTextCommandStringCursor = sGameTextCommandStringBuffer;
 
-    i = GAMETEXT_BOX_COUNT;
-    textBox = &gTextBoxes[GAMETEXT_BOX_COUNT];
-    while (textBox--, i-- != 0) {
-        textBox->cursorX = 0;
-        textBox->cursorY = 0;
+    for (i = GAMETEXT_BOX_COUNT; i-- != 0;) {
+        gTextBoxes[i].cursorX = 0;
+        gTextBoxes[i].cursorY = 0;
     }
     gCurTextBox = NULL;
 }
@@ -1734,7 +1732,7 @@ void gameTextResetCursor(int flags) {
     }
 }
 
-void* gameTextGet(int textId) {
+GameTextDef* gameTextGet(int textId) {
     TextFont* fonts;
     GameTextDef* entry;
     int count;
@@ -1970,66 +1968,66 @@ static inline f32 gameTextDecodeScale(int scale256) {
     return (f32)scale256 / 256.0f;
 }
 
-void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang) {
-    int byteOff;
-    u32 ch;
-    int charLen;
-    int n2;
-    int i;
-    u8* p;
-    TextGlyph* g;
-    u8* tbl;
+void gameTextMeasureString(u8* str, f32 scale, f32* outWidth, f32* outZero, f32* outMaxFontWidth, f32* outMaxLineHeight,
+                           int fontId) {
+    int byteOffset;
+    u32 codePoint;
+    int encodedLength;
+    int argumentCount;
+    int argumentIndex;
+    TextGlyph* glyph;
+    const FontMetrics* metrics;
     f32 width;
-    f32 mAdv;
-    f32 mH;
-    int params[8];
+    f32 scaledFontWidth;
+    f32 scaledLineHeight;
+    int arguments[8];
 
-    byteOff = 0;
+    byteOffset = 0;
     width = 0.0f;
     if (str == NULL) {
         return;
     }
-    if (glyphLang == -1) {
-        if (gameTextCharset == 2) {
-            glyphLang = 6;
+    if (fontId == -1) {
+        if (gameTextCharset == GAMETEXT_SLOT_ERROR) {
+            fontId = GAMETEXT_FONT_SYSTEM;
         } else {
-            glyphLang = sLanguageNameTable[curLanguage].fontId;
+            fontId = sLanguageNameTable[curLanguage].fontId;
         }
     }
-    tbl = (u8*)gGameTextFontMetrics + glyphLang * 16;
-    if (glyphLang != GAMETEXT_FONT_FACE) {
-        if (outMaxAdv != NULL) {
-            *outMaxAdv = (f32)(u32)((FontMetrics*)tbl)->maxWidth * scale;
+    metrics = &gGameTextFontMetrics[fontId];
+    if (fontId != GAMETEXT_FONT_FACE) {
+        if (outMaxFontWidth != NULL) {
+            *outMaxFontWidth = (f32)(u32)metrics->maxWidth * scale;
         }
-        if (outMaxH != NULL) {
-            *outMaxH = (f32)(u32)((FontMetrics*)tbl)->lineHeight * scale;
+        if (outMaxLineHeight != NULL) {
+            *outMaxLineHeight = (f32)(u32)metrics->lineHeight * scale;
         }
     }
 
-    while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0) {
-        byteOff += charLen;
-        if (ch >= 0xe000 && ch <= 0xf8ff) {
-            n2 = ctrlCharLen(ch);
-            for (i = 0; i < n2; i++) {
-                int hi = str[byteOff++];
-                int lo = str[byteOff++];
-                params[i] = (hi << 8) | lo;
+    while ((codePoint = utf8GetNextChar(str + byteOffset, &encodedLength)) != 0) {
+        byteOffset += encodedLength;
+        if (codePoint >= 0xe000 && codePoint <= 0xf8ff) {
+            argumentCount = ctrlCharLen(codePoint);
+            for (argumentIndex = 0; argumentIndex < argumentCount; argumentIndex++) {
+                int hi = str[byteOffset++];
+                int lo = str[byteOffset++];
+                arguments[argumentIndex] = (hi << 8) | lo;
             }
-            switch (ch) {
+            switch (codePoint) {
             case TEXT_CTRL_SCALE:
-                scale = gameTextDecodeScale(params[0]);
+                scale = gameTextDecodeScale(arguments[0]);
                 break;
             case TEXT_CTRL_FONT:
-                glyphLang = params[0];
-                tbl = (u8*)gGameTextFontMetrics + glyphLang * 16;
-                if (glyphLang != GAMETEXT_FONT_FACE) {
-                    mAdv = (f32)(u32)((FontMetrics*)tbl)->maxWidth * scale;
-                    if (outMaxAdv != NULL && mAdv > *outMaxAdv) {
-                        *outMaxAdv = mAdv;
+                fontId = arguments[0];
+                metrics = &gGameTextFontMetrics[fontId];
+                if (fontId != GAMETEXT_FONT_FACE) {
+                    scaledFontWidth = (f32)(u32)metrics->maxWidth * scale;
+                    if (outMaxFontWidth != NULL && scaledFontWidth > *outMaxFontWidth) {
+                        *outMaxFontWidth = scaledFontWidth;
                     }
-                    mH = (f32)(u32)((FontMetrics*)tbl)->lineHeight * scale;
-                    if (outMaxH != NULL && mH > *outMaxH) {
-                        *outMaxH = mH;
+                    scaledLineHeight = (f32)(u32)metrics->lineHeight * scale;
+                    if (outMaxLineHeight != NULL && scaledLineHeight > *outMaxLineHeight) {
+                        *outMaxLineHeight = scaledLineHeight;
                     }
                 }
                 break;
@@ -2037,18 +2035,15 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
             continue;
         }
 
-        g = findGlyph(ch, glyphLang);
-        if (g == NULL) {
+        glyph = findGlyph(codePoint, fontId);
+        if (glyph == NULL || fontId == GAMETEXT_FONT_FACE) {
             continue;
         }
-        if (glyphLang == GAMETEXT_FONT_FACE) {
-            continue;
-        }
-        width = scale * (f32)(g->advanceX + (g->width + g->offsetX)) + width;
+        width += scale * (f32)(glyph->advanceX + (glyph->width + glyph->offsetX));
     }
 
-    if (outW != NULL) {
-        *outW = width;
+    if (outWidth != NULL) {
+        *outWidth = width;
     }
     if (outZero != NULL) {
         *outZero = 0.0f;
@@ -2354,7 +2349,7 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
                     curTexPage = g->page;
                     tex = gameTextFonts->textures[g->page];
                     selectTexture(tex, 0);
-                    if (gGameTextFontMetrics[g->font].unk06 == 1) {
+                    if (gGameTextFontMetrics[g->font].colorMode == GAMETEXT_FONT_COLOR_TEXTURE) {
                         if (mode != 0) {
                             setTextColor(0, 0, 0, 0, gGameTextColorA);
                         } else {
@@ -2416,7 +2411,7 @@ static inline TextGlyph* findGlyph(u32 ch, int glyphLang) {
     return NULL;
 }
 
-void gameTextSetWindow(u8* textBox) {
+void gameTextSetWindow(GameTextBox* textBox) {
     int i;
     GameTextSlot* cmd;
     int idx;
@@ -2432,11 +2427,11 @@ void gameTextSetWindow(u8* textBox) {
         i = gGameTextCommandCount;
         gGameTextCommandCount = i + 1;
         cmd = &gGameTextCommandSlots[i];
-        idx = (textBox - (u8*)gTextBoxes) / 0x20;
+        idx = textBox - gTextBoxes;
         if (idx == 0xff) {
             gCurTextBox = NULL;
         } else {
-            gCurTextBox = (u8*)gTextBoxes + idx * 0x20;
+            gCurTextBox = &gTextBoxes[idx];
         }
         cmd->opcode = 8;
         cmd->arg0 = idx;
@@ -2446,7 +2441,7 @@ void gameTextSetWindow(u8* textBox) {
 void gameTextSetWindowById(int boxId) {
     int i = gGameTextCommandCount;
     GameTextSlot* cmd;
-    void* box;
+    GameTextBox* box;
 
     gGameTextCommandCount = i + 1;
     cmd = &gGameTextCommandSlots[i];
@@ -2472,164 +2467,165 @@ static inline int ctrlCharLen(u32 c) {
     return 0;
 }
 
-void* gameTextGetCurBox(void) {
+GameTextBox* gameTextGetCurBox(void) {
     return gCurTextBox;
 }
 
-void* gameTextGetBox(int box) {
+GameTextBox* gameTextGetBox(int box) {
     return &gTextBoxes[box];
 }
 
-char** gameTextWrapLines(char* str, f32 width, f32 height, int* outCount, f32* outLineH) {
-    int charPos;
-    int cursor;
-    int* boundary;
-    int langIdx;
-    FontMetrics* sizeEntry;
-    int lineOff;
-    int* bp;
+char** gameTextWrapLines(char* str, f32 maxWidth, f32 scale, int* outLineCount, f32* outMaxLineHeight) {
+    int copyOffset;
+    int scanOffset;
+    int* copyBoundary;
+    int fontId;
+    const FontMetrics* metrics;
+    int tableBytes;
+    int* lastBoundary;
     int lineCount;
-    int breakPos;
-    int haveSpace;
-    int lineIdx;
-    char* src;
-    char** buffer;
-    char* dst;
+    int wrapOffset;
+    int hasSpace;
+    int lineIndex;
+    char* readCursor;
+    char** lines;
+    char* writeCursor;
     int lineStarts[32];
-    int params[8];
-    f32 penX;
-    int charLen;
+    int arguments[8];
+    f32 lineWidth;
+    int byteCount;
     int i;
-    u32 ch;
+    u32 codePoint;
     lineCount = 0;
-    lineOff = 0;
-    cursor = 0;
-    breakPos = 0;
-    haveSpace = 0;
-    penX = 0.0f;
-    if (gameTextCharset == 2) {
-        i = 6;
+    tableBytes = 0;
+    scanOffset = 0;
+    wrapOffset = 0;
+    hasSpace = 0;
+    lineWidth = 0.0f;
+    if (gameTextCharset == GAMETEXT_SLOT_ERROR) {
+        i = GAMETEXT_FONT_SYSTEM;
     } else {
         i = sLanguageNameTable[curLanguage].fontId;
     }
-    langIdx = i;
-    sizeEntry = &gGameTextFontMetrics[i];
+    fontId = i;
+    metrics = &gGameTextFontMetrics[i];
 
-    *outCount = 0;
-    if (outLineH != NULL) {
-        *outLineH = (f32)(u32)sizeEntry->lineHeight * height;
+    *outLineCount = 0;
+    if (outMaxLineHeight != NULL) {
+        *outMaxLineHeight = (f32)(u32)metrics->lineHeight * scale;
     }
     if (str == NULL) {
         return 0;
     }
     if (gGameTextCursorX != 0 || gGameTextCursorY != 0) {
-        width = (f32)(u32)gGameTextCursorX;
+        maxWidth = (f32)(u32)gGameTextCursorX;
     }
 
     lineStarts[0] = 0;
-    boundary = lineStarts;
-    bp = boundary;
+    copyBoundary = lineStarts;
+    lastBoundary = copyBoundary;
 
-    while ((ch = utf8GetNextChar((u8*)(str + cursor), &charLen)) != 0) {
-        cursor += charLen;
-        if (ch == 0x20) {
-            breakPos = cursor;
-            haveSpace = 1;
+    while ((codePoint = utf8GetNextChar((u8*)(str + scanOffset), &byteCount)) != 0) {
+        scanOffset += byteCount;
+        if (codePoint == 0x20) {
+            wrapOffset = scanOffset;
+            hasSpace = 1;
         }
-        if (ch >= 0xe000 && ch <= 0xf8ff) {
-            int n;
-            int sel;
-            n = gameTextCtrlCharLen(ch);
-            for (i = 0; i < n; i++) {
-                int b0 = ((u8*)str)[cursor++];
-                int b1 = ((u8*)str)[cursor++];
-                params[i] = (b0 << 8) | b1;
+        if (codePoint >= 0xe000 && codePoint <= 0xf8ff) {
+            int argumentCount;
+            int metricsChanged;
+            argumentCount = gameTextCtrlCharLen(codePoint);
+            for (i = 0; i < argumentCount; i++) {
+                int hi = ((u8*)str)[scanOffset++];
+                int lo = ((u8*)str)[scanOffset++];
+                arguments[i] = (hi << 8) | lo;
             }
-            sel = 1;
-            switch (ch) {
+            metricsChanged = 1;
+            switch (codePoint) {
             case TEXT_CTRL_SCALE:
-                height = gameTextDecodeScale(params[0]);
+                scale = gameTextDecodeScale(arguments[0]);
                 break;
             case TEXT_CTRL_FONT:
-                langIdx = params[0];
-                sizeEntry = &gGameTextFontMetrics[langIdx];
+                fontId = arguments[0];
+                metrics = &gGameTextFontMetrics[fontId];
                 break;
             default:
-                sel = 0;
+                metricsChanged = 0;
             }
-            if (sel != 0 && langIdx != 5) {
-                f32 lh = (f32)(u32)sizeEntry->lineHeight * height;
-                if (outLineH != NULL && lh > *outLineH) {
-                    *outLineH = lh;
+            if (metricsChanged != 0 && fontId != GAMETEXT_FONT_FACE) {
+                f32 scaledLineHeight = (f32)(u32)metrics->lineHeight * scale;
+                if (outMaxLineHeight != NULL && scaledLineHeight > *outMaxLineHeight) {
+                    *outMaxLineHeight = scaledLineHeight;
                 }
             }
         } else {
-            TextGlyph* found = gameTextFindGlyph(ch, langIdx);
+            TextGlyph* found = gameTextFindGlyph(codePoint, fontId);
             if (found != NULL) {
                 int advance = (found->width + found->offsetX) + found->advanceX;
-                penX += height * (f32)advance;
-                if (penX >= width) {
-                    if (haveSpace == 0) {
-                        breakPos = cursor - charLen;
+                lineWidth += scale * (f32)advance;
+                if (lineWidth >= maxWidth) {
+                    if (hasSpace == 0) {
+                        wrapOffset = scanOffset - byteCount;
                     }
-                    bp++;
+                    lastBoundary++;
                     lineCount++;
-                    *(int*)((char*)lineStarts + (lineOff += 4)) = breakPos;
-                    if (lineCount > 1 && bp[0] == bp[-1]) {
+                    *(int*)((char*)lineStarts + (tableBytes += sizeof(lineStarts[0]))) = wrapOffset;
+                    if (lineCount > 1 && lastBoundary[0] == lastBoundary[-1]) {
                         return 0;
                     }
                     if (lineCount >= 0x1e) {
                         return 0;
                     }
-                    penX = 0.0f;
-                    cursor = breakPos;
-                    haveSpace = 0;
+                    lineWidth = 0.0f;
+                    scanOffset = wrapOffset;
+                    hasSpace = 0;
                 }
             }
         }
     }
 
-    lineOff = (lineCount = lineCount + 1) << 2;
-    *(int*)((char*)lineStarts + lineOff) = cursor;
-    *outCount = lineCount;
-    if (cursor == 0) {
+    tableBytes = (lineCount = lineCount + 1) * sizeof(lines[0]);
+    *(int*)((char*)lineStarts + tableBytes) = scanOffset;
+    *outLineCount = lineCount;
+    if (scanOffset == 0) {
         return 0;
     }
-    charLen = cursor + lineCount + lineOff;
-    if (outLineH != NULL) {
-        buffer = mmAllocateFromFBMemoryStore((int)gGameTextStringStore, charLen);
+    /* The block holds the pointer table, copied bytes, and one terminator per line. */
+    byteCount = scanOffset + lineCount + tableBytes;
+    if (outMaxLineHeight != NULL) {
+        lines = mmAllocateFromFBMemoryStore((int)gGameTextStringStore, byteCount);
     } else {
-        buffer = mmAlloc(charLen, 0, 0);
+        lines = mmAlloc(byteCount, 0, 0);
     }
-    if (buffer == NULL) {
+    if (lines == NULL) {
         return 0;
     }
-    dst = (char*)buffer;
-    i = charLen;
+    writeCursor = (char*)lines;
+    i = byteCount;
     while (i-- != 0) {
-        *dst++ = 0;
+        *writeCursor++ = 0;
     }
 
     {
-        char* p = (char*)buffer + lineOff;
-        buffer[0] = p;
-        dst = p;
+        char* lineText = (char*)lines + tableBytes;
+        lines[0] = lineText;
+        writeCursor = lineText;
     }
-    lineIdx = 0;
-    charPos = 0;
-    src = str;
-    while (charPos < cursor) {
-        *dst++ = *src;
-        if (charPos == boundary[1]) {
-            dst = gameTextBreakLine(dst - 1, buffer, lineIdx);
-            boundary++;
-            lineIdx++;
+    lineIndex = 0;
+    copyOffset = 0;
+    readCursor = str;
+    while (copyOffset < scanOffset) {
+        *writeCursor++ = *readCursor;
+        if (copyOffset == copyBoundary[1]) {
+            writeCursor = gameTextBreakLine(writeCursor - 1, lines, lineIndex);
+            copyBoundary++;
+            lineIndex++;
         }
-        src++;
-        charPos++;
+        readCursor++;
+        copyOffset++;
     }
-    *dst = 0;
-    return buffer;
+    *writeCursor = 0;
+    return lines;
 }
 
 static inline char* gameTextBreakLine(char* dst, char** buffer, int lineIdx) {
@@ -2833,7 +2829,7 @@ void gameTextShowAt(int textId, int cursorX, int cursorY) {
 }
 
 void gameTextRenderById(int textId, int cursorX, int cursorY) {
-    GameTextDef* def = (GameTextDef*)gameTextGet(textId);
+    GameTextDef* def = gameTextGet(textId);
     TextSlot* slot;
     u8 savedRed = gGameTextColorR;
     u8 savedGreen = gGameTextColorG;

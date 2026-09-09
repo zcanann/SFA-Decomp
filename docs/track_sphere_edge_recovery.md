@@ -1,5 +1,8 @@
 # Sphere-edge sweep packet
 
+The subsequent [surface response](track_surface_response.md) documents how the
+coordinator uses the resulting contact plane to correct the sphere position.
+
 EN v1.0 passes one 48-byte packet from `trackGetIntersect2` to
 `trackSweepSphereAgainstEdge`. The old C declared four separate arrays (`va`,
 `vb`, `evec`, `rdata`) and passed the first array's address. The callee then

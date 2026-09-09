@@ -62,7 +62,6 @@
 #define SNOWBIKE_IM_BIKE_OBJ        0x72
 #define SNOWBIKE_IM_CLAWBIKE_V0_OBJ 0x16c
 #define SNOWBIKE_IM_CLAWBIKE_V1_OBJ 0x16f
-#define SNOWBIKE_CR_BIKE_OBJ        0x38c
 #define SNOWBIKE_CR_CLAWBIKE_V0_OBJ 0x38d
 #define SNOWBIKE_CR_CLAWBIKE_V1_OBJ 0x38e
 #define SNOWBIKE_CR_CLAWBIKE_V2_OBJ 0x4d4
@@ -106,7 +105,7 @@ SnowBikePathSetup gSnowBikePathSetup = {
 };
 
 int gSnowBikeCollisionObjectIds[12] = {
-    0x72, 0x16D, 0x170, 0x16C, 0x16F, 0x38C, 0x389, 0x38A, 0x4D3, 0x38D, 0x38E, 0x4D4,
+    0x72, 0x16D, 0x170, 0x16C, 0x16F, SNOWBIKE_CR_BIKE_OBJ, 0x389, 0x38A, 0x4D3, 0x38D, 0x38E, 0x4D4,
 };
 
 int gSnowBikeRiderObjectIds[10] = {365, 368, 364, 367, 905, 906, 1235, 909, 910, 1236};

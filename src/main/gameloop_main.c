@@ -46,6 +46,7 @@
 #include "main/track_dolphin_api.h"
 #include "main/shader_api.h"
 #include "main/pi_dolphin.h"
+#include "main/gpu_hang.h"
 #include "main/rcp_dolphin.h"
 #include "main/lightmap_lifecycle_api.h"
 #include "main/lightmap_render_control_api.h"

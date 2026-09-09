@@ -31,7 +31,25 @@
 #include "main/vecmath.h"
 #include "dolphin/os/OSFastCast.h"
 
-static u32 sGQR7Config;
+typedef union ModelAnimationOffsetScratch {
+    s16 modelAnimationOffsets[8];
+    int animationMapOffsets[8];
+    struct {
+        u8 prefix[0x10];
+        u8 tail[0x20];
+    } opaque;
+} ModelAnimationOffsetScratch;
+
+typedef struct ModelResourceScratch {
+    s16 ids[0x400];
+    ModelAnimationOffsetScratch offsets;
+} ModelResourceScratch;
+
+STATIC_ASSERT(sizeof(ModelAnimationOffsetScratch) == 0x30);
+STATIC_ASSERT(sizeof(ModelResourceScratch) == 0x830);
+STATIC_ASSERT(offsetof(ModelResourceScratch, offsets) == 0x800);
+STATIC_ASSERT(offsetof(ModelResourceScratch, offsets.opaque.tail) == 0x810);
+
 int gModelTabEntryCount;
 s16* gModelResourceBuffer;
 int* gModelAnimOffsetTable;
@@ -90,12 +108,12 @@ extern s16 gModelJointScratchBuffer[0xa0];
 extern char sModelAnimationBufferOverflowWarning[];
 extern Vec gModelJitterAxis;
 
-void setGQR7Packed(int a, int b, int c, int d);
+void setGQR7Packed(int loadScale, int loadType, int storeScale, int storeType);
 asm void modelReadMorphDelta(void);
 static inline void* modelGetBoneMtx(ObjModel* model, int idx);
 void ObjModel_TransformVerticesWithTranslation(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
 void ObjModel_TransformVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
-void ObjModel_TransformQuadVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
+void ObjModel_TransformNormalTriplets(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
 /* Register ABI: r3/r4 are vertex buffers, r5 is the chunk count, r6/r7
  * point to stream cursors, r8 is weight B and r9 is the first vertex.
  * r17 holds weight A; r18/r19 hold pending relative indices; r23/r24 are
@@ -288,7 +306,7 @@ void modelAnimUpdateChannels(ModelFileHeader* file, ObjAnimState* work, int chan
         boneIdx = 0;
         boneByteOff = 0;
         while (boneIdx < file->jointCount) {
-            (file->jointData + boneByteOff)[offsetof(ModelBone, idx) + i + 1] = mtxSlotRow[boneIdx];
+            (file->jointData + boneByteOff)[offsetof(ModelBone, animationMatrixSlots) + i] = mtxSlotRow[boneIdx];
             boneByteOff += sizeof(ModelBone);
             boneIdx++;
         }
@@ -538,7 +556,7 @@ void modelAnimResetState(void* m, void* data) {
 int modelLoadAnimations(ModelFileHeader* file, int modelId, void* animBase) {
     int modelAnimOffset;
     u8* bufferCursor = animBase;
-    s16* offsetTable;
+    ModelAnimationOffsetScratch* offsetTable;
     int modelAnimBytes;
     int animationOffset;
     int groupSlot;
@@ -556,17 +574,19 @@ int modelLoadAnimations(ModelFileHeader* file, int modelId, void* animBase) {
     u8 newRefCount;
 
     bufferBytes = 0;
-    offsetTable = (s16*)gModelAnimOffsetTable;
-    fileLoadToBufferOffset(MLDF_FILEID_MODANIM_TAB, offsetTable, modelId << 1, 0x10);
-    modelAnimOffset = offsetTable[0];
+    offsetTable = (ModelAnimationOffsetScratch*)gModelAnimOffsetTable;
+    fileLoadToBufferOffset(MLDF_FILEID_MODANIM_TAB, offsetTable->modelAnimationOffsets, modelId << 1,
+                           sizeof(offsetTable->modelAnimationOffsets));
+    modelAnimOffset = offsetTable->modelAnimationOffsets[0];
     if (file->animationCount == 0) {
         return 0;
     }
     modelAnimBytes = (file->animationCount << 1) + 8;
-    if (modelAnimBytes > 0x800) {
+    if (modelAnimBytes > (int)sizeof(((ModelResourceScratch*)0)->ids)) {
         debugPrintf(sModelAnimationBufferOverflowWarning, modelAnimBytes);
     }
-    fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (modelId & ~3) << 2, 0x20);
+    fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (modelId & ~3) << 2,
+                           sizeof(((ModelAnimationOffsetScratch*)0)->animationMapOffsets));
     file->animationDataFileOffset = gModelAnimOffsetTable[modelId & 3];
     amapOffset = gModelAnimOffsetTable[modelId & 3];
     modelId = gModelAnimOffsetTable[(modelId & 3) + 1] - amapOffset;
@@ -669,7 +689,8 @@ int modelGetAmapSize(int modelId, int amapFlag, int animCount) {
             totalSize++;
         }
         index = modelId & 3;
-        fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (modelId & ~3) << 2, 0x20);
+        fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (modelId & ~3) << 2,
+                               sizeof(((ModelAnimationOffsetScratch*)0)->animationMapOffsets));
         amapSize = gModelAnimOffsetTable[index + 1] - gModelAnimOffsetTable[index];
         totalSize += amapSize;
     }
@@ -694,10 +715,10 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     }
     if (((ModelFileHeader*)hdr)->normalAnimEntries != 0) {
         int normalStride;
-        if (((ModelFileHeader*)hdr)->flags24 & MODEL_FLAGS24_NORMALS_9BYTE) {
-            normalStride = 9;
+        if (((ModelFileHeader*)hdr)->flags24 & MODEL_FLAGS24_NBT_NORMALS) {
+            normalStride = sizeof(ModelNormalTriplet);
         } else {
-            normalStride = 3;
+            normalStride = sizeof(ModelPackedNormal);
         }
         sizes[0] += ((ModelFileHeader*)hdr)->normalCount * normalStride + 0x40;
     }
@@ -809,10 +830,10 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c) {
         *(int*)&((ObjModel*)out2)->vtxBuf[0] = end;
     }
     if (((ModelFileHeader*)p)->normalAnimEntries != NULL) {
-        if (((ModelFileHeader*)p)->flags24 & MODEL_FLAGS24_NORMALS_9BYTE) {
-            normalStride = 9;
+        if (((ModelFileHeader*)p)->flags24 & MODEL_FLAGS24_NBT_NORMALS) {
+            normalStride = sizeof(ModelNormalTriplet);
         } else {
-            normalStride = 3;
+            normalStride = sizeof(ModelPackedNormal);
         }
         pos = roundUpTo32(pos);
         *(int*)&((ObjModel*)out2)->normalBuf = pos;
@@ -1192,8 +1213,6 @@ void ObjModelChain_AdvancePhase(ObjModelChain* chain) {
     }
 }
 
-extern const f32 gModelVertexScale;
-
 void ObjModelChain_Free(ObjModelChain* chain) {
     int i;
     for (i = 0; i < chain->count; i++) {
@@ -1237,14 +1256,14 @@ void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out) 
     s16* vertex;
 
     vertex = (s16*)(model->vertices + vertexIndex * 6);
-    if ((model->flags & 0x800) != 0) {
+    if ((model->flags & MODEL_FLAG_INTEGER_VERTEX_COORDS) != 0) {
         out[0] = vertex[0];
         out[1] = vertex[1];
         out[2] = vertex[2];
     } else {
-        out[0] = vertex[0] * gModelVertexScale;
-        out[1] = vertex[1] * gModelVertexScale;
-        out[2] = vertex[2] * gModelVertexScale;
+        out[0] = vertex[0] / 256.0f;
+        out[1] = vertex[1] / 256.0f;
+        out[2] = vertex[2] / 256.0f;
     }
 }
 
@@ -2119,17 +2138,17 @@ void ObjModel_RelocateAnimData(ModelFileHeader* file, ObjModel* model) {
     file->vertexAnimJob.chunks = file->vertexAnimEntries;
     for (i = 0; i < file->vertexAnimJob.chunkCount; i++) {
         model->vertexAnimOffsets[i] = file->vertexAnimEntries[i].srcDataOffset;
-        if (file->vertexAnimEntries[i].weightStream < file->vertexAnimBase) {
+        if (file->vertexAnimEntries[i].weightStream < file->vertexWeightData) {
             file->vertexAnimEntries[i].weightStream =
-                file->vertexAnimBase + (u32)file->vertexAnimEntries[i].weightStream;
+                file->vertexWeightData + (u32)file->vertexAnimEntries[i].weightStream;
         }
     }
     file->normalAnimJob.chunks = file->normalAnimEntries;
     for (i = 0; i < file->normalAnimJob.chunkCount; i++) {
         model->normalAnimOutputs[i] = model->normalBuf + file->normalAnimEntries[i].srcDataOffset;
-        if (file->normalAnimEntries[i].weightStream < file->normalAnimBase) {
+        if (file->normalAnimEntries[i].weightStream < file->normalWeightData) {
             file->normalAnimEntries[i].weightStream =
-                file->normalAnimBase + (u32)file->normalAnimEntries[i].weightStream;
+                file->normalWeightData + (u32)file->normalAnimEntries[i].weightStream;
         }
     }
 }
@@ -2182,15 +2201,15 @@ void ObjModel_RelocateModelData(u8* m) {
         ((ModelFileHeader*)m)->vertexAnimEntries =
             (ModelVtxAnimChunk*)(m + *(u32*)&((ModelFileHeader*)m)->vertexAnimEntries);
     }
-    if (*(u32*)&((ModelFileHeader*)m)->vertexAnimBase) {
-        ((ModelFileHeader*)m)->vertexAnimBase = m + *(u32*)&((ModelFileHeader*)m)->vertexAnimBase;
+    if (*(u32*)&((ModelFileHeader*)m)->vertexWeightData) {
+        ((ModelFileHeader*)m)->vertexWeightData = m + *(u32*)&((ModelFileHeader*)m)->vertexWeightData;
     }
     if (*(u32*)&((ModelFileHeader*)m)->normalAnimEntries) {
         ((ModelFileHeader*)m)->normalAnimEntries =
             (ModelVtxAnimChunk*)(m + *(u32*)&((ModelFileHeader*)m)->normalAnimEntries);
     }
-    if (*(u32*)&((ModelFileHeader*)m)->normalAnimBase) {
-        ((ModelFileHeader*)m)->normalAnimBase = m + *(u32*)&((ModelFileHeader*)m)->normalAnimBase;
+    if (*(u32*)&((ModelFileHeader*)m)->normalWeightData) {
+        ((ModelFileHeader*)m)->normalWeightData = m + *(u32*)&((ModelFileHeader*)m)->normalWeightData;
     }
     if (*(u32*)&((ModelFileHeader*)m)->renderOps) {
         ((ModelFileHeader*)m)->renderOps = (Shader*)(m + *(u32*)&((ModelFileHeader*)m)->renderOps);
@@ -2344,14 +2363,14 @@ void* loadModelInstance(int resourceId, int arg, void* buffer) {
 }
 
 void ObjModel_InitResourceCaches(void) {
-    void* m;
+    ModelResourceScratch* scratch;
     int* p;
     gModelList = allocModelStruct(0x8c, (int)sizeof(u8*));
     gModelAnimCacheList = allocModelStruct(0xc4, (int)sizeof(u8*));
-    m = mmAlloc(0x830, 0xa, 0);
-    gModelResourceBuffer = m;
-    gModelAnimOffsetTable = (int*)((u8*)m + 0x800);
-    lbl_803DCB5C = (int*)((u8*)m + 0x810);
+    scratch = mmAlloc(sizeof(*scratch), 0xa, 0);
+    gModelResourceBuffer = scratch->ids;
+    gModelAnimOffsetTable = scratch->offsets.animationMapOffsets;
+    lbl_803DCB5C = (int*)scratch->offsets.opaque.tail;
     p = getCurrentDataFile(MLDF_FILEID_MODELS_TAB_A);
     if (p == NULL) {
         return;
@@ -2394,7 +2413,7 @@ void ObjModel_InitRenderBuffers(void) {
     setGQR6_2(7, 4, 7, 4);
 }
 
-void ObjModel_BlendNormalStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, u8** outs, int quad) {
+void ObjModel_BlendNormalStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, u8** outs, int normalTriplets) {
     u16 chunkBlocks[2];
 
     setGQR7Packed(job->quantShift, 6, job->quantShift, 6);
@@ -2430,9 +2449,9 @@ void ObjModel_BlendNormalStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, u8
                             nextWeightBlocks);
             }
             cacheQueueWait(2);
-            if ((u8)quad) {
+            if ((u8)normalTriplets) {
                 chunkDst = outs[i];
-                ObjModel_TransformQuadVerticesLinear(
+                ObjModel_TransformNormalTriplets(
                     mtxs + chunk->mtxIdxA * sizeof(ROMtx), mtxs + chunk->mtxIdxB * sizeof(ROMtx),
                     gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
                     (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
@@ -2450,9 +2469,9 @@ void ObjModel_BlendNormalStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, u8
         }
         lastChunk = job->chunks + i;
         cacheQueueWait(0);
-        if ((u8)quad) {
+        if ((u8)normalTriplets) {
             chunkDst = outs[i];
-            ObjModel_TransformQuadVerticesLinear(
+            ObjModel_TransformNormalTriplets(
                 mtxs + lastChunk->mtxIdxA * sizeof(ROMtx), mtxs + lastChunk->mtxIdxB * sizeof(ROMtx),
                 gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
                 (u8*)(lastChunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
@@ -2525,107 +2544,141 @@ void ObjModel_BlendVertexStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, s3
     }
 }
 
-void ObjModel_TransformVerticesWithTranslation(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count) {
-    f32* ma = (f32*)m1;
-    f32* mb = (f32*)m2;
-    u8* w = src;
-    s16* in = (s16*)d1;
-    s16* out = (s16*)d2;
-    f32 scale = (f32)(1 << ((sGQR7Config >> 24) & 0x3f));
-    f32 invScale = 1.0f / scale;
-    f32 x, y, z, w0, w1, ox, oy, oz;
-    int i;
+/* Scalar reconstruction reads the same live quantization state as retail psq instructions. */
+static inline u32 modelGetGQR7(void) {
+    register u32 config;
+    asm {
+        mfspr config, GQR7
+    }
+    return config;
+}
 
-    for (i = 0; i < count; i++) {
-        w0 = __OSu8tof32(w) * (1.0f / 128.0f);
-        w1 = __OSu8tof32(w + 1) * (1.0f / 128.0f);
-        w += 2;
-        x = __OSs16tof32(&in[0]) * invScale;
-        y = __OSs16tof32(&in[1]) * invScale;
-        z = __OSs16tof32(&in[2]) * invScale;
-        in += 3;
-        ox = (ma[0] * x + ma[3] * y + ma[6] * z + ma[9]) * w0 + (mb[0] * x + mb[3] * y + mb[6] * z + mb[9]) * w1;
-        oy = (ma[1] * x + ma[4] * y + ma[7] * z + ma[10]) * w0 + (mb[1] * x + mb[4] * y + mb[7] * z + mb[10]) * w1;
-        oz = (ma[2] * x + ma[5] * y + ma[8] * z + ma[11]) * w0 + (mb[2] * x + mb[5] * y + mb[8] * z + mb[11]) * w1;
-        out[0] = __OSf32tos16(ox * scale);
-        out[1] = __OSf32tos16(oy * scale);
-        out[2] = __OSf32tos16(oz * scale);
-        out += 3;
+/* GQR scale fields encode signed six-bit powers of two. */
+static inline f32 modelQuantizationFactor(u32 encodedScale) {
+    union {
+        u32 bits;
+        f32 value;
+    } factor;
+    int shift = (int)(encodedScale & 0x3f);
+    shift = (shift ^ 0x20) - 0x20;
+    factor.bits = (u32)(127 + shift) << 23;
+    return factor.value;
+}
+
+void ObjModel_TransformVerticesWithTranslation(u8* matrixA, u8* matrixB, u8* weightPairs, u8* source, u8* destination,
+                                               int count) {
+    f32* a = (f32*)matrixA;
+    f32* b = (f32*)matrixB;
+    ModelSkinWeightPair* weights = (ModelSkinWeightPair*)weightPairs;
+    S16Vec* input = (S16Vec*)source;
+    S16Vec* output = (S16Vec*)destination;
+    u32 quantization = modelGetGQR7();
+    f32 storeFactor = modelQuantizationFactor(quantization >> 8);
+    f32 loadFactor = 1.0f / modelQuantizationFactor(quantization >> 24);
+    f32 x, y, z, weightA, weightB, outputX, outputY, outputZ;
+    int vertex;
+
+    for (vertex = 0; vertex < count; vertex++) {
+        weightA = __OSu8tof32(&weights->matrixA) * (1.0f / 128.0f);
+        weightB = __OSu8tof32(&weights->matrixB) * (1.0f / 128.0f);
+        weights++;
+        x = __OSs16tof32(&input->x) * loadFactor;
+        y = __OSs16tof32(&input->y) * loadFactor;
+        z = __OSs16tof32(&input->z) * loadFactor;
+        input++;
+        outputX = (b[0] * x + b[9] + b[3] * y + b[6] * z) * weightB + (a[0] * x + a[9] + a[3] * y + a[6] * z) * weightA;
+        outputY =
+            (b[1] * x + b[10] + b[4] * y + b[7] * z) * weightB + (a[1] * x + a[10] + a[4] * y + a[7] * z) * weightA;
+        outputZ =
+            (b[2] * x + b[11] + b[5] * y + b[8] * z) * weightB + (a[2] * x + a[11] + a[5] * y + a[8] * z) * weightA;
+        output->x = __OSf32tos16(outputX * storeFactor);
+        output->y = __OSf32tos16(outputY * storeFactor);
+        output->z = __OSf32tos16(outputZ * storeFactor);
+        output++;
     }
 }
 
-void ObjModel_TransformVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count) {
-    f32* ma = (f32*)m1;
-    f32* mb = (f32*)m2;
-    u8* w = src;
-    s8* in = (s8*)d1;
-    s8* out = (s8*)d2;
-    f32 scale = (f32)(1 << ((sGQR7Config >> 24) & 0x3f));
-    f32 invScale = 1.0f / scale;
-    f32 x, y, z, w0, w1, ox, oy, oz;
-    int i;
+void ObjModel_TransformVerticesLinear(u8* matrixA, u8* matrixB, u8* weightPairs, u8* source, u8* destination,
+                                      int count) {
+    f32* a = (f32*)matrixA;
+    f32* b = (f32*)matrixB;
+    ModelSkinWeightPair* weights = (ModelSkinWeightPair*)weightPairs;
+    ModelPackedNormal* input = (ModelPackedNormal*)source;
+    ModelPackedNormal* output = (ModelPackedNormal*)destination;
+    u32 quantization = modelGetGQR7();
+    f32 storeFactor = modelQuantizationFactor(quantization >> 8);
+    f32 loadFactor = 1.0f / modelQuantizationFactor(quantization >> 24);
+    f32 x, y, z, weightA, weightB, outputX, outputY, outputZ;
+    int vertex;
 
-    for (i = 0; i < count; i++) {
-        w0 = __OSu8tof32(w) * (1.0f / 128.0f);
-        w1 = __OSu8tof32(w + 1) * (1.0f / 128.0f);
-        w += 2;
-        x = __OSs8tof32(&in[0]) * invScale;
-        y = __OSs8tof32(&in[1]) * invScale;
-        z = __OSs8tof32(&in[2]) * invScale;
-        in += 3;
-        ox = (ma[0] * x + ma[3] * y + ma[6] * z) * w0 + (mb[0] * x + mb[3] * y + mb[6] * z) * w1;
-        oy = (ma[1] * x + ma[4] * y + ma[7] * z) * w0 + (mb[1] * x + mb[4] * y + mb[7] * z) * w1;
-        oz = (ma[2] * x + ma[5] * y + ma[8] * z) * w0 + (mb[2] * x + mb[5] * y + mb[8] * z) * w1;
-        out[0] = __OSf32tos8(ox * scale);
-        out[1] = __OSf32tos8(oy * scale);
-        out[2] = __OSf32tos8(oz * scale);
-        out += 3;
+    for (vertex = 0; vertex < count; vertex++) {
+        weightA = __OSu8tof32(&weights->matrixA) * (1.0f / 128.0f);
+        weightB = __OSu8tof32(&weights->matrixB) * (1.0f / 128.0f);
+        weights++;
+        x = __OSs8tof32(&input->x) * loadFactor;
+        y = __OSs8tof32(&input->y) * loadFactor;
+        z = __OSs8tof32(&input->z) * loadFactor;
+        input++;
+        outputX = (b[0] * x + b[3] * y + b[6] * z) * weightB + (a[0] * x + a[3] * y + a[6] * z) * weightA;
+        outputY = (b[1] * x + b[4] * y + b[7] * z) * weightB + (a[1] * x + a[4] * y + a[7] * z) * weightA;
+        outputZ = (b[2] * x + b[5] * y + b[8] * z) * weightB + (a[2] * x + a[5] * y + a[8] * z) * weightA;
+        output->x = __OSf32tos8(outputX * storeFactor);
+        output->y = __OSf32tos8(outputY * storeFactor);
+        output->z = __OSf32tos8(outputZ * storeFactor);
+        output++;
     }
 }
-void ObjModel_TransformQuadVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count) {
-    f32* ma = (f32*)m1;
-    f32* mb = (f32*)m2;
-    u8* w = src;
-    s8* in = (s8*)d1;
-    s8* out = (s8*)d2;
-    f32 scale = (f32)(1 << ((sGQR7Config >> 24) & 0x3f));
-    f32 invScale = 1.0f / scale;
-    f32 x, y, z, w0, w1, ox, oy, oz;
-    int i;
-    int k;
+void ObjModel_TransformNormalTriplets(u8* matrixA, u8* matrixB, u8* weightPairs, u8* source, u8* destination,
+                                      int count) {
+    f32* a = (f32*)matrixA;
+    f32* b = (f32*)matrixB;
+    ModelSkinWeightPair* weights = (ModelSkinWeightPair*)weightPairs;
+    ModelPackedNormal* input = (ModelPackedNormal*)source;
+    ModelPackedNormal* output = (ModelPackedNormal*)destination;
+    u32 quantization = modelGetGQR7();
+    f32 storeFactor = modelQuantizationFactor(quantization >> 8);
+    f32 loadFactor = 1.0f / modelQuantizationFactor(quantization >> 24);
+    f32 x, y, z, weightA, weightB, outputX, outputY, outputZ;
+    int vertex;
+    int vector;
 
-    for (i = 0; i < count; i++) {
-        w0 = __OSu8tof32(w) * (1.0f / 128.0f);
-        w1 = __OSu8tof32(w + 1) * (1.0f / 128.0f);
-        w += 2;
-        for (k = 0; k < 3; k++) {
-            x = __OSs8tof32(&in[0]) * invScale;
-            y = __OSs8tof32(&in[1]) * invScale;
-            z = __OSs8tof32(&in[2]) * invScale;
-            in += 3;
-            ox = (ma[0] * x + ma[3] * y + ma[6] * z) * w0 + (mb[0] * x + mb[3] * y + mb[6] * z) * w1;
-            oy = (ma[1] * x + ma[4] * y + ma[7] * z) * w0 + (mb[1] * x + mb[4] * y + mb[7] * z) * w1;
-            oz = (ma[2] * x + ma[5] * y + ma[8] * z) * w0 + (mb[2] * x + mb[5] * y + mb[8] * z) * w1;
-            out[0] = __OSf32tos8(ox * scale);
-            out[1] = __OSf32tos8(oy * scale);
-            out[2] = __OSf32tos8(oz * scale);
-            out += 3;
+    for (vertex = 0; vertex < count; vertex++) {
+        weightA = __OSu8tof32(&weights->matrixA) * (1.0f / 128.0f);
+        weightB = __OSu8tof32(&weights->matrixB) * (1.0f / 128.0f);
+        weights++;
+        for (vector = 0; vector < 3; vector++) {
+            x = __OSs8tof32(&input->x) * loadFactor;
+            y = __OSs8tof32(&input->y) * loadFactor;
+            z = __OSs8tof32(&input->z) * loadFactor;
+            input++;
+            outputX = (b[0] * x + b[3] * y + b[6] * z) * weightB + (a[0] * x + a[3] * y + a[6] * z) * weightA;
+            outputY = (b[1] * x + b[4] * y + b[7] * z) * weightB + (a[1] * x + a[4] * y + a[7] * z) * weightA;
+            outputZ = (b[2] * x + b[5] * y + b[8] * z) * weightB + (a[2] * x + a[5] * y + a[8] * z) * weightA;
+            output->x = __OSf32tos8(outputX * storeFactor);
+            output->y = __OSf32tos8(outputY * storeFactor);
+            output->z = __OSf32tos8(outputZ * storeFactor);
+            output++;
         }
     }
 }
 
-void setGQR6(u32 v) {
+void setGQR6(register u32 config) {
+    asm {
+        mtspr GQR6, config
+    }
 }
 
-void setGQR7(u32 v) {
-    sGQR7Config = v;
+void setGQR7(register u32 config) {
+    asm {
+        mtspr GQR7, config
+    }
 }
-void setGQR7Packed(int a, int b, int c, int d) {
-    setGQR7((((a << 8) + b) << 16) | ((c << 8) + d));
+void setGQR7Packed(int loadScale, int loadType, int storeScale, int storeType) {
+    setGQR7((((loadScale << 8) + loadType) << 16) | ((storeScale << 8) + storeType));
 }
 
-void setGQR6_2(int a, int b, int c, int d) {
-    setGQR6((((a << 8) + b) << 16) | ((c << 8) + d));
+void setGQR6_2(int loadScale, int loadType, int storeScale, int storeType) {
+    setGQR6((((loadScale << 8) + loadType) << 16) | ((storeScale << 8) + storeType));
 }
 void ObjModel_UnpackResourcePayload(u8* src, int srcSize, u8* dst, int dstSize) {
     ModelRenderInstrsState dstState;

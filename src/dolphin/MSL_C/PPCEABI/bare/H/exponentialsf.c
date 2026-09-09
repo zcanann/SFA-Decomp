@@ -83,7 +83,6 @@ static inline float log2_kernel(float value) {
     float coefficients[2] = {-0.72135162353515625f, 0.4808933f};
     float_word inputWord;
     float_word normalizedMantissa;
-    float exponentValue;
 
     bits = *(u32*)&value;
     exponent = (bits >> 23) - 0x80;
@@ -93,6 +92,8 @@ static inline float log2_kernel(float value) {
 
     if ((bits & 0xFFFF) != 0) {
         float delta;
+        float exponentValue;
+        float biasedExponent;
 
         inputWord.i = bits;
         roundedMantissa.i = (bits & 0x007F0000) | 0x3F800000;
@@ -106,14 +107,21 @@ static inline float log2_kernel(float value) {
         delta = normalizedMantissa.f - roundedMantissa.f;
         delta *= __one_over_F[tableIndex];
         exponentValue = (float)exponent;
-        return (exponentValue + 1.375f) + (sLog2MantissaTable[tableIndex] +
-                                           (delta + (sLog2EMinusOne[0] * delta +
-                                                     (sLog2EMinusOne[1] * delta +
-                                                      (delta * delta) * (delta * coefficients[1] + coefficients[0])))));
-    }
+        biasedExponent = exponentValue;
+        biasedExponent += 1.375f;
+        return biasedExponent + (sLog2MantissaTable[tableIndex] +
+                                 (delta + (sLog2EMinusOne[0] * delta +
+                                           (sLog2EMinusOne[1] * delta +
+                                            (delta * delta) * (delta * coefficients[1] + coefficients[0])))));
+    } else {
+        float exponentValue;
+        float biasedExponent;
 
-    exponentValue = (float)exponent;
-    return (exponentValue + 1.375f) + sLog2MantissaTable[tableIndex];
+        exponentValue = (float)exponent;
+        biasedExponent = exponentValue;
+        biasedExponent += 1.375f;
+        return biasedExponent + sLog2MantissaTable[tableIndex];
+    }
 }
 #pragma pop
 
@@ -123,6 +131,7 @@ static inline float exp2_kernel(float value) {
     float fraction;
     float scaleFactor;
     float polynomial;
+    float mantissa;
 
     exponentScale.i = value;
     scaleCopy.i = exponentScale.i;
@@ -153,7 +162,9 @@ static inline float exp2_kernel(float value) {
         sExp2Polynomial[0];
     polynomial = fraction * polynomial;
 
-    return scaleFactor * (polynomial + 1.0f);
+    mantissa = polynomial;
+    mantissa += 1.0f;
+    return scaleFactor * mantissa;
 }
 
 #define float_bits(value) (*(u32*)&(value))

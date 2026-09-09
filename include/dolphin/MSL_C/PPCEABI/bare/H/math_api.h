@@ -2,6 +2,7 @@
 #define DOLPHIN_MSL_C_PPCEABI_BARE_H_MATH_API_H_
 
 #include "types.h"
+#include "dolphin/mtx/vec_types.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 
@@ -15,9 +16,10 @@ float sqrtf(float x);
 float expf(float x);
 float fabsf(float x);
 float powfBitEstimate(float base, float exponentValue);
-void Vec_normalize(void* input, void* output);
-void Vec_scale(void* input, void* output, float scale);
-float Vec_lengthSquared(void* input);
+void Vec_normalize(const Vec* input, Vec* output);
+void Vec_scale(const Vec* input, Vec* output, float scale);
+float Vec_lengthSquared(const Vec* input);
+/* Returns a remainder in pi/4 units; quadrant receives an even count of those units. */
 float trigReduceQuadrant(u16* quadrant, float angle);
 float acosf_fast(float x);
 float atanf_fast(float x);
@@ -25,6 +27,7 @@ void mathSinCosf(float angle, float* sinOut, float* cosOut);
 float mathSinfPrecise(float x);
 float mathCosfPrecise(float x);
 float mathTanf(float angle);
+/* Ignores the sign bit; zero, infinity and NaN receive no special handling. */
 float log2fBitEstimate(float value);
 
 #endif /* DOLPHIN_MSL_C_PPCEABI_BARE_H_MATH_API_H_ */

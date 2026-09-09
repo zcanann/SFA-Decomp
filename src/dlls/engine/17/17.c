@@ -36,7 +36,7 @@ u8 getCurTaskHintTextMap(void)
     return (u8)(s32)gTaskHintMapData[texts[5]];
 }
 
-void* saveGameGetCurHint(void)
+GameTextDef* saveGameGetCurHint(void)
 {
     u8* texts = getLastSavedGameTexts();
     return gameTextGet((s32)texts[5] + 0xf4);

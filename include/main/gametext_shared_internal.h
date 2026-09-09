@@ -30,7 +30,6 @@ extern int gGameTextRevealActive;
 extern f32 gGameTextRevealSpeed;
 
 int utf8GetNextChar(u8* str, int* outLen);
-void* gameTextGetCurBox(void);
 void gameTextMeasureStringBounds(char* str, int boxIdx, int* outMinX, int* outMaxX, int* outMinY, int* outMaxY);
 void gameTextRenderStrs(char* str, int boxIdx);
 void gameTextTickReveal(int textId, struct TextDisplayState* state);

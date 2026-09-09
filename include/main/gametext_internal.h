@@ -2,6 +2,7 @@
 #define MAIN_GAMETEXT_INTERNAL_H_
 
 #include "global.h"
+#include "main/gametext_lookup.h"
 #include "main/gametext_box_api.h"
 
 typedef struct TaskTextEntry {
@@ -9,19 +10,6 @@ typedef struct TaskTextEntry {
     u16 dirId;
     u16 objSeqId;
 } TaskTextEntry;
-
-typedef struct GameTextDef {
-    u16 identifier;
-    u16 count;
-    u8 boxId;
-    u8 alignH;
-    u8 alignV;
-    u8 language;
-    char** strings;
-} GameTextDef;
-
-STATIC_ASSERT(sizeof(GameTextDef) == 0xc);
-STATIC_ASSERT(offsetof(GameTextDef, strings) == 0x8);
 
 #define GAMETEXT_FALLBACK_COUNT       8
 #define GAMETEXT_FALLBACK_BUFFER_SIZE 0x40
@@ -85,17 +73,24 @@ typedef struct LanguageName {
     u8 pad5[3];
 } LanguageName;
 
+#define GAMETEXT_FONT_COLOR_TEXTURE 1
+
 typedef struct FontMetrics {
     u16 glyphCount;
     u8 unk02[2];
     u8 unk04;
     u8 unk05;
-    u8 unk06;
+    u8 colorMode; /* Texture RGB for mode 1; text RGB for other values. */
     u8 pad07;
     u16 maxWidth;
     u16 lineHeight;
     u8 padc[4];
 } FontMetrics;
+
+STATIC_ASSERT(sizeof(FontMetrics) == 0x10);
+STATIC_ASSERT(offsetof(FontMetrics, colorMode) == 0x6);
+STATIC_ASSERT(offsetof(FontMetrics, maxWidth) == 0x8);
+STATIC_ASSERT(offsetof(FontMetrics, lineHeight) == 0xa);
 
 typedef struct CtrlCharEntry {
     u32 key;
@@ -113,7 +108,7 @@ struct TextDisplayState {
 typedef void (*GameTextDrawFunc)(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 
 extern GameTextBox gTextBoxes[GAMETEXT_BOX_COUNT];
-extern void* gCurTextBox;
+extern GameTextBox* gCurTextBox;
 extern GameTextDrawFunc gameTextDrawFunc;
 extern TaskTextEntry gTaskTextTable[];
 extern u8 gUtf8CharClassTable[];

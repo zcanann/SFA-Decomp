@@ -583,3 +583,154 @@ and preserves the whole object. The unit remains `NonMatching`.
 Matching configuration, `ninja all_source`, and strict `ninja` pass with
 30-second timeouts (`main.dol: OK`). The matching link continues to use this
 unit's retail object.
+
+## Bounded per-frame array walks (2026-09-07)
+
+The runner's fallback-expiry and final window-reset loops now use bounded
+reverse indices into their owning arrays. The previous comma conditions
+decremented their cursors even on the terminating iteration, forming pointers
+before the arrays. No such pointer is needed to express either operation.
+The eight fallback records still expire in reverse order only when a positive
+request has accumulated more than 120 frames; all 148 windows still reset.
+
+`gameTextRun` improves from 91.79521% to 91.848404%, retaining 364 source
+instructions against 376 retail instructions. Same-mnemonic operand differences
+fall from 115 to 112; 23 mnemonic-alignment differences remain. The final reset
+now uses retail's counter and cursor registers. Other register assignments
+change within the runner, but its arithmetic, memory-operation order, and
+instruction count are preserved.
+
+The TU rises from 97.8544% to 97.857925% with 44/54 functions exact. All 53 other
+function bodies, allocated non-text bytes, named-symbol layouts, and normalized
+relocation targets remain unchanged. The source and canonical API header pass
+the formatter check with no additional diff; rebuilding preserves the selected
+object bytes.
+
+`tools/gametext_maintenance_probe.py` executes compiled and retail runners
+against an independent state oracle over 64 idle-frame cases. It covers zero,
+positive and negative requests, expiry threshold crossings, first and last
+entries, mixed active masks, both font-timer states, complete window records,
+neighboring guards, blanking-call order, the sound stop, and preserved registers.
+Unicorn executes scalar PPC; the existing Gekko adapter supplies paired-single
+register saves and restores. Loading and queued commands are disabled. Changing
+the expiry comparison to `>=` or skipping the last window makes the probe fail.
+All sixteen existing gametext tests also pass.
+
+Run with Python containing `unicorn` and `pyelftools`, after compiling the TU:
+
+```sh
+python3 tools/gametext_maintenance_probe.py
+```
+
+`ninja all_source` and the strict checksum pass after matching configuration,
+each within its 30-second limit. All 1,001 other source objects retain their
+bytes. The TU remains `NonMatching` and the matching link uses retail.
+
+## Language-family metadata padding (2026-09-07)
+
+The parser now represents the skipped block after string data as
+`GameTextPaddingBlock`: a four-byte byte count followed by a variable-length
+byte span. Size and payload-offset assertions sit beside the private definition.
+The string-offset table also gains assertions for its four-byte count header
+and the following offset array.
+
+EN v1.0 `gameTextFinalizeLoad` offsets `0x1E8` through `0x1F4` locate this
+block, load its count, add that count to the block address, then advance four
+more bytes. Thus the count excludes its own header. The source retains those
+two advances and derives the header skip from the record and cursor types.
+Combining both advances into one expression changes generated instructions.
+At offsets `0x41C` through `0x430`, retail allocates the distance from the
+resource start to this first texture header; the padding stays in that compacted
+metadata allocation.
+
+The locally available sibling-region resources explain the shared extent:
+
+| Resource set | Files audited | Padded files | Padded map families | Languages per family | Padding bytes |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| EN rev1 | 1,216 | 360 | 72 | 6 | 880–18,016 |
+| JP | 1,216 | 360 | 72 | 6 | 880–18,180 |
+| PAL | 1,020 | 288 | 72 | 5 | 12–4,508 |
+
+Every padded span contains `0xEE`. Within every one of these map families,
+all languages reach the same first-texture offset, exactly the largest
+unpadded metadata extent among those languages. This also equalizes the
+compacted allocation size for a family. For example, EN rev1 `CRFort` reaches
+offset 13,660 in every language: English has 6,676 padding bytes, German has
+6,456, and Japanese has zero. Texture starts span every four-byte residue
+modulo 32; the shared language extent determines this padding.
+
+These files corroborate the format; their counts and contents are not EN v1.0
+asset claims. The local EN v1.0 gametext directory is absent, and its executable
+remains the authority for the parser's accesses and code comparison.
+
+`gametext_parser_probe.py --audit-root` now reports padded sibling groups,
+shared texture offsets, and whether those offsets equal the maximum unpadded
+prefix. It excludes single-file directories from shared-group claims and
+distinguishes unequal offsets or uniformly overpadded groups. Reproduce the
+EN rev1 audit and execute its English/Japanese CRFort files through both EN v1.0
+retail and compiled parsers with:
+
+```sh
+python3 tools/gametext_parser_probe.py \
+  --audit-root orig/GSAE01_rev1/files/gametext \
+  --resources orig/GSAE01_rev1/files/gametext/CRFort/English.bin \
+              orig/GSAE01_rev1/files/gametext/CRFort/Japanese.bin
+```
+
+All 384 compiled/retail comparisons pass, including allocation failures and
+relocated metadata. All sixteen existing gametext tests pass. The complete
+gametext object is byte-identical; this is format and source recovery with
+unchanged match scores.
+The final EN `all_source` and strict checksum builds pass within their
+30-second limits; all 1,002 source objects and all objdiff unit measures
+retain their baseline values. EN rev1, JP, and PAL rev1 also build from the
+shared source with the same complete gametext object bytes.
+
+## Public text-record and window lookup contracts
+
+`gametext_lookup.h` now owns the twelve-byte `GameTextDef` and the typed
+`gameTextGet` API. Its assertions retain the string-table pointer at `+8`
+and record the phrase count at `+2` and box ID at `+4`. Every lookup return
+path supplies either a loaded definition or a fallback definition; the current
+hint wrapper now exposes that same return type. The compatibility text-render
+header includes the public record header, while the private font header no
+longer owns the definition.
+
+The box getters, window setter, and current-window pointer use `GameTextBox`.
+The setter computes its index with native record subtraction and selects the
+record with native array indexing. Its existing null and `0xFF` behavior is
+preserved. Box size and field assertions live beside the canonical definition.
+
+Consumers now express the NPC phrase limit, copyright ID/box lookup, options
+alpha, and progressive-scan horizontal alignment through the recovered fields.
+The minimap's truncated `MinimapTextBox` overlay is removed. Its misnamed
+`cursorX`, `cursorY`, and `clipWidth` fields were actually `maxWidth`, `height`,
+and `width`; the halfword at zero remains `unk00`, used here as a width cap,
+pending broader evidence for its meaning. Shared consumers receive only the
+necessary type and access edits.
+
+`gameTextGetStr` and `gameTextGetPhrase` retain their heterogeneous return
+contract: retail error paths return a fallback record, while successful paths
+return a string. This change does not silently reinterpret those error returns.
+
+The sixteen existing gametext tests pass, including 402 load scenarios at each
+host optimization level. Before/after full-source builds preserve every object
+byte in EN and the three SHA-1-verified secondary targets. Formatting is separate
+and byte-neutral. No match credit, storage layout, compiler profile, or regional
+classification changes; the EN all-source and strict checksum gates pass with
+30-second limits.
+
+## Typed font measurement (2026-09-08)
+
+[Font metrics and string measurement](gametext_font_metrics.md) recover the
+renderer color-mode byte and replace measurement's raw font-record arithmetic
+with typed access. All function bytes, data, normalized relocations and match
+scores remain unchanged across the four verified retail versions.
+
+## Line-wrap parameters and buffer contract (2026-09-08)
+
+The line wrapper now names its scale, maximum line height, scan/copy offsets,
+and line-table roles directly, with typed font metrics and native element
+sizes. A PPC probe executes retail and source through 151 cases and records
+the trailing-space case that returns a counted but null final line pointer.
+See [the line-wrapping contract](gametext_line_wrapping.md).

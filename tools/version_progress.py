@@ -20,7 +20,7 @@ from collections import defaultdict
 from dataclasses import dataclass, replace
 from pathlib import Path
 
-from orig.dol_xrefs import DolFile, FunctionSymbol, load_function_symbols
+from orig.dol_xrefs import DolFile, FunctionSymbol, load_function_symbols, parse_function_symbols
 
 
 CODE_SECTIONS = {"init", "text"}
@@ -107,6 +107,22 @@ def read_dol_range(dol: DolFile, start: int, size: int) -> bytes:
             offset = section.offset + start - section.address
             return dol.data[offset : offset + size]
     raise ValueError(f"Range 0x{start:08X}-0x{start + size:08X} is outside {dol.path}")
+
+
+def verified_dol(path: Path, config_path: Path) -> DolFile:
+    """Require the configured retail identity before projecting any boundaries."""
+    match = re.search(
+        r"^hash:[ \t]*(?P<quote>['\"]?)(?P<hash>[0-9a-fA-F]{40})(?P=quote)[ \t]*(?:#.*)?$",
+        config_path.read_text(encoding="utf-8"), re.MULTILINE,
+    )
+    if match is None:
+        raise ValueError(f"Missing or unsupported retail SHA-1 in {config_path}")
+    dol = DolFile(path)
+    actual = hashlib.sha1(dol.data).hexdigest()
+    expected = match.group("hash").lower()
+    if actual != expected:
+        raise ValueError(f"Retail hash mismatch for {path}: expected {expected}, got {actual}")
+    return dol
 
 
 def function_signature(dol: DolFile, function: FunctionSymbol) -> bytes:
@@ -291,6 +307,7 @@ def build_boundary_map(
             if boundary in direct:
                 continue
             source_index = (boundary - source_range.address) // 4
+            byte_phase = (boundary - source_range.address) % 4
             candidates: list[int] = []
             if 0 <= source_index <= len(source_words) - context_words:
                 source_context = source_words[
@@ -308,7 +325,7 @@ def build_boundary_map(
                     and not boundary_crosses_symbol(
                         target_all_symbol_span_index,
                         section,
-                        target_range.address + target_index_value * 4,
+                        target_range.address + target_index_value * 4 + byte_phase,
                     )
                 ):
                     candidates.append(target_index_value)
@@ -328,12 +345,15 @@ def build_boundary_map(
                     and not boundary_crosses_symbol(
                         target_all_symbol_span_index,
                         section,
-                        target_range.address + (target_index_value + context_words) * 4,
+                        target_range.address + (target_index_value + context_words) * 4 + byte_phase,
                     )
                 ):
                     candidates.append(target_index_value + context_words)
             if candidates and len(set(candidates)) == 1:
-                direct[boundary] = target_range.address + candidates[0] * 4
+                # Word contexts locate the containing word, not necessarily
+                # the boundary itself: packed strings and halfwords may end
+                # one, two, or three bytes into that word.
+                direct[boundary] = target_range.address + candidates[0] * 4 + byte_phase
 
     # Discard the rare repeated-code anchor that would make the global mapping
     # run backwards.  Source and target object order is otherwise preserved.
@@ -454,9 +474,13 @@ def build_all_boundary_maps(
 
 
 def load_symbol_spans(path: Path) -> dict[str, tuple[SymbolSpan, ...]]:
+    return parse_symbol_spans(path.read_text(encoding="utf-8"))
+
+
+def parse_symbol_spans(text: str) -> dict[str, tuple[SymbolSpan, ...]]:
     spans: dict[str, list[SymbolSpan]] = defaultdict(list)
     size_re = re.compile(r"\bsize:0x([0-9A-Fa-f]+)\b")
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in text.splitlines():
         match = SYMBOL_LINE_RE.match(line)
         size_match = size_re.search(line)
         if match is None or size_match is None:
@@ -1137,10 +1161,10 @@ def port_coherent_units(
             continue
         accepted.extend(candidates)
 
-    # Fold only short, invariant, zero-filled alignment gaps into the preceding
-    # object before auditing auto-unit alignment.  This is linker padding, not
-    # a standalone translation unit.
-    extensions: dict[tuple[str, str, int], int] = {}
+    # Retain short, invariant, zero-filled alignment gaps outside both objects.
+    # decomp-toolkit lets the linker provide these bytes; extending an object
+    # section instead changes its size and can absorb padding into its last symbol.
+    alignment_gaps: set[tuple[str, int, int]] = set()
     next_source_range: dict[tuple[str, str, int], SplitRange] = {}
     source_ranges_by_section: dict[str, list[SplitRange]] = defaultdict(list)
     for split in source_splits:
@@ -1164,8 +1188,6 @@ def port_coherent_units(
         target_gap = target_after_start - before.target_end
         if not (0 < source_gap == target_gap <= 7):
             continue
-        if before.target_end % 4 == 0:
-            continue
         if symbol_overlaps_range(
             source_detailed_spans,
             section,
@@ -1186,25 +1208,11 @@ def port_coherent_units(
             target_dol, section, before.target_end, target_after_start
         ):
             continue
-        extensions[
-            (before.source.unit, section, before.source.start)
-        ] = target_after_start
-    folded_padding_ranges = len(extensions)
-    accepted = [
-        replace(
-            item,
-            target_end=extensions.get(
-                (item.source.unit, item.source.section, item.source.start),
-                item.target_end,
-            ),
-        )
-        for item in accepted
-    ]
+        alignment_gaps.add((section, before.target_end, target_after_start))
 
-    # Leaving an unclaimed corridor makes decomp-toolkit synthesize an auto
-    # unit.  Its endpoints must be word aligned even when the neighboring real
-    # TU owns a packed byte-sized BSS tail.  Drop the adjacent projected TU in
-    # that rare case so the auto corridor begins at the next safe boundary.
+    # Unknown corridors need word-aligned auto units. Proven alignment gaps
+    # between accepted neighbors need no auto unit; a rejected neighbor must
+    # not make a wider unknown corridor inherit that exemption.
     while True:
         reject_units: set[str] = set()
         by_section: dict[str, list[PortedRange]] = defaultdict(list)
@@ -1214,6 +1222,9 @@ def port_coherent_units(
             ranges.sort(key=lambda item: item.target_start)
             for before, after in zip(ranges, ranges[1:]):
                 if before.target_end >= after.target_start:
+                    continue
+                gap = (before.source.section, before.target_end, after.target_start)
+                if gap in alignment_gaps:
                     continue
                 if before.target_end % 4:
                     reject_units.add(before.source.unit)
@@ -1225,9 +1236,8 @@ def port_coherent_units(
         rejected_units["unaligned auto-unit boundary"].update(reject_units)
         accepted = [item for item in accepted if item.source.unit not in reject_units]
 
-    # A single word between two claimed ranges is linker padding owned by the
-    # preceding object, not a viable standalone auto unit.  Carry it with that
-    # object just as decomp-toolkit does for the active EN layout.
+    # Preserve the legacy treatment of remaining four-byte corridors, but do
+    # not extend an object across an invariant gap proven outside the source TU.
     extensions: dict[tuple[str, str, int], int] = {}
     by_section = defaultdict(list)
     for item in accepted:
@@ -1235,7 +1245,8 @@ def port_coherent_units(
     for ranges in by_section.values():
         ranges.sort(key=lambda item: item.target_start)
         for before, after in zip(ranges, ranges[1:]):
-            if after.target_start - before.target_end == 4:
+            gap = (before.source.section, before.target_end, after.target_start)
+            if after.target_start - before.target_end == 4 and gap not in alignment_gaps:
                 extensions[
                     (
                         before.source.unit,
@@ -1314,6 +1325,7 @@ def port_coherent_units(
 
     # A coherent projection must never assign the same target bytes twice.
     previous_end: dict[str, int] = {}
+    preserved_alignment_gaps = 0
     for split in sorted(
         accepted, key=lambda item: (item.source.section, item.target_start)
     ):
@@ -1322,17 +1334,58 @@ def port_coherent_units(
                 f"Projected {split.source.unit} overlaps a prior "
                 f"{split.source.section} range at 0x{split.target_start:08X}"
             )
+        gap = (
+            split.source.section,
+            previous_end.get(split.source.section, 0),
+            split.target_start,
+        )
+        preserved_alignment_gaps += gap in alignment_gaps
         previous_end[split.source.section] = split.target_end
     return (
         accepted,
         dict(sorted(rejected.items())),
-        folded_padding_ranges,
+        preserved_alignment_gaps,
         exact_symbol_range_remaps,
         {
             reason: tuple(sorted(units))
             for reason, units in sorted(rejected_units.items())
         },
     )
+
+
+def paired_functions(
+    split: PortedRange, matches: dict[int, FunctionSymbol]
+) -> list[tuple[FunctionSymbol, FunctionSymbol]]:
+    """Pair a coherent code range without letting one insertion hide other names.
+
+    Unequal function counts forbid whole-range ordinal pairing. Unique binary
+    anchors can still bound equal-count interior runs. Do not extrapolate past
+    the first/last anchor or pair across reordered anchors or unequal runs.
+    """
+    if split.source.section not in CODE_SECTIONS:
+        return []
+    source, target = split.source_functions, split.target_functions
+    if len(source) == len(target):
+        return list(zip(source, target))
+    target_indices = {function.address: index for index, function in enumerate(target)}
+    anchors = [
+        (index, target_indices[match.address])
+        for index, function in enumerate(source)
+        if (match := matches.get(function.address)) is not None
+        and match.address in target_indices
+    ]
+    pairs = {index: target_index for index, target_index in anchors}
+    if all(left[1] < right[1] for left, right in zip(anchors, anchors[1:])):
+        for (left_source, left_target), (right_source, right_target) in zip(
+            anchors, anchors[1:]
+        ):
+            if right_source - left_source == right_target - left_target:
+                for offset in range(1, right_source - left_source):
+                    pairs[left_source + offset] = left_target + offset
+    return [
+        (source[index], target[target_index])
+        for index, target_index in sorted(pairs.items())
+    ]
 
 
 def build_symbol_mappings(
@@ -1343,17 +1396,7 @@ def build_symbol_mappings(
         mappings: dict[str, str] = {}
         target_names: set[str] = set()
         source_names: set[str] = set()
-        if split.source.section in CODE_SECTIONS and len(split.source_functions) == len(
-            split.target_functions
-        ):
-            function_pairs = zip(split.source_functions, split.target_functions)
-        else:
-            function_pairs = (
-                (source_function, target_function)
-                for source_function in split.source_functions
-                if (target_function := matches.get(source_function.address)) is not None
-                and split.target_start <= target_function.address < split.target_end
-            )
+        function_pairs = paired_functions(split, matches)
         for source_function, target_function in function_pairs:
             if (
                 target_function.name in target_names
@@ -1401,6 +1444,22 @@ def projected_symbol_name(name: str, target_address: int) -> str:
     return f"{match.group('prefix')}_{target_address:08X}"
 
 
+def source_data_identifiers(splits: list[SplitRange], root: Path = Path("src")) -> set[str]:
+    """Keep legacy data names used by shared C, without treating comments as uses."""
+    token = re.compile(
+        r'//[^\n]*|/\*[\s\S]*?\*/|"(?:\\.|[^"\\])*"|'
+        r"'(?:\\.|[^'\\])*'|(?P<symbol>\blbl_[0-9A-Fa-f]{8}\b)"
+    )
+    names: set[str] = set()
+    for unit in sorted({item.unit for item in splits}):
+        path = root / unit
+        if path.suffix not in {".c", ".cpp", ".cc", ".cxx"} or not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        names.update(match.group("symbol") for match in token.finditer(text) if match.group("symbol"))
+    return names
+
+
 def containing_range(
     ranges: list[PortedRange], address: int, *, target: bool
 ) -> PortedRange | None:
@@ -1438,12 +1497,25 @@ def render_projected_symbols(
 
     Source symbols in coherently mapped non-code ranges carry the object sizes
     needed to keep split boundaries legal.  Target function boundaries remain
-    authoritative; only uniquely matched functions receive their canonical EN
-    names.
+    authoritative; canonical EN names come from unique matches or coherent
+    equal-count function runs.
     """
 
-    source_lines = source_path.read_text(encoding="utf-8").splitlines()
-    target_lines = target_path.read_text(encoding="utf-8").splitlines()
+    return render_projected_symbol_texts(
+        source_path.read_text(encoding="utf-8"), target_path.read_text(encoding="utf-8"), ported, matches
+    )
+
+
+def render_projected_symbol_texts(
+    source_text: str,
+    target_text: str,
+    ported: list[PortedRange],
+    matches: dict[int, FunctionSymbol],
+    canonical_data_names: set[str] | None = None,
+) -> tuple[str, int, int, int]:
+    canonical_data_names = canonical_data_names or set()
+    source_lines = source_text.splitlines()
+    target_lines = target_text.splitlines()
     claimed_by_section: dict[str, list[PortedRange]] = defaultdict(list)
     ranges_by_section: dict[str, list[PortedRange]] = defaultdict(list)
     for item in ported:
@@ -1507,6 +1579,7 @@ def render_projected_symbols(
                     continue
         records.append((section, address, ordinal, line))
 
+    data_name_fallbacks: dict[int, str] = {}
     inserted = 0
     for ordinal, line in enumerate(source_lines):
         match = SYMBOL_LINE_RE.match(line)
@@ -1522,6 +1595,9 @@ def render_projected_symbols(
             continue
         target_address = item.target_start + (address - item.source.start)
         target_name = projected_symbol_name(match.group(1), target_address)
+        if match.group(1) in canonical_data_names and target_name != match.group(1):
+            data_name_fallbacks[len(records)] = target_name
+            target_name = match.group(1)
         records.append(
             (
                 section,
@@ -1532,19 +1608,31 @@ def render_projected_symbols(
         )
         inserted += 1
 
+    # Source-used names can collide with a regional label outside the mapped
+    # range, or with another name that had to retain its regional spelling.
+    # Fall back without overwriting either owner; repeat to handle such chains.
+    data_conflicts = 0
+    while data_name_fallbacks:
+        owners: dict[str, set[int]] = defaultdict(set)
+        for _, address, _, line in records:
+            record = SYMBOL_LINE_RE.match(line)
+            assert record is not None
+            owners[record.group(1)].add(address)
+        conflicting = [index for index in data_name_fallbacks
+                       if len(owners[SYMBOL_LINE_RE.match(records[index][3]).group(1)]) > 1]
+        if not conflicting:
+            break
+        for index in conflicting:
+            section, address, ordinal, line = records[index]
+            records[index] = (section, address, ordinal,
+                              rewrite_symbol_line(line, name=data_name_fallbacks.pop(index)))
+            data_conflicts += 1
+
     desired_by_address: dict[int, str] = {}
     for split in ported:
         if split.source.section not in CODE_SECTIONS:
             continue
-        if len(split.source_functions) == len(split.target_functions):
-            function_pairs = zip(split.source_functions, split.target_functions)
-        else:
-            function_pairs = (
-                (source_function, target_function)
-                for source_function in split.source_functions
-                if (target_function := matches.get(source_function.address)) is not None
-                and split.target_start <= target_function.address < split.target_end
-            )
+        function_pairs = paired_functions(split, matches)
         for source_function, target_function in function_pairs:
             desired_by_address[target_function.address] = source_function.name
 
@@ -1556,7 +1644,7 @@ def render_projected_symbols(
 
     rewritten_records: list[tuple[str, int, int, str]] = []
     renamed = 0
-    conflicts = 0
+    conflicts = data_conflicts
     for section, address, ordinal, line in records:
         match = SYMBOL_LINE_RE.match(line)
         assert match is not None
@@ -1592,6 +1680,118 @@ def render_projected_symbols(
     )
 
 
+@dataclass(frozen=True)
+class VersionProjection:
+    ported: list[PortedRange]
+    matches: dict[int, FunctionSymbol]
+    rejected: dict[str, int]
+    preserved_alignment_gaps: int
+    exact_symbol_range_remaps: int
+    rejected_units: dict[str, tuple[str, ...]]
+    anchor_counts: dict[str, tuple[int, int]]
+    snapped_boundaries: int
+    symbols: str
+    renamed: int
+    conflicts: int
+    symbol_delta: int
+    passes: int = 1
+
+
+def project_symbol_snapshot(
+    source_dol: DolFile, source_splits: list[SplitRange], source_symbols: str,
+    target_dol: DolFile, target_symbols: str,
+    canonical_data_names: set[str] | None = None,
+) -> VersionProjection:
+    source_functions = parse_function_symbols(source_symbols)
+    target_functions = parse_function_symbols(target_symbols)
+    matches = unique_function_matches(
+        source_dol, source_functions, target_dol, target_functions
+    )
+    source_symbol_spans = parse_symbol_spans(source_symbols)
+    target_symbol_spans = parse_symbol_spans(target_symbols)
+    target_named_symbol_span_index = symbol_span_index(target_symbol_spans)
+    target_all_symbol_span_index = symbol_span_index(
+        target_symbol_spans, include_address_symbols=True
+    )
+    boundary_maps, anchor_counts = build_all_boundary_maps(
+        source_splits,
+        source_dol,
+        target_dol,
+        source_functions,
+        matches,
+        target_all_symbol_span_index,
+    )
+    boundary_maps, snapped_boundaries = snap_symbol_boundaries(
+        source_splits,
+        boundary_maps,
+        source_dol,
+        target_dol,
+        source_symbol_spans,
+        target_symbol_spans,
+        target_named_symbol_span_index,
+        target_all_symbol_span_index,
+    )
+    (
+        ported,
+        rejected,
+        preserved_alignment_gaps,
+        exact_symbol_range_remaps,
+        rejected_units,
+    ) = port_coherent_units(
+        source_splits,
+        source_functions,
+        target_functions,
+        boundary_maps,
+        target_named_symbol_span_index,
+        target_all_symbol_span_index,
+        source_dol,
+        target_dol,
+        source_symbol_spans,
+        target_symbol_spans,
+    )
+    symbols, renamed, conflicts, symbol_delta = render_projected_symbol_texts(
+        source_symbols, target_symbols, ported, matches, canonical_data_names
+    )
+    return VersionProjection(
+        ported=ported, matches=matches, rejected=rejected,
+        preserved_alignment_gaps=preserved_alignment_gaps,
+        exact_symbol_range_remaps=exact_symbol_range_remaps,
+        rejected_units=rejected_units, anchor_counts=anchor_counts,
+        snapped_boundaries=snapped_boundaries, symbols=symbols,
+        renamed=renamed, conflicts=conflicts, symbol_delta=symbol_delta,
+    )
+
+
+def project_version(
+    source_dol: DolFile, source_splits: list[SplitRange], source_symbols: str,
+    target_dol: DolFile, target_symbols: str, *, max_passes: int = 8,
+    canonical_data_names: set[str] | None = None,
+) -> VersionProjection:
+    """Refine symbol boundaries before publishing one internally consistent result.
+
+    Coherent ranges reveal finer target symbol extents. Those extents can unlock
+    the existing binary-chain and ownership checks on the next pass. All passes
+    remain in memory; unstable projections must not partially update configs.
+    """
+    seen = {target_symbols}
+    renamed = symbol_delta = 0
+    for iteration in range(1, max_passes + 1):
+        result = project_symbol_snapshot(
+            source_dol, source_splits, source_symbols, target_dol, target_symbols, canonical_data_names
+        )
+        renamed += result.renamed
+        symbol_delta += result.symbol_delta
+        if result.symbols == target_symbols:
+            return replace(result, renamed=renamed, symbol_delta=symbol_delta, passes=iteration)
+        if result.symbols in seen:
+            raise ValueError("Regional symbol projection cycles; no configuration written")
+        seen.add(result.symbols)
+        target_symbols = result.symbols
+    raise ValueError(
+        f"Regional symbol projection did not stabilize in {max_passes} passes; no configuration written"
+    )
+
+
 def write_lf_text(path: Path, text: str) -> None:
     with path.open("w", encoding="utf-8", newline="\n") as stream:
         stream.write(text)
@@ -1618,58 +1818,27 @@ def main() -> int:
 
     source_root = Path("config") / args.source
     target_root = Path("config") / args.target
-    source_dol = DolFile(Path("orig") / args.source / "sys" / "main.dol")
-    target_dol = DolFile(Path("orig") / args.target / "sys" / "main.dol")
-    source_functions = load_function_symbols(source_root / "symbols.txt")
-    target_functions = load_function_symbols(target_root / "symbols.txt")
+    try:
+        source_dol = verified_dol(Path("orig") / args.source / "sys" / "main.dol", source_root / "config.yml")
+        target_dol = verified_dol(Path("orig") / args.target / "sys" / "main.dol", target_root / "config.yml")
+    except (ValueError, FileNotFoundError) as error:
+        parser.error(str(error))
     target_header, _ = load_splits(target_root / "splits.txt")
     _, source_splits = load_splits(source_root / "splits.txt")
-
-    matches = unique_function_matches(
-        source_dol, source_functions, target_dol, target_functions
-    )
-    source_symbol_spans = load_symbol_spans(source_root / "symbols.txt")
-    target_symbol_spans = load_symbol_spans(target_root / "symbols.txt")
-    target_named_symbol_span_index = symbol_span_index(target_symbol_spans)
-    target_all_symbol_span_index = symbol_span_index(
-        target_symbol_spans, include_address_symbols=True
-    )
-    boundary_maps, anchor_counts = build_all_boundary_maps(
-        source_splits,
-        source_dol,
-        target_dol,
-        source_functions,
-        matches,
-        target_all_symbol_span_index,
-    )
-    boundary_maps, snapped_boundaries = snap_symbol_boundaries(
-        source_splits,
-        boundary_maps,
-        source_dol,
-        target_dol,
-        source_symbol_spans,
-        target_symbol_spans,
-        target_named_symbol_span_index,
-        target_all_symbol_span_index,
-    )
-    (
-        ported,
-        rejected,
-        folded_padding_ranges,
-        exact_symbol_range_remaps,
-        rejected_units,
-    ) = port_coherent_units(
-        source_splits,
-        source_functions,
-        target_functions,
-        boundary_maps,
-        target_named_symbol_span_index,
-        target_all_symbol_span_index,
-        source_dol,
-        target_dol,
-        source_symbol_spans,
-        target_symbol_spans,
-    )
+    try:
+        projection = project_version(
+            source_dol, source_splits, (source_root / "symbols.txt").read_text(encoding="utf-8"),
+            target_dol, (target_root / "symbols.txt").read_text(encoding="utf-8"),
+            canonical_data_names=source_data_identifiers(source_splits),
+        )
+    except ValueError as error:
+        parser.error(str(error))
+    ported, matches = projection.ported, projection.matches
+    rejected, rejected_units = projection.rejected, projection.rejected_units
+    anchor_counts = projection.anchor_counts
+    snapped_boundaries = projection.snapped_boundaries
+    exact_symbol_range_remaps = projection.exact_symbol_range_remaps
+    preserved_alignment_gaps = projection.preserved_alignment_gaps
     mappings = build_symbol_mappings(ported, matches)
     split_text = render_splits(target_header, ported)
     mapping_text = json.dumps(mappings, indent=2, sort_keys=True) + "\n"
@@ -1697,8 +1866,9 @@ def main() -> int:
         f"{mapped_symbols} symbol mappings, "
         f"{snapped_boundaries} proven symbol-edge snaps, "
         f"{exact_symbol_range_remaps} exact symbol-range remaps, "
-        f"{folded_padding_ranges} folded padding ranges"
+        f"{preserved_alignment_gaps} preserved alignment gaps"
     )
+    print(f"  Symbol refinement stabilized in {projection.passes} passes")
     for section, counts in anchor_counts.items():
         boundaries = {
             address
@@ -1718,19 +1888,15 @@ def main() -> int:
     if args.write:
         write_lf_text(target_root / "splits.txt", split_text)
         write_lf_text(target_root / "symbol_mappings.json", mapping_text)
-        canonical_symbols, renamed, conflicts, symbol_delta = render_projected_symbols(
-            source_root / "symbols.txt",
-            target_root / "symbols.txt",
-            ported,
-            matches,
-        )
+        canonical_symbols = projection.symbols
+        renamed, conflicts, symbol_delta = projection.renamed, projection.conflicts, projection.symbol_delta
         write_lf_text(target_root / "symbols.txt", canonical_symbols)
         print(f"Wrote {target_root / 'splits.txt'}")
         print(f"Wrote {target_root / 'symbol_mappings.json'}")
         print(f"Renamed {renamed} functions in {target_root / 'symbols.txt'}")
         print(f"Projected non-code symbols (net {symbol_delta:+d} entries)")
         if conflicts:
-            print(f"Preserved {conflicts} function names with canonical-name conflicts")
+            print(f"Preserved {conflicts} regional symbol names with canonical-name conflicts")
     if args.write_matching:
         report_path = Path("build") / args.target / "report.json"
         report = json.loads(report_path.read_text(encoding="utf-8"))

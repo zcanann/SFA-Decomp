@@ -248,6 +248,58 @@ class BackendIRTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "register alignment"):
             validate_alignment(data, ["clrrwi r7,r9,4", "mr r4,r7", "blr"], code)
 
+    def test_rotate_aliases_check_complete_encoding(self):
+        # Encodings independently assembled with the project's PowerPC binutils.
+        cases = [
+            ("rotlwi r7,r8,3", (3, 0, 31), 0x5507183E),
+            ("rlwinm r7,r8,5,28,3", (5, 28, 3), 0x55072F06),
+            ("clrlwi r7,r8,4", (0, 4, 31), 0x5507013E),
+            ("slwi r7,r8,3", (3, 0, 28), 0x55071838),
+            ("srwi r7,r8,3", (29, 3, 31), 0x5507E8FE),
+        ]
+        for mnemonic, fields, encoding in cases:
+            data = fixture()
+            instruction = data["blocks"][0]["instructions"][0]["words"]
+            instruction[8:] = [0x67 | (5 << 16)] + list(struct.unpack(
+                "<15I", reg(7) + reg(8, 1) + b"".join(immediate(v) for v in fields)))
+            asm = [mnemonic, "mr r4,r7", "blr"]
+            code = struct.pack(">3I", encoding, 0x7CE43B78, 0x4E800020)
+            with self.subTest(mnemonic=mnemonic):
+                self.assertEqual(len(validate_alignment(data, asm, code)), 3)
+                for bit in range(32):
+                    corrupt = struct.pack(">I", encoding ^ (1 << bit)) + code[4:]
+                    with self.assertRaisesRegex(ValueError, "operand encoding"):
+                        validate_alignment(data, asm, corrupt)
+
+    def test_rotate_rejects_invalid_mask_and_shift_fields(self):
+        for field in range(3):
+            for value in (-1, 32):
+                fields = [3, 0, 31]
+                fields[field] = value
+                data = fixture()
+                instruction = data["blocks"][0]["instructions"][0]["words"]
+                instruction[8:] = [0x67 | (5 << 16)] + list(struct.unpack(
+                    "<15I", reg(7) + reg(8, 1) + b"".join(immediate(v) for v in fields)))
+                with self.subTest(field=field, value=value), self.assertRaisesRegex(ValueError, "invalid rotate"):
+                    validate_alignment(data, ["rotlwi r7,r8,3", "mr r4,r7", "blr"],
+                                       bytes.fromhex("5507183e 7ce43b78 4e800020"))
+
+    def test_blur_unsigned_division_encoding(self):
+        data = fixture()
+        division = data["blocks"][0]["instructions"][0]["words"]
+        division[8:] = [0x46 | (3 << 16)] + list(struct.unpack("<9I", reg(25) + reg(0, 1) + reg(5, 1)))
+        asm = ["divwu r25,r0,r5", "mr r4,r7", "blr"]
+        code = bytes.fromhex("7f202b96 7ce43b78 4e800020")
+        self.assertEqual(len(validate_alignment(data, asm, code)), 3)
+        for bit in range(32):
+            corrupt = struct.pack(">I", 0x7F202B96 ^ (1 << bit)) + code[4:]
+            with self.subTest(bit=bit), self.assertRaisesRegex(ValueError, "operand encoding"):
+                validate_alignment(data, asm, corrupt)
+        with self.assertRaisesRegex(ValueError, "opcode alignment"):
+            validate_alignment(data, ["divw r25,r0,r5", *asm[1:]], code)
+        with self.assertRaisesRegex(ValueError, "register alignment"):
+            validate_alignment(data, ["divwu r25,r5,r0", *asm[1:]], code)
+
     def test_malformed_immediate_cannot_bypass_encoding_check(self):
         data = fixture()
         data["blocks"][0]["instructions"][0]["words"][12] = 5

@@ -22,11 +22,11 @@ MNEMONICS = {
     0x17: "lbzx", 0x19: "lhz", 0x1B: "lhzx", 0x1D: "lha", 0x1F: "lhax",
     0x22: "lwz", 0x24: "lwzx", 0x28: "stb", 0x2A: "stbx", 0x2C: "sth", 0x2E: "sthx",
     0x31: "stw", 0x32: "stwu", 0x33: "stwx", 0x3C: "add", 0x3F: "addi",
-    0x42: "addis", 0x44: "addze", 0x45: "divw", 0x47: "mulhw", 0x49: "mulli", 0x4A: "mullw", 0x4B: "neg",
+    0x42: "addis", 0x44: "addze", 0x45: "divw", 0x46: "divwu", 0x47: "mulhw", 0x49: "mulli", 0x4A: "mullw", 0x4B: "neg",
     0x4C: "subf", 0x4F: "subfic", 0x52: "cmpwi", 0x53: "cmpw",
     0x54: "cmplwi", 0x55: "cmplw", 0x56: "andi.", 0x58: "ori", 0x59: "oris", 0x5A: "xori",
     0x5B: "xoris", 0x5C: "and", 0x5D: "or", 0x5E: "xor", 0x62: "andc", 0x64: "extsb",
-    0x65: "extsh", 0x66: "cntlzw", 0x67: "clrlwi clrrwi rlwinm slwi srwi",
+    0x65: "extsh", 0x66: "cntlzw", 0x67: "clrlwi clrrwi rlwinm rotlwi slwi srwi",
     0x69: "rlwimi", 0x6A: "slw", 0x6B: "srw", 0x6C: "srawi", 0x6D: "sraw", 0x70: "crset", 0x73: "cror",
     0x75: "crclr", 0x78: "mtctr", 0x79: "mtlr", 0x81: "mflr", 0x82: "mfcr",
     0x89: "li", 0x8A: "lis", 0x8B: "mr", 0x8D: "not", 0x8E: "lfs",
@@ -260,14 +260,14 @@ def validate_alignment(snapshot, assembly, code):
             extended = {0x2A: 215, 0x2E: 407, 0x33: 151, 0x98: 663}[op]
             expected = ((31 << 26) | (source["number"] << 21) | (base["number"] << 16)
                         | (index_register["number"] << 11) | (extended << 1))
-        elif op == 0x45:
+        elif op in (0x45, 0x46):
             if len(args) != 3 or any(
                     a["kind"] != 0 or a["register_class"] != 4 or not 0 <= a["number"] < 32
                     for a in args):
-                raise ValueError("invalid signed division operands")
+                raise ValueError("invalid division operands")
             dest, dividend, divisor = args
             expected = ((31 << 26) | (dest["number"] << 21) | (dividend["number"] << 16)
-                        | (divisor["number"] << 11) | (491 << 1))
+                        | (divisor["number"] << 11) | ((491 if op == 0x45 else 459) << 1))
         elif op == 0x56:
             if len(args) != 4:
                 raise ValueError("invalid immediate mask operands")
@@ -277,6 +277,17 @@ def validate_alignment(snapshot, assembly, code):
                     or condition["kind"] != 0 or condition["register_class"] != 1 or condition["number"] != 0):
                 raise ValueError("invalid immediate mask operands")
             expected = (28 << 26) | (source["number"] << 21) | (dest["number"] << 16) | mask["value"]
+        elif op == 0x67:
+            if len(args) != 5:
+                raise ValueError("invalid rotate-and-mask operands")
+            dest, source, shift, mask_begin, mask_end = args
+            if (any(a["kind"] != 0 or a["register_class"] != 4 or not 0 <= a["number"] < 32
+                    for a in (dest, source))
+                    or any(a["kind"] != 2 or not 0 <= a["value"] < 32
+                           for a in (shift, mask_begin, mask_end))):
+                raise ValueError("invalid rotate-and-mask operands")
+            expected = ((21 << 26) | (source["number"] << 21) | (dest["number"] << 16)
+                        | (shift["value"] << 11) | (mask_begin["value"] << 6) | (mask_end["value"] << 1))
         if expected is not None and expected != actual:
             raise ValueError(f"operand encoding failed at {index}: {asm}")
     return instructions

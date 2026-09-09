@@ -580,7 +580,7 @@ void showMemCardError(u8 err)
         gameTextSetColor(0xff, 0xc0, 0x40, 0xff);
         for (i = 0, m = msgs, y = 0x64; i < count + 1; m++, y += 0x14, i++)
         {
-            t = (GameTextDef*)gameTextGet(*m);
+            t = gameTextGet(*m);
             yy = y + ((i > 0) ? 0x64 : 0);
             for (j = 0; j < t->count; j++)
             {

@@ -5,26 +5,7 @@
 #include "game/objects/object.h"
 #include "main/camera_object.h"
 #include "main/resource.h"
-
-typedef struct CamcontrolTraceWork {
-    u8 unknown00[0x40];
-    f32 radius;
-    u8 unknown44[0x0C];
-    s8 bboxHit;
-    u8 unknown51[3];
-    s8 mode;
-    u8 unknown55[0x17];
-    s16 hitCount;
-    u8 blocked;
-    u8 pad6F;
-} CamcontrolTraceWork;
-
-STATIC_ASSERT(offsetof(CamcontrolTraceWork, radius) == 0x40);
-STATIC_ASSERT(offsetof(CamcontrolTraceWork, bboxHit) == 0x50);
-STATIC_ASSERT(offsetof(CamcontrolTraceWork, mode) == 0x54);
-STATIC_ASSERT(offsetof(CamcontrolTraceWork, hitCount) == 0x6C);
-STATIC_ASSERT(offsetof(CamcontrolTraceWork, blocked) == 0x6E);
-STATIC_ASSERT(sizeof(CamcontrolTraceWork) == 0x70);
+#include "main/track_hit_results.h"
 
 typedef struct CameraModeNormalActionSettings {
     u8 pad00[2];
@@ -269,8 +250,8 @@ STATIC_ASSERT(sizeof(CameraModeNormalDescriptor) == 0x40);
 extern CameraModeNormalState* gCameraModeNormalState;
 extern CameraModeNormalDescriptor gCameraModeNormalDescriptor;
 
-int camcontrol_traceMove(f32* fromPos, f32* toPos, f32* outPos, u8* traceWork, char traceMode, u8 runTrace, u8 runBbox,
-                         f32 radius);
+int camcontrol_traceMove(f32* fromPos, f32* toPos, f32* outPos, TrackHitResults* traceWork, char traceMode, u8 runTrace,
+                         u8 runBbox, f32 radius);
 u8 camcontrol_traceFromTarget(f32* fromPos, GameObject* target, f32* outPos, void* unused);
 u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAnim, f32* outPos, s16* outRotY);
 void camcontrol_onTargetTraceBlocked(int unused);

@@ -1,7 +1,7 @@
 # AGENTS.md - SFA-Decomp Runbook
 
 > **Active compiler experiment (scope corrected 2026-09-06):** Only game-category
-> MWCC C/C++ units use the common GC/1.3 `config.compiler_version`. The ten older
+> MWCC C/C++ units use the common GC/1.3 `config.compiler_version`. The older
 > game math units are included, including the four under `dolphin/MSL_C/` that
 > explicitly select the game compiler. Keep `main/zlb.c` on its ProDG toolchain.
 > Dolphin SDK, MSL, MusyX, and compiler runtime retain their pre-migration compiler
@@ -68,6 +68,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 - Reference projects are evidence, not truth. Match version, compiler behavior, ABI, and surrounding code before borrowing anything.
 
 ## Working Style
+- Prioritize source changes shared across retail versions. Check promising changes against available secondary targets and carry verified exact objects into their progress manifests. Verify each input DOL against its configured hash; introduce regional source differences only when the binaries establish different behavior.
 - Start from one promising function, object, data block, or subsystem.
 - Work outward aggressively if the blocker is adjacent code, missing types, unknown globals, constructor patterns, SDK reuse, or bad file boundaries.
 - Do not get trapped in local optima. If a path stops yielding structure, switch level: inspect related code, assets, rodata, strings, object layouts, SDK analogs, or write tooling.
@@ -379,6 +380,15 @@ callee-save preservation across four direct calls. This establishes an assembly
 interface, not definitive original-language provenance. Retain the portable C
 reference and run both morph probes; see `docs/model_morph_targets.md`.
 This exception does not authorize assembly in other functions.
+
+Narrow hardware-access exception (2026-09-08), under the same compelling-evidence
+allowance: `setGQR6`, `setGQR7`, and the private inline `modelGetGQR7` in
+`src/main/model.c` may use one `mtspr` or `mfspr` instruction each. Retail setters
+write actual quantization registers consumed by the vertex kernels; a RAM shadow
+does not implement that contract. The inline reader lets the existing scalar
+reconstructions use live register state without fabricated storage. This does
+not authorize replacing their C arithmetic with assembly or claim those kernels
+match retail. See `docs/model_quantization_registers.md`.
 
 ## Pragmas
 

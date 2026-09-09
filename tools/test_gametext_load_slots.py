@@ -19,7 +19,8 @@ class GameTextLoadSlotTests(unittest.TestCase):
             self.skipTest('clang is required for source-body tests')
         source = (ROOT / 'src/main/gametext.c').read_text()
         headers = '\n'.join((ROOT / path).read_text() for path in (
-            'include/main/gametext_internal.h', 'include/main/textrender_internal.h'))
+            'include/main/gametext_lookup.h', 'include/main/gametext_internal.h',
+            'include/main/textrender_internal.h'))
         records = '\n'.join(re.search(
             r'typedef struct(?: ' + name + r')?\s*\{[^}]*\} ' + name + ';', headers).group()
             for name in ('GameTextDef', 'TextFont', 'LanguageName', 'GameTextLoadSlot'))

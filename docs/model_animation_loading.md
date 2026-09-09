@@ -69,3 +69,47 @@ symbol layouts, and relocations; match scores are unchanged. `ninja all_source`
 and the strict retail checksum build both pass. Formatting the active model
 source and canonical headers passes the dry-run check; only the model source
 needs a separate formatting diff.
+
+## Shared resource scratch allocation
+
+`ModelResourceScratch` now describes the initializer's single `0x830`-byte
+allocation. The first `0x800` bytes are signed halfword ID scratch, used for
+`MODELIND.bin` indirection and the temporary `MODANIM.BIN` list. The final
+`0x30` bytes are shared offset scratch with explicit union views:
+
+| Allocation offset | View | Retail access |
+| --- | --- | --- |
+| `0x000` | `ids[0x400]` | Eight-byte model-indirection reads and variable-length animation-ID reads. The loader warns above `0x800` bytes. |
+| `0x800` | `modelAnimationOffsets[8]` | `modelLoadAnimations` requests 16 bytes from `MODANIM.TAB`, then reads the first signed halfword. |
+| `0x800` | `animationMapOffsets[8]` | Both AMAP readers request 32 bytes at `(modelId & ~3) * 4`, then subtract words `index + 1` and `index`, with `index = modelId & 3`. |
+| `0x810` | Opaque tail alias | The initializer stores this address in `lbl_803DCB5C`; no current consumer establishes a role for its contents. |
+
+The eight-word AMAP transfer crosses the `+0x810` alias. These are overlapping
+views, not independent buffers. The union retains all `0x30` tail bytes while
+describing only the observed read windows; it does not assign a table capacity
+from the next pointer's address. Size and offset assertions establish the
+allocation extent and both published scratch addresses. Allocation and I/O
+sizes now derive from these records. The global pointers keep their proven
+storage types and declaration order, and the signed overflow comparison is
+preserved. Its warning still does not prevent an oversized load.
+
+EN v1.0 retail `ObjModel_InitResourceCaches` (`0x800296A4`) requests `0x830`
+bytes and publishes offsets zero, `0x800`, and `0x810`. Its entire normalized
+instruction body, plus those of `modelLoadAnimations` and `modelGetAmapSize`,
+agrees with checksum-verified EN rev1, JP, and PAL rev1. The locally available
+EN rev1, JP, and PAL resource sets also contain identical `MODANIM.TAB`
+(2,528 bytes) and `AMAP.TAB` (5,056 bytes). Their largest adjacent spans are
+1,716 and 34,320 bytes respectively. This is corroborating sibling-resource
+evidence, not a claim about absent EN v1.0 assets or PAL rev0.
+
+The complete compiled model object remains byte-identical, including all 85
+functions, allocated sections, symbols, and relocations. The recovery introduces
+no regional source conditions or compiler changes and does not increase match
+scores. The initializer and AMAP sizing function remain exact; the animation
+loader retains its existing register differences.
+
+Fresh compilation and objdiff checks for EN, EN rev1, JP, and PAL rev1
+preserve each target's model report and the common object SHA-256
+`e2240860057452c42d5a2074315a7d1b3da3917d2eb9c2d54ac0d9c7e782b74a`.
+Formatting preserves those same bytes. EN `all_source` and the strict retail
+checksum build pass within their 30-second limits.

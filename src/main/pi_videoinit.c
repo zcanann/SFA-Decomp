@@ -1,3 +1,5 @@
+#include "main/video_flip.h"
+#include "main/gpu_hang.h"
 #include "dolphin/os/OSReport.h"
 #include "dolphin/PPCArch.h"
 #include "dolphin/mtx.h"
@@ -122,8 +124,8 @@ void videoInit(void* unusedRenderMode, int unusedArg) {
     GXInitFifoLimits(gGxFifoObj, gGxFifoSize - 0x4000, (gGxFifoSize * 3) >> 2);
     GXSetCPUFifo(gGxFifoObj);
     GXSetGPFifo(gGxFifoObj);
-    Queue_Init(&gVideoFlipQueue, gVideoFlipQueueBuffer, 10, 3 * sizeof(void*));
-    OSInitThreadQueue((OSThreadQueue*)&gVideoFlipWaitQueue);
+    Queue_Init(&gVideoFlipQueue, gVideoFlipQueueBuffer, VIDEO_FLIP_QUEUE_CAPACITY, sizeof(VideoFlipToken));
+    OSInitThreadQueue(&gVideoFlipWaitQueue);
     VISetPreRetraceCallback(videoSwapFrameBuffers);
     VISetPostRetraceCallback(gpuErrorHandler);
     GXSetBreakPtCallback(videoBreakPointCallback);
@@ -238,18 +240,18 @@ extern volatile PPCWGPipe GXWGFifo : (0xCC008000);
 int GXFlush_(u8 visible, int unused) {
     void* fifo_get;
     void* fifo_put;
-    void* item[3];
+    VideoFlipToken token;
     int s;
     void* next;
     gxSetZMode_(1, GX_LEQUAL, 1);
     GXSetAlphaUpdate(GX_TRUE);
     GXFlush();
     GXGetFifoPtrs(gGxFifoObj, &fifo_get, &fifo_put);
-    item[0] = fifo_put;
-    item[1] = 0;
-    item[2] = renderFrameBuffer;
+    token.fifoWritePointer = fifo_put;
+    token.reserved = 0;
+    token.frameBuffer = renderFrameBuffer;
     s = OSDisableInterrupts();
-    Queue_Push(&gVideoFlipQueue, item);
+    Queue_Push(&gVideoFlipQueue, &token);
     if (gGxBreakPtEnabled == 0) {
         GXEnableBreakPt(fifo_put);
         gGxBreakPtEnabled = 1;
@@ -279,44 +281,45 @@ void videoBlackScreenForFrames(int frameCount) {
     VIFlush();
     gVideoBlackScreenFrameCount = frames;
 }
-void logGpuHang(void);
-void gxSetGPMetricsEnabled(int enabled);
 
 void logGpuHang(void) {
     char* strs = (char*)gLoadingScreenTextures;
-    u32 topClks, topPerf0, topClks2, topPerf1;
-    u32 botClks, botPerf0, botClks2, botPerf1;
-    u32 xfStuck;
-    u32 cmdStuck;
-    u32 rdIdle;
-    u32 cmdIdle;
-    u8 cmdRdy;
-    u8 readIdle;
-    u8 fifoErr;
-    u8 readIdleVal;
+    u32 xfTopBefore, xfBottomBefore, setupReadyBefore, rasterReadyBefore;
+    u32 xfTopAfter, xfBottomAfter, setupReadyAfter, rasterReadyAfter;
+    u32 xfTopUnchanged;
+    u32 xfBottomUnchanged;
+    u32 setupReadyAdvanced;
+    u32 rasterReadyAdvanced;
+    GXBool fifoReadIdle;
+    GXBool commandIdle;
+    GXBool unusedStatus;
+    GXBool commandIdleSnapshot;
 
-    GXReadXfRasMetric(&topPerf0, &topClks, &topPerf1, &topClks2);
-    GXReadXfRasMetric(&botPerf0, &botClks, &botPerf1, &botClks2);
-    xfStuck = (botClks - topClks) == 0;
-    cmdStuck = (botPerf0 - topPerf0) == 0;
-    rdIdle = (botClks2 - topClks2) != 0;
-    cmdIdle = (botPerf1 - topPerf1) != 0;
-    GXGetGPStatus(&fifoErr, &fifoErr, &cmdRdy, &readIdle, &fifoErr);
-    OSReport(strs + 0x4002c, cmdRdy, readIdle, xfStuck, cmdStuck, rdIdle, cmdIdle);
-    if (cmdStuck == 0 && rdIdle != 0) {
+    GXReadXfRasMetric(&xfBottomBefore, &xfTopBefore, &rasterReadyBefore, &setupReadyBefore);
+    GXReadXfRasMetric(&xfBottomAfter, &xfTopAfter, &rasterReadyAfter, &setupReadyAfter);
+    xfTopUnchanged = (xfTopAfter - xfTopBefore) == 0;
+    xfBottomUnchanged = (xfBottomAfter - xfBottomBefore) == 0;
+    setupReadyAdvanced = (setupReadyAfter - setupReadyBefore) != 0;
+    rasterReadyAdvanced = (rasterReadyAfter - rasterReadyBefore) != 0;
+    GXGetGPStatus(&unusedStatus, &unusedStatus, &fifoReadIdle, &commandIdle, &unusedStatus);
+    OSReport(strs + 0x4002c, fifoReadIdle, commandIdle, xfTopUnchanged, xfBottomUnchanged, setupReadyAdvanced,
+             rasterReadyAdvanced);
+    if (xfBottomUnchanged == 0 && setupReadyAdvanced != 0) {
         OSReport(strs + 0x400fc);
-    } else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0) {
+    } else if (xfTopUnchanged == 0 && xfBottomUnchanged != 0 && setupReadyAdvanced != 0) {
         OSReport(strs + 0x4011c);
-    } else if ((readIdleVal = readIdle) == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0) {
+    } else if ((commandIdleSnapshot = commandIdle) == 0 && xfTopUnchanged != 0 && xfBottomUnchanged != 0 &&
+               setupReadyAdvanced != 0) {
         OSReport(strs + 0x40144);
-    } else if (cmdRdy != 0 && readIdleVal != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 && cmdIdle != 0) {
+    } else if (fifoReadIdle != 0 && commandIdleSnapshot != 0 && xfTopUnchanged != 0 && xfBottomUnchanged != 0 &&
+               setupReadyAdvanced != 0 && rasterReadyAdvanced != 0) {
         OSReport(strs + 0x4016c);
     } else {
         OSReport(strs + 0x4019c);
     }
 }
 
-void gxSetGPMetricsEnabled(int enabled) {
+void videoSetGpuHangMetricsEnabled(int enabled) {
     if ((u8)enabled != 0) {
         GXSetGPMetric(GX_PERF0_NONE, GX_PERF1_NONE);
         GXWGFifo.u8 = 0x61;
@@ -340,7 +343,7 @@ void gxSetGPMetricsEnabled(int enabled) {
 }
 void gxDisableGpuHangRecovery(void) {
     gGpuHangRecoveryEnabled = 0;
-    gxSetGPMetricsEnabled(0);
+    videoSetGpuHangMetricsEnabled(0);
 }
 
 char sThreadStateAttrSuspendFormat[] = "thread: state=%d attr=%d suspend=%d\n";
@@ -384,7 +387,7 @@ void waitNextFrame(void) {
     }
     if ((u32)Queue_GetCount(&gVideoFlipQueue) > 1) {
         gGpuStallRetraceCount = 0;
-        OSSleepThread((OSThreadQueue*)&gVideoFlipWaitQueue);
+        OSSleepThread(&gVideoFlipWaitQueue);
     }
     OSRestoreInterrupts(lvl);
     Camera_ApplyFullViewport();

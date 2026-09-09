@@ -2,18 +2,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/trig_float_helpers.h"
 
-extern const float sFastReciprocalTwo;
-
-float fastReciprocal(float value) {
-    float reciprocal;
-
-    reciprocal = __fres(value);
-    reciprocal *= sFastReciprocalTwo - value * reciprocal;
-    reciprocal *= sFastReciprocalTwo - value * reciprocal;
-
-    return reciprocal;
-}
-
 #define STORE_SINCOS(angle, sine, cosine, sinOut, cosOut)                                                              \
     switch ((((u16)(angle)) + 0x2000) & 0xC000) {                                                                      \
     case 0x0000:                                                                                                       \

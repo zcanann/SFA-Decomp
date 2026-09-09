@@ -51,3 +51,33 @@ anonymous compiler symbols only. The complete objdiff report is unchanged:
 `modelDoRenderInstrs` remains 3,160 bytes at 99.94304%. The strict retail
 checksum and `all_source` both pass. The extra-joint helper's remaining diff
 is register allocation, not a record-layout or arithmetic mismatch.
+
+## Renderer input and stream types
+
+The main instruction renderer, material-state setup, and vertex-descriptor
+decoder now carry `ModelFileHeader`, `ObjModel`, `Shader`, and
+`ModelRenderOpTextureRefs` directly. The material lookup reads
+`activeModel->file`; its two optional textures use the existing record fields
+instead of an integer-array overlay. Five renderer callers pass the model
+header without converting it to a byte pointer.
+
+The vertex animation input, output, and GX position array select the existing
+`ObjModel.vtxBuf` members directly. The no-hit-volume path decrements
+`ObjHitReactState.resetHitboxMode` through its owning header, preserving the
+unsigned byte store, signed test, and subsequent object-state reload. No state
+size or field signedness changes.
+
+All renderer bitstream consumers now use `ModelRenderInstrsState`, the same
+0x14-byte record accepted by the initializer. The duplicate `MtxBitStream`
+definition and its three-word padding claim are removed. `instrs` and `bit`
+retain offsets 0x00 and 0x10; the intervening count fields and still-opaque
+`fieldC` remain owned by the canonical header. Matrix roles, the owner argument,
+and the skin-matrix-ready flag are named without splitting local lifetimes.
+
+This is source recovery, not a new code match: all 32 function bodies,
+allocated section contents, named symbol layouts, and resolved relocation
+destinations remain unchanged. Compiler-generated constant labels renumber;
+the complete ELF is therefore not byte-identical. `shader.o`, the internal
+header's only other source consumer, is byte-identical when compiled against
+the old and new header. Objdiff remains 99.87762% for the unit, with 24/32
+functions exact. Both `all_source` and the strict retail checksum pass.

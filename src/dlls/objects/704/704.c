@@ -293,7 +293,7 @@ int isFrontEndUiActive(void) {
     return 0;
 }
 void titleScreenShowCopyright(u8 arg) {
-    void* tb;
+    GameTextDef* text;
     TextSlot* box;
 
     if (arg != 0) {
@@ -307,9 +307,9 @@ void titleScreenShowCopyright(u8 arg) {
             gTitleScreenCopyrightLatch = 1;
         }
     }
-    tb = gameTextGet(FRONT_TEXT_COPYRIGHT);
-    if (*(u16*)tb != 0xffff) {
-        box = gameTextGetBox(*(u8*)((char*)tb + 4));
+    text = gameTextGet(FRONT_TEXT_COPYRIGHT);
+    if (text->identifier != 0xffff) {
+        box = gameTextGetBox(text->boxId);
         if (gTitleScreenCopyrightBaseY == 0) {
             gTitleScreenCopyrightBaseY = box->y;
         }
@@ -390,7 +390,7 @@ void titleScreenDrawMenuFrame(int alpha, int hideHighlight, u32 showArrows) {
         }
     }
     if (gTitleScreenCursorY > 0.0f && (boxIndex = linkGetSelectedItemId()) != 0xFFFF) {
-        int t = ((TextSlot*)gameTextGetBox(boxIndex))->y;
+        int t = gameTextGetBox(boxIndex)->y;
         xb = (int)mtx[3];
         yb = t + (int)mtx[7];
         if ((hideHighlight & 0xff) == 0u) {

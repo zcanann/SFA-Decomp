@@ -35,6 +35,10 @@ class TrackGroundQueryTests(unittest.TestCase):
         source = (ROOT / "src/main/track_dolphin.c").read_text()
         hits = (ROOT / "include/main/track_hit_results.h").read_text()
         track = (ROOT / "include/main/track_dolphin.h").read_text()
+        vectors = (ROOT / "include/dolphin/mtx/vec_types.h").read_text()
+        vector = re.search(r"typedef struct Vec\s*\{.*?\}[^;]+;", vectors, re.S).group()
+        vector_alias = re.search(r"typedef Vec Vec3f;",
+                                 (ROOT / "include/main/vec_types.h").read_text()).group()
         function = re.search(r"^int trackGetHeight\(.*?^\}", source, re.M | re.S).group()
         declarations = "\n".join(declaration(source, name) for name in (
             "gTrackBlockDescriptors", "gTrackGroundHits", "gTrackGroundHitOrder",
@@ -60,7 +64,7 @@ int _fltused;
 #else
 #define EXPORT
 #endif
-''' + record(hits, "TrackGroundHit") + record(hits, "TrackQueryBounds") +
+''' + vector + vector_alias + record(hits, "TrackGroundHit") + record(hits, "TrackQueryBounds") +
                            record(track, "TrackBlockDescriptor") + triangle + declarations + r'''
 static GameObject objects[2], queryObject;
 static TrackTriangle triangles[11];

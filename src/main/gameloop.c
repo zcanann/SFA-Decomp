@@ -334,14 +334,14 @@ void askProgressiveScanMode(void) {
     s32 textId;
     u32 i;
     u32 j;
-    u8* box;
-    u8 savedByte;
+    GameTextBox* box;
+    u8 savedAlignment;
 
     counter = 0;
     sel = 1;
     box = gameTextGetBox(0);
-    savedByte = box[0x10];
-    box[0x10] = 0;
+    savedAlignment = box->alignH;
+    box->alignH = 0;
     do {
         counter++;
         padUpdate();
@@ -372,7 +372,7 @@ void askProgressiveScanMode(void) {
             sel = 0;
         }
     } while ((getButtonsJustPressed(0) & PAD_BUTTON_A) == 0 && counter < 600);
-    box[0x10] = savedByte;
+    box->alignH = savedAlignment;
     waitNextFrame();
     GXFlush_(0, 0);
     waitNextFrame();
