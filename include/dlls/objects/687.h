@@ -6,13 +6,12 @@
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_setup.h"
 
-#define TREE_APPLE_COUNT 3
+#define TREE_APPLE_COUNT         3
 #define TREE_BURST_PROFILE_COUNT 11
 
 /* Reader view only: the complete EN placement extent is not established.
  * Do not allocate or copy placements using sizeof this prefix. */
-typedef struct TreePlacementPrefix
-{
+typedef struct TreePlacementPrefix {
     ObjPlacement base;
     u8 rotZ;
     u8 rotY;
@@ -25,8 +24,7 @@ typedef struct TreePlacementPrefix
 } TreePlacementPrefix;
 
 /* tree_getExtraSize allocates the complete 0x5C-byte state. */
-typedef struct TreeState
-{
+typedef struct TreeState {
     GameObject* apples[TREE_APPLE_COUNT];
     f32 applePositions[TREE_APPLE_COUNT][3];
     f32 appleRespawnTimers[TREE_APPLE_COUNT];
@@ -65,8 +63,7 @@ STATIC_ASSERT(offsetof(TreeState, flags) == 0x58);
 STATIC_ASSERT(offsetof(TreeState, burstProfileIndex) == 0x5A);
 STATIC_ASSERT(sizeof(TreeState) == 0x5c);
 
-typedef struct TreeEffectBurst
-{
+typedef struct TreeEffectBurst {
     Vec offset;
     f32 radius;
 } TreeEffectBurst;
