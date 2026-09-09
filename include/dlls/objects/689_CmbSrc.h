@@ -6,7 +6,7 @@
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_setup.h"
 
-#define CMBSRC_PLACEMENT_BYTES 0x30
+#define CMBSRC_PLACEMENT_BYTES   0x30
 #define CMBSRC_EXTRA_STATE_BYTES 0x28
 
 #define CMBSRC_OBJECT_ID 0x06E8
@@ -15,7 +15,7 @@
 
 #define CMBSRC_COLOR_CYCLE_COUNT 3
 
-#define CMBSRC_COLOR_COUNT 16
+#define CMBSRC_COLOR_COUNT      16
 #define CMBSRC_COLOR_BANK_COUNT 2
 
 struct ModelLightStruct;
@@ -25,51 +25,51 @@ struct ModelLightStruct;
  * from uninitialized slack in the allocator's rounded 0x40-byte block.
  * This full-record type does not describe that short producer's extent. */
 typedef struct CmbSrcPlacement {
-  ObjPlacement base;
-  u8 rotZ;
-  u8 rotY;
-  u8 rotX;
-  u8 colorIndex;
-  u8 effectMode;
-  u8 pulseSubMode;
-  u8 unknown1E[0x20 - 0x1E];
-  f32 radius;
-  s16 gameBit;
-  u8 colorDistance;
-  u8 effectDistance;
-  union {
-    u8 pulseDistance;       /* Ordinary source: maximum pulse distance / 8. */
-    u8 thrusterEmissionParam;  /* Normalized parameter passed to objfx_spawnLightPulse. */
-  } modeParam;
-  u8 flags;
-  u8 behaviorFlags;
-  u8 inactiveSeconds;
-  u8 glowProjectionMode;
-  u8 unknown2D[CMBSRC_PLACEMENT_BYTES - 0x2D];
+    ObjPlacement base;
+    u8 rotZ;
+    u8 rotY;
+    u8 rotX;
+    u8 colorIndex;
+    u8 effectMode;
+    u8 pulseSubMode;
+    u8 unknown1E[0x20 - 0x1E];
+    f32 radius;
+    s16 gameBit;
+    u8 colorDistance;
+    u8 effectDistance;
+    union {
+        u8 pulseDistance;         /* Ordinary source: maximum pulse distance / 8. */
+        u8 thrusterEmissionParam; /* Normalized parameter passed to objfx_spawnLightPulse. */
+    } modeParam;
+    u8 flags;
+    u8 behaviorFlags;
+    u8 inactiveSeconds;
+    u8 glowProjectionMode;
+    u8 unknown2D[CMBSRC_PLACEMENT_BYTES - 0x2D];
 } CmbSrcPlacement;
 
 /* MWCC stores this one-bit field in bit 7 of the final state byte. */
 typedef struct CmbSrcHitFlags {
-  u8 disabled : 1;
+    u8 disabled : 1;
 } CmbSrcHitFlags;
 
 /* cmbsrc_getExtraSize returns 0x28 bytes. */
 typedef struct CmbSrcState {
-  struct ModelLightStruct *light;
-  f32 effectTimer;
-  f32 pulseTimer;
-  f32 particleTimer;
-  f32 colorCycleTimer;
-  f32 inactiveTimer;
-  f32 radius;
-  f32 hitRecoverTimer;
-  u16 inactiveFrameCount;
-  u8 flags;
-  u8 colorCycleIndex;
-  u8 priorityHitType;
-  u8 active;
-  s8 hitCharge;
-  CmbSrcHitFlags hitFlags;
+    struct ModelLightStruct* light;
+    f32 effectTimer;
+    f32 pulseTimer;
+    f32 particleTimer;
+    f32 colorCycleTimer;
+    f32 inactiveTimer;
+    f32 radius;
+    f32 hitRecoverTimer;
+    u16 inactiveFrameCount;
+    u8 flags;
+    u8 colorCycleIndex;
+    u8 priorityHitType;
+    u8 active;
+    s8 hitCharge;
+    CmbSrcHitFlags hitFlags;
 } CmbSrcState;
 
 STATIC_ASSERT(sizeof(CmbSrcPlacement) == CMBSRC_PLACEMENT_BYTES);
@@ -113,8 +113,8 @@ STATIC_ASSERT(offsetof(CmbSrcState, hitFlags) == 0x27);
 
 /* Only the first three bytes are selected by the cycling code. */
 typedef struct CmbSrcColorCycleTable {
-  u8 indices[CMBSRC_COLOR_CYCLE_COUNT];
-  u8 unknown03[5];
+    u8 indices[CMBSRC_COLOR_CYCLE_COUNT];
+    u8 unknown03[5];
 } CmbSrcColorCycleTable;
 
 STATIC_ASSERT(sizeof(CmbSrcColorCycleTable) == 8);
