@@ -112,6 +112,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 - Use `python tools/orig/dol_vtables.py --stores-only` when hunting constructor-backed class boundaries, vtables, or callback tables in the retail DOL.
 - Use `python tools/orig/constructor_packets.py` when a store-backed DOL vtable/callback-table hit should become a non-built `src/main/unknown/constructors/` packet for class-boundary or hierarchy recovery.
 - Use `python tools/orig/romlist_params.py` when recovering object placement structs, param widths, or variable-length romlist families from retail data.
+- Use `python tools/orig/resource_registry_audit.py <version>` when regional resource names or descriptor splits look wrong. It checks retail registry pointers and callback correspondence without changing ownership; review complete neighboring units before applying its findings.
 - Write small custom tools and scripts under the tools/ folder when the repo lacks the visibility needed to move quickly.
 
 ## Rules
