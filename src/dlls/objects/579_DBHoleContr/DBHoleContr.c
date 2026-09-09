@@ -1,4 +1,5 @@
 /* DBHoleContr (DLL 0x243) */
+#include "dlls/objects/575_DB_egg.h"
 #include "main/obj_message.h"
 #include "main/object_render.h"
 #include "main/object_update_list.h"
@@ -15,7 +16,6 @@
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
-#define DBEGG_OBJGROUP                  0x24
 #define DBHOLECONTROL1_CHILD_OBJ        1337
 #define DBHOLECONTROL1_CHILD_SETUP_SIZE 56
 

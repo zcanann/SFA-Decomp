@@ -22,14 +22,6 @@ typedef struct WaterFlowWeSetup
     u8 phaseDriverDisabled;
 } WaterFlowWeSetup;
 
-typedef struct FoliageCurrentSetup
-{
-    ObjPlacement base;
-    u8 pad18;
-    u8 currentRadius;
-    u8 currentFlags;
-} FoliageCurrentSetup;
-
 typedef struct ObjectCurrentSourceSetup
 {
     ObjPlacement base;
@@ -44,8 +36,6 @@ STATIC_ASSERT(offsetof(WaterFlowWeSetup, rotZ) == 0x18);
 STATIC_ASSERT(offsetof(WaterFlowWeSetup, scale) == 0x1b);
 STATIC_ASSERT(offsetof(WaterFlowWeSetup, phaseDriverDisabled) == 0x1f);
 STATIC_ASSERT(sizeof(WaterFlowWeSetup) == 0x20);
-STATIC_ASSERT(offsetof(FoliageCurrentSetup, currentRadius) == 0x19);
-STATIC_ASSERT(offsetof(FoliageCurrentSetup, currentFlags) == 0x1a);
 STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, radiusCells) == 0x29);
 STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, strengthTenths) == 0x32);
 

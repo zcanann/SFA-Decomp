@@ -5,11 +5,15 @@
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
 
+#define CC_RIVER_FLOW_OBJECT_GROUP 0x14
+/* Player and WaterFlowWe check this bit; DB_egg applies the current unconditionally. */
+#define CC_RIVER_FLOW_FLAG_PLAYER_AND_WATERFLOWWE 0x02
+
 typedef struct CCRiverFlowPlacement {
     ObjPlacement base;
     u8 angle;
-    u8 heightOffset;
-    u8 speed;
+    u8 currentRadius; /* Also contributes currentRadius / 512 to rootMotionScale. */
+    u8 currentFlags; /* Zero is expanded to 0xFF during initialization. */
     u8 pad1B;
     s16 gameBit;
     u8 pad1E[0x02];
@@ -21,8 +25,8 @@ typedef struct CCRiverFlowState {
 
 STATIC_ASSERT(offsetof(CCRiverFlowPlacement, base) == 0x00);
 STATIC_ASSERT(offsetof(CCRiverFlowPlacement, angle) == 0x18);
-STATIC_ASSERT(offsetof(CCRiverFlowPlacement, heightOffset) == 0x19);
-STATIC_ASSERT(offsetof(CCRiverFlowPlacement, speed) == 0x1A);
+STATIC_ASSERT(offsetof(CCRiverFlowPlacement, currentRadius) == 0x19);
+STATIC_ASSERT(offsetof(CCRiverFlowPlacement, currentFlags) == 0x1A);
 STATIC_ASSERT(offsetof(CCRiverFlowPlacement, pad1B) == 0x1B);
 STATIC_ASSERT(offsetof(CCRiverFlowPlacement, gameBit) == 0x1C);
 STATIC_ASSERT(offsetof(CCRiverFlowPlacement, pad1E) == 0x1E);

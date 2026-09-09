@@ -1,6 +1,7 @@
 #define BADDIE_MOVE_STATUS_SIGNED
 
 #include "main/dll/player.h"
+#include "dlls/objects/372_CCriverflow.h"
 #include "dlls/object_descriptor.h"
 #include "dlls/objects/597_SnowBike.h"
 
@@ -11443,11 +11444,11 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, f32 p3, GameObject* player) {
 
     sumC = 0.0f;
     sumS = 0.0f;
-    objs = (GameObject**)objGetAllOfType(0x14, &n);
+    objs = (GameObject**)objGetAllOfType(CC_RIVER_FLOW_OBJECT_GROUP, &n);
     any = 0;
     for (i = 0; i < n; i++) {
         o = objs[i];
-        if (((FoliageCurrentSetup*)o->anim.placementData)->currentFlags & 2) {
+        if (((CCRiverFlowPlacement*)o->anim.placementData)->currentFlags & CC_RIVER_FLOW_FLAG_PLAYER_AND_WATERFLOWWE) {
             f32 dy;
             any = 1;
             dy = o->anim.localPosY - object->anim.localPosY;
@@ -11455,7 +11456,7 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, f32 p3, GameObject* player) {
                 f32 dx = o->anim.localPosX - object->anim.localPosX;
                 f32 dz = o->anim.localPosZ - object->anim.localPosZ;
                 f32 dist = sqrtf(dx * dx + dz * dz);
-                f32 thresh = 1.5f * (f32)(u32)((FoliageCurrentSetup*)o->anim.placementData)->currentRadius;
+                f32 thresh = 1.5f * (f32)(u32)((CCRiverFlowPlacement*)o->anim.placementData)->currentRadius;
                 if (dist < thresh) {
                     ratio = 0.0f;
                     if (thresh > 0.0f) {

@@ -6,6 +6,8 @@
 #include "game/objects/object_setup.h"
 #include "main/dll/curve_walker.h"
 
+#define DBEGG_OBJGROUP 0x24
+
 /* dbegg_getExtraSize() allocates the complete 0x124-byte state block. */
 typedef struct DbEggState {
     f32 waterOffset;      /* float-height offset above water */
@@ -15,11 +17,11 @@ typedef struct DbEggState {
     f32 launchVelY;       /* 0x110 */
     f32 launchVelZ;       /* 0x114 */
     u8 mode;              /* 0x118 */
-    u8 flags119;          /* bits 1/2/4/8/0x10 */
+    u8 flags;          /* 0x119: DBEGG_FLAG_* */
     u8 unk11A[2];
-    s16 msg11C; /* 0x11C: 3-word message payload sent via ObjMsg */
-    s16 msg11E;
-    f32 msg120;
+    s16 triggerGameBit; /* 0x11C: head of the eight-byte pickup-message payload; -1 skips the gate */
+    s16 pickupMessageValue; /* 0x11E: copied to player state; downstream meaning unknown */
+    f32 pickupMessageArgument; /* 0x120: initialized to 1.0; consumer meaning unknown */
 } DbEggState;
 
 STATIC_ASSERT(offsetof(DbEggState, waterOffset) == 0x000);
@@ -28,44 +30,37 @@ STATIC_ASSERT(offsetof(DbEggState, launchVelX) == 0x10C);
 STATIC_ASSERT(offsetof(DbEggState, launchVelY) == 0x110);
 STATIC_ASSERT(offsetof(DbEggState, launchVelZ) == 0x114);
 STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
-STATIC_ASSERT(offsetof(DbEggState, flags119) == 0x119);
+STATIC_ASSERT(offsetof(DbEggState, flags) == 0x119);
 STATIC_ASSERT(offsetof(DbEggState, unk11A) == 0x11A);
-STATIC_ASSERT(offsetof(DbEggState, msg11C) == 0x11C);
-STATIC_ASSERT(offsetof(DbEggState, msg11E) == 0x11E);
-STATIC_ASSERT(offsetof(DbEggState, msg120) == 0x120);
+STATIC_ASSERT(offsetof(DbEggState, triggerGameBit) == 0x11C);
+STATIC_ASSERT(offsetof(DbEggState, pickupMessageValue) == 0x11E);
+STATIC_ASSERT(offsetof(DbEggState, pickupMessageArgument) == 0x120);
 STATIC_ASSERT(sizeof(DbEggState) == 0x124);
 
-typedef struct DbeggPlacement {
+/* Reader view only: the complete EN serialized extent is not established.
+ * Do not allocate or copy placements using sizeof this prefix. */
+typedef struct DbEggPlacementPrefix {
     ObjPlacement base;    /* 0x00 */
-    u8 pad18;             /* 0x18 */
-    u8 forceRadiusByte;   /* 0x19 */
+    u8 pad18[2];          /* 0x18 */
     u8 speedScaleByte;    /* 0x1A: root-motion scale in 1/64 units */
     u8 facingAngleByte;   /* 0x1B: initial anim.rotX (<<8) */
     s16 triggerGameBit;   /* 0x1C: set once the egg is delivered; also selects the start mode */
     s16 secondaryGameBit; /* 0x1E: set when the egg reaches its target */
-    s16 unk20;            /* 0x20 */
-    u8 pad22[0x24 - 0x22];
+    u8 pad20[0x24 - 0x20];
     s16 activateGameBit; /* 0x24: gates the launch mode */
     u8 behaviorMode;     /* 0x26 */
-    u8 pad27[0x2B - 0x27];
-    u8 unk2B;           /* 0x2B */
+    u8 pad27[0x2C - 0x27];
     s16 counterGameBit; /* 0x2C: bit incremented on delivery (>0 = active) */
-    s8 unk2E;           /* 0x2E */
-} DbeggPlacement;
+} DbEggPlacementPrefix;
 
-STATIC_ASSERT(offsetof(DbeggPlacement, base) == 0x00);
-STATIC_ASSERT(offsetof(DbeggPlacement, forceRadiusByte) == 0x19);
-STATIC_ASSERT(offsetof(DbeggPlacement, speedScaleByte) == 0x1A);
-STATIC_ASSERT(offsetof(DbeggPlacement, facingAngleByte) == 0x1B);
-STATIC_ASSERT(offsetof(DbeggPlacement, triggerGameBit) == 0x1C);
-STATIC_ASSERT(offsetof(DbeggPlacement, secondaryGameBit) == 0x1E);
-STATIC_ASSERT(offsetof(DbeggPlacement, unk20) == 0x20);
-STATIC_ASSERT(offsetof(DbeggPlacement, activateGameBit) == 0x24);
-STATIC_ASSERT(offsetof(DbeggPlacement, behaviorMode) == 0x26);
-STATIC_ASSERT(offsetof(DbeggPlacement, unk2B) == 0x2B);
-STATIC_ASSERT(offsetof(DbeggPlacement, counterGameBit) == 0x2C);
-STATIC_ASSERT(offsetof(DbeggPlacement, unk2E) == 0x2E);
-STATIC_ASSERT(sizeof(DbeggPlacement) == 0x30);
+STATIC_ASSERT(offsetof(DbEggPlacementPrefix, base) == 0x00);
+STATIC_ASSERT(offsetof(DbEggPlacementPrefix, speedScaleByte) == 0x1A);
+STATIC_ASSERT(offsetof(DbEggPlacementPrefix, facingAngleByte) == 0x1B);
+STATIC_ASSERT(offsetof(DbEggPlacementPrefix, triggerGameBit) == 0x1C);
+STATIC_ASSERT(offsetof(DbEggPlacementPrefix, secondaryGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(DbEggPlacementPrefix, activateGameBit) == 0x24);
+STATIC_ASSERT(offsetof(DbEggPlacementPrefix, behaviorMode) == 0x26);
+STATIC_ASSERT(offsetof(DbEggPlacementPrefix, counterGameBit) == 0x2C);
 
 typedef struct DbEggIntPair {
     s32 a;
@@ -90,7 +85,7 @@ void dbegg_initialise(void);
 void dbegg_setupFromDef(GameObject* obj, u8* state);
 void dbegg_processMessages(GameObject* obj);
 int dbegg_probeSurface(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag);
-void dbegg_computeFlocking(GameObject* obj, f32* vel);
+void dbegg_computeWaterCurrent(GameObject* obj, f32* vel);
 
 extern ObjectDescriptor12 gDB_eggObjDescriptor;
 

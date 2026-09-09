@@ -2,18 +2,18 @@
  * DLL 0x023F (DB_egg) - the "dbegg" floating egg object.
  *
  * A buoyant egg driven by a mode state machine (DbEggState.mode, byte at
- * +0x118; flags119 at +0x119). dbegg_update dispatches per mode:
- *   1  settled/idle            2  drifting on water (flocking + buoyancy)
+ * +0x118; flags at +0x119). dbegg_update dispatches per mode:
+ *   1  settled/idle            2  drifting on water (current + buoyancy)
  *   4  inert                   5  falling, seeking water/ground surface
  *   6  player-pickup prompt    7  sinking after release
  *   8  respawn wait            9  curve-follow path
  *   0xa curve init             0xb held (velocity from message +0x10c..)
  *   0xc gated respawn          0xd homing-to-target reposition
- * Surface probing (water tri type 0xe vs ground) is dbegg_probeSurface; sibling-egg
- * flocking repulsion is dbegg_computeFlocking. Buoyancy/clamp/turn constants live in
+ * Surface probing (water tri type 0xe vs ground) is dbegg_probeSurface; water-current
+ * response is dbegg_computeWaterCurrent. Buoyancy/clamp/turn constants live in
  * the lbl_803E61xx/.. pool. dbegg_setupFromDef seeds mode from the placement
  * config's primary/ready condition game bits; behaviorMode selects variant
- * flags119 bits (held, curve, model-1, group-32).
+ * flags for pickup, curve activation, homing and group membership.
  *
  * Game bits: 0x3c4 (egg grabbed, global gate), 0x86d, 0x426/0x428 (sink
  * progress + count), 0x42a (respawn), 0x44d, and the placement's
@@ -21,6 +21,7 @@
  * 17; subtypes 16-20).
  */
 #include "dlls/objects/575_DB_egg.h"
+#include "dlls/objects/372_CCriverflow.h"
 #include "main/dll/partfx_interface.h"
 #include "main/frame_timing.h"
 #include "main/object_render.h"
@@ -47,9 +48,7 @@
 #include "main/track_bbox_api.h"
 #include "main/object_update_list.h"
 
-#define DBEGG_OBJGROUP         0x24
-#define DBEGG_SIBLING_OBJGROUP 0x14
-#define DBEGG_MSG_IN_RANGE     0x7000a  /* sent to player when grab is offered */
+#define DBEGG_MSG_START_PICKUP_SEQUENCE     0x7000a  /* requests the player interaction sequence */
 #define DBEGG_MSG_PLAYER_GRAB  0x100008 /* tells player to grab/hold the egg */
 
 /* ambient particle spawned randomly while dormant in DBEGG_MODE_RESPAWN_WAIT */
@@ -57,9 +56,16 @@
 /* speed-scaled trail spawned while homing to the target in DBEGG_MODE_HOMING */
 #define DBEGG_PARTFX_HOMING_TRAIL 0x345
 
+#define DBEGG_FLAG_CARRY_BEFORE_PICKUP 0x01
+#define DBEGG_FLAG_NO_WATER_OR_DISTANCE_PICKUP 0x02
+#define DBEGG_FLAG_WAIT_FOR_CURVE_GAMEBIT 0x04
+#define DBEGG_FLAG_PICKUP_GAMEBIT_LOCKED 0x08
+#define DBEGG_FLAG_HOME_ON_LANDING 0x10
+#define DBEGG_FLAG_KEEP_GROUP_WHILE_HELD 0x20
+
 typedef enum DbEggMode {
     DBEGG_MODE_SETTLED = 1,         /* settled / idle on the surface */
-    DBEGG_MODE_DRIFTING = 2,        /* drifting on water: flocking + buoyancy */
+    DBEGG_MODE_DRIFTING = 2,        /* drifting on water: current + buoyancy */
     DBEGG_MODE_RELEASED = 3,        /* released / inactive (no longer updated) */
     DBEGG_MODE_INERT = 4,           /* inert (hitbox suppressed) */
     DBEGG_MODE_FALLING = 5,         /* falling, seeking the water/ground surface */
@@ -93,19 +99,19 @@ int dbegg_isActive(GameObject* obj) {
 
 void dbegg_processMessages(GameObject* obj) {
     DbEggState* eggState;
-    DbeggPlacement* config;
+    DbEggPlacementPrefix* config;
     u32 msgType = 0;
     u32 msgFlag = 0;
     u32 msgArg;
 
     eggState = obj->extra;
-    config = (DbeggPlacement*)obj->anim.placementData;
+    config = (DbEggPlacementPrefix*)obj->anim.placementData;
 
     while (ObjMsg_Pop(obj, &msgType, &msgArg, &msgFlag) != 0) {
         if (msgType == 17) {
             switch (msgFlag) {
             case 18:
-                if ((eggState->flags119 & 0x20) == 0) {
+                if ((eggState->flags & DBEGG_FLAG_KEEP_GROUP_WHILE_HELD) == 0) {
                     objFreeObjectType(obj, DBEGG_OBJGROUP);
                 }
                 ObjHits_DisableObject(obj);
@@ -155,12 +161,12 @@ void dbegg_processMessages(GameObject* obj) {
 }
 
 void dbegg_setupFromDef(GameObject* obj, u8* state) {
-    DbeggPlacement* config;
+    DbEggPlacementPrefix* config;
     f32 surfaceProbeOut;
     DbEggState* egg = (DbEggState*)state;
 
-    config = (DbeggPlacement*)obj->anim.placementData;
-    egg->flags119 = 0;
+    config = (DbEggPlacementPrefix*)obj->anim.placementData;
+    egg->flags = 0;
     obj->anim.rotX = config->facingAngleByte << 8;
     obj->anim.rotY = 0;
     obj->anim.rotZ = 0;
@@ -173,28 +179,28 @@ void dbegg_setupFromDef(GameObject* obj, u8* state) {
         }
     }
     if (config->behaviorMode != 0) {
-        egg->flags119 |= 1;
+        egg->flags |= DBEGG_FLAG_CARRY_BEFORE_PICKUP;
         if (config->behaviorMode == 2) {
-            egg->flags119 |= 2;
+            egg->flags |= DBEGG_FLAG_NO_WATER_OR_DISTANCE_PICKUP;
         }
         if (config->behaviorMode == 3) {
             egg->mode = DBEGG_MODE_CURVE_INIT;
         }
         if (config->behaviorMode == 4) {
-            egg->flags119 |= 4;
-            egg->flags119 &= ~1;
+            egg->flags |= DBEGG_FLAG_WAIT_FOR_CURVE_GAMEBIT;
+            egg->flags &= ~DBEGG_FLAG_CARRY_BEFORE_PICKUP;
         }
         if (config->behaviorMode == 5) {
-            egg->flags119 |= 8;
-            egg->flags119 |= 16;
+            egg->flags |= DBEGG_FLAG_PICKUP_GAMEBIT_LOCKED;
+            egg->flags |= DBEGG_FLAG_HOME_ON_LANDING;
         }
         if (config->behaviorMode == 6) {
             Obj_SetActiveModelIndex(obj, 1);
-            egg->flags119 |= 8;
-            egg->flags119 |= 16;
+            egg->flags |= DBEGG_FLAG_PICKUP_GAMEBIT_LOCKED;
+            egg->flags |= DBEGG_FLAG_HOME_ON_LANDING;
         }
         if (config->behaviorMode == 7) {
-            egg->flags119 |= 32;
+            egg->flags |= DBEGG_FLAG_KEEP_GROUP_WHILE_HELD;
         }
     }
     egg->mode = mainGetBit(config->activateGameBit) != 0 ? DBEGG_MODE_FALLING : DBEGG_MODE_GATED_RESPAWN;
@@ -300,32 +306,32 @@ int dbegg_probeSurface(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int 
     return 0;
 }
 
-void dbegg_computeFlocking(GameObject* obj, f32* vel) {
+void dbegg_computeWaterCurrent(GameObject* obj, f32* vel) {
     f32 limit;
     f32 force;
     f32 sumX;
     f32 sumZ;
     int count;
-    GameObject* sibling;
+    GameObject* currentSource;
     int i;
 
     GameObject** objList;
     sumZ = sumX = 0.0f;
-    objList = objGetAllOfType(DBEGG_SIBLING_OBJGROUP, &count);
+    objList = objGetAllOfType(CC_RIVER_FLOW_OBJECT_GROUP, &count);
     for (i = 0, limit = 7.0f; i < count; i++) {
         f32 dy;
-        sibling = objList[i];
-        dy = sibling->anim.localPosY - obj->anim.localPosY;
+        currentSource = objList[i];
+        dy = currentSource->anim.localPosY - obj->anim.localPosY;
         if (dy <= limit && dy >= -7.0f) {
-            f32 dx = sibling->anim.localPosX - obj->anim.localPosX;
-            f32 dz = sibling->anim.localPosZ - obj->anim.localPosZ;
+            f32 dx = currentSource->anim.localPosX - obj->anim.localPosX;
+            f32 dz = currentSource->anim.localPosZ - obj->anim.localPosZ;
             f32 dist = sqrtf(dx * dx + dz * dz);
-            f32 radius = 1.5f * ((DbeggPlacement*)sibling->anim.placementData)->forceRadiusByte;
+            f32 radius = 1.5f * ((CCRiverFlowPlacement*)currentSource->anim.placementData)->currentRadius;
             if (dist < radius) {
                 force = (radius - dist) / radius;
-                force *= (10.0f * sibling->anim.rootMotionScale);
-                sumX += force * mathSinf((3.1415927f * sibling->anim.rotX) / 32768.0f);
-                sumZ += force * mathCosf((3.1415927f * sibling->anim.rotX) / 32768.0f);
+                force *= (10.0f * currentSource->anim.rootMotionScale);
+                sumX += force * mathSinf((3.1415927f * currentSource->anim.rotX) / 32768.0f);
+                sumZ += force * mathCosf((3.1415927f * currentSource->anim.rotX) / 32768.0f);
             }
         }
     }
@@ -417,11 +423,11 @@ ObjectDescriptor12 gDB_eggObjDescriptor = {
 char sAnimGreaterMessage[11] = " GREATER \n\000";
 
 void dbegg_update(GameObject* obj) {
-    DbeggPlacement* data = (DbeggPlacement*)obj->anim.placementData;
+    DbEggPlacementPrefix* data = (DbEggPlacementPrefix*)obj->anim.placementData;
 #define hitState ((ObjHitsPriorityState*)obj->anim.hitReactState)
     GameObject* player;
     DbEggState* egg;
-    DbeggPlacement* placement;
+    DbEggPlacementPrefix* placement;
     DbEggState* pickupState;
     int i;
     int n;
@@ -429,7 +435,7 @@ void dbegg_update(GameObject* obj) {
     f32 v;
     f32 fx;
     f32 fz;
-    f32 flockVel[3];
+    f32 currentVel[3];
     f32 d[3];
     int curvePair[2];
     f32 surfaceHeight;
@@ -452,7 +458,7 @@ void dbegg_update(GameObject* obj) {
             v = surfaceHeight;
             v = v >= 0.0f ? v : -v;
             if (v < 0.09f) {
-                if (egg->flags119 & 0x10) {
+                if (egg->flags & DBEGG_FLAG_HOME_ON_LANDING) {
                     egg->mode = DBEGG_MODE_HOMING;
                 } else {
                     egg->mode = DBEGG_MODE_SETTLED;
@@ -486,7 +492,7 @@ void dbegg_update(GameObject* obj) {
             obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
             break;
         case DBEGG_MODE_DRIFTING:
-            if (egg->flags119 & 4) {
+            if (egg->flags & DBEGG_FLAG_WAIT_FOR_CURVE_GAMEBIT) {
                 obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                 obj->anim.velocityX += (data->base.posX - obj->anim.localPosX) / (fz = 1000.0f);
                 obj->anim.velocityY += (data->base.posY - obj->anim.localPosY) / fz;
@@ -497,13 +503,13 @@ void dbegg_update(GameObject* obj) {
             }
             hitState->flags |= OBJHITS_PRIORITY_STATE_IMMOVABLE;
             fz = 0.0f;
-            flockVel[0] = 0.0f;
-            flockVel[1] = fz;
-            flockVel[2] = fz;
-            dbegg_computeFlocking(obj, flockVel);
-            obj->anim.velocityX += flockVel[0];
-            obj->anim.velocityY += flockVel[1];
-            obj->anim.velocityZ += flockVel[2];
+            currentVel[0] = 0.0f;
+            currentVel[1] = fz;
+            currentVel[2] = fz;
+            dbegg_computeWaterCurrent(obj, currentVel);
+            obj->anim.velocityX += currentVel[0];
+            obj->anim.velocityY += currentVel[1];
+            obj->anim.velocityZ += currentVel[2];
             if (dbegg_probeSurface(obj, &surfaceHeight, obj->anim.velocityX * timeDelta,
                                    obj->anim.velocityZ * timeDelta, 1) != 0) {
                 obj->anim.velocityX = -0.95f * obj->anim.velocityX;
@@ -542,7 +548,7 @@ void dbegg_update(GameObject* obj) {
                     obj->anim.velocityZ = fz;
                     obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                 }
-            } else if (egg->flags119 & 2) {
+            } else if (egg->flags & DBEGG_FLAG_NO_WATER_OR_DISTANCE_PICKUP) {
                 obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             }
             break;
@@ -550,20 +556,20 @@ void dbegg_update(GameObject* obj) {
             obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             break;
         case DBEGG_MODE_PICKUP_PROMPT:
-            if (Vec_xzDistance(&obj->anim.worldPosX, &data->base.posX) > 150.0f && (egg->flags119 & 2) == 0) {
+            if (Vec_xzDistance(&obj->anim.worldPosX, &data->base.posX) > 150.0f && (egg->flags & DBEGG_FLAG_NO_WATER_OR_DISTANCE_PICKUP) == 0) {
                 playerObj = Obj_GetPlayerObject();
                 pickupState = obj->extra;
-                placement = (DbeggPlacement*)obj->anim.placementData;
+                placement = (DbEggPlacementPrefix*)obj->anim.placementData;
                 objFreeObjectType(obj, DBEGG_OBJGROUP);
                 pickupState->mode = DBEGG_MODE_RELEASED;
                 mainSetBits(0x3c4, 1);
                 mainSetBits(0x86d, 1);
                 obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                 mainSetBits(placement->triggerGameBit, 1);
-                pickupState->msg11C = -1;
-                pickupState->msg11E = 0;
-                pickupState->msg120 = 1.0f;
-                ObjMsg_SendToObject(playerObj, DBEGG_MSG_IN_RANGE, obj, (int)&pickupState->msg11C);
+                pickupState->triggerGameBit = -1;
+                pickupState->pickupMessageValue = 0;
+                pickupState->pickupMessageArgument = 1.0f;
+                ObjMsg_SendToObject(playerObj, DBEGG_MSG_START_PICKUP_SEQUENCE, obj, (int)&pickupState->triggerGameBit);
                 obj->userData2 = 0;
             } else if (getButtonsJustPressed(0) & PAD_BUTTON_A) {
                 egg->mode = DBEGG_MODE_FALLING;
@@ -608,9 +614,9 @@ void dbegg_update(GameObject* obj) {
             } else {
                 obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
                 egg->mode = DBEGG_MODE_CURVE_FOLLOW;
-                n = egg->flags119;
-                if (n & 4) {
-                    egg->flags119 = n & ~4;
+                n = egg->flags;
+                if (n & DBEGG_FLAG_WAIT_FOR_CURVE_GAMEBIT) {
+                    egg->flags = n & ~DBEGG_FLAG_WAIT_FOR_CURVE_GAMEBIT;
                 }
             }
             break;
@@ -672,33 +678,33 @@ void dbegg_update(GameObject* obj) {
             }
             break;
         }
-        if (egg->flags119 & 8) {
+        if (egg->flags & DBEGG_FLAG_PICKUP_GAMEBIT_LOCKED) {
             obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             ObjHits_DisableObject(obj);
             if (mainGetBit(data->triggerGameBit) != 0) {
-                egg->flags119 &= ~9;
+                egg->flags &= ~(DBEGG_FLAG_CARRY_BEFORE_PICKUP | DBEGG_FLAG_PICKUP_GAMEBIT_LOCKED);
                 obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
                 ObjHits_EnableObject(obj);
             }
         } else if (obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) {
             if (mainGetBit(0x3c4) == 0) {
                 if (Vec_xzDistance(&obj->anim.worldPosX, &player->anim.worldPosX) < 25.0f) {
-                    if ((egg->flags119 & 1) == 0) {
-                        DbeggPlacement* placement;
+                    if ((egg->flags & DBEGG_FLAG_CARRY_BEFORE_PICKUP) == 0) {
+                        DbEggPlacementPrefix* placement;
                         DbEggState* pickupState;
                         GameObject* playerObj = Obj_GetPlayerObject();
                         pickupState = obj->extra;
-                        placement = (DbeggPlacement*)obj->anim.placementData;
+                        placement = (DbEggPlacementPrefix*)obj->anim.placementData;
                         objFreeObjectType(obj, DBEGG_OBJGROUP);
                         pickupState->mode = DBEGG_MODE_RELEASED;
                         mainSetBits(0x3c4, 1);
                         mainSetBits(0x86d, 1);
                         obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                         mainSetBits(placement->triggerGameBit, 1);
-                        pickupState->msg11C = -1;
-                        pickupState->msg11E = 0;
-                        pickupState->msg120 = 1.0f;
-                        ObjMsg_SendToObject(playerObj, DBEGG_MSG_IN_RANGE, obj, (int)&pickupState->msg11C);
+                        pickupState->triggerGameBit = -1;
+                        pickupState->pickupMessageValue = 0;
+                        pickupState->pickupMessageArgument = 1.0f;
+                        ObjMsg_SendToObject(playerObj, DBEGG_MSG_START_PICKUP_SEQUENCE, obj, (int)&pickupState->triggerGameBit);
                     } else {
                         v = obj->anim.localPosY - player->anim.localPosY;
                         v = v >= 0.0f ? v : -v;

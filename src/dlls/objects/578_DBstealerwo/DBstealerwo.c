@@ -19,6 +19,7 @@
  * thrown sub-object.
  */
 #include "dlls/objects/578_DBstealerwo.h"
+#include "dlls/objects/575_DB_egg.h"
 
 #include "main/dll/partfx_interface.h"
 #include "main/dll/objfx_api.h"
@@ -212,7 +213,6 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, BaddieState* baddie) {
 }
 
 #define DBSTEALERWORM_OBJGROUP 3
-#define DBEGG_OBJGROUP         0x24
 
 /* projectile spat at the baddie target: velocity aimed at targetObj, ownerObj = worm */
 #define DBSTEALERWORM_SEQID                    0x539 /* retail "DBstealerwo..." (DLL 0x242) */

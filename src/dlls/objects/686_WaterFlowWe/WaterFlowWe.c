@@ -3,9 +3,9 @@
  * sways to a water current.
  *
  * Each tick calcCurrentVector sums the influence of two source groups:
- * the foliage-current group (0x14) - only members whose currentFlags
- * have the ENABLED bit set contribute - and the object-current source
- * group (0x50). A source affects the weed only when it is within a
+ * CCRiverFlow current sources (0x14), whose currentFlags must enable
+ * WaterFlowWe, and the separate object-current source group (0x50).
+ * A source affects WaterFlowWe only when it is within a
  * vertical band and inside its planar radius; its strength falls off
  * linearly with distance and is projected through sin/cos of the
  * source angle. The averaged current is low-pass filtered, clamped to
@@ -17,6 +17,7 @@
  * (gWaterFlowIdlePhase / gWaterFlowFlowPhase) that select the weed's idle vs. flowing
  * animation move via ObjAnim_SetCurrentMove.
  */
+#include "dlls/objects/372_CCriverflow.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_02AE_waterflowwe.h"
 #include "main/frame_timing.h"
@@ -29,9 +30,7 @@ f32 gWaterFlowIdlePhase;
 f32 gWaterFlowFlowPhase;
 GameObject* gWaterFlowPhaseDriver;
 
-#define WATERFLOWWE_FOLIAGE_GROUP               0x14
 #define WATERFLOWWE_OBJECT_CURRENT_GROUP        0x50
-#define WATERFLOWWE_FOLIAGE_CURRENT_ENABLED     0x02
 #define WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET 0x84d0
 #define WATERFLOWWE_ZERO                        0.0f
 #define WATERFLOWWE_BAND_MAX                    200.0f
@@ -70,12 +69,12 @@ void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
     currentX = currentZ = WATERFLOWWE_ZERO;
     strength = currentX;
     angle = currentX;
-    objects = (GameObject**)objGetAllOfType(WATERFLOWWE_FOLIAGE_GROUP, &count);
+    objects = (GameObject**)objGetAllOfType(CC_RIVER_FLOW_OBJECT_GROUP, &count);
     hasCurrent = 0;
     for (i = 0; i < count; i++)
     {
         other = objects[i];
-        if ((((FoliageCurrentSetup*)other->anim.placementData)->currentFlags & WATERFLOWWE_FOLIAGE_CURRENT_ENABLED) !=
+        if ((((CCRiverFlowPlacement*)other->anim.placementData)->currentFlags & CC_RIVER_FLOW_FLAG_PLAYER_AND_WATERFLOWWE) !=
             0)
         {
             hasCurrent = 1;
@@ -86,7 +85,7 @@ void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
                 dz = other->anim.localPosZ - object->anim.localPosZ;
                 distance = sqrtf(dx * dx + dz * dz);
                 radius = WATERFLOWWE_RADIUS_PER_CELL *
-                         (f32)(u32)((FoliageCurrentSetup*)other->anim.placementData)->currentRadius;
+                         (f32)(u32)((CCRiverFlowPlacement*)other->anim.placementData)->currentRadius;
                 if (distance < radius)
                 {
                     strength = (radius - distance) / radius;
