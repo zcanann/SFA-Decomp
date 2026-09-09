@@ -197,11 +197,13 @@ void wcpushblock_update(GameObject* obj) {
         u32 phase = WCPUSHBLOCK_FLAGS(state).phase;
         if (phase != WCPUSHBLOCK_PHASE_FADE_OUT && phase != WCPUSHBLOCK_PHASE_FADE_IN) {
             if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
-                objfx_spawnBoxBurst(obj, 1, gWcPushBlockBurstScale, WCPUSHBLOCK_BOX_BURST_VARIANT_A, 1, 50, gWcPushBlockBurstHorizontalExtent,
-                                    gWcPushBlockBurstScale, gWcPushBlockBurstHorizontalExtent, NULL, 0);
+                objfx_spawnBoxBurst(obj, 1, gWcPushBlockBurstScale, WCPUSHBLOCK_BOX_BURST_VARIANT_A, 1, 50,
+                                    gWcPushBlockBurstHorizontalExtent, gWcPushBlockBurstScale,
+                                    gWcPushBlockBurstHorizontalExtent, NULL, 0);
             } else {
-                objfx_spawnBoxBurst(obj, 1, gWcPushBlockBurstScale, WCPUSHBLOCK_BOX_BURST_VARIANT_B, 1, 50, gWcPushBlockBurstHorizontalExtent,
-                                    gWcPushBlockBurstScale, gWcPushBlockBurstHorizontalExtent, NULL, 0);
+                objfx_spawnBoxBurst(obj, 1, gWcPushBlockBurstScale, WCPUSHBLOCK_BOX_BURST_VARIANT_B, 1, 50,
+                                    gWcPushBlockBurstHorizontalExtent, gWcPushBlockBurstScale,
+                                    gWcPushBlockBurstHorizontalExtent, NULL, 0);
             }
         }
     }
