@@ -1,6 +1,7 @@
 #include "main/dll/dll_0018_boneparticleeffect.h"
 #include "dlls/objects/554_DFP_ObjCrea.h"
 #include "dlls/objects/556.h"
+#include "dlls/objects/555_DFP_Torch.h"
 #include "dlls/objects/625_DrakorHoverpad.h"
 #include "dlls/objects/597_SnowBike.h"
 #include "dlls/objects/607_CRFuelTank.h"
@@ -563,8 +564,7 @@ extern ResourceDescriptor gARWBlockerObjDescriptor, gARWBombCollObjDescriptor, g
 extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor;
 extern ResourceDescriptor gChukaObjDescriptor;
 extern ResourceDescriptor gCrCloudRaceObjDescriptor;
-extern ResourceDescriptor gDBHoleControl1ObjDescriptor, gDFP_LevelControlObjDescriptor,
-    gDFP_TorchObjDescriptor;
+extern ResourceDescriptor gDBHoleControl1ObjDescriptor, gDFP_LevelControlObjDescriptor;
 extern ResourceDescriptor gDIM_trickyObjDescriptor, gDR_CloudRunnerObjDescriptor;
 extern ResourceDescriptor gDfplightniObjDescriptor, gDfppowerslObjDescriptor;
 extern ResourceDescriptor gDrCageControlObjDescriptor,
@@ -1771,7 +1771,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gVFP_SpellPlaceObjDescriptor,
     &gDFP_LevelControlObjDescriptor,
     (ResourceDescriptor*)&gDFP_ObjCreatorObjDescriptor,
-    &gDFP_TorchObjDescriptor,
+    (ResourceDescriptor*)&gDFP_TorchObjDescriptor,
     (ResourceDescriptor*)&gDll22CObjDescriptor,
     (ResourceDescriptor*)&gDFP_seqpointObjDescriptor,
     (ResourceDescriptor*)&gDoorswitchObjDescriptor,

@@ -1,10 +1,11 @@
 /*
- * Ocean Force Point Temple torch (DLL 0x22B; "DFP_Torch") - a lightable torch.
+ * DFP_Torch (DLL slot 555 / 0x22B): a lightable torch.
  * Tracks lit state and a flicker/burn timer, plays flame particle and
  * sfx effects while lit, and latches its lit-state gamebit.
  */
+#include "dlls/objects/555_DFP_Torch.h"
+
 #include "main/dll/partfx_interface.h"
-#include "main/dll/DF/dll_022B_dfptorch.h"
 #include "main/dll/dll_0069_modgfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll_000A_expgfx.h"
@@ -37,7 +38,7 @@ const Dll69EffectParams gDfpTorchEffectParams = {0x3E7, 0x8C, 0x8D, 0x28};
 
 int DFP_Torch_getExtraSize(void)
 {
-    return 0x10;
+    return sizeof(DfpTorchState);
 }
 int DFP_Torch_getObjectTypeId(void)
 {
@@ -57,20 +58,10 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
     Camera* cam;
     f32 dist;
     f32 scale;
-    struct
-    {
-        s32 out[2];
-        s16 gridEnd[4];
-        s16 gridStart[4];
-        f32 b[3];
-        f32 a[3];
-        f32 d[3];
-        struct
-        {
-            u8 pad[12];
-            f32 col[3];
-        } fx;
-    } stk2;
+    DfpTorchRenderWork renderWork;
+    VoxPos gridStart;
+    VoxPos gridEnd;
+    VoxPos gridHit;
 
     if (visible == 0)
     {
@@ -84,36 +75,36 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
         {
             state->visibleLatch = 1;
             cam = Camera_GetCurrent();
-            stk2.d[0] = cam->x - obj->anim.localPosX;
-            stk2.d[1] = cam->y - obj->anim.localPosY;
-            stk2.d[2] = cam->z - obj->anim.localPosZ;
+            renderWork.cameraDirection[0] = cam->x - obj->anim.localPosX;
+            renderWork.cameraDirection[1] = cam->y - obj->anim.localPosY;
+            renderWork.cameraDirection[2] = cam->z - obj->anim.localPosZ;
             {
-                f32 sqZ = stk2.d[2] * stk2.d[2];
-                f32 sqX = stk2.d[0] * stk2.d[0];
-                f32 sqY = stk2.d[1] * stk2.d[1];
+                f32 sqZ = renderWork.cameraDirection[2] * renderWork.cameraDirection[2];
+                f32 sqX = renderWork.cameraDirection[0] * renderWork.cameraDirection[0];
+                f32 sqY = renderWork.cameraDirection[1] * renderWork.cameraDirection[1];
                 dist = sqrtf(sqZ + (sqX + sqY));
             }
             if (dist > 50.0f)
             {
                 scale = 1.0f / dist;
-                stk2.d[0] *= scale;
-                stk2.d[1] *= scale;
-                stk2.d[2] *= scale;
-                stk2.a[0] = 32.0f * stk2.d[0];
-                stk2.a[1] = 32.0f * stk2.d[1];
-                stk2.a[2] = 32.0f * stk2.d[2];
-                stk2.a[0] += obj->anim.localPosX;
-                stk2.a[1] += obj->anim.localPosY;
-                stk2.a[2] += obj->anim.localPosZ;
-                stk2.b[0] = -20.0f * stk2.d[0];
-                stk2.b[1] = -20.0f * stk2.d[1];
-                stk2.b[2] = -20.0f * stk2.d[2];
-                stk2.b[0] += cam->x;
-                stk2.b[1] += cam->y;
-                stk2.b[2] += cam->z;
-                voxmaps_worldToGrid(stk2.a, stk2.gridStart);
-                voxmaps_worldToGrid(stk2.b, stk2.gridEnd);
-                if (voxmaps_traceLine((VoxPos*)stk2.gridStart, (VoxPos*)stk2.gridEnd, (VoxPos*)stk2.out, NULL, 0) == 0)
+                renderWork.cameraDirection[0] *= scale;
+                renderWork.cameraDirection[1] *= scale;
+                renderWork.cameraDirection[2] *= scale;
+                renderWork.traceStart[0] = 32.0f * renderWork.cameraDirection[0];
+                renderWork.traceStart[1] = 32.0f * renderWork.cameraDirection[1];
+                renderWork.traceStart[2] = 32.0f * renderWork.cameraDirection[2];
+                renderWork.traceStart[0] += obj->anim.localPosX;
+                renderWork.traceStart[1] += obj->anim.localPosY;
+                renderWork.traceStart[2] += obj->anim.localPosZ;
+                renderWork.traceEnd[0] = -20.0f * renderWork.cameraDirection[0];
+                renderWork.traceEnd[1] = -20.0f * renderWork.cameraDirection[1];
+                renderWork.traceEnd[2] = -20.0f * renderWork.cameraDirection[2];
+                renderWork.traceEnd[0] += cam->x;
+                renderWork.traceEnd[1] += cam->y;
+                renderWork.traceEnd[2] += cam->z;
+                voxmaps_worldToGrid(renderWork.traceStart, &gridStart.x);
+                voxmaps_worldToGrid(renderWork.traceEnd, &gridEnd.x);
+                if (voxmaps_traceLine(&gridStart, &gridEnd, &gridHit, NULL, 0) == 0)
                 {
                     state->visibleLatch = 0;
                     (*gExpgfxInterface)->freeSource((u32)obj);
@@ -127,10 +118,10 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
             {
                 if (state->visibleLatch != 0)
                 {
-                    stk2.fx.col[0] = 0.0f;
-                    stk2.fx.col[1] = 5.0f;
-                    stk2.fx.col[2] = 0.0f;
-                    (*gPartfxInterface)->spawnObject((void*)obj, DFPTORCH_PARTFX_FLICKER, &stk2.fx, 0x12, -1, NULL);
+                    renderWork.flickerParams.posX = 0.0f;
+                    renderWork.flickerParams.posY = 5.0f;
+                    renderWork.flickerParams.posZ = 0.0f;
+                    (*gPartfxInterface)->spawnObject((void*)obj, DFPTORCH_PARTFX_FLICKER, &renderWork.flickerParams, 0x12, -1, NULL);
                 }
                 state->flickerTimer = (s16)(randomGetRange(-10, 10) + 0x3c);
             }
@@ -147,7 +138,7 @@ void DFP_Torch_update(GameObject* obj)
     DfpTorchState* state = obj->extra;
     Dll69Interface** res;
     int i;
-    f32 buf[5];
+    DfpTorchFlameSpawnPrefix flameParams;
     Dll69EffectParams prm;
 
     prm = gDfpTorchEffectParams;
@@ -158,7 +149,7 @@ void DFP_Torch_update(GameObject* obj)
     case DFPTORCH_MODE_ALWAYS_LIT:
         break;
     case DFPTORCH_MODE_LIGHTABLE:
-        buf[4] = -2.0f;
+        flameParams.positionY = -2.0f;
         state->prevLit = state->lit;
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
         {
@@ -192,7 +183,7 @@ void DFP_Torch_update(GameObject* obj)
                 res = Resource_Acquire(0x69, 1);
                 prm.param1 = state->colorIdx * 2 + 0x19d;
                 prm.param2 = state->colorIdx * 2 + 0x19e;
-                (*res)->spawn(obj, 1, buf, 0x10004, -1, &prm);
+                (*res)->spawn(obj, 1, &flameParams, 0x10004, -1, &prm);
                 Resource_Release(res);
                 for (i = 0; i < 0x64; i++)
                 {
@@ -244,16 +235,12 @@ void DFP_Torch_update(GameObject* obj)
     }
 }
 
-void DFP_Torch_init(GameObject* obj, DfpTorchPlacement* def)
+void DFP_Torch_init(GameObject* obj, DfpTorchPlacementPrefix* def)
 {
     DfpTorchState* state = obj->extra;
-    DfpTorchPlacement* place = def;
+    DfpTorchPlacementPrefix* place = def;
     Dll69Interface** res;
-    struct
-    {
-        u8 pad[16];
-        f32 val;
-    } spawnArg;
+    DfpTorchFlameSpawnPrefix flameParams;
     int motionRate;
     obj->anim.rotX = (s16)((place->rotPitch & 0x3f) << 10);
     motionRate = place->motionRate;
@@ -267,7 +254,7 @@ void DFP_Torch_init(GameObject* obj, DfpTorchPlacement* def)
     }
     state->mode = place->mode;
     state->gameBit = place->gameBit;
-    spawnArg.val = -2.0f;
+    flameParams.positionY = -2.0f;
     switch (state->mode)
     {
     case DFPTORCH_MODE_ALWAYS_LIT:
@@ -275,7 +262,7 @@ void DFP_Torch_init(GameObject* obj, DfpTorchPlacement* def)
         res = Resource_Acquire(0x69, 1);
         if (place->colorIdx == 0)
         {
-            (*res)->spawn(obj, 0, &spawnArg, 0x10004, -1, NULL);
+            (*res)->spawn(obj, 0, &flameParams, 0x10004, -1, NULL);
         }
         break;
     }
