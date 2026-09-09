@@ -109,6 +109,16 @@ class DolAuditTests(unittest.TestCase):
         self.assertEqual(len(report["other_consumers"]), 2)
         self.assertIsNone(report["other_consumers"][1]["pool_owner"])
 
+    def test_repurposed_r2_pointer_is_not_a_constant_pool_reference(self):
+        data = bytearray(self.path.read_bytes())
+        text_offset = struct.unpack_from(">I", data, 4)[0]
+        struct.pack_into(">I", data, text_offset, 0x3C40803D)
+        self.path.write_bytes(data)
+        (self.config / "config.yml").write_text(f"hash: {hashlib.sha1(data).hexdigest()}\n")
+        report = pool.audit("TEST", ["a.c"], self.root)
+        self.assertEqual(report["loads"], [])
+        self.assertEqual([load["function"] for load in report["incoming"]], ["second", None])
+
     def test_hash_and_source_validation(self):
         with self.assertRaisesRegex(ValueError, "sources absent"):
             pool.audit("TEST", ["absent.c"], self.root)

@@ -1436,7 +1436,7 @@ dlls/engine/0/0.c:
 	.bss        start:0x803A9450 end:0x803AA0B8
 	.sdata      start:0x803DC698 end:0x803DC818
 	.sbss       start:0x803DE3A8 end:0x803DE568
-	.sdata2     start:0x803E2A80 end:0x803E2E68
+	.sdata2     start:0x803E2A80 end:0x803E2E64
 
 dlls/engine/59/59.c:
 	.text       start:0x80130224 end:0x8013047C

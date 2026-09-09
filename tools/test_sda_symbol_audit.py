@@ -8,11 +8,12 @@ from orig.dol_xrefs import DolSection, FunctionSymbol
 from orig.sda_symbol_audit import reference_pairs, retail_sda_base
 from version_progress import (SplitRange, PortedRange, recover_sbss_layout,
                               recover_sdata_layout, parse_symbol_spans,
-                              render_projected_symbol_texts, replace_projected_section_symbols)
+                              render_projected_symbol_texts, replace_projected_section_symbols, preserves_sda_base)
 
 
-def image(base, bodies):
-    startup = [0x3DA00000 | (base >> 16), 0x61AD0000 | (base & 0xFFFF), 0x4E800020]
+def image(base, bodies, register=13):
+    startup = [0x3C000000 | register << 21 | (base >> 16),
+               0x60000000 | register << 21 | register << 16 | (base & 0xFFFF), 0x4E800020]
     words = startup + [word for body in bodies for word in body]
     blob = struct.pack(f">{len(words)}I", *words)
     functions = []
@@ -34,6 +35,40 @@ class SdaAuditTests(unittest.TestCase):
         self.assertEqual(list(refs), [0x80302480])
         self.assertEqual(list(refs[0x80302480]), [0x80312478])
         self.assertEqual(refs[0x80302480][0x80312478][0]["target_instruction"], 0x80010000)
+
+    def test_r2_constants_use_their_own_base_and_ignore_r13_operands(self):
+        source, sf = image(0x80310000, [[0xC022FFFC, 0x806DFFFC, 0x4E800020]], register=2)
+        target, tf = image(0x80320000, [[0xC022FFF8, 0x806DFFF0, 0x4E800020]], register=2)
+        refs = reference_pairs(source, sf, target, tf, register=2)
+        self.assertEqual(list(refs), [0x8030FFFC])
+        self.assertEqual(list(refs[0x8030FFFC]), [0x8031FFF8])
+        self.assertEqual(retail_sda_base(target, 2), 0x80320000)
+
+    def test_updating_r2_is_not_a_constant_pool_access(self):
+        source, sf = image(0x80310000, [[0xC422FFFC, 0x4E800020]], register=2)
+        target, tf = image(0x80320000, [[0xC422FFF8, 0x4E800020]], register=2)
+        self.assertEqual(reference_pairs(source, sf, target, tf, register=2), {})
+
+    def test_context_restore_pointer_is_not_the_abi_r2_base(self):
+        body = [0x3C40803D, 0x604283A0, 0xC022FFFC, 0x4E800020]
+        source, sf = image(0x80310000, [body], register=2)
+        target, tf = image(0x80320000, [body], register=2)
+        self.assertEqual(reference_pairs(source, sf, target, tf, register=2), {})
+
+    def test_base_writes_are_rejected_but_fpr2_is_a_different_register(self):
+        # li, ori, rlwinm, lwz, lmw, mr, mflr, lwzux, lfsu, psq_lu.
+        for word in [0x38400000, 0x60420000, 0x5462003E, 0x80430000,
+                     0xB8030000, 0x7C621B78, 0x7C4802A6, 0x7C62006E,
+                     0xC4220004, 0xE4220004]:
+            with self.subTest(instruction=hex(word)):
+                self.assertFalse(preserves_sda_base([word], 2))
+        # lfs f2,0(r3), lfsx f2,r3,r0, and mflr r0 preserve GPR r2.
+        self.assertTrue(preserves_sda_base([0xC0430000, 0x7C43042E, 0x7C0802A6], 2))
+
+    def test_non_sda_base_register_is_rejected(self):
+        source, _ = image(0x80310000, [])
+        with self.assertRaisesRegex(ValueError, "r2 or r13"):
+            retail_sda_base(source, 3)
 
     def test_duplicate_function_shapes_are_not_rescued_by_equal_names(self):
         source, sf = image(0x80308000, [[0x806DA480, 0x4E800020], [0x806DA484, 0x4E800020]])
@@ -156,6 +191,17 @@ class InitializedSdaLayoutTests(unittest.TestCase):
         self.assertEqual([(s.name, s.start) for s in parse_symbol_spans(symbols)["sdata"]],
                          [(f"phase{i}", 0x2000 + i * 4) for i in range(4)])
 
+    def test_initialized_r2_section_uses_the_same_operand_and_byte_gate(self):
+        self.source.sections = [DolSection(14, 0, 0x1000, 16)]
+        self.target.sections = [DolSection(14, 0, 0x2000, 20)]
+        boundaries, symbols = recover_sdata_layout(
+            self.source, self.target, [SplitRange("effect.c", "sdata2", 0x1000, 0x1010)],
+            self.source_symbols.replace(".sdata:", ".sdata2:"),
+            self.target_symbols.replace(".sdata:", ".sdata2:"), self.references, set(),
+            section_name="sdata2")
+        self.assertEqual(boundaries, {0x1000: 0x2000, 0x1010: 0x2010})
+        self.assertEqual(len(parse_symbol_spans(symbols)["sdata2"]), 4)
+
     def test_repeated_initializers_without_operand_evidence_prove_nothing(self):
         self.references = {}
         self.assertEqual(self.project(), ({}, self.target_symbols))
@@ -185,6 +231,15 @@ class InitializedSdaLayoutTests(unittest.TestCase):
             [PortedRange(SplitRange("options.c", "sdata", 0x1000, 0x1008),
                          0x2000, 0x2008, (), ())], {}, set(), {0x1000: {0x2005: [{}]}})
         self.assertEqual(parse_symbol_spans(result)["sdata"][0].start, 0x2005)
+
+    def test_replacing_old_storage_does_not_free_its_unchanged_address_name(self):
+        old = "lbl_00001000 = .sdata2:0x00001000; // type:object size:0x4"
+        imported = "lbl_00001000 = .sdata2:0x00002000; // type:object size:0x4"
+        result = replace_projected_section_symbols(old + "\n", "sdata2", [
+            (0x1000, 0x1004, "lbl_00001000", old),
+            (0x2000, 0x2004, "lbl_00001000", imported)])
+        self.assertEqual([(s.name, s.start) for s in parse_symbol_spans(result)["sdata2"]],
+                         [("lbl_00001000", 0x1000), ("lbl_00002000", 0x2000)])
 
     def test_source_used_address_name_does_not_erase_unrelated_regional_label(self):
         target = "lbl_00001000 = .sdata:0x00001000; // type:object size:0x4\n"

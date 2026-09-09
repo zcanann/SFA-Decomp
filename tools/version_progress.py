@@ -239,22 +239,56 @@ def dol_section(dol: DolFile, section: str):
     return next(item for item in dol.sections if item.index == index)
 
 
-def retail_sda_base(dol) -> int:
-    """Read the unique lis r13 / ori r13 startup pair, without linked ELF hints."""
+def retail_sda_base(dol, register: int = 13) -> int:
+    """Read the unique r2/r13 startup pair, without linked ELF hints."""
+    if register not in (2, 13):
+        raise ValueError("SDA base register must be r2 or r13")
     section = dol_section(dol, "init")
     words = struct.unpack(f">{section.size // 4}I",
                           read_dol_range(dol, section.address, section.size))
     candidates = [((high & 0xFFFF) << 16) | (low & 0xFFFF)
                   for high, low in zip(words, words[1:])
-                  if high & 0xFFFF0000 == 0x3DA00000
-                  and low & 0xFFFF0000 == 0x61AD0000]
+                  if high & 0xFFFF0000 == (0x3C000000 | register << 21)
+                  and low & 0xFFFF0000 == (0x60000000 | register << 21 | register << 16)]
     if len(candidates) != 1:
-        raise ValueError(f"Expected one retail r13 startup pair in {dol.path}")
+        raise ValueError(f"Expected one retail r{register} startup pair in {dol.path}")
     return candidates[0]
 
 
-def sda_reference_pairs(source, source_functions, target, target_functions) -> dict:
-    source_base, target_base = retail_sda_base(source), retail_sda_base(target)
+def preserves_sda_base(words, register: int) -> bool:
+    """Conservatively reject functions that overwrite the ABI base register.
+
+    Context restore assembly can reuse r2/r13 as ordinary pointers. A matched
+    instruction shape in such a function is not evidence for SDA storage.
+    String loads are rejected because their destination register range may wrap.
+    Floating-point destinations are distinct from identically numbered GPRs.
+    """
+    arithmetic = {8, 10, 40, 104, 136, 138, 200, 202, 232, 234, 235, 266, 459, 491}
+    gpr_loads = {11, 19, 20, 23, 55, 75, 83, 87, 119, 279, 310, 311,
+                339, 343, 371, 375, 534, 595, 659, 790}
+    logical = {24, 26, 28, 60, 124, 284, 316, 412, 444, 476, 536, 792, 824, 922, 954}
+    indexed_updates = {55, 119, 183, 247, 311, 375, 439, 567, 631, 695, 759}
+    for word in words:
+        opcode, rt, ra = word >> 26, (word >> 21) & 31, (word >> 16) & 31
+        if opcode in {7, 8, 12, 13, 14, 15, 32, 33, 34, 35, 40, 41, 42, 43} and rt == register:
+            return False
+        if opcode in {20, 21, 23, *range(24, 30), 33, 35, 37, 39, 41, 43, 45, 49, 51, 53, 55, 57, 61} and ra == register:
+            return False
+        if opcode == 46 and rt <= register:
+            return False
+        if opcode == 31:
+            xo = (word >> 1) & 1023
+            if xo in {533, 597}:
+                return False
+            if rt == register and (xo in gpr_loads or (xo & 511) in arithmetic):
+                return False
+            if ra == register and xo in logical | indexed_updates:
+                return False
+    return True
+
+
+def sda_reference_pairs(source, source_functions, target, target_functions, *, register=13) -> dict:
+    source_base, target_base = retail_sda_base(source, register), retail_sda_base(target, register)
     left, right = defaultdict(list), defaultdict(list)
     for dol, functions, signatures in ((source, source_functions, left),
                                         (target, target_functions, right)):
@@ -295,10 +329,12 @@ def sda_reference_pairs(source, source_functions, target, target_functions) -> d
     for a, b, evidence in pairs.values():
         source_words = struct.unpack(f">{a.size // 4}I", read_dol_range(source, a.address, a.size))
         target_words = struct.unpack(f">{b.size // 4}I", read_dol_range(target, b.address, b.size))
+        if not preserves_sda_base(source_words, register) or not preserves_sda_base(target_words, register):
+            continue
         for offset, (x, y) in enumerate(zip(source_words, target_words)):
-            # addi and non-updating scalar loads/stores. Updating r13 is not
+            # addi and non-updating scalar loads/stores. Updating the base is not
             # an ABI small-data access; logical-immediate operands are unsigned.
-            if x >> 26 not in {14, *range(32, 56, 2)} or (x >> 16) & 31 != 13:
+            if x >> 26 not in {14, *range(32, 56, 2)} or (x >> 16) & 31 != register:
                 continue
             source_address = source_base + struct.unpack(">h", struct.pack(">H", x & 0xFFFF))[0]
             target_address = target_base + struct.unpack(">h", struct.pack(">H", y & 0xFFFF))[0]
@@ -1648,7 +1684,7 @@ def render_projected_symbol_texts(
                 == item.target_end - item.target_start
                 and not (
                     data_references is not None
-                    and item.source.section in {"sdata", "sbss"}
+                    and item.source.section in {"sdata", "sbss", "sdata2"}
                     and any(target - address != item.target_start - item.source.start
                             for address, targets in data_references.items()
                             if item.source.start <= address < item.source.end
@@ -1925,7 +1961,7 @@ def recover_jump_table_layout(
 def recover_sdata_layout(
     source_dol: DolFile, target_dol: DolFile, source_splits: list[SplitRange],
     source_symbols: str, target_symbols: str, references: dict,
-    canonical_data_names: set[str],
+    canonical_data_names: set[str], *, section_name: str = "sdata",
 ) -> tuple[dict[int, int], str]:
     """Recover initialized small data only with operand AND byte evidence.
 
@@ -1934,7 +1970,9 @@ def recover_sdata_layout(
     keeps its offset, and its complete initialization bytes agree with retail.
     Repeated scalar values alone cannot establish identity or ownership.
     """
-    section = dol_section(target_dol, "sdata")
+    if section_name not in ("sdata", "sdata2"):
+        raise ValueError("Initialized SDA section must be sdata or sdata2")
+    section = dol_section(target_dol, section_name)
     start, end = section.address, section.address + section.size
 
     def project(address, size):
@@ -1954,7 +1992,7 @@ def recover_sdata_layout(
 
     proposals: dict[int, set[int]] = defaultdict(set)
     for split in source_splits:
-        if split.section != "sdata" or split.start == split.end:
+        if split.section != section_name or split.start == split.end:
             continue
         mapped = project(split.start, split.end - split.start)
         if mapped is not None:
@@ -1966,7 +2004,7 @@ def recover_sdata_layout(
     for line in source_symbols.splitlines():
         match = SYMBOL_LINE_RE.match(line)
         size_match = re.search(r"\bsize:0x([0-9A-Fa-f]+)", line)
-        if match is None or match.group(2) != "sdata" or size_match is None:
+        if match is None or match.group(2) != section_name or size_match is None:
             continue
         address, size = int(match.group(3), 16), int(size_match.group(1), 16)
         mapped = project(address, size)
@@ -1977,16 +2015,20 @@ def recover_sdata_layout(
         replacements.append((mapped, mapped + size, name,
                              rewrite_symbol_line(line, name=name, address=mapped)))
     replacements.sort()
-    if any(a[1] > b[0] for a, b in zip(replacements, replacements[1:])):
-        raise ValueError("Retail initialized SDA projections overlap; no configuration written")
-    return boundaries, replace_projected_section_symbols(target_symbols, "sdata", replacements)
+    overlaps = [(a, b) for a, b in zip(replacements, replacements[1:]) if a[1] > b[0]]
+    if overlaps:
+        detail = "; ".join(f"{a[2]} 0x{a[0]:08X}..0x{a[1]:08X} / "
+                           f"{b[2]} 0x{b[0]:08X}..0x{b[1]:08X}" for a, b in overlaps[:3])
+        raise ValueError(f"Retail initialized SDA projections overlap in {section_name}: {detail}; "
+                         "no configuration written")
+    return boundaries, replace_projected_section_symbols(target_symbols, section_name, replacements)
 
 
 def replace_projected_section_symbols(target_symbols, section, replacements):
     """Replace witnessed identities while retaining untouched target storage."""
     # A legacy EN identifier can coincide with an unrelated regional address
     # label. Keep that regional record unless this pass independently replaces
-    # its storage too; give the imported identifier its normal regional fallback.
+    # its storage with a different name; otherwise use the regional fallback.
     existing = [match for line in target_symbols.splitlines()
                 if (match := SYMBOL_LINE_RE.match(line)) and match.group(2) == section]
     adjusted = []
@@ -1995,7 +2037,8 @@ def replace_projected_section_symbols(target_symbols, section, replacements):
         if label is not None and int(name.rsplit("_", 1)[1], 16) != start:
             collisions = [int(m.group(3), 16) for m in existing if m.group(1) == name
                           and int(m.group(3), 16) == int(name.rsplit("_", 1)[1], 16)]
-            if any(not any(a <= address < b for a, b, _, _ in replacements) for address in collisions):
+            if any(not any(a <= address < b and replacement_name != name
+                           for a, b, replacement_name, _ in replacements) for address in collisions):
                 name = projected_symbol_name(name, start)
                 line = rewrite_symbol_line(line, name=name)
         adjusted.append((start, end, name, line))
@@ -2145,6 +2188,16 @@ def project_symbol_snapshot(
             source_dol, target_dol, source_splits, source_symbols, target_symbols,
             references, canonical_data_names or set(),
         )
+    sdata2_boundaries = None
+    constant_references = None
+    if any(split.section == "sdata2" for split in source_splits):
+        constant_references = sda_reference_pairs(
+            source_dol, source_functions, target_dol, target_functions, register=2
+        )
+        sdata2_boundaries, target_symbols = recover_sdata_layout(
+            source_dol, target_dol, source_splits, source_symbols, target_symbols,
+            constant_references, canonical_data_names or set(), section_name="sdata2",
+        )
     source_symbol_spans = parse_symbol_spans(source_symbols)
     target_symbol_spans = parse_symbol_spans(target_symbols)
     target_named_symbol_span_index = symbol_span_index(target_symbol_spans)
@@ -2180,6 +2233,14 @@ def project_symbol_snapshot(
         anchor_counts["sdata"] = (
             direct_count, sum(edge in boundary_maps["sdata"] for edge in source_edges)
         )
+    if sdata2_boundaries is not None:
+        boundary_maps["sdata2"].update(sdata2_boundaries)
+        direct_count, _ = anchor_counts["sdata2"]
+        source_edges = {edge for split in source_splits if split.section == "sdata2"
+                        for edge in (split.start, split.end)}
+        anchor_counts["sdata2"] = (
+            direct_count, sum(edge in boundary_maps["sdata2"] for edge in source_edges)
+        )
     boundary_maps, snapped_boundaries = snap_symbol_boundaries(
         source_splits,
         boundary_maps,
@@ -2209,7 +2270,8 @@ def project_symbol_snapshot(
         target_symbol_spans,
     )
     symbols, renamed, conflicts, symbol_delta = render_projected_symbol_texts(
-        source_symbols, target_symbols, ported, matches, canonical_data_names, references
+        source_symbols, target_symbols, ported, matches, canonical_data_names,
+        {**(references or {}), **(constant_references or {})}
     )
     return VersionProjection(
         ported=ported, matches=matches, rejected=rejected,
