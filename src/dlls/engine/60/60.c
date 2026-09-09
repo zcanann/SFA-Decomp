@@ -21,11 +21,10 @@
 #include "main/vecmath.h"
 #include "dolphin/pad.h"
 
-
 #if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
-#define LINK_TEXT_LINE_HEIGHT() \
-    (getCurLanguage() == LANGUAGE_JAPANESE ? gGameTextFontMetrics[0].lineHeight + 2 : \
-                                           gGameTextFontMetrics[4].lineHeight + 2)
+#define LINK_TEXT_LINE_HEIGHT()                                                                                        \
+    (getCurLanguage() == LANGUAGE_JAPANESE ? gGameTextFontMetrics[0].lineHeight + 2                                    \
+                                           : gGameTextFontMetrics[4].lineHeight + 2)
 #else
 #define LINK_TEXT_LINE_HEIGHT() (gGameTextFontMetrics[sLanguageNameTable[getCurLanguage()].fontId].lineHeight + 2)
 #endif
@@ -73,8 +72,9 @@ void Link_setSelected(int v);
 s32 Link_getSelected(void);
 void Link_render(int context);
 void Link_free(void);
-void Link_setup(TitleMenuTextEntry* items, int count, int selected, const char* defaultMessage, int unused1, int unused2,
-                int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen, int selectedBlue);
+void Link_setup(TitleMenuTextEntry* items, int count, int selected, const char* defaultMessage, int unused1,
+                int unused2, int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen,
+                int selectedBlue);
 void Link_release(void);
 void Link_initialise(void);
 
@@ -516,8 +516,9 @@ void Link_free(void) {
     }
     gLinkItemCount = 0;
 }
-void Link_setup(TitleMenuTextEntry* items, int count, int selected, const char* defaultMessage, int unused1, int unused2,
-                int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen, int selectedBlue) {
+void Link_setup(TitleMenuTextEntry* items, int count, int selected, const char* defaultMessage, int unused1,
+                int unused2, int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen,
+                int selectedBlue) {
     int i;
     TitleMenuTextEntry* item;
     const char* defaultText;
