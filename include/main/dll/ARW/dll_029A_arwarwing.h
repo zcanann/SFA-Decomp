@@ -10,8 +10,7 @@
 
 extern ObjectDescriptor gARWArwingObjDescriptor;
 
-typedef struct ArwInitCfg
-{
+typedef struct ArwInitCfg {
     int a;
     int b;
     u16 c;
