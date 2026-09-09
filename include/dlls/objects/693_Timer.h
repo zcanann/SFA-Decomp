@@ -10,10 +10,9 @@ struct ModelLightStruct;
 
 #define TIMER_OBJECT_GROUP 0x4C
 
-typedef struct TimerFlags
-{
-    u8 ended : 1; /* Latched by cancellation or natural expiry. */
-    u8 startOverride : 1; /* Starts the timer and bypasses start-bit cancellation. */
+typedef struct TimerFlags {
+    u8 ended : 1;                /* Latched by cancellation or natural expiry. */
+    u8 startOverride : 1;        /* Starts the timer and bypasses start-bit cancellation. */
     u8 previousGlowPhaseBit : 1; /* Low bit of the previous textureId >> 8 phase. */
     u8 unknown : 5;
 } TimerFlags;
@@ -21,8 +20,7 @@ typedef struct TimerFlags
 /* Reader prefix through +0x21. EN serialized extent is not established;
  * secondary EN rev1 / JP records are 0x24 bytes. Never use this reader's
  * sizeof for placement allocation or copying. */
-typedef struct TimerPlacementPrefix
-{
+typedef struct TimerPlacementPrefix {
     ObjPlacement base;
     u8 unknown18;
     u8 mode;
@@ -33,8 +31,7 @@ typedef struct TimerPlacementPrefix
 } TimerPlacementPrefix;
 
 /* timer_getExtraSize requests 0x20 bytes. */
-typedef struct TimerState
-{
+typedef struct TimerState {
     f32 remainingFrames;
     struct ModelLightStruct* lightSlot;
     f32 initialized08;
