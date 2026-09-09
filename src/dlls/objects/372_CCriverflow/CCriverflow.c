@@ -4,9 +4,9 @@
 #include "main/gamebits_api.h"
 #include "main/objtype.h"
 
-#define CC_RIVER_FLOW_DEFAULT_CURRENT_FLAGS       0xFF
-#define CC_RIVER_FLOW_RADIUS_SCALE_DIVISOR 512.0f
-#define CC_RIVER_FLOW_MINIMUM_ROOT_MOTION_SCALE      0.01f
+#define CC_RIVER_FLOW_DEFAULT_CURRENT_FLAGS     0xFF
+#define CC_RIVER_FLOW_RADIUS_SCALE_DIVISOR      512.0f
+#define CC_RIVER_FLOW_MINIMUM_ROOT_MOTION_SCALE 0.01f
 
 int ccRiverFlow_getExtraSize(void) {
     return sizeof(CCRiverFlowState);

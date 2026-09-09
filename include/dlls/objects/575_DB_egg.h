@@ -17,10 +17,10 @@ typedef struct DbEggState {
     f32 launchVelY;       /* 0x110 */
     f32 launchVelZ;       /* 0x114 */
     u8 mode;              /* 0x118 */
-    u8 flags;          /* 0x119: DBEGG_FLAG_* */
+    u8 flags;             /* 0x119: DBEGG_FLAG_* */
     u8 unk11A[2];
-    s16 triggerGameBit; /* 0x11C: head of the eight-byte pickup-message payload; -1 skips the gate */
-    s16 pickupMessageValue; /* 0x11E: copied to player state; downstream meaning unknown */
+    s16 triggerGameBit;        /* 0x11C: head of the eight-byte pickup-message payload; -1 skips the gate */
+    s16 pickupMessageValue;    /* 0x11E: copied to player state; downstream meaning unknown */
     f32 pickupMessageArgument; /* 0x120: initialized to 1.0; consumer meaning unknown */
 } DbEggState;
 

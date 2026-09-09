@@ -48,20 +48,20 @@
 #include "main/track_bbox_api.h"
 #include "main/object_update_list.h"
 
-#define DBEGG_MSG_START_PICKUP_SEQUENCE     0x7000a  /* requests the player interaction sequence */
-#define DBEGG_MSG_PLAYER_GRAB  0x100008 /* tells player to grab/hold the egg */
+#define DBEGG_MSG_START_PICKUP_SEQUENCE 0x7000a  /* requests the player interaction sequence */
+#define DBEGG_MSG_PLAYER_GRAB           0x100008 /* tells player to grab/hold the egg */
 
 /* ambient particle spawned randomly while dormant in DBEGG_MODE_RESPAWN_WAIT */
 #define DBEGG_PARTFX_RESPAWN_WAIT 0x3be
 /* speed-scaled trail spawned while homing to the target in DBEGG_MODE_HOMING */
 #define DBEGG_PARTFX_HOMING_TRAIL 0x345
 
-#define DBEGG_FLAG_CARRY_BEFORE_PICKUP 0x01
+#define DBEGG_FLAG_CARRY_BEFORE_PICKUP         0x01
 #define DBEGG_FLAG_NO_WATER_OR_DISTANCE_PICKUP 0x02
-#define DBEGG_FLAG_WAIT_FOR_CURVE_GAMEBIT 0x04
-#define DBEGG_FLAG_PICKUP_GAMEBIT_LOCKED 0x08
-#define DBEGG_FLAG_HOME_ON_LANDING 0x10
-#define DBEGG_FLAG_KEEP_GROUP_WHILE_HELD 0x20
+#define DBEGG_FLAG_WAIT_FOR_CURVE_GAMEBIT      0x04
+#define DBEGG_FLAG_PICKUP_GAMEBIT_LOCKED       0x08
+#define DBEGG_FLAG_HOME_ON_LANDING             0x10
+#define DBEGG_FLAG_KEEP_GROUP_WHILE_HELD       0x20
 
 typedef enum DbEggMode {
     DBEGG_MODE_SETTLED = 1,         /* settled / idle on the surface */
@@ -556,7 +556,8 @@ void dbegg_update(GameObject* obj) {
             obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             break;
         case DBEGG_MODE_PICKUP_PROMPT:
-            if (Vec_xzDistance(&obj->anim.worldPosX, &data->base.posX) > 150.0f && (egg->flags & DBEGG_FLAG_NO_WATER_OR_DISTANCE_PICKUP) == 0) {
+            if (Vec_xzDistance(&obj->anim.worldPosX, &data->base.posX) > 150.0f &&
+                (egg->flags & DBEGG_FLAG_NO_WATER_OR_DISTANCE_PICKUP) == 0) {
                 playerObj = Obj_GetPlayerObject();
                 pickupState = obj->extra;
                 placement = (DbEggPlacementPrefix*)obj->anim.placementData;
@@ -704,7 +705,8 @@ void dbegg_update(GameObject* obj) {
                         pickupState->triggerGameBit = -1;
                         pickupState->pickupMessageValue = 0;
                         pickupState->pickupMessageArgument = 1.0f;
-                        ObjMsg_SendToObject(playerObj, DBEGG_MSG_START_PICKUP_SEQUENCE, obj, (int)&pickupState->triggerGameBit);
+                        ObjMsg_SendToObject(playerObj, DBEGG_MSG_START_PICKUP_SEQUENCE, obj,
+                                            (int)&pickupState->triggerGameBit);
                     } else {
                         v = obj->anim.localPosY - player->anim.localPosY;
                         v = v >= 0.0f ? v : -v;

@@ -13,7 +13,7 @@ typedef struct CCRiverFlowPlacement {
     ObjPlacement base;
     u8 angle;
     u8 currentRadius; /* Also contributes currentRadius / 512 to rootMotionScale. */
-    u8 currentFlags; /* Zero is expanded to 0xFF during initialization. */
+    u8 currentFlags;  /* Zero is expanded to 0xFF during initialization. */
     u8 pad1B;
     s16 gameBit;
     u8 pad1E[0x02];
