@@ -8,16 +8,14 @@
 
 /* active occupies the high bit of the state byte under MWCC. Assigning a
  * game-bit value retains its low bit rather than testing it for nonzero. */
-typedef struct VortexFlags
-{
+typedef struct VortexFlags {
     u8 active : 1;
     u8 unknown : 7;
 } VortexFlags;
 
 /* Vortex_getExtraSize returns the required 0x28 bytes. Up to three layers
  * are used; the WndLift variants initialize and render only two. */
-typedef struct VortexState
-{
+typedef struct VortexState {
     f32 activationFade;
     f32 particleTimer;
     f32 layerAlphaScale[3];
