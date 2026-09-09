@@ -1852,6 +1852,21 @@ def write_lf_text(path: Path, text: str) -> None:
         stream.write(text)
 
 
+def report_unit_is_exact(unit: dict) -> bool:
+    """Require complete byte coverage even when objdiff omits zero fields."""
+    measures = unit.get("measures", {})
+    scored = [
+        measures[key]
+        for key in ("fuzzy_match_percent", "matched_data_percent")
+        if key in measures
+    ]
+    return bool(scored) and all(value == 100.0 for value in scored) and all(
+        int(measures.get(f"matched_{kind}", 0))
+        == int(measures.get(f"total_{kind}", 0))
+        for kind in ("code", "data")
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("target", help="target version under config/ and orig/")
@@ -1960,13 +1975,7 @@ def main() -> int:
             source_path = unit.get("metadata", {}).get("source_path")
             if not source_path:
                 continue
-            measures = unit.get("measures", {})
-            scored = [
-                measures[key]
-                for key in ("fuzzy_match_percent", "matched_data_percent")
-                if key in measures
-            ]
-            if scored and all(value == 100.0 for value in scored):
+            if report_unit_is_exact(unit):
                 exact_sources.add(source_path.removeprefix("src/").replace("\\", "/"))
         manifest_path = target_root / "matching_units.txt"
         write_lf_text(

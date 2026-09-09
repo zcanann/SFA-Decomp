@@ -19,6 +19,7 @@ dlls/engine/17/17.c
 dlls/engine/18/18.c
 dlls/engine/19/19.c
 dlls/engine/1_camcontrol/camcontrol.c
+dlls/engine/20_Hcurves/Hcurves_romcurve.c
 dlls/engine/21/21.c
 dlls/engine/22/22.c
 dlls/engine/23/23.c
@@ -843,6 +844,7 @@ main/boot_logo.c
 main/curves.c
 main/gameloop_buttonobj.c
 main/mm.c
+main/modelEngine.c
 main/modellight.c
 main/obj_movelib.c
 main/objlib.c

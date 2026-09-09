@@ -82,3 +82,46 @@ Each later revision gains seven fully exact units and 440 matched data bytes.
 This repairs ownership and the source tail; it does not reconstruct new code.
 All four source builds and full reports pass, with no match regressions, and
 the strict EN retail checksum passes.
+
+## Engine registry identities
+
+RomCurve's regional split previously began four bytes after the registry's
+pointer, assigning the table's first word to the preceding Hcurves diagnostics.
+All 218 diagnostic bytes match EN. Their final padding is six bytes in EN and
+two in the later versions, where the table starts at `80312248` / `80312E58`.
+All 44 non-null function pointers in the 196-byte table correspond to matched
+functions; its following 36-byte diagnostic string is also identical. The
+corrected boundary gives RomCurve its complete 232-byte data section.
+
+PAL's ObjSeq and OptionsScreen table names are restored at their unchanged
+addresses and extents. ObjSeq has 35 matched non-null function pointers.
+OptionsScreen retains four matched callbacks and its already identified,
+regionally different `OptionsScreen_frameStart`; this proves table identity,
+not an exact match for the OptionsScreen TU. Its existing 44-byte symbol extent
+is preserved. Regeneration retains all three audited table identities and the
+RomCurve boundary without changing fallback mappings.
+
+Resolving all compiled resource-registry pointer relocations using each
+version's symbols reproduces the complete 2,824 retail bytes in all four DOLs.
+RomCurve and modelEngine now report fully exact code and data in both later
+revisions. They add 3,124 matched data bytes after accounting for the four bytes
+transferred out of Hcurves; Hcurves itself retains 100% matched data. With the
+object corridor, this is nine newly verified exact units and 3,564 recovered
+matched data bytes per later revision. No function body changes.
+
+## Exact-manifest zero-field check
+
+Objdiff omits zero-valued fields. The old manifest generator accepted missing
+`matched_data_percent`, falsely treating a completely unmatched data section as
+eligible when code fuzziness was 100%. The old slot-380 record exposed this:
+its 48 data bytes were unmatched, despite an existing completion claim. Its
+corrected data is now verified exact; six other corridor units are newly added
+to each manifest.
+
+Manifest generation now also requires matched code/data byte totals to equal
+their denominators, treating missing counts as zero. PAL's THP wrapper still
+has 29 unmatched data bytes and is removed from the exact manifest. Its code
+and data match scores are unchanged; only the false completion claim is
+removed. Four regression tests cover omitted zero data, exact code with
+unmatched data, rounded percentages, and genuine code-only/data-only matches.
+All 37 projector tests pass.

@@ -17,6 +17,36 @@ from version_progress import (SymbolSpan, SplitRange, VersionProjection, build_b
 from version_progress import source_data_identifiers
 from version_progress import port_coherent_units, SECTION_INDEX
 from version_progress import build_all_boundary_maps, sbss2_bounds, snap_symbol_boundaries
+from version_progress import report_unit_is_exact
+
+
+class ExactReportTests(unittest.TestCase):
+    def test_missing_zero_data_score_does_not_promote_functionless_record(self):
+        self.assertFalse(report_unit_is_exact({"measures": {
+            "fuzzy_match_percent": 100.0, "total_data": "48",
+            "complete_data": "48", "complete_data_percent": 100.0,
+        }}))
+
+    def test_exact_code_does_not_hide_completely_unmatched_data(self):
+        self.assertFalse(report_unit_is_exact({"measures": {
+            "fuzzy_match_percent": 100.0, "total_code": "2076",
+            "matched_code": "2076", "total_data": "29",
+        }}))
+
+    def test_partial_byte_coverage_is_rejected_even_with_rounded_percentages(self):
+        self.assertFalse(report_unit_is_exact({"measures": {
+            "fuzzy_match_percent": 100.0, "matched_data_percent": 100.0,
+            "total_data": "100000000", "matched_data": "99999999",
+        }}))
+
+    def test_exact_data_only_and_code_only_units_remain_eligible(self):
+        for kind in ("code", "data"):
+            with self.subTest(kind=kind):
+                self.assertTrue(report_unit_is_exact({"measures": {
+                    "fuzzy_match_percent": 100.0,
+                    f"total_{kind}": "48", f"matched_{kind}": "48",
+                }}))
+        self.assertFalse(report_unit_is_exact({}))
 
 
 def dol(data, address):
