@@ -119,7 +119,7 @@ void lightningGetStartPos(Vec* out) {
     out->z = gActiveLightning->start[2];
 }
 
-static void lightningDrawStrand(f32* from, f32* to, u8 width, f32 segScale, int* seed) {
+static void lightningDrawStrand(f32* from, f32* to, u8 width, f32 strandSegmentDensity, int* seed) {
     int segs;
     int savedRand;
     int i;
@@ -156,7 +156,7 @@ static void lightningDrawStrand(f32* from, f32* to, u8 width, f32 segScale, int*
     PSVECCrossProduct((Vec*)scaled, (Vec*)up, (Vec*)side);
     PSVECCrossProduct((Vec*)side, (Vec*)scaled, (Vec*)up);
     PSVECNormalize((Vec*)up, (Vec*)up);
-    segs = (len * segScale);
+    segs = (len * strandSegmentDensity);
     if (segs > 10) {
         segs = 10;
     }
@@ -221,7 +221,7 @@ static void lightningDrawStrand(f32* from, f32* to, u8 width, f32 segScale, int*
     }
 }
 
-static void lightningDrawBolt(f32* start, f32* end, u8 width, f32 segScale, f32 d, int* seed, int depth, u8 flags) {
+static void lightningDrawBolt(f32* start, f32* end, u8 width, f32 boltSegmentDensity, f32 strandSegmentDensity, int* seed, int depth, u8 flags) {
     f32 len;
     f32 total;
     f32 py;
@@ -267,7 +267,7 @@ static void lightningDrawBolt(f32* start, f32* end, u8 width, f32 segScale, f32 
     PSVECCrossProduct((Vec*)scaled, (Vec*)up, (Vec*)side);
     PSVECCrossProduct((Vec*)side, (Vec*)scaled, (Vec*)up);
     PSVECNormalize((Vec*)up, (Vec*)up);
-    segs = (len * segScale);
+    segs = (len * boltSegmentDensity);
     if (segs > 10) {
         segs = 10;
     }
@@ -309,14 +309,14 @@ static void lightningDrawBolt(f32* start, f32* end, u8 width, f32 segScale, f32 
                 PSVECScale((Vec*)scaled, (Vec*)branchEnd, bfrac * len);
                 PSVECAdd((Vec*)start, (Vec*)branchEnd, (Vec*)branchEnd);
                 PSVECAdd((Vec*)branchEnd, (Vec*)offset, (Vec*)branchEnd);
-                lightningDrawBolt(next, branchEnd, halfWidth, segScale, d, seed, depth + 1, flags);
+                lightningDrawBolt(next, branchEnd, halfWidth, boltSegmentDensity, strandSegmentDensity, seed, depth + 1, flags);
             }
         } else {
             next[0] = end[0];
             next[1] = end[1];
             next[2] = end[2];
         }
-        lightningDrawStrand(cur, next, width, d, seed);
+        lightningDrawStrand(cur, next, width, strandSegmentDensity, seed);
         px = nx;
         py = ny;
         pz = nz;
@@ -374,7 +374,7 @@ void lightningRender(LightningEffect* p) {
     srand(p->seed);
     PSVECSubtract((Vec*)end, (Vec*)start, (Vec*)diff);
     PSVECMag((Vec*)diff);
-    lightningDrawBolt(start, end, p->width, p->radiusX, p->radiusY, &savedSeed, 0, p->flags);
+    lightningDrawBolt(start, end, p->width, p->boltSegmentDensity, p->strandSegmentDensity, &savedSeed, 0, p->flags);
     srand(savedSeed);
 }
 
@@ -411,7 +411,7 @@ void lightningRenderActive(void) {
     }
 }
 
-LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, u16 lifetime, u8 width,
+LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 boltSegmentDensity, f32 strandSegmentDensity, u16 lifetime, u8 width,
                                  u8 flags) {
     LightningEffect* p = mmAlloc(40, 23, 0);
 
@@ -424,8 +424,8 @@ LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiu
     p->end[0] = end->x;
     p->end[1] = end->y;
     p->end[2] = end->z;
-    p->radiusX = radiusX;
-    p->radiusY = radiusY;
+    p->boltSegmentDensity = boltSegmentDensity;
+    p->strandSegmentDensity = strandSegmentDensity;
     p->lifetime = lifetime;
     p->width = width;
     p->timer = 0;

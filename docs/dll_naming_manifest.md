@@ -621,7 +621,7 @@ any of them is acted on.
 | 0x238 | LINKA_levco | COMPLETE | dlls/objects/568_LINKA_levco/LINKA_levco.c | = (canonical) | Exact retail basename; canonical LinkA API, map routing and `gLinkALevControlObjDescriptor` recovered |
 | 0x239 | textblock | DOL-RECOVERED | dlls/objects/569/textblock.c | = (canonical) | No OBJECTS.bin basename, so the folder stays numeric; source name from the retail `<textblock.c Init>` literal at 0x80329CF0, the TU's only string, printed by its own init slot; DFP_TextblockObj and KP_textbloc are object aliases |
 | 0x23A | DFP_Platfor | COMPLETE | dlls/objects/570_DFP_Platfor/DFP_Platfor.c | = (canonical) | Exact truncated retail basename; diagnostic strings follow descriptor |
-| 0x23B | DFP_Lightni | COMPLETE | dlls/objects/571_DFP_Lightni/DFP_Lightni.c | = (canonical) | Exact truncated retail basename; next-slot DFP_PowerSl helper removed |
+| 0x23B | DFP_Lightni | COMPLETE | dlls/objects/571_DFP_Lightni/DFP_Lightni.c | = (canonical) | Exact truncated retail basename; canonical state/API and lightning width, density and lifetime controls recovered; next slot preserved |
 | 0x23C | DFP_PowerSl | COMPLETE | dlls/objects/572_DFP_PowerSl/DFP_PowerSl.c | = (canonical) | Exact retail basename; leading helper restored from DLL 571 |
 | 0x23D | DBPointMum | COMPLETE | dlls/objects/573_DBPointMum/DBPointMum.c | = (canonical) | Descriptor data only; no .text functions |
 | 0x23E | — | NO-RETAIL-NAME | dlls/objects/574/574.c | = (canonical) | Descriptor data only; no .text functions |
@@ -1080,6 +1080,7 @@ more as they are recovered.
 | 0x235 | dlls/objects/565_DFP_TargetB/DFP_TargetB.c | include/dlls/objects/565_DFP_TargetB.h |
 | 0x237 | dlls/objects/567_DFPSpPl/DFPSpPl.c | include/dlls/objects/567_DFPSpPl.h |
 | 0x238 | dlls/objects/568_LINKA_levco/LINKA_levco.c | include/dlls/objects/568_LINKA_levco.h |
+| 0x23B | dlls/objects/571_DFP_Lightni/DFP_Lightni.c | include/dlls/objects/571_DFP_Lightni.h |
 | 0x242 | dlls/objects/578_DBstealerwo/DBstealerwo.c | include/dlls/objects/578_DBstealerwo.h |
 | 0x250 | dlls/objects/592_KT_Rex/KT_Rex.c | include/dlls/objects/592_KT_Rex.h |
 | 0x255 | dlls/objects/597/597.c | include/dlls/objects/597_SnowBike.h |

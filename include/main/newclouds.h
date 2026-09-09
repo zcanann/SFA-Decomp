@@ -41,7 +41,7 @@ extern NewCloudsInterface** gNewCloudsInterface;
 
 /* extern-cleanup: defining-file public prototypes */
 void mm_free_(void* ptr);
-LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, u16 lifetime, u8 width,
+LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 boltSegmentDensity, f32 strandSegmentDensity, u16 lifetime, u8 width,
                                  u8 flags);
 void lightningRender(LightningEffect* effect);
 void initSkyStars(void);

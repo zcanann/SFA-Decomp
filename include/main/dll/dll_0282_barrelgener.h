@@ -14,8 +14,8 @@ struct ModelLightStruct;
 
 extern ObjectDescriptor gBarrelGenerObjDescriptor;
 extern int gBarrelGenerReleaseFrameOffset;
-extern f32 gObjLightningClusterRadiusX;
-extern f32 gObjLightningClusterRadiusY;
+extern f32 gObjLightningClusterBoltSegmentDensity;
+extern f32 gObjLightningClusterStrandSegmentDensity;
 extern f32 gObjLightningClusterLifetime;
 extern u16 gObjLightningClusterWidth;
 int barrelgener_getLinkId(GameObject* obj);
