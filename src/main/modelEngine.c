@@ -501,6 +501,7 @@
 #include "main/dll/dll_0299.h"
 #include "dlls/objects/689_CmbSrc.h"
 #include "dlls/objects/690_DustMoteSou.h"
+#include "dlls/objects/691.h"
 #include "main/dll/dll_02B4_cntcounter.h"
 #include "main/dll/dll_02B6_cnthitobjec.h"
 #include "main/dll/dll_02B7_mcupgrade.h"
@@ -597,7 +598,7 @@ extern ResourceDescriptor gVFP_LaddersObjDescriptor, gVFP_LevelControlObjDescrip
     gVFP_MiniFireObjDescriptor, gVFP_ObjCreatorObjDescriptor, gVFP_PlatformObjDescriptor,
     gVFP_flamepointObjDescriptor;
 extern ResourceDescriptor gVFP_lavapoolObjDescriptor, gVFP_lavastarObjDescriptor, gVFP_statueballObjDescriptor,
-    gVortexObjDescriptor, gWCBouncyCraObjDescriptor;
+    gWCBouncyCraObjDescriptor;
 extern ResourceDescriptor gWCLevelContObjDescriptor,
     gWCPushBlockObjDescriptor,
     gWCTileObjDescriptor;
@@ -1913,7 +1914,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gBrokenPipeObjDescriptor,
     (ResourceDescriptor*)&gCmbSrcObjDescriptor,
     (ResourceDescriptor*)&gDustMoteSouObjDescriptor,
-    &gVortexObjDescriptor,
+    (ResourceDescriptor*)&gVortexObjDescriptor,
     (ResourceDescriptor*)&gCNTcounterObjDescriptor,
     &gTimerObjDescriptor,
     (ResourceDescriptor*)&gCNThitObjecObjDescriptor,
