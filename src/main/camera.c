@@ -1,4 +1,5 @@
 #include "main/camera.h"
+#include "main/video_viewport.h"
 #include "main/object_transform.h"
 #include "main/pi_dolphin.h"
 #include "main/frame_timing.h"
@@ -809,10 +810,10 @@ void Camera_ApplyFullViewport(void) {
     GXRenderModeObj* renderMode = gRenderModeObj;
 
     if (renderMode->field_rendering != 0) {
-        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, renderMode->xfbHeight, 0.0f,
+        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), 0.0f,
                             1.0f, gViewportJitterField);
     } else {
-        GXSetViewport(0.0f, 0.0f, renderMode->fbWidth, renderMode->xfbHeight, 0.0f,
+        GXSetViewport(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), 0.0f,
                       1.0f);
     }
 }
@@ -821,10 +822,10 @@ void Camera_ApplyEffectDepthViewport(void) {
     GXRenderModeObj* renderMode = gRenderModeObj;
 
     if (renderMode->field_rendering != 0) {
-        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, renderMode->xfbHeight, (-0.075f),
+        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.075f),
                             1.0f, gViewportJitterField);
     } else {
-        GXSetViewport(0.0f, 0.0f, renderMode->fbWidth, renderMode->xfbHeight, (-0.075f),
+        GXSetViewport(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.075f),
                       gCameraEffectViewportFarZ);
     }
 }
@@ -833,10 +834,10 @@ void Camera_ApplyTransparentViewport(void) {
     GXRenderModeObj* renderMode = gRenderModeObj;
 
     if (renderMode->field_rendering != 0) {
-        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, renderMode->xfbHeight, (-0.01f),
+        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.01f),
                             1.0f, gViewportJitterField);
     } else {
-        GXSetViewport(0.0f, 0.0f, renderMode->fbWidth, renderMode->xfbHeight, (-0.01f), 1.0f);
+        GXSetViewport(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.01f), 1.0f);
     }
 }
 
@@ -844,10 +845,10 @@ void Camera_ApplyDecalViewport(void) {
     GXRenderModeObj* renderMode = gRenderModeObj;
 
     if (renderMode->field_rendering != 0) {
-        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, renderMode->xfbHeight, (-0.05f),
+        GXSetViewportJitter(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.05f),
                             1.0f, gViewportJitterField);
     } else {
-        GXSetViewport(0.0f, 0.0f, renderMode->fbWidth, renderMode->xfbHeight, (-0.05f), 1.0f);
+        GXSetViewport(0.0f, 0.0f, renderMode->fbWidth, VIDEO_VIEWPORT_HEIGHT(renderMode), (-0.05f), 1.0f);
     }
 }
 

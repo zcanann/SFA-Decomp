@@ -1,4 +1,5 @@
 #include "main/video_flip.h"
+#include "main/video_viewport.h"
 #include "main/gpu_hang.h"
 #include "dolphin/os/OSReport.h"
 #include "dolphin/PPCArch.h"
@@ -150,11 +151,7 @@ void videoInit(void* unusedRenderMode, int unusedArg) {
     VISetPreRetraceCallback(videoSwapFrameBuffers);
     VISetPostRetraceCallback(gpuErrorHandler);
     GXSetBreakPtCallback(videoBreakPointCallback);
-#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
-    GXSetViewport(0.0f, 0.0f, gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, 0.0f, 1.0f);
-#else
-    GXSetViewport(0.0f, 0.0f, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight, 0.0f, 1.0f);
-#endif
+    GXSetViewport(0.0f, 0.0f, gRenderModeObj->fbWidth, VIDEO_VIEWPORT_HEIGHT(gRenderModeObj), 0.0f, 1.0f);
     GXSetFieldMode(gRenderModeObj->field_rendering, gRenderModeObj->xfbHeight < gRenderModeObj->viHeight);
     GXSetScissor(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
     GXSetDispCopyDst(gRenderModeObj->fbWidth, gDispCopyYScaleLines);
