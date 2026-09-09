@@ -9,8 +9,7 @@
 
 /* EN reads establish this prefix through the halfword at 0x1E.
  * The complete placement record size is not yet verified. */
-typedef struct DfpTorchPlacementPrefix
-{
+typedef struct DfpTorchPlacementPrefix {
     ObjPlacement base; /* 0x00: common placement head */
     s8 rotPitch;       /* 0x18: low 6 bits seed anim.rotX (<<10) */
     u8 mode;           /* 0x19: torch mode selector */
@@ -26,8 +25,7 @@ STATIC_ASSERT(offsetof(DfpTorchPlacementPrefix, colorIdx) == 0x1C);
 STATIC_ASSERT(offsetof(DfpTorchPlacementPrefix, gameBit) == 0x1E);
 
 /* DFP_Torch_getExtraSize proves the complete 0x10-byte state allocation. */
-typedef struct DfpTorchState
-{
+typedef struct DfpTorchState {
     int gameBit;      /* lit-state gamebit, -1 = none (def+0x1E) */
     s16 flickerTimer; /* 0x04 */
     s16 litTimer;     /* 0x06: 0x7D0 countdown while lit */
