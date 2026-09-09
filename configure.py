@@ -342,11 +342,6 @@ cflags_dll_noopt_nolifetimes_noloopinv_nostrength = [
     "-opt", "nopeephole,noschedule,nolifetimes,noloopinvariants,nostrength",
 ]
 
-cflags_dll_noopt_nocse_nolifetimes_noloopinv = [
-    *cflags_game,
-    "-opt", "nopeephole,noschedule,nocse,nolifetimes,noloopinvariants",
-]
-
 cflags_dll_noopt_nocse = [
     *cflags_game,
     "-opt", "nopeephole,noschedule,nocse",
@@ -1782,7 +1777,7 @@ config.libs = [
             Object(NonMatching, "main/gametext.c", cflags=cflags_dll_noopt_noautoinline_deferred),
             Object(MatchingFor("GSAE01"), "main/subtitle.c", cflags=cflags_dll_noopt_level1, extra_cflags=["-inline", "noauto,deferred"]),
             Object(Matching, "main/textrender_drawbox.c"),
-            Object(NonMatching, "main/textrender_boxtex.c", cflags=cflags_dll_noopt_nocse_nolifetimes_noloopinv),
+            Object(NonMatching, "main/textrender_boxtex.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/modellight.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/gameloop.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "main/gameloop_buttonobj.c", cflags=cflags_dll_noopt_noautoinline),
