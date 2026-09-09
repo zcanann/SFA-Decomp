@@ -5,7 +5,7 @@
  */
 #include "main/audio/sfx_keep_alive_api.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/DF/dll_0229_dfplevelcontrol.h"
+#include "dlls/objects/553_DFP_LevelCo.h"
 #include "main/dll/baddie/dll_022F_dfpfloorbar.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/mapEvent.h"
@@ -29,9 +29,6 @@ struct DfpfloorbarPlacement
     s16 loweredGameBit;    /* 0x20 */
 };
 
-/* anim.romDefNo of the puzzle controller object this bar links to (docblock:
- * "the puzzle controller object (romDefNo 0x431)"). */
-#define DFPFLOORBAR_CONTROLLER_SEQID 0x431
 
 int dfpfloorbar_SeqFn(void)
 {
@@ -140,7 +137,7 @@ void DFP_Floorbar_update(GameObject* obj)
         idx = idx_init;
         for (; idx < count; idx++)
         {
-            if (((GameObject*)items[idx])->anim.romDefNo == DFPFLOORBAR_CONTROLLER_SEQID)
+            if (((GameObject*)items[idx])->anim.romDefNo == DFP_LEVEL_CONTROL_OBJECT_ID)
             {
                 state->levelController = (int*)items[idx];
                 idx = count;

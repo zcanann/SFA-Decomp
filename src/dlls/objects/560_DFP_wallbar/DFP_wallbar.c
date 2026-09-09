@@ -5,14 +5,12 @@
  */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/baddie/chuka.h"
-#include "main/dll/DF/dll_0229_dfplevelcontrol.h"
+#include "dlls/objects/553_DFP_LevelCo.h"
 #include "main/gamebits.h"
 #include "main/obj_list.h"
 #include "main/dll/DF/dll_0230_dfpwallbar.h"
 #include "sys/objects.h"
 
-/* romDefNo of the Ocean Force Point level controller this bar links to. */
-#define DFPWALLBAR_SEQID_CONTROLLER 0x431
 
 extern u8 gDFPWallbarSafeFloorTiles[9];
 
@@ -78,7 +76,7 @@ void chuka_update(GameObject* obj)
         for (i = firstIdx; i < count; i++)
         {
             candidate = (GameObject*)objList[i];
-            if (candidate->anim.romDefNo == DFPWALLBAR_SEQID_CONTROLLER)
+            if (candidate->anim.romDefNo == DFP_LEVEL_CONTROL_OBJECT_ID)
             {
                 state->levelController = candidate;
                 i = count;
