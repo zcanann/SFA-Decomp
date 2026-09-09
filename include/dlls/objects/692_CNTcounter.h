@@ -21,8 +21,7 @@ STATIC_ASSERT(sizeof(CntCounterState) == 0x08);
 /* Reader prefix through +0x21; the active EN serialized extent is unproven.
  * Secondary EN rev1 / JP placements are 0x24 bytes. Do not use this prefix's
  * sizeof as an allocation or copy size. */
-typedef struct CntCounterPlacementPrefix
-{
+typedef struct CntCounterPlacementPrefix {
     ObjPlacement base;
     u8 unknown18;
     u8 displayHud;
@@ -39,7 +38,6 @@ STATIC_ASSERT(offsetof(CntCounterPlacementPrefix, initialCount) == 0x1A);
 STATIC_ASSERT(offsetof(CntCounterPlacementPrefix, unknown1C) == 0x1C);
 STATIC_ASSERT(offsetof(CntCounterPlacementPrefix, doneGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(CntCounterPlacementPrefix, countInputGameBit) == 0x20);
-
 
 extern ObjectDescriptor gCNTcounterObjDescriptor;
 

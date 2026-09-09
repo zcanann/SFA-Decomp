@@ -10,85 +10,67 @@
 #include "main/gamebits.h"
 #include "main/model_engine.h"
 
-int CntCounter_getExtraSize(void)
-{
+int CntCounter_getExtraSize(void) {
     return sizeof(CntCounterState);
 }
 
-int CntCounter_getObjectTypeId(void)
-{
+int CntCounter_getObjectTypeId(void) {
     return 0;
 }
 
-void CntCounter_free(GameObject* obj)
-{
+void CntCounter_free(GameObject* obj) {
     CntCounterState* state = obj->extra;
-    if (state->displayHud != 0)
-    {
+    if (state->displayHud != 0) {
         hudNumberSet(-1);
     }
 }
 
-void CntCounter_render(void)
-{
+void CntCounter_render(void) {
 }
 
-void CntCounter_hitDetect(void)
-{
+void CntCounter_hitDetect(void) {
 }
 
-void CntCounter_update(GameObject* obj)
-{
+void CntCounter_update(GameObject* obj) {
     CntCounterState* state = obj->extra;
     CntCounterPlacementPrefix* setup = (CntCounterPlacementPrefix*)obj->anim.placementData;
 
-    if (state->remainingCount != 0)
-    {
+    if (state->remainingCount != 0) {
         int decrementAmount;
-        if (state->displayHud != 0)
-        {
+        if (state->displayHud != 0) {
             hudNumberSet(state->remainingCount);
         }
         decrementAmount = mainGetBit(setup->countInputGameBit);
-        if (decrementAmount != 0)
-        {
+        if (decrementAmount != 0) {
             mainSetBits(setup->countInputGameBit, 0);
             state->remainingCount -= decrementAmount;
-            if (state->remainingCount <= 0)
-            {
+            if (state->remainingCount <= 0) {
                 state->remainingCount = 0;
                 mainSetBits(setup->doneGameBit, 1);
-                if (state->displayHud != 0)
-                {
+                if (state->displayHud != 0) {
                     hudNumberSet(-1);
                 }
                 state->displayHud = 0;
             }
         }
-    }
-    else
-    {
-        if (mainGetBit(setup->countInputGameBit) != 0)
-        {
+    } else {
+        if (mainGetBit(setup->countInputGameBit) != 0) {
             state->displayHud = setup->displayHud;
             state->remainingCount = setup->initialCount;
         }
     }
 }
 
-void CntCounter_init(GameObject* obj)
-{
+void CntCounter_init(GameObject* obj) {
     CntCounterState* state = obj->extra;
     state->displayHud = 0;
     state->remainingCount = 0;
 }
 
-void CntCounter_release(void)
-{
+void CntCounter_release(void) {
 }
 
-void CntCounter_initialise(void)
-{
+void CntCounter_initialise(void) {
 }
 
 ObjectDescriptor gCNTcounterObjDescriptor = {
