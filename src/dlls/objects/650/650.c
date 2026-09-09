@@ -97,7 +97,7 @@ void earthwalker_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
     EarthWalkerState* state = obj->extra;
 
     if (visible != 0) {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6CE0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, gEarthWalkerRenderScale);
         dll_2E_setTargetFromPathPoint(obj, (MoveLibState*)state, 0);
     }
 }

@@ -33,7 +33,7 @@ void WCBouncyCra_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6D38);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, gBouncyCrateOne);
     }
 }
 
@@ -56,7 +56,7 @@ void WCBouncyCra_update(GameObject* obj)
 
             if ((void*)objGetNearestTypeTo(WBOUNCY_TRIGGER_GROUP, obj, &v) == NULL)
             {
-                dist = lbl_803E6D24;
+                dist = gBouncyCrateZero;
             }
             else
             {
@@ -64,17 +64,17 @@ void WCBouncyCra_update(GameObject* obj)
                 dist = gBouncyCrateNearDistance;
                 if (vv < dist)
                 {
-                    dist = lbl_803E6D2C;
+                    dist = gBouncyCrateMaxLaunchSpeed;
                 }
                 else if (vv > gBouncyCrateFarDistance)
                 {
-                    dist = lbl_803E6D24;
+                    dist = gBouncyCrateZero;
                 }
                 else
                 {
-                    dist = (vv - dist) / lbl_803E6D34;
-                    dist = lbl_803E6D38 - dist;
-                    dist *= lbl_803E6D2C;
+                    dist = (vv - dist) / gBouncyCrateLaunchFalloffRange;
+                    dist = gBouncyCrateOne - dist;
+                    dist *= gBouncyCrateMaxLaunchSpeed;
                 }
             }
             obj->anim.velocityY = dist;
@@ -95,7 +95,7 @@ void WCBouncyCra_update(GameObject* obj)
                 state->flags &= ~WBOUNCY_FLAG_ACTIVE;
                 state->cooldown = WBOUNCY_RESET_COOLDOWN;
                 obj->anim.localPosY = state->homeY;
-                obj->anim.velocityY = lbl_803E6D24;
+                obj->anim.velocityY = gBouncyCrateZero;
             }
         }
     }

@@ -30,14 +30,14 @@ STATIC_ASSERT(offsetof(WCBouncyCrateState, flags) == 0x0A);
 STATIC_ASSERT(offsetof(WCBouncyCrateState, bounceCount) == 0x0B);
 
 extern f32 gBouncyCrateTriggerSearchRadius;
-extern f32 lbl_803E6D24;
+extern f32 gBouncyCrateZero;
 extern f32 gBouncyCrateNearDistance;
-extern f32 lbl_803E6D2C;
+extern f32 gBouncyCrateMaxLaunchSpeed;
 extern f32 gBouncyCrateFarDistance;
-extern f32 lbl_803E6D34;
+extern f32 gBouncyCrateLaunchFalloffRange;
 extern f32 gBouncyCrateGravity;
 extern f32 gBouncyCrateRestitution;
-extern f32 lbl_803E6D38;
+extern f32 gBouncyCrateOne;
 extern f32 WCBLOCK_PLAYER_CELL_MARGIN;
 
 int WCBouncyCra_getExtraSize(void);

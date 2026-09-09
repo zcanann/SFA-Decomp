@@ -176,3 +176,65 @@ The earlier unresolved GX modes and function names were repaired in the
 [regional boundary batch](regional_call_identity_recovery.md#three-trailing-return-boundaries-2026-09-09).
 EarthWalker, bouncy-crate and Arwing remain follow-ups for the combined PAL
 manifest link; the checks above substitute only the reviewed push-block TU.
+
+## EarthWalker and bouncy-crate constants (2026-09-09)
+
+The remaining Walled City render and launch references now use five stable
+source identifiers in all five versions:
+
+| Name | Value | Consumer |
+| --- | ---: | --- |
+| `gEarthWalkerRenderScale` | 1 | the render helper's scale argument |
+| `gBouncyCrateZero` | 0 | inactive launch speed and post-bounce velocity reset |
+| `gBouncyCrateMaxLaunchSpeed` | 2 | initial vertical speed near the trigger |
+| `gBouncyCrateLaunchFalloffRange` | 300 | linear launch-speed falloff between distances 200 and 500 |
+| `gBouncyCrateOne` | 1 | launch interpolation and the render helper argument |
+
+EarthWalker's render wrapper is not globally unique: `cfguardian_render` has
+the same normalized instruction shape. Its descriptor independently resolves
+that ambiguity. The globally unique `earthwalker_init` and `earthwalker_update`
+bodies identify one descriptor record in each retail DOL, and its render slot
+selects the correct wrapper from the two candidates:
+
+| Version | Descriptor | Render callback |
+| --- | --- | --- |
+| EN | `8032AED4` | `8022312C` |
+| EN rev1 | `8032BB2C` | `8022377C` |
+| JP | `8032AFF4` | `8022321C` |
+| PAL v1.0 | `8032C6AC` | `8022388C` |
+| PAL rev1 | `8032C86C` | `802239C4` |
+
+Bouncy-crate's complete update body is globally unique in all five DOLs.
+Its seven loads, plus the selected EarthWalker wrapper's load, establish these
+addresses from actual retail r2 operands. Every float's four bytes agree with EN:
+
+| Constant | EN | EN rev1 | JP | PAL v1.0 | PAL rev1 |
+| --- | --- | --- | --- | --- | --- |
+| EarthWalker render scale | `803E6CE0` | `803E7978` | `803E6E00` | `803E8510` | `803E86D8` |
+| Crate zero | `803E6D24` | `803E79BC` | `803E6E44` | `803E8554` | `803E871C` |
+| Crate maximum launch speed | `803E6D2C` | `803E79C4` | `803E6E4C` | `803E855C` | `803E8724` |
+| Crate launch falloff range | `803E6D34` | `803E79CC` | `803E6E54` | `803E8564` | `803E872C` |
+| Crate one | `803E6D38` | `803E79D0` | `803E6E58` | `803E8568` | `803E8730` |
+
+The repair preserves declarations, TU boundaries and automatic-pool ownership.
+Unrelated regional symbols whose numeric names collide with the old EN labels
+remain untouched. No compiler profile or regional source conditional changes.
+
+All five all-retail links and combined EarthWalker/bouncy-crate source links
+reproduce the verified originals exactly. Direct objdiff comparisons with
+completion annotations disabled retain 18 exact EarthWalker functions (3,348
+code and 152 data bytes) and ten exact bouncy-crate functions (872 code and 64
+data bytes). Overall match measures do not change; this resolves previously
+missing or incorrect external identities behind the existing exact scores.
+Only the five external names change in the two source objects: allocated bytes,
+section layouts, relocation records and other symbol properties are identical.
+Every other source object is unchanged. All five source builds and EN's strict
+checksum pass. Arwing's external constants remain the next combined PAL-link
+follow-up.
+
+A fresh PAL v1.0 diagnostic substitutes all 918 manifest source units. Its
+all-retail link remains exact; the source link now reports 36 distinct
+undefined constants, all referenced by `ARWArwing.o`. The repaired GX, MusyX,
+camera, push-block, EarthWalker and bouncy-crate references no longer appear
+in that error list. Successful symbol resolution alone will still need a final
+DOL comparison before the full manifest link can be considered exact.
