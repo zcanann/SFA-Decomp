@@ -16,15 +16,11 @@ void mathSinCosf(float angle, float* outSin, float* outCos) {
     /* Seed the two polynomial accumulators with x and x squared. */
     float sine = trigReduceQuadrant(&quadrant, angle);
     float cosine = sine * sine;
-    sine =
-        sine *
-        (cosine * (*(const float*)&gSinCosSinCoeff5 * cosine + *(const float*)&gSinCosSinCoeff3) +
-         *(const float*)&gSinCosSinCoeff1);
-    cosine =
-        cosine *
-            (cosine * (*(const float*)&gSinCosCosCoeff6 * cosine + *(const float*)&gSinCosCosCoeff4) +
-             *(const float*)&gSinCosCosCoeff2) +
-        *(const float*)&gSinCosCosCoeff0;
+    sine = sine * (cosine * (*(const float*)&gSinCosSinCoeff5 * cosine + *(const float*)&gSinCosSinCoeff3) +
+                   *(const float*)&gSinCosSinCoeff1);
+    cosine = cosine * (cosine * (*(const float*)&gSinCosCosCoeff6 * cosine + *(const float*)&gSinCosCosCoeff4) +
+                       *(const float*)&gSinCosCosCoeff2) +
+             *(const float*)&gSinCosCosCoeff0;
 
     switch (quadrant & 6) {
     case 0:
