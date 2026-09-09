@@ -1,18 +1,17 @@
 /*
- * Ocean Force Point Temple "chuka" wall-bar object (DLL 0x230; "DFP_wallbar").
- * Its callbacks retain the recovered chuka_* names for the moving
- * wall/floor bar driven by the shared baddie state machine.
+ * DFP_wallbar (DLL slot 560 / 0x230) displays the selected safe-floor tile
+ * using model variants and rotation, reading the solution from the level
+ * controller. The exported callback names retain their existing chuka prefix.
  */
+#include "dlls/objects/560_DFP_wallbar.h"
+
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/baddie/chuka.h"
 #include "dlls/objects/553_DFP_LevelCo.h"
 #include "main/gamebits.h"
 #include "main/obj_list.h"
-#include "main/dll/DF/dll_0230_dfpwallbar.h"
 #include "sys/objects.h"
 
 
-extern u8 gDFPWallbarSafeFloorTiles[9];
 
 int chuka_SeqFn(void)
 {
@@ -20,7 +19,7 @@ int chuka_SeqFn(void)
 }
 int chuka_getExtraSize(void)
 {
-    return sizeof(ChukaState);
+    return sizeof(DfpWallbarState);
 }
 int chuka_getObjectTypeId(void)
 {
@@ -39,7 +38,7 @@ void chuka_render(void)
 void chuka_hitDetect(GameObject* obj)
 {
     GameObject* levelController;
-    ChukaState* state = obj->extra;
+    DfpWallbarState* state = obj->extra;
     levelController = state->levelController;
     if (levelController == NULL)
         return;
@@ -50,13 +49,13 @@ void chuka_hitDetect(GameObject* obj)
 
 void chuka_update(GameObject* obj)
 {
-    ChukaPlacement* data = (ChukaPlacement*)obj->anim.placementData;
-    ChukaState* state = obj->extra;
+    DfpWallbarPlacementPrefix* data = (DfpWallbarPlacementPrefix*)obj->anim.placementData;
+    DfpWallbarState* state = obj->extra;
     GameObject* levelController;
     GameObject** objList;
     GameObject* candidate;
     int i;
-    int height;
+    int scaleDivisor;
     int firstIdx;
     int count;
     ObjAnimComponent* objAnim = &obj->anim;
@@ -104,10 +103,10 @@ void chuka_update(GameObject* obj)
         {
             Obj_SetActiveModelIndex(obj, 0);
         }
-        height = data->barHeight;
-        if (height != 0)
+        scaleDivisor = data->motionScaleDivisor;
+        if (scaleDivisor != 0)
         {
-            obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            obj->anim.rootMotionScale = 1.0f / ((f32)scaleDivisor / 1000.0f);
         }
         break;
     case 1:
@@ -115,10 +114,10 @@ void chuka_update(GameObject* obj)
         {
             Obj_SetActiveModelIndex(obj, 1);
         }
-        height = data->barHeight;
-        if (height != 0)
+        scaleDivisor = data->motionScaleDivisor;
+        if (scaleDivisor != 0)
         {
-            obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            obj->anim.rootMotionScale = 1.0f / ((f32)scaleDivisor / 1000.0f);
         }
         if (obj->anim.rotZ != 0) {
             obj->anim.rotZ = 0;
@@ -129,10 +128,10 @@ void chuka_update(GameObject* obj)
         {
             Obj_SetActiveModelIndex(obj, 2);
         }
-        height = data->barHeight;
-        if (height != 0)
+        scaleDivisor = data->motionScaleDivisor;
+        if (scaleDivisor != 0)
         {
-            obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            obj->anim.rootMotionScale = 1.0f / ((f32)scaleDivisor / 1000.0f);
         }
         if (obj->anim.rotZ != 0) {
             obj->anim.rotZ = 0;
@@ -143,10 +142,10 @@ void chuka_update(GameObject* obj)
         {
             Obj_SetActiveModelIndex(obj, 2);
         }
-        height = data->barHeight;
-        if (height != 0)
+        scaleDivisor = data->motionScaleDivisor;
+        if (scaleDivisor != 0)
         {
-            obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            obj->anim.rootMotionScale = 1.0f / ((f32)scaleDivisor / 1000.0f);
         }
         if (obj->anim.rotZ != 0x3fff) {
             obj->anim.rotZ = 0x7fff;
@@ -157,10 +156,10 @@ void chuka_update(GameObject* obj)
         {
             Obj_SetActiveModelIndex(obj, 1);
         }
-        height = data->barHeight;
-        if (height != 0)
+        scaleDivisor = data->motionScaleDivisor;
+        if (scaleDivisor != 0)
         {
-            obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            obj->anim.rootMotionScale = 1.0f / ((f32)scaleDivisor / 1000.0f);
         }
         if (obj->anim.rotZ != 0x3fff) {
             obj->anim.rotZ = 0x7fff;
@@ -171,10 +170,10 @@ void chuka_update(GameObject* obj)
         {
             Obj_SetActiveModelIndex(obj, 0);
         }
-        height = data->barHeight;
-        if (height != 0)
+        scaleDivisor = data->motionScaleDivisor;
+        if (scaleDivisor != 0)
         {
-            obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
+            obj->anim.rootMotionScale = 1.0f / ((f32)scaleDivisor / 1000.0f);
         }
         if (obj->anim.rotZ != 0) {
             obj->anim.rotZ = 0;
@@ -183,25 +182,25 @@ void chuka_update(GameObject* obj)
     }
 }
 
-void chuka_init(GameObject* obj, ChukaPlacement* params)
+void chuka_init(GameObject* obj, DfpWallbarPlacementPrefix* params)
 {
-    ChukaState* state = obj->extra;
-    ChukaPlacement* placement = params;
+    DfpWallbarState* state = obj->extra;
+    DfpWallbarPlacementPrefix* placement = params;
     u8* safeFloorTiles;
 
-    obj->anim.rotX = (s16)(placement->rotXByte << 8);
+    obj->anim.rotX = (s16)(placement->rotationHighByte << 8);
     obj->animEventCallback = chuka_SeqFn;
-    state->startY = obj->anim.localPosY;
+    state->initialLocalPosY = obj->anim.localPosY;
     state->rowIndex = placement->rowIndex;
 
-    if (placement->barHeight != 0)
+    if (placement->motionScaleDivisor != 0)
     {
-        obj->anim.rootMotionScale = 1.0f / ((f32)placement->barHeight / 1000.0f);
+        obj->anim.rootMotionScale = 1.0f / ((f32)placement->motionScaleDivisor / 1000.0f);
     }
 
-    if (placement->rotZInit != 0)
+    if (placement->initialRotZ != 0)
     {
-        obj->anim.rotZ = placement->rotZInit;
+        obj->anim.rotZ = placement->initialRotZ;
     }
 
     obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN;

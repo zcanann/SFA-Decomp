@@ -466,6 +466,7 @@
 #include "dlls/objects/547_VFP_corepla.h"
 #include "dlls/objects/565_DFP_TargetB.h"
 #include "dlls/objects/559_DFP_floorba.h"
+#include "dlls/objects/560_DFP_wallbar.h"
 #include "dlls/objects/575_DB_egg.h"
 #include "main/dll/dll_025A_staticcamera.h"
 #include "main/dll/dll_025B_msplantings.h"
@@ -563,7 +564,6 @@ extern ResourceDescriptor gDll2A4ObjDescriptor, dll_2E, gDllD3ObjDescriptor, exp
 extern ResourceDescriptor gARWBlockerObjDescriptor, gARWBombCollObjDescriptor, gARWGeneratoObjDescriptor,
     gARWProximitObjDescriptor;
 extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor;
-extern ResourceDescriptor gChukaObjDescriptor;
 extern ResourceDescriptor gCrCloudRaceObjDescriptor;
 extern ResourceDescriptor gDBHoleControl1ObjDescriptor;
 extern ResourceDescriptor gDIM_trickyObjDescriptor, gDR_CloudRunnerObjDescriptor;
@@ -1777,7 +1777,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gDFP_seqpointObjDescriptor,
     (ResourceDescriptor*)&gDoorswitchObjDescriptor,
     (ResourceDescriptor*)&gDfpfloorbarObjDescriptor,
-    &gChukaObjDescriptor,
+    (ResourceDescriptor*)&gChukaObjDescriptor,
     &gTrickyCurveObjDescriptor,
     &gDFP_RotatePObjDescriptor,
     (ResourceDescriptor*)&gDfpstatue1ObjDescriptor,
