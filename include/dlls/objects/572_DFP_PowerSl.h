@@ -7,13 +7,11 @@
 #include "game/objects/object_setup.h"
 #include "dlls/object_descriptor.h"
 
-
-
 /* Retail getExtraSize allocates exactly 0x0C bytes. */
 typedef struct DfpPowerSlState {
-  s32 sequenceStartFrame;
-  s32 effectId;
-  s32 disableEffectGameBit;
+    s32 sequenceStartFrame;
+    s32 effectId;
+    s32 disableEffectGameBit;
 } DfpPowerSlState;
 
 /* Mutable EN reader view: init replaces nonpositive frame/effect parameters
@@ -21,13 +19,13 @@ typedef struct DfpPowerSlState {
  * a placement using sizeof this prefix.
  */
 typedef struct DfpPowerSlPlacementPrefix {
-  ObjPlacement base;
-  s8 rotationXByte;
-  u8 unknown19;
-  s16 sequenceStartFrame;
-  s16 effectId;
-  u8 unknown1E[2];
-  s16 disableEffectGameBit;
+    ObjPlacement base;
+    s8 rotationXByte;
+    u8 unknown19;
+    s16 sequenceStartFrame;
+    s16 effectId;
+    u8 unknown1E[2];
+    s16 disableEffectGameBit;
 } DfpPowerSlPlacementPrefix;
 
 STATIC_ASSERT(sizeof(DfpPowerSlState) == 0x0C);
@@ -46,10 +44,10 @@ STATIC_ASSERT(offsetof(DfpPowerSlPlacementPrefix, disableEffectGameBit) == 0x20)
 extern ObjectDescriptor gDfppowerslObjDescriptor;
 
 int dfppowersl_getExtraSize(void);
-int dfppowersl_spawnHitEffects(GameObject *obj);
-void dfppowersl_free(GameObject *obj);
-void dfppowersl_render(GameObject *obj);
-void dfppowersl_update(GameObject *obj);
-void dfppowersl_init(GameObject *obj,DfpPowerSlPlacementPrefix *mapData);
+int dfppowersl_spawnHitEffects(GameObject* obj);
+void dfppowersl_free(GameObject* obj);
+void dfppowersl_render(GameObject* obj);
+void dfppowersl_update(GameObject* obj);
+void dfppowersl_init(GameObject* obj, DfpPowerSlPlacementPrefix* mapData);
 
 #endif /* DLLS_OBJECTS_572_DFP_POWERSL_H_ */
