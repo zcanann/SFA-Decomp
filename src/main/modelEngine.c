@@ -513,7 +513,7 @@
 #include "main/dll/dll_02BE_androssbrain.h"
 #include "main/dll/dll_02BD_androsshand.h"
 #include "dlls/objects/687.h"
-#include "main/dll/dll_02B0_brokenpipe.h"
+#include "dlls/objects/688_BrokenPipe.h"
 #include "main/dll/dll_02AD_softbody.h"
 #include "main/dll/SP/dll_0287_spscarab.h"
 #include "main/dll/VF/platform1.h"

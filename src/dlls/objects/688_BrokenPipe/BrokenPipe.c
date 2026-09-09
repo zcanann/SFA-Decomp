@@ -1,14 +1,14 @@
 /*
- * BrokenPipe (DLL 688) - a static, breakable pipe prop.
+ * BrokenPipe (DLL 688) supplies hit responses for a hidden object. The update
+ * callback requests light-blue hit particles and a staff-hit sound on a cooldown;
+ * this TU neither renders the object nor implements a breaking transition.
  *
- * init applies the placement's packed Z/Y/X rotation bytes (1/256 turns)
- * and an optional uniform scale: the scale byte is normalised, and if the
- * normalised value equals a sentinel constant it is replaced with a safe
- * fallback, then used to scale the hitbox sphere radius, then folded into
- * the model's base root-motion scale. update polls the priority hit-react
- * system, flashing a light-blue hit effect on a cooldown.
+ * Initialization applies packed rotation bytes and an optional scale. It retains
+ * the zero-scale check, scales the signed sphere radius, then multiplies the
+ * object's scale by the model base scale. The object is marked hidden afterward.
  */
-#include "main/dll/dll_02B0_brokenpipe.h"
+#include "dlls/objects/688_BrokenPipe.h"
+#include "game/objects/object.h"
 #include "main/objhits.h"
 
 int brokenpipe_getExtraSize(void)
@@ -23,7 +23,7 @@ void brokenpipe_update(GameObject* obj)
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->hitEffectCooldown);
 }
 
-void brokenpipe_init(GameObject* obj, BrokenPipeSetup* setup)
+void brokenpipe_init(GameObject* obj, BrokenPipePlacementPrefix* setup)
 {
     f32 zeroScale = 0.0f;
 
