@@ -51,7 +51,6 @@ void fastCastFloatToU16(float value, u16* output) {
 #pragma optimize_for_size on
 float exp2f(float value) {
     s16 exponent;
-    float integerPart;
     float fraction;
     union {
         float value;
@@ -63,8 +62,7 @@ float exp2f(float value) {
     }
 
     fastCastFloatToS16(value, &exponent);
-    integerPart = fastCastS16ToFloat(&exponent);
-    fraction = value - integerPart;
+    fraction = value - fastCastS16ToFloat(&exponent);
 
     if (fraction != *(const float*)&sExp2Zero) {
         if (value < *(const float*)&sExp2Zero) {

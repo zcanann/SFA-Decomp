@@ -553,3 +553,36 @@ disabled for the existing parameter word views. This is a before/after behavior
 check, not an IEEE libm accuracy claim or an emulation of quantization registers.
 Local variant controls, objects, complete reports, retail audit and host harness
 are under `/tmp/sfa-power-accumulators/`.
+
+## Tangent accumulator and exponential conversion result (2026-09-08)
+
+`mathTanf` now uses its reduced angle as the tangent polynomial accumulator.
+`exp2f` consumes the signed-16 fast-cast result directly in the fractional-part
+subtraction, removing a float local that only held the conversion result.
+Polynomial grouping, arithmetic types, sign and quadrant handling, conversion
+calls, underflow handling and exponent-word arithmetic are unchanged.
+
+| Function | Before fuzzy | After fuzzy | Generated instructions before → after | Retail instructions |
+| --- | ---: | ---: | ---: | ---: |
+| `mathTanf` | 43.675674% | 53.135136% | 48 → 44 | 37 |
+| `exp2f` | 70.611115% | 76.000000% | 62 → 57 | 54 |
+
+Both remain `NonMatching` under the required GC/1.3 profile. The nine removed
+instructions improve the scores equally in EN, EN revision 1, JP and PAL
+revision 1. All ten retail functions in these two units have equal normalized
+instructions across the four verified DOLs, and their 24-byte and 72-byte pools
+agree. The eight other source functions, non-text sections, named data layouts
+and ordered relocation destinations are preserved; internal function targets
+follow their actual new symbol offsets. Constant-load values still agree with
+retail. Every unrelated source object and objdiff unit remains unchanged. All
+four `all_source` builds and the strict EN checksum pass within 30-second limits.
+
+Host differential checks produce identical before/after bits at both O0 and O2
+for 5,376 tangent cases and 262,160 exponential cases. Tangent coverage combines
+quadrant patterns, signed angles and reducer outputs, including nonfinite values;
+the reducer is stubbed, so this does not test its accuracy. Exponential coverage
+includes the underflow threshold, fractional values and signed-16 conversion
+boundaries, with invalid host casts excluded. Fast-cast stubs use ordinary
+signed-16 conversions; the hardware quantization contract is unchanged. Local
+sources, reports, retail audit and harness are under
+`/tmp/sfa-tan-exp-temporaries/`.
