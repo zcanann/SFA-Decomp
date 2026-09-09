@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import unittest
 
 from orig.dol_xrefs import DolSection, FunctionSymbol
-from orig.sda_symbol_audit import reference_pairs, retail_sda_base
+from orig.sda_symbol_audit import reference_pairs, retail_sda_base, configured_candidates
 from version_progress import (SplitRange, PortedRange, recover_sbss_layout,
                               recover_sdata_layout, parse_symbol_spans,
                               render_projected_symbol_texts, replace_projected_section_symbols, preserves_sda_base,
@@ -29,6 +29,17 @@ def image(base, bodies, register=13):
 
 
 class SdaAuditTests(unittest.TestCase):
+    def test_source_used_name_cannot_fall_back_to_a_regional_label(self):
+        old, regional = "lbl_00001000", "lbl_00002000"
+        spans = parse_symbol_spans(
+            f"{old} = .sdata:0x00001000; // type:object size:0x4\n"
+            f"{regional} = .sbss:0x00002000; // type:object size:0x4\n")
+        names = {s.name: [s] for section in spans.values() for s in section}
+        self.assertEqual(configured_candidates(old, "sbss", {0x2000: [{}]}, names, {old}), names[old])
+        del names[old]
+        self.assertEqual(configured_candidates(old, "sbss", {0x2000: [{}]}, names, {old}), [])
+        self.assertEqual(configured_candidates(old, "sbss", {0x2000: [{}]}, names, set()), names[regional])
+
     def test_negative_displacements_use_each_retail_startup_base(self):
         source, sf = image(0x80308000, [[0x806DA480, 0x4E800020]])
         target, tf = image(0x80318000, [[0x806DA478, 0x4E800020]])

@@ -30,14 +30,26 @@ def load_version(version):
     return dol, parse_function_symbols(text), parse_symbol_spans(text), splits
 
 
+def configured_candidates(name, section, targets, target_names, required_names):
+    # Source linkage uses the actual identifier, even if a regional label at
+    # the expected address exists under another name or in another section.
+    if name in required_names:
+        return list(target_names.get(name, []))
+    configured = [s for s in target_names.get(name, []) if s.section == section]
+    if not configured and len(targets) == 1:
+        configured = [s for s in target_names.get(
+            projected_symbol_name(name, next(iter(targets))), []) if s.section == section]
+    return configured
+
+
 def audit(source_version, target_version):
     source, source_functions, source_spans, source_splits = load_version(source_version)
     target, target_functions, target_spans, target_splits = load_version(target_version)
     refs = reference_pairs(source, source_functions, target, target_functions)
     constant_refs = reference_pairs(source, source_functions, target, target_functions, register=2)
     target_names = defaultdict(list)
-    for section in ("sdata", "sbss", "sdata2"):
-        for span in target_spans.get(section, ()):
+    for spans in target_spans.values():
+        for span in spans:
             target_names[span.name].append(span)
     required_names = source_data_identifiers(source_splits)
     rows = []
@@ -49,10 +61,7 @@ def audit(source_version, target_version):
             name = span.name
             if len(targets) == 1 and ADDRESS_SYMBOL_RE.match(name) and name not in required_names:
                 name = projected_symbol_name(name, next(iter(targets)))
-            configured = [s for s in target_names.get(name, []) if s.section == section]
-            if not configured and len(targets) == 1:
-                configured = [s for s in target_names.get(
-                    projected_symbol_name(span.name, next(iter(targets))), []) if s.section == section]
+            configured = configured_candidates(name, section, targets, target_names, required_names)
             if len(configured) > 1 and owners:
                 configured = [candidate for candidate in configured if any(
                     s.unit in owners and s.section == section and s.start <= candidate.start < s.end

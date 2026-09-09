@@ -83,6 +83,7 @@ dlls/engine/85/85.c
 dlls/engine/86/86.c
 dlls/engine/87/87.c
 dlls/engine/88/88.c
+dlls/engine/9/9.c
 dlls/modgfx/100/100.c
 dlls/modgfx/101/101.c
 dlls/modgfx/102/102.c
@@ -841,6 +842,7 @@ main/pad.c
 main/pi_pathsearch.c
 main/rand.c
 main/rcp_dolphin.c
+main/shader_dolphin.c
 main/shadow_dolphin.c
 main/skystars.c
 main/subtitle.c

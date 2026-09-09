@@ -185,3 +185,8 @@ extract:
 - symbol: gLoadingScreenTextures
   binary: gLoadingScreenTextures.bin
   header: gLoadingScreenTextures.inc
+
+# These constants are read through offsets from sEnvMapBumpIndMtx.
+force_active:
+  - sWarpedRingRotAxes
+  - sWarpedRingIndMtx
