@@ -4460,17 +4460,17 @@ dolphin/gx/GXGeometry.c:
 
 dolphin/gx/GXFrameBuf.c:
 	.text       start:0x8025954C end:0x80259FE0
-	.data       start:0x8032FFB8 end:0x803300D8
+	.data       start:0x8032FFB8 end:0x803300A8
 	.sdata2     start:0x803E9070 end:0x803E9078
 
 dolphin/gx/GXLight.c:
 	.text       start:0x80259FE0 end:0x8025A9F8
-	.data       start:0x803300D8 end:0x803300F8
+	.data       start:0x803300A8 end:0x803300C8
 	.sdata2     start:0x803E9078 end:0x803E90C8
 
 dolphin/gx/GXTexture.c:
 	.text       start:0x8025A9F8 end:0x8025BB58
-	.data       start:0x803300F8 end:0x803303E0
+	.data       start:0x803300C8 end:0x803303E0
 	.sdata      start:0x803DDF80 end:0x803DDFC0
 	.sdata2     start:0x803E90C8 end:0x803E90F8
 

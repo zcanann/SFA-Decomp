@@ -785,13 +785,16 @@ dolphin/gx/GXBump.c
 dolphin/gx/GXDisplayList.c
 dolphin/gx/GXDraw.c
 dolphin/gx/GXFifo.c
+dolphin/gx/GXFrameBuf.c
 dolphin/gx/GXGeometry.c
 dolphin/gx/GXInit.c
+dolphin/gx/GXLight.c
 dolphin/gx/GXMisc.c
 dolphin/gx/GXPerf.c
 dolphin/gx/GXPixel.c
 dolphin/gx/GXStubs.c
 dolphin/gx/GXTev.c
+dolphin/gx/GXTexture.c
 dolphin/gx/GXTransform.c
 dolphin/mtx/mtx.c
 dolphin/mtx/mtx44.c

@@ -1828,6 +1828,100 @@ class VersionProjection:
     passes: int = 1
 
 
+def recover_jump_table_layout(
+    source_dol: DolFile, target_dol: DolFile, source_splits: list[SplitRange],
+    source_symbols: str, target_symbols: str, matches: dict[int, FunctionSymbol],
+) -> tuple[dict[int, int], str]:
+    """Recover switch tables from exact case destinations, not pointer masks.
+
+    Every entry must be an aligned interior address in one independently matched
+    function. Translate each case offset, then require the entire table to occur
+    uniquely in target data. Complete table-only TU ranges may include up to seven
+    zero alignment bytes between tables or at the end; other data is not inferred.
+    """
+    if not any(split.section == "data" for split in source_splits):
+        return {}, target_symbols
+    functions = parse_function_symbols(source_symbols)
+    starts = [function.address for function in functions]
+    target_section = dol_section(target_dol, "data")
+    target_bytes = read_dol_range(target_dol, target_section.address, target_section.size)
+    tables = []
+    source_spans = parse_symbol_spans(source_symbols).get("data", ())
+    name_counts: dict[str, int] = defaultdict(int)
+    for span in source_spans:
+        name_counts[span.name] += 1
+    for span in source_spans:
+        if not re.fullmatch(r"(?:@\d+|jumptable_[0-9A-Fa-f]{8})", span.name):
+            continue
+        if span.start % 4 or span.size < 12 or span.size % 4:
+            continue
+        words = struct.unpack(f">{span.size // 4}I", read_dol_range(source_dol, span.start, span.size))
+        index = bisect.bisect_right(starts, words[0]) - 1
+        if index < 0:
+            continue
+        function = functions[index]
+        target_function = matches.get(function.address)
+        if target_function is None or function.size != target_function.size or not all(
+            function.address < word < function.address + function.size and word % 4 == 0
+            for word in words
+        ):
+            continue
+        translated = struct.pack(f">{len(words)}I", *(
+            target_function.address + word - function.address for word in words))
+        offset = target_bytes.find(translated)
+        if offset < 0 or (target_section.address + offset) % 4 or target_bytes.find(translated, offset + 1) >= 0:
+            continue
+        tables.append((span, target_section.address + offset))
+    tables.sort(key=lambda item: item[0].start)
+    lines = {int(match.group(3), 16): line for line in source_symbols.splitlines()
+             if (match := SYMBOL_LINE_RE.match(line)) and match.group(2) == "data"}
+    replacements = []
+    for span, address in tables:
+        # Anonymous compiler numbers can repeat in unrelated TUs. They are not
+        # globally unique identities to remove elsewhere in the target config.
+        name = (projected_symbol_name(span.name, address) if name_counts[span.name] == 1
+                else f"jumptable_{address:08X}")
+        replacements.append((address, address + span.size, name,
+                             rewrite_symbol_line(lines[span.start], name=name, address=address)))
+    replacements.sort()
+    if any(a[1] > b[0] for a, b in zip(replacements, replacements[1:])):
+        raise ValueError("Retail jump table projections overlap; no configuration written")
+    boundaries = {}
+    for split in source_splits:
+        if split.section != "data":
+            continue
+        owned = [(span, address) for span, address in tables
+                 if split.start <= span.start < span.end <= split.end]
+        if not owned or owned[0][0].start != split.start:
+            continue
+        delta = owned[0][1] - split.start
+        cursor = split.start
+        valid = True
+        for span, address in owned:
+            gap = span.start - cursor
+            if address - span.start != delta or not 0 <= gap <= 7 or (
+                gap and read_dol_range(source_dol, cursor, gap) != bytes(gap)
+            ):
+                valid = False
+                break
+            cursor = span.end
+        tail = split.end - cursor
+        if not valid or not 0 <= tail <= 7 or (tail and read_dol_range(source_dol, cursor, tail) != bytes(tail)):
+            continue
+        mapped = split.start + delta
+        # Verify padding too. Table entries were checked individually above.
+        raw = bytearray(read_dol_range(source_dol, split.start, split.end - split.start))
+        for span, address in owned:
+            begin = span.start - split.start
+            raw[begin:begin + span.size] = read_dol_range(target_dol, address, span.size)
+        if read_dol_range(target_dol, mapped, len(raw)) == raw:
+            for edge in (split.start, split.end):
+                if edge in boundaries and boundaries[edge] != edge + delta:
+                    raise ValueError("Conflicting retail jump table boundaries")
+                boundaries[edge] = edge + delta
+    return boundaries, replace_projected_section_symbols(target_symbols, "data", replacements)
+
+
 def recover_sdata_layout(
     source_dol: DolFile, target_dol: DolFile, source_splits: list[SplitRange],
     source_symbols: str, target_symbols: str, references: dict,
@@ -2034,6 +2128,9 @@ def project_symbol_snapshot(
     matches = unique_function_matches(
         source_dol, source_functions, target_dol, target_functions
     )
+    jump_boundaries, target_symbols = recover_jump_table_layout(
+        source_dol, target_dol, source_splits, source_symbols, target_symbols, matches
+    )
     sbss_boundaries = sdata_boundaries = None
     references = None
     if any(split.section in {"sbss", "sdata"} for split in source_splits):
@@ -2062,6 +2159,14 @@ def project_symbol_snapshot(
         matches,
         target_all_symbol_span_index,
     )
+    if jump_boundaries:
+        boundary_maps["data"].update(jump_boundaries)
+        direct_count, _ = anchor_counts["data"]
+        source_edges = {edge for split in source_splits if split.section == "data"
+                        for edge in (split.start, split.end)}
+        anchor_counts["data"] = (
+            direct_count, sum(edge in boundary_maps["data"] for edge in source_edges)
+        )
     if sbss_boundaries is not None:
         boundary_maps["sbss"] = sbss_boundaries
         anchor_counts["sbss"] = (
