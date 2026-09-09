@@ -6,16 +6,14 @@
 #include "game/objects/object_setup.h"
 
 /* waterflowwe_getExtraSize allocates the complete eight-byte filtered-current state. */
-typedef struct WaterFlowWeState
-{
+typedef struct WaterFlowWeState {
     f32 currentX;
     f32 currentZ;
 } WaterFlowWeState;
 
 /* Accessed reader view only. The complete EN serialized extent is not established;
  * do not use sizeof this prefix to allocate or copy placements. */
-typedef struct WaterFlowWePlacementPrefix
-{
+typedef struct WaterFlowWePlacementPrefix {
     ObjPlacement base;
     u8 rotZ;
     u8 rotY;
