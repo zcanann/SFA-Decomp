@@ -182,8 +182,8 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantPlacement* unusedPlaceme
             state->idleTimer = randomGetRange(MAGICPLANT_IDLE_TIMER_MIN, MAGICPLANT_IDLE_TIMER_MAX);
         } else if (obj->anim.currentMove != MAGICPLANT_MOVE_IDLE) {
             state->animStepScale = gMagicPlantIdleAnimStep;
-            ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_IDLE,
-                                   MAGICPLANT_RANDOM_PROGRESS_SCALE * randomGetRange(0, 99), 0);
+            ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_IDLE, MAGICPLANT_RANDOM_PROGRESS_SCALE * randomGetRange(0, 99),
+                                   0);
         }
     }
 
@@ -221,7 +221,7 @@ void MagicPlant_spawnChild(GameObject* obj, int objectId) {
         placement->base.color[1] = placementData[0x05];
         placement->base.unk07 = (u8)(placementData[0x07] - MAGICPLANT_CHILD_YAW_OFFSET);
         childObj = objSetupObject(&placement->base, MAGICPLANT_CHILD_SETUP_FLAGS, obj->anim.mapEventSlot,
-                                   MAGICPLANT_CHILD_SENTINEL, obj->anim.parent);
+                                  MAGICPLANT_CHILD_SENTINEL, obj->anim.parent);
         if (childObj != NULL) {
             ObjLink_AttachChild(obj, childObj, 0);
             state->childObject = childObj;
@@ -397,8 +397,9 @@ void MagicPlant_init(GameObject* obj, MagicPlantPlacement* placement) {
     if (noSaveTime == 0) {
         progress = (*gMapEventInterface)->getTime(placement->eventId);
         divisor = placement->eventDuration;
-        if (divisor < MAGICPLANT_EVENT_MIN_DURATION)
+        if (divisor < MAGICPLANT_EVENT_MIN_DURATION) {
             divisor = MAGICPLANT_EVENT_MIN_DURATION;
+        }
         progress /= divisor;
         if (progress > MAGICPLANT_ONE) {
             progress = MAGICPLANT_ONE;
