@@ -78,12 +78,54 @@ The recovered SDA2 symbols, split ranges and symbol mappings survive regeneratio
 The 77 targeted SDA, pool-audit, version-projection and jump-table tests pass.
 Clang-format makes no additional changes to the active TU or its canonical header.
 
-This does not establish a full regional source link. Camera-climb and push-block
-still expose colliding legacy references (`lbl_803E19A0`, `lbl_803E6D68`), and
-Arwing retains similar cases. Those names need evidence-backed source recovery;
-silently redirecting unrelated regional labels would hide incorrect relocations.
+This does not establish a full regional source link. Push-block still exposes
+colliding legacy references (`lbl_803E6D68`), and Arwing retains similar cases.
+Those names need evidence-backed source recovery; silently redirecting unrelated
+regional labels would hide incorrect relocations. The camera-climb collision is
+resolved below.
 
 ```sh
 python3 tools/orig/sda_symbol_audit.py GSAJ01 --section sdata2
 python3 tools/verify_source_link.py GSAJ01 dlls/objects/359_SpiritDoorL/SpiritDoorL.c
 ```
+
+## Climbing camera zero (2026-09-09)
+
+Linking all 916 PAL v1.0 manifest units together exposed unresolved external
+references that their normalized object reports did not reject. One was the
+climbing camera's `lbl_803E19A0`. That spelling names unrelated storage in the
+other four regional configs, including a local eight-byte double in JP.
+
+The camera uses this value when its height is already between the target-relative
+minimum and maximum: no vertical correction is needed. Its source now names the
+constant `gCamClimbZero`. A globally unique whole-function instruction signature
+identifies `CameraModeClimb_update` independently in all five verified DOLs.
+The same `lfs` instruction offset, decoded against each retail startup r2 base,
+loads exactly four zero bytes at these addresses:
+
+| Version | Retail load instruction | Constant address |
+| --- | --- | --- |
+| EN | `8010D4D4` | `803E19A0` |
+| EN rev1 | `8010D770` | `803E2620` |
+| JP | `8010D4F4` | `803E1AC0` |
+| PAL v1.0 | `8010D8F0` | `803E31A8` |
+| PAL rev1 | `8010D900` | `803E3368` |
+
+Only those proven symbols are renamed. Unrelated regional `lbl_803E19A0`
+records retain their identities and addresses. The constant remains in its
+existing automatic pool; this change does not invent a source definition or
+claim additional pool ownership.
+
+All five versions pass `all_source`, and both the all-retail and camera-source
+substitution links reproduce their verified original DOLs. EN also passes its
+strict matching checksum. Every report measure is unchanged. The camera object
+changes only the external symbol spelling: all allocated bytes, symbol layouts
+and relocation records are identical. Every other source object is unchanged.
+
+The combined PAL manifest link remains incomplete. Its linker also reports
+unresolved GX render-mode records, `aramInitStreamBuffers`,
+`Obj_UnregisterEffectBox`, and external constants in EarthWalker, bouncy-crate,
+push-block and Arwing. These are concrete linkage follow-ups, not proof that
+their reported instruction matches are false. Individual normalized matches
+continue to require final-address verification before a complete regional source
+link can be claimed.

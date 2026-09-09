@@ -13,7 +13,7 @@
 #include "main/vecmath.h"
 #include "string.h"
 
-extern f32 lbl_803E19A0;
+extern f32 gCamClimbZero;
 extern f32 gCamClimbDistanceSmoothRate;
 extern f32 gCamClimbTraceOrbitRadius;
 extern f32 gCamClimbPi;
@@ -82,7 +82,7 @@ void CameraModeClimb_update(CameraObject* camera) {
     } else if (blend > maxCameraY) {
         value = maxCameraY - blend;
     } else {
-        value = lbl_803E19A0;
+        value = gCamClimbZero;
     }
     value *= (gCameraModeClimbState->heightAdjustRate * timeDelta);
     camera->anim.worldPosY += value;
