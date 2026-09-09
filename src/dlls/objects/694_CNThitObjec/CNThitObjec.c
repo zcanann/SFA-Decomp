@@ -20,8 +20,8 @@
 #include "main/objhits.h"
 #include "sys/objects.h"
 
-#define CNTHIT_MODE_VISIBLE_OBJECT 2
-#define CNTHIT_PROFILE_COUNT 3
+#define CNTHIT_MODE_VISIBLE_OBJECT             2
+#define CNTHIT_PROFILE_COUNT                   3
 #define CNTHIT_DEFAULT_VISIBLE_EXPLOSION_SCALE 80
 
 /* These are placement identities, not model IDs. */
@@ -178,21 +178,22 @@ int mcupgrade_SeqFn(GameObject* obj, int unused, ObjSeqState* event) {
     return 0;
 }
 
-CntHitObjectDescriptor gCNThitObjecObjDescriptor = { {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    cnthitobjec_initialise,
-    cnthitobjec_release,
-    0,
-    (ObjectDescriptorCallback)cnthitobjec_init,
-    (ObjectDescriptorCallback)cnthitobjec_update,
-    (ObjectDescriptorCallback)cnthitobjec_hitDetect,
-    (ObjectDescriptorCallback)cnthitobjec_render,
-    cnthitobjec_free,
-    (ObjectDescriptorCallback)cnthitobjec_getObjectTypeId,
-    cnthitobjec_getExtraSize,
+CntHitObjectDescriptor gCNThitObjecObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        cnthitobjec_initialise,
+        cnthitobjec_release,
+        0,
+        (ObjectDescriptorCallback)cnthitobjec_init,
+        (ObjectDescriptorCallback)cnthitobjec_update,
+        (ObjectDescriptorCallback)cnthitobjec_hitDetect,
+        (ObjectDescriptorCallback)cnthitobjec_render,
+        cnthitobjec_free,
+        (ObjectDescriptorCallback)cnthitobjec_getObjectTypeId,
+        cnthitobjec_getExtraSize,
     },
     0,
 };
