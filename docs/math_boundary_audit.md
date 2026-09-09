@@ -149,3 +149,61 @@ already match exactly. There is no constant pool involved in these helpers.
 The type recovery leaves every existing source object byte-identical in all
 four hash-verified targets, including the exact lighting TU; it does not claim
 a score increase or establish a different compiler profile.
+
+## Fresh same-source compiler controls (2026-09-08)
+
+At staging `c1ac51716c`, the older math family occupies eleven current TUs
+because the reciprocal helper has since been separated. It has 49 functions,
+10,584 code bytes and 1,196 data bytes. Four paths remain under `dolphin/MSL_C`,
+but these select the game compiler explicitly. Those directory names do not
+establish MSL lineage. The other 28 MSL units still have 100% code fuzzy agreement.
+
+Recompiling the **same current source** into scratch directories produces:
+
+| Compiler control | Exact functions | Exact code bytes | Code fuzzy | Data agreement |
+| --- | ---: | ---: | ---: | ---: |
+| Current GC/1.3 and current flags | 3 / 49 | 92 | 74.948980% | 100% |
+| GC/1.2.5n, otherwise identical flags | 42 / 49 | 8,176 | 98.734695% | 100% |
+| GC/1.2.5n plus `-opt functions` | 45 / 49 | 8,956 | 99.555176% | 100% |
+
+[Per-function objdiff results](math_compiler_control.csv) retain all 49 rows.
+The older compiler's extra option closes the three angle-vector functions.
+The four remaining mismatches are `atanf`, `powfCoreHighPrecision`,
+`powfCoreFast` and `mathSinCosf`; current source rewrites mean the older compiler
+alone no longer makes this entire family exact.
+
+This isolates the compiler as the cause of most **current** score loss. It does
+not infer original provenance from an aggregate score or authorize restoring
+compiler exceptions. Independent retail save/restore evidence is also concrete:
+`invSqrt` has 16 instructions, including nine arithmetic/load/result instructions
+between its saves and restores. Those nine already agree with GC/1.3. The current
+compiler adds four `psq_st`/`psq_l` instructions and enlarges its frame from
+32 to 48 bytes; its remaining four operand differences are stack offsets/frame
+sizes. `sqrtf` and `sqrtfHighPrecision` show the same four added instructions and
+four frame-related operand differences. Changing the GC/1.3 processor selection
+to 750 or 604, or toggling `-use_lmw_stmw`, leaves those differences unchanged.
+An O1 control changes arithmetic register allocation and removes retail saves,
+so it does not reproduce these functions either.
+
+The donor-project question has a separate answer. Melee's MSL `trigf.c` uses
+`__four_over_pi_m1`, `__sincos_poly` and `__sincos_on_quadrant`; SFA's already-exact
+MSL `trigf.c` uses that same family. The older angle-vector approximations have
+different coefficients and fast-cast calls. A fresh read-only search across the
+available reference projects found no occurrence of three distinctive coefficient
+spellings (`2.2949214e-15`, `0.000023968449`, `8.8444e-37`). This is only a negative
+source-text search, not proof that no donor contains an equivalent implementation.
+The shared-pool and function-boundary evidence above remains the basis for split
+decisions; the compiler comparison changes no boundaries.
+
+Each scratch compile starts with its actual `ninja -t commands` source command,
+redirects `-o` to a separate directory, and changes only the compiler executable
+and the explicitly listed extra option. The function comparison checks nonempty
+retail/source instruction streams and relocation-aware operands. Separate
+objdiff projects point to the unchanged EN retail objects and each scratch set;
+the figures above come from those reports, not a manually estimated score.
+The current-compiler control reproduces the active report. All constant-pool data
+also remain exact in every control. Scratch commands, objects, instruction diffs,
+source hashes and full reports are under `/tmp/sfa-math-abi-refresh/` locally.
+No configured compiler, source, matching classification or expected checksum
+changes. The immediately preceding all-source and strict EN gates remain valid
+for this documentation-only audit.
