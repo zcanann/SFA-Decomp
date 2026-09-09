@@ -322,7 +322,10 @@ dlls/objects/352/352.c
 dlls/objects/353_CFTreasRobo/CFTreasRobo.c
 dlls/objects/354_CFMagicWall/CFMagicWall.c
 dlls/objects/355/355.c
+dlls/objects/356_CFLevelCont/CFLevelCont.c
 dlls/objects/357_CFRemovalSh/CFRemovalSh.c
+dlls/objects/358/358.c
+dlls/objects/359_SpiritDoorL/SpiritDoorL.c
 dlls/objects/360_HoloPoint/HoloPoint.c
 dlls/objects/361_IMIceMounta/IMIceMounta.c
 dlls/objects/362_CRrockfall/CRrockfall.c
@@ -344,6 +347,9 @@ dlls/objects/377_DFSH_ObjCre/DFSH_ObjCre.c
 dlls/objects/378_SpiritPrize/SpiritPrize.c
 dlls/objects/379_DFSH_LaserB/DFSH_LaserB.c
 dlls/objects/380_GCRobotPatr/GCRobotPatr.c
+dlls/objects/381/381.c
+dlls/objects/382_MMP_levelco/MMP_levelco.c
+dlls/objects/383/383.c
 dlls/objects/384_MMP_asteroi/MMP_asteroi.c
 dlls/objects/385_MMP_trenchF/MMP_trenchF.c
 dlls/objects/386_MMP_moonroc/MMP_moonroc.c

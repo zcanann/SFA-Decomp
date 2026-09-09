@@ -54,3 +54,31 @@ callbacks are independently matched. OptionsScreen has one unresolved regional
 callback and needs a separate code review; the audit does not call it exact.
 The current modelEngine matched-data deficit also includes other symbols, so
 repairing this corridor alone is not proof that the whole TU will match.
+
+## Exploded corridor repair
+
+The seven data ranges above now follow their retail pointers in EN rev1 and
+PAL rev1. CFLevelControl's preceding 48-byte reset-bit table is byte-identical
+to EN. Every descriptor word is either the same scalar or a corresponding
+independently matched function pointer; the functionless slot retains all
+48 bytes of its existing record. No numbered slot or text boundary moved.
+
+Exploded now declares eleven callbacks plus opaque tail words, with total
+sizes asserted as 80 bytes for EN/JP and 64 for the two later revisions.
+`Resource_Acquire` returns the interface at descriptor offset `0x18`; the
+spawning object's `getPhase` at interface offset `0x20` therefore reaches the
+final advertised callback at descriptor offset `0x38`. No consumer of the
+opaque tail was found. Resolving the compiled descriptor's relocations against
+each verified DOL reproduces its complete retail bytes.
+
+The existing projector preserves the corrected symbols and reproduces all
+seven corrected ranges, stabilizing in two passes without a tooling change.
+Its unrelated symbol-name/metadata normalizations were not retained. Existing
+symbol fallback mappings are unchanged. Whole source objects remain identical
+in EN/JP; in the later revisions only Exploded's data section and symbol shrink
+by 16 bytes. Every function body and other allocated section remains unchanged.
+
+Each later revision gains seven fully exact units and 440 matched data bytes.
+This repairs ownership and the source tail; it does not reconstruct new code.
+All four source builds and full reports pass, with no match regressions, and
+the strict EN retail checksum passes.

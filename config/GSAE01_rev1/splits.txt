@@ -2422,18 +2422,18 @@ dlls/objects/354_CFMagicWall/CFMagicWall.c:
 dlls/objects/356_CFLevelCont/CFLevelCont.c:
 	.text       start:0x801A4AD8 end:0x801A536C
 	.rodata     start:0x802C2A68 end:0x802C2A78
-	.data       start:0x80323C58 end:0x80323CBC
+	.data       start:0x80323C58 end:0x80323CC0
 	.sdata2     start:0x803E5080 end:0x803E5088
 
 dlls/objects/358/358.c:
 	.text       start:0x801A536C end:0x801A5D9C
-	.data       start:0x80323CBC end:0x80323D0C
+	.data       start:0x80323CC0 end:0x80323D00
 	.sdata2     start:0x803E5088 end:0x803E50C4
 
 dlls/objects/359_SpiritDoorL/SpiritDoorL.c:
 	.text       start:0x801A5D9C end:0x801A633C
 	.rodata     start:0x802C2A78 end:0x802C2A88
-	.data       start:0x80323D0C end:0x80323D40
+	.data       start:0x80323D00 end:0x80323D38
 	.sdata      start:0x803DCB38 end:0x803DCB48
 	.sdata2     start:0x803E50D0 end:0x803E50D8
 
@@ -2441,23 +2441,23 @@ dlls/objects/360_HoloPoint/HoloPoint.c:
 	.sdata      start:0x803DCB48 end:0x803DCB50
 
 dlls/objects/380_GCRobotPatr/GCRobotPatr.c:
-	.data       start:0x80323D40 end:0x80323D70
+	.data       start:0x80323D38 end:0x80323D68
 
 dlls/objects/381/381.c:
 	.text       start:0x801A633C end:0x801A6BEC
-	.data       start:0x80323D70 end:0x80323DA4
+	.data       start:0x80323D68 end:0x80323DA0
 	.sbss       start:0x803DE7A0 end:0x803DE7A8
 	.sdata2     start:0x803E50F8 end:0x803E5154
 
 dlls/objects/382_MMP_levelco/MMP_levelco.c:
 	.text       start:0x801A6BEC end:0x801A71DC
-	.data       start:0x80323DA4 end:0x80323DDC
+	.data       start:0x80323DA0 end:0x80323DD8
 	.sbss       start:0x803DE7A8 end:0x803DE7B0
 	.sdata2     start:0x803E5158 end:0x803E5164
 
 dlls/objects/383/383.c:
 	.text       start:0x801A71DC end:0x801A7500
-	.data       start:0x80323DDC end:0x80323E10
+	.data       start:0x80323DD8 end:0x80323E10
 	.sdata2     start:0x803E5168 end:0x803E5180
 
 dlls/objects/384_MMP_asteroi/MMP_asteroi.c:
