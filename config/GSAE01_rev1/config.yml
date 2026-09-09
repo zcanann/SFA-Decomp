@@ -97,27 +97,49 @@ clean_extab: false
 # Effect opcode and flag literals are shared across the retail builds. Their
 # values overlap the DOL address space but are plain immediates, not pointers.
 block_relocations:
-# Effect behavior mask 0x80080100: suppress only these lis/addi sites.
-# Real calls to randomChanceOneIn retain their relocations.
-- source: 0x800B45D8
-  end: 0x800B45E0
-- source: 0x800BF5EC
-  end: 0x800BF5F4
-- source: 0x800C1204
-  end: 0x800C120C
-- source: 0x800D34B0
-  end: 0x800D34B8
-- source: 0x800D36C0
-  end: 0x800D36C8
 - target: 0x80380209
   end: 0x8038020A
 - target: 0x80100100
   end: 0x80100104
-# Effect behavior masks 0x80180100..0x80180214 are integer literals.
-# Suppress only their materializations; real callbacks in that address range relocate.
+- target: 0x80080200
+  end: 0x80080204
+- target: 0x80080208
+  end: 0x80080214
+- target: 0x80080610
+  end: 0x80080614
+- target: 0x80080404
+  end: 0x80080408
+- target: 0x800C0100
+  end: 0x800C0104
+- target: 0x80008000
+  end: 0x80008004
+# Effect1_spawnObject: 0x80080108
+- source: 0x800B0588
+  end: 0x800B0590
+# Effect1_spawnObject: 0x80080110
+- source: 0x800B0C9C
+  end: 0x800B0CA4
+# Effect2_spawnObject: 0x80080100
+- source: 0x800B45D8
+  end: 0x800B45E0
+# Effect3_spawnObject: 0x80080110
+- source: 0x800B8664
+  end: 0x800B866C
+# Effect4_spawnObject: 0x80080112
+- source: 0x800B9A18
+  end: 0x800B9A20
+# Effect4_spawnObject: 0x80080112
+- source: 0x800B9B08
+  end: 0x800B9B10
 # Effect4_spawnObject: 0x80180104
 - source: 0x800BB8A0
   end: 0x800BB8A8
+# Effect5_spawnObject: 0x80080118
+- source: 0x800BCC5C
+  end: 0x800BCC64
+# Effect5_spawnObject: 0x80080118
+- source: 0x800BCE94
+  end: 0x800BCE9C
 # Effect5_spawnObject: 0x80180100
 - source: 0x800BD480
   end: 0x800BD488
@@ -127,12 +149,18 @@ block_relocations:
 # Effect7_spawnObject: 0x80180100
 - source: 0x800BE948
   end: 0x800BE950
+# Effect7_spawnObject: 0x80080100
+- source: 0x800BF5EC
+  end: 0x800BF5F4
 # Effect7_spawnObject: 0x80180200
 - source: 0x800BF94C
   end: 0x800BF954
 # Effect7_spawnObject: 0x80180210
 - source: 0x800BF9B8
   end: 0x800BF9C0
+# Effect8_spawnObject: 0x80080100
+- source: 0x800C1204
+  end: 0x800C120C
 # Effect9_spawnObject: 0x80180100
 - source: 0x800C16A8
   end: 0x800C16B0
@@ -163,23 +191,15 @@ block_relocations:
 # Effect18_spawnObject: 0x80180200
 - source: 0x800CCC4C
   end: 0x800CCC54
+# Effect20_spawnObject: 0x80080100
+- source: 0x800D34B0
+  end: 0x800D34B8
+# Effect20_spawnObject: 0x80080100
+- source: 0x800D36C0
+  end: 0x800D36C8
 # Effect20_spawnObject: 0x80180200
 - source: 0x800D47E4
   end: 0x800D47EC
-- target: 0x80080108
-  end: 0x80080120
-- target: 0x80080200
-  end: 0x80080204
-- target: 0x80080208
-  end: 0x80080214
-- target: 0x80080610
-  end: 0x80080614
-- target: 0x80080404
-  end: 0x80080408
-- target: 0x800C0100
-  end: 0x800C0104
-- target: 0x80008000
-  end: 0x80008004
 
 extract:
 - symbol: gLoadingScreenTextures

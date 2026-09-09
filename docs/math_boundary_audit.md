@@ -251,3 +251,14 @@ remain provenance questions. Do not use their current directory, an exact
 reconstruction, or adjacency as the sole reason to choose a compiler or merge
 TUs. This audit changes no paths, boundaries or compiler profiles. Local table
 digests are retained under `/tmp/sfa-msl-neighbor-audit/`.
+
+## PAL v1.0 cross-check (2026-09-09)
+
+PAL v1.0 is now available and passes its configured SHA-1
+`c5bb4a7fd3c4aff48c40e282d4d54795c37155f0`. All 49 functions in the current
+11-unit older math family have the same ordered normalized instruction
+signatures as EN. All 541 supported direct r2 constant loads also agree by
+owning unit, instruction offset, width, exact bytes and pool ownership. No
+outside consumers appear in this scan. This extends the earlier four-version
+evidence; it establishes no new archive provenance or compiler exception and
+supplies no reason for a regional algorithm difference or additional split.

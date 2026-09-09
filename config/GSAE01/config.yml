@@ -256,27 +256,49 @@ clean_extab: false
 # their literal instruction sites so real references to those addresses survive.
 # The remaining legacy target blocks below still cover unaudited cases.
 block_relocations:
-# Effect behavior mask 0x80080100: suppress only these lis/addi sites.
-# Real calls to randomChanceOneIn retain their relocations.
-- source: 0x800B434C
-  end: 0x800B4354
-- source: 0x800BF360
-  end: 0x800BF368
-- source: 0x800C0F78
-  end: 0x800C0F80
-- source: 0x800D3224
-  end: 0x800D322C
-- source: 0x800D3434
-  end: 0x800D343C
 - target: 0x80380209
   end: 0x8038020A
 - target: 0x80100100
   end: 0x80100104
-# Effect behavior masks 0x80180100..0x80180214 are integer literals.
-# Suppress only their materializations; real callbacks in that address range relocate.
+- target: 0x80080200
+  end: 0x80080204
+- target: 0x80080208
+  end: 0x80080214
+- target: 0x80080610
+  end: 0x80080614
+- target: 0x80080404
+  end: 0x80080408
+- target: 0x800C0100
+  end: 0x800C0104
+- target: 0x80008000
+  end: 0x80008004
+# Effect1_spawnObject: 0x80080108
+- source: 0x800B02FC
+  end: 0x800B0304
+# Effect1_spawnObject: 0x80080110
+- source: 0x800B0A10
+  end: 0x800B0A18
+# Effect2_spawnObject: 0x80080100
+- source: 0x800B434C
+  end: 0x800B4354
+# Effect3_spawnObject: 0x80080110
+- source: 0x800B83D8
+  end: 0x800B83E0
+# Effect4_spawnObject: 0x80080112
+- source: 0x800B978C
+  end: 0x800B9794
+# Effect4_spawnObject: 0x80080112
+- source: 0x800B987C
+  end: 0x800B9884
 # Effect4_spawnObject: 0x80180104
 - source: 0x800BB614
   end: 0x800BB61C
+# Effect5_spawnObject: 0x80080118
+- source: 0x800BC9D0
+  end: 0x800BC9D8
+# Effect5_spawnObject: 0x80080118
+- source: 0x800BCC08
+  end: 0x800BCC10
 # Effect5_spawnObject: 0x80180100
 - source: 0x800BD1F4
   end: 0x800BD1FC
@@ -286,12 +308,18 @@ block_relocations:
 # Effect7_spawnObject: 0x80180100
 - source: 0x800BE6BC
   end: 0x800BE6C4
+# Effect7_spawnObject: 0x80080100
+- source: 0x800BF360
+  end: 0x800BF368
 # Effect7_spawnObject: 0x80180200
 - source: 0x800BF6C0
   end: 0x800BF6C8
 # Effect7_spawnObject: 0x80180210
 - source: 0x800BF72C
   end: 0x800BF734
+# Effect8_spawnObject: 0x80080100
+- source: 0x800C0F78
+  end: 0x800C0F80
 # Effect9_spawnObject: 0x80180100
 - source: 0x800C141C
   end: 0x800C1424
@@ -322,23 +350,15 @@ block_relocations:
 # Effect18_spawnObject: 0x80180200
 - source: 0x800CC9C0
   end: 0x800CC9C8
+# Effect20_spawnObject: 0x80080100
+- source: 0x800D3224
+  end: 0x800D322C
+# Effect20_spawnObject: 0x80080100
+- source: 0x800D3434
+  end: 0x800D343C
 # Effect20_spawnObject: 0x80180200
 - source: 0x800D4558
   end: 0x800D4560
-- target: 0x80080108
-  end: 0x80080120
-- target: 0x80080200
-  end: 0x80080204
-- target: 0x80080208
-  end: 0x80080214
-- target: 0x80080610
-  end: 0x80080614
-- target: 0x80080404
-  end: 0x80080408
-- target: 0x800C0100
-  end: 0x800C0104
-- target: 0x80008000
-  end: 0x80008004
 
 # Embedded copyrighted asset: the boot / loading-screen texture set (0x40000). dtk
 # extracts its bytes from the user's own disc into gitignored build/ at split time and

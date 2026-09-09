@@ -70,3 +70,44 @@ survive regional symbol regeneration.
 ```sh
 python3 tools/verify_source_link.py GSAP01_rev1 dlls/objects/254_MagicPlant/MagicPlant.c
 ```
+
+## PAL v1.0 and the second flag family (2026-09-09)
+
+The newly verified PAL v1.0 DOL contains the same effect implementations. Its
+configuration had not inherited the five instruction exclusions for `80080100`,
+so DTK treated those flags as addresses. They occur once in Effect2, Effect7
+and Effect8 and twice in Effect20. Correcting those five pairs completes all
+four units, adding 60,196 matched code bytes. PAL v1.0 now has 914 exact source
+units and 93.3901% matched code; source instructions and data are unchanged.
+
+The neighboring legacy target block `80080108..80080120` is also replaced by
+seven proven instruction pairs in every version. Their values are `80080108`,
+`80080110`, `80080112` and `80080118`, in Effect1, Effect3, Effect4 and Effect5.
+Together with the earlier family, all five configs now use 29 eight-byte
+instruction ranges in 15 effect TUs. PAL v1.0 also receives the earlier 17
+`80180100..80180214` exclusions. Other legacy target blocks are unchanged.
+
+Correspondence comes from independently unique normalized whole retail
+functions. Each complete eight-byte `lis`/`addi` pair is identical in all five
+hash-verified DOLs. The compiled source has the same bytes and no relocation at
+either instruction. All 15 source objects are themselves byte-identical across
+the five versions. The config comments retain the owning function and integer
+value at every exclusion; genuine references elsewhere remain relocatable.
+
+| Newly exact PAL v1.0 unit | Complete code bytes | Complete data bytes |
+| --- | ---: | ---: |
+| `dlls/engine/27/27.c` | 15,708 | 836 |
+| `dlls/engine/32/32.c` | 6,468 | 464 |
+| `dlls/engine/33/33.c` | 6,228 | 336 |
+| `dlls/engine/45/45.c` | 33,024 | 972 |
+
+The 60,196-byte gain counts the four formerly unmatched spawn functions; each
+TU's other four functions were already exact. Both progress denominators stay
+unchanged, and no previously exact unit regresses.
+
+Validation: `all_source` passes for all five versions, and the EN matching build
+passes its strict retail checksum. Each version's all-retail link and a second
+link substituting all 15 affected source objects reproduce that version's
+verified original DOL exactly. Every compiled source object is byte-identical
+to its pre-change baseline. The other four versions' matched code, data and
+function counts are unchanged.
