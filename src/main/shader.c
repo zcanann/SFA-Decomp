@@ -3431,16 +3431,16 @@ void getVisibleObjects(s8* opacity) {
             opacity[i] = objUpdateOpacity(o);
             if (opacity[i] != 0 || (o->anim.modelInstance->flags & OBJDEF_FLAG_RENDER_WHEN_INVISIBLE) != 0) {
                 if ((o->anim.modelInstance->flags & OBJDEF_FLAG_FIXED_SORT_DEPTH) != 0) {
-                    *(f32*)&o->anim.targetObj = (f32)(o->anim.modelInstance->fixedSortDepth * 100);
-                    depthInt = (int)*(f32*)&o->anim.targetObj;
+                    o->anim.renderViewZ = (f32)(o->anim.modelInstance->fixedSortDepth * 100);
+                    depthInt = (int)o->anim.renderViewZ;
                 } else {
                     if (o->anim.parent != NULL) {
                         Camera_ProjectWorldPoint(o->anim.worldPosX, o->anim.worldPosY, o->anim.worldPosZ, &a, &b,
-                                                 &depth, (f32*)&o->anim.targetObj);
+                                                 &depth, &o->anim.renderViewZ);
                     } else {
                         Camera_ProjectWorldPoint(o->anim.localPosX - playerMapOffsetX, o->anim.localPosY,
                                                  o->anim.localPosZ - playerMapOffsetZ, &a, &b, &depth,
-                                                 (f32*)&o->anim.targetObj);
+                                                 &o->anim.renderViewZ);
                     }
                     depthInt = (int)(1e+03f * (1.0f + depth));
                 }

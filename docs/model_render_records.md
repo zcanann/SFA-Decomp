@@ -81,3 +81,41 @@ the complete ELF is therefore not byte-identical. `shader.o`, the internal
 header's only other source consumer, is byte-identical when compiled against
 the old and new header. Objdiff remains 99.87762% for the unit, with 24/32
 functions exact. Both `all_source` and the strict retail checksum pass.
+
+## Shared object depth view
+
+`ObjAnimComponent` offset `0xA4` has two evidenced roles. Camera/focus consumers
+use it as `targetObj`, while visible-object collection and model rendering use
+it as a float. The canonical definition now expresses both views in an
+anonymous union, with `renderViewZ` alongside the existing pointer member.
+Both offsets are asserted at `0xA4`; the component remains `0xB0` bytes.
+
+`getVisibleObjects` either stores `fixedSortDepth * 100` there or passes the
+field's address as `Camera_ProjectWorldPoint`'s final output. That function
+writes view-space Z immediately after the view-matrix transform, before
+projection and perspective division. `modelDoRenderInstrs` reads this value
+when evaluating its near-shadow threshold. Its separate comparison of the
+camera object's `targetObj` against the player still uses the pointer view.
+`Camera_setFocus` also retains its existing pointer storage through
+`CamcontrolCameraState.focusObj`, independently asserted at the same offset.
+
+The renderer's float casts through the pointer member are replaced with native
+field accesses. The fixed-sort override still converts through the stored
+float exactly as retail does. Pointer consumers keep their existing name and
+type; no assumption is made that every object uses both roles at once.
+
+Retail instruction checks agree across EN, EN rev1, JP and PAL rev1:
+
+| Function | Relative instruction | Evidence |
+| --- | --- | --- |
+| `getVisibleObjects` | `+0x10C`, `+0x110` | Float store/load at object `+0xA4` |
+| `getVisibleObjects` | `+0x148`, `+0x17C` | Both projection paths pass object `+0xA4` in r6 |
+| `Camera_ProjectWorldPoint` | `+0x28`, `+0x4C`, `+0x50` | Preserve r6 and write transformed position Z through it |
+| `modelDoRenderInstrs` | `+0x120`, `+0x138` | Camera pointer comparison and rendered-object float load |
+
+The two edited source objects are byte-identical, including all 177 function
+bodies, data, named layouts and relocations. Full-source rebuilds verify every
+other header consumer too: all 1,004 EN objects and 988 objects in each verified
+secondary version are unchanged, as are all four complete objdiff reports.
+The strict EN checksum passes. This is shared type recovery; the remaining
+renderer register-allocation differences and match percentages do not change.

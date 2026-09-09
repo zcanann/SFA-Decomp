@@ -2179,7 +2179,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* owner, ModelFileHea
         GameObject* player = Obj_GetPlayerObject();
         GameObject* cam = (*gCameraInterface)->getCamera();
         if (player != NULL && !(player->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) && cam->anim.targetObj == player) {
-            f32 d = 2e+01f + (obj->anim.hitboxScale * obj->anim.rootMotionScale + *(f32*)&obj->anim.targetObj);
+            f32 d = 2e+01f + (obj->anim.hitboxScale * obj->anim.rootMotionScale + obj->anim.renderViewZ);
             f32 dist = Camera_DistanceToCurrentViewPosition(player->anim.worldPosX, player->anim.worldPosY,
                                                             player->anim.worldPosZ);
             if (d > -dist) {
