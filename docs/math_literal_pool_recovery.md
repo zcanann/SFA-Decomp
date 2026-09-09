@@ -633,3 +633,51 @@ with ordinary host operations. This checks the changed local lifetimes and
 control flow, not the accuracy of the target's estimate instructions or floating
 exception flags. Local variants, host harness, object/report comparisons and
 retail audit are under `/tmp/sfa-arc-accumulators/`.
+
+## Floor and quadrant-reduction conversion results (2026-09-08)
+
+`fastFloorf` now uses one result local for the input magnitude and its subsequent
+integer-valued conversion. The two conversion paths still use unsigned-halfword
+fast casts below 65,536 and signed integer conversion below 8,388,608. Negative
+fraction corrections, the original-input fallback and the separate integer local
+are preserved. Removing that integer local as well produced a weaker match and
+is not retained.
+
+The float quadrant reducer consumes `fastCastU16ToFloat` directly in its return
+expression. The high-precision reducer passes its double-precision scaled angle
+directly to the existing unsigned-conversion helper. Both keep their original
+call order, even-quadrant masks, out-parameter writes and arithmetic types. The
+float reducer still returns a remainder in pi/4 units; the high-precision reducer
+still returns radians.
+
+| Function | Before fuzzy | After fuzzy | Source instructions before → after | Retail instructions |
+| --- | ---: | ---: | ---: | ---: |
+| `fastFloorf` | 75.369230% | 81.215385% | 73 → 69 | 65 |
+| `trigReduceQuadrant` | 56.800000% | 61.966667% | 35 → 30 | 30 |
+| `trigReduceQuadrantHighPrecision` | 54.363636% | 59.060608% | 38 → 33 | 33 |
+
+These changes remove three scalar temporaries and 14 instructions under GC/1.3.
+Equal instruction counts do not make the reducers exact: all three functions
+remain `NonMatching`. The other thirteen functions in the three TUs retain their
+instruction bytes and scores. All non-text sections, named data positions,
+ordered call identities and constant-load destinations are unchanged; each
+function's ordered constant-load values still agree with retail.
+
+The complete sixteen-function retail set has equal normalized instructions in
+hash-verified EN, EN revision 1, JP and PAL revision 1. Their three pools also
+agree, totaling 420 bytes. All four source builds show the same gains and leave
+every unrelated source object in the build census and every unrelated objdiff
+unit unchanged. All four `all_source` builds and the strict EN checksum pass
+within 30-second limits. Compiler profiles, pragmas, splits and checksums are
+unchanged.
+
+Host differential checks compare 458,789 floor results, 429,553 float-reducer
+results and 433,777 high-precision reducer results, including both reducers'
+quadrant outputs. All before/after bits agree at O0 and O2. Coverage includes
+conversion thresholds, fractional negatives, all 65,536 integer-angle seeds,
+signed zeros, subnormals and random float words. Nonfinite and large inputs
+exercise the floor fallback; reducer inputs are restricted to valid host
+unsigned-conversion ranges. Ordinary unsigned conversions model the fast casts,
+so this does not emulate quantization-register saturation or establish behavior
+outside those tested ranges. Local sources, controls, host harness, retail audit
+and complete object/report comparisons are under `/tmp/sfa-math-reduction-locals/`.

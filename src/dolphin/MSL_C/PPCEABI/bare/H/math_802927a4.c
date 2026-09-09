@@ -221,11 +221,9 @@ float Vec_lengthSquared(const Vec* input) {
 #pragma peephole off
 float trigReduceQuadrant(u16* quadrant, float angle) {
     float scaledAngle = 1.2732395f * __fabsf(angle);
-    float roundedQuadrant;
     fastCastFloatToU16(scaledAngle, quadrant);
     *quadrant = (*quadrant + 1) & 0xFFFE;
-    roundedQuadrant = fastCastU16ToFloat(quadrant);
-    return scaledAngle - roundedQuadrant;
+    return scaledAngle - fastCastU16ToFloat(quadrant);
 }
 #pragma optimize_for_size reset
 #pragma optimization_level reset
