@@ -873,6 +873,7 @@ main/vecmath.c
 main/vecmath_vec3.c
 main/zlb.s
 musyx/runtime/adsr_data.c
+musyx/runtime/aram_data.c
 musyx/runtime/aram_init.c
 musyx/runtime/aram_queue.c
 musyx/runtime/data_tables.c

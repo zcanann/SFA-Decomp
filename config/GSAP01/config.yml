@@ -206,6 +206,10 @@ extract:
   binary: gLoadingScreenTextures.bin
   header: gLoadingScreenTextures.inc
 
+force_active:
+  # aram_data.c: retain the same unreferenced 24-byte .bss block as EN.
+  - lbl_803D4868
+
 # Retail startup/BSS bounds establish these linker-generated addresses.
 # symbols_known skips signature recovery; keep the linker formulas external.
 add_relocations:

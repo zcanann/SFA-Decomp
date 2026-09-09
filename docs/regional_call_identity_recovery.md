@@ -121,3 +121,74 @@ The all-retail link and a link substituting `OSReboot.c`, `targimpl.c` and
 PAL v1.0 and EN `all_source` builds pass. EN also passes the strict retail
 checksum, with unchanged progress measures and source object bytes. The PAL
 manifest now records 916 exact source units.
+
+## Three trailing-return boundaries (2026-09-09)
+
+EN rev1, JP, PAL v1.0 and PAL rev1 each split an unreachable trailing `blr`
+from three otherwise complete functions. Their full normalized bodies each
+have one unique correspondence with EN. The preceding instruction branches
+back inside the same function; no direct branch, paired HI/LO materialization,
+or aligned non-executable DOL word points to any of the twelve false entries.
+The repairs preserve the containing TUs, section ownership and total code bytes.
+
+| Function | Bytes | EN | EN rev1 | JP | PAL v1.0 | PAL rev1 |
+| --- | ---: | --- | --- | --- | --- | --- |
+| `Obj_UnregisterEffectBox` | 264 | `8002B758` | `8002B830` | `8002B758` | `8002B8CC` | `8002B8CC` |
+| `streamInit` | 204 | `80272EA4` | `80273608` | `80272F94` | `802736DC` | `80273814` |
+| `aramInitStreamBuffers` | 200 | `80284570` | `80284CD4` | `80284660` | `80284DA8` | `80284EE0` |
+
+The uniquely matched `sndInit` and `aramInit` callers independently establish
+the two MusyX identities. `Obj_UnregisterEffectBox` removes an object from the
+EffectBox array and decrements its count. Resolving all seven relocations in
+its compiled body reproduces all 264 retail bytes in each secondary version:
+
+| Version | `gEffectBoxObjects` | `gEffectBoxObjectCount` | r13 base |
+| --- | --- | --- | --- |
+| EN rev1 | `80341508` | `803DD7F4` | `803E3E40` |
+| JP | `803409C8` | `803DCC94` | `803E3300` |
+| PAL v1.0 | `80342048` | `803DE36C` | `803E4980` |
+| PAL rev1 | `80342208` | `803DE52C` | `803E4B40` |
+
+The larger `main/object.c` remains incomplete. The exact EffectBox DLL source
+also links against the recovered function destination in the substitution check.
+
+### Retained MusyX storage
+
+Substituting `aram_data.c` initially shortened `.bss` by 24 bytes and shifted
+later sections. EN already force-retains its unreferenced `lbl_803D4868` source
+symbol. Each secondary TU owns the same `0x418`-byte BSS span: the referenced
+`0x400`-byte stream-buffer array followed by this opaque 24-byte block. Carrying
+the existing retention rule into the secondary configs restores the retail
+layout. The retained name is the shared source identifier, not a regional
+absolute address. No source padding, symbol address or split was added.
+
+| Version | Opaque BSS tail |
+| --- | --- |
+| EN | `803D4868..803D4880` |
+| EN rev1 | `803D54C8..803D54E0` |
+| JP | `803D4988..803D49A0` |
+| PAL v1.0 | `803D6008..803D6020` |
+| PAL rev1 | `803D61C8..803D61E0` |
+
+### Validation and accounting
+
+Each secondary gains 464 newly reported code bytes and one complete
+`aram_data.c` unit. The three removed false entries reduce its function
+count by three; total code and data denominators stay unchanged. No unit loses
+matched code or data. The accompanying PAL GX mode-name recovery adds one
+more complete unit and 240 data bytes, documented in
+[regional GX recovery](regional_gx_jump_tables.md).
+
+A direct objdiff comparison with `metadata.complete` disabled verifies all
+668 bytes across the three repaired functions. Normal reports previously
+credited `streamInit`'s 204 bytes from its completion annotation despite the
+incorrect target boundary; those bytes are not counted again as new progress.
+Use `tools/unitfuzzy.py` or an objdiff project with `metadata.complete: false`
+to measure source correspondence independently of a manifest's assertion.
+
+All five `all_source` builds pass, and every compiled source object remains
+byte-identical. Each verified original DOL is reproduced both by an all-retail
+link and by substituting these eight source units together: `GXInit.c`,
+`GXFrameBuf.c`, `GXLight.c`, `GXTexture.c`, `synth_job_init.c`, `aram_init.c`,
+`aram_data.c`, and `238_EffectBox/EffectBox.c`. EN also passes its strict retail
+checksum. Compiler profiles and C sources are unchanged.

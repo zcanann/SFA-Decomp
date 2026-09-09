@@ -95,3 +95,31 @@ python3 -m unittest discover -s tools -p test_jump_table_projection.py
 python3 -m unittest discover -s tools -p test_version_progress.py
 python3 -m unittest discover -s tools -p test_sda_symbol_audit.py
 ```
+
+## Verified PAL v1.0 mode names (2026-09-09)
+
+The newly supplied PAL v1.0 DOL passes its configured SHA-1
+`c5bb4a7fd3c4aff48c40e282d4d54795c37155f0`. Its existing GXFrameBuf data
+range was correct, but the four mode records still had anonymous names:
+
+| Mode | PAL v1.0 address | Bytes |
+| --- | --- | ---: |
+| `GXNtsc480IntDf` | `8032FDF8` | 60 |
+| `GXMpal480IntDf` | `8032FE34` | 60 |
+| `GXPal528IntDf` | `8032FE70` | 60 |
+| `GXEurgb60Hz480IntDf` | `8032FEAC` | 60 |
+
+Each complete record occurs uniquely in the verified DOL's data section and
+agrees with the shared source definition. The uniquely corresponding retail
+`__GXInitGX` body independently confirms all ten mode-reference HI/LO
+relocations in each of the five versions. PAL v1.0, like PAL rev1, omits the
+progressive record; the shared source retains it and the PAL link discards it.
+No section boundary or source conditional changes.
+
+Naming these four records adds 240 matched data bytes and makes GXFrameBuf
+complete in PAL v1.0. All five versions reproduce retail with GXInit,
+GXFrameBuf, GXLight and GXTexture source objects substituted together with
+the four units listed in the
+[trailing-return boundary validation](regional_call_identity_recovery.md#three-trailing-return-boundaries-2026-09-09).
+All source objects remain unchanged, all five source builds pass, and EN's
+strict checksum passes.

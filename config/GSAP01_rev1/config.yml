@@ -206,8 +206,10 @@ extract:
   binary: gLoadingScreenTextures.bin
   header: gLoadingScreenTextures.inc
 
-# These constants are read through offsets from sEnvMapBumpIndMtx.
 force_active:
+  # aram_data.c: retain the same unreferenced 24-byte .bss block as EN.
+  - lbl_803D4868
+  # These constants are read through offsets from sEnvMapBumpIndMtx.
   - sWarpedRingRotAxes
   - sWarpedRingIndMtx
 
