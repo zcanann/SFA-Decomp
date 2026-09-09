@@ -1,5 +1,6 @@
 
 #include "dolphin/os/__os.h"
+#include <stddef.h>
 
 static OSFontHeader* FontData;
 static u8* SheetImage;
@@ -155,64 +156,78 @@ static int GetFontCode(u16 code) {
     return 0;
 }
 
-static void Decode(u8* s, u8* d) {
+/* The ROM font uses separate mask, back-reference and literal streams. */
+typedef struct OSFontCompressedHeader {
+    u8 magic[4];
+    s32 decodedSize;
+    s32 linkOffset;
+    s32 chunkOffset;
+} OSFontCompressedHeader;
+
+typedef char OSFontCompressedHeaderSizeCheck[(sizeof(OSFontCompressedHeader) == 0x10) ? 1 : -1];
+typedef char OSFontCompressedHeaderSizeOffsetCheck[(offsetof(OSFontCompressedHeader, decodedSize) == 4) ? 1 : -1];
+typedef char OSFontCompressedHeaderLinkOffsetCheck[(offsetof(OSFontCompressedHeader, linkOffset) == 8) ? 1 : -1];
+typedef char OSFontCompressedHeaderChunkOffsetCheck[(offsetof(OSFontCompressedHeader, chunkOffset) == 12) ? 1 : -1];
+
+static void Decode(u8* src, u8* dst) {
     int i;
-    int j;
-    int k;
-    int p;
-    int q;
-    int r7; // huh? DWARF info says these 2 variables might be register names and not actual names.
-    int r25;
-    int cnt;
-    int os;
-    unsigned int flag;
-    unsigned int code;
+    int link;
+    int copyOffset;
+    int maskOffset;
+    int outputOffset;
+    int linkOffset;
+    int chunkOffset;
+    int copyLength;
+    int decodedSize;
+    unsigned int maskBits;
+    unsigned int mask;
+    OSFontCompressedHeader* header = (OSFontCompressedHeader*)src;
 
-    os = *(int*)(s + 0x4);
-    r7 = *(int*)(s + 0x8);
-    r25 = *(int*)(s + 0xC);
+    decodedSize = header->decodedSize;
+    linkOffset = header->linkOffset;
+    chunkOffset = header->chunkOffset;
 
-    q = 0;
-    flag = 0;
-    p = 16;
+    outputOffset = 0;
+    maskBits = 0;
+    maskOffset = sizeof(OSFontCompressedHeader);
 
     do {
         // Get next mask
-        if (flag == 0) {
-            code = *(u32*)(s + p);
-            p += sizeof(u32);
-            flag = sizeof(u32) * 8;
+        if (maskBits == 0) {
+            mask = *(u32*)(src + maskOffset);
+            maskOffset += sizeof(u32);
+            maskBits = sizeof(u32) * 8;
         }
 
         // Non-linked chunk
-        if (code & 0x80000000) {
-            d[q++] = s[r25++];
+        if (mask & 0x80000000) {
+            dst[outputOffset++] = src[chunkOffset++];
         }
         // Linked chunk
         else {
             // Read offset from link table
-            j = s[r7] << 8 | s[r7 + 1];
-            r7 += sizeof(u16);
+            link = src[linkOffset] << 8 | src[linkOffset + 1];
+            linkOffset += sizeof(u16);
 
-            // Apply offset
-            k = q - (j & 0x0FFF);
-            cnt = j >> 12;
-            if (cnt == 0) {
-                cnt = s[r25++] + 0x12;
+            // The link stores distance minus one; copyOffset keeps that bias.
+            copyOffset = outputOffset - (link & 0x0FFF);
+            copyLength = link >> 12;
+            if (copyLength == 0) {
+                copyLength = src[chunkOffset++] + 0x12;
             } else {
-                cnt += 2;
+                copyLength += 2;
             }
 
-            // Copy chunk
-            for (i = 0; i < cnt; i++, q++, k++) {
-                d[q] = d[k - 1];
+            // Copy forward so a back-reference can repeat overlapping output.
+            for (i = 0; i < copyLength; i++, outputOffset++, copyOffset++) {
+                dst[outputOffset] = dst[copyOffset - 1];
             }
         }
 
         // Prepare next mask bit
-        code <<= 1;
-        flag--;
-    } while (q < os);
+        mask <<= 1;
+        maskBits--;
+    } while (outputOffset < decodedSize);
 }
 
 u16 OSGetFontEncode(void) {
@@ -252,8 +267,10 @@ static void ReadROM(void* buf, int length, int offset) {
 }
 
 static inline u32 GetFontSize(u8* buf) {
-    if (buf[0] == 'Y' && buf[1] == 'a' && buf[2] == 'y') {
-        return *(u32*)(buf + 4);
+    OSFontCompressedHeader* header = (OSFontCompressedHeader*)buf;
+
+    if (header->magic[0] == 'Y' && header->magic[1] == 'a' && header->magic[2] == 'y') {
+        return header->decodedSize;
     }
 
     return 0;
