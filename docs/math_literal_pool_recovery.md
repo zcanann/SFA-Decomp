@@ -386,3 +386,38 @@ objdiff reports are unchanged. Each DOL passes its configured SHA-1. All four
 complete power object retains its seven function bodies, 324-byte literal pool,
 symbols and relocations. Formatting is committed separately and checked for
 unchanged object output. This recovery claims no additional matched bytes.
+
+## Shared sine/cosine polynomial accumulators (2026-09-08)
+
+`mathSinCosf` now evaluates its sine polynomial in the scalar that initially
+holds the reduced angle, and its cosine polynomial in the scalar that initially
+holds the squared angle. This removes two separate intermediate lifetimes while
+preserving every expression's grouping, literal type and evaluation order.
+The two working values are named `sine` and `cosine`, with their initial polynomial
+seeds documented at the declarations. Quadrant dispatch, unordered sign tests,
+output-store order and the quadrant-reduction call are unchanged.
+
+Under the mandated GC/1.3 profile, this improves function fuzzy agreement from
+**54.6375% to 60.7%**, reducing generated code from **95 to 87 instructions**
+(380 to 348 bytes), against retail's 80 instructions. The compiler saves and
+restores two fewer floating-point registers. This is a source-level simplification
+for the current compiler, not evidence that the original author used these exact
+local lifetimes. The function remains `NonMatching`; no compiler flags or text
+boundaries change.
+
+EN, EN revision 1, JP and PAL revision 1 produce the same improvement. Their
+checksum-verified retail functions have the same normalized instructions and
+32-byte coefficient pool. Every other source object and objdiff unit is unchanged.
+The complete non-text sections and named constant positions remain identical;
+every relocation retains its kind, addend, destination symbol and destination
+offset, in the same order. Instruction offsets move with the shorter code.
+The ordered eleven constant loads still agree with retail in all four versions.
+All four source builds and the strict EN checksum pass within 30-second bounds.
+
+A host differential harness exercises 2,560 calls at each of O0 and O2, with
+bit-identical before/after outputs. It stubs quadrant reduction to exercise all
+four cases and ignored quadrant bits, signed zeros, subnormal values, infinities,
+NaNs, and both distinct and aliased output pointers. This verifies the rewritten
+polynomial and store behavior; it is not a new accuracy claim for the reducer or
+an exhaustive floating-point proof. Local before/after sources, objects, reports,
+retail audit and host harness are under `/tmp/sfa-sincos-accumulators/`.
