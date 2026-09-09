@@ -579,7 +579,7 @@ dlls/engine/3/3.c:
 	.data       start:0x80311408 end:0x80311460
 	.bss        start:0x8039C578 end:0x8039CC08
 	.sbss       start:0x803DD530 end:0x803DD540
-	.sdata2     start:0x803E05F8 end:0x803E0660
+	.sdata2     start:0x803E05F8 end:0x803E065C
 
 dlls/engine/22/22.c:
 	.text       start:0x800D7588 end:0x800D7F7C

@@ -75,9 +75,9 @@ objects, retaining their existing compiler profiles and the generated PAL linker
 script, produces the identical DOL. This independently verifies both discarded
 source data and retained table offsets; it is not a claim that a complete PAL
 source link is recovered. The same substitution check also passes in EN and EN
-rev1. JP stops at the all-retail baseline: pre-existing duplicate global names
-`gFloatNegOne`, `gFloatOne`, `gFloatZero`, `gFloatHalf`, and `OnReset` prevent
-linking. Its source build still passes; no JP full-link claim is made here.
+rev1. The initial JP audit stopped on duplicate global names; the subsequent
+[JP symbol repair](jp_link_symbol_recovery.md) removes those collisions and
+verifies the same three GX substitutions against the JP retail checksum.
 
 All four source builds pass with source objects unchanged. EN passes its strict
 retail checksum. Eight new tests cover case order, uniqueness, independent

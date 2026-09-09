@@ -30,6 +30,7 @@ dlls/engine/26/26.c
 dlls/engine/27/27.c
 dlls/engine/28/28.c
 dlls/engine/29/29.c
+dlls/engine/3/3.c
 dlls/engine/30/30.c
 dlls/engine/31/31.c
 dlls/engine/32/32.c
