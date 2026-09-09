@@ -2,16 +2,20 @@
 
 ## Retail evidence
 
-EN `trigf.c` contains `tanf`, `cos(float)`, `sin(float)`, `cosf`, `sinf`,
-and a 48-byte initialization function at `0x80294B88`. The two float overloads
-have native MWCC C++ manglings, `cos__Ff` and `sin__Ff`. The adjacent
-`hyperbolicsf.c` function is likewise `fabsf__Ff`, not the C-linkage `fabsf`
-implemented elsewhere in the math library.
+The reconstructed EN `trigf.c` identifies `tanf`, `cos(float)`, `sin(float)`,
+`cosf`, `sinf`, and a 48-byte initialization function at `0x80294B88`.
+Compiling the float overloads as C++ produces `cos__Ff` and `sin__Ff`;
+the adjacent reconstructed `hyperbolicsf.c` similarly produces `fabsf__Ff`,
+separate from the C-linkage `fabsf` implemented earlier. These are configured
+identities supported by donor patterns, not names preserved in the retail DOL.
+The eight-byte absolute-value body alone cannot establish its original filename
+or linkage; see the [neighboring-label audit](math_boundary_audit.md#neighboring-msl-labels-and-source-lineage-2026-09-08).
 
 The initializer loads four floats from the TU's 16-byte read-only table and
 stores them into its 16-byte writable reduction table. A constructor entry at
-`0x802C1884` points to this function. These are independent reasons to test C++
-language mode, not an inference from an aggregate compiler score.
+`0x802C1884` points to this function. That initialization topology supplies an
+independent reason to test C++ language mode, beyond configured symbol names or
+an aggregate compiler score.
 
 ## Recovery
 

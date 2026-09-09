@@ -207,3 +207,47 @@ source hashes and full reports are under `/tmp/sfa-math-abi-refresh/` locally.
 No configured compiler, source, matching classification or expected checksum
 changes. The immediately preceding all-source and strict EN gates remain valid
 for this documentation-only audit.
+
+## Neighboring MSL labels and source lineage (2026-09-08)
+
+A matching reconstruction does not establish library membership. The current
+paths mix implementation evidence, inferred filenames and historical placement.
+The DOL supplies bytes and addresses, not original archive membership; the names
+in `symbols.txt` and `splits.txt` are reconstruction annotations. In particular,
+noncontiguous MSL-labeled text is a reason to audit those annotations, not by
+itself proof that all intervening code belongs to MSL or to one other library.
+
+| EN text interval | Current identification | Evidence and remaining uncertainty |
+| --- | --- | --- |
+| `80291948..80291CBC` | `s_copysign`, `s_frexp`, `s_ldexp`, `s_modf` | Double-precision fdlibm implementations. Mario Party 4 contains the same word-level exponent/sign operations, subnormal scaling and special-value branches. This supports their source family; it does not recover the original archive name. |
+| `80291CBC..80294640` | Older math family, with `rand` between reducers | Four files remain under `MSL_C`, despite selecting the game compiler. Scalar approximation coefficients, fast-cast calls and shared pools distinguish this family from the later table-based implementations. No donor or original archive has been identified for the complete family. |
+| `80294640..8029471C` | PPC helpers, ctype and console I/O | These helper implementations interrupt the math layout. Their position cannot establish either neighboring math family's ownership. |
+| `8029471C..80294724` | `hyperbolicsf.c` absolute-value helper | Sunshine and Pikmin place a corresponding helper in `hyperbolicsf.c`. An eight-byte absolute-value body is weak evidence for a specific original filename or TU boundary. The configured C++ name is not a name recovered from a DOL symbol table. |
+| `80294724..802947CC` | `floorf.c` | Behavior and generated code are recovered, but no matching donor body was found in the inspected references. Commit `47cb2127e0` created the split from a reconstructed function; `96ca95bf3a` subsequently named it. MSL membership and the original filename remain provisional. |
+| `802947CC..80294BB8` | `trigf.c` | Donor table contents and reduction/polynomial structure support the MSL float-trig family. The retail constructor and writable-table initialization also support C++ compilation; these do not prove an archive name. |
+| `80294BB8..80295334` | `exponentialsf.c` / `powf` | Its logarithm kernel consumes the same reciprocal table used by donor MSL logarithms. This supports a related table-based family, but the local Sunshine `exponentialsf.c` contains no implementation. It is not a source donor for the recovered `powf`, and its filename alone cannot establish exact provenance. |
+
+The shared tables provide a stronger check than decimal-string searches.
+Converting the source initializers to big-endian binary32 gives identical bytes
+in SFA, Sunshine's `Single_precision/common_float_tables.c` and Melee's
+`src/MSL/math_data.c`. Those bytes also equal the hash-verified EN DOL:
+
+| Configured table name | EN address | Compared bytes |
+| --- | --- | ---: |
+| `__one_over_F` | `80332A28` | 516 |
+| `__sincos_on_quadrant` | `80332C2C` | 32 |
+| `__sincos_poly` | `80332C4C` | 40 |
+
+Melee's `src/MSL/math.c` independently shows the seven-bit mantissa-table index,
+eighth-bit rounding decision and reciprocal-scaled residual used by the later
+SFA logarithm kernel. Its natural-log function is not the same function as SFA's
+base-two kernel, so this is structural lineage evidence, not a whole-function
+donor match. Likewise, the intervening SFA `rand` uses `1664525` and
+`1013904223` and returns the full state; donor MSL `rand` uses `1103515245`,
+`12345` and a restricted result. Generic math names do not identify one library.
+
+The four legacy `MSL_C` paths and the weaker neighboring labels should therefore
+remain provenance questions. Do not use their current directory, an exact
+reconstruction, or adjacency as the sole reason to choose a compiler or merge
+TUs. This audit changes no paths, boundaries or compiler profiles. Local table
+digests are retained under `/tmp/sfa-msl-neighbor-audit/`.
