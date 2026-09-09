@@ -111,9 +111,7 @@ STATIC_ASSERT(offsetof(ExplodedState, phase) == 0x69);
 STATIC_ASSERT(offsetof(ExplodedState, pad6A) == 0x6A);
 STATIC_ASSERT(sizeof(ExplodedState) == 0x6C);
 
-
-void exploded_initDebrisState(GameObject* obj, ExplodedPlacement* placement, int usePresetCenter,
-                              ExplodedState* state);
+void exploded_initDebrisState(GameObject* obj, ExplodedPlacement* placement, int usePresetCenter, ExplodedState* state);
 void exploded_seedDebrisMotion(GameObject* obj, ExplodedState* state, ExplodedPlacement* placement);
 u8 exploded_getPhase(GameObject* obj);
 int exploded_getExtraSize(void);

@@ -89,8 +89,8 @@ void exploded_seedDebrisMotion(GameObject* obj, ExplodedState* state, ExplodedPl
     {
         u16 floorOffsetRaw = placement->floorOffsetRaw;
         if (floorOffsetRaw == 0) {
-            trackGetHeightAboveGround(obj, obj->anim.localPosX, obj->anim.localPosY - 10.0f,
-                                      obj->anim.localPosZ, groundHeight, 0);
+            trackGetHeightAboveGround(obj, obj->anim.localPosX, obj->anim.localPosY - 10.0f, obj->anim.localPosZ,
+                                      groundHeight, 0);
             state->floorHeight = obj->anim.localPosY - groundHeight[0];
         } else {
             state->floorHeight = obj->anim.localPosY + (f32)(s16)floorOffsetRaw;
