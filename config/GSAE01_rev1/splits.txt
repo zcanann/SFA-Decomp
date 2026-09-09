@@ -4850,6 +4850,7 @@ dolphin/axfx/reverb_std_callback.c:
 	extab       start:0x80005CB0 end:0x80005CB8
 	extabindex  start:0x80006698 end:0x800066A4
 	.text       start:0x802857B0 end:0x80285B88
+	.sdata2     start:0x803E85B8 end:0x803E85C8
 
 dolphin/OdemuExi2/DebuggerDriver.c:
 	.text       start:0x80285B88 end:0x80286608

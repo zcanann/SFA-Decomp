@@ -1,8 +1,8 @@
 #include "dolphin/axfx/reverb_std_callback.h"
 
-extern const f32 axfx_reverb_std_handle_f32_0p3;
-extern const f32 axfx_reverb_std_handle_f32_0p6;
-extern const double axfx_reverb_std_handle_i2f_magic;
+const f32 axfx_reverb_std_handle_f32_0p3 = 0.3f;
+const f32 axfx_reverb_std_handle_f32_0p6 = 0.6f;
+const double axfx_reverb_std_handle_i2f_magic = 4503601774854144.0;
 
 asm static void HandleReverb2(register s32* sptr, register AXFX_REVSTD_WORK* rv) {
     nofralloc
