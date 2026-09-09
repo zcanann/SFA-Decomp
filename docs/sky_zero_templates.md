@@ -50,10 +50,12 @@ index section remains exactly three bytes; its next linked section supplies
 alignment naturally. No fourth record member is invented. The following four
 bytes remain automatic and the four bytes after the color remain unclaimed.
 
-The required `version_progress.py <version> --write` attempts currently fail
-because its initialized-data analysis tries to read the new sky BSS range from
-the DOL file. Existing regional configs are preserved; only the directly verified
-sky ranges and symbols are changed. BSS ownership is checked through retail
+The required `version_progress.py <version> --write` attempts initially failed
+because its initialized-data analysis tried to read the new sky BSS range from
+the DOL file. Existing regional configs were preserved; only the directly verified
+sky ranges and symbols were changed. The subsequent
+[zero-tail projector fix](version_progress.md#zero-initialized-tail-projection-2026-09-08)
+now reproduces these claims automatically. BSS ownership is checked through retail
 addresses and emitted `SHT_NOBITS` layout, not nonexistent file-backed bytes.
 
 ## Validation

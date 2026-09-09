@@ -24,6 +24,7 @@ from orig.dol_xrefs import DolFile, FunctionSymbol, load_function_symbols, parse
 
 
 CODE_SECTIONS = {"init", "text"}
+ZERO_SECTIONS = {"bss", "sbss", "sbss2"}
 SECTION_INDEX = {
     "init": 0,
     "text": 1,
@@ -236,6 +237,29 @@ def unique_function_matches(
 def dol_section(dol: DolFile, section: str):
     index = SECTION_INDEX[section]
     return next(item for item in dol.sections if item.index == index)
+
+
+def sbss2_bounds(dol: DolFile) -> tuple[int, int] | None:
+    """Bound the final zero-filled tail using the DOL header, not file bytes.
+
+    SFA places .sbss2 immediately after .sdata2, ending at the aggregate BSS
+    range's end. Reject truncated headers and layouts with initialized storage
+    in that tail; neither provides this zero-section boundary evidence.
+    """
+    if len(dol.data) < 0xE0:
+        return None
+    bss_start, bss_size = struct.unpack_from(">II", dol.data, 0xD8)
+    bss_end = bss_start + bss_size
+    pool = dol_section(dol, "sdata2")
+    start = pool.address + pool.size
+    if not bss_start <= start < bss_end <= 0x100000000:
+        return None
+    if any(
+        section.size and section.address < bss_end and start < section.address + section.size
+        for section in dol.sections
+    ):
+        return None
+    return start, bss_end
 
 
 def normalized_section_words(dol: DolFile, section: str) -> tuple[object, list[int]]:
@@ -470,6 +494,24 @@ def build_all_boundary_maps(
         delta = target_origin - source_origin
         result[section] = {boundary: boundary + delta for boundary in boundaries}
         anchor_counts[section] = (0, len(boundaries))
+
+    boundaries = boundaries_by_section.get("sbss2")
+    if boundaries:
+        source_bounds = sbss2_bounds(source_dol)
+        target_bounds = sbss2_bounds(target_dol)
+        mapped = {}
+        if (
+            source_bounds is not None
+            and target_bounds is not None
+            and source_bounds[1] - source_bounds[0] == target_bounds[1] - target_bounds[0]
+        ):
+            delta = target_bounds[0] - source_bounds[0]
+            mapped = {
+                boundary: boundary + delta for boundary in boundaries
+                if source_bounds[0] <= boundary <= source_bounds[1]
+            }
+        result["sbss2"] = mapped
+        anchor_counts["sbss2"] = (0, len(mapped))
     return result, anchor_counts
 
 
@@ -625,6 +667,10 @@ def snap_symbol_boundaries(
 
     proposals: dict[tuple[str, int], int] = {}
     for section, section_map in boundary_maps.items():
+        if section in ZERO_SECTIONS:
+            # Zero-filled storage has no byte signatures to prove a new edge.
+            # Keep the inferred boundary; a crossing symbol will reject its TU.
+            continue
         section_source_spans = source_spans.get(section, ())
         section_target_spans = target_spans.get(section, ())
         source_chain_signatures: list[bytes] = []
@@ -854,7 +900,7 @@ def snap_symbol_boundaries(
             # When one complete source symbol touching that edge has exactly one
             # normalized target homolog, its corresponding edge is stronger
             # evidence than the inferred address.
-            if not candidates and section not in {"bss", "sbss"}:
+            if not candidates:
                 exact_matches: list[int] = []
                 for source_span in section_source_spans:
                     if (
@@ -938,7 +984,7 @@ def snap_symbol_boundaries(
 
 
 def gap_is_zero(dol: DolFile, section: str, start: int, end: int) -> bool:
-    if section in {"bss", "sbss"}:
+    if section in ZERO_SECTIONS:
         return True
     return not any(read_dol_range(dol, start, end - start))
 
@@ -986,7 +1032,7 @@ def port_coherent_units(
         str, dict[tuple[int, bytes], list[SymbolSpan]]
     ] = defaultdict(lambda: defaultdict(list))
     for section, spans in target_detailed_spans.items():
-        if section in CODE_SECTIONS or section in {"bss", "sbss"}:
+        if section in CODE_SECTIONS or section in ZERO_SECTIONS:
             continue
         for span in spans:
             try:
@@ -1003,7 +1049,7 @@ def port_coherent_units(
         if (
             split.start == split.end
             or split.section in CODE_SECTIONS
-            or split.section in {"bss", "sbss"}
+            or split.section in ZERO_SECTIONS
         ):
             continue
         exact_spans = [
@@ -1091,10 +1137,7 @@ def port_coherent_units(
                 break
             source_size = split.end - split.start
             target_size = target_end - target_start
-            if split.section not in CODE_SECTIONS and split.section not in {
-                "bss",
-                "sbss",
-            }:
+            if split.section not in CODE_SECTIONS and split.section not in ZERO_SECTIONS:
                 key = (split.unit, split.section, split.start)
                 chain_homolog = exact_chain_overrides.get(key)
                 source_exact = source_exact_split_spans.get(key)
@@ -1220,6 +1263,16 @@ def port_coherent_units(
             by_section[item.source.section].append(item)
         for ranges in by_section.values():
             ranges.sort(key=lambda item: item.target_start)
+            if ranges[-1].source.section == "sbss2":
+                bounds = sbss2_bounds(target_dol)
+                if (
+                    bounds is not None
+                    and ranges[-1].target_end < bounds[1]
+                    and ranges[-1].target_end % 4
+                ):
+                    # The final unknown BSS corridor also needs an aligned
+                    # auto unit; there is no claimed neighbor to prove a gap.
+                    reject_units.add(ranges[-1].source.unit)
             for before, after in zip(ranges, ranges[1:]):
                 if before.target_end >= after.target_start:
                     continue
@@ -1265,7 +1318,7 @@ def port_coherent_units(
         for item in accepted
     ]
 
-    # Every initialized range must remain inside the target DOL section after
+    # Every initialized range and the final zero tail must stay in bounds after
     # boundary inference and padding folding.  A near-end corridor can retain
     # the source revision's trailing padding even when the target revision
     # removed it; reject the complete TU instead of emitting an invalid split.
@@ -1277,6 +1330,8 @@ def port_coherent_units(
         for section in SECTION_INDEX
         for target_range in (dol_section(target_dol, section),)
     }
+    if any(item.source.section == "sbss2" for item in accepted):
+        target_section_bounds["sbss2"] = sbss2_bounds(target_dol) or (0, 0)
     out_of_bounds_units = {
         item.source.unit
         for item in accepted

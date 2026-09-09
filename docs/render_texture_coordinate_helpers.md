@@ -102,7 +102,9 @@ The regional `version_progress.py <version> --write` refresh was run for all
 three secondary targets. Its conservative mapper could not map the new
 `.sbss2` boundary and dropped the entire unit. The existing claims were
 preserved, and the eight-byte spans above were added using the direct retail
-load evidence. Unrelated regenerated symbol changes were discarded.
+load evidence. Unrelated regenerated symbol changes were discarded. The later
+[zero-tail projector fix](version_progress.md#zero-initialized-tail-projection-2026-09-08)
+now reproduces this split without dropping the unit.
 
 No section-alignment override, forced section, linker retention directive or
 compiler-profile change is needed. EN `all_source` and the strict retail SHA-1

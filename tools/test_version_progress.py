@@ -16,11 +16,121 @@ from version_progress import (SymbolSpan, SplitRange, VersionProjection, build_b
                               PortedRange, render_projected_symbol_texts, main)
 from version_progress import source_data_identifiers
 from version_progress import port_coherent_units, SECTION_INDEX
+from version_progress import build_all_boundary_maps, sbss2_bounds, snap_symbol_boundaries
 
 
 def dol(data, address):
     return SimpleNamespace(path=Path('synthetic.dol'), data=data,
                            sections=[DolSection(13, 0, address, len(data))])
+
+
+class ZeroTailProjectionTests(unittest.TestCase):
+    @staticmethod
+    def image(start, tail_size=56):
+        data = bytearray(0x110)
+        struct.pack_into('>II', data, 0xD8, start - 0x100, 0x100 + tail_size)
+        return SimpleNamespace(path=Path('synthetic.dol'), data=bytes(data), sections=[
+            DolSection(index, 0x100, start - 16 if section == 'sdata2' else 0,
+                       16 if section == 'sdata2' else 0)
+            for section, index in SECTION_INDEX.items()])
+
+    def setUp(self):
+        self.source = self.image(0x80300000)
+        self.target = self.image(0x80400000)
+        self.splits = [SplitRange('color.c', 'sbss2', 0x80300000, 0x80300004),
+                       SplitRange('indices.c', 'sbss2', 0x80300008, 0x8030000C)]
+        self.source_spans = {'sbss2': (
+            SymbolSpan('color', 'sbss2', 0x80300000, 0x80300004),
+            SymbolSpan('indices', 'sbss2', 0x80300008, 0x8030000B))}
+        self.target_spans = {'sbss2': (
+            SymbolSpan('color', 'sbss2', 0x80400000, 0x80400004),
+            SymbolSpan('indices', 'sbss2', 0x80400008, 0x8040000B))}
+
+    def boundaries(self):
+        return build_all_boundary_maps(self.splits, self.source, self.target, [], {}, {})
+
+    def port(self, mappings, spans=None):
+        spans = self.target_spans if spans is None else spans
+        index = symbol_span_index(spans)
+        return port_coherent_units(self.splits, [], [], mappings, index, index,
+                                   self.source, self.target, self.source_spans, spans)
+
+    def test_header_bounds_map_templates_without_reading_zero_storage(self):
+        self.assertEqual(sbss2_bounds(self.source), (0x80300000, 0x80300038))
+        # Unlike initialized constants, a complete named BSS template cannot
+        # supply bytes for either exact-symbol matching or boundary snapping.
+        with patch('version_progress.read_dol_range', side_effect=AssertionError('BSS read')):
+            mappings, counts = self.boundaries()
+            ported, rejected, gaps, *_ = self.port(mappings)
+        self.assertEqual(counts['sbss2'], (0, 4))
+        self.assertFalse(rejected)
+        self.assertEqual(gaps, 1)
+        self.assertEqual([(p.target_start, p.target_end) for p in ported],
+                         [(0x80400000, 0x80400004), (0x80400008, 0x8040000C)])
+
+    def test_changed_tail_width_leaves_whole_units_unclaimed(self):
+        self.target = self.image(0x80400000, 60)
+        self.splits.append(SplitRange('color.c', 'sdata2', 0x802FFFF0, 0x80300000))
+        mappings, counts = self.boundaries()
+        self.assertEqual(mappings['sdata2'][0x802FFFF0], 0x803FFFF0)
+        self.assertEqual(counts['sbss2'], (0, 0))
+        ported, rejected, *_ = self.port(mappings)
+        self.assertEqual(ported, [])
+        self.assertEqual(rejected['unmapped section boundary'], 2)
+
+    def test_invalid_header_or_initialized_tail_is_not_boundary_evidence(self):
+        truncated = self.image(0x80400000)
+        truncated.data = truncated.data[:0xDF]
+        occupied = self.image(0x80400000)
+        occupied.sections.append(DolSection(15, 0x100, 0x80400020, 4))
+        for image in (truncated, occupied, self.image(0x80400000, 0),
+                      self.image(0xFFFFFFE0)):
+            with self.subTest(image=image):
+                self.assertIsNone(sbss2_bounds(image))
+                self.target = image
+                mappings, _ = self.boundaries()
+                self.assertEqual(mappings['sbss2'], {})
+
+    def test_source_range_outside_tail_is_not_projected(self):
+        self.splits[0] = SplitRange('color.c', 'sbss2', 0x802FFFFC, 0x80300004)
+        mappings, _ = self.boundaries()
+        ported, rejected, *_ = self.port(mappings)
+        self.assertEqual([p.source.unit for p in ported], ['indices.c'])
+        self.assertEqual(rejected['unmapped section boundary'], 1)
+
+    def test_target_range_outside_header_bounds_is_rejected(self):
+        mappings, _ = self.boundaries()
+        mappings['sbss2'][0x80300008] = 0x80400038
+        mappings['sbss2'][0x8030000C] = 0x8040003C
+        ported, rejected, *_ = self.port(mappings)
+        self.assertEqual([p.source.unit for p in ported], ['color.c'])
+        self.assertEqual(rejected['target range outside section'], 1)
+
+    def test_last_packed_template_cannot_leave_an_unaligned_auto_unit(self):
+        self.splits[1] = SplitRange('indices.c', 'sbss2', 0x80300008, 0x8030000B)
+        mappings, _ = self.boundaries()
+        ported, rejected, *_ = self.port(mappings)
+        self.assertEqual([p.source.unit for p in ported], ['color.c'])
+        self.assertEqual(rejected['unaligned auto-unit boundary'], 1)
+
+    def test_crossing_named_zero_symbol_is_rejected_without_byte_matching(self):
+        for section in ('bss', 'sbss', 'sbss2'):
+            with self.subTest(section=section):
+                self.splits = [SplitRange('color.c', section, 0x80300000, 0x80300004)]
+                self.source_spans = {section: (SymbolSpan('color', section,
+                                                         0x80300000, 0x80300004),)}
+                target_spans = {section: (SymbolSpan('color', section,
+                                                    0x80400000, 0x80400008),)}
+                index = symbol_span_index(target_spans)
+                mappings = {section: {0x80300000: 0x80400000, 0x80300004: 0x80400004}}
+                with patch('version_progress.read_dol_range', side_effect=AssertionError('BSS read')):
+                    snapped, count = snap_symbol_boundaries(
+                        self.splits, mappings, self.source, self.target,
+                        self.source_spans, target_spans, index, index)
+                    ported, rejected, *_ = self.port(snapped, target_spans)
+                self.assertEqual(count, 0)
+                self.assertEqual(ported, [])
+                self.assertEqual(rejected['target symbol crosses boundary'], 1)
 
 
 class CanonicalDataNameTests(unittest.TestCase):

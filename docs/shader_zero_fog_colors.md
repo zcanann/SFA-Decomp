@@ -53,10 +53,12 @@ denominator, even with an explicit symbol entry. This accounting change is
 separate from the 12 newly matched bytes; no padding definition or artificial
 padding unit is added to preserve the old count.
 
-The required `version_progress.py --write` refreshes cannot map these BSS
-boundaries conservatively and drop the shader and previously verified renderer
-claims. Existing claims are preserved, and only the independently established
-12-byte spans and color symbols are added. BSS has no file-backed DOL payload;
+The required `version_progress.py --write` refreshes initially could not map these BSS
+boundaries conservatively and dropped the shader and previously verified renderer
+claims. Existing claims were preserved, and only the independently established
+12-byte spans and color symbols were added. The subsequent
+[zero-tail projector fix](version_progress.md#zero-initialized-tail-projection-2026-09-08)
+now preserves both claims automatically. BSS has no file-backed DOL payload;
 the checks use section kind, zero contents, size, alignment and retail load
 addresses rather than reading purported constant bytes from the DOL file.
 

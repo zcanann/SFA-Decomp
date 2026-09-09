@@ -349,3 +349,51 @@ evidence in both versions, and loss of the immediate neighbor. All 26 projector
 tests pass. All four `all_source` builds and the strict EN retail checksum pass;
 EN's complete report and all 1,004 source-object hashes are unchanged. Secondary
 validation covers projected objects, not full regional DOL relinks.
+
+## Zero-initialized tail projection (2026-09-08)
+
+The projector now treats `.sbss2` as zero-initialized storage throughout boundary
+mapping, symbol matching, and alignment-gap handling. Previously it omitted
+this section from both the BSS maps and the exclusions from initialized-data
+analysis. A newly claimed four-byte sky template exactly matched its named
+symbol extent, so projection attempted to read that BSS range from the DOL
+file and failed. Earlier renderer and shader claims instead caused their whole
+TUs to be dropped for missing boundaries.
+
+The final tail starts at the end of initialized `.sdata2` and ends at the DOL
+header's aggregate BSS end. Both verified inputs must have valid, nonempty
+tails of equal width, with no initialized section overlapping either tail.
+Only source boundaries inside that interval are translated. These are inferred
+layout boundaries, reported as zero direct anchors; zero bytes are not unique
+binary signatures. The four current retail images independently establish the
+same 56-byte tail:
+
+| Version | `.sbss2` interval |
+| --- | --- |
+| EN | `803E8440..803E8478` |
+| EN rev1 | `803E90C0..803E90F8` |
+| JP | `803E8560..803E8598` |
+| PAL rev1 | `803E9E20..803E9E58` |
+
+A changed tail width or invalid layout leaves the affected complete TUs
+unclaimed. Final projected ranges must remain inside the target's header-backed
+tail. Named symbols crossing a boundary still reject the TU; the projector no
+longer attempts to resolve such conflicts in any BSS section by comparing
+nonexistent file bytes. A final packed claim cannot leave an unaligned automatic
+BSS corridor after it. This does not infer field meaning or authorize new EN
+ownership: retail consumer evidence remains necessary for source recovery.
+
+All three `--write` projections now complete and reproduce the existing split
+files and fallback mappings exactly, preserving all four verified shader,
+renderer, and sky `.sbss2` claims. Each retains 988 coherent units and all 3,213
+regional ranges. Symbol output still applies the existing canonical-name and
+metadata normalization; those unrelated changes were inspected and not retained
+in this tooling fix. PAL rev0 remains excluded without its verified retail DOL.
+
+Seven new regression tests cover a complete named template with no file payload,
+invariant alignment gaps, changed tail width with whole-TU rejection, invalid
+headers and initialized overlaps, source/target bounds, a final unaligned unknown
+corridor, and conflicting named symbols in all three zero-initialized sections.
+All 33 projector tests pass.
+The EN full-source and strict-checksum gates pass, and compiled source objects
+and the EN objdiff report remain unchanged.
