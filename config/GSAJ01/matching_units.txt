@@ -73,6 +73,7 @@ dlls/engine/66/66.c
 dlls/engine/67/67.c
 dlls/engine/68/68.c
 dlls/engine/69/69.c
+dlls/engine/7/7.c
 dlls/engine/70/70.c
 dlls/engine/71/71.c
 dlls/engine/72/72.c

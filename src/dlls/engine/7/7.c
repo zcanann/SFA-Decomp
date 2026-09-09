@@ -93,6 +93,18 @@ static inline void snowFifoTexCoord2s16(s16 s, s16 t) {
     GXWGFifo.s16 = t;
 }
 
+static void lightningSetReferenceZAxis(f32* axis) {
+    axis[0] = 0.0f;
+    axis[1] = 0.0f;
+    axis[2] = 1.0f;
+}
+
+static void lightningSetReferenceXAxis(f32* axis) {
+    axis[0] = 1.0f;
+    axis[1] = 0.0f;
+    axis[2] = 0.0f;
+}
+
 f32 lightningGetRemainingFraction(void) {
     LightningEffect* state;
     u16 totalFrames;
@@ -145,13 +157,9 @@ static void lightningDrawStrand(f32* from, f32* to, u8 width, f32 strandSegmentD
     len = PSVECMag((Vec*)dir);
     PSVECScale((Vec*)dir, (Vec*)scaled, 1.0f / len);
     if (__fabsf(scaled[0]) < 0.9f) {
-        up[0] = 1.0f;
-        up[1] = 0.0f;
-        up[2] = 0.0f;
+        lightningSetReferenceXAxis(up);
     } else {
-        up[0] = 0.0f;
-        up[1] = 0.0f;
-        up[2] = 1.0f;
+        lightningSetReferenceZAxis(up);
     }
     PSVECCrossProduct((Vec*)scaled, (Vec*)up, (Vec*)side);
     PSVECCrossProduct((Vec*)side, (Vec*)scaled, (Vec*)up);
@@ -257,13 +265,9 @@ static void lightningDrawBolt(f32* start, f32* end, u8 width, f32 boltSegmentDen
     len = PSVECMag((Vec*)dir);
     PSVECScale((Vec*)dir, (Vec*)scaled, 1.0f / len);
     if (__fabsf(scaled[0]) < 0.9f) {
-        up[0] = 1.0f;
-        up[1] = 0.0f;
-        up[2] = 0.0f;
+        lightningSetReferenceXAxis(up);
     } else {
-        up[0] = 0.0f;
-        up[1] = 0.0f;
-        up[2] = 1.0f;
+        lightningSetReferenceZAxis(up);
     }
     PSVECCrossProduct((Vec*)scaled, (Vec*)up, (Vec*)side);
     PSVECCrossProduct((Vec*)side, (Vec*)scaled, (Vec*)up);
