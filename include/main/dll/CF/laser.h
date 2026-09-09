@@ -48,20 +48,12 @@ STATIC_ASSERT(offsetof(LaserReleaseInterface, releaseObject) == 0x48);
 #define LASEROBJ_MODE_SEQUENCE_B 2
 #define LASEROBJ_YAW_BYTE_SHIFT  8
 
-#define LASEROBJ_SEQUENCE_A_EVENT      0x2e8
-#define LASEROBJ_SEQUENCE_B_EVENT      0x83c
-#define LASEROBJ_SEQUENCE_B_MODE_MAP_A 7
-#define LASEROBJ_SEQUENCE_B_MODE_MAP_B 0xd
-#define LASEROBJ_SEQUENCE_B_MODE_A     8
-#define LASEROBJ_SEQUENCE_B_MODE_B     2
-
 #define LASEROBJ_MAIN_SEQUENCE_A_EVENT 0x123
 #define LASEROBJ_MAIN_SEQUENCE_B_EVENT 0x83b
 
 extern char sLaserTextBlockInitNoLongerSupported[];
 extern char sLaserInitNoLongerSupported[];
 extern ObjectDescriptor gLaserUnsupportedObjDescriptor;
-extern ObjectDescriptor gLaserObjDescriptor;
 
 int laser_getExtraSize(void);
 int laser_getObjectTypeId(void);
@@ -72,14 +64,5 @@ void laser_updateUnsupported(void);
 void laser_init(void);
 void laser_releaseUnsupported(void);
 void laser_initialiseUnsupported(void);
-int DFPSpPl_getExtraSize(void);
-int DFPSpPl_getObjectTypeId(void);
-void DFPSpPl_free(void);
-void DFPSpPl_render(void);
-void DFPSpPl_hitDetect(void);
-void DFPSpPl_update(GameObject* obj);
-void DFPSpPl_init(GameObject* obj, LaserObjectMapData* mapData);
-void DFPSpPl_release(void);
-void DFPSpPl_initialise(void);
 
 #endif /* MAIN_DLL_CF_LASER_H_ */

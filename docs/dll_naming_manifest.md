@@ -617,7 +617,7 @@ any of them is acted on.
 | 0x234 | DFP_PerchSw | COMPLETE | dlls/objects/564_DFP_PerchSw/DFP_PerchSw.c | = (canonical) | Exact recovered retail basename; diagnostic string follows descriptor in retail data order |
 | 0x235 | DFP_TargetB | COMPLETE | dlls/objects/565_DFP_TargetB/DFP_TargetB.c | = (canonical) | Exact truncated retail basename; confirmed complete TU |
 | 0x236 | DFP_LaserBe | COMPLETE | dlls/objects/566_DFP_LaserBe/laser.c | = (canonical) | Object-def basename keeps the folder; source name from the retail `<laser.c Init>` literal at 0x80329C20, printed by this TU's own init slot (the three `<textblock.c Init>` siblings are Rare's copy-paste from DLL 0x239) |
-| 0x237 | DFPSpPl | COMPLETE | dlls/objects/567_DFPSpPl/DFPSpPl.c | = (canonical) | Exact retail basename; internal laser symbols retained |
+| 0x237 | DFPSpPl | COMPLETE | dlls/objects/567_DFPSpPl/DFPSpPl.c | = (canonical) | Exact retail basename; canonical spellstone state/API and `gDFPSpPlObjDescriptor` recovered |
 | 0x238 | LINKA_levco | COMPLETE | dlls/objects/568_LINKA_levco/LINKA_levco.c | = (canonical) | Exact retail basename; internal FireObject symbols retained |
 | 0x239 | textblock | DOL-RECOVERED | dlls/objects/569/textblock.c | = (canonical) | No OBJECTS.bin basename, so the folder stays numeric; source name from the retail `<textblock.c Init>` literal at 0x80329CF0, the TU's only string, printed by its own init slot; DFP_TextblockObj and KP_textbloc are object aliases |
 | 0x23A | DFP_Platfor | COMPLETE | dlls/objects/570_DFP_Platfor/DFP_Platfor.c | = (canonical) | Exact truncated retail basename; diagnostic strings follow descriptor |
@@ -1077,6 +1077,7 @@ more as they are recovered.
 | 0x232 | dlls/objects/562_DFP_RotateP/DFP_RotateP.c | include/dlls/objects/562_DFP_RotateP.h |
 | 0x233 | dlls/objects/563_DFP_Statue1/DFP_Statue1.c | include/dlls/objects/563_DFP_Statue1.h |
 | 0x235 | dlls/objects/565_DFP_TargetB/DFP_TargetB.c | include/dlls/objects/565_DFP_TargetB.h |
+| 0x237 | dlls/objects/567_DFPSpPl/DFPSpPl.c | include/dlls/objects/567_DFPSpPl.h |
 | 0x242 | dlls/objects/578_DBstealerwo/DBstealerwo.c | include/dlls/objects/578_DBstealerwo.h |
 | 0x250 | dlls/objects/592_KT_Rex/KT_Rex.c | include/dlls/objects/592_KT_Rex.h |
 | 0x255 | dlls/objects/597/597.c | include/dlls/objects/597_SnowBike.h |

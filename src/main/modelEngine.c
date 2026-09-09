@@ -456,6 +456,7 @@
 #include "dlls/objects/196_Tricky.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/CF/laser.h"
+#include "dlls/objects/567_DFPSpPl.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "dlls/objects/294.h"
 #include "dlls/objects/557_DFP_seqpoin.h"
@@ -1784,7 +1785,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gDfperchwitchObjDescriptor,
     (ResourceDescriptor*)&gDfptargetblockObjDescriptor,
     (ResourceDescriptor*)&gLaserUnsupportedObjDescriptor,
-    (ResourceDescriptor*)&gLaserObjDescriptor,
+    (ResourceDescriptor*)&gDFPSpPlObjDescriptor,
     &gFireObjDescriptor,
     (ResourceDescriptor*)&gTextBlockObjDescriptor,
     (ResourceDescriptor*)&gPlatform1ObjDescriptor,
