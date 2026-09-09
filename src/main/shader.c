@@ -4456,11 +4456,19 @@ GXColor gTexShaderAmbColor = {0xFF, 0xFF, 0xFF, 0xFF};
 GXColor gTexLightmapAmbColor = {0xff, 0xff, 0xff, 0xff};
 s8 gTexIndMtxScaleExp = -2;
 const f32 gTexIndMtxScale = 0.0625f;
-extern const GXColor gTexShaderFogColor;
-extern const GXColor gTexLightmapFogColor;
 
 extern IndTexMtx23 gTexIndMtxTable;
 extern WarpDestination gRcpPendingWarpDest;
+
+static inline void shaderInitGlowFogColor(GXColor* color) {
+    const GXColor initial = {0, 0, 0, 0};
+    *color = initial;
+}
+
+static inline void shaderInitMaterialFogColor(GXColor* color) {
+    const GXColor initial = {0, 0, 0, 0};
+    *color = initial;
+}
 
 static u8 mapBlockBounds_HasCornerPastDepthThreshold(MapBlockBoundsRec* bounds, float* xform) {
     Vec v;
@@ -4593,7 +4601,7 @@ Shader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, ModelRe
     Shader* shader;
     u32 shaderIdx;
     u8* byteBase;
-    GXColor fogColor = gTexLightmapFogColor;
+    GXColor fogColor = {0, 0, 0, 0};
     u32 bits;
     u32 bitPos;
     u8 ambColor[3];
@@ -5082,7 +5090,7 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode) {
 Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRenderInstrsState* state) {
     Shader* shader;
     u32 shaderIdx;
-    GXColor fogColor = gTexShaderFogColor;
+    GXColor fogColor;
     u8* instructionBytes;
     u32 flags;
     int* cloudTex;
@@ -5091,6 +5099,7 @@ Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRende
     u32 bits;
     u32 bitPos;
 
+    shaderInitMaterialFogColor(&fogColor);
     bitPos = state->bit;
     {
         int byteOffset = (int)bitPos >> 3;
@@ -5174,7 +5183,6 @@ Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRende
     return shader;
 }
 
-extern int sSynthFadeUnit;
 
 static inline void GXPosition3f32(const f32 x, const f32 y, const f32 z) {
     GXWGFifo.f32 = x;
@@ -5371,7 +5379,7 @@ void renderGlows(void) {
     int i;
     ModelLightStruct* e;
 
-    fogCol = *(GXColor*)&sSynthFadeUnit;
+    shaderInitGlowFogColor(&fogCol);
     GXSetCullMode(GX_CULL_NONE);
     Camera_RebuildProjectionMatrix();
     GXClearVtxDesc();

@@ -268,6 +268,7 @@ main/shader.c:
 	.sdata      start:0x803DC280 end:0x803DC2A8
 	.sbss       start:0x803DDA48 end:0x803DDB54
 	.sdata2     start:0x803DF830 end:0x803DF8D8
+	.sbss2      start:0x803E90C0 end:0x803E90CC
 
 main/shadow_dolphin.c:
 	.text       start:0x80061210 end:0x80062EDC

@@ -231,10 +231,12 @@ All forty functions that directly consume this pool now have matching literal
 value sequences. This includes `renderGlows`, whose extra zero/one loads were
 removed in the second code pass.
 
-Two zero fog-color records at `.sbss2` `0x803E8444` and `0x803E8448` remain retail
-externs (`gTexShaderFogColor` and `gTexLightmapFogColor`). Their declaration and
-emission order has not been recovered. They are not claimed by this change;
-forcing either record into `.sdata2` or `.sbss` would misrepresent its storage.
+At this stage, two zero fog-color records at `.sbss2` `0x803E8444` and
+`0x803E8448` remained retail externs (`gTexShaderFogColor` and
+`gTexLightmapFogColor`). They and the preceding glow-color template are now
+recovered through native initializers in the
+[zero-color ownership follow-up](shader_zero_fog_colors.md), preserving their
+actual `.sbss2` storage and retail order.
 
 The regional `version_progress.py <version> --write` refreshes were attempted
 for EN rev1, JP, PAL, and PAL rev1, but their DOLs are absent in this checkout.
