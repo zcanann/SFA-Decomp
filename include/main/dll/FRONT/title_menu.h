@@ -16,7 +16,10 @@ typedef struct TitleMenuTextEntry {
   s16 x;
   s16 y;
   u8 pad0E[2];
-  s32 textureAssetId;
+  union {
+    s32 textureAssetId;
+    void* texture;
+  };
   u16 width;
   u16 flags;
   u8 unk18[2];
@@ -30,9 +33,16 @@ typedef struct TitleMenuTextEntry {
   u8 pad39[3];
 } TitleMenuTextEntry;
 
+STATIC_ASSERT(offsetof(TitleMenuTextEntry, rightX) == 0x04);
+STATIC_ASSERT(offsetof(TitleMenuTextEntry, textTop) == 0x06);
+STATIC_ASSERT(offsetof(TitleMenuTextEntry, x) == 0x0A);
+STATIC_ASSERT(offsetof(TitleMenuTextEntry, y) == 0x0C);
 STATIC_ASSERT(offsetof(TitleMenuTextEntry, textureAssetId) == 0x10);
+STATIC_ASSERT(offsetof(TitleMenuTextEntry, texture) == 0x10);
+STATIC_ASSERT(offsetof(TitleMenuTextEntry, width) == 0x14);
 STATIC_ASSERT(offsetof(TitleMenuTextEntry, flags) == 0x16);
 STATIC_ASSERT(offsetof(TitleMenuTextEntry, upLink) == 0x1A);
+STATIC_ASSERT(offsetof(TitleMenuTextEntry, downLink) == 0x1B);
 STATIC_ASSERT(offsetof(TitleMenuTextEntry, slots) == 0x1F);
 STATIC_ASSERT(sizeof(TitleMenuTextEntry) == 0x3C);
 
