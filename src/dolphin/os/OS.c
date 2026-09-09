@@ -6,23 +6,23 @@
 #include <dolphin/sipriv.h>
 #include "string.h"
 
-#define OS_BI2_DEBUG_ADDRESS 0x800000F4
-#define DEBUGFLAG_ADDR 0x800030E8
-#define OS_DEBUG_ADDRESS_2 0x800030E9
+#define OS_BI2_DEBUG_ADDRESS    0x800000F4
+#define DEBUGFLAG_ADDR          0x800030E8
+#define OS_DEBUG_ADDRESS_2      0x800030E9
 #define OS_CURRENTCONTEXT_PADDR 0x00C0
 
 vu16 __OSDeviceCode : (OS_BASE_CACHED | 0x30E6);
 static DVDDriveInfo DriveInfo ATTRIBUTE_ALIGN(32);
 static DVDCommandBlock DriveBlock;
 
-static OSBootInfo *BootInfo;
-static u32 *BI2DebugFlag;
-static u32 *BI2DebugFlagHolder;
+static OSBootInfo* BootInfo;
+static u32* BI2DebugFlag;
+static u32* BI2DebugFlagHolder;
 __declspec(weak) BOOL __OSIsGcam = FALSE;
 static f64 ZeroF;
 static f32 ZeroPS[2];
 static BOOL AreWeInitialized = FALSE;
-static __OSExceptionHandler *OSExceptionTable;
+static __OSExceptionHandler* OSExceptionTable;
 OSTime __OSStartTime;
 BOOL __OSInIPL;
 
@@ -32,19 +32,20 @@ extern u32 __DVDLongFileNameFlag;
 extern u32 __PADSpec;
 
 #define OS_EXCEPTIONTABLE_ADDR 0x3000
-#define OS_DBJUMPPOINT_ADDR 0x60
+#define OS_DBJUMPPOINT_ADDR    0x60
 // memory locations for important stuff
-#define OS_BI2_DEBUG_ADDRESS 0x800000F4
+#define OS_BI2_DEBUG_ADDRESS    0x800000F4
 #define OS_BI2_DEBUGFLAG_OFFSET 0xC
-#define PAD3_BUTTON_ADDR 0x800030E4
-#define OS_DVD_DEVICECODE 0x800030E6
-#define DEBUGFLAG_ADDR 0x800030E8
-#define OS_DEBUG_ADDRESS_2 0x800030E9
-#define DB_EXCEPTIONRET_OFFSET 0xC
+#define PAD3_BUTTON_ADDR        0x800030E4
+#define OS_DVD_DEVICECODE       0x800030E6
+#define DEBUGFLAG_ADDR          0x800030E8
+#define OS_DEBUG_ADDRESS_2      0x800030E9
+#define DB_EXCEPTIONRET_OFFSET  0xC
 #define DB_EXCEPTIONDEST_OFFSET 0x8
 
 static void OSExceptionInit(void);
 
+// clang-format off
 asm void __OSFPRInit(void)
 {
     nofralloc
@@ -130,31 +131,30 @@ SkipPairedSingles:
 
     blr
 }
+// clang-format on
 
-u32 OSGetConsoleType()
-{
+u32 OSGetConsoleType() {
     if (BootInfo == NULL || BootInfo->consoleType == 0) {
         return OS_CONSOLE_ARTHUR;
     }
     return BootInfo->consoleType;
 }
 
-void *__OSSavedRegionStart;
-void *__OSSavedRegionEnd;
+void* __OSSavedRegionStart;
+void* __OSSavedRegionEnd;
 
 extern u32 BOOT_REGION_START : 0x812FDFF0; //(*(u32 *)0x812fdff0)
-extern u32 BOOT_REGION_END : 0x812FDFEC; //(*(u32 *)0x812fdfec)
+extern u32 BOOT_REGION_END : 0x812FDFEC;   //(*(u32 *)0x812fdfec)
 
-static void ClearArena(void)
-{
+static void ClearArena(void) {
     if ((u32)(OSGetResetCode() + 0x80000000) != 0U) {
         __OSSavedRegionStart = 0U;
         __OSSavedRegionEnd = 0U;
         memset(OSGetArenaLo(), 0U, (u32)OSGetArenaHi() - (u32)OSGetArenaLo());
         return;
     }
-    __OSSavedRegionStart = (void *)BOOT_REGION_START;
-    __OSSavedRegionEnd = (void *)BOOT_REGION_END;
+    __OSSavedRegionStart = (void*)BOOT_REGION_START;
+    __OSSavedRegionEnd = (void*)BOOT_REGION_END;
     if (BOOT_REGION_START == 0U) {
         memset(OSGetArenaLo(), 0U, (u32)OSGetArenaHi() - (u32)OSGetArenaLo());
         return;
@@ -172,33 +172,31 @@ static void ClearArena(void)
     }
 }
 
-static void InquiryCallback(s32 result, DVDCommandBlock *block)
-{
+static void InquiryCallback(s32 result, DVDCommandBlock* block) {
     switch (block->state) {
-        case 0:
-            __OSDeviceCode = (u16)(0x8000 | DriveInfo.deviceCode);
-            break;
-        default:
-            __OSDeviceCode = 1;
-            break;
+    case 0:
+        __OSDeviceCode = (u16)(0x8000 | DriveInfo.deviceCode);
+        break;
+    default:
+        __OSDeviceCode = 1;
+        break;
     }
 }
 
-void OSInit(void)
-{
+void OSInit(void) {
     /*
     Initializes the Dolphin operating system.
         - most of the main operations get farmed out to other functions
         - loading debug info and setting up heap bounds largely happen here
         - a lot of OS reporting also gets controlled here
     */
-    BI2Debug *DebugInfo;
-    void *debugArenaLo;
+    BI2Debug* DebugInfo;
+    void* debugArenaLo;
     u32 inputConsoleType;
 
     // check if we've already done all this or not
     if ((BOOL)AreWeInitialized == FALSE) { // fantastic name
-        AreWeInitialized = TRUE; // flag to make sure we don't have to do this again
+        AreWeInitialized = TRUE;           // flag to make sure we don't have to do this again
 
         // SYSTEM //
         __OSStartTime = __OSGetSystemTime();
@@ -210,26 +208,25 @@ void OSInit(void)
 
         // DEBUG //
         // load some DVD stuff
-        BI2DebugFlag = 0; // debug flag from the DVD BI2 header
-        BootInfo = (OSBootInfo *)OS_BASE_CACHED; // set pointer to BootInfo
+        BI2DebugFlag = 0;                       // debug flag from the DVD BI2 header
+        BootInfo = (OSBootInfo*)OS_BASE_CACHED; // set pointer to BootInfo
 
         __DVDLongFileNameFlag = 0; // flag to tell us whether we make it through the debug loading
 
         // time to grab a bunch of debug info from the DVD
         // the address for where the BI2 debug info is, is stored at OS_BI2_DEBUG_ADDRESS
-        DebugInfo = (BI2Debug *)*((u32 *)OS_BI2_DEBUG_ADDRESS);
+        DebugInfo = (BI2Debug*)*((u32*)OS_BI2_DEBUG_ADDRESS);
 
         // if the debug info address exists, grab some debug info
         if (DebugInfo != NULL) {
-            BI2DebugFlag = &DebugInfo->debugFlag; // debug flag from DVD BI2
-            __PADSpec = DebugInfo->padSpec; // some other info from DVD BI2
-            *((u8 *)DEBUGFLAG_ADDR) = (u8)*BI2DebugFlag; // store flag in mem
-            *((u8 *)OS_DEBUG_ADDRESS_2) = __PADSpec; // store other info in mem
-        }
-        else if (BootInfo->arenaHi) { // if the top of the heap is already set
-            BI2DebugFlagHolder = (u32 *)*((u8 *)DEBUGFLAG_ADDR); // grab whatever's stored at 0x800030E8
-            BI2DebugFlag = (u32 *)&BI2DebugFlagHolder; // flag is then address of flag holder
-            __PADSpec = (u32) * ((u8 *)OS_DEBUG_ADDRESS_2); // pad spec is whatever's at 0x800030E9
+            BI2DebugFlag = &DebugInfo->debugFlag;              // debug flag from DVD BI2
+            __PADSpec = DebugInfo->padSpec;                    // some other info from DVD BI2
+            *((u8*)DEBUGFLAG_ADDR) = (u8)*BI2DebugFlag;        // store flag in mem
+            *((u8*)OS_DEBUG_ADDRESS_2) = __PADSpec;            // store other info in mem
+        } else if (BootInfo->arenaHi) {                        // if the top of the heap is already set
+            BI2DebugFlagHolder = (u32*)*((u8*)DEBUGFLAG_ADDR); // grab whatever's stored at 0x800030E8
+            BI2DebugFlag = (u32*)&BI2DebugFlagHolder;          // flag is then address of flag holder
+            __PADSpec = (u32) * ((u8*)OS_DEBUG_ADDRESS_2);     // pad spec is whatever's at 0x800030E9
         }
 
         __DVDLongFileNameFlag = 1; // we made it through debug!
@@ -242,7 +239,7 @@ void OSInit(void)
         // if the input arenaLo is null, and debug flag location exists (and flag is < 2),
         //     set arenaLo to just past the end of the db stack
         if ((BootInfo->arenaLo == NULL) && (BI2DebugFlag != 0) && (*BI2DebugFlag < 2)) {
-            debugArenaLo = (char *)(((u32)_stack_addr + 0x1f) & ~0x1f);
+            debugArenaLo = (char*)(((u32)_stack_addr + 0x1f) & ~0x1f);
             OSSetArenaLo(debugArenaLo);
         }
 
@@ -268,8 +265,7 @@ void OSInit(void)
         PPCMthid2(PPCMfhid2() & 0xBFFFFFFF);
         if ((BootInfo->consoleType & OS_CONSOLE_DEVELOPMENT) != 0) {
             BootInfo->consoleType = OS_CONSOLE_DEVHW1;
-        }
-        else {
+        } else {
             BootInfo->consoleType = OS_CONSOLE_RETAIL1;
         }
         BootInfo->consoleType += (__PIRegs[11] & 0xF0000000) >> 28;
@@ -284,8 +280,7 @@ void OSInit(void)
 
         if (BootInfo == NULL || (inputConsoleType = BootInfo->consoleType) == 0) {
             inputConsoleType = OS_CONSOLE_ARTHUR; // default console type
-        }
-        else {
+        } else {
             inputConsoleType = BootInfo->consoleType;
         }
 
@@ -293,24 +288,23 @@ void OSInit(void)
         inputConsoleType = OSGetConsoleType();
         if ((inputConsoleType & 0x10000000) == OS_CONSOLE_RETAIL) { // check "first" byte
             OSReport("Retail %d\n", inputConsoleType);
-        }
-        else {
+        } else {
             switch (inputConsoleType) { // if "first" byte is 2, check "the rest"
-                case OS_CONSOLE_EMULATOR:
-                    OSReport("Mac Emulator\n");
-                    break;
-                case OS_CONSOLE_PC_EMULATOR:
-                    OSReport("PC Emulator\n");
-                    break;
-                case OS_CONSOLE_ARTHUR:
-                    OSReport("EPPC Arthur\n");
-                    break;
-                case OS_CONSOLE_MINNOW:
-                    OSReport("EPPC Minnow\n");
-                    break;
-                default:
-                    OSReport("Development HW%d\n", (inputConsoleType - 0x10000000) - 3);
-                    break;
+            case OS_CONSOLE_EMULATOR:
+                OSReport("Mac Emulator\n");
+                break;
+            case OS_CONSOLE_PC_EMULATOR:
+                OSReport("PC Emulator\n");
+                break;
+            case OS_CONSOLE_ARTHUR:
+                OSReport("EPPC Arthur\n");
+                break;
+            case OS_CONSOLE_MINNOW:
+                OSReport("EPPC Minnow\n");
+                break;
+            default:
+                OSReport("Development HW%d\n", (inputConsoleType - 0x10000000) - 3);
+                break;
             }
         }
 
@@ -343,21 +337,8 @@ void OSInit(void)
 }
 
 static u32 __OSExceptionLocations[] = {
-    0x00000100,
-    0x00000200,
-    0x00000300,
-    0x00000400,
-    0x00000500,
-    0x00000600,
-    0x00000700,
-    0x00000800,
-    0x00000900,
-    0x00000C00,
-    0x00000D00,
-    0x00000F00,
-    0x00001300,
-    0x00001400,
-    0x00001700,
+    0x00000100, 0x00000200, 0x00000300, 0x00000400, 0x00000500, 0x00000600, 0x00000700, 0x00000800,
+    0x00000900, 0x00000C00, 0x00000D00, 0x00000F00, 0x00001300, 0x00001400, 0x00001700,
 };
 
 // dummy entry points to the OS Exception vector
@@ -374,29 +355,28 @@ void __OSDBJUMPEND(void);
 
 #define NOP 0x60000000
 
-static void OSExceptionInit(void)
-{
+static void OSExceptionInit(void) {
     __OSException exception;
-    void *destAddr;
+    void* destAddr;
 
     // These two vars help us change the exception number embedded
     // in the exception handler code.
-    u32 *opCodeAddr;
+    u32* opCodeAddr;
     u32 oldOpCode;
 
     // Address range of the actual code to be copied.
-    u8 *handlerStart;
+    u8* handlerStart;
     u32 handlerSize;
 
     // Install the first level exception vector.
-    opCodeAddr = (u32 *)__OSEVSetNumber;
+    opCodeAddr = (u32*)__OSEVSetNumber;
     oldOpCode = *opCodeAddr;
-    handlerStart = (u8 *)__OSEVStart;
-    handlerSize = (u32)((u8 *)__OSEVEnd - (u8 *)__OSEVStart);
+    handlerStart = (u8*)__OSEVStart;
+    handlerSize = (u32)((u8*)__OSEVEnd - (u8*)__OSEVStart);
 
     // Install the DB integrator, only if we are the first OSInit to be run
     destAddr = OSPhysicalToCached(OS_DBJUMPPOINT_ADDR);
-    if (*(u32 *)destAddr == 0) // Lomem should be zero cleared only once by BS2
+    if (*(u32*)destAddr == 0) // Lomem should be zero cleared only once by BS2
     {
         DBPrintf("Installing OSDBIntegrator\n");
         memcpy(destAddr, __OSDBINTSTART, (u32)__OSDBINTEND - (u32)__OSDBINTSTART);
@@ -420,11 +400,10 @@ static void OSExceptionInit(void)
         // Modify opcodes at __DBVECTOR if necessary
         if (__DBIsExceptionMarked(exception)) {
             DBPrintf(">>> OSINIT: exception %d vectored to debugger\n", exception);
-            memcpy((void *)__DBVECTOR, __OSDBINTEND, (u32)__OSDBJUMPEND - (u32)__OSDBINTEND);
-        }
-        else {
+            memcpy((void*)__DBVECTOR, __OSDBINTEND, (u32)__OSDBJUMPEND - (u32)__OSDBINTEND);
+        } else {
             // make sure the opcodes are still nop
-            u32 *ops = (u32 *)__DBVECTOR;
+            u32* ops = (u32*)__DBVECTOR;
             int cb;
 
             for (cb = 0; cb < (u32)__OSDBJUMPEND - (u32)__OSDBINTEND; cb += sizeof(u32)) {
@@ -455,6 +434,7 @@ static void OSExceptionInit(void)
     DBPrintf("Exceptions initialized...\n");
 }
 
+// clang-format off
 static asm void __OSDBIntegrator(void)
 {
     nofralloc
@@ -470,7 +450,9 @@ entry __OSDBINTSTART
     blr
 entry __OSDBINTEND
 }
+// clang-format on
 
+// clang-format off
 static asm void __OSDBJump(void) {
 
     nofralloc
@@ -478,21 +460,20 @@ entry __OSDBJUMPSTART
     bla     OS_DBJUMPPOINT_ADDR
 entry __OSDBJUMPEND
 
-}
+} // clang-format on
 
-__OSExceptionHandler __OSSetExceptionHandler(__OSException exception, __OSExceptionHandler handler)
-{
+__OSExceptionHandler __OSSetExceptionHandler(__OSException exception, __OSExceptionHandler handler) {
     __OSExceptionHandler oldHandler;
     oldHandler = OSExceptionTable[exception];
     OSExceptionTable[exception] = handler;
     return oldHandler;
 }
 
-__OSExceptionHandler __OSGetExceptionHandler(__OSException exception)
-{
+__OSExceptionHandler __OSGetExceptionHandler(__OSException exception) {
     return OSExceptionTable[exception];
 }
 
+// clang-format off
 static asm void OSExceptionVector(void)
 {
     nofralloc
@@ -575,7 +556,9 @@ recoverable:
 entry __OSEVEnd
     nop
 }
+// clang-format on
 
+// clang-format off
 asm void OSDefaultExceptionHandler(register __OSException exception, register OSContext *context)
 {
     nofralloc
@@ -586,13 +569,13 @@ asm void OSDefaultExceptionHandler(register __OSException exception, register OS
     stwu    r1,-8(r1)
     b       __OSUnhandledException
 }
+// clang-format on
 
-void __OSPSInit(void)
-{
-	PPCMthid2(PPCMfhid2() | 0xA0000000);
-	ICFlashInvalidate();
-	__sync();
-	// clang-format off
+void __OSPSInit(void) {
+    PPCMthid2(PPCMfhid2() | 0xA0000000);
+    ICFlashInvalidate();
+    __sync();
+    // clang-format off
     asm
     {
         li      r3, 0
@@ -601,9 +584,8 @@ void __OSPSInit(void)
     // clang-format on
 }
 
-#define DI_CONFIG_IDX 0x9
+#define DI_CONFIG_IDX         0x9
 #define DI_CONFIG_CONFIG_MASK 0xFF
-u32 __OSGetDIConfig(void)
-{
+u32 __OSGetDIConfig(void) {
     return (__DIRegs[DI_CONFIG_IDX] & DI_CONFIG_CONFIG_MASK);
 }

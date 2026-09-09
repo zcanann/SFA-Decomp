@@ -19,7 +19,8 @@ static OSResetFunctionInfo ResetFunctionInfo = {
     NULL,
 };
 
-void __CARDDefaultApiCallback(s32 chan, s32 result) {}
+void __CARDDefaultApiCallback(s32 chan, s32 result) {
+}
 
 void __CARDSyncCallback(s32 chan, s32 result) {
     CARDControl* card;
@@ -83,11 +84,9 @@ void __CARDExiHandler(s32 chan, OSContext* context) {
     }
 
     if ((result = (status & 0x18) ? CARD_RESULT_IOERROR : CARD_RESULT_READY) == CARD_RESULT_IOERROR &&
-        --card->retry > 0)
-    {
+        --card->retry > 0) {
         result = Retry(chan);
-        if (result >= 0)
-        {
+        if (result >= 0) {
             return;
         }
         goto fatal;
@@ -227,8 +226,7 @@ static inline void SetupTimeoutAlarm(CARDControl* card) {
         break;
     case 0xF4:
     case 0xF1:
-        OSSetAlarm(&card->alarm, OSSecondsToTicks((OSTime)2) * (card->sectorSize / 0x2000),
-                   TimeoutHandler);
+        OSSetAlarm(&card->alarm, OSSecondsToTicks((OSTime)2) * (card->sectorSize / 0x2000), TimeoutHandler);
         break;
     }
 }
@@ -252,9 +250,7 @@ static s32 Retry(s32 chan) {
         return CARD_RESULT_NOCARD;
     }
 
-    if (card->cmd[0] == 0x52 &&
-        !EXIImmEx(chan, (u8* )card->workArea + sizeof(CARDID), card->latency, EXI_WRITE))
-    {
+    if (card->cmd[0] == 0x52 && !EXIImmEx(chan, (u8*)card->workArea + sizeof(CARDID), card->latency, EXI_WRITE)) {
         EXIDeselect(chan);
         EXIUnlock(chan);
         return CARD_RESULT_NOCARD;
@@ -266,9 +262,7 @@ static s32 Retry(s32 chan) {
         return CARD_RESULT_READY;
     }
 
-    if (!EXIDma(chan, card->buffer, (s32)((card->cmd[0] == 0x52) ? 512 : 0x80), card->mode,
-                __CARDTxHandler))
-    {
+    if (!EXIDma(chan, card->buffer, (s32)((card->cmd[0] == 0x52) ? 512 : 0x80), card->mode, __CARDTxHandler)) {
         EXIDeselect(chan);
         EXIUnlock(chan);
         return CARD_RESULT_NOCARD;
@@ -358,11 +352,11 @@ static s32 __CARDStart(s32 chan, CARDCallback txCallback, CARDCallback exiCallba
     return result;
 }
 
-#define AD1(x) ((u8)(((x) >> 17) & 0x7f))
+#define AD1(x)   ((u8)(((x) >> 17) & 0x7f))
 #define AD1EX(x) ((u8)(AD1(x) | 0x80));
-#define AD2(x) ((u8)(((x) >> 9) & 0xff))
-#define AD3(x) ((u8)(((x) >> 7) & 0x03))
-#define BA(x) ((u8)((x)&0x7f))
+#define AD2(x)   ((u8)(((x) >> 9) & 0xff))
+#define AD3(x)   ((u8)(((x) >> 7) & 0x03))
+#define BA(x)    ((u8)((x) & 0x7f))
 
 s32 __CARDReadSegment(s32 chan, CARDCallback callback) {
     CARDControl* card;
@@ -372,7 +366,7 @@ s32 __CARDReadSegment(s32 chan, CARDCallback callback) {
 
     card = &__CARDBlock[chan];
     ASSERTLINE(848, card->addr % CARD_SEG_SIZE == 0);
-    ASSERTLINE(849, card->addr <  card->size * 1024 * 1024 / 8);
+    ASSERTLINE(849, card->addr < card->size * 1024 * 1024 / 8);
 
     card->cmd[0] = 0x52;
     card->cmd[1] = AD1(card->addr);
@@ -388,10 +382,9 @@ s32 __CARDReadSegment(s32 chan, CARDCallback callback) {
         result = CARD_RESULT_READY;
     } else if (result >= 0) {
         if (!EXIImmEx(chan, card->cmd, card->cmdlen, EXI_WRITE) ||
-            !EXIImmEx(chan, (u8* )card->workArea + sizeof(CARDID), card->latency,
-            EXI_WRITE) || // XXX use DMA if possible
-            !EXIDma(chan, card->buffer, 512, card->mode, __CARDTxHandler))
-        {
+            !EXIImmEx(chan, (u8*)card->workArea + sizeof(CARDID), card->latency,
+                      EXI_WRITE) || // XXX use DMA if possible
+            !EXIDma(chan, card->buffer, 512, card->mode, __CARDTxHandler)) {
             card->txCallback = NULL;
             EXIDeselect(chan);
             EXIUnlock(chan);
@@ -412,7 +405,7 @@ s32 __CARDWritePage(s32 chan, CARDCallback callback) {
 
     card = &__CARDBlock[chan];
     ASSERTLINE(905, card->addr % card->pageSize == 0);
-    ASSERTLINE(906, card->addr <  card->size * 1024 * 1024 / 8);
+    ASSERTLINE(906, card->addr < card->size * 1024 * 1024 / 8);
     card->cmd[0] = 0xF2;
 
     card->cmd[1] = AD1(card->addr);
@@ -428,8 +421,7 @@ s32 __CARDWritePage(s32 chan, CARDCallback callback) {
         result = CARD_RESULT_READY;
     } else if (result >= 0) {
         if (!EXIImmEx(chan, card->cmd, card->cmdlen, EXI_WRITE) ||
-            !EXIDma(chan, card->buffer, 0x80, card->mode, __CARDTxHandler))
-        {
+            !EXIDma(chan, card->buffer, 0x80, card->mode, __CARDTxHandler)) {
             card->exiCallback = 0;
             EXIDeselect(chan);
             EXIUnlock(chan);
@@ -450,7 +442,7 @@ s32 __CARDEraseSector(s32 chan, u32 addr, CARDCallback callback) {
 
     card = &__CARDBlock[chan];
     ASSERTLINE(1012, addr % card->sectorSize == 0);
-    ASSERTLINE(1013, addr <  card->size * 1024 * 1024 / 8);
+    ASSERTLINE(1013, addr < card->size * 1024 * 1024 / 8);
 
     card->cmd[0] = 0xF1;
     card->cmd[1] = AD1(addr);
