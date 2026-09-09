@@ -461,7 +461,7 @@
 #include "dlls/objects/557_DFP_seqpoin.h"
 #include "dlls/objects/578_DBstealerwo.h"
 #include "main/dll/DF/dll_022E_dfpdoorswitch.h"
-#include "main/dll/DF/dll_0233_dfpstatue1.h"
+#include "dlls/objects/563_DFP_Statue1.h"
 #include "main/dll/DF/dll_0234_dfperchwitch.h"
 #include "dlls/objects/547_VFP_corepla.h"
 #include "dlls/objects/565_DFP_TargetB.h"

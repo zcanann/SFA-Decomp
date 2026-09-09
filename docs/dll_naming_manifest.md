@@ -1075,6 +1075,7 @@ more as they are recovered.
 | 0x22D | dlls/objects/557_DFP_seqpoin/DFP_seqpoin.c | include/dlls/objects/557_DFP_seqpoin.h |
 | 0x22F | dlls/objects/559_DFP_floorba/DFP_floorba.c | include/main/dll/baddie/dll_022F_dfpfloorbar.h |
 | 0x232 | dlls/objects/562_DFP_RotateP/DFP_RotateP.c | include/dlls/objects/562_DFP_RotateP.h |
+| 0x233 | dlls/objects/563_DFP_Statue1/DFP_Statue1.c | include/dlls/objects/563_DFP_Statue1.h |
 | 0x235 | dlls/objects/565_DFP_TargetB/DFP_TargetB.c | include/dlls/objects/565_DFP_TargetB.h |
 | 0x242 | dlls/objects/578_DBstealerwo/DBstealerwo.c | include/dlls/objects/578_DBstealerwo.h |
 | 0x250 | dlls/objects/592_KT_Rex/KT_Rex.c | include/dlls/objects/592_KT_Rex.h |
