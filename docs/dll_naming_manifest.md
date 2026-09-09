@@ -622,7 +622,7 @@ any of them is acted on.
 | 0x239 | textblock | DOL-RECOVERED | dlls/objects/569/textblock.c | = (canonical) | No OBJECTS.bin basename, so the folder stays numeric; source name from the retail `<textblock.c Init>` literal at 0x80329CF0, the TU's only string, printed by its own init slot; DFP_TextblockObj and KP_textbloc are object aliases |
 | 0x23A | DFP_Platfor | COMPLETE | dlls/objects/570_DFP_Platfor/DFP_Platfor.c | = (canonical) | Exact truncated retail basename; diagnostic strings follow descriptor |
 | 0x23B | DFP_Lightni | COMPLETE | dlls/objects/571_DFP_Lightni/DFP_Lightni.c | = (canonical) | Exact truncated retail basename; canonical state/API and lightning width, density and lifetime controls recovered; next slot preserved |
-| 0x23C | DFP_PowerSl | COMPLETE | dlls/objects/572_DFP_PowerSl/DFP_PowerSl.c | = (canonical) | Exact retail basename; leading helper restored from DLL 571 |
+| 0x23C | DFP_PowerSl | COMPLETE | dlls/objects/572_DFP_PowerSl/DFP_PowerSl.c | = (canonical) | Exact retail basename; leading hit-effect helper restored from DLL 571; canonical 12-byte state and sequence/effect controls |
 | 0x23D | DBPointMum | COMPLETE | dlls/objects/573_DBPointMum/DBPointMum.c | = (canonical) | Descriptor data only; no .text functions |
 | 0x23E | — | NO-RETAIL-NAME | dlls/objects/574/574.c | = (canonical) | Descriptor data only; no .text functions |
 | 0x23F | DB_egg | COMPLETE | dlls/objects/575_DB_egg/DB_egg.c | = (canonical) | Exact recovered retail basename; descriptor precedes diagnostic string and compiler-generated jump table in retail data order |

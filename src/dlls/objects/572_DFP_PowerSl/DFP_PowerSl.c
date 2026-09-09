@@ -1,16 +1,29 @@
+/* DFP_PowerSl effect controller (DLL 572). It starts its
+ * sequence at a configured frame, emits the configured particle effect while
+ * its disable bit is clear, and emits a twenty-particle burst on priority hits.
+ */
+#include "dlls/objects/572_DFP_PowerSl.h"
+
 #include "main/dll/partfx_interface.h"
-#include "main/dfppowersl.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
+
+#define DFPPOWERSL_DEFAULT_START_FRAME 1
+#define DFPPOWERSL_DEFAULT_EFFECT_ID 1
+#define DFPPOWERSL_ROTATION_BYTE_SHIFT 8
+#define DFPPOWERSL_HIT_PRIORITY 0x13
+#define DFPPOWERSL_HIT_VOLUME_ID 1
+#define DFPPOWERSL_HIT_EFFECT_ID 0x39e
+#define DFPPOWERSL_HIT_EFFECT_COUNT 0x14
 
 static inline DfpPowerSlState* dfppowersl_getState(GameObject* obj)
 {
     return obj->extra;
 }
 
-int dfppowersl_spawnSeqObjectsOnHit(GameObject* obj)
+int dfppowersl_spawnHitEffects(GameObject* obj)
 {
     int i;
     GameObject* outObj;
@@ -26,8 +39,8 @@ int dfppowersl_spawnSeqObjectsOnHit(GameObject* obj)
         i = 1;
         do
         {
-            (*gPartfxInterface)->spawnObject(obj, DFPPOWERSL_SPAWN_OBJECT_ID, 0, DFPPOWERSL_SPAWN_MODE_ACTIVE, 0xffffffff, 0);
-        } while (i++ < DFPPOWERSL_SPAWN_COUNT);
+            (*gPartfxInterface)->spawnObject(obj, DFPPOWERSL_HIT_EFFECT_ID, 0, PARTFXFLAG_1, 0xffffffff, 0);
+        } while (i++ < DFPPOWERSL_HIT_EFFECT_COUNT);
     }
     return 0;
 }
@@ -55,12 +68,12 @@ void dfppowersl_render(GameObject* obj)
     if ((u32)powerSl != 0)
     {
         state = dfppowersl_getState(powerSl);
-        if (mainGetBit(state->eventId) == 0)
+        if (mainGetBit(state->disableEffectGameBit) == 0)
         {
             (*gPartfxInterface)
-                ->spawnObject(powerSl, state->spawnObjectId, 0, DFPPOWERSL_SPAWN_MODE_PRELOAD, 0xffffffff, 0);
+                ->spawnObject(powerSl, state->effectId, 0, PARTFXFLAG_4, 0xffffffff, 0);
             (*gPartfxInterface)
-                ->spawnObject(powerSl, state->spawnObjectId, 0, DFPPOWERSL_SPAWN_MODE_ACTIVE, 0xffffffff, 0);
+                ->spawnObject(powerSl, state->effectId, 0, PARTFXFLAG_1, 0xffffffff, 0);
         }
     }
     return;
@@ -75,33 +88,33 @@ void dfppowersl_update(GameObject* obj)
     if ((u32)powerSl != 0)
     {
         state = dfppowersl_getState(powerSl);
-        (*gObjectTriggerInterface)->preempt((int)powerSl, state->activateObjectId);
+        (*gObjectTriggerInterface)->preempt((int)powerSl, state->sequenceStartFrame);
         (*gObjectTriggerInterface)->runSequence(0, powerSl, 0xffffffff);
     }
     return;
 }
 
-void dfppowersl_init(GameObject* obj, DfpPowerSlMapData* mapData)
+void dfppowersl_init(GameObject* obj, DfpPowerSlPlacementPrefix* mapData)
 {
     DfpPowerSlState* state;
 
     if (obj != 0)
     {
         state = dfppowersl_getState(obj);
-        if (mapData->activateObjectId <= 0)
+        if (mapData->sequenceStartFrame <= 0)
         {
-            mapData->activateObjectId = DFPPOWERSL_DEFAULT_PARAM_OBJECT_ID;
+            mapData->sequenceStartFrame = DFPPOWERSL_DEFAULT_START_FRAME;
         }
-        if (mapData->spawnObjectId <= 0)
+        if (mapData->effectId <= 0)
         {
-            mapData->spawnObjectId = DFPPOWERSL_DEFAULT_PARAM_OBJECT_ID;
+            mapData->effectId = DFPPOWERSL_DEFAULT_EFFECT_ID;
         }
-        obj->animEventCallback = dfppowersl_spawnSeqObjectsOnHit;
-        state->activateObjectId = mapData->activateObjectId;
-        state->spawnObjectId = mapData->spawnObjectId;
-        state->eventId = mapData->eventId;
-        obj->anim.rotX = mapData->mode << DFPPOWERSL_MODE_WORD_SHIFT;
-        ObjHits_SetHitVolumeSlot(&obj->anim, DFPPOWERSL_HIT_VOLUME_SLOT, DFPPOWERSL_HIT_VOLUME_ENABLED, 0);
+        obj->animEventCallback = dfppowersl_spawnHitEffects;
+        state->sequenceStartFrame = mapData->sequenceStartFrame;
+        state->effectId = mapData->effectId;
+        state->disableEffectGameBit = mapData->disableEffectGameBit;
+        obj->anim.rotX = mapData->rotationXByte << DFPPOWERSL_ROTATION_BYTE_SHIFT;
+        ObjHits_SetHitVolumeSlot(&obj->anim, DFPPOWERSL_HIT_PRIORITY, DFPPOWERSL_HIT_VOLUME_ID, 0);
     }
     return;
 }

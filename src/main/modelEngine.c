@@ -460,6 +460,7 @@
 #include "dlls/objects/567_DFPSpPl.h"
 #include "dlls/objects/568_LINKA_levco.h"
 #include "dlls/objects/571_DFP_Lightni.h"
+#include "dlls/objects/572_DFP_PowerSl.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "dlls/objects/294.h"
 #include "dlls/objects/557_DFP_seqpoin.h"
@@ -571,7 +572,6 @@ extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor;
 extern ResourceDescriptor gCrCloudRaceObjDescriptor;
 extern ResourceDescriptor gDBHoleControl1ObjDescriptor;
 extern ResourceDescriptor gDIM_trickyObjDescriptor, gDR_CloudRunnerObjDescriptor;
-extern ResourceDescriptor gDfppowerslObjDescriptor;
 extern ResourceDescriptor gDrCageControlObjDescriptor,
     gDrCageWithObjDescriptor, gDrChimmeyObjDescriptor, gDrCloudPerObjDescriptor, gDrCreatorObjDescriptor;
 extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor,
@@ -1793,7 +1793,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gTextBlockObjDescriptor,
     (ResourceDescriptor*)&gPlatform1ObjDescriptor,
     (ResourceDescriptor*)&gDfplightniObjDescriptor,
-    &gDfppowerslObjDescriptor,
+    (ResourceDescriptor*)&gDfppowerslObjDescriptor,
     &gDBPointMumNullResourceDescriptor,
     &gDll23ENullResourceDescriptor,
     (ResourceDescriptor*)&gDB_eggObjDescriptor,
