@@ -1,3 +1,4 @@
+#include "dlls/objects/686_WaterFlowWe.h"
 #include "main/dll/dll_0018_boneparticleeffect.h"
 #include "dlls/objects/554_DFP_ObjCrea.h"
 #include "dlls/objects/556.h"
@@ -601,7 +602,7 @@ extern ResourceDescriptor gWCLevelContObjDescriptor,
     gWCPushBlockObjDescriptor,
     gWCTileObjDescriptor;
 extern ResourceDescriptor gWM_SpiritSetObjDescriptor, gWM_newcrystalObjDescriptor;
-extern ResourceDescriptor gWM_spiritplaceObjDescriptor, gWM_sunObjDescriptor, gWaterFlowWeObjDescriptor;
+extern ResourceDescriptor gWM_spiritplaceObjDescriptor, gWM_sunObjDescriptor;
 extern ResourceDescriptor ObjSeq_funcs;
 extern ResourceDescriptor sky_funcs, sky2_funcs, newclouds_funcs, Dummy08_funcs, cloudaction_funcs, waterfx_funcs,
     dll_0B_funcs, partfx_funcs;
@@ -1907,7 +1908,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gProjectedLightObjDescriptor,
     (ResourceDescriptor*)&gControlLightObjDescriptor,
     (ResourceDescriptor*)&gSoftBodyObjDescriptor,
-    &gWaterFlowWeObjDescriptor,
+    (ResourceDescriptor*)&gWaterFlowWeObjDescriptor,
     (ResourceDescriptor*)&gTreeObjDescriptor,
     (ResourceDescriptor*)&gBrokenPipeObjDescriptor,
     (ResourceDescriptor*)&gCmbSrcObjDescriptor,

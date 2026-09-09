@@ -82,7 +82,6 @@
 
 /* Baddie-family animation data shared with the sequence-driver TUs. */
 
-#define ICEBADDIE_OBJGROUP_SECONDARY 80
 #define ICEBADDIE_HIT_VOLUME_SLOT    10
 
 
@@ -97,7 +96,7 @@ void iceBaddie_enterWhirlpoolGroup(GameObject* obj, EnemyState* state)
 
     if (state->userData2 == 0)
     {
-        objAddObjectType(obj, ICEBADDIE_OBJGROUP_SECONDARY);
+        objAddObjectType(obj, BADDIE_WHIRLPOOL_OBJECT_GROUP);
         state->userData2 = 1;
     }
     ObjHits_SetHitVolumeSlot(&obj->anim, ICEBADDIE_HIT_VOLUME_SLOT, 1, 0);
@@ -110,7 +109,7 @@ void iceBaddie_leaveWhirlpoolGroup(GameObject* obj, EnemyState* state)
 {
     if (state->userData2 != 0)
     {
-        objFreeObjectType(obj, ICEBADDIE_OBJGROUP_SECONDARY);
+        objFreeObjectType(obj, BADDIE_WHIRLPOOL_OBJECT_GROUP);
         state->userData2 = 0;
     }
     *(u16*)obj = (float)(int)obj->anim.rotX - 256.0f * timeDelta;

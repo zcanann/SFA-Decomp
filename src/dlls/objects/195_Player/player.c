@@ -46,7 +46,6 @@
 #include "main/sky_api.h"
 #include "main/object_render.h"
 #include "main/dll/dll_0015_curves.h"
-#include "main/dll/dll_02AE_waterflowwe.h"
 #include "track/intersect_api.h"
 #include "main/track_dolphin_api.h"
 #include "main/track_bbox_api.h"
@@ -11469,13 +11468,13 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, f32 p3, GameObject* player) {
             }
         }
     }
-    objs = (GameObject**)objGetAllOfType(0x50, &n);
+    objs = (GameObject**)objGetAllOfType(BADDIE_WHIRLPOOL_OBJECT_GROUP, &n);
     for (i = 0; i < n; i++) {
         f32 strength;
         s16 currentAngle;
         f32 dy;
         o = objs[i];
-        strength = (f32)(u32)((ObjectCurrentSourceSetup*)o->anim.placementData)->strengthTenths / 10.0f;
+        strength = (f32)(u32)((EnemyPlacement*)o->anim.placementData)->whirlpoolStrengthTenths / 10.0f;
         any = 1;
         dy = o->anim.localPosY - object->anim.localPosY;
         if (dy <= 200.0f && dy >= -200.0f) {
@@ -11485,7 +11484,7 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, f32 p3, GameObject* player) {
             f32 thresh;
             currentAngle = (s16)(getAngle(dx, dz) + 0x84d0);
             dist = sqrtf(dx * dx + dz * dz);
-            thresh = (f32)(int)(((ObjectCurrentSourceSetup*)o->anim.placementData)->radiusCells << 3);
+            thresh = (f32)(int)(((EnemyPlacement*)o->anim.placementData)->whirlpoolRadius << 3);
             if (dist < thresh) {
                 ratio = 0.0f;
                 if (thresh > 0.0f) {

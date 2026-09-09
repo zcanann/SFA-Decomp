@@ -1,28 +1,20 @@
 /*
- * WaterFlowWe (DLL 686) - water-flow weed: a foliage object that
- * sways to a water current.
+ * WaterFlowWe (DLL 686) responds to CCRiverFlow current sources and active
+ * Whirlpool baddies. Current contributions are summed: hasCurrent is a
+ * presence flag, so the retained division is always by one. The persistent
+ * current state is damped, clamped and scaled by timeDelta to choose a heading.
  *
- * Each tick calcCurrentVector sums the influence of two source groups:
- * CCRiverFlow current sources (0x14), whose currentFlags must enable
- * WaterFlowWe, and the separate object-current source group (0x50).
- * A source affects WaterFlowWe only when it is within a
- * vertical band and inside its planar radius; its strength falls off
- * linearly with distance and is projected through sin/cos of the
- * source angle. The averaged current is low-pass filtered, clamped to
- * a maximum magnitude, scaled by timeDelta, and used to point the
- * weed (rotX) downstream.
- *
- * One weed instance (gWaterFlowPhaseDriver, claimed by the first non-disabled
- * phaseDriver) advances two shared wrapping phase accumulators
- * (gWaterFlowIdlePhase / gWaterFlowFlowPhase) that select the weed's idle vs. flowing
- * animation move via ObjAnim_SetCurrentMove.
+ * One eligible instance advances the shared animation phases. Both animation
+ * branches use gWaterFlowIdlePhase; gWaterFlowFlowPhase is advanced and reset
+ * but otherwise unused.
  */
+#include "dlls/objects/686_WaterFlowWe.h"
+#include "dlls/objects/201_Baddie.h"
 #include "dlls/objects/372_CCriverflow.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/dll/dll_02AE_waterflowwe.h"
+#include "game/objects/object.h"
 #include "main/frame_timing.h"
 #include "main/object_render.h"
-#include "dlls/object_descriptor.h"
 #include "main/objtype.h"
 #include "main/vecmath.h"
 
@@ -30,8 +22,7 @@ f32 gWaterFlowIdlePhase;
 f32 gWaterFlowFlowPhase;
 GameObject* gWaterFlowPhaseDriver;
 
-#define WATERFLOWWE_OBJECT_CURRENT_GROUP        0x50
-#define WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET 0x84d0
+#define WATERFLOWWE_WHIRLPOOL_ANGLE_OFFSET 0x84d0
 #define WATERFLOWWE_ZERO                        0.0f
 #define WATERFLOWWE_BAND_MAX                    200.0f
 #define WATERFLOWWE_BAND_MIN                    -200.0f
@@ -99,7 +90,7 @@ void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
         }
     }
 
-    objects = (GameObject**)objGetAllOfType(WATERFLOWWE_OBJECT_CURRENT_GROUP, &count);
+    objects = (GameObject**)objGetAllOfType(BADDIE_WHIRLPOOL_OBJECT_GROUP, &count);
     for (i = 0; i < count; i++)
     {
         f32 objectStrength;
@@ -107,7 +98,7 @@ void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
 
         other = objects[i];
         objectStrength =
-            (f32)(u32)((ObjectCurrentSourceSetup*)other->anim.placementData)->strengthTenths /
+            (f32)(u32)((EnemyPlacement*)other->anim.placementData)->whirlpoolStrengthTenths /
             WATERFLOWWE_STRENGTH_SCALE;
 
         hasCurrent = 1;
@@ -116,9 +107,9 @@ void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
         {
             dx = other->anim.localPosX - object->anim.localPosX;
             dz = other->anim.localPosZ - object->anim.localPosZ;
-            currentAngle = (s16)(getAngle(dx, dz) + WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET);
+            currentAngle = (s16)(getAngle(dx, dz) + WATERFLOWWE_WHIRLPOOL_ANGLE_OFFSET);
             distance = sqrtf(dx * dx + dz * dz);
-            radius = (f32)(s32)(((ObjectCurrentSourceSetup*)other->anim.placementData)->radiusCells << 3);
+            radius = (f32)(s32)(((EnemyPlacement*)other->anim.placementData)->whirlpoolRadius << 3);
             if (distance < radius)
             {
                 strength = (radius - distance) / radius;
@@ -192,7 +183,7 @@ void waterflowwe_hitDetect(void)
 void waterflowwe_update(GameObject* obj)
 {
     GameObject* object = obj;
-    WaterFlowWeSetup* setup = (WaterFlowWeSetup*)object->anim.placementData;
+    WaterFlowWePlacementPrefix* setup = (WaterFlowWePlacementPrefix*)object->anim.placementData;
     f32 vx, vz;
 
     waterflowwe_calcCurrentVector(obj, &vx, &vz);
@@ -230,10 +221,10 @@ void waterflowwe_update(GameObject* obj)
     }
 }
 
-void waterflowwe_init(GameObject* obj, WaterFlowWeSetup* setup)
+void waterflowwe_init(GameObject* obj, WaterFlowWePlacementPrefix* setup)
 {
     GameObject* object = obj;
-    WaterFlowWeSetup* setupData = setup;
+    WaterFlowWePlacementPrefix* setupData = setup;
 
     object->anim.rotZ = (s16)(setupData->rotZ << 8);
     object->anim.rotY = (s16)(setupData->rotY << 8);
@@ -267,14 +258,14 @@ ObjectDescriptor gWaterFlowWeObjDescriptor = {
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)waterflowwe_initialise,
-    (ObjectDescriptorCallback)waterflowwe_release,
+    waterflowwe_initialise,
+    waterflowwe_release,
     0,
     (ObjectDescriptorCallback)waterflowwe_init,
     (ObjectDescriptorCallback)waterflowwe_update,
-    (ObjectDescriptorCallback)waterflowwe_hitDetect,
+    waterflowwe_hitDetect,
     (ObjectDescriptorCallback)waterflowwe_render,
     (ObjectDescriptorCallback)waterflowwe_free,
     (ObjectDescriptorCallback)waterflowwe_getObjectTypeId,
-    (ObjectDescriptorExtraSizeCallback)waterflowwe_getExtraSize,
+    waterflowwe_getExtraSize,
 };
