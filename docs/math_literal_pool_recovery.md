@@ -421,3 +421,44 @@ NaNs, and both distinct and aliased output pointers. This verifies the rewritten
 polynomial and store behavior; it is not a new accuracy claim for the reducer or
 an exhaustive floating-point proof. Local before/after sources, objects, reports,
 retail audit and host harness are under `/tmp/sfa-sincos-accumulators/`.
+
+## Integer-angle polynomial accumulators (2026-09-08)
+
+The same lifetime cleanup applies to all three angle-vector approximations in
+`trig_float_helpers.c`. Each now evaluates the sine polynomial in its reduced-angle
+scalar and the cosine polynomial in its squared-angle scalar. This preserves
+coefficient types, expression grouping, the signed 16-bit fast-cast call and the
+existing shared quadrant/store macro. The two outputs retain their order even
+when their pointers alias. No compiler flags, splits or matching declarations
+change.
+
+| Function | Before fuzzy | After fuzzy | Generated instructions before → after | Retail instructions |
+| --- | ---: | ---: | ---: | ---: |
+| `angleToVec2Fast` | 54.754097% | 67.213110% | 74 → 66 | 61 |
+| `angleToVec2` | 57.538460% | 69.153850% | 78 → 70 | 65 |
+| `angleToVec2Precise` | 60.000000% | 70.942030% | 82 → 74 | 69 |
+
+Each function avoids saving and restoring two additional floating-point locals,
+removing eight instructions under GC/1.3. This improves the current reconstruction;
+it does not prove the original local-variable lifetimes. All three remain
+`NonMatching`, with residual compiler-frame and instruction differences.
+
+The gains are identical in EN, EN revision 1, JP and PAL revision 1. The four
+checksum-verified retail inputs have equal normalized functions and the same
+80-byte pool. EN text remains `80292E20..8029312C`, and its pool remains
+`803E7C20..803E7C70`. All non-text source sections and named storage layouts are
+unchanged. Ordered relocation kinds, addends, constant-pool offsets and external
+call targets are preserved; anonymous literal names are compared by their real
+section offsets. The constant-load value sequences still agree with retail.
+Every other unit's score, generated code, data, symbol layout and relocations
+are unchanged. All four `all_source` builds and the strict EN checksum pass
+within 30-second limits.
+
+A host differential harness checks every one of the 65,536 low-16-bit angle
+patterns with four upper-bit patterns, all three routines and both distinct and
+aliased output pointers. All **1,572,864 calls per build** agree bit-for-bit at
+both O0 and O2. The fast-cast stub uses ordinary signed-16-to-float conversion;
+the hardware quantization-register contract is unchanged and is not emulated by
+this host check. The complete outputs also agree between these two optimization
+levels. Sources, scratch variants, reports, verified-DOL audit and host harness
+are retained locally under `/tmp/sfa-angle-accumulators/`.
