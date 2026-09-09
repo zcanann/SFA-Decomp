@@ -1014,7 +1014,7 @@ config.libs = [
             Object(Matching, "musyx/runtime/snd_groups.c", extra_cflags=["-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "musyx/runtime/sal_studio.c"),
             Object(MatchingFor("GSAE01"), "musyx/runtime/hw_dspctrl.c"),
-            Object(MatchingFor("GSAE01"), "musyx/runtime/sal_volume.c", extra_cflags=["-fp_contract", "off", "-inline", "all"]),
+            Object(MatchingFor("GSAE01", "GSAE01_rev1", "GSAJ01", "GSAP01_rev1"), "musyx/runtime/sal_volume.c", extra_cflags=["-fp_contract", "off", "-inline", "all"]),
             Object(MatchingFor("GSAE01"), "musyx/runtime/snd3dgroup.c", extra_cflags=["-fp_contract", "off", "-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "musyx/runtime/snd_core.c", extra_cflags=["-fp_contract", "off"]),
             Object(MatchingFor("GSAE01"), "musyx/runtime/snd_midictrl.c"),
