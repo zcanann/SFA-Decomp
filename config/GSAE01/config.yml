@@ -271,8 +271,6 @@ block_relocations:
   end: 0x800D322C
 - source: 0x800D3434
   end: 0x800D343C
-- target: 0x80018000
-  end: 0x80018004
 - target: 0x80380209
   end: 0x8038020A
 - target: 0x80100100
