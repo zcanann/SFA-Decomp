@@ -681,3 +681,49 @@ unsigned-conversion ranges. Ordinary unsigned conversions model the fast casts,
 so this does not emulate quantization-register saturation or establish behavior
 outside those tested ranges. Local sources, controls, host harness, retail audit
 and complete object/report comparisons are under `/tmp/sfa-math-reduction-locals/`.
+
+## Final inverse-trig temporary lifetimes (2026-09-08)
+
+The fast atan kernel now reuses its polynomial accumulator for the negative
+result, after computing the positive result. Both signed candidates still
+execute before the sign test with their existing expression grouping. The two
+float atan2 kernels reuse their
+magnitude locals for the reduced angle and squared ratio once the division has
+consumed both magnitudes. Original input words remain available for quadrant
+selection, including the signs of zero and NaNs. The high-precision atan2 kernel
+retains its distinct float magnitudes and double reduction variables.
+
+| Function | Before fuzzy | After fuzzy | Source instructions before → after | Retail instructions |
+| --- | ---: | ---: | ---: | ---: |
+| `atanf_fast` | 45.955555% | 54.844444% | 61 → 57 | 45 |
+| `atan2f_fast` | 68.350000% | 74.550000% | 67 → 59 | 60 |
+| `atan2f` | 68.735290% | 80.500000% | 81 → 73 | 68 |
+
+Five scalar temporaries disappear. The mnemonic-stream differences consist only
+of 20 floating-register save/restore instructions; the arithmetic and branch
+mnemonic sequences remain unchanged. Register assignments, stack offsets and
+branch displacements change with those lifetimes. Reusing only one magnitude
+in fast atan2 scores slightly higher (75.016670%) but keeps another four save
+and restore instructions. The shared two-local reduction structure is retained
+for both float kernels; it improves each over the baseline without changing its
+formulas, types or comparisons.
+
+All eight retail functions have equal normalized signatures across verified EN,
+EN rev1, JP and PAL rev1 DOLs, and their 248-byte constant pools are byte-identical.
+The other five source functions, allocated non-text sections and named data
+positions are unchanged. Ordered constant-load values and call destinations
+remain unchanged. No compiler profile, pragma, split or matching status changes.
+
+The host differential harness produces 854,126 bit-identical outputs at both O0
+and O2. It covers the same dense input grid, random float words and pairs,
+reduction thresholds, signed zeros, subnormals, extreme finite values, infinities
+and quiet NaNs as the preceding inverse-trig pass. Host contraction and strict
+aliasing are disabled; reciprocal and square-root dependencies use ordinary host
+operations. It does not emulate Gekko estimate instructions or measure floating
+exception flags. Scratch sources, probes, comparisons and the retail audit are
+under `/tmp/sfa-arc-final-lifetimes/`.
+
+All four full source builds show the same gains and preserve every other source
+object (990 EN objects, 987 in each secondary version) and every unrelated
+objdiff unit. All four `all_source` builds and the strict EN retail checksum
+pass within their 30-second limits. The math unit remains `NonMatching`.

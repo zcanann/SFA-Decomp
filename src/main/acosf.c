@@ -116,26 +116,25 @@ float acosf(float value) {
 
 float atanf_fast(float value) {
     float reduced = __fabsf(value);
-    float polynomial;
+    float result;
     float positiveResult;
-    float negativeResult;
 
     if (reduced <= *(const float*)&sArcOneF) {
-        polynomial = value * value;
-        return value * (polynomial * (*(const float*)&sAtanFastCoeff5 * polynomial + *(const float*)&sAtanFastCoeff3) +
+        result = value * value;
+        return value * (result * (*(const float*)&sAtanFastCoeff5 * result + *(const float*)&sAtanFastCoeff3) +
                         *(const float*)&sAtanFastCoeff1);
     }
 
     reduced = fastReciprocal(reduced);
-    polynomial = reduced * reduced;
-    polynomial = polynomial * (*(const float*)&sAtanFastCoeff5 * polynomial + *(const float*)&sAtanFastCoeff3) +
+    result = reduced * reduced;
+    result = result * (*(const float*)&sAtanFastCoeff5 * result + *(const float*)&sAtanFastCoeff3) +
                  *(const float*)&sAtanFastCoeff1;
-    positiveResult = *(const float*)&sArcHalfPiF - reduced * polynomial;
-    negativeResult = reduced * polynomial - *(const float*)&sArcHalfPiF;
+    positiveResult = *(const float*)&sArcHalfPiF - reduced * result;
+    result = reduced * result - *(const float*)&sArcHalfPiF;
     if (value >= *(const float*)&sArcZero) {
         return positiveResult;
     }
-    return negativeResult;
+    return result;
 }
 
 float atanf(float value) {
@@ -236,21 +235,20 @@ static inline u32 float_bits(const float* value) {
 }
 
 float atan2f_fast(float y, float x) {
-    float absoluteX = __fabsf(x);
-    float absoluteY = __fabsf(y);
-    float angle;
-    float ratioSquared;
+    /* Magnitudes seed the angle and squared-ratio scratch values. */
+    float reduced = __fabsf(x);
+    float angle = __fabsf(y);
     s32 quadrantSigns;
 
-    if (absoluteX > absoluteY) {
-        angle = absoluteY / absoluteX;
-        ratioSquared = angle * angle;
-        angle = angle * (*(const float*)&sAtan2FastCoeff3 * ratioSquared + *(const float*)&sAtan2FastCoeff1);
+    if (reduced > angle) {
+        angle = angle / reduced;
+        reduced = angle * angle;
+        angle = angle * (*(const float*)&sAtan2FastCoeff3 * reduced + *(const float*)&sAtan2FastCoeff1);
     } else {
-        angle = absoluteX / absoluteY;
-        ratioSquared = angle * angle;
+        angle = reduced / angle;
+        reduced = angle * angle;
         angle = *(const float*)&sArcHalfPiF -
-                angle * (*(const float*)&sAtan2FastCoeff3 * ratioSquared + *(const float*)&sAtan2FastCoeff1);
+                angle * (*(const float*)&sAtan2FastCoeff3 * reduced + *(const float*)&sAtan2FastCoeff1);
     }
 
     quadrantSigns = (((const FloatWord*)&y)->bits & 0x80000000) | ((((const FloatWord*)&x)->bits & 0x80000000) >> 1);
@@ -267,27 +265,26 @@ float atan2f_fast(float y, float x) {
 }
 
 float atan2f(float y, float x) {
-    float absoluteX = __fabsf(x);
-    float absoluteY = __fabsf(y);
-    float angle;
-    float ratioSquared;
+    /* Magnitudes seed the angle and squared-ratio scratch values. */
+    float reduced = __fabsf(x);
+    float angle = __fabsf(y);
     int quadrantSigns;
 
-    if (absoluteX > absoluteY) {
-        angle = absoluteY / absoluteX;
-        ratioSquared = angle * angle;
+    if (reduced > angle) {
+        angle = angle / reduced;
+        reduced = angle * angle;
         angle =
-            angle * (ratioSquared *
-                         (ratioSquared * (*(const float*)&sAtan2Coeff7 * ratioSquared + *(const float*)&sAtan2Coeff5) +
+            angle * (reduced *
+                         (reduced * (*(const float*)&sAtan2Coeff7 * reduced + *(const float*)&sAtan2Coeff5) +
                           *(const float*)&sAtan2Coeff3) +
                      *(const float*)&sAtan2Coeff1);
     } else {
-        angle = absoluteX / absoluteY;
-        ratioSquared = angle * angle;
+        angle = reduced / angle;
+        reduced = angle * angle;
         angle =
             *(const float*)&sArcHalfPiF -
-            angle * (ratioSquared *
-                         (ratioSquared * (*(const float*)&sAtan2Coeff7 * ratioSquared + *(const float*)&sAtan2Coeff5) +
+            angle * (reduced *
+                         (reduced * (*(const float*)&sAtan2Coeff7 * reduced + *(const float*)&sAtan2Coeff5) +
                           *(const float*)&sAtan2Coeff3) +
                      *(const float*)&sAtan2Coeff1);
     }
