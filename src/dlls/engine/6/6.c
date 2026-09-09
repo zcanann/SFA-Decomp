@@ -50,8 +50,6 @@ u8 gSky2RunFirstTime = 1;
 #define SKY_TEXTURE_SKY        0x5fa /* gSkySkyTexture */
 extern u8 gSkyConfigFieldIndices[];
 STATIC_ASSERT(sizeof(Vec) == 0xC);
-extern u16 lbl_803E8460;
-extern u8 lbl_803E8462;
 extern f32 lbl_8039A7B8[];
 const Vec sSky2BestWeightsInit = {-1000.0f, -1000.0f, -1000.0f};
 
@@ -384,6 +382,7 @@ void sky2_run(void) {
     f32 vec[3];
     Vec best;
     f32 height;
+    const SkyBestIdx initialIndices = {{0, 0}, 0};
     SkyBestIdx idx;
     u8 red;
     u8 green;
@@ -436,8 +435,7 @@ void sky2_run(void) {
     sa = r;
     sb = r;
     height = r;
-    *(u16*)&idx = lbl_803E8460;
-    idx.pad = lbl_803E8462;
+    idx = initialIndices;
     skyGetSunColor(0, &red, &green, &blue);
     if (gSky2RunFirstTime != 0) {
         z = 0.0f;
@@ -576,13 +574,13 @@ void sky2_run(void) {
                     if (directionWeight > best.x) {
                         if (best.x > best.y) {
                             best.y = best.x;
-                            idx.second = idx.best;
+                            idx.indices[1] = idx.indices[0];
                         }
                         best.x = directionWeight;
-                        idx.best = k;
+                        idx.indices[0] = k;
                     } else if (directionWeight > best.y) {
                         best.y = directionWeight;
-                        idx.second = k;
+                        idx.indices[1] = k;
                     }
                     k++;
                 } while (k < 8);
@@ -591,7 +589,7 @@ void sky2_run(void) {
                     weight = (&best.x)[k];
                     if (weight > zero) {
                         sampleBase = (f32*)*pp;
-                        p = (SkySlotAnim*)(sampleBase + (sampleIndex = (&idx.best)[k]));
+                        p = (SkySlotAnim*)(sampleBase + (sampleIndex = idx.indices[k]));
                         r = p->cur[0] * weight + r;
                         g = p->cur[0xb] * weight + g;
                         b = p->cur[0x16] * weight + b;

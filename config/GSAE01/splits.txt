@@ -343,6 +343,7 @@ dlls/engine/5/5.c:
 	.bss        start:0x8039A7A8 end:0x8039A7B8
 	.sbss       start:0x803DD128 end:0x803DD180
 	.sdata2     start:0x803DF058 end:0x803DF108
+	.sbss2      start:0x803E8458 end:0x803E845C
 
 dlls/engine/6/6.c:
 	.text       start:0x8008C974 end:0x8008ED88
@@ -352,6 +353,7 @@ dlls/engine/6/6.c:
 	.sdata      start:0x803DB750 end:0x803DB760
 	.sbss       start:0x803DD180 end:0x803DD190
 	.sdata2     start:0x803DF108 end:0x803DF198
+	.sbss2      start:0x803E8460 end:0x803E8464
 
 dlls/engine/7/7.c:
 	.text       start:0x8008ED88 end:0x80093AE0

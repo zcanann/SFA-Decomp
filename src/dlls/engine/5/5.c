@@ -99,7 +99,6 @@ extern f32 gSkyOverrideLightDirection[];
 STATIC_ASSERT(sizeof(Vec) == 0xC);
 const Vec gSkyBaseSunDirection = {0.0f, 0.0f, 4600.0f};
 const Vec gSkyBaseMoonDirection = {0.0f, 0.0f, 4600.0f};
-extern int lbl_803E8458;
 int skyReservedReturnZeroB(void) {
     return 0x0;
 }
@@ -1312,9 +1311,8 @@ void skyRenderTimeOfDayBackdrop(void) {
     f32 blend;
     f32 v;
     f32 ang0;
-    GXColor fogColor;
+    GXColor fogColor = {0, 0, 0, 0};
 
-    fogColor = *(GXColor*)&lbl_803E8458;
     if (gSkyState != NULL) {
         if ((player = Obj_GetPlayerObject()) != NULL &&
             (((cell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ)) == 0x30) || cell == 0x2b)) {
