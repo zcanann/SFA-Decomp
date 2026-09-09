@@ -4714,8 +4714,8 @@ int playerState27(GameObject* obj, PlayerState* state, f32 fv) {
         } else if (gPlayerHitReactionVariant > 2) {
             gPlayerHitReactionVariant = 2;
         }
-        state->baddie.moveSpeed = lbl_803DC690[gPlayerHitReactionVariant - 1];
-        ObjAnim_SetCurrentMove(obj, lbl_803DC688[gPlayerHitReactionVariant - 1], 0.0f, 0);
+        state->baddie.moveSpeed = gPlayerHitReactionMoveSpeeds[gPlayerHitReactionVariant - 1];
+        ObjAnim_SetCurrentMove(obj, gPlayerHitReactionMoves[gPlayerHitReactionVariant - 1], 0.0f, 0);
         gPlayerHitReactionVariant = 0;
     }
     if (state->baddie.moveDone != 0) {
@@ -5476,9 +5476,9 @@ f32 gPlayerModelChainOriginY = 0.675f;
 f32 gPlayerModelChainOriginZ = 0.15f;
 f32 lbl_803DC67C = 0.1f;
 f32 lbl_803DC680 = 2.3f;
-f32 lbl_803DC684 = 1.0f;
-int lbl_803DC688[2] = {210, 212};
-f32 lbl_803DC690[2] = {0.030000001f, 0.030000001f};
+f32 gPlayerFallAnimSpeed = 1.0f;
+int gPlayerHitReactionMoves[2] = {210, 212};
+f32 gPlayerHitReactionMoveSpeeds[2] = {0.030000001f, 0.030000001f};
 s16 gPlayerClimbOntoWallMoves[2] = {102, 103};
 s16 gPlayerClimbOntoWallAltMoves[2] = {240, 241};
 s16 gPlayerCurrentMoveId = -1;
@@ -5490,9 +5490,9 @@ f32 lbl_803DC6B8[2] = {0.05f, 8.5f};
 f32 lbl_803DC6C0 = 8.5f;
 int lbl_803DC6C4[2] = {24, 26};
 s16 gPlayerStopMoves[4] = {27, 28, 29, 33};
-f32 lbl_803DC6D4 = 0.03f;
-f32 lbl_803DC6D8 = 0.03f;
-f32 lbl_803DC6DC = 0.03f;
+f32 gPlayerCloudRunnerAimZResponse = 0.03f;
+f32 gPlayerCloudRunnerAimXResponse = 0.03f;
+f32 gPlayerCloudRunnerTurnScale = 0.03f;
 f32 lbl_803DC6E0 = -0.3f;
 f32 lbl_803DC6E4 = 0.05f;
 
@@ -6045,13 +6045,13 @@ int playerStateOnCloudRunner(GameObject* obj, PlayerState* state) {
         if (hit == NULL) {
             c += lbl_803DC6E4;
         }
-        inner->aimInputZ += interpolate(c - inner->aimInputZ, lbl_803DC6D4, timeDelta);
+        inner->aimInputZ += interpolate(c - inner->aimInputZ, gPlayerCloudRunnerAimZResponse, timeDelta);
     }
     {
         f32 x = state->baddie.moveInputX / 56.0f;
         f32 c;
         c = (x < -1.0f) ? -1.0f : ((x > 1.0f) ? 1.0f : x);
-        inner->aimInputX += interpolate(c - inner->aimInputX, lbl_803DC6D8, timeDelta);
+        inner->aimInputX += interpolate(c - inner->aimInputX, gPlayerCloudRunnerAimXResponse, timeDelta);
     }
     {
         f32 d = inner->aimInputX;
@@ -6068,7 +6068,7 @@ int playerStateOnCloudRunner(GameObject* obj, PlayerState* state) {
         }
         {
             f32 p = -1000.0f * d;
-            inner->targetYaw = (s16)(p * lbl_803DC6DC + (f32)inner->targetYaw);
+            inner->targetYaw = (s16)(p * gPlayerCloudRunnerTurnScale + (f32)inner->targetYaw);
         }
         inner->yaw = inner->targetYaw;
     }
@@ -12290,7 +12290,7 @@ int playerUpdateFallingMotion(GameObject* obj, PlayerState* inner, PlayerState* 
         inner->yawSmoothRate = 40.0f;
         inner->yawRateLimit = 0.9f;
     }
-    inner->targetAnimSpeed = lbl_803DC684;
+    inner->targetAnimSpeed = gPlayerFallAnimSpeed;
     {
         inner->currentSpeed = (inner->currentSpeed < 0.0f)
                                   ? 0.0f

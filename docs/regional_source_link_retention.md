@@ -76,9 +76,10 @@ Overall progress measures remain unchanged. EN also passes its strict checksum.
 The PAL v1.0 test additionally substitutes its entire 918-unit manifest as
 described above. Other full-manifest probes remain diagnostic:
 
-- EN rev1 (923 units) fails to link: `lbl_803E7640` and `lbl_803E7644` are
-  multiply defined by `mtx44.o` and `DR_Creator.o`; `lbl_803DC688` and
-  `lbl_803DC684` are multiply defined by `player.o` and `53.o`.
+- EN rev1 (923 units) initially failed on duplicate matrix and player names.
+  [Recovering the SDK matrix source](sdk_mtx44_recovery.md) and
+  [player data identities](player_regional_data_identities.md) makes its
+  entire manifest reproduce retail too.
 - JP (952 units) links but loses 480 text bytes and 216 data bytes, shifting
   later sections. Its combined manifest has not been certified.
 - PAL rev1 (913 units) initially preserved all section addresses and sizes but
