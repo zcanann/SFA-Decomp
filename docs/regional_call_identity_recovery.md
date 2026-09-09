@@ -68,3 +68,56 @@ larger units.
 python3 tools/orig/call_symbol_audit.py GSAP01_rev1 --all --symbol getCurGameText
 python3 tools/verify_source_link.py GSAP01_rev1 dolphin/os/OSReboot.c
 ```
+
+## PAL v1.0 follow-through (2026-09-09)
+
+The verified PAL v1.0 DOL has the same four-function reboot implementation:
+`Run` at `80244D5C` (64 bytes), `Callback` at `80244D9C` (12),
+`__OSReboot` at `80244DA8` (448), and `OSSetSaveRegion` at `80244F68`
+(12). Its false `80244D88` epilogue symbol is removed. The complete normalized
+bodies agree with EN, including the stack frame and restoration in `Run`.
+
+Four PAL v1.0 getter names also follow independently matched callers. Their
+compiled bytes, with every relocation resolved against the retail configuration
+and startup r13 base `803E4980`, reproduce the retail functions exactly:
+
+| Function | PAL v1.0 address | Code bytes | Global / return value |
+| --- | --- | ---: | --- |
+| `getCurGameText` | `80019C28` | 8 | load `curGameTextDir` at `803DE1DC` |
+| `getSaveFileStruct` | `800E8380` | 12 | `saveData` at `803A4964` |
+| `getLastSavedGameTexts` | `800E84A4` | 16 | `gSaveGameData` (`803A4A48`) + `558` |
+| `saveGameGetEnvState` | `800E8958` | 16 | `gSaveGameData` + `6A8` |
+
+The projector additionally names the intervening `loadSaveSettings` at
+`800E838C`. Its complete 280-byte normalized body uniquely matches PAL rev1;
+its calls set widescreen, subtitles, rumble, sound mode, volumes and language.
+It is larger than EN's 256-byte implementation and receives no exact-match
+claim. The getter-containing game units remain incomplete.
+
+### MetroTRK trap boundary
+
+PAL v1.0 had attributed the first eight-byte file trap to `targimpl.c`. The
+four identical `twui r0, 0; blr` entries occupy `8028D1A0..8028D1C0`, matching
+the complete `targsupp.s` block in the other four verified versions. The
+console writer calls the first slot (`TRKAccessFile`), and console close calls
+the third (`TRKCloseFile`), just as in EN. The unused second and fourth slots
+retain the shared source's ordered `TRKOpenFile` and `TRKPositionFile` names;
+their identical bodies alone cannot distinguish those two identities.
+
+EN leaves twelve alignment bytes after `TRKValidMemory32`, whereas PAL v1.0
+leaves four. The old projection carried the longer tail into PAL's first trap.
+With the call-backed first-slot name in place, the existing projector recovers
+the correct `8028D1A0` boundary for both neighboring units. No compiler profile,
+source function, or data ownership changes. `targimpl` now contains its proper
+30 functions and matches completely.
+
+Together these corrections add 148 matched code bytes and two exact source
+units in PAL v1.0. No previously exact unit regresses, code/data denominators
+remain unchanged, and the removed false epilogue reduces the function
+denominator by one. All 988 existing compiled source objects are unchanged.
+The all-retail link and a link substituting `OSReboot.c`, `targimpl.c` and
+`targsupp.s` both reproduce PAL v1.0's verified original DOL exactly.
+
+PAL v1.0 and EN `all_source` builds pass. EN also passes the strict retail
+checksum, with unchanged progress measures and source object bytes. The PAL
+manifest now records 916 exact source units.

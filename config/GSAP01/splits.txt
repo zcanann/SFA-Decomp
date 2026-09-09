@@ -4942,13 +4942,13 @@ dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c:
 	.text       start:0x8028B854 end:0x8028B910
 
 dolphin/TRK_MINNOW_DOLPHIN/targimpl.c:
-	.text       start:0x8028B910 end:0x8028D1A8
+	.text       start:0x8028B910 end:0x8028D1A0
 	.rodata     start:0x802C31B8 end:0x802C3240
 	.data       start:0x80333A90 end:0x80333AC0
 	.bss        start:0x803D9A98 end:0x803DA018
 
 dolphin/TRK_MINNOW_DOLPHIN/targsupp.s:
-	.text       start:0x8028D1A8 end:0x8028D1C0
+	.text       start:0x8028D1A0 end:0x8028D1C0
 
 Runtime.PPCEABI.H/__start.c:
 	.init       start:0x80003100 end:0x800033A8

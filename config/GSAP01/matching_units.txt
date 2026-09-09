@@ -750,6 +750,7 @@ dolphin/TRK_MINNOW_DOLPHIN/serpoll.c
 dolphin/TRK_MINNOW_DOLPHIN/support.c
 dolphin/TRK_MINNOW_DOLPHIN/targcont.c
 dolphin/TRK_MINNOW_DOLPHIN/target_options.c
+dolphin/TRK_MINNOW_DOLPHIN/targimpl.c
 dolphin/TRK_MINNOW_DOLPHIN/targsupp.s
 dolphin/TRK_MINNOW_DOLPHIN/usr_put.c
 dolphin/ai/ai.c
@@ -823,6 +824,7 @@ dolphin/os/OSLink.c
 dolphin/os/OSMemory.c
 dolphin/os/OSMessage.c
 dolphin/os/OSMutex.c
+dolphin/os/OSReboot.c
 dolphin/os/OSReset.c
 dolphin/os/OSResetSW.c
 dolphin/os/OSStopwatch.c
