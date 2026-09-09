@@ -313,7 +313,8 @@ int Effect7_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.scale = 0.0016f * (f32)(s32)randomGetRange(0x32, 0xc8);
         cfg.lifetimeFrames = 0x96;
         cfg.textureId = 0xc10;
-        cfg.behaviorFlags = EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER | EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH | EXPGFX_BEHAVIOR_ALPHA_PULSE;
+        cfg.behaviorFlags =
+            EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER | EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH | EXPGFX_BEHAVIOR_ALPHA_PULSE;
         cfg.renderFlags = 0x4020020;
         cfg.initialAlpha = randomGetRange(0x7f, 0xff);
         cfg.colorWord0 = cfg.overrideColor0 = 0xa70f;

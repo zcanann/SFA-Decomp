@@ -286,7 +286,8 @@ int Effect2_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.scale = 1e-05f * (f32)(s32)randomGetRange(0x64, 0x78);
         cfg.lifetimeFrames = 0x3b6;
         cfg.initialAlpha = 0xff;
-        cfg.behaviorFlags = EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER | EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH | EXPGFX_BEHAVIOR_ALPHA_PULSE;
+        cfg.behaviorFlags =
+            EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER | EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH | EXPGFX_BEHAVIOR_ALPHA_PULSE;
         cfg.textureId = 0x5c;
         break;
     case 0x2a5:
