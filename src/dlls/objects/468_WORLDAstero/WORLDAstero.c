@@ -6,8 +6,7 @@
  */
 #include "dlls/objects/468_WORLDAstero.h"
 
-#include "main/fcos16_approx_api.h"
-#include "main/fsin16_approx_api.h"
+#include "main/trig.h"
 #include "main/object_render.h"
 #include "main/vecmath.h"
 #include "sys/objects.h"

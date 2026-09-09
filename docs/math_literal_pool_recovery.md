@@ -462,3 +462,48 @@ the hardware quantization-register contract is unchanged and is not emulated by
 this host check. The complete outputs also agree between these two optimization
 levels. Sources, scratch variants, reports, verified-DOL audit and host harness
 are retained locally under `/tmp/sfa-angle-accumulators/`.
+
+## High-precision integer-angle seeds and public types (2026-09-08)
+
+`fsin16HighPrecision` and `fcos16HighPrecision` now pass the existing signed
+16-bit fast-cast result directly into the double-precision angle-scale multiply.
+The removed float local only held that call result. The multiply still promotes
+the returned float to double, and all subsequent polynomial operations and
+quadrant returns retain their grouping and precision.
+
+Both functions improve **83.54808% to 86.38461%** under GC/1.3, shrinking from
+111 to 106 instructions (444 to 424 bytes) against retail's 104 instructions.
+The change removes one register copy and a floating-point register's save/restore
+sequence. The other six functions retain their exact previous instructions and
+scores. These two functions remain `NonMatching`; the current compiler's frame
+and other residual differences are still present.
+
+The TU now includes its public `main/trig.h` first. Six definitions previously
+accepted `u16` despite their public declarations taking `int`. Those definitions
+now take `int` and explicitly convert to `u16` before the scaling shift. The
+quadrant mask already selects only low-16-bit angle information. The two `Approx`
+functions retain their existing `u16` interface, including the caller-side
+conversion contract. Their declarations move from two fragment headers into
+`main/trig.h`; the three direct consumers use that header. No caller argument
+types or expressions change. A separate prototype-only control leaves all eight
+function bodies, allocated sections, symbol layouts and relocations unchanged.
+This fixes the declaration/definition mismatch without changing angle wrapping.
+
+The complete eight-function retail TU and its 192-byte coefficient pool agree
+across hash-verified EN, EN revision 1, JP and PAL revision 1. EN text remains
+`80293234..80293C64`, with the high-precision functions at `802935AC` and
+`80293AC4`; its pool remains `803E7C80..803E7D40`. All four source builds show the
+same two score gains. Every other source object, including all three header
+consumers, remains byte-identical. Non-text sections, named data layouts and
+ordered relocation destinations are preserved, and every function's ordered
+constant-load values still agree with retail. All four `all_source` builds and
+the strict EN checksum pass within 30 seconds.
+
+The host differential check exercises all eight functions for every 16-bit
+angle pattern with four upper-bit patterns: **2,097,152 calls per build**.
+Before/after output bits agree at O0 and O2, including negative word-sized inputs
+and values with unrelated upper bits. Fast-cast is modeled as ordinary signed
+16-bit conversion; its hardware quantization contract is unchanged. The check
+verifies both the removed temporary and the explicit low-16-bit input handling.
+Local sources, controls, full object/report comparisons and verified retail audit
+are under `/tmp/sfa-trig-double-seed/`.

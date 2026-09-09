@@ -3,6 +3,9 @@
 
 #include "types.h"
 
+/* One full turn is 65536 units; only the low 16 angle bits are used. */
+float fsin16Approx(u16 angle);
+float fcos16Approx(u16 angle);
 float fsin16Precise(int angle);
 float fcos16Precise(int angle);
 float fsin16HighPrecision(int angle);
