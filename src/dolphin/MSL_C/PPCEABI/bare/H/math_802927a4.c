@@ -79,11 +79,9 @@ float powfCoreHighPrecision(float base, float power) {
                                            (logValue *
                                                 (logValue *
                                                      (logValue *
-                                                          (logValue *
-                                                               (logValue *
-                                                                    (9.926346441109975e-09 * logValue +
-                                                                     9.472326685984924e-08) +
-                                                                1.3310673239175234e-06) +
+                                                          (logValue * (logValue * (9.926346441109975e-09 * logValue +
+                                                                                   9.472326685984924e-08) +
+                                                                       1.3310673239175234e-06) +
                                                            1.5244851723158107e-05) +
                                                       0.00015403947598618592) +
                                                  0.0013333543997684197) +
