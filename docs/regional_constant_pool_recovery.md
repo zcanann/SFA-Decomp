@@ -129,3 +129,50 @@ push-block and Arwing. These are concrete linkage follow-ups, not proof that
 their reported instruction matches are false. Individual normalized matches
 continue to require final-address verification before a complete regional source
 link can be claimed.
+
+## Push-block burst and sound constants (2026-09-09)
+
+`WCPushBlock` used six EN address labels for shared float constants. Several
+labels were undefined in secondary links; others resolved to unrelated regional
+storage. They now have unit-owned names based on the existing consumers:
+
+| Name (prefix `gWcPushBlock`) | Value | Observed use |
+| --- | ---: | --- |
+| `One` | 1 | render factor and minimum slide-sound volume |
+| `BurstScale` | 2 | burst scale and vertical extent |
+| `BurstHorizontalExtent` | 65 | burst X/Z extent |
+| `Zero` | 0 | stationary velocity, zero Y movement and sound-speed clamp |
+| `SlideSfxSpeedThreshold` | 0.25 | speed subtracted before computing sound volume |
+| `SlideSfxVolumeScale` | 0.5 | scale passed to the object-volume setter |
+
+The complete normalized `wcpushblock_update` body is globally unique in each
+verified DOL. Its twelve loads independently locate these six floats using
+each version's retail r2 base. Every observed load agrees on its destination,
+and all four bytes agree with EN. The resulting addresses are:
+
+| Constant | EN | EN rev1 | JP | PAL v1.0 | PAL rev1 |
+| --- | --- | --- | --- | --- | --- |
+| One | `803E6D54` | `803E79EC` | `803E6E74` | `803E8584` | `803E874C` |
+| Burst scale | `803E6D5C` | `803E79F4` | `803E6E7C` | `803E858C` | `803E8754` |
+| Horizontal extent | `803E6D60` | `803E79F8` | `803E6E80` | `803E8590` | `803E8758` |
+| Zero | `803E6D64` | `803E79FC` | `803E6E84` | `803E8594` | `803E875C` |
+| Sound speed threshold | `803E6D68` | `803E7A00` | `803E6E88` | `803E8598` | `803E8760` |
+| Sound volume scale | `803E6D78` | `803E7A10` | `803E6E98` | `803E85A8` | `803E8770` |
+
+Only the source references and the proven regional symbols are renamed.
+Unrelated symbols at the numeric EN addresses remain intact. The constants
+retain their current automatic-pool ownership and external declarations; this
+repair does not establish a new pool definition or change TU boundaries.
+
+All five all-retail links and push-block source-substitution links reproduce
+their verified originals. All five source builds and EN's strict checksum pass.
+The push-block object's allocated bytes, section layout, relocation records and
+symbol entries are unchanged apart from the six external names; every other
+source object is byte-identical. The unit retains nine exact functions, 3,520
+code bytes and 100 data bytes. This is a linkage and identity repair, with no
+additional match-score credit.
+
+The earlier unresolved GX modes and function names were repaired in the
+[regional boundary batch](regional_call_identity_recovery.md#three-trailing-return-boundaries-2026-09-09).
+EarthWalker, bouncy-crate and Arwing remain follow-ups for the combined PAL
+manifest link; the checks above substitute only the reviewed push-block TU.
