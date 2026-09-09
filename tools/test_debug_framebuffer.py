@@ -1,4 +1,4 @@
-"""Run the production glyph and error-rule rasterizers against a guarded framebuffer.
+"""Run the production backdrop, glyph and rule rasterizers against a guarded framebuffer.
 
 The host harness records cache-store requests; it does not emulate GPU scanout
 or PowerPC cache-line rounding.
@@ -26,10 +26,14 @@ class DebugFramebufferTests(unittest.TestCase):
         if not compiler:
             raise unittest.SkipTest("clang is required for the source-body harness")
         source = (ROOT / "src/main/dll_80136a40.c").read_text()
-        constants = "\n".join(re.findall(r"^#define DEBUG_(?:FRAMEBUFFER|GLYPH|TEXT)_.*$", source, re.M))
+        constants = "\n".join(re.findall(r"^#define DEBUG_(?:FRAMEBUFFER|GLYPH|TEXT|BACKDROP)_.*$", source, re.M))
         glyph = re.search(r"^void debugTextDrawToFrameBuffer\([^;\n]*\) \{.*?^\}", source, re.M | re.S).group()
         pixel = re.search(r"^static inline void debugDrawTextPixel\(.*?^\}", source, re.M | re.S).group()
         rule = re.search(r"^static inline void errorDrawHorizontalRule\(.*?^\}", source, re.M | re.S).group()
+        backdrop = re.search(r"^static inline void errDisplayFillBackdrop\(.*?^\}", source, re.M | re.S).group()
+        backdrop_calls = re.findall(r"if \(enableDebugText != 0\) \{\s*errDisplayFillBackdrop\(\);\s*\}", source)
+        if len(backdrop_calls) != 2:
+            raise AssertionError("Re-audit the two guarded crash-display backdrop calls")
         calls = re.findall(r"^            if \(enableDebugText != 0\) \{\n"
                            r"                errorDrawHorizontalRule\([^;]+\);\n            \}", source, re.M)
         if len(calls) != 3:
@@ -59,7 +63,11 @@ static void DCStoreRange(void* address, unsigned int size) {
     }
     flushCount++;
 }
-''' + constants + "\n" + pixel + "\n" + glyph + "\n" + rule + r'''
+''' + constants + "\n" + pixel + "\n" + glyph + "\n" + rule + "\n" + backdrop + r'''
+EXPORT void runBackdrop(int enabled) {
+    enableDebugText = enabled;
+    flushCount = 0;
+''' + backdrop_calls[0] + "\n}\n" + r'''
 EXPORT void runGlyph(int enabled, int x, int y, u8* grid) {
     enableDebugText = enabled;
     flushCount = 0;
@@ -90,18 +98,20 @@ EXPORT void runCrashRules(int enabled, int y) {
             handle.runGlyph.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int,
                                        ctypes.POINTER(ctypes.c_ubyte)]
             handle.runGlyph.restype = None
+            handle.runBackdrop.argtypes = [ctypes.c_int]
+            handle.runBackdrop.restype = None
             handle.runRule.argtypes = [ctypes.c_int, ctypes.c_int]
             handle.runRule.restype = None
             handle.runCrashRules.argtypes = [ctypes.c_int, ctypes.c_int]
             handle.runCrashRules.restype = None
             cls.libraries.append(handle)
 
-    def check_pixels(self, library, draw, pixels, flushes):
+    def check_pixels(self, library, draw, pixels, flushes, pixel_color=COLOR):
         storage = (ctypes.c_ushort * (WIDTH * HEIGHT + GUARD * 2)).in_dll(library, "storage")
         initial = (ctypes.c_ushort * len(storage))(*([SENTINEL] * len(storage)))
         ctypes.memmove(storage, initial, ctypes.sizeof(initial))
         expected = bytearray(bytes(initial))
-        color = bytes(ctypes.c_ushort(COLOR))
+        color = bytes(ctypes.c_ushort(pixel_color))
         for x, y in pixels:
             offset = 2 * (GUARD + y * WIDTH + x)
             expected[offset:offset + 2] = color
@@ -111,6 +121,12 @@ EXPORT void runCrashRules(int enabled, int y) {
         self.assertEqual(count, len(flushes))
         recorded = ((ctypes.c_int * 2) * 10).in_dll(library, "flushes")
         self.assertEqual([tuple(recorded[i]) for i in range(count)], flushes)
+
+    def test_backdrop_covers_framebuffer_and_preserves_guards(self):
+        for library in self.libraries:
+            pixels = ((x, y) for y in range(HEIGHT) for x in range(WIDTH))
+            self.check_pixels(library, lambda: library.runBackdrop(1), pixels, [], 0x1080)
+            self.check_pixels(library, lambda: library.runBackdrop(0), [], [])
 
     def test_glyph_footprints_and_cache_ranges(self):
         # Each bit has a two-by-two footprint, with consecutive bits one pixel apart.

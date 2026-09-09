@@ -296,3 +296,29 @@ row, and eighty randomized row/width pairs. Mutating the preceding-row stride
 from one pixel to two fails the framebuffer comparison. Formatting preserves
 the raw object; `ninja all_source` and the strict retail checksum gate pass
 with 30-second bounds.
+
+## Native crash-screen backdrop loop
+
+The backdrop fill is a column-major loop over the 640-by-480 framebuffer. A
+normal pair of `for` loops, using `(debugDrawFrameBuffer + y * width)[x]`,
+reproduces both existing inline expansions in `errorThreadFunc`. GC/1.3
+strength reduction and unrolling produce the eight row stores and 60 inner
+iterations previously written out by hand. The source now names the framebuffer
+height and backdrop color and removes the integer pointer casts and explicit
+byte strides.
+
+The row-pointer expression matters: flattening it to
+`debugDrawFrameBuffer[y * width + x]` changes the compiler's induction variables
+and instruction stream. The retained expression preserves every function byte,
+allocated section, named symbol layout, and physical relocation destination in
+EN v1.0, EN revision 1, JP, and PAL revision 1. Compiler-generated anonymous
+labels are renumbered; complete object hashes therefore change. All four objdiff
+reports remain unchanged, including the crash thread's 694 instructions and
+35 operand differences. This is source recovery, with no claimed matching gain.
+
+The guarded framebuffer harness now also executes the production backdrop loop
+at host `-O0` and `-O2`. It verifies all 307,200 pixels have color `0x1080`,
+both external guards remain intact, disabled drawing preserves the framebuffer,
+and the helper does not flush the cache. All twelve debug tests pass.
+All four `all_source` builds and the strict EN retail checksum gate pass with
+30-second bounds.
