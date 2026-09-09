@@ -238,3 +238,11 @@ undefined constants, all referenced by `ARWArwing.o`. The repaired GX, MusyX,
 camera, push-block, EarthWalker and bouncy-crate references no longer appear
 in that error list. Successful symbol resolution alone will still need a final
 DOL comparison before the full manifest link can be considered exact.
+
+## Arwing follow-through
+
+[The Arwing audit](arwing_constant_recovery.md) resolves all 37 legacy float
+identities across the five versions and verifies each Arwing source link.
+The complete PAL manifest now resolves all symbols, exposing retained-code and
+data-layout differences for the next recovery pass. It still does not reproduce
+the full retail DOL.

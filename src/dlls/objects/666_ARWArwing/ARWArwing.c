@@ -1180,10 +1180,10 @@ void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
     int allAttached;
     PlayerStatus* charState;
     f32 radius;
-    f32 c6F7C;
-    f32 c6F78;
-    f32 c6F74;
-    f32 c6FB0;
+    f32 verticalResponse;
+    f32 cruiseSpeed;
+    f32 lateralResponse;
+    f32 rootMotionScale;
     f32 c6F5C;
     f32 c6EF0;
 
@@ -1249,10 +1249,10 @@ void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
             if (state->light != 0)
             {
                 modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
-                modelLightStruct_setPosition(state->light, 0.0f, lbl_803E6FC4, lbl_803E6FC8);
+                modelLightStruct_setPosition(state->light, 0.0f, gArwingLightOffsetY, gArwingLightOffsetZ);
                 modelLightStruct_setFieldBC(state->light, 1);
                 modelLightStruct_setDiffuseColor(state->light, 0x28, 0x7d, 0xff, 0);
-                modelLightStruct_setDistanceAttenuation(state->light, lbl_803E6FCC, lbl_803E6FD0);
+                modelLightStruct_setDistanceAttenuation(state->light, gArwingLightNearDistance, gArwingLightFarDistance);
                 modelLightStruct_startColorFade(state->light, 1, 1);
                 modelLightStruct_setDiffuseTargetColor(state->light, 0x14, 0x64, 0xc8, 0);
             }
@@ -1275,39 +1275,39 @@ void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
     {
         (*gCameraInterface)->setFocus((void*)obj, 0);
         state->flags477 |= ARWING_FLAG_ACTIVE;
-        state->maxSpeedX = lbl_803E6F70;
-        state->accelX = (c6F74 = lbl_803E6F74);
-        state->maxSpeedY = (c6F78 = lbl_803E6F78);
-        state->accelY = (c6F7C = lbl_803E6F7C);
-        state->maxSpeedZ = c6F78;
-        state->accelZ = c6F7C;
-        state->maxAccelZ = lbl_803E6F80;
-        state->minAccelZ = lbl_803E6F84;
+        state->maxSpeedX = gArwingMaxLateralSpeed;
+        state->accelX = (lateralResponse = gArwingLateralResponse);
+        state->maxSpeedY = (cruiseSpeed = gArwingMaxVerticalSpeed);
+        state->accelY = (verticalResponse = gArwingVerticalResponse);
+        state->maxSpeedZ = cruiseSpeed;
+        state->accelZ = verticalResponse;
+        state->maxAccelZ = gArwingMaxForwardAccel;
+        state->minAccelZ = gArwingMinForwardAccel;
         state->speedScaleZ = 1.0f;
-        state->rotXRange = lbl_803E6F88;
-        state->rotXGain = c6F74;
-        state->rotYRange = lbl_803E6F8C;
-        state->rotYGain = c6F7C;
-        state->rotZRange = lbl_803E6F90;
-        state->rotZGain = lbl_803E6F94;
-        state->rotZTrimRange = lbl_803E6F98;
-        state->rotZTrimGain = lbl_803E6F9C;
-        state->rotZBlendThreshold = lbl_803E6FA0;
-        state->rotZBlendRate = lbl_803E6FA4;
-        state->barrelRollSpeed = lbl_803E6FA8;
+        state->rotXRange = gArwingYawRange;
+        state->rotXGain = lateralResponse;
+        state->rotYRange = gArwingPitchRange;
+        state->rotYGain = verticalResponse;
+        state->rotZRange = gArwingRollRange;
+        state->rotZGain = gArwingRollGain;
+        state->rotZTrimRange = gArwingRollTrimRange;
+        state->rotZTrimGain = gArwingRollTrimGain;
+        state->rotZBlendThreshold = gArwingRollBlendThreshold;
+        state->rotZBlendRate = gArwingBlendRate;
+        state->barrelRollSpeed = gArwingBarrelRollSpeed;
         state->unk3FA = 0x19;
-        state->barrelRollDecelRange = lbl_803E6FAC;
-        state->rootMotionScale = (c6FB0 = lbl_803E6FB0);
-        obj->anim.rootMotionScale = c6FB0;
-        state->barrelRollMaxSpeedScale = lbl_803E6FB4;
-        state->barrelRollAccelScale = lbl_803E6FB8;
-        state->speedScaleRollL = lbl_803E6FBC;
+        state->barrelRollDecelRange = gArwingBarrelRollDecelRange;
+        state->rootMotionScale = (rootMotionScale = gArwingRootMotionScale);
+        obj->anim.rootMotionScale = rootMotionScale;
+        state->barrelRollMaxSpeedScale = gArwingBarrelRollMaxSpeedScale;
+        state->barrelRollAccelScale = gArwingBarrelRollAccelScale;
+        state->speedScaleRollL = gArwingLeftRollSpeedScale;
         state->speedScaleRollR = 0.5f;
-        state->accelZRollL = lbl_803E6FD4;
-        state->accelZRollR = c6F74;
-        state->accelZNeutral = lbl_803E6FD8;
-        state->rollCooldownInit = lbl_803E6FDC;
-        state->rollEnergyMax = lbl_803E6FE0;
+        state->accelZRollL = gArwingLeftRollAccel;
+        state->accelZRollR = lateralResponse;
+        state->accelZNeutral = gArwingNeutralForwardAccel;
+        state->rollCooldownInit = gArwingRollCooldown;
+        state->rollEnergyMax = gArwingRollEnergyMax;
         state->altRollEnergyMax = 10.0f;
         state->rollEnergy = state->rollEnergyMax;
         state->altRollEnergy = state->altRollEnergyMax;
@@ -1319,10 +1319,10 @@ void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
         }
         else
         {
-            state->velZ = c6F78;
+            state->velZ = cruiseSpeed;
         }
         state->projLifetime = 0x28;
-        state->projSpeed = lbl_803E6FE0;
+        state->projSpeed = gArwingRollEnergyMax;
         state->fireDelay = 0x6;
         state->bombProjectileParam = 0x5a;
         state->bombProjectileLifetime = 25.0f;
@@ -1338,17 +1338,17 @@ void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
         state->health = state->maxHealth;
         state->bobSpeedThreshold = 0.1f;
         state->bobRotZRate = (c6EF0 = 250.0f);
-        state->bobRotZAmp = lbl_803E6FE4;
+        state->bobRotZAmp = gArwingBobRollAmplitude;
         state->bobXRate = 500.0f;
-        state->bobXAmp = lbl_803E6FD4;
-        state->bobYRate = lbl_803E6FE8;
-        state->bobYAmp = lbl_803E6F80;
-        state->bobBlendRate = lbl_803E6FA4;
+        state->bobXAmp = gArwingLeftRollAccel;
+        state->bobYRate = gArwingBobYRate;
+        state->bobYAmp = gArwingMaxForwardAccel;
+        state->bobBlendRate = gArwingBlendRate;
         state->homeX = obj->anim.localPosX;
         state->homeY = obj->anim.localPosY;
         state->homeZ = obj->anim.localPosZ;
-        state->flightHalfWidth = lbl_803E6FEC;
-        state->flightUpperHeight = lbl_803E6FF0;
+        state->flightHalfWidth = gArwingFlightHalfWidth;
+        state->flightUpperHeight = gArwingFlightUpperHeight;
         state->flightLowerHeight = c6EF0;
     }
 }
@@ -1356,36 +1356,36 @@ void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
 void arwarwing_resetFlightState(GameObject* obj)
 {
     ArwingState* state = obj->extra;
-    f32 v7c;
-    f32 v74;
-    f32 v78;
+    f32 verticalResponse;
+    f32 lateralResponse;
+    f32 cruiseSpeed;
 
-    state->maxSpeedX = lbl_803E6F70;
-    state->accelX = v74 = lbl_803E6F74;
-    state->maxSpeedY = v78 = lbl_803E6F78;
-    state->accelY = v7c = lbl_803E6F7C;
-    state->maxSpeedZ = v78;
-    state->accelZ = v7c;
-    state->maxAccelZ = lbl_803E6F80;
-    state->minAccelZ = lbl_803E6F84;
+    state->maxSpeedX = gArwingMaxLateralSpeed;
+    state->accelX = lateralResponse = gArwingLateralResponse;
+    state->maxSpeedY = cruiseSpeed = gArwingMaxVerticalSpeed;
+    state->accelY = verticalResponse = gArwingVerticalResponse;
+    state->maxSpeedZ = cruiseSpeed;
+    state->accelZ = verticalResponse;
+    state->maxAccelZ = gArwingMaxForwardAccel;
+    state->minAccelZ = gArwingMinForwardAccel;
     state->speedScaleZ = 1.0f;
-    state->rotXRange = lbl_803E6F88;
-    state->rotXGain = v74;
-    state->rotYRange = lbl_803E6F8C;
-    state->rotYGain = v7c;
-    state->rotZRange = lbl_803E6F90;
-    state->rotZGain = lbl_803E6F94;
-    state->rotZTrimRange = lbl_803E6F98;
-    state->rotZTrimGain = lbl_803E6F9C;
-    state->rotZBlendThreshold = lbl_803E6FA0;
-    state->rotZBlendRate = lbl_803E6FA4;
-    state->barrelRollSpeed = lbl_803E6FA8;
+    state->rotXRange = gArwingYawRange;
+    state->rotXGain = lateralResponse;
+    state->rotYRange = gArwingPitchRange;
+    state->rotYGain = verticalResponse;
+    state->rotZRange = gArwingRollRange;
+    state->rotZGain = gArwingRollGain;
+    state->rotZTrimRange = gArwingRollTrimRange;
+    state->rotZTrimGain = gArwingRollTrimGain;
+    state->rotZBlendThreshold = gArwingRollBlendThreshold;
+    state->rotZBlendRate = gArwingBlendRate;
+    state->barrelRollSpeed = gArwingBarrelRollSpeed;
     state->unk3FA = 0x19;
-    state->barrelRollDecelRange = lbl_803E6FAC;
-    state->rootMotionScale = lbl_803E6FB0;
-    state->barrelRollMaxSpeedScale = lbl_803E6FB4;
-    state->barrelRollAccelScale = lbl_803E6FB8;
-    state->speedScaleRollL = lbl_803E6FBC;
+    state->barrelRollDecelRange = gArwingBarrelRollDecelRange;
+    state->rootMotionScale = gArwingRootMotionScale;
+    state->barrelRollMaxSpeedScale = gArwingBarrelRollMaxSpeedScale;
+    state->barrelRollAccelScale = gArwingBarrelRollAccelScale;
+    state->speedScaleRollL = gArwingLeftRollSpeedScale;
     state->speedScaleRollR = 0.5f;
     state->rollEnergy = state->rollEnergyMax;
     state->altRollEnergy = state->altRollEnergyMax;
@@ -1629,7 +1629,7 @@ void arwarwing_render(GameObject* obj, int p2, int p3, int p4, int p5)
 
     if (state->hitShake != 0)
     {
-        dx = (int)(lbl_803E6FF4 * mathSinf(3.1415927f * (f32) * (u16*)&state->shakePitch / 32768.0f));
+        dx = (int)(gArwingHitShakeAmplitude * mathSinf(3.1415927f * (f32) * (u16*)&state->shakePitch / 32768.0f));
         dy = (int)(1024.0f * mathSinf(3.1415927f * (f32) * (u16*)&state->shakeYaw / 32768.0f));
         obj->anim.rotY = (s16)(obj->anim.rotY + dx);
         obj->anim.rotZ = (s16)(obj->anim.rotZ + dy);
@@ -1656,7 +1656,7 @@ void arwarwing_hitDetect(GameObject* obj)
         pos.z += playerMapOffsetZ;
         ObjSeq_SetCameraTransformOverride(pos.x, pos.y, (s16)(0x8000 - obj->anim.rotX + state->aimYaw),
                                           (s16)(obj->anim.rotY + state->aimPitch),
-                                          (s16)(obj->anim.rotZ + state->aimRoll), pos.z, lbl_803E6FF8);
+                                          (s16)(obj->anim.rotZ + state->aimRoll), pos.z, gArwingAimCameraParameter);
     }
 }
 
@@ -1720,7 +1720,7 @@ void arwarwing_update(GameObject* obj)
             obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
             spawnExplosion(obj, 100.0f, 1, 0, 1, 1, 0, 1, 0);
         }
-        state->rotZCur = lbl_803E6F6C * timeDelta + (f32)state->rotZCur;
+        state->rotZCur = gArwingDeathSpinRate * timeDelta + (f32)state->rotZCur;
         obj->anim.rotZ = (s16)state->rotZCur;
         state->velY = state->velY - 0.1f * timeDelta;
         objMove(obj, state->velX * timeDelta, state->velY * timeDelta, state->velZ * timeDelta);
@@ -1741,9 +1741,9 @@ void arwarwing_update(GameObject* obj)
         else
         {
             state->thrusterL->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            throttle = lbl_803E6FFC * timeDelta + (f32)(u32)state->thrusterL->anim.alpha;
-            if (throttle > lbl_803E7000)
-                throttle = lbl_803E7000;
+            throttle = gArwingThrusterFadeInRate * timeDelta + (f32)(u32)state->thrusterL->anim.alpha;
+            if (throttle > gArwingThrusterAlphaMax)
+                throttle = gArwingThrusterAlphaMax;
             state->thrusterL->anim.alpha = throttle;
             state->thrusterR->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             state->thrusterR->anim.alpha = throttle;
