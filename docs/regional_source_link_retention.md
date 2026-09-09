@@ -80,8 +80,9 @@ described above. Other full-manifest probes remain diagnostic:
   [Recovering the SDK matrix source](sdk_mtx44_recovery.md) and
   [player data identities](player_regional_data_identities.md) makes its
   entire manifest reproduce retail too.
-- JP (952 units) links but loses 480 text bytes and 216 data bytes, shifting
-  later sections. Its combined manifest has not been certified.
+- JP (952 units) initially lost text, data and internal small-data slots.
+  The subsequent [JP retention repair](jp_source_link_retention.md) makes its
+  entire manifest reproduce retail too.
 - PAL rev1 (913 units) initially preserved all section addresses and sizes but
   differed in one pointer store. The subsequent
   [path-search identity repair](pathsearch_pointer_identity.md) makes its
@@ -89,5 +90,5 @@ described above. Other full-manifest probes remain diagnostic:
 
 Reproduce a manifest check with `tools/verify_source_link.py VERSION`, passing
 each non-comment source unit from that version's `matching_units.txt` after
-configuring the version and building `all_source`. Secondary versions still
-use ordinary configuration; the native `--matching` checksum target remains EN.
+configuring the version and building `all_source`. All five versions now also
+support the [native `--matching` checksum build](jp_source_link_retention.md).

@@ -72,12 +72,21 @@ When running under WSL, [objdiff](#diffing) is unable to get filesystem notifica
   ```
 
   To use a version other than EN v1.0, specify it with `--version`.
+  All five versions also support `--matching`, which links completed source
+  units with retail objects for the remaining code and checks the original DOL
+  checksum. For example:
+
+  ```sh
+  python configure.py --version GSAJ01 --matching
+  ```
 
 - Build:
 
   ```sh
   ninja
   ```
+
+  Run `ninja all_source` as well to compile the unfinished source units.
 
 ## Diffing
 

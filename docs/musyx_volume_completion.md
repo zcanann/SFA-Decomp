@@ -61,3 +61,14 @@ completion flags: +1944 code bytes and +612 data bytes each. The scored code
 and data percentages are unchanged. EN's strict checksum passes; secondary
 versions currently support progress reports only, so no full-link checksum
 claim is made for them.
+
+## PAL v1.0 and native checksum verification
+
+The replacement PAL v1.0 DOL passes its configured hash. Its exception index
+at `80006308` identifies the 1,944-byte `salCalcVolume` at `8027FAE4` and the
+same eight-byte record at `80005A50`. A source link substituting this unit and
+`trigf.c` reproduces the original DOL exactly, including retained exception
+records after linker garbage collection. PAL v1.0 now joins the explicit
+completion list. All five versions now support and pass the
+[native matching checksum build](jp_source_link_retention.md), superseding the
+earlier progress-only restriction.

@@ -90,3 +90,14 @@ bytes and 60 data bytes each). EN remains unchanged and passes its strict
 retail checksum. Secondary targets currently support progress reports only;
 `configure.py` rejects their `--matching` mode, so no secondary full-link
 checksum claim is made.
+
+## PAL v1.0 and native checksum verification
+
+The replacement PAL v1.0 DOL passes its configured hash. Its constructor entry
+at `802C20C4` points to the generated initializer at `802953B8`; only its owning
+constructor relocation references that local function. A source link
+substituting both this unit and `sal_volume.c` reproduces PAL v1.0 exactly.
+PAL v1.0 now joins the explicit completion list, with no source or compiler
+changes. All five versions now support and pass the
+[native matching checksum build](jp_source_link_retention.md), superseding the
+earlier progress-only restriction.
