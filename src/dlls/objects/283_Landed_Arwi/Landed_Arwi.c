@@ -77,10 +77,10 @@ STATIC_ASSERT(offsetof(LandedArwingFxScratch, y) == 0x10);
 STATIC_ASSERT(offsetof(LandedArwingFxScratch, z) == 0x14);
 STATIC_ASSERT(sizeof(LandedArwingFxScratch) == 0x18);
 
-extern f32 lbl_803E3BB8;
-extern f32 lbl_803E3BBC;
-extern f32 lbl_803E3BC0;
-extern f32 lbl_803E3BC4;
+extern f32 gStaffReactionDebrisYOffset;
+extern f32 gStaffReactionOne;
+extern f32 gStaffReactionSearchDistance;
+extern f32 gStaffReactionStepScale;
 
 LandedArwingFxPoint gLandedArwingPathFxTable[] = {
     {0.1f, 1, 7, 0x20, 0}, {0.1f, 2, 7, 0x20, 0}, {0.1f, 3, 8, 0x20, 0}, {0.1f, 4, 9, 0x20, 0}, {0.1f, 5, 6, 0x10, 0},
@@ -449,7 +449,7 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingHitReactionSta
     if (state->hitStarted != 0) {
         obj->anim.rotY = 0;
         obj->anim.rotZ = 0;
-        if (obj->anim.currentMoveProgress >= lbl_803E3BBC && !state->flags.reactionDone) {
+        if (obj->anim.currentMoveProgress >= gStaffReactionOne && !state->flags.reactionDone) {
             if (placement->reactionCompleteGameBit > 0) {
                 mainSetBits(placement->reactionCompleteGameBit, 1);
             }
@@ -459,7 +459,7 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingHitReactionSta
                 canSetupObject = Obj_CanSetupObject();
                 if (canSetupObject > 0) {
                     spawnIndex = 0;
-                    yOffset = lbl_803E3BB8;
+                    yOffset = gStaffReactionDebrisYOffset;
                     while (spawnIndex < placement->debrisCount) {
                         setup =
                             Obj_AllocObjectSetup(LANDED_ARWING_CHILD_OBJECT_SETUP_SIZE, LANDED_ARWING_DEBRIS_OBJECT_ID);
@@ -473,7 +473,7 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingHitReactionSta
                 }
                 break;
             case LANDED_ARWING_REACTION_DAMAGE_NEAREST:
-                range = lbl_803E3BC0;
+                range = gStaffReactionSearchDistance;
                 other = objGetNearestTypeTo(STAFF_ACTIVATED_OBJECT_GROUP, obj, &range);
                 if (other != NULL) {
                     otherState = other->extra;
@@ -490,7 +490,7 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingHitReactionSta
             state->flags.reactionDone = 1;
         }
         state->flags.impactHandled = 1;
-        state->animationStepScale = lbl_803E3BC4;
+        state->animationStepScale = gStaffReactionStepScale;
     } else {
         if (placement->hitReactionType == LANDED_ARWING_REACTION_JITTER) {
             obj->anim.rotY = randomGetRange(-200, 200);

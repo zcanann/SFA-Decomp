@@ -47,8 +47,8 @@ STATIC_ASSERT(offsetof(StaffActivatedState, hitCooldown) == offsetof(LandedArwin
 #define STAFF_ACTIVATED_TARGET_DISTANCE 20.0f
 #define STAFF_ACTIVATED_ACTION_DISTANCE 18.0f
 
-extern const f32 lbl_803E3BBC;
-extern const f32 lbl_803E3BC4;
+extern const f32 gStaffReactionOne;
+extern const f32 gStaffReactionStepScale;
 
 s16 gStaffActivatedScarabObjectIds[4] = {
     SCARAB_OBJECT_GREEN,
@@ -171,16 +171,16 @@ void staffactivated_spawnMapEventDebris(GameObject* obj) {
 
                 scarab->anim.velocityX =
                     scarab->anim.velocityX *
-                    (lbl_803E3BBC - (lbl_803E3BC4 * randomGetRange(0, STAFF_ACTIVATED_SCARAB_RANDOM_RANGE)));
+                    (gStaffReactionOne - (gStaffReactionStepScale * randomGetRange(0, STAFF_ACTIVATED_SCARAB_RANDOM_RANGE)));
                 scarab->anim.velocityZ =
                     scarab->anim.velocityZ *
-                    (lbl_803E3BBC - (lbl_803E3BC4 * randomGetRange(0, STAFF_ACTIVATED_SCARAB_RANDOM_RANGE)));
+                    (gStaffReactionOne - (gStaffReactionStepScale * randomGetRange(0, STAFF_ACTIVATED_SCARAB_RANDOM_RANGE)));
                 scarab->anim.velocityY = STAFF_ACTIVATED_SCARAB_Y_VELOCITY;
 
                 rotation.x = zero;
                 rotation.y = zero;
                 rotation.z = zero;
-                rotation.scale = lbl_803E3BBC;
+                rotation.scale = gStaffReactionOne;
                 rotation.rotZ = 0;
                 rotation.rotY = 0;
                 rotation.rotX = randomGetRange(-10000, 10000);
@@ -283,7 +283,7 @@ void staffactivated_free(GameObject* obj) {
 
 void staffactivated_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5,
                            s8 visible) {
-    objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, lbl_803E3BBC);
+    objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, gStaffReactionOne);
 }
 
 void staffactivated_update(GameObject* obj) {
@@ -339,14 +339,14 @@ void staffactivated_update(GameObject* obj) {
             particle.posX = 2.8f;
             particle.posY = 1.7f;
             particle.posZ = 0.0f;
-            particle.scale = lbl_803E3BBC;
+            particle.scale = gStaffReactionOne;
             particle.arg3 = 0;
             particle.arg2 = 0x64;
             (*gPartfxInterface)->spawnObject(obj, STAFF_ACTIVATED_PARTICLE_ID, &particle, 2, -1, NULL);
             particle.posX = 2.8f;
             particle.posY = 1.7f;
             particle.posZ = 0.0f;
-            particle.scale = lbl_803E3BBC;
+            particle.scale = gStaffReactionOne;
             particle.arg3 = 5;
             particle.arg2 = 0xA;
             (*gPartfxInterface)->spawnObject(obj, STAFF_ACTIVATED_PARTICLE_ID, &particle, 2, -1, NULL);
@@ -387,7 +387,7 @@ void staffactivated_init(GameObject* obj, StaffActivatedPlacement* placement) {
             break;
         default:
             modelVariant = 1;
-            scale = lbl_803E3BBC;
+            scale = gStaffReactionOne;
             break;
         case 0:
             modelVariant = 0;
@@ -395,7 +395,7 @@ void staffactivated_init(GameObject* obj, StaffActivatedPlacement* placement) {
             break;
         }
     } else {
-        scale = lbl_803E3BBC;
+        scale = gStaffReactionOne;
     }
 
     if (obj->anim.hitReactState != NULL) {
@@ -444,7 +444,7 @@ void staffactivated_init(GameObject* obj, StaffActivatedPlacement* placement) {
         if ((flags->locked = mainGetBit(placement->lockGameBit)) != 0) {
             switch (placement->mode) {
             case STAFF_ACTIVATED_MODE_HIT_REACTION:
-                ObjAnim_SetMoveProgress(&obj->anim, lbl_803E3BBC);
+                ObjAnim_SetMoveProgress(&obj->anim, gStaffReactionOne);
                 break;
             case STAFF_ACTIVATED_MODE_DAMAGE_FIRST:
                 flags->locked = 0;

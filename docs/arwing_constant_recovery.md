@@ -95,14 +95,8 @@ object bytes, section layouts, relocation records and symbol properties are
 identical except for the external names; all other source objects are unchanged.
 EN passes its strict retail checksum.
 
-The complete 918-unit PAL v1.0 manifest now links without undefined symbols,
-but its DOL still differs from retail. The combined link shrinks `.text` by
-112 bytes, `.rodata` by 72, `.data` by 1,800, and `.bss` by 4,960; `.sdata`,
-`.sbss`, `.sdata2`, and `.sbss2` retain their sizes but move with earlier sections.
-The first text displacement occurs at `waterFxUpdate`, immediately after the
-120-byte `surfaceSfxGetRecord`. EN already explicitly retains that unreferenced
-function, whereas PAL's force-active list omits it. Later text alignment reduces
-the final text difference to 112 bytes. Other displacement transitions include
-thread diagnostics, shadow/shader data, Thorntail tables, audio workspace and
-video buffers. These are concrete retention/layout follow-ups, not a claim that
-the full regional source link is recovered.
+The initial complete 918-unit PAL v1.0 manifest linked without undefined symbols
+but lost unreferenced code and data. The subsequent
+[regional retention and staff-reaction identity repair](regional_source_link_retention.md)
+restores the original DOL byte-for-byte with all 918 manifest units substituted
+together. Remaining non-manifest units and automatic gaps still use retail objects.

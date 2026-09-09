@@ -209,6 +209,64 @@ extract:
 force_active:
   # aram_data.c: retain the same unreferenced 24-byte .bss block as EN.
   - lbl_803D4868
+  # dlls/engine/5/5.c
+  # Retain the unused sky color table and trailing small-data word.
+  - sSkyUnusedColors
+  - sSkyUnusedD
+  # dlls/objects/429_SH_thorntai/SHthorntail.c
+  # Thorntail reads these state and dialogue tables through the linked-ident base.
+  - gSHthorntailHitReactEntries
+  - gSHthorntailAsleepHitReactEntries
+  - gSHthorntailStateMoveIds
+  - gSHthorntailStateMoveStepScales
+  - gSHthorntailStateFlags
+  - gSHthorntailStatePrimaryEventSfx
+  - gSHthorntailStateSecondaryEventSfx
+  - gSHthorntailHerdAct1TalkSeqVariants
+  - gSHthorntailHerdAct2ClearTalkSeqVariants
+  - gSHthorntailHerdAct2SetTalkSeqVariants
+  - gSHthorntailHerdAct3ClearTalkSeqVariants
+  - gSHthorntailHerdAct3SetTalkSeqVariants
+  - gSHthorntailHerdAct5ClearTalkSeqVariants
+  # dlls/objects/597/597.c
+  # SnowBike reads these gamebit pairs through the path-setup table base.
+  - gSnowBikeRaceGameBits
+  # main/audio_stream.c
+  # The looped-sound arrays are reached through the flags-array base.
+  - gSfxLoopedObjectSoundIds
+  - gSfxLoopedObjectSoundObjects
+  # main/boot_logo.c
+  # GPU diagnostics address these strings through offsets from the texture base.
+  - sGpuHangSuspectedMessage
+  - sGpuHangStatusFormat
+  - sGpuHangXfStallMessage
+  - sGpuHangUnterminatedMessage
+  - sGpuHangIllegalInstructionMessage
+  - sGpuHangWaitingMessage
+  - sGpuHangUnknownMessage
+  - sGpuHangXfStallLog
+  - sGpuHangUnterminatedLog
+  - sGpuHangIllegalInstructionLog
+  - sGpuHangWaitingLog
+  - sGpuHangUnknownLog
+  # main/objlib.c: retain the zero before the hit-cooldown constant pool.
+  - gObjLibZero
+  # main/shader_dolphin.c
+  # These constants are read through offsets from sEnvMapBumpIndMtx.
+  - sWarpedRingRotAxes
+  - sWarpedRingIndMtx
+  # main/thp/THPRead.c
+  # Retain the message arrays addressed through their neighboring queues.
+  - gPicMenuReadedBuffer2Messages
+  - gPicMenuReadedBufferMessages
+  - gPicMenuFreeReadBufferMessages
+  # main/thp/THPVideoDecode.c
+  # Retain the video decoder stack addressed through its containing area.
+  - gPicMenuVideoDecodeThreadStack
+  # track/intersect.c
+  # Retain the uncalled surface-sound lookup and unused small-data word.
+  - surfaceSfxGetRecord
+  - sIntersectUnused0
 
 # Retail startup/BSS bounds establish these linker-generated addresses.
 # symbols_known skips signature recovery; keep the linker formulas external.
