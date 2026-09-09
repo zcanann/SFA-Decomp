@@ -236,6 +236,7 @@ dlls/objects/249/249.c
 dlls/objects/250_InvisibleHi/InvisibleHi.c
 dlls/objects/252/252.c
 dlls/objects/253/253.c
+dlls/objects/254_MagicPlant/MagicPlant.c
 dlls/objects/255/255.c
 dlls/objects/256_TrickyWarp/TrickyWarp.c
 dlls/objects/257_TrickyGuard/TrickyGuard.c

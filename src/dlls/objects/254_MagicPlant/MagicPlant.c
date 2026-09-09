@@ -29,28 +29,28 @@
 #include "main/objtype.h"
 #include "dlls/objects/237.h"
 
-extern f32 lbl_803E385C;
-extern f32 lbl_803E3880;
-extern f32 lbl_803E3858;
-extern f32 lbl_803E387C;
-extern f32 lbl_803E3878;
-extern f32 lbl_803E3874;
-extern f32 lbl_803E3870;
+extern f32 gMagicPlantZero;
+extern f32 gMagicPlantFadeOutAnimStep;
+extern f32 gMagicPlantOne;
+extern f32 gMagicPlantHalfCircleBinaryAngle;
+extern f32 gMagicPlantPi;
+extern f32 gMagicPlantLaunchSpeedDivisor;
+extern f32 gMagicPlantDropProgressThreshold;
 extern f32 gMagicPlantHitReactAnimStep;
 extern f32 gMagicPlantHitLightScale;
 extern f32 gMagicPlantIdleAnimStep;
-extern f32 lbl_803E3890;
+extern f32 gMagicPlantRandomProgressScale;
 extern f32 gMagicPlantBuzzStartDist;
 extern f32 gMagicPlantBuzzStopDist;
 
-#define MAGICPLANT_ZERO                         lbl_803E385C
-#define MAGICPLANT_ONE                          lbl_803E3858
-#define MAGICPLANT_DROP_PROGRESS_THRESHOLD      lbl_803E3870
-#define MAGICPLANT_LAUNCH_SPEED_DIVISOR         lbl_803E3874
-#define MAGICPLANT_ROTATION_RADIANS_NUMERATOR   lbl_803E3878
-#define MAGICPLANT_ROTATION_RADIANS_DENOMINATOR lbl_803E387C
-#define MAGICPLANT_FADE_OUT_ANIM_STEP           lbl_803E3880
-#define MAGICPLANT_RANDOM_PROGRESS_SCALE        lbl_803E3890
+#define MAGICPLANT_ZERO                         gMagicPlantZero
+#define MAGICPLANT_ONE                          gMagicPlantOne
+#define MAGICPLANT_DROP_PROGRESS_THRESHOLD      gMagicPlantDropProgressThreshold
+#define MAGICPLANT_LAUNCH_SPEED_DIVISOR         gMagicPlantLaunchSpeedDivisor
+#define MAGICPLANT_ROTATION_RADIANS_NUMERATOR   gMagicPlantPi
+#define MAGICPLANT_ROTATION_RADIANS_DENOMINATOR gMagicPlantHalfCircleBinaryAngle
+#define MAGICPLANT_FADE_OUT_ANIM_STEP           gMagicPlantFadeOutAnimStep
+#define MAGICPLANT_RANDOM_PROGRESS_SCALE        gMagicPlantRandomProgressScale
 
 #define MAGICPLANT_OBJECT_TYPE_BASE        0x400
 #define MAGICPLANT_OBJECT_TYPE_MODEL_SHIFT 11

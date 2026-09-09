@@ -296,6 +296,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
   for renaming the generated source folder or filename.
 - Prefer real definitions and linkage over `extern` placeholders.
 - Do not hardcode addresses or invent junk `lbl_` / `fn_` names just to force progress.
+- Scope relocation exclusions for proven integer literals to their source instructions or data objects. A target-address block can hide real callbacks in another version; verify the affected sites independently in each region.
 - Do not commit literal recovered source/header artifacts from `orig/` into `src/`; keep them in manifests/docs or export them to a local non-source folder when needed.
 - When materializing retail-backed stubs without a proven directory, keep them at `src/<basename>` instead of inventing synthetic folders.
 - Do not manually force compiler-generated sections or synthesize likely-generated init/ctor/dtor glue unless there is strong evidence.

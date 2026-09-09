@@ -113,8 +113,59 @@ block_relocations:
   end: 0x8038020A
 - target: 0x80100100
   end: 0x80100104
-- target: 0x80180100
-  end: 0x80180218
+# Effect behavior masks 0x80180100..0x80180214 are integer literals.
+# Suppress only their materializations; real callbacks in that address range relocate.
+# Effect4_spawnObject: 0x80180104
+- source: 0x800BB980
+  end: 0x800BB988
+# Effect5_spawnObject: 0x80180100
+- source: 0x800BD560
+  end: 0x800BD568
+# Effect6_spawnObject: 0x80180200
+- source: 0x800BDCC8
+  end: 0x800BDCD0
+# Effect7_spawnObject: 0x80180100
+- source: 0x800BEA28
+  end: 0x800BEA30
+# Effect7_spawnObject: 0x80180200
+- source: 0x800BFA2C
+  end: 0x800BFA34
+# Effect7_spawnObject: 0x80180210
+- source: 0x800BFA98
+  end: 0x800BFAA0
+# Effect9_spawnObject: 0x80180100
+- source: 0x800C1788
+  end: 0x800C1790
+# Effect9_spawnObject: 0x80180108
+- source: 0x800C1EAC
+  end: 0x800C1EB4
+# Effect12_spawnObject: 0x80180200
+- source: 0x800C6254
+  end: 0x800C625C
+# Effect14_spawnObject: 0x80180208
+- source: 0x800C7B18
+  end: 0x800C7B20
+# Effect16_spawnObject: 0x80180214
+- source: 0x800C8568
+  end: 0x800C8570
+# Effect16_spawnObject: 0x80180214
+- source: 0x800C860C
+  end: 0x800C8614
+# Effect16_spawnObject: 0x80180200
+- source: 0x800C8948
+  end: 0x800C8950
+# Effect17_spawnObject: 0x80180200
+- source: 0x800CAED4
+  end: 0x800CAEDC
+# Effect18_spawnObject: 0x80180100
+- source: 0x800CCAAC
+  end: 0x800CCAB4
+# Effect18_spawnObject: 0x80180200
+- source: 0x800CCD2C
+  end: 0x800CCD34
+# Effect20_spawnObject: 0x80180200
+- source: 0x800D48C4
+  end: 0x800D48CC
 - target: 0x80080108
   end: 0x80080120
 - target: 0x80080200
