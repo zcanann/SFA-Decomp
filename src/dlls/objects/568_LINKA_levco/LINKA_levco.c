@@ -1,21 +1,13 @@
 /*
- * LinkA level-control sequence object (FireObject).
- *
- * A scripted level-progression controller placed in the LinkA map. It runs
- * trigger sequence 0 every update and reacts to that sequence's anim events
- * (LinkALevControl_seqFn), branching on the current map-event mode (getMapAct of
- * its map-event slot):
- *   - OPEN_PATH:  defrag memory, enable object groups, unlock Lightfoot and
- *                 load/lock the destination map for the active mode.
- *   - WARP:       warp to the mode's destination map (mode 2 picks one of
- *                 three routes from game bits) and load the UI DLL.
- *   - UNLOAD_NEIGHBOR_MAP: unload the adjacent map for the active mode.
- * init unlocks the starting level, disables the object's hit detection,
- * sets three progression game bits, kicks an env-fx act and fades the active
- * music channels. A looping object sound is kept alive while sequences run.
+ * LinkA level-control sequence object (DLL 568). Sequence events prepare map
+ * object groups, load and lock destination maps, select warp routes, and unload
+ * neighboring maps. Map slots are converted to directory indices for locking
+ * and unloading; warp IDs belong to a separate route table.
  */
+#include "dlls/objects/568_LINKA_levco.h"
+
 #include "main/audio/sfx_keep_alive_api.h"
-#include "main/dll/dll_0238_linkalevco.h"
+#include "main/gamebit_ids.h"
 #include "main/map_load.h"
 #include "main/model_engine.h"
 #include "main/pi_dolphin_api.h"
@@ -29,30 +21,23 @@
 
 #define LINKA_LEVCONTROL_LOOP_SFX_ID 0x48B
 
-/* getMapAct mode is a small progression index 0..3 with no semantic label. */
+/* Map acts 0..3 select the progression route. */
 
 #define LINKA_LEVCONTROL_ANIM_EVENT_OPEN_PATH           1
 #define LINKA_LEVCONTROL_ANIM_EVENT_WARP                2
 #define LINKA_LEVCONTROL_ANIM_EVENT_UNLOAD_NEIGHBOR_MAP 3
 
-#define LINKA_LEVCONTROL_MAP_ID_7  7
-#define LINKA_LEVCONTROL_MAP_ID_0B 0x0B
-#define LINKA_LEVCONTROL_MAP_ID_17 0x17
+#define LINKA_LEVCONTROL_MAP_SLOT_THORNTAIL  7
+#define LINKA_LEVCONTROL_MAP_SLOT_KRAZOA_PALACE 0x0B
+#define LINKA_LEVCONTROL_MAP_SLOT_ICE_MOUNTAIN 0x17
+#define LINKA_LEVCONTROL_MAP_SLOT_SNOWHORN 10
 
-#define LINKA_LEVCONTROL_WARP_ID_SHRINE        2
+#define LINKA_LEVCONTROL_WARP_ID_MODE01        2
 #define LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_A 0x20
 #define LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B 0x22
 #define LINKA_LEVCONTROL_WARP_ID_MODE3         0x0F
 
-#define LINKA_LEVCONTROL_MODE2_RESET_GAMEBIT      0x405
-#define LINKA_LEVCONTROL_MODE2_ROUTE_A_GAMEBIT    0xBFD
-#define LINKA_LEVCONTROL_MODE2_ROUTE_B_GAMEBIT    0x0FF
-#define LINKA_LEVCONTROL_MODE2_ROUTE_C_GAMEBIT    0xC6E
-#define LINKA_LEVCONTROL_LIGHTFOOT_UNLOCK_GAMEBIT 0x1ED
 
-#define LINKA_LEVCONTROL_INIT_GAMEBIT_0      0x90D
-#define LINKA_LEVCONTROL_INIT_GAMEBIT_1      0x90E
-#define LINKA_LEVCONTROL_INIT_GAMEBIT_2      0x90F
 #define LINKA_LEVCONTROL_MUSIC_FADE_TIME 0x2EE
 
 /* per-instance extra block reserved by the object system; unused by this TU */
@@ -61,75 +46,75 @@
 
 int LinkALevControl_seqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
 {
-    int stateIndex;
-    u8 mode;
+    int eventIndex;
+    u8 mapAct;
     u8 eventId;
-    int mapDir;
+    int mapDirectory;
 
-    mode = (u8)(*gMapEventInterface)->getMapAct((int)obj->anim.mapEventSlot);
+    mapAct = (u8)(*gMapEventInterface)->getMapAct((int)obj->anim.mapEventSlot);
     Sfx_KeepAliveLoopedObjectSound(0, LINKA_LEVCONTROL_LOOP_SFX_ID);
-    for (stateIndex = 0; stateIndex < animUpdate->eventCount; stateIndex++)
+    for (eventIndex = 0; eventIndex < animUpdate->eventCount; eventIndex++)
     {
-        eventId = animUpdate->eventIds[stateIndex];
+        eventId = animUpdate->eventIds[eventIndex];
         if (eventId == LINKA_LEVCONTROL_ANIM_EVENT_OPEN_PATH)
         {
             defragMemory(0);
-            switch (mode)
+            switch (mapAct)
             {
             case 0:
             case 1:
-                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 0, 0);
-                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 2, 0);
-                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 3, 0);
-                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 7, 0);
-                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_7, 10, 0);
-                (*gMapEventInterface)->setObjGroupStatus(10, 7, 0);
-                mainSetBits(LINKA_LEVCONTROL_LIGHTFOOT_UNLOCK_GAMEBIT, 1);
-                loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_17);
-                mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_17);
-                lockLevel(mapDir, 0);
+                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_SLOT_THORNTAIL, 0, 0);
+                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_SLOT_THORNTAIL, 2, 0);
+                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_SLOT_THORNTAIL, 3, 0);
+                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_SLOT_THORNTAIL, 7, 0);
+                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_SLOT_THORNTAIL, 10, 0);
+                (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_SLOT_SNOWHORN, 7, 0);
+                mainSetBits(GAMEBIT_IM_TrickyRelated01ED, 1);
+                loadMapAndParent(LINKA_LEVCONTROL_MAP_SLOT_ICE_MOUNTAIN);
+                mapDirectory = mapGetDirIdx(LINKA_LEVCONTROL_MAP_SLOT_ICE_MOUNTAIN);
+                lockLevel(mapDirectory, 0);
                 break;
             case 2:
-                loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_0B);
-                mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
-                lockLevel(mapDir, 0);
+                loadMapAndParent(LINKA_LEVCONTROL_MAP_SLOT_KRAZOA_PALACE);
+                mapDirectory = mapGetDirIdx(LINKA_LEVCONTROL_MAP_SLOT_KRAZOA_PALACE);
+                lockLevel(mapDirectory, 0);
                 break;
             case 3:
-                loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_7);
-                mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
-                lockLevel(mapDir, 0);
+                loadMapAndParent(LINKA_LEVCONTROL_MAP_SLOT_THORNTAIL);
+                mapDirectory = mapGetDirIdx(LINKA_LEVCONTROL_MAP_SLOT_THORNTAIL);
+                lockLevel(mapDirectory, 0);
                 break;
             }
         }
         else if (eventId == LINKA_LEVCONTROL_ANIM_EVENT_WARP)
         {
-            switch (mode)
+            switch (mapAct)
             {
             case 0:
             case 1:
-                warpToMap(LINKA_LEVCONTROL_WARP_ID_SHRINE, 0);
+                warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE01, 0);
                 break;
             case 2:
-                mainSetBits(LINKA_LEVCONTROL_MODE2_RESET_GAMEBIT, 0);
-                if (mainGetBit(LINKA_LEVCONTROL_MODE2_ROUTE_B_GAMEBIT) != 0)
+                mainSetBits(GAMEBIT_WM_ObjGroups, 0);
+                if (mainGetBit(GAMEBIT_ITEM_SpiritTestFear_Got) != 0)
                 {
-                    (*gMapEventInterface)->setMapAct(LINKA_LEVCONTROL_MAP_ID_0B, 3);
-                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 8, 1);
-                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 9, 1);
+                    (*gMapEventInterface)->setMapAct(LINKA_LEVCONTROL_MAP_SLOT_KRAZOA_PALACE, 3);
+                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_SLOT_KRAZOA_PALACE, 8, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_SLOT_KRAZOA_PALACE, 9, 1);
                     warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B, 0);
                 }
-                else if (mainGetBit(LINKA_LEVCONTROL_MODE2_ROUTE_A_GAMEBIT) != 0)
+                else if (mainGetBit(GAMEBIT_ITEM_TestCombatSpirit_Got) != 0)
                 {
-                    (*gMapEventInterface)->setMapAct(LINKA_LEVCONTROL_MAP_ID_0B, 2);
-                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 5, 1);
-                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 6, 1);
+                    (*gMapEventInterface)->setMapAct(LINKA_LEVCONTROL_MAP_SLOT_KRAZOA_PALACE, 2);
+                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_SLOT_KRAZOA_PALACE, 5, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_SLOT_KRAZOA_PALACE, 6, 1);
                     warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_A, 0);
                 }
-                else if (mainGetBit(LINKA_LEVCONTROL_MODE2_ROUTE_C_GAMEBIT) != 0)
+                else if (mainGetBit(GAMEBIT_ITEM_SpiritTestStrength_Got) != 0)
                 {
-                    (*gMapEventInterface)->setMapAct(LINKA_LEVCONTROL_MAP_ID_0B, 4);
-                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 8, 1);
-                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_ID_0B, 9, 1);
+                    (*gMapEventInterface)->setMapAct(LINKA_LEVCONTROL_MAP_SLOT_KRAZOA_PALACE, 4);
+                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_SLOT_KRAZOA_PALACE, 8, 1);
+                    (*gMapEventInterface)->setObjGroupStatus(LINKA_LEVCONTROL_MAP_SLOT_KRAZOA_PALACE, 9, 1);
                     warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B, 0);
                 }
                 break;
@@ -141,17 +126,17 @@ int LinkALevControl_seqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
         }
         else if (eventId == LINKA_LEVCONTROL_ANIM_EVENT_UNLOAD_NEIGHBOR_MAP)
         {
-            switch (mode)
+            switch (mapAct)
             {
             case 0:
             case 1:
             case 2:
-                mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
-                mapUnload(mapDir, 0x20000000);
+                mapDirectory = mapGetDirIdx(LINKA_LEVCONTROL_MAP_SLOT_THORNTAIL);
+                mapUnload(mapDirectory, 0x20000000);
                 break;
             case 3:
-                mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
-                mapUnload(mapDir, 0x20000000);
+                mapDirectory = mapGetDirIdx(LINKA_LEVCONTROL_MAP_SLOT_KRAZOA_PALACE);
+                mapUnload(mapDirectory, 0x20000000);
                 break;
             }
         }
@@ -173,9 +158,9 @@ void LinkALevControl_free(void)
 {
 }
 
-void LinkALevControl_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
+void LinkALevControl_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
 }
 
 void LinkALevControl_hitDetect(void)
@@ -195,9 +180,9 @@ void LinkALevControl_init(GameObject* obj)
     flags = obj->objectFlags | OBJECT_OBJFLAG_HITDETECT_DISABLED;
     obj->objectFlags = flags;
     skySetEnvFxFlags(0);
-    mainSetBits(LINKA_LEVCONTROL_INIT_GAMEBIT_0, 1);
-    mainSetBits(LINKA_LEVCONTROL_INIT_GAMEBIT_1, 1);
-    mainSetBits(LINKA_LEVCONTROL_INIT_GAMEBIT_2, 1);
+    mainSetBits(GAMEBIT_SawMagic, 1);
+    mainSetBits(GAMEBIT_SawBigHealth, 1);
+    mainSetBits(GAMEBIT_SawApple, 1);
     Music_StopChannelsByPriorityGroup(3, MUSIC_CHANNEL_STOP_FADE, LINKA_LEVCONTROL_MUSIC_FADE_TIME);
 }
 
@@ -209,7 +194,7 @@ void LinkALevControl_initialise(void)
 {
 }
 
-ObjectDescriptor gFireObjDescriptor = {
+ObjectDescriptor gLinkALevControlObjDescriptor = {
     0,
     0,
     0,

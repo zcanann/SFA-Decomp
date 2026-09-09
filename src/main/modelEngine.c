@@ -458,6 +458,7 @@
 #include "main/dll/CF/laser.h"
 #include "dlls/objects/552.h"
 #include "dlls/objects/567_DFPSpPl.h"
+#include "dlls/objects/568_LINKA_levco.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "dlls/objects/294.h"
 #include "dlls/objects/557_DFP_seqpoin.h"
@@ -577,7 +578,7 @@ extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor,
     gDrakorEnergyObjDescriptor;
 extern ResourceDescriptor gDrakorMissileObjDescriptor;
 extern ResourceDescriptor gEarthWalkerObjDescriptor;
-extern ResourceDescriptor gFireFlyObjDescriptor, gFireObjDescriptor;
+extern ResourceDescriptor gFireFlyObjDescriptor;
 extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor, gKtRexFloorSwitchObjDescriptor,
     gKtRexLevelObjDescriptor, gKytesMumObjDescriptor;
 extern ResourceDescriptor gProjectedLightObjDescriptor;
@@ -1787,7 +1788,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gDfptargetblockObjDescriptor,
     (ResourceDescriptor*)&gLaserUnsupportedObjDescriptor,
     (ResourceDescriptor*)&gDFPSpPlObjDescriptor,
-    &gFireObjDescriptor,
+    (ResourceDescriptor*)&gLinkALevControlObjDescriptor,
     (ResourceDescriptor*)&gTextBlockObjDescriptor,
     (ResourceDescriptor*)&gPlatform1ObjDescriptor,
     &gDfplightniObjDescriptor,
