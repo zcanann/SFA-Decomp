@@ -221,7 +221,8 @@ static void lightningDrawStrand(f32* from, f32* to, u8 width, f32 strandSegmentD
     }
 }
 
-static void lightningDrawBolt(f32* start, f32* end, u8 width, f32 boltSegmentDensity, f32 strandSegmentDensity, int* seed, int depth, u8 flags) {
+static void lightningDrawBolt(f32* start, f32* end, u8 width, f32 boltSegmentDensity, f32 strandSegmentDensity,
+                              int* seed, int depth, u8 flags) {
     f32 len;
     f32 total;
     f32 py;
@@ -309,7 +310,8 @@ static void lightningDrawBolt(f32* start, f32* end, u8 width, f32 boltSegmentDen
                 PSVECScale((Vec*)scaled, (Vec*)branchEnd, bfrac * len);
                 PSVECAdd((Vec*)start, (Vec*)branchEnd, (Vec*)branchEnd);
                 PSVECAdd((Vec*)branchEnd, (Vec*)offset, (Vec*)branchEnd);
-                lightningDrawBolt(next, branchEnd, halfWidth, boltSegmentDensity, strandSegmentDensity, seed, depth + 1, flags);
+                lightningDrawBolt(next, branchEnd, halfWidth, boltSegmentDensity, strandSegmentDensity, seed,
+                                  depth + 1, flags);
             }
         } else {
             next[0] = end[0];
@@ -411,8 +413,8 @@ void lightningRenderActive(void) {
     }
 }
 
-LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 boltSegmentDensity, f32 strandSegmentDensity, u16 lifetime, u8 width,
-                                 u8 flags) {
+LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 boltSegmentDensity,
+                                 f32 strandSegmentDensity, u16 lifetime, u8 width, u8 flags) {
     LightningEffect* p = mmAlloc(40, 23, 0);
 
     if (p == NULL) {

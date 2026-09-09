@@ -9,8 +9,8 @@
 #include "main/newclouds.h"
 #include "main/frame_timing.h"
 
-#define DFPLIGHTNI_SFX_ID                  0x4c3
-#define DFPLIGHTNI_SFX_MAX_COUNT           2
+#define DFPLIGHTNI_SFX_ID        0x4c3
+#define DFPLIGHTNI_SFX_MAX_COUNT 2
 
 #define DFPLIGHTNI_RANDOM_TIMER_MIN 0
 #define DFPLIGHTNI_RANDOM_TIMER_MAX 100
@@ -21,17 +21,17 @@
 
 #define DFPLIGHTNI_PLAYER_EFFECT_FRAMES 10
 #define DFPLIGHTNI_LIFETIME_FRAME_SCALE 10
-#define DFPLIGHTNI_WIDTH_STEP                 0xc
-#define DFPLIGHTNI_EFFECT_WIDTH_MASK          0xff
+#define DFPLIGHTNI_WIDTH_STEP           0xc
+#define DFPLIGHTNI_EFFECT_WIDTH_MASK    0xff
 
 #define DFPLIGHTNI_TIMER_MAX          1000.0f
 #define DFPLIGHTNI_TIMER_INACTIVE_MAX 1010.0f
 
-#define DFPLIGHTNI_TIMER_ACTIVE_RESET  999.0f
-#define DFPLIGHTNI_OFFSET_SCALE        0.1f
+#define DFPLIGHTNI_TIMER_ACTIVE_RESET   999.0f
+#define DFPLIGHTNI_OFFSET_SCALE         0.1f
 #define DFPLIGHTNI_DENSITY_MIN          0.001f
 #define DFPLIGHTNI_DENSITY_MAX          5.0f
-#define DFPLIGHTNI_TRIGGER_TIME_BASE   400.0f
+#define DFPLIGHTNI_TRIGGER_TIME_BASE    400.0f
 #define DFPLIGHTNI_DENSITY_NORM_DIVISOR 32767.0f
 
 static inline DfpLightniState* dfplightni_getState(GameObject* obj) {
@@ -140,28 +140,32 @@ void DFP_Lightni_update(GameObject* obj) {
                     f32 clampedStrandDensity;
                     Sfx_PlayFromObjectLimited(obj, DFPLIGHTNI_SFX_ID, DFPLIGHTNI_SFX_MAX_COUNT);
                     if (targetPlayer != 0) {
-                        clampedStrandDensity = (strandSegmentDensity < DFPLIGHTNI_DENSITY_MIN)   ? DFPLIGHTNI_DENSITY_MIN
-                                 : (strandSegmentDensity > DFPLIGHTNI_DENSITY_MAX) ? DFPLIGHTNI_DENSITY_MAX
-                                                                     : strandSegmentDensity;
+                        clampedStrandDensity = (strandSegmentDensity < DFPLIGHTNI_DENSITY_MIN) ? DFPLIGHTNI_DENSITY_MIN
+                                               : (strandSegmentDensity > DFPLIGHTNI_DENSITY_MAX)
+                                                   ? DFPLIGHTNI_DENSITY_MAX
+                                                   : strandSegmentDensity;
                         effectStart = &start;
                         effectEnd = &end;
                         clampedBoltDensity = (boltSegmentDensity < DFPLIGHTNI_DENSITY_MIN)   ? DFPLIGHTNI_DENSITY_MIN
-                                 : (boltSegmentDensity > DFPLIGHTNI_DENSITY_MAX) ? DFPLIGHTNI_DENSITY_MAX
-                                                                     : boltSegmentDensity;
+                                             : (boltSegmentDensity > DFPLIGHTNI_DENSITY_MAX) ? DFPLIGHTNI_DENSITY_MAX
+                                                                                             : boltSegmentDensity;
                         state->effectHandle = lightningCreate(
-                            effectStart, effectEnd, clampedBoltDensity, clampedStrandDensity, DFPLIGHTNI_PLAYER_EFFECT_FRAMES,
+                            effectStart, effectEnd, clampedBoltDensity, clampedStrandDensity,
+                            DFPLIGHTNI_PLAYER_EFFECT_FRAMES,
                             state->widthSteps * DFPLIGHTNI_WIDTH_STEP & DFPLIGHTNI_EFFECT_WIDTH_MASK, 0);
                     } else {
-                        clampedStrandDensity = (strandSegmentDensity < DFPLIGHTNI_DENSITY_MIN)   ? DFPLIGHTNI_DENSITY_MIN
-                                 : (strandSegmentDensity > DFPLIGHTNI_DENSITY_MAX) ? DFPLIGHTNI_DENSITY_MAX
-                                                                     : strandSegmentDensity;
+                        clampedStrandDensity = (strandSegmentDensity < DFPLIGHTNI_DENSITY_MIN) ? DFPLIGHTNI_DENSITY_MIN
+                                               : (strandSegmentDensity > DFPLIGHTNI_DENSITY_MAX)
+                                                   ? DFPLIGHTNI_DENSITY_MAX
+                                                   : strandSegmentDensity;
                         effectStart = &start;
                         effectEnd = &end;
                         clampedBoltDensity = (boltSegmentDensity < DFPLIGHTNI_DENSITY_MIN)   ? DFPLIGHTNI_DENSITY_MIN
-                                 : (boltSegmentDensity > DFPLIGHTNI_DENSITY_MAX) ? DFPLIGHTNI_DENSITY_MAX
-                                                                     : boltSegmentDensity;
+                                             : (boltSegmentDensity > DFPLIGHTNI_DENSITY_MAX) ? DFPLIGHTNI_DENSITY_MAX
+                                                                                             : boltSegmentDensity;
                         state->effectHandle = lightningCreate(
-                            effectStart, effectEnd, clampedBoltDensity, clampedStrandDensity, state->effectLifetimeFrames,
+                            effectStart, effectEnd, clampedBoltDensity, clampedStrandDensity,
+                            state->effectLifetimeFrames,
                             state->widthSteps * DFPLIGHTNI_WIDTH_STEP & DFPLIGHTNI_EFFECT_WIDTH_MASK, 0);
                     }
                 }
@@ -193,8 +197,10 @@ void DFP_Lightni_init(GameObject* obj, DfpLightniPlacementPrefix* mapData) {
             triggerTime = DFPLIGHTNI_TRIGGER_TIME_BASE + triggerTime;
             state->triggerTime = triggerTime;
         }
-        state->boltSegmentDensity = ((f32)(s32)mapData->boltSegmentDensityParam / DFPLIGHTNI_DENSITY_NORM_DIVISOR) * DFPLIGHTNI_DENSITY_MAX;
-        state->strandSegmentDensity = ((f32)(s32)mapData->strandSegmentDensityParam / DFPLIGHTNI_DENSITY_NORM_DIVISOR) * DFPLIGHTNI_DENSITY_MAX;
+        state->boltSegmentDensity =
+            ((f32)(s32)mapData->boltSegmentDensityParam / DFPLIGHTNI_DENSITY_NORM_DIVISOR) * DFPLIGHTNI_DENSITY_MAX;
+        state->strandSegmentDensity =
+            ((f32)(s32)mapData->strandSegmentDensityParam / DFPLIGHTNI_DENSITY_NORM_DIVISOR) * DFPLIGHTNI_DENSITY_MAX;
         state->widthSteps = mapData->widthSteps;
         state->effectLifetimeFrames = mapData->lifetimeTensOfFrames * DFPLIGHTNI_LIFETIME_FRAME_SCALE;
         state->targetPlayerGameBit = mapData->targetPlayerGameBit;
