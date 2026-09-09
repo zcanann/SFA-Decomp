@@ -128,7 +128,7 @@ float atanf_fast(float value) {
     reduced = fastReciprocal(reduced);
     result = reduced * reduced;
     result = result * (*(const float*)&sAtanFastCoeff5 * result + *(const float*)&sAtanFastCoeff3) +
-                 *(const float*)&sAtanFastCoeff1;
+             *(const float*)&sAtanFastCoeff1;
     positiveResult = *(const float*)&sArcHalfPiF - reduced * result;
     result = reduced * result - *(const float*)&sArcHalfPiF;
     if (value >= *(const float*)&sArcZero) {
@@ -273,20 +273,16 @@ float atan2f(float y, float x) {
     if (reduced > angle) {
         angle = angle / reduced;
         reduced = angle * angle;
-        angle =
-            angle * (reduced *
-                         (reduced * (*(const float*)&sAtan2Coeff7 * reduced + *(const float*)&sAtan2Coeff5) +
-                          *(const float*)&sAtan2Coeff3) +
-                     *(const float*)&sAtan2Coeff1);
+        angle = angle * (reduced * (reduced * (*(const float*)&sAtan2Coeff7 * reduced + *(const float*)&sAtan2Coeff5) +
+                                    *(const float*)&sAtan2Coeff3) +
+                         *(const float*)&sAtan2Coeff1);
     } else {
         angle = reduced / angle;
         reduced = angle * angle;
-        angle =
-            *(const float*)&sArcHalfPiF -
-            angle * (reduced *
-                         (reduced * (*(const float*)&sAtan2Coeff7 * reduced + *(const float*)&sAtan2Coeff5) +
-                          *(const float*)&sAtan2Coeff3) +
-                     *(const float*)&sAtan2Coeff1);
+        angle = *(const float*)&sArcHalfPiF -
+                angle * (reduced * (reduced * (*(const float*)&sAtan2Coeff7 * reduced + *(const float*)&sAtan2Coeff5) +
+                                    *(const float*)&sAtan2Coeff3) +
+                         *(const float*)&sAtan2Coeff1);
     }
 
     quadrantSigns = (float_bits(&y) & 0x80000000) | ((float_bits(&x) & 0x80000000) >> 1);
