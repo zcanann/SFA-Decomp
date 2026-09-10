@@ -18,7 +18,7 @@ typedef struct SaveScoreEntry
 typedef struct SaveData
 {
     u8 optionsValid;
-    u8 pad01;
+    u8 languageIndex;
     u8 subtitlesEnabled;
     u8 gameUiSetting;
     u8 cameraSetting;
@@ -36,6 +36,10 @@ typedef struct SaveData
     u8 pad18[4];
     SaveScoreEntry scores[SAVE_SCORE_TABLE_COUNT][SAVE_SCORE_ENTRY_COUNT];
 } SaveData;
+
+STATIC_ASSERT(sizeof(SaveData) == SAVE_DATA_SIZE);
+STATIC_ASSERT(offsetof(SaveData, languageIndex) == 0x01);
+STATIC_ASSERT(offsetof(SaveData, subtitlesEnabled) == 0x02);
 
 /* Bit index into unlockedCheats/enabledCheats, aka cheatId. */
 enum CheatId

@@ -50,6 +50,7 @@ dlls/engine/48/48.c
 dlls/engine/49/49.c
 dlls/engine/5/5.c
 dlls/engine/51/51.c
+dlls/engine/52_n_attractmode/n_attractmode.c
 dlls/engine/56/56.c
 dlls/engine/57/57.c
 dlls/engine/58/58.c

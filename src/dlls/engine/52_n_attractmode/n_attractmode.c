@@ -26,6 +26,7 @@
 #include "main/dll/dll_0037_optionsscreen.h"
 #include "dolphin/os.h"
 #include "dolphin/os/OSReport.h"
+#include "dolphin/os/OSRtc.h"
 #include "dolphin/vi.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "main/dll/FRONT/dll_44.h"
@@ -37,6 +38,21 @@
 #include "main/dll/FRONT/picmenu.h"
 #include "dlls/object_descriptor.h"
 #include "main/camera_interface.h"
+
+#if defined(VERSION_GSAE01_rev1)
+#define NATTRACTMODE_PREPARE_FAIL_LINE 0x33E
+#elif defined(VERSION_GSAP01)
+#define NATTRACTMODE_PREPARE_FAIL_LINE 0x33A
+#elif defined(VERSION_GSAP01_rev1)
+#define NATTRACTMODE_PREPARE_FAIL_LINE 0x34D
+#else
+#define NATTRACTMODE_PREPARE_FAIL_LINE 0x2FB
+#endif
+
+#define TITLE_MENU_LANGUAGE_SETUP_NONE 0
+#define TITLE_MENU_LANGUAGE_SETUP_REQUESTED 1
+#define TITLE_MENU_LANGUAGE_SETUP_OPEN 2
+#define TITLE_MENU_LANGUAGE_SETUP_RESTORE 3
 
 u8 gTitleMenuPanelOpen;
 s8 gTitleMenuLoadDelay;
@@ -57,6 +73,9 @@ void* gAttractMovieOptionalBuffer;
 void* gAttractMovieWorkBuffer;
 void* gAttractMovieScratchBuffer;
 u8 gAttractMovieAutoplayEnabled;
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+s32 gTitleMenuLanguageSetupState;
+#endif
 u8 gAttractMoviePreparePending;
 u8 lbl_803DD618;
 s8 gTitleMenuSelectionFadeStep;
@@ -425,6 +444,16 @@ void TitleMenu_frameEnd(void)
         }                                                                                                              \
         gTitleMenuLinkInterface->vtable->copyItems(gTitleMenuEntries);                                                      \
     } while (0)
+static inline void TitleMenu_CreateSaveFile(void) {
+#if defined(VERSION_GSAP01_rev1)
+    if (cardCreateSaveFile(1) != 0) {
+        loadGameOptions();
+    }
+#else
+    cardCreateSaveFile(1);
+#endif
+}
+
 #define TitleMenu_ReloadSaveSettings()                                                                                 \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -432,7 +461,7 @@ void TitleMenu_frameEnd(void)
         result = loadGameOptions();                                                                                    \
         if ((result == 0) && (gSaveGameEnabled != 0))                                                                      \
         {                                                                                                              \
-            cardCreateSaveFile(1);                                                                                     \
+            TitleMenu_CreateSaveFile();                                                                                     \
         }                                                                                                              \
         loadSaveSettings();                                                                                            \
     } while (0)
@@ -450,6 +479,29 @@ int TitleMenu_run(void)
 
     previousFadeTimer = gTitleMenuLoadDelay;
     frames = framesThisStep;
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+    if (gTitleMenuLanguageSetupState == TITLE_MENU_LANGUAGE_SETUP_RESTORE) {
+        SaveData* options;
+        u8 languageIndex;
+        u8 subtitlesEnabled;
+
+        gTitleMenuLanguageSetupState = TITLE_MENU_LANGUAGE_SETUP_NONE;
+        options = getSaveFileStruct();
+        languageIndex = options->languageIndex;
+        subtitlesEnabled = options->subtitlesEnabled;
+        if (loadGameOptions() == 0 && gSaveGameEnabled != 0) {
+            TitleMenu_CreateSaveFile();
+            options->languageIndex = languageIndex;
+            options->subtitlesEnabled = subtitlesEnabled;
+            if (gSaveGameEnabled != 0) {
+                saveGameOptions();
+            }
+        }
+        options->languageIndex = languageIndex;
+        options->subtitlesEnabled = subtitlesEnabled;
+        loadSaveSettings();
+    }
+#endif
     if (gSaveGameEnabled == 0xfe)
     {
         TitleMenu_ReloadSaveSettings();
@@ -534,7 +586,18 @@ int TitleMenu_run(void)
             (*gCameraInterface)->releaseAction((void*)0, 1);
             if (gSaveGameEnabled == 0xff)
             {
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+                if (loadGameOptions() == 0) {
+                    if (OSGetLanguage() == OS_LANGUAGE_DUTCH) {
+                        gTitleMenuLanguageSetupState = TITLE_MENU_LANGUAGE_SETUP_REQUESTED;
+                    } else if (gSaveGameEnabled != 0) {
+                        TitleMenu_CreateSaveFile();
+                    }
+                }
+                loadSaveSettings();
+#else
                 TitleMenu_ReloadSaveSettings();
+#endif
                 if (gSaveGameEnabled == 0xff)
                 {
                     gSaveGameEnabled = 1;
@@ -598,6 +661,11 @@ int TitleMenu_run(void)
 
     menuId = gTitleMenuLinkInterface->vtable->update();
     gTitleMenuSelection = gTitleMenuLinkInterface->vtable->getSelected();
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+    if (gTitleMenuLanguageSetupState == TITLE_MENU_LANGUAGE_SETUP_REQUESTED) {
+        gTitleMenuSelection = 3;
+    }
+#endif
     if (((1.0f == titleScreenGetCamProgress()) && (gTitleMenuSelectionFade < TITLE_MENU_SELECTION_FADE_MAX)) &&
         (gAttractMoviePlaybackEnabled == 0))
     {
@@ -653,7 +721,11 @@ int TitleMenu_run(void)
     else
     {
         titleScreenSetMenuSelection(gTitleMenuSelection);
-        if ((menuId == 1) && (gTitleMenuSelectionFade == TITLE_MENU_SELECTION_FADE_MAX))
+        if ((menuId == 1
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+             || gTitleMenuLanguageSetupState == TITLE_MENU_LANGUAGE_SETUP_REQUESTED
+#endif
+             ) && (gTitleMenuSelectionFade == TITLE_MENU_SELECTION_FADE_MAX))
         {
             titleScreenSetMenuActive(1);
             gTitleMenuLoadDelay = 1;
@@ -675,6 +747,11 @@ int TitleMenu_run(void)
             case 3:
                 gTitleMenuNextDllId = 7;
                 gOptionsRequestedPanel = 2;
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+                if (gTitleMenuLanguageSetupState == TITLE_MENU_LANGUAGE_SETUP_REQUESTED) {
+                    gTitleMenuLanguageSetupState = TITLE_MENU_LANGUAGE_SETUP_OPEN;
+                }
+#endif
                 break;
             }
             return 0;
@@ -712,6 +789,11 @@ void TitleMenu_initialise(void)
     {
         gAttractMovieAutoplayEnabled = 1;
     }
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+    if (gTitleMenuLanguageSetupState == TITLE_MENU_LANGUAGE_SETUP_OPEN) {
+        gTitleMenuLanguageSetupState = TITLE_MENU_LANGUAGE_SETUP_RESTORE;
+    }
+#endif
     if (gSaveGameEnabled >= 0xfe)
     {
         cardSetIdentityCheckEnabled(0);
