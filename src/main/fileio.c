@@ -34,7 +34,11 @@ DVDCommandBlock gDvdStreamPlayAddrCommandBlock;
 
 static void DvdRead_Callback(s32 result, DVDFileInfo* fileInfo);
 
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
 void dvdCheckError(void)
+#else
+int dvdCheckError(void)
+#endif
 {
     int msgId = 0xffff;
     int status;
@@ -128,7 +132,13 @@ void dvdCheckError(void)
         {
             gameTextSetCharset(prevCharset, 2);
         }
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+        return 1;
+#endif
     }
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+    return 0;
+#endif
 }
 
 int DVDRead(DVDFileInfo* fileInfo, void* buf, s32 size, s32 offset)

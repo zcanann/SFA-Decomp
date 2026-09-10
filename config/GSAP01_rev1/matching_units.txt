@@ -842,6 +842,7 @@ main/audio_stream.c
 main/boot_logo.c
 main/camera.c
 main/curves.c
+main/fileio.c
 main/gameloop_buttonobj.c
 main/modelEngine.c
 main/modellight.c

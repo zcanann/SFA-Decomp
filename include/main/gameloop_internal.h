@@ -3,11 +3,15 @@
 
 #include "game/objects/object_fwd.h"
 #include "types.h"
+#include "dolphin/gx/GXStruct.h"
 
 extern int gGameLoopPendingUiDllId;
 extern f32 gGameLoopMusicFadeTimer;
 extern u8 gGameLoopResetComboDebounce;
 extern char sGameLoopResetMessages[0x50];
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+extern GXRenderModeObj gGameLoopPalRenderMode;
+#endif
 extern f32 gGameLoopResetFadeOutTimer;
 extern u8* gAskProgressiveScanFlag;
 extern int gGameLoopPendingMapId;
