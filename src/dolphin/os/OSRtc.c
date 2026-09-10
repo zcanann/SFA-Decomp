@@ -99,7 +99,7 @@ static int UnlockSram(int commit, u32 offset) {
     ASSERTLINE(375, Scb.locked);
     if (commit != 0) {
         if (offset == 0) {
-            OSSram* sram  = (OSSram*)Scb.sram;
+            OSSram* sram = (OSSram*)Scb.sram;
             if (2u < (sram->flags & 3)) {
                 sram->flags &= ~3;
             }
