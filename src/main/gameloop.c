@@ -158,8 +158,8 @@ static void loadAsset(AssetReq* req) {
         fileLoadToBufferOffset(req->resourceId, (void*)req->dest, req->offset, req->argC);
         break;
     case 4:
-        *(void**)req->dest =
-            loadCharacter((ObjPlacement*)req->arg18, req->arg1c, req->arg24, req->arg20, (GameObject*)req->arg14, req->arg28);
+        *(void**)req->dest = loadCharacter((ObjPlacement*)req->arg18, req->arg1c, req->arg24, req->arg20,
+                                           (GameObject*)req->arg14, req->arg28);
         break;
     case 3:
         *(void**)req->dest = (void*)textureLoad(req->resourceId, 0);
@@ -171,8 +171,8 @@ static void loadAsset(AssetReq* req) {
         *(void**)req->dest = loadModelInstance(req->resourceId, req->argC, tmp);
         break;
     case 7:
-        *(void**)req->dest =
-            loadAnimation((ModelFileHeader*)req->arg24, req->resourceId, (s16)req->argC, (ObjAnimCachedMove*)req->arg20);
+        *(void**)req->dest = loadAnimation((ModelFileHeader*)req->arg24, req->resourceId, (s16)req->argC,
+                                           (ObjAnimCachedMove*)req->arg20);
         break;
     }
 }
@@ -230,11 +230,19 @@ char sGameLoopResetMessages[0x50] =
 #if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
 /* PAL output scales a 480-line EFB to a 528-line XFB. */
 GXRenderModeObj gGameLoopPalRenderMode = {
-    VI_TVMODE_PAL_INT, 640, 480, 528, 40, 23, 640, 528, VI_XFBMODE_DF, GX_FALSE, GX_FALSE,
-    {{6, 6}, {6, 6}, {6, 6}, {6, 6}, {6, 6}, {6, 6},
-     {6, 6}, {6, 6}, {6, 6}, {6, 6}, {6, 6}, {6, 6}},
-    {7, 7, 12, 12, 12, 7, 7}
-};
+    VI_TVMODE_PAL_INT,
+    640,
+    480,
+    528,
+    40,
+    23,
+    640,
+    528,
+    VI_XFBMODE_DF,
+    GX_FALSE,
+    GX_FALSE,
+    {{6, 6}, {6, 6}, {6, 6}, {6, 6}, {6, 6}, {6, 6}, {6, 6}, {6, 6}, {6, 6}, {6, 6}, {6, 6}, {6, 6}},
+    {7, 7, 12, 12, 12, 7, 7}};
 #endif
 
 void cardShowMessage(void) {
@@ -380,9 +388,11 @@ void askProgressiveScanMode(void) {
         gameTextShow(0x33f);
 #endif
         if ((u8)sel == 1) {
-            gameTextSetColor((u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction), 0xff);
+            gameTextSetColor((u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction),
+                             0xff);
         } else {
-            gameTextSetColor((u8)(0x80 - shadeReduction), (u8)(0x80 - shadeReduction), (u8)(0x80 - shadeReduction), 0x80);
+            gameTextSetColor((u8)(0x80 - shadeReduction), (u8)(0x80 - shadeReduction), (u8)(0x80 - shadeReduction),
+                             0x80);
         }
 #if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
         gameTextShowAt(0x3cd, 0, 246);
@@ -390,9 +400,11 @@ void askProgressiveScanMode(void) {
         gameTextShowStr(gameTextGetStr(0x3cd), 0, gAskProgressiveScanYesX, 0x64);
 #endif
         if ((u8)sel == 1) {
-            gameTextSetColor((u8)(0x80 - shadeReduction), (u8)(0x80 - shadeReduction), (u8)(0x80 - shadeReduction), 0x80);
+            gameTextSetColor((u8)(0x80 - shadeReduction), (u8)(0x80 - shadeReduction), (u8)(0x80 - shadeReduction),
+                             0x80);
         } else {
-            gameTextSetColor((u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction), 0xff);
+            gameTextSetColor((u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction),
+                             0xff);
         }
 #if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
         gameTextShowAt(0x3cc, 0, 246);
@@ -478,9 +490,11 @@ void askProgressiveScanMode(void) {
         }
 #endif
         if (j < 0xff) {
-            gameTextSetColor((u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction), 0xff);
+            gameTextSetColor((u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction),
+                             0xff);
         } else {
-            gameTextSetColor((u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction), 0xff);
+            gameTextSetColor((u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction), (u8)(0xff - shadeReduction),
+                             0xff);
         }
 #if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
         gameTextShowAt(showId, 0, messageY);

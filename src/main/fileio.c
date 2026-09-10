@@ -43,8 +43,7 @@ int dvdCheckError(void)
     int msgId = 0xffff;
     int status;
 
-    if (gAudioStreamPlayAddrCallbackDone)
-    {
+    if (gAudioStreamPlayAddrCallbackDone) {
         gAudioStreamPlayAddrCallbackDone = 0;
         gAudioStreamPlayAddrCallbackResult = 0;
         DVDGetStreamPlayAddrAsync(&gDvdStreamPlayAddrCommandBlock, (DVDCBCallback)AudioStream_PlayAddrCallback);
@@ -52,13 +51,11 @@ int dvdCheckError(void)
 
     status = DVDGetDriveStatus();
     gDvdLastDriveStatus = status;
-    switch (status)
-    {
+    switch (status) {
     case DVD_STATE_FATAL_ERROR:
         msgId = GAMETEXT_MSG_DVD_FATAL_ERROR;
         stopRumble2();
-        if (gDvdErrorPauseActive == 0)
-        {
+        if (gDvdErrorPauseActive == 0) {
             gDvdErrorPauseActive = 1;
             setTimeStop(0xff);
             cutsceneFadeInOut(1);
@@ -68,8 +65,7 @@ int dvdCheckError(void)
     case DVD_STATE_NO_DISK:
         msgId = GAMETEXT_MSG_DVD_NO_DISK;
         stopRumble2();
-        if (gDvdErrorPauseActive == 0)
-        {
+        if (gDvdErrorPauseActive == 0) {
             gDvdErrorPauseActive = 1;
             setTimeStop(0xff);
             cutsceneFadeInOut(1);
@@ -78,8 +74,7 @@ int dvdCheckError(void)
     case DVD_STATE_COVER_OPEN:
         msgId = GAMETEXT_MSG_DVD_COVER_OPEN;
         stopRumble2();
-        if (gDvdErrorPauseActive == 0)
-        {
+        if (gDvdErrorPauseActive == 0) {
             gDvdErrorPauseActive = 1;
             setTimeStop(0xff);
             cutsceneFadeInOut(1);
@@ -88,8 +83,7 @@ int dvdCheckError(void)
     case DVD_STATE_WRONG_DISK:
         msgId = GAMETEXT_MSG_DVD_WRONG_DISK;
         stopRumble2();
-        if (gDvdErrorPauseActive == 0)
-        {
+        if (gDvdErrorPauseActive == 0) {
             gDvdErrorPauseActive = 1;
             setTimeStop(0xff);
             cutsceneFadeInOut(1);
@@ -98,20 +92,16 @@ int dvdCheckError(void)
     case DVD_STATE_RETRY:
         msgId = GAMETEXT_MSG_DVD_RETRY;
         stopRumble2();
-        if (gDvdErrorPauseActive == 0)
-        {
+        if (gDvdErrorPauseActive == 0) {
             gDvdErrorPauseActive = 1;
             setTimeStop(0xff);
             cutsceneFadeInOut(1);
         }
         break;
     default:
-        if (gDvdErrorPauseActive != 0)
-        {
-            if ((getLoadedFileFlags(0) & ~LOADED_FILE_FLAG_PI_LOCKED) == 0)
-            {
-                if (getGameState() != 1 || DVDCheckDisk() != 0)
-                {
+        if (gDvdErrorPauseActive != 0) {
+            if ((getLoadedFileFlags(0) & ~LOADED_FILE_FLAG_PI_LOCKED) == 0) {
+                if (getGameState() != 1 || DVDCheckDisk() != 0) {
                     gDvdErrorPauseActive = 0;
                     cutsceneFadeInOut(0);
                     Sfx_SetObjectSoundsPaused(0);
@@ -121,15 +111,13 @@ int dvdCheckError(void)
         break;
     }
 
-    if (msgId != 0xffff)
-    {
+    if (msgId != 0xffff) {
         int prevCharset = gameTextGetCharset();
         Sfx_SetObjectSoundsPaused(1);
         gameTextSetCharset(2, 2);
-    gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextShow(msgId);
-        if (prevCharset != 2)
-        {
+        if (prevCharset != 2) {
             gameTextSetCharset(prevCharset, 2);
         }
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
@@ -141,30 +129,24 @@ int dvdCheckError(void)
 #endif
 }
 
-int DVDRead(DVDFileInfo* fileInfo, void* buf, s32 size, s32 offset)
-{
+int DVDRead(DVDFileInfo* fileInfo, void* buf, s32 size, s32 offset) {
     u8 resetSeen = 0;
     gDvdReadCallbackResult = 0;
-    while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1 || gDvdReadCallbackResult == -3)
-    {
+    while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1 || gDvdReadCallbackResult == -3) {
         DVDReadAsyncPrio(fileInfo, buf, size, offset, DvdRead_Callback, 2);
-        while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1)
-        {
+        while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1) {
             padUpdate();
             checkReset();
-            if (resetSeen)
-            {
+            if (resetSeen) {
                 waitNextFrame();
             }
             dvdCheckError();
-            if (resetSeen)
-            {
+            if (resetSeen) {
                 mmFreeTick(0);
                 gameTextRun();
                 GXFlush_(1, 0);
             }
-            if (gDvdErrorPauseActive != 0)
-            {
+            if (gDvdErrorPauseActive != 0) {
                 resetSeen = 1;
             }
         }
@@ -172,41 +154,33 @@ int DVDRead(DVDFileInfo* fileInfo, void* buf, s32 size, s32 offset)
     return gDvdReadCallbackResult;
 }
 
-static void DvdRead_Callback(s32 result, DVDFileInfo* fileInfo)
-{
+static void DvdRead_Callback(s32 result, DVDFileInfo* fileInfo) {
     (void)fileInfo;
     gDvdReadCallbackResult = result;
 }
 
-void setFileInfo(DVDFileInfo* fileInfo)
-{
+void setFileInfo(DVDFileInfo* fileInfo) {
     gFileInfo = fileInfo;
 }
 
-void* loadFileByPathAsync(char* path, int* outSize, int unused, DVDCallback cb)
-{
+void* loadFileByPathAsync(char* path, int* outSize, int unused, DVDCallback cb) {
     DVDFileInfo* fileInfo;
     int size;
     u32 alignedSize;
     void* buf;
     int guard;
-    if (outSize != NULL)
-    {
+    if (outSize != NULL) {
         *outSize = 0;
     }
     DVDSetAutoInvalidation(1);
-    if (gFileInfo != NULL)
-    {
+    if (gFileInfo != NULL) {
         fileInfo = gFileInfo;
-    }
-    else
-    {
+    } else {
         guard = mmSetForceHeap3Only(0) & 0xff;
         fileInfo = mmAlloc(sizeof(DVDFileInfo), 0xFACEFEED, 0);
         mmSetForceHeap3Only(guard);
     }
-    if (DVDOpen(path, fileInfo) == 0)
-    {
+    if (DVDOpen(path, fileInfo) == 0) {
         mm_free(fileInfo);
         return NULL;
     }
@@ -215,15 +189,12 @@ void* loadFileByPathAsync(char* path, int* outSize, int unused, DVDCallback cb)
     guard = mmSetForceHeap3Only(0) & 0xff;
     buf = mmAlloc(alignedSize, 0x7d7d7d7d, 0);
     mmSetForceHeap3Only(guard);
-    if (buf == NULL)
-    {
+    if (buf == NULL) {
         mm_free(fileInfo);
         return NULL;
     }
-    if (DVDReadAsyncPrio(fileInfo, buf, alignedSize, 0, cb, 2) != 0)
-    {
-        if (outSize != NULL)
-        {
+    if (DVDReadAsyncPrio(fileInfo, buf, alignedSize, 0, cb, 2) != 0) {
+        if (outSize != NULL) {
             *outSize = size;
         }
         return buf;
@@ -233,41 +204,34 @@ void* loadFileByPathAsync(char* path, int* outSize, int unused, DVDCallback cb)
     return NULL;
 }
 
-void* loadFileByPath(char* path, int* outSize, int unused)
-{
+void* loadFileByPath(char* path, int* outSize, int unused) {
     DVDFileInfo fileInfo;
     int size;
     u32 alignedSize;
     void* buf;
-    if (outSize != NULL)
-    {
+    if (outSize != NULL) {
         *outSize = 0;
     }
     DVDSetAutoInvalidation(1);
-    if (DVDOpen(path, &fileInfo) == 0)
-    {
+    if (DVDOpen(path, &fileInfo) == 0) {
         return NULL;
     }
     size = fileInfo.length;
     alignedSize = (size + 0x1f) & ~0x1f;
     buf = mmAlloc(alignedSize, 0x7d7d7d7d, 0);
-    if (buf == NULL)
-    {
+    if (buf == NULL) {
         return NULL;
     }
-    if (DVDRead(&fileInfo, buf, alignedSize, 0) == -1)
-    {
+    if (DVDRead(&fileInfo, buf, alignedSize, 0) == -1) {
         mm_free(buf);
         return NULL;
     }
-    if (DVDClose(&fileInfo) == 0)
-    {
+    if (DVDClose(&fileInfo) == 0) {
         mm_free(buf);
         return NULL;
     }
     DCStoreRange(buf, size);
-    if (outSize != NULL)
-    {
+    if (outSize != NULL) {
         *outSize = size;
     }
     return buf;
