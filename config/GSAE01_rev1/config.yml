@@ -207,6 +207,8 @@ extract:
   header: gLoadingScreenTextures.inc
 
 force_active:
+  # Retain the version/reset metadata previously used as a diagnostic address base.
+  - sGameLoopResetMessages
   # audio.c: retain the unused initialized word and two small-BSS words.
   - lbl_803DB1EC
   - sAudioUnused0

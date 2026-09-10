@@ -852,8 +852,6 @@ main/boot_logo.c
 main/camera.c
 main/curves.c
 main/fileio.c
-main/gameloop.c
-main/gameloop_buttonobj.c
 main/mm.c
 main/modelEngine.c
 main/modellight.c

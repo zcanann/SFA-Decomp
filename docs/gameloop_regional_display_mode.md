@@ -1,5 +1,9 @@
 # Regional display-mode prompt and DVD error result
 
+The later [TU boundary audit](gameloop_tu_recovery.md) reunifies the three game-loop
+fragments and supersedes their completed-unit status below. These results record
+the preceding regional behavior recovery.
+
 The EN v1.0 and JP display-mode prompt selects progressive scan. Both PAL
 releases instead select PAL 50 Hz or EURGB60 interlaced output. The common
 source now preserves those binary-backed differences without changing compiler

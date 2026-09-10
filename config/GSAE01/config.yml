@@ -12,6 +12,8 @@ name: main
 # Retain the priority-sort table even though code addresses it through the
 # containing vidListNodes storage rather than by this symbol directly.
 force_active:
+  # Retain the version/reset metadata previously used as a diagnostic address base.
+  - sGameLoopResetMessages
   # GPU error handlers reach these strings through offsets from the boot
   # texture/FIFO base, so their individual symbols have no direct relocations.
   - sGpuHangSuspectedMessage
