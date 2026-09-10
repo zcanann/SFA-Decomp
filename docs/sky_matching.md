@@ -3,7 +3,8 @@
 Engine slot 5 (`src/dlls/engine/5/5.c`) reaches 100% for EN v1.0 on
 2026-09-07: all 57 functions, 16,924 code bytes, and 776 data bytes.
 Its common GC/1.3 compiler and existing `cflags_dll_noopt_noautoinline`
-profile remain unchanged.
+profile remain unchanged. The later [zero-template recovery](sky_zero_templates.md)
+adds four exact data bytes to this unit across all four supported versions.
 
 ## Sun and moon rendering
 

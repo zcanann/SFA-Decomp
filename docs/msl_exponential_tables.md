@@ -58,8 +58,9 @@ address-based access. No forced section or synthetic float literal is involved.
   the six SDA references have the same roles as the other four versions.
 - The eight-byte MSL `float.c` unit is fully matching and linked from source.
 - EN links `exponentialsf.c` from source; `all_source` and the strict DOL
-  checksum pass. The other four versions remain progress-only builds, so their
-  per-object results are not claims of whole-game source-link validation.
+  checksum pass. The other four versions were progress-only at this stage, so
+  these per-object results did not claim whole-game source-link validation.
+  [Native regional checksum builds](jp_source_link_retention.md) are now supported.
 
 The pre-existing `sconst_type` section pragma for the automatic local
 coefficient-array template is still unresolved. Removing it preserves every

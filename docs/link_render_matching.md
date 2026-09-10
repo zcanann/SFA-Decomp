@@ -49,3 +49,44 @@ python3 tools/tricky_backend_trace.py --unit main/dlls/engine/60/60 \
   --function Link_render --graph \
   --output build/flag_probe/link_render_matching_backend
 ```
+
+## Shared records and regional font lookup (2026-09-09)
+
+Link now uses the same `TitleMenuTextEntry` as its title-menu, save-select and
+warpstone callers. `Link_setup` copies complete 0x3C-byte records and replaces
+the template asset ID at +0x10 with a loaded texture pointer. The canonical
+record therefore exposes both through a union. The duplicate local
+`LinkMenuItem` and 25-slot count are removed, and layout assertions live beside
+the shared definition. Caller template bytes and every other source object
+remain unchanged in all five versions.
+
+The two remaining regional mismatches were the text-only fallback in
+`Link_refreshOverlappingItemTimers` and `Link_scanItemVerticalBounds`.
+EN v1.0 and JP select font 0 for Japanese and font 4 otherwise. EN rev1 and both
+PAL revisions instead read `sLanguageNameTable[getCurLanguage()].fontId` before
+loading the line height. A private expression macro shares this selection at
+all three sites and preserves the extra two pixels and existing comparisons.
+The six retail font IDs are `[4, 4, 4, 4, 0, 4]` in every version; the source
+retains each binary's lookup policy rather than assuming equivalence for
+out-of-range language IDs or modified table contents.
+
+PAL's getter was still named `fn_80019DAC`. All three direct calls in each PAL
+DOL resolve to `80019DAC`; its two instructions load the current-language word
+through r13 and return. The independently read r13 bases resolve that load to
+`803DE1E4` in PAL v1.0 and `803DE3A4` in PAL rev1, the respective `curLanguage`
+locations. Both configs now call it `getCurLanguage`, matching its source API.
+The same call/load audit passes in EN, EN rev1 and JP. All input DOLs pass their
+configured SHA-1 before these reads.
+
+Both regional functions are now exact, completing the Link unit in EN rev1 and
+both PAL revisions. All 22 functions and 2,696 data bytes match in all five
+versions: text is 5,148 bytes in EN/JP and 5,196 in the other versions. The
+non-code sections, alignment and global data-symbol layouts are unchanged.
+EN/JP preserve every instruction and relocation; removing the private record
+only renumbers one anonymous constant label from `@289` to `@288`.
+
+Every version passes `all_source`, the all-retail control link, the Link-only
+source substitution link and the native strict checksum target. The complete
+source-object census finds changes only in Link, including for all consumers
+of the expanded shared header. Compiler profiles, source boundaries and
+expected checksums are unchanged.

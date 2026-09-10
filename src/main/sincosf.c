@@ -13,46 +13,43 @@ const float gSinCosCosCoeff6 = -0.000318879f;
 
 void mathSinCosf(float angle, float* outSin, float* outCos) {
     u16 quadrant;
-    float reducedAngle = trigReduceQuadrant(&quadrant, angle);
-    float reducedSquared = reducedAngle * reducedAngle;
-    float sinApprox =
-        reducedAngle *
-        (reducedSquared * (*(const float*)&gSinCosSinCoeff5 * reducedSquared + *(const float*)&gSinCosSinCoeff3) +
-         *(const float*)&gSinCosSinCoeff1);
-    float cosApprox =
-        reducedSquared *
-            (reducedSquared * (*(const float*)&gSinCosCosCoeff6 * reducedSquared + *(const float*)&gSinCosCosCoeff4) +
-             *(const float*)&gSinCosCosCoeff2) +
-        *(const float*)&gSinCosCosCoeff0;
+    /* Seed the two polynomial accumulators with x and x squared. */
+    float sine = trigReduceQuadrant(&quadrant, angle);
+    float cosine = sine * sine;
+    sine = sine * (cosine * (*(const float*)&gSinCosSinCoeff5 * cosine + *(const float*)&gSinCosSinCoeff3) +
+                   *(const float*)&gSinCosSinCoeff1);
+    cosine = cosine * (cosine * (*(const float*)&gSinCosCosCoeff6 * cosine + *(const float*)&gSinCosCosCoeff4) +
+                       *(const float*)&gSinCosCosCoeff2) +
+             *(const float*)&gSinCosCosCoeff0;
 
     switch (quadrant & 6) {
     case 0:
         if (!(angle >= *(const float*)&gSinCosZero)) {
-            sinApprox = -sinApprox;
+            sine = -sine;
         }
-        *outSin = sinApprox;
-        *outCos = cosApprox;
+        *outSin = sine;
+        *outCos = cosine;
         break;
     case 2:
         if (!(angle >= *(const float*)&gSinCosZero)) {
-            cosApprox = -cosApprox;
+            cosine = -cosine;
         }
-        *outSin = cosApprox;
-        *outCos = -sinApprox;
+        *outSin = cosine;
+        *outCos = -sine;
         break;
     case 4:
         if (angle >= *(const float*)&gSinCosZero) {
-            sinApprox = -sinApprox;
+            sine = -sine;
         }
-        *outSin = sinApprox;
-        *outCos = -cosApprox;
+        *outSin = sine;
+        *outCos = -cosine;
         break;
     default:
         if (angle >= *(const float*)&gSinCosZero) {
-            cosApprox = -cosApprox;
+            cosine = -cosine;
         }
-        *outSin = cosApprox;
-        *outCos = sinApprox;
+        *outSin = cosine;
+        *outCos = sine;
         break;
     }
 }

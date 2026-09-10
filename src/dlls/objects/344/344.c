@@ -8,7 +8,7 @@
 #include "main/carryable_interface.h"
 #include "main/dll/dll_0243_dbholecontrol1.h"
 #include "main/dll/dll_0282_barrelgener.h"
-#include "main/dll/dll_02B5_timer.h"
+#include "dlls/objects/693_Timer.h"
 #include "main/dll/player_api.h"
 #include "main/dll/player_motion.h"
 #include "main/dll/player_state.h"
@@ -364,7 +364,7 @@ void gunpowderBarrel_triggerExplosion(GameObject* obj) {
         state->motionFlags &= ~GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT;
         timerObject = (int*)state->linkedTimerObject;
         if (timerObject != 0) {
-            timer_clearManualFlags((GameObject*)(timerObject));
+            timer_clearStartAndEndFlags((GameObject*)(timerObject));
         }
     }
 }
@@ -714,7 +714,7 @@ void gunpowderBarrel_update(GameObject* obj) {
             ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, r, (s32)(-r / 2.0f), (s32)(r / 2.0f));
         }
         if (state->linkedTimerObject != NULL) {
-            timer_clearManualFlags(state->linkedTimerObject);
+            timer_clearStartAndEndFlags(state->linkedTimerObject);
         }
         if (state->fuseFrames > GUNPOWDER_BARREL_FUSE_DURATION_FRAMES) {
             int index;
@@ -836,7 +836,7 @@ void gunpowderBarrel_update(GameObject* obj) {
         }
     }
     if (state->linkedTimerObject != NULL) {
-        if (timer_hasExpired(state->linkedTimerObject) != 0) {
+        if (timer_hasEnded(state->linkedTimerObject) != 0) {
             state->detonationTrigger = GUNPOWDER_BARREL_DETONATION_TRIGGER_TIMER;
         }
     }

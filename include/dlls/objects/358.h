@@ -6,6 +6,26 @@
 #include "game/objects/object_setup.h"
 #include "main/vec_types.h"
 
+/* Eleven advertised callbacks followed by opaque words. The later verified
+ * revisions place the next descriptor after one tail word instead of five. */
+typedef struct ExplodedDescriptor {
+    ObjectDescriptor11ExtraSize descriptor;
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+    u32 unknown3C[1];
+#else
+    u32 unknown3C[5];
+#endif
+} ExplodedDescriptor;
+
+STATIC_ASSERT(offsetof(ExplodedDescriptor, descriptor) == 0x00);
+STATIC_ASSERT(offsetof(ExplodedDescriptor, descriptor.slot0A) == 0x38);
+STATIC_ASSERT(offsetof(ExplodedDescriptor, unknown3C) == 0x3C);
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+STATIC_ASSERT(sizeof(ExplodedDescriptor) == 0x40);
+#else
+STATIC_ASSERT(sizeof(ExplodedDescriptor) == 0x50);
+#endif
+
 typedef enum ExplodedPhase {
     EXPLODED_PHASE_IDLE = 0,
     EXPLODED_PHASE_ACTIVE = 1,
@@ -91,9 +111,7 @@ STATIC_ASSERT(offsetof(ExplodedState, phase) == 0x69);
 STATIC_ASSERT(offsetof(ExplodedState, pad6A) == 0x6A);
 STATIC_ASSERT(sizeof(ExplodedState) == 0x6C);
 
-
-void exploded_initDebrisState(GameObject* obj, ExplodedPlacement* placement, int usePresetCenter,
-                              ExplodedState* state);
+void exploded_initDebrisState(GameObject* obj, ExplodedPlacement* placement, int usePresetCenter, ExplodedState* state);
 void exploded_seedDebrisMotion(GameObject* obj, ExplodedState* state, ExplodedPlacement* placement);
 u8 exploded_getPhase(GameObject* obj);
 int exploded_getExtraSize(void);
@@ -107,6 +125,6 @@ void exploded_init(GameObject* obj, ExplodedPlacement* placement, int usePresetC
 void exploded_release(void);
 void exploded_initialise(void);
 
-extern ObjectDescriptor16 gExplodedObjDescriptor;
+extern ExplodedDescriptor gExplodedObjDescriptor;
 
 #endif /* DLLS_OBJECTS_358_H_ */

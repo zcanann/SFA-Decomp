@@ -52,7 +52,7 @@
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
 #include "dlls/objects/196_Tricky.h"
-#include "main/dll/dll_02B5_timer.h"
+#include "dlls/objects/693_Timer.h"
 #include "main/dll/headdisplay.h"
 #include "main/sky.h"
 #include "main/dll/rom_curve_interface.h"

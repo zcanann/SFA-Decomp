@@ -8,7 +8,7 @@
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_0004_dummy04.h"
-#include "main/dll/dll_02B1_cmbsrc.h"
+#include "dlls/objects/689_CmbSrc.h"
 #include "main/obj_link.h"
 #include "main/obj_list.h"
 #include "main/object_render.h"
@@ -20,7 +20,6 @@
 #define SC_CLOUDRUNNER_A_EVENT_CREATE_CHILD      0
 #define SC_CLOUDRUNNER_A_EVENT_DEACTIVATE_CHILD  1
 #define SC_CLOUDRUNNER_A_EVENT_REMOVE_CHILD      2
-#define SC_CLOUDRUNNER_A_CHILD_OBJECT_ID         CMBSRC_SEQ_DEFAULT
 #define SC_CLOUDRUNNER_A_OBJECT_TYPE_ID          0xB
 #define SC_CLOUDRUNNER_A_SEQUENCE_CLASS_ID       0x10
 #define SC_CLOUDRUNNER_A_OBJECT_SLOT             0x64
@@ -121,7 +120,7 @@ void sc_cloudrunnera_update(GameObject* obj) {
     for (eventIndex = 0; eventIndex < sequence->eventCount; eventIndex++) {
         switch (sequence->eventIds[eventIndex]) {
         case SC_CLOUDRUNNER_A_EVENT_CREATE_CHILD: {
-            CmbSrcMapData* setup;
+            CmbSrcPlacement* setup;
             GameObject* child;
 
             if (obj->childObjs[0] != NULL) {
@@ -131,20 +130,20 @@ void sc_cloudrunnera_update(GameObject* obj) {
             if (canSetupObject == 0) {
                 break;
             }
-            setup = (CmbSrcMapData*)Obj_AllocObjectSetup(CMBSRC_PLACEMENT_BYTES, SC_CLOUDRUNNER_A_CHILD_OBJECT_ID);
+            setup = (CmbSrcPlacement*)Obj_AllocObjectSetup(CMBSRC_PLACEMENT_BYTES, CMBSRC_OBJECT_ID);
             setup->colorIndex = 0x9;
             setup->effectMode = 0;
             setup->pulseSubMode = 0;
             setup->radius = 1.0f;
             setup->colorDistance = 0xff;
             setup->effectDistance = 0xff;
-            setup->pulseDistance = 0xff;
+            setup->modeParam.pulseDistance = 0xff;
             setup->gameBit = -1;
             setup->base.color[0] = 2;
             setup->base.color[1] = 1;
             setup->base.color[2] = 0xff;
             setup->base.color[3] = 0xff;
-            setup->flags = CMBSRC_MAP_START_ACTIVE;
+            setup->flags = CMBSRC_MAP_EMIT_WHEN_UNRENDERED;
             setup->behaviorFlags = 0;
             child =
                 objSetupObject(&setup->base, SC_CLOUDRUNNER_A_CHILD_SETUP_FLAGS, obj->anim.mapEventSlot,
@@ -156,7 +155,7 @@ void sc_cloudrunnera_update(GameObject* obj) {
         }
         case SC_CLOUDRUNNER_A_EVENT_DEACTIVATE_CHILD: {
             if (obj->childObjs[0] != NULL) {
-                cmbsrc_setExternalActive((GameObject*)obj->childObjs[0], 0);
+                cmbsrc_setEmitWhenUnrendered((GameObject*)obj->childObjs[0], 0);
             }
             break;
         }

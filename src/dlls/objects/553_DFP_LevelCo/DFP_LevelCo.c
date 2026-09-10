@@ -1,13 +1,13 @@
 /*
- * Ocean Force Point Temple level controller (DLL 0x229; "DFP_LevelControl").
- * The DFP prefix is inherited from Dinosaur Planet's Desert Force Point Temple.
+ * DFP_LevelControl (DLL slot 553 / 0x229).
  * Drives the electric-floor puzzle state: a zap-effect countdown timer, RNG
  * seeding of the safe-floor-tile table when its map-act initialization flag is
  * raised, plus gamebit-driven progression, object-group loading, and music.
  */
+#include "dlls/objects/553_DFP_LevelCo.h"
+
 #include "main/audio/music_api.h"
 #include "main/audio/sfx_play_api.h"
-#include "main/dll/dfp_types.h"
 #include "main/dll/player_api.h"
 #include "main/lightmap_api.h"
 #include "main/map_load.h"
@@ -21,18 +21,14 @@
 #include "main/frame_timing.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
-#include "main/dll/DF/dll_0229_dfplevelcontrol.h"
 
 s16 gDFPLevelControlMapAct1Timer = 0x82;
 u8 gDFPLevelControlInitialiseAct1 = 1;
 u8 gDFPLevelControlInitialiseAct2 = 1;
-s16 gDFPLevelControlSafeFloorTiles[10] = {1, 2, 3, 0, 0, 0, 0, 0, 0, 0};
+s16 gDFPLevelControlSafeFloorTiles[9] = {1, 2, 3, 0, 0, 0, 0, 0, 0};
 
-#define DFP_LEVEL_CONTROL_OBJECT_TYPE     0x9
-#define DFP_LEVEL_CONTROL_MSG_ZAP_PLAYER  0x60005
-/* repels the player away from this object and applies status damage (arg = status type) */
-#define DFPLEVELCONTROL_MSG_PLAYER_HIT 0x60005
-#define DFPLEVELCONTROL_OBJGROUP       0x9
+#define DFP_LEVEL_CONTROL_OBJECT_TYPE    0x9
+#define DFP_LEVEL_CONTROL_MSG_ZAP_PLAYER 0x60005
 
 #define DFP_LEVEL_CONTROL_SFX_TRIGGER_D5D 0xd5d
 #define DFP_LEVEL_CONTROL_SFX_TRIGGER_D59 0xd59
@@ -223,16 +219,13 @@ void DFP_LevelControl_update(GameObject* obj) {
         break;
     }
 
-    GameBitLatch_Update((GameBitLatchState*)&state->musicLatchMask, 2, -1, -1, GAMEBIT_OFP_MusicLatch,
-                        MUSICTRIG_mmpassalien);
-    GameBitLatch_UpdateInverted((GameBitLatchState*)&state->musicLatchMask, 4, -1, -1, GAMEBIT_OFP_MusicLatch,
-                                MUSICTRIG_blizzard);
-    GameBitLatch_UpdateInverted((GameBitLatchState*)&state->musicLatchMask, 1, -1, -1, GAMEBIT_OFP_MusicLatch,
-                                MUSICTRIG_trex_hit);
+    GameBitLatch_Update(&state->musicLatch, 2, -1, -1, GAMEBIT_OFP_MusicLatch, MUSICTRIG_mmpassalien);
+    GameBitLatch_UpdateInverted(&state->musicLatch, 4, -1, -1, GAMEBIT_OFP_MusicLatch, MUSICTRIG_blizzard);
+    GameBitLatch_UpdateInverted(&state->musicLatch, 1, -1, -1, GAMEBIT_OFP_MusicLatch, MUSICTRIG_trex_hit);
     mainSetBits(GAMEBIT_VFP_MusicLatch, 0);
 }
 
-void DFP_LevelControl_init(GameObject* obj, DfpLevelControlPlacement* placement) {
+void DFP_LevelControl_init(GameObject* obj, DfpLevelControlPlacementPrefix* placement) {
     int mode;
     DfpLevelControlState* state = obj->extra;
     objAddObjectType(obj, DFP_LEVEL_CONTROL_OBJECT_TYPE);
@@ -242,11 +235,11 @@ void DFP_LevelControl_init(GameObject* obj, DfpLevelControlPlacement* placement)
     state->previousSfxState.triggerD5a = mainGetBit(DFP_LEVEL_CONTROL_SFX_TRIGGER_D5A);
 
     obj->animEventCallback = DFP_LevelControl_animCallback;
-    state->mode = 1;
+    state->placementMode = 1;
 
     mode = placement->mode;
     if (mode != 0 && mode <= 2) {
-        state->mode = mode;
+        state->placementMode = mode;
     }
 
     (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);

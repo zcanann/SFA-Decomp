@@ -17,7 +17,10 @@ main/render.c:
 	.text       start:0x800066E0 end:0x80008DF4
 	.rodata     start:0x802C2100 end:0x802C22A8
 	.data       start:0x802C35A0 end:0x802C5748
-	.sdata2     start:0x803DFD44 end:0x803DFD48
+	.bss        start:0x80336FE0 end:0x803370E0
+	.sdata      start:0x803DC980 end:0x803DC988
+	.sbss       start:0x803DDFA0 end:0x803DDFB0
+	.sdata2     start:0x803DFD00 end:0x803DFD48
 
 main/audio.c:
 	.text       start:0x80008DF4 end:0x8000B4F0
@@ -26,7 +29,7 @@ main/audio.c:
 	.bss        start:0x803370E0 end:0x803377A0
 	.sdata      start:0x803DC988 end:0x803DC9E8
 	.sbss       start:0x803DDFB8 end:0x803DE030
-	.sdata2     start:0x803DFD48 end:0x803DFD70
+	.sdata2     start:0x803DFD48 end:0x803DFD6C
 
 main/audio_sfx.c:
 	.text       start:0x8000B4F0 end:0x8000CE74
@@ -41,8 +44,8 @@ main/audio_stream.c:
 	.data       start:0x802C65F8 end:0x802C6640
 	.bss        start:0x803383E0 end:0x80338830
 	.sdata      start:0x803DC9F0 end:0x803DCA00
-	.sbss       start:0x803DE048 end:0x803DE080
-	.sdata2     start:0x803DFDD0 end:0x803DFDF0
+	.sbss       start:0x803DE048 end:0x803DE07A
+	.sdata2     start:0x803DFDD0 end:0x803DFDEC
 
 main/camera.c:
 	.text       start:0x8000DD94 end:0x8000FEAC
@@ -50,19 +53,20 @@ main/camera.c:
 	.bss        start:0x80338830 end:0x80339F30
 	.sdata      start:0x803DCA00 end:0x803DCA10
 	.sbss       start:0x803DE080 end:0x803DE0B0
-	.sdata2     start:0x803DFDF0 end:0x803DFE58
+	.sdata2     start:0x803DFDF0 end:0x803DFE54
 
 main/curves.c:
 	.text       start:0x8000FEAC end:0x80011014
 	.data       start:0x802C6850 end:0x802C69A0
 	.bss        start:0x80339F30 end:0x80339F40
-	.sdata      start:0x803DCA10 end:0x803DCA18
+	.sdata      start:0x803DCA10 end:0x803DCA14
 	.sbss       start:0x803DE0B0 end:0x803DE0B8
-	.sdata2     start:0x803DFE58 end:0x803DFEA0
+	.sdata2     start:0x803DFE58 end:0x803DFE9C
 
 main/voxmaps.c:
 	.text       start:0x80011014 end:0x80013A08
 	.data       start:0x802C69A0 end:0x802C6B40
+	.bss        start:0x80339F40 end:0x80339FB4
 	.sbss       start:0x803DE0B8 end:0x803DE0E8
 	.sdata2     start:0x803DFEA0 end:0x803DFEB8
 
@@ -72,7 +76,7 @@ main/modelEngine.c:
 	.bss        start:0x80339FB8 end:0x8033B050
 	.sdata      start:0x803DCA18 end:0x803DCA48
 	.sbss       start:0x803DE0E8 end:0x803DE108
-	.sdata2     start:0x803DFEB8 end:0x803DFEE8
+	.sdata2     start:0x803DFEB8 end:0x803DFEE4
 
 main/pad.c:
 	.text       start:0x80014A54 end:0x80015650
@@ -80,11 +84,11 @@ main/pad.c:
 	.bss        start:0x8033B050 end:0x8033B0F0
 	.sdata      start:0x803DCA48 end:0x803DCA50
 	.sbss       start:0x803DE108 end:0x803DE150
-	.sdata2     start:0x803DFEE8 end:0x803DFEF0
+	.sdata2     start:0x803DFEE8 end:0x803DFEEC
 
 main/fileio.c:
 	.text       start:0x80015650 end:0x80015C00
-	.data       start:0x802C76A0 end:0x802C76D8
+	.data       start:0x802C76A0 end:0x802C76D4
 	.bss        start:0x8033B0F0 end:0x8033B120
 	.sbss       start:0x803DE150 end:0x803DE168
 
@@ -105,12 +109,12 @@ main/textrender_drawbox.c:
 	.text       start:0x8001BCDC end:0x8001C908
 	.data       start:0x802CB560 end:0x802CBAB8
 	.bss        start:0x8033D5E0 end:0x8033D600
-	.sbss       start:0x803DE1F0 end:0x803DE220
+	.sbss       start:0x803DE1F0 end:0x803DE21C
 	.sdata2     start:0x803DFF40 end:0x803DFF50
 
 main/textrender_boxtex.c:
 	.text       start:0x8001C908 end:0x8001CCB0
-	.sbss       start:0x803DE220 end:0x803DE230
+	.sbss       start:0x803DE220 end:0x803DE22C
 
 main/modellight.c:
 	.text       start:0x8001CCB0 end:0x8001F6C0
@@ -118,14 +122,14 @@ main/modellight.c:
 	.bss        start:0x8033D600 end:0x8033D728
 	.sdata      start:0x803DCC00 end:0x803DCC08
 	.sbss       start:0x803DE230 end:0x803DE238
-	.sdata2     start:0x803DFF50 end:0x803DFFB0
+	.sdata2     start:0x803DFF50 end:0x803DFFA8
 
 main/gameloop.c:
 	.text       start:0x8001F6C0 end:0x8001FF88
 	.data       start:0x802CBAB8 end:0x802CBB94
 	.bss        start:0x8033D728 end:0x8033D758
 	.sdata      start:0x803DCC08 end:0x803DCC20
-	.sbss       start:0x803DE238 end:0x803DE308
+	.sbss       start:0x803DE238 end:0x803DE300
 
 main/gameloop_buttonobj.c:
 	.text       start:0x8001FF88 end:0x80020074
@@ -134,7 +138,7 @@ main/gameloop_main.c:
 	.text       start:0x80020074 end:0x800214D8
 	.data       start:0x802CBB94 end:0x802CBCA8
 	.bss        start:0x8033D758 end:0x8033DF40
-	.sdata2     start:0x803DFFB0 end:0x803DFFC8
+	.sdata2     start:0x803DFFB0 end:0x803DFFC4
 
 main/vecmath.c:
 	.text       start:0x800214D8 end:0x800228A4
@@ -149,7 +153,7 @@ main/mm.c:
 	.data       start:0x802CBCA8 end:0x802CC270
 	.bss        start:0x8033DF40 end:0x80341EE0
 	.sdata      start:0x803DCC20 end:0x803DCC30
-	.sbss       start:0x803DE308 end:0x803DE348
+	.sbss       start:0x803DE300 end:0x803DE340
 
 main/model.c:
 	.text       start:0x8002446C end:0x8002A748
@@ -157,16 +161,16 @@ main/model.c:
 	.data       start:0x802CC270 end:0x802CC2B0
 	.bss        start:0x80341EE0 end:0x80342048
 	.sdata      start:0x803DCC30 end:0x803DCC38
-	.sbss       start:0x803DE348 end:0x803DE370
-	.sdata2     start:0x803E001C end:0x803E0090
+	.sbss       start:0x803DE340 end:0x803DE368
+	.sdata2     start:0x803E0020 end:0x803E008C
 
 main/object.c:
 	.text       start:0x8002A748 end:0x8002ECE8
 	.data       start:0x802CC2B0 end:0x802CC41C
 	.bss        start:0x80342048 end:0x80342098
 	.sdata      start:0x803DCC38 end:0x803DCC40
-	.sbss       start:0x803DE370 end:0x803DE3C8
-	.sdata2     start:0x803E0090 end:0x803E00E8
+	.sbss       start:0x803DE368 end:0x803DE3C0
+	.sdata2     start:0x803E0090 end:0x803E00E4
 
 main/objanim.c:
 	.text       start:0x8002ECE8 end:0x8003081C
@@ -179,6 +183,7 @@ main/objhits.c:
 	.data       start:0x802CC470 end:0x802CC4F0
 	.bss        start:0x80342098 end:0x80344098
 	.sdata      start:0x803DCC40 end:0x803DCC50
+	.sbss       start:0x803DE3C0 end:0x803DE3E8
 	.sdata2     start:0x803E0118 end:0x803E0170
 
 main/objlib.c:
@@ -191,7 +196,7 @@ main/objprint.c:
 	.text       start:0x80038B1C end:0x8003BD18
 	.data       start:0x802CC558 end:0x802CC5A0
 	.sdata      start:0x803DCC50 end:0x803DCC58
-	.sbss       start:0x803DE408 end:0x803DE420
+	.sbss       start:0x803DE400 end:0x803DE418
 	.sdata2     start:0x803E01A0 end:0x803E01F8
 
 main/objprint_dolphin.c:
@@ -200,7 +205,7 @@ main/objprint_dolphin.c:
 	.data       start:0x802CC5A0 end:0x802CC618
 	.bss        start:0x803445B0 end:0x803475B0
 	.sdata      start:0x803DCC58 end:0x803DCC90
-	.sbss       start:0x803DE420 end:0x803DE470
+	.sbss       start:0x803DE418 end:0x803DE468
 	.sdata2     start:0x803E01F8 end:0x803E0278
 
 main/pi_dolphin.c:
@@ -209,26 +214,26 @@ main/pi_dolphin.c:
 	.data       start:0x802CC618 end:0x802CDD40
 	.bss        start:0x803475B0 end:0x80360EE0
 	.sdata      start:0x803DCC90 end:0x803DCDD8
-	.sbss       start:0x803DE470 end:0x803DE518
+	.sbss       start:0x803DE468 end:0x803DE510
 
 main/boot_logo.c:
-	.data       start:0x802CDD40 end:0x8030DD40
+	.data       start:0x802CDD40 end:0x8030DEF8
 
 main/pi_videoinit.c:
 	.text       start:0x80049D44 end:0x8004AC08
 	.data       start:0x8030DEF8 end:0x8030DF20
-	.sdata2     start:0x803E0278 end:0x803E02B0
+	.sdata2     start:0x803E0278 end:0x803E02AC
 
 main/pi_pathsearch.c:
 	.text       start:0x8004AC08 end:0x8004B83C
 	.sdata2     start:0x803E02B0 end:0x803E02B8
 
-main/zlb.c:
+main/zlb.s:
 	.text       start:0x8004B83C end:0x8004C16C
 	.rodata     start:0x802C2490 end:0x802C2590
 	.data       start:0x8030DF20 end:0x8030E580
 	.bss        start:0x80360EE0 end:0x80379140
-	.sbss       start:0x803DE518 end:0x803DE528
+	.sbss       start:0x803DE510 end:0x803DE520
 
 main/shader_dolphin.c:
 	.text       start:0x8004C16C end:0x80052B58
@@ -236,15 +241,15 @@ main/shader_dolphin.c:
 	.data       start:0x8030E580 end:0x8030E6C8
 	.bss        start:0x80379140 end:0x80379160
 	.sdata      start:0x803DCDD8 end:0x803DCDF0
-	.sbss       start:0x803DE528 end:0x803DE598
-	.sdata2     start:0x803E02B8 end:0x803E0350
+	.sbss       start:0x803DE520 end:0x803DE590
+	.sdata2     start:0x803E02B8 end:0x803E034C
 
 main/rcp_dolphin.c:
 	.text       start:0x80052B58 end:0x800538A4
 	.data       start:0x8030E6C8 end:0x8030E6F8
 	.bss        start:0x80379160 end:0x8037F848
 	.sdata      start:0x803DCDF0 end:0x803DCDF8
-	.sbss       start:0x803DE598 end:0x803DE5A8
+	.sbss       start:0x803DE590 end:0x803DE59E
 	.sdata2     start:0x803E0350 end:0x803E03A0
 
 main/texture.c:
@@ -252,22 +257,24 @@ main/texture.c:
 	.data       start:0x8030E6F8 end:0x8030FB50
 	.bss        start:0x8037F848 end:0x8037F860
 	.sdata      start:0x803DCDF8 end:0x803DCE00
-	.sbss       start:0x803DE5A8 end:0x803DE5C8
+	.sbss       start:0x803DE5A0 end:0x803DE5C0
 	.sdata2     start:0x803E03A0 end:0x803E03B8
 
 main/shader.c:
 	.text       start:0x80055148 end:0x80061278
 	.rodata     start:0x802C2698 end:0x802C26E8
-	.data       start:0x8030FB50 end:0x8030FF08
+	.data       start:0x8030FB50 end:0x8030FF04
 	.bss        start:0x8037F860 end:0x80389150
 	.sdata      start:0x803DCE10 end:0x803DCE38
-	.sbss       start:0x803DE5C8 end:0x803DE6D8
+	.sbss       start:0x803DE5C0 end:0x803DE6CC
+	.sdata2     start:0x803E03B8 end:0x803E0460
+	.sbss2      start:0x803E9C60 end:0x803E9C6C
 
 main/shadow_dolphin.c:
 	.text       start:0x80061278 end:0x80062F44
 	.bss        start:0x80389150 end:0x8038EFE0
 	.sdata      start:0x803DCE40 end:0x803DCE50
-	.sbss       start:0x803DE6D8 end:0x803DE730
+	.sbss       start:0x803DE6D0 end:0x803DE728
 	.sdata2     start:0x803E0460 end:0x803E04B8
 
 main/track_dolphin.c:
@@ -275,7 +282,7 @@ main/track_dolphin.c:
 	.data       start:0x8030FF08 end:0x8030FF50
 	.bss        start:0x8038EFE0 end:0x8038F6E8
 	.sdata      start:0x803DCE50 end:0x803DCE58
-	.sbss       start:0x803DE730 end:0x803DE778
+	.sbss       start:0x803DE728 end:0x803DE770
 	.sdata2     start:0x803E04B8 end:0x803E0510
 
 main/newshadows.c:
@@ -283,20 +290,20 @@ main/newshadows.c:
 	.data       start:0x8030FF50 end:0x80310054
 	.bss        start:0x8038F6E8 end:0x80393560
 	.sdata      start:0x803DCE58 end:0x803DCE68
-	.sbss       start:0x803DE778 end:0x803DE7F0
+	.sbss       start:0x803DE770 end:0x803DE7E8
 	.sdata2     start:0x803E0510 end:0x803E0628
 
 track/intersect.c:
 	.text       start:0x8006F11C end:0x8006FFDC
-	.data       start:0x80310054 end:0x803100B0
+	.data       start:0x80310054 end:0x803100AC
 	.bss        start:0x80393560 end:0x803980B8
 	.sdata      start:0x803DCE68 end:0x803DCEF0
-	.sbss       start:0x803DE7F0 end:0x803DE840
+	.sbss       start:0x803DE7E8 end:0x803DE838
 	.sdata2     start:0x803E0628 end:0x803E0670
 
 track/intersect_screenmath.c:
 	.text       start:0x8006FFDC end:0x80070418
-	.sdata2     start:0x803E0670 end:0x803E06A0
+	.sdata2     start:0x803E0670 end:0x803E069C
 
 track/intersect_mtx44.c:
 	.text       start:0x80070418 end:0x8007049C
@@ -306,12 +313,13 @@ track/intersect_render.c:
 	.text       start:0x8007049C end:0x8007D854
 	.rodata     start:0x802C26E8 end:0x802C27C0
 	.data       start:0x803100B0 end:0x80310158
-	.sdata2     start:0x803E06A8 end:0x803E0798
+	.sdata2     start:0x803E06A8 end:0x803E0794
+	.sbss2      start:0x803E9C70 end:0x803E9C78
 
 track/intersect_memcard.c:
 	.text       start:0x8007D854 end:0x8007EB1C
 	.data       start:0x80310158 end:0x803101F8
-	.sbss       start:0x803DE840 end:0x803DE860
+	.sbss       start:0x803DE838 end:0x803DE858
 	.sdata2     start:0x803E0798 end:0x803E07A8
 
 dlls/engine/2/maketex.c:
@@ -325,7 +333,7 @@ dlls/engine/2/2.c:
 	.data       start:0x803102A0 end:0x80310958
 	.bss        start:0x803980B8 end:0x8039BF48
 	.sdata      start:0x803DCF00 end:0x803DCF40
-	.sbss       start:0x803DE860 end:0x803DE928
+	.sbss       start:0x803DE858 end:0x803DE920
 	.sdata2     start:0x803E07B8 end:0x803E0860
 
 dlls/engine/5/5.c:
@@ -333,17 +341,19 @@ dlls/engine/5/5.c:
 	.rodata     start:0x802C27C0 end:0x802C27D8
 	.data       start:0x80310958 end:0x80310B30
 	.bss        start:0x8039BF48 end:0x8039BF58
-	.sbss       start:0x803DE928 end:0x803DE980
+	.sbss       start:0x803DE920 end:0x803DE978
 	.sdata2     start:0x803E0860 end:0x803E0910
+	.sbss2      start:0x803E9C78 end:0x803E9C7C
 
 dlls/engine/6/6.c:
 	.text       start:0x8008CCE0 end:0x8008F0F4
-	.rodata     start:0x802C27D8 end:0x802C27E8
+	.rodata     start:0x802C27D8 end:0x802C27E4
 	.data       start:0x80310B30 end:0x80310B90
 	.bss        start:0x8039BF58 end:0x8039BFB8
 	.sdata      start:0x803DCF40 end:0x803DCF50
-	.sbss       start:0x803DE980 end:0x803DE990
+	.sbss       start:0x803DE978 end:0x803DE988
 	.sdata2     start:0x803E0910 end:0x803E09A0
+	.sbss2      start:0x803E9C80 end:0x803E9C84
 
 dlls/engine/7/7.c:
 	.text       start:0x8008F0F4 end:0x80093E4C
@@ -351,7 +361,7 @@ dlls/engine/7/7.c:
 	.data       start:0x80310B90 end:0x80310E00
 	.bss        start:0x8039BFB8 end:0x8039C0A0
 	.sdata      start:0x803DCF50 end:0x803DCF60
-	.sbss       start:0x803DE990 end:0x803DE9D0
+	.sbss       start:0x803DE988 end:0x803DE9C8
 	.sdata2     start:0x803E09A0 end:0x803E0A88
 
 main/skystars.c:
@@ -359,7 +369,7 @@ main/skystars.c:
 	.data       start:0x80310E00 end:0x80310E18
 	.bss        start:0x8039C0A0 end:0x8039C2C8
 	.sdata      start:0x803DCF60 end:0x803DCF70
-	.sbss       start:0x803DE9D0 end:0x803DE9E0
+	.sbss       start:0x803DE9C8 end:0x803DE9D8
 	.sdata2     start:0x803E0A88 end:0x803E0AB8
 
 dlls/engine/8/8.c:
@@ -370,14 +380,14 @@ dlls/engine/9/9.c:
 	.data       start:0x80310E40 end:0x80310EC0
 	.bss        start:0x8039C2C8 end:0x8039C2E8
 	.sdata      start:0x803DCF70 end:0x803DCF78
-	.sbss       start:0x803DE9E0 end:0x803DE9F8
+	.sbss       start:0x803DE9D8 end:0x803DE9F0
 	.sdata2     start:0x803E0AB8 end:0x803E0AE8
 
 dlls/engine/19/19.c:
 	.text       start:0x800952E8 end:0x80096D00
 	.data       start:0x80310EC0 end:0x80310F28
 	.bss        start:0x8039C2E8 end:0x8039C2F8
-	.sbss       start:0x803DE9F8 end:0x803DEA50
+	.sbss       start:0x803DE9F0 end:0x803DEA48
 	.sdata2     start:0x803E0AE8 end:0x803E0B48
 
 dlls/engine/10_expgfx/expgfx.c:
@@ -386,25 +396,25 @@ dlls/engine/10_expgfx/expgfx.c:
 	.data       start:0x80310F28 end:0x80311338
 	.bss        start:0x8039C2F8 end:0x8039D638
 	.sdata      start:0x803DCF78 end:0x803DCF88
-	.sbss       start:0x803DEA50 end:0x803DEA80
-	.sdata2     start:0x803E0B48 end:0x803E0C38
+	.sbss       start:0x803DEA48 end:0x803DEA78
+	.sdata2     start:0x803E0B48 end:0x803E0C34
 
 dlls/engine/11/11.c:
 	.text       start:0x800A035C end:0x800A3DAC
 	.data       start:0x80311338 end:0x803113B0
 	.bss        start:0x8039D638 end:0x8039DA60
-	.sbss       start:0x803DEA80 end:0x803DEA98
-	.sdata2     start:0x803E0C38 end:0x803E0C70
+	.sbss       start:0x803DEA78 end:0x803DEA90
+	.sdata2     start:0x803E0C38 end:0x803E0C6C
 
 dlls/engine/12/12.c:
 	.text       start:0x800A3DAC end:0x800A3E5C
-	.data       start:0x803113B0 end:0x80311478
+	.data       start:0x803113B0 end:0x80311472
 
 dlls/engine/13/13.c:
 	.text       start:0x800A3E5C end:0x800A46A4
 	.rodata     start:0x802C29A0 end:0x802C29B0
 	.data       start:0x80311478 end:0x803114C8
-	.sbss       start:0x803DEA98 end:0x803DEAA0
+	.sbss       start:0x803DEA90 end:0x803DEA98
 	.sdata2     start:0x803E0C70 end:0x803E0CB0
 
 dlls/engine/24/24.c:
@@ -412,101 +422,101 @@ dlls/engine/24/24.c:
 	.data       start:0x803114C8 end:0x80311BF0
 	.bss        start:0x8039DA60 end:0x8039DA80
 	.sdata      start:0x803DCF88 end:0x803DCF90
-	.sbss       start:0x803DEAA0 end:0x803DEAC0
+	.sbss       start:0x803DEA98 end:0x803DEAB8
 	.sdata2     start:0x803E0CB0 end:0x803E0CD0
 
 dlls/engine/14/14.c:
 	.text       start:0x800A5160 end:0x800AF9F4
-	.data       start:0x80311BF0 end:0x80311CC8
+	.data       start:0x80311BF0 end:0x80311CC6
 	.bss        start:0x8039DA80 end:0x8039DAC0
 	.sdata      start:0x803DCF90 end:0x803DCFA0
-	.sbss       start:0x803DEAC0 end:0x803DEB28
+	.sbss       start:0x803DEAB8 end:0x803DEB20
 	.sdata2     start:0x803E0CD0 end:0x803E0F28
 
 dlls/engine/26/26.c:
 	.text       start:0x800AF9F4 end:0x800B3508
 	.data       start:0x80311CC8 end:0x80311CF0
 	.bss        start:0x8039DAC0 end:0x8039DAD8
-	.sdata      start:0x803DCFA0 end:0x803DCFB4
-	.sbss       start:0x803DEB28 end:0x803DEB38
+	.sdata      start:0x803DCFA0 end:0x803DCFB0
+	.sbss       start:0x803DEB20 end:0x803DEB30
 	.sdata2     start:0x803E0F28 end:0x803E1078
 
 dlls/engine/27/27.c:
 	.text       start:0x800B3508 end:0x800B7264
-	.data       start:0x80311CF0 end:0x80311E98
+	.data       start:0x80311CF0 end:0x80311E94
 	.bss        start:0x8039DAD8 end:0x8039DAF0
-	.sdata      start:0x803DCFB4 end:0x803DCFC4
-	.sbss       start:0x803DEB38 end:0x803DEB50
+	.sdata      start:0x803DCFB0 end:0x803DCFC0
+	.sbss       start:0x803DEB30 end:0x803DEB48
 	.sdata2     start:0x803E1078 end:0x803E11D8
 
 dlls/engine/28/28.c:
 	.text       start:0x800B7264 end:0x800B90E8
-	.data       start:0x80311E98 end:0x80311F30
+	.data       start:0x80311E98 end:0x80311F2C
 	.bss        start:0x8039DAF0 end:0x8039DB08
 	.sdata2     start:0x803E11D8 end:0x803E1290
 
 dlls/engine/29/29.c:
 	.text       start:0x800B90E8 end:0x800BC5B0
-	.data       start:0x80311F30 end:0x80312048
-	.sdata      start:0x803DCFC4 end:0x803DCFD4
-	.sbss       start:0x803DEB50 end:0x803DEB60
+	.data       start:0x80311F30 end:0x80312044
+	.sdata      start:0x803DCFC0 end:0x803DCFD0
+	.sbss       start:0x803DEB48 end:0x803DEB58
 	.sdata2     start:0x803E1290 end:0x803E13E8
 
 dlls/engine/30/30.c:
 	.text       start:0x800BC5B0 end:0x800BD7A8
 	.data       start:0x80312048 end:0x803120B0
-	.sdata      start:0x803DCFD4 end:0x803DCFE4
-	.sbss       start:0x803DEB60 end:0x803DEB70
+	.sdata      start:0x803DCFD0 end:0x803DCFE0
+	.sbss       start:0x803DEB58 end:0x803DEB68
 	.sdata2     start:0x803E13E8 end:0x803E1488
 
 dlls/engine/31/31.c:
 	.text       start:0x800BD7A8 end:0x800BE3A0
 	.data       start:0x803120B0 end:0x80312108
-	.sdata      start:0x803DCFE4 end:0x803DCFF4
-	.sbss       start:0x803DEB70 end:0x803DEB80
+	.sdata      start:0x803DCFE0 end:0x803DCFF0
+	.sbss       start:0x803DEB68 end:0x803DEB78
 	.sdata2     start:0x803E1488 end:0x803E14E0
 
 dlls/engine/32/32.c:
 	.text       start:0x800BE3A0 end:0x800BFCE4
 	.data       start:0x80312108 end:0x803121E0
 	.bss        start:0x8039DB08 end:0x8039DB20
-	.sdata      start:0x803DCFF4 end:0x803DD004
-	.sbss       start:0x803DEB80 end:0x803DEB90
+	.sdata      start:0x803DCFF0 end:0x803DD000
+	.sbss       start:0x803DEB78 end:0x803DEB88
 	.sdata2     start:0x803E14E0 end:0x803E15A0
 
 dlls/engine/33/33.c:
 	.text       start:0x800BFCE4 end:0x800C1538
 	.data       start:0x803121E0 end:0x80312268
 	.bss        start:0x8039DB20 end:0x8039DB38
-	.sdata      start:0x803DD004 end:0x803DD014
-	.sbss       start:0x803DEB90 end:0x803DEBA0
+	.sdata      start:0x803DD000 end:0x803DD010
+	.sbss       start:0x803DEB88 end:0x803DEB98
 	.sdata2     start:0x803E15A0 end:0x803E1630
 
 dlls/engine/34/34.c:
 	.text       start:0x800C1538 end:0x800C2C88
 	.data       start:0x80312268 end:0x803122F0
 	.bss        start:0x8039DB38 end:0x8039DB50
-	.sdata      start:0x803DD014 end:0x803DD024
-	.sbss       start:0x803DEBA0 end:0x803DEBB0
+	.sdata      start:0x803DD010 end:0x803DD020
+	.sbss       start:0x803DEB98 end:0x803DEBA8
 	.sdata2     start:0x803E1630 end:0x803E16C0
 
 dlls/engine/35/35.c:
 	.text       start:0x800C2C88 end:0x800C4BD0
-	.data       start:0x803122F0 end:0x803123B0
+	.data       start:0x803122F0 end:0x803123AC
 	.bss        start:0x8039DB50 end:0x8039DB68
-	.sdata      start:0x803DD024 end:0x803DD038
-	.sbss       start:0x803DEBB0 end:0x803DEBC0
+	.sdata      start:0x803DD020 end:0x803DD030
+	.sbss       start:0x803DEBA8 end:0x803DEBB8
 	.sdata2     start:0x803E16C0 end:0x803E1740
 
 dlls/engine/36/36.c:
 	.text       start:0x800C4BD0 end:0x800C5A4C
-	.data       start:0x803123B0 end:0x80312410
+	.data       start:0x803123B0 end:0x8031240C
 	.bss        start:0x8039DB68 end:0x8039DB80
 	.sdata2     start:0x803E1740 end:0x803E17B0
 
 dlls/engine/37/37.c:
 	.text       start:0x800C5A4C end:0x800C6920
-	.data       start:0x80312410 end:0x80312478
+	.data       start:0x80312410 end:0x80312474
 	.bss        start:0x8039DB80 end:0x8039DB98
 	.sdata2     start:0x803E17B0 end:0x803E1808
 
@@ -520,13 +530,13 @@ dlls/engine/41/41.c:
 	.text       start:0x800C8374 end:0x800C94AC
 	.data       start:0x80312518 end:0x803125C8
 	.bss        start:0x8039DBB0 end:0x8039DBC8
-	.sdata      start:0x803DD038 end:0x803DD048
-	.sbss       start:0x803DEBC0 end:0x803DEBD0
+	.sdata      start:0x803DD030 end:0x803DD040
+	.sbss       start:0x803DEBB8 end:0x803DEBC8
 	.sdata2     start:0x803E18B0 end:0x803E1918
 
 dlls/engine/40/40.c:
 	.text       start:0x800C94AC end:0x800CA738
-	.data       start:0x803125C8 end:0x80312648
+	.data       start:0x803125C8 end:0x80312644
 	.bss        start:0x8039DBC8 end:0x8039DBE0
 	.sdata2     start:0x803E1918 end:0x803E1988
 
@@ -538,43 +548,43 @@ dlls/engine/38/38.c:
 
 dlls/engine/42/42.c:
 	.text       start:0x800CAC9C end:0x800CB9FC
-	.data       start:0x80312670 end:0x803126C8
-	.sdata      start:0x803DD048 end:0x803DD058
-	.sbss       start:0x803DEBD0 end:0x803DEBE0
+	.data       start:0x80312670 end:0x803126C4
+	.sdata      start:0x803DD040 end:0x803DD050
+	.sbss       start:0x803DEBC8 end:0x803DEBD8
 	.sdata2     start:0x803E19C0 end:0x803E1A28
 
 dlls/engine/43/43.c:
 	.text       start:0x800CB9FC end:0x800CD2C8
-	.data       start:0x803126C8 end:0x80312768
-	.sdata      start:0x803DD058 end:0x803DD068
-	.sbss       start:0x803DEBE0 end:0x803DEBF0
+	.data       start:0x803126C8 end:0x80312764
+	.sdata      start:0x803DD050 end:0x803DD060
+	.sbss       start:0x803DEBD8 end:0x803DEBE8
 	.sdata2     start:0x803E1A28 end:0x803E1AE0
 
 dlls/engine/44/44.c:
 	.text       start:0x800CD2C8 end:0x800CD79C
 	.data       start:0x80312768 end:0x80312790
-	.sdata      start:0x803DD068 end:0x803DD078
-	.sbss       start:0x803DEBF0 end:0x803DEC00
+	.sdata      start:0x803DD060 end:0x803DD070
+	.sbss       start:0x803DEBE8 end:0x803DEBF8
 	.sdata2     start:0x803E1AE0 end:0x803E1B18
 
 dlls/engine/45/45.c:
 	.text       start:0x800CD79C end:0x800D589C
-	.data       start:0x80312790 end:0x80312978
-	.sdata      start:0x803DD078 end:0x803DD088
-	.sbss       start:0x803DEC00 end:0x803DEC10
+	.data       start:0x80312790 end:0x80312974
+	.sdata      start:0x803DD070 end:0x803DD080
+	.sbss       start:0x803DEBF8 end:0x803DEC08
 	.sdata2     start:0x803E1B18 end:0x803E1CE0
 
 dlls/engine/3/3.c:
 	.text       start:0x800D589C end:0x800D78D4
 	.data       start:0x80312978 end:0x803129D0
 	.bss        start:0x8039DBF8 end:0x8039E288
-	.sbss       start:0x803DEC10 end:0x803DEC20
-	.sdata2     start:0x803E1CE0 end:0x803E1D48
+	.sbss       start:0x803DEC08 end:0x803DEC18
+	.sdata2     start:0x803E1CE0 end:0x803E1D44
 
 dlls/engine/22/22.c:
 	.text       start:0x800D78D4 end:0x800D82C8
 	.data       start:0x803129D0 end:0x80312A08
-	.sbss       start:0x803DEC20 end:0x803DEC30
+	.sbss       start:0x803DEC18 end:0x803DEC28
 	.sdata2     start:0x803E1D48 end:0x803E1D78
 
 dlls/engine/4/4.c:
@@ -584,7 +594,7 @@ dlls/engine/4/4.c:
 dlls/engine/15/15.c:
 	.text       start:0x800D838C end:0x800DA138
 	.data       start:0x80312AC8 end:0x80312B40
-	.sbss       start:0x803DEC30 end:0x803DEC58
+	.sbss       start:0x803DEC28 end:0x803DEC49
 	.sdata2     start:0x803E1D78 end:0x803E1DD0
 
 dlls/engine/16/16.c:
@@ -594,48 +604,48 @@ dlls/engine/16/16.c:
 dlls/engine/18/18.c:
 	.text       start:0x800DA220 end:0x800DA254
 	.data       start:0x80312B68 end:0x80312BA8
-	.sbss       start:0x803DEC58 end:0x803DEC60
+	.sbss       start:0x803DEC50 end:0x803DEC54
 
 dlls/engine/20_Hcurves/Hcurves.c:
 	.text       start:0x800DA254 end:0x800DD9B4
 	.data       start:0x80312BA8 end:0x80312C88
 	.bss        start:0x8039E288 end:0x803A2F88
-	.sbss       start:0x803DEC60 end:0x803DEC70
+	.sbss       start:0x803DEC58 end:0x803DEC68
 	.sdata2     start:0x803E1DD0 end:0x803E1E18
 
 dlls/engine/20_Hcurves/Hcurves_romcurve.c:
 	.text       start:0x800DD9B4 end:0x800E57A0
 	.data       start:0x80312C88 end:0x80312D70
 	.bss        start:0x803A2F88 end:0x803A43D8
-	.sbss       start:0x803DEC70 end:0x803DEC80
+	.sbss       start:0x803DEC68 end:0x803DEC74
 	.sdata2     start:0x803E1E18 end:0x803E1E70
 
 dlls/engine/21/21.c:
 	.text       start:0x800E57A0 end:0x800E8560
 	.data       start:0x80312D70 end:0x80312DB0
 	.bss        start:0x803A43D8 end:0x803A4720
-	.sbss       start:0x803DEC80 end:0x803DEC88
+	.sbss       start:0x803DEC78 end:0x803DEC80
 	.sdata2     start:0x803E1E70 end:0x803E1ED0
 
 dlls/engine/23/23.c:
 	.text       start:0x800E8560 end:0x800EA590
-	.rodata     start:0x802C29B0 end:0x802C29C0
+	.rodata     start:0x802C29B0 end:0x802C29BC
 	.data       start:0x80312DB0 end:0x80313070
 	.bss        start:0x803A4720 end:0x803A59B8
-	.sdata      start:0x803DD088 end:0x803DD090
-	.sbss       start:0x803DEC88 end:0x803DECA0
+	.sdata      start:0x803DD080 end:0x803DD090
+	.sbss       start:0x803DEC80 end:0x803DEC98
 	.sdata2     start:0x803E1ED0 end:0x803E1EE0
 
 dlls/engine/17/17.c:
 	.text       start:0x800EA590 end:0x800EAB90
 	.data       start:0x80313070 end:0x80313298
 	.bss        start:0x803A59B8 end:0x803A59C8
-	.sbss       start:0x803DECA0 end:0x803DECB0
+	.sbss       start:0x803DEC98 end:0x803DECA8
 
 dlls/engine/47/47.c:
 	.text       start:0x800EAB90 end:0x800EB1E8
 	.data       start:0x80313298 end:0x803132E8
-	.sdata2     start:0x803E1EE0 end:0x803E1EF8
+	.sdata2     start:0x803E1EE0 end:0x803E1EF4
 
 dlls/modgfx/89/89.c:
 	.text       start:0x800EB1E8 end:0x800EB4B4
@@ -667,12 +677,12 @@ dlls/modgfx/93/93.c:
 dlls/modgfx/94/94.c:
 	.text       start:0x800ED220 end:0x800ED6B0
 	.data       start:0x803139D0 end:0x80313CE0
-	.sdata2     start:0x803E1FC8 end:0x803E2008
+	.sdata2     start:0x803E1FC8 end:0x803E2004
 
 dlls/modgfx/95/95.c:
 	.text       start:0x800ED6B0 end:0x800EDA00
 	.data       start:0x80313CE0 end:0x80313E20
-	.sdata2     start:0x803E2008 end:0x803E2038
+	.sdata2     start:0x803E2008 end:0x803E2034
 
 dlls/modgfx/96/96.c:
 	.text       start:0x800EDA00 end:0x800EDE44
@@ -713,7 +723,7 @@ dlls/modgfx/163/163.c:
 dlls/modgfx/102/102.c:
 	.text       start:0x800EF7BC end:0x800EFBD0
 	.data       start:0x80314838 end:0x80314A48
-	.sdata2     start:0x803E2198 end:0x803E21D0
+	.sdata2     start:0x803E2198 end:0x803E21CC
 
 dlls/modgfx/103/103.c:
 	.text       start:0x800EFBD0 end:0x800EFE4C
@@ -723,7 +733,7 @@ dlls/modgfx/103/103.c:
 dlls/modgfx/104/104.c:
 	.text       start:0x800EFE4C end:0x800F0150
 	.data       start:0x80314C58 end:0x80314E68
-	.sdata2     start:0x803E21E8 end:0x803E2208
+	.sdata2     start:0x803E21E8 end:0x803E2204
 
 dlls/engine/88/88.c:
 	.text       start:0x800F0150 end:0x800F0160
@@ -742,7 +752,7 @@ dlls/modgfx/106/106.c:
 dlls/modgfx/107/107.c:
 	.text       start:0x800F09A8 end:0x800F0BF8
 	.data       start:0x803150D0 end:0x80315160
-	.sdata2     start:0x803E2260 end:0x803E2280
+	.sdata2     start:0x803E2260 end:0x803E227C
 
 dlls/modgfx/108/108.c:
 	.text       start:0x800F0BF8 end:0x800F0C08
@@ -751,29 +761,29 @@ dlls/modgfx/108/108.c:
 dlls/modgfx/109/109.c:
 	.text       start:0x800F0C08 end:0x800F0E68
 	.data       start:0x80315180 end:0x803152C0
-	.sdata2     start:0x803E2280 end:0x803E22A0
+	.sdata2     start:0x803E2280 end:0x803E229C
 
 dlls/modgfx/110/110.c:
 	.text       start:0x800F0E68 end:0x800F10B8
 	.data       start:0x803152C0 end:0x80315350
-	.sdata2     start:0x803E22A0 end:0x803E22C0
+	.sdata2     start:0x803E22A0 end:0x803E22BC
 
 dlls/modgfx/111/111.c:
 	.text       start:0x800F10B8 end:0x800F1600
 	.data       start:0x80315350 end:0x80315528
 	.sdata      start:0x803DD0C0 end:0x803DD0C8
-	.sdata2     start:0x803E22C0 end:0x803E2300
+	.sdata2     start:0x803E22C0 end:0x803E22FC
 
 dlls/modgfx/112/112.c:
 	.text       start:0x800F1600 end:0x800F1B00
 	.data       start:0x80315528 end:0x803156F0
 	.sdata      start:0x803DD0C8 end:0x803DD0D0
-	.sdata2     start:0x803E2300 end:0x803E2340
+	.sdata2     start:0x803E2300 end:0x803E233C
 
 dlls/modgfx/113/113.c:
 	.text       start:0x800F1B00 end:0x800F1E74
 	.data       start:0x803156F0 end:0x80315918
-	.sdata2     start:0x803E2340 end:0x803E2368
+	.sdata2     start:0x803E2340 end:0x803E2364
 
 dlls/modgfx/114/114.c:
 	.text       start:0x800F1E74 end:0x800F2180
@@ -829,13 +839,13 @@ dlls/modgfx/123/123.c:
 dlls/modgfx/124/124.c:
 	.text       start:0x800F4B48 end:0x800F508C
 	.data       start:0x80316498 end:0x803166C0
-	.sdata2     start:0x803E2590 end:0x803E25E0
+	.sdata2     start:0x803E2590 end:0x803E25DC
 
 dlls/modgfx/125/125.c:
 	.text       start:0x800F508C end:0x800F53C0
 	.data       start:0x803166C0 end:0x803168E8
-	.sbss       start:0x803DECB0 end:0x803DECB8
-	.sdata2     start:0x803E25E0 end:0x803E2608
+	.sbss       start:0x803DECA8 end:0x803DECB0
+	.sdata2     start:0x803E25E0 end:0x803E2604
 
 dlls/modgfx/126/126.c:
 	.text       start:0x800F53C0 end:0x800F56FC
@@ -857,17 +867,17 @@ dlls/modgfx/128/128.c:
 dlls/modgfx/129/129.c:
 	.text       start:0x800F5EA8 end:0x800F656C
 	.data       start:0x80316BD8 end:0x80316E00
-	.sdata2     start:0x803E2680 end:0x803E26B8
+	.sdata2     start:0x803E2680 end:0x803E26B4
 
 dlls/modgfx/130/130.c:
 	.text       start:0x800F656C end:0x800F6950
 	.data       start:0x80316E00 end:0x80317028
-	.sdata2     start:0x803E26B8 end:0x803E26E0
+	.sdata2     start:0x803E26B8 end:0x803E26DC
 
 dlls/modgfx/131/131.c:
 	.text       start:0x800F6950 end:0x800F6DA4
 	.data       start:0x80317028 end:0x80317338
-	.sdata2     start:0x803E26E0 end:0x803E2728
+	.sdata2     start:0x803E26E0 end:0x803E2724
 
 dlls/modgfx/132/132.c:
 	.text       start:0x800F6DA4 end:0x800F71F8
@@ -889,7 +899,7 @@ dlls/modgfx/135/135.c:
 	.text       start:0x800F7BD8 end:0x800F7EDC
 	.data       start:0x803176E0 end:0x803178D0
 	.sdata      start:0x803DD0F8 end:0x803DD100
-	.sdata2     start:0x803E27F0 end:0x803E2818
+	.sdata2     start:0x803E27F0 end:0x803E2814
 
 dlls/modgfx/136/136.c:
 	.text       start:0x800F7EDC end:0x800F81AC
@@ -900,12 +910,12 @@ dlls/modgfx/137/137.c:
 	.text       start:0x800F81AC end:0x800F84B0
 	.data       start:0x80317AF0 end:0x80317CE0
 	.sdata      start:0x803DD100 end:0x803DD108
-	.sdata2     start:0x803E2830 end:0x803E2858
+	.sdata2     start:0x803E2830 end:0x803E2854
 
 dlls/modgfx/138/138.c:
 	.text       start:0x800F84B0 end:0x800F866C
 	.data       start:0x80317CE0 end:0x80317DB8
-	.sdata2     start:0x803E2858 end:0x803E2868
+	.sdata2     start:0x803E2858 end:0x803E2864
 
 dlls/modgfx/139/139.c:
 	.text       start:0x800F866C end:0x800F8C04
@@ -943,13 +953,13 @@ dlls/modgfx/145/145.c:
 	.text       start:0x800FA9F4 end:0x800FAE14
 	.data       start:0x80318688 end:0x80318850
 	.sdata      start:0x803DD120 end:0x803DD128
-	.sdata2     start:0x803E29E0 end:0x803E2A18
+	.sdata2     start:0x803E29E0 end:0x803E2A14
 
 dlls/modgfx/146/146.c:
 	.text       start:0x800FAE14 end:0x800FB1C4
 	.data       start:0x80318850 end:0x803188F0
 	.sdata      start:0x803DD128 end:0x803DD130
-	.sdata2     start:0x803E2A18 end:0x803E2A48
+	.sdata2     start:0x803E2A18 end:0x803E2A44
 
 dlls/modgfx/147/147.c:
 	.text       start:0x800FB1C4 end:0x800FB494
@@ -960,13 +970,13 @@ dlls/modgfx/148/148.c:
 	.text       start:0x800FB494 end:0x800FB844
 	.data       start:0x80318B18 end:0x80318BB8
 	.sdata      start:0x803DD130 end:0x803DD138
-	.sdata2     start:0x803E2A70 end:0x803E2AA0
+	.sdata2     start:0x803E2A70 end:0x803E2A9C
 
 dlls/modgfx/149/149.c:
 	.text       start:0x800FB844 end:0x800FBB3C
 	.data       start:0x80318BB8 end:0x80318C78
 	.sdata      start:0x803DD138 end:0x803DD140
-	.sdata2     start:0x803E2AA0 end:0x803E2AC8
+	.sdata2     start:0x803E2AA0 end:0x803E2AC4
 
 dlls/modgfx/150/150.c:
 	.text       start:0x800FBB3C end:0x800FBE5C
@@ -977,7 +987,7 @@ dlls/modgfx/151/151.c:
 	.text       start:0x800FBE5C end:0x800FC20C
 	.data       start:0x80318EA0 end:0x80318F40
 	.sdata      start:0x803DD140 end:0x803DD148
-	.sdata2     start:0x803E2AF0 end:0x803E2B20
+	.sdata2     start:0x803E2AF0 end:0x803E2B1C
 
 dlls/modgfx/152/152.c:
 	.text       start:0x800FC20C end:0x800FC624
@@ -988,7 +998,7 @@ dlls/modgfx/153/153.c:
 	.text       start:0x800FC624 end:0x800FC9D4
 	.data       start:0x80319188 end:0x80319228
 	.sdata      start:0x803DD148 end:0x803DD150
-	.sdata2     start:0x803E2B48 end:0x803E2B78
+	.sdata2     start:0x803E2B48 end:0x803E2B74
 
 dlls/modgfx/154/154.c:
 	.text       start:0x800FC9D4 end:0x800FD358
@@ -1015,7 +1025,7 @@ dlls/modgfx/157/157.c:
 dlls/modgfx/158/158.c:
 	.text       start:0x800FDEB4 end:0x800FE234
 	.data       start:0x803198F0 end:0x80319B18
-	.sdata2     start:0x803E2C20 end:0x803E2C50
+	.sdata2     start:0x803E2C20 end:0x803E2C4C
 
 dlls/modgfx/159/159.c:
 	.text       start:0x800FE234 end:0x800FE65C
@@ -1025,7 +1035,7 @@ dlls/modgfx/159/159.c:
 dlls/modgfx/160/160.c:
 	.text       start:0x800FE65C end:0x800FE9C4
 	.data       start:0x80319D40 end:0x80319F68
-	.sdata2     start:0x803E2C90 end:0x803E2CC0
+	.sdata2     start:0x803E2C90 end:0x803E2CBC
 
 dlls/modgfx/161/161.c:
 	.text       start:0x800FE9C4 end:0x800FED44
@@ -1035,7 +1045,7 @@ dlls/modgfx/161/161.c:
 dlls/modgfx/162/162.c:
 	.text       start:0x800FED44 end:0x800FF090
 	.data       start:0x8031A190 end:0x8031A3B8
-	.sdata2     start:0x803E2CE8 end:0x803E2D10
+	.sdata2     start:0x803E2CE8 end:0x803E2D0C
 
 dlls/modgfx/164/164.c:
 	.text       start:0x800FF090 end:0x800FF0A0
@@ -1061,7 +1071,7 @@ dlls/modgfx/167/167.c:
 dlls/modgfx/168/168.c:
 	.text       start:0x800FFF60 end:0x80100320
 	.data       start:0x8031A578 end:0x8031A6B8
-	.sdata2     start:0x803E2DA0 end:0x803E2DD8
+	.sdata2     start:0x803E2DA0 end:0x803E2DD4
 
 dlls/modgfx/169/169.c:
 	.text       start:0x80100320 end:0x801006DC
@@ -1171,71 +1181,71 @@ dlls/projgfx/194/194.c:
 
 dlls/engine/1_camcontrol/camcontrol.c:
 	.text       start:0x80100EAC end:0x80103940
-	.data       start:0x8031B118 end:0x8031B1E8
+	.data       start:0x8031B118 end:0x8031B1E4
 	.bss        start:0x803A59C8 end:0x803A5B60
 	.sdata      start:0x803DD188 end:0x803DD198
-	.sbss       start:0x803DECB8 end:0x803DED28
+	.sbss       start:0x803DECB0 end:0x803DED20
 	.sdata2     start:0x803E2E30 end:0x803E2E90
 
 dlls/engine/66/66.c:
 	.text       start:0x80103940 end:0x80106A70
 	.data       start:0x8031B1E8 end:0x8031B228
-	.sbss       start:0x803DED28 end:0x803DED38
-	.sdata2     start:0x803E2E90 end:0x803E2F48
+	.sbss       start:0x803DED20 end:0x803DED30
+	.sdata2     start:0x803E2E90 end:0x803E2F44
 
 dlls/engine/67/67.c:
 	.text       start:0x80106A70 end:0x80107F08
 	.data       start:0x8031B228 end:0x8031B258
-	.sbss       start:0x803DED38 end:0x803DED40
-	.sdata2     start:0x803E2F48 end:0x803E2F88
+	.sbss       start:0x803DED30 end:0x803DED34
+	.sdata2     start:0x803E2F48 end:0x803E2F84
 
 dlls/engine/69/69.c:
 	.text       start:0x80107F08 end:0x8010842C
 	.data       start:0x8031B258 end:0x8031B288
-	.sbss       start:0x803DED40 end:0x803DED48
+	.sbss       start:0x803DED38 end:0x803DED40
 	.sdata2     start:0x803E2F88 end:0x803E2FC8
 
 dlls/engine/68/68.c:
 	.text       start:0x8010842C end:0x80109B64
 	.data       start:0x8031B288 end:0x8031B2B8
 	.sdata      start:0x803DD198 end:0x803DD1A0
-	.sbss       start:0x803DED48 end:0x803DED50
+	.sbss       start:0x803DED40 end:0x803DED48
 	.sdata2     start:0x803E2FC8 end:0x803E3048
 
 dlls/engine/70/70.c:
 	.text       start:0x80109B64 end:0x80109F20
 	.data       start:0x8031B2B8 end:0x8031B2E8
-	.sbss       start:0x803DED50 end:0x803DED58
-	.sdata2     start:0x803E3048 end:0x803E3080
+	.sbss       start:0x803DED48 end:0x803DED4C
+	.sdata2     start:0x803E3048 end:0x803E307C
 
 dlls/engine/72/72.c:
 	.text       start:0x80109F20 end:0x8010A520
 	.data       start:0x8031B2E8 end:0x8031B318
-	.sbss       start:0x803DED58 end:0x803DED60
+	.sbss       start:0x803DED50 end:0x803DED54
 	.sdata2     start:0x803E3080 end:0x803E3090
 
 dlls/engine/71/71.c:
 	.text       start:0x8010A520 end:0x8010C324
 	.data       start:0x8031B318 end:0x8031B378
-	.sbss       start:0x803DED60 end:0x803DED68
+	.sbss       start:0x803DED58 end:0x803DED60
 	.sdata2     start:0x803E3090 end:0x803E30C8
 
 dlls/engine/73/73.c:
 	.text       start:0x8010C324 end:0x8010D2DC
 	.data       start:0x8031B378 end:0x8031B3A8
-	.sbss       start:0x803DED68 end:0x803DED70
-	.sdata2     start:0x803E30C8 end:0x803E3150
+	.sbss       start:0x803DED60 end:0x803DED68
+	.sdata2     start:0x803E30C8 end:0x803E314C
 
 dlls/engine/74/74.c:
 	.text       start:0x8010D2DC end:0x8010D758
 	.data       start:0x8031B3A8 end:0x8031B3D8
-	.sbss       start:0x803DED70 end:0x803DED78
+	.sbss       start:0x803DED68 end:0x803DED70
 	.sdata2     start:0x803E3150 end:0x803E3198
 
 dlls/engine/75/75.c:
 	.text       start:0x8010D758 end:0x8010DEF0
 	.data       start:0x8031B3D8 end:0x8031B408
-	.sbss       start:0x803DED78 end:0x803DED80
+	.sbss       start:0x803DED70 end:0x803DED78
 	.sdata2     start:0x803E3198 end:0x803E31A8
 
 dlls/engine/76/76.c:
@@ -1246,57 +1256,57 @@ dlls/engine/77/77.c:
 	.text       start:0x8010DF98 end:0x8010E938
 	.data       start:0x8031B438 end:0x8031B488
 	.sdata      start:0x803DD1A0 end:0x803DD1C0
-	.sbss       start:0x803DED80 end:0x803DED88
-	.sdata2     start:0x803E31D8 end:0x803E3230
+	.sbss       start:0x803DED78 end:0x803DED80
+	.sdata2     start:0x803E31D8 end:0x803E322C
 
 dlls/engine/78/78.c:
 	.text       start:0x8010E938 end:0x8010F714
 	.data       start:0x8031B488 end:0x8031B4C8
-	.sbss       start:0x803DED88 end:0x803DED90
-	.sdata2     start:0x803E3230 end:0x803E3290
+	.sbss       start:0x803DED80 end:0x803DED88
+	.sdata2     start:0x803E3230 end:0x803E328C
 
 dlls/engine/79/79.c:
 	.text       start:0x8010F714 end:0x8010F95C
 	.data       start:0x8031B4C8 end:0x8031B4F8
-	.sbss       start:0x803DED90 end:0x803DED98
+	.sbss       start:0x803DED88 end:0x803DED90
 	.sdata2     start:0x803E3290 end:0x803E32C8
 
 dlls/engine/80/80.c:
 	.text       start:0x8010F95C end:0x8010FE70
 	.data       start:0x8031B4F8 end:0x8031B528
-	.sbss       start:0x803DED98 end:0x803DEDA0
+	.sbss       start:0x803DED90 end:0x803DED98
 	.sdata2     start:0x803E32C8 end:0x803E32E8
 
 dlls/engine/81/81.c:
 	.text       start:0x8010FE70 end:0x80110090
 	.data       start:0x8031B528 end:0x8031B558
-	.sbss       start:0x803DEDA0 end:0x803DEDA8
+	.sbss       start:0x803DED98 end:0x803DEDA0
 	.sdata2     start:0x803E32E8 end:0x803E3308
 
 dlls/engine/82/82.c:
 	.text       start:0x80110090 end:0x80110600
 	.data       start:0x8031B558 end:0x8031B588
 	.sdata      start:0x803DD1C0 end:0x803DD1C8
-	.sbss       start:0x803DEDA8 end:0x803DEDB8
+	.sbss       start:0x803DEDA0 end:0x803DEDB0
 	.sdata2     start:0x803E3308 end:0x803E3328
 
 dlls/engine/83/83.c:
 	.text       start:0x80110600 end:0x80110AD0
 	.data       start:0x8031B588 end:0x8031B5B8
 	.sdata      start:0x803DD1C8 end:0x803DD1D0
-	.sbss       start:0x803DEDB8 end:0x803DEDC0
+	.sbss       start:0x803DEDB0 end:0x803DEDB8
 	.sdata2     start:0x803E3328 end:0x803E3348
 
 dlls/engine/84/84.c:
 	.text       start:0x80110AD0 end:0x8011109C
 	.data       start:0x8031B5B8 end:0x8031B5E8
-	.sbss       start:0x803DEDC0 end:0x803DEDC8
+	.sbss       start:0x803DEDB8 end:0x803DEDC0
 	.sdata2     start:0x803E3348 end:0x803E3380
 
 dlls/engine/85/85.c:
 	.text       start:0x8011109C end:0x8011124C
 	.data       start:0x8031B5E8 end:0x8031B618
-	.sbss       start:0x803DEDC8 end:0x803DEDD0
+	.sbss       start:0x803DEDC0 end:0x803DEDC8
 	.sdata2     start:0x803E3380 end:0x803E33A8
 
 dlls/engine/86/86.c:
@@ -1310,7 +1320,7 @@ dlls/engine/87/87.c:
 	.data       start:0x8031B648 end:0x8031B6D8
 	.bss        start:0x803A5BC0 end:0x803A5BD8
 	.sdata      start:0x803DD1D0 end:0x803DD1D8
-	.sbss       start:0x803DEDD0 end:0x803DEDD8
+	.sbss       start:0x803DEDC8 end:0x803DEDD0
 	.sdata2     start:0x803E33E8 end:0x803E3420
 
 dlls/engine/25/25.c:
@@ -1318,13 +1328,13 @@ dlls/engine/25/25.c:
 	.rodata     start:0x802C29D0 end:0x802C29E0
 	.data       start:0x8031B6D8 end:0x8031B770
 	.sdata      start:0x803DD1D8 end:0x803DD1E0
-	.sbss       start:0x803DEDD8 end:0x803DEDE8
+	.sbss       start:0x803DEDD0 end:0x803DEDE0
 	.sdata2     start:0x803E3420 end:0x803E3490
 
 dlls/engine/46/46.c:
 	.text       start:0x801143A8 end:0x80115E00
 	.data       start:0x8031B770 end:0x8031B7D8
-	.sdata2     start:0x803E3490 end:0x803E34F0
+	.sdata2     start:0x803E3490 end:0x803E34EC
 
 dlls/engine/48/48.c:
 	.data       start:0x8031B7D8 end:0x8031B808
@@ -1333,25 +1343,25 @@ dlls/engine/50/50.c:
 	.text       start:0x80115E00 end:0x8011633C
 	.data       start:0x8031B808 end:0x8031B830
 	.bss        start:0x803A5BD8 end:0x803A5BE8
-	.sbss       start:0x803DEDE8 end:0x803DEDF8
-	.sdata2     start:0x803E34F0 end:0x803E34F8
+	.sbss       start:0x803DEDE0 end:0x803DEDF0
+	.sdata2     start:0x803E34F0 end:0x803E3510
 
 dlls/engine/51/51.c:
 	.text       start:0x8011633C end:0x80116538
-	.data       start:0x8031B830 end:0x8031B868
-	.sbss       start:0x803DEDF8 end:0x803DEE10
+	.data       start:0x8031B830 end:0x8031B864
+	.sbss       start:0x803DEDF0 end:0x803DEE03
 	.sdata2     start:0x803E3510 end:0x803E3518
 
 dlls/engine/52_n_attractmode/n_attractmode.c:
 	.text       start:0x80116538 end:0x801177E8
 	.data       start:0x8031B868 end:0x8031BA40
-	.sbss       start:0x803DEE10 end:0x803DEE58
-	.sdata2     start:0x803E3518 end:0x803E3538
+	.sbss       start:0x803DEE08 end:0x803DEE58
+	.sdata2     start:0x803E3518 end:0x803E3534
 
 main/thp/dll_3b.c:
 	.text       start:0x801177E8 end:0x80117B44
 	.bss        start:0x803A5BE8 end:0x803A6F60
-	.sbss       start:0x803DEE58 end:0x803DEE60
+	.sbss       start:0x803DEE58 end:0x803DEE5C
 
 main/thp/n_options.c:
 	.text       start:0x80117B44 end:0x80118948
@@ -1362,7 +1372,7 @@ main/thp/n_options.c:
 
 main/thp/dll_3e.c:
 	.text       start:0x80118948 end:0x80119164
-	.sbss       start:0x803DEE64 end:0x803DEE88
+	.sbss       start:0x803DEE64 end:0x803DEE81
 
 main/thp/attractmovie.c:
 	.text       start:0x80119164 end:0x801194DC
@@ -1375,12 +1385,12 @@ main/thp/picmenu.c:
 main/thp/THPRead.c:
 	.text       start:0x80119934 end:0x80119C00
 	.bss        start:0x803A76A8 end:0x803A8A90
-	.sbss       start:0x803DEE88 end:0x803DEE90
+	.sbss       start:0x803DEE88 end:0x803DEE8C
 
 main/thp/THPVideoDecode.c:
 	.text       start:0x80119C00 end:0x8011A0FC
 	.bss        start:0x803A8A90 end:0x803A9DF8
-	.sbss       start:0x803DEE90 end:0x803DEEA0
+	.sbss       start:0x803DEE90 end:0x803DEE9C
 
 dlls/engine/53/53.c:
 	.text       start:0x8011A0FC end:0x8011BAEC
@@ -1421,18 +1431,18 @@ dlls/engine/58/58.c:
 
 dlls/engine/0/0.c:
 	.text       start:0x8011DE20 end:0x80130448
-	.rodata     start:0x802C29E0 end:0x802C2A08
+	.rodata     start:0x802C29E0 end:0x802C2A04
 	.data       start:0x8031C5E0 end:0x8031D928
 	.bss        start:0x803A9F90 end:0x803AABF8
 	.sdata      start:0x803DD230 end:0x803DD3B0
-	.sbss       start:0x803DEF28 end:0x803DF0E0
-	.sdata2     start:0x803E3608 end:0x803E39F0
+	.sbss       start:0x803DEF28 end:0x803DF0E8
+	.sdata2     start:0x803E3608 end:0x803E39EC
 
 dlls/engine/59/59.c:
 	.text       start:0x80130448 end:0x801306A0
 	.data       start:0x8031D928 end:0x8031D968
 	.sbss       start:0x803DF0E8 end:0x803DF0F8
-	.sdata2     start:0x803E39F0 end:0x803E39F8
+	.sdata2     start:0x803E39F0 end:0x803E39F4
 
 dlls/engine/60/60.c:
 	.text       start:0x801306A0 end:0x80131AEC
@@ -1446,7 +1456,7 @@ dlls/engine/61/61.c:
 	.data       start:0x8031DA68 end:0x8031DAC0
 	.bss        start:0x803AB558 end:0x803AB570
 	.sbss       start:0x803DF118 end:0x803DF128
-	.sdata2     start:0x803E3A00 end:0x803E3A18
+	.sdata2     start:0x803E3A00 end:0x803E3A14
 
 dlls/engine/62/62.c:
 	.text       start:0x801325B4 end:0x801325D0
@@ -1464,7 +1474,7 @@ dlls/engine/63/63.c:
 	.data       start:0x8031DDB8 end:0x8031DDE0
 	.sdata      start:0x803DD3F0 end:0x803DD3F8
 	.sbss       start:0x803DF160 end:0x803DF168
-	.sdata2     start:0x803E3AB8 end:0x803E3AC0
+	.sdata2     start:0x803E3AB8 end:0x803E3ABC
 
 dlls/engine/64/64.c:
 	.text       start:0x80134644 end:0x80134978
@@ -1478,7 +1488,7 @@ dlls/engine/65/65.c:
 	.bss        start:0x803AB570 end:0x803AB6F0
 	.sdata      start:0x803DD3F8 end:0x803DD408
 	.sbss       start:0x803DF178 end:0x803DF190
-	.sdata2     start:0x803E3AE8 end:0x803E3B00
+	.sdata2     start:0x803E3AE8 end:0x803E3AFC
 
 dlls/objects/704/704.c:
 	.text       start:0x80134E1C end:0x80136FD4
@@ -1486,15 +1496,15 @@ dlls/objects/704/704.c:
 	.bss        start:0x803AB6F0 end:0x803AB7B8
 	.sdata      start:0x803DD408 end:0x803DD410
 	.sbss       start:0x803DF190 end:0x803DF1D8
-	.sdata2     start:0x803E3B00 end:0x803E3BA8
+	.sdata2     start:0x803E3B00 end:0x803E3BA4
 
 main/dll_80136a40.c:
 	.text       start:0x80136FD4 end:0x80138E9C
-	.data       start:0x8031E760 end:0x8031EAA8
+	.data       start:0x8031E760 end:0x8031EAA4
 	.bss        start:0x803AB7B8 end:0x803ADBC8
 	.sdata      start:0x803DD410 end:0x803DD440
 	.sbss       start:0x803DF1D8 end:0x803DF248
-	.sdata2     start:0x803E3BA8 end:0x803E3BD8
+	.sdata2     start:0x803E3BA8 end:0x803E3BD4
 
 dlls/objects/196_Tricky/tricky.c:
 	.text       start:0x80138E9C end:0x8014924C
@@ -1508,7 +1518,7 @@ dlls/objects/201_Baddie/Baddie.c:
 	.text       start:0x8014924C end:0x8014E810
 	.rodata     start:0x802C2A30 end:0x802C2A50
 	.data       start:0x8031F398 end:0x8031F448
-	.sdata      start:0x803DD458 end:0x803DD470
+	.sdata      start:0x803DD458 end:0x803DD46C
 	.sbss       start:0x803DF250 end:0x803DF258
 	.sdata2     start:0x803E3D70 end:0x803E3E20
 
@@ -1531,7 +1541,7 @@ dlls/objects/225_WispBaddie/WispBaddie.c:
 	.data       start:0x8031F4B8 end:0x8031F4F0
 	.sdata      start:0x803DD480 end:0x803DD488
 	.sbss       start:0x803DF268 end:0x803DF270
-	.sdata2     start:0x803E3EE8 end:0x803E3F40
+	.sdata2     start:0x803E3EE8 end:0x803E3F3C
 
 dlls/objects/202/battledroid.c:
 	.text       start:0x8015052C end:0x801505E8
@@ -1542,7 +1552,7 @@ dlls/objects/202/sharpclaw.c:
 	.data       start:0x8031F4F0 end:0x80320A50
 	.bss        start:0x803ADBC8 end:0x803ADC48
 	.sdata      start:0x803DD488 end:0x803DD4A8
-	.sdata2     start:0x803E3F58 end:0x803E3FF0
+	.sdata2     start:0x803E3F58 end:0x803E3FEC
 
 dlls/objects/202/guardclaw.c:
 	.text       start:0x801523EC end:0x801529BC
@@ -1556,18 +1566,18 @@ dlls/objects/202/gcrobotpatrol.c:
 
 dlls/objects/202/mikaladon.c:
 	.text       start:0x80153178 end:0x801535F4
-	.sdata2     start:0x803E4080 end:0x803E40C8
+	.sdata2     start:0x803E4080 end:0x803E40C4
 
 dlls/objects/202/vambat.c:
 	.text       start:0x801535F4 end:0x80153C8C
 	.data       start:0x80320A98 end:0x80320AB8
 	.sdata      start:0x803DD4B8 end:0x803DD4C0
-	.sdata2     start:0x803E40C8 end:0x803E4108
+	.sdata2     start:0x803E40C8 end:0x803E4104
 
 dlls/objects/202/kooshy.c:
 	.text       start:0x80153C8C end:0x80154344
 	.sdata      start:0x803DD4C0 end:0x803DD4C8
-	.sdata2     start:0x803E4108 end:0x803E4150
+	.sdata2     start:0x803E4108 end:0x803E414C
 
 dlls/objects/202/weevil.c:
 	.text       start:0x80154344 end:0x80154974
@@ -1577,16 +1587,16 @@ dlls/objects/202/weevil.c:
 dlls/objects/202/pinpon.c:
 	.text       start:0x80154974 end:0x80155358
 	.sdata      start:0x803DD4D0 end:0x803DD4D8
-	.sdata2     start:0x803E41A8 end:0x803E4218
+	.sdata2     start:0x803E41A8 end:0x803E4214
 
 dlls/objects/202/rachnop.c:
 	.text       start:0x80155358 end:0x8015615C
 	.data       start:0x80320AB8 end:0x80320AD8
-	.sdata2     start:0x803E4218 end:0x803E4260
+	.sdata2     start:0x803E4218 end:0x803E425C
 
 dlls/objects/202/spittingeba.c:
 	.text       start:0x8015615C end:0x80156838
-	.sdata2     start:0x803E4260 end:0x803E42B0
+	.sdata2     start:0x803E4260 end:0x803E42AC
 
 dlls/objects/202/wb.c:
 	.text       start:0x80156838 end:0x80156F9C
@@ -1601,14 +1611,14 @@ dlls/objects/202/mutatedeba.c:
 dlls/objects/202/hoodedzyck.c:
 	.text       start:0x80157390 end:0x80157FD4
 	.sdata      start:0x803DD4E0 end:0x803DD4F0
-	.sdata2     start:0x803E4330 end:0x803E4398
+	.sdata2     start:0x803E4330 end:0x803E4394
 
 dlls/objects/202/firecrawler.c:
 	.text       start:0x80157FD4 end:0x80159E88
 	.data       start:0x80320B60 end:0x80321330
 	.bss        start:0x803ADC48 end:0x803ADCC8
 	.sdata      start:0x803DD4F0 end:0x803DD4F8
-	.sbss       start:0x803DF270 end:0x803DF278
+	.sbss       start:0x803DF270 end:0x803DF274
 	.sdata2     start:0x803E4398 end:0x803E4428
 
 dlls/objects/202/hagabon_mk2.c:
@@ -1631,14 +1641,14 @@ dlls/objects/202/202.c:
 	.text       start:0x8015B55C end:0x8015E134
 	.data       start:0x80321540 end:0x80321668
 	.bss        start:0x803ADCC8 end:0x803ADD20
-	.sbss       start:0x803DF278 end:0x803DF280
-	.sdata2     start:0x803E4518 end:0x803E45D8
+	.sbss       start:0x803DF278 end:0x803DF27A
+	.sdata2     start:0x803E4518 end:0x803E45D4
 
 dlls/objects/206/206.c:
 	.text       start:0x8015E134 end:0x8015FBFC
 	.data       start:0x80321668 end:0x80321740
 	.bss        start:0x803ADD20 end:0x803ADD70
-	.sdata2     start:0x803E45D8 end:0x803E4638
+	.sdata2     start:0x803E45D8 end:0x803E4634
 
 dlls/objects/204_ChukChuk/ChukChuk.c:
 	.text       start:0x8015FBFC end:0x80160238
@@ -1660,31 +1670,31 @@ dlls/objects/208_Grimble/Grimble.c:
 	.text       start:0x8016177C end:0x801636E0
 	.data       start:0x803218A0 end:0x80321970
 	.bss        start:0x803ADD98 end:0x803ADDD8
-	.sdata2     start:0x803E46C8 end:0x803E4748
+	.sdata2     start:0x803E46C8 end:0x803E4744
 
 dlls/objects/207_CannonClaw/CannonClaw.c:
 	.text       start:0x801636E0 end:0x80163814
 	.data       start:0x80321970 end:0x803219A8
-	.sdata2     start:0x803E4748 end:0x803E4758
+	.sdata2     start:0x803E4748 end:0x803E4754
 
 dlls/objects/209_TumbleWeedB/TumbleWeedB.c:
 	.text       start:0x80163814 end:0x8016571C
 	.data       start:0x803219A8 end:0x80321AA8
 	.sdata      start:0x803DD540 end:0x803DD548
-	.sbss       start:0x803DF280 end:0x803DF288
-	.sdata2     start:0x803E4758 end:0x803E47F0
+	.sbss       start:0x803DF280 end:0x803DF284
+	.sdata2     start:0x803E4758 end:0x803E47EC
 
 dlls/objects/211/211.c:
 	.text       start:0x8016571C end:0x80167C2C
 	.data       start:0x80321AA8 end:0x80321B78
 	.bss        start:0x803ADDD8 end:0x803ADE08
 	.sbss       start:0x803DF288 end:0x803DF290
-	.sdata2     start:0x803E47F0 end:0x803E4868
+	.sdata2     start:0x803E47F0 end:0x803E4864
 
 dlls/objects/212_SkeetlaWall/SkeetlaWall.c:
 	.text       start:0x80167C2C end:0x80167DB0
 	.data       start:0x80321B78 end:0x80321BB8
-	.sdata2     start:0x803E4868 end:0x803E4878
+	.sdata2     start:0x803E4868 end:0x803E4874
 
 dlls/objects/213_Kaldachom/Kaldachom.c:
 	.text       start:0x80167DB0 end:0x801699AC
@@ -1697,7 +1707,7 @@ dlls/objects/213_Kaldachom/Kaldachom.c:
 dlls/objects/214_KaldachomMe/KaldachomMe.c:
 	.text       start:0x801699AC end:0x80169D20
 	.data       start:0x80321C18 end:0x80321C50
-	.sdata2     start:0x803E48E8 end:0x803E48F8
+	.sdata2     start:0x803E48E8 end:0x803E48F4
 
 dlls/objects/215/215.c:
 	.text       start:0x80169D20 end:0x8016A540
@@ -1775,13 +1785,13 @@ dlls/objects/227/227.c:
 	.text       start:0x8016F7B8 end:0x80170650
 	.data       start:0x80322138 end:0x80322180
 	.sdata      start:0x803DD558 end:0x803DD560
-	.sdata2     start:0x803E4B48 end:0x803E4BA0
+	.sdata2     start:0x803E4B48 end:0x803E4B9C
 
 dlls/objects/228/228.c:
 	.text       start:0x80170650 end:0x80170920
 	.data       start:0x80322180 end:0x803221E8
 	.sdata      start:0x803DD560 end:0x803DD570
-	.sdata2     start:0x803E4BA0 end:0x803E4BC0
+	.sdata2     start:0x803E4BA0 end:0x803E4BBC
 
 dlls/objects/229/229.c:
 	.text       start:0x80170920 end:0x8017194C
@@ -1792,7 +1802,7 @@ dlls/objects/229/229.c:
 dlls/objects/293_curve/curve.c:
 	.text       start:0x8017194C end:0x80171A24
 	.data       start:0x80322280 end:0x803222C0
-	.sdata2     start:0x803E4C08 end:0x803E4C18
+	.sdata2     start:0x803E4C08 end:0x803E4C14
 
 dlls/objects/230_ReStartMark/ReStartMark.c:
 	.text       start:0x80171A24 end:0x80171A48
@@ -1803,7 +1813,7 @@ dlls/objects/247/247.c:
 	.rodata     start:0x802C2AA0 end:0x802C2AB0
 	.data       start:0x803222F8 end:0x80322330
 	.sbss       start:0x803DF2B0 end:0x803DF2B8
-	.sdata2     start:0x803E4C18 end:0x803E4C38
+	.sdata2     start:0x803E4C18 end:0x803E4C34
 
 dlls/objects/232_Checkpoint4/Checkpoint4.c:
 	.text       start:0x8017202C end:0x801721F8
@@ -1825,7 +1835,7 @@ dlls/objects/233_Setuppoint/Setuppoint.c:
 dlls/objects/237/237.c:
 	.text       start:0x80172360 end:0x80173870
 	.data       start:0x80322418 end:0x80322478
-	.sdata2     start:0x803E4C58 end:0x803E4CC0
+	.sdata2     start:0x803E4C58 end:0x803E4CBC
 
 dlls/objects/255/255.c:
 	.text       start:0x80173870 end:0x801745CC
@@ -1898,7 +1908,7 @@ dlls/objects/250_InvisibleHi/InvisibleHi.c:
 dlls/objects/251/251.c:
 	.text       start:0x8017B2D8 end:0x8017BC88
 	.data       start:0x80322848 end:0x80322880
-	.sdata2     start:0x803E4F70 end:0x803E4F98
+	.sdata2     start:0x803E4F70 end:0x803E4F94
 
 dlls/objects/272/272.c:
 	.text       start:0x8017BC88 end:0x8017C240
@@ -1913,26 +1923,26 @@ dlls/objects/271_MMP_Bridge/MMP_Bridge.c:
 dlls/objects/273/273.c:
 	.text       start:0x8017C3B8 end:0x8017C954
 	.data       start:0x803228F0 end:0x80322928
-	.sdata2     start:0x803E4FB0 end:0x803E4FB8
+	.sdata2     start:0x803E4FB0 end:0x803E4FB4
 
 dlls/objects/274/274.c:
 	.text       start:0x8017C954 end:0x8017CE64
 	.data       start:0x80322928 end:0x80322960
-	.sdata2     start:0x803E4FB8 end:0x803E4FC0
+	.sdata2     start:0x803E4FB8 end:0x803E4FBC
 
 dlls/objects/275/275.c:
 	.text       start:0x8017CE64 end:0x8017D29C
-	.data       start:0x80322960 end:0x80322BB0
+	.data       start:0x80322960 end:0x80322BAC
 
 dlls/objects/276_IMMultiSeq/IMMultiSeq.c:
 	.text       start:0x8017D29C end:0x8017D650
 	.data       start:0x80322BB0 end:0x80322BE8
-	.sdata2     start:0x803E4FC0 end:0x803E4FC8
+	.sdata2     start:0x803E4FC0 end:0x803E4FC4
 
 dlls/objects/277/277.c:
 	.text       start:0x8017D650 end:0x8017DA3C
 	.data       start:0x80322BE8 end:0x80322C20
-	.sdata2     start:0x803E4FC8 end:0x803E4FD0
+	.sdata2     start:0x803E4FC8 end:0x803E4FCC
 
 dlls/objects/278_WM_Column/WM_Column.c:
 	.text       start:0x8017DA3C end:0x8017DED8
@@ -1963,7 +1973,7 @@ dlls/objects/254_MagicPlant/MagicPlant.c:
 dlls/objects/256_TrickyWarp/TrickyWarp.c:
 	.text       start:0x801805CC end:0x801808FC
 	.data       start:0x80322D60 end:0x80322D98
-	.sdata2     start:0x803E50B8 end:0x803E50C0
+	.sdata2     start:0x803E50B8 end:0x803E50BC
 
 dlls/objects/257_TrickyGuard/TrickyGuard.c:
 	.text       start:0x801808FC end:0x801809F8
@@ -1972,17 +1982,17 @@ dlls/objects/257_TrickyGuard/TrickyGuard.c:
 dlls/objects/258_StayPoint/StayPoint.c:
 	.text       start:0x801809F8 end:0x80180B88
 	.data       start:0x80322DD0 end:0x80322E08
-	.sdata2     start:0x803E50C0 end:0x803E50C8
+	.sdata2     start:0x803E50C0 end:0x803E50C4
 
 dlls/objects/280_Duster/Duster.c:
 	.text       start:0x80180B88 end:0x80181488
 	.data       start:0x80322E08 end:0x80322E40
-	.sdata2     start:0x803E50C8 end:0x803E5100
+	.sdata2     start:0x803E50C8 end:0x803E50FC
 
 dlls/objects/259_CurveFish/CurveFish.c:
 	.text       start:0x80181488 end:0x80181B90
 	.data       start:0x80322E40 end:0x80322E78
-	.sdata2     start:0x803E5100 end:0x803E5148
+	.sdata2     start:0x803E5100 end:0x803E5144
 
 dlls/objects/260_SmallBasket/SmallBasket.c:
 	.text       start:0x80181B90 end:0x801838C4
@@ -1997,7 +2007,7 @@ dlls/objects/261_LargeCrate/LargeCrate.c:
 	.rodata     start:0x802C2AC0 end:0x802C2AD8
 	.data       start:0x80322EB0 end:0x80322F10
 	.sbss       start:0x803DF2C8 end:0x803DF2D0
-	.sdata2     start:0x803E51C0 end:0x803E5208
+	.sdata2     start:0x803E51C0 end:0x803E5204
 
 dlls/objects/262/262.c:
 	.text       start:0x80184A80 end:0x80185F28
@@ -2027,12 +2037,12 @@ dlls/objects/268_LanternFire/LanternFire.c:
 	.data       start:0x80322FF0 end:0x80323038
 	.sdata      start:0x803DD5D8 end:0x803DD5E0
 	.sbss       start:0x803DF2D8 end:0x803DF2E0
-	.sdata2     start:0x803E52C8 end:0x803E5300
+	.sdata2     start:0x803E52C8 end:0x803E52FC
 
 dlls/objects/267_FireFlyLant/FireFlyLant.c:
 	.text       start:0x80187888 end:0x80187D00
 	.data       start:0x80323038 end:0x80323070
-	.sdata2     start:0x803E5300 end:0x803E5310
+	.sdata2     start:0x803E5300 end:0x803E530C
 
 dlls/objects/231/231.c:
 	.text       start:0x80187D00 end:0x80188260
@@ -2042,7 +2052,7 @@ dlls/objects/231/231.c:
 dlls/objects/265/265.c:
 	.text       start:0x80188260 end:0x801885F0
 	.data       start:0x803230A8 end:0x803230E0
-	.sdata2     start:0x803E5358 end:0x803E5368
+	.sdata2     start:0x803E5358 end:0x803E5364
 
 dlls/objects/266_Fall_Ladder/Fall_Ladder.c:
 	.text       start:0x801885F0 end:0x8018890C
@@ -2057,7 +2067,7 @@ dlls/objects/281_coldWaterCo/coldWaterCo.c:
 dlls/objects/236_InfoPoint/InfoPoint.c:
 	.text       start:0x80188A58 end:0x80188C44
 	.data       start:0x80323150 end:0x803231B0
-	.sdata2     start:0x803E5388 end:0x803E5390
+	.sdata2     start:0x803E5388 end:0x803E538C
 
 dlls/objects/282/282.c:
 	.text       start:0x80188C44 end:0x80189088
@@ -2066,7 +2076,7 @@ dlls/objects/282/282.c:
 
 dlls/objects/283_Landed_Arwi/Landed_Arwi.c:
 	.text       start:0x80189088 end:0x8018A074
-	.data       start:0x803231E8 end:0x803233E8
+	.data       start:0x803231E8 end:0x803233E4
 	.sdata2     start:0x803E53B0 end:0x803E53CC
 
 dlls/objects/284/284.c:
@@ -2109,17 +2119,17 @@ dlls/objects/290_CCTestInfot/CCTestInfot.c:
 dlls/objects/292/292.c:
 	.text       start:0x8018C32C end:0x8018C6E4
 	.data       start:0x80323570 end:0x803235A8
-	.sdata2     start:0x803E54A8 end:0x803E54E0
+	.sdata2     start:0x803E54A8 end:0x803E54DC
 
 dlls/objects/291_fuelCell/fuelCell.c:
 	.text       start:0x8018C6E4 end:0x8018CEBC
 	.data       start:0x803235A8 end:0x803235E0
-	.sdata2     start:0x803E54E0 end:0x803E5530
+	.sdata2     start:0x803E54E0 end:0x803E552C
 
 dlls/objects/270/270.c:
 	.text       start:0x8018CEBC end:0x8018D448
 	.data       start:0x803235E0 end:0x80323618
-	.sdata2     start:0x803E5530 end:0x803E5578
+	.sdata2     start:0x803E5530 end:0x803E5574
 
 dlls/objects/295/295.c:
 	.text       start:0x8018D448 end:0x8018D5C8
@@ -2140,17 +2150,17 @@ dlls/objects/298_CFCrate/CFCrate.c:
 	.text       start:0x8018DDCC end:0x8018EDA8
 	.data       start:0x803236C0 end:0x803236F8
 	.sdata      start:0x803DD5E8 end:0x803DD5F0
-	.sdata2     start:0x803E55F0 end:0x803E5660
+	.sdata2     start:0x803E55F0 end:0x803E565C
 
 dlls/objects/299_FXEmit/FXEmit.c:
 	.text       start:0x8018EDA8 end:0x8018F82C
-	.data       start:0x803236F8 end:0x80323740
+	.data       start:0x803236F8 end:0x8032373C
 	.sdata2     start:0x803E5660 end:0x803E5678
 
 dlls/objects/304_AreaFXEmit/AreaFXEmit.c:
 	.text       start:0x8018F82C end:0x8019060C
 	.data       start:0x80323740 end:0x80323778
-	.sdata2     start:0x803E5678 end:0x803E5690
+	.sdata2     start:0x803E5678 end:0x803E568C
 
 dlls/objects/301_LFXEmitter/LFXEmitter.c:
 	.text       start:0x8019060C end:0x80190B10
@@ -2180,18 +2190,18 @@ dlls/objects/305/305.c:
 dlls/objects/308_texscroll2/texscroll2.c:
 	.text       start:0x80192610 end:0x801929C8
 	.data       start:0x803238C0 end:0x80323900
-	.sdata2     start:0x803E5748 end:0x803E5750
+	.sdata2     start:0x803E5748 end:0x803E574C
 
 dlls/objects/309_texscroll/texscroll.c:
 	.text       start:0x801929C8 end:0x80192A78
 	.data       start:0x80323900 end:0x80323938
-	.sdata2     start:0x803E5750 end:0x803E5758
+	.sdata2     start:0x803E5750 end:0x803E5754
 
 dlls/objects/310_WaveAnimato/WaveAnimato.c:
 	.text       start:0x80192A78 end:0x8019314C
 	.data       start:0x80323938 end:0x80323980
 	.sbss       start:0x803DF2E8 end:0x803DF300
-	.sdata2     start:0x803E5758 end:0x803E5790
+	.sdata2     start:0x803E5758 end:0x803E578C
 
 dlls/objects/311_AlphaAnimat/AlphaAnimat.c:
 	.text       start:0x8019314C end:0x801937E4
@@ -2220,7 +2230,7 @@ dlls/objects/315_WallAnimato/WallAnimato.c:
 dlls/objects/316_XYZAnimator/XYZAnimator.c:
 	.text       start:0x80194FA4 end:0x801969AC
 	.data       start:0x80323AB8 end:0x80323AF0
-	.sdata2     start:0x803E5818 end:0x803E5838
+	.sdata2     start:0x803E5818 end:0x803E5834
 
 dlls/objects/317_ExplodeAnim/ExplodeAnim.c:
 	.text       start:0x801969AC end:0x80196C04
@@ -2240,7 +2250,7 @@ dlls/objects/341/341.c:
 dlls/objects/319_TexFrameAni/TexFrameAni.c:
 	.text       start:0x80197870 end:0x80197B10
 	.data       start:0x80323B70 end:0x80323BC0
-	.sdata2     start:0x803E5878 end:0x803E5880
+	.sdata2     start:0x803E5878 end:0x803E587C
 
 dlls/objects/320_fogControl/fogControl.c:
 	.text       start:0x80197B10 end:0x80197F84
@@ -2264,7 +2274,7 @@ dlls/objects/307_sfxPlayer/sfxPlayer.c:
 
 dlls/objects/294/294.c:
 	.text       start:0x801990E4 end:0x8019B160
-	.data       start:0x80323CA0 end:0x80323EE0
+	.data       start:0x80323CA0 end:0x80323EDC
 	.sdata2     start:0x803E58E0 end:0x803E5920
 
 dlls/objects/325_CloudPrison/CloudPrison.c:
@@ -2273,7 +2283,7 @@ dlls/objects/325_CloudPrison/CloudPrison.c:
 	.bss        start:0x803ADF78 end:0x803AE0A0
 	.sdata      start:0x803DD608 end:0x803DD610
 	.sbss       start:0x803DF308 end:0x803DF310
-	.sdata2     start:0x803E5920 end:0x803E5928
+	.sdata2     start:0x803E5920 end:0x803E5924
 
 dlls/objects/326_CloudShipCo/CloudShipCo.c:
 	.sdata      start:0x803DD610 end:0x803DD618
@@ -2296,19 +2306,19 @@ dlls/objects/329/329.c:
 dlls/objects/330_CFPowerBase/CFPowerBase.c:
 	.text       start:0x8019DC5C end:0x8019E0D4
 	.data       start:0x80324278 end:0x803242B0
-	.sdata2     start:0x803E59E8 end:0x803E59F0
+	.sdata2     start:0x803E59E8 end:0x803E59EC
 
 dlls/objects/331_CFMainCryst/CFMainCryst.c:
 	.text       start:0x8019E0D4 end:0x8019EAD8
 	.data       start:0x803242B0 end:0x803242E8
 	.sbss       start:0x803DF310 end:0x803DF318
-	.sdata2     start:0x803E59F0 end:0x803E5A30
+	.sdata2     start:0x803E59F0 end:0x803E5A2C
 
 dlls/objects/332/332.c:
 	.text       start:0x8019EAD8 end:0x8019FC24
 	.data       start:0x803242E8 end:0x80324368
 	.sdata      start:0x803DD628 end:0x803DD650
-	.sdata2     start:0x803E5A30 end:0x803E5A78
+	.sdata2     start:0x803E5A30 end:0x803E5A74
 
 dlls/objects/333_LaserBeam/LaserBeam.c:
 	.sdata      start:0x803DD650 end:0x803DD658
@@ -2351,19 +2361,19 @@ dlls/objects/343_SpiritDoorS/SpiritDoorS.c:
 	.text       start:0x801A1078 end:0x801A11F8
 	.data       start:0x803244B0 end:0x803244E8
 	.sdata      start:0x803DD678 end:0x803DD680
-	.sdata2     start:0x803E5AD0 end:0x803E5AD8
+	.sdata2     start:0x803E5AD0 end:0x803E5AD4
 
 dlls/objects/344/344.c:
 	.text       start:0x801A11F8 end:0x801A2ED4
 	.data       start:0x803244E8 end:0x80324528
-	.sdata      start:0x803DD680 end:0x803DD690
-	.sdata2     start:0x803E5AD8 end:0x803E5B60
+	.sdata      start:0x803DD680 end:0x803DD68C
+	.sdata2     start:0x803E5AD8 end:0x803E5B5C
 
 dlls/objects/345/345.c:
 	.text       start:0x801A2ED4 end:0x801A32F8
 	.data       start:0x80324528 end:0x80324560
 	.sbss       start:0x803DF318 end:0x803DF320
-	.sdata2     start:0x803E5B60 end:0x803E5B68
+	.sdata2     start:0x803E5B60 end:0x803E5B64
 
 dlls/objects/346/346.c:
 	.text       start:0x801A32F8 end:0x801A40D0
@@ -2402,7 +2412,7 @@ dlls/objects/349/349.c:
 dlls/objects/351/351.c:
 	.text       start:0x801A48F4 end:0x801A4A9C
 	.data       start:0x80324750 end:0x80324790
-	.sdata2     start:0x803E5BE8 end:0x803E5BF0
+	.sdata2     start:0x803E5BE8 end:0x803E5BEC
 
 dlls/objects/354_CFMagicWall/CFMagicWall.c:
 	.text       start:0x801A4A9C end:0x801A4C40
@@ -2437,13 +2447,13 @@ dlls/objects/381/381.c:
 	.text       start:0x801A64A4 end:0x801A6D54
 	.data       start:0x803248E8 end:0x80324920
 	.sbss       start:0x803DF320 end:0x803DF328
-	.sdata2     start:0x803E5C78 end:0x803E5CD8
+	.sdata2     start:0x803E5C78 end:0x803E5CD4
 
 dlls/objects/382_MMP_levelco/MMP_levelco.c:
 	.text       start:0x801A6D54 end:0x801A7344
 	.data       start:0x80324920 end:0x80324958
 	.sbss       start:0x803DF328 end:0x803DF330
-	.sdata2     start:0x803E5CD8 end:0x803E5CE8
+	.sdata2     start:0x803E5CD8 end:0x803E5CE4
 
 dlls/objects/383/383.c:
 	.text       start:0x801A7344 end:0x801A7668
@@ -2467,7 +2477,7 @@ dlls/objects/385_MMP_trenchF/MMP_trenchF.c:
 	.text       start:0x801A915C end:0x801A9540
 	.data       start:0x80324A10 end:0x80324A48
 	.bss        start:0x803AE0D0 end:0x803AE0E8
-	.sdata2     start:0x803E5DC8 end:0x803E5DE0
+	.sdata2     start:0x803E5DC8 end:0x803E5DDC
 
 dlls/objects/387_MMP_gyserve/MMP_gyserve.c:
 	.text       start:0x801A9540 end:0x801A96A4
@@ -2481,7 +2491,7 @@ dlls/objects/388/388.c:
 dlls/objects/603_MSPlantingS/MSPlantingS.c:
 	.text       start:0x801A9B84 end:0x801AA590
 	.data       start:0x80324AB8 end:0x80324B00
-	.sdata2     start:0x803E5DF0 end:0x803E5E28
+	.sdata2     start:0x803E5DF0 end:0x803E5E24
 
 dlls/objects/389_CCgasvent/CCgasvent.c:
 	.text       start:0x801AA590 end:0x801AA6C4
@@ -2490,13 +2500,13 @@ dlls/objects/389_CCgasvent/CCgasvent.c:
 
 dlls/objects/390_CCgasventCo/CCgasventCo.c:
 	.text       start:0x801AA6C4 end:0x801AAC74
-	.data       start:0x80324B38 end:0x80324B90
+	.data       start:0x80324B38 end:0x80324B8C
 	.sdata2     start:0x803E5E30 end:0x803E5E68
 
 dlls/objects/391_CCqueen/CCqueen.c:
 	.text       start:0x801AAC74 end:0x801AAE50
 	.data       start:0x80324B90 end:0x80324BC8
-	.sdata2     start:0x803E5E68 end:0x803E5E88
+	.sdata2     start:0x803E5E68 end:0x803E5E84
 
 dlls/objects/392_CClightfoot/CClightfoot.c:
 	.text       start:0x801AAE50 end:0x801ABB84
@@ -2521,13 +2531,13 @@ dlls/objects/395_CClevcontro/CClevcontro.c:
 dlls/objects/361_IMIceMounta/IMIceMounta.c:
 	.text       start:0x801AC738 end:0x801AD418
 	.data       start:0x80324E20 end:0x80324E78
-	.sdata2     start:0x803E5EF0 end:0x803E5F00
+	.sdata2     start:0x803E5EF0 end:0x803E5EFC
 
 dlls/objects/362_CRrockfall/CRrockfall.c:
 	.text       start:0x801AD418 end:0x801ADB5C
 	.data       start:0x80324E78 end:0x80324EC8
-	.sbss       start:0x803DF340 end:0x803DF348
-	.sdata2     start:0x803E5F00 end:0x803E5F50
+	.sbss       start:0x803DF340 end:0x803DF344
+	.sdata2     start:0x803E5F00 end:0x803E5F4C
 
 dlls/objects/363/363.c:
 	.text       start:0x801ADB5C end:0x801ADF00
@@ -2543,7 +2553,7 @@ dlls/objects/364/364.c:
 dlls/objects/365_IMIcePillar/IMIcePillar.c:
 	.text       start:0x801AE808 end:0x801AE860
 	.data       start:0x80324F38 end:0x80324F70
-	.sdata2     start:0x803E5F80 end:0x803E5F88
+	.sdata2     start:0x803E5F80 end:0x803E5F84
 
 dlls/objects/366_IMAnimSpace/IMAnimSpace.c:
 	.text       start:0x801AE860 end:0x801AEC24
@@ -2559,8 +2569,8 @@ dlls/objects/367_IMSpaceThru/IMSpaceThru.c:
 dlls/objects/368_IMSpaceRing/IMSpaceRing.c:
 	.text       start:0x801AF0A0 end:0x801AF200
 	.data       start:0x80325028 end:0x80325060
-	.sbss       start:0x803DF348 end:0x803DF350
-	.sdata2     start:0x803E5FD0 end:0x803E5FD8
+	.sbss       start:0x803DF348 end:0x803DF34C
+	.sdata2     start:0x803E5FD0 end:0x803E5FD4
 
 dlls/objects/369_IMSpaceRing/IMSpaceRing.c:
 	.text       start:0x801AF200 end:0x801AF548
@@ -2570,7 +2580,7 @@ dlls/objects/369_IMSpaceRing/IMSpaceRing.c:
 dlls/objects/370_LINKB_levco/LINKB_levco.c:
 	.text       start:0x801AF548 end:0x801AFC84
 	.data       start:0x80325098 end:0x803251B0
-	.sdata2     start:0x803E5FE0 end:0x803E5FE8
+	.sdata2     start:0x803E5FE0 end:0x803E5FE4
 
 dlls/objects/371_LINK_levcon/LINK_levcon.c:
 	.text       start:0x801AFC84 end:0x801B0100
@@ -2580,7 +2590,7 @@ dlls/objects/446/446.c:
 	.text       start:0x801B0100 end:0x801B09D8
 	.rodata     start:0x802C2B58 end:0x802C2B68
 	.data       start:0x803252C8 end:0x80325308
-	.sdata2     start:0x803E5FE8 end:0x803E6028
+	.sdata2     start:0x803E5FE8 end:0x803E6024
 
 dlls/objects/447_DIMLavaBall/DIMLavaBall.c:
 	.text       start:0x801B09D8 end:0x801B0D8C
@@ -2594,8 +2604,8 @@ dlls/objects/448_DIMLogFire/DIMLogFire.c:
 
 dlls/objects/449_DIMSnowBall/DIMSnowBall.c:
 	.text       start:0x801B14F0 end:0x801B1B04
-	.data       start:0x80325380 end:0x80326B20
-	.sdata      start:0x803DD6E8 end:0x803DD6F0
+	.data       start:0x80325380 end:0x80326B1C
+	.sdata      start:0x803DD6E8 end:0x803DD6EA
 	.sdata2     start:0x803E6060 end:0x803E6078
 
 dlls/objects/450_DIMSnowBall/DIMSnowBall.c:
@@ -2606,7 +2616,7 @@ dlls/objects/450_DIMSnowBall/DIMSnowBall.c:
 dlls/objects/451_DIMGate/DIMGate.c:
 	.text       start:0x801B1CF4 end:0x801B1F10
 	.data       start:0x80326B58 end:0x80326B90
-	.sdata2     start:0x803E6090 end:0x803E6098
+	.sdata2     start:0x803E6090 end:0x803E6094
 
 dlls/objects/452_DIMIceWall/DIMIceWall.c:
 	.text       start:0x801B1F10 end:0x801B225C
@@ -2616,24 +2626,24 @@ dlls/objects/452_DIMIceWall/DIMIceWall.c:
 dlls/objects/453_DIMBarrier/DIMBarrier.c:
 	.text       start:0x801B225C end:0x801B24A0
 	.data       start:0x80326BC8 end:0x80326C00
-	.sdata2     start:0x803E60B0 end:0x803E60B8
+	.sdata2     start:0x803E60B0 end:0x803E60B4
 
 dlls/objects/454_DIMCannon/DIMCannon.c:
 	.text       start:0x801B24A0 end:0x801B3A60
 	.data       start:0x80326C00 end:0x80326C38
 	.sdata      start:0x803DD6F0 end:0x803DD718
 	.sbss       start:0x803DF350 end:0x803DF358
-	.sdata2     start:0x803E60B8 end:0x803E6110
+	.sdata2     start:0x803E60B8 end:0x803E610C
 
 dlls/objects/455_DIMLavaSmas/DIMLavaSmas.c:
 	.text       start:0x801B3A60 end:0x801B3E84
 	.data       start:0x80326C38 end:0x80326C70
-	.sdata2     start:0x803E6110 end:0x803E6118
+	.sdata2     start:0x803E6110 end:0x803E6114
 
 dlls/objects/456_DIMBridgeCo/DIMBridgeCo.c:
 	.text       start:0x801B3E84 end:0x801B4184
 	.data       start:0x80326C70 end:0x80326CA8
-	.sdata2     start:0x803E6118 end:0x803E6120
+	.sdata2     start:0x803E6118 end:0x803E611C
 
 dlls/objects/457_DIMDismount/DIMDismount.c:
 	.text       start:0x801B4184 end:0x801B4500
@@ -2647,6 +2657,7 @@ dlls/objects/458_DIMExplosio/DIMExplosio.c:
 	.bss        start:0x803AE100 end:0x803AE110
 	.sbss       start:0x803DF358 end:0x803DF378
 	.sdata2     start:0x803E6140 end:0x803E61E8
+	.sbss2      start:0x803E9C88 end:0x803E9C8C
 
 dlls/objects/459_DIMWoodDoor/DIMWoodDoor.c:
 	.text       start:0x801B5ED8 end:0x801B6144
@@ -2662,22 +2673,22 @@ dlls/objects/462/462.c:
 dlls/objects/460_DIMMagicBri/DIMMagicBri.c:
 	.text       start:0x801B6464 end:0x801B6B10
 	.data       start:0x80326DC0 end:0x80326DF8
-	.sdata2     start:0x803E6218 end:0x803E6238
+	.sdata2     start:0x803E6218 end:0x803E6234
 
 dlls/objects/461_DIM_LevelCo/DIM_LevelCo.c:
 	.text       start:0x801B6B10 end:0x801B7260
 	.data       start:0x80326DF8 end:0x80326E30
-	.sdata2     start:0x803E6238 end:0x803E6248
+	.sdata2     start:0x803E6238 end:0x803E6244
 
 dlls/objects/463/463.c:
 	.text       start:0x801B7260 end:0x801B7348
 	.data       start:0x80326E30 end:0x80326E68
-	.sdata2     start:0x803E6248 end:0x803E6250
+	.sdata2     start:0x803E6248 end:0x803E624C
 
 dlls/objects/464_DIM_tricky/DIM_tricky.c:
 	.text       start:0x801B7348 end:0x801B745C
 	.data       start:0x80326E68 end:0x80326EA0
-	.sdata2     start:0x803E6250 end:0x803E6258
+	.sdata2     start:0x803E6250 end:0x803E6254
 
 dlls/objects/465_DIMTruthHor/DIMTruthHor.c:
 	.text       start:0x801B745C end:0x801B7870
@@ -2698,7 +2709,7 @@ dlls/objects/470/470.c:
 dlls/objects/471_DIM2SnowBal/DIM2SnowBal.c:
 	.text       start:0x801B8464 end:0x801B8A98
 	.data       start:0x80326F50 end:0x80326F88
-	.sdata2     start:0x803E62B8 end:0x803E62F0
+	.sdata2     start:0x803E62B8 end:0x803E62EC
 
 dlls/objects/472_DIM2PathGen/DIM2PathGen.c:
 	.text       start:0x801B8A98 end:0x801B8EB4
@@ -2728,7 +2739,7 @@ dlls/objects/478_DIM2LavaCon/DIM2LavaCon.c:
 	.text       start:0x801B9F2C end:0x801BA3D0
 	.data       start:0x803270A8 end:0x803270E8
 	.sdata      start:0x803DD728 end:0x803DD730
-	.sdata2     start:0x803E63A8 end:0x803E63B0
+	.sdata2     start:0x803E63A8 end:0x803E63AC
 
 dlls/objects/479/479.c:
 	.text       start:0x801BA3D0 end:0x801BA5E8
@@ -2742,12 +2753,12 @@ dlls/objects/480_DIM_Boss/DIM_Boss.c:
 	.bss        start:0x803AE110 end:0x803AE7E8
 	.sdata      start:0x803DD730 end:0x803DD740
 	.sbss       start:0x803DF380 end:0x803DF390
-	.sdata2     start:0x803E63D0 end:0x803E6498
+	.sdata2     start:0x803E63D0 end:0x803E6494
 
 dlls/objects/481_DIM_BossGut/DIM_BossGut.c:
 	.text       start:0x801BE2FC end:0x801BE414
 	.data       start:0x803273B8 end:0x803273F0
-	.sdata2     start:0x803E6498 end:0x803E64A8
+	.sdata2     start:0x803E6498 end:0x803E64A4
 
 dlls/objects/482_DIM_BossTon/DIM_BossTon.c:
 	.text       start:0x801BE414 end:0x801BF5BC
@@ -2758,12 +2769,12 @@ dlls/objects/482_DIM_BossTon/DIM_BossTon.c:
 dlls/objects/483_DIM_BossGut/DIM_BossGut.c:
 	.text       start:0x801BF5BC end:0x801BFFF4
 	.data       start:0x80327430 end:0x80327470
-	.sdata2     start:0x803E64E8 end:0x803E6550
+	.sdata2     start:0x803E64E8 end:0x803E654C
 
 dlls/objects/485_DIM_BossSpi/DIM_BossSpi.c:
 	.text       start:0x801BFFF4 end:0x801C0710
 	.data       start:0x80327470 end:0x803274A8
-	.sdata2     start:0x803E6550 end:0x803E65A0
+	.sdata2     start:0x803E6550 end:0x803E659C
 
 dlls/objects/484_MAGICMaker/MAGICMaker.c:
 	.text       start:0x801C0710 end:0x801C09D4
@@ -2773,7 +2784,7 @@ dlls/objects/484_MAGICMaker/MAGICMaker.c:
 dlls/objects/486_DIMbosscrac/DIMbosscrac.c:
 	.text       start:0x801C09D4 end:0x801C0BD4
 	.data       start:0x803274F0 end:0x80327528
-	.sdata2     start:0x803E65B0 end:0x803E65B8
+	.sdata2     start:0x803E65B0 end:0x803E65B4
 
 dlls/objects/487_DIMbossfire/DIMbossfire.c:
 	.text       start:0x801C0BD4 end:0x801C117C
@@ -2789,8 +2800,8 @@ dlls/objects/373_DFropenode/DFropenode.c:
 	.text       start:0x801C1314 end:0x801C2DFC
 	.rodata     start:0x802C2B98 end:0x802C2BF8
 	.data       start:0x803275C0 end:0x803276E0
-	.sdata      start:0x803DD740 end:0x803DD758
-	.sdata2     start:0x803E65F8 end:0x803E6648
+	.sdata      start:0x803DD740 end:0x803DD75A
+	.sdata2     start:0x803E65F8 end:0x803E6644
 
 dlls/objects/374_DFSH_Door1S/DFSH_Door1S.c:
 	.data       start:0x803276E0 end:0x80327710
@@ -2814,7 +2825,7 @@ dlls/objects/378_SpiritPrize/SpiritPrize.c:
 dlls/objects/377_DFSH_ObjCre/DFSH_ObjCre.c:
 	.text       start:0x801C4284 end:0x801C4558
 	.data       start:0x80327840 end:0x80327878
-	.sdata2     start:0x803E66D0 end:0x803E66D8
+	.sdata2     start:0x803E66D0 end:0x803E66D4
 
 dlls/objects/379_DFSH_LaserB/DFSH_LaserB.c:
 	.text       start:0x801C4558 end:0x801C4D80
@@ -2825,33 +2836,34 @@ dlls/objects/379_DFSH_LaserB/DFSH_LaserB.c:
 dlls/objects/396_MMSH_Shrine/MMSH_Shrine.c:
 	.text       start:0x801C4D80 end:0x801C5ABC
 	.data       start:0x803278B0 end:0x80327928
-	.sdata2     start:0x803E6720 end:0x803E6780
+	.sdata2     start:0x803E6720 end:0x803E677C
 
 dlls/objects/397_MMSH_Scales/MMSH_Scales.c:
 	.text       start:0x801C5ABC end:0x801C5EA8
 	.data       start:0x80327928 end:0x80327960
-	.sdata2     start:0x803E6780 end:0x803E6798
+	.sdata2     start:0x803E6780 end:0x803E6794
 
 dlls/objects/398_MMSH_WaterS/MMSH_WaterS.c:
 	.text       start:0x801C5EA8 end:0x801C60AC
 	.data       start:0x80327960 end:0x803279C8
-	.sdata2     start:0x803E6798 end:0x803E67A8
+	.sdata2     start:0x803E6798 end:0x803E67A4
 
 dlls/objects/399_ECSH_Shrine/ECSH_Shrine.c:
 	.text       start:0x801C60AC end:0x801C7528
-	.data       start:0x803279C8 end:0x80327AE8
+	.data       start:0x803279C8 end:0x80327AE4
 	.sbss       start:0x803DF3C0 end:0x803DF3C8
-	.sdata2     start:0x803E67A8 end:0x803E6810
+	.sdata2     start:0x803E67A8 end:0x803E680C
+	.sbss2      start:0x803E9C90 end:0x803E9C98
 
 dlls/objects/401_ECSH_Creato/ECSH_Creato.c:
 	.text       start:0x801C7528 end:0x801C780C
 	.data       start:0x80327AE8 end:0x80327B20
-	.sdata2     start:0x803E6810 end:0x803E6818
+	.sdata2     start:0x803E6810 end:0x803E6814
 
 dlls/objects/402_GPSH_Shrine/GPSH_Shrine.c:
 	.text       start:0x801C780C end:0x801C87A0
 	.data       start:0x80327B20 end:0x80327B78
-	.sdata2     start:0x803E6818 end:0x803E6860
+	.sdata2     start:0x803E6818 end:0x803E685C
 
 dlls/objects/403_GPSH_ObjCre/GPSH_ObjCre.c:
 	.text       start:0x801C87A0 end:0x801C89E4
@@ -2861,11 +2873,11 @@ dlls/objects/403_GPSH_ObjCre/GPSH_ObjCre.c:
 dlls/objects/404_GPSH_Scene/GPSH_Scene.c:
 	.text       start:0x801C89E4 end:0x801C8A78
 	.data       start:0x80327BC0 end:0x80327BF8
-	.sdata2     start:0x803E6870 end:0x803E6878
+	.sdata2     start:0x803E6870 end:0x803E6874
 
 dlls/objects/400_ECSH_Cup/ECSH_Cup.c:
 	.text       start:0x801C8A78 end:0x801C9284
-	.rodata     start:0x802C2BF8 end:0x802C2C08
+	.rodata     start:0x802C2BF8 end:0x802C2C04
 	.data       start:0x80327BF8 end:0x80327C30
 	.sbss       start:0x803DF3C8 end:0x803DF3D0
 	.sdata2     start:0x803E6878 end:0x803E68B8
@@ -2879,7 +2891,7 @@ dlls/objects/406_DBSH_Symbol/DBSH_Symbol.c:
 	.text       start:0x801C9D7C end:0x801CA570
 	.data       start:0x80327C68 end:0x80327CA0
 	.sdata      start:0x803DD768 end:0x803DD770
-	.sdata2     start:0x803E68F8 end:0x803E6938
+	.sdata2     start:0x803E68F8 end:0x803E6934
 
 dlls/objects/407/407.c:
 	.text       start:0x801CA570 end:0x801CAE34
@@ -2891,18 +2903,18 @@ dlls/objects/407/407.c:
 dlls/objects/408_NWSH_levcon/NWSH_levcon.c:
 	.text       start:0x801CAE34 end:0x801CB0DC
 	.data       start:0x80327CD8 end:0x80327D10
-	.sdata2     start:0x803E6968 end:0x803E6970
+	.sdata2     start:0x803E6968 end:0x803E696C
 
 dlls/objects/409/409.c:
 	.text       start:0x801CB0DC end:0x801CBEC4
-	.data       start:0x80327D10 end:0x80327DA0
+	.data       start:0x80327D10 end:0x80327D9C
 	.sbss       start:0x803DF3D8 end:0x803DF3E0
 	.sdata2     start:0x803E6970 end:0x803E6998
 
 dlls/objects/410/410.c:
 	.text       start:0x801CBEC4 end:0x801CC1B4
 	.data       start:0x80327DA0 end:0x80327DD8
-	.sdata2     start:0x803E6998 end:0x803E69A0
+	.sdata2     start:0x803E6998 end:0x803E699C
 
 dlls/objects/411/411.c:
 	.text       start:0x801CC1B4 end:0x801CCE48
@@ -2941,13 +2953,13 @@ dlls/objects/417/417.c:
 	.text       start:0x801CE58C end:0x801CFEC4
 	.data       start:0x80327F80 end:0x80328110
 	.sdata      start:0x803DD770 end:0x803DD7C0
-	.sdata2     start:0x803E6A20 end:0x803E6A78
+	.sdata2     start:0x803E6A20 end:0x803E6A74
 
 dlls/objects/418_NW_tricky/NW_tricky.c:
 	.text       start:0x801CFEC4 end:0x801D025C
 	.rodata     start:0x802C2C28 end:0x802C2C38
 	.data       start:0x80328110 end:0x80328148
-	.sdata2     start:0x803E6A78 end:0x803E6A88
+	.sdata2     start:0x803E6A78 end:0x803E6A84
 
 dlls/objects/419/419.c:
 	.text       start:0x801D025C end:0x801D02EC
@@ -2961,7 +2973,7 @@ dlls/objects/420/420.c:
 dlls/objects/421_NW_levcontr/NW_levcontr.c:
 	.text       start:0x801D04A0 end:0x801D0DD4
 	.data       start:0x803281B8 end:0x80328358
-	.sdata2     start:0x803E6A90 end:0x803E6AA0
+	.sdata2     start:0x803E6A90 end:0x803E6A9C
 
 dlls/objects/422_SH_tricky/SH_tricky.c:
 	.text       start:0x801D0DD4 end:0x801D0F60
@@ -2975,7 +2987,7 @@ dlls/objects/423/423.c:
 dlls/objects/424_SH_killermu/SH_killermu.c:
 	.text       start:0x801D2334 end:0x801D2FA4
 	.data       start:0x80328438 end:0x803284E0
-	.sdata2     start:0x803E6B10 end:0x803E6B70
+	.sdata2     start:0x803E6B10 end:0x803E6B6C
 
 dlls/objects/425_BombPlant/BombPlant.c:
 	.text       start:0x801D2FA4 end:0x801D3AB0
@@ -2996,7 +3008,7 @@ dlls/objects/428_SH_queenear/SH_queenear.c:
 	.text       start:0x801D48D0 end:0x801D5408
 	.data       start:0x803285D8 end:0x80328658
 	.sdata      start:0x803DD7C8 end:0x803DD7F8
-	.sdata2     start:0x803E6C10 end:0x803E6C28
+	.sdata2     start:0x803E6C10 end:0x803E6C24
 
 dlls/objects/429_SH_thorntai/SHthorntail.c:
 	.text       start:0x801D5408 end:0x801D704C
@@ -3006,32 +3018,32 @@ dlls/objects/429_SH_thorntai/SHthorntail.c:
 
 dlls/objects/432_SH_swapston/SH_swapston.c:
 	.text       start:0x801D704C end:0x801D82E0
-	.data       start:0x80328D20 end:0x80328DD8
+	.data       start:0x80328D20 end:0x80328DD4
 	.bss        start:0x803AE7E8 end:0x803AE808
-	.sdata      start:0x803DD838 end:0x803DD858
+	.sdata      start:0x803DD838 end:0x803DD854
 	.sbss       start:0x803DF3F0 end:0x803DF3F8
 	.sdata2     start:0x803E6C78 end:0x803E6CC8
 
 dlls/objects/430_SH_LevelCon/SH_LevelCon.c:
 	.text       start:0x801D82E0 end:0x801D9F54
 	.data       start:0x80328DD8 end:0x80328F68
-	.sdata2     start:0x803E6CC8 end:0x803E6CE0
+	.sdata2     start:0x803E6CC8 end:0x803E6CDC
 
 dlls/objects/431_SH_swaplift/SH_swaplift.c:
 	.text       start:0x801D9F54 end:0x801DA254
 	.data       start:0x80328F68 end:0x80328FA0
 	.sdata      start:0x803DD858 end:0x803DD860
-	.sdata2     start:0x803E6CE0 end:0x803E6CE8
+	.sdata2     start:0x803E6CE0 end:0x803E6CE4
 
 dlls/objects/433_SH_staff/SH_staff.c:
 	.text       start:0x801DA254 end:0x801DAFFC
-	.data       start:0x80328FA0 end:0x80329010
+	.data       start:0x80328FA0 end:0x8032900C
 	.sdata2     start:0x803E6CE8 end:0x803E6D30
 
 dlls/objects/434_SH_staffHaz/SH_staffHaz.c:
 	.text       start:0x801DAFFC end:0x801DB08C
 	.data       start:0x80329010 end:0x80329048
-	.sdata2     start:0x803E6D30 end:0x803E6D40
+	.sdata2     start:0x803E6D30 end:0x803E6D3C
 
 dlls/objects/435_SH_Beacon/SH_Beacon.c:
 	.text       start:0x801DB08C end:0x801DB6DC
@@ -3043,13 +3055,13 @@ dlls/objects/436_SH_EmptyTum/SH_EmptyTum.c:
 	.text       start:0x801DB6DC end:0x801DB7D0
 	.data       start:0x80329080 end:0x803290B8
 	.sbss       start:0x803DF400 end:0x803DF408
-	.sdata2     start:0x803E6D58 end:0x803E6D68
+	.sdata2     start:0x803E6D58 end:0x803E6D64
 
 dlls/objects/438_SC_levelcon/SC_levelcon.c:
 	.text       start:0x801DB7D0 end:0x801DC6D8
 	.data       start:0x803290B8 end:0x803290F8
 	.sdata      start:0x803DD860 end:0x803DD868
-	.sdata2     start:0x803E6D68 end:0x803E6DA0
+	.sdata2     start:0x803E6D68 end:0x803E6D9C
 
 dlls/objects/439/439.c:
 	.text       start:0x801DC6D8 end:0x801DD00C
@@ -3070,13 +3082,13 @@ dlls/objects/441_SC_Cloudrun/SC_Cloudrun.c:
 
 dlls/objects/442_SC_totempuz/SC_totempuz.c:
 	.text       start:0x801DD8A8 end:0x801DE160
-	.data       start:0x803291D8 end:0x80329220
-	.sdata2     start:0x803E6E08 end:0x803E6E50
+	.data       start:0x803291D8 end:0x8032921C
+	.sdata2     start:0x803E6E08 end:0x803E6E4C
 
 dlls/objects/443_SC_totembon/SC_totembon.c:
 	.text       start:0x801DE160 end:0x801DEB68
 	.data       start:0x80329220 end:0x80329278
-	.sdata2     start:0x803E6E50 end:0x803E6E80
+	.sdata2     start:0x803E6E50 end:0x803E6E7C
 
 dlls/objects/444_SC_totemstr/SC_totemstr.c:
 	.text       start:0x801DEB68 end:0x801DF848
@@ -3097,12 +3109,12 @@ dlls/objects/323_FEseqobject/FEseqobject.c:
 dlls/objects/322_FElevContro/FElevContro.c:
 	.text       start:0x801E006C end:0x801E00E4
 	.data       start:0x80329330 end:0x80329368
-	.sdata2     start:0x803E6ED0 end:0x803E6ED8
+	.sdata2     start:0x803E6ED0 end:0x803E6ED4
 
 dlls/objects/324/324.c:
 	.text       start:0x801E00E4 end:0x801E0160
 	.data       start:0x80329368 end:0x803293A0
-	.sdata2     start:0x803E6ED8 end:0x803E6EE0
+	.sdata2     start:0x803E6ED8 end:0x803E6EDC
 
 dlls/objects/488_SB_Galleon/SB_Galleon.c:
 	.text       start:0x801E0160 end:0x801E2CA8
@@ -3138,12 +3150,12 @@ dlls/objects/492_SB_ShipGun/SB_ShipGun.c:
 dlls/objects/494_SB_CannonBa/SB_CannonBa.c:
 	.text       start:0x801E4468 end:0x801E49C0
 	.data       start:0x80329528 end:0x80329560
-	.sdata2     start:0x803E70C8 end:0x803E70F0
+	.sdata2     start:0x803E70C8 end:0x803E70EC
 
 dlls/objects/493_SB_FireBall/SB_FireBall.c:
 	.text       start:0x801E49C0 end:0x801E4CE4
 	.data       start:0x80329560 end:0x80329598
-	.sdata2     start:0x803E70F0 end:0x803E7100
+	.sdata2     start:0x803E70F0 end:0x803E70FC
 
 dlls/objects/495_SB_CloudBal/SB_CloudBal.c:
 	.text       start:0x801E4CE4 end:0x801E51F8
@@ -3162,13 +3174,13 @@ dlls/objects/498_SB_CageKyte/SB_CageKyte.c:
 dlls/objects/497_SB_SeqDoor/SB_SeqDoor.c:
 	.text       start:0x801E5798 end:0x801E58D4
 	.data       start:0x80329640 end:0x80329678
-	.sdata2     start:0x803E7138 end:0x803E7140
+	.sdata2     start:0x803E7138 end:0x803E713C
 
 dlls/objects/499_SB_MiniFire/SB_MiniFire.c:
 	.text       start:0x801E58D4 end:0x801E5CF0
 	.data       start:0x80329678 end:0x803296B0
 	.sdata      start:0x803DD898 end:0x803DD8A0
-	.sdata2     start:0x803E7140 end:0x803E7170
+	.sdata2     start:0x803E7140 end:0x803E716C
 
 dlls/objects/501/501.c:
 	.text       start:0x801E5CF0 end:0x801E60E4
@@ -3189,25 +3201,25 @@ dlls/objects/502/502.c:
 dlls/objects/503_SB_ShipGunB/SB_ShipGunB.c:
 	.text       start:0x801E66AC end:0x801E6788
 	.data       start:0x80329758 end:0x80329790
-	.sdata2     start:0x803E71D8 end:0x803E71E0
+	.sdata2     start:0x803E71D8 end:0x803E71DC
 
 dlls/objects/645_SPShop/SPShop.c:
 	.text       start:0x801E6788 end:0x801E6E14
 	.data       start:0x80329790 end:0x80329B30
-	.sdata2     start:0x803E71E0 end:0x803E71E8
+	.sdata2     start:0x803E71E0 end:0x803E71E4
 
 dlls/objects/646_SPShopKeepe/SPShopKeepe.c:
 	.text       start:0x801E6E14 end:0x801E8A64
-	.data       start:0x80329B30 end:0x80329BA0
+	.data       start:0x80329B30 end:0x80329B9C
 	.bss        start:0x803AE808 end:0x803AE828
-	.sdata      start:0x803DD8A0 end:0x803DD8B0
-	.sbss       start:0x803DF458 end:0x803DF460
-	.sdata2     start:0x803E71E8 end:0x803E7248
+	.sdata      start:0x803DD8A0 end:0x803DD8AC
+	.sbss       start:0x803DF458 end:0x803DF45C
+	.sdata2     start:0x803E71E8 end:0x803E7244
 
 dlls/objects/644/644.c:
 	.text       start:0x801E8A64 end:0x801E9624
 	.data       start:0x80329BA0 end:0x80329BD8
-	.sdata2     start:0x803E7248 end:0x803E7288
+	.sdata2     start:0x803E7248 end:0x803E7284
 
 dlls/objects/647_SPScarab/SPScarab.c:
 	.text       start:0x801E9624 end:0x801E9AA8
@@ -3216,7 +3228,7 @@ dlls/objects/647_SPScarab/SPScarab.c:
 
 dlls/objects/648_SPDrape/SPDrape.c:
 	.text       start:0x801E9AA8 end:0x801E9F5C
-	.data       start:0x80329C10 end:0x80329C68
+	.data       start:0x80329C10 end:0x80329C64
 	.sdata      start:0x803DD8B0 end:0x803DD8B8
 	.sdata2     start:0x803E72B8 end:0x803E72F0
 
@@ -3230,18 +3242,18 @@ dlls/objects/597/597.c:
 	.rodata     start:0x802C2C68 end:0x802C2CB0
 	.data       start:0x80329CA0 end:0x80329DD8
 	.bss        start:0x803AE828 end:0x803AE860
-	.sdata      start:0x803DD8B8 end:0x803DD8F0
+	.sdata      start:0x803DD8B8 end:0x803DD8EC
 	.sbss       start:0x803DF460 end:0x803DF468
-	.sdata2     start:0x803E72F8 end:0x803E7488
+	.sdata2     start:0x803E72F8 end:0x803E7484
 
 dlls/objects/601_SB_Cloudrun/SB_Cloudrun.c:
 	.text       start:0x801EE808 end:0x801EFAE0
 	.data       start:0x80329DD8 end:0x80329E48
-	.sdata2     start:0x803E7488 end:0x803E74E0
+	.sdata2     start:0x803E7488 end:0x803E74DC
 
 dlls/objects/505_WM_ObjCreat/WM_ObjCreat.c:
 	.text       start:0x801EFAE0 end:0x801F06FC
-	.data       start:0x80329E48 end:0x80329EA8
+	.data       start:0x80329E48 end:0x80329EA4
 	.sbss       start:0x803DF468 end:0x803DF470
 	.sdata2     start:0x803E74E0 end:0x803E7500
 
@@ -3265,12 +3277,12 @@ dlls/objects/506_WM_seqobjec/WM_seqobjec.c:
 	.text       start:0x801F0E58 end:0x801F1080
 	.data       start:0x80329F08 end:0x80329F40
 	.sbss       start:0x803DF478 end:0x803DF480
-	.sdata2     start:0x803E7510 end:0x803E7518
+	.sdata2     start:0x803E7510 end:0x803E7514
 
 dlls/objects/507/507.c:
 	.text       start:0x801F1080 end:0x801F1264
 	.data       start:0x80329F40 end:0x80329F78
-	.sdata2     start:0x803E7518 end:0x803E7528
+	.sdata2     start:0x803E7518 end:0x803E7524
 
 dlls/objects/508/508.c:
 	.text       start:0x801F1264 end:0x801F1D8C
@@ -3281,7 +3293,7 @@ dlls/objects/508/508.c:
 dlls/objects/510/510.c:
 	.text       start:0x801F1D8C end:0x801F2348
 	.data       start:0x80329FB0 end:0x80329FE8
-	.sdata2     start:0x803E7570 end:0x803E7598
+	.sdata2     start:0x803E7570 end:0x803E7594
 
 dlls/objects/511/511.c:
 	.text       start:0x801F2348 end:0x801F269C
@@ -3291,18 +3303,18 @@ dlls/objects/511/511.c:
 dlls/objects/509_WM_LaserTar/WM_LaserTar.c:
 	.text       start:0x801F269C end:0x801F2854
 	.data       start:0x8032A020 end:0x8032A058
-	.sdata2     start:0x803E75A8 end:0x803E75B0
+	.sdata2     start:0x803E75A8 end:0x803E75AC
 
 dlls/objects/512/512.c:
 	.text       start:0x801F2854 end:0x801F3600
 	.rodata     start:0x802C2CB0 end:0x802C2CC8
 	.data       start:0x8032A058 end:0x8032A228
-	.sdata2     start:0x803E75B0 end:0x803E75E0
+	.sdata2     start:0x803E75B0 end:0x803E75DC
 
 dlls/objects/513_WM_colrise/WM_colrise.c:
 	.text       start:0x801F3600 end:0x801F385C
 	.data       start:0x8032A228 end:0x8032A260
-	.sdata2     start:0x803E75E0 end:0x803E7600
+	.sdata2     start:0x803E75E0 end:0x803E75FC
 
 dlls/objects/516_WM_Torch/WM_Torch.c:
 	.text       start:0x801F385C end:0x801F3B34
@@ -3333,14 +3345,14 @@ dlls/objects/521_WM_LevelCon/WM_LevelCon.c:
 
 dlls/objects/522_WM_GeneralS/WM_GeneralS.c:
 	.text       start:0x801F5040 end:0x801F5384
-	.data       start:0x8032A390 end:0x8032A3F0
+	.data       start:0x8032A390 end:0x8032A3EC
 	.sdata2     start:0x803E76B0 end:0x803E76C0
 
 dlls/objects/523_FireFly/FireFly.c:
 	.text       start:0x801F5384 end:0x801F5E0C
 	.data       start:0x8032A3F0 end:0x8032A428
 	.sdata      start:0x803DD928 end:0x803DD930
-	.sdata2     start:0x803E76C0 end:0x803E7710
+	.sdata2     start:0x803E76C0 end:0x803E770C
 
 dlls/objects/524_WM_spiritpl/WM_spiritpl.c:
 	.text       start:0x801F5E0C end:0x801F6CCC
@@ -3395,7 +3407,7 @@ dlls/objects/534_VFP_LevelCo/VFP_LevelCo.c:
 	.text       start:0x801F9F84 end:0x801FA4F8
 	.data       start:0x8032A650 end:0x8032A688
 	.sdata      start:0x803DD948 end:0x803DD950
-	.sdata2     start:0x803E7878 end:0x803E7880
+	.sdata2     start:0x803E7878 end:0x803E787C
 
 dlls/objects/573_DBPointMum/DBPointMum.c:
 	.sdata      start:0x803DD950 end:0x803DD958
@@ -3416,7 +3428,7 @@ dlls/objects/536_VFP_MiniFir/VFP_MiniFir.c:
 dlls/objects/537/537.c:
 	.text       start:0x801FAE7C end:0x801FAFF0
 	.data       start:0x8032A6F8 end:0x8032A730
-	.sdata2     start:0x803E78C0 end:0x803E78D0
+	.sdata2     start:0x803E78C0 end:0x803E78CC
 
 dlls/objects/538_VFP_statueb/VFP_statueb.c:
 	.text       start:0x801FAFF0 end:0x801FB3EC
@@ -3441,7 +3453,7 @@ dlls/objects/541/541.c:
 dlls/objects/542_VFP_Block1/VFP_Block1.c:
 	.text       start:0x801FC12C end:0x801FC248
 	.data       start:0x8032A810 end:0x8032A848
-	.sdata2     start:0x803E7918 end:0x803E7920
+	.sdata2     start:0x803E7918 end:0x803E791C
 
 dlls/objects/543/543.c:
 	.text       start:0x801FC248 end:0x801FCAF8
@@ -3462,34 +3474,34 @@ dlls/objects/546_VFPDragHead/VFPDragHead.c:
 	.text       start:0x801FD468 end:0x801FD8BC
 	.data       start:0x8032A8F0 end:0x8032A928
 	.sbss       start:0x803DF4C0 end:0x803DF4C8
-	.sdata2     start:0x803E7950 end:0x803E7958
+	.sdata2     start:0x803E7950 end:0x803E7954
 
 dlls/objects/547_VFP_corepla/VFP_corepla.c:
 	.text       start:0x801FD8BC end:0x801FD9F0
 	.data       start:0x8032A928 end:0x8032A960
-	.sdata2     start:0x803E7958 end:0x803E7968
+	.sdata2     start:0x803E7958 end:0x803E7964
 
 dlls/objects/548/548.c:
 	.text       start:0x801FD9F0 end:0x801FDC28
 	.data       start:0x8032A960 end:0x8032A998
-	.sbss       start:0x803DF4C8 end:0x803DF4D0
-	.sdata2     start:0x803E7968 end:0x803E7970
+	.sbss       start:0x803DF4C8 end:0x803DF4CC
+	.sdata2     start:0x803E7968 end:0x803E796C
 
 dlls/objects/549_VFP_flamepo/VFP_flamepo.c:
 	.text       start:0x801FDC28 end:0x801FDE34
 	.data       start:0x8032A998 end:0x8032A9D0
-	.sdata2     start:0x803E7970 end:0x803E7978
+	.sdata2     start:0x803E7970 end:0x803E7974
 
 dlls/objects/550_VFP_lavapoo/VFP_lavapoo.c:
 	.text       start:0x801FDE34 end:0x801FE33C
 	.data       start:0x8032A9D0 end:0x8032AA08
-	.sbss       start:0x803DF4D0 end:0x803DF4D8
+	.sbss       start:0x803DF4D0 end:0x803DF4D4
 	.sdata2     start:0x803E7978 end:0x803E79C8
 
 dlls/objects/551_VFP_lavasta/VFP_lavasta.c:
 	.text       start:0x801FE33C end:0x801FE66C
 	.data       start:0x8032AA08 end:0x8032AA40
-	.sbss       start:0x803DF4D8 end:0x803DF4E0
+	.sbss       start:0x803DF4D8 end:0x803DF4DC
 	.sdata2     start:0x803E79C8 end:0x803E79D8
 
 dlls/objects/552/552.c:
@@ -3498,8 +3510,8 @@ dlls/objects/552/552.c:
 
 dlls/objects/575_DB_egg/DB_egg.c:
 	.text       start:0x801FE898 end:0x80200004
-	.data       start:0x8032AA78 end:0x8032AB00
-	.sdata2     start:0x803E79D8 end:0x803E7A88
+	.data       start:0x8032AA78 end:0x8032AAFC
+	.sdata2     start:0x803E79D8 end:0x803E7A84
 
 dlls/objects/576_GCRobotBlas/GCRobotBlas.c:
 	.text       start:0x80200004 end:0x80200130
@@ -3510,7 +3522,7 @@ dlls/objects/577_DrakorEnerg/DrakorEnerg.c:
 	.text       start:0x80200130 end:0x80200598
 	.data       start:0x8032AB38 end:0x8032AB78
 	.sdata      start:0x803DD960 end:0x803DD980
-	.sdata2     start:0x803E7A90 end:0x803E7AC0
+	.sdata2     start:0x803E7A90 end:0x803E7ABC
 
 dlls/objects/578_DBstealerwo/DBstealerwo.c:
 	.text       start:0x80200598 end:0x80204520
@@ -3574,7 +3586,7 @@ dlls/objects/562_DFP_RotateP/DFP_RotateP.c:
 	.text       start:0x80207E0C end:0x80208818
 	.data       start:0x8032B260 end:0x8032B298
 	.bss        start:0x803AE8D8 end:0x803AE8F8
-	.sdata2     start:0x803E7C68 end:0x803E7C98
+	.sdata2     start:0x803E7C68 end:0x803E7C94
 
 dlls/objects/563_DFP_Statue1/DFP_Statue1.c:
 	.text       start:0x80208818 end:0x80208C0C
@@ -3583,7 +3595,7 @@ dlls/objects/563_DFP_Statue1/DFP_Statue1.c:
 
 dlls/objects/564_DFP_PerchSw/DFP_PerchSw.c:
 	.text       start:0x80208C0C end:0x80208C88
-	.data       start:0x8032B2D0 end:0x8032B338
+	.data       start:0x8032B2D0 end:0x8032B331
 
 dlls/objects/565_DFP_TargetB/DFP_TargetB.c:
 	.text       start:0x80208C88 end:0x8020975C
@@ -3602,7 +3614,7 @@ dlls/objects/567_DFPSpPl/DFPSpPl.c:
 dlls/objects/568_LINKA_levco/LINKA_levco.c:
 	.text       start:0x80209A8C end:0x80209F90
 	.data       start:0x8032B440 end:0x8032B478
-	.sdata2     start:0x803E7CF0 end:0x803E7CF8
+	.sdata2     start:0x803E7CF0 end:0x803E7CF4
 
 dlls/objects/569/textblock.c:
 	.text       start:0x80209F90 end:0x8020A034
@@ -3674,31 +3686,31 @@ dlls/objects/467/467.c:
 	.data       start:0x8032B9D8 end:0x8032BAE8
 	.sdata      start:0x803DDA10 end:0x803DDA18
 	.sbss       start:0x803DF530 end:0x803DF538
-	.sdata2     start:0x803E7E60 end:0x803E7F00
+	.sdata2     start:0x803E7E60 end:0x803E7EFC
 
 dlls/objects/604/604.c:
 	.text       start:0x8020F9F8 end:0x80210EA4
-	.rodata     start:0x802C2D60 end:0x802C2D90
+	.rodata     start:0x802C2D60 end:0x802C2D8A
 	.data       start:0x8032BAE8 end:0x8032BBA0
 	.sdata      start:0x803DDA18 end:0x803DDA28
 	.sbss       start:0x803DF538 end:0x803DF540
-	.sdata2     start:0x803E7F00 end:0x803E7F60
+	.sdata2     start:0x803E7F00 end:0x803E7F5C
 
 dlls/objects/605_CRCloudRace/CRCloudRace.c:
 	.text       start:0x80210EA4 end:0x802113CC
-	.data       start:0x8032BBA0 end:0x8032BC00
-	.sdata2     start:0x803E7F60 end:0x803E7F70
+	.data       start:0x8032BBA0 end:0x8032BBFC
+	.sdata2     start:0x803E7F60 end:0x803E7F6C
 
 dlls/objects/606/606.c:
 	.text       start:0x802113CC end:0x80211670
 	.data       start:0x8032BC00 end:0x8032BC40
 	.sdata      start:0x803DDA28 end:0x803DDA30
-	.sdata2     start:0x803E7F70 end:0x803E7F80
+	.sdata2     start:0x803E7F70 end:0x803E7F7C
 
 dlls/objects/607_CRFuelTank/CRFuelTank.c:
 	.text       start:0x80211670 end:0x802118DC
 	.data       start:0x8032BC40 end:0x8032BC78
-	.sdata2     start:0x803E7F80 end:0x803E7F88
+	.sdata2     start:0x803E7F80 end:0x803E7F84
 
 dlls/objects/608/608.c:
 	.text       start:0x802118DC end:0x80212408
@@ -3710,7 +3722,7 @@ dlls/objects/591_KT_RexLevel/KT_RexLevel.c:
 	.text       start:0x80212408 end:0x8021271C
 	.data       start:0x8032BCB0 end:0x8032BCE8
 	.sbss       start:0x803DF540 end:0x803DF548
-	.sdata2     start:0x803E7FC0 end:0x803E7FD0
+	.sdata2     start:0x803E7FC0 end:0x803E7FCC
 
 dlls/objects/592_KT_Rex/KT_Rex.c:
 	.text       start:0x8021271C end:0x80216220
@@ -3718,8 +3730,8 @@ dlls/objects/592_KT_Rex/KT_Rex.c:
 	.data       start:0x8032BCE8 end:0x8032BDA8
 	.bss        start:0x803AE8F8 end:0x803AE968
 	.sdata      start:0x803DDA50 end:0x803DDAA0
-	.sbss       start:0x803DF548 end:0x803DF560
-	.sdata2     start:0x803E7FD0 end:0x803E8078
+	.sbss       start:0x803DF548 end:0x803DF55C
+	.sdata2     start:0x803E7FD0 end:0x803E8074
 
 dlls/objects/593_KT_RexFloor/KT_RexFloor.c:
 	.text       start:0x80216220 end:0x80216CB4
@@ -3749,7 +3761,7 @@ dlls/objects/609_DR_LaserCan/DR_LaserCan.c:
 	.data       start:0x8032BE88 end:0x8032BEC0
 	.sdata      start:0x803DDAA8 end:0x803DDAB0
 	.sbss       start:0x803DF568 end:0x803DF570
-	.sdata2     start:0x803E80F8 end:0x803E8160
+	.sdata2     start:0x803E80F8 end:0x803E815C
 
 dlls/objects/610/610.c:
 	.text       start:0x80218708 end:0x80219308
@@ -3763,14 +3775,14 @@ dlls/objects/612/612.c:
 dlls/objects/611_GM_MazeWell/GM_MazeWell.c:
 	.text       start:0x80219308 end:0x80219658
 	.data       start:0x8032BF08 end:0x8032BF98
-	.sdata2     start:0x803E8198 end:0x803E81A0
+	.sdata2     start:0x803E8198 end:0x803E819C
 
 dlls/objects/614_KytesMum/KytesMum.c:
 	.text       start:0x80219658 end:0x8021A1F8
 	.rodata     start:0x802C2DB8 end:0x802C2DD0
 	.data       start:0x8032BF98 end:0x8032C050
 	.sdata      start:0x803DDAC8 end:0x803DDAD8
-	.sdata2     start:0x803E81A0 end:0x803E81C8
+	.sdata2     start:0x803E81A0 end:0x803E81C4
 
 dlls/objects/615/615.c:
 	.sdata      start:0x803DDAD8 end:0x803DDAE0
@@ -3784,22 +3796,22 @@ dlls/objects/621_DR_Vines/DR_Vines.c:
 dlls/objects/613_DR_Creator/DR_Creator.c:
 	.text       start:0x8021A1F8 end:0x8021A778
 	.data       start:0x8032C050 end:0x8032C098
-	.sdata2     start:0x803E81C8 end:0x803E81F0
+	.sdata2     start:0x803E81C8 end:0x803E81EC
 
 dlls/objects/617_ExplodePlan/ExplodePlan.c:
 	.text       start:0x8021A778 end:0x8021A8AC
 	.data       start:0x8032C098 end:0x8032C0D0
-	.sdata2     start:0x803E81F0 end:0x803E81F8
+	.sdata2     start:0x803E81F0 end:0x803E81F4
 
 dlls/objects/616_DR_CageCont/DR_CageCont.c:
 	.text       start:0x8021A8AC end:0x8021AB9C
 	.data       start:0x8032C0D0 end:0x8032C108
-	.sdata2     start:0x803E81F8 end:0x803E8200
+	.sdata2     start:0x803E81F8 end:0x803E81FC
 
 dlls/objects/619_DR_Chimmey/DR_Chimmey.c:
 	.text       start:0x8021AB9C end:0x8021AD9C
 	.data       start:0x8032C108 end:0x8032C140
-	.sdata2     start:0x803E8200 end:0x803E8210
+	.sdata2     start:0x803E8200 end:0x803E820C
 
 dlls/objects/620/620.c:
 	.text       start:0x8021AD9C end:0x8021B458
@@ -3811,7 +3823,7 @@ dlls/objects/622/622.c:
 	.data       start:0x8032C180 end:0x8032C1C0
 	.sdata      start:0x803DDAF0 end:0x803DDAF8
 	.sbss       start:0x803DF570 end:0x803DF578
-	.sdata2     start:0x803E8248 end:0x803E8258
+	.sdata2     start:0x803E8248 end:0x803E8254
 
 dlls/objects/625/625.c:
 	.text       start:0x8021BAC8 end:0x8021D700
@@ -3841,7 +3853,7 @@ dlls/objects/627_FirePipe/FirePipe.c:
 	.text       start:0x8022002C end:0x80220D68
 	.data       start:0x8032C468 end:0x8032C4A0
 	.sdata      start:0x803DDB40 end:0x803DDB58
-	.sdata2     start:0x803E83A0 end:0x803E83E0
+	.sdata2     start:0x803E83A0 end:0x803E83DC
 
 dlls/objects/629_DR_cradle/DR_cradle.c:
 	.sdata      start:0x803DDB58 end:0x803DDB60
@@ -3862,7 +3874,7 @@ dlls/objects/633_DR_EnergyDi/DR_EnergyDi.c:
 	.text       start:0x80220D68 end:0x80220F68
 	.data       start:0x8032C4A0 end:0x8032C4D8
 	.sdata      start:0x803DDB80 end:0x803DDB88
-	.sdata2     start:0x803E83E0 end:0x803E83E8
+	.sdata2     start:0x803E83E0 end:0x803E83E4
 
 dlls/objects/634_DR_Collapse/DR_Collapse.c:
 	.sdata      start:0x803DDB88 end:0x803DDB90
@@ -3876,7 +3888,7 @@ dlls/objects/635/635.c:
 dlls/objects/636_DR_LightBea/DR_LightBea.c:
 	.text       start:0x80220F68 end:0x80221230
 	.data       start:0x8032C508 end:0x8032C540
-	.sdata2     start:0x803E83E8 end:0x803E83F8
+	.sdata2     start:0x803E83E8 end:0x803E83F4
 
 dlls/objects/637/637.c:
 	.data       start:0x8032C540 end:0x8032C570
@@ -3884,7 +3896,7 @@ dlls/objects/637/637.c:
 dlls/objects/638_DRMusicCont/DRMusicCont.c:
 	.text       start:0x80221230 end:0x802218D8
 	.data       start:0x8032C570 end:0x8032C5A8
-	.sdata2     start:0x803E83F8 end:0x803E8420
+	.sdata2     start:0x803E83F8 end:0x803E841C
 
 dlls/objects/640_DR_CloudPer/DR_CloudPer.c:
 	.text       start:0x802218D8 end:0x80221B90
@@ -3899,13 +3911,13 @@ dlls/objects/641_DR_EarthCal/DR_EarthCal.c:
 dlls/objects/642_BarrelGener/BarrelGener.c:
 	.text       start:0x80221DD0 end:0x802220D8
 	.data       start:0x8032C628 end:0x8032C660
-	.sdata      start:0x803DDB98 end:0x803DDBA0
+	.sdata      start:0x803DDB98 end:0x803DDB9C
 	.sdata2     start:0x803E8450 end:0x803E8468
 
 main/obj_movelib.c:
 	.text       start:0x802220D8 end:0x80222F4C
 	.sdata      start:0x803DDBA0 end:0x803DDBB0
-	.sdata2     start:0x803E8468 end:0x803E84D0
+	.sdata2     start:0x803E8468 end:0x803E84CC
 
 dlls/objects/643_DR_BarrelGr/DR_BarrelGr.c:
 	.text       start:0x80222F4C end:0x80223764
@@ -3933,7 +3945,7 @@ dlls/objects/652_WCBouncyCra/WCBouncyCra.c:
 dlls/objects/656_WCPushBlock/WCPushBlock.c:
 	.text       start:0x80224B54 end:0x80225914
 	.data       start:0x8032C788 end:0x8032C7E0
-	.sdata2     start:0x803E85C8 end:0x803E85D8
+	.sdata2     start:0x803E85C8 end:0x803E85D4
 
 dlls/objects/653_WCLevelCont/WCLevelCont.c:
 	.text       start:0x80225914 end:0x80227A80
@@ -3944,7 +3956,7 @@ dlls/objects/653_WCLevelCont/WCLevelCont.c:
 dlls/objects/654_WCBeacon/WCBeacon.c:
 	.text       start:0x80227A80 end:0x80227E64
 	.data       start:0x8032C950 end:0x8032C988
-	.sdata2     start:0x803E8610 end:0x803E8620
+	.sdata2     start:0x803E8610 end:0x803E861C
 
 dlls/objects/657_WCTile/WCTile.c:
 	.text       start:0x80227E64 end:0x80228370
@@ -3963,9 +3975,9 @@ dlls/objects/658_WCTrexStatu/WCTrexStatu.c:
 
 dlls/objects/659/659.c:
 	.text       start:0x80228C30 end:0x8022930C
-	.rodata     start:0x802C2E18 end:0x802C2E28
+	.rodata     start:0x802C2E18 end:0x802C2E24
 	.data       start:0x8032CA40 end:0x8032CA78
-	.sdata2     start:0x803E8648 end:0x803E8650
+	.sdata2     start:0x803E8648 end:0x803E864C
 
 dlls/objects/660/660.c:
 	.text       start:0x8022930C end:0x8022943C
@@ -3980,13 +3992,13 @@ dlls/objects/665/665.c:
 dlls/objects/661_WCApertureS/WCApertureS.c:
 	.text       start:0x802296B0 end:0x80229BCC
 	.data       start:0x8032CAE8 end:0x8032CB20
-	.sdata2     start:0x803E8658 end:0x803E8678
+	.sdata2     start:0x803E8658 end:0x803E8674
 
 dlls/objects/662_WCTempleDia/WCTempleDia.c:
 	.text       start:0x80229BCC end:0x8022A170
 	.data       start:0x8032CB20 end:0x8032CB70
 	.sdata      start:0x803DDBB8 end:0x803DDBC8
-	.sdata2     start:0x803E8678 end:0x803E86A0
+	.sdata2     start:0x803E8678 end:0x803E869C
 
 dlls/objects/663_WCTempleBri/WCTempleBri.c:
 	.text       start:0x8022A170 end:0x8022AA6C
@@ -4001,9 +4013,9 @@ dlls/objects/664_WCFloorTile/WCFloorTile.c:
 dlls/objects/666_ARWArwing/ARWArwing.c:
 	.text       start:0x8022AE44 end:0x8022EBEC
 	.rodata     start:0x802C2E28 end:0x802C2E38
-	.data       start:0x8032CBE0 end:0x8032CDE0
+	.data       start:0x8032CBE0 end:0x8032CDDC
 	.sdata      start:0x803DDBC8 end:0x803DDBD0
-	.sbss       start:0x803DF588 end:0x803DF590
+	.sbss       start:0x803DF588 end:0x803DF58C
 	.sdata2     start:0x803E86F8 end:0x803E879C
 
 dlls/objects/667/667.c:
@@ -4034,7 +4046,7 @@ dlls/objects/671_ARWBombColl/ARWBombColl.c:
 dlls/objects/672/672.c:
 	.text       start:0x802301D4 end:0x80231088
 	.data       start:0x8032CEF8 end:0x8032CFA8
-	.sdata2     start:0x803E88C8 end:0x803E8910
+	.sdata2     start:0x803E88C8 end:0x803E890C
 
 dlls/objects/673_ARWLevelCon/ARWLevelCon.c:
 	.text       start:0x80231088 end:0x80231600
@@ -4126,7 +4138,7 @@ dlls/objects/689_CmbSrc/CmbSrc.c:
 	.text       start:0x80236A6C end:0x80237D48
 	.data       start:0x8032D4D8 end:0x8032D5C0
 	.sdata      start:0x803DDBE0 end:0x803DDBE8
-	.sdata2     start:0x803E8B88 end:0x803E8BF8
+	.sdata2     start:0x803E8B88 end:0x803E8BF4
 
 dlls/objects/690_DustMoteSou/DustMoteSou.c:
 	.text       start:0x80237D48 end:0x80237FDC
@@ -4182,14 +4194,14 @@ dlls/objects/700_Andross/Andross.c:
 	.data       start:0x8032D860 end:0x8032DA48
 	.sdata      start:0x803DDC30 end:0x803DDCF0
 	.sbss       start:0x803DF5B8 end:0x803DF5D0
-	.sdata2     start:0x803E8CC0 end:0x803E8DD0
+	.sdata2     start:0x803E8CC0 end:0x803E8DCC
 
 dlls/objects/701/701.c:
 	.text       start:0x8023F864 end:0x80240494
 	.data       start:0x8032DA48 end:0x8032DAC8
 	.sdata      start:0x803DDCF0 end:0x803DDD18
 	.sbss       start:0x803DF5D0 end:0x803DF5D8
-	.sdata2     start:0x803E8DD0 end:0x803E8E30
+	.sdata2     start:0x803E8DD0 end:0x803E8E2C
 
 dlls/objects/702_AndrossBrai/AndrossBrai.c:
 	.text       start:0x80240494 end:0x80240818
@@ -4207,7 +4219,7 @@ dolphin/base/PPCArch.c:
 
 dolphin/os/OS.c:
 	.text       start:0x80240BE0 end:0x8024153C
-	.data       start:0x8032DB38 end:0x8032DD78
+	.data       start:0x8032DB38 end:0x8032DCF3
 	.bss        start:0x803AEAC0 end:0x803AEB10
 	.sbss       start:0x803DF5D8 end:0x803DF608
 
@@ -4217,16 +4229,17 @@ dolphin/os/OSAlarm.c:
 
 dolphin/os/OSAlloc.c:
 	.text       start:0x80241BE8 end:0x80241EF8
-	.sdata      start:0x803DDD30 end:0x803DDD38
+	.sdata      start:0x803DDD30 end:0x803DDD34
 	.sbss       start:0x803DF610 end:0x803DF620
 
 dolphin/os/OSArena.c:
 	.text       start:0x80241EF8 end:0x80241F18
 	.sdata      start:0x803DDD38 end:0x803DDD3C
-	.sbss       start:0x803DF620 end:0x803DF628
+	.sbss       start:0x803DF620 end:0x803DF624
 
 dolphin/os/OSAudioSystem.c:
 	.text       start:0x80241F18 end:0x802421AC
+	.data       start:0x8032DCF8 end:0x8032DD78
 
 dolphin/os/OSCache.c:
 	.text       start:0x802421AC end:0x80242868
@@ -4234,18 +4247,18 @@ dolphin/os/OSCache.c:
 
 dolphin/os/OSContext.c:
 	.text       start:0x80242868 end:0x802430D0
-	.data       start:0x8032DFA8 end:0x8032E180
+	.data       start:0x8032DFA8 end:0x8032E17F
 
 dolphin/os/OSError.c:
 	.text       start:0x802430D0 end:0x80243418
-	.data       start:0x8032E180 end:0x8032E4A0
+	.data       start:0x8032E180 end:0x8032E49C
 	.bss        start:0x803AEB10 end:0x803AEB54
 	.sdata      start:0x803DDD3C end:0x803DDD48
 
 dolphin/os/OSFont.c:
 	.text       start:0x80243418 end:0x80243F84
-	.data       start:0x8032E4A0 end:0x8032EFB0
-	.sdata      start:0x803DDD48 end:0x803DDD50
+	.data       start:0x8032E4A0 end:0x8032EFAA
+	.sdata      start:0x803DDD48 end:0x803DDD4A
 	.sbss       start:0x803DF628 end:0x803DF638
 	.sdata2     start:0x803E8E40 end:0x803E8E48
 
@@ -4413,7 +4426,7 @@ dolphin/si/SIBios.c:
 dolphin/si/SISamplingRate.c:
 	.text       start:0x802538B8 end:0x802539C0
 	.data       start:0x8032FAE8 end:0x8032FB80
-	.sbss       start:0x803DF890 end:0x803DF898
+	.sbss       start:0x803DF890 end:0x803DF894
 
 dolphin/exi/EXIBios.c:
 	.text       start:0x802539C0 end:0x80255294
@@ -4426,7 +4439,7 @@ dolphin/exi/EXIUart.c:
 dolphin/gx/GXInit.c:
 	.text       start:0x80255504 end:0x802565F4
 	.bss        start:0x803AFC60 end:0x803B01D8
-	.sdata      start:0x803DDDA8 end:0x803DDDB0
+	.sdata      start:0x803DDDA8 end:0x803DDDAC
 	.sbss       start:0x803DF8A8 end:0x803DF8B8
 	.sdata2     start:0x803E8E88 end:0x803E8EA8
 
@@ -4436,7 +4449,7 @@ dolphin/gx/GXFifo.c:
 
 dolphin/gx/GXAttr.c:
 	.text       start:0x80257058 end:0x80258A60
-	.data       start:0x8032FB80 end:0x8032FDF8
+	.data       start:0x8032FB80 end:0x8032FDF4
 	.sdata      start:0x803DDDB0 end:0x803DDDC0
 
 dolphin/gx/GXMisc.c:
@@ -4448,17 +4461,17 @@ dolphin/gx/GXGeometry.c:
 
 dolphin/gx/GXFrameBuf.c:
 	.text       start:0x80259414 end:0x80259EA8
-	.data       start:0x8032FDF8 end:0x8032FF18
+	.data       start:0x8032FDF8 end:0x8032FEE8
 	.sdata2     start:0x803E8EA8 end:0x803E8EB0
 
 dolphin/gx/GXLight.c:
 	.text       start:0x80259EA8 end:0x8025A8C0
-	.data       start:0x8032FF18 end:0x8032FF38
+	.data       start:0x8032FEE8 end:0x8032FF08
 	.sdata2     start:0x803E8EB0 end:0x803E8F00
 
 dolphin/gx/GXTexture.c:
 	.text       start:0x8025A8C0 end:0x8025BA20
-	.data       start:0x8032FF38 end:0x80330220
+	.data       start:0x8032FF08 end:0x80330220
 	.sdata      start:0x803DDDC0 end:0x803DDE00
 	.sdata2     start:0x803E8F00 end:0x803E8F30
 
@@ -4489,7 +4502,7 @@ dolphin/gx/GXDisplayList.c:
 
 dolphin/gx/GXTransform.c:
 	.text       start:0x8025D780 end:0x8025DD4C
-	.sdata2     start:0x803E8F80 end:0x803E8F90
+	.sdata2     start:0x803E8F80 end:0x803E8F8C
 
 dolphin/gx/GXPerf.c:
 	.text       start:0x8025DD4C end:0x8025E6B8
@@ -4497,7 +4510,7 @@ dolphin/gx/GXPerf.c:
 
 dolphin/card/CARDBios.c:
 	.text       start:0x8025E6B8 end:0x8025F804
-	.data       start:0x80330358 end:0x80330380
+	.data       start:0x80330358 end:0x80330368
 	.bss        start:0x803B0980 end:0x803B0BC0
 
 dolphin/card/CARDUnlock.c:
@@ -4551,7 +4564,7 @@ dolphin/thp/THPDec.c:
 	.rodata     start:0x802C2E68 end:0x802C3160
 	.bss        start:0x803B0BC0 end:0x803B0CF0
 	.sbss       start:0x803DF900 end:0x803DFA18
-	.sdata2     start:0x803E8F90 end:0x803E8FB0
+	.sdata2     start:0x803E8F90 end:0x803E8FAC
 
 dolphin/thp/THPAudio.c:
 	.text       start:0x8026C224 end:0x8026C754
@@ -4601,14 +4614,14 @@ musyx/runtime/synth_jobs.c:
 	extab       start:0x800057C8 end:0x800057E0
 	extabindex  start:0x80005F3C end:0x80005F60
 	.text       start:0x802737A8 end:0x802741F0
-	.sdata2     start:0x803E9008 end:0x803E9020
+	.sdata2     start:0x803E9008 end:0x803E901C
 
 musyx/runtime/data_tables.c:
 	extab       start:0x800057E0 end:0x80005880
 	extabindex  start:0x80005F60 end:0x80006050
 	.text       start:0x802741F0 end:0x80275B9C
 	.bss        start:0x803C1418 end:0x803CBA50
-	.sbss       start:0x803DFA88 end:0x803DFAD0
+	.sbss       start:0x803DFA88 end:0x803DFACC
 
 musyx/runtime/mcmd_wait.c:
 	extab       start:0x80005880 end:0x80005888
@@ -4657,7 +4670,7 @@ musyx/runtime/synth_ac.c:
 	extab       start:0x80005988 end:0x80005990
 	extabindex  start:0x800061DC end:0x800061E8
 	.text       start:0x8027AD18 end:0x8027AE44
-	.sdata2     start:0x803E9048 end:0x803E9060
+	.sdata2     start:0x803E9048 end:0x803E905C
 
 musyx/runtime/synth_adsr.c:
 	extab       start:0x80005990 end:0x800059C0
@@ -4668,14 +4681,15 @@ musyx/runtime/synth_adsr.c:
 musyx/runtime/synth_vsamples.c:
 	extab       start:0x800059C0 end:0x800059E0
 	extabindex  start:0x80006230 end:0x80006260
-	.text       start:0x8027B4F0 end:0x8027BC64
+	.text       start:0x8027B4F0 end:0x8027BC58
 	.bss        start:0x803CCA30 end:0x803CD380
 
 musyx/runtime/snd_groups.c:
 	extab       start:0x800059E0 end:0x80005A08
 	extabindex  start:0x80006260 end:0x8000629C
-	.text       start:0x8027BC64 end:0x8027C23C
+	.text       start:0x8027BC58 end:0x8027C23C
 	.bss        start:0x803CD380 end:0x803CD980
+	.sbss       start:0x803DFB08 end:0x803DFB10
 
 musyx/runtime/sal_studio.c:
 	extab       start:0x80005A08 end:0x80005A30
@@ -4689,7 +4703,7 @@ musyx/runtime/hw_dspctrl.c:
 	.text       start:0x8027CCC4 end:0x8027FAE4
 	.data       start:0x80331540 end:0x80331558
 	.bss        start:0x803CD980 end:0x803CE060
-	.sbss       start:0x803DFB48 end:0x803DFB50
+	.sbss       start:0x803DFB48 end:0x803DFB4C
 
 musyx/runtime/sal_volume.c:
 	extab       start:0x80005A50 end:0x80005A58
@@ -4703,7 +4717,7 @@ musyx/runtime/snd3dgroup.c:
 	extabindex  start:0x80006314 end:0x80006368
 	.text       start:0x8028027C end:0x80281998
 	.bss        start:0x803CE060 end:0x803CEF00
-	.sbss       start:0x803DFB50 end:0x803DFB70
+	.sbss       start:0x803DFB50 end:0x803DFB6E
 	.sdata2     start:0x803E90B0 end:0x803E90F8
 
 musyx/runtime/snd_core.c:
@@ -4842,6 +4856,7 @@ dolphin/axfx/reverb_std_callback.c:
 	extab       start:0x80005CB0 end:0x80005CB8
 	extabindex  start:0x80006698 end:0x800066A4
 	.text       start:0x80285884 end:0x80285C5C
+	.sdata2     start:0x803E9150 end:0x803E9160
 
 dolphin/OdemuExi2/DebuggerDriver.c:
 	.text       start:0x80285C5C end:0x802866DC
@@ -4854,7 +4869,7 @@ Runtime.PPCEABI.H/__va_arg.c:
 Runtime.PPCEABI.H/global_destructor_chain.c:
 	.text       start:0x802867A4 end:0x802867EC
 	.dtors      start:0x802C20E8 end:0x802C20EC
-	.sbss       start:0x803DFBE0 end:0x803DFBE8
+	.sbss       start:0x803DFBE0 end:0x803DFBE4
 
 Runtime.PPCEABI.H/runtime.c:
 	.text       start:0x802867EC end:0x80286F10
@@ -4872,7 +4887,7 @@ Runtime.PPCEABI.H/fragment.c:
 
 Runtime.PPCEABI.H/GCN_mem_alloc.c:
 	.text       start:0x80286FF4 end:0x80287094
-	.sbss       start:0x803DFBE8 end:0x803DFBF0
+	.sbss       start:0x803DFBE8 end:0x803DFBEC
 
 dolphin/TRK_MINNOW_DOLPHIN/mainloop.c:
 	.text       start:0x80287094 end:0x8028718C
@@ -4927,13 +4942,13 @@ dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c:
 	.text       start:0x8028B854 end:0x8028B910
 
 dolphin/TRK_MINNOW_DOLPHIN/targimpl.c:
-	.text       start:0x8028B910 end:0x8028D1A8
+	.text       start:0x8028B910 end:0x8028D1A0
 	.rodata     start:0x802C31B8 end:0x802C3240
 	.data       start:0x80333A90 end:0x80333AC0
 	.bss        start:0x803D9A98 end:0x803DA018
 
 dolphin/TRK_MINNOW_DOLPHIN/targsupp.s:
-	.text       start:0x8028D1A8 end:0x8028D1C0
+	.text       start:0x8028D1A0 end:0x8028D1C0
 
 Runtime.PPCEABI.H/__start.c:
 	.init       start:0x80003100 end:0x800033A8
@@ -4970,7 +4985,7 @@ dolphin/TRK_MINNOW_DOLPHIN/targcont.c:
 
 dolphin/TRK_MINNOW_DOLPHIN/target_options.c:
 	.text       start:0x8028DB7C end:0x8028DB98
-	.bss        start:0x803DC250 end:0x803DC258
+	.bss        start:0x803DC250 end:0x803DC251
 
 dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
 	.text       start:0x8028DB98 end:0x8028DCD8
@@ -4994,7 +5009,7 @@ dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c:
 dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c:
 	.text       start:0x8028E414 end:0x8028F02C
 	.rodata     start:0x802C3258 end:0x802C3338
-	.data       start:0x80333C60 end:0x80333D88
+	.data       start:0x80333C60 end:0x80333D84
 	.sdata2     start:0x803E9160 end:0x803E9168
 
 dolphin/MSL_C/PPCEABI/bare/H/ctype.c:
@@ -5011,11 +5026,11 @@ dolphin/MSL_C/PPCEABI/bare/H/file_io.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.c:
 	.text       start:0x8028F648 end:0x8028F914
-	.sbss       start:0x803DFC08 end:0x803DFC10
+	.sbss       start:0x803DFC08 end:0x803DFC0C
 
 dolphin/MSL_C/PPCEABI/bare/H/mbstring.c:
 	.text       start:0x8028F914 end:0x8028FA58
-	.sdata2     start:0x803E9168 end:0x803E9170
+	.sdata2     start:0x803E9168 end:0x803E916C
 
 dolphin/MSL_C/PPCEABI/bare/H/mem.c:
 	.text       start:0x8028FA58 end:0x8028FBC8
@@ -5032,6 +5047,9 @@ dolphin/MSL_C/PPCEABI/bare/H/printf.c:
 	.data       start:0x80333F88 end:0x803341B8
 	.sdata      start:0x803DDE40 end:0x803DDE48
 	.sdata2     start:0x803E9170 end:0x803E9178
+
+dolphin/MSL_C/PPCEABI/bare/H/float.c:
+	.sdata      start:0x803DDE48 end:0x803DDE50
 
 dolphin/MSL_C/PPCEABI/bare/H/string.c:
 	.text       start:0x80291E14 end:0x802920F0
@@ -5063,7 +5081,7 @@ main/acosf.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/math_802927a4.c:
 	.text       start:0x80292FD4 end:0x8029356C
-	.sdata2     start:0x803E9400 end:0x803E9430
+	.sdata2     start:0x803E92E8 end:0x803E942C
 
 main/math_80292d3c.c:
 	.text       start:0x8029356C end:0x802935F0
@@ -5071,15 +5089,19 @@ main/math_80292d3c.c:
 
 main/rand.c:
 	.text       start:0x802935F0 end:0x8029361C
-	.sbss       start:0x803DFC10 end:0x803DFC18
+	.sbss       start:0x803DFC10 end:0x803DFC14
+
+main/reciprocal.c:
+	.text       start:0x8029361C end:0x80293650
+	.sdata2     start:0x803E9448 end:0x803E944C
 
 main/trig_float_helpers.c:
-	.text       start:0x8029361C end:0x8029395C
-	.sdata2     start:0x803E9448 end:0x803E944C
+	.text       start:0x80293650 end:0x8029395C
+	.sdata2     start:0x803E9450 end:0x803E94A0
 
 main/math_8029312c.c:
 	.text       start:0x8029395C end:0x80293A64
-	.sdata2     start:0x803E94A0 end:0x803E94B0
+	.sdata2     start:0x803E94A0 end:0x803E94AC
 
 main/trig.c:
 	.text       start:0x80293A64 end:0x80294494
@@ -5105,7 +5127,7 @@ dolphin/MSL_C/PPCEABI/bare/H/ctype_funcs.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c:
 	.text       start:0x80294EB4 end:0x80294F4C
-	.sbss       start:0x803DFC18 end:0x803DFC20
+	.sbss       start:0x803DFC18 end:0x803DFC1C
 
 dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.c:
 	.text       start:0x80294F4C end:0x80294F54
@@ -5130,9 +5152,6 @@ dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.c:
 	.sdata      start:0x803DDE50 end:0x803DDE60
 	.sdata2     start:0x803E9680 end:0x803E9698
 
-dolphin/MSL_C/PPCEABI/bare/H/float.c:
-	.sdata      start:0x803DDE48 end:0x803DDE50
-
 dlls/objects/195_Player/player.c:
 	.text       start:0x80295B64 end:0x802B7AC8
 	.rodata     start:0x802C3370 end:0x802C34E8
@@ -5149,8 +5168,8 @@ dlls/objects/437/437.c:
 	.text       start:0x802B7AC8 end:0x802B9FB0
 	.data       start:0x80336688 end:0x803367D0
 	.bss        start:0x803DC870 end:0x803DC890
-	.sdata      start:0x803DDEF0 end:0x803DDF30
-	.sdata2     start:0x803E99A8 end:0x803E9A60
+	.sdata      start:0x803DDEF0 end:0x803DDF2C
+	.sdata2     start:0x803E99A8 end:0x803E9A5C
 
 dlls/objects/598_DIMSnowHorn/DIMSnowHorn.c:
 	.text       start:0x802B9FB0 end:0x802BC900
@@ -5166,14 +5185,14 @@ dlls/objects/473_DIM2PrisonM/DIM2PrisonM.c:
 	.bss        start:0x803DC900 end:0x803DC910
 	.sdata      start:0x803DDF50 end:0x803DDF60
 	.sbss       start:0x803DFCC8 end:0x803DFCD0
-	.sdata2     start:0x803E9AF0 end:0x803E9B08
+	.sdata2     start:0x803E9AF0 end:0x803E9B04
 
 dlls/objects/599_DR_EarthWar/DR_EarthWar.c:
 	.text       start:0x802BCFF0 end:0x802BF8F8
 	.rodata     start:0x802C34E8 end:0x802C3540
 	.data       start:0x80336998 end:0x80336E90
 	.bss        start:0x803DC910 end:0x803DC960
-	.sdata      start:0x803DDF60 end:0x803DDF6C
+	.sdata      start:0x803DDF60 end:0x803DDF70
 	.sbss       start:0x803DFCD0 end:0x803DFCD8
 	.sdata2     start:0x803E9B08 end:0x803E9BC8
 
@@ -5182,5 +5201,6 @@ dlls/objects/600_DR_CloudRun/DR_CloudRun.c:
 	.rodata     start:0x802C3540 end:0x802C358C
 	.data       start:0x80336E90 end:0x80336FDD
 	.bss        start:0x803DC960 end:0x803DC980
+	.sdata      start:0x803DDF70 end:0x803DDF9E
 	.sbss       start:0x803DFCD8 end:0x803DFCE4
 	.sdata2     start:0x803E9BC8 end:0x803E9C58

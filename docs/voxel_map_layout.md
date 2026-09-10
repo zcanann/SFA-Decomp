@@ -223,3 +223,16 @@ The DOL SHA-1 remains `e750e8e894707a52446118a4b84f1b58b677b269`, using the
 retail object for this still-incomplete TU. Formatting checks pass for the source
 and canonical header; running clang-format introduces no changes and preserves
 the raw source-object hash.
+
+### Cache-loop initialization probes
+
+A follow-up compared the first cache loop's initialization order and whether
+the hit slot and replacement slot shared one local. The baseline remains
+99.24227% for `voxmaps_updateActiveMap`. Initializing the loop counter before
+the hit result in the `for` initializer gives 99.201035%; sharing the two slot
+locals gives 98.90722%; combining those changes gives 98.86598%. Scoping the
+ROM-list index to the replacement branch and the free-delay local to the free
+block further regresses each variant. All other functions remain exact in
+these probes. The original source and object are restored; the two early
+`li` operands cannot be fixed independently of the surrounding allocation by
+these initialization rewrites.

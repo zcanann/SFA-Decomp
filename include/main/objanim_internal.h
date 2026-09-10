@@ -546,9 +546,10 @@ typedef struct ObjAnimComponent {
     f32 activeMoveProgress;
     s16 currentMove;
     s16 activeMove;
-    void* targetObj; /* attention/track target (GameObject*): camera focus/track
-                     sites across CAM TUs + baddieControl.c 0xA4-as-pointer
-                     census - general object field, not camera-specific */
+    union {
+        void* targetObj; /* attention/track target, including camera focus */
+        f32 renderViewZ; /* view-space Z, or the fixed render-sort override */
+    };
     f32 hitboxScale;
     s8 mapEventSlot; /* 0xAC: map-event slot the object belongs to - the
                       mapLayer argument of loadCharacter; for objects
@@ -842,6 +843,7 @@ STATIC_ASSERT(offsetof(ObjAnimComponent, textureSlots) == 0x70);
 STATIC_ASSERT(offsetof(ObjAnimComponent, hitVolumeTransforms) == 0x74);
 STATIC_ASSERT(offsetof(ObjAnimComponent, hitVolumeBounds) == 0x78);
 STATIC_ASSERT(offsetof(ObjAnimComponent, targetObj) == 0xA4);
+STATIC_ASSERT(offsetof(ObjAnimComponent, renderViewZ) == 0xA4);
 STATIC_ASSERT(offsetof(ObjAnimComponent, mapEventSlot) == 0xAC);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rotX) == 0x00);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rotY) == 0x02);

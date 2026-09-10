@@ -14,8 +14,8 @@ void objfx_spawnMaskedHitEffect(void* obj, f32 scale, u8 type, u8 mode, u8 mask,
 void objfx_spawnLightPulse(GameObject* obj, f32 radius, int type, int colorIndex, int mode, f32 intensity, void* light);
 void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mult, void* origin,
                                  int flags);
-void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int chance, f32 angleBase, f32 angleLow,
-                           f32 angleHigh, void* origin, int flags);
+void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int chance, f32 radiusEnd, f32 radiusStart,
+                           f32 height, void* origin, int flags);
 void objfx_spawnBoxBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 scaleX, f32 scaleY, f32 scaleZ,
                          void* origin, int flags);
 void projectileDoParticleFx(void* obj, f32 scale, int mode);

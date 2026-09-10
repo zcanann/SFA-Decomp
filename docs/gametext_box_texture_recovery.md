@@ -60,3 +60,22 @@ it. Host halfwords test copying and addressing, not PowerPC serialization or GX
 hardware behavior. The target object comparison remains the codegen evidence.
 `ninja all_source` and the strict matching build pass; this nonmatching TU uses
 its retail object in the latter, so the DOL gate is an integration check only.
+
+## Retiring obsolete optimizer restrictions
+
+With the shared tiling loops in place, enabling common-subexpression elimination,
+lifetime analysis and loop-invariant motion, individually or together, produces
+the identical EN object (`1617af8e...`). The unit now uses the existing common
+`cflags_dll_noopt` profile, retaining only its peephole and scheduling restrictions.
+The private five-restriction profile has no other consumer and is removed.
+All five source objects remain byte-identical and keep the 98.76068% code match.
+This retires redundant fitted settings; it does not establish historical flags.
+
+Enabling peephole optimization instead gives 95.606834%, and scheduling gives
+70.410255%. Neither is retained. Rectangular dimensions, split declarations,
+explicit source indexing, initialized locals, a separate outer-loop increment,
+and halfword width leave the current match unchanged. Moving the source-row view
+into an inner scope gives 97.47863%; unsigned width gives 97.6453%; indexed
+destination stores give 39.931625%. Pixel-coordinate induction no longer yields
+an objdiff function correspondence. These probes are restored; the loop source
+and its established pixel-copy contract remain unchanged.

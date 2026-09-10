@@ -112,6 +112,10 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 - Use `python tools/orig/dol_vtables.py --stores-only` when hunting constructor-backed class boundaries, vtables, or callback tables in the retail DOL.
 - Use `python tools/orig/constructor_packets.py` when a store-backed DOL vtable/callback-table hit should become a non-built `src/main/unknown/constructors/` packet for class-boundary or hierarchy recovery.
 - Use `python tools/orig/romlist_params.py` when recovering object placement structs, param widths, or variable-length romlist families from retail data.
+- Use `python tools/orig/resource_registry_audit.py <version>` when regional resource names or descriptor splits look wrong. It checks retail registry pointers and callback correspondence without changing ownership; review complete neighboring units before applying its findings.
+- Use `python tools/orig/sda_symbol_audit.py <version> --section sbss` (or `sdata` / `sdata2`) when regional small-data names or boundaries look wrong. It reads retail r13/r2 bases and paired instruction operands, excluding functions that overwrite the base register; normalized objdiff relocations and equal section widths cannot establish global addresses.
+- Use `python tools/orig/call_symbol_audit.py <version>` when repeated small functions lack regional names. It reports read-only candidates from two independent unique callers, consistent call destinations and equal normalized callee bodies; inspect actual operands and the containing TU before applying a name.
+- Use `python tools/verify_source_link.py <version> <source-unit>...` when regional completion depends on final relocation addresses or discarded source data. It links the built retail objects first, then substitutes only the selected source objects; both DOLs must exactly match the verified original. This supplements objdiff and does not claim a complete regional source link.
 - Write small custom tools and scripts under the tools/ folder when the repo lacks the visibility needed to move quickly.
 
 ## Rules
@@ -293,6 +297,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
   for renaming the generated source folder or filename.
 - Prefer real definitions and linkage over `extern` placeholders.
 - Do not hardcode addresses or invent junk `lbl_` / `fn_` names just to force progress.
+- Scope relocation exclusions for proven integer literals to their source instructions or data objects. A target-address block can hide real callbacks in another version; verify the affected sites independently in each region.
 - Do not commit literal recovered source/header artifacts from `orig/` into `src/`; keep them in manifests/docs or export them to a local non-source folder when needed.
 - When materializing retail-backed stubs without a proven directory, keep them at `src/<basename>` instead of inventing synthetic folders.
 - Do not manually force compiler-generated sections or synthesize likely-generated init/ctor/dtor glue unless there is strong evidence.

@@ -149,3 +149,116 @@ already match exactly. There is no constant pool involved in these helpers.
 The type recovery leaves every existing source object byte-identical in all
 four hash-verified targets, including the exact lighting TU; it does not claim
 a score increase or establish a different compiler profile.
+
+## Fresh same-source compiler controls (2026-09-08)
+
+At staging `c1ac51716c`, the older math family occupies eleven current TUs
+because the reciprocal helper has since been separated. It has 49 functions,
+10,584 code bytes and 1,196 data bytes. Four paths remain under `dolphin/MSL_C`,
+but these select the game compiler explicitly. Those directory names do not
+establish MSL lineage. The other 28 MSL units still have 100% code fuzzy agreement.
+
+Recompiling the **same current source** into scratch directories produces:
+
+| Compiler control | Exact functions | Exact code bytes | Code fuzzy | Data agreement |
+| --- | ---: | ---: | ---: | ---: |
+| Current GC/1.3 and current flags | 3 / 49 | 92 | 74.948980% | 100% |
+| GC/1.2.5n, otherwise identical flags | 42 / 49 | 8,176 | 98.734695% | 100% |
+| GC/1.2.5n plus `-opt functions` | 45 / 49 | 8,956 | 99.555176% | 100% |
+
+[Per-function objdiff results](math_compiler_control.csv) retain all 49 rows.
+The older compiler's extra option closes the three angle-vector functions.
+The four remaining mismatches are `atanf`, `powfCoreHighPrecision`,
+`powfCoreFast` and `mathSinCosf`; current source rewrites mean the older compiler
+alone no longer makes this entire family exact.
+
+This isolates the compiler as the cause of most **current** score loss. It does
+not infer original provenance from an aggregate score or authorize restoring
+compiler exceptions. Independent retail save/restore evidence is also concrete:
+`invSqrt` has 16 instructions, including nine arithmetic/load/result instructions
+between its saves and restores. Those nine already agree with GC/1.3. The current
+compiler adds four `psq_st`/`psq_l` instructions and enlarges its frame from
+32 to 48 bytes; its remaining four operand differences are stack offsets/frame
+sizes. `sqrtf` and `sqrtfHighPrecision` show the same four added instructions and
+four frame-related operand differences. Changing the GC/1.3 processor selection
+to 750 or 604, or toggling `-use_lmw_stmw`, leaves those differences unchanged.
+An O1 control changes arithmetic register allocation and removes retail saves,
+so it does not reproduce these functions either.
+
+The donor-project question has a separate answer. Melee's MSL `trigf.c` uses
+`__four_over_pi_m1`, `__sincos_poly` and `__sincos_on_quadrant`; SFA's already-exact
+MSL `trigf.c` uses that same family. The older angle-vector approximations have
+different coefficients and fast-cast calls. A fresh read-only search across the
+available reference projects found no occurrence of three distinctive coefficient
+spellings (`2.2949214e-15`, `0.000023968449`, `8.8444e-37`). This is only a negative
+source-text search, not proof that no donor contains an equivalent implementation.
+The shared-pool and function-boundary evidence above remains the basis for split
+decisions; the compiler comparison changes no boundaries.
+
+Each scratch compile starts with its actual `ninja -t commands` source command,
+redirects `-o` to a separate directory, and changes only the compiler executable
+and the explicitly listed extra option. The function comparison checks nonempty
+retail/source instruction streams and relocation-aware operands. Separate
+objdiff projects point to the unchanged EN retail objects and each scratch set;
+the figures above come from those reports, not a manually estimated score.
+The current-compiler control reproduces the active report. All constant-pool data
+also remain exact in every control. Scratch commands, objects, instruction diffs,
+source hashes and full reports are under `/tmp/sfa-math-abi-refresh/` locally.
+No configured compiler, source, matching classification or expected checksum
+changes. The immediately preceding all-source and strict EN gates remain valid
+for this documentation-only audit.
+
+## Neighboring MSL labels and source lineage (2026-09-08)
+
+A matching reconstruction does not establish library membership. The current
+paths mix implementation evidence, inferred filenames and historical placement.
+The DOL supplies bytes and addresses, not original archive membership; the names
+in `symbols.txt` and `splits.txt` are reconstruction annotations. In particular,
+noncontiguous MSL-labeled text is a reason to audit those annotations, not by
+itself proof that all intervening code belongs to MSL or to one other library.
+
+| EN text interval | Current identification | Evidence and remaining uncertainty |
+| --- | --- | --- |
+| `80291948..80291CBC` | `s_copysign`, `s_frexp`, `s_ldexp`, `s_modf` | Double-precision fdlibm implementations. Mario Party 4 contains the same word-level exponent/sign operations, subnormal scaling and special-value branches. This supports their source family; it does not recover the original archive name. |
+| `80291CBC..80294640` | Older math family, with `rand` between reducers | Four files remain under `MSL_C`, despite selecting the game compiler. Scalar approximation coefficients, fast-cast calls and shared pools distinguish this family from the later table-based implementations. No donor or original archive has been identified for the complete family. |
+| `80294640..8029471C` | PPC helpers, ctype and console I/O | These helper implementations interrupt the math layout. Their position cannot establish either neighboring math family's ownership. |
+| `8029471C..80294724` | `hyperbolicsf.c` absolute-value helper | Sunshine and Pikmin place a corresponding helper in `hyperbolicsf.c`. An eight-byte absolute-value body is weak evidence for a specific original filename or TU boundary. The configured C++ name is not a name recovered from a DOL symbol table. |
+| `80294724..802947CC` | `floorf.c` | Behavior and generated code are recovered, but no matching donor body was found in the inspected references. Commit `47cb2127e0` created the split from a reconstructed function; `96ca95bf3a` subsequently named it. MSL membership and the original filename remain provisional. |
+| `802947CC..80294BB8` | `trigf.c` | Donor table contents and reduction/polynomial structure support the MSL float-trig family. The retail constructor and writable-table initialization also support C++ compilation; these do not prove an archive name. |
+| `80294BB8..80295334` | `exponentialsf.c` / `powf` | Its logarithm kernel consumes the same reciprocal table used by donor MSL logarithms. This supports a related table-based family, but the local Sunshine `exponentialsf.c` contains no implementation. It is not a source donor for the recovered `powf`, and its filename alone cannot establish exact provenance. |
+
+The shared tables provide a stronger check than decimal-string searches.
+Converting the source initializers to big-endian binary32 gives identical bytes
+in SFA, Sunshine's `Single_precision/common_float_tables.c` and Melee's
+`src/MSL/math_data.c`. Those bytes also equal the hash-verified EN DOL:
+
+| Configured table name | EN address | Compared bytes |
+| --- | --- | ---: |
+| `__one_over_F` | `80332A28` | 516 |
+| `__sincos_on_quadrant` | `80332C2C` | 32 |
+| `__sincos_poly` | `80332C4C` | 40 |
+
+Melee's `src/MSL/math.c` independently shows the seven-bit mantissa-table index,
+eighth-bit rounding decision and reciprocal-scaled residual used by the later
+SFA logarithm kernel. Its natural-log function is not the same function as SFA's
+base-two kernel, so this is structural lineage evidence, not a whole-function
+donor match. Likewise, the intervening SFA `rand` uses `1664525` and
+`1013904223` and returns the full state; donor MSL `rand` uses `1103515245`,
+`12345` and a restricted result. Generic math names do not identify one library.
+
+The four legacy `MSL_C` paths and the weaker neighboring labels should therefore
+remain provenance questions. Do not use their current directory, an exact
+reconstruction, or adjacency as the sole reason to choose a compiler or merge
+TUs. This audit changes no paths, boundaries or compiler profiles. Local table
+digests are retained under `/tmp/sfa-msl-neighbor-audit/`.
+
+## PAL v1.0 cross-check (2026-09-09)
+
+PAL v1.0 is now available and passes its configured SHA-1
+`c5bb4a7fd3c4aff48c40e282d4d54795c37155f0`. All 49 functions in the current
+11-unit older math family have the same ordered normalized instruction
+signatures as EN. All 541 supported direct r2 constant loads also agree by
+owning unit, instruction offset, width, exact bytes and pool ownership. No
+outside consumers appear in this scan. This extends the earlier four-version
+evidence; it establishes no new archive provenance or compiler exception and
+supplies no reason for a regional algorithm difference or additional split.

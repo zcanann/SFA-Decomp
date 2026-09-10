@@ -11,7 +11,7 @@
  * also provides mcupgradema_SeqFn to the following MCUpgradeMa DLL; that
  * callback shows the HUD, displays NPC dialogue 0x468, then hides the HUD.
  */
-#include "main/dll/dll_02B6_cnthitobjec.h"
+#include "dlls/objects/694_CNThitObjec.h"
 #include "main/dll/mcupgrade_state.h"
 #include "main/dll/player_api.h"
 #include "main/gamebits.h"

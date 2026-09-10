@@ -16,7 +16,8 @@ from pathlib import Path
 import struct
 
 from pool_value_sequence import LOAD_WIDTHS
-from version_progress import load_function_symbols, load_splits, read_dol_range, verified_dol
+from version_progress import (load_function_symbols, load_splits, read_dol_range,
+                              verified_dol, preserves_sda_base)
 
 REPO = Path(__file__).resolve().parent.parent
 
@@ -98,9 +99,19 @@ def audit(version: str, sources: list[str], root: Path = REPO) -> dict:
     if missing := set(selected) - available:
         raise ValueError("sources absent from this version's splits: " + ", ".join(sorted(missing)))
     starts = [function.address for function in functions]
+    clobbered = {function.address for function in functions
+                 if function.section in ("init", "text") and not preserves_sda_base(
+                     [word for (word,) in struct.iter_unpack(">I", read_dol_range(
+                         dol, function.address, function.size))], 2)}
     loads = []
     for section in dol.text_sections:
         for offset, (word,) in enumerate(struct.iter_unpack(">I", read_dol_range(dol, section.address, section.size))):
+            instruction = section.address + offset * 4
+            index = bisect_right(starts, instruction) - 1
+            function = functions[index] if index >= 0 else None
+            name = function.name if function and function.contains(instruction + 3) else None
+            if name is not None and function.address in clobbered:
+                continue
             decoded = direct_load(word, base)
             if decoded is None:
                 continue
@@ -109,10 +120,6 @@ def audit(version: str, sources: list[str], root: Path = REPO) -> dict:
                 continue
             if address + width > pool.address + pool.size:
                 raise ValueError(f"load crosses the DOL .sdata2 end at 0x{address:08X}")
-            instruction = section.address + offset * 4
-            index = bisect_right(starts, instruction) - 1
-            function = functions[index] if index >= 0 else None
-            name = function.name if function and function.contains(instruction + 3) else None
             loads.append(Load(instruction, name, text_claims.owner(instruction, 4), address, width,
                               read_dol_range(dol, address, width).hex(), pool_claims.owner(address, width)))
     outgoing = [load for load in loads if load.source in selected]
@@ -136,7 +143,7 @@ def audit(version: str, sources: list[str], root: Path = REPO) -> dict:
     return {
         "version": version,
         "sda2_base": base,
-        "scope": "direct non-updating r2 loads into DOL section 14; no ownership inference",
+        "scope": "direct non-updating r2 loads into DOL section 14; known base-clobber functions excluded; no ownership inference",
         "summaries": summaries,
         "loads": [asdict(load) for load in outgoing],
         "incoming": [asdict(load) for load in incoming],

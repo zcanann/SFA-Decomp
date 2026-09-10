@@ -1,5 +1,6 @@
 /* Runs the final Andross boss fight from the Arwing. */
 #include "main/dll/dll_02BC_andross.h"
+#include "dlls/objects/694_CNThitObjec.h"
 #include "main/audio/music_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/pi_dolphin_api.h"
@@ -1654,7 +1655,7 @@ void andross_update(GameObject* boss) {
         andross_updateAimTarget(boss, 0x1e);
         andross_updateAimTarget(boss, 0x76f);
         andross_updateAimTarget(boss, 0x814);
-        andross_updateAimTarget(boss, 0x6cf);
+        andross_updateAimTarget(boss, CNTHIT_OBJECT_ID);
     }
 }
 

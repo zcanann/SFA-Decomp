@@ -9,6 +9,26 @@
 
 #define ECSH_SHRINE_OBJECT_GROUP 0xB
 
+typedef struct ECSHShrineCupPosition {
+    f32 x;
+    f32 z;
+} ECSHShrineCupPosition;
+
+STATIC_ASSERT(offsetof(ECSHShrineCupPosition, x) == 0x00);
+STATIC_ASSERT(offsetof(ECSHShrineCupPosition, z) == 0x04);
+STATIC_ASSERT(sizeof(ECSHShrineCupPosition) == 0x08);
+
+typedef struct ECSHShrinePuzzleScratch {
+    f32 cupPositions[12];
+    s16 cupSlotMap[6];
+    s16 nextCupSlotMap[6];
+} ECSHShrinePuzzleScratch;
+
+STATIC_ASSERT(offsetof(ECSHShrinePuzzleScratch, cupPositions) == 0x00);
+STATIC_ASSERT(offsetof(ECSHShrinePuzzleScratch, cupSlotMap) == 0x30);
+STATIC_ASSERT(offsetof(ECSHShrinePuzzleScratch, nextCupSlotMap) == 0x3C);
+STATIC_ASSERT(sizeof(ECSHShrinePuzzleScratch) == 0x48);
+
 typedef struct ECSHShrineState {
     ModelLightStruct* light;
     f32 animTimer;

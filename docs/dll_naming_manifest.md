@@ -449,7 +449,7 @@ any of them is acted on.
 | 0x18C | MMSH_Shrine | COMPLETE | dlls/objects/396_MMSH_Shrine/MMSH_Shrine.c | = (canonical) | — |
 | 0x18D | MMSH_Scales | COMPLETE | dlls/objects/397_MMSH_Scales/MMSH_Scales.c | = (canonical) | — |
 | 0x18E | MMSH_WaterS | COMPLETE | dlls/objects/398_MMSH_WaterS/MMSH_WaterS.c | = (canonical) | — |
-| 0x18F | ECSH_Shrine | COMPLETE | dlls/objects/399_ECSH_Shrine/ECSH_Shrine.c | = (canonical) | — |
+| 0x18F | ECSH_Shrine | COMPLETE | dlls/objects/399_ECSH_Shrine/ECSH_Shrine.c | = (canonical) | Exact 16-function TU with canonical position and scratch layouts, native cup-position initializer, and 400 exact data bytes across all four verified versions; descriptor order and generated path preserved |
 | 0x190 | ECSH_Cup | COMPLETE | dlls/objects/400_ECSH_Cup/ECSH_Cup.c | = (canonical) | — |
 | 0x191 | ECSH_Creato | COMPLETE | dlls/objects/401_ECSH_Creato/ECSH_Creato.c | = (canonical) | — |
 | 0x192 | GPSH_Shrine | COMPLETE | dlls/objects/402_GPSH_Shrine/GPSH_Shrine.c | = (canonical) | — |
@@ -508,7 +508,7 @@ any of them is acted on.
 | 0x1C7 | DIMLavaSmas | COMPLETE | dlls/objects/455_DIMLavaSmas/DIMLavaSmas.c | = (canonical) | Complete 11-function TU at its unchanged 99.69811% fuzzy match with ten exact functions, an allocation-backed three-byte state, active-EN-retail-backed fixed 0x24-byte placement, canonical unit header, terminal descriptor, and exact 60-byte data image; the generated source path remains unchanged |
 | 0x1C8 | DIMBridgeCo | COMPLETE | dlls/objects/456_DIMBridgeCo/DIMBridgeCo.c | = (canonical) | Exact complete ten-function TU with its terminal descriptor, allocation-backed one-byte state, active-EN-retail-backed fixed 0x28-byte placement, canonical unit header, and exact 60-byte data image; the generated source path remains unchanged |
 | 0x1C9 | DIMDismount | COMPLETE | dlls/objects/457_DIMDismount/DIMDismount.c | = (canonical) | Exact complete 11-function TU with its terminal 12-slot descriptor, allocation-backed 0x10-byte plane state, active-EN-retail-backed fixed 0x24-byte placement, canonical unit header and shared dismount-point object-group contract, and exact 96-byte data image; the generated source path remains unchanged |
-| 0x1CA | DIMExplosio | COMPLETE | dlls/objects/458_DIMExplosio/DIMExplosio.c | = (canonical) | Exact complete 11-function TU with its terminal descriptor, allocation-backed 0xA60-byte state, allocation-backed 0x24-byte setup, runtime-bounded 50-element flame and six-element gravity-debris pools, canonical unit header and shared object/setup contracts, and exact 336-byte data image; the generated source path remains unchanged |
+| 0x1CA | DIMExplosio | COMPLETE | dlls/objects/458_DIMExplosio/DIMExplosio.c | = (canonical) | Exact complete 11-function TU with its terminal descriptor, allocation-backed 0xA60-byte state, allocation-backed 0x24-byte setup, runtime-bounded 50-element flame and six-element gravity-debris pools, canonical unit header and shared object/setup contracts, and exact 340-byte data image including the recovered GX color initializer; the generated source path remains unchanged |
 | 0x1CB | DIMWoodDoor | COMPLETE | dlls/objects/459_DIMWoodDoor/DIMWoodDoor.c | = (canonical) | Exact complete nine-function TU with its terminal descriptor, allocation-backed 0x0C-byte state, active-EN-retail-backed fixed 0x24-byte placement, canonical unit header and shared cannonball sequence contract, and exact 80-byte data image; the generated source path remains unchanged |
 | 0x1CC | DIMMagicBri | COMPLETE | dlls/objects/460_DIMMagicBri/DIMMagicBri.c | = (canonical) | Exact complete 12-function TU with its terminal descriptor, allocation-backed 0x68-byte state, active-EN-retail-backed fixed 0x24-byte placement, runtime-bounded ten-segment arrays, canonical unit header, and exact 84-byte data image; the generated source path remains unchanged |
 | 0x1CD | DIM_LevelCo | COMPLETE | dlls/objects/461_DIM_LevelCo/DIM_LevelCo.c | = (canonical) | Exact complete five-function TU with its terminal descriptor, allocation-backed 0x10-byte state, active-EN-retail-backed fixed 0x18-byte placement, canonical unit header, canonical object flags, and recovered gamebit/music-trigger roles; the exact 68-byte data image and generated source path remain unchanged |
@@ -617,12 +617,12 @@ any of them is acted on.
 | 0x234 | DFP_PerchSw | COMPLETE | dlls/objects/564_DFP_PerchSw/DFP_PerchSw.c | = (canonical) | Exact recovered retail basename; diagnostic string follows descriptor in retail data order |
 | 0x235 | DFP_TargetB | COMPLETE | dlls/objects/565_DFP_TargetB/DFP_TargetB.c | = (canonical) | Exact truncated retail basename; confirmed complete TU |
 | 0x236 | DFP_LaserBe | COMPLETE | dlls/objects/566_DFP_LaserBe/laser.c | = (canonical) | Object-def basename keeps the folder; source name from the retail `<laser.c Init>` literal at 0x80329C20, printed by this TU's own init slot (the three `<textblock.c Init>` siblings are Rare's copy-paste from DLL 0x239) |
-| 0x237 | DFPSpPl | COMPLETE | dlls/objects/567_DFPSpPl/DFPSpPl.c | = (canonical) | Exact retail basename; internal laser symbols retained |
-| 0x238 | LINKA_levco | COMPLETE | dlls/objects/568_LINKA_levco/LINKA_levco.c | = (canonical) | Exact retail basename; internal FireObject symbols retained |
+| 0x237 | DFPSpPl | COMPLETE | dlls/objects/567_DFPSpPl/DFPSpPl.c | = (canonical) | Exact retail basename; canonical spellstone state/API and `gDFPSpPlObjDescriptor` recovered |
+| 0x238 | LINKA_levco | COMPLETE | dlls/objects/568_LINKA_levco/LINKA_levco.c | = (canonical) | Exact retail basename; canonical LinkA API, map routing and `gLinkALevControlObjDescriptor` recovered |
 | 0x239 | textblock | DOL-RECOVERED | dlls/objects/569/textblock.c | = (canonical) | No OBJECTS.bin basename, so the folder stays numeric; source name from the retail `<textblock.c Init>` literal at 0x80329CF0, the TU's only string, printed by its own init slot; DFP_TextblockObj and KP_textbloc are object aliases |
 | 0x23A | DFP_Platfor | COMPLETE | dlls/objects/570_DFP_Platfor/DFP_Platfor.c | = (canonical) | Exact truncated retail basename; diagnostic strings follow descriptor |
-| 0x23B | DFP_Lightni | COMPLETE | dlls/objects/571_DFP_Lightni/DFP_Lightni.c | = (canonical) | Exact truncated retail basename; next-slot DFP_PowerSl helper removed |
-| 0x23C | DFP_PowerSl | COMPLETE | dlls/objects/572_DFP_PowerSl/DFP_PowerSl.c | = (canonical) | Exact retail basename; leading helper restored from DLL 571 |
+| 0x23B | DFP_Lightni | COMPLETE | dlls/objects/571_DFP_Lightni/DFP_Lightni.c | = (canonical) | Exact truncated retail basename; canonical state/API and lightning width, density and lifetime controls recovered; next slot preserved |
+| 0x23C | DFP_PowerSl | COMPLETE | dlls/objects/572_DFP_PowerSl/DFP_PowerSl.c | = (canonical) | Exact retail basename; leading hit-effect helper restored from DLL 571; canonical 12-byte state and sequence/effect controls |
 | 0x23D | DBPointMum | COMPLETE | dlls/objects/573_DBPointMum/DBPointMum.c | = (canonical) | Descriptor data only; no .text functions |
 | 0x23E | — | NO-RETAIL-NAME | dlls/objects/574/574.c | = (canonical) | Descriptor data only; no .text functions |
 | 0x23F | DB_egg | COMPLETE | dlls/objects/575_DB_egg/DB_egg.c | = (canonical) | Exact recovered retail basename; descriptor precedes diagnostic string and compiler-generated jump table in retail data order |
@@ -1072,10 +1072,15 @@ more as they are recovered.
 | 0x211 | dlls/objects/529/529.c | include/dlls/objects/529.h |
 | 0x220 | dlls/objects/544/544.c | include/dlls/objects/544.h |
 | 0x223 | dlls/objects/547_VFP_corepla/VFP_corepla.c | include/dlls/objects/547_VFP_corepla.h |
+| 0x228 | dlls/objects/552/552.c | include/dlls/objects/552.h |
 | 0x22D | dlls/objects/557_DFP_seqpoin/DFP_seqpoin.c | include/dlls/objects/557_DFP_seqpoin.h |
 | 0x22F | dlls/objects/559_DFP_floorba/DFP_floorba.c | include/main/dll/baddie/dll_022F_dfpfloorbar.h |
 | 0x232 | dlls/objects/562_DFP_RotateP/DFP_RotateP.c | include/dlls/objects/562_DFP_RotateP.h |
+| 0x233 | dlls/objects/563_DFP_Statue1/DFP_Statue1.c | include/dlls/objects/563_DFP_Statue1.h |
 | 0x235 | dlls/objects/565_DFP_TargetB/DFP_TargetB.c | include/dlls/objects/565_DFP_TargetB.h |
+| 0x237 | dlls/objects/567_DFPSpPl/DFPSpPl.c | include/dlls/objects/567_DFPSpPl.h |
+| 0x238 | dlls/objects/568_LINKA_levco/LINKA_levco.c | include/dlls/objects/568_LINKA_levco.h |
+| 0x23B | dlls/objects/571_DFP_Lightni/DFP_Lightni.c | include/dlls/objects/571_DFP_Lightni.h |
 | 0x242 | dlls/objects/578_DBstealerwo/DBstealerwo.c | include/dlls/objects/578_DBstealerwo.h |
 | 0x250 | dlls/objects/592_KT_Rex/KT_Rex.c | include/dlls/objects/592_KT_Rex.h |
 | 0x255 | dlls/objects/597/597.c | include/dlls/objects/597_SnowBike.h |

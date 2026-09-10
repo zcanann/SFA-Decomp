@@ -85,9 +85,8 @@ const StaffCollisionColorArgs gBaddieFrozenFxColors = {0x08, 0xFF, 0xFF, 0x78};
 GameObject* gBaddieRewardObject;
 StaffCollisionInterface** gBaddieStaffCollisionInterface;
 
-/* object groups: the enemy's own group / secondary group left on a message */
+/* The generic enemy group; active Whirlpool membership is tracked separately. */
 #define ENEMY_OBJGROUP           3
-#define ENEMY_OBJGROUP_SECONDARY 0x50
 
 /* enemy defNos (anim.romDefNo) - names read from retail OBJECTS.bin at def+0x91;
    every id below gates to this file's own DLL 0xC9 */
@@ -2053,8 +2052,8 @@ void enemy_free(GameObject* obj, int flag) {
         hagabonMK2_stopLoopSfx(obj, (u8*)state);
         break;
     case ENEMY_WHIRLPOOL_OBJ:
-        if (objIsObjectType(obj, ENEMY_OBJGROUP_SECONDARY) != 0) {
-            objFreeObjectType(obj, ENEMY_OBJGROUP_SECONDARY);
+        if (objIsObjectType(obj, BADDIE_WHIRLPOOL_OBJECT_GROUP) != 0) {
+            objFreeObjectType(obj, BADDIE_WHIRLPOOL_OBJECT_GROUP);
         }
         break;
     }

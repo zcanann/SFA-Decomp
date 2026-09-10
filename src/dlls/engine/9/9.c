@@ -28,7 +28,6 @@
 #include "dolphin/gx/GXEnum.h"
 #include "main/sky.h"
 #include "main/resource.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/critical_regions.gamecube.h"
 #include "sys/objects/lifecycle.h"
 #include "main/gx_scissor_api.h"
 #include "main/pi_dolphin_api.h"
@@ -37,7 +36,7 @@
 
 CloudActionRuntime gCloudActionRuntime;
 
-GameObject* lbl_803DD1F0[2];
+GameObject* gCloudOverrideObjectStorage[2];
 u8 gCloudOverridePositionValid;
 f32 gCloudOverridePositionX;
 f32 gCloudOverridePositionY;
@@ -95,13 +94,13 @@ void* cloudGetLayerTexture(f32* out1, f32* out2) {
     return NULL;
 }
 
-void __kill_critical_regions(void) {
+void cloudaction_func12_nop(void) {
 }
 
-void __begin_critical_region(void) {
+void cloudaction_func11_nop(void) {
 }
 
-void __end_critical_region(void) {
+void cloudaction_func10_nop(void) {
 }
 
 void cloudaction_func08_nop(void) {
@@ -433,6 +432,6 @@ ResourceDescriptorCallbacks14 cloudaction_funcs = {
      (ResourceDescriptorCallback)cloudaction_update, (ResourceDescriptorCallback)cloudaction_onMapSetup,
      (ResourceDescriptorCallback)cloudaction_scrollTexture, (ResourceDescriptorCallback)renderClouds,
      (ResourceDescriptorCallback)cloudaction_free, (ResourceDescriptorCallback)cloudaction_func08_nop,
-     (ResourceDescriptorCallback)cloudaction_func09_nop, (ResourceDescriptorCallback)__end_critical_region,
-     (ResourceDescriptorCallback)__begin_critical_region, (ResourceDescriptorCallback)__kill_critical_regions,
+     (ResourceDescriptorCallback)cloudaction_func09_nop, (ResourceDescriptorCallback)cloudaction_func10_nop,
+     (ResourceDescriptorCallback)cloudaction_func11_nop, (ResourceDescriptorCallback)cloudaction_func12_nop,
      0x00000000}};

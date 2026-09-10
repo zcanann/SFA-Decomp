@@ -101,10 +101,6 @@ block_relocations:
   end: 0x8038020A
 - target: 0x80100100
   end: 0x80100104
-- target: 0x80180100
-  end: 0x80180218
-- target: 0x80080108
-  end: 0x80080120
 - target: 0x80080200
   end: 0x80080204
 - target: 0x80080208
@@ -117,8 +113,197 @@ block_relocations:
   end: 0x800C0104
 - target: 0x80008000
   end: 0x80008004
+# Effect1_spawnObject: 0x80080108
+- source: 0x800B0588
+  end: 0x800B0590
+# Effect1_spawnObject: 0x80080110
+- source: 0x800B0C9C
+  end: 0x800B0CA4
+# Effect2_spawnObject: 0x80080100
+- source: 0x800B45D8
+  end: 0x800B45E0
+# Effect3_spawnObject: 0x80080110
+- source: 0x800B8664
+  end: 0x800B866C
+# Effect4_spawnObject: 0x80080112
+- source: 0x800B9A18
+  end: 0x800B9A20
+# Effect4_spawnObject: 0x80080112
+- source: 0x800B9B08
+  end: 0x800B9B10
+# Effect4_spawnObject: 0x80180104
+- source: 0x800BB8A0
+  end: 0x800BB8A8
+# Effect5_spawnObject: 0x80080118
+- source: 0x800BCC5C
+  end: 0x800BCC64
+# Effect5_spawnObject: 0x80080118
+- source: 0x800BCE94
+  end: 0x800BCE9C
+# Effect5_spawnObject: 0x80180100
+- source: 0x800BD480
+  end: 0x800BD488
+# Effect6_spawnObject: 0x80180200
+- source: 0x800BDBE8
+  end: 0x800BDBF0
+# Effect7_spawnObject: 0x80180100
+- source: 0x800BE948
+  end: 0x800BE950
+# Effect7_spawnObject: 0x80080100
+- source: 0x800BF5EC
+  end: 0x800BF5F4
+# Effect7_spawnObject: 0x80180200
+- source: 0x800BF94C
+  end: 0x800BF954
+# Effect7_spawnObject: 0x80180210
+- source: 0x800BF9B8
+  end: 0x800BF9C0
+# Effect8_spawnObject: 0x80080100
+- source: 0x800C1204
+  end: 0x800C120C
+# Effect9_spawnObject: 0x80180100
+- source: 0x800C16A8
+  end: 0x800C16B0
+# Effect9_spawnObject: 0x80180108
+- source: 0x800C1DCC
+  end: 0x800C1DD4
+# Effect12_spawnObject: 0x80180200
+- source: 0x800C6174
+  end: 0x800C617C
+# Effect14_spawnObject: 0x80180208
+- source: 0x800C7A38
+  end: 0x800C7A40
+# Effect16_spawnObject: 0x80180214
+- source: 0x800C8488
+  end: 0x800C8490
+# Effect16_spawnObject: 0x80180214
+- source: 0x800C852C
+  end: 0x800C8534
+# Effect16_spawnObject: 0x80180200
+- source: 0x800C8868
+  end: 0x800C8870
+# Effect17_spawnObject: 0x80180200
+- source: 0x800CADF4
+  end: 0x800CADFC
+# Effect18_spawnObject: 0x80180100
+- source: 0x800CC9CC
+  end: 0x800CC9D4
+# Effect18_spawnObject: 0x80180200
+- source: 0x800CCC4C
+  end: 0x800CCC54
+# Effect20_spawnObject: 0x80080100
+- source: 0x800D34B0
+  end: 0x800D34B8
+# Effect20_spawnObject: 0x80080100
+- source: 0x800D36C0
+  end: 0x800D36C8
+# Effect20_spawnObject: 0x80180200
+- source: 0x800D47E4
+  end: 0x800D47EC
 
 extract:
 - symbol: gLoadingScreenTextures
   binary: gLoadingScreenTextures.bin
   header: gLoadingScreenTextures.inc
+
+force_active:
+  # audio.c: retain the unused initialized word and two small-BSS words.
+  - lbl_803DB1EC
+  - sAudioUnused0
+  - sAudioUnused1
+  # gameloop.c: retain the memory-card dialog and its status-helper references.
+  - cardShowMessage
+  # aram_data.c: retain the same unreferenced 24-byte .bss block as EN.
+  - lbl_803D4868
+  # dlls/engine/5/5.c
+  # Retain the unused sky color table and trailing small-data word.
+  - sSkyUnusedColors
+  - sSkyUnusedD
+  # dlls/objects/429_SH_thorntai/SHthorntail.c
+  # Thorntail reads these state and dialogue tables through the linked-ident base.
+  - gSHthorntailHitReactEntries
+  - gSHthorntailAsleepHitReactEntries
+  - gSHthorntailStateMoveIds
+  - gSHthorntailStateMoveStepScales
+  - gSHthorntailStateFlags
+  - gSHthorntailStatePrimaryEventSfx
+  - gSHthorntailStateSecondaryEventSfx
+  - gSHthorntailHerdAct1TalkSeqVariants
+  - gSHthorntailHerdAct2ClearTalkSeqVariants
+  - gSHthorntailHerdAct2SetTalkSeqVariants
+  - gSHthorntailHerdAct3ClearTalkSeqVariants
+  - gSHthorntailHerdAct3SetTalkSeqVariants
+  - gSHthorntailHerdAct5ClearTalkSeqVariants
+  # dlls/objects/597/597.c
+  # SnowBike reads these gamebit pairs through the path-setup table base.
+  - gSnowBikeRaceGameBits
+  # main/audio_stream.c
+  # The looped-sound arrays are reached through the flags-array base.
+  - gSfxLoopedObjectSoundIds
+  - gSfxLoopedObjectSoundObjects
+  # main/boot_logo.c
+  # GPU diagnostics address these strings through offsets from the texture base.
+  - sGpuHangSuspectedMessage
+  - sGpuHangStatusFormat
+  - sGpuHangXfStallMessage
+  - sGpuHangUnterminatedMessage
+  - sGpuHangIllegalInstructionMessage
+  - sGpuHangWaitingMessage
+  - sGpuHangUnknownMessage
+  - sGpuHangXfStallLog
+  - sGpuHangUnterminatedLog
+  - sGpuHangIllegalInstructionLog
+  - sGpuHangWaitingLog
+  - sGpuHangUnknownLog
+  # main/objlib.c: retain the zero before the hit-cooldown constant pool.
+  - gObjLibZero
+  # main/shader_dolphin.c
+  # These constants are read through offsets from sEnvMapBumpIndMtx.
+  - sWarpedRingRotAxes
+  - sWarpedRingIndMtx
+  # main/thp/THPRead.c
+  # Retain the message arrays addressed through their neighboring queues.
+  - gPicMenuReadedBuffer2Messages
+  - gPicMenuReadedBufferMessages
+  - gPicMenuFreeReadBufferMessages
+  # main/thp/THPVideoDecode.c
+  # Retain the video decoder stack addressed through its containing area.
+  - gPicMenuVideoDecodeThreadStack
+  # track/intersect.c
+  # Retain the uncalled surface-sound lookup and unused small-data word.
+  - surfaceSfxGetRecord
+  - sIntersectUnused0
+
+# Retail startup/BSS bounds establish these linker-generated addresses.
+# symbols_known skips signature recovery; keep the linker formulas external.
+add_relocations:
+- source: .text:0x8028D158
+  type: hi
+  target: _db_stack_addr
+- source: .text:0x8028D15C
+  type: l
+  target: _db_stack_addr
+- source: .text:0x80240D3C
+  type: ha
+  target: __ArenaLo
+- source: .text:0x80240D40
+  type: l
+  target: __ArenaLo
+- source: .text:0x80240D74
+  type: ha
+  target: _stack_addr
+- source: .text:0x80240D78
+  type: l
+  target: _stack_addr
+- source: .text:0x80246428
+  type: ha
+  target: _stack_addr
+- source: .text:0x8024642C
+  type: l
+  target: _stack_addr
+- source: .init:0x80003278
+  type: hi
+  target: _stack_addr
+- source: .init:0x8000327C
+  type: l
+  target: _stack_addr

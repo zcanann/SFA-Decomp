@@ -384,7 +384,8 @@ Six oracle unit tests pin separate per-source truncation, 255/256 endpoint
 behavior, wrapped weights, cleared RGBA8 alpha, channel expansion, and plane/tile
 order. A deliberately opaque-alpha source mutation is rejected by the emulator
 probe. This does not test partial tiles, non-finite weights, overlapping headers,
-or whole-game execution. The non-EN builds remain progress-only.
+or whole-game execution. Regional builds were progress-only at this stage;
+[native checksum builds](jp_source_link_retention.md) are now supported.
 
 ```sh
 python tools/shadow_blend_probe.py --version GSAE01

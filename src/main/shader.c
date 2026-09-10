@@ -3431,16 +3431,16 @@ void getVisibleObjects(s8* opacity) {
             opacity[i] = objUpdateOpacity(o);
             if (opacity[i] != 0 || (o->anim.modelInstance->flags & OBJDEF_FLAG_RENDER_WHEN_INVISIBLE) != 0) {
                 if ((o->anim.modelInstance->flags & OBJDEF_FLAG_FIXED_SORT_DEPTH) != 0) {
-                    *(f32*)&o->anim.targetObj = (f32)(o->anim.modelInstance->fixedSortDepth * 100);
-                    depthInt = (int)*(f32*)&o->anim.targetObj;
+                    o->anim.renderViewZ = (f32)(o->anim.modelInstance->fixedSortDepth * 100);
+                    depthInt = (int)o->anim.renderViewZ;
                 } else {
                     if (o->anim.parent != NULL) {
                         Camera_ProjectWorldPoint(o->anim.worldPosX, o->anim.worldPosY, o->anim.worldPosZ, &a, &b,
-                                                 &depth, (f32*)&o->anim.targetObj);
+                                                 &depth, &o->anim.renderViewZ);
                     } else {
                         Camera_ProjectWorldPoint(o->anim.localPosX - playerMapOffsetX, o->anim.localPosY,
                                                  o->anim.localPosZ - playerMapOffsetZ, &a, &b, &depth,
-                                                 (f32*)&o->anim.targetObj);
+                                                 &o->anim.renderViewZ);
                     }
                     depthInt = (int)(1e+03f * (1.0f + depth));
                 }
@@ -4251,7 +4251,7 @@ void mapBlockRenderMain(MapBlockBoundsRec* bounds, MapBlockData* block, float* v
         *(int*)&state.bit = state.bit + 8;
     }
     state.bit += 4;
-    mapBlockRender_drawLightmapIndirectPasses(block, shader, &state, (float(*)[4])viewMtx);
+    mapBlockRender_drawLightmapIndirectPasses(block, shader, &state, (float (*)[4])viewMtx);
 }
 void mapBlockRenderWater(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx) {
     ModelRenderInstrsState state;
@@ -4456,11 +4456,19 @@ GXColor gTexShaderAmbColor = {0xFF, 0xFF, 0xFF, 0xFF};
 GXColor gTexLightmapAmbColor = {0xff, 0xff, 0xff, 0xff};
 s8 gTexIndMtxScaleExp = -2;
 const f32 gTexIndMtxScale = 0.0625f;
-extern const GXColor gTexShaderFogColor;
-extern const GXColor gTexLightmapFogColor;
 
 extern IndTexMtx23 gTexIndMtxTable;
 extern WarpDestination gRcpPendingWarpDest;
+
+static inline void shaderInitGlowFogColor(GXColor* color) {
+    const GXColor initial = {0, 0, 0, 0};
+    *color = initial;
+}
+
+static inline void shaderInitMaterialFogColor(GXColor* color) {
+    const GXColor initial = {0, 0, 0, 0};
+    *color = initial;
+}
 
 static u8 mapBlockBounds_HasCornerPastDepthThreshold(MapBlockBoundsRec* bounds, float* xform) {
     Vec v;
@@ -4593,7 +4601,7 @@ Shader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, ModelRe
     Shader* shader;
     u32 shaderIdx;
     u8* byteBase;
-    GXColor fogColor = gTexLightmapFogColor;
+    GXColor fogColor = {0, 0, 0, 0};
     u32 bits;
     u32 bitPos;
     u8 ambColor[3];
@@ -5082,7 +5090,7 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode) {
 Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRenderInstrsState* state) {
     Shader* shader;
     u32 shaderIdx;
-    GXColor fogColor = gTexShaderFogColor;
+    GXColor fogColor;
     u8* instructionBytes;
     u32 flags;
     int* cloudTex;
@@ -5091,6 +5099,7 @@ Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRende
     u32 bits;
     u32 bitPos;
 
+    shaderInitMaterialFogColor(&fogColor);
     bitPos = state->bit;
     {
         int byteOffset = (int)bitPos >> 3;
@@ -5173,8 +5182,6 @@ Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRende
     }
     return shader;
 }
-
-extern int sSynthFadeUnit;
 
 static inline void GXPosition3f32(const f32 x, const f32 y, const f32 z) {
     GXWGFifo.f32 = x;
@@ -5371,7 +5378,7 @@ void renderGlows(void) {
     int i;
     ModelLightStruct* e;
 
-    fogCol = *(GXColor*)&sSynthFadeUnit;
+    shaderInitGlowFogColor(&fogCol);
     GXSetCullMode(GX_CULL_NONE);
     Camera_RebuildProjectionMatrix();
     GXClearVtxDesc();

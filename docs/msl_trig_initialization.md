@@ -2,16 +2,20 @@
 
 ## Retail evidence
 
-EN `trigf.c` contains `tanf`, `cos(float)`, `sin(float)`, `cosf`, `sinf`,
-and a 48-byte initialization function at `0x80294B88`. The two float overloads
-have native MWCC C++ manglings, `cos__Ff` and `sin__Ff`. The adjacent
-`hyperbolicsf.c` function is likewise `fabsf__Ff`, not the C-linkage `fabsf`
-implemented elsewhere in the math library.
+The reconstructed EN `trigf.c` identifies `tanf`, `cos(float)`, `sin(float)`,
+`cosf`, `sinf`, and a 48-byte initialization function at `0x80294B88`.
+Compiling the float overloads as C++ produces `cos__Ff` and `sin__Ff`;
+the adjacent reconstructed `hyperbolicsf.c` similarly produces `fabsf__Ff`,
+separate from the C-linkage `fabsf` implemented earlier. These are configured
+identities supported by donor patterns, not names preserved in the retail DOL.
+The eight-byte absolute-value body alone cannot establish its original filename
+or linkage; see the [neighboring-label audit](math_boundary_audit.md#neighboring-msl-labels-and-source-lineage-2026-09-08).
 
 The initializer loads four floats from the TU's 16-byte read-only table and
 stores them into its 16-byte writable reduction table. A constructor entry at
-`0x802C1884` points to this function. These are independent reasons to test C++
-language mode, not an inference from an aggregate compiler score.
+`0x802C1884` points to this function. That initialization topology supplies an
+independent reason to test C++ language mode, beyond configured symbol names or
+an aggregate compiler score.
 
 ## Recovery
 
@@ -49,3 +53,51 @@ source artifact establishes that it is the literal historical spelling.
 
 Formatting is checked separately from source recovery, with raw object hashes
 compared before and after formatting.
+
+## Cross-version completion (2026-09-08)
+
+The same recovered source is now marked matching for EN rev1, JP and PAL rev1.
+The automatic matching manifest had omitted it because objdiff leaves the
+unnamed four-byte constructor entry unscored. The explicit `MatchingFor` list
+records the independently checked exception and survives manifest regeneration.
+PAL rev0 remains excluded: its local artifact fails its configured retail hash.
+
+| Version | Constructor entry | Generated initializer |
+| --- | --- | --- |
+| EN | `802C1884` | `80294B88` |
+| EN rev1 | `802C2004` | `802952E8` |
+| JP | `802C1984` | `80294C78` |
+| PAL rev1 | `802C2204` | `802954F8` |
+
+Each hash-verified DOL stores the listed initializer address in the listed
+constructor entry. Source and extracted objects have identical bytes, sizes
+and alignment for all five allocated sections: 1004 text bytes and 60 data
+bytes. The constructor relocation is the same `R_PPC_ADDR32` reference to
+text offset 956, with zero addend. The source object's writable flag on
+`.sdata2` differs from the extraction's flag, as it already does in matching EN;
+this is not an additional regional difference.
+
+The three regional symbol configs now mark the compiler-generated initializer
+local, agreeing with EN and MWCC. A scan of their extracted object relocations
+finds only the owning constructor entry referencing this symbol; no external
+consumer depends on global linkage. The synthetic reference label remains an
+extraction annotation and is not added to source.
+
+Full source builds and source-object hash comparisons pass for all four
+versions. Fresh objdiff reports preserve the six exact functions and 56 scored
+data bytes; only the three secondary targets gain completion credit (1004 code
+bytes and 60 data bytes each). EN remains unchanged and passes its strict
+retail checksum. Secondary targets currently support progress reports only;
+`configure.py` rejects their `--matching` mode, so no secondary full-link
+checksum claim is made.
+
+## PAL v1.0 and native checksum verification
+
+The replacement PAL v1.0 DOL passes its configured hash. Its constructor entry
+at `802C20C4` points to the generated initializer at `802953B8`; only its owning
+constructor relocation references that local function. A source link
+substituting both this unit and `sal_volume.c` reproduces PAL v1.0 exactly.
+PAL v1.0 now joins the explicit completion list, with no source or compiler
+changes. All five versions now support and pass the
+[native matching checksum build](jp_source_link_retention.md), superseding the
+earlier progress-only restriction.

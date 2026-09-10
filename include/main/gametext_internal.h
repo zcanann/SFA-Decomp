@@ -11,6 +11,13 @@ typedef struct TaskTextEntry {
     u16 objSeqId;
 } TaskTextEntry;
 
+STATIC_ASSERT(sizeof(TaskTextEntry) == 6);
+STATIC_ASSERT(offsetof(TaskTextEntry, textSeqId) == 0);
+STATIC_ASSERT(offsetof(TaskTextEntry, dirId) == 2);
+STATIC_ASSERT(offsetof(TaskTextEntry, objSeqId) == 4);
+
+#define GAMETEXT_TASK_TEXT_COUNT 122
+
 #define GAMETEXT_FALLBACK_COUNT       8
 #define GAMETEXT_FALLBACK_BUFFER_SIZE 0x40
 
@@ -110,7 +117,7 @@ typedef void (*GameTextDrawFunc)(int x0, int y0, int x1, int y1, f32 u0, f32 v0,
 extern GameTextBox gTextBoxes[GAMETEXT_BOX_COUNT];
 extern GameTextBox* gCurTextBox;
 extern GameTextDrawFunc gameTextDrawFunc;
-extern TaskTextEntry gTaskTextTable[];
+extern TaskTextEntry gTaskTextTable[GAMETEXT_TASK_TEXT_COUNT];
 extern u8 gUtf8CharClassTable[];
 extern int gUtf8ClassOffsetTable[];
 extern TextFont* gameTextFonts;

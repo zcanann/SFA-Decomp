@@ -51,11 +51,13 @@ char sErrFmtStackAddress[] = "\t%x";
 char sErrFmtRegisterRange[] = "%d - %d";
 
 /* debug font glyph-atlas texture asset (gDebugFontTex0) */
-#define DEBUG_FONT_TEXTURE0_ID  0x25D
-#define DEBUG_FRAMEBUFFER_WIDTH 640
-#define DEBUG_GLYPH_ROWS        5
-#define DEBUG_GLYPH_BITS        8
-#define DEBUG_TEXT_COLOR        0xC080
+#define DEBUG_FONT_TEXTURE0_ID   0x25D
+#define DEBUG_FRAMEBUFFER_WIDTH  640
+#define DEBUG_FRAMEBUFFER_HEIGHT 480
+#define DEBUG_BACKDROP_COLOR     0x1080
+#define DEBUG_GLYPH_ROWS         5
+#define DEBUG_GLYPH_BITS         8
+#define DEBUG_TEXT_COLOR         0xC080
 
 /* Binary commands embedded in the NUL-terminated debug log. Payload bytes may
  * contain zero; position and tab width use little-endian 16-bit values. */
@@ -198,29 +200,14 @@ typedef struct ErrStackFrame {
 } ErrStackFrame;
 
 static inline void errDisplayFillBackdrop(void) {
-    int xcb;
-    int row;
     int x;
-    int n;
+    int y;
 
-    x = 0;
-    xcb = x;
-    do {
-        row = 0;
-        for (n = 0; n < 60; n++) {
-            *(u16*)(xcb + (int)debugDrawFrameBuffer + row) = 0x1080;
-            *(u16*)(xcb + (int)debugDrawFrameBuffer + row + 0x500) = 0x1080;
-            *(u16*)(xcb + (int)debugDrawFrameBuffer + row + 0xA00) = 0x1080;
-            *(u16*)(xcb + (int)debugDrawFrameBuffer + row + 0xF00) = 0x1080;
-            *(u16*)(xcb + (int)debugDrawFrameBuffer + row + 0x1400) = 0x1080;
-            *(u16*)(xcb + (int)debugDrawFrameBuffer + row + 0x1900) = 0x1080;
-            *(u16*)(xcb + (int)debugDrawFrameBuffer + row + 0x1E00) = 0x1080;
-            *(u16*)(xcb + (int)debugDrawFrameBuffer + row + 0x2300) = 0x1080;
-            row += 0x2800;
+    for (x = 0; x < DEBUG_FRAMEBUFFER_WIDTH; x++) {
+        for (y = 0; y < DEBUG_FRAMEBUFFER_HEIGHT; y++) {
+            (debugDrawFrameBuffer + y * DEBUG_FRAMEBUFFER_WIDTH)[x] = DEBUG_BACKDROP_COLOR;
         }
-        xcb += 2;
-        x++;
-    } while (x < 0x280);
+    }
 }
 
 int debugPrintDrawGlyph(void* unused, int c);

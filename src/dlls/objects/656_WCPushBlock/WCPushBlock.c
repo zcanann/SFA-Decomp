@@ -123,7 +123,7 @@ void wcpushblock_free(void) {
 
 void wcpushblock_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) {
     if (visible != 0) {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6D54);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, gWcPushBlockOne);
     }
 }
 
@@ -197,11 +197,13 @@ void wcpushblock_update(GameObject* obj) {
         u32 phase = WCPUSHBLOCK_FLAGS(state).phase;
         if (phase != WCPUSHBLOCK_PHASE_FADE_OUT && phase != WCPUSHBLOCK_PHASE_FADE_IN) {
             if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
-                objfx_spawnBoxBurst(obj, 1, lbl_803E6D5C, WCPUSHBLOCK_BOX_BURST_VARIANT_A, 1, 50, lbl_803E6D60,
-                                    lbl_803E6D5C, lbl_803E6D60, NULL, 0);
+                objfx_spawnBoxBurst(obj, 1, gWcPushBlockBurstScale, WCPUSHBLOCK_BOX_BURST_VARIANT_A, 1, 50,
+                                    gWcPushBlockBurstHorizontalExtent, gWcPushBlockBurstScale,
+                                    gWcPushBlockBurstHorizontalExtent, NULL, 0);
             } else {
-                objfx_spawnBoxBurst(obj, 1, lbl_803E6D5C, WCPUSHBLOCK_BOX_BURST_VARIANT_B, 1, 50, lbl_803E6D60,
-                                    lbl_803E6D5C, lbl_803E6D60, NULL, 0);
+                objfx_spawnBoxBurst(obj, 1, gWcPushBlockBurstScale, WCPUSHBLOCK_BOX_BURST_VARIANT_B, 1, 50,
+                                    gWcPushBlockBurstHorizontalExtent, gWcPushBlockBurstScale,
+                                    gWcPushBlockBurstHorizontalExtent, NULL, 0);
             }
         }
     }
@@ -229,7 +231,7 @@ void wcpushblock_update(GameObject* obj) {
         objAnim->alpha = a;
     }
         {
-            f32 zero = lbl_803E6D64;
+            f32 zero = gWcPushBlockZero;
             obj->anim.velocityX = zero;
             obj->anim.velocityZ = zero;
         }
@@ -280,24 +282,24 @@ void wcpushblock_update(GameObject* obj) {
         }
         break;
     case WCPUSHBLOCK_PHASE_SLIDING: {
-        f32 zero = lbl_803E6D64;
+        f32 zero = gWcPushBlockZero;
         f32 vx = obj->anim.velocityX;
         if (zero != vx || zero != obj->anim.velocityZ) {
-            f32 speed = sqrtf(vx * vx + obj->anim.velocityZ * obj->anim.velocityZ) - lbl_803E6D68;
-            if (speed < lbl_803E6D64) {
-                speed = lbl_803E6D64;
+            f32 speed = sqrtf(vx * vx + obj->anim.velocityZ * obj->anim.velocityZ) - gWcPushBlockSlideSfxSpeedThreshold;
+            if (speed < gWcPushBlockZero) {
+                speed = gWcPushBlockZero;
             }
-            sfxVolume = lbl_803E6D54 + gWcPushBlockSlideSfxVolumeRange * speed / gWcPushBlockSlideSfxMaxSpeed;
+            sfxVolume = gWcPushBlockOne + gWcPushBlockSlideSfxVolumeRange * speed / gWcPushBlockSlideSfxMaxSpeed;
             if (sfxVolume > gWcPushBlockSlideSfxMaxVolume) {
                 sfxVolume = gWcPushBlockSlideSfxMaxVolume;
             }
             Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_en_treedrum16_c8);
-            Sfx_SetObjectSfxVolume(obj, SFXTRIG_en_treedrum16_c8, sfxVolume, lbl_803E6D78);
+            Sfx_SetObjectSfxVolume(obj, SFXTRIG_en_treedrum16_c8, sfxVolume, gWcPushBlockSlideSfxVolumeScale);
             WCPUSHBLOCK_FLAGS(state).sfxActive = 1;
         }
     }
         dt = timeDelta;
-        objMove(obj, obj->anim.velocityX * dt, lbl_803E6D64, obj->anim.velocityZ * dt);
+        objMove(obj, obj->anim.velocityX * dt, gWcPushBlockZero, obj->anim.velocityZ * dt);
         reachedTarget = 0;
         {
             if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X) {
@@ -362,7 +364,7 @@ void wcpushblock_update(GameObject* obj) {
             break;
         }
         {
-            f32 zero = lbl_803E6D64;
+            f32 zero = gWcPushBlockZero;
             obj->anim.velocityX = zero;
             obj->anim.velocityZ = zero;
         }

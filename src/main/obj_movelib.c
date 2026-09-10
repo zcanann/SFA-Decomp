@@ -30,8 +30,8 @@
 #include "main/curve.h"
 #include "main/vecmath.h"
 
-f32 gObjLightningClusterRadiusX = 2.0f;
-f32 gObjLightningClusterRadiusY = 0.2f;
+f32 gObjLightningClusterBoltSegmentDensity = 2.0f;
+f32 gObjLightningClusterStrandSegmentDensity = 0.2f;
 f32 gObjLightningClusterLifetime = 20.0f;
 u16 gObjLightningClusterWidth = 0x40;
 
@@ -81,9 +81,9 @@ int Obj_UpdateLightningCluster(GameObject* obj, LightningEffect** entries, int c
             pos[0] += 0.001f * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[1] += 0.001f * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[2] += 0.001f * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
-            entries[i] =
-                lightningCreate((const Vec3f*)&obj->anim.localPosX, (const Vec3f*)pos, gObjLightningClusterRadiusX,
-                                           gObjLightningClusterRadiusY, gObjLightningClusterLifetime, gObjLightningClusterWidth, 0);
+            entries[i] = lightningCreate(
+                (const Vec3f*)&obj->anim.localPosX, (const Vec3f*)pos, gObjLightningClusterBoltSegmentDensity,
+                gObjLightningClusterStrandSegmentDensity, gObjLightningClusterLifetime, gObjLightningClusterWidth, 0);
             spawned = 1;
         }
     }

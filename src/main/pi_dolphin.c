@@ -75,7 +75,7 @@
 u32 sPiUnused3;
 void* lbl_803DCD10;
 u32 sPiUnused2;
-char* lbl_803DCD08;
+char* gPathSearchLastNonTrickyPoint;
 static u32 sPiUnused1;
 u8 lbl_803DCD00;
 int lbl_803DCCFC;

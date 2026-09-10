@@ -1,5 +1,7 @@
+#include "dlls/objects/571_DFP_Lightni.h"
+
 #include "main/audio/sfx_limited_object_api.h"
-#include "main/dfplightni.h"
+#include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
 #include "main/mm.h"
 #include "main/vecmath.h"
@@ -7,15 +9,30 @@
 #include "main/newclouds.h"
 #include "main/frame_timing.h"
 
+#define DFPLIGHTNI_SFX_ID        0x4c3
+#define DFPLIGHTNI_SFX_MAX_COUNT 2
+
+#define DFPLIGHTNI_RANDOM_TIMER_MIN 0
+#define DFPLIGHTNI_RANDOM_TIMER_MAX 100
+#define DFPLIGHTNI_RANDOM_XZ_MIN    -200
+#define DFPLIGHTNI_RANDOM_XZ_MAX    200
+#define DFPLIGHTNI_RANDOM_Y_MIN     100
+#define DFPLIGHTNI_RANDOM_Y_MAX     300
+
+#define DFPLIGHTNI_PLAYER_EFFECT_FRAMES 10
+#define DFPLIGHTNI_LIFETIME_FRAME_SCALE 10
+#define DFPLIGHTNI_WIDTH_STEP           0xc
+#define DFPLIGHTNI_EFFECT_WIDTH_MASK    0xff
+
 #define DFPLIGHTNI_TIMER_MAX          1000.0f
 #define DFPLIGHTNI_TIMER_INACTIVE_MAX 1010.0f
 
-#define DFPLIGHTNI_TIMER_ACTIVE_RESET  999.0f
-#define DFPLIGHTNI_OFFSET_SCALE        0.1f
-#define DFPLIGHTNI_RADIUS_MIN          0.001f
-#define DFPLIGHTNI_RADIUS_MAX          5.0f
-#define DFPLIGHTNI_TRIGGER_TIME_BASE   400.0f
-#define DFPLIGHTNI_RADIUS_NORM_DIVISOR 32767.0f
+#define DFPLIGHTNI_TIMER_ACTIVE_RESET   999.0f
+#define DFPLIGHTNI_OFFSET_SCALE         0.1f
+#define DFPLIGHTNI_DENSITY_MIN          0.001f
+#define DFPLIGHTNI_DENSITY_MAX          5.0f
+#define DFPLIGHTNI_TRIGGER_TIME_BASE    400.0f
+#define DFPLIGHTNI_DENSITY_NORM_DIVISOR 32767.0f
 
 static inline DfpLightniState* dfplightni_getState(GameObject* obj) {
     return obj->extra;
@@ -46,17 +63,17 @@ void DFP_Lightni_free(GameObject* obj) {
 
 void DFP_Lightni_render(GameObject* obj) {
     DfpLightniState* state;
-    int eventActive;
+    int playerZapped;
 
     if (obj != 0) {
         state = dfplightni_getState(obj);
         if (state->timer >= DFPLIGHTNI_TIMER_MAX) {
-            eventActive = mainGetBit(DFPLIGHTNI_ZAPPED_PLAYER_GAMEBIT);
+            playerZapped = mainGetBit(GAMEBIT_OFP_ZappedByFloorTiles);
             if (state->effectHandle != 0) {
                 lightningRender(state->effectHandle);
             }
-            if (eventActive != 0) {
-                if (state->timer >= DFPLIGHTNI_TIMER_MAX + (f32)(s32)state->delayFrames) {
+            if (playerZapped != 0) {
+                if (state->timer >= DFPLIGHTNI_TIMER_MAX + (f32)(s32)state->effectLifetimeFrames) {
                     state->timer = 0.0f;
                 }
             } else if (state->timer >= DFPLIGHTNI_TIMER_INACTIVE_MAX) {
@@ -69,11 +86,11 @@ void DFP_Lightni_render(GameObject* obj) {
 
 void DFP_Lightni_update(GameObject* obj) {
     GameObject* playerObj;
-    int eventActive;
-    u32 eventBlocked;
+    int targetPlayer;
+    u32 puzzleComplete;
     DfpLightniState* state;
-    f32 radiusX;
-    f32 radiusY;
+    f32 boltSegmentDensity;
+    f32 strandSegmentDensity;
     const Vec3f* effectStart;
     const Vec3f* effectEnd;
     Vec3f start;
@@ -84,15 +101,15 @@ void DFP_Lightni_update(GameObject* obj) {
         playerObj = Obj_GetPlayerObject();
         if (playerObj != 0) {
             state->timer += timeDelta;
-            eventActive = mainGetBit(state->eventId);
-            if ((eventActive != 0) && (state->timer < DFPLIGHTNI_TIMER_MAX)) {
+            targetPlayer = mainGetBit(state->targetPlayerGameBit);
+            if ((targetPlayer != 0) && (state->timer < DFPLIGHTNI_TIMER_MAX)) {
                 state->timer = DFPLIGHTNI_TIMER_ACTIVE_RESET;
             }
             if ((state->timer > state->triggerTime) && (state->timer < DFPLIGHTNI_TIMER_MAX)) {
                 start.x = obj->anim.localPosX;
                 start.y = obj->anim.localPosY;
                 start.z = obj->anim.localPosZ;
-                if (eventActive != 0) {
+                if (targetPlayer != 0) {
                     end.x =
                         DFPLIGHTNI_OFFSET_SCALE * randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX) +
                         playerObj->anim.localPosX;
@@ -115,37 +132,41 @@ void DFP_Lightni_update(GameObject* obj) {
                     mm_free(state->effectHandle);
                     state->effectHandle = 0;
                 }
-                radiusX = state->radiusX;
-                radiusY = state->radiusY;
-                eventBlocked = mainGetBit(DFPLIGHTNI_PUZZLE_COMPLETE_GAMEBIT);
-                if (eventBlocked == 0) {
-                    f32 clampX;
-                    f32 clampY;
+                boltSegmentDensity = state->boltSegmentDensity;
+                strandSegmentDensity = state->strandSegmentDensity;
+                puzzleComplete = mainGetBit(GAMEBIT_OFP_ElectricFloorPuzzleAct1Complete);
+                if (puzzleComplete == 0) {
+                    f32 clampedBoltDensity;
+                    f32 clampedStrandDensity;
                     Sfx_PlayFromObjectLimited(obj, DFPLIGHTNI_SFX_ID, DFPLIGHTNI_SFX_MAX_COUNT);
-                    if (eventActive != 0) {
-                        clampY = (radiusY < DFPLIGHTNI_RADIUS_MIN)   ? DFPLIGHTNI_RADIUS_MIN
-                                 : (radiusY > DFPLIGHTNI_RADIUS_MAX) ? DFPLIGHTNI_RADIUS_MAX
-                                                                     : radiusY;
+                    if (targetPlayer != 0) {
+                        clampedStrandDensity = (strandSegmentDensity < DFPLIGHTNI_DENSITY_MIN) ? DFPLIGHTNI_DENSITY_MIN
+                                               : (strandSegmentDensity > DFPLIGHTNI_DENSITY_MAX)
+                                                   ? DFPLIGHTNI_DENSITY_MAX
+                                                   : strandSegmentDensity;
                         effectStart = &start;
                         effectEnd = &end;
-                        clampX = (radiusX < DFPLIGHTNI_RADIUS_MIN)   ? DFPLIGHTNI_RADIUS_MIN
-                                 : (radiusX > DFPLIGHTNI_RADIUS_MAX) ? DFPLIGHTNI_RADIUS_MAX
-                                                                     : radiusX;
+                        clampedBoltDensity = (boltSegmentDensity < DFPLIGHTNI_DENSITY_MIN)   ? DFPLIGHTNI_DENSITY_MIN
+                                             : (boltSegmentDensity > DFPLIGHTNI_DENSITY_MAX) ? DFPLIGHTNI_DENSITY_MAX
+                                                                                             : boltSegmentDensity;
                         state->effectHandle = lightningCreate(
-                            effectStart, effectEnd, clampX, clampY, DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
-                            state->angleIndex * DFPLIGHTNI_ANGLE_STEP & DFPLIGHTNI_EFFECT_ANGLE_MASK, 0);
+                            effectStart, effectEnd, clampedBoltDensity, clampedStrandDensity,
+                            DFPLIGHTNI_PLAYER_EFFECT_FRAMES,
+                            state->widthSteps * DFPLIGHTNI_WIDTH_STEP & DFPLIGHTNI_EFFECT_WIDTH_MASK, 0);
                     } else {
-                        clampY = (radiusY < DFPLIGHTNI_RADIUS_MIN)   ? DFPLIGHTNI_RADIUS_MIN
-                                 : (radiusY > DFPLIGHTNI_RADIUS_MAX) ? DFPLIGHTNI_RADIUS_MAX
-                                                                     : radiusY;
+                        clampedStrandDensity = (strandSegmentDensity < DFPLIGHTNI_DENSITY_MIN) ? DFPLIGHTNI_DENSITY_MIN
+                                               : (strandSegmentDensity > DFPLIGHTNI_DENSITY_MAX)
+                                                   ? DFPLIGHTNI_DENSITY_MAX
+                                                   : strandSegmentDensity;
                         effectStart = &start;
                         effectEnd = &end;
-                        clampX = (radiusX < DFPLIGHTNI_RADIUS_MIN)   ? DFPLIGHTNI_RADIUS_MIN
-                                 : (radiusX > DFPLIGHTNI_RADIUS_MAX) ? DFPLIGHTNI_RADIUS_MAX
-                                                                     : radiusX;
+                        clampedBoltDensity = (boltSegmentDensity < DFPLIGHTNI_DENSITY_MIN)   ? DFPLIGHTNI_DENSITY_MIN
+                                             : (boltSegmentDensity > DFPLIGHTNI_DENSITY_MAX) ? DFPLIGHTNI_DENSITY_MAX
+                                                                                             : boltSegmentDensity;
                         state->effectHandle = lightningCreate(
-                            effectStart, effectEnd, clampX, clampY, state->delayFrames,
-                            state->angleIndex * DFPLIGHTNI_ANGLE_STEP & DFPLIGHTNI_EFFECT_ANGLE_MASK, 0);
+                            effectStart, effectEnd, clampedBoltDensity, clampedStrandDensity,
+                            state->effectLifetimeFrames,
+                            state->widthSteps * DFPLIGHTNI_WIDTH_STEP & DFPLIGHTNI_EFFECT_WIDTH_MASK, 0);
                     }
                 }
                 state->timer = DFPLIGHTNI_TIMER_MAX;
@@ -155,7 +176,7 @@ void DFP_Lightni_update(GameObject* obj) {
     return;
 }
 
-void DFP_Lightni_init(GameObject* obj, DfpLightniMapData* mapData) {
+void DFP_Lightni_init(GameObject* obj, DfpLightniPlacementPrefix* mapData) {
     DfpLightniState* state;
     int randomValue;
 
@@ -164,11 +185,11 @@ void DFP_Lightni_init(GameObject* obj, DfpLightniMapData* mapData) {
         randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN, DFPLIGHTNI_RANDOM_TIMER_MAX);
         state->timer = randomValue;
         state->effectHandle = 0;
-        if (mapData->radiusX <= 0) {
-            mapData->radiusX = 1;
+        if (mapData->boltSegmentDensityParam <= 0) {
+            mapData->boltSegmentDensityParam = 1;
         }
-        if (mapData->radiusY <= 0) {
-            mapData->radiusY = 1;
+        if (mapData->strandSegmentDensityParam <= 0) {
+            mapData->strandSegmentDensityParam = 1;
         }
         randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN, DFPLIGHTNI_RANDOM_TIMER_MAX);
         {
@@ -176,11 +197,13 @@ void DFP_Lightni_init(GameObject* obj, DfpLightniMapData* mapData) {
             triggerTime = DFPLIGHTNI_TRIGGER_TIME_BASE + triggerTime;
             state->triggerTime = triggerTime;
         }
-        state->radiusX = ((f32)(s32)mapData->radiusX / DFPLIGHTNI_RADIUS_NORM_DIVISOR) * DFPLIGHTNI_RADIUS_MAX;
-        state->radiusY = ((f32)(s32)mapData->radiusY / DFPLIGHTNI_RADIUS_NORM_DIVISOR) * DFPLIGHTNI_RADIUS_MAX;
-        state->angleIndex = mapData->angleIndex;
-        state->delayFrames = mapData->delayTicks * DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES;
-        state->eventId = mapData->eventId;
+        state->boltSegmentDensity =
+            ((f32)(s32)mapData->boltSegmentDensityParam / DFPLIGHTNI_DENSITY_NORM_DIVISOR) * DFPLIGHTNI_DENSITY_MAX;
+        state->strandSegmentDensity =
+            ((f32)(s32)mapData->strandSegmentDensityParam / DFPLIGHTNI_DENSITY_NORM_DIVISOR) * DFPLIGHTNI_DENSITY_MAX;
+        state->widthSteps = mapData->widthSteps;
+        state->effectLifetimeFrames = mapData->lifetimeTensOfFrames * DFPLIGHTNI_LIFETIME_FRAME_SCALE;
+        state->targetPlayerGameBit = mapData->targetPlayerGameBit;
     }
     return;
 }

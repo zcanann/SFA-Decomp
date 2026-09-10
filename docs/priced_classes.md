@@ -657,7 +657,13 @@ Also measured there: file-scope `const f32` 94.512; function-local `static const
 literal (data 192/192, code 94.512); `const f32 X[1]` restores 100.0 but the object lands at the
 declaration point (0x00) or at the start of the function's static run (0x20), never at 0x44.
 
-**ADDENDUM 2026-08-03 — the `engine/7` DECLINE's basis is superseded by the mint law; the row
+**Resolved 2026-09-09:** two called axis-initialization helpers, with ordinary
+automatic inlining, recover the complete pool and preserve all 26 functions.
+The unit is exact across all five versions; see
+[Newclouds source recovery](newclouds_source_recovery.md). This supersedes the
+uncalled-body proposal below. No phantom helper or baseline exception is used.
+
+**Historical ADDENDUM 2026-08-03 — the `engine/7` DECLINE's basis is superseded by the mint law; the row
 moves from "DECLINE — phantom minter" to an owner call.** The verdict above was written as a
 sight-decline: "the missing `1.0f` emits no code in retail's `fn1` either", with the phantom
 minter treated as a fabrication. Two facts measured since decide what that minter was
@@ -1534,6 +1540,13 @@ and the movers; `300_Transporter` was retired as a padding artifact in section 1
 motion reaches none of them** -- confirming 8b's finding from the other direction, since every
 intra-function row's mint order is only reachable through a live use and a live use is what
 moves the load.
+
+2026-09-08 clarification: the `sal_volume` "zero-size" characterization above
+was a classification artifact. Its source object has three generated exception
+records; the retail index identifies the surviving `salCalcVolume` record
+unambiguously. The helper records are stripped in EN's strict source link.
+[The cross-version audit](musyx_volume_completion.md) verifies the live record
+and extends completion to EN rev1, JP and PAL rev1 without changing source.
 
 (2026-08-03, later: the §8 proven-lost-body gate was subsequently run as a batch over the
 remaining ORDER_ONLY units -- see the second addendum under §8's table. It upgrades `332`,

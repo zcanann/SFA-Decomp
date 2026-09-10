@@ -55,3 +55,45 @@ conversion biases; the current source emits it later. Simple lifetime-fraction
 promotion expressions leave both code and pool unchanged. No dead helper or
 forced constant was added to fill the gap. Matched data remains 984/1216 bytes;
 matched code increases from 17424/19800 to 19800/19800.
+
+## Called axis helpers close the pool (2026-09-09)
+
+The unit now fully matches all five retail versions: 26 functions, 19,800 code
+bytes and 1,216 data bytes. The missing pool order comes from two called private
+helpers, `lightningSetReferenceZAxis` and `lightningSetReferenceXAxis`.
+
+Both strand and bolt rendering choose an X or Z reference axis before building
+their perpendicular basis. The helpers replace those four repeated three-store
+blocks. Their calls inline under the common `cflags_dll_noopt` profile, preserving
+the complete retail instruction streams. Their emitted out-of-line copies
+introduce zero and one before `lightningGetRemainingFraction` introduces its
+integer-conversion biases. The Z-axis helper precedes the X-axis helper because
+its zero/zero/one stores supply the evidenced zero-before-one pool order.
+
+This removes the unit's `noauto` restriction while retaining GC/1.3 and its
+existing optimization settings. Keeping `noauto` produces real calls to the
+helpers and regresses both lightning renderers. Explicit `inline` under that
+profile preserves code but omits the early pool contribution. Deferred inlining
+also changes the cloud-update code and emits an additional early constant; it
+is not retained. Ordinary automatic inlining gives both exact callers and the
+complete 232-byte pool, replacing the former 240-byte generated pool. Other
+allocated data and global storage layouts remain unchanged.
+
+No uncalled seed body, invented data, padding, source split or compiler-version
+exception is needed. The helper names and decomposition are inferred from the
+duplicated axis stores and validated by their code and pool output; they are
+not recovered original identifiers. This resolves the historical phantom-body
+proposal in `priced_classes.md` with source helpers that have real callers.
+
+For each hash-verified version, objdiff with completion annotations disabled
+reports every function and data section exact. An all-retail control link and
+a link substituting only this source object both reproduce the original DOL.
+Both helper bodies exist in the object and are absent from the final linked
+ELF. Native matching and `all_source` builds pass, and every unrelated source
+object remains byte-identical. EN is marked matching in `configure.py`; the
+four secondary progress manifests each gain the verified unit. Each version
+gains one completed unit and 232 matched data bytes, with no new function-match
+credit because the 26 functions were already exact.
+
+Sources, compiler controls, full objdiff reports, isolated links and build logs
+are under `/tmp/sfa-lightning-axis/` locally.

@@ -486,26 +486,27 @@ layout, as opposed to the plain monochrome text fonts 0/4.
 
 ### Sequence Lookup Table (0x802C8860) — exact match
 
-`gTaskTextTable` (`include/main/engine_shared.h:314-318` for the `TaskTextEntry {u16 a; u16 b;
-u16 key;}` type, data in `src/main/gametext.c:917`) is at **`.data:0x802C8860`** per
-`config/GSAE01/symbols.txt:10330` — the literal address the wiki cites for the Sequence Lookup
-Table. It has 208 entries (`size:0x4E0` / 6 bytes), and every entry's `b` field is `0x0029`,
-matching the wiki's "every entry is 0x29 (Sequences)" (0x29 = 41 = the index of `"Sequences"` in
-`sMapDirectoryNameTable[]`, `gametext.c:1655`). Spot-checked several rows against the wiki table
-byte-for-byte, e.g.:
-- `{ 0x0004, 0x0029, 0x00D1 }` = `a=Seq#=0004, key=ID#=00D1` -> wiki row `00D1|209|0004|4|Tricky_ThatsMyMa`.
-- `{ 0x4E21, 0x0029, 0x0464 }` -> wiki row `0464|1124|4E21|20001|CF_FindAllChildren`.
-- `{ 0x5368, 0x0029, 0x0548 }` (last entry) -> wiki row `0548|1352|5368|21352|SH_NobodyBringsGifts`.
+`gTaskTextTable` is the 122-entry sequence lookup table at **`.data:0x802C8860`**.
+Its `TaskTextEntry` record in `include/main/gametext_internal.h` contains three
+unsigned halfwords: text sequence ID, directory ID and object sequence ID.
+Retail `gameTextGetTaskText` scans exactly `0x7A` records with a six-byte stride,
+so the accessed table occupies `0x2DC` bytes. All 122 records use directory
+`0x29` (Sequences), and their object sequence IDs are unique. Examples:
 
-All entries checked appear in the same declaration order as the wiki table, and the field
-mapping is `a` = Seq# (text sequence id), `key` = ID# (object sequence id), `b` = constant 0x29
-directory id.
+- `{0x0004, 0x0029, 0x00D1}` maps object sequence 209 to text sequence 4 (`Tricky_ThatsMyMa`).
+- `{0x4E21, 0x0029, 0x0464}` maps object sequence 1124 to text sequence 20001 (`CF_FindAllChildren`).
+- `{0x5368, 0x0029, 0x0548}` is the final accessed record (`SH_NobodyBringsGifts`).
 
-`gameTextGetTaskText(int id, int* outA, int* outB)` (`src/main/gametext.c:70-88`) is the runtime
-accessor: linear-scans `gTaskTextTable` for `e->key == id` (object sequence id) and returns
-`outA = e->a` (text sequence id), `outB = e->b` (directory id, always 0x29). Called from
-`gameTextLoadTaskText` (`src/main/textrender.c:1648`), whose body is the wiki's "if subtitles are
-turned off, the file won't be loaded, with the exception of..." logic.
+The previous 208-entry declaration inferred capacity from the next symbol's
+address and misclassified 516 adjacent bytes as sequence records. Those bytes
+are preserved as `sGameTextUnclassifiedData`; their internal layout remains
+unknown. They are not scanned by the lookup routine. See
+[the table-boundary audit](../gametext_task_table.md).
+
+`gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId)` compares the
+object sequence ID and fills either non-null output on success. It returns
+zero without touching outputs when no record matches. `gameTextLoadTaskText`
+uses the result for the directory/text selection and subtitle allow-list logic.
 
 ### Subtitle allow-list — exact match
 

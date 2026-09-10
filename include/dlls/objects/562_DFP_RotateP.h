@@ -6,6 +6,8 @@
 #include "game/objects/object_setup.h"
 #include "main/objseq.h"
 
+#define DFP_ROTATEP_GAMEBIT_RING_ACTIVE 0xEDF
+
 typedef struct DFPRotatePPlacement {
   ObjPlacement base;     /* 0x00 */
   s8 rotXByte;           /* 0x18 */

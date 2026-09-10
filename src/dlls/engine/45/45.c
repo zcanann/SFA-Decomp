@@ -6,6 +6,7 @@
 #include "main/maketex_random_api.h"
 #include "main/dll/dll_002D_effect20.h"
 #include "main/vecmath.h"
+#include "main/expgfx_internal.h"
 
 f32 gEffect20SineValue0;
 f32 gEffect20SineValue1;
@@ -1555,7 +1556,8 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.lifetimeFrames = randomGetRange(0x1e, 0x28);
             cfg.initialAlpha = randomGetRange(0x40, 0x7f);
             cfg.textureId = 0x605;
-            cfg.behaviorFlags = (u32)randomChanceOneIn;
+            cfg.behaviorFlags =
+                EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER | EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH | EXPGFX_BEHAVIOR_ALPHA_PULSE;
             cfg.renderFlags = 0x28a0;
             cfg.colorWord0 = 0;
             cfg.colorWord1 = 0x7fff;
@@ -1592,7 +1594,8 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     case 0x7ee:
         if (spawnParams != NULL) {
             cfg.scale = 0.0002f * (f32)(s32)randomGetRange(0x1e, 0x46);
-            cfg.behaviorFlags = (u32)randomChanceOneIn;
+            cfg.behaviorFlags =
+                EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER | EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH | EXPGFX_BEHAVIOR_ALPHA_PULSE;
             cfg.renderFlags = 0x8a0;
             cfg.colorWord0 = randomGetRange(40000, 0xffff);
             cfg.colorWord1 = randomGetRange(0x4b0, 32000);

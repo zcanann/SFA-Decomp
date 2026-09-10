@@ -4,10 +4,9 @@
 #include "main/gamebits_api.h"
 #include "main/objtype.h"
 
-#define CC_RIVER_FLOW_OBJECT_GROUP        0x14
-#define CC_RIVER_FLOW_DEFAULT_SPEED       0xFF
-#define CC_RIVER_FLOW_HEIGHT_OFFSET_SCALE 512.0f
-#define CC_RIVER_FLOW_MINIMUM_HEIGHT      0.01f
+#define CC_RIVER_FLOW_DEFAULT_CURRENT_FLAGS     0xFF
+#define CC_RIVER_FLOW_RADIUS_SCALE_DIVISOR      512.0f
+#define CC_RIVER_FLOW_MINIMUM_ROOT_MOTION_SCALE 0.01f
 
 int ccRiverFlow_getExtraSize(void) {
     return sizeof(CCRiverFlowState);
@@ -54,12 +53,12 @@ void ccRiverFlow_init(GameObject* obj, CCRiverFlowPlacement* placement) {
     obj->anim.rotX = placement->angle << 8;
     obj->anim.rootMotionScale = obj->anim.modelInstance->rootMotionScaleBase;
     obj->anim.rootMotionScale =
-        (f32)(u32)placement->heightOffset / CC_RIVER_FLOW_HEIGHT_OFFSET_SCALE + obj->anim.rootMotionScale;
-    if (obj->anim.rootMotionScale < CC_RIVER_FLOW_MINIMUM_HEIGHT) {
-        obj->anim.rootMotionScale = CC_RIVER_FLOW_MINIMUM_HEIGHT;
+        (f32)(u32)placement->currentRadius / CC_RIVER_FLOW_RADIUS_SCALE_DIVISOR + obj->anim.rootMotionScale;
+    if (obj->anim.rootMotionScale < CC_RIVER_FLOW_MINIMUM_ROOT_MOTION_SCALE) {
+        obj->anim.rootMotionScale = CC_RIVER_FLOW_MINIMUM_ROOT_MOTION_SCALE;
     }
-    if (placement->speed == 0) {
-        placement->speed = CC_RIVER_FLOW_DEFAULT_SPEED;
+    if (placement->currentFlags == 0) {
+        placement->currentFlags = CC_RIVER_FLOW_DEFAULT_CURRENT_FLAGS;
     }
 }
 

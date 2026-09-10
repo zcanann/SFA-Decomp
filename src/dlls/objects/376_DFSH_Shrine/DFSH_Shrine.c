@@ -293,8 +293,8 @@ void dfshShrine_update(GameObject* obj) {
         if (state->flags.openedBySequence == 1) {
             state->mode = DFSH_SHRINE_MODE_GRANT_REWARDS;
             mainSetBits(0xB76, 1);
-            gameTimerInit(0x19, 0xD2);
-            timerSetToCountUp();
+            gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY, 0xD2);
+            gameTimerResume();
         }
         break;
     case DFSH_SHRINE_MODE_GRANT_REWARDS:

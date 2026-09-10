@@ -1,6 +1,7 @@
 #define BADDIE_MOVE_STATUS_SIGNED
 
 #include "main/dll/player.h"
+#include "dlls/objects/372_CCriverflow.h"
 #include "dlls/object_descriptor.h"
 #include "dlls/objects/597_SnowBike.h"
 
@@ -45,7 +46,6 @@
 #include "main/sky_api.h"
 #include "main/object_render.h"
 #include "main/dll/dll_0015_curves.h"
-#include "main/dll/dll_02AE_waterflowwe.h"
 #include "track/intersect_api.h"
 #include "main/track_dolphin_api.h"
 #include "main/track_bbox_api.h"
@@ -4714,8 +4714,8 @@ int playerState27(GameObject* obj, PlayerState* state, f32 fv) {
         } else if (gPlayerHitReactionVariant > 2) {
             gPlayerHitReactionVariant = 2;
         }
-        state->baddie.moveSpeed = lbl_803DC690[gPlayerHitReactionVariant - 1];
-        ObjAnim_SetCurrentMove(obj, lbl_803DC688[gPlayerHitReactionVariant - 1], 0.0f, 0);
+        state->baddie.moveSpeed = gPlayerHitReactionMoveSpeeds[gPlayerHitReactionVariant - 1];
+        ObjAnim_SetCurrentMove(obj, gPlayerHitReactionMoves[gPlayerHitReactionVariant - 1], 0.0f, 0);
         gPlayerHitReactionVariant = 0;
     }
     if (state->baddie.moveDone != 0) {
@@ -5476,9 +5476,9 @@ f32 gPlayerModelChainOriginY = 0.675f;
 f32 gPlayerModelChainOriginZ = 0.15f;
 f32 lbl_803DC67C = 0.1f;
 f32 lbl_803DC680 = 2.3f;
-f32 lbl_803DC684 = 1.0f;
-int lbl_803DC688[2] = {210, 212};
-f32 lbl_803DC690[2] = {0.030000001f, 0.030000001f};
+f32 gPlayerFallAnimSpeed = 1.0f;
+int gPlayerHitReactionMoves[2] = {210, 212};
+f32 gPlayerHitReactionMoveSpeeds[2] = {0.030000001f, 0.030000001f};
 s16 gPlayerClimbOntoWallMoves[2] = {102, 103};
 s16 gPlayerClimbOntoWallAltMoves[2] = {240, 241};
 s16 gPlayerCurrentMoveId = -1;
@@ -5490,9 +5490,9 @@ f32 lbl_803DC6B8[2] = {0.05f, 8.5f};
 f32 lbl_803DC6C0 = 8.5f;
 int lbl_803DC6C4[2] = {24, 26};
 s16 gPlayerStopMoves[4] = {27, 28, 29, 33};
-f32 lbl_803DC6D4 = 0.03f;
-f32 lbl_803DC6D8 = 0.03f;
-f32 lbl_803DC6DC = 0.03f;
+f32 gPlayerCloudRunnerAimZResponse = 0.03f;
+f32 gPlayerCloudRunnerAimXResponse = 0.03f;
+f32 gPlayerCloudRunnerTurnScale = 0.03f;
 f32 lbl_803DC6E0 = -0.3f;
 f32 lbl_803DC6E4 = 0.05f;
 
@@ -6045,13 +6045,13 @@ int playerStateOnCloudRunner(GameObject* obj, PlayerState* state) {
         if (hit == NULL) {
             c += lbl_803DC6E4;
         }
-        inner->aimInputZ += interpolate(c - inner->aimInputZ, lbl_803DC6D4, timeDelta);
+        inner->aimInputZ += interpolate(c - inner->aimInputZ, gPlayerCloudRunnerAimZResponse, timeDelta);
     }
     {
         f32 x = state->baddie.moveInputX / 56.0f;
         f32 c;
         c = (x < -1.0f) ? -1.0f : ((x > 1.0f) ? 1.0f : x);
-        inner->aimInputX += interpolate(c - inner->aimInputX, lbl_803DC6D8, timeDelta);
+        inner->aimInputX += interpolate(c - inner->aimInputX, gPlayerCloudRunnerAimXResponse, timeDelta);
     }
     {
         f32 d = inner->aimInputX;
@@ -6068,7 +6068,7 @@ int playerStateOnCloudRunner(GameObject* obj, PlayerState* state) {
         }
         {
             f32 p = -1000.0f * d;
-            inner->targetYaw = (s16)(p * lbl_803DC6DC + (f32)inner->targetYaw);
+            inner->targetYaw = (s16)(p * gPlayerCloudRunnerTurnScale + (f32)inner->targetYaw);
         }
         inner->yaw = inner->targetYaw;
     }
@@ -11443,11 +11443,11 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, f32 p3, GameObject* player) {
 
     sumC = 0.0f;
     sumS = 0.0f;
-    objs = (GameObject**)objGetAllOfType(0x14, &n);
+    objs = (GameObject**)objGetAllOfType(CC_RIVER_FLOW_OBJECT_GROUP, &n);
     any = 0;
     for (i = 0; i < n; i++) {
         o = objs[i];
-        if (((FoliageCurrentSetup*)o->anim.placementData)->currentFlags & 2) {
+        if (((CCRiverFlowPlacement*)o->anim.placementData)->currentFlags & CC_RIVER_FLOW_FLAG_PLAYER_AND_WATERFLOWWE) {
             f32 dy;
             any = 1;
             dy = o->anim.localPosY - object->anim.localPosY;
@@ -11455,7 +11455,7 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, f32 p3, GameObject* player) {
                 f32 dx = o->anim.localPosX - object->anim.localPosX;
                 f32 dz = o->anim.localPosZ - object->anim.localPosZ;
                 f32 dist = sqrtf(dx * dx + dz * dz);
-                f32 thresh = 1.5f * (f32)(u32)((FoliageCurrentSetup*)o->anim.placementData)->currentRadius;
+                f32 thresh = 1.5f * (f32)(u32)((CCRiverFlowPlacement*)o->anim.placementData)->currentRadius;
                 if (dist < thresh) {
                     ratio = 0.0f;
                     if (thresh > 0.0f) {
@@ -11468,13 +11468,13 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, f32 p3, GameObject* player) {
             }
         }
     }
-    objs = (GameObject**)objGetAllOfType(0x50, &n);
+    objs = (GameObject**)objGetAllOfType(BADDIE_WHIRLPOOL_OBJECT_GROUP, &n);
     for (i = 0; i < n; i++) {
         f32 strength;
         s16 currentAngle;
         f32 dy;
         o = objs[i];
-        strength = (f32)(u32)((ObjectCurrentSourceSetup*)o->anim.placementData)->strengthTenths / 10.0f;
+        strength = (f32)(u32)((EnemyPlacement*)o->anim.placementData)->whirlpoolStrengthTenths / 10.0f;
         any = 1;
         dy = o->anim.localPosY - object->anim.localPosY;
         if (dy <= 200.0f && dy >= -200.0f) {
@@ -11484,7 +11484,7 @@ void playerCalcWaterCurrent(f32* outX, f32* outZ, f32 p3, GameObject* player) {
             f32 thresh;
             currentAngle = (s16)(getAngle(dx, dz) + 0x84d0);
             dist = sqrtf(dx * dx + dz * dz);
-            thresh = (f32)(int)(((ObjectCurrentSourceSetup*)o->anim.placementData)->radiusCells << 3);
+            thresh = (f32)(int)(((EnemyPlacement*)o->anim.placementData)->whirlpoolRadius << 3);
             if (dist < thresh) {
                 ratio = 0.0f;
                 if (thresh > 0.0f) {
@@ -12290,7 +12290,7 @@ int playerUpdateFallingMotion(GameObject* obj, PlayerState* inner, PlayerState* 
         inner->yawSmoothRate = 40.0f;
         inner->yawRateLimit = 0.9f;
     }
-    inner->targetAnimSpeed = lbl_803DC684;
+    inner->targetAnimSpeed = gPlayerFallAnimSpeed;
     {
         inner->currentSpeed = (inner->currentSpeed < 0.0f)
                                   ? 0.0f

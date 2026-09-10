@@ -101,10 +101,6 @@ block_relocations:
   end: 0x8038020A
 - target: 0x80100100
   end: 0x80100104
-- target: 0x80180100
-  end: 0x80180218
-- target: 0x80080108
-  end: 0x80080120
 - target: 0x80080200
   end: 0x80080204
 - target: 0x80080208
@@ -117,8 +113,201 @@ block_relocations:
   end: 0x800C0104
 - target: 0x80008000
   end: 0x80008004
+# Effect1_spawnObject: 0x80080108
+- source: 0x800B031C
+  end: 0x800B0324
+# Effect1_spawnObject: 0x80080110
+- source: 0x800B0A30
+  end: 0x800B0A38
+# Effect2_spawnObject: 0x80080100
+- source: 0x800B436C
+  end: 0x800B4374
+# Effect3_spawnObject: 0x80080110
+- source: 0x800B83F8
+  end: 0x800B8400
+# Effect4_spawnObject: 0x80080112
+- source: 0x800B97AC
+  end: 0x800B97B4
+# Effect4_spawnObject: 0x80080112
+- source: 0x800B989C
+  end: 0x800B98A4
+# Effect4_spawnObject: 0x80180104
+- source: 0x800BB634
+  end: 0x800BB63C
+# Effect5_spawnObject: 0x80080118
+- source: 0x800BC9F0
+  end: 0x800BC9F8
+# Effect5_spawnObject: 0x80080118
+- source: 0x800BCC28
+  end: 0x800BCC30
+# Effect5_spawnObject: 0x80180100
+- source: 0x800BD214
+  end: 0x800BD21C
+# Effect6_spawnObject: 0x80180200
+- source: 0x800BD97C
+  end: 0x800BD984
+# Effect7_spawnObject: 0x80180100
+- source: 0x800BE6DC
+  end: 0x800BE6E4
+# Effect7_spawnObject: 0x80080100
+- source: 0x800BF380
+  end: 0x800BF388
+# Effect7_spawnObject: 0x80180200
+- source: 0x800BF6E0
+  end: 0x800BF6E8
+# Effect7_spawnObject: 0x80180210
+- source: 0x800BF74C
+  end: 0x800BF754
+# Effect8_spawnObject: 0x80080100
+- source: 0x800C0F98
+  end: 0x800C0FA0
+# Effect9_spawnObject: 0x80180100
+- source: 0x800C143C
+  end: 0x800C1444
+# Effect9_spawnObject: 0x80180108
+- source: 0x800C1B60
+  end: 0x800C1B68
+# Effect12_spawnObject: 0x80180200
+- source: 0x800C5F08
+  end: 0x800C5F10
+# Effect14_spawnObject: 0x80180208
+- source: 0x800C77CC
+  end: 0x800C77D4
+# Effect16_spawnObject: 0x80180214
+- source: 0x800C821C
+  end: 0x800C8224
+# Effect16_spawnObject: 0x80180214
+- source: 0x800C82C0
+  end: 0x800C82C8
+# Effect16_spawnObject: 0x80180200
+- source: 0x800C85FC
+  end: 0x800C8604
+# Effect17_spawnObject: 0x80180200
+- source: 0x800CAB88
+  end: 0x800CAB90
+# Effect18_spawnObject: 0x80180100
+- source: 0x800CC760
+  end: 0x800CC768
+# Effect18_spawnObject: 0x80180200
+- source: 0x800CC9E0
+  end: 0x800CC9E8
+# Effect20_spawnObject: 0x80080100
+- source: 0x800D3244
+  end: 0x800D324C
+# Effect20_spawnObject: 0x80080100
+- source: 0x800D3454
+  end: 0x800D345C
+# Effect20_spawnObject: 0x80180200
+- source: 0x800D4578
+  end: 0x800D4580
 
 extract:
 - symbol: gLoadingScreenTextures
   binary: gLoadingScreenTextures.bin
   header: gLoadingScreenTextures.inc
+
+force_active:
+  # audio.c: retain the unused initialized word and two small-BSS words.
+  - lbl_803DB1EC
+  - sAudioUnused0
+  - sAudioUnused1
+  # DLL 53: retain the word before the save-selection texture IDs.
+  - lbl_803DBA00
+  # gameloop.c: retain the memory-card dialog and its status-helper references.
+  - cardShowMessage
+  # maketex.c: JP shares EN's complete 168-byte memory-card banner string block.
+  - gMemoryCardBannerAssetNames
+  # aram_data.c: retain the same unreferenced 24-byte .bss block as EN.
+  - lbl_803D4868
+  # dlls/engine/5/5.c
+  # Retain the unused sky color table and trailing small-data word.
+  - sSkyUnusedColors
+  - sSkyUnusedD
+  # dlls/objects/429_SH_thorntai/SHthorntail.c
+  # Thorntail reads these state and dialogue tables through the linked-ident base.
+  - gSHthorntailHitReactEntries
+  - gSHthorntailAsleepHitReactEntries
+  - gSHthorntailStateMoveIds
+  - gSHthorntailStateMoveStepScales
+  - gSHthorntailStateFlags
+  - gSHthorntailStatePrimaryEventSfx
+  - gSHthorntailStateSecondaryEventSfx
+  - gSHthorntailHerdAct1TalkSeqVariants
+  - gSHthorntailHerdAct2ClearTalkSeqVariants
+  - gSHthorntailHerdAct2SetTalkSeqVariants
+  - gSHthorntailHerdAct3ClearTalkSeqVariants
+  - gSHthorntailHerdAct3SetTalkSeqVariants
+  - gSHthorntailHerdAct5ClearTalkSeqVariants
+  # dlls/objects/597/597.c
+  # SnowBike reads these gamebit pairs through the path-setup table base.
+  - gSnowBikeRaceGameBits
+  # main/audio_stream.c
+  # The looped-sound arrays are reached through the flags-array base.
+  - gSfxLoopedObjectSoundIds
+  - gSfxLoopedObjectSoundObjects
+  # main/boot_logo.c
+  # GPU diagnostics address these strings through offsets from the texture base.
+  - sGpuHangSuspectedMessage
+  - sGpuHangStatusFormat
+  - sGpuHangXfStallMessage
+  - sGpuHangUnterminatedMessage
+  - sGpuHangIllegalInstructionMessage
+  - sGpuHangWaitingMessage
+  - sGpuHangUnknownMessage
+  - sGpuHangXfStallLog
+  - sGpuHangUnterminatedLog
+  - sGpuHangIllegalInstructionLog
+  - sGpuHangWaitingLog
+  - sGpuHangUnknownLog
+  # main/objlib.c: retain the zero before the hit-cooldown constant pool.
+  - gObjLibZero
+  # main/shader_dolphin.c
+  # These constants are read through offsets from sEnvMapBumpIndMtx.
+  - sWarpedRingRotAxes
+  - sWarpedRingIndMtx
+  # main/thp/THPRead.c
+  # Retain the message arrays addressed through their neighboring queues.
+  - gPicMenuReadedBuffer2Messages
+  - gPicMenuReadedBufferMessages
+  - gPicMenuFreeReadBufferMessages
+  # main/thp/THPVideoDecode.c
+  # Retain the video decoder stack addressed through its containing area.
+  - gPicMenuVideoDecodeThreadStack
+  # track/intersect.c
+  # Retain the uncalled surface-sound lookup and unused small-data word.
+  - surfaceSfxGetRecord
+  - sIntersectUnused0
+
+# Retail startup/BSS bounds establish these linker-generated addresses.
+# symbols_known skips signature recovery; keep the linker formulas external.
+add_relocations:
+- source: .text:0x8028CAE8
+  type: hi
+  target: _db_stack_addr
+- source: .text:0x8028CAEC
+  type: l
+  target: _db_stack_addr
+- source: .text:0x80240734
+  type: ha
+  target: __ArenaLo
+- source: .text:0x80240738
+  type: l
+  target: __ArenaLo
+- source: .text:0x8024076C
+  type: ha
+  target: _stack_addr
+- source: .text:0x80240770
+  type: l
+  target: _stack_addr
+- source: .text:0x80245DB4
+  type: ha
+  target: _stack_addr
+- source: .text:0x80245DB8
+  type: l
+  target: _stack_addr
+- source: .init:0x80003278
+  type: hi
+  target: _stack_addr
+- source: .init:0x8000327C
+  type: l
+  target: _stack_addr

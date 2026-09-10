@@ -1,6 +1,9 @@
+#include "dlls/objects/686_WaterFlowWe.h"
 #include "main/dll/dll_0018_boneparticleeffect.h"
 #include "dlls/objects/554_DFP_ObjCrea.h"
 #include "dlls/objects/556.h"
+#include "dlls/objects/555_DFP_Torch.h"
+#include "dlls/objects/553_DFP_LevelCo.h"
 #include "dlls/objects/625_DrakorHoverpad.h"
 #include "dlls/objects/597_SnowBike.h"
 #include "dlls/objects/607_CRFuelTank.h"
@@ -454,16 +457,22 @@
 #include "dlls/objects/196_Tricky.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/CF/laser.h"
+#include "dlls/objects/552.h"
+#include "dlls/objects/567_DFPSpPl.h"
+#include "dlls/objects/568_LINKA_levco.h"
+#include "dlls/objects/571_DFP_Lightni.h"
+#include "dlls/objects/572_DFP_PowerSl.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "dlls/objects/294.h"
 #include "dlls/objects/557_DFP_seqpoin.h"
 #include "dlls/objects/578_DBstealerwo.h"
 #include "main/dll/DF/dll_022E_dfpdoorswitch.h"
-#include "main/dll/DF/dll_0233_dfpstatue1.h"
+#include "dlls/objects/563_DFP_Statue1.h"
 #include "main/dll/DF/dll_0234_dfperchwitch.h"
 #include "dlls/objects/547_VFP_corepla.h"
 #include "dlls/objects/565_DFP_TargetB.h"
-#include "main/dll/baddie/dll_022F_dfpfloorbar.h"
+#include "dlls/objects/559_DFP_floorba.h"
+#include "dlls/objects/560_DFP_wallbar.h"
 #include "dlls/objects/575_DB_egg.h"
 #include "main/dll/dll_025A_staticcamera.h"
 #include "main/dll/dll_025B_msplantings.h"
@@ -490,10 +499,12 @@
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/dll/DR/dll_0281_drearthcal.h"
 #include "main/dll/dll_0299.h"
-#include "main/dll/dll_02B1_cmbsrc.h"
-#include "main/dll/dll_02B2_dustmotesou.h"
-#include "main/dll/dll_02B4_cntcounter.h"
-#include "main/dll/dll_02B6_cnthitobjec.h"
+#include "dlls/objects/689_CmbSrc.h"
+#include "dlls/objects/690_DustMoteSou.h"
+#include "dlls/objects/691.h"
+#include "dlls/objects/692_CNTcounter.h"
+#include "dlls/objects/693_Timer.h"
+#include "dlls/objects/694_CNThitObjec.h"
 #include "main/dll/dll_02B7_mcupgrade.h"
 #include "main/dll/dll_02B8_mcupgradema.h"
 #include "main/dll/dll_02B9_mcstaffeffe.h"
@@ -503,8 +514,8 @@
 #include "main/dll/dll_02BF_androssligh.h"
 #include "main/dll/dll_02BE_androssbrain.h"
 #include "main/dll/dll_02BD_androsshand.h"
-#include "main/dll/dll_02AF_tree.h"
-#include "main/dll/dll_02B0_brokenpipe.h"
+#include "dlls/objects/687.h"
+#include "dlls/objects/688_BrokenPipe.h"
 #include "main/dll/dll_02AD_softbody.h"
 #include "main/dll/SP/dll_0287_spscarab.h"
 #include "main/dll/VF/platform1.h"
@@ -548,9 +559,9 @@ char sModelEngineTimerDotText[] = ".";
 
 #define RESOURCE_DESCRIPTOR_COUNT 0x2c1
 
-/* gModelEngineTimerState bits (roles from accessor fns: timerSetToCountUp,
+/* gModelEngineTimerState bits (roles from accessor fns: gameTimerResume,
  * isGameTimerDisabled, gameTimerIsRunning). */
-#define MODELENGINE_TIMER_COUNTDOWN 1
+#define MODELENGINE_TIMER_PAUSED    1
 #define MODELENGINE_TIMER_DISABLED  2
 #define MODELENGINE_TIMER_RUNNING   4
 
@@ -561,12 +572,9 @@ extern ResourceDescriptor gDll2A4ObjDescriptor, dll_2E, gDllD3ObjDescriptor, exp
 extern ResourceDescriptor gARWBlockerObjDescriptor, gARWBombCollObjDescriptor, gARWGeneratoObjDescriptor,
     gARWProximitObjDescriptor;
 extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor;
-extern ResourceDescriptor gChukaObjDescriptor;
 extern ResourceDescriptor gCrCloudRaceObjDescriptor;
-extern ResourceDescriptor gDBHoleControl1ObjDescriptor, gDFP_LevelControlObjDescriptor,
-    gDFP_TorchObjDescriptor;
+extern ResourceDescriptor gDBHoleControl1ObjDescriptor;
 extern ResourceDescriptor gDIM_trickyObjDescriptor, gDR_CloudRunnerObjDescriptor;
-extern ResourceDescriptor gDfplightniObjDescriptor, gDfppowerslObjDescriptor;
 extern ResourceDescriptor gDrCageControlObjDescriptor,
     gDrCageWithObjDescriptor, gDrChimmeyObjDescriptor, gDrCloudPerObjDescriptor, gDrCreatorObjDescriptor;
 extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor,
@@ -574,7 +582,7 @@ extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor,
     gDrakorEnergyObjDescriptor;
 extern ResourceDescriptor gDrakorMissileObjDescriptor;
 extern ResourceDescriptor gEarthWalkerObjDescriptor;
-extern ResourceDescriptor gFireFlyObjDescriptor, gFireObjDescriptor;
+extern ResourceDescriptor gFireFlyObjDescriptor;
 extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor, gKtRexFloorSwitchObjDescriptor,
     gKtRexLevelObjDescriptor, gKytesMumObjDescriptor;
 extern ResourceDescriptor gProjectedLightObjDescriptor;
@@ -584,19 +592,18 @@ extern ResourceDescriptor gDFP_RotatePObjDescriptor, gShopItemObjDescriptor, gSh
     gShopObjDescriptor;
 extern ResourceDescriptor gSnowClawObjDescriptor;
 extern ResourceDescriptor gSpellStoneObjDescriptor;
-extern ResourceDescriptor gTimerObjDescriptor;
 extern ResourceDescriptor gTitleScreenObjDescriptor, gTrickyCurveObjDescriptor;
 extern ResourceDescriptor gVFPDragHeadObjDescriptor, gVFPLiftObjDescriptor, gVFP_Block1ObjDescriptor;
 extern ResourceDescriptor gVFP_LaddersObjDescriptor, gVFP_LevelControlObjDescriptor,
     gVFP_MiniFireObjDescriptor, gVFP_ObjCreatorObjDescriptor, gVFP_PlatformObjDescriptor,
-    gVFP_SpellPlaceObjDescriptor, gVFP_flamepointObjDescriptor;
+    gVFP_flamepointObjDescriptor;
 extern ResourceDescriptor gVFP_lavapoolObjDescriptor, gVFP_lavastarObjDescriptor, gVFP_statueballObjDescriptor,
-    gVortexObjDescriptor, gWCBouncyCraObjDescriptor;
+    gWCBouncyCraObjDescriptor;
 extern ResourceDescriptor gWCLevelContObjDescriptor,
     gWCPushBlockObjDescriptor,
     gWCTileObjDescriptor;
 extern ResourceDescriptor gWM_SpiritSetObjDescriptor, gWM_newcrystalObjDescriptor;
-extern ResourceDescriptor gWM_spiritplaceObjDescriptor, gWM_sunObjDescriptor, gWaterFlowWeObjDescriptor;
+extern ResourceDescriptor gWM_spiritplaceObjDescriptor, gWM_sunObjDescriptor;
 extern ResourceDescriptor ObjSeq_funcs;
 extern ResourceDescriptor sky_funcs, sky2_funcs, newclouds_funcs, Dummy08_funcs, cloudaction_funcs, waterfx_funcs,
     dll_0B_funcs, partfx_funcs;
@@ -894,21 +901,21 @@ void gameTimerRun(void* context)
     f32 dt = timeDelta;
     u8 colorFlag = 0;
     TextSlot* box = gameTextGetBox(0xD);
-    int hours;
     int minutes;
+    int seconds;
     int hundredths;
     u16 boxY;
     char clamped;
-    int totalSecs;
-    int mins;
+    int wholeFrames;
+    int wholeSeconds;
 
-    if ((gModelEngineTimerState & MODELENGINE_TIMER_COUNTDOWN) || getHudHiddenFrameCount() != 0)
+    if ((gModelEngineTimerState & MODELENGINE_TIMER_PAUSED) || getHudHiddenFrameCount() != 0)
     {
         dt = 0.0f;
     }
 
     clamped = 0;
-    if ((gModelEngineTimerFlags & 1) != 0)
+    if ((gModelEngineTimerFlags & GAME_TIMER_COUNT_DOWN) != 0)
     {
         gModelEngineTimerValue -= dt;
         if (gModelEngineTimerValue <= 0.0f)
@@ -937,7 +944,7 @@ void gameTimerRun(void* context)
 
     if (clamped)
     {
-        if ((gModelEngineTimerFlags & 8) != 0)
+        if ((gModelEngineTimerFlags & GAME_TIMER_END_SOUND) != 0)
         {
             Sfx_PlayFromObject(0, SFXTRIG_sc_lockon22);
         }
@@ -945,12 +952,18 @@ void gameTimerRun(void* context)
         gModelEngineTimerState |= MODELENGINE_TIMER_DISABLED;
     }
 
-    if ((gModelEngineTimerFlags & 4) != 0)
+    if ((gModelEngineTimerFlags & GAME_TIMER_LOOP_SOUND) != 0)
     {
         f32 panByte;
         f32 volume;
-        Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_sc_commsbleep_28c);
-        if ((gModelEngineTimerFlags & 1) != 0)
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+        if (dt) {
+#endif
+            Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_sc_commsbleep_28c);
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+        }
+#endif
+        if ((gModelEngineTimerFlags & GAME_TIMER_COUNT_DOWN) != 0)
         {
             panByte = (f32)(0x7F - ((int)(80.0f * (gModelEngineTimerValue / gModelEngineTimerDuration)) & 0xFF));
             volume = 1.3f - 0.6f * (gModelEngineTimerValue / gModelEngineTimerDuration);
@@ -963,12 +976,12 @@ void gameTimerRun(void* context)
         Sfx_SetObjectSfxVolume(0, SFXTRIG_sc_commsbleep_28c, panByte, volume);
     }
 
-    if ((gModelEngineTimerFlags & 0x10) != 0 && pauseMenuState == 0 && getHudHiddenFrameCount() == 0)
+    if ((gModelEngineTimerFlags & GAME_TIMER_DISPLAY) != 0 && pauseMenuState == 0 && getHudHiddenFrameCount() == 0)
     {
-        totalSecs = gModelEngineTimerValue;
-        mins = totalSecs / 60;
-        hours = mins / 60;
-        minutes = mins - hours * 60;
+        wholeFrames = gModelEngineTimerValue;
+        wholeSeconds = wholeFrames / 60;
+        minutes = wholeSeconds / 60;
+        seconds = wholeSeconds - minutes * 60;
         hundredths = (int)(100.0f * (gModelEngineTimerValue / 60.0f));
         hundredths = hundredths - hundredths / 100 * 100;
 
@@ -985,19 +998,19 @@ void gameTimerRun(void* context)
         gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
         }
 
-        sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, hours / 10);
-        gameTextShowStr(gModelEngineTextBuf, 0xD, 5, 3);
-        sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, hours % 10);
-        gameTextShowStr(gModelEngineTextBuf, 0xD, gModelEngineTimerDigitPairXOffset + 5, 3);
         sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, minutes / 10);
-        gameTextShowStr(gModelEngineTextBuf, 0xD, gModelEngineTimerFieldXStride + 5, 3);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, 5, 3);
         sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, minutes % 10);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, gModelEngineTimerDigitPairXOffset + 5, 3);
+        sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, seconds / 10);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, gModelEngineTimerFieldXStride + 5, 3);
+        sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, seconds % 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, 5 + gModelEngineTimerFieldXStride + gModelEngineTimerDigitPairXOffset, 3);
         sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, hundredths / 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, gModelEngineTimerFieldXStride * 2 + 5, 3);
         sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, hundredths % 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, 5 + gModelEngineTimerFieldXStride * 2 + gModelEngineTimerDigitPairXOffset, 3);
-        if (minutes & 1)
+        if (seconds & 1)
         {
             gameTextShowStr(sModelEngineTimerColonText, 0xD, gModelEngineTimerColonX, 3);
             gameTextShowStr(sModelEngineTimerDotText, 0xD, gModelEngineTimerDotX, 3);
@@ -1006,7 +1019,7 @@ void gameTimerRun(void* context)
 }
 
 f32 gameTimerGetElapsedMilliseconds(void) {
-    if ((gModelEngineTimerFlags & 1) != 0) {
+    if ((gModelEngineTimerFlags & GAME_TIMER_COUNT_DOWN) != 0) {
         return 1000.0f * ((gModelEngineTimerDuration - gModelEngineTimerValue) / 60.0f);
     }
     return 1000.0f * (gModelEngineTimerValue / 60.0f);
@@ -1028,29 +1041,29 @@ void gameTimerStop(void)
     gModelEngineTimerState |= MODELENGINE_TIMER_DISABLED;
 }
 
-void timerSetToCountUp(void)
+void gameTimerResume(void)
 {
-    if ((gModelEngineTimerState & MODELENGINE_TIMER_COUNTDOWN) != 0)
+    if ((gModelEngineTimerState & MODELENGINE_TIMER_PAUSED) != 0)
     {
-        gModelEngineTimerState &= ~MODELENGINE_TIMER_COUNTDOWN;
+        gModelEngineTimerState &= ~MODELENGINE_TIMER_PAUSED;
     }
 }
 
-void gameTimerInit(s8 flags, int minutes)
+void gameTimerInit(s8 flags, int durationSeconds)
 {
     gModelEngineTimerFlags = flags;
-    if ((flags & 1) != 0)
+    if ((flags & GAME_TIMER_COUNT_DOWN) != 0)
     {
-        gModelEngineTimerValue = minutes * 60;
+        gModelEngineTimerValue = durationSeconds * 60;
     }
     else
     {
         gModelEngineTimerValue = 0.0f;
     }
-    gModelEngineTimerDuration = minutes * 60;
-    gModelEngineTimerState |= MODELENGINE_TIMER_COUNTDOWN;
+    gModelEngineTimerDuration = durationSeconds * 60;
+    gModelEngineTimerState |= MODELENGINE_TIMER_PAUSED;
     gModelEngineTimerState &= ~MODELENGINE_TIMER_DISABLED;
-    if ((flags & 3) != 0)
+    if ((flags & (GAME_TIMER_COUNT_DOWN | GAME_TIMER_COUNT_UP)) != 0)
     {
         gModelEngineTimerState |= MODELENGINE_TIMER_RUNNING;
     }
@@ -1768,27 +1781,27 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gVFP_flamepointObjDescriptor,
     &gVFP_lavapoolObjDescriptor,
     &gVFP_lavastarObjDescriptor,
-    &gVFP_SpellPlaceObjDescriptor,
-    &gDFP_LevelControlObjDescriptor,
+    (ResourceDescriptor*)&gVFP_SpellPlaceObjDescriptor,
+    (ResourceDescriptor*)&gDFP_LevelControlObjDescriptor,
     (ResourceDescriptor*)&gDFP_ObjCreatorObjDescriptor,
-    &gDFP_TorchObjDescriptor,
+    (ResourceDescriptor*)&gDFP_TorchObjDescriptor,
     (ResourceDescriptor*)&gDll22CObjDescriptor,
     (ResourceDescriptor*)&gDFP_seqpointObjDescriptor,
     (ResourceDescriptor*)&gDoorswitchObjDescriptor,
     (ResourceDescriptor*)&gDfpfloorbarObjDescriptor,
-    &gChukaObjDescriptor,
+    (ResourceDescriptor*)&gChukaObjDescriptor,
     &gTrickyCurveObjDescriptor,
     &gDFP_RotatePObjDescriptor,
     (ResourceDescriptor*)&gDfpstatue1ObjDescriptor,
     (ResourceDescriptor*)&gDfperchwitchObjDescriptor,
     (ResourceDescriptor*)&gDfptargetblockObjDescriptor,
     (ResourceDescriptor*)&gLaserUnsupportedObjDescriptor,
-    (ResourceDescriptor*)&gLaserObjDescriptor,
-    &gFireObjDescriptor,
+    (ResourceDescriptor*)&gDFPSpPlObjDescriptor,
+    (ResourceDescriptor*)&gLinkALevControlObjDescriptor,
     (ResourceDescriptor*)&gTextBlockObjDescriptor,
     (ResourceDescriptor*)&gPlatform1ObjDescriptor,
-    &gDfplightniObjDescriptor,
-    &gDfppowerslObjDescriptor,
+    (ResourceDescriptor*)&gDfplightniObjDescriptor,
+    (ResourceDescriptor*)&gDfppowerslObjDescriptor,
     &gDBPointMumNullResourceDescriptor,
     &gDll23ENullResourceDescriptor,
     (ResourceDescriptor*)&gDB_eggObjDescriptor,
@@ -1902,14 +1915,14 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gProjectedLightObjDescriptor,
     (ResourceDescriptor*)&gControlLightObjDescriptor,
     (ResourceDescriptor*)&gSoftBodyObjDescriptor,
-    &gWaterFlowWeObjDescriptor,
+    (ResourceDescriptor*)&gWaterFlowWeObjDescriptor,
     (ResourceDescriptor*)&gTreeObjDescriptor,
     (ResourceDescriptor*)&gBrokenPipeObjDescriptor,
     (ResourceDescriptor*)&gCmbSrcObjDescriptor,
     (ResourceDescriptor*)&gDustMoteSouObjDescriptor,
-    &gVortexObjDescriptor,
+    (ResourceDescriptor*)&gVortexObjDescriptor,
     (ResourceDescriptor*)&gCNTcounterObjDescriptor,
-    &gTimerObjDescriptor,
+    (ResourceDescriptor*)&gTimerObjDescriptor,
     (ResourceDescriptor*)&gCNThitObjecObjDescriptor,
     (ResourceDescriptor*)&gMCUpgradeObjDescriptor,
     (ResourceDescriptor*)&gMCUpgradeMaObjDescriptor,

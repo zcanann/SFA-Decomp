@@ -19,7 +19,7 @@
 #include "main/vecmath.h"
 #include "sys/objects.h"
 #include "main/audio/sfx_play_api.h"
-#include "main/dll/dll_02B1_cmbsrc.h"
+#include "dlls/objects/689_CmbSrc.h"
 #include "main/objtype.h"
 #include "sys/objects/lifecycle.h"
 #include "main/objseq.h"
@@ -33,7 +33,6 @@
 #define FIREBALL_FLAG_DISABLED    0x8
 
 #define FIREBALL_SEQID_HIDDEN         0x83E
-#define FIREBALL_SEQID_CMBSRC_RECOLOR 0x6E8
 
 #define FIREBALL_SPIRAL_AMPLITUDE 8.0f
 #define FIREBALL_PI               3.1415927f
@@ -259,8 +258,8 @@ void Fireball_hitDetect(GameObject* obj) {
     if (target == NULL) {
         return;
     }
-    if (target->anim.romDefNo == FIREBALL_SEQID_CMBSRC_RECOLOR) {
-        int colorIndex = cmbsrc_getColorIndex(target);
+    if (target->anim.romDefNo == CMBSRC_OBJECT_ID) {
+        int colorIndex = cmbsrc_getColorCycleIndex(target);
         if ((s8)colorIndex != -1) {
             state->colorIndex = (u8)colorIndex;
             if (state->light != NULL) {

@@ -598,11 +598,11 @@ spell several of these out explicitly where the wiki page doesn't:
 
 ### The `_DLL_ID` convention
 
-15 headers define a local `#define <NAME>_DLL_ID 0xNNNN` next to the struct(s) that need to check
-their own ID at runtime (e.g. `include/main/textblock.h:6` → `TEXTBLOCK_DLL_ID 0x0239`,
-`include/main/dfppowersl.h:12` → `DFPPOWERSL_DLL_ID 0x023C`). This is deliberately per-file, not
-centralized — it lines up with the `dll_XXXX_name.c` filename convention as the source of truth for
-"which file is DLL N", rather than a single project-wide enum.
+Runtime DLL-ID constants belong in the owning canonical header when code uses
+that ID. Generated numbered paths establish the slot even when no constant is
+needed: `dlls/objects/572_DFP_PowerSl/DFP_PowerSl.c` owns slot `0x23C`, with its
+public types in `include/dlls/objects/572_DFP_PowerSl.h`. Its former unused
+`DFPPOWERSL_DLL_ID` alias has been removed.
 
 ## Ready-to-adopt code
 

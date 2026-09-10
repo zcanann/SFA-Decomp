@@ -21,7 +21,13 @@
 #include "main/vecmath.h"
 #include "dolphin/pad.h"
 
-#define LINK_ITEM_SLOTS 25
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
+#define LINK_TEXT_LINE_HEIGHT()                                                                                        \
+    (getCurLanguage() == LANGUAGE_JAPANESE ? gGameTextFontMetrics[0].lineHeight + 2                                    \
+                                           : gGameTextFontMetrics[4].lineHeight + 2)
+#else
+#define LINK_TEXT_LINE_HEIGHT() (gGameTextFontMetrics[sLanguageNameTable[getCurLanguage()].fontId].lineHeight + 2)
+#endif
 
 typedef struct LinkTextureSlot {
     void* texture;
@@ -50,45 +56,11 @@ extern char sLinkNavLinkRangeErr[];
 
 #define PAD_ACCEPT_MASK (PAD_BUTTON_A | PAD_BUTTON_START)
 
-typedef struct LinkMenuItem {
-    u16 textId;
-    u16 boxId;
-    s16 rightX;
-    s16 textTop;
-    s16 slotWidth;
-    s16 x;
-    s16 y;
-    u8 pad0E[2];
-
-    union {
-        int textureAssetId;
-        void* texture;
-    };
-
-    u16 width;
-    u16 flags;
-    u8 pad18[2];
-    s8 upLink;
-    s8 downLink;
-    s8 leftLink;
-    s8 rightLink;
-    s8 state;
-    s8 slots[LINK_ITEM_SLOTS];
-    s8 timer;
-    u8 pad39[3];
-} LinkMenuItem;
-STATIC_ASSERT(sizeof(LinkMenuItem) == 0x3C);
-STATIC_ASSERT(offsetof(LinkMenuItem, rightX) == 0x04);
-STATIC_ASSERT(offsetof(LinkMenuItem, x) == 0x0A);
-STATIC_ASSERT(offsetof(LinkMenuItem, y) == 0x0C);
-STATIC_ASSERT(offsetof(LinkMenuItem, textureAssetId) == 0x10);
-STATIC_ASSERT(offsetof(LinkMenuItem, flags) == 0x16);
-STATIC_ASSERT(offsetof(LinkMenuItem, upLink) == 0x1A);
 #define LINK_FLAG_DRAW_SLOTS 0x0004
 
-extern LinkMenuItem gLinkMenuItems[40];
+extern TitleMenuTextEntry gLinkMenuItems[40];
 
-void linkInitTextures(LinkMenuItem* item);
+void linkInitTextures(TitleMenuTextEntry* item);
 void Link_resetTimers(void);
 void Link_copy(u8* srcArg);
 u8 Link_getPulse(void);
@@ -100,20 +72,21 @@ void Link_setSelected(int v);
 s32 Link_getSelected(void);
 void Link_render(int context);
 void Link_free(void);
-void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage, int unused1, int unused2,
-                int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen, int selectedBlue);
+void Link_setup(TitleMenuTextEntry* items, int count, int selected, const char* defaultMessage, int unused1,
+                int unused2, int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen,
+                int selectedBlue);
 void Link_release(void);
 void Link_initialise(void);
 
 u16 linkGetSelectedItemId(void) {
     return gLinkMenuItems[linkSelected].boxId;
 }
-void linkInitTextures(LinkMenuItem* item) {
+void linkInitTextures(TitleMenuTextEntry* item) {
     int budget;
     int i;
 
     budget = item->width;
-    for (i = 0; i < LINK_ITEM_SLOTS; i++) {
+    for (i = 0; i < TITLE_MENU_TEXT_ENTRY_SLOTS; i++) {
         item->slots[i] = -1;
     }
     item->slots[(i = 1) - 1] = 0;
@@ -130,12 +103,12 @@ void linkInitTextures(LinkMenuItem* item) {
         i++;
     }
     item->slots[i++] = 1;
-    if (i >= LINK_ITEM_SLOTS) {
+    if (i >= TITLE_MENU_TEXT_ENTRY_SLOTS) {
         OSReport(sLinkSlotOverflowErr);
     }
 }
 void Link_refreshOverlappingItemTimers(void) {
-    LinkMenuItem* sel;
+    TitleMenuTextEntry* sel;
     int resetTimer;
     Texture* iconTex;
     int i;
@@ -157,11 +130,7 @@ void Link_refreshOverlappingItemTimers(void) {
         iconHeight = iconTex->height;
         selTop = sel->y;
     } else {
-        if (getCurLanguage() == 4) {
-            iconHeight = gGameTextFontMetrics[0].lineHeight + 2;
-        } else {
-            iconHeight = gGameTextFontMetrics[4].lineHeight + 2;
-        }
+        iconHeight = LINK_TEXT_LINE_HEIGHT();
         selTop = sel->textTop - 2;
     }
     selBottom = selTop + iconHeight;
@@ -176,11 +145,7 @@ void Link_refreshOverlappingItemTimers(void) {
                 iconHeight = iconTex->height;
                 itemTop = gLinkMenuItems[i].y;
             } else {
-                if (getCurLanguage() == 4) {
-                    iconHeight = gGameTextFontMetrics[0].lineHeight + 2;
-                } else {
-                    iconHeight = gGameTextFontMetrics[4].lineHeight + 2;
-                }
+                iconHeight = LINK_TEXT_LINE_HEIGHT();
                 itemTop = gLinkMenuItems[i].textTop - 2;
             }
             itemBottom = itemTop + iconHeight;
@@ -202,7 +167,7 @@ void setLinkIsRotated(void) {
 }
 
 void Link_scanItemVerticalBounds(void) {
-    LinkMenuItem* item;
+    TitleMenuTextEntry* item;
     Texture* iconTex;
     int i;
     int minY;
@@ -225,11 +190,7 @@ void Link_scanItemVerticalBounds(void) {
             iconHeight = iconTex->height;
             top = item->y;
         } else {
-            if (getCurLanguage() == 4) {
-                iconHeight = gGameTextFontMetrics[0].lineHeight + 2;
-            } else {
-                iconHeight = gGameTextFontMetrics[4].lineHeight + 2;
-            }
+            iconHeight = LINK_TEXT_LINE_HEIGHT();
             top = item->textTop - 2;
         }
         bottom = top + iconHeight;
@@ -249,14 +210,14 @@ void Link_resetTimers(void) {
     }
 }
 void Link_copy(u8* srcArg) {
-    LinkMenuItem* dst;
-    LinkMenuItem* src;
+    TitleMenuTextEntry* dst;
+    TitleMenuTextEntry* src;
     int i;
 
     i = 0;
     for (; i < gLinkItemCount; i++) {
         dst = &gLinkMenuItems[i];
-        src = &((LinkMenuItem*)srcArg)[i];
+        src = &((TitleMenuTextEntry*)srcArg)[i];
         dst->flags = src->flags;
         dst->upLink = src->upLink;
         dst->rightX = src->rightX;
@@ -277,10 +238,10 @@ u8 Link_getPulse(void) {
     return gLinkPulse;
 }
 void Link_updateItems(u8* srcArg) {
-    LinkMenuItem* src;
+    TitleMenuTextEntry* src;
     int i;
 
-    src = (LinkMenuItem*)srcArg;
+    src = (TitleMenuTextEntry*)srcArg;
     for (i = 0; i < gLinkItemCount; i++) {
         gLinkMenuItems[i].textId = src[i].textId;
         gLinkMenuItems[i].boxId = src[i].boxId;
@@ -320,7 +281,7 @@ s32 Link_getSelected(void) {
 }
 
 void Link_render(int context) {
-    LinkMenuItem* item;
+    TitleMenuTextEntry* item;
     int i;
     int slotIndex;
     int opacity;
@@ -331,7 +292,7 @@ void Link_render(int context) {
     s16 green;
     s16 blue;
     u16 textId;
-    LinkMenuItem* drawItem;
+    TitleMenuTextEntry* drawItem;
     int y;
     s8 timer;
 
@@ -354,7 +315,7 @@ void Link_render(int context) {
                     slotIndex = 0;
                     x = drawItem->x;
                     y = drawItem->y;
-                    while (drawItem->slots[slotIndex] != -1 && slotIndex < LINK_ITEM_SLOTS) {
+                    while (drawItem->slots[slotIndex] != -1 && slotIndex < TITLE_MENU_TEXT_ENTRY_SLOTS) {
                         textureIndex = drawItem->slots[slotIndex];
                         drawTexture(linkTextures[textureIndex].texture, x, y, 0xff, 0x100);
                         x += linkTextures[drawItem->slots[slotIndex]].width;
@@ -438,7 +399,7 @@ void Link_render(int context) {
 
 u32 Link_update(void) {
     int result;
-    LinkMenuItem* item;
+    TitleMenuTextEntry* item;
     u32 buttons;
     u8 acceptPressed;
     s8 horizontalInput;
@@ -555,10 +516,11 @@ void Link_free(void) {
     }
     gLinkItemCount = 0;
 }
-void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage, int unused1, int unused2,
-                int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen, int selectedBlue) {
+void Link_setup(TitleMenuTextEntry* items, int count, int selected, const char* defaultMessage, int unused1,
+                int unused2, int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen,
+                int selectedBlue) {
     int i;
-    LinkMenuItem* item;
+    TitleMenuTextEntry* item;
     const char* defaultText;
     const char* errBase;
 
@@ -571,7 +533,7 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
         gLinkPulseDir = 0;
         gLinkInputEnabled = 0;
 
-        memcpy(gLinkMenuItems, items, count * sizeof(LinkMenuItem));
+        memcpy(gLinkMenuItems, items, count * sizeof(TitleMenuTextEntry));
 
         for (i = 0; i < count; i++) {
             item = &gLinkMenuItems[i];
@@ -607,7 +569,7 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
             }
 
             if ((item->leftLink != -1) && ((item->flags & LINK_FLAG_INHERIT_X) != 0)) {
-                LinkMenuItem* linked = &gLinkMenuItems[item->leftLink];
+                TitleMenuTextEntry* linked = &gLinkMenuItems[item->leftLink];
                 item->x = linked->x + linked->width;
                 item->rightX = linked->rightX + linked->width;
             }
@@ -655,7 +617,7 @@ void Link_initialise(void) {
     gLinkNavigationEnabled = 1;
 }
 
-LinkMenuItem gLinkMenuItems[40];
+TitleMenuTextEntry gLinkMenuItems[40];
 
 char sLinkNavLinkRangeErr[] = {
     0x00, 0x00, 0x00, 0xF9, 0x00, 0x00, 0x01, 0x03, 0x00, 0x00, 0x03, 0x71,

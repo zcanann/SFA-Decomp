@@ -22,7 +22,7 @@ typedef enum NwLevelControlMode {
 typedef struct NwLevelControlState {
     f32 hintCountdown;
     u8 mode;
-    u8 timerMinutes;
+    u8 timerSeconds;
     u8 unknown06[2];
     u32 flags;
     u8 sequenceId;
@@ -36,7 +36,7 @@ typedef struct NwLevelControlState {
 STATIC_ASSERT(sizeof(NwLevelControlState) == 0x14);
 STATIC_ASSERT(offsetof(NwLevelControlState, hintCountdown) == 0x00);
 STATIC_ASSERT(offsetof(NwLevelControlState, mode) == 0x04);
-STATIC_ASSERT(offsetof(NwLevelControlState, timerMinutes) == 0x05);
+STATIC_ASSERT(offsetof(NwLevelControlState, timerSeconds) == 0x05);
 STATIC_ASSERT(offsetof(NwLevelControlState, unknown06) == 0x06);
 STATIC_ASSERT(offsetof(NwLevelControlState, flags) == 0x08);
 STATIC_ASSERT(offsetof(NwLevelControlState, sequenceId) == 0x0C);

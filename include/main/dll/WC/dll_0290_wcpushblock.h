@@ -54,14 +54,14 @@ STATIC_ASSERT(offsetof(WCPushBlockSetup, modelIndex) == 0x19);
 STATIC_ASSERT(offsetof(WCPushBlockSetup, initialTile) == 0x1A);
 
 extern f32 gWcPushBlockControllerSearchRange;
-extern f32 lbl_803E6D5C;
-extern f32 lbl_803E6D60;
-extern f32 lbl_803E6D64;
-extern f32 lbl_803E6D68;
+extern f32 gWcPushBlockBurstScale;
+extern f32 gWcPushBlockBurstHorizontalExtent;
+extern f32 gWcPushBlockZero;
+extern f32 gWcPushBlockSlideSfxSpeedThreshold;
 extern f32 gWcPushBlockSlideSfxVolumeRange;
 extern f32 gWcPushBlockSlideSfxMaxSpeed;
 extern f32 gWcPushBlockSlideSfxMaxVolume;
-extern f32 lbl_803E6D78;
+extern f32 gWcPushBlockSlideSfxVolumeScale;
 extern f32 gWcPushBlockMaxSlideSpeed;
 extern f32 gWcPushBlockSlideAccel;
 extern f32 gWcPushBlockMinSlideSpeed;
@@ -69,7 +69,7 @@ extern f32 gWcPushBlockBobAngleSpeed;
 extern f32 gWcPushBlockBobAmplitude;
 extern f32 gWcPushBlockPi;
 extern f32 gWcPushBlockAngleScale;
-extern f32 lbl_803E6D54;
+extern f32 gWcPushBlockOne;
 
 int wcpushblock_getExtraSize(void);
 int wcpushblock_getObjectTypeId(GameObject* obj);

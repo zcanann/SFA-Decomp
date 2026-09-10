@@ -386,3 +386,394 @@ objdiff reports are unchanged. Each DOL passes its configured SHA-1. All four
 complete power object retains its seven function bodies, 324-byte literal pool,
 symbols and relocations. Formatting is committed separately and checked for
 unchanged object output. This recovery claims no additional matched bytes.
+
+## Shared sine/cosine polynomial accumulators (2026-09-08)
+
+`mathSinCosf` now evaluates its sine polynomial in the scalar that initially
+holds the reduced angle, and its cosine polynomial in the scalar that initially
+holds the squared angle. This removes two separate intermediate lifetimes while
+preserving every expression's grouping, literal type and evaluation order.
+The two working values are named `sine` and `cosine`, with their initial polynomial
+seeds documented at the declarations. Quadrant dispatch, unordered sign tests,
+output-store order and the quadrant-reduction call are unchanged.
+
+Under the mandated GC/1.3 profile, this improves function fuzzy agreement from
+**54.6375% to 60.7%**, reducing generated code from **95 to 87 instructions**
+(380 to 348 bytes), against retail's 80 instructions. The compiler saves and
+restores two fewer floating-point registers. This is a source-level simplification
+for the current compiler, not evidence that the original author used these exact
+local lifetimes. The function remains `NonMatching`; no compiler flags or text
+boundaries change.
+
+EN, EN revision 1, JP and PAL revision 1 produce the same improvement. Their
+checksum-verified retail functions have the same normalized instructions and
+32-byte coefficient pool. Every other source object and objdiff unit is unchanged.
+The complete non-text sections and named constant positions remain identical;
+every relocation retains its kind, addend, destination symbol and destination
+offset, in the same order. Instruction offsets move with the shorter code.
+The ordered eleven constant loads still agree with retail in all four versions.
+All four source builds and the strict EN checksum pass within 30-second bounds.
+
+A host differential harness exercises 2,560 calls at each of O0 and O2, with
+bit-identical before/after outputs. It stubs quadrant reduction to exercise all
+four cases and ignored quadrant bits, signed zeros, subnormal values, infinities,
+NaNs, and both distinct and aliased output pointers. This verifies the rewritten
+polynomial and store behavior; it is not a new accuracy claim for the reducer or
+an exhaustive floating-point proof. Local before/after sources, objects, reports,
+retail audit and host harness are under `/tmp/sfa-sincos-accumulators/`.
+
+## Integer-angle polynomial accumulators (2026-09-08)
+
+The same lifetime cleanup applies to all three angle-vector approximations in
+`trig_float_helpers.c`. Each now evaluates the sine polynomial in its reduced-angle
+scalar and the cosine polynomial in its squared-angle scalar. This preserves
+coefficient types, expression grouping, the signed 16-bit fast-cast call and the
+existing shared quadrant/store macro. The two outputs retain their order even
+when their pointers alias. No compiler flags, splits or matching declarations
+change.
+
+| Function | Before fuzzy | After fuzzy | Generated instructions before → after | Retail instructions |
+| --- | ---: | ---: | ---: | ---: |
+| `angleToVec2Fast` | 54.754097% | 67.213110% | 74 → 66 | 61 |
+| `angleToVec2` | 57.538460% | 69.153850% | 78 → 70 | 65 |
+| `angleToVec2Precise` | 60.000000% | 70.942030% | 82 → 74 | 69 |
+
+Each function avoids saving and restoring two additional floating-point locals,
+removing eight instructions under GC/1.3. This improves the current reconstruction;
+it does not prove the original local-variable lifetimes. All three remain
+`NonMatching`, with residual compiler-frame and instruction differences.
+
+The gains are identical in EN, EN revision 1, JP and PAL revision 1. The four
+checksum-verified retail inputs have equal normalized functions and the same
+80-byte pool. EN text remains `80292E20..8029312C`, and its pool remains
+`803E7C20..803E7C70`. All non-text source sections and named storage layouts are
+unchanged. Ordered relocation kinds, addends, constant-pool offsets and external
+call targets are preserved; anonymous literal names are compared by their real
+section offsets. The constant-load value sequences still agree with retail.
+Every other unit's score, generated code, data, symbol layout and relocations
+are unchanged. All four `all_source` builds and the strict EN checksum pass
+within 30-second limits.
+
+A host differential harness checks every one of the 65,536 low-16-bit angle
+patterns with four upper-bit patterns, all three routines and both distinct and
+aliased output pointers. All **1,572,864 calls per build** agree bit-for-bit at
+both O0 and O2. The fast-cast stub uses ordinary signed-16-to-float conversion;
+the hardware quantization-register contract is unchanged and is not emulated by
+this host check. The complete outputs also agree between these two optimization
+levels. Sources, scratch variants, reports, verified-DOL audit and host harness
+are retained locally under `/tmp/sfa-angle-accumulators/`.
+
+## High-precision integer-angle seeds and public types (2026-09-08)
+
+`fsin16HighPrecision` and `fcos16HighPrecision` now pass the existing signed
+16-bit fast-cast result directly into the double-precision angle-scale multiply.
+The removed float local only held that call result. The multiply still promotes
+the returned float to double, and all subsequent polynomial operations and
+quadrant returns retain their grouping and precision.
+
+Both functions improve **83.54808% to 86.38461%** under GC/1.3, shrinking from
+111 to 106 instructions (444 to 424 bytes) against retail's 104 instructions.
+The change removes one register copy and a floating-point register's save/restore
+sequence. The other six functions retain their exact previous instructions and
+scores. These two functions remain `NonMatching`; the current compiler's frame
+and other residual differences are still present.
+
+The TU now includes its public `main/trig.h` first. Six definitions previously
+accepted `u16` despite their public declarations taking `int`. Those definitions
+now take `int` and explicitly convert to `u16` before the scaling shift. The
+quadrant mask already selects only low-16-bit angle information. The two `Approx`
+functions retain their existing `u16` interface, including the caller-side
+conversion contract. Their declarations move from two fragment headers into
+`main/trig.h`; the three direct consumers use that header. No caller argument
+types or expressions change. A separate prototype-only control leaves all eight
+function bodies, allocated sections, symbol layouts and relocations unchanged.
+This fixes the declaration/definition mismatch without changing angle wrapping.
+
+The complete eight-function retail TU and its 192-byte coefficient pool agree
+across hash-verified EN, EN revision 1, JP and PAL revision 1. EN text remains
+`80293234..80293C64`, with the high-precision functions at `802935AC` and
+`80293AC4`; its pool remains `803E7C80..803E7D40`. All four source builds show the
+same two score gains. Every other source object, including all three header
+consumers, remains byte-identical. Non-text sections, named data layouts and
+ordered relocation destinations are preserved, and every function's ordered
+constant-load values still agree with retail. All four `all_source` builds and
+the strict EN checksum pass within 30 seconds.
+
+The host differential check exercises all eight functions for every 16-bit
+angle pattern with four upper-bit patterns: **2,097,152 calls per build**.
+Before/after output bits agree at O0 and O2, including negative word-sized inputs
+and values with unrelated upper bits. Fast-cast is modeled as ordinary signed
+16-bit conversion; its hardware quantization contract is unchanged. The check
+verifies both the removed temporary and the explicit low-16-bit input handling.
+Local sources, controls, full object/report comparisons and verified retail audit
+are under `/tmp/sfa-trig-double-seed/`.
+
+## Power polynomial accumulators and conversion results (2026-09-08)
+
+The high-precision core now uses one double accumulator for the mantissa
+polynomial, scaled result exponent and fractional exponent. Its integer exponent
+is retained separately before subtracting the explicit double conversion.
+Comments mark the transitions between those phases. The fast core consumes the
+two `fastCastS16ToFloat` results directly in their addition and subtraction,
+removing two float locals used only to hold call results. Conversion-call order,
+coefficient types, polynomial grouping, zero tests, negative-base parity and the
+final binary32 exponent-word arithmetic are preserved.
+
+| Function | Before fuzzy | After fuzzy | Generated instructions before → after | Retail instructions |
+| --- | ---: | ---: | ---: | ---: |
+| `powfCoreHighPrecision` | 86.717390% | 93.818840% | 147 → 135 | 138 |
+| `powfCoreFast` | 85.489365% | 88.787230% | 103 → 93 | 94 |
+
+The change removes five scalar temporaries and 22 instructions under the current
+GC/1.3 compiler. Both functions remain `NonMatching`; shorter code is not an
+exact match, and these simpler local lifetimes are not a claim about the original
+author's declarations. No compiler flags, pragmas, splits or expected checksums
+change. The five other functions in this TU retain their previous instruction
+bytes and scores, including the bit-estimate power variant and vector helpers.
+
+EN, EN revision 1, JP and PAL revision 1 have the same two gains. Their
+checksum-verified retail TUs and both signed fast-cast helpers have equal
+normalized instructions. The 324-byte pool also agrees across all four inputs.
+All non-text source sections and named data positions remain unchanged. The
+ordered 60 constant-load destinations retain their kinds, addends and pool
+offsets, and their values still agree with retail. Ordered call identities are
+unchanged; the source-local `Vec_scale` and `Vec_lengthSquared` offsets move
+naturally with the two shorter preceding functions, and both relocations are
+checked against the helpers' actual new symbol offsets. Every unrelated source
+object and objdiff unit remains unchanged. All four source builds and the strict
+EN checksum pass within 30-second limits.
+
+The host differential harness compares 14,756 input pairs through both cores,
+producing **29,512 bit-identical before/after results** at each of O0 and O2.
+Coverage includes zero-base rules, negative-base parity, integer/fractional powers,
+subnormals, extreme finite bases, infinity/NaN base encodings and random base
+words with bounded powers. The powers are kept within defined integer-conversion
+ranges. Fast-cast stubs use ordinary signed-16 conversions, and strict aliasing is
+disabled for the existing parameter word views. This is a before/after behavior
+check, not an IEEE libm accuracy claim or an emulation of quantization registers.
+Local variant controls, objects, complete reports, retail audit and host harness
+are under `/tmp/sfa-power-accumulators/`.
+
+## Tangent accumulator and exponential conversion result (2026-09-08)
+
+`mathTanf` now uses its reduced angle as the tangent polynomial accumulator.
+`exp2f` consumes the signed-16 fast-cast result directly in the fractional-part
+subtraction, removing a float local that only held the conversion result.
+Polynomial grouping, arithmetic types, sign and quadrant handling, conversion
+calls, underflow handling and exponent-word arithmetic are unchanged.
+
+| Function | Before fuzzy | After fuzzy | Generated instructions before → after | Retail instructions |
+| --- | ---: | ---: | ---: | ---: |
+| `mathTanf` | 43.675674% | 53.135136% | 48 → 44 | 37 |
+| `exp2f` | 70.611115% | 76.000000% | 62 → 57 | 54 |
+
+Both remain `NonMatching` under the required GC/1.3 profile. The nine removed
+instructions improve the scores equally in EN, EN revision 1, JP and PAL
+revision 1. All ten retail functions in these two units have equal normalized
+instructions across the four verified DOLs, and their 24-byte and 72-byte pools
+agree. The eight other source functions, non-text sections, named data layouts
+and ordered relocation destinations are preserved; internal function targets
+follow their actual new symbol offsets. Constant-load values still agree with
+retail. Every unrelated source object and objdiff unit remains unchanged. All
+four `all_source` builds and the strict EN checksum pass within 30-second limits.
+
+Host differential checks produce identical before/after bits at both O0 and O2
+for 5,376 tangent cases and 262,160 exponential cases. Tangent coverage combines
+quadrant patterns, signed angles and reducer outputs, including nonfinite values;
+the reducer is stubbed, so this does not test its accuracy. Exponential coverage
+includes the underflow threshold, fractional values and signed-16 conversion
+boundaries, with invalid host casts excluded. Fast-cast stubs use ordinary
+signed-16 conversions; the hardware quantization contract is unchanged. Local
+sources, reports, retail audit and harness are under
+`/tmp/sfa-tan-exp-temporaries/`.
+
+## Inverse-trigonometric accumulators (2026-09-08)
+
+The inverse-trig TU now retains the input magnitude and its reduced argument in
+one local. The three arcsine/arccosine routines seed their polynomial accumulator
+with the square-root result; fast arctangent uses its squared reduced argument
+as the polynomial accumulator. The three `atan2` variants keep their axis ratio
+and subsequent first-quadrant angle in one scalar. These are successive phases
+of the same calculations, with unchanged operation grouping and scalar types.
+The high-precision `atan2` still divides two floats before promotion to double.
+Fast arctangent still computes both signed results before selecting one.
+
+| Function | Before fuzzy | After fuzzy | Generated instructions before → after |
+| --- | ---: | ---: | ---: |
+| `asinf` | 45.863636% | 62.454544% | 60 → 52 |
+| `acosf_fast` | 45.863636% | 62.454544% | 60 → 52 |
+| `acosf` | 60.300000% | 72.466670% | 76 → 68 |
+| `atanf_fast` | 29.288889% | 45.955555% | 69 → 61 |
+| `atan2f_fast` | 63.183334% | 68.350000% | 71 → 67 |
+| `atan2f` | 63.882355% | 68.735290% | 85 → 81 |
+| `atan2fHighPrecision` | 79.533330% | 82.283330% | 137 → 133 |
+
+Removing eleven scalar temporaries eliminates 44 instructions under GC/1.3.
+All seven functions remain `NonMatching`; simpler source lifetimes are not proof
+of the original author's declarations. `atanf` retains its previous instruction
+bytes and score. Named constant positions, the complete 248-byte pool and all
+other non-text sections are unchanged. Ordered relocation destinations retain
+their identities, kinds, addends and data offsets. All eight functions' ordered
+constant-load values still agree with retail.
+
+The eight retail functions have equal normalized instructions across EN, EN
+revision 1, JP and PAL revision 1, and the complete pool agrees across their
+hash-verified DOLs. EN text remains `80291F44..802927A4` and the pool remains
+`803E79C0..803E7AB8`. All four versions show the same seven score gains; every
+other objdiff unit and every other source object in the current build census is
+unchanged. All four `all_source` builds and the strict EN checksum pass within
+30-second limits. No splits, compiler profiles or expected hashes change.
+
+The host differential harness produces **854,126 bit-identical before/after
+results** at each of O0 and O2. It exercises a dense interval spanning the
+reduction thresholds, random float words and pairs, signed zeros, subnormals,
+extreme finite values, infinities and quiet NaNs. Strict aliasing and host
+contraction are disabled; square root and reciprocal dependencies are stubbed
+with ordinary host operations. This checks the changed local lifetimes and
+control flow, not the accuracy of the target's estimate instructions or floating
+exception flags. Local variants, host harness, object/report comparisons and
+retail audit are under `/tmp/sfa-arc-accumulators/`.
+
+## Floor and quadrant-reduction conversion results (2026-09-08)
+
+`fastFloorf` now uses one result local for the input magnitude and its subsequent
+integer-valued conversion. The two conversion paths still use unsigned-halfword
+fast casts below 65,536 and signed integer conversion below 8,388,608. Negative
+fraction corrections, the original-input fallback and the separate integer local
+are preserved. Removing that integer local as well produced a weaker match and
+is not retained.
+
+The float quadrant reducer consumes `fastCastU16ToFloat` directly in its return
+expression. The high-precision reducer passes its double-precision scaled angle
+directly to the existing unsigned-conversion helper. Both keep their original
+call order, even-quadrant masks, out-parameter writes and arithmetic types. The
+float reducer still returns a remainder in pi/4 units; the high-precision reducer
+still returns radians.
+
+| Function | Before fuzzy | After fuzzy | Source instructions before → after | Retail instructions |
+| --- | ---: | ---: | ---: | ---: |
+| `fastFloorf` | 75.369230% | 81.215385% | 73 → 69 | 65 |
+| `trigReduceQuadrant` | 56.800000% | 61.966667% | 35 → 30 | 30 |
+| `trigReduceQuadrantHighPrecision` | 54.363636% | 59.060608% | 38 → 33 | 33 |
+
+These changes remove three scalar temporaries and 14 instructions under GC/1.3.
+Equal instruction counts do not make the reducers exact: all three functions
+remain `NonMatching`. The other thirteen functions in the three TUs retain their
+instruction bytes and scores. All non-text sections, named data positions,
+ordered call identities and constant-load destinations are unchanged; each
+function's ordered constant-load values still agree with retail.
+
+The complete sixteen-function retail set has equal normalized instructions in
+hash-verified EN, EN revision 1, JP and PAL revision 1. Their three pools also
+agree, totaling 420 bytes. All four source builds show the same gains and leave
+every unrelated source object in the build census and every unrelated objdiff
+unit unchanged. All four `all_source` builds and the strict EN checksum pass
+within 30-second limits. Compiler profiles, pragmas, splits and checksums are
+unchanged.
+
+Host differential checks compare 458,789 floor results, 429,553 float-reducer
+results and 433,777 high-precision reducer results, including both reducers'
+quadrant outputs. All before/after bits agree at O0 and O2. Coverage includes
+conversion thresholds, fractional negatives, all 65,536 integer-angle seeds,
+signed zeros, subnormals and random float words. Nonfinite and large inputs
+exercise the floor fallback; reducer inputs are restricted to valid host
+unsigned-conversion ranges. Ordinary unsigned conversions model the fast casts,
+so this does not emulate quantization-register saturation or establish behavior
+outside those tested ranges. Local sources, controls, host harness, retail audit
+and complete object/report comparisons are under `/tmp/sfa-math-reduction-locals/`.
+
+## Final inverse-trig temporary lifetimes (2026-09-08)
+
+The fast atan kernel now reuses its polynomial accumulator for the negative
+result, after computing the positive result. Both signed candidates still
+execute before the sign test with their existing expression grouping. The two
+float atan2 kernels reuse their
+magnitude locals for the reduced angle and squared ratio once the division has
+consumed both magnitudes. Original input words remain available for quadrant
+selection, including the signs of zero and NaNs. The high-precision atan2 kernel
+retains its distinct float magnitudes and double reduction variables.
+
+| Function | Before fuzzy | After fuzzy | Source instructions before → after | Retail instructions |
+| --- | ---: | ---: | ---: | ---: |
+| `atanf_fast` | 45.955555% | 54.844444% | 61 → 57 | 45 |
+| `atan2f_fast` | 68.350000% | 74.550000% | 67 → 59 | 60 |
+| `atan2f` | 68.735290% | 80.500000% | 81 → 73 | 68 |
+
+Five scalar temporaries disappear. The mnemonic-stream differences consist only
+of 20 floating-register save/restore instructions; the arithmetic and branch
+mnemonic sequences remain unchanged. Register assignments, stack offsets and
+branch displacements change with those lifetimes. Reusing only one magnitude
+in fast atan2 scores slightly higher (75.016670%) but keeps another four save
+and restore instructions. The shared two-local reduction structure is retained
+for both float kernels; it improves each over the baseline without changing its
+formulas, types or comparisons.
+
+All eight retail functions have equal normalized signatures across verified EN,
+EN rev1, JP and PAL rev1 DOLs, and their 248-byte constant pools are byte-identical.
+The other five source functions, allocated non-text sections and named data
+positions are unchanged. Ordered constant-load values and call destinations
+remain unchanged. No compiler profile, pragma, split or matching status changes.
+
+The host differential harness produces 854,126 bit-identical outputs at both O0
+and O2. It covers the same dense input grid, random float words and pairs,
+reduction thresholds, signed zeros, subnormals, extreme finite values, infinities
+and quiet NaNs as the preceding inverse-trig pass. Host contraction and strict
+aliasing are disabled; reciprocal and square-root dependencies use ordinary host
+operations. It does not emulate Gekko estimate instructions or measure floating
+exception flags. Scratch sources, probes, comparisons and the retail audit are
+under `/tmp/sfa-arc-final-lifetimes/`.
+
+All four full source builds show the same gains and preserve every other source
+object (990 EN objects, 987 in each secondary version) and every unrelated
+objdiff unit. All four `all_source` builds and the strict EN retail checksum
+pass within their 30-second limits. The math unit remains `NonMatching`.
+
+## Inverse-square-root input lifetime (2026-09-09)
+
+`invSqrt` now reuses its input for the half-value after taking the reciprocal
+square-root estimate. The separate `halfValue` local disappears. The estimate
+still receives the original input, its explicit float conversion is unchanged,
+and the Newton refinement keeps the same multiplication/subtraction grouping.
+The two square-root functions still need their original input for the final
+multiplication and retain their separate half-value locals.
+
+With the unchanged GC/1.3 profile, `invSqrt` improves from **74.75% to 91.5%**.
+It emits 16 instructions instead of 20, matching retail's instruction count.
+Removing the local removes four save/restore instructions and reduces the frame
+from 48 to 32 bytes. The half-value now occupies f1 instead of f30; the ordered
+arithmetic operations, estimate, rounding and constant loads are unchanged.
+The TU improves from **81.63636% to 85.69697%**, with all twelve data bytes exact.
+
+This remains a partial match. Retail saves f30 and f31 as doubles, while the
+new object uses double and paired-single save/restore operations for f31.
+Two save/restore mnemonic differences and four operand differences remain.
+The simpler input lifetime improves the required compiler's output; it does
+not establish the original author's local declarations or resolve the older
+math family's compiler provenance. No flags, pragmas, splits or completion
+classifications change.
+
+All five hash-verified retail DOLs have the same three function bodies after
+normalizing only r2-relative float-load displacements. Each complete function
+is a unique anchor in its DOL, and every load resolves to the same offset in
+the identical twelve-byte zero/half/three-halves pool. All five source builds
+show the same gain. Both other functions, all allocated non-text sections and
+every unrelated source object remain byte-identical. Each version passes
+`all_source` and the native strict checksum; the incomplete TU still links
+from its retail object. Formatting makes no changes.
+
+A host differential harness checks **2,871,680 results at each of O0 and O2**,
+comparing output bits and the original input delivered to the estimate. It
+combines every binary32 exponent with selected mantissas and signs, 200,000
+random input words, and fourteen estimate cases per input. Those cases include
+an ordinary reciprocal square root, rounding boundaries, signed zeros,
+subnormals, extreme values, infinities, NaNs and random binary64 estimates.
+All before/after results agree. Contraction is disabled on the host; supplied
+estimates test the changed input lifetime without claiming to emulate Gekko's
+estimate accuracy or floating exception flags. Target instruction comparison
+independently verifies that the fused refinement is preserved.
+
+Two analogous conversion-result probes were rejected: consuming the signed
+fast-cast result directly in `log2fBitEstimate` reduces its match from 77.875%
+to 67.166664%, and doing so in `powfBitEstimate` reduces 85.67796% to 78.89831%.
+Both original sources and objects are restored. Scratch sources, reports,
+retail audits and host checks are under `/tmp/sfa-math-result-locals/`.

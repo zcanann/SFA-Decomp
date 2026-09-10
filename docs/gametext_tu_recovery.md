@@ -734,3 +734,10 @@ and line-table roles directly, with typed font metrics and native element
 sizes. A PPC probe executes retail and source through 151 cases and records
 the trailing-space case that returns a counted but null final line pointer.
 See [the line-wrapping contract](gametext_line_wrapping.md).
+
+## Task-text lookup extent (2026-09-08)
+
+[The task-text table audit](gametext_task_table.md) replaces the gap-derived
+208-record declaration with the 122 records actually scanned by retail. The
+adjacent 516 bytes remain opaque at their original addresses. This corrects
+source and symbol structure without changing any instruction or data byte.

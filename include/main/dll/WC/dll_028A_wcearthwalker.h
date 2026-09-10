@@ -24,8 +24,7 @@ STATIC_ASSERT(offsetof(Dll28BAiState, route) == 0x9B0);
 STATIC_ASSERT(offsetof(Dll28BAiState, route.posX) == 0xA18);
 STATIC_ASSERT(offsetof(Dll28BAiState, playerDistance) == 0xAB8);
 
-typedef struct EarthWalkerPlacement
-{
+typedef struct EarthWalkerPlacement {
     ObjPlacement base;
     s8 spawnRot;
     u8 encounterType;
@@ -33,8 +32,7 @@ typedef struct EarthWalkerPlacement
 
 STATIC_ASSERT(offsetof(EarthWalkerPlacement, spawnRot) == 0x18);
 
-typedef struct EarthWalkerState
-{
+typedef struct EarthWalkerState {
     u8 pad000[0x600];
     u8 animPhase;
     u8 pad601[0x610 - 0x601];
@@ -68,7 +66,7 @@ extern f32 gEarthWalkerMoveStartProgress;
 extern f32 gEarthWalkerAnimAdvanceRate;
 extern int gEarthWalkerMoveBlendData;
 extern f32 gEarthWalkerLookAtMaxDistance;
-extern f32 lbl_803E6CE0;
+extern f32 gEarthWalkerRenderScale;
 
 int earthwalker_getExtraSize(void);
 int earthwalker_getObjectTypeId(void);

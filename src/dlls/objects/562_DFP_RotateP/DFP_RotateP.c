@@ -5,7 +5,7 @@
 #include "sys/objects.h"
 #include "main/mapEvent.h"
 #include "dlls/objects/562_DFP_RotateP.h"
-#include "main/dll/dll_02B1_cmbsrc.h"
+#include "dlls/objects/689_CmbSrc.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
@@ -18,18 +18,15 @@
 #define DFP_ROTATEP_MODE_SEQUENCE           2
 #define DFP_ROTATEP_RING_START_SFX          0x459
 #define DFP_ROTATEP_TIMEOUT_RESET_SFX       0x1CE
-#define DFP_ROTATEP_GAMEBIT_RING_ACTIVE     0xEDF
 #define DFP_ROTATEP_RING_VISUAL_SETUP_SIZE  0x2C
-#define DFP_ROTATEP_RING_VISUAL_OBJECT_ID   CMBSRC_SEQ_DEFAULT
 #define DFP_ROTATEP_RING_HIT_SETUP_SIZE     4
 #define DFP_ROTATEP_RING_HIT_OBJECT_ID      0x71C
 #define DFP_ROTATEP_RING_SETUP_MODE         5
 #define DFP_ROTATEP_EFFECT_RING_ROT_STEP    0x3FFF
 
 #define DFP_ROTATEP_COMPLETE_RING_COUNT     4
-#define DFP_ROTATEP_TIMER_ID                0x1D
-#define DFP_ROTATEP_TIMER_SHORT_FRAMES      0x96
-#define DFP_ROTATEP_TIMER_LONG_FRAMES       0xB4
+#define DFP_ROTATEP_TIMER_SHORT_SECONDS      0x96
+#define DFP_ROTATEP_TIMER_LONG_SECONDS       0xB4
 #define DFP_ROTATEP_MODE_SINGLE             1
 #define DFP_ROTATEP_GAMEBIT_SINGLE_COMPLETE 0x9F7
 #define DFP_ROTATEP_SFX_COMPLETE            0x7E
@@ -117,7 +114,7 @@ int DFP_RotateP_ensureEffectHandlePair(GameObject* obj, u8 ringIndex)
     u32 colorIndexWords[2];
     GameObject** handles;
     GameObject** pair;
-    CmbSrcMapData* setup;
+    CmbSrcPlacement* setup;
     int handleOffset;
     s16* colorIndices;
     u8 canSetupObject;
@@ -134,8 +131,8 @@ int DFP_RotateP_ensureEffectHandlePair(GameObject* obj, u8 ringIndex)
     handles = gDFP_RotatePEffectHandles;
     if (*(GameObject**)((char*)handles + handleOffset) == NULL)
     {
-        setup = (CmbSrcMapData*)Obj_AllocObjectSetup(DFP_ROTATEP_RING_VISUAL_SETUP_SIZE,
-                                                     DFP_ROTATEP_RING_VISUAL_OBJECT_ID);
+        setup = (CmbSrcPlacement*)Obj_AllocObjectSetup(DFP_ROTATEP_RING_VISUAL_SETUP_SIZE,
+                                                     CMBSRC_OBJECT_ID);
         setup->base.color[2] = 0xff;
         setup->base.color[3] = 0xff;
         setup->base.color[0] = 2;
@@ -160,7 +157,7 @@ int DFP_RotateP_ensureEffectHandlePair(GameObject* obj, u8 ringIndex)
         setup->pulseSubMode = 0;
         setup->colorDistance = 0x64;
         setup->effectDistance = 0;
-        setup->pulseDistance = 0;
+        setup->modeParam.pulseDistance = 0;
         setup->radius = 0.5f;
         setup->flags = 0xd2;
         setup->behaviorFlags = 0;
@@ -174,7 +171,7 @@ int DFP_RotateP_ensureEffectHandlePair(GameObject* obj, u8 ringIndex)
     }
     if (*pair == NULL)
     {
-        setup = (CmbSrcMapData*)Obj_AllocObjectSetup(DFP_ROTATEP_RING_HIT_SETUP_SIZE, DFP_ROTATEP_RING_HIT_OBJECT_ID);
+        setup = (CmbSrcPlacement*)Obj_AllocObjectSetup(DFP_ROTATEP_RING_HIT_SETUP_SIZE, DFP_ROTATEP_RING_HIT_OBJECT_ID);
         setup->base.color[2] = 0xff;
         setup->base.color[3] = 0xff;
         setup->base.color[0] = 2;
@@ -300,13 +297,17 @@ void DFP_RotateP_update(GameObject* obj)
                     mode = (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);
                     if (mode == DFP_ROTATEP_MODE_SINGLE)
                     {
-                        gameTimerInit(DFP_ROTATEP_TIMER_ID, DFP_ROTATEP_TIMER_SHORT_FRAMES);
+                        gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND |
+                                      GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
+                                      DFP_ROTATEP_TIMER_SHORT_SECONDS);
                     }
                     else
                     {
-                        gameTimerInit(DFP_ROTATEP_TIMER_ID, DFP_ROTATEP_TIMER_LONG_FRAMES);
+                        gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND |
+                                      GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
+                                      DFP_ROTATEP_TIMER_LONG_SECONDS);
                     }
-                    timerSetToCountUp();
+                    gameTimerResume();
                 }
             }
             if (isGameTimerDisabled() != 0)

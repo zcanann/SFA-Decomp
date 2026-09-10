@@ -30,6 +30,7 @@ dlls/engine/26/26.c
 dlls/engine/27/27.c
 dlls/engine/28/28.c
 dlls/engine/29/29.c
+dlls/engine/3/3.c
 dlls/engine/30/30.c
 dlls/engine/31/31.c
 dlls/engine/32/32.c
@@ -72,6 +73,7 @@ dlls/engine/66/66.c
 dlls/engine/67/67.c
 dlls/engine/68/68.c
 dlls/engine/69/69.c
+dlls/engine/7/7.c
 dlls/engine/70/70.c
 dlls/engine/71/71.c
 dlls/engine/72/72.c
@@ -834,6 +836,7 @@ dolphin/mtx/mtxvec.c
 dolphin/mtx/psmtx.c
 dolphin/mtx/vec.c
 dolphin/odenotstub/odenotstub.c
+dolphin/os/OS.c
 dolphin/os/OSAlarm.c
 dolphin/os/OSAlloc.c
 dolphin/os/OSArena.c
@@ -847,15 +850,18 @@ dolphin/os/OSLink.c
 dolphin/os/OSMemory.c
 dolphin/os/OSMessage.c
 dolphin/os/OSMutex.c
+dolphin/os/OSReboot.c
 dolphin/os/OSReset.c
 dolphin/os/OSResetSW.c
 dolphin/os/OSRtc.c
 dolphin/os/OSStopwatch.c
 dolphin/os/OSSync.c
+dolphin/os/OSThread.c
 dolphin/os/OSTime.c
 dolphin/os/__ppc_eabi_init.c
 dolphin/pad/Pad.c
 dolphin/pad/Padclamp.c
+dolphin/si/SIBios.c
 dolphin/si/SISamplingRate.c
 dolphin/thp/THPAudio.c
 dolphin/thp/THPDec.c
@@ -877,12 +883,14 @@ main/obj_movelib.c
 main/objlib.c
 main/pad.c
 main/pi_pathsearch.c
+main/pi_videoinit.c
 main/rand.c
 main/rcp_dolphin.c
 main/shader_dolphin.c
 main/shadow_dolphin.c
 main/skystars.c
 main/subtitle.c
+main/textrender_drawbox.c
 main/texture.c
 main/thp/THPRead.c
 main/thp/THPVideoDecode.c
@@ -895,6 +903,7 @@ main/vecmath.c
 main/vecmath_vec3.c
 main/zlb.s
 musyx/runtime/adsr_data.c
+musyx/runtime/aram_data.c
 musyx/runtime/aram_init.c
 musyx/runtime/aram_queue.c
 musyx/runtime/data_tables.c

@@ -268,6 +268,7 @@ main/shader.c:
 	.sdata      start:0x803DB740 end:0x803DB768
 	.sbss       start:0x803DCEE8 end:0x803DCFF4
 	.sdata2     start:0x803DECD0 end:0x803DED78
+	.sbss2      start:0x803E8560 end:0x803E856C
 
 main/shadow_dolphin.c:
 	.text       start:0x800610B4 end:0x80062D80
@@ -342,6 +343,7 @@ dlls/engine/5/5.c:
 	.bss        start:0x8039A8C8 end:0x8039A8D8
 	.sbss       start:0x803DD248 end:0x803DD2A0
 	.sdata2     start:0x803DF178 end:0x803DF228
+	.sbss2      start:0x803E8578 end:0x803E857C
 
 dlls/engine/6/6.c:
 	.text       start:0x8008C994 end:0x8008EDA8
@@ -351,6 +353,7 @@ dlls/engine/6/6.c:
 	.sdata      start:0x803DB870 end:0x803DB880
 	.sbss       start:0x803DD2A0 end:0x803DD2B0
 	.sdata2     start:0x803DF228 end:0x803DF2B8
+	.sbss2      start:0x803E8580 end:0x803E8584
 
 dlls/engine/7/7.c:
 	.text       start:0x8008EDA8 end:0x80093B00
@@ -576,7 +579,7 @@ dlls/engine/3/3.c:
 	.data       start:0x80311408 end:0x80311460
 	.bss        start:0x8039C578 end:0x8039CC08
 	.sbss       start:0x803DD530 end:0x803DD540
-	.sdata2     start:0x803E05F8 end:0x803E0660
+	.sdata2     start:0x803E05F8 end:0x803E065C
 
 dlls/engine/22/22.c:
 	.text       start:0x800D7588 end:0x800D7F7C
@@ -601,7 +604,7 @@ dlls/engine/16/16.c:
 dlls/engine/18/18.c:
 	.text       start:0x800D9ED4 end:0x800D9F08
 	.data       start:0x803115F8 end:0x80311638
-	.sbss       start:0x803DD578 end:0x803DD580
+	.sbss       start:0x803DD578 end:0x803DD57C
 
 dlls/engine/20_Hcurves/Hcurves.c:
 	.text       start:0x800D9F08 end:0x800DD668
@@ -2654,6 +2657,7 @@ dlls/objects/458_DIMExplosio/DIMExplosio.c:
 	.bss        start:0x803ACA80 end:0x803ACA90
 	.sbss       start:0x803DDC78 end:0x803DDC98
 	.sdata2     start:0x803E4A48 end:0x803E4AF0
+	.sbss2      start:0x803E8588 end:0x803E858C
 
 dlls/objects/459_DIMWoodDoor/DIMWoodDoor.c:
 	.text       start:0x801B58AC end:0x801B5B18
@@ -2849,6 +2853,7 @@ dlls/objects/399_ECSH_Shrine/ECSH_Shrine.c:
 	.data       start:0x80326328 end:0x80326444
 	.sbss       start:0x803DDCE0 end:0x803DDCE8
 	.sdata2     start:0x803E50B0 end:0x803E5114
+	.sbss2      start:0x803E8590 end:0x803E8598
 
 dlls/objects/401_ECSH_Creato/ECSH_Creato.c:
 	.text       start:0x801C6EFC end:0x801C71E0
@@ -4214,7 +4219,7 @@ dolphin/base/PPCArch.c:
 
 dolphin/os/OS.c:
 	.text       start:0x802404C8 end:0x80240E24
-	.data       start:0x8032C480 end:0x8032C6C0
+	.data       start:0x8032C480 end:0x8032C63B
 	.bss        start:0x803AD440 end:0x803AD490
 	.sbss       start:0x803DDEF8 end:0x803DDF28
 
@@ -4234,6 +4239,7 @@ dolphin/os/OSArena.c:
 
 dolphin/os/OSAudioSystem.c:
 	.text       start:0x80241800 end:0x80241A94
+	.data       start:0x8032C640 end:0x8032C6C0
 
 dolphin/os/OSCache.c:
 	.text       start:0x80241A94 end:0x80242150
@@ -4504,7 +4510,7 @@ dolphin/gx/GXPerf.c:
 
 dolphin/card/CARDBios.c:
 	.text       start:0x8025DF70 end:0x8025F0BC
-	.data       start:0x8032ECE0 end:0x8032ED00
+	.data       start:0x8032ECE0 end:0x8032ECF0
 	.bss        start:0x803AF300 end:0x803AF540
 
 dolphin/card/CARDUnlock.c:
@@ -4850,6 +4856,7 @@ dolphin/axfx/reverb_std_callback.c:
 	extab       start:0x80005CB0 end:0x80005CB8
 	extabindex  start:0x80006698 end:0x800066A4
 	.text       start:0x8028513C end:0x80285514
+	.sdata2     start:0x803E7A40 end:0x803E7A50
 
 dolphin/OdemuExi2/DebuggerDriver.c:
 	.text       start:0x80285514 end:0x80285F94

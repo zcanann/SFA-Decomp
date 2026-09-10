@@ -58,7 +58,6 @@
 
 #define GPSH_SHRINE_PLAYER_ANIM_STATE_FLAG 0x80
 #define GPSH_SHRINE_REWARD_MAP_ACT         5
-#define GPSH_SHRINE_TIMER_ID               0x1D
 #define GPSH_SHRINE_TIMER_DURATION         0x4E
 
 enum {
@@ -346,8 +345,10 @@ void gpshShrine_update(GameObject* obj) {
                 if (state->puzzleFlags.activated == 1) {
                     mainSetBits(GAMEBIT_GPSH_SpawnKnowledgeSymbols, 1);
                     state->phase = GPSH_SHRINE_PHASE_PUZZLE_ACTIVE;
-                    gameTimerInit(GPSH_SHRINE_TIMER_ID, GPSH_SHRINE_TIMER_DURATION);
-                    timerSetToCountUp();
+                    gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND |
+                                  GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
+                                  GPSH_SHRINE_TIMER_DURATION);
+                    gameTimerResume();
                 }
                 break;
             case GPSH_SHRINE_PHASE_PUZZLE_ACTIVE:

@@ -16,11 +16,151 @@ from version_progress import (SymbolSpan, SplitRange, VersionProjection, build_b
                               PortedRange, render_projected_symbol_texts, main)
 from version_progress import source_data_identifiers
 from version_progress import port_coherent_units, SECTION_INDEX
+from version_progress import build_all_boundary_maps, sbss2_bounds, snap_symbol_boundaries
+from version_progress import report_unit_is_exact
+
+
+class ExactReportTests(unittest.TestCase):
+    def test_missing_zero_data_score_does_not_promote_functionless_record(self):
+        self.assertFalse(report_unit_is_exact({"measures": {
+            "fuzzy_match_percent": 100.0, "total_data": "48",
+            "complete_data": "48", "complete_data_percent": 100.0,
+        }}))
+
+    def test_exact_code_does_not_hide_completely_unmatched_data(self):
+        self.assertFalse(report_unit_is_exact({"measures": {
+            "fuzzy_match_percent": 100.0, "total_code": "2076",
+            "matched_code": "2076", "total_data": "29",
+        }}))
+
+    def test_partial_byte_coverage_is_rejected_even_with_rounded_percentages(self):
+        self.assertFalse(report_unit_is_exact({"measures": {
+            "fuzzy_match_percent": 100.0, "matched_data_percent": 100.0,
+            "total_data": "100000000", "matched_data": "99999999",
+        }}))
+
+    def test_exact_data_only_and_code_only_units_remain_eligible(self):
+        for kind in ("code", "data"):
+            with self.subTest(kind=kind):
+                self.assertTrue(report_unit_is_exact({"measures": {
+                    "fuzzy_match_percent": 100.0,
+                    f"total_{kind}": "48", f"matched_{kind}": "48",
+                }}))
+        self.assertFalse(report_unit_is_exact({}))
 
 
 def dol(data, address):
     return SimpleNamespace(path=Path('synthetic.dol'), data=data,
                            sections=[DolSection(13, 0, address, len(data))])
+
+
+class ZeroTailProjectionTests(unittest.TestCase):
+    @staticmethod
+    def image(start, tail_size=56):
+        data = bytearray(0x110)
+        struct.pack_into('>II', data, 0xD8, start - 0x100, 0x100 + tail_size)
+        return SimpleNamespace(path=Path('synthetic.dol'), data=bytes(data), sections=[
+            DolSection(index, 0x100, start - 16 if section == 'sdata2' else 0,
+                       16 if section == 'sdata2' else 0)
+            for section, index in SECTION_INDEX.items()])
+
+    def setUp(self):
+        self.source = self.image(0x80300000)
+        self.target = self.image(0x80400000)
+        self.splits = [SplitRange('color.c', 'sbss2', 0x80300000, 0x80300004),
+                       SplitRange('indices.c', 'sbss2', 0x80300008, 0x8030000C)]
+        self.source_spans = {'sbss2': (
+            SymbolSpan('color', 'sbss2', 0x80300000, 0x80300004),
+            SymbolSpan('indices', 'sbss2', 0x80300008, 0x8030000B))}
+        self.target_spans = {'sbss2': (
+            SymbolSpan('color', 'sbss2', 0x80400000, 0x80400004),
+            SymbolSpan('indices', 'sbss2', 0x80400008, 0x8040000B))}
+
+    def boundaries(self):
+        return build_all_boundary_maps(self.splits, self.source, self.target, [], {}, {})
+
+    def port(self, mappings, spans=None):
+        spans = self.target_spans if spans is None else spans
+        index = symbol_span_index(spans)
+        return port_coherent_units(self.splits, [], [], mappings, index, index,
+                                   self.source, self.target, self.source_spans, spans)
+
+    def test_header_bounds_map_templates_without_reading_zero_storage(self):
+        self.assertEqual(sbss2_bounds(self.source), (0x80300000, 0x80300038))
+        # Unlike initialized constants, a complete named BSS template cannot
+        # supply bytes for either exact-symbol matching or boundary snapping.
+        with patch('version_progress.read_dol_range', side_effect=AssertionError('BSS read')):
+            mappings, counts = self.boundaries()
+            ported, rejected, gaps, *_ = self.port(mappings)
+        self.assertEqual(counts['sbss2'], (0, 4))
+        self.assertFalse(rejected)
+        self.assertEqual(gaps, 1)
+        self.assertEqual([(p.target_start, p.target_end) for p in ported],
+                         [(0x80400000, 0x80400004), (0x80400008, 0x8040000C)])
+
+    def test_changed_tail_width_leaves_whole_units_unclaimed(self):
+        self.target = self.image(0x80400000, 60)
+        self.splits.append(SplitRange('color.c', 'sdata2', 0x802FFFF0, 0x80300000))
+        mappings, counts = self.boundaries()
+        self.assertEqual(mappings['sdata2'][0x802FFFF0], 0x803FFFF0)
+        self.assertEqual(counts['sbss2'], (0, 0))
+        ported, rejected, *_ = self.port(mappings)
+        self.assertEqual(ported, [])
+        self.assertEqual(rejected['unmapped section boundary'], 2)
+
+    def test_invalid_header_or_initialized_tail_is_not_boundary_evidence(self):
+        truncated = self.image(0x80400000)
+        truncated.data = truncated.data[:0xDF]
+        occupied = self.image(0x80400000)
+        occupied.sections.append(DolSection(15, 0x100, 0x80400020, 4))
+        for image in (truncated, occupied, self.image(0x80400000, 0),
+                      self.image(0xFFFFFFE0)):
+            with self.subTest(image=image):
+                self.assertIsNone(sbss2_bounds(image))
+                self.target = image
+                mappings, _ = self.boundaries()
+                self.assertEqual(mappings['sbss2'], {})
+
+    def test_source_range_outside_tail_is_not_projected(self):
+        self.splits[0] = SplitRange('color.c', 'sbss2', 0x802FFFFC, 0x80300004)
+        mappings, _ = self.boundaries()
+        ported, rejected, *_ = self.port(mappings)
+        self.assertEqual([p.source.unit for p in ported], ['indices.c'])
+        self.assertEqual(rejected['unmapped section boundary'], 1)
+
+    def test_target_range_outside_header_bounds_is_rejected(self):
+        mappings, _ = self.boundaries()
+        mappings['sbss2'][0x80300008] = 0x80400038
+        mappings['sbss2'][0x8030000C] = 0x8040003C
+        ported, rejected, *_ = self.port(mappings)
+        self.assertEqual([p.source.unit for p in ported], ['color.c'])
+        self.assertEqual(rejected['target range outside section'], 1)
+
+    def test_last_packed_template_cannot_leave_an_unaligned_auto_unit(self):
+        self.splits[1] = SplitRange('indices.c', 'sbss2', 0x80300008, 0x8030000B)
+        mappings, _ = self.boundaries()
+        ported, rejected, *_ = self.port(mappings)
+        self.assertEqual([p.source.unit for p in ported], ['color.c'])
+        self.assertEqual(rejected['unaligned auto-unit boundary'], 1)
+
+    def test_crossing_named_zero_symbol_is_rejected_without_byte_matching(self):
+        for section in ('bss', 'sbss', 'sbss2'):
+            with self.subTest(section=section):
+                self.splits = [SplitRange('color.c', section, 0x80300000, 0x80300004)]
+                self.source_spans = {section: (SymbolSpan('color', section,
+                                                         0x80300000, 0x80300004),)}
+                target_spans = {section: (SymbolSpan('color', section,
+                                                    0x80400000, 0x80400008),)}
+                index = symbol_span_index(target_spans)
+                mappings = {section: {0x80300000: 0x80400000, 0x80300004: 0x80400004}}
+                with patch('version_progress.read_dol_range', side_effect=AssertionError('BSS read')):
+                    snapped, count = snap_symbol_boundaries(
+                        self.splits, mappings, self.source, self.target,
+                        self.source_spans, target_spans, index, index)
+                    ported, rejected, *_ = self.port(snapped, target_spans)
+                self.assertEqual(count, 0)
+                self.assertEqual(ported, [])
+                self.assertEqual(rejected['target symbol crosses boundary'], 1)
 
 
 class CanonicalDataNameTests(unittest.TestCase):
@@ -74,6 +214,78 @@ class CanonicalDataNameTests(unittest.TestCase):
             self.source, target, ranges, {}, {'lbl_80300000', 'lbl_80300004'})
         self.assertEqual(result, target)
         self.assertEqual(conflicts, 2)
+
+
+class PrivateFunctionNameTests(unittest.TestCase):
+    def render(self, scope='local', collision_section='text', same_unit=False,
+               collision_scope=''):
+        source_function = FunctionSymbol('Callback', 'text', 0x80010000, 8)
+        target_function = FunctionSymbol('fn_80020000', 'text', 0x80020000, 8)
+        source = (f'Callback = .text:0x80010000; // type:function size:0x8 scope:{scope}\n')
+        target = ('fn_80020000 = .text:0x80020000; // type:function size:0x8 scope:global\n'
+                  f'Callback = .{collision_section}:0x80020008; // '
+                  f'type:{"function" if collision_section == "text" else "object"} '
+                  f'size:0x8 {collision_scope}\n')
+        ranges = [PortedRange(SplitRange('first.c', 'text', 0x80010000, 0x80010008),
+                              0x80020000, 0x80020008, (source_function,), (target_function,))]
+        # Unequal data widths preserve the existing target object during rendering.
+        ranges.append(PortedRange(SplitRange('first.c' if same_unit else 'second.c',
+                                             collision_section, 0x80010008, 0x8001000C),
+                                  0x80020008, 0x80020010, (), ()))
+        result = render_projected_symbol_texts(source, target, ranges, {})
+        return result, source, ranges
+
+    def test_private_names_can_repeat_in_separate_units_with_local_linkage(self):
+        (result, renamed, conflicts, _), source, ranges = self.render()
+        self.assertIn('Callback = .text:0x80020000; // type:function size:0x8 scope:local', result)
+        self.assertEqual(renamed, 1)
+        self.assertEqual(conflicts, 0)
+        self.assertEqual(render_projected_symbol_texts(source, result, ranges, {})[0], result)
+
+    def test_private_name_cannot_collide_with_same_unit_function_or_data(self):
+        for section in ('text', 'data'):
+            with self.subTest(section=section):
+                (result, renamed, conflicts, _), *_ = self.render(
+                    collision_section=section, same_unit=True)
+                self.assertIn('fn_80020000 =', result)
+                self.assertEqual(renamed, 0)
+                self.assertEqual(conflicts, 1)
+
+    def test_public_name_keeps_global_collision_check(self):
+        (result, renamed, conflicts, _), *_ = self.render(scope='global')
+        self.assertIn('fn_80020000 =', result)
+        self.assertEqual(renamed, 0)
+        self.assertEqual(conflicts, 1)
+
+    def test_public_name_can_coexist_with_other_units_private_symbol(self):
+        for same_unit in (False, True):
+            with self.subTest(same_unit=same_unit):
+                (result, renamed, conflicts, _), *_ = self.render(
+                    scope='global', collision_scope='scope:local', same_unit=same_unit)
+                self.assertEqual(renamed, 0 if same_unit else 1)
+                self.assertEqual(conflicts, 1 if same_unit else 0)
+
+    def test_source_private_linkage_resolves_collision_in_either_record_order(self):
+        for private_first in (False, True):
+            with self.subTest(private_first=private_first):
+                source, target, ranges = [], [], []
+                for i in range(2):
+                    private = (i == 0) == private_first
+                    a, b = 0x80010000 + i * 8, 0x80020000 + i * 8
+                    name = 'Callback' if private else f'fn_{b:08X}'
+                    source.append(f'Callback = .text:0x{a:08X}; // type:function size:0x8 '
+                                  f'scope:{"local" if private else "global"}\n')
+                    target.append(f'{name} = .text:0x{b:08X}; // type:function size:0x8\n')
+                    ranges.append(PortedRange(SplitRange(f'unit{i}.c', 'text', a, a + 8),
+                                              b, b + 8,
+                                              (FunctionSymbol('Callback', 'text', a, 8),),
+                                              (FunctionSymbol(name, 'text', b, 8),)))
+                result, renamed, conflicts, _ = render_projected_symbol_texts(
+                    ''.join(source), ''.join(target), ranges, {})
+                self.assertEqual(renamed, 1)
+                self.assertEqual(conflicts, 0)
+                self.assertEqual(result.count('Callback ='), 2)
+                self.assertEqual(result.count('scope:local'), 1)
 
 
 class AlignmentGapTests(unittest.TestCase):

@@ -153,11 +153,6 @@ args = parser.parse_args()
 config = ProjectConfig()
 config.version = str(args.version)
 version_num = VERSIONS.index(config.version)
-if not args.non_matching and config.version != "GSAE01":
-    sys.exit(
-        f"{config.version} currently supports progress reports only; "
-        "omit --matching (EN v1.0 remains the strict matching target)"
-    )
 
 config.build_dir = args.build_dir
 config.dtk_path = args.dtk
@@ -173,7 +168,7 @@ if config.ninja_path is None:
     if ninja_path is not None:
         config.ninja_path = Path(ninja_path)
 config.progress = args.progress
-config.progress_requires_link = config.version == "GSAE01"
+config.progress_requires_link = config.version == "GSAE01" or not config.non_matching
 if not is_windows():
     config.wrapper = args.wrapper
 if not config.non_matching:
@@ -345,11 +340,6 @@ cflags_dll_noopt_nostrength_noautoinline = [
 cflags_dll_noopt_nolifetimes_noloopinv_nostrength = [
     *cflags_game,
     "-opt", "nopeephole,noschedule,nolifetimes,noloopinvariants,nostrength",
-]
-
-cflags_dll_noopt_nocse_nolifetimes_noloopinv = [
-    *cflags_game,
-    "-opt", "nopeephole,noschedule,nocse,nolifetimes,noloopinvariants",
 ]
 
 cflags_dll_noopt_nocse = [
@@ -976,7 +966,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/w_pow.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/w_sqrt.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.c"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/trigf.c", mw_version="GC/1.2.5", extra_cflags=["-lang=c++"]),
+            Object(MatchingFor("GSAE01", "GSAE01_rev1", "GSAJ01", "GSAP01", "GSAP01_rev1"), "dolphin/MSL_C/PPCEABI/bare/H/trigf.c", mw_version="GC/1.2.5", extra_cflags=["-lang=c++"]),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c", mw_version=config.compiler_version, extra_cflags=["-inline", "off", *msl_math_extra], progress_category="game"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_802927a4.c", mw_version=config.compiler_version, cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", "-use_lmw_stmw", "on", *msl_math_extra], progress_category="game"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_80293da4.c", mw_version=config.compiler_version, cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", *msl_math_extra], progress_category="game"),
@@ -1014,7 +1004,7 @@ config.libs = [
             Object(Matching, "musyx/runtime/snd_groups.c", extra_cflags=["-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "musyx/runtime/sal_studio.c"),
             Object(MatchingFor("GSAE01"), "musyx/runtime/hw_dspctrl.c"),
-            Object(MatchingFor("GSAE01"), "musyx/runtime/sal_volume.c", extra_cflags=["-fp_contract", "off", "-inline", "all"]),
+            Object(MatchingFor("GSAE01", "GSAE01_rev1", "GSAJ01", "GSAP01", "GSAP01_rev1"), "musyx/runtime/sal_volume.c", extra_cflags=["-fp_contract", "off", "-inline", "all"]),
             Object(MatchingFor("GSAE01"), "musyx/runtime/snd3dgroup.c", extra_cflags=["-fp_contract", "off", "-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "musyx/runtime/snd_core.c", extra_cflags=["-fp_contract", "off"]),
             Object(MatchingFor("GSAE01"), "musyx/runtime/snd_midictrl.c"),
@@ -1054,7 +1044,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/engine/4/4.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/5/5.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/engine/6/6.c"),
-            Object(NonMatching, "dlls/engine/7/7.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/engine/7/7.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "dlls/engine/8/8.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/9/9.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/10_expgfx/expgfx.c", cflags=cflags_dll_noopt_noautoinline_deferred),
@@ -1787,7 +1777,7 @@ config.libs = [
             Object(NonMatching, "main/gametext.c", cflags=cflags_dll_noopt_noautoinline_deferred),
             Object(MatchingFor("GSAE01"), "main/subtitle.c", cflags=cflags_dll_noopt_level1, extra_cflags=["-inline", "noauto,deferred"]),
             Object(Matching, "main/textrender_drawbox.c"),
-            Object(NonMatching, "main/textrender_boxtex.c", cflags=cflags_dll_noopt_nocse_nolifetimes_noloopinv),
+            Object(NonMatching, "main/textrender_boxtex.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/modellight.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/gameloop.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "main/gameloop_buttonobj.c", cflags=cflags_dll_noopt_noautoinline),
@@ -1804,7 +1794,7 @@ config.libs = [
             Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/objprint_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_nolifetimes_zerodata, "-inline", "noauto"]),
             Object(NonMatching, "main/pi_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_zerodata, "-inline", "noauto"]),
-            Object(NonMatching, "main/pi_videoinit.c", cflags=[*cflags_dll_noopt_nocse_noloopinv_nolifetimes_noprop_zerodata, "-inline", "noauto"]),
+            Object(MatchingFor("GSAE01"), "main/pi_videoinit.c", cflags=cflags_dll_noopt_nocse_noloopinv_nolifetimes_noprop_zerodata),
             Object(MatchingFor("GSAE01"), "main/pi_pathsearch.c", cflags=[*cflags_dll_noopt_noloopinv_zerodata, "-inline", "noauto"]),
             Object(Matching, "main/zlb.s"),
             Object(Matching, "main/shader_dolphin.c"),

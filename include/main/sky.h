@@ -15,10 +15,13 @@ typedef struct SkyRotQ {
 } SkyRotQ;
 
 typedef struct SkyBestIdx {
-    u8 best;
-    u8 second;
-    u8 pad;
+    u8 indices[2];
+    u8 unused;
 } SkyBestIdx;
+
+STATIC_ASSERT(offsetof(SkyBestIdx, indices) == 0);
+STATIC_ASSERT(offsetof(SkyBestIdx, unused) == 2);
+STATIC_ASSERT(sizeof(SkyBestIdx) == 3);
 
 typedef struct SkySlotAnim {
     s32 unk00;         /* 0x00 */
