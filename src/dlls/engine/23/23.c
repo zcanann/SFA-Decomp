@@ -1,4 +1,6 @@
 #include "main/dll/savegame.h"
+#include "main/dll/dll_0015_save_settings.h"
+#include "main/gametext_internal.h"
 #include "dlls/object_descriptor.h"
 #include "game/objects/object.h"
 #include "main/frame_timing.h"
@@ -34,6 +36,9 @@ int gSaveGameObjGroupCacheIdx[2];
 u8 saveGameLoadStatus;
 
 s8 gSaveGameCurrentSlot = -1;
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+u8 gSaveGameLanguageMap[5] = {LANGUAGE_ENGLISH, LANGUAGE_FRENCH, LANGUAGE_ITALIAN, LANGUAGE_SPANISH, LANGUAGE_GERMAN};
+#endif
 char sGameplayFoxName[] = "FOX";
 
 typedef struct SaveGameTimeEntry {
@@ -177,6 +182,7 @@ static inline void saveGame_addTransientMapBit(int mapId, int shift, MapBitTrans
 }
 
 void SaveGame_initialise(void) {
+    int i;
     memset(gSaveGameData, 0, sizeof(gSaveGameData));
     if (!(((SaveGameData*)gSaveGameWorkBuffer)->newFileFlag & 0x80)) {
         memset(gSaveGameWorkBuffer, 0, SAVEGAME_ACTIVE_SIZE);
@@ -184,6 +190,9 @@ void SaveGame_initialise(void) {
     pRestartPoint = 0;
     gSaveGameMapActCacheIdx[0] = -1;
     gSaveGameObjGroupCacheIdx[0] = -1;
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+    saveFileStruct_resetOptions();
+#else
     memset(saveData, 0, sizeof(saveData));
     ((SaveData*)saveData)->widescreenEnabled = 0;
     ((SaveData*)saveData)->subtitlesEnabled = 1;
@@ -192,26 +201,10 @@ void SaveGame_initialise(void) {
     ((SaveData*)saveData)->musicVolume = SAVEGAME_DEFAULT_VOLUME;
     ((SaveData*)saveData)->sfxVolume = SAVEGAME_DEFAULT_VOLUME;
     ((SaveData*)saveData)->speechVolume = SAVEGAME_DEFAULT_VOLUME;
-    gTransientMapBits[0].mapId = -1;
-    gTransientMapBits[1].mapId = -1;
-    gTransientMapBits[2].mapId = -1;
-    gTransientMapBits[3].mapId = -1;
-    gTransientMapBits[4].mapId = -1;
-    gTransientMapBits[5].mapId = -1;
-    gTransientMapBits[6].mapId = -1;
-    gTransientMapBits[7].mapId = -1;
-    gTransientMapBits[8].mapId = -1;
-    gTransientMapBits[9].mapId = -1;
-    gTransientMapBits[10].mapId = -1;
-    gTransientMapBits[11].mapId = -1;
-    gTransientMapBits[12].mapId = -1;
-    gTransientMapBits[13].mapId = -1;
-    gTransientMapBits[14].mapId = -1;
-    gTransientMapBits[15].mapId = -1;
-    gTransientMapBits[16].mapId = -1;
-    gTransientMapBits[17].mapId = -1;
-    gTransientMapBits[18].mapId = -1;
-    gTransientMapBits[19].mapId = -1;
+#endif
+    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++) {
+        gTransientMapBits[i].mapId = -1;
+    }
 }
 
 void SaveGame_release(void) {
@@ -943,6 +936,9 @@ int loadGameOptions(void) {
 
     loadResult = maybeTryLoadSave(saveData);
     if ((loadResult == 0) || (((SaveData*)saveData)->optionsValid == 0)) {
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+        saveFileStruct_resetOptions();
+#else
         memset(saveData, 0, SAVE_DATA_SIZE);
         ((SaveData*)saveData)->widescreenEnabled = 0;
         ((SaveData*)saveData)->subtitlesEnabled = 1;
@@ -951,9 +947,16 @@ int loadGameOptions(void) {
         ((SaveData*)saveData)->musicVolume = SAVEGAME_DEFAULT_VOLUME;
         ((SaveData*)saveData)->sfxVolume = SAVEGAME_DEFAULT_VOLUME;
         ((SaveData*)saveData)->speechVolume = SAVEGAME_DEFAULT_VOLUME;
+#endif
     }
     return loadResult;
 }
+
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+void saveGameOptions(void) {
+    cardWriteOptions(saveData);
+}
+#endif
 
 SaveGameEnvState* saveGameGetEnvState(void) {
     return (SaveGameEnvState*)(gSaveGameData + 0x6a8);

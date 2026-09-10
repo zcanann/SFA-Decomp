@@ -5,6 +5,13 @@
 
 #define SAVE_DATA_SIZE 0xE4
 
+/* Stored option order differs from both SRAM and gametext language IDs. */
+#define SAVE_LANGUAGE_ENGLISH 0
+#define SAVE_LANGUAGE_FRENCH  1
+#define SAVE_LANGUAGE_ITALIAN 2
+#define SAVE_LANGUAGE_SPANISH 3
+#define SAVE_LANGUAGE_GERMAN  4
+
 #define SAVE_SCORE_TABLE_COUNT 5
 #define SAVE_SCORE_ENTRY_COUNT 5
 

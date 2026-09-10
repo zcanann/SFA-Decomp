@@ -276,6 +276,22 @@ int cardDeleteSaveFile(void)
     return 0;
 }
 
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+int cardWriteOptions(void* data) {
+    int ret;
+    gSaveCardRetry = 0;
+    cardShowLoadingMsg(1);
+    do {
+        ret = saveGame_prepareAndWrite(0, 0, 0, NULL, data, saveGameWriteOptionsCb);
+        showMemCardError(0);
+        if (gSaveCardRetry != 0) {
+            cardShowLoadingMsg(1);
+        }
+    } while (gSaveCardRetry != 0);
+    return ret;
+}
+#endif
+
 int _saveGame(int slot, void* save, void* data)
 {
     int ret;
@@ -738,6 +754,18 @@ void cardShowLoadingMsg(u8 kind)
         GXFlush_(1, 0);
     }
 }
+
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+int saveGameWriteOptionsCb(int slot, int unused, void* save, void* data) {
+    int ret;
+    memcpy(gSaveCardIoBuffer + 0x1F14, data, 0xE4);
+    ret = saveGame_doWrite(2);
+    if (ret == 0) {
+        ret = saveGame_doWrite(1);
+    }
+    return ret;
+}
+#endif
 
 /*
  * Card-write callback dispatched through saveGame_prepareAndWrite from _saveGame.

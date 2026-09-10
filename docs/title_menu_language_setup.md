@@ -66,9 +66,9 @@ Previously unnamed PAL calls now use the evidenced APIs:
 | `OSGetLanguage` | `80245FF0` | `80246128` | Locks SRAM, reads its language byte at offset `0x12`, unlocks, and returns the byte. |
 
 The title-menu change names those retail entry points and declares the PAL save
-API. The save helper units remain incomplete. The SRAM accessors were subsequently
-restored and their unit verified across all five versions; see
-[SRAM language and video modes](sram_language_and_video_modes.md).
+API. The save helper units and SRAM accessors were subsequently restored and
+verified across all five versions; see [save options and language recovery](save_options_language.md)
+and [SRAM language and video modes](sram_language_and_video_modes.md).
 
 The movie-prepare panic line is also versioned from retail: `0x2FB` in EN v1.0/JP,
 `0x33E` in EN rev1, `0x33A` in PAL v1.0, and `0x34D` in PAL rev1. Its constant

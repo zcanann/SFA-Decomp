@@ -13,6 +13,7 @@ char* getSaveFileName(void);
 int loadGameOptions(void);
 #if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
 void saveGameOptions(void);
+extern u8 gSaveGameLanguageMap[5];
 #endif
 void gplaySaveGame(int param);
 void titleDoLoadSave(void);

@@ -8,6 +8,9 @@ void saveFileStruct_unlockCheat(u8 idx);
 int saveFileStruct_isCheatActive(u8 idx);
 int isCheatUnlocked(u8 idx);
 void saveFileStruct_resetVolumes(void);
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+void saveFileStruct_resetOptions(void);
+#endif
 SaveData* getSaveFileStruct(void);
 void loadSaveSettings(void);
 
