@@ -4,8 +4,7 @@
 #include "dolphin/card.h"
 #include "types.h"
 
-typedef union SaveCardFileInfo
-{
+typedef union SaveCardFileInfo {
     CARDFileInfo fileInfo;
     u8 raw[0x18];
 } SaveCardFileInfo;

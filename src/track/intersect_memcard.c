@@ -47,9 +47,6 @@ STATIC_ASSERT(offsetof(ReflectionTextureMatrixLayout, lightPerspectiveScaled) ==
 
 char sMemoryCardFileNameString[20] = "Star Fox Adventures";
 
-
-
-
 u8* gSaveCardImageBuffer;
 u8 gSaveCardFileOpen;
 u8 gSaveCardIdentityCheckEnabled;
@@ -73,8 +70,7 @@ void loadReflectionTexMtxs(void) {
  * Retail ships a locally-defined empty OSReport that disables debug
  * output.
  */
-void OSReport(const char* msg, ...)
-{
+void OSReport(const char* msg, ...) {
 }
 
 /*
@@ -88,66 +84,47 @@ void OSReport(const char* msg, ...)
  * if we still owe one, else success: clear the cache, set state 13,
  * unmount, return 1.
  */
-int cardFormatMemoryCard(void)
-{
+int cardFormatMemoryCard(void) {
     int need_format;
     int res;
     u64 serial;
     int ok;
 
     need_format = 0;
-    if (cardProbe(0) == 0)
-    {
+    if (cardProbe(0) == 0) {
         ok = 0;
-    }
-    else
-    {
+    } else {
         gSaveCardWorkArea = mmAlloc(0xA000, -1, 0);
-        if (gSaveCardWorkArea == 0)
-        {
+        if (gSaveCardWorkArea == 0) {
             gSaveCardState = 8;
             ok = 0;
-        }
-        else
-        {
+        } else {
             ok = 1;
         }
     }
-    if (ok == 0)
-    {
+    if (ok == 0) {
         return 0;
     }
     gSaveCardState = 0;
     res = CARDMount(0, gSaveCardWorkArea, (void*)cardSetStatusNoCard2);
-    if (res == -13)
-    {
+    if (res == -13) {
         need_format = 1;
     }
-    if (res == -6)
-    {
+    if (res == -6) {
         res = CARDCheck(0);
-        if (res == -6)
-        {
+        if (res == -6) {
             res = CARDFormat(0);
         }
-    }
-    else if (res == -13 || res == 0)
-    {
+    } else if (res == -13 || res == 0) {
         res = CARDGetSerialNo(0, &serial);
-        if (res == 0)
-        {
+        if (res == 0) {
             u64 cache = *(u64*)&gSaveCardSerialHi;
-            if (cache == 0 || cache != serial)
-            {
+            if (cache == 0 || cache != serial) {
                 res = -0x55;
                 gSaveCardState = 0xB;
-            }
-            else if (need_format)
-            {
+            } else if (need_format) {
                 res = CARDFormat(0);
-            }
-            else
-            {
+            } else {
                 CARDUnmount(0);
                 mm_free(gSaveCardWorkArea);
                 gSaveCardWorkArea = 0;
@@ -159,14 +136,14 @@ int cardFormatMemoryCard(void)
     CARDUnmount(0);
     mm_free(gSaveCardWorkArea);
     gSaveCardWorkArea = 0;
-    switch (res)
-    {
+    switch (res) {
     case -2:
         gSaveCardState = 1;
         break;
     case -3:
-        if (gSaveCardState != 3)
+        if (gSaveCardState != 3) {
             gSaveCardState = 2;
+        }
         break;
     case -5:
         gSaveCardState = 4;
@@ -184,12 +161,10 @@ int cardFormatMemoryCard(void)
     return 0;
 }
 
-void cardSetIdentityCheckEnabled(u32 enable)
-{
+void cardSetIdentityCheckEnabled(u32 enable) {
     u8 v = enable;
     gSaveCardIdentityCheckEnabled = v;
-    if (v != 0)
-    {
+    if (v != 0) {
         return;
     }
     gSaveCardSerialLo = 0;
@@ -198,68 +173,55 @@ void cardSetIdentityCheckEnabled(u32 enable)
     gSaveCardChecksumHi = 0;
 }
 
-void cardSetStatusNeedInit(void)
-{
+void cardSetStatusNeedInit(void) {
     gSaveCardState = 0xd;
 }
 
-s32 saveGameGetStatus(void)
-{
+s32 saveGameGetStatus(void) {
     return gSaveCardState;
 }
 
-int cardDeleteSaveFile(void)
-{
+int cardDeleteSaveFile(void) {
     int res;
     int ok;
 
     gSaveCardRetry = 0;
 
-    do
-    {
-        if (cardProbe(0) == 0)
-        {
+    do {
+        if (cardProbe(0) == 0) {
             ok = 0;
-        }
-        else
-        {
+        } else {
             gSaveCardWorkArea = mmAlloc(0xA000, -1, 0);
-            if (gSaveCardWorkArea == 0)
-            {
+            if (gSaveCardWorkArea == 0) {
                 gSaveCardState = 8;
                 ok = 0;
-            }
-            else
-            {
+            } else {
                 ok = 1;
             }
         }
-        if (ok == 0)
-        {
+        if (ok == 0) {
             return 0;
         }
         gSaveCardState = 0;
         res = CARDMount(0, gSaveCardWorkArea, (CARDCallback)cardSetStatusNoCard2);
-        if (res == 0 || res == -6)
-        {
+        if (res == 0 || res == -6) {
             res = CARDCheck(0);
         }
-        if (res == 0)
-        {
+        if (res == 0) {
             res = CARDDelete(0, sMemoryCardFileName);
         }
         CARDUnmount(0);
         mm_free(gSaveCardWorkArea);
         gSaveCardWorkArea = 0;
 
-        switch (res + 13)
-        {
+        switch (res + 13) {
         case 11:
             gSaveCardState = 1;
             break;
         case 10:
-            if (gSaveCardState != 3)
+            if (gSaveCardState != 3) {
                 gSaveCardState = 2;
+            }
             break;
         case 0:
             gSaveCardState = 6;
@@ -292,73 +254,59 @@ int cardWriteOptions(void* data) {
 }
 #endif
 
-int _saveGame(int slot, void* save, void* data)
-{
+int _saveGame(int slot, void* save, void* data) {
     int ret;
     gSaveCardRetry = 0;
     cardShowLoadingMsg(1);
-    do
-    {
+    do {
         ret = saveGame_prepareAndWrite(0, slot, 0, save, data, (SaveGameCallback)saveGameWriteSlotCb);
         showMemCardError(0);
-        if (gSaveCardRetry != 0)
-        {
+        if (gSaveCardRetry != 0) {
             cardShowLoadingMsg(1);
         }
     } while (gSaveCardRetry != 0);
     return ret;
 }
 
-int maybeTryLoadSave(void* data)
-{
+int maybeTryLoadSave(void* data) {
     int ret;
     gSaveCardRetry = 0;
     cardShowLoadingMsg(0);
-    do
-    {
+    do {
         ret = saveGame_prepareAndWrite(1, 0, 0, data, NULL, (SaveGameCallback)saveGameReadGlobalsCb);
         showMemCardError(1);
-        if (gSaveCardRetry != 0)
-        {
+        if (gSaveCardRetry != 0) {
             cardShowLoadingMsg(0);
         }
     } while (gSaveCardRetry != 0);
     return ret;
 }
 
-int loadSaveGame(int slot, void* save)
-{
+int loadSaveGame(int slot, void* save) {
     int ret;
     gSaveCardRetry = 0;
     cardShowLoadingMsg(0);
-    do
-    {
+    do {
         ret = saveGame_prepareAndWrite(1, slot, 0, save, NULL, (SaveGameCallback)saveGameReadSlotCb);
         showMemCardError(0);
-        if (gSaveCardRetry != 0)
-        {
+        if (gSaveCardRetry != 0) {
             cardShowLoadingMsg(0);
         }
     } while (gSaveCardRetry != 0);
     return ret;
 }
 
-int cardCreateSaveFile(u8 retry)
-{
+int cardCreateSaveFile(u8 retry) {
     int ret;
 
-    if (retry != 0)
-    {
+    if (retry != 0) {
         gSaveCardRetry = 0;
         cardShowLoadingMsg(2);
     }
-    do
-    {
+    do {
         ret = saveGame(0);
-        if (ret != 0)
-        {
-            if (gSaveCardFileOpen != 0)
-            {
+        if (ret != 0) {
+            if (gSaveCardFileOpen != 0) {
                 gSaveCardFileOpen = 0;
                 CARDClose(&gSaveCardFileInfo.fileInfo);
             }
@@ -366,82 +314,62 @@ int cardCreateSaveFile(u8 retry)
             mm_free(gSaveCardWorkArea);
             gSaveCardWorkArea = 0;
             gSaveCardState = 13;
-            if (ret == 2)
-            {
+            if (ret == 2) {
                 ret = saveGame_prepareAndWrite(0, 0, 0, NULL, NULL, NULL);
             }
         }
-        if (retry != 0)
-        {
+        if (retry != 0) {
             showMemCardError(0);
         }
-        if (gSaveCardRetry != 0)
-        {
+        if (gSaveCardRetry != 0) {
             cardShowLoadingMsg(2);
         }
     } while (gSaveCardRetry != 0 && retry != 0);
     return ret;
 }
-int cardProbe(u8 retry)
-{
+int cardProbe(u8 retry) {
 
     s32 memSize;
     s32 sectorSize;
     s32 res;
 
-    if (retry != 0)
-    {
+    if (retry != 0) {
         gSaveCardRetry = 0;
     }
-    do
-    {
+    do {
         res = -1;
-        while (res == -1)
-        {
+        while (res == -1) {
             res = CARDProbeEx(0, &memSize, &sectorSize);
         }
-        if (res == 0)
-        {
-            if (sectorSize == 0x2000)
-            {
+        if (res == 0) {
+            if (sectorSize == 0x2000) {
                 gSaveCardState = 13;
                 return 1;
             }
             gSaveCardState = 7;
-        }
-        else if (res == -3)
-        {
+        } else if (res == -3) {
             gSaveCardState = 2;
-        }
-        else if (res == -2)
-        {
+        } else if (res == -2) {
             gSaveCardState = 1;
-        }
-        else
-        {
+        } else {
             gSaveCardState = 0;
         }
-        if (retry != 0)
-        {
+        if (retry != 0) {
             showMemCardError(0);
         }
     } while (gSaveCardRetry != 0 && retry != 0);
     return 0;
 }
 
-void _initCardAndDsp(void)
-{
+void _initCardAndDsp(void) {
     CARDInit();
 }
 
-void cardGetMessage(u32* buttons, u32* texts, u32* count)
-{
-    if (gSaveCardIdentityCheckEnabled != 0 && (gSaveCardState == 7 || gSaveCardState == 9))
-    {
+void cardGetMessage(u32* buttons, u32* texts, u32* count) {
+    if (gSaveCardIdentityCheckEnabled != 0 && (gSaveCardState == 7 || gSaveCardState == 9)) {
         gSaveCardState = 11;
     }
-    switch (gSaveCardState)
-    {
+    switch (gSaveCardState) {
     case 0:
         *count = 0;
         gSaveCardState = 13;
@@ -544,8 +472,7 @@ void cardGetMessage(u32* buttons, u32* texts, u32* count)
     }
 }
 
-void showMemCardError(u8 err)
-{
+void showMemCardError(u8 err) {
     int opts[8];
     int msgs[8];
     int count;
@@ -567,12 +494,10 @@ void showMemCardError(u8 err)
     timer = 0;
     held = 0;
     gSaveCardRetry = 0;
-    if (gSaveCardState == 0xd || (err != 0 && gSaveCardState == 0xc))
-    {
+    if (gSaveCardState == 0xd || (err != 0 && gSaveCardState == 0xc)) {
         return;
     }
-    do
-    {
+    do {
         checkReset();
         padUpdate();
         mmFreeTick(0);
@@ -580,73 +505,53 @@ void showMemCardError(u8 err)
         waitNextFrame();
         saved = gSaveCardBackdropColor;
         hudDrawColored(newshadows_getReflectionColorTexture(), 0, 0, &saved, 0x200, 0);
-        if (submenu != 0)
-        {
+        if (submenu != 0) {
             opts[0] = 6;
             opts[1] = 5;
             msgs[0] = 0x327;
             msgs[1] = 0x321;
             msgs[2] = 0x320;
             count = 2;
-        }
-        else
-        {
+        } else {
             cardGetMessage((u32*)opts, (u32*)msgs, (u32*)&count);
         }
         gameTextSetColor(0xff, 0xc0, 0x40, 0xff);
-        for (i = 0, m = msgs, y = 0x64; i < count + 1; m++, y += 0x14, i++)
-        {
+        for (i = 0, m = msgs, y = 0x64; i < count + 1; m++, y += 0x14, i++) {
             t = gameTextGet(*m);
             yy = y + ((i > 0) ? 0x64 : 0);
-            for (j = 0; j < t->count; j++)
-            {
+            for (j = 0; j < t->count; j++) {
                 gameTextShowStr(t->strings[j], 0, 0, yy);
                 yy += 0x18;
             }
-            if (i == sel)
-            {
+            if (i == sel) {
                 v = (int)(47.0f * fcos16HighPrecision(timer) + 208.0f);
                 gameTextSetColor(v, v, v, 0xff);
-            }
-            else
-            {
-            gameTextSetColor(0xa0, 0xa0, 0xa0, 0xff);
+            } else {
+                gameTextSetColor(0xa0, 0xa0, 0xa0, 0xff);
             }
         }
         gameTextRun();
         GXFlush_(1, 0);
-        if (padGetStickY(0) < 0 || padGetCY(0) < 0)
-        {
-            if (held == 0)
-            {
+        if (padGetStickY(0) < 0 || padGetCY(0) < 0) {
+            if (held == 0) {
                 sel++;
                 held = 1;
             }
-        }
-        else if (padGetStickY(0) > 0 || padGetCY(0) > 0)
-        {
-            if (held == 0)
-            {
+        } else if (padGetStickY(0) > 0 || padGetCY(0) > 0) {
+            if (held == 0) {
                 sel--;
                 held = 1;
             }
-        }
-        else
-        {
+        } else {
             held = 0;
         }
-        if (sel < 0)
-        {
+        if (sel < 0) {
             sel = 0;
-        }
-        else if (sel > count - 1)
-        {
+        } else if (sel > count - 1) {
             sel = count - 1;
         }
-        if (getButtonsJustPressed(0) & 0x100)
-        {
-            switch (opts[sel])
-            {
+        if (getButtonsJustPressed(0) & 0x100) {
+            switch (opts[sel]) {
             case 0:
                 submenu = 1;
                 sel = 0;
@@ -667,19 +572,16 @@ void showMemCardError(u8 err)
             case 4:
                 cardDeleteSaveFile();
                 cardCreateSaveFile(0);
-                if (gSaveCardState == 0xd)
-                {
+                if (gSaveCardState == 0xd) {
                     gSaveCardRetry = 1;
                 }
                 break;
             case 5:
                 submenu = 0;
-                if (cardFormatMemoryCard() != 0)
-                {
+                if (cardFormatMemoryCard() != 0) {
                     cardCreateSaveFile(0);
                 }
-                if (gSaveCardState == 0xd)
-                {
+                if (gSaveCardState == 0xd) {
                     gSaveCardRetry = 1;
                 }
                 break;
@@ -702,8 +604,7 @@ void showMemCardError(u8 err)
  * tinting the reflection texture with gSaveCardBackdropColor, then routes the OK/Cancel/back text
  * to gameTextShowAt based on the dialog kind passed in.
  */
-void cardShowLoadingMsg(u8 kind)
-{
+void cardShowLoadingMsg(u8 kind) {
     GameObject** buttons;
     u32 saved;
     int frame;
@@ -714,40 +615,30 @@ void cardShowLoadingMsg(u8 kind)
     u8 mode = kind;
 
     gameTextSetWindow(0);
-    for (frame = 0; frame < 0x3C; frame++)
-    {
+    for (frame = 0; frame < 0x3C; frame++) {
         padUpdate();
         mmFreeTick(0);
         waitNextFrame();
         count = getButtonObjects(&buttons) & 0xFF;
-        if ((u32)count != 0)
-        {
+        if ((u32)count != 0) {
             draw = (*gScreenTransitionInterface)->init;
             draw(0, 0, 0);
             rectAlpha = 0.0f;
             drawRect(rectAlpha, rectAlpha, 0x280, 0x1E0);
-            for (j = 0; j < count; j++)
-            {
+            for (j = 0; j < count; j++) {
                 objRenderModelAndHitVolumes(buttons[j], 0, 0, 0, 0, 1.0f);
             }
             curUiDllDraw(0, 0, 0, 0);
-        }
-        else
-        {
+        } else {
             saved = gSaveCardBackdropColor;
             hudDrawColored(newshadows_getReflectionColorTexture(), 0, 0, &saved, 0x200, 0);
         }
-    gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
-        if (mode == 1)
-        {
+        gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
+        if (mode == 1) {
             gameTextShowAt(0x323, 0, 0xC8);
-        }
-        else if (mode == 2)
-        {
+        } else if (mode == 2) {
             gameTextShowAt(0x573, 0, 0xC8);
-        }
-        else
-        {
+        } else {
             gameTextShowAt(0x56C, 0, 0xC8);
         }
         gameTextRun();
@@ -773,14 +664,12 @@ int saveGameWriteOptionsCb(int slot, int unused, void* save, void* data) {
  * into the card-IO buffer (gSaveCardIoBuffer), then asks saveGame_doWrite(2) to
  * commit; if that fails it falls back to saveGame_doWrite(1).
  */
-int saveGameWriteSlotCb(u8 slot, int unused, void* src1, void* src2)
-{
+int saveGameWriteSlotCb(u8 slot, int unused, void* src1, void* src2) {
     int ret;
     memcpy(gSaveCardIoBuffer + slot * 0x6EC + 0xA50, src1, 0x6EC);
     memcpy(gSaveCardIoBuffer + 0x1F14, src2, 0xE4);
     ret = saveGame_doWrite(2);
-    if (ret == 0)
-    {
+    if (ret == 0) {
         ret = saveGame_doWrite(1);
     }
     return ret;
@@ -791,11 +680,9 @@ int saveGameWriteSlotCb(u8 slot, int unused, void* src1, void* src2)
  * Copies the 0xE4-byte block at offset 0x1F14 in the card buffer (held in
  * gSaveCardIoBuffer) into the caller-supplied destination.
  */
-int saveGameReadGlobalsCb(int saveId, int size, void* dst)
-{
+int saveGameReadGlobalsCb(int saveId, int size, void* dst) {
     memcpy(dst, gSaveCardIoBuffer + 0x1F14, 0xE4);
     return 0;
 }
-
 
 /* .bss block 0x80391DC0-0x803967C0 */
