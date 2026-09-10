@@ -65,9 +65,10 @@ Previously unnamed PAL calls now use the evidenced APIs:
 | `saveGameOptions` | `800E8968` | `800E8960` | Passes `saveData` to the options-writing memory-card path. |
 | `OSGetLanguage` | `80245FF0` | `80246128` | Locks SRAM, reads its language byte at offset `0x12`, unlocks, and returns the byte. |
 
-This change names those retail entry points and declares the PAL save API;
-it does not claim their containing units or the new PAL helper bodies as
-source-complete. Those units retain their existing matching status.
+The title-menu change names those retail entry points and declares the PAL save
+API. The save helper units remain incomplete. The SRAM accessors were subsequently
+restored and their unit verified across all five versions; see
+[SRAM language and video modes](sram_language_and_video_modes.md).
 
 The movie-prepare panic line is also versioned from retail: `0x2FB` in EN v1.0/JP,
 `0x33E` in EN rev1, `0x33A` in PAL v1.0, and `0x34D` in PAL rev1. Its constant

@@ -826,6 +826,7 @@ dolphin/os/OSMutex.c
 dolphin/os/OSReboot.c
 dolphin/os/OSReset.c
 dolphin/os/OSResetSW.c
+dolphin/os/OSRtc.c
 dolphin/os/OSStopwatch.c
 dolphin/os/OSSync.c
 dolphin/os/OSThread.c
