@@ -15,6 +15,12 @@
 #include "main/gx_scissor_api.h"
 #include "track/intersect_render_setup_api.h"
 
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
+#define GAME_TEXT_HUD_BORDER_WIDTH 0
+#else
+#define GAME_TEXT_HUD_BORDER_WIDTH 4
+#endif
+
 const GXColor gGameTextBoxFillColor = {0xFF, 0x40, 0x40, 0xFF};
 
 int gSubtitleLineCount;
@@ -257,7 +263,9 @@ void gameTextDrawBox(struct GameTextDef* strPtr, int boxId, GameTextBox* box) {
             hudY = box->y;
             hudX = box->x;
             GXSetScissor(0, 0, 0x280, 0x1e0);
-            drawHudBox(hudX, hudY, (s16)hudWidth, (s16)hudHeight, 0xff, 1);
+            drawHudBox(hudX - GAME_TEXT_HUD_BORDER_WIDTH, hudY - GAME_TEXT_HUD_BORDER_WIDTH,
+                       (s16)(hudWidth + 2 * GAME_TEXT_HUD_BORDER_WIDTH),
+                       (s16)(hudHeight + 2 * GAME_TEXT_HUD_BORDER_WIDTH), 0xff, 1);
         }
         break;
     case 1: {

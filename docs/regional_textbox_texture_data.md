@@ -42,3 +42,45 @@ mismatch and is not included in the verified JP source substitution.
 ```sh
 python3 tools/verify_source_link.py GSAJ01 main/textrender_drawbox.c
 ```
+
+## Completing the later HUD border change
+
+EN rev1, PAL v1.0, and PAL rev1 now also match the complete drawbox unit.
+Their `gameTextDrawBox` expands the style-7 HUD rectangle by four pixels on
+each side when the current text directory is not 3. Retail subtracts four from
+the signed X/Y arguments and adds eight to width/height, narrowing each result
+to `s16` before `drawHudBox`. The shared source uses a private border-width
+constant: zero in EN v1.0/JP and four in the other three versions. The directory-3
+solid rectangle and other box styles keep their existing geometry.
+
+| Version | `gameTextDrawBox` | Size |
+| --- | --- | --- |
+| EN v1.0 / JP | `8001BE90` | 1,820 bytes |
+| EN rev1 | `8001BF44` | 1,836 bytes |
+| PAL v1.0 / PAL rev1 | `8001BFF4` | 1,836 bytes |
+
+This adds four instructions. Six switch-table destinations move forward by
+16 bytes, explaining the previously unmatched 1,368-byte `.data` section:
+the texture bytes themselves were already equal. All five verified DOLs have
+identical corner and edge textures, including the newly available PAL v1.0.
+Allocated non-code bytes and symbol positions in the source object are unchanged;
+the six `.data` relocation addends now identify the correct case labels.
+
+The independent source link also exposed an unnamed PAL dependency:
+`gGameTextBoxCornerInset`, owned by `gametext.c`. The small-data audit against
+EN rev1 finds four corresponding loads in `gameTextDrawBox`. Manual inspection
+confirms `lwz r7, -0x7D9C(r13)` at `8001C1B8`, `8001C210`, `8001C268`, and
+`8001C2C0` in both PAL revisions. Retail startup initializes r13 to `803E4980`
+in PAL v1.0 and `803E4B40` in PAL rev1, resolving to the existing four-byte
+symbols at `803DCBE4` and `803DCDA4`. Both contain integer 2. These symbols now
+use the canonical name; their addresses, sizes, and ownership are unchanged.
+The EN v1.0-based audit cannot anchor this changed function; EN rev1 supplies
+the identical retail body needed for the comparison.
+
+Each later version gains one exact 1,836-byte function, 1,368 reported matching
+data bytes, and one completed unit. All nine functions and all 1,460 data bytes
+are exact across all five versions. EN v1.0 and JP source objects are byte-identical
+to the baseline, and every other source object is unchanged in all five versions.
+All five `all_source` builds, native strict checksum targets, and independent
+all-retail/selected-source links reproduce the verified originals. The three
+later matching manifests now include `main/textrender_drawbox.c`.

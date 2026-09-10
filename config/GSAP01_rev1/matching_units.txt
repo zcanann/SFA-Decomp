@@ -858,6 +858,7 @@ main/shader_dolphin.c
 main/shadow_dolphin.c
 main/skystars.c
 main/subtitle.c
+main/textrender_drawbox.c
 main/texture.c
 main/thp/THPRead.c
 main/thp/THPVideoDecode.c
