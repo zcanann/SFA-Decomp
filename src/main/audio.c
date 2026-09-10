@@ -20,6 +20,7 @@
 #include "main/audio/stream_api.h"
 #include "musyx/snd3d.h"
 #include "musyx/snd_core.h"
+#include "musyx/dsp_voice.h"
 
 /* Local prototypes: this TU declares sndMasterVolume with int volume/time,
    which disagrees with the musyx definition -- retail calls it directly with
@@ -29,6 +30,9 @@ void sndSeqVolume(u8 volume, u16 time, u32 seqId, u8 mode);
 void sndVolume(u8 volume, u16 time, u8 group);
 void sndOutputMode(int mode);
 #define SYNTH_INTERNAL_USE_PROJECT_TYPES
+
+#define AUDIO_DSP_VOICE_COUNT 48
+#define AUDIO_DSP_VOICE_PREFIX_BYTES 0x100
 
 const MusicSeqStartParams gMusicSeqStartParamsDefault = {
     4, {0xFFFFFFFF, 0xFFFFFFFF}, 0x100, {0, 0x7F}, 0, NULL, 0, NULL};
@@ -696,7 +700,7 @@ int audioInit(void)
         AIInit(0);
         AISetDSPSampleRate(0);
         sndSetHooks(&hooks);
-        sndInit(0x30, 0x30, 0x18, 1, 1, 0x1000000);
+        sndInit(AUDIO_DSP_VOICE_COUNT, 0x30, 0x18, 1, 1, 0x1000000);
         sndSetMaxVoices(0x30, 0x18);
         if (OSGetSoundMode() == 0)
         {
@@ -833,6 +837,11 @@ void audioFree(void* ptr)
 
 void* _audioAlloc(u32 size)
 {
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+    if (size == AUDIO_DSP_VOICE_COUNT * sizeof(DSPvoice)) {
+        return (u8*)mmAlloc(size + AUDIO_DSP_VOICE_PREFIX_BYTES, 0xb, 0) + AUDIO_DSP_VOICE_PREFIX_BYTES;
+    }
+#endif
     return mmAlloc(size, 0xb, 0);
 }
 

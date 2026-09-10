@@ -846,6 +846,7 @@ dolphin/si/SISamplingRate.c
 dolphin/thp/THPAudio.c
 dolphin/thp/THPDec.c
 dolphin/vi/vi.c
+main/audio.c
 main/audio_sfx.c
 main/audio_stream.c
 main/boot_logo.c
