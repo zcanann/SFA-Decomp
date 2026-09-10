@@ -252,9 +252,9 @@ static void loadAsset(AssetLoadRequest* req) {
         fileLoadToBufferOffset(req->resourceId, req->destination, req->args.file.offset, req->args.file.size);
         break;
     case ASSET_LOAD_OBJECT:
-        *(void**)req->destination = loadCharacter(req->args.object.placement, req->args.object.flags,
-            req->args.object.mapLayer, req->args.object.objectIndex, req->args.object.parent,
-            req->args.object.unusedArgument);
+        *(void**)req->destination =
+            loadCharacter(req->args.object.placement, req->args.object.flags, req->args.object.mapLayer,
+                          req->args.object.objectIndex, req->args.object.parent, req->args.object.unusedArgument);
         break;
     case ASSET_LOAD_TEXTURE:
         *(void**)req->destination = (void*)textureLoad(req->resourceId, 0);
@@ -267,7 +267,7 @@ static void loadAsset(AssetLoadRequest* req) {
         break;
     case ASSET_LOAD_ANIMATION:
         *(void**)req->destination = loadAnimation(req->args.animation.definition, req->resourceId,
-            (s16)req->args.animation.moveIndex, req->args.animation.cache);
+                                                  (s16)req->args.animation.moveIndex, req->args.animation.cache);
         break;
     }
 }
