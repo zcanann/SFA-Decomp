@@ -5,6 +5,13 @@
 
 #define SAVE_DATA_SIZE 0xE4
 
+/* Stored option order differs from both SRAM and gametext language IDs. */
+#define SAVE_LANGUAGE_ENGLISH 0
+#define SAVE_LANGUAGE_FRENCH  1
+#define SAVE_LANGUAGE_ITALIAN 2
+#define SAVE_LANGUAGE_SPANISH 3
+#define SAVE_LANGUAGE_GERMAN  4
+
 #define SAVE_SCORE_TABLE_COUNT 5
 #define SAVE_SCORE_ENTRY_COUNT 5
 
@@ -18,7 +25,7 @@ typedef struct SaveScoreEntry
 typedef struct SaveData
 {
     u8 optionsValid;
-    u8 pad01;
+    u8 languageIndex;
     u8 subtitlesEnabled;
     u8 gameUiSetting;
     u8 cameraSetting;
@@ -36,6 +43,10 @@ typedef struct SaveData
     u8 pad18[4];
     SaveScoreEntry scores[SAVE_SCORE_TABLE_COUNT][SAVE_SCORE_ENTRY_COUNT];
 } SaveData;
+
+STATIC_ASSERT(sizeof(SaveData) == SAVE_DATA_SIZE);
+STATIC_ASSERT(offsetof(SaveData, languageIndex) == 0x01);
+STATIC_ASSERT(offsetof(SaveData, subtitlesEnabled) == 0x02);
 
 /* Bit index into unlockedCheats/enabledCheats, aka cheatId. */
 enum CheatId

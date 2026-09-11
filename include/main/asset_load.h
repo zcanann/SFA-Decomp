@@ -5,8 +5,8 @@
 
 #include "main/objanim.h"
 
-void getTabEntry(void *dst, int fileId, int offset, int size);
-int fileLoadToBufferOffset(int fileId, void *dst, int offset, int size);
+void getTabEntry(void* dst, int fileId, int offset, int size);
+int fileLoadToBufferOffset(int fileId, void* dst, int offset, int size);
 void loadAssetFileById(void* out, int fileId);
 void loadTextureFile(void** out, int assetId);
 void animationLoad(void** out, int animId, int moveIndex, ObjAnimCachedMove* cache, ObjAnimDef* animDef);

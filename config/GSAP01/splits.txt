@@ -125,20 +125,12 @@ main/modellight.c:
 	.sdata2     start:0x803DFF50 end:0x803DFFA8
 
 main/gameloop.c:
-	.text       start:0x8001F6C0 end:0x8001FF88
-	.data       start:0x802CBAB8 end:0x802CBB94
-	.bss        start:0x8033D728 end:0x8033D758
+	.text       start:0x8001F6C0 end:0x800214D8
+	.data       start:0x802CBAB8 end:0x802CBCA4
+	.bss        start:0x8033D728 end:0x8033DF40
 	.sdata      start:0x803DCC08 end:0x803DCC20
 	.sbss       start:0x803DE238 end:0x803DE300
-
-main/gameloop_buttonobj.c:
-	.text       start:0x8001FF88 end:0x80020074
-
-main/gameloop_main.c:
-	.text       start:0x80020074 end:0x800214D8
-	.data       start:0x802CBB94 end:0x802CBCA8
-	.bss        start:0x8033D758 end:0x8033DF40
-	.sdata2     start:0x803DFFB0 end:0x803DFFC4
+	.sdata2     start:0x803DFFA8 end:0x803DFFC4
 
 main/vecmath.c:
 	.text       start:0x800214D8 end:0x800228A4

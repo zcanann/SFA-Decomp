@@ -9,7 +9,6 @@ typedef struct NAttractModeMovieDims {
   int height;
 } NAttractModeMovieDims;
 
-#define NATTRACTMODE_PREPARE_FAIL_LINE 0x2FB
 #define NATTRACTMODE_MOVIE_HEAP 0x18
 #define NATTRACTMODE_WORK_BUFFER_SIZE 0x4000
 #define NATTRACTMODE_MOVIE_STATE_PREPARED 2

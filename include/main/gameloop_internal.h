@@ -3,18 +3,28 @@
 
 #include "game/objects/object_fwd.h"
 #include "types.h"
+#include "dolphin/gx/GXStruct.h"
 
 extern int gGameLoopPendingUiDllId;
 extern f32 gGameLoopMusicFadeTimer;
 extern u8 gGameLoopResetComboDebounce;
 extern char sGameLoopResetMessages[0x50];
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+extern GXRenderModeObj gGameLoopPalRenderMode;
+#endif
 extern f32 gGameLoopResetFadeOutTimer;
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+extern u8 gAskDisplayMode;
+#else
 extern u8* gAskProgressiveScanFlag;
+#endif
 extern int gGameLoopPendingMapId;
 extern int gGameLoopPendingMapDataFileId;
 extern u8 gGameLoopPendingMusicId;
 extern GameObject* gGameLoopButtonObjects[2];
+#if !defined(VERSION_GSAP01) && !defined(VERSION_GSAP01_rev1)
 extern u8 gGameLoopProgressiveMode;
+#endif
 extern u8* gGameBitSaveData;
 typedef struct GameBitDef {
     u16 firstBit;

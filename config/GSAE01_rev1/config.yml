@@ -207,12 +207,16 @@ extract:
   header: gLoadingScreenTextures.inc
 
 force_active:
+  # Retain the version/reset metadata previously used as a diagnostic address base.
+  - sGameLoopResetMessages
   # audio.c: retain the unused initialized word and two small-BSS words.
   - lbl_803DB1EC
   - sAudioUnused0
   - sAudioUnused1
   # gameloop.c: retain the memory-card dialog and its status-helper references.
   - cardShowMessage
+  # Present in EN rev1 even though only PAL code selects this render mode.
+  - gGameLoopPalRenderMode
   # aram_data.c: retain the same unreferenced 24-byte .bss block as EN.
   - lbl_803D4868
   # dlls/engine/5/5.c

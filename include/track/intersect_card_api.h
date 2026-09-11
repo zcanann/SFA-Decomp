@@ -4,8 +4,7 @@
 #include "dolphin/card.h"
 #include "types.h"
 
-typedef union SaveCardFileInfo
-{
+typedef union SaveCardFileInfo {
     CARDFileInfo fileInfo;
     u8 raw[0x18];
 } SaveCardFileInfo;
@@ -29,6 +28,10 @@ void cardSetStatusNeedInit(void);
 s32 saveGameGetStatus(void);
 int cardDeleteSaveFile(void);
 int _saveGame(int slot, void* save, void* data);
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+int cardWriteOptions(void* data);
+int saveGameWriteOptionsCb(int slot, int unused, void* save, void* data);
+#endif
 int maybeTryLoadSave(void* data);
 int loadSaveGame(int slot, void* save);
 int cardCreateSaveFile(u8 retry);

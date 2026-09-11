@@ -20,7 +20,9 @@ dlls/engine/18/18.c
 dlls/engine/19/19.c
 dlls/engine/1_camcontrol/camcontrol.c
 dlls/engine/20_Hcurves/Hcurves_romcurve.c
+dlls/engine/21/21.c
 dlls/engine/22/22.c
+dlls/engine/23/23.c
 dlls/engine/24/24.c
 dlls/engine/25/25.c
 dlls/engine/26/26.c
@@ -51,6 +53,7 @@ dlls/engine/48/48.c
 dlls/engine/49/49.c
 dlls/engine/5/5.c
 dlls/engine/51/51.c
+dlls/engine/52_n_attractmode/n_attractmode.c
 dlls/engine/56/56.c
 dlls/engine/57/57.c
 dlls/engine/58/58.c
@@ -831,6 +834,7 @@ dolphin/os/OSMutex.c
 dolphin/os/OSReboot.c
 dolphin/os/OSReset.c
 dolphin/os/OSResetSW.c
+dolphin/os/OSRtc.c
 dolphin/os/OSStopwatch.c
 dolphin/os/OSSync.c
 dolphin/os/OSThread.c
@@ -843,12 +847,14 @@ dolphin/si/SISamplingRate.c
 dolphin/thp/THPAudio.c
 dolphin/thp/THPDec.c
 dolphin/vi/vi.c
+main/audio.c
 main/audio_sfx.c
 main/audio_stream.c
 main/boot_logo.c
 main/camera.c
 main/curves.c
-main/gameloop_buttonobj.c
+main/fileio.c
+main/mm.c
 main/modellight.c
 main/obj_movelib.c
 main/objlib.c
@@ -861,6 +867,7 @@ main/shader_dolphin.c
 main/shadow_dolphin.c
 main/skystars.c
 main/subtitle.c
+main/textrender_drawbox.c
 main/texture.c
 main/thp/THPRead.c
 main/thp/THPVideoDecode.c

@@ -238,9 +238,14 @@ void mmInit(void) {
     mmInitRegion(p, size, MM_LARGE_REGION_SLOTS);
 
     //savegame buffer
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+    p = OSAllocFromHeap(__OSCurrHeap, 0x6ec);
+    gSaveGameWorkBuffer = p;
+#else
     p = OSAllocFromHeap(__OSCurrHeap, 0x6ed);
     gSaveGameWorkBuffer = p;
     gAskProgressiveScanFlag = (u8*)p + 0x6ec;
+#endif
 
     //medium region
     p = OSAllocFromHeap(__OSCurrHeap, MM_MEDIUM_REGION_SIZE);

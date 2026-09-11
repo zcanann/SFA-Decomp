@@ -11,12 +11,12 @@ extern "C" {
 #endif
 
 // make the assert happy
-#define OS_SOUND_MODE_MONO 0
+#define OS_SOUND_MODE_MONO   0
 #define OS_SOUND_MODE_STEREO 1
 
 // make the asserts happy
-#define OS_VIDEO_MODE_NTSC 0
-#define OS_VIDEO_MODE_MPAL 2
+#define OS_VIDEO_MODE_NTSC   0
+#define OS_VIDEO_MODE_MPAL   2
 
 #define OS_PROGRESSIVE_MODE_OFF 0
 #define OS_PROGRESSIVE_MODE_ON  1
@@ -57,7 +57,7 @@ typedef struct OSSramEx {
 #define SRAM_SIZE (sizeof(OSSram) + sizeof(OSSramEx))
 
 typedef struct SramControl {
-    u8 sram[SRAM_SIZE];  // dummy for OSSram + OSSramEx
+    u8 sram[SRAM_SIZE]; // dummy for OSSram + OSSramEx
     u32 offset;
     BOOL enabled;
     BOOL locked;

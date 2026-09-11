@@ -12,8 +12,7 @@
 STATIC_ASSERT(sizeof(TextFont) == 0x28);
 STATIC_ASSERT(offsetof(TextFont, status) == 0x1c);
 
-typedef struct
-{
+typedef struct {
     DVDFileInfo fileInfo;
     void* loadHandle;
     int loadedSize;
@@ -30,8 +29,7 @@ STATIC_ASSERT(offsetof(GameTextLoadSlot, state) == 0x44);
 STATIC_ASSERT(offsetof(GameTextLoadSlot, dirId) == 0x48);
 STATIC_ASSERT(offsetof(GameTextLoadSlot, sourceId) == 0x4b);
 
-typedef struct
-{
+typedef struct {
     u32 code;
     u16 r, g, b, a;
 } SubtitleCmd;
@@ -61,7 +59,6 @@ extern SubtitleCmd sSubtitleCtrlCmdScratch[SUBTITLE_CONTROL_COMMAND_COUNT];
 #define TEXT_ALIGN_CENTER  2
 #define TEXT_ALIGN_JUSTIFY 3
 
-
 /* Per-glyph font id stored in TextGlyph.font. Id 1 is unused. */
 #define GAMETEXT_FONT_JAPANESE 0
 #define GAMETEXT_FONT_ICON     2
@@ -76,13 +73,13 @@ extern SubtitleCmd sSubtitleCtrlCmdScratch[SUBTITLE_CONTROL_COMMAND_COUNT];
 #define GAMETEXT_SLOT_ERROR    2 /* Boot */
 #define GAMETEXT_SLOT_HUD      3 /* Link */
 
-#define GAMETEXT_LOAD_SLOT_COUNT              8
-#define GAMETEXT_PENDING_SOURCE_COUNT         4
-#define GAMETEXT_INVALID_DIR                  0xff
-#define GAMETEXT_INVALID_LANGUAGE             6
-#define GAMETEXT_MAP_DIR_COUNT                0x49
-#define GAMETEXT_LANGUAGE_COUNT               6
-#define GAMETEXT_SEQUENCE_SOURCE_ID           1
+#define GAMETEXT_LOAD_SLOT_COUNT      8
+#define GAMETEXT_PENDING_SOURCE_COUNT 4
+#define GAMETEXT_INVALID_DIR          0xff
+#define GAMETEXT_INVALID_LANGUAGE     6
+#define GAMETEXT_MAP_DIR_COUNT        0x49
+#define GAMETEXT_LANGUAGE_COUNT       6
+#define GAMETEXT_SEQUENCE_SOURCE_ID   1
 
 extern s16 gGameTextBoxTexAssets;
 extern u16 gGameTextBoxCornerTexSrc[256];

@@ -179,7 +179,7 @@ fonts.c           (29) main/textrender.c + textrender_run.c      [L1 11][BODY]
     fontWordwrap / fontYSpacing / fontExtraCharSpacing / fontSquash / fontBgColour
     == SFA gameTextSetWindow / textRenderStr / gameTextMeasureString / gameTextRenderStrs / ...
     retail's own name for the DLL-side text block is textblock.c ("<textblock.c Init>").
-main.c            (34) main/gameloop_main.c + main/gameloop.c    [L1 22][BODY] DP mainLoop etc.
+main.c            (34) main/gameloop.c    [L1 22][BODY] DP mainLoop etc.
                        + main/modelEngine.c (the game timer)     == SFA gameLoop / gameUpdate /
     main / getGameState / setGameState / checkReset / cutsceneEnterExit / blankScreen.
 dll.c             (12) main/modelEngine.c (the load/free API only) [BODY] SETTLED, and the
@@ -287,7 +287,7 @@ menu.c            (27) main/modelEngine.c (the UI-DLL switcher)  [BODY] SETTLED 
 lfx.c / envfx.c    (3) main/skystars.c / render.c(getEnvfxAct)   [?] SFA render.c literally has
     getEnvfxAct / getEnvfxActImmediately - DP's envfx.c is 2 functions.  Weak but suggestive.
 scheduler.c       (20) (none)                                    N64 OS scheduler; GC uses OS/VI.
-boot.c / reset.c   (9) main/boot_logo.c / gameloop_main checkReset  [?]
+boot.c / reset.c   (9) main/boot_logo.c / gameloop checkReset  [?]
 audio.c / mp3 /   (16) main/audio*.c                             NOT a correspondence: DP is the
   segment_BED0.c                                                 N64 audio driver, SFA is MusyX.
 libultra/*             src/dolphin/*                             platform SDK, unrelated bodies.

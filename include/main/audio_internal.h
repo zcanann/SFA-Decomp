@@ -9,20 +9,19 @@
 #include "dolphin/mtx/vec.h"
 #include "game/objects/object.h"
 
-#define AUDIO_ARQ_REQUEST_COUNT 16
-#define MUSIC_CHANNEL_COUNT 16
-#define SFX_OBJECT_CHANNEL_COUNT 56
-#define SFX_LOOPED_OBJECT_TABLE_OBJECT_COLUMN \
-    (offsetof(SfxLoopedObjectSoundTable, objects) / sizeof(GameObject*))
-#define SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE 1
-#define SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN 2
-#define SFX_LOOPED_OBJECT_STOP_FLAG 0x40
+#define AUDIO_ARQ_REQUEST_COUNT               16
+#define MUSIC_CHANNEL_COUNT                   16
+#define SFX_OBJECT_CHANNEL_COUNT              56
+#define SFX_LOOPED_OBJECT_TABLE_OBJECT_COLUMN (offsetof(SfxLoopedObjectSoundTable, objects) / sizeof(GameObject*))
+#define SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE    1
+#define SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN     2
+#define SFX_LOOPED_OBJECT_STOP_FLAG           0x40
 
-#define STREAM_FADEBITS_FLAGA_SHIFT 6
-#define STREAM_FADEBITS_FLAGB_SHIFT 4
+#define STREAM_FADEBITS_FLAGA_SHIFT   6
+#define STREAM_FADEBITS_FLAGB_SHIFT   4
 #define STREAM_FADEBITS_STOPSFX_SHIFT 2
-#define STREAM_VOLBITS_CHANMASK_BIT 7
-#define STREAM_VOLBITS_VOLUME_MASK 0x7F
+#define STREAM_VOLBITS_CHANMASK_BIT   7
+#define STREAM_VOLBITS_VOLUME_MASK    0x7F
 
 STATIC_ASSERT(sizeof(ReverbState) == 0x154);
 
@@ -295,14 +294,12 @@ void sampleDirectorySLoadedCallback(s32 status, DVDFileInfo* fileInfo);
 void sfxTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
 void musicTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
 void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f32* outF6, f32* outF7,
-                          f32* outF8, int* outI9, int* outI10, int* outI11);
+int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f32* outF6, f32* outF7, f32* outF8,
+                          int* outI9, int* outI10, int* outI11);
 SfxTrigger* Sfx_FindTrigger(u16 id);
-SfxObjectChannel* Sfx_AllocObjectChannel(u16 fxId, u8 volume, double pitch, u8 pan,
-                                         int globalCtrlDisabled);
+SfxObjectChannel* Sfx_AllocObjectChannel(u16 fxId, u8 volume, double pitch, u8 pan, int globalCtrlDisabled);
 void AudioAramReadAllocAsync(void* source, u32 size, void** outBuf, AudioArqRequestCallback callback,
-                             MusicTrackSlot* callbackArg1, MusicChannel* callbackArg2,
-                             MusicTrigger* callbackArg3);
+                             MusicTrackSlot* callbackArg1, MusicChannel* callbackArg2, MusicTrigger* callbackArg3);
 void audioLoadTriggerData(void);
 void AudioAramWriteSync(void* addr, u32 dest, u32 size);
 

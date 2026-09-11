@@ -99,7 +99,7 @@ static int UnlockSram(int commit, u32 offset) {
     ASSERTLINE(375, Scb.locked);
     if (commit != 0) {
         if (offset == 0) {
-            OSSram* sram  = (OSSram*)Scb.sram;
+            OSSram* sram = (OSSram*)Scb.sram;
             if (2u < (sram->flags & 3)) {
                 sram->flags &= ~3;
             }
@@ -186,6 +186,7 @@ void OSSetSoundMode(u32 mode) {
     __OSUnlockSram(TRUE);
 }
 
+#if !defined(VERSION_GSAP01) && !defined(VERSION_GSAP01_rev1)
 u32 OSGetProgressiveMode(void) {
     OSSram* sram;
     u32 on;
@@ -212,6 +213,51 @@ void OSSetProgressiveMode(u32 on) {
     sram->flags |= flag;
     __OSUnlockSram(TRUE);
 }
+
+#endif
+
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+u8 OSGetLanguage(void) {
+    OSSram* sram;
+    u8 language;
+
+    sram = __OSLockSram();
+    language = sram->language;
+    __OSUnlockSram(FALSE);
+    return language;
+}
+
+#endif
+
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+u32 OSGetEuRgb60Mode(void) {
+    OSSram* sram;
+    u32 on;
+
+    sram = __OSLockSram();
+    on = (sram->ntd & 0x40) >> 6;
+    __OSUnlockSram(FALSE);
+    return on;
+}
+
+void OSSetEuRgb60Mode(u32 on) {
+    u32 flag;
+    OSSram* sram;
+    u32 currentFlag;
+
+    flag = (on & 1) << 6;
+    sram = __OSLockSram();
+    currentFlag = sram->ntd & 0x40;
+    if (flag == currentFlag) {
+        __OSUnlockSram(FALSE);
+        return;
+    }
+    sram->ntd &= ~0x40;
+    sram->ntd |= flag;
+    __OSUnlockSram(TRUE);
+}
+
+#endif
 
 u16 OSGetWirelessID(s32 chan) {
     OSSramEx* sram;

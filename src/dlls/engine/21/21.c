@@ -1,3 +1,6 @@
+#include "main/dll/dll_0015_save_settings.h"
+#include "main/dll/savegame.h"
+#include "main/gametext_api.h"
 #include "dolphin/os.h"
 #include "dolphin/mtx/vec.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -1445,6 +1448,33 @@ void saveFileStruct_resetVolumes(void) {
     ((SaveData*)saveData)->speechVolume = 0x7f;
 }
 
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+void saveFileStruct_resetOptions(void) {
+    memset(saveData, 0, SAVE_DATA_SIZE);
+    ((SaveData*)saveData)->widescreenEnabled = 0;
+    ((SaveData*)saveData)->subtitlesEnabled = 1;
+    ((SaveData*)saveData)->rumbleEnabled = 1;
+    ((SaveData*)saveData)->optionsValid = 1;
+    ((SaveData*)saveData)->musicVolume = 0x7f;
+    ((SaveData*)saveData)->sfxVolume = 0x7f;
+    ((SaveData*)saveData)->speechVolume = 0x7f;
+    switch (OSGetLanguage()) {
+    case OS_LANGUAGE_GERMAN:
+        ((SaveData*)saveData)->languageIndex = SAVE_LANGUAGE_GERMAN;
+        break;
+    case OS_LANGUAGE_FRENCH:
+        ((SaveData*)saveData)->languageIndex = SAVE_LANGUAGE_FRENCH;
+        break;
+    case OS_LANGUAGE_SPANISH:
+        ((SaveData*)saveData)->languageIndex = SAVE_LANGUAGE_SPANISH;
+        break;
+    case OS_LANGUAGE_ITALIAN:
+        ((SaveData*)saveData)->languageIndex = SAVE_LANGUAGE_ITALIAN;
+        break;
+    }
+}
+#endif
+
 SaveData* getSaveFileStruct(void) {
     return (SaveData*)saveData;
 }
@@ -1459,6 +1489,9 @@ void loadSaveSettings(void) {
     audioSetVolumes(((SaveData*)saveData)->sfxVolume, 10, 0, 1, 0);
     audioSetVolumes(((SaveData*)saveData)->musicVolume, 10, 1, 0, 0);
     audioSetVolumes(((SaveData*)saveData)->speechVolume, 10, 0, 0, 1);
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+    gameTextSetLanguage(gSaveGameLanguageMap[((SaveData*)saveData)->languageIndex]);
+#endif
 }
 
 void* getLastSavedGameTexts(void) {
@@ -1491,7 +1524,7 @@ int pushable_savePos(GameObject* obj) {
     return 0;
 }
 
-const f32 lbl_803E06C4 = 0.0f;
+const f32 gCurvesUnusedZero = 0.0f;
 
 typedef struct CurvesDllInterface {
     u32 reserved0;

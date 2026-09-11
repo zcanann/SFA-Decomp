@@ -14,6 +14,10 @@ typedef struct NpcDialoguePhraseState {
 STATIC_ASSERT(sizeof(NpcDialoguePhraseState) == 0x18);
 STATIC_ASSERT(offsetof(NpcDialoguePhraseState, phraseBuffer) == 0x14);
 
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+void gameTextSetLanguage(int language);
+#endif
+
 void gameTextAppendStr(char* str, int box);
 void gameTextQueueReveal(int textId, TextDisplayState* state);
 void gameTextFreePhrase(NpcDialoguePhraseState* phrase);
