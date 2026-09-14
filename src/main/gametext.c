@@ -57,8 +57,6 @@ static inline int gameTextCountChars(char* str);
 
 static inline TextGlyph* gameTextFindGlyph(u32 ch, int langIdx);
 
-static inline char* gameTextBreakLine(char* dst, char** buffer, int lineIdx);
-
 static void translateToDinoLanguage(u8* str);
 
 /*
@@ -2152,18 +2150,18 @@ GameTextBox* gameTextGetBox(int box) {
 }
 
 char** gameTextWrapLines(char* str, f32 maxWidth, f32 scale, int* outLineCount, f32* outMaxLineHeight) {
-    int copyOffset;
     int scanOffset;
     int* copyBoundary;
-    int fontId;
     const FontMetrics* metrics;
+    int lineIndex;
+    char* readCursor;
+    int copyOffset;
+    int fontId;
     int tableBytes;
     int* lastBoundary;
     int lineCount;
     int wrapOffset;
     int hasSpace;
-    int lineIndex;
-    char* readCursor;
     char** lines;
     char* writeCursor;
     int lineStarts[32];
@@ -2293,45 +2291,44 @@ char** gameTextWrapLines(char* str, f32 maxWidth, f32 scale, int* outLineCount, 
     while (copyOffset < scanOffset) {
         *writeCursor++ = *readCursor;
         if (copyOffset == copyBoundary[1]) {
-            writeCursor = gameTextBreakLine(writeCursor - 1, lines, lineIndex);
+            char* breakChar;
+            int lookbehindLength;
+            int previousCharLength;
+            u32 previousCodePoint;
+
+            writeCursor--;
+            breakChar = writeCursor;
+            for (;;) {
+                lookbehindLength = 6;
+                do {
+                    previousCodePoint = utf8GetNextChar((u8*)(writeCursor - lookbehindLength), &previousCharLength);
+                    if (lookbehindLength != previousCharLength) {
+                        continue;
+                    }
+                    if (isSpace(previousCodePoint)) {
+                        int trimLength = previousCharLength;
+                        while (trimLength-- != 0) {
+                            *--writeCursor = 0;
+                        }
+                        break;
+                    }
+                    breakChar[1] = breakChar[0];
+                    breakChar[0] = 0;
+                    writeCursor = breakChar + 1;
+                    *(char**)((char*)lines + ((lineIndex + 1) << 2)) = writeCursor++;
+                    goto line_broken;
+                } while (--lookbehindLength > 0);
+            }
+
+        line_broken:
             copyBoundary++;
             lineIndex++;
         }
-        readCursor++;
         copyOffset++;
+        readCursor++;
     }
     *writeCursor = 0;
     return lines;
-}
-
-static inline char* gameTextBreakLine(char* dst, char** buffer, int lineIdx) {
-    char* q;
-    int k;
-    int charLen2;
-    u32 ch;
-
-    q = dst;
-    for (;;) {
-        k = 6;
-        do {
-            ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
-            if (k != charLen2) {
-                continue;
-            }
-            if (isSpace(ch)) {
-                int j = charLen2;
-                while (j-- != 0) {
-                    *--dst = 0;
-                }
-                break;
-            }
-            q[1] = q[0];
-            q[0] = 0;
-            dst = q + 1;
-            *(char**)((char*)buffer + ((lineIdx + 1) << 2)) = dst++;
-            return dst;
-        } while (--k > 0);
-    }
 }
 
 void gameTextFreePhrase(NpcDialoguePhraseState* p) {

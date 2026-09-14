@@ -90,3 +90,34 @@ objdiff report is unchanged. The gametext objects are identical across all
 four versions. The 16 existing gametext tests also pass. Formatting the TU and
 API header is a no-op; the final EN `all_source` and strict retail checksum
 checks pass in 19.65 and 21.17 seconds, within their 30-second limits.
+
+## Copy-loop allocation pass (2026-09-14)
+
+With the common GC/1.3 profile, `gameTextWrapLines` improves from 98.932465%
+to 99.3573%, retaining its 1,836-byte body. The line-break operation now lives
+inside the copy loop, so its trimming and insertion both update the same write
+cursor. The copied-byte offset advances before the input pointer, as in retail.
+A small declaration-order adjustment preserves the improved allocation. The
+obsolete private `gameTextBreakLine` helper is removed.
+
+There are still 57 differing instruction words, all register operands. The
+input and output parameters, font state, boundary-table pointer, allocation
+size, and saved break character still receive different registers. The other
+51 exact functions, named storage layouts, and allocated non-text bytes are
+unchanged; this is not a claim of an exact function or complete source TU.
+
+The GC/1.3 LLDB trace reproduces the ordinary object and records allocation
+without modifying compiler state:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/main/gametext \
+    --function gameTextWrapLines --graph --output build/wrap_match/final_trace
+```
+
+The emulation probe now links `gametext_data.o` alongside the selected code
+object. Its previous generic external-data stubs replaced the recovered UTF-8
+masks and control-length table with zeros after the initialized-data split;
+both the pre-change and current source object failed that stale fixture.
+With the actual data object, both pass all 151 retail comparisons, including
+multibyte characters, control arguments, complete allocation contents, and ABI
+preservation. The 20 existing gametext tests also pass.

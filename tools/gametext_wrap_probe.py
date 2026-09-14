@@ -164,7 +164,11 @@ def main():
     texts += [control(0xf8f4, value) + b'ABC' for value in (0, 1, 255, 32768, 65535)]
     cases = 0
     with tempfile.TemporaryDirectory(prefix='sfa-text-wrap-') as temporary:
-        compiled, symbols = link_source(args.object, Path(temporary), retail)
+        # The initialized tables now belong to the separately recovered data TU.
+        # In particular, UTF-8 masks and control lengths must not become stubs.
+        compiled, symbols = link_source(
+            args.object, Path(temporary), retail, entry='gameTextWrapLines',
+            extra_objects=(ROOT / 'build/GSAE01/src/main/gametext_data.o',))
         for text in texts:
             for width in (5.0, 11.0, 40.0):
                 for want_height in (False, True):
