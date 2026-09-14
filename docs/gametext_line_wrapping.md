@@ -6,6 +6,10 @@ scale, not a height constraint. `gameTextRenderStrs` supplies a text box's
 width and scale, then uses the returned maximum line height to advance its
 vertical cursor.
 
+**EN status (2026-09-14): 100% matching**, including every relocated instruction
+against the verified retail DOL. The code TU has 52 of 54 exact functions and
+remains `NonMatching` because two other functions are unfinished.
+
 The source now distinguishes the scanning byte offset, copying byte offset,
 last candidate wrap position, line-start table, and its two traversal pointers.
 Font selection uses the existing font IDs and a read-only `FontMetrics` view.
@@ -78,8 +82,8 @@ expected results cover ordinary line contents, allocation sizes, height
 changes, limits, and the trailing null pointer; agreement alone would not
 catch a shared fixture mistake.
 
-This is source and contract recovery, with no match-score claim. The compiled
-function remains at 96.45098%. Cross-version verification checks the normalized
+The initial source-and-contract recovery pass retained a 96.45098% match.
+Its cross-version verification checked the normalized
 retail function shape and raw source object identity; EN execution does not
 claim that every regional text resource or malformed input has been exercised.
 
@@ -121,3 +125,26 @@ both the pre-change and current source object failed that stale fixture.
 With the actual data object, both pass all 151 retail comparisons, including
 multibyte characters, control arguments, complete allocation contents, and ABI
 preservation. The 20 existing gametext tests also pass.
+
+## Exact register allocation (2026-09-14)
+
+`gameTextWrapLines` now matches all 459 instructions (1,836 bytes), up from
+99.3573%. The existing general counter holds the control-argument count while
+a scoped index fills the argument array. The clearing and copying passes use
+separate cursors, and the line index belongs to the copying scope. Keeping the
+recovered declaration order reproduces GC/1.3's saved-register allocation.
+No compiler settings, pragmas, assembly, or TU boundaries changed.
+
+The ordinary and LLDB-instrumented compiler builds agree. Objdiff reports
+100% for the wrapper and 99.907104% for the code TU. All other function bytes,
+named symbol layouts, non-text section contents, and resolved relocation
+destinations remain unchanged; compiler-generated anonymous labels renumber.
+The new relocation regression test resolves calls and data references to their
+actual retail addresses and compares the complete function against the
+hash-verified EN DOL. All 21 gametext tests and 151 retail/compiled execution
+cases pass. Only the EN retail input is available in this checkout, so this
+pass makes no new regional matching claim.
+
+The final EN `ninja all_source` and strict checksum builds pass in 16.33 and
+17.14 seconds, respectively, within their 30-second limits. The TU and API
+header pass the required clang-format check.

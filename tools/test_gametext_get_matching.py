@@ -29,6 +29,9 @@ class GameTextGetMatchingTests(unittest.TestCase):
     def test_relocated_renderer_matches_retail(self):
         self.assert_relocated_function("textRenderStr", 0x1008)
 
+    def test_relocated_line_wrapper_matches_retail(self):
+        self.assert_relocated_function("gameTextWrapLines", 0x72C)
+
     def assert_relocated_function(self, function, expected_size):
         config = ROOT / "config/GSAE01"
         dol_path = ROOT / "orig/GSAE01/sys/main.dol"

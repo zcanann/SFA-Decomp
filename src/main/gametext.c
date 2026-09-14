@@ -2150,26 +2150,24 @@ GameTextBox* gameTextGetBox(int box) {
 }
 
 char** gameTextWrapLines(char* str, f32 maxWidth, f32 scale, int* outLineCount, f32* outMaxLineHeight) {
-    int scanOffset;
-    int* copyBoundary;
-    const FontMetrics* metrics;
-    int lineIndex;
-    char* readCursor;
-    int copyOffset;
-    int fontId;
     int tableBytes;
     int* lastBoundary;
+    int* copyBoundary;
     int lineCount;
+    char** lines;
+    int scanOffset;
+    int copyOffset;
     int wrapOffset;
     int hasSpace;
-    char** lines;
-    char* writeCursor;
-    int lineStarts[32];
-    int arguments[8];
     f32 lineWidth;
-    int byteCount;
+    char* readCursor;
     int i;
     u32 codePoint;
+    int lineStarts[32];
+    int arguments[8];
+    int fontId;
+    int byteCount;
+    const FontMetrics* metrics;
     lineCount = 0;
     tableBytes = 0;
     scanOffset = 0;
@@ -2206,13 +2204,13 @@ char** gameTextWrapLines(char* str, f32 maxWidth, f32 scale, int* outLineCount, 
             hasSpace = 1;
         }
         if (codePoint >= 0xe000 && codePoint <= 0xf8ff) {
-            int argumentCount;
+            int argumentIndex;
             int metricsChanged;
-            argumentCount = gameTextCtrlCharLen(codePoint);
-            for (i = 0; i < argumentCount; i++) {
+            i = gameTextCtrlCharLen(codePoint);
+            for (argumentIndex = 0; argumentIndex < i; argumentIndex++) {
                 int hi = ((u8*)str)[scanOffset++];
                 int lo = ((u8*)str)[scanOffset++];
-                arguments[i] = (hi << 8) | lo;
+                arguments[argumentIndex] = (hi << 8) | lo;
             }
             metricsChanged = 1;
             switch (codePoint) {
@@ -2274,61 +2272,65 @@ char** gameTextWrapLines(char* str, f32 maxWidth, f32 scale, int* outLineCount, 
     if (lines == NULL) {
         return 0;
     }
-    writeCursor = (char*)lines;
-    i = byteCount;
-    while (i-- != 0) {
-        *writeCursor++ = 0;
+    {
+        char* clearCursor = (char*)lines;
+        i = byteCount;
+        while (i-- != 0) {
+            *clearCursor++ = 0;
+        }
     }
 
     {
+        char* writeCursor;
+        int lineIndex;
         char* lineText = (char*)lines + tableBytes;
         lines[0] = lineText;
         writeCursor = lineText;
-    }
-    lineIndex = 0;
-    copyOffset = 0;
-    readCursor = str;
-    while (copyOffset < scanOffset) {
-        *writeCursor++ = *readCursor;
-        if (copyOffset == copyBoundary[1]) {
-            char* breakChar;
-            int lookbehindLength;
-            int previousCharLength;
-            u32 previousCodePoint;
+        lineIndex = 0;
+        copyOffset = 0;
+        readCursor = str;
+        while (copyOffset < scanOffset) {
+            *writeCursor++ = *readCursor;
+            if (copyOffset == copyBoundary[1]) {
+                char* breakChar;
+                int lookbehindLength;
+                int previousCharLength;
+                u32 previousCodePoint;
 
-            writeCursor--;
-            breakChar = writeCursor;
-            for (;;) {
-                lookbehindLength = 6;
-                do {
-                    previousCodePoint = utf8GetNextChar((u8*)(writeCursor - lookbehindLength), &previousCharLength);
-                    if (lookbehindLength != previousCharLength) {
-                        continue;
-                    }
-                    if (isSpace(previousCodePoint)) {
-                        int trimLength = previousCharLength;
-                        while (trimLength-- != 0) {
-                            *--writeCursor = 0;
+                writeCursor--;
+                breakChar = writeCursor;
+                for (;;) {
+                    lookbehindLength = 6;
+                    do {
+                        previousCodePoint = utf8GetNextChar((u8*)(writeCursor - lookbehindLength), &previousCharLength);
+                        if (lookbehindLength != previousCharLength) {
+                            continue;
                         }
-                        break;
-                    }
-                    breakChar[1] = breakChar[0];
-                    breakChar[0] = 0;
-                    writeCursor = breakChar + 1;
-                    *(char**)((char*)lines + ((lineIndex + 1) << 2)) = writeCursor++;
-                    goto line_broken;
-                } while (--lookbehindLength > 0);
-            }
+                        if (isSpace(previousCodePoint)) {
+                            int trimLength = previousCharLength;
+                            while (trimLength-- != 0) {
+                                *--writeCursor = 0;
+                            }
+                            break;
+                        }
+                        breakChar[1] = breakChar[0];
+                        breakChar[0] = 0;
+                        writeCursor = breakChar + 1;
+                        *(char**)((char*)lines + ((lineIndex + 1) << 2)) = writeCursor++;
+                        goto line_broken;
+                    } while (--lookbehindLength > 0);
+                }
 
-        line_broken:
-            copyBoundary++;
-            lineIndex++;
+            line_broken:
+                copyBoundary++;
+                lineIndex++;
+            }
+            copyOffset++;
+            readCursor++;
         }
-        copyOffset++;
-        readCursor++;
+        *writeCursor = 0;
+        return lines;
     }
-    *writeCursor = 0;
-    return lines;
 }
 
 void gameTextFreePhrase(NpcDialoguePhraseState* p) {
