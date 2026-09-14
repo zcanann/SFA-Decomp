@@ -287,3 +287,49 @@ exact, so the progress manifests remain unchanged.
 checks pass. `ninja all_source` and strict matching `ninja` pass. The TU remains
 `NonMatching`, so the strict retail link continues to use its retail object;
 the separate object comparisons above validate the source change itself.
+
+## Cache-hit offset lifetime (2026-09-14)
+
+The hit path now reuses its signed cache-slot local as a byte offset after the
+search succeeds. The multiplication retains the unsigned `sizeof` operand and
+an explicit assignment back to the local. In GC/1.3, rewriting this as `*=` or
+assigning a separate single-use offset produces different register allocation.
+The local is named `cacheSlot` to cover both phases. Initializing the scan index
+before the result also reproduces retail's initialization order.
+
+This resolves every remaining physical-register choice. Of 194 instructions in
+`voxmaps_updateActiveMap`, 192 are now positionally exact; the only difference
+is an adjacent pair at function offsets 0x178 and 0x17c:
+
+| Retail | Source |
+| --- | --- |
+| `li r0,0` | `slwi r3,r4,2` |
+| `slwi r3,r4,2` | `li r0,0` |
+
+The raw function-byte mismatch falls from 16 bytes to eight, and differing
+instruction positions from 13 to two. Objdiff's fuzzy metric nevertheless falls
+from 99.97318% to 99.925514% for the TU (99.62887% to 98.96907% for this
+function), because this instruction reorder costs more than the previous
+register substitutions under that metric. This is an intermediate reduction
+of the concrete binary residual, not a claim of an exact function or a higher
+fuzzy score. The TU stays `NonMatching`, with 27/28 exact functions and all
+604 data bytes exact.
+
+A read-only GC/1.3 LLDB capture reproduces ordinary compilation with raw object
+SHA-256 `9b7395406a80e2f5b346e830a3590d2ca25790b1b713197687c9a520e2a9019e`
+for the unrenamed candidate. It captures 19 backend stages, 112 GPR nodes,
+78 replayed physical-color decisions, and no high-degree simplification
+removals. The offset occupies preallocated v48; zero occupies v95. The two
+instructions already have their final relative order before global backend
+optimization. Moving the offset update into a comma/address expression or
+using a separate zero local does not correct that order.
+
+EN, EN rev1, JP, PAL and PAL rev1 all have the same eight differing bytes at
+0x178–0x17f, against SHA-1-verified original DOLs. The other 27 function bodies,
+allocated non-text sections, named symbol layouts and resolved relocation sites
+are unchanged in each region. No regional completion manifest is promoted.
+After updating to the fresh staging tip, `ninja all_source` and strict matching
+`ninja` pass with 30-second limits. The EN DOL retains SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`; the incomplete TU still links its
+retail object. The source and canonical header pass the formatter check, and
+formatting introduces no separate changes.

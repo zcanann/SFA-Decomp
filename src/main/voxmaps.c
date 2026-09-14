@@ -238,8 +238,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj) {
     VoxMapFile** bufferSlot;
     int slotByteOffset;
     int bestTimer;
+    int cacheSlot;
     int slot;
-    int foundSlot;
     int blockId;
     int bestSlot;
     int zWorldOffset;
@@ -264,15 +264,18 @@ int* voxmaps_updateActiveMap(VoxPos* obj) {
         blockId = cell->blockId;
     }
     if (blockId != -1) {
-        foundSlot = -1;
-        for (slot = 0; slot < VOXMAP_SLOT_COUNT; slot++) {
+        slot = 0;
+        cacheSlot = -1;
+        for (; slot < VOXMAP_SLOT_COUNT; slot++) {
             if (blockId == gVoxMapsBlockIds[slot]) {
-                foundSlot = slot;
+                cacheSlot = slot;
                 slot = VOXMAP_SLOT_COUNT;
             }
         }
-        if (foundSlot != -1) {
-            gVoxMapsSlotAges[foundSlot] = 0;
+        if (cacheSlot != -1) {
+            /* Reuse the cache-slot index as its byte offset. */
+            cacheSlot = cacheSlot * sizeof(gVoxMapsSlotAges[0]);
+            *(int*)((u8*)gVoxMapsSlotAges + cacheSlot) = 0;
             gVoxMapsActiveState.activeMap = NULL;
         } else {
             bestSlot = -1;
