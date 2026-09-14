@@ -763,7 +763,49 @@ non-text bytes and named-symbol layouts stay unchanged. Objdiff rises from
 
 The remaining renderer differences include the glyph/face-width register pair,
 the justified-alignment counter copy, and placement of the coordinate multiplier
-load. These are still unresolved. GC/1.3 graph captures for the atlas builder and
+load. These remained unresolved until the exact-renderer pass below. GC/1.3 graph captures for the atlas builder and
 line wrapper also reproduced the compiler's simplification and physical-register
 choices; neither investigation produced a retained source change. Register-graph
 replay explains a compiled candidate, not the original source's variable layout.
+
+## Exact string renderer (2026-09-14)
+
+`textRenderStr` now matches all 4,104 bytes. This resolves the renderer differences
+listed in the centered-alignment pass above. Two source changes were needed:
+
+- Express both glyph origins as `4.0f * (position + roundedOffset)`, retaining
+  an explicit `f32` cast around each scaled glyph offset. These casts preserve
+  the intermediate rounding and prevent multiplication/addition contraction.
+  Grouping both axes restores the retail multiplier-load order and FPR choices.
+- Extract the justification scan into `gameTextCountSpaces`, a private inline
+  helper. It counts ASCII spaces in decoded text and skips each control code's
+  argument bytes. Declare its byte offset before its space counter.
+
+The helper is a reconstructed source boundary, not a recovered original name.
+It emits no separate function and changes neither TU ownership nor compiler flags.
+Its inlining explains two coupled compiler effects that local declaration
+shuffles in the renderer could not reproduce. In the previous GC/1.3 capture,
+the two zero initializations used original source registers 39 and 40, below the
+late value-numbering pass's eligible temporary range. The helper's cloned
+counters use virtual registers 96 and 97. `AFTER VALUE NUMBERING 2` replaces the
+second zero with the move that becomes retail's `mr r24,r20`. The resulting
+allocation also assigns the glyph cursor to `r20` and the face width to `r21`,
+fixing the remaining register permutation without changing the glyph lookup.
+
+The existing LLDB graph tracer verifies that its instrumented and ordinary
+objects are identical, then replays simplification and all 318 physical color
+choices across 20 captured stages. The final renderer has 1,026 aligned
+instructions and no retail differences. Reproduce with:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/main/gametext \
+    --function textRenderStr --graph --output build/textrender_match/final_trace
+```
+
+Objdiff rises from 99.54678% to 100% for the renderer and from 50/54 to 51/54 exact
+functions in the TU. Only the renderer's instruction bytes change; allocated
+non-text bytes and named-symbol layouts remain unchanged. The relocation test
+now covers the entire renderer against the hash-verified EN DOL, alongside the
+three functions matched in earlier passes. The whole TU remains `NonMatching`
+while `gameTextFinalizeLoad`, `gameTextBuildSystemFontAtlas`, and
+`gameTextWrapLines` remain incomplete.

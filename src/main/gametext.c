@@ -1775,6 +1775,26 @@ static void translateToDinoLanguage(u8* str) {
     }
 }
 
+static inline int gameTextCountSpaces(u8* text) {
+    int offset;
+    int spaceCount;
+    u32 codePoint;
+    int charLength;
+
+    offset = 0;
+    spaceCount = offset;
+    while ((codePoint = utf8GetNextChar(text + offset, &charLength)) != 0) {
+        offset += charLength;
+        if (codePoint == 0x20) {
+            spaceCount++;
+        }
+        if (codePoint >= 0xe000 && codePoint <= 0xf8ff) {
+            offset += ctrlCharLen(codePoint) * 2;
+        }
+    }
+    return spaceCount;
+}
+
 void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mode) {
     int realign;
     f32 fx0, fy0, fx1, fy1;
@@ -1912,21 +1932,8 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
                 break;
             case TEXT_ALIGN_JUSTIFY: {
                 int spaceCount;
-                int acc;
-                u32 innerCh;
-                int innerLen;
                 gameTextMeasureString(p, gGameTextScale, &measW, NULL, 0, 0, -1);
-                acc = 0;
-                spaceCount = acc;
-                while ((innerCh = utf8GetNextChar(p + acc, &innerLen)) != 0) {
-                    acc += innerLen;
-                    if (innerCh == 0x20) {
-                        spaceCount++;
-                    }
-                    if (innerCh >= 0xe000 && innerCh <= 0xf8ff) {
-                        acc += ctrlCharLen(innerCh) * 2;
-                    }
-                }
+                spaceCount = gameTextCountSpaces(p);
                 spaceExtra = (win->width - measW) / spaceCount;
                 break;
             }
@@ -1953,12 +1960,8 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
         u0 = (f32)(g->u << 5);
         v0 = (f32)(g->v << 5);
         e710 = 4.0f;
-        fx0 = (f32)g->offsetX * gGameTextScale;
-        fx0 = x + fx0;
-        fx0 = e710 * fx0;
-        fy0 = (f32)g->offsetY * gGameTextScale;
-        fy0 = y + fy0;
-        fy0 = e710 * fy0;
+        fx0 = e710 * (x + (f32)((f32)g->offsetX * gGameTextScale));
+        fy0 = e710 * (y + (f32)((f32)g->offsetY * gGameTextScale));
         fx1 = e710 * ((f32)(u32)g->width * gGameTextScale) + fx0;
         fy1 = e710 * ((f32)(u32)g->height * gGameTextScale) + fy0;
         if (fx0 < 0.0f && fx1 > 0.0f) {

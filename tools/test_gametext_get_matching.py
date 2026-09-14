@@ -26,6 +26,9 @@ class GameTextGetMatchingTests(unittest.TestCase):
     def test_relocated_map_loader_matches_retail(self):
         self.assert_relocated_function("gameTextLoadForCurMap", 0x2AC)
 
+    def test_relocated_renderer_matches_retail(self):
+        self.assert_relocated_function("textRenderStr", 0x1008)
+
     def assert_relocated_function(self, function, expected_size):
         config = ROOT / "config/GSAE01"
         dol_path = ROOT / "orig/GSAE01/sys/main.dol"
