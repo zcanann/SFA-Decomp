@@ -12,6 +12,7 @@ from collections import Counter
 from pathlib import Path
 import random
 import re
+import struct
 import tempfile
 
 from gametext_parser_probe import ROOT, RETURN, STACK, link_source
@@ -28,6 +29,52 @@ GLOBALS = {'gObjSeqPreemptCount': 1, 'gObjSeqCamMode': 4,
            'gObjSeqCameraActive': 1, 'lbl_803DD0DC': 4,
            'gObjSeqCameraSourceObj': 4, 'gObjSeqCameraOverrideActive': 1,
            'gObjSeqBgCmdCount': 1}
+
+
+def verify_exact(obj, retail, dol):
+    """Resolve source data relocations at retail TU addresses before comparing bytes."""
+    from elftools.elf.elffile import ELFFile
+
+    splits = (ROOT / 'config/GSAE01/splits.txt').read_text()
+    unit = splits.split('dlls/engine/2/2.c:\n', 1)[1].split('\n\n', 1)[0]
+    bases = {name: int(address, 16) for name, address in
+             re.findall(r'(\.\w+)\s+start:0x([0-9A-Fa-f]+)', unit)}
+    with obj.open('rb') as stream:
+        elf = ELFFile(stream)
+        symbols = elf.get_section_by_name('.symtab')
+        function = next(s for s in symbols.iter_symbols() if s.name == FUNCTION)
+        section = elf.get_section(function['st_shndx'])
+        start, size = function['st_value'], function['st_size']
+        code = bytearray(section.data()[start:start + size])
+        for relocation in elf.get_section_by_name('.rela.text').iter_relocations():
+            offset = relocation['r_offset'] - start
+            if not 0 <= offset < size:
+                continue
+            symbol = symbols.get_symbol(relocation['r_info_sym'])
+            section_name = elf.get_section(symbol['st_shndx']).name
+            address = bases[section_name] + symbol['st_value'] + relocation['r_addend']
+            kind = relocation['r_info_type']
+            if kind in (4, 6):  # R_PPC_ADDR16_LO / R_PPC_ADDR16_HA
+                value = address if kind == 4 else (address + 0x8000) >> 16
+                struct.pack_into('>H', code, offset, value & 0xFFFF)
+            elif kind == 109:  # R_PPC_EMB_SDA21
+                if section_name == '.sdata2':
+                    register, base = 2, 0x803E6500
+                else:
+                    assert section_name in ('.sdata', '.sbss'), section_name
+                    register, base = 13, 0x803E31E0
+                displacement = address - base
+                assert -32768 <= displacement < 32768
+                word = struct.unpack_from('>I', code, offset)[0]
+                word = (word & 0xFFE00000) | (register << 16) | (displacement & 0xFFFF)
+                struct.pack_into('>I', code, offset, word)
+            else:
+                raise AssertionError(f'unexpected reset relocation: {kind}')
+    address = retail[FUNCTION][1]
+    segment = next(s for s in dol.sections if s.address <= address < s.address + s.size)
+    offset = segment.offset + address - segment.address
+    assert size == 760, f'unexpected reset size: {size}'
+    assert code == dol.data[offset:offset + size], 'relocated reset bytes differ from retail'
 
 
 def execute(segments, symbols, initial):
@@ -99,7 +146,11 @@ def main():
     parser.add_argument('--object', type=Path,
                         default=ROOT / 'build/GSAE01/src/dlls/engine/2/2.o')
     parser.add_argument('--retail-only', action='store_true')
+    parser.add_argument('--require-exact', action='store_true',
+                        help='also require all relocated source instructions to equal retail')
     args = parser.parse_args()
+    if args.retail_only and args.require_exact:
+        parser.error('--require-exact requires a source object')
     config = (ROOT / 'config/GSAE01/symbols.txt').read_text()
     retail = {name: (section, int(address, 16)) for name, section, address in
               re.findall(r'^(\w+) = (\.\w+):(0x[0-9A-Fa-f]+);', config, re.M)}
@@ -111,12 +162,16 @@ def main():
     for initial in patterns:
         execute(segments, {name: value[1] for name, value in retail.items()}, initial)
     if not args.retail_only:
+        if args.require_exact:
+            verify_exact(args.object, retail, dol)
         with tempfile.TemporaryDirectory(prefix='sfa-objseq-reset-') as temporary:
             compiled_segments, compiled_symbols = link_source(args.object, Path(temporary), retail, entry=FUNCTION)
             for initial in patterns:
                 execute(segments + compiled_segments, compiled_symbols, initial)
     print(f'PASS: {len(patterns)} storage patterns; all 85 slots, 1,027 stores, guards, globals, and ABI'
           + (' (retail only)' if args.retail_only else ' (retail and source)'))
+    if args.require_exact:
+        print('PASS: all 760 relocated source bytes equal the verified retail DOL')
 
 
 if __name__ == '__main__':

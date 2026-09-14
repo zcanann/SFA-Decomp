@@ -1,78 +1,98 @@
-# ObjSeq_onMapSetup matching investigation
+# ObjSeq_onMapSetup matching
 
-With the game GC/1.3 compiler and the existing engine DLL 2 flags,
-`ObjSeq_onMapSetup` is **99.947365%** matching in all five supported retail
-versions: EN `GSAE01`, EN rev1, JP, PAL, and PAL rev1. Each input DOL was
-verified against its configured hash before the regional comparisons.
+`ObjSeq_onMapSetup` is **100% matching** in EN `GSAE01`, EN rev1, JP,
+PAL, and PAL rev1. Each input DOL was verified against its configured hash
+before comparison. The function is 760 bytes / 190 instructions in all five
+versions. Resolving the EN source object's relocations at the retail addresses
+also reproduces all 760 original DOL bytes exactly.
 
-The source emits the retail function's 760 bytes / 190 instructions. This pass
-improves the match from 99.789474%; the preceding pass improved it from
-99.210526% / 764 bytes. Only two instructions now differ, both because the
-word-indexed address temporary uses r3 instead of r10:
+The source is now one ordinary loop over 85 slots, followed by seven global
+resets. MWCC supplies the eight-slot unroll and the five-slot remainder.
+This replaces the manually expanded bulk loop and pointer-based tail that
+previously matched 99.947365%.
 
-```text
-retail: add r10,r3,r0       source: add r3,r3,r0
-retail: addi r29,r10,13284  source: addi r29,r3,13284
-```
+## Storage and language reconstruction
 
-The other 188 instructions match. Other functions' machine code, allocated
-non-text sections, and non-text symbol layouts are unchanged. The complete DLL
-remains `NonMatching`.
+The final two instruction differences were consequences of how MWCC constructs
+induction variables. LLDB backend traces showed that a native-array loop shares
+the word-address temporary with the float-address virtual register, producing
+the retail r10 allocation. The manually reconstructed tail used a separate
+virtual register and selected r3.
 
-## Loop reconstruction
+Native arrays also exposed a storage problem. Under the C frontend, tentative
+uninitialized definitions were allocated according to use and deferred-definition
+order. Explicit zero initializers reproduced the registers but moved storage to
+`.data`. Neither result preserved retail storage. A small independent two-array
+compiler probe established that the C++ frontend instead supports the required
+declaration-order BSS layout.
 
-The bulk loop processes ten groups of eight slots. Indexing its tables by
-`group * 8` lets MWCC generate the pointer induction variables, instead of
-advancing twelve source-level pointer cursors. Advancing the group counter
-before the slot counter preserves the retail instruction order. Declaring the
-count cursor before the handle cursor then reproduces the tail's r29 handle
-register. Neither counter adds instructions to the resulting function.
+The complete, unsplit DLL now uses the common **GC/1.3** compiler in C++ mode,
+with the existing optimization settings. `-bool off` retains the integer-valued
+comparison results independently evidenced by the retail stream-stop stores
+(`cntlzw`, `srwi`, `extsh`, `sth`) and the inlined NPC predicate. `-msext on`
+accepts the existing anonymous structs in imported headers. C linkage preserves
+the public ABI, and explicit pointer casts make the existing interfaces valid
+under C++.
 
-The preceding pass removed a duplicate `marks[0]` store for each of the last
-five slots. Sharing the cleared signed-byte value between the first two flag
-stores keeps the tail rolled without adding a memory access. Simply removing
-the duplicate from the older source caused MWCC to unroll the tail again,
-growing the function to 984 bytes.
+This is an evidence-backed language reconstruction, **not a recovered original
+compiler command or proof that the original source was C++**. The evidence is
+the native-array induction-variable topology, correct uninitialized storage,
+and integer comparison widths, rather than aggregate match percentage alone.
+The generated source path, compiler version, optimization profile, and TU
+boundaries are unchanged. No inline assembly, per-function pragmas, initialized
+BSS substitutes, or forced source sections are involved.
 
-LLDB captures distinguish two unrollers. The frontend `IRO_LoopUnroller`
-rejects the separately written tail because its index is not initialized in
-the preheader. The unwanted extra unroll occurs during backend loop
-transformations, after code motion and before late simplification. The
-backend's loop-size-dependent limit sees the shared byte value before it
-simplifies away in the final instructions. Ordinary and traced compiler
-outputs were checked for identical object hashes.
+Six tables previously hidden in oversized declarations now have their own
+85-element definitions:
 
-Register-graph replay explains the remaining difference. In an isolated
-native-array experiment, compiler-generated loop setup reuses the float
-address virtual register for the word-indexed base. The current source gives
-that base a separate virtual register. The experiment reproduces all retail
-register choices but puts the arrays in `.data` instead of retail `.bss`; it
-was discarded. Native uninitialized-array experiments instead change BSS
-allocation order. Neither is an acceptable storage reconstruction.
+| Table | Offset from runtime buffer | Element type |
+| --- | ---: | --- |
+| Slot marks | `0x338c` | `u8` |
+| Slot object IDs | `0x33e4` | `int` |
+| Slot distances | `0x3740` | `f32` |
+| Pending frames | `0x39e8` | `s8` |
+| Slot states | `0x3a40` | `u8` |
+| Previous slot results | `0x3c4c` | `u8` |
 
-Scoped cursors, pointer-role permutations, indexed-tail forms, and alternate
-base expressions have not resolved the remaining temporary. Compiler settings
-and translation-unit boundaries are unchanged.
+The byte arrays have 85 elements; MWCC supplies the three alignment bytes.
+Existing surrounding declarations retain their unexplained storage. EN symbol
+boundaries record the recovered arrays without changing the TU's section ranges.
+Small-data definitions are ordered to preserve every existing symbol address.
 
-## Reset oracle
+## Neighbouring functions and object audit
 
-`tools/objseq_map_setup_probe.py` executes the complete function in Unicorn PPC
-emulation. It verifies the EN DOL against its configured hash before running.
-The expectations come from the retail stores, independently of the source
-overlay: twelve tables across 85 slots, seven globals, 1,027 writes, untouched
-padding and guards, and callee-preserved registers.
+Using the native tables at the affected accesses preserves `ObjSeq_update`
+exactly and improves `ObjSeq_start` from **98.89807% to 99.86226%**, reducing
+it from 2,932 to the retail 2,904 bytes. Apart from `ObjSeq_start` and
+`ObjSeq_onMapSetup`, every function retains its previous machine code.
 
-Install the optional `unicorn` and `pyelftools` packages, then run:
+All non-text section bytes, sizes, and alignments are unchanged. Existing
+non-text symbols retain their offsets; the four oversized symbols shrink to
+make room for the recovered tables. Data relocation destinations and addends
+are unchanged. Text symbol offsets move with the shorter `ObjSeq_start`.
+The complete DLL improves from **99.67799% to 99.76112%** and remains
+`NonMatching`; the matching link still uses its retail object.
+
+## Verification
+
+`tools/objseq_map_setup_probe.py` executes the complete retail and source
+functions in Unicorn PPC emulation. Expectations come from the retail stores,
+independently of the reconstructed source: twelve tables across 85 slots,
+seven globals, 1,027 writes, untouched padding and guards, and callee-preserved
+registers. Four deterministic initial storage patterns pass.
+
+With optional `unicorn` and `pyelftools` installed:
 
 ```sh
-python3 tools/objseq_map_setup_probe.py --retail-only
-python3 tools/objseq_map_setup_probe.py --object path/to/candidate/2.o
+python3 tools/objseq_map_setup_probe.py --require-exact
 ```
 
-Retail and the improved source pass all four deterministic initial storage
-patterns, including the exact write count. The oracle supplements objdiff and
-does not establish an exact assembly match.
+`--require-exact` additionally resolves source data relocations at the EN TU's
+retail addresses and compares all function bytes with the hash-verified DOL.
+The former 99.947365% object correctly fails this check.
 
-Validation: `ninja all_source` passes, the strict matching build reports
-`build/GSAE01/main.dol: OK`, and `clang-format --dry-run --Werror` passes for
-the active TU. Running the formatter introduced no additional source changes.
+Validation: all five regional objdiff comparisons pass for the reset function;
+`ninja all_source` passes; the strict EN build reports
+`build/GSAE01/main.dol: OK`; and `clang-format --dry-run --Werror` passes for
+the active TU. Formatting is committed separately and preserves the complete
+source object's SHA-256.

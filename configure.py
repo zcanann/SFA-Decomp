@@ -1039,7 +1039,10 @@ config.libs = [
             Object(NonMatching, "dlls/engine/0/0.c", extra_cflags=["-inline", "noauto", "-char", "signed"]),
             Object(MatchingFor("GSAE01"), "dlls/engine/1_camcontrol/camcontrol.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/2/maketex.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "dlls/engine/2/2.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
+            # ObjSeq language reconstruction: declaration-order BSS and integer booleans.
+            # Evidence and limitations: docs/objseq_map_setup_matching.md.
+            Object(NonMatching, "dlls/engine/2/2.c", cflags=cflags_dll_noopt_noloopinv_noautoinline,
+                   extra_cflags=["-lang=c++", "-bool", "off", "-msext", "on"]),
             Object(MatchingFor("GSAE01"), "dlls/engine/3/3.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/engine/4/4.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/5/5.c", cflags=cflags_dll_noopt_noautoinline),
