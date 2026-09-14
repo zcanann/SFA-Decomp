@@ -38,10 +38,8 @@ ObjfsaWalkGroup gObjfsaWalkGroups[0x1C48 / sizeof(ObjfsaWalkGroup)];
 u8 gObjfsaWalkGroupActive[0xB8];
 
 #define OBJFSA_CORNER(BASE, OFF, POSOFF) (f32)((f32) * (s8*)(OFF) * scale + *(f32*)((BASE) + (POSOFF)))
-#define OBJFSA_NEWPATCH (patchBase[gObjfsaPatchCount])
-#define OBJFSA_NEWPATCH_S16(F)                                                                                         \
-    (*(s16*)((char*)&patchBase->F + gObjfsaPatchCount * sizeof(ObjfsaPatch)))
-
+#define OBJFSA_NEWPATCH                  (patchBase[gObjfsaPatchCount])
+#define OBJFSA_NEWPATCH_S16(F)           (*(s16*)((char*)&patchBase->F + gObjfsaPatchCount * sizeof(ObjfsaPatch)))
 
 static inline f32 RomCurveNode_GetHermiteTangent(RomCurveDef** nodePtr, int angleOffset, int useCos);
 inline f32 objfsaCorner(s8 ofs, f32 scl, f32* base);
@@ -993,7 +991,8 @@ static s16 Objfsa_PackPlaneNormal(f32 normal) {
     return 32767.0f * normal;
 }
 
-static inline void Objfsa_SetPatchPlane(ObjfsaPatchPlane* plane, f32* planeOffset, f32 startX, f32 startZ, f32 endX, f32 endZ) {
+static inline void Objfsa_SetPatchPlane(ObjfsaPatchPlane* plane, f32* planeOffset, f32 startX, f32 startZ, f32 endX,
+                                        f32 endZ) {
     f32 normalX;
     f32 normalZ;
     f32 normalLength;
@@ -1161,24 +1160,28 @@ void Objfsa_UpdateWalkGroupPatches(void) {
                             newPatch->exit0X = (s16)((x0 + x1) / 2.0f);
                             newPatch->exit0Z = (s16)((z0 + z1) / 2.0f);
 
-                            Objfsa_SetPatchPlane(&OBJFSA_NEWPATCH.planes[0], &OBJFSA_NEWPATCH.planeOffsets[0], x0, z0, x1, z1);
+                            Objfsa_SetPatchPlane(&OBJFSA_NEWPATCH.planes[0], &OBJFSA_NEWPATCH.planeOffsets[0], x0, z0,
+                                                 x1, z1);
 
                             edgeCoords = (s8*)linkedCurve + returnEdgeIndex * sizeof(linkedCurve->linkEdges[0]);
                             x2 = objfsaCorner(edgeCoords[0x34], cornerScale, &linkedCurve->x);
                             z2 = objfsaCorner(edgeCoords[0x35], cornerScale, &linkedCurve->z);
-                            Objfsa_SetPatchPlane(&OBJFSA_NEWPATCH.planes[1], &OBJFSA_NEWPATCH.planeOffsets[1], x1, z1, x2, z2);
+                            Objfsa_SetPatchPlane(&OBJFSA_NEWPATCH.planes[1], &OBJFSA_NEWPATCH.planeOffsets[1], x1, z1,
+                                                 x2, z2);
 
                             x3 = objfsaCorner(edgeCoords[0x36], cornerScale, &linkedCurve->x);
                             z3 = objfsaCorner(edgeCoords[0x37], cornerScale, &linkedCurve->z);
                             (exitRecord = &OBJFSA_NEWPATCH)->exit1X = (s16)((x2 + x3) / 2.0f);
                             exitRecord->exit1Z = (s16)((z2 + z3) / 2.0f);
 
-                            Objfsa_SetPatchPlane(&OBJFSA_NEWPATCH.planes[2], &OBJFSA_NEWPATCH.planeOffsets[2], x2, z2, x3, z3);
+                            Objfsa_SetPatchPlane(&OBJFSA_NEWPATCH.planes[2], &OBJFSA_NEWPATCH.planeOffsets[2], x2, z2,
+                                                 x3, z3);
 
                             edgeCoords = (s8*)(edgeSlotCursor + offsetof(ObjfsaWalkCurveDef, linkEdges));
                             z0 = objfsaCorner(edgeCoords[1], cornerScale, &curve->z);
                             x0 = objfsaCorner(edgeCoords[0], cornerScale, &curve->x);
-                            Objfsa_SetPatchPlane(&OBJFSA_NEWPATCH.planes[3], &OBJFSA_NEWPATCH.planeOffsets[3], x3, z3, x0, z0);
+                            Objfsa_SetPatchPlane(&OBJFSA_NEWPATCH.planes[3], &OBJFSA_NEWPATCH.planeOffsets[3], x3, z3,
+                                                 x0, z0);
 
                             curveHeight = 2.0f * curve->maxYExtent + curve->y;
                             linkedCurveHeight = 2.0f * linkedCurve->maxYExtent + linkedCurve->y;
