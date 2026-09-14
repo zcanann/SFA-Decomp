@@ -862,8 +862,8 @@ void gameTextLoadForCurMap(int sourceId) {
     } while (i-- != 0);
 
     gGameTextCharsets[sourceId].status = 1;
-    *(dirPtr = &gGameTextCharsets[sourceId].dirId) = (u8)curGameTextDir;
-    *(langPtr = &gGameTextCharsets[sourceId].languageId) = curLanguage;
+    *(dirPtr = (u8*)gGameTextCharsets + (sourceId * (int)sizeof(TextFont) + (int)offsetof(TextFont, dirId))) = (u8)curGameTextDir;
+    *(langPtr = (u8*)gGameTextCharsets + (sourceId * (int)sizeof(TextFont) + (int)offsetof(TextFont, languageId))) = curLanguage;
 
     freeSlot = gameTextFindFreeLoadSlot();
 

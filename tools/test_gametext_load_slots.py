@@ -35,6 +35,7 @@ class GameTextLoadSlotTests(unittest.TestCase):
             bodies.append(source[declaration:end + 1])
         fixture = r'''
 #include <assert.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 typedef unsigned char u8;
