@@ -1,4 +1,4 @@
-"""Relocate gameTextGet at its retail address and compare every instruction.
+"""Relocate exact gametext functions at retail addresses and compare every instruction.
 
 This validates the function and its actual data destinations. The containing
 code TU still has other nonmatching functions and is not a complete source link.
@@ -18,6 +18,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class GameTextGetMatchingTests(unittest.TestCase):
     def test_relocated_function_matches_retail(self):
+        self.assert_relocated_function("gameTextGet", 0x294)
+
+    def test_relocated_runner_matches_retail(self):
+        self.assert_relocated_function("gameTextRun", 0x5E0)
+
+    def assert_relocated_function(self, function, expected_size):
         config = ROOT / "config/GSAE01"
         dol_path = ROOT / "orig/GSAE01/sys/main.dol"
         object_path = ROOT / "build/GSAE01/src/main/gametext.o"
@@ -35,17 +41,19 @@ class GameTextGetMatchingTests(unittest.TestCase):
         sda = {"sdata": (13, retail_sda_base(dol, 13)),
                "sbss": (13, retail_sda_base(dol, 13)),
                "sdata2": (2, retail_sda_base(dol, 2))}
-        _, offset, size, *_ = obj.symbols["gameTextGet"]
-        address = symbols["gameTextGet"][1]
-        image = bytearray(obj.functions["gameTextGet"])
-        self.assertEqual(size, 0x294)
+        _, offset, size, *_ = obj.symbols[function]
+        address = symbols[function][1]
+        image = bytearray(obj.functions[function])
+        self.assertEqual(size, expected_size)
         count = 0
         for relative, kind, addend, name, section, value in obj.relocations[".rela.text -> .text"]:
             if not offset <= relative < offset + size:
                 continue
             count += 1
             position = relative - offset
-            if section == "SHN_UNDEF":
+            # Each named callee uses its retail address: other functions in this
+            # nonmatching TU can still have different compiled sizes.
+            if section == "SHN_UNDEF" or (section == ".text" and name in symbols):
                 destination_section, destination = symbols[name]
             else:
                 destination_section = section.removeprefix(".")

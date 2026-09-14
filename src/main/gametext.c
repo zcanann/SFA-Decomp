@@ -1049,11 +1049,12 @@ static inline void gameTextApplyWindowPosition(int index, int x, int y) {
 }
 
 void gameTextRun(void) {
+    int i;
     GameTextLoadSlot* loadSlot;
     TextFont* pending;
+    int commandCount;
     int sourceId;
     GameTextSlot* cmd;
-    int i;
     GameTextLoadSlot* freeSlot;
     int dirId;
     int languageId;
@@ -1101,8 +1102,7 @@ void gameTextRun(void) {
     } while (sourceId < GAMETEXT_PENDING_SOURCE_COUNT);
 
     loadSlot = curGameTexts;
-    i = GAMETEXT_LOAD_SLOT_COUNT - 1;
-    do {
+    for (i = GAMETEXT_LOAD_SLOT_COUNT; i-- != 0;) {
         if ((loadSlot->state == 5 || loadSlot->state == 6) && loadSlot->loadHandle != NULL) {
             mm_free(loadSlot->loadHandle);
             loadSlot->loadHandle = NULL;
@@ -1110,7 +1110,7 @@ void gameTextRun(void) {
             loadSlot->active = 0;
         }
         loadSlot++;
-    } while (i-- != 0);
+    }
 
     zero = 0.0f;
     fadeLimit = 120.0f;
@@ -1141,8 +1141,8 @@ void gameTextRun(void) {
     gGameTextCursorX = 0;
     gGameTextCursorY = 0;
 
-    i = gGameTextCommandCount;
-    while (i-- != 0) {
+    commandCount = gGameTextCommandCount;
+    while (commandCount-- != 0) {
         switch (cmd->opcode) {
         case 3: {
             u8 c1, c2, c3;
