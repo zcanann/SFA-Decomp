@@ -236,3 +236,54 @@ block further regresses each variant. All other functions remain exact in
 these probes. The original source and object are restored; the two early
 `li` operands cannot be fixed independently of the surrounding allocation by
 these initialization rewrites.
+
+## LLDB cache-replacement allocation (2026-09-14)
+
+A fresh macOS LLDB capture of GC/1.3 reproduces the ordinary object byte for
+byte. Both captures contain 194 instructions, 19 optimizer snapshots and a
+112-node GPR graph; simplification and physical coloring replay successfully,
+with no high-degree removals. Capture the current source with:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/main/voxmaps \
+  --function voxmaps_updateActiveMap --graph --output build/voxmaps-lldb/current
+```
+
+The replacement path previously colored its compiler-generated scaled index
+and buffer address before the saved free delay and ROM-list index. The source
+now carries one byte offset across the four parallel cache arrays and keeps
+the buffer slot as a typed pointer. The offset is derived from the buffer
+element's `sizeof`; assertions establish the equal strides of the block IDs,
+ages and origins. Each cast returns to the actual array element type, and the
+arrays retain their independent definitions and storage order.
+
+Together with the local declaration order, this gives the replacement path
+the retail register allocation without adding instructions:
+
+| Value | Previous register | Current and retail register |
+| --- | --- | --- |
+| Saved free delay | r25 | r27 |
+| ROM-list index | r26 | r29 |
+| Slot byte offset | r29 | r25 |
+| Buffer-slot address | r27 | r26 |
+
+The function improves from 99.24227% to 99.62887% similarity, and the unit from
+99.94525% to 99.97318%. The residual shrinks from 25 to 13 instruction
+differences. All remaining differences are at instruction indices 79–98: the
+cache-search counter/result, their initialization order, and the hit branch's
+shared zero and age-address calculation. Pointer aliases, inline clearing
+helpers and equivalent store spellings tested here normalize to the same
+allocation. They are not retained. This does not establish that the remaining
+source search is exhausted.
+
+EN v1.0, EN rev1, JP, PAL and PAL rev1 all produce the same improved objdiff
+result after checking each input DOL against its configured SHA-1. In each
+version, only `voxmaps_updateActiveMap` changes instruction bytes; the other
+27 functions, all allocated non-text sections, named symbol layouts and
+resolved relocations are unchanged. No regional unit becomes completely
+exact, so the progress manifests remain unchanged.
+
+`clang-format -i` changes neither the TU nor its header, and their dry-run
+checks pass. `ninja all_source` and strict matching `ninja` pass. The TU remains
+`NonMatching`, so the strict retail link continues to use its retail object;
+the separate object comparisons above validate the source change itself.
