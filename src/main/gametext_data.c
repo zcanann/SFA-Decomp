@@ -279,7 +279,6 @@ static u8 sGameTextUnclassifiedData[0x204] = {
     0x00, 0x00, 0x00,
 };
 
-
 void* gGameTextStringStore = (void*)-1;
 char sJpDiscErrorTopSpacerLine[4] = {0};
 char sJpDiscErrorBottomSpacerLine[4] = {0};
