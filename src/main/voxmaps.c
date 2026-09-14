@@ -273,10 +273,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj) {
             }
         }
         if (cacheSlot != -1) {
-            /* Reuse the cache-slot index as its byte offset. */
-            cacheSlot = cacheSlot * sizeof(gVoxMapsSlotAges[0]);
-            *(int*)((u8*)gVoxMapsSlotAges + cacheSlot) = 0;
-            gVoxMapsActiveState.activeMap = NULL;
+            gVoxMapsSlotAges[cacheSlot] = 0;
+            gVoxMapsActiveState.activeMap = gVoxMapsBuffers[cacheSlot];
         } else {
             bestSlot = -1;
             bestTimer = -1;

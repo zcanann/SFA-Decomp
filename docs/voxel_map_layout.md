@@ -2,6 +2,9 @@
 
 Target: EN v1.0 (`GSAE01`), game compiler GC/1.3.
 
+Current status (2026-09-14): 100% exact in all five configured regions, including
+verified source-object DOL links. Earlier sections record intermediate reconstructions.
+
 `voxmaps_getRouteNode` ranks set bits in the occupancy bitmap and scales the
 result by four to find a node. Its callers read individual bytes, then extract
 two-bit cells using an X-dependent shift. `VoxMapNode` therefore describes four
@@ -357,3 +360,37 @@ residual. Moving the final active-map clear outside the branches changes the
 retail control-flow layout. These probes are not retained. The source-name
 inventory (`tools/orig/source_leaks.py --search voxmaps`) provides no matching
 source leak to resolve the remaining source spelling.
+
+## Exact cache-hit selection (2026-09-14)
+
+The cache-hit branch now resets `gVoxMapsSlotAges[cacheSlot]` and selects
+`gVoxMapsBuffers[cacheSlot]` into `activeMap`. This removes the explicit byte
+offset conversion and its pointer cast. The two array accesses share the
+scaled index, recovering the compiler-generated temporary without manually
+reusing the source local. All 194 instructions of `voxmaps_updateActiveMap`
+are exact; the complete TU now matches all 10,740 code bytes, all 604 data
+bytes and all 28 functions.
+
+The earlier literal-NULL reconstruction removed the second array access.
+Restoring the buffer read changes how the shared index is represented: a
+verified 76-stage frontend trace has `@1081` assigned inside the age-store
+address expression, after that store's zero operand. The buffer read remains
+in the final frontend listing, while the emitted object still has the retail
+NULL store. This establishes the recovered source's code generation under
+GC/1.3; it does not establish the internal cause of the later load elimination.
+The ordinary and instrumented source objects have SHA-256
+`648f44a1db2847bb520f0d0f5d7a404d1f7d5569ee72dd07687aecee772e20c9`.
+
+EN, EN rev1, JP, PAL and PAL rev1 each report 100% for this complete unit.
+`tools/verify_source_link.py <version> main/voxmaps.c` verifies both the retail
+link and a link substituting only this source object against each original
+DOL's configured SHA-1. All five pass. The other 27 function bodies, allocated
+non-text sections, named symbol layouts and resolved relocation sites are
+unchanged in each region.
+
+The EN unit is now `Matching`, and the four secondary matching manifests
+include `main/voxmaps.c`. No compiler flags, section ownership, symbol config
+or expected checksums change. With the source object enabled, `ninja all_source`
+and strict matching `ninja` pass under 30-second limits. The resulting EN DOL
+retains SHA-1 `e750e8e894707a52446118a4b84f1b58b677b269`. The TU and canonical
+header pass `clang-format --dry-run --Werror`; formatting adds no separate diff.

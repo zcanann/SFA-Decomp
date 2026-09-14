@@ -878,6 +878,7 @@ main/thp/n_options.c
 main/thp/picmenu.c
 main/vecmath.c
 main/vecmath_vec3.c
+main/voxmaps.c
 main/zlb.s
 musyx/runtime/adsr_data.c
 musyx/runtime/aram_data.c
