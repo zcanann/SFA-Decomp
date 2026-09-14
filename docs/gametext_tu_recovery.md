@@ -809,3 +809,30 @@ now covers the entire renderer against the hash-verified EN DOL, alongside the
 three functions matched in earlier passes. The whole TU remains `NonMatching`
 while `gameTextFinalizeLoad`, `gameTextBuildSystemFontAtlas`, and
 `gameTextWrapLines` remain incomplete.
+
+## Exact system-font atlas builder (2026-09-14)
+
+`gameTextBuildSystemFontAtlas` now matches all 275 instructions (1,100 bytes),
+up from 99.02909%. The matching C extracts the 32-byte I4 tile copy into the
+private inline `gameTextCopySystemFontTile` helper. It applies the row pitch
+and copies the eight words in pairs, advancing the glyph-data cursor. The
+caller calculates the starting column before the row and expresses the 3x3
+tile bounds directly in its loops. The recovered local declaration order
+retains the retail register allocation.
+
+The compiler fully inlines the helper and unrolls the word copies. The
+ordinary and LLDB-instrumented builds agree, and objdiff reports 100% for the
+function. The relocation regression test resolves every call and data reference
+at its actual retail address, then compares the complete function against the
+hash-verified EN DOL. All 22 gametext tests pass.
+
+All other function bytes, named-symbol layouts, allocated non-text bytes, and
+normalized relocation records are unchanged. The code TU now has 53/54 exact
+functions, 99.95417% fuzzy matching, and 100% data matching. Only
+`gameTextFinalizeLoad` remains unfinished, so the TU stays `NonMatching`.
+Only EN retail inputs are available in this checkout; this pass makes no new
+regional completion claim.
+
+Matching configuration, `ninja all_source`, and the strict retail checksum
+build pass within their 30-second limits. The source and canonical API header
+also pass the required clang-format check.

@@ -660,6 +660,15 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     loadSlot->state = 3;
 }
 
+static inline void gameTextCopySystemFontTile(u8* destination, int tileRow, u32** pixels) {
+    int wordIndex;
+    destination += tileRow * gGameTextFontTexRowPitch;
+    for (wordIndex = 0; wordIndex < 8; wordIndex += 2) {
+        *(u32*)(destination + sizeof(Texture) + wordIndex * 4) = *(*pixels)++;
+        *(u32*)(destination + sizeof(Texture) + wordIndex * 4 + 4) = *(*pixels)++;
+    }
+}
+
 void gameTextBuildSystemFontAtlas(void) {
     int glyphWidthTiles;
     int glyphCount;
@@ -778,28 +787,18 @@ void gameTextBuildSystemFontAtlas(void) {
         glyph->page = 0;
         {
             int firstTileRow;
-            int tileRowEnd;
-            int firstTileColumn;
-            int tileColumnEnd;
-            int tileRow;
-            u8* tileDestination;
-            u32* glyphPixels;
             int tileColumn;
+            int tileRow;
+            int firstTileColumn;
+            u32* glyphPixels;
 
             glyphPixels = (u32*)glyphImage;
-            firstTileRow = glyph->v >> 3;
             firstTileColumn = glyph->u >> 3;
+            firstTileRow = glyph->v >> 3;
             tileRow = firstTileRow;
-            tileColumnEnd = firstTileColumn + 3;
-            tileRowEnd = firstTileRow + 3;
-            for (; tileRow < tileRowEnd; tileRow++) {
-                for (tileColumn = firstTileColumn; tileColumn < tileColumnEnd; tileColumn++) {
-                    int wordIndex;
-                    tileDestination = (u8*)charset->textures[0] + (tileColumn << 5);
-                    tileDestination += gGameTextFontTexRowPitch * tileRow;
-                    for (wordIndex = 0; wordIndex < 8; wordIndex++) {
-                        *(u32*)(tileDestination + sizeof(Texture) + wordIndex * 4) = *glyphPixels++;
-                    }
+            for (; tileRow < firstTileRow + 3; tileRow++) {
+                for (tileColumn = firstTileColumn; tileColumn < firstTileColumn + 3; tileColumn++) {
+                    gameTextCopySystemFontTile((u8*)charset->textures[0] + (tileColumn << 5), tileRow, &glyphPixels);
                 }
             }
         }

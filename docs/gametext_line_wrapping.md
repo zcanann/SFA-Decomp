@@ -7,8 +7,8 @@ width and scale, then uses the returned maximum line height to advance its
 vertical cursor.
 
 **EN status (2026-09-14): 100% matching**, including every relocated instruction
-against the verified retail DOL. The code TU has 52 of 54 exact functions and
-remains `NonMatching` because two other functions are unfinished.
+against the verified retail DOL. The code TU has 53 of 54 exact functions and
+remains `NonMatching` while `gameTextFinalizeLoad` is unfinished.
 
 The source now distinguishes the scanning byte offset, copying byte offset,
 last candidate wrap position, line-start table, and its two traversal pointers.
