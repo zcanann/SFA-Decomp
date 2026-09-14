@@ -534,6 +534,8 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     u16* compactedResource;
     int relocationDelta;
     int* relocatedStringPointers;
+    int stringIndex;
+    int relocatedPointer;
     int remainingUnits;
 
     DCStoreRange(loadSlot->loadHandle, loadSlot->loadedSize);
@@ -647,8 +649,10 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
         charset->entries[i].strings = (char**)(phrasePointers + relocationDelta);
     }
     relocatedStringPointers = (int*)((u8*)stringPointers + relocationDelta);
-    for (i = 0; i < stringCount; i++) {
-        relocatedStringPointers[i] += relocationDelta;
+    for (stringIndex = 0; stringIndex < stringCount; stringIndex++) {
+        relocatedPointer = relocatedStringPointers[stringIndex];
+        relocatedPointer += relocationDelta;
+        relocatedStringPointers[stringIndex] = relocatedPointer;
     }
     mmSetFreeDelay(0);
     mm_free(loadSlot->loadHandle);

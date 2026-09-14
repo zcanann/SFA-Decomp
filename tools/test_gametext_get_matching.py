@@ -1,7 +1,7 @@
 """Relocate exact gametext functions at retail addresses and compare every instruction.
 
-This validates the function and its actual data destinations. The containing
-code TU still has other nonmatching functions and is not a complete source link.
+This validates each function and its actual data destinations. The strict EN
+checksum target additionally verifies the complete gametext source link.
 """
 
 from pathlib import Path
@@ -35,6 +35,9 @@ class GameTextGetMatchingTests(unittest.TestCase):
     def test_relocated_system_font_atlas_matches_retail(self):
         self.assert_relocated_function("gameTextBuildSystemFontAtlas", 0x44C)
 
+    def test_relocated_finalizer_matches_retail(self):
+        self.assert_relocated_function("gameTextFinalizeLoad", 0x638)
+
     def assert_relocated_function(self, function, expected_size):
         config = ROOT / "config/GSAE01"
         dol_path = ROOT / "orig/GSAE01/sys/main.dol"
@@ -63,8 +66,7 @@ class GameTextGetMatchingTests(unittest.TestCase):
                 continue
             count += 1
             position = relative - offset
-            # Each named callee uses its retail address: other functions in this
-            # nonmatching TU can still have different compiled sizes.
+            # Resolve each named callee independently at its retail address.
             if section == "SHN_UNDEF" or (section == ".text" and name in symbols):
                 destination_section, destination = symbols[name]
             else:

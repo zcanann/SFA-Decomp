@@ -6,8 +6,9 @@ intact; the preceding initialized tables/defaults belong to a separate data
 input. This restores `gameTextGet` and three other functions to exact matches.
 
 The six former gametext/render fragments are reunited in `src/main/gametext.c`.
-This is a source-boundary correction, not a claim that the resulting source is
-fully matching. The original file name remains unproven.
+The complete EN TU now matches retail, including its final source link; see
+[the completion audit](#complete-en-tu-2026-09-15). The original file name
+remains unproven.
 
 ## Retail evidence
 
@@ -872,3 +873,34 @@ checks. The active source and canonical API header pass clang-format checks.
 Matching configuration, `ninja all_source` (15.79 seconds), and the strict
 checksum build (17.02 seconds) pass with 30-second limits. The checksum still
 links the retail gametext code object while this function remains unfinished.
+
+## Complete EN TU (2026-09-15)
+
+The last eight register differences in `gameTextFinalizeLoad` are resolved.
+Its final string-pointer loop uses an independent `stringIndex` and a named
+`relocatedPointer` value. Loading that value, applying `+= relocationDelta`,
+and storing it back as three statements preserves the retail instruction
+sequence and recovers r6 for the rebased array and r7 for the index. The local
+declaration order is significant; collapsing the body into an array compound
+assignment restores the mismatch.
+
+Read-only GC/1.3 traces explain the change: the final index's interference
+degree falls from 29 to 21, allowing simplification before the array register.
+The graph has 185 nodes instead of 194. Simplification and coloring replay
+successfully, and instrumented and ordinary builds emit the same object.
+Only the eight instruction operands change. All other functions, allocated
+non-text sections, named-symbol layouts, and relocation records are unchanged.
+
+Objdiff reports all 54 functions, all 22,692 code bytes, and all 10,528 data
+bytes exact. `configure.py` now marks `main/gametext.c` matching for EN only.
+The strict checksum passes with the source object in the link, verifying the
+final addresses and complete DOL rather than relying on normalized relocations.
+The separate initialized-data TU remains unchanged. No secondary-target DOL
+is available in this checkout, so no regional completion claim is added.
+
+All 23 gametext tests pass, including the new 1,592-byte relocated-finalizer
+regression check and 402 host load scenarios at each of O0 and O2. All 360
+compiled-versus-retail PPC parser comparisons pass. Clang-format leaves the
+source and canonical API header unchanged and both pass its strict check.
+`ninja all_source` (16.64 seconds) and the strict checksum build (17.87 seconds)
+pass within their 30-second limits.
