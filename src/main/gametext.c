@@ -511,6 +511,7 @@ static void gameTextLoadCancelCallback(s32 result, DVDCommandBlock* block) {
 }
 
 void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
+    u16* textureCursor;
     int textureIndex;
     u16* loadedResource;
     u32 bitsPerPixel;
@@ -521,7 +522,7 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     int i;
     u8* stringData;
     GameTextPaddingBlock* paddingBlock;
-    GameTextTableHeader* tableHeader;
+    u16* headerFields;
     u16* textureDataStart;
     GameTextGlyphTable* resource;
     u16 textureFormat;
@@ -531,7 +532,6 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     TextFont* charset;
     u32 tableBytes;
     u16* compactedResource;
-    u16* textureCursor;
     int relocationDelta;
     int* relocatedStringPointers;
     int remainingUnits;
@@ -554,10 +554,10 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
         return;
     }
     charset->glyphs = resource->glyphs;
-    tableHeader = (GameTextTableHeader*)((char*)(resource + 1) + charset->glyphCount * sizeof(TextGlyph));
-    charset->entryCount = tableHeader->entryCount;
-    stringDataSize = tableHeader->stringDataSize;
-    definitions = (GameTextDef*)(tableHeader + 1);
+    headerFields = (u16*)((char*)(resource + 1) + charset->glyphCount * sizeof(TextGlyph));
+    charset->entryCount = *headerFields++;
+    stringDataSize = *headerFields++;
+    definitions = (GameTextDef*)headerFields;
     charset->entries = definitions;
     stringTable = (GameTextStringTable*)(definitions + charset->entryCount);
     stringCount = stringTable->count;
@@ -565,7 +565,8 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     for (i = 0; i < charset->entryCount; i++) {
         charset->entries[i].strings = (char**)(stringPointers + (int)charset->entries[i].strings);
     }
-    stringData = (u8*)stringTable + (stringCount * sizeof(*stringPointers) + sizeof(*stringTable));
+    stringTable++;
+    stringData = (u8*)stringTable + stringCount * sizeof(*stringPointers);
     {
         int j;
         for (j = 0; j < stringCount; j++) {
@@ -604,22 +605,20 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
         if (charset->textures[textureIndex] != NULL) {
             if (bitsPerPixel == 4) {
                 u8* src8 = (u8*)textureCursor;
-                u8* dst8 = textureGetImageData(charset->textures[textureIndex]);
+                u8* dst8 = (u8*)(charset->textures[textureIndex] + 1);
                 remainingUnits = (int)(width * height) >> 1;
                 while (remainingUnits--) {
                     *dst8++ = *src8++;
                 }
-                DCFlushRange(textureGetImageData(charset->textures[textureIndex]),
-                             charset->textures[textureIndex]->dataSize);
+                DCFlushRange(charset->textures[textureIndex] + 1, charset->textures[textureIndex]->dataSize);
             } else {
                 u16* src16 = textureCursor;
-                u16* dst16 = textureGetImageData(charset->textures[textureIndex]);
+                u16* dst16 = (u16*)(charset->textures[textureIndex] + 1);
                 remainingUnits = width * height;
                 while (remainingUnits--) {
                     *dst16++ = *src16++;
                 }
-                DCFlushRange(textureGetImageData(charset->textures[textureIndex]),
-                             charset->textures[textureIndex]->dataSize);
+                DCFlushRange(charset->textures[textureIndex] + 1, charset->textures[textureIndex]->dataSize);
             }
         }
         {

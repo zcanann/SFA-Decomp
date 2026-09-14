@@ -836,3 +836,39 @@ regional completion claim.
 Matching configuration, `ninja all_source`, and the strict retail checksum
 build pass within their 30-second limits. The source and canonical API header
 also pass the required clang-format check.
+
+## Loader register allocation (2026-09-14)
+
+`gameTextFinalizeLoad` improves from 99.34673% to 99.88693%, retaining its
+1,592-byte retail size. Raw instruction differences fall from 46 to eight.
+The message header is read as two advancing halfwords, preserving the recovered
+four-byte header and its actual position after the glyph array. Advancing past
+the string-table header before calculating the text-data extent also recovers
+the retail addition order.
+
+Texture payloads use the native `Texture` header extent directly. LLDB traces
+of GC/1.3 show that the inlined image accessors used as cache-flush arguments
+leave additional coalesced register-graph nodes. Removing those accessor calls
+and restoring the texture-cursor declaration order recovers the allocation
+throughout the texture upload and table-copy phases. This changes no compiler
+flags and adds no helper or assembly body.
+
+Only the final string-pointer relocation loop remains different: retail uses
+r6 for the rebased array and r7 for its index, while the source uses r7 and r6.
+The eight differing instructions are at offsets `0x520`, `0x524`, `0x53C`,
+`0x5B8`, `0x5C0`, `0x5C4`, `0x5C8`, and `0x5D0`. Ordinary and read-only
+LLDB-instrumented builds produce identical objects; graph simplification and
+color selection replay successfully. Declaration, pointer-type, and simple
+loop-spelling changes have not resolved this final pair.
+
+The TU is now 99.992065% fuzzy, with 53/54 exact functions and 100% data
+matching. All other function bytes, named-symbol layouts, allocated non-text
+bytes, and relocation records remain unchanged. The TU stays `NonMatching`;
+this is progress toward full completion, not a complete source-object match.
+
+All 22 gametext tests and 360 compiled-versus-retail PPC parser comparisons
+pass, including copy tails, texture-allocation failures, relocated data, and ABI
+checks. The active source and canonical API header pass clang-format checks.
+Matching configuration, `ninja all_source` (15.79 seconds), and the strict
+checksum build (17.02 seconds) pass with 30-second limits. The checksum still
+links the retail gametext code object while this function remains unfinished.
