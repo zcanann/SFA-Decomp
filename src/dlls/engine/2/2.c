@@ -78,7 +78,7 @@ typedef struct SeqRunFlags {
     u8 useWorldSpace : 1;
 } SeqRunFlags;
 
-#define OBJSEQ_SLOT_COUNT 85
+#define OBJSEQ_SLOT_COUNT            85
 #define OBJSEQ_LINKED_PAIRS_PER_SLOT 16
 #define MAKETEX_CAMMODE_NPCSPEAK     0x4d /* cameramode DLL dll_004D_cameramodenpcspeak */
 #define MAKETEX_CAMMODE_DEFAULT      0x42 /* default gameplay cameramode DLL */
@@ -1023,7 +1023,7 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags) {
         obj = gObjSeqStartObjOverride;
     }
     obj->seqIndex = slot;
-    parent = (GameObject *)obj->anim.parent;
+    parent = (GameObject*)obj->anim.parent;
     x = obj->anim.localPosX;
     y = obj->anim.localPosY;
     z = obj->anim.localPosZ;
@@ -1144,7 +1144,7 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags) {
             }
             newObj = objSetupObject(&setup->base, 5, -1, -1, parent);
             newObj->seqIndex = -2;
-            seq = (ObjSeqState *)newObj->extra;
+            seq = (ObjSeqState*)newObj->extra;
             seq->heading = heading;
             seq->flags = -1;
             seq->flags = seq->flags & ~0x400;
@@ -1308,7 +1308,7 @@ int ObjSeq_resolveTargetObject(GameObject* obj) {
     f32 distSq;
 
     objects = (void**)ObjList_GetObjects(&unused, &objectCount);
-    seqObj = (ObjSeqState *)obj->extra;
+    seqObj = (ObjSeqState*)obj->extra;
     model = (ObjSeqPlacement*)obj->anim.placementData;
     if (obj->anim.classId == 0x11) {
         seqObj->targetObj = NULL;
@@ -1345,7 +1345,7 @@ int ObjSeq_resolveTargetObject(GameObject* obj) {
         } else {
             bestDist = -1.0f;
             for (i = 0; i < objectCount; i++) {
-                candidate = (GameObject *)objects[i];
+                candidate = (GameObject*)objects[i];
                 linked = objSeqFindLinkedObject(seqObj, candidate);
                 if (linked == obj) {
                     seqObj->targetObj = candidate;
@@ -1413,7 +1413,7 @@ void* ObjSeq_FindTargetObject(GameObject* obj) {
         bestDistSq = -1.0f;
         bestObj = NULL;
         for (i = 0; i < objectCount; i++) {
-            candidate = (GameObject *)objects[i];
+            candidate = (GameObject*)objects[i];
             if (candidate->anim.romDefNo == objectType) {
                 dx = obj->anim.localPosX - candidate->anim.localPosX;
                 dy = obj->anim.localPosY - candidate->anim.localPosY;
@@ -1517,7 +1517,7 @@ void ObjSeq_runBgCmds(void) {
             candidate = *objPtr;
             if (candidate->anim.classId == 0x10) {
                 model = (ObjSeqPlacement*)candidate->anim.placementData;
-                seqp = (ObjSeqState *)candidate->extra;
+                seqp = (ObjSeqState*)candidate->extra;
                 if (model != NULL && model->slot == index) {
                     if (model->targetType >= 4 && ObjSeq_FindTargetObject(candidate) == NULL) {
                         ok = 0;
@@ -1539,7 +1539,7 @@ void ObjSeq_runBgCmds(void) {
             candidate = *mp;
             model = (ObjSeqPlacement*)candidate->anim.placementData;
             if (model != NULL && model->slot == index) {
-                seqp = (ObjSeqState *)candidate->extra;
+                seqp = (ObjSeqState*)candidate->extra;
                 if (ok != 0) {
                     seqp->runState = 2;
                     seqp->pendingStartFrame = xrot;
@@ -1871,7 +1871,7 @@ void ObjSeq_updateCamera(void) {
                 ->setMode(OBJSEQ_CAMMODE_FIXED, 0, 1, sizeof(CameraModeFixedPose), &cameraPose, model[0x24], 0xff);
             gObjSeqCameraActive = 1;
         } else {
-            camObj = (CameraObject *)(*gCameraInterface)->getCamera();
+            camObj = (CameraObject*)(*gCameraInterface)->getCamera();
             camObj->anim.worldPosX = x;
             camObj->anim.worldPosY = y;
             camObj->anim.worldPosZ = z;
@@ -3259,7 +3259,7 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
     }
     seq = (u8*)obj->extra;
     model = (ObjSeqPlacement*)obj->anim.placementData;
-    activeObj = (GameObject *)((ObjSeqState*)seq)->targetObj;
+    activeObj = (GameObject*)((ObjSeqState*)seq)->targetObj;
     if (activeObj == NULL) {
         activeObj = obj;
     }
@@ -3347,7 +3347,7 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
         if ((f & 4) != 0) {
             break;
         }
-        activeObj = (GameObject *)ObjSeq_ToggleCommand3Target(obj, (ObjSeqState*)seq, model);
+        activeObj = (GameObject*)ObjSeq_ToggleCommand3Target(obj, (ObjSeqState*)seq, model);
         activeObj->anim.activeMove = -1;
         break;
     case SEQACT_CONDITION:
@@ -3623,14 +3623,14 @@ void* ObjSeq_ToggleCommand3Target(GameObject* obj, ObjSeqState* seq, ObjSeqPlace
     seq->targetAttached = (s8)(seq->targetAttached ^ 1);
     if ((s8)seq->targetAttached != 0) {
         ObjSeq_resolveTargetObject(obj);
-        seqObj = (GameObject *)seq->targetObj;
+        seqObj = (GameObject*)seq->targetObj;
         if (seqObj != NULL) {
             result = seqObj;
             seqObj->pendingParentObj = obj;
             seqObj->objectFlags |= OBJECT_OBJFLAG_SEQ_ATTACHED;
             seq->callbackContext = seqObj;
 
-            activeObj = (GameObject *)seq->targetObj;
+            activeObj = (GameObject*)seq->targetObj;
             j = 0;
             slotOff = (s8)seq->slot * 0x80;
             slotBase = (ObjSeqLinkedPair*)(gObjSeqRuntimeBuffer + slotOff);
@@ -3770,7 +3770,7 @@ void ObjSeq_RebuildCurveStateToFrame(GameObject* obj, GameObject* seqObj, ObjSeq
         switch ((s8)opcode) {
         case 3:
             flags = (s8)(flags | 4);
-            seqObj = (GameObject *)ObjSeq_ToggleCommand3Target(obj, seq, model);
+            seqObj = (GameObject*)ObjSeq_ToggleCommand3Target(obj, seq, model);
             seqObj->anim.activeMove = -1;
             break;
         case 0:
@@ -4388,12 +4388,12 @@ int ObjSeq_update(GameObject* obj, f32 t) {
         return 1;
     }
 
-    seq = (ObjSeqState *)obj->extra;
+    seq = (ObjSeqState*)obj->extra;
     state = seq;
     if ((state->stateFlags & 2) != 0) {
         setJoypadDisabled();
     }
-    activeObj = (GameObject *)state->targetObj;
+    activeObj = (GameObject*)state->targetObj;
     gObjSeqStop = 0;
     gObjSeqLinkedTransformValid = 0;
     gObjSeqSkippingToEnd = 0;
@@ -4438,7 +4438,7 @@ int ObjSeq_update(GameObject* obj, f32 t) {
 
         activeObj = obj;
         if (state->targetObj != NULL) {
-            activeObj = (GameObject *)state->targetObj;
+            activeObj = (GameObject*)state->targetObj;
             activeObj->pendingParentObj = obj;
             activeObj->objectFlags |= OBJECT_OBJFLAG_SEQ_ATTACHED;
         } else if (state->isCameraSeq == 0 && state->movementState < 4) {
@@ -4840,7 +4840,7 @@ void ObjSeq_release(void) {
 }
 
 void ObjSeq_initialise(void) {
-    gObjSeqAnimLookup = (ObjSeqAnimLookup *)mmAlloc(0x10, 0x11, 0);
+    gObjSeqAnimLookup = (ObjSeqAnimLookup*)mmAlloc(0x10, 0x11, 0);
     ObjSeq_onMapSetup();
     gObjSeqCamModeArgB = 1;
     gObjSeqCamModeArgD = 0x5a;
@@ -4857,5 +4857,4 @@ void ObjSeq_copyDefaultColor(GXColor* out) {
     out->b = src->b;
     out->a = src->a;
 }
-
 }
