@@ -1,5 +1,10 @@
 # Gametext TU recovery
 
+The later [initialized-data ownership audit](gametext_data_ownership.md)
+corrects the merged data claim described below. The text boundary remains
+intact; the preceding initialized tables/defaults belong to a separate data
+input. This restores `gameTextGet` and three other functions to exact matches.
+
 The six former gametext/render fragments are reunited in `src/main/gametext.c`.
 This is a source-boundary correction, not a claim that the resulting source is
 fully matching. The original file name remains unproven.

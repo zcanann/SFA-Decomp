@@ -28,21 +28,39 @@ class GameTextFontResourceTests(unittest.TestCase):
     def setUpClass(cls):
         dol_path = ROOT / "orig/GSAE01/sys/main.dol"
         object_path = ROOT / "build/GSAE01/src/main/gametext.o"
-        if not dol_path.exists() or not object_path.exists():
-            raise unittest.SkipTest("retail EN DOL and built gametext object are required")
+        data_path = ROOT / "build/GSAE01/src/main/gametext_data.o"
+        if not all(path.exists() for path in (dol_path, object_path, data_path)):
+            raise unittest.SkipTest("retail EN DOL and both built gametext objects are required")
         cls.dol = DolFile(dol_path)
         cls.obj = read_object(object_path)
-        cls.images = {name: bytearray(cls.obj.sections[name][4]) for name in BASES}
-        for key, relocations in cls.obj.relocations.items():
-            section = key.split(" -> ", 1)[1]
-            if section not in cls.images:
-                continue
-            for offset, kind, addend, name, destination, value in relocations:
-                if destination == ".text":
+        data_obj = read_object(data_path)
+        objects = ((data_obj, BASES), (cls.obj, {".data": 0x802C8F40}))
+        cls.images = {
+            ".data": bytearray(data_obj.sections[".data"][4] + cls.obj.sections[".data"][4]),
+            ".sdata": bytearray(data_obj.sections[".sdata"][4]),
+        }
+        cls.locations = {
+            name: (bases[section] + offset, size)
+            for obj, bases in objects
+            for name, (section, offset, size, *_) in obj.symbols.items()
+            if section in bases and not name.startswith(".")
+        }
+        for obj, bases in objects:
+            for key, relocations in obj.relocations.items():
+                section = key.split(" -> ", 1)[1]
+                if section not in bases:
                     continue
-                if kind != 1 or destination not in BASES:
-                    raise ValueError(f"unsupported resource relocation: {key}, {name}, {kind}, {destination}")
-                struct.pack_into(">I", cls.images[section], offset, BASES[destination] + value + addend)
+                for offset, kind, addend, name, destination, value in relocations:
+                    if destination == ".text":
+                        continue
+                    if kind != 1:
+                        raise ValueError(f"unsupported resource relocation: {key}, {name}, {kind}")
+                    if destination == "SHN_UNDEF":
+                        address = cls.locations[name][0] + addend
+                    else:
+                        address = bases[destination] + value + addend
+                    output_offset = bases[section] - BASES[section] + offset
+                    struct.pack_into(">I", cls.images[section], output_offset, address)
 
     def retail_read(self, address, size):
         section = next(section for section in self.dol.sections
@@ -68,8 +86,7 @@ class GameTextFontResourceTests(unittest.TestCase):
     def test_native_layout_and_relocated_bytes(self):
         for name, (address, size) in RESOURCES.items():
             with self.subTest(resource=name):
-                section, offset, actual_size, *_ = self.obj.symbols[name]
-                self.assertEqual((BASES[section] + offset, actual_size), (address, size))
+                self.assertEqual(self.locations[name], (address, size))
                 self.assertEqual(self.source_read(address, size), self.retail_read(address, size))
 
     def test_each_font_covers_exactly_its_localized_messages(self):
