@@ -1,27 +1,40 @@
 # ObjSeq_onMapSetup matching investigation
 
-EN `GSAE01`, game GC/1.3 compiler, existing engine DLL 2 flags.
-The function remains **99.210526%** matching: retail is 760 bytes and the
-current source emits 764 bytes. No source or compiler settings were changed.
+With the game GC/1.3 compiler and the existing engine DLL 2 flags,
+`ObjSeq_onMapSetup` is **99.789474%** matching in all five supported retail
+versions: EN `GSAE01`, EN rev1, JP, PAL, and PAL rev1. Each input DOL was
+verified against its configured hash before the regional comparisons.
 
-The first 135 instructions match. The remaining differences are eight register
-operands in the tail and a duplicate byte store to `marks[0]`. The tail runs for
-slots 80 through 84, so that instruction adds five writes without changing the
-final memory contents.
+The source now emits the retail function's 760 bytes / 190 instructions, up
+from 99.210526% and 764 bytes. The first 135 instructions match. Six instructions
+in the remainder differ only in register operands: the temporary word-indexed
+base uses r3 instead of r10, and the handle cursor uses r31 instead of r29.
+The other functions' machine code, allocated non-text sections, and non-text
+symbol layouts are unchanged. The complete DLL remains `NonMatching`.
 
-Removing that duplicate store causes MWCC to unroll the tail again: the function
-grows to 984 bytes. Indexed field accesses can keep the tail rolled, but tested
-forms leave address calculations, different induction updates, or register
-differences. A single automatically unrolled 85-slot pointer loop also differs:
-its remainder advances twelve independent pointers; retail advances three and
-derives the other nine addresses inside the tail.
+## Tail-loop reconstruction
 
-A diagnostic single-iteration inner loop prevented the second unroll and
-reproduced the 190-instruction shape, leaving the eight register differences.
-It was discarded because the extra loop has no evidenced source-level purpose.
-This isolates the unroll decision; it does not establish an acceptable source
-reconstruction. LLDB backend capture was also used on an indexed-handle
-candidate, which retained an extra address calculation.
+The previous source wrote `marks[0]` twice for each of the last five slots.
+Simply removing the duplicate causes MWCC to unroll the tail again, growing the
+function to 984 bytes. Sharing the cleared signed-byte value between the first
+two flag stores keeps the tail rolled without adding a memory access. Retaining
+separate byte-indexed and word-indexed base lifetimes also improves the register
+allocation. The duplicate write is now removed.
+
+LLDB frontend and backend captures distinguish two unrollers. The frontend
+`IRO_LoopUnroller` rejects this tail because its index is not initialized in the
+preheader. The extra unroll instead occurs during the backend loop
+transformations, after code motion and before late simplification. Inspection
+of the GC/1.3 backend shows a loop-size-dependent unroll-factor limit. The
+shared byte value affects this earlier representation, then simplifies away
+in the final instructions. Ordinary and traced compiler outputs were checked
+for identical object hashes.
+
+Scoped tail cursors, pointer-role permutations, indexed accesses, and alternate
+base expressions have not resolved the remaining registers. Direct native-table
+experiments suggest a plausible path toward recovering the original loop, but
+also change BSS ordering and offsets; those experiments were discarded.
+Compiler settings and translation-unit boundaries are unchanged.
 
 ## Reset oracle
 
@@ -38,12 +51,10 @@ python3 tools/objseq_map_setup_probe.py --retail-only
 python3 tools/objseq_map_setup_probe.py --object path/to/candidate/2.o
 ```
 
-Four deterministic initial storage patterns pass against retail. The candidate
-with only the duplicate store removed also passes all four, despite its worse
-assembly match. The unchanged source intentionally fails the strict write-count
-check on five extra byte stores, one per tail slot; its final storage comparison
-passes. The oracle supplements objdiff and does not establish an exact match.
+Retail and the improved source pass all four deterministic initial storage
+patterns, including the exact write count. The oracle supplements objdiff and
+does not establish an exact assembly match.
 
-Validation after restoring the source: a fresh compile of DLL 2 through
-`ninja all_source` passes, and the strict retail checksum check reports
-`build/GSAE01/main.dol: OK`.
+Validation: `ninja all_source` passes, the strict matching build reports
+`build/GSAE01/main.dol: OK`, and `clang-format --dry-run --Werror` passes for
+the active TU. Running the formatter introduced no additional source changes.
