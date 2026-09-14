@@ -333,3 +333,27 @@ After updating to the fresh staging tip, `ninja all_source` and strict matching
 `e750e8e894707a52446118a4b84f1b58b677b269`; the incomplete TU still links its
 retail object. The source and canonical header pass the formatter check, and
 formatting introduces no separate changes.
+
+### Frontend origin of the remaining offset temporary
+
+`tools/mwcc_frontend_trace.py --unit main/main/voxmaps --function
+voxmaps_updateActiveMap --propagation --output <capture-directory>` reproduces
+the committed object above with SHA-256
+`95ed715d875b73ede7af1a6a1c41e3671bc1f3f165b32fe486695fdc490761c8`.
+Its 76-stage listing identifies the signed offset as `@1083`, first appearing
+between the final `IRO_EvaluateConditionals` dump and
+`Before RebuildCondExpressions`. The compiler's own diagnostic immediately
+before that dump reports `Splitting range for variable`; the hash-checked
+GC/1.3 routine at 0x45d090 calls the range-cloning routine at 0x45d290,
+whose assertion filename is `IROUseDef.c`. Thus the offset's preallocated
+register originates in late live-range splitting of the reused source local.
+
+The final frontend expression list retains an independent `EASS` for the
+shifted, converted offset before the zero-valued store. The earlier copy and
+expression propagation passes have already finished. Native address forms
+remove that independent definition but restore the 13-instruction register
+residual; in-place helpers retain the split and the two-instruction order
+residual. Moving the final active-map clear outside the branches changes the
+retail control-flow layout. These probes are not retained. The source-name
+inventory (`tools/orig/source_leaks.py --search voxmaps`) provides no matching
+source leak to resolve the remaining source spelling.
