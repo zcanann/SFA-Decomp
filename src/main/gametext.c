@@ -1908,8 +1908,7 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
             case TEXT_ALIGN_CENTER:
                 spaceExtra = 0.0f;
                 gameTextMeasureString(p, gGameTextScale, &measW, NULL, 0, 0, -1);
-                x = win->width - measW;
-                x = x * 0.5f + win->x;
+                x = (win->width - measW) / 2.0f + win->x;
                 break;
             case TEXT_ALIGN_JUSTIFY: {
                 int spaceCount;

@@ -746,3 +746,24 @@ See [the line-wrapping contract](gametext_line_wrapping.md).
 208-record declaration with the 122 records actually scanned by retail. The
 adjacent 516 bytes remain opaque at their original addresses. This corrects
 source and symbol structure without changing any instruction or data byte.
+
+## Centered text alignment (2026-09-14)
+
+`textRenderStr` now spells the centered horizontal position as
+`(win->width - measW) / 2.0f + win->x`. GC/1.3 reduces the division to multiplication
+by one half, but evaluates the width difference before loading that constant,
+as retail does. The previous two-statement multiplication loaded the constant
+first and assigned different floating-point temporaries.
+
+All 112 relocated bytes at function offsets `0x5F4..0x664` match the hash-verified
+EN DOL. Exactly ten instruction words change in the 4,104-byte function; allocated
+non-text bytes and named-symbol layouts stay unchanged. Objdiff rises from
+99.34698% to 99.54678%, with no other function-score changes. The TU retains
+50/54 exact functions and remains `NonMatching`.
+
+The remaining renderer differences include the glyph/face-width register pair,
+the justified-alignment counter copy, and placement of the coordinate multiplier
+load. These are still unresolved. GC/1.3 graph captures for the atlas builder and
+line wrapper also reproduced the compiler's simplification and physical-register
+choices; neither investigation produced a retained source change. Register-graph
+replay explains a compiled candidate, not the original source's variable layout.
