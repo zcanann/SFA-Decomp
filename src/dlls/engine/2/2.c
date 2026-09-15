@@ -3234,13 +3234,12 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
     ObjAnimState* animState;
     u8* act2;
     ObjAnimState* st2;
-    u8* entry;
-    s16* sfxTimerEntry;
+    s8* opcodeByte;
+    s16* sfxTimers;
     ObjSeqState* sfxState;
     int opcode;
     int sub;
     int restart;
-    int reps;
     int val;
     int slot;
     int minRot;
@@ -3264,7 +3263,7 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
         activeObj = obj;
     }
 
-    opcode = (s8)((u8*)cmd)[0];
+    opcode = cmd->opcode;
     switch (opcode) {
     case SEQACT_ANIM:
         if (flag8 != 0) {
@@ -3352,11 +3351,9 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
         break;
     case SEQACT_CONDITION:
         if (doUpdate != 0 && cmd->param > 0 && gObjSeqPendingCmd0BCount < 0x14) {
-            *(u8**)((entry = base + gObjSeqPendingCmd0BCount * 8) + 0x2b34) = (u8*)cmd + 4;
-            *(s16*)(entry + 0x2b3a) = ((ObjSeqState*)seq)->curFrame;
-            reps = cmd->param;
-            gObjSeqPendingCmd0BCount = gObjSeqPendingCmd0BCount + 1;
-            *(s16*)(entry + 0x2b38) = reps;
+            ((ObjSeqPendingCmd0B*)(base + 0x2b34))[gObjSeqPendingCmd0BCount].cmd = (u8*)(cmd + 1);
+            ((ObjSeqPendingCmd0B*)(base + 0x2b34))[gObjSeqPendingCmd0BCount].frame = ((ObjSeqState*)seq)->curFrame;
+            ((ObjSeqPendingCmd0B*)(base + 0x2b34))[gObjSeqPendingCmd0BCount++].reps = cmd->param;
         }
         ((ObjSeqState*)seq)->cmdCursor += cmd->param;
         break;
@@ -3402,18 +3399,14 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
             break;
         }
         if ((s8)gObjSeqDeferredCmdCount < 10) {
-            entry = base + gObjSeqDeferredCmdCount * 8;
-            *(GameObject**)(entry + 0x3ca4) = activeObj;
-            *(s8*)((int)entry + 0x3caa) = (s8)((cmd->param >> 12) & 0xf);
-            if (*(s8*)((int)entry + 0x3caa) == 0xb || *(s8*)((int)entry + 0x3caa) == 0xc) {
-                u8* entry2;
-                val = (cmd)[1].param;
-                entry2 = base + (s8)(gObjSeqDeferredCmdCount++) * 8;
-                *(s16*)(entry2 + 0x3ca8) = val;
+            ((ObjSeqBgCmd*)(base + 0x3ca4))[gObjSeqDeferredCmdCount].object = activeObj;
+            *(opcodeByte = &((ObjSeqBgCmd*)(base + 0x3ca4))[gObjSeqDeferredCmdCount].opcode) = (s8)((cmd->param >> 12) & 0xf);
+            if (*opcodeByte == 0xb || *opcodeByte == 0xc) {
+                val = cmd[1].param;
+                ((ObjSeqBgCmd*)(base + 0x3ca4))[gObjSeqDeferredCmdCount++].param = val;
             } else {
                 val = (s16)(cmd->param & 0xfff);
-                gObjSeqDeferredCmdCount++;
-                *(s16*)(entry + 0x3ca8) = val;
+((ObjSeqBgCmd*)(base + 0x3ca4))[gObjSeqDeferredCmdCount++].param = val;
             }
         }
         break;
@@ -3426,7 +3419,7 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
     }
 
     if ((s8)gObjSeqSkippingToEnd != 0 || (s8)lbl_803DD111 != 0) {
-        if ((s8)((u8*)cmd)[0] == 0xd) {
+        if (cmd->opcode == 0xd) {
             switch ((cmd->param >> 12) & 0xf) {
             case 2:
                 getEnvfxAct(activeObj, activeObj, cmd->param & 0xfff, 0);
@@ -3441,7 +3434,7 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
         return 0;
     }
 
-    switch ((s8)((u8*)cmd)[0]) {
+    switch (cmd->opcode) {
     case SEQACT_SFX:
         if (flag8 != 0) {
             break;
@@ -3527,13 +3520,13 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
         } else {
             slot = 3;
         }
-        sfxTimerEntry = &((ObjSeqState*)seq)->sfxTimer[slot];
-        if (*sfxTimerEntry > 0) {
-            Sfx_RemoveLoopedObjectSound(obj, (u16)((ObjSeqState*)seq)->sfxId[slot]);
+        sfxTimers = ((ObjSeqState*)seq)->sfxTimer;
+        if (sfxTimers[slot] > 0) {
+            Sfx_RemoveLoopedObjectSound(obj, (u16)((s16*)(seq + offsetof(ObjSeqState, sfxId)))[slot]);
         }
-        ((u8*)cmd)[1] = ((u8*)cmd)[5];
-        ((u8*)cmd)[4] = 0x63;
-        *sfxTimerEntry = ((ObjSeqCommand*)cmd)[1].param;
+        cmd[0].frameDelta = cmd[1].frameDelta;
+        cmd[1].opcode = 0x63;
+        sfxTimers[slot] = cmd[1].param;
         sfxState = (ObjSeqState*)seq;
         sfxState->sfxId[slot] = (s16)(cmd->param & 0xfff);
         Sfx_AddLoopedObjectSound(obj, (u16)sfxState->sfxId[slot]);
