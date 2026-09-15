@@ -3400,13 +3400,14 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
         }
         if ((s8)gObjSeqDeferredCmdCount < 10) {
             ((ObjSeqBgCmd*)(base + 0x3ca4))[gObjSeqDeferredCmdCount].object = activeObj;
-            *(opcodeByte = &((ObjSeqBgCmd*)(base + 0x3ca4))[gObjSeqDeferredCmdCount].opcode) = (s8)((cmd->param >> 12) & 0xf);
+            *(opcodeByte = &((ObjSeqBgCmd*)(base + 0x3ca4))[gObjSeqDeferredCmdCount].opcode) =
+                (s8)((cmd->param >> 12) & 0xf);
             if (*opcodeByte == 0xb || *opcodeByte == 0xc) {
                 val = cmd[1].param;
                 ((ObjSeqBgCmd*)(base + 0x3ca4))[gObjSeqDeferredCmdCount++].param = val;
             } else {
                 val = (s16)(cmd->param & 0xfff);
-((ObjSeqBgCmd*)(base + 0x3ca4))[gObjSeqDeferredCmdCount++].param = val;
+                ((ObjSeqBgCmd*)(base + 0x3ca4))[gObjSeqDeferredCmdCount++].param = val;
             }
         }
         break;
