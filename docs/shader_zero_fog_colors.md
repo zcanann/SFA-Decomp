@@ -79,3 +79,15 @@ Full source builds and the strict EN checksum pass, and formatting is verified
 separately for unchanged objects. Shader remains `NonMatching`; the strict
 link uses its retail object, so source placement is established by the object
 and relocation comparisons above rather than that integration check alone.
+
+The data audit now recognizes these three compiler-named local templates. It
+checks their three four-byte symbol extents and every `.sbss2` reference against
+the function-relative load sites above. It permits the name difference only for
+these templates, after checking both the source and retail objects. The regression
+checks reject a swapped zero-color destination, a misplaced load, a nonzero addend,
+an additional consumer, and a widened template:
+
+```sh
+python3 tools/map_render_data_audit.py
+python3 -m unittest discover -s tools -p test_map_render_data_audit.py
+```
