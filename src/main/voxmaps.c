@@ -63,6 +63,10 @@ int gVoxMapsBlockIds[VOXMAP_SLOT_COUNT];
 int gVoxMapsSlotAges[VOXMAP_SLOT_COUNT];
 VoxMapSlotOrigin gVoxMapsSlotOrigins[VOXMAP_SLOT_COUNT];
 
+STATIC_ASSERT(sizeof(gVoxMapsBuffers[0]) == sizeof(gVoxMapsBlockIds[0]));
+STATIC_ASSERT(sizeof(gVoxMapsBuffers[0]) == sizeof(gVoxMapsSlotAges[0]));
+STATIC_ASSERT(sizeof(gVoxMapsBuffers[0]) == sizeof(gVoxMapsSlotOrigins[0]));
+
 void Stack_Free(RingBufferQueue* stack) {
     mm_free(stack);
 }
@@ -228,12 +232,14 @@ int* voxmaps_updateActiveMap(VoxPos* obj) {
     int* worldOrigins;
     int gridX;
     int gridZ;
-    int cellIndex;
-    int romListIndex;
     int previousFreeDelay;
+    int romListIndex;
+    int cellIndex;
+    VoxMapFile** bufferSlot;
+    int slotByteOffset;
     int bestTimer;
+    int cacheSlot;
     int slot;
-    int foundSlot;
     int blockId;
     int bestSlot;
     int zWorldOffset;
@@ -258,16 +264,17 @@ int* voxmaps_updateActiveMap(VoxPos* obj) {
         blockId = cell->blockId;
     }
     if (blockId != -1) {
-        foundSlot = -1;
-        for (slot = 0; slot < VOXMAP_SLOT_COUNT; slot++) {
+        slot = 0;
+        cacheSlot = -1;
+        for (; slot < VOXMAP_SLOT_COUNT; slot++) {
             if (blockId == gVoxMapsBlockIds[slot]) {
-                foundSlot = slot;
+                cacheSlot = slot;
                 slot = VOXMAP_SLOT_COUNT;
             }
         }
-        if (foundSlot != -1) {
-            gVoxMapsSlotAges[foundSlot] = 0;
-            gVoxMapsActiveState.activeMap = NULL;
+        if (cacheSlot != -1) {
+            gVoxMapsSlotAges[cacheSlot] = 0;
+            gVoxMapsActiveState.activeMap = gVoxMapsBuffers[cacheSlot];
         } else {
             bestSlot = -1;
             bestTimer = -1;
@@ -279,15 +286,18 @@ int* voxmaps_updateActiveMap(VoxPos* obj) {
             }
             cellIndex = cell->cellIndex;
             romListIndex = cell->romListIndex;
-            if (gVoxMapsBuffers[bestSlot] != NULL) {
+            /* The parallel cache arrays share one byte offset for this slot. */
+            slotByteOffset = bestSlot * sizeof(gVoxMapsBuffers[0]);
+            bufferSlot = (VoxMapFile**)((u8*)gVoxMapsBuffers + slotByteOffset);
+            if (*bufferSlot != NULL) {
                 previousFreeDelay = mmSetFreeDelay(0);
-                mm_free(gVoxMapsBuffers[bestSlot]);
+                mm_free(*bufferSlot);
                 mmSetFreeDelay(previousFreeDelay);
             }
-            gVoxMapsBuffers[bestSlot] = voxLoadVoxMapActual(blockId, bestSlot, romListIndex, cellIndex);
-            gVoxMapsBlockIds[bestSlot] = blockId;
-            gVoxMapsSlotAges[bestSlot] = 0;
-            origin = &gVoxMapsSlotOrigins[bestSlot];
+            *bufferSlot = voxLoadVoxMapActual(blockId, bestSlot, romListIndex, cellIndex);
+            *(int*)((u8*)gVoxMapsBlockIds + slotByteOffset) = blockId;
+            *(int*)((u8*)gVoxMapsSlotAges + slotByteOffset) = 0;
+            origin = (VoxMapSlotOrigin*)((u8*)gVoxMapsSlotOrigins + slotByteOffset);
             origin->gridX = gVoxMapsActiveState.blockOriginGrid[0];
             origin->gridZ = gVoxMapsActiveState.blockOriginGrid[1];
             gVoxMapsActiveState.activeMap = NULL;

@@ -109,6 +109,12 @@ only be used when the naming law is satisfied, and it does NOT recover the rotat
 
 ## 3. Peephole-gated unroll base-chunking (purge-priced)
 
+**Hcurves resolved 2026-09-14:** the complete updater and TU now match EN v1.0,
+JP, and PAL using unchanged GC/1.3 settings. Native arrays, shorter patch-base
+lifetime, a shared plane builder, and ordinary indexed searches recover the
+retail code. The older Hcurves pricing below is historical and no longer
+applies. See [the completed reconstruction](objfsa_patch_lookup_matching.md#complete-updater-match).
+
 **Mechanism.** In an unrolled copy loop retail folds the stride into the load/store
 displacements of up to 32 copies off ONE base register; with peephole ON our compile re-bases
 (surplus `addi base,base,stride` per copy, chunk 8). Controller isolated to `-opt nopeephole`:

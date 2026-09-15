@@ -2,6 +2,9 @@
 
 Target: EN v1.0 (`GSAE01`), game compiler GC/1.3.
 
+Current status (2026-09-14): 100% exact in all five configured regions, including
+verified source-object DOL links. Earlier sections record intermediate reconstructions.
+
 `voxmaps_getRouteNode` ranks set bits in the occupancy bitmap and scales the
 result by four to find a node. Its callers read individual bytes, then extract
 two-bit cells using an X-dependent shift. `VoxMapNode` therefore describes four
@@ -236,3 +239,158 @@ block further regresses each variant. All other functions remain exact in
 these probes. The original source and object are restored; the two early
 `li` operands cannot be fixed independently of the surrounding allocation by
 these initialization rewrites.
+
+## LLDB cache-replacement allocation (2026-09-14)
+
+A fresh macOS LLDB capture of GC/1.3 reproduces the ordinary object byte for
+byte. Both captures contain 194 instructions, 19 optimizer snapshots and a
+112-node GPR graph; simplification and physical coloring replay successfully,
+with no high-degree removals. Capture the current source with:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/main/voxmaps \
+  --function voxmaps_updateActiveMap --graph --output build/voxmaps-lldb/current
+```
+
+The replacement path previously colored its compiler-generated scaled index
+and buffer address before the saved free delay and ROM-list index. The source
+now carries one byte offset across the four parallel cache arrays and keeps
+the buffer slot as a typed pointer. The offset is derived from the buffer
+element's `sizeof`; assertions establish the equal strides of the block IDs,
+ages and origins. Each cast returns to the actual array element type, and the
+arrays retain their independent definitions and storage order.
+
+Together with the local declaration order, this gives the replacement path
+the retail register allocation without adding instructions:
+
+| Value | Previous register | Current and retail register |
+| --- | --- | --- |
+| Saved free delay | r25 | r27 |
+| ROM-list index | r26 | r29 |
+| Slot byte offset | r29 | r25 |
+| Buffer-slot address | r27 | r26 |
+
+The function improves from 99.24227% to 99.62887% similarity, and the unit from
+99.94525% to 99.97318%. The residual shrinks from 25 to 13 instruction
+differences. All remaining differences are at instruction indices 79–98: the
+cache-search counter/result, their initialization order, and the hit branch's
+shared zero and age-address calculation. Pointer aliases, inline clearing
+helpers and equivalent store spellings tested here normalize to the same
+allocation. They are not retained. This does not establish that the remaining
+source search is exhausted.
+
+EN v1.0, EN rev1, JP, PAL and PAL rev1 all produce the same improved objdiff
+result after checking each input DOL against its configured SHA-1. In each
+version, only `voxmaps_updateActiveMap` changes instruction bytes; the other
+27 functions, all allocated non-text sections, named symbol layouts and
+resolved relocations are unchanged. No regional unit becomes completely
+exact, so the progress manifests remain unchanged.
+
+`clang-format -i` changes neither the TU nor its header, and their dry-run
+checks pass. `ninja all_source` and strict matching `ninja` pass. The TU remains
+`NonMatching`, so the strict retail link continues to use its retail object;
+the separate object comparisons above validate the source change itself.
+
+## Cache-hit offset lifetime (2026-09-14)
+
+The hit path now reuses its signed cache-slot local as a byte offset after the
+search succeeds. The multiplication retains the unsigned `sizeof` operand and
+an explicit assignment back to the local. In GC/1.3, rewriting this as `*=` or
+assigning a separate single-use offset produces different register allocation.
+The local is named `cacheSlot` to cover both phases. Initializing the scan index
+before the result also reproduces retail's initialization order.
+
+This resolves every remaining physical-register choice. Of 194 instructions in
+`voxmaps_updateActiveMap`, 192 are now positionally exact; the only difference
+is an adjacent pair at function offsets 0x178 and 0x17c:
+
+| Retail | Source |
+| --- | --- |
+| `li r0,0` | `slwi r3,r4,2` |
+| `slwi r3,r4,2` | `li r0,0` |
+
+The raw function-byte mismatch falls from 16 bytes to eight, and differing
+instruction positions from 13 to two. Objdiff's fuzzy metric nevertheless falls
+from 99.97318% to 99.925514% for the TU (99.62887% to 98.96907% for this
+function), because this instruction reorder costs more than the previous
+register substitutions under that metric. This is an intermediate reduction
+of the concrete binary residual, not a claim of an exact function or a higher
+fuzzy score. The TU stays `NonMatching`, with 27/28 exact functions and all
+604 data bytes exact.
+
+A read-only GC/1.3 LLDB capture reproduces ordinary compilation with raw object
+SHA-256 `9b7395406a80e2f5b346e830a3590d2ca25790b1b713197687c9a520e2a9019e`
+for the unrenamed candidate. It captures 19 backend stages, 112 GPR nodes,
+78 replayed physical-color decisions, and no high-degree simplification
+removals. The offset occupies preallocated v48; zero occupies v95. The two
+instructions already have their final relative order before global backend
+optimization. Moving the offset update into a comma/address expression or
+using a separate zero local does not correct that order.
+
+EN, EN rev1, JP, PAL and PAL rev1 all have the same eight differing bytes at
+0x178–0x17f, against SHA-1-verified original DOLs. The other 27 function bodies,
+allocated non-text sections, named symbol layouts and resolved relocation sites
+are unchanged in each region. No regional completion manifest is promoted.
+After updating to the fresh staging tip, `ninja all_source` and strict matching
+`ninja` pass with 30-second limits. The EN DOL retains SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`; the incomplete TU still links its
+retail object. The source and canonical header pass the formatter check, and
+formatting introduces no separate changes.
+
+### Frontend origin of the remaining offset temporary
+
+`tools/mwcc_frontend_trace.py --unit main/main/voxmaps --function
+voxmaps_updateActiveMap --propagation --output <capture-directory>` reproduces
+the committed object above with SHA-256
+`95ed715d875b73ede7af1a6a1c41e3671bc1f3f165b32fe486695fdc490761c8`.
+Its 76-stage listing identifies the signed offset as `@1083`, first appearing
+between the final `IRO_EvaluateConditionals` dump and
+`Before RebuildCondExpressions`. The compiler's own diagnostic immediately
+before that dump reports `Splitting range for variable`; the hash-checked
+GC/1.3 routine at 0x45d090 calls the range-cloning routine at 0x45d290,
+whose assertion filename is `IROUseDef.c`. Thus the offset's preallocated
+register originates in late live-range splitting of the reused source local.
+
+The final frontend expression list retains an independent `EASS` for the
+shifted, converted offset before the zero-valued store. The earlier copy and
+expression propagation passes have already finished. Native address forms
+remove that independent definition but restore the 13-instruction register
+residual; in-place helpers retain the split and the two-instruction order
+residual. Moving the final active-map clear outside the branches changes the
+retail control-flow layout. These probes are not retained. The source-name
+inventory (`tools/orig/source_leaks.py --search voxmaps`) provides no matching
+source leak to resolve the remaining source spelling.
+
+## Exact cache-hit selection (2026-09-14)
+
+The cache-hit branch now resets `gVoxMapsSlotAges[cacheSlot]` and selects
+`gVoxMapsBuffers[cacheSlot]` into `activeMap`. This removes the explicit byte
+offset conversion and its pointer cast. The two array accesses share the
+scaled index, recovering the compiler-generated temporary without manually
+reusing the source local. All 194 instructions of `voxmaps_updateActiveMap`
+are exact; the complete TU now matches all 10,740 code bytes, all 604 data
+bytes and all 28 functions.
+
+The earlier literal-NULL reconstruction removed the second array access.
+Restoring the buffer read changes how the shared index is represented: a
+verified 76-stage frontend trace has `@1081` assigned inside the age-store
+address expression, after that store's zero operand. The buffer read remains
+in the final frontend listing, while the emitted object still has the retail
+NULL store. This establishes the recovered source's code generation under
+GC/1.3; it does not establish the internal cause of the later load elimination.
+The ordinary and instrumented source objects have SHA-256
+`648f44a1db2847bb520f0d0f5d7a404d1f7d5569ee72dd07687aecee772e20c9`.
+
+EN, EN rev1, JP, PAL and PAL rev1 each report 100% for this complete unit.
+`tools/verify_source_link.py <version> main/voxmaps.c` verifies both the retail
+link and a link substituting only this source object against each original
+DOL's configured SHA-1. All five pass. The other 27 function bodies, allocated
+non-text sections, named symbol layouts and resolved relocation sites are
+unchanged in each region.
+
+The EN unit is now `Matching`, and the four secondary matching manifests
+include `main/voxmaps.c`. No compiler flags, section ownership, symbol config
+or expected checksums change. With the source object enabled, `ninja all_source`
+and strict matching `ninja` pass under 30-second limits. The resulting EN DOL
+retains SHA-1 `e750e8e894707a52446118a4b84f1b58b677b269`. The TU and canonical
+header pass `clang-format --dry-run --Werror`; formatting adds no separate diff.

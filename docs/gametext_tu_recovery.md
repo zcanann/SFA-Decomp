@@ -1,8 +1,14 @@
 # Gametext TU recovery
 
+The later [initialized-data ownership audit](gametext_data_ownership.md)
+corrects the merged data claim described below. The text boundary remains
+intact; the preceding initialized tables/defaults belong to a separate data
+input. This restores `gameTextGet` and three other functions to exact matches.
+
 The six former gametext/render fragments are reunited in `src/main/gametext.c`.
-This is a source-boundary correction, not a claim that the resulting source is
-fully matching. The original file name remains unproven.
+The complete EN TU now matches retail, including its final source link; see
+[the completion audit](#complete-en-tu-2026-09-15). The original file name
+remains unproven.
 
 ## Retail evidence
 
@@ -741,3 +747,160 @@ See [the line-wrapping contract](gametext_line_wrapping.md).
 208-record declaration with the 122 records actually scanned by retail. The
 adjacent 516 bytes remain opaque at their original addresses. This corrects
 source and symbol structure without changing any instruction or data byte.
+
+## Centered text alignment (2026-09-14)
+
+`textRenderStr` now spells the centered horizontal position as
+`(win->width - measW) / 2.0f + win->x`. GC/1.3 reduces the division to multiplication
+by one half, but evaluates the width difference before loading that constant,
+as retail does. The previous two-statement multiplication loaded the constant
+first and assigned different floating-point temporaries.
+
+All 112 relocated bytes at function offsets `0x5F4..0x664` match the hash-verified
+EN DOL. Exactly ten instruction words change in the 4,104-byte function; allocated
+non-text bytes and named-symbol layouts stay unchanged. Objdiff rises from
+99.34698% to 99.54678%, with no other function-score changes. The TU retains
+50/54 exact functions and remains `NonMatching`.
+
+The remaining renderer differences include the glyph/face-width register pair,
+the justified-alignment counter copy, and placement of the coordinate multiplier
+load. These remained unresolved until the exact-renderer pass below. GC/1.3 graph captures for the atlas builder and
+line wrapper also reproduced the compiler's simplification and physical-register
+choices; neither investigation produced a retained source change. Register-graph
+replay explains a compiled candidate, not the original source's variable layout.
+
+## Exact string renderer (2026-09-14)
+
+`textRenderStr` now matches all 4,104 bytes. This resolves the renderer differences
+listed in the centered-alignment pass above. Two source changes were needed:
+
+- Express both glyph origins as `4.0f * (position + roundedOffset)`, retaining
+  an explicit `f32` cast around each scaled glyph offset. These casts preserve
+  the intermediate rounding and prevent multiplication/addition contraction.
+  Grouping both axes restores the retail multiplier-load order and FPR choices.
+- Extract the justification scan into `gameTextCountSpaces`, a private inline
+  helper. It counts ASCII spaces in decoded text and skips each control code's
+  argument bytes. Declare its byte offset before its space counter.
+
+The helper is a reconstructed source boundary, not a recovered original name.
+It emits no separate function and changes neither TU ownership nor compiler flags.
+Its inlining explains two coupled compiler effects that local declaration
+shuffles in the renderer could not reproduce. In the previous GC/1.3 capture,
+the two zero initializations used original source registers 39 and 40, below the
+late value-numbering pass's eligible temporary range. The helper's cloned
+counters use virtual registers 96 and 97. `AFTER VALUE NUMBERING 2` replaces the
+second zero with the move that becomes retail's `mr r24,r20`. The resulting
+allocation also assigns the glyph cursor to `r20` and the face width to `r21`,
+fixing the remaining register permutation without changing the glyph lookup.
+
+The existing LLDB graph tracer verifies that its instrumented and ordinary
+objects are identical, then replays simplification and all 318 physical color
+choices across 20 captured stages. The final renderer has 1,026 aligned
+instructions and no retail differences. Reproduce with:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/main/gametext \
+    --function textRenderStr --graph --output build/textrender_match/final_trace
+```
+
+Objdiff rises from 99.54678% to 100% for the renderer and from 50/54 to 51/54 exact
+functions in the TU. Only the renderer's instruction bytes change; allocated
+non-text bytes and named-symbol layouts remain unchanged. The relocation test
+now covers the entire renderer against the hash-verified EN DOL, alongside the
+three functions matched in earlier passes. The whole TU remains `NonMatching`
+while `gameTextFinalizeLoad`, `gameTextBuildSystemFontAtlas`, and
+`gameTextWrapLines` remain incomplete.
+
+## Exact system-font atlas builder (2026-09-14)
+
+`gameTextBuildSystemFontAtlas` now matches all 275 instructions (1,100 bytes),
+up from 99.02909%. The matching C extracts the 32-byte I4 tile copy into the
+private inline `gameTextCopySystemFontTile` helper. It applies the row pitch
+and copies the eight words in pairs, advancing the glyph-data cursor. The
+caller calculates the starting column before the row and expresses the 3x3
+tile bounds directly in its loops. The recovered local declaration order
+retains the retail register allocation.
+
+The compiler fully inlines the helper and unrolls the word copies. The
+ordinary and LLDB-instrumented builds agree, and objdiff reports 100% for the
+function. The relocation regression test resolves every call and data reference
+at its actual retail address, then compares the complete function against the
+hash-verified EN DOL. All 22 gametext tests pass.
+
+All other function bytes, named-symbol layouts, allocated non-text bytes, and
+normalized relocation records are unchanged. The code TU now has 53/54 exact
+functions, 99.95417% fuzzy matching, and 100% data matching. Only
+`gameTextFinalizeLoad` remains unfinished, so the TU stays `NonMatching`.
+Only EN retail inputs are available in this checkout; this pass makes no new
+regional completion claim.
+
+Matching configuration, `ninja all_source`, and the strict retail checksum
+build pass within their 30-second limits. The source and canonical API header
+also pass the required clang-format check.
+
+## Loader register allocation (2026-09-14)
+
+`gameTextFinalizeLoad` improves from 99.34673% to 99.88693%, retaining its
+1,592-byte retail size. Raw instruction differences fall from 46 to eight.
+The message header is read as two advancing halfwords, preserving the recovered
+four-byte header and its actual position after the glyph array. Advancing past
+the string-table header before calculating the text-data extent also recovers
+the retail addition order.
+
+Texture payloads use the native `Texture` header extent directly. LLDB traces
+of GC/1.3 show that the inlined image accessors used as cache-flush arguments
+leave additional coalesced register-graph nodes. Removing those accessor calls
+and restoring the texture-cursor declaration order recovers the allocation
+throughout the texture upload and table-copy phases. This changes no compiler
+flags and adds no helper or assembly body.
+
+Only the final string-pointer relocation loop remains different: retail uses
+r6 for the rebased array and r7 for its index, while the source uses r7 and r6.
+The eight differing instructions are at offsets `0x520`, `0x524`, `0x53C`,
+`0x5B8`, `0x5C0`, `0x5C4`, `0x5C8`, and `0x5D0`. Ordinary and read-only
+LLDB-instrumented builds produce identical objects; graph simplification and
+color selection replay successfully. Declaration, pointer-type, and simple
+loop-spelling changes have not resolved this final pair.
+
+The TU is now 99.992065% fuzzy, with 53/54 exact functions and 100% data
+matching. All other function bytes, named-symbol layouts, allocated non-text
+bytes, and relocation records remain unchanged. The TU stays `NonMatching`;
+this is progress toward full completion, not a complete source-object match.
+
+All 22 gametext tests and 360 compiled-versus-retail PPC parser comparisons
+pass, including copy tails, texture-allocation failures, relocated data, and ABI
+checks. The active source and canonical API header pass clang-format checks.
+Matching configuration, `ninja all_source` (15.79 seconds), and the strict
+checksum build (17.02 seconds) pass with 30-second limits. The checksum still
+links the retail gametext code object while this function remains unfinished.
+
+## Complete EN TU (2026-09-15)
+
+The last eight register differences in `gameTextFinalizeLoad` are resolved.
+Its final string-pointer loop uses an independent `stringIndex` and a named
+`relocatedPointer` value. Loading that value, applying `+= relocationDelta`,
+and storing it back as three statements preserves the retail instruction
+sequence and recovers r6 for the rebased array and r7 for the index. The local
+declaration order is significant; collapsing the body into an array compound
+assignment restores the mismatch.
+
+Read-only GC/1.3 traces explain the change: the final index's interference
+degree falls from 29 to 21, allowing simplification before the array register.
+The graph has 185 nodes instead of 194. Simplification and coloring replay
+successfully, and instrumented and ordinary builds emit the same object.
+Only the eight instruction operands change. All other functions, allocated
+non-text sections, named-symbol layouts, and relocation records are unchanged.
+
+Objdiff reports all 54 functions, all 22,692 code bytes, and all 10,528 data
+bytes exact. `configure.py` now marks `main/gametext.c` matching for EN only.
+The strict checksum passes with the source object in the link, verifying the
+final addresses and complete DOL rather than relying on normalized relocations.
+The separate initialized-data TU remains unchanged. No secondary-target DOL
+is available in this checkout, so no regional completion claim is added.
+
+All 23 gametext tests pass, including the new 1,592-byte relocated-finalizer
+regression check and 402 host load scenarios at each of O0 and O2. All 360
+compiled-versus-retail PPC parser comparisons pass. Clang-format leaves the
+source and canonical API header unchanged and both pass its strict check.
+`ninja all_source` (16.64 seconds) and the strict checksum build (17.87 seconds)
+pass within their 30-second limits.

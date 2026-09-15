@@ -1,3 +1,5 @@
+#include "stddef.h"
+extern "C" {
 #include "dlls/object_descriptor.h"
 #include "main/camera_interface.h"
 #include "main/dll/dll_0000_gameui_api.h"
@@ -76,6 +78,7 @@ typedef struct SeqRunFlags {
     u8 useWorldSpace : 1;
 } SeqRunFlags;
 
+#define OBJSEQ_SLOT_COUNT            85
 #define OBJSEQ_LINKED_PAIRS_PER_SLOT 16
 #define MAKETEX_CAMMODE_NPCSPEAK     0x4d /* cameramode DLL dll_004D_cameramodenpcspeak */
 #define MAKETEX_CAMMODE_DEFAULT      0x42 /* default gameplay cameramode DLL */
@@ -708,69 +711,92 @@ typedef struct CamMode {
     u8 flag;
 } CamMode;
 
+/* Keep these definitions in retail BSS order; MWCC aligns the 85-byte tables. */
+u8 gObjSeqRuntimeBuffer[0x2A80];
+ObjSeqBgRotationCmd gObjSeqBgCmds[0x1E];
+ObjSeqBgCmd lbl_8039944C[0xA0 / sizeof(ObjSeqBgCmd)];
+f32 objSeqOverridePos[0x1EE];
+u8 gObjSeqSlotMarks[OBJSEQ_SLOT_COUNT];
+int gObjSeqSlotObjectIds[OBJSEQ_SLOT_COUNT];
+u8 lbl_80399E50[0x58];
+u8 objSeqXrotChanged[0x58];
+s16 objSeqXrotValues[0xAC];
+f32 gObjSeqSlotDistances[OBJSEQ_SLOT_COUNT];
+f32 gObjSeqSlotStreamTimeTable[0x55];
+s8 gObjSeqPendingFrames[OBJSEQ_SLOT_COUNT];
+u8 gObjSeqSlotStates[OBJSEQ_SLOT_COUNT];
+s16 gObjSeqSlotSeqIdTable[0x56];
+s8 gObjSeqBoolFlags[0x58];
+s8 gObjSeqCondFlags[0x58];
+s8 gObjSeqSlotResults[0x58];
+u8 gObjSeqPreviousSlotResults[OBJSEQ_SLOT_COUNT];
+ObjSeqBgCmd gObjSeqDeferredCmds[0x50 / sizeof(ObjSeqBgCmd)];
+s8 gObjSeqJumpLatch[0x58];
+int gObjSeqPreemptList[40][2];
+
 int ObjSeq_update(GameObject* obj, f32 t);
 
-u8 gObjSeqPreemptCount;
-f32 gObjSeqLinkedSavedPosX;
-f32 gObjSeqLinkedSavedPosY;
-f32 gObjSeqLinkedSavedPosZ;
-s16 gObjSeqLinkedSavedPitch;
-u8 gObjSeqLinkedTransformValid;
-s8 gObjSeqDeferredCmdCount;
-u8 gObjSeqSkippingToEnd;
-u8 lbl_803DD111;
-u8 gObjSeqCameraActive;
-int gObjSeqCamMode;
-int gObjSeqCamModeArgB;
-int gObjSeqCamModeArgC;
-int gObjSeqCamModeArgD;
-GameObject* focusedNpc;
-u8 gObjSeqCameraOverrideActive;
-f32 gObjSeqCameraOverridePosX;
-f32 gObjSeqCameraOverridePosY;
-f32 gObjSeqCameraOverridePosZ;
-s16 gObjSeqCameraOverrideRotX;
-s16 gObjSeqCameraOverrideRotY;
-s16 gObjSeqCameraOverrideRotZ;
-f32 gObjSeqCameraOverrideW;
-f32 lbl_803DD0DC;
-u8 gObjSeqStop;
-u8 gObjSeqCamPosOverridePending;
-u8 gObjSeqFnDispatched;
-ObjSeqAnimLookup* gObjSeqAnimLookup;
-f32 gObjSeqFovOverrideValue;
-f32 gObjSeqCurvePosOffsetX;
-f32 gObjSeqCurvePosOffsetY;
-f32 gObjSeqCurvePosOffsetZ;
-int gObjSeqPendingCmd0BCount;
-s8 gObjSeqBgCmdCount;
-void* gObjSeqCameraSourceObj;
-u16 lbl_803DD0B6;
-SeqRunFlags gObjSeqRunFlags;
-f32 gObjSeqSavedCamPosX;
-f32 gObjSeqSavedCamPosY;
-f32 gObjSeqSavedCamPosZ;
-f32 gObjSeqSavedCamFov;
-int gObjSeqSavedCamPitch;
-int gObjSeqSavedCamYaw;
-int gObjSeqSavedCamRoll;
-int gObjSeqStreamSuppressed;
-int gObjSeqInputOverrideActive;
-u8 curSeqNo;
-s16 lbl_803DD08A;
-u8 gObjSeqFovOverrideActive;
-int seqGlobal4;
-s8 seqGlobal3;
-GameObject* gObjSeqStartObjOverride;
-u8 gObjSeqStartOffsetBack;
-f32 gObjSeqStreamRemainingTime;
-s16 gObjSeqStreamStopped;
-s16 seqGlobal2;
-s16 seqGlobal1;
-u32 gObjSeqCurrentTrackId;
-int gObjSeqCamOwnerSeqIndex;
-s16 lbl_803DD062;
 s16 lbl_803DD060;
+s16 lbl_803DD062;
+int gObjSeqCamOwnerSeqIndex;
+u32 gObjSeqCurrentTrackId;
+s16 seqGlobal1;
+s16 seqGlobal2;
+s16 gObjSeqStreamStopped;
+f32 gObjSeqStreamRemainingTime;
+u8 gObjSeqStartOffsetBack;
+GameObject* gObjSeqStartObjOverride;
+s8 seqGlobal3;
+int seqGlobal4;
+u8 gObjSeqFovOverrideActive;
+s16 lbl_803DD08A;
+u8 curSeqNo;
+int gObjSeqInputOverrideActive;
+int gObjSeqStreamSuppressed;
+int gObjSeqSavedCamRoll;
+int gObjSeqSavedCamYaw;
+int gObjSeqSavedCamPitch;
+f32 gObjSeqSavedCamFov;
+f32 gObjSeqSavedCamPosZ;
+f32 gObjSeqSavedCamPosY;
+f32 gObjSeqSavedCamPosX;
+SeqRunFlags gObjSeqRunFlags;
+u16 lbl_803DD0B6;
+void* gObjSeqCameraSourceObj;
+s8 gObjSeqBgCmdCount;
+int gObjSeqPendingCmd0BCount;
+f32 gObjSeqCurvePosOffsetZ;
+f32 gObjSeqCurvePosOffsetY;
+f32 gObjSeqCurvePosOffsetX;
+f32 gObjSeqFovOverrideValue;
+ObjSeqAnimLookup* gObjSeqAnimLookup;
+u8 gObjSeqFnDispatched;
+u8 gObjSeqCamPosOverridePending;
+u8 gObjSeqStop;
+f32 lbl_803DD0DC;
+f32 gObjSeqCameraOverrideW;
+s16 gObjSeqCameraOverrideRotZ;
+s16 gObjSeqCameraOverrideRotY;
+s16 gObjSeqCameraOverrideRotX;
+f32 gObjSeqCameraOverridePosZ;
+f32 gObjSeqCameraOverridePosY;
+f32 gObjSeqCameraOverridePosX;
+u8 gObjSeqCameraOverrideActive;
+GameObject* focusedNpc;
+int gObjSeqCamModeArgD;
+int gObjSeqCamModeArgC;
+int gObjSeqCamModeArgB;
+int gObjSeqCamMode;
+u8 gObjSeqCameraActive;
+u8 lbl_803DD111;
+u8 gObjSeqSkippingToEnd;
+s8 gObjSeqDeferredCmdCount;
+u8 gObjSeqLinkedTransformValid;
+s16 gObjSeqLinkedSavedPitch;
+f32 gObjSeqLinkedSavedPosZ;
+f32 gObjSeqLinkedSavedPosY;
+f32 gObjSeqLinkedSavedPosX;
+u8 gObjSeqPreemptCount;
 typedef struct SeqRunRec {
     s16 slot;
     s16 flags;
@@ -984,12 +1010,12 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags) {
         gObjSeqTaskTextId = seqIdx;
     }
 
-    hdr = mmAlloc(0x20, 0x11, 0);
+    hdr = (u8*)mmAlloc(0x20, 0x11, 0);
     getTabEntry(hdr, MLDF_FILEID_OBJSEQ_TAB, seqIdx * 2, 8);
     first = *(s16*)hdr;
     count = ((s16*)hdr)[1] - first;
     size = count << 3;
-    buf = mmAlloc(size, 0x11, 0);
+    buf = (u8*)mmAlloc(size, 0x11, 0);
     getTabEntry(buf, MLDF_FILEID_OBJSEQ_BIN, first * 8, size);
     mm_free(hdr);
 
@@ -997,7 +1023,7 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags) {
         obj = gObjSeqStartObjOverride;
     }
     obj->seqIndex = slot;
-    parent = obj->anim.parent;
+    parent = (GameObject*)obj->anim.parent;
     x = obj->anim.localPosX;
     y = obj->anim.localPosY;
     z = obj->anim.localPosZ;
@@ -1016,7 +1042,7 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags) {
     }
 
     i = 0;
-    st->cmdFlags[obj->seqIndex] = 0;
+    lbl_80399E50[obj->seqIndex] = 0;
     base[obj->seqIndex + 0x3334] = 0;
     gObjSeqSlotValues[obj->seqIndex] = 0;
     *(int*)((u8*)&st->handles[0] + obj->seqIndex * 4) = obj->anim.romDefNo;
@@ -1118,7 +1144,7 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags) {
             }
             newObj = objSetupObject(&setup->base, 5, -1, -1, parent);
             newObj->seqIndex = -2;
-            seq = newObj->extra;
+            seq = (ObjSeqState*)newObj->extra;
             seq->heading = heading;
             seq->flags = -1;
             seq->flags = seq->flags & ~0x400;
@@ -1167,7 +1193,7 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags) {
             seq->targetObjId = walk2->targetObjId;
             seq->savedFlags = seq->flags;
             if (idx == 0) {
-                *(u8*)((u8*)&st->cmdFlags[0] + obj->seqIndex) = walk2->flags;
+                lbl_80399E50[obj->seqIndex] = walk2->flags;
                 *(int*)((u8*)&st->handles[0] + obj->seqIndex * 4) = ((ObjPlacement*)newObj->anim.placementData)->ident;
                 mapFlags = obj->anim.modelInstance->flags;
                 if ((mapFlags & OBJDEF_FLAG_HITBOX_GROUP) && !(mapFlags & OBJDEF_FLAG_CAN_HOLD_PLAYER)) {
@@ -1180,12 +1206,12 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags) {
         walk2++;
     }
 
-    st->headings[obj->seqIndex] = heading;
+    objSeqXrotValues[obj->seqIndex] = heading;
     base[obj->seqIndex + 0x3590] = 0;
     base[obj->seqIndex + 0x338c] = 0;
     seqFlags = objSeqRemoveMonitoredObj(base, &mon, obj);
     if (seqFlags != 0) {
-        st->cmdFlags[obj->seqIndex] |= 0x10;
+        lbl_80399E50[obj->seqIndex] |= 0x10;
     } else {
         gObjSeqStreamStopped = 0;
         trackId = (u32)(*slotPtr - 1) & 0x3fff;
@@ -1204,8 +1230,8 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags) {
         }
     }
 
-    st->dists[obj->seqIndex] = seqFlags;
-    st->frames[obj->seqIndex] = seqFlags;
+    gObjSeqSlotDistances[obj->seqIndex] = seqFlags;
+    gObjSeqSlotStreamTimeTable[obj->seqIndex] = seqFlags;
 
     if (slot >= 0 && slot < 0x55) {
         if (gObjSeqBgCmdCount < 0x1e) {
@@ -1282,7 +1308,7 @@ int ObjSeq_resolveTargetObject(GameObject* obj) {
     f32 distSq;
 
     objects = (void**)ObjList_GetObjects(&unused, &objectCount);
-    seqObj = obj->extra;
+    seqObj = (ObjSeqState*)obj->extra;
     model = (ObjSeqPlacement*)obj->anim.placementData;
     if (obj->anim.classId == 0x11) {
         seqObj->targetObj = NULL;
@@ -1319,7 +1345,7 @@ int ObjSeq_resolveTargetObject(GameObject* obj) {
         } else {
             bestDist = -1.0f;
             for (i = 0; i < objectCount; i++) {
-                candidate = objects[i];
+                candidate = (GameObject*)objects[i];
                 linked = objSeqFindLinkedObject(seqObj, candidate);
                 if (linked == obj) {
                     seqObj->targetObj = candidate;
@@ -1387,7 +1413,7 @@ void* ObjSeq_FindTargetObject(GameObject* obj) {
         bestDistSq = -1.0f;
         bestObj = NULL;
         for (i = 0; i < objectCount; i++) {
-            candidate = objects[i];
+            candidate = (GameObject*)objects[i];
             if (candidate->anim.romDefNo == objectType) {
                 dx = obj->anim.localPosX - candidate->anim.localPosX;
                 dy = obj->anim.localPosY - candidate->anim.localPosY;
@@ -1491,7 +1517,7 @@ void ObjSeq_runBgCmds(void) {
             candidate = *objPtr;
             if (candidate->anim.classId == 0x10) {
                 model = (ObjSeqPlacement*)candidate->anim.placementData;
-                seqp = candidate->extra;
+                seqp = (ObjSeqState*)candidate->extra;
                 if (model != NULL && model->slot == index) {
                     if (model->targetType >= 4 && ObjSeq_FindTargetObject(candidate) == NULL) {
                         ok = 0;
@@ -1513,7 +1539,7 @@ void ObjSeq_runBgCmds(void) {
             candidate = *mp;
             model = (ObjSeqPlacement*)candidate->anim.placementData;
             if (model != NULL && model->slot == index) {
-                seqp = candidate->extra;
+                seqp = (ObjSeqState*)candidate->extra;
                 if (ok != 0) {
                     seqp->runState = 2;
                     seqp->pendingStartFrame = xrot;
@@ -1646,7 +1672,7 @@ void objLoadAnimdata(ObjSeqState* seq, ObjSeqAnimPlacement* placement) {
         return;
     }
 
-    seq->cmds = mmAlloc(size, 0x11, 0);
+    seq->cmds = (u8*)mmAlloc(size, 0x11, 0);
     if (seq->cmds == NULL) {
         logPrintf(sObjLoadAnimdataNullACRomTabWarning);
         return;
@@ -1788,9 +1814,9 @@ ObjSeqDllInterface ObjSeq_funcs = {
     (ObjectDescriptorCallback)ObjSeq_SetCoordinateSpace,
 };
 
-char sEndObjSequenceMaxFreesError[41] = "endObjSequence: max number of obj frees\n\000";
-char sObjSequenceMissingObjectFormat[38] = " SEQUENCE: Could not Find Object %i \n\000";
-char sObjLoadAnimdataNullACRomTabWarning[45] = "<objLoadAnimdata>  Warning ACRomTab is NULL\n\000";
+char sEndObjSequenceMaxFreesError[41] = "endObjSequence: max number of obj frees\n";
+char sObjSequenceMissingObjectFormat[38] = " SEQUENCE: Could not Find Object %i \n";
+char sObjLoadAnimdataNullACRomTabWarning[45] = "<objLoadAnimdata>  Warning ACRomTab is NULL\n";
 
 void ObjSeq_updateCamera(void) {
     CameraModeFixedPose cameraPose;
@@ -1809,7 +1835,7 @@ void ObjSeq_updateCamera(void) {
     s16 roll;
     int code;
 
-    obj = gObjSeqCameraSourceObj;
+    obj = (GameObject*)gObjSeqCameraSourceObj;
     if (obj != NULL) {
         model = (u8*)obj->anim.placementData;
         if (gObjSeqCameraOverrideActive != 0) {
@@ -1845,7 +1871,7 @@ void ObjSeq_updateCamera(void) {
                 ->setMode(OBJSEQ_CAMMODE_FIXED, 0, 1, sizeof(CameraModeFixedPose), &cameraPose, model[0x24], 0xff);
             gObjSeqCameraActive = 1;
         } else {
-            camObj = (*gCameraInterface)->getCamera();
+            camObj = (CameraObject*)(*gCameraInterface)->getCamera();
             camObj->anim.worldPosX = x;
             camObj->anim.worldPosY = y;
             camObj->anim.worldPosZ = z;
@@ -2128,7 +2154,7 @@ int objSeqExecCmd06(GameObject* obj, GameObject* sourceObj, ObjSeqState* seq, in
                 }
                 seq->curveInterp = mmAlloc(0x2c, 0x11, 0);
                 if (seq->curveInterp != NULL) {
-                    RomCurveInterp_InitFromNode(seq->curveInterp, seq->curveId);
+                    RomCurveInterp_InitFromNode((RomCurveInterpState*)seq->curveInterp, seq->curveId);
                 } else {
                     seq->curveId = -1;
                 }
@@ -2951,7 +2977,7 @@ void ObjSeq_UpdateCurvePosition(GameObject* obj, ObjSeqState* seq) {
         return;
     }
 
-    if (RomCurveInterp_EvaluateOffsetPosition(state->curveInterp, offset, outPos, &state->heading,
+    if (RomCurveInterp_EvaluateOffsetPosition((RomCurveInterpState*)state->curveInterp, offset, outPos, &state->heading,
                                               state->groundSnapEnabled) != 0) {
         object->anim.localPosX = outPos[0];
         object->anim.localPosY = outPos[1];
@@ -3231,9 +3257,9 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
     if (noExec == 0) {
         doUpdate = 1;
     }
-    seq = obj->extra;
+    seq = (u8*)obj->extra;
     model = (ObjSeqPlacement*)obj->anim.placementData;
-    activeObj = ((ObjSeqState*)seq)->targetObj;
+    activeObj = (GameObject*)((ObjSeqState*)seq)->targetObj;
     if (activeObj == NULL) {
         activeObj = obj;
     }
@@ -3321,7 +3347,7 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
         if ((f & 4) != 0) {
             break;
         }
-        activeObj = ObjSeq_ToggleCommand3Target(obj, (ObjSeqState*)seq, model);
+        activeObj = (GameObject*)ObjSeq_ToggleCommand3Target(obj, (ObjSeqState*)seq, model);
         activeObj->anim.activeMove = -1;
         break;
     case SEQACT_CONDITION:
@@ -3597,14 +3623,14 @@ void* ObjSeq_ToggleCommand3Target(GameObject* obj, ObjSeqState* seq, ObjSeqPlace
     seq->targetAttached = (s8)(seq->targetAttached ^ 1);
     if ((s8)seq->targetAttached != 0) {
         ObjSeq_resolveTargetObject(obj);
-        seqObj = seq->targetObj;
+        seqObj = (GameObject*)seq->targetObj;
         if (seqObj != NULL) {
             result = seqObj;
             seqObj->pendingParentObj = obj;
             seqObj->objectFlags |= OBJECT_OBJFLAG_SEQ_ATTACHED;
             seq->callbackContext = seqObj;
 
-            activeObj = seq->targetObj;
+            activeObj = (GameObject*)seq->targetObj;
             j = 0;
             slotOff = (s8)seq->slot * 0x80;
             slotBase = (ObjSeqLinkedPair*)(gObjSeqRuntimeBuffer + slotOff);
@@ -3744,7 +3770,7 @@ void ObjSeq_RebuildCurveStateToFrame(GameObject* obj, GameObject* seqObj, ObjSeq
         switch ((s8)opcode) {
         case 3:
             flags = (s8)(flags | 4);
-            seqObj = ObjSeq_ToggleCommand3Target(obj, seq, model);
+            seqObj = (GameObject*)ObjSeq_ToggleCommand3Target(obj, seq, model);
             seqObj->anim.activeMove = -1;
             break;
         case 0:
@@ -4362,12 +4388,12 @@ int ObjSeq_update(GameObject* obj, f32 t) {
         return 1;
     }
 
-    seq = obj->extra;
+    seq = (ObjSeqState*)obj->extra;
     state = seq;
     if ((state->stateFlags & 2) != 0) {
         setJoypadDisabled();
     }
-    activeObj = state->targetObj;
+    activeObj = (GameObject*)state->targetObj;
     gObjSeqStop = 0;
     gObjSeqLinkedTransformValid = 0;
     gObjSeqSkippingToEnd = 0;
@@ -4401,7 +4427,7 @@ int ObjSeq_update(GameObject* obj, f32 t) {
             }
         }
     }
-    ((u8*)(base + 0x3cf4))[state->slot] = 0;
+    gObjSeqJumpLatch[state->slot] = 0;
 
     do {
         gObjSeqDeferredCmdCount = 0;
@@ -4412,7 +4438,7 @@ int ObjSeq_update(GameObject* obj, f32 t) {
 
         activeObj = obj;
         if (state->targetObj != NULL) {
-            activeObj = state->targetObj;
+            activeObj = (GameObject*)state->targetObj;
             activeObj->pendingParentObj = obj;
             activeObj->objectFlags |= OBJECT_OBJFLAG_SEQ_ATTACHED;
         } else if (state->isCameraSeq == 0 && state->movementState < 4) {
@@ -4431,27 +4457,27 @@ int ObjSeq_update(GameObject* obj, f32 t) {
 
         gObjSeqFnDispatched = 0;
         if (activeObj != obj) {
-            objCallSeqFn(activeObj, obj, seq, ((u8*)(base + 0x3c4c))[state->slot]);
+            objCallSeqFn(activeObj, obj, seq, gObjSeqPreviousSlotResults[state->slot]);
             gObjSeqFnDispatched = 1;
         }
 
         if ((state->sequenceControlFlags & OBJSEQ_CONTROL_SET_LATCH_B) != 0) {
-            ((u8*)(base + 0x3b9c))[state->slot] = 1;
+            gObjSeqCondFlags[state->slot] = 1;
         }
         if ((state->sequenceControlFlags & OBJSEQ_CONTROL_CLEAR_LATCH_B) != 0) {
-            ((u8*)(base + 0x3b9c))[state->slot] = 0;
+            gObjSeqCondFlags[state->slot] = 0;
         }
         if ((state->sequenceControlFlags & OBJSEQ_CONTROL_SET_LATCH_A) != 0) {
-            ((u8*)(base + 0x3b44))[state->slot] = 1;
+            gObjSeqBoolFlags[state->slot] = 1;
         }
         if ((state->sequenceControlFlags & OBJSEQ_CONTROL_CLEAR_LATCH_A) != 0) {
-            ((u8*)(base + 0x3b44))[state->slot] = 0;
+            gObjSeqBoolFlags[state->slot] = 0;
         }
         if ((state->sequenceControlFlags & OBJSEQ_CONTROL_SET_STATE_LATCH) != 0) {
-            ((u8*)(base + 0x3a40))[state->slot] = 1;
+            gObjSeqSlotStates[state->slot] = 1;
         }
         if ((state->sequenceControlFlags & OBJSEQ_CONTROL_CLEAR_STATE_LATCH) != 0) {
-            ((u8*)(base + 0x3a40))[state->slot] = 0;
+            gObjSeqSlotStates[state->slot] = 0;
         }
 
         if (state->runState == 2) {
@@ -4459,27 +4485,27 @@ int ObjSeq_update(GameObject* obj, f32 t) {
             return 0;
         }
 
-        if ((s8)((u8*)(base + 0x3c4c))[state->slot] == 1) {
+        if ((s8)gObjSeqPreviousSlotResults[state->slot] == 1) {
             step = 0;
-        } else if ((s8)((u8*)(base + 0x3c4c))[state->slot] == 2) {
+        } else if ((s8)gObjSeqPreviousSlotResults[state->slot] == 2) {
             state->curFrame = state->endFrame;
             gObjSeqSkippingToEnd = 1;
-        } else if ((s8)((u8*)(base + 0x3c4c))[state->slot] == 3) {
+        } else if ((s8)gObjSeqPreviousSlotResults[state->slot] == 3) {
             found = objSeqFindConditional(seq, obj);
             if (found > -1) {
-                ((u8*)(base + 0x3cf4))[state->slot] = 1;
+                gObjSeqJumpLatch[state->slot] = 1;
                 state->curFrame = found;
                 state->prevFrame = state->curFrame;
             }
         }
 
         if (state->targetObj != NULL && ((GameObject*)state->targetObj)->seqIndex != -1 &&
-            (((u8*)(base + 0x3538))[state->slot] & 0x10) == 0) {
+            (lbl_80399E50[state->slot] & 0x10) == 0) {
             (*gCameraInterface)->setLetterbox(0x41, 1);
         }
 
         slot = state->slot;
-        if (((u8*)(base + 0x3590))[slot] != 0) {
+        if (objSeqXrotChanged[slot] != 0) {
             state->heading = ((s16*)(base + 0x35e8))[slot];
         }
 
@@ -4615,7 +4641,7 @@ int ObjSeq_update(GameObject* obj, f32 t) {
             }
             pressed = ObjSeq_CheckConditionOpcode(state, obj, conditionOpcode);
             if (pressed != 0) {
-                ((u8*)(base + 0x3cf4))[state->slot] = 1;
+                gObjSeqJumpLatch[state->slot] = 1;
                 state->curFrame = seq->conditionFrames[k];
                 state->prevFrame = state->curFrame;
                 state->conditionOpcodes[0] = 0;
@@ -4633,7 +4659,7 @@ int ObjSeq_update(GameObject* obj, f32 t) {
         }
 
         if ((s8)gObjSeqFnDispatched == 0 && activeObj != obj) {
-            objCallSeqFn(activeObj, obj, seq, ((u8*)(base + 0x3c4c))[state->slot]);
+            objCallSeqFn(activeObj, obj, seq, gObjSeqPreviousSlotResults[state->slot]);
         }
 
         if (state->sequenceControlFlags != 0) {
@@ -4698,7 +4724,7 @@ int ObjSeq_update(GameObject* obj, f32 t) {
             slot = state->slot;
             if (((s8*)(base + 0x3cf4))[slot] != 0) {
                 ((s16*)(base + 0x3694))[slot] = state->curFrame;
-                ((u8*)(base + 0x338c))[state->slot] = 2;
+                gObjSeqSlotMarks[state->slot] = 2;
                 ((f32*)(base + 0x3740))[state->slot] = (f32)state->curFrame;
             }
             if (-1.0f == ((f32*)(base + 0x3740))[slot = state->slot]) {
@@ -4784,240 +4810,22 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot) {
     gObjSeqBgCmds[count].yrot = shortYrot;
     gObjSeqBgCmds[gObjSeqBgCmdCount++].xrot = shortXrot;
 }
-u8 gObjSeqRuntimeBuffer[0x2A80];
-int gObjSeqPreemptList[40][2];
-s8 gObjSeqJumpLatch[0x58];
-ObjSeqBgCmd gObjSeqDeferredCmds[0x50 / sizeof(ObjSeqBgCmd)];
-s8 gObjSeqSlotResults[0xB0];
-s8 gObjSeqCondFlags[0x58];
-s8 gObjSeqBoolFlags[0x58];
-s16 gObjSeqSlotSeqIdTable[0x56];
-f32 gObjSeqSlotStreamTimeTable[0x81];
-s16 objSeqXrotValues[0x156];
-u8 objSeqXrotChanged[0x58];
-u8 lbl_80399E50[0x58];
-f32 objSeqOverridePos[0x259];
-ObjSeqBgCmd lbl_8039944C[0xA0 / sizeof(ObjSeqBgCmd)];
-ObjSeqBgRotationCmd gObjSeqBgCmds[0x1E];
-
-#define OBJSEQ_SLOT_COUNT 85
-
-typedef struct ObjSeqRuntimeStorage {
-    u8 _reserved0000[0x338c];
-    u8 marks[0x58];
-    int handles[OBJSEQ_SLOT_COUNT];
-    u8 _reserved3538[0x58];
-    u8 counts[0x58];
-    u8 _reserved35e8[0x158];
-    f32 distances[OBJSEQ_SLOT_COUNT];
-    f32 frames[OBJSEQ_SLOT_COUNT];
-    u8 pending[0x58];
-    u8 states[0x58];
-    s16 modes[0x56];
-    u8 flagsA[0x58];
-    u8 flagsB[0x58];
-    u8 results[0x58];
-    u8 actions[0x58];
-} ObjSeqRuntimeStorage;
-
-STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, marks) == 0x338c);
-STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, handles) == 0x33e4);
-STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, counts) == 0x3590);
-STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, distances) == 0x3740);
-STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, frames) == 0x3894);
-STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, pending) == 0x39e8);
-STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, states) == 0x3a40);
-STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, modes) == 0x3a98);
-STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, flagsA) == 0x3b44);
-STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, flagsB) == 0x3b9c);
-STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, results) == 0x3bf4);
-STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, actions) == 0x3c4c);
-
 void ObjSeq_onMapSetup(void) {
-    u8* base = gObjSeqRuntimeBuffer;
-    u8* flagsB;
-    u8* flagsA;
-    s16* modes;
-    u8* actions;
-    u8* results;
-    u8* states;
-    u8* pending;
-    f32* frames;
-    f32* dists;
-    int* handles;
-    u8* counts;
-    u8* marks;
-    int i = 0;
-    f32 neg1;
-    f32 zero;
-
-    flagsB = base + offsetof(ObjSeqRuntimeStorage, flagsB);
-    flagsA = base + offsetof(ObjSeqRuntimeStorage, flagsA);
-    modes = (s16*)(base + offsetof(ObjSeqRuntimeStorage, modes));
-    actions = base + offsetof(ObjSeqRuntimeStorage, actions);
-    results = base + offsetof(ObjSeqRuntimeStorage, results);
-    states = base + offsetof(ObjSeqRuntimeStorage, states);
-    pending = base + offsetof(ObjSeqRuntimeStorage, pending);
-    frames = (f32*)(base + offsetof(ObjSeqRuntimeStorage, frames));
-    dists = (f32*)(base + offsetof(ObjSeqRuntimeStorage, distances));
-    counts = base + offsetof(ObjSeqRuntimeStorage, counts);
-    handles = (int*)(base + offsetof(ObjSeqRuntimeStorage, handles));
-    marks = base + offsetof(ObjSeqRuntimeStorage, marks);
-
-    {
-        zero = 0.0f;
-        neg1 = -1.0f;
-        for (; i < 0x50; i += 8) {
-            flagsB[0] = 0;
-            flagsA[0] = 0;
-            modes[0] = 0;
-            actions[0] = 0;
-            results[0] = 0;
-            states[0] = 0;
-            pending[0] = 0;
-            frames[0] = zero;
-            dists[0] = neg1;
-            counts[0] = 0;
-            handles[0] = 0;
-            marks[0] = 0;
-            flagsB[1] = 0;
-            flagsA[1] = 0;
-            modes[1] = 0;
-            actions[1] = 0;
-            results[1] = 0;
-            states[1] = 0;
-            pending[1] = 0;
-            frames[1] = zero;
-            dists[1] = neg1;
-            counts[1] = 0;
-            handles[1] = 0;
-            marks[1] = 0;
-            flagsB[2] = 0;
-            flagsA[2] = 0;
-            modes[2] = 0;
-            actions[2] = 0;
-            results[2] = 0;
-            states[2] = 0;
-            pending[2] = 0;
-            frames[2] = zero;
-            dists[2] = neg1;
-            counts[2] = 0;
-            handles[2] = 0;
-            marks[2] = 0;
-            flagsB[3] = 0;
-            flagsA[3] = 0;
-            modes[3] = 0;
-            actions[3] = 0;
-            results[3] = 0;
-            states[3] = 0;
-            pending[3] = 0;
-            frames[3] = zero;
-            dists[3] = neg1;
-            counts[3] = 0;
-            handles[3] = 0;
-            marks[3] = 0;
-            flagsB[4] = 0;
-            flagsA[4] = 0;
-            modes[4] = 0;
-            actions[4] = 0;
-            results[4] = 0;
-            states[4] = 0;
-            pending[4] = 0;
-            frames[4] = zero;
-            dists[4] = neg1;
-            counts[4] = 0;
-            handles[4] = 0;
-            marks[4] = 0;
-            flagsB[5] = 0;
-            flagsA[5] = 0;
-            modes[5] = 0;
-            actions[5] = 0;
-            results[5] = 0;
-            states[5] = 0;
-            pending[5] = 0;
-            frames[5] = zero;
-            dists[5] = neg1;
-            counts[5] = 0;
-            handles[5] = 0;
-            marks[5] = 0;
-            flagsB[6] = 0;
-            flagsA[6] = 0;
-            modes[6] = 0;
-            actions[6] = 0;
-            results[6] = 0;
-            states[6] = 0;
-            pending[6] = 0;
-            frames[6] = zero;
-            dists[6] = neg1;
-            counts[6] = 0;
-            handles[6] = 0;
-            marks[6] = 0;
-            flagsB[7] = 0;
-            flagsA[7] = 0;
-            modes[7] = 0;
-            actions[7] = 0;
-            results[7] = 0;
-            states[7] = 0;
-            pending[7] = 0;
-            frames[7] = zero;
-            dists[7] = neg1;
-            counts[7] = 0;
-            handles[7] = 0;
-            marks[7] = 0;
-            flagsB += 8;
-            flagsA += 8;
-            modes += 8;
-            actions += 8;
-            results += 8;
-            states += 8;
-            pending += 8;
-            frames += 8;
-            dists += 8;
-            counts += 8;
-            handles += 8;
-            marks += 8;
-        }
+    int i;
+    for (i = 0; i < OBJSEQ_SLOT_COUNT; i++) {
+        gObjSeqCondFlags[i] = 0;
+        gObjSeqBoolFlags[i] = 0;
+        gObjSeqSlotSeqIdTable[i] = 0;
+        gObjSeqPreviousSlotResults[i] = 0;
+        gObjSeqSlotResults[i] = 0;
+        gObjSeqSlotStates[i] = 0;
+        gObjSeqPendingFrames[i] = 0;
+        gObjSeqSlotStreamTimeTable[i] = 0.0f;
+        gObjSeqSlotDistances[i] = -1.0f;
+        objSeqXrotChanged[i] = 0;
+        gObjSeqSlotObjectIds[i] = 0;
+        gObjSeqSlotMarks[i] = 0;
     }
-
-    {
-        marks = base + i;
-        modes = (s16*)(base + i * 2);
-        modes += 0x3a98 / 2;
-        handles = (int*)(base + i * 4);
-        handles += 0x33e4 / 4;
-        marks += 0x338c;
-        zero = 0.0f;
-        neg1 = -1.0f;
-        while (i < 85) {
-            frames = (f32*)(handles + 300);
-            dists = (f32*)(handles + 215);
-            flagsA = marks + 0x810;
-            flagsB = marks + 0x7b8;
-            actions = marks + 0x8c0;
-            results = marks + 0x868;
-            states = marks + 0x6b4;
-            pending = marks + 0x65c;
-            counts = marks + 0x204;
-            *flagsA++ = 0;
-            *flagsB++ = 0;
-            modes[0] = 0;
-            *actions++ = 0;
-            *results++ = 0;
-            *states++ = 0;
-            *pending++ = 0;
-            *frames++ = zero;
-            *dists++ = neg1;
-            *counts++ = 0;
-            handles[0] = 0;
-            marks[0] = 0;
-            marks[0] = 0;
-            modes++;
-            handles++;
-            marks++;
-            i++;
-        }
-    }
-
     gObjSeqPreemptCount = 0;
     gObjSeqCamMode = 0;
     gObjSeqCameraActive = 0;
@@ -5032,7 +4840,7 @@ void ObjSeq_release(void) {
 }
 
 void ObjSeq_initialise(void) {
-    gObjSeqAnimLookup = mmAlloc(0x10, 0x11, 0);
+    gObjSeqAnimLookup = (ObjSeqAnimLookup*)mmAlloc(0x10, 0x11, 0);
     ObjSeq_onMapSetup();
     gObjSeqCamModeArgB = 1;
     gObjSeqCamModeArgD = 0x5a;
@@ -5048,4 +4856,5 @@ void ObjSeq_copyDefaultColor(GXColor* out) {
     out->g = src->g;
     out->b = src->b;
     out->a = src->a;
+}
 }

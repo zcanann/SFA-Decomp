@@ -6,6 +6,10 @@ scale, not a height constraint. `gameTextRenderStrs` supplies a text box's
 width and scale, then uses the returned maximum line height to advance its
 vertical cursor.
 
+**EN status (2026-09-14): 100% matching**, including every relocated instruction
+against the verified retail DOL. The code TU has 53 of 54 exact functions and
+remains `NonMatching` while `gameTextFinalizeLoad` is unfinished.
+
 The source now distinguishes the scanning byte offset, copying byte offset,
 last candidate wrap position, line-start table, and its two traversal pointers.
 Font selection uses the existing font IDs and a read-only `FontMetrics` view.
@@ -78,8 +82,8 @@ expected results cover ordinary line contents, allocation sizes, height
 changes, limits, and the trailing null pointer; agreement alone would not
 catch a shared fixture mistake.
 
-This is source and contract recovery, with no match-score claim. The compiled
-function remains at 96.45098%. Cross-version verification checks the normalized
+The initial source-and-contract recovery pass retained a 96.45098% match.
+Its cross-version verification checked the normalized
 retail function shape and raw source object identity; EN execution does not
 claim that every regional text resource or malformed input has been exercised.
 
@@ -90,3 +94,57 @@ objdiff report is unchanged. The gametext objects are identical across all
 four versions. The 16 existing gametext tests also pass. Formatting the TU and
 API header is a no-op; the final EN `all_source` and strict retail checksum
 checks pass in 19.65 and 21.17 seconds, within their 30-second limits.
+
+## Copy-loop allocation pass (2026-09-14)
+
+With the common GC/1.3 profile, `gameTextWrapLines` improves from 98.932465%
+to 99.3573%, retaining its 1,836-byte body. The line-break operation now lives
+inside the copy loop, so its trimming and insertion both update the same write
+cursor. The copied-byte offset advances before the input pointer, as in retail.
+A small declaration-order adjustment preserves the improved allocation. The
+obsolete private `gameTextBreakLine` helper is removed.
+
+There are still 57 differing instruction words, all register operands. The
+input and output parameters, font state, boundary-table pointer, allocation
+size, and saved break character still receive different registers. The other
+51 exact functions, named storage layouts, and allocated non-text bytes are
+unchanged; this is not a claim of an exact function or complete source TU.
+
+The GC/1.3 LLDB trace reproduces the ordinary object and records allocation
+without modifying compiler state:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/main/gametext \
+    --function gameTextWrapLines --graph --output build/wrap_match/final_trace
+```
+
+The emulation probe now links `gametext_data.o` alongside the selected code
+object. Its previous generic external-data stubs replaced the recovered UTF-8
+masks and control-length table with zeros after the initialized-data split;
+both the pre-change and current source object failed that stale fixture.
+With the actual data object, both pass all 151 retail comparisons, including
+multibyte characters, control arguments, complete allocation contents, and ABI
+preservation. The 20 existing gametext tests also pass.
+
+## Exact register allocation (2026-09-14)
+
+`gameTextWrapLines` now matches all 459 instructions (1,836 bytes), up from
+99.3573%. The existing general counter holds the control-argument count while
+a scoped index fills the argument array. The clearing and copying passes use
+separate cursors, and the line index belongs to the copying scope. Keeping the
+recovered declaration order reproduces GC/1.3's saved-register allocation.
+No compiler settings, pragmas, assembly, or TU boundaries changed.
+
+The ordinary and LLDB-instrumented compiler builds agree. Objdiff reports
+100% for the wrapper and 99.907104% for the code TU. All other function bytes,
+named symbol layouts, non-text section contents, and resolved relocation
+destinations remain unchanged; compiler-generated anonymous labels renumber.
+The new relocation regression test resolves calls and data references to their
+actual retail addresses and compares the complete function against the
+hash-verified EN DOL. All 21 gametext tests and 151 retail/compiled execution
+cases pass. Only the EN retail input is available in this checkout, so this
+pass makes no new regional matching claim.
+
+The final EN `ninja all_source` and strict checksum builds pass in 16.33 and
+17.14 seconds, respectively, within their 30-second limits. The TU and API
+header pass the required clang-format check.

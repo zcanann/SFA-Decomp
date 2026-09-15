@@ -12,6 +12,11 @@ name: main
 # Retain the priority-sort table even though code addresses it through the
 # containing vidListNodes storage rather than by this symbol directly.
 force_active:
+  # Unreferenced initialized words retained by retail in gametext_data.c.
+  # Dropping them shifts the following small-data globals despite exact objdiff.
+  - lbl_803DB3DC
+  - lbl_803DB3E4
+  - lbl_803DB404
   # Retain the version/reset metadata previously used as a diagnostic address base.
   - sGameLoopResetMessages
   # GPU error handlers reach these strings through offsets from the boot

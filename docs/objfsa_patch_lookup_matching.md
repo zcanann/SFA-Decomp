@@ -1,5 +1,9 @@
 # Objfsa patch lookup
 
+**Current status (2026-09-14):** Hcurves is completely matching in EN v1.0,
+JP, and PAL. The sections below record the earlier recovery stages; see
+[Complete updater match](#complete-updater-match) for the final reconstruction.
+
 `Objfsa_GetPatchGroupIdAtPoint` in `dlls/engine/20_Hcurves/Hcurves.c`
 matches all 73 instructions (292 bytes) in EN, EN revision 1, JP, PAL, and
 PAL revision 1 under the existing common GC/1.3 compiler and optimization
@@ -132,3 +136,44 @@ patch-update code mismatch is unchanged.
 python3 tools/pool_value_sequence.py src/dlls/engine/20_Hcurves/Hcurves.c --version GSAE01
 python3 tools/retail_pool_audit.py src/dlls/engine/20_Hcurves/Hcurves.c --version GSAE01
 ```
+
+## Complete updater match
+
+`Objfsa_UpdateWalkGroupPatches` now matches all 1,194 instructions (4,776
+bytes) under the unchanged common GC/1.3 profile. The complete Hcurves unit
+has 19 exact functions, 14,176 matched code bytes, and 20,024 matched data
+bytes in EN v1.0, JP, and PAL. Its separate `Hcurves_romcurve.c` TU is unchanged.
+
+The reset uses the native active-group and walk-group arrays. Initializing
+the scalar patch-base pointer after curve enumeration avoids extending its
+lifetime across the preceding calls and reproduces the shared-base allocation.
+The compiler then folds all 32 stores in each clear-loop iteration onto one
+base without changing optimization settings.
+
+A private inline plane builder takes the normal destination, offset
+destination, and two X/Z corners. Sharing this helper across all eight edges
+recovers the floating-point registers and pointer evaluation order. The
+existing static normal-packing helper remains before it and preserves the
+complete retail literal pool. These helper names are reconstructed, not
+original source names.
+
+The reciprocal-edge lookup is an ordinary four-iteration loop, which MWCC
+fully unrolls. The existing-patch search indexes the patch array with its one
+loop counter; MWCC performs the pointer strength reduction. Height stores
+advance from the first patch's typed field by the patch stride. Together
+these source forms recover the final register and address-operand differences.
+
+Each input DOL passed its configured SHA-1 check. Standalone source-substitution
+links reproduce the complete retail DOL byte for byte in EN v1.0, JP, and PAL,
+including final relocation addresses and linker-discarded helper code.
+EN revision 1 and PAL revision 1 improve from 98.330605% to 98.49831% unit
+fuzzy matching (updater 95.03943% to 95.53775%); they remain NonMatching.
+Their existing 18 exact functions and complete data match are preserved.
+No regional source conditionals, compiler exceptions, or split changes were
+introduced. The currently available PAL DOL passes its configured hash,
+superseding the older local-artifact limitation recorded above.
+
+Validation: EN `ninja all_source` and strict matching `ninja` both pass within
+30-second timeouts. The existing reset oracle passes all 984 retail/source
+comparisons. Source formatting is checked separately and preserves the raw
+object hash.

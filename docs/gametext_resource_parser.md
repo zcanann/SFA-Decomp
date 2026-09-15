@@ -110,3 +110,17 @@ from the existing string-pointer local removes two address calculations. The
 native record boundaries remain unchanged. The parser improves from 97.79397%
 to 98.095474% fuzzy and shrinks from 1,596 to 1,588 bytes. All 432 PPC comparisons
 above pass again, including the allocator guards and ABI checks.
+
+## Current EN matching status (2026-09-15)
+
+The parser now matches all 1,592 retail bytes. Sequential halfword reads preserve
+the correct message header while recovering its register allocation; native
+texture-header pointer arithmetic recovers the texture upload registers. An
+independent final-loop index and an explicit load, compound addition, and store
+through a named value resolve the last r6/r7 swap.
+
+The code TU has 54/54 exact functions and 100% code and data matching. It is
+marked matching for EN, and the strict retail checksum now validates its source
+object in the final link. All 23 gametext tests and 360 synthetic PPC comparisons
+pass. See [the TU completion audit](gametext_tu_recovery.md#complete-en-tu-2026-09-15)
+for compiler-trace findings and full validation.

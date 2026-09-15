@@ -1,4 +1,5 @@
 #include "main/gametext_api.h"
+#include "main/gametext_data.h"
 #include "main/gametext_internal.h"
 #include "main/gametext_shared_internal.h"
 #include "main/textrender_api.h"
@@ -44,283 +45,6 @@ int isSpace(u32 c);
 
 static char* gameStrcpy(char* dst, char* src);
 
-u8 gUtf8CharClassTable[256] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5,
-};
-
-int gUtf8ClassOffsetTable[6] = {0, 12416, 925824, 63447168, -100130688, -2113396608};
-
-char* sMapDirectoryNameTable[74] = {
-    "Animtest",     "Arwing",       "BOSSAndross",   "Boot",         "BossDrakor",   "BossGaldon",   "BossTrex",
-    "CRFort",       "CapeClaw",     "CloudDungeon",  "CloudRace",    "Communicator", "DBShrine",     "DFPTop",
-    "DFShrine",     "DarkIceMines", "DarkIceMines2", "Desert",       "DragRock",     "DragRockBot",  "ECShrine",
-    "FrontEnd",     "GPShrine",     "GameMaze",      "IceMountain",  "InsideGal",    "LINKG",        "LightFoot",
-    "Link",         "LinkB",        "LinkC",         "LinkD",        "LinkE",        "LinkF",        "LinkH",
-    "LinkJ",        "MMPass",       "MMShrine",      "MagicCave",    "NWShrine",     "NWastes",      "Sequences",
-    "ShipBattle",   "Shop",         "SwapHol",       "TaskTexts000", "TaskTexts001", "TaskTexts002", "TaskTexts003",
-    "TaskTexts004", "TaskTexts005", "TaskTexts006",  "TaskTexts007", "TaskTexts008", "TaskTexts009", "TaskTexts010",
-    "TaskTexts011", "TaskTexts012", "TaskTexts013",  "TaskTexts014", "TaskTexts015", "TaskTexts016", "TaskTexts017",
-    "TaskTexts018", "TaskTexts019", "TaskTexts021",  "TaskTexts022", "TaskTexts023", "TaskTexts024", "Volcano",
-    "WallCity",     "Warlock",      "WorldMap",      NULL,
-};
-
-char sLanguageNameEnglish[] = "English";
-char sLanguageNameFrench[] = "French";
-char sLanguageNameGerman[] = "German";
-char sLanguageNameItalian[] = "Italian";
-char sLanguageNameSpanish[] = "Spanish";
-char sLanguageNameJapanese[] = "Japanese";
-
-LanguageName sLanguageNameTable[6] = {
-    {sLanguageNameEnglish, 4, {0, 0, 0}}, {sLanguageNameFrench, 4, {0, 0, 0}},   {sLanguageNameGerman, 4, {0, 0, 0}},
-    {sLanguageNameItalian, 4, {0, 0, 0}}, {sLanguageNameJapanese, 0, {0, 0, 0}}, {sLanguageNameSpanish, 4, {0, 0, 0}},
-};
-
-GameTextBox gTextBoxes[GAMETEXT_BOX_COUNT] = {
-    {560, 560, 400, 400, 560, 400, 1.0f, 2, 0, 2, 5, 40, 40, 0, 0, 0, 0, 0},
-    {256, 256, 96, 96, 256, 96, 1.0f, 3, 0, 3, 6, 30, 30, 0, 0, 0, 0, 0},
-    {580, 580, 400, 400, 580, 400, 1.0f, 2, 1, 2, 5, 30, 40, 0, 0, 0, 0, 0},
-    {16, 320, 16, 110, 320, 110, 1.0f, 0, 1, 0, 7, 40, 40, 0, 0, 0, 0, 0},
-    {330, 330, 256, 256, 330, 256, 1.0f, 0, 0, 0, 5, 30, 100, 0, 0, 0, 0, 0},
-    {330, 330, 330, 330, 330, 330, 1.0f, 0, 0, 0, 5, 30, 240, 0, 0, 0, 0, 0},
-    {230, 230, 256, 256, 230, 256, 1.0f, 2, 0, 2, 5, 380, 100, 0, 0, 0, 0, 0},
-    {230, 230, 256, 256, 230, 256, 1.0f, 2, 0, 2, 5, 380, 240, 0, 0, 0, 0, 0},
-    {16, 200, 100, 256, 200, 256, 1.0f, 1, 0, 1, 5, 361, 63, 0, 0, 0, 0, 0},
-    {16, 200, 16, 256, 200, 256, 1.0f, 1, 0, 1, 5, 346, 88, 0, 0, 0, 0, 0},
-    {580, 580, 25, 25, 580, 25, 1.0f, 2, 0, 2, 5, 30, 415, 0, 0, 0, 0, 0},
-    {580, 580, 480, 480, 580, 480, 1.0f, 2, 0, 2, 5, 30, 0, 0, 0, 0, 0, 0},
-    {390, 390, 200, 200, 390, 200, 1.0f, 2, 0, 2, 7, 40, 50, 0, 0, 0, 0, 0},
-    {150, 150, 16, 40, 150, 40, 1.2f, 0, 1, 0, 5, 54, 300, 0, 0, 0, 0, 0},
-    {16, 502, 16, 32, 502, 32, 1.0f, 2, 0, 2, 3, 69, 263, 0, 0, 0, 0, 0},
-    {16, 502, 16, 32, 502, 32, 1.0f, 2, 0, 2, 3, 69, 314, 0, 0, 0, 0, 0},
-    {260, 260, 16, 32, 260, 32, 1.0f, 1, 0, 1, 5, 56, 0, 0, 0, 0, 0, 0},
-    {260, 260, 16, 32, 260, 32, 1.0f, 1, 0, 1, 5, 56, -34, 0, 0, 0, 0, 0},
-    {16, 502, 16, 32, 502, 32, 1.0f, 2, 0, 2, 3, 69, 161, 0, 0, 0, 0, 0},
-    {16, 502, 16, 32, 502, 32, 1.0f, 2, 0, 2, 3, 69, 215, 0, 0, 0, 0, 0},
-    {16, 502, 16, 32, 502, 32, 1.0f, 2, 0, 2, 3, 69, 269, 0, 0, 0, 0, 0},
-    {640, 640, 16, 32, 640, 32, 1.0f, 2, 0, 2, 5, 0, 416, 0, 0, 0, 0, 0},
-    {260, 260, 16, 32, 260, 32, 1.0f, 0, 0, 0, 5, 56, 0, 0, 0, 0, 0, 0},
-    {260, 260, 16, 32, 260, 32, 1.0f, 0, 0, 0, 5, 56, 26, 0, 0, 0, 0, 0},
-    {260, 260, 16, 32, 260, 32, 1.0f, 0, 0, 0, 5, 56, 52, 0, 0, 0, 0, 0},
-    {260, 260, 16, 52, 260, 52, 1.0f, 0, 0, 0, 5, 56, 78, 0, 0, 0, 0, 0},
-    {260, 260, 16, 32, 260, 32, 1.0f, 0, 0, 0, 5, 56, 104, 0, 0, 0, 0, 0},
-    {260, 260, 16, 52, 260, 52, 1.0f, 0, 0, 0, 5, 56, 130, 0, 0, 0, 0, 0},
-    {260, 260, 16, 32, 260, 32, 1.0f, 0, 0, 0, 5, 56, 156, 0, 0, 0, 0, 0},
-    {260, 260, 16, 52, 260, 52, 1.0f, 0, 0, 0, 5, 56, 182, 0, 0, 0, 0, 0},
-    {260, 260, 16, 52, 260, 52, 1.0f, 0, 0, 0, 5, 56, 208, 0, 0, 0, 0, 0},
-    {240, 240, 16, 32, 240, 32, 1.0f, 0, 0, 0, 5, 76, 52, 0, 0, 0, 0, 0},
-    {240, 240, 16, 32, 240, 32, 1.0f, 0, 0, 0, 5, 76, 94, 0, 0, 0, 0, 0},
-    {240, 240, 16, 32, 240, 32, 1.0f, 0, 0, 0, 5, 76, 136, 0, 0, 0, 0, 0},
-    {260, 260, 128, 128, 260, 128, 1.0f, 1, 0, 1, 5, 56, 26, 0, 0, 0, 0, 0},
-    {260, 260, 128, 128, 260, 128, 1.0f, 1, 0, 1, 5, 56, 52, 0, 0, 0, 0, 0},
-    {260, 260, 128, 128, 260, 128, 1.0f, 1, 0, 1, 5, 56, 78, 0, 0, 0, 0, 0},
-    {260, 260, 128, 128, 260, 128, 1.0f, 1, 0, 1, 5, 56, 104, 0, 0, 0, 0, 0},
-    {260, 260, 128, 128, 260, 128, 1.0f, 1, 0, 1, 5, 56, 130, 0, 0, 0, 0, 0},
-    {260, 260, 128, 128, 260, 128, 1.0f, 1, 0, 1, 5, 56, 156, 0, 0, 0, 0, 0},
-    {260, 260, 128, 128, 260, 128, 1.0f, 1, 0, 1, 5, 56, 182, 0, 0, 0, 0, 0},
-    {260, 260, 128, 128, 260, 128, 1.0f, 1, 0, 1, 5, 56, 208, 0, 0, 0, 0, 0},
-    {32, 32, 16, 32, 32, 32, 1.0f, 2, 0, 2, 5, 142, 26, 0, 0, 0, 0, 0},
-    {32, 32, 16, 32, 32, 32, 1.0f, 2, 0, 2, 5, 169, 26, 0, 0, 0, 0, 0},
-    {32, 32, 16, 32, 32, 32, 1.0f, 2, 0, 2, 5, 196, 26, 0, 0, 0, 0, 0},
-    {260, 260, 32, 32, 260, 32, 1.0f, 0, 0, 0, 5, 56, 0, 0, 0, 0, 0, 0},
-    {260, 260, 32, 32, 260, 32, 1.0f, 0, 0, 0, 5, 56, 234, 0, 0, 0, 0, 0},
-    {16, 256, 32, 32, 256, 32, 1.0f, 2, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0},
-    {16, 256, 32, 32, 256, 32, 1.0f, 2, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0},
-    {16, 256, 32, 32, 256, 32, 1.0f, 2, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0},
-    {16, 256, 32, 32, 256, 32, 1.0f, 2, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0},
-    {16, 256, 32, 32, 256, 32, 1.0f, 2, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0},
-    {16, 256, 32, 32, 256, 32, 1.0f, 2, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0},
-    {16, 260, 32, 32, 260, 32, 1.0f, 2, 0, 2, 3, 56, 397, 0, 0, 0, 0, 0},
-    {400, 400, 300, 300, 400, 300, 1.0f, 2, 0, 2, 5, 120, 90, 0, 0, 0, 0, 0},
-    {16, 160, 24, 24, 160, 24, 1.0f, 0, 2, 0, 5, 450, 263, 0, 0, 0, 0, 0},
-    {16, 187, 24, 24, 187, 24, 1.0f, 0, 2, 0, 5, 423, 292, 0, 0, 0, 0, 0},
-    {16, 256, 24, 24, 256, 24, 1.0f, 0, 2, 0, 5, 64, 97, 0, 0, 0, 0, 0},
-    {16, 256, 24, 24, 256, 24, 1.0f, 0, 2, 0, 5, 353, 113, 0, 0, 0, 0, 0},
-    {16, 190, 24, 24, 190, 24, 1.0f, 2, 2, 2, 5, 111, 125, 0, 0, 0, 0, 0},
-    {16, 244, 24, 24, 244, 24, 1.0f, 0, 2, 0, 5, 366, 219, 0, 0, 0, 0, 0},
-    {16, 208, 24, 24, 208, 24, 1.0f, 0, 2, 0, 5, 402, 180, 0, 0, 0, 0, 0},
-    {16, 189, 24, 24, 189, 24, 1.0f, 0, 2, 0, 5, 421, 152, 0, 0, 0, 0, 0},
-    {16, 256, 24, 24, 256, 24, 1.0f, 0, 2, 0, 5, 67, 359, 0, 0, 0, 0, 0},
-    {16, 225, 24, 24, 225, 24, 1.0f, 0, 2, 0, 5, 385, 324, 0, 0, 0, 0, 0},
-    {260, 260, 16, 32, 260, 32, 1.0f, 0, 0, 0, 5, 56, 0, 0, 0, 0, 0, 0},
-    {260, 260, 128, 128, 260, 128, 1.0f, 1, 0, 1, 5, 56, 0, 0, 0, 0, 0, 0},
-    {260, 260, 16, 32, 260, 32, 1.0f, 0, 0, 0, 5, 56, 26, 0, 0, 0, 0, 0},
-    {200, 200, 128, 128, 200, 128, 1.0f, 1, 0, 1, 5, 121, 26, 0, 0, 0, 0, 0},
-    {200, 160, 128, 128, 160, 128, 1.0f, 1, 0, 1, 5, 121, 26, 0, 0, 0, 0, 0},
-    {200, 200, 24, 24, 200, 24, 1.0f, 2, 0, 2, 7, 370, 300, 0, 0, 0, 0, 0},
-    {200, 200, 24, 24, 200, 24, 1.0f, 2, 0, 2, 7, 70, 300, 0, 0, 0, 0, 0},
-    {200, 200, 24, 24, 200, 24, 1.0f, 2, 0, 2, 7, 220, 260, 0, 0, 0, 0, 0},
-    {0, 500, 46, 46, 500, 46, 1.0f, 2, 1, 2, 2, 60, 52, 0, 0, 0, 0, 0},
-    {100, 100, 16, 32, 100, 32, 1.0f, 0, 0, 0, 5, 130, 178, 0, 0, 0, 0, 0},
-    {100, 100, 16, 32, 100, 32, 1.0f, 0, 0, 0, 5, 130, 204, 0, 0, 0, 0, 0},
-    {100, 100, 16, 32, 100, 32, 1.0f, 0, 0, 0, 5, 130, 230, 0, 0, 0, 0, 0},
-    {100, 100, 16, 32, 100, 32, 1.0f, 0, 0, 0, 5, 130, 256, 0, 0, 0, 0, 0},
-    {100, 100, 16, 32, 100, 32, 1.0f, 0, 0, 0, 5, 130, 282, 0, 0, 0, 0, 0},
-    {100, 100, 16, 32, 100, 32, 1.0f, 0, 0, 0, 5, 401, 178, 0, 0, 0, 0, 0},
-    {100, 100, 16, 32, 100, 32, 1.0f, 0, 0, 0, 5, 401, 204, 0, 0, 0, 0, 0},
-    {100, 100, 16, 32, 100, 32, 1.0f, 0, 0, 0, 5, 401, 230, 0, 0, 0, 0, 0},
-    {100, 100, 16, 32, 100, 32, 1.0f, 0, 0, 0, 5, 401, 256, 0, 0, 0, 0, 0},
-    {100, 100, 16, 32, 100, 32, 1.0f, 0, 0, 0, 5, 401, 282, 0, 0, 0, 0, 0},
-    {200, 200, 16, 32, 200, 32, 1.0f, 2, 0, 2, 5, 70, 110, 0, 0, 0, 0, 0},
-    {200, 200, 16, 32, 200, 32, 1.0f, 2, 0, 2, 5, 370, 110, 0, 0, 0, 0, 0},
-    {1600, 1600, 24, 24, 1600, 24, 1.0f, 0, 0, 0, 5, 50, 78, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 152, 200, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 200, 200, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 248, 200, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 296, 200, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 344, 200, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 392, 200, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 440, 200, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 488, 200, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 128, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 176, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 224, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 272, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 320, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 368, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 416, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 464, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 104, 296, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 152, 296, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 200, 296, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 248, 296, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 296, 296, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 344, 296, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 392, 296, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 440, 296, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 488, 296, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 200, 344, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 248, 344, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 296, 344, 0, 0, 0, 0, 0},
-    {48, 48, 24, 24, 48, 24, 1.0f, 2, 0, 2, 7, 344, 344, 0, 0, 0, 0, 0},
-    {400, 400, 24, 24, 400, 24, 1.0f, 2, 0, 2, 5, 120, 228, 0, 0, 0, 0, 0},
-    {400, 400, 24, 24, 400, 24, 1.0f, 2, 0, 2, 5, 120, 254, 0, 0, 0, 0, 0},
-    {400, 400, 24, 24, 400, 24, 1.0f, 2, 0, 2, 5, 120, 280, 0, 0, 0, 0, 0},
-    {400, 400, 24, 24, 400, 24, 1.0f, 2, 0, 2, 5, 120, 306, 0, 0, 0, 0, 0},
-    {400, 400, 24, 24, 400, 24, 1.0f, 2, 0, 2, 5, 120, 332, 0, 0, 0, 0, 0},
-    {360, 360, 16, 420, 360, 420, 1.0f, 2, 1, 2, 5, 140, 60, 0, 0, 0, 0, 0},
-    {560, 560, 45, 45, 560, 45, 1.0f, 3, 0, 3, 5, 40, 395, 0, 0, 0, 0, 0},
-    {560, 560, 480, 480, 560, 480, 1.0f, 2, 0, 2, 5, 40, 0, 0, 0, 0, 0, 0},
-    {512, 512, 25, 25, 512, 25, 1.0f, 2, 0, 2, 5, 84, 415, 0, 0, 0, 0, 0},
-    {512, 512, 480, 480, 512, 480, 1.0f, 3, 0, 3, 5, 84, 0, 0, 0, 0, 0, 0},
-    {48, 48, 56, 56, 48, 56, 1.0f, 2, 1, 2, 5, 32, 415, 0, 0, 0, 0, 0},
-    {160, 160, 16, 256, 160, 256, 1.0f, 1, 0, 1, 5, 140, 60, 0, 0, 0, 0, 0},
-    {160, 160, 16, 256, 160, 256, 1.0f, 0, 0, 0, 5, 340, 60, 0, 0, 0, 0, 0},
-    {340, 340, 300, 300, 340, 300, 1.0f, 2, 0, 2, 7, 150, 60, 0, 0, 0, 0, 0},
-    {240, 240, 256, 256, 240, 256, 1.0f, 2, 0, 2, 7, 360, 60, 0, 0, 0, 0, 0},
-    {112, 192, 100, 100, 192, 100, 1.0f, 2, 1, 2, 5, 54, 340, 0, 0, 0, 0, 0},
-    {640, 640, 100, 100, 640, 100, 1.7f, 2, 0, 2, 5, 0, 230, 0, 0, 0, 0, 0},
-    {640, 640, 350, 350, 640, 350, 1.7f, 2, 0, 2, 5, 0, 100, 0, 0, 0, 0, 0},
-    {180, 180, 300, 300, 180, 300, 1.0f, 1, 0, 1, 5, 120, 90, 0, 0, 0, 0, 0},
-    {180, 180, 300, 300, 180, 300, 1.0f, 0, 0, 0, 5, 340, 90, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 128, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 176, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 224, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 272, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 320, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 0, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 0, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 0, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 0, 248, 0, 0, 0, 0, 0},
-    {24, 24, 24, 24, 24, 24, 1.0f, 2, 0, 2, 7, 0, 248, 0, 0, 0, 0, 0},
-    {16, 320, 16, 110, 320, 110, 1.0f, 0, 1, 0, 7, 250, 150, 0, 0, 0, 0, 0},
-    {640, 640, 480, 480, 640, 480, 1.0f, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0},
-};
-
-FontMetrics gGameTextFontMetrics[7] = {
-    {0, {14, 170}, 21, 10, 2, 0, 21, 21, {0, 0, 0, 0}}, {0, {0, 1}, 14, 7, 1, 0, 14, 21, {0, 0, 0, 0}},
-    {0, {0, 11}, 30, 15, 1, 0, 30, 22, {0, 0, 0, 0}},   {0, {0, 6}, 32, 16, 1, 0, 32, 24, {0, 0, 0, 0}},
-    {0, {0, 136}, 21, 10, 2, 0, 21, 21, {0, 0, 0, 0}},  {0, {0, 8}, 46, 23, 1, 0, 46, 55, {0, 0, 0, 0}},
-    {0, {0, 0}, 0, 0, 0, 0, 0, 0, {0, 0, 0, 0}},
-};
-
-CtrlCharEntry gGameTextCtrlCodeArgCounts[46] = {
-    {0x0000F8F2, 0x00000002}, {0x0000F8F3, 0x00000000}, {0x0000F8F4, 0x00000001}, {0x0000F8F5, 0x00000001},
-    {0x0000F8F6, 0x00000001}, {0x0000F8F7, 0x00000001}, {0x0000F8F8, 0x00000000}, {0x0000F8F9, 0x00000000},
-    {0x0000F8FA, 0x00000000}, {0x0000F8FB, 0x00000000}, {0x0000F8FC, 0x00000000}, {0x0000F8FD, 0x00000000},
-    {0x0000F8FE, 0x00000000}, {0x0000F8FF, 0x00000004}, {0x0000E000, 0x00000001}, {0x0000E018, 0x00000003},
-    {0x0000E020, 0x00000001}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004},
-    {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004},
-    {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004},
-    {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004},
-    {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004},
-    {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004},
-    {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004},
-    {0x0000F8FF, 0x00000004}, {0x0000F8FF, 0x00000004},
-};
-
-TaskTextEntry gTaskTextTable[GAMETEXT_TASK_TEXT_COUNT] = {
-    {0x0004, 0x0029, 0x00D1}, {0x0006, 0x0029, 0x04F7}, {0x0009, 0x0029, 0x017C}, {0x000B, 0x0029, 0x004B},
-    {0x000C, 0x0029, 0x0285}, {0x000E, 0x0029, 0x04EA}, {0x0010, 0x0029, 0x0041}, {0x0011, 0x0029, 0x047A},
-    {0x0013, 0x0029, 0x046C}, {0x0015, 0x0029, 0x01D7}, {0x0016, 0x0029, 0x0477}, {0x0031, 0x0029, 0x0205},
-    {0x0037, 0x0029, 0x01B0}, {0x0038, 0x0029, 0x0075}, {0x003C, 0x0029, 0x02E5}, {0x003D, 0x0029, 0x0078},
-    {0x003F, 0x0029, 0x0499}, {0x0042, 0x0029, 0x001E}, {0x0043, 0x0029, 0x000C}, {0x0048, 0x0029, 0x0027},
-    {0x004B, 0x0029, 0x00A7}, {0x0056, 0x0029, 0x00AD}, {0x005A, 0x0029, 0x020F}, {0x005F, 0x0029, 0x0023},
-    {0x0092, 0x0029, 0x04C3}, {0x00A6, 0x0029, 0x00E4}, {0x00A7, 0x0029, 0x001C}, {0x00AA, 0x0029, 0x00FE},
-    {0x00AB, 0x0029, 0x0105}, {0x00AD, 0x0029, 0x00FF}, {0x00AE, 0x0029, 0x0121}, {0x00AF, 0x0029, 0x056A},
-    {0x00B1, 0x0029, 0x00FA}, {0x00B2, 0x0029, 0x00FB}, {0x00B3, 0x0029, 0x00FC}, {0x00B8, 0x0029, 0x01AA},
-    {0x00B9, 0x0029, 0x01AB}, {0x00CA, 0x0029, 0x016E}, {0x00CB, 0x0029, 0x01A4}, {0x00E6, 0x0029, 0x007A},
-    {0x00F0, 0x0029, 0x0324}, {0x01F8, 0x0029, 0x0338}, {0x01FE, 0x0029, 0x035A}, {0x0203, 0x0029, 0x049C},
-    {0x0205, 0x0029, 0x053E}, {0x020A, 0x0029, 0x0510}, {0x020B, 0x0029, 0x0544}, {0x0265, 0x0029, 0x0462},
-    {0x0288, 0x0029, 0x0532}, {0x0289, 0x0029, 0x008E}, {0x028A, 0x0029, 0x0282}, {0x028C, 0x0029, 0x01DB},
-    {0x028E, 0x0029, 0x0045}, {0x02A0, 0x0029, 0x00E3}, {0x02B4, 0x0029, 0x001F}, {0x02B9, 0x0029, 0x04E8},
-    {0x02BA, 0x0029, 0x04E9}, {0x02F1, 0x0029, 0x0127}, {0x02F2, 0x0029, 0x0128}, {0x02F3, 0x0029, 0x0487},
-    {0x02F4, 0x0029, 0x03C4}, {0x02F5, 0x0029, 0x03C8}, {0x4E21, 0x0029, 0x0464}, {0x4E22, 0x0029, 0x0481},
-    {0x4E23, 0x0029, 0x0483}, {0x4E24, 0x0029, 0x053D}, {0x4E25, 0x0029, 0x02D8}, {0x4E26, 0x0029, 0x04FB},
-    {0x4E27, 0x0029, 0x04FE}, {0x4E28, 0x0029, 0x0505}, {0x4E29, 0x0029, 0x0503}, {0x4E2A, 0x0029, 0x0052},
-    {0x4E2B, 0x0029, 0x004F}, {0x4E2C, 0x0029, 0x0050}, {0x4E2D, 0x0029, 0x011B}, {0x4E2E, 0x0029, 0x0571},
-    {0x4E2F, 0x0029, 0x0074}, {0x4E30, 0x0029, 0x007B}, {0x4E31, 0x0029, 0x0383}, {0x4E32, 0x0029, 0x0384},
-    {0x4E34, 0x0029, 0x0515}, {0x4E35, 0x0029, 0x0549}, {0x4E36, 0x0029, 0x0148}, {0x4E37, 0x0029, 0x014A},
-    {0x4E38, 0x0029, 0x033A}, {0x4E3D, 0x0029, 0x001D}, {0x4E40, 0x0029, 0x0020}, {0x4E41, 0x0029, 0x0388},
-    {0x4E42, 0x0029, 0x0395}, {0x4E43, 0x0029, 0x015C}, {0x4E44, 0x0029, 0x058B}, {0x4E45, 0x0029, 0x0283},
-    {0x4E46, 0x0029, 0x02AA}, {0x4E84, 0x0029, 0x0064}, {0x4E89, 0x0029, 0x0069}, {0x4E8B, 0x0029, 0x0083},
-    {0x4E8C, 0x0029, 0x0490}, {0x4EAB, 0x0029, 0x008B}, {0x4EAC, 0x0029, 0x0598}, {0x4EB6, 0x0029, 0x059A},
-    {0x4EE9, 0x0029, 0x00C9}, {0x4EEA, 0x0029, 0x00CA}, {0x4EEB, 0x0029, 0x00CB}, {0x4EF2, 0x0029, 0x00D2},
-    {0x4EF5, 0x0029, 0x00D5}, {0x4F0A, 0x0029, 0x00EA}, {0x4F35, 0x0029, 0x0115}, {0x4F38, 0x0029, 0x0118},
-    {0x4F3E, 0x0029, 0x011E}, {0x501A, 0x0029, 0x01FA}, {0x501C, 0x0029, 0x01FC}, {0x5078, 0x0029, 0x0080},
-    {0x509B, 0x0029, 0x0271}, {0x50B5, 0x0029, 0x0493}, {0x50D7, 0x0029, 0x006D}, {0x50D8, 0x0029, 0x0180},
-    {0x50DC, 0x0029, 0x059C}, {0x517F, 0x0029, 0x035F}, {0x529F, 0x0029, 0x047F}, {0x52B2, 0x0029, 0x0492},
-    {0x52BD, 0x0029, 0x049D}, {0x5368, 0x0029, 0x0548},
-};
-
-/* No current retail consumer establishes a record layout for this adjacent span. */
-static u8 sGameTextUnclassifiedData[0x204] = {
-    0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x06, 0x00, 0x06, 0x00, 0x06, 0x00, 0x06, 0x00, 0x06, 0x00, 0x06, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x02, 0x00, 0x02,
-    0x00, 0x05, 0x00, 0x05, 0x00, 0x05, 0x00, 0x05, 0x00, 0x06, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x06, 0x00, 0x06, 0x00,
-    0x06, 0x00, 0x06, 0x00, 0x06, 0x00, 0x06, 0xFF, 0xFF, 0x00, 0x05, 0x00, 0x05, 0x00, 0x05, 0x00, 0x06, 0x00, 0x07,
-    0xFF, 0xFF, 0x00, 0x07, 0x00, 0x07, 0x00, 0x07, 0x00, 0x07, 0x00, 0x07, 0x00, 0x07, 0x00, 0x07, 0x00, 0x07, 0x00,
-    0x07, 0x00, 0x07, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x07, 0x00, 0x06, 0x00, 0x09, 0x00, 0x09,
-    0x00, 0x0A, 0x00, 0x0A, 0x00, 0x0A, 0x00, 0x0A, 0x00, 0x0A, 0xFF, 0xFF, 0x00, 0x09, 0x00, 0x09, 0x00, 0x09, 0x00,
-    0x09, 0x00, 0x09, 0x00, 0x09, 0x00, 0x06, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0C, 0xFF, 0xFF, 0x00, 0x0C,
-    0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x0C, 0x00, 0x06, 0x00, 0x0B, 0xFF, 0xFF, 0x00, 0x0B, 0x00, 0x0B, 0x00, 0x0B, 0x00,
-    0x0B, 0x00, 0x0B, 0x00, 0x0B, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x0B, 0xFF, 0xFF, 0x00, 0x0C,
-    0x00, 0x08, 0x00, 0x08, 0x00, 0x08, 0x00, 0x08, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x06, 0x00, 0x04, 0x00,
-    0x04, 0x00, 0x04, 0xFF, 0xFF, 0x00, 0x04, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x04, 0xFF, 0xFF, 0x00, 0x00,
-    0x00, 0x06, 0x00, 0x06, 0x00, 0x03, 0xFF, 0xFF, 0x00, 0x03, 0x00, 0x03, 0x00, 0x03, 0x00, 0x03, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0x00, 0x03, 0x00, 0x0A, 0x00, 0x0A, 0x00, 0x0A, 0x00, 0x0A, 0xFF, 0xFF, 0x00, 0x06, 0xFF, 0xFF,
-    0x00, 0x06, 0x00, 0x05, 0x00, 0x05, 0x00, 0x05, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x06, 0x00, 0x01, 0xFF,
-    0xFF, 0xFF, 0xFF, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0xFF, 0xFF, 0x00, 0x01, 0x00, 0x01, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x01, 0x00, 0x0C, 0x00, 0x08, 0xFF, 0xFF, 0x00,
-    0x08, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x06, 0x00, 0x06, 0x00, 0x03, 0x00, 0x03, 0xFF, 0xFF, 0x00, 0x03, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x03, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00,
-};
-
 /* In-string formatting control codes (Unicode PUA). */
 #define TEXT_CTRL_SCALE 0xf8f4
 #define TEXT_CTRL_FONT  0xf8f7
@@ -333,79 +57,14 @@ static inline int gameTextCountChars(char* str);
 
 static inline TextGlyph* gameTextFindGlyph(u32 ch, int langIdx);
 
-static inline char* gameTextBreakLine(char* dst, char** buffer, int lineIdx);
-
-extern char sJpDiscLoadingMessage[];
-extern char sDiscLoadingMessage[];
-extern char sDiscReadingMessage[];
-extern char sDiscInsertPromptLine[];
-extern char sDiscInsertGameDiscLine[];
-
-void* gGameTextStringStore = (void*)-1;
-char sJpDiscErrorTopSpacerLine[4] = {0};
-char sJpDiscErrorBottomSpacerLine[4] = {0};
-char sJpDiscReadErrorTopSpacerLine[4] = {0};
-char sJpDiscReadingTopSpacerLine[4] = {0};
-char sJpDiscCoverOpenTopSpacerLine[4] = {0};
-char sJpDiscInsertTopSpacerLine[4] = {0};
-char sJpDiscInsertBottomSpacerLine[4] = {0};
-char sJpWrongDiscTopSpacerLine[4] = {0};
-char sJpWrongDiscMiddleSpacerLine[4] = "\xE3\x80\x80";
-char* sJpDiscLoadingMessageLines[1] = {sJpDiscLoadingMessage};
-char sDiscErrorSpacerLine[4] = {0};
-char sDiscReadErrorSpacerLine[4] = {0};
-char* sDiscReadingMessageLines[1] = {sDiscReadingMessage};
-char sDiscCoverOpenSpacerLine[4] = {0};
-char* sDiscInsertMessageLines[2] = {sDiscInsertPromptLine, sDiscInsertGameDiscLine};
-char sWrongDiscSpacerLine[4] = {0};
-char* sDiscLoadingMessageLines[1] = {sDiscLoadingMessage};
-int gGameTextFontTexRowPitch = 0x800;
-GXColor gGameTextClearColor = {0, 0, 0, 0xC0};
-int gGameTextFlagGlyphRaise = 3;
-f32 gGameTextRevealSpeed = 0.4f;
-char sGameTextBlankFormat[] = "    ";
-char lbl_803DB3DC[4] = {0};
-int gGameTextSavedDir = -1;
-char lbl_803DB3E4[4] = {0};
-s16 gGameTextBoxTexAssets = 0x1C4;
-int gGameTextBoxCornerInset = 2;
-int gGameTextBoxInset = 0xE;
-int gGameTextBoxColorR = 0xFF;
-int gGameTextBoxColorG = 0xFF;
-int gGameTextBoxColorB = 0xFF;
-int gGameTextBoxColorA = 0xFF;
-char lbl_803DB404[4] = {0};
-
 static void translateToDinoLanguage(u8* str);
 
 /*
- * The disc-error/loading screens' self-contained resources: the SJIS->glyph
- * remap table, the built-in font metrics, and the Japanese and English
- * disc-status message text. These screens must be able to draw without
+ * The disc-error/loading screens' resident resources: the built-in font
+ * metrics and the Japanese and English disc-status message text.
+ * These screens must be able to draw without
  * loading anything from disc, so the whole resource lives in the executable.
  */
-
-u16 gGameTextSjisGlyphTable[256] = {
-    0x30A8, 0x8347, 0x30E9, 0x8389, 0x30FC, 0x815B, 0x304C, 0x82AA, 0x767A, 0x94AD, 0x751F, 0x90B6, 0x3057, 0x82B5,
-    0x307E, 0x82DC, 0x305F, 0x82BD, 0x3002, 0x8142, 0x0020, 0x0020, 0x672C, 0x967B, 0x4F53, 0x91CC, 0x306E, 0x82CC,
-    0x30D1, 0x8370, 0x30EF, 0x838F, 0x30DC, 0x837B, 0x30BF, 0x835E, 0x30F3, 0x8393, 0x3092, 0x82F0, 0x62BC, 0x899F,
-    0x3066, 0x82C4, 0x96FB, 0x9364, 0x6E90, 0x8CB9, 0x004F, 0x004F, 0x0046, 0x0046, 0x306B, 0x82C9, 0x53D6, 0x8EE6,
-    0x6271, 0x88B5, 0x8AAC, 0x90E0, 0x660E, 0x96BE, 0x66F8, 0x8F91, 0x6307, 0x8E77, 0x793A, 0x8EA6, 0x5F93, 0x8F5D,
-    0x3063, 0x82C1, 0x4E0B, 0x89BA, 0x3055, 0x82B3, 0x3044, 0x82A2, 0x30C7, 0x8366, 0x30A3, 0x8342, 0x30B9, 0x8358,
-    0x30AF, 0x834E, 0x8AAD, 0x93C7, 0x3081, 0x82DF, 0x305B, 0x82B9, 0x3093, 0x82F1, 0x3067, 0x82C5, 0x304F, 0x82AD,
-    0x308F, 0x82ED, 0x306F, 0x82CD, 0x304A, 0x82A8, 0x307F, 0x82DD, 0x8FBC, 0x8D9E, 0x3059, 0x82B7, 0x30AB, 0x834A,
-    0x30D0, 0x836F, 0x958B, 0x8A4A, 0x30B2, 0x8351, 0x30E0, 0x8380, 0x7D9A, 0x91B1, 0x3051, 0x82AF, 0x308B, 0x82E9,
-    0x5834, 0x8FEA, 0x5408, 0x8D87, 0x9589, 0x95C2, 0x300C, 0x8175, 0x30D5, 0x8374, 0x30A9, 0x8348, 0x30C3, 0x8362,
-    0x30A2, 0x8341, 0x30C9, 0x8368, 0x30D9, 0x8378, 0x30C1, 0x8360, 0x30E3, 0x8383, 0x300D, 0x8176, 0x30BB, 0x835A,
-    0x30C8, 0x8367, 0x3053, 0x82B1, 0x3042, 0x82A0, 0x308A, 0x82E8, 0x30ED, 0x838D, 0x4E2D, 0x9286, 0x2026, 0x8163,
-    0x0053, 0x0053, 0x0065, 0x0065, 0x0020, 0x0020, 0x0068, 0x0068, 0x0061, 0x0061, 0x0070, 0x0070, 0x0072, 0x0072,
-    0x006F, 0x006F, 0x0064, 0x0064, 0x0075, 0x0075, 0x0063, 0x0063, 0x0069, 0x0069, 0x006E, 0x006E, 0x002E, 0x002E,
-    0x0041, 0x0041, 0x0067, 0x0067, 0x006C, 0x006C, 0x0073, 0x0073, 0x0079, 0x0079, 0x0074, 0x0074, 0x006D, 0x006D,
-    0x004E, 0x004E, 0x0049, 0x0049, 0x0054, 0x0054, 0x0045, 0x0045, 0x0044, 0x0044, 0x004F, 0x004F, 0x0047, 0x0047,
-    0x004D, 0x004D, 0x0043, 0x0043, 0x0055, 0x0055, 0x0042, 0x0042, 0x0028, 0x0028, 0x0029, 0x0029, 0x0062, 0x0062,
-    0x00E1, 0x0000, 0x0066, 0x0066, 0x00F3, 0x0000, 0x004C, 0x004C, 0x0046, 0x0046, 0x0078, 0x0078, 0x0076, 0x0076,
-    0x00C9, 0x0000, 0x0000, 0x0000,
-};
 
 TextGlyph sJpDiscStatusGlyphs[85] = {
     {0x30A8, 1, 1, 0, 1, 3, 2, 20, 16, 0, 0},    {0x30E9, 22, 1, 1, 1, 2, 1, 19, 18, 0, 0},
@@ -852,6 +511,7 @@ static void gameTextLoadCancelCallback(s32 result, DVDCommandBlock* block) {
 }
 
 void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
+    u16* textureCursor;
     int textureIndex;
     u16* loadedResource;
     u32 bitsPerPixel;
@@ -862,7 +522,7 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     int i;
     u8* stringData;
     GameTextPaddingBlock* paddingBlock;
-    GameTextTableHeader* tableHeader;
+    u16* headerFields;
     u16* textureDataStart;
     GameTextGlyphTable* resource;
     u16 textureFormat;
@@ -872,9 +532,10 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     TextFont* charset;
     u32 tableBytes;
     u16* compactedResource;
-    u16* textureCursor;
     int relocationDelta;
     int* relocatedStringPointers;
+    int stringIndex;
+    int relocatedPointer;
     int remainingUnits;
 
     DCStoreRange(loadSlot->loadHandle, loadSlot->loadedSize);
@@ -895,10 +556,10 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
         return;
     }
     charset->glyphs = resource->glyphs;
-    tableHeader = (GameTextTableHeader*)((char*)(resource + 1) + charset->glyphCount * sizeof(TextGlyph));
-    charset->entryCount = tableHeader->entryCount;
-    stringDataSize = tableHeader->stringDataSize;
-    definitions = (GameTextDef*)(tableHeader + 1);
+    headerFields = (u16*)((char*)(resource + 1) + charset->glyphCount * sizeof(TextGlyph));
+    charset->entryCount = *headerFields++;
+    stringDataSize = *headerFields++;
+    definitions = (GameTextDef*)headerFields;
     charset->entries = definitions;
     stringTable = (GameTextStringTable*)(definitions + charset->entryCount);
     stringCount = stringTable->count;
@@ -906,7 +567,8 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     for (i = 0; i < charset->entryCount; i++) {
         charset->entries[i].strings = (char**)(stringPointers + (int)charset->entries[i].strings);
     }
-    stringData = (u8*)stringTable + (stringCount * sizeof(*stringPointers) + sizeof(*stringTable));
+    stringTable++;
+    stringData = (u8*)stringTable + stringCount * sizeof(*stringPointers);
     {
         int j;
         for (j = 0; j < stringCount; j++) {
@@ -945,22 +607,20 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
         if (charset->textures[textureIndex] != NULL) {
             if (bitsPerPixel == 4) {
                 u8* src8 = (u8*)textureCursor;
-                u8* dst8 = textureGetImageData(charset->textures[textureIndex]);
+                u8* dst8 = (u8*)(charset->textures[textureIndex] + 1);
                 remainingUnits = (int)(width * height) >> 1;
                 while (remainingUnits--) {
                     *dst8++ = *src8++;
                 }
-                DCFlushRange(textureGetImageData(charset->textures[textureIndex]),
-                             charset->textures[textureIndex]->dataSize);
+                DCFlushRange(charset->textures[textureIndex] + 1, charset->textures[textureIndex]->dataSize);
             } else {
                 u16* src16 = textureCursor;
-                u16* dst16 = textureGetImageData(charset->textures[textureIndex]);
+                u16* dst16 = (u16*)(charset->textures[textureIndex] + 1);
                 remainingUnits = width * height;
                 while (remainingUnits--) {
                     *dst16++ = *src16++;
                 }
-                DCFlushRange(textureGetImageData(charset->textures[textureIndex]),
-                             charset->textures[textureIndex]->dataSize);
+                DCFlushRange(charset->textures[textureIndex] + 1, charset->textures[textureIndex]->dataSize);
             }
         }
         {
@@ -989,8 +649,10 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
         charset->entries[i].strings = (char**)(phrasePointers + relocationDelta);
     }
     relocatedStringPointers = (int*)((u8*)stringPointers + relocationDelta);
-    for (i = 0; i < stringCount; i++) {
-        relocatedStringPointers[i] += relocationDelta;
+    for (stringIndex = 0; stringIndex < stringCount; stringIndex++) {
+        relocatedPointer = relocatedStringPointers[stringIndex];
+        relocatedPointer += relocationDelta;
+        relocatedStringPointers[stringIndex] = relocatedPointer;
     }
     mmSetFreeDelay(0);
     mm_free(loadSlot->loadHandle);
@@ -999,6 +661,15 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
     loadSlot->loadHandle = compactedResource;
     charset->status = 2;
     loadSlot->state = 3;
+}
+
+static inline void gameTextCopySystemFontTile(u8* destination, int tileRow, u32** pixels) {
+    int wordIndex;
+    destination += tileRow * gGameTextFontTexRowPitch;
+    for (wordIndex = 0; wordIndex < 8; wordIndex += 2) {
+        *(u32*)(destination + sizeof(Texture) + wordIndex * 4) = *(*pixels)++;
+        *(u32*)(destination + sizeof(Texture) + wordIndex * 4 + 4) = *(*pixels)++;
+    }
 }
 
 void gameTextBuildSystemFontAtlas(void) {
@@ -1119,28 +790,18 @@ void gameTextBuildSystemFontAtlas(void) {
         glyph->page = 0;
         {
             int firstTileRow;
-            int tileRowEnd;
-            int firstTileColumn;
-            int tileColumnEnd;
-            int tileRow;
-            u8* tileDestination;
-            u32* glyphPixels;
             int tileColumn;
+            int tileRow;
+            int firstTileColumn;
+            u32* glyphPixels;
 
             glyphPixels = (u32*)glyphImage;
-            firstTileRow = glyph->v >> 3;
             firstTileColumn = glyph->u >> 3;
+            firstTileRow = glyph->v >> 3;
             tileRow = firstTileRow;
-            tileColumnEnd = firstTileColumn + 3;
-            tileRowEnd = firstTileRow + 3;
-            for (; tileRow < tileRowEnd; tileRow++) {
-                for (tileColumn = firstTileColumn; tileColumn < tileColumnEnd; tileColumn++) {
-                    int wordIndex;
-                    tileDestination = (u8*)charset->textures[0] + (tileColumn << 5);
-                    tileDestination += gGameTextFontTexRowPitch * tileRow;
-                    for (wordIndex = 0; wordIndex < 8; wordIndex++) {
-                        *(u32*)(tileDestination + sizeof(Texture) + wordIndex * 4) = *glyphPixels++;
-                    }
+            for (; tileRow < firstTileRow + 3; tileRow++) {
+                for (tileColumn = firstTileColumn; tileColumn < firstTileColumn + 3; tileColumn++) {
+                    gameTextCopySystemFontTile((u8*)charset->textures[0] + (tileColumn << 5), tileRow, &glyphPixels);
                 }
             }
         }
@@ -1201,8 +862,10 @@ void gameTextLoadForCurMap(int sourceId) {
     } while (i-- != 0);
 
     gGameTextCharsets[sourceId].status = 1;
-    *(dirPtr = &gGameTextCharsets[sourceId].dirId) = (u8)curGameTextDir;
-    *(langPtr = &gGameTextCharsets[sourceId].languageId) = curLanguage;
+    *(dirPtr = (u8*)gGameTextCharsets + (sourceId * (int)sizeof(TextFont) + (int)offsetof(TextFont, dirId))) =
+        (u8)curGameTextDir;
+    *(langPtr = (u8*)gGameTextCharsets + (sourceId * (int)sizeof(TextFont) + (int)offsetof(TextFont, languageId))) =
+        curLanguage;
 
     freeSlot = gameTextFindFreeLoadSlot();
 
@@ -1388,11 +1051,12 @@ static inline void gameTextApplyWindowPosition(int index, int x, int y) {
 }
 
 void gameTextRun(void) {
+    int i;
     GameTextLoadSlot* loadSlot;
     TextFont* pending;
+    int commandCount;
     int sourceId;
     GameTextSlot* cmd;
-    int i;
     GameTextLoadSlot* freeSlot;
     int dirId;
     int languageId;
@@ -1440,8 +1104,7 @@ void gameTextRun(void) {
     } while (sourceId < GAMETEXT_PENDING_SOURCE_COUNT);
 
     loadSlot = curGameTexts;
-    i = GAMETEXT_LOAD_SLOT_COUNT - 1;
-    do {
+    for (i = GAMETEXT_LOAD_SLOT_COUNT; i-- != 0;) {
         if ((loadSlot->state == 5 || loadSlot->state == 6) && loadSlot->loadHandle != NULL) {
             mm_free(loadSlot->loadHandle);
             loadSlot->loadHandle = NULL;
@@ -1449,7 +1112,7 @@ void gameTextRun(void) {
             loadSlot->active = 0;
         }
         loadSlot++;
-    } while (i-- != 0);
+    }
 
     zero = 0.0f;
     fadeLimit = 120.0f;
@@ -1480,8 +1143,8 @@ void gameTextRun(void) {
     gGameTextCursorX = 0;
     gGameTextCursorY = 0;
 
-    i = gGameTextCommandCount;
-    while (i-- != 0) {
+    commandCount = gGameTextCommandCount;
+    while (commandCount-- != 0) {
         switch (cmd->opcode) {
         case 3: {
             u8 c1, c2, c3;
@@ -2112,6 +1775,26 @@ static void translateToDinoLanguage(u8* str) {
     }
 }
 
+static inline int gameTextCountSpaces(u8* text) {
+    int offset;
+    int spaceCount;
+    u32 codePoint;
+    int charLength;
+
+    offset = 0;
+    spaceCount = offset;
+    while ((codePoint = utf8GetNextChar(text + offset, &charLength)) != 0) {
+        offset += charLength;
+        if (codePoint == 0x20) {
+            spaceCount++;
+        }
+        if (codePoint >= 0xe000 && codePoint <= 0xf8ff) {
+            offset += ctrlCharLen(codePoint) * 2;
+        }
+    }
+    return spaceCount;
+}
+
 void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mode) {
     int realign;
     f32 fx0, fy0, fx1, fy1;
@@ -2245,26 +1928,12 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
             case TEXT_ALIGN_CENTER:
                 spaceExtra = 0.0f;
                 gameTextMeasureString(p, gGameTextScale, &measW, NULL, 0, 0, -1);
-                x = win->width - measW;
-                x = x * 0.5f + win->x;
+                x = (win->width - measW) / 2.0f + win->x;
                 break;
             case TEXT_ALIGN_JUSTIFY: {
                 int spaceCount;
-                int acc;
-                u32 innerCh;
-                int innerLen;
                 gameTextMeasureString(p, gGameTextScale, &measW, NULL, 0, 0, -1);
-                acc = 0;
-                spaceCount = acc;
-                while ((innerCh = utf8GetNextChar(p + acc, &innerLen)) != 0) {
-                    acc += innerLen;
-                    if (innerCh == 0x20) {
-                        spaceCount++;
-                    }
-                    if (innerCh >= 0xe000 && innerCh <= 0xf8ff) {
-                        acc += ctrlCharLen(innerCh) * 2;
-                    }
-                }
+                spaceCount = gameTextCountSpaces(p);
                 spaceExtra = (win->width - measW) / spaceCount;
                 break;
             }
@@ -2291,12 +1960,8 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
         u0 = (f32)(g->u << 5);
         v0 = (f32)(g->v << 5);
         e710 = 4.0f;
-        fx0 = (f32)g->offsetX * gGameTextScale;
-        fx0 = x + fx0;
-        fx0 = e710 * fx0;
-        fy0 = (f32)g->offsetY * gGameTextScale;
-        fy0 = y + fy0;
-        fy0 = e710 * fy0;
+        fx0 = e710 * (x + (f32)((f32)g->offsetX * gGameTextScale));
+        fy0 = e710 * (y + (f32)((f32)g->offsetY * gGameTextScale));
         fx1 = e710 * ((f32)(u32)g->width * gGameTextScale) + fx0;
         fy1 = e710 * ((f32)(u32)g->height * gGameTextScale) + fy0;
         if (fx0 < 0.0f && fx1 > 0.0f) {
@@ -2487,26 +2152,24 @@ GameTextBox* gameTextGetBox(int box) {
 }
 
 char** gameTextWrapLines(char* str, f32 maxWidth, f32 scale, int* outLineCount, f32* outMaxLineHeight) {
-    int copyOffset;
-    int scanOffset;
-    int* copyBoundary;
-    int fontId;
-    const FontMetrics* metrics;
     int tableBytes;
     int* lastBoundary;
+    int* copyBoundary;
     int lineCount;
+    char** lines;
+    int scanOffset;
+    int copyOffset;
     int wrapOffset;
     int hasSpace;
-    int lineIndex;
-    char* readCursor;
-    char** lines;
-    char* writeCursor;
-    int lineStarts[32];
-    int arguments[8];
     f32 lineWidth;
-    int byteCount;
+    char* readCursor;
     int i;
     u32 codePoint;
+    int lineStarts[32];
+    int arguments[8];
+    int fontId;
+    int byteCount;
+    const FontMetrics* metrics;
     lineCount = 0;
     tableBytes = 0;
     scanOffset = 0;
@@ -2543,13 +2206,13 @@ char** gameTextWrapLines(char* str, f32 maxWidth, f32 scale, int* outLineCount, 
             hasSpace = 1;
         }
         if (codePoint >= 0xe000 && codePoint <= 0xf8ff) {
-            int argumentCount;
+            int argumentIndex;
             int metricsChanged;
-            argumentCount = gameTextCtrlCharLen(codePoint);
-            for (i = 0; i < argumentCount; i++) {
+            i = gameTextCtrlCharLen(codePoint);
+            for (argumentIndex = 0; argumentIndex < i; argumentIndex++) {
                 int hi = ((u8*)str)[scanOffset++];
                 int lo = ((u8*)str)[scanOffset++];
-                arguments[i] = (hi << 8) | lo;
+                arguments[argumentIndex] = (hi << 8) | lo;
             }
             metricsChanged = 1;
             switch (codePoint) {
@@ -2611,61 +2274,64 @@ char** gameTextWrapLines(char* str, f32 maxWidth, f32 scale, int* outLineCount, 
     if (lines == NULL) {
         return 0;
     }
-    writeCursor = (char*)lines;
-    i = byteCount;
-    while (i-- != 0) {
-        *writeCursor++ = 0;
+    {
+        char* clearCursor = (char*)lines;
+        i = byteCount;
+        while (i-- != 0) {
+            *clearCursor++ = 0;
+        }
     }
 
     {
+        char* writeCursor;
+        int lineIndex;
         char* lineText = (char*)lines + tableBytes;
         lines[0] = lineText;
         writeCursor = lineText;
-    }
-    lineIndex = 0;
-    copyOffset = 0;
-    readCursor = str;
-    while (copyOffset < scanOffset) {
-        *writeCursor++ = *readCursor;
-        if (copyOffset == copyBoundary[1]) {
-            writeCursor = gameTextBreakLine(writeCursor - 1, lines, lineIndex);
-            copyBoundary++;
-            lineIndex++;
-        }
-        readCursor++;
-        copyOffset++;
-    }
-    *writeCursor = 0;
-    return lines;
-}
+        lineIndex = 0;
+        copyOffset = 0;
+        readCursor = str;
+        while (copyOffset < scanOffset) {
+            *writeCursor++ = *readCursor;
+            if (copyOffset == copyBoundary[1]) {
+                char* breakChar;
+                int lookbehindLength;
+                int previousCharLength;
+                u32 previousCodePoint;
 
-static inline char* gameTextBreakLine(char* dst, char** buffer, int lineIdx) {
-    char* q;
-    int k;
-    int charLen2;
-    u32 ch;
-
-    q = dst;
-    for (;;) {
-        k = 6;
-        do {
-            ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
-            if (k != charLen2) {
-                continue;
-            }
-            if (isSpace(ch)) {
-                int j = charLen2;
-                while (j-- != 0) {
-                    *--dst = 0;
+                writeCursor--;
+                breakChar = writeCursor;
+                for (;;) {
+                    lookbehindLength = 6;
+                    do {
+                        previousCodePoint = utf8GetNextChar((u8*)(writeCursor - lookbehindLength), &previousCharLength);
+                        if (lookbehindLength != previousCharLength) {
+                            continue;
+                        }
+                        if (isSpace(previousCodePoint)) {
+                            int trimLength = previousCharLength;
+                            while (trimLength-- != 0) {
+                                *--writeCursor = 0;
+                            }
+                            break;
+                        }
+                        breakChar[1] = breakChar[0];
+                        breakChar[0] = 0;
+                        writeCursor = breakChar + 1;
+                        *(char**)((char*)lines + ((lineIndex + 1) << 2)) = writeCursor++;
+                        goto line_broken;
+                    } while (--lookbehindLength > 0);
                 }
-                break;
+
+            line_broken:
+                copyBoundary++;
+                lineIndex++;
             }
-            q[1] = q[0];
-            q[0] = 0;
-            dst = q + 1;
-            *(char**)((char*)buffer + ((lineIdx + 1) << 2)) = dst++;
-            return dst;
-        } while (--k > 0);
+            copyOffset++;
+            readCursor++;
+        }
+        *writeCursor = 0;
+        return lines;
     }
 }
 

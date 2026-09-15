@@ -129,11 +129,16 @@ def synthetic_resource(strings=3, textures=2, dimensions=None):
     return data + bytes(8)
 
 
-def link_source(obj, directory, retail_symbols, entry='gameTextFinalizeLoad'):
+def link_source(obj, directory, retail_symbols, entry='gameTextFinalizeLoad', extra_objects=()):
     from elftools.elf.elffile import ELFFile
 
     prefix = ROOT / 'build/binutils/powerpc-eabi-'
     nm, assembler, linker = (str(prefix) + name for name in ('nm', 'as', 'ld'))
+    if extra_objects:
+        combined = directory / 'source.o'
+        subprocess.run([linker, '-r', str(obj), *(str(path) for path in extra_objects),
+                        '-o', str(combined)], check=True, timeout=30)
+        obj = combined
     undefined = subprocess.check_output([nm, '-u', str(obj)], text=True, timeout=30)
     definitions, data_stubs = [], []
     for line in undefined.splitlines():
