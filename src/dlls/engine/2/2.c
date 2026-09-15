@@ -919,7 +919,7 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags) {
     u8* base;
     SeqRunTables* st;
     ObjSeqCastEntry* walk2;
-    ObjSeqCastEntry* walk;
+    ObjSeqCastEntry* entries;
     int packed;
     ObjSeqPreemptEntry* mon;
     int i;
@@ -1047,18 +1047,17 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags) {
     gObjSeqSlotValues[obj->seqIndex] = 0;
     *(int*)((u8*)&st->handles[0] + obj->seqIndex * 4) = obj->anim.romDefNo;
 
-    walk = (ObjSeqCastEntry*)buf;
+    entries = (ObjSeqCastEntry*)buf;
     bit = 1;
     for (; i < count; i++) {
-        if ((flags & (bit << i)) && (walk->flags & 0x4000)) {
-            objIdU = walk->objId;
+        if ((flags & (bit << i)) && (entries[i].flags & 0x4000)) {
+            objIdU = entries[i].objId;
             if (objIdU == OBJSEQ_KRYSTAL_OBJ || objIdU == OBJSEQ_SABRE_OBJ) {
                 if (playerStatusIsPositive(Obj_GetPlayerObject()) == 0) {
                     return -1;
                 }
             }
         }
-        walk++;
     }
 
     idx = 0;
@@ -1234,9 +1233,10 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags) {
     gObjSeqSlotStreamTimeTable[obj->seqIndex] = seqFlags;
 
     if (slot >= 0 && slot < 0x55) {
-        if (gObjSeqBgCmdCount < 0x1e) {
-            st->recs[gObjSeqBgCmdCount].slot = slot;
-            st->recs[gObjSeqBgCmdCount].count = count;
+        s8 bgCount = gObjSeqBgCmdCount;
+        if (bgCount < 0x1e) {
+            st->recs[bgCount].slot = slot;
+            st->recs[bgCount].count = count;
             st->recs[gObjSeqBgCmdCount++].flags = seqFlags;
         }
     }
