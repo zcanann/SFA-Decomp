@@ -61,6 +61,10 @@ Small-data definitions are ordered to preserve every existing symbol address.
 
 ## Neighbouring functions and object audit
 
+The subsequent [ObjSeq_start pass](objseq_start_matching.md) reaches 100%
+for that function in all five versions without changing this reset function.
+The figures below describe the initial native-table reconstruction.
+
 Using the native tables at the affected accesses preserves `ObjSeq_update`
 exactly and improves `ObjSeq_start` from **98.89807% to 99.86226%**, reducing
 it from 2,932 to the retail 2,904 bytes. Apart from `ObjSeq_start` and

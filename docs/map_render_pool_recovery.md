@@ -1,5 +1,10 @@
 # Map-rendering TU and pool recovery (2026-09-07)
 
+Latest EN status (2026-09-15): **141/145 exact functions, 99.857895% instruction
+fuzzy similarity, and 40,668 exact assigned data bytes**. See the exact block
+release follow-up below. The historical measurements in earlier sections describe
+their individual checkpoints.
+
 The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
@@ -543,3 +548,49 @@ with 139/145 functions exact. The unresolved frustum differences concern plane
 indexing and its associated saved registers and frame layout. Formatting
 preserves the selected probe object byte-for-byte. Both thirty-second-bounded
 build gates pass; the TU remains `NonMatching` and the strict link uses retail.
+
+## Exact block release through allocator replay (2026-09-15)
+
+`unloadMap` now matches all 154 retail instructions. Its shared inline
+`mapReleaseBlockReference` keeps the same loops and expressions; declaring the
+scroll slot, shader byte offset, layer cursor, and shader pointer in that order
+recovers the remaining shader-pointer/byte-offset register swap. The other locals
+retain their order. This establishes an exact source spelling, not the original
+local names or declaration order.
+
+The macOS LLDB capture reproduces the ordinary full object byte-for-byte, aligns
+all 154 instructions, and replays all 54 physical register choices with no
+high-degree removals. Projecting retail operands onto the baseline graph found
+that virtual registers 46 and 48 could exchange their physical colors without
+interference. Replaying declaration permutations identified the retained order;
+the actual compilation then confirmed the prediction. The final trace can be
+regenerated with:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/main/shader \
+  --function unloadMap --graph --output build/shader_unload_trace
+```
+
+Only two function bodies change: ten bytes in `unloadMap`, and seven bytes in
+`doPendingMapLoads`. Their sizes are unchanged. The latter improves from
+98.79135% to 98.81043%. All other 143 function bodies, allocated non-text bytes,
+named symbol layouts, and complete relocation records are unchanged. Formatting
+preserves the entire compiled object.
+
+Four functions still prevent a source-matching TU:
+
+| Function | Instruction fuzzy similarity | Remaining evidence |
+| --- | ---: | --- |
+| `mapLoadUnloadObjects` | 98.58787% | Same 478-instruction mnemonic stream, but address formation, cursor lifetimes, and register choices differ. Retail register projection rejects the current value partition. |
+| `doPendingMapLoads` | 98.81043% | Source has 784 instructions versus retail's 786. The slot-flag clearing loop lacks a count reload/sign extension; other regions also differ in register allocation. |
+| `mapFillCellEntry` | 99.32447% | Coordinate-load order, initial slot-base/cursor copies, and register allocation differ. Declaration movement alone did not resolve them. |
+| `renderObjects` | 99.82456% | Two address additions have commuted operands. Native indexed stores change instruction selection; the tested alternatives were not retained. |
+
+The source remains `NonMatching`. `ninja all_source` and the strict EN checksum
+target pass with 30-second bounds. The data audit checks all 40,668 assigned
+bytes, 120 native symbol layouts, 40 data relocations, 151 direct retail pool
+loads, and the three anonymous zero-color templates. Its six focused regression
+checks pass. The original and matching DOLs retain SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`; that integration build still links the
+retail shader object. Only the EN DOL is present in this checkout, so this pass
+makes no new regional completion claims.

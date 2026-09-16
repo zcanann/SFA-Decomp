@@ -1367,13 +1367,13 @@ static inline void mapReleaseBlockReference(int blockIndex) {
     if (blockIndex >= 0) {
         gMapBlockRefCounts[blockIndex]--;
         if (gMapBlockRefCounts[blockIndex] == 0) {
-            Shader* shader;
-            u8* layerCursor;
+            u32 scrollSlot;
             int shaderOffset;
+            u8* layerCursor;
+            Shader* shader;
             int textureIndex;
             int index;
             int layerIndex;
-            u32 scrollSlot;
             MapBlockData* block;
 
             block = gMapBlocks[blockIndex];

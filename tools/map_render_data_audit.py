@@ -12,12 +12,47 @@ import argparse
 from pathlib import Path
 import struct
 
+from elftools.elf.elffile import ELFFile
+
 from pool_content_check import parse_splits
 from tricky_object_compare import read_object
 
 
 ROOT = Path(__file__).resolve().parent.parent
 UNIT = "main/shader.c"
+
+
+ZERO_COLOR_TEMPLATES = {
+    "sGlowFogColor": ("renderGlows", 0x1C, 0),
+    "gTexShaderFogColor": ("mapBlockRender_setShader", 0x10, 4),
+    "gTexLightmapFogColor": ("mapBlockRender_setLightmapShader", 0x10, 8),
+}
+
+
+def audit_zero_colors(snapshot, source: Path) -> None:
+    """Match anonymous GXColor templates by their complete layout and live loads."""
+    with source.open("rb") as stream:
+        elf = ELFFile(stream)
+        section = elf.get_section_index(".sbss2")
+        layouts = sorted(
+            (symbol["st_value"], symbol["st_size"])
+            for symbol in elf.get_section_by_name(".symtab").iter_symbols()
+            if symbol["st_shndx"] == section and symbol["st_info"]["type"] == "STT_OBJECT"
+        )
+    assert layouts == [(0, 4), (4, 4), (8, 4)], "zero-color template layout differs"
+
+    expected = []
+    for function, offset, template in ZERO_COLOR_TEMPLATES.values():
+        symbol = snapshot.symbols[function]
+        assert symbol[0] == ".text" and offset + 4 <= symbol[2]
+        expected.append((symbol[1] + offset, 109, 0, template))  # R_PPC_EMB_SDA21
+    actual = []
+    for section, records in snapshot.relocations.items():
+        for offset, kind, addend, name, target_section, target_offset in records:
+            if target_section == ".sbss2":
+                assert section.endswith(" -> .text"), "non-text zero-color reference"
+                actual.append((offset, kind, addend, target_offset))
+    assert sorted(actual) == sorted(expected), "zero-color load destinations differ"
 
 
 def audit(source: Path) -> None:
@@ -44,9 +79,17 @@ def audit(source: Path) -> None:
         assert actual[4].ljust(expected[3], b"\0") == expected[4], f"{name}: bytes differ"
         total += expected[3]
 
+    # These three local initializers have compiler-generated names in the source
+    # object. Check every definition and reference before allowing that difference.
+    audit_zero_colors(ours, source)
+    for name, (_, _, offset) in ZERO_COLOR_TEMPLATES.items():
+        assert retail.symbols[name][:3] == (".sbss2", offset, 4)
+    audit_zero_colors(retail, ROOT / "build/GSAE01/obj/main/shader.o")
+
     shared = 0
     for name, symbol in retail.symbols.items():
-        if symbol[0] not in (".text", ".sdata2") and not name.startswith(("gap_", "jumptable_")):
+        if (symbol[0] not in (".text", ".sdata2") and name not in ZERO_COLOR_TEMPLATES
+                and not name.startswith(("gap_", "jumptable_"))):
             assert name in ours.symbols, f"missing native data symbol: {name}"
     for name in ours.symbols.keys() & retail.symbols.keys():
         a, b = ours.symbols[name], retail.symbols[name]
@@ -100,6 +143,7 @@ def audit(source: Path) -> None:
     relocations = sum(map(len, data_relocations(ours).values()))
     print(f"PASS: {total} assigned data bytes, {shared} native symbol layouts, "
           f"{relocations} data relocations, {loads} direct retail pool loads")
+    print("All three anonymous zero-color templates retain their four-byte layouts and exact load destinations.")
     print("The 164-byte pool has four bytes of trailing linker alignment; text matching is a separate check.")
 
 
