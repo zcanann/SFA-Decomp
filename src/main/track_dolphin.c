@@ -2695,7 +2695,9 @@ u8 doEdges;
     f8 = (u16)flags & 8;
     f100 = (u16)flags & 0x100;
     f4 = (u16)flags & 4;
-    last = count - 1;
+    /* Keep the copy and decrement separate for the retail spill-slot order. */
+    last = count;
+    last--;
     for (; i < count; i++) {
         MapBlockData* blk;
         int vb;
