@@ -666,3 +666,32 @@ function bodies, all allocated data, named-symbol layouts and relocation
 destinations remain unchanged. The hosted-page bitmap accesses now also use
 `MapRomListPage.loadedObjectBits`; this cleanup preserves the generated object.
 The complete TU improves from **99.86113% to 99.86275%** and remains NonMatching.
+
+### Copy-coalescing boundary behind the cell-entry plateau (2026-09-17)
+
+The sibling compiler project now contains an independent reconstruction of
+GC/1.3 `InterferenceGraph.c`'s complete copy-coalescing routine, 1,098 bytes at
+`0x005794f0` through `0x00579939`. Its native model agrees with the original in
+1,504 offline sandbox cases spanning five register classes, interval boundaries,
+interference, chained merges, two-block traversal, and operand rewriting.
+Allocation, instruction unlinking, and assertions are stubbed dependencies;
+Win32 binary matching remains unmeasured.
+
+`tricky_backend_graph.py` now captures the actual eligibility interval and
+post-coalescing parent map. For unchanged `mapFillCellEntry`, the physical limit
+is 32, the inclusive merge interval is 46–144, and the protected GPR is 1.
+The retained `slots` local is virtual register 42, the first inline cursor is
+64, and its address temporary is 70. Thus 70 can merge into 64, but 42 cannot
+merge with either. The resulting ADDI targets the cursor and copies to the
+retained pointer, opposite the retail sequence. Reversing the C assignments
+still yields the same raw object after value numbering and coalescing.
+
+Both ordinary and instrumented baseline objects have SHA-256
+`708f9fe319e600397a3fc57eb39d6fd18aaa92f3697c1740f13c421eca66036f`.
+The complete graph simplification and color replay agree with the captured
+compiler. Rejected probes include pointer aggregates, coordinate aliases,
+shared lookup helpers, and reusing the object local between load phases.
+Moving the complete BSS definition block earlier also disturbed its symbol
+layout and was discarded. These findings improve diagnosis, not the shader
+match percentage: all probes were restored, leaving 142/145 exact functions
+and the existing 99.86275% TU match intact.

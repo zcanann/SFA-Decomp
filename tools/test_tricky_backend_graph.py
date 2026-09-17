@@ -2,7 +2,7 @@ import copy
 import struct
 import unittest
 
-from tricky_backend_graph import (capture_color_policy, capture_graph, capture_simplification_policy, coloring_order, describe_node,
+from tricky_backend_graph import (capture_coalescing_policy, capture_color_policy, capture_graph, capture_simplification_policy, coloring_order, describe_node,
                                  replay_coloring, replay_simplification, validate_graph, validate_rewrite)
 
 
@@ -38,6 +38,30 @@ def simplification_fixture(removal_order, weights=(10, 5)):
 
 
 class BackendGraphTests(unittest.TestCase):
+    def test_coalescing_policy_preserves_named_and_inline_register_boundary(self):
+        parents = list(range(80))
+        parents[70] = 64
+        values = {
+            0x1E6A8C: struct.pack("<i", 80), 0x1E6788: struct.pack("<i", 32),
+            0x1E7260: struct.pack("<h", 46), 0x1E66B8: struct.pack("<i", 79),
+            0x1E6CFA: struct.pack("<h", -1), 0x1E01C8: struct.pack("<I", 0x600000),
+            0x200000: struct.pack("<80h", *parents),
+        }
+
+        def memory(address, size):
+            return values[address - 0x400000][:size]
+
+        policy = capture_coalescing_policy(memory, 0x400000)
+        self.assertEqual(policy, {"physical_count": 32, "first_eligible": 46,
+                                 "last_eligible": 79, "protected_gpr": -1, "parents": parents})
+        parents[42] = 70
+        values[0x200000] = struct.pack("<80h", *parents)
+        with self.assertRaisesRegex(ValueError, "minimum-number root"):
+            capture_coalescing_policy(memory, 0x400000)
+        values[0x200000] = b""
+        with self.assertRaisesRegex(ValueError, "short copy-coalescing parent map"):
+            capture_coalescing_policy(memory, 0x400000)
+
     def test_simplification_uses_class_mask_and_shared_cutoff(self):
         values = {
             0x1E6784: struct.pack("<i", 32), 0x1E6788: struct.pack("<i", 32),

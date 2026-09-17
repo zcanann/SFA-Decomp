@@ -154,6 +154,39 @@ def capture_graph(memory, base, colored=True, register_class=4):
     return nodes
 
 
+def capture_coalescing_policy(memory, base, register_class=4):
+    """Read the interval and resulting parent map used by GC/1.3 VA 0x5794F0.
+
+    Independently recovered in mwcc's GC_1_3/CopyCoalescing.c. The parent
+    map is post-coalescing state, not a reconstruction of the input graph.
+    """
+    register_kind(register_class)
+
+    def integer(offset, size, signed=False):
+        raw = memory(base + offset, size)
+        if len(raw) != size:
+            raise ValueError("short copy-coalescing policy read")
+        return int.from_bytes(raw, "little", signed=signed)
+
+    count = integer(0x1E6A7C + 4 * register_class, 4, True)
+    if not 32 <= count <= 32768:
+        raise ValueError("invalid copy-coalescing register count")
+    pointer = integer(0x1E01C8, 4)
+    raw = memory(pointer, count * 2)
+    if len(raw) != count * 2:
+        raise ValueError("short copy-coalescing parent map read")
+    parents = list(struct.unpack("<" + "h" * count, raw))
+    if any(not 0 <= parent <= reg for reg, parent in enumerate(parents)):
+        raise ValueError("copy-coalescing parent is not a minimum-number root")
+    return {
+        "physical_count": integer(0x1E6778 + 4 * register_class, 4, True),
+        "first_eligible": integer(0x1E7258 + 2 * register_class, 2, True),
+        "last_eligible": integer(0x1E66A8 + 4 * register_class, 4, True),
+        "protected_gpr": integer(0x1E6CFA, 2, True),
+        "parents": parents,
+    }
+
+
 def capture_graph_snapshot(memory, base, name, colored, register_class=4):
     kind, _ = register_kind(register_class)
     word = lambda address: int.from_bytes(memory(address, 4), "little")
@@ -163,6 +196,7 @@ def capture_graph_snapshot(memory, base, name, colored, register_class=4):
     snapshot["register_class"] = register_class
     snapshot["coloring_graph"] = capture_graph(memory, base, colored, register_class)
     if not colored:
+        snapshot["coalescing_policy"] = capture_coalescing_policy(memory, base, register_class)
         snapshot["simplification_policy"] = capture_simplification_policy(memory, base, register_class)
         snapshot["color_policy"] = capture_color_policy(memory, base, register_class)
     return snapshot
