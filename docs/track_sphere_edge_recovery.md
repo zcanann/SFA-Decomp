@@ -103,3 +103,46 @@ function, allocated data section, named-symbol layout and resolved relocation
 is unchanged, and no other source object changes. All five track objects have
 SHA-256 `36ee73d5fe750e70e284b9db81b3f20fc18cbfe6104d093987d655819a1cc0de`.
 The unit remains `NonMatching` until its remaining six functions are exact.
+
+## Shared endpoint-sphere sweep
+
+The two endpoint tests now call one inline `trackSweepEndpointSphere` helper.
+They perform the same ray/sphere calculation: project the center offset onto
+an already normalized movement direction, reject a miss, choose the entry
+root for an exterior start or exit root for an interior/surface start, and
+accept only a distance in `[0, maxDistance]`. On success the helper writes the
+moving center, contact normal, offset plane constant, and distance. Rejection
+leaves those outputs untouched. Its scratch vector is local to the helper.
+The spelling and helper name are reconstructed, not recovered source names.
+
+This source boundary reproduces all 24 previously different floating-point
+instructions in the two endpoint paths. Merely sharing or splitting scalar
+locals in the coordinator did not reproduce their retail register allocation.
+The coordinator remains 1,115 instructions / 4,460 bytes and improves from
+99.76233% to **99.86996%** in all five versions. The TU reaches **99.71693%**,
+still with **24/30 exact functions**. Twenty-six coordinator differences remain:
+endpoint scratch-pointer setup/addressing, the output-slot register, and two
+instructions computing the final plane distance.
+
+The before/after audit changes exactly 24 instructions, all in the endpoint
+paths (indices 695 through 853); their opcodes and instruction count are
+unchanged. All other 29 functions, allocated data sections, named-symbol
+layout, and resolved relocations are unchanged. The inline helper has no
+out-of-line emitted body. All five original DOL hashes are rechecked, and
+`ninja all_source` plus the strict retail checksum pass in each version.
+The resulting raw object SHA-256 is
+`1761c9673147b23f0ea0216cbd3a3f6fb62bf24c5b3d6fb9895876f67a57dba7`.
+
+`python3 tools/test_track_endpoint_sphere.py` checks 1,211 cases at both `-O0`
+and `-O2` against independently computed quadratic roots: 621 accepted sweeps
+and 590 rejections. Cases include tangent contact, interior/surface starts,
+backward motion, movement-limit rejection and exact endpoints, plus random
+oriented rays. Inputs and rejected outputs must remain unchanged. Host vector
+adapters validate geometry and branches, not Gekko rounding or execution of
+the complete coordinator.
+
+An ordinary LLDB instruction capture reproduces the unmodified object's hash
+and all 1,115 instructions. Requesting its GPR graph exposed an unsupported
+allocation retry (`unpaired initial GPR graph`); no graph replay is claimed.
+Explicit scratch-pointer, declaration-order, and transform-helper experiments
+did not recover the remaining retail setup and are not retained.
