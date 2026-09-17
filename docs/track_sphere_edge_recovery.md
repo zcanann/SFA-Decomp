@@ -146,3 +146,39 @@ and all 1,115 instructions. Requesting its GPR graph exposed an unsupported
 allocation retry (`unpaired initial GPR graph`); no graph replay is claimed.
 Explicit scratch-pointer, declaration-order, and transform-helper experiments
 did not recover the remaining retail setup and are not retained.
+
+## Endpoint scratch-pointer allocation
+
+Explicit `startY`, `startZ`, `endY`, and `endZ` pointers now express the shared
+coordinate addresses used by matrix output arguments and scalar copies. They
+use ordinary typed array addresses; no integer or byte-pointer cast is needed.
+Their position among the existing pointer declarations and initialization order
+are codegen-significant. This recovers all retail pointer setup instructions,
+matrix argument registers, edge scratch registers, and the output-slot register.
+
+The coordinator improves to **99.98027%** in all five versions, leaving only
+four of its 1,115 instructions different: stores at indices 150/153 use direct
+stack addressing instead of the existing endpoint pointers, and 974/975 use
+FPR1 instead of FPR0 for the intermediate plane distance. Constant propagation
+is the first captured stage that folds the two stores' pointer operands into
+stack addresses. Address casts and separate plane-distance temporaries did not
+fix these differences and are not retained.
+
+The TU reaches **99.73444%**, with **24/30 functions exact**. Exactly 22
+coordinator instructions change. All other functions, named-symbol layout,
+allocated data sections, and resolved relocations remain unchanged; all five
+source builds and strict checksum gates pass against hash-verified originals.
+The new object SHA-256 is
+`eb029dd1cdcbda02cd31262db562b3e40f567e640bbdb300126b59cfd9cdc123`.
+
+The preceding source's allocator capture shows an initial 309-node GPR graph,
+then a 364-node retry. `tricky_backend_trace.py --final-allocation-attempt`
+now permits inspection of the final complete pair while explicitly recording
+the earlier attempt as unreplayed. It retains all raw snapshots, requires the
+retry graph to grow, and still rejects missing final pairs and incorrect
+simplification/coloring. The strict default is unchanged. The observed final
+attempt replays 332 simplification steps and physical color choices, including
+one high-degree removal (virtual register 47, degree 29, weight 368). Spill
+selection in the earlier attempt is not verified. LLDB and ordinary compilation
+produce identical objects. This trace exposed the pointer-register ordering
+that guided the retained source change.

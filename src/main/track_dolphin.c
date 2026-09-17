@@ -1902,6 +1902,10 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     u8* slotp;
     u8* typeSlotp;
     f32* outp;
+    f32* startZ;
+    f32* startY;
+    f32* endZ;
+    f32* endY;
     f32 *edge1p, *edge2p, *vbp, *evecp;
     u8* slotBase;
     s16 i;
@@ -1960,6 +1964,10 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     sp2 = startPos;
     slotp = slots;
     outp = slots;
+    endY = &we[1];
+    endZ = &we[2];
+    startZ = &ws[2];
+    startY = &ws[1];
     /* These byte views preserve the independent scratch-pointer setup. */
     edge1p = (f32*)((u8*)edgePlanes + sizeof(edgePlanes[0]));
     edge2p = (f32*)((u8*)edgePlanes + 2 * sizeof(edgePlanes[0]));
@@ -1983,22 +1991,22 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
         negativeClearance = -clearance;
         do {
             we[0] = cur[0];
-            we[1] = cur[1];
-            we[2] = cur[2];
+            *endY = cur[1];
+            *endZ = cur[2];
             found = 0;
             hit = 0;
             for (desc = gTrackBlockDescriptors; desc < descEnd; desc++) {
                 if (desc->object != NULL) {
-                    Matrix_TransformPoint(desc->alternateMatrix, svFromp[0], svFromp[1], svFromp[2], &ws[0], &ws[1],
-                                          &ws[2]);
-                    Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2], &we[0], &we[1], &we[2]);
+                    Matrix_TransformPoint(desc->alternateMatrix, svFromp[0], svFromp[1], svFromp[2], &ws[0], startY,
+                                          startZ);
+                    Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2], &we[0], endY, endZ);
                 } else {
                     ws[0] = svFromp[0] - offX;
-                    ws[1] = svFromp[1];
-                    ws[2] = svFromp[2] - offZ;
+                    *startY = svFromp[1];
+                    *startZ = svFromp[2] - offZ;
                     we[0] = cur[0] - offX;
-                    we[1] = cur[1];
-                    we[2] = cur[2] - offZ;
+                    *endY = cur[1];
+                    *endZ = cur[2] - offZ;
                 }
                 PSVECSubtract((Vec*)we, (Vec*)ws, (Vec*)delta);
                 mag = PSVECMag((Vec*)delta);
@@ -2171,8 +2179,8 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                 if (hit != 0) {
                     u8 triFlags;
                     we[0] = hitpt[0];
-                    we[1] = hitpt[1];
-                    we[2] = hitpt[2];
+                    *endY = hitpt[1];
+                    *endZ = hitpt[2];
                     contactPlane[0] = plane[0];
                     contactPlane[1] = plane[1];
                     contactPlane[2] = plane[2];
@@ -2182,8 +2190,8 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                     typeb2 = triFlags;
                     objmtx = (u32)desc->object;
                     collisionStart[0] = ws[0];
-                    collisionStart[1] = ws[1];
-                    collisionStart[2] = ws[2];
+                    collisionStart[1] = *startY;
+                    collisionStart[2] = *startZ;
                     collisionContact[0] = hitpt[0];
                     collisionContact[1] = hitpt[1];
                     collisionContact[2] = hitpt[2];
