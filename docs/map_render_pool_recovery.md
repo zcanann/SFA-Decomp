@@ -619,3 +619,32 @@ bytes, 120 symbol layouts, 40 data relocations, and 151 direct retail pool loads
 The full source build and strict EN retail checksum pass. Formatting is verified
 separately against the complete raw object; the strict link still uses this
 TU's retail object.
+
+### Loaded-object bitmap compound updates (2026-09-17)
+
+`mapLoadUnloadObjects` now uses compound OR assignments at its two loaded-object
+bitmap updates. This preserves the existing signed-byte lvalue and truncation,
+while evaluating that lvalue once. Both instructions change from
+`or r0,r4,r0` to the retail `or r0,r0,r4`. The preceding clear and all surrounding
+instructions remain unchanged. An unsigned-byte compound lvalue regressed the
+match; reversing the explicit RHS operands alone was byte-neutral.
+
+EN function fuzzy matching improves from **98.58787% to 98.62971%**; the complete
+TU improves from **99.85951% to 99.86113%**. This is a two-instruction improvement,
+not a newly exact function. All five configured originals were hash-verified,
+and EN, JP, PAL, EN rev1 and PAL rev1 show the same function-score improvement.
+For each region the before/after objects differ in exactly four text bytes,
+all in this function. The other 144 function bodies, allocated data, named-symbol
+layouts and relocation destinations are unchanged. Anonymous literal labels are
+renumbered by the semantic source edit; their sections, offsets and bytes agree.
+The retail data audit also passes its 40,668 bytes, 120 native symbol layouts,
+40 data relocations and 151 direct pool loads.
+
+The investigation independently recovered the previously unimplemented GC/1.3
+`PCodeUtilities.c` address emitter at `0x004e8f90` in the sibling `mwcc` project
+(`src/versions/GC_1_3/AddressEmit.c`). Its 219-byte body passed 4,660 comparisons
+with the original x86 routine in a hardened offline Unicorn sandbox. That model
+clarifies MR/ADDI/symbolic-LI emission, but does not yet reconstruct the frontend
+compound-assignment lowering responsible for this OR-order difference. No causal
+proof or Win32 byte-match claim is made for that connection. The new compiler
+model and fixture remain in that workspace alongside its pre-existing GC/1.3 work.

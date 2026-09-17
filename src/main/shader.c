@@ -918,7 +918,7 @@ void mapLoadUnloadObjects(int flag) {
                                 ix2 = bit >> 3;
                                 msk = 1 << (bit & 7);
                                 *(s8*)&pg->loadedObjectBits[ix2] = pg->loadedObjectBits[ix2] & ~msk;
-                                *(s8*)&pg->loadedObjectBits[ix2] = pg->loadedObjectBits[ix2] | msk;
+                                *(s8*)&pg->loadedObjectBits[ix2] |= msk;
                             }
                             objSetupObject((ObjPlacement*)objStart, 1, nearbyMapIds[i], bit, NULL);
                         }
@@ -995,7 +995,7 @@ void mapLoadUnloadObjects(int flag) {
                                 ix3 = bit >> 3;
                                 msk3 = 1 << (bit & 7);
                                 *(s8*)(*(int*)(pg3 + 0x10) + ix3) = *(u8*)(*(int*)(pg3 + 0x10) + ix3) & ~msk3;
-                                *(s8*)(*(int*)(pg3 + 0x10) + ix3) = *(u8*)(*(int*)(pg3 + 0x10) + ix3) | msk3;
+                                *(s8*)(*(int*)(pg3 + 0x10) + ix3) |= msk3;
                             }
                             objSetupObject((ObjPlacement*)cur, 1, mid2, bit, obj2);
                         }
