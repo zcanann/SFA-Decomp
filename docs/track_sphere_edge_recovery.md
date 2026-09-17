@@ -69,3 +69,37 @@ copies remain unchanged apart from their recovered names.
   invocation limited to 30 seconds. The TU remains `NonMatching`; the checksum
   therefore verifies integration with its retail object, while objdiff checks
   the reconstructed source directly.
+
+## Coordinator edge-plane array and stack placement
+
+The coordinator's three edge planes are now `f32 edgePlanes[3][4]` instead of
+three independent four-float arrays. Each record receives the corresponding
+`TrackTriangle.edgeNormals` vector and a fourth plane constant. The three
+tested constants produce edge-mask bits 1, 2, and 4. These parallel consumers
+establish the element count and four-component shape independently of stack
+spacing. The owned 48-byte `TrackSphereSweepEdge` packet remains intact.
+
+This places the packet at retail SP+184 and the three planes at SP+232, +248,
+and +264. Ordinary array-to-pointer assignments introduce two extra register
+copies; byte views using `sizeof(edgePlanes[0])` preserve the independent
+scratch-pointer setup, as the packet's existing `offsetof` views already do.
+Moving the packet declaration alone does not correct the stack allocation.
+
+All five hash-verified retail versions improve from **99.698654% to 99.76233%**
+for the 4,460-byte coordinator. The TU improves from 99.689735% to **99.699844%**
+and preserves all **24/30 exact functions**. This is a stack-layout improvement,
+not another exact function. Fifty retail instruction differences remain,
+including pointer setup/addressing and endpoint-sphere floating-point registers.
+
+The before/after instruction audit finds exactly 75 changed instructions. Every
+change is solely the 16-bit displacement of an SP-based `addi`, `lfs`, or
+`stfs`: old offsets 184..231 move up 48 bytes, and 232..279 move down 48 bytes.
+Every opcode, register field, branch, arithmetic instruction, and other bit is
+unchanged. This verifies a complete permutation of the two disjoint scratch
+areas; it does not claim a host geometry test of the entire coordinator.
+
+Full source and strict retail builds pass for all five versions. Every other
+function, allocated data section, named-symbol layout and resolved relocation
+is unchanged, and no other source object changes. All five track objects have
+SHA-256 `36ee73d5fe750e70e284b9db81b3f20fc18cbfe6104d093987d655819a1cc0de`.
+The unit remains `NonMatching` until its remaining six functions are exact.
