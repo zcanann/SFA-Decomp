@@ -70,3 +70,49 @@ records, and non-text bytes remain identical. The TU reaches 99.67222% fuzzy,
 retains 23/30 exact functions, and keeps all 2,040 data bytes exact. Formatting
 is committed separately and preserves the raw object hash. Both `all_source`
 and the strict retail checksum gate pass; the TU remains `NonMatching`.
+
+## GC/1.3 zero-commoning boundary (September 17)
+
+A fresh unchanged-object backend capture now follows the single differing
+instruction through 21 stages. At the first adjacency-loop initialization,
+`outputLineIndex` is virtual GPR 43 and `lineByteOffset` is GPR 44. Both zero
+loads remain unchanged through late value numbering: its eligible interval is
+[49, 227]. The baseline raw-object SHA-256 is
+`6aa15c92ee6ae57d0b9930a7d335f8196a9761d4b3ff02755e66bab5a25cc520`.
+The independently reconstructed GC/1.3 predicate at `0x005082a0` rejects these
+named-register destinations. This distinguishes the difference from physical
+color selection or a missed final peephole.
+
+Replacing explicit byte-offset induction with ordinary array indexing gives
+a compiler-generated offset in GPR 70, inside [48, 227], but the first zero
+still targets GPR 43. No commoning occurs; indexing alone is insufficient.
+Extracting the adjacency pass into an inline helper does produce the retail
+copy: after late value numbering, GPR 70 copies GPR 69 and becomes `mr r4,r5`.
+However, this moves the zero-commoning mismatch to the sorting loop: its named
+index is GPR 41, below the helper variant's lower bound 46, and the generated
+GPR 61 zero cannot share that excluded definition. Other registers also change,
+so the helper is not retained.
+
+Reusing the endpoint counter for the later adjacency/sorting index and using
+ordinary array indexing produces the complete retail instruction sequence,
+including the required copies. Its remaining eleven operand differences swap
+only the adjacency offset and line pointer between r3 and r4. This is a useful
+source-shape witness, not an accepted source change: its 99.80769% fuzzy score
+is below the retained 99.82249%. Giving adjacency its own typed line pointer
+rotates three registers instead. Sharing every line counter additionally
+changes later strength reduction, so that broader rewrite is also rejected.
+
+The trace validator now recognizes GC/1.3 opcode 0x199 (`PSQ_STX`), independently
+checked against the verified compiler's descriptor table at `0x005bdcf0` with
+18-byte stride. This permits the builder's large-stack indexed paired-single
+save to pass mnemonic/register alignment; it does not add a complete paired-
+single encoding validator. All 38 backend-IR tests pass, including a positive
+indexed-store fixture and wrong-register/wrong-opcode rejection tests.
+
+Reproduce the retained-source capture with:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/main/track_dolphin \
+  --function intersectModLineBuild --graph --register-class gpr \
+  --output build/track_complete/model_line_trace
+```
