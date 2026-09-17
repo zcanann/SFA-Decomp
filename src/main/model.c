@@ -553,9 +553,9 @@ void modelAnimResetState(void* m, void* data) {
         channel->prevBlendCacheSlot = channel->moveCacheSlot;
     }
 }
-int modelLoadAnimations(ModelFileHeader* file, int modelId, void* animBase) {
+int modelLoadAnimations(ModelFileHeader* file, int resourceId, u8* bufferCursor) {
     int modelAnimOffset;
-    u8* bufferCursor = animBase;
+    int modelId = resourceId;
     ModelAnimationOffsetScratch* offsetTable;
     int modelAnimBytes;
     int animationOffset;

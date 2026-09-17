@@ -19,24 +19,42 @@ The loader has two distinct resource paths:
 
 `gModelAnimOffsetTable` is reused as I/O scratch: the first `MODANIM.TAB`
 lookup reads a signed halfword, while the later `AMAP.TAB` lookup reads words
-and derives a byte span from adjacent offsets. The first view now uses an
-explicit `s16*` local. The existing parameter reuse for the AMAP byte span
-and the separate buffer cursor are retained: separating the span or using
-the buffer parameter directly changes register allocation. Cache locals are
-named for animations rather than texture atlases.
+and derives a byte span from adjacent offsets. The first view uses the signed
+halfword array in `ModelAnimationOffsetScratch`. A mutable local starts with the resource ID
+and is later reused for the AMAP byte span; the buffer cursor is a `u8*`
+parameter. Separating the ID and byte span into independent locals changes
+register allocation. Cache locals are named for animations rather than
+texture atlases.
 
 The existing overflow diagnostic, group-table writes, reference-count
 signedness, and error cleanup are preserved. The change adds no new bounds
 checks or allocation behavior. The zero-animation case still performs its
 initial table read before returning.
 
-All 85 model function bodies, allocated section bytes, and named symbol layouts
-remain unchanged under GC/1.3. The loader remains 944 bytes at 99.66102%; its
-remaining retail differences exchange the registers used for the byte span
-and buffer cursor. Anonymous symbol names change without changing normalized
-relocation destinations. Separate formatting preserves the complete object.
-The strict retail checksum and `all_source` builds validate the canonical
-declaration and its direct caller.
+The loader now matches all 944 bytes under GC/1.3, raising the EN model TU
+from 78/85 to 79/85 exact functions. The previous 99.66102% body exchanged
+`r27` and `r31`: it kept the ID/span in the parameter and copied the buffer
+parameter into a local. Keeping the cursor as the parameter and the mutable
+ID/span as a local recovers retail allocation without changing the algorithm.
+The public declaration now expresses the buffer's byte-pointer type.
+
+LLDB captures of the ordinary GC/1.3 compiler verified all 236 instructions
+and replayed register simplification and physical coloring. Instrumented and
+ordinary compiles produced identical objects for each source version. The
+matched capture has zero retail instruction differences. This establishes
+code generation, not the original source spelling.
+
+All other 84 function bodies, symbol layouts, relocations, and allocated data
+remain unchanged. `clang-format` makes no additional edits and the rebuilt
+object is byte-identical to the pre-format result. The strict EN retail
+checksum and `all_source` builds pass. The TU remains `NonMatching` because
+other functions and data are still incomplete.
+
+The same source also scores 100% for this function in EN rev1, JP, and PAL
+rev1 after verifying each input DOL against its configured SHA-1. These are
+per-function objdiff checks, not complete regional source-link claims. The
+existing matrix-preparation test still passes 144 scenarios each at `-O0`
+and `-O2`.
 
 ## Shared move-resource ownership
 
