@@ -147,4 +147,3 @@ void loadAssetFileById(void* out, int fileId) {
     gGameLoopAssetReq.destination = out;
     loadAsset(&gGameLoopAssetReq);
 }
-
