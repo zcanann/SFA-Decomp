@@ -1662,8 +1662,8 @@ static inline void trackProjectOntoOffsetPlane(f32* position, const f32* plane, 
     position[0] -= radiusDistance * plane[0];
     position[1] -= radiusDistance * plane[1];
     position[2] -= radiusDistance * plane[2];
-    planeCorrection =
-        clearance - (plane[3] + (position[2] * *(const f32*)(plane + 2) + (position[0] * *(const f32*)plane + position[1] * plane[1])));
+    planeCorrection = clearance - (plane[3] + (position[2] * *(const f32*)(plane + 2) +
+                                               (position[0] * *(const f32*)plane + position[1] * plane[1])));
     position[0] += planeCorrection * plane[0];
     position[1] += planeCorrection * plane[1];
     position[2] += planeCorrection * plane[2];
@@ -1712,8 +1712,8 @@ int trackResolveSurfacePenetration(const f32* startPosition, f32* position, cons
             case 1:
             case 8:
             case 0xa: {
-                clearance =
-                    clearance - (plane[3] + (position[2] * *(const f32*)(plane + 2) + (position[0] * *(const f32*)plane + position[1] * plane[1])));
+                clearance = clearance - (plane[3] + (position[2] * *(const f32*)(plane + 2) +
+                                                     (position[0] * *(const f32*)plane + position[1] * plane[1])));
                 if (clearance > 0.0f) {
                     f32 normalXSquared = plane[0] * plane[0];
                     f32 normalZSquared = plane[2] * plane[2];
@@ -1747,8 +1747,8 @@ int trackResolveSurfacePenetration(const f32* startPosition, f32* position, cons
             case 9:
             case 0xa:
             default: {
-                clearance =
-                    clearance - (plane[3] + (position[2] * *(const f32*)(plane + 2) + (position[0] * *(const f32*)plane + position[1] * plane[1])));
+                clearance = clearance - (plane[3] + (position[2] * *(const f32*)(plane + 2) +
+                                                     (position[0] * *(const f32*)plane + position[1] * plane[1])));
                 if (clearance > 0.0f) {
                     f32 normalXSquared = plane[0] * plane[0];
                     f32 normalZSquared = plane[2] * plane[2];
