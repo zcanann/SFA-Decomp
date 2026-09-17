@@ -1,6 +1,6 @@
 # Shared asset-request record
 
-`src/main/gameloop.c` now models its private request as `AssetLoadRequest` with
+`src/main/asset_load.c` now models its private request as `AssetLoadRequest` with
 named request kinds and typed argument views. The dispatcher and four request
 builders no longer pass destination, object, placement, animation-definition or
 cache pointers through `int` fields.
@@ -51,6 +51,10 @@ does not establish a model-flags contract or a scratch-record layout. Likewise,
 does not assert that it is a size or function count.
 
 ## Extent and unresolved ownership
+
+The later [boundary audit](gameloop_asset_boundary.md) establishes a separate
+asset-loader input and resolves the four-byte gap as linker alignment. The
+following records the uncertainty before that audit.
 
 The modeled request still ends at +0x2C. This is the accessed extent already
 represented by the source, not a new claim about the four bytes before the next

@@ -173,148 +173,6 @@ s8 hudHiddenFrameCount;
 u8 gGameLoopReloadRequested;
 u8 lbl_803DCA38;
 
-typedef enum AssetLoadType {
-    ASSET_LOAD_FILE = 0,
-    ASSET_LOAD_FILE_BUFFER = 1,
-    ASSET_LOAD_FILE_RANGE = 2,
-    ASSET_LOAD_TEXTURE = 3,
-    ASSET_LOAD_OBJECT = 4,
-    ASSET_LOAD_RESOURCE = 5,
-    ASSET_LOAD_MODEL = 6,
-    ASSET_LOAD_ANIMATION = 7
-} AssetLoadType;
-
-typedef struct AssetLoadRequest {
-    u8 pending;
-    u8 type;
-    u8 reserved[2];
-    int resourceId;
-    void* destination;
-    union {
-        struct {
-            int size;
-            int offset;
-        } file;
-        struct {
-            int argument;
-        } resource;
-        struct {
-            int argument;
-        } model;
-        struct {
-            u8 unused[8];
-            GameObject* parent;
-            ObjPlacement* placement;
-            int flags;
-            int objectIndex;
-            int mapLayer;
-            int unusedArgument;
-        } object;
-        struct {
-            int moveIndex;
-            u8 unused[16];
-            ObjAnimCachedMove* cache;
-            ObjAnimDef* definition;
-        } animation;
-    } args;
-} AssetLoadRequest;
-
-STATIC_ASSERT(sizeof(AssetLoadRequest) == 0x2c);
-STATIC_ASSERT(offsetof(AssetLoadRequest, pending) == 0);
-STATIC_ASSERT(offsetof(AssetLoadRequest, type) == 1);
-STATIC_ASSERT(offsetof(AssetLoadRequest, resourceId) == 4);
-STATIC_ASSERT(offsetof(AssetLoadRequest, destination) == 8);
-STATIC_ASSERT(offsetof(AssetLoadRequest, args.file.size) == 0x0c);
-STATIC_ASSERT(offsetof(AssetLoadRequest, args.file.offset) == 0x10);
-STATIC_ASSERT(offsetof(AssetLoadRequest, args.resource.argument) == 0x0c);
-STATIC_ASSERT(offsetof(AssetLoadRequest, args.model.argument) == 0x0c);
-STATIC_ASSERT(offsetof(AssetLoadRequest, args.object.parent) == 0x14);
-STATIC_ASSERT(offsetof(AssetLoadRequest, args.object.placement) == 0x18);
-STATIC_ASSERT(offsetof(AssetLoadRequest, args.object.flags) == 0x1c);
-STATIC_ASSERT(offsetof(AssetLoadRequest, args.object.objectIndex) == 0x20);
-STATIC_ASSERT(offsetof(AssetLoadRequest, args.object.mapLayer) == 0x24);
-STATIC_ASSERT(offsetof(AssetLoadRequest, args.object.unusedArgument) == 0x28);
-STATIC_ASSERT(offsetof(AssetLoadRequest, args.animation.moveIndex) == 0x0c);
-STATIC_ASSERT(offsetof(AssetLoadRequest, args.animation.cache) == 0x20);
-STATIC_ASSERT(offsetof(AssetLoadRequest, args.animation.definition) == 0x24);
-
-static void loadAsset(AssetLoadRequest* req) {
-    u8 modelScratch[0x10];
-
-    switch (req->type) {
-    case ASSET_LOAD_FILE:
-        *(void**)req->destination = fileLoad(req->resourceId, 0);
-        break;
-    case ASSET_LOAD_FILE_BUFFER:
-        fileLoadToBuffer(req->resourceId, req->destination);
-        break;
-    case ASSET_LOAD_FILE_RANGE:
-        fileLoadToBufferOffset(req->resourceId, req->destination, req->args.file.offset, req->args.file.size);
-        break;
-    case ASSET_LOAD_OBJECT:
-        *(void**)req->destination =
-            loadCharacter(req->args.object.placement, req->args.object.flags, req->args.object.mapLayer,
-                          req->args.object.objectIndex, req->args.object.parent, req->args.object.unusedArgument);
-        break;
-    case ASSET_LOAD_TEXTURE:
-        *(void**)req->destination = (void*)textureLoad(req->resourceId, 0);
-        break;
-    case ASSET_LOAD_RESOURCE:
-        *(void**)req->destination = Resource_Acquire(req->resourceId & 0xffff, req->args.resource.argument & 0xffff);
-        break;
-    case ASSET_LOAD_MODEL:
-        *(void**)req->destination = loadModelInstance(req->resourceId, req->args.model.argument, modelScratch);
-        break;
-    case ASSET_LOAD_ANIMATION:
-        *(void**)req->destination = loadAnimation(req->args.animation.definition, req->resourceId,
-                                                  (s16)req->args.animation.moveIndex, req->args.animation.cache);
-        break;
-    }
-}
-
-void nop_onUnloadMap(int wpad0, int wpad1) {
-}
-void doNothing_startOfFrame(void) {
-}
-AssetLoadRequest gGameLoopAssetReq;
-
-void animationLoad(void** out, int animId, int moveIndex, ObjAnimCachedMove* cache, ObjAnimDef* animDef) {
-    gGameLoopAssetReq.pending = 1;
-    gGameLoopAssetReq.type = ASSET_LOAD_ANIMATION;
-    gGameLoopAssetReq.resourceId = (s16)animId;
-    gGameLoopAssetReq.destination = out;
-    gGameLoopAssetReq.args.animation.moveIndex = (s16)moveIndex;
-    gGameLoopAssetReq.args.animation.cache = cache;
-    gGameLoopAssetReq.args.animation.definition = animDef;
-    loadAsset(&gGameLoopAssetReq);
-}
-
-void loadTextureFile(void** out, int assetId) {
-    gGameLoopAssetReq.pending = 1;
-    gGameLoopAssetReq.type = ASSET_LOAD_TEXTURE;
-    gGameLoopAssetReq.resourceId = assetId;
-    gGameLoopAssetReq.destination = out;
-    loadAsset(&gGameLoopAssetReq);
-}
-
-void getTabEntry(void* dst, int fileId, int offset, int size) {
-    gGameLoopAssetReq.pending = 1;
-    gGameLoopAssetReq.type = ASSET_LOAD_FILE_RANGE;
-    gGameLoopAssetReq.resourceId = fileId;
-    gGameLoopAssetReq.destination = dst;
-    gGameLoopAssetReq.args.file.offset = offset;
-    gGameLoopAssetReq.args.file.size = size;
-    loadAsset(&gGameLoopAssetReq);
-}
-
-void loadAssetFileById(void* out, int fileId) {
-    gGameLoopAssetReq.pending = 1;
-    gGameLoopAssetReq.type = ASSET_LOAD_FILE;
-    gGameLoopAssetReq.resourceId = fileId;
-    gGameLoopAssetReq.destination = out;
-    loadAsset(&gGameLoopAssetReq);
-}
-
 void crash(int wpad0, int wpad1, int wpad2, int wpad3, int wpad4, int wpad5, int wpad6, int wpad7) {
     *(u8*)0 = 0;
 }
@@ -638,7 +496,6 @@ void removeButtonObject(GameObject* object) {
 #define GAMEBIT_FLAG_WIDTH_MASK 0x1f /* bit-run length: (mask)+1 bits stored for this entry */
 #define GAMEBIT_FLAG_SYNC       0x20 /* request a save-sync when this bit is written */
 #define GAMEBIT_FLAG_BANK_SHIFT 6    /* top bits select one of four save-data banks */
-extern char sGameBitSetDuringSaveLoadWarning[];
 
 /* Top-level boot / soft-reset state machine (the global gameState). */
 typedef enum GameLoopState {
@@ -764,7 +621,7 @@ void mainSetBits(int gameBit, int value) {
     u32 bit;
 
     if (isSaveGameLoading()) {
-        OSReport(sGameBitSetDuringSaveLoadWarning, gameBit, value);
+        OSReport("WARNING in mainSetBits: Bit %d can't be set to %d while a savegame is loading\n", gameBit, value);
         return;
     }
     if (gameBit & 0x8000) {
@@ -833,30 +690,11 @@ void setFrameCountdown(s8 count) {
     frameCountdown = count;
 }
 
-typedef struct GameLoopDiagnosticMessages {
-    char setBitsDuringLoad[80];
-    char resetPressed[28];
-    char resetNow[24];
-    char audioQuit[20];
-    char gxFlush[20];
-    char viFlush[16];
-    char resetDefault[16];
-} GameLoopDiagnosticMessages;
-
-STATIC_ASSERT(sizeof(GameLoopDiagnosticMessages) == 204);
-
-char sGameBitSetDuringSaveLoadWarning[204] =
-    "WARNING in mainSetBits: Bit %d can't be set to %d while a savegame is "
-    "loading\n\000\000GAME_STATE_RESETPRESSED\n\000\000\000\000GAME_STATE_RESETNOW\n\000\000\000\000audioQuit "
-    "passed\n\000\000\000GX flush passed\n\000\000\000\000VIFlush passed\n\000reset default\n\000\000";
-
 void checkReset(void) {
-    const GameLoopDiagnosticMessages* msg;
     u8 pressed;
     f32 t;
     int status;
 
-    msg = (const GameLoopDiagnosticMessages*)sGameBitSetDuringSaveLoadWarning;
     if (gVideoRetracePending == 0 || gDvdCoverOpenErrorActive != 0) {
         return;
     }
@@ -887,7 +725,7 @@ void checkReset(void) {
         break;
     case GAME_STATE_RESETPRESSED:
     case GAME_STATE_HARDRESETPRESSED:
-        OSReport(msg->resetPressed);
+        OSReport("GAME_STATE_RESETPRESSED\n");
         if (gGameLoopInitComplete != 0) {
             (*gScreenTransitionInterface)->start(0x1e, SCREEN_TRANSITION_BLACK);
         }
@@ -911,7 +749,7 @@ void checkReset(void) {
         }
         break;
     case GAME_STATE_RESETNOW:
-        OSReport(msg->resetNow);
+        OSReport("GAME_STATE_RESETNOW\n");
         while (gDvdErrorPauseActive == 0 && (gAudioStreamPlaying != 0 || gAudioStreamDvdState != 0)) {
             status = DVDGetDriveStatus();
             gDvdLastDriveStatus = status;
@@ -935,19 +773,19 @@ void checkReset(void) {
         }
         AISetStreamPlayState(AI_STREAM_STOP);
         audioReset();
-        OSReport(msg->audioQuit);
+        OSReport("audioQuit passed\n");
         stopRumble2();
         waitNextFrame();
         GXFlush_(1, 0);
         waitNextFrame();
         GXFlush_(1, 0);
-        OSReport(msg->gxFlush);
+        OSReport("GX flush passed\n");
         LCDisable();
         DVDSetAutoInvalidation(1);
         VISetBlack(1);
         VIFlush();
         VIWaitForRetrace();
-        OSReport(msg->viFlush);
+        OSReport("VIFlush passed\n");
         gameState = GAME_STATE_RESETDONE;
         if (gGameLoopHardReset != 0) {
             OSResetSystem(1, 0x80000000, 1);
@@ -956,7 +794,7 @@ void checkReset(void) {
         }
         break;
     default:
-        OSReport(msg->resetDefault);
+        OSReport("reset default\n");
         break;
     }
 }

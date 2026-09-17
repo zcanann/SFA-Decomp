@@ -1,5 +1,9 @@
 # Game-loop translation-unit recovery
 
+The later [asset-loader boundary audit](gameloop_asset_boundary.md) corrects the
+leading asset-loader ownership, removes the diagnostic overlay, and resolves
+the BSS gap described below. The main-loop and button-object merger remains.
+
 The three former files `gameloop.c`, `gameloop_buttonobj.c`, and
 `gameloop_main.c` are now one `src/main/gameloop.c`, in retail function order.
 This corrects an optimization-driven split and recovers the PAL boot path and
