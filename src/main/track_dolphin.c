@@ -2230,7 +2230,8 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                     }
                     radiusDistance = contactPlane[3] +
                                      (cur[2] * contactPlane[2] + (cur[0] * contactPlane[0] + cur[1] * contactPlane[1]));
-                    radiusDistance -= radius;
+                    /* Preserve the single-precision temporary before forming the call argument. */
+                    radiusDistance = (f32)radiusDistance - radius;
                     trackResolveSurfacePenetration(collisionStart, cur, collisionContact, contactPlane, radiusDistance,
                                                    clearance, type);
                     if (objmtx != 0) {

@@ -182,3 +182,29 @@ one high-degree removal (virtual register 47, degree 29, weight 368). Spill
 selection in the earlier attempt is not verified. LLDB and ordinary compilation
 produce identical objects. This trace exposed the pointer-register ordering
 that guided the retained source change.
+
+## Final plane-distance temporary
+
+The assignment is now `radiusDistance = (f32)radiusDistance - radius`.
+Although both operands already have type `f32`, the explicit cast prevents
+MWCC from coalescing the preceding plane sum into the call-argument register.
+LLDB captures before and after reproduce their ordinary objects exactly.
+Before the cast, both instructions define virtual FPR32, which coalesces into
+physical FPR1. With the cast, the sum retains virtual FPR32 / physical FPR0,
+while the subtraction defines virtual FPR41 and coalesces into physical FPR1.
+Both final FPR graph replays pass (344 nodes / 310 choices before, 345 / 311
+after), with no high-degree removals.
+
+Exactly two instruction words change in all five versions: index 974 changes
+`ec26002a` to `ec06002a`, and index 975 changes `ec21e828` to `ec20e828`.
+The coordinator reaches **99.989235%**, with only the indirect-store differences
+at indices 150 and 153 remaining. The TU reaches **99.73587%** and still has
+**24/30 exact functions**. No other function, allocated data section, named-symbol
+layout, resolved relocation or source object changes. Full source and strict
+retail builds pass for all five hash-verified originals. The new track object
+SHA-256 is `60852af4d1624f3f1854c1b9adbec74c181811a2f62d38b517aefc7f7aca75da`.
+
+Ordinary `Vec` records for the transformed endpoints, register declarations,
+address/value casts and a scalar store helper do not fix the remaining stores.
+Volatile experiments alter other stores and are not retained. Double-precision
+locals and arithmetic regress code generation; the retained cast is `f32` only.
