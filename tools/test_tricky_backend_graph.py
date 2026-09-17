@@ -2,7 +2,7 @@ import copy
 import struct
 import unittest
 
-from tricky_backend_graph import (capture_coalescing_policy, capture_color_policy, capture_graph, capture_simplification_policy, coloring_order, describe_node,
+from tricky_backend_graph import (capture_coalescing_policy, capture_color_policy, capture_graph, capture_simplification_policy, capture_symbol_objects, coloring_order, describe_node,
                                  replay_coloring, replay_simplification, validate_graph, validate_rewrite)
 
 
@@ -38,6 +38,25 @@ def simplification_fixture(removal_order, weights=(10, 5)):
 
 
 class BackendGraphTests(unittest.TestCase):
+    def test_symbol_metadata_uses_object_and_name_record_offsets(self):
+        memory = bytearray(0x400)
+        memory[0x102] = 0
+        struct.pack_into("<I", memory, 0x10a, 0x200)
+        struct.pack_into("<IH", memory, 0x112, 0x20010, 0x103)
+        struct.pack_into("<I", memory, 0x11e, 0x300)
+        memory[0x137] = 1
+        struct.pack_into("<I", memory, 0x138, 0x220)
+        memory[0x20a:0x217] = b"gShaderSlots\0"
+        symbolic = bytes([3, 8, 0, 0, 0, 0]) + struct.pack("<I", 0x100) + bytes(2)
+        instruction = {"address": 1, "words": [0] * 8 + [0x1008a] + list(struct.unpack("<3I", symbolic))}
+        snapshot = {"blocks": [{"instructions": [instruction, instruction]}]}
+        self.assertEqual(capture_symbol_objects(lambda a, n: memory[a:a + n], snapshot), {
+            "256": {"name": "gShaderSlots", "kind": 0, "flags": 0x20010, "category": 0x103,
+                    "context": 0x300, "field37": 1, "cached_name38": 0x220},
+        })
+        with self.assertRaisesRegex(ValueError, "short symbolic object read"):
+            capture_symbol_objects(lambda a, n: b"", snapshot)
+
     def test_coalescing_policy_preserves_named_and_inline_register_boundary(self):
         parents = list(range(80))
         parents[70] = 64

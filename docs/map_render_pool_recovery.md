@@ -695,3 +695,33 @@ Moving the complete BSS definition block earlier also disturbed its symbol
 layout and was discarded. These findings improve diagnosis, not the shader
 match percentage: all probes were restored, leaving 142/145 exact functions
 and the existing 99.86275% TU match intact.
+
+### Object metadata and shared BSS selection (2026-09-17)
+
+The sibling compiler reconstruction now includes the 117-byte GC/1.3 object-name
+lookup at `0x004fcd60` through `0x004fcdd4` (`ObjectName.c`). It follows aliases,
+selects direct names or kind-specific cached names, and dispatches lazy builders.
+Its native model agrees with 2,376 original-routine cases, each making two calls
+to check caching. Name builders and assertions are stubbed; this is functional
+agreement, not a Win32 binary match. The section-category predicate was separately
+checked in 8,360 cases against the original without dependency stubs.
+
+The backend graph capture now records symbolic operands' object kind, name,
+flags and category, plus variable context and cached-name fields. This read-only
+capture rules out the proposed exclusion-flag explanation for the pending-load
+slot and table accesses: with their definitions after the functions, these
+objects have flags zero, category `0x103`, and a null context pointer.
+
+Moving the complete BSS definition group before the functions and using native
+array accesses replaces those operands with the compiler-generated `...bss.0`
+base (category `0x102`). However, storage follows first-use order in this probe,
+changing the proven global offsets. The pending-load function also regresses
+from 98.81043% to 97.18829%. Keeping the definitions late with the same native
+accesses regresses further to 94.36896%. Both probes were discarded. Symbolic
+relocation normalization can conceal the changed global offsets, so a shared
+base alone is insufficient evidence of a correct source reconstruction.
+
+Ordinary and instrumented objects agree byte-for-byte for all three captures:
+the unchanged baseline, native accesses with late definitions, and native
+accesses with early definitions. No shader source change is retained from this
+experiment; the current TU remains 99.86275% with 142/145 exact functions.

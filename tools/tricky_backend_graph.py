@@ -187,6 +187,48 @@ def capture_coalescing_policy(memory, base, register_class=4):
     }
 
 
+def capture_symbol_objects(memory, snapshot):
+    """Read GC/1.3 object metadata for symbolic IR operands without mutation.
+
+    SectionCategory/ObjectName/SharedContext in the sibling mwcc project
+    establish these offsets independently. Flag meanings remain numeric.
+    """
+    addresses = set()
+    for block in snapshot["blocks"]:
+        for instruction in block["instructions"]:
+            for item in decode(instruction)["operands"]:
+                if item["kind"] == 3:
+                    address = int.from_bytes(bytes.fromhex(item["raw"])[6:10], "little")
+                    if address:
+                        addresses.add(address)
+    objects = {}
+    for address in sorted(addresses):
+        raw = memory(address, 0x18)
+        if len(raw) != 0x18:
+            raise ValueError("short symbolic object read")
+        name_pointer = int.from_bytes(raw[10:14], "little")
+        name = bytearray()
+        if name_pointer:
+            for offset in range(256):
+                char = memory(name_pointer + 10 + offset, 1)
+                if len(char) != 1:
+                    raise ValueError("short symbolic object name read")
+                if char == b"\0":
+                    break
+                name.extend(char)
+        info = {"name": name.decode("utf-8", "replace"), "kind": raw[2],
+                "flags": int.from_bytes(raw[18:22], "little"),
+                "category": int.from_bytes(raw[22:24], "little")}
+        if raw[2] == 0:
+            extra = memory(address + 0x1e, 0x1e)
+            if len(extra) != 0x1e:
+                raise ValueError("short shared-context object read")
+            info.update(context=int.from_bytes(extra[:4], "little"),
+                        field37=extra[0x19], cached_name38=int.from_bytes(extra[0x1a:], "little"))
+        objects[str(address)] = info
+    return objects
+
+
 def capture_graph_snapshot(memory, base, name, colored, register_class=4):
     kind, _ = register_kind(register_class)
     word = lambda address: int.from_bytes(memory(address, 4), "little")
@@ -196,6 +238,7 @@ def capture_graph_snapshot(memory, base, name, colored, register_class=4):
     snapshot["register_class"] = register_class
     snapshot["coloring_graph"] = capture_graph(memory, base, colored, register_class)
     if not colored:
+        snapshot["symbol_objects"] = capture_symbol_objects(memory, snapshot)
         snapshot["coalescing_policy"] = capture_coalescing_policy(memory, base, register_class)
         snapshot["simplification_policy"] = capture_simplification_policy(memory, base, register_class)
         snapshot["color_policy"] = capture_color_policy(memory, base, register_class)
