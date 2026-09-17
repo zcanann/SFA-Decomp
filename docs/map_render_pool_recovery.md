@@ -594,3 +594,28 @@ checks pass. The original and matching DOLs retain SHA-1
 `e750e8e894707a52446118a4b84f1b58b677b269`; that integration build still links the
 retail shader object. Only the EN DOL is present in this checkout, so this pass
 makes no new regional completion claims.
+
+## Exact object-render queue stores (2026-09-17)
+
+`renderObjects` now indexes a `u32` view of the queue's `type` field, with
+the field base expressed by `offsetof(LightSortEntry, type)` and the stride
+by `sizeof(LightSortEntry) / sizeof(u32)`. Both object-shadow paths retain
+the cached queue base, store their existing kind, and increment the same
+count. This spelling reproduces retail's base-first address additions without
+moving the queue definitions or changing their storage.
+
+The function improves from 99.82456% to **100%**, retaining all 456 bytes.
+Only four instruction bytes change, in the two commuted additions. All other
+144 function bodies, complete relocation records, symbol layouts, and allocated
+non-text sections remain byte-identical. The TU reaches 142/145 exact functions
+and 99.85951% fuzzy match. It remains `NonMatching` because the map load/unload,
+pending-load, and cell-entry functions are still inexact.
+
+The same source gives a 100% objdiff function match in EN rev1, JP, PAL, and
+PAL rev1 after each input DOL passes its configured hash check. These are
+function matches rather than whole-object completion claims, so regional
+matching manifests do not change. The data audit passes all 40,668 assigned
+bytes, 120 symbol layouts, 40 data relocations, and 151 direct retail pool loads.
+The full source build and strict EN retail checksum pass. Formatting is verified
+separately against the complete raw object; the strict link still uses this
+TU's retail object.

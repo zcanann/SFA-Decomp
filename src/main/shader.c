@@ -3544,8 +3544,7 @@ static void renderObjects(s8* opacity) {
                 u32 shadowKind;
                 renderShadowType3(obj, 0x13, 0);
                 shadowKind = 2;
-                *(u32*)(queueBase + (gLightmapDrawQueueCount * (int)sizeof(LightSortEntry) +
-                                     offsetof(LightSortEntry, type))) = shadowKind;
+                ((u32*)(queueBase + offsetof(LightSortEntry, type)))[gLightmapDrawQueueCount * (sizeof(LightSortEntry) / sizeof(u32))] = shadowKind;
                 gLightmapDrawQueueCount += 1;
             } else if (obj->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH &&
                        (obj->anim.flags & OBJANIM_FLAG_HIDDEN) == 0 &&
@@ -3553,8 +3552,7 @@ static void renderObjects(s8* opacity) {
                 u32 shadowKind;
                 renderShadowType3(obj, 0x13, 0);
                 shadowKind = 3;
-                *(u32*)(queueBase + (gLightmapDrawQueueCount * (int)sizeof(LightSortEntry) +
-                                     offsetof(LightSortEntry, type))) = shadowKind;
+                ((u32*)(queueBase + offsetof(LightSortEntry, type)))[gLightmapDrawQueueCount * (sizeof(LightSortEntry) / sizeof(u32))] = shadowKind;
                 gLightmapDrawQueueCount += 1;
             }
         }
