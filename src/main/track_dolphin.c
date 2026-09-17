@@ -1853,11 +1853,11 @@ int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, f32* rayOrigin, f32*
 }
 
 /* Direction is normalized; an interior start selects the sphere exit. */
-static inline int trackSweepEndpointSphere(const f32* center, f32 radiusSquared,
- const f32* origin, const f32* direction, f32 maxDistance,
- f32* hitPoint, f32* planeOut, f32* distanceOut) {
- f32 centerOffset[3];
- f32 distance, centerDistanceSquared, lineDistanceSquared, radialDistance, planeConstant;
+static inline int trackSweepEndpointSphere(const f32* center, f32 radiusSquared, const f32* origin,
+                                           const f32* direction, f32 maxDistance, f32* hitPoint, f32* planeOut,
+                                           f32* distanceOut) {
+    f32 centerOffset[3];
+    f32 distance, centerDistanceSquared, lineDistanceSquared, radialDistance, planeConstant;
     PSVECSubtract((Vec*)center, (Vec*)origin, (Vec*)centerOffset);
     distance = PSVECDotProduct((Vec*)centerOffset, (Vec*)direction);
     centerDistanceSquared = PSVECSquareMag((Vec*)centerOffset);
@@ -1889,7 +1889,6 @@ static inline int trackSweepEndpointSphere(const f32* center, f32 radiusSquared,
             }
         }
     }
-
 }
 
 /* trackGetIntersect2 -- sweep each input sphere against the gathered triangle
@@ -2151,7 +2150,8 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                             edge.start[0] = tri->vx[vertexBit];
                             edge.start[1] = tri->vy[vertexBit];
                             edge.start[2] = tri->vz[vertexBit];
-                            ok = trackSweepEndpointSphere(edge.start, edge.radiusSquared, ws, dir, mag, hitpt, plane, &frac);
+                            ok = trackSweepEndpointSphere(edge.start, edge.radiusSquared, ws, dir, mag, hitpt, plane,
+                                                          &frac);
                             if (ok) {
                                 hit = 1;
                                 goto hitCheck;
