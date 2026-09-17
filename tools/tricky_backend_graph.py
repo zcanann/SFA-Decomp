@@ -260,6 +260,41 @@ def capture_storage_modes(memory, base):
     }
 
 
+def capture_section_records(memory, base, objects):
+    """Read records for captured variable names, including their shared-base owners."""
+    def read(address, size):
+        raw = memory(address, size)
+        if len(raw) != size:
+            raise ValueError("short section record read")
+        return raw
+
+    def word(address):
+        return int.from_bytes(read(address, 4), "little")
+
+    keys = {obj["cached_name38"] for obj in objects.values()
+            if obj["kind"] == 0 and obj["cached_name38"]}
+    address = word(base + 0x1e6a9c)
+    seen, result = set(), []
+    while address:
+        if address in seen or len(seen) >= 65536:
+            raise ValueError("invalid section record list")
+        seen.add(address)
+        raw = read(address, 50)
+        integer = lambda offset, size=4: int.from_bytes(raw[offset:offset + size], "little")
+        if integer(0) in keys:
+            owner = integer(4)
+            owner_base = word(owner + 20) if owner else 0
+            entry = {"address": address, "key": integer(0), "owner": owner,
+                     "offset": integer(12), "storage": integer(16), "flags": raw[20],
+                     "category": integer(44, 2), "owner_base": owner_base}
+            if owner_base:
+                entry.update(base_object=word(owner_base), base_enabled=word(owner_base + 8))
+            result.append(entry)
+        address = integer(24)
+    return {"context_enabled": read(base + 0x1e7102, 1)[0],
+            "records_scanned": len(seen), "records": result}
+
+
 def capture_graph_snapshot(memory, base, name, colored, register_class=4):
     kind, _ = register_kind(register_class)
     word = lambda address: int.from_bytes(memory(address, 4), "little")
@@ -271,6 +306,7 @@ def capture_graph_snapshot(memory, base, name, colored, register_class=4):
     if not colored:
         snapshot["symbol_objects"] = capture_symbol_objects(memory, snapshot)
         snapshot["storage_modes"] = capture_storage_modes(memory, base)
+        snapshot["section_records"] = capture_section_records(memory, base, snapshot["symbol_objects"])
         snapshot["coalescing_policy"] = capture_coalescing_policy(memory, base, register_class)
         snapshot["simplification_policy"] = capture_simplification_policy(memory, base, register_class)
         snapshot["color_policy"] = capture_color_policy(memory, base, register_class)

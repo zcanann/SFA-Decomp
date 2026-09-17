@@ -2,7 +2,7 @@ import copy
 import struct
 import unittest
 
-from tricky_backend_graph import (capture_coalescing_policy, capture_color_policy, capture_graph, capture_simplification_policy, capture_symbol_objects, capture_storage_modes, coloring_order, describe_node,
+from tricky_backend_graph import (capture_coalescing_policy, capture_color_policy, capture_graph, capture_simplification_policy, capture_symbol_objects, capture_storage_modes, capture_section_records, coloring_order, describe_node,
                                  replay_coloring, replay_simplification, validate_graph, validate_rewrite)
 
 
@@ -38,6 +38,34 @@ def simplification_fixture(removal_order, weights=(10, 5)):
 
 
 class BackendGraphTests(unittest.TestCase):
+    def test_section_records_keep_both_categories_and_read_owner_base(self):
+        records = {0x1e6a9c: struct.pack("<I", 0x100), 0x1e7102: b"\x01",
+                   0x314: struct.pack("<I", 0x400), 0x400: struct.pack("<I", 0x500),
+                   0x408: struct.pack("<I", 0x600)}
+        for address, next_address, category in [(0x100, 0x180, 0x102), (0x180, 0, 0x103)]:
+            raw = bytearray(50)
+            struct.pack_into("<II", raw, 0, 0x700, 0x300)
+            struct.pack_into("<II", raw, 12, 12, 0x800)
+            raw[20] = 0x10
+            struct.pack_into("<I", raw, 24, next_address)
+            struct.pack_into("<H", raw, 44, category)
+            records[address] = raw
+        read = lambda address, size: records[address][:size]
+        objects = {"1": {"kind": 0, "cached_name38": 0x700}}
+        result = capture_section_records(read, 0, objects)
+        self.assertEqual(result["records_scanned"], 2)
+        self.assertEqual(result["context_enabled"], 1)
+        self.assertEqual([r["category"] for r in result["records"]], [0x102, 0x103])
+        self.assertEqual(result["records"][0], {"address": 0x100, "key": 0x700, "owner": 0x300,
+                         "offset": 12, "storage": 0x800, "flags": 0x10, "category": 0x102,
+                         "owner_base": 0x400, "base_object": 0x500, "base_enabled": 0x600})
+        self.assertEqual(capture_section_records(read, 0, {})["records"], [])
+        struct.pack_into("<I", records[0x180], 24, 0x100)
+        with self.assertRaisesRegex(ValueError, "invalid section record list"):
+            capture_section_records(read, 0, objects)
+        with self.assertRaisesRegex(ValueError, "short section record read"):
+            capture_section_records(lambda a, n: b"", 0, objects)
+
     def test_storage_mode_lists_preserve_alias_order_and_signed_ids(self):
         records = {
             0x1e72ba: struct.pack("<I", 0x100),

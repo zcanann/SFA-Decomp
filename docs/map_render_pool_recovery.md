@@ -749,3 +749,38 @@ context for these BSS arrays; storage visibility/allocation remains the lead.
 The baseline and native-probe captures each preserve their ordinary object's
 raw hash. The native probe remains rejected and was restored. Shader matching
 stays 99.86275% with 142/145 exact functions.
+
+### Section-record ownership and private-storage probes (2026-09-17)
+
+The recovered section-record query now guides a read-only trace of records
+selected by each captured variable's cached name. The trace records the owner,
+allocated storage, offset, category, and owner's shared-base descriptor. It
+preserves list order and both category variants of a name.
+
+In baseline `doPendingMapLoads`, shared contexts are globally enabled, but
+`gLightmapDrawQueue` has a category-0x103 record with flags 0x10, offset zero,
+no allocated storage, and an owner with no shared-base descriptor. The same
+owner appears for the captured external map globals. The trace scans 228
+records. This establishes a concrete missing owner base at this stage, beyond
+the previously excluded flag and addressing-mode explanations.
+
+No direct source consumers of the eighteen named BSS objects occur outside
+shader.c. A private-storage experiment temporarily removed their public
+extern declarations and made the complete early definition group static.
+This still assigned storage by first use: the queue moved from offset zero
+to 0x4640 and the ROM-list indexes from 0x4208 to 0x1c. Native pending-load
+accesses remained 97.18829%; private linkage did not recover the retail layout.
+All private-storage source/header changes were restored.
+
+A typed eight-element slot-array view was also tested with cached and live
+slot counts, using either the cached pool base or the queue's address. All
+four variants regressed the pending-load function (98.23919%, 98.02290%,
+94.283714%, and 94.59542%, respectively) and were discarded. No shader source
+change is retained from these probes.
+
+The early-definition/native-access trace scans 230 records and confirms the
+positive case: `...bss.0` has category 0x102, flags zero, a nonnull owner-base
+descriptor, and an enabled base pointing back to that generated symbol. Both
+baseline and early-definition captures produce byte-identical ordinary and
+instrumented objects. This validates the traced ownership transition; it does
+not make the rejected early-definition layout correct.
