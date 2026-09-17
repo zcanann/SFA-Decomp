@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare scalar model skinning with retail PPC and a float32 arithmetic oracle.
+"""Compare reconstructed model skinning with retail PPC and a float32 arithmetic oracle.
 
 Requires unicorn and pyelftools. Emulates only the paired-single quantization
 and arithmetic used by these kernels, plus GQR reads. This is a finite-input
@@ -50,17 +50,27 @@ class QuantizedPairs(GekkoPairs):
         ins = int.from_bytes(emulator.mem_read(pc, 4), 'big')
         opcode = ins >> 26
         dest, a, b, c = ((ins >> shift) & 31 for shift in (21, 16, 11, 6))
+        indexed_quantized = opcode == 4 and ((ins >> 1) & 63) in (6, 7, 38, 39)
         if opcode == 31 and (ins >> 1) & 1023 == 339:
             spr = ((ins >> 16) & 31) | ((ins >> 6) & 0x3e0)
             assert 912 <= spr <= 919, ('unexpected special-register read', spr)
             emulator.reg_write(getattr(self.ppc, f'UC_PPC_REG_{dest}'), self.gqr[spr - 912])
-        elif opcode in (56, 57, 60, 61):
-            address = ((self.gpr(a) if a else 0) + signed(ins, 12)) & 0xffffffff
-            config = self.gqr[(ins >> 12) & 7]
-            load = opcode in (56, 57)
+        elif opcode in (56, 57, 60, 61) or indexed_quantized:
+            if indexed_quantized:
+                operation = (ins >> 1) & 63
+                address = ((self.gpr(a) if a else 0) + self.gpr(b)) & 0xffffffff
+                config = self.gqr[(ins >> 7) & 7]
+                load = operation in (6, 38)
+                update = bool(operation & 32)
+                count = 1 if (ins >> 10) & 1 else 2
+            else:
+                address = ((self.gpr(a) if a else 0) + signed(ins, 12)) & 0xffffffff
+                config = self.gqr[(ins >> 12) & 7]
+                load = opcode in (56, 57)
+                update = bool(opcode & 1)
+                count = 1 if (ins >> 15) & 1 else 2
             field = config >> (16 if load else 0)
             kind, scale = field & 7, signed(field >> 8, 6)
-            count = 1 if (ins >> 15) & 1 else 2
             fmt, width, low, high = {0: ('f', 4, None, None), 4: ('B', 1, 0, 255),
                 5: ('H', 2, 0, 65535), 6: ('b', 1, -128, 127),
                 7: ('h', 2, -32768, 32767)}[kind]
@@ -73,13 +83,20 @@ class QuantizedPairs(GekkoPairs):
                 if kind:
                     values = [int(min(high, max(low, f32(math.ldexp(v, scale))))) for v in values]
                 emulator.mem_write(address, pack(fmt * count, *values))
-            if opcode & 1:
+            if update:
                 assert a
                 emulator.reg_write(getattr(self.ppc, f'UC_PPC_REG_{a}'), address)
         elif opcode == 4:
-            short = (ins >> 1) & 31
+            extended = (ins >> 1) & 1023
+            short = extended & 31
             av, bv, cv = self.read(a), self.read(b), self.read(c)
-            if short in (12, 13):
+            if extended == 528:  # ps_merge00: broadcast scalar operands
+                self.write(dest, [av[0], bv[0]])
+            elif short == 25:  # ps_mul
+                self.write(dest, [f32(av[i] * cv[i]) for i in range(2)])
+            elif short == 29:  # ps_madd
+                self.write(dest, [FMA(av[i], cv[i], bv[i]) for i in range(2)])
+            elif short in (12, 13):
                 self.write(dest, [f32(v * cv[short - 12]) for v in av])
             elif short in (14, 15):
                 self.write(dest, [FMA(av[i], cv[short - 14], bv[i]) for i in range(2)])

@@ -167,3 +167,34 @@ coordinate census are documented in
 [Model vertex coordinate encoding](model_vertex_coordinates.md). The catalog
 now also reports unskinned model coordinates; its original skinning statistics
 are unchanged.
+
+## Native paired-float arithmetic in the affine kernel
+
+GC/1.3 accepts `__vec2x32float__` as a native C type. Independent compiler
+inspection and isolated compile probes establish that pair addition and
+multiply-add emit `ps_add`/`ps_madd`; a scalar operand is broadcast with
+`ps_merge00`. This requires no new assembly, pragma, or compiler-option change.
+The companion compiler recovery also reconstructs the frontend propagation
+eligibility and cached-variable creation routines, with 10,025 and 8,448
+original/native differential cases respectively.
+
+`ObjModel_TransformVerticesWithTranslation` now evaluates X and Y together,
+loading the first two components of each ROMtx column through a small inline
+pair accessor. Z and the existing quantized input/output conversions remain
+scalar. A union exposes the two result components for the SDK fast-cast stores.
+The arithmetic retains the retail fused ordering and live GQR7 scale behavior.
+
+Fresh objdiff reports move this function from 0% to **13.216495%** in EN,
+EN rev1, JP and PAL rev1, using hash-verified regional DOLs. EN model's aggregate
+fuzzy score moves from **94.335335% to 94.538124%**. The unit remains
+`NonMatching`, with **79/85 exact functions**. The reconstructed affine body
+is 488 bytes, up from 448; the retail body is 388 bytes. Pair register saves,
+scalar broadcasts, quantized conversions and loop pipelining still differ.
+
+All other 84 function bodies, their normalized relocations, allocated data,
+named data offsets and non-text relocations are unchanged in EN. Regional
+before/after builds likewise change only the affine function and preserve data.
+The behavior probe now supports indexed quantized accesses, pair broadcasts,
+`ps_mul` and `ps_madd`. Both retail and the compiled reconstruction pass all
+2,306 existing finite-input scenarios against the independent scalar oracle.
+These results retain the exceptional-value and aliasing limits described above.
