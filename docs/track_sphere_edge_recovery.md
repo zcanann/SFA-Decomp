@@ -208,3 +208,35 @@ Ordinary `Vec` records for the transformed endpoints, register declarations,
 address/value casts and a scalar store helper do not fix the remaining stores.
 Volatile experiments alter other stores and are not retained. Double-precision
 locals and arithmetic regress code generation; the retained cast is `f32` only.
+
+## Store-fold watchpoint and compiler selector
+
+A hardware watchpoint on the first remaining store's base-register operand
+catches the write at compiler PC `0x005747f7`, after the second word copy at
+`0x005747f6`. The instrumented and ordinary objects both retain SHA-256
+`60852af4d1624f3f1854c1b9adbec74c181811a2f62d38b517aefc7f7aca75da`.
+The before/after IR shows virtual GPR65 with immediate offset zero becoming
+frame GPR1 with a kind-3 symbolic operand and displacement 4; the adjacent
+GPR66 store similarly acquires displacement 8. This locates the actual fold,
+not merely the first dump that exposes its result.
+
+The caller invokes a 122-byte selector at `0x00574a10` from `0x005747df`.
+The selector reads the current definition table at `0x005dfc38`, checks ADDI
+opcode `0x3f`, symbolic operand kind 3, either configured frame base
+(`0x005e70e0` / `0x005e6cfa`), local-object kind 1, and the offset predicate
+at `0x004f5c90`. The observed definition uses frame base 1; the second allowed
+base is -1. On success the caller copies the defining address operands into
+the store. The definition lookup and local-frame eligibility are therefore
+the relevant next source-model boundary, rather than physical register choice.
+
+The sibling compiler project now has a local `ConstantAddress.c` model of the
+complete selector, registered with host tests and its GC/1.3 manifest. All
+8,140 original/native cases agree, covering all 47 reachable x86 instructions,
+signed offset truncation, alternate frame bases, rejected definitions and
+unchanged failure output. Its offset-predicate call is an explicit stub
+boundary, and no Win32 binary match is claimed. `ninja check` passes there.
+
+Moving scratch-pointer setup into query loops, constructing component addresses
+through named base pointers, or extracting scalar/vector translation helpers
+does not improve the coordinator. Those experiments remain outside production
+source. The TU is unchanged at 99.73587%, with the coordinator at 99.989235%.
