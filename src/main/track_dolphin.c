@@ -2008,18 +2008,21 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         edgePlanes[0][0] = tri->edgeNormals[0].x;
                         edgePlanes[0][1] = tri->edgeNormals[0].y;
                         edgePlanes[0][2] = tri->edgeNormals[0].z;
-                        edgePlanes[0][3] = -(tri->vz[0] * edgePlanes[0][2] + (tri->vx[0] * edgePlanes[0][0] + tri->vy[0] * edgePlanes[0][1])) +
-                                   PSVECDotProduct((Vec*)edgePlanes[0], (Vec*)hitpt);
+                        edgePlanes[0][3] = -(tri->vz[0] * edgePlanes[0][2] +
+                                             (tri->vx[0] * edgePlanes[0][0] + tri->vy[0] * edgePlanes[0][1])) +
+                                           PSVECDotProduct((Vec*)edgePlanes[0], (Vec*)hitpt);
                         edgePlanes[1][0] = tri->edgeNormals[1].x;
                         edgePlanes[1][1] = tri->edgeNormals[1].y;
                         edgePlanes[1][2] = tri->edgeNormals[1].z;
-                        edgePlanes[1][3] = -(tri->vz[1] * edgePlanes[1][2] + (tri->vx[1] * edgePlanes[1][0] + tri->vy[1] * edgePlanes[1][1])) +
-                                   PSVECDotProduct((Vec*)edge1p, (Vec*)hitpt);
+                        edgePlanes[1][3] = -(tri->vz[1] * edgePlanes[1][2] +
+                                             (tri->vx[1] * edgePlanes[1][0] + tri->vy[1] * edgePlanes[1][1])) +
+                                           PSVECDotProduct((Vec*)edge1p, (Vec*)hitpt);
                         edgePlanes[2][0] = tri->edgeNormals[2].x;
                         edgePlanes[2][1] = tri->edgeNormals[2].y;
                         edgePlanes[2][2] = tri->edgeNormals[2].z;
-                        edgePlanes[2][3] = -(tri->vz[2] * edgePlanes[2][2] + (tri->vx[2] * edgePlanes[2][0] + tri->vy[2] * edgePlanes[2][1])) +
-                                   PSVECDotProduct((Vec*)edge2p, (Vec*)hitpt);
+                        edgePlanes[2][3] = -(tri->vz[2] * edgePlanes[2][2] +
+                                             (tri->vx[2] * edgePlanes[2][0] + tri->vy[2] * edgePlanes[2][1])) +
+                                           PSVECDotProduct((Vec*)edge2p, (Vec*)hitpt);
                         b = 0;
                         if (radius > 0.0f) {
                             if (edgePlanes[0][3] > 0.0f) {
@@ -2041,18 +2044,21 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         edgePlanes[0][0] = tri->edgeNormals[0].x;
                         edgePlanes[0][1] = tri->edgeNormals[0].y;
                         edgePlanes[0][2] = tri->edgeNormals[0].z;
-                        edgePlanes[0][3] = -(tri->vz[0] * edgePlanes[0][2] + (tri->vx[0] * edgePlanes[0][0] + tri->vy[0] * edgePlanes[0][1])) +
-                                   PSVECDotProduct((Vec*)edgePlanes[0], (Vec*)ws);
+                        edgePlanes[0][3] = -(tri->vz[0] * edgePlanes[0][2] +
+                                             (tri->vx[0] * edgePlanes[0][0] + tri->vy[0] * edgePlanes[0][1])) +
+                                           PSVECDotProduct((Vec*)edgePlanes[0], (Vec*)ws);
                         edgePlanes[1][0] = tri->edgeNormals[1].x;
                         edgePlanes[1][1] = tri->edgeNormals[1].y;
                         edgePlanes[1][2] = tri->edgeNormals[1].z;
-                        edgePlanes[1][3] = -(tri->vz[1] * edgePlanes[1][2] + (tri->vx[1] * edgePlanes[1][0] + tri->vy[1] * edgePlanes[1][1])) +
-                                   PSVECDotProduct((Vec*)edge1p, (Vec*)ws);
+                        edgePlanes[1][3] = -(tri->vz[1] * edgePlanes[1][2] +
+                                             (tri->vx[1] * edgePlanes[1][0] + tri->vy[1] * edgePlanes[1][1])) +
+                                           PSVECDotProduct((Vec*)edge1p, (Vec*)ws);
                         edgePlanes[2][0] = tri->edgeNormals[2].x;
                         edgePlanes[2][1] = tri->edgeNormals[2].y;
                         edgePlanes[2][2] = tri->edgeNormals[2].z;
-                        edgePlanes[2][3] = -(tri->vz[2] * edgePlanes[2][2] + (tri->vx[2] * edgePlanes[2][0] + tri->vy[2] * edgePlanes[2][1])) +
-                                   PSVECDotProduct((Vec*)edge2p, (Vec*)ws);
+                        edgePlanes[2][3] = -(tri->vz[2] * edgePlanes[2][2] +
+                                             (tri->vx[2] * edgePlanes[2][0] + tri->vy[2] * edgePlanes[2][1])) +
+                                           PSVECDotProduct((Vec*)edge2p, (Vec*)ws);
                         b = 0;
                         if (edgePlanes[0][3] > 0.0f) {
                             b |= 1;
