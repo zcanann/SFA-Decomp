@@ -904,7 +904,8 @@ void mapLoadUnloadObjects(int flag) {
                     bit = 0;
                     cur = (u32)page->objects;
                     bp = page->loadedObjectBits;
-                    end = cur + ((MapRomListIndex*)(base + (int)offsetof(MapRomListBuffers, indexes)))[nearbyMapIds[i]].groupsStart;
+                    end = cur + ((MapRomListIndex*)(base + (int)offsetof(MapRomListBuffers, indexes)))[nearbyMapIds[i]]
+                                    .groupsStart;
                     while (cur < end) {
                         objStart = cur;
                         if ((*bp & mask) == 0 && objShouldLoad((ObjPlacement*)cur, 0, nearbyMapIds[i]) != 0) {
@@ -956,7 +957,8 @@ void mapLoadUnloadObjects(int flag) {
                     int lp = obj2->anim.transformMatrixIndex + 1;
                     bit = 0;
                     cur = (u32)page2->objects;
-                    end = cur + ((MapRomListIndex*)(base + (int)offsetof(MapRomListBuffers, indexes)))[mid2].groupsStart;
+                    end =
+                        cur + ((MapRomListIndex*)(base + (int)offsetof(MapRomListBuffers, indexes)))[mid2].groupsStart;
                     bits = (*gMapEventInterface)->getObjGroups(mid2);
                     if (bits != 0) {
                         grpBit = 0;
