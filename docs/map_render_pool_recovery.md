@@ -754,12 +754,12 @@ stays 99.86275% with 142/145 exact functions.
 
 The recovered section-record query now guides a read-only trace of records
 selected by each captured variable's cached name. The trace records the owner,
-allocated storage, offset, category, and owner's shared-base descriptor. It
+byte size, offset, category, and owner's shared-base descriptor. It
 preserves list order and both category variants of a name.
 
 In baseline `doPendingMapLoads`, shared contexts are globally enabled, but
 `gLightmapDrawQueue` has a category-0x103 record with flags 0x10, offset zero,
-no allocated storage, and an owner with no shared-base descriptor. The same
+byte size zero, and an owner with no shared-base descriptor. The same
 owner appears for the captured external map globals. The trace scans 228
 records. This establishes a concrete missing owner base at this stage, beyond
 the previously excluded flag and addressing-mode explanations.
@@ -784,3 +784,18 @@ descriptor, and an enabled base pointing back to that generated symbol. Both
 baseline and early-definition captures produce byte-identical ordinary and
 instrumented objects. This validates the traced ownership transition; it does
 not make the rejected early-definition layout correct.
+
+### Corrected section-record size interpretation (2026-09-17)
+
+Recovering the compiler's allocation creator at 0x004d07c0 establishes that
+record +0x10 is the requested byte size, not a storage pointer. It returns
+the section record itself and replaces its owner with the selected area.
+The earlier zero/nonzero checks could not establish the field's type. The
+trace now labels this word `size`; older captures' `storage` value is the
+same word and must be read as a size. The baseline record's size is zero
+and its owner base is null; the missing-base observation remains valid.
+
+The creator passes 6,336 original/native cases, using the actual category
+predicate and recovered native record lookup. Canonical allocation/section
+and area/owner types are now unified in the sibling compiler project. This
+is a correction to the model and trace terminology, not a shader match gain.

@@ -57,7 +57,7 @@ class BackendGraphTests(unittest.TestCase):
         self.assertEqual(result["context_enabled"], 1)
         self.assertEqual([r["category"] for r in result["records"]], [0x102, 0x103])
         self.assertEqual(result["records"][0], {"address": 0x100, "key": 0x700, "owner": 0x300,
-                         "offset": 12, "storage": 0x800, "flags": 0x10, "category": 0x102,
+                         "offset": 12, "size": 0x800, "flags": 0x10, "category": 0x102,
                          "owner_base": 0x400, "base_object": 0x500, "base_enabled": 0x600})
         self.assertEqual(capture_section_records(read, 0, {})["records"], [])
         struct.pack_into("<I", records[0x180], 24, 0x100)

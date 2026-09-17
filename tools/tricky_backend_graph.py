@@ -285,7 +285,7 @@ def capture_section_records(memory, base, objects):
             owner = integer(4)
             owner_base = word(owner + 20) if owner else 0
             entry = {"address": address, "key": integer(0), "owner": owner,
-                     "offset": integer(12), "storage": integer(16), "flags": raw[20],
+                     "offset": integer(12), "size": integer(16), "flags": raw[20],
                      "category": integer(44, 2), "owner_base": owner_base}
             if owner_base:
                 entry.update(base_object=word(owner_base), base_enabled=word(owner_base + 8))
