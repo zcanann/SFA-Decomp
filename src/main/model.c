@@ -2580,7 +2580,10 @@ void ObjModel_TransformVerticesWithTranslation(u8* matrixA, u8* matrixB, u8* wei
     f32 storeFactor = modelQuantizationFactor(quantization >> 8);
     f32 loadFactor = 1.0f / modelQuantizationFactor(quantization >> 24);
     f32 x, y, z, weightA, weightB, outputZ;
-    union { __vec2x32float__ pair; f32 values[2]; } outputXY;
+    union {
+        __vec2x32float__ pair;
+        f32 values[2];
+    } outputXY;
     int vertex;
 
     for (vertex = 0; vertex < count; vertex++) {
@@ -2591,7 +2594,12 @@ void ObjModel_TransformVerticesWithTranslation(u8* matrixA, u8* matrixB, u8* wei
         y = __OSs16tof32(&input->y) * loadFactor;
         z = __OSs16tof32(&input->z) * loadFactor;
         input++;
-        outputXY.pair = (modelLoadFloatPair(b) * x + modelLoadFloatPair(b + 9) + modelLoadFloatPair(b + 3) * y + modelLoadFloatPair(b + 6) * z) * weightB + (modelLoadFloatPair(a) * x + modelLoadFloatPair(a + 9) + modelLoadFloatPair(a + 3) * y + modelLoadFloatPair(a + 6) * z) * weightA;
+        outputXY.pair = (modelLoadFloatPair(b) * x + modelLoadFloatPair(b + 9) + modelLoadFloatPair(b + 3) * y +
+                         modelLoadFloatPair(b + 6) * z) *
+                            weightB +
+                        (modelLoadFloatPair(a) * x + modelLoadFloatPair(a + 9) + modelLoadFloatPair(a + 3) * y +
+                         modelLoadFloatPair(a + 6) * z) *
+                            weightA;
         outputZ =
             (b[2] * x + b[11] + b[5] * y + b[8] * z) * weightB + (a[2] * x + a[11] + a[5] * y + a[8] * z) * weightA;
         output->x = __OSf32tos16(outputXY.values[0] * storeFactor);
