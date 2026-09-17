@@ -1718,7 +1718,7 @@ int trackResolveSurfacePenetration(const f32* startPosition, f32* position, cons
                 normalX = plane[0];
                 normalZ = plane[2];
                 clearance =
-                    clearance - (plane[3] + (position[2] * normalZ + (normalX * position[0] + position[1] * plane[1])));
+                    clearance - (plane[3] + (normalZ * position[2] + (normalX * position[0] + position[1] * plane[1])));
                 if (clearance > 0.0f) {
                     f32 normalXSquared = normalX * normalX;
                     f32 normalZSquared = normalZ * normalZ;
@@ -1758,7 +1758,7 @@ int trackResolveSurfacePenetration(const f32* startPosition, f32* position, cons
                 normalX = plane[0];
                 normalZ = plane[2];
                 clearance =
-                    clearance - (plane[3] + (position[2] * normalZ + (normalX * position[0] + position[1] * plane[1])));
+                    clearance - (plane[3] + (normalZ * position[2] + (normalX * position[0] + position[1] * plane[1])));
                 if (clearance > 0.0f) {
                     f32 normalXSquared = normalX * normalX;
                     f32 normalZSquared = normalZ * normalZ;

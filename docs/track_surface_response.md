@@ -76,3 +76,31 @@ Before/after object audits preserve every function body in the complete track
 TU, all allocated data, all named symbol layouts and resolved relocations.
 Anonymous compiler labels renumber; formatting is separate and preserves the
 raw object. Match scores and unit classifications do not change.
+
+## GC/1.3 operand-order improvement
+
+The constrained horizontal and vertical branches now spell the Z product as
+`normalZ * position[2]`, consistent with their `normalX * position[0]` product.
+The surrounding sum grouping, locals and control flow are unchanged. This is
+an operand-order improvement, not a newly exact function or TU.
+
+The probe was guided by independent GC/1.3 expression-lowering recovery in the
+sibling MWCC research repository. Its newly reconstructed binary-float helper
+at `0x0044bed0` demonstrates ordered operand evaluation/materialization before
+destination selection; 5,920 original/native differential cases validate that
+body with explicit dependency adapters. The contracted multiply-add emitter is
+a separate dependency, so the ordinary compiled-object comparison is the
+source-facing evidence here, not a claim of complete lowering replay.
+
+Across all five configured retail versions, the function improves from
+**99.27881% to 99.31599%** and the TU from **99.66211% to 99.663536%**.
+Exactly two four-byte instructions change, at function offsets `+0x1d8` and
+`+0x3c4`. Every other instruction, all relocation sections, the symbol/string
+tables and allocated data remain byte-identical. The function stays 1,076
+bytes, and the TU remains `NonMatching` with 23 of 30 functions exact.
+
+The existing surface-response tests pass at O0 and O2 (622 cases each).
+`clang-format -i` makes no additional source change and preserves the raw
+object hash; its dry-run check passes. All five `all_source` builds and strict
+retail checksums pass. The strict link still uses the retail object for this
+nonmatching TU and is an integration gate, not proof of a complete source match.
