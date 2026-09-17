@@ -104,3 +104,39 @@ The existing surface-response tests pass at O0 and O2 (622 cases each).
 object hash; its dry-run check passes. All five `all_source` builds and strict
 retail checksums pass. The strict link still uses the retail object for this
 nonmatching TU and is an integration gate, not proof of a complete source match.
+
+## Exact GC/1.3 surface response
+
+`trackResolveSurfacePenetration` now matches all 269 retail instructions in all
+five configured versions. The constrained branches evaluate their dot products
+in expression order instead of loading cached X/Z normals first. Their squared
+normal components remain separate expressions so MWCC emits the two retail
+multiplies before the square root. The shared projection helper evaluates the
+X product plus Y product in the retail order, preserving which product is fused.
+
+The X/Z dot-product reads use explicit `const f32*` dereferences, matching the
+existing Y-normal spelling. These casts are codegen-significant despite being
+type-preserving. Replacing them with indexing or uncast dereferences recreates
+the mismatch. No integer pointer laundering, extra storage, compiler override,
+or assembly is involved.
+
+A diagnostic variant with ordinary reads has the correct instruction and load
+order but gives the constrained normal loads early virtual FPRs 38/39; the
+projection helper's X normal is FPR 46. In the exact source, the corresponding
+loads are temporaries 105/107 and 144. Fresh captures preserve the ordinary raw
+objects and replay the allocator completely: the exact graph has 208 nodes,
+174 physical color choices, no high-degree removals, and zero retail differences.
+This distinguishes register birth/identity from a final scheduling adjustment.
+
+The TU advances from 23 to **24 of 30 exact functions**, and from 99.663536% to
+**99.689735%** fuzzy. All five input DOL hashes were verified. Full source and
+strict retail builds pass for each version; only this function changes in the
+track object, with every other function, allocated data section, named symbol
+layout, and resolved relocation preserved. Fresh before/after source builds
+change no other object. The source object is identical across all five versions:
+SHA-256 `cdf12f319034b24adf9bc4325d360cfa9a3982fefa9b64c7f47a85571df72281`.
+The existing 622-case geometric oracle passes at both O0 and O2.
+
+The unit remains `NonMatching` while its six other functions are unfinished.
+The strict DOL check remains an integration gate using its retail object; the
+per-function objdiff comparison proves this response's source match.

@@ -1663,7 +1663,7 @@ static inline void trackProjectOntoOffsetPlane(f32* position, const f32* plane, 
     position[1] -= radiusDistance * plane[1];
     position[2] -= radiusDistance * plane[2];
     planeCorrection =
-        clearance - (plane[3] + (position[2] * plane[2] + (position[1] * plane[1] + position[0] * plane[0])));
+        clearance - (plane[3] + (position[2] * *(const f32*)(plane + 2) + (position[0] * *(const f32*)plane + position[1] * plane[1])));
     position[0] += planeCorrection * plane[0];
     position[1] += planeCorrection * plane[1];
     position[2] += planeCorrection * plane[2];
@@ -1712,16 +1712,11 @@ int trackResolveSurfacePenetration(const f32* startPosition, f32* position, cons
             case 1:
             case 8:
             case 0xa: {
-                f32 normalZ;
-                f32 normalX;
-
-                normalX = plane[0];
-                normalZ = plane[2];
                 clearance =
-                    clearance - (plane[3] + (normalZ * position[2] + (normalX * position[0] + position[1] * plane[1])));
+                    clearance - (plane[3] + (position[2] * *(const f32*)(plane + 2) + (position[0] * *(const f32*)plane + position[1] * plane[1])));
                 if (clearance > 0.0f) {
-                    f32 normalXSquared = normalX * normalX;
-                    f32 normalZSquared = normalZ * normalZ;
+                    f32 normalXSquared = plane[0] * plane[0];
+                    f32 normalZSquared = plane[2] * plane[2];
                     f32 correction =
                         mathCosfHighPrecision(atan2fHighPrecision(plane[1], sqrtf(normalXSquared + normalZSquared)));
                     if (0.0f != correction) {
@@ -1752,16 +1747,11 @@ int trackResolveSurfacePenetration(const f32* startPosition, f32* position, cons
             case 9:
             case 0xa:
             default: {
-                f32 normalZ;
-                f32 normalX;
-
-                normalX = plane[0];
-                normalZ = plane[2];
                 clearance =
-                    clearance - (plane[3] + (normalZ * position[2] + (normalX * position[0] + position[1] * plane[1])));
+                    clearance - (plane[3] + (position[2] * *(const f32*)(plane + 2) + (position[0] * *(const f32*)plane + position[1] * plane[1])));
                 if (clearance > 0.0f) {
-                    f32 normalXSquared = normalX * normalX;
-                    f32 normalZSquared = normalZ * normalZ;
+                    f32 normalXSquared = plane[0] * plane[0];
+                    f32 normalZSquared = plane[2] * plane[2];
                     f32 correction =
                         mathSinfHighPrecision(atan2fHighPrecision(plane[1], sqrtf(normalXSquared + normalZSquared)));
                     correction = clearance / correction;
