@@ -648,3 +648,21 @@ clarifies MR/ADDI/symbolic-LI emission, but does not yet reconstruct the fronten
 compound-assignment lowering responsible for this OR-order difference. No causal
 proof or Win32 byte-match claim is made for that connection. The new compiler
 model and fixture remain in that workspace alongside its pre-existing GC/1.3 work.
+
+### Typed ROM-list group boundaries (2026-09-17)
+
+The two ordinary-object traversal limits in `mapLoadUnloadObjects` read
+`MapRomListIndex.groupsStart`, at pool offset `0x4208 + 0x88 = 0x4290`, with
+0x8C-byte index stride. The index builder sets this boundary to the minimum of
+the curve offset and all present group offsets, or the page size if none exist.
+It is distinct from `objectsSize`, which only excludes the curve suffix.
+
+`MapRomListBuffers` is an address view of the existing separate 120-entry index
+array, not a new storage definition. All five symbol configurations confirm its
+0x4208 pool origin and 0x83A8 end at the loaded-page array. Typed field accesses
+correct the two ADD operand orders, improving the function from **98.62971% to
+98.67155%** in all five versions. Exactly four text bytes change; the other 144
+function bodies, all allocated data, named-symbol layouts and relocation
+destinations remain unchanged. The hosted-page bitmap accesses now also use
+`MapRomListPage.loadedObjectBits`; this cleanup preserves the generated object.
+The complete TU improves from **99.86113% to 99.86275%** and remains NonMatching.
