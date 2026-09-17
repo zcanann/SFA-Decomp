@@ -1310,12 +1310,13 @@ void trackIntersect(void) {
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
         }
         if (previousType != segmentType) {
-            u16 v = i;
+            u16 sortedLineIndex = i;
             int ti = segmentType * 2;
-            gIntersectSegmentTypeTable[ti] = v;
+            /* Keep the narrowed line index separate from the previous type. */
+            gIntersectSegmentTypeTable[ti] = (u16)sortedLineIndex;
             if (previousType != -1) {
                 int pi = previousType * 2;
-                gIntersectSegmentTypeTable[pi + 1] = v;
+                gIntersectSegmentTypeTable[pi + 1] = (u16)sortedLineIndex;
             }
             previousType = segmentType;
         }

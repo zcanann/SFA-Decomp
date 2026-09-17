@@ -134,3 +134,38 @@ or outside the loop, or reusing the dead source-count variable for it, also
 preserves the exchange. While/for spelling, prefix/postfix increments and
 `register` qualifiers do not resolve it. Per-line or per-endpoint inline
 helpers regress the match. None of these candidates is retained.
+
+## Static block-line range stores
+
+The final `trackIntersect` phase writes the current sorted-line ordinal into
+both the new segment's start and the previous segment's end. Its narrowed
+`u16` local is now named `sortedLineIndex`, and both stores explicitly cast it
+to `u16`. Either cast alone leaves the old code unchanged; together they keep
+the stored value in retail's r4 while the extended previous type occupies r5.
+These casts preserve the existing value and width.
+
+LLDB captures reproduce the ordinary before/after objects and successfully
+replay both GPR graphs: 286 nodes / 252 color choices before, 287 / 253 after,
+with no high-degree removals. The index narrowing defines original virtual
+GPR32 before the change and temporary GPR257 afterward. Physical coloring then
+assigns the latter r4. This is a codegen-significant source spelling, not a
+change to segment types, ordinal values, or table storage.
+
+All five versions improve from **99.552635% to 99.61404%** for `trackIntersect`.
+The 570-instruction / 2,280-byte body changes only seven instruction words:
+509, 511, 513, 518, 519, 521 and 524 swap r4/r5 operands. Retail differences
+fall from 32 to 26. The TU reaches **99.74085%**, still **24/30 exact functions**;
+`trackGetIntersect2` remains at 99.989235% with its two differing stores.
+
+The other 29 functions, allocated data, named-symbol layout and resolved
+relocations are unchanged. All five originals' configured hashes are rechecked;
+full source builds and strict retail checksum gates pass in each version.
+The raw object SHA-256 is
+`ea07066e0c5c0da98c2c5c270472b5ad0a71e1e577a140b5690f3a13636b660c`.
+No host execution of the entire static-line rebuild is claimed.
+
+Splitting adjacency/range-loop counters, extracting inline adjacency or range
+helpers, permuting the original counter declarations and adding casts to
+adjacency accesses do not improve this candidate. Removing the existing empty
+loop regresses code generation substantially, so it is retained. Coordinator
+pointer-walk experiments also leave its two store differences unchanged.
