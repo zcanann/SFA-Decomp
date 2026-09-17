@@ -725,3 +725,27 @@ Ordinary and instrumented objects agree byte-for-byte for all three captures:
 the unchanged baseline, native accesses with late definitions, and native
 accesses with early definitions. No shader source change is retained from this
 experiment; the current TU remains 99.86275% with 142/145 exact functions.
+
+### Addressing-mode exclusion ruled out for the BSS arrays (2026-09-17)
+
+The sibling compiler project now reconstructs the ObjGen addressing-mode
+classifier (`0x004b3ff0`, 352 bytes), its relative-mode predicate (`0x004b3fc0`,
+35 bytes), and its alias-list lookup (`0x0042fb20`, 29 bytes). The classifier
+passes 7,112 original/native comparisons both with a stubbed alias dependency
+and with the recovered lookup. The lookup separately passes 4,196 comparisons,
+including duplicate IDs and high argument bits. Preparation, allocation and
+assertions remain stubbed in classifier tests; Win32 binary matching is unmeasured.
+
+`tricky_backend_graph.py` now records signed object section IDs and the ordered
+section/alias lists. In the ordinary baseline, `gLightmapDrawQueue` is section 9,
+data mode 1. In the native-array-access probe, `gShaderRomListSlots`,
+`gMapBlockCellEntryTables`, `gMapBlockLayerTables`, `gMapRomListIndexes` and
+`gLoadedRomListPages` are also section 9, mode 1, with null shared-context
+pointers. Mode 1 does not trigger the relative-mode exclusion (modes 2 and 6–8).
+Small-data globals, including the map origins and slot count, use section 10,
+mode 6. Thus the addressing-mode predicate does not explain the missing shared
+context for these BSS arrays; storage visibility/allocation remains the lead.
+
+The baseline and native-probe captures each preserve their ordinary object's
+raw hash. The native probe remains rejected and was restored. Shader matching
+stays 99.86275% with 142/145 exact functions.

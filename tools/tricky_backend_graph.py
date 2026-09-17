@@ -217,6 +217,7 @@ def capture_symbol_objects(memory, snapshot):
                     break
                 name.extend(char)
         info = {"name": name.decode("utf-8", "replace"), "kind": raw[2],
+                "section": int.from_bytes(raw[4:6], "little", signed=True),
                 "flags": int.from_bytes(raw[18:22], "little"),
                 "category": int.from_bytes(raw[22:24], "little")}
         if raw[2] == 0:
@@ -229,6 +230,36 @@ def capture_symbol_objects(memory, snapshot):
     return objects
 
 
+def capture_storage_modes(memory, base):
+    """Read the GC/1.3 section and alias lists used by ObjGen_PPC_EABI.c."""
+    def read(address, size):
+        raw = memory(address, size)
+        if len(raw) != size:
+            raise ValueError("short storage mode read")
+        return raw
+
+    def records(offset, size, decode_record):
+        address = int.from_bytes(read(base + offset, 4), "little")
+        seen, result = set(), []
+        while address:
+            if address in seen or len(seen) >= 4096:
+                raise ValueError("invalid storage mode list")
+            seen.add(address)
+            raw = read(address, size)
+            result.append(decode_record(raw))
+            address = int.from_bytes(raw[:4], "little")
+        return result
+
+    return {
+        "sections": records(0x1e72ba, 12, lambda r: {
+            "id": int.from_bytes(r[8:10], "little", signed=True),
+            "data_mode": r[10], "function_mode": r[11]}),
+        "aliases": records(0x1e6c88, 10, lambda r: {
+            "id": int.from_bytes(r[8:10], "little", signed=True),
+            "kind": r[4], "section": int.from_bytes(r[6:8], "little", signed=True)}),
+    }
+
+
 def capture_graph_snapshot(memory, base, name, colored, register_class=4):
     kind, _ = register_kind(register_class)
     word = lambda address: int.from_bytes(memory(address, 4), "little")
@@ -239,6 +270,7 @@ def capture_graph_snapshot(memory, base, name, colored, register_class=4):
     snapshot["coloring_graph"] = capture_graph(memory, base, colored, register_class)
     if not colored:
         snapshot["symbol_objects"] = capture_symbol_objects(memory, snapshot)
+        snapshot["storage_modes"] = capture_storage_modes(memory, base)
         snapshot["coalescing_policy"] = capture_coalescing_policy(memory, base, register_class)
         snapshot["simplification_policy"] = capture_simplification_policy(memory, base, register_class)
         snapshot["color_policy"] = capture_color_policy(memory, base, register_class)

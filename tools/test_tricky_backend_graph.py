@@ -2,7 +2,7 @@ import copy
 import struct
 import unittest
 
-from tricky_backend_graph import (capture_coalescing_policy, capture_color_policy, capture_graph, capture_simplification_policy, capture_symbol_objects, coloring_order, describe_node,
+from tricky_backend_graph import (capture_coalescing_policy, capture_color_policy, capture_graph, capture_simplification_policy, capture_symbol_objects, capture_storage_modes, coloring_order, describe_node,
                                  replay_coloring, replay_simplification, validate_graph, validate_rewrite)
 
 
@@ -38,9 +38,30 @@ def simplification_fixture(removal_order, weights=(10, 5)):
 
 
 class BackendGraphTests(unittest.TestCase):
+    def test_storage_mode_lists_preserve_alias_order_and_signed_ids(self):
+        records = {
+            0x1e72ba: struct.pack("<I", 0x100),
+            0x1e6c88: struct.pack("<I", 0x200),
+            0x100: struct.pack("<IIhBB", 0, 0, 12, 6, 9),
+            0x200: struct.pack("<IBBhh", 0x220, 1, 0, 12, -1),
+            0x220: struct.pack("<IBBhh", 0, 2, 0, 13, -1),
+        }
+        read = lambda address, size: records[address][:size]
+        self.assertEqual(capture_storage_modes(read, 0), {
+            "sections": [{"id": 12, "data_mode": 6, "function_mode": 9}],
+            "aliases": [{"id": -1, "kind": 1, "section": 12},
+                        {"id": -1, "kind": 2, "section": 13}],
+        })
+        records[0x220] = struct.pack("<IBBhh", 0x200, 2, 0, 13, -1)
+        with self.assertRaisesRegex(ValueError, "invalid storage mode list"):
+            capture_storage_modes(read, 0)
+        with self.assertRaisesRegex(ValueError, "short storage mode read"):
+            capture_storage_modes(lambda a, n: b"", 0)
+
     def test_symbol_metadata_uses_object_and_name_record_offsets(self):
         memory = bytearray(0x400)
         memory[0x102] = 0
+        struct.pack_into("<h", memory, 0x104, -3)
         struct.pack_into("<I", memory, 0x10a, 0x200)
         struct.pack_into("<IH", memory, 0x112, 0x20010, 0x103)
         struct.pack_into("<I", memory, 0x11e, 0x300)
@@ -51,7 +72,7 @@ class BackendGraphTests(unittest.TestCase):
         instruction = {"address": 1, "words": [0] * 8 + [0x1008a] + list(struct.unpack("<3I", symbolic))}
         snapshot = {"blocks": [{"instructions": [instruction, instruction]}]}
         self.assertEqual(capture_symbol_objects(lambda a, n: memory[a:a + n], snapshot), {
-            "256": {"name": "gShaderSlots", "kind": 0, "flags": 0x20010, "category": 0x103,
+            "256": {"name": "gShaderSlots", "kind": 0, "section": -3, "flags": 0x20010, "category": 0x103,
                     "context": 0x300, "field37": 1, "cached_name38": 0x220},
         })
         with self.assertRaisesRegex(ValueError, "short symbolic object read"):
