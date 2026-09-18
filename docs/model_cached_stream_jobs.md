@@ -155,3 +155,25 @@ remains exact. The wrapper call oracle passes 640 cases per implementation
 `ninja all_source build/GSAE01/ok`, explicit retail checksum verification and
 source/header formatting checks pass. The TU remains `NonMatching`, with 80 of
 85 functions exact.
+
+## Exact vertex stream wrapper
+
+The prefetch helper now retains the chunk-array base, accesses the next chunk
+as `chunks[i + 1]`, and returns `chunks + i`. Previously it retained the
+current-chunk pointer and accessed `chunk[1]`. Both forms snapshot the same
+array before the transfer calls; the weight transfer still reloads the job's
+chunk pointer at its original point. This source change gives GC/1.3 the retail
+register allocation without changing the compiler profile or adding assembly.
+
+`ObjModel_BlendVertexStream` is now **100% exact**, including all 628 code bytes
+and normalized relocations, in EN, EN rev1, JP and PAL rev1. The regional DOL
+hashes are verified. The other 84 function bodies, allocated data, named symbol
+positions and normalized relocations remain unchanged. Both stream wrappers
+are exact, bringing the EN unit to **81/85 exact functions**; the bone-matrix
+initializer and three skinning kernels remain, so the TU stays `NonMatching`.
+
+The formatted source passes all 640 wrapper scenarios against both retail and
+the independent call oracle (1,280 comparisons). `ninja all_source
+build/GSAE01/ok`, explicit retail checksum verification, and source/header
+formatting checks pass. These checks retain the oracle's DMA, transform and
+save/restore stub limitations described above.

@@ -2476,19 +2476,19 @@ void ObjModel_BlendNormalStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, u8
 
 static inline ModelVtxAnimChunk* modelPrefetchNextVertexChunk(ModelVtxAnimJob* job, u32 i, u8* animData,
                                                               u16* chunkBlocks, int* work) {
-    ModelVtxAnimChunk* chunk;
+    ModelVtxAnimChunk* chunks;
     u32 nextBufferIndex;
-    chunk = job->chunks + i;
-    *work = (u32)((chunk[1].vtxBlocks << 5) + 0x1f) >> 5;
+    chunks = job->chunks;
+    *work = (u32)((chunks[i + 1].vtxBlocks << 5) + 0x1f) >> 5;
     nextBufferIndex = ((i + 1) & 1) * 2;
-    copyToCache(gModelCacheBuffersA[(u8)(nextBufferIndex)], animData + chunk[1].srcDataOffset, *work);
+    copyToCache(gModelCacheBuffersA[(u8)(nextBufferIndex)], animData + chunks[i + 1].srcDataOffset, *work);
     chunkBlocks[(i + 1) & 1] = *work;
     {
         ModelVtxAnimChunk* nextChunk;
         int nextWeightBlocks = (u32)(((nextChunk = job->chunks + i)[1].weightBlocks << 5) + 0x1f) >> 5;
         copyToCache(gModelCacheBuffersA[(u8)((u8)(nextBufferIndex) + 1)], nextChunk[1].weightStream, nextWeightBlocks);
     }
-    return chunk;
+    return chunks + i;
 }
 
 static inline void modelConsumeVertexChunk(u8* mtxs, ModelVtxAnimChunk* chunk, u32 i, u16* chunkBlocks, u8* chunkDst,
