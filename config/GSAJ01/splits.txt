@@ -124,10 +124,15 @@ main/modellight.c:
 	.sbss       start:0x803DCB50 end:0x803DCB58
 	.sdata2     start:0x803DE870 end:0x803DE8C8
 
+main/asset_load.c:
+	.text       start:0x8001F54C end:0x8001F7AC
+	.data       start:0x802CA540 end:0x802CA560
+	.bss        start:0x8033C0A8 end:0x8033C0D4
+
 main/gameloop.c:
-	.text       start:0x8001F54C end:0x80021370
-	.data       start:0x802CA540 end:0x802CA6F0
-	.bss        start:0x8033C0A8 end:0x8033C8C0
+	.text       start:0x8001F7AC end:0x80021370
+	.data       start:0x802CA560 end:0x802CA6F0
+	.bss        start:0x8033C0D8 end:0x8033C8C0
 	.sdata      start:0x803DB530 end:0x803DB550
 	.sbss       start:0x803DCB58 end:0x803DCC28
 	.sdata2     start:0x803DE8C8 end:0x803DE8DC

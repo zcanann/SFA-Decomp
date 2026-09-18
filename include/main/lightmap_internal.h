@@ -3,6 +3,7 @@
 
 #include "main/dll/ppcwgpipe_struct.h"
 #include "global.h"
+#include "main/map_romlist_page.h"
 #include <stddef.h>
 
 typedef struct EnvironmentUpdateInterface {
@@ -50,6 +51,15 @@ typedef struct MapLayerBuffers {
 STATIC_ASSERT(offsetof(MapLayerBuffers, cellStates) == 0x41CC);
 STATIC_ASSERT(offsetof(MapLayerBuffers, cellEntries) == 0x41E0);
 STATIC_ASSERT(offsetof(MapLayerBuffers, blockIndices) == 0x41F4);
+
+/* Address view of the separate ROM-list index array from the cached queue base. */
+typedef struct MapRomListBuffers {
+    u8 reserved[0x4208];
+    MapRomListIndex indexes[120];
+} MapRomListBuffers;
+
+STATIC_ASSERT(offsetof(MapRomListBuffers, indexes) == 0x4208);
+STATIC_ASSERT(sizeof(MapRomListBuffers) == 0x83A8);
 
 struct GameObject;
 

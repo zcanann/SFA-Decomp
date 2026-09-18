@@ -154,6 +154,147 @@ def capture_graph(memory, base, colored=True, register_class=4):
     return nodes
 
 
+def capture_coalescing_policy(memory, base, register_class=4):
+    """Read the interval and resulting parent map used by GC/1.3 VA 0x5794F0.
+
+    Independently recovered in mwcc's GC_1_3/CopyCoalescing.c. The parent
+    map is post-coalescing state, not a reconstruction of the input graph.
+    """
+    register_kind(register_class)
+
+    def integer(offset, size, signed=False):
+        raw = memory(base + offset, size)
+        if len(raw) != size:
+            raise ValueError("short copy-coalescing policy read")
+        return int.from_bytes(raw, "little", signed=signed)
+
+    count = integer(0x1E6A7C + 4 * register_class, 4, True)
+    if not 32 <= count <= 32768:
+        raise ValueError("invalid copy-coalescing register count")
+    pointer = integer(0x1E01C8, 4)
+    raw = memory(pointer, count * 2)
+    if len(raw) != count * 2:
+        raise ValueError("short copy-coalescing parent map read")
+    parents = list(struct.unpack("<" + "h" * count, raw))
+    if any(not 0 <= parent <= reg for reg, parent in enumerate(parents)):
+        raise ValueError("copy-coalescing parent is not a minimum-number root")
+    return {
+        "physical_count": integer(0x1E6778 + 4 * register_class, 4, True),
+        "first_eligible": integer(0x1E7258 + 2 * register_class, 2, True),
+        "last_eligible": integer(0x1E66A8 + 4 * register_class, 4, True),
+        "protected_gpr": integer(0x1E6CFA, 2, True),
+        "parents": parents,
+    }
+
+
+def capture_symbol_objects(memory, snapshot):
+    """Read GC/1.3 object metadata for symbolic IR operands without mutation.
+
+    SectionCategory/ObjectName/SharedContext in the sibling mwcc project
+    establish these offsets independently. Flag meanings remain numeric.
+    """
+    addresses = set()
+    for block in snapshot["blocks"]:
+        for instruction in block["instructions"]:
+            for item in decode(instruction)["operands"]:
+                if item["kind"] == 3:
+                    address = int.from_bytes(bytes.fromhex(item["raw"])[6:10], "little")
+                    if address:
+                        addresses.add(address)
+    objects = {}
+    for address in sorted(addresses):
+        raw = memory(address, 0x18)
+        if len(raw) != 0x18:
+            raise ValueError("short symbolic object read")
+        name_pointer = int.from_bytes(raw[10:14], "little")
+        name = bytearray()
+        if name_pointer:
+            for offset in range(256):
+                char = memory(name_pointer + 10 + offset, 1)
+                if len(char) != 1:
+                    raise ValueError("short symbolic object name read")
+                if char == b"\0":
+                    break
+                name.extend(char)
+        info = {"name": name.decode("utf-8", "replace"), "kind": raw[2],
+                "section": int.from_bytes(raw[4:6], "little", signed=True),
+                "flags": int.from_bytes(raw[18:22], "little"),
+                "category": int.from_bytes(raw[22:24], "little")}
+        if raw[2] == 0:
+            extra = memory(address + 0x1e, 0x1e)
+            if len(extra) != 0x1e:
+                raise ValueError("short shared-context object read")
+            info.update(context=int.from_bytes(extra[:4], "little"),
+                        field37=extra[0x19], cached_name38=int.from_bytes(extra[0x1a:], "little"))
+        objects[str(address)] = info
+    return objects
+
+
+def capture_storage_modes(memory, base):
+    """Read the GC/1.3 section and alias lists used by ObjGen_PPC_EABI.c."""
+    def read(address, size):
+        raw = memory(address, size)
+        if len(raw) != size:
+            raise ValueError("short storage mode read")
+        return raw
+
+    def records(offset, size, decode_record):
+        address = int.from_bytes(read(base + offset, 4), "little")
+        seen, result = set(), []
+        while address:
+            if address in seen or len(seen) >= 4096:
+                raise ValueError("invalid storage mode list")
+            seen.add(address)
+            raw = read(address, size)
+            result.append(decode_record(raw))
+            address = int.from_bytes(raw[:4], "little")
+        return result
+
+    return {
+        "sections": records(0x1e72ba, 12, lambda r: {
+            "id": int.from_bytes(r[8:10], "little", signed=True),
+            "data_mode": r[10], "function_mode": r[11]}),
+        "aliases": records(0x1e6c88, 10, lambda r: {
+            "id": int.from_bytes(r[8:10], "little", signed=True),
+            "kind": r[4], "section": int.from_bytes(r[6:8], "little", signed=True)}),
+    }
+
+
+def capture_section_records(memory, base, objects):
+    """Read records for captured variable names, including their shared-base owners."""
+    def read(address, size):
+        raw = memory(address, size)
+        if len(raw) != size:
+            raise ValueError("short section record read")
+        return raw
+
+    def word(address):
+        return int.from_bytes(read(address, 4), "little")
+
+    keys = {obj["cached_name38"] for obj in objects.values()
+            if obj["kind"] == 0 and obj["cached_name38"]}
+    address = word(base + 0x1e6a9c)
+    seen, result = set(), []
+    while address:
+        if address in seen or len(seen) >= 65536:
+            raise ValueError("invalid section record list")
+        seen.add(address)
+        raw = read(address, 50)
+        integer = lambda offset, size=4: int.from_bytes(raw[offset:offset + size], "little")
+        if integer(0) in keys:
+            owner = integer(4)
+            owner_base = word(owner + 20) if owner else 0
+            entry = {"address": address, "key": integer(0), "owner": owner,
+                     "offset": integer(12), "size": integer(16), "flags": raw[20],
+                     "category": integer(44, 2), "owner_base": owner_base}
+            if owner_base:
+                entry.update(base_object=word(owner_base), base_enabled=word(owner_base + 8))
+            result.append(entry)
+        address = integer(24)
+    return {"context_enabled": read(base + 0x1e7102, 1)[0],
+            "records_scanned": len(seen), "records": result}
+
+
 def capture_graph_snapshot(memory, base, name, colored, register_class=4):
     kind, _ = register_kind(register_class)
     word = lambda address: int.from_bytes(memory(address, 4), "little")
@@ -163,6 +304,10 @@ def capture_graph_snapshot(memory, base, name, colored, register_class=4):
     snapshot["register_class"] = register_class
     snapshot["coloring_graph"] = capture_graph(memory, base, colored, register_class)
     if not colored:
+        snapshot["symbol_objects"] = capture_symbol_objects(memory, snapshot)
+        snapshot["storage_modes"] = capture_storage_modes(memory, base)
+        snapshot["section_records"] = capture_section_records(memory, base, snapshot["symbol_objects"])
+        snapshot["coalescing_policy"] = capture_coalescing_policy(memory, base, register_class)
         snapshot["simplification_policy"] = capture_simplification_policy(memory, base, register_class)
         snapshot["color_policy"] = capture_color_policy(memory, base, register_class)
     return snapshot

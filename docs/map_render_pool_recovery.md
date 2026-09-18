@@ -594,3 +594,208 @@ checks pass. The original and matching DOLs retain SHA-1
 `e750e8e894707a52446118a4b84f1b58b677b269`; that integration build still links the
 retail shader object. Only the EN DOL is present in this checkout, so this pass
 makes no new regional completion claims.
+
+## Exact object-render queue stores (2026-09-17)
+
+`renderObjects` now indexes a `u32` view of the queue's `type` field, with
+the field base expressed by `offsetof(LightSortEntry, type)` and the stride
+by `sizeof(LightSortEntry) / sizeof(u32)`. Both object-shadow paths retain
+the cached queue base, store their existing kind, and increment the same
+count. This spelling reproduces retail's base-first address additions without
+moving the queue definitions or changing their storage.
+
+The function improves from 99.82456% to **100%**, retaining all 456 bytes.
+Only four instruction bytes change, in the two commuted additions. All other
+144 function bodies, complete relocation records, symbol layouts, and allocated
+non-text sections remain byte-identical. The TU reaches 142/145 exact functions
+and 99.85951% fuzzy match. It remains `NonMatching` because the map load/unload,
+pending-load, and cell-entry functions are still inexact.
+
+The same source gives a 100% objdiff function match in EN rev1, JP, PAL, and
+PAL rev1 after each input DOL passes its configured hash check. These are
+function matches rather than whole-object completion claims, so regional
+matching manifests do not change. The data audit passes all 40,668 assigned
+bytes, 120 symbol layouts, 40 data relocations, and 151 direct retail pool loads.
+The full source build and strict EN retail checksum pass. Formatting is verified
+separately against the complete raw object; the strict link still uses this
+TU's retail object.
+
+### Loaded-object bitmap compound updates (2026-09-17)
+
+`mapLoadUnloadObjects` now uses compound OR assignments at its two loaded-object
+bitmap updates. This preserves the existing signed-byte lvalue and truncation,
+while evaluating that lvalue once. Both instructions change from
+`or r0,r4,r0` to the retail `or r0,r0,r4`. The preceding clear and all surrounding
+instructions remain unchanged. An unsigned-byte compound lvalue regressed the
+match; reversing the explicit RHS operands alone was byte-neutral.
+
+EN function fuzzy matching improves from **98.58787% to 98.62971%**; the complete
+TU improves from **99.85951% to 99.86113%**. This is a two-instruction improvement,
+not a newly exact function. All five configured originals were hash-verified,
+and EN, JP, PAL, EN rev1 and PAL rev1 show the same function-score improvement.
+For each region the before/after objects differ in exactly four text bytes,
+all in this function. The other 144 function bodies, allocated data, named-symbol
+layouts and relocation destinations are unchanged. Anonymous literal labels are
+renumbered by the semantic source edit; their sections, offsets and bytes agree.
+The retail data audit also passes its 40,668 bytes, 120 native symbol layouts,
+40 data relocations and 151 direct pool loads.
+
+The investigation independently recovered the previously unimplemented GC/1.3
+`PCodeUtilities.c` address emitter at `0x004e8f90` in the sibling `mwcc` project
+(`src/versions/GC_1_3/AddressEmit.c`). Its 219-byte body passed 4,660 comparisons
+with the original x86 routine in a hardened offline Unicorn sandbox. That model
+clarifies MR/ADDI/symbolic-LI emission, but does not yet reconstruct the frontend
+compound-assignment lowering responsible for this OR-order difference. No causal
+proof or Win32 byte-match claim is made for that connection. The new compiler
+model and fixture remain in that workspace alongside its pre-existing GC/1.3 work.
+
+### Typed ROM-list group boundaries (2026-09-17)
+
+The two ordinary-object traversal limits in `mapLoadUnloadObjects` read
+`MapRomListIndex.groupsStart`, at pool offset `0x4208 + 0x88 = 0x4290`, with
+0x8C-byte index stride. The index builder sets this boundary to the minimum of
+the curve offset and all present group offsets, or the page size if none exist.
+It is distinct from `objectsSize`, which only excludes the curve suffix.
+
+`MapRomListBuffers` is an address view of the existing separate 120-entry index
+array, not a new storage definition. All five symbol configurations confirm its
+0x4208 pool origin and 0x83A8 end at the loaded-page array. Typed field accesses
+correct the two ADD operand orders, improving the function from **98.62971% to
+98.67155%** in all five versions. Exactly four text bytes change; the other 144
+function bodies, all allocated data, named-symbol layouts and relocation
+destinations remain unchanged. The hosted-page bitmap accesses now also use
+`MapRomListPage.loadedObjectBits`; this cleanup preserves the generated object.
+The complete TU improves from **99.86113% to 99.86275%** and remains NonMatching.
+
+### Copy-coalescing boundary behind the cell-entry plateau (2026-09-17)
+
+The sibling compiler project now contains an independent reconstruction of
+GC/1.3 `InterferenceGraph.c`'s complete copy-coalescing routine, 1,098 bytes at
+`0x005794f0` through `0x00579939`. Its native model agrees with the original in
+1,504 offline sandbox cases spanning five register classes, interval boundaries,
+interference, chained merges, two-block traversal, and operand rewriting.
+Allocation, instruction unlinking, and assertions are stubbed dependencies;
+Win32 binary matching remains unmeasured.
+
+`tricky_backend_graph.py` now captures the actual eligibility interval and
+post-coalescing parent map. For unchanged `mapFillCellEntry`, the physical limit
+is 32, the inclusive merge interval is 46–144, and the protected GPR is 1.
+The retained `slots` local is virtual register 42, the first inline cursor is
+64, and its address temporary is 70. Thus 70 can merge into 64, but 42 cannot
+merge with either. The resulting ADDI targets the cursor and copies to the
+retained pointer, opposite the retail sequence. Reversing the C assignments
+still yields the same raw object after value numbering and coalescing.
+
+Both ordinary and instrumented baseline objects have SHA-256
+`708f9fe319e600397a3fc57eb39d6fd18aaa92f3697c1740f13c421eca66036f`.
+The complete graph simplification and color replay agree with the captured
+compiler. Rejected probes include pointer aggregates, coordinate aliases,
+shared lookup helpers, and reusing the object local between load phases.
+Moving the complete BSS definition block earlier also disturbed its symbol
+layout and was discarded. These findings improve diagnosis, not the shader
+match percentage: all probes were restored, leaving 142/145 exact functions
+and the existing 99.86275% TU match intact.
+
+### Object metadata and shared BSS selection (2026-09-17)
+
+The sibling compiler reconstruction now includes the 117-byte GC/1.3 object-name
+lookup at `0x004fcd60` through `0x004fcdd4` (`ObjectName.c`). It follows aliases,
+selects direct names or kind-specific cached names, and dispatches lazy builders.
+Its native model agrees with 2,376 original-routine cases, each making two calls
+to check caching. Name builders and assertions are stubbed; this is functional
+agreement, not a Win32 binary match. The section-category predicate was separately
+checked in 8,360 cases against the original without dependency stubs.
+
+The backend graph capture now records symbolic operands' object kind, name,
+flags and category, plus variable context and cached-name fields. This read-only
+capture rules out the proposed exclusion-flag explanation for the pending-load
+slot and table accesses: with their definitions after the functions, these
+objects have flags zero, category `0x103`, and a null context pointer.
+
+Moving the complete BSS definition group before the functions and using native
+array accesses replaces those operands with the compiler-generated `...bss.0`
+base (category `0x102`). However, storage follows first-use order in this probe,
+changing the proven global offsets. The pending-load function also regresses
+from 98.81043% to 97.18829%. Keeping the definitions late with the same native
+accesses regresses further to 94.36896%. Both probes were discarded. Symbolic
+relocation normalization can conceal the changed global offsets, so a shared
+base alone is insufficient evidence of a correct source reconstruction.
+
+Ordinary and instrumented objects agree byte-for-byte for all three captures:
+the unchanged baseline, native accesses with late definitions, and native
+accesses with early definitions. No shader source change is retained from this
+experiment; the current TU remains 99.86275% with 142/145 exact functions.
+
+### Addressing-mode exclusion ruled out for the BSS arrays (2026-09-17)
+
+The sibling compiler project now reconstructs the ObjGen addressing-mode
+classifier (`0x004b3ff0`, 352 bytes), its relative-mode predicate (`0x004b3fc0`,
+35 bytes), and its alias-list lookup (`0x0042fb20`, 29 bytes). The classifier
+passes 7,112 original/native comparisons both with a stubbed alias dependency
+and with the recovered lookup. The lookup separately passes 4,196 comparisons,
+including duplicate IDs and high argument bits. Preparation, allocation and
+assertions remain stubbed in classifier tests; Win32 binary matching is unmeasured.
+
+`tricky_backend_graph.py` now records signed object section IDs and the ordered
+section/alias lists. In the ordinary baseline, `gLightmapDrawQueue` is section 9,
+data mode 1. In the native-array-access probe, `gShaderRomListSlots`,
+`gMapBlockCellEntryTables`, `gMapBlockLayerTables`, `gMapRomListIndexes` and
+`gLoadedRomListPages` are also section 9, mode 1, with null shared-context
+pointers. Mode 1 does not trigger the relative-mode exclusion (modes 2 and 6–8).
+Small-data globals, including the map origins and slot count, use section 10,
+mode 6. Thus the addressing-mode predicate does not explain the missing shared
+context for these BSS arrays; storage visibility/allocation remains the lead.
+
+The baseline and native-probe captures each preserve their ordinary object's
+raw hash. The native probe remains rejected and was restored. Shader matching
+stays 99.86275% with 142/145 exact functions.
+
+### Section-record ownership and private-storage probes (2026-09-17)
+
+The recovered section-record query now guides a read-only trace of records
+selected by each captured variable's cached name. The trace records the owner,
+byte size, offset, category, and owner's shared-base descriptor. It
+preserves list order and both category variants of a name.
+
+In baseline `doPendingMapLoads`, shared contexts are globally enabled, but
+`gLightmapDrawQueue` has a category-0x103 record with flags 0x10, offset zero,
+byte size zero, and an owner with no shared-base descriptor. The same
+owner appears for the captured external map globals. The trace scans 228
+records. This establishes a concrete missing owner base at this stage, beyond
+the previously excluded flag and addressing-mode explanations.
+
+No direct source consumers of the eighteen named BSS objects occur outside
+shader.c. A private-storage experiment temporarily removed their public
+extern declarations and made the complete early definition group static.
+This still assigned storage by first use: the queue moved from offset zero
+to 0x4640 and the ROM-list indexes from 0x4208 to 0x1c. Native pending-load
+accesses remained 97.18829%; private linkage did not recover the retail layout.
+All private-storage source/header changes were restored.
+
+A typed eight-element slot-array view was also tested with cached and live
+slot counts, using either the cached pool base or the queue's address. All
+four variants regressed the pending-load function (98.23919%, 98.02290%,
+94.283714%, and 94.59542%, respectively) and were discarded. No shader source
+change is retained from these probes.
+
+The early-definition/native-access trace scans 230 records and confirms the
+positive case: `...bss.0` has category 0x102, flags zero, a nonnull owner-base
+descriptor, and an enabled base pointing back to that generated symbol. Both
+baseline and early-definition captures produce byte-identical ordinary and
+instrumented objects. This validates the traced ownership transition; it does
+not make the rejected early-definition layout correct.
+
+### Corrected section-record size interpretation (2026-09-17)
+
+Recovering the compiler's allocation creator at 0x004d07c0 establishes that
+record +0x10 is the requested byte size, not a storage pointer. It returns
+the section record itself and replaces its owner with the selected area.
+The earlier zero/nonzero checks could not establish the field's type. The
+trace now labels this word `size`; older captures' `storage` value is the
+same word and must be read as a size. The baseline record's size is zero
+and its owner base is null; the missing-base observation remains valid.
+
+The creator passes 6,336 original/native cases, using the actual category
+predicate and recovered native record lookup. Canonical allocation/section
+and area/owner types are now unified in the sibling compiler project. This
+is a correction to the model and trace terminology, not a shader match gain.

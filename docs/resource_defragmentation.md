@@ -51,3 +51,25 @@ increase in exact-function count. Full source compilation and the strict
 retail checksum build pass. The separate formatting change preserves every
 non-brace token and every generated object; it attaches existing braces and
 adds braces around previously unbraced control-flow bodies.
+
+## Exact register allocation (2026-09-17)
+
+Both relocation passes now reuse one function-local `replacement` pointer.
+The first pass keeps its own file index, declared before its four cursors.
+Together these changes reproduce retail's first-pass file index in r22 and
+replacement pointer in r29 without changing the allocation or copy sequence.
+Moving either declaration alone does not recover the complete allocation.
+
+`defragMemory` is now **100% exact**, still 1,028 bytes, under the existing
+GC/1.3 profile. Only its eleven instruction words change; the other 56 function
+bodies and all allocated non-text sections are byte-identical. The EN TU now
+has 56/57 exact functions and 99.92435% fuzzy match. `mapLoadDataFile` remains
+inexact, so the TU stays `NonMatching`.
+
+After verifying each original DOL against its configured hash, the same source
+also gives a 100% objdiff function match for EN rev1, JP, PAL, and PAL rev1.
+These are function matches, not complete regional object claims; the regional
+matching manifests remain unchanged. Formatting the active TU and its header
+preserves the raw EN object, and both pass the formatter check. `ninja all_source`
+and the strict EN retail checksum target pass; the latter still links this
+TU's retail object.

@@ -624,6 +624,7 @@ static inline int loadedFileFlags(void) {
 }
 
 void defragMemory(int mode) {
+    void* replacement;
     void** buffers;
     s16* owners;
     int* sizes;
@@ -645,12 +646,11 @@ void defragMemory(int mode) {
         return;
     }
     if (mode != 0) {
+        int fileId;
         void** moveBuffers;
         s16* moveOwners;
         int* moveSizes;
         u8* moveFlags;
-        void* replacement;
-        int fileId;
         mmSetForceHeaps1and2Only(1);
         fileId = 0;
         {
@@ -744,7 +744,6 @@ void defragMemory(int mode) {
             case MLDF_FILEID_TEX0_BIN_B:
             case MLDF_FILEID_VOXMAP_BIN_B:
             case MLDF_FILEID_ANIMCURV_BIN_B: {
-                void* replacement;
                 if (*buffers != NULL && *owners != -1 && mmGetRegionForPtr(*buffers) == 0) {
                     replacement = mmAlloc(*sizes + 0x20, 0x7d7d7d7d, 0);
                     if (replacement == NULL) {

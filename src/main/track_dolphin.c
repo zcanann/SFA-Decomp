@@ -1310,12 +1310,13 @@ void trackIntersect(void) {
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
         }
         if (previousType != segmentType) {
-            u16 v = i;
+            u16 sortedLineIndex = i;
             int ti = segmentType * 2;
-            gIntersectSegmentTypeTable[ti] = v;
+            /* Keep the narrowed line index separate from the previous type. */
+            gIntersectSegmentTypeTable[ti] = (u16)sortedLineIndex;
             if (previousType != -1) {
                 int pi = previousType * 2;
-                gIntersectSegmentTypeTable[pi + 1] = v;
+                gIntersectSegmentTypeTable[pi + 1] = (u16)sortedLineIndex;
             }
             previousType = segmentType;
         }
@@ -1662,8 +1663,8 @@ static inline void trackProjectOntoOffsetPlane(f32* position, const f32* plane, 
     position[0] -= radiusDistance * plane[0];
     position[1] -= radiusDistance * plane[1];
     position[2] -= radiusDistance * plane[2];
-    planeCorrection =
-        clearance - (plane[3] + (position[2] * plane[2] + (position[1] * plane[1] + position[0] * plane[0])));
+    planeCorrection = clearance - (plane[3] + (position[2] * *(const f32*)(plane + 2) +
+                                               (position[0] * *(const f32*)plane + position[1] * plane[1])));
     position[0] += planeCorrection * plane[0];
     position[1] += planeCorrection * plane[1];
     position[2] += planeCorrection * plane[2];
@@ -1712,16 +1713,11 @@ int trackResolveSurfacePenetration(const f32* startPosition, f32* position, cons
             case 1:
             case 8:
             case 0xa: {
-                f32 normalZ;
-                f32 normalX;
-
-                normalX = plane[0];
-                normalZ = plane[2];
-                clearance =
-                    clearance - (plane[3] + (position[2] * normalZ + (normalX * position[0] + position[1] * plane[1])));
+                clearance = clearance - (plane[3] + (position[2] * *(const f32*)(plane + 2) +
+                                                     (position[0] * *(const f32*)plane + position[1] * plane[1])));
                 if (clearance > 0.0f) {
-                    f32 normalXSquared = normalX * normalX;
-                    f32 normalZSquared = normalZ * normalZ;
+                    f32 normalXSquared = plane[0] * plane[0];
+                    f32 normalZSquared = plane[2] * plane[2];
                     f32 correction =
                         mathCosfHighPrecision(atan2fHighPrecision(plane[1], sqrtf(normalXSquared + normalZSquared)));
                     if (0.0f != correction) {
@@ -1752,16 +1748,11 @@ int trackResolveSurfacePenetration(const f32* startPosition, f32* position, cons
             case 9:
             case 0xa:
             default: {
-                f32 normalZ;
-                f32 normalX;
-
-                normalX = plane[0];
-                normalZ = plane[2];
-                clearance =
-                    clearance - (plane[3] + (position[2] * normalZ + (normalX * position[0] + position[1] * plane[1])));
+                clearance = clearance - (plane[3] + (position[2] * *(const f32*)(plane + 2) +
+                                                     (position[0] * *(const f32*)plane + position[1] * plane[1])));
                 if (clearance > 0.0f) {
-                    f32 normalXSquared = normalX * normalX;
-                    f32 normalZSquared = normalZ * normalZ;
+                    f32 normalXSquared = plane[0] * plane[0];
+                    f32 normalZSquared = plane[2] * plane[2];
                     f32 correction =
                         mathSinfHighPrecision(atan2fHighPrecision(plane[1], sqrtf(normalXSquared + normalZSquared)));
                     correction = clearance / correction;
@@ -1862,6 +1853,45 @@ int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, f32* rayOrigin, f32*
     return 0;
 }
 
+/* Direction is normalized; an interior start selects the sphere exit. */
+static inline int trackSweepEndpointSphere(const f32* center, f32 radiusSquared, const f32* origin,
+                                           const f32* direction, f32 maxDistance, f32* hitPoint, f32* planeOut,
+                                           f32* distanceOut) {
+    f32 centerOffset[3];
+    f32 distance, centerDistanceSquared, lineDistanceSquared, radialDistance, planeConstant;
+    PSVECSubtract((Vec*)center, (Vec*)origin, (Vec*)centerOffset);
+    distance = PSVECDotProduct((Vec*)centerOffset, (Vec*)direction);
+    centerDistanceSquared = PSVECSquareMag((Vec*)centerOffset);
+    if (distance < 0.0f && centerDistanceSquared > radiusSquared) {
+        return 0;
+    } else {
+        lineDistanceSquared = -(distance * distance - centerDistanceSquared);
+        if (lineDistanceSquared > radiusSquared) {
+            return 0;
+        } else {
+            radialDistance = sqrtf(radiusSquared - lineDistanceSquared);
+            if (centerDistanceSquared > radiusSquared) {
+                distance -= radialDistance;
+            } else {
+                distance += radialDistance;
+            }
+            if (distance >= 0.0f && distance <= maxDistance) {
+                PSVECScale((Vec*)direction, (Vec*)hitPoint, distance);
+                PSVECAdd((Vec*)origin, (Vec*)hitPoint, (Vec*)hitPoint);
+                PSVECSubtract((Vec*)hitPoint, (Vec*)center, (Vec*)planeOut);
+                PSVECNormalize((Vec*)planeOut, (Vec*)planeOut);
+                radialDistance = sqrtf(radiusSquared);
+                planeConstant = -PSVECDotProduct((Vec*)hitPoint, (Vec*)planeOut);
+                planeOut[3] = planeConstant + radialDistance;
+                *distanceOut = distance;
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+}
+
 /* trackGetIntersect2 -- sweep each input sphere against the gathered triangle
  * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */
 char sTrackHitOverflowError[] = "HIT OVERFLOW\n";
@@ -1873,6 +1903,10 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     u8* slotp;
     u8* typeSlotp;
     f32* outp;
+    f32* startZ;
+    f32* startY;
+    f32* endZ;
+    f32* endY;
     f32 *edge1p, *edge2p, *vbp, *evecp;
     u8* slotBase;
     s16 i;
@@ -1883,9 +1917,7 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     u8 typeb2;
     TrackBlockDescriptor* descSave;
     u8 type;
-    f32 edge2[4];
-    f32 edge1[4];
-    f32 edge0[4];
+    f32 edgePlanes[3][4];
     TrackSphereSweepEdge edge;
     f32 ws[3];
     f32 we[3];
@@ -1899,17 +1931,8 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     f32 collisionContact[3];
     f32 collisionStart[3];
     f32 dir[3];
-    f32 tmp1[3];
-    f32 tmp2[3];
     f32 frac;
-    f32 ndot;
     f32 dS;
-    f32 dotv;
-    f32 sq;
-    f32 disc;
-    f32 root;
-    f32 tt;
-    f32 rr;
     f32 dE;
     u8 vertexBit;
     u8 nextBit;
@@ -1942,9 +1965,13 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     sp2 = startPos;
     slotp = slots;
     outp = slots;
-    edge1p = edge1;
-    edge2p = edge2;
+    endY = &we[1];
+    endZ = &we[2];
+    startZ = &ws[2];
+    startY = &ws[1];
     /* These byte views preserve the independent scratch-pointer setup. */
+    edge1p = (f32*)((u8*)edgePlanes + sizeof(edgePlanes[0]));
+    edge2p = (f32*)((u8*)edgePlanes + 2 * sizeof(edgePlanes[0]));
     vbp = (f32*)((u8*)&edge + offsetof(TrackSphereSweepEdge, end));
     evecp = (f32*)((u8*)&edge + offsetof(TrackSphereSweepEdge, direction));
     eps = 0.0f;
@@ -1965,22 +1992,22 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
         negativeClearance = -clearance;
         do {
             we[0] = cur[0];
-            we[1] = cur[1];
-            we[2] = cur[2];
+            *endY = cur[1];
+            *endZ = cur[2];
             found = 0;
             hit = 0;
             for (desc = gTrackBlockDescriptors; desc < descEnd; desc++) {
                 if (desc->object != NULL) {
-                    Matrix_TransformPoint(desc->alternateMatrix, svFromp[0], svFromp[1], svFromp[2], &ws[0], &ws[1],
-                                          &ws[2]);
-                    Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2], &we[0], &we[1], &we[2]);
+                    Matrix_TransformPoint(desc->alternateMatrix, svFromp[0], svFromp[1], svFromp[2], &ws[0], startY,
+                                          startZ);
+                    Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2], &we[0], endY, endZ);
                 } else {
                     ws[0] = svFromp[0] - offX;
-                    ws[1] = svFromp[1];
-                    ws[2] = svFromp[2] - offZ;
+                    *startY = svFromp[1];
+                    *startZ = svFromp[2] - offZ;
                     we[0] = cur[0] - offX;
-                    we[1] = cur[1];
-                    we[2] = cur[2] - offZ;
+                    *endY = cur[1];
+                    *endZ = cur[2] - offZ;
                 }
                 PSVECSubtract((Vec*)we, (Vec*)ws, (Vec*)delta);
                 mag = PSVECMag((Vec*)delta);
@@ -2017,30 +2044,33 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         if (hitpt[1] > tri->vy[tri->minMaxY >> 4] + clearance) {
                             continue;
                         }
-                        edge0[0] = tri->edgeNormals[0].x;
-                        edge0[1] = tri->edgeNormals[0].y;
-                        edge0[2] = tri->edgeNormals[0].z;
-                        edge0[3] = -(tri->vz[0] * edge0[2] + (tri->vx[0] * edge0[0] + tri->vy[0] * edge0[1])) +
-                                   PSVECDotProduct((Vec*)edge0, (Vec*)hitpt);
-                        edge1[0] = tri->edgeNormals[1].x;
-                        edge1[1] = tri->edgeNormals[1].y;
-                        edge1[2] = tri->edgeNormals[1].z;
-                        edge1[3] = -(tri->vz[1] * edge1[2] + (tri->vx[1] * edge1[0] + tri->vy[1] * edge1[1])) +
-                                   PSVECDotProduct((Vec*)edge1p, (Vec*)hitpt);
-                        edge2[0] = tri->edgeNormals[2].x;
-                        edge2[1] = tri->edgeNormals[2].y;
-                        edge2[2] = tri->edgeNormals[2].z;
-                        edge2[3] = -(tri->vz[2] * edge2[2] + (tri->vx[2] * edge2[0] + tri->vy[2] * edge2[1])) +
-                                   PSVECDotProduct((Vec*)edge2p, (Vec*)hitpt);
+                        edgePlanes[0][0] = tri->edgeNormals[0].x;
+                        edgePlanes[0][1] = tri->edgeNormals[0].y;
+                        edgePlanes[0][2] = tri->edgeNormals[0].z;
+                        edgePlanes[0][3] = -(tri->vz[0] * edgePlanes[0][2] +
+                                             (tri->vx[0] * edgePlanes[0][0] + tri->vy[0] * edgePlanes[0][1])) +
+                                           PSVECDotProduct((Vec*)edgePlanes[0], (Vec*)hitpt);
+                        edgePlanes[1][0] = tri->edgeNormals[1].x;
+                        edgePlanes[1][1] = tri->edgeNormals[1].y;
+                        edgePlanes[1][2] = tri->edgeNormals[1].z;
+                        edgePlanes[1][3] = -(tri->vz[1] * edgePlanes[1][2] +
+                                             (tri->vx[1] * edgePlanes[1][0] + tri->vy[1] * edgePlanes[1][1])) +
+                                           PSVECDotProduct((Vec*)edge1p, (Vec*)hitpt);
+                        edgePlanes[2][0] = tri->edgeNormals[2].x;
+                        edgePlanes[2][1] = tri->edgeNormals[2].y;
+                        edgePlanes[2][2] = tri->edgeNormals[2].z;
+                        edgePlanes[2][3] = -(tri->vz[2] * edgePlanes[2][2] +
+                                             (tri->vx[2] * edgePlanes[2][0] + tri->vy[2] * edgePlanes[2][1])) +
+                                           PSVECDotProduct((Vec*)edge2p, (Vec*)hitpt);
                         b = 0;
                         if (radius > 0.0f) {
-                            if (edge0[3] > 0.0f) {
+                            if (edgePlanes[0][3] > 0.0f) {
                                 b |= 1;
                             }
-                            if (edge1[3] > 0.0f) {
+                            if (edgePlanes[1][3] > 0.0f) {
                                 b |= 2;
                             }
-                            if (edge2[3] > 0.0f) {
+                            if (edgePlanes[2][3] > 0.0f) {
                                 b |= 4;
                             }
                         }
@@ -2050,29 +2080,32 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         }
                         tri->edgeOutBits = b;
                     } else if (dS >= negativeClearance && radius > 0.0f) {
-                        edge0[0] = tri->edgeNormals[0].x;
-                        edge0[1] = tri->edgeNormals[0].y;
-                        edge0[2] = tri->edgeNormals[0].z;
-                        edge0[3] = -(tri->vz[0] * edge0[2] + (tri->vx[0] * edge0[0] + tri->vy[0] * edge0[1])) +
-                                   PSVECDotProduct((Vec*)edge0, (Vec*)ws);
-                        edge1[0] = tri->edgeNormals[1].x;
-                        edge1[1] = tri->edgeNormals[1].y;
-                        edge1[2] = tri->edgeNormals[1].z;
-                        edge1[3] = -(tri->vz[1] * edge1[2] + (tri->vx[1] * edge1[0] + tri->vy[1] * edge1[1])) +
-                                   PSVECDotProduct((Vec*)edge1p, (Vec*)ws);
-                        edge2[0] = tri->edgeNormals[2].x;
-                        edge2[1] = tri->edgeNormals[2].y;
-                        edge2[2] = tri->edgeNormals[2].z;
-                        edge2[3] = -(tri->vz[2] * edge2[2] + (tri->vx[2] * edge2[0] + tri->vy[2] * edge2[1])) +
-                                   PSVECDotProduct((Vec*)edge2p, (Vec*)ws);
+                        edgePlanes[0][0] = tri->edgeNormals[0].x;
+                        edgePlanes[0][1] = tri->edgeNormals[0].y;
+                        edgePlanes[0][2] = tri->edgeNormals[0].z;
+                        edgePlanes[0][3] = -(tri->vz[0] * edgePlanes[0][2] +
+                                             (tri->vx[0] * edgePlanes[0][0] + tri->vy[0] * edgePlanes[0][1])) +
+                                           PSVECDotProduct((Vec*)edgePlanes[0], (Vec*)ws);
+                        edgePlanes[1][0] = tri->edgeNormals[1].x;
+                        edgePlanes[1][1] = tri->edgeNormals[1].y;
+                        edgePlanes[1][2] = tri->edgeNormals[1].z;
+                        edgePlanes[1][3] = -(tri->vz[1] * edgePlanes[1][2] +
+                                             (tri->vx[1] * edgePlanes[1][0] + tri->vy[1] * edgePlanes[1][1])) +
+                                           PSVECDotProduct((Vec*)edge1p, (Vec*)ws);
+                        edgePlanes[2][0] = tri->edgeNormals[2].x;
+                        edgePlanes[2][1] = tri->edgeNormals[2].y;
+                        edgePlanes[2][2] = tri->edgeNormals[2].z;
+                        edgePlanes[2][3] = -(tri->vz[2] * edgePlanes[2][2] +
+                                             (tri->vx[2] * edgePlanes[2][0] + tri->vy[2] * edgePlanes[2][1])) +
+                                           PSVECDotProduct((Vec*)edge2p, (Vec*)ws);
                         b = 0;
-                        if (edge0[3] > 0.0f) {
+                        if (edgePlanes[0][3] > 0.0f) {
                             b |= 1;
                         }
-                        if (edge1[3] > 0.0f) {
+                        if (edgePlanes[1][3] > 0.0f) {
                             b |= 2;
                         }
-                        if (edge2[3] > 0.0f) {
+                        if (edgePlanes[2][3] > 0.0f) {
                             b |= 4;
                         }
                         tri->edgeOutBits = b;
@@ -2126,38 +2159,8 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                             edge.start[0] = tri->vx[vertexBit];
                             edge.start[1] = tri->vy[vertexBit];
                             edge.start[2] = tri->vz[vertexBit];
-                            rr = edge.radiusSquared;
-                            PSVECSubtract((Vec*)edge.start, (Vec*)ws, (Vec*)tmp1);
-                            dotv = PSVECDotProduct((Vec*)tmp1, (Vec*)dir);
-                            sq = PSVECSquareMag((Vec*)tmp1);
-                            if (dotv < 0.0f && sq > rr) {
-                                ok = 0;
-                            } else {
-                                disc = -(dotv * dotv - sq);
-                                if (disc > rr) {
-                                    ok = 0;
-                                } else {
-                                    root = sqrtf(rr - disc);
-                                    if (sq > rr) {
-                                        dotv -= root;
-                                    } else {
-                                        dotv += root;
-                                    }
-                                    if (dotv >= 0.0f && dotv <= mag) {
-                                        PSVECScale((Vec*)dir, (Vec*)hitpt, dotv);
-                                        PSVECAdd((Vec*)ws, (Vec*)hitpt, (Vec*)hitpt);
-                                        PSVECSubtract((Vec*)hitpt, (Vec*)edge.start, (Vec*)plane);
-                                        PSVECNormalize((Vec*)plane, (Vec*)plane);
-                                        root = sqrtf(rr);
-                                        ndot = -PSVECDotProduct((Vec*)hitpt, (Vec*)plane);
-                                        plane[3] = ndot + root;
-                                        frac = dotv;
-                                        ok = 1;
-                                    } else {
-                                        ok = 0;
-                                    }
-                                }
-                            }
+                            ok = trackSweepEndpointSphere(edge.start, edge.radiusSquared, ws, dir, mag, hitpt, plane,
+                                                          &frac);
                             if (ok) {
                                 hit = 1;
                                 goto hitCheck;
@@ -2165,38 +2168,7 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                             edge.end[0] = tri->vx[nextBit];
                             edge.end[1] = tri->vy[nextBit];
                             edge.end[2] = tri->vz[nextBit];
-                            dE = edge.radiusSquared;
-                            PSVECSubtract((Vec*)vbp, (Vec*)ws, (Vec*)tmp2);
-                            sq = PSVECDotProduct((Vec*)tmp2, (Vec*)dir);
-                            dotv = PSVECSquareMag((Vec*)tmp2);
-                            if (sq < 0.0f && dotv > dE) {
-                                ok = 0;
-                            } else {
-                                disc = -(sq * sq - dotv);
-                                if (disc > dE) {
-                                    ok = 0;
-                                } else {
-                                    root = sqrtf(dE - disc);
-                                    if (dotv > dE) {
-                                        tt = sq - root;
-                                    } else {
-                                        tt = sq + root;
-                                    }
-                                    if (tt >= 0.0f && tt <= mag) {
-                                        PSVECScale((Vec*)dir, (Vec*)hitpt, tt);
-                                        PSVECAdd((Vec*)ws, (Vec*)hitpt, (Vec*)hitpt);
-                                        PSVECSubtract((Vec*)hitpt, (Vec*)vbp, (Vec*)plane);
-                                        PSVECNormalize((Vec*)plane, (Vec*)plane);
-                                        root = sqrtf(dE);
-                                        ndot = -PSVECDotProduct((Vec*)hitpt, (Vec*)plane);
-                                        plane[3] = ndot + root;
-                                        frac = tt;
-                                        ok = 1;
-                                    } else {
-                                        ok = 0;
-                                    }
-                                }
-                            }
+                            ok = trackSweepEndpointSphere(vbp, edge.radiusSquared, ws, dir, mag, hitpt, plane, &frac);
                             if (ok) {
                                 hit = 1;
                                 goto hitCheck;
@@ -2208,8 +2180,8 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                 if (hit != 0) {
                     u8 triFlags;
                     we[0] = hitpt[0];
-                    we[1] = hitpt[1];
-                    we[2] = hitpt[2];
+                    *endY = hitpt[1];
+                    *endZ = hitpt[2];
                     contactPlane[0] = plane[0];
                     contactPlane[1] = plane[1];
                     contactPlane[2] = plane[2];
@@ -2219,8 +2191,8 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                     typeb2 = triFlags;
                     objmtx = (u32)desc->object;
                     collisionStart[0] = ws[0];
-                    collisionStart[1] = ws[1];
-                    collisionStart[2] = ws[2];
+                    collisionStart[1] = *startY;
+                    collisionStart[2] = *startZ;
                     collisionContact[0] = hitpt[0];
                     collisionContact[1] = hitpt[1];
                     collisionContact[2] = hitpt[2];
@@ -2259,7 +2231,8 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                     }
                     radiusDistance = contactPlane[3] +
                                      (cur[2] * contactPlane[2] + (cur[0] * contactPlane[0] + cur[1] * contactPlane[1]));
-                    radiusDistance -= radius;
+                    /* Preserve the single-precision temporary before forming the call argument. */
+                    radiusDistance = (f32)radiusDistance - radius;
                     trackResolveSurfacePenetration(collisionStart, cur, collisionContact, contactPlane, radiusDistance,
                                                    clearance, type);
                     if (objmtx != 0) {
@@ -2722,7 +2695,9 @@ u8 doEdges;
     f8 = (u16)flags & 8;
     f100 = (u16)flags & 0x100;
     f4 = (u16)flags & 4;
-    last = count - 1;
+    /* Keep the copy and decrement separate for the retail spill-slot order. */
+    last = count;
+    last--;
     for (; i < count; i++) {
         MapBlockData* blk;
         int vb;

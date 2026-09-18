@@ -2,7 +2,7 @@ import copy
 import struct
 import unittest
 
-from tricky_backend_graph import (capture_color_policy, capture_graph, capture_simplification_policy, coloring_order, describe_node,
+from tricky_backend_graph import (capture_coalescing_policy, capture_color_policy, capture_graph, capture_simplification_policy, capture_symbol_objects, capture_storage_modes, capture_section_records, coloring_order, describe_node,
                                  replay_coloring, replay_simplification, validate_graph, validate_rewrite)
 
 
@@ -38,6 +38,98 @@ def simplification_fixture(removal_order, weights=(10, 5)):
 
 
 class BackendGraphTests(unittest.TestCase):
+    def test_section_records_keep_both_categories_and_read_owner_base(self):
+        records = {0x1e6a9c: struct.pack("<I", 0x100), 0x1e7102: b"\x01",
+                   0x314: struct.pack("<I", 0x400), 0x400: struct.pack("<I", 0x500),
+                   0x408: struct.pack("<I", 0x600)}
+        for address, next_address, category in [(0x100, 0x180, 0x102), (0x180, 0, 0x103)]:
+            raw = bytearray(50)
+            struct.pack_into("<II", raw, 0, 0x700, 0x300)
+            struct.pack_into("<II", raw, 12, 12, 0x800)
+            raw[20] = 0x10
+            struct.pack_into("<I", raw, 24, next_address)
+            struct.pack_into("<H", raw, 44, category)
+            records[address] = raw
+        read = lambda address, size: records[address][:size]
+        objects = {"1": {"kind": 0, "cached_name38": 0x700}}
+        result = capture_section_records(read, 0, objects)
+        self.assertEqual(result["records_scanned"], 2)
+        self.assertEqual(result["context_enabled"], 1)
+        self.assertEqual([r["category"] for r in result["records"]], [0x102, 0x103])
+        self.assertEqual(result["records"][0], {"address": 0x100, "key": 0x700, "owner": 0x300,
+                         "offset": 12, "size": 0x800, "flags": 0x10, "category": 0x102,
+                         "owner_base": 0x400, "base_object": 0x500, "base_enabled": 0x600})
+        self.assertEqual(capture_section_records(read, 0, {})["records"], [])
+        struct.pack_into("<I", records[0x180], 24, 0x100)
+        with self.assertRaisesRegex(ValueError, "invalid section record list"):
+            capture_section_records(read, 0, objects)
+        with self.assertRaisesRegex(ValueError, "short section record read"):
+            capture_section_records(lambda a, n: b"", 0, objects)
+
+    def test_storage_mode_lists_preserve_alias_order_and_signed_ids(self):
+        records = {
+            0x1e72ba: struct.pack("<I", 0x100),
+            0x1e6c88: struct.pack("<I", 0x200),
+            0x100: struct.pack("<IIhBB", 0, 0, 12, 6, 9),
+            0x200: struct.pack("<IBBhh", 0x220, 1, 0, 12, -1),
+            0x220: struct.pack("<IBBhh", 0, 2, 0, 13, -1),
+        }
+        read = lambda address, size: records[address][:size]
+        self.assertEqual(capture_storage_modes(read, 0), {
+            "sections": [{"id": 12, "data_mode": 6, "function_mode": 9}],
+            "aliases": [{"id": -1, "kind": 1, "section": 12},
+                        {"id": -1, "kind": 2, "section": 13}],
+        })
+        records[0x220] = struct.pack("<IBBhh", 0x200, 2, 0, 13, -1)
+        with self.assertRaisesRegex(ValueError, "invalid storage mode list"):
+            capture_storage_modes(read, 0)
+        with self.assertRaisesRegex(ValueError, "short storage mode read"):
+            capture_storage_modes(lambda a, n: b"", 0)
+
+    def test_symbol_metadata_uses_object_and_name_record_offsets(self):
+        memory = bytearray(0x400)
+        memory[0x102] = 0
+        struct.pack_into("<h", memory, 0x104, -3)
+        struct.pack_into("<I", memory, 0x10a, 0x200)
+        struct.pack_into("<IH", memory, 0x112, 0x20010, 0x103)
+        struct.pack_into("<I", memory, 0x11e, 0x300)
+        memory[0x137] = 1
+        struct.pack_into("<I", memory, 0x138, 0x220)
+        memory[0x20a:0x217] = b"gShaderSlots\0"
+        symbolic = bytes([3, 8, 0, 0, 0, 0]) + struct.pack("<I", 0x100) + bytes(2)
+        instruction = {"address": 1, "words": [0] * 8 + [0x1008a] + list(struct.unpack("<3I", symbolic))}
+        snapshot = {"blocks": [{"instructions": [instruction, instruction]}]}
+        self.assertEqual(capture_symbol_objects(lambda a, n: memory[a:a + n], snapshot), {
+            "256": {"name": "gShaderSlots", "kind": 0, "section": -3, "flags": 0x20010, "category": 0x103,
+                    "context": 0x300, "field37": 1, "cached_name38": 0x220},
+        })
+        with self.assertRaisesRegex(ValueError, "short symbolic object read"):
+            capture_symbol_objects(lambda a, n: b"", snapshot)
+
+    def test_coalescing_policy_preserves_named_and_inline_register_boundary(self):
+        parents = list(range(80))
+        parents[70] = 64
+        values = {
+            0x1E6A8C: struct.pack("<i", 80), 0x1E6788: struct.pack("<i", 32),
+            0x1E7260: struct.pack("<h", 46), 0x1E66B8: struct.pack("<i", 79),
+            0x1E6CFA: struct.pack("<h", -1), 0x1E01C8: struct.pack("<I", 0x600000),
+            0x200000: struct.pack("<80h", *parents),
+        }
+
+        def memory(address, size):
+            return values[address - 0x400000][:size]
+
+        policy = capture_coalescing_policy(memory, 0x400000)
+        self.assertEqual(policy, {"physical_count": 32, "first_eligible": 46,
+                                 "last_eligible": 79, "protected_gpr": -1, "parents": parents})
+        parents[42] = 70
+        values[0x200000] = struct.pack("<80h", *parents)
+        with self.assertRaisesRegex(ValueError, "minimum-number root"):
+            capture_coalescing_policy(memory, 0x400000)
+        values[0x200000] = b""
+        with self.assertRaisesRegex(ValueError, "short copy-coalescing parent map"):
+            capture_coalescing_policy(memory, 0x400000)
+
     def test_simplification_uses_class_mask_and_shared_cutoff(self):
         values = {
             0x1E6784: struct.pack("<i", 32), 0x1E6788: struct.pack("<i", 32),

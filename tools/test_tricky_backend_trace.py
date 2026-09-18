@@ -65,6 +65,48 @@ class BackendTraceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "missing FPR coloring policy"):
                 trace.inspect([initial, colored, final], Path("unused.o"), ["trickyDigTunnel"], require_graph=True)
 
+    def test_final_attempt_reports_unreplayed_retry_and_checks_final_coloring(self):
+        before, after = simplification_fixture([32, 33])
+        smaller, _ = simplification_fixture([32])
+        smaller.pop()
+        smaller[32]["neighbors"] = []
+        smaller[32]["prefix"][5] = smaller[32]["prefix"][8] = 0
+        initial = {"name": "trickyDigTunnel", "stage": "BEFORE GPR SIMPLIFICATION",
+                   "graph_colored": False, "coloring_graph": before,
+                   "available_gprs": [28, 29], "original_gpr_count": 34,
+                   "color_policy": {"initial": [29], "reserve": [28], "reserve_cursor": 0, "blocked": []}}
+        earlier = dict(initial, coloring_graph=smaller)
+        colored = {"name": "trickyDigTunnel", "stage": "BEFORE GPR REWRITE",
+                   "graph_colored": True, "coloring_graph": after}
+        final = {"name": "trickyDigTunnel", "stage": "FINAL CODE"}
+        stages = [earlier, initial, colored, final]
+        with ExitStack() as stack:
+            stack.enter_context(patch.object(trace, "read_object", return_value=SimpleNamespace(functions={"trickyDigTunnel": b""})))
+            stack.enter_context(patch.object(trace, "validate_snapshot"))
+            rewrite = stack.enter_context(patch.object(trace, "validate_rewrite"))
+            stack.enter_context(patch.object(trace, "validate_alignment", return_value=[]))
+            stack.enter_context(patch.object(trace.strucdiff, "text_lines", return_value=[]))
+            stack.enter_context(patch.object(trace.strucdiff, "analyse", return_value=([], [], [], 0, 0)))
+            with self.assertRaisesRegex(ValueError, "unpaired initial"):
+                trace.inspect(stages, Path("unused.o"), ["trickyDigTunnel"], require_graph=True)
+            result = trace.inspect(stages, Path("unused.o"), ["trickyDigTunnel"],
+                                   require_graph=True, final_allocation_attempt=True)["trickyDigTunnel"]
+            self.assertEqual(result["unreplayed_allocation_attempts"],
+                             [{"stage": earlier["stage"], "nodes": 33, "next_nodes": 34}])
+            self.assertTrue(result["simplification_replayed"])
+            self.assertEqual(len(result["color_decisions"]), 2)
+            rewrite.assert_called_once_with(colored, final)
+            with self.assertRaisesRegex(ValueError, "does not grow"):
+                trace.inspect([initial, initial, colored, final], Path("unused.o"),
+                              ["trickyDigTunnel"], require_graph=True, final_allocation_attempt=True)
+            with self.assertRaisesRegex(ValueError, "unpaired initial"):
+                trace.inspect([earlier, initial, final], Path("unused.o"),
+                              ["trickyDigTunnel"], final_allocation_attempt=True)
+            initial["color_policy"]["initial"] = [28, 29]
+            with self.assertRaisesRegex(ValueError, "replayed color disagrees"):
+                trace.inspect(stages, Path("unused.o"), ["trickyDigTunnel"],
+                              require_graph=True, final_allocation_attempt=True)
+
     def test_reordered_duplicate_and_dangling_graph_pairs_are_rejected(self):
         before, after = simplification_fixture([32, 33])
         initial = {"name": "trickyDigTunnel", "stage": "BEFORE GPR SIMPLIFICATION",

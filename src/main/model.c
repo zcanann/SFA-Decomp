@@ -553,9 +553,9 @@ void modelAnimResetState(void* m, void* data) {
         channel->prevBlendCacheSlot = channel->moveCacheSlot;
     }
 }
-int modelLoadAnimations(ModelFileHeader* file, int modelId, void* animBase) {
+int modelLoadAnimations(ModelFileHeader* file, int resourceId, u8* bufferCursor) {
     int modelAnimOffset;
-    u8* bufferCursor = animBase;
+    int modelId = resourceId;
     ModelAnimationOffsetScratch* offsetTable;
     int modelAnimBytes;
     int animationOffset;
@@ -2544,7 +2544,7 @@ void ObjModel_BlendVertexStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, s3
     }
 }
 
-/* Scalar reconstruction reads the same live quantization state as retail psq instructions. */
+/* Skinning reads the same live quantization state as retail psq instructions. */
 static inline u32 modelGetGQR7(void) {
     register u32 config;
     asm {
@@ -2565,6 +2565,10 @@ static inline f32 modelQuantizationFactor(u32 encodedScale) {
     return factor.value;
 }
 
+static inline __vec2x32float__ modelLoadFloatPair(const f32* pair) {
+    return *(const __vec2x32float__*)pair;
+}
+
 void ObjModel_TransformVerticesWithTranslation(u8* matrixA, u8* matrixB, u8* weightPairs, u8* source, u8* destination,
                                                int count) {
     f32* a = (f32*)matrixA;
@@ -2575,7 +2579,11 @@ void ObjModel_TransformVerticesWithTranslation(u8* matrixA, u8* matrixB, u8* wei
     u32 quantization = modelGetGQR7();
     f32 storeFactor = modelQuantizationFactor(quantization >> 8);
     f32 loadFactor = 1.0f / modelQuantizationFactor(quantization >> 24);
-    f32 x, y, z, weightA, weightB, outputX, outputY, outputZ;
+    f32 x, y, z, weightA, weightB, outputZ;
+    union {
+        __vec2x32float__ pair;
+        f32 values[2];
+    } outputXY;
     int vertex;
 
     for (vertex = 0; vertex < count; vertex++) {
@@ -2586,13 +2594,16 @@ void ObjModel_TransformVerticesWithTranslation(u8* matrixA, u8* matrixB, u8* wei
         y = __OSs16tof32(&input->y) * loadFactor;
         z = __OSs16tof32(&input->z) * loadFactor;
         input++;
-        outputX = (b[0] * x + b[9] + b[3] * y + b[6] * z) * weightB + (a[0] * x + a[9] + a[3] * y + a[6] * z) * weightA;
-        outputY =
-            (b[1] * x + b[10] + b[4] * y + b[7] * z) * weightB + (a[1] * x + a[10] + a[4] * y + a[7] * z) * weightA;
+        outputXY.pair = (modelLoadFloatPair(b) * x + modelLoadFloatPair(b + 9) + modelLoadFloatPair(b + 3) * y +
+                         modelLoadFloatPair(b + 6) * z) *
+                            weightB +
+                        (modelLoadFloatPair(a) * x + modelLoadFloatPair(a + 9) + modelLoadFloatPair(a + 3) * y +
+                         modelLoadFloatPair(a + 6) * z) *
+                            weightA;
         outputZ =
             (b[2] * x + b[11] + b[5] * y + b[8] * z) * weightB + (a[2] * x + a[11] + a[5] * y + a[8] * z) * weightA;
-        output->x = __OSf32tos16(outputX * storeFactor);
-        output->y = __OSf32tos16(outputY * storeFactor);
+        output->x = __OSf32tos16(outputXY.values[0] * storeFactor);
+        output->y = __OSf32tos16(outputXY.values[1] * storeFactor);
         output->z = __OSf32tos16(outputZ * storeFactor);
         output++;
     }

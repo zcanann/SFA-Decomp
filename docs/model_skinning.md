@@ -167,3 +167,64 @@ coordinate census are documented in
 [Model vertex coordinate encoding](model_vertex_coordinates.md). The catalog
 now also reports unskinned model coordinates; its original skinning statistics
 are unchanged.
+
+## Native paired-float arithmetic in the affine kernel
+
+GC/1.3 accepts `__vec2x32float__` as a native C type. Independent compiler
+inspection and isolated compile probes establish that pair addition and
+multiply-add emit `ps_add`/`ps_madd`; a scalar operand is broadcast with
+`ps_merge00`. This requires no new assembly, pragma, or compiler-option change.
+The companion compiler recovery also reconstructs the frontend propagation
+eligibility and cached-variable creation routines, with 10,025 and 8,448
+original/native differential cases respectively.
+
+`ObjModel_TransformVerticesWithTranslation` now evaluates X and Y together,
+loading the first two components of each ROMtx column through a small inline
+pair accessor. Z and the existing quantized input/output conversions remain
+scalar. A union exposes the two result components for the SDK fast-cast stores.
+The arithmetic retains the retail fused ordering and live GQR7 scale behavior.
+
+Fresh objdiff reports move this function from 0% to **13.216495%** in EN,
+EN rev1, JP and PAL rev1, using hash-verified regional DOLs. EN model's aggregate
+fuzzy score moves from **94.335335% to 94.538124%**. The unit remains
+`NonMatching`, with **79/85 exact functions**. The reconstructed affine body
+is 488 bytes, up from 448; the retail body is 388 bytes. Pair register saves,
+scalar broadcasts, quantized conversions and loop pipelining still differ.
+
+All other 84 function bodies, their normalized relocations, allocated data,
+named data offsets and non-text relocations are unchanged in EN. Regional
+before/after builds likewise change only the affine function and preserve data.
+The behavior probe now supports indexed quantized accesses, pair broadcasts,
+`ps_mul` and `ps_madd`. Both retail and the compiled reconstruction pass all
+2,306 existing finite-input scenarios against the independent scalar oracle.
+These results retain the exceptional-value and aliasing limits described above.
+
+## Verified limits of ordinary native-vector memory lowering
+
+Further GC/1.3 recovery identifies the PSQ emitter at `0x004e8ae0` and its
+opcode selector at `0x004e8c80` in the hash-verified compiler. The companion
+`../mwcc` reconstruction passes 8,880 original/native comparisons of these two
+bodies, with frame-offset, relative-symbol and instruction-constructor
+dependencies recorded and stubbed. This establishes functional behavior, not a
+Win32 compiler binary match.
+
+The normal native-pair load/store callers explicitly pass quantizer register
+identifier `0x390` (GQR0) and W=0. A traced minimal pair-add/scaled-add probe
+confirms those arguments for all six memory requests and preserves the entire
+ordinary object byte-for-byte. The selector uses displacement PSQ operations
+only for a local object whose combined frame offset lies in 0..2047; an ordinary
+indirect pointer has no such object and takes the indexed path. Scalar-to-pair
+broadcasts and contracted arithmetic enter the constructors as `ps_merge00`
+and `ps_madd` respectively.
+
+Thus the current native-vector memory path does not supply the retail kernels'
+GQR6/GQR7 accesses or their displacement addressing through indirect pointers.
+This is a concrete limit of that path, not proof that every compiler intrinsic
+or optimization path has been exhausted. The game source, compiler flags and
+assembly policy remain unchanged. Model still has 79/85 exact functions and an
+aggregate fuzzy score of 94.538124%.
+
+Reproduction inputs and complete traces are recorded in the companion files
+`docs/fixtures/model_quantized_memory_20260917.json` and
+`docs/fixtures/model_paired_float_emission_20260917.json`; the native probe is
+`probes/gc_1_3/paired_float.c` in `../mwcc`.

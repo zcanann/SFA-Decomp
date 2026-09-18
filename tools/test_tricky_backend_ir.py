@@ -189,6 +189,18 @@ class BackendIRTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "opcode alignment"):
             validate_alignment(data, ["stw r31,0(r3)", "mr r4,r7", "blr"], code)
 
+    def test_indexed_paired_single_store_alignment(self):
+        data = fixture()
+        store = data["blocks"][0]["instructions"][0]["words"]
+        args = reg(31, 1, 3) + reg(1, 1) + reg(0, 1) + immediate(0) + immediate(0)
+        store[8:] = [0x199 | (5 << 16)] + list(struct.unpack("<15I", args))
+        code = bytes.fromhex("13e1000e 7ce43b78 4e800020")
+        self.assertEqual(len(validate_alignment(data, ["psq_stx f31,r1,r0,0,0", "mr r4,r7", "blr"], code)), 3)
+        with self.assertRaisesRegex(ValueError, "register alignment"):
+            validate_alignment(data, ["psq_stx f30,r1,r0,0,0", "mr r4,r7", "blr"], code)
+        with self.assertRaisesRegex(ValueError, "opcode alignment"):
+            validate_alignment(data, ["psq_st f31,0(r1),0,0", "mr r4,r7", "blr"], code)
+
     def test_indexed_store_encodings(self):
         cases = [
             (0x2A, "stbx r4,r3,r0", reg(4, 1), 0, 0x7C8301AE),

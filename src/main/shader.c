@@ -904,7 +904,8 @@ void mapLoadUnloadObjects(int flag) {
                     bit = 0;
                     cur = (u32)page->objects;
                     bp = page->loadedObjectBits;
-                    end = cur + *(int*)(base + (0x4290 + nearbyMapIds[i] * 0x8C));
+                    end = cur + ((MapRomListIndex*)(base + (int)offsetof(MapRomListBuffers, indexes)))[nearbyMapIds[i]]
+                                    .groupsStart;
                     while (cur < end) {
                         objStart = cur;
                         if ((*bp & mask) == 0 && objShouldLoad((ObjPlacement*)cur, 0, nearbyMapIds[i]) != 0) {
@@ -918,7 +919,7 @@ void mapLoadUnloadObjects(int flag) {
                                 ix2 = bit >> 3;
                                 msk = 1 << (bit & 7);
                                 *(s8*)&pg->loadedObjectBits[ix2] = pg->loadedObjectBits[ix2] & ~msk;
-                                *(s8*)&pg->loadedObjectBits[ix2] = pg->loadedObjectBits[ix2] | msk;
+                                *(s8*)&pg->loadedObjectBits[ix2] |= msk;
                             }
                             objSetupObject((ObjPlacement*)objStart, 1, nearbyMapIds[i], bit, NULL);
                         }
@@ -956,7 +957,8 @@ void mapLoadUnloadObjects(int flag) {
                     int lp = obj2->anim.transformMatrixIndex + 1;
                     bit = 0;
                     cur = (u32)page2->objects;
-                    end = cur + *(int*)(base + (0x4290 + mid2 * 0x8C));
+                    end =
+                        cur + ((MapRomListIndex*)(base + (int)offsetof(MapRomListBuffers, indexes)))[mid2].groupsStart;
                     bits = (*gMapEventInterface)->getObjGroups(mid2);
                     if (bits != 0) {
                         grpBit = 0;
@@ -973,12 +975,12 @@ void mapLoadUnloadObjects(int flag) {
                         if (bit < 0) {
                             vis = 0;
                         } else {
-                            char* pg2 = ((char**)(base + 0x83A8))[mid2];
+                            MapRomListPage* pageForBits = ((MapRomListPage**)(base + 0x83A8))[mid2];
                             idx = bit >> 3;
                             if (idx >= 0xc4) {
                                 vis = 0;
                             } else {
-                                switch (((vis = 1) << (bit & 7)) & *(s8*)(*(int*)(pg2 + 0x10) + idx)) {
+                                switch (((vis = 1) << (bit & 7)) & *(s8*)&pageForBits->loadedObjectBits[idx]) {
                                 case 0:
                                     vis = 0;
                                     break;
@@ -989,13 +991,13 @@ void mapLoadUnloadObjects(int flag) {
                             if (bit >= 0) {
                                 int msk3;
                                 int ix3;
-                                char* pg3;
+                                MapRomListPage* pageForBits;
 
-                                pg3 = ((char**)(base + 0x83A8))[mid2];
+                                pageForBits = ((MapRomListPage**)(base + 0x83A8))[mid2];
                                 ix3 = bit >> 3;
                                 msk3 = 1 << (bit & 7);
-                                *(s8*)(*(int*)(pg3 + 0x10) + ix3) = *(u8*)(*(int*)(pg3 + 0x10) + ix3) & ~msk3;
-                                *(s8*)(*(int*)(pg3 + 0x10) + ix3) = *(u8*)(*(int*)(pg3 + 0x10) + ix3) | msk3;
+                                *(s8*)&pageForBits->loadedObjectBits[ix3] = pageForBits->loadedObjectBits[ix3] & ~msk3;
+                                *(s8*)&pageForBits->loadedObjectBits[ix3] |= msk3;
                             }
                             objSetupObject((ObjPlacement*)cur, 1, mid2, bit, obj2);
                         }
@@ -3544,8 +3546,9 @@ static void renderObjects(s8* opacity) {
                 u32 shadowKind;
                 renderShadowType3(obj, 0x13, 0);
                 shadowKind = 2;
-                *(u32*)(queueBase + (gLightmapDrawQueueCount * (int)sizeof(LightSortEntry) +
-                                     offsetof(LightSortEntry, type))) = shadowKind;
+                ((u32*)(queueBase + offsetof(LightSortEntry,
+                                             type)))[gLightmapDrawQueueCount * (sizeof(LightSortEntry) / sizeof(u32))] =
+                    shadowKind;
                 gLightmapDrawQueueCount += 1;
             } else if (obj->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH &&
                        (obj->anim.flags & OBJANIM_FLAG_HIDDEN) == 0 &&
@@ -3553,8 +3556,9 @@ static void renderObjects(s8* opacity) {
                 u32 shadowKind;
                 renderShadowType3(obj, 0x13, 0);
                 shadowKind = 3;
-                *(u32*)(queueBase + (gLightmapDrawQueueCount * (int)sizeof(LightSortEntry) +
-                                     offsetof(LightSortEntry, type))) = shadowKind;
+                ((u32*)(queueBase + offsetof(LightSortEntry,
+                                             type)))[gLightmapDrawQueueCount * (sizeof(LightSortEntry) / sizeof(u32))] =
+                    shadowKind;
                 gLightmapDrawQueueCount += 1;
             }
         }

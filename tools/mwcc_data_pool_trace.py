@@ -18,13 +18,14 @@ HOOKS = {0x4B315D: b"\x89\xf8", 0x4D0171: b"\x8b\x07", 0x4D0180: b"\x31\xc0"}
 
 
 class State:
-    def __init__(self, debugger, output):
+    def __init__(self, debugger, output, function):
         import lldb
 
         self.api = lldb
         self.target = debugger.GetSelectedTarget()
         self.process = self.target.GetProcess()
         self.output = Path(output)
+        self.function = function
         self.events = []
         self.failure = None
         (self.output / "guest.pid").write_text(str(self.process.GetProcessID()))
@@ -78,7 +79,7 @@ class State:
             function = self.word(0x5E6610)
             function_name = self.symbol(function)["name"] if function else None
             result = self.word(reg("rdi")) if pc == 0x4D0171 else 0
-            if function_name == "gameTextGet":
+            if function_name == self.function:
                 self.events.append({"kind": "lookup", "function": function_name,
                                     "symbol": self.symbol(symbol), "pool": self.symbol(result)})
         if not frame.FindRegister("rax").SetValueFromCString(str(result)):
@@ -102,9 +103,9 @@ def on_breakpoint(frame, bp_loc, internal_dict):
         return True
 
 
-def install(debugger, output):
+def install(debugger, output, function="gameTextGet"):
     global STATE
-    STATE = State(debugger, output)
+    STATE = State(debugger, output, function)
 
 
 def finish(debugger):
@@ -113,7 +114,7 @@ def finish(debugger):
     if STATE.process.GetState() != STATE.api.eStateExited or STATE.process.GetExitStatus() != 0:
         raise ValueError("Compiler did not exit successfully")
     if not any(event["kind"] == "lookup" for event in STATE.events):
-        raise ValueError("No gameTextGet pool lookups were captured")
+        raise ValueError(f"No {STATE.function} pool lookups were captured")
     (STATE.output / "events.json").write_text(json.dumps(STATE.events, indent=2) + "\n")
 
 
@@ -128,6 +129,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--unit", default="main/main/gametext")
     parser.add_argument("--source", type=Path)
+    parser.add_argument("--function", default="gameTextGet", help="function whose pool lookups to capture")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     if sys.platform != "darwin" or not shutil.which("lldb"):
@@ -151,7 +153,7 @@ def main():
                 "breakpoint set --func-regex loadPEFromSource", "run",
                 "breakpoint disable 1", "thread step-out",
                 "command script import " + json.dumps(str(Path(__file__).resolve())),
-                f"script mwcc_data_pool_trace.install(lldb.debugger, {str(output)!r})",
+                f"script mwcc_data_pool_trace.install(lldb.debugger, {str(output)!r}, {args.function!r})",
                 "continue", "script mwcc_data_pool_trace.finish(lldb.debugger)"]
     launch = [shutil.which("lldb"), "--batch", "--one-line-on-crash", "process kill"]
     for item in commands:
