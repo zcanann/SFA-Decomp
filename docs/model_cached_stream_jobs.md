@@ -64,3 +64,68 @@ report is unchanged: the normal loader remains 880 bytes at 99.181816%, and the
 vertex loader 628 bytes at 99.01274%. The strict retail checksum and `all_source`
 pass. Existing matrix-preparation tests pass 144 scenarios each at O0 and O2;
 those tests cover adjacent matrix behavior, not cache-DMA execution.
+
+
+## Vertex stream helpers (2026-09-18)
+
+The vertex stream now uses a private inline helper to prefetch the next data and
+weight pair. It returns the current chunk captured before the transfer calls,
+retaining the original chunk-table reload for the weight transfer. Its
+`nextBufferIndex` selects the data buffer directly; the adjacent entry selects
+the weights. The initial
+prefetch remains in the caller. A second private inline helper shares the
+transform-and-copy operations between the loop and final-chunk paths.
+
+EN objdiff improves `ObjModel_BlendVertexStream` from 99.01274% to 99.20382%.
+Its size remains 628 bytes; 21 instructions still differ in register operands,
+down from 28. The final-chunk path is byte-exact; remaining register differences
+are in the loop and its setup. This is partial progress, not a new exact function. All other 84
+function bodies are unchanged. Formatting and the final helper name preserve
+the tested candidate's allocated bytes and normalized relocations.
+
+`tools/model_vertex_stream_probe.py` resolves the retail object's relocations
+and verifies its complete body against the hash-verified EN DOL, then executes
+both wrapper bodies in Unicorn. An independent call oracle checks 640 scenarios
+with 0, 1, 2, 3, 4, 7, 8, 15, 16 or 31 chunks, signed input/output offsets,
+byte-sized matrix and transfer counts, and varied quantization values. It
+checks transfer, wait, transform and output-copy arguments and ordering while
+clobbering volatile GPRs at dependency calls. DMA, skinning arithmetic and
+save/restore helpers are stubbed; these tests do not validate hardware transfers
+or callee-save behavior. All 1,280 wrapper comparisons pass. EN `all_source`,
+the strict checksum target and active-source/header formatting checks pass.
+
+Reproduce after building the source object, using Python with Unicorn installed:
+
+```sh
+python3 tools/model_vertex_stream_probe.py build/GSAE01/src/main/model.o --output /tmp/model-vertex-stream.json
+```
+
+The same source change was also compiled for EN rev1, JP and PAL rev1 after
+verifying each input DOL against its configured hash. Each regional report
+shows the same 99.01274% to 99.20382% improvement; only the vertex-stream body
+changes. Allocated non-text bytes, normalized relocations and named symbol
+positions are unchanged in each before/after pair. No regional source condition
+or completion-manifest claim is added.
+
+
+## Exact normal-stream wrapper (2026-09-18)
+
+A private inline `modelConsumeNormalChunk` helper now shares the normal wrapper's
+transform-and-copy sequence. Its function-pointer argument receives one of the
+two fixed kernel functions; GC/1.3 resolves it during inlining, preserving direct
+calls. This removes four duplicated sequences and reproduces retail register
+allocation without assembly, pragmas, or compiler-profile changes.
+
+`ObjModel_BlendNormalStream` is now exactly 880 bytes with identical normalized
+relocations in EN, EN rev1, JP and PAL rev1. Each original DOL passed its configured
+hash check. EN model now has 80 of 85 exact functions; the complete TU remains
+`NonMatching`. The vertex wrapper retains its 99.20382% improvement. Against the
+prior committed source, only these two function bodies change; allocated data,
+normalized relocations and named symbol positions remain unchanged. No regional
+completion manifest claims the still-incomplete object.
+
+The final formatted normal helper preserves the tested body. The vertex call
+oracle still passes 640 cases per implementation; the normal wrapper is verified
+by complete byte and relocation identity. `ninja all_source`, the strict retail
+checksum target, an explicit retail checksum verification, and source/header
+formatting checks pass.

@@ -2413,6 +2413,15 @@ void ObjModel_InitRenderBuffers(void) {
     setGQR6_2(7, 4, 7, 4);
 }
 
+static inline void modelConsumeNormalChunk(u8* mtxs, ModelVtxAnimChunk* chunk, u32 i, u16* chunkBlocks, u8* chunkDst,
+                                           void (*transform)(u8*, u8*, u8*, u8*, u8*, int)) {
+    transform(mtxs + chunk->mtxIdxA * sizeof(ROMtx), mtxs + chunk->mtxIdxB * sizeof(ROMtx),
+              gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
+              (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+              (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), chunk->vtxCount);
+    memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
+}
+
 void ObjModel_BlendNormalStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, u8** outs, int normalTriplets) {
     u16 chunkBlocks[2];
 
@@ -2424,7 +2433,6 @@ void ObjModel_BlendNormalStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, u8
         int weightBlocks;
         u32 i;
         u32 nextSlot;
-        u8* chunkDst;
         ModelVtxAnimChunk* lastChunk;
 
         chunk = job->chunks;
@@ -2450,44 +2458,47 @@ void ObjModel_BlendNormalStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, u8
             }
             cacheQueueWait(2);
             if ((u8)normalTriplets) {
-                chunkDst = outs[i];
-                ObjModel_TransformNormalTriplets(
-                    mtxs + chunk->mtxIdxA * sizeof(ROMtx), mtxs + chunk->mtxIdxB * sizeof(ROMtx),
-                    gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                    (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-                    (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), chunk->vtxCount);
-                memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
+                modelConsumeNormalChunk(mtxs, chunk, i, chunkBlocks, outs[i], ObjModel_TransformNormalTriplets);
             } else {
-                chunkDst = outs[i];
-                ObjModel_TransformVerticesLinear(
-                    mtxs + chunk->mtxIdxA * sizeof(ROMtx), mtxs + chunk->mtxIdxB * sizeof(ROMtx),
-                    gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                    (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-                    (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), chunk->vtxCount);
-                memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
+                modelConsumeNormalChunk(mtxs, chunk, i, chunkBlocks, outs[i], ObjModel_TransformVerticesLinear);
             }
         }
         lastChunk = job->chunks + i;
         cacheQueueWait(0);
         if ((u8)normalTriplets) {
-            chunkDst = outs[i];
-            ObjModel_TransformNormalTriplets(
-                mtxs + lastChunk->mtxIdxA * sizeof(ROMtx), mtxs + lastChunk->mtxIdxB * sizeof(ROMtx),
-                gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                (u8*)(lastChunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-                (u8*)(lastChunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), lastChunk->vtxCount);
-            memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
+            modelConsumeNormalChunk(mtxs, lastChunk, i, chunkBlocks, outs[i], ObjModel_TransformNormalTriplets);
         } else {
-            chunkDst = outs[i];
-            ObjModel_TransformVerticesLinear(
-                mtxs + lastChunk->mtxIdxA * sizeof(ROMtx), mtxs + lastChunk->mtxIdxB * sizeof(ROMtx),
-                gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                (u8*)(lastChunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-                (u8*)(lastChunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), lastChunk->vtxCount);
-            memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
+            modelConsumeNormalChunk(mtxs, lastChunk, i, chunkBlocks, outs[i], ObjModel_TransformVerticesLinear);
         }
         cacheQueueWait(0);
     }
+}
+
+static inline ModelVtxAnimChunk* modelPrefetchNextVertexChunk(ModelVtxAnimJob* job, u32 i, u8* animData,
+                                                              u16* chunkBlocks) {
+    ModelVtxAnimChunk* chunk;
+    u32 nextBufferIndex;
+    int vtxBlocks;
+    chunk = job->chunks + i;
+    vtxBlocks = (u32)((chunk[1].vtxBlocks << 5) + 0x1f) >> 5;
+    nextBufferIndex = ((i + 1) & 1) * 2;
+    copyToCache(gModelCacheBuffersA[(u8)(nextBufferIndex)], animData + chunk[1].srcDataOffset, vtxBlocks);
+    chunkBlocks[(i + 1) & 1] = vtxBlocks;
+    {
+        ModelVtxAnimChunk* nextChunk;
+        int nextWeightBlocks = (u32)(((nextChunk = job->chunks + i)[1].weightBlocks << 5) + 0x1f) >> 5;
+        copyToCache(gModelCacheBuffersA[(u8)((u8)(nextBufferIndex) + 1)], nextChunk[1].weightStream, nextWeightBlocks);
+    }
+    return chunk;
+}
+
+static inline void modelConsumeVertexChunk(u8* mtxs, ModelVtxAnimChunk* chunk, u32 i, u16* chunkBlocks, u8* chunkDst) {
+    ObjModel_TransformVerticesWithTranslation(
+        mtxs + chunk->mtxIdxA * sizeof(ROMtx), mtxs + chunk->mtxIdxB * sizeof(ROMtx),
+        gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
+        (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+        (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), chunk->vtxCount);
+    memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
 }
 
 void ObjModel_BlendVertexStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, s32* dstOffsets, u8* dstBase) {
@@ -2500,8 +2511,6 @@ void ObjModel_BlendVertexStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, s3
         int vtxBlocks;
         int weightBlocks;
         u32 i;
-        u32 nextSlot;
-        u8* chunkDst;
 
         chunk = job->chunks;
         vtxBlocks = (u32)((chunk->vtxBlocks << 5) + 0x1f) >> 5;
@@ -2511,35 +2520,13 @@ void ObjModel_BlendVertexStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, s3
         copyToCache(*(u8**)((int)gModelCacheBuffersA + sizeof(gModelCacheBuffersA[0])), chunk->weightStream,
                     weightBlocks);
         for (i = 0; i < (u32)(job->chunkCount - 1); i++) {
-            chunk = job->chunks + i;
-            vtxBlocks = (u32)((chunk[1].vtxBlocks << 5) + 0x1f) >> 5;
-            nextSlot = (i + 1) & 1;
-            copyToCache(gModelCacheBuffersA[(u8)(nextSlot * 2)], animData + chunk[1].srcDataOffset, vtxBlocks);
-            chunkBlocks[(i + 1) & 1] = vtxBlocks;
-            {
-                ModelVtxAnimChunk* nextChunk;
-                int nextWeightBlocks = (u32)(((nextChunk = job->chunks + i)[1].weightBlocks << 5) + 0x1f) >> 5;
-                copyToCache(gModelCacheBuffersA[(u8)((u8)(nextSlot * 2) + 1)], nextChunk[1].weightStream,
-                            nextWeightBlocks);
-            }
+            chunk = modelPrefetchNextVertexChunk(job, i, animData, chunkBlocks);
             cacheQueueWait(2);
-            chunkDst = dstBase + dstOffsets[i];
-            ObjModel_TransformVerticesWithTranslation(
-                mtxs + chunk->mtxIdxA * sizeof(ROMtx), mtxs + chunk->mtxIdxB * sizeof(ROMtx),
-                gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-                (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), chunk->vtxCount);
-            memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
+            modelConsumeVertexChunk(mtxs, chunk, i, chunkBlocks, dstBase + dstOffsets[i]);
         }
         chunk = job->chunks + i;
         cacheQueueWait(0);
-        chunkDst = dstBase + dstOffsets[i];
-        ObjModel_TransformVerticesWithTranslation(
-            mtxs + chunk->mtxIdxA * sizeof(ROMtx), mtxs + chunk->mtxIdxB * sizeof(ROMtx),
-            gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-            (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-            (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), chunk->vtxCount);
-        memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
+        modelConsumeVertexChunk(mtxs, chunk, i, chunkBlocks, dstBase + dstOffsets[i]);
         cacheQueueWait(0);
     }
 }
