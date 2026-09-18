@@ -2477,8 +2477,8 @@ void ObjModel_BlendNormalStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, u8
 static inline ModelVtxAnimChunk* modelPrefetchNextVertexChunk(ModelVtxAnimJob* job, u32 i, u8* animData,
                                                               u16* chunkBlocks) {
     ModelVtxAnimChunk* chunk;
-    u32 nextBufferIndex;
     int vtxBlocks;
+    u32 nextBufferIndex;
     chunk = job->chunks + i;
     vtxBlocks = (u32)((chunk[1].vtxBlocks << 5) + 0x1f) >> 5;
     nextBufferIndex = ((i + 1) & 1) * 2;

@@ -76,8 +76,8 @@ the weights. The initial
 prefetch remains in the caller. A second private inline helper shares the
 transform-and-copy operations between the loop and final-chunk paths.
 
-EN objdiff improves `ObjModel_BlendVertexStream` from 99.01274% to 99.20382%.
-Its size remains 628 bytes; 21 instructions still differ in register operands,
+EN objdiff improves `ObjModel_BlendVertexStream` from 99.01274% to 99.33121%.
+Its size remains 628 bytes; 18 instructions still differ in register operands,
 down from 28. The final-chunk path is byte-exact; remaining register differences
 are in the loop and its setup. This is partial progress, not a new exact function. All other 84
 function bodies are unchanged. Formatting and the final helper name preserve
@@ -102,7 +102,7 @@ python3 tools/model_vertex_stream_probe.py build/GSAE01/src/main/model.o --outpu
 
 The same source change was also compiled for EN rev1, JP and PAL rev1 after
 verifying each input DOL against its configured hash. Each regional report
-shows the same 99.01274% to 99.20382% improvement; only the vertex-stream body
+shows the same 99.01274% to 99.33121% improvement; only the vertex-stream body
 changes. Allocated non-text bytes, normalized relocations and named symbol
 positions are unchanged in each before/after pair. No regional source condition
 or completion-manifest claim is added.
@@ -119,7 +119,7 @@ allocation without assembly, pragmas, or compiler-profile changes.
 `ObjModel_BlendNormalStream` is now exactly 880 bytes with identical normalized
 relocations in EN, EN rev1, JP and PAL rev1. Each original DOL passed its configured
 hash check. EN model now has 80 of 85 exact functions; the complete TU remains
-`NonMatching`. The vertex wrapper retains its 99.20382% improvement. Against the
+`NonMatching`. The vertex wrapper retains its 99.33121% improvement. Against the
 prior committed source, only these two function bodies change; allocated data,
 normalized relocations and named symbol positions remain unchanged. No regional
 completion manifest claims the still-incomplete object.
@@ -129,3 +129,12 @@ oracle still passes 640 cases per implementation; the normal wrapper is verified
 by complete byte and relocation identity. `ninja all_source`, the strict retail
 checksum target, an explicit retail checksum verification, and source/header
 formatting checks pass.
+
+The prefetch helper declares its chunk pointer, transfer count and buffer index
+in first-use order. A read-only GC/1.3 trace and allocator replay establish that
+swapping the latter two declarations swaps their virtual-register IDs (57/58)
+and physical assignments (r22/r25). Both traced objects are byte-identical to
+ordinary builds. The allocation replay requires no high-degree spill choices;
+this improvement comes from virtual-register numbering and coloring order. The
+change reduces the vertex wrapper's differing instructions from 21 to 18 while preserving its exact final-chunk path and the
+exact normal wrapper. All four checked versions show the same improvement.
