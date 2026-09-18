@@ -138,3 +138,20 @@ ordinary builds. The allocation replay requires no high-degree spill choices;
 this improvement comes from virtual-register numbering and coloring order. The
 change reduces the vertex wrapper's differing instructions from 21 to 18 while preserving its exact final-chunk path and the
 exact normal wrapper. All four checked versions show the same improvement.
+
+A shared integer scratch local now carries the next transfer count during
+prefetch and the current buffer slot during consumption. These lifetimes do not
+overlap. Passing its address through the inline helpers puts the transfer count
+in the retail register and improves the vertex wrapper from 99.33121% to
+99.36306%, with 17 remaining register-operand differences in the 628-byte body.
+The final-chunk path remains exact. Moving the chunk pointer into the caller
+alongside this scratch local regresses allocation, so that change is not used.
+
+EN, EN rev1, JP and PAL rev1 show the same improvement. Across each before/after
+object pair, only the vertex wrapper's body changes; normalized relocations,
+named symbol positions and allocated data are unchanged. The normal wrapper
+remains exact. The wrapper call oracle passes 640 cases per implementation
+(1,280 comparisons), with DMA, transform and save/restore helpers stubbed.
+`ninja all_source build/GSAE01/ok`, explicit retail checksum verification and
+source/header formatting checks pass. The TU remains `NonMatching`, with 80 of
+85 functions exact.
