@@ -52,6 +52,7 @@ void fastCastFloatToU16(float value, u16* output) {
 float exp2f(float value) {
     s16 exponent;
     float fraction;
+    float truncated;
     union {
         float value;
         u32 bits;
@@ -62,7 +63,8 @@ float exp2f(float value) {
     }
 
     fastCastFloatToS16(value, &exponent);
-    fraction = value - fastCastS16ToFloat(&exponent);
+    truncated = fastCastS16ToFloat(&exponent);
+    fraction = value - truncated;
 
     if (fraction != *(const float*)&sExp2Zero) {
         if (value < *(const float*)&sExp2Zero) {
@@ -124,13 +126,14 @@ const float lbl_803E79B4 = 0.0f;
 #pragma optimization_level 0
 #pragma optimize_for_size on
 float fastFloorf(float value) {
+    float magnitude;
     float result;
     u16 shortValue;
     int integerValue;
 
-    result = __fabsf(value);
-    if (result < *(float*)&sFastFloorU16Limit) {
-        fastCastFloatToU16(result, &shortValue);
+    magnitude = __fabsf(value);
+    if (magnitude < *(float*)&sFastFloorU16Limit) {
+        fastCastFloatToU16(magnitude, &shortValue);
         result = fastCastU16ToFloat(&shortValue);
 
         if (value >= *(float*)&sFastFloorZero) {
@@ -144,7 +147,7 @@ float fastFloorf(float value) {
         return -result;
     }
 
-    if (result < *(float*)&sFastFloorIntegerLimit) {
+    if (magnitude < *(float*)&sFastFloorIntegerLimit) {
         integerValue = value;
         result = (float)integerValue;
 
