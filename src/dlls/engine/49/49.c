@@ -1,7 +1,7 @@
 #include "main/texture.h"
 #include "track/intersect_hud_api.h"
 #include "main/gametext_box_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"

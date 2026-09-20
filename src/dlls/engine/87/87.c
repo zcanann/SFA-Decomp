@@ -12,7 +12,7 @@
  */
 #include "main/dll/dll_0057_cameramodetitle.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/attract_movie_api.h"
 #include "main/audio/audio_control_api.h"
 #include "main/audio/music_api.h"

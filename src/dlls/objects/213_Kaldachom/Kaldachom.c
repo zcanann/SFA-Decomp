@@ -6,7 +6,7 @@
  */
 #include "dlls/objects/213_Kaldachom.h"
 #include "dlls/objects/214_KaldachomMe.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll/dll_005A_staffcollision.h"

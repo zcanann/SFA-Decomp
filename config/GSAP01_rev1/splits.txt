@@ -4987,88 +4987,88 @@ dolphin/TRK_MINNOW_DOLPHIN/target_options.c:
 dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
 	.text       start:0x8028DCD8 end:0x8028DE18
 
-dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c:
+MSL_C/PPCEABI/bare/H/abort_exit.c:
 	.text       start:0x8028DE18 end:0x8028DEE4
 	.bss        start:0x803DC418 end:0x803DC518
 	.sbss       start:0x803DFDB0 end:0x803DFDC0
 
-dolphin/MSL_C/PPCEABI/bare/H/alloc.c:
+MSL_C/PPCEABI/bare/H/alloc.c:
 	.text       start:0x8028DEE4 end:0x8028E44C
 	.rodata     start:0x802C3380 end:0x802C3398
 	.bss        start:0x803DC518 end:0x803DC550
 	.sbss       start:0x803DFDC0 end:0x803DFDC8
 
-dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c:
+MSL_C/PPCEABI/bare/H/ansi_files.c:
 	.text       start:0x8028E44C end:0x8028E554
 	.data       start:0x80333CE0 end:0x80333E20
 	.bss        start:0x803DC550 end:0x803DC850
 
-dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c:
+MSL_C/PPCEABI/bare/H/ansi_fp.c:
 	.text       start:0x8028E554 end:0x8028F16C
 	.rodata     start:0x802C3398 end:0x802C3478
 	.data       start:0x80333E20 end:0x80333F44
 	.sdata2     start:0x803E9328 end:0x803E9330
 
-dolphin/MSL_C/PPCEABI/bare/H/ctype.c:
+MSL_C/PPCEABI/bare/H/ctype.c:
 	.data       start:0x80333F48 end:0x80334148
 
-dolphin/MSL_C/PPCEABI/bare/H/buffer_io.c:
+MSL_C/PPCEABI/bare/H/buffer_io.c:
 	.text       start:0x8028F16C end:0x8028F264
 
-dolphin/MSL_C/PPCEABI/bare/H/direct_io.c:
+MSL_C/PPCEABI/bare/H/direct_io.c:
 	.text       start:0x8028F264 end:0x8028F590
 
-dolphin/MSL_C/PPCEABI/bare/H/file_io.c:
+MSL_C/PPCEABI/bare/H/file_io.c:
 	.text       start:0x8028F590 end:0x8028F788
 
-dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.c:
+MSL_C/PPCEABI/bare/H/FILE_POS.c:
 	.text       start:0x8028F788 end:0x8028FA54
 	.sbss       start:0x803DFDC8 end:0x803DFDCC
 
-dolphin/MSL_C/PPCEABI/bare/H/mbstring.c:
+MSL_C/PPCEABI/bare/H/mbstring.c:
 	.text       start:0x8028FA54 end:0x8028FB98
 	.sdata2     start:0x803E9330 end:0x803E9334
 
-dolphin/MSL_C/PPCEABI/bare/H/mem.c:
+MSL_C/PPCEABI/bare/H/mem.c:
 	.text       start:0x8028FB98 end:0x8028FD08
 
-dolphin/MSL_C/PPCEABI/bare/H/mem_funcs.c:
+MSL_C/PPCEABI/bare/H/mem_funcs.c:
 	.text       start:0x8028FD08 end:0x8028FFE8
 
-dolphin/MSL_C/PPCEABI/bare/H/misc_io.c:
+MSL_C/PPCEABI/bare/H/misc_io.c:
 	.text       start:0x8028FFE8 end:0x8028FFF8
 
-dolphin/MSL_C/PPCEABI/bare/H/printf.c:
+MSL_C/PPCEABI/bare/H/printf.c:
 	.text       start:0x8028FFF8 end:0x80291F54
 	.rodata     start:0x802C3478 end:0x802C34A0
 	.data       start:0x80334148 end:0x80334378
 	.sdata      start:0x803DE000 end:0x803DE008
 	.sdata2     start:0x803E9338 end:0x803E9340
 
-dolphin/MSL_C/PPCEABI/bare/H/float.c:
+MSL_C/PPCEABI/bare/H/float.c:
 	.sdata      start:0x803DE008 end:0x803DE010
 
-dolphin/MSL_C/PPCEABI/bare/H/string.c:
+MSL_C/PPCEABI/bare/H/string.c:
 	.text       start:0x80291F54 end:0x80292230
 
-dolphin/MSL_C/PPCEABI/bare/H/wchar_io.c:
+MSL_C/PPCEABI/bare/H/wchar_io.c:
 	.text       start:0x80292230 end:0x802922B8
 
-dolphin/MSL_C/PPCEABI/bare/H/s_copysign.c:
+MSL_C/PPCEABI/bare/H/s_copysign.c:
 	.text       start:0x802922B8 end:0x802922E0
 
-dolphin/MSL_C/PPCEABI/bare/H/s_frexp.c:
+MSL_C/PPCEABI/bare/H/s_frexp.c:
 	.text       start:0x802922E0 end:0x8029236C
 	.sdata2     start:0x803E9340 end:0x803E9348
 
-dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c:
+MSL_C/PPCEABI/bare/H/s_ldexp.c:
 	.text       start:0x8029236C end:0x80292530
 	.sdata2     start:0x803E9348 end:0x803E9370
 
-dolphin/MSL_C/PPCEABI/bare/H/s_modf.c:
+MSL_C/PPCEABI/bare/H/s_modf.c:
 	.text       start:0x80292530 end:0x8029262C
 
-dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c:
+MSL_C/PPCEABI/bare/H/math_float_helpers.c:
 	.text       start:0x8029262C end:0x802928B4
 	.sdata2     start:0x803E9370 end:0x803E93B8
 
@@ -5076,7 +5076,7 @@ main/acosf.c:
 	.text       start:0x802928B4 end:0x80293114
 	.sdata2     start:0x803E93B8 end:0x803E94B0
 
-dolphin/MSL_C/PPCEABI/bare/H/math_802927a4.c:
+MSL_C/PPCEABI/bare/H/math_802927a4.c:
 	.text       start:0x80293114 end:0x802936AC
 	.sdata2     start:0x803E94B0 end:0x803E95F4
 
@@ -5108,42 +5108,42 @@ main/sincosf.c:
 	.text       start:0x802945D4 end:0x80294714
 	.sdata2     start:0x803E9738 end:0x803E9758
 
-dolphin/MSL_C/PPCEABI/bare/H/math_80293da4.c:
+MSL_C/PPCEABI/bare/H/math_80293da4.c:
 	.text       start:0x80294714 end:0x80294EBC
 	.sdata2     start:0x803E9758 end:0x803E9810
 
-dolphin/MSL_C/PPCEABI/bare/H/math_8029454c.c:
+MSL_C/PPCEABI/bare/H/math_8029454c.c:
 	.text       start:0x80294EBC end:0x80294FB0
 	.sdata2     start:0x803E9810 end:0x803E9828
 
 dolphin/base/PPCArch_weak.c:
 	.text       start:0x80294FB0 end:0x80294FCC
 
-dolphin/MSL_C/PPCEABI/bare/H/ctype_funcs.c:
+MSL_C/PPCEABI/bare/H/ctype_funcs.c:
 	.text       start:0x80294FCC end:0x80294FF4
 
-dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c:
+MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c:
 	.text       start:0x80294FF4 end:0x8029508C
 	.sbss       start:0x803DFDD8 end:0x803DFDDC
 
-dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.c:
+MSL_C/PPCEABI/bare/H/hyperbolicsf.c:
 	.text       start:0x8029508C end:0x80295094
 
-dolphin/MSL_C/PPCEABI/bare/H/floorf.c:
+MSL_C/PPCEABI/bare/H/floorf.c:
 	.text       start:0x80295094 end:0x8029513C
 	.sdata2     start:0x803E9828 end:0x803E9830
 
-dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
+MSL_C/PPCEABI/bare/H/trigf.c:
 	.text       start:0x8029513C end:0x80295528
 	.ctors      start:0x802C2204 end:0x802C2208
 	.rodata     start:0x802C34A0 end:0x802C34B0
 	.data       start:0x80334378 end:0x80334388
 	.sdata2     start:0x803E9830 end:0x803E9848
 
-dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.c:
+MSL_C/PPCEABI/bare/H/common_float_tables.c:
 	.data       start:0x80334388 end:0x803345D8
 
-dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.c:
+MSL_C/PPCEABI/bare/H/exponentialsf.c:
 	.text       start:0x80295528 end:0x80295CA4
 	.data       start:0x803345D8 end:0x80334820
 	.sdata      start:0x803DE010 end:0x803DE020

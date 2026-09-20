@@ -17,7 +17,7 @@
  * InvHit_free releases the expgfx source for mode 4.
  */
 #include "dlls/objects/241_InvHit.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/player_target.h"
 #include "main/dll_000A_expgfx.h"

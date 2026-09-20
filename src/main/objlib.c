@@ -3,7 +3,7 @@
 #include "main/frame_timing.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "game/objects/object.h"
 #include "main/model.h"
 #include "main/obj_contact.h"

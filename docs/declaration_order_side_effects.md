@@ -269,7 +269,7 @@ compiler enforces, or paired only with declarations that evaluate nothing.
 | `dlls/objects/241_InvHit/InvHit.c` | `InvHit_update` | 2 | 2 | `Obj_GetPlayerObject, Player_GetTargetObject` |
 | `dlls/objects/466_WORLDplanet/WORLDplanet.c` | `worldplanet_update` | 2 | 2 | `ObjList_FindObjectById` |
 | `dlls/objects/704/704.c` | `titleScreenDrawMenuFrame` | 1 | 5 | `f32` |
-| `dolphin/MSL_C/PPCEABI/bare/H/math_8029454c.c` | `mathTanf` | 0 | 4 | `trigReduceQuadrant` |
+| `MSL_C/PPCEABI/bare/H/math_8029454c.c` | `mathTanf` | 0 | 4 | `trigReduceQuadrant` |
 | `main/objprint.c` | `staffUpdateSegmentTransforms` | 2 | 3 | `OBJPRINT_ACTIVE_BANK_INDEX, OBJPRINT_ATTACH_POINTS` |
 | `main/objprint_dolphin.c` | `objRenderModel` | 0 | 12 | `Obj_GetActiveModel` |
 | `main/objprint_dolphin.c` | `objSetupRenderOpGxState` | 3 | 3 | `OBJPRINT_MODEL_DEF` |

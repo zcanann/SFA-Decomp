@@ -1,6 +1,6 @@
 #include "dlls/objects/376_DFSH_Shrine.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/audio_control_api.h"
 #include "main/audio/music_api.h"
 #include "main/audio/music_trigger_ids.h"

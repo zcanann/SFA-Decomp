@@ -71,7 +71,7 @@
 #include "main/screen_transition.h"
 #include "main/object_transform.h"
 #include "types.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/objseq_api.h"
 #include "main/shader_api.h"
 #include "main/pi_dolphin_api.h"

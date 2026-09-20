@@ -25,7 +25,7 @@
 #include "main/mm.h"
 #include "main/render_mode_api.h"
 #include "main/vecmath.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "stdlib.h"
 #include "string.h"
 #include "track/intersect_api.h"

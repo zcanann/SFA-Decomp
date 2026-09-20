@@ -1,7 +1,7 @@
 #define TRACK_BBOX_FLAGS_S8
 #include "dolphin/os/OSReport.h"
 #include "main/dll/rom_curve_def.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/Hcurves_api.h"
 #include "main/dll/rom_curve_interface.h"

@@ -1,7 +1,7 @@
 #include "dlls/objects/386_MMP_moonroc.h"
 #include "dlls/objects/387_MMP_gyserve.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/sfx_channel_volume_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"

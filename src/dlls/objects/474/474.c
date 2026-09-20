@@ -5,7 +5,7 @@
 
 #include "dlls/objects/474.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/vecmath_distance_api.h"
 #include "main/frame_timing.h"

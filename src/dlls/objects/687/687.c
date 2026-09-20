@@ -5,7 +5,7 @@
  * Tree remains an internal family name for this numbered DLL.
  */
 #include "dlls/objects/687.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dlls/objects/279_AppleOnTree.h"
 #include "main/frame_timing.h"
 #include "main/objHitReact.h"

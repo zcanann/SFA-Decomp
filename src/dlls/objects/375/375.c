@@ -5,7 +5,7 @@
 
 #include "dlls/objects/375.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits_api.h"
 #include "main/object_render.h"

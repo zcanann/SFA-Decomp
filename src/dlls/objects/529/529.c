@@ -7,7 +7,7 @@
  * Each crawler waits at its spawn point, dives toward a nearby target,
  * and then attacks or retreats according to its variant flags.
  */
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dlls/object_descriptor.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "dlls/objects/196_Tricky.h"

@@ -2,7 +2,7 @@
 
 #include "dlls/objects/609_DR_LaserCan.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/maketex_timer_api.h"
 #include "dlls/objects/196_Tricky.h"
 #include "main/dll/dll_0273_firepipe.h"

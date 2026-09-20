@@ -4,7 +4,7 @@
  */
 #include "dlls/objects/306_WaterFallSp.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_keep_alive_api.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"

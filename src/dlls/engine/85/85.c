@@ -3,7 +3,7 @@
  */
 #include "main/dll/dll_0055_cameramode.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "game/objects/object.h"
 #include "main/frame_timing.h"
 #include "main/mm.h"

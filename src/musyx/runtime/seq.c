@@ -14,14 +14,14 @@
 #include "musyx/snd_groups.h"
 #include "musyx/synth_seq_events.h"
 #include "types.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
+#include "MSL_C/PPCEABI/bare/H/floorf.h"
 #include "musyx/synth_voice.h"
 #include "musyx/mcmd.h"
 #include "musyx/hw_init.h"
 #include "musyx/voice_id.h"
 #include "musyx/synth_config.h"
 #include "musyx/synth_job_queue.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 
 SynthCallbackLink seqNote[SYNTH_CALLBACK_COUNT];
 SynthVoice seqInstance[SYNTH_MAX_VOICES];

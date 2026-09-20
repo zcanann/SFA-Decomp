@@ -1,4 +1,4 @@
-#include "dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.h"
+#include "MSL_C/PPCEABI/bare/H/common_float_tables.h"
 
 float __one_over_F[] = {
     1.0,        0.99224806, 0.98461539, 0.97709924, 0.969697,   0.96240604,

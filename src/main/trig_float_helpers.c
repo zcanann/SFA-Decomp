@@ -1,5 +1,5 @@
 #include "dolphin.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/trig_float_helpers.h"
 
 #define STORE_SINCOS(angle, sine, cosine, sinOut, cosOut)                                                              \

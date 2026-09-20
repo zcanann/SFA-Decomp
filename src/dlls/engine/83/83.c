@@ -3,7 +3,7 @@
  */
 #include "main/dll/dll_0053_cameramodecloudrunner.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "game/objects/object.h"
 #include "main/dll/DR/dll_0258_drcloudrunner.h"
 #include "main/dll/player_api.h"

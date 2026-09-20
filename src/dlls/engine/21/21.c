@@ -3,7 +3,7 @@
 #include "main/gametext_api.h"
 #include "dolphin/os.h"
 #include "dolphin/mtx/vec.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/camera_interface.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/dll/dll_0017_savegame_api.h"

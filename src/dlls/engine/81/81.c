@@ -3,7 +3,7 @@
  */
 #include "main/dll/dll_0051_cameramodecannon.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/mm.h"
 #include "main/objprint_api.h"
 

@@ -12,9 +12,9 @@
 #include "main/render_mode_api.h"
 #include "main/render_sequence_api.h"
 #include "main/sky_interface.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "MSL_C/PPCEABI/bare/H/floorf.h"
 
 static void render_copyPackedU64Tail(u64* dst, u32 packed);
 static void render_copyPackedU64Head(u64* dst, u32 packed);

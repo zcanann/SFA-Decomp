@@ -7,7 +7,7 @@
  */
 #include "dlls/objects/245_SidekickBal.h"
 #include "dolphin/mtx/vec.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/os/OSReport.h"
 #include "dolphin/pad.h"
 #include "main/audio/sfx_trigger_ids.h"

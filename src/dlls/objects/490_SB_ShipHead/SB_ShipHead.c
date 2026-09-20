@@ -12,7 +12,7 @@
 
 #include "dlls/objects/488_SB_Galleon.h"
 #include "dlls/objects/493_SB_FireBall.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/audio/sfx_trigger_ids.h"

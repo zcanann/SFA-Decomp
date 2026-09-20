@@ -22,7 +22,7 @@
 #include "main/frame_timing.h"
 #include "main/gametext_box_api.h"
 #include "main/textrender_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
 #include "main/object_render.h"
 #include "main/model_engine.h"

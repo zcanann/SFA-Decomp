@@ -1,8 +1,8 @@
-#include "dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.h"
+#include "MSL_C/PPCEABI/bare/H/exponentialsf.h"
 #include "dolphin/types.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.h"
+#include "MSL_C/PPCEABI/bare/H/common_float_tables.h"
 
 static float sLog2EMinusOne[2] = {0.41015625f, 0.0325387903f};
 

@@ -1,7 +1,7 @@
 #include "main/curve.h"
 #include "main/debug.h"
 #include "main/frame_timing.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 
 int gCurveCachedSampleCount = -1;
 

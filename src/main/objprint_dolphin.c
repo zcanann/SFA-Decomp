@@ -31,7 +31,7 @@
 #include "dolphin/gx/GXGeometry.h"
 #include "dolphin/gx/GXTev.h"
 #include "dolphin/gx/GXTransform.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "track/intersect_api.h"
 #include "track/intersect_fog_api.h"
 #include "main/newshadows_shadow_api.h"

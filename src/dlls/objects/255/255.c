@@ -5,7 +5,7 @@
  * behaviour, proximity effects, and a two-phase collection burst.
  */
 #include "dlls/objects/255.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/os/OSReport.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/partfx_interface.h"

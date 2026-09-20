@@ -4,7 +4,7 @@
 #include "main/dll/dll_0044_cameramodeviewfinder.h"
 
 #include "dlls/objects/488_SB_Galleon.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/pad.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"

@@ -36,7 +36,7 @@
 #include "main/lightmap_api.h"
 #include "main/objfx.h"
 #include "main/screen_transition.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/shader_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/dll/player_state.h"

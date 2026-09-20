@@ -4,7 +4,7 @@
  */
 #include "dlls/objects/299_FXEmit.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/debug.h"
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"

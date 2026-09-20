@@ -12,7 +12,7 @@
  */
 #include "sys/objects.h"
 #include "main/camera.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/SP/dll_0288_spdrape.h"

@@ -1,5 +1,5 @@
 #include "dolphin.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 
 /* Address-based reads retain these named constants without duplicate literals. */
 const float gSinCosZero = 0.0f;

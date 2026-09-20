@@ -145,6 +145,7 @@ class ProgressCategory:
 
 SDK_OBJECT_PREFIXES = (
     "dolphin/",
+    "MSL_C/",
     "Runtime.PPCEABI.H/",
 )
 

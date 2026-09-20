@@ -1,6 +1,6 @@
 #include "dlls/objects/423.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "dlls/objects/196_Tricky.h"
 #include "main/dll/partfx_interface.h"

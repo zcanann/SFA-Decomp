@@ -31,7 +31,7 @@
  * Exact game-bit meanings and several encounter sub-states are inferred
  * from use, not confirmed.
  */
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/curve.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"

@@ -1,6 +1,6 @@
 #include "dolphin.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/math_8029312c.h"
 
 float powfCoreHighPrecision(float base, float power) {

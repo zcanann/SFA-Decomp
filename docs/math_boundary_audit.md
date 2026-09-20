@@ -19,6 +19,23 @@ game-category math units are a separate frontier. Their current category and
 filenames are hypotheses about provenance, not independent proof of Rare
 authorship or compiler version.
 
+## MSL directory separation (2026-09-20)
+
+The source and companion header trees now live under `src/MSL_C/` and
+`include/MSL_C/`, retaining the `PPCEABI/bare/H` layout. Includes, all five
+regional split configs, matching manifests, and tooling references follow the
+move. No section boundaries or compiler options change. The existing
+`MSLLib` profile is independent of Dolphin: GC/1.2.5n by default, with the
+established per-unit compiler and flag overrides. Applying `cflags_msl` to
+every unit would change that already-matching configuration.
+
+Fresh EN reports before and after the move retain 100% code agreement for
+all 28 active library units. The four game-category math units retain their
+GC/1.3 profiles and existing scores. The trig constructor's four unscored data
+bytes remain the documented [objdiff limitation](msl_trig_initialization.md).
+Unassigned donor sources such as `e_fmod.c` have no active EN retail object to
+score; their configure entries alone do not establish a match.
+
 ## What the DOL says about the splits
 
 `tools/retail_pool_audit.py` reads the hash-verified retail DOL directly. It
@@ -111,7 +128,7 @@ and strict DOL checks. This work adds visibility; it claims no new source match.
 
 ```sh
 python3 tools/retail_pool_audit.py \
-  src/dolphin/MSL_C/PPCEABI/bare/H/math_802927a4.c \
+  src/MSL_C/PPCEABI/bare/H/math_802927a4.c \
   src/main/trig_float_helpers.c
 python3 tools/retail_pool_audit.py src/main/trig.c --version GSAJ01 --json
 python3 -m unittest discover -s tools -p test_retail_pool_audit.py -v
@@ -154,7 +171,7 @@ a score increase or establish a different compiler profile.
 
 At staging `c1ac51716c`, the older math family occupies eleven current TUs
 because the reciprocal helper has since been separated. It has 49 functions,
-10,584 code bytes and 1,196 data bytes. Four paths remain under `dolphin/MSL_C`,
+10,584 code bytes and 1,196 data bytes. Four paths remain under `MSL_C`,
 but these select the game compiler explicitly. Those directory names do not
 establish MSL lineage. The other 28 MSL units still have 100% code fuzzy agreement.
 

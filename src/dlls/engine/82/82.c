@@ -3,7 +3,7 @@
  */
 #include "main/dll/dll_0052_cameramodeforcebehind.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "game/objects/object.h"
 #include "main/dll/dll_0042_cameramodenormal.h"
 #include "main/dll/player_motion.h"

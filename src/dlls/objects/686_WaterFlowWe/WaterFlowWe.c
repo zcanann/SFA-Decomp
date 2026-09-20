@@ -11,7 +11,7 @@
 #include "dlls/objects/686_WaterFlowWe.h"
 #include "dlls/objects/201_Baddie.h"
 #include "dlls/objects/372_CCriverflow.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "game/objects/object.h"
 #include "main/frame_timing.h"
 #include "main/object_render.h"

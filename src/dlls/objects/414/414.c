@@ -7,7 +7,7 @@
  */
 #include "dlls/objects/414.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/camera.h"

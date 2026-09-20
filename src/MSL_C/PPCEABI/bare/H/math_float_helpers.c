@@ -1,6 +1,6 @@
 #include "dolphin/os/OSFastCast.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 
 extern const float sFastFloorU16Limit;
 extern const float sFastFloorZero;

@@ -151,7 +151,7 @@ address. `[lo-hi)` is the splits.txt `.text` range (the partition unit).
 | 78 | `main/newclouds.c` | 8008EE18-80094494 | ENGINE-HOST | FORENSIC | 0x007 anom:snow,lightning,cloud,mm | engine/SDK host of DLL(s) 0x007 |
 | 79 | `main/objseq.c` | 80080DE8-80088758 | ENGINE-HOST | FORENSIC | 0x002 anom:rom,animated,seq | engine/SDK host of DLL(s) 0x002 |
 | 80 | `main/dfplightni.c` | 80209958-80209FE0 | ENGINE-HOST | FORENSIC | 0x23B anom:dfppowersl | engine/SDK host of DLL(s) 0x23B |
-| 81 | `dolphin/MSL_C/PPCEABI/bare/H/gamecube.c` | 80094494-800944A0 | ENGINE-HOST | FORENSIC | 0x009 | engine/SDK host of DLL(s) 0x009 |
+| 81 | `MSL_C/PPCEABI/bare/H/gamecube.c` | 80094494-800944A0 | ENGINE-HOST | FORENSIC | 0x009 | engine/SDK host of DLL(s) 0x009 |
 | 82 | `main/textblock.c` | 80209810-802098B4 | ENGINE-HOST | FORENSIC | 0x239 | engine/SDK host of DLL(s) 0x239 |
 | 83 | `main/platform1.c` | 802098B4-80209958 | ENGINE-HOST | FORENSIC | 0x23A | engine/SDK host of DLL(s) 0x23A |
 | 84 | `main/dfppowersl.c` | 80209FE0-8020A1C8 | ENGINE-HOST | FORENSIC | 0x23C | engine/SDK host of DLL(s) 0x23C |
@@ -197,7 +197,7 @@ Batches: 12. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | `main/objseq.c` | 80080DE8-80088758 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x002 |
 | `main/sky.c` | 80088758-8008EE18 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x005,0x006 |
 | `main/newclouds.c` | 8008EE18-80094494 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x007 |
-| `dolphin/MSL_C/PPCEABI/bare/H/gamecube.c` | 80094494-800944A0 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x009 |
+| `MSL_C/PPCEABI/bare/H/gamecube.c` | 80094494-800944A0 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x009 |
 | `main/dll/dll_8b.c` | 80100A90-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_8c.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_8d.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |

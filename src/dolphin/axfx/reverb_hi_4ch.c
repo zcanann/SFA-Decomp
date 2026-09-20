@@ -3,7 +3,7 @@
 #include <dolphin/axfx.h>
 
 #include "dolphin/axfx/__axfx.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 
 extern const double reverb_hi_4ch_handle_i2fMagic;
 

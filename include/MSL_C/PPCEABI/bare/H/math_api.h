@@ -3,8 +3,8 @@
 
 #include "types.h"
 #include "dolphin/mtx/vec_types.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/exponentialsf.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 
 double __fabs(double);
 double __frsqrte(double x);

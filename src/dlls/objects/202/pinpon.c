@@ -1,5 +1,5 @@
 #include "dlls/objects/202.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "game/objects/object.h"
 #include "game/objects/object_setup.h"
 #include "main/audio/sfx_play_api.h"

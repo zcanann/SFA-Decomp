@@ -1,7 +1,7 @@
 #include "main/trig.h"
 #include "dolphin.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 /* Address-based reads retain these named constants without duplicate literals. */
 const float sTrigApproxCosBias = 0.99999f;

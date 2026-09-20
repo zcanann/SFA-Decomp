@@ -2,7 +2,7 @@
 
 #include "dlls/objects/344.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "dolphin/mtx/vec.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/carryable_interface.h"

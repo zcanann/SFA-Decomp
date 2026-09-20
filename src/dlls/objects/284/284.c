@@ -5,7 +5,7 @@
 #include "dlls/objects/284.h"
 #include "dlls/objects/262.h"
 #include "dlls/objects/283_Landed_Arwi.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/partfx_interface.h"
 #include "main/frame_timing.h"

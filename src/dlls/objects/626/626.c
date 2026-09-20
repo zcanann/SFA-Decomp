@@ -19,7 +19,7 @@
 #include "dlls/objects/626.h"
 #include "dlls/objects/common/vehicle.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/path_control_interface.h"

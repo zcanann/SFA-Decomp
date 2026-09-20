@@ -3,7 +3,7 @@
 #include "main/reciprocal.h"
 #include "main/acosf.h"
 #include "main/acosf_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 
 /* Address-based reads retain these named constants without duplicate literals. */
 const float sArcHalf = 0.5f;

@@ -9,7 +9,7 @@
  * running the enable sequence; selectActiveCloud switches the active
  * cloud and runs the select sequence.
  */
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"

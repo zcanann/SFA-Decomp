@@ -5,7 +5,7 @@
  */
 #include "dlls/objects/483_DIM_BossGut.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/curve.h"
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll/curve_walker.h"

@@ -5,7 +5,7 @@
  * shared by the sequence-driven baddie objects.
  */
 #include "dlls/objects/225_WispBaddie.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/rom_curve_interface.h"

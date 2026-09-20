@@ -54,7 +54,7 @@
 #include "main/textrender_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/zlb.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "track/intersect_api.h"
 #include "track/intersect_depth_read_api.h"
 #include "dolphin/gx/GXFifo.h"

@@ -2,7 +2,7 @@
 #include "musyx/snd_core.h"
 #include "musyx/synth_voice.h"
 #include "musyx/synth_delay.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "musyx/snd3d.h"
 
 typedef struct START_LIST

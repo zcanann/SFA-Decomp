@@ -24,7 +24,7 @@
 #include "string.h"
 #include "sys/objects.h"
 #include "main/shader_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/partfx_interface.h"
 #include "main/track_bbox_api.h"

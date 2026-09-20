@@ -4,7 +4,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "game/objects/object.h"
 #include "main/resource.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_000E_partfx.h"
 #include "main/dll/dll_001B_effect2.h"

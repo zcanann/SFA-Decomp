@@ -23,7 +23,7 @@
 #include "dlls/objects/625_DrakorHoverpad.h"
 #include "dlls/objects/common/vehicle.h"
 #include "dolphin/mtx/vec.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/curve.h"
 #include "main/frame_timing.h"
 #include "main/gamebits_api.h"

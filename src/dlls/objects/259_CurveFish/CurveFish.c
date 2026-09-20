@@ -5,7 +5,7 @@
  * speed and animation in response to the player and priority hits.
  */
 #include "dlls/objects/259_CurveFish.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"

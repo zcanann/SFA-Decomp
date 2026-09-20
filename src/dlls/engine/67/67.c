@@ -3,7 +3,7 @@
  */
 #include "main/dll/dll_0043_cameramodestaffanim.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/pad.h"
 #include "string.h"
 #include "types.h"

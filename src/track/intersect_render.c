@@ -1,6 +1,6 @@
 #include "global.h"
 #include "dolphin/card.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gamebits_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "dolphin/mtx.h"

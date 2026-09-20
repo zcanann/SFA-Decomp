@@ -3,7 +3,7 @@
 #include "main/shader_api.h"
 #include "main/shader_map_api.h"
 #include "main/debug.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/model.h"
 #include "main/joint_pose.h"
 #include "main/model_engine.h"

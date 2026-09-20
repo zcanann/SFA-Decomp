@@ -5,7 +5,7 @@
 
 #include "dlls/objects/466_WORLDplanet.h"
 #include "dlls/objects/467.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/pad.h"
 #include "main/dll/dll_0000_gameui_hud_api.h"
 #include "main/lightmap_api.h"

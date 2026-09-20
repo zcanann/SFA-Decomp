@@ -1,7 +1,7 @@
-#include "dolphin/MSL_C/PPCEABI/bare/H/trigf.h"
+#include "MSL_C/PPCEABI/bare/H/trigf.h"
 #include "dolphin/types.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.h"
+#include "MSL_C/PPCEABI/bare/H/common_float_tables.h"
+#include "MSL_C/PPCEABI/bare/H/hyperbolicsf.h"
 
 #define __epsilon 3.45266983e-4f
 #define __HI(x)   (((s32*)&x)[0])

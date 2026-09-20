@@ -10,7 +10,7 @@
 #include "main/hud_visibility_api.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "sys/objects/lifecycle.h"
 #include "main/camera.h"
 #include "main/dll/waterfx_interface.h"

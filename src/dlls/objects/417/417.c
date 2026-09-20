@@ -1,6 +1,6 @@
 #include "dlls/objects/417_NW_mammoth.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dlls/objects/209_TumbleWeedB.h"
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_play_api.h"

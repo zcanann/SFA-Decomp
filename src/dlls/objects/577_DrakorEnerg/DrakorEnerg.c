@@ -24,7 +24,7 @@
 #include "sys/objects.h"
 #include "main/object_render.h"
 #include "main/gamebits.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0241_drakorenergy.h"

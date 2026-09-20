@@ -40,7 +40,7 @@
 #include "main/dll/dll_0014_api.h"
 #include "main/gameloop_api.h"
 #include "main/textrender_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gamebit_ids.h"
 
 #include "main/gametext_show_str_api.h"
@@ -52,7 +52,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "track/intersect_screen_api.h"
 #include "main/hud_visibility_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/dll/tricky_api.h"
 #include "main/vecmath.h"
