@@ -5,6 +5,8 @@ units on 2026-09-20. All 25 functions now match retail code and data. Together
 with the four previously matched `MSL_C` units, the complete eleven-unit
 core-math family has 49 exact functions, 10,584 code bytes and 1,196 data bytes.
 This count describes that family, not every math-related operation in the game.
+Exact reconstruction does not establish game authorship or MSL membership;
+see the [compiler and provenance investigation](compiler_gc125_investigation.md).
 
 | Unit | Previous EN code fuzzy | Final code/data | Functions |
 | --- | ---: | ---: | ---: |
