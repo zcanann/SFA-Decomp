@@ -1,10 +1,10 @@
-# Crash-display separator matching
+# Debug-display TU completion
 
 `errorThreadFunc` now matches all 694 retail instructions (2,776 bytes) in
 GSAE01, GSAE01_rev1, GSAJ01, GSAP01 and GSAP01_rev1 under the existing GC/1.3
-TU profile. The unit remains NonMatching because `debugPrintDrawRecord` still
-has nine differing operand words (99.90131%). Thirteen of fourteen functions
-are exact; unit fuzzy matching is 99.97716%.
+TU profile. That separator change initially left `debugPrintDrawRecord` with
+nine differing operand words (99.90131%), thirteen of fourteen functions exact,
+and unit fuzzy matching at 99.97716%. The final wrap change below completes it.
 
 The last difference was two adjacent setup instructions: retail initialized
 colour 0xc080 before `y + 76`, while the previous single-loop source emitted
@@ -47,3 +47,42 @@ Validation on 2026-09-20:
 - All 13 framebuffer, rectangle-record and formatted-text behavior tests pass.
 - The active TU and its header pass clang-format's strict check. Formatting
   changes are confined to the new helper; existing source formatting is unchanged.
+
+## Final automatic-wrap match
+
+`debugPrintDrawRecord` now matches all 456 instructions (1,824 bytes). The entire
+TU is Matching in all five versions: 14 functions, 7,880 code bytes and 10,272
+data bytes. The GC/1.3 compiler and existing TU optimization profile are unchanged.
+
+The residual was a top/right coordinate register exchange in the third rectangle
+expansion, at automatic wrapping. A diagnostic GC/1.3 graph capture reproduced
+all 169 physical-register decisions. A temporary-factory observation traced the
+scaled top coordinate back to the range splitter at caller return `0x0045d2ff`,
+with the unscaled top coordinate as its original object. Thus both top-coordinate
+lifetimes, plus the right coordinate, had to change allocation together.
+
+Swapping the shared rectangle helper's top/right declaration order fixed the
+wrap expansion but broke the reposition and explicit-newline expansions. The
+retained reconstruction instead gives automatic wrapping its own private inline
+`debugPrintWrapLine` operation, including the bounds, draw-pass guard and cursor
+reset. Its local top coordinate precedes the right coordinate. Reposition,
+explicit newline and final-log drawing retain the shared helper. This deliberately
+keeps a small repeated bounds calculation: consolidating it changes generated
+register allocation. The helper name and source organization are inferred, not
+recovered original provenance; identical runtime behavior does not establish the
+original abstraction.
+
+Final validation on 2026-09-20:
+
+- All five regional objdiff reports show every function and section at 100%.
+- Relative to the separator-matched baseline, only 11 bytes in the nine operand
+  words of `debugPrintDrawRecord` change. All other function bodies, data bytes,
+  named-symbol layouts and resolved relocation destinations are preserved.
+- Every version passes `ninja all_source` and the strict retail checksum target
+  with this TU enabled as source. Independent `tools/verify_source_link.py`
+  substitutions also reproduce each hash-verified original DOL exactly.
+- All 13 framebuffer, rectangle-record and formatted-text tests pass. The existing
+  record harness now extracts the wrap helper as well, so its wrap thresholds,
+  pass guards, rectangle coordinates and cursor resets exercise production code.
+- The source and canonical header pass the strict clang-format check. Only newly
+  introduced code needed formatting; no separate existing-code formatting diff.

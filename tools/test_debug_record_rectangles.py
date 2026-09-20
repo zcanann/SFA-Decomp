@@ -33,7 +33,8 @@ class DebugRecordRectangleTests(unittest.TestCase):
                                    for name in names)
         functions = "\n".join(re.search(r"^(?:static inline void|int) " + name + r"\([^;{}]*\) \{.*?^\}",
                                          source, re.M | re.S).group()
-                               for name in ("debugPrintFillRect", "debugDrawLogRect", "debugPrintDrawRecord"))
+                               for name in ("debugPrintFillRect", "debugDrawLogRect", "debugPrintWrapLine",
+                                            "debugPrintDrawRecord"))
         cls.temporary = tempfile.TemporaryDirectory(prefix="sfa-debug-rectangles-")
         cls.addClassCleanup(cls.temporary.cleanup)
         directory = Path(cls.temporary.name)

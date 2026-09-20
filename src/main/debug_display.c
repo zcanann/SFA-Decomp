@@ -301,6 +301,40 @@ static inline void debugDrawLogRect(void) {
     }
 }
 
+/* Wrap owns its bounds: sharing debugDrawLogRect changes register allocation. */
+static inline void debugPrintWrapLine(void) {
+    if (debugPrintXpos * (gDebugScaleX + gDebugScaleBiasX) > gDebugScreenWidth - 0x10) {
+        if (gDebugDrawPass == 0) {
+            u32 y1;
+            u32 x;
+            u32 y0;
+            u32 x1;
+            u32 x0;
+            f32 sc;
+
+            y1 = debugPrintYpos + 0xa;
+            x = debugPrintXpos;
+            y0 = gDebugRectStartY;
+            x0 = gDebugRectStartX;
+            if ((((x - x0) == 0) | ((y1 - y0) == 0)) == 0) {
+                if (x0 >= 2) {
+                    x0 -= 2;
+                }
+                x1 = x + 2;
+                x0 *= (sc = gDebugScaleX + gDebugScaleBiasX);
+                x1 *= sc;
+                y0 = y0 * (sc = gDebugScaleY + gDebugScaleBiasY);
+                y1 *= sc;
+                debugPrintFillRect(x0, y0, x1, y1);
+            }
+        }
+        debugPrintXpos = gDebugPrintOriginX;
+        debugPrintYpos += 0xb;
+        gDebugRectStartX = debugPrintXpos;
+        gDebugRectStartY = debugPrintYpos;
+    }
+}
+
 int debugPrintDrawRecord(void* context, u8* cursor) {
     u8* recordStart = cursor;
     u8 recordByte;
@@ -408,15 +442,7 @@ int debugPrintDrawRecord(void* context, u8* cursor) {
             advanceX = 7;
         }
         debugPrintXpos += advanceX;
-        if (debugPrintXpos * (gDebugScaleX + gDebugScaleBiasX) > gDebugScreenWidth - 0x10) {
-            if (gDebugDrawPass == 0) {
-                debugDrawLogRect();
-            }
-            debugPrintXpos = gDebugPrintOriginX;
-            debugPrintYpos += 0xb;
-            gDebugRectStartX = debugPrintXpos;
-            gDebugRectStartY = debugPrintYpos;
-        }
+        debugPrintWrapLine();
     }
     return cursor - recordStart;
 }
