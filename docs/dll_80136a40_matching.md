@@ -5,7 +5,47 @@ The source is now `src/main/debug_display.c`, with its public API in
 placeholder, not an evidenced DLL identity. `debug_display` describes the debug
 log renderer, bitmap text, and fatal-error screen; it is not a recovered filename.
 
-## Current frontier (2026-09-20)
+## Exact framebuffer rasterizer (2026-09-20)
+
+`debugTextDrawToFrameBuffer` now matches all 96 instructions / 384 bytes in
+all five retail versions. Compute the top and bottom scanline positions from
+`glyphRow` directly instead of maintaining two explicit row-offset locals.
+Keeping `(y + 1)` together in the bottom-row expression matters: MWCC strength
+reduction creates the two retail induction variables without combining them
+into a different shared row expression. The bitmap writes and eight-pixel cache
+ranges are unchanged, including the overlapping ninth pixel.
+
+The baseline backend capture reproduces the ordinary object and locates the
+explicit bottom-row offset in original virtual GPR36/r29, with x in GPR32/r27.
+The indexed source gives the retail register allocation and moves the glyph
+pointer setup ahead of the row multiplications. The retained capture aligns all
+96 instructions, reports zero differences, and replays the 81-node GPR graph
+and all 49 physical color choices. Its raw object SHA-256 is
+`da732d6a6905c921599340ed3059de114212839699e271dc211d530e7c32af51`.
+
+Only six instruction words change. Every other function, allocated section
+size, non-text byte, named-symbol offset and resolved relocation is preserved;
+two anonymous symbols renumber at unchanged addresses. The whole TU improves
+from **99.84670% to 99.960915%**, with **12/14 functions exact** and all assigned
+data exact. It remains `NonMatching`.
+
+| Remaining function | Similarity | Differing instruction words |
+| --- | ---: | ---: |
+| `debugPrintDrawRecord` | 99.90131% | 9: wrap rectangle top/right register exchange |
+| `errorThreadFunc` | 99.95389% | 2: vertical-rule initializations reversed |
+
+The crash-thread trace shows the row-bound addition already present before
+global optimization, while code motion hoists the color materialization from
+the store after it. Equivalent loop forms and pixel helpers did not improve
+that order. Rectangle declaration permutations, explicit conversion spellings,
+coordinate arguments and scaling helpers did not improve the complete unit.
+No such experimental changes are retained.
+
+All five original DOL hashes, regional `ninja all_source` and strict retail
+checksum gates pass. All 12 debug-display behavior tests pass. Clang-format
+validation is clean and introduces no formatting changes.
+
+## Earlier crash-thread improvement (2026-09-20)
 
 GC/1.3 and the existing TU optimization profile are unchanged. Giving the
 crash-screen loop an explicit `u32 threadAddress` for its hexadecimal diagnostic

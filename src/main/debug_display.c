@@ -543,19 +543,15 @@ void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused) {
     int glyphRow;
     int topRowStart;
     int glyphBit;
-    int bottomRowOffset;
-    int topRowOffset;
 
     if (enableDebugText != 0) {
         glyphRow = 0;
-        bottomRowOffset = (y + 1) * DEBUG_FRAMEBUFFER_WIDTH;
-        topRowOffset = y * DEBUG_FRAMEBUFFER_WIDTH;
         for (; glyphRow < DEBUG_GLYPH_ROWS; glyphRow++) {
             glyphBit = 0;
-            topRowStart = x + topRowOffset;
+            topRowStart = x + (y + glyphRow * 2) * DEBUG_FRAMEBUFFER_WIDTH;
             pixelOffsets[0][0] = topRowStart;
             pixelOffsets[0][1] = topRowStart + 1;
-            bottomRowStart = bottomRowOffset + x;
+            bottomRowStart = ((y + 1) + glyphRow * 2) * DEBUG_FRAMEBUFFER_WIDTH + x;
             pixelOffsets[1][0] = bottomRowStart;
             pixelOffsets[1][1] = bottomRowStart + 1;
             for (; glyphBit < DEBUG_GLYPH_BITS; glyphBit++) {
@@ -572,8 +568,6 @@ void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused) {
             }
             DCStoreRange(debugDrawFrameBuffer + topRowStart, DEBUG_GLYPH_BITS * sizeof(u16));
             DCStoreRange(debugDrawFrameBuffer + bottomRowStart, DEBUG_GLYPH_BITS * sizeof(u16));
-            topRowOffset += 2 * DEBUG_FRAMEBUFFER_WIDTH;
-            bottomRowOffset += 2 * DEBUG_FRAMEBUFFER_WIDTH;
         }
     }
 }
