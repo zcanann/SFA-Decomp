@@ -2604,29 +2604,63 @@ u8 doEdges;
     Vec triangleVertices[3];
     Vec edgeNormal;
     u32 offA;
-    int* firstp;
+    u32 offB;
+    u32 offC;
+    int *firstp;
     int last;
     int mask16;
     int f40, f80, f200, f120, f20, f8, f100, f4;
-    int gx0, gz0, gx1, gz1;
-    u32 offB;
-    MapBlockData **cellp, **cw;
-    int gx, gz;
-    int count, layer;
-    int *descp, *dw;
-    u32 offC;
-    int relx0, relz0, relx1, relz1;
+    int *q2;
+    MapBlockData **p1;
+    int *q1;
+    MapBlockData **p2;
+    MapBlockData **cellp;
+    MapBlockData **cw;
+    int *dw;
+    Vec *edgeCursor;
+    int layer;
+    Vec *secondVertex;
+    int *descp;
+    int gx0;
+    int relx0;
+    int relz0;
+    int relx1;
+    int gx1;
     int i;
     int vEnd;
-    CollisionPolygonGroup* groupEnd;
+    CollisionPolygonGroup *groupEnd;
     u8 typeb;
     u32 bb;
     u32 dmaflip;
-    Vec* secondVertex;
-    MapBlockData** p1;
-    int* q1;
-    MapBlockData** p2;
-    int* q2;
+    int gz0;
+    int relz1;
+    int gz1;
+    int gx;
+    int gz;
+    MapBlockData *blk;
+    MapTriIndex *triangle;
+    int edgeIndex;
+    int dxoff;
+    int dzoff;
+    int t0;
+    int normalComponentIndex;
+    int count;
+    int x;
+    int j;
+    int yy;
+    u8 type;
+    int minX;
+    u8 minYi;
+    int maxX;
+    int minY;
+    int maxY;
+    int minZ;
+    u8 maxYi;
+    int maxZ;
+    CollisionPolygonGroup *group;
+    int z;
+    u16 *tw;
+    u8 *vo;
 
     x0 -= gMapBlockOriginWorldX;
     z0 -= gMapBlockOriginWorldZ;
@@ -2656,9 +2690,9 @@ u8 doEdges;
     do {
         for (gx = gx0, p1 = cw, q1 = dw; gx <= gx1 && count < 16; gx++) {
             for (gz = gz0, p2 = p1, q2 = q1; gz <= gz1 && count < 16; gz++) {
-                MapBlockData* blk = mapGetBlockAtPos(gx, gz, layer);
-                if (blk != NULL) {
-                    *p2 = blk;
+                MapBlockData *gridBlock = mapGetBlockAtPos(gx, gz, layer);
+                if (gridBlock != NULL) {
+                    *p2 = gridBlock;
                     q2[0] = gx * 0x280;
                     q2[2] = gz * 0x280;
                     p2++;
@@ -2679,11 +2713,11 @@ u8 doEdges;
     }
 
     {
-        MapBlockData* c0 = cells[0];
-        void* p = mapBlockGetPolygon(c0, 0);
+        MapBlockData *c0 = cells[0];
+        void *initialPolygon = mapBlockGetPolygon(c0, 0);
         dmaflip = 0;
         offA = 0;
-        cacheAllocAndCopy((u8*)p, c0->nPolygons << 3, &offA, &offB, 0x2000);
+        cacheAllocAndCopy((u8*)initialPolygon, c0->nPolygons << 3, &offA, &offB, 0x2000);
         cacheAllocAndCopy((u8*)c0->vertices, c0->vertexCount * 6, &offB, &offC, 0x2000);
     }
     i = 0;
@@ -2700,27 +2734,24 @@ u8 doEdges;
     last = count;
     last--;
     for (; i < count; i++) {
-        MapBlockData* blk;
         int vb;
-        CollisionPolygonGroup* group;
         s16 mask;
         s16 bit;
         int pos;
-        int dxoff, dzoff;
-        CollisionPolygonGroup* groups;
-
+        CollisionPolygonGroup *groups;
         bb = offA;
         vb = offB;
         if (i < last) {
-            MapBlockData* next = cellp[1];
+            MapBlockData *next = cellp[1];
             u32 nextBase;
-            void* p;
-            int c13, c14;
+            void *nextPolygon;
+            int c13;
+            int c14;
             dmaflip ^= 0x2000u;
             nextBase = dmaflip + 0x2000;
-            p = mapBlockGetPolygon(next, 0);
+            nextPolygon = mapBlockGetPolygon(next, 0);
             offA = dmaflip;
-            c13 = cacheAllocAndCopy((u8*)p, next->nPolygons << 3, &offA, &offB, nextBase);
+            c13 = cacheAllocAndCopy((u8*)nextPolygon, next->nPolygons << 3, &offA, &offB, nextBase);
             c14 = cacheAllocAndCopy((u8*)next->vertices, next->vertexCount * 6, &offB, &offC, nextBase);
             cacheQueueWait((u8)(c13 + c14));
         } else {
@@ -2769,9 +2800,6 @@ u8 doEdges;
         mask16 = mask;
         for (; group < groupEnd; group++) {
             u32 tf = group->flags;
-            int t0;
-            u8 type;
-            MapTriIndex* triangle;
 
             if ((tf & 0x10) && f40) {
                 continue;
@@ -2823,13 +2851,8 @@ u8 doEdges;
             vEnd = group[1].firstTri;
             secondVertex = &triangleVertices[1];
             for (; t0 < vEnd; t0++, triangle++) {
-                u8* vo;
-                s16* vp;
-                Vec* vertexCursor;
-                u8 maxYi, minYi;
-                u16* tw;
-                int minX, maxX, minY, maxY, minZ, maxZ;
-                int j;
+                s16 *vp;
+                Vec *vertexCursor;
                 f32 mag;
 
                 if ((mask16 & triangle->cellMask & 0xff) == 0) {
@@ -2858,10 +2881,9 @@ u8 doEdges;
                 vo = (u8*)(cur + 2);
                 vertexCursor = &triangleVertices[1];
                 for (; j < 3; j++) {
-                    int x, yy, z;
                     vp = (s16*)(vb + *tw * 6);
                     x = vp[0] >> 3;
-                    yy = blk->collisionYOffset + (vp[1] >> 3);
+                    yy = (vp[1] >> 3) + blk->collisionYOffset;
                     z = vp[2] >> 3;
                     if (x > maxX) {
                         maxX = x;
@@ -2935,8 +2957,7 @@ u8 doEdges;
                 }
                 ((TrackTriangle*)cur)->planeD = -PSVECDotProduct((Vec*)(cur + 4), &triangleVertices[0]);
                 if (doEdges) {
-                    int normalComponentIndex, degenerateEdge, edgeIndex;
-                    Vec* edgeCursor;
+                    int degenerateEdge;
                     f32 one, eps;
                     PSVECSubtract(&triangleVertices[2], &triangleVertices[0], &edgeVectors[2]);
                     normalComponentIndex = 0;
@@ -2995,7 +3016,6 @@ u8 doEdges;
     }
     return cur;
 }
-
 void trackIntersectBroadphase(GameObject* obj, TrackQueryBounds* ranges, u32 queryMask, int b) {
     f32 x0 = (f32)(ranges->minX - 5);
     f32 x1 = (f32)(ranges->maxX + 5);
