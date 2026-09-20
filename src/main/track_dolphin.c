@@ -2006,8 +2006,9 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                     *startY = svFromp[1];
                     *startZ = svFromp[2] - offZ;
                     we[0] = cur[0] - offX;
-                    *endY = cur[1];
-                    *endZ = cur[2] - offZ;
+                    /* TODO: Recover a non-volatile source shape that preserves retail's indirect stores. */
+                    *(volatile f32*)endY = cur[1];
+                    *(volatile f32*)endZ = cur[2] - offZ;
                 }
                 PSVECSubtract((Vec*)we, (Vec*)ws, (Vec*)delta);
                 mag = PSVECMag((Vec*)delta);
