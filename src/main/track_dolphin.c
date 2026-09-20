@@ -1229,8 +1229,7 @@ void trackIntersect(void) {
                                 pointY = sourceLine->y[endpoint];
                                 pointZ = sourceLine->z[endpoint] + mapOriginZ;
                                 if (gIntersectPointCount < 0x6a4) {
-                                    rec->pt[endpoint] =
-                                        insertPoint(gIntersectLineCount, edges, pointX, pointY, pointZ);
+                                    rec->pt[endpoint] = insertPoint(gIntersectLineCount, edges, pointX, pointY, pointZ);
                                 }
                             }
                             counts[rec->kind & 0x3f]++;
@@ -1304,8 +1303,7 @@ void trackIntersect(void) {
 
     previousType = -1;
     for (i = 0; i < gIntersectLineCount; i++) {
-        segmentType =
-            (s16)((s8)trackGetPooledLine(((s16*)gIntersectLineIndexTable)[i])->kind & 0x3f);
+        segmentType = (s16)((s8)trackGetPooledLine(((s16*)gIntersectLineIndexTable)[i])->kind & 0x3f);
         if (segmentType >= 0x14) {
             segmentType = 1;
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
