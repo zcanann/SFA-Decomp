@@ -1157,7 +1157,6 @@ static inline void trackSortLineOrder(void) {
 void trackIntersect(void) {
     s16 counts[0x47];
     s16 edges[0x6a4 * 2];
-    int sourceOffset;
     int blockIndex;
     int rowOffset;
     int sourceIndex;
@@ -1204,11 +1203,10 @@ void trackIntersect(void) {
                 if (idx[blockIndex] >= 0) {
                     MapBlockData* blk = mapGetBlock(idx[blockIndex]);
                     sourceIndex = 0;
-                    sourceOffset = 0;
-                    blockX = 640.0f * gridX;
-                    for (; sourceIndex < blk->hitCount; sourceOffset += sizeof(MapHitLine), sourceIndex++) {
+                    for (; sourceIndex < blk->hitCount; sourceIndex++) {
+                        blockX = 640.0f * gridX;
                         if (gIntersectLineCount < 0x5dc) {
-                            MapHitLine* sourceLine = (MapHitLine*)((u8*)blk->hits + sourceOffset);
+                            MapHitLine* sourceLine = &blk->hits[sourceIndex];
                             IntersectLine* rec = (IntersectLine*)(gIntersectLinePool + gIntersectLineCount * 0x10);
                             f32 mapOriginX, mapOriginZ;
                             rec->end0 = sourceLine->endpointData[0];

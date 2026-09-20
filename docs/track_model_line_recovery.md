@@ -273,3 +273,40 @@ Each track object has SHA-256
 Only `trackIntersect` changes relative to the preceding accessor commit;
 other function bytes, named-symbol layouts, non-text data and resolved
 relocations remain identical. The unit is still `NonMatching`.
+
+## Indexed map-line import (September 20)
+
+The map-line import now uses `blk->hits[sourceIndex]` directly, removing its
+redundant named byte-offset counter. Put the block-X calculation inside the
+source-line loop: GC/1.3 hoists it back to the retail position, after both zero
+initializations. Leaving the calculation before the loop instead moves the
+new generated offset's initialization past the floating-point calculation.
+No additional volatile access or helper is needed.
+
+The retained object has SHA-256
+`76488b758f3e83805c526eff61d0eb627c5edf9c078244d1b1917d3f22f7a235`.
+The ordinary and LLDB-instrumented objects are byte-identical. Both this graph
+and the preceding graph replay all 253 color choices on 287 nodes, without
+high-degree removals. Their 570 aligned instructions map 222 virtual registers
+with no partition conflicts or mapped interference-edge differences; four
+neighbors are unmapped. Only the two remaining final-loop values change
+physical registers: index r26 -> r25 and offset r25 -> r24. Retail requires
+r23/r22. This simplifies the import but does **not** improve the fuzzy score:
+`trackIntersect` remains 99.91228%, and the TU remains 99.92923%, 26/30 exact.
+All other function bytes, named-symbol layouts, non-text data and resolved
+relocations are unchanged. Anonymous literal names renumber.
+
+Further source probes do not recover those last colors: reusing earlier
+counter locals preserves the existing result; dedicated counters lose the
+required zero-copy instruction; extracting the segment pass preserves opcode
+shape but changes more registers. Removing the row-offset local preserves
+opcodes but changes grid-loop registers as well. Accessors for imported
+records or point-edge pointers also regress allocation. A sampled permutation
+search over the indexed candidate's complete named GPR band found no better
+coloring; this is not an exhaustive impossibility result. The new indexed
+source and its narrower named-register band are the next diagnostic baseline.
+
+All five configured input DOL hashes, `ninja all_source` builds and strict
+retail checksums pass. The five regional track objects share the hash above;
+all five objdiff reports retain the scores and exact-function count stated
+above. The eight existing track tests pass. The unit remains `NonMatching`.
