@@ -5,6 +5,9 @@
 
 float powfCoreHighPrecision(float base, float power) {
     register double logValue;
+    register double fractionalExponent;
+    register double log2Mantissa;
+    register double resultExponentAsDouble;
     register u32 baseBits;
     register int baseExponent;
     register int resultExponent;
@@ -23,7 +26,7 @@ float powfCoreHighPrecision(float base, float power) {
         baseExponent = (s16)(((baseBits >> 23) & 0xFF) - 127);
         normalizedBase.bits = (baseBits & 0x7FFFFF) | 0x3F800000;
         logValue = normalizedBase.value - 1.0;
-        logValue =
+        log2Mantissa =
             logValue *
             (logValue *
                  (logValue *
@@ -64,24 +67,23 @@ float powfCoreHighPrecision(float base, float power) {
                        0.480898347574289) +
                   -0.7213475204586257) +
              1.4426950408891204);
-        /* Convert the base logarithm to the result exponent. */
-        logValue = power * (logValue + (double)baseExponent);
+        logValue = power * (log2Mantissa + (double)baseExponent);
         resultExponent = logValue;
-        /* Retain the fractional part for the exp2 polynomial. */
-        logValue = logValue - (double)resultExponent;
+        resultExponentAsDouble = (double)resultExponent;
+        fractionalExponent = logValue - resultExponentAsDouble;
 
-        if (logValue) {
-            result.value =
-                (float)(logValue *
-                            (logValue *
-                                 (logValue *
-                                      (logValue *
-                                           (logValue *
-                                                (logValue *
-                                                     (logValue *
-                                                          (logValue * (logValue * (9.926346441109975e-09 * logValue +
-                                                                                   9.472326685984924e-08) +
-                                                                       1.3310673239175234e-06) +
+        result.value = fractionalExponent ? (float)(fractionalExponent *
+                            (fractionalExponent *
+                                 (fractionalExponent *
+                                      (fractionalExponent *
+                                           (fractionalExponent *
+                                                (fractionalExponent *
+                                                     (fractionalExponent *
+                                                          (fractionalExponent *
+                                                               (fractionalExponent *
+                                                                    (9.926346441109975e-09 * fractionalExponent +
+                                                                     9.472326685984924e-08) +
+                                                                1.3310673239175234e-06) +
                                                            1.5244851723158107e-05) +
                                                       0.00015403947598618592) +
                                                  0.0013333543997684197) +
@@ -89,10 +91,7 @@ float powfCoreHighPrecision(float base, float power) {
                                        0.055504108628658844) +
                                   0.24022650696122427) +
                              0.693147180559909) +
-                        0.9999999999999999);
-        } else {
-            result.value = 1.0f;
-        }
+                        0.9999999999999999) : 1.0f;
 
         if ((int)(baseBits & 0x80000000)) {
             integerPower = power;
@@ -111,6 +110,8 @@ float powfCoreHighPrecision(float base, float power) {
 }
 
 float powfCoreFast(float base, register float power) {
+    float resultExponentAsFloat;
+    float baseExponentAsFloat;
     register u32 baseBits;
     register int integerPower;
     union {
@@ -131,14 +132,12 @@ float powfCoreFast(float base, register float power) {
         logValue.value = logValue.value - 1.0f;
         logValue.value = logValue.value * (logValue.value * (0.15544586f * logValue.value + -0.5729206f) + 1.4172995f) +
                          0.00072527403f;
-        logValue.value = power * (logValue.value + fastCastS16ToFloat(&baseExponent));
+        baseExponentAsFloat = fastCastS16ToFloat(&baseExponent);
+        logValue.value = power * (logValue.value + baseExponentAsFloat);
         fastCastFloatToS16(logValue.value, &resultExponent);
-        logValue.value = logValue.value - fastCastS16ToFloat(&resultExponent);
-        if (logValue.value) {
-            result.value = (logValue.value * (0.3431449f * logValue.value + 0.6519048f) + 1.0023681f);
-        } else {
-            result.value = 1.0f;
-        }
+        resultExponentAsFloat = fastCastS16ToFloat(&resultExponent);
+        logValue.value = logValue.value - resultExponentAsFloat;
+        result.value = logValue.value ? (logValue.value * (0.3431449f * logValue.value + 0.6519048f) + 1.0023681f) : 1.0f;
         if ((int)(baseBits & 0x80000000)) {
             integerPower = power;
             if (integerPower & 1) {
@@ -221,9 +220,11 @@ float Vec_lengthSquared(const Vec* input) {
 #pragma peephole off
 float trigReduceQuadrant(u16* quadrant, float angle) {
     float scaledAngle = 1.2732395f * __fabsf(angle);
+    float roundedQuadrant;
     fastCastFloatToU16(scaledAngle, quadrant);
     *quadrant = (*quadrant + 1) & 0xFFFE;
-    return scaledAngle - fastCastU16ToFloat(quadrant);
+    roundedQuadrant = fastCastU16ToFloat(quadrant);
+    return scaledAngle - roundedQuadrant;
 }
 #pragma optimize_for_size reset
 #pragma optimization_level reset

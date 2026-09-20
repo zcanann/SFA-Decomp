@@ -51,6 +51,7 @@ void fastCastFloatToU16(float value, u16* output) {
 #pragma optimize_for_size on
 float exp2f(float value) {
     s16 exponent;
+    float integerPart;
     float fraction;
     union {
         float value;
@@ -62,7 +63,8 @@ float exp2f(float value) {
     }
 
     fastCastFloatToS16(value, &exponent);
-    fraction = value - fastCastS16ToFloat(&exponent);
+    integerPart = fastCastS16ToFloat(&exponent);
+    fraction = value - integerPart;
 
     if (fraction != *(const float*)&sExp2Zero) {
         if (value < *(const float*)&sExp2Zero) {
@@ -119,44 +121,46 @@ const float sFastFloorZero = 0.0f;
 const float sFastFloorNegativeOne = -1.0f;
 const float sFastFloorIntegerLimit = 8388608.0f;
 const float sFastFloorOne = 1.0f;
-const float lbl_803E79B4 = 0.0f;
+/* Unconsumed zero word retained in the unit-owned constant pool. */
+const float sFastFloorZeroTail = 0.0f;
 
 #pragma optimization_level 0
 #pragma optimize_for_size on
 float fastFloorf(float value) {
-    float result;
+    float absoluteValue;
+    float roundedValue;
     u16 shortValue;
     int integerValue;
 
-    result = __fabsf(value);
-    if (result < *(float*)&sFastFloorU16Limit) {
-        fastCastFloatToU16(result, &shortValue);
-        result = fastCastU16ToFloat(&shortValue);
+    absoluteValue = __fabsf(value);
+    if (absoluteValue < *(float*)&sFastFloorU16Limit) {
+        fastCastFloatToU16(absoluteValue, &shortValue);
+        roundedValue = fastCastU16ToFloat(&shortValue);
 
         if (value >= *(float*)&sFastFloorZero) {
-            return result;
+            return roundedValue;
         }
 
-        if (value != -result) {
-            return *(float*)&sFastFloorNegativeOne - result;
+        if (value != -roundedValue) {
+            return *(float*)&sFastFloorNegativeOne - roundedValue;
         }
 
-        return -result;
+        return -roundedValue;
     }
 
-    if (result < *(float*)&sFastFloorIntegerLimit) {
+    if (absoluteValue < *(float*)&sFastFloorIntegerLimit) {
         integerValue = value;
-        result = (float)integerValue;
+        roundedValue = (float)integerValue;
 
         if (value >= *(float*)&sFastFloorZero) {
-            return result;
+            return roundedValue;
         }
 
-        if (value != result) {
-            return result - *(float*)&sFastFloorOne;
+        if (value != roundedValue) {
+            return roundedValue - *(float*)&sFastFloorOne;
         }
 
-        return result;
+        return roundedValue;
     }
 
     return value;

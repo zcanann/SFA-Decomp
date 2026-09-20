@@ -742,6 +742,10 @@ MSL_C/PPCEABI/bare/H/file_io.c
 MSL_C/PPCEABI/bare/H/float.c
 MSL_C/PPCEABI/bare/H/floorf.c
 MSL_C/PPCEABI/bare/H/hyperbolicsf.c
+MSL_C/PPCEABI/bare/H/math_802927a4.c
+MSL_C/PPCEABI/bare/H/math_80293da4.c
+MSL_C/PPCEABI/bare/H/math_8029454c.c
+MSL_C/PPCEABI/bare/H/math_float_helpers.c
 MSL_C/PPCEABI/bare/H/mbstring.c
 MSL_C/PPCEABI/bare/H/mem.c
 MSL_C/PPCEABI/bare/H/mem_funcs.c

@@ -56,12 +56,19 @@ class ActiveCompilerProfileTests(unittest.TestCase):
         finally:
             os.chdir(previous_directory)
 
-    def test_game_code_uses_gc13(self):
+    def test_game_code_compiler_profiles(self):
         self.assertEqual(self.config.compiler_version, "GC/1.3")
+        msl_math = {
+            "MSL_C/PPCEABI/bare/H/" + name + ".c"
+            for name in ("math_float_helpers", "math_802927a4", "math_80293da4", "math_8029454c")
+        }
         for name, obj in self.objects.items():
             if obj.options["progress_category"] == "game" and not name.endswith(".s"):
                 with self.subTest(source=name):
-                    self.assertEqual(obj.options["mw_version"], "GC/1.3")
+                    expected = "GC/1.2.5n" if name in msl_math else "GC/1.3"
+                    self.assertEqual(obj.options["mw_version"], expected)
+                    if name in msl_math:
+                        self.assertTrue(obj.completed)
 
     def test_dolphin_library_default_is_gc125n(self):
         obj = self.dolphin_lib["objects"][0].resolve(self.config, self.dolphin_lib)

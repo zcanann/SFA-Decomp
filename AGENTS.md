@@ -2,8 +2,10 @@
 
 > **Active compiler experiment (scope corrected 2026-09-06):** Only game-category
 > MWCC C/C++ units use the common GC/1.3 `config.compiler_version`. The older
-> game math units are included, including the four under `MSL_C/` that
-> explicitly select the game compiler. Keep `main/zlb.c` on its ProDG toolchain.
+> game math units are included, except for the four under `MSL_C/`: the user
+> authorized GC/1.2.5n for those files on 2026-09-20. Their complete code and
+> data now match retail; see `docs/msl_game_math_matching.md`.
+> Keep `main/zlb.c` on its ProDG toolchain.
 > Dolphin SDK, MSL, MusyX, and compiler runtime retain their pre-migration compiler
 > profiles: GC/1.2.5n library defaults where applicable and their existing per-unit
 > exceptions. Their inclusion in the global migration was a scope mistake; do not
