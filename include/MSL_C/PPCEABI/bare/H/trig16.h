@@ -1,5 +1,5 @@
-#ifndef MAIN_TRIG_H_
-#define MAIN_TRIG_H_
+#ifndef MSL_TRIG16_H_
+#define MSL_TRIG16_H_
 
 #include "types.h"
 
@@ -14,4 +14,4 @@ float fsin16(int angle);
 float fcos16(int angle);
 float mathSinfFast(float x);
 
-#endif /* MAIN_TRIG_H_ */
+#endif /* MSL_TRIG16_H_ */

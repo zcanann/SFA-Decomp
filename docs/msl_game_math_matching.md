@@ -1,5 +1,8 @@
 # Game math under MSL_C: exact compiler profile
 
+Current classification and paths: [the MSL rehome](msl_math_rehome.md). These
+units are now library code; the game-category wording below is historical.
+
 On 2026-09-20 the user authorized an exception to the GC/1.3 game compiler
 requirement for the four game-category units under `MSL_C/PPCEABI/bare/H/`.
 They now use GC/1.2.5n, retaining their existing optimization and inline settings.

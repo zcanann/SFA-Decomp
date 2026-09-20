@@ -36,7 +36,7 @@
 #include "main/vecmath.h"
 #include "main/track_dolphin_api.h"
 #include "main/object_render.h"
-#include "main/trig.h"
+#include "MSL_C/PPCEABI/bare/H/trig16.h"
 #include "main/objseq.h"
 #include "main/objfx.h"
 #include "dlls/object_descriptor.h"

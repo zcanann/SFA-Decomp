@@ -59,7 +59,7 @@
 #include "main/audio/sfx_looped_object_api.h"
 #include "main/dll/player_target.h"
 #include "game/objects/object_setup.h"
-#include "main/trig.h"
+#include "MSL_C/PPCEABI/bare/H/trig16.h"
 #include "main/frustum.h"
 #include "dlls/objects/245_SidekickBal.h"
 #include "dlls/objects/417_NW_mammoth.h"

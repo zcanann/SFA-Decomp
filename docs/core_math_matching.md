@@ -1,5 +1,8 @@
 # Remaining core math: exact recovery
 
+Current paths and grouping: [the MSL rehome](msl_math_rehome.md). Names below
+describe the matching work before that byte-neutral move.
+
 The user extended the GC/1.2.5n compiler exception to these seven `main/`
 units on 2026-09-20. All 25 functions now match retail code and data. Together
 with the four previously matched `MSL_C` units, the complete eleven-unit

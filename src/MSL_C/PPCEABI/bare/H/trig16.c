@@ -1,4 +1,4 @@
-#include "main/trig.h"
+#include "MSL_C/PPCEABI/bare/H/trig16.h"
 #include "dolphin.h"
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "MSL_C/PPCEABI/bare/H/math_float_helpers.h"

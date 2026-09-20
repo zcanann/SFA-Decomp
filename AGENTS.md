@@ -2,12 +2,12 @@
 
 > **Active compiler experiment (scope corrected 2026-09-06):** Only game-category
 > MWCC C/C++ units use the common GC/1.3 `config.compiler_version`. The older
-> game math units are included, except for the four under `MSL_C/` and seven
-> core-math units under `main/`: the user authorized GC/1.2.5n for these on
-> 2026-09-20. The latter are `acosf.c`, `math_80292d3c.c`, `reciprocal.c`,
-> `trig_float_helpers.c`, `math_8029312c.c`, `trig.c`, and `sincosf.c`.
-> Their complete code and data now match retail; see
-> `docs/msl_game_math_matching.md` and `docs/core_math_matching.md`.
+> math block, including `rand`, belongs to the `MSL_C/PPCEABI/bare/H/` source
+> tree and third-party grouping by user instruction (2026-09-20). Its eleven
+> math TUs retain their exact GC/1.2.5n profiles; `rand.c` retains GC/1.3.
+> These are independent library settings, not game compiler exceptions.
+> MSL ownership is provisional; descriptive filenames do not claim recovered
+> vendor source names. See `docs/msl_math_rehome.md` for the path mapping.
 > Keep `main/zlb.c` on its ProDG toolchain.
 > Dolphin SDK, MSL, MusyX, and compiler runtime retain their pre-migration compiler
 > profiles: GC/1.2.5n library defaults where applicable and their existing per-unit

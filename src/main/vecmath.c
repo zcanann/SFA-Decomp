@@ -1,10 +1,10 @@
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/trig_float_helpers.h"
+#include "MSL_C/PPCEABI/bare/H/angle_vectors.h"
 #include "dolphin/mtx/vec.h"
-#include "main/acosf.h"
+#include "MSL_C/PPCEABI/bare/H/inverse_trig.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
-#include "main/trig.h"
+#include "MSL_C/PPCEABI/bare/H/trig16.h"
 #include "stdlib.h"
 
 const f32 gVecMathZero[1] = {0.0f};

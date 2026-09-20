@@ -1,4 +1,4 @@
-#include "main/math_80292d3c.h"
+#include "MSL_C/PPCEABI/bare/H/trig_reduce.h"
 
 double trigReduceQuadrantHighPrecision(int* quadrant, float angle) {
     double absoluteAngle = __fabsf(angle);

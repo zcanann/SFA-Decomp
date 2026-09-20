@@ -2,8 +2,8 @@
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
-#include "main/trig.h"
-#include "main/math_80292d3c.h"
+#include "MSL_C/PPCEABI/bare/H/trig16.h"
+#include "MSL_C/PPCEABI/bare/H/trig_reduce.h"
 
 float mathSinfFast(float angle) {
     u16 quadrant;

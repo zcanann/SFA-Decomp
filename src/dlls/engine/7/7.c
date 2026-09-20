@@ -35,7 +35,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
-#include "main/trig_float_helpers.h"
+#include "MSL_C/PPCEABI/bare/H/angle_vectors.h"
 #include "dolphin/mtx/vec.h"
 #include "main/debug.h"
 #include "main/hud_visibility_api.h"

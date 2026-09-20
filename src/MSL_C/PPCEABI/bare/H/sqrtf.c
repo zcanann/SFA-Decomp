@@ -1,5 +1,5 @@
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/math_8029312c.h"
+#include "MSL_C/PPCEABI/bare/H/sqrtf.h"
 
 float sqrtfHighPrecision(float value) {
     float reciprocalSqrt;

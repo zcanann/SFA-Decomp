@@ -54,7 +54,7 @@
 #include "main/objmodel.h"
 #include "main/sky.h"
 #include "main/newshadows_texture_api.h"
-#include "main/acosf_api.h"
+#include "MSL_C/PPCEABI/bare/H/inverse_trig_api.h"
 #include "main/tex_dolphin.h"
 #include "string.h"
 #include "track/intersect_hud_api.h"

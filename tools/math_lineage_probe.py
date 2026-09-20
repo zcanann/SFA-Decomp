@@ -18,7 +18,7 @@ import re
 import struct
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCES = ("src/main/acosf.c", "src/main/trig.c",
+SOURCES = ("src/MSL_C/PPCEABI/bare/H/inverse_trig.c", "src/MSL_C/PPCEABI/bare/H/trig16.c",
            "src/MSL_C/PPCEABI/bare/H/math_float_helpers.c")
 NUMBERS = re.compile(
     r"(?<![\w.])(?:0[xX][0-9a-fA-F]+|(?:\d+\.\d*|\.\d+|\d+)"

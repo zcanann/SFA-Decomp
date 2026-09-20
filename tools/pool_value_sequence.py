@@ -16,7 +16,7 @@ selected sections. Use --sections when a value may have moved between pools.
 Usage:
   python3 tools/pool_value_sequence.py <src-path> [section]
   python3 tools/pool_value_sequence.py --all [section]
-  python3 tools/pool_value_sequence.py src/main/trig.c --version GSAJ01
+  python3 tools/pool_value_sequence.py src/MSL_C/PPCEABI/bare/H/trig16.c --version GSAJ01
   python3 tools/pool_value_sequence.py <src-path> --sections .sdata,.sdata2
 
 Exit status: 0 if every function's sequence matches, 1 otherwise.

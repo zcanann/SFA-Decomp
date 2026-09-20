@@ -1,4 +1,4 @@
-#include "main/reciprocal.h"
+#include "MSL_C/PPCEABI/bare/H/reciprocal.h"
 
 float fastReciprocal(float value) {
     float reciprocal;

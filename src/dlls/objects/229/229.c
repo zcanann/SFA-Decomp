@@ -22,7 +22,7 @@
 #include "main/model.h"
 #include "main/model_light.h"
 #include "main/object_render.h"
-#include "main/trig.h"
+#include "MSL_C/PPCEABI/bare/H/trig16.h"
 #include "main/vecmath.h"
 #include "sys/objects.h"
 #include "sys/objects/lifecycle.h"

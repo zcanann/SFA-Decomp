@@ -17,7 +17,7 @@
 #include "main/gametext_color_api.h"
 #include "main/gameloop_api.h"
 #include "main/frame_timing.h"
-#include "main/trig.h"
+#include "MSL_C/PPCEABI/bare/H/trig16.h"
 #include "main/camera.h"
 #include "main/track_dolphin_api.h"
 #include "main/vecmath.h"

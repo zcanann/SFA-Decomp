@@ -1,8 +1,8 @@
 #include "dolphin/types.h"
-#include "main/math_8029312c.h"
-#include "main/reciprocal.h"
-#include "main/acosf.h"
-#include "main/acosf_api.h"
+#include "MSL_C/PPCEABI/bare/H/sqrtf.h"
+#include "MSL_C/PPCEABI/bare/H/reciprocal.h"
+#include "MSL_C/PPCEABI/bare/H/inverse_trig.h"
+#include "MSL_C/PPCEABI/bare/H/inverse_trig_api.h"
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
 
 /* Address-based reads retain these named constants without duplicate literals. */

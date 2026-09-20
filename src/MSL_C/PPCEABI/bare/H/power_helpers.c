@@ -1,7 +1,7 @@
 #include "dolphin.h"
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "MSL_C/PPCEABI/bare/H/math_float_helpers.h"
-#include "main/math_8029312c.h"
+#include "MSL_C/PPCEABI/bare/H/sqrtf.h"
 
 float powfCoreHighPrecision(float base, float power) {
     register double logValue;

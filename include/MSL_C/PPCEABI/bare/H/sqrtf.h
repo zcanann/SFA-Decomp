@@ -1,5 +1,5 @@
-#ifndef MAIN_MATH_8029312C_H_
-#define MAIN_MATH_8029312C_H_
+#ifndef MSL_SQRTF_H_
+#define MSL_SQRTF_H_
 
 float sqrtfHighPrecision(float value);
 float invSqrt(float value);

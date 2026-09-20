@@ -1,5 +1,5 @@
-#ifndef MAIN_ACOSF_H_
-#define MAIN_ACOSF_H_
+#ifndef MSL_INVERSE_TRIG_H_
+#define MSL_INVERSE_TRIG_H_
 
 #include "dolphin/types.h"
 

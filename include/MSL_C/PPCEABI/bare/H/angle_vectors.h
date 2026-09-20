@@ -1,5 +1,5 @@
-#ifndef MAIN_TRIG_FLOAT_HELPERS_H_
-#define MAIN_TRIG_FLOAT_HELPERS_H_
+#ifndef MSL_ANGLE_VECTORS_H_
+#define MSL_ANGLE_VECTORS_H_
 
 #include "types.h"
 

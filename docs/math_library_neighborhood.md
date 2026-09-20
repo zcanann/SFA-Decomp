@@ -1,5 +1,7 @@
 # Older math: library neighborhood and ten reference projects
 
+Subsequent user-approved implementation: [MSL paths, names and grouping](msl_math_rehome.md).
+
 2026-09-20, SFA baseline `fe5149e59a`, EN v1.0.
 
 **The binary location is positive evidence for a library math block.** The

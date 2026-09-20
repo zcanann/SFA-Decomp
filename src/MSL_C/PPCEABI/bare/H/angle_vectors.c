@@ -1,6 +1,6 @@
 #include "dolphin.h"
 #include "MSL_C/PPCEABI/bare/H/math_float_helpers.h"
-#include "main/trig_float_helpers.h"
+#include "MSL_C/PPCEABI/bare/H/angle_vectors.h"
 
 #define STORE_SINCOS(angle, sine, cosine, sinOut, cosOut)                                                              \
     switch ((((u16)(angle)) + 0x2000) & 0xC000) {                                                                      \

@@ -90,7 +90,7 @@
 #include "main/dll/dll_0044_cameramodeviewfinder.h"
 #include "main/dll/player_spirit_api.h"
 #include "main/loaded_file_flags.h"
-#include "main/trig.h"
+#include "MSL_C/PPCEABI/bare/H/trig16.h"
 #include "main/audio/sfx_limited_object_api.h"
 #include "main/dll/dll_0017_savegame_api.h"
 #include "main/dll/dll_0011_screens_api.h"

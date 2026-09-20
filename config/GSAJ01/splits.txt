@@ -5072,47 +5072,47 @@ MSL_C/PPCEABI/bare/H/math_float_helpers.c:
 	.text       start:0x80291DAC end:0x80292034
 	.sdata2     start:0x803E7A98 end:0x803E7AE0
 
-main/acosf.c:
+MSL_C/PPCEABI/bare/H/inverse_trig.c:
 	.text       start:0x80292034 end:0x80292894
 	.sdata2     start:0x803E7AE0 end:0x803E7BD8
 
-MSL_C/PPCEABI/bare/H/math_802927a4.c:
+MSL_C/PPCEABI/bare/H/power_helpers.c:
 	.text       start:0x80292894 end:0x80292E2C
 	.sdata2     start:0x803E7BD8 end:0x803E7D1C
 
-main/math_80292d3c.c:
+MSL_C/PPCEABI/bare/H/trig_reduce.c:
 	.text       start:0x80292E2C end:0x80292EB0
 	.sdata2     start:0x803E7D20 end:0x803E7D38
 
-main/rand.c:
+MSL_C/PPCEABI/bare/H/rand.c:
 	.text       start:0x80292EB0 end:0x80292EDC
 	.sbss       start:0x803DE530 end:0x803DE534
 
-main/reciprocal.c:
+MSL_C/PPCEABI/bare/H/reciprocal.c:
 	.text       start:0x80292EDC end:0x80292F10
 	.sdata2     start:0x803E7D38 end:0x803E7D3C
 
-main/trig_float_helpers.c:
+MSL_C/PPCEABI/bare/H/angle_vectors.c:
 	.text       start:0x80292F10 end:0x8029321C
 	.sdata2     start:0x803E7D40 end:0x803E7D90
 
-main/math_8029312c.c:
+MSL_C/PPCEABI/bare/H/sqrtf.c:
 	.text       start:0x8029321C end:0x80293324
 	.sdata2     start:0x803E7D90 end:0x803E7D9C
 
-main/trig.c:
+MSL_C/PPCEABI/bare/H/trig16.c:
 	.text       start:0x80293324 end:0x80293D54
 	.sdata2     start:0x803E7DA0 end:0x803E7E60
 
-main/sincosf.c:
+MSL_C/PPCEABI/bare/H/sincosf.c:
 	.text       start:0x80293D54 end:0x80293E94
 	.sdata2     start:0x803E7E60 end:0x803E7E80
 
-MSL_C/PPCEABI/bare/H/math_80293da4.c:
+MSL_C/PPCEABI/bare/H/sincos_approximations.c:
 	.text       start:0x80293E94 end:0x8029463C
 	.sdata2     start:0x803E7E80 end:0x803E7F38
 
-MSL_C/PPCEABI/bare/H/math_8029454c.c:
+MSL_C/PPCEABI/bare/H/tanf_log2.c:
 	.text       start:0x8029463C end:0x80294730
 	.sdata2     start:0x803E7F38 end:0x803E7F50
 

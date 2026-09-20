@@ -27,7 +27,7 @@
 #include "dolphin/gx/GXCull.h"
 #include "dolphin/gx/GXLighting.h"
 #include "dolphin/gx/GXPixel.h"
-#include "main/acosf.h"
+#include "MSL_C/PPCEABI/bare/H/inverse_trig.h"
 #include "dolphin/gx/GXGeometry.h"
 #include "dolphin/gx/GXTev.h"
 #include "dolphin/gx/GXTransform.h"

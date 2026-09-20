@@ -25,7 +25,7 @@
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTev.h"
 #include "main/shader_init_api.h"
-#include "main/acosf_api.h"
+#include "MSL_C/PPCEABI/bare/H/inverse_trig_api.h"
 #include "main/render_internal.h"
 #include "string.h"
 #include "main/vecmath.h"
