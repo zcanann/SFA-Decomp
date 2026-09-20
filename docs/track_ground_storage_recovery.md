@@ -68,3 +68,9 @@ other arrays displaced. Duplicating setup in the positive/negative mode arms
 adds an instruction and does not fix storage order. None of these candidates
 is retained; accessor inlining does not bypass the evidenced BSS allocation
 order.
+
+Function-local static result arrays behave the same way: without initializers,
+their BSS order still follows use; with explicit zero initializers, they move
+to `.data`. Const-qualified local pointer aliases do not defer their address
+setup enough to recover retail code while preserving BSS. These follow-up
+probes are not retained and do not establish that retail used local statics.

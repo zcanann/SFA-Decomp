@@ -24,6 +24,7 @@ from tricky_backend_graph import capture_graph_snapshot, register_kind
 
 BASE = 0x400000
 DUMP = BASE + 0xFF2D0
+TEMPORARY_RETURN = 0x4F4275  # RET from the object factory at 0x4F4200.
 GRAPH = {BASE + 0x107070: "BEFORE GPR SIMPLIFICATION",
          BASE + 0x106E20: "BEFORE GPR REWRITE"}
 _state = None
@@ -33,7 +34,7 @@ def emulate_hook(pc, sp, ebx, word, write_word):
     """Return the exact next ESP/EIP, writing only PUSH EBX's stack slot."""
     if not 4 <= sp <= 0xFFFFFFFB:
         raise ValueError("hook stack pointer is outside the 32-bit guest")
-    if pc == DUMP:
+    if pc in (DUMP, TEMPORARY_RETURN):
         destination = word(sp)
         if not BASE <= destination < BASE + 0x20B000:
             raise ValueError("dump-hook return is outside the compiler image")
@@ -42,6 +43,17 @@ def emulate_hook(pc, sp, ebx, word, write_word):
         write_word(sp - 4, ebx & 0xFFFFFFFF)
         return sp - 4, pc + 1
     raise ValueError("unrecognized compiler hook")
+
+
+def match_temporary_births(graph, births, identity):
+    """Join observed factory results to graph objects, not to register numbers."""
+    matched = {}
+    for register, node in enumerate(graph):
+        address = node["prefix"][1]
+        if address in births and identity(address) == (births[address]["name"], births[address]["type"]):
+            entry = matched.setdefault(address, dict(births[address], registers=[]))
+            entry["registers"].append(register)
+    return list(matched.values())
 
 
 def page_reader(read):
@@ -79,11 +91,15 @@ class CaptureState:
         self.process = self.target.GetProcess()
         self.wanted = set(job["functions"])
         self.snapshots = []
+        self.temporary_names = set(job.get("temporary_names", []))
+        self.temporary_births = {}
         self.current_name = None
         self.failure = None
         Path(job["pid"]).write_text(str(self.process.GetProcessID()))
         memory = page_reader(self.read)
         hooks = {DUMP: b"\xc3"}
+        if self.temporary_names:
+            hooks[TEMPORARY_RETURN] = b"\xc3"
         if job["graph"]:
             hooks.update({address: b"\x53" for address in GRAPH})
         for address, expected in hooks.items():
@@ -117,7 +133,18 @@ class CaptureState:
         word = lambda address: int.from_bytes(memory(address, 4), "little")
         pc = frame.GetPC()
         sp = frame.FindRegister("rsp").GetValueAsUnsigned()
-        if pc == DUMP:
+        if pc == TEMPORARY_RETURN:
+            # The hash-verified factory returns an object in EAX. Names are
+            # recorded before later IRO passes assign a virtual register.
+            address = frame.FindRegister("rax").GetValueAsUnsigned() & 0xFFFFFFFF
+            name = self.string(word(address + 10) + 10)
+            self.temporary_births.pop(address, None)  # Arena storage can be reused.
+            if name in self.temporary_names:
+                self.temporary_births[address] = {
+                    "object": address, "name": name, "type": word(address + 14),
+                    "factory": 0x4F4200, "return_address": word(sp),
+                }
+        elif pc == DUMP:
             self.current_name = self.string(word(sp + 4))
             stage = self.string(word(sp + 8))
             if self.current_name in self.wanted:
@@ -131,6 +158,10 @@ class CaptureState:
               and memory(BASE + 0x1E7317, 1) == bytes([self.job.get("register_class", 4)])):
             snapshot = capture_graph_snapshot(memory, BASE, self.current_name,
                                               pc == BASE + 0x106E20, self.job.get("register_class", 4))
+            if self.temporary_names:
+                snapshot["temporary_births"] = match_temporary_births(
+                    snapshot["coloring_graph"], self.temporary_births,
+                    lambda address: (self.string(word(address + 10) + 10), word(address + 14)))
             self.snapshots.append(snapshot)
         sp, pc = emulate_hook(pc, sp, frame.FindRegister("rbx").GetValueAsUnsigned(), word, self.write_word)
         if not frame.FindRegister("rsp").SetValueFromCString(str(sp)) or not frame.SetPC(pc):
@@ -230,10 +261,12 @@ def _stop_timed_out_capture(process, pid_file, command):
     process.wait()
 
 
-def capture(command, cwd, wanted, graph=False, timeout=60, register_class=4):
+def capture(command, cwd, wanted, graph=False, timeout=60, register_class=4, temporary_names=()):
     register_kind(register_class)
     if sys.platform != "darwin":
         raise RuntimeError("LLDB capture requires macOS and Wibo")
+    if temporary_names and not graph:
+        raise ValueError("temporary birth capture requires a register graph")
     cwd = Path(cwd).resolve()
     executable = (cwd / command[0]).resolve()
     if hashlib.sha256(executable.read_bytes()).hexdigest() != COMPILER_SHA256:
@@ -245,6 +278,7 @@ def capture(command, cwd, wanted, graph=False, timeout=60, register_class=4):
         scratch = Path(scratch)
         result, pid, job_path = scratch / "snapshots.json", scratch / "pid", scratch / "job.json"
         job_path.write_text(json.dumps({"functions": sorted(wanted), "graph": graph, "register_class": register_class,
+                                        "temporary_names": sorted(set(temporary_names)),
                                         "result": str(result), "pid": str(pid)}))
         # Install guest breakpoints only after Wibo has mapped the PE image.
         commands = ["settings set target.disable-aslr false", "breakpoint set --func-regex loadPEFromSource",

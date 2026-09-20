@@ -162,3 +162,67 @@ The TU reaches **99.896484%**, retaining **25/30 exact functions**, and remains
 `NonMatching`. The strict link still substitutes its retail object. The
 collector's remaining grid-register differences and the other four imperfect
 functions are not claimed complete.
+
+## Frontend origin of the remaining grid counters (September 20)
+
+A fresh LLDB capture of `bad98ad595` confirms that all eleven differences
+remain register operands. The two multiplication instructions and their
+incremented counters already exist in `BEFORE GLOBAL OPTIMIZATION`; they are
+not introduced by the PPC backend's later strength-reduction pass. In the
+final allocation graph:
+
+| Value | Virtual GPR | Current physical | Retail physical |
+| --- | --- | --- | --- |
+| `p2` | 107 | r20 | r14 |
+| `q2` | 110 | r17 | r16 |
+| X origin, generated `@1899` | 166 | r16 | r20 |
+| Z origin, generated `@1897` | 168 | r14 | r17 |
+
+The named-register boundary is 122. Both generated objects are created by
+`0x004F4200`, observed at its return instruction `0x004F4275`, with caller
+return address `0x004A6D8C`. Static inspection places that call at
+`0x004A6D87` inside the frontend routine `0x004A6D60`–`0x004A7287`.
+Its caller at `0x004A59EE` sits in the path labeled by the compiler's
+"Found reduction in strength" diagnostic. The caller first checks existing
+reduction records with `0x00469180`, and invokes the materializer on a miss.
+These are observed call sites and inferred roles, not recovered original
+source names or a reconstruction of either complete routine.
+
+The capture still produces the ordinary object's exact SHA-256:
+`76488b758f3e83805c526eff61d0eb627c5edf9c078244d1b1917d3f22f7a235`.
+The 398-node final graph replays all 366 color choices and two high-degree
+removals. The first 283-node allocation attempt remains explicitly unreplayed.
+No source match is gained: the collector stays 99.888885%, and the TU stays
+99.92923%, 26/30 exact.
+
+The supported LLDB provider now exposes this diagnostic without the scratch
+provider copy:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/main/track_dolphin \
+  --function trackBuildBlockTriangles --graph --final-allocation-attempt \
+  --temporary-name '@1897' --temporary-name '@1899' \
+  --output build/track_triangle_births
+```
+
+Temporary names depend on the current source and compiler. The tool fails
+if a requested name has no observed birth in the selected graphs. It joins
+factory results to graph nodes by object address and checks name/type identity;
+register numbers alone are not used as identity. The return address identifies
+one caller site, not an unwound stack. The new option is macOS-only; existing
+capture modes and cross-platform trace reading remain available. The factory's
+RET is emulated as a four-byte guest return, without changing its EAX result.
+Ordinary/instrumented object equality remains mandatory.
+
+Source probes retain no changes. Reusing scalar coordinate locals, extracting
+inline store/append helpers, changing pointer-store views, and spelling the
+loops as split-initialization `for` or `while` forms preserve the same residual.
+Explicit coordinate induction counters regress code and spill layout. Typed
+three-word origin records also do not improve the match. Volatile coordinate
+stores add operand differences; qualifying only the block-pointer store does
+not help. No additional volatile exception is justified. The next useful
+boundary is frontend reduction-record reuse/materialization and its ordering,
+rather than the backend initialization emitter.
+
+The LLDB provider, trace inspection and graph suites pass 12, 6 and 35 tests.
+The new trace also passes offline readback with the same full allocator checks.

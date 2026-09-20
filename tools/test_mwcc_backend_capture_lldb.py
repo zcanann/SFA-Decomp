@@ -21,6 +21,29 @@ class LldbCaptureTests(unittest.TestCase):
         word.assert_called_once_with(0x1000)
         write.assert_not_called()
 
+    def test_temporary_factory_return_preserves_guest_result_and_stack(self):
+        word, write = Mock(return_value=0x4A6D8C), Mock()
+        self.assertEqual(capture.emulate_hook(capture.TEMPORARY_RETURN, 0x1000, 0, word, write),
+                         (0x1004, 0x4A6D8C))
+        word.assert_called_once_with(0x1000)
+        write.assert_not_called()
+        with self.assertRaisesRegex(ValueError, "outside the compiler image"):
+            capture.emulate_hook(capture.TEMPORARY_RETURN, 0x1000, 0, lambda _: 0, write)
+        write.assert_not_called()
+
+    def test_temporary_birth_join_uses_object_identity_and_rejects_arena_reuse(self):
+        graph = [{"prefix": [0, address]} for address in [0, 0x100, 0x200, 0x100, 0x300]]
+        births = {0x100: {"name": "@first", "type": 7, "return_address": 0x4A6D8C},
+                  0x200: {"name": "@stale", "type": 7},
+                  0x300: {"name": "@same_name", "type": 8}}
+        identity = Mock(side_effect=lambda a: {0x100: ("@first", 7),
+                                               0x200: ("@new", 7),
+                                               0x300: ("@same_name", 9)}[a])
+        self.assertEqual(capture.match_temporary_births(graph, births, identity),
+                         [{"name": "@first", "type": 7, "return_address": 0x4A6D8C,
+                           "registers": [1, 3]}])
+        self.assertNotIn("registers", births[0x100])
+
     def test_graph_push_preserves_low_guest_ebx(self):
         for address in capture.GRAPH:
             word, write = Mock(), Mock()
