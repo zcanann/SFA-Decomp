@@ -202,3 +202,28 @@ retail checksum gate passes, and all five track objects have SHA-256
 The complete TU reaches **99.90503%**, with **26/30 exact functions**. It remains
 `NonMatching`; this is an exact function, not a claim that the entire TU links
 from source to retail bytes.
+
+## Static-line adjacency uses the same accessor
+
+`trackIntersect` now also calls `trackGetPooledLine(i)` in its adjacency pass.
+This one-line change fixes eighteen register-only instruction differences,
+raising the function from **99.61404% to 99.807014%**. It remains 570 instructions
+/ 2,280 bytes. Its eight remaining differences are the sort-loop zero copy at
+index 321 and the final segment-loop counter/offset registers at indices
+489, 490, 494, 513, 526, 527 and 529.
+
+Both LLDB captures reproduce their ordinary objects and replay 287-node GPR
+graphs with 253 color choices and no high-degree removals. The register-role
+comparison aligns all 570 instructions, maps 222 registers, and finds no
+partition conflicts or mapped interference-edge differences; four neighbors
+remain unmapped. The adjacency pointer changes from virtual GPR50/r5 to
+GPR87/r3, its index from GPR65/r4 to GPR64/r5, and its offset from GPR84/r3 to
+GPR83/r4. These are all the changed instruction operands.
+
+All five regional objdiff reports now give the TU **99.92069%**, with
+**26/30 exact functions**. Each region passes the original-DOL hash check,
+`all_source` and strict retail checksum. All five object hashes are
+`833e92e118ea39d26a25a1b3b6af59d31c89b097088f3ad53e98ac44286792f8`.
+Only `trackIntersect` changes relative to the exact-model-builder commit;
+other function bytes, named symbols, data and resolved relocations are
+unchanged. The two builders' shared accessor has no emitted out-of-line body.

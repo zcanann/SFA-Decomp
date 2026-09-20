@@ -1231,7 +1231,7 @@ void trackIntersect(void) {
         s16* pointEdges2;
         s16 adjacentLine;
 
-        line = (IntersectLine*)(gIntersectLinePool + i * 16);
+        line = trackGetPooledLine(i);
         pointIndex = line->pt[0] * 2;
         pointEdges = &edges[pointIndex];
         adjacentLine = pointEdges[0];
