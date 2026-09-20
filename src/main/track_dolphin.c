@@ -2606,21 +2606,21 @@ u8 doEdges;
     u32 offA;
     u32 offB;
     u32 offC;
-    int *firstp;
+    int* firstp;
     int last;
     int mask16;
     int f40, f80, f200, f120, f20, f8, f100, f4;
-    int *q2;
-    MapBlockData **p1;
-    int *q1;
-    MapBlockData **p2;
-    MapBlockData **cellp;
-    MapBlockData **cw;
-    int *dw;
-    Vec *edgeCursor;
+    int* q2;
+    MapBlockData** p1;
+    int* q1;
+    MapBlockData** p2;
+    MapBlockData** cellp;
+    MapBlockData** cw;
+    int* dw;
+    Vec* edgeCursor;
     int layer;
-    Vec *secondVertex;
-    int *descp;
+    Vec* secondVertex;
+    int* descp;
     int gx0;
     int relx0;
     int relz0;
@@ -2628,7 +2628,7 @@ u8 doEdges;
     int gx1;
     int i;
     int vEnd;
-    CollisionPolygonGroup *groupEnd;
+    CollisionPolygonGroup* groupEnd;
     u8 typeb;
     u32 bb;
     u32 dmaflip;
@@ -2637,8 +2637,8 @@ u8 doEdges;
     int gz1;
     int gx;
     int gz;
-    MapBlockData *blk;
-    MapTriIndex *triangle;
+    MapBlockData* blk;
+    MapTriIndex* triangle;
     int edgeIndex;
     int dxoff;
     int dzoff;
@@ -2657,10 +2657,10 @@ u8 doEdges;
     int minZ;
     u8 maxYi;
     int maxZ;
-    CollisionPolygonGroup *group;
+    CollisionPolygonGroup* group;
     int z;
-    u16 *tw;
-    u8 *vo;
+    u16* tw;
+    u8* vo;
 
     x0 -= gMapBlockOriginWorldX;
     z0 -= gMapBlockOriginWorldZ;
@@ -2690,7 +2690,7 @@ u8 doEdges;
     do {
         for (gx = gx0, p1 = cw, q1 = dw; gx <= gx1 && count < 16; gx++) {
             for (gz = gz0, p2 = p1, q2 = q1; gz <= gz1 && count < 16; gz++) {
-                MapBlockData *gridBlock = mapGetBlockAtPos(gx, gz, layer);
+                MapBlockData* gridBlock = mapGetBlockAtPos(gx, gz, layer);
                 if (gridBlock != NULL) {
                     *p2 = gridBlock;
                     q2[0] = gx * 0x280;
@@ -2713,8 +2713,8 @@ u8 doEdges;
     }
 
     {
-        MapBlockData *c0 = cells[0];
-        void *initialPolygon = mapBlockGetPolygon(c0, 0);
+        MapBlockData* c0 = cells[0];
+        void* initialPolygon = mapBlockGetPolygon(c0, 0);
         dmaflip = 0;
         offA = 0;
         cacheAllocAndCopy((u8*)initialPolygon, c0->nPolygons << 3, &offA, &offB, 0x2000);
@@ -2738,13 +2738,13 @@ u8 doEdges;
         s16 mask;
         s16 bit;
         int pos;
-        CollisionPolygonGroup *groups;
+        CollisionPolygonGroup* groups;
         bb = offA;
         vb = offB;
         if (i < last) {
-            MapBlockData *next = cellp[1];
+            MapBlockData* next = cellp[1];
             u32 nextBase;
-            void *nextPolygon;
+            void* nextPolygon;
             int c13;
             int c14;
             dmaflip ^= 0x2000u;
@@ -2851,8 +2851,8 @@ u8 doEdges;
             vEnd = group[1].firstTri;
             secondVertex = &triangleVertices[1];
             for (; t0 < vEnd; t0++, triangle++) {
-                s16 *vp;
-                Vec *vertexCursor;
+                s16* vp;
+                Vec* vertexCursor;
                 f32 mag;
 
                 if ((mask16 & triangle->cellMask & 0xff) == 0) {
