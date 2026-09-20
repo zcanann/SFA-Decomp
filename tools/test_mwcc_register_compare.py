@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from mwcc_register_compare import load_capture, match_roles
 from tricky_backend_ir import COMPILER_SHA256
@@ -74,6 +75,39 @@ class RegisterComparisonTests(unittest.TestCase):
             path.with_name("traced.o").write_bytes(b"changed")
             with self.assertRaisesRegex(ValueError, "object hash mismatch"):
                 load_capture(path, "example")
+
+    def test_retry_uses_final_graph_and_preserves_unverified_attempts(self):
+        attempts = [{"nodes": 33, "next_nodes": 34}]
+        first = {"name": "example", "stage": "BEFORE GPR SIMPLIFICATION",
+                 "coloring_graph": ["old"]}
+        final = {"name": "example", "stage": "BEFORE GPR SIMPLIFICATION",
+                 "coloring_graph": ["final"]}
+        rewrite = {"name": "example", "stage": "BEFORE GPR REWRITE",
+                   "coloring_graph": ["colored"], "blocks": []}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "trace.json"
+            path.with_name("traced.o").write_bytes(b"object")
+            path.write_text(json.dumps({
+                "schema": 1, "compiler_sha256": COMPILER_SHA256,
+                "object_sha256": hashlib.sha256(b"object").hexdigest(),
+                "register_class": 4, "unit": "example",
+                "snapshots": [first, final, rewrite, {"name": "example", "stage": "FINAL CODE"}],
+            }))
+            # Validation itself is covered by the backend replay suites. This
+            # exercises selection after validation and keeps the strict default.
+            def validate(*args, **kwargs):
+                if not kwargs["final_allocation_attempt"]:
+                    raise ValueError("unpaired initial GPR graph")
+                return {"example": {"unreplayed_allocation_attempts": attempts}}
+
+            with patch("mwcc_register_compare.inspect", side_effect=validate), \
+                    patch("mwcc_register_compare.emitted_instructions", return_value=[]):
+                with self.assertRaisesRegex(ValueError, "unpaired initial"):
+                    load_capture(path, "example")
+                result = load_capture(path, "example", final_allocation_attempt=True)
+            self.assertEqual(result["graph"], ["final"])
+            self.assertEqual(result["colored"], ["colored"])
+            self.assertEqual(result["unreplayed_allocation_attempts"], attempts)
 
 
 if __name__ == "__main__":
