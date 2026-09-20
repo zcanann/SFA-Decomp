@@ -2,6 +2,10 @@
 
 September 8, 2026; source baseline `51367a241e`, GC/1.3 game compiler.
 
+Follow-up: the [ten-project library-neighborhood audit](math_library_neighborhood.md)
+supports a library classification for the older math block and explicitly
+corrects the earlier claim that Gekko-specific Newton helpers exclude MSL.
+
 Follow-up: [the complete power pool is now recovered](math_literal_pool_recovery.md#complete-power-function-pool).
 The tables below describe the pre-recovery claims; the power unit's 280-byte
 gap has since been claimed with an exact literal pool and unchanged code.
