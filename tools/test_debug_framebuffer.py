@@ -30,14 +30,15 @@ class DebugFramebufferTests(unittest.TestCase):
         glyph = re.search(r"^void debugTextDrawToFrameBuffer\([^;\n]*\) \{.*?^\}", source, re.M | re.S).group()
         pixel = re.search(r"^static inline void debugDrawTextPixel\(.*?^\}", source, re.M | re.S).group()
         rule = re.search(r"^static inline void errorDrawHorizontalRule\(.*?^\}", source, re.M | re.S).group()
+        rectangle = re.search(r"^static inline void errorDrawFilledRect\(.*?^\}", source, re.M | re.S).group()
         backdrop = re.search(r"^static inline void errDisplayFillBackdrop\(.*?^\}", source, re.M | re.S).group()
         backdrop_calls = re.findall(r"if \(enableDebugText != 0\) \{\s*errDisplayFillBackdrop\(\);\s*\}", source)
         if len(backdrop_calls) != 2:
             raise AssertionError("Re-audit the two guarded crash-display backdrop calls")
         calls = re.findall(r"^            if \(enableDebugText != 0\) \{\n"
-                           r"                errorDrawHorizontalRule\([^;]+\);\n            \}", source, re.M)
-        if len(calls) != 3:
-            raise AssertionError("Re-audit the three crash-display rule call sites")
+                           r"                (?:errorDrawHorizontalRule|errorDrawFilledRect)\([^;]+\);\n            \}", source, re.M)
+        if len(calls) != 4:
+            raise AssertionError("Re-audit the four crash-display rule call sites")
         cls.temporary = tempfile.TemporaryDirectory(prefix="sfa-debug-framebuffer-")
         cls.addClassCleanup(cls.temporary.cleanup)
         directory = Path(cls.temporary.name)
@@ -63,7 +64,7 @@ static void DCStoreRange(void* address, unsigned int size) {
     }
     flushCount++;
 }
-''' + constants + "\n" + pixel + "\n" + glyph + "\n" + rule + "\n" + backdrop + r'''
+''' + constants + "\n" + pixel + "\n" + glyph + "\n" + rule + "\n" + rectangle + "\n" + backdrop + r'''
 EXPORT void runBackdrop(int enabled) {
     enableDebugText = enabled;
     flushCount = 0;
@@ -76,6 +77,10 @@ EXPORT void runGlyph(int enabled, int x, int y, u8* grid) {
 EXPORT void runRule(int row, int width) {
     flushCount = 0;
     errorDrawHorizontalRule(row, width);
+}
+EXPORT void runRectangle(int left, int top, int right, int bottom) {
+    flushCount = 0;
+    errorDrawFilledRect(left, top, right, bottom);
 }
 EXPORT void runCrashRules(int enabled, int y) {
     enableDebugText = enabled;
@@ -102,6 +107,8 @@ EXPORT void runCrashRules(int enabled, int y) {
             handle.runBackdrop.restype = None
             handle.runRule.argtypes = [ctypes.c_int, ctypes.c_int]
             handle.runRule.restype = None
+            handle.runRectangle.argtypes = [ctypes.c_int] * 4
+            handle.runRectangle.restype = None
             handle.runCrashRules.argtypes = [ctypes.c_int, ctypes.c_int]
             handle.runCrashRules.restype = None
             cls.libraries.append(handle)
@@ -156,6 +163,14 @@ EXPORT void runCrashRules(int enabled, int y) {
                 pixels = {(x, y) for y in rows for x in range(width)}
                 self.check_pixels(library, lambda: library.runRule(row, width), pixels, [])
 
+    def test_filled_rectangle_footprints(self):
+        cases = [(240, 59, 241, 268), (240, 59, 241, 280), (2, 3, 7, 11),
+                 (639, 479, 640, 480), (0, 0, 0, 1), (2, 3, 5, 3), (5, 7, 2, 3)]
+        for library in self.libraries:
+            for left, top, right, bottom in cases:
+                pixels = {(x, y) for x in range(left, right) for y in range(top, bottom)}
+                self.check_pixels(library, lambda: library.runRectangle(left, top, right, bottom), pixels, [])
+
     def test_crash_display_call_sites(self):
         for library in self.libraries:
             for enabled in (0, 1, 255):
@@ -164,6 +179,7 @@ EXPORT void runCrashRules(int enabled, int y) {
                     if enabled:
                         for row, width in ((58, 640), (91, 240), (stack_y + 76, 640)):
                             pixels.update((x, y) for y in (row - 1, row) for x in range(width))
+                        pixels.update((240, y) for y in range(59, stack_y + 76))
                     self.check_pixels(library, lambda: library.runCrashRules(enabled, stack_y), pixels, [])
 
 

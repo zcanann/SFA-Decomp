@@ -656,6 +656,20 @@ static inline void errorDrawHorizontalRule(int row, int width) {
     }
 }
 
+static inline void errorDrawFilledRect(int left, int top, int right, int bottom) {
+    int column;
+    int rowOffset = top * (DEBUG_FRAMEBUFFER_WIDTH * sizeof(u16));
+    for (column = left; column < right; column++) {
+        int row = bottom;
+        while (row > top) {
+            *(u16*)((char*)debugDrawFrameBuffer + rowOffset + column * sizeof(u16)) = DEBUG_TEXT_COLOR;
+            rowOffset += DEBUG_FRAMEBUFFER_WIDTH * sizeof(u16);
+            row--;
+        }
+        rowOffset = top * (DEBUG_FRAMEBUFFER_WIDTH * sizeof(u16));
+    }
+}
+
 void* errorThreadFunc(void* unused) {
     DebugFontErrorDataView* messages = (DebugFontErrorDataView*)gDebugFontAndErrorData;
     int y;
@@ -738,14 +752,7 @@ void* errorThreadFunc(void* unused) {
                 errorDrawHorizontalRule(y + 0x4c, 640);
             }
             if (enableDebugText != 0) {
-                int b = 0x12700;
-                u16 rowColor = 0xc080;
-                int rows = y + 0x4c;
-                while (rows > 0x3b) {
-                    *(u16*)((char*)debugDrawFrameBuffer + b + 0x1e0) = rowColor;
-                    b += 0x500;
-                    rows--;
-                }
+                errorDrawFilledRect(240, 59, 241, y + 76);
             }
             y += 0x51;
             if (sp == NULL) {
