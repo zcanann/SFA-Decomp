@@ -974,14 +974,17 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
     return gTrackSweepHitCount;
 }
 
+static inline IntersectLine* trackGetPooledLine(int index) {
+    return &((IntersectLine*)gIntersectLinePool)[index];
+}
+
 void intersectModLineBuild(ObjDef* definition) {
     s16 pointLinks[0xd48];
     IntersectLine* line;
     int lineIndex;
     int sourceLineCount;
     MapHitLine* sourceLine;
-    int lineByteOffset;
-    int outputLineIndex;
+    int index;
     s16 previousGroup;
 
     mapBlockFlag = 1;
@@ -989,7 +992,6 @@ void intersectModLineBuild(ObjDef* definition) {
     gIntersectPointCount = 0;
     sourceLineCount = definition->modLineCount;
     for (lineIndex = 0, sourceLine = definition->modLines; lineIndex < sourceLineCount; sourceLine++, lineIndex++) {
-        int i;
         if (gIntersectLineCount < 0x5dc) {
             line = (IntersectLine*)((u8*)gIntersectLinePool + gIntersectLineCount * (int)sizeof(IntersectLine));
             line->end0 = sourceLine->endpointData[0];
@@ -1002,30 +1004,29 @@ void intersectModLineBuild(ObjDef* definition) {
             line->flags = sourceLine->flags;
             *(s8*)&line->flags ^= 0x10;
             line->param = sourceLine->param;
-            for (i = 0; i < 2; i++) {
-                f32 x = sourceLine->x[i];
-                f32 y = sourceLine->y[i];
-                f32 z = sourceLine->z[i];
+            for (index = 0; index < 2; index++) {
+                f32 x = sourceLine->x[index];
+                f32 y = sourceLine->y[index];
+                f32 z = sourceLine->z[index];
                 if (gIntersectPointCount < 0x6a4) {
-                    line->pt[i] = insertPoint(gIntersectLineCount, pointLinks, x, y, z);
+                    line->pt[index] = insertPoint(gIntersectLineCount, pointLinks, x, y, z);
                 }
             }
             gIntersectLineCount++;
         }
     }
     {
-        outputLineIndex = 0;
-        lineByteOffset = outputLineIndex;
-        for (; outputLineIndex < gIntersectLineCount; lineByteOffset += sizeof(IntersectLine), outputLineIndex++) {
+        index = 0;
+        for (; index < gIntersectLineCount; index++) {
             int pointLinkIndex;
             s16* firstPointLinks;
             s16* secondPointLinks;
-            line = (IntersectLine*)((u8*)gIntersectLinePool + lineByteOffset);
+            line = trackGetPooledLine(index);
             pointLinkIndex = line->pt[0] * 2;
             firstPointLinks = &pointLinks[pointLinkIndex];
-            if (firstPointLinks[0] > -1 && firstPointLinks[0] != outputLineIndex) {
+            if (firstPointLinks[0] > -1 && firstPointLinks[0] != index) {
                 line->adj[0] = firstPointLinks[0];
-            } else if (firstPointLinks[1] > -1 && firstPointLinks[1] != outputLineIndex) {
+            } else if (firstPointLinks[1] > -1 && firstPointLinks[1] != index) {
                 line->adj[0] = firstPointLinks[1];
             } else {
                 line->adj[0] = -1;
@@ -1034,9 +1035,9 @@ void intersectModLineBuild(ObjDef* definition) {
                 pointLinkIndex = line->pt[1] * 2;
                 secondPointLinks = &pointLinks[pointLinkIndex];
             }
-            if (secondPointLinks[0] > -1 && secondPointLinks[0] != outputLineIndex) {
+            if (secondPointLinks[0] > -1 && secondPointLinks[0] != index) {
                 line->adj[1] = secondPointLinks[0];
-            } else if (secondPointLinks[1] > -1 && secondPointLinks[1] != outputLineIndex) {
+            } else if (secondPointLinks[1] > -1 && secondPointLinks[1] != index) {
                 line->adj[1] = secondPointLinks[1];
             } else {
                 line->adj[1] = -1;
@@ -1061,7 +1062,7 @@ void intersectModLineBuild(ObjDef* definition) {
         }
     }
     previousGroup = -1;
-    for (outputLineIndex = 0; outputLineIndex < gIntersectLineCount; outputLineIndex++) {
+    for (index = 0; index < gIntersectLineCount; index++) {
         s16 bestLineIndex = 0;
         IntersectLine* candidateLines;
         int candidateLineIndex = 0;
@@ -1078,9 +1079,9 @@ void intersectModLineBuild(ObjDef* definition) {
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
         }
         if (groupIndex != previousGroup) {
-            definition->intersectionSegmentRanges[groupIndex].first = outputLineIndex;
+            definition->intersectionSegmentRanges[groupIndex].first = index;
             if (previousGroup != -1) {
-                definition->intersectionSegmentRanges[previousGroup].end = outputLineIndex;
+                definition->intersectionSegmentRanges[previousGroup].end = index;
             }
             previousGroup = groupIndex;
         }
@@ -1088,12 +1089,12 @@ void intersectModLineBuild(ObjDef* definition) {
             int emittedLineIndex;
             s16 bestLine;
             bestLine = bestLineIndex;
-            for (emittedLineIndex = 0; emittedLineIndex < outputLineIndex; emittedLineIndex++) {
+            for (emittedLineIndex = 0; emittedLineIndex < index; emittedLineIndex++) {
                 if (definition->intersectionLines[emittedLineIndex].adj[0] == bestLine) {
-                    definition->intersectionLines[emittedLineIndex].adj[0] = outputLineIndex;
+                    definition->intersectionLines[emittedLineIndex].adj[0] = index;
                 }
                 if (definition->intersectionLines[emittedLineIndex].adj[1] == bestLine) {
-                    definition->intersectionLines[emittedLineIndex].adj[1] = outputLineIndex;
+                    definition->intersectionLines[emittedLineIndex].adj[1] = index;
                 }
             }
         }
@@ -1104,15 +1105,15 @@ void intersectModLineBuild(ObjDef* definition) {
                 line = &((IntersectLine*)gIntersectLinePool)[lineIndex];
                 if (line->kind != 0x14) {
                     if (bestLine == line->adj[0]) {
-                        line->adj[0] = outputLineIndex;
+                        line->adj[0] = index;
                     }
                     if (bestLine == ((IntersectLine*)gIntersectLinePool)[lineIndex].adj[1]) {
-                        ((IntersectLine*)gIntersectLinePool)[lineIndex].adj[1] = outputLineIndex;
+                        ((IntersectLine*)gIntersectLinePool)[lineIndex].adj[1] = index;
                     }
                 }
             }
         }
-        memcpy(&definition->intersectionLines[outputLineIndex], &((IntersectLine*)gIntersectLinePool)[bestLineIndex],
+        memcpy(&definition->intersectionLines[index], &((IntersectLine*)gIntersectLinePool)[bestLineIndex],
                sizeof(IntersectLine));
         ((IntersectLine*)gIntersectLinePool)[bestLineIndex].kind = 0x14;
     }

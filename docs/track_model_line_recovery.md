@@ -169,3 +169,36 @@ helpers, permuting the original counter declarations and adding casts to
 adjacency accesses do not improve this candidate. Removing the existing empty
 loop regresses code generation substantially, so it is retained. Coordinator
 pointer-walk experiments also leave its two store differences unchanged.
+
+## Exact model-line builder through the pool accessor (September 20)
+
+`intersectModLineBuild` now matches all **338 instructions / 1,352 bytes**.
+The private `trackGetPooledLine(index)` accessor returns a typed element of the
+existing integer-backed engine pool. The builder uses ordinary indexed access
+through this helper and shares one neutrally named `index` across endpoint,
+adjacency and output loops. These lifetimes do not overlap. No volatile access,
+new storage, compiler setting or forced-inline pragma is needed.
+
+The earlier shared-counter/indexed candidate already emitted the correct
+instruction sequence but exchanged the adjacency pointer and byte-offset
+registers. Comparing its LLDB capture with the accessor version aligns all
+338 instructions and maps 188 registers, with no partition conflicts or mapped
+interference-edge differences (four graph neighbors remain unmapped). The
+pointer changes from virtual GPR49/r4 to GPR72/r3, and the generated offset
+changes from GPR70/r3 to GPR69/r4. This recovers the retail colors. The accessor
+is inlined; no extra function body or call is emitted.
+
+The retained capture exactly reproduces the ordinary object, replays the
+230-node GPR graph and all 196 physical color choices, and reports zero retail
+differences. Against the previous retained source, only instruction 94 changes:
+`li r4,0` becomes retail's `mr r4,r5`. Every other function's bytes, every named
+symbol's location and every non-text byte is unchanged. Anonymous literal
+labels renumber, but their relocation offsets, types, addends and resolved
+destinations remain identical.
+
+All five input DOL hashes are checked. Each regional `all_source` and strict
+retail checksum gate passes, and all five track objects have SHA-256
+`ca5e66b31beb372b8424aee30297da96e2707163d94f7bf8d15173f0c6268c95`.
+The complete TU reaches **99.90503%**, with **26/30 exact functions**. It remains
+`NonMatching`; this is an exact function, not a claim that the entire TU links
+from source to retail bytes.
