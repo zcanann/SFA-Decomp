@@ -845,6 +845,7 @@ dolphin/si/SISamplingRate.c
 dolphin/thp/THPAudio.c
 dolphin/thp/THPDec.c
 dolphin/vi/vi.c
+main/acosf.c
 main/asset_load.c
 main/audio.c
 main/audio_sfx.c
@@ -853,6 +854,8 @@ main/boot_logo.c
 main/camera.c
 main/curves.c
 main/fileio.c
+main/math_80292d3c.c
+main/math_8029312c.c
 main/mm.c
 main/modelEngine.c
 main/modellight.c
@@ -863,8 +866,10 @@ main/pi_pathsearch.c
 main/pi_videoinit.c
 main/rand.c
 main/rcp_dolphin.c
+main/reciprocal.c
 main/shader_dolphin.c
 main/shadow_dolphin.c
+main/sincosf.c
 main/skystars.c
 main/subtitle.c
 main/textrender_drawbox.c
@@ -876,6 +881,8 @@ main/thp/dll_3b.c
 main/thp/dll_3e.c
 main/thp/n_options.c
 main/thp/picmenu.c
+main/trig.c
+main/trig_float_helpers.c
 main/vecmath.c
 main/vecmath_vec3.c
 main/voxmaps.c

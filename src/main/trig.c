@@ -61,7 +61,11 @@ float fsin16Approx(u16 angle) {
     }
 }
 
-float fsin16(int angle) {
+/* The old-style definitions narrow the promoted int arguments to u16.
+ * This preserves the caller ABI and retail two-byte parameter stack slots. */
+float fsin16(angle)
+u16 angle;
+{
     s16 scaledAngleBits = (s16)(int)(((u16)angle << 2) & 0x3FFFC);
     float x = fastCastS16ToFloat(&scaledAngleBits);
     float x2 = x * x;
@@ -87,7 +91,9 @@ float fsin16(int angle) {
     }
 }
 
-float fsin16Precise(int angle) {
+float fsin16Precise(angle)
+u16 angle;
+{
     s16 scaledAngleBits = (s16)(int)(((u16)angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&scaledAngleBits);
     float y2 = y * y;
@@ -117,9 +123,12 @@ float fsin16Precise(int angle) {
     }
 }
 
-float fsin16HighPrecision(int angle) {
+float fsin16HighPrecision(angle)
+u16 angle;
+{
     s16 scaledAngleBits = (s16)(int)(((u16)angle << 2) & 0x3FFFC);
-    double reducedAngle = *(const double*)&sTrigHighPrecisionAngleScale * fastCastS16ToFloat(&scaledAngleBits);
+    float reducedFloat = fastCastS16ToFloat(&scaledAngleBits);
+    double reducedAngle = *(const double*)&sTrigHighPrecisionAngleScale * reducedFloat;
     double reducedSquared = reducedAngle * reducedAngle;
 
     switch (angle & 0xE000) {
@@ -199,7 +208,9 @@ float fcos16Approx(u16 angle) {
     }
 }
 
-float fcos16(int angle) {
+float fcos16(angle)
+u16 angle;
+{
     s16 scaledAngleBits = (s16)(int)(((u16)angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&scaledAngleBits);
     float y2 = y * y;
@@ -225,7 +236,9 @@ float fcos16(int angle) {
     }
 }
 
-float fcos16Precise(int angle) {
+float fcos16Precise(angle)
+u16 angle;
+{
     s16 scaledAngleBits = (s16)(int)(((u16)angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&scaledAngleBits);
     float y2 = y * y;
@@ -255,9 +268,12 @@ float fcos16Precise(int angle) {
     }
 }
 
-float fcos16HighPrecision(int angle) {
+float fcos16HighPrecision(angle)
+u16 angle;
+{
     s16 scaledAngleBits = (s16)(int)(((u16)angle << 2) & 0x3FFFC);
-    double reducedAngle = *(const double*)&sTrigHighPrecisionAngleScale * fastCastS16ToFloat(&scaledAngleBits);
+    float reducedFloat = fastCastS16ToFloat(&scaledAngleBits);
+    double reducedAngle = *(const double*)&sTrigHighPrecisionAngleScale * reducedFloat;
     double reducedSquared = reducedAngle * reducedAngle;
 
     switch (angle & 0xE000) {

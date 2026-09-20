@@ -33,9 +33,10 @@ float sqrtf(float value) {
 
 float invSqrt(float value) {
     float reciprocalSqrt;
+    float halfValue;
 
     reciprocalSqrt = (float)__frsqrte(value);
-    value = 0.5f * value;
-    reciprocalSqrt = reciprocalSqrt * (1.5f - reciprocalSqrt * (value * reciprocalSqrt));
+    halfValue = 0.5f * value;
+    reciprocalSqrt = reciprocalSqrt * (1.5f - reciprocalSqrt * (halfValue * reciprocalSqrt));
     return reciprocalSqrt;
 }
