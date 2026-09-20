@@ -1,6 +1,34 @@
-# dll_80136a40 (debug display) — residual analysis
+# Debug display — matching progress
 
-## Current frontier (2026-09-07)
+The source is now `src/main/debug_display.c`, with its public API in
+`include/main/debug_display.h`. The old `dll_80136a40` name was an address-based
+placeholder, not an evidenced DLL identity. `debug_display` describes the debug
+log renderer, bitmap text, and fatal-error screen; it is not a recovered filename.
+
+## Current frontier (2026-09-20)
+
+GC/1.3 and the existing TU optimization profile are unchanged. Giving the
+crash-screen loop an explicit `u32 threadAddress` for its hexadecimal diagnostic
+fixes the cached font-block/self-address register exchange without adding any
+instructions. `errorThreadFunc` improves from 99.71614% to 99.95389%; only the two
+vertical-rule initializations remain reversed. The whole TU improves from
+99.76295% to 99.84670%, preserving all eleven exact functions and assigned data.
+The TU remains `NonMatching`.
+
+Current-profile probes of raster induction variables, coordinate-local lifetimes,
+and vertical-rule setup did not improve the other residuals without regressions.
+The rendering source is unchanged.
+
+Validation: the same improvement holds for EN, EN revision 1, JP, PAL, and PAL
+revision 1, with no per-function regressions. Only 33 instruction words change;
+section sizes, data contents, symbol offsets, and relocations are preserved
+(apart from the source filename and anonymous-symbol numbering). The 12 debug
+rectangle, framebuffer, and formatted-text behavior tests pass, as do
+`clang-format --dry-run --Werror`, EN `ninja all_source`, and the strict retail
+checksum. Regional progress regeneration was reviewed; unrelated inferred
+boundary/symbol changes were discarded, leaving only the five source-path moves.
+
+## Previous frontier (2026-09-07)
 
 The current TU uses GC/1.3 with `-opt nopeephole,noschedule`; strength reduction
 is enabled. After shared unsigned pixel writes and separator cursor recovery,

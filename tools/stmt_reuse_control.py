@@ -270,7 +270,7 @@ REAL_ROWS = [
     ("main/gametext.c", "gameTextWrapLines"),
     ("dlls/objects/229/229.c", "Shield_update"),
     ("main/pi_pathsearch.c", "pathSearchAddNeighbor"),
-    ("main/dll_80136a40.c", "debugPrintDrawRecord"),
+    ("main/debug_display.c", "debugPrintDrawRecord"),
 ]
 
 

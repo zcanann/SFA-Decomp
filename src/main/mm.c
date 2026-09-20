@@ -2,7 +2,7 @@
 #include "dolphin/os/OSReport.h"
 #include "dolphin/os.h"
 #include "types.h"
-#include "main/dll/dll_80136a40.h"
+#include "main/debug_display.h"
 #include "main/dll/savegame.h"
 #include "main/dll/dll_0017_savegame_api.h"
 #include "main/attract_movie_api.h"

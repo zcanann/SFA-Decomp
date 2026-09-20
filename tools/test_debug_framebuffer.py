@@ -25,7 +25,7 @@ class DebugFramebufferTests(unittest.TestCase):
         compiler = shutil.which("clang")
         if not compiler:
             raise unittest.SkipTest("clang is required for the source-body harness")
-        source = (ROOT / "src/main/dll_80136a40.c").read_text()
+        source = (ROOT / "src/main/debug_display.c").read_text()
         constants = "\n".join(re.findall(r"^#define DEBUG_(?:FRAMEBUFFER|GLYPH|TEXT|BACKDROP)_.*$", source, re.M))
         glyph = re.search(r"^void debugTextDrawToFrameBuffer\([^;\n]*\) \{.*?^\}", source, re.M | re.S).group()
         pixel = re.search(r"^static inline void debugDrawTextPixel\(.*?^\}", source, re.M | re.S).group()

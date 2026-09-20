@@ -61,7 +61,7 @@
 #include "main/camera.h"
 #include "dolphin/gx/GXDispList.h"
 #include "main/dll/FRONT/n_options.h"
-#include "main/dll/dll_80136a40.h"
+#include "main/debug_display.h"
 #include "track/intersect_depth_read_api.h"
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_hud_api.h"

@@ -1,7 +1,7 @@
 /*
- * dll_80136a40 - EN v1.0 retargeted system/debug leaves.
+ * Debug text rendering and fatal-error display.
  *
- * A grab-bag of low-level support code linked into this DLL:
+ * Shared debug-display services:
  *   - The fatal-error display thread (errorThreadFunc) plus its installer
  *     (errDisplayInstallHandlers / errDisplayHandler): OSSetErrorHandler hooks dump the
  *     exception type, DSISR/SRR0, the stack trace and a full GPR/SPR
@@ -15,7 +15,7 @@
  *     debugPrintDrawRecord (record interpreter: color/tab/newline/position tags).
  *     debugPrintfxy instead draws the bitmap font into both external framebuffers.
  */
-#include "main/dll/dll_80136a40.h"
+#include "main/debug_display.h"
 #include "main/texture.h"
 #include "track/intersect_api.h"
 #include "main/frame_timing.h"
@@ -687,10 +687,11 @@ void* errorThreadFunc(void* unused) {
         __GXAbortWaitPECopyDone();
         OSRestoreInterrupts(lvl);
         while (1) {
+            u32 threadAddress = (u32)errorThreadFunc;
             if (enableDebugText != 0) {
                 errDisplayFillBackdrop();
             }
-            debugPrintfxy(0x10, 0x15, messages->threadFormat, errorThreadFunc);
+            debugPrintfxy(0x10, 0x15, messages->threadFormat, threadAddress);
             debugPrintfxy(0x10, 0x2a, messages->exceptionLabel);
             switch (gErrExceptionType) {
             case 0:

@@ -22,7 +22,7 @@ class DebugRecordRectangleTests(unittest.TestCase):
         compiler = shutil.which("clang")
         if not compiler:
             raise unittest.SkipTest("clang is required for the source-body harness")
-        source = (ROOT / "src/main/dll_80136a40.c").read_text()
+        source = (ROOT / "src/main/debug_display.c").read_text()
         names = ("debugPrintXpos", "debugPrintYpos", "gDebugRectStartX", "gDebugRectStartY",
                  "gDebugDrawPass", "gDebugFixedWidthMode", "gDebugScaleX", "gDebugScaleY",
                  "gDebugScaleBiasX", "gDebugScaleBiasY", "gDebugTextColorR", "gDebugTextColorG",

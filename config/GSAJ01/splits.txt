@@ -1495,7 +1495,7 @@ dlls/objects/704/704.c:
 	.sbss       start:0x803DDAB0 end:0x803DDAF8
 	.sdata2     start:0x803E2408 end:0x803E24AC
 
-main/dll_80136a40.c:
+main/debug_display.c:
 	.text       start:0x80136A60 end:0x80138928
 	.data       start:0x8031D0C0 end:0x8031D404
 	.bss        start:0x803AA138 end:0x803AC548

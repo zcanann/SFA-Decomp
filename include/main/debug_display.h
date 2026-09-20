@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_DLL_80136A40_H_
-#define MAIN_DLL_DLL_80136A40_H_
+#ifndef MAIN_DEBUG_DISPLAY_H_
+#define MAIN_DEBUG_DISPLAY_H_
 
 #include "types.h"
 #include "main/debug.h"

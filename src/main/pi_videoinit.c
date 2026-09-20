@@ -8,7 +8,7 @@
 #include "main/shader_api.h"
 #include "dolphin/gx/GXStruct.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/dll/dll_80136a40.h"
+#include "main/debug_display.h"
 #include "main/gamebits.h"
 #include "game/objects/object.h"
 #include "sys/objects.h"
