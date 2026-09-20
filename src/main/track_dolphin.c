@@ -1125,11 +1125,38 @@ void intersectModLineBuild(ObjDef* definition) {
     gIntersectPointCount = 0;
 }
 
+static inline void trackSortLineOrder(void) {
+    int sortComplete;
+    int sortIndex;
+    s16 secondLineIndex;
+    s16 firstLineIndex;
+    s16* sortOrder;
+    IntersectLine* lines;
+    int sortByteOffset;
+
+    sortComplete = 0;
+    while (sortComplete == 0) {
+        sortComplete = 1;
+        for (sortIndex = 0, sortByteOffset = sortIndex; sortIndex < gIntersectLineCount - 1;
+             sortByteOffset += sizeof(s16), sortIndex++) {
+            int firstType;
+
+            lines = (IntersectLine*)gIntersectLinePool;
+            sortOrder = (s16*)(gIntersectLineSortOrderBuffer + sortByteOffset);
+            firstLineIndex = sortOrder[0];
+            firstType = (s8)lines[firstLineIndex].kind & 0x3f;
+            if (firstType < ((s8)lines[(secondLineIndex = sortOrder[1])].kind & 0x3f)) {
+                sortOrder[0] = secondLineIndex;
+                *(s16*)(gIntersectLineSortOrderBuffer + sortByteOffset + sizeof(s16)) = firstLineIndex;
+                sortComplete = 0;
+            }
+        }
+    }
+}
+
 void trackIntersect(void) {
     s16 counts[0x47];
     s16 edges[0x6a4 * 2];
-    s16* sourceCoord;
-    u8* linePoint;
     int sourceOffset;
     int blockIndex;
     int rowOffset;
@@ -1139,13 +1166,6 @@ void trackIntersect(void) {
     int layer;
     IntersectLine* line;
     int i;
-    int lineOffset;
-    u8* lineBytes;
-    s16* sortOrder;
-    s16 firstLine;
-    s16 secondLine;
-    int sortIndex;
-    int sortComplete;
     s16 previousType, segmentType;
     f32 pointX, pointY, pointZ;
     f32 blockX;
@@ -1189,7 +1209,6 @@ void trackIntersect(void) {
                     for (; sourceIndex < blk->hitCount; sourceOffset += sizeof(MapHitLine), sourceIndex++) {
                         if (gIntersectLineCount < 0x5dc) {
                             MapHitLine* sourceLine = (MapHitLine*)((u8*)blk->hits + sourceOffset);
-                            s16* sourcePoints = sourceLine->x;
                             IntersectLine* rec = (IntersectLine*)(gIntersectLinePool + gIntersectLineCount * 0x10);
                             f32 mapOriginX, mapOriginZ;
                             rec->end0 = sourceLine->endpointData[0];
@@ -1205,14 +1224,12 @@ void trackIntersect(void) {
                             mapOriginX = blockX + playerMapOffsetX;
                             mapOriginZ = blockZ + playerMapOffsetZ;
                             endpoint = 0;
-                            sourceCoord = sourcePoints;
-                            linePoint = (u8*)rec;
-                            for (; endpoint < 2; sourceCoord++, linePoint += 2, endpoint++) {
-                                pointX = mapOriginX + sourceCoord[0];
-                                pointY = sourceCoord[2];
-                                pointZ = sourceCoord[4] + mapOriginZ;
+                            for (; endpoint < 2; endpoint++) {
+                                pointX = mapOriginX + sourceLine->x[endpoint];
+                                pointY = sourceLine->y[endpoint];
+                                pointZ = sourceLine->z[endpoint] + mapOriginZ;
                                 if (gIntersectPointCount < 0x6a4) {
-                                    *(s16*)(linePoint + 4) =
+                                    rec->pt[endpoint] =
                                         insertPoint(gIntersectLineCount, edges, pointX, pointY, pointZ);
                                 }
                             }
@@ -1264,24 +1281,7 @@ void trackIntersect(void) {
         for (i = 0; i < gIntersectLineCount; i++) {
             *(s16*)(gIntersectLineSortOrderBuffer + i * 2) = i;
         }
-        sortComplete = 0;
-        while (sortComplete == 0) {
-            sortComplete = 1;
-            for (sortIndex = 0, lineOffset = sortIndex; sortIndex < gIntersectLineCount - 1;
-                 lineOffset += sizeof(s16), sortIndex++) {
-                int firstType;
-
-                lineBytes = (u8*)gIntersectLinePool;
-                sortOrder = (s16*)(gIntersectLineSortOrderBuffer + lineOffset);
-                firstLine = sortOrder[0];
-                firstType = (s8)lineBytes[firstLine * sizeof(IntersectLine) + 3] & 0x3f;
-                if (firstType < ((s8)lineBytes[(secondLine = sortOrder[1]) * sizeof(IntersectLine) + 3] & 0x3f)) {
-                    sortOrder[0] = secondLine;
-                    *(s16*)(gIntersectLineSortOrderBuffer + lineOffset + sizeof(s16)) = firstLine;
-                    sortComplete = 0;
-                }
-            }
-        }
+        trackSortLineOrder();
     }
 
     for (i = 0x46; i != 0; i--) {
@@ -1303,9 +1303,9 @@ void trackIntersect(void) {
     }
 
     previousType = -1;
-    for (i = 0, lineOffset = i; i < gIntersectLineCount; lineOffset += 2, i++) {
+    for (i = 0; i < gIntersectLineCount; i++) {
         segmentType =
-            (s16)((s8) * (u8*)(gIntersectLinePool + *(s16*)(gIntersectLineIndexTable + lineOffset) * 0x10 + 3) & 0x3f);
+            (s16)((s8)trackGetPooledLine(((s16*)gIntersectLineIndexTable)[i])->kind & 0x3f);
         if (segmentType >= 0x14) {
             segmentType = 1;
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);

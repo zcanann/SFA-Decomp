@@ -227,3 +227,49 @@ All five regional objdiff reports now give the TU **99.92069%**, with
 Only `trackIntersect` changes relative to the exact-model-builder commit;
 other function bytes, named symbols, data and resolved relocations are
 unchanged. The two builders' shared accessor has no emitted out-of-line body.
+
+## Exact sorting opcodes and typed endpoints (September 20)
+
+The private `trackSortLineOrder()` helper now owns the bubble-sort pass, while
+its identity-table initialization stays in the caller. The helper uses typed
+`IntersectLine.kind` accesses and keeps the evidenced table-base reload for
+the second swap store. Its declaration order matters to MWCC's register
+allocation. Inlining recovers retail's `mr r5,r10` at instruction 321 without
+volatile accesses or an extra call/body. Extracting the initialization too
+instead exchanges its counter and offset registers, so that broader helper
+was rejected.
+
+The final segment pass uses indexed lookup through `trackGetPooledLine` rather
+than a second manually maintained byte offset. This preserves its zero copy
+once the sorting offset has moved into the helper. The map-line import pass
+also uses the canonical `MapHitLine.x/y/z[endpoint]` and
+`IntersectLine.pt[endpoint]` arrays. The source-coordinate and destination-byte
+scratch cursors are unnecessary: removing both preserves every already-exact
+instruction and changes only the still-unmatched final-loop register choices.
+Removing the resulting unused declarations preserves the raw object.
+
+`trackIntersect` improves from **99.807014% to 99.91228%**. All 570 opcodes and
+non-register operands match retail. Seven instruction words still differ at
+indices 489, 490, 494, 513, 526, 527 and 529: the final index uses r26 instead
+of r23, and its generated offset uses r25 instead of r22. No function is
+promoted to exact by this change.
+
+The final LLDB capture equals the ordinary compile, aligns all 570
+instructions, and replays the 287-node graph and 253 color choices without
+high-degree removals. Retail's colors for virtual GPR60 and GPR68 satisfy that
+same graph with all other colors unchanged. A scratch replay of the candidate
+before endpoint cleanup could recover retail colors by moving its two final
+values earlier in simplification order. Actual dedicated locals at those
+positions recovered the physical registers, but replaced the required zero
+copy with a second `li`. The named/generated exclusion in the companion
+compiler's `GC13_ValueNumbering_CanNumber` explains that tradeoff. Those
+experiments are not retained. Volatile scalar casts did not fix it; volatile
+objects or reads added stack storage and instructions.
+
+All five input hashes, source builds and strict retail checksums pass. Regional
+objdiff reports agree at **99.92923% for the TU**, with **26/30 exact functions**.
+Each track object has SHA-256
+`cf5235c552236ef4632d0aa1cc5073ef03340de58a7bb6c82c4e8950fcb66b34`.
+Only `trackIntersect` changes relative to the preceding accessor commit;
+other function bytes, named-symbol layouts, non-text data and resolved
+relocations remain identical. The unit is still `NonMatching`.
