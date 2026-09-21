@@ -310,3 +310,136 @@ All five configured input DOL hashes, `ninja all_source` builds and strict
 retail checksums pass. The five regional track objects share the hash above;
 all five objdiff reports retain the scores and exact-function count stated
 above. The eight existing track tests pass. The unit remains `NonMatching`.
+
+## Value-numbering reuse checks (September 20 follow-up)
+
+The sibling MWCC project now reconstructs the complete available-expression
+scan at 0x00508530 (267 bytes) and operand comparator at 0x00508640
+(397 bytes), in `ValueNumberingReuse.c`. Its original/native oracle passes
+5,504 cases with no dependency adapters: the original scan calls the original
+comparator. It checks source-operand mutation as well as the result and selected
+available operand. The durable fixture includes the verified compiler hash,
+offline Docker command and image identity.
+
+The scan requires identical opcode bucket, flags and operand count and an
+available result. It prefers an available operand with the original result
+register, falling back to the list head. Commutative flag 0x2000 permits a
+second comparison with operands 1/2 exchanged; success retains that exchange,
+and failure restores it. Source registers compare saved value numbers, with
+memory-version checks for flags 0x20002. These routines do not bypass the
+previously recovered named-LI exclusion in `CanNumber`.
+
+The prediction was that retaining a compiler-generated offset through a scoped
+index expression might preserve reuse while moving the scalar's allocation.
+Twenty-four variants tested ordinary/long/unsigned counters, two declaration
+positions, and multiply/shift/add forms. Multiplication and shift retained the
+extra LI instead of retail's MR; repeated addition lost a counter update.
+None improves the retained source. Removing the imported empty loop is also
+not byte-neutral: it removes nineteen emitted instructions. It stays intact.
+
+Thirty-six map-counter scope/type/initializer variants retained seven residual
+register differences or introduced additional grid-loop differences. Thirty-six
+coherent parameter-order permutations of the dynamic-slot inline helpers also
+retained `trackGetLineIntersect`'s seventeen register differences. None is
+retained. This follow-up adds reusable compiler understanding, not another game
+match: the TU remains 27/30 exact at 99.94134%, including the exact block-triangle
+collector recovered in the preceding step. The two final `trackIntersect`
+values still need different object allocation/lifetime structure; the reuse
+scan itself supplies no alternate eligibility rule for the near-match source.
+
+### Dynamic-slot narrowing capture
+
+A scratch LLDB entry hook at 0x004e02a0 captures all 21 narrow conversions in
+`trackGetLineIntersect` for both the retained K&R-u8 helper and the int-parameter
+candidate. Each traced object equals its ordinary compilation. Both reach the
+same caller multiset. The important conversion returns to 0x0044f766 (call at
+0x0044f761): the retained source passes requested register 62 before the
+allocation loop's cooldown load, whereas the int candidate passes requested
+register 0 after that load. Only the low signed short of this argument is
+semantic; high stack bits are not part of the requested-register value.
+
+Thirty-six helper-local byte initializations, plus ten caller-local variants,
+confirm the timing prediction: int helpers with an early byte local regain
+414 instructions, but retain the same seventeen register differences. Passing
+a separate byte local into the old u8 helper regresses more registers. None
+is retained. The cast-lowering path at 0x0044f6b0--0x0044f786 is a statically
+inspected portion of a larger routine, not a newly reconstructed function.
+The two complete compiler functions added in this follow-up remain the
+value-numbering scan and comparator described above.
+
+The retained game object remains byte-identical to the preceding exact-triangle
+result. EN `all_source` and the strict checksum target pass. The sibling MWCC
+native tests, 32-bit layout checks and aggregate `ninja check` pass as well.
+
+
+## Complete cast lowering (September 21 follow-up)
+
+The sibling MWCC reconstruction now includes the entire 2,585-byte cast handler
+at 0x0044f1e0--0x0044fbf8 in `CastExpression.c`, superseding the partial static
+inspection above. The binary's diagnostic anchor names `InstrSelection.c`;
+function and helper names remain inferred. Its hardened offline original/native
+oracle passes 9,120 cases and visits 808 original instructions. Child evaluation,
+conversion primitives, allocation and instruction emission are explicit adapters;
+this validates the handler's decisions, dependency arguments, event order and
+result, not a complete compiler pipeline. The durable fixture is
+`../mwcc/docs/fixtures/gc13_cast_expression_20260921.json`.
+
+The recovered integer narrowing branch always normalizes the destination type
+when its width is smaller than the source or less than four bytes. This explains
+the LLDB capture: moving the conversion into a helper-local byte moves its timing
+but does not remove the narrowed value. Pointer-source conversion has a different
+path, but the slot is an integer identifier, so pointer laundering is not an
+acceptable source reconstruction.
+
+The remaining line-query difference is not solely register coloring. At aligned
+instruction 228, retail stores the original slot register (`stb r31,21(r4)`),
+whereas the retained source stores the narrowed register (`stb r3,21(r5)`). The
+extra live narrowed value also changes the allocation-loop counter and pointer
+registers. An integer helper parameter restores those loop registers but adds a
+narrowing instruction immediately before the byte store.
+
+Twenty additional ANSI public-parameter probes cover u8, s8, u16, s16 and unsigned
+int, each with K&R/ANSI byte/integer allocation helpers. None improves the retained
+function. Byte parameters change other instructions and register lifetimes;
+unsigned int retains the existing outcome. Earlier helper-prototype and full-byte
+bitfield probes likewise supplied no acceptable match. Seven file-static storage
+variants for the height-query buffers did not repair the BSS ownership changes
+caused by early descriptor initialization. None of these probes is retained.
+
+No new game function becomes exact in this follow-up. The retained track object
+remains the preceding exact-triangle result: 27/30 exact functions, 99.94134% TU
+match. The sibling native tests, strict C90 32-bit layout compilation and aggregate
+`ninja check` pass. EN `ninja all_source` and the strict retail target pass.
+
+
+### API and lifetime checks after cast recovery
+
+A reduced GC/1.3 probe using the track TU's exact compiler command confirms that
+`void probeStore(unsigned char* p, int v) { *p = v; }` emits `clrlwi r0,r4,24;
+stb r0,0(r3); blr`. A signed destination emits `extsb` instead. Explicitly
+casting the value, casting the assignment to void, and using a comma expression
+do not remove the conversion. The extra narrowing therefore does not require
+an inlined allocation helper or the surrounding track loop.
+
+Further rejected source families cover the public/helper parameter types together,
+old-style helper prototypes, register/const parameter qualifiers, signed byte
+storage, full-byte bitfields, and a directly written allocation loop. None gives
+retail's complete opcode/register sequence. An unsigned-byte public parameter
+moves normalization before the object loop and removes the two per-iteration
+masks; this is not just a different coloring of the target. No type, prototype,
+bitfield, or control-flow experiment is retained.
+
+For `trackIntersect`, 42 counter-lifetime variants either retain the same seven
+register differences or add another instruction mismatch. A fresh LLDB capture
+of a dedicated counter shared by the segment-table clear and final range loop
+still identifies nodes 48/49 as `rowOffset`/`blockIndex` and nodes 59/67 as the
+anonymous `@923`/`@915`. Its ordinary and traced object hashes both equal the
+retained object:
+`5c353e528455ac0a2bbba4f84c61881d13c8fa8fa2be6b6ba3c5a2584522a677`.
+The source counter name/declaration is not controlling these final identities.
+Fully indexing the map grid loses two or three instructions; extracting a
+per-layer import helper loses one and changes many registers. These are also
+rejected. Scratch captures and probes remain under `build/track_finish/`.
+
+This pass produces no additional exact function and adds no volatile access.
+The retained object and its 27/30 exact functions remain unchanged.
