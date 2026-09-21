@@ -12,6 +12,10 @@ name: main
 # Retain the priority-sort table even though code addresses it through the
 # containing vidListNodes storage rather than by this symbol directly.
 force_active:
+  # Retail retains this unreferenced ObjSeq API entry (40 bytes).
+  - ObjSeq_SetCameraTransformOverride
+  # Retain the initialized zero word before the default color.
+  - lbl_803DB744
   # Unreferenced initialized words retained by retail in gametext_data.c.
   # Dropping them shifts the following small-data globals despite exact objdiff.
   - lbl_803DB3DC

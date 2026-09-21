@@ -2641,6 +2641,8 @@ u8 doEdges;
     int dzoff;
     int t0;
     int normalComponentIndex;
+    int layerCount;
+    int columnCount;
     int count;
     int x;
     int j;
@@ -2685,17 +2687,16 @@ u8 doEdges;
     descp = (int*)gTrackGridOrigin;
     dw = descp;
     do {
-        for (gx = gx0, p1 = cw, q1 = dw; gx <= gx1 && count < 16; gx++) {
-            for (gz = gz0, p2 = p1, q2 = q1; gz <= gz1 && count < 16; gz++) {
+        for (gx = gx0, p1 = cw, q1 = dw, layerCount = 0; gx <= gx1 && count < 16; gx++) {
+            for (gz = gz0, p2 = &p1[layerCount], q2 = &q1[layerCount * 3], columnCount = 0; gz <= gz1 && count < 16;
+                 gz++) {
                 MapBlockData* gridBlock = mapGetBlockAtPos(gx, gz, layer);
                 if (gridBlock != NULL) {
-                    *p2 = gridBlock;
-                    q2[0] = gx * 0x280;
-                    q2[2] = gz * 0x280;
-                    p2++;
-                    q2 += 3;
-                    p1++;
-                    q1 += 3;
+                    p2[columnCount] = gridBlock;
+                    q2[columnCount * 3] = gx * 0x280;
+                    q2[columnCount * 3 + 2] = gz * 0x280;
+                    columnCount++;
+                    layerCount++;
                     cw++;
                     dw += 3;
                     count++;

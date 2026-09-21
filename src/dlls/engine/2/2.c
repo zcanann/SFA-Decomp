@@ -510,9 +510,14 @@ typedef struct ObjSeqBgCmd {
 
 typedef struct ObjSeqPendingCmd0B {
     u8* cmd;
-    s16 reps;
+    s16 commandCount;
     s16 frame;
 } ObjSeqPendingCmd0B;
+
+STATIC_ASSERT(sizeof(ObjSeqPendingCmd0B) == 8);
+STATIC_ASSERT(offsetof(ObjSeqPendingCmd0B, cmd) == 0);
+STATIC_ASSERT(offsetof(ObjSeqPendingCmd0B, commandCount) == 4);
+STATIC_ASSERT(offsetof(ObjSeqPendingCmd0B, frame) == 6);
 
 typedef struct RomCurveNode {
     u8 pad00[0x08];
@@ -702,7 +707,7 @@ extern char sObjSequenceMissingObjectFormat[];
 extern s8 gObjSeqJumpLatch[];
 int objSeqExecCmd06(GameObject* obj, GameObject* sourceObj, ObjSeqState* seq, int cmd, s8 flag);
 
-extern ObjSeqBgCmd lbl_8039944C[];
+extern ObjSeqPendingCmd0B lbl_8039944C[];
 int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmd, s8 flags, void* out);
 void* ObjSeq_ToggleCommand3Target(GameObject* obj, ObjSeqState* seq, ObjSeqPlacement* placement);
 
@@ -714,7 +719,8 @@ typedef struct CamMode {
 /* Keep these definitions in retail BSS order; MWCC aligns the 85-byte tables. */
 u8 gObjSeqRuntimeBuffer[0x2A80];
 ObjSeqBgRotationCmd gObjSeqBgCmds[0x1E];
-ObjSeqBgCmd lbl_8039944C[0xA0 / sizeof(ObjSeqBgCmd)];
+ObjSeqPendingCmd0B lbl_8039944C[0x14];
+STATIC_ASSERT(sizeof(lbl_8039944C) == 0xA0);
 f32 objSeqOverridePos[0x1EE];
 u8 gObjSeqSlotMarks[OBJSEQ_SLOT_COUNT];
 int gObjSeqSlotObjectIds[OBJSEQ_SLOT_COUNT];
@@ -1432,30 +1438,32 @@ void* ObjSeq_FindTargetObject(GameObject* obj) {
 #define ObjSeq_GetObjects(unused, count) (ObjList_GetObjects((unused), (count)))
 
 void ObjSeq_runBgCmds(void) {
-    int ok;
-    int keepCount;
-    GameObject** objects;
-    int matchCount;
-    GameObject** objPtr;
-    u8* base;
-    ObjSeqRunBgState* state;
-    ObjSeqQueuedBgCmd* cmd;
-    int count;
-    int i;
     int index;
     int xrot;
     ObjSeqPlacement* model;
     ObjSeqState* seqp;
-    GameObject* candidate;
-    GameObject** mp;
     int n;
+    GameObject* candidate;
+    int count;
+    int matchCount;
+    int i;
+    GameObject** mp;
+    int ok;
     s8* pending;
+    int keepCount;
     u8* results;
     u8* actions;
+    GameObject** objects;
     f32* dists;
     f32* frames;
     u8* marks;
     s8 frames8;
+    ObjSeqRunBgState* state;
+    u8* base;
+    struct {
+        ObjSeqQueuedBgCmd* cmd;
+        GameObject** objPtr;
+    } cursor;
     GameObject* matched[0x28];
     ObjSeqQueuedBgCmd keepBuf[0x1e];
     int objectCount;
@@ -1500,21 +1508,22 @@ void ObjSeq_runBgCmds(void) {
 
     count = gObjSeqBgCmdCount;
     keepCount = 0;
-    cmd = (ObjSeqQueuedBgCmd*)(base + 0x2a80) + count;
+    cursor.objPtr = objects;
+    cursor.cmd = (ObjSeqQueuedBgCmd*)(base + 0x2a80) + count;
     while (count > 0) {
-        cmd--;
+        cursor.cmd--;
         count--;
-        index = cmd->index;
-        xrot = cmd->xrot;
+        index = cursor.cmd->index;
+        xrot = cursor.cmd->xrot;
         i = 0;
         state->boolFlags[index] = 0;
         state->conditionFlags[index] = 0;
         state->slotStates[index] = 0;
         matchCount = 0;
         ok = 1;
-        objPtr = objects;
+        cursor.objPtr = objects;
         for (; i < objectCount; i++) {
-            candidate = *objPtr;
+            candidate = *cursor.objPtr;
             if (candidate->anim.classId == 0x10) {
                 model = (ObjSeqPlacement*)candidate->anim.placementData;
                 seqp = (ObjSeqState*)candidate->extra;
@@ -1530,7 +1539,7 @@ void ObjSeq_runBgCmds(void) {
                     }
                 }
             }
-            objPtr++;
+            cursor.objPtr++;
         }
 
         n = 0;
@@ -3237,6 +3246,7 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
     s8* opcodeByte;
     s16* sfxTimers;
     ObjSeqState* sfxState;
+    int pendingIndex;
     int opcode;
     int sub;
     int restart;
@@ -3350,10 +3360,14 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
         activeObj->anim.activeMove = -1;
         break;
     case SEQACT_CONDITION:
-        if (doUpdate != 0 && cmd->param > 0 && gObjSeqPendingCmd0BCount < 0x14) {
-            ((ObjSeqPendingCmd0B*)(base + 0x2b34))[gObjSeqPendingCmd0BCount].cmd = (u8*)(cmd + 1);
-            ((ObjSeqPendingCmd0B*)(base + 0x2b34))[gObjSeqPendingCmd0BCount].frame = ((ObjSeqState*)seq)->curFrame;
-            ((ObjSeqPendingCmd0B*)(base + 0x2b34))[gObjSeqPendingCmd0BCount++].reps = cmd->param;
+        if (doUpdate != 0 && cmd->param > 0 && (pendingIndex = gObjSeqPendingCmd0BCount) < 0x14) {
+            ((u8**)(base + 0x2b34))[pendingIndex * (sizeof(ObjSeqPendingCmd0B) / sizeof(u8*))] = (u8*)(cmd + 1);
+            ((s16*)(base + (0x2b34 + offsetof(ObjSeqPendingCmd0B,
+                                              frame))))[pendingIndex * (sizeof(ObjSeqPendingCmd0B) / sizeof(s16))] =
+                ((ObjSeqState*)seq)->curFrame;
+            ((s16*)(base + (0x2b34 + offsetof(ObjSeqPendingCmd0B,
+                                              commandCount))))[(gObjSeqPendingCmd0BCount++) *
+                                                               (sizeof(ObjSeqPendingCmd0B) / sizeof(s16))] = cmd->param;
         }
         ((ObjSeqState*)seq)->cmdCursor += cmd->param;
         break;
@@ -3729,7 +3743,7 @@ void ObjSeq_RebuildCurveStateToFrame(GameObject* obj, GameObject* seqObj, ObjSeq
     f32 prevX;
     f32 prevZ;
     int opcode;
-    ObjSeqBgCmd* entry;
+    ObjSeqPendingCmd0B* entry;
 
     ObjSeqState* state = seq;
 
@@ -3897,7 +3911,7 @@ void ObjSeq_RebuildCurveStateToFrame(GameObject* obj, GameObject* seqObj, ObjSeq
         }
 
         for (i = 0; i < gObjSeqPendingCmd0BCount; i++) {
-            if (seqDoSubCmd0B(obj, seqObj, seq, (u8*)entry[i].object, entry[i].flags, entry[i].param, 1, 0) != 0) {
+            if (seqDoSubCmd0B(obj, seqObj, seq, entry[i].cmd, entry[i].frame, entry[i].commandCount, 1, 0) != 0) {
                 i = gObjSeqPendingCmd0BCount;
             }
             {
@@ -4330,7 +4344,8 @@ static inline int ObjSeq_CheckConditionOpcode(ObjSeqState* state, GameObject* ob
     case 0x19:
         cb = state->conditionCallback;
         if (cb != NULL) {
-            return cb(state->callbackContext, (u8*)obj);
+            int result = cb(state->callbackContext, (u8*)obj, conditionOpcode);
+            return result;
         }
         break;
     case 0x1a:
@@ -4350,7 +4365,7 @@ int ObjSeq_update(GameObject* obj, f32 t) {
     ObjSeqState* seq;
     ObjSeqState* state;
     u8* p;
-    ObjSeqBgCmd* entry;
+    ObjSeqPendingCmd0B* entry;
     int runs;
     int step;
     int slot;
@@ -4362,6 +4377,7 @@ int ObjSeq_update(GameObject* obj, f32 t) {
     int found;
     int pressed;
     int restart;
+    u8 controlFlags;
     s8 rewindStep;
     u8 conditionOpcode;
     int aInt;
@@ -4656,11 +4672,12 @@ int ObjSeq_update(GameObject* obj, f32 t) {
             objCallSeqFn(activeObj, obj, seq, gObjSeqPreviousSlotResults[state->slot]);
         }
 
-        if (state->sequenceControlFlags != 0) {
+        controlFlags = state->sequenceControlFlags;
+        if (controlFlags != 0) {
             restart = 0;
-            if ((state->sequenceControlFlags & OBJSEQ_CONTROL_RESTART_AT_SAVED_FRAME) != 0) {
+            if ((controlFlags & OBJSEQ_CONTROL_RESTART_AT_SAVED_FRAME) != 0) {
                 restart = 1;
-                state->sequenceControlFlags = state->sequenceControlFlags & ~OBJSEQ_CONTROL_RESTART_AT_SAVED_FRAME;
+                state->sequenceControlFlags = controlFlags & ~OBJSEQ_CONTROL_RESTART_AT_SAVED_FRAME;
                 state->curFrame = (s16)state->savedFrame;
                 state->prevFrame = state->curFrame;
             }
@@ -4684,9 +4701,8 @@ int ObjSeq_update(GameObject* obj, f32 t) {
         objSeqDoBgCmds0D(seq, activeObj, 0);
 
         for (k = 0; k < gObjSeqPendingCmd0BCount; k++) {
-            entry = (ObjSeqBgCmd*)(base + k * 8);
-            entry = (ObjSeqBgCmd*)((int)entry + 0x2b34);
-            if (seqDoSubCmd0B(obj, activeObj, seq, (u8*)entry->object, entry->flags, entry->param, 0, 0) != 0) {
+            entry = (ObjSeqPendingCmd0B*)(base + 0x2b34) + k;
+            if (seqDoSubCmd0B(obj, activeObj, seq, entry->cmd, entry->frame, entry->commandCount, 0, 0) != 0) {
                 k = gObjSeqPendingCmd0BCount;
             }
             {
@@ -4721,7 +4737,7 @@ int ObjSeq_update(GameObject* obj, f32 t) {
                 gObjSeqSlotMarks[state->slot] = 2;
                 ((f32*)(base + 0x3740))[state->slot] = (f32)state->curFrame;
             }
-            if (-1.0f == ((f32*)(base + 0x3740))[slot = state->slot]) {
+            if (-1.0f == ((f32*)(base + 0x3740))[slot = (s8)(u8)state->slot]) {
                 if (gObjSeqTimedStreamSlot == slot) {
                     fval = gObjSeqStreamRemainingTime;
                     aInt = fval;

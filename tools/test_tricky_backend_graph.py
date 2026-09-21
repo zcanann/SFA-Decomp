@@ -2,7 +2,7 @@ import copy
 import struct
 import unittest
 
-from tricky_backend_graph import (capture_coalescing_policy, capture_color_policy, capture_graph, capture_simplification_policy, capture_symbol_objects, capture_storage_modes, capture_section_records, coloring_order, describe_node,
+from tricky_backend_graph import (capture_coalescing_policy, capture_color_policy, capture_graph, capture_register_objects, capture_simplification_policy, capture_symbol_objects, capture_storage_modes, capture_section_records, coloring_order, describe_node,
                                  replay_coloring, replay_simplification, validate_graph, validate_rewrite)
 
 
@@ -38,6 +38,28 @@ def simplification_fixture(removal_order, weights=(10, 5)):
 
 
 class BackendGraphTests(unittest.TestCase):
+    def test_register_objects_preserve_aliases_and_distinct_same_named_objects(self):
+        memory = bytearray(1024)
+        struct.pack_into("<II", memory, 110, 300, 0x1234)
+        struct.pack_into("<II", memory, 210, 300, 0x5678)
+        memory[310:315] = b"item\0"
+        graph = [{"prefix": [0, address]} for address in [0, 100, 100, 200]]
+        read = lambda address, size: memory[address:address + size]
+        self.assertEqual(capture_register_objects(read, graph), {
+            "100": {"name": "item", "type": 0x1234, "registers": [1, 2]},
+            "200": {"name": "item", "type": 0x5678, "registers": [3]},
+        })
+        struct.pack_into("<I", memory, 110, 0)
+        self.assertEqual(capture_register_objects(read, graph)["100"]["name"], "")
+        with self.assertRaisesRegex(ValueError, "short register object read"):
+            capture_register_objects(lambda address, size: b"", graph)
+        struct.pack_into("<I", memory, 110, 300)
+        memory[310:566] = b"x" * 256
+        with self.assertRaisesRegex(ValueError, "unterminated register object name"):
+            capture_register_objects(read, graph)
+        with self.assertRaisesRegex(ValueError, "short register object name read"):
+            capture_register_objects(lambda address, size: read(address, size) if size == 8 else b"", graph)
+
     def test_section_records_keep_both_categories_and_read_owner_base(self):
         records = {0x1e6a9c: struct.pack("<I", 0x100), 0x1e7102: b"\x01",
                    0x314: struct.pack("<I", 0x400), 0x400: struct.pack("<I", 0x500),
@@ -105,6 +127,17 @@ class BackendGraphTests(unittest.TestCase):
         })
         with self.assertRaisesRegex(ValueError, "short symbolic object read"):
             capture_symbol_objects(lambda a, n: b"", snapshot)
+
+    def test_allocator_objects_include_register_only_locals(self):
+        memory = bytearray(0x300)
+        memory[0x102] = 1
+        struct.pack_into("<I", memory, 0x10a, 0x200)
+        memory[0x20a:0x210] = b"count\0"
+        nodes = [{"prefix": [0, address]} for address in (0, 0x100, 0x100)]
+        snapshot = {"blocks": [], "coloring_graph": nodes}
+        result = capture_symbol_objects(lambda a, n: memory[a:a + n], snapshot)
+        self.assertEqual(result, {"256": {"name": "count", "kind": 1,
+                                         "section": 0, "flags": 0, "category": 0}})
 
     def test_coalescing_policy_preserves_named_and_inline_register_boundary(self):
         parents = list(range(80))

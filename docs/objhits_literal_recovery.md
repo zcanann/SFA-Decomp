@@ -285,6 +285,10 @@ the active source and canonical header pass the formatter check.
 
 ## Swept-pair distance and typed track-contact points
 
+**Matching update (2026-09-21):** `ObjHits_DetectObjectPair` now matches 100%
+in all five regions. See [the completion report](objhits_detect_object_pair_matching.md).
+The six-register-operand plateau below describes the earlier reconstruction.
+
 `ObjHits_SweepPointDistance` isolates the distance from object B to a projected
 point on object A's movement segment. The caller still checks the squared
 movement threshold and the projection's inclusive `[0, 1]` bounds before using
@@ -326,6 +330,10 @@ pass. Formatting is a separate commit and preserves the semantic object byte
 for byte; the active source and canonical header pass the formatter check.
 
 ## Canonical hit-volume query records
+
+**Matching update (2026-09-21):** This function now matches 100% in all five
+regions. See [CheckHitVolumes matching](objhits_check_hit_volumes_matching.md).
+The scores below describe the earlier typing-only change.
 
 `ObjHits_CheckHitVolumes` now uses `ObjModelHitSphere` throughout its active
 sphere arrays, previous-frame array, walking cursors, and selected contact
@@ -391,3 +399,115 @@ relocations are unchanged; this recovery does not add an exact function.
 The active TU and all three owning headers pass the formatter check. Only
 the reaction-state header needs formatting, committed separately. Both
 `ninja all_source` and the strict retail checksum build pass.
+
+## Final code completion and remaining pool order (2026-09-21)
+
+All 54 functions are now exact: 25,988 / 25,988 EN code bytes. The final
+function was `ObjHits_CheckObjectHitVolumes`; see
+`objhits_check_object_hit_volumes_matching.md`. Every allocated data section
+except `.sdata2` also matches. The unit remains `NonMatching`.
+
+The remaining pool discrepancy is placement, not missing values. Retail
+starts with `0.0f`, `2.0f`, `1.0f`, `0.1f`, then `1e-6f`; reconstructed
+source starts with `0.0f`, `1.0f`, `1e-6f`. Source emits `0.1f` at offset
+72 for the track-contact fallback radius and `2.0f` at offset 84 for the
+priority tick delta. Retail places them at offsets 12 and 4 respectively.
+Both sections occupy 88 bytes, including alignment padding.
+
+The existing GC/1.3 `FloatConstantPool.c` reconstruction in `../mwcc`
+(`GC13_InternFloatConstant`, binary address `0x004dee70`) interns constants
+by exact type identity and payload and publishes new entries when lowered.
+Merely declaring an inline clamp helper earlier does not move its constant.
+The following full-TU experiments were rejected and are not retained:
+
+- Expressing doubled radius or point coordinates as multiplication by
+  `2.0f` moves that literal earlier but introduces loads and multiply
+  instructions, regressing both already-exact skeleton collectors.
+- Named static const scalars are folded into the same late anonymous pool
+  entries. External const definitions add storage while their consumers
+  still use anonymous copies.
+- An earlier inline fallback-radius clamp preserves function bodies but
+  does not move `0.1f`. A non-inline helper moves it while adding a function
+  and changing track-contact code.
+
+No compiler override, fabricated constant array, section directive or
+TU split was introduced. These probes leave production source and the
+ordinary object byte-identical to the completed-function baseline, SHA-256
+`f820dbfc84359d46552f7fc4e41dadbf04228fd8a9f6d201d2b021a23168b689`.
+The remaining task is recovering the source/compiler mechanism that emitted
+these constants early without adding runtime instructions or duplicate data.
+
+## Called-helper pool experiment (2026-09-21)
+
+The stronger precedent is `docs/newclouds_source_recovery.md` and
+`docs/object_matching.md`: ordinary called static helpers can introduce
+constants in their emitted bodies, inline into callers, and then disappear
+through linker garbage collection. This differs from explicit inline
+helpers, which do not emit the early bodies under the current profile.
+
+An EN experiment reproduces the **complete 88-byte retail pool** using four
+called operations, defined in this order:
+
+1. Clear a vector's three components, replacing the repeated `pj.accum` and
+   `normAccum` zero stores in both skeleton-response functions.
+2. Allocate the four sphere scratch buffers and initialize the hit tick delta
+   to two, extracted from `ObjHits_InitWorkBuffers`.
+3. Compute a reciprocal, used for joint length and distance reciprocals in
+   both skeleton collectors.
+4. Clamp the fallback radius to 0.1, called from track-contact selection.
+
+With ordinary automatic inlining, every retail function except
+`ObjHits_CheckObjectHitVolumes` stays byte-identical. The 53 exact bodies
+include the initializer: keeping its active-volume reset block in the caller
+avoids the earlier extraction's missing zero-load instruction. All four new
+helper bodies are removed by the linker. An isolated link verifies that the
+**entire linked `.sdata2` section** equals the all-retail control. That control
+DOL also equals the hash-verified EN original.
+
+This candidate is not retained. Automatic inlining removes the two calls to
+the empty `ObjHits_OnPlayerHitVolumeMiss` function and changes the surrounding
+allocation; `ObjHits_CheckObjectHitVolumes` falls to 86.33046%. The retail calls
+are independent evidence against simply removing the existing `noauto`
+restriction. Explicit inline helpers with `noauto` preserve the calls but
+lose the early pool contribution. An inline dispatch wrapper does not protect
+the calls from automatic inlining. Reversing source definitions with deferred
+emission preserves the original function bodies under `noauto`, but leaves
+the original pool mismatch; enabling auto still removes the miss calls.
+
+The result narrows the unresolved issue to reconciling helper emission with
+these retained empty-function calls. No call casts, volatile accesses, fake
+bodies, no-inline annotations, section forcing or unused seed functions were
+introduced to bypass that evidence. The production source, object and compiler
+profile remain unchanged. Local diagnostic artifacts are under
+`build/objhits_pool/`; the strongest candidate is `initgroup_52/objhits.c`,
+with its isolated link under `link/`.
+
+### Stub and source-order follow-up
+
+The Dinosaur Planet reference `src/objhits.c` supplies a useful independent
+lineage clue: `func_80028DCC` makes the same two player-miss calls, and its
+callee `func_8002949C` contains substantial animation-sampling and collision
+work. Its return type is `void`. This supports identifying the SFA four-byte
+stub as a disabled former operation; it does not establish how the original
+SFA source prevented inlining. No legacy algorithm or unused locals were
+copied into the empty SFA body.
+
+Additional diagnostic probes leave the conflict unresolved:
+
+- An explicit `return;` and casts discarding all unused parameters still let
+  automatic inlining erase the calls.
+- Alternative inferred return types also fail to retain the calls. The
+  canonical `void` declaration is unchanged.
+- Inline declaration/definition ordering does not give the desired combination
+  of early out-of-line helper emission and explicit inlining under `noauto`.
+- Late named scalar definitions with reverse/deferred compilation introduce
+  duplicate zero storage and regress eight functions. They are not a valid
+  replacement for anonymous literals.
+- The configured original-artifact source-leak inventory has no `objhits`
+  match. The reference's nonempty routine is lineage evidence only, not a
+  recovered SFA body or permission to invent unreachable code.
+
+No new matching credit is claimed from these probes. Source, ordinary object,
+canonical declarations, TU boundaries and production flags are unchanged.
+The unresolved compiler/source distinction is specifically the retention of
+ordinary calls to the empty hook alongside early helper-emitted literals.

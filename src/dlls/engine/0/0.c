@@ -2831,7 +2831,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
                 icon = 0x5A;
                 break;
             }
-            drawTexture(((void**)(base + 0x1C0))[icon], 575.0f, 102.0f, (u8)(fade* gCMenuHighlightFade / 0xFF), 0x100);
+            drawTexture(((void**)(base + 0x1C0))[icon], 575.0f, 102.0f, (u8)(fade * gCMenuHighlightFade / 0xFF), 0x100);
         }
     }
     if (hudYButtonItemIconTexture != NULL && gHudYButtonItemTextureCache != yButtonItemTextureId) {
@@ -3104,25 +3104,32 @@ int cMenuCountAvailableEntries(CMenuItemDef* items, s8 useTricky) {
 #define CMENU_ITEM_SLOT_COUNT 64
 
 int cMenuSetItems(CMenuItemDef* itemsArg, char useTricky) {
-    const CMenuItemDef* itemTable = itemsArg;
-    s16* textIds;
     const CMenuItemDef* item;
-    int halfwordOffset[1];
-    s16* textureIds;
-    s16* previousTextureId;
     int itemCount;
-    int* ownedBits;
+    s16* previousTextureId;
+    s16* textureIds;
     CMenuHud* hud;
-    u8* itemFlags;
     int wordOffset;
     s16* textureIdCursor;
     s16* previousTextureIdCursor;
     s16* textIdCursor;
+    s16* nextTextureId;
+    s16* auxiliaryValues;
+    u8* auxiliaryBytes;
+    u8* closeModes;
+    u8* enabledFlags;
+    int actionMask;
+    int yButtonAction;
+    u8* itemFlags;
     u8* itemFlagCursor;
     int ownedState;
     Texture** textureCursor;
+    s32 itemMask;
+    int* ownedBits;
+    s16* textIds;
     Texture** textures;
     int i;
+    int halfwordOffset[1];
     s16 previousTextureIds[CMENU_ITEM_SLOT_COUNT];
 
     hud = (CMenuHud*)lbl_803A87F0;
@@ -3151,10 +3158,10 @@ int cMenuSetItems(CMenuItemDef* itemsArg, char useTricky) {
     *ownedBits = -1;
     if (useTricky == 0) {
         gCMenuForcedSelIndex = -1;
-        for (item = itemTable; item->ownedGameBit > -1; item++) {
+        for (item = itemsArg; item->ownedGameBit > -1; item++) {
             ownedState = mainGetBit(item->ownedGameBit);
             if (ownedState != 0) {
-                if (itemTable == gCMenuStaffAbilities) {
+                if (itemsArg == gCMenuStaffAbilities) {
                     if (item->usedGameBit < 0 || mainGetBit(item->usedGameBit) == 0) {
                         *(s16*)((char*)hud + halfwordOffset[0] + offsetof(CMenuHud, itemSlots)) = item->iconTextureId;
                         *(int*)((char*)hud + wordOffset + offsetof(CMenuHud, ownedBits)) = item->ownedGameBit;
@@ -3167,9 +3174,9 @@ int cMenuSetItems(CMenuItemDef* itemsArg, char useTricky) {
                         *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, auxiliaryBytes)) = item->auxiliaryByte;
                         *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, closeMode)) = item->closeMode;
                         if (item->activeGameBit < 0 || mainGetBit(item->activeGameBit) == 0) {
-                            *(u8*)(itemCount + offsetof(CMenuHud, enabled) + (char*)hud) = 1;
+                            *(u8*)((char*)&hud->enabled + itemCount) = 1;
                         } else {
-                            *(u8*)(itemCount + offsetof(CMenuHud, enabled) + (char*)hud) = 0;
+                            *(u8*)((char*)&hud->enabled + itemCount) = 0;
                         }
                         itemCount++;
                         wordOffset += 4;
@@ -3190,9 +3197,9 @@ int cMenuSetItems(CMenuItemDef* itemsArg, char useTricky) {
                     *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, auxiliaryBytes)) = item->auxiliaryByte;
                     *(u8*)((char*)hud + itemCount + offsetof(CMenuHud, closeMode)) = item->closeMode;
                     if (item->activeGameBit < 0 || mainGetBit(item->activeGameBit) == 0) {
-                        *(u8*)(itemCount + offsetof(CMenuHud, enabled) + (char*)hud) = 1;
+                        *(u8*)((char*)&hud->enabled + itemCount) = 1;
                     } else {
-                        *(u8*)(itemCount + offsetof(CMenuHud, enabled) + (char*)hud) = 0;
+                        *(u8*)((char*)&hud->enabled + itemCount) = 0;
                     }
                     itemCount++;
                     wordOffset += 4;
@@ -3201,19 +3208,10 @@ int cMenuSetItems(CMenuItemDef* itemsArg, char useTricky) {
             }
         }
     } else {
-        s16* nextTextureId;
-        s16* auxiliaryValues;
-        u8* auxiliaryBytes;
-        u8* closeModes;
-        u8* enabledFlags;
-        int actionMask;
-        int yButtonAction;
-        s32 itemMask;
-
         getTrickyObject();
         itemMask = gTrickyHudItemMask;
         if (itemMask != -1) {
-            item = itemTable;
+            item = itemsArg;
             nextTextureId = textureIds;
             auxiliaryValues = hud->auxiliaryValues;
             auxiliaryBytes = hud->auxiliaryBytes;

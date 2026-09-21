@@ -207,6 +207,10 @@ extract:
   header: gLoadingScreenTextures.inc
 
 force_active:
+  # Retail-retained ObjSeq API entry and initialized word before default color.
+  - ObjSeq_SetCameraTransformOverride
+  - seqClearTaskTexts
+  - lbl_803DB744
   # Retain the version/reset metadata previously used as a diagnostic address base.
   - sGameLoopResetMessages
   # audio.c: retain the unused initialized word and two small-BSS words.

@@ -922,14 +922,34 @@ void ObjHitbox_UpdateRotatedBounds(ObjAnimComponent* objAnim, int advanceMatrix)
 
 int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcObj, char recordHits, char applyResponse,
                             u32 hitMask, u32 sweepMask) {
+    ObjModelHitSphere* sphereB;
+    char isCapsuleB;
+    ObjHitsContactScratchEntry* writeContact;
+    ModelFileHeader* modelFile;
     ObjHitsContactScratchEntry* nextContact;
+    int i;
+    int idxA;
+    ModelHitSphereDef* volumeDef;
+    u16 link;
+    int maskIndexA;
+    int hit;
+    s64 bitA;
+    int j;
+    u32 linkA;
+    int contactCount;
+    ObjHitsContactScratchEntry* readContact;
+    int maskIndexB;
+    char isCapsuleA;
+    char skipSweep;
+    ObjModelHitSphere* contactSphereB;
+    ObjHitsPriorityState* stateA;
+    ObjHitsPriorityState* stateB;
+    s64 maskA;
+    u32 linkB;
+    int k;
+    s64 maskB;
     int sphereCountA;
     int sphereCountB;
-    ObjHitsPriorityState* stateA;
-    int idxA;
-    ObjHitsContactScratchEntry* writeContact;
-    char isCapsuleB;
-    ObjModelHitSphere* sphereB;
     ObjModelHitSphere* sphereA;
     ObjModelHitSphere* previousSphereA;
     ObjModelHitSphere* activeSpheresA;
@@ -940,28 +960,10 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
     ObjHitsPriorityState* stateSrc;
     s64 sweepSphereMask;
     ObjHitsContactScratchEntry* contactBase;
-    int contactCount;
-    char isCapsuleA;
-    char skipSweep;
-    s64 maskB;
-    ModelHitSphereDef* volumeDef;
-    ObjModelHitSphere* contactSphereB;
     ObjModel* model;
-    ModelFileHeader* modelFile;
-    s64 maskA;
-    ObjHitsContactScratchEntry* readContact;
     int result;
-    s64 bitA;
     s64 bitB;
-    int i;
-    int j;
-    int k;
-    int hit;
-    ObjHitsPriorityState* stateB;
     ObjHitsPriorityState* react;
-    u32 linkA;
-    u32 linkB;
-    u16 link;
     float radiusA;
     float radiusB;
     float dxs;
@@ -1099,24 +1101,24 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
     maskA = 0;
     maskB = 0;
     sweepSphereMask = 0;
-    i = 0;
+    maskIndexA = 0;
     volumeDef = volumeDefsA;
-    for (; i < sphereCountA; i++) {
-        if (i == volumeDef->sphereIndex) {
+    for (; maskIndexA < sphereCountA; maskIndexA++) {
+        if (maskIndexA == volumeDef->sphereIndex) {
             if ((hitMask & 1 << volumeDef->maskBit) != 0) {
-                maskA |= 1 << i;
+                maskA |= 1 << maskIndexA;
             }
             if ((sweepMask & 1 << volumeDef->maskBit) != 0) {
-                sweepSphereMask |= 1 << i;
+                sweepSphereMask |= 1 << maskIndexA;
             }
         }
         volumeDef++;
     }
-    j = 0;
+    maskIndexB = 0;
     volumeDef = volumeDefsB;
-    for (; j < sphereCountB; j++) {
-        if (j == volumeDef->sphereIndex) {
-            maskB |= 1 << j;
+    for (; maskIndexB < sphereCountB; maskIndexB++) {
+        if (maskIndexB == volumeDef->sphereIndex) {
+            maskB |= 1 << maskIndexB;
         }
         volumeDef++;
     }
@@ -1279,12 +1281,12 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
             link = linkA;
             while (link != 0) {
                 maskA |= 1 << (idxA + (u16)((link & 0xf000) >> 12));
-                link = link << 4;
+                link <<= 4;
             }
             link = linkB;
             while (link != 0) {
                 maskB |= 1 << (hit + (u16)((link & 0xf000) >> 12));
-                link = link << 4;
+                link <<= 4;
             }
             if (linkA == 0 && linkB == 0) {
                 if (recordHits != 0) {
@@ -1344,30 +1346,30 @@ void ObjHits_OnPlayerHitVolumeMiss(GameObject* objA, GameObject* objB, GameObjec
 }
 
 void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObject* attA, GameObject* attB, f32 dt) {
-    ObjHitsPriorityState* attStateB;
-    ObjHitsPriorityState* stateB;
     ObjHitsPriorityState* attStateA;
+    ObjHitsPriorityState* attStateB;
     ObjHitsPriorityState* stateA;
-    ObjModel* model;
+    ObjHitsPriorityState* stateB;
     u32 sphereBufferIndex;
-    u32 mask;
+    ObjModel* model;
     u8 result;
+    u32 mask;
+    stateA = (ObjHitsPriorityState*)objA->anim.hitReactState;
     stateB = (ObjHitsPriorityState*)objB->anim.hitReactState;
-    stateA = ObjAnim_GetPriorityHitState(&objA->anim);
     if (attA != NULL) {
-        attStateA = ObjAnim_GetPriorityHitState(&attA->anim);
+        attStateA = (ObjHitsPriorityState*)attA->anim.hitReactState;
     } else {
         attStateA = NULL;
     }
     if (attB != NULL) {
-        attStateB = ObjAnim_GetPriorityHitState(&attB->anim);
+        attStateB = (ObjHitsPriorityState*)attB->anim.hitReactState;
     } else {
         attStateB = NULL;
     }
     result = 0;
     if ((stateA->objectHitMask != 0) && (stateA->suppressOutgoingHits == 0)) {
         if (objA->anim.classId == 1) {
-            model = ObjHits_GetActiveModel(objA);
+            model = (ObjModel*)objA->anim.banks[objA->anim.bankIndex];
             sphereBufferIndex = (model->bufferFlags >> 2) & 1;
             if ((stateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
                 memcpy(model->hitVolumeSphereBuffers[sphereBufferIndex], gObjHitsPrimaryHitboxScratchBuffers[0],
@@ -1381,7 +1383,7 @@ void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObjec
                        model->file->hitVolumeCount * sizeof(ObjModelHitSphere));
             }
             if (attA != NULL) {
-                model = ObjHits_GetActiveModel(attA);
+                model = (ObjModel*)attA->anim.banks[attA->anim.bankIndex];
                 sphereBufferIndex = (model->bufferFlags >> 2) & 1;
                 if ((stateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
                     memcpy(model->hitVolumeSphereBuffers[sphereBufferIndex], gObjHitsSecondaryHitboxScratchBuffers[0],
@@ -1413,7 +1415,7 @@ void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObjec
     result = 0;
     if (((stateB->sourceMask & 0x80) == 0) && (stateB->objectHitMask != 0) && (stateB->suppressOutgoingHits == 0)) {
         if (objB->anim.classId == 1) {
-            model = ObjHits_GetActiveModel(objB);
+            model = (ObjModel*)objB->anim.banks[objB->anim.bankIndex];
             sphereBufferIndex = (model->bufferFlags >> 2) & 1;
             if ((stateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
                 memcpy(model->hitVolumeSphereBuffers[sphereBufferIndex], gObjHitsPrimaryHitboxScratchBuffers[0],
@@ -1427,7 +1429,7 @@ void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObjec
                        model->file->hitVolumeCount * sizeof(ObjModelHitSphere));
             }
             if (attB != NULL) {
-                model = ObjHits_GetActiveModel(attB);
+                model = (ObjModel*)attB->anim.banks[attB->anim.bankIndex];
                 sphereBufferIndex = (model->bufferFlags >> 2) & 1;
                 if ((stateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
                     memcpy(model->hitVolumeSphereBuffers[sphereBufferIndex], gObjHitsSecondaryHitboxScratchBuffers[0],
@@ -1620,18 +1622,9 @@ void ObjHits_ApplyPairResponse(GameObject* objA, GameObject* objB, f32 x, f32 y,
 
 static inline f32 ObjHits_SweepPointDistance(GameObject* otherObject, ObjHitsPriorityState* sweepState, f32 moveX,
                                              f32 moveY, f32 moveZ, f32 fraction) {
-    f32 delta;
-    f32 squaredZ;
-    f32 squaredX;
-    f32 squaredY;
-
-    delta = (fraction * moveZ + sweepState->worldPosZ) - otherObject->anim.worldPosZ;
-    squaredZ = delta * delta;
-    delta = (fraction * moveX + sweepState->worldPosX) - otherObject->anim.worldPosX;
-    squaredX = delta * delta;
-    delta = (fraction * moveY + sweepState->worldPosY) - otherObject->anim.worldPosY;
-    squaredY = delta * delta;
-    return sqrtf(squaredZ + (squaredX + squaredY));
+    return sqrtf(SQUARE((fraction * moveZ + sweepState->worldPosZ) - otherObject->anim.worldPosZ) +
+                 (SQUARE((fraction * moveX + sweepState->worldPosX) - otherObject->anim.worldPosX) +
+                  SQUARE((fraction * moveY + sweepState->worldPosY) - otherObject->anim.worldPosY)));
 }
 
 void ObjHits_DetectObjectPair(GameObject* objA, GameObject* objB) {
@@ -1868,7 +1861,6 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
             ObjModel* model;
             int volumeIndex;
             ModelFileHeader* modelFile;
-            ModelHitSphereDef* hitVolume;
             ObjModelHitSphere* currentSpheres;
             ObjModelHitSphere* previousSpheres;
 
@@ -1879,25 +1871,22 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
             previousSpheres = (ObjModelHitSphere*)model->hitVolumeSphereBuffers[sphereBits ^ 1];
             pointCount = 0;
             for (volumeIndex = 0; volumeIndex < (int)(u32)modelFile->hitVolumeCount; volumeIndex++) {
-                hitVolume = &((ModelHitSphereDef*)modelFile->hitVolumes)[volumeIndex];
-                if ((volumeIndex == hitVolume->sphereIndex) && ((hitMask & 1 << hitVolume->maskBit) != 0)) {
-                    sphereBits = hitVolume->linkedSpheres;
+                if ((volumeIndex == ((ModelHitSphereDef*)modelFile->hitVolumes)[volumeIndex].sphereIndex) &&
+                    ((hitMask & 1 << ((ModelHitSphereDef*)modelFile->hitVolumes)[volumeIndex].maskBit) != 0)) {
+                    sphereBits = ((ModelHitSphereDef*)modelFile->hitVolumes)[volumeIndex].linkedSpheres;
                     if (sphereBits != 0) {
                         for (; (u16)sphereBits != 0; sphereBits = (u16)((sphereBits & 0xffff) << 4)) {
                             linkedSphereIndex = (((u16)sphereBits & 0xf000) >> 0xc) + volumeIndex & 0xffff;
                             if (pointCount < TRACK_HIT_MAX_POINTS) {
-                                ObjModelHitSphere* currentSphere;
-                                ObjModelHitSphere* previousSphere;
-                                int sphereOffset = linkedSphereIndex * sizeof(ObjModelHitSphere);
-                                currentSphere = (ObjModelHitSphere*)((u8*)currentSpheres + sphereOffset);
-                                endPoints[pointCount].x = playerMapOffsetX + currentSphere->pos[0];
-                                endPoints[pointCount].y = currentSphere->pos[1];
-                                endPoints[pointCount].z = playerMapOffsetZ + currentSphere->pos[2];
-                                previousSphere = (ObjModelHitSphere*)((u8*)previousSpheres + sphereOffset);
-                                startPoints[pointCount].x = playerMapOffsetX + previousSphere->pos[0];
-                                startPoints[pointCount].y = previousSphere->pos[1];
-                                startPoints[pointCount].z = playerMapOffsetZ + previousSphere->pos[2];
-                                hitResults.radii[pointCount] = currentSphere->radius;
+                                endPoints[pointCount].x = playerMapOffsetX + currentSpheres[linkedSphereIndex].pos[0];
+                                endPoints[pointCount].y = currentSpheres[linkedSphereIndex].pos[1];
+                                endPoints[pointCount].z = playerMapOffsetZ + currentSpheres[linkedSphereIndex].pos[2];
+                                startPoints[pointCount].x =
+                                    playerMapOffsetX + previousSpheres[linkedSphereIndex].pos[0];
+                                startPoints[pointCount].y = previousSpheres[linkedSphereIndex].pos[1];
+                                startPoints[pointCount].z =
+                                    playerMapOffsetZ + previousSpheres[linkedSphereIndex].pos[2];
+                                hitResults.radii[pointCount] = currentSpheres[linkedSphereIndex].radius;
                                 hitResults.surfaceTypes[pointCount] = -1;
                                 hitResults.queryTypes[pointCount] = 7;
                                 pointCount += 1;
@@ -1971,34 +1960,36 @@ static inline void ObjHits_ResetFrameContacts(ObjHitsPriorityState* state) {
 }
 
 void ObjHits_Update(int objectCount) {
+    ObjHitsSweepEntry** entrySlotBase;
+    int slotIndex;
+    ObjHitsSweepEntry* nextEntry;
+    int hitVolumeIndex;
+    GameObject* obj;
+    GameObject* candAttachedObj;
+    ObjHitsPriorityState* objState;
+    ObjHitsSweepEntry** entrySlot;
+    int candidateIndex;
+    int slotCount;
+    ObjHitsSweepEntry* entry;
+    GameObject* candObj;
+    GameObject** objectList;
+    GameObject* listAttachedObj;
+    GameObject* attachedObj;
+    ObjHitsPriorityState* candState;
+    ObjHitsPriorityState* attachedState;
+    GameObject* listObj;
+    int currentIndex;
     u8 skeletonScratchB[1036];
     u8 skeletonScratchC[1040];
     ObjHitsSkeletonHit skeletonHits[OBJHITS_SKELETON_HIT_CAPACITY + 2];
     u8 skeletonScratchD[100];
     u8 skeletonScratchE[100];
-    GameObject* listObj;
-    ObjHitsSweepEntry** entrySlot;
-    ObjHitsSweepEntry* nextEntry;
-    int slotIndex;
-    GameObject* obj;
-    ObjHitsPriorityState* objState;
-    int candidateIndex;
-    int slotCount;
-    GameObject* candObj;
-    ObjHitsSweepEntry** entrySlotBase;
-    ObjHitsPriorityState* candState;
-    int currentIndex;
-    GameObject* attachedObj;
     ObjHitsSweepEntry* sweepEntries;
     int listCount;
     int startIndex;
-    ObjHitsSweepEntry* entry;
     ObjHitsSweepEntry* candidateEntry;
-    GameObject** objectList;
-    GameObject* candAttachedObj;
     f32 axisDiff;
     f32 diff;
-    int hitVolumeIndex;
 
     objectList = ObjList_GetObjects(&startIndex, &listCount);
     sweepEntries = gObjHitsSweepEntries;
@@ -2006,8 +1997,8 @@ void ObjHits_Update(int objectCount) {
     sweepEntries->maxX = -36288576.0f;
     gObjHitsSweepEntryPtrs[0] = sweepEntries;
     slotCount = 1;
-    entrySlotBase = &gObjHitsSweepEntryPtrs[1];
     nextEntry = &sweepEntries[1];
+    entrySlotBase = &gObjHitsSweepEntryPtrs[1];
     entrySlot = entrySlotBase;
     for (; objectCount > 0; objectCount--) {
         {
@@ -2027,10 +2018,10 @@ void ObjHits_Update(int objectCount) {
                     gObjHitsSweepEntryPtrs[slotCount++]->maxX = listObj->anim.worldPosX + listState->sweepRadiusX;
                 }
                 ObjHits_ResetFrameContacts(listState);
-                attachedObj = listObj->childObjs[0];
-                if ((attachedObj != 0) && (attachedObj->anim.classId == 0x2d)) {
-                    listState = ObjAnim_GetPriorityHitState(&attachedObj->anim);
-                    ObjHits_ResetFrameContacts(listState);
+                listAttachedObj = listObj->childObjs[0];
+                if ((listAttachedObj != 0) && (listAttachedObj->anim.classId == 0x2d)) {
+                    attachedState = (ObjHitsPriorityState*)listAttachedObj->anim.hitReactState;
+                    ObjHits_ResetFrameContacts(attachedState);
                 }
             }
             objectList++;

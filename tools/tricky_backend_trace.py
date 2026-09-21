@@ -282,6 +282,11 @@ def main():
                       f"caller return {birth['return_address']:#x}")
             for register in args.register or []:
                 print("  " + describe_node(graph, register, colored=colored, register_class=item["register_class"]))
+                address = graph[register]["prefix"][1]
+                identity = snapshot.get("register_objects", {}).get(str(address))
+                if identity is not None:
+                    print(f"    object {address:#x}: {identity['name']!r}; "
+                          f"type={identity['type']:#x}; registers={identity['registers']}")
         if item["simplification_replayed"]:
             print(f"  Replayed simplification: {len(item['high_degree_removals'])} high-degree removals")
             for step in item["simplification_steps"]:

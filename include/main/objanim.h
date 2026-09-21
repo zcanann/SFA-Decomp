@@ -13,7 +13,7 @@ typedef struct ObjAnimEventList ObjAnimEventList;
 typedef struct ObjWeaponDaTable ObjWeaponDaTable;
 
 typedef void (*ObjAnimSequenceFreeCallback)(void* ctx, u8* obj);
-typedef int (*ObjAnimSequenceConditionCallback)(void* ctx, u8* obj);
+typedef int (*ObjAnimSequenceConditionCallback)(void* ctx, u8* obj, int conditionOpcode);
 extern char gObjAnimMissingCachedMoveWarning[];
 
 #define OBJANIM_STATE_INDEX_CURRENT         0

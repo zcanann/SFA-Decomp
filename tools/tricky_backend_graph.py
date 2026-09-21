@@ -188,7 +188,7 @@ def capture_coalescing_policy(memory, base, register_class=4):
 
 
 def capture_symbol_objects(memory, snapshot):
-    """Read GC/1.3 object metadata for symbolic IR operands without mutation.
+    """Read GC/1.3 symbolic operand and allocator object metadata without mutation.
 
     SectionCategory/ObjectName/SharedContext in the sibling mwcc project
     establish these offsets independently. Flag meanings remain numeric.
@@ -201,6 +201,9 @@ def capture_symbol_objects(memory, snapshot):
                     address = int.from_bytes(bytes.fromhex(item["raw"])[6:10], "little")
                     if address:
                         addresses.add(address)
+    # The graph retains named locals even when no symbolic operand refers to them.
+    addresses.update(node["prefix"][1] for node in snapshot.get("coloring_graph", [])
+                     if node["prefix"][1])
     objects = {}
     for address in sorted(addresses):
         raw = memory(address, 0x18)
@@ -295,6 +298,41 @@ def capture_section_records(memory, base, objects):
             "records_scanned": len(seen), "records": result}
 
 
+def capture_register_objects(memory, graph):
+    """Record source/generated object identities attached to allocator nodes.
+
+    Object name (+10) and type (+14) use the independently verified GC/1.3
+    layout also used by the LLDB temporary-birth tracer. An object may own
+    several graph nodes; names alone are not unique provenance identifiers.
+    """
+    objects = {}
+    for register, node in enumerate(graph):
+        address = node["prefix"][1]
+        if not address:
+            continue
+        key = str(address)
+        if key not in objects:
+            raw = memory(address + 10, 8)
+            if len(raw) != 8:
+                raise ValueError("short register object read")
+            name_pointer = int.from_bytes(raw[:4], "little")
+            name = bytearray()
+            if name_pointer:
+                for offset in range(256):
+                    char = memory(name_pointer + 10 + offset, 1)
+                    if len(char) != 1:
+                        raise ValueError("short register object name read")
+                    if char == b"\0":
+                        break
+                    name.extend(char)
+                else:
+                    raise ValueError("unterminated register object name")
+            objects[key] = {"name": name.decode("utf-8", "replace"),
+                            "type": int.from_bytes(raw[4:], "little"), "registers": []}
+        objects[key]["registers"].append(register)
+    return objects
+
+
 def capture_graph_snapshot(memory, base, name, colored, register_class=4):
     kind, _ = register_kind(register_class)
     word = lambda address: int.from_bytes(memory(address, 4), "little")
@@ -304,6 +342,7 @@ def capture_graph_snapshot(memory, base, name, colored, register_class=4):
     snapshot["register_class"] = register_class
     snapshot["coloring_graph"] = capture_graph(memory, base, colored, register_class)
     if not colored:
+        snapshot["register_objects"] = capture_register_objects(memory, snapshot["coloring_graph"])
         snapshot["symbol_objects"] = capture_symbol_objects(memory, snapshot)
         snapshot["storage_modes"] = capture_storage_modes(memory, base)
         snapshot["section_records"] = capture_section_records(memory, base, snapshot["symbol_objects"])

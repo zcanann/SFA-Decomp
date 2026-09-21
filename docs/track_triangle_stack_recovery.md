@@ -226,3 +226,49 @@ rather than the backend initialization emitter.
 
 The LLDB provider, trace inspection and graph suites pass 12, 6 and 35 tests.
 The new trace also passes offline readback with the same full allocator checks.
+
+## Exact grid collection through nested indices (September 20)
+
+`trackBuildBlockTriangles` now matches **100%**, all **765 instructions /
+3,060 bytes**, in EN, EN rev1, JP, PAL and PAL rev1. The TU reaches
+**99.94134%**, with **27/30 exact functions**. It remains `NonMatching` because
+`trackIntersect`, `trackGetLineIntersect` and `trackGetHeight` are not exact.
+
+The successful source keeps each layer's starting pointers fixed and uses
+`layerCount` to locate each column's start. Within a column, `columnCount`
+indexes successful block lookups and their three-word origins. Both counts
+advance only when a block exists. The column count advances before the layer
+count, followed by the retained overall cursors. MWCC's frontend strength
+reduction generates the intermediate pointer counters with retail's register
+allocation and update order. No volatile access is added.
+
+This follows reconstruction of three complete GC/1.3 routines in the sibling
+MWCC project, under `src/versions/GC_1_3/`:
+
+- `IROLoopReduction.c`: driver at 0x004a5580, 1,520 bytes; 3,001 differential cases.
+- `IROReduction.c`: materializer at 0x004a6d60, 1,320 bytes; 1,920 cases.
+- `IROExpressionEqual.c`: ordered equality at 0x00469180, 602 bytes; 6,294 cases.
+
+The compiler models are checked against isolated original x86 instructions
+with explicit dependency adapters; they do not claim Win32 object matching.
+Their sources, partial layout assertions, native tests, reproducible offline
+oracles and fixtures are recorded in that project's `docs/IRO_REDUCTION.md`.
+LLDB establishes that the X/Z reductions are multiplication by 640 with unit
+steps and no optional increment object. The useful source change instead makes
+the pointer counters compiler-generated through nested indexing.
+
+A final supported LLDB capture produces the ordinary object's exact SHA-256,
+`5c353e528455ac0a2bbba4f84c61881d13c8fa8fa2be6b6ba3c5a2584522a677`,
+with zero retail instruction differences. Its final 398-node allocation graph
+replays all 366 color choices and two high-degree removals. The initial
+283-node spill-selection attempt remains explicitly unreplayed.
+
+All five verified input DOLs pass `ninja all_source` and the strict retail
+checksum target. Each region produces that same source object and reports the
+collector exact in objdiff. Relative to the preceding source object, only
+15 bytes in this function change; other function bytes, allocated data and
+named symbol offsets are preserved. One anonymous literal label is renumbered,
+with its relocation destination unchanged. Formatting preserves the candidate
+object. The eight existing track tests also pass; they cover endpoints,
+wrappers, edges and ground/surface queries, not full block-triangle geometry.
+The strict link continues to use the retail object for this incomplete TU.

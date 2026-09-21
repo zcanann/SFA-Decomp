@@ -1233,3 +1233,157 @@ respectively. Final EN `all_source` and strict checksum builds pass in 19.65
 and 20.79 seconds; the linked DOL retains SHA-1
 `e750e8e894707a52446118a4b84f1b58b677b269`. Formatting is separate and
 preserves the complete generated object.
+
+## 2026-09-21: reproduce MWCC C-menu gains with macOS LLDB
+
+Fresh staging `c81ee28505` still contained the 98.84106% source, despite the
+September 14–15 sibling `mwcc` investigation recording a 99.43709% candidate.
+Reapplied that candidate's function-local changes to the current complete TU:
+use the input parameter directly, preserve the experimentally established local
+order, and address the whole enabled array before adding the item index.
+This reproduces previous compiler research; it is not a new 100% solution or
+proof of the original declarations. The existing one-element offset array
+remains a matching workaround.
+
+The EN function improves **98.84106% → 99.43709%**, retaining 1,208 bytes and
+302 instructions. Differing instruction words fall from **55 to 32**. Fresh
+macOS LLDB captures of both sources reproduce their ordinary complete objects
+byte-for-byte, capture 21 stages each, and replay simplification and physical
+coloring. The graph shrinks from 207 to 206 nodes. The candidate's four remaining
+virtual-register differences are:
+
+| Value | Virtual register | Current GPR | Retail GPR |
+| --- | ---: | ---: | ---: |
+| Input table | 32 | 25 | 24 |
+| Previous-texture cursor | 56 | 30 | 25 |
+| Free-loop counter | 60 | 25 | 27 |
+| HUD base | 81 | 24 | 30 |
+
+The retail projection introduces no interference collision with the other
+current colors. That proves compatibility with the captured graph, not that
+ordinary declaration order can realize that coloring. The sibling compiler's
+`docs/COPY_PROPAGATION.md` records the stronger fixed-graph ordering limits
+and the named/generated-register cutoff governing zero-load merging.
+
+A bounded follow-up tested 25 aggregate-local variants: every selection of one,
+two or three of HUD, previous-texture cursor, texture IDs, item count and word
+offset became local record fields. Sixteen explicit inline variants varied the
+caller-owned subset (none, each of those five individually, HUD/item count,
+previous cursor/item count), with either scalar or array halfword offset.
+All compiled to 1,208 bytes; none improved the retained candidate. A record
+containing only HUD ties it. These tests change promotion/inline identity
+strata; they do not exhaust possible source or lifetime shapes, and none of
+the artificial records/helpers is installed in game source.
+
+The same 98.84106% → 99.43709% gain reproduces in JP, PAL, EN revision 1 and
+PAL revision 1 after checking every input DOL against its configured SHA-1.
+For each of the five targets, all 117 other function bodies, named allocated
+symbol layouts, relocations, and non-text allocated sections are unchanged.
+No function becomes exact, so no regional matching classification changes.
+The existing host behavioral assertions pass at both optimization levels;
+10,000 ASan/UBSan differential cases against the staging baseline preserve
+return values, complete state and ordered service calls. EN `ninja all_source`
+and strict `ninja` both pass with 30-second limits. The DOL retains SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`.
+
+Local sources, commands, source hashes, objects, regional results and LLDB
+captures are under ignored `build/cmenu-sept21/`. Reproduce the retained
+capture and allocation projection with:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/dlls/engine/0/0 \
+    --function cMenuSetItems --graph --output build/cmenu-sept21/final-capture
+python3 tools/mwcc_retail_registers.py \
+    build/cmenu-sept21/final-capture/trace.json --function cMenuSetItems
+```
+
+## 2026-09-21 follow-up: source-controlled identity boundaries
+
+The retained source remains **99.43709%**, with the same complete generated
+object as the preceding entry. This follow-up found no additional source gain.
+It narrowed the interaction between range splitting, inline-local allocation
+and zero commoning rather than accepting a solver witness as matching C.
+
+The ordinary-compile matrix keeps item count and word offset caller-owned and
+puts the body in an explicit inline helper. It varies all 64 caller/helper
+partitions of HUD, previous-texture pointer, texture IDs, ownership result,
+input-table alias and inventory cursor, crossed with assignment versus zero/OR
+ownership initialization. The helper has a scalar halfword offset and separate
+free counter. All **128** variants preserve the complete nonregister instruction
+signature and 1,208-byte size; none improves the retained source. They produce
+12 distinct function byte sequences, but that does not establish identical
+allocator graphs. Six selected variants have separately verified LLDB captures.
+
+For those six graphs, allowing caller and inline declaration identities to
+permute together still gives UNSAT for the full retail color vector. This is
+an overapproximation: real declarations cannot freely cross those two groups.
+On the eight-caller and four-caller ownership-OR graphs, permitting **one more**
+optimizer-created identity to move gives SAT, independently checked by the
+sibling MWCC procedural allocator. It is the Tricky branch's reused item cursor
+(v42 and v38 respectively), not the free counter in these particular captures.
+This is a fixed-graph diagnostic, not evidence of original helper functions.
+
+Giving Tricky its own helper-local cursor preserves all instruction forms in
+four ordinary probes. A fresh capture of the eight-caller form confirms that
+this removes the corresponding split-generated identity and makes the cursor
+part of the inline-local group. Nevertheless, the two separate declaration
+bands remain UNSAT. Permitting values to cross bands while requiring only
+item count and word offset to remain caller-owned gives a replay-verified SAT
+witness. Additional queries on this fixed graph show:
+
+- Keeping the free counter inline-generated makes that query UNSAT.
+- Keeping only the halfword offset inline-generated remains SAT.
+- Keeping the input-table alias caller-owned remains SAT by itself, but adding
+  the inline-generated halfword-offset requirement makes it UNSAT.
+
+Three corresponding source witnesses compile, but none realizes the modeled
+result: source-level changes also change zero merging and surviving identities,
+producing 1,204 or 1,212 bytes rather than 1,208. Their scores are 96.10927%,
+97.79801% and 98.278145%. A successful fixed-graph query must therefore not be
+reported as a source solution. Six integer HUD-address accumulation controls
+also regress and change instruction count.
+
+A direct separate Tricky cursor, without an inline helper, was tested at 25
+local declaration positions. Two reproduce the retained function bytes;
+the others regress. The first variant has its own ordinary-equivalent LLDB
+capture. Its 26-named-local exact query is UNSAT; a seeded 80,000-trial search
+(79,149 distinct orders) never improves the baseline 34 weighted register
+operand mismatches. These are operand counts, not the 32 differing instruction
+words or objdiff percentages. No experimental source is installed.
+
+### Reusable capture and solver handoff
+
+`tricky_backend_graph.py` now records allocator-node object names and type
+pointers using the same independently verified Object offsets as the existing
+LLDB temporary-birth tracer. Records are keyed by object address and retain all
+associated register IDs: identical names do not imply identical objects.
+`tricky_backend_trace.py --register N` displays this identity in fresh captures;
+old captures remain readable. Nine fresh captures, including the unchanged
+retained-source control, reproduce their ordinary complete objects exactly.
+
+`tools/mwcc_register_order_input.py` exports a verified GPR capture into the
+sibling solver's existing schema. It checks object provenance, replay, retail
+projection and interference, rejects high-degree cases unsupported by that
+solver, and requires an explicit hypothetical movable-ID set. It does not infer
+that generated names identify source declarations. For the retained source:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/dlls/engine/0/0 \
+    --function cMenuSetItems --graph --register 32 --register 60 \
+    --output build/cmenu-followup/final-control
+python3 tools/mwcc_register_order_input.py \
+    build/cmenu-followup/final-control/trace.json --function cMenuSetItems \
+    --movable 34:59 --output build/cmenu-followup/final-control/order-input.json
+python3 ../mwcc/tools/solve_gc13_register_order.py \
+    --input build/cmenu-followup/final-control/order-input.json \
+    --output build/cmenu-followup/final-control/order-result.json
+```
+
+Ranges are half-open. Captured IDs are specific to that compiler/source input.
+The exporter agrees exactly with the separately prepared direct-cursor solver
+input; the retained-source baseline-color control passes procedural replay.
+Capture/IR/register tests pass (107 passed, seven platform-dependent skips),
+including aliasing, same-named distinct objects and malformed memory reads.
+EN `ninja all_source` and strict `ninja` pass with 30-second limits. Local
+variant sources, command/source hashes, solver inputs, SMT constraints and
+reports remain under ignored `build/cmenu-followup/`.
