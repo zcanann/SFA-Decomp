@@ -1387,3 +1387,83 @@ including aliasing, same-named distinct objects and malformed memory reads.
 EN `ninja all_source` and strict `ninja` pass with 30-second limits. Local
 variant sources, command/source hashes, solver inputs, SMT constraints and
 reports remain under ignored `build/cmenu-followup/`.
+
+## 2026-09-21: map HUD fixed-graph limit
+
+`mapScreenDrawHud` remains **99.85532%**, with 864 instructions / 3,456 bytes
+and 25 differing instruction words. No experimental game source is retained.
+The complete EN unit is 99.98431%; it remains `NonMatching`.
+
+Fresh native macOS LLDB captures reproduce the ordinary complete object,
+SHA-256 `6800d014626e2d45f2637dc72552a20bb0c34aa2b0063599a3f9b13d52561652`.
+The retained function has 21 captured stages and a 307-node GPR graph.
+Simplification and all 263 physical color choices replay, without high-degree
+removals. The only projected changes remain panel top v50 (r23 to r27) and
+clamped opacity v59 (r27 to r23). The projection is interference-valid.
+
+The sibling MWCC scan-order solver now establishes a stronger negative than
+unsuccessful declaration searches. All these full-retail-color queries are
+**UNSAT** on the retained graph:
+
+- Named identities 32 through 56 may permute.
+- Those identities plus opacity's generated identity 59 may permute.
+- All identities 32 through 80 with captured compiler objects may permute.
+- **Every virtual identity, 32 through 306, may permute.**
+
+The last query deliberately permits much more freedom than source declaration
+order. It still cannot reproduce the supplied complete retail color vector.
+A baseline-color control is SAT and its witness passes the independent
+procedural allocator replay. Z3 4.16.0 performs these checks against the
+unchanged GC/1.3 bank policy. This rules out scan-order permutations of this
+particular graph, not different source graphs or a future exact reconstruction.
+A legal coloring alone is insufficient: MWCC must also reach it through its
+simplification order, register-bank growth, and lowest-free-register choices.
+
+The restriction reaches beyond the two visibly swapped values. In this capture,
+the two generated shimmer phase counters (v77/v78, retail r29/r28) have no
+interference neighbors using retail r25, r26 or r27. Their allocation must
+therefore precede enabling those lower-numbered registers. The early frame's
+width conversion and texture bases also participate in bank growth. A further
+investigation should change or partition the relevant lifetimes, then recapture
+the graph; merely promoting panel fields or permuting declarations is not enough
+on the retained graph.
+
+The local probe set contains 225 successfully built scratch objects. It covers
+panel-field promotion, opacity initialization and clamp spelling, separate
+initial/final opacity locals, narrow/wide coordinate and opacity types, local
+reuse, shimmer snapshots and conversion placement, explicit inline helpers,
+and named or promoted phase counters. These are compiler probes, not a claim
+that every variant preserves retail behavior. None provides a retained gain.
+Seven source forms have ordinary-equivalent LLDB captures: the control,
+promoted panel top, promoted opacity, top reused for task count, short width,
+short opacity, and explicit scalar phase counters.
+
+The earlier short-opacity/integer-snapshot form reproduces its six positional
+differences: every register matches, but one `extsh` occurs five instructions
+early. Moving snapshots, exposing texture setup, or extracting shimmer helpers
+does not recover both its allocation and the retained instruction order. That
+older score is not promoted as an improvement over the current source.
+
+Reproduce the retained capture and unrestricted virtual-order query with:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/dlls/engine/0/0 \
+    --function mapScreenDrawHud --graph --output build/maphud-sept21/baseline
+python3 tools/mwcc_register_order_input.py \
+    build/maphud-sept21/baseline/trace.json --function mapScreenDrawHud \
+    --movable 32:307 --output build/maphud-sept21/all-virtual-order.json
+python3 ../mwcc/tools/solve_gc13_register_order.py \
+    --input build/maphud-sept21/all-virtual-order.json \
+    --output build/maphud-sept21/all-virtual-result.json
+```
+
+IDs and the upper bound are specific to this source and capture. Use
+`--movable 32:57` when exporting the named-local query; add `--baseline-colors`
+to the solver for its control. Scratch sources, objects, captures and solver
+reports remain under ignored `build/maphud-sept21/`.
+
+After restoring the normal EN matching configuration, `ninja all_source
+build/GSAE01/ok` passes under a 30-second limit and reports the strict retail
+checksum OK. The rebuilt complete engine-0 object has the same SHA-256 as the
+initial capture. No source, headers, compiler settings, splits, or regional
+matching claims change in this investigation.
