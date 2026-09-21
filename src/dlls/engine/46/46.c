@@ -1,7 +1,7 @@
 #include "main/camera_interface.h"
 #include "string.h"
 #include "sys/objects.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/objprint_api.h"
 #include "dlls/object_descriptor.h"
 #include "main/dll/rom_curve_interface.h"

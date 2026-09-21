@@ -240,3 +240,133 @@ Moving scratch-pointer setup into query loops, constructing component addresses
 through named base pointers, or extracting scalar/vector translation helpers
 does not improve the coordinator. Those experiments remain outside production
 source. The TU is unchanged at 99.73587%, with the coordinator at 99.989235%.
+
+## Two-store diagnostic control (2026-09-20)
+
+A fresh GC/1.3 LLDB capture confirms that the current coordinator still differs
+at only instruction indices 150 and 153. These are the static-world endpoint
+copies, not the earlier bounce initialization or the start-point copies:
+
+```c
+*endY = cur[1];
+*endZ = cur[2] - offZ;
+```
+
+Retail writes through r27/r28; current source emits SP+164/SP+168. The complete
+ordinary and instrumented baseline objects have SHA-256
+`7ecb728fb409bab9e079347ce5da067fb4c8bf96e396072b31f25d5c3f1c0daa`.
+The captured function has 19 stages and 1,115 final instructions.
+
+The sibling `../mwcc` model in
+`src/versions/GC_1_3/ConstantAddress.c` explains the frame-address selector.
+Further static inspection of the hash-verified GC/1.3 binary establishes two
+relevant parts of its caller:
+
+- At `0x00573866..0x00573871`, the instruction walker tests bit `0x80` of the
+  instruction flags at `+0x14`. A set bit branches directly to the next
+  instruction at `0x00574978`, bypassing constant folding.
+- `0x00574a90..0x00574c1a` initializes the GPR, FPR and special-register
+  definition tables for a block. It intersects each register's definition list
+  with that block's incoming definition bitset. Exactly one incoming definition
+  yields a PCode pointer; zero or multiple definitions yield null. The driver
+  at `0x00573820..0x00573828` calls this initializer before the block walker.
+  These roles are inferred from the instructions, not recovered source names;
+  this investigation does not claim a differential test of the initializer.
+
+As a **diagnostic only**, changing the two accesses to
+`*(volatile f32*)endY` and `*(volatile f32*)endZ` reproduces **100% objdiff** for
+the function. LLDB shows their flags changing from `0x4` to `0x84`. Their
+virtual bases remain GPR65/GPR66 across constant propagation, whereas baseline
+changes both bases to frame GPR1 and symbolic offsets 4/8. The diagnostic's
+ordinary and instrumented objects both hash to
+`11777ad64940b5717740ff6ff6d75db649fdc6db20e93c74fbf6d1d95aff0893`.
+
+The raw object comparison changes exactly four bytes in two instruction words:
+`d00100a4` becomes `d01b0000`, and `d00100a8` becomes `d01c0000`.
+All other function bodies, allocated data, section layouts, named symbols and
+relocations are unchanged. This isolates the optimizer gate without requiring
+an allocator change. It does **not** establish that these ordinary stack writes
+were volatile in the original source. The casts are not installed in `src/`,
+and neither the function nor TU is promoted to matching.
+
+Focused ordinary-source controls give the following results:
+
+| Source experiment | Instructions | Objdiff |
+| --- | ---: | ---: |
+| Baseline | 1,115 | 99.989235% |
+| Explicit same-type pointer casts | 1,115 | 99.989235% |
+| Block-local aliases for the two pointers | 1,115 | 99.989235% |
+| Direct `we[1]` / `we[2]` accesses at these two sites | 1,117 | 99.779370% |
+| Volatile-pointee diagnostic | 1,115 | 100% |
+
+Additional scratch controls with void/byte pointer casts, same-type value
+casts, scalar inline stores, inline pointer identity helpers, and cursor-based
+translation helpers leave both differences intact. Splitting the Z copy and
+subtraction adds a store. Reassigning the endpoint pointers inside the branch
+changes allocation extensively. None is retained as game source.
+
+Reproduce the focused controls and independently hash-gated captures with:
+
+```sh
+python3 tools/track_intersect_store_probe.py --capture
+```
+
+The tool writes complete scratch sources/objects and `report.json` under
+`build/track_intersect_store_probe/`. It uses fresh compilation directories,
+the actual configured TU flags, objdiff, full object comparisons, and the
+existing LLDB capture equivalence gate. Its report records both stores' flags
+and operands immediately before and after constant propagation. Without
+`--capture`, the same source/object controls run without a debugger.
+
+All five originals were checked against their configured SHA-1 values. The
+EN-built diagnostic object also scores 100% for this function against each
+regional retail object. This is a cross-region comparison of one experimental
+object, not five regional source builds or source-link completion. The current
+EN `ninja all_source` and strict retail checksum pass. Production source remains
+at 99.989235%; the unresolved task is recovering a justified source shape that
+retains the two indirect stores.
+
+## Retained volatile exception (2026-09-20)
+
+The user authorized the two volatile accesses as a narrow matching exception
+if another non-volatile investigation did not succeed, with a TODO to revisit
+them. A second round tested 12 ordinary C variants on the fresh staging tip:
+deriving either coordinate pointer from the other, incrementing the pointers
+during setup, byte-based initializers, four sequential vector-copy cursors,
+point/bounce-scoped initialization, and an inline translation helper with scalar
+inputs and separate output pointers. None reached 100%. Byte initializers and
+the four cursors retained the original two differences; the other variants
+regressed instruction count or operands. Local results are retained under
+`build/track_intersect_lldb/second_round/`.
+
+The two casts are now retained in `trackGetIntersect2`, immediately below:
+
+```c
+/* TODO: Recover a non-volatile source shape that preserves retail's indirect stores. */
+```
+
+This supersedes the preceding investigation's decision to keep them outside
+production. It is an explicitly authorized code-generation workaround, not
+evidence that the original stack accesses were volatile. The rest of the
+function, compiler flags and TU boundaries are unchanged. The entire TU remains
+`NonMatching`, since five other functions still differ.
+
+The retained function reaches **100%**, with **25/30 exact functions** and
+**99.74327%** overall for the TU. Its object hash is the diagnostic hash above:
+only the two store words change relative to baseline, with no other function,
+data, symbol-layout or relocation differences. `clang-format -i` makes no
+additional edits to the TU or its canonical header; both pass the dry-run check
+and formatting preserves the complete object. The probe accepts both the
+ordinary and retained source forms and continues to recreate the non-volatile
+baseline before comparing controls.
+
+The retained source was then rebuilt separately for all five configured retail
+versions. Each has the same object hash, 100% for this function, and passing
+`ninja all_source` and strict checksum gates against independently hash-verified
+original DOLs. Each Ninja invocation was limited to 30 seconds. The matching
+link still uses the retail object for this incomplete TU; objdiff verifies the
+new source function directly. The regional results and build logs are under
+`build/track_intersect_lldb/retained_regions/`, and the active build configuration
+is restored to EN v1.0. A fresh LLDB run of the retained-source probe also
+reproduces the baseline and exact exception objects without instrumentation
+changes to either output.

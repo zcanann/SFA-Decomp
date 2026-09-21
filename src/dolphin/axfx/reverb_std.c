@@ -3,7 +3,7 @@
 #include <dolphin/axfx.h>
 
 #include "dolphin/axfx/__axfx.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 
 extern const f32 axfx_reverb_std_handle_f32_0p3;
 extern const f32 axfx_reverb_std_handle_f32_0p6;

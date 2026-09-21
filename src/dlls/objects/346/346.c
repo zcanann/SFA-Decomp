@@ -3,7 +3,7 @@
 #include "dlls/objects/346.h"
 #include "dlls/objects/358.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gamebits_api.h"
 #include "main/model.h"
 #include "sys/objects.h"

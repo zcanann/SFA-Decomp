@@ -13,7 +13,7 @@
  * id. Some init bookkeeping (the sortedOffsets sort, partFlags/partAlpha
  * arrays) appears only partly wired; behavior is inferred.
  */
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"

@@ -39,7 +39,7 @@ so the "should-be-compiled" class is EMPTY.
 | 6 | `dolphin/axfx/reverb_std.c` | VENDOR-SUP | full vendor AXFX source, partially adapted (spells `axfx_reverb_std_f32_*` pool names); retail linked only 7 of its 14 functions, as the compiled two-TU split `reverb_std_create.c`+`reverb_std_callback.c` |
 | 7 | `dolphin/os/OSTimer.c` | VENDOR-SUP | its `DecrementerException{Callback,Handler}` live in compiled `OSAlarm.c`; no `OS*Timer` API in symbols.txt |
 | 8 | `dolphin/os/OSInterruptUnused.c` | VENDOR-SUP | its `SetInterruptMask` lives in compiled `OSInterrupt.c`; `OSGet/OSSetInterruptMask` absent from the DOL |
-| 9 | `dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c` | VENDOR-SUP | MSL `acosf`/`powf`; retail's come from compiled `main/acosf.c` and `exponentialsf.c` |
+| 9 | `MSL_C/PPCEABI/bare/H/math_ppc.c` | VENDOR-SUP | MSL `acosf`/`powf`; retail's come from compiled `main/acosf.c` and `exponentialsf.c` |
 | 10 | `Runtime.PPCEABI.H/Gecko_ExceptionPPC.cp` | VENDOR-SUP | MW C++ exception runtime; only `__register_fragment`/`__unregister_fragment` shipped, from compiled `fragment.c`; the DOL has no C++ EH machinery |
 | 11 | `dolphin/TRK_MINNOW_DOLPHIN/main.c` | VENDOR-SUP | DDH transport driver (`ddh_cc_*`, none in DOL); compiled `main_TRK.c` is the linked main |
 | 12 | `dolphin/TRK_MINNOW_DOLPHIN/main_gdev.c` | VENDOR-SUP | GDEV transport twin of #11 (`gdev_cc_*`, none in DOL) |

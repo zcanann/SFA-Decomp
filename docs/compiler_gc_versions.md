@@ -3,6 +3,8 @@
 Measured on September 6, 2026. The unchanged-source comparison uses staging
 `30cb240500a6898f79bf0272f60f9771168034ae`, targeting EN v1.0 (`GSAE01`).
 Subsequent source matches are recorded in [the cleanup log](compiler_gc13_cleanup.md).
+The [GC/1.2.5 investigation](compiler_gc125_investigation.md) compares the older
+compiler, its modern `n` patch, retail save conventions, and C-menu rematching.
 
 GC/1.3 can recover real matches. GC/1.3.2 is a separate candidate: several
 relevant changes were already present by 1.3.2. These results compare the local

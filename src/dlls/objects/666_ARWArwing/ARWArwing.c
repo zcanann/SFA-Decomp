@@ -24,7 +24,7 @@
  * CLAUDE.md matching notes.
  */
 #include "main/dll/partfx_interface.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
 #include "main/camera_interface.h"
 #include "main/camera.h"

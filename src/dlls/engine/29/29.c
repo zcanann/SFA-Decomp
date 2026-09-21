@@ -2,7 +2,7 @@
 #include "main/vecmath.h"
 #include "main/dll_000A_expgfx.h"
 #include "game/objects/object.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_001D_effect4.h"
 

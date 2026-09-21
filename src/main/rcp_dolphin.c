@@ -1,4 +1,4 @@
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/texture.h"
 #include "game/objects/object.h"
 #include "main/model_light.h"

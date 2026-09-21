@@ -3,7 +3,7 @@
  */
 #include "main/dll/CAM/dll_0045_camTalk.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "game/objects/object.h"
 #include "main/camera_interface.h"
 #include "main/frame_timing.h"

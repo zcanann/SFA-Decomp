@@ -10,7 +10,7 @@
 #include "main/objtexture.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/lightmap_api.h"
 #include "main/track_dolphin_api.h"
 #include "main/audio/sfx_play_api.h"

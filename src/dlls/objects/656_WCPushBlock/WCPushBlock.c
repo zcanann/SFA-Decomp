@@ -22,7 +22,7 @@
  */
 #include "main/dll/WC/dll_0290_wcpushblock.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/gameloop_gamebit_api.h"

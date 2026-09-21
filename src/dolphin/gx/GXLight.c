@@ -1,6 +1,6 @@
 
 #include "dolphin/gx/__gx.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 
 #pragma fp_contract off
 

@@ -5,7 +5,7 @@
 #include "sys/objects/lifecycle.h"
 #include "sys/objects.h"
 #include "main/shader_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/mapEventTypes.h"
 #include "main/mm.h"
 #include "main/vecmath.h"

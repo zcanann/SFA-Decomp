@@ -1,6 +1,6 @@
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx/vec.h"
 #include "dolphin/os.h"
 #include "dolphin/pad.h"

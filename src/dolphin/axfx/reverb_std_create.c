@@ -1,5 +1,5 @@
 #include "dolphin/axfx/reverb_std_create.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "string.h"
 #include "musyx/sal_dsp.h"
 s32 sReverbStdDelayLengths[4] = { 1789, 1999, 433, 149 };

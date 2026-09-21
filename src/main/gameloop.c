@@ -61,7 +61,7 @@
 #include "main/dll/savegame_load_api.h"
 #include "main/dll/savegame.h"
 #include "main/dll/dll_0015_save_settings.h"
-#include "main/dll/dll_80136a40.h"
+#include "main/debug_display.h"
 #include "main/newshadows.h"
 #include "main/track_dolphin_api.h"
 #include "main/shader_api.h"

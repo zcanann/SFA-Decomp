@@ -5,7 +5,7 @@
  * bounds, reverses at edges, and transitions into target-aware attacks.
  */
 #include "dlls/objects/208_Grimble.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll/boneparticleeffect_interface.h"

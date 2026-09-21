@@ -20,7 +20,7 @@ class AtanReductionTests(unittest.TestCase):
         compiler = shutil.which("clang")
         if not compiler:
             raise unittest.SkipTest("clang is required for the source-body harness")
-        source = (ROOT / "src/main/acosf.c").read_text()
+        source = (ROOT / "src/MSL_C/PPCEABI/bare/H/inverse_trig.c").read_text()
         function = re.search(r"^float atanf\(.*?^\}", source, re.M | re.S).group()
         function = function.replace("float atanf(", "EXPORT float sfa_atanf(", 1)
         constants = "\n".join(re.findall(r"^const (?:float|double) \w+ = [^;]+;", source, re.M))

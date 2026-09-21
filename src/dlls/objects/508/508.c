@@ -3,7 +3,7 @@
  */
 #include "dlls/objects/508.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "game/objects/object.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_position_api.h"

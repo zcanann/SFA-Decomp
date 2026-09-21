@@ -60,3 +60,17 @@ checked separately in the MWCC object.
 `ninja all_source` and the strict retail DOL checksum both pass. The TU remains
 `NonMatching`, so the strict link uses its retail object and is not proof of
 the reconstructed function's instruction identity.
+
+A September 20 follow-up tests ordinary inline accessors for the descriptor,
+result-order and hit-record arrays. Early descriptor setup again reaches
+99.96203%, but the descriptor array still moves from +0x424 to +0x50, with the
+other arrays displaced. Duplicating setup in the positive/negative mode arms
+adds an instruction and does not fix storage order. None of these candidates
+is retained; accessor inlining does not bypass the evidenced BSS allocation
+order.
+
+Function-local static result arrays behave the same way: without initializers,
+their BSS order still follows use; with explicit zero initializers, they move
+to `.data`. Const-qualified local pointer aliases do not defer their address
+setup enough to recover retail code while preserving BSS. These follow-up
+probes are not retained and do not establish that retail used local statics.

@@ -41,7 +41,7 @@ address,section,size_bytes,byte_class,subtype_reason,adjacent_owner,adjacency_co
 0x803DC388,.sdata,16,const-data,small const / rodata,dll_0279_drenergydisc.c,high,1,main/modelEngine.o,16,0,0,0
 0x803DC420,.sdata,8,const-data,small const / rodata,dll_02B5_timer.c,high,2,auto_07_8032BE50_data.o,8,0,0,0
 0x803DC500,.sdata,48,const-data,small const / rodata,dll_02BD_androsshand.c,high,5,main/unknown/autos/placeholder_80220608.o,48,0,0,0
-0x803DC648,.sdata,24,const-data,small const / rodata,printf.c,high,2,dolphin/MSL_C/PPCEABI/bare/H/e_pow.o,24,0,0,0
+0x803DC648,.sdata,24,const-data,small const / rodata,printf.c,high,2,MSL_C/PPCEABI/bare/H/e_pow.o,24,0,0,0
 0x803DC6F0,.sdata,112,const-data,small const / rodata,player.c,high,5,main/unknown/autos/placeholder_802A36EC.o,110,0,0,0
 0x803DC76C,.sdata,50,const-data,small const / rodata,dll_0257_drearthwarrior.c,high,5,main/dll/DR/dll_0258_drcloudrunner.o,48,0,0,0
 0x803DC7A0,.sbss,24,bss,zero-init,,-,6,main/model.o,17,0,4,0
@@ -73,7 +73,7 @@ address,section,size_bytes,byte_class,subtype_reason,adjacent_owner,adjacency_co
 0x803DDE98,.sbss,8,bss,zero-init,,-,1,dolphin/db/db.o,8,0,0,0
 0x803DE218,.sbss,432,bss,zero-init,,-,94,main/audio/hw_dspctrl.o,405,0,0,0
 0x803DE3E4,.sbss,12,bss,zero-init,,-,2,Runtime.PPCEABI.H/GCN_mem_alloc.o,8,0,4,0
-0x803DE408,.sbss,8,bss,zero-init,,-,1,dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.o,8,0,0,0
+0x803DE408,.sbss,8,bss,zero-init,,-,1,MSL_C/PPCEABI/bare/H/FILE_POS.o,8,0,0,0
 0x803DE4C0,.sbss,36,bss,zero-init,,-,6,main/dll/DR/dll_0257_drearthwarrior.o,34,0,0,0
 0x803DE500,.sdata2,440,float-pool,read-only const/float pool (.sdata2),modelEngine.c,med,6,main/unknown/autos/placeholder_800066E0.o,240,129,68,0
 0x803DE6E4,.sdata2,12,float-pool,read-only const/float pool (.sdata2),modelEngine.c,high,1,main/pad.o,4,4,0,0
@@ -192,9 +192,9 @@ address,section,size_bytes,byte_class,subtype_reason,adjacent_owner,adjacency_co
 0x803E77D8,.sdata2,24,float-pool,read-only const/float pool (.sdata2),synth.c,high,2,main/audio/synth_jobs.o,4,20,0,0
 0x803E78E4,.sdata2,12,float-pool,read-only const/float pool (.sdata2),hw_volume.c,high,4,main/audio/hw_volume.o,8,0,0,0
 0x803E7920,.sdata2,40,float-pool,read-only const/float pool (.sdata2),reverb_std_create.c,high,4,dolphin/axfx/reverb_std_callback.o,36,4,0,0
-0x803E79C0,.sdata2,528,float-pool,read-only const/float pool (.sdata2),math_float_helpers.c,high,15,dolphin/MSL_C/PPCEABI/bare/H/k_sin.o,512,12,0,0
+0x803E79C0,.sdata2,528,float-pool,read-only const/float pool (.sdata2),math_float_helpers.c,high,15,MSL_C/PPCEABI/bare/H/k_sin.o,512,12,0,0
 0x803E7BD8,.sdata2,56,float-pool,read-only const/float pool (.sdata2),e_sqrt.c,high,6,auto_03_802929CC_text.o,52,4,0,0
-0x803E7C18,.sdata2,408,float-pool,read-only const/float pool (.sdata2),s_tan.c,high,17,dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.o,400,8,0,0
+0x803E7C18,.sdata2,408,float-pool,read-only const/float pool (.sdata2),s_tan.c,high,17,MSL_C/PPCEABI/bare/H/e_rem_pio2.o,400,8,0,0
 0x803E8214,.sdata2,28,float-pool,read-only const/float pool (.sdata2),player.c,high,3,dlls/objects/437/437.o,24,4,0,0
 0x803E82D4,.sdata2,12,float-pool,read-only const/float pool (.sdata2),dll_01D9_dim2prisonmammoth.c,high,3,main/dll/DR/dll_0257_drearthwarrior.o,4,8,0,0
 0x803E82E0,.sdata2,136,float-pool,read-only const/float pool (.sdata2),dll_01D9_dim2prisonmammoth.c,med,3,main/dll/DR/dll_0257_drearthwarrior.o,108,28,0,0

@@ -17,7 +17,7 @@
  * save point the first time their own arrivalWarpId matches that index.
  */
 #include "dlls/objects/240_WarpPoint.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"

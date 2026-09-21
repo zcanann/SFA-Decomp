@@ -5,7 +5,7 @@
  */
 #include "dlls/objects/469_DIM2Conveyo.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"

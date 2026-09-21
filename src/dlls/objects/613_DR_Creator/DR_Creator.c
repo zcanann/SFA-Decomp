@@ -7,7 +7,7 @@
  * (DR_Creator_SeqFn).
  */
 #include "main/dll/DR/dll_0265_drcreator.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/debug.h"
 #include "main/frame_timing.h"
 #include "main/gamebits_api.h"

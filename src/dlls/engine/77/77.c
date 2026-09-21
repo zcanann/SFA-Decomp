@@ -3,7 +3,7 @@
  */
 #include "main/dll/dll_004D_cameramodenpcspeak.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_0042_cameramodenormal.h"
 #include "main/frame_timing.h"
 #include "main/maketex_api.h"

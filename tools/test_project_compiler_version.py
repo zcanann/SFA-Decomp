@@ -56,12 +56,23 @@ class ActiveCompilerProfileTests(unittest.TestCase):
         finally:
             os.chdir(previous_directory)
 
-    def test_game_code_uses_gc13(self):
+    def test_game_code_compiler_profiles(self):
         self.assertEqual(self.config.compiler_version, "GC/1.3")
         for name, obj in self.objects.items():
             if obj.options["progress_category"] == "game" and not name.endswith(".s"):
                 with self.subTest(source=name):
                     self.assertEqual(obj.options["mw_version"], "GC/1.3")
+
+    def test_older_math_has_independent_msl_profiles(self):
+        names = ("math_float_helpers", "inverse_trig", "power_helpers", "trig_reduce",
+                 "rand", "reciprocal", "angle_vectors", "sqrtf", "trig16", "sincosf",
+                 "sincos_approximations", "tanf_log2")
+        for name in names:
+            with self.subTest(source=name):
+                obj = self.objects[f"MSL_C/PPCEABI/bare/H/{name}.c"]
+                self.assertEqual(obj.options["progress_category"], "third_party")
+                self.assertEqual(obj.options["mw_version"], "GC/1.3" if name == "rand" else "GC/1.2.5n")
+                self.assertTrue(obj.completed)
 
     def test_dolphin_library_default_is_gc125n(self):
         obj = self.dolphin_lib["objects"][0].resolve(self.config, self.dolphin_lib)
@@ -81,9 +92,9 @@ class ActiveCompilerProfileTests(unittest.TestCase):
             "Runtime.PPCEABI.H/__start.c": "GC/1.2.5n",
             "Runtime.PPCEABI.H/__mem.c": "GC/1.3",
             "Runtime.PPCEABI.H/__va_arg.c": "GC/1.3.2",
-            "dolphin/MSL_C/PPCEABI/bare/H/floorf.c": "GC/1.2.5n",
-            "dolphin/MSL_C/PPCEABI/bare/H/mbstring.c": "GC/1.3.2r",
-            "dolphin/MSL_C/PPCEABI/bare/H/mem.c": "GC/1.3",
+            "MSL_C/PPCEABI/bare/H/floorf.c": "GC/1.2.5n",
+            "MSL_C/PPCEABI/bare/H/mbstring.c": "GC/1.3.2r",
+            "MSL_C/PPCEABI/bare/H/mem.c": "GC/1.3",
             "musyx/runtime/synth.c": "GC/1.2.5n",
             "musyx/runtime/hw_break.c": "GC/2.0",
         }
@@ -112,13 +123,13 @@ class ActiveCompilerProfileTests(unittest.TestCase):
     def test_float_math_uses_native_cpp_linkage_and_initialization(self):
         for name, compiler in (("trigf", "GC/1.2.5"), ("hyperbolicsf", "GC/1.2.5n")):
             with self.subTest(source=name):
-                obj = self.objects[f"dolphin/MSL_C/PPCEABI/bare/H/{name}.c"]
+                obj = self.objects[f"MSL_C/PPCEABI/bare/H/{name}.c"]
                 self.assertEqual(obj.options["mw_version"], compiler)
                 self.assertEqual(obj.options["extra_cflags"], ["-lang=c++"])
                 self.assertTrue(obj.completed)
 
     def test_exponential_tables_use_normal_small_data_rules(self):
-        prefix = "dolphin/MSL_C/PPCEABI/bare/H/"
+        prefix = "MSL_C/PPCEABI/bare/H/"
         constants = self.objects[prefix + "float.c"]
         self.assertEqual(constants.options["mw_version"], "GC/1.2.5n")
         self.assertTrue(constants.completed)

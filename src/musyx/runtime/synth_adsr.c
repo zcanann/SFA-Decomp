@@ -1,5 +1,5 @@
 #include "PowerPC_EABI_Support/Runtime/runtime.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "musyx/adsr.h"
 #include "musyx/adsr_setup.h"
 #include "musyx/adsr_handle.h"

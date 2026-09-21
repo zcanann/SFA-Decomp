@@ -22,7 +22,7 @@ class DebugRecordRectangleTests(unittest.TestCase):
         compiler = shutil.which("clang")
         if not compiler:
             raise unittest.SkipTest("clang is required for the source-body harness")
-        source = (ROOT / "src/main/dll_80136a40.c").read_text()
+        source = (ROOT / "src/main/debug_display.c").read_text()
         names = ("debugPrintXpos", "debugPrintYpos", "gDebugRectStartX", "gDebugRectStartY",
                  "gDebugDrawPass", "gDebugFixedWidthMode", "gDebugScaleX", "gDebugScaleY",
                  "gDebugScaleBiasX", "gDebugScaleBiasY", "gDebugTextColorR", "gDebugTextColorG",
@@ -33,7 +33,8 @@ class DebugRecordRectangleTests(unittest.TestCase):
                                    for name in names)
         functions = "\n".join(re.search(r"^(?:static inline void|int) " + name + r"\([^;{}]*\) \{.*?^\}",
                                          source, re.M | re.S).group()
-                               for name in ("debugPrintFillRect", "debugDrawLogRect", "debugPrintDrawRecord"))
+                               for name in ("debugPrintFillRect", "debugDrawLogRect", "debugPrintWrapLine",
+                                            "debugPrintDrawRecord"))
         cls.temporary = tempfile.TemporaryDirectory(prefix="sfa-debug-rectangles-")
         cls.addClassCleanup(cls.temporary.cleanup)
         directory = Path(cls.temporary.name)

@@ -9,8 +9,8 @@
 #include "main/lightmap_api.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frustum.h"
 #include "main/asset_load.h"
 #include "game/objects/object.h"
@@ -54,7 +54,7 @@
 #include "main/newshadows.h"
 #include "main/sky.h"
 #include "main/newshadows_texture_api.h"
-#include "main/acosf_api.h"
+#include "MSL_C/PPCEABI/bare/H/inverse_trig_api.h"
 #include "main/tex_dolphin.h"
 #include "string.h"
 
@@ -974,14 +974,17 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
     return gTrackSweepHitCount;
 }
 
+static inline IntersectLine* trackGetPooledLine(int index) {
+    return &((IntersectLine*)gIntersectLinePool)[index];
+}
+
 void intersectModLineBuild(ObjDef* definition) {
     s16 pointLinks[0xd48];
     IntersectLine* line;
     int lineIndex;
     int sourceLineCount;
     MapHitLine* sourceLine;
-    int lineByteOffset;
-    int outputLineIndex;
+    int index;
     s16 previousGroup;
 
     mapBlockFlag = 1;
@@ -989,7 +992,6 @@ void intersectModLineBuild(ObjDef* definition) {
     gIntersectPointCount = 0;
     sourceLineCount = definition->modLineCount;
     for (lineIndex = 0, sourceLine = definition->modLines; lineIndex < sourceLineCount; sourceLine++, lineIndex++) {
-        int i;
         if (gIntersectLineCount < 0x5dc) {
             line = (IntersectLine*)((u8*)gIntersectLinePool + gIntersectLineCount * (int)sizeof(IntersectLine));
             line->end0 = sourceLine->endpointData[0];
@@ -1002,30 +1004,29 @@ void intersectModLineBuild(ObjDef* definition) {
             line->flags = sourceLine->flags;
             *(s8*)&line->flags ^= 0x10;
             line->param = sourceLine->param;
-            for (i = 0; i < 2; i++) {
-                f32 x = sourceLine->x[i];
-                f32 y = sourceLine->y[i];
-                f32 z = sourceLine->z[i];
+            for (index = 0; index < 2; index++) {
+                f32 x = sourceLine->x[index];
+                f32 y = sourceLine->y[index];
+                f32 z = sourceLine->z[index];
                 if (gIntersectPointCount < 0x6a4) {
-                    line->pt[i] = insertPoint(gIntersectLineCount, pointLinks, x, y, z);
+                    line->pt[index] = insertPoint(gIntersectLineCount, pointLinks, x, y, z);
                 }
             }
             gIntersectLineCount++;
         }
     }
     {
-        outputLineIndex = 0;
-        lineByteOffset = outputLineIndex;
-        for (; outputLineIndex < gIntersectLineCount; lineByteOffset += sizeof(IntersectLine), outputLineIndex++) {
+        index = 0;
+        for (; index < gIntersectLineCount; index++) {
             int pointLinkIndex;
             s16* firstPointLinks;
             s16* secondPointLinks;
-            line = (IntersectLine*)((u8*)gIntersectLinePool + lineByteOffset);
+            line = trackGetPooledLine(index);
             pointLinkIndex = line->pt[0] * 2;
             firstPointLinks = &pointLinks[pointLinkIndex];
-            if (firstPointLinks[0] > -1 && firstPointLinks[0] != outputLineIndex) {
+            if (firstPointLinks[0] > -1 && firstPointLinks[0] != index) {
                 line->adj[0] = firstPointLinks[0];
-            } else if (firstPointLinks[1] > -1 && firstPointLinks[1] != outputLineIndex) {
+            } else if (firstPointLinks[1] > -1 && firstPointLinks[1] != index) {
                 line->adj[0] = firstPointLinks[1];
             } else {
                 line->adj[0] = -1;
@@ -1034,9 +1035,9 @@ void intersectModLineBuild(ObjDef* definition) {
                 pointLinkIndex = line->pt[1] * 2;
                 secondPointLinks = &pointLinks[pointLinkIndex];
             }
-            if (secondPointLinks[0] > -1 && secondPointLinks[0] != outputLineIndex) {
+            if (secondPointLinks[0] > -1 && secondPointLinks[0] != index) {
                 line->adj[1] = secondPointLinks[0];
-            } else if (secondPointLinks[1] > -1 && secondPointLinks[1] != outputLineIndex) {
+            } else if (secondPointLinks[1] > -1 && secondPointLinks[1] != index) {
                 line->adj[1] = secondPointLinks[1];
             } else {
                 line->adj[1] = -1;
@@ -1061,7 +1062,7 @@ void intersectModLineBuild(ObjDef* definition) {
         }
     }
     previousGroup = -1;
-    for (outputLineIndex = 0; outputLineIndex < gIntersectLineCount; outputLineIndex++) {
+    for (index = 0; index < gIntersectLineCount; index++) {
         s16 bestLineIndex = 0;
         IntersectLine* candidateLines;
         int candidateLineIndex = 0;
@@ -1078,9 +1079,9 @@ void intersectModLineBuild(ObjDef* definition) {
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
         }
         if (groupIndex != previousGroup) {
-            definition->intersectionSegmentRanges[groupIndex].first = outputLineIndex;
+            definition->intersectionSegmentRanges[groupIndex].first = index;
             if (previousGroup != -1) {
-                definition->intersectionSegmentRanges[previousGroup].end = outputLineIndex;
+                definition->intersectionSegmentRanges[previousGroup].end = index;
             }
             previousGroup = groupIndex;
         }
@@ -1088,12 +1089,12 @@ void intersectModLineBuild(ObjDef* definition) {
             int emittedLineIndex;
             s16 bestLine;
             bestLine = bestLineIndex;
-            for (emittedLineIndex = 0; emittedLineIndex < outputLineIndex; emittedLineIndex++) {
+            for (emittedLineIndex = 0; emittedLineIndex < index; emittedLineIndex++) {
                 if (definition->intersectionLines[emittedLineIndex].adj[0] == bestLine) {
-                    definition->intersectionLines[emittedLineIndex].adj[0] = outputLineIndex;
+                    definition->intersectionLines[emittedLineIndex].adj[0] = index;
                 }
                 if (definition->intersectionLines[emittedLineIndex].adj[1] == bestLine) {
-                    definition->intersectionLines[emittedLineIndex].adj[1] = outputLineIndex;
+                    definition->intersectionLines[emittedLineIndex].adj[1] = index;
                 }
             }
         }
@@ -1104,15 +1105,15 @@ void intersectModLineBuild(ObjDef* definition) {
                 line = &((IntersectLine*)gIntersectLinePool)[lineIndex];
                 if (line->kind != 0x14) {
                     if (bestLine == line->adj[0]) {
-                        line->adj[0] = outputLineIndex;
+                        line->adj[0] = index;
                     }
                     if (bestLine == ((IntersectLine*)gIntersectLinePool)[lineIndex].adj[1]) {
-                        ((IntersectLine*)gIntersectLinePool)[lineIndex].adj[1] = outputLineIndex;
+                        ((IntersectLine*)gIntersectLinePool)[lineIndex].adj[1] = index;
                     }
                 }
             }
         }
-        memcpy(&definition->intersectionLines[outputLineIndex], &((IntersectLine*)gIntersectLinePool)[bestLineIndex],
+        memcpy(&definition->intersectionLines[index], &((IntersectLine*)gIntersectLinePool)[bestLineIndex],
                sizeof(IntersectLine));
         ((IntersectLine*)gIntersectLinePool)[bestLineIndex].kind = 0x14;
     }
@@ -1124,12 +1125,38 @@ void intersectModLineBuild(ObjDef* definition) {
     gIntersectPointCount = 0;
 }
 
+static inline void trackSortLineOrder(void) {
+    int sortComplete;
+    int sortIndex;
+    s16 secondLineIndex;
+    s16 firstLineIndex;
+    s16* sortOrder;
+    IntersectLine* lines;
+    int sortByteOffset;
+
+    sortComplete = 0;
+    while (sortComplete == 0) {
+        sortComplete = 1;
+        for (sortIndex = 0, sortByteOffset = sortIndex; sortIndex < gIntersectLineCount - 1;
+             sortByteOffset += sizeof(s16), sortIndex++) {
+            int firstType;
+
+            lines = (IntersectLine*)gIntersectLinePool;
+            sortOrder = (s16*)(gIntersectLineSortOrderBuffer + sortByteOffset);
+            firstLineIndex = sortOrder[0];
+            firstType = (s8)lines[firstLineIndex].kind & 0x3f;
+            if (firstType < ((s8)lines[(secondLineIndex = sortOrder[1])].kind & 0x3f)) {
+                sortOrder[0] = secondLineIndex;
+                *(s16*)(gIntersectLineSortOrderBuffer + sortByteOffset + sizeof(s16)) = firstLineIndex;
+                sortComplete = 0;
+            }
+        }
+    }
+}
+
 void trackIntersect(void) {
     s16 counts[0x47];
     s16 edges[0x6a4 * 2];
-    s16* sourceCoord;
-    u8* linePoint;
-    int sourceOffset;
     int blockIndex;
     int rowOffset;
     int sourceIndex;
@@ -1138,13 +1165,6 @@ void trackIntersect(void) {
     int layer;
     IntersectLine* line;
     int i;
-    int lineOffset;
-    u8* lineBytes;
-    s16* sortOrder;
-    s16 firstLine;
-    s16 secondLine;
-    int sortIndex;
-    int sortComplete;
     s16 previousType, segmentType;
     f32 pointX, pointY, pointZ;
     f32 blockX;
@@ -1183,12 +1203,10 @@ void trackIntersect(void) {
                 if (idx[blockIndex] >= 0) {
                     MapBlockData* blk = mapGetBlock(idx[blockIndex]);
                     sourceIndex = 0;
-                    sourceOffset = 0;
-                    blockX = 640.0f * gridX;
-                    for (; sourceIndex < blk->hitCount; sourceOffset += sizeof(MapHitLine), sourceIndex++) {
+                    for (; sourceIndex < blk->hitCount; sourceIndex++) {
+                        blockX = 640.0f * gridX;
                         if (gIntersectLineCount < 0x5dc) {
-                            MapHitLine* sourceLine = (MapHitLine*)((u8*)blk->hits + sourceOffset);
-                            s16* sourcePoints = sourceLine->x;
+                            MapHitLine* sourceLine = &blk->hits[sourceIndex];
                             IntersectLine* rec = (IntersectLine*)(gIntersectLinePool + gIntersectLineCount * 0x10);
                             f32 mapOriginX, mapOriginZ;
                             rec->end0 = sourceLine->endpointData[0];
@@ -1204,15 +1222,12 @@ void trackIntersect(void) {
                             mapOriginX = blockX + playerMapOffsetX;
                             mapOriginZ = blockZ + playerMapOffsetZ;
                             endpoint = 0;
-                            sourceCoord = sourcePoints;
-                            linePoint = (u8*)rec;
-                            for (; endpoint < 2; sourceCoord++, linePoint += 2, endpoint++) {
-                                pointX = mapOriginX + sourceCoord[0];
-                                pointY = sourceCoord[2];
-                                pointZ = sourceCoord[4] + mapOriginZ;
+                            for (; endpoint < 2; endpoint++) {
+                                pointX = mapOriginX + sourceLine->x[endpoint];
+                                pointY = sourceLine->y[endpoint];
+                                pointZ = sourceLine->z[endpoint] + mapOriginZ;
                                 if (gIntersectPointCount < 0x6a4) {
-                                    *(s16*)(linePoint + 4) =
-                                        insertPoint(gIntersectLineCount, edges, pointX, pointY, pointZ);
+                                    rec->pt[endpoint] = insertPoint(gIntersectLineCount, edges, pointX, pointY, pointZ);
                                 }
                             }
                             counts[rec->kind & 0x3f]++;
@@ -1230,7 +1245,7 @@ void trackIntersect(void) {
         s16* pointEdges2;
         s16 adjacentLine;
 
-        line = (IntersectLine*)(gIntersectLinePool + i * 16);
+        line = trackGetPooledLine(i);
         pointIndex = line->pt[0] * 2;
         pointEdges = &edges[pointIndex];
         adjacentLine = pointEdges[0];
@@ -1263,24 +1278,7 @@ void trackIntersect(void) {
         for (i = 0; i < gIntersectLineCount; i++) {
             *(s16*)(gIntersectLineSortOrderBuffer + i * 2) = i;
         }
-        sortComplete = 0;
-        while (sortComplete == 0) {
-            sortComplete = 1;
-            for (sortIndex = 0, lineOffset = sortIndex; sortIndex < gIntersectLineCount - 1;
-                 lineOffset += sizeof(s16), sortIndex++) {
-                int firstType;
-
-                lineBytes = (u8*)gIntersectLinePool;
-                sortOrder = (s16*)(gIntersectLineSortOrderBuffer + lineOffset);
-                firstLine = sortOrder[0];
-                firstType = (s8)lineBytes[firstLine * sizeof(IntersectLine) + 3] & 0x3f;
-                if (firstType < ((s8)lineBytes[(secondLine = sortOrder[1]) * sizeof(IntersectLine) + 3] & 0x3f)) {
-                    sortOrder[0] = secondLine;
-                    *(s16*)(gIntersectLineSortOrderBuffer + lineOffset + sizeof(s16)) = firstLine;
-                    sortComplete = 0;
-                }
-            }
-        }
+        trackSortLineOrder();
     }
 
     for (i = 0x46; i != 0; i--) {
@@ -1302,9 +1300,8 @@ void trackIntersect(void) {
     }
 
     previousType = -1;
-    for (i = 0, lineOffset = i; i < gIntersectLineCount; lineOffset += 2, i++) {
-        segmentType =
-            (s16)((s8) * (u8*)(gIntersectLinePool + *(s16*)(gIntersectLineIndexTable + lineOffset) * 0x10 + 3) & 0x3f);
+    for (i = 0; i < gIntersectLineCount; i++) {
+        segmentType = (s16)((s8)trackGetPooledLine(((s16*)gIntersectLineIndexTable)[i])->kind & 0x3f);
         if (segmentType >= 0x14) {
             segmentType = 1;
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
@@ -2006,8 +2003,9 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                     *startY = svFromp[1];
                     *startZ = svFromp[2] - offZ;
                     we[0] = cur[0] - offX;
-                    *endY = cur[1];
-                    *endZ = cur[2] - offZ;
+                    /* TODO: Recover a non-volatile source shape that preserves retail's indirect stores. */
+                    *(volatile f32*)endY = cur[1];
+                    *(volatile f32*)endZ = cur[2] - offZ;
                 }
                 PSVECSubtract((Vec*)we, (Vec*)ws, (Vec*)delta);
                 mag = PSVECMag((Vec*)delta);
@@ -2603,29 +2601,63 @@ u8 doEdges;
     Vec triangleVertices[3];
     Vec edgeNormal;
     u32 offA;
+    u32 offB;
+    u32 offC;
     int* firstp;
     int last;
     int mask16;
     int f40, f80, f200, f120, f20, f8, f100, f4;
-    int gx0, gz0, gx1, gz1;
-    u32 offB;
-    MapBlockData **cellp, **cw;
-    int gx, gz;
-    int count, layer;
-    int *descp, *dw;
-    u32 offC;
-    int relx0, relz0, relx1, relz1;
+    int* q2;
+    MapBlockData** p1;
+    int* q1;
+    MapBlockData** p2;
+    MapBlockData** cellp;
+    MapBlockData** cw;
+    int* dw;
+    Vec* edgeCursor;
+    int layer;
+    Vec* secondVertex;
+    int* descp;
+    int gx0;
+    int relx0;
+    int relz0;
+    int relx1;
+    int gx1;
     int i;
     int vEnd;
     CollisionPolygonGroup* groupEnd;
     u8 typeb;
     u32 bb;
     u32 dmaflip;
-    Vec* secondVertex;
-    MapBlockData** p1;
-    int* q1;
-    MapBlockData** p2;
-    int* q2;
+    int gz0;
+    int relz1;
+    int gz1;
+    int gx;
+    int gz;
+    MapBlockData* blk;
+    MapTriIndex* triangle;
+    int edgeIndex;
+    int dxoff;
+    int dzoff;
+    int t0;
+    int normalComponentIndex;
+    int count;
+    int x;
+    int j;
+    int yy;
+    u8 type;
+    int minX;
+    u8 minYi;
+    int maxX;
+    int minY;
+    int maxY;
+    int minZ;
+    u8 maxYi;
+    int maxZ;
+    CollisionPolygonGroup* group;
+    int z;
+    u16* tw;
+    u8* vo;
 
     x0 -= gMapBlockOriginWorldX;
     z0 -= gMapBlockOriginWorldZ;
@@ -2655,9 +2687,9 @@ u8 doEdges;
     do {
         for (gx = gx0, p1 = cw, q1 = dw; gx <= gx1 && count < 16; gx++) {
             for (gz = gz0, p2 = p1, q2 = q1; gz <= gz1 && count < 16; gz++) {
-                MapBlockData* blk = mapGetBlockAtPos(gx, gz, layer);
-                if (blk != NULL) {
-                    *p2 = blk;
+                MapBlockData* gridBlock = mapGetBlockAtPos(gx, gz, layer);
+                if (gridBlock != NULL) {
+                    *p2 = gridBlock;
                     q2[0] = gx * 0x280;
                     q2[2] = gz * 0x280;
                     p2++;
@@ -2679,10 +2711,10 @@ u8 doEdges;
 
     {
         MapBlockData* c0 = cells[0];
-        void* p = mapBlockGetPolygon(c0, 0);
+        void* initialPolygon = mapBlockGetPolygon(c0, 0);
         dmaflip = 0;
         offA = 0;
-        cacheAllocAndCopy((u8*)p, c0->nPolygons << 3, &offA, &offB, 0x2000);
+        cacheAllocAndCopy((u8*)initialPolygon, c0->nPolygons << 3, &offA, &offB, 0x2000);
         cacheAllocAndCopy((u8*)c0->vertices, c0->vertexCount * 6, &offB, &offC, 0x2000);
     }
     i = 0;
@@ -2699,27 +2731,24 @@ u8 doEdges;
     last = count;
     last--;
     for (; i < count; i++) {
-        MapBlockData* blk;
         int vb;
-        CollisionPolygonGroup* group;
         s16 mask;
         s16 bit;
         int pos;
-        int dxoff, dzoff;
         CollisionPolygonGroup* groups;
-
         bb = offA;
         vb = offB;
         if (i < last) {
             MapBlockData* next = cellp[1];
             u32 nextBase;
-            void* p;
-            int c13, c14;
+            void* nextPolygon;
+            int c13;
+            int c14;
             dmaflip ^= 0x2000u;
             nextBase = dmaflip + 0x2000;
-            p = mapBlockGetPolygon(next, 0);
+            nextPolygon = mapBlockGetPolygon(next, 0);
             offA = dmaflip;
-            c13 = cacheAllocAndCopy((u8*)p, next->nPolygons << 3, &offA, &offB, nextBase);
+            c13 = cacheAllocAndCopy((u8*)nextPolygon, next->nPolygons << 3, &offA, &offB, nextBase);
             c14 = cacheAllocAndCopy((u8*)next->vertices, next->vertexCount * 6, &offB, &offC, nextBase);
             cacheQueueWait((u8)(c13 + c14));
         } else {
@@ -2768,9 +2797,6 @@ u8 doEdges;
         mask16 = mask;
         for (; group < groupEnd; group++) {
             u32 tf = group->flags;
-            int t0;
-            u8 type;
-            MapTriIndex* triangle;
 
             if ((tf & 0x10) && f40) {
                 continue;
@@ -2822,13 +2848,8 @@ u8 doEdges;
             vEnd = group[1].firstTri;
             secondVertex = &triangleVertices[1];
             for (; t0 < vEnd; t0++, triangle++) {
-                u8* vo;
                 s16* vp;
                 Vec* vertexCursor;
-                u8 maxYi, minYi;
-                u16* tw;
-                int minX, maxX, minY, maxY, minZ, maxZ;
-                int j;
                 f32 mag;
 
                 if ((mask16 & triangle->cellMask & 0xff) == 0) {
@@ -2857,10 +2878,9 @@ u8 doEdges;
                 vo = (u8*)(cur + 2);
                 vertexCursor = &triangleVertices[1];
                 for (; j < 3; j++) {
-                    int x, yy, z;
                     vp = (s16*)(vb + *tw * 6);
                     x = vp[0] >> 3;
-                    yy = blk->collisionYOffset + (vp[1] >> 3);
+                    yy = (vp[1] >> 3) + blk->collisionYOffset;
                     z = vp[2] >> 3;
                     if (x > maxX) {
                         maxX = x;
@@ -2934,8 +2954,7 @@ u8 doEdges;
                 }
                 ((TrackTriangle*)cur)->planeD = -PSVECDotProduct((Vec*)(cur + 4), &triangleVertices[0]);
                 if (doEdges) {
-                    int normalComponentIndex, degenerateEdge, edgeIndex;
-                    Vec* edgeCursor;
+                    int degenerateEdge;
                     f32 one, eps;
                     PSVECSubtract(&triangleVertices[2], &triangleVertices[0], &edgeVectors[2]);
                     normalComponentIndex = 0;
@@ -2994,7 +3013,6 @@ u8 doEdges;
     }
     return cur;
 }
-
 void trackIntersectBroadphase(GameObject* obj, TrackQueryBounds* ranges, u32 queryMask, int b) {
     f32 x0 = (f32)(ranges->minX - 5);
     f32 x1 = (f32)(ranges->maxX + 5);

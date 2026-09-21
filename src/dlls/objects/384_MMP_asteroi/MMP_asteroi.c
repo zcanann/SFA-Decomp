@@ -6,7 +6,7 @@
  */
 #include "dlls/objects/384_MMP_asteroi.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/sfx_channel_volume_api.h"
 #include "main/audio/sfx_keep_alive_api.h"
 #include "main/audio/sfx_trigger_ids.h"

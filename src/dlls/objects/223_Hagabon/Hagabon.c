@@ -5,7 +5,7 @@
  * hit reactions.
  */
 #include "dlls/objects/223_Hagabon.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/partfx_interface.h"

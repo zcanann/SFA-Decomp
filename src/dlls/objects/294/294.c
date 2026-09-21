@@ -58,7 +58,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/vecmath.h"
 #include "dolphin/mtx.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gameloop_api.h"
 #include "track/intersect_api.h"
 #include "main/audio/sfx_play_api.h"

@@ -2,7 +2,7 @@
 #include "main/dll/dll_02BC_andross.h"
 #include "dlls/objects/694_CNThitObjec.h"
 #include "main/audio/music_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/map_load.h"
 #include "main/audio/sfx.h"

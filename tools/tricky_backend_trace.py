@@ -17,6 +17,11 @@ With --final-allocation-attempt, a larger uncolored graph may supersede an
 unpaired initial graph. Earlier attempts are recorded as unreplayed, not as
 verified spill decisions; the final pair still passes every replay check.
 The default remains strict, and all raw snapshots are preserved.
+On macOS, --temporary-name NAME also records returns from GC/1.3's temporary
+object factory and joins them to the requested graph by object address, name
+and type. Names are build-specific (for example @1899); they are not retail
+symbols. The recorded caller return is an exact call-site observation, not a
+reconstructed call stack. Missing requested names fail the capture.
 """
 
 from __future__ import annotations
@@ -137,8 +142,10 @@ def inspect(snapshots, obj, functions, require_graph=False, unit=UNIT, required_
 
 
 def run_capture(source, directory, functions, graph=False, unit=UNIT, register_class=4,
-                final_allocation_attempt=False):
+                final_allocation_attempt=False, temporary_names=()):
     register_kind(register_class)
+    if temporary_names and (sys.platform != "darwin" or not graph):
+        raise ValueError("temporary birth capture currently requires macOS and --graph")
     if sys.platform == "darwin":
         from mwcc_backend_capture_lldb import capture
     elif sys.platform.startswith("linux"):
@@ -161,6 +168,8 @@ def run_capture(source, directory, functions, graph=False, unit=UNIT, register_c
         compiler_index = next(i for i, value in enumerate(command) if Path(value).name.lower() == "mwcceppc.exe")
         compiler = (ROOT / command[compiler_index]).resolve()
         options = {"graph": graph}
+        if temporary_names:
+            options["temporary_names"] = temporary_names
         if register_class != 4:
             options["register_class"] = register_class
         snapshots, log = capture(command[compiler_index:] + ["-pragma", "debug_listing on"], ROOT, set(functions), **options)
@@ -171,6 +180,12 @@ def run_capture(source, directory, functions, graph=False, unit=UNIT, register_c
         report = inspect(snapshots, traced_obj, functions, require_graph=graph, unit=unit,
                          required_register_class=register_class if graph else None,
                          final_allocation_attempt=final_allocation_attempt)
+        if temporary_names:
+            found = {birth["name"] for snapshot in snapshots
+                     for birth in snapshot.get("temporary_births", [])}
+            missing = set(temporary_names) - found
+            if missing:
+                raise ValueError(f"temporary births not observed in the requested graphs: {sorted(missing)}")
         document = {
             "schema": 1, "unit": unit, "compiler_sha256": hashlib.sha256(compiler.read_bytes()).hexdigest(),
             "object_sha256": traced_hash, "source": str(source),
@@ -178,6 +193,8 @@ def run_capture(source, directory, functions, graph=False, unit=UNIT, register_c
             "command": command[compiler_index:] + ["-pragma", "debug_listing on"],
             "graph_requested": graph, "register_class": register_class, "snapshots": snapshots,
         }
+        if temporary_names:
+            document["temporary_names"] = sorted(set(temporary_names))
         shutil.copyfile(traced_obj, directory / "traced.o")
         (directory / "compiler.log").write_text(log, encoding="utf-8")
         (directory / "trace.json").write_text(json.dumps(document, indent=2), encoding="utf-8")
@@ -197,6 +214,8 @@ def main():
                         help="Replay the final graph after growing allocation retries; earlier attempts remain unverified")
     parser.add_argument("--register-class", choices=("gpr", "fpr"), help="Graph class (default: gpr)")
     parser.add_argument("--register", type=int, action="append", help="Virtual register graph index; requires --graph when capturing")
+    parser.add_argument("--temporary-name", action="append", default=[],
+                        help="Trace an observed compiler temporary name back to its object-factory caller; repeatable, macOS --graph captures only")
     parser.add_argument("--read", type=Path, help="Inspect a previous trace and its adjacent traced.o without compiling")
     args = parser.parse_args()
     if args.instruction and len(args.function or []) != 1:
@@ -207,6 +226,8 @@ def main():
         parser.error("--register-class requires --graph when capturing")
     if args.final_allocation_attempt and not (args.graph or args.read):
         parser.error("--final-allocation-attempt requires --graph or --read")
+    if args.temporary_name and (args.read or not args.graph or sys.platform != "darwin"):
+        parser.error("--temporary-name requires a fresh macOS --graph capture")
     if args.read:
         document = json.loads(args.read.read_text(encoding="utf-8"))
         if document["schema"] != 1:
@@ -236,7 +257,8 @@ def main():
         source = args.source or (ROOT / base[base.index("-c") + 1])
         document, report = run_capture(source.resolve(), args.output.resolve(), args.function or FUNCTIONS,
                                       args.graph, unit, 3 if args.register_class == "fpr" else 4,
-                                      final_allocation_attempt=args.final_allocation_attempt)
+                                      final_allocation_attempt=args.final_allocation_attempt,
+                                      temporary_names=args.temporary_name)
     print("Instrumented/ordinary raw object SHA256:", document["object_sha256"])
     for name, item in report.items():
         kind, prefix = register_kind(item["register_class"])
@@ -254,6 +276,10 @@ def main():
             colored = snapshot.get("graph_colored", True)
             order = coloring_order(graph) if colored else []
             print(f"  {snapshot['stage']}: {len(graph)} nodes; coloring prefix {order[:8]}")
+            for birth in snapshot.get("temporary_births", []):
+                registers = ", ".join(f"v{register}" for register in birth["registers"])
+                print(f"    {birth['name']}: {registers} from factory {birth['factory']:#x}, "
+                      f"caller return {birth['return_address']:#x}")
             for register in args.register or []:
                 print("  " + describe_node(graph, register, colored=colored, register_class=item["register_class"]))
         if item["simplification_replayed"]:

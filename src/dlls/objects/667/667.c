@@ -20,7 +20,7 @@
  * arwprojectile_launchForward + arwprojectile_setParamScalar live in the
  * arwarwingbo translation unit (dll_029C).
  */
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
 #include "main/frame_timing.h"
 #include "main/pad.h"

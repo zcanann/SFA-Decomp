@@ -6,7 +6,7 @@
  * the object, records its game bit, and starts a steam effect.
  */
 #include "dlls/objects/204_ChukChuk.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/objfx_api.h"
 #include "main/frame_timing.h"

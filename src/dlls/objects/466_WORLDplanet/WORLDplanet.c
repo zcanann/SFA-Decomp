@@ -18,7 +18,7 @@
 #include "main/dll/hint_text_api.h"
 #include "main/dll/partfx_interface.h"
 #include "main/frame_timing.h"
-#include "main/trig.h"
+#include "MSL_C/PPCEABI/bare/H/trig16.h"
 #include "main/gamebits_api.h"
 #include "main/lightmap_api.h"
 #include "main/lightmap_render_control_api.h"

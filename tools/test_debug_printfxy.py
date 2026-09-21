@@ -23,7 +23,7 @@ class DebugPrintfxyTests(unittest.TestCase):
         compiler = shutil.which("clang")
         if not compiler:
             raise unittest.SkipTest("clang is required for the source-body harness")
-        source = (ROOT / "src/main/dll_80136a40.c").read_text()
+        source = (ROOT / "src/main/debug_display.c").read_text()
         function = re.search(r"^void debugPrintfxy\(.*?^\}", source, re.M | re.S).group()
         view = re.search(r"typedef struct DebugFontErrorDataView \{.*?\} DebugFontErrorDataView;",
                          source, re.S).group()

@@ -26,7 +26,7 @@
 #include "sys/objects.h"
 #include "sys/objects/lifecycle.h"
 #include "main/frame_timing.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"

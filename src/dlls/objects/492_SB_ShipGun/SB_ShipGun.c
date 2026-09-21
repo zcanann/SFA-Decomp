@@ -23,7 +23,7 @@
 #include "dlls/objects/488_SB_Galleon.h"
 #include "dlls/objects/494_SB_CannonBa.h"
 #include "dlls/objects/504_WM_Galleon.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "game/objects/object.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"

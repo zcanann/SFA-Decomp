@@ -1,4 +1,4 @@
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "game/objects/object.h"

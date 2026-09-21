@@ -2,7 +2,7 @@
 #include <dolphin/ax.h>
 #include <dolphin/axfx.h>
 #include "dolphin/axfx/__axfx.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 
 // prototypes
 static void DLsetdelay(AXFX_REVHI_DELAYLINE* dl, s32 lag);

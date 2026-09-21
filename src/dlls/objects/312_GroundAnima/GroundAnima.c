@@ -2,7 +2,7 @@
 #include "dlls/objects/312_GroundAnima.h"
 #include "dlls/objects/237.h"
 #include "dlls/objects/386_MMP_moonroc.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/os/OSCache.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"

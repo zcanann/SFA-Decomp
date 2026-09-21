@@ -7,7 +7,7 @@
  * partner-door messages, side-specific game bits, effects, and audio.
  */
 #include "dlls/objects/244.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/camera.h"
 #include "main/gamebits.h"
 #include "main/obj_message.h"

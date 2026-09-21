@@ -22,7 +22,7 @@
 #include "main/maketex_random_api.h"
 #include "main/maketex_sequence_api.h"
 #include "main/maketex_timer_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/obj_link.h"

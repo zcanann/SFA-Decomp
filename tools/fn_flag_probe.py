@@ -96,7 +96,7 @@ PROFILES: dict[str, tuple[str | None, str | None]] = {
 # so a token earns its place here only by changing some unit's output.
 #
 # MEASURED 2026-08-05, AND IT IS THE SAME FAILURE THIS COMMENT WARNS ABOUT:
-# at -O0 (the msl_math_o0_cflags units -- acosf, sincosf, math_8029454c) EVERY
+# at -O0 (the msl_math_o0_cflags units -- inverse_trig, sincosf, tanf_log2) EVERY
 # token below is BYTE-INERT.  All seven profiles were md5-verified to produce
 # objects identical to the configured build, so this table prints an all-"-"
 # column set that is indistinguishable from a closed axis -- while the axes that

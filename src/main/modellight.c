@@ -9,7 +9,7 @@
 #include "sys/objects.h"
 #include "dolphin/gx/GXLighting.h"
 #include "string.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/gx/GXGet.h"
 #include "main/object_transform.h"
 #include "dolphin/mtx/vec.h"

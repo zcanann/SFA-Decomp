@@ -4,7 +4,7 @@
  * object callbacks, and rendering code.
  */
 #include "dlls/objects/373_DFropenode.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx/vec.h"
 #include "game/objects/object.h"
 #include "main/audio/sfx_keep_alive_api.h"

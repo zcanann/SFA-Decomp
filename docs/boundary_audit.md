@@ -95,7 +95,7 @@ DLLs whose fns it hosts:
 | main/dll/ARW/ARWarwingattachment.c (801F0B50-801F37CC) | LaserBeam 0x1FC tail, PressureSwitch 0x1FE, dll_1FF, WM_LaserTarget 0x1FD, dll_200, WM_colrise 0x201, WM_Torch 0x204, LightSource 0x206 head — 8 WM-lane DLLs, no arwing attachment | |
 | main/dll/LGT/LGTdirectionallight.c | WM_Worm 0x207 tail + WM_LevelControl 0x209 head | |
 | main/dll/LGT/LGTprojectedlight.c | WM_LevelControl 0x209 tail + WM_GeneralScales 0x20A (whole) | |
-| dolphin/MSL_C/PPCEABI/bare/H/gamecube.c | last 3 fns (80094494-8009449C) are dll 0x009's getObjectTypeId-family stubs | DLL code in an SDK unit |
+| MSL_C/PPCEABI/bare/H/gamecube.c | last 3 fns (80094494-8009449C) are dll 0x009's getObjectTypeId-family stubs | DLL code in an SDK unit |
 
 ## Known-case surgery plans (Phase 2)
 
@@ -296,7 +296,7 @@ descriptor `lbl_8030F7E8` (auto_07 data) legitimately points its tail slots
 functions `__end_critical_region` / `__begin_critical_region` /
 `__kill_critical_regions` (80094494-800944A0), with its body slots pointing at
 cloudaction.c's fns. The SDK fns correctly live in
-`dolphin/MSL_C/PPCEABI/bare/H/gamecube.c` (a MatchingFor SDK unit) and CANNOT
+`MSL_C/PPCEABI/bare/H/gamecube.c` (a MatchingFor SDK unit) and CANNOT
 move into cloudaction.c without breaking the SDK unit's link/match. The audit
 flags it because the descriptor's fn-pointer span crosses the gamecube|
 cloudaction boundary, but that span is a legitimate two-TU reference, not a
@@ -325,7 +325,7 @@ proven-irreducible MSL-edge cut remains.
 
 | dll | descriptor | fn range | TU (proposed) | cutting boundary(ies) | reach | names |
 |---|---|---|---|---|---|---|
-| 0x009 | lbl_8030F7E8 | 80094494-80094F60 | 80093AE0-80094F7C | 800944A0 (dolphin/MSL_C/PPCEABI/bare/H/gamecube.c \| main/dll/cloudaction.c) | n |  |
+| 0x009 | lbl_8030F7E8 | 80094494-80094F60 | 80093AE0-80094F7C | 800944A0 (MSL_C/PPCEABI/bare/H/gamecube.c \| main/dll/cloudaction.c) | n |  |
 
 ## CF-lane canonical-naming finish (June 2026)
 
@@ -381,7 +381,7 @@ No-descriptor / vestigial-unit dispositions:
 
 | dll | descriptor | fn range | TU (proposed) | cutting boundary(ies) | reach | names |
 |---|---|---|---|---|---|---|
-| 0x009 | lbl_8030F7E8 | 80094494-80094F60 | 80093AE0-80094F7C | 800944A0 (dolphin/MSL_C/PPCEABI/bare/H/gamecube.c \| main/dll/cloudaction.c) | n |  |
+| 0x009 | lbl_8030F7E8 | 80094494-80094F60 | 80093AE0-80094F7C | 800944A0 (MSL_C/PPCEABI/bare/H/gamecube.c \| main/dll/cloudaction.c) | n |  |
 | 0x003 | lbl_803112E8 | 800D5530-800D7548 | 800D5530-800D7568 | 800D6660 (main/dll/dim_partfx.c \| main/dll/df_partfx.c) | n |  |
 | 0x00F | lbl_80311438 | 800D8020-800D9DC8 | 800D8020-800D9DCC | 800D8F90 (main/dll/df_partfx.c \| main/dll/objfsa.c) | n |  |
 | 0x014 | lbl_803115F8 | 800E0134-800E5430 | 800D9EE8-800E5434 | 800E1B24 (main/dll/objfsa.c \| main/dll/curves.c) | n |  |

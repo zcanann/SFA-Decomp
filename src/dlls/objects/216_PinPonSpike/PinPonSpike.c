@@ -6,7 +6,7 @@
  * The launch-angle helper is also used by the duster object family.
  */
 #include "dlls/objects/216_PinPonSpike.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/partfx_interface.h"

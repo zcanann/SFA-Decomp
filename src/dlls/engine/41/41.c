@@ -1,5 +1,5 @@
 #include "main/dll/waterfxcfg_struct.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "game/objects/object.h"
 #include "main/dll_000A_expgfx.h"

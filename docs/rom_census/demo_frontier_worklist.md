@@ -19,11 +19,11 @@ No boundary-insert ambiguity on any row; zero demo-only strings attributable to 
 | Unit | fuzzy % | Status | .text size | KIOSK range | Notes |
 |---|---|---|---|---|---|
 | main/textrender_boxtex.c | 96.66 | NonMatching | 0x3A8 | 8001BC58-8001C000 | single fn `gameTextInitBoxTextures` |
-| dolphin/MSL_C/.../math_8029454c.c | 98.36 | NonMatching | 0xF4 | 80291C34-80291D28 | `mathTanf`, `log2fBitEstimate` |
+| MSL_C/.../math_8029454c.c | 98.36 | NonMatching | 0xF4 | 80291C34-80291D28 | `mathTanf`, `log2fBitEstimate` |
 | main/sincosf.c | 98.75 | NonMatching | 0x140 | 8029134C-8029148C | `mathSinCosf` |
 | dlls/engine/3/3.c | 99.53 | NonMatching | 0x2038 | 800D41B0-800D61E8 | Checkpoint_* DLL, 18 fns |
 | musyx/runtime/synth_seq_dispatch.c | 99.75 | NonMatching | 0x1458 | 8026BADC-8026CF34 | MusyX seq dispatch |
-| dolphin/MSL_C/.../exponentialsf.c | 99.78 | NonMatching | 0x77C | 802922A0-80292A1C | `powf` |
+| MSL_C/.../exponentialsf.c | 99.78 | NonMatching | 0x77C | 802922A0-80292A1C | `powf` |
 | musyx/runtime/synth_queue.c | 99.85 | NonMatching | 0x11A8 | 80269E80-8026B028 | `seqStartPlay`/`seqPause`/... |
 | dlls/objects/625/625.c | 99.97 | NonMatching | 0x1C08 | 8021E164-8021FD6C | drakorhoverpad, 29 fns |
 

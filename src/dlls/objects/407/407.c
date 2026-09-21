@@ -1,7 +1,7 @@
 /* DLL 0x197. */
 #include "dlls/objects/407.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera.h"
 #include "main/dll/expgfx_interface.h"

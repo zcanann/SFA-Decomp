@@ -5,7 +5,7 @@
  */
 #include "dlls/objects/270.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/stream_api.h"
 #include "main/camera.h"
 #include "main/dll/player_status.h"

@@ -15,7 +15,7 @@
 #include "main/obj_trigger.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/partfx_interface.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/model.h"
 #include "main/objHitReact.h"
 #include "main/objprint_character_api.h"

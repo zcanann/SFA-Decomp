@@ -6,7 +6,7 @@
 #include "game/objects/object.h"
 #include "main/pause_menu_api.h"
 #include "main/shader_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/gx/GXLegacy.h"
 #include "dolphin/gx/GXTransform.h"
 #include "dolphin/mtx.h"

@@ -4,7 +4,7 @@
  */
 #include "dlls/objects/512.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/pad.h"
 #include "game/objects/object.h"
 #include "main/audio/sfx_ids.h"

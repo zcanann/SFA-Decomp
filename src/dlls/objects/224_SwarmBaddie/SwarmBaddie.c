@@ -5,7 +5,7 @@
  * and particle effects from its hit-volume envelope.
  */
 #include "dlls/objects/224_SwarmBaddie.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_channel_volume_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"

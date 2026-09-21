@@ -11,7 +11,7 @@ extern "C" {
 #include "main/dll/dll_0056_cameramodearwing.h"
 #include "main/dll/dll_0057_cameramodetitle.h"
 #include "main/debug.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "game/objects/object.h"
 #include "main/objprint_api.h"

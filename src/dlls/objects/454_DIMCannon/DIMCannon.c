@@ -6,7 +6,7 @@
  */
 #include "dlls/objects/454_DIMCannon.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/pad.h"
 #include "game/objects/object.h"
 #include "main/audio/sfx_channel_query_api.h"

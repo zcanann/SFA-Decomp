@@ -5,7 +5,7 @@
  * spiral motion, and fadeout.
  */
 #include "dlls/objects/227_Fireball.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/waterfx_interface.h"
 #include "main/dll_000A_expgfx.h"

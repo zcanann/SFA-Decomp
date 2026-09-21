@@ -7,7 +7,7 @@
 
 #include "dlls/objects/437.h"
 #include "dlls/objects/440_SC_totempol.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/audio/sfx_play_api.h"

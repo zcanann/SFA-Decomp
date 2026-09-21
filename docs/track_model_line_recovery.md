@@ -169,3 +169,144 @@ helpers, permuting the original counter declarations and adding casts to
 adjacency accesses do not improve this candidate. Removing the existing empty
 loop regresses code generation substantially, so it is retained. Coordinator
 pointer-walk experiments also leave its two store differences unchanged.
+
+## Exact model-line builder through the pool accessor (September 20)
+
+`intersectModLineBuild` now matches all **338 instructions / 1,352 bytes**.
+The private `trackGetPooledLine(index)` accessor returns a typed element of the
+existing integer-backed engine pool. The builder uses ordinary indexed access
+through this helper and shares one neutrally named `index` across endpoint,
+adjacency and output loops. These lifetimes do not overlap. No volatile access,
+new storage, compiler setting or forced-inline pragma is needed.
+
+The earlier shared-counter/indexed candidate already emitted the correct
+instruction sequence but exchanged the adjacency pointer and byte-offset
+registers. Comparing its LLDB capture with the accessor version aligns all
+338 instructions and maps 188 registers, with no partition conflicts or mapped
+interference-edge differences (four graph neighbors remain unmapped). The
+pointer changes from virtual GPR49/r4 to GPR72/r3, and the generated offset
+changes from GPR70/r3 to GPR69/r4. This recovers the retail colors. The accessor
+is inlined; no extra function body or call is emitted.
+
+The retained capture exactly reproduces the ordinary object, replays the
+230-node GPR graph and all 196 physical color choices, and reports zero retail
+differences. Against the previous retained source, only instruction 94 changes:
+`li r4,0` becomes retail's `mr r4,r5`. Every other function's bytes, every named
+symbol's location and every non-text byte is unchanged. Anonymous literal
+labels renumber, but their relocation offsets, types, addends and resolved
+destinations remain identical.
+
+All five input DOL hashes are checked. Each regional `all_source` and strict
+retail checksum gate passes, and all five track objects have SHA-256
+`ca5e66b31beb372b8424aee30297da96e2707163d94f7bf8d15173f0c6268c95`.
+The complete TU reaches **99.90503%**, with **26/30 exact functions**. It remains
+`NonMatching`; this is an exact function, not a claim that the entire TU links
+from source to retail bytes.
+
+## Static-line adjacency uses the same accessor
+
+`trackIntersect` now also calls `trackGetPooledLine(i)` in its adjacency pass.
+This one-line change fixes eighteen register-only instruction differences,
+raising the function from **99.61404% to 99.807014%**. It remains 570 instructions
+/ 2,280 bytes. Its eight remaining differences are the sort-loop zero copy at
+index 321 and the final segment-loop counter/offset registers at indices
+489, 490, 494, 513, 526, 527 and 529.
+
+Both LLDB captures reproduce their ordinary objects and replay 287-node GPR
+graphs with 253 color choices and no high-degree removals. The register-role
+comparison aligns all 570 instructions, maps 222 registers, and finds no
+partition conflicts or mapped interference-edge differences; four neighbors
+remain unmapped. The adjacency pointer changes from virtual GPR50/r5 to
+GPR87/r3, its index from GPR65/r4 to GPR64/r5, and its offset from GPR84/r3 to
+GPR83/r4. These are all the changed instruction operands.
+
+All five regional objdiff reports now give the TU **99.92069%**, with
+**26/30 exact functions**. Each region passes the original-DOL hash check,
+`all_source` and strict retail checksum. All five object hashes are
+`833e92e118ea39d26a25a1b3b6af59d31c89b097088f3ad53e98ac44286792f8`.
+Only `trackIntersect` changes relative to the exact-model-builder commit;
+other function bytes, named symbols, data and resolved relocations are
+unchanged. The two builders' shared accessor has no emitted out-of-line body.
+
+## Exact sorting opcodes and typed endpoints (September 20)
+
+The private `trackSortLineOrder()` helper now owns the bubble-sort pass, while
+its identity-table initialization stays in the caller. The helper uses typed
+`IntersectLine.kind` accesses and keeps the evidenced table-base reload for
+the second swap store. Its declaration order matters to MWCC's register
+allocation. Inlining recovers retail's `mr r5,r10` at instruction 321 without
+volatile accesses or an extra call/body. Extracting the initialization too
+instead exchanges its counter and offset registers, so that broader helper
+was rejected.
+
+The final segment pass uses indexed lookup through `trackGetPooledLine` rather
+than a second manually maintained byte offset. This preserves its zero copy
+once the sorting offset has moved into the helper. The map-line import pass
+also uses the canonical `MapHitLine.x/y/z[endpoint]` and
+`IntersectLine.pt[endpoint]` arrays. The source-coordinate and destination-byte
+scratch cursors are unnecessary: removing both preserves every already-exact
+instruction and changes only the still-unmatched final-loop register choices.
+Removing the resulting unused declarations preserves the raw object.
+
+`trackIntersect` improves from **99.807014% to 99.91228%**. All 570 opcodes and
+non-register operands match retail. Seven instruction words still differ at
+indices 489, 490, 494, 513, 526, 527 and 529: the final index uses r26 instead
+of r23, and its generated offset uses r25 instead of r22. No function is
+promoted to exact by this change.
+
+The final LLDB capture equals the ordinary compile, aligns all 570
+instructions, and replays the 287-node graph and 253 color choices without
+high-degree removals. Retail's colors for virtual GPR60 and GPR68 satisfy that
+same graph with all other colors unchanged. A scratch replay of the candidate
+before endpoint cleanup could recover retail colors by moving its two final
+values earlier in simplification order. Actual dedicated locals at those
+positions recovered the physical registers, but replaced the required zero
+copy with a second `li`. The named/generated exclusion in the companion
+compiler's `GC13_ValueNumbering_CanNumber` explains that tradeoff. Those
+experiments are not retained. Volatile scalar casts did not fix it; volatile
+objects or reads added stack storage and instructions.
+
+All five input hashes, source builds and strict retail checksums pass. Regional
+objdiff reports agree at **99.92923% for the TU**, with **26/30 exact functions**.
+Each track object has SHA-256
+`cf5235c552236ef4632d0aa1cc5073ef03340de58a7bb6c82c4e8950fcb66b34`.
+Only `trackIntersect` changes relative to the preceding accessor commit;
+other function bytes, named-symbol layouts, non-text data and resolved
+relocations remain identical. The unit is still `NonMatching`.
+
+## Indexed map-line import (September 20)
+
+The map-line import now uses `blk->hits[sourceIndex]` directly, removing its
+redundant named byte-offset counter. Put the block-X calculation inside the
+source-line loop: GC/1.3 hoists it back to the retail position, after both zero
+initializations. Leaving the calculation before the loop instead moves the
+new generated offset's initialization past the floating-point calculation.
+No additional volatile access or helper is needed.
+
+The retained object has SHA-256
+`76488b758f3e83805c526eff61d0eb627c5edf9c078244d1b1917d3f22f7a235`.
+The ordinary and LLDB-instrumented objects are byte-identical. Both this graph
+and the preceding graph replay all 253 color choices on 287 nodes, without
+high-degree removals. Their 570 aligned instructions map 222 virtual registers
+with no partition conflicts or mapped interference-edge differences; four
+neighbors are unmapped. Only the two remaining final-loop values change
+physical registers: index r26 -> r25 and offset r25 -> r24. Retail requires
+r23/r22. This simplifies the import but does **not** improve the fuzzy score:
+`trackIntersect` remains 99.91228%, and the TU remains 99.92923%, 26/30 exact.
+All other function bytes, named-symbol layouts, non-text data and resolved
+relocations are unchanged. Anonymous literal names renumber.
+
+Further source probes do not recover those last colors: reusing earlier
+counter locals preserves the existing result; dedicated counters lose the
+required zero-copy instruction; extracting the segment pass preserves opcode
+shape but changes more registers. Removing the row-offset local preserves
+opcodes but changes grid-loop registers as well. Accessors for imported
+records or point-edge pointers also regress allocation. A sampled permutation
+search over the indexed candidate's complete named GPR band found no better
+coloring; this is not an exhaustive impossibility result. The new indexed
+source and its narrower named-register band are the next diagnostic baseline.
+
+All five configured input DOL hashes, `ninja all_source` builds and strict
+retail checksums pass. The five regional track objects share the hash above;
+all five objdiff reports retain the scores and exact-function count stated
+above. The eight existing track tests pass. The unit remains `NonMatching`.

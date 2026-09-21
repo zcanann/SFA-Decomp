@@ -5,7 +5,7 @@
  * optional game bit records that the placement has already been shown.
  */
 #include "dlls/objects/248_LevelName.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits_api.h"
 #include "main/gametext_internal.h"

@@ -1,5 +1,5 @@
 #include "global.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
 #include "track/intersect_internal.h"

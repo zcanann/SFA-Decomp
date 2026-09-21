@@ -6,7 +6,7 @@
  */
 #include "dlls/objects/206.h"
 #include "dlls/objects/202.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll/partfx_interface.h"

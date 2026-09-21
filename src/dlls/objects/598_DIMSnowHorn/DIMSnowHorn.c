@@ -15,7 +15,7 @@
 #include "main/objHitReact.h"
 #include "main/vecmath.h"
 #include "main/newclouds.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"

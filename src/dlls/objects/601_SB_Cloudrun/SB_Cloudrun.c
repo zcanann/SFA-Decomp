@@ -23,7 +23,7 @@
 #include "sys/objects.h"
 #include "dolphin/mtx.h"
 #include "main/dll/cloudaction_interface.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/partfx_interface.h"
 #include "main/shader_api.h"

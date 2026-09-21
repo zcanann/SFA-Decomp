@@ -5,7 +5,7 @@
 #include "dlls/objects/262.h"
 #include "dolphin/mtx/vec.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/partfx_interface.h"
 #include "main/frame_timing.h"

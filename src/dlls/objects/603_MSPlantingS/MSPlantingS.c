@@ -14,7 +14,7 @@
 #include "main/audio/sfx_play_api.h"
 #include "dlls/objects/196_Tricky.h"
 #include "main/dll/partfx_interface.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/object_render.h"
 #include "main/objhits.h"
 #include "main/objprint_api.h"

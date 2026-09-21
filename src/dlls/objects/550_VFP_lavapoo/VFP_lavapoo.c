@@ -1,6 +1,6 @@
 /* VFP_lavapoo (DLL 0x0226) */
 #include "dlls/object_descriptor.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "game/objects/object_setup.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"

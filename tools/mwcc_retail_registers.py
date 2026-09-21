@@ -122,15 +122,20 @@ def main():
     parser.add_argument("capture", type=Path)
     parser.add_argument("--function", required=True)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--final-allocation-attempt", action="store_true",
+                        help="use the verified final retry graph; earlier spill choices remain unverified")
     args = parser.parse_args()
     document = json.loads(args.capture.read_text())
-    capture = load_capture(args.capture, args.function)
+    capture = load_capture(args.capture, args.function, final_allocation_attempt=args.final_allocation_attempt)
     target, _ = strucdiff.obj_paths(document["unit"])
     source = args.capture.parent / "traced.o"
     result = project(capture, strucdiff.text_lines(str(source), args.function),
                      strucdiff.text_lines(target, args.function))
     result.update(function=args.function, unit=document["unit"],
-                  captured_object_sha256=capture["object_sha256"])
+                  captured_object_sha256=capture["object_sha256"],
+                  unreplayed_allocation_attempts=capture["unreplayed_allocation_attempts"])
+    if capture["unreplayed_allocation_attempts"]:
+        print("Earlier allocation attempts remain unreplayed:", capture["unreplayed_allocation_attempts"])
     print(f"{args.function}: {result['instruction_count']} instructions; "
           f"{len(result['changes'])} virtual registers need different colors")
     for change in result["changes"]:

@@ -13,7 +13,7 @@
  */
 #include "dlls/objects/460_DIMMagicBri.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "dolphin/os/OSCache.h"
 #include "main/dll/player_api.h"
 #include "main/dll/ppcwgpipe_struct.h"

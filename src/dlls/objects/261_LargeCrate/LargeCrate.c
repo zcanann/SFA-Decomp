@@ -7,7 +7,7 @@
 #include "dlls/objects/261_LargeCrate.h"
 #include "dlls/objects/237.h"
 #include "dlls/objects/262.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera_interface.h"
 #include "main/dll/modgfx_interface.h"

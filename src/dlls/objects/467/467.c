@@ -4,7 +4,7 @@
  */
 #include "dlls/objects/467.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/stream_api.h"
 #include "main/camera.h"
 #include "main/dll/dll_0000_gameui_api.h"

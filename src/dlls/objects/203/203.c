@@ -5,7 +5,7 @@
  * its sequence state requests it. No retail object name is known.
  */
 #include "dlls/objects/203.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"

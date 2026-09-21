@@ -7,7 +7,7 @@
  * actions when they enter the box; the Tricky action is a no-op.
  */
 #include "dlls/objects/238_EffectBox.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/player_api.h"
 #include "main/gamebits.h"
 #include "main/object_render.h"

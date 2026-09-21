@@ -82,7 +82,7 @@ address. `[lo-hi)` is the splits.txt `.text` range (the partition unit).
 | 1 | `main/dll/dll_0000_baby_snowworm.c` | 80128120-8012FECC | MISLABELED | FORENSIC | 0x000 anom:gameui,pause,viewfn,pausemenufn | dll_0000_gameui.c |
 | 2 | `main/dll/dll_003C_tumbleweedbush.c` | 80130124-80131540 | MISLABELED | FORENSIC | 0x03C anom:link,linkdrawfn,titlescreenfn | dll_003C_link.c |
 | 3 | `main/dll/dll_80161130.c` | 80161130-80161F0C | HELPER-TU | RENAME-ONLY | — anom:grimble,scarab | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 4 | `main/dll/dll_80136a40.c` | 80136A40-8013939C | HELPER-TU | RENAME-ONLY | — anom:tricky,debug,report,trickyfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 4 | `main/debug_display.c` | 80136A40-8013939C | HELPER-TU | RENAMED | — anom:tricky,debug,report,trickyfn | descriptive debug-display name; no descriptor |
 | 5 | `main/dll/dll_3b.c` | 8011730C-801175A4 | HELPER-TU | RENAME-ONLY | — anom:audio,pop,push,attract | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | 6 | `main/dll/dll_bb.c` | 80101980-8010210C | HELPER-TU | RENAME-ONLY | — anom:camera,camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | 7 | `main/dll/dll_3e.c` | 8011846C-80118C88 | HELPER-TU | RENAME-ONLY | — anom:thp,prepare,play | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
@@ -151,7 +151,7 @@ address. `[lo-hi)` is the splits.txt `.text` range (the partition unit).
 | 78 | `main/newclouds.c` | 8008EE18-80094494 | ENGINE-HOST | FORENSIC | 0x007 anom:snow,lightning,cloud,mm | engine/SDK host of DLL(s) 0x007 |
 | 79 | `main/objseq.c` | 80080DE8-80088758 | ENGINE-HOST | FORENSIC | 0x002 anom:rom,animated,seq | engine/SDK host of DLL(s) 0x002 |
 | 80 | `main/dfplightni.c` | 80209958-80209FE0 | ENGINE-HOST | FORENSIC | 0x23B anom:dfppowersl | engine/SDK host of DLL(s) 0x23B |
-| 81 | `dolphin/MSL_C/PPCEABI/bare/H/gamecube.c` | 80094494-800944A0 | ENGINE-HOST | FORENSIC | 0x009 | engine/SDK host of DLL(s) 0x009 |
+| 81 | `MSL_C/PPCEABI/bare/H/gamecube.c` | 80094494-800944A0 | ENGINE-HOST | FORENSIC | 0x009 | engine/SDK host of DLL(s) 0x009 |
 | 82 | `main/textblock.c` | 80209810-802098B4 | ENGINE-HOST | FORENSIC | 0x239 | engine/SDK host of DLL(s) 0x239 |
 | 83 | `main/platform1.c` | 802098B4-80209958 | ENGINE-HOST | FORENSIC | 0x23A | engine/SDK host of DLL(s) 0x23A |
 | 84 | `main/dfppowersl.c` | 80209FE0-8020A1C8 | ENGINE-HOST | FORENSIC | 0x23C | engine/SDK host of DLL(s) 0x23C |
@@ -197,7 +197,7 @@ Batches: 12. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | `main/objseq.c` | 80080DE8-80088758 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x002 |
 | `main/sky.c` | 80088758-8008EE18 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x005,0x006 |
 | `main/newclouds.c` | 8008EE18-80094494 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x007 |
-| `dolphin/MSL_C/PPCEABI/bare/H/gamecube.c` | 80094494-800944A0 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x009 |
+| `MSL_C/PPCEABI/bare/H/gamecube.c` | 80094494-800944A0 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x009 |
 | `main/dll/dll_8b.c` | 80100A90-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_8c.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_8d.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
@@ -286,7 +286,7 @@ Batches: 12. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
 | `main/dll/dll_003C_tumbleweedbush.c` | 80130124-80131540 | MISLABELED | FORENSIC | dll_003C_link.c |
-| `main/dll/dll_80136a40.c` | 80136A40-8013939C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/debug_display.c` | 80136A40-8013939C | HELPER-TU | RENAMED | descriptive debug-display name; no descriptor |
 | `main/dll/dll_df.c` | 8013B368-8013D8F0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_d3.c` | 8013F100-8013F100 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_80161130.c` | 80161130-80161F0C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |

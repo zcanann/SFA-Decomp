@@ -43,7 +43,7 @@
 #include "main/frame_timing.h"
 #include "main/model_engine.h"
 #include "main/model_light.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
 #include "main/dll/hagabon_mk2.h"
 #include "main/dll/duster_wb.h"

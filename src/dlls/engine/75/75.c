@@ -3,7 +3,7 @@
  */
 #include "main/dll/dll_004B_cameramodeclimb.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_0042_cameramodenormal.h"

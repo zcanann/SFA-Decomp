@@ -2,7 +2,7 @@
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/textrender_api.h"
 #include "dlls/object_descriptor.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/gameloop_api.h"
 #include "main/dll/dll_003C_link.h"

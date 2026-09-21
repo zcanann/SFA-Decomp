@@ -18,7 +18,7 @@
 #include "dlls/objects/458_DIMExplosio.h"
 #include "dolphin/mtx.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/gx/GXGeometry.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/partfx_interface.h"

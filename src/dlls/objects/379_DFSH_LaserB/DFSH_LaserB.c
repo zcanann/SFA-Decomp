@@ -5,7 +5,7 @@
  */
 #include "dlls/objects/379_DFSH_LaserB.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/sfx_channel_volume_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"

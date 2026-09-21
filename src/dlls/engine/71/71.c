@@ -3,8 +3,8 @@
  */
 #include "main/dll/dll_0047_cameramodepath.h"
 
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "game/objects/object.h"
 #include "main/camera_interface.h"
 #include "main/curve.h"

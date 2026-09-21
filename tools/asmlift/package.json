@@ -1,0 +1,7 @@
+{
+  "name": "sfa-asmlift-tools",
+  "private": true,
+  "dependencies": {
+    "@asmlift/cli": "0.8.1"
+  }
+}

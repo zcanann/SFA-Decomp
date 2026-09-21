@@ -47,7 +47,7 @@
 #include "main/obj_query.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "dlls/objects/226.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/baddie_control_interface.h"
 
 int dbstealerworm_turnToFaceObject(GameObject* obj, GameObject* otherObj, f32 yawOffset, f32 speed, f32 unused,

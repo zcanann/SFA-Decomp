@@ -10,7 +10,7 @@ are unscannable rather than treated as successful comparisons.
 python3 tools/pool_value_sequence.py src/main/objhits.c
 python3 tools/pool_value_sequence.py src/main/objhits.c --version GSAJ01
 python3 tools/pool_value_sequence.py --all .sdata2 --version GSAE01_rev1
-python3 tools/pool_value_sequence.py src/dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c --sections .sdata,.sdata2
+python3 tools/pool_value_sequence.py src/MSL_C/PPCEABI/bare/H/math_float_helpers.c --sections .sdata,.sdata2
 ```
 
 The CLI verifies the selected version's configured DOL SHA-1 before inspecting

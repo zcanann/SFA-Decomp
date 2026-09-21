@@ -121,7 +121,7 @@ without section attributes, synthetic arrays or extra definitions.
 | --- | ---: | ---: | ---: |
 | `main/math_8029312c` | 3 | 12 | 81.63636% |
 | `main/trig_float_helpers` | 4 | 80 | 59.221153% |
-| `dolphin/MSL_C/PPCEABI/bare/H/math_80293da4` | 7 | 184 | 83.05306% |
+| `MSL_C/PPCEABI/bare/H/math_80293da4` | 7 | 184 | 83.05306% |
 
 Thirty-six named scalar definitions and their forward declarations are removed.
 Float suffixes and double precision are preserved. The reciprocal helper's
@@ -283,7 +283,7 @@ for each version with:
 
 ```sh
 python tools/pool_value_sequence.py \
-  src/dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c --version GSAE01
+  src/MSL_C/PPCEABI/bare/H/math_float_helpers.c --version GSAE01
 ```
 
 Objdiff credits **72 additional matched data bytes in each verified version**,

@@ -16,7 +16,7 @@ from tricky_backend_ir import COMPILER_SHA256, decode, emitted_instructions
 from tricky_backend_trace import inspect
 
 
-def load_capture(path, function):
+def load_capture(path, function, *, final_allocation_attempt=False):
     document = json.loads(path.read_text())
     if document.get("schema") != 1 or document.get("compiler_sha256") != COMPILER_SHA256:
         raise ValueError("unsupported capture schema or compiler")
@@ -25,16 +25,20 @@ def load_capture(path, function):
         raise ValueError("captured object hash mismatch")
     register_class = document["register_class"]
     # Reuse the complete IR/object alignment and allocator replay checks.
-    inspect(document["snapshots"], obj, [function], require_graph=True,
-            unit=document["unit"], required_register_class=register_class)
+    report = inspect(document["snapshots"], obj, [function], require_graph=True,
+                     unit=document["unit"], required_register_class=register_class,
+                     final_allocation_attempt=final_allocation_attempt)
     stages = [s for s in document["snapshots"] if s["name"] == function]
     kind, _ = register_kind(register_class)
-    before = next(s for s in stages if s["stage"] == f"BEFORE {kind} SIMPLIFICATION")
-    rewrite = next(s for s in stages if s["stage"] == f"BEFORE {kind} REWRITE")
+    # A spill retry replaces the original graph. Never compare its smaller
+    # graph with the final rewrite or imply that earlier spill choices replayed.
+    before = next(s for s in reversed(stages) if s["stage"] == f"BEFORE {kind} SIMPLIFICATION")
+    rewrite = next(s for s in reversed(stages) if s["stage"] == f"BEFORE {kind} REWRITE")
     records = {i["address"]: decode(i) for b in rewrite["blocks"] for i in b["instructions"]}
     return {"class": register_class, "final": emitted_instructions(stages[-1]),
             "records": records, "graph": before["coloring_graph"],
-            "colored": rewrite["coloring_graph"], "object_sha256": document["object_sha256"]}
+            "colored": rewrite["coloring_graph"], "object_sha256": document["object_sha256"],
+            "unreplayed_allocation_attempts": report[function]["unreplayed_allocation_attempts"]}
 
 
 def match_roles(left, right):
@@ -107,9 +111,18 @@ def main():
     parser.add_argument("right", type=Path)
     parser.add_argument("--function", required=True)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--final-allocation-attempt", action="store_true",
+                        help="use the verified final retry graph; earlier spill choices remain unverified")
     args = parser.parse_args()
-    left, right = (load_capture(path, args.function) for path in (args.left, args.right))
+    left, right = (load_capture(path, args.function, final_allocation_attempt=args.final_allocation_attempt)
+                   for path in (args.left, args.right))
     result = match_roles(left, right)
+    result["unreplayed_allocation_attempts"] = [left["unreplayed_allocation_attempts"],
+                                               right["unreplayed_allocation_attempts"]]
+    for label, capture in (("left", left), ("right", right)):
+        if capture["unreplayed_allocation_attempts"]:
+            print(f"{label}: earlier allocation attempts remain unreplayed: "
+                  f"{capture['unreplayed_allocation_attempts']}")
     if args.output:
         args.output.write_text(json.dumps(result, indent=2) + "\n")
     _, prefix = register_kind(left["class"])
