@@ -188,7 +188,7 @@ def capture_coalescing_policy(memory, base, register_class=4):
 
 
 def capture_symbol_objects(memory, snapshot):
-    """Read GC/1.3 object metadata for symbolic IR operands without mutation.
+    """Read GC/1.3 symbolic operand and allocator object metadata without mutation.
 
     SectionCategory/ObjectName/SharedContext in the sibling mwcc project
     establish these offsets independently. Flag meanings remain numeric.
@@ -201,6 +201,9 @@ def capture_symbol_objects(memory, snapshot):
                     address = int.from_bytes(bytes.fromhex(item["raw"])[6:10], "little")
                     if address:
                         addresses.add(address)
+    # The graph retains named locals even when no symbolic operand refers to them.
+    addresses.update(node["prefix"][1] for node in snapshot.get("coloring_graph", [])
+                     if node["prefix"][1])
     objects = {}
     for address in sorted(addresses):
         raw = memory(address, 0x18)

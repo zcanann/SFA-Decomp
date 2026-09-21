@@ -128,6 +128,17 @@ class BackendGraphTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "short symbolic object read"):
             capture_symbol_objects(lambda a, n: b"", snapshot)
 
+    def test_allocator_objects_include_register_only_locals(self):
+        memory = bytearray(0x300)
+        memory[0x102] = 1
+        struct.pack_into("<I", memory, 0x10a, 0x200)
+        memory[0x20a:0x210] = b"count\0"
+        nodes = [{"prefix": [0, address]} for address in (0, 0x100, 0x100)]
+        snapshot = {"blocks": [], "coloring_graph": nodes}
+        result = capture_symbol_objects(lambda a, n: memory[a:a + n], snapshot)
+        self.assertEqual(result, {"256": {"name": "count", "kind": 1,
+                                         "section": 0, "flags": 0, "category": 0}})
+
     def test_coalescing_policy_preserves_named_and_inline_register_boundary(self):
         parents = list(range(80))
         parents[70] = 64
