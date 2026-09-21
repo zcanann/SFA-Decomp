@@ -1233,3 +1233,66 @@ respectively. Final EN `all_source` and strict checksum builds pass in 19.65
 and 20.79 seconds; the linked DOL retains SHA-1
 `e750e8e894707a52446118a4b84f1b58b677b269`. Formatting is separate and
 preserves the complete generated object.
+
+## 2026-09-21: reproduce MWCC C-menu gains with macOS LLDB
+
+Fresh staging `c81ee28505` still contained the 98.84106% source, despite the
+September 14–15 sibling `mwcc` investigation recording a 99.43709% candidate.
+Reapplied that candidate's function-local changes to the current complete TU:
+use the input parameter directly, preserve the experimentally established local
+order, and address the whole enabled array before adding the item index.
+This reproduces previous compiler research; it is not a new 100% solution or
+proof of the original declarations. The existing one-element offset array
+remains a matching workaround.
+
+The EN function improves **98.84106% → 99.43709%**, retaining 1,208 bytes and
+302 instructions. Differing instruction words fall from **55 to 32**. Fresh
+macOS LLDB captures of both sources reproduce their ordinary complete objects
+byte-for-byte, capture 21 stages each, and replay simplification and physical
+coloring. The graph shrinks from 207 to 206 nodes. The candidate's four remaining
+virtual-register differences are:
+
+| Value | Virtual register | Current GPR | Retail GPR |
+| --- | ---: | ---: | ---: |
+| Input table | 32 | 25 | 24 |
+| Previous-texture cursor | 56 | 30 | 25 |
+| Free-loop counter | 60 | 25 | 27 |
+| HUD base | 81 | 24 | 30 |
+
+The retail projection introduces no interference collision with the other
+current colors. That proves compatibility with the captured graph, not that
+ordinary declaration order can realize that coloring. The sibling compiler's
+`docs/COPY_PROPAGATION.md` records the stronger fixed-graph ordering limits
+and the named/generated-register cutoff governing zero-load merging.
+
+A bounded follow-up tested 25 aggregate-local variants: every selection of one,
+two or three of HUD, previous-texture cursor, texture IDs, item count and word
+offset became local record fields. Sixteen explicit inline variants varied the
+caller-owned subset (none, each of those five individually, HUD/item count,
+previous cursor/item count), with either scalar or array halfword offset.
+All compiled to 1,208 bytes; none improved the retained candidate. A record
+containing only HUD ties it. These tests change promotion/inline identity
+strata; they do not exhaust possible source or lifetime shapes, and none of
+the artificial records/helpers is installed in game source.
+
+The same 98.84106% → 99.43709% gain reproduces in JP, PAL, EN revision 1 and
+PAL revision 1 after checking every input DOL against its configured SHA-1.
+For each of the five targets, all 117 other function bodies, named allocated
+symbol layouts, relocations, and non-text allocated sections are unchanged.
+No function becomes exact, so no regional matching classification changes.
+The existing host behavioral assertions pass at both optimization levels;
+10,000 ASan/UBSan differential cases against the staging baseline preserve
+return values, complete state and ordered service calls. EN `ninja all_source`
+and strict `ninja` both pass with 30-second limits. The DOL retains SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`.
+
+Local sources, commands, source hashes, objects, regional results and LLDB
+captures are under ignored `build/cmenu-sept21/`. Reproduce the retained
+capture and allocation projection with:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/dlls/engine/0/0 \
+    --function cMenuSetItems --graph --output build/cmenu-sept21/final-capture
+python3 tools/mwcc_retail_registers.py \
+    build/cmenu-sept21/final-capture/trace.json --function cMenuSetItems
+```
