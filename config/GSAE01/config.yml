@@ -12,6 +12,8 @@ name: main
 # Retain the priority-sort table even though code addresses it through the
 # containing vidListNodes storage rather than by this symbol directly.
 force_active:
+  # Unreferenced zero retail keeps in the title screen init pool.
+  - gTitleScreenInitUnusedZero
   # Retail retains this unreferenced ObjSeq API entry (40 bytes).
   - ObjSeq_SetCameraTransformOverride
   # Retain the initialized zero word before the default color.

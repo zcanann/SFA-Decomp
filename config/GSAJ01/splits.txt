@@ -1341,7 +1341,7 @@ dlls/engine/50/50.c:
 	.data       start:0x8031A298 end:0x8031A2C0
 	.bss        start:0x803A4558 end:0x803A4568
 	.sbss       start:0x803DD708 end:0x803DD718
-	.sdata2     start:0x803E1E08 end:0x803E1E28
+	.sdata2     start:0x803E1E08 end:0x803E1E24
 
 dlls/engine/51/51.c:
 	.text       start:0x80115F40 end:0x8011613C

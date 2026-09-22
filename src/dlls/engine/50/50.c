@@ -28,6 +28,14 @@ u8 gTitleScreenInitDvdErrorLatched;
 
 Texture* gTitleScreenInitLoadingTextures[4];
 
+static void drawLoadingTexture(Texture* texture, int alpha)
+{
+    drawTexture(texture, (f32)(u32)((int)(0x280 - (u32)texture->width) >> 1),
+                (f32)(u32)((int)(0x1e0 - (u32)texture->height) >> 1), alpha, 0x119);
+}
+
+const f32 gTitleScreenInitTextureLodZero[] = {0.0f};
+
 void runLoadingScreens(void)
 {
     Texture* textureSlot;
@@ -87,10 +95,7 @@ void runLoadingScreens(void)
         {
             alpha = (int)((255.0f * (f32)(0x1e0 - gTitleScreenInitLoadingFrameCounter)) / 30.0f);
         }
-        drawTexture(gTitleScreenInitLoadingTextures[1],
-                    (f32)(u32)((int)(0x280 - (u32)(gTitleScreenInitLoadingTextures[1])->width) >> 1),
-                    (f32)(u32)((int)(0x1e0 - (u32)(gTitleScreenInitLoadingTextures[1])->height) >> 1), alpha,
-                    0x119);
+        drawLoadingTexture(gTitleScreenInitLoadingTextures[1], alpha);
     }
     else if (gTitleScreenInitLoadingFrameCounter < 0x258)
     {
@@ -107,10 +112,7 @@ void runLoadingScreens(void)
         {
             alpha = (int)((255.0f * (f32)(0x258 - gTitleScreenInitLoadingFrameCounter)) / 30.0f);
         }
-        drawTexture(gTitleScreenInitLoadingTextures[2],
-                    (f32)(u32)((int)(0x280 - (u32)(gTitleScreenInitLoadingTextures[2])->width) >> 1),
-                    (f32)(u32)((int)(0x1e0 - (u32)(gTitleScreenInitLoadingTextures[2])->height) >> 1), alpha,
-                    0x119);
+        drawLoadingTexture(gTitleScreenInitLoadingTextures[2], alpha);
     }
 
     dvdErrorActive = gDvdErrorPauseActive;
@@ -153,7 +155,8 @@ static inline void initLoadingScreenTexturesBody(void)
         texObj = &textureHeader->gxTexObj;
         GXInitTexObj(texObj, (u8*)textureHeader + sizeof(Texture), textureHeader->width, textureHeader->height,
                      textureHeader->format, textureHeader->wrapS, textureHeader->wrapT, 0);
-        GXInitTexObjLOD(texObj, textureHeader->minFilter, textureHeader->magFilter, 0.0f, 0.0f, 0.0f, 0, 0, 0);
+        GXInitTexObjLOD(texObj, textureHeader->minFilter, textureHeader->magFilter, gTitleScreenInitTextureLodZero[0],
+                        gTitleScreenInitTextureLodZero[0], gTitleScreenInitTextureLodZero[0], 0, 0, 0);
         GXInitTexObjUserData(texObj, textureHeader);
         textureFormat = GXGetTexObjFmt(texObj);
         textureWidth = GXGetTexObjWidth(texObj);
@@ -170,6 +173,8 @@ void initLoadingScreenTextures(void)
 {
     initLoadingScreenTexturesBody();
 }
+
+const f32 gTitleScreenInitUnusedZero = 0.0f;
 
 void TitleScreenInit_render(void)
 {
