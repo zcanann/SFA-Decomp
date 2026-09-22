@@ -1336,12 +1336,17 @@ dlls/engine/46/46.c:
 dlls/engine/48/48.c:
 	.data       start:0x8031AD98 end:0x8031ADC8
 
-dlls/engine/50/50.c:
-	.text       start:0x80115C80 end:0x801161BC
-	.data       start:0x8031ADC8 end:0x8031ADF0
+dlls/engine/50/loadingscreen.c:
+	.text       start:0x80115C80 end:0x80116108
 	.bss        start:0x803A5098 end:0x803A50A8
-	.sbss       start:0x803DE260 end:0x803DE270
-	.sdata2     start:0x803E2968 end:0x803E2988
+	.sbss       start:0x803DE260 end:0x803DE268
+	.sdata2     start:0x803E2968 end:0x803E297C
+
+dlls/engine/50/50.c:
+	.text       start:0x80116108 end:0x801161BC
+	.data       start:0x8031ADC8 end:0x8031ADF0
+	.sbss       start:0x803DE268 end:0x803DE270
+	.sdata2     start:0x803E2980 end:0x803E2984
 
 dlls/engine/51/51.c:
 	.text       start:0x801161BC end:0x801163B8
