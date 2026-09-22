@@ -207,6 +207,8 @@ extract:
   header: gLoadingScreenTextures.inc
 
 force_active:
+  # Unreferenced zero retail keeps in the title screen init pool.
+  - gTitleScreenInitUnusedZero
   # Retail-retained ObjSeq API entry and initialized word before default color.
   - ObjSeq_SetCameraTransformOverride
   - seqClearTaskTexts
