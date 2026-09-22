@@ -12,7 +12,7 @@ typedef struct MapRomListPage
     u16 objectDataSize;
     u8 unk0A[0x02];
     u32* cells;
-    u8* loadedObjectBits;
+    s8* loadedObjectBits;
     u32* cellRects;
     u8 unk18;
     u8 mapLayer;
