@@ -1048,7 +1048,7 @@ config.libs = [
         "cflags": cflags_dll_noopt,
         "progress_category": "game",
             "objects": [
-            Object(NonMatching, "dlls/engine/0/0.c", extra_cflags=["-inline", "noauto", "-char", "signed"]),
+            Object(MatchingFor("GSAE01"), "dlls/engine/0/0.c", extra_cflags=["-inline", "noauto,deferred", "-char", "signed"]),
             Object(MatchingFor("GSAE01"), "dlls/engine/1_camcontrol/camcontrol.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/2/maketex.c", cflags=cflags_dll_noopt_noautoinline),
             # ObjSeq language reconstruction: declaration-order BSS and integer booleans.
