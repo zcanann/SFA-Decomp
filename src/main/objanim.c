@@ -362,6 +362,7 @@ static inline s16 ObjAnim_ReadRootAxisSample(s16* axis, int sampleIndex) {
     return ((ObjAnimRootCurveAxis*)axis)->samples[sampleIndex];
 }
 
+#pragma opt_common_subs on
 int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float* phaseOut) {
     s16* axisSamples;
     f32 blendDistanceDelta;
@@ -506,8 +507,7 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
                     if (blendSamples != NULL) {
                         axisSamples = &moveSamples[sampleIndex];
                         moveDistanceDelta = moveRootScale * ((f32)axisSamples[1] - axisSamples[0]);
-                        axisSamples = &blendSamples[sampleIndex];
-                        blendDistanceDelta = blendScale * ((f32)axisSamples[1] - axisSamples[0]);
+                        blendDistanceDelta = blendScale * ((f32)blendSamples[sampleIndex + 1] - blendSamples[sampleIndex]);
                         segmentEndDistance += (moveDistanceDelta * moveWeight) + (blendDistanceDelta * blendWeight);
                     } else {
                         axisSamples = &moveSamples[sampleIndex];
@@ -525,6 +525,8 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     }
     return 0;
 }
+
+#pragma opt_common_subs reset
 
 #define OBJANIM_MOVE_STEP_SCALE_MIN -1.0f
 
