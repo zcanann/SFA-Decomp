@@ -891,6 +891,7 @@ main/modelEngine.c
 main/modellight.c
 main/obj_movelib.c
 main/objlib.c
+main/objprint.c
 main/pad.c
 main/pi_pathsearch.c
 main/pi_videoinit.c

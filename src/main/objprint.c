@@ -1252,6 +1252,7 @@ void objSetColorFilter(s16 red, s16 green, s16 blue) {
 
 #define OBJPRINT_ATTACH_POINTS(staff) ((char*)OBJPRINT_MODEL_INSTANCE(staff)->attachPoints)
 
+#pragma opt_propagation off
 void staffUpdateSegmentTransforms(GameObject* staffArg, GameObject* objArg, ObjModel* modelArg, int a, int b, int c) {
     Vec pointB;
     Vec pointA;
@@ -1299,10 +1300,8 @@ void staffUpdateSegmentTransforms(GameObject* staffArg, GameObject* objArg, ObjM
             if (attachmentIndex < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
                 ObjAttachPoint* attachmentA = (ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset);
                 int jointIndexA = attachmentA->joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
-                MtxPtr jointMatrixA =
-                    (MtxPtr)(jointIndexA * (int)sizeof(ObjModelJointMatrix) +
-                             *(int*)((u8*)model + ((model->bufferFlags & 1) * sizeof(model->jointMatrices[0])) +
-                                     offsetof(ObjModel, jointMatrices)));
+                MtxPtr jointMatrixA = (MtxPtr)(model->jointMatrices[model->bufferFlags & 1] +
+                                               jointIndexA * (int)sizeof(ObjModelJointMatrix));
                 pointA.x = attachmentA->pos[0];
                 pointA.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))->pos[1];
                 pointA.z = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))->pos[2];
@@ -1339,6 +1338,8 @@ void staffUpdateSegmentTransforms(GameObject* staffArg, GameObject* objArg, ObjM
         }
     }
 }
+
+#pragma opt_propagation reset
 
 void objRenderShadowIfVisible(GameObject* obj, int wpad0, int wpad1, int wpad2, int wpad3, int wpad4) {
     ObjModel** arr = obj->anim.modelBanks;

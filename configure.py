@@ -1806,7 +1806,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/objanim.c", cflags=cflags_dll_noopt_nocse),
             Object(NonMatching, "main/objhits.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "main/objlib.c"),
-            Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "main/objprint.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/objprint_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_nolifetimes_zerodata, "-inline", "noauto"]),
             Object(NonMatching, "main/pi_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_zerodata, "-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "main/pi_videoinit.c", cflags=cflags_dll_noopt_nocse_noloopinv_nolifetimes_noprop_zerodata),
