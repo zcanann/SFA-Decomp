@@ -1250,96 +1250,66 @@ void objSetColorFilter(s16 red, s16 green, s16 blue) {
     gObjColorFilterEnabled = 1;
 }
 
-#define OBJPRINT_ATTACH_POINTS(staff) ((char*)OBJPRINT_MODEL_INSTANCE(staff)->attachPoints)
-
-#pragma opt_propagation off
-void staffUpdateSegmentTransforms(GameObject* staffArg, GameObject* objArg, ObjModel* modelArg, int a, int b, int c) {
-    Vec pointB;
-    Vec pointA;
+void staffUpdateSegmentTransforms(GameObject* staff, GameObject* owner, ObjModel* model, int a, int b, int c) {
+    MtxPtr jointMatrix;
+    int jointIndex;
     int attachmentIndex;
-    char* segmentBytes;
-    Vec* pointBPtr;
-    Vec* pointBStorage;
     int segmentIndex;
-    char* stateBytes;
-    ObjModel* model;
-    int ownerAddress;
-    GameObject* staff;
-
-    staff = (GameObject*)staffArg;
-    ownerAddress = (int)objArg;
-    model = (ObjModel*)modelArg;
+    Vec points[2];
+    StaffState* state;
 
     if (OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount >= 2 && staff->anim.classId == 0x2d) {
-        int attachmentOffset;
-        stateBytes = (char*)staff->extra;
-        segmentIndex = 0;
-        attachmentIndex = 1;
-        attachmentOffset = sizeof(ObjAttachPoint);
-        segmentBytes = stateBytes;
-        pointBStorage = &pointB;
-        pointBPtr = pointBStorage;
-
-        while (segmentIndex < ((StaffState*)stateBytes)->geometrySegmentCount) {
+        state = (StaffState*)staff->extra;
+        for (segmentIndex = 0; segmentIndex < state->geometrySegmentCount; segmentIndex++) {
+            attachmentIndex = (segmentIndex << 1) + 1;
             if (attachmentIndex < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
-                MtxPtr jointMatrixB;
-                int jointIndexB;
-                jointIndexB = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1]
-                                  .joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
-                jointMatrixB = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, jointIndexB);
-                pointBPtr->x = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1].pos[0];
-                pointB.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1].pos[1];
-                pointB.z = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1].pos[2];
-                PSMTXMultVec(jointMatrixB, pointBPtr, pointBPtr);
-                pointBPtr->x += playerMapOffsetX;
-                pointB.z += playerMapOffsetZ;
-                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointBX)) = pointBPtr->x;
-                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointBY)) = pointB.y;
-                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointBZ)) = pointB.z;
+                jointIndex = OBJPRINT_MODEL_INSTANCE(staff)
+                                 ->attachPoints[attachmentIndex + 1]
+                                 .joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
+                jointMatrix = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, jointIndex);
+                points[1].x = OBJPRINT_MODEL_INSTANCE(staff)->attachPoints[attachmentIndex + 1].pos[0];
+                points[1].y = OBJPRINT_MODEL_INSTANCE(staff)->attachPoints[attachmentIndex + 1].pos[1];
+                points[1].z = OBJPRINT_MODEL_INSTANCE(staff)->attachPoints[attachmentIndex + 1].pos[2];
+                PSMTXMultVec(jointMatrix, &points[1], &points[1]);
+                points[1].x += playerMapOffsetX;
+                points[1].z += playerMapOffsetZ;
+                state->geometryPointBX[segmentIndex] = points[1].x;
+                state->geometryPointBY[segmentIndex] = points[1].y;
+                state->geometryPointBZ[segmentIndex] = points[1].z;
             }
             if (attachmentIndex < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
-                ObjAttachPoint* attachmentA = (ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset);
-                int jointIndexA = attachmentA->joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
-                MtxPtr jointMatrixA = (MtxPtr)(model->jointMatrices[model->bufferFlags & 1] +
-                                               jointIndexA * (int)sizeof(ObjModelJointMatrix));
-                pointA.x = attachmentA->pos[0];
-                pointA.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))->pos[1];
-                pointA.z = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))->pos[2];
-                PSMTXMultVec(jointMatrixA, &pointA, &pointA);
-                pointA.x += playerMapOffsetX;
-                pointA.z += playerMapOffsetZ;
-                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointAX)) = pointA.x;
-                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointAY)) = pointA.y;
-                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointAZ)) = pointA.z;
+                jointIndex = OBJPRINT_MODEL_INSTANCE(staff)
+                                 ->attachPoints[attachmentIndex]
+                                 .joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
+                jointMatrix =
+                    (MtxPtr)(model->jointMatrices[model->bufferFlags & 1] + jointIndex * sizeof(ObjModelJointMatrix));
+                points[0].x = OBJPRINT_MODEL_INSTANCE(staff)->attachPoints[attachmentIndex].pos[0];
+                points[0].y = OBJPRINT_MODEL_INSTANCE(staff)->attachPoints[attachmentIndex].pos[1];
+                points[0].z = OBJPRINT_MODEL_INSTANCE(staff)->attachPoints[attachmentIndex].pos[2];
+                PSMTXMultVec(jointMatrix, &points[0], &points[0]);
+                points[0].x += playerMapOffsetX;
+                points[0].z += playerMapOffsetZ;
+                state->geometryPointAX[segmentIndex] = points[0].x;
+                state->geometryPointAY[segmentIndex] = points[0].y;
+                state->geometryPointAZ[segmentIndex] = points[0].z;
             }
-            attachmentIndex += 2;
-            attachmentOffset += 2 * sizeof(ObjAttachPoint);
-            segmentBytes += sizeof(f32);
-            segmentIndex++;
-            pointBPtr = pointBStorage;
         }
 
-        if (((StaffState*)stateBytes)->geometrySegmentCount != 0) {
-            char* orientationBytes = stateBytes + ((StaffState*)stateBytes)->orientationSegmentIndex * (int)sizeof(f32);
-            pointB.x = *(f32*)(orientationBytes + offsetof(StaffState, geometryPointBX));
-            pointB.y = *(f32*)(orientationBytes + offsetof(StaffState, geometryPointBY));
-            pointB.z = *(f32*)(orientationBytes + offsetof(StaffState, geometryPointBZ));
-            STAFF_INTERFACE(staff)->updateSwipe(staff, (GameObject*)ownerAddress, &pointA);
-            pointB.x -= pointA.x;
-            pointB.y -= pointA.y;
-            pointB.z -= pointA.z;
-            staff->anim.rotX = getAngle(pointB.x, pointB.z);
-            {
-                f32 dx = pointB.x * pointB.x;
-                f32 dz = pointB.z * pointB.z;
-                staff->anim.rotY = (s16)(-getAngle(pointB.y, sqrtf(dx + dz)) + 0x4000);
-            }
+        if (state->geometrySegmentCount != 0) {
+            points[1].x = state->geometryPointBX[state->orientationSegmentIndex];
+            points[1].y = state->geometryPointBY[state->orientationSegmentIndex];
+            points[1].z = state->geometryPointBZ[state->orientationSegmentIndex];
+            STAFF_INTERFACE(staff)->updateSwipe(staff, owner, &points[0]);
+            points[1].x -= points[0].x;
+            points[1].y -= points[0].y;
+            points[1].z -= points[0].z;
+            staff->anim.rotX = getAngle(points[1].x, points[1].z);
+            staff->anim.rotY =
+                (s16)(-getAngle(points[1].y, sqrtf(points[1].x * points[1].x + points[1].z * points[1].z)) + 0x4000);
             staff->anim.rotZ = 0;
         }
     }
 }
-
-#pragma opt_propagation reset
 
 void objRenderShadowIfVisible(GameObject* obj, int wpad0, int wpad1, int wpad2, int wpad3, int wpad4) {
     ObjModel** arr = obj->anim.modelBanks;
