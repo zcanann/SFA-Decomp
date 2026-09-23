@@ -506,7 +506,8 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
                     if (blendSamples != NULL) {
                         axisSamples = &moveSamples[sampleIndex];
                         moveDistanceDelta = moveRootScale * ((f32)axisSamples[1] - axisSamples[0]);
-                        blendDistanceDelta = blendScale * ((f32)blendSamples[sampleIndex + 1] - blendSamples[sampleIndex]);
+                        blendDistanceDelta =
+                            blendScale * ((f32)blendSamples[sampleIndex + 1] - blendSamples[sampleIndex]);
                         segmentEndDistance += (moveDistanceDelta * moveWeight) + (blendDistanceDelta * blendWeight);
                     } else {
                         axisSamples = &moveSamples[sampleIndex];
