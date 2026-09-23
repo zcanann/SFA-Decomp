@@ -207,6 +207,8 @@ extract:
   header: gLoadingScreenTextures.inc
 
 force_active:
+  # Unreferenced zero retail keeps in the title screen init pool.
+  - gTitleScreenInitUnusedZero
   # Retain the version/reset metadata previously used as a diagnostic address base.
   - sGameLoopResetMessages
   # audio.c: retain the unused initialized word and two small-BSS words.

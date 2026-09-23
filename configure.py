@@ -1048,7 +1048,7 @@ config.libs = [
         "cflags": cflags_dll_noopt,
         "progress_category": "game",
             "objects": [
-            Object(NonMatching, "dlls/engine/0/0.c", extra_cflags=["-inline", "noauto", "-char", "signed"]),
+            Object(MatchingFor("GSAE01"), "dlls/engine/0/0.c", extra_cflags=["-inline", "noauto,deferred", "-char", "signed"]),
             Object(MatchingFor("GSAE01"), "dlls/engine/1_camcontrol/camcontrol.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/2/maketex.c", cflags=cflags_dll_noopt_noautoinline),
             # ObjSeq language reconstruction: declaration-order BSS and integer booleans.
@@ -1103,7 +1103,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/engine/47/47.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/48/48.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/49/49.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "dlls/engine/50/50.c", cflags=cflags_dll_noopt_nocse_noprop),
+            Object(MatchingFor("GSAE01"), "dlls/engine/50/50.c", cflags=cflags_dll_noopt_nocse_noprop),
             Object(MatchingFor("GSAE01"), "dlls/engine/51/51.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/52_n_attractmode/n_attractmode.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/engine/53/53.c", cflags=cflags_dll_noopt_noinline),
@@ -1816,7 +1816,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/boot_logo.c"),
             Object(Matching, "main/rcp_dolphin.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/texture.c", cflags=cflags_dll_noopt_noautoinline_deferred),
-            Object(NonMatching, "main/shader.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(NonMatching, "main/shader.c", cflags=cflags_dll_noopt_noautoinline_deferred),
             Object(MatchingFor("GSAE01"), "main/shadow_dolphin.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/track_dolphin.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/newshadows.c", cflags=cflags_dll_noopt_nodead_noautoinline, extra_cflags=["-inline", "deferred"]),
