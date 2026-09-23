@@ -1803,7 +1803,7 @@ config.libs = [
             Object(NonMatching, "main/model.c", cflags=[*cflags_dll_noopt_noloopinv, "-inline", "noauto"]),
             Object(NonMatching, "main/object.c"),
             Object(MatchingFor("GSAE01"), "main/skystars.c"),
-            Object(MatchingFor("GSAE01"), "main/objanim.c", cflags=cflags_dll_noopt_nocse),
+            Object(MatchingFor("GSAE01"), "main/objanim.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objhits.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "main/objlib.c"),
             Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt_noautoinline),
