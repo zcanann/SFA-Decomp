@@ -12,6 +12,11 @@ name: main
 # Retain the priority-sort table even though code addresses it through the
 # containing vidListNodes storage rather than by this symbol directly.
 force_active:
+  # shader.c reaches these objects through enclosing storage or keeps them
+  # without a direct relocation; the retail link retains their full extents.
+  - sShaderObjLoadMessages
+  - gLightmapDeferredObjects
+  - gMapCellRenderState
   # Unreferenced zero retail keeps in the title screen init pool.
   - gTitleScreenInitUnusedZero
   # Retail retains this unreferenced ObjSeq API entry (40 bytes).

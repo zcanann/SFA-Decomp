@@ -1,16 +1,16 @@
 # Map-rendering TU and pool recovery (2026-09-07)
 
-Latest EN status (2026-09-15): **141/145 exact functions, 99.857895% instruction
-fuzzy similarity, and 40,668 exact assigned data bytes**. See the exact block
-release follow-up below. The historical measurements in earlier sections describe
-their individual checkpoints.
+Latest EN status (2026-09-24): **145/145 exact functions, 100% instruction
+similarity, and 40,668 exact assigned data bytes**. The source object links to
+the retail DOL SHA-1. The historical measurements below describe their
+individual checkpoints.
 
 The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
-All 40,656 assigned data bytes match. The common GC/1.3 invocation produces
-139/145 exact functions and a 99.62504% instruction fuzzy score; the TU remains
-`NonMatching` because six functions still differ.
+At that checkpoint, all 40,656 assigned data bytes matched. The common GC/1.3
+invocation produced 139/145 exact functions and a 99.62504% instruction fuzzy
+score.
 
 This supersedes the constant-pool blocker in
 [lightmap_draw_recovery.md](lightmap_draw_recovery.md) and the historical
@@ -824,3 +824,20 @@ Dinosaur Planet's `mapUpdateStreaming` supplies that shape. Indexing
 with `i` (DP's `var_s3`) reproduces every retail register. The function is
 register-identical to the retail listing. All other function bytes and every
 data section stay unchanged, apart from renumbered anonymous `@N` labels.
+
+### Source-linked data completion (2026-09-24)
+
+The deferred-inline profile left three `.sdata2` words in the wrong order:
+the source emitted `-250.0f`, `0.4f`, `0.0625f` at offsets `0x74..0x7c`, while
+retail stores the named indirect-matrix scale first. A TU-owned static scale,
+read through a local pointer in the indirect pass, retains a single copy. Its
+address-only reference in the adjacent bounds function emits no instructions
+but creates the scale before the depth-threshold literal. The source pool now
+matches every assigned byte and `gTexIndMtxScale` occupies offset `0x74`.
+
+The retail link also retains `sShaderObjLoadMessages`,
+`gLightmapDeferredObjects`, and `gMapCellRenderState` despite no direct
+relocations to their symbols. The EN `force_active` list now retains them.
+With `main/shader.c` selected as `MatchingFor("GSAE01")`, both the strict
+build checksum and `verify_source_link.py GSAE01 main/shader.c` produce retail
+SHA-1 `e750e8e894707a52446118a4b84f1b58b677b269`.

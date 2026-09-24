@@ -2084,6 +2084,8 @@ Shader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, ModelRe
     return shader;
 }
 
+static const f32 gTexIndMtxScale = 0.0625f;
+
 void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, Shader* shader,
                                                ModelRenderInstrsState* state, f32 (*viewMtx)[4]) {
     f32 passMtx[3][4];
@@ -2097,7 +2099,6 @@ void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, S
     int bitPos;
     u32 flags;
     int i;
-    f32 scale = 0.0625f;
 
     bitPos = state->bit;
     {
@@ -2130,7 +2131,11 @@ void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, S
         indMtx = gTexIndMtxTable;
         newshadows_getNoiseTextureFrames(&noiseTextures, &noiseFrameCount);
         selectTexture(noiseTextures[(u8)i], 1);
-        indMtx.m[0][0] = ((f32)((i & 0xff) + 1) * scale) / 2.0f;
+        {
+            const f32* scale = &gTexIndMtxScale;
+            f32 s = (f32)((i & 0xff) + 1) * *scale;
+            indMtx.m[0][0] = s / 2.0f;
+        }
         indMtx.m[1][1] = indMtx.m[0][0];
         GXSetIndTexMtx(GX_ITM_0, indMtx.m, gTexIndMtxScaleExp);
         GXCallDisplayList(bounds[0]->dlist, bounds[0]->dlistSize);
@@ -2144,6 +2149,8 @@ static u8 mapBlockBounds_HasCornerPastDepthThreshold(MapBlockBoundsRec* bounds, 
     f32 timing;
 
     i = 0;
+    /* Keep the shared scale ahead of the depth threshold in this TU's pool. */
+    (void)&gTexIndMtxScale;
     timing = 0.125f;
     fbset = -250.0f;
     while (1) {
