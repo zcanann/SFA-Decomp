@@ -582,7 +582,7 @@ Four functions still prevent a source-matching TU:
 | Function | Instruction fuzzy similarity | Remaining evidence |
 | --- | ---: | --- |
 | `mapLoadUnloadObjects` | 98.58787% | Same 478-instruction mnemonic stream, but address formation, cursor lifetimes, and register choices differ. Retail register projection rejects the current value partition. |
-| `doPendingMapLoads` | 98.81043% | Source has 784 instructions versus retail's 786. The slot-flag clearing loop lacks a count reload/sign extension; other regions also differ in register allocation. |
+| `doPendingMapLoads` | 100% (register-exact against the retail listing) | Per-layer tables and the saved-block records are indexed by counter, as in Dinosaur Planet's `mapUpdateStreaming`; see below. |
 | `mapFillCellEntry` | 99.32447% | Coordinate-load order, initial slot-base/cursor copies, and register allocation differ. Declaration movement alone did not resolve them. |
 | `renderObjects` | 99.82456% | Two address additions have commuted operands. Native indexed stores change instruction selection; the tested alternatives were not retained. |
 
@@ -799,3 +799,28 @@ The creator passes 6,336 original/native cases, using the actual category
 predicate and recovered native record lookup. Canonical allocation/section
 and area/owner types are now unified in the sibling compiler project. This
 is a correction to the model and trace terminology, not a shader match gain.
+
+### `doPendingMapLoads` register allocation (2026-09-24)
+
+The instruction stream already matched; 56 register operands differed. An
+LLDB capture of GC/1.3's allocator (coordinator 0x506CD0, simplify 0x507070,
+colour selection 0x506F50, copy coalescing 0x5794F0) replays exactly: K = 29,
+simplify scans vregs upward, spill choice is the lowest cost/degree with ties to
+the higher vreg, and colours take the lowest free register after claiming saved
+registers from r31 downward.
+
+The replay showed retail's top saved band (`cnt`, the layer-table and
+cell-state bases, the section base, the record base) needs extra permanent
+degree on the slot and table-base webs. Permanent degree comes from
+coalesced copies: the coalescer keeps the child's interference in its
+neighbours' degree counts, merges only inside the compiler-temporary window
+(never two named locals), and roots the lower vreg. Retail's extra degree
+therefore comes from compiler induction temporaries, not named cursor locals.
+
+Dinosaur Planet's `mapUpdateStreaming` supplies that shape. Indexing
+`gMapBlockCellEntryTables`, `gMapBlockLayerTables` and
+`gMapBlockCellStateTables` by `layer` in all three loops, indexing
+`recs[cnt]` / `recs[i]` directly, and counting the rom-list retirement loop
+with `i` (DP's `var_s3`) reproduces every retail register. The function is
+register-identical to the retail listing. All other function bytes and every
+data section stay unchanged, apart from renumbered anonymous `@N` labels.

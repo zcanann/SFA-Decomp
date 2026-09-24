@@ -4184,16 +4184,12 @@ void loadMapForCameraPos(float x, float y, float z) {
 }
 
 void doPendingMapLoads(void) {
-    char** gridTables;
     s16 sl;
     int slot;
     MapInfoRecord* e;
-    s8** stateTables;
     int ff;
     int gx;
     int gz;
-    s8** cBase;
-    MapCellEntry** cellTables;
     char* cellGrid;
     int doLoad;
     int mapId;
@@ -4201,19 +4197,15 @@ void doPendingMapLoads(void) {
     int* blockIndex;
     int d;
     int loadedCount;
-    char** aBase;
     int cnt;
     int col;
     s8 first;
     int row;
-    MapCellEntry** eBase;
     int sz;
     int i;
     int layer;
     u8 waited;
-    MapLoadRec* savedBlocks;
     MapCellEntry* ent;
-    MapLoadRec* rec;
     f32 dz;
     MapLoadRec recs[300];
     int rectA[4], rectB[4], rectC[4], rectD[4];
@@ -4259,22 +4251,18 @@ void doPendingMapLoads(void) {
         nop_onUnloadMap(1, 0);
         cnt = 0;
         layer = 0;
-        cellTables = eBase = gMapBlockCellEntryTables;
-        gridTables = aBase = (char**)gMapBlockLayerTables;
-        stateTables = cBase = gMapBlockCellStateTables;
-        rec = savedBlocks = recs;
         for (; layer < 5; layer++) {
-            ent = *cellTables;
-            cellGrid = *gridTables;
-            gMapLayerCellStates = *stateTables;
+            ent = gMapBlockCellEntryTables[layer];
+            cellGrid = (char*)gMapBlockLayerTables[layer];
+            gMapLayerCellStates = gMapBlockCellStateTables[layer];
             i = 0;
             for (row = 0; row < 16; row++) {
                 for (col = 0; col < 16; col++) {
                     if (cellGrid[i] > -1) {
-                        rec[cnt].x = gMapBlockOriginX + col;
-                        rec[cnt].z = gMapBlockOriginZ + row;
-                        rec[cnt].layer = layer;
-                        rec[cnt].blockId = cellGrid[i];
+                        recs[cnt].x = gMapBlockOriginX + col;
+                        recs[cnt].z = gMapBlockOriginZ + row;
+                        recs[cnt].layer = layer;
+                        recs[cnt].blockId = cellGrid[i];
                         cnt++;
                     }
                     cellGrid[i] = -2;
@@ -4287,9 +4275,6 @@ void doPendingMapLoads(void) {
                     i++;
                 }
             }
-            cellTables++;
-            gridTables++;
-            stateTables++;
         }
         gMapBlockOriginX += gx - 7;
         gMapBlockOriginZ += gz - 7;
@@ -4363,14 +4348,13 @@ void doPendingMapLoads(void) {
                 }
                 gMapBlockIndexCount -= 1;
                 /* Vestigial grid walk over each layer's cell table: writes only dead locals. */
-                for (i = 0; i < 5; i++) {
-                    cellGrid = (char*)*eBase;
+                for (layer = 0; layer < 5; layer++) {
+                    cellGrid = (char*)gMapBlockCellEntryTables[layer];
                     for (row = 0; row < 16; row++) {
                         for (col = 0; col < 16; col++) {
                             cellGrid += sizeof(MapCellEntry);
                         }
                     }
-                    eBase++;
                 }
                 mapDir = mapGetDirIdx(gShaderCurMapEventId);
                 mapLoadDataFile(mapDir, MLDF_FILEID_TEX1_BIN_A);
@@ -4387,8 +4371,8 @@ void doPendingMapLoads(void) {
                 for (layer = 0; layer < 5; layer++) {
                     mapGetBlockGridRects(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, rectA, rectB, rectC, rectD,
                                          layer, 0, slot);
-                    cellGrid = *aBase;
-                    gMapLayerCellStates = *cBase;
+                    cellGrid = (char*)gMapBlockLayerTables[layer];
+                    gMapLayerCellStates = gMapBlockCellStateTables[layer];
                     for (row = rectA[2]; row <= rectA[3]; row++) {
                         for (col = rectA[0]; col <= rectA[1]; col++) {
                             cellGrid[col + ((row + 7) << 4) + 7] = -3;
@@ -4425,26 +4409,24 @@ void doPendingMapLoads(void) {
                             i++;
                         }
                     }
-                    aBase++;
-                    cBase++;
                 }
                 clearForceLoadImmediately();
             }
         }
         first = 1;
-        for (slot = gShaderRomListSlotCount - 1; slot >= 0; slot--) {
-            if (gShaderRomListSlots[slot].flag == 0) {
-                if (gShaderRomListSlots[slot].romlist != NULL) {
-                    sl = gShaderRomListSlots[slot].slot;
-                    mapBuildRomListIndex(gShaderRomListSlots[slot].romlist, &gMapRomListIndexes[sl], sl, 1);
-                    mm_free(gShaderRomListSlots[slot].romlist);
+        for (i = gShaderRomListSlotCount - 1; i >= 0; i--) {
+            if (gShaderRomListSlots[i].flag == 0) {
+                if (gShaderRomListSlots[i].romlist != NULL) {
+                    sl = gShaderRomListSlots[i].slot;
+                    mapBuildRomListIndex(gShaderRomListSlots[i].romlist, &gMapRomListIndexes[sl], sl, 1);
+                    mm_free(gShaderRomListSlots[i].romlist);
                     gLoadedRomListPages[sl] = NULL;
                 }
-                gShaderRomListSlots[slot].romlist = NULL;
-                gShaderRomListSlots[slot].slot = -1;
+                gShaderRomListSlots[i].romlist = NULL;
+                gShaderRomListSlots[i].slot = -1;
             }
             if (first) {
-                if (gShaderRomListSlots[slot].romlist == NULL) {
+                if (gShaderRomListSlots[i].romlist == NULL) {
                     gShaderRomListSlotCount--;
                 } else {
                     first = 0;
@@ -4452,9 +4434,8 @@ void doPendingMapLoads(void) {
             }
         }
         for (i = 0; i < cnt; i++) {
-            blockId = savedBlocks->blockId;
+            blockId = recs[i].blockId;
             mapReleaseBlockReference(blockId);
-            savedBlocks++;
         }
         gMapCellRenderInstrBits = 0;
         gMapCellRenderInstrsEnabled = 0;
