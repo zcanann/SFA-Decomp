@@ -4184,290 +4184,284 @@ void loadMapForCameraPos(float x, float y, float z) {
 }
 
 void doPendingMapLoads(void) {
-    int gx, gz;
-    s8** cBase;
-    MapLoadRec* savedBlocks;
-    int doLoad;
-    u8 waited;
-    int col;
+    char** gridTables;
+    s16 sl;
     int slot;
-    int layer;
-    int i;
-    int cnt;
-    f32 dz;
-    char** aBase;
+    MapInfoRecord* e;
+    s8** stateTables;
+    int ff;
+    int gx;
+    int gz;
+    s8** cBase;
+    MapCellEntry** cellTables;
     char* cellGrid;
-    int row;
+    int doLoad;
+    int mapId;
+    int mapDir;
+    int* blockIndex;
+    int d;
     int loadedCount;
+    char** aBase;
+    int cnt;
+    int col;
+    s8 first;
+    int row;
+    MapCellEntry** eBase;
+    int sz;
+    int i;
+    int layer;
+    u8 waited;
+    MapLoadRec* savedBlocks;
+    MapCellEntry* ent;
+    MapLoadRec* rec;
+    f32 dz;
     MapLoadRec recs[300];
     int rectA[4], rectB[4], rectC[4], rectD[4];
+    s16 blockId;
 
     waited = 0;
-    if (!(renderFlags & 0x1000)) {
-        gMapSavedPlayerOffsetX = playerMapOffsetX;
-        gMapSavedPlayerOffsetZ = playerMapOffsetZ;
-        if (gShaderCurMapEventId != -1 && gShaderCurMapEventId != gShaderGameTextLoadedMapId) {
-            gShaderGameTextLoadedMapId = gShaderCurMapEventId;
-            if (gShaderCurMapEventId < 118 && gShaderMapTextDirTable[gShaderCurMapEventId] != -1) {
-                gameTextLoadDir(gShaderMapTextDirTable[gShaderCurMapEventId]);
-            }
-        }
-        if (!(renderFlags & 2) && (getLoadedFileFlags(0) != 0 || gMapPendingFileFlags == 0)) {
-            gMapPendingFileFlags = getLoadedFileFlags(0);
-        } else {
-            renderFlags &= ~2;
-            dz = gShaderLoadCenterZ - playerMapOffsetZ;
-            gx = fastFloorf((gShaderLoadCenterX - playerMapOffsetX) / 640.0f);
-            gz = fastFloorf(dz / 640.0f);
-            doLoad = renderFlags & 0x800;
-            renderFlags &= ~0x800;
-            {
-                int ff = getLoadedFileFlags(0);
-                if ((ff & ~LOADED_FILE_FLAG_PI_LOCKED) != 0) {
-                    if (gShaderCurMapEventId != 38 && gShaderCurMapEventId != 58 && gShaderCurMapEventId != 59 &&
-                        gShaderCurMapEventId != 60 && gShaderCurMapEventId != 61 && gShaderCurMapEventId != 62 &&
-                        gShaderCurMapEventId != 28) {
-                        gMapLoadDeferred = 1;
-                    }
-                } else {
-                    if (gMapLoadDeferred != 0) {
-                        gMapLoadDeferred = 0;
-                        doLoad = 1;
-                    }
-                }
-            }
-            if (gx != 7 || gz != 7 || doLoad != 0 || (renderFlags & 0x4000)) {
-                MapCellEntry** eBase;
-
-                shadowVolumesSetDirty(1);
-                nop_onUnloadMap(1, 0);
-                cnt = 0;
-                layer = 0;
-                {
-                    MapCellEntry** cellTables;
-                    char** gridTables;
-                    s8** stateTables;
-                    MapLoadRec* rec;
-
-                    cellTables = eBase = gMapBlockCellEntryTables;
-                    gridTables = aBase = (char**)gMapBlockLayerTables;
-                    stateTables = cBase = gMapBlockCellStateTables;
-                    rec = savedBlocks = recs;
-                    for (; layer < 5; layer++) {
-                        MapCellEntry* ent = *cellTables;
-                        cellGrid = *gridTables;
-                        gMapLayerCellStates = *stateTables;
-                        i = 0;
-                        for (row = 0; row < 16; row++) {
-                            for (col = 0; col < 16; col++) {
-                                if (cellGrid[i] > -1) {
-                                    rec[cnt].x = gMapBlockOriginX + col;
-                                    rec[cnt].z = gMapBlockOriginZ + row;
-                                    rec[cnt].layer = layer;
-                                    rec[cnt].blockId = cellGrid[i];
-                                    cnt++;
-                                }
-                                cellGrid[i] = -2;
-                                gMapLayerCellStates[i] = -1;
-                                ent->blockId = -3;
-                                ent->mapId = -1;
-                                ent->adjacentMapId1 = -1;
-                                ent->adjacentMapId2 = -1;
-                                ent++;
-                                i++;
-                            }
-                        }
-                        cellTables++;
-                        gridTables++;
-                        stateTables++;
-                    }
-                }
-                gMapBlockOriginX += gx - 7;
-                gMapBlockOriginZ += gz - 7;
-                playerMapOffsetX = 640.0f * gMapBlockOriginX;
-                playerMapOffsetZ = 640.0f * gMapBlockOriginZ;
-                gMapBlockOriginWorldX = playerMapOffsetX;
-                gMapBlockOriginWorldZ = playerMapOffsetZ;
-                for (i = 0; i < gShaderRomListSlotCount; i++) {
-                    gShaderRomListSlots[i].flag = 0;
-                }
-                gShaderCurMapEventId = mapCoordsToId(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, 0);
-                gMapCurRomListSlot = -1;
-                if (gShaderCurMapEventId == -1) {
-                    int d = mapGetDirIdx(41);
-                    setForceLoadImmediately();
-                    mapLoadDataFile(d, MLDF_FILEID_TEX1_BIN_A);
-                    mapLoadDataFile(d, MLDF_FILEID_TEX0_BIN_A);
-                    mapLoadDataFile(d, MLDF_FILEID_ANIM_BIN_A);
-                    mapLoadDataFile(d, MLDF_FILEID_MODELS_BIN_A);
-                    mapLoadDataFile(d, MLDF_FILEID_TEX1_TAB_A);
-                    mapLoadDataFile(d, MLDF_FILEID_MODELS_TAB_A);
-                    mapLoadDataFile(d, MLDF_FILEID_ANIM_TAB_A);
-                    mapLoadDataFile(d, MLDF_FILEID_TEX0_TAB_A);
-                    clearForceLoadImmediately();
-                    while (getLoadedFileFlags(0) != 0) {
-                        OSReport(sTrackPiLockedFormat, getLoadedFileFlags(0));
-                        padUpdate();
-                        checkReset();
-                        if (waited) {
-                            waitNextFrame();
-                        }
-                        loadDataFiles();
-                        dvdCheckError();
-                        if (waited) {
-                            mmFreeTick(0);
-                            gameTextRun();
-                            GXFlush_(1, 0);
-                        }
-                        if (gDvdErrorPauseActive) {
-                            waited = 1;
-                        }
-                    }
-                } else {
-                    if (gShaderCurMapEventId != -1) {
-                        setForceLoadImmediately();
-                        slot = mapFindLoadedRomList(gShaderCurMapEventId);
-                        if (slot == -1) {
-                            slot = mapProcessRomList(gShaderCurMapEventId);
-                        }
-                        {
-                            int mapId = gShaderCurMapEventId;
-                            int sz = (int)((u32)getDataFileSize(MLDF_FILEID_MAPINFO_BIN) >> 5);
-                            if (mapId < 0 || mapId >= sz) {
-                                curMapType = 0;
-                            } else {
-                                MapInfoRecord* e = (MapInfoRecord*)gMapInfoBuffer;
-                                getTabEntry(e, MLDF_FILEID_MAPINFO_BIN, mapId << 5, 0x20);
-                                curMapType = e->mapType;
-                            }
-                        }
-                        gShaderRomListSlots[slot].flag = 1;
-                        gMapCurRomListSlot = slot;
-                        mapCheckCurBlocks(mapGetDirIdx(gShaderCurMapEventId));
-                        mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_BLOCKS_TAB_A);
-                        mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_BLOCKS_BIN_A);
-                        mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_VOXMAP_TAB_A);
-                        mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_VOXMAP_BIN_A);
-                        gMapBlockIndexList = getCurrentDataFile(MLDF_FILEID_BLOCKS_TAB_A);
-                        gMapBlockIndexCount = 0;
-                        {
-                            int* blockIndex;
-                            for (blockIndex = gMapBlockIndexList; gMapBlockIndexList != 0 && *blockIndex != -1;) {
-                                blockIndex++;
-                                gMapBlockIndexCount += 1;
-                            }
-                        }
-                        gMapBlockIndexCount -= 1;
-                        /* Vestigial grid walk over each layer's cell table: writes only dead locals. */
-                        for (i = 0; i < 5; i++) {
-                            cellGrid = (char*)*eBase;
-                            for (row = 0; row < 16; row++) {
-                                for (col = 0; col < 16; col++) {
-                                    cellGrid += sizeof(MapCellEntry);
-                                }
-                            }
-                            eBase++;
-                        }
-                        {
-                            int mapDir = mapGetDirIdx(gShaderCurMapEventId);
-                            mapLoadDataFile(mapDir, MLDF_FILEID_TEX1_BIN_A);
-                            mapLoadDataFile(mapDir, MLDF_FILEID_TEX0_BIN_A);
-                            mapLoadDataFile(mapDir, MLDF_FILEID_ANIM_BIN_A);
-                            mapLoadDataFile(mapDir, MLDF_FILEID_MODELS_BIN_A);
-                            mapLoadDataFile(mapDir, MLDF_FILEID_ANIMCURV_BIN_A);
-                            mapLoadDataFile(mapDir, MLDF_FILEID_TEX1_TAB_A);
-                            mapLoadDataFile(mapDir, MLDF_FILEID_MODELS_TAB_A);
-                            mapLoadDataFile(mapDir, MLDF_FILEID_ANIM_TAB_A);
-                            mapLoadDataFile(mapDir, MLDF_FILEID_TEX0_TAB_A);
-                            mapLoadDataFile(mapDir, MLDF_FILEID_ANIMCURV_TAB_A);
-                        }
-                        loadModelAndAnimTabs();
-                        for (layer = 0; layer < 5; layer++) {
-                            mapGetBlockGridRects(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, rectA, rectB, rectC, rectD,
-                                                 layer, 0, slot);
-                            cellGrid = *aBase;
-                            gMapLayerCellStates = *cBase;
-                            for (row = rectA[2]; row <= rectA[3]; row++) {
-                                for (col = rectA[0]; col <= rectA[1]; col++) {
-                                    cellGrid[col + ((row + 7) << 4) + 7] = -3;
-                                }
-                            }
-                            for (row = rectB[2]; row <= rectB[3]; row++) {
-                                for (col = rectB[0]; col <= rectB[1]; col++) {
-                                    cellGrid[col + ((row + 7) << 4) + 7] = -3;
-                                }
-                            }
-                            for (row = rectC[2]; row <= rectC[3]; row++) {
-                                for (col = rectC[0]; col <= rectC[1]; col++) {
-                                    cellGrid[col + ((row + 7) << 4) + 7] = -3;
-                                }
-                            }
-                            for (row = rectD[2]; row <= rectD[3]; row++) {
-                                for (col = rectD[0]; col <= rectD[1]; col++) {
-                                    cellGrid[col + ((row + 7) << 4) + 7] = -3;
-                                }
-                            }
-                            loadedCount = 0;
-                            i = 0;
-                            for (row = 0; row < 16; row++) {
-                                for (col = 0; col < 16; col++) {
-                                    gx = gMapBlockOriginX + col;
-                                    gz = gMapBlockOriginZ + row;
-                                    if (cellGrid[i] == -3) {
-                                        if (mapLoadBlock(col, row, gx, gz, layer) == 0) {
-                                            cellGrid[i] = -2;
-                                        } else {
-                                            gMapLayerCellStates[i] = loadedCount++;
-                                        }
-                                    }
-                                    i++;
-                                }
-                            }
-                            aBase++;
-                            cBase++;
-                        }
-                        clearForceLoadImmediately();
-                    }
-                }
-                {
-                    s8 first;
-
-                    first = 1;
-                    for (slot = gShaderRomListSlotCount - 1; slot >= 0; slot--) {
-                        if (gShaderRomListSlots[slot].flag == 0) {
-                            if (gShaderRomListSlots[slot].romlist != NULL) {
-                                s16 sl = gShaderRomListSlots[slot].slot;
-                                mapBuildRomListIndex(gShaderRomListSlots[slot].romlist, &gMapRomListIndexes[sl], sl, 1);
-                                mm_free(gShaderRomListSlots[slot].romlist);
-                                gLoadedRomListPages[sl] = NULL;
-                            }
-                            gShaderRomListSlots[slot].romlist = NULL;
-                            gShaderRomListSlots[slot].slot = -1;
-                        }
-                        if (first) {
-                            if (gShaderRomListSlots[slot].romlist == NULL) {
-                                gShaderRomListSlotCount--;
-                            } else {
-                                first = 0;
-                            }
-                        }
-                    }
-                }
-                {
-                    for (i = 0; i < cnt; i++) {
-                        s16 blockId = savedBlocks->blockId;
-                        mapReleaseBlockReference(blockId);
-                        savedBlocks++;
-                    }
-                }
-                gMapCellRenderInstrBits = 0;
-                gMapCellRenderInstrsEnabled = 0;
-            }
-            mapLoadUnloadObjects(doLoad);
-            gMapPendingFileFlags = getLoadedFileFlags(0);
-            renderFlags &= ~0x4000;
+    if (renderFlags & 0x1000) {
+        return;
+    }
+    gMapSavedPlayerOffsetX = playerMapOffsetX;
+    gMapSavedPlayerOffsetZ = playerMapOffsetZ;
+    if (gShaderCurMapEventId != -1 && gShaderCurMapEventId != gShaderGameTextLoadedMapId) {
+        gShaderGameTextLoadedMapId = gShaderCurMapEventId;
+        if (gShaderCurMapEventId < 118 && gShaderMapTextDirTable[gShaderCurMapEventId] != -1) {
+            gameTextLoadDir(gShaderMapTextDirTable[gShaderCurMapEventId]);
         }
     }
+    if (!(renderFlags & 2) && (getLoadedFileFlags(0) != 0 || gMapPendingFileFlags == 0)) {
+        gMapPendingFileFlags = getLoadedFileFlags(0);
+        return;
+    }
+    renderFlags &= ~2;
+    dz = gShaderLoadCenterZ - playerMapOffsetZ;
+    gx = fastFloorf((gShaderLoadCenterX - playerMapOffsetX) / 640.0f);
+    gz = fastFloorf(dz / 640.0f);
+    doLoad = renderFlags & 0x800;
+    renderFlags &= ~0x800;
+    ff = getLoadedFileFlags(0);
+    if ((ff & ~LOADED_FILE_FLAG_PI_LOCKED) != 0) {
+        if (gShaderCurMapEventId != 38 && gShaderCurMapEventId != 58 && gShaderCurMapEventId != 59 &&
+            gShaderCurMapEventId != 60 && gShaderCurMapEventId != 61 && gShaderCurMapEventId != 62 &&
+            gShaderCurMapEventId != 28) {
+            gMapLoadDeferred = 1;
+        }
+    } else {
+        if (gMapLoadDeferred != 0) {
+            gMapLoadDeferred = 0;
+            doLoad = 1;
+        }
+    }
+    if (gx != 7 || gz != 7 || doLoad != 0 || (renderFlags & 0x4000)) {
+        shadowVolumesSetDirty(1);
+        nop_onUnloadMap(1, 0);
+        cnt = 0;
+        layer = 0;
+        cellTables = eBase = gMapBlockCellEntryTables;
+        gridTables = aBase = (char**)gMapBlockLayerTables;
+        stateTables = cBase = gMapBlockCellStateTables;
+        rec = savedBlocks = recs;
+        for (; layer < 5; layer++) {
+            ent = *cellTables;
+            cellGrid = *gridTables;
+            gMapLayerCellStates = *stateTables;
+            i = 0;
+            for (row = 0; row < 16; row++) {
+                for (col = 0; col < 16; col++) {
+                    if (cellGrid[i] > -1) {
+                        rec[cnt].x = gMapBlockOriginX + col;
+                        rec[cnt].z = gMapBlockOriginZ + row;
+                        rec[cnt].layer = layer;
+                        rec[cnt].blockId = cellGrid[i];
+                        cnt++;
+                    }
+                    cellGrid[i] = -2;
+                    gMapLayerCellStates[i] = -1;
+                    ent->blockId = -3;
+                    ent->mapId = -1;
+                    ent->adjacentMapId1 = -1;
+                    ent->adjacentMapId2 = -1;
+                    ent++;
+                    i++;
+                }
+            }
+            cellTables++;
+            gridTables++;
+            stateTables++;
+        }
+        gMapBlockOriginX += gx - 7;
+        gMapBlockOriginZ += gz - 7;
+        playerMapOffsetX = 640.0f * gMapBlockOriginX;
+        playerMapOffsetZ = 640.0f * gMapBlockOriginZ;
+        gMapBlockOriginWorldX = playerMapOffsetX;
+        gMapBlockOriginWorldZ = playerMapOffsetZ;
+        for (i = 0; i < gShaderRomListSlotCount; i++) {
+            gShaderRomListSlots[i].flag = 0;
+        }
+        gShaderCurMapEventId = mapCoordsToId(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, 0);
+        gMapCurRomListSlot = -1;
+        if (gShaderCurMapEventId == -1) {
+            d = mapGetDirIdx(41);
+            setForceLoadImmediately();
+            mapLoadDataFile(d, MLDF_FILEID_TEX1_BIN_A);
+            mapLoadDataFile(d, MLDF_FILEID_TEX0_BIN_A);
+            mapLoadDataFile(d, MLDF_FILEID_ANIM_BIN_A);
+            mapLoadDataFile(d, MLDF_FILEID_MODELS_BIN_A);
+            mapLoadDataFile(d, MLDF_FILEID_TEX1_TAB_A);
+            mapLoadDataFile(d, MLDF_FILEID_MODELS_TAB_A);
+            mapLoadDataFile(d, MLDF_FILEID_ANIM_TAB_A);
+            mapLoadDataFile(d, MLDF_FILEID_TEX0_TAB_A);
+            clearForceLoadImmediately();
+            while (getLoadedFileFlags(0) != 0) {
+                OSReport(sTrackPiLockedFormat, getLoadedFileFlags(0));
+                padUpdate();
+                checkReset();
+                if (waited) {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (waited) {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive) {
+                    waited = 1;
+                }
+            }
+        } else {
+            if (gShaderCurMapEventId != -1) {
+                setForceLoadImmediately();
+                slot = mapFindLoadedRomList(gShaderCurMapEventId);
+                if (slot == -1) {
+                    slot = mapProcessRomList(gShaderCurMapEventId);
+                }
+                mapId = gShaderCurMapEventId;
+                sz = (int)((u32)getDataFileSize(MLDF_FILEID_MAPINFO_BIN) >> 5);
+                if (mapId < 0 || mapId >= sz) {
+                    curMapType = 0;
+                } else {
+                    e = (MapInfoRecord*)gMapInfoBuffer;
+                    getTabEntry(e, MLDF_FILEID_MAPINFO_BIN, mapId << 5, 0x20);
+                    curMapType = e->mapType;
+                }
+                gShaderRomListSlots[slot].flag = 1;
+                gMapCurRomListSlot = slot;
+                mapCheckCurBlocks(mapGetDirIdx(gShaderCurMapEventId));
+                mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_BLOCKS_TAB_A);
+                mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_BLOCKS_BIN_A);
+                mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_VOXMAP_TAB_A);
+                mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_VOXMAP_BIN_A);
+                gMapBlockIndexList = getCurrentDataFile(MLDF_FILEID_BLOCKS_TAB_A);
+                gMapBlockIndexCount = 0;
+                for (blockIndex = gMapBlockIndexList; gMapBlockIndexList != 0 && *blockIndex != -1;) {
+                    blockIndex++;
+                    gMapBlockIndexCount += 1;
+                }
+                gMapBlockIndexCount -= 1;
+                /* Vestigial grid walk over each layer's cell table: writes only dead locals. */
+                for (i = 0; i < 5; i++) {
+                    cellGrid = (char*)*eBase;
+                    for (row = 0; row < 16; row++) {
+                        for (col = 0; col < 16; col++) {
+                            cellGrid += sizeof(MapCellEntry);
+                        }
+                    }
+                    eBase++;
+                }
+                mapDir = mapGetDirIdx(gShaderCurMapEventId);
+                mapLoadDataFile(mapDir, MLDF_FILEID_TEX1_BIN_A);
+                mapLoadDataFile(mapDir, MLDF_FILEID_TEX0_BIN_A);
+                mapLoadDataFile(mapDir, MLDF_FILEID_ANIM_BIN_A);
+                mapLoadDataFile(mapDir, MLDF_FILEID_MODELS_BIN_A);
+                mapLoadDataFile(mapDir, MLDF_FILEID_ANIMCURV_BIN_A);
+                mapLoadDataFile(mapDir, MLDF_FILEID_TEX1_TAB_A);
+                mapLoadDataFile(mapDir, MLDF_FILEID_MODELS_TAB_A);
+                mapLoadDataFile(mapDir, MLDF_FILEID_ANIM_TAB_A);
+                mapLoadDataFile(mapDir, MLDF_FILEID_TEX0_TAB_A);
+                mapLoadDataFile(mapDir, MLDF_FILEID_ANIMCURV_TAB_A);
+                loadModelAndAnimTabs();
+                for (layer = 0; layer < 5; layer++) {
+                    mapGetBlockGridRects(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, rectA, rectB, rectC, rectD,
+                                         layer, 0, slot);
+                    cellGrid = *aBase;
+                    gMapLayerCellStates = *cBase;
+                    for (row = rectA[2]; row <= rectA[3]; row++) {
+                        for (col = rectA[0]; col <= rectA[1]; col++) {
+                            cellGrid[col + ((row + 7) << 4) + 7] = -3;
+                        }
+                    }
+                    for (row = rectB[2]; row <= rectB[3]; row++) {
+                        for (col = rectB[0]; col <= rectB[1]; col++) {
+                            cellGrid[col + ((row + 7) << 4) + 7] = -3;
+                        }
+                    }
+                    for (row = rectC[2]; row <= rectC[3]; row++) {
+                        for (col = rectC[0]; col <= rectC[1]; col++) {
+                            cellGrid[col + ((row + 7) << 4) + 7] = -3;
+                        }
+                    }
+                    for (row = rectD[2]; row <= rectD[3]; row++) {
+                        for (col = rectD[0]; col <= rectD[1]; col++) {
+                            cellGrid[col + ((row + 7) << 4) + 7] = -3;
+                        }
+                    }
+                    loadedCount = 0;
+                    i = 0;
+                    for (row = 0; row < 16; row++) {
+                        for (col = 0; col < 16; col++) {
+                            gx = gMapBlockOriginX + col;
+                            gz = gMapBlockOriginZ + row;
+                            if (cellGrid[i] == -3) {
+                                if (mapLoadBlock(col, row, gx, gz, layer) == 0) {
+                                    cellGrid[i] = -2;
+                                } else {
+                                    gMapLayerCellStates[i] = loadedCount++;
+                                }
+                            }
+                            i++;
+                        }
+                    }
+                    aBase++;
+                    cBase++;
+                }
+                clearForceLoadImmediately();
+            }
+        }
+        first = 1;
+        for (slot = gShaderRomListSlotCount - 1; slot >= 0; slot--) {
+            if (gShaderRomListSlots[slot].flag == 0) {
+                if (gShaderRomListSlots[slot].romlist != NULL) {
+                    sl = gShaderRomListSlots[slot].slot;
+                    mapBuildRomListIndex(gShaderRomListSlots[slot].romlist, &gMapRomListIndexes[sl], sl, 1);
+                    mm_free(gShaderRomListSlots[slot].romlist);
+                    gLoadedRomListPages[sl] = NULL;
+                }
+                gShaderRomListSlots[slot].romlist = NULL;
+                gShaderRomListSlots[slot].slot = -1;
+            }
+            if (first) {
+                if (gShaderRomListSlots[slot].romlist == NULL) {
+                    gShaderRomListSlotCount--;
+                } else {
+                    first = 0;
+                }
+            }
+        }
+        for (i = 0; i < cnt; i++) {
+            blockId = savedBlocks->blockId;
+            mapReleaseBlockReference(blockId);
+            savedBlocks++;
+        }
+        gMapCellRenderInstrBits = 0;
+        gMapCellRenderInstrsEnabled = 0;
+    }
+    mapLoadUnloadObjects(doLoad);
+    gMapPendingFileFlags = getLoadedFileFlags(0);
+    renderFlags &= ~0x4000;
 }
 
 void goToNextMapLayer(void) {
