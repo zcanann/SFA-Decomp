@@ -282,6 +282,7 @@ dlls/objects/241_InvHit/InvHit.c
 dlls/objects/242_iceblast/iceblast.c
 dlls/objects/243_flameblast/flameblast.c
 dlls/objects/244/244.c
+dlls/objects/245_SidekickBal/SidekickBal.c
 dlls/objects/246_Area/Area.c
 dlls/objects/247/247.c
 dlls/objects/248_LevelName/LevelName.c
