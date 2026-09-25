@@ -166,6 +166,11 @@ void guardClaw_update(GameObject* obj, u8* state) {
 
     if (enemyState->userData1 == 2 && mainGetBit(def->gameBitD) == 0) {
         obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+        if (obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) {
+            setAButtonIcon(A_BUTTON_ICON_HINT);
+        }
+#endif
         if (obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) {
             groundBaddieHandlePaidTrigger(obj, state);
         }

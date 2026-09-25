@@ -224,6 +224,7 @@ dlls/objects/202/baddiewhirlpool.c
 dlls/objects/202/battledroid.c
 dlls/objects/202/firecrawler.c
 dlls/objects/202/gcrobotpatrol.c
+dlls/objects/202/guardclaw.c
 dlls/objects/202/hagabon_mk2.c
 dlls/objects/202/hoodedzyck.c
 dlls/objects/202/kooshy.c
@@ -679,6 +680,7 @@ dlls/objects/655_WCPressureS/WCPressureS.c
 dlls/objects/656_WCPushBlock/WCPushBlock.c
 dlls/objects/657_WCTile/WCTile.c
 dlls/objects/658_WCTrexStatu/WCTrexStatu.c
+dlls/objects/659/659.c
 dlls/objects/660/660.c
 dlls/objects/661_WCApertureS/WCApertureS.c
 dlls/objects/662_WCTempleDia/WCTempleDia.c
