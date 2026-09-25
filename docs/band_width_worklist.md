@@ -445,7 +445,7 @@ member). No row is misfiled — every row has a live ledger/memory anchor.
 | hudDrawMagicBar | dlls/engine/0/0 | 2472 | 99.288 | 75 | 0 | 12G/0F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
 | mapLoadUnloadObjects | main/shader | 1912 | 98.372 | 112 | 1 | 13G/0F | 8 | surplus-queue W7 (add-grouping optimal) + priced 24b/A83: a CSE asymmetry the source text has to state twice; verified |
 | drawViewFinderHud | dlls/engine/0/0 | 4980 | 99.345 | 126 | 1 | 7G/18F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
-| modelRenderInterpolateRootTransform | main/render | 2212 | 96.682 | 140 | 11 | 17G/1F | 1 | 16-18-wide multi-defect: surplus-queue W-list + toplevel-base-mat alias wall (dropping the alias local REGRESSES); verified 140/117 at HEAD after the u16 frameStreamStride commit |
+| modelRenderInterpolateRootTransform | main/render | 2212 | 100 | 0 | 0 | 17G/1F | 0 | **Resolved 2026-09-25:** compound prologue add, u64 loop-head mask, solver-derived declaration order. [Matching record](render_root_transform_matching.md). |
 | Checkpoint_buildControlPoints | dlls/engine/3/3 | 2500 | 100 | 0 | 0 | 12G/12F | 0 | **Resolved 2026-09-07:** local segment endpoints and the three-axis write cursor recover all 625 instructions. [Matching analysis](checkpoint_matching.md). |
 
 ### hand-asm (5)

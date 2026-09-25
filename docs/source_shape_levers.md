@@ -507,16 +507,10 @@ doomed-variable copy and reuses a u64 register PAIR in place IFF the redefinitio
 assignment (`h &= x`); `h = h & x` and `h = hw & x` never do, independent of the other operand's
 type.
 
-**The wall it prices.** `modelRenderInterpolateRootTransform` needs compound-AND semantics, an
-unfoldable-but-not-address-taken mask, and the exact pressure balance SIMULTANEOUSLY — and every
-plausible-2002 spelling reaches at most two of three. A compound whose RHS is a
-compile-time-constant local is folded/remat'd at the use, killing retail's `64(r1)` spill slot
-and flipping three other stack homes to registers (frame −16); the only opaque spelling found (a
-pointer-laundered mask) reproduces the exact target loop-head stream but wrecks the frame from
-the other side (+16, dead double-store). Baseline `h = (u64)hw & maskConst` is a genuine local
-optimum: **96.682 stands** (one byte-neutral cast removal landed alongside, `bea49f14ba`). The
-refcorpus has ZERO `addc/adde` u64 arithmetic across 42k functions — no donor exists for this
-class. §4 above is the same function's operand-signedness lever; the two are independent.
+**Resolved 2026-09-25.** `modelRenderInterpolateRootTransform` matches 100% with a plain
+`u64 h` and `h &= 0xFFF0`; no mask local is needed. The residual was never the mask: it was the
+loop-head `h` type, a split `sample = h` copy, the prologue's compound `curB += posA` and the
+declaration order. See [the matching record](render_root_transform_matching.md).
 
 ### 14. The saved-register-redefinition tell — a "rotation" hiding a mis-decompilation
 

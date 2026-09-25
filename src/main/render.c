@@ -1676,7 +1676,6 @@ asm void modelAnimBuildJointMatrices(int* out, u8* dst, void* animState, u8* joi
 }
 // clang-format on
 
-
 typedef u64 RenderPackedAddress;
 
 #define RENDER_PACKED_ADDRESS(pointer) ((u32)(pointer))
@@ -1695,21 +1694,6 @@ static inline void render_writePackedU16(RenderPackedAddress address, u16 value)
     bitpos -= (nb);                                                                                                    \
     bufA = bitpos >> 3;                                                                                                \
     posA += bufA;                                                                                                      \
-    addrB = bufA + curB;                                                                                               \
-    curB = addrB;                                                                                                      \
-    bitpos &= 7;                                                                                                       \
-    render_copyPackedU64Head(&bufA, posA);                                                                             \
-    render_copyPackedU64Tail(&bufA, posA + 7);                                                                         \
-    render_copyPackedU64Head(&bufB, addrB);                                                                            \
-    render_copyPackedU64Tail(&bufB, addrB + 7);                                                                        \
-    bufA <<= (bitpos & 0xFFFFFFFF);                                                                                    \
-    bufB <<= (bitpos & 0xFFFFFFFF);                                                                                    \
-    bitpos += (nb);
-
-#define RENDER_BITS_REFILL_NEXT(nb)                                                                                    \
-    bitpos -= (nb);                                                                                                    \
-    bufA = bitpos >> 3;                                                                                                \
-    posA += bufA;                                                                                                      \
     curB = bufA + curB;                                                                                                \
     bitpos &= 7;                                                                                                       \
     render_copyPackedU64Head(&bufA, posA);                                                                             \
@@ -1724,11 +1708,11 @@ const f32 gModelRenderSubframeScale[1] = {16384.0f};
 
 void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s16* outRotation) {
     f32 framePhase;
-    u64 tp;
-    u64 bitpos;
+    u64 nib3;
     int curB;
-    u64 posA;
+    s64 posA;
     u64 outPos;
+    u64 tp;
     u64 end;
     u64 bufA;
     u64 bufB;
@@ -1736,9 +1720,13 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
     s64* q;
     s64 frac;
     u64 vA;
-    u32 addrB;
-    u64 maskConst;
     int i;
+    u64 sample;
+    u32 hw;
+    u64 h;
+    u64 bitpos;
+    u64 nib;
+    u64 nib2;
 
     framePhase = anim->framePhase;
     outPos = RENDER_PACKED_ADDRESS(outRotation);
@@ -1746,10 +1734,8 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
     posA = RENDER_PACKED_ADDRESS(anim->frameStreamCursor);
     tp = RENDER_PACKED_ADDRESS(anim->moveFrameData->trackDescriptors);
     q = &tmp;
-    maskConst = 0xFFF0;
 
-    addrB = posA + curB;
-    curB = addrB;
+    curB += posA;
     end = RENDER_PACKED_ADDRESS(outPosition + 3);
     framePhase -= floorf(framePhase);
     framePhase *= gModelRenderSubframeScale[0];
@@ -1757,16 +1743,16 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
 
     render_copyPackedU64Head(&bufA, posA);
     render_copyPackedU64Tail(&bufA, posA + 7);
-    render_copyPackedU64Head(&bufB, addrB);
-    render_copyPackedU64Tail(&bufB, addrB + 7);
+    render_copyPackedU64Head(&bufB, curB);
+    render_copyPackedU64Tail(&bufB, curB + 7);
     bitpos = 0;
 
     do {
-        s64 h = render_readPackedU16(tp);
-        u64 nib = h & 0xf;
-        u64 sample = 0;
-        u32 hw = h;
-        h = (u64)hw & maskConst;
+        sample = 0;
+        h = render_readPackedU16(tp);
+        nib = h & 0xf;
+        hw = h;
+        h &= 0xFFF0;
 
         if (nib != 0) {
             bitpos += nib;
@@ -1785,28 +1771,27 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
             for (i = 14; i != 0; i--) {
                 *q /= 2;
             }
-            sample = h + ((vA + tmp) << 2);
+            h += (vA + tmp) << 2;
             bufA <<= (nib & 0xFFFFFFFF);
             bufB <<= (nib & 0xFFFFFFFF);
+            sample = h;
         }
         tp += 2;
         render_writePackedU16(outPos, sample);
         outPos += 2;
 
         do {
-            u64 nib3;
-
             if ((hw & 0x10) == 0) {
                 sample = 0;
                 break;
             }
             h = render_readPackedU16(tp);
             if ((h & 0x10) != 0) {
-                u64 nib2 = h & 0xf;
+                nib2 = h & 0xf;
                 if (nib2 != 0) {
                     bitpos += nib2;
                     if ((s64)bitpos > 64) {
-                        RENDER_BITS_REFILL_NEXT(nib2)
+                        RENDER_BITS_REFILL(nib2)
                     }
                     bufA <<= (nib2 & 0xFFFFFFFF);
                     bufB <<= (nib2 & 0xFFFFFFFF);
@@ -1821,10 +1806,10 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
             sample = 0;
             nib3 = h & 0xf;
             if (nib3 != 0) {
-                u64 masked2 = h & 0xFFF0;
+                h &= 0xFFF0;
                 bitpos += nib3;
                 if ((s64)bitpos > 64) {
-                    RENDER_BITS_REFILL_NEXT(nib3)
+                    RENDER_BITS_REFILL(nib3)
                 }
                 tmp = 64 - nib3;
                 vA = bufA >> (tmp & 0xFFFFFFFF);
@@ -1834,9 +1819,10 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
                 for (i = 14; i != 0; i--) {
                     *q /= 2;
                 }
-                sample = masked2 + (vA + tmp);
+                h += vA + tmp;
                 bufA <<= (nib3 & 0xFFFFFFFF);
                 bufB <<= (nib3 & 0xFFFFFFFF);
+                sample = h;
             }
             tp += 2;
         } while (0);
