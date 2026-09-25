@@ -362,7 +362,6 @@ static inline s16 ObjAnim_ReadRootAxisSample(s16* axis, int sampleIndex) {
     return ((ObjAnimRootCurveAxis*)axis)->samples[sampleIndex];
 }
 
-#pragma opt_common_subs on
 int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float* phaseOut) {
     s16* axisSamples;
     f32 blendDistanceDelta;
@@ -507,7 +506,8 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
                     if (blendSamples != NULL) {
                         axisSamples = &moveSamples[sampleIndex];
                         moveDistanceDelta = moveRootScale * ((f32)axisSamples[1] - axisSamples[0]);
-                        blendDistanceDelta = blendScale * ((f32)blendSamples[sampleIndex + 1] - blendSamples[sampleIndex]);
+                        blendDistanceDelta =
+                            blendScale * ((f32)blendSamples[sampleIndex + 1] - blendSamples[sampleIndex]);
                         segmentEndDistance += (moveDistanceDelta * moveWeight) + (blendDistanceDelta * blendWeight);
                     } else {
                         axisSamples = &moveSamples[sampleIndex];
@@ -525,8 +525,6 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     }
     return 0;
 }
-
-#pragma opt_common_subs reset
 
 #define OBJANIM_MOVE_STEP_SCALE_MIN -1.0f
 
@@ -568,6 +566,7 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
     s16* axis;
     s16* blendAxis;
     s16* at;
+    ObjAnimPackedEvent eventEntry;
     int previousSampleIndex;
     int currentSampleIndex;
     int eventFrame;
@@ -672,8 +671,9 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
 
             for (eventIndex = 0; eventIndex < eventCount && events->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY;
                  eventIndex++) {
-                eventFrame = ObjAnim_GetPackedEventFrame(objAnim->eventTable->entries[eventIndex]);
-                eventId = ObjAnim_GetPackedEventId(objAnim->eventTable->entries[eventIndex]);
+                eventEntry = objAnim->eventTable->entries[eventIndex];
+                eventFrame = ObjAnim_GetPackedEventFrame(eventEntry);
+                eventId = ObjAnim_GetPackedEventId(eventEntry);
                 if (eventId == OBJANIM_EVENT_ID_NONE) {
                     continue;
                 }
