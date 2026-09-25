@@ -1398,14 +1398,14 @@ dlls/engine/53/53.c:
 	.sdata2     start:0x803E3720 end:0x803E3748
 
 dlls/engine/54/54.c:
-	.text       start:0x8011BB20 end:0x8011C690
+	.text       start:0x8011BB20 end:0x8011C514
 	.data       start:0x8031C0E0 end:0x8031C158
 	.bss        start:0x803A9FF0 end:0x803AA130
 	.sbss       start:0x803DF088 end:0x803DF0B0
 	.sdata2     start:0x803E3748 end:0x803E3798
 
 dlls/engine/55/55.c:
-	.text       start:0x8011C690 end:0x8011DA58
+	.text       start:0x8011C514 end:0x8011DA58
 	.data       start:0x8031C158 end:0x8031C6B0
 	.bss        start:0x803AA130 end:0x803AA150
 	.sdata      start:0x803DD3E8 end:0x803DD3F0
