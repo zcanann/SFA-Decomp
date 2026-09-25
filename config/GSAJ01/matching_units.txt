@@ -47,6 +47,7 @@ Runtime.PPCEABI.H/fragment.c
 Runtime.PPCEABI.H/global_destructor_chain.c
 Runtime.PPCEABI.H/mem_TRK.c
 Runtime.PPCEABI.H/runtime.c
+dlls/engine/0/0.c
 dlls/engine/10_expgfx/expgfx.c
 dlls/engine/11/11.c
 dlls/engine/12/12.c
