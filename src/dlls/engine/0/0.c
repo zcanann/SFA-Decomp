@@ -4038,6 +4038,12 @@ void pauseMenuUpdate(void) {
  * slot pointer and clears the +0x4c sentinel
  * if it overflowed the 0x90000000 watermark. Tail restores FOV
  * and runs the standard close-block trio. */
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
+#define PAUSE_MENU_VIEWPORT_HEIGHT (gRenderModeObj->xfbHeight)
+#else
+#define PAUSE_MENU_VIEWPORT_HEIGHT (gRenderModeObj->efbHeight)
+#endif
+
 void pauseMenuRenderSlotShadow(void) {
     f32 saved_fov;
 
@@ -4051,7 +4057,7 @@ void pauseMenuRenderSlotShadow(void) {
     Camera_SetFovY(43.0f);
     Camera_RebuildProjectionMatrix();
     Camera_UpdateViewMatrices();
-    GXSetViewport(0.0f, 0.0f, (f32)gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, 0.0f, 1.0f);
+    GXSetViewport(0.0f, 0.0f, (f32)gRenderModeObj->fbWidth, PAUSE_MENU_VIEWPORT_HEIGHT, 0.0f, 1.0f);
     renderObjectShadowTexture(gGameUiHudAnimObjects[gPauseMenuPageIndex]);
     {
         GameObject* slot = gGameUiHudAnimObjects[gPauseMenuPageIndex];
@@ -4127,7 +4133,7 @@ void pauseMenuDoSave(void) {
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    GXSetViewport(0.0f, 0.0f, (f32)gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, 0.0f, 1.0f);
+    GXSetViewport(0.0f, 0.0f, (f32)gRenderModeObj->fbWidth, PAUSE_MENU_VIEWPORT_HEIGHT, 0.0f, 1.0f);
     for (i = 1; i < 6; i++) {
         if (gGameUiHudAnimObjects[i] == NULL) {
             continue;
