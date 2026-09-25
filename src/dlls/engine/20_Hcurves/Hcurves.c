@@ -29,9 +29,6 @@ int gObjfsaLastWalkGroupIndex;
 int gObjfsaBlockFlagsChecksum;
 #endif
 
-#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
-extern u8 gObjfsaPrevBlockFlags[];
-#endif
 extern char sObjfsaFoundNewWalkGroupPatch[];
 extern char sObjfsaIsPointWithinPatchGroupError[];
 
@@ -1016,6 +1013,11 @@ static inline void Objfsa_SetPatchPlane(ObjfsaPatchPlane* plane, f32* planeOffse
     *planeOffset = -(plane->normalX * startX + plane->normalZ * startZ);
 }
 
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+u8 gObjfsaPrevBlockFlags[ROM_LIST_PAGE_COUNT] = {0};
+char sObjfsaCornerTooFarOut[] = "Corner is too far out (%f)\n";
+#endif
+
 void Objfsa_UpdateWalkGroupPatches(void) {
     char* edgeSlotCursor;
     u8 loadedBlockFlags[ROM_LIST_PAGE_COUNT];
@@ -1272,10 +1274,6 @@ void doNothing_onTrickyFree(void) {
 void doNothing_onTrickyInit(void) {
 }
 
-#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
-u8 gObjfsaPrevBlockFlags[ROM_LIST_PAGE_COUNT] = {0};
-char sObjfsaCornerTooFarOut[] = "Corner is too far out (%f)\n";
-#endif
 char sObjfsaFoundNewWalkGroupPatch[] = "Found new walk group patch from walkgroup %d\n";
 char sObjfsaIsPointWithinPatchGroupError[] = "Error in isPointWithinPatchGroup\n";
 char sObjfsaMissingPatchExitPoint0[] = "Unable to find exit point 0 on patch between walkgroup %d and %d\n";
