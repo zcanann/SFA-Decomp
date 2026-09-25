@@ -2086,8 +2086,8 @@ s32 isTalkingToNpc(void) {
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
 void gameUiDrawNpcDialogueText(int a, int b, int c) {
     TextSlot* box = gameTextGetBox(NPC_DIALOGUE_TEXT_BOX);
-    char* phrase;
     int slot;
+    char* phrase;
     int encodedLength;
     u32 ch;
 
@@ -2106,7 +2106,8 @@ void gameUiDrawNpcDialogueText(int a, int b, int c) {
                     slot = NPC_DIALOGUE_TEXT_BOX;
                 }
             }
-            gameTextGetBox(slot)->alpha = (u8)gNpcDialogueTextAlpha;
+            box = gameTextGetBox(slot);
+            box->alpha = (u8)gNpcDialogueTextAlpha;
             gameTextAppendStr(phrase, slot);
         } else {
             box->alpha = (u8)gNpcDialogueTextAlpha;
