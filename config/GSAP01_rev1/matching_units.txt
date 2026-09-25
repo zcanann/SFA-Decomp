@@ -649,6 +649,7 @@ dlls/objects/621_DR_Vines/DR_Vines.c
 dlls/objects/622/622.c
 dlls/objects/623/623.c
 dlls/objects/624_DR_Rock/DR_Rock.c
+dlls/objects/625/625.c
 dlls/objects/627_FirePipe/FirePipe.c
 dlls/objects/628_DR_pulley/DR_pulley.c
 dlls/objects/629_DR_cradle/DR_cradle.c
