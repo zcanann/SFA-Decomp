@@ -20,10 +20,14 @@
 #include "string.h"
 #include "main/dll/objfsa_internal.h"
 
+#if !defined(VERSION_GSAE01_rev1) && !defined(VERSION_GSAP01_rev1)
 static int sObjfsaUnused0;
+#endif
 int gObjfsaPatchCount;
 int gObjfsaLastWalkGroupIndex;
+#if !defined(VERSION_GSAE01_rev1) && !defined(VERSION_GSAP01_rev1)
 int gObjfsaBlockFlagsChecksum;
+#endif
 
 extern char sObjfsaFoundNewWalkGroupPatch[];
 extern char sObjfsaIsPointWithinPatchGroupError[];
@@ -1009,6 +1013,11 @@ static inline void Objfsa_SetPatchPlane(ObjfsaPatchPlane* plane, f32* planeOffse
     *planeOffset = -(plane->normalX * startX + plane->normalZ * startZ);
 }
 
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+u8 gObjfsaPrevBlockFlags[ROM_LIST_PAGE_COUNT] = {0};
+char sObjfsaCornerTooFarOut[] = "Corner is too far out (%f)\n";
+#endif
+
 void Objfsa_UpdateWalkGroupPatches(void) {
     char* edgeSlotCursor;
     u8 loadedBlockFlags[ROM_LIST_PAGE_COUNT];
@@ -1061,6 +1070,7 @@ void Objfsa_UpdateWalkGroupPatches(void) {
     ObjfsaPatch* exitRecord;
     mapGetLoadedMapFlags(loadedBlockFlags);
 
+#if !defined(VERSION_GSAE01_rev1) && !defined(VERSION_GSAP01_rev1)
     checksum = 1;
     for (flagIndex = 0; flagIndex < ROM_LIST_PAGE_COUNT; flagIndex++) {
         if (loadedBlockFlags[flagIndex] != 0) {
@@ -1073,6 +1083,18 @@ void Objfsa_UpdateWalkGroupPatches(void) {
     } else {
         return;
     }
+#else
+    for (flagIndex = 0; flagIndex < ROM_LIST_PAGE_COUNT; flagIndex++) {
+        if (loadedBlockFlags[flagIndex] != gObjfsaPrevBlockFlags[flagIndex]) {
+            break;
+        }
+    }
+
+    if (flagIndex == ROM_LIST_PAGE_COUNT) {
+        return;
+    }
+    memcpy(gObjfsaPrevBlockFlags, loadedBlockFlags, ROM_LIST_PAGE_COUNT);
+#endif
 
     {
         if (loadedBlockFlags[2] != 0 || loadedBlockFlags[0x34] != 0) {

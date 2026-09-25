@@ -140,20 +140,30 @@ StaffCollisionInterface** gBaddieStaffCollisionInterface;
 /* ObjPlacement offsets read by the defeat handler to fire the baddie's
  * death gamebits. */
 
-static const u16 lbl_803E2558[4] = {0x2C4, 0x2CD, 0x2CE, 0x2CF};
-static const u16 lbl_803E2560[2] = {0x3CD, 0xB};
-static const u16 lbl_803E2564[2] = {0x3CD, 0x2C4};
-static const u16 lbl_803E2568[1] = {0xB};
+static const u16 sBaddieCommandSpawnIds[4] = {0x2C4, 0x2CD, 0x2CE, 0x2CF};
+static const u16 sBaddieRewardSpawnIds[2] = {0x3CD, 0xB};
+static const u16 sBaddieAltRewardSpawnIds[2] = {0x3CD, 0x2C4};
+static const u16 sBaddieAltRewardSpawnId[1] = {0xB};
 
 void Tricky_resumeAfterCommand(GameObject* obj, EnemyState* state) {
     ObjHitsPriorityState* hitState;
     u8 moveId;
+    f32 moveSpeedScale;
 
     state->actionId = 1;
     if (((state->controlFlags & 0x1000) != 0) && ((state->prevControlFlags & 0x1000) == 0)) {
         obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        moveSpeedScale = state->moveSpeedScale0;
         moveId = state->moveId0;
-        state->animPlaySpeed = 1.0f / (60.0f * state->moveSpeedScale0);
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+        if (moveSpeedScale != 0.0f) {
+            state->animPlaySpeed = 1.0f / (60.0f * moveSpeedScale);
+        } else {
+            state->animPlaySpeed = 0.1f;
+        }
+#else
+        state->animPlaySpeed = 1.0f / (60.0f * moveSpeedScale);
+#endif
         state->rootMotionFlags = 1;
         ObjAnim_SetCurrentMove(obj, moveId, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
         if (obj->anim.hitReactState != NULL) {
@@ -184,6 +194,7 @@ void Tricky_resumeAfterCommand(GameObject* obj, EnemyState* state) {
 
 void tricky_handleDefeat(GameObject* obj, EnemyState* state) {
     ObjHitsPriorityState* hitState;
+    f32 moveSpeedScale;
     EnemyPlacement* setup;
     int alpha;
     void* tricky;
@@ -208,8 +219,17 @@ void tricky_handleDefeat(GameObject* obj, EnemyState* state) {
         state->trackedObj = NULL;
         ObjHits_DisableObject(obj);
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+        moveSpeedScale = state->moveSpeedScale1;
         moveId = state->moveId1;
-        state->animPlaySpeed = 1.0f / (60.0f * state->moveSpeedScale1);
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+        if (moveSpeedScale != 0.0f) {
+            state->animPlaySpeed = 1.0f / (60.0f * moveSpeedScale);
+        } else {
+            state->animPlaySpeed = 0.1f;
+        }
+#else
+        state->animPlaySpeed = 1.0f / (60.0f * moveSpeedScale);
+#endif
         state->rootMotionFlags = 1;
         ObjAnim_SetCurrentMove(obj, moveId, 0.0f, 0);
         if ((void*)obj->anim.hitReactState != NULL) {
@@ -568,10 +588,10 @@ int baddie_spawnRewardDrops(GameObject* obj, int state, int spawnBits, u32 useAl
 
     (void)state;
     parentSetup = (ObjPlacement*)obj->anim.placementData;
-    *(struct TrickyCommandSpawnPair*)commandSpawnIds = *(struct TrickyCommandSpawnPair*)lbl_803E2558;
-    rewardSpawnIds0 = *(u32*)lbl_803E2560;
-    rewardTail.pair = *(u32*)lbl_803E2564;
-    rewardTail.single = lbl_803E2568[0];
+    *(struct TrickyCommandSpawnPair*)commandSpawnIds = *(struct TrickyCommandSpawnPair*)sBaddieCommandSpawnIds;
+    rewardSpawnIds0 = *(u32*)sBaddieRewardSpawnIds;
+    rewardTail.pair = *(u32*)sBaddieAltRewardSpawnIds;
+    rewardTail.single = sBaddieAltRewardSpawnId[0];
     if (spawnBits == 0) {
         return 0;
     }
@@ -1098,8 +1118,17 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state) {
     } else if ((flags & 0x100) != 0) {
         state->actionId = 2;
         if (((state->controlFlags & 0x100) != 0) && ((state->prevControlFlags & 0x100) == 0)) {
+            f32 moveSpeedScale = state->moveSpeedScale2;
             int moveId = state->moveId2;
-            state->animPlaySpeed = 1.0f / (60.0f * state->moveSpeedScale2);
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+            if (moveSpeedScale != 0.0f) {
+                state->animPlaySpeed = 1.0f / (60.0f * moveSpeedScale);
+            } else {
+                state->animPlaySpeed = 0.1f;
+            }
+#else
+            state->animPlaySpeed = 1.0f / (60.0f * moveSpeedScale);
+#endif
             state->rootMotionFlags = 1;
             ObjAnim_SetCurrentMove(obj, moveId, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
             if (*(void**)(obj + 0x2a) != 0) {
@@ -1999,7 +2028,15 @@ void baddieSetMove(GameObject* obj, void* state, u8 moveId, f32 rateScale, u8 mo
     EnemyState* enemyState = (EnemyState*)state;
     ObjHitsPriorityState* hitState;
 
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+    if (0.0f != rateScale) {
+        enemyState->animPlaySpeed = 1.0f / (60.0f * rateScale);
+    } else {
+        enemyState->animPlaySpeed = 0.1f;
+    }
+#else
     enemyState->animPlaySpeed = 1.0f / (60.0f * rateScale);
+#endif
     enemyState->rootMotionFlags = stateByte;
     ObjAnim_SetCurrentMove(obj, moveId, 0.0f, moveControlFlags);
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;

@@ -25,7 +25,7 @@ typedef struct SidekickBallState {
             u8 pad1B8[4];               /* 0x1B8 */
             f32 floorBaseY;             /* 0x1BC */
             u8 pad1C0[0x9B];            /* 0x1C0 */
-            u8 hittableLatch;           /* 0x25B */
+            s8 hittableLatch;           /* 0x25B */
             u8 pad25C[5];               /* 0x25C */
             s8 hasCollisionNormal;      /* 0x261 */
             u8 pad262[6];               /* 0x262 */

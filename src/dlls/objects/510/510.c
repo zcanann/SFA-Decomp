@@ -123,8 +123,13 @@ void PressureSwitch_update(GameObject* obj) {
         }
     }
     mapSlot = obj->anim.mapEventSlot;
+#if defined(VERSION_GSAP01_rev1)
+    if (mapSlot == PRESSURE_SWITCH_EVENT_SLOT &&
+        (*gMapEventInterface)->getMapAct(mapSlot) == PRESSURE_SWITCH_CAMERA_MAP_ACT) {
+#else
     if (mapSlot == PRESSURE_SWITCH_EVENT_SLOT &&
         (*gMapEventInterface)->getMapAct(mapSlot) == PRESSURE_SWITCH_CAMERA_MAP_ACT && isPlayerFar == 0) {
+#endif
         if (state->holdTimer != 0) {
             verticalOffset = placement->base.posY - obj->anim.localPosY;
             if (verticalOffset > PRESSURE_SWITCH_CAMERA_MIN_DEPTH &&

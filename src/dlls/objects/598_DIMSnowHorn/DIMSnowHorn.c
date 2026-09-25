@@ -1058,7 +1058,11 @@ void DIMSnowHorn1_update(GameObject* obj) {
 
     data = obj->extra;
     data->advanceCountThreshold = 5;
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+    obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+#else
     obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+#endif
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->trackContactMask = 9;
     {
         u8* fp = base + 0x94;
@@ -1078,6 +1082,9 @@ void DIMSnowHorn1_update(GameObject* obj) {
             return;
         }
     }
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+    obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+#endif
     if (data->mountMode == 2) {
         data->baddie.physicsActive = 1;
         DIMSnowHorn1_ridingUpdate(obj, framesThisStep, -1);

@@ -19,7 +19,13 @@
 #define CARRYABLE_OBJGROUP 0x10
 
 void Carryable_putDownAndSavePos(GameObject* obj) {
-    CarryableState* state = obj->extra;
+    CarryableState* state;
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+    if (obj->anim.romDefNo == 0x112) {
+        return;
+    }
+#endif
+    state = obj->extra;
     state->carryState = CARRY_STATE_RESTING;
     state->isHeld = 0;
     if ((state->flags & CARRYABLE_FLAG_SUPPRESS_POS_SAVE) == 0) {
@@ -186,7 +192,12 @@ int Carryable_updateHeld(GameObject* obj, CarryableState* state) {
         if (obj->userData2 == 1) {
             held->carryState = CARRY_STATE_PUTDOWN;
         }
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+        if (held->carryState == CARRY_STATE_PUTDOWN && obj->userData2 == 0 &&
+            obj->anim.romDefNo != 0x112) {
+#else
         if (held->carryState == CARRY_STATE_PUTDOWN && obj->userData2 == 0) {
+#endif
             CarryableState* h2 = obj->extra;
             h2->carryState = CARRY_STATE_RESTING;
             h2->isHeld = 0;

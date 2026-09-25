@@ -114,8 +114,7 @@ void timer_update(GameObject* obj) {
             mainSetBits(setup->startGameBit, 0);
             endedThisFrame = 1;
         }
-#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
-        /* These revisions compare the disabled mask (0 or 2) with 1. */
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
         if (state->mode == TIMER_MODE_GLOBAL && isGameTimerDisabled() == 1) {
             mainSetBits(setup->expiredGameBit, 1);
             mainSetBits(setup->startGameBit, 0);

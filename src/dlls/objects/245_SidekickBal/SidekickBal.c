@@ -86,6 +86,9 @@ static inline void sidekickBall_throw(GameObject* obj, f32 velocityX, f32 veloci
     state->previousPosX = obj->anim.localPosX;
     state->previousPosY = obj->anim.localPosY;
     state->previousPosZ = obj->anim.localPosZ;
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+    (*gPathControlInterface)->attachObject(obj, &state->pathControl);
+#endif
 }
 
 void sidekickBall_handlePlayerInteraction(GameObject* obj, SidekickBallState* state) {
@@ -213,6 +216,9 @@ void sidekickBall_launch(GameObject* obj, GameObject* source, f32 velocityX, f32
     state->previousPosX = obj->anim.localPosX;
     state->previousPosY = obj->anim.localPosY;
     state->previousPosZ = obj->anim.localPosZ;
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+    (*gPathControlInterface)->attachObject(obj, &state->pathControl);
+#endif
 }
 
 int SidekickBall_getExtraSize(void) {
@@ -299,9 +305,19 @@ void SidekickBall_update(GameObject* obj) {
         break;
     }
 
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
     (*gPathControlInterface)->update(obj, &state->pathControl, timeDelta);
     (*gPathControlInterface)->apply(obj, &state->pathControl);
     (*gPathControlInterface)->advance(obj, &state->pathControl, timeDelta);
+#else
+    if (((SidekickBallState*)obj->extra)->hittableLatch == 1) {
+        (*gPathControlInterface)->update(obj, &state->pathControl, timeDelta);
+        (*gPathControlInterface)->apply(obj, &state->pathControl);
+        (*gPathControlInterface)->advance(obj, &state->pathControl, timeDelta);
+    } else {
+        (*gPathControlInterface)->attachObject(obj, obj->extra);
+    }
+#endif
 }
 
 static inline int sidekickBall_updateFloorDepth(GameObject* obj, SidekickBallState* state) {
@@ -322,6 +338,7 @@ static inline int sidekickBall_updateFloorDepth(GameObject* obj, SidekickBallSta
 }
 
 u8 trickyBallMove(GameObject* obj) {
+    SidekickBallState* state;
     int hasCollisionNormal;
     Vec collisionNormal;
     f32 deltaX;
@@ -334,7 +351,6 @@ u8 trickyBallMove(GameObject* obj) {
     f32 reflectedZ;
     f32 dot;
     f32 restitution;
-    SidekickBallState* state;
     int hasMovementDelta;
     int hasFloorDepth;
 
@@ -379,9 +395,19 @@ u8 trickyBallMove(GameObject* obj) {
     }
 
     objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta, obj->anim.velocityZ * timeDelta);
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
     (*gPathControlInterface)->update(obj, &state->pathControl, timeDelta);
     (*gPathControlInterface)->apply(obj, &state->pathControl);
     (*gPathControlInterface)->advance(obj, &state->pathControl, timeDelta);
+#else
+    if (((SidekickBallState*)obj->extra)->hittableLatch == 1) {
+        (*gPathControlInterface)->update(obj, &state->pathControl, timeDelta);
+        (*gPathControlInterface)->apply(obj, &state->pathControl);
+        (*gPathControlInterface)->advance(obj, &state->pathControl, timeDelta);
+    } else {
+        (*gPathControlInterface)->attachObject(obj, obj->extra);
+    }
+#endif
 
     if (state->hasCollisionNormal != 0) {
         hasCollisionNormal = 1;

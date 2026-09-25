@@ -8,23 +8,18 @@
 
 typedef struct WCLevelContInterface WCLevelContInterface;
 
-struct WCLevelContInterface
-{
+struct WCLevelContInterface {
     u8 pad00[0x20];
-    void (*tileAToWorldPos)(GameObject* obj, int tileX, int tileY, f32* outX, f32* outZ,
-                            WCLevelContInterface* iface);
-    void (*worldPosToTileA)(GameObject* obj, f32 x, f32 z, s16* outTileX, s16* outTileY,
-                            WCLevelContInterface* iface);
+    void (*tileAToWorldPos)(GameObject* obj, int tileX, int tileY, f32* outX, f32* outZ, WCLevelContInterface* iface);
+    void (*worldPosToTileA)(GameObject* obj, f32 x, f32 z, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
     void (*setTileA)(int value, int tileX, int tileY, WCLevelContInterface* iface);
     int (*getTileA)(int tileX, int tileY, WCLevelContInterface* iface);
     void (*getInitialTileXYA)(int value, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
     void (*getSolvedTileXYA)(int value, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
     u8 (*traceMoveA)(GameObject* obj, int tileX, int tileY, f32* outX, f32* outZ, int dx, int dy,
                      WCLevelContInterface* iface);
-    void (*tileBToWorldPos)(GameObject* obj, int tileX, int tileY, f32* outX, f32* outZ,
-                            WCLevelContInterface* iface);
-    void (*worldPosToTileB)(GameObject* obj, f32 x, f32 z, s16* outTileX, s16* outTileY,
-                            WCLevelContInterface* iface);
+    void (*tileBToWorldPos)(GameObject* obj, int tileX, int tileY, f32* outX, f32* outZ, WCLevelContInterface* iface);
+    void (*worldPosToTileB)(GameObject* obj, f32 x, f32 z, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
     void (*setTileB)(int value, int tileX, int tileY, WCLevelContInterface* iface);
     int (*getTileB)(int tileX, int tileY, WCLevelContInterface* iface);
     void (*getInitialTileXYB)(int value, s16* outTileX, s16* outTileY, WCLevelContInterface* iface);
@@ -50,8 +45,7 @@ STATIC_ASSERT(offsetof(WCLevelContInterface, getInitialTileXYB) == 0x4C);
 STATIC_ASSERT(offsetof(WCLevelContInterface, getSolvedTileXYB) == 0x50);
 STATIC_ASSERT(offsetof(WCLevelContInterface, traceMoveB) == 0x54);
 
-typedef struct WclevelcontFlags
-{
+typedef struct WclevelcontFlags {
     u8 b80 : 1;
     u8 b40 : 1;
     u8 b20 : 1;
@@ -78,8 +72,10 @@ typedef struct WclevelcontFlags
 #define WCLEVELCTL_MODE_TREX_INIT   6
 #define WCLEVELCTL_MODE_DONE        7
 
-typedef struct WcLevelControlState
-{
+typedef struct WcLevelControlState {
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+    f32 messageTimer;
+#endif
     f32 eventTimer;
     f32 tileBResetTimer;
     f32 tileAResetTimer;
@@ -95,20 +91,34 @@ typedef struct WcLevelControlState
 } WcLevelControlState;
 
 STATIC_ASSERT(sizeof(WclevelcontFlags) == 1);
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
 STATIC_ASSERT(sizeof(WcLevelControlState) == 0x1C);
-STATIC_ASSERT(offsetof(WcLevelControlState, eventTimer) == 0x00);
-STATIC_ASSERT(offsetof(WcLevelControlState, tileBResetTimer) == 0x04);
-STATIC_ASSERT(offsetof(WcLevelControlState, tileAResetTimer) == 0x08);
-STATIC_ASSERT(offsetof(WcLevelControlState, mode) == 0x0C);
-STATIC_ASSERT(offsetof(WcLevelControlState, previousMode) == 0x0D);
+STATIC_ASSERT(offsetof(WcLevelControlState, eventTimer) == 0x0);
+STATIC_ASSERT(offsetof(WcLevelControlState, tileBResetTimer) == 0x4);
+STATIC_ASSERT(offsetof(WcLevelControlState, tileAResetTimer) == 0x8);
+STATIC_ASSERT(offsetof(WcLevelControlState, mode) == 0xC);
+STATIC_ASSERT(offsetof(WcLevelControlState, previousMode) == 0xD);
 STATIC_ASSERT(offsetof(WcLevelControlState, gameBitLatch) == 0x10);
 STATIC_ASSERT(offsetof(WcLevelControlState, dialogueFlags) == 0x14);
 STATIC_ASSERT(offsetof(WcLevelControlState, thorntailMusicId) == 0x16);
 STATIC_ASSERT(offsetof(WcLevelControlState, ambientMusicId) == 0x18);
 STATIC_ASSERT(offsetof(WcLevelControlState, completionFlags) == 0x1A);
+#else
+STATIC_ASSERT(sizeof(WcLevelControlState) == 0x20);
+STATIC_ASSERT(offsetof(WcLevelControlState, messageTimer) == 0x00);
+STATIC_ASSERT(offsetof(WcLevelControlState, eventTimer) == 0x4);
+STATIC_ASSERT(offsetof(WcLevelControlState, tileBResetTimer) == 0x8);
+STATIC_ASSERT(offsetof(WcLevelControlState, tileAResetTimer) == 0xC);
+STATIC_ASSERT(offsetof(WcLevelControlState, mode) == 0x10);
+STATIC_ASSERT(offsetof(WcLevelControlState, previousMode) == 0x11);
+STATIC_ASSERT(offsetof(WcLevelControlState, gameBitLatch) == 0x14);
+STATIC_ASSERT(offsetof(WcLevelControlState, dialogueFlags) == 0x18);
+STATIC_ASSERT(offsetof(WcLevelControlState, thorntailMusicId) == 0x1A);
+STATIC_ASSERT(offsetof(WcLevelControlState, ambientMusicId) == 0x1C);
+STATIC_ASSERT(offsetof(WcLevelControlState, completionFlags) == 0x1E);
+#endif
 
-typedef union WcTileGrid
-{
+typedef union WcTileGrid {
     u8 g[8][8];
     u64 align8;
 } WcTileGrid;

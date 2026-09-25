@@ -88,6 +88,7 @@ dlls/engine/43/43.c
 dlls/engine/44/44.c
 dlls/engine/45/45.c
 dlls/engine/46/46.c
+dlls/engine/47/47.c
 dlls/engine/48/48.c
 dlls/engine/49/49.c
 dlls/engine/5/5.c
@@ -281,6 +282,7 @@ dlls/objects/241_InvHit/InvHit.c
 dlls/objects/242_iceblast/iceblast.c
 dlls/objects/243_flameblast/flameblast.c
 dlls/objects/244/244.c
+dlls/objects/245_SidekickBal/SidekickBal.c
 dlls/objects/246_Area/Area.c
 dlls/objects/247/247.c
 dlls/objects/248_LevelName/LevelName.c
@@ -322,6 +324,7 @@ dlls/objects/283_Landed_Arwi/Landed_Arwi.c
 dlls/objects/284/284.c
 dlls/objects/285/285.c
 dlls/objects/286_MagicCaveBo/MagicCaveBo.c
+dlls/objects/287_MagicCaveTo/MagicCaveTo.c
 dlls/objects/288_TrickyGuard/TrickyGuard.c
 dlls/objects/289/289.c
 dlls/objects/290_CCTestInfot/CCTestInfot.c
@@ -630,6 +633,7 @@ dlls/objects/594_KT_Lazerwal/KT_Lazerwal.c
 dlls/objects/595_KT_Lazerlig/KT_Lazerlig.c
 dlls/objects/596_KT_Fallingr/KT_Fallingr.c
 dlls/objects/597/597.c
+dlls/objects/598_DIMSnowHorn/DIMSnowHorn.c
 dlls/objects/599_DR_EarthWar/DR_EarthWar.c
 dlls/objects/600_DR_CloudRun/DR_CloudRun.c
 dlls/objects/601_SB_Cloudrun/SB_Cloudrun.c
@@ -656,6 +660,7 @@ dlls/objects/622/622.c
 dlls/objects/623/623.c
 dlls/objects/624_DR_Rock/DR_Rock.c
 dlls/objects/625/625.c
+dlls/objects/626/626.c
 dlls/objects/627_FirePipe/FirePipe.c
 dlls/objects/628_DR_pulley/DR_pulley.c
 dlls/objects/629_DR_cradle/DR_cradle.c
