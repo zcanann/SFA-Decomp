@@ -128,6 +128,19 @@ void GM_MazeWell_update(GameObject* obj) {
         int itemIndex;
         for (itemIndex = 0;;) {
             if ((*gGameUIInterface)->isItemBeingUsed(questBits[itemIndex]) != 0) {
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+                state = obj->extra;
+                switch (itemIndex) {
+                case 0:
+                case 1:
+                case 2:
+                    mainSetBits(questBits[itemIndex + QUEST_REWARD_BASE], 1);
+                    saveFileStruct_unlockCheat((u8)itemIndex);
+                    break;
+                }
+                state->pendingDialogue = questBits32[itemIndex + QUEST_DIALOGUE_BASE32];
+                mainSetBits(questBits[itemIndex + QUEST_FOLLOWUP_BASE], 1);
+#else
                 if (gGameTextFontIsSjis != 0) {
                     state = obj->extra;
                     switch (itemIndex) {
@@ -155,6 +168,7 @@ void GM_MazeWell_update(GameObject* obj) {
                     }
                     mainSetBits(questBits[itemIndex + QUEST_FOLLOWUP_BASE], 1);
                 }
+#endif
                 found = 1;
                 break;
             }

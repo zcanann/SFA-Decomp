@@ -57,7 +57,15 @@ void shTricky_update(GameObject* obj) {
 void shTricky_init(GameObject* obj) {
     ShTrickyState* state = obj->extra;
     if (mainGetBit(GAMEBIT_SH_ReturnedToQueen) != 0) {
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+        if (mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands) != 0) {
+            state->phase = SH_TRICKY_PHASE_COMPLETE;
+        } else {
+            mainSetBits(GAMEBIT_SH_ReturnedToQueen, 0);
+        }
+#else
         state->phase = SH_TRICKY_PHASE_COMPLETE;
+#endif
     } else {
         state->phase = SH_TRICKY_PHASE_WAIT_TRIGGER;
     }
