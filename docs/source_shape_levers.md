@@ -589,6 +589,41 @@ definition source when the home flips.
 recolour mass (`DIMCannon_updateAim` was `struc 1` of `ndiff 8`, but the class it headed had been
 written off as "23 clamp spellings flat").
 
+### 16. Two reconstructed locals where retail had one — the merge that a wide flat band is telling you about
+
+**Shape.** An operand-only saved-register exchange that no ordering knob touches, in a band too
+wide (>=5) for the rotation model to fit. The tell is negative: an exhaustive declaration sweep is
+*completely* flat. The mistake is to read that as unmatchable and route to the (now rule-closed)
+TU-split lane. It is actually evidence the defect is upstream of allocation — in how many webs
+exist at all.
+
+**Why order cannot reach it.** The backend capture on `loadCharacter` shows the exchange being
+decided in *simplification*, not coloring: the load-flags web left on the low-degree sweep at
+degree 27 while the parent went out through high-degree selection at degree 37, which reverses
+their removal order and hands the parent first choice of `r29`. Degree counts overlapping webs.
+Declaration order permutes values *within* the shape and can never change a degree, so a
+permutation sweep over that function is provably flat — which is exactly what ~960 gated builds
+reported. §14 is the same insight in the other direction (retail had TWO variables, ours one);
+this is the merge case.
+
+**Source.** Delete a reconstructed local and let an existing one cover both roles, where the two
+roles are disjoint in time. In `loadCharacter` one int both accumulates each model's data offset
+into `offsets[]` before the allocation and then walks the object's trailing region after it; the
+reconstruction had split that into `total` and `cursor`. Separately, the DLL-state block computed
+its end into the already-dead `base` local and copied back (`base = cursor + dllStateSize; ... cursor = base;`),
+the same join idiom the weapon-DA block below it already used — so this composes with §11/§12
+rather than competing with them.
+
+**Measured.** `loadCharacter` **99.80858 -> 100**, unit `main/object` 99.9719 -> **100** and
+promoted to `MatchingFor("GSAE01")`. **All-or-nothing, like §12:** the merged accumulator alone
+leaves all 21 positional differences, and the DLL-block copy alone trades them for 22 of its own.
+Only together are they byte-exact.
+
+**Cross-version confirmation is the cheap honesty check on a lever like this.** A real lifetime
+recovery should help every version that compiles the same C, and an EN-only spelling will not:
+`GSAJ01` and `GSAE01_rev1` both rose 99.74753 -> 99.77558 from the same edit. See
+[object loader recovery](object_matching.md).
+
 ## The signedness axis — CLOSED BOTH-SIDED by census, and three protected shapes
 
 **Do not re-run either side as a per-function hunt.** Two independent censuses, store-side and

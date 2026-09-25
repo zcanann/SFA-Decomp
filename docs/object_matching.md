@@ -24,20 +24,20 @@ substituting the compiled object reproduces every allocated data section,
 including the entire 40,744-byte linked `.sdata2` section. Both extra helper
 bodies are absent from that link; every retail function retains its size.
 
-The only linked differences are 26 bytes in `loadCharacter`. Its parent pointer
-and load flags occupy r29/r28 instead of retail r28/r29. Helper extraction fixes
-the model-pointer allocation in the culling loop and improves this function
-from 99.77795% to 99.80858%; the other 59 functions remain exact. The TU's fuzzy
-code score improves from 99.9674% to 99.9719%. It remains `NonMatching` until
-that register exchange is resolved.
+`loadCharacter` is now byte-exact as well, so all 60 functions and the
+complete pool match and the unit is `MatchingFor("GSAE01")` at 100%. Helper
+extraction had already raised it from 99.77795% to 99.80858%; recovering two
+local lifetimes closes the remaining parent/load-flags register exchange
+described below.
 
 Validation: objdiff, isolated full-section link comparison, formatting with an
 unchanged raw object, `ninja all_source`, and the strict matching DOL checksum.
 
 ## GC/1.3 allocator trace
 
-The remaining exchange is reproducible under LLDB using the compiler backend
-capture tool. The instrumented and ordinary objects have identical SHA-256
+This section records how the exchange was diagnosed while it was still open; it
+is the mechanism the closing edit had to defeat. It was reproducible under LLDB
+using the compiler backend capture tool. The instrumented and ordinary objects have identical SHA-256
 `f6bff8a34073cbfff90a6e30a4f42d15fd1a5f3f25f2e4eabe9777cd7c7a8990`.
 This observation applies to the source at `db7dce19e3`, not every subsequent
 revision; virtual register numbers are capture-specific.
@@ -79,10 +79,12 @@ Read-only comparison with `../dinosaur-planet/src/object.c` finds the related
 event-data, weapon-data, and visibility-radius helpers. That lineage supports
 investigating helper boundaries, but is not proof of the EN GameCube source.
 Extracting those stages individually and in combinations did not resolve the
-exchange. Local lifetime reuse, declaration order, and equivalent callback
-access forms also did not improve the baseline. Regressing experiments were
-removed. Isolated compiler-version comparisons likewise did not supply a
-match; the active game compiler remains GC/1.3.
+exchange. Declaration order and equivalent callback access forms did not improve
+the baseline either, and single-site lifetime reuse was tried without success;
+what finally worked was reusing two lifetimes at once, since the change is
+all-or-nothing. Regressing experiments were removed. Isolated compiler-version
+comparisons likewise did not supply a match; the active game compiler remains
+GC/1.3.
 
 ## Typed loader interface
 
@@ -106,10 +108,11 @@ above. Direct comparison of both initial and colored graphs finds all 331
 nodes' neighbor lists, weights, degrees, colors, and flags unchanged. The
 instruction-role comparator independently maps 267 registers with no partition
 conflicts or mapped edge differences; its 48 unmapped graph neighbors are
-covered by that complete node comparison. Thus the typed interface improves
-source recovery but does not explain or resolve the remaining allocation
-exchange. Further tests of return paths, model-call temporaries, loop indices,
-allocation signedness, and flag-expression forms produced no code-match gain.
+covered by that complete node comparison. Thus the typed interface improved
+source recovery without explaining the allocation exchange, which the local
+lifetimes below account for. Further tests of return paths, model-call
+temporaries, loop indices, allocation signedness, and flag-expression forms
+produced no code-match gain.
 
 ## Trailing constant-pool alignment
 
@@ -136,10 +139,11 @@ supported direct loads; the source and isolated-link checks supply independent
 layout evidence.
 
 An EN link substituting the current compiled object preserves every allocated
-data section, including the entire linked `.sdata2`. Its only existing retail
-differences are the 26 text bytes in `loadCharacter` described above. Repeating
-that substitution after the boundary repair preserves every allocated section
-of the preceding diagnostic link, including text.
+data section, including the entire linked `.sdata2`. At the time of the boundary
+repair its only differences were the 26 text bytes in `loadCharacter` described
+above; those are now gone too. Repeating that substitution after the boundary
+repair preserves every allocated section of the preceding diagnostic link,
+including text.
 
 The secondary split claims are refreshed with `version_progress.py --write`;
 only this pool end changes in each version. All source objects remain
@@ -147,4 +151,57 @@ byte-identical, as do every retail function and relocation in the recarved
 object. Objdiff now reports this pool as 100%, adding 84 matched data bytes per
 version while removing four alignment bytes from its total. Other units and
 function scores are unchanged. All four `all_source` builds and the strict EN
-checksum pass. `object.c` remains `NonMatching` because of `loadCharacter`.
+checksum pass.
+
+## Local lifetimes close the register exchange
+
+The parent/load-flags exchange was not a coloring wall and not reachable by any
+ordering knob. It was two reconstructed locals that retail did not have.
+
+The reconstruction declared `total` for the running model-data offset and walked
+the arena with a separate `cursor`. Retail used **one** local for both: the same
+int accumulates each model's data offset into `offsets[]` before allocation and
+then walks the object's trailing region afterwards. Deleting `total` and using
+`cursor` in the model-load loops is the first half.
+
+The reconstruction also advanced the arena in place across the DLL-state block
+(`cursor += dllStateSize`). Retail computed the block's end in a second int and
+copied it back, exactly the idiom the weapon-DA block below it already uses, and
+it reused the dead `base` local rather than a fresh one:
+
+```c
+    if (dllStateSize != 0) {
+        obj->extra = (void*)cursor;
+        base = cursor + dllStateSize;
+    } else {
+        obj->extra = NULL;
+        base = cursor;
+    }
+    cursor = base;
+```
+
+Neither edit helps on its own. Alone, the merged accumulator leaves the 21
+positional differences untouched and the DLL-block copy trades them for 22 of
+its own. Together they are byte-exact. That all-or-nothing behaviour matches the
+copy-survival class in [source shape levers](source_shape_levers.md): the web
+count the allocator sees is what moves, so a partial change just relocates the
+damage.
+
+The backend capture explains why the earlier sweeps could not find this. The
+exchange was decided before physical coloring, in simplification: load flags left
+by the low-degree sweep at degree 27 while the parent went out through
+high-degree selection at degree 37, reversing their order for coloring and giving
+the parent first choice of r29. Degree is a property of how many webs exist and
+overlap, and declaration order cannot change that. Merging two locals into one
+and redirecting a join through a dead local does.
+
+The prior exhaustive declaration sweep (all 31 declarations across roughly 32
+positions, about 960 gated builds, every one flat) was therefore measuring a knob
+that could not reach the defect, not proving the function unmatchable. The band
+is 12 GPRs wide, far past the width-4 cliff where ordering knobs stop working;
+at that width the productive move is to question the **set** of source locals
+rather than their order.
+
+Both other versions tested improve under the same source, which is what a real
+source recovery should do rather than an EN-specific spelling: `GSAJ01` and
+`GSAE01_rev1` each rise from 99.74753% to 99.77558%.
