@@ -57,7 +57,7 @@
 #include "dolphin/mtx/vec.h"
 
 s16 gObjPartitionPivot;
-void* lbl_803DCBC0;
+void* gObjContNoBuf;
 int* gObjFileOffsetTable;
 int gObjFileCount;
 u8* gObjTablesBinData;
@@ -156,6 +156,10 @@ char sObjDebugStrings[] = {
 char sObjFreeObjdefError[] = "objFreeObjdef: Error!! (%d)\n";
 
 char sObjFreeNonExistentObjectWarning[] = "Tried to free non-existent object\n";
+
+#if !defined(VERSION_GSAE01)
+char sObjFreedObjectMessage[] = "FREED OBJECT %s\n";
+#endif
 
 char sObjUnknownTypeUsingDummyObjectWarning[] =
     "Warning: Unknown object type '%d/%d romdefno %d', using DummyObject (128)\n";
@@ -1280,6 +1284,11 @@ void Obj_FreeObject(GameObject* obj) {
             return;
         }
     }
+#if !defined(VERSION_GSAE01)
+    if (obj != NULL) {
+        OSReport(sObjFreedObjectMessage, obj->anim.modelInstance->name);
+    }
+#endif
     if (gObjDefCaptureMode == 2) {
         i = gObjDeferredFreeCount;
         if (gObjDeferredFreeCount != 0) {
@@ -2163,7 +2172,7 @@ void Obj_InitObjectSystem(void) {
 
     gObjDeferredFreeList = mmAlloc(OBJ_DEFERRED_FREE_CAPACITY * sizeof(*gObjDeferredFreeList), 0xe, 0);
     gObjPendingDefFreeList = mmAlloc(OBJ_PENDING_DEF_FREE_CAPACITY * sizeof(*gObjPendingDefFreeList), 0xe, 0);
-    lbl_803DCBC0 = mmAlloc(0x10, 0xe, 0);
+    gObjContNoBuf = mmAlloc(0x10, 0xe, 0);
     loadAssetFileById(&gObjSeqToObjIdTable, MLDF_FILEID_OBJINDEX_BIN);
     gObjSeqToObjIdMax = (getDataFileSize(MLDF_FILEID_OBJINDEX_BIN) >> 1) - 1;
     for (p = gObjSeqToObjIdTable + gObjSeqToObjIdMax; *p == 0;) {

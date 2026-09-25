@@ -888,12 +888,13 @@ void TitleScreen_release(void) {
 
 extern s16 gTitleScreenTextureIds[];
 /* Main title-screen texture asset ids (docblock: "the main texture (asset 0x647 or 0xC5)"). */
-#define FRONT_MAIN_TEXTURE_ID_A 0x647
-#define FRONT_MAIN_TEXTURE_ID_B 0xC5
+#define FRONT_MAIN_TEXTURE_ID_A   0x647
+#define FRONT_MAIN_TEXTURE_ID_B   0xC5
+#define FRONT_MAIN_TEXTURE_ID_PAL 0x648
 
 /* Copyright/title text box shown frameY titleScreenShowCopyright (docblock: "push text box 0x3d9"). */
 
-/* Reset state bytes, load the main texture (asset 0x647 or 0xC5 depending on
+/* Reset state bytes, load the main texture (PAL asset 0x648, otherwise 0x647 or 0xC5 depending on
  * gGameTextFontIsSjis), identity the matrix, then load the 19-entry texture table
  * from the id list at gTitleScreenTextureIds into gTitleScreenTextures. */
 void TitleScreen_initialise(void) {
@@ -902,11 +903,15 @@ void TitleScreen_initialise(void) {
     gTitleScreenMenuSelection = 0;
     gTitleScreenPrevMenuActive = -1;
     gTitleScreenMenuActive = 0;
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+    gTitleScreenMainTex = textureLoadAsset(FRONT_MAIN_TEXTURE_ID_PAL);
+#else
     if (gGameTextFontIsSjis != 0) {
         gTitleScreenMainTex = textureLoadAsset(FRONT_MAIN_TEXTURE_ID_A);
     } else {
         gTitleScreenMainTex = textureLoadAsset(FRONT_MAIN_TEXTURE_ID_B);
     }
+#endif
     lbl_803DD9D0 = 1.0f;
     lbl_803DD9CC = 1.0f;
     PSMTXIdentity((MtxPtr)gTitleScreenMtx);

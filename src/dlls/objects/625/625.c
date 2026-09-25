@@ -44,6 +44,8 @@
 #include "main/obj_path.h"
 #include "main/obj_query.h"
 #include "main/objhits.h"
+#include "main/pi_dolphin.h"
+#include "dolphin/gx/GXFrameBuffer.h"
 
 /* placement subtype id (desc[0]) selecting the pad behaviour mode */
 #define DRAKORHOVERPAD_SUBTYPE_TRACKING 1812 /* tracks/yaws toward a nearby object */
@@ -56,6 +58,7 @@ f32 gDrakorHoverpadMtx[16];
 
 #define DRAKORHOVERPAD_SPEED_STEP 2.0f
 
+#define DRAKORHOVERPAD_PAL50_SPEED_SCALE 0.7545f
 f32 gDrakorHoverpadSteerMaxSpeed = 5.0f;
 s16 gDrakorHoverpadRollScale = 3;
 f32 gDrakorHoverpadCameraOffsetY = 5.0f;
@@ -668,6 +671,11 @@ void drakorhoverpad_updateMain(GameObject* obj) {
         (*gRomCurveInterface)->setClosed(&p->curve, 0);
     }
     p->targetSpeed = 0.0f;
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+    if (gRenderModeObj != &GXEurgb60Hz480IntDf) {
+        p->speed = p->speed * (DRAKORHOVERPAD_PAL50_SPEED_SCALE * timeDelta);
+    }
+#endif
     if (p->speed != 0.0f) {
         Curve_AdvanceAlongPath(&curve->curve, p->speed);
         c = curve->reverse;

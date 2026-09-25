@@ -230,9 +230,22 @@ int shopitem_getObjectTypeId(void) {
 }
 
 void shopitem_free(GameObject* obj) {
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+    ShopItemState* state;
+    u8 i;
+
+#endif
     (*gExpgfxInterface)->freeSource((int)obj);
     switch (obj->anim.romDefNo) {
     case SHOPITEM_SEQ_SPARKLE:
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+        state = obj->extra;
+        for (i = 0; i < 10; i++) {
+            if (state->lightningHandles[i] != NULL) {
+                mm_free_(state->lightningHandles[i]);
+            }
+        }
+#endif
         objFreeObjectType(obj, FUEL_CELL_OBJECT_GROUP);
         break;
     }

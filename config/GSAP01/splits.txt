@@ -163,7 +163,7 @@ main/model.c:
 
 main/object.c:
 	.text       start:0x8002A748 end:0x8002ECE8
-	.data       start:0x802CC2B0 end:0x802CC41C
+	.data       start:0x802CC2B0 end:0x802CC420
 	.bss        start:0x80342048 end:0x80342098
 	.sdata      start:0x803DCC38 end:0x803DCC40
 	.sbss       start:0x803DE368 end:0x803DE3C0
@@ -171,7 +171,7 @@ main/object.c:
 
 main/objanim.c:
 	.text       start:0x8002ECE8 end:0x8003081C
-	.data       start:0x802CC41C end:0x802CC470
+	.data       start:0x802CC420 end:0x802CC470
 	.sdata2     start:0x803E00E8 end:0x803E0118
 
 main/objhits.c:
@@ -321,13 +321,13 @@ track/intersect_memcard.c:
 
 dlls/engine/2/maketex.c:
 	.text       start:0x8007EB1C end:0x80080554
-	.data       start:0x803101F8 end:0x803102A0
+	.data       start:0x803101F8 end:0x80310290
 	.sdata      start:0x803DCEF0 end:0x803DCF00
 	.sdata2     start:0x803E07A8 end:0x803E07B8
 
 dlls/engine/2/2.c:
 	.text       start:0x80080554 end:0x80088AC4
-	.data       start:0x803102A0 end:0x80310958
+	.data       start:0x80310290 end:0x80310958
 	.bss        start:0x803980B8 end:0x8039BF48
 	.sdata      start:0x803DCF00 end:0x803DCF40
 	.sbss       start:0x803DE858 end:0x803DE920
@@ -3827,7 +3827,7 @@ dlls/objects/625/625.c:
 	.data       start:0x8032C1C0 end:0x8032C288
 	.bss        start:0x803AE968 end:0x803AE9A8
 	.sdata      start:0x803DDAF8 end:0x803DDB08
-	.sdata2     start:0x803E8258 end:0x803E82C8
+	.sdata2     start:0x803E8258 end:0x803E82C4
 
 dlls/objects/626/626.c:
 	.text       start:0x8021D700 end:0x8021FAAC

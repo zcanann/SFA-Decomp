@@ -39,6 +39,7 @@
 #define PRESSURESWITCHFB_TARGET_OBJECT_GROUP 5
 
 #define PRESSURESWITCHFB_PRESSED_TEXTURE_ID    0x100
+#define PRESSURESWITCHFB_SKIP_LATCH_IDENT      0x41996
 #define PRESSURESWITCHFB_DISABLED_TEXTURE_ID   0
 #define PRESSURESWITCHFB_NO_GAME_BIT           -1
 #define PRESSURESWITCHFB_TRACKED_POSITION_MASK 0xFF
@@ -363,7 +364,13 @@ void PressureSwitchFB_init(GameObject* obj, PressureSwitchFBPlacement* placement
             if (sequenceId != PRESSURESWITCHFB_SEQ_ID_SH_PRESSURE) {
                 if (sequenceId != PRESSURESWITCHFB_SEQ_ID_LINK_UNDERW) {
                     if (sequenceId != PRESSURESWITCHFB_SEQ_ID_CC_PRESSURE) {
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
                         flags->latched = 1;
+#else
+                        if (((ObjPlacement*)obj->anim.placementData)->ident != PRESSURESWITCHFB_SKIP_LATCH_IDENT) {
+                            flags->latched = 1;
+                        }
+#endif
                     }
                 }
             }

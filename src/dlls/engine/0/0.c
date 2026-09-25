@@ -1136,6 +1136,9 @@ void drawWorldMapHud(void);
 void setWorldMapVoiceoverActive(u32 val);
 void cMenuRun(void);
 void gameUiUpdateNpcDialogue(void);
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+void gameUiDrawNpcDialogueText(int a, int b, int c);
+#endif
 
 static inline void pauseMenuFreeIconTextures(CMenuHud* hud) {
     u8 textureIndex;
@@ -1908,6 +1911,7 @@ void GameUI_hudDraw(int a, int b, int c) {
     if (arwing != 0) {
         drawArwingHud(a, b, c);
         pauseMenuDraw(a, b, c);
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
         box = gameTextGetBox(0x7c);
         if (curGameText != 0xffff && gNpcDialogueTextAlpha != 0) {
             gameTextSetColor(0xff, 0xff, 0xff, (u8)gNpcDialogueTextAlpha);
@@ -1918,6 +1922,9 @@ void GameUI_hudDraw(int a, int b, int c) {
                 gameTextQueueReveal(curGameText, &gNpcDialoguePhraseState.display);
             }
         }
+#else
+        gameUiDrawNpcDialogueText(a, b, c);
+#endif
         pauseMenuDrawText(a, b, c);
     } else {
         pauseMenuDraw(a, b, c);
@@ -1944,6 +1951,7 @@ void GameUI_hudDraw(int a, int b, int c) {
         GXSetScissor(0, 0, 0x280, 0x1e0);
         if (player != 0) {
             hudDrawButtons(a, b, c);
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
             box = gameTextGetBox(0x7c);
             if (curGameText != 0xffff && gNpcDialogueTextAlpha != 0) {
                 gameTextSetColor(0xff, 0xff, 0xff, (u8)gNpcDialogueTextAlpha);
@@ -1954,6 +1962,9 @@ void GameUI_hudDraw(int a, int b, int c) {
                     gameTextQueueReveal(curGameText, &gNpcDialoguePhraseState.display);
                 }
             }
+#else
+            gameUiDrawNpcDialogueText(a, b, c);
+#endif
             drawTrickyHudOverlay(a, b, c);
         }
         if (gTimeListPromptSelection != 0) {
@@ -2067,6 +2078,41 @@ s32 isTalkingToNpc(void) {
     return gNpcDialogueActive;
 }
 
+#define NPC_DIALOGUE_TEXT_BOX        0x7c
+#define NPC_DIALOGUE_NARROW_BOX      0x7a
+#define NPC_DIALOGUE_WIDE_BOX_MARKER 0xf8f7
+#define NPC_DIALOGUE_WIDE_BOX_CODE   5
+
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+void gameUiDrawNpcDialogueText(int a, int b, int c) {
+    TextSlot* box = gameTextGetBox(NPC_DIALOGUE_TEXT_BOX);
+    char* phrase;
+    int slot;
+    int encodedLength;
+    int ch;
+
+    if (curGameText != 0xffff) {
+        if (gNpcDialogueTextAlpha != 0) {
+            gameTextSetColor(0xff, 0xff, 0xff, (u8)gNpcDialogueTextAlpha);
+            if (gNpcDialoguePageFrames != -1) {
+                phrase = gameTextGetPhrase(curGameText, gNpcDialoguePhraseState.display.charIndex);
+                ch = utf8GetNextChar((u8*)phrase, &encodedLength);
+                slot = NPC_DIALOGUE_NARROW_BOX;
+                if (ch == NPC_DIALOGUE_WIDE_BOX_MARKER) {
+                    if (utf8GetNextChar((u8*)(phrase + encodedLength), &encodedLength) == NPC_DIALOGUE_WIDE_BOX_CODE) {
+                        slot = NPC_DIALOGUE_TEXT_BOX;
+                    }
+                }
+                gameTextGetBox(slot)->alpha = (u8)gNpcDialogueTextAlpha;
+                gameTextAppendStr(phrase, slot);
+            } else {
+                box->alpha = (u8)gNpcDialogueTextAlpha;
+                gameTextQueueReveal(curGameText, &gNpcDialoguePhraseState.display);
+            }
+        }
+    }
+}
+#endif
 void gameUiUpdateNpcDialogue(void) {
     Obj_GetPlayerObject();
     if (gNpcDialogueActive != 0) {
@@ -4038,6 +4084,12 @@ void pauseMenuUpdate(void) {
  * slot pointer and clears the +0x4c sentinel
  * if it overflowed the 0x90000000 watermark. Tail restores FOV
  * and runs the standard close-block trio. */
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
+#define PAUSE_MENU_VIEWPORT_HEIGHT (gRenderModeObj->xfbHeight)
+#else
+#define PAUSE_MENU_VIEWPORT_HEIGHT (gRenderModeObj->efbHeight)
+#endif
+
 void pauseMenuRenderSlotShadow(void) {
     f32 saved_fov;
 
@@ -4051,7 +4103,7 @@ void pauseMenuRenderSlotShadow(void) {
     Camera_SetFovY(43.0f);
     Camera_RebuildProjectionMatrix();
     Camera_UpdateViewMatrices();
-    GXSetViewport(0.0f, 0.0f, (f32)gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, 0.0f, 1.0f);
+    GXSetViewport(0.0f, 0.0f, (f32)gRenderModeObj->fbWidth, PAUSE_MENU_VIEWPORT_HEIGHT, 0.0f, 1.0f);
     renderObjectShadowTexture(gGameUiHudAnimObjects[gPauseMenuPageIndex]);
     {
         GameObject* slot = gGameUiHudAnimObjects[gPauseMenuPageIndex];
@@ -4127,7 +4179,7 @@ void pauseMenuDoSave(void) {
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    GXSetViewport(0.0f, 0.0f, (f32)gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, 0.0f, 1.0f);
+    GXSetViewport(0.0f, 0.0f, (f32)gRenderModeObj->fbWidth, PAUSE_MENU_VIEWPORT_HEIGHT, 0.0f, 1.0f);
     for (i = 1; i < 6; i++) {
         if (gGameUiHudAnimObjects[i] == NULL) {
             continue;

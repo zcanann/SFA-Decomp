@@ -92,11 +92,14 @@ main/fileio.c:
 	.bss        start:0x80339A70 end:0x80339AA0
 	.sbss       start:0x803DCA70 end:0x803DCA88
 
+main/gametext_data.c:
+	.data       start:0x802C6F98 end:0x802C9040
+	.sdata      start:0x803DB3D0 end:0x803DB528
+
 main/gametext.c:
 	.text       start:0x80015BC8 end:0x8001B46C
-	.data       start:0x802C6F98 end:0x802C9FE8
+	.data       start:0x802C9040 end:0x802C9FE8
 	.bss        start:0x80339AA0 end:0x8033B360
-	.sdata      start:0x803DB3D0 end:0x803DB528
 	.sbss       start:0x803DCA88 end:0x803DCB10
 	.sdata2     start:0x803DE810 end:0x803DE840
 
@@ -163,7 +166,7 @@ main/model.c:
 
 main/object.c:
 	.text       start:0x8002A5D4 end:0x8002EB74
-	.data       start:0x802CACF8 end:0x802CAE64
+	.data       start:0x802CACF8 end:0x802CAE68
 	.bss        start:0x803409C8 end:0x80340A18
 	.sdata      start:0x803DB568 end:0x803DB570
 	.sbss       start:0x803DCC90 end:0x803DCCE8
@@ -171,7 +174,7 @@ main/object.c:
 
 main/objanim.c:
 	.text       start:0x8002EB74 end:0x800306A8
-	.data       start:0x802CAE64 end:0x802CAEB8
+	.data       start:0x802CAE68 end:0x802CAEB8
 	.sdata2     start:0x803DEA00 end:0x803DEA30
 
 main/objhits.c:

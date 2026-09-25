@@ -657,6 +657,9 @@ void NW_mammoth_update(GameObject* obj, int unusedArg) {
     state = obj->extra;
     placement = (NwMammothPlacement*)obj->anim.placementData;
     if ((state->runtimeFlags & NW_MAMMOTH_RUNTIME_RESET_PATH) != 0) {
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+        (*gPathControlInterface)->attachObject(obj, &state->pathState);
+#endif
         state->runtimeFlags &= ~NW_MAMMOTH_RUNTIME_RESET_PATH;
     }
     state->playerObject = Obj_GetPlayerObject();
