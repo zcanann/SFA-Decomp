@@ -4837,6 +4837,16 @@ void pauseMenuDrawStatusPage(GameObject* player) {
  * pausemenu - in-game pause-menu rendering (main panel + status overlay).
  */
 
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+#define measureLeft boundsLeft
+#define measureRight boundsRight
+#define measureTop boundsTop
+#define measureBottom boundsBottom
+#define tokenLeft boundsLeft
+#define tokenRight boundsRight
+#define tokenTop boundsTop
+#define tokenBottom boundsBottom
+#endif
 void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
     s16 alpha;
     PauseTbl* statusTable;
@@ -4851,10 +4861,17 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
     f32 timer;
     s32 textHeight;
     s32 lineHeight;
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+    f32 lineSpan;
+#endif
     int boundsLeft, boundsRight, boundsTop, boundsBottom;
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
     int measureLeft, measureRight, measureTop, measureBottom;
+#endif
     SmallText characterCount;
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
     int tokenLeft, tokenRight, tokenTop, tokenBottom;
+#endif
     char tokenCountText[12];
     f32 zero = 0.0f;
 
@@ -4945,6 +4962,9 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         break;
     case 4:
         pauseMenuDoSave();
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+        lineHeight = gGameTextFontMetrics[sLanguageNameTable[getCurLanguage()].fontId].lineHeight;
+#endif
         alpha = 255.0f * gPauseMenuOpenAmount;
         gPauseMenuMapSwivelCos = mathCosf(3.1415927f * gPauseMenuMapSwivelAngle / 32768.0f);
         gPauseMenuHoloTime += timeDelta;
@@ -4992,11 +5012,22 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
                         gameTextShowStr(gPauseMenuCurHintText->strings[stringIndex], 0x79, 0xf0, textY);
                         gameTextMeasureStringBoundsAt(gPauseMenuCurHintText->strings[stringIndex], 0x79, 0, 0,
                                                       &measureLeft, &measureRight, &measureTop, &measureBottom);
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
                         lineHeight = gGameTextFontMetrics[sLanguageNameTable[getCurLanguage()].fontId].lineHeight;
+#endif
                         textHeight = measureBottom - measureTop;
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
                         textY += (textHeight > lineHeight)
                                      ? textHeight
                                      : gGameTextFontMetrics[sLanguageNameTable[getCurLanguage()].fontId].lineHeight;
+#else
+                        lineSpan = (f32)textHeight / (f32)lineHeight;
+                        lineSpan += 0.9999;
+                        if (1.0f > lineSpan) {
+                            lineSpan = 1.0f;
+                        }
+                        textY += (s32)lineSpan * lineHeight;
+#endif
                     }
                 }
             } else {
@@ -5060,7 +5091,11 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
             switch (pauseMenuState) {
             case 7:
             case 9:
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
                 gameTextShowAt(0x3cf, 0xc8, 0x118);
+#else
+                gameTextShowAt(0x3cf, 0xc8, 0x109);
+#endif
                 gameTextShowAt(0x3e1, 0xc8, 0x96);
                 break;
             case 6:
@@ -5209,6 +5244,16 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         break;
     }
 }
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+#undef measureLeft
+#undef measureRight
+#undef measureTop
+#undef measureBottom
+#undef tokenLeft
+#undef tokenRight
+#undef tokenTop
+#undef tokenBottom
+#endif
 
 void drawArwingHud(int unused1, int unused2, int unused3) {
     u8 bombSlot;
