@@ -139,7 +139,10 @@ literals), that is a TU-boundary artifact — leave the unit `NonMatching`, do n
   it counts *every* value the allocator sees, including statements needing no saved register at all, which is why a
   one-instruction change anywhere can re-colour the whole band far away. Declaration order permutes values *within*
   the shape but **can never change the rotation**, so at width >=5 with an identical stream every ordering knob is
-  provably flat — route to the TU-split/`mw_version` lane instead of sweeping. Inert for the same reason: dead or
+  provably flat. A flat wide-band sweep is evidence the defect is UPSTREAM of allocation, not that the function
+  is capped: the exchange is usually decided in *simplification* by node DEGREE, which counts overlapping webs,
+  so change the SET of source locals (merge two reconstructed locals into the one retail had, or split one into
+  two) rather than their order — that closed `loadCharacter` after ~960 flat gated builds (`docs/source_shape_levers.md` §16). Inert for the same reason: dead or
   unused locals, the number of source locals backing a split web, and use counts. GPR and FP bands have independent
   counters. **One move the usual sweeps miss:** a block-scoped local is exactly equivalent to ranking it LAST in the
   enclosing declaration list, so *hoisting* a block-scoped local to function scope (or pushing a function-scope one

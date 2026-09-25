@@ -739,14 +739,15 @@ K1 in an earlier plain-arithmetic statement. Verdicts:
   This supersedes the earlier conjectural-uncalled-body verdict. The unit is
   `MatchingFor("GSAE01")`; both `all_source` and the strict checksum pass with its
   C object linked. See [BabyCloudRunner_matching.md](BabyCloudRunner_matching.md).
-- **`main/object` — CALLED HELPERS RECOVERED (2026-09-07, GC/1.3).**
+- **`main/object` — CLOSED AT 100% (2026-09-24, GC/1.3).**
   `objPlacementRangeToWorld` emits the signed bias at 0x28, and
   `objInitCullScale` emits 10/255 before `modelInitBones`' 0.01/0.1.
   All three calls inline; both out-of-line bodies strip. The complete 84-byte
   source pool plus linker alignment reproduces all allocated retail data in
-  an isolated source-object link. Only 26 text bytes differ, from the remaining
-  parent/load-flags register exchange in `loadCharacter` (99.80858%). This
-  supersedes the earlier uncalled-static probe; the TU remains NonMatching.
+  an isolated source-object link. The last 26 text bytes, the parent/load-flags
+  register exchange in `loadCharacter`, are closed by recovering two local
+  lifetimes rather than by any ordering knob; the TU is `MatchingFor("GSAE01")`.
+  This supersedes the earlier uncalled-static probe.
   See [object_matching.md](object_matching.md).
 - **`track/intersect_render` — CALLED HELPERS RECOVERED (2026-09-08).**
   [Texture-coordinate helpers](render_texture_coordinate_helpers.md) now recover

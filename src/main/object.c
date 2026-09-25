@@ -1565,7 +1565,6 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
     int idx;
     int i;
     int count;
-    int total;
     ObjModelInstance* modelDef;
     GameObject* obj;
     int base;
@@ -1669,25 +1668,25 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
     if (modelDef->flags & 1) {
         loadFlags |= OBJLOAD_FLAG_SINGLE_MODEL;
     }
-    total = 0;
+    cursor = 0;
     i = 0;
     count = modelDef->modelCount;
     if (loadFlags & OBJLOAD_FLAG_INDEXED_MODEL) {
         i = (loadFlags >> 0xb) & 0xf;
         if (i < count) {
             models[i] = ObjModel_Load(-modelDef->modelFileIds[i], loadFlags, &size);
-            offsets[i] = total;
-            total += size;
+            offsets[i] = cursor;
+            cursor += size;
         }
     } else if (!(loadFlags & OBJLOAD_FLAG_SINGLE_MODEL)) {
         for (; i < count; i++) {
             models[i] = ObjModel_Load(-modelDef->modelFileIds[i], loadFlags, &size);
-            offsets[i] = total;
-            total += size;
+            offsets[i] = cursor;
+            cursor += size;
         }
     }
     base = objGetTotalDataSize(tp, def, (s16*)data, loadFlags);
-    allocSize = base + total;
+    allocSize = base + cursor;
     obj = mmAlloc(allocSize, 0xe, 0);
     memcpy(obj, &tmpl, sizeof(GameObject));
     memset((u8*)obj + sizeof(GameObject), 0, allocSize - sizeof(GameObject));
@@ -1755,10 +1754,12 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
     }
     if (dllStateSize != 0) {
         obj->extra = (void*)cursor;
-        cursor += dllStateSize;
+        base = cursor + dllStateSize;
     } else {
         obj->extra = NULL;
+        base = cursor;
     }
+    cursor = base;
     if ((loadFlags & OBJLOAD_FLAG_ANIM_EVENTS) || (obj->anim.modelInstance->flags & OBJDEF_FLAG_HAS_EVENT)) {
         seq2[0] = obj->anim.romDefNo;
         alignedCursor = roundUpTo4(cursor);

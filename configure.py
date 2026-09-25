@@ -1801,7 +1801,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/vecmath_vec3.c"),
             Object(MatchingFor("GSAE01"), "main/mm.c", cflags=cflags_dll_noopt_noautoinline_deferred),
             Object(NonMatching, "main/model.c", cflags=[*cflags_dll_noopt_noloopinv, "-inline", "noauto"]),
-            Object(NonMatching, "main/object.c"),
+            Object(MatchingFor("GSAE01"), "main/object.c"),
             Object(MatchingFor("GSAE01"), "main/skystars.c"),
             Object(MatchingFor("GSAE01"), "main/objanim.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objhits.c", cflags=cflags_dll_noopt_noautoinline),

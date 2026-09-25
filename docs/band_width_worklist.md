@@ -33,6 +33,16 @@ the unchanged GC/1.3 profile. Its 267 mnemonics now match, with 18 operand
 differences remaining. The old no-lever classification below is historical;
 see [track-contact selection](objhits_track_contact.md).
 
+Update 2026-09-24: `loadCharacter` is resolved at 100%, completing `main/object`
+(all 60 functions and its pool). The fix is **not** an ordering knob. The
+exchange was decided in simplification by node *degree*, which is a function of
+how many locals exist and overlap, so no permutation could reach it; merging two
+reconstructed locals into the one retail used, plus routing the DLL-state block's
+end through a dead local, is byte-exact. This is the counter-example to reading a
+flat wide-band declaration sweep as "unmatchable": at band width past 4, question
+the **set** of source locals, not their order. See
+[object loader recovery](object_matching.md).
+
 ## Rotation class CLOSED WITH MECHANISM (2026-08-03 corpus mining)
 
 The saved-band rotation offset is set by the inline-boundary value count, dose-saturating at one,
@@ -147,7 +157,7 @@ MWCC generate the shared data base; see the resolved row below.
 | renderClouds | dlls/engine/9/9 | 1612 | 99.491 | 6 | 2 | 6G/1F | 1 | global-load-CSE volatile purge (renderClouds closed) |
 | beginLoadingMap | main/shader | 2324 | 99.776 | 7 | 1 | 3G/0F | 8 | symbol-provenance-load-cse (the 6-fn reload family) |
 | sceneDraw | main/lightmap | 1500 | 98.880 | 19 | 4 | 4G/0F | 3 | symbol-provenance-load-cse (the 6-fn reload family) |
-| loadCharacter | main/object | 2612 | 99.778 | 25 | 0 | 12G/1F | 1 | copy<->load home exchange: the 5th copy-class param takes r28 in retail/r29 in ours, the loadFlags load-class web the reverse. EXHAUSTIVE: all 31 declarations x ~32 positions (~960 gated builds) flat at 25 — the strongest cliff evidence in the repo. The parameter list is all-integer so reordering it would move ABI arrival registers |
+| loadCharacter | main/object | 2612 | 100.000 | 0 | 0 | 12G/1F | 0 | Resolved 2026-09-24 by recovering two local lifetimes, not by any ordering knob: one int serves as both the model-data offset accumulator and the arena cursor, and the DLL-state block computes its end into the dead `base` local and copies back. All-or-nothing, and the whole TU is now `MatchingFor("GSAE01")` at 100%. The old row read: copy<->load home exchange, the 5th copy-class param takes r28 in retail/r29 in ours, EXHAUSTIVE over all 31 declarations x ~32 positions (~960 gated builds) flat at 25. That sweep was flat because degree, not order, decided the exchange. See [evidence](object_matching.md). |
 | worldplanet_update | dlls/objects/466_WORLDplanet/WORLDplanet | 3136 | 100.000 | 0 | 0 | — | 0 | Resolved 2026-09-06: independent parameter arrays, scalar input bytes, object-pointer reuse, a 16-bit orbit angle, and explicit offset locals reproduce retail. All eleven functions and the source-linked DOL checksum pass; see [matching evidence](WORLDplanet_matching.md). |
 | drlasercannon_aimAtTarget | dlls/objects/609_DR_LaserCan/DR_LaserCan | 940 | 100.000 | 0 | 0 | — | 0 | resolved 2026-09-04: N64-backed signed array and unrolled clamp loop; getAngle unchanged ([evidence](DR_LaserCan_matching.md)) |
 | voxmaps_updateActiveMap | main/voxmaps | 776 | 97.412 | 38 | 4 | 8G/0F | 3 | symbol-provenance-load-cse (the 6-fn reload family) |
