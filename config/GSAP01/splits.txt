@@ -163,7 +163,7 @@ main/model.c:
 
 main/object.c:
 	.text       start:0x8002A748 end:0x8002ECE8
-	.data       start:0x802CC2B0 end:0x802CC41C
+	.data       start:0x802CC2B0 end:0x802CC420
 	.bss        start:0x80342048 end:0x80342098
 	.sdata      start:0x803DCC38 end:0x803DCC40
 	.sbss       start:0x803DE368 end:0x803DE3C0
@@ -171,7 +171,7 @@ main/object.c:
 
 main/objanim.c:
 	.text       start:0x8002ECE8 end:0x8003081C
-	.data       start:0x802CC41C end:0x802CC470
+	.data       start:0x802CC420 end:0x802CC470
 	.sdata2     start:0x803E00E8 end:0x803E0118
 
 main/objhits.c:

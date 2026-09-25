@@ -874,6 +874,7 @@ main/fileio.c
 main/mm.c
 main/modellight.c
 main/obj_movelib.c
+main/objanim.c
 main/objlib.c
 main/pad.c
 main/pi_pathsearch.c
