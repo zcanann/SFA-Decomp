@@ -210,6 +210,9 @@ char sFrontendSingleDigitFormat[] = "%1d";
 char sFrontendFoxName[] = "FOX";
 char sFrontendStringFormat[] = "%s";
 char lbl_803DBA20[4] = "";
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+char sSaveSelectTaskBullet[] = "-";
+#endif
 char sFrontendPercentFormat[] = "%d%";
 
 typedef enum SaveSelectPanelId {
@@ -519,6 +522,9 @@ void SaveSelectScreen_render(int param) {
         u8 firstInfoTextIndex;
         int taskTextCount;
         int taskTextIndex;
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+        int bulletY;
+#endif
         FrontendSaveSlot* slot;
 
         saveSelect_drawText(param, alpha);
@@ -529,10 +535,20 @@ void SaveSelectScreen_render(int param) {
             taskTextCount++;
         }
         taskTextIndex = 0;
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+        bulletY = 52;
+#endif
         firstInfoTextIndex = SAVE_SELECT_VISIBLE_TASK_TEXT_COUNT - taskTextCount;
         while (taskTextIndex < taskTextCount) {
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+            gameTextSetColor(0xff, 0xff, 0xff, alpha);
+            gameTextShowStr(sSaveSelectTaskBullet, 0x93, 0x41, bulletY);
+#endif
             gameTextAppendStr(saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].taskTexts[taskTextIndex],
                               gSaveSelectInfoTextIds[firstInfoTextIndex + taskTextIndex]);
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+            bulletY += 42;
+#endif
             taskTextIndex++;
         }
         if (gSaveSelectMenuItem != NULL) {
@@ -592,12 +608,12 @@ void SaveSelectScreen_frameEnd_nop(void) {
 
 int SaveSelectScreen_run(void) {
     char buf[32];
+    char* data;
     s8 timer;
     int frames;
     int sel;
     int slot;
     int prev;
-    char* data;
     SaveSelectPanel* panel;
     int btn;
     SaveGameCharacterPosition* flagPtr;
@@ -641,6 +657,9 @@ int SaveSelectScreen_run(void) {
                     data = loadFileByPath(buf, 0, 0);
                     if (data != NULL) {
                         memcpy(gSaveGameWorkBuffer, data, 0x6ec);
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+                        mm_free(data);
+#endif
                     }
                 } else {
                     saveSetOverrideHealth(0);
