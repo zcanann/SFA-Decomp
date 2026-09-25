@@ -1909,6 +1909,16 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* sequence) {
         }
     }
 
+#if !defined(VERSION_GSAE01)
+    if ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE) != 0 &&
+        (state->followObj->objectFlags & OBJECT_OBJFLAG_FREED) != 0) {
+        trickyResetCommandState(state);
+        state->movementState = TRICKY_MOVE_WALK_WAIT;
+        state->prevSpeed = 0.0f;
+        state->speed = 0.0f;
+    }
+#endif
+
     for (i = 0; i < sequence->eventCount; i++) {
         switch (sequence->eventIds[i]) {
         case TRICKY_SEQUENCE_EVENT_TOGGLE_FLAME_CHILDREN:

@@ -221,6 +221,7 @@ dlls/modgfx/97/97.c
 dlls/modgfx/98/98.c
 dlls/modgfx/99/99.c
 dlls/objects/195_Player/player.c
+dlls/objects/196_Tricky/tricky.c
 dlls/objects/197/197.c
 dlls/objects/198_AnimatedObj/AnimatedObj.c
 dlls/objects/199_DIM2RoofRub/DIM2RoofRub.c
