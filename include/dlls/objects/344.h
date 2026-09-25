@@ -27,7 +27,9 @@ typedef struct GunpowderBarrelHeldFlags {
     u8 pendingThrowVelocityCapture : 1;
     u8 held : 1;
     u8 onGround : 1;
+#if defined(VERSION_GSAE01)
     u8 wasOnGround : 1;
+#endif
     u8 landed : 1;
     u8 cannonRangeVariant : 1;
     u8 unknown01 : 1;
@@ -71,6 +73,10 @@ typedef struct GunpowderBarrelState {
     s16 launchYaw;
     u8 pad52[0x02];
     f32 impactSoundCooldown;
+#if !defined(VERSION_GSAE01)
+    s8 groundGraceFrames;
+    u8 pad59[0x5C - 0x59];
+#endif
 } GunpowderBarrelState;
 
 STATIC_ASSERT(offsetof(GunpowderBarrelPlacement, base) == 0x00);
@@ -113,7 +119,12 @@ STATIC_ASSERT(offsetof(GunpowderBarrelState, pad4B) == 0x4B);
 STATIC_ASSERT(offsetof(GunpowderBarrelState, launchYaw) == 0x50);
 STATIC_ASSERT(offsetof(GunpowderBarrelState, pad52) == 0x52);
 STATIC_ASSERT(offsetof(GunpowderBarrelState, impactSoundCooldown) == 0x54);
+#if defined(VERSION_GSAE01)
 STATIC_ASSERT(sizeof(GunpowderBarrelState) == 0x58);
+#else
+STATIC_ASSERT(offsetof(GunpowderBarrelState, groundGraceFrames) == 0x58);
+STATIC_ASSERT(sizeof(GunpowderBarrelState) == 0x5C);
+#endif
 
 int gunpowderBarrel_isHeld(GameObject* obj);
 int gunpowderBarrel_canBeGrabbed(GameObject* obj);

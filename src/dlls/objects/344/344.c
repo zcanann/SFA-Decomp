@@ -45,6 +45,7 @@
 #define GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING      0x01
 #define GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT     0x02
 #define GUNPOWDER_BARREL_DETONATION_TRIGGER_IMPACT 4
+#define GUNPOWDER_BARREL_GROUND_GRACE_FRAMES       3
 #define GUNPOWDER_BARREL_DETONATION_TRIGGER_TIMER  0xA
 #define GUNPOWDER_BARREL_FUSE_DURATION_FRAMES      0x14
 #define GUNPOWDER_BARREL_RESPAWN_DURATION_FRAMES   0x3C
@@ -341,6 +342,9 @@ void gunpowderBarrel_triggerExplosion(GameObject* obj) {
         ObjHits_SetSourceMask((ObjAnimComponent*)obj, 1);
         ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, 0x14, -5, 0x14);
         ObjHits_EnableObject(obj);
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+        ObjHits_MarkObjectPositionDirty(&obj->anim);
+#endif
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, GUNPOWDER_BARREL_HIT_VOLUME_SLOT_BLAST, 4, 0);
         Sfx_PlayFromObject(obj, SFXTRIG_en_barrelblow11_d1);
         obj->anim.localPosY += 10.0f;
@@ -434,7 +438,11 @@ void gunpowderBarrel_updatePhysics(GameObject* obj) {
             if (result == 2) {
                 state->detonationTrigger = GUNPOWDER_BARREL_DETONATION_TRIGGER_IMPACT;
             } else {
+#if defined(VERSION_GSAE01)
                 if (!state->heldFlags.wasOnGround) {
+#else
+                if (state->groundGraceFrames == 0) {
+#endif
                     if (state->heldFlags.landed) {
                         Sfx_PlayFromObject(obj, SFXTRIG_barrel_putdown);
                     } else {
@@ -479,7 +487,19 @@ void gunpowderBarrel_updatePhysics(GameObject* obj) {
             }
         }
     }
+#if defined(VERSION_GSAE01)
     state->heldFlags.wasOnGround = state->heldFlags.onGround;
+#else
+    if (state->heldFlags.onGround) {
+        state->groundGraceFrames = GUNPOWDER_BARREL_GROUND_GRACE_FRAMES;
+    } else {
+        int remaining = state->groundGraceFrames - 1;
+        if (remaining < 0) {
+            remaining = 0;
+        }
+        state->groundGraceFrames = remaining;
+    }
+#endif
 }
 
 int gunpowderBarrel_getExtraSize(void) {

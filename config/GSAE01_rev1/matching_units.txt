@@ -378,6 +378,7 @@ dlls/objects/340/340.c
 dlls/objects/341/341.c
 dlls/objects/342/342.c
 dlls/objects/343_SpiritDoorS/SpiritDoorS.c
+dlls/objects/344/344.c
 dlls/objects/345/345.c
 dlls/objects/346/346.c
 dlls/objects/347_CFForceFiel/CFForceFiel.c
