@@ -57,7 +57,7 @@
 #include "dolphin/mtx/vec.h"
 
 s16 gObjPartitionPivot;
-void* lbl_803DCBC0;
+void* gObjContNoBuf;
 int* gObjFileOffsetTable;
 int gObjFileCount;
 u8* gObjTablesBinData;
@@ -2172,7 +2172,7 @@ void Obj_InitObjectSystem(void) {
 
     gObjDeferredFreeList = mmAlloc(OBJ_DEFERRED_FREE_CAPACITY * sizeof(*gObjDeferredFreeList), 0xe, 0);
     gObjPendingDefFreeList = mmAlloc(OBJ_PENDING_DEF_FREE_CAPACITY * sizeof(*gObjPendingDefFreeList), 0xe, 0);
-    lbl_803DCBC0 = mmAlloc(0x10, 0xe, 0);
+    gObjContNoBuf = mmAlloc(0x10, 0xe, 0);
     loadAssetFileById(&gObjSeqToObjIdTable, MLDF_FILEID_OBJINDEX_BIN);
     gObjSeqToObjIdMax = (getDataFileSize(MLDF_FILEID_OBJINDEX_BIN) >> 1) - 1;
     for (p = gObjSeqToObjIdTable + gObjSeqToObjIdMax; *p == 0;) {
