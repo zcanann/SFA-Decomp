@@ -89,11 +89,47 @@ TitleMenuItem* gOptionsMenuItems[8];
 #define OPTIONS_SUBMENU_AUDIO    2
 #define OPTIONS_SUBMENU_LANGUAGE 3
 
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+extern u8 gOptionsLanguageIds[5];
+#endif
 extern s8 gOptionsActivePanel;
 extern int lbl_803DD6FC;
 extern s8 gOptionsExitCountdown;
 extern s8 gOptionsExitRequested;
 extern s8 gOptionsLayoutRefreshFrames;
+
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+void optionsMenu_applyMiscSetting(int selection, int item)
+{
+    if (selection == 0)
+    {
+        Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
+        (*gScreenTransitionInterface)->start(0x14, SCREEN_TRANSITION_HUD);
+        gOptionsExitCountdown = 0x23;
+        gOptionsExitRequested = 1;
+    }
+    if (gOptionsMenuItems[item] != NULL && gTitleMenuItemInterface->vtable->isChanged(gOptionsMenuItems[item]) != 0)
+    {
+        switch (item)
+        {
+        case 0:
+            gOptionsSaveData->subtitlesEnabled = !gTitleMenuItemInterface->vtable->getValue(gOptionsMenuItems[0]);
+            setSubtitlesEnabled(gOptionsSaveData->subtitlesEnabled);
+            break;
+        default:
+            saveFileStruct_setCheatActive(CHEAT_DINO_LANGUAGE,
+                                          !gTitleMenuItemInterface->vtable->getValue(gOptionsMenuItems[item]));
+            break;
+        }
+    }
+    else if (selection == 1 && item > 0 && item < 6)
+    {
+        gameTextSetLanguage(gOptionsLanguageIds[item - 1]);
+        gOptionsSaveData->languageIndex = (u8)(item - 1);
+        Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
+    }
+}
+#endif
 
 void optionsMenu_applyAudioSetting(int action, int option)
 {
@@ -762,6 +798,9 @@ int OptionsScreen_frameStart(void)
         }
         break;
     case OPTIONSSCREEN_PANEL_MISC:
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+        optionsMenu_applyMiscSetting(selection, item);
+#else
         if (selection == 0)
         {
             Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
@@ -783,6 +822,7 @@ int OptionsScreen_frameStart(void)
                 break;
             }
         }
+#endif
         break;
     }
 

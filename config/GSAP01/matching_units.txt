@@ -97,6 +97,7 @@ dlls/engine/50/50.c
 dlls/engine/51/51.c
 dlls/engine/52_n_attractmode/n_attractmode.c
 dlls/engine/54/54.c
+dlls/engine/55/55.c
 dlls/engine/56/56.c
 dlls/engine/57/57.c
 dlls/engine/58/58.c
@@ -887,6 +888,7 @@ main/curves.c
 main/debug_display.c
 main/fileio.c
 main/mm.c
+main/modelEngine.c
 main/modellight.c
 main/obj_movelib.c
 main/objanim.c
