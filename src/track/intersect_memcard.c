@@ -1,3 +1,4 @@
+#include "dolphin/os/OSRtc.h"
 #include "global.h"
 #include "dolphin/card.h"
 #include "dolphin/mtx.h"
@@ -476,6 +477,11 @@ void showMemCardError(u8 err) {
     int opts[8];
     int msgs[8];
     int count;
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+    int measureLeft, measureRight, measureTop, measureBottom;
+    int lineHeight;
+    int textHeight;
+#endif
     u32 saved;
     int sel;
     u8 submenu;
@@ -494,6 +500,13 @@ void showMemCardError(u8 err) {
     timer = 0;
     held = 0;
     gSaveCardRetry = 0;
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+    if (OSGetLanguage() == OS_LANGUAGE_DUTCH && err != 0) {
+        if (gSaveCardState == 2 || gSaveCardState == 3) {
+            return;
+        }
+    }
+#endif
     if (gSaveCardState == 0xd || (err != 0 && gSaveCardState == 0xc)) {
         return;
     }
@@ -521,7 +534,16 @@ void showMemCardError(u8 err) {
             yy = y + ((i > 0) ? 0x64 : 0);
             for (j = 0; j < t->count; j++) {
                 gameTextShowStr(t->strings[j], 0, 0, yy);
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+                gameTextMeasureStringBoundsAt(t->strings[j], 0, 0, 0, &measureLeft, &measureRight, &measureTop,
+                                              &measureBottom);
+                lineHeight = gGameTextFontMetrics[sLanguageNameTable[getCurLanguage()].fontId].lineHeight;
+                textHeight = measureBottom - measureTop;
+                yy += (textHeight > lineHeight) ? textHeight : gGameTextFontMetrics[sLanguageNameTable[getCurLanguage()].fontId].lineHeight;
+                yy += 5;
+#else
                 yy += 0x18;
+#endif
             }
             if (i == sel) {
                 v = (int)(47.0f * fcos16HighPrecision(timer) + 208.0f);

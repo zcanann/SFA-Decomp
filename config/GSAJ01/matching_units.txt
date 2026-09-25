@@ -907,6 +907,7 @@ main/pad.c
 main/pi_pathsearch.c
 main/pi_videoinit.c
 main/rcp_dolphin.c
+main/render.c
 main/shader.c
 main/shader_dolphin.c
 main/shadow_dolphin.c

@@ -26,6 +26,9 @@
 #include "main/obj_trigger.h"
 #include "sys/objects.h"
 #include "main/frame_timing.h"
+#include "main/debug.h"
+#include "main/pi_dolphin.h"
+#include "dolphin/gx/GXFrameBuffer.h"
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"
@@ -308,7 +311,14 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, BossDrakorState* state, int 
                             mstate = (f32*)missile->extra;
                             PSVECScale(&vecA, &vecC, PSVECDotProduct(&vecA, &vecB));
                             PSVECSubtract(&vecB, &vecC, &vecC);
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+                            prod = vecC.x;
+                            if (0.0f != prod || 0.0f != vecC.y || 0.0f != vecC.z) {
+                                PSVECNormalize(&vecC, &vecC);
+                            }
+#else
                             PSVECNormalize(&vecC, &vecC);
+#endif
                             PSVECScale(&vecC, &missile->anim.velocity,
                                        s->missileBaseSpeed * gBossDrakorMissileInitialSpeedFactor);
                             *mstate = spd;
@@ -650,6 +660,10 @@ static inline void bossdrakor_updateEffects(GameObject* obj, BossDrakorState* dr
     }
 }
 void bossdrakor_update(GameObject* obj) {
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+    f32 curveStep;
+    f32 advanceStep;
+#endif
     BossDrakorState* state;
     int moveResult;
     int adv;
@@ -701,8 +715,19 @@ void bossdrakor_update(GameObject* obj) {
             modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)drakorState->lightObj, 50.0f);
         }
     }
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+    advanceStep = drakorState->curveAdvanceStep;
+    curveStep = advanceStep;
+    if (gRenderModeObj != &GXEurgb60Hz480IntDf) {
+        curveStep = advanceStep * (0.764f * timeDelta);
+    }
+    logPrintf(" DRAKOR SPEED %f ", advanceStep);
+    moveResult = Obj_UpdateRomCurveFollowVelocityIndexed(obj, &drakorState->curveWalker, curveStep, 200.0f, 10.0f,
+                                                         1, &drakorState->curveFollowState);
+#else
     moveResult = Obj_UpdateRomCurveFollowVelocityIndexed(obj, &drakorState->curveWalker, drakorState->curveAdvanceStep,
                                                          200.0f, 10.0f, 1, &drakorState->curveFollowState);
+#endif
     if (state->flags198.b40) {
         player = Obj_GetPlayerObject();
         if (player != NULL) {

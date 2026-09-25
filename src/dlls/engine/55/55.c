@@ -280,6 +280,10 @@ void languageMenuInit(void)
         gTitleMenuItemInterface->vtable->createWithWindow(0x36b, 0x22, 0, 1,
                                                          (s16)(gOptionsSaveData->subtitlesEnabled == 0));
 
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+    panel->entries[panel->count - 2].downLink = -1;
+    panel->entries[panel->count - 1].flags |= TITLE_MENU_TEXT_ENTRY_HIDDEN;
+#else
     if (isCheatUnlocked(LANGUAGE_MENU_CHEAT_ID) != 0 && gGameTextFontIsSjis == 0)
     {
         panel->entries[panel->count - 2].downLink = panel->count - 1;
@@ -293,6 +297,7 @@ void languageMenuInit(void)
         panel->entries[panel->count - 2].downLink = -1;
         panel->entries[panel->count - 1].flags |= TITLE_MENU_TEXT_ENTRY_HIDDEN;
     }
+#endif
 
     gTitleMenuItemInterface->vtable->setEnabled(gOptionsMenuItems[0], 1);
 
