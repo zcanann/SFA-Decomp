@@ -309,6 +309,7 @@ dlls/objects/269_PortalSpell/PortalSpell.c
 dlls/objects/270/270.c
 dlls/objects/271_MMP_Bridge/MMP_Bridge.c
 dlls/objects/272/272.c
+dlls/objects/273/273.c
 dlls/objects/274/274.c
 dlls/objects/275/275.c
 dlls/objects/276_IMMultiSeq/IMMultiSeq.c

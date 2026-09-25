@@ -15,6 +15,7 @@
 #define DOOR_LOCK_INPUT_PORT                         0
 #define DOOR_LOCK_CMENU_EXPLANATION_SEQUENCE         1
 #define DOOR_LOCK_SEQUENCE_WORLD_SPACE_MODE          0
+#define DOOR_LOCK_SKIP_UNLOCK_IDENT                  0x4B13A
 #define DOOR_LOCK_GAME_BIT_NONE                      -1
 #define DOOR_LOCK_SEQUENCE_ID_NONE                   -1
 #define DOOR_LOCK_QUEUED_SEQUENCE_ID_NONE            0
@@ -123,9 +124,16 @@ void DoorLock_update(GameObject* obj) {
             if (placement->triggerGameBit != DOOR_LOCK_GAME_BIT_NONE && mainGetBit(placement->triggerGameBit) == 0) {
                 obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
             }
+#if defined(VERSION_GSAP01_rev1)
+            if (((placement->triggerGameBit != DOOR_LOCK_GAME_BIT_NONE &&
+                  ObjTrigger_IsSetById(obj, placement->triggerGameBit) != 0) ||
+                 (placement->triggerGameBit == DOOR_LOCK_GAME_BIT_NONE && ObjTrigger_IsSet(obj) != 0)) &&
+                placement->base.ident != DOOR_LOCK_SKIP_UNLOCK_IDENT) {
+#else
             if ((placement->triggerGameBit != DOOR_LOCK_GAME_BIT_NONE &&
                  ObjTrigger_IsSetById(obj, placement->triggerGameBit) != 0) ||
                 (placement->triggerGameBit == DOOR_LOCK_GAME_BIT_NONE && ObjTrigger_IsSet(obj) != 0)) {
+#endif
                 if (placement->unlockSequenceId != DOOR_LOCK_SEQUENCE_ID_NONE) {
                     (*gObjectTriggerInterface)
                         ->runSequence((int)placement->unlockSequenceId, obj, DOOR_LOCK_SEQUENCE_ARG_NONE);
