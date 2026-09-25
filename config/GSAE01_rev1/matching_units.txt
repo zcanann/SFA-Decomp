@@ -285,6 +285,7 @@ dlls/objects/247/247.c
 dlls/objects/248_LevelName/LevelName.c
 dlls/objects/249/249.c
 dlls/objects/250_InvisibleHi/InvisibleHi.c
+dlls/objects/251/251.c
 dlls/objects/252/252.c
 dlls/objects/253/253.c
 dlls/objects/254_MagicPlant/MagicPlant.c
@@ -448,6 +449,7 @@ dlls/objects/413/413.c
 dlls/objects/414/414.c
 dlls/objects/415_NW_treebrid/NW_treebrid.c
 dlls/objects/416_NW_geyser/NW_geyser.c
+dlls/objects/417/417.c
 dlls/objects/418_NW_tricky/NW_tricky.c
 dlls/objects/419/419.c
 dlls/objects/420/420.c
@@ -669,6 +671,7 @@ dlls/objects/640_DR_CloudPer/DR_CloudPer.c
 dlls/objects/641_DR_EarthCal/DR_EarthCal.c
 dlls/objects/642_BarrelGener/BarrelGener.c
 dlls/objects/643_DR_BarrelGr/DR_BarrelGr.c
+dlls/objects/644/644.c
 dlls/objects/645_SPShop/SPShop.c
 dlls/objects/646_SPShopKeepe/SPShopKeepe.c
 dlls/objects/647_SPScarab/SPScarab.c
