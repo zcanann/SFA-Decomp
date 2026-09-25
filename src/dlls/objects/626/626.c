@@ -26,6 +26,8 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/objfx_api.h"
 #include "main/frame_timing.h"
+#include "main/pi_dolphin.h"
+#include "dolphin/gx/GXFrameBuffer.h"
 #include "main/gamebits_api.h"
 #include "main/game_ui_interface.h"
 #include "sys/objects/lifecycle.h"
@@ -488,6 +490,7 @@ int hightop_handleMotionEvent(GameObject* obj, u8 event) {
         mainSetBits(0x634, 1);
         (*gObjectTriggerInterface)->runSequence(4, obj, -1);
         break;
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
     case 7:
         mainSetBits(0x634, 0);
         mainSetBits(0x631, 1);
@@ -496,6 +499,7 @@ int hightop_handleMotionEvent(GameObject* obj, u8 event) {
         runtime->lookController.modeBits &= ~2;
         (*gPlayerInterface)->setState(obj, runtime, 7);
         break;
+#endif
     case 8:
         (*gObjectTriggerInterface)->runSequence(7, obj, -1);
         break;
@@ -552,6 +556,11 @@ int hightop_stateHandler02(GameObject* obj, HighTopRuntime* stateArg, f32 dt) {
     f32 ang;
     f32 moveSpeed;
     s16* vec;
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+    if (mainGetBit(0x631) != 0) {
+        return 8;
+    }
+#endif
     *(u32*)stateArg = *(u32*)stateArg | 0x200000;
     if (stateArg->baddie.inputMagnitude < 0.05f) {
         stateArg->baddie.turnRateAbs = 0;
@@ -885,6 +894,9 @@ void HighTop_hitDetect(GameObject* obj) {
         runtime->airMeterRemaining -= 1;
         objfx_shakeCameraByDistance(obj, 1000.0f);
         if (runtime->airMeterRemaining <= 0) {
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+            mainSetBits(0xbf7, 0);
+#endif
             (*gGameUIInterface)->airMeterShutdown();
             runtime->flagsC49.b7 = 0;
             mainSetBits(0x634, 0);
@@ -923,9 +935,21 @@ void HighTop_update(GameObject* obj) {
     runtime->baddie.hitPoints = 0;
     *(int*)state &= ~0x8000;
     if ((runtime->flagsC40 & HIGHTOP_FLAG_CURVE_FOLLOW) != 0) {
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+        f32 curveStep = 8.0f * timeDelta;
+        int ev;
+        if (gRenderModeObj != &GXEurgb60Hz480IntDf) {
+            gHighTopCurveFollowSpeedFactor = 0.85f;
+            curveStep = 8.0f;
+        }
+        ev = Obj_UpdateRomCurveFollowVelocity(
+            (GameObject*)self, &runtime->curveWalker,
+            gHighTopCurveFollowSpeedFactor * (runtime->curveFollowSpeedScale * timeDelta), 70.0f, curveStep, 0);
+#else
         int ev = Obj_UpdateRomCurveFollowVelocity(
             (GameObject*)self, &runtime->curveWalker,
             gHighTopCurveFollowSpeedFactor * (runtime->curveFollowSpeedScale * timeDelta), 70.0f, 8.0f * timeDelta, 0);
+#endif
         if (ev != 0) {
             if (ev == -1) {
                 runtime->flagsC40 &= ~0x140;
