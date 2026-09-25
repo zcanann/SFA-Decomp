@@ -622,6 +622,7 @@ dlls/objects/594_KT_Lazerwal/KT_Lazerwal.c
 dlls/objects/595_KT_Lazerlig/KT_Lazerlig.c
 dlls/objects/596_KT_Fallingr/KT_Fallingr.c
 dlls/objects/597/597.c
+dlls/objects/599_DR_EarthWar/DR_EarthWar.c
 dlls/objects/600_DR_CloudRun/DR_CloudRun.c
 dlls/objects/601_SB_Cloudrun/SB_Cloudrun.c
 dlls/objects/602_StaticCamer/StaticCamer.c
@@ -719,6 +720,7 @@ dlls/objects/700_Andross/Andross.c
 dlls/objects/701/701.c
 dlls/objects/702_AndrossBrai/AndrossBrai.c
 dlls/objects/703_AndrossLigh/AndrossLigh.c
+dlls/objects/704/704.c
 dlls/projgfx/171/171.c
 dlls/projgfx/172/172.c
 dlls/projgfx/173/173.c

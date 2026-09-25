@@ -217,6 +217,7 @@ int DR_EarthWarrior_stateHandler03(GameObject* obj, BaddieState* baddie) {
     EarthWarriorState* state = obj->extra;
     f32 fz;
     obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
     fz = 0.0f;
     baddie->animSpeedC = fz;
     baddie->animSpeedB = fz;
@@ -232,6 +233,23 @@ int DR_EarthWarrior_stateHandler03(GameObject* obj, BaddieState* baddie) {
         }
         baddie->moveSpeed = 0.02f;
     }
+#else
+    if (baddie->moveJustStartedA != 0) {
+        fz = 0.0f;
+        baddie->animSpeedC = fz;
+        baddie->animSpeedB = fz;
+        baddie->animSpeedA = fz;
+        obj->anim.velocityX = fz;
+        obj->anim.velocityY = fz;
+        obj->anim.velocityZ = fz;
+        if (state->sub.flags994.b80) {
+            ObjAnim_SetCurrentMove(obj, 7, fz, 0);
+        } else {
+            ObjAnim_SetCurrentMove(obj, 8, fz, 0);
+        }
+        baddie->moveSpeed = 0.02f;
+    }
+#endif
     if (baddie->moveDone != 0) {
         if (state->sub.mountState == VEHICLE_Mounted) {
             state->sub.energy -= 1;
