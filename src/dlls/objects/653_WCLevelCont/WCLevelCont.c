@@ -33,25 +33,23 @@
 
 u8 gWcTileGridB[8][8];
 
+#define WCLEVELCONT_TILE_MESSAGE_TEXT_ID 1401
+#define WCLEVELCONT_TILE_MESSAGE_FRAMES  300.0f
 const f32 gWcLevelContZero[] = {0.0f};
 const f32 gWcPushBlockTileResetTime[] = {20.0f};
 
-void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state)
-{
+void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state) {
     f32 sunTime;
 
     (*gSkyInterface)->getSunPosition(&sunTime);
-    switch (state->mode)
-    {
+    switch (state->mode) {
     case WCLEVELCTL_MODE_TREX_INIT:
-        gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND | GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
-                      0x50);
+        gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND | GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY, 0x50);
         gameTimerResume();
         state->mode = WCLEVELCTL_MODE_TREX_ACTIVE;
         break;
     case WCLEVELCTL_MODE_TREX_ACTIVE:
-        if (mainGetBit(0x2a5) != 0)
-        {
+        if (mainGetBit(0x2a5) != 0) {
             GameObject* player;
             mainSetBits(0x274, 1);
             mainSetBits(0xef1, 0);
@@ -61,13 +59,10 @@ void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state)
             state->mode = WCLEVELCTL_MODE_IDLE;
             Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             gameTimerStop();
-        }
-        else if (isGameTimerDisabled() != 0)
-        {
+        } else if (isGameTimerDisabled() != 0) {
             mainSetBits(0x274, 0);
             mainSetBits(0xef1, 0);
-            if (mainGetBit(0x34d) == 0)
-            {
+            if (mainGetBit(0x34d) == 0) {
                 mainSetBits(0x2b1, 0);
                 mainSetBits(0x226, 1);
                 mainSetBits(0x2a6, 1);
@@ -78,12 +73,10 @@ void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state)
         }
         break;
     default:
-        if (!(state->completionFlags & WCLEVELCTL_FLAG_TREX) && mainGetBit(0x2b1) != 0)
-        {
+        if (!(state->completionFlags & WCLEVELCTL_FLAG_TREX) && mainGetBit(0x2b1) != 0) {
             mainSetBits(0xef1, 1);
             mainSetBits(0xe6d, 0);
-            if (mainGetBit(0x204) != 0)
-            {
+            if (mainGetBit(0x204) != 0) {
                 mainSetBits(0x226, 0);
                 mainSetBits(0x2a6, 0);
                 mainSetBits(0x206, 0);
@@ -95,85 +88,65 @@ void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state)
         break;
     }
 
-    if (!(state->completionFlags & WCLEVELCTL_FLAG_TILE_A))
-    {
-        if ((u8)mainGetBit(WCPUSHBLOCK_GAMEBIT_A_COUNT) == 4)
-        {
+    if (!(state->completionFlags & WCLEVELCTL_FLAG_TILE_A)) {
+        if ((u8)mainGetBit(WCPUSHBLOCK_GAMEBIT_A_COUNT) == 4) {
             mainSetBits(WCPUSHBLOCK_GAMEBIT_A_SOLVED, 1);
             Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             state->completionFlags |= WCLEVELCTL_FLAG_TILE_A;
-        }
-        else if (mainGetBit(WCPUSHBLOCK_GAMEBIT_A_FADE) != 0)
-        {
-            if (state->tileAResetTimer <= gWcLevelContZero[0])
-            {
+        } else if (mainGetBit(WCPUSHBLOCK_GAMEBIT_A_FADE) != 0) {
+            if (state->tileAResetTimer <= gWcLevelContZero[0]) {
                 mainSetBits(WCPUSHBLOCK_GAMEBIT_A_COUNT, 0);
                 memcpy(gWcTileGridA, gWcTileGridAInitial.g, 0x40);
                 state->tileAResetTimer = gWcPushBlockTileResetTime[0];
             }
         }
-        if (state->tileAResetTimer > gWcLevelContZero[0])
-        {
+        if (state->tileAResetTimer > gWcLevelContZero[0]) {
             state->tileAResetTimer -= timeDelta;
-            if (state->tileAResetTimer <= gWcLevelContZero[0])
+            if (state->tileAResetTimer <= gWcLevelContZero[0]) {
                 mainSetBits(WCPUSHBLOCK_GAMEBIT_A_FADE, 0);
+            }
         }
     }
 
-    if (!(state->completionFlags & WCLEVELCTL_FLAG_TILE_B))
-    {
-        if ((u8)mainGetBit(WCPUSHBLOCK_GAMEBIT_B_COUNT) == 4)
-        {
+    if (!(state->completionFlags & WCLEVELCTL_FLAG_TILE_B)) {
+        if ((u8)mainGetBit(WCPUSHBLOCK_GAMEBIT_B_COUNT) == 4) {
             mainSetBits(WCPUSHBLOCK_GAMEBIT_B_SOLVED, 1);
             Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             state->completionFlags |= WCLEVELCTL_FLAG_TILE_B;
-        }
-        else if (mainGetBit(WCPUSHBLOCK_GAMEBIT_B_FADE) != 0)
-        {
-            if (state->tileBResetTimer <= gWcLevelContZero[0])
-            {
+        } else if (mainGetBit(WCPUSHBLOCK_GAMEBIT_B_FADE) != 0) {
+            if (state->tileBResetTimer <= gWcLevelContZero[0]) {
                 mainSetBits(WCPUSHBLOCK_GAMEBIT_B_COUNT, 0);
                 memcpy(gWcTileGridB, gWcTileGridBInitial.g, 0x40);
                 state->tileBResetTimer = gWcPushBlockTileResetTime[0];
             }
         }
-        if (state->tileBResetTimer > gWcLevelContZero[0])
-        {
+        if (state->tileBResetTimer > gWcLevelContZero[0]) {
             state->tileBResetTimer -= timeDelta;
-            if (state->tileBResetTimer <= gWcLevelContZero[0])
+            if (state->tileBResetTimer <= gWcLevelContZero[0]) {
                 mainSetBits(WCPUSHBLOCK_GAMEBIT_B_FADE, 0);
+            }
         }
     }
 
-    if (!(state->completionFlags & WCLEVELCTL_FLAG_SWITCHES))
-    {
-        if (mainGetBit(0xc58) != 0 && mainGetBit(0xc59) != 0 && mainGetBit(0xc5a) != 0)
-        {
+    if (!(state->completionFlags & WCLEVELCTL_FLAG_SWITCHES)) {
+        if (mainGetBit(0xc58) != 0 && mainGetBit(0xc59) != 0 && mainGetBit(0xc5a) != 0) {
             mainSetBits(0x205, 1);
             Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             state->completionFlags |= WCLEVELCTL_FLAG_SWITCHES;
-        }
-        else if (!state->dialogueFlags.b40 && mainGetBit(0xc58) != 0)
-        {
+        } else if (!state->dialogueFlags.b40 && mainGetBit(0xc58) != 0) {
             Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             state->dialogueFlags.b40 = 1;
-        }
-        else if (!state->dialogueFlags.b20 && mainGetBit(0xc59) != 0)
-        {
+        } else if (!state->dialogueFlags.b20 && mainGetBit(0xc59) != 0) {
             Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             state->dialogueFlags.b20 = 1;
-        }
-        else if (!state->dialogueFlags.b18 && mainGetBit(0xc5a) != 0)
-        {
+        } else if (!state->dialogueFlags.b18 && mainGetBit(0xc5a) != 0) {
             Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             state->dialogueFlags.b18 = 1;
         }
     }
 
-    if (!(state->completionFlags & WCLEVELCTL_FLAG_FINAL))
-    {
-        if (mainGetBit(0xbcf) != 0)
-        {
+    if (!(state->completionFlags & WCLEVELCTL_FLAG_FINAL)) {
+        if (mainGetBit(0xbcf) != 0) {
             GameObject* player;
             mainSetBits(0xbc8, 0);
             mainSetBits(0x2f0, 1);
@@ -187,58 +160,49 @@ void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state)
     }
 
     state->completionFlags &= ~WCLEVELCTL_FLAG_TRIGGERED;
-    if (mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
-    {
+    if (mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0) {
         mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 0);
         mainSetBits(GAMEBIT_Tricky_Spawns, 0);
-        if (mainGetBit(GAMEBIT_TrickyTalk) == 0xff)
+        if (mainGetBit(GAMEBIT_TrickyTalk) == 0xff) {
             mainSetBits(GAMEBIT_TrickyTalk, randomGetRange(6, 7));
+        }
     }
 }
 
 u8 gWcTileGridA[9][8];
 
-void wclevelcont_updateAct1State(GameObject* obj, WcLevelControlState* state)
-{
-    if (state->completionFlags & WCLEVELCTL_FLAG_EVENT_ACTIVE)
+void wclevelcont_updateAct1State(GameObject* obj, WcLevelControlState* state) {
+    if (state->completionFlags & WCLEVELCTL_FLAG_EVENT_ACTIVE) {
         return;
+    }
     state->previousMode = state->mode;
-    switch (state->mode)
-    {
+    switch (state->mode) {
     case WCLEVELCTL_MODE_PUZZLE_A:
-        if (state->completionFlags & WCLEVELCTL_FLAG_TRIGGERED)
-        {
-            gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND |
-                          GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
+        if (state->completionFlags & WCLEVELCTL_FLAG_TRIGGERED) {
+            gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND | GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
                           0x3c);
             gameTimerResume();
             mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 1);
             mainSetBits(0xedd, 1);
-        }
-        else if (mainGetBit(0x7f9) != 0)
-        {
+        } else if (mainGetBit(0x7f9) != 0) {
             state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_A;
             gameTimerStop();
-            if (mainGetBit(0x7fa) != 0)
+            if (mainGetBit(0x7fa) != 0) {
                 Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
-            else
+            } else {
                 Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
+            }
             mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
             mainSetBits(0xedd, 0);
-            if (mainGetBit(0x7fa) != 0)
-            {
+            if (mainGetBit(0x7fa) != 0) {
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 state->mode = WCLEVELCTL_MODE_SEQUENCE;
-            }
-            else
-            {
+            } else {
                 (*gObjectTriggerInterface)->runSequence(1, obj, -1);
                 state->mode = WCLEVELCTL_MODE_IDLE;
             }
             state->completionFlags |= WCLEVELCTL_FLAG_EVENT_ACTIVE;
-        }
-        else if (isGameTimerDisabled() != 0)
-        {
+        } else if (isGameTimerDisabled() != 0) {
             mainSetBits(0x7ef, 0);
             mainSetBits(0x7ed, 0);
             mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
@@ -247,39 +211,31 @@ void wclevelcont_updateAct1State(GameObject* obj, WcLevelControlState* state)
         }
         break;
     case WCLEVELCTL_MODE_PUZZLE_B:
-        if (state->completionFlags & WCLEVELCTL_FLAG_TRIGGERED)
-        {
-            gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND |
-                          GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
+        if (state->completionFlags & WCLEVELCTL_FLAG_TRIGGERED) {
+            gameTimerInit(GAME_TIMER_COUNT_DOWN | GAME_TIMER_LOOP_SOUND | GAME_TIMER_END_SOUND | GAME_TIMER_DISPLAY,
                           0x50);
             gameTimerResume();
             mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 1);
             mainSetBits(0xedc, 1);
-        }
-        else if (mainGetBit(0x7fa) != 0)
-        {
+        } else if (mainGetBit(0x7fa) != 0) {
             state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_B;
             gameTimerStop();
-            if (mainGetBit(0x7f9) != 0)
+            if (mainGetBit(0x7f9) != 0) {
                 Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
-            else
+            } else {
                 Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
+            }
             mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
             mainSetBits(0xedc, 0);
-            if (mainGetBit(0x7f9) != 0)
-            {
+            if (mainGetBit(0x7f9) != 0) {
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 state->mode = WCLEVELCTL_MODE_SEQUENCE;
-            }
-            else
-            {
+            } else {
                 (*gObjectTriggerInterface)->runSequence(1, obj, -1);
                 state->mode = WCLEVELCTL_MODE_IDLE;
             }
             state->completionFlags |= WCLEVELCTL_FLAG_EVENT_ACTIVE;
-        }
-        else if (isGameTimerDisabled() != 0)
-        {
+        } else if (isGameTimerDisabled() != 0) {
             mainSetBits(0x7f0, 0);
             mainSetBits(0x7ee, 0);
             mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
@@ -288,8 +244,7 @@ void wclevelcont_updateAct1State(GameObject* obj, WcLevelControlState* state)
         }
         break;
     case WCLEVELCTL_MODE_SEQUENCE:
-        if (mainGetBit(0xcac) != 0)
-        {
+        if (mainGetBit(0xcac) != 0) {
             GameObject* player;
             mainSetBits(0xda9, 0);
             mainSetBits(0xc37, 1);
@@ -301,16 +256,14 @@ void wclevelcont_updateAct1State(GameObject* obj, WcLevelControlState* state)
     case WCLEVELCTL_MODE_DONE:
         break;
     default:
-        if (!(state->completionFlags & WCLEVELCTL_FLAG_PUZZLE_A) && mainGetBit(0x7ed) != 0)
-        {
+        if (!(state->completionFlags & WCLEVELCTL_FLAG_PUZZLE_A) && mainGetBit(0x7ed) != 0) {
             mainSetBits(0x7ef, 1);
             state->eventTimer = 70.0f;
             state->mode = WCLEVELCTL_MODE_PUZZLE_A;
             state->completionFlags |= WCLEVELCTL_FLAG_EVENT_ACTIVE;
             break;
         }
-        if (!(state->completionFlags & WCLEVELCTL_FLAG_PUZZLE_B) && mainGetBit(0x7ee) != 0)
-        {
+        if (!(state->completionFlags & WCLEVELCTL_FLAG_PUZZLE_B) && mainGetBit(0x7ee) != 0) {
             mainSetBits(0x7f0, 1);
             state->eventTimer = 70.0f;
             state->mode = WCLEVELCTL_MODE_PUZZLE_B;
@@ -321,41 +274,33 @@ void wclevelcont_updateAct1State(GameObject* obj, WcLevelControlState* state)
     state->completionFlags &= ~WCLEVELCTL_FLAG_TRIGGERED;
 }
 
-int wclevelcont_seqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
-{
+int wclevelcont_seqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     WcLevelControlState* state = obj->extra;
     int i;
 
     state->completionFlags |= WCLEVELCTL_FLAG_TRIGGERED;
     state->completionFlags &= ~WCLEVELCTL_FLAG_EVENT_ACTIVE;
-    if (state->previousMode == WCLEVELCTL_MODE_PUZZLE_A)
-    {
+    if (state->previousMode == WCLEVELCTL_MODE_PUZZLE_A) {
         f32 t = state->eventTimer - timeDelta;
         state->eventTimer = t;
-        if (t <= gWcLevelContZero[0])
-        {
+        if (t <= gWcLevelContZero[0]) {
             GameObject* player;
             mainSetBits(0x7f7, 1);
             player = (GameObject*)Obj_GetPlayerObject();
             (*gMapEventInterface)->savePoint(&player->anim.localPosX, player->anim.rotX, 1, 0);
         }
-    }
-    else if (state->previousMode == WCLEVELCTL_MODE_PUZZLE_B)
-    {
+    } else if (state->previousMode == WCLEVELCTL_MODE_PUZZLE_B) {
         f32 t = state->eventTimer - timeDelta;
         state->eventTimer = t;
-        if (t <= gWcLevelContZero[0])
-        {
+        if (t <= gWcLevelContZero[0]) {
             GameObject* player;
             mainSetBits(0x802, 1);
             player = (GameObject*)Obj_GetPlayerObject();
             (*gMapEventInterface)->savePoint(&player->anim.localPosX, player->anim.rotX, 1, 0);
         }
     }
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        switch (animUpdate->eventIds[i])
-        {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 1:
             state->mode = WCLEVELCTL_MODE_TREX_INIT;
             break;
@@ -364,16 +309,13 @@ int wclevelcont_seqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
     return 0;
 }
 
-int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
-{
+int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy) {
     int i;
     int limit;
 
-    if (dx != 0)
-    {
+    if (dx != 0) {
         int bi = b;
-        if (dx == -1)
-        {
+        if (dx == -1) {
             f32 pz, px;
             mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
             {
@@ -384,9 +326,7 @@ int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
             }
             a += 1;
             limit = 8;
-        }
-        else
-        {
+        } else {
             f32 pz, px;
             mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
             {
@@ -397,12 +337,9 @@ int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
             a -= 1;
             limit = -1;
         }
-        for (i = a; i != limit; i -= dx)
-        {
-            if (gWcTileGridB[i][b] != 0)
-            {
-                if (gWcTileGridB[i][b] <= 4)
-                {
+        for (i = a; i != limit; i -= dx) {
+            if (gWcTileGridB[i][b] != 0) {
+                if (gWcTileGridB[i][b] <= 4) {
                     f32 pz, px;
                     i += dx;
                     mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
@@ -417,12 +354,9 @@ int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
                 }
             }
         }
-    }
-    else
-    {
+    } else {
         int ai = a;
-        if (dy == -1)
-        {
+        if (dy == -1) {
             f32 pz, px;
             mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
             {
@@ -433,9 +367,7 @@ int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
             }
             b += 1;
             limit = 8;
-        }
-        else
-        {
+        } else {
             f32 pz, px;
             mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
             {
@@ -446,12 +378,9 @@ int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
             b -= 1;
             limit = -1;
         }
-        for (i = b; i != limit; i -= dy)
-        {
-            if (gWcTileGridB[a][i] != 0)
-            {
-                if (gWcTileGridB[a][i] <= 4)
-                {
+        for (i = b; i != limit; i -= dy) {
+            if (gWcTileGridB[a][i] != 0) {
+                if (gWcTileGridB[a][i] <= 4) {
                     f32 pz, px;
                     i += dy;
                     mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
@@ -470,16 +399,12 @@ int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
     return 4;
 }
 
-void wclevelcont_getSolvedTileXYB(s16 value, s16* outTileX, s16* outTileY)
-{
+void wclevelcont_getSolvedTileXYB(s16 value, s16* outTileX, s16* outTileY) {
     int i, j;
 
-    for (i = 0; i < 8; i++)
-    {
-        for (j = 0; j < 8; j++)
-        {
-            if (value == gWcTileGridBSolved.g[i][j])
-            {
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+            if (value == gWcTileGridBSolved.g[i][j]) {
                 *outTileX = i;
                 *outTileY = j;
                 return;
@@ -488,16 +413,12 @@ void wclevelcont_getSolvedTileXYB(s16 value, s16* outTileX, s16* outTileY)
     }
 }
 
-void wclevelcont_getInitialTileXYB(s16 value, s16* outTileX, s16* outTileY)
-{
+void wclevelcont_getInitialTileXYB(s16 value, s16* outTileX, s16* outTileY) {
     int i, j;
 
-    for (i = 0; i < 8; i++)
-    {
-        for (j = 0; j < 8; j++)
-        {
-            if (value == gWcTileGridBInitial.g[i][j])
-            {
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+            if (value == gWcTileGridBInitial.g[i][j]) {
                 *outTileX = i;
                 *outTileY = j;
                 return;
@@ -506,26 +427,21 @@ void wclevelcont_getInitialTileXYB(s16 value, s16* outTileX, s16* outTileY)
     }
 }
 
-int wclevelcont_getTileB(s16 tileX, s16 tileY)
-{
-    if (tileX < 0 || tileX > 7 || tileY < 0 || tileY > 7)
-    {
+int wclevelcont_getTileB(s16 tileX, s16 tileY) {
+    if (tileX < 0 || tileX > 7 || tileY < 0 || tileY > 7) {
         return 0;
     }
     return gWcTileGridB[tileX][tileY];
 }
 
-void wclevelcont_setTileB(int value, s16 tileX, s16 tileY)
-{
-    if (tileX < 0 || tileX > 7 || tileY < 0 || tileY > 7)
-    {
+void wclevelcont_setTileB(int value, s16 tileX, s16 tileY) {
+    if (tileX < 0 || tileX > 7 || tileY < 0 || tileY > 7) {
         return;
     }
     gWcTileGridB[tileX][tileY] = value;
 }
 
-void wclevelcont_worldPosToTileB(GameObject* obj, f32 px, f32 pz, s16* outTileX, s16* outTileY)
-{
+void wclevelcont_worldPosToTileB(GameObject* obj, f32 px, f32 pz, s16* outTileX, s16* outTileY) {
     f32 outX, outZ;
 
     mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &outX, &outZ);
@@ -533,8 +449,7 @@ void wclevelcont_worldPosToTileB(GameObject* obj, f32 px, f32 pz, s16* outTileX,
     *outTileY = (s16)((s16)(pz - outZ - 128.0f) / 48);
 }
 
-void wclevelcont_tileBToWorldPos(GameObject* obj, s16 tileX, s16 tileY, f32* outXp, f32* outZp)
-{
+void wclevelcont_tileBToWorldPos(GameObject* obj, s16 tileX, s16 tileY, f32* outXp, f32* outZp) {
     f32 outX, outZ;
 
     mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &outX, &outZ);
@@ -545,16 +460,13 @@ void wclevelcont_tileBToWorldPos(GameObject* obj, s16 tileX, s16 tileY, f32* out
     }
 }
 
-int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
-{
+int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy) {
     int i;
     int limit;
 
-    if (dx != 0)
-    {
+    if (dx != 0) {
         int bi = b;
-        if (dx == -1)
-        {
+        if (dx == -1) {
             f32 pz, px;
             mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
             {
@@ -566,9 +478,7 @@ int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
             }
             a += 1;
             limit = 8;
-        }
-        else
-        {
+        } else {
             f32 pz, px;
             mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
             {
@@ -580,34 +490,26 @@ int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
             a -= 1;
             limit = -1;
         }
-        for (i = a; i != limit; i -= dx)
-        {
-            if (gWcTileGridA[i][b] != 0)
-            {
-                if (gWcTileGridA[i][b] <= 4)
-                {
+        for (i = a; i != limit; i -= dx) {
+            if (gWcTileGridA[i][b] != 0) {
+                if (gWcTileGridA[i][b] <= 4) {
                     f32 pz, px;
                     i += dx;
-                    mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px,
-                                            &pz);
+                    mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
                     *outX = (32.0f + px + (f32)((s16)i * 48)) + 24.0f;
                     return 1;
                 }
                 {
                     f32 pz, px;
-                    mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px,
-                                            &pz);
+                    mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
                     *outX = (32.0f + px + (f32)((s16)i * 48)) + 24.0f;
                     return 2;
                 }
             }
         }
-    }
-    else
-    {
+    } else {
         int ai = a;
-        if (dy == -1)
-        {
+        if (dy == -1) {
             f32 pz, px;
             mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
             {
@@ -620,9 +522,7 @@ int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
             }
             b += 1;
             limit = 8;
-        }
-        else
-        {
+        } else {
             f32 pz, px;
             mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
             {
@@ -635,23 +535,18 @@ int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
             b -= 1;
             limit = -1;
         }
-        for (i = b; i != limit; i -= dy)
-        {
-            if (gWcTileGridA[a][i] != 0)
-            {
-                if (gWcTileGridA[a][i] <= 4)
-                {
+        for (i = b; i != limit; i -= dy) {
+            if (gWcTileGridA[a][i] != 0) {
+                if (gWcTileGridA[a][i] <= 4) {
                     f32 pz, px;
                     i += dy;
-                    mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px,
-                                            &pz);
+                    mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
                     *outZ = (129.0f + pz + (f32)((s16)i * 48)) + 24.0f;
                     return 1;
                 }
                 {
                     f32 pz, px;
-                    mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px,
-                                            &pz);
+                    mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
                     *outZ = (129.0f + pz + (f32)((s16)i * 48)) + 24.0f;
                     return 2;
                 }
@@ -661,16 +556,12 @@ int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
     return 4;
 }
 
-void wclevelcont_getSolvedTileXYA(s16 value, s16* outTileX, s16* outTileY)
-{
+void wclevelcont_getSolvedTileXYA(s16 value, s16* outTileX, s16* outTileY) {
     int i, j;
 
-    for (i = 0; i < 8; i++)
-    {
-        for (j = 0; j < 8; j++)
-        {
-            if (value == gWcTileGridASolved.g[i][j])
-            {
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+            if (value == gWcTileGridASolved.g[i][j]) {
                 *outTileX = i;
                 *outTileY = j;
                 return;
@@ -679,16 +570,12 @@ void wclevelcont_getSolvedTileXYA(s16 value, s16* outTileX, s16* outTileY)
     }
 }
 
-void wclevelcont_getInitialTileXYA(s16 value, s16* outTileX, s16* outTileY)
-{
+void wclevelcont_getInitialTileXYA(s16 value, s16* outTileX, s16* outTileY) {
     int i, j;
 
-    for (i = 0; i < 8; i++)
-    {
-        for (j = 0; j < 8; j++)
-        {
-            if (value == gWcTileGridAInitial.g[i][j])
-            {
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+            if (value == gWcTileGridAInitial.g[i][j]) {
                 *outTileX = i;
                 *outTileY = j;
                 return;
@@ -697,26 +584,21 @@ void wclevelcont_getInitialTileXYA(s16 value, s16* outTileX, s16* outTileY)
     }
 }
 
-int wclevelcont_getTileA(s16 tileX, s16 tileY)
-{
-    if (tileX < 0 || tileX > 7 || tileY < 0 || tileY > 7)
-    {
+int wclevelcont_getTileA(s16 tileX, s16 tileY) {
+    if (tileX < 0 || tileX > 7 || tileY < 0 || tileY > 7) {
         return 0;
     }
     return gWcTileGridA[tileX][tileY];
 }
 
-void wclevelcont_setTileA(int value, s16 tileX, s16 tileY)
-{
-    if (tileX < 0 || tileX > 7 || tileY < 0 || tileY > 7)
-    {
+void wclevelcont_setTileA(int value, s16 tileX, s16 tileY) {
+    if (tileX < 0 || tileX > 7 || tileY < 0 || tileY > 7) {
         return;
     }
     gWcTileGridA[tileX][tileY] = value;
 }
 
-void wclevelcont_worldPosToTileA(GameObject* obj, f32 px, f32 pz, s16* outTileX, s16* outTileY)
-{
+void wclevelcont_worldPosToTileA(GameObject* obj, f32 px, f32 pz, s16* outTileX, s16* outTileY) {
     f32 outX, outZ;
 
     mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &outX, &outZ);
@@ -724,8 +606,7 @@ void wclevelcont_worldPosToTileA(GameObject* obj, f32 px, f32 pz, s16* outTileX,
     *outTileY = (s16)((s16)(pz - outZ - 129.0f) / 48);
 }
 
-void wclevelcont_tileAToWorldPos(GameObject* obj, s16 tileX, s16 tileY, f32* outXp, f32* outZp)
-{
+void wclevelcont_tileAToWorldPos(GameObject* obj, s16 tileX, s16 tileY, f32* outXp, f32* outZp) {
     f32 outX, outZ;
 
     mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &outX, &outZ);
@@ -736,32 +617,26 @@ void wclevelcont_tileAToWorldPos(GameObject* obj, s16 tileX, s16 tileY, f32* out
     }
 }
 
-int wclevelcont_getExtraSize(void)
-{
-    return 0x1c;
+int wclevelcont_getExtraSize(void) {
+    return sizeof(WcLevelControlState);
 }
 
-int wclevelcont_getObjectTypeId(void)
-{
+int wclevelcont_getObjectTypeId(void) {
     return 0;
 }
 
-void wclevelcont_free(GameObject* obj)
-{
+void wclevelcont_free(GameObject* obj) {
     WcLevelControlState* state = obj->extra;
     u8 mode;
 
     objFreeObjectType(obj, WCLEVELCONT_OBJGROUP);
     mode = state->mode;
-    if (mode == 1)
-    {
+    if (mode == 1) {
         mainSetBits(0x7ef, 0);
         mainSetBits(0x7ed, 0);
         mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
         mainSetBits(0xedd, 0);
-    }
-    else if (mode == 2)
-    {
+    } else if (mode == 2) {
         mainSetBits(0x7f0, 0);
         mainSetBits(0x7ee, 0);
         mainSetBits(GAMEBIT_WC_PushBlockTimerActive, 0);
@@ -770,44 +645,33 @@ void wclevelcont_free(GameObject* obj)
     gameTimerStop();
 }
 
-void wclevelcont_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible != 0)
-    {
+void wclevelcont_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) {
+    if (visible != 0) {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
-void wclevelcont_hitDetect(void)
-{
+void wclevelcont_hitDetect(void) {
 }
 
-void wclevelcont_syncProgressBits(WcLevelControlState* state)
-{
+void wclevelcont_syncProgressBits(WcLevelControlState* state) {
     int flag;
 
-    if ((*gSkyInterface)->getSunPosition(0))
-    {
-        if (state->thorntailMusicId != 0x2d)
-        {
+    if ((*gSkyInterface)->getSunPosition(0)) {
+        if (state->thorntailMusicId != 0x2d) {
             state->thorntailMusicId = 0x2d;
             Music_Trigger(MUSICTRIG_PU1_Mysterious, 1);
         }
-        if (state->ambientMusicId != -1)
-        {
+        if (state->ambientMusicId != -1) {
             state->ambientMusicId = 0xffff;
             Music_Trigger(MUSICTRIG_fox_arwing, 0);
         }
-    }
-    else
-    {
-        if (state->thorntailMusicId != 0x39)
-        {
+    } else {
+        if (state->thorntailMusicId != 0x39) {
             state->thorntailMusicId = 0x39;
             Music_Trigger(MUSICTRIG_nightjungle, 1);
         }
-        if (state->ambientMusicId != 0x22)
-        {
+        if (state->ambientMusicId != 0x22) {
             state->ambientMusicId = 0x22;
             Music_Trigger(MUSICTRIG_fox_arwing, 1);
         }
@@ -815,27 +679,31 @@ void wclevelcont_syncProgressBits(WcLevelControlState* state)
     GameBitLatch_Update(&state->gameBitLatch, 0x8, -1, -1, 0xba6, 0xd2);
     GameBitLatch_Update(&state->gameBitLatch, 0x4, -1, -1, 0xcce, 0x36);
     GameBitLatch_Update(&state->gameBitLatch, 0x10, -1, -1, 0xcd0, 0xd4);
-    GameBitLatch_Update(&state->gameBitLatch, 0x40, -1, -1, GAMEBIT_SHRINE_MUSIC_LOCK,
-                        MUSICTRIG_PU3_Adventure_c4);
+    GameBitLatch_Update(&state->gameBitLatch, 0x40, -1, -1, GAMEBIT_SHRINE_MUSIC_LOCK, MUSICTRIG_PU3_Adventure_c4);
     flag = 0;
-    if (mainGetBit(GAMEBIT_WC_PushBlockTimerActive) == 0 &&
-        (mainGetBit(0xda9) != 0 || gameTimerIsRunning() != 0))
-    {
+    if (mainGetBit(GAMEBIT_WC_PushBlockTimerActive) == 0 && (mainGetBit(0xda9) != 0 || gameTimerIsRunning() != 0)) {
         flag = 1;
     }
     mainSetBits(0xf31, flag);
     GameBitLatch_Update(&state->gameBitLatch, 0x80, -1, -1, 0xf31, 0xaf);
 }
 
-void wclevelcont_update(GameObject* obj)
-{
+void wclevelcont_update(GameObject* obj) {
     WcLevelControlState* state = obj->extra;
     f32 sunTime;
 
-    if (obj->userData1 == 0)
-    {
-        if (mainGetBit(GAMEBIT_WC_MagicCaveRelated0E05) == 0)
-        {
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+    if (state->messageTimer > gWcLevelContZero[0]) {
+        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        gameTextShow(WCLEVELCONT_TILE_MESSAGE_TEXT_ID);
+        state->messageTimer -= timeDelta;
+        if (state->messageTimer < gWcLevelContZero[0]) {
+            state->messageTimer = gWcLevelContZero[0];
+        }
+    }
+#endif
+    if (obj->userData1 == 0) {
+        if (mainGetBit(GAMEBIT_WC_MagicCaveRelated0E05) == 0) {
             getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_A, 0);
             getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_B, 0);
             getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_C, 0);
@@ -845,8 +713,7 @@ void wclevelcont_update(GameObject* obj)
         }
         obj->userData1 = 1;
     }
-    switch ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot))
-    {
+    switch ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot)) {
     case 1:
     default:
         wclevelcont_updateAct1State(obj, state);
@@ -856,20 +723,16 @@ void wclevelcont_update(GameObject* obj)
         break;
     }
     wclevelcont_syncProgressBits(state);
-    if ((*gSkyInterface)->getSunPosition(&sunTime))
-    {
+    if ((*gSkyInterface)->getSunPosition(&sunTime)) {
         mainSetBits(0x7f3, 1);
         mainSetBits(0x7f1, 0);
-    }
-    else
-    {
+    } else {
         mainSetBits(0x7f3, 0);
         mainSetBits(0x7f1, 1);
     }
 }
 
-void wclevelcont_init(GameObject* obj)
-{
+void wclevelcont_init(GameObject* obj) {
     WcLevelControlState* state = obj->extra;
     u16 flags;
 
@@ -878,29 +741,37 @@ void wclevelcont_init(GameObject* obj)
     memcpy(gWcTileGridA, gWcTileGridAInitial.g, 0x40);
     mainSetBits(0x811, 0);
     memcpy(gWcTileGridB, gWcTileGridBInitial.g, 0x40);
-    if (mainGetBit(0x7fa) != 0)
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+    state->messageTimer = WCLEVELCONT_TILE_MESSAGE_FRAMES;
+#endif
+    if (mainGetBit(0x7fa) != 0) {
         state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_B;
-    if (mainGetBit(0x7f9) != 0)
-        state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_A;
-    if (mainGetBit(0x813) != 0)
-        state->completionFlags |= WCLEVELCTL_FLAG_TILE_B;
-    if (mainGetBit(0x812) != 0)
-        state->completionFlags |= WCLEVELCTL_FLAG_TILE_A;
-    if (mainGetBit(0x2a5) != 0)
-        state->completionFlags |= WCLEVELCTL_FLAG_TREX;
-    if (mainGetBit(0x205) != 0)
-        state->completionFlags |= WCLEVELCTL_FLAG_SWITCHES;
-    if (mainGetBit(0xbcf) != 0)
-        state->completionFlags |= WCLEVELCTL_FLAG_FINAL;
-    if (mainGetBit(0xcac) != 0)
-        state->completionFlags |= WCLEVELCTL_FLAG_EXTRA;
-    flags = state->completionFlags;
-    if (flags & WCLEVELCTL_FLAG_EXTRA)
-    {
-        state->mode = WCLEVELCTL_MODE_DONE;
     }
-    else if ((flags & WCLEVELCTL_FLAG_PUZZLE_A) && (flags & WCLEVELCTL_FLAG_PUZZLE_B))
-    {
+    if (mainGetBit(0x7f9) != 0) {
+        state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_A;
+    }
+    if (mainGetBit(0x813) != 0) {
+        state->completionFlags |= WCLEVELCTL_FLAG_TILE_B;
+    }
+    if (mainGetBit(0x812) != 0) {
+        state->completionFlags |= WCLEVELCTL_FLAG_TILE_A;
+    }
+    if (mainGetBit(0x2a5) != 0) {
+        state->completionFlags |= WCLEVELCTL_FLAG_TREX;
+    }
+    if (mainGetBit(0x205) != 0) {
+        state->completionFlags |= WCLEVELCTL_FLAG_SWITCHES;
+    }
+    if (mainGetBit(0xbcf) != 0) {
+        state->completionFlags |= WCLEVELCTL_FLAG_FINAL;
+    }
+    if (mainGetBit(0xcac) != 0) {
+        state->completionFlags |= WCLEVELCTL_FLAG_EXTRA;
+    }
+    flags = state->completionFlags;
+    if (flags & WCLEVELCTL_FLAG_EXTRA) {
+        state->mode = WCLEVELCTL_MODE_DONE;
+    } else if ((flags & WCLEVELCTL_FLAG_PUZZLE_A) && (flags & WCLEVELCTL_FLAG_PUZZLE_B)) {
         state->mode = WCLEVELCTL_MODE_SEQUENCE;
     }
     objAddObjectType(obj, WCLEVELCONT_OBJGROUP);
@@ -914,12 +785,10 @@ void wclevelcont_init(GameObject* obj)
     state->dialogueFlags.b18 = mainGetBit(0xc5a);
 }
 
-void wclevelcont_release(void)
-{
+void wclevelcont_release(void) {
 }
 
-void wclevelcont_initialise(void)
-{
+void wclevelcont_initialise(void) {
 }
 
 WcTileGrid gWcTileGridAInitial = {{
