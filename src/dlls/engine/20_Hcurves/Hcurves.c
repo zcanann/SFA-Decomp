@@ -20,11 +20,18 @@
 #include "string.h"
 #include "main/dll/objfsa_internal.h"
 
+#if !defined(VERSION_GSAE01_rev1) && !defined(VERSION_GSAP01_rev1)
 static int sObjfsaUnused0;
+#endif
 int gObjfsaPatchCount;
 int gObjfsaLastWalkGroupIndex;
+#if !defined(VERSION_GSAE01_rev1) && !defined(VERSION_GSAP01_rev1)
 int gObjfsaBlockFlagsChecksum;
+#endif
 
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+extern u8 gObjfsaPrevBlockFlags[];
+#endif
 extern char sObjfsaFoundNewWalkGroupPatch[];
 extern char sObjfsaIsPointWithinPatchGroupError[];
 
@@ -1061,6 +1068,7 @@ void Objfsa_UpdateWalkGroupPatches(void) {
     ObjfsaPatch* exitRecord;
     mapGetLoadedMapFlags(loadedBlockFlags);
 
+#if !defined(VERSION_GSAE01_rev1) && !defined(VERSION_GSAP01_rev1)
     checksum = 1;
     for (flagIndex = 0; flagIndex < ROM_LIST_PAGE_COUNT; flagIndex++) {
         if (loadedBlockFlags[flagIndex] != 0) {
@@ -1073,6 +1081,18 @@ void Objfsa_UpdateWalkGroupPatches(void) {
     } else {
         return;
     }
+#else
+    for (flagIndex = 0; flagIndex < ROM_LIST_PAGE_COUNT; flagIndex++) {
+        if (loadedBlockFlags[flagIndex] != gObjfsaPrevBlockFlags[flagIndex]) {
+            break;
+        }
+    }
+
+    if (flagIndex == ROM_LIST_PAGE_COUNT) {
+        return;
+    }
+    memcpy(gObjfsaPrevBlockFlags, loadedBlockFlags, ROM_LIST_PAGE_COUNT);
+#endif
 
     {
         if (loadedBlockFlags[2] != 0 || loadedBlockFlags[0x34] != 0) {
@@ -1252,6 +1272,10 @@ void doNothing_onTrickyFree(void) {
 void doNothing_onTrickyInit(void) {
 }
 
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+u8 gObjfsaPrevBlockFlags[ROM_LIST_PAGE_COUNT] = {0};
+char sObjfsaCornerTooFarOut[] = "Corner is too far out (%f)\n";
+#endif
 char sObjfsaFoundNewWalkGroupPatch[] = "Found new walk group patch from walkgroup %d\n";
 char sObjfsaIsPointWithinPatchGroupError[] = "Error in isPointWithinPatchGroup\n";
 char sObjfsaMissingPatchExitPoint0[] = "Unable to find exit point 0 on patch between walkgroup %d and %d\n";
