@@ -2091,28 +2091,27 @@ void gameUiDrawNpcDialogueText(int a, int b, int c) {
     int encodedLength;
     u32 ch;
 
-    if (curGameText != 0xffff) {
-        if (gNpcDialogueTextAlpha == 0) {
-            return;
-        }
-        gameTextSetColor(0xff, 0xff, 0xff, (u8)gNpcDialogueTextAlpha);
-        if (gNpcDialoguePageFrames != -1) {
-            phrase = gameTextGetPhrase(curGameText, gNpcDialoguePhraseState.display.charIndex);
-            ch = utf8GetNextChar((u8*)phrase, &encodedLength);
-            slot = NPC_DIALOGUE_NARROW_BOX;
-            if (ch == NPC_DIALOGUE_WIDE_BOX_MARKER) {
-                ch = utf8GetNextChar((u8*)(phrase + encodedLength), &encodedLength);
-                if (ch == NPC_DIALOGUE_WIDE_BOX_CODE) {
-                    slot = NPC_DIALOGUE_TEXT_BOX;
-                }
+    if (curGameText == 0xffff || gNpcDialogueTextAlpha == 0) {
+        return;
+    }
+
+    gameTextSetColor(0xff, 0xff, 0xff, (u8)gNpcDialogueTextAlpha);
+    if (gNpcDialoguePageFrames != -1) {
+        phrase = gameTextGetPhrase(curGameText, gNpcDialoguePhraseState.display.charIndex);
+        ch = utf8GetNextChar((u8*)phrase, &encodedLength);
+        slot = NPC_DIALOGUE_NARROW_BOX;
+        if (ch == NPC_DIALOGUE_WIDE_BOX_MARKER) {
+            ch = utf8GetNextChar((u8*)(phrase + encodedLength), &encodedLength);
+            if (ch == NPC_DIALOGUE_WIDE_BOX_CODE) {
+                slot = NPC_DIALOGUE_TEXT_BOX;
             }
-            box = gameTextGetBox(slot);
-            box->alpha = (u8)gNpcDialogueTextAlpha;
-            gameTextAppendStr(phrase, slot);
-        } else {
-            box->alpha = (u8)gNpcDialogueTextAlpha;
-            gameTextQueueReveal(curGameText, &gNpcDialoguePhraseState.display);
         }
+        box = gameTextGetBox(slot);
+        box->alpha = (u8)gNpcDialogueTextAlpha;
+        gameTextAppendStr(phrase, slot);
+    } else {
+        box->alpha = (u8)gNpcDialogueTextAlpha;
+        gameTextQueueReveal(curGameText, &gNpcDialoguePhraseState.display);
     }
 }
 #endif
@@ -4854,9 +4853,8 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
     GameObject* player;
     ObjModel* model;
     s32 x;
-    s32 randomWidth;
-    s32 randomHeight;
     s16 panelAlpha;
+    s16* taskTextIds;
     s32 stringIndex;
     s32 textY;
     f32 timer;
@@ -4921,10 +4919,8 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         }
         timer = gameTextGetTimer();
         if (timer != zero) {
-            randomWidth = randomGetRange(0, 0x1e) * 2;
-            randomHeight = randomGetRange(0, 0x1e) * 2;
             pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)(panelAlpha / 2),
-                                       0x230, 0x190, randomHeight, randomWidth);
+                                       0x230, 0x190, randomGetRange(0, 0x1e) * 2, randomGetRange(0, 0x1e) * 2);
             model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
             objRender(0, 0, 0, 0, gGameUiCommCubeObjects[1], 1);
             model->bufferFlags &= ~0x8;
@@ -4986,10 +4982,8 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         model->bufferFlags &= ~0x8;
         timer = gameTextGetTimer();
         if (timer != zero) {
-            randomWidth = randomGetRange(0, 0x1e) * 2;
-            randomHeight = randomGetRange(0, 0x1e) * 2;
-            pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)((s16)alpha / 2),
-                                       0x230, 0x190, randomHeight, randomWidth);
+            pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)(alpha / 2),
+                                       0x230, 0x190, randomGetRange(0, 0x1e) * 2, randomGetRange(0, 0x1e) * 2);
             model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
             objRender(0, 0, 0, 0, gGameUiCommCubeObjects[1], 1);
             model->bufferFlags &= ~0x8;
@@ -5070,10 +5064,8 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         model->bufferFlags &= ~0x8;
         timer = gameTextGetTimer();
         if (timer != zero) {
-            randomWidth = randomGetRange(0, 0x1e) * 2;
-            randomHeight = randomGetRange(0, 0x1e) * 2;
-            pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)((s16)alpha / 2),
-                                       0x230, 0x190, randomHeight, randomWidth);
+            pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)(alpha / 2),
+                                       0x230, 0x190, randomGetRange(0, 0x1e) * 2, randomGetRange(0, 0x1e) * 2);
             model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
             objRender(0, 0, 0, 0, gGameUiCommCubeObjects[1], 1);
             model->bufferFlags &= ~0x8;
@@ -5185,7 +5177,6 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
             break;
         case 1: {
             s32 tokenTextY;
-            s16* taskTextIds;
             gameTextShowAt(0x440, 0, 0x78);
             gameTextMeasureById(0x440, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             tokenTextY = (tokenBottom - tokenTop) + 5;
@@ -5219,7 +5210,6 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
             break;
         }
         case 2: {
-            s16* taskTextIds;
             s32 tokenTextY;
             gameTextShowAt(0x443, 0, 0xa0);
             gameTextMeasureById(0x443, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
