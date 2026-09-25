@@ -157,6 +157,10 @@ char sObjFreeObjdefError[] = "objFreeObjdef: Error!! (%d)\n";
 
 char sObjFreeNonExistentObjectWarning[] = "Tried to free non-existent object\n";
 
+#if !defined(VERSION_GSAE01)
+char sObjFreedObjectMessage[] = "FREED OBJECT %s\n";
+#endif
+
 char sObjUnknownTypeUsingDummyObjectWarning[] =
     "Warning: Unknown object type '%d/%d romdefno %d', using DummyObject (128)\n";
 
@@ -1280,6 +1284,11 @@ void Obj_FreeObject(GameObject* obj) {
             return;
         }
     }
+#if !defined(VERSION_GSAE01)
+    if (obj != NULL) {
+        OSReport(sObjFreedObjectMessage, obj->anim.modelInstance->name);
+    }
+#endif
     if (gObjDefCaptureMode == 2) {
         i = gObjDeferredFreeCount;
         if (gObjDeferredFreeCount != 0) {
