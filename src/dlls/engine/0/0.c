@@ -2089,26 +2089,28 @@ void gameUiDrawNpcDialogueText(int a, int b, int c) {
     char* phrase;
     int slot;
     int encodedLength;
-    int ch;
+    u32 ch;
 
     if (curGameText != 0xffff) {
-        if (gNpcDialogueTextAlpha != 0) {
-            gameTextSetColor(0xff, 0xff, 0xff, (u8)gNpcDialogueTextAlpha);
-            if (gNpcDialoguePageFrames != -1) {
-                phrase = gameTextGetPhrase(curGameText, gNpcDialoguePhraseState.display.charIndex);
-                ch = utf8GetNextChar((u8*)phrase, &encodedLength);
-                slot = NPC_DIALOGUE_NARROW_BOX;
-                if (ch == NPC_DIALOGUE_WIDE_BOX_MARKER) {
-                    if (utf8GetNextChar((u8*)(phrase + encodedLength), &encodedLength) == NPC_DIALOGUE_WIDE_BOX_CODE) {
-                        slot = NPC_DIALOGUE_TEXT_BOX;
-                    }
+        if (gNpcDialogueTextAlpha == 0) {
+            return;
+        }
+        gameTextSetColor(0xff, 0xff, 0xff, (u8)gNpcDialogueTextAlpha);
+        if (gNpcDialoguePageFrames != -1) {
+            phrase = gameTextGetPhrase(curGameText, gNpcDialoguePhraseState.display.charIndex);
+            ch = utf8GetNextChar((u8*)phrase, &encodedLength);
+            slot = NPC_DIALOGUE_NARROW_BOX;
+            if (ch == NPC_DIALOGUE_WIDE_BOX_MARKER) {
+                ch = utf8GetNextChar((u8*)(phrase + encodedLength), &encodedLength);
+                if (ch == NPC_DIALOGUE_WIDE_BOX_CODE) {
+                    slot = NPC_DIALOGUE_TEXT_BOX;
                 }
-                gameTextGetBox(slot)->alpha = (u8)gNpcDialogueTextAlpha;
-                gameTextAppendStr(phrase, slot);
-            } else {
-                box->alpha = (u8)gNpcDialogueTextAlpha;
-                gameTextQueueReveal(curGameText, &gNpcDialoguePhraseState.display);
             }
+            gameTextGetBox(slot)->alpha = (u8)gNpcDialogueTextAlpha;
+            gameTextAppendStr(phrase, slot);
+        } else {
+            box->alpha = (u8)gNpcDialogueTextAlpha;
+            gameTextQueueReveal(curGameText, &gNpcDialoguePhraseState.display);
         }
     }
 }
@@ -4085,9 +4087,9 @@ void pauseMenuUpdate(void) {
  * if it overflowed the 0x90000000 watermark. Tail restores FOV
  * and runs the standard close-block trio. */
 #if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
-#define PAUSE_MENU_VIEWPORT_HEIGHT (gRenderModeObj->xfbHeight)
+#define GAME_UI_VIEWPORT_HEIGHT (gRenderModeObj->xfbHeight)
 #else
-#define PAUSE_MENU_VIEWPORT_HEIGHT (gRenderModeObj->efbHeight)
+#define GAME_UI_VIEWPORT_HEIGHT (gRenderModeObj->efbHeight)
 #endif
 
 void pauseMenuRenderSlotShadow(void) {
@@ -4103,7 +4105,7 @@ void pauseMenuRenderSlotShadow(void) {
     Camera_SetFovY(43.0f);
     Camera_RebuildProjectionMatrix();
     Camera_UpdateViewMatrices();
-    GXSetViewport(0.0f, 0.0f, (f32)gRenderModeObj->fbWidth, PAUSE_MENU_VIEWPORT_HEIGHT, 0.0f, 1.0f);
+    GXSetViewport(0.0f, 0.0f, (f32)gRenderModeObj->fbWidth, GAME_UI_VIEWPORT_HEIGHT, 0.0f, 1.0f);
     renderObjectShadowTexture(gGameUiHudAnimObjects[gPauseMenuPageIndex]);
     {
         GameObject* slot = gGameUiHudAnimObjects[gPauseMenuPageIndex];
@@ -4134,7 +4136,7 @@ void gameUiBeginOverlayView(f32 fov, f32 x, f32 y) {
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    GXSetViewport(x - 320.0f, y - 240.0f, (f32)gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, 0.0f, 1.0f);
+    GXSetViewport(x - 320.0f, y - 240.0f, (f32)gRenderModeObj->fbWidth, GAME_UI_VIEWPORT_HEIGHT, 0.0f, 1.0f);
 }
 
 /* Render-block teardown for the snowworm
@@ -4179,7 +4181,7 @@ void pauseMenuDoSave(void) {
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    GXSetViewport(0.0f, 0.0f, (f32)gRenderModeObj->fbWidth, PAUSE_MENU_VIEWPORT_HEIGHT, 0.0f, 1.0f);
+    GXSetViewport(0.0f, 0.0f, (f32)gRenderModeObj->fbWidth, GAME_UI_VIEWPORT_HEIGHT, 0.0f, 1.0f);
     for (i = 1; i < 6; i++) {
         if (gGameUiHudAnimObjects[i] == NULL) {
             continue;
@@ -5433,11 +5435,7 @@ void headDisplayDraw(void) {
         Camera_UpdateViewMatrices();
         Camera_RebuildProjectionMatrix();
         GXSetViewport(230.0f, y - 240.0f, (f32)(u32)gRenderModeObj->fbWidth,
-#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
-                      (f32)(u32)gRenderModeObj->xfbHeight,
-#else
-                      (f32)(u32)gRenderModeObj->efbHeight,
-#endif
+                      (f32)(u32)GAME_UI_VIEWPORT_HEIGHT,
                       0.0f, 1.0f);
         if (gHeadDisplayModelObjs[panelType] != NULL) {
             ObjAnim_AdvanceCurrentMove(gHeadDisplayModelObjs[panelType], gPauseMenuPanelAnims.speeds[panelType],
@@ -5641,7 +5639,7 @@ void hudDrawCMenu(int p1, int p2, int p3) {
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    GXSetViewport(sx - 320.0f, sy - 240.0f, (f32)(u32)gRenderModeObj->fbWidth, (f32)(u32)gRenderModeObj->xfbHeight,
+    GXSetViewport(sx - 320.0f, sy - 240.0f, (f32)(u32)gRenderModeObj->fbWidth, (f32)(u32)GAME_UI_VIEWPORT_HEIGHT,
                   0.0f, 1.0f);
     zero = 0;
     i = zero;
@@ -5947,10 +5945,12 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
     int ax1;
     int ay0;
     int ay1;
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
     int bx0;
     int bx1;
     int by0;
     int by1;
+#endif
     int am3;
     int am2;
     int am1;
@@ -6174,8 +6174,13 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
                 gameTextMeasureStringBoundsAt(bTextPtr, 9, 0, 0, &bm0, &bm1, &bm2, &bm3);
                 gameTextShowStr(bTextPtr, 9, 0, 0);
                 gameTextSetCharset(bPrevCharset2, 3);
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
                 gameTextMeasureStringBoundsAt(textObj->strings[*bPhraseIndex], 9, 0, 0, &bx0, &bx1, &by0, &by1);
                 wid = (bx1 - bx0) + -7;
+#else
+                gameTextMeasureStringBoundsAt(textObj->strings[*bPhraseIndex], 9, 0, 0, &ax0, &ax1, &ay0, &ay1);
+                wid = (ax1 - ax0) + -7;
+#endif
                 if (wid < 1) {
                     wid = 1;
                 }
