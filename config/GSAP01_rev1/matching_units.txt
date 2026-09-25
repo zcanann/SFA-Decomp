@@ -320,6 +320,7 @@ dlls/objects/283_Landed_Arwi/Landed_Arwi.c
 dlls/objects/284/284.c
 dlls/objects/285/285.c
 dlls/objects/286_MagicCaveBo/MagicCaveBo.c
+dlls/objects/287_MagicCaveTo/MagicCaveTo.c
 dlls/objects/288_TrickyGuard/TrickyGuard.c
 dlls/objects/289/289.c
 dlls/objects/290_CCTestInfot/CCTestInfot.c
@@ -627,6 +628,7 @@ dlls/objects/594_KT_Lazerwal/KT_Lazerwal.c
 dlls/objects/595_KT_Lazerlig/KT_Lazerlig.c
 dlls/objects/596_KT_Fallingr/KT_Fallingr.c
 dlls/objects/597/597.c
+dlls/objects/598_DIMSnowHorn/DIMSnowHorn.c
 dlls/objects/599_DR_EarthWar/DR_EarthWar.c
 dlls/objects/600_DR_CloudRun/DR_CloudRun.c
 dlls/objects/601_SB_Cloudrun/SB_Cloudrun.c
