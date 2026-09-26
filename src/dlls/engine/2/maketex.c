@@ -40,7 +40,10 @@
 #define CARD_ASSET_ICON2     0xdc
 #define CARD_ASSET_ICON3     0xf4
 #define CARD_ASSET_ICONPAL   0x10c
-#define CARD_ASSET_SUBTITLE  0x124
+#endif
+
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+extern char sMemoryCardSubtitleString[20];
 #endif
 
 volatile s32 gSaveCardState = 0xD;
@@ -386,8 +389,8 @@ void loadMemCardImages(void) {
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
 static void saveCardBuildComment(void)
 {
-    char* names = sMemoryCardFileNameString;
 #if defined(VERSION_GSAE01_rev1)
+    char* names = sMemoryCardFileNameString;
     if (getCurLanguage() == OS_LANGUAGE_ITALIAN) {
         gSaveCardImageBuffer[0x00] = 0x83;
         gSaveCardImageBuffer[0x01] = 0x58;
@@ -429,24 +432,24 @@ static void saveCardBuildComment(void)
 #else
     switch (getCurLanguage()) {
     case OS_LANGUAGE_GERMAN:
-        sprintf((char*)gSaveCardImageBuffer, names);
-        sprintf((char*)(gSaveCardImageBuffer + 0x20), names + CARD_ASSET_SUBTITLE);
+        sprintf((char*)gSaveCardImageBuffer, sMemoryCardFileNameString);
+        sprintf((char*)(gSaveCardImageBuffer + 0x20), sMemoryCardSubtitleString);
         break;
     case OS_LANGUAGE_SPANISH:
-        sprintf((char*)gSaveCardImageBuffer, names);
-        sprintf((char*)(gSaveCardImageBuffer + 0x20), names + CARD_ASSET_SUBTITLE);
+        sprintf((char*)gSaveCardImageBuffer, sMemoryCardFileNameString);
+        sprintf((char*)(gSaveCardImageBuffer + 0x20), sMemoryCardSubtitleString);
         break;
     case OS_LANGUAGE_DUTCH:
-        sprintf((char*)gSaveCardImageBuffer, names);
-        sprintf((char*)(gSaveCardImageBuffer + 0x20), names + CARD_ASSET_SUBTITLE);
+        sprintf((char*)gSaveCardImageBuffer, sMemoryCardFileNameString);
+        sprintf((char*)(gSaveCardImageBuffer + 0x20), sMemoryCardSubtitleString);
         break;
     case OS_LANGUAGE_FRENCH:
-        sprintf((char*)gSaveCardImageBuffer, names);
-        sprintf((char*)(gSaveCardImageBuffer + 0x20), names + CARD_ASSET_SUBTITLE);
+        sprintf((char*)gSaveCardImageBuffer, sMemoryCardFileNameString);
+        sprintf((char*)(gSaveCardImageBuffer + 0x20), sMemoryCardSubtitleString);
         break;
     default:
-        sprintf((char*)gSaveCardImageBuffer, names);
-        sprintf((char*)(gSaveCardImageBuffer + 0x20), names + CARD_ASSET_SUBTITLE);
+        sprintf((char*)gSaveCardImageBuffer, sMemoryCardFileNameString);
+        sprintf((char*)(gSaveCardImageBuffer + 0x20), sMemoryCardSubtitleString);
         break;
     }
 #endif
@@ -797,13 +800,14 @@ u8 gMemoryCardBannerAssetNames[168] = {
     112, 97,  108, 0,   0,   0,   83,  84,  65,  82,  70,  79,  88,  32,  65,  68,  86,  69,  78,  84,  85,
     82,  69,  83,  0,   0,   68,  105, 110, 111, 115, 97,  117, 114, 32,  80,  108, 97,  110, 101, 116, 0};
 #else
-u8 gMemoryCardBannerAssetNames[152] = {
+u8 gMemoryCardBannerAssetNames[132] = {
     111, 112, 101, 110, 105, 110, 103, 46,  98,  110, 114, 0,   99,  97,  114, 100, 47,  109, 101, 109, 99,
     97,  114, 100, 105, 99,  111, 110, 48,  46,  105, 109, 103, 0,   0,   0,   99,  97,  114, 100, 47,  109,
     101, 109, 99,  97,  114, 100, 105, 99,  111, 110, 49,  46,  105, 109, 103, 0,   0,   0,   99,  97,  114,
     100, 47,  109, 101, 109, 99,  97,  114, 100, 105, 99,  111, 110, 50,  46,  105, 109, 103, 0,   0,   0,
     99,  97,  114, 100, 47,  109, 101, 109, 99,  97,  114, 100, 105, 99,  111, 110, 51,  46,  105, 109, 103,
     0,   0,   0,   99,  97,  114, 100, 47,  109, 101, 109, 99,  97,  114, 100, 105, 99,  111, 110, 48,  46,
-    112, 97,  108, 0,   0,   0,   68,  105, 110, 111, 115, 97,  117, 114, 32,  80,  108, 97,  110, 101, 116,
-    0};
+    112, 97,  108, 0,   0,   0};
+
+char sMemoryCardSubtitleString[20] = "Dinosaur Planet";
 #endif
