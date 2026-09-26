@@ -292,22 +292,14 @@ char sJpDiscCoverOpenTopSpacerLine[4] = {0};
 char sJpDiscInsertTopSpacerLine[4] = {0};
 char sJpDiscInsertBottomSpacerLine[4] = {0};
 char sJpWrongDiscTopSpacerLine[4] = {0};
-#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
-char sJpWrongDiscMiddleSpacerLine[4] = {0};
-#else
 char sJpWrongDiscMiddleSpacerLine[4] = "\xE3\x80\x80";
-#endif
 char* sJpDiscLoadingMessageLines[1] = {sJpDiscLoadingMessage};
 char sDiscErrorSpacerLine[4] = {0};
 char sDiscReadErrorSpacerLine[4] = {0};
 char* sDiscReadingMessageLines[1] = {sDiscReadingMessage};
 char sDiscCoverOpenSpacerLine[4] = {0};
 char* sDiscInsertMessageLines[2] = {sDiscInsertPromptLine, sDiscInsertGameDiscLine};
-#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
-char sWrongDiscSpacerLine[4] = "\xE3\x80\x80";
-#else
 char sWrongDiscSpacerLine[4] = {0};
-#endif
 char* sDiscLoadingMessageLines[1] = {sDiscLoadingMessage};
 int gGameTextFontTexRowPitch = 0x800;
 GXColor gGameTextClearColor = {0, 0, 0, 0xC0};
