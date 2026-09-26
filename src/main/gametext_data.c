@@ -284,6 +284,25 @@ static u8 sGameTextUnclassifiedData[0x204] = {
 };
 
 void* gGameTextStringStore = (void*)-1;
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+char sDiscErrorSpacerLine[4] = {0};
+char sDiscReadErrorSpacerLine[4] = {0};
+char* sDiscReadingMessageLines[1] = {sDiscReadingMessage};
+char sDiscCoverOpenSpacerLine[4] = {0};
+char* sDiscInsertMessageLines[2] = {sDiscInsertPromptLine, sDiscInsertGameDiscLine};
+char sWrongDiscSpacerLine[4] = {0};
+char* sDiscLoadingMessageLines[1] = {sDiscLoadingMessage};
+char sJpDiscErrorTopSpacerLine[4] = {0};
+char sJpDiscErrorBottomSpacerLine[4] = {0};
+char sJpDiscReadErrorTopSpacerLine[4] = {0};
+char sJpDiscReadingTopSpacerLine[4] = {0};
+char sJpDiscCoverOpenTopSpacerLine[4] = {0};
+char sJpDiscInsertTopSpacerLine[4] = {0};
+char sJpDiscInsertBottomSpacerLine[4] = {0};
+char sJpWrongDiscTopSpacerLine[4] = {0};
+char sJpWrongDiscMiddleSpacerLine[4] = "\xE3\x80\x80";
+char* sJpDiscLoadingMessageLines[1] = {sJpDiscLoadingMessage};
+#else
 char sJpDiscErrorTopSpacerLine[4] = {0};
 char sJpDiscErrorBottomSpacerLine[4] = {0};
 char sJpDiscReadErrorTopSpacerLine[4] = {0};
@@ -301,6 +320,7 @@ char sDiscCoverOpenSpacerLine[4] = {0};
 char* sDiscInsertMessageLines[2] = {sDiscInsertPromptLine, sDiscInsertGameDiscLine};
 char sWrongDiscSpacerLine[4] = {0};
 char* sDiscLoadingMessageLines[1] = {sDiscLoadingMessage};
+#endif
 int gGameTextFontTexRowPitch = 0x800;
 GXColor gGameTextClearColor = {0, 0, 0, 0xC0};
 int gGameTextFlagGlyphRaise = 3;
