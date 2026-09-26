@@ -92,11 +92,14 @@ main/fileio.c:
 	.bss        start:0x8033A5B0 end:0x8033A5E0
 	.sbss       start:0x803DD5D0 end:0x803DD5E8
 
+main/gametext_data.c:
+	.data       start:0x802C7618 end:0x802C94C0
+	.sdata      start:0x803DBF10 end:0x803DC068
+
 main/gametext.c:
 	.text       start:0x80015C00 end:0x8001B520
-	.data       start:0x802C7618 end:0x802CAA68
+	.data       start:0x802C94C0 end:0x802CAA68
 	.bss        start:0x8033A5E0 end:0x8033BEA0
-	.sdata      start:0x803DBF10 end:0x803DC068
 	.sbss       start:0x803DD5E8 end:0x803DD670
 	.sdata2     start:0x803DF370 end:0x803DF3A0
 
