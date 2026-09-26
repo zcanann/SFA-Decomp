@@ -39,8 +39,8 @@ typedef struct Texture { u8 header[0x60]; } Texture;
 #define EXPORT
 #endif
 static s16 gGameTextBoxTexAssets = 0x1C4;
-static u16 gGameTextBoxCornerTexSrc[256];
-static u16 gGameTextBoxEdgeTexSrc[400];
+static u16 gGameTextBoxCornerTexSrc[16][16];
+static u16 gGameTextBoxEdgeTexSrc[20][20];
 static Texture* background;
 static Texture* allocations[2];
 static void* flushAddresses[2];
@@ -55,8 +55,8 @@ EXPORT void prepare(Texture* bg, Texture* corner, Texture* edge,
     allocations[1] = edge;
     loadCount = allocationCount = flushCount = 0;
     valid = 1;
-    for (i = 0; i < 256; i++) gGameTextBoxCornerTexSrc[i] = cornerPixels[i];
-    for (i = 0; i < 400; i++) gGameTextBoxEdgeTexSrc[i] = edgePixels[i];
+    for (i = 0; i < 256; i++) gGameTextBoxCornerTexSrc[i / 16][i % 16] = cornerPixels[i];
+    for (i = 0; i < 400; i++) gGameTextBoxEdgeTexSrc[i / 20][i % 20] = edgePixels[i];
 }
 
 static Texture* textureLoadAsset(int asset) {
@@ -91,8 +91,8 @@ EXPORT int lifecycleIsValid(void) {
 }
 EXPORT int sourcesAreUnchanged(const u16* corner, const u16* edge) {
     int i;
-    for (i = 0; i < 256; i++) if (corner[i] != gGameTextBoxCornerTexSrc[i]) return 0;
-    for (i = 0; i < 400; i++) if (edge[i] != gGameTextBoxEdgeTexSrc[i]) return 0;
+    for (i = 0; i < 256; i++) if (corner[i] != gGameTextBoxCornerTexSrc[i / 16][i % 16]) return 0;
+    for (i = 0; i < 400; i++) if (edge[i] != gGameTextBoxEdgeTexSrc[i / 20][i % 20]) return 0;
     return 1;
 }
 ''')
@@ -159,7 +159,7 @@ EXPORT int sourcesAreUnchanged(const u16* corner, const u16* edge) {
         source = (ROOT / "src/main/textrender_drawbox.c").read_text()
         assets = []
         for name, count in (("Corner", 256), ("Edge", 400)):
-            match = re.search(r"u16 gGameTextBox" + name + r"TexSrc\[\d+\] = \{([^}]+)\}", source)
+            match = re.search(r"u16 gGameTextBox" + name + r"TexSrc\[\d+\]\[\d+\] = \{(.*?)\n\};", source, re.S)
             self.assertIsNotNone(match)
             pixels = [int(word, 16) for word in re.findall(r"0x[0-9a-fA-F]+", match.group(1))]
             self.assertEqual(len(pixels), count)

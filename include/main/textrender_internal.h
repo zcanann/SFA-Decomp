@@ -82,8 +82,8 @@ extern SubtitleCmd sSubtitleCtrlCmdScratch[SUBTITLE_CONTROL_COMMAND_COUNT];
 #define GAMETEXT_SEQUENCE_SOURCE_ID   1
 
 extern s16 gGameTextBoxTexAssets;
-extern u16 gGameTextBoxCornerTexSrc[256];
-extern u16 gGameTextBoxEdgeTexSrc[400];
+extern u16 gGameTextBoxCornerTexSrc[16][16];
+extern u16 gGameTextBoxEdgeTexSrc[20][20];
 extern Texture* gGameTextBoxCornerTexture;
 extern Texture* gGameTextBoxBgTexture;
 extern Texture* gGameTextBoxEdgeTexture;

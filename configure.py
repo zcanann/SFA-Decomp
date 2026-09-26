@@ -1793,7 +1793,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/gametext.c", cflags=cflags_dll_noopt_noautoinline_deferred),
             Object(MatchingFor("GSAE01"), "main/subtitle.c", cflags=cflags_dll_noopt_level1, extra_cflags=["-inline", "noauto,deferred"]),
             Object(Matching, "main/textrender_drawbox.c"),
-            Object(NonMatching, "main/textrender_boxtex.c", cflags=cflags_dll_noopt),
+            Object(Matching, "main/textrender_boxtex.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/modellight.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "main/asset_load.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
             Object(Matching, "main/gameloop.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
