@@ -17,9 +17,9 @@ typedef struct TrackBlockDescriptor {
 
 /* One edge sweep packet: endpoints, unit direction, and sphere dimensions. */
 typedef struct TrackSphereSweepEdge {
-    f32 start[3];
-    f32 end[3];
-    f32 direction[3];
+    Vec start;
+    Vec end;
+    Vec direction;
     f32 radius;
     f32 radiusSquared;
     f32 length;
@@ -73,8 +73,8 @@ STATIC_ASSERT(offsetof(TrackBlockDescriptor, firstTriangle) == 4);
 STATIC_ASSERT(offsetof(TrackBlockDescriptor, currentCollisionMatrix) == 0x0C);
 STATIC_ASSERT(sizeof(TrackShadowTriangle) == 0x14);
 
-int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, f32* rayOrigin, f32* rayDirection, f32 maxDistance,
-                                f32* hitPointOut, f32* planeOut, f32 unusedClearance, f32* hitDistanceOut,
+int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, Vec* rayOrigin, Vec* rayDirection, f32 maxDistance,
+                                Vec* hitPointOut, f32* planeOut, f32 unusedClearance, f32* hitDistanceOut,
                                 f32 unusedEpsilon);
 
 TrackBlockDescriptor* trackGetBlockDescriptors(u32* outCount);

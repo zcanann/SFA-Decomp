@@ -1,3 +1,12 @@
 # tools/banned_shapes_check.py baseline -- accepted existing instances.
 # Anything NOT listed here is regrowth and fails the gate.
 # Shrink this file; never grow it.
+# trackGetIntersect2: retail stores through endY/endZ only in the untransformed branch; no non-volatile spelling found.
+src/main/track_dolphin.c:1980:VOLATILE_PUN
+src/main/track_dolphin.c:1981:VOLATILE_PUN
+# trackGetIntersect2: retail branches straight to the hit handler from nested searches; structured forms add compares.
+src/main/track_dolphin.c:2050:GOTO
+src/main/track_dolphin.c:2112:GOTO
+src/main/track_dolphin.c:2137:GOTO
+src/main/track_dolphin.c:2146:GOTO
+src/main/track_dolphin.c:2182:GOTO

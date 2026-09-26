@@ -7,7 +7,7 @@
 
 #ifdef TRACK_BBOX_FLAGS_S8
 int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, TrackLineIntersectResult* hit,
-                          GameObject* self, s8 lineMask, s8 segment, int slot, s8 yTolerance);
+                          GameObject* self, s8 lineMask, s8 segment, u8 slot, s8 yTolerance);
 #else
 int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, TrackLineIntersectResult* hit,
                           GameObject* self, int lineMask, s8 segment, int slot, s8 yTolerance);
