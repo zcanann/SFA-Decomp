@@ -2551,4 +2551,6 @@ void enemy_initialise(void) {
     }
 }
 
+#if !defined(VERSION_GSAE01_rev1) && !defined(VERSION_GSAP01_rev1)
 const f32 lbl_803E2604 = 0.0f;
+#endif
