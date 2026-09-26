@@ -896,6 +896,7 @@ main/obj_movelib.c
 main/objanim.c
 main/object.c
 main/objlib.c
+main/objprint.c
 main/pad.c
 main/pi_dolphin.c
 main/pi_pathsearch.c
