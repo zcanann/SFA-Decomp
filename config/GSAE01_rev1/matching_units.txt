@@ -222,6 +222,7 @@ dlls/objects/197/197.c
 dlls/objects/198_AnimatedObj/AnimatedObj.c
 dlls/objects/199_DIM2RoofRub/DIM2RoofRub.c
 dlls/objects/200_DepthOfFieldPoint/DepthOfFieldPoint.c
+dlls/objects/201_Baddie/Baddie.c
 dlls/objects/202/202.c
 dlls/objects/202/baddiewhirlpool.c
 dlls/objects/202/battledroid.c
@@ -895,6 +896,7 @@ main/objanim.c
 main/object.c
 main/objlib.c
 main/pad.c
+main/pi_dolphin.c
 main/pi_pathsearch.c
 main/pi_videoinit.c
 main/rcp_dolphin.c

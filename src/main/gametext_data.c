@@ -163,7 +163,11 @@ GameTextBox gTextBoxes[GAMETEXT_BOX_COUNT] = {
     {400, 400, 24, 24, 400, 24, 1.0f, 2, 0, 2, 5, 120, 306, 0, 0, 0, 0, 0},
     {400, 400, 24, 24, 400, 24, 1.0f, 2, 0, 2, 5, 120, 332, 0, 0, 0, 0, 0},
     {360, 360, 16, 420, 360, 420, 1.0f, 2, 1, 2, 5, 140, 60, 0, 0, 0, 0, 0},
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
     {560, 560, 45, 45, 560, 45, 1.0f, 3, 0, 3, 5, 40, 395, 0, 0, 0, 0, 0},
+#else
+    {560, 560, 25, 25, 560, 25, 1.0f, 2, 0, 2, 5, 40, 415, 0, 0, 0, 0, 0},
+#endif
     {560, 560, 480, 480, 560, 480, 1.0f, 2, 0, 2, 5, 40, 0, 0, 0, 0, 0, 0},
     {512, 512, 25, 25, 512, 25, 1.0f, 2, 0, 2, 5, 84, 415, 0, 0, 0, 0, 0},
     {512, 512, 480, 480, 512, 480, 1.0f, 3, 0, 3, 5, 84, 0, 0, 0, 0, 0, 0},
@@ -280,6 +284,25 @@ static u8 sGameTextUnclassifiedData[0x204] = {
 };
 
 void* gGameTextStringStore = (void*)-1;
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+char sDiscErrorSpacerLine[4] = {0};
+char sDiscReadErrorSpacerLine[4] = {0};
+char* sDiscReadingMessageLines[1] = {sDiscReadingMessage};
+char sDiscCoverOpenSpacerLine[4] = {0};
+char* sDiscInsertMessageLines[2] = {sDiscInsertPromptLine, sDiscInsertGameDiscLine};
+char sWrongDiscSpacerLine[4] = {0};
+char* sDiscLoadingMessageLines[1] = {sDiscLoadingMessage};
+char sJpDiscErrorTopSpacerLine[4] = {0};
+char sJpDiscErrorBottomSpacerLine[4] = {0};
+char sJpDiscReadErrorTopSpacerLine[4] = {0};
+char sJpDiscReadingTopSpacerLine[4] = {0};
+char sJpDiscCoverOpenTopSpacerLine[4] = {0};
+char sJpDiscInsertTopSpacerLine[4] = {0};
+char sJpDiscInsertBottomSpacerLine[4] = {0};
+char sJpWrongDiscTopSpacerLine[4] = {0};
+char sJpWrongDiscMiddleSpacerLine[4] = "\xE3\x80\x80";
+char* sJpDiscLoadingMessageLines[1] = {sJpDiscLoadingMessage};
+#else
 char sJpDiscErrorTopSpacerLine[4] = {0};
 char sJpDiscErrorBottomSpacerLine[4] = {0};
 char sJpDiscReadErrorTopSpacerLine[4] = {0};
@@ -297,6 +320,7 @@ char sDiscCoverOpenSpacerLine[4] = {0};
 char* sDiscInsertMessageLines[2] = {sDiscInsertPromptLine, sDiscInsertGameDiscLine};
 char sWrongDiscSpacerLine[4] = {0};
 char* sDiscLoadingMessageLines[1] = {sDiscLoadingMessage};
+#endif
 int gGameTextFontTexRowPitch = 0x800;
 GXColor gGameTextClearColor = {0, 0, 0, 0xC0};
 int gGameTextFlagGlyphRaise = 3;
@@ -314,6 +338,7 @@ int gGameTextBoxColorB = 0xFF;
 int gGameTextBoxColorA = 0xFF;
 char lbl_803DB404[4] = {0};
 
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
 u16 gGameTextSjisGlyphTable[256] = {
     0x30A8, 0x8347, 0x30E9, 0x8389, 0x30FC, 0x815B, 0x304C, 0x82AA, 0x767A, 0x94AD, 0x751F, 0x90B6, 0x3057, 0x82B5,
     0x307E, 0x82DC, 0x305F, 0x82BD, 0x3002, 0x8142, 0x0020, 0x0020, 0x672C, 0x967B, 0x4F53, 0x91CC, 0x306E, 0x82CC,
@@ -335,3 +360,4 @@ u16 gGameTextSjisGlyphTable[256] = {
     0x00E1, 0x0000, 0x0066, 0x0066, 0x00F3, 0x0000, 0x004C, 0x004C, 0x0046, 0x0046, 0x0078, 0x0078, 0x0076, 0x0076,
     0x00C9, 0x0000, 0x0000, 0x0000,
 };
+#endif

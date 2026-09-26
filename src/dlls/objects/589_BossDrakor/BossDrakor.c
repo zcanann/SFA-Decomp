@@ -313,7 +313,7 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, BossDrakorState* state, int 
                             PSVECSubtract(&vecB, &vecC, &vecC);
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
                             prod = vecC.x;
-                            if (0.0f != prod || 0.0f != vecC.y || 0.0f != vecC.z) {
+                            if (prod || vecC.y || vecC.z) {
                                 PSVECNormalize(&vecC, &vecC);
                             }
 #else

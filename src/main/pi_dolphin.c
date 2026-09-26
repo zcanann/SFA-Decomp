@@ -176,7 +176,11 @@ struct MldfNames {
     char* fileNames[0x22e];
     char* mapNames[0x49];
     int remapGroups[0x4b];
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
     s16 adjacency[0x2be];
+#else
+    s16 adjacency[0x2ae];
+#endif
     char fmtAnimCurvBin[0x10];
     char fmtAnimCurvTab[0x10];
     char fmtVoxmapBin[0x10];
@@ -1262,16 +1266,25 @@ int lockLevel(s32 level, int bucket) {
     return cur;
 }
 
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
 char sAssetIndexOverflowError[0x1D] = "ERROR: asset index overflow ";
+#endif
 
 int getTableFileEntry(int fileId, int index, int* out) {
     u8* base = gResourceFileTable;
     int count = 0;
     void* table = NULL;
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+    u8 needWait = 0;
+    u32 waitMask = 0;
+#endif
     switch (fileId) {
     case 0x2a:
         count = 0x800;
         table = (u8*)(base + 0x10000) + 0x70e0;
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+        waitMask = 0xc;
+#endif
         break;
     case 0x2f:
         count = 0xbb8;
@@ -1299,12 +1312,36 @@ int getTableFileEntry(int fileId, int index, int* out) {
     case 0xe:
         count = 0x1fd0;
         table = &base[0x2c0];
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+        waitMask = 0xa0000000;
+#endif
         break;
     }
     if (index < 0 || index >= count) {
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
         debugPrintfxy(0x14, 0x28, sAssetIndexOverflowError);
+#endif
         return 0;
     }
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+    while ((waitMask & loadedFileFlags()) != 0) {
+        padUpdate();
+        checkReset();
+        if (needWait) {
+            waitNextFrame();
+        }
+        loadDataFiles(0);
+        dvdCheckError();
+        if (needWait) {
+            mmFreeTick(0);
+            gameTextRun();
+            GXFlush_(1, 0);
+        }
+        if (gDvdErrorPauseActive) {
+            needWait = 1;
+        }
+    }
+#endif
     if (table != NULL) {
         *out = ((int*)table)[index];
         return 1;
