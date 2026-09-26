@@ -5180,10 +5180,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
             gameTextShowAt(0x440, 0, 0x78);
             gameTextMeasureById(0x440, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             tokenTextY = (tokenBottom - tokenTop) + 5;
-            {
-                u8* thresholds = &statusTable->tokens[0].thresh;
-                sprintf(tokenCountText, lbl_803DBB58, thresholds[gPauseMenuTokenIndex * 8]);
-            }
+            sprintf(tokenCountText, lbl_803DBB58, statusTable->tokens[gPauseMenuTokenIndex].thresh);
             gameTextShowStr(tokenCountText, 0x79, 0, tokenTextY + 0x78);
             gameTextMeasureStringBoundsAt(tokenCountText, 0x79, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             {

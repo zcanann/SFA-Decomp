@@ -886,6 +886,8 @@ main/camera.c
 main/curves.c
 main/debug_display.c
 main/fileio.c
+main/gametext.c
+main/gametext_data.c
 main/mm.c
 main/modelEngine.c
 main/modellight.c
@@ -964,6 +966,7 @@ musyx/runtime/synth_jobs.c
 musyx/runtime/synth_vsamples.c
 musyx/runtime/voice.c
 track/intersect.c
+track/intersect_memcard.c
 track/intersect_mtx44.c
 track/intersect_render.c
 track/intersect_screenmath.c

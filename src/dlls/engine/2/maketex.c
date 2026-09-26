@@ -142,6 +142,9 @@ int saveGame_doWrite(int slot) {
 /* Saves the game: verifies the existing save slots' checksums, rewrites
  * stale slots and card images, then runs the caller's callback and maps the
  * result to a status code. */
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+static void saveCardBuildComment(void);
+#endif
 int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, void* cbC, void* cbD, SaveGameCallback cb) {
     u64 chk;
     u64 chk2;
@@ -214,6 +217,11 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, void* cbC, void*
         }
         result = CARDRead(&gSaveCardFileInfo.fileInfo, m, 0x2000, 0);
         if (result == CARD_RESULT_READY) {
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+            if ((u8)writeImages == 0) {
+                saveCardBuildComment();
+            }
+#endif
             chk2 = saveGame_checksum((u64*)gSaveCardImageBuffer, 0x400);
             if (chk2 != *(u64*)(gSaveCardIoBuffer + 0xa40)) {
                 if ((u8)writeImages != 0) {
@@ -278,9 +286,6 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, void* cbC, void*
     return 0;
 }
 
-#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
-static void saveCardBuildComment(void);
-#endif
 /* Builds the memory card comment strings (Shift-JIS title on JP cards),
  * loads the banner/icon images from disc, and checksums both halves of the
  * card image buffer. */
