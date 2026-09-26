@@ -966,6 +966,7 @@ musyx/runtime/synth_jobs.c
 musyx/runtime/synth_vsamples.c
 musyx/runtime/voice.c
 track/intersect.c
+track/intersect_memcard.c
 track/intersect_mtx44.c
 track/intersect_render.c
 track/intersect_screenmath.c

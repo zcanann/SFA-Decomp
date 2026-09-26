@@ -483,13 +483,13 @@ void showMemCardError(u8 err) {
     int textHeight;
 #endif
     u32 saved;
+    int* m;
+    int y;
     int sel;
+    int i;
     u8 submenu;
     int timer;
     u8 held;
-    int* m;
-    int y;
-    int i;
     int j;
     int yy;
     GameTextDef* t;
@@ -533,13 +533,18 @@ void showMemCardError(u8 err) {
             t = gameTextGet(*m);
             yy = y + ((i > 0) ? 0x64 : 0);
             for (j = 0; j < t->count; j++) {
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+                int rowHeight;
+#endif
                 gameTextShowStr(t->strings[j], 0, 0, yy);
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
                 gameTextMeasureStringBoundsAt(t->strings[j], 0, 0, 0, &measureLeft, &measureRight, &measureTop,
                                               &measureBottom);
                 lineHeight = gGameTextFontMetrics[sLanguageNameTable[getCurLanguage()].fontId].lineHeight;
                 textHeight = measureBottom - measureTop;
-                yy += (textHeight > lineHeight) ? textHeight : gGameTextFontMetrics[sLanguageNameTable[getCurLanguage()].fontId].lineHeight;
+                rowHeight = (textHeight > lineHeight) ? textHeight
+                                : gGameTextFontMetrics[sLanguageNameTable[getCurLanguage()].fontId].lineHeight;
+                yy = rowHeight + yy;
                 yy += 5;
 #else
                 yy += 0x18;
