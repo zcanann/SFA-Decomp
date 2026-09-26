@@ -504,6 +504,9 @@ void SaveSelectScreen_render(int param) {
     int progress;
     int alpha;
     u8 fadeAlpha;
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+    int bulletY;
+#endif
 
     panel = &gSaveSelectPanels[gSaveSelectPanelIndex];
     gameTextSetDrawFunc(titleScreenTextDrawFunc);
@@ -522,9 +525,6 @@ void SaveSelectScreen_render(int param) {
         u8 firstInfoTextIndex;
         int taskTextCount;
         int taskTextIndex;
-#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
-        int bulletY;
-#endif
         FrontendSaveSlot* slot;
 
         saveSelect_drawText(param, alpha);
