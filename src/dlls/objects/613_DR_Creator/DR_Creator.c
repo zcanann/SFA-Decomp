@@ -23,6 +23,9 @@ int DR_Creator_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
 {
     int i;
     DrcreatorPlacement* placement = (DrcreatorPlacement*)obj->anim.placementData;
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+    DrcreatorState* seqState = obj->extra;
+#endif
     DrcreatorState* state;
     DrcreatorSetup* setup;
     GameObject* projectile;
@@ -33,6 +36,12 @@ int DR_Creator_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+        if (animUpdate->eventIds[i] == 10 && mainGetBit(seqState->spawnGameBit) != 0)
+        {
+            mainSetBits(0x631, 1);
+        }
+#endif
         switch (placement->behaviorMode)
         {
         case DRCREATOR_BEHAVIOR_SEQUENCE_0:

@@ -956,11 +956,11 @@ void gameTimerRun(void* context)
     {
         f32 panByte;
         f32 volume;
-#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
         if (dt) {
 #endif
             Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_sc_commsbleep_28c);
-#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+#if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
         }
 #endif
         if ((gModelEngineTimerFlags & GAME_TIMER_COUNT_DOWN) != 0)

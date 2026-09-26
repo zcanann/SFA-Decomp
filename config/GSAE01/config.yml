@@ -171,6 +171,7 @@ force_active:
   - lbl_803DC8E4
   # main/pi_dolphin.c
   - sPiUnused0
+  - sPiUnused1
   - sPiUnused2
   - sPiUnused3
   # dlls/objects/609_DR_LaserCan/DR_LaserCan.c

@@ -318,6 +318,11 @@ typedef struct ObjectDescriptor24 {
     ObjectDescriptorCallback slot17;
 } ObjectDescriptor24;
 
+typedef struct ObjectDescriptor6WithPadding {
+    ObjectDescriptor6 descriptor;
+    u32 padding;
+} ObjectDescriptor6WithPadding;
+
 typedef struct ObjectDescriptor24WithPadding {
     ObjectDescriptor24 descriptor;
     u32 padding;

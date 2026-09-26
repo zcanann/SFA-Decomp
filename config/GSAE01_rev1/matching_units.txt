@@ -459,6 +459,7 @@ dlls/objects/418_NW_tricky/NW_tricky.c
 dlls/objects/419/419.c
 dlls/objects/420/420.c
 dlls/objects/421_NW_levcontr/NW_levcontr.c
+dlls/objects/422_SH_tricky/SH_tricky.c
 dlls/objects/423/423.c
 dlls/objects/424_SH_killermu/SH_killermu.c
 dlls/objects/425_BombPlant/BombPlant.c
@@ -648,6 +649,7 @@ dlls/objects/609_DR_LaserCan/DR_LaserCan.c
 dlls/objects/610/610.c
 dlls/objects/611_GM_MazeWell/GM_MazeWell.c
 dlls/objects/612/612.c
+dlls/objects/613_DR_Creator/DR_Creator.c
 dlls/objects/614_KytesMum/KytesMum.c
 dlls/objects/615/615.c
 dlls/objects/616_DR_CageCont/DR_CageCont.c
