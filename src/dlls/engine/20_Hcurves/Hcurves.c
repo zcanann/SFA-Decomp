@@ -1022,7 +1022,6 @@ void Objfsa_UpdateWalkGroupPatches(void) {
     u8 patchWalkGroupPairs[364];
     f32 z1;
     f32 x1;
-    ObjfsaPatch* newPatch;
     s8* edgeCoords;
     u8 groupB;
     ObjfsaPatch* patch;
@@ -1031,6 +1030,7 @@ void Objfsa_UpdateWalkGroupPatches(void) {
     int curveCount;
     ObjfsaPatch* patchBase;
     ObjfsaWalkCurveDef** curveCursor;
+    ObjfsaPatch* newPatch;
     u8* groupPair;
     int curveIndex;
     int returnEdgeIndex;
