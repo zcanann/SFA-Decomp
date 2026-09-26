@@ -1560,7 +1560,7 @@ void trackCollectGroundHits(TrackTriangle* triStart, TrackTriangle* triEnd, Trac
         if (inside == 0) {
             continue;
         }
-        if (gTrackGroundHitCount >= 0x23) {
+        if (gTrackGroundHitCount >= ARRAY_COUNT(gTrackGroundHits)) {
             break;
         }
         if (desc->object != NULL) {
@@ -1578,8 +1578,15 @@ void trackCollectGroundHits(TrackTriangle* triStart, TrackTriangle* triEnd, Trac
     }
 }
 
+/* Retail body unknown; something uncalled here must have used these arrays first, given their .bss order. */
+void trackResetGroundHits(void) {
+    gTrackGroundHitPtrs = gTrackGroundHitOrder;
+    gTrackGroundHitWriteCursor = gTrackGroundHits;
+    gTrackGroundHitCount = 0;
+}
+
 int trackGetHeight(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsOut, int mode, int queryMask) {
-    TrackBlockDescriptor* desc;
+    TrackBlockDescriptor* desc = gTrackBlockDescriptors;
     TrackBlockDescriptor* end;
     TrackGroundHit* hit;
     int j;
@@ -1595,21 +1602,18 @@ int trackGetHeight(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsO
         bounds.minZ = z;
         bounds.maxZ = z;
         trackIntersectBroadphase(obj, &bounds, queryMask, 1);
+    } else if (mode == -1) {
+        mode = 0;
     } else {
-        if (mode == -1) {
-            mode = 0;
-        } else {
-            mode = 1;
-        }
+        mode = 1;
     }
 
-    gTrackGroundHitPtrs = gTrackGroundHitOrder;
     gTrackGroundHitWriteCursor = gTrackGroundHits;
-    desc = gTrackBlockDescriptors;
+    gTrackGroundHitPtrs = gTrackGroundHitOrder;
     gTrackGroundHitCount = 0;
     end = gTrackBlockDescriptors + gActiveTrackBlockCount;
     for (; desc < end; desc++) {
-        if (gTrackGroundHitCount >= 0x23) {
+        if (gTrackGroundHitCount >= ARRAY_COUNT(gTrackGroundHits)) {
             break;
         }
         if (desc->object != NULL) {
