@@ -284,7 +284,42 @@ static u8 sGameTextUnclassifiedData[0x204] = {
 };
 
 void* gGameTextStringStore = (void*)-1;
-#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+char sDiscErrorSpacerLine[4] = {0};
+char sDiscReadErrorSpacerLine[4] = {0};
+char* sDiscReadingMessageLines[1] = {sDiscReadingMessage};
+char sDiscCoverOpenSpacerLine[4] = {0};
+char* sDiscInsertMessageLines[2] = {sDiscInsertPromptLine, sDiscInsertGameDiscLine};
+char sWrongDiscSpacerLine[4] = {0};
+char* sDiscLoadingMessageLines[1] = {sDiscLoadingMessage};
+char sFrDiscErrorSpacerLine[4] = {0};
+char sFrDiscReadErrorSpacerLine[4] = {0};
+char* sFrDiscReadingMessageLines[1] = {sFrDiscReadingMessage};
+char sFrDiscCoverOpenSpacerLine[4] = {0};
+char* sFrDiscInsertMessageLines[2] = {sFrDiscInsertPromptLine, sFrDiscInsertGameDiscLine};
+char sFrWrongDiscSpacerLine[4] = {0};
+char* sFrDiscLoadingMessageLines[1] = {sFrDiscLoadingMessage};
+char sDeDiscErrorSpacerLine[4] = {0};
+char sDeDiscReadErrorSpacerLine[4] = {0};
+char* sDeDiscReadingMessageLines[1] = {sDeDiscReadingMessage};
+char sDeDiscCoverOpenSpacerLine[4] = {0};
+char* sDeDiscInsertMessageLines[2] = {sDeDiscInsertPromptLine, sDeDiscInsertGameDiscLine};
+char sDeWrongDiscSpacerLine[4] = {0};
+char* sDeDiscLoadingMessageLines[1] = {sDeDiscLoadingMessage};
+char* sItDiscErrorOccurredMessageLines[2] = {sItDiscErrorOccurredLine, sItDiscErrorInstructionBookletLine};
+char sItDiscReadErrorSpacerLine[4] = {0};
+char* sItDiscReadingMessageLines[1] = {sItDiscReadingMessage};
+char* sItDiscInsertMessageLines[2] = {sItDiscInsertPromptLine, sItDiscInsertGameDiscLine};
+char sItWrongDiscIsNotLine[8] = "non \xC3\xA8";
+char* sItDiscLoadingMessageLines[1] = {sItDiscLoadingMessage};
+char sEsDiscErrorSpacerLine[4] = {0};
+char sEsDiscReadErrorSpacerLine[4] = {0};
+char* sEsDiscReadingMessageLines[1] = {sEsDiscReadingMessage};
+char sEsDiscCoverOpenSpacerLine[4] = {0};
+char* sEsDiscInsertMessageLines[2] = {sEsDiscInsertPromptLine, sEsDiscInsertGameDiscLine};
+char sEsWrongDiscSpacerLine[4] = {0};
+char* sEsDiscLoadingMessageLines[1] = {sEsDiscLoadingMessage};
+#elif defined(VERSION_GSAE01_rev1)
 char sDiscErrorSpacerLine[4] = {0};
 char sDiscReadErrorSpacerLine[4] = {0};
 char* sDiscReadingMessageLines[1] = {sDiscReadingMessage};
@@ -326,7 +361,9 @@ GXColor gGameTextClearColor = {0, 0, 0, 0xC0};
 int gGameTextFlagGlyphRaise = 3;
 f32 gGameTextRevealSpeed = 0.4f;
 char sGameTextBlankFormat[] = "    ";
+#if !defined(VERSION_GSAP01) && !defined(VERSION_GSAP01_rev1)
 char lbl_803DB3DC[4] = {0};
+#endif
 int gGameTextSavedDir = -1;
 char lbl_803DB3E4[4] = {0};
 s16 gGameTextBoxTexAssets = 0x1C4;

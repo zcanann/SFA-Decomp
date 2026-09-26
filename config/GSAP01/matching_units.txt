@@ -887,6 +887,8 @@ main/camera.c
 main/curves.c
 main/debug_display.c
 main/fileio.c
+main/gametext.c
+main/gametext_data.c
 main/mm.c
 main/modelEngine.c
 main/modellight.c

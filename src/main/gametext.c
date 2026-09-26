@@ -19,6 +19,7 @@
 #include "track/intersect_hud_api.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
+#include "dolphin/os/OSRtc.h"
 #include "main/fileio.h"
 #include "main/lightmap_text_color_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
@@ -67,6 +68,32 @@ static void translateToDinoLanguage(u8* str);
  */
 
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+TextGlyph sDiscStatusGlyphs[43] = {
+    {0x41, 0x01, 0x1, 0, 1, 2, 4, 0x0d, 0x0f, 4, 0}, {0x6e, 0x0f, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+    {0x20, 0x19, 0x1, 6, 0, 15, 6, 0x00, 0x00, 4, 0}, {0x65, 0x1a, 0x1, 0, 1, 6, 4, 0x0a, 0x0b, 4, 0},
+    {0x72, 0x25, 0x1, 0, 1, 7, 4, 0x08, 0x0a, 4, 0}, {0x6f, 0x2e, 0x1, 0, 1, 7, 4, 0x0a, 0x0a, 4, 0},
+    {0x68, 0x39, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0}, {0x61, 0x43, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0},
+    {0x73, 0x4d, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0}, {0x63, 0x57, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0},
+    {0x75, 0x61, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0}, {0x64, 0x6b, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0},
+    {0x2e, 0x75, 0x1, 0, 1, 14, 4, 0x03, 0x03, 4, 0}, {0x54, 0x79, 0x1, 0, 1, 2, 4, 0x0b, 0x0f, 4, 0},
+    {0x74, 0x85, 0x1, 0, 1, 4, 4, 0x07, 0x0d, 4, 0}, {0x70, 0x8d, 0x1, 0, 1, 7, 0, 0x09, 0x0e, 4, 0},
+    {0x77, 0x97, 0x1, 0, 1, 7, 4, 0x0e, 0x0a, 4, 0}, {0x4f, 0xa6, 0x1, 0, 1, 2, 3, 0x0c, 0x0f, 4, 0},
+    {0x46, 0xb3, 0x1, 0, 1, 2, 4, 0x0a, 0x0f, 4, 0}, {0x6b, 0xbe, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0},
+    {0x4e, 0xc8, 0x1, 0, 1, 2, 4, 0x0d, 0x0f, 4, 0}, {0x49, 0xd6, 0x1, 0, 1, 2, 4, 0x03, 0x0f, 4, 0},
+    {0x45, 0xda, 0x1, 0, 1, 2, 4, 0x09, 0x0f, 4, 0}, {0x44, 0xe4, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x47, 0xf1, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0}, {0x4d, 0xfe, 0x1, 0, 1, 2, 4, 0x10, 0x0f, 4, 0},
+    {0x43, 0x10f, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0}, {0x55, 0x11c, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x42, 0x129, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0}, {0x69, 0x136, 0x1, 0, 1, 3, 4, 0x03, 0x0e, 4, 0},
+    {0x6c, 0x13a, 0x1, 0, 1, 3, 4, 0x03, 0x0e, 4, 0}, {0x66, 0x13e, 0x1, 0, 1, 3, 4, 0x06, 0x0e, 4, 0},
+    {0x6d, 0x145, 0x1, 0, 1, 6, 4, 0x0f, 0x0b, 4, 0}, {0x62, 0x155, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0},
+    {0x50, 0x15f, 0x1, 0, 1, 2, 4, 0x0b, 0x0f, 4, 0}, {0x52, 0x16b, 0x1, 0, 1, 2, 4, 0x0b, 0x0f, 4, 0},
+    {0x67, 0x177, 0x1, 0, 1, 6, 0, 0x09, 0x0f, 4, 0}, {0x76, 0x181, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0},
+    {0x79, 0x18b, 0x1, 0, 1, 7, 0, 0x09, 0x0e, 4, 0}, {0x2c, 0x195, 0x1, 0, 1, 14, 2, 0x03, 0x05, 4, 0},
+    {0x53, 0x199, 0x1, 0, 1, 2, 4, 0x0b, 0x0f, 4, 0}, {0x78, 0x1a5, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+    {0x4c, 0x1af, 0x1, 0, 1, 2, 4, 0x09, 0x0f, 4, 0},
+};
+#else
 TextGlyph sDiscStatusGlyphs[43] = {
     {0x41, 0x01, 0x1, 0, 1, 3, 4, 0x0d, 0x0e, 4, 0},  {0x6e, 0x0f, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
     {0x20, 0x19, 0x1, 6, 0, 15, 6, 0x00, 0x00, 4, 0}, {0x65, 0x1a, 0x1, 0, 1, 6, 4, 0x0a, 0x0b, 4, 0},
@@ -91,6 +118,7 @@ TextGlyph sDiscStatusGlyphs[43] = {
     {0x53, 0x199, 0x1, 0, 1, 3, 4, 0x0b, 0x0e, 4, 0}, {0x78, 0x1a5, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
     {0x4c, 0x1af, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0},
 };
+#endif
 
 /* English disc-status message lines. */
 char sDiscErrorOccurredLine[] = "An error has occurred.";
@@ -148,6 +176,403 @@ GameTextDef sDiscStatusMessageTable[7] = {
     {0x33b, 1, 0x81, 0, 0, 0, sDiscReadingMessageLines},       {0x33c, 4, 0x81, 0, 0, 0, sDiscCoverOpenMessageLines},
     {0x33d, 2, 0x81, 0, 0, 0, sDiscInsertMessageLines},        {0x33e, 6, 0x81, 0, 0, 0, sWrongDiscMessageLines},
     {0x565, 1, 0x93, 0, 0, 0, sDiscLoadingMessageLines},
+};
+#endif
+
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+TextGlyph sFrDiscStatusGlyphs[46] = {
+    {0x55, 0x01, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0}, {0x6e, 0x0e, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+    {0x65, 0x18, 0x1, 0, 1, 6, 4, 0x0a, 0x0b, 4, 0}, {0x20, 0x23, 0x1, 6, 0, 15, 6, 0x00, 0x00, 4, 0},
+    {0x72, 0x24, 0x1, 0, 1, 7, 4, 0x08, 0x0a, 4, 0}, {0x75, 0x2d, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+    {0x73, 0x37, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0}, {0x74, 0x41, 0x1, 0, 1, 4, 4, 0x07, 0x0d, 4, 0},
+    {0x76, 0x49, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0}, {0x2e, 0x53, 0x1, 0, 1, 14, 4, 0x03, 0x03, 4, 0},
+    {0xc9, 0x57, 0x1, 0, 1, 0, 4, 0x0a, 0x11, 4, 0}, {0x69, 0x62, 0x1, 0, 1, 3, 4, 0x03, 0x0e, 4, 0},
+    {0x67, 0x66, 0x1, 0, 1, 6, 0, 0x09, 0x0f, 4, 0}, {0x7a, 0x70, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+    {0x6c, 0x7a, 0x1, 0, 1, 3, 4, 0x03, 0x0e, 4, 0}, {0x61, 0x7e, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0},
+    {0x63, 0x88, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0}, {0x6f, 0x92, 0x1, 0, 1, 7, 4, 0x0a, 0x0a, 4, 0},
+    {0xe9, 0x9d, 0x1, 0, 1, 3, 4, 0x0a, 0x0e, 4, 0}, {0x66, 0xa8, 0x1, 0, 1, 3, 4, 0x06, 0x0e, 4, 0},
+    {0x2d, 0xaf, 0x1, 0, 1, 10, 8, 0x05, 0x03, 4, 0}, {0x6d, 0xb5, 0x1, 0, 1, 6, 4, 0x0f, 0x0b, 4, 0},
+    {0x64, 0xc5, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0}, {0x27, 0xcf, 0x1, 0, 1, 3, 12, 0x02, 0x06, 4, 0},
+    {0x4e, 0xd2, 0x1, 0, 1, 2, 4, 0x0d, 0x0f, 4, 0}, {0x49, 0xe0, 0x1, 0, 1, 2, 4, 0x03, 0x0f, 4, 0},
+    {0x54, 0xe4, 0x1, 0, 1, 2, 4, 0x0b, 0x0f, 4, 0}, {0x45, 0xf0, 0x1, 0, 1, 2, 4, 0x09, 0x0f, 4, 0},
+    {0x44, 0xfa, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0}, {0x4f, 0x107, 0x1, 0, 1, 2, 3, 0x0c, 0x0f, 4, 0},
+    {0x47, 0x114, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0}, {0x41, 0x121, 0x1, 0, 1, 2, 4, 0x0d, 0x0f, 4, 0},
+    {0x4d, 0x12f, 0x1, 0, 1, 2, 4, 0x10, 0x0f, 4, 0}, {0x43, 0x140, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x42, 0x14d, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0}, {0x70, 0x15a, 0x1, 0, 1, 7, 0, 0x09, 0x0e, 4, 0},
+    {0x4c, 0x164, 0x1, 0, 1, 2, 4, 0x09, 0x0f, 4, 0}, {0x71, 0x16e, 0x1, 0, 1, 7, 0, 0x09, 0x0e, 4, 0},
+    {0x68, 0x178, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0}, {0x56, 0x182, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x50, 0x18f, 0x1, 0, 1, 2, 4, 0x0b, 0x0f, 4, 0}, {0x6a, 0x19b, 0x1, 0, 1, 3, 1, 0x04, 0x11, 4, 0},
+    {0x2c, 0x1a0, 0x1, 0, 1, 14, 2, 0x03, 0x05, 4, 0}, {0x53, 0x1a4, 0x1, 0, 1, 2, 4, 0x0b, 0x0f, 4, 0},
+    {0x46, 0x1b0, 0x1, 0, 1, 2, 4, 0x0a, 0x0f, 4, 0}, {0x78, 0x1bb, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+};
+
+char sFrDiscErrorOccurredLine[] = "Une erreur est survenue.";
+
+char sFrDiscErrorInstructionBookletLine[] = "\xC3\x89teignez la console et r\xC3\xA9" "f\xC3\xA9rez-vous au manuel d'instructions NINTENDO GAMECUBE pour de plus amples informations.";
+
+char* sFrDiscErrorOccurredMessageLines[3] = {
+    sFrDiscErrorOccurredLine,
+    sFrDiscErrorSpacerLine,
+    sFrDiscErrorInstructionBookletLine,
+};
+
+char sFrDiscReadErrorLine[] = "La lecture du disque a \xC3\xA9" "chou\xC3\xA9.";
+
+char sFrDiscReadErrorInstructionBookletLine[] = "Veuillez vous r\xC3\xA9" "f\xC3\xA9rer au manuel d'instructions NINTENDO GAMECUBE pour de plus amples informations.";
+
+char* sFrDiscReadErrorMessageLines[3] = {
+    sFrDiscReadErrorLine,
+    sFrDiscReadErrorSpacerLine,
+    sFrDiscReadErrorInstructionBookletLine,
+};
+
+char sFrDiscReadingMessage[] = "Lecture du disque...";
+
+char sFrDiscCoverOpenLine[] = "Le couvercle est ouvert.";
+
+char sFrDiscCoverContinuePromptLine[] = "Pour continuer le jeu,";
+
+char sFrDiscCoverClosePromptLine[] = "veuillez fermer le couvercle.";
+
+char* sFrDiscCoverOpenMessageLines[4] = {
+    sFrDiscCoverOpenLine,
+    sFrDiscCoverOpenSpacerLine,
+    sFrDiscCoverContinuePromptLine,
+    sFrDiscCoverClosePromptLine,
+};
+
+char sFrDiscInsertPromptLine[] = "Veuillez ins\xC3\xA9rer le disque";
+
+char sFrDiscInsertGameDiscLine[] = "Star Fox Adventures.";
+
+char sFrWrongDiscThisIsNotLine[] = "Ceci n'est pas le disque";
+
+char sFrWrongDiscGameNameLine[] = "Star Fox Adventures.";
+
+char sFrWrongDiscInsertPromptLine[] = "Veuillez ins\xC3\xA9rer le disque";
+
+char sFrWrongDiscInsertGameDiscLine[] = "Star Fox Adventures.";
+
+char* sFrWrongDiscMessageLines[5] = {
+    sFrWrongDiscThisIsNotLine,
+    sFrWrongDiscGameNameLine,
+    sFrWrongDiscSpacerLine,
+    sFrWrongDiscInsertPromptLine,
+    sFrWrongDiscInsertGameDiscLine,
+};
+
+char sFrDiscLoadingMessage[] = "T\xC3\xA9l\xC3\xA9" "chargement...";
+
+GameTextDef sFrDiscStatusMessageTable[7] = {
+    {0x339, 3, 0x81, 0, 0, 1, sFrDiscErrorOccurredMessageLines},
+    {0x33a, 3, 0x81, 0, 0, 1, sFrDiscReadErrorMessageLines},
+    {0x33b, 1, 0x81, 0, 0, 1, sFrDiscReadingMessageLines},
+    {0x33c, 4, 0x81, 0, 0, 1, sFrDiscCoverOpenMessageLines},
+    {0x33d, 2, 0x81, 0, 0, 1, sFrDiscInsertMessageLines},
+    {0x33e, 5, 0x81, 0, 0, 1, sFrWrongDiscMessageLines},
+    {0x565, 1, 0x93, 0, 0, 1, sFrDiscLoadingMessageLines},
+};
+
+TextGlyph sDeDiscStatusGlyphs[44] = {
+    {0x45, 0x01, 0x1, 0, 1, 2, 4, 0x09, 0x0f, 4, 0}, {0x69, 0x0b, 0x1, 0, 1, 3, 4, 0x03, 0x0e, 4, 0},
+    {0x6e, 0x0f, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0}, {0x20, 0x19, 0x1, 6, 0, 15, 6, 0x00, 0x00, 4, 0},
+    {0x46, 0x1a, 0x1, 0, 1, 2, 4, 0x0a, 0x0f, 4, 0}, {0x65, 0x25, 0x1, 0, 1, 6, 4, 0x0a, 0x0b, 4, 0},
+    {0x68, 0x30, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0}, {0x6c, 0x3a, 0x1, 0, 1, 3, 4, 0x03, 0x0e, 4, 0},
+    {0x72, 0x3e, 0x1, 0, 1, 7, 4, 0x08, 0x0a, 4, 0}, {0x73, 0x47, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+    {0x74, 0x51, 0x1, 0, 1, 4, 4, 0x07, 0x0d, 4, 0}, {0x61, 0x59, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0},
+    {0x75, 0x63, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0}, {0x66, 0x6d, 0x1, 0, 1, 3, 4, 0x06, 0x0e, 4, 0},
+    {0x67, 0x74, 0x1, 0, 1, 6, 0, 0x09, 0x0f, 4, 0}, {0x2e, 0x7e, 0x1, 0, 1, 14, 4, 0x03, 0x03, 4, 0},
+    {0x42, 0x82, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0}, {0x64, 0x8f, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0},
+    {0x4e, 0x99, 0x1, 0, 1, 2, 4, 0x0d, 0x0f, 4, 0}, {0x49, 0xa7, 0x1, 0, 1, 2, 4, 0x03, 0x0f, 4, 0},
+    {0x54, 0xab, 0x1, 0, 1, 2, 4, 0x0b, 0x0f, 4, 0}, {0x44, 0xb7, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x4f, 0xc4, 0x1, 0, 1, 2, 3, 0x0c, 0x0f, 4, 0}, {0x47, 0xd1, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x41, 0xde, 0x1, 0, 1, 2, 4, 0x0d, 0x0f, 4, 0}, {0x4d, 0xec, 0x1, 0, 1, 2, 4, 0x10, 0x0f, 4, 0},
+    {0x43, 0xfd, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0}, {0x55, 0x10a, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x63, 0x117, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0}, {0x2c, 0x121, 0x1, 0, 1, 14, 2, 0x03, 0x05, 4, 0},
+    {0x6d, 0x125, 0x1, 0, 1, 6, 4, 0x0f, 0x0b, 4, 0}, {0x77, 0x135, 0x1, 0, 1, 7, 4, 0x0e, 0x0a, 4, 0},
+    {0x6f, 0x144, 0x1, 0, 1, 7, 4, 0x0a, 0x0a, 4, 0}, {0x7a, 0x14f, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+    {0x6b, 0x159, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0}, {0x2d, 0x163, 0x1, 0, 1, 10, 8, 0x05, 0x03, 4, 0},
+    {0xf6, 0x169, 0x1, 0, 1, 4, 4, 0x09, 0x0d, 4, 0}, {0xdf, 0x173, 0x1, 0, 1, 3, 3, 0x0b, 0x0f, 4, 0},
+    {0x53, 0x17f, 0x1, 0, 1, 2, 4, 0x0b, 0x0f, 4, 0}, {0x70, 0x18b, 0x1, 0, 1, 7, 0, 0x09, 0x0e, 4, 0},
+    {0x78, 0x195, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0}, {0x76, 0x19f, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0},
+    {0xe4, 0x1a9, 0x1, 0, 1, 4, 4, 0x09, 0x0d, 4, 0}, {0x4c, 0x1b3, 0x1, 0, 1, 2, 4, 0x09, 0x0f, 4, 0},
+};
+
+char sDeDiscErrorOccurredLine[] = "Ein Fehler ist aufgetreten.";
+
+char sDeDiscErrorInstructionBookletLine[] = "Bitte den NINTENDO GAMECUBE ausschalten und die Bedienungsanleitung lesen, um weitere Informationen zu erhalten.";
+
+char* sDeDiscErrorOccurredMessageLines[3] = {
+    sDeDiscErrorOccurredLine,
+    sDeDiscErrorSpacerLine,
+    sDeDiscErrorInstructionBookletLine,
+};
+
+char sDeDiscReadErrorLine[] = "Diese Game Disc kann nicht gelesen werden.";
+
+char sDeDiscReadErrorInstructionBookletLine[] = "Bitte die Bedienungsanleitung lesen, um weitere Informationen zu erhalten.";
+
+char* sDeDiscReadErrorMessageLines[3] = {
+    sDeDiscReadErrorLine,
+    sDeDiscReadErrorSpacerLine,
+    sDeDiscReadErrorInstructionBookletLine,
+};
+
+char sDeDiscReadingMessage[] = "Disc wird gelesen...";
+
+char sDeDiscCoverOpenLine[] = "Der Disc-Deckel ist ge\xC3\xB6" "ffnet.";
+
+char sDeDiscCoverClosePromptLine[] = "Bitte den Disc-Deckel schlie\xC3\x9F" "en,";
+
+char sDeDiscCoverContinuePromptLine[] = "um mit dem Spiel fortzufahren.";
+
+char* sDeDiscCoverOpenMessageLines[4] = {
+    sDeDiscCoverOpenLine,
+    sDeDiscCoverOpenSpacerLine,
+    sDeDiscCoverClosePromptLine,
+    sDeDiscCoverContinuePromptLine,
+};
+
+char sDeDiscInsertPromptLine[] = "Bitte die ";
+
+char sDeDiscInsertGameDiscLine[] = "Star Fox Adventures-Game Disc einlegen.";
+
+char sDeWrongDiscThisIsNotLine[] = "Diese Game Disc enth\xC3\xA4lt nicht";
+
+char sDeWrongDiscGameNameLine[] = "Star Fox Adventures.";
+
+char sDeWrongDiscInsertGameDiscLine[] = "Bitte die Star Fox Adventures-Game Disc einlegen.";
+
+char* sDeWrongDiscMessageLines[4] = {
+    sDeWrongDiscThisIsNotLine,
+    sDeWrongDiscGameNameLine,
+    sDeWrongDiscSpacerLine,
+    sDeWrongDiscInsertGameDiscLine,
+};
+
+char sDeDiscLoadingMessage[] = "Ladevorgang...";
+
+GameTextDef sDeDiscStatusMessageTable[7] = {
+    {0x339, 3, 0x81, 0, 0, 2, sDeDiscErrorOccurredMessageLines},
+    {0x33a, 3, 0x81, 0, 0, 2, sDeDiscReadErrorMessageLines},
+    {0x33b, 1, 0x81, 0, 0, 2, sDeDiscReadingMessageLines},
+    {0x33c, 4, 0x81, 0, 0, 2, sDeDiscCoverOpenMessageLines},
+    {0x33d, 2, 0x81, 0, 0, 2, sDeDiscInsertMessageLines},
+    {0x33e, 4, 0x81, 0, 0, 2, sDeWrongDiscMessageLines},
+    {0x565, 1, 0x93, 0, 0, 2, sDeDiscLoadingMessageLines},
+};
+
+TextGlyph sItDiscStatusGlyphs[43] = {
+    {0x53, 0x01, 0x1, 0, 1, 2, 4, 0x0b, 0x0f, 4, 0}, {0x69, 0x0d, 0x1, 0, 1, 3, 4, 0x03, 0x0e, 4, 0},
+    {0x20, 0x11, 0x1, 6, 0, 15, 6, 0x00, 0x00, 4, 0}, {0xe8, 0x12, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0},
+    {0x76, 0x1c, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0}, {0x65, 0x26, 0x1, 0, 1, 6, 4, 0x0a, 0x0b, 4, 0},
+    {0x72, 0x31, 0x1, 0, 1, 7, 4, 0x08, 0x0a, 4, 0}, {0x66, 0x3a, 0x1, 0, 1, 3, 4, 0x06, 0x0e, 4, 0},
+    {0x63, 0x41, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0}, {0x61, 0x4b, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0},
+    {0x74, 0x55, 0x1, 0, 1, 4, 4, 0x07, 0x0d, 4, 0}, {0x6f, 0x5d, 0x1, 0, 1, 7, 4, 0x0a, 0x0a, 4, 0},
+    {0x75, 0x68, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0}, {0x6e, 0x72, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+    {0x2e, 0x7c, 0x1, 0, 1, 14, 4, 0x03, 0x03, 4, 0}, {0x70, 0x80, 0x1, 0, 1, 7, 0, 0x09, 0x0e, 4, 0},
+    {0x67, 0x8a, 0x1, 0, 1, 6, 0, 0x09, 0x0f, 4, 0}, {0x28, 0x94, 0x1, 0, 1, 2, 0, 0x05, 0x13, 4, 0},
+    {0x4f, 0x9a, 0x1, 0, 1, 2, 3, 0x0c, 0x0f, 4, 0}, {0x46, 0xa7, 0x1, 0, 1, 2, 4, 0x0a, 0x0f, 4, 0},
+    {0x29, 0xb2, 0x1, 0, 1, 2, 0, 0x05, 0x13, 4, 0}, {0x6c, 0xb8, 0x1, 0, 1, 3, 4, 0x03, 0x0e, 4, 0},
+    {0x6d, 0xbc, 0x1, 0, 1, 6, 4, 0x0f, 0x0b, 4, 0}, {0x64, 0xcc, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0},
+    {0x27, 0xd6, 0x1, 0, 1, 3, 12, 0x02, 0x06, 4, 0}, {0x73, 0xd9, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+    {0x7a, 0xe3, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0}, {0x4e, 0xed, 0x1, 0, 1, 2, 4, 0x0d, 0x0f, 4, 0},
+    {0x49, 0xfb, 0x1, 0, 1, 2, 4, 0x03, 0x0f, 4, 0}, {0x54, 0xff, 0x1, 0, 1, 2, 4, 0x0b, 0x0f, 4, 0},
+    {0x45, 0x10b, 0x1, 0, 1, 2, 4, 0x09, 0x0f, 4, 0}, {0x44, 0x115, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x47, 0x122, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0}, {0x41, 0x12f, 0x1, 0, 1, 2, 4, 0x0d, 0x0f, 4, 0},
+    {0x4d, 0x13d, 0x1, 0, 1, 2, 4, 0x10, 0x0f, 4, 0}, {0x43, 0x14e, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x55, 0x15b, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0}, {0x42, 0x168, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x62, 0x175, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0}, {0x4c, 0x17f, 0x1, 0, 1, 2, 4, 0x09, 0x0f, 4, 0},
+    {0x68, 0x189, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0}, {0x2c, 0x193, 0x1, 0, 1, 14, 2, 0x03, 0x05, 4, 0},
+    {0x78, 0x197, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+};
+
+char sItDiscErrorOccurredLine[] = "Si \xC3\xA8 verificato un errore.";
+
+char sItDiscErrorInstructionBookletLine[] = "Spegni (OFF) e controlla il manuale d'istruzioni del NINTENDO GAMECUBE per ulteriori indicazioni.";
+
+char sItDiscReadErrorLine[] = "Impossibile leggere il disco di gioco.";
+
+char sItDiscReadErrorInstructionBookletLine[] = "Consulta il manuale d'istruzioni del NINTENDO GAMECUBE per ulteriori indicazioni.";
+
+char* sItDiscReadErrorMessageLines[3] = {
+    sItDiscReadErrorLine,
+    sItDiscReadErrorInstructionBookletLine,
+    sItDiscReadErrorSpacerLine,
+};
+
+char sItDiscReadingMessage[] = "Lettura del disco in corso...";
+
+char sItDiscCoverOpenLine[] = "Il coperchio del disco";
+
+char sItDiscCoverOpenSecondLine[] = "\xC3\xA8 aperto.";
+
+char sItDiscCoverContinuePromptLine[] = "Se vuoi proseguire nel gioco,";
+
+char sItDiscCoverClosePromptLine[] = "chiudi il coperchio del disco.";
+
+char* sItDiscCoverOpenMessageLines[4] = {
+    sItDiscCoverOpenLine,
+    sItDiscCoverOpenSecondLine,
+    sItDiscCoverContinuePromptLine,
+    sItDiscCoverClosePromptLine,
+};
+
+char sItDiscInsertPromptLine[] = "Inserisci il disco di gioco";
+
+char sItDiscInsertGameDiscLine[] = "Star Fox Adventures.";
+
+char sItWrongDiscThisIsNotLine[] = "Il disco di gioco";
+
+char sItWrongDiscGameNameLine[] = "Star Fox Adventures.";
+
+char sItWrongDiscInsertPromptLine[] = "Inserisci il disco di gioco";
+
+char sItWrongDiscInsertGameDiscLine[] = "Star Fox Adventures.";
+
+char* sItWrongDiscMessageLines[5] = {
+    sItWrongDiscThisIsNotLine,
+    sItWrongDiscIsNotLine,
+    sItWrongDiscGameNameLine,
+    sItWrongDiscInsertPromptLine,
+    sItWrongDiscInsertGameDiscLine,
+};
+
+char sItDiscLoadingMessage[] = "Caricamento in corso...";
+
+GameTextDef sItDiscStatusMessageTable[7] = {
+    {0x339, 2, 0x81, 0, 0, 3, sItDiscErrorOccurredMessageLines},
+    {0x33a, 3, 0x81, 0, 0, 3, sItDiscReadErrorMessageLines},
+    {0x33b, 1, 0x81, 0, 0, 3, sItDiscReadingMessageLines},
+    {0x33c, 4, 0x81, 0, 0, 3, sItDiscCoverOpenMessageLines},
+    {0x33d, 2, 0x81, 0, 0, 3, sItDiscInsertMessageLines},
+    {0x33e, 5, 0x81, 0, 0, 3, sItWrongDiscMessageLines},
+    {0x565, 1, 0x93, 0, 0, 3, sItDiscLoadingMessageLines},
+};
+
+TextGlyph sEsDiscStatusGlyphs[44] = {
+    {0x53, 0x01, 0x1, 0, 1, 2, 4, 0x0b, 0x0f, 4, 0}, {0x65, 0x0d, 0x1, 0, 1, 6, 4, 0x0a, 0x0b, 4, 0},
+    {0x20, 0x18, 0x1, 6, 0, 15, 6, 0x00, 0x00, 4, 0}, {0x68, 0x19, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0},
+    {0x61, 0x23, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0}, {0x70, 0x2d, 0x1, 0, 1, 7, 0, 0x09, 0x0e, 4, 0},
+    {0x72, 0x37, 0x1, 0, 1, 7, 4, 0x08, 0x0a, 4, 0}, {0x6f, 0x40, 0x1, 0, 1, 7, 4, 0x0a, 0x0a, 4, 0},
+    {0x64, 0x4b, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0}, {0x75, 0x55, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+    {0x63, 0x5f, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0}, {0x69, 0x69, 0x1, 0, 1, 3, 4, 0x03, 0x0e, 4, 0},
+    {0x6e, 0x6d, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0}, {0x2e, 0x77, 0x1, 0, 1, 14, 4, 0x03, 0x03, 4, 0},
+    {0x41, 0x7b, 0x1, 0, 1, 2, 4, 0x0d, 0x0f, 4, 0}, {0x67, 0x89, 0x1, 0, 1, 6, 0, 0x09, 0x0f, 4, 0},
+    {0x6c, 0x93, 0x1, 0, 1, 3, 4, 0x03, 0x0e, 4, 0}, {0x73, 0x97, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+    {0x79, 0xa1, 0x1, 0, 1, 7, 0, 0x09, 0x0e, 4, 0}, {0x74, 0xab, 0x1, 0, 1, 4, 4, 0x07, 0x0d, 4, 0},
+    {0x6d, 0xb3, 0x1, 0, 1, 6, 4, 0x0f, 0x0b, 4, 0}, {0x4e, 0xc3, 0x1, 0, 1, 2, 4, 0x0d, 0x0f, 4, 0},
+    {0x49, 0xd1, 0x1, 0, 1, 2, 4, 0x03, 0x0f, 4, 0}, {0x54, 0xd5, 0x1, 0, 1, 2, 4, 0x0b, 0x0f, 4, 0},
+    {0x45, 0xe1, 0x1, 0, 1, 2, 4, 0x09, 0x0f, 4, 0}, {0x44, 0xeb, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x4f, 0xf8, 0x1, 0, 1, 2, 3, 0x0c, 0x0f, 4, 0}, {0x47, 0x105, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x4d, 0x112, 0x1, 0, 1, 2, 4, 0x10, 0x0f, 4, 0}, {0x43, 0x123, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x55, 0x130, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0}, {0x42, 0x13d, 0x1, 0, 1, 2, 4, 0x0c, 0x0f, 4, 0},
+    {0x62, 0x14a, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0}, {0xe1, 0x154, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0},
+    {0x66, 0x15e, 0x1, 0, 1, 3, 4, 0x06, 0x0e, 4, 0}, {0xf3, 0x165, 0x1, 0, 1, 3, 4, 0x09, 0x0e, 4, 0},
+    {0x4c, 0x16f, 0x1, 0, 1, 2, 4, 0x09, 0x0f, 4, 0}, {0x71, 0x179, 0x1, 0, 1, 7, 0, 0x09, 0x0e, 4, 0},
+    {0x6a, 0x183, 0x1, 0, 1, 3, 1, 0x04, 0x11, 4, 0}, {0x2c, 0x188, 0x1, 0, 1, 14, 2, 0x03, 0x05, 4, 0},
+    {0x46, 0x18c, 0x1, 0, 1, 2, 4, 0x0a, 0x0f, 4, 0}, {0x78, 0x197, 0x1, 0, 1, 7, 4, 0x09, 0x0a, 4, 0},
+    {0x76, 0x1a1, 0x1, 0, 1, 6, 4, 0x09, 0x0b, 4, 0}, {0xc9, 0x1ab, 0x1, 0, 1, 0, 4, 0x0a, 0x11, 4, 0},
+};
+
+char sEsDiscErrorOccurredLine[] = "Se ha producido un error.";
+
+char sEsDiscErrorInstructionBookletLine[] = "Apaga la consola y consulta el manual de instrucciones de NINTENDO GAMECUBE para obtener m\xC3\xA1s informaci\xC3\xB3n.";
+
+char* sEsDiscErrorOccurredMessageLines[3] = {
+    sEsDiscErrorOccurredLine,
+    sEsDiscErrorSpacerLine,
+    sEsDiscErrorInstructionBookletLine,
+};
+
+char sEsDiscReadErrorLine[] = "No se puede leer el disco.";
+
+char sEsDiscReadErrorInstructionBookletLine[] = "Consulta el manual de instrucciones de NINTENDO GAMECUBE para obtener m\xC3\xA1s informaci\xC3\xB3n.";
+
+char* sEsDiscReadErrorMessageLines[3] = {
+    sEsDiscReadErrorLine,
+    sEsDiscReadErrorSpacerLine,
+    sEsDiscReadErrorInstructionBookletLine,
+};
+
+char sEsDiscReadingMessage[] = "Leyendo el disco...";
+
+char sEsDiscCoverOpenLine[] = "La tapa est\xC3\xA1 abierta.";
+
+char sEsDiscCoverContinuePromptLine[] = "Si quieres seguir jugando,";
+
+char sEsDiscCoverClosePromptLine[] = "debes cerrar la tapa.";
+
+char* sEsDiscCoverOpenMessageLines[4] = {
+    sEsDiscCoverOpenLine,
+    sEsDiscCoverOpenSpacerLine,
+    sEsDiscCoverContinuePromptLine,
+    sEsDiscCoverClosePromptLine,
+};
+
+char sEsDiscInsertPromptLine[] = "Coloca el disco de";
+
+char sEsDiscInsertGameDiscLine[] = "Star Fox Adventures.";
+
+char sEsWrongDiscThisIsNotLine[] = "\xC3\x89ste no es el disco de";
+
+char sEsWrongDiscGameNameLine[] = "Star Fox Adventures.";
+
+char sEsWrongDiscInsertPromptLine[] = "Coloca el disco de";
+
+char sEsWrongDiscInsertGameDiscLine[] = "Star Fox Adventures.";
+
+char* sEsWrongDiscMessageLines[5] = {
+    sEsWrongDiscThisIsNotLine,
+    sEsWrongDiscGameNameLine,
+    sEsWrongDiscSpacerLine,
+    sEsWrongDiscInsertPromptLine,
+    sEsWrongDiscInsertGameDiscLine,
+};
+
+char sEsDiscLoadingMessage[] = "Cargando...";
+
+GameTextDef sEsDiscStatusMessageTable[7] = {
+    {0x339, 3, 0x81, 0, 0, 5, sEsDiscErrorOccurredMessageLines},
+    {0x33a, 3, 0x81, 0, 0, 5, sEsDiscReadErrorMessageLines},
+    {0x33b, 1, 0x81, 0, 0, 5, sEsDiscReadingMessageLines},
+    {0x33c, 4, 0x81, 0, 0, 5, sEsDiscCoverOpenMessageLines},
+    {0x33d, 2, 0x81, 0, 0, 5, sEsDiscInsertMessageLines},
+    {0x33e, 5, 0x81, 0, 0, 5, sEsWrongDiscMessageLines},
+    {0x565, 1, 0x93, 0, 0, 5, sEsDiscLoadingMessageLines},
+};
+
+TextGlyph sGameTextEuroExtraGlyphs[59] = {
+    {0x20, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x27, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x28, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x29, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x2c, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x2d, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x2e, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x41, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x42, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x43, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x44, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x45, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x46, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x47, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x49, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x4c, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x4d, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x4e, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x4f, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x50, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x52, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x53, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x54, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x55, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x56, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x61, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x62, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x63, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x64, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x65, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x66, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x67, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x68, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x69, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x6a, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x6b, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x6c, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x6d, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x6e, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x6f, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x70, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x71, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x72, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x73, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x74, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x75, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x76, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x77, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x78, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0x79, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0x7a, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0xc9, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0xdf, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0xe1, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0xe4, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0xe8, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0xe9, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0}, {0xf3, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
+    {0xf6, 0x00, 0x0, 0, 0, 0, 0, 0x00, 0x00, 4, 0},
 };
 #endif
 
@@ -822,7 +1247,6 @@ static inline void gameTextCopySystemFontTile(u8* destination, int tileRow, u32*
 }
 
 void gameTextBuildSystemFontAtlas(void) {
-    int glyphWidthTiles;
     int glyphCount;
     FontMetrics* fontMetrics;
     TextFont* charset;
@@ -834,6 +1258,7 @@ void gameTextBuildSystemFontAtlas(void) {
     u8* compressedFont;
     OSFontHeader* fontData;
     int previousHeapOverride;
+    int glyphWidthTiles;
     int remainingGlyphs;
     TextGlyph* glyph;
     u8 encodedChar[3];
@@ -847,7 +1272,38 @@ void gameTextBuildSystemFontAtlas(void) {
     case OS_FONT_ENCODE_ANSI:
         compressedFontSize = OS_FONT_ROM_SIZE_ANSI;
         fontDataSize = 0x10120;
-#if defined(VERSION_GSAE01_rev1)
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+        gGameTextFontIsSjis = 0;
+        charset->glyphs = sGameTextEuroExtraGlyphs;
+        charset->glyphCount = ARRAY_COUNT(sGameTextEuroExtraGlyphs);
+        switch (OSGetLanguage()) {
+        case OS_LANGUAGE_GERMAN:
+            curLanguage = LANGUAGE_GERMAN;
+            charset->entries = sDeDiscStatusMessageTable;
+            charset->entryCount = ARRAY_COUNT(sDeDiscStatusMessageTable);
+            break;
+        case OS_LANGUAGE_FRENCH:
+            curLanguage = LANGUAGE_FRENCH;
+            charset->entries = sFrDiscStatusMessageTable;
+            charset->entryCount = ARRAY_COUNT(sFrDiscStatusMessageTable);
+            break;
+        case OS_LANGUAGE_SPANISH:
+            curLanguage = LANGUAGE_SPANISH;
+            charset->entries = sEsDiscStatusMessageTable;
+            charset->entryCount = ARRAY_COUNT(sEsDiscStatusMessageTable);
+            break;
+        case OS_LANGUAGE_ITALIAN:
+            curLanguage = LANGUAGE_ITALIAN;
+            charset->entries = sItDiscStatusMessageTable;
+            charset->entryCount = ARRAY_COUNT(sItDiscStatusMessageTable);
+            break;
+        default:
+            curLanguage = LANGUAGE_ENGLISH;
+            charset->entries = sDiscStatusMessageTable;
+            charset->entryCount = ARRAY_COUNT(sDiscStatusMessageTable);
+            break;
+        }
+#elif defined(VERSION_GSAE01_rev1)
         gGameTextFontIsSjis = 0;
         charset->glyphs = sDiscStatusGlyphs;
         charset->glyphCount = ARRAY_COUNT(sDiscStatusGlyphs);
@@ -859,6 +1315,7 @@ void gameTextBuildSystemFontAtlas(void) {
         gGameTextFontIsSjis = 0;
 #endif
         break;
+#if !defined(VERSION_GSAP01) && !defined(VERSION_GSAP01_rev1)
     case OS_FONT_ENCODE_SJIS:
         compressedFontSize = OS_FONT_ROM_SIZE_SJIS;
         fontDataSize = 0x90ee4;
@@ -871,11 +1328,12 @@ void gameTextBuildSystemFontAtlas(void) {
         charset->entryCount = ARRAY_COUNT(sJpDiscStatusMessageTable);
 #endif
         break;
+#endif
     }
     compressedFont = mmAlloc(compressedFontSize, 0x1a, 0);
     fontData = mmAlloc(fontDataSize, 0x1a, 0);
     OSLoadFont(fontData, compressedFont);
-#if !defined(VERSION_GSAE01_rev1)
+#if !defined(VERSION_GSAE01_rev1) && !defined(VERSION_GSAP01) && !defined(VERSION_GSAP01_rev1)
     if (charset->glyphCount == 0) {
 #if !defined(VERSION_GSAP01) && !defined(VERSION_GSAP01_rev1)
         if (gGameTextFontIsSjis) {
@@ -905,11 +1363,12 @@ void gameTextBuildSystemFontAtlas(void) {
     atlasX = 0;
     atlasY = 0;
     while (remainingGlyphs--) {
-#if defined(VERSION_GSAE01_rev1)
+#if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
         if (curLanguage == LANGUAGE_JAPANESE) {
 #else
         if (gGameTextFontIsSjis) {
 #endif
+#if !defined(VERSION_GSAP01) && !defined(VERSION_GSAP01_rev1)
             int codePoint;
             u32 sjisCode;
             int leadByte;
@@ -926,6 +1385,7 @@ void gameTextBuildSystemFontAtlas(void) {
                 encodedChar[1] = trailByte;
                 encodedChar[2] = 0;
             }
+#endif
         } else {
             encodedChar[0] = glyph->key;
             encodedChar[1] = 0;
@@ -1450,6 +1910,65 @@ int gameTextGetState(int i) {
 f32 gameTextGetTimer(void) {
     return gameTextFonts->timer;
 }
+
+#if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
+void gameTextSetLanguage(int language) {
+    GameTextSlot* cmd;
+    int slotIndex;
+    int dirId;
+    TextFont* charsets = gGameTextCharsets;
+
+    curLanguage = language;
+    if (language == gGameTextLastLanguage) {
+        return;
+    }
+
+    dirId = curGameTextDir;
+    switch (language) {
+    case LANGUAGE_ENGLISH:
+        charsets[GAMETEXT_SLOT_ERROR].entries = sDiscStatusMessageTable;
+        charsets[GAMETEXT_SLOT_ERROR].entryCount = 7;
+        break;
+    case LANGUAGE_FRENCH:
+        charsets[GAMETEXT_SLOT_ERROR].entries = sFrDiscStatusMessageTable;
+        charsets[GAMETEXT_SLOT_ERROR].entryCount = 7;
+        break;
+    case LANGUAGE_GERMAN:
+        charsets[GAMETEXT_SLOT_ERROR].entries = sDeDiscStatusMessageTable;
+        charsets[GAMETEXT_SLOT_ERROR].entryCount = 7;
+        break;
+    case LANGUAGE_ITALIAN:
+        charsets[GAMETEXT_SLOT_ERROR].entries = sItDiscStatusMessageTable;
+        charsets[GAMETEXT_SLOT_ERROR].entryCount = 7;
+        break;
+    case LANGUAGE_SPANISH:
+        charsets[GAMETEXT_SLOT_ERROR].entries = sEsDiscStatusMessageTable;
+        charsets[GAMETEXT_SLOT_ERROR].entryCount = 7;
+        break;
+    }
+
+    gameTextFonts = &gGameTextCharsets[GAMETEXT_SLOT_HUD];
+    gameTextCharset = GAMETEXT_SLOT_HUD;
+    if (gameTextDrawFunc == NULL) {
+        slotIndex = gGameTextCommandCount;
+        gGameTextCommandCount = slotIndex + 1;
+        cmd = &gGameTextCommandSlots[slotIndex];
+        cmd->opcode = GAMETEXT_COMMAND_SET_CHARSET;
+        cmd->arg0 = GAMETEXT_SLOT_HUD;
+    }
+    gameTextLoadDir(0x1c);
+    gameTextFonts = &gGameTextCharsets[GAMETEXT_SLOT_DIALOGUE];
+    gameTextCharset = GAMETEXT_SLOT_DIALOGUE;
+    if (gameTextDrawFunc == NULL) {
+        slotIndex = gGameTextCommandCount;
+        gGameTextCommandCount = slotIndex + 1;
+        cmd = &gGameTextCommandSlots[slotIndex];
+        cmd->opcode = GAMETEXT_COMMAND_SET_CHARSET;
+        cmd->arg0 = GAMETEXT_SLOT_DIALOGUE;
+    }
+    gameTextLoadDir(dirId);
+}
+#endif
 
 int getCurLanguage(void) {
     return curLanguage;
