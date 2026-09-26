@@ -847,14 +847,29 @@ void gameTextBuildSystemFontAtlas(void) {
     case OS_FONT_ENCODE_ANSI:
         compressedFontSize = OS_FONT_ROM_SIZE_ANSI;
         fontDataSize = 0x10120;
+#if defined(VERSION_GSAE01_rev1)
+        gGameTextFontIsSjis = 0;
+        charset->glyphs = sDiscStatusGlyphs;
+        charset->glyphCount = ARRAY_COUNT(sDiscStatusGlyphs);
+        curLanguage = LANGUAGE_ENGLISH;
+        charset->entries = sDiscStatusMessageTable;
+        charset->entryCount = ARRAY_COUNT(sDiscStatusMessageTable);
+#else
         curLanguage = LANGUAGE_ENGLISH;
         gGameTextFontIsSjis = 0;
+#endif
         break;
     case OS_FONT_ENCODE_SJIS:
         compressedFontSize = OS_FONT_ROM_SIZE_SJIS;
         fontDataSize = 0x90ee4;
         curLanguage = LANGUAGE_JAPANESE;
         gGameTextFontIsSjis = 1;
+#if defined(VERSION_GSAE01_rev1)
+        charset->glyphs = sJpDiscStatusGlyphs;
+        charset->glyphCount = ARRAY_COUNT(sJpDiscStatusGlyphs);
+        charset->entries = sJpDiscStatusMessageTable;
+        charset->entryCount = ARRAY_COUNT(sJpDiscStatusMessageTable);
+#endif
         break;
     }
     compressedFont = mmAlloc(compressedFontSize, 0x1a, 0);
@@ -1176,14 +1191,25 @@ void gameTextInit(void) {
 }
 
 static inline u32 lookupSjisGlyph(int c) {
+#if defined(VERSION_GSAE01_rev1)
+    int i;
+
+    for (i = 0; i < 0x301; i++) {
+        if (gGameTextUnicodeToSjis[i] == c) {
+            return gGameTextUnicodeToSjis[i + 1];
+        }
+    }
+#else
     int i = 0xfe;
     u16* p = gGameTextSjisGlyphTable;
+
     while (i--) {
         if (p[0] == c) {
             return p[1];
         }
         p++;
     }
+#endif
     return 0;
 }
 
