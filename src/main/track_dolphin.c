@@ -100,12 +100,17 @@ STATIC_ASSERT(offsetof(MapDynamicSlot, cooldown) == 0x14);
 STATIC_ASSERT(offsetof(MapDynamicSlot, querySlot) == 0x15);
 
 #define MAP_DYNAMIC_SLOT_COUNT 64
+#define TRACK_TRIANGLE_CAPACITY 1200
+#define INTERSECT_LINE_CAPACITY 1500
+#define INTERSECT_POINT_CAPACITY 1700
+#define TRACK_GROUND_HIT_CAPACITY 35
 
-int trackBuildBlockTriangles(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
-int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f32 scale, f32 x0, f32 y0, f32 z0, f32 x1,
-                             f32 y1, f32 z1, u8 flags);
-int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* endPos, int count, void* slots,
-                       int flagsArg);
+TrackTriangle* trackBuildBlockTriangles(TrackTriangle* base, int x0, int y0, int z0, int x1, int y1, int z1, int a,
+                                        int b);
+TrackTriangle* trackBuildModelTriangles(TrackTriangle* cur, TrackBlockDescriptor* desc, int* model, f32 scale, f32 x0,
+                                        f32 y0, f32 z0, f32 x1, f32 y1, f32 z1, u8 flags);
+int trackGetIntersect2(int mode, void* tri1, void* tri2, Vec* startPos, Vec* endPos, int count,
+                       TrackHitResults* results, int flagsArg);
 int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackLineIntersectResult* hit,
                                  GameObject* target, s8 lineMask, s8 segment, s8 yTolerance, GameObject* sourceObj);
 
@@ -118,8 +123,8 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z);
 char sTrackNoFreeLastLineError[] = "NO FREE LAST LINE\n";
 
 u16 gIntersectSegmentTypeTable[40];
-TrackGroundHit* gTrackGroundHitOrder[35];
-TrackGroundHit gTrackGroundHits[35];
+TrackGroundHit* gTrackGroundHitOrder[TRACK_GROUND_HIT_CAPACITY];
+TrackGroundHit gTrackGroundHits[TRACK_GROUND_HIT_CAPACITY];
 
 char sTrackIntersectFuncOverflowFormat[] = "trackIntersect: FUNC OVERFLOW %d\n";
 
@@ -203,7 +208,7 @@ void Obj_SetParent(GameObject* obj, GameObject* newParent, int updateLocalTransf
                                            obj->anim.parent);
             Obj_TransformWorldVectorToLocal(dirX, 0.0f, dirZ, &obj->anim.velocityX, (f32*)dirBuf, &obj->anim.velocityZ,
                                             obj->anim.parent);
-            yawSum = yawSum - ((GameObject*)obj->anim.parent)->anim.rotX;
+            yawSum -= ((GameObject*)obj->anim.parent)->anim.rotX;
             if (yawSum > 0x8000) {
                 yawSum -= 0xffff;
             }
@@ -289,8 +294,8 @@ int trackSweepCircleAgainstPoint(f32* x, f32* z, f32 centerX, f32 centerZ, f32 r
             if (timeB < timeA) {
                 timeA = timeB;
             }
-            hitTime = timeA;
-            if (hitTime >= 0.0f && hitTime <= 1.0f) {
+            if (timeA >= 0.0f && timeA <= 1.0f) {
+                hitTime = timeA;
                 gIntersectSweepHitTime = hitTime;
                 if (resolveCollision != 0) {
                     hitX = hitTime * moveX + x[0];
@@ -301,10 +306,9 @@ int trackSweepCircleAgainstPoint(f32* x, f32* z, f32 centerX, f32 centerZ, f32 r
                     penetration = planeOffset + (normalX * x[1] + normalZ * z[1]);
                     x[1] = x[1] - penetration * normalX;
                     z[1] = z[1] - penetration * normalZ;
-                    separation = 0.1f;
-                    separationX = separation * normalX;
-                    separationZ = separation * normalZ;
-                    while (planeOffset + (x[1] * normalX + z[1] * normalZ) < separation) {
+                    separationX = 0.1f * normalX;
+                    separationZ = 0.1f * normalZ;
+                    while (planeOffset + (x[1] * normalX + z[1] * normalZ) < 0.1f) {
                         x[1] += separationX;
                         z[1] += separationZ;
                     }
@@ -332,7 +336,6 @@ void trackInvalidateDynamicSlotsForObject(GameObject* target) {
  * line table, sliding/clipping the end point; fills *hit with the last hit. */
 int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackLineIntersectResult* hit,
                                  GameObject* target, s8 lineMask, s8 segment, s8 yTolerance, GameObject* sourceObj) {
-    f32 margin = 200.0f;
     f32 fracs[5];
     f32 dists[5];
     f32 lb[4], la[4], ld[4];
@@ -346,8 +349,9 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
     int found;
     int count;
     int end;
-    u32 lineIdx;
-    int vt, vp;
+    s16* lineIdx;
+    IntersectLine* lines;
+    Vec* points;
     s8 lineType;
     s8 flag1;
     s8 flag2;
@@ -364,9 +368,9 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
             start = 0;
             end = target->anim.modelInstance->modLineCount;
         }
-        lineIdx = 0;
-        vt = (int)target->anim.modelInstance->intersectionLines;
-        vp = (int)target->anim.modelInstance->intersectionPoints;
+        lineIdx = NULL;
+        lines = (IntersectLine*)target->anim.modelInstance->intersectionLines;
+        points = (Vec*)target->anim.modelInstance->intersectionPoints;
         if (target->objectFlags & 0x100) {
             end = 0;
         }
@@ -379,9 +383,9 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
             start = 0;
             end = gIntersectLineCount;
         }
-        lineIdx = gIntersectLineIndexTable;
-        vt = gIntersectLinePool;
-        vp = (int)gIntersectPoints;
+        lineIdx = (s16*)gIntersectLineIndexTable;
+        lines = (IntersectLine*)gIntersectLinePool;
+        points = (Vec*)gIntersectPoints;
     }
 
     flag1 = !(flags & 1);
@@ -415,10 +419,10 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
     maxX += radius;
     minZ -= radius;
     maxZ += radius;
-    minX -= margin;
-    maxX += margin;
-    minZ -= margin;
-    maxZ += margin;
+    minX -= 200.0f;
+    maxX += 200.0f;
+    minZ -= 200.0f;
+    maxZ += 200.0f;
 
     count = 0;
     found = 1;
@@ -426,28 +430,28 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
     while (found) {
         found = 0;
         for (i = start; i < end; i++) {
-            u8* rec;
+            IntersectLine* rec;
             int i0, i1;
             s8 lineFlags, kind;
-            f32 *va, *vb;
+            Vec *va, *vb;
             f32 ha, ylo, hb, yhi;
 
             dist = -1.0f;
-            if (lineIdx != 0) {
-                rec = (u8*)(vt + ((s16*)lineIdx)[i] * 0x10);
+            if (lineIdx != NULL) {
+                rec = &lines[lineIdx[i]];
             } else {
-                rec = (u8*)(vt + i * 0x10);
+                rec = &lines[i];
             }
-            lineFlags = *(s8*)&((IntersectLine*)rec)->flags;
+            lineFlags = *(s8*)&rec->flags;
             if ((lineMask & ~lineFlags) == 0) {
                 continue;
             }
-            kind = ((IntersectLine*)rec)->kind;
+            kind = rec->kind;
             if (kind & 0x40) {
                 continue;
             }
-            i0 = ((IntersectLine*)rec)->pt[0];
-            i1 = ((IntersectLine*)rec)->pt[1];
+            i0 = rec->pt[0];
+            i1 = rec->pt[1];
             if (kind & 0x80) {
                 if (flag4 != 0) {
                     continue;
@@ -459,14 +463,14 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
             if (flag2 != 0) {
                 lineType = 1;
             }
-            va = (f32*)(vp + i0 * 0xc);
-            ax2 = va[0];
-            ay2 = va[1];
-            az2 = va[2];
-            vb = (f32*)(vp + i1 * 0xc);
-            bx2 = vb[0];
-            by2 = vb[1];
-            bz2 = vb[2];
+            va = &points[i0];
+            ax2 = va->x;
+            ay2 = va->y;
+            az2 = va->z;
+            vb = &points[i1];
+            bx2 = vb->x;
+            by2 = vb->y;
+            bz2 = vb->z;
             if (ax2 < minX && bx2 < minX) {
                 continue;
             }
@@ -484,22 +488,19 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
             if (by2 < ay2) {
                 ylo = by2;
             }
-            ylo = ylo - (f32)yTolerance;
+            ylo -= (f32)yTolerance;
             if (lineFlags & 0x80) {
-                ha = (f32) * (s16*)rec;
+                ha = *(s16*)&rec->end0;
                 hb = ha;
             } else {
-                ha = (f32)(s8)rec[0];
-                hb = (f32)(s8)rec[1];
+                ha = (s8)rec->end0;
+                hb = (s8)rec->end1;
             }
-            {
-                f32 ta = ay2 + ha;
-                yhi = ta;
-                if (by2 + hb > ta) {
-                    yhi = by2 + hb;
-                }
+            yhi = ay2 + ha;
+            if (by2 + hb > yhi) {
+                yhi = by2 + hb;
             }
-            yhi = yhi + (f32)yTolerance;
+            yhi += (f32)yTolerance;
             if (startPos[1] < ylo) {
                 continue;
             }
@@ -694,9 +695,9 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
     if (count != 0 && hit != NULL) {
         int pick = count - 1;
         int hi;
-        s16* rec2;
+        IntersectLine* rec2;
         f32 fa, fb;
-        f32 *lineStart, *lineEnd;
+        Vec *lineStart, *lineEnd;
         f32 dx, dz;
         if (flag1 == 0) {
             pick = 0;
@@ -708,37 +709,37 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
         hit->distance = fracs[0] * sqrtf(dx * dx + dz * dz);
         hit->interpolation = dists[pick];
         hi = hits[pick];
-        if (lineIdx != 0) {
-            rec2 = (s16*)(vt + *(s16*)(lineIdx + hi * 2) * 0x10);
+        if (lineIdx != NULL) {
+            rec2 = &lines[lineIdx[hi]];
         } else {
-            rec2 = (s16*)(vt + hi * 0x10);
+            rec2 = &lines[hi];
         }
         {
-            int j0 = rec2[2];
-            int j1 = rec2[3];
-            if ((s8) * (u8*)((u8*)rec2 + 2) & 0x80) {
-                fa = rec2[0];
+            int j0 = rec2->pt[0];
+            int j1 = rec2->pt[1];
+            if ((s8)rec2->flags & 0x80) {
+                fa = *(s16*)&rec2->end0;
                 fb = fa;
             } else {
-                fa = (f32)(s8) * (u8*)rec2;
-                fb = (f32)(s8) * ((u8*)rec2 + 1);
+                fa = (s8)rec2->end0;
+                fb = (s8)rec2->end1;
             }
-            hit->lineStartX = ((f32*)vp)[j0 * 3];
-            lineStart = (f32*)(vp + j0 * 0xc);
-            hit->lineStartY = lineStart[1];
+            hit->lineStartX = ((f32*)points)[j0 * 3];
+            lineStart = &points[j0];
+            hit->lineStartY = lineStart->y;
             hit->upperY0 = hit->lineStartY + fa;
-            hit->lineStartZ = lineStart[2];
-            hit->lineEndX = ((f32*)vp)[j1 * 3];
-            lineEnd = (f32*)(vp + j1 * 0xc);
-            hit->lineEndY = lineEnd[1];
+            hit->lineStartZ = lineStart->z;
+            hit->lineEndX = ((f32*)points)[j1 * 3];
+            lineEnd = &points[j1];
+            hit->lineEndY = lineEnd->y;
             hit->upperY1 = hit->lineEndY + fb;
-            hit->lineEndZ = lineEnd[2];
-            hit->surfaceType = (s8)(*((u8*)rec2 + 3) & 0x3f);
-            hit->flags = *((u8*)rec2 + 2);
-            hit->kind = rec2[6];
+            hit->lineEndZ = lineEnd->z;
+            hit->surfaceType = (s8)(rec2->kind & 0x3f);
+            hit->flags = rec2->flags;
+            hit->kind = rec2->param;
             hit->object = target;
-            hit->adjacentLine0 = rec2[4];
-            hit->adjacentLine1 = rec2[5];
+            hit->adjacentLine0 = rec2->adj[0];
+            hit->adjacentLine1 = rec2->adj[1];
         }
     }
     if (count != 0) {
@@ -984,7 +985,7 @@ void intersectModLineBuild(ObjDef* definition) {
     gIntersectPointCount = 0;
     sourceLineCount = definition->modLineCount;
     for (lineIndex = 0, sourceLine = definition->modLines; lineIndex < sourceLineCount; sourceLine++, lineIndex++) {
-        if (gIntersectLineCount < 0x5dc) {
+        if (gIntersectLineCount < INTERSECT_LINE_CAPACITY) {
             line = (IntersectLine*)((u8*)gIntersectLinePool + gIntersectLineCount * (int)sizeof(IntersectLine));
             line->end0 = sourceLine->endpointData[0];
             line->end1 = sourceLine->endpointData[1];
@@ -1000,7 +1001,7 @@ void intersectModLineBuild(ObjDef* definition) {
                 f32 x = sourceLine->x[index];
                 f32 y = sourceLine->y[index];
                 f32 z = sourceLine->z[index];
-                if (gIntersectPointCount < 0x6a4) {
+                if (gIntersectPointCount < INTERSECT_POINT_CAPACITY) {
                     line->pt[index] = insertPoint(gIntersectLineCount, pointLinks, x, y, z);
                 }
             }
@@ -1042,10 +1043,9 @@ void intersectModLineBuild(ObjDef* definition) {
     definition->intersectionLines =
         mmAlloc(gIntersectLineCount * (int)sizeof(IntersectLine) + gIntersectPointCount * (int)sizeof(Vec) + 0x28,
                 0xffff00ff, 0);
-    definition->intersectionPoints =
-        (f32*)((u8*)definition->intersectionLines + gIntersectLineCount * (int)sizeof(IntersectLine));
+    definition->intersectionPoints = (f32*)(definition->intersectionLines + gIntersectLineCount);
     definition->intersectionSegmentRanges =
-        (TrackModelLineRange*)((u8*)definition->intersectionPoints + gIntersectPointCount * (int)sizeof(Vec));
+        (TrackModelLineRange*)(definition->intersectionPoints + gIntersectPointCount * 3);
     {
         int rangeByteOffset;
         for (rangeByteOffset = 0; rangeByteOffset < 40; rangeByteOffset++) {
@@ -1094,13 +1094,13 @@ void intersectModLineBuild(ObjDef* definition) {
             s16 bestLine;
             bestLine = bestLineIndex;
             for (lineIndex = 0; lineIndex < gIntersectLineCount; lineIndex++) {
-                line = &((IntersectLine*)gIntersectLinePool)[lineIndex];
+                line = trackGetPooledLine(lineIndex);
                 if (line->kind != 0x14) {
                     if (bestLine == line->adj[0]) {
                         line->adj[0] = index;
                     }
-                    if (bestLine == ((IntersectLine*)gIntersectLinePool)[lineIndex].adj[1]) {
-                        ((IntersectLine*)gIntersectLinePool)[lineIndex].adj[1] = index;
+                    if (bestLine == trackGetPooledLine(lineIndex)->adj[1]) {
+                        trackGetPooledLine(lineIndex)->adj[1] = index;
                     }
                 }
             }
@@ -1148,7 +1148,7 @@ static inline void trackSortLineOrder(void) {
 
 void trackIntersect(void) {
     s16 counts[0x47];
-    s16 edges[0x6a4 * 2];
+    s16 edges[INTERSECT_POINT_CAPACITY * 2];
     int blockIndex;
     int sourceIndex;
     int endpoint;
@@ -1195,7 +1195,7 @@ void trackIntersect(void) {
                     for (; sourceIndex < blk->hitCount; sourceIndex++) {
                         blockX = 640.0f * gridX;
                         blockZ = 640.0f * gridZ;
-                        if (gIntersectLineCount < 0x5dc) {
+                        if (gIntersectLineCount < INTERSECT_LINE_CAPACITY) {
                             MapHitLine* sourceLine = &blk->hits[sourceIndex];
                             IntersectLine* rec = (IntersectLine*)(gIntersectLinePool + gIntersectLineCount * 0x10);
                             f32 mapOriginX, mapOriginZ;
@@ -1216,7 +1216,7 @@ void trackIntersect(void) {
                                 pointX = mapOriginX + sourceLine->x[endpoint];
                                 pointY = sourceLine->y[endpoint];
                                 pointZ = sourceLine->z[endpoint] + mapOriginZ;
-                                if (gIntersectPointCount < 0x6a4) {
+                                if (gIntersectPointCount < INTERSECT_POINT_CAPACITY) {
                                     rec->pt[endpoint] = insertPoint(gIntersectLineCount, edges, pointX, pointY, pointZ);
                                 }
                             }
@@ -1276,10 +1276,10 @@ void trackIntersect(void) {
     }
 
     for (i = 0; i < gIntersectLineCount; i++) {
-        IntersectLine* line = (IntersectLine*)(gIntersectLinePool + i * 16);
+        IntersectLine* line = trackGetPooledLine(i);
         int typeIndex = (line->kind & 0x3f) + 1;
         s16 typeOffset = counts[typeIndex]++;
-        *(s16*)(gIntersectLineIndexTable + typeOffset * 2) = i;
+        ((s16*)gIntersectLineIndexTable)[typeOffset] = i;
     }
 
     for (i = 0; i < gIntersectLineCount - 1; i++) {
@@ -1344,18 +1344,12 @@ void trackSetLinesEnabledByParam(int matchVal, GameObject* obj, int flag) {
 }
 
 void trackTickDynamicSlotCooldowns(void) {
-    u32 cur;
-    int idx;
-    s16 i;
-    i = 0;
-    idx = 0;
+    s16 i = 0;
     do {
-        MapDynamicSlot* entry = (MapDynamicSlot*)((u8*)gMapDynamicSlots + idx);
-        cur = entry->cooldown;
-        if (cur != 0) {
+        MapDynamicSlot* entry = &gMapDynamicSlots[i];
+        if (entry->cooldown != 0) {
             entry->cooldown--;
         }
-        idx += sizeof(MapDynamicSlot);
         i++;
     } while (i < MAP_DYNAMIC_SLOT_COUNT);
 }
@@ -1369,7 +1363,7 @@ int trackIntersectRebuildPending(void) {
 }
 
 void setMapBlockFlag(void) {
-    mapBlockFlag = 0x1;
+    mapBlockFlag = 1;
 }
 
 int trackGetHeightAboveGround(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int queryMask) {
@@ -1385,8 +1379,7 @@ int trackGetHeightAboveGround(GameObject* obj, f32 x, f32 y, f32 z, f32* outDept
         best = y - arr[0]->height;
         arrp = arr + 1;
         for (i = 1; i < n; i++, arrp++) {
-            cur = (*arrp)->height;
-            cur = y - cur;
+            cur = y - (*arrp)->height;
             if (cur >= 0.0f) {
                 if (best < 0.0f || cur < best) {
                     best = cur;
@@ -1427,9 +1420,7 @@ int trackGetNearestGroundOffsetAndNormal(GameObject* obj, f32 x, f32 y, f32 z, f
         bestDistance = firstDistance;
         nearestIndex = 0;
         for (hitIndex = 1; hitIndex < hitCount; hitIndex++) {
-            f32 distance = hits[hitIndex]->height;
-            distance = y - distance;
-            distance = trackAbsF32(distance);
+            f32 distance = trackAbsF32(y - hits[hitIndex]->height);
             if (distance < bestDistance) {
                 bestDistance = distance;
                 nearestIndex = hitIndex;
@@ -1460,9 +1451,7 @@ int trackGetNearestGroundOffset(GameObject* obj, f32 x, f32 y, f32 z, f32* outGr
         bestDistance = firstDistance;
         nearestIndex = 0;
         for (hitIndex = 1; hitIndex < hitCount; hitIndex++) {
-            f32 distance = hits[hitIndex]->height;
-            distance = y - distance;
-            distance = trackAbsF32(distance);
+            f32 distance = trackAbsF32(y - hits[hitIndex]->height);
             if (distance < bestDistance) {
                 bestDistance = distance;
                 nearestIndex = hitIndex;
@@ -1528,24 +1517,20 @@ void trackCollectGroundHits(TrackTriangle* triStart, TrackTriangle* triEnd, Trac
         {
             for (i = 0; i < 3; i++) {
                 int nxt;
-                f32 zero;
-                f32 extrudeDistance;
                 f32 nz, ny, nx, mag;
-                extrudeDistance = 10.0f;
-                zero = 0.0f;
 
                 nxt = i + 1;
                 if (nxt > 2) {
                     nxt = 0;
                 }
-                vxp[3] = extrudeDistance * vec[0] + vxp[i];
-                vyp[3] = extrudeDistance * vec[1] + vyp[i];
-                vzp[3] = extrudeDistance * vec[2] + vzp[i];
+                vxp[3] = 10.0f * vec[0] + vxp[i];
+                vyp[3] = 10.0f * vec[1] + vyp[i];
+                vzp[3] = 10.0f * vec[2] + vzp[i];
                 nx = vyp[3] * (vzp[i] - vzp[nxt]) + (vyp[i] * (vzp[nxt] - vzp[3]) + vyp[nxt] * (vzp[3] - vzp[i]));
                 ny = vzp[3] * (vxp[i] - vxp[nxt]) + (vzp[i] * (vxp[nxt] - vxp[3]) + vzp[nxt] * (vxp[3] - vxp[i]));
                 nz = vxp[3] * (vyp[i] - vyp[nxt]) + (vxp[i] * (vyp[nxt] - vyp[3]) + vxp[nxt] * (vyp[3] - vyp[i]));
                 mag = sqrtf(nx * nx + ny * ny + nz * nz);
-                if (mag > zero) {
+                if (mag > 0.0f) {
                     f32 s = 1.0f / mag;
                     nx *= s;
                     ny *= s;
@@ -1755,70 +1740,69 @@ int trackResolveSurfacePenetration(const f32* startPosition, f32* position, cons
     return 1;
 }
 
-int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, f32* rayOrigin, f32* rayDirection, f32 maxDistance,
-                                f32* hitPointOut, f32* planeOut, f32 unusedClearance, f32* hitDistanceOut,
+int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, Vec* rayOrigin, Vec* rayDirection, f32 maxDistance,
+                                Vec* hitPointOut, f32* planeOut, f32 unusedClearance, f32* hitDistanceOut,
                                 f32 unusedEpsilon) {
     f32 crossNormal[3];
     f32 startOffset[3];
     f32 scratch[3];
     f32 sphereCenter[3];
-    f32 distance, lineDistanceSquared, edgeDistance, zero;
+    f32 distance, lineDistanceSquared, edgeDistance;
 
-    Vec3_Cross(rayDirection, edge->direction, crossNormal);
+    Vec3_Cross(&rayDirection->x, &edge->direction.x, crossNormal);
     distance = Vec3_Normalize(crossNormal);
     if (0.0f == distance) {
         return 0;
     }
-    startOffset[0] = rayOrigin[0] - edge->start[0];
-    startOffset[1] = rayOrigin[1] - edge->start[1];
-    startOffset[2] = rayOrigin[2] - edge->start[2];
+    startOffset[0] = rayOrigin->x - edge->start.x;
+    startOffset[1] = rayOrigin->y - edge->start.y;
+    startOffset[2] = rayOrigin->z - edge->start.z;
     {
         f32 dotY = crossNormal[1] * startOffset[1];
         lineDistanceSquared = dotY + crossNormal[0] * startOffset[0] + crossNormal[2] * startOffset[2];
     }
     lineDistanceSquared *= lineDistanceSquared;
     if (lineDistanceSquared <= edge->radiusSquared) {
-        Vec3_Cross(startOffset, edge->direction, scratch);
+        Vec3_Cross(startOffset, &edge->direction.x, scratch);
         {
             f32 dotY = scratch[1] * crossNormal[1];
             distance = -(dotY + scratch[0] * crossNormal[0] + scratch[2] * crossNormal[2]) / distance;
         }
-        Vec3_Cross(crossNormal, edge->direction, scratch);
+        Vec3_Cross(crossNormal, &edge->direction.x, scratch);
         Vec3_Normalize(scratch);
         {
             f32 radialDistance = sqrtf(edge->radiusSquared - lineDistanceSquared);
-            f32 dotY = rayDirection[1] * scratch[1];
-            f32 directionProjection = dotY + rayDirection[0] * scratch[0] + rayDirection[2] * scratch[2];
+            f32 dotY = rayDirection->y * scratch[1];
+            f32 directionProjection = dotY + rayDirection->x * scratch[0] + rayDirection->z * scratch[2];
             f32 entryOffset = radialDistance / directionProjection;
             if (entryOffset < 0.0f) {
                 entryOffset = -entryOffset;
             }
             distance -= entryOffset;
         }
-        zero = 0.0f;
-        if (distance >= zero) {
+        if (distance >= 0.0f) {
             if (distance <= maxDistance) {
-                sphereCenter[0] = rayDirection[0] * distance;
-                sphereCenter[1] = rayDirection[1] * distance;
-                sphereCenter[2] = rayDirection[2] * distance;
-                sphereCenter[0] = rayOrigin[0] + sphereCenter[0];
-                sphereCenter[1] = rayOrigin[1] + sphereCenter[1];
-                sphereCenter[2] = rayOrigin[2] + sphereCenter[2];
+                sphereCenter[0] = rayDirection->x * distance;
+                sphereCenter[1] = rayDirection->y * distance;
+                sphereCenter[2] = rayDirection->z * distance;
+                sphereCenter[0] = rayOrigin->x + sphereCenter[0];
+                sphereCenter[1] = rayOrigin->y + sphereCenter[1];
+                sphereCenter[2] = rayOrigin->z + sphereCenter[2];
                 {
-                    f32 edgeStartYProduct = edge->direction[1] * edge->start[1];
+                    f32 edgeStartYProduct = edge->direction.y * edge->start.y;
                     edgeDistance =
-                        (sphereCenter[0] * edge->direction[0] + sphereCenter[1] * edge->direction[1] +
-                         sphereCenter[2] * edge->direction[2]) -
-                        (edgeStartYProduct + edge->direction[0] * edge->start[0] + edge->direction[2] * edge->start[2]);
+                        (sphereCenter[0] * edge->direction.x + sphereCenter[1] * edge->direction.y +
+                         sphereCenter[2] * edge->direction.z) -
+                        (edgeStartYProduct + edge->direction.x * edge->start.x + edge->direction.z * edge->start.z);
                 }
-                if (edgeDistance >= zero) {
+                if (edgeDistance >= 0.0f) {
                     if (edgeDistance <= edge->length) {
-                        scratch[0] = edge->direction[0] * edgeDistance;
-                        scratch[1] = edge->direction[1] * edgeDistance;
-                        scratch[2] = edge->direction[2] * edgeDistance;
-                        scratch[0] = edge->start[0] + scratch[0];
-                        scratch[1] = edge->start[1] + scratch[1];
-                        scratch[2] = edge->start[2] + scratch[2];
+                        scratch[0] = edge->direction.x * edgeDistance;
+                        scratch[1] = edge->direction.y * edgeDistance;
+                        scratch[2] = edge->direction.z * edgeDistance;
+                        scratch[0] = edge->start.x + scratch[0];
+                        scratch[1] = edge->start.y + scratch[1];
+                        scratch[2] = edge->start.z + scratch[2];
                         planeOut[0] = sphereCenter[0] - scratch[0];
                         planeOut[1] = sphereCenter[1] - scratch[1];
                         planeOut[2] = sphereCenter[2] - scratch[2];
@@ -1829,9 +1813,9 @@ int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, f32* rayOrigin, f32*
                                 edge->radius - (dotY + sphereCenter[0] * planeOut[0] + sphereCenter[2] * planeOut[2]);
                         }
                         /* Preserve the byte view: native array copies remove retail stack stores. */
-                        hitPointOut[0] = *(f32*)((u8*)sphereCenter + 0);
-                        hitPointOut[1] = *(f32*)((u8*)sphereCenter + 4);
-                        hitPointOut[2] = *(f32*)((u8*)sphereCenter + 8);
+                        hitPointOut->x = *(f32*)((u8*)sphereCenter + 0);
+                        hitPointOut->y = *(f32*)((u8*)sphereCenter + 4);
+                        hitPointOut->z = *(f32*)((u8*)sphereCenter + 8);
                         *hitDistanceOut = distance;
                         return 3;
                     }
@@ -1843,14 +1827,14 @@ int trackSweepSphereAgainstEdge(TrackSphereSweepEdge* edge, f32* rayOrigin, f32*
 }
 
 /* Direction is normalized; an interior start selects the sphere exit. */
-static inline int trackSweepEndpointSphere(const f32* center, f32 radiusSquared, const f32* origin,
-                                           const f32* direction, f32 maxDistance, f32* hitPoint, f32* planeOut,
+static inline int trackSweepEndpointSphere(const Vec* center, f32 radiusSquared, const Vec* origin,
+                                           const Vec* direction, f32 maxDistance, Vec* hitPoint, f32* planeOut,
                                            f32* distanceOut) {
-    f32 centerOffset[3];
+    Vec centerOffset;
     f32 distance, centerDistanceSquared, lineDistanceSquared, radialDistance, planeConstant;
-    PSVECSubtract((Vec*)center, (Vec*)origin, (Vec*)centerOffset);
-    distance = PSVECDotProduct((Vec*)centerOffset, (Vec*)direction);
-    centerDistanceSquared = PSVECSquareMag((Vec*)centerOffset);
+    PSVECSubtract(center, origin, &centerOffset);
+    distance = PSVECDotProduct(&centerOffset, direction);
+    centerDistanceSquared = PSVECSquareMag(&centerOffset);
     if (distance < 0.0f && centerDistanceSquared > radiusSquared) {
         return 0;
     } else {
@@ -1865,12 +1849,12 @@ static inline int trackSweepEndpointSphere(const f32* center, f32 radiusSquared,
                 distance += radialDistance;
             }
             if (distance >= 0.0f && distance <= maxDistance) {
-                PSVECScale((Vec*)direction, (Vec*)hitPoint, distance);
-                PSVECAdd((Vec*)origin, (Vec*)hitPoint, (Vec*)hitPoint);
-                PSVECSubtract((Vec*)hitPoint, (Vec*)center, (Vec*)planeOut);
+                PSVECScale(direction, hitPoint, distance);
+                PSVECAdd(origin, hitPoint, hitPoint);
+                PSVECSubtract(hitPoint, center, (Vec*)planeOut);
                 PSVECNormalize((Vec*)planeOut, (Vec*)planeOut);
                 radialDistance = sqrtf(radiusSquared);
-                planeConstant = -PSVECDotProduct((Vec*)hitPoint, (Vec*)planeOut);
+                planeConstant = -PSVECDotProduct(hitPoint, (Vec*)planeOut);
                 planeOut[3] = planeConstant + radialDistance;
                 *distanceOut = distance;
                 return 1;
@@ -1885,10 +1869,10 @@ static inline int trackSweepEndpointSphere(const f32* center, f32 radiusSquared,
  * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */
 char sTrackHitOverflowError[] = "HIT OVERFLOW\n";
 
-int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* endPos, int count, void* slots,
-                       int flagsArg) {
-    f32 *ep1, *ep2;
-    f32 *sp1, *sp2;
+int trackGetIntersect2(int mode, void* tri1, void* tri2, Vec* startPos, Vec* endPos, int count,
+                       TrackHitResults* results, int flagsArg) {
+    Vec *ep1, *ep2;
+    Vec *sp1, *sp2;
     u8* slotp;
     u8* typeSlotp;
     f32* outp;
@@ -1896,7 +1880,8 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     f32* startY;
     f32* endZ;
     f32* endY;
-    f32 *edge1p, *edge2p, *vbp, *evecp;
+    f32 *edge1p, *edge2p;
+    Vec *vbp, *evecp;
     u8* slotBase;
     s16 i;
     u8 retLo;
@@ -1908,18 +1893,18 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     u8 type;
     f32 edgePlanes[3][4];
     TrackSphereSweepEdge edge;
-    f32 ws[3];
-    f32 we[3];
-    f32 delta[3];
-    f32 hitpt[3];
-    f32 cur[3];
+    Vec ws;
+    Vec we;
+    Vec delta;
+    Vec hitpt;
+    Vec cur;
     f32 plane[4];
     f32 contactPlane[4];
-    f32 svFrom[3];
-    f32* svFromp = svFrom;
-    f32 collisionContact[3];
-    f32 collisionStart[3];
-    f32 dir[3];
+    Vec svFrom;
+    Vec* svFromp = &svFrom;
+    Vec collisionContact;
+    Vec collisionStart;
+    Vec dir;
     f32 frac;
     f32 dS;
     f32 dE;
@@ -1931,15 +1916,13 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     TrackTriangle* tri;
     u32 objmtx;
     TrackBlockDescriptor* desc;
-    f32 eps;
     f32 negativeClearance, radius, clearance;
     f32 offX, offZ;
     f32 mag;
     s32* gridOrigin;
     TrackBlockDescriptor* descEnd;
-    TrackHitResults* results = slots;
 
-    slotBase = (u8*)slots;
+    slotBase = (u8*)results;
     descEnd = gTrackBlockDescriptors + gActiveTrackBlockCount;
     gridOrigin = (s32*)gTrackGridOrigin;
     offX = (f32)gridOrigin[0];
@@ -1952,57 +1935,55 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     ep2 = endPos;
     sp1 = startPos;
     sp2 = startPos;
-    slotp = slots;
-    outp = slots;
-    endY = &we[1];
-    endZ = &we[2];
-    startZ = &ws[2];
-    startY = &ws[1];
-    /* These byte views preserve the independent scratch-pointer setup. */
-    edge1p = (f32*)((u8*)edgePlanes + sizeof(edgePlanes[0]));
-    edge2p = (f32*)((u8*)edgePlanes + 2 * sizeof(edgePlanes[0]));
-    vbp = (f32*)((u8*)&edge + offsetof(TrackSphereSweepEdge, end));
-    evecp = (f32*)((u8*)&edge + offsetof(TrackSphereSweepEdge, direction));
-    eps = 0.0f;
+    slotp = (u8*)results;
+    outp = results->planes[0];
+    endY = &we.y;
+    endZ = &we.z;
+    startZ = &ws.z;
+    startY = &ws.y;
+    edge1p = edgePlanes[1];
+    edge2p = edgePlanes[2];
+    vbp = &edge.end;
+    evecp = &edge.direction;
     do {
-        cur[0] = ep1[0];
-        cur[1] = ep2[1];
-        cur[2] = ep2[2];
-        svFromp[0] = sp1[0];
-        svFromp[1] = sp2[1];
-        svFromp[2] = sp2[2];
-        radius = *(f32*)(slotp + 0x40);
+        cur.x = ep1->x;
+        cur.y = ep2->y;
+        cur.z = ep2->z;
+        svFromp->x = sp1->x;
+        svFromp->y = sp2->y;
+        svFromp->z = sp2->z;
+        radius = *(f32*)(slotp + offsetof(TrackHitResults, radii));
         typeSlotp = slotBase + i;
-        type = typeSlotp[0x54];
+        type = typeSlotp[offsetof(TrackHitResults, queryTypes)];
         clearance = radius + gTrackCollisionEpsilon;
         edge.radius = radius;
         edge.radiusSquared = radius * radius;
         bounces = 0;
         negativeClearance = -clearance;
         do {
-            we[0] = cur[0];
-            *endY = cur[1];
-            *endZ = cur[2];
+            we.x = cur.x;
+            *endY = cur.y;
+            *endZ = cur.z;
             found = 0;
             hit = 0;
             for (desc = gTrackBlockDescriptors; desc < descEnd; desc++) {
                 if (desc->object != NULL) {
-                    Matrix_TransformPoint(desc->alternateMatrix, svFromp[0], svFromp[1], svFromp[2], &ws[0], startY,
+                    Matrix_TransformPoint(desc->alternateMatrix, svFromp->x, svFromp->y, svFromp->z, &ws.x, startY,
                                           startZ);
-                    Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2], &we[0], endY, endZ);
+                    Matrix_TransformPoint(desc->currentMatrix, cur.x, cur.y, cur.z, &we.x, endY, endZ);
                 } else {
-                    ws[0] = svFromp[0] - offX;
-                    *startY = svFromp[1];
-                    *startZ = svFromp[2] - offZ;
-                    we[0] = cur[0] - offX;
+                    ws.x = svFromp->x - offX;
+                    *startY = svFromp->y;
+                    *startZ = svFromp->z - offZ;
+                    we.x = cur.x - offX;
                     /* TODO: Recover a non-volatile source shape that preserves retail's indirect stores. */
-                    *(volatile f32*)endY = cur[1];
-                    *(volatile f32*)endZ = cur[2] - offZ;
+                    *(volatile f32*)endY = cur.y;
+                    *(volatile f32*)endZ = cur.z - offZ;
                 }
-                PSVECSubtract((Vec*)we, (Vec*)ws, (Vec*)delta);
-                mag = PSVECMag((Vec*)delta);
-                if (mag > eps) {
-                    PSVECNormalize((Vec*)delta, (Vec*)dir);
+                PSVECSubtract(&we, &ws, &delta);
+                mag = PSVECMag(&delta);
+                if (mag > 0.0f) {
+                    PSVECNormalize(&delta, &dir);
                 }
                 for (tri = gTrackTriangleBuffer + desc->firstTriangle;
                      tri < gTrackTriangleBuffer + desc[1].firstTriangle; tri++) {
@@ -2015,23 +1996,23 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                     plane[1] = tri->planeN[1];
                     plane[2] = tri->planeN[2];
                     plane[3] = tri->planeD;
-                    dE = (plane[3] + PSVECDotProduct((Vec*)plane, (Vec*)we)) - radius;
+                    dE = (plane[3] + PSVECDotProduct((Vec*)plane, &we)) - radius;
                     if (!(dE <= 0.0f)) {
                         continue;
                     }
-                    dS = (plane[3] + PSVECDotProduct((Vec*)plane, (Vec*)ws)) - radius;
+                    dS = (plane[3] + PSVECDotProduct((Vec*)plane, &ws)) - radius;
                     if ((dS <= 0.0f && dE >= 0.0f) || (dS >= 0.0f && dE <= 0.0f)) {
                         if (dS != dE) {
                             frac = dS / (dS - dE);
                         } else {
                             frac = 0.0f;
                         }
-                        PSVECScale((Vec*)delta, (Vec*)hitpt, frac);
-                        PSVECAdd((Vec*)hitpt, (Vec*)ws, (Vec*)hitpt);
-                        if (hitpt[1] < tri->vy[tri->minMaxY & 0xf] - clearance) {
+                        PSVECScale(&delta, &hitpt, frac);
+                        PSVECAdd(&hitpt, &ws, &hitpt);
+                        if (hitpt.y < tri->vy[tri->minMaxY & 0xf] - clearance) {
                             continue;
                         }
-                        if (hitpt[1] > tri->vy[tri->minMaxY >> 4] + clearance) {
+                        if (hitpt.y > tri->vy[tri->minMaxY >> 4] + clearance) {
                             continue;
                         }
                         edgePlanes[0][0] = tri->edgeNormals[0].x;
@@ -2039,28 +2020,28 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         edgePlanes[0][2] = tri->edgeNormals[0].z;
                         edgePlanes[0][3] = -(tri->vz[0] * edgePlanes[0][2] +
                                              (tri->vx[0] * edgePlanes[0][0] + tri->vy[0] * edgePlanes[0][1])) +
-                                           PSVECDotProduct((Vec*)edgePlanes[0], (Vec*)hitpt);
-                        edgePlanes[1][0] = tri->edgeNormals[1].x;
-                        edgePlanes[1][1] = tri->edgeNormals[1].y;
-                        edgePlanes[1][2] = tri->edgeNormals[1].z;
-                        edgePlanes[1][3] = -(tri->vz[1] * edgePlanes[1][2] +
-                                             (tri->vx[1] * edgePlanes[1][0] + tri->vy[1] * edgePlanes[1][1])) +
-                                           PSVECDotProduct((Vec*)edge1p, (Vec*)hitpt);
-                        edgePlanes[2][0] = tri->edgeNormals[2].x;
-                        edgePlanes[2][1] = tri->edgeNormals[2].y;
-                        edgePlanes[2][2] = tri->edgeNormals[2].z;
-                        edgePlanes[2][3] = -(tri->vz[2] * edgePlanes[2][2] +
-                                             (tri->vx[2] * edgePlanes[2][0] + tri->vy[2] * edgePlanes[2][1])) +
-                                           PSVECDotProduct((Vec*)edge2p, (Vec*)hitpt);
+                                           PSVECDotProduct((Vec*)edgePlanes[0], &hitpt);
+                        edge1p[0] = tri->edgeNormals[1].x;
+                        edge1p[1] = tri->edgeNormals[1].y;
+                        edge1p[2] = tri->edgeNormals[1].z;
+                        edge1p[3] = -(tri->vz[1] * edge1p[2] +
+                                             (tri->vx[1] * edge1p[0] + tri->vy[1] * edge1p[1])) +
+                                           PSVECDotProduct((Vec*)edge1p, &hitpt);
+                        edge2p[0] = tri->edgeNormals[2].x;
+                        edge2p[1] = tri->edgeNormals[2].y;
+                        edge2p[2] = tri->edgeNormals[2].z;
+                        edge2p[3] = -(tri->vz[2] * edge2p[2] +
+                                             (tri->vx[2] * edge2p[0] + tri->vy[2] * edge2p[1])) +
+                                           PSVECDotProduct((Vec*)edge2p, &hitpt);
                         b = 0;
                         if (radius > 0.0f) {
                             if (edgePlanes[0][3] > 0.0f) {
                                 b |= 1;
                             }
-                            if (edgePlanes[1][3] > 0.0f) {
+                            if (edge1p[3] > 0.0f) {
                                 b |= 2;
                             }
-                            if (edgePlanes[2][3] > 0.0f) {
+                            if (edge2p[3] > 0.0f) {
                                 b |= 4;
                             }
                         }
@@ -2075,27 +2056,27 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         edgePlanes[0][2] = tri->edgeNormals[0].z;
                         edgePlanes[0][3] = -(tri->vz[0] * edgePlanes[0][2] +
                                              (tri->vx[0] * edgePlanes[0][0] + tri->vy[0] * edgePlanes[0][1])) +
-                                           PSVECDotProduct((Vec*)edgePlanes[0], (Vec*)ws);
-                        edgePlanes[1][0] = tri->edgeNormals[1].x;
-                        edgePlanes[1][1] = tri->edgeNormals[1].y;
-                        edgePlanes[1][2] = tri->edgeNormals[1].z;
-                        edgePlanes[1][3] = -(tri->vz[1] * edgePlanes[1][2] +
-                                             (tri->vx[1] * edgePlanes[1][0] + tri->vy[1] * edgePlanes[1][1])) +
-                                           PSVECDotProduct((Vec*)edge1p, (Vec*)ws);
-                        edgePlanes[2][0] = tri->edgeNormals[2].x;
-                        edgePlanes[2][1] = tri->edgeNormals[2].y;
-                        edgePlanes[2][2] = tri->edgeNormals[2].z;
-                        edgePlanes[2][3] = -(tri->vz[2] * edgePlanes[2][2] +
-                                             (tri->vx[2] * edgePlanes[2][0] + tri->vy[2] * edgePlanes[2][1])) +
-                                           PSVECDotProduct((Vec*)edge2p, (Vec*)ws);
+                                           PSVECDotProduct((Vec*)edgePlanes[0], &ws);
+                        edge1p[0] = tri->edgeNormals[1].x;
+                        edge1p[1] = tri->edgeNormals[1].y;
+                        edge1p[2] = tri->edgeNormals[1].z;
+                        edge1p[3] = -(tri->vz[1] * edge1p[2] +
+                                             (tri->vx[1] * edge1p[0] + tri->vy[1] * edge1p[1])) +
+                                           PSVECDotProduct((Vec*)edge1p, &ws);
+                        edge2p[0] = tri->edgeNormals[2].x;
+                        edge2p[1] = tri->edgeNormals[2].y;
+                        edge2p[2] = tri->edgeNormals[2].z;
+                        edge2p[3] = -(tri->vz[2] * edge2p[2] +
+                                             (tri->vx[2] * edge2p[0] + tri->vy[2] * edge2p[1])) +
+                                           PSVECDotProduct((Vec*)edge2p, &ws);
                         b = 0;
                         if (edgePlanes[0][3] > 0.0f) {
                             b |= 1;
                         }
-                        if (edgePlanes[1][3] > 0.0f) {
+                        if (edge1p[3] > 0.0f) {
                             b |= 2;
                         }
-                        if (edgePlanes[2][3] > 0.0f) {
+                        if (edge2p[3] > 0.0f) {
                             b |= 4;
                         }
                         tri->edgeOutBits = b;
@@ -2117,15 +2098,15 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                             if (k > 2) {
                                 k = 0;
                             }
-                            edge.start[0] = tri->vx[edgeBit];
-                            edge.start[1] = tri->vy[edgeBit];
-                            edge.start[2] = tri->vz[edgeBit];
-                            edge.end[0] = tri->vx[k];
-                            edge.end[1] = tri->vy[k];
-                            edge.end[2] = tri->vz[k];
-                            PSVECSubtract((Vec*)vbp, (Vec*)edge.start, (Vec*)evecp);
-                            edge.length = Vec3_Normalize(evecp);
-                            if (trackSweepSphereAgainstEdge(&edge, ws, dir, mag, hitpt, plane, clearance, &frac,
+                            edge.start.x = tri->vx[edgeBit];
+                            edge.start.y = tri->vy[edgeBit];
+                            edge.start.z = tri->vz[edgeBit];
+                            vbp->x = tri->vx[k];
+                            vbp->y = tri->vy[k];
+                            vbp->z = tri->vz[k];
+                            PSVECSubtract(vbp, &edge.start, evecp);
+                            edge.length = Vec3_Normalize(&evecp->x);
+                            if (trackSweepSphereAgainstEdge(&edge, &ws, &dir, mag, &hitpt, plane, clearance, &frac,
                                                             0.0f)) {
                                 hit = 1;
                                 goto hitCheck;
@@ -2146,19 +2127,20 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                             if (nextBit > 2) {
                                 nextBit = 0;
                             }
-                            edge.start[0] = tri->vx[vertexBit];
-                            edge.start[1] = tri->vy[vertexBit];
-                            edge.start[2] = tri->vz[vertexBit];
-                            ok = trackSweepEndpointSphere(edge.start, edge.radiusSquared, ws, dir, mag, hitpt, plane,
-                                                          &frac);
+                            edge.start.x = tri->vx[vertexBit];
+                            edge.start.y = tri->vy[vertexBit];
+                            edge.start.z = tri->vz[vertexBit];
+                            ok = trackSweepEndpointSphere(&edge.start, edge.radiusSquared, &ws, &dir, mag, &hitpt,
+                                                          plane, &frac);
                             if (ok) {
                                 hit = 1;
                                 goto hitCheck;
                             }
-                            edge.end[0] = tri->vx[nextBit];
-                            edge.end[1] = tri->vy[nextBit];
-                            edge.end[2] = tri->vz[nextBit];
-                            ok = trackSweepEndpointSphere(vbp, edge.radiusSquared, ws, dir, mag, hitpt, plane, &frac);
+                            vbp->x = tri->vx[nextBit];
+                            vbp->y = tri->vy[nextBit];
+                            vbp->z = tri->vz[nextBit];
+                            ok = trackSweepEndpointSphere(vbp, edge.radiusSquared, &ws, &dir, mag, &hitpt, plane,
+                                                          &frac);
                             if (ok) {
                                 hit = 1;
                                 goto hitCheck;
@@ -2169,9 +2151,9 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
             hitCheck:
                 if (hit != 0) {
                     u8 triFlags;
-                    we[0] = hitpt[0];
-                    *endY = hitpt[1];
-                    *endZ = hitpt[2];
+                    we.x = hitpt.x;
+                    *endY = hitpt.y;
+                    *endZ = hitpt.z;
                     contactPlane[0] = plane[0];
                     contactPlane[1] = plane[1];
                     contactPlane[2] = plane[2];
@@ -2180,12 +2162,12 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                     triFlags = tri->flags;
                     typeb2 = triFlags;
                     objmtx = (u32)desc->object;
-                    collisionStart[0] = ws[0];
-                    collisionStart[1] = *startY;
-                    collisionStart[2] = *startZ;
-                    collisionContact[0] = hitpt[0];
-                    collisionContact[1] = hitpt[1];
-                    collisionContact[2] = hitpt[2];
+                    collisionStart.x = ws.x;
+                    collisionStart.y = *startY;
+                    collisionStart.z = *startZ;
+                    collisionContact.x = hitpt.x;
+                    collisionContact.y = hitpt.y;
+                    collisionContact.z = hitpt.z;
                     descSave = desc;
                     found = 1;
                     if ((u8)type == 7) {
@@ -2193,9 +2175,9 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         outp[1] = contactPlane[1];
                         outp[2] = contactPlane[2];
                         outp[3] = contactPlane[3];
-                        typeSlotp[0x50] = typeb;
-                        typeSlotp[0x58] = triFlags;
-                        *(int*)(slotp + 0x5c) = objmtx;
+                        typeSlotp[offsetof(TrackHitResults, surfaceTypes)] = typeb;
+                        typeSlotp[offsetof(TrackHitResults, triangleFlags)] = triFlags;
+                        *(u32*)(slotp + offsetof(TrackHitResults, objects)) = objmtx;
                         bounces++;
                         goto slotComplete;
                     }
@@ -2206,39 +2188,39 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                 bounces++;
                 if (bounces > 10) {
                     logPrintf(sTrackHitOverflowError);
-                    cur[0] = svFromp[0];
-                    cur[1] = svFromp[1];
-                    cur[2] = svFromp[2];
+                    cur.x = svFromp->x;
+                    cur.y = svFromp->y;
+                    cur.z = svFromp->z;
                     found = 0;
                 } else {
                     f32 radiusDistance;
                     if (objmtx != 0) {
-                        Matrix_TransformPoint(descSave->currentMatrix, cur[0], cur[1], cur[2], &cur[0], &cur[1],
-                                              &cur[2]);
+                        Matrix_TransformPoint(descSave->currentMatrix, cur.x, cur.y, cur.z, &cur.x, &cur.y,
+                                              &cur.z);
                     } else {
-                        cur[0] -= offX;
-                        cur[2] -= offZ;
+                        cur.x -= offX;
+                        cur.z -= offZ;
                     }
                     radiusDistance = contactPlane[3] +
-                                     (cur[2] * contactPlane[2] + (cur[0] * contactPlane[0] + cur[1] * contactPlane[1]));
+                                     (cur.z * contactPlane[2] + (cur.x * contactPlane[0] + cur.y * contactPlane[1]));
                     /* Preserve the single-precision temporary before forming the call argument. */
                     radiusDistance = (f32)radiusDistance - radius;
-                    trackResolveSurfacePenetration(collisionStart, cur, collisionContact, contactPlane, radiusDistance,
-                                                   clearance, type);
+                    trackResolveSurfacePenetration(&collisionStart.x, &cur.x, &collisionContact.x, contactPlane,
+                                                   radiusDistance, clearance, type);
                     if (objmtx != 0) {
-                        Matrix_TransformPoint(descSave->currentCollisionMatrix, cur[0], cur[1], cur[2], &cur[0],
-                                              &cur[1], &cur[2]);
+                        Matrix_TransformPoint(descSave->currentCollisionMatrix, cur.x, cur.y, cur.z, &cur.x,
+                                              &cur.y, &cur.z);
                     } else {
-                        cur[0] += offX;
-                        cur[2] += offZ;
+                        cur.x += offX;
+                        cur.z += offZ;
                     }
                     outp[0] = contactPlane[0];
                     outp[1] = contactPlane[1];
                     outp[2] = contactPlane[2];
                     outp[3] = contactPlane[3];
-                    typeSlotp[0x50] = typeb;
-                    typeSlotp[0x58] = typeb2;
-                    *(int*)(slotp + 0x5c) = objmtx;
+                    typeSlotp[offsetof(TrackHitResults, surfaceTypes)] = typeb;
+                    typeSlotp[offsetof(TrackHitResults, triangleFlags)] = typeb2;
+                    *(u32*)(slotp + offsetof(TrackHitResults, objects)) = objmtx;
                 }
             }
         } while (found != 0);
@@ -2247,9 +2229,9 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
             if (contactPlane[1] >= 0.707f || contactPlane[1] <= -0.707f) {
                 retHi |= curBit;
             }
-            ep1[0] = cur[0];
-            ep2[1] = cur[1];
-            ep2[2] = cur[2];
+            ep1->x = cur.x;
+            ep2->y = cur.y;
+            ep2->z = cur.z;
             results->hitCount++;
             retLo |= curBit;
         }
@@ -2257,10 +2239,10 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
         slotp += 4;
         outp += 4;
         i++;
-        ep1 += 3;
-        ep2 += 3;
-        sp1 += 3;
-        sp2 += 3;
+        ep1++;
+        ep2++;
+        sp1++;
+        sp2++;
     } while (i < count);
     return retLo | (retHi << 4);
 }
@@ -2286,8 +2268,8 @@ int trackGetIntersect(GameObject* contactSource, f32* startPoints, f32* endPoint
     }
 
     hitMask = trackGetIntersect2(0, gTrackTriangleBuffer + blocks->firstTriangle,
-                                 gTrackTriangleBuffer + blocks[1].firstTriangle, startPoints, endPoints, pointCount,
-                                 results, 0);
+                                 gTrackTriangleBuffer + blocks[1].firstTriangle, (Vec*)startPoints, (Vec*)endPoints,
+                                 pointCount, results, 0);
 
     for (pointIndex = 0; pointIndex < pointCount; pointIndex++) {
         if (results->objects[pointIndex] != NULL) {
@@ -2303,8 +2285,8 @@ int trackGetIntersect(GameObject* contactSource, f32* startPoints, f32* endPoint
     return hitMask;
 }
 
-int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f32 scale, f32 x0, f32 y0, f32 z0, f32 x1,
-                             f32 y1, f32 z1, u8 flags) {
+TrackTriangle* trackBuildModelTriangles(TrackTriangle* cur, TrackBlockDescriptor* desc, int* model, f32 scale, f32 x0,
+                                        f32 y0, f32 z0, f32 x1, f32 y1, f32 z1, u8 flags) {
     f32 xd, xc, xb, xa;
     f32 zd, zc, zb, za;
     f32 ytmp;
@@ -2482,9 +2464,9 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
                 continue;
             }
 
-            xs = ((TrackTriangle*)cur)->vx;
-            ys = ((TrackTriangle*)cur)->vy;
-            zs = ((TrackTriangle*)cur)->vz;
+            xs = cur->vx;
+            ys = cur->vy;
+            zs = cur->vz;
 
             nxi = ys[2] * (zs[0] - zs[1]) + (ys[0] * (zs[1] - zs[2]) + ys[1] * (zs[2] - zs[0]));
             fnx = nxi;
@@ -2497,51 +2479,49 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
                 continue;
             }
             inv = 1.0f / len;
-            ((TrackTriangle*)cur)->planeN[0] = fnx * inv;
-            ((TrackTriangle*)cur)->planeN[1] = fny * inv;
-            ((TrackTriangle*)cur)->planeN[2] = fnz * inv;
+            cur->planeN[0] = fnx * inv;
+            cur->planeN[1] = fny * inv;
+            cur->planeN[2] = fnz * inv;
 
             if (flag8) {
-                if (((TrackTriangle*)cur)->planeN[1] >= 0.707f) {
+                if (cur->planeN[1] >= 0.707f) {
                     continue;
                 }
-                if (((TrackTriangle*)cur)->planeN[1] <= -0.707f) {
+                if (cur->planeN[1] <= -0.707f) {
                     continue;
                 }
             }
             if (flag4) {
-                if (((TrackTriangle*)cur)->planeN[1] < 0.707f && ((TrackTriangle*)cur)->planeN[1] > -0.707f) {
+                if (cur->planeN[1] < 0.707f && cur->planeN[1] > -0.707f) {
                     continue;
                 }
             }
 
-            ((TrackTriangle*)cur)->planeD =
-                -(*(f32*)(cur + 0xc) * *(s16*)(cur + 0x1c) +
-                  (*(f32*)(cur + 4) * *(s16*)(cur + 0x10) + *(f32*)(cur + 8) * *(s16*)(cur + 0x16)));
+            cur->planeD =
+                -(cur->planeN[2] * cur->vz[0] +
+                  (cur->planeN[0] * cur->vx[0] + cur->planeN[1] * cur->vy[0]));
 
             {
-                f32 eps;
                 normalComponentIndex = 0;
                 degenerateEdge = 0;
                 edgeIndex = 0;
                 xw = xs;
                 yw = ys;
                 zw = zs;
-                eps = 0.0f;
                 for (; edgeIndex < 3; edgeIndex++) {
                     int k = edgeIndex + 1;
                     f32 px, py, pz;
                     if (k > 2) {
                         k = 0;
                     }
-                    px = ((TrackTriangle*)cur)->planeN[0] + xw[0];
-                    py = ((TrackTriangle*)cur)->planeN[1] + yw[0];
-                    pz = ((TrackTriangle*)cur)->planeN[2] + zw[0];
+                    px = cur->planeN[0] + xw[0];
+                    py = cur->planeN[1] + yw[0];
+                    pz = cur->planeN[2] + zw[0];
                     ex = py * (f32)(zw[0] - zs[k]) + ((f32)yw[0] * ((f32)zs[k] - pz) + ys[k] * (pz - zw[0]));
                     ey = pz * (f32)(xw[0] - xs[k]) + ((f32)zw[0] * ((f32)xs[k] - px) + zs[k] * (px - xw[0]));
                     ez = px * (f32)(yw[0] - ys[k]) + ((f32)xw[0] * ((f32)ys[k] - py) + xs[k] * (py - yw[0]));
                     len = sqrtf(ez * ez + (ex * ex + ey * ey));
-                    if (len > eps) {
+                    if (len > 0.0f) {
                         f32 inv2 = 1.0f / len;
                         ex *= inv2;
                         ey *= inv2;
@@ -2549,9 +2529,9 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
                     } else {
                         degenerateEdge = 1;
                     }
-                    *(f32*)(cur + normalComponentIndex++ * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = ex;
-                    *(f32*)(cur + normalComponentIndex++ * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = ey;
-                    *(f32*)(cur + normalComponentIndex++ * sizeof(f32) + offsetof(TrackTriangle, edgeNormals)) = ez;
+                    (&cur->edgeNormals[0].x)[normalComponentIndex++] = ex;
+                    (&cur->edgeNormals[0].x)[normalComponentIndex++] = ey;
+                    (&cur->edgeNormals[0].x)[normalComponentIndex++] = ez;
                     xw++;
                     yw++;
                     zw++;
@@ -2561,11 +2541,11 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
                 }
             }
 
-            *(s8*)&((TrackTriangle*)cur)->surfaceType = (u8)trackGetPackedSurfaceType(group);
-            ((TrackTriangle*)cur)->minMaxY = (u8)((maxYi << 4) | minYi);
-            ((TrackTriangle*)cur)->flags = 10;
-            ((TrackTriangle*)cur)->flags |= 8;
-            cur += 0x4c;
+            *(s8*)&cur->surfaceType = (u8)trackGetPackedSurfaceType(group);
+            cur->minMaxY = (u8)((maxYi << 4) | minYi);
+            cur->flags = 10;
+            cur->flags |= 8;
+            cur++;
             if ((u32)cur >= gTrackTriangleBufferEnd) {
                 return cur;
             }
@@ -2576,8 +2556,8 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
 
 /* trackBuildBlockTriangles -- gather map-block collision triangles overlapping
  * the query box into the buffer at cur; returns advanced cursor. */
-int trackBuildBlockTriangles(cur, x0, y0, z0, x1, y1, z1, flags, doEdges)
-int cur;
+TrackTriangle* trackBuildBlockTriangles(cur, x0, y0, z0, x1, y1, z1, flags, doEdges)
+TrackTriangle* cur;
 int x0;
 int y0;
 int z0;
@@ -2858,17 +2838,17 @@ u8 doEdges;
                 maxY = minY;
                 minZ = vp[2] >> 3;
                 maxZ = minZ;
-                ((TrackTriangle*)cur)->vx[0] = minX + dxoff;
-                ((TrackTriangle*)cur)->vy[0] = minY;
-                ((TrackTriangle*)cur)->vz[0] = minZ + dzoff;
-                triangleVertices[0].x = __OSs16tof32(&((TrackTriangle*)cur)->vx[0]);
-                triangleVertices[0].y = __OSs16tof32(&((TrackTriangle*)cur)->vy[0]);
-                triangleVertices[0].z = __OSs16tof32(&((TrackTriangle*)cur)->vz[0]);
+                cur->vx[0] = minX + dxoff;
+                cur->vy[0] = minY;
+                cur->vz[0] = minZ + dzoff;
+                triangleVertices[0].x = __OSs16tof32(&cur->vx[0]);
+                triangleVertices[0].y = __OSs16tof32(&cur->vy[0]);
+                triangleVertices[0].z = __OSs16tof32(&cur->vz[0]);
                 maxYi = 0;
                 minYi = 0;
                 j = 1;
                 tw = &triangle->vert[1];
-                vo = (u8*)(cur + 2);
+                vo = (u8*)cur + 2;
                 vertexCursor = &triangleVertices[1];
                 for (; j < 3; j++) {
                     vp = (s16*)(vb + *tw * 6);
@@ -2923,15 +2903,15 @@ u8 doEdges;
 
                 PSVECSubtract(&triangleVertices[0], secondVertex, &edgeVectors[0]);
                 PSVECSubtract(secondVertex, &triangleVertices[2], &edgeVectors[1]);
-                PSVECCrossProduct(&edgeVectors[0], &edgeVectors[1], (Vec*)(cur + 4));
-                mag = PSVECMag((Vec*)(cur + 4));
+                PSVECCrossProduct(&edgeVectors[0], &edgeVectors[1], (Vec*)cur->planeN);
+                mag = PSVECMag((Vec*)cur->planeN);
                 if (!(mag > 0.0f)) {
                     continue;
                 }
                 mag = 1.0f / mag;
-                PSVECScale((Vec*)(cur + 4), (Vec*)(cur + 4), mag);
+                PSVECScale((Vec*)cur->planeN, (Vec*)cur->planeN, mag);
                 if (f8) {
-                    if (((TrackTriangle*)cur)->planeN[1] >= 0.707f || ((TrackTriangle*)cur)->planeN[1] <= -0.707f) {
+                    if (cur->planeN[1] >= 0.707f || cur->planeN[1] <= -0.707f) {
                         if (type != 4) {
                             continue;
                         }
@@ -2941,34 +2921,28 @@ u8 doEdges;
                     }
                 }
                 if (f4) {
-                    if (((TrackTriangle*)cur)->planeN[1] < 0.707f && ((TrackTriangle*)cur)->planeN[1] > -0.707f) {
+                    if (cur->planeN[1] < 0.707f && cur->planeN[1] > -0.707f) {
                         continue;
                     }
                 }
-                ((TrackTriangle*)cur)->planeD = -PSVECDotProduct((Vec*)(cur + 4), &triangleVertices[0]);
+                cur->planeD = -PSVECDotProduct((Vec*)cur->planeN, &triangleVertices[0]);
                 if (doEdges) {
                     int degenerateEdge;
-                    f32 one, eps;
                     PSVECSubtract(&triangleVertices[2], &triangleVertices[0], &edgeVectors[2]);
                     normalComponentIndex = 0;
                     degenerateEdge = 0;
                     edgeIndex = 0;
                     edgeCursor = edgeVectors;
-                    eps = 0.0f;
-                    one = 1.0f;
                     do {
                         f32 m;
-                        PSVECCrossProduct((Vec*)(cur + 4), edgeCursor, &edgeNormal);
+                        PSVECCrossProduct((Vec*)cur->planeN, edgeCursor, &edgeNormal);
                         m = PSVECMag(&edgeNormal);
-                        if (m > eps) {
-                            m = one / m;
+                        if (m > 0.0f) {
+                            m = 1.0f / m;
                             PSVECScale(&edgeNormal, &edgeNormal, m);
-                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) +
-                                    offsetof(TrackTriangle, edgeNormals)) = edgeNormal.x;
-                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) +
-                                    offsetof(TrackTriangle, edgeNormals)) = edgeNormal.y;
-                            *(f32*)(cur + (normalComponentIndex++) * sizeof(f32) +
-                                    offsetof(TrackTriangle, edgeNormals)) = edgeNormal.z;
+                            (&cur->edgeNormals[0].x)[normalComponentIndex++] = edgeNormal.x;
+                            (&cur->edgeNormals[0].x)[normalComponentIndex++] = edgeNormal.y;
+                            (&cur->edgeNormals[0].x)[normalComponentIndex++] = edgeNormal.z;
                         } else {
                             degenerateEdge = 1;
                             break;
@@ -2991,10 +2965,10 @@ u8 doEdges;
                     if (tf2 & 0x20) {
                         type |= 0x40;
                     }
-                    *(s8*)&((TrackTriangle*)cur)->surfaceType = t2;
-                    ((TrackTriangle*)cur)->minMaxY = (u8)((maxYi << 4) | minYi);
-                    ((TrackTriangle*)cur)->flags = type;
-                    cur += 0x4c;
+                    *(s8*)&cur->surfaceType = t2;
+                    cur->minMaxY = (u8)((maxYi << 4) | minYi);
+                    cur->flags = type;
+                    cur++;
                     if ((u32)cur >= gTrackTriangleBufferEnd) {
                         return cur;
                     }
@@ -3022,7 +2996,7 @@ void trackIntersectBroadphase(GameObject* obj, TrackQueryBounds* ranges, u32 que
     int count;
 
     {
-        int cur;
+        TrackTriangle* cur;
         TrackBlockDescriptor* desc;
         TrackBlockDescriptor* descEnd;
 
@@ -3031,14 +3005,14 @@ void trackIntersectBroadphase(GameObject* obj, TrackQueryBounds* ranges, u32 que
         desc->firstTriangle = 0;
         desc++;
         descEnd = &gTrackBlockDescriptors[20];
-        gTrackTriangleBufferEnd = (u32)(gTrackTriangleBuffer + 1200);
+        gTrackTriangleBufferEnd = (u32)(gTrackTriangleBuffer + TRACK_TRIANGLE_CAPACITY);
         masked = queryMask & 0xffff;
         if ((masked & 0x10) != 0) {
-            cur = (int)gTrackTriangleBuffer;
+            cur = gTrackTriangleBuffer;
         } else {
-            cur = trackBuildBlockTriangles((int)gTrackTriangleBuffer, x0, y0, z0, x1, y1, z1, queryMask, b);
+            cur = trackBuildBlockTriangles(gTrackTriangleBuffer, x0, y0, z0, x1, y1, z1, queryMask, b);
         }
-        if (cur < gTrackTriangleBufferEnd && (masked & 1) && obj != NULL) {
+        if ((u32)cur < gTrackTriangleBufferEnd && (masked & 1) && obj != NULL) {
             ObjAnimComponent** t = ObjHitReact_GetResetObjects(&count);
             i = 0;
             resetObjects = t;
@@ -3107,11 +3081,11 @@ void trackIntersectBroadphase(GameObject* obj, TrackQueryBounds* ranges, u32 que
                 desc->alternateMatrix = (f32*)resetObj->hitboxTransformState->matrices +
                                         ((resetObj->hitboxTransformState->activeMatrixIndex ^ 1) << 4);
 
-                desc->firstTriangle = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
+                desc->firstTriangle = (s16)(cur - gTrackTriangleBuffer);
                 desc->object = resetObj;
                 cur = trackBuildModelTriangles(cur, desc, model, 1.0f, x0, y0, z0, x1, y1, z1, queryMask);
                 desc++;
-                if (cur >= gTrackTriangleBufferEnd) {
+                if ((u32)cur >= gTrackTriangleBufferEnd) {
                     break;
                 }
                 if (desc >= descEnd) {
@@ -3119,7 +3093,7 @@ void trackIntersectBroadphase(GameObject* obj, TrackQueryBounds* ranges, u32 que
                 }
             }
         }
-        gTrackTriangleCount = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
+        gTrackTriangleCount = (s16)(cur - gTrackTriangleBuffer);
         gActiveTrackBlockCount = (u8)(desc - gTrackBlockDescriptors);
         desc->firstTriangle = gTrackTriangleCount;
     }
@@ -3188,28 +3162,21 @@ void trackGetGridOrigin(int** outOrigin) {
 }
 
 void trackGetTriangleBuffer(int* outCount, int* outTable) {
-    TrackBlockDescriptor* descriptors = gTrackBlockDescriptors;
-    *outCount = descriptors[gActiveTrackBlockCount].firstTriangle;
+    *outCount = gTrackBlockDescriptors[gActiveTrackBlockCount].firstTriangle;
     *outTable = (int)gTrackTriangleBuffer;
 }
 
 void trackInitCollisionBuffers(void) {
     int i;
-    int off;
     if (gTrackTriangleBuffer == NULL) {
-        gTrackTriangleBuffer = mmAlloc(1200 * sizeof(TrackTriangle), 0xffff00ff, 0);
-        gIntersectLinePool = (int)mmAlloc(0x5dc0, 0xffff00ff, 0);
-        gIntersectPoints = mmAlloc(0x4fb0, 0xffff00ff, 0);
-        gIntersectLineIndexTable = (int)mmAlloc(0xbb8, 0xffff00ff, 0);
+        gTrackTriangleBuffer = mmAlloc(TRACK_TRIANGLE_CAPACITY * sizeof(TrackTriangle), 0xffff00ff, 0);
+        gIntersectLinePool = (int)mmAlloc(INTERSECT_LINE_CAPACITY * sizeof(IntersectLine), 0xffff00ff, 0);
+        gIntersectPoints = mmAlloc(INTERSECT_POINT_CAPACITY * sizeof(Vec), 0xffff00ff, 0);
+        gIntersectLineIndexTable = (int)mmAlloc(INTERSECT_LINE_CAPACITY * sizeof(s16), 0xffff00ff, 0);
         gMapDynamicSlots = mmAlloc(MAP_DYNAMIC_SLOT_COUNT * sizeof(MapDynamicSlot), 0xffff00ff, 0);
     }
-    off = 0;
-    for (i = 0; i < 4; i++) {
-        int j;
-        for (j = 0; j < 16; j++) {
-            ((MapDynamicSlot*)((u8*)gMapDynamicSlots + off))[j].cooldown = 0;
-        }
-        off += sizeof(MapDynamicSlot) * 16;
+    for (i = 0; i < MAP_DYNAMIC_SLOT_COUNT; i++) {
+        gMapDynamicSlots[i].cooldown = 0;
     }
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
