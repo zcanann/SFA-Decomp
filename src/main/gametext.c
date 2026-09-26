@@ -875,6 +875,7 @@ void gameTextBuildSystemFontAtlas(void) {
     compressedFont = mmAlloc(compressedFontSize, 0x1a, 0);
     fontData = mmAlloc(fontDataSize, 0x1a, 0);
     OSLoadFont(fontData, compressedFont);
+#if !defined(VERSION_GSAE01_rev1)
     if (charset->glyphCount == 0) {
 #if !defined(VERSION_GSAP01) && !defined(VERSION_GSAP01_rev1)
         if (gGameTextFontIsSjis) {
@@ -891,6 +892,7 @@ void gameTextBuildSystemFontAtlas(void) {
             charset->entryCount = ARRAY_COUNT(sDiscStatusMessageTable);
         }
     }
+#endif
     charset->textures[0] = textureAlloc(0x200, 0x60, GX_TF_I4, 0, 0, 0, 0, 1, 1);
     glyphCount = charset->glyphCount;
     fontMetrics[GAMETEXT_FONT_SYSTEM].glyphCount = glyphCount;
@@ -903,7 +905,11 @@ void gameTextBuildSystemFontAtlas(void) {
     atlasX = 0;
     atlasY = 0;
     while (remainingGlyphs--) {
+#if defined(VERSION_GSAE01_rev1)
+        if (curLanguage == LANGUAGE_JAPANESE) {
+#else
         if (gGameTextFontIsSjis) {
+#endif
             int codePoint;
             u32 sjisCode;
             int leadByte;
@@ -1192,12 +1198,14 @@ void gameTextInit(void) {
 
 static inline u32 lookupSjisGlyph(int c) {
 #if defined(VERSION_GSAE01_rev1)
-    int i;
+    int i = 0x302;
+    u16* p = gGameTextUnicodeToSjis;
 
-    for (i = 0; i < 0x301; i++) {
-        if (gGameTextUnicodeToSjis[i] == c) {
-            return gGameTextUnicodeToSjis[i + 1];
+    while (i--) {
+        if (p[0] == c) {
+            return p[1];
         }
+        p++;
     }
 #else
     int i = 0xfe;
