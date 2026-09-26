@@ -776,7 +776,7 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z) {
     return gIntersectPointCount - 1;
 }
 
-static inline MapDynamicSlot* trackFindDynamicSlot(GameObject* self, GameObject* target, int querySlot) {
+static inline MapDynamicSlot* trackFindDynamicSlot(GameObject* self, GameObject* target, u8 querySlot) {
     s16 k;
     MapDynamicSlot* entry;
 
@@ -784,7 +784,7 @@ static inline MapDynamicSlot* trackFindDynamicSlot(GameObject* self, GameObject*
     do {
         entry = &gMapDynamicSlots[k];
         if (entry->cooldown != 0 && entry->owner == self && entry->target == target &&
-            entry->querySlot == (u8)querySlot) {
+            entry->querySlot == querySlot) {
             entry->cooldown = 0;
             return entry;
         }
@@ -793,15 +793,7 @@ static inline MapDynamicSlot* trackFindDynamicSlot(GameObject* self, GameObject*
     return NULL;
 }
 
-static inline int trackDynamicSlotEnabled(int querySlot) {
-    return (u8)querySlot != 0xff;
-}
-
-static inline MapDynamicSlot* trackAllocDynamicSlot(self, target, querySlot)
-GameObject* self;
-GameObject* target;
-u8 querySlot;
-{
+static inline MapDynamicSlot* trackAllocDynamicSlot(GameObject* self, GameObject* target, u8 querySlot) {
     s16 k;
     MapDynamicSlot* entry;
 
@@ -822,7 +814,7 @@ u8 querySlot;
 }
 
 int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, TrackLineIntersectResult* out,
-                          GameObject* self, s8 lineMask, s8 segment, int slot, s8 yTolerance) {
+                          GameObject* self, s8 lineMask, s8 segment, u8 slot, s8 yTolerance) {
     f32 worldStart[3];
     f32 worldEnd[3];
     f32 localStart[3];
@@ -897,7 +889,7 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
         if (hit == 0) {
             continue;
         }
-        if (trackDynamicSlotEnabled(slot) && (entry = trackFindDynamicSlot(self, target, slot)) != NULL) {
+        if (slot != 0xff && (entry = trackFindDynamicSlot(self, target, slot)) != NULL) {
             localStart[0] = entry->cachedLocalEnd.x;
             localStart[1] = entry->cachedLocalEnd.y;
             localStart[2] = entry->cachedLocalEnd.z;
@@ -912,7 +904,7 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
             Obj_TransformLocalPointToWorld(localEnd[0], localEnd[1], localEnd[2], &worldEnd[0], &worldEnd[1],
                                            &worldEnd[2], (GameObject*)(int)target);
         }
-        if (trackDynamicSlotEnabled(slot)) {
+        if (slot != 0xff) {
             entry = trackAllocDynamicSlot(self, target, slot);
             if (entry != NULL) {
                 entry->cachedLocalEnd.x = localEnd[0];
@@ -1158,7 +1150,6 @@ void trackIntersect(void) {
     s16 counts[0x47];
     s16 edges[0x6a4 * 2];
     int blockIndex;
-    int rowOffset;
     int sourceIndex;
     int endpoint;
     int gridX, gridZ;
@@ -1195,16 +1186,15 @@ void trackIntersect(void) {
 
     for (layer = 0; layer < 5; layer++) {
         s8* idx = mapGetBlockIdx(layer);
-        for (gridZ = 0, rowOffset = 0; gridZ < 0x10; rowOffset += 0x10, gridZ++) {
-            gridX = 0;
-            blockIndex = rowOffset;
-            blockZ = 640.0f * gridZ;
-            for (; gridX < 0x10; blockIndex++, gridX++) {
+        for (gridZ = 0; gridZ < 0x10; gridZ++) {
+            for (gridX = 0; gridX < 0x10; gridX++) {
+                blockIndex = (gridZ << 4) + gridX;
                 if (idx[blockIndex] >= 0) {
                     MapBlockData* blk = mapGetBlock(idx[blockIndex]);
                     sourceIndex = 0;
                     for (; sourceIndex < blk->hitCount; sourceIndex++) {
                         blockX = 640.0f * gridX;
+                        blockZ = 640.0f * gridZ;
                         if (gIntersectLineCount < 0x5dc) {
                             MapHitLine* sourceLine = &blk->hits[sourceIndex];
                             IntersectLine* rec = (IntersectLine*)(gIntersectLinePool + gIntersectLineCount * 0x10);
@@ -1307,13 +1297,11 @@ void trackIntersect(void) {
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
         }
         if (previousType != segmentType) {
-            u16 sortedLineIndex = i;
             int ti = segmentType * 2;
-            /* Keep the narrowed line index separate from the previous type. */
-            gIntersectSegmentTypeTable[ti] = (u16)sortedLineIndex;
+            gIntersectSegmentTypeTable[ti] = i;
             if (previousType != -1) {
                 int pi = previousType * 2;
-                gIntersectSegmentTypeTable[pi + 1] = (u16)sortedLineIndex;
+                gIntersectSegmentTypeTable[pi + 1] = i;
             }
             previousType = segmentType;
         }
