@@ -893,6 +893,7 @@ main/objanim.c
 main/object.c
 main/objlib.c
 main/pad.c
+main/pi_dolphin.c
 main/pi_pathsearch.c
 main/pi_videoinit.c
 main/rcp_dolphin.c
