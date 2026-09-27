@@ -8,7 +8,7 @@ import struct
 import sys
 import unittest
 
-from build import ROOT, PAYLOAD_ADDRESS, compile_payload, sections, symbols, tool_directory
+from build import ROOT, PAYLOAD_ADDRESS, PAYLOAD_LIMIT, compile_payload, sections, symbols, tool_directory
 
 OUT = ROOT / "build/practice"
 sys.path.insert(0, str(OUT / "python"))
@@ -40,7 +40,7 @@ class Machine:
         self.stub = {}
         for name, (addr, _) in symbols().items():
             if name.startswith("GX") or name in (
-                "padUpdate", "Obj_GetPlayerObject", "OSSetArenaHi", "playerDoControls",
+                "padUpdate", "Obj_GetPlayerObject", "OSSetArenaLo", "playerDoControls",
                 "playerEnterDeepWater", "playerUpdateSurfaceResponse", "Camera_SetCurrentViewIndex",
                 "Camera_UpdateProjection", "resetSomeGxFlags", "getScreenResolution", "mathSinf", "mathCosf",
                 "Matrix_TransformPoint", "mapGetBlockAtPos", "ObjList_GetObjects", "PSMTXInverse", "PSMTXMultVec"):
@@ -149,10 +149,17 @@ class PayloadTests(unittest.TestCase):
         self.m = Machine(self.payload, self.exports, self.dol)
 
     def test_arena_reservation(self):
-        self.m.call("Practice_SetArenaHi", 0x81700000)
-        self.assertEqual(self.m.calls[-1][:2], ("OSSetArenaHi", PAYLOAD_ADDRESS))
-        self.m.call("Practice_SetArenaHi", 0x81600000)
-        self.assertEqual(self.m.calls[-1][1], 0x81600000)
+        for start in (0x803F8480, PAYLOAD_ADDRESS):
+            self.m.call("Practice_SetArenaLo", start)
+            self.assertEqual(self.m.calls[-1][:2], ("OSSetArenaLo", PAYLOAD_LIMIT))
+        self.m.call("Practice_SetArenaLo", 0x80500000)
+        self.assertEqual(self.m.calls[-1][1], 0x80500000)
+
+    def test_pointer_guard_covers_mem1_but_excludes_payload(self):
+        for address, valid in [(0, 0), (PAYLOAD_ADDRESS, 0), (PAYLOAD_LIMIT - 4, 0),
+                               (PAYLOAD_LIMIT, 1), (0x817D0000, 1), (0x81800000, 0)]:
+            self.m.call("validPointer", address)
+            self.assertEqual(self.m.r(3), valid)
 
     def test_menu_debounce_navigation_and_input(self):
         m = self.m

@@ -1,4 +1,4 @@
-# EN v1.0 practice ROM v1
+# EN v1.0 practice ROM v1.1
 
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
@@ -51,17 +51,45 @@ From the practice worktree:
 ```powershell
 python tools/practice/build.py build --enable `
   --iso "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00).iso" `
-  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1).iso" `
-  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.sfapatch"
+  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.1).iso" `
+  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.1.sfapatch"
 ```
 
 The `.sfapatch` is a ZIP containing a manifest and the new payload, not a retail
-DOL or ISO. Apply it to the same clean source dump with:
+DOL or ISO. Version 2 of the package format identifies the source by the clean
+DOL hash, independent of the image's padding or compression. Apply it with:
 
 ```powershell
 python tools/practice/build.py apply --iso "clean.iso" `
-  --patch "SFA-EN-v1.0-Practice-v1.sfapatch" --output "practice.iso"
+  --patch "SFA-EN-v1.0-Practice-v1.1.sfapatch" --output "practice.iso"
 ```
+
+The executable transformation is also available without a disc container:
+
+```powershell
+python tools/practice/build.py apply --dol "main.dol" `
+  --patch "SFA-EN-v1.0-Practice-v1.1.sfapatch" --output "practice.dol"
+```
+
+`--dol` is also accepted by `build`. This is the interface for future image
+adapters: extract the executable, identify its revision/hash, patch it, and
+replace that logical executable in the image. Container format and game revision
+are separate concerns. The current image writer accepts uncompressed ISO/GCM;
+it does not directly read or edit RVZ, WIA, GCZ, or every Dolphin-supported format.
+
+An RVZ workflow can use Dolphin's conversion tool around the ISO patcher:
+
+```powershell
+DolphinTool convert -i clean.rvz -o clean.iso -f iso
+python tools/practice/build.py apply --iso clean.iso `
+  --patch SFA-EN-v1.0-Practice-v1.1.sfapatch --output practice.iso
+DolphinTool convert -i practice.iso -o practice.rvz -f rvz -b 131072 -c zstd -l 5
+```
+
+Use new output names and omit `--scrub` to preserve logical disc data. The
+conversion command syntax was checked against Dolphin's converter source;
+an RVZ round trip has not been tested for this release. Recompression changes
+container bytes even when the decoded disc data is unchanged.
 
 Output/patch filenames must be new; existing files are refused. The build writes
 its payload ELF, linker map, manifest, and ISO verification report to
@@ -76,25 +104,42 @@ runtime code and declarations are enclosed in `#ifdef SFA_PRACTICE`.
 
 ## Memory and patch design
 
-Original text/data/BSS addresses are preserved. Five verified call instructions
-are replaced: OSInit's arena-high setup, controller polling, the end-of-frame
+Original text/data/BSS addresses are preserved. Six verified call instructions
+are replaced: both OSInit arena-low setup calls, controller polling, the end-of-frame
 stub, player controls, and player surface response. Calls go through ordinary
 PPC EABI C wrappers; game/compiler/SDK routines remain at their retail addresses.
 
 A new DOL section contains code, constants and explicitly initialized zero-state
-at `0x816C0000`. OSInit's arena high is clamped there, reserving 256 KiB below the
-retail fallback `0x81700000`. No menu/viewer allocations use the game heap.
+at `0x803FA480`, the verified retail default `__ArenaLo`, above the startup stack
+at `0x803F8478`. Both OSInit arena-low paths clamp the heap start to `0x8040A480`
+before `ClearArena`, protecting a 64 KiB payload region. The retail debug-flag
+path originally starts its arena 8 KiB earlier, so that path loses 72 KiB of heap
+capacity overall. Arena high is unchanged. No menu/viewer allocations use the game heap.
 **The enabled build changes heap capacity and allocation addresses/timing. It is
 a practice build, not an SRM-neutral measurement build.** Swimming also deliberately
 changes player state. The viewers read collision/trigger data and submit GX draws.
 
 The builder verifies the original DOL SHA-1
 `e750e8e894707a52446118a4b84f1b58b677b269`, the hook counts and original bytes,
-section/BSS overlap and relative branch ranges. It copies the ISO to a new file,
-puts the patched DOL in an unused disc extent, and updates only the disc header's
-DOL offset. Original asset offsets and the original on-disc DOL remain intact.
-Read-back checks compare every byte outside those two edited extents and hash the
-original ISO again. The patch records the exact source ISO SHA-256.
+section/BSS overlap, the apploader's `0x80700000` production load ceiling and
+relative branch ranges. It copies the ISO to a new file and replaces the DOL at
+its existing offset when space permits. Otherwise it puts the patched DOL in an
+unused disc extent and updates only the disc header's four-byte DOL offset.
+Apploader bytes, FST entries, assets and asset offsets remain intact. In the
+relocation case the original on-disc DOL also remains intact. Read-back checks
+compare every byte outside the declared edits and hash the original ISO again.
+Input/output ISO hashes are recorded in the build report, not used as the
+portable patch's compatibility key.
+
+This EN disc's DOL starts at `0x1E000`, is `0x33DD40` bytes long and is followed
+by the FST at `0x35BE00`: only 192 bytes of spare space are available. The payload
+needs about 20 KiB. A growing DOL cannot be replaced at that offset without
+moving it or other disc structures; this writer moves only the DOL.
+
+V1 failed before game entry because its section at `0x816C0000` exceeded both
+the apploader's production (`0x80700000`) and development (`0x81200000`) limits.
+V1.1 fixes the placement instead of modifying or bypassing the apploader. Older
+version-1 patch packages are rejected by the corrected patcher.
 
 JP, PAL, and later EN revisions need independently verified symbol/hook adapters
 and binary hashes. The current tool refuses them; it does not search for vaguely
@@ -112,7 +157,8 @@ clang-format --dry-run --Werror src/practice/practice.c include/practice/practic
 ```
 
 Patch tests cover original-section preservation, corrupt-input rejection,
-disabled code elimination, an ISO fixture round trip, and overwrite protection.
+disabled code elimination, in-place and relocated ISO fixtures, DOL-only
+application, the old high-address boot regression, and overwrite protection.
 Payload tests run the compiled PPC instructions with stubbed game/GX services:
 menu debouncing/navigation/input consumption, arena bounds, swimming restoration,
 trigger shapes, packed terrain vertices, water filters, and object transforms.
@@ -121,6 +167,13 @@ paired-lane stack saves/restores (ordinary floating-point saves still run).
 
 `build/practice/menu-geometry-preview.png`, when Pillow is installed, is a
 rasterization of the captured menu draw commands. It is not a Dolphin screenshot.
+V1.1 was also booted from its ISO in a local Dolphin instance with an isolated
+profile and Null video backend. The apploader loaded the new section without
+the boundary warning/error; a read-only RAM sample showed `gameState=1`,
+`gGameLoopInitComplete=1`, `gGameLoopMapLoaded=1`, 45 objects and intact payload
+code. The arena-low value after subsequent system allocations was `0x805364A0`.
+This is startup validation, not a visual or long-session playtest.
+
 These checks do not establish in-game GPU-state compatibility, visual alignment
 in every map, or swimming behavior in every movement/sequence state. Those need
 playtesting in Dolphin; treat this as the first experimental practice release.

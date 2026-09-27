@@ -19,11 +19,13 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
 VERSION = "GSAE01"
-# OSInit's retail fallback arena top is 0x81700000. Reserve 256 KiB below it;
-# leave the apploader/FST/system area above that boundary alone.
-PAYLOAD_ADDRESS = 0x816C0000
-PAYLOAD_LIMIT = 0x81700000
-MAGIC = "SFA-PRACTICE-1"
+# Verified EN startup: stack top 0x803F8478, default __ArenaLo 0x803FA480.
+# Both OSInit arena-low calls must reserve our space before ClearArena runs.
+# Do not load a DOL section above the retail apploader's production boundary.
+PAYLOAD_ADDRESS = 0x803FA480
+PAYLOAD_LIMIT = PAYLOAD_ADDRESS + 0x10000
+BOOT_LOAD_LIMIT = 0x80700000
+MAGIC = "SFA-PRACTICE-2"
 
 
 def u32(data, offset):
@@ -153,6 +155,7 @@ SECTIONS {{
   /DISCARD/ : {{ *(.comment) *(.eh_frame*) *(.llvm_addrsig) }}
 }}
 ASSERT(__practice_end <= 0x{PAYLOAD_LIMIT:08x}, "Practice payload exceeds reservation")
+__practice_limit = 0x{PAYLOAD_LIMIT:08x};
 """)
     elf = out / "practice.elf"
     run([binutils / ("powerpc-eabi-ld" + suffix), "-T", linker, "-Map=" + str(out / "practice.map"), "-o", elf, obj])
@@ -169,7 +172,7 @@ def make_patch(dol, payload, exports):
         raise ValueError("Payload is empty or exceeds its reserved memory")
     edits = []
     hooks = [
-        ("OSInit", "OSSetArenaHi", "Practice_SetArenaHi", 1),
+        ("OSInit", "OSSetArenaLo", "Practice_SetArenaLo", 2),
         ("gameLoop", "padUpdate", "Practice_PadUpdate", 1),
         ("gameLoop", "doNothing_endOfFrame", "Practice_Draw", 1),
         (None, "playerDoControls", "Practice_PlayerControls", 1),
@@ -195,9 +198,17 @@ def make_patch(dol, payload, exports):
     bss, bss_size = u32(dol, 0xD8), u32(dol, 0xDC)
     if bss < PAYLOAD_ADDRESS + len(payload) and bss + bss_size > PAYLOAD_ADDRESS:
         raise ValueError("Payload overlaps original BSS")
-    return {"format": MAGIC, "version": VERSION, "dol_sha1": expected_dol_hash(),
+    manifest = {"format": MAGIC, "version": VERSION, "dol_sha1": expected_dol_hash(),
             "payload_address": PAYLOAD_ADDRESS, "payload_offset": offset,
             "payload_sha256": hashlib.sha256(payload).hexdigest(), "edits": edits}
+    validate_boot_layout(apply_dol(dol, manifest, payload))
+    return manifest
+
+
+def validate_boot_layout(dol):
+    for _, _, address, size in sections(dol):
+        if address < 0x80003100 or address + size > BOOT_LOAD_LIMIT:
+            raise ValueError("DOL section exceeds the retail apploader's production load boundary")
 
 
 def apply_dol(dol, manifest, payload):
@@ -219,6 +230,7 @@ def apply_dol(dol, manifest, payload):
         data[off:off+len(after)] = after
     data.extend(bytes(manifest["payload_offset"] - len(data)))
     data.extend(payload)
+    validate_boot_layout(data)
     return bytes(data)
 
 
@@ -290,38 +302,59 @@ def write_iso(iso, output, manifest, payload):
     if output == iso or output.exists():
         raise ValueError("Output must be a NEW file; existing images are never overwritten")
     before_hash = digest(iso)
-    if before_hash != manifest["iso_sha256"]:
-        raise ValueError("ISO hash does not match this patch's source image")
     original, occupied = read_iso(iso)
     patched = apply_dol(original, manifest, payload)
-    position = find_disc_space(occupied, len(patched), iso.stat().st_size)
+    with iso.open("rb") as stream:
+        stream.seek(0x420)
+        original_position = struct.unpack(">I", stream.read(4))[0]
+    # Prefer replacing the logical DOL in its existing extent. Relocate only
+    # when growth would overwrite the FST, apploader, or an asset.
+    old_extent = (original_position, original_position + len(original))
+    neighbors = [extent for extent in occupied if extent != old_extent]
+    fits = original_position + len(patched) <= iso.stat().st_size and not any(
+        start < original_position + len(patched) and stop > original_position
+        for start, stop in neighbors)
+    position = original_position if fits else find_disc_space(occupied, len(patched), iso.stat().st_size)
     output.parent.mkdir(parents=True, exist_ok=True)
     # Exclusive creation is intentional: never truncate another run's output.
     with iso.open("rb") as source, output.open("xb") as target:
         shutil.copyfileobj(source, target, 4 << 20)
         target.seek(position)
         target.write(patched)
-        target.seek(0x420)
-        target.write(struct.pack(">I", position))
+        if position != original_position:
+            target.seek(0x420)
+            target.write(struct.pack(">I", position))
     with output.open("rb") as stream:
         stream.seek(position)
         if stream.read(len(patched)) != patched:
             raise ValueError("Patched executable failed read-back verification")
-    changed = [(0x420, 0x424), (position, position + len(patched))]
+    changed = [(position, position + len(patched))]
+    if position != original_position:
+        changed.append((0x420, 0x424))
     verify_unchanged_extents(iso, output, changed)
     if digest(iso) != before_hash:
         raise ValueError("Original ISO changed during generation")
     return {"input": str(iso), "output": str(output), "input_sha256": before_hash,
             "output_sha256": digest(output), "dol_offset": position, "dol_size": len(patched),
+            "original_dol_offset": original_position, "dol_relocated": position != original_position,
             "changed_extents": changed, "all_other_bytes_identical": True,
             "patched_dol_sha256": hashlib.sha256(patched).hexdigest()}
+
+
+def write_dol(dol, output, manifest, payload):
+    """Container-independent executable replacement for image adapters."""
+    patched = apply_dol(dol, manifest, payload)
+    with output.open("xb") as stream:
+        stream.write(patched)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=["build", "apply"])
     parser.add_argument("--enable", action="store_true", help="define SFA_PRACTICE (default: disabled)")
-    parser.add_argument("--iso", type=Path, required=True)
+    inputs = parser.add_mutually_exclusive_group(required=True)
+    inputs.add_argument("--iso", type=Path, help="uncompressed GameCube ISO/GCM")
+    inputs.add_argument("--dol", type=Path, help="extracted main.dol; output is a patched DOL")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--patch", type=Path, help="package to create, or existing package for apply")
     parser.add_argument("--build-dir", type=Path, default=ROOT / "build/practice")
@@ -331,19 +364,20 @@ def main():
     out = args.build_dir.resolve()
     out.mkdir(parents=True, exist_ok=True)
     if args.command == "build":
-        dol, _ = read_iso(args.iso)
+        dol = args.dol.read_bytes() if args.dol else read_iso(args.iso)[0]
+        verify_dol(dol)
         payload, exports = compile_payload(out, args.enable, args.compilers, args.binutils)
         if not args.enable:
             (out / "practice-disabled.dol").write_bytes(dol)
             print("SFA_PRACTICE disabled: no symbols, no hooks; DOL matches retail SHA-1", expected_dol_hash())
             if args.output:
-                with args.iso.open("rb") as source, args.output.open("xb") as target:
+                source_path = args.dol or args.iso
+                with source_path.open("rb") as source, args.output.open("xb") as target:
                     shutil.copyfileobj(source, target, 4 << 20)
-                if digest(args.iso) != digest(args.output):
-                    raise ValueError("Disabled ISO differs from original")
+                if digest(source_path) != digest(args.output):
+                    raise ValueError("Disabled output differs from original")
             return
         manifest = make_patch(dol, payload, exports)
-        manifest["iso_sha256"] = digest(args.iso)
         (out / "practice.dol").write_bytes(apply_dol(dol, manifest, payload))
         (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
         patch = args.patch or out / "SFA-EN-v1.0-practice.sfapatch"
@@ -351,7 +385,7 @@ def main():
             archive.writestr("manifest.json", json.dumps(manifest, indent=2))
             archive.writestr("practice.bin", payload)
         print("Created patch:", patch)
-        print("Payload:", len(payload), "bytes; original addresses preserved; 256 KiB arena reservation")
+        print("Payload:", len(payload), "bytes; original addresses preserved; 64 KiB arena-low reservation")
     else:
         if not args.patch or not args.output:
             parser.error("apply requires --patch and --output")
@@ -359,9 +393,13 @@ def main():
             manifest = json.loads(archive.read("manifest.json"))
             payload = archive.read("practice.bin")
     if args.output:
-        report = write_iso(args.iso, args.output, manifest, payload)
-        (out / "iso-report.json").write_text(json.dumps(report, indent=2) + "\n")
-        print(json.dumps(report, indent=2))
+        if args.dol:
+            write_dol(args.dol.read_bytes(), args.output, manifest, payload)
+            print("Created patched DOL:", args.output)
+        else:
+            report = write_iso(args.iso, args.output, manifest, payload)
+            (out / "iso-report.json").write_text(json.dumps(report, indent=2) + "\n")
+            print(json.dumps(report, indent=2))
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@
 #include "game/objects/object.h"
 #include "main/dll/player_state.h"
 
-void Practice_SetArenaHi(void* end);
+void Practice_SetArenaLo(void* start);
 void Practice_PadUpdate(void);
 void Practice_Draw(void);
 void Practice_PlayerControls(GameObject* obj, PlayerState* state, f32 dt);

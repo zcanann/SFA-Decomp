@@ -19,6 +19,7 @@
 #include "sys/objects.h"
 
 extern u8 __practice_start[];
+extern u8 __practice_limit[];
 extern u8 gDebugFontAndErrorData[];
 extern PADStatus gPadStatuses[];
 extern u8 timeStop;
@@ -93,7 +94,8 @@ static Vec point(f32 x, f32 y, f32 z) {
 }
 
 static int validPointer(const void* p) {
-    return (u32)p >= 0x80003100 && (u32)p < (u32)__practice_start && ((u32)p & 3) == 0;
+    return (u32)p >= 0x80003100 && (u32)p < 0x81800000 && ((u32)p & 3) == 0 &&
+           ((u32)p < (u32)__practice_start || (u32)p >= (u32)__practice_limit);
 }
 
 static int nearPoint(Vec p) {
@@ -559,11 +561,11 @@ static void drawMenu(void) {
            MUTED);
 }
 
-void Practice_SetArenaHi(void* end) {
-    if ((u32)end > (u32)__practice_start) {
-        end = __practice_start;
+void Practice_SetArenaLo(void* start) {
+    if ((u32)start < (u32)__practice_limit) {
+        start = __practice_limit;
     }
-    OSSetArenaHi(end);
+    OSSetArenaLo(start);
 }
 
 static void closeMenu(void) {
