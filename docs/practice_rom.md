@@ -1,25 +1,26 @@
-# EN v1.0 practice ROM v1.4
+# EN v1.0 practice ROM v1.5
 
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
 The first supported input is a clean US/EN v1.0 (`GSAE01`, revision 0) ISO.
-The controls below describe packaged V1.4. See **Pending changes after V1.4**
-for the newer source-only controls and menus; no replacement ISO is packaged yet.
+V1.5 includes the categorized Flags and Log tabs, revised roll macros, and
+destination resource-bank setup for practice warps. See **V1.5 changes** below.
 
 ## Controls
 
 - **L + R + D-pad Down:** open/close the practice menu (controller 1).
 - **L/R inside the menu:** previous/next tab, wrapping at the ends. Collision
-  is first, Cheats second, Warp third. Z is unused. Analog press and digital click count as
+  is first, followed by Cheats, Warp, Flags and Log. Z is unused. Analog press and digital click count as
   one shoulder press; holding a shoulder does not repeatedly switch tabs.
 - **D-pad Up/Down:** select a row; hold to repeat.
 - **A:** toggle its checkbox. Enabling a group expands it.
 - **Right/Left:** expand/collapse a group. Left on a child returns to its parent.
 - **Left/Right on numeric rows:** change water height, draw distance, or hover cadence.
 - **B:** close. **X on the Cheats tab:** reset water to the player's Y + 40.
-- **With Auto-Shield Hover enabled:** hold R to run the cadence; release R to stop.
+- **With Auto-Shield Hover enabled:** hold X + R to run the cadence; release either to stop.
+- **With Auto Roll enabled:** hold X for roll, configurable blanks, shield, repeat.
 - **Warp tab:** Left/Right edits category, map, spawn, position, layer, facing or step.
-  Selecting a map/spawn restores its preset. Select **Warp Now** and press **A** to travel.
+  Selecting a map/spawn restores its preset. Select **Warp Now** (fourth row, below Spawn) and press **A** to travel.
 - With swimming enabled and the menu closed, **L + Up/Down** raises/lowers the water surface.
 
 The menu consumes controller-1 input and uses the existing `timeStop` mechanism
@@ -61,19 +62,24 @@ The normal HUD shows a small reminder of the opening chord.
   player-local water surface/depth. A cyan grid shows that surface. Real map
   water geometry is unchanged. Disabling releases the swim flag and restores
   the real water query. Normal walls and collision still apply.
-- **Auto-Shield Hover** on Cheats: while physical **R is held**, emits
+- **Auto-Shield Hover** on Cheats: while physical **X + R are held**, emits
   **R (shield), then X (roll)** on
   successive game input frames. **Blanks After Roll** and **Blanks After Shield**
   each accept 0-60 frames, edited with D-pad Left/Right. Each action lasts one
   frame; blank frames release both X and R. At 2 roll blanks and 1 shield blank,
-  the repeating pattern is `R, blank, X, blank, blank`. Both counts default to
-  zero. Releasing R stops immediately and resets the cadence to shield; merely
+  the repeating pattern is `R, blank, X, blank, blank`. Defaults are 3 roll blanks and
+  0 shield blanks. Releasing either button stops and resets the cadence to shield; merely
   enabling the checkbox sends no inputs. Analog R and its digital click both
-  activate it. The stick and other buttons remain available. The macro stops during
+  count toward the R requirement. The stick and other buttons remain available. The macro stops during
   menus, paused gameplay, disabled input or DVD errors and restarts at shield.
   Turning it off returns X/R to physical input with correct release edges.
   It automates inputs only: height, velocity and animation state are not forced.
   The best cadence and resulting hover behavior still require gameplay testing.
+- **Auto Roll:** hold X to send one X frame, 39 blank frames, one R frame, then
+  repeat. The gap is configurable from 0 to 120; shield hover takes priority
+  while X + R are held.
+- **Flags / Log:** categorized state editing and optional Dolphin logging,
+  described under **V1.5 changes** below.
 - **Warp:** all 117 map IDs are listed in categories. 61 have world destinations:
   41 use retail WARPTAB entries and 20 use explicitly marked estimated positions.
   Estimated positions come from a central placed object plus 50 Y, or an occupied
@@ -92,7 +98,7 @@ The normal HUD shows a small reminder of the opening chord.
 
 Collision and triggers start enabled, with every geometry filter on except
 **Terrain Triangles** and **Water Triangles**. Draw Through Walls remains off.
-Swimming and Auto-Shield Hover are opt-in. Individual filters are independent.
+Swimming, both roll macros, and logging are opt-in. Individual filters are independent.
 The menu scrolls to keep the selected row visible when every group is expanded.
 Rendering is capped at 12,000 lines and 6,000 fill triangles per frame; the menu
 reports when a cap is reached. Map collision reserves half the wire budget and
@@ -158,8 +164,8 @@ From the practice worktree:
 ```powershell
 python tools/practice/build.py build --enable `
   --iso "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00).iso" `
-  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.4).iso" `
-  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.4.sfapatch"
+  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.5).iso" `
+  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.5.sfapatch"
 ```
 
 The `.sfapatch` is a ZIP containing a manifest and the new payload, not a retail
@@ -168,14 +174,14 @@ DOL hash, independent of the image's padding or compression. Apply it with:
 
 ```powershell
 python tools/practice/build.py apply --iso "clean.iso" `
-  --patch "SFA-EN-v1.0-Practice-v1.4.sfapatch" --output "practice.iso"
+  --patch "SFA-EN-v1.0-Practice-v1.5.sfapatch" --output "practice.iso"
 ```
 
 The executable transformation is also available without a disc container:
 
 ```powershell
 python tools/practice/build.py apply --dol "main.dol" `
-  --patch "SFA-EN-v1.0-Practice-v1.4.sfapatch" --output "practice.dol"
+  --patch "SFA-EN-v1.0-Practice-v1.5.sfapatch" --output "practice.dol"
 ```
 
 `--dol` is also accepted by `build`. This is the interface for future image
@@ -189,7 +195,7 @@ An RVZ workflow can use Dolphin's conversion tool around the ISO patcher:
 ```powershell
 DolphinTool convert -i clean.rvz -o clean.iso -f iso
 python tools/practice/build.py apply --iso clean.iso `
-  --patch SFA-EN-v1.0-Practice-v1.4.sfapatch --output practice.iso
+  --patch SFA-EN-v1.0-Practice-v1.5.sfapatch --output practice.iso
 DolphinTool convert -i practice.iso -o practice.rvz -f rvz -b 131072 -c zstd -l 5
 ```
 
@@ -211,9 +217,9 @@ runtime code and declarations are enclosed in `#ifdef SFA_PRACTICE`.
 
 ## Memory and patch design
 
-Original text/data/BSS addresses are preserved. Six verified call instructions
+Original text/data/BSS addresses are preserved. Seven verified call instructions
 are replaced: both OSInit arena-low setup calls, controller polling, the end-of-frame
-stub, player controls, and player surface response. Calls go through ordinary
+stub, warp reload, player controls, and player surface response. Calls go through ordinary
 PPC EABI C wrappers; game/compiler/SDK routines remain at their retail addresses.
 
 A new DOL section contains code, constants and explicitly initialized zero-state
@@ -240,7 +246,7 @@ portable patch's compatibility key.
 
 This EN disc's DOL starts at `0x1E000`, is `0x33DD40` bytes long and is followed
 by the FST at `0x35BE00`: only 192 bytes of spare space are available. The payload
-needs about 46 KiB. A growing DOL cannot be replaced at that offset without
+needs about 59 KiB. A growing DOL cannot be replaced at that offset without
 moving it or other disc structures; this writer moves only the DOL.
 
 V1 failed before game entry because its section at `0x816C0000` exceeded both
@@ -254,7 +260,7 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
-### Pending changes after V1.4 (not packaged)
+### V1.5 changes
 
 Reported V1.4 failures: warping to Galdon hangs on black, Andross flight
 shows a broken cube-like Arwing, and all five Krazoa test maps fail to warp.
@@ -266,13 +272,12 @@ source auxiliary-bank selection. The existing queued loader unloads old
 objects before synchronously loading destination/parent resource banks.
 Ordinary and superseding scripted warps retain their retail reload path.
 
-Shrine transporters likewise call `loadMapAndParent` on entry. The pending loader
+Shrine transporters likewise call `loadMapAndParent` on entry. The loader
 test covers all five test destinations as well as Galdon and Andross. This
 addresses a verified loading-path omission; the reported gameplay failures have
-not yet been confirmed fixed in Dolphin. No new ISO or patch has been generated,
-as requested during testing.
+not yet been confirmed fixed through Dolphin gameplay testing.
 
-Pending menu and cheat changes:
+Menu and cheat changes:
 
 - L/R cycles Collision, Cheats, Warp, Flags, Log. **Warp Now is the fourth row**,
   immediately after Category, Map, Spawn; it still requires an explicit A press.
@@ -332,12 +337,24 @@ are printed, followed by a suppressed-event count; snapshots still advance.
 
 These controls are tested as compiled PPC code with stubbed game services;
 their gameplay effects and layout still need Dolphin playtesting.
-The pending source passes 32 payload tests, 8 patch tests, `ninja all_source`,
+The source passes 32 payload tests, 8 patch tests, `ninja all_source`,
 and the strict retail checksum. A read-only check against the verified EN disc's
 3,920 BITTABLE records validated all 87 ordinary catalog rows (some are aliases
 shown on more than one page). Six menu previews were inspected from rasterized
 GX commands, not Dolphin screenshots. The payload is 60,096 bytes and still fits
 the original 64 KiB reservation.
+
+V1.5 was packaged and booted successfully from its new ISO in Dolphin with an
+isolated profile and Null video backend: initialized/loaded state, 45 objects,
+intact payload, and no apploader boundary errors. This is startup validation,
+not confirmation of the reported boss/shrine warp fixes during gameplay.
+Every byte outside the relocated DOL and four-byte header pointer compared
+equal; the original retained SHA-256
+`f2efe87066555522fa99a31a9f8b7eb4f51b47d59e5a348b1fed324fcd69fc4e`.
+The new ISO SHA-256 is
+`902ddae941b2df122b96ee94abcad49e188964be39dfe79f15ce7d82fc73cf68`;
+the payload SHA-256 is
+`7500eb64ce943a548f243928da6206087f936dd42a6dccf669698e8e3d7945a3`.
 
 ### Packaged build checks
 
