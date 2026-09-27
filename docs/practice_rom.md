@@ -198,6 +198,18 @@ the boundary warning/error; a read-only RAM sample showed `gameState=1`,
 code. The arena-low value after subsequent system allocations was `0x805364A0`.
 This is startup validation, not a visual or long-session playtest.
 
+V1.2 passed all 13 compiled-payload tests, all 8 patch tests, `ninja all_source`,
+the strict retail checksum, and the same isolated Dolphin startup check (45
+objects, initialized/loaded state, intact payload). Formatting preserved both
+the complete object and payload bytes. The 27,456-byte payload SHA-256 is
+`c331fcf30aff51fbca864b8231816d746cdce11158289a179039bfacc1caab94`.
+The new ISO SHA-256 is
+`3ed7a0343f381ea5128d392dcd5bd45f8d01eb295f786e990160d85ef8e7e691`;
+the original retained SHA-256
+`f2efe87066555522fa99a31a9f8b7eb4f51b47d59e5a348b1fed324fcd69fc4e`.
+Every byte outside the relocated DOL and four-byte header pointer compared equal.
+The reported problem locations have not yet been visually retested in Dolphin.
+
 These checks do not establish in-game GPU-state compatibility, visual alignment
 in every map, or swimming behavior in every movement/sequence state. Those need
 playtesting in Dolphin; treat this as the first experimental practice release.
