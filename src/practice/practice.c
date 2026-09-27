@@ -13,6 +13,7 @@
 #include "main/frame_timing.h"
 #include "main/map_block.h"
 #include "main/obj_list.h"
+#include "main/object_transform.h"
 #include "main/objhits_types.h"
 #include "main/pad.h"
 #include "main/shader_api.h"
@@ -39,12 +40,14 @@ enum {
     OBJECT_MESH,
     HIT_SPHERES,
     WATER_MESH,
+    BARRIERS,
     TRIGGERS,
     PLANES,
     BOXES,
     SPHERES,
     CYLINDERS,
     TARGET_PATH,
+    TRIGGER_FILL,
     SWIMMING,
     WATER_HEIGHT,
     WATER_GRID,
@@ -62,26 +65,31 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"OBJECT TRIANGLES", COLLISION, 0},
                                             {"OBJECT HIT SPHERES", COLLISION, 0},
                                             {"WATER TRIANGLES", COLLISION, 0},
+                                            {"BARRIERS / LEDGES", COLLISION, 0},
                                             {"TRIGGERS", -1, 1},
                                             {"CROSSING PLANES", TRIGGERS, 0},
                                             {"BOXES", TRIGGERS, 0},
                                             {"SPHERES", TRIGGERS, 0},
                                             {"CYLINDERS", TRIGGERS, 0},
                                             {"TARGET MOTION", TRIGGERS, 0},
+                                            {"TRANSLUCENT FILL", TRIGGERS, 0},
                                             {"FORCED SWIMMING", -1, 1},
                                             {"WATER HEIGHT", SWIMMING, 0},
                                             {"SHOW WATER PLANE", SWIMMING, 0},
                                             {"DRAW THROUGH WALLS", -1, 0},
                                             {"DRAW DISTANCE", -1, 0}};
-static u8 enabled[ROW_COUNT] = {0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0};
+static u8 enabled[ROW_COUNT] = {0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0};
 static u8 expanded[ROW_COUNT];
 static u8 menuOpen, chordLatched, savedTimeStop, swimApplied;
-static int selected, repeatTimer, visibleCount, visible[ROW_COUNT];
+static int selected, repeatTimer, visibleCount, visible[ROW_COUNT], menuTop;
 static int drawDistance = 1000;
 static f32 waterHeight;
 static GameObject* swimOwner;
 static int linesDrawn, trianglesDrawn, triggersDrawn;
+static int fillsDrawn;
+static int drawLimitReached;
 static int lineLimit = 12000;
+static int fillLimit = 6000;
 static Vec origin;
 static const u32 WHITE = 0xE7EFFAFF, MUTED = 0x95A5BFFF, GOLD = 0xFFD16AFF;
 
@@ -111,6 +119,7 @@ static void vertex(f32 x, f32 y, f32 z, u32 color) {
 /* The view matrix consumes positions relative to the current map origin. */
 static void line(Vec a, Vec b, u32 color) {
     if (linesDrawn >= lineLimit) {
+        drawLimitReached = 1;
         return;
     }
     GXBegin(GX_LINES, GX_VTXFMT7, 2);
@@ -119,12 +128,108 @@ static void line(Vec a, Vec b, u32 color) {
     linesDrawn++;
 }
 
+/* Conservative bounds include large faces crossing the draw radius even when
+ * every vertex lies outside it. Vertex-only culling leaves holes under Fox. */
+static int nearTriangle(Vec a, Vec b, Vec c) {
+    f32 distance = 0;
+    int axis;
+    for (axis = 0; axis < 3; axis++) {
+        f32 low = ((f32*)&a)[axis], high = low, p = ((f32*)&origin)[axis], delta = 0;
+        if (((f32*)&b)[axis] < low) { low = ((f32*)&b)[axis]; }
+        if (((f32*)&c)[axis] < low) { low = ((f32*)&c)[axis]; }
+        if (((f32*)&b)[axis] > high) { high = ((f32*)&b)[axis]; }
+        if (((f32*)&c)[axis] > high) { high = ((f32*)&c)[axis]; }
+        if (p < low) { delta = low - p; }
+        if (p > high) { delta = p - high; }
+        distance += delta * delta;
+    }
+    return distance <= (f32)drawDistance * drawDistance;
+}
+
 static void triangle(Vec a, Vec b, Vec c, u32 color) {
-    if (nearPoint(a) || nearPoint(b) || nearPoint(c)) {
+    Vec ab = point(b.x - a.x, b.y - a.y, b.z - a.z);
+    Vec ac = point(c.x - a.x, c.y - a.y, c.z - a.z);
+    Vec normal = point(ab.y * ac.z - ab.z * ac.y, ab.z * ac.x - ab.x * ac.z, ab.x * ac.y - ab.y * ac.x);
+    if (!(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z > 0)) { return; }
+    if (nearTriangle(a, b, c)) {
         line(a, b, color);
         line(b, c, color);
         line(c, a, color);
         trianglesDrawn++;
+    }
+}
+
+/* Translucent surfaces test against scene depth but never write to it. Keep
+ * both sides visible so volumes remain readable when the camera is inside. */
+static void fillTriangle(Vec a, Vec b, Vec c, u32 color) {
+    if (!enabled[TRIGGER_FILL] || fillsDrawn >= fillLimit) {
+        return;
+    }
+    color = (color & 0xFFFFFF00) | 0x30;
+    GXBegin(GX_TRIANGLES, GX_VTXFMT7, 3);
+    vertex(a.x - playerMapOffsetX, a.y, a.z - playerMapOffsetZ, color);
+    vertex(b.x - playerMapOffsetX, b.y, b.z - playerMapOffsetZ, color);
+    vertex(c.x - playerMapOffsetX, c.y, c.z - playerMapOffsetZ, color);
+    fillsDrawn++;
+}
+
+static void fillQuad(Vec a, Vec b, Vec c, Vec d, u32 color) {
+    fillTriangle(a, b, c, color);
+    fillTriangle(a, c, d, color);
+}
+
+static void fillSphere(Vec center, f32 radius, u32 color) {
+    Vec previous[16], ring[16];
+    int latitude, longitude;
+    if (!enabled[TRIGGER_FILL] || !(radius > 0 && radius < 50000)) {
+        return;
+    }
+    for (longitude = 0; longitude < 16; longitude++) {
+        previous[longitude] = point(center.x, center.y - radius, center.z);
+    }
+    for (latitude = 1; latitude <= 8 && fillsDrawn < fillLimit; latitude++) {
+        f32 angle = -1.57079632679f + latitude * (3.14159265359f / 8);
+        f32 y = center.y + mathSinf(angle) * radius;
+        f32 r = mathCosf(angle) * radius;
+        for (longitude = 0; longitude < 16; longitude++) {
+            f32 yaw = longitude * (6.28318530718f / 16);
+            ring[longitude] = point(center.x + mathCosf(yaw) * r, y, center.z + mathSinf(yaw) * r);
+        }
+        for (longitude = 0; longitude < 16; longitude++) {
+            int next = (longitude + 1) & 15;
+            if (latitude == 1) {
+                fillTriangle(previous[longitude], ring[longitude], ring[next], color);
+            } else if (latitude == 8) {
+                fillTriangle(previous[longitude], ring[longitude], previous[next], color);
+            } else {
+                fillQuad(previous[longitude], ring[longitude], ring[next], previous[next], color);
+            }
+        }
+        for (longitude = 0; longitude < 16; longitude++) {
+            previous[longitude] = ring[longitude];
+        }
+    }
+}
+
+static void fillCylinder(Vec bottom, Vec top, f32 radius, u32 color) {
+    Vec firstA, firstB, prevA, prevB;
+    int i;
+    if (!enabled[TRIGGER_FILL] || !(radius > 0 && radius < 50000)) {
+        return;
+    }
+    for (i = 0; i <= 24 && fillsDrawn < fillLimit; i++) {
+        f32 angle = i * (6.28318530718f / 24);
+        Vec a = point(bottom.x + mathCosf(angle) * radius, bottom.y, bottom.z + mathSinf(angle) * radius);
+        Vec b = point(a.x, top.y, a.z);
+        if (i == 0) {
+            firstA = a; firstB = b;
+        } else {
+            if (i == 24) { a = firstA; b = firstB; }
+            fillQuad(prevA, prevB, b, a, color);
+            fillTriangle(bottom, prevA, a, color);
+            fillTriangle(top, b, prevB, color);
+        }
+        prevA = a; prevB = b;
     }
 }
 
@@ -226,6 +331,7 @@ static void drawTriggers(GameObject* obj) {
                               (i & 2) ? plane->clipHalfExtent : -plane->clipHalfExtent, 0);
             PSMTXMultVec(inverse, &local, &p[i]);
         }
+        fillQuad(p[0], p[1], p[3], p[2], color);
         line(p[0], p[1], color);
         line(p[1], p[3], color);
         line(p[3], p[2], color);
@@ -250,6 +356,12 @@ static void drawTriggers(GameObject* obj) {
             p[i].y = center.y + y * cp + z * sp;
             p[i].z = center.z - x * sy + forward * cy;
         }
+        fillQuad(p[0], p[1], p[3], p[2], color);
+        fillQuad(p[4], p[5], p[7], p[6], color);
+        fillQuad(p[0], p[1], p[5], p[4], color);
+        fillQuad(p[2], p[3], p[7], p[6], color);
+        fillQuad(p[0], p[2], p[6], p[4], color);
+        fillQuad(p[1], p[3], p[7], p[5], color);
         for (i = 0; i < 8; i++) {
             for (j = 1; j <= 4; j <<= 1) {
                 if (!(i & j)) {
@@ -258,6 +370,7 @@ static void drawTriggers(GameObject* obj) {
             }
         }
     } else if (type == 0x4b && enabled[SPHERES]) {
+        fillSphere(center, def->size[0] * 2.0f, color);
         sphere(center, def->size[0] * 2.0f, color);
     } else if (type == 0x230 && enabled[CYLINDERS]) {
         Vec a = center, b = center;
@@ -265,6 +378,7 @@ static void drawTriggers(GameObject* obj) {
         f32 radius = def->size[0] * 2.0f;
         a.y -= def->size[1] * 2.0f;
         b.y += def->size[1] * 2.0f;
+        fillCylinder(a, b, radius, color);
         circle(a, radius, 1, color);
         circle(b, radius, 1, color);
         for (i = 0; i < 4; i++) {
@@ -294,32 +408,67 @@ static int floorCell(f32 x) {
     return x < n * 640.0f ? n - 1 : n;
 }
 
+/* HITS.bin / model lines form vertical interaction planes independent of the
+ * triangle meshes. Match trackSweepCircleAgainstLines' signed height decode. */
+static void drawHitLines(MapHitLine* hits, int count, f32 x, f32 z, GameObject* owner) {
+    int i, j;
+    if (!enabled[BARRIERS] || !validPointer(hits)) { return; }
+    for (i = 0; i < count && linesDrawn < lineLimit; i++) {
+        MapHitLine* hit = &hits[i];
+        f32 ha = (s8)hit->endpointData[0], hb = (s8)hit->endpointData[1];
+        Vec p[4];
+        if (hit->flags & 0x80) {
+            ha = hb = (s16)((hit->endpointData[0] << 8) | hit->endpointData[1]);
+        }
+        p[0] = point(hit->x[0] + x, hit->y[0], hit->z[0] + z);
+        p[1] = point(hit->x[1] + x, hit->y[1], hit->z[1] + z);
+        p[2] = p[1]; p[2].y += hb;
+        p[3] = p[0]; p[3].y += ha;
+        if (owner != NULL) {
+            for (j = 0; j < 4; j++) {
+                Obj_TransformLocalPointToWorld(p[j].x, p[j].y, p[j].z, &p[j].x, &p[j].y, &p[j].z, owner);
+            }
+        }
+        if (nearTriangle(p[0], p[1], p[2]) || nearTriangle(p[0], p[2], p[3])) {
+            for (j = 0; j < 4; j++) { line(p[j], p[(j + 1) & 3], 0xFF875FFF); }
+        }
+    }
+}
+
 static void drawTerrain(void) {
     int cx = floorCell(origin.x - gMapBlockOriginWorldX), cz = floorCell(origin.z - gMapBlockOriginWorldZ);
-    int x, z, layer, groupIndex, triIndex, corner;
+    int x, z, layer, groupIndex, triIndex, corner, ring;
     int radius = (drawDistance + 639) / 640;
-    for (layer = 0; layer < 5 && linesDrawn < lineLimit; layer++) {
-        for (z = cz - radius; z <= cz + radius && linesDrawn < lineLimit; z++) {
-            for (x = cx - radius; x <= cx + radius && linesDrawn < lineLimit; x++) {
+    for (ring = 0; ring <= radius && linesDrawn < lineLimit; ring++) {
+        for (z = cz - ring; z <= cz + ring && linesDrawn < lineLimit; z++) {
+            for (x = cx - ring; x <= cx + ring && linesDrawn < lineLimit; x++) {
+                if (x != cx - ring && x != cx + ring && z != cz - ring && z != cz + ring) { continue; }
+                for (layer = 0; layer < 5 && linesDrawn < lineLimit; layer++) {
                 MapBlockData* block = mapGetBlockAtPos(x, z, layer);
-                if (!validPointer(block) || !validPointer(block->gcPolygons) || !validPointer(block->polygonGroups) ||
+                if (!validPointer(block)) { continue; }
+                drawHitLines(block->hits, block->hitCount, x * 640 + playerMapOffsetX, z * 640 + playerMapOffsetZ, NULL);
+                if (!validPointer(block->gcPolygons) || !validPointer(block->polygonGroups) ||
                     !validPointer(block->vertices)) {
                     continue;
                 }
                 for (groupIndex = 0; groupIndex < block->polyGroupCount && linesDrawn < lineLimit; groupIndex++) {
                     CollisionPolygonGroup* group = &block->polygonGroups[groupIndex];
                     int water = (group->flags & 8) != 0;
-                    int end = groupIndex + 1 < block->polyGroupCount ? group[1].firstTri : block->nPolygons;
+                    int end = group[1].firstTri;
                     u32 color = water ? 0x42BFFFFF : 0x59E99AFF;
                     if (water ? !enabled[WATER_MESH] : !enabled[TERRAIN]) {
                         continue;
                     }
+                    /* Water with bit 1 is never queried. Retain solid bit-2
+                     * groups: Fox's side-contact query (0x29) includes those. */
+                    if (water && (group->flags & 1)) { continue; }
                     if (end > block->nPolygons) {
                         end = block->nPolygons;
                     }
                     for (triIndex = group->firstTri; triIndex < end && linesDrawn < lineLimit; triIndex++) {
                         MapTriIndex* tri = &block->gcPolygons[triIndex];
                         Vec p[3];
+                        if (!(tri->cellMask & 0xFF) || !(tri->cellMask & 0xFF00)) { continue; }
                         for (corner = 0; corner < 3; corner++) {
                             s16* v;
                             if (tri->vert[corner] >= block->vertexCount) {
@@ -335,6 +484,7 @@ static void drawTerrain(void) {
                         }
                     }
                 }
+                }
             }
         }
     }
@@ -346,6 +496,9 @@ static void drawObjectCollision(GameObject* obj) {
     ObjHitboxTransformState* hit = obj->anim.hitboxTransformState;
     Vec center = point(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ);
     int bank = 0, i, j, k;
+    if (validPointer(obj->anim.modelInstance) && obj->anim.transformMatrixIndex >= 0) {
+        drawHitLines(obj->anim.modelInstance->modLines, obj->anim.modelInstance->modLineCount, 0, 0, obj);
+    }
     if (!nearPoint(center) || !validPointer(obj->anim.modelBanks) || !validPointer(obj->anim.modelInstance)) {
         return;
     }
@@ -416,6 +569,10 @@ static void drawWorld(void) {
     Camera_UpdateProjection(NULL, 0);
     GXLoadPosMtxImm((MtxPtr)gCameraViewMatrix, GX_PNMTX0);
     setupGeometry(!enabled[XRAY]);
+    /* Reserve half the wire budget for nearby map collision. */
+    if (enabled[COLLISION] && (enabled[TERRAIN] || enabled[WATER_MESH] || enabled[BARRIERS])) {
+        lineLimit = 6000;
+    }
     objects = ObjList_GetObjects(&start, &count);
     if (validPointer(objects) && count >= 0 && count <= 2048) {
         for (i = start; i < count && linesDrawn < lineLimit; i++) {
@@ -441,9 +598,12 @@ static void drawWorld(void) {
             line(c, d, 0x3BBFFFFF);
         }
     }
-    if (enabled[COLLISION] && (enabled[TERRAIN] || enabled[WATER_MESH])) {
+    if (linesDrawn >= lineLimit) { drawLimitReached = 1; }
+    lineLimit = 12000;
+    if (enabled[COLLISION] && (enabled[TERRAIN] || enabled[WATER_MESH] || enabled[BARRIERS])) {
         drawTerrain();
     }
+    if (linesDrawn >= lineLimit) { drawLimitReached = 1; }
 }
 
 static void rectangle(f32 x, f32 y, f32 w, f32 h, u32 color) {
@@ -526,11 +686,13 @@ static void drawMenu(void) {
     }
     rectangle(20, 20, 600, 430, 0x081020EF);
     rectangle(20, 20, 600, 4, 0x59D5FFFF);
-    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1", WHITE);
+    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.2", WHITE);
     textAt(36, 59, "A: TOGGLE  LEFT/RIGHT: EXPAND  B: CLOSE", MUTED);
     rebuildRows();
-    for (i = 0; i < visibleCount; i++) {
-        int row = visible[i], y = 86 + i * 18;
+    if (menuTop > selected) { menuTop = selected; }
+    if (menuTop < selected - 16) { menuTop = selected - 16; }
+    for (i = menuTop; i < visibleCount && i < menuTop + 17; i++) {
+        int row = visible[i], y = 86 + (i - menuTop) * 18;
         int indent = rows[row].parent < 0 ? 0 : 24;
         u32 color = rows[row].parent >= 0 && !enabled[(int)rows[row].parent] ? MUTED : WHITE;
         if (i == selected) {
@@ -557,7 +719,7 @@ static void drawMenu(void) {
     textAt(252, 395, "TRIGGERS:", MUTED);
     numberAt(372, 395, triggersDrawn, WHITE);
     textAt(36, 419,
-           linesDrawn >= lineLimit ? "DRAW LIMIT REACHED - REDUCE DISTANCE" : "SWIM HEIGHT: L+UP/DOWN  X: RESET TO FOX",
+           drawLimitReached || fillsDrawn >= fillLimit ? "DRAW LIMIT REACHED - REDUCE DISTANCE" : "SWIM HEIGHT: L+UP/DOWN  X: RESET TO FOX",
            MUTED);
 }
 
@@ -746,7 +908,8 @@ void Practice_SurfaceResponse(GameObject* obj, PlayerState* state, PlayerState* 
 
 void Practice_Draw(void) {
     u8 viewIndex = gCameraCurrentViewIndex;
-    linesDrawn = trianglesDrawn = triggersDrawn = 0;
+    linesDrawn = trianglesDrawn = triggersDrawn = fillsDrawn = 0;
+    drawLimitReached = 0;
     if (enabled[COLLISION] || enabled[TRIGGERS] || (enabled[SWIMMING] && enabled[WATER_GRID])) {
         drawWorld();
     }

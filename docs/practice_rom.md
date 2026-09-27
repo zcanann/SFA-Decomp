@@ -1,4 +1,4 @@
-# EN v1.0 practice ROM v1.1
+# EN v1.0 practice ROM v1.2
 
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
@@ -21,9 +21,14 @@ The normal HUD shows a small reminder of the opening chord.
 ## Included
 
 - **Collision:** loaded terrain triangles (green), object collision triangles
-  (yellow), current object hit spheres (orange), water triangles (cyan).
+  (yellow), current object hit spheres (orange), water triangles (cyan), and
+  **Barriers / Ledges** (coral): the separate HITS.bin and model-line planes.
+  These interaction planes include invisible barriers, ledges, and climb aids;
+  their presence does not mean every kind blocks Fox in every movement state.
 - **Triggers:** crossing planes, rotated boxes, spheres, vertical cylinders
   (pink); optional line between the trigger's previous/current target sample.
+  **Translucent Fill** starts enabled, with opaque outlines. Both sides render;
+  fill tests scene depth and never writes depth. Disable it for wireframes.
   The engine's disabled flag makes a trigger grey. Geometry does not establish
   whether all of its game-bit/command conditions currently permit activation.
 - **Forced Swimming:** uses the game's deep-water entry path and substitutes a
@@ -33,10 +38,27 @@ The normal HUD shows a small reminder of the opening chord.
 - **Draw Through Walls** and a **250–2500 unit Draw Distance** setting.
 
 Collision/trigger/swimming groups start disabled. Individual geometry filters
-are independent. Rendering is capped at 12,000 lines per frame; the menu reports
-when the cap is reached. Only loaded objects/map blocks are visible. Trigger
+are independent. Draw Through Walls, Water Triangles and Object Hit Spheres
+start disabled. Barrier planes start enabled within the collision group.
+The menu scrolls to keep the selected row visible when every group is expanded.
+Rendering is capped at 12,000 lines and 6,000 fill triangles per frame; the menu
+reports when a cap is reached. Map collision reserves half the wire budget and
+visits the player's block first, then successive rings, across all five layers.
+Only loaded objects/map blocks are visible. Trigger
 timers, message-only triggers, curves, and every specialized interaction volume
 are not covered by this first viewer. Noclip is not included yet.
+
+V1.2 corrects terrain ranges to use the final polygon-group sentinel and skips
+triangles with an empty X or Z collision-cell mask, degenerate triangles, and
+water groups that the retail query always rejects. Bounds-based distance culling
+keeps large triangles crossing the draw radius even if their vertices lie outside.
+Solid group bit 2 remains included: Fox's side-contact query uses mask `0x29`.
+These rules follow `trackBuildBlockTriangles`; this is a view of collision
+candidates, not the result of a particular live collision query. State-dependent
+responses and specialized object volumes still require further coverage.
+Barrier endpoint heights follow the signed-byte / signed-16-bit decoding in
+`trackSweepCircleAgainstLines`; object lines use the engine's local-to-world
+transform. The viewer does not invoke or overwrite the game's collision queries.
 
 ## Build and apply
 
@@ -51,8 +73,8 @@ From the practice worktree:
 ```powershell
 python tools/practice/build.py build --enable `
   --iso "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00).iso" `
-  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.1).iso" `
-  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.1.sfapatch"
+  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.2).iso" `
+  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.2.sfapatch"
 ```
 
 The `.sfapatch` is a ZIP containing a manifest and the new payload, not a retail
@@ -61,14 +83,14 @@ DOL hash, independent of the image's padding or compression. Apply it with:
 
 ```powershell
 python tools/practice/build.py apply --iso "clean.iso" `
-  --patch "SFA-EN-v1.0-Practice-v1.1.sfapatch" --output "practice.iso"
+  --patch "SFA-EN-v1.0-Practice-v1.2.sfapatch" --output "practice.iso"
 ```
 
 The executable transformation is also available without a disc container:
 
 ```powershell
 python tools/practice/build.py apply --dol "main.dol" `
-  --patch "SFA-EN-v1.0-Practice-v1.1.sfapatch" --output "practice.dol"
+  --patch "SFA-EN-v1.0-Practice-v1.2.sfapatch" --output "practice.dol"
 ```
 
 `--dol` is also accepted by `build`. This is the interface for future image
@@ -82,7 +104,7 @@ An RVZ workflow can use Dolphin's conversion tool around the ISO patcher:
 ```powershell
 DolphinTool convert -i clean.rvz -o clean.iso -f iso
 python tools/practice/build.py apply --iso clean.iso `
-  --patch SFA-EN-v1.0-Practice-v1.1.sfapatch --output practice.iso
+  --patch SFA-EN-v1.0-Practice-v1.2.sfapatch --output practice.iso
 DolphinTool convert -i practice.iso -o practice.rvz -f rvz -b 131072 -c zstd -l 5
 ```
 
@@ -133,7 +155,7 @@ portable patch's compatibility key.
 
 This EN disc's DOL starts at `0x1E000`, is `0x33DD40` bytes long and is followed
 by the FST at `0x35BE00`: only 192 bytes of spare space are available. The payload
-needs about 20 KiB. A growing DOL cannot be replaced at that offset without
+needs about 30 KiB. A growing DOL cannot be replaced at that offset without
 moving it or other disc structures; this writer moves only the DOL.
 
 V1 failed before game entry because its section at `0x816C0000` exceeded both
@@ -161,7 +183,9 @@ disabled code elimination, in-place and relocated ISO fixtures, DOL-only
 application, the old high-address boot regression, and overwrite protection.
 Payload tests run the compiled PPC instructions with stubbed game/GX services:
 menu debouncing/navigation/input consumption, arena bounds, swimming restoration,
-trigger shapes, packed terrain vertices, water filters, and object transforms.
+trigger fills/outlines and toggles, depth-test defaults/no depth writes, menu
+scrolling, packed terrain vertices, sentinel and cell-mask filtering, large-face
+culling, water filters, nearby-block priority, barrier heights, and object transforms.
 Unicorn lacks Gekko paired singles, so the harness skips only the compiler's
 paired-lane stack saves/restores (ordinary floating-point saves still run).
 

@@ -38,12 +38,14 @@ class Machine:
         self.current = None
         self.words = []
         self.stub = {}
+        self.blocks = {}
         for name, (addr, _) in symbols().items():
             if name.startswith("GX") or name in (
                 "padUpdate", "Obj_GetPlayerObject", "OSSetArenaLo", "playerDoControls",
                 "playerEnterDeepWater", "playerUpdateSurfaceResponse", "Camera_SetCurrentViewIndex",
                 "Camera_UpdateProjection", "resetSomeGxFlags", "getScreenResolution", "mathSinf", "mathCosf",
-                "Matrix_TransformPoint", "mapGetBlockAtPos", "ObjList_GetObjects", "PSMTXInverse", "PSMTXMultVec"):
+                "Matrix_TransformPoint", "mapGetBlockAtPos", "ObjList_GetObjects", "PSMTXInverse", "PSMTXMultVec",
+                "Obj_TransformLocalPointToWorld"):
                 self.stub[addr] = name
         self.uc.hook_add(UC_HOOK_CODE, self.service)
         self.uc.hook_add(UC_HOOK_MEM_WRITE, self.fifo, begin=0xCC008000, end=0xCC008003)
@@ -56,6 +58,17 @@ class Machine:
 
     def r(self, n):
         return self.uc.reg_read(UC_PPC_REG_0 + n)
+
+    def row(self, label):
+        for index in range(18):
+            address = self.read(self.sym["rows"] + index * 8)
+            text = bytes(self.uc.mem_read(address, 64)).split(b"\0")[0].decode()
+            if text == label:
+                return index
+        raise AssertionError(label)
+
+    def toggle(self, label, value):
+        self.write(self.sym["enabled"] + self.row(label), value, "B")
 
     def f(self, n):
         return struct.unpack(">d", struct.pack(">Q", self.uc.reg_read(UC_PPC_REG_FPR0 + n)))[0]
@@ -108,12 +121,15 @@ class Machine:
             result = [sum(a[i * 4 + k] * p[k] for k in range(4)) for i in range(3)]
             uc.mem_write(self.r(5), struct.pack(">3f", *result))
         elif name == "mapGetBlockAtPos":
-            uc.reg_write(UC_PPC_REG_0 + 3, self.block if self.r(3) == self.r(4) == self.r(5) == 0 else 0)
+            uc.reg_write(UC_PPC_REG_0 + 3, self.blocks.get((self.r(3), self.r(4), self.r(5)), 0))
+        elif name == "Obj_TransformLocalPointToWorld":
+            for axis in range(3):
+                self.write(self.r(3 + axis), self.f(1 + axis) + self.read(self.r(6) + 0x18 + axis * 4, "f"), "f")
         elif name == "ObjList_GetObjects":
             self.write(self.r(3), 0)
             self.write(self.r(4), 0)
             uc.reg_write(UC_PPC_REG_0 + 3, 0)
-        self.calls.append((name, self.r(3), self.r(4)))
+        self.calls.append((name, self.r(3), self.r(4), self.r(5)))
         uc.reg_write(UC_PPC_REG_PC, uc.reg_read(UC_PPC_REG_LR))
 
     def fifo(self, uc, access, address, size, value, unused):
@@ -186,7 +202,7 @@ class PayloadTests(unittest.TestCase):
     def test_swim_restores_real_water_query(self):
         m = self.m
         m.pad()
-        m.write(m.sym["enabled"] + 11, 1, "B")
+        m.toggle("FORCED SWIMMING", 1)
         m.write(m.sym["waterHeight"], 140.0, "f")
         m.call("Practice_PlayerControls", m.player, m.state)
         self.assertEqual(m.read(m.state + 0x3F0, "B") & 0x20, 0x20)
@@ -195,7 +211,7 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.state + 0x1C0, "f"), -100000.0)
         m.pad(0x48)  # L+Up
         self.assertEqual(m.read(m.sym["waterHeight"], "f"), 142.0)
-        m.write(m.sym["enabled"] + 11, 0, "B")
+        m.toggle("FORCED SWIMMING", 0)
         m.call("Practice_PlayerControls", m.player, m.state)
         self.assertEqual(m.read(m.state + 0x3F0, "B") & 0x20, 0)
 
@@ -206,13 +222,21 @@ class PayloadTests(unittest.TestCase):
         m.write(m.player + 0x4C, placement)
         m.write(definition + 0x50, 294, "h")
         m.uc.mem_write(placement + 0x3A, bytes([10, 20, 30]))
-        m.write(m.sym["enabled"] + 10, 0, "B")
-        for type_id, expected_lines in [(0x4D, 12), (0x4B, 72), (0x230, 52)]:
+        m.toggle("TARGET MOTION", 0)
+        for type_id, expected_lines, expected_fills in [(0x4D, 12, 12), (0x4B, 72, 224), (0x230, 52, 96)]:
             m.geometry = []
             m.write(placement, type_id, "H")
             m.call("drawTriggers", m.player)
+            lines = [g for g in m.geometry if g[0] == 0xA8]
+            fills = [g for g in m.geometry if g[0] == 0x90]
+            self.assertEqual(len(lines), expected_lines)
+            self.assertEqual(len(fills), expected_fills)
+            self.assertTrue(all(len(g[2]) == 3 and all(p[3] & 255 == 0x30 for p in g[2]) for g in fills))
+            m.toggle("TRANSLUCENT FILL", 0)
+            m.geometry = []
+            m.call("drawTriggers", m.player)
             self.assertEqual(len(m.geometry), expected_lines)
-            self.assertTrue(all(len(g[2]) == 2 for g in m.geometry))
+            m.toggle("TRANSLUCENT FILL", 1)
         m.write(definition + 0x50, 195, "h")
         m.geometry = []
         m.call("drawTriggers", m.player)
@@ -225,24 +249,30 @@ class PayloadTests(unittest.TestCase):
         m.write(m.player + 0x4C, placement)
         m.write(definition + 0x50, 294, "h")
         m.write(placement, 0x4C, "H")
-        m.write(m.sym["enabled"] + 10, 0, "B")
+        m.toggle("TARGET MOTION", 0)
         m.write(m.state + 0x34, 20.0, "f")
         m.write(m.state + 0x14, 1.0, "f")
         m.uc.mem_write(m.state + 0x38, struct.pack(">12f", 1, 0, 0, -10, 0, 1, 0, -100, 0, 0, 1, -30))
         m.call("drawTriggers", m.player)
-        self.assertEqual(len(m.geometry), 5)
+        self.assertEqual(len(m.geometry), 7)
         self.assertEqual(m.geometry[0][2][0][:3], (-10, 80, 30))
         self.assertEqual(m.geometry[0][2][1][:3], (30, 80, 30))
 
     def test_menu_geometry_and_preview(self):
         m = self.m
         m.pad(0x64, 4)
-        for row in [0, 5, 11]:
-            m.write(m.sym["expanded"] + row, 1, "B")
+        for label in ["COLLISION", "TRIGGERS", "FORCED SWIMMING"]:
+            m.write(m.sym["expanded"] + m.row(label), 1, "B")
         m.call("Practice_Draw")
         self.assertGreater(len(m.geometry), 1000)
         self.assertTrue(all(g[1] == len(g[2]) for g in m.geometry))
         self.assertTrue(all(0 <= p[0] <= 640 and 0 <= p[1] <= 480 for g in m.geometry for p in g[2]))
+        m.write(m.sym["selected"], 17)
+        m.call("drawMenu")
+        self.assertEqual(m.read(m.sym["menuTop"]), 1)
+        m.geometry = []
+        m.write(m.sym["selected"], 0)
+        m.call("drawMenu")
         try:
             from PIL import Image, ImageDraw
         except ImportError:
@@ -257,23 +287,25 @@ class PayloadTests(unittest.TestCase):
     def test_terrain_packed_vertices_and_water_filter(self):
         m = self.m
         m.block = 0x81100000
+        m.blocks[0, 0, 0] = m.block
         group, vertices, tri = m.block + 0x1000, m.block + 0x2000, m.block + 0x3000
         for offset, address in [(0x4C, tri), (0x50, group), (0x58, vertices)]:
             m.write(m.block + offset, address)
         for offset, value in [(0x8E, 50), (0x90, 3), (0x98, 1), (0x9A, 1)]:
             m.write(m.block + offset, value, "H")
         m.uc.mem_write(vertices, struct.pack(">9h", 0, 80, 0, 80, 160, 0, 0, 240, 80))
-        m.uc.mem_write(tri, struct.pack(">4H", 0, 1, 2, 0))
+        m.uc.mem_write(tri, struct.pack(">4H", 0, 1, 2, 0xFFFF))
+        m.write(group + 0x14, 1, "H")
         m.call("drawTerrain")
         self.assertEqual(len(m.geometry), 3)
         self.assertEqual(m.geometry[0][2][0][:3], (0, 60, 0))
         self.assertEqual(m.geometry[0][2][1][:3], (10, 70, 0))
         m.geometry = []
         m.write(group + 0x10, 8)
-        m.write(m.sym["enabled"] + 4, 0, "B")
+        m.toggle("WATER TRIANGLES", 0)
         m.call("drawTerrain")
         self.assertFalse(m.geometry)
-        m.write(m.sym["enabled"] + 4, 1, "B")
+        m.toggle("WATER TRIANGLES", 1)
         m.call("drawTerrain")
         self.assertEqual(len(m.geometry), 3)
 
@@ -304,6 +336,88 @@ class PayloadTests(unittest.TestCase):
         m.write(file + 2, 0, "H")
         m.call("drawObjectCollision", m.player)
         self.assertEqual(m.geometry[0][2][0][:3], (10.03125, 20.0625, 30.09375))
+
+    def test_terrain_uses_sentinel_masks_and_query_filters(self):
+        m = self.m
+        block, group, vertices, tri = [0x81100000 + n * 0x1000 for n in range(4)]
+        m.blocks[0, 0, 0] = block
+        for off, addr in [(0x4C, tri), (0x50, group), (0x58, vertices)]:
+            m.write(block + off, addr)
+        for off, value in [(0x90, 3), (0x98, 2), (0x9A, 1)]:
+            m.write(block + off, value, "H")
+        m.write(group + 0x14, 1, "H")  # Last sentinel excludes a trailing triangle.
+        m.uc.mem_write(vertices, struct.pack(">9h", -2400, 0, -2400, 2400, 0, -2400, 0, 0, 2400))
+        m.uc.mem_write(tri, struct.pack(">8H", 0, 1, 2, 0xFFFF, 0, 1, 2, 0xFFFF))
+        m.write(m.sym["drawDistance"], 250)  # All vertices outside; triangle crosses Fox.
+        m.call("drawTerrain")
+        self.assertEqual(len(m.geometry), 3)
+        for mask in [0, 0xFF, 0xFF00]:
+            m.geometry = []
+            m.write(tri + 6, mask, "H")
+            m.call("drawTerrain")
+            self.assertFalse(m.geometry)
+        m.write(tri + 6, 0xFFFF, "H")
+        m.write(group + 0x10, 2)
+        m.call("drawTerrain")
+        self.assertEqual(len(m.geometry), 3)  # Fox's side query includes bit-2 groups.
+        m.geometry = []
+        m.toggle("WATER TRIANGLES", 1)
+        m.write(group + 0x10, 9)  # Water with bit 1 never enters the retail query.
+        m.call("drawTerrain")
+        self.assertFalse(m.geometry)
+        m.write(group + 0x10, 0)
+        m.uc.mem_write(vertices, bytes(18))
+        m.call("drawTerrain")
+        self.assertFalse(m.geometry)  # Degenerate faces cannot collide.
+
+    def test_barrier_heights_and_nearby_block_priority(self):
+        m = self.m
+        block, hits = 0x81100000, 0x81101000
+        m.blocks[1, 1, 0] = block
+        m.blocks[0, 0, 0] = block
+        m.write(m.sym["origin"], 650.0, "f")
+        m.write(m.sym["origin"] + 8, 650.0, "f")
+        m.write(m.sym["lineLimit"], 4)
+        m.write(block + 0x70, hits)
+        m.write(block + 0x9C, 1, "H")
+        m.uc.mem_write(hits, struct.pack(">6h4Bh2x", 0, 10, 20, 30, 0, 0, 0xF6, 40, 0, 1, 0))
+        m.call("drawTerrain")  # No triangle buffers: HITS still has to draw.
+        self.assertEqual(len(m.geometry), 4)
+        self.assertEqual([g[2][0][:3] for g in m.geometry],
+                         [(640, 20, 640), (650, 30, 640), (650, 70, 640), (640, 10, 640)])
+        m.write(hits + 12, 300, "h")
+        m.write(hits + 14, 0x80, "B")
+        m.geometry = []
+        m.write(m.sym["linesDrawn"], 0)
+        m.call("drawTerrain")
+        self.assertEqual(m.geometry[2][2][0][:3], (650, 330, 640))
+        m.toggle("BARRIERS / LEDGES", 0)
+        m.geometry = []
+        m.write(m.sym["linesDrawn"], 0)
+        m.call("drawTerrain")
+        self.assertFalse(m.geometry)
+
+    def test_model_barrier_without_triangle_mesh(self):
+        m = self.m
+        definition, hits = 0x81100000, 0x81101000
+        m.write(m.player + 0x50, definition)
+        m.write(definition + 0x30, hits)
+        m.write(definition + 0x5C, 1, "B")
+        m.uc.mem_write(hits, struct.pack(">6h4Bh2x", 0, 10, 20, 30, 0, 0, 10, 40, 0, 1, 0))
+        m.call("drawObjectCollision", m.player)
+        self.assertEqual(len(m.geometry), 4)
+        self.assertEqual(m.geometry[0][2][0][:3], (0, 120, 0))
+        self.assertEqual(m.geometry[2][2][0][:3], (10, 170, 0))
+
+    def test_world_depth_default_and_no_depth_writes(self):
+        m = self.m
+        self.assertEqual(m.read(m.sym["enabled"] + m.row("DRAW THROUGH WALLS"), "B"), 0)
+        m.call("drawWorld")
+        self.assertIn(("GXSetZMode", 1, 3, 0), m.calls)
+        m.calls = []
+        m.toggle("DRAW THROUGH WALLS", 1)
+        m.call("drawWorld")
+        self.assertIn(("GXSetZMode", 0, 3, 0), m.calls)
 
 
 if __name__ == "__main__":
