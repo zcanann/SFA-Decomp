@@ -1494,29 +1494,43 @@ static int bitLogCategory(int id) {
 static void sendPracticeLog(void) {
     int length = 0, offset = 0;
     while (logLine[length] && length < sizeof(logLine) - 1) {
-        if (logLine[length] == '\n') { logLine[length] = '\r'; }
+        if (logLine[length] == '\n') {
+            logLine[length] = '\r';
+        }
         length++;
     }
-    if (!EXILock(0, 1, NULL)) { return; }
+    if (!EXILock(0, 1, NULL)) {
+        return;
+    }
     while (offset < length) {
         u32 command = 0x20010000;
         int available, amount;
-        if (!EXISelect(0, 1, EXI_FREQ_8M)) { break; }
+        if (!EXISelect(0, 1, EXI_FREQ_8M)) {
+            break;
+        }
         EXIImm(0, &command, 4, EXI_WRITE, NULL);
         EXISync(0);
         EXIImm(0, &command, 1, EXI_READ, NULL);
         EXISync(0);
         EXIDeselect(0);
         available = 16 - (int)(command >> 24);
-        if (available <= 0 || available > 16) { break; }
-        if (!EXISelect(0, 1, EXI_FREQ_8M)) { break; }
+        if (available <= 0 || available > 16) {
+            break;
+        }
+        if (!EXISelect(0, 1, EXI_FREQ_8M)) {
+            break;
+        }
         command = 0xa0010000;
         EXIImm(0, &command, 4, EXI_WRITE, NULL);
         EXISync(0);
         while (available > 0 && offset < length) {
             amount = length - offset;
-            if (amount > 4) { amount = 4; }
-            if (amount > available) { amount = available; }
+            if (amount > 4) {
+                amount = 4;
+            }
+            if (amount > available) {
+                amount = available;
+            }
             EXIImm(0, logLine + offset, amount, EXI_WRITE, NULL);
             EXISync(0);
             offset += amount;
@@ -1559,7 +1573,8 @@ static void pollStateLog(void) {
         logBaseline = 0;
     }
     if (!logBaseline) {
-        sprintf(logLine, "[PRACTICE] Watching %d game bits; filters %02X; net changes per frame\n", checkedBitCount, config);
+        sprintf(logLine, "[PRACTICE] Watching %d game bits; filters %02X; net changes per frame\n", checkedBitCount,
+                config);
         sendPracticeLog();
     }
     for (bank = 0; bank < 4; bank++) {
@@ -1578,7 +1593,7 @@ static void pollStateLog(void) {
                     const PracticeBitLabel* entry = namedBit(i);
                     if (count++ < 32) {
                         sprintf(logLine, "[PRACTICE][%u][BIT %03X] %s: %08X -> %08X\n", logFrame, i,
-                                 entry ? entry->name : "UNNAMED", before, after);
+                                entry ? entry->name : "UNNAMED", before, after);
                         sendPracticeLog();
                     }
                 }
@@ -1592,7 +1607,8 @@ static void pollStateLog(void) {
     }
     for (i = 0; i < 120; i++) {
         if (logBaseline && enabled[LOG_GROUPS] && logGroups[i] != gMapObjGroupStatuses[i] && count++ < 32) {
-            sprintf(logLine, "[PRACTICE][%u][GROUPS %d] %08X -> %08X\n", logFrame, i, logGroups[i], gMapObjGroupStatuses[i]);
+            sprintf(logLine, "[PRACTICE][%u][GROUPS %d] %08X -> %08X\n", logFrame, i, logGroups[i],
+                    gMapObjGroupStatuses[i]);
             sendPracticeLog();
         }
         logGroups[i] = gMapObjGroupStatuses[i];
