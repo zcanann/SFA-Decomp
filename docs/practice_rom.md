@@ -1,10 +1,10 @@
-# EN v1.0 practice ROM v1.5
+# EN v1.0 practice ROM v1.6
 
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
 The first supported input is a clean US/EN v1.0 (`GSAE01`, revision 0) ISO.
-V1.5 includes the categorized Flags and Log tabs, revised roll macros, and
-destination resource-bank setup for practice warps. See **V1.5 changes** below.
+V1.6 adds missing key items, mutes object sound effects while the menu is open,
+and fixes Dolphin logging. See **V1.6 fixes** below.
 
 ## Controls
 
@@ -164,8 +164,8 @@ From the practice worktree:
 ```powershell
 python tools/practice/build.py build --enable `
   --iso "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00).iso" `
-  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.5).iso" `
-  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.5.sfapatch"
+  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.6).iso" `
+  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.6.sfapatch"
 ```
 
 The `.sfapatch` is a ZIP containing a manifest and the new payload, not a retail
@@ -174,14 +174,14 @@ DOL hash, independent of the image's padding or compression. Apply it with:
 
 ```powershell
 python tools/practice/build.py apply --iso "clean.iso" `
-  --patch "SFA-EN-v1.0-Practice-v1.5.sfapatch" --output "practice.iso"
+  --patch "SFA-EN-v1.0-Practice-v1.6.sfapatch" --output "practice.iso"
 ```
 
 The executable transformation is also available without a disc container:
 
 ```powershell
 python tools/practice/build.py apply --dol "main.dol" `
-  --patch "SFA-EN-v1.0-Practice-v1.5.sfapatch" --output "practice.dol"
+  --patch "SFA-EN-v1.0-Practice-v1.6.sfapatch" --output "practice.dol"
 ```
 
 `--dol` is also accepted by `build`. This is the interface for future image
@@ -195,7 +195,7 @@ An RVZ workflow can use Dolphin's conversion tool around the ISO patcher:
 ```powershell
 DolphinTool convert -i clean.rvz -o clean.iso -f iso
 python tools/practice/build.py apply --iso clean.iso `
-  --patch SFA-EN-v1.0-Practice-v1.5.sfapatch --output practice.iso
+  --patch SFA-EN-v1.0-Practice-v1.6.sfapatch --output practice.iso
 DolphinTool convert -i practice.iso -o practice.rvz -f rvz -b 131072 -c zstd -l 5
 ```
 
@@ -260,7 +260,7 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
-### Pending fixes after V1.5 (not packaged)
+### V1.6 fixes
 
 - Inventory / Key Items adds the intro Galleon gold key, all four DarkIce Mines
   cogs, and Walled City silver/gold teeth. The CloudRunner flute moves from Gear
@@ -290,8 +290,20 @@ pause owners. An isolated Dolphin test booted a private test image and verified
 real OSREPORT output: enabled, watching 3,920 bits, Galleon gold key 0-to-1 and
 1-to-0, then disabled. The probe changed and restored that bit only in its own
 test emulator. No active object voices existed at that startup point, so this
-does not claim an audible shield-loop playtest. The published V1.5 ISO and older
-images are unchanged; the fixes await the next release build.
+does not claim an audible shield-loop playtest.
+
+
+V1.6 was packaged alongside the original and previous releases, then booted in
+Dolphin with an isolated profile and Null video backend: initialized/loaded
+state, 45 objects, intact payload, and no apploader boundary errors. This checks
+startup, not visual or audible gameplay. The 62,368-byte payload fits the
+existing 64 KiB reservation. Every byte outside the relocated DOL and four-byte
+header pointer compared equal, and the original ISO retained SHA-256
+`f2efe87066555522fa99a31a9f8b7eb4f51b47d59e5a348b1fed324fcd69fc4e`.
+The V1.6 ISO SHA-256 is
+`9e1aa1c3fcad2a85211c0b819dbdeb318cb93951a9522a037b8f35d1dd7c24ae`;
+the payload SHA-256 is
+`4e6814997d6895ae6073018c7e9cdc86a5da05b54b2fd4878912a1d81f13f93e`.
 
 ### V1.5 changes
 
@@ -357,7 +369,7 @@ flags, especially spell availability, may be overwritten on the next update.
 
 Logging is **off by default**. The Log tab offers Inventory, Spells, Tricky,
 Area / Map Acts, Other / Unknown Bits, Object Groups, and Player Stats filters.
-The original V1.5 output path is broken; use the pending UART fix above.
+The original V1.5 output path is broken; use V1.6 with the UART fix above.
 With that fix, enable Dolphin's OSREPORT logging to see `[PRACTICE]` entries with a frame
 counter, bit ID/name or map/stat identity, and before/after values. Named-bit
 categories cover the curated catalog; unclassified bits go to Other, including
@@ -371,7 +383,7 @@ are printed, followed by a suppressed-event count; snapshots still advance.
 
 These controls are tested as compiled PPC code with stubbed game services;
 their gameplay effects and layout still need Dolphin playtesting.
-The source passes 32 payload tests, 8 patch tests, `ninja all_source`,
+The V1.5 source passed 32 payload tests, 8 patch tests, `ninja all_source`,
 and the strict retail checksum. A read-only check against the verified EN disc's
 3,920 BITTABLE records validated all 87 ordinary catalog rows (some are aliases
 shown on more than one page). Six menu previews were inspected from rasterized
