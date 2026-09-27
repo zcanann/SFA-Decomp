@@ -5,9 +5,20 @@
 #ifdef SFA_PRACTICE
 #include "main/gamebit_ids.h"
 enum {
-    FLAGS_ROOT, FLAGS_INVENTORY, FLAGS_SPELLS, FLAGS_TRICKY, FLAGS_STATS,
-    FLAGS_AREA, FLAGS_GROUPS, FLAGS_ADVANCED, FLAGS_RAW, FLAGS_UNUSED,
-    FLAGS_GEAR, FLAGS_SUPPLIES, FLAGS_KEYS, FLAGS_STONES
+    FLAGS_ROOT,
+    FLAGS_INVENTORY,
+    FLAGS_SPELLS,
+    FLAGS_TRICKY,
+    FLAGS_STATS,
+    FLAGS_AREA,
+    FLAGS_GROUPS,
+    FLAGS_ADVANCED,
+    FLAGS_RAW,
+    FLAGS_UNUSED,
+    FLAGS_GEAR,
+    FLAGS_SUPPLIES,
+    FLAGS_KEYS,
+    FLAGS_STONES
 };
 typedef struct PracticeBitLabel {
     const char* name;
@@ -15,14 +26,14 @@ typedef struct PracticeBitLabel {
     u8 page;
     u8 map;
 } PracticeBitLabel;
-#define ITEM(label, id) {label, GAMEBIT_##id, FLAGS_INVENTORY, 0}
-#define SUPPLY(label, id) {label, GAMEBIT_##id, FLAGS_INVENTORY, 1}
-#define KEY(label, id) {label, GAMEBIT_##id, FLAGS_INVENTORY, 2}
-#define STONE(label, id) {label, GAMEBIT_##id, FLAGS_INVENTORY, 3}
-#define SPELL(label, id) {label, GAMEBIT_##id, FLAGS_SPELLS, 0}
-#define TRICKY(label, id) {label, GAMEBIT_##id, FLAGS_TRICKY, 0}
+#define ITEM(label, id)      {label, GAMEBIT_##id, FLAGS_INVENTORY, 0}
+#define SUPPLY(label, id)    {label, GAMEBIT_##id, FLAGS_INVENTORY, 1}
+#define KEY(label, id)       {label, GAMEBIT_##id, FLAGS_INVENTORY, 2}
+#define STONE(label, id)     {label, GAMEBIT_##id, FLAGS_INVENTORY, 3}
+#define SPELL(label, id)     {label, GAMEBIT_##id, FLAGS_SPELLS, 0}
+#define TRICKY(label, id)    {label, GAMEBIT_##id, FLAGS_TRICKY, 0}
 #define AREA(map, label, id) {label, GAMEBIT_##id, FLAGS_AREA, map}
-#define UNUSED(label, id) {label, GAMEBIT_##id, FLAGS_UNUSED, 0}
+#define UNUSED(label, id)    {label, GAMEBIT_##id, FLAGS_UNUSED, 0}
 static const PracticeBitLabel practiceBits[] = {
     ITEM("STAFF", ITEM_Staff_Got),
     ITEM("FIREFLY LANTERN", ITEM_FireflyLantern_Got),
