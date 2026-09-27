@@ -1,10 +1,10 @@
-# EN v1.0 practice ROM v1.6
+# EN v1.0 practice ROM v1.7
 
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
 The first supported input is a clean US/EN v1.0 (`GSAE01`, revision 0) ISO.
-V1.6 adds missing key items, mutes object sound effects while the menu is open,
-and fixes Dolphin logging. See **V1.6 fixes** below.
+V1.7 adds inventory spell access, LFV wood pieces and Tricky ball entries,
+checkpoint/layer logging, and quieter log defaults. See **V1.7 changes** below.
 
 ## Controls
 
@@ -164,8 +164,8 @@ From the practice worktree:
 ```powershell
 python tools/practice/build.py build --enable `
   --iso "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00).iso" `
-  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.6).iso" `
-  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.6.sfapatch"
+  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.7).iso" `
+  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.7.sfapatch"
 ```
 
 The `.sfapatch` is a ZIP containing a manifest and the new payload, not a retail
@@ -174,14 +174,14 @@ DOL hash, independent of the image's padding or compression. Apply it with:
 
 ```powershell
 python tools/practice/build.py apply --iso "clean.iso" `
-  --patch "SFA-EN-v1.0-Practice-v1.6.sfapatch" --output "practice.iso"
+  --patch "SFA-EN-v1.0-Practice-v1.7.sfapatch" --output "practice.iso"
 ```
 
 The executable transformation is also available without a disc container:
 
 ```powershell
 python tools/practice/build.py apply --dol "main.dol" `
-  --patch "SFA-EN-v1.0-Practice-v1.6.sfapatch" --output "practice.dol"
+  --patch "SFA-EN-v1.0-Practice-v1.7.sfapatch" --output "practice.dol"
 ```
 
 `--dol` is also accepted by `build`. This is the interface for future image
@@ -195,7 +195,7 @@ An RVZ workflow can use Dolphin's conversion tool around the ISO patcher:
 ```powershell
 DolphinTool convert -i clean.rvz -o clean.iso -f iso
 python tools/practice/build.py apply --iso clean.iso `
-  --patch SFA-EN-v1.0-Practice-v1.6.sfapatch --output practice.iso
+  --patch SFA-EN-v1.0-Practice-v1.7.sfapatch --output practice.iso
 DolphinTool convert -i practice.iso -o practice.rvz -f rvz -b 131072 -c zstd -l 5
 ```
 
@@ -261,7 +261,7 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
-### Pending changes after V1.6 (not packaged)
+### V1.7 changes
 
 - Inventory now orders **Gear, Staff Spells, Supplies, Key Items, Spellstones**.
   Staff Spells also remains accessible from the Flags root. Gear includes both
@@ -304,8 +304,17 @@ pass; compiling without `SFA_PRACTICE` emits no symbols. The 64,192-byte payload
 fits the unchanged 64 KiB reservation. A private ISO booted in an isolated Dolphin
 Null-backend profile (initialized/loaded, 45 objects, intact payload); the builder
 verified all non-DOL/header bytes and the original ISO unchanged. This is startup
-and harness validation, not checkpoint gameplay testing. Published V1.6 and older
-ISOs are unchanged; these changes await the next requested release.
+and harness validation, not checkpoint gameplay testing.
+
+V1.7 was packaged alongside the original and older ISOs, then booted successfully
+in an isolated Dolphin Null-backend profile: initialized/loaded state, 45 objects,
+intact payload and no apploader boundary errors. All bytes outside the relocated
+DOL and four-byte header pointer compared equal. The original retained SHA-256
+`f2efe87066555522fa99a31a9f8b7eb4f51b47d59e5a348b1fed324fcd69fc4e`.
+V1.7 ISO SHA-256:
+`b3aa7d2e8d180c0b015397ea4c50f26647993478cb90b2ad25ea4782da4f39fe`.
+Payload SHA-256:
+`716ebb7284c0e5f2c2e1b25f9d5c54adfaf5b991020fa48bcc18e96956504165`.
 
 ### V1.6 fixes
 
