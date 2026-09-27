@@ -4,6 +4,13 @@
 #ifdef SFA_PRACTICE
 #include "practice/practice.h"
 #include "practice/warp_catalog.h"
+#include "practice/state_catalog.h"
+#include "sys/objects/lifecycle.h"
+#include "dolphin/os/OSReport.h"
+#include "main/dll/dll_0017_savegame_api.h"
+#include "main/dll/savegame.h"
+#include "main/mldf_fileid.h"
+#include "main/pi_data_file_api.h"
 #include "dlls/objects/294.h"
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"
@@ -84,15 +91,27 @@ enum {
     WARP_STEP,
     WARP_RESET,
     WARP_GO,
+    LOG_ENABLED,
+    LOG_INVENTORY,
+    LOG_SPELLS,
+    LOG_TRICKY,
+    LOG_AREA,
+    LOG_OTHER,
+    LOG_GROUPS,
+    LOG_STATS,
+    AUTO_ROLL,
+    AUTO_ROLL_BLANKS,
     ROW_COUNT
 };
 enum {
     TAB_COLLISION,
     TAB_CHEATS,
     TAB_WARP,
+    TAB_FLAGS,
+    TAB_LOG,
     TAB_COUNT
 };
-static const char* tabLabels[TAB_COUNT] = {"COLLISION", "CHEATS", "WARP"};
+static const char* tabLabels[TAB_COUNT] = {"COLLISION", "CHEATS", "WARP", "FLAGS", "LOG"};
 typedef struct PracticeRow {
     const char* label;
     s8 parent;
@@ -138,14 +157,27 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"FACING (0-255)", -1, 0, TAB_WARP},
                                             {"POSITION STEP", -1, 0, TAB_WARP},
                                             {"RESET TO SPAWN", -1, 0, TAB_WARP},
-                                            {"WARP NOW", -1, 0, TAB_WARP}};
-static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1};
-static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1};
+                                            {"WARP NOW", -1, 0, TAB_WARP},
+                                            {"LOG TO DOLPHIN", -1, 0, TAB_LOG},
+                                            {"INVENTORY", -1, 0, TAB_LOG},
+                                            {"SPELLS", -1, 0, TAB_LOG},
+                                            {"TRICKY", -1, 0, TAB_LOG},
+                                            {"AREA / MAP ACTS", -1, 0, TAB_LOG},
+                                            {"OTHER / UNKNOWN BITS", -1, 0, TAB_LOG},
+                                            {"OBJECT GROUPS", -1, 0, TAB_LOG},
+                                            {"PLAYER STATS", -1, 0, TAB_LOG},
+                                            {"AUTO ROLL", -1, 1, TAB_CHEATS},
+                                            {"AUTO-ROLL BLANK FRAMES", AUTO_ROLL, 0, TAB_CHEATS}};
+static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1};
+static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1,
+                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
 static u8 menuOpen, chordLatched, savedTimeStop, swimApplied;
-static u8 activeTab, hoverPhase, hoverActive;
+static u8 activeTab, hoverPhase, hoverActive, autoRollPhase;
 static u32 hoverButtons;
 static u32 previousShoulders;
-static int hoverWait, rollBlanks, shieldBlanks;
+static int hoverWait, rollBlanks = 3, shieldBlanks;
+static int autoRollWait, autoRollBlanks = 39;
 static const char* warpCategories[] = {"ALL MAPS",         "AREAS",          "KRAZOA SHRINES", "BOSSES",
                                        "CONNECTING PATHS", "ARWING / WORLD", "TEST / UNUSED",  "OBJECT CHUNKS"};
 static const int warpSteps[] = {1, 10, 100, 640};
@@ -1001,15 +1033,410 @@ static void drawWarpValue(int row, int y, u32 color) {
     }
 }
 
+/* The retail count is in halfwords; use the asset's byte size to bound four-byte
+ * descriptors. Never use the retail getter to walk arbitrary/invalid records. */
+#pragma push
+#pragma auto_inline off
+extern u16 gSaveGameMapActBits[120], gSaveGameMapObjGroupBits[120];
+extern u32 gMapObjGroupStatuses[120];
+static const int bitBankOffsets[] = {0xef0, 0x564, 0x24, 0x5d8};
+static const int bitBankSizes[] = {0x80, 0x74, 0x144, 0xac};
+static const int bitSnapshotOffsets[] = {0, 0x80, 0xf4, 0x238};
+static const char* flagPages[] = {"FLAGS", "INVENTORY", "SPELLS", "TRICKY", "PLAYER STATS", "AREA PROGRESS",
+                                "OBJECT GROUPS", "ADVANCED", "RAW BIT ID", "UNUSED / UNCERTAIN",
+                                "GEAR", "SUPPLIES", "KEY ITEMS", "SPELLSTONES"};
+static const char* statLabels[] = {"HEALTH (RAW UNITS)", "MAX HEALTH", "MAGIC", "MAX MAGIC", "SCARABS",
+                                 "BAFOMDADS", "MAX BAFOMDADS"};
+static const int flagSteps[] = {1, 16, 256};
+static int flagPage, flagMap = 23, flagRawId, flagStep;
+static GameBitDef* checkedBitTable;
+static int checkedBitCount;
+static u8 logBits[740], logBaseline;
+static u32 logGroups[120], logFrame, logConfig;
+static int logStats[7];
+static PlayerStatus* logStatsOwner;
+static u8* logSaveOwner;
+
+static int practiceStateReady(void) {
+    if (!validPointer(gGameBitTable) || !validPointer(gGameBitSaveData) ||
+        (u32)gGameBitSaveData > 0x817ff000 || isSaveGameLoading()) {
+        return 0;
+    }
+    if (checkedBitTable != gGameBitTable) {
+        int bytes = getDataFileSize(MLDF_FILEID_BITTABLE_BIN);
+        logBaseline = 0;
+        checkedBitCount = 0;
+        if (bytes > 0 && bytes <= 0x4000 && !(bytes & 3) && (u32)gGameBitTable <= 0x81800000 - bytes) {
+            checkedBitCount = bytes / sizeof(GameBitDef);
+        }
+        checkedBitTable = gGameBitTable;
+    }
+    return checkedBitCount > 0;
+}
+
+static int stateBitWidth(int id) {
+    GameBitDef* def;
+    int width;
+    if (id < 0 || id >= checkedBitCount || id >= gGameBitCount || id == 0x95 || id == 0x96) {
+        return 0;
+    }
+    def = &gGameBitTable[id];
+    width = (def->flags & 31) + 1;
+    return def->firstBit + width <= bitBankSizes[def->flags >> 6] * 8 ? width : 0;
+}
+
+static u32 readStateBit(int id, int snapshot) {
+    GameBitDef* def = &gGameBitTable[id];
+    int bank = def->flags >> 6, i;
+    u8* data = snapshot ? logBits + bitSnapshotOffsets[bank] : gGameBitSaveData + bitBankOffsets[bank];
+    u32 value = 0;
+    for (i = 0; i <= (def->flags & 31); i++) {
+        int bit = def->firstBit + i;
+        if (data[bit >> 3] & (1 << (bit & 7))) {
+            value |= 1u << i;
+        }
+    }
+    return value;
+}
+
+static const PracticeBitLabel* namedBit(int id) {
+    int i;
+    for (i = 0; i < sizeof(practiceBits) / sizeof(practiceBits[0]); i++) {
+        if (practiceBits[i].id == id) {
+            return &practiceBits[i];
+        }
+    }
+    return NULL;
+}
+
+/* Route edits of act/group bits through the same API as their dedicated pages
+ * so the game's cached masks, aliases and transient-group timers stay coherent.
+ * IDs >= 80 are runtime aliases; only the 75 world map IDs are editable here. */
+static void writeStateBit(int id, u32 value) {
+    int i, bit;
+    u32 old;
+    if (!practiceStateReady() || !stateBitWidth(id) || !validPointer(Obj_GetPlayerObject())) {
+        return;
+    }
+    old = readStateBit(id, 0);
+    if (old == value) {
+        return;
+    }
+    for (i = 0; i < 75; i++) {
+        if (gSaveGameMapObjGroupBits[i] && gSaveGameMapObjGroupBits[i] == id) {
+            for (bit = 0; bit < stateBitWidth(id); bit++) {
+                if ((old ^ value) & (1u << bit)) {
+                    SaveGame_gplaySetObjGroupStatus(i, bit, (value >> bit) & 1);
+                }
+            }
+            return;
+        }
+    }
+    for (i = 0; i < 75; i++) {
+        if (gSaveGameMapActBits[i] && gSaveGameMapActBits[i] == id) {
+            SaveGame_gplaySetAct(i, value);
+            return;
+        }
+    }
+    mainSetBits(id, value);
+}
+
+static PlayerStatus* practiceStats(void) {
+    PlayerStatus* stats;
+    if (!validPointer(Obj_GetPlayerObject())) {
+        return NULL;
+    }
+    stats = SaveGame_getPlayerStats();
+    return validPointer(stats) ? stats : NULL;
+}
+
+static int statValue(PlayerStatus* stats, int row) {
+    switch (row) {
+    case 0: return stats->health;
+    case 1: return stats->maxHealth;
+    case 2: return stats->magic;
+    case 3: return stats->maxMagic;
+    case 4: return stats->money;
+    case 5: return stats->healCount;
+    default: return stats->healCountMax;
+    }
+}
+
+static void editStat(int row, int delta) {
+    PlayerStatus* stats = practiceStats();
+    int value, max;
+    if (!stats || !practiceStateReady()) {
+        return;
+    }
+    max = row == 0 ? stats->maxHealth : row == 1 ? 127 : row == 2 ? stats->maxMagic : row == 3 ? 32767 :
+          row == 5 ? stats->healCountMax : 255;
+    value = statValue(stats, row) + delta;
+    if (value > max) { value = max; }
+    if (value < 0) { value = 0; }
+    switch (row) {
+    case 0: stats->health = value; break;
+    case 1: stats->maxHealth = value; if (stats->health > value) { stats->health = value; } break;
+    case 2: stats->magic = value; break;
+    case 3: stats->maxMagic = value; if (stats->magic > value) { stats->magic = value; } break;
+    case 4: stats->money = value; break;
+    case 5: stats->healCount = value; break;
+    case 6: stats->healCountMax = value; if (stats->healCount > value) { stats->healCount = value; } break;
+    }
+}
+
+static const PracticeBitLabel* pageBit(int index) {
+    int i;
+    for (i = 0; i < sizeof(practiceBits) / sizeof(practiceBits[0]); i++) {
+        if ((flagPage >= FLAGS_GEAR && practiceBits[i].page == FLAGS_INVENTORY && practiceBits[i].map == flagPage - FLAGS_GEAR) ||
+            (flagPage < FLAGS_GEAR && practiceBits[i].page == flagPage && (flagPage != FLAGS_AREA || practiceBits[i].map == flagMap))) {
+            if (index-- == 0) { return &practiceBits[i]; }
+        }
+    }
+    return NULL;
+}
+
+static int flagRowCount(void) {
+    int n = 0;
+    if (flagPage == FLAGS_ROOT || flagPage == FLAGS_STATS) { return 7; }
+    if (flagPage == FLAGS_INVENTORY) { return 4; }
+    if (flagPage == FLAGS_ADVANCED || flagPage == FLAGS_RAW) { return 2; }
+    if (flagPage == FLAGS_GROUPS) {
+        int id = gSaveGameMapObjGroupBits[flagMap];
+        return 1 + (practiceStateReady() && id ? stateBitWidth(id) : 0);
+    }
+    while (pageBit(n)) { n++; }
+    return n + (flagPage == FLAGS_AREA ? 2 : flagPage == FLAGS_TRICKY ? 1 : 0);
+}
+
+static int flagBitId(int row) {
+    const PracticeBitLabel* entry;
+    if (flagPage == FLAGS_RAW) { return row == 1 ? flagRawId : -1; }
+    if (flagPage == FLAGS_GROUPS) { return row ? gSaveGameMapObjGroupBits[flagMap] : -1; }
+    if (flagPage == FLAGS_AREA) {
+        if (row < 2) { return row == 1 && gSaveGameMapActBits[flagMap] ? gSaveGameMapActBits[flagMap] : -1; }
+        row -= 2;
+    }
+    if (flagPage == FLAGS_TRICKY) { row--; }
+    entry = pageBit(row);
+    return entry ? entry->id : -1;
+}
+
+static void editFlags(u32 pressed) {
+    int delta = (pressed & PAD_BUTTON_RIGHT) ? 1 : (pressed & PAD_BUTTON_LEFT) ? -1 : 0;
+    int id, width;
+    u32 value, max, step = flagSteps[flagStep];
+    if (pressed & PAD_BUTTON_X) { flagStep = (flagStep + 1) % 3; }
+    if (flagPage == FLAGS_ROOT || flagPage == FLAGS_ADVANCED || flagPage == FLAGS_INVENTORY) {
+        if (pressed & PAD_BUTTON_A) {
+            flagPage = flagPage == FLAGS_ROOT ? selected + 1 : selected + (flagPage == FLAGS_INVENTORY ? FLAGS_GEAR : FLAGS_RAW);
+            selected = menuTop = 0;
+        }
+        return;
+    }
+    if ((flagPage == FLAGS_AREA || flagPage == FLAGS_GROUPS) && selected == 0) {
+        flagMap = (flagMap + 75 + delta) % 75;
+        return;
+    }
+    if (flagPage == FLAGS_RAW && selected == 0) {
+        flagRawId += delta * step;
+        if (flagRawId < 0) { flagRawId = 0; }
+        if (flagRawId > 4095) { flagRawId = 4095; }
+        return;
+    }
+    if (!practiceStateReady()) { return; }
+    if (flagPage == FLAGS_STATS) {
+        if (delta) { editStat(selected, delta * step); }
+        return;
+    }
+    id = flagBitId(selected);
+    width = stateBitWidth(id);
+    if (!width) { return; }
+    value = readStateBit(id, 0);
+    if (flagPage == FLAGS_GROUPS) {
+        u32 mask = 1u << (selected - 1);
+        if (pressed & PAD_BUTTON_A) { value ^= mask; }
+        else if (delta > 0) { value |= mask; }
+        else if (delta < 0) { value &= ~mask; }
+    } else if (width == 1) {
+        if (pressed & PAD_BUTTON_A) { value ^= 1; }
+        else if (delta) { value = delta > 0; }
+    } else {
+        max = 0xffffffffu >> (32 - width);
+        if (delta > 0) { value = max - value < step ? max : value + step; }
+        if (delta < 0) { value = value < step ? 0 : value - step; }
+    }
+    writeStateBit(id, value);
+}
+
+static void hexAt(int x, int y, u32 value, int digits, u32 color) {
+    char buffer[9];
+    int i;
+    buffer[digits] = 0;
+    for (i = digits - 1; i >= 0; i--) {
+        buffer[i] = "0123456789ABCDEF"[value & 15];
+        value >>= 4;
+    }
+    textAt(x, y, buffer, color);
+}
+
+static void drawFlags(void) {
+    int i, ready = practiceStateReady();
+    for (i = menuTop; i < visibleCount && i < menuTop + 15; i++) {
+        int y = 110 + (i - menuTop) * 18, id = -1, width;
+        const PracticeBitLabel* entry;
+        const char* label = NULL;
+        u32 color = i == selected ? GOLD : WHITE;
+        if (i == selected) { rectangle(28, y - 4, 584, 18, 0x263C60FF); }
+        if (flagPage == FLAGS_ROOT || flagPage == FLAGS_ADVANCED || flagPage == FLAGS_INVENTORY) {
+            label = flagPages[flagPage == FLAGS_ROOT ? i + 1 : i + (flagPage == FLAGS_INVENTORY ? FLAGS_GEAR : FLAGS_RAW)];
+            textAt(564, y, ">", color);
+        } else if ((flagPage == FLAGS_AREA || flagPage == FLAGS_GROUPS) && i == 0) {
+            label = "MAP";
+            textAt(250, y, practiceWarpMaps[flagMap].name, color);
+        } else if (flagPage == FLAGS_TRICKY && i == 0) {
+            label = "OBJECT PRESENT (READ ONLY)";
+            textAt(528, y, validPointer(getTrickyObject()) ? "YES" : "NO", color);
+        } else if (flagPage == FLAGS_STATS) {
+            PlayerStatus* stats = ready ? practiceStats() : NULL;
+            label = statLabels[i];
+            if (stats) { numberAt(480, y, statValue(stats, i), color); }
+            else { textAt(528, y, "N/A", MUTED); }
+        } else if (flagPage == FLAGS_RAW && i == 0) {
+            label = "BIT ID (HEX)";
+            hexAt(480, y, flagRawId, 4, color);
+        } else {
+            id = flagBitId(i);
+            entry = namedBit(id);
+            label = flagPage == FLAGS_GROUPS ? "GROUP" : flagPage == FLAGS_AREA && i == 1 ? "MAP ACT" :
+                    entry ? entry->name : "VALUE (HEX)";
+            if (flagPage == FLAGS_GROUPS) { numberAt(132, y, i - 1, color); }
+            width = ready ? stateBitWidth(id) : 0;
+            if (!width) { textAt(528, y, "N/A", MUTED); }
+            else {
+                u32 value = readStateBit(id, 0);
+                if (flagPage == FLAGS_GROUPS) {
+                    value = (value >> (i - 1)) & 1;
+                    width = 1;
+                    textAt(252, y, gMapObjGroupStatuses[flagMap] & (1u << (i - 1)) ? "ACTIVE" : "INACTIVE", MUTED);
+                }
+                if (width == 1) { textAt(528, y, value ? "ON" : "OFF", color); }
+                else if (flagPage == FLAGS_RAW || width == 32) { hexAt(480, y, value, 8, color); }
+                else { numberAt(480, y, value, color); }
+            }
+        }
+        textAt(36, y, label, color);
+    }
+    textAt(36, 387, flagPages[flagPage], MUTED);
+    if (!ready) { textAt(36, 407, "STATE UNAVAILABLE / SAVE LOADING", MUTED); }
+    else if (flagPage == FLAGS_UNUSED) { textAt(36, 407, "UNUSED OR UNCERTAIN - NOT NORMAL ITEMS", MUTED); }
+    else if (flagPage == FLAGS_GROUPS) { textAt(36, 407, "SAVED SWITCH + ACTIVE MASK; NOT OBJECT COUNT", MUTED); }
+    else {
+        int id = flagBitId(selected), width = stateBitWidth(id);
+        if (width && flagPage != FLAGS_ROOT && flagPage != FLAGS_ADVANCED && flagPage != FLAGS_INVENTORY && flagPage != FLAGS_STATS) {
+            textAt(36, 407, "BIT:", MUTED); hexAt(96, 407, id, 4, WHITE);
+            textAt(168, 407, "BANK:", MUTED); numberAt(240, 407, gGameBitTable[id].flags >> 6, WHITE);
+            textAt(288, 407, "WIDTH:", MUTED); numberAt(372, 407, width, WHITE);
+        }
+    }
+    textAt(36, 429, "L/R: TABS  B: BACK  X: STEP", MUTED);
+    numberAt(360, 429, flagSteps[flagStep], WHITE);
+}
+
+static int bitLogCategory(int id) {
+    const PracticeBitLabel* entry = namedBit(id);
+    int i;
+    if (entry) {
+        if (entry->page == FLAGS_INVENTORY) { return LOG_INVENTORY; }
+        if (entry->page == FLAGS_SPELLS) { return LOG_SPELLS; }
+        if (entry->page == FLAGS_TRICKY) { return LOG_TRICKY; }
+        if (entry->page == FLAGS_AREA) { return LOG_AREA; }
+    }
+    for (i = 0; i < 120; i++) {
+        if (gSaveGameMapObjGroupBits[i] && gSaveGameMapObjGroupBits[i] == id) { return LOG_GROUPS; }
+        if (gSaveGameMapActBits[i] && gSaveGameMapActBits[i] == id) { return LOG_AREA; }
+    }
+    return LOG_OTHER;
+}
+
+/* Observational net changes between draw frames, not a hook on every setter.
+ * Baselines advance even for filtered/suppressed events. No gameplay writes. */
+static void pollStateLog(void) {
+    int bank, i, count = 0;
+    u32 config = 0, changedBanks = 0;
+    PlayerStatus* stats;
+    logFrame++;
+    if (!enabled[LOG_ENABLED]) { logBaseline = 0; return; }
+    if (!practiceStateReady()) { logBaseline = 0; return; }
+    for (i = LOG_INVENTORY; i <= LOG_STATS; i++) { config |= enabled[i] << (i - LOG_INVENTORY); }
+    if (logSaveOwner != gGameBitSaveData || logConfig != config) { logBaseline = 0; }
+    for (bank = 0; bank < 4; bank++) {
+        for (i = 0; i < bitBankSizes[bank]; i++) {
+            if (logBits[bitSnapshotOffsets[bank] + i] != gGameBitSaveData[bitBankOffsets[bank] + i]) {
+                changedBanks |= 1 << bank;
+                break;
+            }
+        }
+    }
+    if (logBaseline && changedBanks) {
+        for (i = 0; i < checkedBitCount; i++) {
+            if (stateBitWidth(i) && (changedBanks & (1 << (gGameBitTable[i].flags >> 6)))) {
+                u32 before = readStateBit(i, 1), after = readStateBit(i, 0);
+                if (before != after && enabled[bitLogCategory(i)]) {
+                    const PracticeBitLabel* entry = namedBit(i);
+                    if (count++ < 32) {
+                        OSReport("[PRACTICE][%u][BIT %03X] %s: %08X -> %08X\n", logFrame, i,
+                                 entry ? entry->name : "UNNAMED", before, after);
+                    }
+                }
+            }
+        }
+    }
+    for (bank = 0; bank < 4; bank++) {
+        for (i = 0; i < bitBankSizes[bank]; i++) { logBits[bitSnapshotOffsets[bank] + i] = gGameBitSaveData[bitBankOffsets[bank] + i]; }
+    }
+    for (i = 0; i < 120; i++) {
+        if (logBaseline && enabled[LOG_GROUPS] && logGroups[i] != gMapObjGroupStatuses[i] && count++ < 32) {
+            OSReport("[PRACTICE][%u][GROUPS %d] %08X -> %08X\n", logFrame, i, logGroups[i], gMapObjGroupStatuses[i]);
+        }
+        logGroups[i] = gMapObjGroupStatuses[i];
+    }
+    stats = practiceStats();
+    if (stats) {
+        for (i = 0; i < 7; i++) {
+            int value = statValue(stats, i);
+            if (logBaseline && enabled[LOG_STATS] && stats == logStatsOwner && logStats[i] != value && count++ < 32) {
+                OSReport("[PRACTICE][%u][STAT] %s: %d -> %d\n", logFrame, statLabels[i], logStats[i], value);
+            }
+            logStats[i] = value;
+        }
+    }
+    if (count > 32) { OSReport("[PRACTICE][%u] %d additional changes suppressed\n", logFrame, count - 32); }
+    logStatsOwner = stats;
+    logSaveOwner = gGameBitSaveData;
+    logConfig = config;
+    logBaseline = 1;
+}
+
+#pragma pop
+
 static void rebuildRows(void) {
     int i;
+    if (activeTab == TAB_FLAGS) {
+        visibleCount = flagRowCount();
+        if (selected >= visibleCount) { selected = visibleCount - 1; }
+        return;
+    }
     visibleCount = 0;
     for (i = 0; i < ROW_COUNT; i++) {
-        if (rows[i].tab != activeTab) {
+        if (rows[i].tab != activeTab || i == WARP_GO) {
             continue;
         }
         if (rows[i].parent < 0 || expanded[(int)rows[i].parent]) {
             visible[visibleCount++] = i;
+            /* Keep the action beside the three destination selectors. */
+            if (i == WARP_SPAWN) {
+                visible[visibleCount++] = WARP_GO;
+            }
         }
     }
     if (selected >= visibleCount) {
@@ -1028,7 +1455,7 @@ static void drawMenu(void) {
     GXLoadPosMtxImm(identity, GX_PNMTX0);
     setupGeometry(0);
     if (!menuOpen) {
-        rectangle(16, 16, 444, 24 + (enabled[SWIMMING] + enabled[SHIELD_HOVER]) * 18, 0x0B1427DD);
+        rectangle(16, 16, 444, 24 + (enabled[SWIMMING] + enabled[SHIELD_HOVER] + enabled[AUTO_ROLL]) * 18, 0x0B1427DD);
         textAt(24, 23, "SFA PRACTICE  L+R+DOWN: MENU", WHITE);
         if (enabled[SWIMMING]) {
             textAt(24, 41, "SWIM Y:", 0x63D5FFFF);
@@ -1036,7 +1463,10 @@ static void drawMenu(void) {
             textAt(228, 41, "L+UP/DOWN", MUTED);
         }
         if (enabled[SHIELD_HOVER]) {
-            textAt(24, enabled[SWIMMING] ? 59 : 41, "AUTO-SHIELD HOVER: HOLD R", GOLD);
+            textAt(24, enabled[SWIMMING] ? 59 : 41, "AUTO-SHIELD HOVER: HOLD X+R", GOLD);
+        }
+        if (enabled[AUTO_ROLL]) {
+            textAt(24, 41 + (enabled[SWIMMING] + enabled[SHIELD_HOVER]) * 18, "AUTO ROLL: HOLD X", GOLD);
         }
         return;
     }
@@ -1044,15 +1474,15 @@ static void drawMenu(void) {
     rectangle(20, 20, 600, 4, 0x59D5FFFF);
     textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.4", WHITE);
     for (i = 0; i < TAB_COUNT; i++) {
-        int width = 410 / TAB_COUNT;
+        int width = 580 / TAB_COUNT;
         if (i == activeTab) {
             rectangle(28 + i * width, 55, width - 4, 20, 0x263C60FF);
         }
         textAt(36 + i * width, 60, tabLabels[i], i == activeTab ? GOLD : MUTED);
     }
-    textAt(470, 60, "L/R: TABS", MUTED);
     textAt(36, 83,
-           activeTab == TAB_WARP ? "LEFT/RIGHT: CHANGE  A: ACTION  B: CLOSE"
+           activeTab == TAB_FLAGS ? "A: OPEN/TOGGLE  LEFT/RIGHT: VALUE"
+           : activeTab == TAB_WARP ? "LEFT/RIGHT: CHANGE  A: ACTION  B: CLOSE"
                                  : "A: TOGGLE  LEFT/RIGHT: EXPAND  B: CLOSE",
            MUTED);
     rebuildRows();
@@ -1061,6 +1491,10 @@ static void drawMenu(void) {
     }
     if (menuTop < selected - 14) {
         menuTop = selected - 14;
+    }
+    if (activeTab == TAB_FLAGS) {
+        drawFlags();
+        return;
     }
     for (i = menuTop; i < visibleCount && i < menuTop + 15; i++) {
         int row = visible[i], y = 110 + (i - menuTop) * 18;
@@ -1073,7 +1507,7 @@ static void drawMenu(void) {
         if (rows[row].group) {
             textAt(36, y, expanded[row] ? "-" : "+", color);
         }
-        if (row < WARP_CATEGORY && row != WATER_HEIGHT && row != RANGE && row != ROLL_BLANKS && row != SHIELD_BLANKS) {
+        if ((row < WARP_CATEGORY || row >= LOG_ENABLED) && row != WATER_HEIGHT && row != RANGE && row != ROLL_BLANKS && row != SHIELD_BLANKS && row != AUTO_ROLL_BLANKS) {
             rectangle(58 + indent, y - 1, 12, 12, color);
             rectangle(60 + indent, y + 1, 8, 8, enabled[row] ? 0x56C7FFFF : 0x101B2EFF);
         }
@@ -1087,7 +1521,10 @@ static void drawMenu(void) {
         if (row == ROLL_BLANKS || row == SHIELD_BLANKS) {
             numberAt(440, y, row == ROLL_BLANKS ? rollBlanks : shieldBlanks, color);
         }
-        if (row >= WARP_CATEGORY) {
+        if (row == AUTO_ROLL_BLANKS) {
+            numberAt(440, y, autoRollBlanks, color);
+        }
+        if (row >= WARP_CATEGORY && row <= WARP_GO) {
             drawWarpValue(row, y, color);
         }
     }
@@ -1106,13 +1543,19 @@ static void drawMenu(void) {
         textAt(36, 419, "L/R: TABS  WARP NOW + A: TRAVEL", MUTED);
         return;
     }
+    if (activeTab == TAB_LOG) {
+        textAt(36, 365, "DOLPHIN: OSREPORT / HLE LOG", MUTED);
+        textAt(36, 389, "NET CHANGES PER FRAME; 32 EVENT LIMIT", MUTED);
+        textAt(36, 419, "L/R: TABS  A: TOGGLE  B: CLOSE", MUTED);
+        return;
+    }
     textAt(36, 395, "TRIS:", MUTED);
     numberAt(108, 395, trianglesDrawn, WHITE);
     textAt(252, 395, "TRIGGERS:", MUTED);
     numberAt(372, 395, triggersDrawn, WHITE);
     textAt(36, 419,
            drawLimitReached || fillsDrawn >= fillLimit ? "DRAW LIMIT REACHED - REDUCE DISTANCE"
-           : activeTab == TAB_CHEATS                   ? "SWIM: L+UP/DOWN  X: RESET  HOVER: HOLD R"
+           : activeTab == TAB_CHEATS                   ? "HOVER: HOLD X+R  AUTO ROLL: HOLD X"
                                                        : "L/R: TABS  L+R+DOWN: CLOSE",
            MUTED);
 }
@@ -1233,23 +1676,29 @@ static void swallowInput(void) {
 /* Alternate real controller inputs once per game input poll. Preserve the
  * physical pad history: padUpdate needs it for menu chords and other buttons.
  * Build X/R edges against our last effective input, including when disabled.
- * Run only while physical R is held, sampled before injecting any inputs.
- * Each action lasts one input frame; configurable gaps release both buttons. */
+ * Hover requires physical X+R. Auto roll requires physical X and sends one X
+ * frame, configurable blank frames, one R frame, then repeats. Hover wins.
+ * Sample physical buttons before injection; preserve history for padUpdate. */
 static void updateShieldHover(GameObject* player, int blocked) {
     u32 mask = PAD_BUTTON_X | PAD_TRIGGER_R;
     u32 before, after;
     u16 beforeTrigger, afterTrigger;
-    int active =
-        enabled[SHIELD_HOVER] && validPointer(player) && ((gPadButtonsHeld[0] | gPadTriggers[0]) & PAD_TRIGGER_R);
+    u32 physical = gPadButtonsHeld[0] | gPadTriggers[0];
+    int mode = enabled[SHIELD_HOVER] && (physical & mask) == mask ? 1 :
+               enabled[AUTO_ROLL] && (physical & PAD_BUTTON_X) ? 2 : 0;
     PADStatus* pad = &gPadStatuses[gPadStatusBufferIndex * PAD_MAX_CONTROLLERS];
     if (blocked || timeStop || joypadDisabled || gDvdErrorPauseActive || !validPointer(player)) {
         hoverActive = hoverPhase = 0;
         hoverWait = 0;
+        autoRollWait = 0;
+        autoRollPhase = 0;
         return;
     }
-    if (!active && !hoverActive) {
+    if (!mode && !hoverActive) {
         hoverPhase = 0;
         hoverWait = 0;
+        autoRollWait = 0;
+        autoRollPhase = 0;
         return;
     }
     before =
@@ -1258,8 +1707,25 @@ static void updateShieldHover(GameObject* player, int blocked) {
                                 : (gPadTriggers[0] ^ gPadTriggersPressed[0] ^ gPadTriggersReleased[0]) & PAD_TRIGGER_R;
     after = gPadButtonsHeld[0] & mask;
     afterTrigger = gPadTriggers[0] & PAD_TRIGGER_R;
-    if (active) {
-        if (hoverWait > 0) {
+    if (mode != hoverActive) {
+        hoverPhase = 0;
+        hoverWait = autoRollWait = 0;
+        autoRollPhase = 0;
+    }
+    if (mode) {
+        if (mode == 2) {
+            after = 0;
+            if (autoRollWait > 0) {
+                autoRollWait--;
+            } else if (autoRollPhase) {
+                after = PAD_TRIGGER_R;
+                autoRollPhase = 0;
+            } else {
+                after = PAD_BUTTON_X;
+                autoRollWait = autoRollBlanks;
+                autoRollPhase = 1;
+            }
+        } else if (hoverWait > 0) {
             after = 0;
             hoverWait--;
         } else {
@@ -1281,7 +1747,7 @@ static void updateShieldHover(GameObject* player, int blocked) {
     gPadTriggersPressed[0] = (gPadTriggersPressed[0] & ~PAD_TRIGGER_R) | (afterTrigger & ~beforeTrigger);
     gPadTriggersReleased[0] = (gPadTriggersReleased[0] & ~PAD_TRIGGER_R) | (beforeTrigger & ~afterTrigger);
     hoverButtons = after;
-    hoverActive = active;
+    hoverActive = mode;
 }
 
 void Practice_PadUpdate(void) {
@@ -1344,10 +1810,18 @@ void Practice_PadUpdate(void) {
         } else {
             repeatTimer = 0;
         }
-        row = visible[selected];
+        row = activeTab == TAB_FLAGS ? -1 : visible[selected];
         if (pressed & PAD_BUTTON_B) {
-            closeMenu();
-        } else if (row >= WARP_CATEGORY) {
+            if (activeTab == TAB_FLAGS && flagPage != FLAGS_ROOT) {
+                flagPage = flagPage >= FLAGS_GEAR ? FLAGS_INVENTORY :
+                           flagPage == FLAGS_RAW || flagPage == FLAGS_UNUSED ? FLAGS_ADVANCED : FLAGS_ROOT;
+                selected = menuTop = 0;
+            } else {
+                closeMenu();
+            }
+        } else if (activeTab == TAB_FLAGS) {
+            editFlags(pressed);
+        } else if (row >= WARP_CATEGORY && row <= WARP_GO) {
             int delta = (pressed & PAD_BUTTON_RIGHT) ? 1 : (pressed & PAD_BUTTON_LEFT) ? -1 : 0;
             editWarpRow(row, delta);
             if (pressed & PAD_BUTTON_A) {
@@ -1357,7 +1831,7 @@ void Practice_PadUpdate(void) {
                     requestPracticeWarp(player);
                 }
             }
-        } else if (row == WATER_HEIGHT || row == RANGE || row == ROLL_BLANKS || row == SHIELD_BLANKS) {
+        } else if (row == WATER_HEIGHT || row == RANGE || row == ROLL_BLANKS || row == SHIELD_BLANKS || row == AUTO_ROLL_BLANKS) {
             int delta = (pressed & PAD_BUTTON_RIGHT) ? 1 : (pressed & PAD_BUTTON_LEFT) ? -1 : 0;
             if (row == WATER_HEIGHT) {
                 waterHeight += delta * 10.0f;
@@ -1370,13 +1844,14 @@ void Practice_PadUpdate(void) {
                     drawDistance = 2500;
                 }
             } else {
-                int* blanks = row == ROLL_BLANKS ? &rollBlanks : &shieldBlanks;
+                int* blanks = row == ROLL_BLANKS ? &rollBlanks : row == SHIELD_BLANKS ? &shieldBlanks : &autoRollBlanks;
+                int max = row == AUTO_ROLL_BLANKS ? 120 : 60;
                 *blanks += delta;
                 if (*blanks < 0) {
                     *blanks = 0;
                 }
-                if (*blanks > 60) {
-                    *blanks = 60;
+                if (*blanks > max) {
+                    *blanks = max;
                 }
             }
         } else {
@@ -1474,6 +1949,7 @@ void Practice_SurfaceResponse(GameObject* obj, PlayerState* state, PlayerState* 
 
 void Practice_Draw(void) {
     u8 viewIndex = gCameraCurrentViewIndex;
+    pollStateLog();
     linesDrawn = trianglesDrawn = triggersDrawn = fillsDrawn = 0;
     drawLimitReached = 0;
     if (enabled[COLLISION] || enabled[TRIGGERS] || (enabled[SWIMMING] && enabled[WATER_GRID])) {

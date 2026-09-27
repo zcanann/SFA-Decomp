@@ -39,6 +39,8 @@ class Machine:
         self.words = []
         self.stub = {}
         self.blocks = {}
+        self.reports = []
+        self.bit_edits = []
         for name, (addr, _) in symbols().items():
             if name.startswith("GX") or name in (
                 "padUpdate", "Obj_GetPlayerObject", "OSSetArenaLo", "playerDoControls",
@@ -46,7 +48,9 @@ class Machine:
                 "Camera_UpdateProjection", "resetSomeGxFlags", "getScreenResolution", "mathSinf", "mathCosf",
                 "Matrix_TransformPoint", "mapGetBlockAtPos", "ObjList_GetObjects", "PSMTXInverse", "PSMTXMultVec",
                 "Obj_TransformLocalPointToWorld", "mainGetBit", "ObjHits_IsObjectEnabled", "warpToMap",
-                "mapReload", "mapLoadByCoords", "unlockLevel"):
+                "mapReload", "mapLoadByCoords", "unlockLevel", "isSaveGameLoading", "getDataFileSize",
+                "SaveGame_getPlayerStats", "getTrickyObject", "mainSetBits", "SaveGame_gplaySetAct",
+                "SaveGame_gplaySetObjGroupStatus", "OSReport"):
                 self.stub[addr] = name
         self.uc.hook_add(UC_HOOK_CODE, self.service)
         self.uc.hook_add(UC_HOOK_MEM_WRITE, self.fifo, begin=0xCC008000, end=0xCC008003)
@@ -61,7 +65,7 @@ class Machine:
         return self.uc.reg_read(UC_PPC_REG_0 + n)
 
     def row(self, label):
-        for index in range(40):
+        for index in range(50):
             address = self.read(self.sym["rows"] + index * 8)
             text = bytes(self.uc.mem_read(address, 64)).split(b"\0")[0].decode()
             if text == label:
@@ -92,7 +96,32 @@ class Machine:
         if name == "Obj_GetPlayerObject":
             uc.reg_write(UC_PPC_REG_0 + 3, self.player)
         elif name == "mainGetBit":
-            uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "gate_bit", 1))
+            uc.reg_write(UC_PPC_REG_0 + 3, self.bit_value(self.r(3)) if hasattr(self, "bit_table") else getattr(self, "gate_bit", 1))
+        elif name == "mainSetBits":
+            self.bit_edits.append((self.r(3), self.r(4)))
+            self.set_bit(self.r(3), self.r(4))
+        elif name == "isSaveGameLoading":
+            uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "save_loading", 0))
+        elif name == "getDataFileSize":
+            uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "bit_table_size", 0x4000))
+        elif name == "SaveGame_getPlayerStats":
+            uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "stats", 0))
+        elif name == "getTrickyObject":
+            uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "tricky", 0))
+        elif name == "SaveGame_gplaySetAct":
+            self.set_bit(self.read(self.sym["gSaveGameMapActBits"] + self.r(3) * 2, "H"), self.r(4))
+        elif name == "SaveGame_gplaySetObjGroupStatus":
+            gamebit = self.read(self.sym["gSaveGameMapObjGroupBits"] + self.r(3) * 2, "H")
+            mask = 1 << self.r(4)
+            value = self.bit_value(gamebit)
+            value = value | mask if self.r(5) else value & ~mask
+            self.set_bit(gamebit, value)
+            for mid in range(120):
+                if self.read(self.sym["gSaveGameMapObjGroupBits"] + mid * 2, "H") == gamebit:
+                    self.write(self.sym["gMapObjGroupStatuses"] + mid * 4, value)
+        elif name == "OSReport":
+            fmt = bytes(uc.mem_read(self.r(3), 160)).split(b"\0")[0].decode()
+            self.reports.append((fmt, tuple(self.r(i) for i in range(4, 11))))
         elif name == "ObjHits_IsObjectEnabled":
             uc.reg_write(UC_PPC_REG_0 + 3, 1)
         elif name == "warpToMap":
@@ -172,6 +201,38 @@ class Machine:
         self.write(self.sym["gPadStatuses"], held & 0xFFFF, "H")
         self.write(self.sym["gPadStatuses"] + 7, 255 if held & 0x20 else 0, "B")
         self.call("Practice_PadUpdate")
+
+    def state_fixture(self):
+        self.bit_table, self.save_data, self.stats = 0x81100000, 0x81108000, 0x8110A000
+        self.write(self.sym["gGameBitTable"], self.bit_table)
+        self.write(self.sym["gGameBitSaveData"], self.save_data)
+        self.write(self.sym["gGameBitCount"], 8192, "h")
+        # All unspecified descriptors deliberately invalid, not aliases of bit 0.
+        self.uc.mem_write(self.bit_table, b"\xff\xff\x00\x00" * 4096)
+        self.uc.mem_write(self.sym["gSaveGameMapActBits"], bytes(240))
+        self.uc.mem_write(self.sym["gSaveGameMapObjGroupBits"], bytes(240))
+        self.uc.mem_write(self.stats, struct.pack(">bbBBhhBBBB", 12, 16, 0, 0, 40, 100, 20, 1, 5, 0))
+        for gid, first, width, bank in ((0x75, 0, 1, 2), (0x3f5, 5, 8, 2), (0x4e4, 13, 1, 2),
+                                        (0x958, 14, 1, 2), (0x300, 0, 4, 1), (0x301, 8, 32, 1)):
+            self.bit_def(gid, first, width, bank)
+        self.call("practiceStateReady")
+
+    def bit_def(self, gid, first, width, bank):
+        self.uc.mem_write(self.bit_table + gid * 4, struct.pack(">HBB", first, (bank << 6) | (width - 1), 0))
+
+    def bit_value(self, gid):
+        first, flags, _ = struct.unpack(">HBB", self.uc.mem_read(self.bit_table + gid * 4, 4))
+        base = self.save_data + (0xef0, 0x564, 0x24, 0x5d8)[flags >> 6]
+        return sum(((self.read(base + (first + n) // 8, "B") >> ((first + n) % 8)) & 1) << n
+                   for n in range((flags & 31) + 1))
+
+    def set_bit(self, gid, value):
+        first, flags, _ = struct.unpack(">HBB", self.uc.mem_read(self.bit_table + gid * 4, 4))
+        base = self.save_data + (0xef0, 0x564, 0x24, 0x5d8)[flags >> 6]
+        for n in range((flags & 31) + 1):
+            addr, shift = base + (first + n) // 8, (first + n) % 8
+            byte = self.read(addr, "B")
+            self.write(addr, (byte & ~(1 << shift)) | (((value >> n) & 1) << shift), "B")
 
 
 class PayloadTests(unittest.TestCase):
@@ -453,7 +514,7 @@ class PayloadTests(unittest.TestCase):
         m.pad()
         m.pad(0x20, 0x20)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
-        self.assertEqual(m.read(m.sym["visibleCount"]), 6)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 8)
         self.assertEqual(m.read(m.sym["visible"]), m.row("FORCED SWIMMING"))
         m.pad(0x20)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)  # Holding R does not repeat tabs.
@@ -461,7 +522,15 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 0)
         m.pad()
         m.pad(0x40, 0x40)
-        self.assertEqual(m.read(m.sym["activeTab"], "B"), 2)  # Wrap left to Warp.
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 4)  # Wrap left to Log.
+        self.assertEqual(m.read(m.sym["visibleCount"]), 8)
+        m.pad()
+        m.pad(0x40, 0x40)
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 3)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 7)
+        m.pad()
+        m.pad(0x40, 0x40)
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 2)
         m.pad()
         m.pad(0x40, 0x40)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
@@ -478,9 +547,10 @@ class PayloadTests(unittest.TestCase):
     def test_hover_alternates_edges_preserves_steering_and_releases(self):
         m = self.m
         m.toggle("AUTO-SHIELD HOVER", 1)
+        m.write(m.sym["rollBlanks"], 0)
         m.write(m.sym["gPadStatuses"] + 2, 40, "b")
         for frame in range(6):
-            m.pad(0x820, 0x20 if frame == 0 else 0)  # Hold R to run; Y remains available.
+            m.pad(0xc20, 0x420 if frame == 0 else 0)  # Hold X+R; Y remains available.
             action = 0x20 if frame % 2 == 0 else 0x400
             previous = 0 if frame == 0 else (0x400 if frame % 2 == 0 else 0x20)
             self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x800 | action)
@@ -489,7 +559,7 @@ class PayloadTests(unittest.TestCase):
             self.assertEqual(m.read(m.sym["gPadTriggers"], "H") & 0x20, action & 0x20)
             self.assertEqual(m.read(m.sym["gPadStatuses"] + 7, "B"), 255 if action == 0x20 else 0)
             self.assertEqual(m.read(m.sym["gPadStatuses"] + 2, "b"), 40)
-            self.assertEqual(m.read(m.sym["gPadButtonsPrevious"]), 0x820)
+            self.assertEqual(m.read(m.sym["gPadButtonsPrevious"]), 0xc20)
         m.pad(0x800)
         self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x800)
         self.assertEqual(m.read(m.sym["gPadButtonsReleased"]) & 0x420, 0x400)
@@ -498,8 +568,8 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x800)
         for blocker in ("timeStop", "gDvdErrorPauseActive", "joypadDisabled"):
             m.write(m.sym[blocker], 1, "B")
-            m.pad(0x20)
-            self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x20)
+            m.pad(0x420)
+            self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x420)
             self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)
             self.assertEqual(m.read(m.sym["hoverPhase"], "B"), 0)
             m.write(m.sym[blocker], 0, "B")
@@ -512,7 +582,7 @@ class PayloadTests(unittest.TestCase):
         m.write(m.sym["shieldBlanks"], 3)
         for release_after in (1, 2, 5):  # Shield, blank, and roll frames.
             for frame in range(release_after):
-                m.pad(0x20, 0x20 if frame == 0 else 0)
+                m.pad(0x420, 0x420 if frame == 0 else 0)
             previous = m.read(m.sym["gPadButtonsHeld"]) & 0x420
             m.pad()
             self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
@@ -521,15 +591,15 @@ class PayloadTests(unittest.TestCase):
             self.assertEqual(m.read(m.sym["hoverPhase"], "B"), 0)
             m.pad()
             self.assertEqual(m.read(m.sym["gPadButtonsJustPressed"]), 0)
-        m.pad(0x20, 0x20)
-        m.pad(0x20)  # Blank frame suppresses physical R.
+        m.pad(0x420, 0x420)
+        m.pad(0x420)  # Blank frame suppresses physical X+R.
         m.toggle("AUTO-SHIELD HOVER", 0)
-        m.pad(0x20)
-        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x20)
-        self.assertEqual(m.read(m.sym["gPadButtonsJustPressed"]), 0x20)
+        m.pad(0x420)
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x420)
+        self.assertEqual(m.read(m.sym["gPadButtonsJustPressed"]), 0x420)
         self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)
         m.toggle("AUTO-SHIELD HOVER", 1)
-        m.pad()  # Establish physical release before an analog-only press.
+        m.pad(0x400, 0x400)  # Hold X before an analog-only R press.
         m.write(m.sym["gPadTriggers"], 0x20, "H")
         m.write(m.sym["gPadTriggersPressed"], 0x20, "H")
         m.call("Practice_PadUpdate")
@@ -550,13 +620,16 @@ class PayloadTests(unittest.TestCase):
         m = self.m
         m.pad(0x64, 4)
         m.pad()
-        m.pad(0x40, 0x40)  # Collision -> Warp, wrapping left.
+        m.pad(0x20, 0x20)  # Collision -> Cheats -> Warp.
+        m.pad()
+        m.pad(0x20, 0x20)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 2)
         self.assertEqual(m.read(m.sym["visibleCount"]), 11)
+        self.assertEqual(m.read(m.sym["visible"] + 3 * 4), m.row("WARP NOW"))
         destination = m.sym["warpDestination"]
         default = bytes(m.uc.mem_read(destination, 16))
         self.assertAlmostEqual(m.read(destination, "f"), 3583.789306640625)
-        m.write(m.sym["selected"], 3)
+        m.write(m.sym["selected"], 4)
         m.pad(2, 2)
         self.assertEqual(m.read(destination, "f"), struct.unpack(">f", default[:4])[0] + 10)
         self.assertEqual(m.read(m.sym["warpEdited"], "B"), 1)
@@ -575,7 +648,7 @@ class PayloadTests(unittest.TestCase):
         m.write(m.sym["warpCategory"], 6)
         m.pad(2, 2)
         self.assertEqual(m.read(m.sym["warpMap"]), 75)
-        m.write(m.sym["selected"], 10)
+        m.write(m.sym["selected"], 3)
         m.pad(0x100, 0x100)
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
         self.assertFalse(any(c[0] == "warpToMap" for c in m.calls))
@@ -661,7 +734,8 @@ class PayloadTests(unittest.TestCase):
         # Ordinary game warps must retain their existing loading behavior.
         m.call("Practice_WarpReload")
         self.assertEqual([c[0] for c in m.calls], ["mapReload"])
-        for map_id, layer in ((28, -2), (38, 2)):  # Galdon and Andross flight.
+        # Include all five Krazoa tests as well as Galdon and Andross flight.
+        for map_id, layer in ((28, -2), (38, 2), (31, 0), (32, 0), (33, 0), (34, 0), (39, 0)):
             m.calls = []
             m.write(m.sym["warpMap"], map_id)
             m.call("resetWarpSpawn")
@@ -684,6 +758,241 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual([c[0] for c in m.calls], ["mapReload"])
         self.assertEqual(m.read(m.sym["warpLoadPending"], "B"), 0)
 
+    def test_flags_hierarchy_unused_separation_and_back_navigation(self):
+        m = self.m
+        m.state_fixture()
+        m.pad(0x64, 4)
+        m.write(m.sym["activeTab"], 3, "B")
+        m.pad()
+        m.pad(0x100, 0x100)  # Flags -> Inventory.
+        self.assertEqual(m.read(m.sym["flagPage"]), 1)
+        m.call("rebuildRows")
+        self.assertEqual(m.read(m.sym["visibleCount"]), 4)
+        m.pad(0x100, 0x100)  # Gear.
+        self.assertEqual(m.read(m.sym["flagPage"]), 10)
+        m.pad(0x100, 0x100)  # Staff.
+        self.assertEqual(m.bit_edits, [(0x75, 1)])
+        m.pad(0x200, 0x200)
+        self.assertEqual(m.read(m.sym["flagPage"]), 1)
+        m.pad(0x200, 0x200)
+        self.assertEqual(m.read(m.sym["flagPage"]), 0)
+        m.write(m.sym["selected"], 6)
+        m.pad(0x100, 0x100)  # Advanced.
+        m.write(m.sym["selected"], 1)
+        m.pad(0x100, 0x100)  # Unused / uncertain.
+        self.assertEqual(m.read(m.sym["flagPage"]), 9)
+        m.call("flagBitId", 0)
+        self.assertEqual(m.r(3), 0x958)
+        m.pad(0x200, 0x200)
+        self.assertEqual(m.read(m.sym["flagPage"]), 7)
+        m.pad(0x200, 0x200)
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
+        m.pad(0x200, 0x200)
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 0)
+
+    def test_state_widths_cross_byte_edits_and_loading_guards(self):
+        m = self.m
+        m.state_fixture()
+        m.write(m.sym["flagPage"], 8)
+        m.write(m.sym["flagRawId"], 0x3f5)
+        m.write(m.sym["selected"], 1)
+        m.set_bit(0x75, 1)
+        m.set_bit(0x3f5, 254)
+        m.call("editFlags", 2)
+        self.assertEqual(m.bit_value(0x3f5), 255)
+        m.call("editFlags", 2)
+        self.assertEqual(m.bit_value(0x3f5), 255)
+        self.assertEqual(m.bit_value(0x75), 1)  # Adjacent packed flag unchanged.
+        m.write(m.sym["flagStep"], 2)
+        m.call("editFlags", 1)
+        self.assertEqual(m.bit_value(0x3f5), 0)
+        m.save_loading = 1
+        m.call("editFlags", 2)
+        self.assertEqual(m.bit_value(0x3f5), 0)
+        m.save_loading = 0
+        for gid in (0x95, 0x96, 4096, 0xffffffff):
+            m.call("stateBitWidth", gid)
+            self.assertEqual(m.r(3), 0)
+        m.bit_def(0x20, 0x80 * 8 - 1, 2, 0)
+        m.call("stateBitWidth", 0x20)
+        self.assertEqual(m.r(3), 0)  # Descriptor extends past bank end.
+        m.bit_table_size = 400
+        m.write(m.sym["checkedBitTable"], 0)
+        m.call("practiceStateReady")
+        m.call("stateBitWidth", 100)
+        self.assertEqual(m.r(3), 0)  # Bound by file size, not the retail halfword count.
+
+    def test_flags_act_group_api_routing_and_unsigned_masks(self):
+        m = self.m
+        m.state_fixture()
+        m.write(m.sym["gSaveGameMapActBits"] + 23 * 2, 0x300, "H")
+        for mid in (7, 23):
+            m.write(m.sym["gSaveGameMapObjGroupBits"] + mid * 2, 0x301, "H")
+        m.write(m.sym["flagPage"], 8)
+        m.write(m.sym["flagRawId"], 0x301)
+        m.write(m.sym["selected"], 1)
+        m.set_bit(0x301, 0x80000000)
+        m.call("editFlags", 2)
+        self.assertEqual(m.bit_value(0x301), 0x80000001)
+        self.assertEqual(m.read(m.sym["gMapObjGroupStatuses"] + 23 * 4), 0x80000001)
+        self.assertTrue(any(c[0] == "SaveGame_gplaySetObjGroupStatus" for c in m.calls))
+        self.assertFalse(m.bit_edits)
+        m.set_bit(0x301, 0xffffffff)
+        m.call("editFlags", 2)
+        self.assertEqual(m.bit_value(0x301), 0xffffffff)
+        m.call("writeStateBit", 0x300, 3)
+        self.assertEqual(m.bit_value(0x300), 3)
+        self.assertTrue(any(c[:3] == ("SaveGame_gplaySetAct", 23, 3) for c in m.calls))
+        m.write(m.sym["flagPage"], 6)
+        m.write(m.sym["flagMap"], 23)
+        m.call("flagRowCount")
+        self.assertEqual(m.r(3), 33)
+        m.write(m.sym["selected"], 32)
+        m.call("editFlags", 0x100)
+        self.assertEqual(m.bit_value(0x301), 0x7fffffff)
+
+    def test_stats_clamp_to_capacity_and_never_write_while_loading(self):
+        m = self.m
+        m.state_fixture()
+        m.call("editStat", 0, 256)
+        self.assertEqual(m.read(m.stats, "b"), 16)
+        m.call("editStat", 1, (-10) & 0xffffffff)
+        self.assertEqual(m.read(m.stats, "b"), 6)
+        self.assertEqual(m.read(m.stats + 1, "b"), 6)
+        m.call("editStat", 3, (-90) & 0xffffffff)
+        self.assertEqual(m.read(m.stats + 4, "h"), 10)
+        m.call("editStat", 4, 256)
+        self.assertEqual(m.read(m.stats + 8, "B"), 255)
+        before = bytes(m.uc.mem_read(m.stats, 12))
+        m.save_loading = 1
+        m.call("editStat", 0, 0xffffffff)
+        self.assertEqual(bytes(m.uc.mem_read(m.stats, 12)), before)
+
+    def test_logging_filters_baselines_and_observational_state(self):
+        m = self.m
+        m.state_fixture()
+        m.call("pollStateLog")
+        self.assertFalse(m.reports)
+        self.assertEqual(m.read(m.sym["logBaseline"], "B"), 0)
+        m.toggle("LOG TO DOLPHIN", 1)
+        m.call("pollStateLog")
+        self.assertFalse(m.reports)  # No initial state dump.
+        m.set_bit(0x75, 1)
+        m.set_bit(0x4e4, 1)
+        m.write(m.stats + 8, 23, "B")
+        m.write(m.sym["gMapObjGroupStatuses"] + 23 * 4, 0x80000001)
+        saved = bytes(m.uc.mem_read(m.save_data, 0x1000))
+        stats = bytes(m.uc.mem_read(m.stats, 12))
+        groups = bytes(m.uc.mem_read(m.sym["gMapObjGroupStatuses"], 480))
+        m.call("pollStateLog")
+        self.assertEqual(len(m.reports), 4)
+        self.assertEqual(bytes(m.uc.mem_read(m.save_data, 0x1000)), saved)
+        self.assertEqual(bytes(m.uc.mem_read(m.stats, 12)), stats)
+        self.assertEqual(bytes(m.uc.mem_read(m.sym["gMapObjGroupStatuses"], 480)), groups)
+        self.assertFalse(m.bit_edits)
+        bit_reports = [args for fmt, args in m.reports if "BIT" in fmt]
+        self.assertEqual([(args[1], args[3], args[4]) for args in bit_reports], [(0x75, 0, 1), (0x4e4, 0, 1)])
+        m.reports.clear()
+        m.toggle("INVENTORY", 0)
+        m.call("pollStateLog")
+        m.set_bit(0x75, 0)
+        m.call("pollStateLog")
+        self.assertFalse(m.reports)
+        m.toggle("INVENTORY", 1)
+        m.call("pollStateLog")
+        self.assertFalse(m.reports)  # Filtered history isn't replayed.
+        m.save_loading = 1
+        m.call("pollStateLog")
+        m.set_bit(0x75, 1)
+        m.save_loading = 0
+        m.call("pollStateLog")
+        self.assertFalse(m.reports)  # Loading resets baseline.
+        m.set_bit(0x75, 0)
+        m.set_bit(0x75, 1)
+        m.call("pollStateLog")
+        self.assertFalse(m.reports)  # Deliberately net-frame, not every setter.
+
+    def test_logging_burst_limit_advances_snapshot(self):
+        m = self.m
+        m.state_fixture()
+        for i in range(40):
+            m.bit_def(0x600 + i, i, 1, 0)
+        m.toggle("LOG TO DOLPHIN", 1)
+        m.call("pollStateLog")
+        for i in range(40):
+            m.set_bit(0x600 + i, 1)
+        m.call("pollStateLog")
+        self.assertEqual(len(m.reports), 33)
+        self.assertIn("suppressed", m.reports[-1][0])
+        self.assertEqual(m.reports[-1][1][1], 8)
+        m.reports.clear()
+        m.call("pollStateLog")
+        self.assertFalse(m.reports)
+
+    def test_flags_and_log_pages_stay_inside_screen(self):
+        m = self.m
+        m.state_fixture()
+        m.write(m.sym["menuOpen"], 1, "B")
+        for tab, page in [(3, n) for n in range(14)] + [(4, 0)]:
+            m.geometry = []
+            m.write(m.sym["activeTab"], tab, "B")
+            m.write(m.sym["flagPage"], page)
+            m.write(m.sym["selected"], 0)
+            m.call("drawMenu")
+            self.assertTrue(m.geometry)
+            self.assertTrue(all(0 <= v[0] <= 640 and 0 <= v[1] <= 480 for g in m.geometry for v in g[2]), (tab, page))
+
+    def test_hover_default_gap_requires_both_buttons_and_releases_either(self):
+        m = self.m
+        self.assertEqual(m.read(m.sym["rollBlanks"]), 3)
+        m.toggle("AUTO-SHIELD HOVER", 1)
+        for single in (0x400, 0x20):
+            m.pad(single, single)
+            self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), single)
+            self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)
+            m.pad()
+        for released in (0x400, 0x20, 0):
+            for action in [0x20, 0x400, 0, 0, 0] * 2:
+                m.pad(0x420)
+                self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), action)
+            m.pad(released)
+            self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), released)
+            self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)
+
+    def test_auto_roll_roll_then_blank_then_shield_then_roll(self):
+        m = self.m
+        self.assertEqual(m.read(m.sym["autoRollBlanks"]), 39)
+        m.toggle("AUTO ROLL", 1)
+        for blanks in (39, 3):
+            m.pad()  # Release resets timer.
+            m.write(m.sym["autoRollBlanks"], blanks)
+            previous = 0
+            for frame in range((blanks + 2) * 2 + 1):
+                m.pad(0xc00, 0x400 if frame == 0 else 0)  # X held, Y preserved.
+                phase = frame % (blanks + 2)
+                action = 0x400 if phase == 0 else 0x20 if phase == blanks + 1 else 0
+                shield = action & 0x20
+                self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x800 | action)
+                self.assertEqual(m.read(m.sym["gPadButtonsJustPressed"]) & 0x420, action & ~previous)
+                self.assertEqual(m.read(m.sym["gPadButtonsReleased"]) & 0x420, previous & ~action)
+                self.assertEqual(m.read(m.sym["gPadTriggers"], "H"), shield)
+                self.assertEqual(m.read(m.sym["gPadTriggersPressed"], "H"), shield)
+                self.assertEqual(m.read(m.sym["gPadStatuses"] + 7, "B"), 255 if shield else 0)
+                self.assertEqual(m.read(m.sym["gPadButtonsPrevious"]), 0xc00)
+                previous = action
+            m.pad(0x800)
+            self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x800)
+            self.assertEqual(m.read(m.sym["gPadTriggers"], "H"), 0)
+        m.toggle("AUTO-SHIELD HOVER", 1)
+        for action in (0x20, 0x400, 0, 0, 0):
+            m.pad(0x420)
+            self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), action)
+        m.pad(0x400)  # Drop R: auto roll resumes with a fresh X press.
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x400)
+        m.pad(0x64, 4)  # Opening the menu suppresses both cheats.
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
+        self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)
+
     def test_hover_custom_cadence_and_menu_limits(self):
         m = self.m
         m.toggle("AUTO-SHIELD HOVER", 1)
@@ -692,7 +1001,7 @@ class PayloadTests(unittest.TestCase):
         sequence = [0x20, 0, 0, 0, 0x400, 0, 0] * 2
         previous = 0
         for action in sequence:
-            m.pad(0x120, 0x20 if previous == 0 and action == 0x20 else 0)  # Hold R; A stays available.
+            m.pad(0x520, 0x420 if previous == 0 and action == 0x20 else 0)  # Hold X+R; A stays available.
             self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x100 | action)
             self.assertEqual(m.read(m.sym["gPadButtonsJustPressed"]) & 0x420, action & ~previous)
             self.assertEqual(m.read(m.sym["gPadButtonsReleased"]) & 0x420, previous & ~action)

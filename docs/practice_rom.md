@@ -3,6 +3,8 @@
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
 The first supported input is a clean US/EN v1.0 (`GSAE01`, revision 0) ISO.
+The controls below describe packaged V1.4. See **Pending changes after V1.4**
+for the newer source-only controls and menus; no replacement ISO is packaged yet.
 
 ## Controls
 
@@ -254,8 +256,9 @@ similar instructions and patch an unknown version.
 
 ### Pending changes after V1.4 (not packaged)
 
-Reported V1.4 failures: warping to Galdon hangs on black, and Andross flight
-shows a broken cube-like Arwing. The practice coordinate warp omitted the
+Reported V1.4 failures: warping to Galdon hangs on black, Andross flight
+shows a broken cube-like Arwing, and all five Krazoa test maps fail to warp.
+The practice coordinate warp omitted the
 destination-bank setup performed by normal entry paths. A new practice-only
 hook at `loadNextMap`'s `mapReload` call queues `mapLoadByCoords` after the fade
 and character-position commit, clears source resource locks, and discards the
@@ -263,10 +266,78 @@ source auxiliary-bank selection. The existing queued loader unloads old
 objects before synchronously loading destination/parent resource banks.
 Ordinary and superseding scripted warps retain their retail reload path.
 
-This addresses a verified loading-path omission, but neither reported gameplay
-failure has yet been confirmed fixed in Dolphin. The pending source passes 23
-compiled-payload tests, 8 patch tests, `ninja all_source`, and the retail build
-check. No new ISO or patch has been generated, as requested during testing.
+Shrine transporters likewise call `loadMapAndParent` on entry. The pending loader
+test covers all five test destinations as well as Galdon and Andross. This
+addresses a verified loading-path omission; the reported gameplay failures have
+not yet been confirmed fixed in Dolphin. No new ISO or patch has been generated,
+as requested during testing.
+
+Pending menu and cheat changes:
+
+- L/R cycles Collision, Cheats, Warp, Flags, Log. **Warp Now is the fourth row**,
+  immediately after Category, Map, Spawn; it still requires an explicit A press.
+- Shield hover requires **physical X + R**, with **3 blanks after roll** and
+  0 after shield by default. Both gaps remain configurable from 0 to 60.
+- **Auto Roll** runs while physical **X** is held: one frame of X, **39 blank
+  frames**, one frame of R, then X again. The blank gap is configurable from 0
+  to 120; the default cycle is 41 input frames. X and R are both released during
+  blank frames. Shield hover takes priority when both cheats are enabled and
+  X + R are held. Releasing the activation buttons restores physical input;
+  entering the menu, loading pauses, and player changes reset the cycle.
+
+Flags uses a curated catalog in `include/practice/state_catalog.h`, based on
+the existing named game bits, rather than presenting all IDs at once:
+
+- **Inventory:** Gear, Supplies, Key Items, Spellstones.
+- **Spells:** normal ability unlocks and separately labeled disabled flags.
+- **Tricky:** commands, spawning permission, rescue/goodbye progression,
+  stay/find, call, flame, distract, food and ball flags; also a read-only check
+  for whether the Tricky object exists. Spawn permission is not a command to
+  spawn/despawn him immediately. The uncertain C11 flag is in Advanced.
+- **Player Stats:** health, magic, scarabs and Bafomdads with capacity fields.
+  Health is shown in raw units; edits clamp to storage bounds/current capacity.
+- **Area Progress:** choose a map, edit its act and the curated flags associated
+  with that area. Coverage is incomplete; maps without curated entries still
+  expose their act when the retail table defines one.
+- **Object Groups:** choose a world map, then individual saved group switches.
+  Each row also shows the active cached mask. These are group flags, not counts
+  of resident objects. Group names remain numeric where their role is unknown.
+  Runtime object-chunk aliases are not exposed as independent world maps.
+- **Advanced:** direct hexadecimal bit-ID access and a separate **Unused /
+  Uncertain** submenu for deleted spells, unused spellstones and tentative IDs.
+
+**A** enters a submenu or toggles a boolean, **Left/Right** changes a value or
+selector, **X** cycles numeric steps 1/16/256, and **B** goes back one level.
+Selected bit rows show ID, bank and width. Raw values are hexadecimal; ordinary
+counts are decimal. Invalid descriptors, constant bits and unavailable state
+are not editable. The descriptor bound comes from the BITTABLE asset size,
+not the retail count (which is measured in halfwords). Edits use retail game-bit
+setters; map acts and groups use their savegame APIs even from the raw editor,
+so caches and shared masks follow normal engine behavior. Edits affect current
+save state and can persist through the game's normal saves. Script-controlled
+flags, especially spell availability, may be overwritten on the next update.
+
+Logging is **off by default**. The Log tab offers Inventory, Spells, Tricky,
+Area / Map Acts, Other / Unknown Bits, Object Groups, and Player Stats filters.
+Enable Dolphin's OSReport/HLE logging to see `[PRACTICE]` entries with a frame
+counter, bit ID/name or map/stat identity, and before/after values. Named-bit
+categories cover the curated catalog; unclassified bits go to Other, including
+unused items. Logging reads snapshots without modifying gameplay state.
+
+The logger reports **net changes between draw frames**, including direct/bulk
+writes, not every call to a setter. A flip that reverses within one frame is
+invisible. Enabling logging, changing filters, or loading a save establishes a
+fresh baseline without dumping historical state. At most 32 events per frame
+are printed, followed by a suppressed-event count; snapshots still advance.
+
+These controls are tested as compiled PPC code with stubbed game services;
+their gameplay effects and layout still need Dolphin playtesting.
+The pending source passes 32 payload tests, 8 patch tests, `ninja all_source`,
+and the strict retail checksum. A read-only check against the verified EN disc's
+3,920 BITTABLE records validated all 87 ordinary catalog rows (some are aliases
+shown on more than one page). Six menu previews were inspected from rasterized
+GX commands, not Dolphin screenshots. The payload is 60,096 bytes and still fits
+the original 64 KiB reservation.
 
 ### Packaged build checks
 
