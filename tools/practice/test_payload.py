@@ -1,0 +1,303 @@
+"""Execute the compiled PPC payload with stubbed game/GX services.
+
+Requires Unicorn (pip install --target build/practice/python unicorn==2.1.4).
+These checks exercise real target instructions, not Dolphin or GPU emulation.
+"""
+import math
+import struct
+import sys
+import unittest
+
+from build import ROOT, PAYLOAD_ADDRESS, compile_payload, sections, symbols, tool_directory
+
+OUT = ROOT / "build/practice"
+sys.path.insert(0, str(OUT / "python"))
+from unicorn import Uc, UC_ARCH_PPC, UC_MODE_PPC32, UC_MODE_BIG_ENDIAN, UC_HOOK_CODE, UC_HOOK_MEM_WRITE
+from unicorn.ppc_const import UC_PPC_REG_0, UC_PPC_REG_FPR0, UC_PPC_REG_MSR, UC_PPC_REG_LR, UC_PPC_REG_PC
+
+
+class Machine:
+    def __init__(self, payload, exports, dol):
+        self.payload = payload
+        self.sym = exports
+        self.uc = Uc(UC_ARCH_PPC, UC_MODE_PPC32 | UC_MODE_BIG_ENDIAN)
+        self.uc.mem_map(0x80000000, 0x1800000)
+        self.uc.mem_map(0xCC008000, 0x1000)
+        self.uc.reg_write(UC_PPC_REG_MSR, 0x2000)
+        for _, off, addr, size in sections(dol):
+            self.uc.mem_write(addr, dol[off:off + size])
+        self.uc.mem_write(PAYLOAD_ADDRESS, payload)
+        self.player = 0x81000000
+        self.state = self.player + 0x1000
+        self.write(self.player + 0xB8, self.state)
+        self.write(self.player + 0x1C, 100.0, "f")
+        self.write(self.state + 0x1C0, -100000.0, "f")
+        self.write(self.sym["timeDelta"], 1.0, "f")
+        self.calls = []
+        self.geometry = []
+        self.current = None
+        self.words = []
+        self.stub = {}
+        for name, (addr, _) in symbols().items():
+            if name.startswith("GX") or name in (
+                "padUpdate", "Obj_GetPlayerObject", "OSSetArenaHi", "playerDoControls",
+                "playerEnterDeepWater", "playerUpdateSurfaceResponse", "Camera_SetCurrentViewIndex",
+                "Camera_UpdateProjection", "resetSomeGxFlags", "getScreenResolution", "mathSinf", "mathCosf",
+                "Matrix_TransformPoint", "mapGetBlockAtPos", "ObjList_GetObjects", "PSMTXInverse", "PSMTXMultVec"):
+                self.stub[addr] = name
+        self.uc.hook_add(UC_HOOK_CODE, self.service)
+        self.uc.hook_add(UC_HOOK_MEM_WRITE, self.fifo, begin=0xCC008000, end=0xCC008003)
+
+    def write(self, address, value, fmt="I"):
+        self.uc.mem_write(address, struct.pack(">" + fmt, value))
+
+    def read(self, address, fmt="I"):
+        return struct.unpack(">" + fmt, self.uc.mem_read(address, struct.calcsize(fmt)))[0]
+
+    def r(self, n):
+        return self.uc.reg_read(UC_PPC_REG_0 + n)
+
+    def f(self, n):
+        return struct.unpack(">d", struct.pack(">Q", self.uc.reg_read(UC_PPC_REG_FPR0 + n)))[0]
+
+    def setf(self, n, f):
+        self.uc.reg_write(UC_PPC_REG_FPR0 + n, struct.unpack(">Q", struct.pack(">d", f))[0])
+
+    def service(self, uc, pc, size, unused):
+        # Unicorn lacks Gekko paired singles. MWCC also saves/restores the upper
+        # lanes beside ordinary stfd/lfd saves; this payload does no paired math.
+        if PAYLOAD_ADDRESS <= pc < PAYLOAD_ADDRESS + len(self.payload):
+            instruction = self.read(pc)
+            if instruction >> 26 in (56, 60):
+                assert (instruction >> 16) & 31 == 1 and (instruction >> 12) & 15 == 0
+                uc.reg_write(UC_PPC_REG_PC, pc + 4)
+                return
+        name = self.stub.get(pc)
+        if not name:
+            return
+        if name == "Obj_GetPlayerObject":
+            uc.reg_write(UC_PPC_REG_0 + 3, self.player)
+        elif name == "getScreenResolution":
+            uc.reg_write(UC_PPC_REG_0 + 3, (480 << 16) | 640)
+        elif name == "GXBegin":
+            self.current = (self.r(3), self.r(5), [])
+            self.geometry.append(self.current)
+            self.words = []
+        elif name == "playerEnterDeepWater":
+            self.write(self.state + 0x3F0, self.read(self.state + 0x3F0, "B") | 0x20, "B")
+        elif name in ("mathSinf", "mathCosf"):
+            self.setf(1, (math.sin if name == "mathSinf" else math.cos)(self.f(1)))
+        elif name == "Matrix_TransformPoint":
+            matrix = self.r(3)
+            p = [self.f(1), self.f(2), self.f(3), 1.0]
+            for axis in range(3):
+                value = sum(self.read(matrix + (k * 4 + axis) * 4, "f") * p[k] for k in range(4))
+                self.write(self.r(4 + axis), value, "f")
+        elif name == "PSMTXInverse":
+            # Trigger fixture is an orthonormal affine matrix; invert by transpose.
+            a = struct.unpack(">12f", uc.mem_read(self.r(3), 48))
+            inverse = []
+            for i in range(3):
+                row = [a[k * 4 + i] for k in range(3)]
+                inverse.extend(row + [-sum(row[k] * a[k * 4 + 3] for k in range(3))])
+            uc.mem_write(self.r(4), struct.pack(">12f", *inverse))
+            uc.reg_write(UC_PPC_REG_0 + 3, 1)
+        elif name == "PSMTXMultVec":
+            a = struct.unpack(">12f", uc.mem_read(self.r(3), 48))
+            p = list(struct.unpack(">3f", uc.mem_read(self.r(4), 12))) + [1]
+            result = [sum(a[i * 4 + k] * p[k] for k in range(4)) for i in range(3)]
+            uc.mem_write(self.r(5), struct.pack(">3f", *result))
+        elif name == "mapGetBlockAtPos":
+            uc.reg_write(UC_PPC_REG_0 + 3, self.block if self.r(3) == self.r(4) == self.r(5) == 0 else 0)
+        elif name == "ObjList_GetObjects":
+            self.write(self.r(3), 0)
+            self.write(self.r(4), 0)
+            uc.reg_write(UC_PPC_REG_0 + 3, 0)
+        self.calls.append((name, self.r(3), self.r(4)))
+        uc.reg_write(UC_PPC_REG_PC, uc.reg_read(UC_PPC_REG_LR))
+
+    def fifo(self, uc, access, address, size, value, unused):
+        assert size == 4, (address, size)
+        self.words.append(value)
+        if len(self.words) == 4:
+            xyz = struct.unpack(">fff", struct.pack(">III", *self.words[:3]))
+            self.current[2].append((*xyz, self.words[3]))
+            self.words = []
+
+    def call(self, name, *args):
+        self.uc.reg_write(UC_PPC_REG_0 + 1, 0x815F0000)
+        self.uc.reg_write(UC_PPC_REG_LR, 0x80002000)
+        for i, value in enumerate(args):
+            self.uc.reg_write(UC_PPC_REG_0 + 3 + i, value)
+        self.setf(1, 1.0)
+        self.uc.emu_start(self.sym[name], 0x80002000, count=2000000)
+        assert self.uc.reg_read(UC_PPC_REG_PC) == 0x80002000, "instruction budget exhausted"
+
+    def pad(self, held=0, pressed=0):
+        self.write(self.sym["gPadButtonsHeld"], held)
+        self.write(self.sym["gPadButtonsJustPressed"], pressed)
+        self.call("Practice_PadUpdate")
+
+
+class PayloadTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.payload, cls.exports = compile_payload(OUT, True)
+        cls.dol = (ROOT / "orig/GSAE01/sys/main.dol").read_bytes()
+
+    def setUp(self):
+        self.m = Machine(self.payload, self.exports, self.dol)
+
+    def test_arena_reservation(self):
+        self.m.call("Practice_SetArenaHi", 0x81700000)
+        self.assertEqual(self.m.calls[-1][:2], ("OSSetArenaHi", PAYLOAD_ADDRESS))
+        self.m.call("Practice_SetArenaHi", 0x81600000)
+        self.assertEqual(self.m.calls[-1][1], 0x81600000)
+
+    def test_menu_debounce_navigation_and_input(self):
+        m = self.m
+        m.write(m.sym["timeStop"], 3, "B")
+        m.pad(0x64, 4)  # L+R+Down
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
+        self.assertEqual(m.read(m.sym["timeStop"], "B"), 255)
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
+        m.pad(0x64)
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
+        m.pad()
+        m.pad(0x100, 0x100)  # A toggles/expands collision
+        self.assertEqual(m.read(m.sym["enabled"], "B"), 1)
+        self.assertEqual(m.read(m.sym["expanded"], "B"), 1)
+        m.pad(4, 4)
+        self.assertEqual(m.read(m.sym["selected"]), 1)
+        m.pad(1, 1)  # Left collapses parent
+        self.assertEqual(m.read(m.sym["selected"]), 0)
+        self.assertEqual(m.read(m.sym["expanded"], "B"), 0)
+        m.pad(0x200, 0x200)
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 0)
+        self.assertEqual(m.read(m.sym["timeStop"], "B"), 3)
+
+    def test_swim_restores_real_water_query(self):
+        m = self.m
+        m.pad()
+        m.write(m.sym["enabled"] + 11, 1, "B")
+        m.write(m.sym["waterHeight"], 140.0, "f")
+        m.call("Practice_PlayerControls", m.player, m.state)
+        self.assertEqual(m.read(m.state + 0x3F0, "B") & 0x20, 0x20)
+        self.assertEqual(m.read(m.state + 0x1C0, "f"), -100000.0)
+        m.call("Practice_SurfaceResponse", m.player, m.state, m.state)
+        self.assertEqual(m.read(m.state + 0x1C0, "f"), -100000.0)
+        m.pad(0x48)  # L+Up
+        self.assertEqual(m.read(m.sym["waterHeight"], "f"), 142.0)
+        m.write(m.sym["enabled"] + 11, 0, "B")
+        m.call("Practice_PlayerControls", m.player, m.state)
+        self.assertEqual(m.read(m.state + 0x3F0, "B") & 0x20, 0)
+
+    def test_trigger_boxes_spheres_and_cylinders(self):
+        m = self.m
+        definition, placement = 0x81100000, 0x81101000
+        m.write(m.player + 0x50, definition)
+        m.write(m.player + 0x4C, placement)
+        m.write(definition + 0x50, 294, "h")
+        m.uc.mem_write(placement + 0x3A, bytes([10, 20, 30]))
+        m.write(m.sym["enabled"] + 10, 0, "B")
+        for type_id, expected_lines in [(0x4D, 12), (0x4B, 72), (0x230, 52)]:
+            m.geometry = []
+            m.write(placement, type_id, "H")
+            m.call("drawTriggers", m.player)
+            self.assertEqual(len(m.geometry), expected_lines)
+            self.assertTrue(all(len(g[2]) == 2 for g in m.geometry))
+        m.write(definition + 0x50, 195, "h")
+        m.geometry = []
+        m.call("drawTriggers", m.player)
+        self.assertFalse(m.geometry)
+
+    def test_trigger_plane_inverts_world_to_local_matrix(self):
+        m = self.m
+        definition, placement = 0x81100000, 0x81101000
+        m.write(m.player + 0x50, definition)
+        m.write(m.player + 0x4C, placement)
+        m.write(definition + 0x50, 294, "h")
+        m.write(placement, 0x4C, "H")
+        m.write(m.sym["enabled"] + 10, 0, "B")
+        m.write(m.state + 0x34, 20.0, "f")
+        m.write(m.state + 0x14, 1.0, "f")
+        m.uc.mem_write(m.state + 0x38, struct.pack(">12f", 1, 0, 0, -10, 0, 1, 0, -100, 0, 0, 1, -30))
+        m.call("drawTriggers", m.player)
+        self.assertEqual(len(m.geometry), 5)
+        self.assertEqual(m.geometry[0][2][0][:3], (-10, 80, 30))
+        self.assertEqual(m.geometry[0][2][1][:3], (30, 80, 30))
+
+    def test_menu_geometry_and_preview(self):
+        m = self.m
+        m.pad(0x64, 4)
+        for row in [0, 5, 11]:
+            m.write(m.sym["expanded"] + row, 1, "B")
+        m.call("Practice_Draw")
+        self.assertGreater(len(m.geometry), 1000)
+        self.assertTrue(all(g[1] == len(g[2]) for g in m.geometry))
+        self.assertTrue(all(0 <= p[0] <= 640 and 0 <= p[1] <= 480 for g in m.geometry for p in g[2]))
+        try:
+            from PIL import Image, ImageDraw
+        except ImportError:
+            return
+        picture = Image.new("RGB", (640, 480), (40, 50, 60))
+        draw = ImageDraw.Draw(picture)
+        for _, _, points in m.geometry:
+            color = points[0][3]
+            draw.polygon([(p[0], p[1]) for p in points], fill=((color >> 24) & 255, (color >> 16) & 255, (color >> 8) & 255))
+        picture.save(OUT / "menu-geometry-preview.png")
+
+    def test_terrain_packed_vertices_and_water_filter(self):
+        m = self.m
+        m.block = 0x81100000
+        group, vertices, tri = m.block + 0x1000, m.block + 0x2000, m.block + 0x3000
+        for offset, address in [(0x4C, tri), (0x50, group), (0x58, vertices)]:
+            m.write(m.block + offset, address)
+        for offset, value in [(0x8E, 50), (0x90, 3), (0x98, 1), (0x9A, 1)]:
+            m.write(m.block + offset, value, "H")
+        m.uc.mem_write(vertices, struct.pack(">9h", 0, 80, 0, 80, 160, 0, 0, 240, 80))
+        m.uc.mem_write(tri, struct.pack(">4H", 0, 1, 2, 0))
+        m.call("drawTerrain")
+        self.assertEqual(len(m.geometry), 3)
+        self.assertEqual(m.geometry[0][2][0][:3], (0, 60, 0))
+        self.assertEqual(m.geometry[0][2][1][:3], (10, 70, 0))
+        m.geometry = []
+        m.write(group + 0x10, 8)
+        m.write(m.sym["enabled"] + 4, 0, "B")
+        m.call("drawTerrain")
+        self.assertFalse(m.geometry)
+        m.write(m.sym["enabled"] + 4, 1, "B")
+        m.call("drawTerrain")
+        self.assertEqual(len(m.geometry), 3)
+
+    def test_object_mesh_uses_forward_matrix_and_vertex_scale(self):
+        m = self.m
+        definition, banks, model, file = [0x81100000 + n * 0x1000 for n in range(4)]
+        hit, group, vertices, tri = [0x81104000 + n * 0x1000 for n in range(4)]
+        m.write(m.player + 0x50, definition)
+        m.write(m.player + 0x58, hit)
+        m.write(m.player + 0x7C, banks)
+        m.write(definition + 0x55, 1, "B")
+        m.write(banks, model)
+        m.write(model, file)
+        for off, value in [(0x28, vertices), (0x5C, tri), (0x60, group)]:
+            m.write(file + off, value)
+        m.write(file + 2, 0x800, "H")
+        m.write(file + 0xE4, 3, "H")
+        m.write(file + 0xF0, 1, "H")
+        m.write(group + 0x14, 1, "H")
+        m.uc.mem_write(vertices, struct.pack(">9h", 8, 16, 24, 80, 160, 0, 0, 240, 80))
+        m.uc.mem_write(tri, struct.pack(">4H", 0, 1, 2, 0))
+        matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 10, 20, 30, 1]
+        m.uc.mem_write(hit + 0x80, struct.pack(">16f", *matrix))
+        m.call("drawObjectCollision", m.player)
+        self.assertEqual(len(m.geometry), 3)
+        self.assertEqual(m.geometry[0][2][0][:3], (18, 36, 54))
+        m.geometry = []
+        m.write(file + 2, 0, "H")
+        m.call("drawObjectCollision", m.player)
+        self.assertEqual(m.geometry[0][2][0][:3], (10.03125, 20.0625, 30.09375))
+
+
+if __name__ == "__main__":
+    unittest.main()
