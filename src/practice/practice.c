@@ -6,7 +6,8 @@
 #include "practice/warp_catalog.h"
 #include "practice/state_catalog.h"
 #include "sys/objects/lifecycle.h"
-#include "dolphin/os/OSReport.h"
+#include "dolphin/exi.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/dll/dll_0017_savegame_api.h"
 #include "main/dll/savegame.h"
 #include "main/mldf_fileid.h"
@@ -17,6 +18,10 @@
 #include "dolphin/pad.h"
 #include "dolphin/os/OSArena.h"
 #include "main/camera.h"
+#include "main/hud_visibility_api.h"
+#include "main/audio_internal.h"
+#include "musyx/mcmd.h"
+#include "musyx/snd_synth_api.h"
 #include "main/debug_display.h"
 #include "main/frame_timing.h"
 #include "main/gameloop_api.h"
@@ -173,6 +178,11 @@ static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 
 static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0,
                                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
 static u8 menuOpen, chordLatched, savedTimeStop, swimApplied;
+static u8 menuSoundActive, menuSoundOwned[SFX_OBJECT_CHANNEL_COUNT];
+static int menuSoundHudDepth;
+static u8 menuSoundDvdPaused;
+static u32 menuSoundHandles[SFX_OBJECT_CHANNEL_COUNT];
+static u64 menuSoundAges[SFX_OBJECT_CHANNEL_COUNT];
 static u8 activeTab, hoverPhase, hoverActive, autoRollPhase;
 static u32 hoverButtons;
 static u32 previousShoulders;
@@ -1052,6 +1062,8 @@ static int flagPage, flagMap = 23, flagRawId, flagStep;
 static GameBitDef* checkedBitTable;
 static int checkedBitCount;
 static u8 logBits[740], logBaseline;
+static u8 logWasEnabled;
+static char logLine[192];
 static u32 logGroups[120], logFrame, logConfig;
 static int logStats[7];
 static PlayerStatus* logStatsOwner;
@@ -1474,6 +1486,47 @@ static int bitLogCategory(int id) {
     return LOG_OTHER;
 }
 
+/* Retail OSReport is intentionally empty. Send bounded lines to the IPL UART,
+ * which Dolphin exposes under OSREPORT without symbol maps or HLE signatures.
+ * Use the SDK EXI bus lock; abandon output if the bus/FIFO is busy. Never spin
+ * waiting for log space, and never alter the game's UART/console-type globals.
+ * Callers format only fixed strings and bounded catalog labels into logLine. */
+static void sendPracticeLog(void) {
+    int length = 0, offset = 0;
+    while (logLine[length] && length < sizeof(logLine) - 1) {
+        if (logLine[length] == '\n') { logLine[length] = '\r'; }
+        length++;
+    }
+    if (!EXILock(0, 1, NULL)) { return; }
+    while (offset < length) {
+        u32 command = 0x20010000;
+        int available, amount;
+        if (!EXISelect(0, 1, EXI_FREQ_8M)) { break; }
+        EXIImm(0, &command, 4, EXI_WRITE, NULL);
+        EXISync(0);
+        EXIImm(0, &command, 1, EXI_READ, NULL);
+        EXISync(0);
+        EXIDeselect(0);
+        available = 16 - (int)(command >> 24);
+        if (available <= 0 || available > 16) { break; }
+        if (!EXISelect(0, 1, EXI_FREQ_8M)) { break; }
+        command = 0xa0010000;
+        EXIImm(0, &command, 4, EXI_WRITE, NULL);
+        EXISync(0);
+        while (available > 0 && offset < length) {
+            amount = length - offset;
+            if (amount > 4) { amount = 4; }
+            if (amount > available) { amount = available; }
+            EXIImm(0, logLine + offset, amount, EXI_WRITE, NULL);
+            EXISync(0);
+            offset += amount;
+            available -= amount;
+        }
+        EXIDeselect(0);
+    }
+    EXIUnlock(0);
+}
+
 /* Observational net changes between draw frames, not a hook on every setter.
  * Baselines advance even for filtered/suppressed events. No gameplay writes. */
 static void pollStateLog(void) {
@@ -1482,8 +1535,18 @@ static void pollStateLog(void) {
     PlayerStatus* stats;
     logFrame++;
     if (!enabled[LOG_ENABLED]) {
+        if (logWasEnabled) {
+            sprintf(logLine, "[PRACTICE] Logging disabled\n");
+            sendPracticeLog();
+        }
+        logWasEnabled = 0;
         logBaseline = 0;
         return;
+    }
+    if (!logWasEnabled) {
+        sprintf(logLine, "[PRACTICE] Logging enabled - waiting for game state\n");
+        sendPracticeLog();
+        logWasEnabled = 1;
     }
     if (!practiceStateReady()) {
         logBaseline = 0;
@@ -1494,6 +1557,10 @@ static void pollStateLog(void) {
     }
     if (logSaveOwner != gGameBitSaveData || logConfig != config) {
         logBaseline = 0;
+    }
+    if (!logBaseline) {
+        sprintf(logLine, "[PRACTICE] Watching %d game bits; filters %02X; net changes per frame\n", checkedBitCount, config);
+        sendPracticeLog();
     }
     for (bank = 0; bank < 4; bank++) {
         for (i = 0; i < bitBankSizes[bank]; i++) {
@@ -1510,8 +1577,9 @@ static void pollStateLog(void) {
                 if (before != after && enabled[bitLogCategory(i)]) {
                     const PracticeBitLabel* entry = namedBit(i);
                     if (count++ < 32) {
-                        OSReport("[PRACTICE][%u][BIT %03X] %s: %08X -> %08X\n", logFrame, i,
+                        sprintf(logLine, "[PRACTICE][%u][BIT %03X] %s: %08X -> %08X\n", logFrame, i,
                                  entry ? entry->name : "UNNAMED", before, after);
+                        sendPracticeLog();
                     }
                 }
             }
@@ -1524,7 +1592,8 @@ static void pollStateLog(void) {
     }
     for (i = 0; i < 120; i++) {
         if (logBaseline && enabled[LOG_GROUPS] && logGroups[i] != gMapObjGroupStatuses[i] && count++ < 32) {
-            OSReport("[PRACTICE][%u][GROUPS %d] %08X -> %08X\n", logFrame, i, logGroups[i], gMapObjGroupStatuses[i]);
+            sprintf(logLine, "[PRACTICE][%u][GROUPS %d] %08X -> %08X\n", logFrame, i, logGroups[i], gMapObjGroupStatuses[i]);
+            sendPracticeLog();
         }
         logGroups[i] = gMapObjGroupStatuses[i];
     }
@@ -1533,13 +1602,15 @@ static void pollStateLog(void) {
         for (i = 0; i < 7; i++) {
             int value = statValue(stats, i);
             if (logBaseline && enabled[LOG_STATS] && stats == logStatsOwner && logStats[i] != value && count++ < 32) {
-                OSReport("[PRACTICE][%u][STAT] %s: %d -> %d\n", logFrame, statLabels[i], logStats[i], value);
+                sprintf(logLine, "[PRACTICE][%u][STAT] %s: %d -> %d\n", logFrame, statLabels[i], logStats[i], value);
+                sendPracticeLog();
             }
             logStats[i] = value;
         }
     }
     if (count > 32) {
-        OSReport("[PRACTICE][%u] %d additional changes suppressed\n", logFrame, count - 32);
+        sprintf(logLine, "[PRACTICE][%u] %d additional changes suppressed\n", logFrame, count - 32);
+        sendPracticeLog();
     }
     logStatsOwner = stats;
     logSaveOwner = gGameBitSaveData;
@@ -1677,7 +1748,7 @@ static void drawMenu(void) {
         return;
     }
     if (activeTab == TAB_LOG) {
-        textAt(36, 365, "DOLPHIN: OSREPORT / HLE LOG", MUTED);
+        textAt(36, 365, "DOLPHIN: OSREPORT LOG (NOTICE)", MUTED);
         textAt(36, 389, "NET CHANGES PER FRAME; 32 EVENT LIMIT", MUTED);
         textAt(36, 419, "L/R: TABS  A: TOGGLE  B: CLOSE", MUTED);
         return;
@@ -1698,6 +1769,47 @@ void Practice_SetArenaLo(void* start) {
         start = __practice_limit;
     }
     OSSetArenaLo(start);
+}
+
+/* Match the engine's object-SFX pause behavior without unpausing channels that
+ * were already muted by the game. Handle + allocation age identify a voice even
+ * if a channel is recycled while paused. Music/stream volumes are untouched. */
+static void updateMenuSounds(void) {
+    int i;
+    if (!menuOpen && !menuSoundActive) {
+        return;
+    }
+    if (menuOpen && !menuSoundActive) {
+        menuSoundHudDepth = getHudHiddenFrameCount();
+        menuSoundDvdPaused = gDvdErrorPauseActive;
+    }
+    for (i = 0; i < SFX_OBJECT_CHANNEL_COUNT; i++) {
+        SfxObjectChannel* channel = &gSfxObjectChannels[i];
+        if (channel->handle == (u32)-1 || channel->handle != menuSoundHandles[i] || channel->age != menuSoundAges[i]) {
+            menuSoundOwned[i] = 0;
+        }
+        if (menuOpen) {
+            if (channel->handle != (u32)-1 && !channel->paused) {
+                menuSoundHandles[i] = channel->handle;
+                menuSoundAges[i] = channel->age;
+                menuSoundOwned[i] = 1;
+                channel->paused = 1;
+                sndFXCtrl(channel->handle, MCMD_CTRL_VOLUME, 0);
+            }
+        } else {
+            if (menuSoundOwned[i] && channel->paused && (!gDvdErrorPauseActive || menuSoundDvdPaused) &&
+                getHudHiddenFrameCount() <= menuSoundHudDepth && timeStop == savedTimeStop) {
+                channel->paused = 0;
+                if (channel->hasPosition) {
+                    Sfx_UpdateObjectChannel3D(channel);
+                } else {
+                    sndFXCtrl(channel->handle, MCMD_CTRL_VOLUME, channel->volume);
+                }
+            }
+            menuSoundOwned[i] = 0;
+        }
+    }
+    menuSoundActive = menuOpen;
 }
 
 static void closeMenu(void) {
@@ -2038,6 +2150,7 @@ void Practice_PadUpdate(void) {
         swallowInput();
     }
     updateShieldHover(player, menuOpen || wasOpen || chord);
+    updateMenuSounds();
 }
 
 static void applyWater(GameObject* obj, PlayerState* state) {
@@ -2085,6 +2198,7 @@ void Practice_SurfaceResponse(GameObject* obj, PlayerState* state, PlayerState* 
 
 void Practice_Draw(void) {
     u8 viewIndex = gCameraCurrentViewIndex;
+    updateMenuSounds();
     pollStateLog();
     linesDrawn = trianglesDrawn = triggersDrawn = fillsDrawn = 0;
     drawLimitReached = 0;

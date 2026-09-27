@@ -260,6 +260,39 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
+### Pending fixes after V1.5 (not packaged)
+
+- Inventory / Key Items adds the intro Galleon gold key, all four DarkIce Mines
+  cogs, and Walled City silver/gold teeth. The CloudRunner flute moves from Gear
+  into Key Items. These are possession flags; their separate used/puzzle flags
+  are not implicitly reset.
+- Opening the menu mutes object sound effects, including an already-playing
+  shield loop. Music/stream playback continues. Existing game-muted voices stay
+  muted, recycled channels are identified by handle and allocation age, and
+  closing restores only voices owned by the practice mute. Positional sounds
+  resume through the engine's spatial-volume update. Newly started effects are
+  muted while the menu remains open. A new cutscene/DVD pause keeps ownership
+  of its mute. **The shortcut remains L+R+Down; swim control remains L+Up/Down.**
+- V1.5's logger called the retail `OSReport`, which is an empty function in this
+  game (`track/intersect_memcard.c`). The compiled harness had intercepted that
+  call, so its earlier passing tests did not establish working Dolphin output.
+  Practice now formats its own bounded lines and writes through the IPL debug
+  UART using the SDK EXI lock/transfer functions. No retail console-type or UART
+  globals are changed. A busy bus/full FIFO drops output rather than spinning
+  for log space. Dolphin displays this under **OSREPORT** at **Notice** verbosity;
+  **OSREPORT_HLE alone is insufficient**. Enable Log to File or the Log window.
+  Toggling logging emits an immediate enabled/disabled acknowledgement, and
+  baseline changes report the number of watched game bits and category mask.
+
+Validation: 36 compiled-payload tests and 8 patch tests pass. The sound checks
+cover pre-muted voices, restored spatial volume, recycled handles and independent
+pause owners. An isolated Dolphin test booted a private test image and verified
+real OSREPORT output: enabled, watching 3,920 bits, Galleon gold key 0-to-1 and
+1-to-0, then disabled. The probe changed and restored that bit only in its own
+test emulator. No active object voices existed at that startup point, so this
+does not claim an audible shield-loop playtest. The published V1.5 ISO and older
+images are unchanged; the fixes await the next release build.
+
 ### V1.5 changes
 
 Reported V1.4 failures: warping to Galdon hangs on black, Andross flight
@@ -324,7 +357,8 @@ flags, especially spell availability, may be overwritten on the next update.
 
 Logging is **off by default**. The Log tab offers Inventory, Spells, Tricky,
 Area / Map Acts, Other / Unknown Bits, Object Groups, and Player Stats filters.
-Enable Dolphin's OSReport/HLE logging to see `[PRACTICE]` entries with a frame
+The original V1.5 output path is broken; use the pending UART fix above.
+With that fix, enable Dolphin's OSREPORT logging to see `[PRACTICE]` entries with a frame
 counter, bit ID/name or map/stat identity, and before/after values. Named-bit
 categories cover the curated catalog; unclassified bits go to Other, including
 unused items. Logging reads snapshots without modifying gameplay state.

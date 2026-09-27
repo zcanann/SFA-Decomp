@@ -4,6 +4,7 @@ Requires Unicorn (pip install --target build/practice/python unicorn==2.1.4).
 These checks exercise real target instructions, not Dolphin or GPU emulation.
 """
 import math
+import re
 import struct
 import sys
 import unittest
@@ -41,6 +42,10 @@ class Machine:
         self.blocks = {}
         self.reports = []
         self.bit_edits = []
+        self.uart = bytearray()
+        self.exi_command = None
+        for index in range(56):
+            self.write(self.sym["gSfxObjectChannels"] + index * 0x38, 0xffffffff)
         for name, (addr, _) in symbols().items():
             if name.startswith("GX") or name in (
                 "padUpdate", "Obj_GetPlayerObject", "OSSetArenaLo", "playerDoControls",
@@ -50,7 +55,8 @@ class Machine:
                 "Obj_TransformLocalPointToWorld", "mainGetBit", "ObjHits_IsObjectEnabled", "warpToMap",
                 "mapReload", "mapLoadByCoords", "unlockLevel", "isSaveGameLoading", "getDataFileSize",
                 "SaveGame_getPlayerStats", "getTrickyObject", "mainSetBits", "SaveGame_gplaySetAct",
-                "SaveGame_gplaySetObjGroupStatus", "OSReport"):
+                "SaveGame_gplaySetObjGroupStatus", "sprintf", "EXILock", "EXISelect", "EXIImm",
+                "EXISync", "EXIDeselect", "EXIUnlock", "sndFXCtrl", "getHudHiddenFrameCount", "Sfx_UpdateObjectChannel3D"):
                 self.stub[addr] = name
         self.uc.hook_add(UC_HOOK_CODE, self.service)
         self.uc.hook_add(UC_HOOK_MEM_WRITE, self.fifo, begin=0xCC008000, end=0xCC008003)
@@ -119,9 +125,40 @@ class Machine:
             for mid in range(120):
                 if self.read(self.sym["gSaveGameMapObjGroupBits"] + mid * 2, "H") == gamebit:
                     self.write(self.sym["gMapObjGroupStatuses"] + mid * 4, value)
-        elif name == "OSReport":
-            fmt = bytes(uc.mem_read(self.r(3), 160)).split(b"\0")[0].decode()
-            self.reports.append((fmt, tuple(self.r(i) for i in range(4, 11))))
+        elif name == "getHudHiddenFrameCount":
+            uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "hud_hidden", 0))
+        elif name == "sprintf":
+            fmt = bytes(uc.mem_read(self.r(4), 180)).split(b"\0")[0].decode()
+            args = tuple(self.r(i) for i in range(5, 12))
+            self.reports.append((fmt, args))
+            values = iter(args)
+            def format_arg(match):
+                value = next(values)
+                spec = match[0]
+                if spec == "%s":
+                    return bytes(uc.mem_read(value, 100)).split(b"\0")[0].decode()
+                if spec.endswith("X"):
+                    return format(value, spec[1:])
+                if spec == "%d" and value >= 0x80000000:
+                    value -= 0x100000000
+                return str(value)
+            message = re.sub(r"%[0-9]*[sudX]", format_arg, fmt).encode()
+            uc.mem_write(self.r(3), message + b"\0")
+            uc.reg_write(UC_PPC_REG_0 + 3, len(message))
+        elif name in ("EXILock", "EXISelect", "EXISync", "EXIDeselect", "EXIUnlock", "EXIImm"):
+            result = 1
+            if name == "EXILock":
+                result = not getattr(self, "exi_busy", False)
+            elif name == "EXISelect":
+                self.exi_command = None
+            elif name == "EXIImm":
+                if self.r(6) == 0:
+                    self.write(self.r(4), getattr(self, "uart_queued", 0), "B")
+                elif self.exi_command is None:
+                    self.exi_command = self.read(self.r(4))
+                elif self.exi_command == 0xa0010000:
+                    self.uart.extend(uc.mem_read(self.r(4), self.r(5)))
+            uc.reg_write(UC_PPC_REG_0 + 3, result)
         elif name == "ObjHits_IsObjectEnabled":
             uc.reg_write(UC_PPC_REG_0 + 3, 1)
         elif name == "warpToMap":
@@ -876,7 +913,10 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.sym["logBaseline"], "B"), 0)
         m.toggle("LOG TO DOLPHIN", 1)
         m.call("pollStateLog")
-        self.assertFalse(m.reports)  # No initial state dump.
+        self.assertEqual(len(m.reports), 2)  # Enable + baseline acknowledgement, no state dump.
+        self.assertIn(b"Logging enabled", m.uart)
+        self.assertIn(b"Watching 4096 game bits", m.uart)
+        m.reports.clear()
         m.set_bit(0x75, 1)
         m.set_bit(0x4e4, 1)
         m.write(m.stats + 8, 23, "B")
@@ -895,18 +935,21 @@ class PayloadTests(unittest.TestCase):
         m.reports.clear()
         m.toggle("INVENTORY", 0)
         m.call("pollStateLog")
+        m.reports.clear()  # Filter-change acknowledgement.
         m.set_bit(0x75, 0)
         m.call("pollStateLog")
         self.assertFalse(m.reports)
         m.toggle("INVENTORY", 1)
         m.call("pollStateLog")
-        self.assertFalse(m.reports)  # Filtered history isn't replayed.
+        self.assertEqual(len(m.reports), 1)  # Baseline only; filtered history isn't replayed.
+        m.reports.clear()
         m.save_loading = 1
         m.call("pollStateLog")
         m.set_bit(0x75, 1)
         m.save_loading = 0
         m.call("pollStateLog")
-        self.assertFalse(m.reports)  # Loading resets baseline.
+        self.assertEqual(len(m.reports), 1)  # Loading resets baseline.
+        m.reports.clear()
         m.set_bit(0x75, 0)
         m.set_bit(0x75, 1)
         m.call("pollStateLog")
@@ -919,6 +962,7 @@ class PayloadTests(unittest.TestCase):
             m.bit_def(0x600 + i, i, 1, 0)
         m.toggle("LOG TO DOLPHIN", 1)
         m.call("pollStateLog")
+        m.reports.clear()
         for i in range(40):
             m.set_bit(0x600 + i, 1)
         m.call("pollStateLog")
@@ -928,6 +972,83 @@ class PayloadTests(unittest.TestCase):
         m.reports.clear()
         m.call("pollStateLog")
         self.assertFalse(m.reports)
+
+    def test_debug_uart_chunks_carriage_returns_and_busy_bus(self):
+        m = self.m
+        message = b"[PRACTICE] This line spans several sixteen-byte FIFO writes\n"
+        m.uc.mem_write(m.sym["logLine"], message + b"\0")
+        m.call("sendPracticeLog")
+        self.assertEqual(bytes(m.uart), message.replace(b"\n", b"\r"))
+        self.assertEqual(m.calls[-1][0], "EXIUnlock")
+        m.uart.clear()
+        m.calls.clear()
+        m.exi_busy = True
+        m.call("sendPracticeLog")
+        self.assertEqual([c[0] for c in m.calls], ["EXILock"])
+        self.assertFalse(m.uart)
+        m.exi_busy = False
+        m.uart_queued = 16
+        m.call("sendPracticeLog")  # Full FIFO must return, not spin indefinitely.
+        self.assertFalse(m.uart)
+        self.assertEqual(m.calls[-1][0], "EXIUnlock")
+
+    def test_key_items_include_galleon_key_cogs_flute_and_teeth(self):
+        m = self.m
+        m.write(m.sym["flagPage"], 12)  # Inventory / Key Items.
+        ids = set()
+        for row in range(14):
+            m.call("flagBitId", row)
+            ids.add(m.r(3))
+        self.assertTrue({0x91c, 0x953, 0x17b, 0x17e, 0x17f, 0x180, 0x81d, 0x81e} <= ids)
+
+    def test_menu_mutes_owned_object_sounds_and_restores_without_touching_music(self):
+        m = self.m
+        base = m.sym["gSfxObjectChannels"]
+        for i in range(3):
+            m.write(base + i * 0x38, 100 + i)
+            m.write(base + i * 0x38 + 7, 70 + i, "B")
+            m.write(base + i * 0x38 + 0x30, i + 1, "Q")
+        m.write(base + 0x38 + 6, 1, "B")  # Already paused by the game.
+        m.write(base + 2 * 0x38 + 4, 1, "B")  # Positional sound.
+        m.hud_hidden = 1  # An existing cutscene need not have muted these voices.
+        m.pad(0x44, 4)  # L+Down alone must keep the original controls.
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 0)
+        m.pad(0x64, 4)
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
+        self.assertEqual([c[1:] for c in m.calls if c[0] == "sndFXCtrl"], [(100, 7, 0), (102, 7, 0)])
+        for i in range(3):
+            self.assertEqual(m.read(base + i * 0x38 + 6, "B"), 1)
+        m.calls.clear()
+        m.pad()
+        m.pad(0x200, 0x200)
+        self.assertIn(("sndFXCtrl", 100, 7, 70), m.calls)
+        self.assertTrue(any(c[:2] == ("Sfx_UpdateObjectChannel3D", base + 2 * 0x38) for c in m.calls))
+        self.assertEqual([m.read(base + i * 0x38 + 6, "B") for i in range(3)], [0, 1, 0])
+
+    def test_menu_audio_respects_recycled_voices_and_other_pause_owners(self):
+        m = self.m
+        base = m.sym["gSfxObjectChannels"]
+        m.write(base, 100)
+        m.pad(0x64, 4)
+        # Recycle the same voice handle into a different, already-paused allocation.
+        m.write(base + 0x30, 9, "Q")
+        m.call("updateMenuSounds")
+        m.pad()
+        m.pad(0x200, 0x200)
+        self.assertEqual(m.read(base + 6, "B"), 1)
+        for guard in ("gDvdErrorPauseActive", "hud"):
+            m.write(base + 6, 0, "B")
+            m.pad(0x64, 4)
+            if guard == "hud":
+                m.hud_hidden = 1
+            else:
+                m.write(m.sym[guard], 1, "B")
+            m.pad()
+            m.pad(0x200, 0x200)
+            self.assertEqual(m.read(base + 6, "B"), 1)
+            m.hud_hidden = 0
+            m.write(m.sym["gDvdErrorPauseActive"], 0, "B")
 
     def test_flags_and_log_pages_stay_inside_screen(self):
         m = self.m
