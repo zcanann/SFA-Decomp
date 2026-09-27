@@ -178,6 +178,14 @@ def make_patch(dol, payload, exports):
         ("loadNextMap", "mapReload", "Practice_WarpReload", 1),
         (None, "playerDoControls", "Practice_PlayerControls", 1),
         (None, "playerUpdateSurfaceResponse", "Practice_SurfaceResponse", 1),
+        ("SaveGame_gplaySavePoint", "memcpy", "Practice_SaveCheckpointCopy", 3),
+        ("SaveGame_gplaySavePoint", "mm_free", "Practice_ClearCheckpoint", 1),
+        ("SaveGame_gplayRestartPoint", "mainSetBits", "Practice_RestartCheckpointBit", 2),
+        ("SaveGame_gplayGotoSavegame", "loadMapForCurrentSaveGame", "Practice_GotoSaveCheckpoint", 1),
+        ("SaveGame_gplayGotoRestartPoint", "loadMapForCurrentSaveGame", "Practice_GotoRestartCheckpoint", 1),
+        ("SaveGame_gplayClearRestartPoint", "mm_free", "Practice_ClearCheckpoint", 1),
+        ("saveGame_save", "_saveGame", "Practice_WriteSave", 1),
+        ("gplaySaveGame", "_saveGame", "Practice_WriteSave", 1),
     ]
     table = symbols()
     for caller, callee, replacement, count in hooks:

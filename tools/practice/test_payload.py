@@ -9,7 +9,7 @@ import struct
 import sys
 import unittest
 
-from build import ROOT, PAYLOAD_ADDRESS, PAYLOAD_LIMIT, compile_payload, sections, symbols, tool_directory
+from build import ROOT, PAYLOAD_ADDRESS, PAYLOAD_LIMIT, compile_payload, make_patch, sections, symbols, tool_directory
 
 OUT = ROOT / "build/practice"
 sys.path.insert(0, str(OUT / "python"))
@@ -56,7 +56,8 @@ class Machine:
                 "mapReload", "mapLoadByCoords", "unlockLevel", "isSaveGameLoading", "getDataFileSize",
                 "SaveGame_getPlayerStats", "getTrickyObject", "mainSetBits", "SaveGame_gplaySetAct",
                 "SaveGame_gplaySetObjGroupStatus", "sprintf", "EXILock", "EXISelect", "EXIImm",
-                "EXISync", "EXIDeselect", "EXIUnlock", "sndFXCtrl", "getHudHiddenFrameCount", "Sfx_UpdateObjectChannel3D"):
+                "EXISync", "EXIDeselect", "EXIUnlock", "sndFXCtrl", "getHudHiddenFrameCount", "Sfx_UpdateObjectChannel3D",
+                "getCurMapLayer", "memcpy", "mmAlloc", "mm_free", "loadMapForCurrentSaveGame", "_saveGame"):
                 self.stub[addr] = name
         self.uc.hook_add(UC_HOOK_CODE, self.service)
         self.uc.hook_add(UC_HOOK_MEM_WRITE, self.fifo, begin=0xCC008000, end=0xCC008003)
@@ -71,7 +72,7 @@ class Machine:
         return self.uc.reg_read(UC_PPC_REG_0 + n)
 
     def row(self, label):
-        for index in range(50):
+        for index in range(len(re.findall(r'\{"[^"\n]+",', (ROOT / "src/practice/practice.c").read_text().split("static const PracticeRow rows", 1)[1].split("static u8 enabled", 1)[0]))):
             address = self.read(self.sym["rows"] + index * 8)
             text = bytes(self.uc.mem_read(address, 64)).split(b"\0")[0].decode()
             if text == label:
@@ -125,6 +126,14 @@ class Machine:
             for mid in range(120):
                 if self.read(self.sym["gSaveGameMapObjGroupBits"] + mid * 2, "H") == gamebit:
                     self.write(self.sym["gMapObjGroupStatuses"] + mid * 4, value)
+        elif name == "getCurMapLayer":
+            uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "layer", 0) & 0xffffffff)
+        elif name == "memcpy":
+            uc.mem_write(self.r(3), bytes(uc.mem_read(self.r(4), self.r(5))))
+        elif name == "mmAlloc":
+            uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "allocation", 0x81110000))
+        elif name == "_saveGame":
+            uc.reg_write(UC_PPC_REG_0 + 3, 0x35)
         elif name == "getHudHiddenFrameCount":
             uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "hud_hidden", 0))
         elif name == "sprintf":
@@ -560,7 +569,7 @@ class PayloadTests(unittest.TestCase):
         m.pad()
         m.pad(0x40, 0x40)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 4)  # Wrap left to Log.
-        self.assertEqual(m.read(m.sym["visibleCount"]), 8)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 10)
         m.pad()
         m.pad(0x40, 0x40)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 3)
@@ -804,7 +813,7 @@ class PayloadTests(unittest.TestCase):
         m.pad(0x100, 0x100)  # Flags -> Inventory.
         self.assertEqual(m.read(m.sym["flagPage"]), 1)
         m.call("rebuildRows")
-        self.assertEqual(m.read(m.sym["visibleCount"]), 4)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 5)
         m.pad(0x100, 0x100)  # Gear.
         self.assertEqual(m.read(m.sym["flagPage"]), 10)
         m.pad(0x100, 0x100)  # Staff.
@@ -908,6 +917,7 @@ class PayloadTests(unittest.TestCase):
     def test_logging_filters_baselines_and_observational_state(self):
         m = self.m
         m.state_fixture()
+        m.toggle("PLAYER STATS", 1)
         m.call("pollStateLog")
         self.assertFalse(m.reports)
         self.assertEqual(m.read(m.sym["logBaseline"], "B"), 0)
@@ -994,12 +1004,154 @@ class PayloadTests(unittest.TestCase):
 
     def test_key_items_include_galleon_key_cogs_flute_and_teeth(self):
         m = self.m
-        m.write(m.sym["flagPage"], 12)  # Inventory / Key Items.
+        m.write(m.sym["flagPage"], 13)  # Inventory / Key Items.
         ids = set()
-        for row in range(14):
+        m.call("flagRowCount")
+        for row in range(m.r(3)):
             m.call("flagBitId", row)
             ids.add(m.r(3))
-        self.assertTrue({0x91c, 0x953, 0x17b, 0x17e, 0x17f, 0x180, 0x81d, 0x81e} <= ids)
+        self.assertTrue({0x91c, 0x953, 0x17b, 0x17e, 0x17f, 0x180, 0x81d, 0x81e, 0xc25, 0xc26, 0xc27} <= ids)
+
+    def test_inventory_spell_alias_and_tricky_ball(self):
+        m = self.m
+        m.state_fixture()
+        m.write(m.sym["flagPage"], 1)
+        m.write(m.sym["selected"], 1)  # Inventory -> Staff Spells, immediately after Gear.
+        m.call("editFlags", 0x100)
+        self.assertEqual(m.read(m.sym["flagPage"]), 11)
+        pages = []
+        for page in (2, 11, 10, 3):
+            m.write(m.sym["flagPage"], page)
+            m.call("flagRowCount")
+            ids = []
+            for row in range(m.r(3)):
+                m.call("flagBitId", row)
+                ids.append(m.r(3))
+            pages.append(ids)
+        self.assertEqual(pages[0], pages[1])
+        self.assertTrue({0x2d, 0x957, 0x5ce} <= set(pages[0]))
+        # All ball possession/availability rows in Gear also exist in Tricky.
+        gear_labels = []
+        for row in range(len(pages[2])):
+            m.write(m.sym["flagPage"], 10)
+            m.call("pageBit", row)
+            name = bytes(m.uc.mem_read(m.read(m.r(3)), 80)).split(b"\0")[0]
+            if b"TRICKY BALL" in name:
+                gear_labels.append(pages[2][row])
+        self.assertEqual(len(gear_labels), 2)
+        self.assertTrue(set(gear_labels) <= set(pages[3]))
+
+    def test_quiet_log_defaults_and_explicit_runtime_opt_in(self):
+        m = self.m
+        m.state_fixture()
+        for label, expected in (("PLAYER STATS", 0), ("RUNTIME / ACTION FLAGS", 0),
+                                ("SAVE / RESPAWN CHECKPOINTS", 1)):
+            self.assertEqual(m.read(m.sym["enabled"] + m.row(label), "B"), expected)
+        for i, gid in enumerate((0x961, 0x965, 0x986, 0x3b0, 0x884)):
+            m.bit_def(gid, 40 + i, 1, 0)
+        m.toggle("LOG TO DOLPHIN", 1)
+        m.call("pollStateLog")
+        m.reports.clear()
+        for gid in (0x961, 0x965, 0x986, 0x3b0):
+            m.set_bit(gid, 1)
+        m.write(m.stats + 8, 22, "B")
+        m.call("pollStateLog")
+        self.assertFalse(m.reports)
+        m.toggle("RUNTIME / ACTION FLAGS", 1)
+        m.call("pollStateLog")
+        m.reports.clear()
+        for gid in (0x961, 0x965, 0x986, 0x3b0):
+            m.set_bit(gid, 0)
+        m.call("pollStateLog")
+        self.assertEqual(len(m.reports), 4)
+        m.reports.clear()
+        m.set_bit(0x884, 1)
+        m.call("pollStateLog")
+        self.assertEqual(len(m.reports), 1)
+        self.assertIn(b"WARPSTONE / TRANSPORT", m.uart)
+
+    def test_layer_changes_across_loading_and_filter_resets(self):
+        m = self.m
+        m.state_fixture()
+        m.toggle("LOG TO DOLPHIN", 1)
+        m.call("pollStateLog")
+        m.uart.clear()
+        m.layer = -1
+        m.call("pollStateLog")
+        self.assertIn(b"[LAYER] 0 -> -1", m.uart)
+        m.save_loading = 1
+        m.layer = 2
+        m.call("pollStateLog")
+        self.assertIn(b"[LAYER] -1 -> 2", m.uart)
+        m.uart.clear()
+        m.call("pollStateLog")
+        self.assertFalse(m.uart)
+        m.toggle("AREA / MAP ACTS", 0)
+        m.layer = 1
+        m.call("pollStateLog")
+        m.toggle("AREA / MAP ACTS", 1)
+        m.call("pollStateLog")
+        self.assertFalse(m.uart)  # No replay of filtered history.
+
+    def test_retail_checkpoint_hooks_repeat_restore_and_preserve_operations(self):
+        m = self.m
+        m.state_fixture()
+        # Execute the original checkpoint routines with actual patched call sites.
+        for edit in make_patch(self.dol, self.payload, self.exports)["edits"]:
+            if "hook" in edit:
+                m.uc.mem_write(edit["address"], bytes.fromhex(edit["after"]))
+        # Recover the retail r13 anchor from getCurMapLayer's single SDA load.
+        insn = m.read(m.sym["getCurMapLayer"])
+        self.assertEqual((insn >> 16) & 31, 13)
+        delta = struct.unpack(">h", struct.pack(">H", insn & 0xffff))[0]
+        m.uc.reg_write(UC_PPC_REG_0 + 13, m.sym["curMapLayer"] - delta)
+        live = m.sym["gSaveGameData"]
+        work, restart, pos = 0x81112000, 0x81110000, 0x81114000
+        m.write(m.sym["gSaveGameWorkBuffer"], work)
+        m.write(m.sym["pRestartPoint"], 0)
+        m.uc.mem_write(live, bytes(0xf70))
+        m.uc.mem_write(pos, struct.pack(">3f", 100, 200, -300))
+        m.toggle("LOG TO DOLPHIN", 1)
+        for _ in range(2):
+            m.call("SaveGame_gplaySavePoint", pos, 0x4000, 0, 0xffffffff)
+        self.assertEqual(bytes(m.uart).count(b"SAVE SET"), 2)
+        self.assertIn(b"layer=-1 XYZ=100,200,-300", m.uart)
+        self.assertEqual(bytes(m.uc.mem_read(live, 0xf70)), bytes(m.uc.mem_read(work, 0xf70)))
+        m.uart.clear()
+        m.write(live + 0x22, 1, "B")
+        m.call("SaveGame_gplaySavePoint", 0, 0, 0, 0)
+        self.assertFalse(m.uart)  # Suppressed checkpoint is not reported as accepted.
+        m.write(live + 0x22, 0, "B")
+        m.call("SaveGame_gplaySavePoint", 0, 0, 1, 0)
+        self.assertIn(b"SAVE REFRESH (POSITION KEPT)", m.uart)
+        for _ in range(2):
+            m.call("SaveGame_gplayRestartPoint", pos, 0x2000, 2, 0)
+        self.assertEqual(bytes(m.uart).count(b"RESTART SET"), 2)
+        self.assertEqual(m.read(m.sym["pRestartPoint"]), restart)
+        self.assertIn(b"layer=2 XYZ=100,200,-300", m.uart)
+        m.save_loading = 1  # Direct events do not depend on polling readiness.
+        m.call("SaveGame_gplayGotoRestartPoint")
+        self.assertIn(b"RESPAWN RESTART", m.uart)
+        self.assertEqual(bytes(m.uc.mem_read(live, 0xf70)), bytes(m.uc.mem_read(restart, 0xf70)))
+        m.call("SaveGame_gplayClearRestartPoint")
+        self.assertIn(b"RESTART CLEAR", m.uart)
+        self.assertEqual(m.read(m.sym["pRestartPoint"]), 0)
+        m.call("SaveGame_gplayGotoRestartPoint")
+        self.assertIn(b"RESPAWN SAVE (FALLBACK)", m.uart)
+        m.call("SaveGame_gplayGotoSavegame")
+        self.assertIn(b"RESTORE SAVE", m.uart)
+        self.assertEqual(sum(c[0] == "loadMapForCurrentSaveGame" for c in m.calls), 3)
+        m.call("Practice_WriteSave", 2, work, m.sym["saveData"])
+        self.assertEqual(m.r(3), 0x35)
+        self.assertIn(b"CARD SAVE REQUEST", m.uart)
+        m.uart.clear()
+        m.allocation = 0
+        m.call("SaveGame_gplayRestartPoint", pos, 0, 0, 0)
+        self.assertFalse(m.uart)  # Failed allocation creates no checkpoint.
+        m.toggle("SAVE / RESPAWN CHECKPOINTS", 0)
+        m.call("SaveGame_gplaySavePoint", pos, 0, 0, 0)
+        self.assertFalse(m.uart)
+        self.assertEqual(m.read(work + 0x684, "f"), 100)
 
     def test_menu_mutes_owned_object_sounds_and_restores_without_touching_music(self):
         m = self.m
@@ -1054,7 +1206,7 @@ class PayloadTests(unittest.TestCase):
         m = self.m
         m.state_fixture()
         m.write(m.sym["menuOpen"], 1, "B")
-        for tab, page in [(3, n) for n in range(14)] + [(4, 0)]:
+        for tab, page in [(3, n) for n in range(15)] + [(4, 0)]:
             m.geometry = []
             m.write(m.sym["activeTab"], tab, "B")
             m.write(m.sym["flagPage"], page)

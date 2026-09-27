@@ -28,7 +28,7 @@ class PatchTests(unittest.TestCase):
         for edit in self.manifest["edits"]:
             original_part[edit["offset"]:edit["offset"] + 4] = bytes.fromhex(edit["before"])
         self.assertEqual(original_part, self.dol)
-        self.assertEqual(len([e for e in self.manifest["edits"] if "hook" in e]), 7)
+        self.assertEqual(len([e for e in self.manifest["edits"] if "hook" in e]), 18)
 
     def test_reject_previous_apploader_boundary_regression(self):
         patched = bytearray(apply_dol(self.dol, self.manifest, self.payload))

@@ -16,6 +16,7 @@ enum {
     FLAGS_RAW,
     FLAGS_UNUSED,
     FLAGS_GEAR,
+    FLAGS_INVENTORY_SPELLS,
     FLAGS_SUPPLIES,
     FLAGS_KEYS,
     FLAGS_STONES
@@ -27,9 +28,9 @@ typedef struct PracticeBitLabel {
     u8 map;
 } PracticeBitLabel;
 #define ITEM(label, id)      {label, GAMEBIT_##id, FLAGS_INVENTORY, 0}
-#define SUPPLY(label, id)    {label, GAMEBIT_##id, FLAGS_INVENTORY, 1}
-#define KEY(label, id)       {label, GAMEBIT_##id, FLAGS_INVENTORY, 2}
-#define STONE(label, id)     {label, GAMEBIT_##id, FLAGS_INVENTORY, 3}
+#define SUPPLY(label, id)    {label, GAMEBIT_##id, FLAGS_INVENTORY, 2}
+#define KEY(label, id)       {label, GAMEBIT_##id, FLAGS_INVENTORY, 3}
+#define STONE(label, id)     {label, GAMEBIT_##id, FLAGS_INVENTORY, 4}
 #define SPELL(label, id)     {label, GAMEBIT_##id, FLAGS_SPELLS, 0}
 #define TRICKY(label, id)    {label, GAMEBIT_##id, FLAGS_TRICKY, 0}
 #define AREA(map, label, id) {label, GAMEBIT_##id, FLAGS_AREA, map}
@@ -51,10 +52,15 @@ static const PracticeBitLabel practiceBits[] = {
     ITEM("BAFOMDAD HOLDER", ITEM_BafomdadHolder_Got),
     ITEM("DINO HORN", ITEM_DinoHorn_Got),
     ITEM("VIEWFINDER", ITEM_Viewfinder_Got),
+    ITEM("TRICKY BALL BOUGHT", ITEM_TrickyBall_Bought),
+    ITEM("TRICKY BALL USABLE", ITEM_TrickyBall_Usable),
     STONE("FIRE SPELLSTONE 1", ITEM_FireSpellStone1_Got),
     STONE("WATER SPELLSTONE 1", ITEM_WaterSpellStone1_Got),
     STONE("FIRE SPELLSTONE 2", ITEM_FireSpellStone2_Got),
     STONE("WATER SPELLSTONE 2", ITEM_WaterSpellStone2_Got),
+    KEY("LFV WOOD BLOCK 1", ITEM_LVBlock1_Got),
+    KEY("LFV WOOD BLOCK 2", ITEM_LVBlock2_Got),
+    KEY("LFV WOOD BLOCK 3", ITEM_LVBlock3_Got),
     KEY("GALLEON GOLD KEY", ITEM_WMGoldKey_Got),
     KEY("CLOUDRUNNER FLUTE", ITEM_Flute_Got),
     KEY("DIM COG 1", ITEM_DIMCog1_Got),
@@ -129,6 +135,10 @@ static const PracticeBitLabel practiceBits[] = {
     AREA(39, "SPIRIT COLLECTED", ITEM_SpiritTestStrength_Got),
     AREA(40, "ENTERED", K6_Entered),
     AREA(40, "SPIRIT COLLECTED", ITEM_Spirit6_Got),
+    {"ICE BLAST UNAVAILABLE (961)", GAMEBIT_ITEM_Spell0961_Disabled, FLAGS_ROOT, 0},
+    {"BLASTER UNAVAILABLE (965)", GAMEBIT_ITEM_Spell0965_Disabled, FLAGS_ROOT, 0},
+    {"OUTDOOR EFFECTS", GAMEBIT_ENV_isOutdoor, FLAGS_ROOT, 0},
+    {"WARPSTONE / TRANSPORT FLAG (884)", GAMEBIT_SH_WarpStoneRelated0884, FLAGS_AREA, 7},
     UNUSED("UNUSED LASER SPELL", ITEM_LaserSpell_Got),
     UNUSED("DELETED SPELL 5FC", ITEM_DeletedSpell5FC_Got),
     UNUSED("DELETED SPELL 777", ITEM_DeletedSpell777_Got),

@@ -27,6 +27,9 @@
 #include "main/gameloop_api.h"
 #include "main/gameloop_internal.h"
 #include "main/fileio.h"
+#include "main/mm.h"
+#include "string.h"
+#include "track/intersect_card_api.h"
 #include "main/gamebits_api.h"
 #include "main/map_block.h"
 #include "main/map_load.h"
@@ -106,6 +109,8 @@ enum {
     LOG_STATS,
     AUTO_ROLL,
     AUTO_ROLL_BLANKS,
+    LOG_CHECKPOINTS,
+    LOG_ACTIONS,
     ROW_COUNT
 };
 enum {
@@ -172,9 +177,11 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"OBJECT GROUPS", -1, 0, TAB_LOG},
                                             {"PLAYER STATS", -1, 0, TAB_LOG},
                                             {"AUTO ROLL", -1, 1, TAB_CHEATS},
-                                            {"AUTO-ROLL BLANK FRAMES", AUTO_ROLL, 0, TAB_CHEATS}};
+                                            {"AUTO-ROLL BLANK FRAMES", AUTO_ROLL, 0, TAB_CHEATS},
+                                            {"SAVE / RESPAWN CHECKPOINTS", -1, 0, TAB_LOG},
+                                            {"RUNTIME / ACTION FLAGS", -1, 0, TAB_LOG}};
 static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1,
-                                1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1};
+                                1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0};
 static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0,
                                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
 static u8 menuOpen, chordLatched, savedTimeStop, swimApplied;
@@ -1052,9 +1059,9 @@ extern u32 gMapObjGroupStatuses[120];
 static const int bitBankOffsets[] = {0xef0, 0x564, 0x24, 0x5d8};
 static const int bitBankSizes[] = {0x80, 0x74, 0x144, 0xac};
 static const int bitSnapshotOffsets[] = {0, 0x80, 0xf4, 0x238};
-static const char* flagPages[] = {"FLAGS",         "INVENTORY",     "SPELLS",    "TRICKY",     "PLAYER STATS",
+static const char* flagPages[] = {"FLAGS",         "INVENTORY",     "STAFF SPELLS",    "TRICKY",     "PLAYER STATS",
                                   "AREA PROGRESS", "OBJECT GROUPS", "ADVANCED",  "RAW BIT ID", "UNUSED / UNCERTAIN",
-                                  "GEAR",          "SUPPLIES",      "KEY ITEMS", "SPELLSTONES"};
+                                  "GEAR",          "STAFF SPELLS", "SUPPLIES",      "KEY ITEMS", "SPELLSTONES"};
 static const char* statLabels[] = {"HEALTH (RAW UNITS)", "MAX HEALTH",   "MAGIC", "MAX MAGIC", "SCARABS",
                                    "BAFOMDADS",          "MAX BAFOMDADS"};
 static const int flagSteps[] = {1, 16, 256};
@@ -1062,7 +1069,8 @@ static int flagPage, flagMap = 23, flagRawId, flagStep;
 static GameBitDef* checkedBitTable;
 static int checkedBitCount;
 static u8 logBits[740], logBaseline;
-static u8 logWasEnabled;
+static u8 logWasEnabled, logLayerReady;
+static int logLayer;
 static char logLine[192];
 static u32 logGroups[120], logFrame, logConfig;
 static int logStats[7];
@@ -1237,7 +1245,8 @@ static void editStat(int row, int delta) {
 static const PracticeBitLabel* pageBit(int index) {
     int i;
     for (i = 0; i < sizeof(practiceBits) / sizeof(practiceBits[0]); i++) {
-        if ((flagPage >= FLAGS_GEAR && practiceBits[i].page == FLAGS_INVENTORY &&
+        if ((flagPage == FLAGS_INVENTORY_SPELLS && practiceBits[i].page == FLAGS_SPELLS) ||
+            (flagPage >= FLAGS_GEAR && practiceBits[i].page == FLAGS_INVENTORY &&
              practiceBits[i].map == flagPage - FLAGS_GEAR) ||
             (flagPage < FLAGS_GEAR && practiceBits[i].page == flagPage &&
              (flagPage != FLAGS_AREA || practiceBits[i].map == flagMap))) {
@@ -1255,7 +1264,7 @@ static int flagRowCount(void) {
         return 7;
     }
     if (flagPage == FLAGS_INVENTORY) {
-        return 4;
+        return 5;
     }
     if (flagPage == FLAGS_ADVANCED || flagPage == FLAGS_RAW) {
         return 2;
@@ -1461,6 +1470,29 @@ static void drawFlags(void) {
 static int bitLogCategory(int id) {
     const PracticeBitLabel* entry = namedBit(id);
     int i;
+    switch (id) {
+    case GAMEBIT_ITEM_PortalSpell_Disabled:
+    case GAMEBIT_ITEM_Spell0961_Disabled:
+    case GAMEBIT_ITEM_StaffBooster_Disabled:
+    case GAMEBIT_ITEM_Spell0965_Disabled:
+    case GAMEBIT_ITEM_DinoHorn_Disabled:
+    case GAMEBIT_ITEM_Firefly_Disabled:
+    case GAMEBIT_Tricky_CantFeed:
+    case GAMEBIT_ITEM_SharpClawDisguise_Disabled:
+    case GAMEBIT_ITEM_SuperQuake_Disabled:
+    case GAMEBIT_ITEM_FireBlaster_Disabled:
+    case GAMEBIT_ITEM_SpellStone_Disabled:
+    case GAMEBIT_NoBallsAllowed:
+    case GAMEBIT_ITEM_Flute_Disabled:
+    case GAMEBIT_ENV_isOutdoor:
+    case GAMEBIT_ENV_disableDayFX1:
+    case GAMEBIT_ENV_disableDayFX2:
+    case GAMEBIT_ENV_disableDayFX3:
+        return LOG_ACTIONS;
+    case GAMEBIT_ITEM_TrickyBall_Bought:
+    case GAMEBIT_ITEM_TrickyBall_Usable:
+        return LOG_TRICKY;
+    }
     if (entry) {
         if (entry->page == FLAGS_INVENTORY) {
             return LOG_INVENTORY;
@@ -1541,6 +1573,62 @@ static void sendPracticeLog(void) {
     EXIUnlock(0);
 }
 
+/* Hook accepted checkpoint operations inside the retail implementations. This
+ * also covers indirect map-event calls, repeated writes of identical state, and
+ * operations during loading. The original operation always runs unchanged. */
+extern u32 pRestartPoint;
+extern void loadMapForCurrentSaveGame(void);
+
+static void logCheckpoint(const char* action, const u8* save) {
+    const SaveGameCharacterPosition* pos;
+    if (!enabled[LOG_ENABLED] || !enabled[LOG_CHECKPOINTS] || !validPointer(save) ||
+        (u32)save > 0x817ff000 || save[0x20] > 1) {
+        return;
+    }
+    /* EN save layout, established by engine/23: character at 0x20, positions
+     * at 0x684. Use the character stored in this snapshot, not the live one. */
+    pos = (const SaveGameCharacterPosition*)(save + 0x684) + save[0x20];
+    sprintf(logLine, "[PRACTICE][%u][CHECKPOINT] %s layer=%d XYZ=%d,%d,%d\n", logFrame, action,
+            pos->mapLayer, (int)pos->x, (int)pos->y, (int)pos->z);
+    sendPracticeLog();
+}
+
+void* Practice_SaveCheckpointCopy(void* dest, const void* src, size_t size) {
+    void* result = memcpy(dest, src, size);
+    if (dest == gSaveGameWorkBuffer) {
+        logCheckpoint(size == 0x5d8 ? "SAVE REFRESH (POSITION KEPT)" : "SAVE SET", dest);
+    }
+    return result;
+}
+
+void Practice_RestartCheckpointBit(int bit, u32 value) {
+    mainSetBits(bit, value);
+    if (bit == GAMEBIT_CF_DoStandUpAnim && value == 0) {
+        logCheckpoint("RESTART SET", (const u8*)pRestartPoint);
+    }
+}
+
+void Practice_ClearCheckpoint(void* pointer) {
+    logCheckpoint("RESTART CLEAR", pointer);
+    mm_free(pointer);
+}
+
+void Practice_GotoSaveCheckpoint(void) {
+    logCheckpoint("RESTORE SAVE", gSaveGameData);
+    loadMapForCurrentSaveGame();
+}
+
+void Practice_GotoRestartCheckpoint(void) {
+    logCheckpoint(pRestartPoint ? "RESPAWN RESTART" : "RESPAWN SAVE (FALLBACK)", gSaveGameData);
+    loadMapForCurrentSaveGame();
+}
+
+int Practice_WriteSave(int slot, void* save, void* data) {
+    /* This is a card-write request, not a claim of asynchronous completion. */
+    logCheckpoint("CARD SAVE REQUEST", save);
+    return _saveGame(slot, save, data);
+}
+
 /* Observational net changes between draw frames, not a hook on every setter.
  * Baselines advance even for filtered/suppressed events. No gameplay writes. */
 static void pollStateLog(void) {
@@ -1554,6 +1642,7 @@ static void pollStateLog(void) {
             sendPracticeLog();
         }
         logWasEnabled = 0;
+        logLayerReady = 0;
         logBaseline = 0;
         return;
     }
@@ -1562,6 +1651,18 @@ static void pollStateLog(void) {
         sendPracticeLog();
         logWasEnabled = 1;
     }
+    /* Layer changes remain observable across load/baseline resets. */
+    if (enabled[LOG_AREA]) {
+        int layer = getCurMapLayer();
+        if (logLayerReady && layer != logLayer) {
+            sprintf(logLine, "[PRACTICE][%u][LAYER] %d -> %d\n", logFrame, logLayer, layer);
+            sendPracticeLog();
+        }
+        logLayer = layer;
+        logLayerReady = 1;
+    } else {
+        logLayerReady = 0;
+    }
     if (!practiceStateReady()) {
         logBaseline = 0;
         return;
@@ -1569,6 +1670,8 @@ static void pollStateLog(void) {
     for (i = LOG_INVENTORY; i <= LOG_STATS; i++) {
         config |= enabled[i] << (i - LOG_INVENTORY);
     }
+    config |= enabled[LOG_CHECKPOINTS] << 7;
+    config |= enabled[LOG_ACTIONS] << 8;
     if (logSaveOwner != gGameBitSaveData || logConfig != config) {
         logBaseline = 0;
     }

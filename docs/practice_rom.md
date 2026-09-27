@@ -217,10 +217,11 @@ runtime code and declarations are enclosed in `#ifdef SFA_PRACTICE`.
 
 ## Memory and patch design
 
-Original text/data/BSS addresses are preserved. Seven verified call instructions
-are replaced: both OSInit arena-low setup calls, controller polling, the end-of-frame
-stub, warp reload, player controls, and player surface response. Calls go through ordinary
-PPC EABI C wrappers; game/compiler/SDK routines remain at their retail addresses.
+Original text/data/BSS addresses are preserved. The current source replaces 18
+verified call instructions: the seven V1.6 calls (both OSInit arena-low setup
+calls, controller polling, end-of-frame stub, warp reload, player controls,
+surface response), plus eleven internal save/checkpoint calls. Calls go through
+ordinary PPC EABI C wrappers; game/compiler/SDK routines retain retail addresses.
 
 A new DOL section contains code, constants and explicitly initialized zero-state
 at `0x803FA480`, the verified retail default `__ArenaLo`, above the startup stack
@@ -259,6 +260,52 @@ and binary hashes. The current tool refuses them; it does not search for vaguely
 similar instructions and patch an unknown version.
 
 ## Validation and limits
+
+### Pending changes after V1.6 (not packaged)
+
+- Inventory now orders **Gear, Staff Spells, Supplies, Key Items, Spellstones**.
+  Staff Spells also remains accessible from the Flags root. Gear includes both
+  Tricky ball bought/usable flags, also retained in Tricky; their logs remain in
+  the Tricky category. Key Items adds the three LFV wood blocks (`C25`-`C27`),
+  without resetting their separate puzzle-used flags.
+- **Player Stats** and **Runtime / Action Flags** logging default off. The new
+  runtime category owns spell/item availability restrictions and outdoor/effect
+  context flags, including `961`, `965`, `986`, and `3B0`, regardless of their
+  menu locations. Normal ability-unlock logs remain under Spells. `884` now has
+  a WarpStone/transport label under Area; its transport consumers do not establish
+  that it is ordinary movement noise, so it remains visible by default.
+- **Save / Respawn Checkpoints** logging defaults on when the master logger is
+  enabled. Entries report accepted save sets, partial save refreshes that retain
+  the position, restart sets/clears, save restores, restart respawns and fallback
+  to the save snapshot. Repeated identical checkpoint writes are reported.
+  Logs include the snapshot's layer and whole-unit XYZ coordinates.
+- Card saves made through `saveGame_save` and `gplaySaveGame` produce a **CARD
+  SAVE REQUEST** entry. This reports submission, not asynchronous card completion;
+  it does not trace every lower-level card operation or new-game file creation.
+- Area / Map Acts also reports **LAYER old -> new** using `getCurMapLayer` each
+  draw frame, including during loading. Re-enabling the filter starts a baseline;
+  changes that reverse within one frame remain invisible.
+
+Checkpoint hooks target verified calls inside the retail implementations, covering
+both direct and indirect API callers. Save-point `memcpy` hooks report only accepted
+writes to the work buffer; restart-set reporting runs after its position/layer are
+written. Allocation failure and a blocked save point emit no accepted-set event.
+The original copies, bit setter, frees, loader and card call always execute with
+unchanged arguments/return values. Direct checkpoint events do not depend on the
+bit logger's loading/baseline guard or its 32-net-changes-per-frame limit. The UART
+still drops output when the bus/FIFO cannot accept it.
+
+Validation: 40 compiled-PPC payload tests and 8 patch tests pass, including actual
+retail checkpoint routines with the verified call-site edits applied. Tests cover
+repeat/blocked/partial saves, restart allocation failure, restore/fallback/clear,
+original copy effects and card return values, quiet defaults, layer changes during
+loading, and the spell-page alias. `ninja all_source` and the strict retail checksum
+pass; compiling without `SFA_PRACTICE` emits no symbols. The 64,192-byte payload
+fits the unchanged 64 KiB reservation. A private ISO booted in an isolated Dolphin
+Null-backend profile (initialized/loaded, 45 objects, intact payload); the builder
+verified all non-DOL/header bytes and the original ISO unchanged. This is startup
+and harness validation, not checkpoint gameplay testing. Published V1.6 and older
+ISOs are unchanged; these changes await the next requested release.
 
 ### V1.6 fixes
 
