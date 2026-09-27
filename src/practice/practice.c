@@ -136,16 +136,15 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"POSITION STEP", -1, 0, TAB_WARP},
                                             {"RESET TO SPAWN", -1, 0, TAB_WARP},
                                             {"WARP NOW", -1, 0, TAB_WARP}};
-static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0,
-                               1, 1, 1, 1, 1, 1, 1};
+static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1};
 static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1};
 static u8 menuOpen, chordLatched, savedTimeStop, swimApplied;
 static u8 activeTab, hoverPhase, hoverActive;
 static u32 hoverButtons;
 static u32 previousShoulders;
 static int hoverWait, rollBlanks, shieldBlanks;
-static const char* warpCategories[] = {"ALL MAPS", "AREAS", "KRAZOA SHRINES", "BOSSES", "CONNECTING PATHS",
-                                      "ARWING / WORLD", "TEST / UNUSED", "OBJECT CHUNKS"};
+static const char* warpCategories[] = {"ALL MAPS",         "AREAS",          "KRAZOA SHRINES", "BOSSES",
+                                       "CONNECTING PATHS", "ARWING / WORLD", "TEST / UNUSED",  "OBJECT CHUNKS"};
 static const int warpSteps[] = {1, 10, 100, 640};
 static int warpCategory = 1, warpMap = 23, warpSpawn, warpStep = 1;
 static u8 warpReady, warpEdited;
@@ -753,8 +752,8 @@ static void drawPlayerCollision(GameObject* player) {
                     line(from, p, color);
                 }
             }
-            if (i == 0 && enabled[FOX_FEET] && (collision->flags & 1) &&
-                collision->floorY[0] > -100000 && collision->floorY[0] < 100000) {
+            if (i == 0 && enabled[FOX_FEET] && (collision->flags & 1) && collision->floorY[0] > -100000 &&
+                collision->floorY[0] < 100000) {
                 Vec floor = p;
                 floor.y = collision->floorY[0];
                 if (nearPoint(floor)) {
@@ -984,9 +983,11 @@ static void drawWarpValue(int row, int y, u32 color) {
             }
         }
     } else if (row >= WARP_X && row <= WARP_ANGLE) {
-        int value = row == WARP_X ? (int)warpDestination.x : row == WARP_Y ? (int)warpDestination.y
-                    : row == WARP_Z ? (int)warpDestination.z : row == WARP_LAYER ? warpDestination.layer
-                    : warpDestination.angle;
+        int value = row == WARP_X       ? (int)warpDestination.x
+                    : row == WARP_Y     ? (int)warpDestination.y
+                    : row == WARP_Z     ? (int)warpDestination.z
+                    : row == WARP_LAYER ? warpDestination.layer
+                                        : warpDestination.angle;
         numberAt(380, y, value, color);
     } else if (row == WARP_STEP) {
         numberAt(380, y, warpSteps[warpStep], color);
@@ -1045,8 +1046,10 @@ static void drawMenu(void) {
         textAt(36 + i * width, 60, tabLabels[i], i == activeTab ? GOLD : MUTED);
     }
     textAt(470, 60, "L/R: TABS", MUTED);
-    textAt(36, 83, activeTab == TAB_WARP ? "LEFT/RIGHT: CHANGE  A: ACTION  B: CLOSE"
-                                      : "A: TOGGLE  LEFT/RIGHT: EXPAND  B: CLOSE", MUTED);
+    textAt(36, 83,
+           activeTab == TAB_WARP ? "LEFT/RIGHT: CHANGE  A: ACTION  B: CLOSE"
+                                 : "A: TOGGLE  LEFT/RIGHT: EXPAND  B: CLOSE",
+           MUTED);
     rebuildRows();
     if (menuTop > selected) {
         menuTop = selected;
@@ -1088,9 +1091,13 @@ static void drawMenu(void) {
         textAt(36, 350, "MAP ID:", MUTED);
         numberAt(132, 350, warpMap, WHITE);
         textAt(220, 350, warpEdited ? "CUSTOM POSITION" : "SPAWN PRESET", MUTED);
-        textAt(36, 377, warpMessage ? warpMessage : !map->spawnCount ? "OBJECT / UNPLACED MAP: NO STANDALONE WARP"
-                        : practiceWarpSpawns[map->firstSpawn + warpSpawn].warp < 0 ? "ESTIMATED SPAWN - ADJUST POSITION AS NEEDED"
-                        : "MAP OR SPAWN CHANGE RESTORES ITS DEFAULTS", MUTED);
+        textAt(36, 377,
+               warpMessage        ? warpMessage
+               : !map->spawnCount ? "OBJECT / UNPLACED MAP: NO STANDALONE WARP"
+               : practiceWarpSpawns[map->firstSpawn + warpSpawn].warp < 0
+                   ? "ESTIMATED SPAWN - ADJUST POSITION AS NEEDED"
+                   : "MAP OR SPAWN CHANGE RESTORES ITS DEFAULTS",
+               MUTED);
         textAt(36, 419, "L/R: TABS  WARP NOW + A: TRAVEL", MUTED);
         return;
     }
@@ -1100,7 +1107,7 @@ static void drawMenu(void) {
     numberAt(372, 395, triggersDrawn, WHITE);
     textAt(36, 419,
            drawLimitReached || fillsDrawn >= fillLimit ? "DRAW LIMIT REACHED - REDUCE DISTANCE"
-           : activeTab == TAB_CHEATS                    ? "SWIM: L+UP/DOWN  X: RESET  HOVER: HOLD R"
+           : activeTab == TAB_CHEATS                   ? "SWIM: L+UP/DOWN  X: RESET  HOVER: HOLD R"
                                                        : "L/R: TABS  L+R+DOWN: CLOSE",
            MUTED);
 }
@@ -1145,8 +1152,8 @@ static int warpDestinationMap(void) {
         z--;
     }
     for (i = 0; i < 128; i++) {
-        if (layers[i] == warpDestination.layer && x >= bounds[i].minX && x <= bounds[i].maxX &&
-            z >= bounds[i].minZ && z <= bounds[i].maxZ) {
+        if (layers[i] == warpDestination.layer && x >= bounds[i].minX && x <= bounds[i].maxX && z >= bounds[i].minZ &&
+            z <= bounds[i].maxZ) {
             int cell = x - bounds[i].minX + (z - bounds[i].minZ) * (bounds[i].maxX - bounds[i].minX + 1);
             if (cell >= 0 && cell < 512 && (cells[i * 64 + (cell >> 3)] & (1 << (cell & 7)))) {
                 return i;
@@ -1205,8 +1212,8 @@ static void updateShieldHover(GameObject* player, int blocked) {
     u32 mask = PAD_BUTTON_X | PAD_TRIGGER_R;
     u32 before, after;
     u16 beforeTrigger, afterTrigger;
-    int active = enabled[SHIELD_HOVER] && validPointer(player) &&
-                 ((gPadButtonsHeld[0] | gPadTriggers[0]) & PAD_TRIGGER_R);
+    int active =
+        enabled[SHIELD_HOVER] && validPointer(player) && ((gPadButtonsHeld[0] | gPadTriggers[0]) & PAD_TRIGGER_R);
     PADStatus* pad = &gPadStatuses[gPadStatusBufferIndex * PAD_MAX_CONTROLLERS];
     if (blocked || timeStop || joypadDisabled || gDvdErrorPauseActive || !validPointer(player)) {
         hoverActive = hoverPhase = 0;
