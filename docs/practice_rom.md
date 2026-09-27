@@ -1,4 +1,4 @@
-# EN v1.0 practice ROM v1.2
+# EN v1.0 practice ROM v1.3
 
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
@@ -7,11 +7,14 @@ The first supported input is a clean US/EN v1.0 (`GSAE01`, revision 0) ISO.
 ## Controls
 
 - **L + R + D-pad Down:** open/close the practice menu (controller 1).
+- **L/R inside the menu:** previous/next tab, wrapping at the ends. Collision
+  is first, Cheats second. Z is unused. Analog press and digital click count as
+  one shoulder press; holding a shoulder does not repeatedly switch tabs.
 - **D-pad Up/Down:** select a row; hold to repeat.
 - **A:** toggle its checkbox. Enabling a group expands it.
 - **Right/Left:** expand/collapse a group. Left on a child returns to its parent.
-- **Left/Right on Water Height or Draw Distance:** change the value.
-- **B:** close. **X inside the menu:** reset the water surface to the player's Y + 40.
+- **Left/Right on numeric rows:** change water height, draw distance, or hover cadence.
+- **B:** close. **X on the Cheats tab:** reset water to the player's Y + 40.
 - With swimming enabled and the menu closed, **L + Up/Down** raises/lowers the water surface.
 
 The menu consumes controller-1 input and uses the existing `timeStop` mechanism
@@ -21,29 +24,50 @@ The normal HUD shows a small reminder of the opening chord.
 ## Included
 
 - **Collision:** loaded terrain triangles (green), object collision triangles
-  (yellow), current object hit spheres (orange), water triangles (cyan), and
+  (yellow), object hit volumes (orange), water triangles (cyan), and
   **Barriers / Ledges** (coral): the separate HITS.bin and model-line planes.
   These interaction planes include invisible barriers, ledges, and climb aids;
   their presence does not mean every kind blocks Fox in every movement state.
+  **Barrier Fill** controls their translucent surfaces independently of triggers.
+  Object hit volumes include the primary sphere / vertical-span shape used for
+  object-pair collision, including the barrel's body, as well as model hit spheres.
+  The vertical-span shape has flat ends, matching the pair test rather than an
+  assumed rounded capsule. Inactive primary volumes are gray.
 - **Triggers:** crossing planes, rotated boxes, spheres, vertical cylinders
   (pink); optional line between the trigger's previous/current target sample.
   **Translucent Fill** starts enabled, with opaque outlines. Both sides render;
   fill tests scene depth and never writes depth. Disable it for wireframes.
-  The engine's disabled flag makes a trigger grey. Geometry does not establish
+  Disabled triggers have gray fill, outlines, normals and target-motion lines.
+  This includes the status bit, disabled hit callback, and an unmet crossing-plane
+  game-bit gate. Geometry does not establish
   whether all of its game-bit/command conditions currently permit activation.
 - **Forced Swimming:** uses the game's deep-water entry path and substitutes a
   player-local water surface/depth. A cyan grid shows that surface. Real map
   water geometry is unchanged. Disabling releases the swim flag and restores
   the real water query. Normal walls and collision still apply.
+- **Auto-Shield Hover** on Cheats: emits **R (shield), then X (roll)** on
+  successive game input frames. **Blanks After Roll** and **Blanks After Shield**
+  each accept 0-60 frames, edited with D-pad Left/Right. Each action lasts one
+  frame; blank frames release both X and R. At 2 roll blanks and 1 shield blank,
+  the repeating pattern is `R, blank, X, blank, blank`. Both counts default to
+  zero. The stick and other buttons remain available. The macro stops during
+  menus, paused gameplay, disabled input or DVD errors and restarts at shield.
+  Turning it off returns X/R to physical input with correct release edges.
+  It automates inputs only: height, velocity and animation state are not forced.
+  The best cadence and resulting hover behavior still require gameplay testing.
 - **Draw Through Walls** and a **250–2500 unit Draw Distance** setting.
 
-Collision/trigger/swimming groups start disabled. Individual geometry filters
-are independent. Draw Through Walls, Water Triangles and Object Hit Spheres
-start disabled. Barrier planes start enabled within the collision group.
+Collision and triggers start enabled, with every geometry filter on except
+**Terrain Triangles** and **Water Triangles**. Draw Through Walls remains off.
+Swimming and Auto-Shield Hover are opt-in. Individual filters are independent.
 The menu scrolls to keep the selected row visible when every group is expanded.
 Rendering is capped at 12,000 lines and 6,000 fill triangles per frame; the menu
 reports when a cap is reached. Map collision reserves half the wire budget and
 visits the player's block first, then successive rings, across all five layers.
+Object drawing visits nearby distance bands before farther objects, so spawn
+order does not give distant hit spheres priority over nearby geometry. Cached
+model spheres outside draw range are skipped; this is not a complete solution
+to stale animation collision buffers following a chunk change.
 Only loaded objects/map blocks are visible. Trigger
 timers, message-only triggers, curves, and every specialized interaction volume
 are not covered by this first viewer. Noclip is not included yet.
@@ -60,6 +84,23 @@ Barrier endpoint heights follow the signed-byte / signed-16-bit decoding in
 `trackSweepCircleAgainstLines`; object lines use the engine's local-to-world
 transform. The viewer does not invoke or overwrite the game's collision queries.
 
+### Signpost and remaining collision reports
+
+A read-only Dolphin snapshot captured two `DirectionSi` objects using collision
+bank 1. The visible sign scales were approximately 0.4196 and 0.3804, while their
+collision matrices had unit scale. Executing the original EN v1.0
+`trackBuildModelTriangles` in the PPC harness against the first captured sign
+produced 26 triangles with local bounds X [-60, 41], Y [0, 95], Z [-7, 7].
+The large sign-shaped overlay agrees with the retail collision mesh; applying
+the visible sign's scale would misrepresent that query. This does not imply
+every triangle responds to every actor or movement state.
+
+The separate blocker near the lowering Ice Mountain race fence has not yet been
+identified conclusively. X-ray did not restore it in the reported playtest.
+The new object-level volumes improve coverage, but are not proof that this
+specific blocker is fixed. Distant-enemy volumes following chunk changes also
+need further runtime investigation.
+
 ## Build and apply
 
 Use the repository's existing GC/1.3 MWCC and PowerPC binutils. The builder finds
@@ -73,8 +114,8 @@ From the practice worktree:
 ```powershell
 python tools/practice/build.py build --enable `
   --iso "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00).iso" `
-  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.2).iso" `
-  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.2.sfapatch"
+  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.3).iso" `
+  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.3.sfapatch"
 ```
 
 The `.sfapatch` is a ZIP containing a manifest and the new payload, not a retail
@@ -83,14 +124,14 @@ DOL hash, independent of the image's padding or compression. Apply it with:
 
 ```powershell
 python tools/practice/build.py apply --iso "clean.iso" `
-  --patch "SFA-EN-v1.0-Practice-v1.2.sfapatch" --output "practice.iso"
+  --patch "SFA-EN-v1.0-Practice-v1.3.sfapatch" --output "practice.iso"
 ```
 
 The executable transformation is also available without a disc container:
 
 ```powershell
 python tools/practice/build.py apply --dol "main.dol" `
-  --patch "SFA-EN-v1.0-Practice-v1.2.sfapatch" --output "practice.dol"
+  --patch "SFA-EN-v1.0-Practice-v1.3.sfapatch" --output "practice.dol"
 ```
 
 `--dol` is also accepted by `build`. This is the interface for future image
@@ -104,7 +145,7 @@ An RVZ workflow can use Dolphin's conversion tool around the ISO patcher:
 ```powershell
 DolphinTool convert -i clean.rvz -o clean.iso -f iso
 python tools/practice/build.py apply --iso clean.iso `
-  --patch SFA-EN-v1.0-Practice-v1.2.sfapatch --output practice.iso
+  --patch SFA-EN-v1.0-Practice-v1.3.sfapatch --output practice.iso
 DolphinTool convert -i practice.iso -o practice.rvz -f rvz -b 131072 -c zstd -l 5
 ```
 

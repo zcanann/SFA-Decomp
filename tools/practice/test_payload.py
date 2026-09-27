@@ -45,7 +45,7 @@ class Machine:
                 "playerEnterDeepWater", "playerUpdateSurfaceResponse", "Camera_SetCurrentViewIndex",
                 "Camera_UpdateProjection", "resetSomeGxFlags", "getScreenResolution", "mathSinf", "mathCosf",
                 "Matrix_TransformPoint", "mapGetBlockAtPos", "ObjList_GetObjects", "PSMTXInverse", "PSMTXMultVec",
-                "Obj_TransformLocalPointToWorld"):
+                "Obj_TransformLocalPointToWorld", "mainGetBit"):
                 self.stub[addr] = name
         self.uc.hook_add(UC_HOOK_CODE, self.service)
         self.uc.hook_add(UC_HOOK_MEM_WRITE, self.fifo, begin=0xCC008000, end=0xCC008003)
@@ -60,7 +60,7 @@ class Machine:
         return self.uc.reg_read(UC_PPC_REG_0 + n)
 
     def row(self, label):
-        for index in range(18):
+        for index in range(22):
             address = self.read(self.sym["rows"] + index * 8)
             text = bytes(self.uc.mem_read(address, 64)).split(b"\0")[0].decode()
             if text == label:
@@ -90,6 +90,8 @@ class Machine:
             return
         if name == "Obj_GetPlayerObject":
             uc.reg_write(UC_PPC_REG_0 + 3, self.player)
+        elif name == "mainGetBit":
+            uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "gate_bit", 1))
         elif name == "getScreenResolution":
             uc.reg_write(UC_PPC_REG_0 + 3, (480 << 16) | 640)
         elif name == "GXBegin":
@@ -152,6 +154,14 @@ class Machine:
     def pad(self, held=0, pressed=0):
         self.write(self.sym["gPadButtonsHeld"], held)
         self.write(self.sym["gPadButtonsJustPressed"], pressed)
+        self.write(self.sym["gPadButtonsReleased"], 0)
+        self.write(self.sym["gPadButtonsPrevious"], held)
+        self.write(self.sym["gPadTriggers"], held & 0x60, "H")
+        self.write(self.sym["gPadTriggersPressed"], pressed & 0x60, "H")
+        self.write(self.sym["gPadTriggersReleased"], 0, "H")
+        self.write(self.sym["gPadPrevTriggers"], held & 0x60, "H")
+        self.write(self.sym["gPadStatuses"], held & 0xFFFF, "H")
+        self.write(self.sym["gPadStatuses"] + 7, 255 if held & 0x20 else 0, "B")
         self.call("Practice_PadUpdate")
 
 
@@ -187,8 +197,8 @@ class PayloadTests(unittest.TestCase):
         m.pad(0x64)
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
         m.pad()
-        m.pad(0x100, 0x100)  # A toggles/expands collision
-        self.assertEqual(m.read(m.sym["enabled"], "B"), 1)
+        m.pad(0x100, 0x100)  # A toggles collision off, keeps its children visible.
+        self.assertEqual(m.read(m.sym["enabled"], "B"), 0)
         self.assertEqual(m.read(m.sym["expanded"], "B"), 1)
         m.pad(4, 4)
         self.assertEqual(m.read(m.sym["selected"]), 1)
@@ -267,7 +277,7 @@ class PayloadTests(unittest.TestCase):
         self.assertGreater(len(m.geometry), 1000)
         self.assertTrue(all(g[1] == len(g[2]) for g in m.geometry))
         self.assertTrue(all(0 <= p[0] <= 640 and 0 <= p[1] <= 480 for g in m.geometry for p in g[2]))
-        m.write(m.sym["selected"], 17)
+        m.write(m.sym["selected"], 15)
         m.call("drawMenu")
         self.assertEqual(m.read(m.sym["menuTop"]), 1)
         m.geometry = []
@@ -286,6 +296,7 @@ class PayloadTests(unittest.TestCase):
 
     def test_terrain_packed_vertices_and_water_filter(self):
         m = self.m
+        m.toggle("TERRAIN TRIANGLES", 1)
         m.block = 0x81100000
         m.blocks[0, 0, 0] = m.block
         group, vertices, tri = m.block + 0x1000, m.block + 0x2000, m.block + 0x3000
@@ -339,6 +350,7 @@ class PayloadTests(unittest.TestCase):
 
     def test_terrain_uses_sentinel_masks_and_query_filters(self):
         m = self.m
+        m.toggle("TERRAIN TRIANGLES", 1)
         block, group, vertices, tri = [0x81100000 + n * 0x1000 for n in range(4)]
         m.blocks[0, 0, 0] = block
         for off, addr in [(0x4C, tri), (0x50, group), (0x58, vertices)]:
@@ -372,6 +384,7 @@ class PayloadTests(unittest.TestCase):
 
     def test_barrier_heights_and_nearby_block_priority(self):
         m = self.m
+        m.toggle("BARRIER FILL", 0)
         block, hits = 0x81100000, 0x81101000
         m.blocks[1, 1, 0] = block
         m.blocks[0, 0, 0] = block
@@ -405,9 +418,77 @@ class PayloadTests(unittest.TestCase):
         m.write(definition + 0x5C, 1, "B")
         m.uc.mem_write(hits, struct.pack(">6h4Bh2x", 0, 10, 20, 30, 0, 0, 10, 40, 0, 1, 0))
         m.call("drawObjectCollision", m.player)
+        self.assertEqual(len(m.geometry), 6)
+        self.assertEqual(m.geometry[2][2][0][:3], (0, 120, 0))
+        self.assertEqual(m.geometry[4][2][0][:3], (10, 170, 0))
+        self.assertTrue(all(g[0] == 0x90 and all(p[3] & 255 == 0x30 for p in g[2]) for g in m.geometry[:2]))
+        m.toggle("TRANSLUCENT FILL", 0)
+        m.geometry = []
+        m.call("drawObjectCollision", m.player)
+        self.assertEqual(len(m.geometry), 6)  # Independent of trigger fill.
+        m.toggle("BARRIER FILL", 0)
+        m.geometry = []
+        m.call("drawObjectCollision", m.player)
         self.assertEqual(len(m.geometry), 4)
-        self.assertEqual(m.geometry[0][2][0][:3], (0, 120, 0))
-        self.assertEqual(m.geometry[2][2][0][:3], (10, 170, 0))
+
+    def test_tabs_defaults_and_hover_toggle(self):
+        m = self.m
+        for label in ("TERRAIN TRIANGLES", "WATER TRIANGLES", "DRAW THROUGH WALLS", "FORCED SWIMMING", "AUTO-SHIELD HOVER"):
+            self.assertEqual(m.read(m.sym["enabled"] + m.row(label), "B"), 0)
+        for label in ("COLLISION", "TRIGGERS", "OBJECT TRIANGLES", "OBJECT HIT VOLUMES", "BARRIERS / LEDGES", "BARRIER FILL", "TRANSLUCENT FILL"):
+            self.assertEqual(m.read(m.sym["enabled"] + m.row(label), "B"), 1)
+        m.pad(0x64, 4)
+        m.call("rebuildRows")
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 0)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 16)
+        m.pad()
+        m.pad(0x20, 0x20)
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 6)
+        self.assertEqual(m.read(m.sym["visible"]), m.row("FORCED SWIMMING"))
+        m.pad(0x20)
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)  # Holding R does not repeat tabs.
+        m.pad(0x40, 0x40)
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 0)
+        m.pad()
+        m.pad(0x40, 0x40)
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)  # Wrap left.
+        m.write(m.sym["selected"], 3)
+        m.pad(0x100, 0x100)
+        self.assertEqual(m.read(m.sym["enabled"] + m.row("AUTO-SHIELD HOVER"), "B"), 1)
+        self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)  # Menu wins over automation.
+        m.pad(0x200, 0x200)
+        m.pad()
+        self.assertEqual(m.read(m.sym["gPadTriggers"], "H") & 0x20, 0x20)
+
+    def test_hover_alternates_edges_preserves_steering_and_releases(self):
+        m = self.m
+        m.toggle("AUTO-SHIELD HOVER", 1)
+        m.write(m.sym["gPadStatuses"] + 2, 40, "b")
+        for frame in range(6):
+            m.pad(0x800)  # Y remains held; no physical X/R input.
+            action = 0x20 if frame % 2 == 0 else 0x400
+            previous = 0 if frame == 0 else (0x400 if frame % 2 == 0 else 0x20)
+            self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x800 | action)
+            self.assertEqual(m.read(m.sym["gPadButtonsJustPressed"]) & 0x420, action)
+            self.assertEqual(m.read(m.sym["gPadButtonsReleased"]) & 0x420, previous)
+            self.assertEqual(m.read(m.sym["gPadTriggers"], "H") & 0x20, action & 0x20)
+            self.assertEqual(m.read(m.sym["gPadStatuses"] + 7, "B"), 255 if action == 0x20 else 0)
+            self.assertEqual(m.read(m.sym["gPadStatuses"] + 2, "b"), 40)
+            self.assertEqual(m.read(m.sym["gPadButtonsPrevious"]), 0x800)
+        m.toggle("AUTO-SHIELD HOVER", 0)
+        m.pad(0x800)
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x800)
+        self.assertEqual(m.read(m.sym["gPadButtonsReleased"]) & 0x420, 0x400)
+        m.toggle("AUTO-SHIELD HOVER", 1)
+        for blocker in ("timeStop", "gDvdErrorPauseActive", "joypadDisabled"):
+            m.write(m.sym[blocker], 1, "B")
+            m.pad()
+            self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
+            self.assertEqual(m.read(m.sym["hoverPhase"], "B"), 0)
+            m.write(m.sym[blocker], 0, "B")
+        m.pad()
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x20)
 
     def test_world_depth_default_and_no_depth_writes(self):
         m = self.m
@@ -418,6 +499,77 @@ class PayloadTests(unittest.TestCase):
         m.toggle("DRAW THROUGH WALLS", 1)
         m.call("drawWorld")
         self.assertIn(("GXSetZMode", 0, 3, 0), m.calls)
+
+    def test_hover_custom_cadence_and_menu_limits(self):
+        m = self.m
+        m.toggle("AUTO-SHIELD HOVER", 1)
+        m.write(m.sym["rollBlanks"], 2)
+        m.write(m.sym["shieldBlanks"], 3)
+        sequence = [0x20, 0, 0, 0, 0x400, 0, 0] * 2
+        previous = 0
+        for action in sequence:
+            m.pad(0x100)  # A stays available while X/R are automated.
+            self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x100 | action)
+            self.assertEqual(m.read(m.sym["gPadButtonsJustPressed"]) & 0x420, action & ~previous)
+            self.assertEqual(m.read(m.sym["gPadButtonsReleased"]) & 0x420, previous & ~action)
+            previous = action
+        m.pad(0x64, 4)
+        self.assertEqual(m.read(m.sym["hoverWait"]), 0)
+        m.pad()
+        m.pad(0x20, 0x20)
+        m.write(m.sym["selected"], 4)  # Blanks after roll.
+        m.pad(2, 2)
+        self.assertEqual(m.read(m.sym["rollBlanks"]), 3)
+        m.write(m.sym["rollBlanks"], 60)
+        m.pad(2, 2)
+        self.assertEqual(m.read(m.sym["rollBlanks"]), 60)
+        m.write(m.sym["rollBlanks"], 0)
+        m.pad(1, 1)
+        self.assertEqual(m.read(m.sym["rollBlanks"]), 0)
+
+    def test_object_level_sphere_and_barrel_vertical_span_without_model(self):
+        m = self.m
+        hit = 0x81100000
+        m.write(m.player + 0x54, hit)
+        m.write(hit + 0x60, 1, "H")
+        m.write(hit + 0x5A, 20, "h")
+        m.write(hit + 0x62, 1, "B")
+        m.call("drawObjectCollision", m.player)
+        self.assertEqual(len(m.geometry), 72)
+        self.assertEqual(m.geometry[0][2][0][:3], (0, 120, 0))
+        m.geometry = []
+        m.write(hit + 0x62, 2, "B")
+        m.write(hit + 0x5C, -5, "h")
+        m.write(hit + 0x5E, 20, "h")
+        m.call("drawObjectCollision", m.player)
+        self.assertEqual(len(m.geometry), 52)
+        self.assertEqual(sorted(set(p[1] for g in m.geometry for p in g[2])), [95, 120])
+        m.geometry = []
+        m.toggle("OBJECT HIT VOLUMES", 0)
+        m.call("drawObjectCollision", m.player)
+        self.assertFalse(m.geometry)
+
+    def test_disabled_trigger_fill_outline_and_markers_are_gray(self):
+        m = self.m
+        definition, placement = 0x81100000, 0x81101000
+        m.write(m.player + 0x50, definition)
+        m.write(m.player + 0x4C, placement)
+        m.write(definition + 0x50, 294, "h")
+        m.write(placement, 0x4C, "H")
+        m.write(m.state + 0x34, 20.0, "f")
+        m.uc.mem_write(m.state + 0x38, struct.pack(">12f", 1, 0, 0, -10, 0, 1, 0, -100, 0, 0, 1, -30))
+        for status, obj_flags, gate_value in [(4, 0, 1), (0, 0x2000, 1), (0, 0, 0)]:
+            m.geometry = []
+            m.write(m.state, status, "B")
+            m.write(m.player + 0xB0, obj_flags, "H")
+            m.gate_bit = gate_value
+            m.call("drawTriggers", m.player)
+            self.assertEqual(len(m.geometry), 8)
+            self.assertTrue(all((p[3] >> 8) == 0x929292 for g in m.geometry for p in g[2]))
+        m.geometry = []
+        m.write(m.state + 0x82, -1, "h")  # No gate: zero-valued unrelated bit must not gray it.
+        m.call("drawTriggers", m.player)
+        self.assertEqual(m.geometry[0][2][0][3] >> 8, 0xFF69D4)
 
 
 if __name__ == "__main__":

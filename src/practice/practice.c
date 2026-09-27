@@ -11,10 +11,13 @@
 #include "main/camera.h"
 #include "main/debug_display.h"
 #include "main/frame_timing.h"
+#include "main/fileio.h"
+#include "main/gamebits_api.h"
 #include "main/map_block.h"
 #include "main/obj_list.h"
 #include "main/object_transform.h"
 #include "main/objhits_types.h"
+#include "main/objhits.h"
 #include "main/pad.h"
 #include "main/shader_api.h"
 #include "sys/objects.h"
@@ -41,6 +44,7 @@ enum {
     HIT_SPHERES,
     WATER_MESH,
     BARRIERS,
+    BARRIER_FILL,
     TRIGGERS,
     PLANES,
     BOXES,
@@ -53,19 +57,26 @@ enum {
     WATER_GRID,
     XRAY,
     RANGE,
+    SHIELD_HOVER,
+    ROLL_BLANKS,
+    SHIELD_BLANKS,
     ROW_COUNT
 };
+enum { TAB_COLLISION, TAB_CHEATS, TAB_COUNT };
+static const char* tabLabels[TAB_COUNT] = {"COLLISION", "CHEATS"};
 typedef struct PracticeRow {
     const char* label;
     s8 parent;
     u8 group;
+    u8 tab;
 } PracticeRow;
 static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"TERRAIN TRIANGLES", COLLISION, 0},
                                             {"OBJECT TRIANGLES", COLLISION, 0},
-                                            {"OBJECT HIT SPHERES", COLLISION, 0},
+                                            {"OBJECT HIT VOLUMES", COLLISION, 0},
                                             {"WATER TRIANGLES", COLLISION, 0},
                                             {"BARRIERS / LEDGES", COLLISION, 0},
+                                            {"BARRIER FILL", COLLISION, 0},
                                             {"TRIGGERS", -1, 1},
                                             {"CROSSING PLANES", TRIGGERS, 0},
                                             {"BOXES", TRIGGERS, 0},
@@ -73,14 +84,21 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"CYLINDERS", TRIGGERS, 0},
                                             {"TARGET MOTION", TRIGGERS, 0},
                                             {"TRANSLUCENT FILL", TRIGGERS, 0},
-                                            {"FORCED SWIMMING", -1, 1},
-                                            {"WATER HEIGHT", SWIMMING, 0},
-                                            {"SHOW WATER PLANE", SWIMMING, 0},
+                                            {"FORCED SWIMMING", -1, 1, TAB_CHEATS},
+                                            {"WATER HEIGHT", SWIMMING, 0, TAB_CHEATS},
+                                            {"SHOW WATER PLANE", SWIMMING, 0, TAB_CHEATS},
                                             {"DRAW THROUGH WALLS", -1, 0},
-                                            {"DRAW DISTANCE", -1, 0}};
-static u8 enabled[ROW_COUNT] = {0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0};
-static u8 expanded[ROW_COUNT];
+                                            {"DRAW DISTANCE", -1, 0},
+                                            {"AUTO-SHIELD HOVER", -1, 1, TAB_CHEATS},
+                                            {"BLANKS AFTER ROLL", SHIELD_HOVER, 0, TAB_CHEATS},
+                                            {"BLANKS AFTER SHIELD", SHIELD_HOVER, 0, TAB_CHEATS}};
+static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0};
+static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 static u8 menuOpen, chordLatched, savedTimeStop, swimApplied;
+static u8 activeTab, hoverPhase, hoverActive;
+static u32 hoverButtons;
+static u32 previousShoulders;
+static int hoverWait, rollBlanks, shieldBlanks;
 static int selected, repeatTimer, visibleCount, visible[ROW_COUNT], menuTop;
 static int drawDistance = 1000;
 static f32 waterHeight;
@@ -176,7 +194,7 @@ static void triangle(Vec a, Vec b, Vec c, u32 color) {
 /* Translucent surfaces test against scene depth but never write to it. Keep
  * both sides visible so volumes remain readable when the camera is inside. */
 static void fillTriangle(Vec a, Vec b, Vec c, u32 color) {
-    if (!enabled[TRIGGER_FILL] || fillsDrawn >= fillLimit) {
+    if (fillsDrawn >= fillLimit) {
         return;
     }
     color = (color & 0xFFFFFF00) | 0x30;
@@ -330,13 +348,17 @@ static void drawTriggers(GameObject* obj) {
     TriggerState* state = obj->extra;
     Vec center = point(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ);
     u32 color;
-    int type;
+    int type, disabled;
     if (!validPointer(def) || !validPointer(state) || !validPointer(obj->anim.modelInstance) ||
         obj->anim.modelInstance->dllId != 294 || !nearPoint(center)) {
         return;
     }
-    color = (state->status & 4) ? 0x7D8796FF : 0xFF69D4FF;
     type = def->base.objectId;
+    disabled = (state->status & 4) || (obj->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED);
+    if (type == 0x4c && state->gateBits[0] != -1 && mainGetBit(state->gateBits[0]) == 0) {
+        disabled = 1;
+    }
+    color = disabled ? 0x929292FF : 0xFF69D4FF;
     if (type == 0x4c && enabled[PLANES]) {
         MmpTriggerPlaneState* plane = (MmpTriggerPlaneState*)state;
         Mtx inverse;
@@ -350,7 +372,9 @@ static void drawTriggers(GameObject* obj) {
                               (i & 2) ? plane->clipHalfExtent : -plane->clipHalfExtent, 0);
             PSMTXMultVec(inverse, &local, &p[i]);
         }
-        fillQuad(p[0], p[1], p[3], p[2], color);
+        if (enabled[TRIGGER_FILL]) {
+            fillQuad(p[0], p[1], p[3], p[2], color);
+        }
         line(p[0], p[1], color);
         line(p[1], p[3], color);
         line(p[3], p[2], color);
@@ -358,7 +382,7 @@ static void drawTriggers(GameObject* obj) {
         {
             Vec n =
                 point(center.x + plane->normalX * 40, center.y + plane->normalY * 40, center.z + plane->normalZ * 40);
-            line(center, n, GOLD);
+            line(center, n, disabled ? color : GOLD);
         }
     } else if (type == 0x4d && enabled[BOXES]) {
         Vec p[8];
@@ -375,12 +399,14 @@ static void drawTriggers(GameObject* obj) {
             p[i].y = center.y + y * cp + z * sp;
             p[i].z = center.z - x * sy + forward * cy;
         }
+        if (enabled[TRIGGER_FILL]) {
         fillQuad(p[0], p[1], p[3], p[2], color);
         fillQuad(p[4], p[5], p[7], p[6], color);
         fillQuad(p[0], p[1], p[5], p[4], color);
         fillQuad(p[2], p[3], p[7], p[6], color);
         fillQuad(p[0], p[2], p[6], p[4], color);
         fillQuad(p[1], p[3], p[7], p[5], color);
+        }
         for (i = 0; i < 8; i++) {
             for (j = 1; j <= 4; j <<= 1) {
                 if (!(i & j)) {
@@ -417,7 +443,7 @@ static void drawTriggers(GameObject* obj) {
         Vec b = point(state->prevTargetPosX, state->prevTargetPosY, state->prevTargetPosZ);
         if (a.x > -1000000 && a.x < 1000000 && a.y > -1000000 && a.y < 1000000 && a.z > -1000000 && a.z < 1000000 &&
             b.x > -1000000 && b.x < 1000000 && b.y > -1000000 && b.y < 1000000 && b.z > -1000000 && b.z < 1000000) {
-            line(a, b, 0xFFE067FF);
+            line(a, b, disabled ? color : 0xFFE067FF);
         }
     }
 }
@@ -453,6 +479,9 @@ static void drawHitLines(MapHitLine* hits, int count, f32 x, f32 z, GameObject* 
             }
         }
         if (nearTriangle(p[0], p[1], p[2]) || nearTriangle(p[0], p[2], p[3])) {
+            if (enabled[BARRIER_FILL]) {
+                fillQuad(p[0], p[1], p[2], p[3], 0xFF875FFF);
+            }
             for (j = 0; j < 4; j++) {
                 line(p[j], p[(j + 1) & 3], 0xFF875FFF);
             }
@@ -530,6 +559,28 @@ static void drawObjectCollision(GameObject* obj) {
     ObjHitboxTransformState* hit = obj->anim.hitboxTransformState;
     Vec center = point(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ);
     int bank = 0, i, j, k;
+    if (enabled[HIT_SPHERES] && validPointer(obj->anim.hitReactState) && nearPoint(center)) {
+        ObjHitsPriorityState* state = (ObjHitsPriorityState*)obj->anim.hitReactState;
+        u32 color = (state->flags & OBJHITS_PRIORITY_STATE_ENABLED) &&
+            !(state->flags & OBJHITS_PRIORITY_STATE_HIT_EXCLUDED) && state->activeHitboxMode == 0
+            ? 0xFFAB4FFF : 0x929292FF;
+        if (state->shapeFlags & OBJHITS_SHAPE_SPHERE) {
+            sphere(center, state->primaryRadius, color);
+        } else if (state->shapeFlags & OBJHITS_SHAPE_CAPSULE) {
+            Vec a = center, b = center;
+            a.y += state->primaryCapsuleOffsetA;
+            b.y += state->primaryCapsuleOffsetB;
+            circle(a, state->primaryRadius, 1, color);
+            circle(b, state->primaryRadius, 1, color);
+            for (i = 0; i < 4; i++) {
+                Vec c = a, d = b;
+                c.x += mathCosf(i * 1.57079632679f) * state->primaryRadius;
+                c.z += mathSinf(i * 1.57079632679f) * state->primaryRadius;
+                d.x = c.x; d.z = c.z;
+                line(c, d, color);
+            }
+        }
+    }
     if (validPointer(obj->anim.modelInstance) && obj->anim.transformMatrixIndex >= 0) {
         drawHitLines(obj->anim.modelInstance->modLines, obj->anim.modelInstance->modLineCount, 0, 0, obj);
     }
@@ -552,7 +603,11 @@ static void drawObjectCollision(GameObject* obj) {
         for (i = 0; i < file->hitVolumeCount && linesDrawn < lineLimit; i++) {
             Vec p =
                 point(spheres[i].pos[0] + playerMapOffsetX, spheres[i].pos[1], spheres[i].pos[2] + playerMapOffsetZ);
-            sphere(p, spheres[i].radius, 0xFFAB4FFF);
+            /* Animation hit buffers can remain stale on culled objects. Never
+             * spend the nearby draw budget on a cached sphere outside range. */
+            if (nearPoint(p)) {
+                sphere(p, spheres[i].radius, 0xFFAB4FFF);
+            }
         }
     }
     if (!enabled[OBJECT_MESH] || !validPointer(hit) || hit->activeMatrixIndex > 1 ||
@@ -591,7 +646,7 @@ static void drawObjectCollision(GameObject* obj) {
 
 static void drawWorld(void) {
     GameObject* player = Obj_GetPlayerObject();
-    int i, count, start;
+    int i, count, start, band;
     GameObject** objects;
     if (!validPointer(player)) {
         return;
@@ -609,9 +664,20 @@ static void drawWorld(void) {
     }
     objects = ObjList_GetObjects(&start, &count);
     if (validPointer(objects) && count >= 0 && count <= 2048) {
+        /* Hit-volume outlines can be numerous. Give nearby objects the first
+         * opportunity to draw instead of depending on object spawn order. */
+        for (band = 0; band < drawDistance && linesDrawn < lineLimit; band += 250) {
         for (i = start; i < count && linesDrawn < lineLimit; i++) {
             GameObject* obj = objects[i];
+            f32 x, y, z, distance;
             if (!validPointer(obj)) {
+                continue;
+            }
+            x = obj->anim.worldPosX - origin.x;
+            y = obj->anim.worldPosY - origin.y;
+            z = obj->anim.worldPosZ - origin.z;
+            distance = x * x + y * y + z * z;
+            if (distance < (f32)band * band || distance >= (f32)(band + 250) * (band + 250)) {
                 continue;
             }
             if (enabled[TRIGGERS]) {
@@ -620,6 +686,7 @@ static void drawWorld(void) {
             if (enabled[COLLISION]) {
                 drawObjectCollision(obj);
             }
+        }
         }
     }
     if (enabled[SWIMMING] && enabled[WATER_GRID]) {
@@ -693,6 +760,9 @@ static void rebuildRows(void) {
     int i;
     visibleCount = 0;
     for (i = 0; i < ROW_COUNT; i++) {
+        if (rows[i].tab != activeTab) {
+            continue;
+        }
         if (rows[i].parent < 0 || expanded[(int)rows[i].parent]) {
             visible[visibleCount++] = i;
         }
@@ -713,28 +783,39 @@ static void drawMenu(void) {
     GXLoadPosMtxImm(identity, GX_PNMTX0);
     setupGeometry(0);
     if (!menuOpen) {
-        rectangle(16, 16, 444, enabled[SWIMMING] ? 42 : 24, 0x0B1427DD);
+        rectangle(16, 16, 444, 24 + (enabled[SWIMMING] + enabled[SHIELD_HOVER]) * 18, 0x0B1427DD);
         textAt(24, 23, "SFA PRACTICE  L+R+DOWN: MENU", WHITE);
         if (enabled[SWIMMING]) {
             textAt(24, 41, "SWIM Y:", 0x63D5FFFF);
             numberAt(120, 41, (int)waterHeight, WHITE);
             textAt(228, 41, "L+UP/DOWN", MUTED);
         }
+        if (enabled[SHIELD_HOVER]) {
+            textAt(24, enabled[SWIMMING] ? 59 : 41, "AUTO-SHIELD HOVER: ON", GOLD);
+        }
         return;
     }
     rectangle(20, 20, 600, 430, 0x081020EF);
     rectangle(20, 20, 600, 4, 0x59D5FFFF);
-    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.2", WHITE);
-    textAt(36, 59, "A: TOGGLE  LEFT/RIGHT: EXPAND  B: CLOSE", MUTED);
+    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.3", WHITE);
+    for (i = 0; i < TAB_COUNT; i++) {
+        int width = 410 / TAB_COUNT;
+        if (i == activeTab) {
+            rectangle(28 + i * width, 55, width - 4, 20, 0x263C60FF);
+        }
+        textAt(36 + i * width, 60, tabLabels[i], i == activeTab ? GOLD : MUTED);
+    }
+    textAt(470, 60, "L/R: TABS", MUTED);
+    textAt(36, 83, "A: TOGGLE  LEFT/RIGHT: EXPAND  B: CLOSE", MUTED);
     rebuildRows();
     if (menuTop > selected) {
         menuTop = selected;
     }
-    if (menuTop < selected - 16) {
-        menuTop = selected - 16;
+    if (menuTop < selected - 14) {
+        menuTop = selected - 14;
     }
-    for (i = menuTop; i < visibleCount && i < menuTop + 17; i++) {
-        int row = visible[i], y = 86 + (i - menuTop) * 18;
+    for (i = menuTop; i < visibleCount && i < menuTop + 15; i++) {
+        int row = visible[i], y = 110 + (i - menuTop) * 18;
         int indent = rows[row].parent < 0 ? 0 : 24;
         u32 color = rows[row].parent >= 0 && !enabled[(int)rows[row].parent] ? MUTED : WHITE;
         if (i == selected) {
@@ -744,7 +825,7 @@ static void drawMenu(void) {
         if (rows[row].group) {
             textAt(36, y, expanded[row] ? "-" : "+", color);
         }
-        if (row != WATER_HEIGHT && row != RANGE) {
+        if (row != WATER_HEIGHT && row != RANGE && row != ROLL_BLANKS && row != SHIELD_BLANKS) {
             rectangle(58 + indent, y - 1, 12, 12, color);
             rectangle(60 + indent, y + 1, 8, 8, enabled[row] ? 0x56C7FFFF : 0x101B2EFF);
         }
@@ -755,6 +836,9 @@ static void drawMenu(void) {
         if (row == RANGE) {
             numberAt(400, y, drawDistance, color);
         }
+        if (row == ROLL_BLANKS || row == SHIELD_BLANKS) {
+            numberAt(440, y, row == ROLL_BLANKS ? rollBlanks : shieldBlanks, color);
+        }
     }
     textAt(36, 395, "TRIS:", MUTED);
     numberAt(108, 395, trianglesDrawn, WHITE);
@@ -762,7 +846,8 @@ static void drawMenu(void) {
     numberAt(372, 395, triggersDrawn, WHITE);
     textAt(36, 419,
            drawLimitReached || fillsDrawn >= fillLimit ? "DRAW LIMIT REACHED - REDUCE DISTANCE"
-                                                       : "SWIM HEIGHT: L+UP/DOWN  X: RESET TO FOX",
+               : activeTab ? "SWIM: L+UP/DOWN  X: RESET  HOVER: R/X"
+                           : "L/R: TABS  L+R+DOWN: CLOSE",
            MUTED);
 }
 
@@ -795,14 +880,68 @@ static void swallowInput(void) {
     gPadMenuStickXSign[0] = gPadMenuStickYSign[0] = 0;
 }
 
+/* Alternate real controller inputs once per game input poll. Preserve the
+ * physical pad history: padUpdate needs it for menu chords and other buttons.
+ * Build X/R edges against our last effective input, including when disabled.
+ * Each action lasts one input frame; configurable gaps release both buttons. */
+static void updateShieldHover(GameObject* player, int blocked) {
+    u32 mask = PAD_BUTTON_X | PAD_TRIGGER_R;
+    u32 before, after;
+    u16 beforeTrigger, afterTrigger;
+    int active = enabled[SHIELD_HOVER] && validPointer(player);
+    PADStatus* pad = &gPadStatuses[gPadStatusBufferIndex * PAD_MAX_CONTROLLERS];
+    if (blocked || timeStop || joypadDisabled || gDvdErrorPauseActive || !validPointer(player)) {
+        hoverActive = hoverPhase = 0;
+        hoverWait = 0;
+        return;
+    }
+    if (!active && !hoverActive) {
+        hoverPhase = 0;
+        hoverWait = 0;
+        return;
+    }
+    before = hoverActive ? hoverButtons :
+        (gPadButtonsHeld[0] ^ gPadButtonsJustPressed[0] ^ gPadButtonsReleased[0]) & mask;
+    beforeTrigger = hoverActive ? hoverButtons & PAD_TRIGGER_R :
+        (gPadTriggers[0] ^ gPadTriggersPressed[0] ^ gPadTriggersReleased[0]) & PAD_TRIGGER_R;
+    after = gPadButtonsHeld[0] & mask;
+    afterTrigger = gPadTriggers[0] & PAD_TRIGGER_R;
+    if (active) {
+        if (hoverWait > 0) {
+            after = 0;
+            hoverWait--;
+        } else {
+            after = hoverPhase ? PAD_BUTTON_X : PAD_TRIGGER_R;
+            hoverWait = hoverPhase ? rollBlanks : shieldBlanks;
+            hoverPhase ^= 1;
+        }
+        afterTrigger = after & PAD_TRIGGER_R;
+        pad->button = (pad->button & ~mask) | after;
+        pad->triggerRight = afterTrigger ? 255 : 0;
+    } else {
+        hoverPhase = 0;
+        hoverWait = 0;
+    }
+    gPadButtonsHeld[0] = (gPadButtonsHeld[0] & ~mask) | after;
+    gPadButtonsJustPressed[0] = (gPadButtonsJustPressed[0] & ~mask) | (after & ~before);
+    gPadButtonsReleased[0] = (gPadButtonsReleased[0] & ~mask) | (before & ~after);
+    gPadTriggers[0] = (gPadTriggers[0] & ~PAD_TRIGGER_R) | afterTrigger;
+    gPadTriggersPressed[0] = (gPadTriggersPressed[0] & ~PAD_TRIGGER_R) | (afterTrigger & ~beforeTrigger);
+    gPadTriggersReleased[0] = (gPadTriggersReleased[0] & ~PAD_TRIGGER_R) | (beforeTrigger & ~afterTrigger);
+    hoverButtons = after;
+    hoverActive = active;
+}
+
 void Practice_PadUpdate(void) {
-    u32 held, pressed, shoulders;
+    u32 held, pressed, shoulders, shoulderPressed;
     int chord, wasOpen;
     GameObject* player;
     padUpdate();
     held = gPadButtonsHeld[0];
     pressed = gPadButtonsJustPressed[0];
     shoulders = held | gPadTriggers[0];
+    shoulderPressed = shoulders & ~previousShoulders & (PAD_TRIGGER_L | PAD_TRIGGER_R);
+    previousShoulders = shoulders & (PAD_TRIGGER_L | PAD_TRIGGER_R);
     chord =
         (shoulders & (PAD_TRIGGER_L | PAD_TRIGGER_R)) == (PAD_TRIGGER_L | PAD_TRIGGER_R) && (held & PAD_BUTTON_DOWN);
     wasOpen = menuOpen;
@@ -818,6 +957,8 @@ void Practice_PadUpdate(void) {
     chordLatched = chord != 0;
     player = Obj_GetPlayerObject();
     if (player != swimOwner) {
+        hoverActive = hoverPhase = 0;
+        hoverWait = 0;
         swimApplied = 0;
         swimOwner = player;
         if (enabled[SWIMMING] && validPointer(player)) {
@@ -826,6 +967,13 @@ void Practice_PadUpdate(void) {
     }
     if (menuOpen && !chord) {
         int row;
+        int tabDelta = ((shoulderPressed & PAD_TRIGGER_R) != 0) - ((shoulderPressed & PAD_TRIGGER_L) != 0);
+        if (tabDelta != 0) {
+            activeTab = (activeTab + TAB_COUNT + tabDelta) % TAB_COUNT;
+            selected = menuTop = repeatTimer = 0;
+            pressed &= ~(PAD_BUTTON_A | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN);
+            held &= ~(PAD_BUTTON_UP | PAD_BUTTON_DOWN);
+        }
         rebuildRows();
         if (held & (PAD_BUTTON_UP | PAD_BUTTON_DOWN)) {
             repeatTimer++;
@@ -844,11 +992,11 @@ void Practice_PadUpdate(void) {
         row = visible[selected];
         if (pressed & PAD_BUTTON_B) {
             closeMenu();
-        } else if (row == WATER_HEIGHT || row == RANGE) {
+        } else if (row == WATER_HEIGHT || row == RANGE || row == ROLL_BLANKS || row == SHIELD_BLANKS) {
             int delta = (pressed & PAD_BUTTON_RIGHT) ? 1 : (pressed & PAD_BUTTON_LEFT) ? -1 : 0;
             if (row == WATER_HEIGHT) {
                 waterHeight += delta * 10.0f;
-            } else {
+            } else if (row == RANGE) {
                 drawDistance += delta * 250;
                 if (drawDistance < 250) {
                     drawDistance = 250;
@@ -856,6 +1004,11 @@ void Practice_PadUpdate(void) {
                 if (drawDistance > 2500) {
                     drawDistance = 2500;
                 }
+            } else {
+                int* blanks = row == ROLL_BLANKS ? &rollBlanks : &shieldBlanks;
+                *blanks += delta;
+                if (*blanks < 0) { *blanks = 0; }
+                if (*blanks > 60) { *blanks = 60; }
             }
         } else {
             if (rows[row].group) {
@@ -885,7 +1038,7 @@ void Practice_PadUpdate(void) {
                 }
             }
         }
-        if ((pressed & PAD_BUTTON_X) && validPointer(player)) {
+        if (activeTab && (pressed & PAD_BUTTON_X) && validPointer(player)) {
             waterHeight = player->anim.worldPosY + 40.0f;
         }
     }
@@ -904,6 +1057,7 @@ void Practice_PadUpdate(void) {
     if (menuOpen || wasOpen || chord) {
         swallowInput();
     }
+    updateShieldHover(player, menuOpen || wasOpen || chord);
 }
 
 static void applyWater(GameObject* obj, PlayerState* state) {
