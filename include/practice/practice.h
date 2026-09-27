@@ -9,6 +9,7 @@
 void Practice_SetArenaLo(void* start);
 void Practice_PadUpdate(void);
 void Practice_Draw(void);
+void Practice_WarpReload(void);
 void Practice_PlayerControls(GameObject* obj, PlayerState* state, f32 dt);
 void Practice_SurfaceResponse(GameObject* obj, PlayerState* state, PlayerState* cfg, f32 dt);
 #endif

@@ -252,6 +252,24 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
+### Pending changes after V1.4 (not packaged)
+
+Reported V1.4 failures: warping to Galdon hangs on black, and Andross flight
+shows a broken cube-like Arwing. The practice coordinate warp omitted the
+destination-bank setup performed by normal entry paths. A new practice-only
+hook at `loadNextMap`'s `mapReload` call queues `mapLoadByCoords` after the fade
+and character-position commit, clears source resource locks, and discards the
+source auxiliary-bank selection. The existing queued loader unloads old
+objects before synchronously loading destination/parent resource banks.
+Ordinary and superseding scripted warps retain their retail reload path.
+
+This addresses a verified loading-path omission, but neither reported gameplay
+failure has yet been confirmed fixed in Dolphin. The pending source passes 23
+compiled-payload tests, 8 patch tests, `ninja all_source`, and the retail build
+check. No new ISO or patch has been generated, as requested during testing.
+
+### Packaged build checks
+
 ```powershell
 ninja all_source
 ninja

@@ -45,7 +45,8 @@ class Machine:
                 "playerEnterDeepWater", "playerUpdateSurfaceResponse", "Camera_SetCurrentViewIndex",
                 "Camera_UpdateProjection", "resetSomeGxFlags", "getScreenResolution", "mathSinf", "mathCosf",
                 "Matrix_TransformPoint", "mapGetBlockAtPos", "ObjList_GetObjects", "PSMTXInverse", "PSMTXMultVec",
-                "Obj_TransformLocalPointToWorld", "mainGetBit", "ObjHits_IsObjectEnabled", "warpToMap"):
+                "Obj_TransformLocalPointToWorld", "mainGetBit", "ObjHits_IsObjectEnabled", "warpToMap",
+                "mapReload", "mapLoadByCoords", "unlockLevel"):
                 self.stub[addr] = name
         self.uc.hook_add(UC_HOOK_CODE, self.service)
         self.uc.hook_add(UC_HOOK_MEM_WRITE, self.fifo, begin=0xCC008000, end=0xCC008003)
@@ -97,6 +98,9 @@ class Machine:
         elif name == "warpToMap":
             self.write(self.sym["gWarpRequested"], 1, "B")
             self.write(self.sym["gPendingWarpIndex"], self.r(3), "h")
+        elif name == "mapLoadByCoords":
+            self.loaded_coordinates = (self.f(1), self.f(2), self.f(3), self.r(3))
+            self.write(self.sym["gGameLoopPendingMapDataFileId"], 17)
         elif name == "getScreenResolution":
             uc.reg_write(UC_PPC_REG_0 + 3, (480 << 16) | 640)
         elif name == "GXBegin":
@@ -651,6 +655,34 @@ class PayloadTests(unittest.TestCase):
         m.write(c, 0)
         m.call("drawPlayerCollision", m.player)
         self.assertFalse(m.geometry)
+
+    def test_practice_warp_queues_destination_banks_only_at_committed_reload(self):
+        m = self.m
+        # Ordinary game warps must retain their existing loading behavior.
+        m.call("Practice_WarpReload")
+        self.assertEqual([c[0] for c in m.calls], ["mapReload"])
+        for map_id, layer in ((28, -2), (38, 2)):  # Galdon and Andross flight.
+            m.calls = []
+            m.write(m.sym["warpMap"], map_id)
+            m.call("resetWarpSpawn")
+            destination = bytes(m.uc.mem_read(m.sym["warpDestination"], 16))
+            m.uc.mem_write(m.sym["warpQueuedDestination"], destination)
+            m.uc.mem_write(m.sym["gRcpPendingWarpDest"], destination)
+            m.write(m.sym["warpLoadPending"], 1, "B")
+            m.call("Practice_WarpReload")
+            self.assertEqual([c[0] for c in m.calls], ["unlockLevel", "mapLoadByCoords"])
+            self.assertEqual(m.calls[0][1:], (0, 0, 1))
+            self.assertEqual(m.loaded_coordinates[:3], struct.unpack(">3f", destination[:12]))
+            self.assertEqual(m.loaded_coordinates[3], layer & 0xffffffff)
+            self.assertEqual(m.read(m.sym["gGameLoopPendingMapDataFileId"], "i"), -1)
+            self.assertEqual(m.read(m.sym["warpLoadPending"], "B"), 0)
+        # If a normal scripted warp supersedes our request, don't change its banks.
+        m.calls = []
+        m.write(m.sym["warpLoadPending"], 1, "B")
+        m.write(m.sym["gRcpPendingWarpDest"], 0.0, "f")
+        m.call("Practice_WarpReload")
+        self.assertEqual([c[0] for c in m.calls], ["mapReload"])
+        self.assertEqual(m.read(m.sym["warpLoadPending"], "B"), 0)
 
     def test_hover_custom_cadence_and_menu_limits(self):
         m = self.m

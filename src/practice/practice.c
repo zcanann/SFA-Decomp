@@ -12,9 +12,12 @@
 #include "main/camera.h"
 #include "main/debug_display.h"
 #include "main/frame_timing.h"
+#include "main/gameloop_api.h"
+#include "main/gameloop_internal.h"
 #include "main/fileio.h"
 #include "main/gamebits_api.h"
 #include "main/map_block.h"
+#include "main/map_load.h"
 #include "main/obj_list.h"
 #include "main/object_transform.h"
 #include "main/objhits_types.h"
@@ -149,6 +152,8 @@ static const int warpSteps[] = {1, 10, 100, 640};
 static int warpCategory = 1, warpMap = 23, warpSpawn, warpStep = 1;
 static u8 warpReady, warpEdited;
 static WarpDestination warpDestination;
+static WarpDestination warpQueuedDestination;
+static u8 warpLoadPending;
 static const char* warpMessage;
 static int selected, repeatTimer, visibleCount, visible[ROW_COUNT], menuTop;
 static int drawDistance = 1000;
@@ -1183,9 +1188,31 @@ static void requestPracticeWarp(GameObject* player) {
      * ID, so they do not pretend to arrive at an unrelated checkpoint marker. */
     warpToMap(index >= 0 ? index : 2, 1);
     gRcpPendingWarpDest = warpDestination;
+    warpQueuedDestination = warpDestination;
+    warpLoadPending = 1;
     if (index < 0 || warpEdited) {
         gPendingWarpIndex = 128;
     }
+}
+
+/* Called only at loadNextMap's mapReload call, after it commits the new
+ * character coordinates and the fade has finished. Retail callers normally
+ * arrange resource banks before warping; arbitrary practice travel must queue
+ * them explicitly. doQueuedLoads unloads old objects before loading the banks. */
+void Practice_WarpReload(void) {
+    int practice = warpLoadPending && gRcpPendingWarpDest.x == warpQueuedDestination.x &&
+                   gRcpPendingWarpDest.y == warpQueuedDestination.y &&
+                   gRcpPendingWarpDest.z == warpQueuedDestination.z &&
+                   gRcpPendingWarpDest.layer == warpQueuedDestination.layer;
+    warpLoadPending = 0;
+    if (!practice) {
+        mapReload();
+        return;
+    }
+    unlockLevel(0, 0, 1);
+    mapLoadByCoords(gRcpPendingWarpDest.x, gRcpPendingWarpDest.y, gRcpPendingWarpDest.z, gRcpPendingWarpDest.layer);
+    /* A saved auxiliary bank belongs to the source area, not this destination. */
+    gGameLoopPendingMapDataFileId = -1;
 }
 
 static void swallowInput(void) {

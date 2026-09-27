@@ -175,6 +175,7 @@ def make_patch(dol, payload, exports):
         ("OSInit", "OSSetArenaLo", "Practice_SetArenaLo", 2),
         ("gameLoop", "padUpdate", "Practice_PadUpdate", 1),
         ("gameLoop", "doNothing_endOfFrame", "Practice_Draw", 1),
+        ("loadNextMap", "mapReload", "Practice_WarpReload", 1),
         (None, "playerDoControls", "Practice_PlayerControls", 1),
         (None, "playerUpdateSurfaceResponse", "Practice_SurfaceResponse", 1),
     ]
