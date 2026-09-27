@@ -3,6 +3,7 @@
  */
 #ifdef SFA_PRACTICE
 #include "practice/practice.h"
+#include "practice/warp_catalog.h"
 #include "dlls/objects/294.h"
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"
@@ -28,6 +29,8 @@ extern u8 gDebugFontAndErrorData[];
 extern PADStatus gPadStatuses[];
 extern u8 timeStop;
 extern int gMapBlockOriginWorldX, gMapBlockOriginWorldZ;
+extern void* gShaderMapRomBuffers[5];
+extern u8 gWarpRequested;
 extern void resetSomeGxFlags(void);
 extern MapBlockData* mapGetBlockAtPos(int x, int z, int layer);
 extern void playerDoControls(GameObject*, PlayerState*, f32);
@@ -60,14 +63,33 @@ enum {
     SHIELD_HOVER,
     ROLL_BLANKS,
     SHIELD_BLANKS,
+    FOX_COLLISION,
+    FOX_OBJECT_BODY,
+    FOX_MODEL_SPHERES,
+    FOX_FEET,
+    FOX_BODY_POINTS,
+    FOX_WALL_POINTS,
+    FOX_SWEEPS,
+    WARP_CATEGORY,
+    WARP_MAP,
+    WARP_SPAWN,
+    WARP_X,
+    WARP_Y,
+    WARP_Z,
+    WARP_LAYER,
+    WARP_ANGLE,
+    WARP_STEP,
+    WARP_RESET,
+    WARP_GO,
     ROW_COUNT
 };
 enum {
     TAB_COLLISION,
     TAB_CHEATS,
+    TAB_WARP,
     TAB_COUNT
 };
-static const char* tabLabels[TAB_COUNT] = {"COLLISION", "CHEATS"};
+static const char* tabLabels[TAB_COUNT] = {"COLLISION", "CHEATS", "WARP"};
 typedef struct PracticeRow {
     const char* label;
     s8 parent;
@@ -95,14 +117,40 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"DRAW DISTANCE", -1, 0},
                                             {"AUTO-SHIELD HOVER", -1, 1, TAB_CHEATS},
                                             {"BLANKS AFTER ROLL", SHIELD_HOVER, 0, TAB_CHEATS},
-                                            {"BLANKS AFTER SHIELD", SHIELD_HOVER, 0, TAB_CHEATS}};
-static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0};
-static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+                                            {"BLANKS AFTER SHIELD", SHIELD_HOVER, 0, TAB_CHEATS},
+                                            {"FOX / PLAYER", -1, 1},
+                                            {"OBJECT BODY", FOX_COLLISION, 0},
+                                            {"MODEL HIT SPHERES", FOX_COLLISION, 0},
+                                            {"FEET / FLOOR CONTACT", FOX_COLLISION, 0},
+                                            {"MOVEMENT BODY SPHERES", FOX_COLLISION, 0},
+                                            {"WALL PROBE SPHERES", FOX_COLLISION, 0},
+                                            {"CACHED SWEEP LINES", FOX_COLLISION, 0},
+                                            {"CATEGORY", -1, 0, TAB_WARP},
+                                            {"MAP", -1, 0, TAB_WARP},
+                                            {"SPAWN", -1, 0, TAB_WARP},
+                                            {"POSITION X", -1, 0, TAB_WARP},
+                                            {"POSITION Y", -1, 0, TAB_WARP},
+                                            {"POSITION Z", -1, 0, TAB_WARP},
+                                            {"LAYER", -1, 0, TAB_WARP},
+                                            {"FACING (0-255)", -1, 0, TAB_WARP},
+                                            {"POSITION STEP", -1, 0, TAB_WARP},
+                                            {"RESET TO SPAWN", -1, 0, TAB_WARP},
+                                            {"WARP NOW", -1, 0, TAB_WARP}};
+static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0,
+                               1, 1, 1, 1, 1, 1, 1};
+static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1};
 static u8 menuOpen, chordLatched, savedTimeStop, swimApplied;
 static u8 activeTab, hoverPhase, hoverActive;
 static u32 hoverButtons;
 static u32 previousShoulders;
 static int hoverWait, rollBlanks, shieldBlanks;
+static const char* warpCategories[] = {"ALL MAPS", "AREAS", "KRAZOA SHRINES", "BOSSES", "CONNECTING PATHS",
+                                      "ARWING / WORLD", "TEST / UNUSED", "OBJECT CHUNKS"};
+static const int warpSteps[] = {1, 10, 100, 640};
+static int warpCategory = 1, warpMap = 23, warpSpawn, warpStep = 1;
+static u8 warpReady, warpEdited;
+static WarpDestination warpDestination;
+static const char* warpMessage;
 static int selected, repeatTimer, visibleCount, visible[ROW_COUNT], menuTop;
 static int drawDistance = 1000;
 static f32 waterHeight;
@@ -563,7 +611,10 @@ static void drawObjectCollision(GameObject* obj) {
     ObjHitboxTransformState* hit = obj->anim.hitboxTransformState;
     Vec center = point(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ);
     int bank = 0, i, j, k;
-    if (enabled[HIT_SPHERES] && validPointer(obj->anim.hitReactState) && nearPoint(center)) {
+    int isPlayer = obj == Obj_GetPlayerObject();
+    int bodyEnabled = isPlayer ? enabled[FOX_COLLISION] && enabled[FOX_OBJECT_BODY] : enabled[HIT_SPHERES];
+    int spheresEnabled = isPlayer ? enabled[FOX_COLLISION] && enabled[FOX_MODEL_SPHERES] : enabled[HIT_SPHERES];
+    if (bodyEnabled && validPointer(obj->anim.hitReactState) && nearPoint(center)) {
         ObjHitsPriorityState* state = (ObjHitsPriorityState*)obj->anim.hitReactState;
         u32 color = (state->flags & OBJHITS_PRIORITY_STATE_ENABLED) &&
                             !(state->flags & OBJHITS_PRIORITY_STATE_HIT_EXCLUDED) && state->activeHitboxMode == 0
@@ -604,7 +655,7 @@ static void drawObjectCollision(GameObject* obj) {
         return;
     }
     file = model->file;
-    if (enabled[HIT_SPHERES] && validPointer(model->activeHitVolumeSpheres)) {
+    if (spheresEnabled && validPointer(model->activeHitVolumeSpheres)) {
         ObjModelHitSphere* spheres = (ObjModelHitSphere*)model->activeHitVolumeSpheres;
         for (i = 0; i < file->hitVolumeCount && linesDrawn < lineLimit; i++) {
             Vec p =
@@ -650,6 +701,95 @@ static void drawObjectCollision(GameObject* obj) {
     }
 }
 
+static Vec playerProbeWorld(GameObject* player, const f32* position) {
+    Vec p = point(position[0], position[1], position[2]);
+    GameObject* parent = player->anim.parent;
+    if (validPointer(parent)) {
+        ObjHitboxTransformState* hit = parent->anim.hitboxTransformState;
+        if (validPointer(hit) && hit->activeMatrixIndex <= 1 && ObjHits_IsObjectEnabled(&parent->anim)) {
+            p = transformPoint(&hit->matrices[hit->activeMatrixIndex + 2][0][0], p);
+        } else {
+            Obj_TransformLocalPointToWorld(p.x, p.y, p.z, &p.x, &p.y, &p.z, parent);
+        }
+    }
+    return p;
+}
+
+static void drawPlayerCollision(GameObject* player) {
+    PlayerState* state = player->extra;
+    CurvesCollisionState* collision;
+    int i, count;
+    if (!enabled[FOX_COLLISION] || !validPointer(state)) {
+        return;
+    }
+    collision = &state->baddie.curvesCollision;
+    if (!(collision->flags & CURVES_COLLISION_STATE_ACTIVE)) {
+        return;
+    }
+    if (collision->flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) {
+        count = collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT;
+        if (count > 4) {
+            count = 4;
+        }
+        for (i = 0; i < count; i++) {
+            Vec p = point(collision->points[i][0], collision->points[i][1], collision->points[i][2]);
+            f32 radius = collision->segmentHits.radii[i];
+            u32 color = i ? 0xCF8FFFFF : 0x66FFB3FF;
+            if (!nearPoint(p)) {
+                continue;
+            }
+            if ((i ? enabled[FOX_BODY_POINTS] : enabled[FOX_FEET]) && radius > 0 && radius < 1000) {
+                sphere(p, radius, color);
+                if (i == 0 && radius < 1) {
+                    /* Fox's normal ground radius is only 0.05. Mark its center
+                     * without presenting the marker as a larger collision shape. */
+                    line(point(p.x - 3, p.y, p.z), point(p.x + 3, p.y, p.z), color);
+                    line(point(p.x, p.y, p.z - 3), point(p.x, p.y, p.z + 3), color);
+                }
+            }
+            if (enabled[FOX_SWEEPS]) {
+                Vec from = point(collision->traceStart[i][0], collision->traceStart[i][1], collision->traceStart[i][2]);
+                if (nearPoint(from)) {
+                    line(from, p, color);
+                }
+            }
+            if (i == 0 && enabled[FOX_FEET] && (collision->flags & 1) &&
+                collision->floorY[0] > -100000 && collision->floorY[0] < 100000) {
+                Vec floor = p;
+                floor.y = collision->floorY[0];
+                if (nearPoint(floor)) {
+                    line(p, floor, color);
+                    /* Cross marks a query result, not an extra hit radius. */
+                    line(point(floor.x - 5, floor.y, floor.z), point(floor.x + 5, floor.y, floor.z), color);
+                    line(point(floor.x, floor.y, floor.z - 5), point(floor.x, floor.y, floor.z + 5), color);
+                }
+            }
+        }
+    }
+    if ((collision->flags & CURVES_COLLISION_STATE_LOCAL_POINTS) && validPointer(collision->localPointRadii)) {
+        count = collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK;
+        if (count > 4) {
+            count = 4;
+        }
+        for (i = 0; i < count; i++) {
+            Vec p = playerProbeWorld(player, collision->localPointWorld[i]);
+            f32 radius = collision->localPointRadii[i];
+            if (!nearPoint(p)) {
+                continue;
+            }
+            if (enabled[FOX_WALL_POINTS] && radius > 0 && radius < 1000) {
+                sphere(p, radius, 0x5CDAFFFF);
+            }
+            if (enabled[FOX_SWEEPS]) {
+                Vec from = playerProbeWorld(player, collision->localPointTarget[i]);
+                if (nearPoint(from)) {
+                    line(from, p, 0x5CDAFFFF);
+                }
+            }
+        }
+    }
+}
+
 static void drawWorld(void) {
     GameObject* player = Obj_GetPlayerObject();
     int i, count, start, band;
@@ -664,6 +804,9 @@ static void drawWorld(void) {
     Camera_UpdateProjection(NULL, 0);
     GXLoadPosMtxImm((MtxPtr)gCameraViewMatrix, GX_PNMTX0);
     setupGeometry(!enabled[XRAY]);
+    if (enabled[COLLISION]) {
+        drawPlayerCollision(player);
+    }
     /* Reserve half the wire budget for nearby map collision. */
     if (enabled[COLLISION] && (enabled[TERRAIN] || enabled[WATER_MESH] || enabled[BARRIERS])) {
         lineLimit = 6000;
@@ -762,6 +905,96 @@ static void numberAt(int x, int y, int number, u32 color) {
     textAt(x, y, &buffer[pos], color);
 }
 
+static void resetWarpSpawn(void) {
+    const PracticeWarpMap* map = &practiceWarpMaps[warpMap];
+    warpEdited = 0;
+    warpMessage = NULL;
+    warpReady = 1;
+    if (map->spawnCount) {
+        warpDestination = practiceWarpSpawns[map->firstSpawn + warpSpawn].destination;
+    } else {
+        warpDestination.x = warpDestination.y = warpDestination.z = 0;
+        warpDestination.layer = warpDestination.angle = 0;
+    }
+}
+
+static void changeWarpMap(int direction) {
+    int i;
+    for (i = 0; i < 117; i++) {
+        warpMap = (warpMap + 117 + direction) % 117;
+        if (!warpCategory || practiceWarpMaps[warpMap].category == warpCategory) {
+            break;
+        }
+    }
+    warpSpawn = 0;
+    resetWarpSpawn();
+}
+
+static void editWarpRow(int row, int delta) {
+    const PracticeWarpMap* map = &practiceWarpMaps[warpMap];
+    if (!delta) {
+        return;
+    }
+    warpMessage = NULL;
+    if (row == WARP_CATEGORY) {
+        warpCategory = (warpCategory + 8 + delta) % 8;
+        warpMap = 116;
+        changeWarpMap(1);
+    } else if (row == WARP_MAP) {
+        changeWarpMap(delta);
+    } else if (row == WARP_SPAWN && map->spawnCount) {
+        warpSpawn = (warpSpawn + map->spawnCount + delta) % map->spawnCount;
+        resetWarpSpawn();
+    } else if (row == WARP_STEP) {
+        warpStep = (warpStep + 4 + delta) % 4;
+    } else if (map->spawnCount && row >= WARP_X && row <= WARP_ANGLE) {
+        f32 step = delta * warpSteps[warpStep];
+        if (row == WARP_X) {
+            warpDestination.x += step;
+        } else if (row == WARP_Y) {
+            warpDestination.y += step;
+        } else if (row == WARP_Z) {
+            warpDestination.z += step;
+        } else if (row == WARP_LAYER) {
+            warpDestination.layer = (warpDestination.layer + delta + 7) % 5 - 2;
+        } else {
+            warpDestination.angle = (warpDestination.angle + delta + 256) % 256;
+        }
+        warpEdited = 1;
+    }
+}
+
+static void drawWarpValue(int row, int y, u32 color) {
+    const PracticeWarpMap* map = &practiceWarpMaps[warpMap];
+    if (row == WARP_CATEGORY) {
+        textAt(260, y, warpCategories[warpCategory], color);
+    } else if (row == WARP_MAP) {
+        textAt(260, y, map->name, color);
+    } else if (row == WARP_SPAWN) {
+        if (!map->spawnCount) {
+            textAt(260, y, "NO WORLD DESTINATION", MUTED);
+        } else {
+            int index = practiceWarpSpawns[map->firstSpawn + warpSpawn].warp;
+            numberAt(260, y, warpSpawn + 1, color);
+            textAt(290, y, "/", color);
+            numberAt(310, y, map->spawnCount, color);
+            textAt(350, y, index >= 0 ? "WARP ID:" : "ESTIMATED", color);
+            if (index >= 0) {
+                numberAt(465, y, index, color);
+            }
+        }
+    } else if (row >= WARP_X && row <= WARP_ANGLE) {
+        int value = row == WARP_X ? (int)warpDestination.x : row == WARP_Y ? (int)warpDestination.y
+                    : row == WARP_Z ? (int)warpDestination.z : row == WARP_LAYER ? warpDestination.layer
+                    : warpDestination.angle;
+        numberAt(380, y, value, color);
+    } else if (row == WARP_STEP) {
+        numberAt(380, y, warpSteps[warpStep], color);
+    } else {
+        textAt(380, y, "PRESS A", color);
+    }
+}
+
 static void rebuildRows(void) {
     int i;
     visibleCount = 0;
@@ -797,13 +1030,13 @@ static void drawMenu(void) {
             textAt(228, 41, "L+UP/DOWN", MUTED);
         }
         if (enabled[SHIELD_HOVER]) {
-            textAt(24, enabled[SWIMMING] ? 59 : 41, "AUTO-SHIELD HOVER: ON", GOLD);
+            textAt(24, enabled[SWIMMING] ? 59 : 41, "AUTO-SHIELD HOVER: HOLD R", GOLD);
         }
         return;
     }
     rectangle(20, 20, 600, 430, 0x081020EF);
     rectangle(20, 20, 600, 4, 0x59D5FFFF);
-    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.3", WHITE);
+    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.4", WHITE);
     for (i = 0; i < TAB_COUNT; i++) {
         int width = 410 / TAB_COUNT;
         if (i == activeTab) {
@@ -812,7 +1045,8 @@ static void drawMenu(void) {
         textAt(36 + i * width, 60, tabLabels[i], i == activeTab ? GOLD : MUTED);
     }
     textAt(470, 60, "L/R: TABS", MUTED);
-    textAt(36, 83, "A: TOGGLE  LEFT/RIGHT: EXPAND  B: CLOSE", MUTED);
+    textAt(36, 83, activeTab == TAB_WARP ? "LEFT/RIGHT: CHANGE  A: ACTION  B: CLOSE"
+                                      : "A: TOGGLE  LEFT/RIGHT: EXPAND  B: CLOSE", MUTED);
     rebuildRows();
     if (menuTop > selected) {
         menuTop = selected;
@@ -831,7 +1065,7 @@ static void drawMenu(void) {
         if (rows[row].group) {
             textAt(36, y, expanded[row] ? "-" : "+", color);
         }
-        if (row != WATER_HEIGHT && row != RANGE && row != ROLL_BLANKS && row != SHIELD_BLANKS) {
+        if (row < WARP_CATEGORY && row != WATER_HEIGHT && row != RANGE && row != ROLL_BLANKS && row != SHIELD_BLANKS) {
             rectangle(58 + indent, y - 1, 12, 12, color);
             rectangle(60 + indent, y + 1, 8, 8, enabled[row] ? 0x56C7FFFF : 0x101B2EFF);
         }
@@ -845,6 +1079,20 @@ static void drawMenu(void) {
         if (row == ROLL_BLANKS || row == SHIELD_BLANKS) {
             numberAt(440, y, row == ROLL_BLANKS ? rollBlanks : shieldBlanks, color);
         }
+        if (row >= WARP_CATEGORY) {
+            drawWarpValue(row, y, color);
+        }
+    }
+    if (activeTab == TAB_WARP) {
+        const PracticeWarpMap* map = &practiceWarpMaps[warpMap];
+        textAt(36, 350, "MAP ID:", MUTED);
+        numberAt(132, 350, warpMap, WHITE);
+        textAt(220, 350, warpEdited ? "CUSTOM POSITION" : "SPAWN PRESET", MUTED);
+        textAt(36, 377, warpMessage ? warpMessage : !map->spawnCount ? "OBJECT / UNPLACED MAP: NO STANDALONE WARP"
+                        : practiceWarpSpawns[map->firstSpawn + warpSpawn].warp < 0 ? "ESTIMATED SPAWN - ADJUST POSITION AS NEEDED"
+                        : "MAP OR SPAWN CHANGE RESTORES ITS DEFAULTS", MUTED);
+        textAt(36, 419, "L/R: TABS  WARP NOW + A: TRAVEL", MUTED);
+        return;
     }
     textAt(36, 395, "TRIS:", MUTED);
     numberAt(108, 395, trianglesDrawn, WHITE);
@@ -852,7 +1100,7 @@ static void drawMenu(void) {
     numberAt(372, 395, triggersDrawn, WHITE);
     textAt(36, 419,
            drawLimitReached || fillsDrawn >= fillLimit ? "DRAW LIMIT REACHED - REDUCE DISTANCE"
-           : activeTab                                 ? "SWIM: L+UP/DOWN  X: RESET  HOVER: R/X"
+           : activeTab == TAB_CHEATS                    ? "SWIM: L+UP/DOWN  X: RESET  HOVER: HOLD R"
                                                        : "L/R: TABS  L+R+DOWN: CLOSE",
            MUTED);
 }
@@ -868,6 +1116,68 @@ static void closeMenu(void) {
     menuOpen = 0;
     if (timeStop == 0xff) {
         timeStop = savedTimeStop;
+    }
+}
+
+/* Read the same world-map bounds/occupied-cell tables as mapCoordsToId,
+ * using an absolute layer without modifying the game's current layer. */
+static int warpDestinationMap(void) {
+    typedef struct PracticeMapBounds {
+        s16 minX, maxX, minZ, maxZ;
+        s8 originX, originZ;
+    } PracticeMapBounds;
+    PracticeMapBounds* bounds = (PracticeMapBounds*)gShaderMapRomBuffers[1];
+    s8* layers = (s8*)gShaderMapRomBuffers[3];
+    u8* cells = (u8*)gShaderMapRomBuffers[4];
+    int x, z, i;
+    if (!validPointer(bounds) || !validPointer(layers) || !validPointer(cells) ||
+        !(warpDestination.x >= -100000 && warpDestination.x <= 100000) ||
+        !(warpDestination.y >= -100000 && warpDestination.y <= 100000) ||
+        !(warpDestination.z >= -100000 && warpDestination.z <= 100000)) {
+        return -1;
+    }
+    x = (int)(warpDestination.x / 640.0f);
+    z = (int)(warpDestination.z / 640.0f);
+    if (warpDestination.x < x * 640.0f) {
+        x--;
+    }
+    if (warpDestination.z < z * 640.0f) {
+        z--;
+    }
+    for (i = 0; i < 128; i++) {
+        if (layers[i] == warpDestination.layer && x >= bounds[i].minX && x <= bounds[i].maxX &&
+            z >= bounds[i].minZ && z <= bounds[i].maxZ) {
+            int cell = x - bounds[i].minX + (z - bounds[i].minZ) * (bounds[i].maxX - bounds[i].minX + 1);
+            if (cell >= 0 && cell < 512 && (cells[i * 64 + (cell >> 3)] & (1 << (cell & 7)))) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+static void requestPracticeWarp(GameObject* player) {
+    const PracticeWarpMap* map = &practiceWarpMaps[warpMap];
+    int index;
+    if (!map->spawnCount || !validPointer(player) || savedTimeStop || joypadDisabled || gDvdErrorPauseActive ||
+        gWarpRequested) {
+        warpMessage = "WARP UNAVAILABLE IN THIS STATE";
+        return;
+    }
+    if (warpDestinationMap() != warpMap) {
+        warpMessage = "POSITION / LAYER IS OUTSIDE THE SELECTED MAP";
+        return;
+    }
+    index = practiceWarpSpawns[map->firstSpawn + warpSpawn].warp;
+    closeMenu();
+    hoverActive = hoverPhase = 0;
+    hoverWait = 0;
+    /* Use the retail fade/reload path. Custom positions use an unused arrival
+     * ID, so they do not pretend to arrive at an unrelated checkpoint marker. */
+    warpToMap(index >= 0 ? index : 2, 1);
+    gRcpPendingWarpDest = warpDestination;
+    if (index < 0 || warpEdited) {
+        gPendingWarpIndex = 128;
     }
 }
 
@@ -889,12 +1199,14 @@ static void swallowInput(void) {
 /* Alternate real controller inputs once per game input poll. Preserve the
  * physical pad history: padUpdate needs it for menu chords and other buttons.
  * Build X/R edges against our last effective input, including when disabled.
+ * Run only while physical R is held, sampled before injecting any inputs.
  * Each action lasts one input frame; configurable gaps release both buttons. */
 static void updateShieldHover(GameObject* player, int blocked) {
     u32 mask = PAD_BUTTON_X | PAD_TRIGGER_R;
     u32 before, after;
     u16 beforeTrigger, afterTrigger;
-    int active = enabled[SHIELD_HOVER] && validPointer(player);
+    int active = enabled[SHIELD_HOVER] && validPointer(player) &&
+                 ((gPadButtonsHeld[0] | gPadTriggers[0]) & PAD_TRIGGER_R);
     PADStatus* pad = &gPadStatuses[gPadStatusBufferIndex * PAD_MAX_CONTROLLERS];
     if (blocked || timeStop || joypadDisabled || gDvdErrorPauseActive || !validPointer(player)) {
         hoverActive = hoverPhase = 0;
@@ -981,6 +1293,9 @@ void Practice_PadUpdate(void) {
             held &= ~(PAD_BUTTON_UP | PAD_BUTTON_DOWN);
         }
         rebuildRows();
+        if (activeTab == TAB_WARP && !warpReady) {
+            resetWarpSpawn();
+        }
         if (held & (PAD_BUTTON_UP | PAD_BUTTON_DOWN)) {
             repeatTimer++;
             if ((pressed & (PAD_BUTTON_UP | PAD_BUTTON_DOWN)) || (repeatTimer > 20 && repeatTimer % 5 == 0)) {
@@ -998,6 +1313,16 @@ void Practice_PadUpdate(void) {
         row = visible[selected];
         if (pressed & PAD_BUTTON_B) {
             closeMenu();
+        } else if (row >= WARP_CATEGORY) {
+            int delta = (pressed & PAD_BUTTON_RIGHT) ? 1 : (pressed & PAD_BUTTON_LEFT) ? -1 : 0;
+            editWarpRow(row, delta);
+            if (pressed & PAD_BUTTON_A) {
+                if (row == WARP_RESET) {
+                    resetWarpSpawn();
+                } else if (row == WARP_GO) {
+                    requestPracticeWarp(player);
+                }
+            }
         } else if (row == WATER_HEIGHT || row == RANGE || row == ROLL_BLANKS || row == SHIELD_BLANKS) {
             int delta = (pressed & PAD_BUTTON_RIGHT) ? 1 : (pressed & PAD_BUTTON_LEFT) ? -1 : 0;
             if (row == WATER_HEIGHT) {
@@ -1048,7 +1373,7 @@ void Practice_PadUpdate(void) {
                 }
             }
         }
-        if (activeTab && (pressed & PAD_BUTTON_X) && validPointer(player)) {
+        if (activeTab == TAB_CHEATS && (pressed & PAD_BUTTON_X) && validPointer(player)) {
             waterHeight = player->anim.worldPosY + 40.0f;
         }
     }

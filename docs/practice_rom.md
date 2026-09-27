@@ -1,4 +1,4 @@
-# EN v1.0 practice ROM v1.3
+# EN v1.0 practice ROM v1.4
 
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
@@ -8,13 +8,16 @@ The first supported input is a clean US/EN v1.0 (`GSAE01`, revision 0) ISO.
 
 - **L + R + D-pad Down:** open/close the practice menu (controller 1).
 - **L/R inside the menu:** previous/next tab, wrapping at the ends. Collision
-  is first, Cheats second. Z is unused. Analog press and digital click count as
+  is first, Cheats second, Warp third. Z is unused. Analog press and digital click count as
   one shoulder press; holding a shoulder does not repeatedly switch tabs.
 - **D-pad Up/Down:** select a row; hold to repeat.
 - **A:** toggle its checkbox. Enabling a group expands it.
 - **Right/Left:** expand/collapse a group. Left on a child returns to its parent.
 - **Left/Right on numeric rows:** change water height, draw distance, or hover cadence.
 - **B:** close. **X on the Cheats tab:** reset water to the player's Y + 40.
+- **With Auto-Shield Hover enabled:** hold R to run the cadence; release R to stop.
+- **Warp tab:** Left/Right edits category, map, spawn, position, layer, facing or step.
+  Selecting a map/spawn restores its preset. Select **Warp Now** and press **A** to travel.
 - With swimming enabled and the menu closed, **L + Up/Down** raises/lowers the water surface.
 
 The menu consumes controller-1 input and uses the existing `timeStop` mechanism
@@ -41,20 +44,48 @@ The normal HUD shows a small reminder of the opening chord.
   This includes the status bit, disabled hit callback, and an unmet crossing-plane
   game-bit gate. Geometry does not establish
   whether all of its game-bit/command conditions currently permit activation.
+- **Fox / Player** collision filters: object body, model hit spheres, feet/floor
+  contact, movement body spheres, wall probe spheres, and cached sweep lines.
+  These are independent of the generic Object Hit Volumes checkbox. Movement
+  shapes read the active `CurvesCollisionState` and its live radii/counts. Segment
+  points are world-space; wall points use the player parent's collision transform
+  when parented. A captured Ice Mountain state had a 0.05 ground radius and 8.5
+  body/wall radii. The tiny ground sphere gets a center cross; floor results get
+  a cross and connecting line. These markers are not additional hit volumes.
+  Cached trace endpoints can coincide after the engine copies the resolved point
+  back, so this is not a history of all sweeps. Animation foot-effect positions
+  are deliberately not represented as collision shapes.
 - **Forced Swimming:** uses the game's deep-water entry path and substitutes a
   player-local water surface/depth. A cyan grid shows that surface. Real map
   water geometry is unchanged. Disabling releases the swim flag and restores
   the real water query. Normal walls and collision still apply.
-- **Auto-Shield Hover** on Cheats: emits **R (shield), then X (roll)** on
+- **Auto-Shield Hover** on Cheats: while physical **R is held**, emits
+  **R (shield), then X (roll)** on
   successive game input frames. **Blanks After Roll** and **Blanks After Shield**
   each accept 0-60 frames, edited with D-pad Left/Right. Each action lasts one
   frame; blank frames release both X and R. At 2 roll blanks and 1 shield blank,
   the repeating pattern is `R, blank, X, blank, blank`. Both counts default to
-  zero. The stick and other buttons remain available. The macro stops during
+  zero. Releasing R stops immediately and resets the cadence to shield; merely
+  enabling the checkbox sends no inputs. Analog R and its digital click both
+  activate it. The stick and other buttons remain available. The macro stops during
   menus, paused gameplay, disabled input or DVD errors and restarts at shield.
   Turning it off returns X/R to physical input with correct release edges.
   It automates inputs only: height, velocity and animation state are not forced.
   The best cadence and resulting hover behavior still require gameplay testing.
+- **Warp:** all 117 map IDs are listed in categories. 61 have world destinations:
+  41 use retail WARPTAB entries and 20 use explicitly marked estimated positions.
+  Estimated positions come from a central placed object plus 50 Y, or an occupied
+  block center with Y=0 when no placement is available; adjust them as needed.
+  They are not guaranteed safe ground or working entrances. The other 56 IDs
+  represent unplaced maps or object chunks and cannot be warped to standalone.
+  The 95 presets use the retail occupied-cell lookup, including overlapping
+  maps and signed layers. X/Y/Z, layer, facing byte and position step are editable.
+  Warping validates that X/Z/layer still resolve to the selected map and uses
+  the retail fade/reload path. Edited positions use unused arrival ID 128 to
+  avoid activating an unrelated checkpoint marker. Unedited retail presets
+  retain their arrival IDs and therefore their normal arrival events.
+  Story flags, map acts and character selection are retained; bosses, Arwing
+  stages and unused maps may require suitable progression state.
 - **Draw Through Walls** and a **250–2500 unit Draw Distance** setting.
 
 Collision and triggers start enabled, with every geometry filter on except
@@ -103,6 +134,16 @@ need further runtime investigation.
 
 ## Build and apply
 
+The checked-in warp metadata can be regenerated from a clean EN disc:
+
+```powershell
+python tools/practice/warp_catalog.py --iso "path/to/clean-EN-v1.0.iso"
+```
+
+The generator verifies the DOL hash and derives map names, cells, layers and
+warp records from the disc. Category grouping and estimated-spawn selection
+are practice policy. No original assets are included in the patch package.
+
 Use the repository's existing GC/1.3 MWCC and PowerPC binutils. The builder finds
 them in `build/compilers` and `build/binutils`, including the parent checkout of
 a Git worktree. Override with `--compilers` / `--binutils` if necessary. Current
@@ -114,8 +155,8 @@ From the practice worktree:
 ```powershell
 python tools/practice/build.py build --enable `
   --iso "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00).iso" `
-  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.3).iso" `
-  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.3.sfapatch"
+  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.4).iso" `
+  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.4.sfapatch"
 ```
 
 The `.sfapatch` is a ZIP containing a manifest and the new payload, not a retail
@@ -124,14 +165,14 @@ DOL hash, independent of the image's padding or compression. Apply it with:
 
 ```powershell
 python tools/practice/build.py apply --iso "clean.iso" `
-  --patch "SFA-EN-v1.0-Practice-v1.3.sfapatch" --output "practice.iso"
+  --patch "SFA-EN-v1.0-Practice-v1.4.sfapatch" --output "practice.iso"
 ```
 
 The executable transformation is also available without a disc container:
 
 ```powershell
 python tools/practice/build.py apply --dol "main.dol" `
-  --patch "SFA-EN-v1.0-Practice-v1.3.sfapatch" --output "practice.dol"
+  --patch "SFA-EN-v1.0-Practice-v1.4.sfapatch" --output "practice.dol"
 ```
 
 `--dol` is also accepted by `build`. This is the interface for future image
@@ -145,7 +186,7 @@ An RVZ workflow can use Dolphin's conversion tool around the ISO patcher:
 ```powershell
 DolphinTool convert -i clean.rvz -o clean.iso -f iso
 python tools/practice/build.py apply --iso clean.iso `
-  --patch SFA-EN-v1.0-Practice-v1.3.sfapatch --output practice.iso
+  --patch SFA-EN-v1.0-Practice-v1.4.sfapatch --output practice.iso
 DolphinTool convert -i practice.iso -o practice.rvz -f rvz -b 131072 -c zstd -l 5
 ```
 
@@ -196,7 +237,7 @@ portable patch's compatibility key.
 
 This EN disc's DOL starts at `0x1E000`, is `0x33DD40` bytes long and is followed
 by the FST at `0x35BE00`: only 192 bytes of spare space are available. The payload
-needs about 30 KiB. A growing DOL cannot be replaced at that offset without
+needs about 46 KiB. A growing DOL cannot be replaced at that offset without
 moving it or other disc structures; this writer moves only the DOL.
 
 V1 failed before game entry because its section at `0x816C0000` exceeded both
@@ -225,7 +266,9 @@ application, the old high-address boot regression, and overwrite protection.
 Payload tests run the compiled PPC instructions with stubbed game/GX services:
 menu debouncing/navigation/input consumption, arena bounds, swimming restoration,
 trigger fills/outlines and toggles, depth-test defaults/no depth writes, menu
-scrolling, packed terrain vertices, sentinel and cell-mask filtering, large-face
+scrolling, hold-R hover activation/release and cadence, all three tabs, warp
+defaults/overrides/explicit activation/occupied-cell validation, player movement
+shapes and parent transforms, packed terrain vertices, sentinel and cell-mask filtering, large-face
 culling, water filters, nearby-block priority, barrier heights, and object transforms.
 Unicorn lacks Gekko paired singles, so the harness skips only the compiler's
 paired-lane stack saves/restores (ordinary floating-point saves still run).

@@ -45,7 +45,7 @@ class Machine:
                 "playerEnterDeepWater", "playerUpdateSurfaceResponse", "Camera_SetCurrentViewIndex",
                 "Camera_UpdateProjection", "resetSomeGxFlags", "getScreenResolution", "mathSinf", "mathCosf",
                 "Matrix_TransformPoint", "mapGetBlockAtPos", "ObjList_GetObjects", "PSMTXInverse", "PSMTXMultVec",
-                "Obj_TransformLocalPointToWorld", "mainGetBit"):
+                "Obj_TransformLocalPointToWorld", "mainGetBit", "ObjHits_IsObjectEnabled", "warpToMap"):
                 self.stub[addr] = name
         self.uc.hook_add(UC_HOOK_CODE, self.service)
         self.uc.hook_add(UC_HOOK_MEM_WRITE, self.fifo, begin=0xCC008000, end=0xCC008003)
@@ -60,7 +60,7 @@ class Machine:
         return self.uc.reg_read(UC_PPC_REG_0 + n)
 
     def row(self, label):
-        for index in range(22):
+        for index in range(40):
             address = self.read(self.sym["rows"] + index * 8)
             text = bytes(self.uc.mem_read(address, 64)).split(b"\0")[0].decode()
             if text == label:
@@ -92,6 +92,11 @@ class Machine:
             uc.reg_write(UC_PPC_REG_0 + 3, self.player)
         elif name == "mainGetBit":
             uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "gate_bit", 1))
+        elif name == "ObjHits_IsObjectEnabled":
+            uc.reg_write(UC_PPC_REG_0 + 3, 1)
+        elif name == "warpToMap":
+            self.write(self.sym["gWarpRequested"], 1, "B")
+            self.write(self.sym["gPendingWarpIndex"], self.r(3), "h")
         elif name == "getScreenResolution":
             uc.reg_write(UC_PPC_REG_0 + 3, (480 << 16) | 640)
         elif name == "GXBegin":
@@ -440,7 +445,7 @@ class PayloadTests(unittest.TestCase):
         m.pad(0x64, 4)
         m.call("rebuildRows")
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 0)
-        self.assertEqual(m.read(m.sym["visibleCount"]), 16)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 23)
         m.pad()
         m.pad(0x20, 0x20)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
@@ -452,13 +457,18 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 0)
         m.pad()
         m.pad(0x40, 0x40)
-        self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)  # Wrap left.
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 2)  # Wrap left to Warp.
+        m.pad()
+        m.pad(0x40, 0x40)
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
         m.write(m.sym["selected"], 3)
         m.pad(0x100, 0x100)
         self.assertEqual(m.read(m.sym["enabled"] + m.row("AUTO-SHIELD HOVER"), "B"), 1)
         self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)  # Menu wins over automation.
         m.pad(0x200, 0x200)
         m.pad()
+        self.assertEqual(m.read(m.sym["gPadTriggers"], "H") & 0x20, 0)
+        m.pad(0x20, 0x20)
         self.assertEqual(m.read(m.sym["gPadTriggers"], "H") & 0x20, 0x20)
 
     def test_hover_alternates_edges_preserves_steering_and_releases(self):
@@ -466,7 +476,7 @@ class PayloadTests(unittest.TestCase):
         m.toggle("AUTO-SHIELD HOVER", 1)
         m.write(m.sym["gPadStatuses"] + 2, 40, "b")
         for frame in range(6):
-            m.pad(0x800)  # Y remains held; no physical X/R input.
+            m.pad(0x820, 0x20 if frame == 0 else 0)  # Hold R to run; Y remains available.
             action = 0x20 if frame % 2 == 0 else 0x400
             previous = 0 if frame == 0 else (0x400 if frame % 2 == 0 else 0x20)
             self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x800 | action)
@@ -475,19 +485,51 @@ class PayloadTests(unittest.TestCase):
             self.assertEqual(m.read(m.sym["gPadTriggers"], "H") & 0x20, action & 0x20)
             self.assertEqual(m.read(m.sym["gPadStatuses"] + 7, "B"), 255 if action == 0x20 else 0)
             self.assertEqual(m.read(m.sym["gPadStatuses"] + 2, "b"), 40)
-            self.assertEqual(m.read(m.sym["gPadButtonsPrevious"]), 0x800)
-        m.toggle("AUTO-SHIELD HOVER", 0)
+            self.assertEqual(m.read(m.sym["gPadButtonsPrevious"]), 0x820)
         m.pad(0x800)
         self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x800)
         self.assertEqual(m.read(m.sym["gPadButtonsReleased"]) & 0x420, 0x400)
-        m.toggle("AUTO-SHIELD HOVER", 1)
+        self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)
+        m.pad(0x800)
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x800)
         for blocker in ("timeStop", "gDvdErrorPauseActive", "joypadDisabled"):
             m.write(m.sym[blocker], 1, "B")
-            m.pad()
-            self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
+            m.pad(0x20)
+            self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x20)
+            self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)
             self.assertEqual(m.read(m.sym["hoverPhase"], "B"), 0)
             m.write(m.sym[blocker], 0, "B")
-        m.pad()
+        m.pad(0x20)
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x20)
+
+    def test_hover_release_resets_gaps_and_disabled_restores_physical_input(self):
+        m = self.m
+        m.toggle("AUTO-SHIELD HOVER", 1)
+        m.write(m.sym["shieldBlanks"], 3)
+        for release_after in (1, 2, 5):  # Shield, blank, and roll frames.
+            for frame in range(release_after):
+                m.pad(0x20, 0x20 if frame == 0 else 0)
+            previous = m.read(m.sym["gPadButtonsHeld"]) & 0x420
+            m.pad()
+            self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
+            self.assertEqual(m.read(m.sym["gPadButtonsReleased"]) & 0x420, previous)
+            self.assertEqual(m.read(m.sym["hoverWait"]), 0)
+            self.assertEqual(m.read(m.sym["hoverPhase"], "B"), 0)
+            m.pad()
+            self.assertEqual(m.read(m.sym["gPadButtonsJustPressed"]), 0)
+        m.pad(0x20, 0x20)
+        m.pad(0x20)  # Blank frame suppresses physical R.
+        m.toggle("AUTO-SHIELD HOVER", 0)
+        m.pad(0x20)
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x20)
+        self.assertEqual(m.read(m.sym["gPadButtonsJustPressed"]), 0x20)
+        self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)
+        m.toggle("AUTO-SHIELD HOVER", 1)
+        m.pad()  # Establish physical release before an analog-only press.
+        m.write(m.sym["gPadTriggers"], 0x20, "H")
+        m.write(m.sym["gPadTriggersPressed"], 0x20, "H")
+        m.call("Practice_PadUpdate")
+        self.assertEqual(m.read(m.sym["hoverActive"], "B"), 1)
         self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x20)
 
     def test_world_depth_default_and_no_depth_writes(self):
@@ -500,6 +542,116 @@ class PayloadTests(unittest.TestCase):
         m.call("drawWorld")
         self.assertIn(("GXSetZMode", 0, 3, 0), m.calls)
 
+    def test_warp_navigation_defaults_and_explicit_action(self):
+        m = self.m
+        m.pad(0x64, 4)
+        m.pad()
+        m.pad(0x40, 0x40)  # Collision -> Warp, wrapping left.
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 2)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 11)
+        destination = m.sym["warpDestination"]
+        default = bytes(m.uc.mem_read(destination, 16))
+        self.assertAlmostEqual(m.read(destination, "f"), 3583.789306640625)
+        m.write(m.sym["selected"], 3)
+        m.pad(2, 2)
+        self.assertEqual(m.read(destination, "f"), struct.unpack(">f", default[:4])[0] + 10)
+        self.assertEqual(m.read(m.sym["warpEdited"], "B"), 1)
+        m.write(m.sym["selected"], 2)
+        m.pad(2, 2)
+        self.assertEqual(m.read(m.sym["warpSpawn"]), 1)
+        self.assertEqual(m.read(m.sym["warpEdited"], "B"), 0)
+        self.assertEqual(m.read(destination + 4, "f"), 6545.6337890625)
+        m.write(m.sym["selected"], 1)
+        m.pad(2, 2)
+        self.assertNotEqual(m.read(m.sym["warpMap"]), 23)
+        self.assertEqual(m.read(m.sym["warpSpawn"]), 0)
+        self.assertFalse(any(c[0] == "warpToMap" for c in m.calls))
+        # Browsing object chunks shows unavailable entries, without issuing warps.
+        m.write(m.sym["selected"], 0)
+        m.write(m.sym["warpCategory"], 6)
+        m.pad(2, 2)
+        self.assertEqual(m.read(m.sym["warpMap"]), 75)
+        m.write(m.sym["selected"], 10)
+        m.pad(0x100, 0x100)
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
+        self.assertFalse(any(c[0] == "warpToMap" for c in m.calls))
+        # Resetting the map restores the preset, including Y/layer/facing.
+        m.write(m.sym["warpMap"], 23)
+        m.write(m.sym["warpSpawn"], 0)
+        m.call("resetWarpSpawn")
+        self.assertEqual(bytes(m.uc.mem_read(destination, 16)), default)
+
+    def test_warp_validates_world_cells_and_uses_retail_transition(self):
+        m = self.m
+        bounds, layers, cells = 0x81100000, 0x81101000, 0x81102000
+        m.write(m.sym["gShaderMapRomBuffers"] + 4, bounds)
+        m.write(m.sym["gShaderMapRomBuffers"] + 12, layers)
+        m.write(m.sym["gShaderMapRomBuffers"] + 16, cells)
+        m.uc.mem_write(layers, bytes([127]) * 128)
+        m.uc.mem_write(bounds + 23 * 10, struct.pack(">4h2b", 5, 5, 6, 6, 0, 0))
+        m.write(layers + 23, 0, "b")
+        m.write(cells + 23 * 64, 1, "B")
+        m.call("resetWarpSpawn")
+        m.write(m.sym["menuOpen"], 1, "B")
+        m.write(m.sym["timeStop"], 255, "B")
+        m.write(m.sym["warpDestination"], 0.0, "f")
+        m.call("requestPracticeWarp", m.player)
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
+        self.assertFalse(any(c[0] == "warpToMap" for c in m.calls))
+        m.call("resetWarpSpawn")
+        m.call("requestPracticeWarp", m.player)
+        self.assertIn(("warpToMap", 2, 1, m.calls[-1][3]), m.calls)
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 0)
+        self.assertEqual(m.read(m.sym["timeStop"], "B"), 0)
+        self.assertEqual(m.read(m.sym["gPendingWarpIndex"], "h"), 2)
+        self.assertEqual(bytes(m.uc.mem_read(m.sym["gRcpPendingWarpDest"], 16)),
+                         bytes(m.uc.mem_read(m.sym["warpDestination"], 16)))
+        m.write(m.sym["gWarpRequested"], 0, "B")
+        m.write(m.sym["warpEdited"], 1, "B")
+        m.call("requestPracticeWarp", m.player)
+        self.assertEqual(m.read(m.sym["gPendingWarpIndex"], "h"), 128)
+        # Negative coordinates must floor toward -infinity, not truncate to zero.
+        m.uc.mem_write(bounds + 7 * 10, struct.pack(">4h2b", -9, -9, -2, -2, 0, 0))
+        m.write(layers + 7, 0, "b")
+        m.write(cells + 7 * 64, 1, "B")
+        m.write(m.sym["warpMap"], 7)
+        m.call("resetWarpSpawn")
+        m.call("warpDestinationMap")
+        self.assertEqual(m.r(3), 7)
+
+    def test_player_movement_shapes_toggles_and_parent_space(self):
+        m = self.m
+        c = m.state + 4
+        m.write(c, 0x04002009)
+        m.write(c + 0x25C, 0x21, "B")
+        m.uc.mem_write(c + 8, struct.pack(">6f", 0, 100, 0, 0, 117, 0))
+        m.write(c + 0xA8, 0.05, "f")
+        m.write(c + 0xAC, 8.5, "f")
+        m.write(c + 0x1F0, -100000.0, "f")
+        radii = 0x81100000
+        m.write(c + 0xE0, radii)
+        m.write(radii, 8.5, "f")
+        m.uc.mem_write(c + 0xE4, struct.pack(">3f", 2, 105, 3))
+        m.toggle("CACHED SWEEP LINES", 0)
+        m.call("drawPlayerCollision", m.player)
+        self.assertEqual(len(m.geometry), 218)  # Three real spheres plus tiny-ground marker.
+        for label, expected in (("FEET / FLOOR CONTACT", 144), ("MOVEMENT BODY SPHERES", 72), ("WALL PROBE SPHERES", 0)):
+            m.geometry = []
+            m.toggle(label, 0)
+            m.call("drawPlayerCollision", m.player)
+            self.assertEqual(len(m.geometry), expected)
+        parent = 0x81200000
+        m.write(m.player + 0x30, parent)  # Canonical ObjAnimComponent.parent.
+        m.write(parent + 0x18, 100.0, "f")
+        m.write(parent + 0x20, 200.0, "f")
+        m.toggle("WALL PROBE SPHERES", 1)
+        m.call("drawPlayerCollision", m.player)
+        self.assertEqual(m.geometry[0][2][0][:3], (102, 113.5, 203))
+        m.geometry = []
+        m.write(c, 0)
+        m.call("drawPlayerCollision", m.player)
+        self.assertFalse(m.geometry)
+
     def test_hover_custom_cadence_and_menu_limits(self):
         m = self.m
         m.toggle("AUTO-SHIELD HOVER", 1)
@@ -508,7 +660,7 @@ class PayloadTests(unittest.TestCase):
         sequence = [0x20, 0, 0, 0, 0x400, 0, 0] * 2
         previous = 0
         for action in sequence:
-            m.pad(0x100)  # A stays available while X/R are automated.
+            m.pad(0x120, 0x20 if previous == 0 and action == 0x20 else 0)  # Hold R; A stays available.
             self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0x100 | action)
             self.assertEqual(m.read(m.sym["gPadButtonsJustPressed"]) & 0x420, action & ~previous)
             self.assertEqual(m.read(m.sym["gPadButtonsReleased"]) & 0x420, previous & ~action)
@@ -545,7 +697,7 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(len(m.geometry), 52)
         self.assertEqual(sorted(set(p[1] for g in m.geometry for p in g[2])), [95, 120])
         m.geometry = []
-        m.toggle("OBJECT HIT VOLUMES", 0)
+        m.toggle("OBJECT BODY", 0)
         m.call("drawObjectCollision", m.player)
         self.assertFalse(m.geometry)
 
