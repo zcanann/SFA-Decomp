@@ -33,26 +33,45 @@ extern f32 mathCosf(f32);
 extern u32 getScreenResolution(void);
 
 enum {
-    COLLISION, TERRAIN, OBJECT_MESH, HIT_SPHERES, WATER_MESH,
-    TRIGGERS, PLANES, BOXES, SPHERES, CYLINDERS, TARGET_PATH,
-    SWIMMING, WATER_HEIGHT, WATER_GRID, XRAY, RANGE, ROW_COUNT
+    COLLISION,
+    TERRAIN,
+    OBJECT_MESH,
+    HIT_SPHERES,
+    WATER_MESH,
+    TRIGGERS,
+    PLANES,
+    BOXES,
+    SPHERES,
+    CYLINDERS,
+    TARGET_PATH,
+    SWIMMING,
+    WATER_HEIGHT,
+    WATER_GRID,
+    XRAY,
+    RANGE,
+    ROW_COUNT
 };
 typedef struct PracticeRow {
     const char* label;
     s8 parent;
     u8 group;
 } PracticeRow;
-static const PracticeRow rows[ROW_COUNT] = {
-    {"COLLISION", -1, 1}, {"TERRAIN TRIANGLES", COLLISION, 0},
-    {"OBJECT TRIANGLES", COLLISION, 0}, {"OBJECT HIT SPHERES", COLLISION, 0},
-    {"WATER TRIANGLES", COLLISION, 0},
-    {"TRIGGERS", -1, 1}, {"CROSSING PLANES", TRIGGERS, 0},
-    {"BOXES", TRIGGERS, 0}, {"SPHERES", TRIGGERS, 0},
-    {"CYLINDERS", TRIGGERS, 0}, {"TARGET MOTION", TRIGGERS, 0},
-    {"FORCED SWIMMING", -1, 1}, {"WATER HEIGHT", SWIMMING, 0},
-    {"SHOW WATER PLANE", SWIMMING, 0}, {"DRAW THROUGH WALLS", -1, 0},
-    {"DRAW DISTANCE", -1, 0}
-};
+static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
+                                            {"TERRAIN TRIANGLES", COLLISION, 0},
+                                            {"OBJECT TRIANGLES", COLLISION, 0},
+                                            {"OBJECT HIT SPHERES", COLLISION, 0},
+                                            {"WATER TRIANGLES", COLLISION, 0},
+                                            {"TRIGGERS", -1, 1},
+                                            {"CROSSING PLANES", TRIGGERS, 0},
+                                            {"BOXES", TRIGGERS, 0},
+                                            {"SPHERES", TRIGGERS, 0},
+                                            {"CYLINDERS", TRIGGERS, 0},
+                                            {"TARGET MOTION", TRIGGERS, 0},
+                                            {"FORCED SWIMMING", -1, 1},
+                                            {"WATER HEIGHT", SWIMMING, 0},
+                                            {"SHOW WATER PLANE", SWIMMING, 0},
+                                            {"DRAW THROUGH WALLS", -1, 0},
+                                            {"DRAW DISTANCE", -1, 0}};
 static u8 enabled[ROW_COUNT] = {0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0};
 static u8 expanded[ROW_COUNT];
 static u8 menuOpen, chordLatched, savedTimeStop, swimApplied;
@@ -67,7 +86,9 @@ static const u32 WHITE = 0xE7EFFAFF, MUTED = 0x95A5BFFF, GOLD = 0xFFD16AFF;
 
 static Vec point(f32 x, f32 y, f32 z) {
     Vec p;
-    p.x = x; p.y = y; p.z = z;
+    p.x = x;
+    p.y = y;
+    p.z = z;
     return p;
 }
 
@@ -77,7 +98,7 @@ static int validPointer(const void* p) {
 
 static int nearPoint(Vec p) {
     f32 x = p.x - origin.x, y = p.y - origin.y, z = p.z - origin.z;
-    return x*x + y*y + z*z < (f32)drawDistance * drawDistance;
+    return x * x + y * y + z * z < (f32)drawDistance * drawDistance;
 }
 
 static void vertex(f32 x, f32 y, f32 z, u32 color) {
@@ -145,10 +166,23 @@ static void circle(Vec center, f32 radius, int axis, u32 color) {
         f32 a = i * (6.28318530718f / 24.0f);
         f32 s = mathSinf(a) * radius, c = mathCosf(a) * radius;
         Vec p = center;
-        if (axis == 0) { p.y += c; p.z += s; }
-        if (axis == 1) { p.x += c; p.z += s; }
-        if (axis == 2) { p.x += c; p.y += s; }
-        if (i == 0) { first = p; } else { line(prev, i == 24 ? first : p, color); }
+        if (axis == 0) {
+            p.y += c;
+            p.z += s;
+        }
+        if (axis == 1) {
+            p.x += c;
+            p.z += s;
+        }
+        if (axis == 2) {
+            p.x += c;
+            p.y += s;
+        }
+        if (i == 0) {
+            first = p;
+        } else {
+            line(prev, i == 24 ? first : p, color);
+        }
         prev = p;
     }
 }
@@ -182,17 +216,21 @@ static void drawTriggers(GameObject* obj) {
         Mtx inverse;
         Vec p[4];
         int i;
-        if (PSMTXInverse(plane->mtx, inverse) == 0) { return; }
+        if (PSMTXInverse(plane->mtx, inverse) == 0) {
+            return;
+        }
         for (i = 0; i < 4; i++) {
             Vec local = point((i & 1) ? plane->clipHalfExtent : -plane->clipHalfExtent,
                               (i & 2) ? plane->clipHalfExtent : -plane->clipHalfExtent, 0);
             PSMTXMultVec(inverse, &local, &p[i]);
         }
-        line(p[0], p[1], color); line(p[1], p[3], color);
-        line(p[3], p[2], color); line(p[2], p[0], color);
+        line(p[0], p[1], color);
+        line(p[1], p[3], color);
+        line(p[3], p[2], color);
+        line(p[2], p[0], color);
         {
-            Vec n = point(center.x + plane->normalX * 40, center.y + plane->normalY * 40,
-                          center.z + plane->normalZ * 40);
+            Vec n =
+                point(center.x + plane->normalX * 40, center.y + plane->normalY * 40, center.z + plane->normalZ * 40);
             line(center, n, GOLD);
         }
     } else if (type == 0x4d && enabled[BOXES]) {
@@ -212,7 +250,9 @@ static void drawTriggers(GameObject* obj) {
         }
         for (i = 0; i < 8; i++) {
             for (j = 1; j <= 4; j <<= 1) {
-                if (!(i & j)) { line(p[i], p[i | j], color); }
+                if (!(i & j)) {
+                    line(p[i], p[i | j], color);
+                }
             }
         }
     } else if (type == 0x4b && enabled[SPHERES]) {
@@ -221,22 +261,27 @@ static void drawTriggers(GameObject* obj) {
         Vec a = center, b = center;
         int i;
         f32 radius = def->size[0] * 2.0f;
-        a.y -= def->size[1] * 2.0f; b.y += def->size[1] * 2.0f;
-        circle(a, radius, 1, color); circle(b, radius, 1, color);
+        a.y -= def->size[1] * 2.0f;
+        b.y += def->size[1] * 2.0f;
+        circle(a, radius, 1, color);
+        circle(b, radius, 1, color);
         for (i = 0; i < 4; i++) {
             Vec c = a, d = b;
             c.x += mathCosf(i * 1.57079632679f) * radius;
             c.z += mathSinf(i * 1.57079632679f) * radius;
-            d.x = c.x; d.z = c.z; line(c, d, color);
+            d.x = c.x;
+            d.z = c.z;
+            line(c, d, color);
         }
-    } else { return; }
+    } else {
+        return;
+    }
     triggersDrawn++;
     if (enabled[TARGET_PATH]) {
         Vec a = point(state->targetPosX, state->targetPosY, state->targetPosZ);
         Vec b = point(state->prevTargetPosX, state->prevTargetPosY, state->prevTargetPosZ);
-        if (a.x > -1000000 && a.x < 1000000 && a.y > -1000000 && a.y < 1000000 &&
-            a.z > -1000000 && a.z < 1000000 && b.x > -1000000 && b.x < 1000000 &&
-            b.y > -1000000 && b.y < 1000000 && b.z > -1000000 && b.z < 1000000) {
+        if (a.x > -1000000 && a.x < 1000000 && a.y > -1000000 && a.y < 1000000 && a.z > -1000000 && a.z < 1000000 &&
+            b.x > -1000000 && b.x < 1000000 && b.y > -1000000 && b.y < 1000000 && b.z > -1000000 && b.z < 1000000) {
             line(a, b, 0xFFE067FF);
         }
     }
@@ -255,27 +300,37 @@ static void drawTerrain(void) {
         for (z = cz - radius; z <= cz + radius && linesDrawn < lineLimit; z++) {
             for (x = cx - radius; x <= cx + radius && linesDrawn < lineLimit; x++) {
                 MapBlockData* block = mapGetBlockAtPos(x, z, layer);
-                if (!validPointer(block) || !validPointer(block->gcPolygons) ||
-                    !validPointer(block->polygonGroups) || !validPointer(block->vertices)) { continue; }
+                if (!validPointer(block) || !validPointer(block->gcPolygons) || !validPointer(block->polygonGroups) ||
+                    !validPointer(block->vertices)) {
+                    continue;
+                }
                 for (groupIndex = 0; groupIndex < block->polyGroupCount && linesDrawn < lineLimit; groupIndex++) {
                     CollisionPolygonGroup* group = &block->polygonGroups[groupIndex];
                     int water = (group->flags & 8) != 0;
                     int end = groupIndex + 1 < block->polyGroupCount ? group[1].firstTri : block->nPolygons;
                     u32 color = water ? 0x42BFFFFF : 0x59E99AFF;
-                    if (water ? !enabled[WATER_MESH] : !enabled[TERRAIN]) { continue; }
-                    if (end > block->nPolygons) { end = block->nPolygons; }
+                    if (water ? !enabled[WATER_MESH] : !enabled[TERRAIN]) {
+                        continue;
+                    }
+                    if (end > block->nPolygons) {
+                        end = block->nPolygons;
+                    }
                     for (triIndex = group->firstTri; triIndex < end && linesDrawn < lineLimit; triIndex++) {
                         MapTriIndex* tri = &block->gcPolygons[triIndex];
                         Vec p[3];
                         for (corner = 0; corner < 3; corner++) {
                             s16* v;
-                            if (tri->vert[corner] >= block->vertexCount) { break; }
+                            if (tri->vert[corner] >= block->vertexCount) {
+                                break;
+                            }
                             v = (s16*)block->vertices + tri->vert[corner] * 3;
                             p[corner].x = (v[0] >> 3) + x * 640 + gMapBlockOriginWorldX;
                             p[corner].y = (v[1] >> 3) + block->collisionYOffset;
                             p[corner].z = (v[2] >> 3) + z * 640 + gMapBlockOriginWorldZ;
                         }
-                        if (corner == 3) { triangle(p[0], p[1], p[2], color); }
+                        if (corner == 3) {
+                            triangle(p[0], p[1], p[2], color);
+                        }
                     }
                 }
             }
@@ -289,30 +344,39 @@ static void drawObjectCollision(GameObject* obj) {
     ObjHitboxTransformState* hit = obj->anim.hitboxTransformState;
     Vec center = point(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ);
     int bank = 0, i, j, k;
-    if (!nearPoint(center) || !validPointer(obj->anim.modelBanks) ||
-        !validPointer(obj->anim.modelInstance)) { return; }
+    if (!nearPoint(center) || !validPointer(obj->anim.modelBanks) || !validPointer(obj->anim.modelInstance)) {
+        return;
+    }
     if (obj->anim.hitReactState != NULL) {
         bank = ((ObjHitsPriorityState*)obj->anim.hitReactState)->stateIndex;
     }
-    if (bank < 0 || bank >= obj->anim.modelInstance->modelCount) { return; }
+    if (bank < 0 || bank >= obj->anim.modelInstance->modelCount) {
+        return;
+    }
     model = obj->anim.modelBanks[bank];
-    if (!validPointer(model) || !validPointer(model->file)) { return; }
+    if (!validPointer(model) || !validPointer(model->file)) {
+        return;
+    }
     file = model->file;
     if (enabled[HIT_SPHERES] && validPointer(model->activeHitVolumeSpheres)) {
         ObjModelHitSphere* spheres = (ObjModelHitSphere*)model->activeHitVolumeSpheres;
         for (i = 0; i < file->hitVolumeCount && linesDrawn < lineLimit; i++) {
-            Vec p = point(spheres[i].pos[0] + playerMapOffsetX, spheres[i].pos[1],
-                          spheres[i].pos[2] + playerMapOffsetZ);
+            Vec p =
+                point(spheres[i].pos[0] + playerMapOffsetX, spheres[i].pos[1], spheres[i].pos[2] + playerMapOffsetZ);
             sphere(p, spheres[i].radius, 0xFFAB4FFF);
         }
     }
     if (!enabled[OBJECT_MESH] || !validPointer(hit) || hit->activeMatrixIndex > 1 ||
         !validPointer(file->collisionBlocks) || !validPointer(file->collisionTriangles) ||
-        !validPointer(file->vertices)) { return; }
+        !validPointer(file->vertices)) {
+        return;
+    }
     for (i = 0; i < file->collisionBlockCount && linesDrawn < lineLimit; i++) {
         CollisionPolygonGroup* group = &file->collisionBlocks[i];
         int end = group[1].firstTri;
-        if (end > 20000 || (group->flags & 0x100000)) { continue; }
+        if (end > 20000 || (group->flags & 0x100000)) {
+            continue;
+        }
         for (j = group->firstTri; j < end && linesDrawn < lineLimit; j++) {
             Vec p[3];
             for (k = 0; k < 3; k++) {
@@ -320,12 +384,18 @@ static void drawObjectCollision(GameObject* obj) {
                 s16* v;
                 f32 scale = (file->flags & MODEL_FLAG_INTEGER_VERTEX_COORDS) ? 1.0f : 1.0f / 256.0f;
                 Vec local;
-                if (idx >= file->vertexCount) { break; }
+                if (idx >= file->vertexCount) {
+                    break;
+                }
                 v = (s16*)file->vertices + idx * 3;
-                local.x = v[0] * scale; local.y = v[1] * scale; local.z = v[2] * scale;
+                local.x = v[0] * scale;
+                local.y = v[1] * scale;
+                local.z = v[2] * scale;
                 p[k] = transformPoint(&hit->matrices[hit->activeMatrixIndex + 2][0][0], local);
             }
-            if (k == 3) { triangle(p[0], p[1], p[2], 0xF4BE5FFF); }
+            if (k == 3) {
+                triangle(p[0], p[1], p[2], 0xF4BE5FFF);
+            }
         }
     }
 }
@@ -334,8 +404,12 @@ static void drawWorld(void) {
     GameObject* player = Obj_GetPlayerObject();
     int i, count, start;
     GameObject** objects;
-    if (!validPointer(player)) { return; }
-    origin.x = player->anim.worldPosX; origin.y = player->anim.worldPosY; origin.z = player->anim.worldPosZ;
+    if (!validPointer(player)) {
+        return;
+    }
+    origin.x = player->anim.worldPosX;
+    origin.y = player->anim.worldPosY;
+    origin.z = player->anim.worldPosZ;
     Camera_SetCurrentViewIndex(0);
     Camera_UpdateProjection(NULL, 0);
     GXLoadPosMtxImm((MtxPtr)gCameraViewMatrix, GX_PNMTX0);
@@ -344,9 +418,15 @@ static void drawWorld(void) {
     if (validPointer(objects) && count >= 0 && count <= 2048) {
         for (i = start; i < count && linesDrawn < lineLimit; i++) {
             GameObject* obj = objects[i];
-            if (!validPointer(obj)) { continue; }
-            if (enabled[TRIGGERS]) { drawTriggers(obj); }
-            if (enabled[COLLISION]) { drawObjectCollision(obj); }
+            if (!validPointer(obj)) {
+                continue;
+            }
+            if (enabled[TRIGGERS]) {
+                drawTriggers(obj);
+            }
+            if (enabled[COLLISION]) {
+                drawObjectCollision(obj);
+            }
         }
     }
     if (enabled[SWIMMING] && enabled[WATER_GRID]) {
@@ -355,16 +435,21 @@ static void drawWorld(void) {
             Vec b = point(origin.x + 250, waterHeight, origin.z + i * 50);
             Vec c = point(origin.x + i * 50, waterHeight, origin.z - 250);
             Vec d = point(origin.x + i * 50, waterHeight, origin.z + 250);
-            line(a, b, 0x3BBFFFFF); line(c, d, 0x3BBFFFFF);
+            line(a, b, 0x3BBFFFFF);
+            line(c, d, 0x3BBFFFFF);
         }
     }
-    if (enabled[COLLISION] && (enabled[TERRAIN] || enabled[WATER_MESH])) { drawTerrain(); }
+    if (enabled[COLLISION] && (enabled[TERRAIN] || enabled[WATER_MESH])) {
+        drawTerrain();
+    }
 }
 
 static void rectangle(f32 x, f32 y, f32 w, f32 h, u32 color) {
     GXBegin(GX_QUADS, GX_VTXFMT7, 4);
-    vertex(x, y, 0, color); vertex(x+w, y, 0, color);
-    vertex(x+w, y+h, 0, color); vertex(x, y+h, 0, color);
+    vertex(x, y, 0, color);
+    vertex(x + w, y, 0, color);
+    vertex(x + w, y + h, 0, color);
+    vertex(x, y + h, 0, color);
 }
 
 /* Reuse the retail error-display bitmap without loading or allocating a font. */
@@ -372,12 +457,18 @@ static void textAt(int x, int y, const char* text, u32 color) {
     for (; *text; text++, x += 12) {
         unsigned int c = (u8)*text;
         int row, col;
-        if (c >= 'a' && c <= 'z') { c -= 'a' - 'A'; }
-        if (c < 0x21 || c > 0x5a) { continue; }
+        if (c >= 'a' && c <= 'z') {
+            c -= 'a' - 'A';
+        }
+        if (c < 0x21 || c > 0x5a) {
+            continue;
+        }
         for (row = 0; row < 5; row++) {
             u8 bits = gDebugFontAndErrorData[(c - 0x21) * 5 + row];
             for (col = 0; col < 6; col++) {
-                if (bits & (1 << col)) { rectangle(x + col * 2, y + row * 2, 2, 2, color); }
+                if (bits & (1 << col)) {
+                    rectangle(x + col * 2, y + row * 2, 2, 2, color);
+                }
             }
         }
     }
@@ -388,8 +479,13 @@ static void numberAt(int x, int y, int number, u32 color) {
     int pos = 15;
     u32 value = number < 0 ? -(u32)number : (u32)number;
     buffer[pos] = 0;
-    do { buffer[--pos] = '0' + value % 10; value /= 10; } while (value);
-    if (number < 0) { buffer[--pos] = '-'; }
+    do {
+        buffer[--pos] = '0' + value % 10;
+        value /= 10;
+    } while (value);
+    if (number < 0) {
+        buffer[--pos] = '-';
+    }
     textAt(x, y, &buffer[pos], color);
 }
 
@@ -397,14 +493,18 @@ static void rebuildRows(void) {
     int i;
     visibleCount = 0;
     for (i = 0; i < ROW_COUNT; i++) {
-        if (rows[i].parent < 0 || expanded[(int)rows[i].parent]) { visible[visibleCount++] = i; }
+        if (rows[i].parent < 0 || expanded[(int)rows[i].parent]) {
+            visible[visibleCount++] = i;
+        }
     }
-    if (selected >= visibleCount) { selected = visibleCount - 1; }
+    if (selected >= visibleCount) {
+        selected = visibleCount - 1;
+    }
 }
 
 static void drawMenu(void) {
-    Mtx identity = {{1,0,0,0}, {0,1,0,0}, {0,0,1,0}};
-    f32 projection[4][4] = {{2.0f/640,0,0,-1}, {0,-2.0f/480,0,1}, {0,0,-1,0}, {0,0,0,1}};
+    Mtx identity = {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}};
+    f32 projection[4][4] = {{2.0f / 640, 0, 0, -1}, {0, -2.0f / 480, 0, 1}, {0, 0, -1, 0}, {0, 0, 0, 1}};
     u32 res = getScreenResolution();
     int i;
     GXSetViewport(0, 0, res & 0xffff, res >> 16, 0, 1);
@@ -431,36 +531,57 @@ static void drawMenu(void) {
         int row = visible[i], y = 86 + i * 18;
         int indent = rows[row].parent < 0 ? 0 : 24;
         u32 color = rows[row].parent >= 0 && !enabled[(int)rows[row].parent] ? MUTED : WHITE;
-        if (i == selected) { rectangle(28, y - 4, 584, 18, 0x263C60FF); color = GOLD; }
-        if (rows[row].group) { textAt(36, y, expanded[row] ? "-" : "+", color); }
+        if (i == selected) {
+            rectangle(28, y - 4, 584, 18, 0x263C60FF);
+            color = GOLD;
+        }
+        if (rows[row].group) {
+            textAt(36, y, expanded[row] ? "-" : "+", color);
+        }
         if (row != WATER_HEIGHT && row != RANGE) {
             rectangle(58 + indent, y - 1, 12, 12, color);
             rectangle(60 + indent, y + 1, 8, 8, enabled[row] ? 0x56C7FFFF : 0x101B2EFF);
         }
         textAt(80 + indent, y, rows[row].label, color);
-        if (row == WATER_HEIGHT) { numberAt(400, y, (int)waterHeight, color); }
-        if (row == RANGE) { numberAt(400, y, drawDistance, color); }
+        if (row == WATER_HEIGHT) {
+            numberAt(400, y, (int)waterHeight, color);
+        }
+        if (row == RANGE) {
+            numberAt(400, y, drawDistance, color);
+        }
     }
-    textAt(36, 395, "TRIS:", MUTED); numberAt(108, 395, trianglesDrawn, WHITE);
-    textAt(252, 395, "TRIGGERS:", MUTED); numberAt(372, 395, triggersDrawn, WHITE);
-    textAt(36, 419, linesDrawn >= lineLimit ? "DRAW LIMIT REACHED - REDUCE DISTANCE" :
-           "SWIM HEIGHT: L+UP/DOWN  X: RESET TO FOX", MUTED);
+    textAt(36, 395, "TRIS:", MUTED);
+    numberAt(108, 395, trianglesDrawn, WHITE);
+    textAt(252, 395, "TRIGGERS:", MUTED);
+    numberAt(372, 395, triggersDrawn, WHITE);
+    textAt(36, 419,
+           linesDrawn >= lineLimit ? "DRAW LIMIT REACHED - REDUCE DISTANCE" : "SWIM HEIGHT: L+UP/DOWN  X: RESET TO FOX",
+           MUTED);
 }
 
 void Practice_SetArenaHi(void* end) {
-    if ((u32)end > (u32)__practice_start) { end = __practice_start; }
+    if ((u32)end > (u32)__practice_start) {
+        end = __practice_start;
+    }
     OSSetArenaHi(end);
 }
 
 static void closeMenu(void) {
     menuOpen = 0;
-    if (timeStop == 0xff) { timeStop = savedTimeStop; }
+    if (timeStop == 0xff) {
+        timeStop = savedTimeStop;
+    }
 }
 
 static void swallowInput(void) {
     PADStatus* pad = &gPadStatuses[gPadStatusBufferIndex * PAD_MAX_CONTROLLERS];
-    pad->button = 0; pad->stickX = 0; pad->stickY = 0; pad->substickX = 0; pad->substickY = 0;
-    pad->triggerLeft = 0; pad->triggerRight = 0;
+    pad->button = 0;
+    pad->stickX = 0;
+    pad->stickY = 0;
+    pad->substickX = 0;
+    pad->substickY = 0;
+    pad->triggerLeft = 0;
+    pad->triggerRight = 0;
     gPadButtonsHeld[0] = gPadButtonsJustPressed[0] = gPadButtonsReleased[0] = 0;
     gPadTriggers[0] = gPadTriggersPressed[0] = gPadTriggersReleased[0] = 0;
     gPadLastStickX[0] = gPadLastStickY[0] = 0;
@@ -472,21 +593,29 @@ void Practice_PadUpdate(void) {
     int chord, wasOpen;
     GameObject* player;
     padUpdate();
-    held = gPadButtonsHeld[0]; pressed = gPadButtonsJustPressed[0];
+    held = gPadButtonsHeld[0];
+    pressed = gPadButtonsJustPressed[0];
     shoulders = held | gPadTriggers[0];
-    chord = (shoulders & (PAD_TRIGGER_L | PAD_TRIGGER_R)) == (PAD_TRIGGER_L | PAD_TRIGGER_R) &&
-            (held & PAD_BUTTON_DOWN);
+    chord =
+        (shoulders & (PAD_TRIGGER_L | PAD_TRIGGER_R)) == (PAD_TRIGGER_L | PAD_TRIGGER_R) && (held & PAD_BUTTON_DOWN);
     wasOpen = menuOpen;
     if (chord && !chordLatched) {
-        if (menuOpen) { closeMenu(); }
-        else { savedTimeStop = timeStop; timeStop = 0xff; menuOpen = 1; }
+        if (menuOpen) {
+            closeMenu();
+        } else {
+            savedTimeStop = timeStop;
+            timeStop = 0xff;
+            menuOpen = 1;
+        }
     }
     chordLatched = chord != 0;
     player = Obj_GetPlayerObject();
     if (player != swimOwner) {
         swimApplied = 0;
         swimOwner = player;
-        if (enabled[SWIMMING] && validPointer(player)) { waterHeight = player->anim.worldPosY + 40.0f; }
+        if (enabled[SWIMMING] && validPointer(player)) {
+            waterHeight = player->anim.worldPosY + 40.0f;
+        }
     }
     if (menuOpen && !chord) {
         int row;
@@ -495,49 +624,79 @@ void Practice_PadUpdate(void) {
             repeatTimer++;
             if ((pressed & (PAD_BUTTON_UP | PAD_BUTTON_DOWN)) || (repeatTimer > 20 && repeatTimer % 5 == 0)) {
                 selected += (held & PAD_BUTTON_DOWN) ? 1 : -1;
-                if (selected < 0) { selected = visibleCount - 1; }
-                if (selected >= visibleCount) { selected = 0; }
+                if (selected < 0) {
+                    selected = visibleCount - 1;
+                }
+                if (selected >= visibleCount) {
+                    selected = 0;
+                }
             }
-        } else { repeatTimer = 0; }
+        } else {
+            repeatTimer = 0;
+        }
         row = visible[selected];
-        if (pressed & PAD_BUTTON_B) { closeMenu(); }
-        else if (row == WATER_HEIGHT || row == RANGE) {
+        if (pressed & PAD_BUTTON_B) {
+            closeMenu();
+        } else if (row == WATER_HEIGHT || row == RANGE) {
             int delta = (pressed & PAD_BUTTON_RIGHT) ? 1 : (pressed & PAD_BUTTON_LEFT) ? -1 : 0;
-            if (row == WATER_HEIGHT) { waterHeight += delta * 10.0f; }
-            else {
+            if (row == WATER_HEIGHT) {
+                waterHeight += delta * 10.0f;
+            } else {
                 drawDistance += delta * 250;
-                if (drawDistance < 250) { drawDistance = 250; }
-                if (drawDistance > 2500) { drawDistance = 2500; }
+                if (drawDistance < 250) {
+                    drawDistance = 250;
+                }
+                if (drawDistance > 2500) {
+                    drawDistance = 2500;
+                }
             }
         } else {
             if (rows[row].group) {
-                if (pressed & PAD_BUTTON_RIGHT) { expanded[row] = 1; }
-                if (pressed & PAD_BUTTON_LEFT) { expanded[row] = 0; }
+                if (pressed & PAD_BUTTON_RIGHT) {
+                    expanded[row] = 1;
+                }
+                if (pressed & PAD_BUTTON_LEFT) {
+                    expanded[row] = 0;
+                }
             } else if ((pressed & PAD_BUTTON_LEFT) && rows[row].parent >= 0) {
                 int parent = rows[row].parent, i;
                 expanded[parent] = 0;
                 rebuildRows();
-                for (i = 0; i < visibleCount; i++) { if (visible[i] == parent) { selected = i; } }
+                for (i = 0; i < visibleCount; i++) {
+                    if (visible[i] == parent) {
+                        selected = i;
+                    }
+                }
             }
             if (pressed & PAD_BUTTON_A) {
                 enabled[row] ^= 1;
-                if (rows[row].group && enabled[row]) { expanded[row] = 1; }
+                if (rows[row].group && enabled[row]) {
+                    expanded[row] = 1;
+                }
                 if (row == SWIMMING && enabled[row] && validPointer(player)) {
                     waterHeight = player->anim.worldPosY + 40.0f;
                 }
             }
         }
-        if ((pressed & PAD_BUTTON_X) && validPointer(player)) { waterHeight = player->anim.worldPosY + 40.0f; }
+        if ((pressed & PAD_BUTTON_X) && validPointer(player)) {
+            waterHeight = player->anim.worldPosY + 40.0f;
+        }
     }
     if (!menuOpen && !wasOpen && !chord && enabled[SWIMMING] && (shoulders & PAD_TRIGGER_L) &&
         (held & (PAD_BUTTON_UP | PAD_BUTTON_DOWN))) {
         f32 delta = timeDelta * ((held & PAD_BUTTON_UP) ? 2.0f : -2.0f);
-        if (delta > 10) { delta = 10; }
-        if (delta < -10) { delta = -10; }
+        if (delta > 10) {
+            delta = 10;
+        }
+        if (delta < -10) {
+            delta = -10;
+        }
         waterHeight += delta;
         swallowInput();
     }
-    if (menuOpen || wasOpen || chord) { swallowInput(); }
+    if (menuOpen || wasOpen || chord) {
+        swallowInput();
+    }
 }
 
 static void applyWater(GameObject* obj, PlayerState* state) {
@@ -564,13 +723,17 @@ void Practice_PlayerControls(GameObject* obj, PlayerState* state, f32 dt) {
         }
     }
     playerDoControls(obj, state, dt);
-    if (active) { state->baddie.waterSurfaceY = original; }
+    if (active) {
+        state->baddie.waterSurfaceY = original;
+    }
 }
 
 void Practice_SurfaceResponse(GameObject* obj, PlayerState* state, PlayerState* cfg, f32 dt) {
     f32 original = cfg->baddie.waterSurfaceY;
     int active = enabled[SWIMMING] && obj == Obj_GetPlayerObject();
-    if (active) { cfg->baddie.waterSurfaceY = waterHeight; }
+    if (active) {
+        cfg->baddie.waterSurfaceY = waterHeight;
+    }
     playerUpdateSurfaceResponse(obj, state, cfg, dt);
     if (active) {
         cfg->baddie.waterSurfaceY = original;
@@ -582,7 +745,9 @@ void Practice_SurfaceResponse(GameObject* obj, PlayerState* state, PlayerState* 
 void Practice_Draw(void) {
     u8 viewIndex = gCameraCurrentViewIndex;
     linesDrawn = trianglesDrawn = triggersDrawn = 0;
-    if (enabled[COLLISION] || enabled[TRIGGERS] || (enabled[SWIMMING] && enabled[WATER_GRID])) { drawWorld(); }
+    if (enabled[COLLISION] || enabled[TRIGGERS] || (enabled[SWIMMING] && enabled[WATER_GRID])) {
+        drawWorld();
+    }
     drawMenu();
     gCameraCurrentViewIndex = viewIndex;
     resetSomeGxFlags();
