@@ -180,8 +180,8 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"AUTO-ROLL BLANK FRAMES", AUTO_ROLL, 0, TAB_CHEATS},
                                             {"SAVE / RESPAWN CHECKPOINTS", -1, 0, TAB_LOG},
                                             {"RUNTIME / ACTION FLAGS", -1, 0, TAB_LOG}};
-static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1,
-                                1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0};
+static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1,
+                                1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0};
 static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0,
                                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
 static u8 menuOpen, chordLatched, savedTimeStop, swimApplied;
@@ -1059,9 +1059,9 @@ extern u32 gMapObjGroupStatuses[120];
 static const int bitBankOffsets[] = {0xef0, 0x564, 0x24, 0x5d8};
 static const int bitBankSizes[] = {0x80, 0x74, 0x144, 0xac};
 static const int bitSnapshotOffsets[] = {0, 0x80, 0xf4, 0x238};
-static const char* flagPages[] = {"FLAGS",         "INVENTORY",     "STAFF SPELLS",    "TRICKY",     "PLAYER STATS",
-                                  "AREA PROGRESS", "OBJECT GROUPS", "ADVANCED",  "RAW BIT ID", "UNUSED / UNCERTAIN",
-                                  "GEAR",          "STAFF SPELLS", "SUPPLIES",      "KEY ITEMS", "SPELLSTONES"};
+static const char* flagPages[] = {"FLAGS",         "INVENTORY",     "STAFF SPELLS", "TRICKY",     "PLAYER STATS",
+                                  "AREA PROGRESS", "OBJECT GROUPS", "ADVANCED",     "RAW BIT ID", "UNUSED / UNCERTAIN",
+                                  "GEAR",          "STAFF SPELLS",  "SUPPLIES",     "KEY ITEMS",  "SPELLSTONES"};
 static const char* statLabels[] = {"HEALTH (RAW UNITS)", "MAX HEALTH",   "MAGIC", "MAX MAGIC", "SCARABS",
                                    "BAFOMDADS",          "MAX BAFOMDADS"};
 static const int flagSteps[] = {1, 16, 256};
@@ -1581,15 +1581,15 @@ extern void loadMapForCurrentSaveGame(void);
 
 static void logCheckpoint(const char* action, const u8* save) {
     const SaveGameCharacterPosition* pos;
-    if (!enabled[LOG_ENABLED] || !enabled[LOG_CHECKPOINTS] || !validPointer(save) ||
-        (u32)save > 0x817ff000 || save[0x20] > 1) {
+    if (!enabled[LOG_ENABLED] || !enabled[LOG_CHECKPOINTS] || !validPointer(save) || (u32)save > 0x817ff000 ||
+        save[0x20] > 1) {
         return;
     }
     /* EN save layout, established by engine/23: character at 0x20, positions
      * at 0x684. Use the character stored in this snapshot, not the live one. */
     pos = (const SaveGameCharacterPosition*)(save + 0x684) + save[0x20];
-    sprintf(logLine, "[PRACTICE][%u][CHECKPOINT] %s layer=%d XYZ=%d,%d,%d\n", logFrame, action,
-            pos->mapLayer, (int)pos->x, (int)pos->y, (int)pos->z);
+    sprintf(logLine, "[PRACTICE][%u][CHECKPOINT] %s layer=%d XYZ=%d,%d,%d\n", logFrame, action, pos->mapLayer,
+            (int)pos->x, (int)pos->y, (int)pos->z);
     sendPracticeLog();
 }
 
