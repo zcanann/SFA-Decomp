@@ -138,11 +138,12 @@ The checked-in warp metadata can be regenerated from a clean EN disc:
 
 ```powershell
 python tools/practice/warp_catalog.py --iso "path/to/clean-EN-v1.0.iso"
+clang-format -i include/practice/warp_catalog.h
 ```
 
 The generator verifies the DOL hash and derives map names, cells, layers and
 warp records from the disc. Category grouping and estimated-spawn selection
-are practice policy. No original assets are included in the patch package.
+are practice policy. No original asset files are included in the patch package.
 
 Use the repository's existing GC/1.3 MWCC and PowerPC binutils. The builder finds
 them in `build/compilers` and `build/binutils`, including the parent checkout of
@@ -258,6 +259,7 @@ python tools/practice/test_patch.py
 python -m pip install --target build/practice/python unicorn==2.1.4
 python tools/practice/test_payload.py
 clang-format --dry-run --Werror src/practice/practice.c include/practice/practice.h
+clang-format --dry-run --Werror include/practice/warp_catalog.h
 ```
 
 Patch tests cover original-section preservation, corrupt-input rejection,
@@ -293,6 +295,23 @@ the original retained SHA-256
 `f2efe87066555522fa99a31a9f8b7eb4f51b47d59e5a348b1fed324fcd69fc4e`.
 Every byte outside the relocated DOL and four-byte header pointer compared equal.
 The reported problem locations have not yet been visually retested in Dolphin.
+
+V1.4 passed 22 compiled-payload tests and 8 patch tests, `ninja all_source`, the
+strict retail checksum, and an isolated Dolphin ISO boot using the Null backend
+(initialized and loaded state, 45 objects, intact payload; no apploader errors).
+All 95 destination presets resolved to their intended map IDs using a read-only
+snapshot of retail-initialized world-map tables in the PPC harness. This verifies
+map/layer association, not safe footing, arrival scripts or playable progression.
+The three menu pages were reviewed from rasterized GX draw commands. Actual
+hover behavior, warp arrivals and player-overlay alignment still need playtesting.
+Formatting preserved complete object and payload bytes. The 46,816-byte payload
+SHA-256 is `7c6aa0156541c0b748bbea549db34320c0efa09fa9363c729e9aadd321dfaebe`.
+The ISO SHA-256 is
+`29ba6bdc1974fd170c39945f42e95a9f981998507d520abc0c2c5cc68ff551f7`.
+The original retained the SHA-256 recorded above; every byte outside the relocated
+DOL and its four-byte header pointer compared equal. V1.3 remains alongside the
+other earlier builds, but its hover checkbox runs continuously; use V1.4 for the
+corrected hold-R activation.
 
 These checks do not establish in-game GPU-state compatibility, visual alignment
 in every map, or swimming behavior in every movement/sequence state. Those need
