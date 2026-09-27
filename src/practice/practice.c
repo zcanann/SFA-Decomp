@@ -62,7 +62,11 @@ enum {
     SHIELD_BLANKS,
     ROW_COUNT
 };
-enum { TAB_COLLISION, TAB_CHEATS, TAB_COUNT };
+enum {
+    TAB_COLLISION,
+    TAB_CHEATS,
+    TAB_COUNT
+};
 static const char* tabLabels[TAB_COUNT] = {"COLLISION", "CHEATS"};
 typedef struct PracticeRow {
     const char* label;
@@ -400,12 +404,12 @@ static void drawTriggers(GameObject* obj) {
             p[i].z = center.z - x * sy + forward * cy;
         }
         if (enabled[TRIGGER_FILL]) {
-        fillQuad(p[0], p[1], p[3], p[2], color);
-        fillQuad(p[4], p[5], p[7], p[6], color);
-        fillQuad(p[0], p[1], p[5], p[4], color);
-        fillQuad(p[2], p[3], p[7], p[6], color);
-        fillQuad(p[0], p[2], p[6], p[4], color);
-        fillQuad(p[1], p[3], p[7], p[5], color);
+            fillQuad(p[0], p[1], p[3], p[2], color);
+            fillQuad(p[4], p[5], p[7], p[6], color);
+            fillQuad(p[0], p[1], p[5], p[4], color);
+            fillQuad(p[2], p[3], p[7], p[6], color);
+            fillQuad(p[0], p[2], p[6], p[4], color);
+            fillQuad(p[1], p[3], p[7], p[5], color);
         }
         for (i = 0; i < 8; i++) {
             for (j = 1; j <= 4; j <<= 1) {
@@ -562,8 +566,9 @@ static void drawObjectCollision(GameObject* obj) {
     if (enabled[HIT_SPHERES] && validPointer(obj->anim.hitReactState) && nearPoint(center)) {
         ObjHitsPriorityState* state = (ObjHitsPriorityState*)obj->anim.hitReactState;
         u32 color = (state->flags & OBJHITS_PRIORITY_STATE_ENABLED) &&
-            !(state->flags & OBJHITS_PRIORITY_STATE_HIT_EXCLUDED) && state->activeHitboxMode == 0
-            ? 0xFFAB4FFF : 0x929292FF;
+                            !(state->flags & OBJHITS_PRIORITY_STATE_HIT_EXCLUDED) && state->activeHitboxMode == 0
+                        ? 0xFFAB4FFF
+                        : 0x929292FF;
         if (state->shapeFlags & OBJHITS_SHAPE_SPHERE) {
             sphere(center, state->primaryRadius, color);
         } else if (state->shapeFlags & OBJHITS_SHAPE_CAPSULE) {
@@ -576,7 +581,8 @@ static void drawObjectCollision(GameObject* obj) {
                 Vec c = a, d = b;
                 c.x += mathCosf(i * 1.57079632679f) * state->primaryRadius;
                 c.z += mathSinf(i * 1.57079632679f) * state->primaryRadius;
-                d.x = c.x; d.z = c.z;
+                d.x = c.x;
+                d.z = c.z;
                 line(c, d, color);
             }
         }
@@ -667,26 +673,26 @@ static void drawWorld(void) {
         /* Hit-volume outlines can be numerous. Give nearby objects the first
          * opportunity to draw instead of depending on object spawn order. */
         for (band = 0; band < drawDistance && linesDrawn < lineLimit; band += 250) {
-        for (i = start; i < count && linesDrawn < lineLimit; i++) {
-            GameObject* obj = objects[i];
-            f32 x, y, z, distance;
-            if (!validPointer(obj)) {
-                continue;
+            for (i = start; i < count && linesDrawn < lineLimit; i++) {
+                GameObject* obj = objects[i];
+                f32 x, y, z, distance;
+                if (!validPointer(obj)) {
+                    continue;
+                }
+                x = obj->anim.worldPosX - origin.x;
+                y = obj->anim.worldPosY - origin.y;
+                z = obj->anim.worldPosZ - origin.z;
+                distance = x * x + y * y + z * z;
+                if (distance < (f32)band * band || distance >= (f32)(band + 250) * (band + 250)) {
+                    continue;
+                }
+                if (enabled[TRIGGERS]) {
+                    drawTriggers(obj);
+                }
+                if (enabled[COLLISION]) {
+                    drawObjectCollision(obj);
+                }
             }
-            x = obj->anim.worldPosX - origin.x;
-            y = obj->anim.worldPosY - origin.y;
-            z = obj->anim.worldPosZ - origin.z;
-            distance = x * x + y * y + z * z;
-            if (distance < (f32)band * band || distance >= (f32)(band + 250) * (band + 250)) {
-                continue;
-            }
-            if (enabled[TRIGGERS]) {
-                drawTriggers(obj);
-            }
-            if (enabled[COLLISION]) {
-                drawObjectCollision(obj);
-            }
-        }
         }
     }
     if (enabled[SWIMMING] && enabled[WATER_GRID]) {
@@ -846,8 +852,8 @@ static void drawMenu(void) {
     numberAt(372, 395, triggersDrawn, WHITE);
     textAt(36, 419,
            drawLimitReached || fillsDrawn >= fillLimit ? "DRAW LIMIT REACHED - REDUCE DISTANCE"
-               : activeTab ? "SWIM: L+UP/DOWN  X: RESET  HOVER: R/X"
-                           : "L/R: TABS  L+R+DOWN: CLOSE",
+           : activeTab                                 ? "SWIM: L+UP/DOWN  X: RESET  HOVER: R/X"
+                                                       : "L/R: TABS  L+R+DOWN: CLOSE",
            MUTED);
 }
 
@@ -900,10 +906,10 @@ static void updateShieldHover(GameObject* player, int blocked) {
         hoverWait = 0;
         return;
     }
-    before = hoverActive ? hoverButtons :
-        (gPadButtonsHeld[0] ^ gPadButtonsJustPressed[0] ^ gPadButtonsReleased[0]) & mask;
-    beforeTrigger = hoverActive ? hoverButtons & PAD_TRIGGER_R :
-        (gPadTriggers[0] ^ gPadTriggersPressed[0] ^ gPadTriggersReleased[0]) & PAD_TRIGGER_R;
+    before =
+        hoverActive ? hoverButtons : (gPadButtonsHeld[0] ^ gPadButtonsJustPressed[0] ^ gPadButtonsReleased[0]) & mask;
+    beforeTrigger = hoverActive ? hoverButtons & PAD_TRIGGER_R
+                                : (gPadTriggers[0] ^ gPadTriggersPressed[0] ^ gPadTriggersReleased[0]) & PAD_TRIGGER_R;
     after = gPadButtonsHeld[0] & mask;
     afterTrigger = gPadTriggers[0] & PAD_TRIGGER_R;
     if (active) {
@@ -1007,8 +1013,12 @@ void Practice_PadUpdate(void) {
             } else {
                 int* blanks = row == ROLL_BLANKS ? &rollBlanks : &shieldBlanks;
                 *blanks += delta;
-                if (*blanks < 0) { *blanks = 0; }
-                if (*blanks > 60) { *blanks = 60; }
+                if (*blanks < 0) {
+                    *blanks = 0;
+                }
+                if (*blanks > 60) {
+                    *blanks = 60;
+                }
             }
         } else {
             if (rows[row].group) {
