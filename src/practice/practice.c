@@ -135,12 +135,24 @@ static int nearTriangle(Vec a, Vec b, Vec c) {
     int axis;
     for (axis = 0; axis < 3; axis++) {
         f32 low = ((f32*)&a)[axis], high = low, p = ((f32*)&origin)[axis], delta = 0;
-        if (((f32*)&b)[axis] < low) { low = ((f32*)&b)[axis]; }
-        if (((f32*)&c)[axis] < low) { low = ((f32*)&c)[axis]; }
-        if (((f32*)&b)[axis] > high) { high = ((f32*)&b)[axis]; }
-        if (((f32*)&c)[axis] > high) { high = ((f32*)&c)[axis]; }
-        if (p < low) { delta = low - p; }
-        if (p > high) { delta = p - high; }
+        if (((f32*)&b)[axis] < low) {
+            low = ((f32*)&b)[axis];
+        }
+        if (((f32*)&c)[axis] < low) {
+            low = ((f32*)&c)[axis];
+        }
+        if (((f32*)&b)[axis] > high) {
+            high = ((f32*)&b)[axis];
+        }
+        if (((f32*)&c)[axis] > high) {
+            high = ((f32*)&c)[axis];
+        }
+        if (p < low) {
+            delta = low - p;
+        }
+        if (p > high) {
+            delta = p - high;
+        }
         distance += delta * delta;
     }
     return distance <= (f32)drawDistance * drawDistance;
@@ -150,7 +162,9 @@ static void triangle(Vec a, Vec b, Vec c, u32 color) {
     Vec ab = point(b.x - a.x, b.y - a.y, b.z - a.z);
     Vec ac = point(c.x - a.x, c.y - a.y, c.z - a.z);
     Vec normal = point(ab.y * ac.z - ab.z * ac.y, ab.z * ac.x - ab.x * ac.z, ab.x * ac.y - ab.y * ac.x);
-    if (!(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z > 0)) { return; }
+    if (!(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z > 0)) {
+        return;
+    }
     if (nearTriangle(a, b, c)) {
         line(a, b, color);
         line(b, c, color);
@@ -222,14 +236,19 @@ static void fillCylinder(Vec bottom, Vec top, f32 radius, u32 color) {
         Vec a = point(bottom.x + mathCosf(angle) * radius, bottom.y, bottom.z + mathSinf(angle) * radius);
         Vec b = point(a.x, top.y, a.z);
         if (i == 0) {
-            firstA = a; firstB = b;
+            firstA = a;
+            firstB = b;
         } else {
-            if (i == 24) { a = firstA; b = firstB; }
+            if (i == 24) {
+                a = firstA;
+                b = firstB;
+            }
             fillQuad(prevA, prevB, b, a, color);
             fillTriangle(bottom, prevA, a, color);
             fillTriangle(top, b, prevB, color);
         }
-        prevA = a; prevB = b;
+        prevA = a;
+        prevB = b;
     }
 }
 
@@ -412,7 +431,9 @@ static int floorCell(f32 x) {
  * triangle meshes. Match trackSweepCircleAgainstLines' signed height decode. */
 static void drawHitLines(MapHitLine* hits, int count, f32 x, f32 z, GameObject* owner) {
     int i, j;
-    if (!enabled[BARRIERS] || !validPointer(hits)) { return; }
+    if (!enabled[BARRIERS] || !validPointer(hits)) {
+        return;
+    }
     for (i = 0; i < count && linesDrawn < lineLimit; i++) {
         MapHitLine* hit = &hits[i];
         f32 ha = (s8)hit->endpointData[0], hb = (s8)hit->endpointData[1];
@@ -422,15 +443,19 @@ static void drawHitLines(MapHitLine* hits, int count, f32 x, f32 z, GameObject* 
         }
         p[0] = point(hit->x[0] + x, hit->y[0], hit->z[0] + z);
         p[1] = point(hit->x[1] + x, hit->y[1], hit->z[1] + z);
-        p[2] = p[1]; p[2].y += hb;
-        p[3] = p[0]; p[3].y += ha;
+        p[2] = p[1];
+        p[2].y += hb;
+        p[3] = p[0];
+        p[3].y += ha;
         if (owner != NULL) {
             for (j = 0; j < 4; j++) {
                 Obj_TransformLocalPointToWorld(p[j].x, p[j].y, p[j].z, &p[j].x, &p[j].y, &p[j].z, owner);
             }
         }
         if (nearTriangle(p[0], p[1], p[2]) || nearTriangle(p[0], p[2], p[3])) {
-            for (j = 0; j < 4; j++) { line(p[j], p[(j + 1) & 3], 0xFF875FFF); }
+            for (j = 0; j < 4; j++) {
+                line(p[j], p[(j + 1) & 3], 0xFF875FFF);
+            }
         }
     }
 }
@@ -442,48 +467,57 @@ static void drawTerrain(void) {
     for (ring = 0; ring <= radius && linesDrawn < lineLimit; ring++) {
         for (z = cz - ring; z <= cz + ring && linesDrawn < lineLimit; z++) {
             for (x = cx - ring; x <= cx + ring && linesDrawn < lineLimit; x++) {
-                if (x != cx - ring && x != cx + ring && z != cz - ring && z != cz + ring) { continue; }
-                for (layer = 0; layer < 5 && linesDrawn < lineLimit; layer++) {
-                MapBlockData* block = mapGetBlockAtPos(x, z, layer);
-                if (!validPointer(block)) { continue; }
-                drawHitLines(block->hits, block->hitCount, x * 640 + playerMapOffsetX, z * 640 + playerMapOffsetZ, NULL);
-                if (!validPointer(block->gcPolygons) || !validPointer(block->polygonGroups) ||
-                    !validPointer(block->vertices)) {
+                if (x != cx - ring && x != cx + ring && z != cz - ring && z != cz + ring) {
                     continue;
                 }
-                for (groupIndex = 0; groupIndex < block->polyGroupCount && linesDrawn < lineLimit; groupIndex++) {
-                    CollisionPolygonGroup* group = &block->polygonGroups[groupIndex];
-                    int water = (group->flags & 8) != 0;
-                    int end = group[1].firstTri;
-                    u32 color = water ? 0x42BFFFFF : 0x59E99AFF;
-                    if (water ? !enabled[WATER_MESH] : !enabled[TERRAIN]) {
+                for (layer = 0; layer < 5 && linesDrawn < lineLimit; layer++) {
+                    MapBlockData* block = mapGetBlockAtPos(x, z, layer);
+                    if (!validPointer(block)) {
                         continue;
                     }
-                    /* Water with bit 1 is never queried. Retain solid bit-2
+                    drawHitLines(block->hits, block->hitCount, x * 640 + playerMapOffsetX, z * 640 + playerMapOffsetZ,
+                                 NULL);
+                    if (!validPointer(block->gcPolygons) || !validPointer(block->polygonGroups) ||
+                        !validPointer(block->vertices)) {
+                        continue;
+                    }
+                    for (groupIndex = 0; groupIndex < block->polyGroupCount && linesDrawn < lineLimit; groupIndex++) {
+                        CollisionPolygonGroup* group = &block->polygonGroups[groupIndex];
+                        int water = (group->flags & 8) != 0;
+                        int end = group[1].firstTri;
+                        u32 color = water ? 0x42BFFFFF : 0x59E99AFF;
+                        if (water ? !enabled[WATER_MESH] : !enabled[TERRAIN]) {
+                            continue;
+                        }
+                        /* Water with bit 1 is never queried. Retain solid bit-2
                      * groups: Fox's side-contact query (0x29) includes those. */
-                    if (water && (group->flags & 1)) { continue; }
-                    if (end > block->nPolygons) {
-                        end = block->nPolygons;
-                    }
-                    for (triIndex = group->firstTri; triIndex < end && linesDrawn < lineLimit; triIndex++) {
-                        MapTriIndex* tri = &block->gcPolygons[triIndex];
-                        Vec p[3];
-                        if (!(tri->cellMask & 0xFF) || !(tri->cellMask & 0xFF00)) { continue; }
-                        for (corner = 0; corner < 3; corner++) {
-                            s16* v;
-                            if (tri->vert[corner] >= block->vertexCount) {
-                                break;
+                        if (water && (group->flags & 1)) {
+                            continue;
+                        }
+                        if (end > block->nPolygons) {
+                            end = block->nPolygons;
+                        }
+                        for (triIndex = group->firstTri; triIndex < end && linesDrawn < lineLimit; triIndex++) {
+                            MapTriIndex* tri = &block->gcPolygons[triIndex];
+                            Vec p[3];
+                            if (!(tri->cellMask & 0xFF) || !(tri->cellMask & 0xFF00)) {
+                                continue;
                             }
-                            v = (s16*)block->vertices + tri->vert[corner] * 3;
-                            p[corner].x = (v[0] >> 3) + x * 640 + gMapBlockOriginWorldX;
-                            p[corner].y = (v[1] >> 3) + block->collisionYOffset;
-                            p[corner].z = (v[2] >> 3) + z * 640 + gMapBlockOriginWorldZ;
-                        }
-                        if (corner == 3) {
-                            triangle(p[0], p[1], p[2], color);
+                            for (corner = 0; corner < 3; corner++) {
+                                s16* v;
+                                if (tri->vert[corner] >= block->vertexCount) {
+                                    break;
+                                }
+                                v = (s16*)block->vertices + tri->vert[corner] * 3;
+                                p[corner].x = (v[0] >> 3) + x * 640 + gMapBlockOriginWorldX;
+                                p[corner].y = (v[1] >> 3) + block->collisionYOffset;
+                                p[corner].z = (v[2] >> 3) + z * 640 + gMapBlockOriginWorldZ;
+                            }
+                            if (corner == 3) {
+                                triangle(p[0], p[1], p[2], color);
+                            }
                         }
                     }
-                }
                 }
             }
         }
@@ -598,12 +632,16 @@ static void drawWorld(void) {
             line(c, d, 0x3BBFFFFF);
         }
     }
-    if (linesDrawn >= lineLimit) { drawLimitReached = 1; }
+    if (linesDrawn >= lineLimit) {
+        drawLimitReached = 1;
+    }
     lineLimit = 12000;
     if (enabled[COLLISION] && (enabled[TERRAIN] || enabled[WATER_MESH] || enabled[BARRIERS])) {
         drawTerrain();
     }
-    if (linesDrawn >= lineLimit) { drawLimitReached = 1; }
+    if (linesDrawn >= lineLimit) {
+        drawLimitReached = 1;
+    }
 }
 
 static void rectangle(f32 x, f32 y, f32 w, f32 h, u32 color) {
@@ -689,8 +727,12 @@ static void drawMenu(void) {
     textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.2", WHITE);
     textAt(36, 59, "A: TOGGLE  LEFT/RIGHT: EXPAND  B: CLOSE", MUTED);
     rebuildRows();
-    if (menuTop > selected) { menuTop = selected; }
-    if (menuTop < selected - 16) { menuTop = selected - 16; }
+    if (menuTop > selected) {
+        menuTop = selected;
+    }
+    if (menuTop < selected - 16) {
+        menuTop = selected - 16;
+    }
     for (i = menuTop; i < visibleCount && i < menuTop + 17; i++) {
         int row = visible[i], y = 86 + (i - menuTop) * 18;
         int indent = rows[row].parent < 0 ? 0 : 24;
@@ -719,7 +761,8 @@ static void drawMenu(void) {
     textAt(252, 395, "TRIGGERS:", MUTED);
     numberAt(372, 395, triggersDrawn, WHITE);
     textAt(36, 419,
-           drawLimitReached || fillsDrawn >= fillLimit ? "DRAW LIMIT REACHED - REDUCE DISTANCE" : "SWIM HEIGHT: L+UP/DOWN  X: RESET TO FOX",
+           drawLimitReached || fillsDrawn >= fillLimit ? "DRAW LIMIT REACHED - REDUCE DISTANCE"
+                                                       : "SWIM HEIGHT: L+UP/DOWN  X: RESET TO FOX",
            MUTED);
 }
 
