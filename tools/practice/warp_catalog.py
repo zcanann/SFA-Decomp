@@ -158,6 +158,13 @@ def catalog(iso):
         assert record[26] < 6 and record[27] in (1, 2)
         maps[54]["spawns"].append(dict(cave_default, name=name, cave=dict(
             source=source, group=record[26], act=record[27], exit=record[33])))
+    # WarpStone's corridor shares a position; its act and controller select the
+    # onward route. Palace variants normally depend on carried spirits.
+    link_default = maps[66]["spawns"][0]
+    assert len(maps[66]["spawns"]) == 1 and link_default["warp"] == 126
+    maps[66]["spawns"] = [dict(link_default, name=name, link=route) for route, name in enumerate(
+        ("To Ice Mountain", "To Krazoa Palace: K2", "To Krazoa Palace: K3",
+         "To Krazoa Palace: K4", "Return to Thorntail Hollow"), 1)]
     return maps, {name: hashlib.sha256(data).hexdigest() for name, data in assets.items() if not name.endswith(".romlist.zlb")}
 
 
@@ -167,7 +174,7 @@ def generate(iso, output):
              " * Categories, friendly names, curated positions and fallbacks are practice policy. */",
              "#ifndef PRACTICE_WARP_CATALOG_H", "#define PRACTICE_WARP_CATALOG_H", "#ifdef SFA_PRACTICE",
              '#include "main/rcp_dolphin_api.h"',
-             "typedef struct PracticeWarpSpawn { WarpDestination destination; s16 warp; s16 cave; const char* name; } PracticeWarpSpawn;",
+             "typedef struct PracticeWarpSpawn { WarpDestination destination; s16 warp; s16 cave; const char* name; s16 link; } PracticeWarpSpawn;",
              "typedef struct PracticeCaveArrival { u8 source; u8 group; u8 act; u8 exit; } PracticeCaveArrival;",
              "typedef struct PracticeWarpMap { const char* name; u16 firstSpawn; u8 spawnCount; u8 category; } PracticeWarpMap;",
              "static const PracticeWarpSpawn practiceWarpSpawns[] = {"]
@@ -181,7 +188,7 @@ def generate(iso, output):
             if p.get("cave"):
                 caves.append(p["cave"])
                 cave = len(caves)
-            lines.append(f'    {{{{{xyz}, {p["layer"]}, {p["angle"]}}}, {p["warp"]}, {cave}, {name}}},')
+            lines.append(f'    {{{{{xyz}, {p["layer"]}, {p["angle"]}}}, {p["warp"]}, {cave}, {name}, {p.get("link", 0)}}},')
             first += 1
     lines += ["};", "static const PracticeWarpMap practiceWarpMaps[] = {"]
     for m in maps:

@@ -59,7 +59,9 @@ def generate(inputs, output):
             title += " — " + case["label"]
         image_path = Path(case["image_path"]) if case["image_path"] else None
         src = html.escape(Path(os.path.relpath(image_path, output)).as_posix(), quote=True) if image_path else ""
-        status = "Arrival check passed" if case["arrival_check"] else "Arrival needs investigation"
+        status = "Load/fade completed; playability unverified" if case["arrival_check"] else "Load/fade failed"
+        if case["visual_note"]:
+            status += "; see visual finding below"
         if case["mostly_dark"]:
             status += "; image mostly dark"
         cards.append(f'<article><h2>{html.escape(title)}</h2><p>{status}</p>'
@@ -70,7 +72,7 @@ def generate(inputs, output):
     document = '''<!doctype html><meta charset="utf-8"><title>Practice v1.14 warp captures</title>
 <style>body{background:#111827;color:#e5e7eb;font:16px system-ui;margin:24px}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:20px}article{background:#1f2937;padding:12px}h2{font-size:17px}img{width:100%}pre{white-space:pre-wrap}input{padding:10px;margin-bottom:20px;width:300px}</style>
 <h1>Practice v1.14 warp captures</h1>
-<p>Isolated Dolphin D3D capture sweep. The harness queues the retail reload after minimal Fox setup; cases share save state within each run. These are arrival checks, not full playtests or entrance/exit interaction tests. Collision overlays retain their release defaults.</p>
+<p>Isolated Dolphin D3D capture sweep. The harness queues the retail reload after minimal Fox setup; cases share save state within each run. Load/fade completion is NOT a passing warp: empty voids and fallback models can satisfy it. Usability requires visual and movement/exit testing. Collision overlays retain their release defaults.</p>
 <p>Click an image for the full capture. Empty/unused maps, missing room groups, wrong character assets, black screens and invalid arrivals need separate review.</p>
 <input placeholder="Filter map or spawn" oninput="document.querySelectorAll('article').forEach(a=>a.hidden=!a.textContent.toLowerCase().includes(this.value.toLowerCase()))">
 <main>''' + "\n".join(cards) + "</main>"
@@ -89,7 +91,7 @@ def generate(inputs, output):
             draw.text((x + 3, y + 188), label[:43], fill="white")
         sheet.save(output / f"contact-{start // 20 + 1:02d}.jpg")
     print(f"{len(rows)} cases; {sum(bool(c['image_path']) for c in rows)} screenshots; "
-          f"{sum(c['arrival_check'] for c in rows)} arrival checks passed; "
+          f"{sum(c['arrival_check'] for c in rows)} loads/fades completed (not playable-warp passes); "
           f"{sum(bool(c['mostly_dark']) for c in rows)} mostly-dark flags")
 
 

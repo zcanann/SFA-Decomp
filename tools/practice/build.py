@@ -177,6 +177,7 @@ def make_patch(dol, payload, exports):
         ("gameLoop", "padUpdate", "Practice_PadUpdate", 1),
         ("gameLoop", "doNothing_endOfFrame", "Practice_Draw", 1),
         ("loadNextMap", "mapReload", "Practice_WarpReload", 1),
+        ("LinkALevControl_seqFn", "mainGetBit", "Practice_LinkRouteBit", 3),
         ("camcontrol_applyState", "loadMapForCameraPos", "Practice_CameraLoadPos", 1),
         (None, "playerDie", "Practice_PlayerDie", 7),
         (None, "playerUpdate", "Practice_PlayerUpdate", 1),
@@ -201,6 +202,16 @@ def make_patch(dol, payload, exports):
             edits.append({"offset": off, "before": dol[off:off+4].hex(),
                           "after": branch(pc, exports[replacement]).hex(),
                           "hook": f"{callee} -> {replacement}", "address": pc})
+    # The cut Dragon Rock light DLL is an eight-byte null resource, not an
+    # object descriptor. Its four surviving object definitions still use it.
+    # Replace only this registry pointer; leave the adjacent descriptors intact.
+    pc = table["gResourceDescriptors"][0] + 639 * 4
+    off = next(off + pc - addr for _, off, addr, size in sections(dol) if addr <= pc < addr + size)
+    if u32(dol, off) != table["gDll27FNullResourceDescriptor"][0]:
+        raise ValueError("Unexpected stripped Dragon Rock light descriptor")
+    edits.append({"offset": off, "before": dol[off:off+4].hex(),
+                  "after": struct.pack(">I", exports["practiceLegacyLightDescriptor"]).hex(),
+                  "hook": "stripped Dragon Rock light descriptor", "address": pc})
     slot = next(i for i in range(7) if u32(dol, 0x90 + i * 4) == 0)
     offset = align(len(dol))
     for base, value in [(0, offset), (0x48, PAYLOAD_ADDRESS), (0x90, len(payload))]:

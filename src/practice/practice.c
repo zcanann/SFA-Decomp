@@ -45,6 +45,7 @@
 #include "main/shader_api.h"
 #include "main/shader_map_api.h"
 #include "sys/objects.h"
+#include "main/object_render.h"
 
 extern u8 __practice_start[];
 extern u8 __practice_limit[];
@@ -64,6 +65,26 @@ extern void playerRefreshCollisionState(GameObject*, int, int);
 extern f32 mathSinf(f32);
 extern f32 mathCosf(f32);
 extern u32 getScreenResolution(void);
+
+/* Retail DR_LightHal/Pol/Lam definitions still request DLL 639, but its
+ * descriptor was stripped to two zero words. Supply inert scenery callbacks
+ * instead of letting the loader read neighboring data as function pointers.
+ * The original lighting/animation logic is absent; this only keeps the models. */
+static int practiceLegacyLightSize(void) {
+    return 0;
+}
+
+static void practiceLegacyLightRender(GameObject* obj, int a, int b, int c, int d, s8 visible) {
+    if (visible) {
+        objRenderModelAndHitVolumes(obj, a, b, c, d, 1.0f);
+    }
+}
+
+ObjectDescriptor practiceLegacyLightDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS, NULL, NULL, NULL, NULL, NULL, NULL,
+    (ObjectDescriptorCallback)practiceLegacyLightRender, NULL,
+    (ObjectDescriptorCallback)practiceLegacyLightSize, practiceLegacyLightSize,
+};
 
 enum {
     COLLISION,
@@ -221,6 +242,8 @@ static WarpDestination warpDestination;
 static WarpDestination warpQueuedDestination;
 static u8 warpLoadPending;
 static s16 warpQueuedCave;
+static s16 warpQueuedLink;
+static u8 warpActiveLink;
 static const char* warpMessage;
 static int selected, repeatTimer, visibleCount, visible[ROW_COUNT], menuTop;
 static int drawDistance = 1000;
@@ -2157,6 +2180,7 @@ static void requestPracticeWarp(GameObject* player) {
     gRcpPendingWarpDest = warpDestination;
     warpQueuedDestination = warpDestination;
     warpQueuedCave = practiceWarpSpawns[map->firstSpawn + warpSpawn].cave;
+    warpQueuedLink = practiceWarpSpawns[map->firstSpawn + warpSpawn].link;
     warpLoadPending = 1;
     if (index < 0 || warpEdited) {
         gPendingWarpIndex = 128;
@@ -2183,12 +2207,15 @@ static void applyArrivalGroups(int map) {
  * them explicitly. doQueuedLoads unloads old objects before loading the banks. */
 void Practice_WarpReload(void) {
     int cave = warpQueuedCave;
+    int link = warpQueuedLink;
     int practice = warpLoadPending && gRcpPendingWarpDest.x == warpQueuedDestination.x &&
                    gRcpPendingWarpDest.y == warpQueuedDestination.y &&
                    gRcpPendingWarpDest.z == warpQueuedDestination.z &&
                    gRcpPendingWarpDest.layer == warpQueuedDestination.layer;
     warpLoadPending = 0;
     warpQueuedCave = 0;
+    warpQueuedLink = 0;
+    warpActiveLink = 0;
     if (!practice) {
         mapReload();
         return;
@@ -2201,6 +2228,16 @@ void Practice_WarpReload(void) {
     applyArrivalGroups(gGameLoopPendingMapId);
     /* A saved auxiliary bank belongs to the source area, not this destination. */
     gGameLoopPendingMapDataFileId = -1;
+    if (gGameLoopPendingMapId == 66 && link >= 1 && link <= 5) {
+        int sourceDir = mapGetDirIdx(link == 5 ? 11 : 7);
+        gGameLoopPendingMapDataFileId =
+            sMapFileNameAdjacencyTable[sourceDir] >= 0 ? sMapFileNameAdjacencyTable[sourceDir] : sourceDir;
+        SaveGame_gplaySetAct(66, link == 1 ? 1 : link == 5 ? 3 : 2);
+        if (link == 1) {
+            SaveGame_gplaySetAct(23, 1);
+        }
+        warpActiveLink = link;
+    }
     if (gGameLoopPendingMapId == 54 && cave > 0 &&
         cave <= sizeof(practiceCaveArrivals) / sizeof(practiceCaveArrivals[0])) {
         const PracticeCaveArrival* arrival = &practiceCaveArrivals[cave - 1];
@@ -2227,6 +2264,28 @@ void Practice_WarpReload(void) {
     if (gGameLoopPendingMapId == 68) {
         gGameLoopPendingMapDataFileId = mapGetDirIdx(19);
     }
+    /* Landed_Arwing_SeqFn retains Palace for both late-game departures. */
+    if (gGameLoopPendingMapId == 38 || gGameLoopPendingMapId == 65) {
+        gGameLoopPendingMapDataFileId = mapGetDirIdx(11);
+    }
+}
+
+/* Only LinkA's route controller calls this hook. Select a practice Palace
+ * route without granting/removing spirits or changing other readers' results.
+ * Its normal callback still loads the destination and applies act/groups. */
+u32 Practice_LinkRouteBit(int bit) {
+    if (gShaderCurMapEventId == 66 && warpActiveLink >= 2 && warpActiveLink <= 4) {
+        if (bit == GAMEBIT_ITEM_TestCombatSpirit_Got) {
+            return warpActiveLink == 2;
+        }
+        if (bit == GAMEBIT_ITEM_SpiritTestFear_Got) {
+            return warpActiveLink == 3;
+        }
+        if (bit == GAMEBIT_ITEM_SpiritTestStrength_Got) {
+            return warpActiveLink == 4;
+        }
+    }
+    return mainGetBit(bit);
 }
 
 #pragma push

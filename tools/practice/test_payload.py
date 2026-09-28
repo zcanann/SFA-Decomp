@@ -1240,7 +1240,7 @@ class PayloadTests(unittest.TestCase):
         m.call("Practice_WarpReload")
         self.assertEqual([c[0] for c in m.calls], ["mapReload"])
         # Include all five Krazoa tests as well as Galdon and Andross flight.
-        for map_id, layer in ((28, -2), (38, 2), (31, 0), (32, 0), (33, 0), (34, 0), (39, 0), (68, -1), (27, -2)):
+        for map_id, layer in ((28, -2), (38, 2), (65, 0), (31, 0), (32, 0), (33, 0), (34, 0), (39, 0), (68, -1), (27, -2)):
             m.calls = []
             m.write(m.sym["warpMap"], map_id)
             m.call("resetWarpSpawn")
@@ -1258,7 +1258,8 @@ class PayloadTests(unittest.TestCase):
             self.assertEqual(m.calls[0][1:], (0, 0, 1))
             self.assertEqual(m.loaded_coordinates[:3], struct.unpack(">3f", destination[:12]))
             self.assertEqual(m.loaded_coordinates[3], layer & 0xffffffff)
-            self.assertEqual(m.read(m.sym["gGameLoopPendingMapDataFileId"], "i"), 26 if map_id == 68 else -1)
+            self.assertEqual(m.read(m.sym["gGameLoopPendingMapDataFileId"], "i"),
+                             {68: 26, 38: 15, 65: 15}.get(map_id, -1))
             self.assertEqual(m.read(m.sym["warpLoadPending"], "B"), 0)
         # If a normal scripted warp supersedes our request, don't change its banks.
         m.calls = []
@@ -1387,6 +1388,42 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
         m.pad(0x200, 0x200)
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 0)
+
+    def test_link_routes_retain_assets_without_editing_spirit_inventory(self):
+        m = self.m
+        m.state_fixture()
+        m.write(m.sym["gSaveGameMapActBits"] + 66 * 2, 0x300, "H")
+        m.write(m.sym["gSaveGameMapActBits"] + 23 * 2, 0x302, "H")
+        m.bit_def(0x302, 80, 4, 1)
+        spirits = (0xbfd, 0xff, 0xc6e)
+        for index, gid in enumerate(spirits):
+            m.bit_def(gid, 100 + index, 1, 2)
+            m.set_bit(gid, 1)
+        for route in range(1, 6):
+            m.write(m.sym["warpMap"], 66)
+            m.write(m.sym["warpSpawn"], route - 1)
+            m.call("resetWarpSpawn")
+            dest = bytes(m.uc.mem_read(m.sym["warpDestination"], 16))
+            m.uc.mem_write(m.sym["gRcpPendingWarpDest"], dest)
+            m.uc.mem_write(m.sym["warpQueuedDestination"], dest)
+            m.write(m.sym["warpQueuedLink"], route, "h")
+            m.write(m.sym["warpLoadPending"], 1, "B")
+            m.write(m.sym["gGameLoopPendingMapId"], 66)
+            m.call("Practice_WarpReload")
+            self.assertEqual(m.bit_value(0x300), 1 if route == 1 else 3 if route == 5 else 2)
+            self.assertEqual(m.read(m.sym["gGameLoopPendingMapDataFileId"], "i"), 15 if route == 5 else 12)
+            self.assertEqual(m.read(m.sym["warpQueuedLink"], "h"), 0)
+            m.write(m.sym["gShaderCurMapEventId"], 66)
+            for index, gid in enumerate(spirits):
+                m.call("Practice_LinkRouteBit", gid)
+                self.assertEqual(m.r(3), int(route == index + 2) if 2 <= route <= 4 else 1)
+                self.assertEqual(m.bit_value(gid), 1)
+            # Outside the corridor the inventory is always authoritative.
+            m.write(m.sym["gShaderCurMapEventId"], 11)
+            m.call("Practice_LinkRouteBit", spirits[0])
+            self.assertEqual(m.r(3), 1)
+            m.call("Practice_WarpReload")  # Retail onward travel clears override.
+            self.assertEqual(m.read(m.sym["warpActiveLink"], "B"), 0)
 
     def test_item_discovery_flags_do_not_change_inventory_and_remember_back_row(self):
         m = self.m

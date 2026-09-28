@@ -1,10 +1,13 @@
-# EN v1.0 practice ROM v1.14
+# EN v1.0 practice ROM v1.15
 
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
 The first supported input is a clean US/EN v1.0 (`GSAE01`, revision 0) ISO.
-V1.14 adds named Cape Claw spawns, map-entry object groups, DIM warp adjustments,
-and Magic Cave presets with entrance/return state. See **V1.14 changes** below.
+V1.15 repairs Dragon Rock Bottom's stripped light-object DLL, adds LinkA route
+presets, and supplies the missing Palace resource bank for Andross flight and
+Great Fox. See [the recovery notes](practice_map_recovery_v1_15.md) for evidence,
+screenshots and remaining limitations. V1.14's named spawns, entry groups and
+Magic Cave contexts remain included.
 
 ## Controls
 

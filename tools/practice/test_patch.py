@@ -6,7 +6,7 @@ import tempfile
 import unittest
 
 from build import (ROOT, PAYLOAD_ADDRESS, BOOT_LOAD_LIMIT, apply_dol, branch, compile_payload, digest,
-                   find_disc_space, make_patch, sections, u32, write_iso, write_dol, validate_boot_layout)
+                   find_disc_space, make_patch, sections, symbols, u32, write_iso, write_dol, validate_boot_layout)
 
 
 class PatchTests(unittest.TestCase):
@@ -28,7 +28,7 @@ class PatchTests(unittest.TestCase):
         for edit in self.manifest["edits"]:
             original_part[edit["offset"]:edit["offset"] + 4] = bytes.fromhex(edit["before"])
         self.assertEqual(original_part, self.dol)
-        self.assertEqual(len([e for e in self.manifest["edits"] if "hook" in e]), 29)
+        self.assertEqual(len([e for e in self.manifest["edits"] if "hook" in e]), 33)
 
     def test_reject_previous_apploader_boundary_regression(self):
         patched = bytearray(apply_dol(self.dol, self.manifest, self.payload))
@@ -36,6 +36,22 @@ class PatchTests(unittest.TestCase):
         struct.pack_into(">I", patched, 0x48 + 2 * 4, 0x816C0000)
         with self.assertRaisesRegex(ValueError, "apploader"):
             validate_boot_layout(patched)
+
+    def test_stripped_light_repair_replaces_only_its_registry_entry(self):
+        table = symbols()
+        address = table["gResourceDescriptors"][0] + 639 * 4
+        offset = next(off + address - base for _, off, base, size in sections(self.dol)
+                      if base <= address < base + size)
+        patched = apply_dol(self.dol, self.manifest, self.payload)
+        self.assertEqual(u32(self.dol, offset), table["gDll27FNullResourceDescriptor"][0])
+        self.assertEqual(u32(patched, offset), self.exports["practiceLegacyLightDescriptor"])
+        self.assertEqual(patched[offset-4:offset], self.dol[offset-4:offset])
+        self.assertEqual(patched[offset+4:offset+8], self.dol[offset+4:offset+8])
+        descriptor = self.exports["practiceLegacyLightDescriptor"] - PAYLOAD_ADDRESS
+        # All unused callbacks are null; only render/type/size are supplied.
+        self.assertEqual(self.payload[descriptor+16:descriptor+40], bytes(24))
+        self.assertNotEqual(u32(self.payload, descriptor+40), 0)
+        self.assertEqual(u32(self.payload, descriptor+44), 0)
 
     def test_reject_changed_inputs(self):
         bad = bytearray(self.dol)
