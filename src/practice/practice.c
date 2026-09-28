@@ -48,6 +48,7 @@ extern u8 gDebugFontAndErrorData[];
 extern PADStatus gPadStatuses[];
 extern u8 timeStop;
 extern int gMapBlockOriginWorldX, gMapBlockOriginWorldZ;
+extern int gShaderCurMapEventId;
 extern void* gShaderMapRomBuffers[5];
 extern u8 gWarpRequested;
 extern void resetSomeGxFlags(void);
@@ -1291,7 +1292,7 @@ static int flagRowCount(void) {
     while (pageBit(n)) {
         n++;
     }
-    return n + (flagPage == FLAGS_AREA ? 2 : flagPage == FLAGS_TRICKY || flagPage == FLAGS_MAPS ? 1 : 0);
+    return n + (flagPage == FLAGS_AREA ? 2 : flagPage == FLAGS_TRICKY || flagPage == FLAGS_MAPS || flagPage == FLAGS_CONSUMABLES ? 1 : 0);
 }
 
 static int flagBitId(int row) {
@@ -1308,7 +1309,7 @@ static int flagBitId(int row) {
         }
         row -= 2;
     }
-    if (flagPage == FLAGS_TRICKY || flagPage == FLAGS_MAPS) {
+    if (flagPage == FLAGS_TRICKY || flagPage == FLAGS_MAPS || flagPage == FLAGS_CONSUMABLES) {
         row--;
     }
     entry = pageBit(row);
@@ -1332,6 +1333,12 @@ static void editFlags(u32 pressed) {
                 flagPage = flagPage == FLAGS_ROOT
                                ? selected + 1
                                : selected + (flagPage == FLAGS_INVENTORY ? FLAGS_UPGRADES : FLAGS_RAW);
+            }
+            /* The streaming engine tracks the active map as the player travels.
+             * Choose it on entry only; retain manual selection while browsing. */
+            if (flagPage == FLAGS_GROUPS && !isSaveGameLoading() &&
+                gShaderCurMapEventId >= 0 && gShaderCurMapEventId < 75) {
+                flagMap = gShaderCurMapEventId;
             }
             selected = menuTop = 0;
         }
@@ -1364,9 +1371,9 @@ static void editFlags(u32 pressed) {
         }
         return;
     }
-    if (flagPage == FLAGS_STATS) {
+    if (flagPage == FLAGS_STATS || (flagPage == FLAGS_CONSUMABLES && selected == 0)) {
         if (delta) {
-            editStat(selected, delta * step);
+            editStat(flagPage == FLAGS_STATS ? selected : 4, delta * step);
         }
         return;
     }
@@ -1441,11 +1448,12 @@ static void drawFlags(void) {
         } else if (flagPage == FLAGS_TRICKY && i == 0) {
             label = "OBJECT PRESENT (READ ONLY)";
             textAt(528, y, validPointer(getTrickyObject()) ? "YES" : "NO", color);
-        } else if (flagPage == FLAGS_STATS) {
+        } else if (flagPage == FLAGS_STATS || (flagPage == FLAGS_CONSUMABLES && i == 0)) {
             PlayerStatus* stats = ready ? practiceStats() : NULL;
-            label = statLabels[i];
+            int stat = flagPage == FLAGS_STATS ? i : 4;
+            label = statLabels[stat];
             if (stats) {
-                numberAt(480, y, statValue(stats, i), color);
+                numberAt(480, y, statValue(stats, stat), color);
             } else {
                 textAt(528, y, "N/A", MUTED);
             }
@@ -2350,7 +2358,8 @@ void Practice_PadUpdate(void) {
             if (activeTab == TAB_FLAGS && flagPage != FLAGS_ROOT) {
                 int backSelection = flagPage == FLAGS_ITEM_AREA                            ? flagItemArea
                                     : flagPage >= FLAGS_UPGRADES && flagPage <= FLAGS_MAPS ? flagPage - FLAGS_UPGRADES
-                                                                                           : 0;
+                                    : flagPage == FLAGS_RAW || flagPage == FLAGS_UNUSED ? flagPage - FLAGS_RAW
+                                                                                           : flagPage - 1;
                 flagPage = flagPage == FLAGS_ITEM_AREA                         ? FLAGS_AREA_ITEMS
                            : flagPage >= FLAGS_UPGRADES                        ? FLAGS_INVENTORY
                            : flagPage == FLAGS_RAW || flagPage == FLAGS_UNUSED ? FLAGS_ADVANCED

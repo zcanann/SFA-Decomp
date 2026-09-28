@@ -271,6 +271,15 @@ similar instructions and patch an unknown version.
 
 ### Pending changes after V1.7 (not packaged)
 
+Object Groups selects the streaming engine's current world map when opened.
+Manual selection remains available and stays put while browsing. During save
+loading, or when the active map ID is unavailable/outside the editable world-map
+range, it retains the previous selection.
+
+Back returns to the parent folder's selected row throughout Flags, including
+Object Groups and Advanced. Consumables now includes editable Scarabs, sharing
+the same live count and edit limits as Player Stats.
+
 Inventory now uses **Upgrades, Staff Spells, Consumables, Area Items, Spellstones,
 Krazoa Spirits, Maps**. Staff spells also remain accessible from the Flags root.
 Area Items opens a list of areas; Back returns to the selected area rather than
@@ -324,11 +333,12 @@ player. It sets only map ownership flags.
 
 The isolated payload uses GC/1.3 size optimization (`-O4,s`) and non-inlined
 movement helpers to retain the original 64 KiB reservation; the retail build's
-compiler settings are unchanged. The payload is 64,704 bytes. All 47 compiled-PPC
+compiler settings are unchanged. The payload is 64,864 bytes. All 47 compiled-PPC
 checks and 8 patch-integrity tests pass, including actual lethal retail health
 subtraction, quick-toggle latching, menu/chord separation, roll-input priority,
 parented movement, load/player-change guards, the six spirit edits, area navigation
-and isolated bulk map unlocks. Disabled
+and isolated bulk map unlocks. Additional compiled checks cover current-map
+selection, parent-row restoration and Scarabs edits/loading guards. Disabled
 practice still emits no symbols; `ninja all_source` and the strict retail target pass.
 
 Before the inventory reorganization, a private test ISO passed an isolated Dolphin
