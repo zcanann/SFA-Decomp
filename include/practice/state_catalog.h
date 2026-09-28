@@ -19,7 +19,8 @@ enum {
     FLAGS_INVENTORY_SPELLS,
     FLAGS_SUPPLIES,
     FLAGS_KEYS,
-    FLAGS_STONES
+    FLAGS_STONES,
+    FLAGS_SPIRITS
 };
 typedef struct PracticeBitLabel {
     const char* name;
@@ -31,6 +32,7 @@ typedef struct PracticeBitLabel {
 #define SUPPLY(label, id)    {label, GAMEBIT_##id, FLAGS_INVENTORY, 2}
 #define KEY(label, id)       {label, GAMEBIT_##id, FLAGS_INVENTORY, 3}
 #define STONE(label, id)     {label, GAMEBIT_##id, FLAGS_INVENTORY, 4}
+#define SPIRIT(label, id)    {label, GAMEBIT_##id, FLAGS_INVENTORY, 5}
 #define SPELL(label, id)     {label, GAMEBIT_##id, FLAGS_SPELLS, 0}
 #define TRICKY(label, id)    {label, GAMEBIT_##id, FLAGS_TRICKY, 0}
 #define AREA(map, label, id) {label, GAMEBIT_##id, FLAGS_AREA, map}
@@ -58,6 +60,12 @@ static const PracticeBitLabel practiceBits[] = {
     STONE("WATER SPELLSTONE 1", ITEM_WaterSpellStone1_Got),
     STONE("FIRE SPELLSTONE 2", ITEM_FireSpellStone2_Got),
     STONE("WATER SPELLSTONE 2", ITEM_WaterSpellStone2_Got),
+    SPIRIT("KRAZOA 1 - OBSERVATION", K1_SPIRIT_COLLECTED),
+    SPIRIT("KRAZOA 2 - COMBAT", ITEM_TestCombatSpirit_Got),
+    SPIRIT("KRAZOA 3 - FEAR", ITEM_SpiritTestFear_Got),
+    SPIRIT("KRAZOA 4 - STRENGTH", ITEM_SpiritTestStrength_Got),
+    SPIRIT("KRAZOA 5 - KNOWLEDGE", ITEM_Spirit5_Got),
+    SPIRIT("KRAZOA 6", ITEM_Spirit6_Got),
     KEY("LFV WOOD BLOCK 1", ITEM_LVBlock1_Got),
     KEY("LFV WOOD BLOCK 2", ITEM_LVBlock2_Got),
     KEY("LFV WOOD BLOCK 3", ITEM_LVBlock3_Got),
@@ -151,6 +159,7 @@ static const PracticeBitLabel practiceBits[] = {
 #undef SUPPLY
 #undef KEY
 #undef STONE
+#undef SPIRIT
 #undef SPELL
 #undef TRICKY
 #undef AREA

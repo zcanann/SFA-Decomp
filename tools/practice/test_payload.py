@@ -57,6 +57,7 @@ class Machine:
                 "SaveGame_getPlayerStats", "getTrickyObject", "mainSetBits", "SaveGame_gplaySetAct",
                 "SaveGame_gplaySetObjGroupStatus", "sprintf", "EXILock", "EXISelect", "EXIImm",
                 "EXISync", "EXIDeselect", "EXIUnlock", "sndFXCtrl", "getHudHiddenFrameCount", "Sfx_UpdateObjectChannel3D",
+                "playerUpdate", "playerDoHitDetection", "playerDie", "Obj_TransformWorldVectorToLocal",
                 "getCurMapLayer", "memcpy", "mmAlloc", "mm_free", "loadMapForCurrentSaveGame", "_saveGame"):
                 self.stub[addr] = name
         self.uc.hook_add(UC_HOOK_CODE, self.service)
@@ -126,6 +127,14 @@ class Machine:
             for mid in range(120):
                 if self.read(self.sym["gSaveGameMapObjGroupBits"] + mid * 2, "H") == gamebit:
                     self.write(self.sym["gMapObjGroupStatuses"] + mid * 4, value)
+        elif name == "playerUpdate" and getattr(self, "spend_resources", False):
+            self.write(self.stats, 1, "b")
+            self.write(self.stats + 4, 0, "h")
+        elif name == "Obj_TransformWorldVectorToLocal":
+            # A rotated parent fixture: inverse yaw maps world X to local -Z.
+            x, y, z = self.f(1), self.f(2), self.f(3)
+            for reg, value in zip((3, 4, 5), (z, y, -x)):
+                self.write(self.r(reg), value, "f")
         elif name == "getCurMapLayer":
             uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "layer", 0) & 0xffffffff)
         elif name == "memcpy":
@@ -329,6 +338,7 @@ class PayloadTests(unittest.TestCase):
         m = self.m
         m.pad()
         m.toggle("FORCED SWIMMING", 1)
+        m.write(m.sym["swimActive"], 1, "B")
         m.write(m.sym["waterHeight"], 140.0, "f")
         m.call("Practice_PlayerControls", m.player, m.state)
         self.assertEqual(m.read(m.state + 0x3F0, "B") & 0x20, 0x20)
@@ -340,6 +350,138 @@ class PayloadTests(unittest.TestCase):
         m.toggle("FORCED SWIMMING", 0)
         m.call("Practice_PlayerControls", m.player, m.state)
         self.assertEqual(m.read(m.state + 0x3F0, "B") & 0x20, 0)
+
+    def test_swim_quick_toggle_recaptures_height_without_menu_chord_collision(self):
+        m = self.m
+        m.pad()
+        m.toggle("FORCED SWIMMING", 1)
+        m.pad(0x41, 1)  # L+Left.
+        self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)
+        self.assertEqual(m.read(m.sym["waterHeight"], "f"), 140)
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
+        m.pad(0x41)
+        self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)  # Held chord does not repeat.
+        m.pad()
+        m.pad(0x41, 1)
+        self.assertEqual(m.read(m.sym["swimActive"], "B"), 0)
+        self.assertEqual(m.read(m.sym["enabled"] + m.row("FORCED SWIMMING"), "B"), 1)
+        m.pad()
+        m.write(m.player + 0x1c, 900.0, "f")
+        m.pad(0x41, 1)
+        self.assertEqual(m.read(m.sym["waterHeight"], "f"), 940)
+        m.pad(0x48, 8)  # Existing L+Up height control.
+        self.assertEqual(m.read(m.sym["waterHeight"], "f"), 942)
+        m.pad(0x64, 4)  # L+R+Down only opens menu.
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
+        m.pad(0x41, 1)
+        self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)
+
+    def test_free_move_armed_toggle_cardinal_motion_and_input_priority(self):
+        m = self.m
+        m.pad()
+        m.toggle("FREE MOVE", 1)
+        m.toggle("AUTO ROLL", 1)
+        m.toggle("FORCED SWIMMING", 1)
+        m.write(m.sym["swimActive"], 1, "B")
+        m.call("Practice_PlayerUpdate", m.player)
+        self.assertEqual(m.calls[-1][0], "playerUpdate")  # Armed is not active.
+        m.pad(0x42, 2)  # L+Right.
+        self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
+        self.assertEqual(m.read(m.sym["swimActive"], "B"), 0)
+        m.pad(0x42)
+        self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
+        m.write(m.sym["gPadStatuses"] + 2, 70, "b")
+        m.write(m.sym["gPadStatuses"] + 3, 70, "b")
+        m.pad(0x800, 0x800)  # Y up; stick +X/-Z in world axes.
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
+        self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)
+        m.calls.clear()
+        m.call("Practice_PlayerUpdate", m.player)
+        self.assertEqual([m.read(m.player + k, "f") for k in (0xc, 0x10, 0x14)], [5, 5, -5])
+        self.assertFalse(any(c[0] == "playerUpdate" for c in m.calls))
+        m.call("Practice_PlayerHitDetection", m.player)
+        self.assertFalse(any(c[0] == "playerDoHitDetection" for c in m.calls))
+        m.pad(0x400, 0x400)  # X descends instead of rolling.
+        m.call("Practice_PlayerUpdate", m.player)
+        self.assertEqual(m.read(m.player + 0x10, "f"), 0)
+        m.pad()
+        m.pad(0x42, 2)
+        self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)  # Exit chord swallowed too.
+        m.call("Practice_PlayerUpdate", m.player)
+        self.assertEqual(m.calls[-1][0], "playerUpdate")
+        m.call("Practice_PlayerHitDetection", m.player)
+        self.assertEqual(m.calls[-1][0], "playerDoHitDetection")
+
+    def test_free_move_parent_transform_pause_load_and_player_change(self):
+        m = self.m
+        m.pad()
+        m.toggle("FREE MOVE", 1)
+        m.pad(0x42, 2)
+        parent = 0x81120000
+        m.write(m.player + 0x30, parent)  # ObjAnimComponent.parent.
+        m.write(m.sym["freeStep"], 5.0, "f")
+        m.call("Practice_PlayerUpdate", m.player)
+        transforms = [c for c in m.calls if c[0] == "Obj_TransformWorldVectorToLocal"]
+        self.assertTrue(transforms)
+        self.assertEqual(m.read(m.player + 0x14, "f"), -5)
+        m.pad(0x64, 4)
+        self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
+        self.assertEqual(bytes(m.uc.mem_read(m.sym["freeStep"], 12)), bytes(12))
+        m.pad()
+        m.pad(0x200, 0x200)
+        m.write(m.sym["joypadDisabled"], 1, "B")
+        m.pad()
+        self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
+        m.write(m.sym["joypadDisabled"], 0, "B")
+        m.pad(0x42, 2)
+        m.save_loading = 1
+        m.pad()
+        self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
+        m.save_loading = 0
+        m.pad(0x42, 2)
+        m.player += 0x4000
+        m.pad()
+        self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
+        self.assertEqual(m.read(m.sym["enabled"] + m.row("FREE MOVE"), "B"), 1)
+
+    def test_infinite_resources_restore_capacities_and_guard_lethal_damage(self):
+        m = self.m
+        m.state_fixture()
+        m.toggle("INFINITE HEALTH", 1)
+        m.toggle("INFINITE MAGIC", 1)
+        m.spend_resources = True
+        m.call("Practice_PlayerUpdate", m.player)
+        self.assertEqual(m.read(m.stats, "b"), 16)
+        self.assertEqual(m.read(m.stats + 4, "h"), 100)
+        # Real retail health subtraction must not enter the death routine at zero.
+        m.write(m.state + 0x35c, m.stats)
+        insn = m.read(m.sym["getCurMapLayer"])
+        delta = struct.unpack(">h", struct.pack(">H", insn & 0xffff))[0]
+        m.uc.reg_write(UC_PPC_REG_0 + 13, m.sym["curMapLayer"] - delta)
+        for edit in make_patch(self.dol, self.payload, self.exports)["edits"]:
+            if "hook" in edit:
+                m.uc.mem_write(edit["address"], bytes.fromhex(edit["after"]))
+        m.calls.clear()
+        m.call("playerAddHealth", m.player, (-100) & 0xffffffff)
+        self.assertEqual(m.read(m.stats, "b"), 16)
+        self.assertFalse(any(c[0] == "playerDie" for c in m.calls))
+        # Death without depleted health is scripted/void behavior, not HP loss.
+        m.call("Practice_PlayerDie", m.player)
+        self.assertEqual(m.calls[-1][0], "playerDie")
+        m.toggle("INFINITE HEALTH", 0)
+        m.toggle("INFINITE MAGIC", 0)
+        m.call("Practice_PlayerUpdate", m.player)
+        self.assertEqual(m.read(m.stats, "b"), 1)
+        self.assertEqual(m.read(m.stats + 4, "h"), 0)
+        m.call("playerAddHealth", m.player, (-100) & 0xffffffff)
+        self.assertEqual(m.calls[-1][0], "playerDie")
+        m.toggle("INFINITE HEALTH", 1)
+        m.toggle("INFINITE MAGIC", 1)
+        m.save_loading = 1
+        m.call("refillResources", m.player)
+        self.assertEqual(m.read(m.stats, "b"), 0)
+        self.assertEqual(m.read(m.stats + 4, "h"), 0)
 
     def test_trigger_boxes_spheres_and_cylinders(self):
         m = self.m
@@ -560,7 +702,7 @@ class PayloadTests(unittest.TestCase):
         m.pad()
         m.pad(0x20, 0x20)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
-        self.assertEqual(m.read(m.sym["visibleCount"]), 8)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 11)
         self.assertEqual(m.read(m.sym["visible"]), m.row("FORCED SWIMMING"))
         m.pad(0x20)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)  # Holding R does not repeat tabs.
@@ -813,7 +955,7 @@ class PayloadTests(unittest.TestCase):
         m.pad(0x100, 0x100)  # Flags -> Inventory.
         self.assertEqual(m.read(m.sym["flagPage"]), 1)
         m.call("rebuildRows")
-        self.assertEqual(m.read(m.sym["visibleCount"]), 5)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 6)
         m.pad(0x100, 0x100)  # Gear.
         self.assertEqual(m.read(m.sym["flagPage"]), 10)
         m.pad(0x100, 0x100)  # Staff.
@@ -917,6 +1059,8 @@ class PayloadTests(unittest.TestCase):
     def test_logging_filters_baselines_and_observational_state(self):
         m = self.m
         m.state_fixture()
+        self.assertEqual(m.read(m.sym["enabled"] + m.row("LOG TO DOLPHIN"), "B"), 1)
+        m.toggle("LOG TO DOLPHIN", 0)
         m.toggle("PLAYER STATS", 1)
         m.call("pollStateLog")
         self.assertFalse(m.reports)
@@ -1040,6 +1184,24 @@ class PayloadTests(unittest.TestCase):
                 gear_labels.append(pages[2][row])
         self.assertEqual(len(gear_labels), 2)
         self.assertTrue(set(gear_labels) <= set(pages[3]))
+
+    def test_inventory_krazoa_spirits_one_through_six(self):
+        m = self.m
+        m.state_fixture()
+        m.write(m.sym["flagPage"], 1)
+        m.write(m.sym["selected"], 5)
+        m.call("editFlags", 0x100)
+        self.assertEqual(m.read(m.sym["flagPage"]), 15)
+        m.call("flagRowCount")
+        self.assertEqual(m.r(3), 6)
+        for row, gid in enumerate((0xba8, 0xbfd, 0xff, 0xc6e, 0xc85, 0x174)):
+            m.bit_def(gid, 64 + row, 1, 0)
+            m.call("flagBitId", row)
+            self.assertEqual(m.r(3), gid)
+            m.write(m.sym["selected"], row)
+            m.call("editFlags", 0x100)
+            self.assertEqual(m.bit_edits[-1], (gid, 1))
+        self.assertEqual(len(m.bit_edits), 6)  # No implicit deposit/progression edits.
 
     def test_quiet_log_defaults_and_explicit_runtime_opt_in(self):
         m = self.m
@@ -1206,7 +1368,7 @@ class PayloadTests(unittest.TestCase):
         m = self.m
         m.state_fixture()
         m.write(m.sym["menuOpen"], 1, "B")
-        for tab, page in [(3, n) for n in range(15)] + [(4, 0)]:
+        for tab, page in [(3, n) for n in range(16)] + [(4, 0)]:
             m.geometry = []
             m.write(m.sym["activeTab"], tab, "B")
             m.write(m.sym["flagPage"], page)

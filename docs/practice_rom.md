@@ -21,7 +21,12 @@ checkpoint/layer logging, and quieter log defaults. See **V1.7 changes** below.
 - **With Auto Roll enabled:** hold X for roll, configurable blanks, shield, repeat.
 - **Warp tab:** Left/Right edits category, map, spawn, position, layer, facing or step.
   Selecting a map/spawn restores its preset. Select **Warp Now** (fourth row, below Spawn) and press **A** to travel.
-- With swimming enabled and the menu closed, **L + Up/Down** raises/lowers the water surface.
+- With Forced Swimming enabled: **L + Left** toggles swimming during play;
+  activation resets the surface to player Y + 40. **L + Up/Down** adjusts the
+  surface while swimming is active. Enabling it in the menu also starts swimming.
+- With Free Move enabled: **L + Right** toggles movement override during play.
+  The stick moves along world X/Z axes, **Y ascends**, and **X descends**. The
+  menu checkbox only arms the shortcut; the HUD distinguishes READY from ON.
 
 The menu consumes controller-1 input and uses the existing `timeStop` mechanism
 while open. This pauses object gameplay; it is not an emulator-wide frame pause.
@@ -98,7 +103,9 @@ The normal HUD shows a small reminder of the opening chord.
 
 Collision and triggers start enabled, with every geometry filter on except
 **Terrain Triangles** and **Water Triangles**. Draw Through Walls remains off.
-Swimming, both roll macros, and logging are opt-in. Individual filters are independent.
+Swimming, free move, infinite health/magic and both roll macros are opt-in.
+Logging starts enabled in the current source; Player Stats and Runtime / Action
+Flags remain off. Individual filters are independent.
 The menu scrolls to keep the selected row visible when every group is expanded.
 Rendering is capped at 12,000 lines and 6,000 fill triangles per frame; the menu
 reports when a cap is reached. Map collision reserves half the wire budget and
@@ -217,10 +224,11 @@ runtime code and declarations are enclosed in `#ifdef SFA_PRACTICE`.
 
 ## Memory and patch design
 
-Original text/data/BSS addresses are preserved. The current source replaces 18
+Original text/data/BSS addresses are preserved. The current source replaces 28
 verified call instructions: the seven V1.6 calls (both OSInit arena-low setup
 calls, controller polling, end-of-frame stub, warp reload, player controls,
-surface response), plus eleven internal save/checkpoint calls. Calls go through
+surface response), eleven internal save/checkpoint calls, one player update, two
+player collision passes and seven player-death calls. Calls go through
 ordinary PPC EABI C wrappers; game/compiler/SDK routines retain retail addresses.
 
 A new DOL section contains code, constants and explicitly initialized zero-state
@@ -260,6 +268,49 @@ and binary hashes. The current tool refuses them; it does not search for vaguely
 similar instructions and patch an unknown version.
 
 ## Validation and limits
+
+### Pending changes after V1.7 (not packaged)
+
+- **Forced Swimming** stays enabled in the menu while **L+Left** toggles its
+  active state. Every activation places the surface at the current player Y+40;
+  L+Up/Down retains height control. The cyan plane draws only while active.
+- **Free Move** arms a separate **L+Right** toggle. The stick controls world X/Z,
+  X descends and Y ascends, at five world units per nominal frame per axis with
+  a stick dead zone and bounded frame delta. It bypasses the player's update and
+  collision passes while active, freezes its movement animation/state, and clears
+  movement velocities. Parent transforms convert movement into local coordinates.
+  Other objects and triggers still run. The two movement modes are mutually exclusive.
+- Activation/exit input is consumed; free movement has priority over roll macros.
+  Both modes return to READY on player replacement, save loading or a queued warp.
+  Free move also releases for disabled input, DVD/cutscene guards and mounted/focus
+  control. Opening the practice menu pauses movement without clearing activation.
+- **Infinite Health** and **Infinite Magic** are independent Cheats toggles,
+  off by default. They refill to the current capacity before/after player updates,
+  without editing capacities or spell unlocks. Health-depleted death calls are
+  intercepted while enabled; scripted/void death with positive health still follows
+  the retail path. Save loading suppresses refills. This is not a revive command.
+- **Logging starts enabled**. Player Stats and Runtime / Action Flags remain off.
+  Dolphin still needs OSREPORT at Notice and a file/log-window destination.
+- Inventory adds **Krazoa Spirits**, with six numbered possession/collected flags:
+  Observation `BA8`, Combat `BFD`, Fear `0FF`, Strength `C6E`, Knowledge `C85`,
+  and spirit 6 `174`. They also remain on their area pages. Editing these flags
+  does not reset deposited/progression flags or run a spirit collection cutscene.
+
+The isolated payload uses GC/1.3 size optimization (`-O4,s`) and non-inlined
+movement helpers to retain the original 64 KiB reservation; the retail build's
+compiler settings are unchanged. The payload is 64,000 bytes. All 45 compiled-PPC
+checks and 8 patch-integrity tests pass, including actual lethal retail health
+subtraction, quick-toggle latching, menu/chord separation, roll-input priority,
+parented movement, load/player-change guards, and the six spirit edits. Disabled
+practice still emits no symbols; `ninja all_source` and the strict retail target pass.
+
+A private test ISO passed an isolated Dolphin Null-backend startup check
+(initialized/loaded, 45 objects, intact payload). OSREPORT immediately printed
+logging enabled and a 3,920-bit baseline with filter mask `BF`, confirming the
+new default without external RAM edits. The builder verified the original ISO
+and all bytes outside the relocated DOL/header pointer unchanged. Movement and
+resource behavior are compiled-PPC harness checks, not Dolphin gameplay tests.
+Published V1.7 and older ISOs are unchanged; these additions await packaging.
 
 ### V1.7 changes
 
@@ -423,7 +474,7 @@ so caches and shared masks follow normal engine behavior. Edits affect current
 save state and can persist through the game's normal saves. Script-controlled
 flags, especially spell availability, may be overwritten on the next update.
 
-Logging is **off by default**. The Log tab offers Inventory, Spells, Tricky,
+In V1.5-V1.7 logging was **off by default** (current source defaults on). The Log tab offers Inventory, Spells, Tricky,
 Area / Map Acts, Other / Unknown Bits, Object Groups, and Player Stats filters.
 The original V1.5 output path is broken; use V1.6 with the UART fix above.
 With that fix, enable Dolphin's OSREPORT logging to see `[PRACTICE]` entries with a frame

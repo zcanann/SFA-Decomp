@@ -10,6 +10,7 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/dll/dll_0017_savegame_api.h"
 #include "main/dll/savegame.h"
+#include "main/dll/player.h"
 #include "main/mldf_fileid.h"
 #include "main/pi_data_file_api.h"
 #include "dlls/objects/294.h"
@@ -111,6 +112,9 @@ enum {
     AUTO_ROLL_BLANKS,
     LOG_CHECKPOINTS,
     LOG_ACTIONS,
+    FREE_MOVE,
+    INFINITE_HEALTH,
+    INFINITE_MAGIC,
     ROW_COUNT
 };
 enum {
@@ -179,9 +183,11 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"AUTO ROLL", -1, 1, TAB_CHEATS},
                                             {"AUTO-ROLL BLANK FRAMES", AUTO_ROLL, 0, TAB_CHEATS},
                                             {"SAVE / RESPAWN CHECKPOINTS", -1, 0, TAB_LOG},
-                                            {"RUNTIME / ACTION FLAGS", -1, 0, TAB_LOG}};
-static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1,
-                                1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0};
+                                            {"RUNTIME / ACTION FLAGS", -1, 0, TAB_LOG},
+                                            {"FREE MOVE", -1, 0, TAB_CHEATS},
+                                            {"INFINITE HEALTH", -1, 0, TAB_CHEATS},
+                                            {"INFINITE MAGIC", -1, 0, TAB_CHEATS}};
+static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0};
 static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0,
                                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
 static u8 menuOpen, chordLatched, savedTimeStop, swimApplied;
@@ -208,6 +214,8 @@ static int selected, repeatTimer, visibleCount, visible[ROW_COUNT], menuTop;
 static int drawDistance = 1000;
 static f32 waterHeight;
 static GameObject* swimOwner;
+static u8 swimActive, freeActive, quickLatch;
+static Vec freeStep;
 static int linesDrawn, trianglesDrawn, triggersDrawn;
 static int fillsDrawn;
 static int drawLimitReached;
@@ -891,7 +899,7 @@ static void drawWorld(void) {
             }
         }
     }
-    if (enabled[SWIMMING] && enabled[WATER_GRID]) {
+    if (enabled[SWIMMING] && swimActive && enabled[WATER_GRID]) {
         for (i = -5; i <= 5; i++) {
             Vec a = point(origin.x - 250, waterHeight, origin.z + i * 50);
             Vec b = point(origin.x + 250, waterHeight, origin.z + i * 50);
@@ -1061,7 +1069,7 @@ static const int bitBankSizes[] = {0x80, 0x74, 0x144, 0xac};
 static const int bitSnapshotOffsets[] = {0, 0x80, 0xf4, 0x238};
 static const char* flagPages[] = {"FLAGS",         "INVENTORY",     "STAFF SPELLS", "TRICKY",     "PLAYER STATS",
                                   "AREA PROGRESS", "OBJECT GROUPS", "ADVANCED",     "RAW BIT ID", "UNUSED / UNCERTAIN",
-                                  "GEAR",          "STAFF SPELLS",  "SUPPLIES",     "KEY ITEMS",  "SPELLSTONES"};
+                                  "GEAR",          "STAFF SPELLS",  "SUPPLIES",     "KEY ITEMS",  "SPELLSTONES", "KRAZOA SPIRITS"};
 static const char* statLabels[] = {"HEALTH (RAW UNITS)", "MAX HEALTH",   "MAGIC", "MAX MAGIC", "SCARABS",
                                    "BAFOMDADS",          "MAX BAFOMDADS"};
 static const int flagSteps[] = {1, 16, 256};
@@ -1264,7 +1272,7 @@ static int flagRowCount(void) {
         return 7;
     }
     if (flagPage == FLAGS_INVENTORY) {
-        return 5;
+        return 6;
     }
     if (flagPage == FLAGS_ADVANCED || flagPage == FLAGS_RAW) {
         return 2;
@@ -1777,18 +1785,28 @@ static void drawMenu(void) {
     GXLoadPosMtxImm(identity, GX_PNMTX0);
     setupGeometry(0);
     if (!menuOpen) {
-        rectangle(16, 16, 444, 24 + (enabled[SWIMMING] + enabled[SHIELD_HOVER] + enabled[AUTO_ROLL]) * 18, 0x0B1427DD);
+        int y = 41;
+        rectangle(16, 16, 564,
+                  24 + (enabled[SWIMMING] + enabled[SHIELD_HOVER] + enabled[AUTO_ROLL] + enabled[FREE_MOVE]) * 18,
+                  0x0B1427DD);
         textAt(24, 23, "SFA PRACTICE  L+R+DOWN: MENU", WHITE);
         if (enabled[SWIMMING]) {
-            textAt(24, 41, "SWIM Y:", 0x63D5FFFF);
-            numberAt(120, 41, (int)waterHeight, WHITE);
-            textAt(228, 41, "L+UP/DOWN", MUTED);
+            textAt(24, y, swimActive ? "SWIM ON" : "SWIM READY", 0x63D5FFFF);
+            textAt(168, y, "L+LEFT  UP/DOWN: HEIGHT", MUTED);
+            numberAt(456, y, (int)waterHeight, WHITE);
+            y += 18;
+        }
+        if (enabled[FREE_MOVE]) {
+            textAt(24, y, freeActive ? "MOVE ON" : "MOVE READY", GOLD);
+            textAt(168, y, "L+RIGHT STICK XZ X/Y: DOWN/UP", MUTED);
+            y += 18;
         }
         if (enabled[SHIELD_HOVER]) {
-            textAt(24, enabled[SWIMMING] ? 59 : 41, "AUTO-SHIELD HOVER: HOLD X+R", GOLD);
+            textAt(24, y, "AUTO-SHIELD HOVER: HOLD X+R", GOLD);
+            y += 18;
         }
         if (enabled[AUTO_ROLL]) {
-            textAt(24, 41 + (enabled[SWIMMING] + enabled[SHIELD_HOVER]) * 18, "AUTO ROLL: HOLD X", GOLD);
+            textAt(24, y, "AUTO ROLL: HOLD X", GOLD);
         }
         return;
     }
@@ -2022,6 +2040,8 @@ void Practice_WarpReload(void) {
     gGameLoopPendingMapDataFileId = -1;
 }
 
+#pragma push
+#pragma auto_inline off
 static void swallowInput(void) {
     PADStatus* pad = &gPadStatuses[gPadStatusBufferIndex * PAD_MAX_CONTROLLERS];
     pad->button = 0;
@@ -2115,9 +2135,126 @@ static void updateShieldHover(GameObject* player, int blocked) {
     hoverActive = mode;
 }
 
+/* Menu switches arm the shortcuts. Only one movement override runs at once.
+ * Use physical button chords before input injection and consume activation frames. */
+static int updateQuickMovement(GameObject* player, u32 held, u32 shoulders, int blocked) {
+    int quick = (shoulders & PAD_TRIGGER_L) && !(shoulders & PAD_TRIGGER_R)
+                    ? held & (PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT) : 0;
+    int edge = quick & ~quickLatch;
+    int wasFree = freeActive;
+    PADStatus* pad = &gPadStatuses[gPadStatusBufferIndex * PAD_MAX_CONTROLLERS];
+    quickLatch = quick;
+    freeStep = point(0, 0, 0);
+    if (!enabled[SWIMMING]) {
+        swimActive = 0;
+    }
+    if (!enabled[FREE_MOVE]) {
+        freeActive = 0;
+    }
+    if (!validPointer(player) || isSaveGameLoading() || gWarpRequested) {
+        swimActive = freeActive = 0;
+        return wasFree;
+    }
+    if ((!menuOpen && timeStop && !blocked) || joypadDisabled || gDvdErrorPauseActive) {
+        freeActive = 0;
+    }
+    if (!blocked && !timeStop && !joypadDisabled && !gDvdErrorPauseActive) {
+        if (edge == PAD_BUTTON_LEFT && enabled[SWIMMING]) {
+            swimActive ^= 1;
+            if (swimActive) {
+                freeActive = 0;
+                waterHeight = player->anim.worldPosY + 40.0f;
+            }
+        } else if (edge == PAD_BUTTON_RIGHT && enabled[FREE_MOVE]) {
+            freeActive ^= 1;
+            if (freeActive) {
+                swimActive = 0;
+            }
+        }
+        if (freeActive && !quick) {
+            f32 dt = timeDelta;
+            if (!(dt > 0)) {
+                dt = 0;
+            } else if (dt > 3) {
+                dt = 3;
+            }
+            freeStep.x = (pad->stickX > 20 ? 1 : pad->stickX < -20 ? -1 : 0) * 5.0f * dt;
+            freeStep.z = (pad->stickY > 20 ? -1 : pad->stickY < -20 ? 1 : 0) * 5.0f * dt;
+            freeStep.y = (((held & PAD_BUTTON_Y) != 0) - ((held & PAD_BUTTON_X) != 0)) * 5.0f * dt;
+        }
+    }
+    return freeActive || wasFree || (quick && (enabled[SWIMMING] || enabled[FREE_MOVE]));
+}
+
+static void refillResources(GameObject* obj) {
+    PlayerStatus* stats;
+    if ((!enabled[INFINITE_HEALTH] && !enabled[INFINITE_MAGIC]) || obj != Obj_GetPlayerObject() ||
+        isSaveGameLoading()) {
+        return;
+    }
+    stats = practiceStats();
+    if (stats) {
+        if (enabled[INFINITE_HEALTH] && stats->maxHealth > 0) {
+            stats->health = stats->maxHealth;
+        }
+        if (enabled[INFINITE_MAGIC] && stats->maxMagic > 0) {
+            stats->magic = stats->maxMagic;
+        }
+    }
+}
+
+extern void playerDie(GameObject* obj);
+void Practice_PlayerDie(GameObject* obj) {
+    PlayerStatus* stats = NULL;
+    if (enabled[INFINITE_HEALTH] && obj == Obj_GetPlayerObject() && !isSaveGameLoading()) {
+        stats = practiceStats();
+    }
+    if (stats && stats->health <= 0 && stats->maxHealth > 0) {
+        stats->health = stats->maxHealth;
+        return;
+    }
+    playerDie(obj);
+}
+
+void Practice_PlayerUpdate(GameObject* obj) {
+    PlayerState* state = obj->extra;
+    Vec delta = freeStep;
+    refillResources(obj);
+    if (freeActive && obj == swimOwner && validPointer(state) &&
+        (state->cutsceneTimer > 0 || state->focusObject != NULL || joypadDisabled || gDvdErrorPauseActive)) {
+        freeActive = 0;
+    }
+    if (!freeActive || !enabled[FREE_MOVE] || obj != swimOwner || !validPointer(state)) {
+        playerUpdate(obj);
+        refillResources(obj);
+        return;
+    }
+    if (obj->anim.parent) {
+        Obj_TransformWorldVectorToLocal(delta.x, delta.y, delta.z, &delta.x, &delta.y, &delta.z, obj->anim.parent);
+    }
+    obj->anim.localPosX += delta.x;
+    obj->anim.localPosY += delta.y;
+    obj->anim.localPosZ += delta.z;
+    obj->anim.velocityX = obj->anim.velocityY = obj->anim.velocityZ = 0;
+    obj->externalVelX = obj->externalVelY = obj->externalVelZ = 0;
+    state->baddie.animSpeedA = state->baddie.animSpeedB = state->baddie.animSpeedC = 0;
+    state->smoothVelX = state->smoothVelZ = state->verticalVel = 0;
+    if (swimApplied) {
+        state->flags3F0.b20 = 0;
+        swimApplied = 0;
+    }
+    /* The enclosing object update recomputes world coordinates from localPos. */
+}
+
+void Practice_PlayerHitDetection(GameObject* obj) {
+    if (!freeActive || !enabled[FREE_MOVE] || obj != swimOwner) {
+        playerDoHitDetection(obj);
+    }
+}
+
 void Practice_PadUpdate(void) {
     u32 held, pressed, shoulders, shoulderPressed;
-    int chord, wasOpen;
+    int chord, wasOpen, movementInput;
     GameObject* player;
     padUpdate();
     held = gPadButtonsHeld[0];
@@ -2142,11 +2279,8 @@ void Practice_PadUpdate(void) {
     if (player != swimOwner) {
         hoverActive = hoverPhase = 0;
         hoverWait = 0;
-        swimApplied = 0;
+        swimApplied = swimActive = freeActive = 0;
         swimOwner = player;
-        if (enabled[SWIMMING] && validPointer(player)) {
-            waterHeight = player->anim.worldPosY + 40.0f;
-        }
     }
     if (menuOpen && !chord) {
         int row;
@@ -2246,6 +2380,8 @@ void Practice_PadUpdate(void) {
                 }
                 if (row == SWIMMING && enabled[row] && validPointer(player)) {
                     waterHeight = player->anim.worldPosY + 40.0f;
+                    swimActive = 1;
+                    freeActive = 0;
                 }
             }
         }
@@ -2253,7 +2389,8 @@ void Practice_PadUpdate(void) {
             waterHeight = player->anim.worldPosY + 40.0f;
         }
     }
-    if (!menuOpen && !wasOpen && !chord && enabled[SWIMMING] && (shoulders & PAD_TRIGGER_L) &&
+    movementInput = updateQuickMovement(player, held, shoulders, menuOpen || wasOpen || chord);
+    if (!menuOpen && !wasOpen && !chord && enabled[SWIMMING] && swimActive && (shoulders & PAD_TRIGGER_L) &&
         (held & (PAD_BUTTON_UP | PAD_BUTTON_DOWN))) {
         f32 delta = timeDelta * ((held & PAD_BUTTON_UP) ? 2.0f : -2.0f);
         if (delta > 10) {
@@ -2265,10 +2402,10 @@ void Practice_PadUpdate(void) {
         waterHeight += delta;
         swallowInput();
     }
-    if (menuOpen || wasOpen || chord) {
+    if (menuOpen || wasOpen || chord || movementInput) {
         swallowInput();
     }
-    updateShieldHover(player, menuOpen || wasOpen || chord);
+    updateShieldHover(player, menuOpen || wasOpen || chord || movementInput);
     updateMenuSounds();
 }
 
@@ -2280,9 +2417,9 @@ static void applyWater(GameObject* obj, PlayerState* state) {
 
 void Practice_PlayerControls(GameObject* obj, PlayerState* state, f32 dt) {
     f32 original = state->baddie.waterSurfaceY;
-    int active = enabled[SWIMMING] && obj == Obj_GetPlayerObject();
+    int active = enabled[SWIMMING] && swimActive && obj == Obj_GetPlayerObject();
     if (obj == Obj_GetPlayerObject()) {
-        if (enabled[SWIMMING]) {
+        if (active) {
             applyWater(obj, state);
             if (!state->flags3F0.b20 && state->waterDepth > 25.0f && state->focusObject == NULL) {
                 playerEnterDeepWater(obj, state, state);
@@ -2303,7 +2440,7 @@ void Practice_PlayerControls(GameObject* obj, PlayerState* state, f32 dt) {
 
 void Practice_SurfaceResponse(GameObject* obj, PlayerState* state, PlayerState* cfg, f32 dt) {
     f32 original = cfg->baddie.waterSurfaceY;
-    int active = enabled[SWIMMING] && obj == Obj_GetPlayerObject();
+    int active = enabled[SWIMMING] && swimActive && obj == Obj_GetPlayerObject();
     if (active) {
         cfg->baddie.waterSurfaceY = waterHeight;
     }
@@ -2315,13 +2452,15 @@ void Practice_SurfaceResponse(GameObject* obj, PlayerState* state, PlayerState* 
     }
 }
 
+#pragma pop
+
 void Practice_Draw(void) {
     u8 viewIndex = gCameraCurrentViewIndex;
     updateMenuSounds();
     pollStateLog();
     linesDrawn = trianglesDrawn = triggersDrawn = fillsDrawn = 0;
     drawLimitReached = 0;
-    if (enabled[COLLISION] || enabled[TRIGGERS] || (enabled[SWIMMING] && enabled[WATER_GRID])) {
+    if (enabled[COLLISION] || enabled[TRIGGERS] || (enabled[SWIMMING] && swimActive && enabled[WATER_GRID])) {
         drawWorld();
     }
     drawMenu();

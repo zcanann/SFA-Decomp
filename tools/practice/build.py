@@ -125,8 +125,9 @@ def compile_payload(out, enabled, compilers=None, binutils=None):
     binutils = binutils or tool_directory("binutils")
     suffix = ".exe" if (binutils / "powerpc-eabi-nm.exe").exists() else ""
     nm_tool = binutils / ("powerpc-eabi-nm" + suffix)
+    # Size optimization keeps the optional payload in its original 64 KiB reservation.
     flags = ["-nodefaults", "-proc", "gekko", "-align", "powerpc", "-enum", "int",
-             "-fp", "hardware", "-Cpp_exceptions", "off", "-O4,p", "-inline", "auto",
+             "-fp", "hardware", "-Cpp_exceptions", "off", "-O4,s", "-inline", "auto",
              "-nosyspath", "-RTTI", "off", "-fp_contract", "off", "-str", "reuse",
              "-char", "signed", "-sdata", "0", "-sdata2", "0", "-maxerrors", "10",
              "-i", ROOT / "include", "-DVERSION_GSAE01"]
@@ -176,6 +177,9 @@ def make_patch(dol, payload, exports):
         ("gameLoop", "padUpdate", "Practice_PadUpdate", 1),
         ("gameLoop", "doNothing_endOfFrame", "Practice_Draw", 1),
         ("loadNextMap", "mapReload", "Practice_WarpReload", 1),
+        (None, "playerDie", "Practice_PlayerDie", 7),
+        (None, "playerUpdate", "Practice_PlayerUpdate", 1),
+        (None, "playerDoHitDetection", "Practice_PlayerHitDetection", 2),
         (None, "playerDoControls", "Practice_PlayerControls", 1),
         (None, "playerUpdateSurfaceResponse", "Practice_SurfaceResponse", 1),
         ("SaveGame_gplaySavePoint", "memcpy", "Practice_SaveCheckpointCopy", 3),
