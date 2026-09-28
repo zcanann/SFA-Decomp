@@ -1484,9 +1484,9 @@ class PayloadTests(unittest.TestCase):
         m.call("editFlags", 0x100)
         self.assertEqual(m.read(m.sym["flagPage"]), 13)
         m.call("flagRowCount")
-        self.assertEqual(m.r(3), 8)
+        self.assertEqual(m.r(3), 9)
         expected = ({0x91c}, {0x194, 0x66d}, {0x1ee, 0x17b, 0x17e, 0x17f, 0x180},
-                    {0x193}, {0x953}, {0xa9, 0xaf7}, {0xc25, 0xc26, 0xc27}, {0x81d, 0x81e})
+                    {0x193}, {0x953}, {0xa9, 0xaf7}, {0xc25, 0xc26, 0xc27}, {0x81d, 0x81e}, {0x1a2})
         for area, required in enumerate(expected):
             m.write(m.sym["selected"], area)
             m.call("editFlags", 0x100)

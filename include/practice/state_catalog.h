@@ -33,11 +33,12 @@ enum {
     ITEM_AREA_CLOUDRUNNER,
     ITEM_AREA_CAPE_CLAW,
     ITEM_AREA_LIGHTFOOT,
-    ITEM_AREA_WALLED_CITY
+    ITEM_AREA_WALLED_CITY,
+    ITEM_AREA_SNOWHORN
 };
 static const char* itemAreaNames[] = {
     "GALLEON",   "THORNTAIL HOLLOW",  "DARKICE MINES", "MOON MOUNTAIN PASS", "CLOUDRUNNER FORTRESS",
-    "CAPE CLAW", "LIGHTFOOT VILLAGE", "WALLED CITY"};
+    "CAPE CLAW", "LIGHTFOOT VILLAGE", "WALLED CITY",   "SNOWHORN WASTES"};
 typedef struct PracticeBitLabel {
     const char* name;
     u16 id;
@@ -101,6 +102,7 @@ static const PracticeBitLabel practiceBits[] = {
     KEY(WALLED_CITY, "GOLD TOOTH", ITEM_WCGoldTooth_Got),
     KEY(WALLED_CITY, "SUN STONE", ITEM_WCSunStone_Got),
     KEY(WALLED_CITY, "MOON STONE", ITEM_WCMoonStone_Got),
+    KEY(SNOWHORN, "ARTIFACT", ITEM_NWSnowHornArtifact_Got),
     MAP("THORNTAIL HOLLOW", ITEM_MapSH_Got),
     MAP("SNOWHORN WASTES", ITEM_MapNW_Got),
     MAP("DARKICE MINES", ITEM_MapDIM_Got),

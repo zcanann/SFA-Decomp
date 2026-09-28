@@ -275,6 +275,12 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
+### Inventory additions after the regression test ISO
+
+Flags > Inventory > Area Items > Snowhorn Wastes now contains **Artifact**,
+using the ownership bit `ITEM_NWSnowHornArtifact_Got` (0x1A2). This source change
+is not yet included in an ISO.
+
 ### Fixes after V1.11 (test ISO, no numbered release)
 
 C-stick Left/Right again swivels Free Move without a modifier. L only changes
