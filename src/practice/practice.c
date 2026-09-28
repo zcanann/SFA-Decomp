@@ -1928,7 +1928,7 @@ static void drawMenu(void) {
     }
     rectangle(20, 20, 600, 430, 0x081020EF);
     rectangle(20, 20, 600, 4, 0x59D5FFFF);
-    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.8", WHITE);
+    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.9", WHITE);
     for (i = 0; i < TAB_COUNT; i++) {
         int width = 580 / TAB_COUNT;
         if (i == activeTab) {
