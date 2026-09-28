@@ -491,6 +491,18 @@ class PayloadTests(unittest.TestCase):
         m.write(m.player + 4, -456, "h")
         m.toggle("FREE MOVE", 1)
         m.pad(0x48, 8)
+        self.assertEqual(m.read(m.sym["enabled"] + m.row("INVERT X"), "B"), 1)
+        for inverted in (1, 0):
+            m.toggle("INVERT X", inverted)
+            for shoulders in (0, 0x40):
+                for stick in (-59, 59):
+                    m.write(m.sym["freeYaw"], 0, "h")
+                    m.write(m.sym["gPadStatuses"] + 4, stick, "b")
+                    m.pad(shoulders)
+                    self.assertEqual(m.read(m.sym["freeYaw"], "h"),
+                                     (364 if stick > 0 else -364) * (1 if inverted else -1))
+                    self.assertEqual(m.read(m.sym["freePitch"], "h"), 0)
+        m.write(m.sym["freeYaw"], 0, "h")
         m.write(m.sym["gPadStatuses"] + 4, 59, "b")
         m.pad()
         m.write(m.sym["gPadStatuses"] + 5, 59, "b")
@@ -568,7 +580,8 @@ class PayloadTests(unittest.TestCase):
         m.pad()
         m.pad(0x64, 4)
         m.pad()
-        m.pad(0x20, 0x20)  # Cheats tab, first row is Forced Swimming.
+        m.pad(0x20, 0x20)  # Cheats tab starts with Free Move and Invert X.
+        m.write(m.sym["selected"], 2)  # Forced Swimming.
         m.pad(0x100, 0x100)
         self.assertEqual(m.read(m.sym["enabled"] + m.row("FORCED SWIMMING"), "B"), 1)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
@@ -995,8 +1008,10 @@ class PayloadTests(unittest.TestCase):
         m.pad()
         m.pad(0x20, 0x20)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
-        self.assertEqual(m.read(m.sym["visibleCount"]), 11)
-        self.assertEqual(m.read(m.sym["visible"]), m.row("FORCED SWIMMING"))
+        self.assertEqual(m.read(m.sym["visibleCount"]), 12)
+        self.assertEqual(m.read(m.sym["visible"]), m.row("FREE MOVE"))
+        self.assertEqual(m.read(m.sym["visible"] + 4), m.row("INVERT X"))
+        self.assertEqual(m.read(m.sym["enabled"] + m.row("INVERT X"), "B"), 1)
         m.pad(0x20)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)  # Holding R does not repeat tabs.
         m.pad(0x40, 0x40)
@@ -1015,7 +1030,7 @@ class PayloadTests(unittest.TestCase):
         m.pad()
         m.pad(0x40, 0x40)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
-        m.write(m.sym["selected"], 3)
+        m.write(m.sym["selected"], 5)
         m.pad(0x100, 0x100)
         self.assertEqual(m.read(m.sym["enabled"] + m.row("AUTO-SHIELD HOVER"), "B"), 1)
         self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)  # Menu wins over automation.
@@ -1865,7 +1880,7 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.sym["hoverWait"]), 0)
         m.pad()
         m.pad(0x20, 0x20)
-        m.write(m.sym["selected"], 4)  # Blanks after roll.
+        m.write(m.sym["selected"], 6)  # Blanks after roll.
         m.pad(2, 2)
         self.assertEqual(m.read(m.sym["rollBlanks"]), 3)
         m.write(m.sym["rollBlanks"], 60)

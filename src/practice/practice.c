@@ -120,6 +120,7 @@ enum {
     INFINITE_HEALTH,
     INFINITE_MAGIC,
     MAP_CELLS,
+    FREE_INVERT_X,
     ROW_COUNT
 };
 enum {
@@ -189,14 +190,16 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"AUTO-ROLL BLANK FRAMES", AUTO_ROLL, 0, TAB_CHEATS},
                                             {"SAVE / RESPAWN CHECKPOINTS", -1, 0, TAB_LOG},
                                             {"RUNTIME / ACTION FLAGS", -1, 0, TAB_LOG},
-                                            {"FREE MOVE", -1, 0, TAB_CHEATS},
+                                            {"FREE MOVE", -1, 1, TAB_CHEATS},
                                             {"INFINITE HEALTH", -1, 0, TAB_CHEATS},
                                             {"INFINITE MAGIC", -1, 0, TAB_CHEATS},
-                                            {"MAP CELLS / GRAVITY", -1, 0}};
+                                            {"MAP CELLS / GRAVITY", -1, 0},
+                                            {"INVERT X", FREE_MOVE, 0, TAB_CHEATS}};
 static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1,
-                                1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0};
+                                1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0,
+                                0, 0, 0, 0, 1};
 static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0,
-                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1};
 static u8 menuOpen, chordLatched, savedTimeStop, swimApplied;
 static u8 menuSoundActive, menuSoundOwned[SFX_OBJECT_CHANNEL_COUNT];
 static int menuSoundHudDepth;
@@ -1878,8 +1881,14 @@ static void rebuildRows(void) {
         return;
     }
     visibleCount = 0;
+    if (activeTab == TAB_CHEATS) {
+        visible[visibleCount++] = FREE_MOVE;
+        if (expanded[FREE_MOVE]) {
+            visible[visibleCount++] = FREE_INVERT_X;
+        }
+    }
     for (i = 0; i < ROW_COUNT; i++) {
-        if (rows[i].tab != activeTab || i == WARP_GO) {
+        if (rows[i].tab != activeTab || i == WARP_GO || i == FREE_MOVE || i == FREE_INVERT_X) {
             continue;
         }
         if (rows[i].parent < 0 || expanded[(int)rows[i].parent]) {
@@ -2341,7 +2350,7 @@ static int updateQuickMovement(GameObject* player, u32 held, u32 shoulders, int 
             }
             /* Fox faces local -Z: decreasing yaw turns right. Positive pitch
              * points upward. Keep a stable yaw at steep angles, without flips. */
-            freeYaw -= (int)(freeAxis(pad->substickX, 59.0f) * 364.0f * dt);
+            freeYaw += (int)(freeAxis(pad->substickX, 59.0f) * (enabled[FREE_INVERT_X] ? 364.0f : -364.0f) * dt);
             if (shoulders & PAD_TRIGGER_L) {
                 pitch = freePitch + (int)(freeAxis(pad->substickY, 59.0f) * 364.0f * dt);
                 freePitch = pitch < -0x3800 ? -0x3800 : pitch > 0x3800 ? 0x3800 : pitch;

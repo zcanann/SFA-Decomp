@@ -30,6 +30,8 @@ storage regions in gamebit change logs. See **V1.12 changes** below.
   The main stick moves forward/back and strafes relative to Fox's facing.
   **C-stick Left/Right** swivels Fox with or without L. **C-stick Up/Down**
   ascends/descends; **L + C-stick Up/Down** pitches instead.
+  Free Move is first on the Cheats tab; its **Invert X** child option defaults
+  on and reverses C-stick swivel. Turn it off for the V1.12 swivel direction.
   Moving forward while pitched also changes altitude. The camera
   follows directly behind Fox. The
   menu checkbox only arms the shortcut; the HUD distinguishes READY from ON.
@@ -274,6 +276,13 @@ and binary hashes. The current tool refuses them; it does not search for vaguely
 similar instructions and patch an unknown version.
 
 ## Validation and limits
+
+### Pending after V1.12
+
+Free Move is the first Cheats entry, with an expanded **Invert X** checkbox
+enabled by default. It reverses C-stick horizontal swivel with or without L;
+main-stick movement, vertical movement, and pitch retain their controls.
+These changes are not yet included in an ISO.
 
 ### V1.12 changes
 
