@@ -140,7 +140,7 @@ class Machine:
             gamebit = self.read(self.sym["gSaveGameMapObjGroupBits"] + self.r(3) * 2, "H")
             mask = 1 << self.r(4)
             value = self.bit_value(gamebit)
-            value = value | mask if self.r(5) else value & ~mask
+            value = value | mask if self.r(5) not in (0, 0xfffffffe) else value & ~mask
             self.set_bit(gamebit, value)
             for mid in range(120):
                 if self.read(self.sym["gSaveGameMapObjGroupBits"] + mid * 2, "H") == gamebit:
@@ -1310,6 +1310,51 @@ class PayloadTests(unittest.TestCase):
         before = len(m.bit_edits)
         m.call("applyArrivalGroups", 38)  # Arwing: no group bank.
         self.assertEqual(len(m.bit_edits), before)
+
+    def test_magic_cave_arrivals_set_layout_reward_and_return_without_granting_reward(self):
+        m = self.m
+        m.state_fixture()
+        m.write(m.sym["gSaveGameMapObjGroupBits"] + 54 * 2, 0x301, "H")
+        m.write(m.sym["gSaveGameMapActBits"] + 54 * 2, 0x300, "H")
+        for gid, first, width in ((0x1b8, 64, 8), (0x91e, 72, 1), (0xe05, 73, 1), (0x2d, 74, 1)):
+            m.bit_def(gid, first, width, 2)
+        m.write(m.sym["warpMap"], 54)
+        m.call("resetWarpSpawn")
+        dest = bytes(m.uc.mem_read(m.sym["warpDestination"], 16))
+        x, y, z, layer, _ = struct.unpack(">3f2h", dest)
+        bounds, layers, cells = 0x81200000, 0x81201000, 0x81202000
+        m.write(m.sym["gShaderMapRomBuffers"] + 4, bounds)
+        m.write(m.sym["gShaderMapRomBuffers"] + 12, layers)
+        m.write(m.sym["gShaderMapRomBuffers"] + 16, cells)
+        m.uc.mem_write(layers, bytes([127]) * 128)
+        gx, gz = math.floor(x / 640), math.floor(z / 640)
+        m.uc.mem_write(bounds + 54 * 10, struct.pack(">4h2b", gx, gx, gz, gz, 0, 0))
+        m.write(layers + 54, layer, "b")
+        m.write(cells + 54 * 64, 1, "B")
+        contexts = [(0, 2, 102), (1, 1, 52), (2, 2, 3), (1, 2, 95),
+                    (0, 1, 103), (2, 1, 53), (3, 2, 72), (4, 2, 16), (5, 2, 21)]
+        for index, (group, act, exit_warp) in enumerate(contexts):
+            m.write(m.sym["warpMap"], 54)
+            m.write(m.sym["warpSpawn"], index)
+            m.call("resetWarpSpawn")
+            m.set_bit(0x301, 0x3f | (1 << 15))
+            m.set_bit(0x91e, 1)
+            m.set_bit(0x2d, 1)
+            m.write(m.sym["gWarpRequested"], 0, "B")
+            m.call("requestPracticeWarp", m.player)
+            self.assertEqual(m.read(m.sym["warpQueuedCave"], "h"), index + 1)
+            # Selection changes after queueing must not change the queued entry.
+            m.write(m.sym["warpSpawn"], 0)
+            m.write(m.sym["gGameLoopPendingMapId"], 54)
+            m.call("Practice_WarpReload")
+            self.assertEqual(m.bit_value(0x301), (1 << group) | (1 << 15))
+            self.assertEqual(m.bit_value(0x300), act)
+            self.assertEqual(m.bit_value(0x1b8), exit_warp)
+            self.assertEqual(m.bit_value(0x91e), 0)
+            self.assertEqual(m.bit_value(0x2d), 1)
+            self.assertEqual(m.read(m.sym["gGameLoopPendingMapDataFileId"], "i"),
+                             [12, 12, 12, 12, 14, 47, 7, 25, 20][index])
+            self.assertEqual(m.read(m.sym["warpQueuedCave"], "h"), 0)
 
     def test_flags_hierarchy_unused_separation_and_back_navigation(self):
         m = self.m

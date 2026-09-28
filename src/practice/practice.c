@@ -220,6 +220,7 @@ static u8 warpReady, warpEdited;
 static WarpDestination warpDestination;
 static WarpDestination warpQueuedDestination;
 static u8 warpLoadPending;
+static s16 warpQueuedCave;
 static const char* warpMessage;
 static int selected, repeatTimer, visibleCount, visible[ROW_COUNT], menuTop;
 static int drawDistance = 1000;
@@ -1952,7 +1953,7 @@ static void drawMenu(void) {
     }
     rectangle(20, 20, 600, 430, 0x081020EF);
     rectangle(20, 20, 600, 4, 0x59D5FFFF);
-    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.13", WHITE);
+    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.14", WHITE);
     for (i = 0; i < TAB_COUNT; i++) {
         int width = 580 / TAB_COUNT;
         if (i == activeTab) {
@@ -2155,6 +2156,7 @@ static void requestPracticeWarp(GameObject* player) {
     warpToMap(index >= 0 ? index : 2, 1);
     gRcpPendingWarpDest = warpDestination;
     warpQueuedDestination = warpDestination;
+    warpQueuedCave = practiceWarpSpawns[map->firstSpawn + warpSpawn].cave;
     warpLoadPending = 1;
     if (index < 0 || warpEdited) {
         gPendingWarpIndex = 128;
@@ -2180,11 +2182,13 @@ static void applyArrivalGroups(int map) {
  * arrange resource banks before warping; arbitrary practice travel must queue
  * them explicitly. doQueuedLoads unloads old objects before loading the banks. */
 void Practice_WarpReload(void) {
+    int cave = warpQueuedCave;
     int practice = warpLoadPending && gRcpPendingWarpDest.x == warpQueuedDestination.x &&
                    gRcpPendingWarpDest.y == warpQueuedDestination.y &&
                    gRcpPendingWarpDest.z == warpQueuedDestination.z &&
                    gRcpPendingWarpDest.layer == warpQueuedDestination.layer;
     warpLoadPending = 0;
+    warpQueuedCave = 0;
     if (!practice) {
         mapReload();
         return;
@@ -2197,6 +2201,26 @@ void Practice_WarpReload(void) {
     applyArrivalGroups(gGameLoopPendingMapId);
     /* A saved auxiliary bank belongs to the source area, not this destination. */
     gGameLoopPendingMapDataFileId = -1;
+    if (gGameLoopPendingMapId == 54 && cave > 0 &&
+        cave <= sizeof(practiceCaveArrivals) / sizeof(practiceCaveArrivals[0])) {
+        const PracticeCaveArrival* arrival = &practiceCaveArrivals[cave - 1];
+        int sourceDir = mapGetDirIdx(arrival->source);
+        int group;
+        /* Normal cave entry retains the entrance area's character assets. */
+        gGameLoopPendingMapDataFileId =
+            sMapFileNameAdjacencyTable[sourceDir] >= 0 ? sMapFileNameAdjacencyTable[sourceDir] : sourceDir;
+        SaveGame_gplaySetAct(54, arrival->act);
+        /* These six groups select mutually exclusive cave rewards. A previous
+         * cave warp may have bypassed the normal exit cleanup. */
+        for (group = 0; group < 6; group++) {
+            SaveGame_gplaySetObjGroupStatus(54, group, group == arrival->group ? 1 : -2);
+        }
+        mainSetBits(GAMEBIT_MagicCaveExitWarp, arrival->exit);
+        mainSetBits(GAMEBIT_MC_IsExiting, 0);
+        if (arrival->source == 13) {
+            mainSetBits(GAMEBIT_WC_MagicCaveRelated0E05, 0);
+        }
+    }
     /* LinkD has no resource parent. Normal entry retains DIM Top's bank,
      * which its entrance/exit triggers load and unload (directory 26).
      * A full practice reload must supply that bank alongside the link. */

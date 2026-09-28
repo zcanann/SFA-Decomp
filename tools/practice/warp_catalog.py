@@ -38,7 +38,7 @@ def read_assets(iso, extra_names=()):
 
 
 def catalog(iso):
-    dol, assets = read_assets(iso)
+    dol, assets = read_assets(iso, ("OBJECTS.tab", "OBJECTS.bin", "OBJINDEX.bin"))
 
     def dol_offset(address):
         return next(off + address - base for _, off, base, size in sections(dol) if base <= address < base + size)
@@ -132,6 +132,32 @@ def catalog(iso):
     ]
     for destination in maps[29]["spawns"]:
         assert resolve(destination["x"], destination["z"], destination["layer"]) == 29
+    # Magic Cave reuses one arrival point for different layouts/rewards and
+    # return warps. Read the actual entrance contract rather than inventing it.
+    cave_default = maps[54]["spawns"][0]
+    assert len(maps[54]["spawns"]) == 1 and cave_default["warp"] == 87
+    maps[54]["spawns"] = []
+    for source, index, name in (
+        (7, 484, "TTH: Fire Blaster"), (7, 853, "TTH: Magic Upgrade"),
+        (7, 713, "TTH: Open Portal"), (8, 153, "TTH: Staff Booster"),
+        (10, 339, "Snowhorn Wastes"), (29, 715, "Cape Claw"),
+        (4, 510, "Volcano Force Point"), (18, 188, "Moon Mountain Pass"),
+        (13, 364, "Walled City"),
+    ):
+        packed = assets[maps[source]["romlist"] + ".romlist.zlb"]
+        data = zlib.decompress(packed[16:16 + u32(packed, 12)])
+        offset = 0
+        for _ in range(index):
+            offset += data[offset + 2] * 4
+        record = data[offset:offset + data[offset + 2] * 4]
+        object_id = struct.unpack_from(">h", record)[0]
+        canonical = struct.unpack_from(">h", assets["OBJINDEX.bin"], object_id * 2)[0]
+        object_offset = u32(assets["OBJECTS.tab"], canonical * 4)
+        assert assets["OBJECTS.bin"][object_offset + 0x91:object_offset + 0x9c] == b"MagicCaveTo"
+        assert len(record) == 0x28 and record[31] == 54 and record[32] == 87
+        assert record[26] < 6 and record[27] in (1, 2)
+        maps[54]["spawns"].append(dict(cave_default, name=name, cave=dict(
+            source=source, group=record[26], act=record[27], exit=record[33])))
     return maps, {name: hashlib.sha256(data).hexdigest() for name, data in assets.items() if not name.endswith(".romlist.zlb")}
 
 
@@ -141,20 +167,28 @@ def generate(iso, output):
              " * Categories, friendly names, curated positions and fallbacks are practice policy. */",
              "#ifndef PRACTICE_WARP_CATALOG_H", "#define PRACTICE_WARP_CATALOG_H", "#ifdef SFA_PRACTICE",
              '#include "main/rcp_dolphin_api.h"',
-             "typedef struct PracticeWarpSpawn { WarpDestination destination; s16 warp; const char* name; } PracticeWarpSpawn;",
+             "typedef struct PracticeWarpSpawn { WarpDestination destination; s16 warp; s16 cave; const char* name; } PracticeWarpSpawn;",
+             "typedef struct PracticeCaveArrival { u8 source; u8 group; u8 act; u8 exit; } PracticeCaveArrival;",
              "typedef struct PracticeWarpMap { const char* name; u16 firstSpawn; u8 spawnCount; u8 category; } PracticeWarpMap;",
              "static const PracticeWarpSpawn practiceWarpSpawns[] = {"]
-    first = 0
+    first, caves = 0, []
     for record in maps:
         record["first"] = first
         for p in record["spawns"]:
             xyz = ", ".join(f"{p[k]:.9f}f" for k in ("x", "y", "z"))
             name = json.dumps(p["name"].upper()) if p.get("name") else "NULL"
-            lines.append(f'    {{{{{xyz}, {p["layer"]}, {p["angle"]}}}, {p["warp"]}, {name}}},')
+            cave = 0
+            if p.get("cave"):
+                caves.append(p["cave"])
+                cave = len(caves)
+            lines.append(f'    {{{{{xyz}, {p["layer"]}, {p["angle"]}}}, {p["warp"]}, {cave}, {name}}},')
             first += 1
     lines += ["};", "static const PracticeWarpMap practiceWarpMaps[] = {"]
     for m in maps:
         lines.append(f'    {{{json.dumps(m["name"].upper())}, {m["first"]}, {len(m["spawns"])}, {m["category"]}}}, /* {m["id"]} */')
+    lines += ["};", "static const PracticeCaveArrival practiceCaveArrivals[] = {"]
+    for c in caves:
+        lines.append(f'    {{{c["source"]}, {c["group"]}, {c["act"]}, {c["exit"]}}},')
     lines += ["};", "#endif", "#endif", ""]
     output.write_text("\n".join(lines))
     report = dict(maps=maps, asset_sha256=hashes)

@@ -1,10 +1,10 @@
-# EN v1.0 practice ROM v1.13
+# EN v1.0 practice ROM v1.14
 
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
 The first supported input is a clean US/EN v1.0 (`GSAE01`, revision 0) ISO.
-V1.13 puts Free Move first in Cheats and adds Invert X, enabled by default,
-for C-stick swivel. See **V1.13 changes** below.
+V1.14 adds named Cape Claw spawns, map-entry object groups, DIM warp adjustments,
+and Magic Cave presets with entrance/return state. See **V1.14 changes** below.
 
 ## Controls
 
@@ -178,8 +178,8 @@ From the practice worktree:
 ```powershell
 python tools/practice/build.py build --enable `
   --iso "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00).iso" `
-  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.13).iso" `
-  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.13.sfapatch"
+  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.14).iso" `
+  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.14.sfapatch"
 ```
 
 The `.sfapatch` is a ZIP containing a manifest and the new payload, not a retail
@@ -188,14 +188,14 @@ DOL hash, independent of the image's padding or compression. Apply it with:
 
 ```powershell
 python tools/practice/build.py apply --iso "clean.iso" `
-  --patch "SFA-EN-v1.0-Practice-v1.13.sfapatch" --output "practice.iso"
+  --patch "SFA-EN-v1.0-Practice-v1.14.sfapatch" --output "practice.iso"
 ```
 
 The executable transformation is also available without a disc container:
 
 ```powershell
 python tools/practice/build.py apply --dol "main.dol" `
-  --patch "SFA-EN-v1.0-Practice-v1.13.sfapatch" --output "practice.dol"
+  --patch "SFA-EN-v1.0-Practice-v1.14.sfapatch" --output "practice.dol"
 ```
 
 `--dol` is also accepted by `build`. This is the interface for future image
@@ -209,7 +209,7 @@ An RVZ workflow can use Dolphin's conversion tool around the ISO patcher:
 ```powershell
 DolphinTool convert -i clean.rvz -o clean.iso -f iso
 python tools/practice/build.py apply --iso clean.iso `
-  --patch SFA-EN-v1.0-Practice-v1.13.sfapatch --output practice.iso
+  --patch SFA-EN-v1.0-Practice-v1.14.sfapatch --output practice.iso
 DolphinTool convert -i practice.iso -o practice.rvz -f rvz -b 131072 -c zstd -l 5
 ```
 
@@ -276,7 +276,30 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
-### Pending entry-group defaults
+### V1.14 changes
+
+Magic Cave now offers nine named entry contexts using the retail `MagicCaveTo`
+placements: TTH Fire Blaster, TTH Magic Upgrade, TTH Open Portal, TTH Staff
+Booster (underground), Snowhorn Wastes, Cape Claw, Volcano Force Point,
+Moon Mountain Pass and Walled City. Each uses the shared retail arrival point
+and sets the entrance's map act, selected cave reward group and return-warp
+bit. It also retains the source area's resource bank for Fox's model.
+
+The context is captured when the warp is requested and applied only when that
+request commits. Groups 0-5 select mutually exclusive cave rewards; stale
+selections from a previous practice visit are cleared without a transient
+group-unload delay. Other groups and collected-reward bits are preserved.
+The exit-in-progress bit is cleared on entry; Walled City's entrance also
+clears its retail cave-entry state bit. Ordinary warps are unchanged.
+
+Rendered Dolphin captures exposed a fallback Fox model when only the cave's
+bank was loaded. Retaining the entrance bank fixed this in the repeated TTH
+Fire Blaster and Magic Upgrade captures. The compiled-PPC regression exercises
+all nine contexts, return IDs and resource banks, including changing menu
+selection after a warp is queued. This validates stored return state; it does
+not yet constitute an in-game interaction test of every cave exit.
+
+### V1.14 entry-group defaults
 
 Practice warps now enable known map-entry object groups for 20 destinations,
 including link maps, CloudRunner Dungeon and the areas reached by Arwing
@@ -286,9 +309,9 @@ no group bank; room-specific additions remain for a later pass.
 See [the defaults and their evidence](practice_arrival_groups.md).
 All 56 PPC payload checks and eight patch-integrity checks pass, including
 the disabled-build check. The entry defaults still need Dolphin playtesting.
-These changes are not included in the published V1.13 ISO.
+These changes are included in V1.14.
 
-### Pending named spawn changes
+### V1.14 named spawn changes
 
 Spawn presets support optional friendly names, shown beside their number/count.
 Unnamed presets retain their warp-ID or estimated label. Cape Claw now has:
@@ -310,10 +333,10 @@ each position against the retail world grid.
 The compiled PPC payload was checked for all five coordinates/rendered labels,
 default selection and wraparound. Three existing warp checks and all eight
 patch-integrity checks pass. The payload occupies 56,512 bytes of the 64 KiB
-reservation. These changes are not included in the published V1.13 ISO;
+reservation. These changes are included in V1.14;
 the positions have not been visually playtested in Dolphin.
 
-### Pending DIM warp changes
+### V1.14 DIM warp changes
 
 DIM Bottom's estimated destination is now the supplied position
 `(-8974.73438, -1627.60266, 17620.2559)`, on layer -2. The catalog generator
@@ -328,8 +351,7 @@ The destination and queued-bank PPC regression checks pass, as do the eight
 patch-integrity checks. An isolated Dolphin Null-backend probe reaches LinkD
 and clears the black fade with this change. However, the same probe also
 succeeds on V1.13: the reported black screen has not been reproduced, and this
-resource-bank correction is not yet confirmed to resolve it. These changes
-are not included in the published V1.13 ISO.
+resource-bank correction is not yet confirmed to resolve it. These changes are included in V1.14.
 
 ### V1.13 changes
 
