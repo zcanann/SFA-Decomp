@@ -1,11 +1,10 @@
-# EN v1.0 practice ROM v1.9
+# EN v1.0 practice ROM v1.10
 
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
 The first supported input is a clean US/EN v1.0 (`GSAE01`, revision 0) ISO.
-V1.9 adds the map-cell viewer, camera-relative Free Move with C-stick height,
-updated movement shortcuts, collision-history refresh to address Free Move
-snap-back, and Remove All for inventory maps. See **V1.9 changes** below.
+V1.10 adds C-stick yaw/pitch, movement relative to Fox's facing, and a camera
+that follows directly behind him during Free Move. See **V1.10 changes** below.
 
 ## Controls
 
@@ -175,8 +174,8 @@ From the practice worktree:
 ```powershell
 python tools/practice/build.py build --enable `
   --iso "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00).iso" `
-  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.9).iso" `
-  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.9.sfapatch"
+  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.10).iso" `
+  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.10.sfapatch"
 ```
 
 The `.sfapatch` is a ZIP containing a manifest and the new payload, not a retail
@@ -185,14 +184,14 @@ DOL hash, independent of the image's padding or compression. Apply it with:
 
 ```powershell
 python tools/practice/build.py apply --iso "clean.iso" `
-  --patch "SFA-EN-v1.0-Practice-v1.9.sfapatch" --output "practice.iso"
+  --patch "SFA-EN-v1.0-Practice-v1.10.sfapatch" --output "practice.iso"
 ```
 
 The executable transformation is also available without a disc container:
 
 ```powershell
 python tools/practice/build.py apply --dol "main.dol" `
-  --patch "SFA-EN-v1.0-Practice-v1.9.sfapatch" --output "practice.dol"
+  --patch "SFA-EN-v1.0-Practice-v1.10.sfapatch" --output "practice.dol"
 ```
 
 `--dol` is also accepted by `build`. This is the interface for future image
@@ -206,7 +205,7 @@ An RVZ workflow can use Dolphin's conversion tool around the ISO patcher:
 ```powershell
 DolphinTool convert -i clean.rvz -o clean.iso -f iso
 python tools/practice/build.py apply --iso clean.iso `
-  --patch SFA-EN-v1.0-Practice-v1.9.sfapatch --output practice.iso
+  --patch SFA-EN-v1.0-Practice-v1.10.sfapatch --output practice.iso
 DolphinTool convert -i practice.iso -o practice.rvz -f rvz -b 131072 -c zstd -l 5
 ```
 
@@ -273,7 +272,7 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
-### Pending changes after V1.9 (not packaged)
+### V1.10 changes
 
 Free Move now uses Fox's facing as its movement frame. The C-stick controls yaw
 and pitch instead of direct height: right turns right, up looks up, and the main
@@ -299,17 +298,24 @@ state discards the saved pose without writing into the former object. Opening
 the practice menu freezes movement and look input.
 
 The shortcut bindings remain L+D-pad Up for swimming, L+D-pad Down for Free Move,
-and L+C-stick Up/Down for active swim height. These changes await packaging;
-the published V1.9 ISO is unchanged.
+and L+C-stick Up/Down for active swim height.
 
 Validation: 51 compiled PPC checks and eight patch tests pass, including facing
 and pitch movement, turning in place, parent-relative heading, camera placement,
-exit restoration and the disabled payload's zero symbols. A private image with
-the new camera hook booted in an isolated Dolphin Null profile: game state,
-loop initialization and map-loaded flags reached 1, with 45 objects and the
-payload prefix intact. This boot preceded the final stick-range calibration;
-that adjustment is covered by the compiled checks. Camera feel and appearance
-still need in-game testing.
+exit restoration and the disabled payload's zero symbols. The patch suite was
+rerun with the release title. The packaged V1.10 ISO booted in an isolated
+Dolphin Null profile: game state, loop initialization and map-loaded flags
+reached 1, with 45 objects and the payload prefix intact. Camera feel and
+appearance still need in-game testing.
+
+The original ISO was rehashed unchanged. Read-back verification confirmed that
+all bytes outside the relocated DOL and its four-byte header pointer are
+identical. Payload size is 55,232 bytes, within the existing 64 KiB reservation.
+
+V1.10 ISO SHA-256:
+`00f51c3650088d2714ec0ba6bf12bdc8508fdb37cb2700a525c9055109343eaf`.
+Payload SHA-256:
+`6ec66fb6f4c38626bc230a4d8091233716cf60903044f336503101a1d2299ee7`.
 
 ### V1.9 changes
 
