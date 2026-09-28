@@ -4,9 +4,25 @@
 #define PRACTICE_WARP_CATALOG_H
 #ifdef SFA_PRACTICE
 #include "main/rcp_dolphin_api.h"
-typedef struct PracticeWarpSpawn { WarpDestination destination; s16 warp; s16 cave; const char* name; s16 link; } PracticeWarpSpawn;
-typedef struct PracticeCaveArrival { u8 source; u8 group; u8 act; u8 exit; } PracticeCaveArrival;
-typedef struct PracticeWarpMap { const char* name; u16 firstSpawn; u8 spawnCount; u8 category; } PracticeWarpMap;
+typedef struct PracticeWarpSpawn {
+    WarpDestination destination;
+    s16 warp;
+    s16 cave;
+    const char* name;
+    s16 link;
+} PracticeWarpSpawn;
+typedef struct PracticeCaveArrival {
+    u8 source;
+    u8 group;
+    u8 act;
+    u8 exit;
+} PracticeCaveArrival;
+typedef struct PracticeWarpMap {
+    const char* name;
+    u16 firstSpawn;
+    u8 spawnCount;
+    u8 category;
+} PracticeWarpMap;
 static const PracticeWarpSpawn practiceWarpSpawns[] = {
     {{522.406250000f, 244.000000000f, 14505.628906250f, 0, 0}, -1, 0, NULL, 0},
     {{-13753.408203125f, -1715.000000000f, 11227.976562500f, 0, 0}, 121, 0, NULL, 0},
@@ -121,134 +137,127 @@ static const PracticeWarpSpawn practiceWarpSpawns[] = {
     {{3794.463623047f, -1454.000000000f, -5169.570800781f, 0, 0}, -1, 0, NULL, 0},
 };
 static const PracticeWarpMap practiceWarpMaps[] = {
-    {"SHIP BATTLE", 0, 1, 1}, /* 0 */
-    {"ZNOT USED - FRONT END2", 1, 0, 6}, /* 1 */
-    {"DRAGON ROCK - TOP", 1, 1, 1}, /* 2 */
-    {"ZNOT USED - KRAZOA PALACE", 2, 2, 6}, /* 3 */
-    {"VOLCANO FORCE POINT", 4, 5, 1}, /* 4 */
-    {"ROLLING DEMO - JUST IN CASE", 9, 1, 6}, /* 5 */
-    {"ZNOT USED - DISCOVERY FALLS", 10, 1, 6}, /* 6 */
-    {"THORNTAIL HOLLOW", 11, 5, 1}, /* 7 */
-    {"THORNTAIL HOLLOW - UNDERGRO", 16, 1, 1}, /* 8 */
-    {"MAZETEST", 17, 1, 6}, /* 9 */
-    {"SNOWHORN WASTES", 18, 2, 1}, /* 10 */
-    {"KRAZOA PALACE", 20, 6, 1}, /* 11 */
-    {"CLOUDRUNNER FORTRESS", 26, 2, 1}, /* 12 */
-    {"WALLED CITY", 28, 5, 1}, /* 13 */
-    {"LIGHTFOOT VILLAGE", 33, 3, 1}, /* 14 */
-    {"ZNOT USED - CLOUDRUNNER - T", 36, 0, 6}, /* 15 */
-    {"CLOUDRUNNER - DUNGEON", 36, 2, 1}, /* 16 */
-    {"ZNOT USED - CLOUDRUNNER - T", 38, 0, 6}, /* 17 */
-    {"MOON MOUNTAIN PASS", 38, 2, 1}, /* 18 */
-    {"DARKICE MINES - TOP", 40, 1, 1}, /* 19 */
-    {"ZNOT USED - KRAZOA SHRINE", 41, 0, 6}, /* 20 */
-    {"OCEAN FORCE POINT - BOTTOM", 41, 5, 1}, /* 21 */
-    {"KRAZCHAMBER", 46, 0, 1}, /* 22 */
-    {"ICE MOUNTAIN", 46, 2, 1}, /* 23 */
-    {"ZNOT USED - ICE MOUNTAIN 2", 48, 0, 6}, /* 24 */
-    {"ZNOT USED - ICE MOUNTAIN 3", 48, 0, 6}, /* 25 */
-    {"ANIMTEST", 48, 1, 6}, /* 26 */
-    {"DARKICE MINES - BOTTOM", 49, 1, 1}, /* 27 */
-    {"BOSS DARKICE", 50, 4, 3}, /* 28 */
-    {"CAPE CLAW", 54, 5, 1}, /* 29 */
-    {"ZNOT USED - INSIDE GALLEON", 59, 0, 6}, /* 30 */
-    {"TEST OF COMBAT", 59, 1, 2}, /* 31 */
-    {"TEST OF FEAR", 60, 1, 2}, /* 32 */
-    {"TEST OF SKILL", 61, 1, 2}, /* 33 */
-    {"TEST OF KNOWLEDGE", 62, 1, 2}, /* 34 */
-    {"ZNOT USED - DIAMOND BAY", 63, 1, 6}, /* 35 */
-    {"ZNOT USED - EARTHWALKER TEM", 64, 0, 6}, /* 36 */
-    {"ZNOT USED - WILLOW GROVE", 64, 1, 6}, /* 37 */
-    {"ARWING LEVEL - ANDROSS", 65, 1, 5}, /* 38 */
-    {"TEST OF STRENGTH", 66, 1, 2}, /* 39 */
-    {"BOSS SCALES", 67, 1, 3}, /* 40 */
-    {"WORLD MAP", 68, 1, 5}, /* 41 */
-    {"ZNOT USED - WGSHRINE", 69, 1, 6}, /* 42 */
-    {"CLOUDRUNNER - RACE", 70, 1, 1}, /* 43 */
-    {"BOSS DRAKOR", 71, 1, 3}, /* 44 */
-    {"ZNOT USED - WMINSERT", 72, 0, 6}, /* 45 */
-    {"ZNOT USED - DARKICE MINES -", 72, 0, 6}, /* 46 */
-    {"ZNOT USED - DARKICE MINES -", 72, 0, 6}, /* 47 */
-    {"BOSS TREX", 72, 2, 3}, /* 48 */
-    {"ZNOT USED - MIKESLAVA", 74, 0, 6}, /* 49 */
-    {"OCEAN FORCE POINT - TOP", 74, 2, 1}, /* 50 */
-    {"SHOP", 76, 1, 1}, /* 51 */
-    {"DRAGON ROCK - BOTTOM", 77, 1, 1}, /* 52 */
-    {"ZNOT USED - BOSS KAMERIAN D", 78, 1, 6}, /* 53 */
-    {"MAGIC CAVE - SMALL\\BIG", 79, 9, 1}, /* 54 */
-    {"ZNOT USED - DUSTER CAVE", 88, 1, 6}, /* 55 */
-    {"LINKB - ICE2WASTES", 89, 1, 4}, /* 56 */
-    {"ZNOT USED - CLOUDRUNNER2RAC", 90, 1, 6}, /* 57 */
-    {"ARWING TO PLANET", 91, 1, 5}, /* 58 */
-    {"ARWING DARKICE", 92, 1, 5}, /* 59 */
-    {"ARWING CLOUD", 93, 1, 5}, /* 60 */
-    {"ARWING CITY", 94, 1, 5}, /* 61 */
-    {"ARWING DRAGON", 95, 1, 5}, /* 62 */
-    {"GAME FRONT", 96, 1, 6}, /* 63 */
-    {"LINKK - NIK TEST", 97, 1, 4}, /* 64 */
-    {"GREAT FOX", 98, 1, 1}, /* 65 */
-    {"LINKA - WARPSTONE TO OTHERS", 99, 5, 4}, /* 66 */
-    {"LINKC - WASTES TO HOLLOW", 104, 1, 4}, /* 67 */
+    {"SHIP BATTLE", 0, 1, 1},                   /* 0 */
+    {"ZNOT USED - FRONT END2", 1, 0, 6},        /* 1 */
+    {"DRAGON ROCK - TOP", 1, 1, 1},             /* 2 */
+    {"ZNOT USED - KRAZOA PALACE", 2, 2, 6},     /* 3 */
+    {"VOLCANO FORCE POINT", 4, 5, 1},           /* 4 */
+    {"ROLLING DEMO - JUST IN CASE", 9, 1, 6},   /* 5 */
+    {"ZNOT USED - DISCOVERY FALLS", 10, 1, 6},  /* 6 */
+    {"THORNTAIL HOLLOW", 11, 5, 1},             /* 7 */
+    {"THORNTAIL HOLLOW - UNDERGRO", 16, 1, 1},  /* 8 */
+    {"MAZETEST", 17, 1, 6},                     /* 9 */
+    {"SNOWHORN WASTES", 18, 2, 1},              /* 10 */
+    {"KRAZOA PALACE", 20, 6, 1},                /* 11 */
+    {"CLOUDRUNNER FORTRESS", 26, 2, 1},         /* 12 */
+    {"WALLED CITY", 28, 5, 1},                  /* 13 */
+    {"LIGHTFOOT VILLAGE", 33, 3, 1},            /* 14 */
+    {"ZNOT USED - CLOUDRUNNER - T", 36, 0, 6},  /* 15 */
+    {"CLOUDRUNNER - DUNGEON", 36, 2, 1},        /* 16 */
+    {"ZNOT USED - CLOUDRUNNER - T", 38, 0, 6},  /* 17 */
+    {"MOON MOUNTAIN PASS", 38, 2, 1},           /* 18 */
+    {"DARKICE MINES - TOP", 40, 1, 1},          /* 19 */
+    {"ZNOT USED - KRAZOA SHRINE", 41, 0, 6},    /* 20 */
+    {"OCEAN FORCE POINT - BOTTOM", 41, 5, 1},   /* 21 */
+    {"KRAZCHAMBER", 46, 0, 1},                  /* 22 */
+    {"ICE MOUNTAIN", 46, 2, 1},                 /* 23 */
+    {"ZNOT USED - ICE MOUNTAIN 2", 48, 0, 6},   /* 24 */
+    {"ZNOT USED - ICE MOUNTAIN 3", 48, 0, 6},   /* 25 */
+    {"ANIMTEST", 48, 1, 6},                     /* 26 */
+    {"DARKICE MINES - BOTTOM", 49, 1, 1},       /* 27 */
+    {"BOSS DARKICE", 50, 4, 3},                 /* 28 */
+    {"CAPE CLAW", 54, 5, 1},                    /* 29 */
+    {"ZNOT USED - INSIDE GALLEON", 59, 0, 6},   /* 30 */
+    {"TEST OF COMBAT", 59, 1, 2},               /* 31 */
+    {"TEST OF FEAR", 60, 1, 2},                 /* 32 */
+    {"TEST OF SKILL", 61, 1, 2},                /* 33 */
+    {"TEST OF KNOWLEDGE", 62, 1, 2},            /* 34 */
+    {"ZNOT USED - DIAMOND BAY", 63, 1, 6},      /* 35 */
+    {"ZNOT USED - EARTHWALKER TEM", 64, 0, 6},  /* 36 */
+    {"ZNOT USED - WILLOW GROVE", 64, 1, 6},     /* 37 */
+    {"ARWING LEVEL - ANDROSS", 65, 1, 5},       /* 38 */
+    {"TEST OF STRENGTH", 66, 1, 2},             /* 39 */
+    {"BOSS SCALES", 67, 1, 3},                  /* 40 */
+    {"WORLD MAP", 68, 1, 5},                    /* 41 */
+    {"ZNOT USED - WGSHRINE", 69, 1, 6},         /* 42 */
+    {"CLOUDRUNNER - RACE", 70, 1, 1},           /* 43 */
+    {"BOSS DRAKOR", 71, 1, 3},                  /* 44 */
+    {"ZNOT USED - WMINSERT", 72, 0, 6},         /* 45 */
+    {"ZNOT USED - DARKICE MINES -", 72, 0, 6},  /* 46 */
+    {"ZNOT USED - DARKICE MINES -", 72, 0, 6},  /* 47 */
+    {"BOSS TREX", 72, 2, 3},                    /* 48 */
+    {"ZNOT USED - MIKESLAVA", 74, 0, 6},        /* 49 */
+    {"OCEAN FORCE POINT - TOP", 74, 2, 1},      /* 50 */
+    {"SHOP", 76, 1, 1},                         /* 51 */
+    {"DRAGON ROCK - BOTTOM", 77, 1, 1},         /* 52 */
+    {"ZNOT USED - BOSS KAMERIAN D", 78, 1, 6},  /* 53 */
+    {"MAGIC CAVE - SMALL\\BIG", 79, 9, 1},      /* 54 */
+    {"ZNOT USED - DUSTER CAVE", 88, 1, 6},      /* 55 */
+    {"LINKB - ICE2WASTES", 89, 1, 4},           /* 56 */
+    {"ZNOT USED - CLOUDRUNNER2RAC", 90, 1, 6},  /* 57 */
+    {"ARWING TO PLANET", 91, 1, 5},             /* 58 */
+    {"ARWING DARKICE", 92, 1, 5},               /* 59 */
+    {"ARWING CLOUD", 93, 1, 5},                 /* 60 */
+    {"ARWING CITY", 94, 1, 5},                  /* 61 */
+    {"ARWING DRAGON", 95, 1, 5},                /* 62 */
+    {"GAME FRONT", 96, 1, 6},                   /* 63 */
+    {"LINKK - NIK TEST", 97, 1, 4},             /* 64 */
+    {"GREAT FOX", 98, 1, 1},                    /* 65 */
+    {"LINKA - WARPSTONE TO OTHERS", 99, 5, 4},  /* 66 */
+    {"LINKC - WASTES TO HOLLOW", 104, 1, 4},    /* 67 */
     {"LINKD - DARKMINES TOP 2 BOT", 105, 1, 4}, /* 68 */
     {"LINKE - HOLLOW TO MOON PASS", 106, 1, 4}, /* 69 */
     {"LINKF - MOONPASS TO VOLCANO", 107, 1, 4}, /* 70 */
     {"LINKG - HOLLOW TO LIGHTFOOT", 108, 1, 4}, /* 71 */
     {"LINKH - LIGHTFOOT TO CAPECL", 109, 1, 4}, /* 72 */
     {"LINKJ - CAPECLAW 2 OCEAN FO", 110, 1, 4}, /* 73 */
-    {"LINKI - CLOUDRUNNER2RACE ", 111, 0, 4}, /* 74 */
-    {"DFPODIUM", 111, 0, 7}, /* 75 */
-    {"DFCRADLE", 111, 0, 7}, /* 76 */
-    {"DFCAVEHATCH1", 111, 0, 7}, /* 77 */
-    {"DFCAVEHATCH2", 111, 0, 7}, /* 78 */
-    {"SCSTATUE", 111, 0, 7}, /* 79 */
-    {"GALLEONSHIP", 111, 0, 7}, /* 80 */
-    {"CFGALLEON", 111, 0, 7}, /* 81 */
-    {"CFGANGPLANK", 111, 0, 7}, /* 82 */
-    {"NWTREEBRIDGE", 111, 0, 7}, /* 83 */
-    {"CFDUNGEONBLOCK", 111, 0, 7}, /* 84 */
-    {"CLOUDRUNNERMAP", 111, 0, 7}, /* 85 */
-    {"CCBRIDGE", 111, 0, 7}, /* 86 */
-    {"CFCOLUMN", 111, 0, 7}, /* 87 */
-    {"NWBOULDER", 111, 0, 7}, /* 88 */
-    {"CFPRISONDOOR", 111, 0, 7}, /* 89 */
-    {"CFPRISONCAGE", 111, 0, 7}, /* 90 */
-    {"NWTREEBRIDGE2", 111, 0, 7}, /* 91 */
-    {"DIM2 ICE BLOCK1", 111, 0, 7}, /* 92 */
-    {"DIMPUSHBLOCK", 111, 0, 7}, /* 93 */
-    {"DIM2 ICE BLOCK2", 111, 0, 7}, /* 94 */
-    {"DIMHORNPLINTH", 111, 0, 7}, /* 95 */
-    {"NWSHCOLPUSH", 111, 0, 7}, /* 96 */
-    {"DIM2LIFT", 111, 0, 7}, /* 97 */
-    {"DIM2ICEFLOE", 111, 0, 7}, /* 98 */
-    {"DIM2ICEFLOE1", 111, 0, 7}, /* 99 */
-    {"DIM2ICEFLOE2", 111, 0, 7}, /* 100 */
-    {"CFLIFTPLAT", 111, 0, 7}, /* 101 */
-    {"IMSPACECRAFT", 111, 0, 7}, /* 102 */
-    {"DIMBOSSGUT", 111, 0, 7}, /* 103 */
-    {"WMCOLRISE", 111, 0, 7}, /* 104 */
-    {"VFPSLIDE1", 111, 0, 7}, /* 105 */
-    {"VFPSLIDE2", 111, 0, 7}, /* 106 */
-    {"DRPUSHCART", 111, 0, 7}, /* 107 */
-    {"DRLIFTPLAT", 111, 0, 7}, /* 108 */
-    {"DIM2STONEPILLAR", 111, 0, 7}, /* 109 */
-    {"BOSSDRAKORROCK", 111, 0, 7}, /* 110 */
-    {"WCBOUNCYCRATE", 111, 0, 7}, /* 111 */
-    {"WCPUSHBLOCK", 111, 0, 7}, /* 112 */
-    {"WCTEMPLELIFT", 111, 0, 7}, /* 113 */
-    {"KAMERIANCOLUMN", 111, 0, 7}, /* 114 */
-    {"DBSTEPSTONE", 111, 0, 7}, /* 115 */
-    {"VFPPUSHBLOCK", 111, 0, 7}, /* 116 */
+    {"LINKI - CLOUDRUNNER2RACE ", 111, 0, 4},   /* 74 */
+    {"DFPODIUM", 111, 0, 7},                    /* 75 */
+    {"DFCRADLE", 111, 0, 7},                    /* 76 */
+    {"DFCAVEHATCH1", 111, 0, 7},                /* 77 */
+    {"DFCAVEHATCH2", 111, 0, 7},                /* 78 */
+    {"SCSTATUE", 111, 0, 7},                    /* 79 */
+    {"GALLEONSHIP", 111, 0, 7},                 /* 80 */
+    {"CFGALLEON", 111, 0, 7},                   /* 81 */
+    {"CFGANGPLANK", 111, 0, 7},                 /* 82 */
+    {"NWTREEBRIDGE", 111, 0, 7},                /* 83 */
+    {"CFDUNGEONBLOCK", 111, 0, 7},              /* 84 */
+    {"CLOUDRUNNERMAP", 111, 0, 7},              /* 85 */
+    {"CCBRIDGE", 111, 0, 7},                    /* 86 */
+    {"CFCOLUMN", 111, 0, 7},                    /* 87 */
+    {"NWBOULDER", 111, 0, 7},                   /* 88 */
+    {"CFPRISONDOOR", 111, 0, 7},                /* 89 */
+    {"CFPRISONCAGE", 111, 0, 7},                /* 90 */
+    {"NWTREEBRIDGE2", 111, 0, 7},               /* 91 */
+    {"DIM2 ICE BLOCK1", 111, 0, 7},             /* 92 */
+    {"DIMPUSHBLOCK", 111, 0, 7},                /* 93 */
+    {"DIM2 ICE BLOCK2", 111, 0, 7},             /* 94 */
+    {"DIMHORNPLINTH", 111, 0, 7},               /* 95 */
+    {"NWSHCOLPUSH", 111, 0, 7},                 /* 96 */
+    {"DIM2LIFT", 111, 0, 7},                    /* 97 */
+    {"DIM2ICEFLOE", 111, 0, 7},                 /* 98 */
+    {"DIM2ICEFLOE1", 111, 0, 7},                /* 99 */
+    {"DIM2ICEFLOE2", 111, 0, 7},                /* 100 */
+    {"CFLIFTPLAT", 111, 0, 7},                  /* 101 */
+    {"IMSPACECRAFT", 111, 0, 7},                /* 102 */
+    {"DIMBOSSGUT", 111, 0, 7},                  /* 103 */
+    {"WMCOLRISE", 111, 0, 7},                   /* 104 */
+    {"VFPSLIDE1", 111, 0, 7},                   /* 105 */
+    {"VFPSLIDE2", 111, 0, 7},                   /* 106 */
+    {"DRPUSHCART", 111, 0, 7},                  /* 107 */
+    {"DRLIFTPLAT", 111, 0, 7},                  /* 108 */
+    {"DIM2STONEPILLAR", 111, 0, 7},             /* 109 */
+    {"BOSSDRAKORROCK", 111, 0, 7},              /* 110 */
+    {"WCBOUNCYCRATE", 111, 0, 7},               /* 111 */
+    {"WCPUSHBLOCK", 111, 0, 7},                 /* 112 */
+    {"WCTEMPLELIFT", 111, 0, 7},                /* 113 */
+    {"KAMERIANCOLUMN", 111, 0, 7},              /* 114 */
+    {"DBSTEPSTONE", 111, 0, 7},                 /* 115 */
+    {"VFPPUSHBLOCK", 111, 0, 7},                /* 116 */
 };
 static const PracticeCaveArrival practiceCaveArrivals[] = {
-    {7, 0, 2, 102},
-    {7, 1, 1, 52},
-    {7, 2, 2, 3},
-    {8, 1, 2, 95},
-    {10, 0, 1, 103},
-    {29, 2, 1, 53},
-    {4, 3, 2, 72},
-    {18, 4, 2, 16},
-    {13, 5, 2, 21},
+    {7, 0, 2, 102}, {7, 1, 1, 52}, {7, 2, 2, 3},   {8, 1, 2, 95},  {10, 0, 1, 103},
+    {29, 2, 1, 53}, {4, 3, 2, 72}, {18, 4, 2, 16}, {13, 5, 2, 21},
 };
 #endif
 #endif

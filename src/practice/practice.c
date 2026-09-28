@@ -81,9 +81,20 @@ static void practiceLegacyLightRender(GameObject* obj, int a, int b, int c, int 
 }
 
 ObjectDescriptor practiceLegacyLightDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS, NULL, NULL, NULL, NULL, NULL, NULL,
-    (ObjectDescriptorCallback)practiceLegacyLightRender, NULL,
-    (ObjectDescriptorCallback)practiceLegacyLightSize, practiceLegacyLightSize,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    (ObjectDescriptorCallback)practiceLegacyLightRender,
+    NULL,
+    (ObjectDescriptorCallback)practiceLegacyLightSize,
+    practiceLegacyLightSize,
 };
 
 enum {
