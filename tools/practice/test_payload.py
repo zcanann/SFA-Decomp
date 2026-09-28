@@ -50,12 +50,14 @@ class Machine:
         self.retail_stack_ranges = [(retail[name][0], sum(retail[name])) for name in (
             "isInBounds", "Obj_GetWorldPosition", "playerRefreshCollisionState",
             "curves_preparePointCollisionFrame", "curves_updateLocalPointTransforms", "setMatrixFromObjectPos",
-            "Camera_UpdateForObject", "Obj_TransformWorldPointToLocal")]
+            "Camera_UpdateForObject", "Obj_TransformWorldPointToLocal", "playerUpdateSurfaceResponse",
+            "interpolate", "powfBitEstimate")]
         for name, (addr, _) in retail.items():
             if name.startswith("GX") or name in (
                 "padUpdate", "Obj_GetPlayerObject", "OSSetArenaLo", "playerDoControls",
                 "playerEnterDeepWater", "playerUpdateSurfaceResponse", "Camera_SetCurrentViewIndex",
                 "Camera_UpdateProjection", "resetSomeGxFlags", "getScreenResolution", "mathSinf", "mathCosf", "fastFloorf",
+                "fastCastS16ToFloat",
                 "Matrix_TransformPoint", "mapGetBlockAtPos", "ObjList_GetObjects", "PSMTXInverse", "PSMTXMultVec",
                 "Obj_TransformLocalPointToWorld", "mainGetBit", "ObjHits_IsObjectEnabled", "warpToMap",
                 "mapReload", "mapLoadByCoords", "unlockLevel", "isSaveGameLoading", "getDataFileSize",
@@ -112,6 +114,9 @@ class Machine:
             uc.reg_write(UC_PPC_REG_0 + 3, self.player)
         elif name == "fastFloorf":
             self.setf(1, math.floor(self.f(1)))
+        elif name == "fastCastS16ToFloat":
+            # This leaf uses Gekko psq_l quantization, unsupported by Unicorn.
+            self.setf(1, float(self.read(self.r(3), "h")))
         elif name == "angleToVec2":
             angle = self.r(3) * math.pi / 32768
             self.write(self.r(4), math.sin(angle), "f")
@@ -250,12 +255,12 @@ class Machine:
             self.current[2].append((*xyz, self.words[3]))
             self.words = []
 
-    def call(self, name, *args):
+    def call(self, name, *args, dt=1.0):
         self.uc.reg_write(UC_PPC_REG_0 + 1, 0x815F0000)
         self.uc.reg_write(UC_PPC_REG_LR, 0x80002000)
         for i, value in enumerate(args):
             self.uc.reg_write(UC_PPC_REG_0 + 3 + i, value)
-        self.setf(1, 1.0)
+        self.setf(1, dt)
         self.uc.emu_start(self.sym[name], 0x80002000, count=2000000)
         assert self.uc.reg_read(UC_PPC_REG_PC) == 0x80002000, "instruction budget exhausted"
 
@@ -348,6 +353,36 @@ class PayloadTests(unittest.TestCase):
         m.pad(0x200, 0x200)
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 0)
         self.assertEqual(m.read(m.sym["timeStop"], "B"), 3)
+
+    def test_surface_hook_preserves_retail_movement(self):
+        # Retail's ground-response path uses incoming f31 before assigning it.
+        # playerUpdate supplies dt there; the hook must preserve that contract.
+        for surface in (0, 3, 13):
+            for dt in (1.0, 2.0):
+                for swimming in (0, 1, 2):  # Disabled, armed, actively swimming.
+                    with self.subTest(surface=surface, dt=dt, swimming=swimming):
+                        results = []
+                        for hooked in (False, True):
+                            m = Machine(self.payload, self.exports, self.dol)
+                            m.call("__init_registers")
+                            del m.stub[m.sym["playerUpdateSurfaceResponse"]]
+                            m.toggle("FORCED SWIMMING", int(swimming != 0))
+                            m.write(m.sym["swimActive"], int(swimming == 2), "B")
+                            m.write(m.sym["waterHeight"], 140.0, "f")
+                            if swimming == 2 and not hooked:
+                                m.write(m.state + 0x1C0, 140.0, "f")
+                            m.write(m.state + 0x264, 0x10, "B")
+                            m.write(m.state + 0xBC, surface, "B")
+                            m.write(m.player + 0x24, 5.0, "f")
+                            m.write(m.player + 0x2C, 3.0, "f")
+                            m.write(m.sym["timeDelta"], dt, "f")
+                            m.setf(31, dt)
+                            name = "Practice_SurfaceResponse" if hooked else "playerUpdateSurfaceResponse"
+                            m.call(name, m.player, m.state, m.state, dt=dt)
+                            if swimming == 2 and not hooked:
+                                m.write(m.state + 0x1C0, -100000.0, "f")
+                            results.append(bytes(m.uc.mem_read(m.player, 0x2000)))
+                        self.assertEqual(results[0], results[1])
 
     def test_swim_restores_real_water_query(self):
         m = self.m
@@ -455,7 +490,7 @@ class PayloadTests(unittest.TestCase):
         m.toggle("FREE MOVE", 1)
         m.pad(0x48, 8)
         m.write(m.sym["gPadStatuses"] + 4, 59, "b")
-        m.pad(0x40)
+        m.pad()
         m.write(m.sym["gPadStatuses"] + 5, 59, "b")
         m.pad(0x40)
         self.assertEqual(m.read(m.sym["freeYaw"], "h"), -364)
@@ -463,12 +498,12 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(bytes(m.uc.mem_read(m.sym["freeStep"], 12)), bytes(12))
         m.call("Practice_PlayerUpdate", m.player)
         self.assertEqual([m.read(m.player + k, "h") for k in (0, 2, 4)], [-364, 364, 0])
-        # Unmodified C-stick moves vertically without changing either angle.
-        for height, expected in ((59, 5), (-59, -5), (20, 0)):
+        # Unmodified C-stick swivels while moving vertically, without pitching.
+        for frame, (height, expected) in enumerate(((59, 5), (-59, -5), (20, 0)), 2):
             m.write(m.sym["gPadStatuses"] + 4, 59, "b")
             m.write(m.sym["gPadStatuses"] + 5, height, "b")
             m.pad()
-            self.assertEqual([m.read(m.sym[name], "h") for name in ("freeYaw", "freePitch")], [-364, 364])
+            self.assertEqual([m.read(m.sym[name], "h") for name in ("freeYaw", "freePitch")], [-364 * frame, 364])
             self.assertEqual(struct.unpack(">3f", m.uc.mem_read(m.sym["freeStep"], 12)), (0, expected, 0))
         # A 45-degree heading/pitch moves diagonally upward; strafe stays level.
         m.write(m.sym["freeYaw"], -8192, "h")
@@ -761,6 +796,26 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(len(m.geometry), 7)
         self.assertEqual(m.geometry[0][2][0][:3], (-10, 80, 30))
         self.assertEqual(m.geometry[0][2][1][:3], (30, 80, 30))
+
+    def test_debug_draw_preserves_retail_vertex_formats(self):
+        m = self.m
+        m.call("__init_registers")
+        # Run the real retail format setter, which updates the persistent GX cache.
+        del m.stub[m.sym["GXSetVtxAttrFmt"]]
+        m.call("GXSetVtxAttrFmt", 7, 9, 1, 3, 0)  # Format 7: XYZ S16.
+        m.call("GXSetVtxAttrFmt", 7, 11, 1, 3, 0)  # Format 7: RGBA4.
+        m.call("GXSetVtxAttrFmt", 2, 9, 1, 4, 0)  # Format 2: XYZ F32.
+        m.call("GXSetVtxAttrFmt", 2, 11, 1, 5, 0)  # Format 2: RGBA8.
+        gx = symbols()["gxData"][0]
+        before = bytes(m.uc.mem_read(gx + 0x1c, 8 * 4 * 3))
+        for menu in (0, 1):
+            m.write(m.sym["menuOpen"], menu, "B")
+            m.calls.clear()
+            m.call("Practice_Draw")
+            self.assertEqual(bytes(m.uc.mem_read(gx + 0x1c, 8 * 4 * 3)), before)
+            begins = [c for c in m.calls if c[0] == "GXBegin"]
+            self.assertTrue(begins)
+            self.assertTrue(all(c[2] == 2 for c in begins))
 
     def test_menu_geometry_and_preview(self):
         m = self.m

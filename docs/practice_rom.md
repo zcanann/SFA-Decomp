@@ -28,7 +28,8 @@ See **V1.11 changes** below.
   swimming stays off until L+D-pad Down is pressed.
 - With Free Move enabled: **L + D-pad Up** toggles movement override during play.
   The main stick moves forward/back and strafes relative to Fox's facing.
-  **C-stick Up/Down** ascends/descends; hold **L + C-stick** to turn and pitch.
+  **C-stick Left/Right** swivels Fox with or without L. **C-stick Up/Down**
+  ascends/descends; **L + C-stick Up/Down** pitches instead.
   Moving forward while pitched also changes altitude. The camera
   follows directly behind Fox. The
   menu checkbox only arms the shortcut; the HUD distinguishes READY from ON.
@@ -273,6 +274,48 @@ and binary hashes. The current tool refuses them; it does not search for vaguely
 similar instructions and patch an unknown version.
 
 ## Validation and limits
+
+### Fixes after V1.11 (test ISO, no numbered release)
+
+C-stick Left/Right again swivels Free Move without a modifier. L only changes
+the vertical C-stick axis from height movement to pitch. The main stick still
+moves relative to Fox's facing; L+Up toggles Free Move and L+Down toggles swimming.
+
+The debug renderer now uses retail vertex format 2 (F32 XYZ, RGBA8) without
+changing any vertex-format definitions. Previously both the viewer and HUD
+changed format 7 from S16 XYZ / RGBA4 to F32 XYZ / RGBA8 and left it changed
+between frames. Retail `pi_videoinit.c` initializes those formats once, and
+`objRenderAttachment` still submits packed S16 vertices using format 7.
+`resetSomeGxFlags` only invalidates two depth-state caches; it does not restore
+vertex formats. Disabling Collision/Triggers could not repair this state, and
+the HUD still ran the same setup. The running V1.11 GX cache confirmed the wrong
+format-7 types. This is a proven rendering regression; whether it explains all
+reported Ice Mountain torch and TTH-to-Moon-Mountain-Pass link-map platform
+issues still needs an in-game check.
+
+The swimming surface-response wrapper also contaminated an implicit retail
+register dependency even when every movement cheat was disabled. At EN callsite
+`0x802B6584`, `playerUpdate` supplies `dt` in both f1 and f31. Several paths in
+retail `playerUpdateSurfaceResponse` read f31 as an uninitialized `velMag` before
+assigning it. The wrapper had placed the saved water height there instead;
+the no-water sentinel -100000 made horizontal damping amplify velocity by 5001
+at dt=1. The saved water height now spills to the stack, leaving dt in f31.
+The regression executes the actual retail surface-response and math instructions
+and compares complete player/state snapshots against a direct retail call on
+normal ground, snow, and ice at dt=1/2, with swimming disabled, armed, and active.
+Only the Gekko quantized s16-to-float leaf is emulated by the harness. This
+reproduced the amplification before the fix and now matches retail; wind-tunnel
+gameplay still needs an in-game check.
+
+Validation: 55 payload checks and 8 patch checks pass, including the disabled
+build emitting no payload. `build/practice/regression-fixes.iso` and
+`build/practice/regression-fixes.sfapatch` contain these fixes. The ISO boots
+through map initialization in an isolated Dolphin profile with the Null video
+backend; a read-only memory probe confirmed format 7 remains `0x54e0e407`
+(S16 positions, RGBA4 colors). This does not verify the reported scenes visually.
+ISO SHA-256: `1db7a5f1c22dd7280df2d69c296165a2355b48c2567d9f7747394d1790d3d825`.
+The original disc hash and all bytes outside the new DOL extent and header DOL
+pointer are verified unchanged; previous release images are untouched.
 
 ### V1.11 changes
 

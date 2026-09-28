@@ -266,7 +266,7 @@ static void line(Vec a, Vec b, u32 color) {
         drawLimitReached = 1;
         return;
     }
-    GXBegin(GX_LINES, GX_VTXFMT7, 2);
+    GXBegin(GX_LINES, GX_VTXFMT2, 2);
     vertex(a.x - playerMapOffsetX, a.y, a.z - playerMapOffsetZ, color);
     vertex(b.x - playerMapOffsetX, b.y, b.z - playerMapOffsetZ, color);
     linesDrawn++;
@@ -324,7 +324,7 @@ static void fillTriangle(Vec a, Vec b, Vec c, u32 color) {
         return;
     }
     color = (color & 0xFFFFFF00) | 0x30;
-    GXBegin(GX_TRIANGLES, GX_VTXFMT7, 3);
+    GXBegin(GX_TRIANGLES, GX_VTXFMT2, 3);
     vertex(a.x - playerMapOffsetX, a.y, a.z - playerMapOffsetZ, color);
     vertex(b.x - playerMapOffsetX, b.y, b.z - playerMapOffsetZ, color);
     vertex(c.x - playerMapOffsetX, c.y, c.z - playerMapOffsetZ, color);
@@ -400,8 +400,8 @@ static void setupGeometry(int depth) {
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
-    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    /* Retail format 2 already uses F32 positions and RGBA8 colors. Formats
+     * persist across frames; format 7 belongs to packed model attachments. */
     GXSetCurrentMtx(GX_PNMTX0);
     GXSetNumChans(1);
     GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
@@ -991,7 +991,7 @@ static void drawWorld(void) {
 }
 
 static void rectangle(f32 x, f32 y, f32 w, f32 h, u32 color) {
-    GXBegin(GX_QUADS, GX_VTXFMT7, 4);
+    GXBegin(GX_QUADS, GX_VTXFMT2, 4);
     vertex(x, y, 0, color);
     vertex(x + w, y, 0, color);
     vertex(x + w, y + h, 0, color);
@@ -2341,8 +2341,8 @@ static int updateQuickMovement(GameObject* player, u32 held, u32 shoulders, int 
             }
             /* Fox faces local -Z: decreasing yaw turns right. Positive pitch
              * points upward. Keep a stable yaw at steep angles, without flips. */
+            freeYaw -= (int)(freeAxis(pad->substickX, 59.0f) * 364.0f * dt);
             if (shoulders & PAD_TRIGGER_L) {
-                freeYaw -= (int)(freeAxis(pad->substickX, 59.0f) * 364.0f * dt);
                 pitch = freePitch + (int)(freeAxis(pad->substickY, 59.0f) * 364.0f * dt);
                 freePitch = pitch < -0x3800 ? -0x3800 : pitch > 0x3800 ? 0x3800 : pitch;
             } else {
@@ -2662,7 +2662,12 @@ void Practice_PlayerControls(GameObject* obj, PlayerState* state, f32 dt) {
 }
 
 void Practice_SurfaceResponse(GameObject* obj, PlayerState* state, PlayerState* cfg, f32 dt) {
-    f32 original = cfg->baddie.waterSurfaceY;
+    /* Retail reads incoming f31 as velMag on several ground paths before
+     * assigning it. playerUpdate supplies dt in both f1 and f31. Spill the
+     * saved water height so this wrapper keeps dt in f31 across the call,
+     * rather than the no-water sentinel (-100000). The compiled retail-body
+     * regression test checks this register-dependent contract. */
+    volatile f32 original = cfg->baddie.waterSurfaceY;
     int active = enabled[SWIMMING] && swimActive && obj == Obj_GetPlayerObject();
     if (active) {
         cfg->baddie.waterSurfaceY = waterHeight;
