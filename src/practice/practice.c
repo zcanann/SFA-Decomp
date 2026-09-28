@@ -2359,10 +2359,10 @@ static int updateQuickMovement(GameObject* player, u32 held, u32 shoulders, int 
 void Practice_CameraLoadPos(f32 x, f32 y, f32 z) {
     GameObject* player = Obj_GetPlayerObject();
     PlayerState* state = validPointer(player) ? player->extra : NULL;
-    if (freeActive && enabled[FREE_MOVE] && player == freePoseOwner && state == freePoseState &&
-        validPointer(state) && !isSaveGameLoading() && !gWarpRequested && !joypadDisabled &&
-        !gDvdErrorPauseActive && !(state->cutsceneTimer > 0) && state->focusObject == NULL &&
-        gCameraCurrentViewIndex == 0 && (!timeStop || menuOpen)) {
+    if (freeActive && enabled[FREE_MOVE] && player == freePoseOwner && state == freePoseState && validPointer(state) &&
+        !isSaveGameLoading() && !gWarpRequested && !joypadDisabled && !gDvdErrorPauseActive &&
+        !(state->cutsceneTimer > 0) && state->focusObject == NULL && gCameraCurrentViewIndex == 0 &&
+        (!timeStop || menuOpen)) {
         Camera* view = &gCameras[0];
         Vec forward = freeForward();
         x = player->anim.worldPosX - forward.x * 180.0f;
