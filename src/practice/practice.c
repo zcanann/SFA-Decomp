@@ -1068,10 +1068,10 @@ extern u32 gMapObjGroupStatuses[120];
 static const int bitBankOffsets[] = {0xef0, 0x564, 0x24, 0x5d8};
 static const int bitBankSizes[] = {0x80, 0x74, 0x144, 0xac};
 static const int bitSnapshotOffsets[] = {0, 0x80, 0xf4, 0x238};
-static const char* flagPages[] = {"FLAGS",        "INVENTORY",          "STAFF SPELLS",  "TRICKY",
-                                  "PLAYER STATS", "AREA PROGRESS",      "OBJECT GROUPS", "ADVANCED",
-                                  "RAW BIT ID",   "UNUSED / UNCERTAIN", "UPGRADES",          "STAFF SPELLS",
-                                  "CONSUMABLES",     "AREA ITEMS",          "SPELLSTONES",   "KRAZOA SPIRITS", "MAPS", "AREA ITEMS"};
+static const char* flagPages[] = {"FLAGS",          "INVENTORY",     "STAFF SPELLS", "TRICKY",     "PLAYER STATS",
+                                  "AREA PROGRESS",  "OBJECT GROUPS", "ADVANCED",     "RAW BIT ID", "UNUSED / UNCERTAIN",
+                                  "UPGRADES",       "STAFF SPELLS",  "CONSUMABLES",  "AREA ITEMS", "SPELLSTONES",
+                                  "KRAZOA SPIRITS", "MAPS",          "AREA ITEMS"};
 static const char* statLabels[] = {"HEALTH (RAW UNITS)", "MAX HEALTH",   "MAGIC", "MAX MAGIC", "SCARABS",
                                    "BAFOMDADS",          "MAX BAFOMDADS"};
 static const int flagSteps[] = {1, 16, 256};
@@ -1322,14 +1322,16 @@ static void editFlags(u32 pressed) {
     if (pressed & PAD_BUTTON_X) {
         flagStep = (flagStep + 1) % 3;
     }
-    if (flagPage == FLAGS_ROOT || flagPage == FLAGS_ADVANCED || flagPage == FLAGS_INVENTORY || flagPage == FLAGS_AREA_ITEMS) {
+    if (flagPage == FLAGS_ROOT || flagPage == FLAGS_ADVANCED || flagPage == FLAGS_INVENTORY ||
+        flagPage == FLAGS_AREA_ITEMS) {
         if (pressed & PAD_BUTTON_A) {
             if (flagPage == FLAGS_AREA_ITEMS) {
                 flagItemArea = selected;
                 flagPage = FLAGS_ITEM_AREA;
             } else {
-                flagPage = flagPage == FLAGS_ROOT ? selected + 1
-                                                  : selected + (flagPage == FLAGS_INVENTORY ? FLAGS_UPGRADES : FLAGS_RAW);
+                flagPage = flagPage == FLAGS_ROOT
+                               ? selected + 1
+                               : selected + (flagPage == FLAGS_INVENTORY ? FLAGS_UPGRADES : FLAGS_RAW);
             }
             selected = menuTop = 0;
         }
@@ -1422,9 +1424,13 @@ static void drawFlags(void) {
         if (i == selected) {
             rectangle(28, y - 4, 584, 18, 0x263C60FF);
         }
-        if (flagPage == FLAGS_ROOT || flagPage == FLAGS_ADVANCED || flagPage == FLAGS_INVENTORY || flagPage == FLAGS_AREA_ITEMS) {
-            label = flagPage == FLAGS_AREA_ITEMS ? itemAreaNames[i]
-                       : flagPages[flagPage == FLAGS_ROOT ? i + 1 : i + (flagPage == FLAGS_INVENTORY ? FLAGS_UPGRADES : FLAGS_RAW)];
+        if (flagPage == FLAGS_ROOT || flagPage == FLAGS_ADVANCED || flagPage == FLAGS_INVENTORY ||
+            flagPage == FLAGS_AREA_ITEMS) {
+            label = flagPage == FLAGS_AREA_ITEMS
+                        ? itemAreaNames[i]
+                        : flagPages[flagPage == FLAGS_ROOT
+                                        ? i + 1
+                                        : i + (flagPage == FLAGS_INVENTORY ? FLAGS_UPGRADES : FLAGS_RAW)];
             textAt(564, y, ">", color);
         } else if (flagPage == FLAGS_MAPS && i == 0) {
             label = "UNLOCK ALL";
@@ -2342,9 +2348,11 @@ void Practice_PadUpdate(void) {
         row = activeTab == TAB_FLAGS ? -1 : visible[selected];
         if (pressed & PAD_BUTTON_B) {
             if (activeTab == TAB_FLAGS && flagPage != FLAGS_ROOT) {
-                int backSelection = flagPage == FLAGS_ITEM_AREA ? flagItemArea
-                                    : flagPage >= FLAGS_UPGRADES && flagPage <= FLAGS_MAPS ? flagPage - FLAGS_UPGRADES : 0;
-                flagPage = flagPage == FLAGS_ITEM_AREA ? FLAGS_AREA_ITEMS : flagPage >= FLAGS_UPGRADES                              ? FLAGS_INVENTORY
+                int backSelection = flagPage == FLAGS_ITEM_AREA                            ? flagItemArea
+                                    : flagPage >= FLAGS_UPGRADES && flagPage <= FLAGS_MAPS ? flagPage - FLAGS_UPGRADES
+                                                                                           : 0;
+                flagPage = flagPage == FLAGS_ITEM_AREA                         ? FLAGS_AREA_ITEMS
+                           : flagPage >= FLAGS_UPGRADES                        ? FLAGS_INVENTORY
                            : flagPage == FLAGS_RAW || flagPage == FLAGS_UNUSED ? FLAGS_ADVANCED
                                                                                : FLAGS_ROOT;
                 selected = backSelection;

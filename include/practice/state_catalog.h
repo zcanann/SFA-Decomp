@@ -35,9 +35,8 @@ enum {
     ITEM_AREA_WALLED_CITY
 };
 static const char* itemAreaNames[] = {
-    "GALLEON", "THORNTAIL HOLLOW", "DARKICE MINES", "MOON MOUNTAIN PASS",
-    "CLOUDRUNNER FORTRESS", "CAPE CLAW", "LIGHTFOOT VILLAGE", "WALLED CITY"
-};
+    "GALLEON",   "THORNTAIL HOLLOW",  "DARKICE MINES", "MOON MOUNTAIN PASS", "CLOUDRUNNER FORTRESS",
+    "CAPE CLAW", "LIGHTFOOT VILLAGE", "WALLED CITY"};
 typedef struct PracticeBitLabel {
     const char* name;
     u16 id;
