@@ -1292,9 +1292,9 @@ static int flagRowCount(void) {
     while (pageBit(n)) {
         n++;
     }
-    return n + (flagPage == FLAGS_AREA || flagPage == FLAGS_MAPS ? 2
+    return n + (flagPage == FLAGS_AREA || flagPage == FLAGS_MAPS            ? 2
                 : flagPage == FLAGS_TRICKY || flagPage == FLAGS_CONSUMABLES ? 1
-                                                                                                      : 0);
+                                                                            : 0);
 }
 
 static int flagBitId(int row) {
