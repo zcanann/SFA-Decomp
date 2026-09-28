@@ -3,11 +3,14 @@
 #define PRACTICE_ARRIVAL_CATALOG_H
 #ifdef SFA_PRACTICE
 #include "global.h"
-typedef struct PracticeArrivalGroups { int map; u32 enable; } PracticeArrivalGroups;
+typedef struct PracticeArrivalGroups {
+    int map;
+    u32 enable;
+} PracticeArrivalGroups;
 static const PracticeArrivalGroups practiceArrivalGroups[] = {
-    {2, 0x00018000u}, /* Dragon Rock - Top */
-    {4, 0x00000006u}, /* Volcano Force Point */
-    {7, 0x0000043Du}, /* ThornTail Hollow */
+    {2, 0x00018000u},  /* Dragon Rock - Top */
+    {4, 0x00000006u},  /* Volcano Force Point */
+    {7, 0x0000043Du},  /* ThornTail Hollow */
     {10, 0x00000001u}, /* SnowHorn Wastes */
     {12, 0x00000001u}, /* CloudRunner Fortress */
     {13, 0x00000C23u}, /* Walled City */
