@@ -1292,7 +1292,9 @@ static int flagRowCount(void) {
     while (pageBit(n)) {
         n++;
     }
-    return n + (flagPage == FLAGS_AREA ? 2 : flagPage == FLAGS_TRICKY || flagPage == FLAGS_MAPS || flagPage == FLAGS_CONSUMABLES ? 1 : 0);
+    return n + (flagPage == FLAGS_AREA                                                                ? 2
+                : flagPage == FLAGS_TRICKY || flagPage == FLAGS_MAPS || flagPage == FLAGS_CONSUMABLES ? 1
+                                                                                                      : 0);
 }
 
 static int flagBitId(int row) {
@@ -1336,8 +1338,8 @@ static void editFlags(u32 pressed) {
             }
             /* The streaming engine tracks the active map as the player travels.
              * Choose it on entry only; retain manual selection while browsing. */
-            if (flagPage == FLAGS_GROUPS && !isSaveGameLoading() &&
-                gShaderCurMapEventId >= 0 && gShaderCurMapEventId < 75) {
+            if (flagPage == FLAGS_GROUPS && !isSaveGameLoading() && gShaderCurMapEventId >= 0 &&
+                gShaderCurMapEventId < 75) {
                 flagMap = gShaderCurMapEventId;
             }
             selected = menuTop = 0;
@@ -2358,7 +2360,7 @@ void Practice_PadUpdate(void) {
             if (activeTab == TAB_FLAGS && flagPage != FLAGS_ROOT) {
                 int backSelection = flagPage == FLAGS_ITEM_AREA                            ? flagItemArea
                                     : flagPage >= FLAGS_UPGRADES && flagPage <= FLAGS_MAPS ? flagPage - FLAGS_UPGRADES
-                                    : flagPage == FLAGS_RAW || flagPage == FLAGS_UNUSED ? flagPage - FLAGS_RAW
+                                    : flagPage == FLAGS_RAW || flagPage == FLAGS_UNUSED    ? flagPage - FLAGS_RAW
                                                                                            : flagPage - 1;
                 flagPage = flagPage == FLAGS_ITEM_AREA                         ? FLAGS_AREA_ITEMS
                            : flagPage >= FLAGS_UPGRADES                        ? FLAGS_INVENTORY
