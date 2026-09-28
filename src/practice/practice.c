@@ -41,6 +41,7 @@
 #include "main/objhits.h"
 #include "main/pad.h"
 #include "main/shader_api.h"
+#include "main/shader_map_api.h"
 #include "sys/objects.h"
 
 extern u8 __practice_start[];
@@ -222,6 +223,9 @@ static f32 waterHeight;
 static GameObject* swimOwner;
 static u8 swimActive, freeActive, quickLatch;
 static Vec freeStep;
+static GameObject* freePoseOwner;
+static PlayerState* freePoseState;
+static s16 freeYaw, freePitch, freeSavedPitch, freeSavedRoll;
 static int linesDrawn, trianglesDrawn, triggersDrawn;
 static int fillsDrawn;
 static int drawLimitReached;
@@ -1909,7 +1913,7 @@ static void drawMenu(void) {
         }
         if (enabled[FREE_MOVE]) {
             textAt(24, y, freeActive ? "MOVE ON" : "MOVE READY", GOLD);
-            textAt(168, y, "L+DOWN  C-STICK: UP/DOWN", MUTED);
+            textAt(168, y, "L+DOWN  C-STICK: LOOK", MUTED);
             y += 18;
         }
         if (enabled[SHIELD_HOVER]) {
@@ -2251,6 +2255,31 @@ static void updateShieldHover(GameObject* player, int blocked) {
     hoverActive = mode;
 }
 
+/* padUpdate already applies PADClamp: cardinal maxima are 72 / 59. */
+static f32 freeAxis(s8 value, f32 maximum) {
+    f32 range = maximum - 20.0f;
+    f32 axis = value > 20 ? (value - 20) / range : value < -20 ? (value + 20) / range : 0;
+    return axis < -1 ? -1 : axis > 1 ? 1 : axis;
+}
+
+static Vec freeForward(void) {
+    f32 yaw = freeYaw * (3.14159265359f / 32768);
+    f32 pitch = freePitch * (3.14159265359f / 32768);
+    f32 horizontal = mathCosf(pitch);
+    return point(-mathSinf(yaw) * horizontal, mathSinf(pitch), -mathCosf(yaw) * horizontal);
+}
+
+static void restoreFreePose(GameObject* player) {
+    if (freePoseOwner == player && validPointer(player) && player->extra == freePoseState &&
+        validPointer(freePoseState) && !isSaveGameLoading() && !gWarpRequested) {
+        player->anim.rotY = freeSavedPitch;
+        player->anim.rotZ = freeSavedRoll;
+        playerRefreshCollisionState(player, (int)freePoseState, validPointer(player->anim.hitReactState) ? 7 : 3);
+    }
+    freePoseOwner = NULL;
+    freePoseState = NULL;
+}
+
 /* Menu switches arm the shortcuts. Only one movement override runs at once.
  * Use physical button chords before input injection and consume activation frames. */
 static int updateQuickMovement(GameObject* player, u32 held, u32 shoulders, int blocked) {
@@ -2269,6 +2298,7 @@ static int updateQuickMovement(GameObject* player, u32 held, u32 shoulders, int 
     }
     if (!validPointer(player) || isSaveGameLoading() || gWarpRequested) {
         swimActive = freeActive = 0;
+        restoreFreePose(player);
         return wasFree;
     }
     if ((!menuOpen && timeStop && !blocked) || joypadDisabled || gDvdErrorPauseActive) {
@@ -2285,29 +2315,66 @@ static int updateQuickMovement(GameObject* player, u32 held, u32 shoulders, int 
             freeActive ^= 1;
             if (freeActive) {
                 swimActive = 0;
+                freePoseOwner = player;
+                freePoseState = player->extra;
+                freeYaw = player->anim.rotX + (player->anim.parent ? player->anim.parentAnim->rotX : 0);
+                freePitch = 0;
+                freeSavedPitch = player->anim.rotY;
+                freeSavedRoll = player->anim.rotZ;
             }
         }
         if (freeActive && !quick) {
             f32 dt = timeDelta;
-            f32 right, forward, angle, sine, cosine;
+            f32 right, forward, angle;
+            int pitch;
+            Vec direction;
             if (!(dt > 0)) {
                 dt = 0;
             } else if (dt > 3) {
                 dt = 3;
             }
-            right = (pad->stickX > 20 ? 1 : pad->stickX < -20 ? -1 : 0) * 5.0f * dt;
-            forward = (pad->stickY > 20 ? 1 : pad->stickY < -20 ? -1 : 0) * 5.0f * dt;
-            /* Same yaw convention as Camera_UpdateViewMatrices, view zero.
-             * Ignore pitch so vertical movement belongs only to the C-stick. */
-            angle = (gCameras[0].yaw + 32768) * (3.14159265359f / 32768);
-            sine = mathSinf(angle);
-            cosine = mathCosf(angle);
-            freeStep.x = right * cosine + forward * sine;
-            freeStep.z = right * sine - forward * cosine;
-            freeStep.y = (pad->substickY > 20 ? 1 : pad->substickY < -20 ? -1 : 0) * 5.0f * dt;
+            /* Fox faces local -Z: decreasing yaw turns right. Positive pitch
+             * points upward. Keep a stable yaw at steep angles, without flips. */
+            freeYaw -= (int)(freeAxis(pad->substickX, 59.0f) * 364.0f * dt);
+            pitch = freePitch + (int)(freeAxis(pad->substickY, 59.0f) * 364.0f * dt);
+            freePitch = pitch < -0x3800 ? -0x3800 : pitch > 0x3800 ? 0x3800 : pitch;
+            right = freeAxis(pad->stickX, 72.0f) * 5.0f * dt;
+            forward = freeAxis(pad->stickY, 72.0f) * 5.0f * dt;
+            angle = freeYaw * (3.14159265359f / 32768);
+            direction = freeForward();
+            freeStep.x = right * mathCosf(angle) + forward * direction.x;
+            freeStep.z = -right * mathSinf(angle) + forward * direction.z;
+            freeStep.y = forward * direction.y;
         }
     }
+    if (!freeActive) {
+        restoreFreePose(player);
+    }
     return freeActive || wasFree || (quick && (enabled[SWIMMING] || enabled[FREE_MOVE]));
+}
+
+/* This replaces only camcontrol_applyState's load-center call, after retail
+ * camera logic and before view matrices/culling. On exit retail owns the view
+ * again; no handler, target, parent, or camera mode is replaced. */
+void Practice_CameraLoadPos(f32 x, f32 y, f32 z) {
+    GameObject* player = Obj_GetPlayerObject();
+    PlayerState* state = validPointer(player) ? player->extra : NULL;
+    if (freeActive && enabled[FREE_MOVE] && player == freePoseOwner && state == freePoseState &&
+        validPointer(state) && !isSaveGameLoading() && !gWarpRequested && !joypadDisabled &&
+        !gDvdErrorPauseActive && !(state->cutsceneTimer > 0) && state->focusObject == NULL &&
+        gCameraCurrentViewIndex == 0 && (!timeStop || menuOpen)) {
+        Camera* view = &gCameras[0];
+        Vec forward = freeForward();
+        x = player->anim.worldPosX - forward.x * 180.0f;
+        y = player->anim.worldPosY + 25.0f - forward.y * 180.0f;
+        z = player->anim.worldPosZ - forward.z * 180.0f;
+        Obj_TransformWorldPointToLocal(x, y, z, &view->x, &view->y, &view->z, view->parentObject);
+        view->yaw = 32768 - freeYaw + (view->parentObject ? view->parentObject->anim.rotX : 0);
+        view->pitch = -freePitch;
+        view->roll = 0;
+        Camera_UpdateForObject(view);
+    }
+    loadMapForCameraPos(x, y, z);
 }
 
 static void refillResources(GameObject* obj) {
@@ -2349,6 +2416,9 @@ void Practice_PlayerUpdate(GameObject* obj) {
         freeActive = 0;
     }
     if (!freeActive || !enabled[FREE_MOVE] || obj != swimOwner || !validPointer(state)) {
+        if (obj == freePoseOwner) {
+            restoreFreePose(obj);
+        }
         playerUpdate(obj);
         refillResources(obj);
         return;
@@ -2359,6 +2429,10 @@ void Practice_PlayerUpdate(GameObject* obj) {
     obj->anim.localPosX += delta.x;
     obj->anim.localPosY += delta.y;
     obj->anim.localPosZ += delta.z;
+    obj->anim.rotX = freeYaw - (obj->anim.parent ? obj->anim.parentAnim->rotX : 0);
+    obj->anim.rotY = freePitch;
+    obj->anim.rotZ = 0;
+    state->yaw = state->targetYaw = state->prevYaw = state->prevTargetYaw = obj->anim.rotX;
     /* Teleport-style refresh: skipping retail update/hit detection leaves both
      * terrain sweeps and object-hit positions at the last ordinary frame.
      * Rebuild them here so releasing Free Move cannot sweep across the journey. */

@@ -26,8 +26,10 @@ snap-back, and Remove All for inventory maps. See **V1.9 changes** below.
   activation resets the surface to player Y + 40. **L + C-stick Up/Down** adjusts the
   surface while swimming is active. Enabling it in the menu also starts swimming.
 - With Free Move enabled: **L + D-pad Down** toggles movement override during play.
-  The main stick moves horizontally relative to the camera; **C-stick Up/Down**
-  ascends/descends. Camera pitch does not affect height. The
+  The main stick moves forward/back and strafes relative to Fox's facing.
+  **C-stick Left/Right** turns, and **C-stick Up/Down** pitches up/down. Moving
+  forward while pitched changes altitude; no modifier is needed. The camera
+  follows directly behind Fox. The
   menu checkbox only arms the shortcut; the HUD distinguishes READY from ON.
 
 The menu consumes controller-1 input and uses the existing `timeStop` mechanism
@@ -226,12 +228,12 @@ runtime code and declarations are enclosed in `#ifdef SFA_PRACTICE`.
 
 ## Memory and patch design
 
-Original text/data/BSS addresses are preserved. The current source replaces 28
+Original text/data/BSS addresses are preserved. The current source replaces 29
 verified call instructions: the seven V1.6 calls (both OSInit arena-low setup
 calls, controller polling, end-of-frame stub, warp reload, player controls,
 surface response), eleven internal save/checkpoint calls, one player update, two
-player collision passes and seven player-death calls. Calls go through
-ordinary PPC EABI C wrappers; game/compiler/SDK routines retain retail addresses.
+player collision passes, seven player-death calls and one camera load-center call.
+Calls go through ordinary PPC EABI C wrappers; game/compiler/SDK routines retain retail addresses.
 
 A new DOL section contains code, constants and explicitly initialized zero-state
 at `0x803FA480`, the verified retail default `__ArenaLo`, above the startup stack
@@ -270,6 +272,44 @@ and binary hashes. The current tool refuses them; it does not search for vaguely
 similar instructions and patch an unknown version.
 
 ## Validation and limits
+
+### Pending changes after V1.9 (not packaged)
+
+Free Move now uses Fox's facing as its movement frame. The C-stick controls yaw
+and pitch instead of direct height: right turns right, up looks up, and the main
+stick moves forward/back along that direction or strafes horizontally. Both
+sticks use proportional input outside a 20-unit dead zone, reaching full speed
+at the retail PADClamp cardinal maxima (72 for the main stick, 59 for C-stick).
+Full movement speed is five world units per nominal frame;
+full turning speed is about two degrees per nominal frame. Pitch is limited to
+roughly +/-79 degrees so the view cannot flip over.
+
+The main camera sits 180 units behind a point 25 units above Fox's world position,
+following the same facing and pitch. A single verified call-site hook in
+`camcontrol_applyState` overrides the final view and streaming center before
+matrix generation and culling. The normal camera controller continues to run;
+its mode, target and parent are retained, and its view resumes on exit. Alternate
+views, loading, warp, cutscene/focus and disabled-input states are guarded.
+
+Fox's applied and desired heading stay aligned with the new facing, including on
+a rotated parent. His pitch/roll are owned only while Free Move is active and are
+restored on exit; the selected yaw is retained. Collision histories are rebuilt
+after turns/moves and after restoring tilt. A replaced player or loading/warping
+state discards the saved pose without writing into the former object. Opening
+the practice menu freezes movement and look input.
+
+The shortcut bindings remain L+D-pad Up for swimming, L+D-pad Down for Free Move,
+and L+C-stick Up/Down for active swim height. These changes await packaging;
+the published V1.9 ISO is unchanged.
+
+Validation: 51 compiled PPC checks and eight patch tests pass, including facing
+and pitch movement, turning in place, parent-relative heading, camera placement,
+exit restoration and the disabled payload's zero symbols. A private image with
+the new camera hook booted in an isolated Dolphin Null profile: game state,
+loop initialization and map-loaded flags reached 1, with 45 objects and the
+payload prefix intact. This boot preceded the final stick-range calibration;
+that adjustment is covered by the compiled checks. Camera feel and appearance
+still need in-game testing.
 
 ### V1.9 changes
 

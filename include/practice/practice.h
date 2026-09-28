@@ -11,6 +11,7 @@ void Practice_SetArenaLo(void* start);
 void Practice_PadUpdate(void);
 void Practice_Draw(void);
 void Practice_WarpReload(void);
+void Practice_CameraLoadPos(f32 x, f32 y, f32 z);
 void Practice_PlayerUpdate(GameObject* obj);
 void Practice_PlayerDie(GameObject* obj);
 void Practice_PlayerHitDetection(GameObject* obj);

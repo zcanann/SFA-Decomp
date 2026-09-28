@@ -177,6 +177,7 @@ def make_patch(dol, payload, exports):
         ("gameLoop", "padUpdate", "Practice_PadUpdate", 1),
         ("gameLoop", "doNothing_endOfFrame", "Practice_Draw", 1),
         ("loadNextMap", "mapReload", "Practice_WarpReload", 1),
+        ("camcontrol_applyState", "loadMapForCameraPos", "Practice_CameraLoadPos", 1),
         (None, "playerDie", "Practice_PlayerDie", 7),
         (None, "playerUpdate", "Practice_PlayerUpdate", 1),
         (None, "playerDoHitDetection", "Practice_PlayerHitDetection", 2),

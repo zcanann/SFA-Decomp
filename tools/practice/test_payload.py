@@ -49,7 +49,8 @@ class Machine:
         retail = symbols()
         self.retail_stack_ranges = [(retail[name][0], sum(retail[name])) for name in (
             "isInBounds", "Obj_GetWorldPosition", "playerRefreshCollisionState",
-            "curves_preparePointCollisionFrame", "curves_updateLocalPointTransforms", "setMatrixFromObjectPos")]
+            "curves_preparePointCollisionFrame", "curves_updateLocalPointTransforms", "setMatrixFromObjectPos",
+            "Camera_UpdateForObject", "Obj_TransformWorldPointToLocal")]
         for name, (addr, _) in retail.items():
             if name.startswith("GX") or name in (
                 "padUpdate", "Obj_GetPlayerObject", "OSSetArenaLo", "playerDoControls",
@@ -62,7 +63,7 @@ class Machine:
                 "SaveGame_gplaySetObjGroupStatus", "sprintf", "EXILock", "EXISelect", "EXIImm",
                 "EXISync", "EXIDeselect", "EXIUnlock", "sndFXCtrl", "getHudHiddenFrameCount", "Sfx_UpdateObjectChannel3D",
                 "playerUpdate", "playerDoHitDetection", "playerDie", "Obj_TransformWorldVectorToLocal",
-                "playerRefreshCollisionState", "trackInvalidateDynamicSlotsForObject", "angleToVec2",
+                "playerRefreshCollisionState", "trackInvalidateDynamicSlotsForObject", "angleToVec2", "loadMapForCameraPos",
                 "getCurMapLayer", "memcpy", "mmAlloc", "mm_free", "loadMapForCurrentSaveGame", "_saveGame"):
                 self.stub[addr] = name
         self.uc.hook_add(UC_HOOK_CODE, self.service)
@@ -197,6 +198,8 @@ class Machine:
         elif name == "mapLoadByCoords":
             self.loaded_coordinates = (self.f(1), self.f(2), self.f(3), self.r(3))
             self.write(self.sym["gGameLoopPendingMapDataFileId"], 17)
+        elif name == "loadMapForCameraPos":
+            self.camera_load = (self.f(1), self.f(2), self.f(3))
         elif name == "getScreenResolution":
             uc.reg_write(UC_PPC_REG_0 + 3, (480 << 16) | 640)
         elif name == "GXBegin":
@@ -400,7 +403,7 @@ class PayloadTests(unittest.TestCase):
         m.pad(0x48, 8)
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)
 
-    def test_free_move_camera_relative_cstick_height_and_input_priority(self):
+    def test_free_move_facing_relative_motion_and_input_priority(self):
         m = self.m
         m.pad()
         m.toggle("FREE MOVE", 1)
@@ -408,45 +411,116 @@ class PayloadTests(unittest.TestCase):
         m.toggle("FORCED SWIMMING", 1)
         m.write(m.sym["swimActive"], 1, "B")
         m.call("Practice_PlayerUpdate", m.player)
-        self.assertEqual(m.calls[-1][0], "playerUpdate")  # Armed is not active.
-        m.pad(0x44, 4)  # L+Down.
+        self.assertEqual(m.calls[-1][0], "playerUpdate")
+        m.pad(0x44, 4)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 0)
         m.pad(0x44)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
-        m.write(m.sym["gPadStatuses"] + 2, 70, "b")
-        m.write(m.sym["gPadStatuses"] + 3, 70, "b")
-        m.write(m.sym["gPadStatuses"] + 5, 70, "b")
-        m.write(m.sym["gCameras"], -32768, "h")  # Main view faces -Z, right is +X.
-        m.pad(0x400, 0x400)  # X must not descend or trigger auto roll.
+        # Facing -Z, regardless of where the retail camera used to look.
+        m.write(m.sym["gCameras"], 16384, "h")
+        m.write(m.sym["gPadStatuses"] + 2, 40, "b")
+        m.write(m.sym["gPadStatuses"] + 3, 40, "b")
+        m.pad(0x400, 0x400)
         self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
         self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)
         m.calls.clear()
         m.call("Practice_PlayerUpdate", m.player)
-        self.assertEqual([m.read(m.player + k, "f") for k in (0xc, 0x10, 0x14)], [5, 5, -5])
+        for k, value in zip((0xc, 0x10, 0x14), (25 / 13, 0, -25 / 13)):
+            self.assertAlmostEqual(m.read(m.player + k, "f"), value, places=4)
         self.assertFalse(any(c[0] == "playerUpdate" for c in m.calls))
         m.call("Practice_PlayerHitDetection", m.player)
         self.assertFalse(any(c[0] == "playerDoHitDetection" for c in m.calls))
-        m.write(m.sym["gPadStatuses"] + 5, -70, "b")
-        m.pad(0x800, 0x800)  # C-stick down descends; Y has no movement role.
-        m.call("Practice_PlayerUpdate", m.player)
-        self.assertEqual(m.read(m.player + 0x10, "f"), 0)
-        for yaw, expected in ((0, (-5, 0, 5)), (16384, (-5, 0, -5)), (-16384, (5, 0, 5))):
-            m.write(m.sym["gCameras"], yaw, "h")
-            m.write(m.sym["gCameras"] + 2, 16384, "h")  # Looking vertically never adds climb.
-            m.write(m.sym["gPadStatuses"] + 2, 70, "b")
-            m.write(m.sym["gPadStatuses"] + 3, 70, "b")
-            m.pad(0xc00, 0xc00)  # Neither X nor Y affects height.
+        for yaw, expected in ((-32768, (-5, 0, 5)), (16384, (-5, 0, -5)), (-16384, (5, 0, 5))):
+            m.write(m.sym["freeYaw"], yaw, "h")
+            m.write(m.sym["gPadStatuses"] + 2, 40, "b")
+            m.write(m.sym["gPadStatuses"] + 3, 40, "b")
+            m.pad(0xc00, 0xc00)
             for axis, value in enumerate(expected):
-                self.assertAlmostEqual(m.read(m.sym["freeStep"] + axis * 4, "f"), value, places=4)
+                self.assertAlmostEqual(m.read(m.sym["freeStep"] + axis * 4, "f"), value * 5 / 13, places=4)
         m.pad()
         m.pad(0x44, 4)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
-        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)  # Exit chord swallowed too.
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
         m.call("Practice_PlayerUpdate", m.player)
         self.assertEqual(m.calls[-1][0], "playerUpdate")
         m.call("Practice_PlayerHitDetection", m.player)
         self.assertEqual(m.calls[-1][0], "playerDoHitDetection")
+
+    def test_free_move_look_turns_in_place_and_pitch_changes_forward_axis(self):
+        m = self.m
+        m.pad()
+        m.write(m.player + 2, 123, "h")
+        m.write(m.player + 4, -456, "h")
+        m.toggle("FREE MOVE", 1)
+        m.pad(0x44, 4)
+        m.write(m.sym["gPadStatuses"] + 4, 59, "b")
+        m.pad()
+        m.write(m.sym["gPadStatuses"] + 5, 59, "b")
+        m.pad()
+        self.assertEqual(m.read(m.sym["freeYaw"], "h"), -364)
+        self.assertEqual(m.read(m.sym["freePitch"], "h"), 364)
+        self.assertEqual(bytes(m.uc.mem_read(m.sym["freeStep"], 12)), bytes(12))
+        m.call("Practice_PlayerUpdate", m.player)
+        self.assertEqual([m.read(m.player + k, "h") for k in (0, 2, 4)], [-364, 364, 0])
+        # A 45-degree heading/pitch moves diagonally upward; strafe stays level.
+        m.write(m.sym["freeYaw"], -8192, "h")
+        m.write(m.sym["freePitch"], 8192, "h")
+        m.write(m.sym["gPadStatuses"] + 3, 72, "b")
+        m.pad()
+        for axis, value in enumerate((2.5, 5 / math.sqrt(2), -2.5)):
+            self.assertAlmostEqual(m.read(m.sym["freeStep"] + axis * 4, "f"), value, places=4)
+        m.write(m.sym["gPadStatuses"] + 2, 46, "b")  # Half-speed strafe.
+        m.pad()
+        self.assertAlmostEqual(m.read(m.sym["freeStep"], "f"), 2.5 / math.sqrt(2), places=4)
+        self.assertEqual(m.read(m.sym["freeStep"] + 4, "f"), 0)
+        m.write(m.sym["freePitch"], 0x37ff, "h")
+        m.write(m.sym["gPadStatuses"] + 5, 127, "b")
+        m.pad()
+        self.assertEqual(m.read(m.sym["freePitch"], "h"), 0x3800)
+        m.pad(0x64, 4)  # Opening the menu freezes look input.
+        m.write(m.sym["gPadStatuses"] + 4, 59, "b")
+        m.write(m.sym["gPadStatuses"] + 5, -59, "b")
+        m.pad()
+        self.assertEqual(m.read(m.sym["freeYaw"], "h"), -8192)
+        self.assertEqual(m.read(m.sym["freePitch"], "h"), 0x3800)
+        m.pad(0x200, 0x200)
+        m.pad()
+        m.pad(0x44, 4)
+        self.assertEqual(m.read(m.sym["freePoseOwner"]), 0)
+        self.assertEqual([m.read(m.player + k, "h") for k in (2, 4)], [123, -456])
+
+    def test_free_move_camera_follows_target_and_releases_to_retail(self):
+        m = self.m
+        m.call("__init_registers")
+        m.pad()
+        m.toggle("FREE MOVE", 1)
+        m.pad(0x44, 4)
+        m.uc.mem_write(m.player + 0x18, struct.pack(">3f", 1000, 200, -300))
+        camera = m.sym["gCameras"]
+        m.call("Practice_CameraLoadPos")
+        self.assertEqual(struct.unpack(">3f", m.uc.mem_read(camera + 0xc, 12)), (1000, 225, -120))
+        self.assertEqual(struct.unpack(">3f", m.uc.mem_read(camera + 0x44, 12)), (1000, 225, -120))
+        self.assertEqual(m.read(camera, "h"), -32768)
+        self.assertEqual(m.camera_load, (1000, 225, -120))
+        m.write(m.sym["freeYaw"], -16384, "h")
+        m.write(m.sym["freePitch"], 8192, "h")
+        m.call("Practice_CameraLoadPos")
+        expected = (1000 - 180 / math.sqrt(2), 225 - 180 / math.sqrt(2), -300)
+        for actual, value in zip(m.camera_load, expected):
+            self.assertAlmostEqual(actual, value, places=3)
+        self.assertEqual([m.read(camera + k, "h") for k in (0, 2, 4)], [-16384, -8192, 0])
+        snapshot = bytes(m.uc.mem_read(camera, 0x60))
+        # Ordinary camera, loading, scripted focus, and secondary views are never overridden.
+        for flag in ("disabled", "loading", "focus", "secondary"):
+            m.write(m.sym["freeActive"], flag != "disabled", "B")
+            m.save_loading = flag == "loading"
+            m.write(m.state + 0x7f0, 0x81122000 if flag == "focus" else 0)
+            m.write(m.sym["gCameraCurrentViewIndex"], flag == "secondary", "B")
+            m.call("Practice_CameraLoadPos")
+            self.assertEqual(bytes(m.uc.mem_read(camera, 0x60)), snapshot)
+            self.assertEqual(m.camera_load[0], 1.0)
+            m.write(m.state + 0x7f0, 0)
 
     def test_map_cells_use_retail_bounds_all_layers_and_preserve_state(self):
         m = self.m
@@ -487,12 +561,14 @@ class PayloadTests(unittest.TestCase):
         m.toggle("FREE MOVE", 1)
         m.pad(0x44, 4)
         parent = 0x81120000
+        m.write(parent, 16384, "h")
         m.write(m.player + 0x30, parent)  # ObjAnimComponent.parent.
         m.write(m.sym["freeStep"], 5.0, "f")
         m.call("Practice_PlayerUpdate", m.player)
         transforms = [c for c in m.calls if c[0] == "Obj_TransformWorldVectorToLocal"]
         self.assertTrue(transforms)
         self.assertEqual(m.read(m.player + 0x14, "f"), -5)
+        self.assertEqual(m.read(m.player, "h"), -16384)  # Keep facing world -Z on the rotated parent.
         m.pad(0x64, 4)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
         self.assertEqual(bytes(m.uc.mem_read(m.sym["freeStep"], 12)), bytes(12))
