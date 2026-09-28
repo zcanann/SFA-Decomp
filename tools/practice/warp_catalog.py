@@ -16,7 +16,7 @@ import zlib
 from build import ROOT, read_iso, sections, symbols, u32
 
 
-def catalog(iso):
+def read_assets(iso, extra_names=()):
     dol, _ = read_iso(iso)
     assets = {}
     with iso.open("rb") as stream:
@@ -30,9 +30,15 @@ def catalog(iso):
                 continue
             start = count * 12 + (name & 0xffffff)
             name = fst[start:fst.index(0, start)].decode("ascii")
-            if name in ("MAPINFO.bin", "MAPS.bin", "MAPS.tab", "globalma.bin", "WARPTAB.bin") or name.endswith(".romlist.zlb"):
+            if (name in ("MAPINFO.bin", "MAPS.bin", "MAPS.tab", "globalma.bin", "WARPTAB.bin")
+                    or name in extra_names or name.endswith(".romlist.zlb")):
                 stream.seek(offset)
                 assets[name] = stream.read(size)
+    return dol, assets
+
+
+def catalog(iso):
+    dol, assets = read_assets(iso)
 
     def dol_offset(address):
         return next(off + address - base for _, off, base, size in sections(dol) if base <= address < base + size)

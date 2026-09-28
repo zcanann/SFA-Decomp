@@ -14,6 +14,7 @@
 #include "main/mldf_fileid.h"
 #include "main/pi_data_file_api.h"
 #include "main/pi_dolphin_api.h"
+#include "practice/arrival_catalog.h"
 #include "dlls/objects/294.h"
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"
@@ -2160,6 +2161,20 @@ static void requestPracticeWarp(GameObject* player) {
     }
 }
 
+static void applyArrivalGroups(int map) {
+    int i, bit;
+    for (i = 0; i < sizeof(practiceArrivalGroups) / sizeof(practiceArrivalGroups[0]); i++) {
+        if (practiceArrivalGroups[i].map == map) {
+            for (bit = 0; bit < 32; bit++) {
+                if (practiceArrivalGroups[i].enable & (1u << bit)) {
+                    SaveGame_gplaySetObjGroupStatus(map, bit, 1);
+                }
+            }
+            break;
+        }
+    }
+}
+
 /* Called only at loadNextMap's mapReload call, after it commits the new
  * character coordinates and the fade has finished. Retail callers normally
  * arrange resource banks before warping; arbitrary practice travel must queue
@@ -2176,6 +2191,10 @@ void Practice_WarpReload(void) {
     }
     unlockLevel(0, 0, 1);
     mapLoadByCoords(gRcpPendingWarpDest.x, gRcpPendingWarpDest.y, gRcpPendingWarpDest.z, gRcpPendingWarpDest.layer);
+    /* Restore known entry requirements before destination objects load. Use
+     * the normal setter for saved bits, cached masks and bank aliases; retain
+     * unrelated groups, story progress and the current map act. */
+    applyArrivalGroups(gGameLoopPendingMapId);
     /* A saved auxiliary bank belongs to the source area, not this destination. */
     gGameLoopPendingMapDataFileId = -1;
     /* LinkD has no resource parent. Normal entry retains DIM Top's bank,

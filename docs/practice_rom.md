@@ -276,6 +276,18 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
+### Pending entry-group defaults
+
+Practice warps now enable known map-entry object groups for 20 destinations,
+including link maps, CloudRunner Dungeon and the areas reached by Arwing
+landings. This happens at committed reload through the normal group setter.
+Other groups and the current map act are preserved. Arwing flight maps have
+no group bank; room-specific additions remain for a later pass.
+See [the defaults and their evidence](practice_arrival_groups.md).
+All 56 PPC payload checks and eight patch-integrity checks pass, including
+the disabled-build check. The entry defaults still need Dolphin playtesting.
+These changes are not included in the published V1.13 ISO.
+
 ### Pending named spawn changes
 
 Spawn presets support optional friendly names, shown beside their number/count.

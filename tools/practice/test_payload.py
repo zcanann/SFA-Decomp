@@ -1231,6 +1231,11 @@ class PayloadTests(unittest.TestCase):
 
     def test_practice_warp_queues_destination_banks_only_at_committed_reload(self):
         m = self.m
+        m.state_fixture()
+        m.write(m.sym["gSaveGameMapObjGroupBits"] + 68 * 2, 0x301, "H")
+        m.write(m.sym["gSaveGameMapObjGroupBits"] + 27 * 2, 0x302, "H")
+        m.bit_def(0x302, 40, 32, 1)
+        m.calls = []
         # Ordinary game warps must retain their existing loading behavior.
         m.call("Practice_WarpReload")
         self.assertEqual([c[0] for c in m.calls], ["mapReload"])
@@ -1246,7 +1251,10 @@ class PayloadTests(unittest.TestCase):
             # Result of retail mapSetup inside the stubbed mapLoadByCoords.
             m.write(m.sym["gGameLoopPendingMapId"], map_id)
             m.call("Practice_WarpReload")
-            self.assertEqual([c[0] for c in m.calls], ["unlockLevel", "mapLoadByCoords"])
+            self.assertEqual([c[0] for c in m.calls[:2]], ["unlockLevel", "mapLoadByCoords"])
+            self.assertEqual([c[:3] for c in m.calls[2:]],
+                             [("SaveGame_gplaySetObjGroupStatus", map_id, bit)
+                              for bit in ({68: [1], 27: [0]}.get(map_id, []))])
             self.assertEqual(m.calls[0][1:], (0, 0, 1))
             self.assertEqual(m.loaded_coordinates[:3], struct.unpack(">3f", destination[:12]))
             self.assertEqual(m.loaded_coordinates[3], layer & 0xffffffff)
@@ -1259,6 +1267,49 @@ class PayloadTests(unittest.TestCase):
         m.call("Practice_WarpReload")
         self.assertEqual([c[0] for c in m.calls], ["mapReload"])
         self.assertEqual(m.read(m.sym["warpLoadPending"], "B"), 0)
+
+    def test_arrival_groups_preserve_progress_and_only_apply_to_committed_practice_warp(self):
+        m = self.m
+        m.state_fixture()
+        m.write(m.sym["gSaveGameMapObjGroupBits"] + 29 * 2, 0x301, "H")
+        m.write(m.sym["gSaveGameMapActBits"] + 29 * 2, 0x300, "H")
+        m.write(m.sym["gSaveGameMapObjGroupBits"] + 10 * 2, 0x302, "H")
+        m.write(m.sym["gSaveGameMapObjGroupBits"] + 56 * 2, 0x302, "H")
+        m.bit_def(0x302, 40, 32, 1)
+        m.write(m.sym["warpMap"], 29)
+        m.call("resetWarpSpawn")
+        group_bit = m.read(m.sym["gSaveGameMapObjGroupBits"] + 29 * 2, "H")
+        act_bit = m.read(m.sym["gSaveGameMapActBits"] + 29 * 2, "H")
+        m.set_bit(group_bit, 1 << 7)  # Existing room/progress state must survive.
+        m.set_bit(act_bit, 2)
+        m.write(m.sym["menuOpen"], 1, "B")
+        m.write(m.sym["timeStop"], 255, "B")
+        # Browsing and editing the preset cannot change persistent groups.
+        m.call("editWarpRow", m.row("SPAWN"), 1)
+        self.assertEqual(m.bit_value(group_bit), 1 << 7)
+        destination = bytes(m.uc.mem_read(m.sym["warpDestination"], 16))
+        m.uc.mem_write(m.sym["warpQueuedDestination"], destination)
+        m.uc.mem_write(m.sym["gRcpPendingWarpDest"], destination)
+        m.write(m.sym["warpLoadPending"], 1, "B")
+        m.write(m.sym["gGameLoopPendingMapId"], 29)
+        m.call("Practice_WarpReload")
+        expected = (1 << 7) | (1 << 31) | 0x13  # Entry 0/1/4/31 + prior group 7.
+        self.assertEqual(m.bit_value(group_bit), expected)
+        self.assertEqual(m.read(m.sym["gMapObjGroupStatuses"] + 29 * 4), expected)
+        self.assertEqual(m.bit_value(act_bit), 2)
+        # A retail reload, or a superseding scripted warp, cannot apply defaults.
+        for pending in (0, 1):
+            m.set_bit(group_bit, 0)
+            m.write(m.sym["warpLoadPending"], pending, "B")
+            m.write(m.sym["gRcpPendingWarpDest"], 0.0, "f")
+            m.call("Practice_WarpReload")
+            self.assertEqual(m.bit_value(group_bit), 0)
+        # Shared banks use the retail setter; unsupported maps stay untouched.
+        m.call("applyArrivalGroups", 56)
+        self.assertEqual(m.read(m.sym["gMapObjGroupStatuses"] + 10 * 4) & 1, 1)
+        before = len(m.bit_edits)
+        m.call("applyArrivalGroups", 38)  # Arwing: no group bank.
+        self.assertEqual(len(m.bit_edits), before)
 
     def test_flags_hierarchy_unused_separation_and_back_navigation(self):
         m = self.m
