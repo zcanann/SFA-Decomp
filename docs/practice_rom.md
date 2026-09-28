@@ -23,7 +23,8 @@ that follows directly behind him during Free Move. See **V1.10 changes** below.
   Selecting a map/spawn restores its preset. Select **Warp Now** (fourth row, below Spawn) and press **A** to travel.
 - With Forced Swimming enabled: **L + D-pad Down** toggles swimming during play;
   activation resets the surface to player Y + 40. **L + C-stick Up/Down** adjusts the
-  surface while swimming is active. Enabling it in the menu also starts swimming.
+  surface while swimming is active. The menu checkbox only arms the shortcut;
+  swimming stays off until L+D-pad Down is pressed.
 - With Free Move enabled: **L + D-pad Up** toggles movement override during play.
   The main stick moves forward/back and strafes relative to Fox's facing.
   **C-stick Up/Down** ascends/descends; hold **L + C-stick** to turn and pitch.
@@ -282,8 +283,9 @@ The HUD shows both C-stick bindings. **L+D-pad Up** now toggles Free Move;
 **L+D-pad Down** toggles swimming. The menu stays **L+R+D-pad Down**.
 
 Swimming and Free Move can both be armed in the menu, but only one runs at a
-time. Activating either shortcut stops the other mode. Starting swimming from
-the menu also stops Free Move. L+C-stick controls water height only in active
+time. Activating either shortcut stops the other mode. Enabling Forced Swimming
+in the menu only arms its shortcut; it leaves swimming off and any active Free
+Move running. L+C-stick controls water height only in active
 swimming, so Free Move look input cannot change the water plane.
 
 Flags now has an **Item Discovery** page with separate introduction latches:
@@ -304,7 +306,7 @@ pickup/proximity-message and one-shot sequence gates. No retail source changes
 are needed; the new page is inside the practice build guard.
 
 Validation: 53 compiled PPC checks and eight patch tests pass. Coverage includes
-both movement-mode transitions, menu activation of swimming during Free Move,
+both movement-mode transitions, arming swimming without activating it during Free Move,
 L+C-stick routing, direct vertical movement, the swapped shortcuts, discovery
 edits preserving inventory, loading guards, Back selection memory and screen
 bounds. Reading BITTABLE.bin directly from the original ISO confirms all 14

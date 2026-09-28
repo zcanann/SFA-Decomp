@@ -2604,11 +2604,6 @@ void Practice_PadUpdate(void) {
                 if (rows[row].group && enabled[row]) {
                     expanded[row] = 1;
                 }
-                if (row == SWIMMING && enabled[row] && validPointer(player)) {
-                    waterHeight = player->anim.worldPosY + 40.0f;
-                    swimActive = 1;
-                    freeActive = 0;
-                }
             }
         }
         if (activeTab == TAB_CHEATS && (pressed & PAD_BUTTON_X) && validPointer(player)) {

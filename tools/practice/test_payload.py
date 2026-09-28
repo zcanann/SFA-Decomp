@@ -533,6 +533,14 @@ class PayloadTests(unittest.TestCase):
         m.pad()
         m.pad(0x20, 0x20)  # Cheats tab, first row is Forced Swimming.
         m.pad(0x100, 0x100)
+        self.assertEqual(m.read(m.sym["enabled"] + m.row("FORCED SWIMMING"), "B"), 1)
+        self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
+        self.assertEqual(m.read(m.sym["swimActive"], "B"), 0)  # Checkbox only arms the shortcut.
+        self.assertEqual(m.read(m.sym["waterHeight"], "f"), surface + 2)
+        m.pad(0x200, 0x200)
+        m.pad()
+        self.assertEqual(m.read(m.sym["swimActive"], "B"), 0)  # Closing the menu does not start swimming.
+        m.pad(0x44, 4)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)
         self.assertEqual(m.read(m.sym["freePoseOwner"]), 0)
