@@ -97,3 +97,15 @@ Nine patch tests cover original section preservation, exact edit boundaries,
 the isolated descriptor pointer replacement, and zero emitted payload when
 `SFA_PRACTICE` is disabled. Dolphin tests use private profiles and do not read or
 modify the user's saves.
+
+The compact screenshot gallery is `build/practice/repair-gallery/index.html`.
+Formatting preserved both object and payload bytes. The published image is
+`orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.15).iso` in the main
+checkout, alongside `SFA-EN-v1.0-Practice-v1.15.sfapatch`. Its SHA-256 is
+`37fccefde0123afd4076eeb55f877c450bde67c818b97c16871d2dbbf8e61340`, identical
+to the tested v15c candidate. Payload size: 58,656 bytes; payload SHA-256:
+`e2b51589272ddd37af9602e70876826888b8ad763d99334b663bd1aeddeed77a`.
+The original ISO retained SHA-256
+`f2efe87066555522fa99a31a9f8b7eb4f51b47d59e5a348b1fed324fcd69fc4e`.
+Every byte outside the relocated DOL and its four-byte header pointer compared
+equal. Earlier practice releases were preserved.
