@@ -276,6 +276,31 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
+### Pending named spawn changes
+
+Spawn presets support optional friendly names, shown beside their number/count.
+Unnamed presets retain their warp-ID or estimated label. Cape Claw now has:
+
+| Spawn | Name | X | Y | Z |
+| --- | --- | --- | --- | --- |
+| 1 (default) | Entrance | 1413.41162 | -1206.3031 | -4200.09863 |
+| 2 | Link Door | 2872.06055 | -1401.93994 | -4406.44971 |
+| 3 | Mana Shrine | 2053.456298828125 | -1668 | -2064.908203125 |
+| 4 | Gas Chamber | 3754.10693 | -1464.93994 | -3452.88184 |
+| 5 | Cannon | 3299.2041 | -1579.93994 | -2635.34961 |
+
+All five use layer 0. Mana Shrine retains the former default's X/Z, facing,
+and arrival ID 53, with Y lowered as requested to avoid the intact rock.
+The other four are custom arrivals. Selecting Cape Claw resets to Entrance.
+The catalog generator preserves these names, positions, and order, and checks
+each position against the retail world grid.
+
+The compiled PPC payload was checked for all five coordinates/rendered labels,
+default selection and wraparound. Three existing warp checks and all eight
+patch-integrity checks pass. The payload occupies 56,512 bytes of the 64 KiB
+reservation. These changes are not included in the published V1.13 ISO;
+the positions have not been visually playtested in Dolphin.
+
 ### Pending DIM warp changes
 
 DIM Bottom's estimated destination is now the supplied position

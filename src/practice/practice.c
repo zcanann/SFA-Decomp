@@ -1109,13 +1109,17 @@ static void drawWarpValue(int row, int y, u32 color) {
         if (!map->spawnCount) {
             textAt(260, y, "NO WORLD DESTINATION", MUTED);
         } else {
-            int index = practiceWarpSpawns[map->firstSpawn + warpSpawn].warp;
+            const PracticeWarpSpawn* spawn = &practiceWarpSpawns[map->firstSpawn + warpSpawn];
             numberAt(260, y, warpSpawn + 1, color);
             textAt(290, y, "/", color);
             numberAt(310, y, map->spawnCount, color);
-            textAt(350, y, index >= 0 ? "WARP ID:" : "ESTIMATED", color);
-            if (index >= 0) {
-                numberAt(465, y, index, color);
+            if (spawn->name) {
+                textAt(350, y, spawn->name, color);
+            } else {
+                textAt(350, y, spawn->warp >= 0 ? "WARP ID:" : "ESTIMATED", color);
+                if (spawn->warp >= 0) {
+                    numberAt(465, y, spawn->warp, color);
+                }
             }
         }
     } else if (row >= WARP_X && row <= WARP_ANGLE) {
@@ -2012,7 +2016,8 @@ static void drawMenu(void) {
         textAt(36, 377,
                warpMessage        ? warpMessage
                : !map->spawnCount ? "OBJECT / UNPLACED MAP: NO STANDALONE WARP"
-               : practiceWarpSpawns[map->firstSpawn + warpSpawn].warp < 0
+               : !practiceWarpSpawns[map->firstSpawn + warpSpawn].name &&
+                       practiceWarpSpawns[map->firstSpawn + warpSpawn].warp < 0
                    ? "ESTIMATED SPAWN - ADJUST POSITION AS NEEDED"
                    : "MAP OR SPAWN CHANGE RESTORES ITS DEFAULTS",
                MUTED);
