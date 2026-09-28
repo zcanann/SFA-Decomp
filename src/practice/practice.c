@@ -13,6 +13,7 @@
 #include "main/dll/player.h"
 #include "main/mldf_fileid.h"
 #include "main/pi_data_file_api.h"
+#include "main/pi_dolphin_api.h"
 #include "dlls/objects/294.h"
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"
@@ -2172,6 +2173,12 @@ void Practice_WarpReload(void) {
     mapLoadByCoords(gRcpPendingWarpDest.x, gRcpPendingWarpDest.y, gRcpPendingWarpDest.z, gRcpPendingWarpDest.layer);
     /* A saved auxiliary bank belongs to the source area, not this destination. */
     gGameLoopPendingMapDataFileId = -1;
+    /* LinkD has no resource parent. Normal entry retains DIM Top's bank,
+     * which its entrance/exit triggers load and unload (directory 26).
+     * A full practice reload must supply that bank alongside the link. */
+    if (gGameLoopPendingMapId == 68) {
+        gGameLoopPendingMapDataFileId = mapGetDirIdx(19);
+    }
 }
 
 #pragma push

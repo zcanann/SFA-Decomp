@@ -1153,6 +1153,10 @@ class PayloadTests(unittest.TestCase):
         m.write(m.sym["warpSpawn"], 0)
         m.call("resetWarpSpawn")
         self.assertEqual(bytes(m.uc.mem_read(destination, 16)), default)
+        m.write(m.sym["warpMap"], 27)  # User-provided DIM Bottom arrival.
+        m.call("resetWarpSpawn")
+        self.assertEqual(bytes(m.uc.mem_read(destination, 16)),
+                         struct.pack(">3f2h", -8974.73438, -1627.60266, 17620.2559, -2, 0))
 
     def test_warp_validates_world_cells_and_uses_retail_transition(self):
         m = self.m
@@ -1231,7 +1235,7 @@ class PayloadTests(unittest.TestCase):
         m.call("Practice_WarpReload")
         self.assertEqual([c[0] for c in m.calls], ["mapReload"])
         # Include all five Krazoa tests as well as Galdon and Andross flight.
-        for map_id, layer in ((28, -2), (38, 2), (31, 0), (32, 0), (33, 0), (34, 0), (39, 0)):
+        for map_id, layer in ((28, -2), (38, 2), (31, 0), (32, 0), (33, 0), (34, 0), (39, 0), (68, -1), (27, -2)):
             m.calls = []
             m.write(m.sym["warpMap"], map_id)
             m.call("resetWarpSpawn")
@@ -1239,12 +1243,14 @@ class PayloadTests(unittest.TestCase):
             m.uc.mem_write(m.sym["warpQueuedDestination"], destination)
             m.uc.mem_write(m.sym["gRcpPendingWarpDest"], destination)
             m.write(m.sym["warpLoadPending"], 1, "B")
+            # Result of retail mapSetup inside the stubbed mapLoadByCoords.
+            m.write(m.sym["gGameLoopPendingMapId"], map_id)
             m.call("Practice_WarpReload")
             self.assertEqual([c[0] for c in m.calls], ["unlockLevel", "mapLoadByCoords"])
             self.assertEqual(m.calls[0][1:], (0, 0, 1))
             self.assertEqual(m.loaded_coordinates[:3], struct.unpack(">3f", destination[:12]))
             self.assertEqual(m.loaded_coordinates[3], layer & 0xffffffff)
-            self.assertEqual(m.read(m.sym["gGameLoopPendingMapDataFileId"], "i"), -1)
+            self.assertEqual(m.read(m.sym["gGameLoopPendingMapDataFileId"], "i"), 26 if map_id == 68 else -1)
             self.assertEqual(m.read(m.sym["warpLoadPending"], "B"), 0)
         # If a normal scripted warp supersedes our request, don't change its banks.
         m.calls = []

@@ -276,6 +276,24 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
+### Pending DIM warp changes
+
+DIM Bottom's estimated destination is now the supplied position
+`(-8974.73438, -1627.60266, 17620.2559)`, on layer -2. The catalog generator
+preserves this override and verifies that its world cell resolves to DIM Bottom.
+
+A direct practice warp into LinkD (DIM Top to Bottom, map 68) now loads DIM
+Top's resource bank (directory 26) alongside the link. LinkD has no resource
+parent; its retail transition triggers explicitly manage the neighboring DIM
+banks. Full practice reloads previously loaded only the link's own bank.
+
+The destination and queued-bank PPC regression checks pass, as do the eight
+patch-integrity checks. An isolated Dolphin Null-backend probe reaches LinkD
+and clears the black fade with this change. However, the same probe also
+succeeds on V1.13: the reported black screen has not been reproduced, and this
+resource-bank correction is not yet confirmed to resolve it. These changes
+are not included in the published V1.13 ISO.
+
 ### V1.13 changes
 
 Free Move is the first Cheats entry, with an expanded **Invert X** checkbox

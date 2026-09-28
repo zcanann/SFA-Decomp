@@ -104,6 +104,12 @@ def catalog(iso):
                 if resolve(x, z, layer) == mid:
                     maps[mid]["spawns"].append(dict(x=x, y=0, z=z, layer=layer, angle=0, warp=-2))
                     break
+    # User-provided DIM Bottom arrival, replacing the estimated object position.
+    # Keep its verified world-map layer and custom-arrival semantics.
+    destination = maps[27]["spawns"][0]
+    assert destination["warp"] == -1 and destination["layer"] == -2
+    destination.update(x=-8974.73438, y=-1627.60266, z=17620.2559)
+    assert resolve(destination["x"], destination["z"], destination["layer"]) == 27
     return maps, {name: hashlib.sha256(data).hexdigest() for name, data in assets.items() if not name.endswith(".romlist.zlb")}
 
 
