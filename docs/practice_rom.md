@@ -22,11 +22,12 @@ enabled. See **V1.8 changes** below.
 - **With Auto Roll enabled:** hold X for roll, configurable blanks, shield, repeat.
 - **Warp tab:** Left/Right edits category, map, spawn, position, layer, facing or step.
   Selecting a map/spawn restores its preset. Select **Warp Now** (fourth row, below Spawn) and press **A** to travel.
-- With Forced Swimming enabled: **L + Left** toggles swimming during play;
-  activation resets the surface to player Y + 40. **L + Up/Down** adjusts the
+- With Forced Swimming enabled: **L + D-pad Up** toggles swimming during play;
+  activation resets the surface to player Y + 40. **L + C-stick Up/Down** adjusts the
   surface while swimming is active. Enabling it in the menu also starts swimming.
-- With Free Move enabled: **L + Right** toggles movement override during play.
-  The stick moves along world X/Z axes, **Y ascends**, and **X descends**. The
+- With Free Move enabled: **L + D-pad Down** toggles movement override during play.
+  The main stick moves horizontally relative to the camera; **C-stick Up/Down**
+  ascends/descends. Camera pitch does not affect height. The
   menu checkbox only arms the shortcut; the HUD distinguishes READY from ON.
 
 The menu consumes controller-1 input and uses the existing `timeStop` mechanism
@@ -275,6 +276,42 @@ similar instructions and patch an unknown version.
 Maps now places **Remove All** second, directly below **Unlock All**. Press A
 to clear the twelve map-ownership flags; individual map toggles follow both
 actions. Progression flags are unchanged, and save loading blocks both actions.
+
+**Map Cells / Gravity**, off by default on the Collision tab, draws the 640-unit
+map grid with translucent horizontal tiles at Fox's height and vertical edge
+markers. Green means at least one of the five streamed block layers is occupied;
+red means all are empty inside the 16-by-16 streaming window; amber means outside
+that window. The current cell outline is gold. It respects Draw Distance and
+Draw Through Walls and does not require terrain triangles or the Collision
+master switch. The markers show an X/Z partition, not vertical gameplay limits.
+
+Classification calls retail `isInBounds`, the same check used by `playerUpdate`.
+Only its zero result takes the ordinary unparented/unmounted player freeze path,
+which clears velocity and skips movement/gravity processing. An outside-window
+result is -1 and does not take that path. This is map coverage, not a claim that
+gravity is active in every occupied cell regardless of player state. Loading or
+unavailable layer tables suppress the viewer. The viewer does not edit map data.
+
+**L+D-pad Up** toggles swimming and **L+D-pad Down** toggles Free Move once
+armed. **L+C-stick Up/Down** adjusts the active swim surface. **L+R+Down**
+retains priority for opening the menu. Active Free Move needs no modifier.
+
+Free Move now follows the main camera's yaw on the horizontal plane, with
+C-stick Up/Down for height. X/Y no longer move vertically. It also rebuilds the
+retail terrain/local-point collision sweeps and object-hit positions at every
+new position, and aligns previous local/world positions there. Releasing it no
+longer resumes sweeps from the last ordinary gameplay position. Collision with
+geometry at the destination still applies once Free Move is released.
+
+Repeated debug geometry helpers are compiled out of line to retain the same
+64 KiB payload reservation; retail compiler settings and game addresses are
+unchanged. The new input and cache behavior is checked with compiled PPC, including
+the retail collision-refresh routines and map-bounds check; Dolphin gameplay
+verification is still pending.
+
+Validation: all 49 compiled-PPC checks and 8 patch-integrity tests pass. The
+53,888-byte payload fits the unchanged reservation; disabled practice still
+emits no symbols. Published ISOs remain unchanged.
 
 ### V1.8 changes
 

@@ -34,6 +34,7 @@
 #include "main/gamebits_api.h"
 #include "main/map_block.h"
 #include "main/map_load.h"
+#include "main/lightmap_api.h"
 #include "main/obj_list.h"
 #include "main/object_transform.h"
 #include "main/objhits_types.h"
@@ -56,6 +57,7 @@ extern MapBlockData* mapGetBlockAtPos(int x, int z, int layer);
 extern void playerDoControls(GameObject*, PlayerState*, f32);
 extern void playerUpdateSurfaceResponse(GameObject*, PlayerState*, PlayerState*, f32);
 extern void playerEnterDeepWater(GameObject*, PlayerState*, PlayerState*);
+extern void playerRefreshCollisionState(GameObject*, int, int);
 extern f32 mathSinf(f32);
 extern f32 mathCosf(f32);
 extern u32 getScreenResolution(void);
@@ -116,6 +118,7 @@ enum {
     FREE_MOVE,
     INFINITE_HEALTH,
     INFINITE_MAGIC,
+    MAP_CELLS,
     ROW_COUNT
 };
 enum {
@@ -187,7 +190,8 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"RUNTIME / ACTION FLAGS", -1, 0, TAB_LOG},
                                             {"FREE MOVE", -1, 0, TAB_CHEATS},
                                             {"INFINITE HEALTH", -1, 0, TAB_CHEATS},
-                                            {"INFINITE MAGIC", -1, 0, TAB_CHEATS}};
+                                            {"INFINITE MAGIC", -1, 0, TAB_CHEATS},
+                                            {"MAP CELLS / GRAVITY", -1, 0}};
 static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1,
                                 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0};
 static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0,
@@ -226,6 +230,9 @@ static int fillLimit = 6000;
 static Vec origin;
 static const u32 WHITE = 0xE7EFFAFF, MUTED = 0x95A5BFFF, GOLD = 0xFFD16AFF;
 
+/* Keep repeated debug geometry helpers out of line to fit the fixed payload. */
+#pragma push
+#pragma auto_inline off
 static Vec point(f32 x, f32 y, f32 z) {
     Vec p;
     p.x = x;
@@ -568,6 +575,59 @@ static int floorCell(f32 x) {
     return x < n * 640.0f ? n - 1 : n;
 }
 
+/* playerUpdate freezes ordinary unparented movement only when isInBounds is
+ * exactly zero. It checks all five block layers, ignores Y, and returns -1
+ * outside the streaming window. Do not equate missing geometry with that case. */
+static void drawMapCells(void) {
+    int x, z, i, state, haveCurrent = 0;
+    int cx = floorCell(origin.x), cz = floorCell(origin.z);
+    int radius = (drawDistance + 639) / 640;
+    Vec p[4], current[4];
+    u32 color;
+    if (isSaveGameLoading()) {
+        return;
+    }
+    for (i = 0; i < 5; i++) {
+        if (!validPointer(gMapBlockLayerTables[i])) {
+            return;
+        }
+    }
+    for (z = cz - radius; z <= cz + radius && linesDrawn < lineLimit; z++) {
+        for (x = cx - radius; x <= cx + radius && linesDrawn < lineLimit; x++) {
+            state = isInBounds(x * 640.0f + 320, z * 640.0f + 320);
+            color = state == 0 ? 0xFF6578FF : state > 0 ? 0x58D98CFF : 0xE4B45AFF;
+            p[0] = point(x * 640.0f, origin.y + 2, z * 640.0f);
+            p[1] = p[0];
+            p[1].x += 640;
+            p[2] = p[1];
+            p[2].z += 640;
+            p[3] = p[0];
+            p[3].z += 640;
+            if (!nearTriangle(p[0], p[1], p[2]) && !nearTriangle(p[0], p[2], p[3])) {
+                continue;
+            }
+            fillQuad(p[0], p[1], p[2], p[3], color);
+            for (i = 0; i < 4; i++) {
+                Vec a = p[i], b = p[i];
+                line(p[i], p[(i + 1) & 3], color);
+                a.y -= 160;
+                b.y += 160;
+                line(a, b, color);
+                if (x == cx && z == cz) {
+                    current[i] = p[i];
+                    haveCurrent = 1;
+                }
+            }
+        }
+    }
+    /* Neighboring cells share edges; draw the current outline last. */
+    if (haveCurrent) {
+        for (i = 0; i < 4; i++) {
+            line(current[i], current[(i + 1) & 3], GOLD);
+        }
+    }
+}
+
 /* HITS.bin / model lines form vertical interaction planes independent of the
  * triangle meshes. Match trackSweepCircleAgainstLines' signed height decode. */
 static void drawHitLines(MapHitLine* hits, int count, f32 x, f32 z, GameObject* owner) {
@@ -867,6 +927,9 @@ static void drawWorld(void) {
     Camera_UpdateProjection(NULL, 0);
     GXLoadPosMtxImm((MtxPtr)gCameraViewMatrix, GX_PNMTX0);
     setupGeometry(!enabled[XRAY]);
+    if (enabled[MAP_CELLS]) {
+        drawMapCells();
+    }
     if (enabled[COLLISION]) {
         drawPlayerCollision(player);
     }
@@ -967,6 +1030,8 @@ static void numberAt(int x, int y, int number, u32 color) {
     }
     textAt(x, y, &buffer[pos], color);
 }
+
+#pragma pop
 
 static void resetWarpSpawn(void) {
     const PracticeWarpMap* map = &practiceWarpMaps[warpMap];
@@ -1838,13 +1903,13 @@ static void drawMenu(void) {
         textAt(24, 23, "SFA PRACTICE  L+R+DOWN: MENU", WHITE);
         if (enabled[SWIMMING]) {
             textAt(24, y, swimActive ? "SWIM ON" : "SWIM READY", 0x63D5FFFF);
-            textAt(168, y, "L+LEFT  UP/DOWN: HEIGHT", MUTED);
+            textAt(168, y, "L+UP  L+C: HEIGHT", MUTED);
             numberAt(456, y, (int)waterHeight, WHITE);
             y += 18;
         }
         if (enabled[FREE_MOVE]) {
             textAt(24, y, freeActive ? "MOVE ON" : "MOVE READY", GOLD);
-            textAt(168, y, "L+RIGHT STICK XZ X/Y: DOWN/UP", MUTED);
+            textAt(168, y, "L+DOWN  C-STICK: UP/DOWN", MUTED);
             y += 18;
         }
         if (enabled[SHIELD_HOVER]) {
@@ -1853,6 +1918,11 @@ static void drawMenu(void) {
         }
         if (enabled[AUTO_ROLL]) {
             textAt(24, y, "AUTO ROLL: HOLD X", GOLD);
+        }
+        if (enabled[MAP_CELLS]) {
+            rectangle(16, 422, 608, 46, 0x0B1427DD);
+            textAt(24, 429, "CELLS: GREEN LOADED / RED EMPTY (FREEZE)", WHITE);
+            textAt(24, 447, "YELLOW OUTSIDE GRID / GOLD CURRENT CELL", MUTED);
         }
         return;
     }
@@ -2185,7 +2255,7 @@ static void updateShieldHover(GameObject* player, int blocked) {
  * Use physical button chords before input injection and consume activation frames. */
 static int updateQuickMovement(GameObject* player, u32 held, u32 shoulders, int blocked) {
     int quick =
-        (shoulders & PAD_TRIGGER_L) && !(shoulders & PAD_TRIGGER_R) ? held & (PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT) : 0;
+        (shoulders & PAD_TRIGGER_L) && !(shoulders & PAD_TRIGGER_R) ? held & (PAD_BUTTON_UP | PAD_BUTTON_DOWN) : 0;
     int edge = quick & ~quickLatch;
     int wasFree = freeActive;
     PADStatus* pad = &gPadStatuses[gPadStatusBufferIndex * PAD_MAX_CONTROLLERS];
@@ -2205,13 +2275,13 @@ static int updateQuickMovement(GameObject* player, u32 held, u32 shoulders, int 
         freeActive = 0;
     }
     if (!blocked && !timeStop && !joypadDisabled && !gDvdErrorPauseActive) {
-        if (edge == PAD_BUTTON_LEFT && enabled[SWIMMING]) {
+        if (edge == PAD_BUTTON_UP && enabled[SWIMMING]) {
             swimActive ^= 1;
             if (swimActive) {
                 freeActive = 0;
                 waterHeight = player->anim.worldPosY + 40.0f;
             }
-        } else if (edge == PAD_BUTTON_RIGHT && enabled[FREE_MOVE]) {
+        } else if (edge == PAD_BUTTON_DOWN && enabled[FREE_MOVE]) {
             freeActive ^= 1;
             if (freeActive) {
                 swimActive = 0;
@@ -2219,14 +2289,22 @@ static int updateQuickMovement(GameObject* player, u32 held, u32 shoulders, int 
         }
         if (freeActive && !quick) {
             f32 dt = timeDelta;
+            f32 right, forward, angle, sine, cosine;
             if (!(dt > 0)) {
                 dt = 0;
             } else if (dt > 3) {
                 dt = 3;
             }
-            freeStep.x = (pad->stickX > 20 ? 1 : pad->stickX < -20 ? -1 : 0) * 5.0f * dt;
-            freeStep.z = (pad->stickY > 20 ? -1 : pad->stickY < -20 ? 1 : 0) * 5.0f * dt;
-            freeStep.y = (((held & PAD_BUTTON_Y) != 0) - ((held & PAD_BUTTON_X) != 0)) * 5.0f * dt;
+            right = (pad->stickX > 20 ? 1 : pad->stickX < -20 ? -1 : 0) * 5.0f * dt;
+            forward = (pad->stickY > 20 ? 1 : pad->stickY < -20 ? -1 : 0) * 5.0f * dt;
+            /* Same yaw convention as Camera_UpdateViewMatrices, view zero.
+             * Ignore pitch so vertical movement belongs only to the C-stick. */
+            angle = (gCameras[0].yaw + 32768) * (3.14159265359f / 32768);
+            sine = mathSinf(angle);
+            cosine = mathCosf(angle);
+            freeStep.x = right * cosine + forward * sine;
+            freeStep.z = right * sine - forward * cosine;
+            freeStep.y = (pad->substickY > 20 ? 1 : pad->substickY < -20 ? -1 : 0) * 5.0f * dt;
         }
     }
     return freeActive || wasFree || (quick && (enabled[SWIMMING] || enabled[FREE_MOVE]));
@@ -2281,6 +2359,17 @@ void Practice_PlayerUpdate(GameObject* obj) {
     obj->anim.localPosX += delta.x;
     obj->anim.localPosY += delta.y;
     obj->anim.localPosZ += delta.z;
+    /* Teleport-style refresh: skipping retail update/hit detection leaves both
+     * terrain sweeps and object-hit positions at the last ordinary frame.
+     * Rebuild them here so releasing Free Move cannot sweep across the journey. */
+    Obj_GetWorldPosition(obj, &obj->anim.worldPosX, &obj->anim.worldPosY, &obj->anim.worldPosZ);
+    playerRefreshCollisionState(obj, (int)state, validPointer(obj->anim.hitReactState) ? 7 : 3);
+    obj->anim.previousLocalPosX = obj->anim.localPosX;
+    obj->anim.previousLocalPosY = obj->anim.localPosY;
+    obj->anim.previousLocalPosZ = obj->anim.localPosZ;
+    obj->anim.previousWorldPosX = obj->anim.worldPosX;
+    obj->anim.previousWorldPosY = obj->anim.worldPosY;
+    obj->anim.previousWorldPosZ = obj->anim.worldPosZ;
     obj->anim.velocityX = obj->anim.velocityY = obj->anim.velocityZ = 0;
     obj->externalVelX = obj->externalVelY = obj->externalVelZ = 0;
     state->baddie.animSpeedA = state->baddie.animSpeedB = state->baddie.animSpeedC = 0;
@@ -2289,7 +2378,6 @@ void Practice_PlayerUpdate(GameObject* obj) {
         state->flags3F0.b20 = 0;
         swimApplied = 0;
     }
-    /* The enclosing object update recomputes world coordinates from localPos. */
 }
 
 void Practice_PlayerHitDetection(GameObject* obj) {
@@ -2300,7 +2388,7 @@ void Practice_PlayerHitDetection(GameObject* obj) {
 
 void Practice_PadUpdate(void) {
     u32 held, pressed, shoulders, shoulderPressed;
-    int chord, wasOpen, movementInput;
+    int chord, wasOpen, movementInput, waterStick;
     GameObject* player;
     padUpdate();
     held = gPadButtonsHeld[0];
@@ -2442,9 +2530,11 @@ void Practice_PadUpdate(void) {
         }
     }
     movementInput = updateQuickMovement(player, held, shoulders, menuOpen || wasOpen || chord);
-    if (!menuOpen && !wasOpen && !chord && enabled[SWIMMING] && swimActive && (shoulders & PAD_TRIGGER_L) &&
-        (held & (PAD_BUTTON_UP | PAD_BUTTON_DOWN))) {
-        f32 delta = timeDelta * ((held & PAD_BUTTON_UP) ? 2.0f : -2.0f);
+    waterStick = gPadStatuses[gPadStatusBufferIndex * PAD_MAX_CONTROLLERS].substickY;
+    if (!menuOpen && !wasOpen && !chord && !timeStop && !joypadDisabled && !gDvdErrorPauseActive &&
+        enabled[SWIMMING] && swimActive && (shoulders & (PAD_TRIGGER_L | PAD_TRIGGER_R)) == PAD_TRIGGER_L &&
+        (waterStick > 20 || waterStick < -20)) {
+        f32 delta = timeDelta * (waterStick > 20 ? 2.0f : -2.0f);
         if (delta > 10) {
             delta = 10;
         }
@@ -2512,7 +2602,7 @@ void Practice_Draw(void) {
     pollStateLog();
     linesDrawn = trianglesDrawn = triggersDrawn = fillsDrawn = 0;
     drawLimitReached = 0;
-    if (enabled[COLLISION] || enabled[TRIGGERS] || (enabled[SWIMMING] && swimActive && enabled[WATER_GRID])) {
+    if (enabled[COLLISION] || enabled[TRIGGERS] || enabled[MAP_CELLS] || (enabled[SWIMMING] && swimActive && enabled[WATER_GRID])) {
         drawWorld();
     }
     drawMenu();

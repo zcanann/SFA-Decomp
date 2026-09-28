@@ -46,11 +46,15 @@ class Machine:
         self.exi_command = None
         for index in range(56):
             self.write(self.sym["gSfxObjectChannels"] + index * 0x38, 0xffffffff)
-        for name, (addr, _) in symbols().items():
+        retail = symbols()
+        self.retail_stack_ranges = [(retail[name][0], sum(retail[name])) for name in (
+            "isInBounds", "Obj_GetWorldPosition", "playerRefreshCollisionState",
+            "curves_preparePointCollisionFrame", "curves_updateLocalPointTransforms", "setMatrixFromObjectPos")]
+        for name, (addr, _) in retail.items():
             if name.startswith("GX") or name in (
                 "padUpdate", "Obj_GetPlayerObject", "OSSetArenaLo", "playerDoControls",
                 "playerEnterDeepWater", "playerUpdateSurfaceResponse", "Camera_SetCurrentViewIndex",
-                "Camera_UpdateProjection", "resetSomeGxFlags", "getScreenResolution", "mathSinf", "mathCosf",
+                "Camera_UpdateProjection", "resetSomeGxFlags", "getScreenResolution", "mathSinf", "mathCosf", "fastFloorf",
                 "Matrix_TransformPoint", "mapGetBlockAtPos", "ObjList_GetObjects", "PSMTXInverse", "PSMTXMultVec",
                 "Obj_TransformLocalPointToWorld", "mainGetBit", "ObjHits_IsObjectEnabled", "warpToMap",
                 "mapReload", "mapLoadByCoords", "unlockLevel", "isSaveGameLoading", "getDataFileSize",
@@ -58,6 +62,7 @@ class Machine:
                 "SaveGame_gplaySetObjGroupStatus", "sprintf", "EXILock", "EXISelect", "EXIImm",
                 "EXISync", "EXIDeselect", "EXIUnlock", "sndFXCtrl", "getHudHiddenFrameCount", "Sfx_UpdateObjectChannel3D",
                 "playerUpdate", "playerDoHitDetection", "playerDie", "Obj_TransformWorldVectorToLocal",
+                "playerRefreshCollisionState", "trackInvalidateDynamicSlotsForObject", "angleToVec2",
                 "getCurMapLayer", "memcpy", "mmAlloc", "mm_free", "loadMapForCurrentSaveGame", "_saveGame"):
                 self.stub[addr] = name
         self.uc.hook_add(UC_HOOK_CODE, self.service)
@@ -92,7 +97,8 @@ class Machine:
     def service(self, uc, pc, size, unused):
         # Unicorn lacks Gekko paired singles. MWCC also saves/restores the upper
         # lanes beside ordinary stfd/lfd saves; this payload does no paired math.
-        if PAYLOAD_ADDRESS <= pc < PAYLOAD_ADDRESS + len(self.payload):
+        if (PAYLOAD_ADDRESS <= pc < PAYLOAD_ADDRESS + len(self.payload) or
+                any(start <= pc < end for start, end in self.retail_stack_ranges)):
             instruction = self.read(pc)
             if instruction >> 26 in (56, 60):
                 assert (instruction >> 16) & 31 == 1 and (instruction >> 12) & 15 == 0
@@ -103,6 +109,12 @@ class Machine:
             return
         if name == "Obj_GetPlayerObject":
             uc.reg_write(UC_PPC_REG_0 + 3, self.player)
+        elif name == "fastFloorf":
+            self.setf(1, math.floor(self.f(1)))
+        elif name == "angleToVec2":
+            angle = self.r(3) * math.pi / 32768
+            self.write(self.r(4), math.sin(angle), "f")
+            self.write(self.r(5), math.cos(angle), "f")
         elif name == "mainGetBit":
             uc.reg_write(UC_PPC_REG_0 + 3, self.bit_value(self.r(3)) if hasattr(self, "bit_table") else getattr(self, "gate_bit", 1))
         elif name == "mainSetBits":
@@ -345,7 +357,8 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.state + 0x1C0, "f"), -100000.0)
         m.call("Practice_SurfaceResponse", m.player, m.state, m.state)
         self.assertEqual(m.read(m.state + 0x1C0, "f"), -100000.0)
-        m.pad(0x48)  # L+Up
+        m.write(m.sym["gPadStatuses"] + 5, 70, "b")
+        m.pad(0x40)  # L+C-stick Up
         self.assertEqual(m.read(m.sym["waterHeight"], "f"), 142.0)
         m.toggle("FORCED SWIMMING", 0)
         m.call("Practice_PlayerControls", m.player, m.state)
@@ -355,28 +368,39 @@ class PayloadTests(unittest.TestCase):
         m = self.m
         m.pad()
         m.toggle("FORCED SWIMMING", 1)
-        m.pad(0x41, 1)  # L+Left.
+        m.pad(0x48, 8)  # L+Up.
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)
         self.assertEqual(m.read(m.sym["waterHeight"], "f"), 140)
         self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
-        m.pad(0x41)
+        m.pad(0x48)
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)  # Held chord does not repeat.
         m.pad()
-        m.pad(0x41, 1)
+        m.pad(0x48, 8)
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 0)
         self.assertEqual(m.read(m.sym["enabled"] + m.row("FORCED SWIMMING"), "B"), 1)
         m.pad()
         m.write(m.player + 0x1c, 900.0, "f")
-        m.pad(0x41, 1)
+        m.pad(0x48, 8)
         self.assertEqual(m.read(m.sym["waterHeight"], "f"), 940)
-        m.pad(0x48, 8)  # Existing L+Up height control.
+        m.write(m.sym["gPadStatuses"] + 5, 70, "b")
+        m.pad(0x40)  # L+C-stick Up controls height without toggling.
         self.assertEqual(m.read(m.sym["waterHeight"], "f"), 942)
+        m.write(m.sym["gPadStatuses"] + 5, -70, "b")
+        m.pad(0x40)
+        self.assertEqual(m.read(m.sym["waterHeight"], "f"), 940)
+        m.write(m.sym["gPadStatuses"] + 5, 70, "b")
+        m.pad()  # C-stick without L does not edit the swim surface.
+        self.assertEqual(m.read(m.sym["waterHeight"], "f"), 940)
+        m.pad(0x60)  # Adding R also suppresses water adjustment.
+        self.assertEqual(m.read(m.sym["waterHeight"], "f"), 940)
+        m.toggle("FREE MOVE", 1)
         m.pad(0x64, 4)  # L+R+Down only opens menu.
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
-        m.pad(0x41, 1)
+        self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
+        m.pad(0x48, 8)
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)
 
-    def test_free_move_armed_toggle_cardinal_motion_and_input_priority(self):
+    def test_free_move_camera_relative_cstick_height_and_input_priority(self):
         m = self.m
         m.pad()
         m.toggle("FREE MOVE", 1)
@@ -385,14 +409,16 @@ class PayloadTests(unittest.TestCase):
         m.write(m.sym["swimActive"], 1, "B")
         m.call("Practice_PlayerUpdate", m.player)
         self.assertEqual(m.calls[-1][0], "playerUpdate")  # Armed is not active.
-        m.pad(0x42, 2)  # L+Right.
+        m.pad(0x44, 4)  # L+Down.
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 0)
-        m.pad(0x42)
+        m.pad(0x44)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
         m.write(m.sym["gPadStatuses"] + 2, 70, "b")
         m.write(m.sym["gPadStatuses"] + 3, 70, "b")
-        m.pad(0x800, 0x800)  # Y up; stick +X/-Z in world axes.
+        m.write(m.sym["gPadStatuses"] + 5, 70, "b")
+        m.write(m.sym["gCameras"], -32768, "h")  # Main view faces -Z, right is +X.
+        m.pad(0x400, 0x400)  # X must not descend or trigger auto roll.
         self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
         self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)
         m.calls.clear()
@@ -401,11 +427,20 @@ class PayloadTests(unittest.TestCase):
         self.assertFalse(any(c[0] == "playerUpdate" for c in m.calls))
         m.call("Practice_PlayerHitDetection", m.player)
         self.assertFalse(any(c[0] == "playerDoHitDetection" for c in m.calls))
-        m.pad(0x400, 0x400)  # X descends instead of rolling.
+        m.write(m.sym["gPadStatuses"] + 5, -70, "b")
+        m.pad(0x800, 0x800)  # C-stick down descends; Y has no movement role.
         m.call("Practice_PlayerUpdate", m.player)
         self.assertEqual(m.read(m.player + 0x10, "f"), 0)
+        for yaw, expected in ((0, (-5, 0, 5)), (16384, (-5, 0, -5)), (-16384, (5, 0, 5))):
+            m.write(m.sym["gCameras"], yaw, "h")
+            m.write(m.sym["gCameras"] + 2, 16384, "h")  # Looking vertically never adds climb.
+            m.write(m.sym["gPadStatuses"] + 2, 70, "b")
+            m.write(m.sym["gPadStatuses"] + 3, 70, "b")
+            m.pad(0xc00, 0xc00)  # Neither X nor Y affects height.
+            for axis, value in enumerate(expected):
+                self.assertAlmostEqual(m.read(m.sym["freeStep"] + axis * 4, "f"), value, places=4)
         m.pad()
-        m.pad(0x42, 2)
+        m.pad(0x44, 4)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
         self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)  # Exit chord swallowed too.
         m.call("Practice_PlayerUpdate", m.player)
@@ -413,11 +448,44 @@ class PayloadTests(unittest.TestCase):
         m.call("Practice_PlayerHitDetection", m.player)
         self.assertEqual(m.calls[-1][0], "playerDoHitDetection")
 
+    def test_map_cells_use_retail_bounds_all_layers_and_preserve_state(self):
+        m = self.m
+        # Initialize retail r2/r13 so the real isInBounds can read its globals/constants.
+        m.call("__init_registers")
+        tables = 0x81120000
+        m.uc.mem_write(tables, b'\xff' * (5 * 256))
+        for layer in range(5):
+            m.write(m.sym["gMapBlockLayerTables"] + layer * 4, tables + layer * 256)
+        m.write(tables + 4 * 256, 0, "b")  # Occupancy on layer five counts even with no mesh.
+        m.write(m.sym["gMapBlockOriginX"], -2, "i")
+        m.write(m.sym["gMapBlockOriginZ"], -1, "i")
+        m.write(m.sym["playerMapOffsetX"], -1280, "f")
+        m.write(m.sym["playerMapOffsetZ"], -640, "f")
+        m.uc.mem_write(m.sym["origin"], struct.pack(">3f", -960, 100, -320))
+        before = bytes(m.uc.mem_read(tables, 5 * 256))
+        m.call("drawMapCells")
+        self.assertEqual(bytes(m.uc.mem_read(tables, 5 * 256)), before)
+        colors = {v[3] for _, _, vertices in m.geometry for v in vertices}
+        self.assertTrue({0x58d98c30, 0xff657830, 0xe4b45a30, 0xffd16aff} <= colors)
+        green = [v for _, _, vertices in m.geometry for v in vertices if v[3] == 0x58d98c30]
+        self.assertEqual({v[0] for v in green}, {0, 640})
+        self.assertEqual({v[2] for v in green}, {0, 640})
+        self.assertEqual({v[1] for v in green}, {102})
+        self.assertEqual(m.read(m.sym["enabled"] + m.row("MAP CELLS / GRAVITY"), "B"), 0)
+        m.geometry.clear()
+        m.save_loading = 1
+        m.call("drawMapCells")
+        self.assertFalse(m.geometry)
+        m.save_loading = 0
+        m.write(m.sym["gMapBlockLayerTables"], 0)
+        m.call("drawMapCells")
+        self.assertFalse(m.geometry)
+
     def test_free_move_parent_transform_pause_load_and_player_change(self):
         m = self.m
         m.pad()
         m.toggle("FREE MOVE", 1)
-        m.pad(0x42, 2)
+        m.pad(0x44, 4)
         parent = 0x81120000
         m.write(m.player + 0x30, parent)  # ObjAnimComponent.parent.
         m.write(m.sym["freeStep"], 5.0, "f")
@@ -434,16 +502,53 @@ class PayloadTests(unittest.TestCase):
         m.pad()
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
         m.write(m.sym["joypadDisabled"], 0, "B")
-        m.pad(0x42, 2)
+        m.pad(0x44, 4)
         m.save_loading = 1
         m.pad()
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
         m.save_loading = 0
-        m.pad(0x42, 2)
+        m.pad(0x44, 4)
         m.player += 0x4000
         m.pad()
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
         self.assertEqual(m.read(m.sym["enabled"] + m.row("FREE MOVE"), "B"), 1)
+
+    def test_free_move_rebuilds_retail_collision_sweeps_at_destination(self):
+        m = self.m
+        m.call("__init_registers")
+        del m.stub[m.sym["playerRefreshCollisionState"]]
+        m.pad()
+        m.toggle("FREE MOVE", 1)
+        m.pad(0x44, 4)
+        collision, points, hits = m.state + 4, 0x81120000, 0x81121000
+        m.write(m.player + 0x54, hits)
+        m.write(collision, 0x04002008)  # Active segment and local collision points.
+        m.write(collision + 4, points)
+        m.write(collision + 0xdc, points)
+        m.write(collision + 0x25c, 0x11, "B")
+        m.write(collision + 0xa8, 2.0, "f")
+        m.write(collision + 0xd8, 0x81123000)  # Stale contact object.
+        m.write(collision + 0x260, 0x33, "B")
+        m.uc.mem_write(m.sym["freeStep"], struct.pack(">3f", 3000, 120, -1500))
+        m.call("Practice_PlayerUpdate", m.player)
+        destination = (3000, 120, -1500)
+        for address in (m.player + 0xc, m.player + 0x18, m.player + 0x80, m.player + 0x8c,
+                        hits + 0x10, hits + 0x1c, collision + 8, collision + 0xe4):
+            self.assertEqual(struct.unpack(">3f", m.uc.mem_read(address, 12)), destination)
+        self.assertEqual(m.read(collision + 0x38, "f"), 3000)
+        self.assertAlmostEqual(m.read(collision + 0x3c, "f"), 122.1, places=4)
+        self.assertEqual(m.read(collision + 0x40, "f"), -1500)
+        self.assertEqual(m.read(collision + 0x118, "f"), 121)
+        self.assertEqual(m.read(collision + 0xd8), 0)
+        self.assertEqual(m.read(collision + 0x260, "B"), 0)
+        self.assertTrue(any(c[0] == "trackInvalidateDynamicSlotsForObject" for c in m.calls))
+        m.pad()
+        m.pad(0x44, 4)
+        self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
+        m.call("Practice_PlayerUpdate", m.player)
+        m.call("Practice_PlayerHitDetection", m.player)
+        self.assertEqual(struct.unpack(">3f", m.uc.mem_read(collision + 8, 12)), destination)
+        self.assertEqual(m.calls[-1][0], "playerDoHitDetection")
 
     def test_infinite_resources_restore_capacities_and_guard_lethal_damage(self):
         m = self.m
@@ -698,7 +803,7 @@ class PayloadTests(unittest.TestCase):
         m.pad(0x64, 4)
         m.call("rebuildRows")
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 0)
-        self.assertEqual(m.read(m.sym["visibleCount"]), 23)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 24)
         m.pad()
         m.pad(0x20, 0x20)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
