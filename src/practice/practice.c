@@ -187,7 +187,8 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"FREE MOVE", -1, 0, TAB_CHEATS},
                                             {"INFINITE HEALTH", -1, 0, TAB_CHEATS},
                                             {"INFINITE MAGIC", -1, 0, TAB_CHEATS}};
-static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0};
+static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1,
+                                1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0};
 static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0,
                                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
 static u8 menuOpen, chordLatched, savedTimeStop, swimApplied;
@@ -1067,9 +1068,10 @@ extern u32 gMapObjGroupStatuses[120];
 static const int bitBankOffsets[] = {0xef0, 0x564, 0x24, 0x5d8};
 static const int bitBankSizes[] = {0x80, 0x74, 0x144, 0xac};
 static const int bitSnapshotOffsets[] = {0, 0x80, 0xf4, 0x238};
-static const char* flagPages[] = {"FLAGS",         "INVENTORY",     "STAFF SPELLS", "TRICKY",     "PLAYER STATS",
-                                  "AREA PROGRESS", "OBJECT GROUPS", "ADVANCED",     "RAW BIT ID", "UNUSED / UNCERTAIN",
-                                  "GEAR",          "STAFF SPELLS",  "SUPPLIES",     "KEY ITEMS",  "SPELLSTONES", "KRAZOA SPIRITS"};
+static const char* flagPages[] = {"FLAGS",        "INVENTORY",          "STAFF SPELLS",  "TRICKY",
+                                  "PLAYER STATS", "AREA PROGRESS",      "OBJECT GROUPS", "ADVANCED",
+                                  "RAW BIT ID",   "UNUSED / UNCERTAIN", "GEAR",          "STAFF SPELLS",
+                                  "SUPPLIES",     "KEY ITEMS",          "SPELLSTONES",   "KRAZOA SPIRITS"};
 static const char* statLabels[] = {"HEALTH (RAW UNITS)", "MAX HEALTH",   "MAGIC", "MAX MAGIC", "SCARABS",
                                    "BAFOMDADS",          "MAX BAFOMDADS"};
 static const int flagSteps[] = {1, 16, 256};
@@ -2138,8 +2140,8 @@ static void updateShieldHover(GameObject* player, int blocked) {
 /* Menu switches arm the shortcuts. Only one movement override runs at once.
  * Use physical button chords before input injection and consume activation frames. */
 static int updateQuickMovement(GameObject* player, u32 held, u32 shoulders, int blocked) {
-    int quick = (shoulders & PAD_TRIGGER_L) && !(shoulders & PAD_TRIGGER_R)
-                    ? held & (PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT) : 0;
+    int quick =
+        (shoulders & PAD_TRIGGER_L) && !(shoulders & PAD_TRIGGER_R) ? held & (PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT) : 0;
     int edge = quick & ~quickLatch;
     int wasFree = freeActive;
     PADStatus* pad = &gPadStatuses[gPadStatusBufferIndex * PAD_MAX_CONTROLLERS];
