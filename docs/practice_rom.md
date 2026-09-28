@@ -278,6 +278,22 @@ similar instructions and patch an unknown version.
 
 ### V1.14 changes
 
+The V1.14 ISO and patch package are in `orig/GSAE01`, alongside the original
+and earlier releases. The builder verified that all bytes outside the relocated
+DOL and its header pointer remain identical to the clean ISO. The payload is
+57,504 bytes within the existing 64 KiB reservation.
+
+V1.14 ISO SHA-256:
+`67f071ea4bde8fcaf6c42c60e4a84df51247ed5b27041c55b9ae37c1d772e543`.
+V1.14 payload SHA-256:
+`6295948d879cf20a008defda7a730120145fab5b271ca717974ba79be95ed6f8`.
+
+The 57-check PPC suite passed for the cave contexts; after the resource-bank
+fix, the cave/bank/arrival regressions and all eight patch-integrity checks
+passed. Formatting preserved the compiled payload byte for byte.
+[The rendered warp audit](practice_warp_audit_v1_14.md) covers all 107 presets
+and records remaining failures; these are not all working destinations.
+
 Magic Cave now offers nine named entry contexts using the retail `MagicCaveTo`
 placements: TTH Fire Blaster, TTH Magic Upgrade, TTH Open Portal, TTH Staff
 Booster (underground), Snowhorn Wastes, Cape Claw, Volcano Force Point,
