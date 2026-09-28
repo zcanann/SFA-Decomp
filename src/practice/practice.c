@@ -2531,8 +2531,8 @@ void Practice_PadUpdate(void) {
     }
     movementInput = updateQuickMovement(player, held, shoulders, menuOpen || wasOpen || chord);
     waterStick = gPadStatuses[gPadStatusBufferIndex * PAD_MAX_CONTROLLERS].substickY;
-    if (!menuOpen && !wasOpen && !chord && !timeStop && !joypadDisabled && !gDvdErrorPauseActive &&
-        enabled[SWIMMING] && swimActive && (shoulders & (PAD_TRIGGER_L | PAD_TRIGGER_R)) == PAD_TRIGGER_L &&
+    if (!menuOpen && !wasOpen && !chord && !timeStop && !joypadDisabled && !gDvdErrorPauseActive && enabled[SWIMMING] &&
+        swimActive && (shoulders & (PAD_TRIGGER_L | PAD_TRIGGER_R)) == PAD_TRIGGER_L &&
         (waterStick > 20 || waterStick < -20)) {
         f32 delta = timeDelta * (waterStick > 20 ? 2.0f : -2.0f);
         if (delta > 10) {
@@ -2602,7 +2602,8 @@ void Practice_Draw(void) {
     pollStateLog();
     linesDrawn = trianglesDrawn = triggersDrawn = fillsDrawn = 0;
     drawLimitReached = 0;
-    if (enabled[COLLISION] || enabled[TRIGGERS] || enabled[MAP_CELLS] || (enabled[SWIMMING] && swimActive && enabled[WATER_GRID])) {
+    if (enabled[COLLISION] || enabled[TRIGGERS] || enabled[MAP_CELLS] ||
+        (enabled[SWIMMING] && swimActive && enabled[WATER_GRID])) {
         drawWorld();
     }
     drawMenu();
