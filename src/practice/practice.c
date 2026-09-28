@@ -1141,7 +1141,7 @@ static const int bitSnapshotOffsets[] = {0, 0x80, 0xf4, 0x238};
 static const char* flagPages[] = {"FLAGS",          "INVENTORY",     "STAFF SPELLS", "TRICKY",     "PLAYER STATS",
                                   "AREA PROGRESS",  "OBJECT GROUPS", "ADVANCED",     "RAW BIT ID", "UNUSED / UNCERTAIN",
                                   "UPGRADES",       "STAFF SPELLS",  "CONSUMABLES",  "AREA ITEMS", "SPELLSTONES",
-                                  "KRAZOA SPIRITS", "MAPS",          "AREA ITEMS"};
+                                  "KRAZOA SPIRITS", "MAPS",          "AREA ITEMS", "ITEM DISCOVERY"};
 static const char* statLabels[] = {"HEALTH (RAW UNITS)", "MAX HEALTH",   "MAGIC", "MAX MAGIC", "SCARABS",
                                    "BAFOMDADS",          "MAX BAFOMDADS"};
 static const int flagSteps[] = {1, 16, 256};
@@ -1330,7 +1330,7 @@ static const PracticeBitLabel* pageBit(int index) {
             (flagPage == FLAGS_INVENTORY_SPELLS && practiceBits[i].page == FLAGS_SPELLS) ||
             (flagPage >= FLAGS_UPGRADES && practiceBits[i].page == FLAGS_INVENTORY &&
              practiceBits[i].map == flagPage - FLAGS_UPGRADES) ||
-            (flagPage < FLAGS_UPGRADES && practiceBits[i].page == flagPage &&
+            ((flagPage < FLAGS_UPGRADES || flagPage == FLAGS_DISCOVERY) && practiceBits[i].page == flagPage &&
              (flagPage != FLAGS_AREA || practiceBits[i].map == flagMap))) {
             if (index-- == 0) {
                 return &practiceBits[i];
@@ -1342,7 +1342,10 @@ static const PracticeBitLabel* pageBit(int index) {
 
 static int flagRowCount(void) {
     int n = 0;
-    if (flagPage == FLAGS_ROOT || flagPage == FLAGS_STATS) {
+    if (flagPage == FLAGS_ROOT) {
+        return 8;
+    }
+    if (flagPage == FLAGS_STATS) {
         return 7;
     }
     if (flagPage == FLAGS_AREA_ITEMS) {
@@ -1402,7 +1405,7 @@ static void editFlags(u32 pressed) {
                 flagPage = FLAGS_ITEM_AREA;
             } else {
                 flagPage = flagPage == FLAGS_ROOT
-                               ? selected + 1
+                               ? (selected == 7 ? FLAGS_DISCOVERY : selected + 1)
                                : selected + (flagPage == FLAGS_INVENTORY ? FLAGS_UPGRADES : FLAGS_RAW);
             }
             /* The streaming engine tracks the active map as the player travels.
@@ -1507,7 +1510,7 @@ static void drawFlags(void) {
             label = flagPage == FLAGS_AREA_ITEMS
                         ? itemAreaNames[i]
                         : flagPages[flagPage == FLAGS_ROOT
-                                        ? i + 1
+                                        ? (i == 7 ? FLAGS_DISCOVERY : i + 1)
                                         : i + (flagPage == FLAGS_INVENTORY ? FLAGS_UPGRADES : FLAGS_RAW)];
             textAt(564, y, ">", color);
         } else if (flagPage == FLAGS_MAPS && i < 2) {
@@ -1567,6 +1570,8 @@ static void drawFlags(void) {
         textAt(36, 407, "STATE UNAVAILABLE / SAVE LOADING", MUTED);
     } else if (flagPage == FLAGS_UNUSED) {
         textAt(36, 407, "UNUSED OR UNCERTAIN - NOT NORMAL ITEMS", MUTED);
+    } else if (flagPage == FLAGS_DISCOVERY) {
+        textAt(36, 407, "ON: SEEN  OFF: INTRO ARMED", MUTED);
     } else if (flagPage == FLAGS_GROUPS) {
         textAt(36, 407, "SAVED SWITCH + ACTIVE MASK; NOT OBJECT COUNT", MUTED);
     } else {
@@ -1612,7 +1617,7 @@ static int bitLogCategory(int id) {
         return LOG_TRICKY;
     }
     if (entry) {
-        if (entry->page == FLAGS_INVENTORY || entry->page == FLAGS_ITEM_AREA) {
+        if (entry->page == FLAGS_INVENTORY || entry->page == FLAGS_ITEM_AREA || entry->page == FLAGS_DISCOVERY) {
             return LOG_INVENTORY;
         }
         if (entry->page == FLAGS_SPELLS) {
@@ -1907,13 +1912,13 @@ static void drawMenu(void) {
         textAt(24, 23, "SFA PRACTICE  L+R+DOWN: MENU", WHITE);
         if (enabled[SWIMMING]) {
             textAt(24, y, swimActive ? "SWIM ON" : "SWIM READY", 0x63D5FFFF);
-            textAt(168, y, "L+UP  L+C: HEIGHT", MUTED);
+            textAt(168, y, "L+DOWN  L+C: HEIGHT", MUTED);
             numberAt(456, y, (int)waterHeight, WHITE);
             y += 18;
         }
         if (enabled[FREE_MOVE]) {
             textAt(24, y, freeActive ? "MOVE ON" : "MOVE READY", GOLD);
-            textAt(168, y, "L+DOWN  C-STICK: LOOK", MUTED);
+            textAt(168, y, "L+UP C:HEIGHT L+C:LOOK", MUTED);
             y += 18;
         }
         if (enabled[SHIELD_HOVER]) {
@@ -2305,13 +2310,13 @@ static int updateQuickMovement(GameObject* player, u32 held, u32 shoulders, int 
         freeActive = 0;
     }
     if (!blocked && !timeStop && !joypadDisabled && !gDvdErrorPauseActive) {
-        if (edge == PAD_BUTTON_UP && enabled[SWIMMING]) {
+        if (edge == PAD_BUTTON_DOWN && enabled[SWIMMING]) {
             swimActive ^= 1;
             if (swimActive) {
                 freeActive = 0;
                 waterHeight = player->anim.worldPosY + 40.0f;
             }
-        } else if (edge == PAD_BUTTON_DOWN && enabled[FREE_MOVE]) {
+        } else if (edge == PAD_BUTTON_UP && enabled[FREE_MOVE]) {
             freeActive ^= 1;
             if (freeActive) {
                 swimActive = 0;
@@ -2335,16 +2340,20 @@ static int updateQuickMovement(GameObject* player, u32 held, u32 shoulders, int 
             }
             /* Fox faces local -Z: decreasing yaw turns right. Positive pitch
              * points upward. Keep a stable yaw at steep angles, without flips. */
-            freeYaw -= (int)(freeAxis(pad->substickX, 59.0f) * 364.0f * dt);
-            pitch = freePitch + (int)(freeAxis(pad->substickY, 59.0f) * 364.0f * dt);
-            freePitch = pitch < -0x3800 ? -0x3800 : pitch > 0x3800 ? 0x3800 : pitch;
+            if (shoulders & PAD_TRIGGER_L) {
+                freeYaw -= (int)(freeAxis(pad->substickX, 59.0f) * 364.0f * dt);
+                pitch = freePitch + (int)(freeAxis(pad->substickY, 59.0f) * 364.0f * dt);
+                freePitch = pitch < -0x3800 ? -0x3800 : pitch > 0x3800 ? 0x3800 : pitch;
+            } else {
+                freeStep.y = freeAxis(pad->substickY, 59.0f) * 5.0f * dt;
+            }
             right = freeAxis(pad->stickX, 72.0f) * 5.0f * dt;
             forward = freeAxis(pad->stickY, 72.0f) * 5.0f * dt;
             angle = freeYaw * (3.14159265359f / 32768);
             direction = freeForward();
             freeStep.x = right * mathCosf(angle) + forward * direction.x;
             freeStep.z = -right * mathSinf(angle) + forward * direction.z;
-            freeStep.y = forward * direction.y;
+            freeStep.y += forward * direction.y;
         }
     }
     if (!freeActive) {
@@ -2520,11 +2529,13 @@ void Practice_PadUpdate(void) {
         row = activeTab == TAB_FLAGS ? -1 : visible[selected];
         if (pressed & PAD_BUTTON_B) {
             if (activeTab == TAB_FLAGS && flagPage != FLAGS_ROOT) {
-                int backSelection = flagPage == FLAGS_ITEM_AREA                            ? flagItemArea
+                int backSelection = flagPage == FLAGS_DISCOVERY                            ? 7
+                                    : flagPage == FLAGS_ITEM_AREA                          ? flagItemArea
                                     : flagPage >= FLAGS_UPGRADES && flagPage <= FLAGS_MAPS ? flagPage - FLAGS_UPGRADES
                                     : flagPage == FLAGS_RAW || flagPage == FLAGS_UNUSED    ? flagPage - FLAGS_RAW
                                                                                            : flagPage - 1;
-                flagPage = flagPage == FLAGS_ITEM_AREA                         ? FLAGS_AREA_ITEMS
+                flagPage = flagPage == FLAGS_DISCOVERY                         ? FLAGS_ROOT
+                           : flagPage == FLAGS_ITEM_AREA                      ? FLAGS_AREA_ITEMS
                            : flagPage >= FLAGS_UPGRADES                        ? FLAGS_INVENTORY
                            : flagPage == FLAGS_RAW || flagPage == FLAGS_UNUSED ? FLAGS_ADVANCED
                                                                                : FLAGS_ROOT;

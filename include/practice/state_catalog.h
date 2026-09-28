@@ -22,7 +22,8 @@ enum {
     FLAGS_STONES,
     FLAGS_SPIRITS,
     FLAGS_MAPS,
-    FLAGS_ITEM_AREA
+    FLAGS_ITEM_AREA,
+    FLAGS_DISCOVERY
 };
 enum {
     ITEM_AREA_GALLEON,
@@ -53,6 +54,7 @@ typedef struct PracticeBitLabel {
 #define TRICKY(label, id)    {label, GAMEBIT_##id, FLAGS_TRICKY, 0}
 #define AREA(map, label, id) {label, GAMEBIT_##id, FLAGS_AREA, map}
 #define UNUSED(label, id)    {label, GAMEBIT_##id, FLAGS_UNUSED, 0}
+#define DISCOVERY(label, id) {label, GAMEBIT_##id, FLAGS_DISCOVERY, 0}
 static const PracticeBitLabel practiceBits[] = {
     ITEM("STAFF", ITEM_Staff_Got),
     ITEM("FIREFLY LANTERN", ITEM_FireflyLantern_Got),
@@ -138,6 +140,22 @@ static const PracticeBitLabel practiceBits[] = {
     TRICKY("BALL BOUGHT", ITEM_TrickyBall_Bought),
     TRICKY("BALL USABLE", ITEM_TrickyBall_Usable),
     TRICKY("BALL DISABLED", NoBallsAllowed),
+    /* Separate one-shot introduction latches, not item ownership/counts.
+     * CollectedFlag09A8 is the moon-seed case in collectible_checkProximityPickup. */
+    DISCOVERY("STAFF ENERGY GEM", SawMagic),
+    DISCOVERY("ENERGY EGG", SawBigHealth),
+    DISCOVERY("DUSTER EGG / APPLE", SawApple),
+    DISCOVERY("SCARAB", SawScarab),
+    DISCOVERY("BOMB SPORE", SawBombSpore),
+    DISCOVERY("FUEL CELL", SawFuelCell),
+    DISCOVERY("BAFOMDAD", SawBafomdad),
+    DISCOVERY("MOON SEED", CollectedFlag09A8),
+    DISCOVERY("BOMB SPORE PLANT", SawBombPlant),
+    DISCOVERY("BOMB SPORE PATCH", SawBombPlantPatch),
+    DISCOVERY("WARP PAD", SawWarpPad),
+    DISCOVERY("STAFF BOOST PAD", SawStaffBoostPad),
+    DISCOVERY("BARREL GENERATOR", SawBarrelGen),
+    DISCOVERY("C-MENU EXPLANATION", SawCMenuExplanation),
     AREA(7, "TALKED TO PEPPER", SH_TalkedToPepper),
     AREA(7, "FOUND QUEEN", SH_FoundQueen),
     AREA(7, "RETURNED TO QUEEN", SH_ReturnedToQueen),
@@ -193,5 +211,6 @@ static const PracticeBitLabel practiceBits[] = {
 #undef TRICKY
 #undef AREA
 #undef UNUSED
+#undef DISCOVERY
 #endif
 #endif

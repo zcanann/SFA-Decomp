@@ -371,19 +371,19 @@ class PayloadTests(unittest.TestCase):
         m = self.m
         m.pad()
         m.toggle("FORCED SWIMMING", 1)
-        m.pad(0x48, 8)  # L+Up.
+        m.pad(0x44, 4)  # L+Down.
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)
         self.assertEqual(m.read(m.sym["waterHeight"], "f"), 140)
         self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
-        m.pad(0x48)
+        m.pad(0x44)
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)  # Held chord does not repeat.
         m.pad()
-        m.pad(0x48, 8)
+        m.pad(0x44, 4)
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 0)
         self.assertEqual(m.read(m.sym["enabled"] + m.row("FORCED SWIMMING"), "B"), 1)
         m.pad()
         m.write(m.player + 0x1c, 900.0, "f")
-        m.pad(0x48, 8)
+        m.pad(0x44, 4)
         self.assertEqual(m.read(m.sym["waterHeight"], "f"), 940)
         m.write(m.sym["gPadStatuses"] + 5, 70, "b")
         m.pad(0x40)  # L+C-stick Up controls height without toggling.
@@ -400,7 +400,7 @@ class PayloadTests(unittest.TestCase):
         m.pad(0x64, 4)  # L+R+Down only opens menu.
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
-        m.pad(0x48, 8)
+        m.pad(0x44, 4)
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)
 
     def test_free_move_facing_relative_motion_and_input_priority(self):
@@ -412,10 +412,10 @@ class PayloadTests(unittest.TestCase):
         m.write(m.sym["swimActive"], 1, "B")
         m.call("Practice_PlayerUpdate", m.player)
         self.assertEqual(m.calls[-1][0], "playerUpdate")
-        m.pad(0x44, 4)
+        m.pad(0x48, 8)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 0)
-        m.pad(0x44)
+        m.pad(0x48)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
         # Facing -Z, regardless of where the retail camera used to look.
         m.write(m.sym["gCameras"], 16384, "h")
@@ -439,7 +439,7 @@ class PayloadTests(unittest.TestCase):
             for axis, value in enumerate(expected):
                 self.assertAlmostEqual(m.read(m.sym["freeStep"] + axis * 4, "f"), value * 5 / 13, places=4)
         m.pad()
-        m.pad(0x44, 4)
+        m.pad(0x48, 8)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
         self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
         m.call("Practice_PlayerUpdate", m.player)
@@ -453,16 +453,23 @@ class PayloadTests(unittest.TestCase):
         m.write(m.player + 2, 123, "h")
         m.write(m.player + 4, -456, "h")
         m.toggle("FREE MOVE", 1)
-        m.pad(0x44, 4)
+        m.pad(0x48, 8)
         m.write(m.sym["gPadStatuses"] + 4, 59, "b")
-        m.pad()
+        m.pad(0x40)
         m.write(m.sym["gPadStatuses"] + 5, 59, "b")
-        m.pad()
+        m.pad(0x40)
         self.assertEqual(m.read(m.sym["freeYaw"], "h"), -364)
         self.assertEqual(m.read(m.sym["freePitch"], "h"), 364)
         self.assertEqual(bytes(m.uc.mem_read(m.sym["freeStep"], 12)), bytes(12))
         m.call("Practice_PlayerUpdate", m.player)
         self.assertEqual([m.read(m.player + k, "h") for k in (0, 2, 4)], [-364, 364, 0])
+        # Unmodified C-stick moves vertically without changing either angle.
+        for height, expected in ((59, 5), (-59, -5), (20, 0)):
+            m.write(m.sym["gPadStatuses"] + 4, 59, "b")
+            m.write(m.sym["gPadStatuses"] + 5, height, "b")
+            m.pad()
+            self.assertEqual([m.read(m.sym[name], "h") for name in ("freeYaw", "freePitch")], [-364, 364])
+            self.assertEqual(struct.unpack(">3f", m.uc.mem_read(m.sym["freeStep"], 12)), (0, expected, 0))
         # A 45-degree heading/pitch moves diagonally upward; strafe stays level.
         m.write(m.sym["freeYaw"], -8192, "h")
         m.write(m.sym["freePitch"], 8192, "h")
@@ -476,7 +483,7 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.sym["freeStep"] + 4, "f"), 0)
         m.write(m.sym["freePitch"], 0x37ff, "h")
         m.write(m.sym["gPadStatuses"] + 5, 127, "b")
-        m.pad()
+        m.pad(0x40)
         self.assertEqual(m.read(m.sym["freePitch"], "h"), 0x3800)
         m.pad(0x64, 4)  # Opening the menu freezes look input.
         m.write(m.sym["gPadStatuses"] + 4, 59, "b")
@@ -486,16 +493,56 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.sym["freePitch"], "h"), 0x3800)
         m.pad(0x200, 0x200)
         m.pad()
-        m.pad(0x44, 4)
+        m.pad(0x48, 8)
         self.assertEqual(m.read(m.sym["freePoseOwner"]), 0)
         self.assertEqual([m.read(m.player + k, "h") for k in (2, 4)], [123, -456])
+
+    def test_swim_and_free_move_are_mutually_exclusive(self):
+        m = self.m
+        m.pad()
+        m.toggle("FORCED SWIMMING", 1)
+        m.toggle("FREE MOVE", 1)
+        m.pad(0x44, 4)
+        m.call("Practice_PlayerControls", m.player, m.state)
+        self.assertEqual(m.read(m.sym["swimApplied"], "B"), 1)
+        m.pad()
+        m.pad(0x48, 8)
+        self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
+        self.assertEqual(m.read(m.sym["swimActive"], "B"), 0)
+        m.call("Practice_PlayerUpdate", m.player)
+        self.assertEqual(m.read(m.sym["swimApplied"], "B"), 0)
+        surface = m.read(m.sym["waterHeight"], "f")
+        m.write(m.sym["gPadStatuses"] + 5, 59, "b")
+        m.pad(0x40)  # L+C pitches Free Move; it cannot also edit swim height.
+        self.assertGreater(m.read(m.sym["freePitch"], "h"), 0)
+        self.assertEqual(m.read(m.sym["waterHeight"], "f"), surface)
+        m.pad(0x44, 4)
+        self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
+        self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)
+        self.assertEqual(m.read(m.sym["freePoseOwner"]), 0)
+        surface = m.read(m.sym["waterHeight"], "f")  # Re-captured after moving.
+        m.write(m.sym["gPadStatuses"] + 5, 59, "b")
+        pitch = m.read(m.sym["freePitch"], "h")
+        m.pad(0x40)  # In swimming the same chord only changes water height.
+        self.assertEqual(m.read(m.sym["waterHeight"], "f"), surface + 2)
+        self.assertEqual(m.read(m.sym["freePitch"], "h"), pitch)
+        m.pad(0x48, 8)
+        m.toggle("FORCED SWIMMING", 0)
+        m.pad()
+        m.pad(0x64, 4)
+        m.pad()
+        m.pad(0x20, 0x20)  # Cheats tab, first row is Forced Swimming.
+        m.pad(0x100, 0x100)
+        self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
+        self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)
+        self.assertEqual(m.read(m.sym["freePoseOwner"]), 0)
 
     def test_free_move_camera_follows_target_and_releases_to_retail(self):
         m = self.m
         m.call("__init_registers")
         m.pad()
         m.toggle("FREE MOVE", 1)
-        m.pad(0x44, 4)
+        m.pad(0x48, 8)
         m.uc.mem_write(m.player + 0x18, struct.pack(">3f", 1000, 200, -300))
         camera = m.sym["gCameras"]
         m.call("Practice_CameraLoadPos")
@@ -559,7 +606,7 @@ class PayloadTests(unittest.TestCase):
         m = self.m
         m.pad()
         m.toggle("FREE MOVE", 1)
-        m.pad(0x44, 4)
+        m.pad(0x48, 8)
         parent = 0x81120000
         m.write(parent, 16384, "h")
         m.write(m.player + 0x30, parent)  # ObjAnimComponent.parent.
@@ -578,12 +625,12 @@ class PayloadTests(unittest.TestCase):
         m.pad()
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
         m.write(m.sym["joypadDisabled"], 0, "B")
-        m.pad(0x44, 4)
+        m.pad(0x48, 8)
         m.save_loading = 1
         m.pad()
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
         m.save_loading = 0
-        m.pad(0x44, 4)
+        m.pad(0x48, 8)
         m.player += 0x4000
         m.pad()
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
@@ -595,7 +642,7 @@ class PayloadTests(unittest.TestCase):
         del m.stub[m.sym["playerRefreshCollisionState"]]
         m.pad()
         m.toggle("FREE MOVE", 1)
-        m.pad(0x44, 4)
+        m.pad(0x48, 8)
         collision, points, hits = m.state + 4, 0x81120000, 0x81121000
         m.write(m.player + 0x54, hits)
         m.write(collision, 0x04002008)  # Active segment and local collision points.
@@ -619,7 +666,7 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(collision + 0x260, "B"), 0)
         self.assertTrue(any(c[0] == "trackInvalidateDynamicSlotsForObject" for c in m.calls))
         m.pad()
-        m.pad(0x44, 4)
+        m.pad(0x48, 8)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 0)
         m.call("Practice_PlayerUpdate", m.player)
         m.call("Practice_PlayerHitDetection", m.player)
@@ -896,7 +943,7 @@ class PayloadTests(unittest.TestCase):
         m.pad()
         m.pad(0x40, 0x40)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 3)
-        self.assertEqual(m.read(m.sym["visibleCount"]), 7)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 8)
         m.pad()
         m.pad(0x40, 0x40)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 2)
@@ -1158,6 +1205,42 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
         m.pad(0x200, 0x200)
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 0)
+
+    def test_item_discovery_flags_do_not_change_inventory_and_remember_back_row(self):
+        m = self.m
+        m.state_fixture()
+        ids = [0x90d, 0x90e, 0x90f, 0x910, 0x18e, 0xcbe, 0xcc0, 0x9a8,
+               0x189, 0x196, 0x912, 0xd2a, 0xadb, 0x930]
+        for index, gid in enumerate(ids):
+            m.bit_def(gid, 200 + index, 1, 2)
+        m.set_bit(0x75, 1)  # Staff ownership and bomb-spore count stay intact.
+        m.set_bit(0x3f5, 7)
+        m.pad(0x64, 4)
+        m.write(m.sym["activeTab"], 3, "B")
+        m.pad()
+        m.write(m.sym["selected"], 7)
+        m.pad(0x100, 0x100)
+        self.assertEqual(m.read(m.sym["flagPage"]), 18)
+        m.call("flagRowCount")
+        self.assertEqual(m.r(3), len(ids))
+        for index, gid in enumerate(ids):
+            m.call("flagBitId", index)
+            self.assertEqual(m.r(3), gid)
+            m.write(m.sym["selected"], index)
+            m.pad(0x100, 0x100)
+            self.assertEqual(m.bit_value(gid), 1)
+            m.pad(1, 1)  # Left re-arms the introduction without giving/taking items.
+            self.assertEqual(m.bit_value(gid), 0)
+        self.assertEqual(m.bit_edits, [(gid, value) for gid in ids for value in (1, 0)])
+        self.assertEqual(m.bit_value(0x75), 1)
+        self.assertEqual(m.bit_value(0x3f5), 7)
+        m.save_loading = True
+        m.pad(0x100, 0x100)
+        self.assertEqual(m.bit_value(ids[-1]), 0)
+        m.save_loading = False
+        m.pad(0x200, 0x200)
+        self.assertEqual(m.read(m.sym["flagPage"]), 0)
+        self.assertEqual(m.read(m.sym["selected"]), 7)
 
     def test_state_widths_cross_byte_edits_and_loading_guards(self):
         m = self.m
@@ -1593,7 +1676,7 @@ class PayloadTests(unittest.TestCase):
         m.write(base + 0x38 + 6, 1, "B")  # Already paused by the game.
         m.write(base + 2 * 0x38 + 4, 1, "B")  # Positional sound.
         m.hud_hidden = 1  # An existing cutscene need not have muted these voices.
-        m.pad(0x44, 4)  # L+Down alone must keep the original controls.
+        m.pad(0x48, 8)  # L+Up alone must keep the original controls when Free Move is not armed.
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 0)
         m.pad(0x64, 4)
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
@@ -1636,7 +1719,7 @@ class PayloadTests(unittest.TestCase):
         m = self.m
         m.state_fixture()
         m.write(m.sym["menuOpen"], 1, "B")
-        for tab, page in [(3, n) for n in range(18)] + [(4, 0)]:
+        for tab, page in [(3, n) for n in range(19)] + [(4, 0)]:
             m.geometry = []
             m.write(m.sym["activeTab"], tab, "B")
             m.write(m.sym["flagPage"], page)

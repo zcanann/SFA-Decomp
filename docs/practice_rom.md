@@ -21,13 +21,13 @@ that follows directly behind him during Free Move. See **V1.10 changes** below.
 - **With Auto Roll enabled:** hold X for roll, configurable blanks, shield, repeat.
 - **Warp tab:** Left/Right edits category, map, spawn, position, layer, facing or step.
   Selecting a map/spawn restores its preset. Select **Warp Now** (fourth row, below Spawn) and press **A** to travel.
-- With Forced Swimming enabled: **L + D-pad Up** toggles swimming during play;
+- With Forced Swimming enabled: **L + D-pad Down** toggles swimming during play;
   activation resets the surface to player Y + 40. **L + C-stick Up/Down** adjusts the
   surface while swimming is active. Enabling it in the menu also starts swimming.
-- With Free Move enabled: **L + D-pad Down** toggles movement override during play.
+- With Free Move enabled: **L + D-pad Up** toggles movement override during play.
   The main stick moves forward/back and strafes relative to Fox's facing.
-  **C-stick Left/Right** turns, and **C-stick Up/Down** pitches up/down. Moving
-  forward while pitched changes altitude; no modifier is needed. The camera
+  **C-stick Up/Down** ascends/descends; hold **L + C-stick** to turn and pitch.
+  Moving forward while pitched also changes altitude. The camera
   follows directly behind Fox. The
   menu checkbox only arms the shortcut; the HUD distinguishes READY from ON.
 
@@ -271,6 +271,45 @@ and binary hashes. The current tool refuses them; it does not search for vaguely
 similar instructions and patch an unknown version.
 
 ## Validation and limits
+
+### Pending changes after V1.10 (not packaged)
+
+Free Move now uses unmodified C-stick Up/Down for world-vertical movement.
+Holding L changes the C-stick to yaw/pitch control and suppresses direct height
+movement; unmodified C-stick Left/Right does not turn Fox. Main-stick movement
+still follows his facing, including pitch, and the camera follows behind him.
+The HUD shows both C-stick bindings. **L+D-pad Up** now toggles Free Move;
+**L+D-pad Down** toggles swimming. The menu stays **L+R+D-pad Down**.
+
+Swimming and Free Move can both be armed in the menu, but only one runs at a
+time. Activating either shortcut stops the other mode. Starting swimming from
+the menu also stops Free Move. L+C-stick controls water height only in active
+swimming, so Free Move look input cannot change the water plane.
+
+Flags now has an **Item Discovery** page with separate introduction latches:
+staff energy gems, energy eggs, duster eggs/apples, scarabs, bomb spores, fuel
+cells, Bafomdads, moon seeds, bomb-spore plants and patches, warp pads, staff
+boost pads, barrel generators and the C-menu explanation. ON means already
+seen; OFF re-arms the introduction for its next qualifying pickup/trigger.
+These edits do not change item ownership/counts, respawn items or immediately
+launch a cutscene. Some unique-item scenes use ownership or story progression
+rather than a separate introduction latch; those are not mixed into this page.
+Changes to these flags log under the inventory category.
+
+The IDs come from the existing `Saw*` gamebits and their object consumers.
+Moon seed's `0x9A8` latch is confirmed by `collectible_checkProximityPickup`'s
+moon-seed case. `MagicDust_update`, `FuelCell_update`, `BombPlantSp_update`,
+`AppleOnTree`, `Duster`, `Transporter`, `StaffActivated` and `BarrelGener` show the
+pickup/proximity-message and one-shot sequence gates. No retail source changes
+are needed; the new page is inside the practice build guard.
+
+Validation: 53 compiled PPC checks and eight patch tests pass. Coverage includes
+both movement-mode transitions, menu activation of swimming during Free Move,
+L+C-stick routing, direct vertical movement, the swapped shortcuts, discovery
+edits preserving inventory, loading guards, Back selection memory and screen
+bounds. Reading BITTABLE.bin directly from the original ISO confirms all 14
+catalog entries are persistent one-bit bank-2 flags. These changes are not yet
+packaged into a new ISO.
 
 ### V1.10 changes
 
