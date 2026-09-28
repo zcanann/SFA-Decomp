@@ -1070,12 +1070,12 @@ static const int bitBankSizes[] = {0x80, 0x74, 0x144, 0xac};
 static const int bitSnapshotOffsets[] = {0, 0x80, 0xf4, 0x238};
 static const char* flagPages[] = {"FLAGS",        "INVENTORY",          "STAFF SPELLS",  "TRICKY",
                                   "PLAYER STATS", "AREA PROGRESS",      "OBJECT GROUPS", "ADVANCED",
-                                  "RAW BIT ID",   "UNUSED / UNCERTAIN", "GEAR",          "STAFF SPELLS",
-                                  "SUPPLIES",     "KEY ITEMS",          "SPELLSTONES",   "KRAZOA SPIRITS"};
+                                  "RAW BIT ID",   "UNUSED / UNCERTAIN", "UPGRADES",          "STAFF SPELLS",
+                                  "CONSUMABLES",     "AREA ITEMS",          "SPELLSTONES",   "KRAZOA SPIRITS", "MAPS", "AREA ITEMS"};
 static const char* statLabels[] = {"HEALTH (RAW UNITS)", "MAX HEALTH",   "MAGIC", "MAX MAGIC", "SCARABS",
                                    "BAFOMDADS",          "MAX BAFOMDADS"};
 static const int flagSteps[] = {1, 16, 256};
-static int flagPage, flagMap = 23, flagRawId, flagStep;
+static int flagPage, flagMap = 23, flagRawId, flagStep, flagItemArea;
 static GameBitDef* checkedBitTable;
 static int checkedBitCount;
 static u8 logBits[740], logBaseline;
@@ -1255,10 +1255,12 @@ static void editStat(int row, int delta) {
 static const PracticeBitLabel* pageBit(int index) {
     int i;
     for (i = 0; i < sizeof(practiceBits) / sizeof(practiceBits[0]); i++) {
-        if ((flagPage == FLAGS_INVENTORY_SPELLS && practiceBits[i].page == FLAGS_SPELLS) ||
-            (flagPage >= FLAGS_GEAR && practiceBits[i].page == FLAGS_INVENTORY &&
-             practiceBits[i].map == flagPage - FLAGS_GEAR) ||
-            (flagPage < FLAGS_GEAR && practiceBits[i].page == flagPage &&
+        if ((flagPage == FLAGS_ITEM_AREA && practiceBits[i].page == FLAGS_ITEM_AREA &&
+             practiceBits[i].map == flagItemArea) ||
+            (flagPage == FLAGS_INVENTORY_SPELLS && practiceBits[i].page == FLAGS_SPELLS) ||
+            (flagPage >= FLAGS_UPGRADES && practiceBits[i].page == FLAGS_INVENTORY &&
+             practiceBits[i].map == flagPage - FLAGS_UPGRADES) ||
+            (flagPage < FLAGS_UPGRADES && practiceBits[i].page == flagPage &&
              (flagPage != FLAGS_AREA || practiceBits[i].map == flagMap))) {
             if (index-- == 0) {
                 return &practiceBits[i];
@@ -1273,8 +1275,11 @@ static int flagRowCount(void) {
     if (flagPage == FLAGS_ROOT || flagPage == FLAGS_STATS) {
         return 7;
     }
+    if (flagPage == FLAGS_AREA_ITEMS) {
+        return sizeof(itemAreaNames) / sizeof(itemAreaNames[0]);
+    }
     if (flagPage == FLAGS_INVENTORY) {
-        return 6;
+        return 7;
     }
     if (flagPage == FLAGS_ADVANCED || flagPage == FLAGS_RAW) {
         return 2;
@@ -1286,7 +1291,7 @@ static int flagRowCount(void) {
     while (pageBit(n)) {
         n++;
     }
-    return n + (flagPage == FLAGS_AREA ? 2 : flagPage == FLAGS_TRICKY ? 1 : 0);
+    return n + (flagPage == FLAGS_AREA ? 2 : flagPage == FLAGS_TRICKY || flagPage == FLAGS_MAPS ? 1 : 0);
 }
 
 static int flagBitId(int row) {
@@ -1303,7 +1308,7 @@ static int flagBitId(int row) {
         }
         row -= 2;
     }
-    if (flagPage == FLAGS_TRICKY) {
+    if (flagPage == FLAGS_TRICKY || flagPage == FLAGS_MAPS) {
         row--;
     }
     entry = pageBit(row);
@@ -1317,10 +1322,15 @@ static void editFlags(u32 pressed) {
     if (pressed & PAD_BUTTON_X) {
         flagStep = (flagStep + 1) % 3;
     }
-    if (flagPage == FLAGS_ROOT || flagPage == FLAGS_ADVANCED || flagPage == FLAGS_INVENTORY) {
+    if (flagPage == FLAGS_ROOT || flagPage == FLAGS_ADVANCED || flagPage == FLAGS_INVENTORY || flagPage == FLAGS_AREA_ITEMS) {
         if (pressed & PAD_BUTTON_A) {
-            flagPage = flagPage == FLAGS_ROOT ? selected + 1
-                                              : selected + (flagPage == FLAGS_INVENTORY ? FLAGS_GEAR : FLAGS_RAW);
+            if (flagPage == FLAGS_AREA_ITEMS) {
+                flagItemArea = selected;
+                flagPage = FLAGS_ITEM_AREA;
+            } else {
+                flagPage = flagPage == FLAGS_ROOT ? selected + 1
+                                                  : selected + (flagPage == FLAGS_INVENTORY ? FLAGS_UPGRADES : FLAGS_RAW);
+            }
             selected = menuTop = 0;
         }
         return;
@@ -1340,6 +1350,16 @@ static void editFlags(u32 pressed) {
         return;
     }
     if (!practiceStateReady()) {
+        return;
+    }
+    if (flagPage == FLAGS_MAPS && selected == 0) {
+        if (pressed & PAD_BUTTON_A) {
+            const PracticeBitLabel* entry;
+            int i = 0;
+            while ((entry = pageBit(i++)) != NULL) {
+                writeStateBit(entry->id, 1);
+            }
+        }
         return;
     }
     if (flagPage == FLAGS_STATS) {
@@ -1402,10 +1422,13 @@ static void drawFlags(void) {
         if (i == selected) {
             rectangle(28, y - 4, 584, 18, 0x263C60FF);
         }
-        if (flagPage == FLAGS_ROOT || flagPage == FLAGS_ADVANCED || flagPage == FLAGS_INVENTORY) {
-            label =
-                flagPages[flagPage == FLAGS_ROOT ? i + 1 : i + (flagPage == FLAGS_INVENTORY ? FLAGS_GEAR : FLAGS_RAW)];
+        if (flagPage == FLAGS_ROOT || flagPage == FLAGS_ADVANCED || flagPage == FLAGS_INVENTORY || flagPage == FLAGS_AREA_ITEMS) {
+            label = flagPage == FLAGS_AREA_ITEMS ? itemAreaNames[i]
+                       : flagPages[flagPage == FLAGS_ROOT ? i + 1 : i + (flagPage == FLAGS_INVENTORY ? FLAGS_UPGRADES : FLAGS_RAW)];
             textAt(564, y, ">", color);
+        } else if (flagPage == FLAGS_MAPS && i == 0) {
+            label = "UNLOCK ALL";
+            textAt(528, y, ready ? "A" : "N/A", ready ? color : MUTED);
         } else if ((flagPage == FLAGS_AREA || flagPage == FLAGS_GROUPS) && i == 0) {
             label = "MAP";
             textAt(250, y, practiceWarpMaps[flagMap].name, color);
@@ -1454,7 +1477,7 @@ static void drawFlags(void) {
         }
         textAt(36, y, label, color);
     }
-    textAt(36, 387, flagPages[flagPage], MUTED);
+    textAt(36, 387, flagPage == FLAGS_ITEM_AREA ? itemAreaNames[flagItemArea] : flagPages[flagPage], MUTED);
     if (!ready) {
         textAt(36, 407, "STATE UNAVAILABLE / SAVE LOADING", MUTED);
     } else if (flagPage == FLAGS_UNUSED) {
@@ -1504,7 +1527,7 @@ static int bitLogCategory(int id) {
         return LOG_TRICKY;
     }
     if (entry) {
-        if (entry->page == FLAGS_INVENTORY) {
+        if (entry->page == FLAGS_INVENTORY || entry->page == FLAGS_ITEM_AREA) {
             return LOG_INVENTORY;
         }
         if (entry->page == FLAGS_SPELLS) {
@@ -1705,8 +1728,13 @@ static void pollStateLog(void) {
                 if (before != after && enabled[bitLogCategory(i)]) {
                     const PracticeBitLabel* entry = namedBit(i);
                     if (count++ < 32) {
-                        sprintf(logLine, "[PRACTICE][%u][BIT %03X] %s: %08X -> %08X\n", logFrame, i,
-                                entry ? entry->name : "UNNAMED", before, after);
+                        if (entry && entry->page == FLAGS_ITEM_AREA) {
+                            sprintf(logLine, "[PRACTICE][%u][BIT %03X][%s] %s: %08X -> %08X\n", logFrame, i,
+                                    itemAreaNames[entry->map], entry->name, before, after);
+                        } else {
+                            sprintf(logLine, "[PRACTICE][%u][BIT %03X] %s: %08X -> %08X\n", logFrame, i,
+                                    entry ? entry->name : "UNNAMED", before, after);
+                        }
                         sendPracticeLog();
                     }
                 }
@@ -2314,10 +2342,13 @@ void Practice_PadUpdate(void) {
         row = activeTab == TAB_FLAGS ? -1 : visible[selected];
         if (pressed & PAD_BUTTON_B) {
             if (activeTab == TAB_FLAGS && flagPage != FLAGS_ROOT) {
-                flagPage = flagPage >= FLAGS_GEAR                              ? FLAGS_INVENTORY
+                int backSelection = flagPage == FLAGS_ITEM_AREA ? flagItemArea
+                                    : flagPage >= FLAGS_UPGRADES && flagPage <= FLAGS_MAPS ? flagPage - FLAGS_UPGRADES : 0;
+                flagPage = flagPage == FLAGS_ITEM_AREA ? FLAGS_AREA_ITEMS : flagPage >= FLAGS_UPGRADES                              ? FLAGS_INVENTORY
                            : flagPage == FLAGS_RAW || flagPage == FLAGS_UNUSED ? FLAGS_ADVANCED
                                                                                : FLAGS_ROOT;
-                selected = menuTop = 0;
+                selected = backSelection;
+                menuTop = 0;
             } else {
                 closeMenu();
             }

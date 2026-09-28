@@ -15,12 +15,28 @@ enum {
     FLAGS_ADVANCED,
     FLAGS_RAW,
     FLAGS_UNUSED,
-    FLAGS_GEAR,
+    FLAGS_UPGRADES,
     FLAGS_INVENTORY_SPELLS,
-    FLAGS_SUPPLIES,
-    FLAGS_KEYS,
+    FLAGS_CONSUMABLES,
+    FLAGS_AREA_ITEMS,
     FLAGS_STONES,
-    FLAGS_SPIRITS
+    FLAGS_SPIRITS,
+    FLAGS_MAPS,
+    FLAGS_ITEM_AREA
+};
+enum {
+    ITEM_AREA_GALLEON,
+    ITEM_AREA_THORNTAIL,
+    ITEM_AREA_DARKICE,
+    ITEM_AREA_MOON_PASS,
+    ITEM_AREA_CLOUDRUNNER,
+    ITEM_AREA_CAPE_CLAW,
+    ITEM_AREA_LIGHTFOOT,
+    ITEM_AREA_WALLED_CITY
+};
+static const char* itemAreaNames[] = {
+    "GALLEON", "THORNTAIL HOLLOW", "DARKICE MINES", "MOON MOUNTAIN PASS",
+    "CLOUDRUNNER FORTRESS", "CAPE CLAW", "LIGHTFOOT VILLAGE", "WALLED CITY"
 };
 typedef struct PracticeBitLabel {
     const char* name;
@@ -30,7 +46,8 @@ typedef struct PracticeBitLabel {
 } PracticeBitLabel;
 #define ITEM(label, id)      {label, GAMEBIT_##id, FLAGS_INVENTORY, 0}
 #define SUPPLY(label, id)    {label, GAMEBIT_##id, FLAGS_INVENTORY, 2}
-#define KEY(label, id)       {label, GAMEBIT_##id, FLAGS_INVENTORY, 3}
+#define KEY(area, label, id) {label, GAMEBIT_##id, FLAGS_ITEM_AREA, ITEM_AREA_##area}
+#define MAP(label, id)       {label, GAMEBIT_##id, FLAGS_INVENTORY, 6}
 #define STONE(label, id)     {label, GAMEBIT_##id, FLAGS_INVENTORY, 4}
 #define SPIRIT(label, id)    {label, GAMEBIT_##id, FLAGS_INVENTORY, 5}
 #define SPELL(label, id)     {label, GAMEBIT_##id, FLAGS_SPELLS, 0}
@@ -44,15 +61,10 @@ static const PracticeBitLabel practiceBits[] = {
     SUPPLY("BOMB SPORES", ITEM_BombSpore_Count),
     SUPPLY("FUEL CELLS", ITEM_FuelCell_Count),
     SUPPLY("MOON SEEDS", ITEM_MoonSeed_Count),
-    SUPPLY("WHITE GRUBTUBS", ITEM_WhiteShroom_Count),
-    SUPPLY("FIRE GEMS", ITEM_FireGem_Count),
-    SUPPLY("FIRE WEEDS", ITEM_FireWeed_Count),
-    SUPPLY("GOLD BARS", ITEM_CCGoldBar_Count),
     ITEM("50 SCARAB BAG", ITEM_50ScarabBag_Got),
     ITEM("100 SCARAB BAG", ITEM_100ScarabBag_Got),
     ITEM("200 SCARAB BAG", ITEM_200ScarabBag_Got),
     ITEM("BAFOMDAD HOLDER", ITEM_BafomdadHolder_Got),
-    ITEM("DINO HORN", ITEM_DinoHorn_Got),
     ITEM("VIEWFINDER", ITEM_Viewfinder_Got),
     ITEM("TRICKY BALL BOUGHT", ITEM_TrickyBall_Bought),
     ITEM("TRICKY BALL USABLE", ITEM_TrickyBall_Usable),
@@ -66,23 +78,40 @@ static const PracticeBitLabel practiceBits[] = {
     SPIRIT("KRAZOA 4 - STRENGTH", ITEM_SpiritTestStrength_Got),
     SPIRIT("KRAZOA 5 - KNOWLEDGE", ITEM_Spirit5_Got),
     SPIRIT("KRAZOA 6", ITEM_Spirit6_Got),
-    KEY("LFV WOOD BLOCK 1", ITEM_LVBlock1_Got),
-    KEY("LFV WOOD BLOCK 2", ITEM_LVBlock2_Got),
-    KEY("LFV WOOD BLOCK 3", ITEM_LVBlock3_Got),
-    KEY("GALLEON GOLD KEY", ITEM_WMGoldKey_Got),
-    KEY("CLOUDRUNNER FLUTE", ITEM_Flute_Got),
-    KEY("DIM COG 1", ITEM_DIMCog1_Got),
-    KEY("DIM COG 2", ITEM_DIMCog2_Got),
-    KEY("DIM COG 3", ITEM_DIMCog3_Got),
-    KEY("DIM COG 4", ITEM_DIMCog4_Got),
-    KEY("WALLED CITY SILVER TOOTH", ITEM_WCSilverTooth_Got),
-    KEY("WALLED CITY GOLD TOOTH", ITEM_WCGoldTooth_Got),
-    KEY("SHACKLE KEY", ITEM_DIMShackleKey_Got),
-    KEY("CELL KEY", ITEM_DIM2CellKey_Got),
-    KEY("SILVER KEY - MINES", ITEM_DIMSilverKey_Got),
-    KEY("MOON PASS KEY", ITEM_MoonPassKey_Got),
-    KEY("SUN STONE", ITEM_WCSunStone_Got),
-    KEY("MOON STONE", ITEM_WCMoonStone_Got),
+    KEY(GALLEON, "GOLD KEY", ITEM_WMGoldKey_Got),
+    KEY(THORNTAIL, "WHITE GRUBTUBS", ITEM_WhiteShroom_Count),
+    KEY(THORNTAIL, "FIRE WEEDS", ITEM_FireWeed_Count),
+    KEY(DARKICE, "DINO HORN", ITEM_DinoHorn_Got),
+    KEY(DARKICE, "COG 1", ITEM_DIMCog1_Got),
+    KEY(DARKICE, "COG 2", ITEM_DIMCog2_Got),
+    KEY(DARKICE, "COG 3", ITEM_DIMCog3_Got),
+    KEY(DARKICE, "COG 4", ITEM_DIMCog4_Got),
+    KEY(DARKICE, "SHACKLE KEY", ITEM_DIMShackleKey_Got),
+    KEY(DARKICE, "CELL KEY", ITEM_DIM2CellKey_Got),
+    KEY(DARKICE, "SILVER KEY", ITEM_DIMSilverKey_Got),
+    KEY(MOON_PASS, "KEY", ITEM_MoonPassKey_Got),
+    KEY(CLOUDRUNNER, "FLUTE", ITEM_Flute_Got),
+    KEY(CAPE_CLAW, "FIRE GEMS", ITEM_FireGem_Count),
+    KEY(CAPE_CLAW, "GOLD BARS", ITEM_CCGoldBar_Count),
+    KEY(LIGHTFOOT, "WOOD BLOCK 1", ITEM_LVBlock1_Got),
+    KEY(LIGHTFOOT, "WOOD BLOCK 2", ITEM_LVBlock2_Got),
+    KEY(LIGHTFOOT, "WOOD BLOCK 3", ITEM_LVBlock3_Got),
+    KEY(WALLED_CITY, "SILVER TOOTH", ITEM_WCSilverTooth_Got),
+    KEY(WALLED_CITY, "GOLD TOOTH", ITEM_WCGoldTooth_Got),
+    KEY(WALLED_CITY, "SUN STONE", ITEM_WCSunStone_Got),
+    KEY(WALLED_CITY, "MOON STONE", ITEM_WCMoonStone_Got),
+    MAP("THORNTAIL HOLLOW", ITEM_MapSH_Got),
+    MAP("SNOWHORN WASTES", ITEM_MapNW_Got),
+    MAP("DARKICE MINES", ITEM_MapDIM_Got),
+    MAP("MOON MOUNTAIN PASS", ITEM_MapMMP_Got),
+    MAP("CLOUDRUNNER FORTRESS", ITEM_MapCF_Got),
+    MAP("CAPE CLAW", ITEM_MapCC_Got),
+    MAP("LIGHTFOOT VILLAGE", ITEM_MapLV_Got),
+    MAP("WALLED CITY", ITEM_MapWC_Got),
+    MAP("DRAGON ROCK", ITEM_MapDR_Got),
+    MAP("KRAZOA PALACE", ITEM_MapWM_Got),
+    MAP("VOLCANO FORCE POINT", ITEM_MapVFP_Got),
+    MAP("OCEAN FORCE POINT", ITEM_MapOFP_Got),
     SPELL("MAGIC UNLOCKED", ITEM_Magic_Got),
     SPELL("FIRE BLASTER", STAFF_ABILITY_FIRE_BLASTER),
     SPELL("SHARPCLAW DISGUISE", STAFF_ABILITY_SHARPCLAW_DISGUISE),
@@ -158,6 +187,7 @@ static const PracticeBitLabel practiceBits[] = {
 #undef ITEM
 #undef SUPPLY
 #undef KEY
+#undef MAP
 #undef STONE
 #undef SPIRIT
 #undef SPELL

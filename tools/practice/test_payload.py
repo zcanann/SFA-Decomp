@@ -955,7 +955,7 @@ class PayloadTests(unittest.TestCase):
         m.pad(0x100, 0x100)  # Flags -> Inventory.
         self.assertEqual(m.read(m.sym["flagPage"]), 1)
         m.call("rebuildRows")
-        self.assertEqual(m.read(m.sym["visibleCount"]), 6)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 7)
         m.pad(0x100, 0x100)  # Gear.
         self.assertEqual(m.read(m.sym["flagPage"]), 10)
         m.pad(0x100, 0x100)  # Staff.
@@ -1146,15 +1146,90 @@ class PayloadTests(unittest.TestCase):
         self.assertFalse(m.uart)
         self.assertEqual(m.calls[-1][0], "EXIUnlock")
 
-    def test_key_items_include_galleon_key_cogs_flute_and_teeth(self):
+    def test_area_items_are_grouped_by_memorable_location_and_back_retains_area(self):
         m = self.m
-        m.write(m.sym["flagPage"], 13)  # Inventory / Key Items.
-        ids = set()
+        m.state_fixture()
+        m.pad(0x64, 4)
+        m.write(m.sym["activeTab"], 3, "B")
+        m.pad()
+        m.write(m.sym["flagPage"], 1)
+        m.write(m.sym["selected"], 3)
+        m.call("editFlags", 0x100)
+        self.assertEqual(m.read(m.sym["flagPage"]), 13)
         m.call("flagRowCount")
-        for row in range(m.r(3)):
+        self.assertEqual(m.r(3), 8)
+        expected = ({0x91c}, {0x194, 0x66d}, {0x1ee, 0x17b, 0x17e, 0x17f, 0x180},
+                    {0x193}, {0x953}, {0xa9, 0xaf7}, {0xc25, 0xc26, 0xc27}, {0x81d, 0x81e})
+        for area, required in enumerate(expected):
+            m.write(m.sym["selected"], area)
+            m.call("editFlags", 0x100)
+            self.assertEqual(m.read(m.sym["flagPage"]), 17)
+            self.assertEqual(m.read(m.sym["flagItemArea"]), area)
+            m.call("flagRowCount")
+            ids = set()
+            for row in range(m.r(3)):
+                m.call("flagBitId", row)
+                ids.add(m.r(3))
+            self.assertTrue(required <= ids, (area, ids))
+            m.pad(0x200, 0x200)
+            self.assertEqual(m.read(m.sym["flagPage"]), 13)
+            self.assertEqual(m.read(m.sym["selected"]), area)
+        m.pad(0x200, 0x200)
+        self.assertEqual(m.read(m.sym["flagPage"]), 1)
+        self.assertEqual(m.read(m.sym["selected"]), 3)
+        for page in (10, 12):  # Upgrades and Consumables have no area quest items.
+            m.write(m.sym["flagPage"], page)
+            m.call("flagRowCount")
+            for row in range(m.r(3)):
+                m.call("flagBitId", row)
+                self.assertNotIn(m.r(3), {0xa9, 0xaf7, 0x194, 0x66d, 0x1ee})
+
+    def test_maps_unlock_all_is_first_and_only_edits_map_ownership(self):
+        m = self.m
+        m.state_fixture()
+        m.write(m.sym["flagPage"], 1)
+        m.write(m.sym["selected"], 6)
+        m.call("editFlags", 0x100)
+        self.assertEqual(m.read(m.sym["flagPage"]), 16)
+        m.call("flagRowCount")
+        self.assertEqual(m.r(3), 13)
+        m.call("flagBitId", 0)
+        self.assertEqual(m.r(3), 0xffffffff)
+        ids = (0x5a3, 0x5a0, 0x59e, 0x835, 0x5a1, 0x82f,
+               0x5a2, 0x82e, 0x7dd, 0x7e5, 0x59d, 0x7e9)
+        for row, gid in enumerate(ids, 1):
+            m.bit_def(gid, 80 + row, 1, 0)
             m.call("flagBitId", row)
-            ids.add(m.r(3))
-        self.assertTrue({0x91c, 0x953, 0x17b, 0x17e, 0x17f, 0x180, 0x81d, 0x81e, 0xc25, 0xc26, 0xc27} <= ids)
+            self.assertEqual(m.r(3), gid)
+        m.call("editFlags", 2)  # Right is not a bulk activation.
+        self.assertFalse(m.bit_edits)
+        m.save_loading = 1
+        m.call("editFlags", 0x100)
+        self.assertFalse(m.bit_edits)
+        m.save_loading = 0
+        m.call("editFlags", 0x100)
+        self.assertEqual(m.bit_edits, [(gid, 1) for gid in ids])
+        m.call("editFlags", 0x100)
+        self.assertEqual(len(m.bit_edits), 12)  # Already unlocked: no repeated setters.
+        m.write(m.sym["selected"], 1)
+        m.call("editFlags", 0x100)
+        self.assertEqual(m.bit_edits[-1], (0x5a3, 0))
+        m.write(m.sym["selected"], 0)
+        m.player = 0
+        m.call("editFlags", 0x100)
+        self.assertEqual(len(m.bit_edits), 13)
+
+    def test_short_area_item_labels_keep_area_context_in_logs(self):
+        m = self.m
+        m.state_fixture()
+        for i, gid in enumerate((0x91c, 0xa9)):
+            m.bit_def(gid, 72 + i * 2, 2 if gid == 0xa9 else 1, 0)
+        m.call("pollStateLog")
+        m.set_bit(0x91c, 1)
+        m.set_bit(0xa9, 2)
+        m.call("pollStateLog")
+        self.assertIn(b"[BIT 91C][GALLEON] GOLD KEY", m.uart)
+        self.assertIn(b"[BIT 0A9][CAPE CLAW] FIRE GEMS", m.uart)
 
     def test_inventory_spell_alias_and_tricky_ball(self):
         m = self.m
@@ -1368,7 +1443,7 @@ class PayloadTests(unittest.TestCase):
         m = self.m
         m.state_fixture()
         m.write(m.sym["menuOpen"], 1, "B")
-        for tab, page in [(3, n) for n in range(16)] + [(4, 0)]:
+        for tab, page in [(3, n) for n in range(18)] + [(4, 0)]:
             m.geometry = []
             m.write(m.sym["activeTab"], tab, "B")
             m.write(m.sym["flagPage"], page)

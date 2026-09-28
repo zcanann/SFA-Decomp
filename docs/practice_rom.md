@@ -271,6 +271,32 @@ similar instructions and patch an unknown version.
 
 ### Pending changes after V1.7 (not packaged)
 
+Inventory now uses **Upgrades, Staff Spells, Consumables, Area Items, Spellstones,
+Krazoa Spirits, Maps**. Staff spells also remain accessible from the Flags root.
+Area Items opens a list of areas; Back returns to the selected area rather than
+resetting the cursor to the start. Labels within each area omit its name, while
+inventory log lines retain the area in brackets.
+
+| Area | Items |
+| --- | --- |
+| Galleon | Gold key |
+| ThornTail Hollow | White grubtubs, fire weeds |
+| DarkIce Mines | Dino horn, four cogs, shackle key, cell key, silver key |
+| Moon Mountain Pass | Key |
+| CloudRunner Fortress | Flute |
+| Cape Claw | Fire gems, gold bars |
+| LightFoot Village | Three wood blocks |
+| Walled City | Silver/gold teeth, sun/moon stones |
+
+Consumables retains fireflies, bomb spores, fuel cells and moon seeds. Upgrades
+retains staff, lantern, scarab bags, Bafomdad holder, viewfinder and Tricky ball
+flags. These moves preserve the existing game-bit IDs and count widths.
+
+**Maps** has **Unlock All** first, activated with A, then twelve individual map
+ownership toggles. Bulk unlocking calls the same guarded setter as individual
+edits and skips unchanged bits; it makes no changes while loading or without a
+player. It sets only map ownership flags.
+
 - **Forced Swimming** stays enabled in the menu while **L+Left** toggles its
   active state. Every activation places the surface at the current player Y+40;
   L+Up/Down retains height control. The cyan plane draws only while active.
@@ -298,14 +324,16 @@ similar instructions and patch an unknown version.
 
 The isolated payload uses GC/1.3 size optimization (`-O4,s`) and non-inlined
 movement helpers to retain the original 64 KiB reservation; the retail build's
-compiler settings are unchanged. The payload is 64,000 bytes. All 45 compiled-PPC
+compiler settings are unchanged. The payload is 64,704 bytes. All 47 compiled-PPC
 checks and 8 patch-integrity tests pass, including actual lethal retail health
 subtraction, quick-toggle latching, menu/chord separation, roll-input priority,
-parented movement, load/player-change guards, and the six spirit edits. Disabled
+parented movement, load/player-change guards, the six spirit edits, area navigation
+and isolated bulk map unlocks. Disabled
 practice still emits no symbols; `ninja all_source` and the strict retail target pass.
 
-A private test ISO passed an isolated Dolphin Null-backend startup check
-(initialized/loaded, 45 objects, intact payload). OSREPORT immediately printed
+Before the inventory reorganization, a private test ISO passed an isolated Dolphin
+Null-backend startup check (initialized/loaded, 45 objects, intact payload).
+OSREPORT immediately printed
 logging enabled and a 3,920-bit baseline with filter mask `BF`, confirming the
 new default without external RAM edits. The builder verified the original ISO
 and all bytes outside the relocated DOL/header pointer unchanged. Movement and
