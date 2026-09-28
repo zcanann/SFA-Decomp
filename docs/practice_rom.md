@@ -270,6 +270,12 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
+### Pending changes after V1.8 (not packaged)
+
+Maps now places **Remove All** second, directly below **Unlock All**. Press A
+to clear the twelve map-ownership flags; individual map toggles follow both
+actions. Progression flags are unchanged, and save loading blocks both actions.
+
 ### V1.8 changes
 
 Object Groups selects the streaming engine's current world map when opened.

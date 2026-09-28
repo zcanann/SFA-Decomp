@@ -1292,8 +1292,8 @@ static int flagRowCount(void) {
     while (pageBit(n)) {
         n++;
     }
-    return n + (flagPage == FLAGS_AREA                                                                ? 2
-                : flagPage == FLAGS_TRICKY || flagPage == FLAGS_MAPS || flagPage == FLAGS_CONSUMABLES ? 1
+    return n + (flagPage == FLAGS_AREA || flagPage == FLAGS_MAPS ? 2
+                : flagPage == FLAGS_TRICKY || flagPage == FLAGS_CONSUMABLES ? 1
                                                                                                       : 0);
 }
 
@@ -1312,7 +1312,7 @@ static int flagBitId(int row) {
         row -= 2;
     }
     if (flagPage == FLAGS_TRICKY || flagPage == FLAGS_MAPS || flagPage == FLAGS_CONSUMABLES) {
-        row--;
+        row -= flagPage == FLAGS_MAPS ? 2 : 1;
     }
     entry = pageBit(row);
     return entry ? entry->id : -1;
@@ -1363,12 +1363,12 @@ static void editFlags(u32 pressed) {
     if (!practiceStateReady()) {
         return;
     }
-    if (flagPage == FLAGS_MAPS && selected == 0) {
+    if (flagPage == FLAGS_MAPS && selected < 2) {
         if (pressed & PAD_BUTTON_A) {
             const PracticeBitLabel* entry;
             int i = 0;
             while ((entry = pageBit(i++)) != NULL) {
-                writeStateBit(entry->id, 1);
+                writeStateBit(entry->id, selected == 0);
             }
         }
         return;
@@ -1441,8 +1441,8 @@ static void drawFlags(void) {
                                         ? i + 1
                                         : i + (flagPage == FLAGS_INVENTORY ? FLAGS_UPGRADES : FLAGS_RAW)];
             textAt(564, y, ">", color);
-        } else if (flagPage == FLAGS_MAPS && i == 0) {
-            label = "UNLOCK ALL";
+        } else if (flagPage == FLAGS_MAPS && i < 2) {
+            label = i == 0 ? "UNLOCK ALL" : "REMOVE ALL";
             textAt(528, y, ready ? "A" : "N/A", ready ? color : MUTED);
         } else if ((flagPage == FLAGS_AREA || flagPage == FLAGS_GROUPS) && i == 0) {
             label = "MAP";

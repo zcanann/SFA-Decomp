@@ -1184,7 +1184,7 @@ class PayloadTests(unittest.TestCase):
                 m.call("flagBitId", row)
                 self.assertNotIn(m.r(3), {0xa9, 0xaf7, 0x194, 0x66d, 0x1ee})
 
-    def test_maps_unlock_all_is_first_and_only_edits_map_ownership(self):
+    def test_maps_bulk_actions_are_first_and_only_edit_map_ownership(self):
         m = self.m
         m.state_fixture()
         m.write(m.sym["flagPage"], 1)
@@ -1192,12 +1192,14 @@ class PayloadTests(unittest.TestCase):
         m.call("editFlags", 0x100)
         self.assertEqual(m.read(m.sym["flagPage"]), 16)
         m.call("flagRowCount")
-        self.assertEqual(m.r(3), 13)
+        self.assertEqual(m.r(3), 14)
         m.call("flagBitId", 0)
+        self.assertEqual(m.r(3), 0xffffffff)
+        m.call("flagBitId", 1)
         self.assertEqual(m.r(3), 0xffffffff)
         ids = (0x5a3, 0x5a0, 0x59e, 0x835, 0x5a1, 0x82f,
                0x5a2, 0x82e, 0x7dd, 0x7e5, 0x59d, 0x7e9)
-        for row, gid in enumerate(ids, 1):
+        for row, gid in enumerate(ids, 2):
             m.bit_def(gid, 80 + row, 1, 0)
             m.call("flagBitId", row)
             self.assertEqual(m.r(3), gid)
@@ -1211,13 +1213,23 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.bit_edits, [(gid, 1) for gid in ids])
         m.call("editFlags", 0x100)
         self.assertEqual(len(m.bit_edits), 12)  # Already unlocked: no repeated setters.
-        m.write(m.sym["selected"], 1)
+        m.write(m.sym["selected"], 2)
         m.call("editFlags", 0x100)
         self.assertEqual(m.bit_edits[-1], (0x5a3, 0))
+        m.write(m.sym["selected"], 1)
+        m.call("editFlags", 2)  # Remove All also requires A.
+        m.save_loading = 1
+        m.call("editFlags", 0x100)
+        self.assertEqual(len(m.bit_edits), 13)
+        m.save_loading = 0
+        m.call("editFlags", 0x100)
+        self.assertEqual(m.bit_edits[13:], [(gid, 0) for gid in ids[1:]])
+        m.call("editFlags", 0x100)
+        self.assertEqual(len(m.bit_edits), 24)  # Already removed: no repeated setters.
         m.write(m.sym["selected"], 0)
         m.player = 0
         m.call("editFlags", 0x100)
-        self.assertEqual(len(m.bit_edits), 13)
+        self.assertEqual(len(m.bit_edits), 24)
 
     def test_short_area_item_labels_keep_area_context_in_logs(self):
         m = self.m
