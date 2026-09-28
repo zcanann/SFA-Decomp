@@ -1,10 +1,11 @@
-# EN v1.0 practice ROM v1.7
+# EN v1.0 practice ROM v1.8
 
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
 The first supported input is a clean US/EN v1.0 (`GSAE01`, revision 0) ISO.
-V1.7 adds inventory spell access, LFV wood pieces and Tricky ball entries,
-checkpoint/layer logging, and quieter log defaults. See **V1.7 changes** below.
+V1.8 adds quick swimming/free-move toggles, infinite health/magic, organized
+inventory and map controls, and menu navigation improvements. Logging starts
+enabled. See **V1.8 changes** below.
 
 ## Controls
 
@@ -171,8 +172,8 @@ From the practice worktree:
 ```powershell
 python tools/practice/build.py build --enable `
   --iso "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00).iso" `
-  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.7).iso" `
-  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.7.sfapatch"
+  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.8).iso" `
+  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.8.sfapatch"
 ```
 
 The `.sfapatch` is a ZIP containing a manifest and the new payload, not a retail
@@ -181,14 +182,14 @@ DOL hash, independent of the image's padding or compression. Apply it with:
 
 ```powershell
 python tools/practice/build.py apply --iso "clean.iso" `
-  --patch "SFA-EN-v1.0-Practice-v1.7.sfapatch" --output "practice.iso"
+  --patch "SFA-EN-v1.0-Practice-v1.8.sfapatch" --output "practice.iso"
 ```
 
 The executable transformation is also available without a disc container:
 
 ```powershell
 python tools/practice/build.py apply --dol "main.dol" `
-  --patch "SFA-EN-v1.0-Practice-v1.7.sfapatch" --output "practice.dol"
+  --patch "SFA-EN-v1.0-Practice-v1.8.sfapatch" --output "practice.dol"
 ```
 
 `--dol` is also accepted by `build`. This is the interface for future image
@@ -202,7 +203,7 @@ An RVZ workflow can use Dolphin's conversion tool around the ISO patcher:
 ```powershell
 DolphinTool convert -i clean.rvz -o clean.iso -f iso
 python tools/practice/build.py apply --iso clean.iso `
-  --patch SFA-EN-v1.0-Practice-v1.7.sfapatch --output practice.iso
+  --patch SFA-EN-v1.0-Practice-v1.8.sfapatch --output practice.iso
 DolphinTool convert -i practice.iso -o practice.rvz -f rvz -b 131072 -c zstd -l 5
 ```
 
@@ -269,7 +270,7 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
-### Pending changes after V1.7 (not packaged)
+### V1.8 changes
 
 Object Groups selects the streaming engine's current world map when opened.
 Manual selection remains available and stays put while browsing. During save
@@ -348,7 +349,19 @@ logging enabled and a 3,920-bit baseline with filter mask `BF`, confirming the
 new default without external RAM edits. The builder verified the original ISO
 and all bytes outside the relocated DOL/header pointer unchanged. Movement and
 resource behavior are compiled-PPC harness checks, not Dolphin gameplay tests.
-Published V1.7 and older ISOs are unchanged; these additions await packaging.
+Published V1.7 and older ISOs remain unchanged.
+
+V1.8 was packaged alongside the original and booted with an isolated Dolphin
+Null-backend profile: initialized/loaded state, 45 objects, intact payload prefix,
+and no apploader boundary errors. OSREPORT confirmed logging enabled and the
+3,920-bit baseline with filter mask `BF`. This verifies startup, not visual or
+gameplay behavior. The builder verified the original ISO hash and that all bytes
+outside the relocated DOL and its header pointer are identical.
+
+V1.8 ISO SHA-256:
+`f153de92eab008266de63603a5a8032e2eddee1084be96e99a0128450f7cf7f9`.
+Payload SHA-256:
+`40f6d0431c5023c954dda0027fcaba4517a3c7adddab004564b4df70e54f1e19`.
 
 ### V1.7 changes
 
