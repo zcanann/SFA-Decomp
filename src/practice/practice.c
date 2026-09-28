@@ -1138,10 +1138,11 @@ extern u32 gMapObjGroupStatuses[120];
 static const int bitBankOffsets[] = {0xef0, 0x564, 0x24, 0x5d8};
 static const int bitBankSizes[] = {0x80, 0x74, 0x144, 0xac};
 static const int bitSnapshotOffsets[] = {0, 0x80, 0xf4, 0x238};
-static const char* flagPages[] = {"FLAGS",          "INVENTORY",     "STAFF SPELLS", "TRICKY",     "PLAYER STATS",
-                                  "AREA PROGRESS",  "OBJECT GROUPS", "ADVANCED",     "RAW BIT ID", "UNUSED / UNCERTAIN",
-                                  "UPGRADES",       "STAFF SPELLS",  "CONSUMABLES",  "AREA ITEMS", "SPELLSTONES",
-                                  "KRAZOA SPIRITS", "MAPS",          "AREA ITEMS", "ITEM DISCOVERY"};
+static const char* flagPages[] = {"FLAGS",        "INVENTORY",          "STAFF SPELLS",  "TRICKY",
+                                  "PLAYER STATS", "AREA PROGRESS",      "OBJECT GROUPS", "ADVANCED",
+                                  "RAW BIT ID",   "UNUSED / UNCERTAIN", "UPGRADES",      "STAFF SPELLS",
+                                  "CONSUMABLES",  "AREA ITEMS",         "SPELLSTONES",   "KRAZOA SPIRITS",
+                                  "MAPS",         "AREA ITEMS",         "ITEM DISCOVERY"};
 static const char* statLabels[] = {"HEALTH (RAW UNITS)", "MAX HEALTH",   "MAGIC", "MAX MAGIC", "SCARABS",
                                    "BAFOMDADS",          "MAX BAFOMDADS"};
 static const int flagSteps[] = {1, 16, 256};
@@ -2535,7 +2536,7 @@ void Practice_PadUpdate(void) {
                                     : flagPage == FLAGS_RAW || flagPage == FLAGS_UNUSED    ? flagPage - FLAGS_RAW
                                                                                            : flagPage - 1;
                 flagPage = flagPage == FLAGS_DISCOVERY                         ? FLAGS_ROOT
-                           : flagPage == FLAGS_ITEM_AREA                      ? FLAGS_AREA_ITEMS
+                           : flagPage == FLAGS_ITEM_AREA                       ? FLAGS_AREA_ITEMS
                            : flagPage >= FLAGS_UPGRADES                        ? FLAGS_INVENTORY
                            : flagPage == FLAGS_RAW || flagPage == FLAGS_UNUSED ? FLAGS_ADVANCED
                                                                                : FLAGS_ROOT;
