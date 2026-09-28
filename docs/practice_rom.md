@@ -1,11 +1,10 @@
-# EN v1.0 practice ROM v1.12
+# EN v1.0 practice ROM v1.13
 
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
 The first supported input is a clean US/EN v1.0 (`GSAE01`, revision 0) ISO.
-V1.12 fixes persistent graphics-state corruption and movement amplification,
-restores unmodified C-stick swivel, adds the Snowhorn Artifact, and includes
-storage regions in gamebit change logs. See **V1.12 changes** below.
+V1.13 puts Free Move first in Cheats and adds Invert X, enabled by default,
+for C-stick swivel. See **V1.13 changes** below.
 
 ## Controls
 
@@ -179,8 +178,8 @@ From the practice worktree:
 ```powershell
 python tools/practice/build.py build --enable `
   --iso "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00).iso" `
-  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.12).iso" `
-  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.12.sfapatch"
+  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.13).iso" `
+  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.13.sfapatch"
 ```
 
 The `.sfapatch` is a ZIP containing a manifest and the new payload, not a retail
@@ -189,14 +188,14 @@ DOL hash, independent of the image's padding or compression. Apply it with:
 
 ```powershell
 python tools/practice/build.py apply --iso "clean.iso" `
-  --patch "SFA-EN-v1.0-Practice-v1.12.sfapatch" --output "practice.iso"
+  --patch "SFA-EN-v1.0-Practice-v1.13.sfapatch" --output "practice.iso"
 ```
 
 The executable transformation is also available without a disc container:
 
 ```powershell
 python tools/practice/build.py apply --dol "main.dol" `
-  --patch "SFA-EN-v1.0-Practice-v1.12.sfapatch" --output "practice.dol"
+  --patch "SFA-EN-v1.0-Practice-v1.13.sfapatch" --output "practice.dol"
 ```
 
 `--dol` is also accepted by `build`. This is the interface for future image
@@ -210,7 +209,7 @@ An RVZ workflow can use Dolphin's conversion tool around the ISO patcher:
 ```powershell
 DolphinTool convert -i clean.rvz -o clean.iso -f iso
 python tools/practice/build.py apply --iso clean.iso `
-  --patch SFA-EN-v1.0-Practice-v1.12.sfapatch --output practice.iso
+  --patch SFA-EN-v1.0-Practice-v1.13.sfapatch --output practice.iso
 DolphinTool convert -i practice.iso -o practice.rvz -f rvz -b 131072 -c zstd -l 5
 ```
 
@@ -277,12 +276,26 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
-### Pending after V1.12
+### V1.13 changes
 
 Free Move is the first Cheats entry, with an expanded **Invert X** checkbox
 enabled by default. It reverses C-stick horizontal swivel with or without L;
 main-stick movement, vertical movement, and pitch retain their controls.
-These changes are not yet included in an ISO.
+These changes are included in the V1.13 ISO.
+
+All 55 payload checks passed for the feature change. After updating the release
+label, the three menu/default/inversion checks and all eight patch-integrity
+checks passed. The packaged ISO boots through map initialization in an isolated
+Dolphin Null-backend profile with 45 objects, an intact payload prefix, and
+retail vertex format 7 preserved. This is a boot check, not visual playtesting.
+The payload is 55,872 bytes within the existing 64 KiB reservation. The builder
+verified the original ISO hash and that only the output's relocated DOL and
+header DOL pointer differ. The original ISO and earlier releases are untouched.
+
+V1.13 ISO SHA-256:
+`9532ee993c6806f7844b41874ad7c43ad5f9eed52b340903c3280313d0fe965a`.
+V1.13 payload SHA-256:
+`1afd671049195e644acdae409b17d2bab66417bb68cd9dff8fdd4fc5d09f5d33`.
 
 ### V1.12 changes
 
