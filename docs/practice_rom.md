@@ -1,11 +1,11 @@
-# EN v1.0 practice ROM v1.11
+# EN v1.0 practice ROM v1.12
 
 This experiment lives on `practice-rom`, based on `main`, in its own worktree.
 It builds a retail-DOL payload independently of the matching decomp link.
 The first supported input is a clean US/EN v1.0 (`GSAE01`, revision 0) ISO.
-V1.11 adds Item Discovery flags, L-modified C-stick look, direct C-stick height,
-swapped movement shortcuts, and swimming that stays off when armed in the menu.
-See **V1.11 changes** below.
+V1.12 fixes persistent graphics-state corruption and movement amplification,
+restores unmodified C-stick swivel, adds the Snowhorn Artifact, and includes
+storage regions in gamebit change logs. See **V1.12 changes** below.
 
 ## Controls
 
@@ -177,8 +177,8 @@ From the practice worktree:
 ```powershell
 python tools/practice/build.py build --enable `
   --iso "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00).iso" `
-  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.11).iso" `
-  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.11.sfapatch"
+  --output "C:/Projects/SFA-Decomp/orig/GSAE01/Star Fox Adventures (USA) (v1.00) (Practice v1.12).iso" `
+  --patch "C:/Projects/SFA-Decomp/orig/GSAE01/SFA-EN-v1.0-Practice-v1.12.sfapatch"
 ```
 
 The `.sfapatch` is a ZIP containing a manifest and the new payload, not a retail
@@ -187,14 +187,14 @@ DOL hash, independent of the image's padding or compression. Apply it with:
 
 ```powershell
 python tools/practice/build.py apply --iso "clean.iso" `
-  --patch "SFA-EN-v1.0-Practice-v1.11.sfapatch" --output "practice.iso"
+  --patch "SFA-EN-v1.0-Practice-v1.12.sfapatch" --output "practice.iso"
 ```
 
 The executable transformation is also available without a disc container:
 
 ```powershell
 python tools/practice/build.py apply --dol "main.dol" `
-  --patch "SFA-EN-v1.0-Practice-v1.11.sfapatch" --output "practice.dol"
+  --patch "SFA-EN-v1.0-Practice-v1.12.sfapatch" --output "practice.dol"
 ```
 
 `--dol` is also accepted by `build`. This is the interface for future image
@@ -208,7 +208,7 @@ An RVZ workflow can use Dolphin's conversion tool around the ISO patcher:
 ```powershell
 DolphinTool convert -i clean.rvz -o clean.iso -f iso
 python tools/practice/build.py apply --iso clean.iso `
-  --patch SFA-EN-v1.0-Practice-v1.11.sfapatch --output practice.iso
+  --patch SFA-EN-v1.0-Practice-v1.12.sfapatch --output practice.iso
 DolphinTool convert -i practice.iso -o practice.rvz -f rvz -b 131072 -c zstd -l 5
 ```
 
@@ -275,18 +275,17 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
-### Additions after the regression test ISO
+### V1.12 changes
 
 Flags > Inventory > Area Items > Snowhorn Wastes now contains **Artifact**,
-using the ownership bit `ITEM_NWSnowHornArtifact_Got` (0x1A2). This source change
-is not yet included in an ISO.
+using the ownership bit `ITEM_NWSnowHornArtifact_Got` (0x1A2).
 
 Every bit-change log now includes `[REGION 0]` through `[REGION 3]`, taken from
 the bit descriptor's storage-bank field. Named and unnamed bits both include
-the region; area-item labels still retain their map context. This logging change
-is also pending the next ISO build.
+the region; area-item labels still retain their map context.
 
-### Fixes after V1.11 (test ISO, no numbered release)
+The following fixes were first supplied in the regression test ISO and are now
+included in V1.12:
 
 C-stick Left/Right again swivels Free Move without a modifier. L only changes
 the vertical C-stick axis from height movement to pitch. The main stick still
@@ -318,7 +317,7 @@ Only the Gekko quantized s16-to-float leaf is emulated by the harness. This
 reproduced the amplification before the fix and now matches retail; wind-tunnel
 gameplay still needs an in-game check.
 
-Validation: 55 payload checks and 8 patch checks pass, including the disabled
+Pre-release validation: 55 payload checks and 8 patch checks passed, including the disabled
 build emitting no payload. `build/practice/regression-fixes.iso` and
 `build/practice/regression-fixes.sfapatch` contain these fixes. The ISO boots
 through map initialization in an isolated Dolphin profile with the Null video
@@ -327,6 +326,20 @@ backend; a read-only memory probe confirmed format 7 remains `0x54e0e407`
 ISO SHA-256: `1db7a5f1c22dd7280df2d69c296165a2355b48c2567d9f7747394d1790d3d825`.
 The original disc hash and all bytes outside the new DOL extent and header DOL
 pointer are verified unchanged; previous release images are untouched.
+
+The packaged V1.12 release repeats all 55 payload checks and 8 patch checks and
+passes an isolated Dolphin Null-backend boot through map initialization, with
+45 objects, an intact payload prefix, and format 7 still `0x54e0e407`.
+The payload is 55,712 bytes within the existing 64 KiB reservation. The original
+ISO and previous releases remain untouched. The builder verified the original
+hash and that the output changes only the relocated DOL and header DOL pointer.
+This boot check does not visually verify the affected torches, platforms, or wind
+tunnels.
+
+V1.12 ISO SHA-256:
+`ee6c873046c9a0af411f651d8d5e5f0c533a51c2bfa87ac662a07cafc65fa18d`.
+V1.12 payload SHA-256:
+`f7eb9b7a41af43eebfac8ec8eb8909a7f4831e8ac260eaa884db88619a71c454`.
 
 ### V1.11 changes
 
