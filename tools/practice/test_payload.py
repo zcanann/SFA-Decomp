@@ -165,7 +165,9 @@ class Machine:
             uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "hud_hidden", 0))
         elif name == "sprintf":
             fmt = bytes(uc.mem_read(self.r(4), 180)).split(b"\0")[0].decode()
-            args = tuple(self.r(i) for i in range(5, 12))
+            # EABI integer arguments use r3-r10; after destination/format, the
+            # seventh printf value is passed at SP+8, not in r11.
+            args = tuple(self.r(i) for i in range(5, 11)) + (self.read(self.r(1) + 8),)
             self.reports.append((fmt, args))
             values = iter(args)
             def format_arg(match):
@@ -1412,7 +1414,8 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(bytes(m.uc.mem_read(m.sym["gMapObjGroupStatuses"], 480)), groups)
         self.assertFalse(m.bit_edits)
         bit_reports = [args for fmt, args in m.reports if "BIT" in fmt]
-        self.assertEqual([(args[1], args[3], args[4]) for args in bit_reports], [(0x75, 0, 1), (0x4e4, 0, 1)])
+        self.assertEqual([(args[1], args[2], args[4], args[5]) for args in bit_reports],
+                         [(0x75, 2, 0, 1), (0x4e4, 2, 0, 1)])
         m.reports.clear()
         m.toggle("INVENTORY", 0)
         m.call("pollStateLog")
@@ -1440,7 +1443,7 @@ class PayloadTests(unittest.TestCase):
         m = self.m
         m.state_fixture()
         for i in range(40):
-            m.bit_def(0x600 + i, i, 1, 0)
+            m.bit_def(0x600 + i, 128 + i, 1, i % 4)
         m.toggle("LOG TO DOLPHIN", 1)
         m.call("pollStateLog")
         m.reports.clear()
@@ -1450,6 +1453,9 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(len(m.reports), 33)
         self.assertIn("suppressed", m.reports[-1][0])
         self.assertEqual(m.reports[-1][1][1], 8)
+        for region in range(4):
+            self.assertIn(f"[BIT {0x600 + region:03X}][REGION {region}] UNNAMED: 00000000 -> 00000001".encode(),
+                          m.uart)
         m.reports.clear()
         m.call("pollStateLog")
         self.assertFalse(m.reports)
@@ -1567,8 +1573,8 @@ class PayloadTests(unittest.TestCase):
         m.set_bit(0x91c, 1)
         m.set_bit(0xa9, 2)
         m.call("pollStateLog")
-        self.assertIn(b"[BIT 91C][GALLEON] GOLD KEY", m.uart)
-        self.assertIn(b"[BIT 0A9][CAPE CLAW] FIRE GEMS", m.uart)
+        self.assertIn(b"[BIT 91C][REGION 0][GALLEON] GOLD KEY: 00000000 -> 00000001", m.uart)
+        self.assertIn(b"[BIT 0A9][REGION 0][CAPE CLAW] FIRE GEMS: 00000000 -> 00000002", m.uart)
 
     def test_inventory_spell_alias_and_tricky_ball(self):
         m = self.m

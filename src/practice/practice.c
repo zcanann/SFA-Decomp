@@ -1820,11 +1820,12 @@ static void pollStateLog(void) {
                     const PracticeBitLabel* entry = namedBit(i);
                     if (count++ < 32) {
                         if (entry && entry->page == FLAGS_ITEM_AREA) {
-                            sprintf(logLine, "[PRACTICE][%u][BIT %03X][%s] %s: %08X -> %08X\n", logFrame, i,
-                                    itemAreaNames[entry->map], entry->name, before, after);
+                            sprintf(logLine, "[PRACTICE][%u][BIT %03X][REGION %d][%s] %s: %08X -> %08X\n",
+                                    logFrame, i, gGameBitTable[i].flags >> 6, itemAreaNames[entry->map],
+                                    entry->name, before, after);
                         } else {
-                            sprintf(logLine, "[PRACTICE][%u][BIT %03X] %s: %08X -> %08X\n", logFrame, i,
-                                    entry ? entry->name : "UNNAMED", before, after);
+                            sprintf(logLine, "[PRACTICE][%u][BIT %03X][REGION %d] %s: %08X -> %08X\n", logFrame,
+                                    i, gGameBitTable[i].flags >> 6, entry ? entry->name : "UNNAMED", before, after);
                         }
                         sendPracticeLog();
                     }

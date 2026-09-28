@@ -275,11 +275,16 @@ similar instructions and patch an unknown version.
 
 ## Validation and limits
 
-### Inventory additions after the regression test ISO
+### Additions after the regression test ISO
 
 Flags > Inventory > Area Items > Snowhorn Wastes now contains **Artifact**,
 using the ownership bit `ITEM_NWSnowHornArtifact_Got` (0x1A2). This source change
 is not yet included in an ISO.
+
+Every bit-change log now includes `[REGION 0]` through `[REGION 3]`, taken from
+the bit descriptor's storage-bank field. Named and unnamed bits both include
+the region; area-item labels still retain their map context. This logging change
+is also pending the next ISO build.
 
 ### Fixes after V1.11 (test ISO, no numbered release)
 
@@ -733,7 +738,7 @@ In V1.5-V1.7 logging was **off by default** (current source defaults on). The Lo
 Area / Map Acts, Other / Unknown Bits, Object Groups, and Player Stats filters.
 The original V1.5 output path is broken; use V1.6 with the UART fix above.
 With that fix, enable Dolphin's OSREPORT logging to see `[PRACTICE]` entries with a frame
-counter, bit ID/name or map/stat identity, and before/after values. Named-bit
+counter, bit ID/name and storage region (0-3) or map/stat identity, and before/after values. Named-bit
 categories cover the curated catalog; unclassified bits go to Other, including
 unused items. Logging reads snapshots without modifying gameplay state.
 
