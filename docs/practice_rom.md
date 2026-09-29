@@ -290,9 +290,9 @@ Calls go through ordinary PPC EABI C wrappers; game/compiler/SDK routines retain
 
 A new DOL section contains code, constants and explicitly initialized zero-state
 at `0x803FA480`, the verified retail default `__ArenaLo`, above the startup stack
-at `0x803F8478`. Both OSInit arena-low paths clamp the heap start to `0x8040B480`
-before `ClearArena`, protecting a 68 KiB payload region. The retail debug-flag
-path originally starts its arena 8 KiB earlier, so that path loses 76 KiB of heap
+at `0x803F8478`. Both OSInit arena-low paths clamp the heap start to `0x8041A480`
+before `ClearArena`, protecting a 128 KiB payload region. The retail debug-flag
+path originally starts its arena 8 KiB earlier, so that path loses 136 KiB of heap
 capacity overall. Arena high is unchanged. No menu/viewer allocations use the game heap.
 **The enabled build changes heap capacity and allocation addresses/timing. It is
 a practice build, not an SRM-neutral measurement build.** Swimming also deliberately
@@ -879,6 +879,19 @@ Menu and cheat changes:
   blank frames. Shield hover takes priority when both cheats are enabled and
   X + R are held. Releasing the activation buttons restores physical input;
   entering the menu, loading pauses, and player changes reset the cycle.
+
+Log lines name each changed bit by its `GameBitId` from `main/gamebit_ids.h`
+(without the `GAMEBIT_` prefix), falling back to the Flags label and then
+`UNNAMED`. An id with conflicting names shows them all, joined with `|`. The
+payload embeds the table from `include/practice/gamebit_names.h`; after names
+change in `gamebit_ids.h`, regenerate it:
+
+```powershell
+python tools/practice/gamebit_names.py
+clang-format -i include/practice/gamebit_names.h
+```
+
+The payload test fails if the embedded table and `gamebit_ids.h` disagree.
 
 Flags uses a curated catalog in `include/practice/state_catalog.h`, based on
 the existing named game bits, rather than presenting all IDs at once:

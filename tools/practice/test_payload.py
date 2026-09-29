@@ -9,12 +9,15 @@ import struct
 import sys
 import unittest
 
+import gamebit_names
 from build import ROOT, PAYLOAD_ADDRESS, PAYLOAD_LIMIT, compile_payload, make_patch, apply_dol, sections, symbols, tool_directory
 
 OUT = ROOT / "build/practice"
 sys.path.insert(0, str(OUT / "python"))
 from unicorn import Uc, UC_ARCH_PPC, UC_MODE_PPC32, UC_MODE_BIG_ENDIAN, UC_HOOK_CODE, UC_HOOK_MEM_WRITE
 from unicorn.ppc_const import UC_PPC_REG_0, UC_PPC_REG_FPR0, UC_PPC_REG_MSR, UC_PPC_REG_LR, UC_PPC_REG_PC
+
+GAMEBIT_NAMES = gamebit_names.names()
 
 
 class Machine:
@@ -2584,7 +2587,8 @@ class PayloadTests(unittest.TestCase):
         self.assertIn("suppressed", m.reports[-1][0])
         self.assertEqual(m.reports[-1][1][1], 8)
         for region in range(4):
-            self.assertIn(f"[BIT {0x600 + region:03X}][REGION {region}] UNNAMED: 00000000 -> 00000001".encode(),
+            name = GAMEBIT_NAMES.get(0x600 + region, "UNNAMED")
+            self.assertIn(f"[BIT {0x600 + region:03X}][REGION {region}] {name}: 00000000 -> 00000001".encode(),
                           m.uart)
         m.reports.clear()
         m.call("pollStateLog")
@@ -2703,8 +2707,21 @@ class PayloadTests(unittest.TestCase):
         m.set_bit(0x91c, 1)
         m.set_bit(0xa9, 2)
         m.call("pollStateLog")
-        self.assertIn(b"[BIT 91C][REGION 0][GALLEON] GOLD KEY: 00000000 -> 00000001", m.uart)
-        self.assertIn(b"[BIT 0A9][REGION 0][CAPE CLAW] FIRE GEMS: 00000000 -> 00000002", m.uart)
+        self.assertIn(f"[BIT 91C][REGION 0][GALLEON] {GAMEBIT_NAMES[0x91C]}: 00000000 -> 00000001".encode(), m.uart)
+        self.assertIn(f"[BIT 0A9][REGION 0][CAPE CLAW] {GAMEBIT_NAMES[0xA9]}: 00000000 -> 00000002".encode(), m.uart)
+
+    def test_log_names_match_gamebit_ids_header(self):
+        m = self.m
+        offsets, text = m.sym["practiceGameBitNameOffsets"], m.sym["practiceGameBitNameText"]
+        count = max(GAMEBIT_NAMES) + 1
+        embedded = {}
+        for bit in range(count):
+            offset = m.read(offsets + bit * 2, "H")
+            if offset != 0xFFFF:
+                raw = bytes(m.uc.mem_read(text + offset, 160))
+                embedded[bit] = raw[:raw.index(0)].decode()
+        self.assertEqual(embedded, GAMEBIT_NAMES)
+        self.assertEqual(GAMEBIT_NAMES[0xF47], "WM_HitAnimTarget0F47|WM_SwitchRelated0F47")
 
     def test_inventory_spell_alias_and_tricky_ball(self):
         m = self.m
@@ -2780,7 +2797,7 @@ class PayloadTests(unittest.TestCase):
         m.set_bit(0x884, 1)
         m.call("pollStateLog")
         self.assertEqual(len(m.reports), 1)
-        self.assertIn(b"WARPSTONE / TRANSPORT", m.uart)
+        self.assertIn(GAMEBIT_NAMES[0x884].encode(), m.uart)
 
     def test_layer_changes_across_loading_and_filter_resets(self):
         m = self.m

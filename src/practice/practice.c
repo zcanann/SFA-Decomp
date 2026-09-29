@@ -5,6 +5,7 @@
 #include "practice/practice.h"
 #include "practice/warp_catalog.h"
 #include "practice/state_catalog.h"
+#include "practice/gamebit_names.h"
 #include "sys/objects/lifecycle.h"
 #include "dolphin/exi.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
@@ -1275,6 +1276,13 @@ static u32 readStateBit(int id, int snapshot) {
     return value;
 }
 
+static const char* gameBitName(int id) {
+    if (id < 0 || id >= PRACTICE_GAMEBIT_NAME_COUNT || practiceGameBitNameOffsets[id] == PRACTICE_GAMEBIT_NO_NAME) {
+        return NULL;
+    }
+    return &practiceGameBitNameText[practiceGameBitNameOffsets[id]];
+}
+
 static const PracticeBitLabel* namedBit(int id) {
     int i;
     for (i = 0; i < sizeof(practiceBits) / sizeof(practiceBits[0]); i++) {
@@ -1926,13 +1934,17 @@ static void pollStateLog(void) {
                 u32 before = readStateBit(i, 1), after = readStateBit(i, 0);
                 if (before != after && enabled[bitLogCategory(i)]) {
                     const PracticeBitLabel* entry = namedBit(i);
+                    const char* name = gameBitName(i);
+                    if (name == NULL) {
+                        name = entry ? entry->name : "UNNAMED";
+                    }
                     if (count++ < 32) {
                         if (entry && entry->page == FLAGS_ITEM_AREA) {
                             sprintf(logLine, "[PRACTICE][%u][BIT %03X][REGION %d][%s] %s: %08X -> %08X\n", logFrame, i,
-                                    gGameBitTable[i].flags >> 6, itemAreaNames[entry->map], entry->name, before, after);
+                                    gGameBitTable[i].flags >> 6, itemAreaNames[entry->map], name, before, after);
                         } else {
                             sprintf(logLine, "[PRACTICE][%u][BIT %03X][REGION %d] %s: %08X -> %08X\n", logFrame, i,
-                                    gGameBitTable[i].flags >> 6, entry ? entry->name : "UNNAMED", before, after);
+                                    gGameBitTable[i].flags >> 6, name, before, after);
                         }
                         sendPracticeLog();
                     }
@@ -2194,7 +2206,7 @@ static void drawMenu(void) {
     }
     rectangle(20, 20, 600, 430, 0x081020EF);
     rectangle(20, 20, 600, 4, 0x59D5FFFF);
-    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.17", WHITE);
+    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.18", WHITE);
     for (i = 0; i < TAB_COUNT; i++) {
         int width = 580 / TAB_COUNT;
         if (i == activeTab) {
