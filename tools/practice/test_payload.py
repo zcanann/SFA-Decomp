@@ -9,7 +9,7 @@ import struct
 import sys
 import unittest
 
-from build import ROOT, PAYLOAD_ADDRESS, PAYLOAD_LIMIT, compile_payload, make_patch, sections, symbols, tool_directory
+from build import ROOT, PAYLOAD_ADDRESS, PAYLOAD_LIMIT, compile_payload, make_patch, apply_dol, sections, symbols, tool_directory
 
 OUT = ROOT / "build/practice"
 sys.path.insert(0, str(OUT / "python"))
@@ -66,7 +66,11 @@ class Machine:
                 "EXISync", "EXIDeselect", "EXIUnlock", "sndFXCtrl", "getHudHiddenFrameCount", "Sfx_UpdateObjectChannel3D",
                 "playerUpdate", "playerDoHitDetection", "playerDie", "Obj_TransformWorldVectorToLocal",
                 "playerRefreshCollisionState", "trackInvalidateDynamicSlotsForObject", "angleToVec2", "loadMapForCameraPos",
-                "getCurMapLayer", "memcpy", "mmAlloc", "mm_free", "loadMapForCurrentSaveGame", "_saveGame"):
+                "getCurMapLayer", "memcpy", "mmAlloc", "mm_free", "loadMapForCurrentSaveGame", "_saveGame",
+                "MagicCaveTop_update", "objSetupObject", "SaveGame_getCurChar", "SaveGame_setCharacter",
+                "SaveGame_getCurCharPos", "getSbGalleon", "ObjAnim_SetCurrentMove", "player_setState",
+                "Camera_setFocus", "Camera_setMode", "SB_Galleon_onSeqFree", "getEnvfxActImmediately",
+                "setDrawCloudsAndLights", "setDrawLights"):
                 self.stub[addr] = name
         self.uc.hook_add(UC_HOOK_CODE, self.service)
         self.uc.hook_add(UC_HOOK_MEM_WRITE, self.fifo, begin=0xCC008000, end=0xCC008003)
@@ -126,12 +130,22 @@ class Machine:
         elif name == "mainSetBits":
             self.bit_edits.append((self.r(3), self.r(4)))
             self.set_bit(self.r(3), self.r(4))
+        elif name == "MagicCaveTop_update" and self.bit_value(0x91e):
+            self.set_bit(0x91e, 0)
         elif name == "isSaveGameLoading":
             uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "save_loading", 0))
         elif name == "getDataFileSize":
             uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "bit_table_size", 0x4000))
         elif name == "SaveGame_getPlayerStats":
             uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "stats", 0))
+        elif name == "SaveGame_getCurChar":
+            uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "character", 1))
+        elif name == "SaveGame_setCharacter":
+            self.character = self.r(3)
+        elif name == "SaveGame_getCurCharPos":
+            uc.reg_write(UC_PPC_REG_0 + 3, 0x8110b000 + self.character * 16)
+        elif name == "getSbGalleon":
+            uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "ship", 0))
         elif name == "getTrickyObject":
             uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "tricky", 0))
         elif name == "SaveGame_gplaySetAct":
@@ -244,8 +258,8 @@ class Machine:
                 self.write(self.r(3 + axis), self.f(1 + axis) + self.read(self.r(6) + 0x18 + axis * 4, "f"), "f")
         elif name == "ObjList_GetObjects":
             self.write(self.r(3), 0)
-            self.write(self.r(4), 0)
-            uc.reg_write(UC_PPC_REG_0 + 3, 0)
+            self.write(self.r(4), getattr(self, "object_count", 0))
+            uc.reg_write(UC_PPC_REG_0 + 3, getattr(self, "object_list", 0))
         self.calls.append((name, self.r(3), self.r(4), self.r(5)))
         uc.reg_write(UC_PPC_REG_PC, uc.reg_read(UC_PPC_REG_LR))
 
@@ -290,7 +304,8 @@ class Machine:
         self.uc.mem_write(self.sym["gSaveGameMapObjGroupBits"], bytes(240))
         self.uc.mem_write(self.stats, struct.pack(">bbBBhhBBBB", 12, 16, 0, 0, 40, 100, 20, 1, 5, 0))
         for gid, first, width, bank in ((0x75, 0, 1, 2), (0x3f5, 5, 8, 2), (0x4e4, 13, 1, 2),
-                                        (0x958, 14, 1, 2), (0x300, 0, 4, 1), (0x301, 8, 32, 1)):
+                                        (0x958, 14, 1, 2), (0x956, 256, 1, 2),
+                                        (0x300, 0, 4, 1), (0x301, 8, 32, 1)):
             self.bit_def(gid, first, width, bank)
         self.call("practiceStateReady")
 
@@ -328,6 +343,181 @@ class PayloadTests(unittest.TestCase):
         self.m.call("Practice_SetArenaLo", 0x80500000)
         self.assertEqual(self.m.calls[-1][1], 0x80500000)
 
+    def test_linki_registration_reads_retail_cells_and_changes_only_unused_slot(self):
+        from warp_catalog import LINKI_ORIGIN
+        # EN MAPS.tab slot 74: header 98960, cells 99016, end 99240.
+        # Retain the audited header/cells as a small loader fixture, so this
+        # regression needs only the retail DOL, not an entire ISO at a fixed path.
+        cells = [0x7ffe007f] * 56
+        for cell, block in ((10, 0), (18, 1), (25, 4), (26, 2), (33, 3), (34, 5)):
+            cells[cell] = 0x2400007f | (block << 17)
+        header = struct.pack('>4h', 8, 7, 0, 1) + bytes(48)
+        map_data = header + struct.pack('>56I', *cells)
+
+        class MapMachine(Machine):
+            def service(self, uc, pc, size, unused):
+                if pc == self.sym['getTabEntry']:
+                    offset, length = self.r(5), self.r(6)
+                    assert (offset, length) == (98960, 280)
+                    uc.mem_write(self.r(3), map_data)
+                    self.calls.append(('getTabEntry', offset, length))
+                    uc.reg_write(UC_PPC_REG_PC, uc.reg_read(UC_PPC_REG_LR))
+                    return
+                super().service(uc, pc, size, unused)
+
+        m = MapMachine(self.payload, self.exports, self.dol)
+        delta = m.read(m.sym['getCurMapLayer']) & 0xffff
+        if delta & 0x8000:
+            delta -= 0x10000
+        m.uc.reg_write(UC_PPC_REG_0 + 13, m.sym['curMapLayer'] - delta)
+        m.stub[m.sym['initMaps']] = 'initMaps'
+        sizes = (1280, 512, 128, 8192)
+        buffers = [0x81200000 + i * 0x10000 for i in range(4)]
+        before = []
+        for i, (address, size) in enumerate(zip(buffers, sizes), 1):
+            m.write(m.sym['gShaderMapRomBuffers'] + i * 4, address)
+            data = bytes([0 if i == 4 else 0x80 if i == 3 else 0xff]) * size
+            m.uc.mem_write(address, data)
+            before.append(data)
+        m.write(m.sym['gMapsTab'], 0x81300000)
+        m.uc.mem_write(0x81300000 + 74 * 28, struct.pack('>3I', 98960, 99016, 99240))
+        m.write(m.sym['gMapInfoBuffer'], 0x81310000)
+        m.call('Practice_InitMaps')
+        self.assertEqual(m.calls[0][0], 'initMaps')
+        self.assertEqual(sum(c[0] == 'getTabEntry' for c in m.calls), 1)
+        self.assertEqual(struct.unpack('>4h2b', m.uc.mem_read(buffers[0] + 740, 10)),
+                         (LINKI_ORIGIN, LINKI_ORIGIN + 7, LINKI_ORIGIN - 1, LINKI_ORIGIN + 5, 0, 1))
+        self.assertEqual(m.read(buffers[2] + 74, 'b'), 0)
+        occupied = bytes(m.uc.mem_read(buffers[3] + 74 * 64, 64))
+        self.assertEqual([n for n in range(512) if occupied[n // 8] & (1 << (n % 8))],
+                         [10, 18, 25, 26, 33, 34])
+        for address, old, slot_size in zip(buffers, before, (10, 0, 1, 64)):
+            after = bytes(m.uc.mem_read(address, len(old)))
+            start, end = 74 * slot_size, 75 * slot_size
+            self.assertEqual(after[:start] + after[end:], old[:start] + old[end:])
+
+    def test_curated_dim_and_krazoa_entrance_names(self):
+        import json
+        maps = json.loads((OUT / 'warp-catalog.json').read_text())['maps']
+        dim = maps[27]['spawns']
+        self.assertEqual([p['name'] for p in dim],
+                         ['Bike Entrance', 'Waterfall Room', 'Cannon Bridge Switch', 'Galdon Portal'])
+        for p, xyz in zip(dim[1:3], ((-10076.0898, -1948.52502, 17830.9336),
+                                    (-7847.50977, -2225.93994, 16918.0762))):
+            self.assertEqual(tuple(p[k] for k in ('x', 'y', 'z')), xyz)
+            self.assertEqual(p['layer'], -2)
+        for mid in (31, 32, 33, 34, 39):
+            self.assertEqual(maps[mid]['spawns'][0]['name'], 'Entrance')
+        self.assertEqual(maps[74]['spawns'][0]['bank_map'], 12)
+
+    def test_save_integrity_bypass_runs_retail_write_and_preserves_io_errors(self):
+        def checksum(block):
+            words = struct.unpack(">" + "Q" * (len(block) // 8), block)
+            x = 0
+            for word in words:
+                x ^= word
+            return x ^ ((sum(words) + 14) & 0xffffffffffffffff)
+
+        class CardMachine(Machine):
+            def service(self, uc, pc, size, unused):
+                name = self.stub.get(pc)
+                result = 0
+                if name == "mmAlloc":
+                    result = self.next_allocation
+                    self.next_allocation += 0x4000
+                elif name == "saveGame":
+                    self.identity_during_save = self.read(self.sym["gSaveCardIdentityCheckEnabled"], "B")
+                    result = 1
+                elif name == "CARDRead":
+                    offset = self.r(6)
+                    self.read_offsets.append(offset)
+                    result = -5 if self.fail_read else 0
+                    if result == 0:
+                        uc.mem_write(self.r(4), bytes(self.card[offset:offset+self.r(5)]))
+                elif name == "CARDWrite":
+                    result = -3 if self.fail_write else 0
+                    if result == 0:
+                        offset = self.r(6)
+                        self.card[offset:offset+self.r(5)] = uc.mem_read(self.r(4), self.r(5))
+                        self.write_offsets.append(offset)
+                elif name not in ("DCInvalidateRange", "DCFlushRange", "CARDClose", "CARDUnmount"):
+                    return super().service(uc, pc, size, unused)
+                uc.reg_write(UC_PPC_REG_0 + 3, result & 0xffffffff)
+                uc.reg_write(UC_PPC_REG_PC, uc.reg_read(UC_PPC_REG_LR))
+
+        manifest = make_patch(self.dol, self.payload, self.exports)
+        patched = apply_dol(self.dol, manifest, self.payload)
+        for enabled, corrupt, stale_identity, read_error, write_error in (
+                (0, True, False, False, False), (1, True, True, False, False),
+                (0, False, True, False, False), (1, False, True, False, False),
+                (0, False, False, False, False), (1, True, False, True, False),
+                (1, False, False, False, True)):
+            with self.subTest(enabled=enabled, corrupt=corrupt, identity=stale_identity,
+                              read_error=read_error, write_error=write_error):
+                m = CardMachine(self.payload, self.exports, patched)
+                m.call("__init_registers")
+                for name in ("saveGame", "CARDRead", "CARDWrite", "DCInvalidateRange", "DCFlushRange",
+                             "CARDClose", "CARDUnmount"):
+                    m.stub[m.sym[name]] = name
+                m.next_allocation = 0x81180000
+                m.fail_read, m.fail_write = read_error, write_error
+                m.read_offsets, m.write_offsets = [], []
+                m.card = bytearray(0x6000)
+                block = bytearray(0x2000)
+                struct.pack_into(">Q", block, 0xa40, checksum(m.card[:0x2000]))
+                block[0xb00:0xb10] = bytes(range(16))
+                value = checksum(block[:0x1ff8])
+                struct.pack_into(">Q", block, 0x1ff8, value ^ int(corrupt))
+                m.card[0x2000:0x4000] = block
+                m.card[0x4000:0x6000] = block
+                m.write(m.sym["gSaveCardChecksumHi"], value ^ int(stale_identity), "Q")
+                m.write(m.sym["gSaveCardIdentityCheckEnabled"], 1, "B")
+                m.toggle("DISABLE SAVE INTEGRITY CHECKS", enabled)
+                save, data = 0x81100000, 0x81101000
+                m.uc.mem_write(save, b"\x6d" * 0x6ec)
+                m.uc.mem_write(data, b"\x37" * 0xe4)
+                m.call("Practice_PrepareSave", 0, 1, 0, save, data, m.sym["saveGameWriteSlotCb"])
+                success = not (read_error or write_error or (not enabled and (corrupt or stale_identity)))
+                self.assertEqual(m.r(3), int(success))
+                self.assertEqual(m.identity_during_save, 1 - enabled)
+                self.assertEqual(m.read(m.sym["gSaveCardIdentityCheckEnabled"], "B"), 1)
+                self.assertEqual(m.read(m.sym["saveIntegrityBypassActive"], "B"), 0)
+                if success:
+                    self.assertEqual(m.write_offsets[-2:], [0x4000, 0x2000])
+                    for offset in (0x2000, 0x4000):
+                        written = m.card[offset:offset+0x2000]
+                        self.assertEqual(struct.unpack_from(">Q", written, 0x1ff8)[0], checksum(written[:0x1ff8]))
+                        self.assertEqual(written[0xa50+0x6ec:0xa50+2*0x6ec], b"\x6d" * 0x6ec)
+                        self.assertEqual(written[0xb00:0xb10], bytes(range(16)))
+                else:
+                    self.assertFalse(m.write_offsets)
+
+    def test_swim_grid_survives_dense_collision_and_map_origin_changes(self):
+        m = self.m
+        m.toggle("FOX / PLAYER", 1)
+        m.toggle("SWIM ANYWHERE", 1)
+        m.toggle("TRIGGERS", 0)
+        m.write(m.sym["swimActive"], 1, "B")
+        m.write(m.sym["waterHeight"], 140, "f")
+        hit = 0x81100000
+        m.write(m.player + 0x54, hit)
+        m.write(hit + 0x60, 1, "H")
+        m.write(hit + 0x5a, 20, "h")
+        m.write(hit + 0x62, 1, "B")
+        m.object_count, m.object_list = 100, 0x81102000
+        m.uc.mem_write(m.object_list, struct.pack(">I", m.player) * m.object_count)
+        for x, z in ((0, 0), (-9600, 17920)):
+            m.write(m.player + 0x18, x, "f")
+            m.write(m.player + 0x20, z, "f")
+            m.write(m.sym["playerMapOffsetX"], x, "f")
+            m.write(m.sym["playerMapOffsetZ"], z, "f")
+            m.geometry.clear()
+            m.call("Practice_Draw")
+            grid = [g for g in m.geometry if g[2][0][3] == 0x3bbfffff]
+            self.assertEqual(len(grid), 22)
+            self.assertEqual(grid[0][2][0][:3], (-250, 140, -250))
+            self.assertEqual(m.read(m.sym["drawLimitReached"]), 1)
+
     def test_pointer_guard_covers_mem1_but_excludes_payload(self):
         for address, valid in [(0, 0), (PAYLOAD_ADDRESS, 0), (PAYLOAD_LIMIT - 4, 0),
                                (PAYLOAD_LIMIT, 1), (0x817D0000, 1), (0x81800000, 0)]:
@@ -344,17 +534,89 @@ class PayloadTests(unittest.TestCase):
         m.pad(0x64)
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
         m.pad()
-        m.pad(0x100, 0x100)  # A toggles collision off, keeps its children visible.
+        m.pad(0x100, 0x100)  # A toggles collision off and hides its children.
         self.assertEqual(m.read(m.sym["enabled"], "B"), 0)
         self.assertEqual(m.read(m.sym["expanded"], "B"), 1)
         m.pad(4, 4)
         self.assertEqual(m.read(m.sym["selected"]), 1)
+        self.assertEqual(m.read(m.sym["visible"] + 1, "B"), m.row("TRIGGERS"))
+        m.pad(8, 8)
+        m.pad(0x100, 0x100)  # Re-enabling restores the children and their settings.
+        m.pad(4, 4)
+        self.assertEqual(m.read(m.sym["visible"] + 1, "B"), m.row("TERRAIN TRIANGLES"))
+        self.assertEqual(m.read(m.sym["enabled"] + m.row("TERRAIN TRIANGLES"), "B"), 0)
+        self.assertEqual(m.read(m.sym["enabled"] + m.row("OBJECT TRIANGLES"), "B"), 1)
         m.pad(1, 1)  # Left collapses parent
         self.assertEqual(m.read(m.sym["selected"]), 0)
         self.assertEqual(m.read(m.sym["expanded"], "B"), 0)
         m.pad(0x200, 0x200)
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 0)
         self.assertEqual(m.read(m.sym["timeStop"], "B"), 3)
+
+    def test_menu_chord_waits_for_physical_down_release_without_cooldown(self):
+        m = self.m
+        m.write(m.sym["timeStop"], 3, "B")
+        m.pad(0x64, 4)
+        # A skipped retail poll leaves swallowed input at zero while the
+        # physical history still records L+R+Down. It is not a release.
+        m.call("Practice_PadUpdate")
+        m.pad(0x64)
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
+        # Either shoulder can drop out/recover while Down stays held.
+        for held in (0x44, 0x64, 0x24, 0x64, 4, 0x64):
+            m.pad(held)
+            self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
+            self.assertEqual(m.read(m.sym["activeTab"], "B"), 0)
+            self.assertEqual(m.read(m.sym["selected"]), 0)
+        m.pad(0x60)  # Release only Down; keep both shoulders held.
+        m.pad(0x64, 4)  # The next press closes immediately.
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 0)
+        self.assertEqual(m.read(m.sym["timeStop"], "B"), 3)
+        m.pad(0x44)
+        self.assertEqual(m.read(m.sym["gPadButtonsHeld"]), 0)
+        m.call("Practice_PadUpdate")
+        m.pad(0x64)
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 0)
+        m.pad(0x60)
+        m.pad(0x64, 4)  # No minimum frame count before reopening.
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
+        m.pad()
+        m.pad(0x20, 0x20)  # Ordinary L/R tab navigation still works.
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
+        m.pad(0x200, 0x200)
+        self.assertEqual(m.read(m.sym["menuOpen"], "B"), 0)
+        self.assertEqual(m.read(m.sym["timeStop"], "B"), 3)
+
+    def test_menu_tabs_require_a_physical_shoulder_release_and_press(self):
+        m = self.m
+        m.pad(0x64, 4)
+        m.pad()
+        for button, expected in ((0x20, 1), (0x40, 0)):
+            m.pad(button, button)
+            self.assertEqual(m.read(m.sym["activeTab"], "B"), expected)
+            for _ in range(24):
+                # A skipped poll sees input swallowed by the preceding menu
+                # frame, but the physical history still holds this shoulder.
+                m.call("Practice_PadUpdate")
+                m.pad(button)
+                self.assertEqual(m.read(m.sym["activeTab"], "B"), expected)
+            m.pad()
+        # Analog depression and the digital click form one physical press.
+        def sample(buttons, analog):
+            m.write(m.sym["gPadButtonsHeld"], buttons)
+            m.write(m.sym["gPadButtonsPrevious"], buttons)
+            m.write(m.sym["gPadTriggers"], analog, "H")
+            m.write(m.sym["gPadPrevTriggers"], analog, "H")
+            m.call("Practice_PadUpdate")
+        sample(0, 0x20)
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
+        for buttons, analog in ((0x20, 0x20), (0x20, 0), (0x20, 0x20), (0, 0x20)):
+            sample(buttons, analog)
+            m.call("Practice_PadUpdate")
+            self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
+        sample(0, 0)
+        sample(0, 0x20)  # A real release/repress advances immediately.
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 2)
 
     def test_surface_hook_preserves_retail_movement(self):
         # Retail's ground-response path uses incoming f31 before assigning it.
@@ -368,7 +630,7 @@ class PayloadTests(unittest.TestCase):
                             m = Machine(self.payload, self.exports, self.dol)
                             m.call("__init_registers")
                             del m.stub[m.sym["playerUpdateSurfaceResponse"]]
-                            m.toggle("FORCED SWIMMING", int(swimming != 0))
+                            m.toggle("SWIM ANYWHERE", int(swimming != 0))
                             m.write(m.sym["swimActive"], int(swimming == 2), "B")
                             m.write(m.sym["waterHeight"], 140.0, "f")
                             if swimming == 2 and not hooked:
@@ -389,7 +651,7 @@ class PayloadTests(unittest.TestCase):
     def test_swim_restores_real_water_query(self):
         m = self.m
         m.pad()
-        m.toggle("FORCED SWIMMING", 1)
+        m.toggle("SWIM ANYWHERE", 1)
         m.write(m.sym["swimActive"], 1, "B")
         m.write(m.sym["waterHeight"], 140.0, "f")
         m.call("Practice_PlayerControls", m.player, m.state)
@@ -400,14 +662,14 @@ class PayloadTests(unittest.TestCase):
         m.write(m.sym["gPadStatuses"] + 5, 70, "b")
         m.pad(0x40)  # L+C-stick Up
         self.assertEqual(m.read(m.sym["waterHeight"], "f"), 142.0)
-        m.toggle("FORCED SWIMMING", 0)
+        m.toggle("SWIM ANYWHERE", 0)
         m.call("Practice_PlayerControls", m.player, m.state)
         self.assertEqual(m.read(m.state + 0x3F0, "B") & 0x20, 0)
 
     def test_swim_quick_toggle_recaptures_height_without_menu_chord_collision(self):
         m = self.m
         m.pad()
-        m.toggle("FORCED SWIMMING", 1)
+        m.toggle("SWIM ANYWHERE", 1)
         m.pad(0x44, 4)  # L+Down.
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 1)
         self.assertEqual(m.read(m.sym["waterHeight"], "f"), 140)
@@ -417,7 +679,7 @@ class PayloadTests(unittest.TestCase):
         m.pad()
         m.pad(0x44, 4)
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 0)
-        self.assertEqual(m.read(m.sym["enabled"] + m.row("FORCED SWIMMING"), "B"), 1)
+        self.assertEqual(m.read(m.sym["enabled"] + m.row("SWIM ANYWHERE"), "B"), 1)
         m.pad()
         m.write(m.player + 0x1c, 900.0, "f")
         m.pad(0x44, 4)
@@ -445,7 +707,7 @@ class PayloadTests(unittest.TestCase):
         m.pad()
         m.toggle("FREE MOVE", 1)
         m.toggle("AUTO ROLL", 1)
-        m.toggle("FORCED SWIMMING", 1)
+        m.toggle("SWIM ANYWHERE", 1)
         m.write(m.sym["swimActive"], 1, "B")
         m.call("Practice_PlayerUpdate", m.player)
         self.assertEqual(m.calls[-1][0], "playerUpdate")
@@ -549,7 +811,7 @@ class PayloadTests(unittest.TestCase):
     def test_swim_and_free_move_are_mutually_exclusive(self):
         m = self.m
         m.pad()
-        m.toggle("FORCED SWIMMING", 1)
+        m.toggle("SWIM ANYWHERE", 1)
         m.toggle("FREE MOVE", 1)
         m.pad(0x44, 4)
         m.call("Practice_PlayerControls", m.player, m.state)
@@ -576,14 +838,14 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.sym["waterHeight"], "f"), surface + 2)
         self.assertEqual(m.read(m.sym["freePitch"], "h"), pitch)
         m.pad(0x48, 8)
-        m.toggle("FORCED SWIMMING", 0)
+        m.toggle("SWIM ANYWHERE", 0)
         m.pad()
         m.pad(0x64, 4)
         m.pad()
         m.pad(0x20, 0x20)  # Cheats tab starts with Free Move and Invert X.
-        m.write(m.sym["selected"], 2)  # Forced Swimming.
+        m.write(m.sym["selected"], 4)  # Swim Anywhere, after health/magic and enabled Free Move.
         m.pad(0x100, 0x100)
-        self.assertEqual(m.read(m.sym["enabled"] + m.row("FORCED SWIMMING"), "B"), 1)
+        self.assertEqual(m.read(m.sym["enabled"] + m.row("SWIM ANYWHERE"), "B"), 1)
         self.assertEqual(m.read(m.sym["freeActive"], "B"), 1)
         self.assertEqual(m.read(m.sym["swimActive"], "B"), 0)  # Checkbox only arms the shortcut.
         self.assertEqual(m.read(m.sym["waterHeight"], "f"), surface + 2)
@@ -835,7 +1097,7 @@ class PayloadTests(unittest.TestCase):
     def test_menu_geometry_and_preview(self):
         m = self.m
         m.pad(0x64, 4)
-        for label in ["COLLISION", "TRIGGERS", "FORCED SWIMMING"]:
+        for label in ["COLLISION", "TRIGGERS", "SWIM ANYWHERE"]:
             m.write(m.sym["expanded"] + m.row(label), 1, "B")
         m.call("Practice_Draw")
         self.assertGreater(len(m.geometry), 1000)
@@ -997,23 +1259,31 @@ class PayloadTests(unittest.TestCase):
 
     def test_tabs_defaults_and_hover_toggle(self):
         m = self.m
-        for label in ("TERRAIN TRIANGLES", "WATER TRIANGLES", "DRAW THROUGH WALLS", "FORCED SWIMMING", "AUTO-SHIELD HOVER"):
+        for label in ("TERRAIN TRIANGLES", "WATER TRIANGLES", "DRAW THROUGH WALLS", "FOX / PLAYER", "SWIM ANYWHERE", "AUTO-SHIELD HOVER"):
             self.assertEqual(m.read(m.sym["enabled"] + m.row(label), "B"), 0)
         for label in ("COLLISION", "TRIGGERS", "OBJECT TRIANGLES", "OBJECT HIT VOLUMES", "BARRIERS / LEDGES", "BARRIER FILL", "TRANSLUCENT FILL"):
             self.assertEqual(m.read(m.sym["enabled"] + m.row(label), "B"), 1)
         m.pad(0x64, 4)
         m.call("rebuildRows")
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 0)
-        self.assertEqual(m.read(m.sym["visibleCount"]), 24)
+        self.assertEqual(m.read(m.sym["visibleCount"]), 18)
         m.pad()
         m.pad(0x20, 0x20)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
-        self.assertEqual(m.read(m.sym["visibleCount"]), 12)
-        self.assertEqual(m.read(m.sym["visible"]), m.row("FREE MOVE"))
-        self.assertEqual(m.read(m.sym["visible"] + 4), m.row("INVERT X"))
+        self.assertEqual(m.read(m.sym["visibleCount"]), 7)
+        self.assertEqual(m.read(m.sym["visible"], "B"), m.row("INFINITE HEALTH"))
+        self.assertEqual(m.read(m.sym["visible"] + 1, "B"), m.row("INFINITE MAGIC"))
+        self.assertEqual(m.read(m.sym["visible"] + 2, "B"), m.row("FREE MOVE"))
+        self.assertEqual(m.read(m.sym["visible"] + 3, "B"), m.row("SWIM ANYWHERE"))
         self.assertEqual(m.read(m.sym["enabled"] + m.row("INVERT X"), "B"), 1)
         m.pad(0x20)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)  # Holding R does not repeat tabs.
+        m.write(m.sym["selected"], 2)
+        m.pad(0x100, 0x100)  # Free Move reveals its retained Invert X option.
+        m.pad()
+        self.assertEqual(m.read(m.sym["visibleCount"]), 8)
+        self.assertEqual(m.read(m.sym["visible"] + 3, "B"), m.row("INVERT X"))
+        m.pad(0x100, 0x100)
         m.pad(0x40, 0x40)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 0)
         m.pad()
@@ -1030,7 +1300,7 @@ class PayloadTests(unittest.TestCase):
         m.pad()
         m.pad(0x40, 0x40)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 1)
-        m.write(m.sym["selected"], 5)
+        m.write(m.sym["selected"], 4)  # Hover; disabled groups hide their children.
         m.pad(0x100, 0x100)
         self.assertEqual(m.read(m.sym["enabled"] + m.row("AUTO-SHIELD HOVER"), "B"), 1)
         self.assertEqual(m.read(m.sym["hoverActive"], "B"), 0)  # Menu wins over automation.
@@ -1121,10 +1391,11 @@ class PayloadTests(unittest.TestCase):
         m.pad(0x20, 0x20)
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 2)
         self.assertEqual(m.read(m.sym["visibleCount"]), 11)
-        self.assertEqual(m.read(m.sym["visible"] + 3 * 4), m.row("WARP NOW"))
+        self.assertEqual(m.read(m.sym["visible"] + 3, "B"), m.row("WARP NOW"))
         destination = m.sym["warpDestination"]
         default = bytes(m.uc.mem_read(destination, 16))
-        self.assertAlmostEqual(m.read(destination, "f"), 3583.789306640625)
+        self.assertEqual(m.read(m.sym["warpMap"]), 7)
+        self.assertAlmostEqual(m.read(destination, "f"), -5541.40576171875)
         m.write(m.sym["selected"], 4)
         m.pad(2, 2)
         self.assertEqual(m.read(destination, "f"), struct.unpack(">f", default[:4])[0] + 10)
@@ -1133,23 +1404,29 @@ class PayloadTests(unittest.TestCase):
         m.pad(2, 2)
         self.assertEqual(m.read(m.sym["warpSpawn"]), 1)
         self.assertEqual(m.read(m.sym["warpEdited"], "B"), 0)
-        self.assertEqual(m.read(destination + 4, "f"), 6545.6337890625)
+        self.assertEqual(m.read(destination + 4, "f"), -636.2503051757812)
         m.write(m.sym["selected"], 1)
         m.pad(2, 2)
-        self.assertNotEqual(m.read(m.sym["warpMap"]), 23)
+        self.assertEqual(m.read(m.sym["warpMap"]), 8)
         self.assertEqual(m.read(m.sym["warpSpawn"]), 0)
         self.assertFalse(any(c[0] == "warpToMap" for c in m.calls))
         # Browsing object chunks shows unavailable entries, without issuing warps.
         m.write(m.sym["selected"], 0)
-        m.write(m.sym["warpCategory"], 6)
+        m.write(m.sym["warpCategory"], 8)
         m.pad(2, 2)
         self.assertEqual(m.read(m.sym["warpMap"]), 75)
         m.write(m.sym["selected"], 3)
         m.pad(0x100, 0x100)
         self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
         self.assertFalse(any(c[0] == "warpToMap" for c in m.calls))
+        for mid in (55, 64):  # Duster Cave softlocks; Nik Test deadlocks.
+            m.write(m.sym["warpMap"], mid)
+            m.call("resetWarpSpawn")
+            m.call("requestPracticeWarp", m.player)
+            self.assertEqual(m.read(m.sym["menuOpen"], "B"), 1)
+            self.assertFalse(any(c[0] == "warpToMap" for c in m.calls))
         # Resetting the map restores the preset, including Y/layer/facing.
-        m.write(m.sym["warpMap"], 23)
+        m.write(m.sym["warpMap"], 7)
         m.write(m.sym["warpSpawn"], 0)
         m.call("resetWarpSpawn")
         self.assertEqual(bytes(m.uc.mem_read(destination, 16)), default)
@@ -1160,6 +1437,7 @@ class PayloadTests(unittest.TestCase):
 
     def test_warp_validates_world_cells_and_uses_retail_transition(self):
         m = self.m
+        m.write(m.sym["warpMap"], 23)
         bounds, layers, cells = 0x81100000, 0x81101000, 0x81102000
         m.write(m.sym["gShaderMapRomBuffers"] + 4, bounds)
         m.write(m.sym["gShaderMapRomBuffers"] + 12, layers)
@@ -1192,12 +1470,49 @@ class PayloadTests(unittest.TestCase):
         m.write(layers + 7, 0, "b")
         m.write(cells + 7 * 64, 1, "B")
         m.write(m.sym["warpMap"], 7)
+        m.write(m.sym["warpSpawn"], 1)  # Egg Room follows the default Arwing arrival.
         m.call("resetWarpSpawn")
         m.call("warpDestinationMap")
         self.assertEqual(m.r(3), 7)
 
+    def test_warp_categories_follow_progression_and_wrap_both_ways(self):
+        m = self.m
+        for category, expected in ((1, [7, 8, 51, 23, 56, 10, 67, 69, 18, 70, 4, 71, 14, 72, 29, 73, 50, 21]),
+                                   (2, [19, 68, 27, 12, 16, 13, 2, 11]),
+                                   (4, [28, 43, 48, 44, 40]),
+                                   (5, [41, 59, 60, 61, 62, 38]),
+                                   (6, [0, 65, 9, 51, 54, 66]),
+                                   (7, [52, 26, 74])):
+            m.write(m.sym["warpCategory"], category - 1)
+            m.call("editWarpRow", m.row("CATEGORY"), 1)
+            for mid in expected:
+                self.assertEqual(m.read(m.sym["warpMap"]), mid)
+                m.call("changeWarpMap", 1)
+            self.assertEqual(m.read(m.sym["warpMap"]), expected[0])
+            for mid in reversed(expected):
+                m.call("changeWarpMap", -1)
+                self.assertEqual(m.read(m.sym["warpMap"]), mid)
+        m.write(m.sym["warpCategory"], 5)
+        m.call("editWarpRow", m.row("CATEGORY"), 1)
+        self.assertEqual(m.read(m.sym["warpCategory"]), 6)
+        self.assertEqual(m.read(m.sym["warpMap"]), 0)  # Special starts with Ship Battle.
+        m.write(m.sym["warpCategory"], 9)
+        m.call("editWarpRow", m.row("CATEGORY"), 1)
+        self.assertEqual(m.read(m.sym["warpCategory"]), 0)
+        visited = []
+        for _ in range(117):
+            visited.append(m.read(m.sym["warpMap"]))
+            m.call("changeWarpMap", 1)
+        self.assertEqual(sorted(visited), list(range(117)))
+        self.assertEqual(m.read(m.sym["warpMap"]), visited[0])
+        m.call("editWarpRow", m.row("CATEGORY"), -1)
+        self.assertEqual(m.read(m.sym["warpCategory"]), 9)
+        self.assertEqual(m.read(m.sym["warpMap"]), 75)
+        self.assertFalse(any(c[0] == "warpToMap" for c in m.calls))
+
     def test_player_movement_shapes_toggles_and_parent_space(self):
         m = self.m
+        m.toggle("FOX / PLAYER", 1)
         c = m.state + 4
         m.write(c, 0x04002009)
         m.write(c + 0x25C, 0x21, "B")
@@ -1232,6 +1547,7 @@ class PayloadTests(unittest.TestCase):
     def test_practice_warp_queues_destination_banks_only_at_committed_reload(self):
         m = self.m
         m.state_fixture()
+        m.bit_def(0xa82, 260, 1, 2)
         m.write(m.sym["gSaveGameMapObjGroupBits"] + 68 * 2, 0x301, "H")
         m.write(m.sym["gSaveGameMapObjGroupBits"] + 27 * 2, 0x302, "H")
         m.bit_def(0x302, 40, 32, 1)
@@ -1254,7 +1570,8 @@ class PayloadTests(unittest.TestCase):
             self.assertEqual([c[0] for c in m.calls[:2]], ["unlockLevel", "mapLoadByCoords"])
             self.assertEqual([c[:3] for c in m.calls[2:]],
                              [("SaveGame_gplaySetObjGroupStatus", map_id, bit)
-                              for bit in ({68: [1], 27: [0]}.get(map_id, []))])
+                              for bit in ({68: [1], 27: [0]}.get(map_id, []))] +
+                             [("mainSetBits", 0xa82 if map_id in (28, 68, 27) else 0x956, 1)])
             self.assertEqual(m.calls[0][1:], (0, 0, 1))
             self.assertEqual(m.loaded_coordinates[:3], struct.unpack(">3f", destination[:12]))
             self.assertEqual(m.loaded_coordinates[3], layer & 0xffffffff)
@@ -1312,6 +1629,448 @@ class PayloadTests(unittest.TestCase):
         m.call("applyArrivalGroups", 38)  # Arwing: no group bank.
         self.assertEqual(len(m.bit_edits), before)
 
+    def test_ocean_force_point_top_warp_restores_room_groups(self):
+        m = self.m
+        m.state_fixture()
+        m.write(m.sym["gSaveGameMapObjGroupBits"] + 50 * 2, 0x301, "H")
+        m.write(m.sym["gSaveGameMapActBits"] + 50 * 2, 0x300, "H")
+        m.write(m.sym["warpMap"], 50)
+        m.call("resetWarpSpawn")
+        destination = bytes(m.uc.mem_read(m.sym["warpDestination"], 16))
+        m.uc.mem_write(m.sym["warpQueuedDestination"], destination)
+        m.uc.mem_write(m.sym["gRcpPendingWarpDest"], destination)
+        m.write(m.sym["gGameLoopPendingMapId"], 50)
+        for act in (1, 2):
+            m.set_bit(0x300, act)
+            m.set_bit(0x301, 1 << 6)  # Preserve another puzzle's saved group.
+            m.bit_edits.clear()
+            m.write(m.sym["warpLoadPending"], 1, "B")
+            m.call("Practice_WarpReload")
+            expected = (1 << 6) | (1 << 20) | (1 << 21) | (1 << 23)
+            self.assertEqual(m.bit_value(0x301), expected)
+            self.assertEqual(m.read(m.sym["gMapObjGroupStatuses"] + 50 * 4), expected)
+            self.assertEqual(m.bit_value(0x300), act)
+            self.assertTrue(all(edit[0] in (0x301, 0x956) for edit in m.bit_edits))
+
+    def test_shop_warp_restores_thorntail_exit_without_changing_visit_flags(self):
+        m = self.m
+        m.state_fixture()
+        m.write(m.sym["gSaveGameMapObjGroupBits"] + 51 * 2, 0x301, "H")
+        m.write(m.sym["gSaveGameMapObjGroupBits"] + 7 * 2, 0x302, "H")
+        m.write(m.sym["gSaveGameMapObjGroupBits"] + 8 * 2, 0x302, "H")
+        m.write(m.sym["gSaveGameMapActBits"] + 7 * 2, 0x300, "H")
+        m.bit_def(0x302, 40, 32, 1)
+        m.bit_def(0xad3, 72, 1, 2)  # Shop first-visit dialogue seen.
+        m.write(m.sym["warpMap"], 51)
+        m.call("resetWarpSpawn")
+        destination = bytes(m.uc.mem_read(m.sym["warpDestination"], 16))
+        m.uc.mem_write(m.sym["warpQueuedDestination"], destination)
+        m.uc.mem_write(m.sym["gRcpPendingWarpDest"], destination)
+        m.write(m.sym["gGameLoopPendingMapId"], 51)
+        for visited in (0, 1):
+            m.set_bit(0xad3, visited)
+            m.set_bit(0x300, 2)
+            m.set_bit(0x301, 1 << 3)
+            m.set_bit(0x302, (1 << 27) | 1)  # Outside enemies loaded before entering.
+            m.bit_edits.clear()
+            m.write(m.sym["warpLoadPending"], 1, "B")
+            m.call("Practice_WarpReload")
+            self.assertEqual(m.bit_value(0x301), (1 << 3) | 0x61)
+            self.assertEqual(m.bit_value(0x302), (1 << 27) | (1 << 11))
+            self.assertEqual(m.read(m.sym["gMapObjGroupStatuses"] + 8 * 4), m.bit_value(0x302))
+            self.assertEqual(m.bit_value(0x300), 2)
+            self.assertEqual(m.bit_value(0xad3), visited)
+            self.assertTrue(all(edit[0] in (0x301, 0x302, 0x956) for edit in m.bit_edits))
+
+    def test_named_room_warps_queue_groups_and_banks_without_resetting_progress(self):
+        m = self.m
+        m.state_fixture()
+        m.bit_def(0x212, 100, 1, 2)
+        m.bit_def(0x818, 101, 1, 2)
+        m.bit_def(0xe05, 102, 1, 2)
+        m.bit_def(0x956, 103, 1, 2)
+        m.bit_def(0xd37, 104, 1, 2)
+        for bit, first in ((0x142, 105), (0x1ec, 106), (0x40, 107), (0x5bd, 108), (0x9e9, 109)):
+            m.bit_def(bit, first, 1, 2)
+        m.bit_def(0xa82, 110, 1, 2)
+        bounds, layers, cells = 0x81200000, 0x81201000, 0x81202000
+        m.write(m.sym["gShaderMapRomBuffers"] + 4, bounds)
+        m.write(m.sym["gShaderMapRomBuffers"] + 12, layers)
+        m.write(m.sym["gShaderMapRomBuffers"] + 16, cells)
+        # Expected retail IDs in the requested menu order, room masks and banks.
+        cases = {
+            2: [(121, 0, -1), (128, 0, -1), (128, 0, -1), (128, 0, -1), (128, 0x1004, -1)],
+            4: [(124, 0, -1), (72, 8, -1), (81, 0x140, -1), (122, 0x140, -1), (123, 0, -1)],
+            7: [(108, 0, -1), (3, 0x80, -1), (15, 0, -1), (52, 0x100, -1), (102, 0, -1)],
+            8: [(95, 0x80000000, 19), (128, 0x2000000, 19)],
+            10: [(103, 2, -1), (66, 8, -1), (128, 0x1130, -1), (128, 0x190, 65)],
+            11: [(40, 8, -1), (32, 0x60, -1), (34, 0x300, -1), (34, 0x300, -1),
+                 (78, 0xc00, -1), (65, 0xc00, -1), (6, 3, -1)],
+            12: [(99, 0, -1), (74, 2, -1), (128, 0xc0, 24), (128, 0x8080000, -1)],
+            13: [(120, 0, -1), (19, 0, -1), (128, 0, -1), (21, 0, -1), (70, 0, -1),
+                 (91, 16, -1), (128, 16, -1), (128, 16, -1), (128, 0, -1)],
+            18: [(16, 0, -1), (128, 32, -1), (64, 256, -1), (128, 256, -1)],
+            19: [(119, 0, -1), (128, 0, -1), (128, 2, -1), (128, 0x122, -1),
+                 (128, 0x140, -1), (128, 8, -1), (128, 0x140280, -1),
+                 (128, 0x40080, -1), (128, 0x10000, -1), (128, 0x400, -1),
+                 (128, 0x201000, -1), (128, 0x205000, -1)],
+            28: [(92, 0, -1), (30, 4, -1), (29, 0, -1), (54, 0, -1)],
+            29: [(128, 0, -1), (128, 0, -1), (53, 0, -1), (128, 0, -1), (128, 0, -1),
+                 (128, 0, -1), (128, 0, -1), (128, 0, -1), (128, 0, -1)],
+            50: [(115, 0, -1), (128, 0, -1), (104, 0, -1)],
+        }
+        custom = {(8, 1): (-6063.78467, -1378.93994, -1727.74219),
+                  (10, 2): (-5006.61035, -769.940002, 2251.30469),
+                  (10, 3): (-5783.62256, -834.940002, 1350.67285),
+                  (12, 2): (1711.75391, 1866.06006, -16725.6328),
+                  (12, 3): (107.256348, 2049.06006, -16931.1602),
+                  (13, 2): (-16324.0811, -1122.93994, -13857.9746),
+                  (13, 6): (-14271.3672, -1001.94, -12973.8633),
+                  (13, 7): (-18367.6523, -1001.94, -14556.7051),
+                  (13, 8): (-16320.599609375, -474.0, -13759.7998046875),
+                  (18, 1): (-12825.8311, -220.606461, -2201.03027),
+                  (18, 3): (-12220.2471, 37.0600014, -4310.73633),
+                  (19, 1): (-7468.39258, -1229.19495, 9575.22461),
+                  (19, 2): (-7792.62012, -1170.76294, 10578.2334),
+                  (19, 3): (-8107.45459, -1251.93994, 12673.5801),
+                  (19, 4): (-8457.36621, -1311.93994, 13714.9141),
+                  (19, 5): (-8680.41406, -1458.93994, 11013.4033),
+                  (19, 6): (-7708.66357, -1258.24097, 13558.5918),
+                  (19, 7): (-8374.41016, -1005.94, 14447.2275),
+                  (19, 8): (-6573.54492, -1228.93994, 14728.7676),
+                  (19, 9): (-7278.93896, -1041.93994, 15043.3613),
+                  (19, 10): (-10037.4512, -782.878357, 14736.7),
+                  (19, 11): (-9730.06348, -916.940002, 14331.4121),
+                  (29, 5): (3299.2041, -1579.93994, -2635.34961),
+                  (29, 7): (3358.5166, -1398.93994, -4058.07812),
+                  (50, 1): (3371.50684, -1620.93994, -8013.62842)}
+        for mid, presets in cases.items():
+            m.write(m.sym["gSaveGameMapObjGroupBits"] + mid * 2, 0x301, "H")
+            m.write(m.sym["gSaveGameMapActBits"] + mid * 2, 0x300, "H")
+            for spawn, (warp, groups, bank) in enumerate(presets):
+                with self.subTest(map=mid, spawn=spawn):
+                    initial_groups = 1 << 20
+                    cleared_groups = 0
+                    if mid == 11 and spawn == 6:
+                        cleared_groups = (1 << 2) | (1 << 3) | (1 << 5)
+                    if mid == 12 and spawn == 3:
+                        cleared_groups = sum(1 << n for n in (0, 1, 5, 7, 8))
+                    initial_groups |= cleared_groups
+                    m.set_bit(0x301, initial_groups)
+                    initial_act = 1 if mid == 13 else 2
+                    m.set_bit(0x300, initial_act)
+                    for bit in (0x212, 0x818, 0xe05, 0x142, 0x1ec):
+                        m.set_bit(bit, 0)
+                    m.write(m.sym["warpMap"], mid)
+                    m.write(m.sym["warpSpawn"], spawn)
+                    m.call("resetWarpSpawn")
+                    destination = bytes(m.uc.mem_read(m.sym["warpDestination"], 16))
+                    x, y, z, layer, _ = struct.unpack(">3f2h", destination)
+                    if (mid, spawn) in custom:
+                        self.assertEqual(destination[:12], struct.pack(">3f", *custom[mid, spawn]))
+                    gx, gz = math.floor(x / 640), math.floor(z / 640)
+                    m.uc.mem_write(layers, bytes([127]) * 128)
+                    m.write(layers + mid, layer, "b")
+                    m.write(cells + mid * 64, 1, "B")
+                    m.uc.mem_write(bounds + mid * 10, struct.pack(">4h2b", gx, gx, gz, gz, 0, 0))
+                    m.write(m.sym["gWarpRequested"], 0, "B")
+                    m.call("requestPracticeWarp", m.player)
+                    self.assertEqual(m.read(m.sym["gPendingWarpIndex"], "h"), warp)
+                    self.assertEqual(m.read(m.sym["warpQueuedGroups"]), groups)
+                    self.assertEqual(m.bit_value(0x301), initial_groups)
+                    act = (spawn + 1 if spawn < 6 else 1) if mid == 11 else 0
+                    if mid == 13 and spawn == 8:
+                        act = 2
+                    if mid == 29:
+                        act = {5: 3, 7: 2}.get(spawn, 0)
+                    self.assertEqual(m.read(m.sym["warpQueuedAct"], "h"), act)
+                    self.assertEqual(m.bit_value(0x300), initial_act)
+                    flags = {2: 1, 12: 2, 13: 4}.get(mid, 0) if spawn else 0
+                    if mid == 12 and spawn == 3:
+                        flags |= 8
+                    self.assertEqual(m.read(m.sym["warpQueuedFlags"], "H"), flags)
+                    self.assertEqual(m.bit_value(0x212), 0)
+                    self.assertEqual(m.bit_value(0x818), 0)
+                    self.assertEqual(m.bit_value(0x1ec), 0)
+                    # Further menu browsing must not replace the queued room.
+                    m.write(m.sym["warpSpawn"], 0)
+                    m.call("resetWarpSpawn")
+                    m.write(m.sym["gGameLoopPendingMapId"], mid)
+                    m.bit_edits.clear()
+                    m.call("Practice_WarpReload")
+                    baseline = {2: 0x18000, 4: 6, 7: 0x43d, 8: 0, 10: 1, 11: 0, 12: 1,
+                                13: 0xc23, 18: 0x2000001, 19: 0x400001, 28: 0, 29: 0x80000013, 50: 0xb00000}[mid]
+                    if mid == 18 and spawn == 0:
+                        baseline |= 4  # Ground Quake exit restores the life-force door corridor.
+                    if mid == 12 and spawn == 3:
+                        baseline = 0
+                    self.assertEqual(m.bit_value(0x301), (1 << 20) | baseline | groups)
+                    self.assertEqual(m.read(m.sym["gGameLoopPendingMapDataFileId"], "i"), bank)
+                    self.assertEqual(m.bit_value(0x300), act or initial_act)
+                    landing_edits = ([(0x212 if mid == 12 else 0x818, 1)] if flags else []) if mid in (12, 13) else [(0x956, 1)]
+                    if mid == 2:
+                        landing_edits = [(0x9e9, 1)] if flags else []
+                    if mid == 11:
+                        landing_edits.append((0xd37, int(warp != 78)))
+                    if mid in (19, 28):
+                        landing_edits = [(0xa82, int(warp != 119))]
+                    if mid == 29 and act == 3:
+                        landing_edits = [(0x142, 1), (0x1ec, 1)] + landing_edits
+                    self.assertEqual(m.bit_edits, landing_edits)
+                    self.assertEqual(m.bit_value(0x40), 0)  # Act overrides do not grant staff spells.
+                    self.assertEqual(m.bit_value(0x5bd), 0)
+                    self.assertEqual(m.bit_value(0xe05), 0)  # Keep WC's environment initialization.
+                    self.assertEqual(m.read(m.sym["warpQueuedGroups"]), 0)
+                    self.assertEqual(m.read(m.sym["warpQueuedBankMap"], "h"), -1)
+        for pending in (0, 1):
+            m.set_bit(0x301, 0)
+            m.set_bit(0x212, 0)
+            m.set_bit(0x818, 0)
+            m.write(m.sym["warpQueuedFlags"], 6, "H")
+            m.write(m.sym["warpLoadPending"], pending, "B")
+            m.write(m.sym["warpQueuedGroups"], 0xffffffff)
+            m.write(m.sym["warpQueuedBankMap"], 67, "h")
+            m.write(m.sym["gRcpPendingWarpDest"], 0.0, "f")
+            m.write(m.sym["gGameLoopPendingMapDataFileId"], 77)
+            m.call("Practice_WarpReload")
+            self.assertEqual(m.bit_value(0x301), 0)
+            self.assertEqual(m.bit_value(0x212), 0)
+            self.assertEqual(m.bit_value(0x818), 0)
+            self.assertEqual(m.read(m.sym["gGameLoopPendingMapDataFileId"]), 77)
+
+    def test_totem_event_rearms_completed_save_only_for_committed_event_preset(self):
+        m = self.m
+        m.state_fixture()
+        reset = (0x2d0, 0x2bc, 0x64c, 0x64d, 0x64e, 0x64f, 0x650,
+                 0xa4c, 0xa4d, 0xa4e, 0xa4f, 0x768, 0x769, 0x76a, 0x76b,
+                 0xa50, 0xa51, 0xa52, 0xa53)
+        for i, gid in enumerate(reset + (0x2b5, 0x4d0, 0x61c)):
+            m.bit_def(gid, 500 + i, 1, 2)
+        m.write(m.sym["gSaveGameMapObjGroupBits"] + 14 * 2, 0x301, "H")
+        m.write(m.sym["gSaveGameMapActBits"] + 14 * 2, 0x300, "H")
+        for flags, warp, pending in ((0, 80, 1), (16, 128, 1), (16, 80, 0),
+                                     (16, 80, 1), (16, 80, 1)):
+            event = flags == 16 and warp == 80 and pending
+            m.set_bit(0x301, (1 << 20) | 2)
+            m.set_bit(0x300, 6)
+            for gid in reset + (0x61c,):
+                m.set_bit(gid, 1)
+            for gid in (0x2b5, 0x4d0):
+                m.set_bit(gid, 0)
+            m.write(m.sym["gGameLoopPendingMapId"], 14)
+            m.write(m.sym["gPendingWarpIndex"], warp, "h")
+            m.write(m.sym["warpQueuedFlags"], flags, "H")
+            m.write(m.sym["warpQueuedAct"], 2, "h")
+            m.write(m.sym["warpQueuedGroups"], 4)
+            m.write(m.sym["warpLoadPending"], pending, "B")
+            m.call("Practice_WarpReload")
+            self.assertEqual([m.bit_value(gid) for gid in reset], [int(not event)] * len(reset))
+            self.assertEqual(m.bit_value(0x2b5), int(bool(event)))
+            self.assertEqual(m.bit_value(0x4d0), int(bool(event)))
+            self.assertEqual(m.bit_value(0x61c), 1)  # Tracking/strength progress survives.
+            self.assertEqual(m.bit_value(0x301), (1 << 20) | (4 if event else (6 if pending else 2)))
+
+    def test_practice_landings_cover_planet_and_dungeon_submaps(self):
+        m = self.m
+        m.state_fixture()
+        bits = (0x956, 0x212, 0x818, 0x9e9, 0xa82, 0xd37, 0xc85)
+        for i, bit in enumerate(bits):
+            m.bit_def(bit, 200 + i, 1, 2)
+        cases = [(mid, 128, 0x956) for mid in (4, 7, 8, 10, 14, 18, 21, 23, 29, 50, 51, 54, 56, 66, 67)]
+        for maps, bit in (((2, 44, 52), 0x9e9), ((12, 16, 43, 74), 0x212),
+                          ((13, 48), 0x818), ((19, 27, 28, 68), 0xa82)):
+            cases.extend((mid, 128, bit) for mid in maps)
+        cases += [(2, 121, None), (12, 99, None), (13, 120, None), (19, 119, None)]
+        cases += [(11, 78, 0x956), (11, 6, 0x956)]
+        for mid, warp, changed in cases:
+            for initial in (0, 1):
+                with self.subTest(map=mid, warp=warp, initial=initial):
+                    for bit in bits:
+                        m.set_bit(bit, initial)
+                    m.bit_edits.clear()
+                    m.write(m.sym["gPendingWarpIndex"], warp, "h")
+                    m.write(m.sym["gGameLoopPendingMapId"], mid)
+                    m.write(m.sym["warpLoadPending"], 1, "B")
+                    dest = struct.pack(">3f2h", 100, 200, 300, 0, 0)
+                    m.uc.mem_write(m.sym["warpQueuedDestination"], dest)
+                    m.uc.mem_write(m.sym["gRcpPendingWarpDest"], dest)
+                    m.call("Practice_WarpReload")
+                    expected_edits = [(changed, 1)] if changed else []
+                    if mid == 19 and warp == 119:
+                        expected_edits = [(0xa82, 0)]
+                    if mid == 11:
+                        expected_edits.append((0xd37, int(warp != 78)))
+                    self.assertEqual(m.bit_edits, expected_edits)
+                    for bit in bits:
+                        expected = int(warp != 78) if mid == 11 and bit == 0xd37 else 1 if bit == changed else initial
+                        if mid == 19 and warp == 119 and bit == 0xa82:
+                            expected = 0
+                        self.assertEqual(m.bit_value(bit), expected)
+        # A normal Ice Mountain warp, or a scripted warp superseding the queued
+        # destination, must not clear Thorntail's pending arrival.
+        for pending in (0, 1):
+            m.set_bit(0x956, 0)
+            m.bit_edits.clear()
+            m.write(m.sym["gGameLoopPendingMapId"], 23)
+            m.write(m.sym["warpLoadPending"], pending, "B")
+            m.write(m.sym["gRcpPendingWarpDest"], 999, "f")
+            m.call("Practice_WarpReload")
+            self.assertEqual(m.bit_edits, [])
+            self.assertEqual(m.bit_value(0x956), 0)
+
+    def test_dragon_rock_custom_spawns_suppress_only_the_pending_landing(self):
+        m = self.m
+        m.state_fixture()
+        m.bit_def(0x9e9, 80, 1, 2)
+        m.bit_def(0xe7b, 81, 1, 2)
+        m.write(m.sym["gSaveGameMapObjGroupBits"] + 2 * 2, 0x301, "H")
+        bounds, layers, cells = 0x81200000, 0x81201000, 0x81202000
+        m.write(m.sym["gShaderMapRomBuffers"] + 4, bounds)
+        m.write(m.sym["gShaderMapRomBuffers"] + 12, layers)
+        m.write(m.sym["gShaderMapRomBuffers"] + 16, cells)
+        m.uc.mem_write(layers, bytes([127]) * 128)
+        m.write(layers + 2, 0, "b")
+        m.write(cells + 2 * 64, 1, "B")
+        coordinates = [None, (-16170.6943, -1406.93994, 13305.6621),
+                       (-16116.4424, -1632.93994, 12628.3105),
+                       (-17069.1855, -1632.93994, 9946.83105),
+                       (-16982.3438, -1647.93994, 8530.29395)]
+        for spawn, expected in enumerate(coordinates):
+            m.set_bit(0x9e9, 0)
+            m.set_bit(0xe7b, 0)
+            m.set_bit(0x301, 1 << 5)
+            m.write(m.sym["warpMap"], 2)
+            m.write(m.sym["warpSpawn"], spawn)
+            m.call("resetWarpSpawn")
+            destination = bytes(m.uc.mem_read(m.sym["warpDestination"], 16))
+            x, y, z, layer, _ = struct.unpack(">3f2h", destination)
+            if expected:
+                self.assertEqual(destination[:12], struct.pack(">3f", *expected))
+            gx, gz = math.floor(x / 640), math.floor(z / 640)
+            m.uc.mem_write(bounds + 2 * 10, struct.pack(">4h2b", gx, gx, gz, gz, 0, 0))
+            m.write(m.sym["gWarpRequested"], 0, "B")
+            m.call("requestPracticeWarp", m.player)
+            self.assertEqual(m.read(m.sym["warpQueuedFlags"], "H"), int(spawn != 0))
+            self.assertEqual(m.bit_value(0x9e9), 0)
+            self.assertEqual(bytes(m.uc.mem_read(m.sym["gRcpPendingWarpDest"], 16)), destination)
+            m.write(m.sym["warpSpawn"], 0)  # Queued custom arrival survives UI changes.
+            m.write(m.sym["gGameLoopPendingMapId"], 2)
+            m.bit_edits.clear()
+            m.call("Practice_WarpReload")
+            self.assertEqual(m.bit_edits, [(0x9e9, 1)] if spawn else [])
+            self.assertEqual(m.bit_value(0xe7b), 0)  # Keep the weather setup pending.
+            self.assertEqual(m.bit_value(0x301), (1 << 5) | 0x18000 | (0x1004 if spawn == 4 else 0))
+            self.assertEqual(m.read(m.sym["warpQueuedFlags"], "H"), 0)
+        m.set_bit(0x9e9, 0)
+        m.write(m.sym["warpQueuedFlags"], 1, "H")
+        m.bit_edits.clear()
+        m.call("Practice_WarpReload")  # Ordinary arrival must retain the landing sequence.
+        self.assertEqual(m.bit_edits, [])
+        self.assertEqual(m.bit_value(0x9e9), 0)
+
+    def test_great_fox_presets_queue_scene_act_without_changing_ordinary_warps(self):
+        m = self.m
+        m.state_fixture()
+        m.bit_def(0x956, 100, 1, 2)
+        m.write(m.sym["gSaveGameMapActBits"] + 65 * 2, 0x300, "H")
+        m.write(m.sym["warpMap"], 65)
+        m.call("resetWarpSpawn")
+        x, y, z, layer, _ = struct.unpack(">3f2h", m.uc.mem_read(m.sym["warpDestination"], 16))
+        bounds, layers, cells = 0x81200000, 0x81201000, 0x81202000
+        m.write(m.sym["gShaderMapRomBuffers"] + 4, bounds)
+        m.write(m.sym["gShaderMapRomBuffers"] + 12, layers)
+        m.write(m.sym["gShaderMapRomBuffers"] + 16, cells)
+        m.uc.mem_write(layers, bytes([127]) * 128)
+        gx, gz = math.floor(x / 640), math.floor(z / 640)
+        m.uc.mem_write(bounds + 65 * 10, struct.pack(">4h2b", gx, gx, gz, gz, 0, 0))
+        m.write(layers + 65, layer, "b")
+        m.write(cells + 65 * 64, 1, "B")
+        for spawn, act in ((0, 1), (1, 2)):
+            m.set_bit(0x300, 3 - act)
+            m.write(m.sym["warpSpawn"], spawn)
+            m.call("resetWarpSpawn")
+            m.write(m.sym["gWarpRequested"], 0, "B")
+            m.call("requestPracticeWarp", m.player)
+            self.assertEqual(m.read(m.sym["warpQueuedAct"], "h"), act)
+            self.assertEqual(m.bit_value(0x300), 3 - act)  # Only at committed arrival.
+            m.write(m.sym["warpSpawn"], 1 - spawn)  # UI changes cannot alter queued scene.
+            m.write(m.sym["gGameLoopPendingMapId"], 65)
+            m.bit_edits.clear()
+            m.call("Practice_WarpReload")
+            self.assertEqual(m.bit_value(0x300), act)
+            self.assertEqual(m.bit_edits, [(0x956, 1)])
+            self.assertIn(("SaveGame_gplaySetAct", 65, act), [c[:3] for c in m.calls])
+            self.assertEqual(m.read(m.sym["warpQueuedAct"], "h"), 0)
+            self.assertEqual(m.read(m.sym["gGameLoopPendingMapDataFileId"], "i"), 15)
+            m.bit_edits.clear()
+            m.write(m.sym["warpQueuedAct"], 3 - act, "h")
+            m.call("Practice_WarpReload")  # No pending practice arrival.
+            self.assertEqual(m.bit_edits, [])
+            self.assertEqual(m.bit_value(0x300), act)
+            self.assertEqual(m.read(m.sym["warpQueuedAct"], "h"), 0)
+
+    def test_ship_combat_warp_mounts_once_and_restores_previous_character_on_practice_exit(self):
+        m = self.m
+        m.state_fixture()
+        m.write(m.sym["gSaveGameMapActBits"], 0x300, "H")
+        m.write(m.sym["gSaveGameMapObjGroupBits"], 0x301, "H")
+        m.set_bit(0x301, (1 << 2) | (1 << 7))
+        m.write(m.sym["warpMap"], 0)
+        m.call("resetWarpSpawn")
+        destination = bytes(m.uc.mem_read(m.sym["warpDestination"], 16))
+        m.uc.mem_write(m.sym["gRcpPendingWarpDest"], destination)
+        m.uc.mem_write(m.sym["warpQueuedDestination"], destination)
+        m.write(m.sym["warpLoadPending"], 1, "B")
+        m.write(m.sym["gGameLoopPendingMapId"], 0)
+        m.call("Practice_WarpReload")
+        self.assertEqual(m.character, 0)
+        self.assertEqual(m.bit_value(0x75), 1)
+        self.assertEqual(m.bit_value(0x300), 1)
+        self.assertEqual(m.bit_value(0x301), 1 << 7)
+        self.assertEqual(bytes(m.uc.mem_read(0x8110b000, 12)), destination[:12])
+        m.write(m.sym["gShaderCurMapEventId"], 0)
+        # A player update before the vehicle arrives must keep setup pending.
+        m.call("Practice_PlayerUpdate", m.player)
+        self.assertEqual(m.read(m.sym["warpShipPending"], "B"), 1)
+        bird, bird_state = 0x81210000, 0x81212000
+        m.ship, m.object_list, m.object_count = 0x81213000, 0x81214000, 1
+        m.write(m.object_list, bird)
+        m.write(bird + 0x46, 0x8c, "h")
+        m.write(bird + 0xb8, bird_state)
+        for offset, value in ((0x0c, 500.), (0x10, 200.), (0x14, -200.)):
+            m.write(bird + offset, value, "f")
+        for global_name, offset, callback in (("gPlayerInterface", 0x14, "player_setState"),
+                                              ("gCameraInterface", 0x28, "Camera_setFocus"),
+                                              ("gCameraInterface", 0x1c, "Camera_setMode")):
+            ptr = 0x81215000 if global_name == "gPlayerInterface" else 0x81216000
+            m.write(m.sym[global_name], ptr)
+            m.write(ptr, ptr + 0x100)
+            m.write(ptr + 0x100 + offset, m.sym[callback])
+        m.calls.clear()
+        m.call("Practice_PlayerUpdate", m.player)
+        self.assertEqual(m.read(m.sym["warpShipPending"], "B"), 0)
+        self.assertEqual(m.read(m.state + 0x7f0), bird)
+        self.assertEqual(m.read(m.state + 0x6e8), m.sym["gPlayerMotionTuning"] + 24)
+        self.assertEqual(m.read(m.state + 0x6ec, "B"), 4)
+        self.assertIn(("player_setState", m.player, m.state, 0x18), m.calls)
+        self.assertIn(("Camera_setMode", 0x4a, 1, 0), m.calls)
+        self.assertEqual([c[3] for c in m.calls if c[0] == "getEnvfxActImmediately"],
+                         [0x85, 0x83, 0x82, 0x94, 0x84])
+        self.assertEqual(struct.unpack(">3f", m.uc.mem_read(m.ship + 12, 12)), (-1100., -100., -50.))
+        m.calls.clear()
+        m.call("Practice_PlayerUpdate", m.player)
+        self.assertEqual([c[0] for c in m.calls], ["playerUpdate"])
+        # A second battle warp must not replace Fox with Krystal as the saved owner.
+        m.write(m.sym["warpLoadPending"], 1, "B")
+        m.call("Practice_WarpReload")
+        self.assertEqual(m.read(m.sym["warpShipPreviousCharacter"], "B"), 1)
+        m.write(m.sym["gGameLoopPendingMapId"], 7)
+        m.write(m.sym["warpLoadPending"], 1, "B")
+        m.call("Practice_WarpReload")
+        self.assertEqual(m.character, 1)
+        self.assertEqual(m.read(m.sym["warpShipPending"], "B"), 0)
+        self.assertEqual(bytes(m.uc.mem_read(0x8110b010, 12)), destination[:12])
+
     def test_magic_cave_arrivals_set_layout_reward_and_return_without_granting_reward(self):
         m = self.m
         m.state_fixture()
@@ -1356,6 +2115,136 @@ class PayloadTests(unittest.TestCase):
             self.assertEqual(m.read(m.sym["gGameLoopPendingMapDataFileId"], "i"),
                              [12, 12, 12, 12, 14, 47, 7, 25, 20][index])
             self.assertEqual(m.read(m.sym["warpQueuedCave"], "h"), 0)
+
+    def test_practice_cave_returns_restore_banks_groups_and_select_the_exit_actor(self):
+        m = self.m
+        m.state_fixture()
+        m.bit_def(0x91e, 72, 1, 2)
+        m.bit_def(0x818, 73, 1, 2)  # WC_FlewTo: set means landing already completed.
+        m.bit_def(0x302, 40, 32, 1)
+        obj, placement = 0x81210000, 0x81210200
+        m.write(obj + 0x4c, placement)
+        for index, source in enumerate((7, 7, 7, 8, 10, 29, 4, 18, 13)):
+            entry = m.sym["practiceCaveArrivals"] + index * 12
+            exit_warp = m.read(entry + 3, "B")
+            ident = m.read(entry + 4)
+            entrance_group = m.read(entry + 8, "B")
+            m.write(m.sym["gSaveGameMapObjGroupBits"] + source * 2, 0x302, "H")
+            m.set_bit(0x302, 1 << 30)
+            m.set_bit(0x91e, 1)
+            m.set_bit(0x818, 0)
+            m.write(m.sym["warpLoadPending"], 0, "B")
+            m.write(m.sym["warpActiveCave"], index + 1, "B")
+            m.write(m.sym["gShaderCurMapEventId"], 54)
+            m.write(m.sym["gPendingWarpIndex"], exit_warp, "h")
+            m.write(m.sym["gGameLoopPendingMapId"], source)
+            m.calls.clear()
+            m.call("Practice_WarpReload")
+            self.assertIn("mapLoadByCoords", [c[0] for c in m.calls])
+            self.assertEqual(m.bit_value(0x818), int(source == 13))
+            self.assertEqual(m.read(m.sym["warpReturningCave"], "B"), index + 1)
+            self.assertEqual(m.read(m.sym["gGameLoopPendingMapDataFileId"], "i"), 19 if source == 8 else -1)
+            expected = {7: 0x43d, 8: 0, 10: 1, 29: 0x80000013, 4: 6, 18: 0x2000005, 13: 0xc23}[source]
+            if entrance_group < 32:
+                expected |= 1 << entrance_group
+            self.assertEqual(m.bit_value(0x302), expected | (1 << 30))
+            # A different entrance updating first must leave the handoff alone.
+            m.write(obj + 0xac, source, "b")
+            m.write(placement + 20, ident ^ 1)
+            m.calls.clear()
+            m.call("Practice_CaveTopUpdate", obj)
+            self.assertFalse(any(c[0] == "MagicCaveTop_update" for c in m.calls))
+            self.assertEqual(m.bit_value(0x91e), 1)
+            m.write(placement + 20, ident)
+            m.call("Practice_CaveTopUpdate", obj)
+            self.assertEqual(m.bit_value(0x91e), 0)
+            self.assertEqual(m.read(m.sym["warpReturningCave"], "B"), 0)
+        # Unrelated/scripted travel cancels the practice return context.
+        m.write(m.sym["warpActiveCave"], 1, "B")
+        m.write(m.sym["gPendingWarpIndex"], 3, "h")
+        m.set_bit(0x91e, 1)
+        m.set_bit(0x818, 0)
+        m.calls.clear()
+        m.call("Practice_WarpReload")
+        self.assertEqual([c[0] for c in m.calls], ["mainGetBit", "mapReload"])
+        self.assertEqual(m.bit_value(0x818), 0)
+        self.assertEqual(m.read(m.sym["warpReturningCave"], "B"), 0)
+
+    def test_exterior_shrine_presets_start_only_their_own_exit_sequence(self):
+        m = self.m
+        m.state_fixture()
+        m.bit_def(0x91e, 72, 1, 2)
+        bounds, layers, cells = 0x81200000, 0x81201000, 0x81202000
+        m.write(m.sym["gShaderMapRomBuffers"] + 4, bounds)
+        m.write(m.sym["gShaderMapRomBuffers"] + 12, layers)
+        m.write(m.sym["gShaderMapRomBuffers"] + 16, cells)
+        obj, placement = 0x81210000, 0x81210200
+        m.write(obj + 0x4c, placement)
+        for index, (mid, spawn) in enumerate(((7, 4), (7, 3), (7, 1), (8, 0),
+                                             (10, 0), (29, 2), (4, 1), (18, 0), (13, 3))):
+            entry = m.sym["practiceCaveArrivals"] + index * 12
+            ident = m.read(entry + 4)
+            m.write(m.sym["warpMap"], mid)
+            m.write(m.sym["warpSpawn"], spawn)
+            m.call("resetWarpSpawn")
+            x, y, z, layer, _ = struct.unpack(">3f2h", m.uc.mem_read(m.sym["warpDestination"], 16))
+            gx, gz = math.floor(x / 640), math.floor(z / 640)
+            m.uc.mem_write(layers, bytes([127]) * 128)
+            m.write(layers + mid, layer, "b")
+            m.write(cells + mid * 64, 1, "B")
+            m.uc.mem_write(bounds + mid * 10, struct.pack(">4h2b", gx, gx, gz, gz, 0, 0))
+            m.set_bit(0x91e, 0)
+            m.write(m.sym["gWarpRequested"], 0, "B")
+            m.call("requestPracticeWarp", m.player)
+            self.assertEqual(m.read(m.sym["warpQueuedCave"], "h"), -index - 1)
+            self.assertEqual(m.bit_value(0x91e), 0)
+            m.write(m.sym["gGameLoopPendingMapId"], mid)
+            m.call("Practice_WarpReload")
+            self.assertEqual(m.read(m.sym["warpReturningCave"], "B"), index + 1)
+            self.assertEqual(m.bit_value(0x91e), 0)
+            m.write(obj + 0xac, mid, "b")
+            m.write(placement + 20, ident ^ 1)
+            m.calls.clear()
+            m.call("Practice_CaveTopUpdate", obj)
+            self.assertFalse(any(c[0] == "MagicCaveTop_update" for c in m.calls))
+            self.assertEqual(m.bit_value(0x91e), 0)
+            m.write(placement + 20, ident)
+            player = m.player
+            m.player = 0
+            m.call("Practice_CaveTopUpdate", obj)
+            self.assertEqual(m.bit_value(0x91e), 0)
+            self.assertEqual(m.read(m.sym["warpReturningCave"], "B"), index + 1)
+            m.player = player
+            m.call("Practice_CaveTopUpdate", obj)
+            self.assertIn(("mainSetBits", 0x91e, 1),
+                          [c[:3] for c in m.calls if c[0] == "mainSetBits"])
+            self.assertEqual(m.bit_value(0x91e), 0)
+            self.assertEqual(m.read(m.sym["warpReturningCave"], "B"), 0)
+            m.calls.clear()
+            m.call("Practice_CaveTopUpdate", obj)
+            self.assertFalse(any(c[0] == "mainSetBits" for c in m.calls))
+            # An edited coordinate keeps the teleport but omits the sequence.
+            m.write(m.sym["warpEdited"], 1, "B")
+            m.write(m.sym["gWarpRequested"], 0, "B")
+            m.call("requestPracticeWarp", m.player)
+            self.assertEqual(m.read(m.sym["warpQueuedCave"], "h"), 0)
+            m.call("Practice_WarpReload")
+            self.assertEqual(m.read(m.sym["warpReturningCave"], "B"), 0)
+
+    def test_mmp_cave_return_omits_only_the_rolling_door(self):
+        m = self.m
+        placement = 0x81210200
+        m.write(placement, 0x825, "h")
+        m.write(placement + 20, 0x4b3f0)
+        for active, map_id, expected in ((1, 18, False), (0, 18, True), (1, 7, True)):
+            m.write(m.sym["warpMmpCaveReturn"], active, "B")
+            m.calls.clear()
+            m.call("Practice_CaveGroupObject", placement, 1, map_id, 489, 0)
+            self.assertEqual(any(c[0] == "objSetupObject" for c in m.calls), expected)
+        m.write(placement + 20, 0x4babf)  # Life-force door remains eligible.
+        m.calls.clear()
+        m.call("Practice_CaveGroupObject", placement, 1, 18, 473, 0)
+        self.assertTrue(any(c[0] == "objSetupObject" for c in m.calls))
 
     def test_flags_hierarchy_unused_separation_and_back_navigation(self):
         m = self.m
@@ -2019,7 +2908,7 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.sym["hoverWait"]), 0)
         m.pad()
         m.pad(0x20, 0x20)
-        m.write(m.sym["selected"], 6)  # Blanks after roll.
+        m.write(m.sym["selected"], 5)  # Blanks after roll; Free Move/Swimming are off.
         m.pad(2, 2)
         self.assertEqual(m.read(m.sym["rollBlanks"]), 3)
         m.write(m.sym["rollBlanks"], 60)
@@ -2031,6 +2920,7 @@ class PayloadTests(unittest.TestCase):
 
     def test_object_level_sphere_and_barrel_vertical_span_without_model(self):
         m = self.m
+        m.toggle("FOX / PLAYER", 1)
         hit = 0x81100000
         m.write(m.player + 0x54, hit)
         m.write(hit + 0x60, 1, "H")

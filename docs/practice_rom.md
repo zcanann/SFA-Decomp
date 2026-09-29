@@ -12,11 +12,17 @@ Magic Cave contexts remain included.
 ## Controls
 
 - **L + R + D-pad Down:** open/close the practice menu (controller 1).
+  Release Down before toggling again; there is no time cooldown. A shoulder
+  dropping out or a skipped controller poll cannot retrigger the same press.
+  The opening/closing gesture is consumed until Down is physically released.
 - **L/R inside the menu:** previous/next tab, wrapping at the ends. Collision
   is first, followed by Cheats, Warp, Flags and Log. Z is unused. Analog press and digital click count as
   one shoulder press; holding a shoulder does not repeatedly switch tabs.
+  Tab edges use physical input history, so a skipped controller poll cannot
+  turn the menu's cleared gameplay input into a false release/repress.
 - **D-pad Up/Down:** select a row; hold to repeat.
-- **A:** toggle its checkbox. Enabling a group expands it.
+- **A:** toggle its checkbox. Enabling a group expands it; disabling hides its
+  children without resetting their values.
 - **Right/Left:** expand/collapse a group. Left on a child returns to its parent.
 - **Left/Right on numeric rows:** change water height, draw distance, or hover cadence.
 - **B:** close. **X on the Cheats tab:** reset water to the player's Y + 40.
@@ -24,7 +30,18 @@ Magic Cave contexts remain included.
 - **With Auto Roll enabled:** hold X for roll, configurable blanks, shield, repeat.
 - **Warp tab:** Left/Right edits category, map, spawn, position, layer, facing or step.
   Selecting a map/spawn restores its preset. Select **Warp Now** (fourth row, below Spawn) and press **A** to travel.
-- With Forced Swimming enabled: **L + D-pad Down** toggles swimming during play;
+  **Overworld** follows TTH, Well, Shop, Ice Mountain, Snowhorn, MMP, VFPT,
+  LFV, Cape Claw and OFPT exterior/interior, with connecting paths interleaved.
+  **Dungeons** groups DIM, CloudRunner, Walled City, Dragon Rock Top and Krazoa Palace;
+  LinkD sits between DIM Top/Bottom.
+  **Bosses** follows Galdon, CloudRunner Race, King Red Eye, Drakor and Scales.
+  **Outer Space** follows Orbit (World Map), DIM, CRF, Walled City, Dragon Rock
+  and Andross. **Special** contains Ship Battle, Great Fox, WarpStone Maze,
+  Shop (also in Overworld), Magic Cave, and LinkA - Warpstone to Others, in that order.
+  **Unused** contains Dragon Rock Bottom, Animtest, and LinkI. **Unused Broken** holds
+  the remaining legacy maps, including Arwing to Planet.
+  Nik Test and Duster Cave stay listed but cannot be selected as warp destinations.
+- With Swim Anywhere enabled: **L + D-pad Down** toggles swimming during play;
   activation resets the surface to player Y + 40. **L + C-stick Up/Down** adjusts the
   surface while swimming is active. The menu checkbox only arms the shortcut;
   swimming stays off until L+D-pad Down is pressed.
@@ -32,7 +49,8 @@ Magic Cave contexts remain included.
   The main stick moves forward/back and strafes relative to Fox's facing.
   **C-stick Left/Right** swivels Fox with or without L. **C-stick Up/Down**
   ascends/descends; **L + C-stick Up/Down** pitches instead.
-  Free Move is first on the Cheats tab; its **Invert X** child option defaults
+  Infinite Health and Infinite Magic are first on the Cheats tab, then Free Move.
+  Free Move's **Invert X** child option defaults
   on and reverses C-stick swivel. Turn it off for the V1.12 swivel direction.
   Moving forward while pitched also changes altitude. The camera
   follows directly behind Fox. The
@@ -73,10 +91,19 @@ The normal HUD shows a small reminder of the opening chord.
   Cached trace endpoints can coincide after the engine copies the resolved point
   back, so this is not a history of all sweeps. Animation foot-effect positions
   are deliberately not represented as collision shapes.
-- **Forced Swimming:** uses the game's deep-water entry path and substitutes a
+- **Swim Anywhere:** uses the game's deep-water entry path and substitutes a
   player-local water surface/depth. A cyan grid shows that surface. Real map
   water geometry is unchanged. Disabling releases the swim flag and restores
-  the real water query. Normal walls and collision still apply.
+  the real water query. Normal walls and collision still apply. The grid draws
+  before other overlays so dense collision cannot exhaust its line budget.
+- **Disable Save Integrity Checks:** off by default. During a save-slot write,
+  bypasses cached card identity/checksum comparisons. Retail still tries the
+  primary block first; if it falls back to a readable backup with a stale
+  checksum, the practice hook normalizes that checksum in the working buffer
+  so the write can proceed. The normal write routine produces fresh checksums
+  and verifies read-back. Card filesystem checks and read/write errors still
+  apply. The bypass does not affect loading, deleting or formatting cards, and
+  restores the identity-check setting after each write attempt.
 - **Auto-Shield Hover** on Cheats: while physical **X + R are held**, emits
   **R (shield), then X (roll)** on
   successive game input frames. **Blanks After Roll** and **Blanks After Shield**
@@ -95,13 +122,13 @@ The normal HUD shows a small reminder of the opening chord.
   while X + R are held.
 - **Flags / Log:** categorized state editing and optional Dolphin logging,
   described under **V1.5 changes** below.
-- **Warp:** all 117 map IDs are listed in categories. 61 have world destinations:
-  41 use retail WARPTAB entries and 20 use explicitly marked estimated positions.
+- **Warp:** all 117 map IDs are listed in categories. 59 have selectable destinations,
+  using retail WARPTAB entries, curated positions, or explicitly marked estimates.
   Estimated positions come from a central placed object plus 50 Y, or an occupied
   block center with Y=0 when no placement is available; adjust them as needed.
-  They are not guaranteed safe ground or working entrances. The other 56 IDs
-  represent unplaced maps or object chunks and cannot be warped to standalone.
-  The 95 presets use the retail occupied-cell lookup, including overlapping
+  They are not guaranteed safe ground or working entrances. The other 58 IDs
+  are unplaced maps, object chunks, or explicitly unavailable destinations.
+  The 146 presets use the retail occupied-cell lookup, including overlapping
   maps and signed layers. X/Y/Z, layer, facing byte and position step are editable.
   Warping validates that X/Z/layer still resolve to the selected map and uses
   the retail fade/reload path. Edited positions use unused arrival ID 128 to

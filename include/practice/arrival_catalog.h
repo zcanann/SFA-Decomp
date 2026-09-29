@@ -3,14 +3,11 @@
 #define PRACTICE_ARRIVAL_CATALOG_H
 #ifdef SFA_PRACTICE
 #include "global.h"
-typedef struct PracticeArrivalGroups {
-    int map;
-    u32 enable;
-} PracticeArrivalGroups;
+typedef struct PracticeArrivalGroups { int map; u32 enable; } PracticeArrivalGroups;
 static const PracticeArrivalGroups practiceArrivalGroups[] = {
-    {2, 0x00018000u},  /* Dragon Rock - Top */
-    {4, 0x00000006u},  /* Volcano Force Point */
-    {7, 0x0000043Du},  /* ThornTail Hollow */
+    {2, 0x00018000u}, /* Dragon Rock - Top */
+    {4, 0x00000006u}, /* Volcano Force Point */
+    {7, 0x0000043Du}, /* ThornTail Hollow */
     {10, 0x00000001u}, /* SnowHorn Wastes */
     {12, 0x00000001u}, /* CloudRunner Fortress */
     {13, 0x00000C23u}, /* Walled City */
@@ -21,7 +18,8 @@ static const PracticeArrivalGroups practiceArrivalGroups[] = {
     {27, 0x00000001u}, /* DarkIce Mines - Bottom */
     {29, 0x80000013u}, /* Cape Claw */
     {43, 0x00000407u}, /* CloudRunner - Race */
-    {50, 0x00100000u}, /* Ocean Force Point - Top */
+    {50, 0x00B00000u}, /* Ocean Force Point - Top */
+    {51, 0x00000061u}, /* Shop */
     {56, 0x00000001u}, /* LinkB - Ice2Wastes */
     {68, 0x00000002u}, /* LinkD - Darkmines top 2 bot */
     {70, 0xC0000000u}, /* LinkF - moonpass to volcano */

@@ -16,6 +16,15 @@
 #include "main/pi_dolphin_api.h"
 #include "practice/arrival_catalog.h"
 #include "dlls/objects/294.h"
+#include "dlls/objects/287_MagicCaveTo.h"
+#include "dlls/objects/488_SB_Galleon.h"
+#include "dlls/objects/601_SB_Cloudrun.h"
+#include "main/dll/player_data.h"
+#include "main/player_control_interface.h"
+#include "main/camera_interface.h"
+#include "main/objanim.h"
+#include "main/render_envfx_api.h"
+#include "main/lightmap_render_control_api.h"
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"
 #include "dolphin/pad.h"
@@ -31,6 +40,7 @@
 #include "main/gameloop_internal.h"
 #include "main/fileio.h"
 #include "main/mm.h"
+#include "main/maketex_api.h"
 #include "string.h"
 #include "track/intersect_card_api.h"
 #include "main/gamebits_api.h"
@@ -55,6 +65,11 @@ extern u8 timeStop;
 extern int gMapBlockOriginWorldX, gMapBlockOriginWorldZ;
 extern int gShaderCurMapEventId;
 extern void* gShaderMapRomBuffers[5];
+typedef struct PracticeMapBounds {
+    s16 minX, maxX, minZ, maxZ;
+    s8 originX, originZ;
+} PracticeMapBounds;
+extern void mapInitSetRects(PracticeMapBounds* rect, u8* bitmap, int originX, int originZ, int map);
 extern u8 gWarpRequested;
 extern void resetSomeGxFlags(void);
 extern MapBlockData* mapGetBlockAtPos(int x, int z, int layer);
@@ -65,6 +80,7 @@ extern void playerRefreshCollisionState(GameObject*, int, int);
 extern f32 mathSinf(f32);
 extern f32 mathCosf(f32);
 extern u32 getScreenResolution(void);
+extern void playerStagedClearActiveMove(GameObject*);
 
 /* Retail DR_LightHal/Pol/Lam definitions still request DLL 639, but its
  * descriptor was stripped to two zero words. Supply inert scenery callbacks
@@ -155,6 +171,7 @@ enum {
     INFINITE_MAGIC,
     MAP_CELLS,
     FREE_INVERT_X,
+    DISABLE_SAVE_INTEGRITY,
     ROW_COUNT
 };
 enum {
@@ -186,7 +203,7 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"CYLINDERS", TRIGGERS, 0},
                                             {"TARGET MOTION", TRIGGERS, 0},
                                             {"TRANSLUCENT FILL", TRIGGERS, 0},
-                                            {"FORCED SWIMMING", -1, 1, TAB_CHEATS},
+                                            {"SWIM ANYWHERE", -1, 1, TAB_CHEATS},
                                             {"WATER HEIGHT", SWIMMING, 0, TAB_CHEATS},
                                             {"SHOW WATER PLANE", SWIMMING, 0, TAB_CHEATS},
                                             {"DRAW THROUGH WALLS", -1, 0},
@@ -210,7 +227,7 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"LAYER", -1, 0, TAB_WARP},
                                             {"FACING (0-255)", -1, 0, TAB_WARP},
                                             {"POSITION STEP", -1, 0, TAB_WARP},
-                                            {"RESET TO SPAWN", -1, 0, TAB_WARP},
+                                            {"RESET", -1, 0, TAB_WARP},
                                             {"WARP NOW", -1, 0, TAB_WARP},
                                             {"LOG TO DOLPHIN", -1, 0, TAB_LOG},
                                             {"INVENTORY", -1, 0, TAB_LOG},
@@ -228,12 +245,14 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"INFINITE HEALTH", -1, 0, TAB_CHEATS},
                                             {"INFINITE MAGIC", -1, 0, TAB_CHEATS},
                                             {"MAP CELLS / GRAVITY", -1, 0},
-                                            {"INVERT X", FREE_MOVE, 0, TAB_CHEATS}};
-static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+                                            {"INVERT X", FREE_MOVE, 0, TAB_CHEATS},
+                                            {"DISABLE SAVE INTEGRITY CHECKS", -1, 0, TAB_CHEATS}};
+static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1};
 static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
                                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1};
 static u8 menuOpen, chordLatched, savedTimeStop, swimApplied;
+static u8 saveIntegrityBypassActive;
 static u8 menuSoundActive, menuSoundOwned[SFX_OBJECT_CHANNEL_COUNT];
 static int menuSoundHudDepth;
 static u8 menuSoundDvdPaused;
@@ -244,19 +263,26 @@ static u32 hoverButtons;
 static u32 previousShoulders;
 static int hoverWait, rollBlanks = 3, shieldBlanks;
 static int autoRollWait, autoRollBlanks = 39;
-static const char* warpCategories[] = {"ALL MAPS",         "AREAS",          "KRAZOA SHRINES", "BOSSES",
-                                       "CONNECTING PATHS", "ARWING / WORLD", "TEST / UNUSED",  "OBJECT CHUNKS"};
 static const int warpSteps[] = {1, 10, 100, 640};
-static int warpCategory = 1, warpMap = 23, warpSpawn, warpStep = 1;
+static int warpCategory = 1, warpMap = 7, warpSpawn, warpStep = 1;
 static u8 warpReady, warpEdited;
 static WarpDestination warpDestination;
 static WarpDestination warpQueuedDestination;
 static u8 warpLoadPending;
 static s16 warpQueuedCave;
+static u8 warpActiveCave, warpReturningCave, warpMmpCaveReturn;
+static u8 warpShipPending, warpShipCharacterSaved, warpShipPreviousCharacter;
 static s16 warpQueuedLink;
+static s16 warpQueuedAct;
+static u16 warpQueuedFlags;
+static s16 warpQueuedBankMap = -1;
+static u32 warpQueuedGroups;
 static u8 warpActiveLink;
 static const char* warpMessage;
-static int selected, repeatTimer, visibleCount, visible[ROW_COUNT], menuTop;
+static int selected, repeatTimer, visibleCount, menuTop;
+/* Row IDs fit in a byte; keep the menu list compact within the payload arena. */
+static u8 visible[ROW_COUNT];
+STATIC_ASSERT(ROW_COUNT <= 256);
 static int drawDistance = 1000;
 static f32 waterHeight;
 static GameObject* swimOwner;
@@ -970,6 +996,17 @@ static void drawWorld(void) {
     Camera_UpdateProjection(NULL, 0);
     GXLoadPosMtxImm((MtxPtr)gCameraViewMatrix, GX_PNMTX0);
     setupGeometry(!enabled[XRAY]);
+    /* Draw the swim guide before dense overlays can consume the line budget. */
+    if (enabled[SWIMMING] && swimActive && enabled[WATER_GRID]) {
+        for (i = -5; i <= 5; i++) {
+            Vec a = point(origin.x - 250, waterHeight, origin.z + i * 50);
+            Vec b = point(origin.x + 250, waterHeight, origin.z + i * 50);
+            Vec c = point(origin.x + i * 50, waterHeight, origin.z - 250);
+            Vec d = point(origin.x + i * 50, waterHeight, origin.z + 250);
+            line(a, b, 0x3BBFFFFF);
+            line(c, d, 0x3BBFFFFF);
+        }
+    }
     if (enabled[MAP_CELLS]) {
         drawMapCells();
     }
@@ -1005,16 +1042,6 @@ static void drawWorld(void) {
                     drawObjectCollision(obj);
                 }
             }
-        }
-    }
-    if (enabled[SWIMMING] && swimActive && enabled[WATER_GRID]) {
-        for (i = -5; i <= 5; i++) {
-            Vec a = point(origin.x - 250, waterHeight, origin.z + i * 50);
-            Vec b = point(origin.x + 250, waterHeight, origin.z + i * 50);
-            Vec c = point(origin.x + i * 50, waterHeight, origin.z - 250);
-            Vec d = point(origin.x + i * 50, waterHeight, origin.z + 250);
-            line(a, b, 0x3BBFFFFF);
-            line(c, d, 0x3BBFFFFF);
         }
     }
     if (linesDrawn >= lineLimit) {
@@ -1090,13 +1117,14 @@ static void resetWarpSpawn(void) {
 }
 
 static void changeWarpMap(int direction) {
-    int i;
-    for (i = 0; i < 117; i++) {
-        warpMap = (warpMap + 117 + direction) % 117;
-        if (!warpCategory || practiceWarpMaps[warpMap].category == warpCategory) {
-            break;
-        }
+    const PracticeWarpCategory* category = &warpCategories[warpCategory];
+    const u8* maps = &practiceWarpMapOrder[category->firstMap];
+    int count = category->mapCount;
+    int index = 0;
+    while (index < count - 1 && maps[index] != warpMap) {
+        index++;
     }
+    warpMap = maps[(index + count + direction) % count];
     warpSpawn = 0;
     resetWarpSpawn();
 }
@@ -1108,8 +1136,9 @@ static void editWarpRow(int row, int delta) {
     }
     warpMessage = NULL;
     if (row == WARP_CATEGORY) {
-        warpCategory = (warpCategory + 8 + delta) % 8;
-        warpMap = 116;
+        int count = sizeof(warpCategories) / sizeof(warpCategories[0]);
+        warpCategory = (warpCategory + count + delta) % count;
+        warpMap = -1;
         changeWarpMap(1);
     } else if (row == WARP_MAP) {
         changeWarpMap(delta);
@@ -1138,12 +1167,12 @@ static void editWarpRow(int row, int delta) {
 static void drawWarpValue(int row, int y, u32 color) {
     const PracticeWarpMap* map = &practiceWarpMaps[warpMap];
     if (row == WARP_CATEGORY) {
-        textAt(260, y, warpCategories[warpCategory], color);
+        textAt(260, y, warpCategories[warpCategory].name, color);
     } else if (row == WARP_MAP) {
         textAt(260, y, map->name, color);
     } else if (row == WARP_SPAWN) {
         if (!map->spawnCount) {
-            textAt(260, y, "NO WORLD DESTINATION", MUTED);
+            textAt(260, y, "UNAVAILABLE", MUTED);
         } else {
             const PracticeWarpSpawn* spawn = &practiceWarpSpawns[map->firstSpawn + warpSpawn];
             numberAt(260, y, warpSpawn + 1, color);
@@ -1796,6 +1825,39 @@ int Practice_WriteSave(int slot, void* save, void* data) {
     return _saveGame(slot, save, data);
 }
 
+int Practice_PrepareSave(int writeImages, int cbA, int cbB, void* cbC, void* cbD, SaveGameCallback cb) {
+    u8 identity = gSaveCardIdentityCheckEnabled;
+    int result;
+    /* Hook only the write operation, not loading, deletion or formatting. */
+    saveIntegrityBypassActive = enabled[DISABLE_SAVE_INTEGRITY] && writeImages == 0;
+    if (saveIntegrityBypassActive) {
+        gSaveCardIdentityCheckEnabled = 0;
+    }
+    result = saveGame_prepareAndWrite(writeImages, cbA, cbB, cbC, cbD, cb);
+    gSaveCardIdentityCheckEnabled = identity;
+    saveIntegrityBypassActive = 0;
+    return result;
+}
+
+s32 Practice_SaveCardRead(CARDFileInfo* file, void* buffer, s32 length, s32 offset) {
+    s32 result = CARDRead(file, buffer, length, offset);
+    if (saveIntegrityBypassActive && result == CARD_RESULT_READY && buffer == gSaveCardIoBuffer && buffer != NULL &&
+        length == 0x2000 && offset == 0x4000) {
+        u64* words = (u64*)buffer;
+        u64 x = 0, sum = 1;
+        int i;
+        /* Retail tries the primary block first, then this backup. Accept a
+         * readable backup even if its stored checksum is stale. The regular
+         * write path still generates checksums and verifies the write-back. */
+        for (i = 0; i < 0x3ff; i++) {
+            x ^= words[i];
+            sum += words[i];
+        }
+        words[0x3ff] = x ^ (sum + 13);
+    }
+    return result;
+}
+
 /* Observational net changes between draw frames, not a hook on every setter.
  * Baselines advance even for filtered/suppressed events. No gameplay writes. */
 static void pollStateLog(void) {
@@ -1922,16 +1984,19 @@ static void rebuildRows(void) {
     }
     visibleCount = 0;
     if (activeTab == TAB_CHEATS) {
+        visible[visibleCount++] = INFINITE_HEALTH;
+        visible[visibleCount++] = INFINITE_MAGIC;
         visible[visibleCount++] = FREE_MOVE;
-        if (expanded[FREE_MOVE]) {
+        if (enabled[FREE_MOVE] && expanded[FREE_MOVE]) {
             visible[visibleCount++] = FREE_INVERT_X;
         }
     }
     for (i = 0; i < ROW_COUNT; i++) {
-        if (rows[i].tab != activeTab || i == WARP_GO || i == FREE_MOVE || i == FREE_INVERT_X) {
+        if (rows[i].tab != activeTab || i == WARP_GO || i == FREE_MOVE || i == FREE_INVERT_X || i == INFINITE_HEALTH ||
+            i == INFINITE_MAGIC) {
             continue;
         }
-        if (rows[i].parent < 0 || expanded[(int)rows[i].parent]) {
+        if (rows[i].parent < 0 || (enabled[(int)rows[i].parent] && expanded[(int)rows[i].parent])) {
             visible[visibleCount++] = i;
             /* Keep the action beside the three destination selectors. */
             if (i == WARP_SPAWN) {
@@ -2020,7 +2085,7 @@ static void drawMenu(void) {
             color = GOLD;
         }
         if (rows[row].group) {
-            textAt(36, y, expanded[row] ? "-" : "+", color);
+            textAt(36, y, enabled[row] && expanded[row] ? "-" : "+", color);
         }
         if ((row < WARP_CATEGORY || row >= LOG_ENABLED) && row != WATER_HEIGHT && row != RANGE && row != ROLL_BLANKS &&
             row != SHIELD_BLANKS && row != AUTO_ROLL_BLANKS) {
@@ -2051,7 +2116,7 @@ static void drawMenu(void) {
         textAt(220, 350, warpEdited ? "CUSTOM POSITION" : "SPAWN PRESET", MUTED);
         textAt(36, 377,
                warpMessage        ? warpMessage
-               : !map->spawnCount ? "OBJECT / UNPLACED MAP: NO STANDALONE WARP"
+               : !map->spawnCount ? "NO STANDALONE WARP AVAILABLE"
                : !practiceWarpSpawns[map->firstSpawn + warpSpawn].name &&
                        practiceWarpSpawns[map->firstSpawn + warpSpawn].warp < 0
                    ? "ESTIMATED SPAWN - ADJUST POSITION AS NEEDED"
@@ -2082,6 +2147,15 @@ void Practice_SetArenaLo(void* start) {
         start = __practice_limit;
     }
     OSSetArenaLo(start);
+}
+
+/* LinkI retains its six blocks and romlist, but has no GLOBALMA entry.
+ * Register only its unused RAM slot; read geometry through the retail loader. */
+void Practice_InitMaps(void) {
+    initMaps();
+    mapInitSetRects((PracticeMapBounds*)gShaderMapRomBuffers[1] + 74, (u8*)gShaderMapRomBuffers[4] + 74 * 64,
+                    PRACTICE_LINKI_ORIGIN, PRACTICE_LINKI_ORIGIN, 74);
+    ((s8*)gShaderMapRomBuffers[3])[74] = 0;
 }
 
 /* Match the engine's object-SFX pause behavior without unpausing channels that
@@ -2135,10 +2209,6 @@ static void closeMenu(void) {
 /* Read the same world-map bounds/occupied-cell tables as mapCoordsToId,
  * using an absolute layer without modifying the game's current layer. */
 static int warpDestinationMap(void) {
-    typedef struct PracticeMapBounds {
-        s16 minX, maxX, minZ, maxZ;
-        s8 originX, originZ;
-    } PracticeMapBounds;
     PracticeMapBounds* bounds = (PracticeMapBounds*)gShaderMapRomBuffers[1];
     s8* layers = (s8*)gShaderMapRomBuffers[3];
     u8* cells = (u8*)gShaderMapRomBuffers[4];
@@ -2191,22 +2261,89 @@ static void requestPracticeWarp(GameObject* player) {
     gRcpPendingWarpDest = warpDestination;
     warpQueuedDestination = warpDestination;
     warpQueuedCave = practiceWarpSpawns[map->firstSpawn + warpSpawn].cave;
+    if (warpQueuedCave < 0 && warpEdited) {
+        /* A custom position must not be pulled back to the shrine by a sequence. */
+        warpQueuedCave = 0;
+    }
     warpQueuedLink = practiceWarpSpawns[map->firstSpawn + warpSpawn].link;
+    warpQueuedAct = practiceWarpSpawns[map->firstSpawn + warpSpawn].act;
+    warpQueuedFlags = practiceWarpSpawns[map->firstSpawn + warpSpawn].flags;
+    warpQueuedBankMap = practiceWarpSpawns[map->firstSpawn + warpSpawn].bankMap;
+    warpQueuedGroups = practiceWarpSpawns[map->firstSpawn + warpSpawn].groups;
     warpLoadPending = 1;
     if (index < 0 || warpEdited) {
         gPendingWarpIndex = 128;
     }
 }
 
+static void enableWarpGroups(int map, u32 groups) {
+    int bit;
+    for (bit = 0; bit < 32; bit++) {
+        if (groups & (1u << bit)) {
+            SaveGame_gplaySetObjGroupStatus(map, bit, 1);
+        }
+    }
+}
+
+static void suppressWarpLanding(int map, u16 flags) {
+    int bit = GAMEBIT_FlewToPlanet;
+    int arrivalMap = -1, arrivalWarp = -1;
+    u16 skipFlag = 0;
+    switch (map) {
+    case 2:
+    case 44:
+    case 52:
+        bit = GAMEBIT_DR_FlewTo;
+        arrivalMap = 2;
+        arrivalWarp = 121;
+        skipFlag = PRACTICE_WARP_SKIP_DR_ARRIVAL;
+        break;
+    case 12:
+    case 16:
+    case 43:
+    case 74:
+        bit = GAMEBIT_CF_FlewTo;
+        arrivalMap = 12;
+        arrivalWarp = 99;
+        skipFlag = PRACTICE_WARP_SKIP_CF_ARRIVAL;
+        break;
+    case 13:
+    case 48:
+        bit = GAMEBIT_WC_FlewTo;
+        arrivalMap = 13;
+        arrivalWarp = 120;
+        skipFlag = PRACTICE_WARP_SKIP_WC_ARRIVAL;
+        break;
+    case 19:
+    case 27:
+    case 28:
+    case 68:
+        bit = GAMEBIT_DIM_FlewTo;
+        arrivalMap = 19;
+        arrivalWarp = 119;
+        break;
+    }
+    /* Landing controllers interpret a SET bit as completed. Preserve the
+     * main Arwing preset's state, but finish arrivals for other practice
+     * destinations, including a dungeon's submaps and edited spawn points. */
+    if (map != arrivalMap || gPendingWarpIndex != arrivalWarp || (flags & skipFlag)) {
+        mainSetBits(bit, 1);
+    } else if (map == 19) {
+        /* DIM's explicit Arwing Arrival preset replays its landing. */
+        mainSetBits(bit, 0);
+    }
+    /* KPLandingPa uses this completion bit and an always-on trigger. Replay
+     * its landing for the K5 Arwing preset without granting a carried spirit. */
+    if (map == 11) {
+        mainSetBits(GAMEBIT_WM_FlewTo, gPendingWarpIndex != 78);
+    }
+}
+
 static void applyArrivalGroups(int map) {
-    int i, bit;
+    int i;
     for (i = 0; i < sizeof(practiceArrivalGroups) / sizeof(practiceArrivalGroups[0]); i++) {
         if (practiceArrivalGroups[i].map == map) {
-            for (bit = 0; bit < 32; bit++) {
-                if (practiceArrivalGroups[i].enable & (1u << bit)) {
-                    SaveGame_gplaySetObjGroupStatus(map, bit, 1);
-                }
-            }
+            enableWarpGroups(map, practiceArrivalGroups[i].enable);
             break;
         }
     }
@@ -2219,26 +2356,171 @@ static void applyArrivalGroups(int map) {
 void Practice_WarpReload(void) {
     int cave = warpQueuedCave;
     int link = warpQueuedLink;
+    int act = warpQueuedAct;
+    u16 flags = warpQueuedFlags;
+    int bankMap = warpQueuedBankMap;
+    u32 groups = warpQueuedGroups;
+    int returning = 0;
     int practice = warpLoadPending && gRcpPendingWarpDest.x == warpQueuedDestination.x &&
                    gRcpPendingWarpDest.y == warpQueuedDestination.y &&
                    gRcpPendingWarpDest.z == warpQueuedDestination.z &&
                    gRcpPendingWarpDest.layer == warpQueuedDestination.layer;
+    if (!practice && warpActiveCave > 0 &&
+        warpActiveCave <= sizeof(practiceCaveArrivals) / sizeof(practiceCaveArrivals[0]) &&
+        gShaderCurMapEventId == 54 && mainGetBit(GAMEBIT_MC_IsExiting) &&
+        gPendingWarpIndex == practiceCaveArrivals[warpActiveCave - 1].exit) {
+        returning = warpActiveCave;
+    }
     warpLoadPending = 0;
     warpQueuedCave = 0;
     warpQueuedLink = 0;
+    warpQueuedAct = 0;
+    warpQueuedFlags = 0;
+    warpQueuedBankMap = -1;
+    warpQueuedGroups = 0;
     warpActiveLink = 0;
-    if (!practice) {
+    warpActiveCave = 0;
+    warpReturningCave = 0;
+    warpMmpCaveReturn = 0;
+    warpShipPending = 0;
+    if (!practice && !returning) {
         mapReload();
         return;
     }
     unlockLevel(0, 0, 1);
     mapLoadByCoords(gRcpPendingWarpDest.x, gRcpPendingWarpDest.y, gRcpPendingWarpDest.z, gRcpPendingWarpDest.layer);
+    if (practice && (gGameLoopPendingMapId == 0 || warpShipCharacterSaved)) {
+        SaveGameCharacterPosition* position;
+        if (gGameLoopPendingMapId == 0) {
+            if (!warpShipCharacterSaved) {
+                warpShipPreviousCharacter = SaveGame_getCurChar();
+                warpShipCharacterSaved = 1;
+            }
+            SaveGame_setCharacter(0);               /* Krystal owns the opening riding animations. */
+            mainSetBits(GAMEBIT_ITEM_Staff_Got, 1); /* Skip FEseqobject's opening movie. */
+            SaveGame_gplaySetAct(0, 1);
+            /* Group 2 is the later on-deck encounter, not the flying battle. */
+            SaveGame_gplaySetObjGroupStatus(0, 2, -2);
+            warpShipPending = 1;
+        } else {
+            SaveGame_setCharacter(warpShipPreviousCharacter);
+            warpShipCharacterSaved = 0;
+        }
+        /* loadNextMap committed coordinates before this hook switched character. */
+        position = SaveGame_getCurCharPos();
+        position->x = gRcpPendingWarpDest.x;
+        position->y = gRcpPendingWarpDest.y;
+        position->z = gRcpPendingWarpDest.z;
+        position->angle = gRcpPendingWarpDest.angle;
+        position->mapLayer = gRcpPendingWarpDest.layer;
+        position->mapDataFileId = -1;
+    }
     /* Restore known entry requirements before destination objects load. Use
      * the normal setter for saved bits, cached masks and bank aliases; retain
      * unrelated groups, story progress and the current map act. */
     applyArrivalGroups(gGameLoopPendingMapId);
+    if (practice) {
+        enableWarpGroups(gGameLoopPendingMapId, groups);
+        if (gGameLoopPendingMapId == 12 && (flags & PRACTICE_WARP_CF_EXTERIOR)) {
+            /* Upper back exit: #42 toggles interior 7 off and enables 27;
+             * corridor 19 stays resident. Do not preload rooftop 5/8 or
+             * carry the lower race entrance 1 over from a previous warp. */
+            SaveGame_gplaySetObjGroupStatus(12, 0, -2);
+            SaveGame_gplaySetObjGroupStatus(12, 1, -2);
+            SaveGame_gplaySetObjGroupStatus(12, 5, -2);
+            SaveGame_gplaySetObjGroupStatus(12, 7, -2);
+            SaveGame_gplaySetObjGroupStatus(12, 8, -2);
+        }
+        if (gGameLoopPendingMapId == 11 && gPendingWarpIndex == 6 && act == 1) {
+            /* Krystal starts before warlock#60 (toggles 0/2) and #75
+             * (toggles 1/3/5). Preloading the interior makes entry hide it.
+             * Reset only the far-side groups; keep other Palace progress. */
+            SaveGame_gplaySetObjGroupStatus(11, 2, -2);
+            SaveGame_gplaySetObjGroupStatus(11, 3, -2);
+            SaveGame_gplaySetObjGroupStatus(11, 5, -2);
+        }
+    }
+    if (practice && act > 0 && act <= 15) {
+        SaveGame_gplaySetAct(gGameLoopPendingMapId, act);
+    }
+    if (practice && gGameLoopPendingMapId == 14 && act == 2 && gPendingWarpIndex == 80 &&
+        (flags & PRACTICE_WARP_LFV_TOTEM)) {
+        static const u16 resetBits[] = {GAMEBIT_LV_EscapedFromPole,
+                                        0x2bc,
+                                        0x64c,
+                                        0x64d,
+                                        0x64e,
+                                        0x64f,
+                                        0x650,
+                                        0xa4c,
+                                        0xa4d,
+                                        0xa4e,
+                                        0xa4f,
+                                        0x768,
+                                        0x769,
+                                        0x76a,
+                                        0x76b,
+                                        0xa50,
+                                        0xa51,
+                                        0xa52,
+                                        0xa53};
+        int i;
+        /* SC_levelcon's captured arrival, without its redundant second warp.
+         * Act 2's setup marker starts the intro; reset only this minigame. */
+        SaveGame_gplaySetObjGroupStatus(14, 1, -2);
+        mainSetBits(GAMEBIT_LV_CapturedByLightFoot, 1);
+        mainSetBits(0x4d0, 1);
+        for (i = 0; i < sizeof(resetBits) / sizeof(resetBits[0]); i++) {
+            mainSetBits(resetBits[i], 0);
+        }
+    }
+    if (practice && gGameLoopPendingMapId == 29 && act == 3) {
+        /* capeclaw#26's act-3 entry leg sets these before reaching DIMCannon
+         * #575. The reset bit selects its usable, player-operated mode. */
+        mainSetBits(0x142, 1);
+        mainSetBits(0x1ec, 1);
+    }
+    /* A practice Magic Cave exit is a retail warp, but Walled City's pending
+     * landing must still be completed before its arrival controller loads. */
+    if (practice || (returning && gGameLoopPendingMapId == 13)) {
+        suppressWarpLanding(gGameLoopPendingMapId, flags);
+    }
+    if (gGameLoopPendingMapId == 51) {
+        /* The shop is entered through Thorntail's group-11 tunnel. Its
+         * loading and layer-switch planes live in hollow, not swapstore.
+         * hollow#862 unloads outside group 0 on entry and restores it on exit.
+         * Keeping it loaded lets Thorntail's enemies fall into the shop. */
+        SaveGame_gplaySetObjGroupStatus(7, 0, -2);
+        SaveGame_gplaySetObjGroupStatus(7, 11, 1);
+    }
     /* A saved auxiliary bank belongs to the source area, not this destination. */
     gGameLoopPendingMapDataFileId = -1;
+    if (practice && bankMap >= 0 && bankMap < 75) {
+        /* Well arrivals need their child bank as well as Thorntail's parent.
+         * Post BribeClaw retains LinkC (wastes#28 loads its directory 65). */
+        gGameLoopPendingMapDataFileId = mapGetDirIdx(bankMap);
+    }
+    if (practice && cave < 0 && -cave <= sizeof(practiceCaveArrivals) / sizeof(practiceCaveArrivals[0]) &&
+        practiceCaveArrivals[-cave - 1].source == gGameLoopPendingMapId) {
+        returning = -cave;
+    }
+    if (returning) {
+        const PracticeCaveArrival* arrival = &practiceCaveArrivals[returning - 1];
+        int sourceDir = mapGetDirIdx(arrival->source);
+        warpReturningCave = returning;
+        if (arrival->entranceGroup < 32) {
+            SaveGame_gplaySetObjGroupStatus(arrival->source, arrival->entranceGroup, 1);
+        }
+        /* The well shares Thorntail's bank but also needs its own assets.
+         * loadMapAndParent supplies the parent; explicitly supply the child. */
+        if (sMapFileNameAdjacencyTable[sourceDir] >= 0) {
+            gGameLoopPendingMapDataFileId = sourceDir;
+        }
+        if (arrival->source == 18) {
+            SaveGame_gplaySetObjGroupStatus(18, 2, 1);
+            warpMmpCaveReturn = 1;
+        }
+    }
     if (gGameLoopPendingMapId == 66 && link >= 1 && link <= 5) {
         int sourceDir = mapGetDirIdx(link == 5 ? 11 : 7);
         gGameLoopPendingMapDataFileId =
@@ -2254,6 +2536,7 @@ void Practice_WarpReload(void) {
         const PracticeCaveArrival* arrival = &practiceCaveArrivals[cave - 1];
         int sourceDir = mapGetDirIdx(arrival->source);
         int group;
+        warpActiveCave = cave;
         /* Normal cave entry retains the entrance area's character assets. */
         gGameLoopPendingMapDataFileId =
             sMapFileNameAdjacencyTable[sourceDir] >= 0 ? sMapFileNameAdjacencyTable[sourceDir] : sourceDir;
@@ -2279,6 +2562,40 @@ void Practice_WarpReload(void) {
     if (gGameLoopPendingMapId == 38 || gGameLoopPendingMapId == 65) {
         gGameLoopPendingMapDataFileId = mapGetDirIdx(11);
     }
+}
+
+/* Retail lets the first loaded entrance consume the global exit flag, even
+ * when another entrance was selected. Restrict only practice cave returns. */
+void Practice_CaveTopUpdate(GameObject* obj) {
+    if (warpReturningCave) {
+        const PracticeCaveArrival* arrival = &practiceCaveArrivals[warpReturningCave - 1];
+        if (!validPointer(obj->anim.placement) || obj->anim.placement->ident != arrival->entranceId ||
+            obj->anim.mapEventSlot != arrival->source) {
+            return;
+        }
+        if (Obj_GetPlayerObject() == NULL) {
+            return;
+        }
+        /* Arm only at the chosen actor, so an interrupted exterior warp cannot
+         * leave a synthetic exit flag for another map's entrance to consume. */
+        mainSetBits(GAMEBIT_MC_IsExiting, 1);
+        MagicCaveTop_update(obj);
+        if (!mainGetBit(GAMEBIT_MC_IsExiting)) {
+            warpReturningCave = 0;
+        }
+        return;
+    }
+    MagicCaveTop_update(obj);
+}
+
+/* MMP's life-force doors share group 2 with the rolling cave door. The
+ * requested practice return keeps the former without adding the latter.
+ * mapInstantiateObjects accepts a failed/omitted setup and marks the slot. */
+GameObject* Practice_CaveGroupObject(ObjPlacement* placement, int flags, int map, int index, GameObject* parent) {
+    if (warpMmpCaveReturn && map == 18 && placement->ident == 0x4B3F0 && placement->objectId == 0x825) {
+        return NULL;
+    }
+    return objSetupObject(placement, flags, map, index, parent);
 }
 
 /* Only LinkA's route controller calls this hook. Select a practice Palace
@@ -2550,9 +2867,61 @@ void Practice_PlayerDie(GameObject* obj) {
     playerDie(obj);
 }
 
+/* Reproduce player_SeqFn event 3's CloudRunner handoff once both actors exist.
+ * Ordinary new games and scripted transitions never arm this setup. */
+static void practiceShipCombat(GameObject* obj, PlayerState* state) {
+    GameObject* ship;
+    GameObject* bird = NULL;
+    GameObject** objects;
+    int start, count, i;
+    if (!warpShipPending || gShaderCurMapEventId != 0 || obj != Obj_GetPlayerObject() || !validPointer(state)) {
+        return;
+    }
+    ship = getSbGalleon();
+    objects = ObjList_GetObjects(&start, &count);
+    if (!validPointer(ship) || !validPointer(objects) || count < 0 || count > 2048) {
+        return;
+    }
+    for (i = start; i < count; i++) {
+        if (validPointer(objects[i]) && objects[i]->anim.romDefNo == 0x8c) {
+            bird = objects[i];
+            break;
+        }
+    }
+    if (!bird || !validPointer(bird->extra)) {
+        return;
+    }
+    warpShipPending = 0;
+    /* Start at the first combat flight target instead of waiting for the
+     * cinematic's authored ship position to drift into weapon range. */
+    ship->anim.localPosX = bird->anim.localPosX - 1600.0f;
+    ship->anim.localPosY = bird->anim.localPosY - 300.0f;
+    ship->anim.localPosZ = bird->anim.localPosZ + 150.0f;
+    SB_Galleon_onSeqFree(ship);
+    /* Opening sequence 105, curves 474/478: sky, weather, then the
+     * moving cloud layer used at the handoff to combat. */
+    setDrawCloudsAndLights(1);
+    setDrawLights(0);
+    getEnvfxActImmediately(obj, obj, 0x85, 0);
+    getEnvfxActImmediately(obj, obj, 0x83, 0);
+    getEnvfxActImmediately(obj, obj, 0x82, 0);
+    getEnvfxActImmediately(obj, obj, 0x94, 0);
+    getEnvfxActImmediately(obj, obj, 0x84, 0);
+    state->focusObject = bird;
+    obj->anim.flags |= 8;
+    state->moveSequence = gPlayerMotionTuning.moveSequences[1];
+    state->moveSequenceFlags = 4;
+    ObjAnim_SetCurrentMove(obj, 0x7b, 0.0f, 1);
+    (*gPlayerInterface)->setState(obj, state, 0x18);
+    state->baddie.stateExitFn = (BaddieStateExitFn)playerStagedClearActiveMove;
+    (*gCameraInterface)->setFocus(bird, 0);
+    (*gCameraInterface)->setMode(0x4a, 1, 0, 0, NULL, 0, 0xff);
+}
+
 void Practice_PlayerUpdate(GameObject* obj) {
     PlayerState* state = obj->extra;
     Vec delta = freeStep;
+    practiceShipCombat(obj, state);
     refillResources(obj);
     if (freeActive && obj == swimOwner && validPointer(state) &&
         (state->cutsceneTimer > 0 || state->focusObject != NULL || joypadDisabled || gDvdErrorPauseActive)) {
@@ -2611,12 +2980,16 @@ void Practice_PadUpdate(void) {
     held = gPadButtonsHeld[0];
     pressed = gPadButtonsJustPressed[0];
     shoulders = held | gPadTriggers[0];
-    shoulderPressed = shoulders & ~previousShoulders & (PAD_TRIGGER_L | PAD_TRIGGER_R);
-    previousShoulders = shoulders & (PAD_TRIGGER_L | PAD_TRIGGER_R);
+    /* Swallowed input is not a physical release: skipped polls retain those
+     * zeroed fields. Track the untouched button/analog history for tab edges. */
+    shoulderPressed =
+        (gPadButtonsPrevious[0] | gPadPrevTriggers[0]) & ~previousShoulders & (PAD_TRIGGER_L | PAD_TRIGGER_R);
+    previousShoulders = (gPadButtonsPrevious[0] | gPadPrevTriggers[0]) & (PAD_TRIGGER_L | PAD_TRIGGER_R);
     chord =
         (shoulders & (PAD_TRIGGER_L | PAD_TRIGGER_R)) == (PAD_TRIGGER_L | PAD_TRIGGER_R) && (held & PAD_BUTTON_DOWN);
     wasOpen = menuOpen;
     if (chord && !chordLatched) {
+        chordLatched = 1;
         if (menuOpen) {
             closeMenu();
         } else {
@@ -2625,7 +2998,13 @@ void Practice_PadUpdate(void) {
             menuOpen = 1;
         }
     }
-    chordLatched = chord != 0;
+    /* One toggle per Down press, even if an analog shoulder crosses its
+     * threshold again. A skipped pad poll retains our swallowed held/status
+     * fields, so only the untouched physical history can confirm release. */
+    if (!(gPadButtonsPrevious[0] & PAD_BUTTON_DOWN)) {
+        chordLatched = 0;
+    }
+    chord = chordLatched;
     player = Obj_GetPlayerObject();
     if (player != swimOwner) {
         hoverActive = hoverPhase = 0;

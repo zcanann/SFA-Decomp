@@ -174,9 +174,11 @@ def make_patch(dol, payload, exports):
     edits = []
     hooks = [
         ("OSInit", "OSSetArenaLo", "Practice_SetArenaLo", 2),
+        ("init", "initMaps", "Practice_InitMaps", 1),
         ("gameLoop", "padUpdate", "Practice_PadUpdate", 1),
         ("gameLoop", "doNothing_endOfFrame", "Practice_Draw", 1),
         ("loadNextMap", "mapReload", "Practice_WarpReload", 1),
+        ("mapInstantiateObjects", "objSetupObject", "Practice_CaveGroupObject", 1),
         ("LinkALevControl_seqFn", "mainGetBit", "Practice_LinkRouteBit", 3),
         ("camcontrol_applyState", "loadMapForCameraPos", "Practice_CameraLoadPos", 1),
         (None, "playerDie", "Practice_PlayerDie", 7),
@@ -192,6 +194,8 @@ def make_patch(dol, payload, exports):
         ("SaveGame_gplayClearRestartPoint", "mm_free", "Practice_ClearCheckpoint", 1),
         ("saveGame_save", "_saveGame", "Practice_WriteSave", 1),
         ("gplaySaveGame", "_saveGame", "Practice_WriteSave", 1),
+        ("_saveGame", "saveGame_prepareAndWrite", "Practice_PrepareSave", 1),
+        ("saveGame_prepareAndWrite", "CARDRead", "Practice_SaveCardRead", 3),
     ]
     table = symbols()
     for caller, callee, replacement, count in hooks:
@@ -212,6 +216,15 @@ def make_patch(dol, payload, exports):
     edits.append({"offset": off, "before": dol[off:off+4].hex(),
                   "after": struct.pack(">I", exports["practiceLegacyLightDescriptor"]).hex(),
                   "hook": "stripped Dragon Rock light descriptor", "address": pc})
+    # Preserve the descriptor and all other callbacks; select the correct
+    # entrance actor only for a return from a practice-selected magic cave.
+    pc = table["gMagicCaveTopObjDescriptor"][0] + 0x20
+    off = next(off + pc - addr for _, off, addr, size in sections(dol) if addr <= pc < addr + size)
+    if u32(dol, off) != table["MagicCaveTop_update"][0]:
+        raise ValueError("Unexpected magic cave entrance update callback")
+    edits.append({"offset": off, "before": dol[off:off+4].hex(),
+                  "after": struct.pack(">I", exports["Practice_CaveTopUpdate"]).hex(),
+                  "hook": "practice cave return actor selection", "address": pc})
     slot = next(i for i in range(7) if u32(dol, 0x90 + i * 4) == 0)
     offset = align(len(dol))
     for base, value in [(0, offset), (0x48, PAYLOAD_ADDRESS), (0x90, len(payload))]:

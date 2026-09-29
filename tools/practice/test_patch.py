@@ -28,7 +28,17 @@ class PatchTests(unittest.TestCase):
         for edit in self.manifest["edits"]:
             original_part[edit["offset"]:edit["offset"] + 4] = bytes.fromhex(edit["before"])
         self.assertEqual(original_part, self.dol)
-        self.assertEqual(len([e for e in self.manifest["edits"] if "hook" in e]), 33)
+        self.assertEqual(len([e for e in self.manifest["edits"] if "hook" in e]), 40)
+
+    def test_cave_return_hook_changes_only_the_update_callback(self):
+        table = symbols()
+        address = table["gMagicCaveTopObjDescriptor"][0]
+        offset = next(off + address - base for _, off, base, size in sections(self.dol)
+                      if base <= address < base + size)
+        patched = apply_dol(self.dol, self.manifest, self.payload)
+        self.assertEqual(u32(patched, offset + 0x20), self.exports["Practice_CaveTopUpdate"])
+        self.assertEqual(patched[offset:offset+0x20], self.dol[offset:offset+0x20])
+        self.assertEqual(patched[offset+0x24:offset+0x38], self.dol[offset+0x24:offset+0x38])
 
     def test_reject_previous_apploader_boundary_regression(self):
         patched = bytearray(apply_dol(self.dol, self.manifest, self.payload))
