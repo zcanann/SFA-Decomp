@@ -2125,7 +2125,7 @@ static void drawHeapBar(int region, int y) {
 }
 
 static void drawHeapBars(void) {
-    static const s16 barY[HEAP_REGIONS] = {0, 11, 459, 470};
+    static const s16 barY[HEAP_REGIONS] = {470, 459, 448, 437};
     int i;
     for (i = 0; i < HEAP_REGIONS && i < gMmRegionCount; i++) {
         drawHeapBar(i, barY[i]);
@@ -2160,9 +2160,6 @@ static void drawMenu(void) {
     GXSetProjection(projection, GX_ORTHOGRAPHIC);
     GXLoadPosMtxImm(identity, GX_PNMTX0);
     setupGeometry(0);
-    if (enabled[HEAP_BARS] || (menuOpen && activeTab == TAB_DEBUG)) {
-        drawHeapBars();
-    }
     if (!menuOpen) {
         int y = 41;
         rectangle(16, 16, 564,
@@ -2188,9 +2185,10 @@ static void drawMenu(void) {
             textAt(24, y, "AUTO ROLL: HOLD X", GOLD);
         }
         if (enabled[MAP_CELLS]) {
-            rectangle(16, 422, 608, 46, 0x0B1427DD);
-            textAt(24, 429, "CELLS: GREEN LOADED / RED EMPTY (FREEZE)", WHITE);
-            textAt(24, 447, "YELLOW OUTSIDE GRID / GOLD CURRENT CELL", MUTED);
+            int legend = enabled[HEAP_BARS] ? 378 : 422;
+            rectangle(16, legend, 608, 46, 0x0B1427DD);
+            textAt(24, legend + 7, "CELLS: GREEN LOADED / RED EMPTY (FREEZE)", WHITE);
+            textAt(24, legend + 25, "YELLOW OUTSIDE GRID / GOLD CURRENT CELL", MUTED);
         }
         return;
     }
@@ -2278,7 +2276,7 @@ static void drawMenu(void) {
     if (activeTab == TAB_DEBUG) {
         textAt(36, 266, "   USED/SIZE K    SLOTS     FREE K  HASH", MUTED);
         drawHeapStats();
-        textAt(36, 419, "BARS: R0 R1 TOP / R2 R3 BOTTOM", MUTED);
+        textAt(36, 419, "BARS: R0 AT BOTTOM, R3 ON TOP", MUTED);
         return;
     }
     textAt(36, 395, "TRIS:", MUTED);
@@ -3355,6 +3353,10 @@ void Practice_Draw(void) {
         drawWorld();
     }
     drawMenu();
+    /* Drawn over the open menu's lower edge so the Debug tab can preview them. */
+    if (enabled[HEAP_BARS] || (menuOpen && activeTab == TAB_DEBUG)) {
+        drawHeapBars();
+    }
     gCameraCurrentViewIndex = viewIndex;
     resetSomeGxFlags();
 }

@@ -138,7 +138,9 @@ The normal HUD shows a small reminder of the opening chord.
   Story flags, map acts and character selection are retained; bosses, Arwing
   stages and unused maps may require suitable progression state.
 - **Heap Bars** (Debug tab, off by default): four full-width 10px bars show the game's
-  `mm` regions by address, R0/R1 at the top edge and R2/R3 at the bottom. Gray is
+  `mm` regions by address, stacked upward from the bottom edge (R0 lowest, R3
+  highest). They draw over the open menu's lower edge, and the Map Cells legend
+  moves up while they are enabled. Gray is
   the region's slot table and dark is free. Allocated blocks are coloured by the
   tag passed to `mmAlloc`: a tag above 0xFF is the caller's own RGBA debug colour
   (drawn opaque); a small category id gets a stable hashed colour. Each pixel covers
@@ -153,7 +155,7 @@ The normal HUD shows a small reminder of the opening chord.
   so an identical layout reached by a different history hashes the same. Regions
   with per-frame scratch allocations can change every frame; compare while the
   menu is open or at load screens. Opening the Debug tab previews the bars even
-  while the checkbox is off. Region 0 can sit under the top TV overscan.
+  while the checkbox is off.
 - **Draw Through Walls** and a **250–2500 unit Draw Distance** setting.
 
 Collision and triggers start enabled, with every geometry filter on except

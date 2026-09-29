@@ -1107,6 +1107,8 @@ class PayloadTests(unittest.TestCase):
         m.write(m.sym["gMmRegionCount"], 1, "B")
         m.write(m.sym["menuOpen"], 0, "B")
         m.write(m.sym["enabled"] + m.row("HEAP BARS"), 1, "B")
+        m.toggle("COLLISION", 0)
+        m.toggle("TRIGGERS", 0)
         mask = 0xFFFFFFFF
 
         def mix(acc, value):
@@ -1129,8 +1131,8 @@ class PayloadTests(unittest.TestCase):
 
         def used_spans():
             m.geometry = []
-            m.call("drawMenu")
-            spans = [(g[2][0][0], g[2][1][0], g[2][0][3]) for g in m.geometry if g[2] and g[2][0][1] == 0]
+            m.call("Practice_Draw")
+            spans = [(g[2][0][0], g[2][1][0], g[2][0][3]) for g in m.geometry if g[2] and g[2][0][1] == 470]
             return [s for s in spans[2:] if s[0] < 270]  # Skip background, slot table and centred hash.
 
         # Category ids get a scattered colour; RGBA tags are used opaque; the
@@ -1138,14 +1140,14 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(used_spans(), [(1, 42, (0x12 * 0x9E3779B1 & mask) | 0xFF), (121, 122, 0xFFFF00FF)])
         self.assertEqual(m.read(m.sym["heapLargestFree"]), size - 0x30C0)
         self.assertEqual(m.read(m.sym["heapHash"]), expected)
-        backing = [g for g in m.geometry if g[2] and g[2][0][3] == 0x081020FF and g[2][0][1] == 0]
-        self.assertEqual([(q[2][0][0], q[2][2][0], q[2][2][1]) for q in backing], [(270, 370, 10)])
+        backing = [g for g in m.geometry if g[2] and g[2][0][3] == 0x081020FF and g[2][0][1] == 470]
+        self.assertEqual([(q[2][0][0], q[2][2][0], q[2][2][1]) for q in backing], [(270, 370, 480)])
         m.uc.mem_write(start + 8, struct.pack(">hhh", 1, -1, 1))  # Allocation ids and ticks are not hashed.
         m.write(start + 0x14, 0x9999)
-        m.call("drawMenu")
+        m.call("Practice_Draw")
         self.assertEqual(m.read(m.sym["heapHash"]), expected)
         m.write(start + 0x1C * 2 + 4, 0x40)  # Any size change moves the fingerprint.
-        m.call("drawMenu")
+        m.call("Practice_Draw")
         self.assertNotEqual(m.read(m.sym["heapHash"]), expected)
         m.write(start + 0x1C * 2 + 4, 0x20)
         m.uc.mem_write(start + 4 * 0x1C + 8, struct.pack(">hhh", 0, 3, 0))  # Corrupt chain loops back to slot 0.
