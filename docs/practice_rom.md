@@ -15,8 +15,8 @@ Magic Cave contexts remain included.
   Release Down before toggling again; there is no time cooldown. A shoulder
   dropping out or a skipped controller poll cannot retrigger the same press.
   The opening/closing gesture is consumed until Down is physically released.
-- **L/R inside the menu:** previous/next tab, wrapping at the ends. Collision
-  is first, followed by Cheats, Warp, Flags and Log. Z is unused. Analog press and digital click count as
+- **L/R inside the menu:** previous/next tab, wrapping at the ends. Draw
+  is first, followed by Cheats, Warp, Flags, Log and Debug. Z is unused. Analog press and digital click count as
   one shoulder press; holding a shoulder does not repeatedly switch tabs.
   Tab edges use physical input history, so a skipped controller poll cannot
   turn the menu's cleared gameplay input into a false release/repress.
@@ -82,7 +82,8 @@ The normal HUD shows a small reminder of the opening chord.
   whether all of its game-bit/command conditions currently permit activation.
 - **Fox / Player** collision filters: object body, model hit spheres, feet/floor
   contact, movement body spheres, wall probe spheres, and cached sweep lines.
-  These are independent of the generic Object Hit Volumes checkbox. Movement
+  These are independent of the generic Object Hit Volumes checkbox and of the
+  Collision group: Fox / Player draws with Collision disabled. Movement
   shapes read the active `CurvesCollisionState` and its live radii/counts. Segment
   points are world-space; wall points use the player parent's collision transform
   when parented. A captured Ice Mountain state had a 0.05 ground radius and 8.5
@@ -136,6 +137,23 @@ The normal HUD shows a small reminder of the opening chord.
   retain their arrival IDs and therefore their normal arrival events.
   Story flags, map acts and character selection are retained; bosses, Arwing
   stages and unused maps may require suitable progression state.
+- **Heap Bars** (Debug tab, off by default): four full-width 10px bars show the game's
+  `mm` regions by address, R0/R1 at the top edge and R2/R3 at the bottom. Gray is
+  the region's slot table and dark is free. Allocated blocks are coloured by the
+  tag passed to `mmAlloc`: a tag above 0xFF is the caller's own RGBA debug colour
+  (drawn opaque); a small category id gets a stable hashed colour. Each pixel covers
+  1/640 of a region; the first block to reach a pixel owns its colour, and
+  allocations smaller than a pixel are widened to one pixel.
+  The bars walk each region's address-ordered slot chain every frame, bounded by
+  its slot count. The Debug tab lists used/size KB (the region's own counter),
+  slots in use, the largest free block and a 32-bit fingerprint per region. Each
+  region's fingerprint is also drawn in hex at the centre of its bar.
+  The fingerprint mixes each allocated block's address, size and tag (xxHash-style
+  rounds and avalanche; not cryptographic). Allocation ids and ticks are excluded,
+  so an identical layout reached by a different history hashes the same. Regions
+  with per-frame scratch allocations can change every frame; compare while the
+  menu is open or at load screens. Opening the Debug tab previews the bars even
+  while the checkbox is off. Region 0 can sit under the top TV overscan.
 - **Draw Through Walls** and a **250–2500 unit Draw Distance** setting.
 
 Collision and triggers start enabled, with every geometry filter on except
@@ -270,9 +288,9 @@ Calls go through ordinary PPC EABI C wrappers; game/compiler/SDK routines retain
 
 A new DOL section contains code, constants and explicitly initialized zero-state
 at `0x803FA480`, the verified retail default `__ArenaLo`, above the startup stack
-at `0x803F8478`. Both OSInit arena-low paths clamp the heap start to `0x8040A480`
-before `ClearArena`, protecting a 64 KiB payload region. The retail debug-flag
-path originally starts its arena 8 KiB earlier, so that path loses 72 KiB of heap
+at `0x803F8478`. Both OSInit arena-low paths clamp the heap start to `0x8040B480`
+before `ClearArena`, protecting a 68 KiB payload region. The retail debug-flag
+path originally starts its arena 8 KiB earlier, so that path loses 76 KiB of heap
 capacity overall. Arena high is unchanged. No menu/viewer allocations use the game heap.
 **The enabled build changes heap capacity and allocation addresses/timing. It is
 a practice build, not an SRM-neutral measurement build.** Swimming also deliberately
@@ -589,7 +607,7 @@ Maps now places **Remove All** second, directly below **Unlock All**. Press A
 to clear the twelve map-ownership flags; individual map toggles follow both
 actions. Progression flags are unchanged, and save loading blocks both actions.
 
-**Map Cells / Gravity**, off by default on the Collision tab, draws the 640-unit
+**Map Cells / Gravity**, off by default on the Draw tab, draws the 640-unit
 map grid with translucent horizontal tiles at Fox's height and vertical edge
 markers. Green means at least one of the five streamed block layers is occupied;
 red means all are empty inside the 16-by-16 streaming window; amber means outside

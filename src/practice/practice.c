@@ -172,17 +172,19 @@ enum {
     MAP_CELLS,
     FREE_INVERT_X,
     DISABLE_SAVE_INTEGRITY,
+    HEAP_BARS,
     ROW_COUNT
 };
 enum {
-    TAB_COLLISION,
+    TAB_DRAW,
     TAB_CHEATS,
     TAB_WARP,
     TAB_FLAGS,
     TAB_LOG,
+    TAB_DEBUG,
     TAB_COUNT
 };
-static const char* tabLabels[TAB_COUNT] = {"COLLISION", "CHEATS", "WARP", "FLAGS", "LOG"};
+static const char* tabLabels[TAB_COUNT] = {"DRAW", "CHEATS", "WARP", "FLAGS", "LOG", "DEBUG"};
 typedef struct PracticeRow {
     const char* label;
     s8 parent;
@@ -246,7 +248,8 @@ static const PracticeRow rows[ROW_COUNT] = {{"COLLISION", -1, 1},
                                             {"INFINITE MAGIC", -1, 0, TAB_CHEATS},
                                             {"MAP CELLS / GRAVITY", -1, 0},
                                             {"INVERT X", FREE_MOVE, 0, TAB_CHEATS},
-                                            {"DISABLE SAVE INTEGRITY CHECKS", -1, 0, TAB_CHEATS}};
+                                            {"DISABLE SAVE INTEGRITY CHECKS", -1, 0, TAB_CHEATS},
+                                            {"HEAP BARS", -1, 0, TAB_DEBUG}};
 static u8 enabled[ROW_COUNT] = {1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1};
 static u8 expanded[ROW_COUNT] = {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
@@ -701,7 +704,7 @@ static void drawMapCells(void) {
  * triangle meshes. Match trackSweepCircleAgainstLines' signed height decode. */
 static void drawHitLines(MapHitLine* hits, int count, f32 x, f32 z, GameObject* owner) {
     int i, j;
-    if (!enabled[BARRIERS] || !validPointer(hits)) {
+    if (!enabled[COLLISION] || !enabled[BARRIERS] || !validPointer(hits)) {
         return;
     }
     for (i = 0; i < count && linesDrawn < lineLimit; i++) {
@@ -804,8 +807,10 @@ static void drawObjectCollision(GameObject* obj) {
     Vec center = point(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ);
     int bank = 0, i, j, k;
     int isPlayer = obj == Obj_GetPlayerObject();
-    int bodyEnabled = isPlayer ? enabled[FOX_COLLISION] && enabled[FOX_OBJECT_BODY] : enabled[HIT_SPHERES];
-    int spheresEnabled = isPlayer ? enabled[FOX_COLLISION] && enabled[FOX_MODEL_SPHERES] : enabled[HIT_SPHERES];
+    int bodyEnabled =
+        isPlayer ? enabled[FOX_COLLISION] && enabled[FOX_OBJECT_BODY] : enabled[COLLISION] && enabled[HIT_SPHERES];
+    int spheresEnabled =
+        isPlayer ? enabled[FOX_COLLISION] && enabled[FOX_MODEL_SPHERES] : enabled[COLLISION] && enabled[HIT_SPHERES];
     if (bodyEnabled && validPointer(obj->anim.hitReactState) && nearPoint(center)) {
         ObjHitsPriorityState* state = (ObjHitsPriorityState*)obj->anim.hitReactState;
         u32 color = (state->flags & OBJHITS_PRIORITY_STATE_ENABLED) &&
@@ -859,7 +864,7 @@ static void drawObjectCollision(GameObject* obj) {
             }
         }
     }
-    if (!enabled[OBJECT_MESH] || !validPointer(hit) || hit->activeMatrixIndex > 1 ||
+    if (!enabled[COLLISION] || !enabled[OBJECT_MESH] || !validPointer(hit) || hit->activeMatrixIndex > 1 ||
         !validPointer(file->collisionBlocks) || !validPointer(file->collisionTriangles) ||
         !validPointer(file->vertices)) {
         return;
@@ -1010,9 +1015,7 @@ static void drawWorld(void) {
     if (enabled[MAP_CELLS]) {
         drawMapCells();
     }
-    if (enabled[COLLISION]) {
-        drawPlayerCollision(player);
-    }
+    drawPlayerCollision(player);
     /* Reserve half the wire budget for nearby map collision. */
     if (enabled[COLLISION] && (enabled[TERRAIN] || enabled[WATER_MESH] || enabled[BARRIERS])) {
         lineLimit = 6000;
@@ -1038,7 +1041,7 @@ static void drawWorld(void) {
                 if (enabled[TRIGGERS]) {
                     drawTriggers(obj);
                 }
-                if (enabled[COLLISION]) {
+                if (enabled[COLLISION] || (enabled[FOX_COLLISION] && obj == player)) {
                     drawObjectCollision(obj);
                 }
             }
@@ -2009,6 +2012,144 @@ static void rebuildRows(void) {
     }
 }
 
+/* Mirrors of the retail mm.c region table and its address-ordered slot chain. */
+typedef struct PracticeMmRegion {
+    int numSlots;
+    int slotsUsed;
+    u8* start;
+    int size;
+    int usedBytes;
+} PracticeMmRegion;
+typedef struct PracticeHeapItem {
+    u8* loc;
+    int size;
+    s16 type;
+    s16 prev;
+    s16 next;
+    s16 stack;
+    int tag;
+    int allocTick;
+    int allocId;
+} PracticeHeapItem;
+STATIC_ASSERT(sizeof(PracticeMmRegion) == 0x14);
+STATIC_ASSERT(sizeof(PracticeHeapItem) == 0x1C);
+extern PracticeMmRegion gMmRegionTable[];
+extern u8 gMmRegionCount;
+
+#define HEAP_REGIONS    4
+#define HEAP_BAR_WIDTH  640
+#define HEAP_BAR_HEIGHT 10
+static int heapLargestFree[HEAP_REGIONS];
+static u32 heapHash[HEAP_REGIONS];
+
+#define HASH_P1 0x9E3779B1
+#define HASH_P2 0x85EBCA77
+#define HASH_P3 0xC2B2AE3D
+
+static u32 hashRound(u32 acc, u32 value) {
+    acc += value * HASH_P2;
+    acc = (acc << 13) | (acc >> 19);
+    return acc * HASH_P1;
+}
+
+static u32 hashFinish(u32 h) {
+    h ^= h >> 15;
+    h *= HASH_P2;
+    h ^= h >> 13;
+    h *= HASH_P3;
+    return h ^ (h >> 16);
+}
+
+/* A tag above one byte is a caller-chosen RGBA debug colour; smaller tags are
+ * category ids and get a stable scattered colour. */
+static u32 heapTagColor(u32 tag) {
+    if (tag <= 0xFF) {
+        tag = (tag + 1) * HASH_P1;
+    }
+    return tag | 0xFF;
+}
+
+/* The chain can be observed mid-update, so bound the walk by the slot count and
+ * reject any index outside the slot table. The first block to reach a pixel
+ * column owns it, keeping each bar at one quad per column at most. */
+static void drawHeapBar(int region, int y) {
+    PracticeMmRegion* r = &gMmRegionTable[region];
+    PracticeHeapItem* base = (PracticeHeapItem*)r->start;
+    f32 scale;
+    int idx = 0, steps = 0, runStart = 0, runEnd = 0, largest = 0;
+    u32 runColor = 0, hash = HASH_P1 + region;
+    if (!validPointer(base) || r->size <= 0 || r->numSlots <= 0) {
+        heapHash[region] = 0;
+        return;
+    }
+    scale = (f32)HEAP_BAR_WIDTH / r->size;
+    rectangle(0, y, HEAP_BAR_WIDTH, HEAP_BAR_HEIGHT, 0x101828C0);
+    rectangle(0, y, (f32)(r->numSlots * sizeof(PracticeHeapItem)) * scale + 1, HEAP_BAR_HEIGHT, 0x6A7488E0);
+    while (idx >= 0 && idx < r->numSlots && steps++ < r->numSlots) {
+        PracticeHeapItem* it = &base[idx];
+        if (it->type == 0) {
+            if (it->size > largest) {
+                largest = it->size;
+            }
+        } else {
+            int x0 = (int)((f32)(it->loc - r->start) * scale);
+            int x1 = (int)((f32)(it->loc + it->size - r->start) * scale + 0.999f);
+            u32 color = heapTagColor(it->tag);
+            hash = hashRound(hashRound(hashRound(hash, (u32)it->loc), it->size), it->tag);
+            if (x1 <= x0) {
+                x1 = x0 + 1;
+            }
+            if (x0 < runEnd) {
+                x0 = runEnd;
+            }
+            if (x1 > x0) {
+                if (x0 != runEnd || color != runColor) {
+                    if (runEnd > runStart) {
+                        rectangle(runStart, y, runEnd - runStart, HEAP_BAR_HEIGHT, runColor);
+                    }
+                    runStart = x0;
+                    runColor = color;
+                }
+                runEnd = x1;
+            }
+        }
+        idx = it->next;
+    }
+    if (runEnd > runStart) {
+        rectangle(runStart, y, runEnd - runStart, HEAP_BAR_HEIGHT, runColor);
+    }
+    heapLargestFree[region] = largest;
+    heapHash[region] = hashFinish(hash);
+    rectangle(HEAP_BAR_WIDTH / 2 - 50, y, 100, HEAP_BAR_HEIGHT, 0x081020FF);
+    hexAt(HEAP_BAR_WIDTH / 2 - 48, y, heapHash[region], 8, GOLD);
+}
+
+static void drawHeapBars(void) {
+    static const s16 barY[HEAP_REGIONS] = {0, 11, 459, 470};
+    int i;
+    for (i = 0; i < HEAP_REGIONS && i < gMmRegionCount; i++) {
+        drawHeapBar(i, barY[i]);
+    }
+}
+
+static void drawHeapStats(void) {
+    int i;
+    for (i = 0; i < HEAP_REGIONS && i < gMmRegionCount; i++) {
+        PracticeMmRegion* r = &gMmRegionTable[i];
+        int y = 290 + i * 20;
+        textAt(36, y, "R", MUTED);
+        numberAt(48, y, i, WHITE);
+        numberAt(72, y, r->usedBytes / 1024, WHITE);
+        textAt(144, y, "/", MUTED);
+        numberAt(156, y, r->size / 1024, WHITE);
+        numberAt(252, y, r->slotsUsed, WHITE);
+        textAt(300, y, "/", MUTED);
+        numberAt(312, y, r->numSlots, WHITE);
+        numberAt(372, y, heapLargestFree[i] / 1024, WHITE);
+        hexAt(468, y, heapHash[i], 8, GOLD);
+    }
+}
+
 static void drawMenu(void) {
     Mtx identity = {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}};
     f32 projection[4][4] = {{2.0f / 640, 0, 0, -1}, {0, -2.0f / 480, 0, 1}, {0, 0, -1, 0}, {0, 0, 0, 1}};
@@ -2019,6 +2160,9 @@ static void drawMenu(void) {
     GXSetProjection(projection, GX_ORTHOGRAPHIC);
     GXLoadPosMtxImm(identity, GX_PNMTX0);
     setupGeometry(0);
+    if (enabled[HEAP_BARS] || (menuOpen && activeTab == TAB_DEBUG)) {
+        drawHeapBars();
+    }
     if (!menuOpen) {
         int y = 41;
         rectangle(16, 16, 564,
@@ -2052,7 +2196,7 @@ static void drawMenu(void) {
     }
     rectangle(20, 20, 600, 430, 0x081020EF);
     rectangle(20, 20, 600, 4, 0x59D5FFFF);
-    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.14", WHITE);
+    textAt(36, 38, "STAR FOX ADVENTURES / PRACTICE V1.17", WHITE);
     for (i = 0; i < TAB_COUNT; i++) {
         int width = 580 / TAB_COUNT;
         if (i == activeTab) {
@@ -2129,6 +2273,12 @@ static void drawMenu(void) {
         textAt(36, 365, "DOLPHIN: OSREPORT LOG (NOTICE)", MUTED);
         textAt(36, 389, "NET CHANGES PER FRAME; 32 EVENT LIMIT", MUTED);
         textAt(36, 419, "L/R: TABS  A: TOGGLE  B: CLOSE", MUTED);
+        return;
+    }
+    if (activeTab == TAB_DEBUG) {
+        textAt(36, 266, "   USED/SIZE K    SLOTS     FREE K  HASH", MUTED);
+        drawHeapStats();
+        textAt(36, 419, "BARS: R0 R1 TOP / R2 R3 BOTTOM", MUTED);
         return;
     }
     textAt(36, 395, "TRIS:", MUTED);
@@ -3200,7 +3350,7 @@ void Practice_Draw(void) {
     pollStateLog();
     linesDrawn = trianglesDrawn = triggersDrawn = fillsDrawn = 0;
     drawLimitReached = 0;
-    if (enabled[COLLISION] || enabled[TRIGGERS] || enabled[MAP_CELLS] ||
+    if (enabled[COLLISION] || enabled[FOX_COLLISION] || enabled[TRIGGERS] || enabled[MAP_CELLS] ||
         (enabled[SWIMMING] && swimActive && enabled[WATER_GRID])) {
         drawWorld();
     }

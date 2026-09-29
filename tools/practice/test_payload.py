@@ -1094,6 +1094,63 @@ class PayloadTests(unittest.TestCase):
             self.assertTrue(begins)
             self.assertTrue(all(c[2] == 2 for c in begins))
 
+    def test_heap_bars_follow_region_chain(self):
+        m = self.m
+        start, size = 0x81300000, 0x10000
+        slots = [(0x80, 0x1000, 1, 0x11, 1), (0x1080, 0x2000, 0, 0, 2), (0x3080, 0x20, 1, 0xFFFF00FF, 3),
+                 (0x30A0, 0x20, 1, 0x7D7D7D7D, 4), (0x30C0, size - 0x30C0, 0, 0, -1)]
+        for i, (offset, length, kind, tag, following) in enumerate(slots):
+            m.uc.mem_write(start + i * 0x1C, struct.pack(">IIhhhhIII", start + offset, length, kind, i - 1, following,
+                                                         i, tag, 0x1234, i))
+        table = m.sym["gMmRegionTable"]
+        m.uc.mem_write(table, struct.pack(">IIIII", len(slots), len(slots), start, size, 0x1040))
+        m.write(m.sym["gMmRegionCount"], 1, "B")
+        m.write(m.sym["menuOpen"], 0, "B")
+        m.write(m.sym["enabled"] + m.row("HEAP BARS"), 1, "B")
+        mask = 0xFFFFFFFF
+
+        def mix(acc, value):
+            acc = (acc + value * 0x85EBCA77) & mask
+            acc = ((acc << 13) | (acc >> 19)) & mask
+            return acc * 0x9E3779B1 & mask
+
+        def finish(h):
+            h ^= h >> 15
+            h = h * 0x85EBCA77 & mask
+            h ^= h >> 13
+            h = h * 0xC2B2AE3D & mask
+            return h ^ (h >> 16)
+
+        expected = 0x9E3779B1
+        for offset, length, kind, tag, _ in slots:
+            if kind:
+                expected = mix(mix(mix(expected, start + offset), length), tag)
+        expected = finish(expected)
+
+        def used_spans():
+            m.geometry = []
+            m.call("drawMenu")
+            spans = [(g[2][0][0], g[2][1][0], g[2][0][3]) for g in m.geometry if g[2] and g[2][0][1] == 0]
+            return [s for s in spans[2:] if s[0] < 270]  # Skip background, slot table and centred hash.
+
+        # Category ids get a scattered colour; RGBA tags are used opaque; the
+        # second block in pixel 121 is clipped away by the first owner.
+        self.assertEqual(used_spans(), [(1, 42, (0x12 * 0x9E3779B1 & mask) | 0xFF), (121, 122, 0xFFFF00FF)])
+        self.assertEqual(m.read(m.sym["heapLargestFree"]), size - 0x30C0)
+        self.assertEqual(m.read(m.sym["heapHash"]), expected)
+        backing = [g for g in m.geometry if g[2] and g[2][0][3] == 0x081020FF and g[2][0][1] == 0]
+        self.assertEqual([(q[2][0][0], q[2][2][0], q[2][2][1]) for q in backing], [(270, 370, 10)])
+        m.uc.mem_write(start + 8, struct.pack(">hhh", 1, -1, 1))  # Allocation ids and ticks are not hashed.
+        m.write(start + 0x14, 0x9999)
+        m.call("drawMenu")
+        self.assertEqual(m.read(m.sym["heapHash"]), expected)
+        m.write(start + 0x1C * 2 + 4, 0x40)  # Any size change moves the fingerprint.
+        m.call("drawMenu")
+        self.assertNotEqual(m.read(m.sym["heapHash"]), expected)
+        m.write(start + 0x1C * 2 + 4, 0x20)
+        m.uc.mem_write(start + 4 * 0x1C + 8, struct.pack(">hhh", 0, 3, 0))  # Corrupt chain loops back to slot 0.
+        self.assertEqual(used_spans()[:2], [(1, 42, (0x12 * 0x9E3779B1 & mask) | 0xFF), (121, 122, 0xFFFF00FF)])
+
     def test_menu_geometry_and_preview(self):
         m = self.m
         m.pad(0x64, 4)
@@ -1288,7 +1345,11 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(m.read(m.sym["activeTab"], "B"), 0)
         m.pad()
         m.pad(0x40, 0x40)
-        self.assertEqual(m.read(m.sym["activeTab"], "B"), 4)  # Wrap left to Log.
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 5)  # Wrap left to Debug.
+        self.assertEqual(m.read(m.sym["visibleCount"]), 1)
+        m.pad()
+        m.pad(0x40, 0x40)
+        self.assertEqual(m.read(m.sym["activeTab"], "B"), 4)
         self.assertEqual(m.read(m.sym["visibleCount"]), 10)
         m.pad()
         m.pad(0x40, 0x40)
@@ -1543,6 +1604,30 @@ class PayloadTests(unittest.TestCase):
         m.write(c, 0)
         m.call("drawPlayerCollision", m.player)
         self.assertFalse(m.geometry)
+
+    def test_player_collision_draws_without_collision_group(self):
+        m = self.m
+        m.toggle("FOX / PLAYER", 1)
+        m.toggle("COLLISION", 0)
+        m.toggle("TRIGGERS", 0)
+        m.toggle("CACHED SWEEP LINES", 0)
+        c = m.state + 4
+        m.write(c, 0x04002009)
+        m.write(c + 0x25C, 0x21, "B")
+        m.uc.mem_write(c + 8, struct.pack(">6f", 0, 100, 0, 0, 117, 0))
+        m.write(c + 0xA8, 0.05, "f")
+        m.write(c + 0xAC, 8.5, "f")
+        m.write(c + 0x1F0, -100000.0, "f")
+        radii = 0x81100000
+        m.write(c + 0xE0, radii)
+        m.write(radii, 8.5, "f")
+        m.uc.mem_write(c + 0xE4, struct.pack(">3f", 2, 105, 3))
+        m.call("Practice_Draw")
+        with_fox = len(m.geometry)
+        m.geometry = []
+        m.toggle("FOX / PLAYER", 0)
+        m.call("Practice_Draw")
+        self.assertEqual(with_fox - len(m.geometry), 218)
 
     def test_practice_warp_queues_destination_banks_only_at_committed_reload(self):
         m = self.m

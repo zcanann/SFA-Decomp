@@ -23,7 +23,7 @@ VERSION = "GSAE01"
 # Both OSInit arena-low calls must reserve our space before ClearArena runs.
 # Do not load a DOL section above the retail apploader's production boundary.
 PAYLOAD_ADDRESS = 0x803FA480
-PAYLOAD_LIMIT = PAYLOAD_ADDRESS + 0x10000
+PAYLOAD_LIMIT = PAYLOAD_ADDRESS + 0x11000
 BOOT_LOAD_LIMIT = 0x80700000
 MAGIC = "SFA-PRACTICE-2"
 
@@ -125,7 +125,7 @@ def compile_payload(out, enabled, compilers=None, binutils=None):
     binutils = binutils or tool_directory("binutils")
     suffix = ".exe" if (binutils / "powerpc-eabi-nm.exe").exists() else ""
     nm_tool = binutils / ("powerpc-eabi-nm" + suffix)
-    # Size optimization keeps the optional payload in its original 64 KiB reservation.
+    # Size optimization keeps the optional payload in its 68 KiB reservation.
     flags = ["-nodefaults", "-proc", "gekko", "-align", "powerpc", "-enum", "int",
              "-fp", "hardware", "-Cpp_exceptions", "off", "-O4,s", "-inline", "auto",
              "-nosyspath", "-RTTI", "off", "-fp_contract", "off", "-str", "reuse",
@@ -423,7 +423,7 @@ def main():
             archive.writestr("manifest.json", json.dumps(manifest, indent=2))
             archive.writestr("practice.bin", payload)
         print("Created patch:", patch)
-        print("Payload:", len(payload), "bytes; original addresses preserved; 64 KiB arena-low reservation")
+        print("Payload:", len(payload), "bytes; original addresses preserved; 68 KiB arena-low reservation")
     else:
         if not args.patch or not args.output:
             parser.error("apply requires --patch and --output")
