@@ -2121,7 +2121,7 @@ static void drawHeapBar(int region, int y) {
     heapLargestFree[region] = largest;
     heapHash[region] = hashFinish(hash);
     rectangle(HEAP_BAR_WIDTH / 2 - 50, y, 100, HEAP_BAR_HEIGHT, 0x081020FF);
-    hexAt(HEAP_BAR_WIDTH / 2 - 48, y, heapHash[region], 8, GOLD);
+    hexAt(HEAP_BAR_WIDTH / 2 - 48, y, heapHash[region], 8, region == 1 ? WHITE : GOLD);
 }
 
 static void drawHeapBars(void) {
