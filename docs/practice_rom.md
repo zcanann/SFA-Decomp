@@ -138,8 +138,8 @@ The normal HUD shows a small reminder of the opening chord.
   Story flags, map acts and character selection are retained; bosses, Arwing
   stages and unused maps may require suitable progression state.
 - **Heap Bars** (Debug tab, off by default): four full-width 10px bars show the game's
-  `mm` regions by address, stacked upward from the bottom edge (R0 lowest, R3
-  highest). They draw over the open menu's lower edge, and the Map Cells legend
+  `mm` regions by address, stacked at the bottom edge in index order, R0 at the
+  top of the stack and R3 at the screen's bottom. They draw over the open menu's lower edge, and the Map Cells legend
   moves up while they are enabled. Gray is
   the region's slot table and dark is free. Allocated blocks are coloured by the
   tag passed to `mmAlloc`: a tag above 0xFF is the caller's own RGBA debug colour

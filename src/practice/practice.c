@@ -2125,7 +2125,7 @@ static void drawHeapBar(int region, int y) {
 }
 
 static void drawHeapBars(void) {
-    static const s16 barY[HEAP_REGIONS] = {470, 459, 448, 437};
+    static const s16 barY[HEAP_REGIONS] = {437, 448, 459, 470};
     int i;
     for (i = 0; i < HEAP_REGIONS && i < gMmRegionCount; i++) {
         drawHeapBar(i, barY[i]);
@@ -2276,7 +2276,7 @@ static void drawMenu(void) {
     if (activeTab == TAB_DEBUG) {
         textAt(36, 266, "   USED/SIZE K    SLOTS     FREE K  HASH", MUTED);
         drawHeapStats();
-        textAt(36, 419, "BARS: R0 AT BOTTOM, R3 ON TOP", MUTED);
+        textAt(36, 419, "BARS: R0 TO R3, TOP TO BOTTOM", MUTED);
         return;
     }
     textAt(36, 395, "TRIS:", MUTED);

@@ -1132,7 +1132,7 @@ class PayloadTests(unittest.TestCase):
         def used_spans():
             m.geometry = []
             m.call("Practice_Draw")
-            spans = [(g[2][0][0], g[2][1][0], g[2][0][3]) for g in m.geometry if g[2] and g[2][0][1] == 470]
+            spans = [(g[2][0][0], g[2][1][0], g[2][0][3]) for g in m.geometry if g[2] and g[2][0][1] == 437]
             return [s for s in spans[2:] if s[0] < 270]  # Skip background, slot table and centred hash.
 
         # Category ids get a scattered colour; RGBA tags are used opaque; the
@@ -1140,8 +1140,8 @@ class PayloadTests(unittest.TestCase):
         self.assertEqual(used_spans(), [(1, 42, (0x12 * 0x9E3779B1 & mask) | 0xFF), (121, 122, 0xFFFF00FF)])
         self.assertEqual(m.read(m.sym["heapLargestFree"]), size - 0x30C0)
         self.assertEqual(m.read(m.sym["heapHash"]), expected)
-        backing = [g for g in m.geometry if g[2] and g[2][0][3] == 0x081020FF and g[2][0][1] == 470]
-        self.assertEqual([(q[2][0][0], q[2][2][0], q[2][2][1]) for q in backing], [(270, 370, 480)])
+        backing = [g for g in m.geometry if g[2] and g[2][0][3] == 0x081020FF and g[2][0][1] == 437]
+        self.assertEqual([(q[2][0][0], q[2][2][0], q[2][2][1]) for q in backing], [(270, 370, 447)])
         m.uc.mem_write(start + 8, struct.pack(">hhh", 1, -1, 1))  # Allocation ids and ticks are not hashed.
         m.write(start + 0x14, 0x9999)
         m.call("Practice_Draw")
