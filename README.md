@@ -1,3 +1,5 @@
+
+
 Star Fox Adventures Decompilation
 [![Build Status]][actions] [![Progress]][progress site] [![DOL Progress]][progress site]
 ===============================
@@ -55,7 +57,7 @@ When running under WSL, [objdiff](#diffing) is unable to get filesystem notifica
 - Clone the repository:
 
   ```sh
-  git clone https://github.com/my/repo.git
+  git clone https://github.com/zcanann/SFA-Decomp.git
   ```
 
 - Copy your game's disc image to the matching version directory under `orig/`.
