@@ -129,8 +129,6 @@ extern WcTileGrid gWcTileGridASolved;
 extern WcTileGrid gWcTileGridAInitial;
 extern u8 gWcTileGridB[][8];
 extern u8 gWcTileGridA[][8];
-extern const f32 gWcLevelContZero[1];
-extern const f32 gWcPushBlockTileResetTime[1];
 
 void wclevelcont_getSolvedTileXYB(s16 value, s16* outTileX, s16* outTileY);
 void wclevelcont_getInitialTileXYB(s16 value, s16* outTileX, s16* outTileY);
