@@ -1376,7 +1376,7 @@ config.libs = [
             Object(Matching, "dlls/objects/516_WM_Torch/WM_Torch.c"),
             Object(Matching, "dlls/objects/517_WM_Vein/WM_Vein.c"),
             Object(Matching, "dlls/objects/518_LightSource/LightSource.c"),
-            Object(Matching, "dlls/objects/519_WM_Worm/WM_Worm.c", cflags=cflags_dll_noopt_nocse),
+            Object(Matching, "dlls/objects/519_WM_Worm/WM_Worm.c", cflags=cflags_dll_noopt),
             Object(Matching, "dlls/objects/520_WM_Wallpowe/WM_Wallpowe.c"),
             Object(Matching, "dlls/objects/521_WM_LevelCon/WM_LevelCon.c"),
             Object(Matching, "dlls/objects/522_WM_GeneralS/WM_GeneralS.c"),
