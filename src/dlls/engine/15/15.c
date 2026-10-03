@@ -380,7 +380,7 @@ void player_rotateTowardEnemy(GameObject* obj, BaddieState* state, int spd) {
         if (diff < -0x8000) {
             diff += 0xffff;
         }
-        obj->anim.rotX = (s16)(obj->anim.rotX + (int)((f32)diff * timeDelta / (PLAYER_MOVE_DISTANCE_SCALE * spd)));
+        obj->anim.rotX += (int)((f32)diff * timeDelta / (PLAYER_MOVE_DISTANCE_SCALE * spd));
     }
 }
 

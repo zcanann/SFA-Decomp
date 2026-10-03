@@ -856,7 +856,7 @@ config.libs = [
             Object(Matching, "dlls/engine/12/12.c"),
             Object(Matching, "dlls/engine/13/13.c"),
             Object(Matching, "dlls/engine/14/14.c"),
-            Object(Matching, "dlls/engine/15/15.c", cflags=cflags_dll_noopt_nocse_noautoinline),
+            Object(Matching, "dlls/engine/15/15.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "dlls/engine/16/16.c"),
             Object(Matching, "dlls/engine/17/17.c"),
             Object(Matching, "dlls/engine/18/18.c"),
