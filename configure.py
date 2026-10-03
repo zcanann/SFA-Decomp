@@ -1120,7 +1120,7 @@ config.libs = [
             Object(Matching, "dlls/objects/260_SmallBasket/SmallBasket.c", cflags=cflags_dll_noopt_noprop),
             Object(Matching, "dlls/objects/261_LargeCrate/LargeCrate.c"),
             Object(Matching, "dlls/objects/262/262.c"),
-            Object(Matching, "dlls/objects/263/263.c", cflags=cflags_dll_noopt_nocse_noinline),
+            Object(Matching, "dlls/objects/263/263.c", cflags=cflags_dll_noopt),
             Object(Matching, "dlls/objects/264_EndObject/EndObject.c"),
             Object(Matching, "dlls/objects/265/265.c"),
             Object(Matching, "dlls/objects/266_Fall_Ladder/Fall_Ladder.c"),

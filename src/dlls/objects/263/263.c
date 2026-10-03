@@ -206,7 +206,7 @@ void windLift107_update(GameObject* obj) {
     ObjHitsPriorityState* hitState;
     s8 throwState;
     char carryActive;
-    u8 contactFlags;
+    s8 contactFlags;
 
     placement = (WindLift107Placement*)obj->anim.placementData;
     clockScale = 1.0f;
@@ -361,7 +361,7 @@ void windLift107_update(GameObject* obj) {
         }
         hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         contactFlags = hitState->contactFlags;
-        if ((s8)contactFlags != 0 && state->throwState == WINDLIFT107_THROW_LAUNCHED) {
+        if (contactFlags != 0 && state->throwState == WINDLIFT107_THROW_LAUNCHED) {
             obj->anim.velocityY = 0.0f;
             state->throwState = WINDLIFT107_THROW_NONE;
             impactState = obj->extra;
@@ -371,7 +371,7 @@ void windLift107_update(GameObject* obj) {
             impactState->burstTimer = 1;
             return;
         }
-        if ((s8)contactFlags != 0 && state->throwState == WINDLIFT107_THROW_DROPPED) {
+        if (contactFlags != 0 && state->throwState == WINDLIFT107_THROW_DROPPED) {
             state->throwState = WINDLIFT107_THROW_NONE;
             impactState = obj->extra;
             impactParamsC.scale = impactState->radius;
