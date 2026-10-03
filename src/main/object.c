@@ -926,12 +926,11 @@ static void objFreeObjdef(u8* obj, int flag) {
 
 void Obj_RegisterObject(GameObject* obj, int b);
 
-#pragma dont_inline on
 void* loadModLines(int idx, s16* outCount) {
     void* result;
-    int* hdr;
-    int size;
-    int start;
+    int* hdr = NULL;
+    int size = 0;
+    int start = 0;
 
     result = 0;
     if (idx > (getDataFileSize(MLDF_FILEID_MODLINES_TAB) - 4) >> 2) {
@@ -949,7 +948,6 @@ void* loadModLines(int idx, s16* outCount) {
     *outCount = (u32)size / 20;
     return result;
 }
-#pragma dont_inline reset
 
 static inline void Obj_FreeDeferredObjects(void) {
     int i;
