@@ -1280,7 +1280,6 @@ DSError TRKPPCAccessFPRegister(void* srcDestPtr, u32 fpr, BOOL read)
 static inline DSError TRKPPCAccessSpecialReg(void* value, u32* access_func, BOOL read)
 {
 #if defined(__MWERKS__)
-#pragma unused(read)
 #elif defined(__GNUC__)
 	UNUSED(read);
 #endif

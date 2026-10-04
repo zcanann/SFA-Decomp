@@ -158,8 +158,6 @@ float powfCoreFast(float base, register float power) {
     return 1.0f;
 }
 
-#pragma optimization_level 0
-#pragma optimize_for_size on
 float powfBitEstimate(float base, float exponentValue) {
     u32 baseBits;
     union {
@@ -198,15 +196,11 @@ float powfBitEstimate(float base, float exponentValue) {
 
     return 1.0f;
 }
-#pragma optimize_for_size reset
-#pragma optimization_level reset
 
-#pragma optimization_level 0
 #pragma peephole off
 void Vec_normalize(const Vec* input, Vec* output) {
     Vec_scale(input, output, invSqrt(Vec_lengthSquared(input)));
 }
-#pragma optimization_level reset
 
 #pragma peephole on
 void Vec_scale(const Vec* input, Vec* output, float scale) {
@@ -219,8 +213,6 @@ float Vec_lengthSquared(const Vec* input) {
     return input->z * input->z + (input->x * input->x + input->y * input->y);
 }
 
-#pragma optimization_level 0
-#pragma optimize_for_size on
 #pragma peephole off
 float trigReduceQuadrant(u16* quadrant, float angle) {
     float scaledAngle = 1.2732395f * __fabsf(angle);
@@ -230,5 +222,3 @@ float trigReduceQuadrant(u16* quadrant, float angle) {
     roundedQuadrant = fastCastU16ToFloat(quadrant);
     return scaledAngle - roundedQuadrant;
 }
-#pragma optimize_for_size reset
-#pragma optimization_level reset

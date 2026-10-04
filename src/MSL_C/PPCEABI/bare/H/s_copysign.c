@@ -17,7 +17,6 @@
 
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/fdlibm.h"
 
-#pragma warn_implicitconv off
 
 #ifdef __STDC__
 	double copysign(double x, double y)
@@ -30,4 +29,3 @@
 	return x;
 }
 
-#pragma warn_implicitconv on

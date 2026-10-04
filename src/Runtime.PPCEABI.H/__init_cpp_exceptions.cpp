@@ -3,8 +3,6 @@
 #include "PowerPC_EABI_Support/Runtime/NMWException.h"
 
 #if __MWERKS__
-#pragma exceptions off
-#pragma internal on
 #endif
 
 static int fragmentID = -2;
