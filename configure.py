@@ -757,7 +757,7 @@ config.libs = [
             Object(Matching, "MSL_C/PPCEABI/bare/H/s_atan.c"),
             Object(Matching, "MSL_C/PPCEABI/bare/H/e_acos.c"),
             Object(Matching, "MSL_C/PPCEABI/bare/H/float.c"),
-            Object(Matching, "MSL_C/PPCEABI/bare/H/exponentialsf.c", extra_cflags=["-O3,p", "-opt", "nopeephole"]),
+            Object(Matching, "MSL_C/PPCEABI/bare/H/exponentialsf.c", extra_cflags=["-O2,p", "-opt", "nopeephole,nopropagation"]),
             Object(Matching, "MSL_C/PPCEABI/bare/H/extras.c"),
             Object(Matching, "MSL_C/PPCEABI/bare/H/k_rem_pio2.c"),
             Object(Matching, "MSL_C/PPCEABI/bare/H/w_acos.c"),
