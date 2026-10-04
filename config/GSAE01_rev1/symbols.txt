@@ -10009,7 +10009,6 @@ DR_CloudRunner_release = .text:0x802C1F70; // type:function size:0x4
 DR_CloudRunner_initialise = .text:0x802C1F74; // type:function size:0x78
 __init_cpp_exceptions_reference = .ctors:0x802C2000; // type:object size:0x4 scope:global
 _ctors = .ctors:0x802C2000; // type:label scope:global data:4byte
-__sinit_trigf_c_reference = .ctors:0x802C2004; // type:object size:0x4 scope:local
 __destroy_global_chain_reference = .dtors:0x802C2020; // type:object size:0x4 scope:global
 _dtors = .dtors:0x802C2020; // type:label scope:global data:4byte
 __fini_cpp_exceptions_reference = .dtors:0x802C2024; // type:object size:0x4 scope:global
