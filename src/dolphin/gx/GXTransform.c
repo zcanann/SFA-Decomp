@@ -4,7 +4,6 @@
 
 #define __GXData gx
 
-
 void GXSetProjection(const Mtx44 mtx, GXProjectionType type) {
     u32 reg;
 
@@ -189,7 +188,6 @@ void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, GXTexMtxType type) {
 #endif
 }
 
-#pragma fp_contract off
 void GXSetViewportJitter(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz, u32 field) {
     f32 sx;
     f32 sy;
@@ -237,8 +235,6 @@ void GXSetViewportJitter(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz,
     GX_WRITE_XF_REG_F(31, oz);
     __GXData->bpSentNot = 1;
 }
-
-#pragma fp_contract on
 
 void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz) {
     GXSetViewportJitter(left, top, wd, ht, nearz, farz, 1);
