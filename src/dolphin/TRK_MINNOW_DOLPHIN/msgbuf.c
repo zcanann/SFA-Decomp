@@ -92,10 +92,10 @@ DSError TRKSetBufferPosition(TRKBuffer* msg, u32 pos) {
     return error;
 }
 
-#pragma dont_inline on
 DSError TRKAppendBuffer(TRKBuffer* msg, const void* data, unsigned int length) {
     DSError error = DS_NoError;
-    u32 bytesLeft;
+    u32 bytesLeft = 0;
+    u8* dst;
 
     // Return if no bytes to append
     if (length == 0) {
@@ -116,7 +116,8 @@ DSError TRKAppendBuffer(TRKBuffer* msg, const void* data, unsigned int length) {
         msg->data[msg->position] = ((u8*)data)[0];
     } else {
         // Otherwise, use memcpy
-        TRK_memcpy(msg->data + msg->position, data, length);
+        dst = msg->data + msg->position;
+        TRK_memcpy(dst, data, length);
     }
 
     // Update the position and length
@@ -125,11 +126,11 @@ DSError TRKAppendBuffer(TRKBuffer* msg, const void* data, unsigned int length) {
 
     return error;
 }
-#pragma dont_inline reset
 
 DSError TRKReadBuffer(TRKBuffer* msg, void* data, unsigned int length) {
     DSError error = DS_NoError;
-    u32 bytesLeft;
+    u32 bytesLeft = 0;
+    u8* dst;
 
     // Return if no bytes to read
     if (length == 0) {
