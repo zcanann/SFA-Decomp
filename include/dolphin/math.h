@@ -1,8 +1,6 @@
 #ifndef _DOLPHIN_MATH
 #define _DOLPHIN_MATH
 
-// this file is necessary to match mtx/quat.c
-
 #define M_PI 3.141592653589793
 
 #ifndef _MATH_INLINE
