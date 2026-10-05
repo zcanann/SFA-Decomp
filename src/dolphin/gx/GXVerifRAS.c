@@ -387,7 +387,6 @@ asm void __GXVerifyTEV(void) {
     nofralloc
 #include "../../nonmatchings/__GXVerifyTEV.s"
 }
-#pragma peephole on
 #else
 void __GXVerifyTEV(void) {
     u32 i; // r31

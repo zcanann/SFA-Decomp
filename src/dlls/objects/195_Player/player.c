@@ -1,3 +1,4 @@
+#include "main/dll/baddie_state.h"
 #define BADDIE_MOVE_STATUS_SIGNED
 
 #include "main/dll/player.h"
@@ -8835,7 +8836,7 @@ static inline int playerCanGuard(GameObject* obj, PlayerState* inner) {
     }
 }
 
-int playerStateMoving(int obj, int state, f32 fv) {
+int playerStateMoving(GameObject* obj, void* state, f32 fv) {
     f32* moveParams;
     PlayerState* inner;
     int dir;
@@ -9115,7 +9116,7 @@ int playerStateMoving(int obj, int state, f32 fv) {
             t = (t < 0.0f) ? -t : t;
             {
                 int r = ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, ((PlayerState*)state)->baddie.animSpeedC,
-                                                     (f32*)(state + 0x2a0));
+                                                     (f32*)((int)state + 0x2a0));
                 if (r == 0) {
                     ((PlayerState*)state)->baddie.moveSpeed = 0.005f;
                 }
@@ -9286,7 +9287,9 @@ int playerStateMoving(int obj, int state, f32 fv) {
                 }
                 {
                     int r = ObjAnim_SampleRootCurvePhase(
-                        (ObjAnimComponent*)obj, ((PlayerState*)state)->baddie.animSpeedC, (f32*)(state + 0x2a0));
+                        (ObjAnimComponent*)obj,
+                        ((PlayerState*)state)->baddie.animSpeedC,
+                        (f32*)((int)state) + (offsetof(BaddieState, moveSpeed)/4)); //@fake
                     if (r == 0) {
                         ((PlayerState*)state)->baddie.moveSpeed = 0.005f;
                     }

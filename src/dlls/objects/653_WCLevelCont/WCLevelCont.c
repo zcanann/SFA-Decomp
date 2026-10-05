@@ -35,8 +35,6 @@ u8 gWcTileGridB[8][8];
 
 #define WCLEVELCONT_TILE_MESSAGE_TEXT_ID 1401
 #define WCLEVELCONT_TILE_MESSAGE_FRAMES  300.0f
-const f32 gWcLevelContZero[] = {0.0f};
-const f32 gWcPushBlockTileResetTime[] = {20.0f};
 
 void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state) {
     f32 sunTime;
@@ -94,15 +92,15 @@ void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state) {
             Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             state->completionFlags |= WCLEVELCTL_FLAG_TILE_A;
         } else if (mainGetBit(GAMEBIT_WC_PushBlockAFade) != 0) {
-            if (state->tileAResetTimer <= gWcLevelContZero[0]) {
+            if (state->tileAResetTimer <= 0.0f) {
                 mainSetBits(GAMEBIT_WC_PushBlockACount, 0);
                 memcpy(gWcTileGridA, gWcTileGridAInitial.g, 0x40);
-                state->tileAResetTimer = gWcPushBlockTileResetTime[0];
+                state->tileAResetTimer = 20.0f;
             }
         }
-        if (state->tileAResetTimer > gWcLevelContZero[0]) {
+        if (state->tileAResetTimer > 0.0f) {
             state->tileAResetTimer -= timeDelta;
-            if (state->tileAResetTimer <= gWcLevelContZero[0]) {
+            if (state->tileAResetTimer <= 0.0f) {
                 mainSetBits(GAMEBIT_WC_PushBlockAFade, 0);
             }
         }
@@ -114,15 +112,15 @@ void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state) {
             Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             state->completionFlags |= WCLEVELCTL_FLAG_TILE_B;
         } else if (mainGetBit(GAMEBIT_WC_PushBlockBFade) != 0) {
-            if (state->tileBResetTimer <= gWcLevelContZero[0]) {
+            if (state->tileBResetTimer <= 0.0f) {
                 mainSetBits(GAMEBIT_WC_PushBlockBCount, 0);
                 memcpy(gWcTileGridB, gWcTileGridBInitial.g, 0x40);
-                state->tileBResetTimer = gWcPushBlockTileResetTime[0];
+                state->tileBResetTimer = 20.0f;
             }
         }
-        if (state->tileBResetTimer > gWcLevelContZero[0]) {
+        if (state->tileBResetTimer > 0.0f) {
             state->tileBResetTimer -= timeDelta;
-            if (state->tileBResetTimer <= gWcLevelContZero[0]) {
+            if (state->tileBResetTimer <= 0.0f) {
                 mainSetBits(GAMEBIT_WC_PushBlockBFade, 0);
             }
         }
@@ -283,7 +281,7 @@ int wclevelcont_seqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     if (state->previousMode == WCLEVELCTL_MODE_PUZZLE_A) {
         f32 t = state->eventTimer - timeDelta;
         state->eventTimer = t;
-        if (t <= gWcLevelContZero[0]) {
+        if (t <= 0.0f) {
             GameObject* player;
             mainSetBits(GAMEBIT_WC_TimedPuzzleAComplete, 1);
             player = (GameObject*)Obj_GetPlayerObject();
@@ -292,7 +290,7 @@ int wclevelcont_seqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     } else if (state->previousMode == WCLEVELCTL_MODE_PUZZLE_B) {
         f32 t = state->eventTimer - timeDelta;
         state->eventTimer = t;
-        if (t <= gWcLevelContZero[0]) {
+        if (t <= 0.0f) {
             GameObject* player;
             mainSetBits(GAMEBIT_WC_TimedPuzzleBComplete, 1);
             player = (GameObject*)Obj_GetPlayerObject();
@@ -331,7 +329,8 @@ int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
             mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
             {
                 f32 base = 24.0f;
-                *outX = base + (224.0f + px + gWcLevelContZero[0]);
+                f32 ofs = 0.0f;
+                *outX = base + (224.0f + px + ofs);
                 *outZ = base + (128.0f + pz + (f32)(bi * 48));
             }
             a -= 1;
@@ -372,8 +371,9 @@ int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
             mapGetBlockOriginForPos(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &px, &pz);
             {
                 f32 base = 24.0f;
+                f32 ofs = 0.0f;
                 *outX = base + (224.0f + px + (f32)(ai * 48));
-                *outZ = base + (128.0f + pz + gWcLevelContZero[0]);
+                *outZ = base + (128.0f + pz + ofs);
             }
             b -= 1;
             limit = -1;
@@ -484,7 +484,8 @@ int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
             {
                 f32 base = 24.0f;
                 f32 tx = 32.0f + px;
-                *outX = base + (tx + gWcLevelContZero[0]);
+                f32 ofs = 0.0f;
+                *outX = base + (tx + ofs);
                 *outZ = (129.0f + pz + (f32)(bi * 48)) + base;
             }
             a -= 1;
@@ -528,9 +529,10 @@ int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
             {
                 f32 base = 24.0f;
                 f32 tz;
+                f32 ofs = 0.0f;
                 *outX = (32.0f + px + (f32)(ai * 48)) + base;
                 tz = 129.0f + pz;
-                *outZ = base + (tz + gWcLevelContZero[0]);
+                *outZ = base + (tz + ofs);
             }
             b -= 1;
             limit = -1;
@@ -688,22 +690,17 @@ void wclevelcont_syncProgressBits(WcLevelControlState* state) {
     GameBitLatch_Update(&state->gameBitLatch, 0x80, -1, -1, GAMEBIT_CountdownTimerRunning, 0xaf);
 }
 
-/* Retail compiled this function with common-subexpression elimination off: with it on, the
- * message-timer guard and clamp share one value-numbered web for the zero atom, which is
- * created at the guard and so coloured last, putting the constant in f1 where retail has f0.
- * The rest of the unit needs CSE on -- traceMoveA and traceMoveB rely on it. */
-#pragma opt_common_subs off
 void wclevelcont_update(GameObject* obj) {
     WcLevelControlState* state = obj->extra;
     f32 sunTime;
 
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
-    if (state->messageTimer > gWcLevelContZero[0]) {
+    if (state->messageTimer > 0.0f) {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextShow(WCLEVELCONT_TILE_MESSAGE_TEXT_ID);
         state->messageTimer -= timeDelta;
-        if (state->messageTimer < gWcLevelContZero[0]) {
-            state->messageTimer = gWcLevelContZero[0];
+        if (state->messageTimer < 0.0f) {
+            state->messageTimer = 0.0f;
         }
     }
 #endif
@@ -713,7 +710,7 @@ void wclevelcont_update(GameObject* obj) {
             getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_B, 0);
             getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_C, 0);
             getEnvfxActImmediately(obj, obj, WCLEVELCONT_ENVFX_D, 0);
-            skySetLightIndex(0, gWcLevelContZero[0]);
+            skySetLightIndex(0, 0.0f);
             mainSetBits(GAMEBIT_WC_MagicCaveRelated0E05, 1);
         }
         obj->userData1 = 1;
@@ -736,7 +733,6 @@ void wclevelcont_update(GameObject* obj) {
         mainSetBits(GAMEBIT_WC_IsNight, 1);
     }
 }
-#pragma opt_common_subs reset
 
 void wclevelcont_init(GameObject* obj) {
     WcLevelControlState* state = obj->extra;

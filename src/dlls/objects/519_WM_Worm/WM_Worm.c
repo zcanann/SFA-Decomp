@@ -65,15 +65,15 @@ void WM_Worm_update(GameObject* obj) {
             /* Move only along axes where the player position differs. */
             if ((dx > 0.0f) || (dx < 0.0f)) {
                 dx = 0.01f * dx;
-                obj->anim.localPosX = dx * timeDelta + obj->anim.localPosX;
+                obj->anim.localPosX += dx * timeDelta;
             }
             if ((dy > 0.0f) || (dy < 0.0f)) {
                 dy = 0.01f * dy;
-                obj->anim.localPosY = dy * timeDelta + obj->anim.localPosY;
+                obj->anim.localPosY += dy * timeDelta;
             }
             if ((dz > 0.0f) || (dz < 0.0f)) {
                 dz = 0.01f * dz;
-                obj->anim.localPosZ = dz * timeDelta + obj->anim.localPosZ;
+                obj->anim.localPosZ += dz * timeDelta;
             }
             spawnCountOrInterval = state->spawnCountOrInterval;
             if (spawnCountOrInterval >= 0 || (spawnCountOrInterval < 0 && obj->userData1 <= 0)) {

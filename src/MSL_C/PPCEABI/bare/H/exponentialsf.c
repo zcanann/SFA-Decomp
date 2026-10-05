@@ -169,8 +169,6 @@ static inline float exp2_kernel(float value) {
 
 #define float_bits(value) (*(u32*)&(value))
 
-#pragma optimization_level 2
-#pragma opt_propagation off
 float powf(float base, float power) {
     int integerPower;
     float fractionalPower;
@@ -216,4 +214,3 @@ float powf(float base, float power) {
 
     return 0.0f;
 }
-#pragma opt_propagation reset

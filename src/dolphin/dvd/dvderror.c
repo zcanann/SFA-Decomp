@@ -10,7 +10,6 @@ u32 ErrorTable[18] = {
 
 #define DIDNT_MATCH 29
 
-#pragma dont_inline on
 static u8 ErrorCode2Num(u32 errorCode) {
 	u32 i;
 
@@ -27,7 +26,6 @@ static u8 ErrorCode2Num(u32 errorCode) {
 
 	return DIDNT_MATCH;
 }
-#pragma dont_inline reset
 
 void __DVDStoreErrorCode(u32 error) {
     u32 statusCode;

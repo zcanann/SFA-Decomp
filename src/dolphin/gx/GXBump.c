@@ -20,7 +20,6 @@ do { \
 } while (0)
 #endif
 
-#pragma dont_inline on
 void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, GXIndTexFormat format, GXIndTexBiasSel bias_sel, GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s, GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod, GXIndTexAlphaSel alpha_sel) {
     u32 reg;
 
@@ -38,7 +37,6 @@ void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, GXIndTe
     GX_WRITE_SOME_REG5(GX_LOAD_BP_REG, reg);
     __GXData->bpSentNot = 0;
 }
-#pragma dont_inline reset
 
 void GXSetIndTexMtx(GXIndTexMtxID mtx_id, const f32 offset[2][3], s8 scale_exp) {
     u32 reg0;

@@ -2,8 +2,6 @@
 #include "dolphin/gx/__gx.h"
 #include "MSL_C/PPCEABI/bare/H/math_trig_api.h"
 
-#pragma fp_contract off
-
 #define __GXData gx
 
 static inline float sqrtf(float x) {
@@ -303,7 +301,6 @@ void GXLoadLightObjImm(const GXLightObj* lt_obj, GXLightID light) {
 
     __GXData->bpSentNot = 1;
 }
-
 
 void GXSetChanAmbColor(GXChannelID chan, GXColor amb_color) {
     u32 reg;

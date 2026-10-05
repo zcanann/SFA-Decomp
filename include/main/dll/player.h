@@ -14,7 +14,7 @@ void playerDoHitDetection(GameObject* obj);
 int playerCheckCommonTransitions(GameObject* obj, struct PlayerState* state, struct PlayerState* inner, f32 fv);
 
 int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 fv, u32 mask);
-int playerStateMoving(int obj, int state, f32 fv);
+int playerStateMoving(GameObject* obj, void* state, f32 fv);
 int playerStateOnLadder(GameObject* obj, struct PlayerState* state);
 int playerStateClimbWall(GameObject* obj, struct PlayerState* state);
 int playerStateAimStaff(GameObject* obj, struct PlayerState* state, f32 fv);

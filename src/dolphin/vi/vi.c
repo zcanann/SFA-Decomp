@@ -233,45 +233,59 @@ VIRetraceCallback VISetPostRetraceCallback(VIRetraceCallback cb)
 	return oldcb;
 }
 
-#pragma dont_inline on
 static VITiming* getTiming(VITVMode mode)
 {
+	VITiming* t;
+
 	switch (mode) {
 	case VI_TVMODE_NTSC_INT:
-		return &timing[0];
+		t = &timing[0];
+		break;
 	case VI_TVMODE_NTSC_DS:
-		return &timing[1];
+		t = &timing[1];
+		break;
 
 	case VI_TVMODE_PAL_INT:
-		return &timing[2];
+		t = &timing[2];
+		break;
 	case VI_TVMODE_PAL_DS:
-		return &timing[3];
+		t = &timing[3];
+		break;
 
 	case VI_TVMODE_EURGB60_INT:
-		return &timing[0];
+		t = &timing[0];
+		break;
 	case VI_TVMODE_EURGB60_DS:
-		return &timing[1];
+		t = &timing[1];
+		break;
 
 	case VI_TVMODE_MPAL_INT:
-		return &timing[4];
+		t = &timing[4];
+		break;
 	case VI_TVMODE_MPAL_DS:
-		return &timing[5];
+		t = &timing[5];
+		break;
 
 	case VI_TVMODE_NTSC_PROG:
-		return &timing[6];
+		t = &timing[6];
+		break;
 	case VI_TVMODE_3:
-		return &timing[7];
+		t = &timing[7];
+		break;
 
 	case VI_TVMODE_DEBUG_PAL_INT:
-		return &timing[2];
+		t = &timing[2];
+		break;
 	case VI_TVMODE_DEBUG_PAL_DS:
-		return &timing[3];
+		t = &timing[3];
+		break;
 
 	default:
-		return NULL;
+		t = NULL;
+		break;
 	}
+	return t;
 }
-#pragma dont_inline reset
 
 void __VIInit(VITVMode mode)
 {

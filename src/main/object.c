@@ -926,12 +926,11 @@ static void objFreeObjdef(u8* obj, int flag) {
 
 void Obj_RegisterObject(GameObject* obj, int b);
 
-#pragma dont_inline on
 void* loadModLines(int idx, s16* outCount) {
     void* result;
-    int* hdr;
-    int size;
-    int start;
+    int* hdr = NULL;
+    int size = 0;
+    int start = 0;
 
     result = 0;
     if (idx > (getDataFileSize(MLDF_FILEID_MODLINES_TAB) - 4) >> 2) {
@@ -949,7 +948,6 @@ void* loadModLines(int idx, s16* outCount) {
     *outCount = (u32)size / 20;
     return result;
 }
-#pragma dont_inline reset
 
 static inline void Obj_FreeDeferredObjects(void) {
     int i;
@@ -1051,7 +1049,6 @@ void objGetWeaponDa(u8* obj, int objType, ObjWeaponDaTable* weaponDaTable, int k
     }
 }
 
-#pragma dont_inline on
 void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u32 moveId, u8 load) {
     int i;
     s16* tbl;
@@ -1080,7 +1077,6 @@ void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u
         i += 3;
     }
 }
-#pragma dont_inline reset
 
 void Obj_UpdateObject(GameObject* obj) {
     ObjAnimComponent* object;
@@ -1189,7 +1185,6 @@ void Obj_UpdateObject(GameObject* obj) {
     }
 }
 
-#pragma dont_inline on
 void Obj_RunInitCallback(GameObject* obj, void* placementData, int unused) {
     s16 mode = obj->anim.romDefNo;
     switch (mode) {
@@ -1228,7 +1223,6 @@ void Obj_RunInitCallback(GameObject* obj, void* placementData, int unused) {
         obj->externalVelZ = zero;
     }
 }
-#pragma dont_inline reset
 
 void Obj_FreeObject(GameObject* obj) {
     int i;

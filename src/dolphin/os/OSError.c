@@ -8,9 +8,7 @@ OSErrorHandler __OSErrorTable[OS_ERROR_MAX];
 
 // Retail ships with all FPSCR exception enable bits cleared (the SDK default
 // would be FPSCR_VE|FPSCR_OE|FPSCR_UE|FPSCR_ZE|FPSCR_XE).
-#pragma explicit_zero_data on
 u32 __OSFpscrEnableBits = 0;
-#pragma explicit_zero_data reset
 
 void OSPanic(const char* file, int line, const char* msg, ...) {
     va_list marker;

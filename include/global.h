@@ -3,6 +3,12 @@
 
 #include "dolphin/types.h"
 
+#define F_PI 3.1415927f
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
+
+#define S16_TO_RAD(ANGLE) (F_PI * ANGLE / 32768.0f)
+
 #define ARRAY_SIZE(o) (sizeof(o) / sizeof(o[0]))
 #define ARRAY_SSIZE(o) ((s32)(sizeof(o) / sizeof(o[0])))
 

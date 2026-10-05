@@ -1,4 +1,3 @@
-#pragma cplusplus on
 
 extern inline float sqrtf(float x) {
     static const double _half=.5;
@@ -63,4 +62,3 @@ inline float floor(float x) {
     return (float)i;
 }
 
-#pragma cplusplus reset

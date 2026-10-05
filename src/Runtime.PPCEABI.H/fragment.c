@@ -14,7 +14,6 @@ static ProcessInfo fragmentinfo[MAXFRAGMENTS];
 #if __MWERKS__
 #endif
 
-#pragma peephole off
 void __unregister_fragment(int fragmentID)
 {
     ProcessInfo* f;

@@ -194,7 +194,6 @@ __declspec(section ".init") asm void __init_hardware(void)
     blr
 }
 
-#pragma scheduling off
 __declspec(section ".init") asm void __flush_cache(void* address, unsigned int size)
 {
     nofralloc
