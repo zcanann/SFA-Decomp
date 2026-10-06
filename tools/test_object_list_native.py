@@ -57,7 +57,7 @@ static void event(const char* code,int id) { if (recordEvents) append(actual,cod
 static void Obj_RemoveFromUpdateList(GameObject*);
 static void Sfx_RemoveLoopedObjectSoundForObject(GameObject* p) { assert(p); }
 static void Sfx_StopObjectChannel(GameObject* p,int mask) { assert(p && mask==0x7f); }
-static void objFreeObjdef(u8* p,int flag) { released=(GameObject*)p; releaseFlag=flag; }
+static void objFreeObjectInternal(GameObject* p,int flag) { released=p; releaseFlag=flag; }
 static char sObjFreeNonExistentObjectWarning[]="missing",sObjFreedObjectMessage[]="freed %s";
 static void OSReport(const char* format,...) { if (format==sObjFreeNonExistentObjectWarning) warningCount++; }
 static void Obj_TransformLocalPointToWorld(float x,float y,float z,float* ox,float* oy,float* oz,GameObject* p) {

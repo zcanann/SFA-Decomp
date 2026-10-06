@@ -171,12 +171,12 @@ static void check(int mask, int index, int collision) {
     }
     assert(refs[currentId] == 0 && allocCalls == 1 && ioCalls == 1);
     refs[currentId] = 2;
-    releaseDefinition((u8*)&object);
+    releaseDefinition(&object);
     assert(refs[currentId] == 1 && freeCalls == 0);
-    releaseDefinition((u8*)&object);
+    releaseDefinition(&object);
     assert(refs[currentId] == 0 && !resource && !modLines && !intersections);
     assert(freeCalls == 1 + (index >= 0 ? !!(collision & 1) + !!(collision & 2) : 0));
-    releaseDefinition((u8*)&object);
+    releaseDefinition(&object);
     assert(warnings == 1);
     for (int i = 0; i < CAPACITY; i++) assert(refs[i] == 0);
 }
@@ -203,12 +203,12 @@ int main(void) {
     assert(definition->extraSetupData == end && definition->sequenceMap == end);
     assert(definition->eventMoveTable == end && definition->hitReactMoveTable == end);
     assert(definition->weaponDaTable == end && definition->hitVolumes == end);
-    releaseDefinition((u8*)&object);
+    releaseDefinition(&object);
     /* A stale cache slot with zero references must reload the definition. */
     definition = loadObjectFile(0);
     assert(definition == resource && refs[0] == 1);
     assert(allocCalls == 2 && ioCalls == 2);
-    releaseDefinition((u8*)&object);
+    releaseDefinition(&object);
     assert(freeCalls == 2);
     reset(0);
     assert(loadObjectFile(CAPACITY) == NULL && loadObjectFile(CAPACITY + 10) == NULL);
@@ -228,11 +228,11 @@ def harness():
     source = (ROOT / "src/main/object.c").read_text()
     start, end = find_function_body(source, "loadObjectFile")
     loader = "ObjDef* loadObjectFile(int id) " + source[start:end + 1]
-    start, end = find_function_body(source, "objFreeObjdef")
+    start, end = find_function_body(source, "objFreeObjectInternal")
     teardown = source[start:end + 1]
     start = teardown.index("    {\n        s16 type;")
-    end = teardown.index("    if (((GameObject*)obj)->seqIndex", start)
-    release = "static void releaseDefinition(u8* obj) {\n    void* entry;\n"
+    end = teardown.index("    if (obj->seqIndex", start)
+    release = "static void releaseDefinition(GameObject* obj) {\n    void* entry;\n"
     release += teardown[start:end] + "}\n"
     return "\n".join((PRELUDE, definition, FIXTURE, loader, release, CASES))
 

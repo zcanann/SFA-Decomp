@@ -99,6 +99,56 @@ byte-identical; its only changes are ten anonymous literal-symbol numbers at
 unchanged addresses. Compiler profiles, TU boundaries, and source-link coverage
 remain unchanged. The two previously documented reporting artifacts remain.
 
+## Object destruction and sequence detachment
+
+The private full-object destructor is now `objFreeObjectInternal`, with a
+`GameObject*` argument and an `onlySelf` flag. The former `objFreeObjdef` name
+came from the cache-release diagnostic embedded near its end, but that block
+is only one stage of destruction. Dinosaur Planet separates
+`objFreeObjectInternal(Object*, s32 onlySelf)` from `objFreeObjdef(s32 tabIdx)`;
+its full destructor follows the same child collection, sequence detachment,
+shadow/message/model cleanup, cached-definition release, and placement-release
+order. This is strong lineage for the descriptive rename, not proof of SFA's
+original symbol spelling. The retail diagnostic string remains unchanged.
+
+The existing 40-entry temporary child array now stores `GameObject*`, so the
+collection survives native pointer widths and later removal from the global
+object array. Sequence detachment uses the canonical `ObjSeqState.targetObj`
+field rather than an integer store through the extra-state pointer. The byte
+written at retail offset `0x8F` is named `targetFreed`, with assertions for it
+and the target pointer. That name describes the observed destruction write;
+no separate reader of that byte has been identified. Foxhollow independently
+uses pointer-array storage and this same sequence-state layout.
+
+Shadow, message queue, model-bank, and placement accesses now use canonical
+fields directly. The generic DLL free slot retains an explicit cast to its
+evidenced `(GameObject*, int)` call signature. Signed pointer comparisons retain
+pointer-width `ptrdiff_t` casts for retail instruction selection. The reused
+object/definition local keeps its existing lifetime. Cleanup order, the
+40-entry scratch capacity, and retail's lack of a child-count bounds check are
+preserved.
+
+`python3 tools/test_object_free_native.py` extracts the complete production
+destructor and the actual object-definition, shadow-state, and sequence-state
+records. Its 15,360 scenarios pass at `-O0` and `-O2` under ASan/UBSan, using
+64-bit pointers and a native object adapter. They cover 0, 1, 20, and 40 children,
+mutation of the global list by child destruction, player/DLL callbacks,
+`onlySelf`, shared/owned/sentinel shadow resources, frozen-model effects,
+definition reference counts, sequence IDs, and owned placement data. Release
+and callback spies check the complete order and pointer identity; they do not
+execute the underlying game services. Negative controls reject truncated child
+pointers, a four-byte sequence-pointer clear, the old fixed flag offset,
+incorrect shared-texture ownership, and a dropped callback flag.
+
+The existing object-list and definition-cache fixtures also pass after updating
+their references to the typed, renamed destructor. All 60 retail functions and
+all assigned data in `object.c` remain 100% in EN, EN rev1, JP, PAL, and PAL rev1.
+Every source build and strict retail checksum passes, with no new mismatches
+in the complete inventories. All other source objects are raw byte-identical.
+The destructor rename and eight anonymous literal-symbol renumberings explain
+`object.o`'s identity change; instructions, allocated storage, compiler profiles,
+and TU boundaries are unchanged.
+
 ## Loader helpers
 
 Two called private helpers account for the early literals in `object.c`:

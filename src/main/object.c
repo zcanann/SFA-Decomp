@@ -745,140 +745,139 @@ ObjPlacement* Obj_AllocObjectSetup(int size, int type) {
     p->size = size;
     return p;
 }
-static void objFreeObjdef(u8* obj, int flag) {
-    int defs[40];
-    void (*fp)(u8*, int);
-    void (*cb)(u8*);
+static void objFreeObjectInternal(GameObject* obj, int onlySelf) {
+    GameObject* childrenToFree[40];
+    void (*freeCallback)(GameObject*, int);
     BoneParticleEffectSpawnFn cb2;
     int i;
     int j;
     int n;
     int count;
     void* entry; /* Object-list entry, then the cached definition being released. */
-    int* bp;
+    ObjSeqState* sequenceState;
     void* curTex;
     void* tex;
     ObjectShadowMesh* shadowMesh;
     int modelCount;
     int group;
 
-    if (*(u8*)&((GameObject*)obj)->contactRefCount != 0) {
-        ObjContact_RemoveObjectCallbacks((GameObject*)obj);
+    if (obj->contactRefCount != 0) {
+        ObjContact_RemoveObjectCallbacks(obj);
     }
-    switch (((GameObject*)obj)->anim.romDefNo) {
+    switch (obj->anim.romDefNo) {
     case 0:
     case 0x1f:
-        playerFree((GameObject*)obj, flag);
+        playerFree(obj, onlySelf);
         break;
     default:
-        if (((GameObject*)obj)->anim.dll != NULL) {
-            fp = (void (*)(u8*, int))((ObjectInterface*)*((GameObject*)obj)->anim.dll)->free;
-            if (fp != NULL) {
-                fp(obj, flag);
+        if (obj->anim.dll != NULL) {
+            freeCallback = (void (*)(GameObject*, int))((ObjectInterface*)*obj->anim.dll)->free;
+            if (freeCallback != NULL) {
+                freeCallback(obj, onlySelf);
             }
-            Resource_Release(((GameObject*)obj)->anim.dll);
-            ((GameObject*)obj)->anim.dll = NULL;
+            Resource_Release(obj->anim.dll);
+            obj->anim.dll = NULL;
         }
         break;
     }
     gTitleMenuControlInterface->vtable->func15(obj);
     (*gExpgfxInterface)->freeOwner3(obj);
-    if (((ObjAnimComponent*)obj)->modelInstance->flags & OBJDEF_FLAG_HITBOX_GROUP) {
-        objFreeObjectType((GameObject*)obj, OBJECT_OBJGROUP_HITBOX);
-        if (flag == 0) {
+    if (obj->anim.modelInstance->flags & OBJDEF_FLAG_HITBOX_GROUP) {
+        objFreeObjectType(obj, OBJECT_OBJGROUP_HITBOX);
+        if (onlySelf == 0) {
             count = 0;
             for (i = 0; i < gObjCount; i++) {
                 entry = gObjList[i];
-                if (*(int*)&((GameObject*)entry)->anim.parent == (int)obj) {
+                if ((ptrdiff_t)((GameObject*)entry)->anim.parent == (ptrdiff_t)obj) {
                     ((GameObject*)entry)->anim.parent = NULL;
-                    if (*(void**)&((GameObject*)entry)->anim.placementData != NULL) {
-                        defs[count++] = (int)entry;
+                    if (((GameObject*)entry)->anim.placementData != NULL) {
+                        childrenToFree[count++] = entry;
                     }
                 }
             }
             for (n = 0; n < count; n++) {
-                Obj_FreeObject((GameObject*)defs[n]);
+                Obj_FreeObject(childrenToFree[n]);
             }
-            mapUnloadRomListPage(((GameObject*)obj)->anim.hostedMapSlot);
+            mapUnloadRomListPage(obj->anim.hostedMapSlot);
         }
     }
-    if (flag == 0 && ((GameObject*)obj)->anim.classId == 0x10) {
+    if (onlySelf == 0 && obj->anim.classId == 0x10) {
         for (i = 0; i < gObjCount; i++) {
             entry = gObjList[i];
-            if (*(int*)&((GameObject*)entry)->pendingParentObj == (int)obj) {
+            if ((ptrdiff_t)((GameObject*)entry)->pendingParentObj == (ptrdiff_t)obj) {
                 ((GameObject*)entry)->pendingParentObj = NULL;
             }
         }
     }
     for (j = 0; j < gObjCount; j++) {
         if (gObjList[j]->anim.classId == 0x10) {
-            bp = (int*)gObjList[j]->extra;
-            if (*(u8**)bp == obj) {
-                *bp = 0;
-                *((u8*)bp + 0x8f) = 1;
+            sequenceState = gObjList[j]->extra;
+            if (sequenceState->targetObj == obj) {
+                sequenceState->targetObj = NULL;
+                sequenceState->targetFreed = 1;
             }
         }
     }
-    if (((ObjAnimComponent*)obj)->modelInstance->group8RegistrationCount > 0) {
-        objFreeObjectType((GameObject*)obj, OBJECT_OBJGROUP_GROUP8);
+    if (obj->anim.modelInstance->group8RegistrationCount > 0) {
+        objFreeObjectType(obj, OBJECT_OBJGROUP_GROUP8);
     }
-    if (((ObjAnimComponent*)obj)->modelState != NULL) {
-        if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_BIG_BOX) {
+    if (obj->anim.modelState != NULL) {
+        if (obj->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_BIG_BOX) {
             shadowVolumesSetDirty(1);
         }
-        if (((ObjAnimComponent*)obj)->modelState->shadowTexture != NULL) {
+        if (obj->anim.modelState->shadowTexture != NULL) {
             curTex = newshadows_getSmallDiskTexture();
-            tex = ((ObjAnimComponent*)obj)->modelState->shadowTexture;
+            tex = obj->anim.modelState->shadowTexture;
             if (tex != curTex) {
-                if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) {
+                if (obj->anim.modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) {
                     mm_free(tex);
                 } else {
-                    textureFree((Texture*)(tex));
+                    textureFree((Texture*)tex);
                 }
             }
         }
-        if (((ObjAnimComponent*)obj)->modelState->shadowWorkBuffer != NULL) {
-            mm_free(((ObjAnimComponent*)obj)->modelState->shadowWorkBuffer);
+        if (obj->anim.modelState->shadowWorkBuffer != NULL) {
+            mm_free(obj->anim.modelState->shadowWorkBuffer);
         }
-        shadowMesh = ((ObjAnimComponent*)obj)->modelState->shadowRenderResource;
+        shadowMesh = obj->anim.modelState->shadowRenderResource;
         if (shadowMesh != NULL && shadowMesh != OBJECT_SHADOW_MESH_UNCACHED) {
             mm_free(shadowMesh);
         }
     }
-    if (*(void**)&((GameObject*)obj)->msgQueue != NULL) {
-        mm_free(((GameObject*)obj)->msgQueue);
-        ((GameObject*)obj)->msgQueue = NULL;
+    if (obj->msgQueue != NULL) {
+        mm_free(obj->msgQueue);
+        obj->msgQueue = NULL;
     }
-    modelCount = ((ObjAnimComponent*)obj)->modelInstance->modelCount;
+    modelCount = obj->anim.modelInstance->modelCount;
     for (j = 0; j < modelCount; j++) {
-        if ((int)((ObjAnimComponent*)obj)->banks[j] != 0) {
-            ObjModel_Release(((ObjAnimComponent*)obj)->banks[j]);
+        if ((ptrdiff_t)obj->anim.modelBanks[j] != 0) {
+            ObjModel_Release(obj->anim.modelBanks[j]);
         }
     }
-    if (((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_FROZEN) {
-        ((GameObject*)obj)->colorFadeFrames = 0;
-        ((GameObject*)obj)->colorFadeFlags = ((GameObject*)obj)->colorFadeFlags & ~OBJ_COLOR_FADE_FLAG_FROZEN;
-        ((GameObject*)obj)->fadeCounter = 0;
-        ObjModel_ClearRenderAttachment((ObjModel*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex]);
+    if (obj->colorFadeFlags & OBJ_COLOR_FADE_FLAG_FROZEN) {
+        obj->colorFadeFrames = 0;
+        obj->colorFadeFlags = obj->colorFadeFlags & ~OBJ_COLOR_FADE_FLAG_FROZEN;
+        obj->fadeCounter = 0;
+        ObjModel_ClearRenderAttachment(obj->anim.modelBanks[obj->anim.bankIndex]);
         cb2 = (*gBoneParticleEffectInterface)->spawnEffect;
         cb2(obj, 0x7fb, NULL, 0x50, NULL);
         cb2 = (*gBoneParticleEffectInterface)->spawnEffect;
         cb2(obj, 0x7fc, NULL, 0x32, NULL);
     }
-    if (((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE) {
-        Obj_ClearModelColorFadeRecursive((GameObject*)obj);
+    if (obj->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE) {
+        Obj_ClearModelColorFadeRecursive(obj);
     }
-    group = objGetObjectType((GameObject*)obj);
+    group = objGetObjectType(obj);
     if (group != 0) {
-        objFreeObjectType((GameObject*)obj, group - 1);
+        objFreeObjectType(obj, group - 1);
     }
     {
         s16 type;
         u8* refCounts;
 
-        type = ((GameObject*)obj)->anim.defId;
+        type = obj->anim.defId;
         refCounts = gObjFileRefCount;
-        if (refCounts[((GameObject*)obj)->anim.defId] == 0) {
+        if (refCounts[obj->anim.defId] == 0) {
             debugPrintf(sObjFreeObjdefError);
         } else {
             refCounts[type]--;
@@ -894,15 +893,15 @@ static void objFreeObjdef(u8* obj, int flag) {
             }
         }
     }
-    if (((GameObject*)obj)->seqIndex > -1) {
-        if (flag == 0) {
-            (*gObjectTriggerInterface)->endSequence(((GameObject*)obj)->seqIndex);
+    if (obj->seqIndex > -1) {
+        if (onlySelf == 0) {
+            (*gObjectTriggerInterface)->endSequence(obj->seqIndex);
         }
-        ((GameObject*)obj)->seqIndex = 0xffff;
+        obj->seqIndex = 0xffff;
     }
-    if ((*(s16*)&((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) &&
-        *(void**)&((GameObject*)obj)->anim.placementData != NULL) {
-        mm_free(((GameObject*)obj)->anim.placementData);
+    if ((obj->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) &&
+        obj->anim.placementData != NULL) {
+        mm_free(obj->anim.placementData);
     }
     mm_free(obj);
 }
@@ -937,7 +936,7 @@ static inline void Obj_FreeDeferredObjects(void) {
     for (i = 0; i < gObjDeferredFreeCount; i++) {
         void* p = gObjDeferredFreeList[i];
         if (p != NULL) {
-            objFreeObjdef(p, 0);
+            objFreeObjectInternal(p, 0);
             gObjDeferredFreeList[i] = NULL;
         }
     }
@@ -1283,7 +1282,7 @@ void Obj_FreeObject(GameObject* obj) {
             }
         }
     } else {
-        objFreeObjdef((u8*)obj, !gObjDefCaptureMode);
+        objFreeObjectInternal(obj, !gObjDefCaptureMode);
     }
 }
 
@@ -1952,7 +1951,7 @@ void Obj_FlushDeferredFreeList(void) {
     for (i = 0; i < gObjDeferredFreeCount; i++) {
         void* p = gObjDeferredFreeList[i];
         if (p != NULL) {
-            objFreeObjdef(p, 0);
+            objFreeObjectInternal(p, 0);
             gObjDeferredFreeList[i] = NULL;
         }
     }

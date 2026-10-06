@@ -782,7 +782,7 @@ typedef enum ObjDefFlag {
     OBJDEF_FLAG_RELATED_TO_MODELS = 0x00000020,
 
     /* The object lives in OBJECT_OBJGROUP_HITBOX: Obj_RegisterObject adds it to
-   * that group and forces activeHitboxMode to 0x5a, objFreeObjDef removes it,
+   * that group and forces activeHitboxMode to 0x5a, objFreeObjectInternal removes it,
    * objSetSlot refuses mode 0x5a without it, and ObjHitReact_UpdateResetObjects
    * skips it in the per-frame reset pass. Several DLLs use
    * "HITBOX_GROUP set and CAN_HOLD_PLAYER clear" as the test for an object the
