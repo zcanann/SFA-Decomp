@@ -260,9 +260,9 @@ struct MldfIterators {
 };
 
 /* Resource-buffer view shared with the payload loader. */
-#define MLDF_ID_RT(t, s)    (*(int*)(((s) << 2) + (size_t)(t)->ids))
-#define MLDF_OWNER_RT(t, s) (*(s16*)(((s) << 1) + (size_t)(t)->owners))
-#define MLDF_PTR_RT(t, s)   (*(void**)(((s) << MLDF_BUFFER_SLOT_SHIFT) + (size_t)(t)->ptrs))
+#define MLDF_ID_RT(t, s)                (*(int*)(((s) << 2) + (size_t)(t)->ids))
+#define MLDF_OWNER_RT(t, s)             (*(s16*)(((s) << 1) + (size_t)(t)->owners))
+#define MLDF_PTR_RT(t, s)               (*(void**)(((s) << MLDF_BUFFER_SLOT_SHIFT) + (size_t)(t)->ptrs))
 #define MLDF_BUFFER_FROM_CURSOR(cursor) ((u8*)*(void**)((cursor) - MLDF_BUFFER_PTRS_FROM_ARENA_END))
 
 /* Metadata following the four-byte ZLB/DIR tag. Texture frame readers
@@ -2852,8 +2852,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         }
         selectionScratch = offsetFlags & 0x80000000;
         if (selectionScratch != 0 && tableScratch == 0) {
-            while (interruptState = OSDisableInterrupts(), entryIndex = gAssetLoadInFlightFlags, OSRestoreInterrupts(interruptState),
-                   entryIndex != 0) {
+            while (interruptState = OSDisableInterrupts(), entryIndex = gAssetLoadInFlightFlags,
+                   OSRestoreInterrupts(interruptState), entryIndex != 0) {
                 if ((entryIndex & 0x20000000) == 0 && (entryIndex & 0x10000000) == 0) {
                     /* Retail wait-path bug: the request bit becomes a byte displacement. */
                     tableScratch = (size_t)*(void**)((size_t)resources->ptrs + 0x80000000u);
@@ -2876,8 +2876,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                 }
             }
         } else if ((offsetFlags & 0x20000000) != 0 && tableB == 0) {
-            while (interruptState = OSDisableInterrupts(), entryIndex = gAssetLoadInFlightFlags, OSRestoreInterrupts(interruptState),
-                   entryIndex != 0) {
+            while (interruptState = OSDisableInterrupts(), entryIndex = gAssetLoadInFlightFlags,
+                   OSRestoreInterrupts(interruptState), entryIndex != 0) {
                 if ((entryIndex & 0x80000000) == 0 && (entryIndex & 0x40000000) == 0) {
                     /* Retail reloads AUDIO_TAB here, not ANIMCURV_TAB_B. */
                     tableB = resources->ptrs[MLDF_FILEID_AUDIO_TAB];
@@ -2923,8 +2923,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         }
         selectionScratch = offsetFlags & 0x80000000;
         if (selectionScratch != 0 && tableScratch == 0) {
-            while (interruptState = OSDisableInterrupts(), entryIndex = gAssetLoadInFlightFlags, OSRestoreInterrupts(interruptState),
-                   entryIndex != 0) {
+            while (interruptState = OSDisableInterrupts(), entryIndex = gAssetLoadInFlightFlags,
+                   OSRestoreInterrupts(interruptState), entryIndex != 0) {
                 if ((entryIndex & 0x2000000) == 0 && (entryIndex & 0x1000000) == 0) {
                     tableScratch = (size_t)resources->ptrs[MLDF_FILEID_VOXMAP_TAB_A];
                     break;
@@ -2946,8 +2946,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                 }
             }
         } else if ((offsetFlags & 0x20000000) != 0 && tableB == 0) {
-            while (interruptState = OSDisableInterrupts(), entryIndex = gAssetLoadInFlightFlags, OSRestoreInterrupts(interruptState),
-                   entryIndex != 0) {
+            while (interruptState = OSDisableInterrupts(), entryIndex = gAssetLoadInFlightFlags,
+                   OSRestoreInterrupts(interruptState), entryIndex != 0) {
                 if ((entryIndex & 0x8000000) == 0 && (entryIndex & 0x4000000) == 0) {
                     tableB = resources->ptrs[MLDF_FILEID_VOXMAP_TAB_B];
                     break;
@@ -3013,8 +3013,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         }
         entryOffset = offsetFlags & 0x10000000;
         if (entryOffset != 0 && tableScratch == 0) {
-            while (interruptState = OSDisableInterrupts(), loadFlags = gAssetLoadInFlightFlags, OSRestoreInterrupts(interruptState),
-                   loadFlags != 0) {
+            while (interruptState = OSDisableInterrupts(), loadFlags = gAssetLoadInFlightFlags,
+                   OSRestoreInterrupts(interruptState), loadFlags != 0) {
                 if ((loadFlags & 4) == 0 && (loadFlags & 1) == 0) {
                     tableScratch = (size_t)resources->ptrs[MLDF_FILEID_MODELS_TAB_A];
                     break;
@@ -3036,8 +3036,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                 }
             }
         } else if ((offsetFlags & 0x20000000) != 0 && tableB == 0) {
-            while (interruptState = OSDisableInterrupts(), loadFlags = gAssetLoadInFlightFlags, OSRestoreInterrupts(interruptState),
-                   loadFlags != 0) {
+            while (interruptState = OSDisableInterrupts(), loadFlags = gAssetLoadInFlightFlags,
+                   OSRestoreInterrupts(interruptState), loadFlags != 0) {
                 if ((loadFlags & 8) == 0 && (loadFlags & 2) == 0) {
                     tableB = resources->ptrs[MLDF_FILEID_MODELS_TAB_B];
                     break;
@@ -3199,8 +3199,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             tableB = resources->ptrs[MLDF_FILEID_ANIM_TAB_B];
         }
         if ((offsetFlags & 0x10000000) != 0 && tableScratch == 0) {
-            while (interruptState = OSDisableInterrupts(), loadFlags = gAssetLoadInFlightFlags, OSRestoreInterrupts(interruptState),
-                   loadFlags != 0) {
+            while (interruptState = OSDisableInterrupts(), loadFlags = gAssetLoadInFlightFlags,
+                   OSRestoreInterrupts(interruptState), loadFlags != 0) {
                 if ((loadFlags & 0x40) == 0 && (loadFlags & 0x10) == 0) {
                     tableScratch = (size_t)resources->ptrs[MLDF_FILEID_ANIM_TAB_A];
                     break;
@@ -3222,8 +3222,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                 }
             }
         } else if ((offsetFlags & 0x20000000) != 0 && tableB == 0) {
-            while (interruptState = OSDisableInterrupts(), loadFlags = gAssetLoadInFlightFlags, OSRestoreInterrupts(interruptState),
-                   loadFlags != 0) {
+            while (interruptState = OSDisableInterrupts(), loadFlags = gAssetLoadInFlightFlags,
+                   OSRestoreInterrupts(interruptState), loadFlags != 0) {
                 if ((loadFlags & 0x80) == 0 && (loadFlags & 0x20) == 0) {
                     tableB = resources->ptrs[MLDF_FILEID_ANIM_TAB_B];
                     break;
@@ -3248,24 +3248,28 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         if ((offsetFlags & 0x20000000) != 0) {
             fileId = MLDF_FILEID_ANIM_BIN_B;
             if (sizeOut != NULL) {
-                *sizeOut = (((u32*)((u8*)tableB + sizeof(u32)))[entryIndex] & 0xfffffff) - (((u32*)tableB)[entryIndex] & 0xfffffff);
+                *sizeOut = (((u32*)((u8*)tableB + sizeof(u32)))[entryIndex] & 0xfffffff) -
+                           (((u32*)tableB)[entryIndex] & 0xfffffff);
             }
         } else if ((offsetFlags & 0x10000000) != 0) {
             fileId = MLDF_FILEID_ANIM_BIN_A;
             if (sizeOut != NULL) {
                 int* tableA = (int*)tableScratch;
-                *sizeOut = (((u32*)((u8*)tableA + sizeof(u32)))[entryIndex] & 0xfffffff) - (((u32*)tableA)[entryIndex] & 0xfffffff);
+                *sizeOut = (((u32*)((u8*)tableA + sizeof(u32)))[entryIndex] & 0xfffffff) -
+                           (((u32*)tableA)[entryIndex] & 0xfffffff);
             }
         } else if (tableScratch != 0) {
             fileId = MLDF_FILEID_ANIM_BIN_A;
             if (sizeOut != NULL) {
                 int* tableA = (int*)tableScratch;
-                *sizeOut = (((u32*)((u8*)tableA + sizeof(u32)))[entryIndex] & 0xfffffff) - (((u32*)tableA)[entryIndex] & 0xfffffff);
+                *sizeOut = (((u32*)((u8*)tableA + sizeof(u32)))[entryIndex] & 0xfffffff) -
+                           (((u32*)tableA)[entryIndex] & 0xfffffff);
             }
         } else if (tableB != 0) {
             fileId = MLDF_FILEID_ANIM_BIN_B;
             if (sizeOut != NULL) {
-                *sizeOut = (((u32*)((u8*)tableB + sizeof(u32)))[entryIndex] & 0xfffffff) - (((u32*)tableB)[entryIndex] & 0xfffffff);
+                *sizeOut = (((u32*)((u8*)tableB + sizeof(u32)))[entryIndex] & 0xfffffff) -
+                           (((u32*)tableB)[entryIndex] & 0xfffffff);
             }
         }
         offsetFlags &= 0xfffffff;
@@ -3284,7 +3288,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             fileId = MLDF_FILEID_PREANIM_BIN;
             if (sizeOut != NULL) {
                 u32* table = (u32*)selectionScratch;
-                *sizeOut = (((u32*)((u8*)table + sizeof(u32)))[entryIndex] & 0xfffffff) - (table[entryIndex] & 0xfffffff);
+                *sizeOut =
+                    (((u32*)((u8*)table + sizeof(u32)))[entryIndex] & 0xfffffff) - (table[entryIndex] & 0xfffffff);
             }
         }
         offsetFlags &= 0xfffffff;
@@ -3308,7 +3313,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             tableB = resources->ptrs[MLDF_FILEID_TEX0_TAB_B];
         }
         if ((offsetFlags & TEX_TAB_MAP_A) != 0 && tableScratch == 0) {
-            while (interruptState = OSDisableInterrupts(), workIndex = gAssetLoadInFlightFlags, OSRestoreInterrupts(interruptState), workIndex != 0) {
+            while (interruptState = OSDisableInterrupts(), workIndex = gAssetLoadInFlightFlags,
+                   OSRestoreInterrupts(interruptState), workIndex != 0) {
                 if ((workIndex & 0x100) == 0 && (workIndex & 0x100) == 0) {
                     tableScratch = (size_t)resources->ptrs[MLDF_FILEID_TEX0_TAB_A];
                     break;
@@ -3330,7 +3336,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                 }
             }
         } else if ((offsetFlags & 0x80000000) != 0 && tableB == 0) {
-            while (interruptState = OSDisableInterrupts(), workIndex = gAssetLoadInFlightFlags, OSRestoreInterrupts(interruptState), workIndex != 0) {
+            while (interruptState = OSDisableInterrupts(), workIndex = gAssetLoadInFlightFlags,
+                   OSRestoreInterrupts(interruptState), workIndex != 0) {
                 if ((workIndex & 0x800) == 0 && (workIndex & 0x200) == 0) {
                     tableB = resources->ptrs[MLDF_FILEID_TEX0_TAB_B];
                     break;
@@ -3353,7 +3360,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             }
         }
         if (tableB != 0 && (entryByteOffset = entryIndex << 2,
-                          (*(u32*)((u8*)resources->workspace.mergeTex0 + entryByteOffset) & TEX_TAB_MAP_B) != 0)) {
+                            (*(u32*)((u8*)resources->workspace.mergeTex0 + entryByteOffset) & TEX_TAB_MAP_B) != 0)) {
             fileId = MLDF_FILEID_TEX0_BIN_B;
             if (sizeOut != NULL) {
                 offsetFlags = tableB[entryIndex] & 0xffffff;
@@ -3373,8 +3380,9 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     *sizeOut = (tableB[workIndex - 1] & 0xffffff) - offsetFlags;
                 }
             }
-        } else if (tableScratch != 0 && (entryByteOffset = entryIndex << 2,
-                                 (*(int*)((u8*)resources->workspace.mergeTex0 + entryByteOffset) & TEX_TAB_MAP_A) != 0)) {
+        } else if (tableScratch != 0 &&
+                   (entryByteOffset = entryIndex << 2,
+                    (*(int*)((u8*)resources->workspace.mergeTex0 + entryByteOffset) & TEX_TAB_MAP_A) != 0)) {
             fileId = MLDF_FILEID_TEX0_BIN_A;
             if (sizeOut != NULL) {
                 int* tableA = (int*)tableScratch;
@@ -3450,7 +3458,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             tableB = resources->ptrs[MLDF_FILEID_TEX1_TAB_B];
         }
         if ((offsetFlags & TEX_TAB_MAP_A) != 0 && tableScratch == 0) {
-            while (interruptState = OSDisableInterrupts(), workIndex = gAssetLoadInFlightFlags, OSRestoreInterrupts(interruptState), workIndex != 0) {
+            while (interruptState = OSDisableInterrupts(), workIndex = gAssetLoadInFlightFlags,
+                   OSRestoreInterrupts(interruptState), workIndex != 0) {
                 if ((workIndex & 0x1000) == 0 && (workIndex & 0x1000) == 0) {
                     tableScratch = (size_t)resources->ptrs[MLDF_FILEID_TEX1_TAB_A];
                     break;
@@ -3472,7 +3481,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                 }
             }
         } else if ((offsetFlags & 0x80000000) != 0 && tableB == 0) {
-            while (interruptState = OSDisableInterrupts(), workIndex = gAssetLoadInFlightFlags, OSRestoreInterrupts(interruptState), workIndex != 0) {
+            while (interruptState = OSDisableInterrupts(), workIndex = gAssetLoadInFlightFlags,
+                   OSRestoreInterrupts(interruptState), workIndex != 0) {
                 if ((workIndex & 0x8000) == 0 && (workIndex & 0x2000) == 0) {
                     tableB = resources->ptrs[MLDF_FILEID_TEX1_TAB_B];
                     break;
@@ -3495,7 +3505,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             }
         }
         if (tableB != 0 && (entryByteOffset = entryIndex << 2,
-                          (*(u32*)((u8*)resources->workspace.mergeTex1 + entryByteOffset) & TEX_TAB_MAP_B) != 0)) {
+                            (*(u32*)((u8*)resources->workspace.mergeTex1 + entryByteOffset) & TEX_TAB_MAP_B) != 0)) {
             fileId = MLDF_FILEID_TEX1_BIN_B;
             if (sizeOut != NULL) {
                 offsetFlags = tableB[entryIndex] & 0xffffff;
@@ -3515,8 +3525,9 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     *sizeOut = (tableB[workIndex - 1] & 0xffffff) - offsetFlags;
                 }
             }
-        } else if (tableScratch != 0 && (entryByteOffset = entryIndex << 2,
-                                 (*(int*)((u8*)resources->workspace.mergeTex1 + entryByteOffset) & TEX_TAB_MAP_A) != 0)) {
+        } else if (tableScratch != 0 &&
+                   (entryByteOffset = entryIndex << 2,
+                    (*(int*)((u8*)resources->workspace.mergeTex1 + entryByteOffset) & TEX_TAB_MAP_A) != 0)) {
             fileId = MLDF_FILEID_TEX1_BIN_A;
             if (sizeOut != NULL) {
                 int* tableA = (int*)tableScratch;
@@ -3627,8 +3638,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             entry = residentArchive + offsetFlags;
             if (strncmp((char*)entry, sZlbBlockTag, 3) == 0) {
                 unpackedSize = ZLB_HDR(entry)->stream.decompressedSize;
-                zlbDecompress((u8*)(MLDF_BUFFER_FROM_CURSOR(resourceCursor) + offsetFlags + 0x10), ZLB_HDR(entry)->stream.compressedSize,
-                              (u8*)destBuf, &unpackedSize);
+                zlbDecompress((u8*)(MLDF_BUFFER_FROM_CURSOR(resourceCursor) + offsetFlags + 0x10),
+                              ZLB_HDR(entry)->stream.compressedSize, (u8*)destBuf, &unpackedSize);
                 DCStoreRange(destBuf, unpackedSize);
             } else {
                 return 0;
@@ -3640,8 +3651,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             entry = residentArchive + offsetFlags;
             if (strncmp((char*)entry, sZlbBlockTag, 3) == 0) {
                 unpackedSize = ZLB_HDR(entry)->stream.decompressedSize;
-                zlbDecompress((u8*)(MLDF_BUFFER_FROM_CURSOR(resourceCursor) + offsetFlags + 0x10), ZLB_HDR(entry)->stream.compressedSize,
-                              (u8*)destBuf, &unpackedSize);
+                zlbDecompress((u8*)(MLDF_BUFFER_FROM_CURSOR(resourceCursor) + offsetFlags + 0x10),
+                              ZLB_HDR(entry)->stream.compressedSize, (u8*)destBuf, &unpackedSize);
                 DCStoreRange(destBuf, unpackedSize);
             } else {
                 return 0;
@@ -3650,10 +3661,13 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             struct PackHeader* hdr = (struct PackHeader*)(residentArchive + offsetFlags);
             /* Preserve the signed archive-relative arithmetic and its retail load order. */
             if (hdr->magic == 0xe0e0e0e0) {
-                memcpy(destBuf, (u8*)((size_t)residentArchive + ((hdr->auxSize + 0x18) + (ptrdiff_t)hdr - (ptrdiff_t)residentArchive)),
+                memcpy(destBuf,
+                       (u8*)((size_t)residentArchive +
+                             ((hdr->auxSize + 0x18) + (ptrdiff_t)hdr - (ptrdiff_t)residentArchive)),
                        hdr->decompressedSize);
             } else if (hdr->magic == 0xfacefeed) {
-                zlbDecompress((u8*)((size_t)residentArchive + ((hdr->auxSize + 0x28) + (ptrdiff_t)hdr - (ptrdiff_t)residentArchive)),
+                zlbDecompress((u8*)((size_t)residentArchive +
+                                    ((hdr->auxSize + 0x28) + (ptrdiff_t)hdr - (ptrdiff_t)residentArchive)),
                               hdr->compressedSize - 0x10, (u8*)destBuf, &hdr->decompressedSize);
                 DCStoreRange(destBuf, hdr->decompressedSize);
             }
@@ -3670,8 +3684,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             }
             if (strncmp((char*)entry, sZlbBlockTag, 3) == 0) {
                 unpackedSize = ZLB_HDR(entry)->stream.decompressedSize;
-                zlbDecompress((u8*)(MLDF_BUFFER_FROM_CURSOR(resourceCursor) + entryIndex + 0x10), ZLB_HDR(entry)->stream.compressedSize,
-                              (u8*)destBuf, &unpackedSize);
+                zlbDecompress((u8*)(MLDF_BUFFER_FROM_CURSOR(resourceCursor) + entryIndex + 0x10),
+                              ZLB_HDR(entry)->stream.compressedSize, (u8*)destBuf, &unpackedSize);
                 DCStoreRange(destBuf, unpackedSize);
             }
         } else if (fileId == MLDF_FILEID_TEXPRE_BIN) {
@@ -3682,11 +3696,12 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             }
             if (strncmp((char*)entry, sZlbBlockTag, 3) == 0) {
                 unpackedSize = ZLB_HDR(entry)->stream.decompressedSize;
-                zlbDecompress((u8*)(MLDF_BUFFER_FROM_CURSOR(resourceCursor) + entryIndex + 0x10), ZLB_HDR(entry)->stream.compressedSize,
-                              (u8*)destBuf, &unpackedSize);
+                zlbDecompress((u8*)(MLDF_BUFFER_FROM_CURSOR(resourceCursor) + entryIndex + 0x10),
+                              ZLB_HDR(entry)->stream.compressedSize, (u8*)destBuf, &unpackedSize);
                 DCStoreRange(destBuf, unpackedSize);
             }
-        } else if (fileId == MLDF_FILEID_ANIM_BIN_A || fileId == MLDF_FILEID_PREANIM_BIN || fileId == MLDF_FILEID_ANIM_BIN_B) {
+        } else if (fileId == MLDF_FILEID_ANIM_BIN_A || fileId == MLDF_FILEID_PREANIM_BIN ||
+                   fileId == MLDF_FILEID_ANIM_BIN_B) {
             entry = residentArchive + offsetFlags;
             isPacked = ObjModel_IsPackedResource((u8*)entry);
             if (isPacked != 0) {
