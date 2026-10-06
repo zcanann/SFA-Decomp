@@ -767,10 +767,8 @@ int modelLoad_calcSizes(ModelFileHeader* file, int flags, ModelInstanceSizes* si
         total = (sizes->moveCacheBytes + sizes->jointMatrixBytes + sizes->hitSphereBytes + 8) + total;
     }
     total += sizes->geometryBytes;
-    if (file->jointData != 0 && file->jointCount != 0 &&
-        file->unk18 != 0) {
-        total = ((u32)file->jointCount << 1) +
-                (((u32)file->jointCount * 7) << 2) + (int)sizeof(ModelJointWork) + total;
+    if (file->jointData != 0 && file->jointCount != 0 && file->unk18 != 0) {
+        total = ((u32)file->jointCount << 1) + (((u32)file->jointCount * 7) << 2) + (int)sizeof(ModelJointWork) + total;
     }
     if (file->vertexAnimEntries != 0) {
         chunkBytes = (u32)file->vertexAnimJob.chunkCount * sizeof(s32);
@@ -860,8 +858,7 @@ ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstIns
         cursor = (u8*)roundUpTo32((int)cursor);
         model->normalBuf = cursor;
         bufferEnd = cursor + file->normalCount * normalStride;
-        memcpy(model->normalBuf, file->normals,
-               file->normalCount * normalStride);
+        memcpy(model->normalBuf, file->normals, file->normalCount * normalStride);
         DCFlushRange(model->normalBuf, normalStride * file->normalCount);
         cursor = (u8*)roundUpTo32((int)bufferEnd);
     } else {
@@ -930,8 +927,7 @@ ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstIns
         cursor += file->hitVolumeCount * sizeof(ObjModelHitSphere);
         model->activeHitVolumeSpheres = model->hitVolumeSphereBuffers[0];
     }
-    if (file->jointData != NULL && file->jointCount != 0 &&
-        file->unk18 != NULL && file->unk1C != NULL) {
+    if (file->jointData != NULL && file->jointCount != 0 && file->unk18 != NULL && file->unk1C != NULL) {
         cursor = (u8*)roundUpTo4((int)cursor);
         model->skeletonJointData = (ModelJointWork*)cursor;
         cursor += sizeof(ModelJointWork);
