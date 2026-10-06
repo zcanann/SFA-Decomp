@@ -6,7 +6,7 @@
 #include "main/vec_types.h"
 #include "main/vecmath.h"
 
-#define CAMERA_COUNT 12
+#define CAMERA_COUNT                  12
 #define OBJECT_TRANSFORM_MATRIX_COUNT 30
 
 typedef struct GameObject GameObject;

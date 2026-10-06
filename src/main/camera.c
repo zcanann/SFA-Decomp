@@ -37,12 +37,6 @@ s16 gCameraViewportYOffset;
 s16 gCameraFarPlaneTransitionFrames;
 s16 gCameraFarPlaneTransitionFramesLeft;
 
-
-
-
-
-
-
 CameraProjectionMatrix gCameraProjectionMatrix;
 CameraMatrix gCameraInverseViewMatrix;
 CameraMatrix gCameraViewMatrix;
@@ -83,19 +77,19 @@ static void Obj_BuildTransformMatricesForYaw(GameObject* obj, s32 yawIndex);
 static inline f32 Camera_Expf(f32 x, u32 iterations);
 
 static inline void Camera_ResetView(Camera* camera, int x, int y, int z, int roll, int pitch, int yaw) {
-        camera->roll = roll * 182;
-        camera->pitch = pitch * 182;
-        camera->yaw = yaw * 182;
-        camera->x = x;
-        camera->y = y;
-        camera->z = z;
-        camera->velocity.x = 0.0f;
-        camera->velocity.y = 0.0f;
-        camera->velocity.z = 0.0f;
-        camera->shakeOffsetY = 0.0f;
-        camera->parentObject = NULL;
-        camera->shakePitchOffset = 0;
-        camera->fovY = 60.0f;
+    camera->roll = roll * 182;
+    camera->pitch = pitch * 182;
+    camera->yaw = yaw * 182;
+    camera->x = x;
+    camera->y = y;
+    camera->z = z;
+    camera->velocity.x = 0.0f;
+    camera->velocity.y = 0.0f;
+    camera->velocity.z = 0.0f;
+    camera->shakeOffsetY = 0.0f;
+    camera->parentObject = NULL;
+    camera->shakePitchOffset = 0;
+    camera->fovY = 60.0f;
 }
 
 void Camera_InitState(void) {
@@ -326,8 +320,8 @@ void Camera_UpdateViewMatrices(void) {
     PSMTXCopy((MtxPtr)gCameraViewMatrix, (MtxPtr)gCameraViewRotationMatrix);
     gCameraViewRotationMatrix[11] = gCameraViewRotationMatrix[7] = gCameraViewRotationMatrix[3] = 0.0f;
     PSMTXCopy((MtxPtr)gCameraInverseViewMatrix, (MtxPtr)gCameraInverseViewRotationMatrix);
-    gCameraInverseViewRotationMatrix[11] = gCameraInverseViewRotationMatrix[7] =
-        gCameraInverseViewRotationMatrix[3] = 0.0f;
+    gCameraInverseViewRotationMatrix[11] = gCameraInverseViewRotationMatrix[7] = gCameraInverseViewRotationMatrix[3] =
+        0.0f;
 }
 
 f32* Camera_GetInverseViewMatrix(void) {
