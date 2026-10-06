@@ -229,8 +229,14 @@ STATIC_ASSERT(offsetof(struct MldfTables, owners) == 0x19738);
 
 typedef u8 MldfArenaBlock[0x20000];
 enum {
-    MLDF_ROM_LIST_WORDS_FROM_ARENA_END = (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, romList)) / sizeof(int)
+    MLDF_ROM_LIST_WORDS_FROM_ARENA_END = (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, romList)) / sizeof(int),
+    MLDF_BUFFER_PTRS_FROM_ARENA_END = sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ptrs),
+    MLDF_BUFFER_SLOT_SHIFT = sizeof(void*) == 8 ? 3 : 2
 };
+
+/* Keep the retail shift expression: MWCC schedules a multiplication differently. */
+STATIC_ASSERT((1u << MLDF_BUFFER_SLOT_SHIFT) == sizeof(void*));
+STATIC_ASSERT(sizeof(ptrdiff_t) == sizeof(void*));
 
 struct MldfIterators {
     void** ptrs;
@@ -256,7 +262,7 @@ struct MldfIterators {
 #define MLDF_SP_ID(p)    (tbl->ids[slot])
 #define MLDF_SP_SIZE(p)  (tbl->sizes[slot])
 #define MLDF_SP_PTR(p)   (*(void**)((slot << 2) + (u32)tbl->ptrs))
-#define MLDF_QPTR        (*(u32*)(slotPtrAddr - 0x6A28))
+#define MLDF_QPTR        ((u8*)*(void**)(slotPtrAddr - MLDF_BUFFER_PTRS_FROM_ARENA_END))
 
 /* 16-byte header of a "ZLB"-tagged compressed stream; the deflate payload
    follows at +0x10. "DIR"-tagged data is stored raw. */
@@ -2754,35 +2760,30 @@ void* mapLoadDataFile(int mapId, int fileId) {
     return result;
 }
 
-/* The decompression path below manipulates loaded-buffer addresses as
-   integers, while mapLoadDataFile itself treats them as pointers. */
-#undef MLDF_PTR
-#define MLDF_PTR(s) ((u32)tbl->ptrs[s])
-
 char sAssetHaltFormat[] = "HALT\t%s\n";
 char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
 
 void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 length, int* sizeOut, int entryIndex,
                                 u32 flagBits) {
     struct MldfTables* tbl = (struct MldfTables*)gResourceFileTable;
-    u32 tab0 = 0; /* TAB ptr of the primary slot of the pair, 0 = not ready */
-    u32 tab1 = 0; /* TAB ptr of the alternate slot of the pair */
+    size_t tab0 = 0; /* Primary TAB address, reused as a TEXPRE search index. */
+    u8* tab1 = NULL; /* TAB ptr of the alternate slot of the pair */
     u8 frame = 0; /* run a full frame per wait iteration once dvd error UI is up */
-    /* Slot-select scratch; case 0x2b reuses it for a flags snapshot and cases 0x51/0x4f for a TAB ptr. */
-    u32 slotScratch;
+    /* Slot-select scratch; case 0x2b reuses it for a flags snapshot and case 0x51 for a TAB address. */
+    size_t slotScratch;
     int entryOff;
     int flags;
     int intr;
     int i;
     int prev;
-    u32 slotPtrAddr; /* &tbl->ptrs[fileId] biased +0x6A28 for MLDF_QPTR; the size probes reuse it
-                        as the payload address */
-    u32 fileBuf;
+    size_t slotPtrAddr; /* Slot address biased to the arena end for MLDF_QPTR; reused
+                        as the payload address during size probes. */
+    u8* fileBuf;
     u32 alignedSize;
     int tmp;
     u32 decompSize;
     int entryByteOff;
-    u32 qptr; /* MLDF_QPTR from the guard, reused for the first use of each branch */
+    u8* qptr; /* MLDF_QPTR from the guard, reused for the first use of each branch */
     DVDFileInfo buf;
 
     switch (fileId) {
@@ -2794,7 +2795,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         entryIndex = gAssetLoadInFlightFlags;
         OSRestoreInterrupts(intr);
         if ((entryIndex & 0x20000000) == 0 && (entryIndex & 0x10000000) == 0) {
-            tab0 = MLDF_PTR(0xe);
+            tab0 = (size_t)MLDF_PTR(0xe);
         }
         if ((entryIndex & 0x80000000) == 0 && (entryIndex & 0x40000000) == 0) {
             tab1 = MLDF_PTR(0x56);
@@ -2804,7 +2805,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             while (intr = OSDisableInterrupts(), entryIndex = gAssetLoadInFlightFlags, OSRestoreInterrupts(intr),
                    entryIndex != 0) {
                 if ((entryIndex & 0x20000000) == 0 && (entryIndex & 0x10000000) == 0) {
-                    tab0 = *(u32*)((char*)&tbl->ptrs[0] + 0x80000000);
+                    tab0 = (size_t)*(void**)((size_t)tbl->ptrs + 0x80000000u);
                     break;
                 }
                 padUpdate();
@@ -2863,7 +2864,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         entryIndex = gAssetLoadInFlightFlags;
         OSRestoreInterrupts(intr);
         if ((entryIndex & 0x2000000) == 0 && (entryIndex & 0x1000000) == 0) {
-            tab0 = MLDF_PTR(0x1a);
+            tab0 = (size_t)MLDF_PTR(0x1a);
         }
         if ((entryIndex & 0x8000000) == 0 && (entryIndex & 0x4000000) == 0) {
             tab1 = MLDF_PTR(0x53);
@@ -2873,7 +2874,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             while (intr = OSDisableInterrupts(), entryIndex = gAssetLoadInFlightFlags, OSRestoreInterrupts(intr),
                    entryIndex != 0) {
                 if ((entryIndex & 0x2000000) == 0 && (entryIndex & 0x1000000) == 0) {
-                    tab0 = MLDF_PTR(0x1a);
+                    tab0 = (size_t)MLDF_PTR(0x1a);
                     break;
                 }
                 padUpdate();
@@ -2932,7 +2933,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         entryIndex = gAssetLoadInFlightFlags;
         OSRestoreInterrupts(intr);
         if ((entryIndex & 0x20000) == 0 && (entryIndex & 0x10000) == 0) {
-            tab0 = MLDF_PTR(0x26);
+            tab0 = (size_t)MLDF_PTR(0x26);
         }
         if ((entryIndex & 0x80000) == 0 && (entryIndex & 0x40000) == 0) {
             tab1 = MLDF_PTR(0x48);
@@ -2953,7 +2954,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         slotScratch = gAssetLoadInFlightFlags;
         OSRestoreInterrupts(intr);
         if (((int)slotScratch & 4) == 0 && ((int)slotScratch & 1) == 0) {
-            tab0 = MLDF_PTR(0x2a);
+            tab0 = (size_t)MLDF_PTR(0x2a);
         }
         if (((int)slotScratch & 8) == 0 && ((int)slotScratch & 2) == 0) {
             tab1 = MLDF_PTR(0x45);
@@ -2963,7 +2964,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             while (intr = OSDisableInterrupts(), flags = gAssetLoadInFlightFlags, OSRestoreInterrupts(intr),
                    flags != 0) {
                 if ((flags & 4) == 0 && (flags & 1) == 0) {
-                    tab0 = MLDF_PTR(0x2a);
+                    tab0 = (size_t)MLDF_PTR(0x2a);
                     break;
                 }
                 padUpdate();
@@ -3138,7 +3139,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         flags = gAssetLoadInFlightFlags;
         OSRestoreInterrupts(intr);
         if ((flags & 0x40) == 0 && (flags & 0x10) == 0) {
-            tab0 = MLDF_PTR(0x2f);
+            tab0 = (size_t)MLDF_PTR(0x2f);
         }
         if ((flags & 0x80) == 0 && (flags & 0x20) == 0) {
             tab1 = MLDF_PTR(0x49);
@@ -3147,7 +3148,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             while (intr = OSDisableInterrupts(), flags = gAssetLoadInFlightFlags, OSRestoreInterrupts(intr),
                    flags != 0) {
                 if ((flags & 0x40) == 0 && (flags & 0x10) == 0) {
-                    tab0 = MLDF_PTR(0x2f);
+                    tab0 = (size_t)MLDF_PTR(0x2f);
                     break;
                 }
                 padUpdate();
@@ -3213,8 +3214,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         }
         offsetFlags &= 0xfffffff;
         if (((u8)flagBits & 1) != 0) {
-            qptr = *(u32*)((fileId << 2) + (u32)&tbl->ptrs[0]);
-            slotPtrAddr = qptr + offsetFlags;
+            qptr = *(void**)((fileId << MLDF_BUFFER_SLOT_SHIFT) + (size_t)tbl->ptrs);
+            slotPtrAddr = (size_t)(qptr + offsetFlags);
             tmp = ObjModel_IsPackedResource((u8*)slotPtrAddr);
             if (tmp != 0) {
                 *sizeOut = ObjModel_GetUnpackedResourceSize((u8*)slotPtrAddr, *sizeOut);
@@ -3222,7 +3223,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         }
         break;
     case 0x51:
-        slotScratch = MLDF_PTR(0x52);
+        slotScratch = (size_t)MLDF_PTR(0x52);
         if (slotScratch != 0) {
             fileId = 0x51;
             if (sizeOut != NULL) {
@@ -3232,8 +3233,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         }
         offsetFlags &= 0xfffffff;
         if (((u8)flagBits & 1) != 0) {
-            qptr = *(u32*)((fileId << 2) + (u32)&tbl->ptrs[0]);
-            slotPtrAddr = qptr + offsetFlags;
+            qptr = *(void**)((fileId << MLDF_BUFFER_SLOT_SHIFT) + (size_t)tbl->ptrs);
+            slotPtrAddr = (size_t)(qptr + offsetFlags);
             tmp = ObjModel_IsPackedResource((u8*)slotPtrAddr);
             if (tmp != 0) {
                 *sizeOut = ObjModel_GetUnpackedResourceSize((u8*)slotPtrAddr, *sizeOut);
@@ -3245,7 +3246,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         i = gAssetLoadInFlightFlags;
         OSRestoreInterrupts(intr);
         if ((i & 0x100) == 0 && (i & 0x100) == 0) {
-            tab0 = MLDF_PTR(0x24);
+            tab0 = (size_t)MLDF_PTR(0x24);
         }
         if ((i & 0x800) == 0 && (i & 0x200) == 0) {
             tab1 = MLDF_PTR(0x4e);
@@ -3253,7 +3254,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         if ((offsetFlags & 0x40000000) != 0 && tab0 == 0) {
             while (intr = OSDisableInterrupts(), i = gAssetLoadInFlightFlags, OSRestoreInterrupts(intr), i != 0) {
                 if ((i & 0x100) == 0 && (i & 0x100) == 0) {
-                    tab0 = MLDF_PTR(0x24);
+                    tab0 = (size_t)MLDF_PTR(0x24);
                     break;
                 }
                 padUpdate();
@@ -3385,7 +3386,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         i = gAssetLoadInFlightFlags;
         OSRestoreInterrupts(intr);
         if ((i & 0x4000) == 0 && (i & 0x1000) == 0) {
-            tab0 = MLDF_PTR(0x21);
+            tab0 = (size_t)MLDF_PTR(0x21);
         }
         if ((i & 0x8000) == 0 && (i & 0x2000) == 0) {
             tab1 = MLDF_PTR(0x4c);
@@ -3393,7 +3394,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         if ((offsetFlags & 0x40000000) != 0 && tab0 == 0) {
             while (intr = OSDisableInterrupts(), i = gAssetLoadInFlightFlags, OSRestoreInterrupts(intr), i != 0) {
                 if ((i & 0x1000) == 0 && (i & 0x1000) == 0) {
-                    tab0 = MLDF_PTR(0x21);
+                    tab0 = (size_t)MLDF_PTR(0x21);
                     break;
                 }
                 padUpdate();
@@ -3521,7 +3522,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         offsetFlags &= 0xfffffff;
         break;
     case 0x4f: {
-        u32 tabPtr;
+        u8* tabPtr;
 
         tabPtr = MLDF_PTR(0x50);
         if (tabPtr != 0) {
@@ -3551,7 +3552,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
     if (((u8)flagBits & 1) != 0) {
         return 0;
     }
-    slotPtrAddr = (fileId << 2) + ((u32)&tbl->ptrs[0] + 0x6A28);
+    slotPtrAddr = (fileId << MLDF_BUFFER_SLOT_SHIFT) + ((size_t)tbl->ptrs + MLDF_BUFFER_PTRS_FROM_ARENA_END);
     qptr = MLDF_QPTR;
     if (qptr != 0) {
         if (fileId == 0xd || fileId == 0x55) {
@@ -3587,10 +3588,11 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             }
         } else if (fileId == 0x2b || fileId == 0x46) {
             struct PackHeader* hdr = (struct PackHeader*)(qptr + offsetFlags);
+            /* Preserve the signed archive-relative arithmetic and its retail load order. */
             if (hdr->magic == 0xe0e0e0e0) {
-                memcpy(destBuf, (void*)(qptr + ((hdr->auxSize + 0x18) + (int)hdr - (int)qptr)), hdr->decompressedSize);
+                memcpy(destBuf, (u8*)((size_t)qptr + ((hdr->auxSize + 0x18) + (ptrdiff_t)hdr - (ptrdiff_t)qptr)), hdr->decompressedSize);
             } else if (hdr->magic == 0xfacefeed) {
-                zlbDecompress((u8*)(qptr + ((hdr->auxSize + 0x28) + (int)hdr - (int)qptr)), hdr->compressedSize - 0x10,
+                zlbDecompress((u8*)((size_t)qptr + ((hdr->auxSize + 0x28) + (ptrdiff_t)hdr - (ptrdiff_t)qptr)), hdr->compressedSize - 0x10,
                               (u8*)destBuf, &hdr->decompressedSize);
                 DCStoreRange(destBuf, hdr->decompressedSize);
             }
@@ -3636,11 +3638,11 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             memcpy(destBuf, (void*)(qptr + offsetFlags), length);
         }
     } else if (fileId == 0x20 || fileId == 0x4b) {
-        u32 srcBuf;
+        u8* srcBuf;
 
         DVDOpen(sResourceFileNameTable[fileId], &buf);
         alignedSize = (length + 0x1f) & 0xffffffe0;
-        srcBuf = (u32)mmAlloc(alignedSize, 0x7f7f7fff, 0);
+        srcBuf = mmAlloc(alignedSize, 0x7f7f7fff, 0);
         DVDRead(&buf, (void*)srcBuf, alignedSize, offsetFlags & 0xffffff);
         DVDClose(&buf);
         DCStoreRange((void*)srcBuf, length);
@@ -3655,12 +3657,12 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
         mm_free((void*)srcBuf);
     } else {
         DVDOpen(sResourceFileNameTable[fileId], &buf);
-        if (((u32)destBuf & 0x1f) != 0 || ((int)length & 0x1f) != 0) {
+        if (((size_t)destBuf & 0x1f) != 0 || ((int)length & 0x1f) != 0) {
             u32 bounceSize;
-            int bounceBuf;
+            void* bounceBuf;
 
             bounceSize = (length + 0x1f) & 0xffffffe0;
-            bounceBuf = (int)mmAlloc(bounceSize, 0x7f7f7fff, 0);
+            bounceBuf = mmAlloc(bounceSize, 0x7f7f7fff, 0);
             DVDRead(&buf, (void*)bounceBuf, bounceSize, offsetFlags);
             memcpy(destBuf, (void*)bounceBuf, length);
             mm_free((void*)bounceBuf);

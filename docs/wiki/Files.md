@@ -222,8 +222,10 @@ has its own copy of every asset" note, generalized into a fixed dual-slot pool r
 one-slot-per-map. This is implemented by `mapLoadDataFile(int mapId, int fileId)`, which
 `switch`es on `fileId` with paired `case` labels (e.g. `case 0xd: case 0x55:` for
 ANIMCURV.bin) and picks whichever of the two physical slots is free or already owns `mapId`.
-The backing storage is `struct MldfTables` at `lbl_80345E10` (see the struct comment in
-`pi_dolphin.c` for the full slot layout: `ids`, `sizes`, `ptrs`, `owners`, plus per-resource
+`struct MldfTables` is an address view of neighbouring globals relative to
+`gResourceFileTable`, whose own allocation is only 0x160 bytes. It is not one
+large backing allocation (see the struct comment in `pi_dolphin.c` for the
+full slot layout: `ids`, `sizes`, `ptrs`, `owners`, plus per-resource
 merge buffers `mergeAnimCurv`/`mergeVoxMap`/`mergeBlocks`/`mergeTex1`/`mergeTex0`/`mergeAnim`/
 `mergeModels`), and file-name formatting comes from `struct MldfNames` (per-map format strings
 `fmtAnimCurvBin`, `fmtVoxmapBin`, `fmtModBin`, etc., built with `sMapFileNameTable[]` - the
@@ -242,6 +244,38 @@ offset, int size)` (also in `pi_dolphin.c`) open `sResourceFileNameTable[id]` di
 the disc root" table. `src/main/gameloop.c` wraps these in an async `AssetReq`/`loadAsset`
 request struct (`resourceId`, `dest`, `offset`, `argC` fields) for the game's asynchronous
 streaming path.
+
+`loadAndDecompressDataFile` selects a resident bank, optionally reports an
+entry's size, then copies or decompresses its payload. TEX1/TEXPRE `DIR`
+records return a borrowed pointer into the resident archive. When no resident
+buffer exists, the DVD path uses a temporary allocation for TEX1 or for reads
+whose destination/length is not 32-byte aligned.
+
+The loader now retains table, payload and temporary-buffer pointers at native
+width. `MLDF_PTR` no longer changes into a narrowing integer macro halfway
+through the TU. Locals reused for a table address and an index/flag snapshot
+remain `size_t`; pointer-only locals use pointer types. The biased slot address
+comes from `sizeof(MldfArenaBlock) - offsetof(MldfTables, ptrs)`, preserving
+the existing addressing scheme without treating that bias as an allocation
+boundary. Slot indexing retains the retail shift, derived from pointer width
+and size-asserted. A multiplication changed MWCC's instruction order. Model
+payload positioning likewise retains signed archive-relative arithmetic through
+`ptrdiff_t`; simpler pointer expressions changed code generation.
+
+`tools/test_resource_loader_addresses.py` executes the complete loader body
+under ASan/UBSan at `-O0` and `-O2`: 60 resident-resource cases, 32 size queries
+(including sparse/out-of-order tables), 2,144 DVD cases and one wait-loop case.
+It checks native pointers, borrowed versus copied data, buffer bounds, query
+sizes, cache operations and temporary-buffer release. The fixture supplies the
+address view as one host allocation, uses host-endian headers, and spies on DVD,
+decompression and packed-animation services. It excludes the existing invalid
+animation-curve wait lookup and the disk `DIR` infinite loop. This does not
+establish a native resource registry or asset decoder.
+
+All five versions retain a 100% complete `pi_dolphin` TU and exact source-linked
+retail DOLs. Only two anonymous literal-symbol numbers change at unchanged
+locations; instruction bytes, section contents, symbol offsets and normalized
+relocations remain identical. Every other source object is byte-identical.
 
 Per-map compressed blocks (`modXX.zlb.bin`) are handled separately by
 `piRomLoadSection(int romOffset, int mapIndex, int destBuf)`, which opens
