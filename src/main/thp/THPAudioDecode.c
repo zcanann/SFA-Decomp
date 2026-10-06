@@ -5,10 +5,10 @@
 #include "dolphin/os/OSMessage.h"
 #include "dolphin/thp/THPAudio.h"
 
-#define THP_AUDIO_STACK_SIZE 0x1000
+#define THP_AUDIO_STACK_SIZE   0x1000
 #define THP_AUDIO_BUFFER_COUNT 3
-#define THP_FRAME_COMP_AUDIO 1
-#define THP_FRAME_HEADER_SIZE 8
+#define THP_FRAME_COMP_AUDIO   1
+#define THP_FRAME_HEADER_SIZE  8
 
 OSThread gAttractMovieAudioDecodeThread;
 u8 gAttractMovieAudioDecodeThreadStack[THP_AUDIO_STACK_SIZE];
@@ -22,26 +22,18 @@ static void* AudioDecoder(void* param);
 static void* AudioDecoderForOnMemory(void* param);
 static void AttractMovieAudio_Decode(AttractMovieReadBuffer* readBufferArg);
 
-BOOL CreateAudioDecodeThread(OSPriority priority, void* param)
-{
+BOOL CreateAudioDecodeThread(OSPriority priority, void* param) {
 
-    if (param != NULL)
-    {
+    if (param != NULL) {
         if (OSCreateThread(&gAttractMovieAudioDecodeThread, AudioDecoderForOnMemory, param,
-                           gAttractMovieAudioDecodeThreadStack +
-                               ARRAY_COUNT(gAttractMovieAudioDecodeThreadStack),
-                           sizeof(gAttractMovieAudioDecodeThreadStack), priority, 1) == 0)
-        {
+                           gAttractMovieAudioDecodeThreadStack + ARRAY_COUNT(gAttractMovieAudioDecodeThreadStack),
+                           sizeof(gAttractMovieAudioDecodeThreadStack), priority, 1) == 0) {
             return 0;
         }
-    }
-    else
-    {
+    } else {
         if (OSCreateThread(&gAttractMovieAudioDecodeThread, AudioDecoder, NULL,
-                           gAttractMovieAudioDecodeThreadStack +
-                               ARRAY_COUNT(gAttractMovieAudioDecodeThreadStack),
-                           sizeof(gAttractMovieAudioDecodeThreadStack), priority, 1) == 0)
-        {
+                           gAttractMovieAudioDecodeThreadStack + ARRAY_COUNT(gAttractMovieAudioDecodeThreadStack),
+                           sizeof(gAttractMovieAudioDecodeThreadStack), priority, 1) == 0) {
             return 0;
         }
     }
@@ -53,18 +45,14 @@ BOOL CreateAudioDecodeThread(OSPriority priority, void* param)
     return 1;
 }
 
-void AudioDecodeThreadStart(void)
-{
-    if (gAttractMovieAudioThreadActive != 0)
-    {
+void AudioDecodeThreadStart(void) {
+    if (gAttractMovieAudioThreadActive != 0) {
         OSResumeThread(&gAttractMovieAudioDecodeThread);
     }
 }
 
-void AudioDecodeThreadCancel(void)
-{
-    if (gAttractMovieAudioThreadActive != 0)
-    {
+void AudioDecodeThreadCancel(void) {
+    if (gAttractMovieAudioThreadActive != 0) {
         OSCancelThread(&gAttractMovieAudioDecodeThread);
         gAttractMovieAudioThreadActive = 0;
     }
@@ -147,17 +135,14 @@ static void AttractMovieAudio_Decode(AttractMovieReadBuffer* readBufferArg) {
     }
 }
 
-void PushFreeAudioBuffer(void* message)
-{
+void PushFreeAudioBuffer(void* message) {
     OSSendMessage(&gAttractMovieFreeAudioQueue, message, OS_MESSAGE_NOBLOCK);
 }
 
-void* PopDecodedAudioBuffer(int flags)
-{
+void* PopDecodedAudioBuffer(int flags) {
     void* message;
 
-    if (OSReceiveMessage(&gAttractMovieDecodedAudioQueue, &message, flags) == 1)
-    {
+    if (OSReceiveMessage(&gAttractMovieDecodedAudioQueue, &message, flags) == 1) {
         return message;
     }
     return NULL;
