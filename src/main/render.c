@@ -339,7 +339,7 @@ static const f32 sJointSinCoef1 = 2.39684487e-05f;
 
 // clang-format off
 asm void modelAnimBuildJointMatrices(u8** jointWorkspace, f32* rootTransform, ObjAnimState* animState,
-                                     const ModelBone* bones, int jointCount, s16* jointScratch, int flags, int mode) {
+                                     const ModelBone* bones, int jointCount, const struct ModelJointAdjustment* jointAdjustments, int flags, int mode) {
     nofralloc
     mflr r0
     stwu r1, -0xfc(r1)

@@ -96,13 +96,13 @@ static inline void modelLoadInitialMove(ModelFileHeader* file, ObjAnimCachedMove
     }
 }
 
-extern s16 gModelJointScratchBuffer[0xa0];
-#define BLENDTBL_ENTRY(FIELD, OFF)                                                                                     \
-    if (poseAdjustments->FIELD != 0) {                                                                                 \
-        gModelJointScratchBuffer[outPos++] = (s16)(offA + (OFF));                                                      \
-        gModelJointScratchBuffer[outPos++] = (s16)(offB + (OFF));                                                      \
-        gModelJointScratchBuffer[outPos++] = poseAdjustments->FIELD;                                                   \
-        gModelJointScratchBuffer[outPos++] = poseAdjustments->FIELD;                                                   \
+extern ModelJointAdjustmentBuffer gModelJointAdjustments;
+#define APPEND_JOINT_ADJUSTMENT(FIELD, AXIS) \
+    if (poseAdjustments->FIELD[AXIS] != 0) { \
+        gModelJointAdjustments.words[wordCount++] = (s16)(poseOffsetA + offsetof(ModelJointPosePair, FIELD[0][AXIS])); \
+        gModelJointAdjustments.words[wordCount++] = (s16)(poseOffsetB + offsetof(ModelJointPosePair, FIELD[0][AXIS])); \
+        gModelJointAdjustments.words[wordCount++] = poseAdjustments->FIELD[AXIS]; \
+        gModelJointAdjustments.words[wordCount++] = poseAdjustments->FIELD[AXIS]; \
     }
 extern char sModelAnimationBufferOverflowWarning[];
 extern Vec gModelJitterAxis;
@@ -380,7 +380,7 @@ void modelAnimEvalSlotPair(f32* rootTransform, ObjModel* model, ObjAnimState* ch
         }
     }
     modelAnimBuildJointMatrices(&jointWorkspace, rootTransform, &work, (const ModelBone*)file->jointData,
-                                file->jointCount, gModelJointScratchBuffer, flags, (u8)mode);
+                                file->jointCount, gModelJointAdjustments.entries, flags, (u8)mode);
 }
 void modelAnimEvalChannels(f32* rootTransform, ObjModel* model, ObjAnimState* channel, f32 blend, int flags) {
     ObjAnimState work;
@@ -424,7 +424,7 @@ void modelAnimEvalChannels(f32* rootTransform, ObjModel* model, ObjAnimState* ch
             outFlags |= 0x20;
         }
         modelAnimBuildJointMatrices(&jointWorkspace, rootTransform, &work, (const ModelBone*)file->jointData,
-                                    file->jointCount, gModelJointScratchBuffer, flags, outFlags | 0x40);
+                                    file->jointCount, gModelJointAdjustments.entries, flags, outFlags | 0x40);
     } else {
         int i;
         int blendMask;
@@ -461,7 +461,7 @@ void modelAnimEvalChannels(f32* rootTransform, ObjModel* model, ObjAnimState* ch
                 work.eventCountdown = slotEvent;
                 modelAnimUpdateChannels(file, &work, 2);
                 modelAnimBuildJointMatrices(&jointWorkspace, rootTransform, &work, (const ModelBone*)file->jointData,
-                                            file->jointCount, gModelJointScratchBuffer, flags, blendMask);
+                                            file->jointCount, gModelJointAdjustments.entries, flags, blendMask);
                 if (blendMask != 0) {
                     outFlags |= 1 << i;
                 }
@@ -495,7 +495,7 @@ void modelAnimEvalChannels(f32* rootTransform, ObjModel* model, ObjAnimState* ch
                 outFlags |= 0x20;
             }
             modelAnimBuildJointMatrices(&jointWorkspace, rootTransform, &work, (const ModelBone*)file->jointData,
-                                        file->jointCount, gModelJointScratchBuffer, flags, outFlags);
+                                        file->jointCount, gModelJointAdjustments.entries, flags, outFlags);
         }
     }
 }
@@ -2005,7 +2005,7 @@ ObjModelJointMatrix* ObjModel_GetJointMatrix(u8* modelBytes, int jointIndex) {
     return (ObjModelJointMatrix*)(model->jointMatrices[model->bufferFlags & 1] + jointIndex * 0x40);
 }
 
-s16 gModelJointScratchBuffer[0xa0];
+ModelJointAdjustmentBuffer gModelJointAdjustments;
 ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int renderOpIndex) {
     return &model->textureRefs[renderOpIndex];
 }
@@ -2027,52 +2027,52 @@ extern s16 gModelRootRotX;
 extern s16 gModelRootRotY;
 extern s16 gModelRootRotZ;
 
-static void ObjModel_BuildAnimBlendTable(ObjAnimComponent* objAnim, ObjAnimState* channel, ModelFileHeader* file) {
-    int poseOff;
-    ObjModelInstance* modelDef;
-    int defOff;
+static void modelBuildJointAdjustments(ObjAnimComponent* objAnim, ObjAnimState* channel, ModelFileHeader* file) {
+    int poseOffset;
+    ObjDef* modelDef;
+    int bindingOffset;
     int i;
-    u32 jointRemap;
-    int offA;
-    int offB;
-    int outPos;
+    u32 modelJoint;
+    int poseOffsetA;
+    int poseOffsetB;
+    int wordCount;
     ObjJointPose* poseAdjustments;
-    u8* rowA;
-    u8* rowB;
+    const s8* matrixSlotsA;
+    const s8* matrixSlotsB;
 
     if (file->flags & MODEL_FLAG_CACHED_ANIMATIONS) {
-        rowA = channel->moveCache[channel->moveCacheSlot]->jointMatrixSlots;
-        rowB = channel->moveCache[channel->prevMoveCacheSlot]->jointMatrixSlots;
+        matrixSlotsA = (const s8*)channel->moveCache[channel->moveCacheSlot]->jointMatrixSlots;
+        matrixSlotsB = (const s8*)channel->moveCache[channel->prevMoveCacheSlot]->jointMatrixSlots;
     } else {
-        rowA = file->animationDataSection + channel->moveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
-        rowB = file->animationDataSection + channel->prevMoveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
+        matrixSlotsA = (const s8*)file->animationDataSection + channel->moveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
+        matrixSlotsB = (const s8*)file->animationDataSection + channel->prevMoveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
     }
     modelDef = objAnim->modelInstance;
-    defOff = 0;
-    outPos = 0;
+    bindingOffset = 0;
+    wordCount = 0;
     i = 0;
-    poseOff = 0;
+    poseOffset = 0;
     for (; i < modelDef->jointCount; i++) {
-        jointRemap = *(u8*)(modelDef->jointData + defOff + objAnim->bankIndex + 1);
-        if (jointRemap != 0xff) {
-            poseAdjustments = (ObjJointPose*)(objAnim->jointPoseData + poseOff);
-            offA = *(s8*)(rowA + jointRemap) << 6;
-            offB = *(s8*)(rowB + jointRemap) << 6;
-            BLENDTBL_ENTRY(rotation[0], 0)
-            BLENDTBL_ENTRY(rotation[1], 2)
-            BLENDTBL_ENTRY(rotation[2], 4)
-            BLENDTBL_ENTRY(scale[0], 0xc)
-            BLENDTBL_ENTRY(scale[1], 0xe)
-            BLENDTBL_ENTRY(scale[2], 0x10)
-            BLENDTBL_ENTRY(translation[0], 0x18)
-            BLENDTBL_ENTRY(translation[1], 0x1a)
-            BLENDTBL_ENTRY(translation[2], 0x1c)
+        modelJoint = (u8)modelDef->jointData[bindingOffset + objAnim->bankIndex + 1];
+        if (modelJoint != 0xff) {
+            poseAdjustments = (ObjJointPose*)(objAnim->jointPoseData + poseOffset);
+            poseOffsetA = matrixSlotsA[modelJoint] * (int)sizeof(ObjModelJointMatrix);
+            poseOffsetB = matrixSlotsB[modelJoint] * (int)sizeof(ObjModelJointMatrix);
+            APPEND_JOINT_ADJUSTMENT(rotation, 0)
+            APPEND_JOINT_ADJUSTMENT(rotation, 1)
+            APPEND_JOINT_ADJUSTMENT(rotation, 2)
+            APPEND_JOINT_ADJUSTMENT(scale, 0)
+            APPEND_JOINT_ADJUSTMENT(scale, 1)
+            APPEND_JOINT_ADJUSTMENT(scale, 2)
+            APPEND_JOINT_ADJUSTMENT(translation, 0)
+            APPEND_JOINT_ADJUSTMENT(translation, 1)
+            APPEND_JOINT_ADJUSTMENT(translation, 2)
         }
-        defOff += modelDef->modelCount + 1;
-        poseOff += sizeof(ObjJointPose);
+        bindingOffset += modelDef->modelCount + 1;
+        poseOffset += sizeof(ObjJointPose);
     }
-    gModelJointScratchBuffer[outPos++] = 0x1000;
-    gModelJointScratchBuffer[outPos] = 0x1000;
+    gModelJointAdjustments.words[wordCount++] = MODEL_JOINT_ADJUSTMENT_END;
+    gModelJointAdjustments.words[wordCount] = MODEL_JOINT_ADJUSTMENT_END;
 }
 
 void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameObject* obj, f32* dst) {
@@ -2081,7 +2081,7 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
     f32 pos[3];
     s16 rot[3];
 
-    ObjModel_BuildAnimBlendTable(&obj->anim, model->animStateA, blend);
+    modelBuildJointAdjustments(&obj->anim, model->animStateA, blend);
     model->bufferFlags ^= 1;
     ch = model->animStateA;
     if (ch->moveControlFlags & 4) {
@@ -2103,7 +2103,7 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
         modelAnimEvalChannels(dst, model, (ObjAnimState*)model->animStateA, obj->anim.currentMoveProgress, 0x7f);
         ch2 = model->animStateB;
         if (ch2 != NULL && obj->anim.activeMove > -1) {
-            ObjModel_BuildAnimBlendTable(&obj->anim, model->animStateB, blend);
+            modelBuildJointAdjustments(&obj->anim, model->animStateB, blend);
             modelAnimEvalChannels(dst, model, (ObjAnimState*)model->animStateB, obj->anim.activeMoveProgress, -1);
         }
     }

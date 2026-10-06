@@ -51,7 +51,7 @@ static ModelBone bones[3];
 static ObjAnimCachedMove moves[4];
 static u8 buffers[2][3 * 64];
 static f32 rootTransform[12];
-static s16 gModelJointScratchBuffer[0xa0];
+static ModelJointAdjustmentBuffer gModelJointAdjustments;
 static void modelAnimUpdateChannels(ModelFileHeader* owner, ObjAnimState* work, int count) {
     assert(owner == &file && work != &channel);
     assert(preparedCount == renderedCount && preparedCount < expectedCount);
@@ -70,10 +70,10 @@ static void modelAnimUpdateChannels(ModelFileHeader* owner, ObjAnimState* work, 
     prepared = work;
 }
 void modelAnimBuildJointMatrices(u8** workspace, f32* root, ObjAnimState* animState,
-                                 const ModelBone* joints, int count, s16* scratch, int flags, int mode) {
+                                 const ModelBone* joints, int count, const ModelJointAdjustment* adjustments, int flags, int mode) {
     assert(preparedCount == renderedCount + 1 && renderedCount < expectedCount);
     assert(animState == prepared && joints == bones && count == 3);
-    assert(root == rootTransform && scratch == gModelJointScratchBuffer);
+    assert(root == rootTransform && adjustments == gModelJointAdjustments.entries);
     assert(flags == expectedFlags && mode == passes[renderedCount].mode);
     assert((uintptr_t)*workspace > UINT32_MAX);
     assert(*workspace == buffers[model.bufferFlags & 1]);
@@ -183,7 +183,10 @@ def harness():
     model = (ROOT / "include/main/model.h").read_text()
     anim = (ROOT / "include/main/objanim_internal.h").read_text()
     render = (ROOT / "include/main/render_internal.h").read_text()
+    pose = (ROOT / "include/main/joint_pose.h").read_text()
     parts = [PRELUDE]
+    for kind, name in (("struct", "ModelJointAdjustment"), ("union", "ModelJointAdjustmentBuffer")):
+        parts.append(re.search(rf"typedef {kind} {name}\s*\{{.*?\}} {name};", pose, re.S)[0])
     for header, name in ((model, "MODEL_FLAG_CACHED_ANIMATIONS"), (anim, "OBJANIM_MOVE_CACHE_SLOT_COUNT")):
         parts.append(re.search(rf"^#define {name}\s+[^\n]+", header, re.M)[0])
     for header, kind, name in (

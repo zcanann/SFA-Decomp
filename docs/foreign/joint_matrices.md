@@ -300,3 +300,37 @@ source-linked DOL checks and `all_source` builds pass. The native caller test,
 evaluations at both O0 and O2 with ASan/UBSan, including both buffers and every
 renderer call path. A truncated-pointer negative control fails. Preparation
 and rendering are spies in this test; it does not validate matrix arithmetic.
+
+## Joint-adjustment stream
+
+2026-10-06. `modelBuildJointAdjustments` (formerly
+`ObjModel_BuildAnimBlendTable`) builds additive joint adjustments, not blend
+weights. Each nonzero `ObjJointPose` component emits four halfwords: current
+and previous pose byte offsets, then the signed delta duplicated for both
+channels. The renderer's loops at EN `0x800075FC` and `0x80007830` read an
+unsigned offset at byte 0 and a signed delta at byte 4, then advance eight
+bytes. The second interpolated channel enters with the stream pointer advanced
+two bytes. The paired decoder applies the first delta to both adjacent samples.
+Both terminal offsets are `0x1000`; terminal deltas are never read.
+
+`ModelJointPosePair` records the decoded rotation, unsigned scale and signed
+translation rows, starting at workspace byte `0x1C`. Their component offsets
+replace the builder's numeric offset arguments. Signed matrix-slot indices
+still select 64-byte workspaces; multiplication preserves the retail `extsb` /
+`slwi` sequence without C's undefined left shift of a negative value.
+Dinosaur Planet's `mod_func_8001A640` emits the older single-channel offset /
+delta pairs with the same component offsets.
+
+`gModelJointAdjustments` keeps the evidenced 0x140-byte allocation. Its union
+exposes the producer's halfword stream and the renderer's typed eight-byte
+records. At most 39 records fit before the two-word terminator; the retail
+builder has no capacity check. No allocation or behavior was expanded here.
+
+All five versions retain identical model section contents, symbol offsets and
+relocations after normalizing the two intentional names; every other source
+object is byte-identical. Full objdiff and strict source-linked DOL checks
+pass with the same two library accounting discrepancies noted above.
+`tools/test_model_joint_adjustments.py` checks 7,428 streams at O0 and O2 with
+ASan/UBSan, including the last fitting record and untouched terminal deltas.
+Negative controls detect both an incorrect component offset and the former
+signed shift. The native caller-contract test also passes with the typed input.
