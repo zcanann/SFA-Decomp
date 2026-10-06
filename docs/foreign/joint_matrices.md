@@ -334,3 +334,41 @@ pass with the same two library accounting discrepancies noted above.
 ASan/UBSan, including the last fitting record and untouched terminal deltas.
 Negative controls detect both an incorrect component offset and the former
 signed shift. The native caller-contract test also passes with the typed input.
+
+## Object joint bindings
+
+2026-10-06. `ObjDef.jointBindingsOffset` is the file-relative word at `0x10`;
+loading turns it into `jointBindings`, with `jointBindingBytes` as the explicit
+packed-byte view. `jointBindingCount` at `0x5A` counts bindings, not skeleton
+joints. Each `ObjJointBinding` has an unsigned tag followed by `modelCount`
+unsigned model-joint indices. The record ordinal selects the corresponding
+18-byte `ObjJointPose`; `0xFF` means absent in that model. Allocation, lookup
+and adjustment-building consumers now use this contract. The relocation uses
+byte-pointer addition without truncating the allocation pointer through `int`.
+
+`python3 tools/orig/joint_bindings.py GSAE01 --include-records` audits the
+available EN asset table and records its hashes. Of 1,478 definitions, 147
+have bindings: 542 records, all contained within their owning object records,
+with one to three model indices per record and 33 absent-model entries.
+`SC_animbaby` (definition 729) has duplicate tags 0 and 1. Dinosaur Planet's
+`pSequenceBones` and `mod_func_8001A640` corroborate the variable stride and
+per-model mapping; the EN bytes and consumers establish this target's layout.
+
+Pose lookups keep the last valid matching tag. World-position lookup instead
+uses the first matching tag and retains its existing matrix-index clamp. If
+the tag is entirely absent, that function leaves its joint index uninitialized;
+this existing behavior is preserved. Its model and matrix pointer lifetimes
+now have their actual types. The packed lookup loops retain explicit scalar
+loads with canonical `offsetof` expressions: a cached record pointer changes
+MWCC's address selection. The byte view removes the old pointer-to-pointer
+type laundering without that codegen change.
+
+The native lookup test checks 8,643 pose lookups, 2,320 world-position calls
+with existing tags, and four binding relocations at both O0 and O2 under
+ASan/UBSan. The known missing-tag compiler warning remains visible. Controls
+reject first-match pose semantics and truncated relocation pointers; the
+7,428-stream adjustment test also passes with the recovered binding type.
+All five versions pass full objdiff, `all_source` and strict source-linked DOL
+checks with the same two library accounting discrepancies. The only object
+differences are anonymous literal names in objexpr and engine/2; their contents,
+symbol offsets and relocations remain unchanged.

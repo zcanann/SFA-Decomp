@@ -3,6 +3,19 @@
 
 #include "global.h"
 
+/* Packed ObjDef binding: one tag followed by modelCount joint indices.
+ * Records have variable width; their ordinal selects the ObjJointPose. */
+typedef struct ObjJointBinding {
+    u8 tag;
+    u8 modelJoints[];
+} ObjJointBinding;
+
+#define OBJ_JOINT_BINDING_MISSING 0xFF
+
+STATIC_ASSERT(sizeof(ObjJointBinding) == 1);
+STATIC_ASSERT(offsetof(ObjJointBinding, tag) == 0);
+STATIC_ASSERT(offsetof(ObjJointBinding, modelJoints) == 1);
+
 /* Additive adjustments to the animated pose, one record per ObjDef joint binding. */
 typedef struct ObjJointPose {
     s16 rotation[3];

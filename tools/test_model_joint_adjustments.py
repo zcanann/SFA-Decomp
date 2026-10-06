@@ -41,7 +41,7 @@ typedef struct ModelFileHeader {
     u8 jointCount;
     u8* animationDataSection;
 } ModelFileHeader;
-typedef struct ObjDef { s8* jointData; s8 modelCount; u8 jointCount; } ObjDef;
+typedef struct ObjDef { ObjJointBinding* jointBindings; s8 modelCount; u8 jointBindingCount; } ObjDef;
 typedef struct ObjAnimComponent {
     ObjDef* modelInstance;
     s8 bankIndex;
@@ -71,7 +71,7 @@ static void run(int cached, int models, int bank, int slot, int skeleton, int bi
     int stride = (skeleton + 7) & ~7;
     ObjAnimState channel = {{&moves[0], &moves[1]}, slot, 1 - slot};
     ModelFileHeader file = {cached ? MODEL_FLAG_CACHED_ANIMATIONS : 0, skeleton, shared};
-    ObjDef definition = {bindingData, models, bindings};
+    ObjDef definition = {(ObjJointBinding*)bindingData, models, bindings};
     ObjAnimComponent anim = {&definition, bank, (u8*)poses};
     for (int row = 0; row < 2; row++) for (int joint = 0; joint < 128; joint++) {
         moves[row].jointMatrixSlots[joint] = seed * 37 + row * 79 + joint * 17;

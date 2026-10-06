@@ -2054,9 +2054,9 @@ static void modelBuildJointAdjustments(ObjAnimComponent* objAnim, ObjAnimState* 
     wordCount = 0;
     i = 0;
     poseOffset = 0;
-    for (; i < modelDef->jointCount; i++) {
-        modelJoint = (u8)modelDef->jointData[bindingOffset + objAnim->bankIndex + 1];
-        if (modelJoint != 0xff) {
+    for (; i < modelDef->jointBindingCount; i++) {
+        modelJoint = ((ObjJointBinding*)((u8*)modelDef->jointBindings + bindingOffset))->modelJoints[objAnim->bankIndex];
+        if (modelJoint != OBJ_JOINT_BINDING_MISSING) {
             poseAdjustments = (ObjJointPose*)(objAnim->jointPoseData + poseOffset);
             poseOffsetA = matrixSlotsA[modelJoint] * (int)sizeof(ObjModelJointMatrix);
             poseOffsetB = matrixSlotsB[modelJoint] * (int)sizeof(ObjModelJointMatrix);
@@ -2070,7 +2070,7 @@ static void modelBuildJointAdjustments(ObjAnimComponent* objAnim, ObjAnimState* 
             APPEND_JOINT_ADJUSTMENT(translation, 1)
             APPEND_JOINT_ADJUSTMENT(translation, 2)
         }
-        bindingOffset += modelDef->modelCount + 1;
+        bindingOffset += modelDef->modelCount + (int)sizeof(ObjJointBinding);
         poseOffset += sizeof(ObjJointPose);
     }
     gModelJointAdjustments.words[wordCount++] = MODEL_JOINT_ADJUSTMENT_END;

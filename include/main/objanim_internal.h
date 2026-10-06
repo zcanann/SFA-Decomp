@@ -9,6 +9,7 @@
 #include "main/objhits_types.h"
 #include "main/model.h"
 
+struct ObjJointBinding;
 typedef struct ObjHitReactState ObjHitReactState;
 typedef struct ObjHitReactMoveEntry ObjHitReactMoveEntry;
 typedef struct ProjectedShadowTexture ProjectedShadowTexture;
@@ -327,7 +328,11 @@ typedef struct ObjDef {
     f32 rootMotionScaleBase;
     s32* modelFileIds; /* 0x08: table of per-model file ids (negated -> ObjModel_Load), modelCount entries */
     ObjTextureSlotDef* textureSlotDefs;
-    s8* jointData;
+    union {
+        u32 jointBindingsOffset;
+        struct ObjJointBinding* jointBindings;
+        u8* jointBindingBytes; /* Packed variable-width records. */
+    };
     u8 pad14[0x18 - 0x14];
     u8* extraSetupData;
     s16* sequenceMap;
@@ -353,7 +358,7 @@ typedef struct ObjDef {
     u8 unk57;
     u8 attachPointCount;
     u8 textureSlotCount;
-    u8 jointCount;
+    u8 jointBindingCount;
     u8 pad5B;
     u8 modLineCount;
     s8 modLineIndex;
@@ -660,7 +665,9 @@ STATIC_ASSERT(offsetof(ObjDef, shadowScaleBase) == 0x00);
 STATIC_ASSERT(offsetof(ObjDef, rootMotionScaleBase) == 0x04);
 STATIC_ASSERT(offsetof(ObjDef, modelFileIds) == 0x08);
 STATIC_ASSERT(offsetof(ObjDef, textureSlotDefs) == 0x0C);
-STATIC_ASSERT(offsetof(ObjDef, jointData) == 0x10);
+STATIC_ASSERT(offsetof(ObjDef, jointBindingsOffset) == 0x10);
+STATIC_ASSERT(offsetof(ObjDef, jointBindings) == 0x10);
+STATIC_ASSERT(offsetof(ObjDef, jointBindingBytes) == 0x10);
 STATIC_ASSERT(offsetof(ObjDef, extraSetupData) == 0x18);
 STATIC_ASSERT(offsetof(ObjDef, sequenceMap) == 0x1C);
 STATIC_ASSERT(offsetof(ObjDef, eventMoveTable) == 0x20);
@@ -685,7 +692,7 @@ STATIC_ASSERT(offsetof(ObjDef, category) == 0x52);
 STATIC_ASSERT(offsetof(ObjDef, modelCount) == 0x55);
 STATIC_ASSERT(offsetof(ObjDef, group8RegistrationCount) == 0x56);
 STATIC_ASSERT(offsetof(ObjDef, textureSlotCount) == 0x59);
-STATIC_ASSERT(offsetof(ObjDef, jointCount) == 0x5A);
+STATIC_ASSERT(offsetof(ObjDef, jointBindingCount) == 0x5A);
 STATIC_ASSERT(offsetof(ObjDef, sequenceCount) == 0x5E);
 STATIC_ASSERT(offsetof(ObjDef, renderFlags) == 0x5F);
 

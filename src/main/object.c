@@ -993,7 +993,7 @@ u8* loadObjectFile(int id) {
         }
         buf->modelFileIds = (s32*)((int)buf + (int)buf->modelFileIds);
         buf->textureSlotDefs = (ObjTextureSlotDef*)((int)buf + (int)buf->textureSlotDefs);
-        buf->jointData = (s8*)((int)buf + (int)buf->jointData);
+        buf->jointBindings = (ObjJointBinding*)((u8*)buf + buf->jointBindingsOffset);
         if (buf->extraSetupData != NULL) {
             buf->extraSetupData = (u8*)((int)buf + (int)buf->extraSetupData);
         }
@@ -1463,9 +1463,9 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags) {
             size += sizeof(ObjHitboxTransformState);
         }
     }
-    if (modelDef->jointCount != 0) {
+    if (modelDef->jointBindingCount != 0) {
         r = roundUpTo4(size);
-        size = r + modelDef->jointCount * sizeof(ObjJointPose);
+        size = r + modelDef->jointBindingCount * sizeof(ObjJointPose);
     }
     if (modelDef->textureSlotCount != 0) {
         r = roundUpTo4(size);
@@ -1792,10 +1792,10 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
             cursor = ObjHitbox_AllocRotatedBounds(&obj->anim, cursor);
         }
     }
-    if (modelDef->jointCount != 0) {
+    if (modelDef->jointBindingCount != 0) {
         alignedCursor = roundUpTo4(cursor);
         obj->anim.jointPoseData = (u8*)alignedCursor;
-        cursor = alignedCursor + modelDef->jointCount * sizeof(ObjJointPose);
+        cursor = alignedCursor + modelDef->jointBindingCount * sizeof(ObjJointPose);
     }
     if (modelDef->textureSlotCount != 0) {
         alignedCursor = roundUpTo4(cursor);
