@@ -6,6 +6,7 @@
 #include "main/camera_object.h"
 #include "main/dll/DR/dr_types.h"
 #include "main/camera_interface.h"
+#include "main/dll/dll_0042_cameramodenormal.h"
 #include "main/resource.h"
 
 typedef struct CamcontrolTriggeredAction CamcontrolTriggeredAction;
@@ -30,14 +31,6 @@ typedef void (*CamcontrolHandlerActivateFn)(CameraObject* camera, int startFlags
 typedef void (*CamcontrolHandlerUpdateFn)(CameraObject* camera);
 typedef void (*CamcontrolHandlerReleaseFn)(CameraObject* camera);
 typedef void (*CamcontrolHandlerActionCallbackFn)(void* actionData, int dataSize);
-typedef void (*CamcontrolDefaultHandlerFollowFn)(void* camera, ObjAnimComponent* target);
-typedef void (*CamcontrolDefaultHandlerUpdatePitchFn)(void* camera, double targetY, double distance);
-typedef void (*CamcontrolDefaultHandlerUpdateSlideFn)(void* camera, GameObject* target, f32 floorHeight,
-                                                      f32 ceilingHeight);
-typedef void (*CamcontrolDefaultHandlerGetSettingsFn)(f32* minDistance, f32* maxDistance, f32* lowerHeightOffset,
-                                                      f32* upperHeightOffset, f32* targetHeight);
-typedef void (*CamcontrolDefaultHandlerUpdateVerticalBoundsFn)(void* camera, int flags, int queryType, f32* floorHeight,
-                                                               f32* ceilingHeight);
 
 typedef struct CamcontrolHandlerVTable {
     CamcontrolHandlerReservedFn reserved18;
@@ -53,11 +46,11 @@ typedef struct CamcontrolDefaultHandlerVTable {
     CamcontrolHandlerUpdateFn update;
     CamcontrolHandlerReleaseFn release;
     CamcontrolHandlerActionCallbackFn actionCallback;
-    CamcontrolDefaultHandlerFollowFn follow;
-    CamcontrolDefaultHandlerUpdatePitchFn updatePitch;
-    CamcontrolDefaultHandlerUpdateSlideFn updateSlide;
-    CamcontrolDefaultHandlerGetSettingsFn getSettings;
-    CamcontrolDefaultHandlerUpdateVerticalBoundsFn updateVerticalBounds;
+    CameraModeNormalFollowFn follow;
+    CameraModeNormalUpdatePitchFn updatePitch;
+    CameraModeNormalUpdateSlideFn updateSlide;
+    CameraModeNormalGetSettingsFn getSettings;
+    CameraModeNormalUpdateVerticalBoundsFn updateVerticalBounds;
 } CamcontrolDefaultHandlerVTable;
 
 typedef struct CamcontrolHandler {

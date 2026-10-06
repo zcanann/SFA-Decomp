@@ -12,10 +12,19 @@ from test_camera_update_storage import records
 
 ROOT = Path(__file__).resolve().parents[1]
 SERVICES = r"""
+#include <math.h>
+static f32 mathSinf(f32 angle) { return sinf(angle); }
+static f32 mathCosf(f32 angle) { return cosf(angle); }
+static CameraModeCrawlState crawlState;
+static CameraModeCrawlState* gCameraModeCrawlState = &crawlState;
+static f32 relativeHeight;
 static CameraModeStaffAnimState state;
 static CameraModeStaffAnimState* gCameraModeStaffAnimState = &state;
 static GameObject target, oldFrame, newFrame;
 static CameraObject camera;
+static CameraModeNormalState normalState;
+static CameraModeNormalState* gCameraModeNormalState = &normalState;
+static int angleCalls;
 static f32 timeDelta = 2.0f, expectedT, curveSpeed, expectedSpeed;
 static int pathFinished, followCalls, boundsCalls, slideCalls, pitchCalls, actionCalls;
 static int modeCalls, advanceCalls, resetCalls, blockedCalls, transformCalls, collisionKind;
@@ -31,7 +40,7 @@ static void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy
     *oz = z - (parent ? parent->anim.worldPosZ : 0);
     transformCalls++;
 }
-static void follow(void* record, ObjAnimComponent* focus) {
+static void follow(CameraObject* record, ObjAnimComponent* focus) {
     CameraObject* work = record;
     assert(work != &camera && work->focusObject == &target && focus == &target.anim);
     assert(work->localFrameObj == camera.localFrameObj);
@@ -43,7 +52,7 @@ static void follow(void* record, ObjAnimComponent* focus) {
     work->localZ += 3000.0f;
     followCalls++;
 }
-static void bounds(void* record, int flags, int mode, f32* floor, f32* ceiling) {
+static void bounds(CameraObject* record, int flags, int mode, f32* floor, f32* ceiling) {
     CameraObject* work = record;
     assert(flags == 1 && mode == 3 && floor == &state.floorHeight && ceiling == &state.ceilingHeight);
     /* Exercise the complete native-width collision record inside both cameras. */
@@ -58,16 +67,13 @@ static void bounds(void* record, int flags, int mode, f32* floor, f32* ceiling) 
     *ceiling = 100.0f;
     boundsCalls++;
 }
-static void slide(void* record, GameObject* focus, f32 floor, f32 ceiling) {
+static void slide(CameraObject* record, GameObject* focus, f32 floor, f32 ceiling) {
     assert(record == &camera && focus == &target && floor == -100000.0f && ceiling == 100000.0f);
     slideCalls++;
 }
-static void pitch(void* record, double targetY, double distance) {
-    assert(record == &camera && targetY == target.anim.worldPosY && distance == 5.0);
-    pitchCalls++;
-}
+static CameraModeNormalDescriptor normalDescriptor = {.updatePitch = CameraModeNormal_updatePitch};
 static CamcontrolDefaultHandlerVTable vtable = {
-    .follow = follow, .updatePitch = pitch, .updateSlide = slide, .updateVerticalBounds = bounds,
+    .follow = follow, .updatePitch = CameraModeNormal_updatePitch, .updateSlide = slide, .updateVerticalBounds = bounds,
 };
 static CamcontrolDefaultHandler handler = {&vtable};
 static CamcontrolDefaultHandlerEntry entry = {.handler = &handler};
@@ -78,8 +84,8 @@ static void setMode(int mode, int arg1, int arg2, int size, void* params, int fr
     modeCalls++;
 }
 static void relative(void* record, f32* x, f32* y, f32* z, f32* distance, f32 height, int local) {
-    assert(record == &camera && height == 0 && local == 0);
-    *x = 3; *y = 0; *z = 4; *distance = 5;
+    assert(record == &camera && height == relativeHeight && local == 0);
+    *x = 3; *y = 0; *z = 4; *distance = 5.5f;
 }
 static CameraInterface interface = {.getDefaultHandlerEntry = getDefaultHandler, .setMode = setMode,
                                     .getRelativePosition = relative};
@@ -105,7 +111,19 @@ static u8 camcontrol_getTargetPosition(void* record, ObjAnimComponent* focus, f3
     return 1;
 }
 static void camcontrol_onTargetTraceBlocked(int blocked) { assert(blocked == 1); blockedCalls++; }
-static u32 getAngle(f32 x, f32 z) { assert(x == 3 && z == 4); return 0; }
+static u32 getAngle(f32 x, f32 z) {
+    if (angleCalls++ == 0) {
+        assert(x == 3 && z == 4);
+        return 0;
+    }
+    assert(x == camera.worldY - (target.anim.worldPosY + normalState.targetHeight) && z == 5.5f);
+    pitchCalls++;
+    return 0x1000;
+}
+static f32 interpolate(f32 value, f32 response, f32 delta) {
+    assert(value == 4096 && response == 0.125f && delta == timeDelta);
+    return value * response;
+}
 static void CameraModeStaffAnim_updateTargetAction(CameraObject* record, GameObject* focus) {
     assert(record == &camera && focus == &target);
     actionCalls++;
@@ -126,7 +144,11 @@ static void setup(void) {
     }
     camera.focusObject = &target;
     camera.anim.localPosY = 25;
-    target.anim.worldPosY = 15;
+    target.anim.worldPosY = 15.25f;
+    normalState.targetHeight = 7.5f;
+    normalState.yawResponseFrames = 8;
+    angleCalls = 0;
+    relativeHeight = 0;
     expectedT = 0.5f;
     curveSpeed = expectedSpeed = 0.75f;
     followCalls = boundsCalls = slideCalls = pitchCalls = actionCalls = modeCalls = 0;
@@ -166,6 +188,7 @@ static void updateCase(int finished, int collision, int priorCollision, int chan
     CameraModeStaffAnim_update(&camera);
     assert(followCalls == 1 && boundsCalls == 2 && advanceCalls == 1);
     assert(slideCalls == 1 && pitchCalls == 1 && actionCalls == 1);
+    assert(camera.anim.rotY == 512 && angleCalls == 2);
     assert(modeCalls == (finished || collision || priorCollision));
     assert(state.collisionTime == (priorCollision ? 7.0f : 0) + (collision ? timeDelta : 0));
     assert(resetCalls == (collision || priorCollision) && blockedCalls == resetCalls);
@@ -182,6 +205,7 @@ static void updateCase(int finished, int collision, int priorCollision, int chan
 }
 int main(void) {
     assert(sizeof(void*) == 8 && (uintptr_t)&entry > UINT32_MAX);
+    assert(normalDescriptor.updatePitch == vtable.updatePitch);
     sampleCase(-10, 10, 0, 0.1f, 0);
     sampleCase(0, 0, 0, -1.0f, 1);
     sampleCase(5, 10, 0.5f, 0.75f, 0);
@@ -197,13 +221,30 @@ int main(void) {
     state.pathNotNeeded = 1;
     CameraModeStaffAnim_update(&camera);
     assert(modeCalls == 1 && !followCalls && !advanceCalls && !actionCalls && !transformCalls);
+    setup();
+    camera.worldY = 25;
+    relativeHeight = 35;
+    crawlState.flags.useDefaultHandler = 1;
+    CameraModeCrawl_update(&camera);
+    assert(camera.anim.rotY == 512 && angleCalls == 2 && pitchCalls == 1);
+    assert(transformCalls == 1 && !modeCalls && !followCalls && !advanceCalls);
     return 0;
 }
 """
 
 
 def harness():
-    parts = [records()]
+    parts = [records(), "typedef double f64;", "typedef void (*ResourceDescriptorCallback)(void);",
+             "typedef struct CameraModeNormalInitSettings CameraModeNormalInitSettings;",
+             "typedef struct CameraModeNormalActionSettings CameraModeNormalActionSettings;"]
+    normal = (ROOT / "include/main/dll/dll_0042_cameramodenormal.h").read_text()
+    start = normal.index("typedef void (*CameraModeNormalFollowFn)")
+    end = normal.index("STATIC_ASSERT(offsetof(CameraModeNormalDescriptor,")
+    parts.append(normal[start:end])
+    parts.append(re.search(r"^void CameraModeNormal_updatePitch[^\n]*", normal, re.M)[0])
+    crawl = (ROOT / "include/main/dll/dll_0050_cameramodecrawl.h").read_text()
+    for name in ("CameraModeCrawlFlags", "CameraModeCrawlState"):
+        parts.append(re.search(rf"typedef struct {name}\s*\{{.*?\}} {name};", crawl, re.S)[0])
     for path in ("include/main/curve_eval.h", "include/main/curve_types.h",
                  "include/main/dll/dll_0043_cameramodestaffanim.h",
                  "include/main/dll/CAM/dll_0001_camcontrol.h", "include/main/camera_interface.h"):
@@ -224,6 +265,14 @@ def harness():
         else:
             parts.append(header[header.index("typedef int (*CameraGetModeFn)"):header.index("STATIC_ASSERT(")])
     parts.append(SERVICES)
+    normal_source = (ROOT / "src/dlls/engine/66/66.c").read_text()
+    start, end = find_function_body(normal_source, "CameraModeNormal_updatePitch")
+    declaration = normal_source.rfind("void CameraModeNormal_updatePitch", 0, start)
+    parts.append(normal_source[declaration:end + 1])
+    crawl_source = (ROOT / "src/dlls/engine/80/80.c").read_text()
+    start, end = find_function_body(crawl_source, "CameraModeCrawl_update")
+    declaration = crawl_source.rfind("void CameraModeCrawl_update", 0, start)
+    parts.append(crawl_source[declaration:end + 1])
     source = (ROOT / "src/dlls/engine/67/67.c").read_text()
     for name, result in (("CameraModeStaffAnim_samplePath", "int"), ("CameraModeStaffAnim_update", "void")):
         start, end = find_function_body(source, name)

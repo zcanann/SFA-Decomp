@@ -802,7 +802,7 @@ void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 
     }
 }
 
-void CameraModeNormal_updatePitch(f32 targetY, f32 dist, CameraObject* camera) {
+void CameraModeNormal_updatePitch(CameraObject* camera, f32 targetY, f32 dist) {
     int pitchDelta;
 
     pitchDelta =

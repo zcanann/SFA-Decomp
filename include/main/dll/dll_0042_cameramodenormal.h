@@ -215,6 +215,15 @@ STATIC_ASSERT(offsetof(CameraModeNormalState, clampFlags) == 0xC8);
 STATIC_ASSERT(offsetof(CameraModeNormalState, padC9) == 0xC9);
 STATIC_ASSERT(sizeof(CameraModeNormalState) == 0xCC);
 
+typedef void (*CameraModeNormalFollowFn)(CameraObject* camera, ObjAnimComponent* target);
+typedef void (*CameraModeNormalUpdatePitchFn)(CameraObject* camera, f32 targetY, f32 distance);
+typedef void (*CameraModeNormalUpdateSlideFn)(CameraObject* camera, GameObject* target, f32 floorHeight,
+                                                      f32 ceilingHeight);
+typedef void (*CameraModeNormalGetSettingsFn)(f32* minDistance, f32* maxDistance, f32* lowerHeightOffset,
+                                                      f32* upperHeightOffset, f32* targetHeight);
+typedef void (*CameraModeNormalUpdateVerticalBoundsFn)(CameraObject* camera, int flags, int queryType, f32* floorHeight,
+                                                               f32* ceilingHeight);
+
 typedef struct CameraModeNormalDescriptor {
     u32 metadata[4];
     void (*initialise)(void);
@@ -224,12 +233,11 @@ typedef struct CameraModeNormalDescriptor {
     void (*update)(CameraObject* camera);
     void (*free)(CameraObject* camera);
     void (*copyToCurrent)(CameraModeNormalActionSettings* settings);
-    void (*follow)(CameraObject* camera, ObjAnimComponent* target);
-    void (*updatePitch)(f32 targetY, f32 distance, CameraObject* camera);
-    void (*updateSlide)(CameraObject* camera, GameObject* target, f32 floorHeight, f32 ceilingHeight);
-    void (*getSettings)(f32* minDistance, f32* maxDistance, f32* lowerHeightOffset, f32* upperHeightOffset,
-                        f32* targetHeight);
-    void (*updateVerticalBounds)(CameraObject* camera, int flags, int queryType, f32* floorHeight, f32* ceilingHeight);
+    CameraModeNormalFollowFn follow;
+    CameraModeNormalUpdatePitchFn updatePitch;
+    CameraModeNormalUpdateSlideFn updateSlide;
+    CameraModeNormalGetSettingsFn getSettings;
+    CameraModeNormalUpdateVerticalBoundsFn updateVerticalBounds;
 } CameraModeNormalDescriptor;
 
 STATIC_ASSERT(offsetof(CameraModeNormalDescriptor, metadata) == 0x00);
@@ -264,7 +272,7 @@ void CameraModeNormal_updateVerticalBounds(CameraObject* camera, int flags, int 
 void CameraModeNormal_getSettings(f32* minDistance, f32* maxDistance, f32* lowerHeightOffset, f32* upperHeightOffset,
                                   f32* targetHeight);
 void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 floorHeight, f32 ceilingHeight);
-void CameraModeNormal_updatePitch(f32 targetY, f32 distance, CameraObject* camera);
+void CameraModeNormal_updatePitch(CameraObject* camera, f32 targetY, f32 distance);
 void CameraModeNormal_follow(CameraObject* camera, ObjAnimComponent* target);
 void CameraModeNormal_copyToCurrent(CameraModeNormalActionSettings* settings);
 void CameraModeNormal_free(CameraObject* camera);

@@ -256,7 +256,7 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
             yawDelta += 0xffff;
         }
         camera->anim.rotX += yawDelta;
-        defaultHandler->handler->vtable->updatePitch(camera, (double)target->anim.worldPosY, (double)relDistXZ);
+        defaultHandler->handler->vtable->updatePitch(camera, target->anim.worldPosY, relDistXZ);
         if (needsReset != 0) {
             (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
         }

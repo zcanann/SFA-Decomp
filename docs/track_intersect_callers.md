@@ -334,3 +334,48 @@ reports without completion overrides show no new discrepancies; only the
 documented TRK vector-carving and MusyX exception-data reporting cases
 remain. Every full-source build and strict source-linked retail checksum
 passes against its verified original DOL.
+
+## Default-camera callback ABI (2026-10-06)
+
+The normal-camera descriptor and the camera-control helper table formerly
+described the same pitch callback with incompatible C types. The descriptor
+and function declaration placed two `f32` arguments before `CameraObject*`;
+the shared helper table placed an untyped camera pointer first and used two
+`double` arguments. PowerPC's separate integer and floating-point argument
+registers allowed both spellings to reproduce the same register contents,
+masking an invalid indirect-call contract in the reconstructed C.
+
+The canonical signature is now
+`void (CameraObject* camera, f32 targetY, f32 distance)`. Retail EN's staff
+and crawl call sites put the camera in r3 before loading target Y and
+distance into f1/f2. Reordering those source arguments to match the old
+callee declaration changed that instruction order; putting the camera
+first in both caller and callee reproduces every instruction. Dinosaur
+Planet's corresponding normal-camera `func5` signature independently uses
+the camera-first, two-float form. Foxhollow already uses the normal-camera
+descriptor directly with float arguments, corroborating the precision
+mismatch, though its old declaration retained the alternate argument order.
+
+All five default-camera helper callback types now live with their owning
+normal-camera interface and are reused by both table views. `follow`,
+`updateSlide` and `updateVerticalBounds` also use `CameraObject*` rather
+than a competing `void*` signature. The generic mode lifecycle/action
+prefix remains separate; these changes concern the normal-camera helper
+tail. Descriptor contents, callback slots and resource loading are unchanged.
+
+The existing staff-camera native probe now binds the actual
+`CameraModeNormal_updatePitch` function to both production descriptor/table
+types without casts, and executes the actual staff and crawl update bodies
+through that callback. Fractional target-height and distance arguments,
+normal-mode height adjustment and the resulting camera pitch are checked
+under ASan/UBSan at `-O0` and `-O2`. This replaces the old double-argument
+pitch mock, which could not expose disagreement with the real callee.
+
+All affected TUs remain 100% in all five versions. The complete camera
+control, normal, staff, climb and crawl objects are byte-identical to the
+baseline in every region, and all EN source-object hashes are unchanged.
+Formatting separately preserves every source-object hash in all five
+builds. Full-source builds and strict source-linked retail checksums pass
+against verified originals. Full-project reports without completion
+overrides show no new differences beyond the documented TRK vector-carving
+and MusyX discarded exception-data reporting cases.
