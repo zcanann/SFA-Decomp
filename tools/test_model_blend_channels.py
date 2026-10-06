@@ -21,6 +21,8 @@ class ModelBlendChannelTests(unittest.TestCase):
         header = (ROOT / 'include/main/model.h').read_text()
         channel = re.search(r'typedef struct ObjModelBlendChannel \{.*?\} ObjModelBlendChannel;',
                             header, re.S).group()
+        target = re.search(r'typedef union ModelMorphTargetRef \{.*?\} ModelMorphTargetRef;',
+                           header, re.S).group()
         flags = '\n'.join(re.findall(r'^#define BLENDCHAN_.*$', header, re.M))
         work = re.search(r'typedef struct ModelBlendChannelFlags \{.*?\} ModelBlendChannelFlags;',
                          source, re.S).group()
@@ -40,11 +42,12 @@ class ModelBlendChannelTests(unittest.TestCase):
 typedef unsigned char u8;
 typedef signed char s8;
 typedef unsigned short u16;
+typedef unsigned int u32;
 typedef short s16;
 typedef float f32;
-''' + channel + '\n' + flags + '\n' + work + '\n' + initializers + r'''
+''' + channel + '\n' + target + '\n' + flags + '\n' + work + '\n' + initializers + r'''
 typedef struct ModelFileHeader {
-    u16** morphTargetPtrs;
+    ModelMorphTargetRef* morphTargets;
     u16 vertexCount;
     u8 morphTargetCount;
     void* vertexAnimEntries;
@@ -68,7 +71,7 @@ static void modelBlendMorphTargets(u8* src, u8* dst, u16 count, u16* a, u16* b, 
 static ObjModelBlendChannel channels[3];
 static u8 base[6], output0[6], output1[6];
 static u16 target0 = 100, target1 = 101;
-static u16* targets[] = {&target0, &target1};
+static ModelMorphTargetRef targets[] = {{.stream = &target0}, {.stream = &target1}};
 static ModelFileHeader file;
 static ObjModel model;
 static int frames;
@@ -181,7 +184,7 @@ int main(void) {
     ObjModel_SetBlendChannelTargets(&model, 2, -1, 2, 0, 0);
     ObjModel_SetBlendChannelTargets(&model, 3, -1, 0, 0, 0);
     assert(memcmp(&saved, &channels[2], sizeof(saved)) == 0);
-    file.morphTargetPtrs = NULL;
+    file.morphTargets = NULL;
     ObjModel_AdvanceBlendChannels(&model, 10);
     ObjModel_SetBlendChannelWeight(&model, 2, 5);
     ObjModel_ClearBlendChannels(&model);

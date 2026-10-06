@@ -52,3 +52,62 @@ full objdiff report is unchanged. All three getters remain 16-byte exact
 matches, and `trackBuildModelTriangles` remains 2,632 bytes at 100%. The
 strict retail checksum and `all_source` both pass. No runtime behavior or
 asset contents were changed.
+
+## Model-relative offsets (2026-10-06)
+
+The 520-byte retail `ObjModel_RelocateModelData` at EN `0x80028F94` reads 21
+header words as unsigned byte offsets and replaces them with addresses based
+on the model header. `ModelFileHeader` now exposes these two states through
+offset/pointer unions. The header's 0xFC-byte target size and every new offset
+view are asserted. The relocator takes a `ModelFileHeader*` and uses the named
+offsets, removing 43 casted `u32*` reads and the pointer-to-pointer store cast.
+The existing unidentified fields at +0x18 and +0x1C retain their unknown roles.
+
+Two subordinate tables undergo the same transition. A `ModelDisplayListEntry`
+has a `dlistOffset` view at +0 alongside its runtime `dlist` pointer, retaining
+the 0x1C stride. A four-byte `ModelMorphTargetRef` has an `offset` and a
+`u16* stream` view. The header's table is now `morphTargets`, and the two
+morph-channel selections read each entry's `stream` directly.
+
+The source preserves these observed retail distinctions:
+
+| Site | Relocation condition |
+| --- | --- |
+| `verticesOffset` | Always add the base, including offset zero |
+| Other header offsets | Relocate only nonzero offsets |
+| `unk18Offset`, `unk1COffset`, `jointFuzzScalesOffset` | Also require a nonzero `jointDataOffset` |
+| Display-list entries | Relocate the sum of primary and shadow counts; entry offset zero still means the model base |
+| Morph-table entries | Relocate `morphTargetCount` entries; entry offset zero still means the model base |
+
+The existing call site relocates a newly loaded model before caching it. This
+operation is not idempotent. It does not relocate animation allocations or
+convert texture IDs; those remain later loader stages. The working Foxhollow
+port at `894de8a8edecfad2e455f1a6345e328f50c74aba` expands records in
+`modelUnpackFileData` before the separate relocation stage. That native file
+decoder supplied a useful comparison of the two stages; retail remains the
+evidence for target layout and control flow.
+
+`python3 tools/test_model_relocation.py` runs the production relocator and
+record definitions with native pointers above 4 GiB. It checks 732 scenarios
+at both `-O0` and `-O2`, with ASan/UBSan and warnings treated as errors. Cases
+include isolated offset bits and their complements, mixed optional fields,
+absent joints with nonzero dependent offsets, empty tables, shadow-only
+display lists, all 510 display lists and all 255 morph entries. Each case
+compares the whole allocation against expected pointers and unchanged bytes,
+including unrelated header fields, padding, unused table entries and payload.
+These fixtures represent already decoded, host-endian native records; they
+do not parse retail asset bytes or establish a complete native game loader.
+The existing blend-channel test now uses the production morph-reference
+union and retains its 22 checked apply passes at each optimization level.
+
+All five verified targets (EN, EN rev1, JP, PAL and PAL rev1) retain a
+byte-identical model object: 85 exact functions and 604 exact data bytes.
+The shared-header rebuild changes only `dlls/engine/2/2.o` outside that TU:
+98 anonymous literal symbols are renumbered, with identical section bytes,
+symbol positions and normalized relocations. Its 70 functions remain exact;
+all other source object hashes are unchanged. Complete objdiff reports show
+no new discrepancies, retaining only the existing `__exception` and
+`sal_volume` library accounting exceptions. Full-source builds and strict
+source-linked DOL checksums pass for every target. The separate formatting
+change preserves every source object hash across all five targets, and both
+the active TU and canonical header pass `clang-format --dry-run --Werror`.

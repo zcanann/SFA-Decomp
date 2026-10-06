@@ -1442,7 +1442,7 @@ void ObjModel_ApplyBlendChannels(ObjModel* model) {
     int refreshBits;
 
     hdr = model->file;
-    if (hdr->morphTargetPtrs == NULL) {
+    if (hdr->morphTargets == NULL) {
         return;
     }
     emptyTarget = hdr->vertexCount + 1;
@@ -1494,12 +1494,12 @@ void ObjModel_ApplyBlendChannels(ObjModel* model) {
             f32 eased;
 
             if (ch->morphTargetA > -1) {
-                targetA = hdr->morphTargetPtrs[ch->morphTargetA];
+                targetA = hdr->morphTargets[ch->morphTargetA].stream;
             } else {
                 targetA = (u16*)&emptyTarget;
             }
             if (ch->morphTargetB > -1) {
-                targetB = hdr->morphTargetPtrs[ch->morphTargetB];
+                targetB = hdr->morphTargets[ch->morphTargetB].stream;
             } else {
                 targetB = (u16*)&emptyTarget;
             }
@@ -1545,7 +1545,7 @@ void ObjModel_ApplyBlendChannels(ObjModel* model) {
 void ObjModel_AdvanceBlendChannels(ObjModel* model, f32 dt) {
     int i;
     ObjModelBlendChannel* ch;
-    if (model->file->morphTargetPtrs == NULL) {
+    if (model->file->morphTargets == NULL) {
         return;
     }
     for (i = 0; i < 3; i++) {
@@ -1572,7 +1572,7 @@ void ObjModel_AdvanceBlendChannels(ObjModel* model, f32 dt) {
 int ObjModel_NeedsBlendChannelUpdate(ObjModel* model) {
     ObjModelBlendChannel* ch;
 
-    if (model->file->morphTargetPtrs == NULL) {
+    if (model->file->morphTargets == NULL) {
         return 0;
     }
     ch = model->blendChannels;
@@ -1594,7 +1594,7 @@ int ObjModel_NeedsBlendChannelUpdate(ObjModel* model) {
 void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight) {
     ObjModelBlendChannel* ch;
 
-    if (channel > 2 || model->file->morphTargetPtrs == NULL) {
+    if (channel > 2 || model->file->morphTargets == NULL) {
         return;
     }
     ch = model->blendChannels + channel;
@@ -1607,7 +1607,7 @@ void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight) {
 void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b, f32 weightRate, int flags) {
     ObjModelBlendChannel* ch;
     u8* hdr;
-    if (channel > 2 || ((ModelFileHeader*)(hdr = (u8*)model->file))->morphTargetPtrs == NULL) {
+    if (channel > 2 || ((ModelFileHeader*)(hdr = (u8*)model->file))->morphTargets == NULL) {
         return;
     }
     if (a < -1) {
@@ -1641,7 +1641,7 @@ void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b,
 }
 
 void ObjModel_ClearBlendChannels(ObjModel* model) {
-    if (model->file->morphTargetPtrs != NULL) {
+    if (model->file->morphTargets != NULL) {
         ObjModel_SetBlendChannelTargets(model, 0, -1, -1, 0.0f,
                                         BLENDCHAN_FLAG_MANUAL | BLENDCHAN_FLAG_RESET_WEIGHT | BLENDCHAN_FLAG_DIRTY);
         ObjModel_SetBlendChannelTargets(model, 1, -1, -1, 0.0f,
@@ -2166,80 +2166,81 @@ void ObjModel_RelocateAnimData(ModelFileHeader* file, ObjModel* model) {
     }
 }
 
-void ObjModel_RelocateModelData(u8* m) {
+void ObjModel_RelocateModelData(ModelFileHeader* file) {
     int i;
-    if (*(u32*)&((ModelFileHeader*)m)->hitVolumes) {
-        ((ModelFileHeader*)m)->hitVolumes = m + *(u32*)&((ModelFileHeader*)m)->hitVolumes;
+    u8* base = (u8*)file;
+    if (file->hitVolumesOffset) {
+        file->hitVolumes = base + file->hitVolumesOffset;
     }
-    if (*(u32*)&((ModelFileHeader*)m)->jointData) {
-        ((ModelFileHeader*)m)->jointData = m + *(u32*)&((ModelFileHeader*)m)->jointData;
-        if (*(u32*)&((ModelFileHeader*)m)->unk18) {
-            ((ModelFileHeader*)m)->unk18 = m + *(u32*)&((ModelFileHeader*)m)->unk18;
+    if (file->jointDataOffset) {
+        file->jointData = base + file->jointDataOffset;
+        if (file->unk18Offset) {
+            file->unk18 = base + file->unk18Offset;
         }
-        if (*(u32*)&((ModelFileHeader*)m)->unk1C) {
-            ((ModelFileHeader*)m)->unk1C = m + *(u32*)&((ModelFileHeader*)m)->unk1C;
+        if (file->unk1COffset) {
+            file->unk1C = base + file->unk1COffset;
         }
-        if (*(u32*)&((ModelFileHeader*)m)->jointFuzzScales) {
-            ((ModelFileHeader*)m)->jointFuzzScales =
-                (ModelFuzzScaleDef*)(m + *(u32*)&((ModelFileHeader*)m)->jointFuzzScales);
+        if (file->jointFuzzScalesOffset) {
+            file->jointFuzzScales =
+                (ModelFuzzScaleDef*)(base + file->jointFuzzScalesOffset);
         }
     }
-    if (*(u32*)&((ModelFileHeader*)m)->extraJointDefs) {
-        ((ModelFileHeader*)m)->extraJointDefs =
-            (ModelExtraJointDef*)(m + *(u32*)&((ModelFileHeader*)m)->extraJointDefs);
+    if (file->extraJointDefsOffset) {
+        file->extraJointDefs =
+            (ModelExtraJointDef*)(base + file->extraJointDefsOffset);
     }
-    if (*(u32*)&((ModelFileHeader*)m)->textureIds) {
-        *(u8**)&((ModelFileHeader*)m)->textureIds = m + *(u32*)&((ModelFileHeader*)m)->textureIds;
+    if (file->textureIdsOffset) {
+        file->textureIds = (s32*)(base + file->textureIdsOffset);
     }
-    ((ModelFileHeader*)m)->vertices = m + *(u32*)&((ModelFileHeader*)m)->vertices;
-    if (*(u32*)&((ModelFileHeader*)m)->normals) {
-        ((ModelFileHeader*)m)->normals = m + *(u32*)&((ModelFileHeader*)m)->normals;
+    file->vertices = base + file->verticesOffset;
+    if (file->normalsOffset) {
+        file->normals = base + file->normalsOffset;
     }
-    if (*(u32*)&((ModelFileHeader*)m)->colors) {
-        ((ModelFileHeader*)m)->colors = m + *(u32*)&((ModelFileHeader*)m)->colors;
+    if (file->colorsOffset) {
+        file->colors = base + file->colorsOffset;
     }
-    if (*(u32*)&((ModelFileHeader*)m)->texCoords) {
-        ((ModelFileHeader*)m)->texCoords = m + *(u32*)&((ModelFileHeader*)m)->texCoords;
+    if (file->texCoordsOffset) {
+        file->texCoords = base + file->texCoordsOffset;
     }
-    if (*(u32*)&((ModelFileHeader*)m)->instrs) {
-        ((ModelFileHeader*)m)->instrs = m + *(u32*)&((ModelFileHeader*)m)->instrs;
+    if (file->instrsOffset) {
+        file->instrs = base + file->instrsOffset;
     }
-    if (*(u32*)&((ModelFileHeader*)m)->displayLists) {
-        ((ModelFileHeader*)m)->displayLists = (ModelDisplayListEntry*)(m + *(u32*)&((ModelFileHeader*)m)->displayLists);
+    if (file->displayListsOffset) {
+        file->displayLists = (ModelDisplayListEntry*)(base + file->displayListsOffset);
     }
-    if (*(u32*)&((ModelFileHeader*)m)->morphTargetPtrs) {
-        ((ModelFileHeader*)m)->morphTargetPtrs = (u16**)(m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs);
+    if (file->morphTargetsOffset) {
+        file->morphTargets = (ModelMorphTargetRef*)(base + file->morphTargetsOffset);
     }
-    if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries) {
-        ((ModelFileHeader*)m)->vertexAnimEntries =
-            (ModelVtxAnimChunk*)(m + *(u32*)&((ModelFileHeader*)m)->vertexAnimEntries);
+    if (file->vertexAnimEntriesOffset) {
+        file->vertexAnimEntries =
+            (ModelVtxAnimChunk*)(base + file->vertexAnimEntriesOffset);
     }
-    if (*(u32*)&((ModelFileHeader*)m)->vertexWeightData) {
-        ((ModelFileHeader*)m)->vertexWeightData = m + *(u32*)&((ModelFileHeader*)m)->vertexWeightData;
+    if (file->vertexWeightDataOffset) {
+        file->vertexWeightData = base + file->vertexWeightDataOffset;
     }
-    if (*(u32*)&((ModelFileHeader*)m)->normalAnimEntries) {
-        ((ModelFileHeader*)m)->normalAnimEntries =
-            (ModelVtxAnimChunk*)(m + *(u32*)&((ModelFileHeader*)m)->normalAnimEntries);
+    if (file->normalAnimEntriesOffset) {
+        file->normalAnimEntries =
+            (ModelVtxAnimChunk*)(base + file->normalAnimEntriesOffset);
     }
-    if (*(u32*)&((ModelFileHeader*)m)->normalWeightData) {
-        ((ModelFileHeader*)m)->normalWeightData = m + *(u32*)&((ModelFileHeader*)m)->normalWeightData;
+    if (file->normalWeightDataOffset) {
+        file->normalWeightData = base + file->normalWeightDataOffset;
     }
-    if (*(u32*)&((ModelFileHeader*)m)->renderOps) {
-        ((ModelFileHeader*)m)->renderOps = (Shader*)(m + *(u32*)&((ModelFileHeader*)m)->renderOps);
+    if (file->renderOpsOffset) {
+        file->renderOps = (Shader*)(base + file->renderOpsOffset);
     }
-    for (i = 0; i < ((ModelFileHeader*)m)->displayListCount + ((ModelFileHeader*)m)->shadowDisplayListCount; i++) {
-        ((ModelFileHeader*)m)->displayLists[i].dlist = m + *(u32*)&((ModelFileHeader*)m)->displayLists[i].dlist;
+    for (i = 0; i < file->displayListCount + file->shadowDisplayListCount; i++) {
+        file->displayLists[i].dlist = base + file->displayLists[i].dlistOffset;
     }
-    for (i = 0; i < ((ModelFileHeader*)m)->morphTargetCount; i++) {
-        ((ModelFileHeader*)m)->morphTargetPtrs[i] = (u16*)(m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs[i]);
+    for (i = 0; i < file->morphTargetCount; i++) {
+        file->morphTargets[i].stream = (u16*)(base + file->morphTargets[i].offset);
     }
-    if (*(u32*)&((ModelFileHeader*)m)->collisionTriangles) {
-        ((ModelFileHeader*)m)->collisionTriangles =
-            (ModelCollisionTriangle*)(m + *(u32*)&((ModelFileHeader*)m)->collisionTriangles);
+    if (file->collisionTrianglesOffset) {
+        file->collisionTriangles =
+            (ModelCollisionTriangle*)(base + file->collisionTrianglesOffset);
     }
-    if (*(u32*)&((ModelFileHeader*)m)->collisionBlocks) {
-        ((ModelFileHeader*)m)->collisionBlocks =
-            (CollisionPolygonGroup*)(m + *(u32*)&((ModelFileHeader*)m)->collisionBlocks);
+    if (file->collisionBlocksOffset) {
+        file->collisionBlocks =
+            (CollisionPolygonGroup*)(base + file->collisionBlocksOffset);
     }
 }
 
@@ -2357,7 +2358,7 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize) {
     }
     if (ModelList_getHeader(gModelList, realId[0], &header) == 0) {
         header = ObjModel_LoadModelData(realId[0]);
-        ObjModel_RelocateModelData(header);
+        ObjModel_RelocateModelData((ModelFileHeader*)header);
         h[0] = header;
         i[0] = 0;
         off[0] = i[0];

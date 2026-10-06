@@ -192,12 +192,22 @@ typedef struct ModelCollisionTriangle {
 STATIC_ASSERT(sizeof(ModelCollisionTriangle) == 8);
 STATIC_ASSERT(offsetof(ModelCollisionTriangle, vertexIndices) == 0);
 
+/* A morph table entry is a model-relative byte offset on disk, then a stream
+ * pointer after model relocation. Streams contain index/flags and s16 deltas. */
+typedef union ModelMorphTargetRef {
+    u32 offset;
+    u16* stream;
+} ModelMorphTargetRef;
+
+STATIC_ASSERT(sizeof(ModelMorphTargetRef) == 4);
+STATIC_ASSERT(offsetof(ModelMorphTargetRef, offset) == 0);
+STATIC_ASSERT(offsetof(ModelMorphTargetRef, stream) == 0);
+
 /*
  * ModelFileHeader - in-place header of a loaded .MOD model file. Offset
- * fields are patched to pointers by ObjModel_RelocateModelData /
- * ObjModel_RelocateAnimData (the u32-vs-pointer launders in model.c keep
- * the original load widths). Only fields with read/write evidence in
- * model.c are named; everything else is padded.
+ * fields become native pointers during relocation. The unions distinguish
+ * serialized u32 offsets from their runtime pointer views. Only fields with
+ * read/write evidence are named; everything else is padded.
  */
 typedef struct ModelFileHeader {
     u8 refCount;
@@ -210,26 +220,66 @@ typedef struct ModelFileHeader {
     u8 unk06[6];
     s32 dataSize; /* anim data appended at header + dataSize */
     u8 unk10[8];
-    u8* unk18;
-    u8* unk1C;
-    s32* textureIds; /* file texture ids, patched to texture ptrs on load */
+    union {
+        u32 unk18Offset;
+        u8* unk18;
+    };
+    union {
+        u32 unk1COffset;
+        u8* unk1C;
+    };
+    union {
+        u32 textureIdsOffset;
+        s32* textureIds; /* file texture ids, patched to texture ptrs on load */
+    };
     u8 flags24;      /* 0x08 = NBT triplets instead of single packed normals */
     u8 unk25[3];
-    u8* vertices;  /* vertexCount s16 XYZ records; scale selected by MODEL_FLAG_INTEGER_VERTEX_COORDS */
-    u8* normals;   /* 3 or 9 bytes each, normalCount */
-    u8* colors;    /* GX_VA_CLR0 array, stride 2 */
-    u8* texCoords; /* GX_VA_TEX0/TEX1 array, stride 4 */
-    Shader* renderOps;
-    u8* jointData;
-    ModelFuzzScaleDef* jointFuzzScales; /* one record per joint */
-    ModelFuzzScaleDef vertexFuzzScale;
-    ModelExtraJointDef* extraJointDefs;
     union {
+        u32 verticesOffset;
+        u8* vertices;  /* vertexCount s16 XYZ records; scale selected by MODEL_FLAG_INTEGER_VERTEX_COORDS */
+    };
+    union {
+        u32 normalsOffset;
+        u8* normals;   /* 3 or 9 bytes each, normalCount */
+    };
+    union {
+        u32 colorsOffset;
+        u8* colors;    /* GX_VA_CLR0 array, stride 2 */
+    };
+    union {
+        u32 texCoordsOffset;
+        u8* texCoords; /* GX_VA_TEX0/TEX1 array, stride 4 */
+    };
+    union {
+        u32 renderOpsOffset;
+        Shader* renderOps;
+    };
+    union {
+        u32 jointDataOffset;
+        u8* jointData;
+    };
+    union {
+        u32 jointFuzzScalesOffset;
+        ModelFuzzScaleDef* jointFuzzScales; /* one record per joint */
+    };
+    ModelFuzzScaleDef vertexFuzzScale;
+    union {
+        u32 extraJointDefsOffset;
+        ModelExtraJointDef* extraJointDefs;
+    };
+    union {
+        u32 hitVolumesOffset;
         u8* hitVolumes;      /* 0x18-byte ModelHitSphereDef records */
         void* hitReactTable; /* animation-bank hit-reaction rows */
     };
-    ModelCollisionTriangle* collisionTriangles;
-    CollisionPolygonGroup* collisionBlocks;
+    union {
+        u32 collisionTrianglesOffset;
+        ModelCollisionTriangle* collisionTriangles;
+    };
+    union {
+        u32 collisionBlocksOffset;
+        CollisionPolygonGroup* collisionBlocks;
+    };
     struct ObjAnimMoveData** moveData;
     u8* animationDataSection;
     union {
@@ -245,17 +295,38 @@ typedef struct ModelFileHeader {
     u8 unk86[2];
     ModelVtxAnimJob vertexAnimJob;
     u8 unk98[0xC];
-    ModelVtxAnimChunk* vertexAnimEntries;
-    u8* vertexWeightData;
+    union {
+        u32 vertexAnimEntriesOffset;
+        ModelVtxAnimChunk* vertexAnimEntries;
+    };
+    union {
+        u32 vertexWeightDataOffset;
+        u8* vertexWeightData;
+    };
     ModelVtxAnimJob normalAnimJob;
     u8 unkBC[0xC];
-    ModelVtxAnimChunk* normalAnimEntries;
-    u8* normalWeightData;
-    struct ModelDisplayListEntry* displayLists; /* primary group followed by shadow group */
-    u8* instrs;
+    union {
+        u32 normalAnimEntriesOffset;
+        ModelVtxAnimChunk* normalAnimEntries;
+    };
+    union {
+        u32 normalWeightDataOffset;
+        u8* normalWeightData;
+    };
+    union {
+        u32 displayListsOffset;
+        struct ModelDisplayListEntry* displayLists; /* primary group followed by shadow group */
+    };
+    union {
+        u32 instrsOffset;
+        u8* instrs;
+    };
     u16 instrsBitLenWords; /* 0xD8: render-instruction stream length; *8 gives bit length (see objprint_dolphin render-instr readers) */
     u8 unkDA[2];
-    u16** morphTargetPtrs; /* morphTargetCount streams: index/flags, then signed component words */
+    union {
+        u32 morphTargetsOffset;
+        ModelMorphTargetRef* morphTargets; /* morphTargetCount entries */
+    };
     u16 cullDistance;
     u16 shaderFlags;
     u16 vertexCount;
@@ -301,6 +372,29 @@ typedef struct ModelFileHeader {
 #define OBJMODEL_BUFFER_FLAG_HITSPHERE_SELECT 0x4 /* selects a hitVolumeSphereBuffers entry */
 #define OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED  0x40
 
+STATIC_ASSERT(sizeof(ModelFileHeader) == 0xFC);
+STATIC_ASSERT(offsetof(ModelFileHeader, unk18Offset) == 0x18);
+STATIC_ASSERT(offsetof(ModelFileHeader, unk1COffset) == 0x1C);
+STATIC_ASSERT(offsetof(ModelFileHeader, textureIdsOffset) == 0x20);
+STATIC_ASSERT(offsetof(ModelFileHeader, verticesOffset) == 0x28);
+STATIC_ASSERT(offsetof(ModelFileHeader, normalsOffset) == 0x2C);
+STATIC_ASSERT(offsetof(ModelFileHeader, colorsOffset) == 0x30);
+STATIC_ASSERT(offsetof(ModelFileHeader, texCoordsOffset) == 0x34);
+STATIC_ASSERT(offsetof(ModelFileHeader, renderOpsOffset) == 0x38);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointDataOffset) == 0x3C);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointFuzzScalesOffset) == 0x40);
+STATIC_ASSERT(offsetof(ModelFileHeader, extraJointDefsOffset) == 0x54);
+STATIC_ASSERT(offsetof(ModelFileHeader, collisionTrianglesOffset) == 0x5C);
+STATIC_ASSERT(offsetof(ModelFileHeader, collisionBlocksOffset) == 0x60);
+STATIC_ASSERT(offsetof(ModelFileHeader, vertexAnimEntriesOffset) == 0xA4);
+STATIC_ASSERT(offsetof(ModelFileHeader, vertexWeightDataOffset) == 0xA8);
+STATIC_ASSERT(offsetof(ModelFileHeader, normalAnimEntriesOffset) == 0xC8);
+STATIC_ASSERT(offsetof(ModelFileHeader, normalWeightDataOffset) == 0xCC);
+STATIC_ASSERT(offsetof(ModelFileHeader, displayListsOffset) == 0xD0);
+STATIC_ASSERT(offsetof(ModelFileHeader, instrsOffset) == 0xD4);
+STATIC_ASSERT(offsetof(ModelFileHeader, morphTargetsOffset) == 0xDC);
+STATIC_ASSERT(offsetof(ModelFileHeader, hitVolumesOffset) == 0x58);
+
 STATIC_ASSERT(offsetof(ModelFileHeader, vertexAnimJob) == 0x88);
 STATIC_ASSERT(offsetof(ModelFileHeader, normalAnimJob) == 0xac);
 STATIC_ASSERT(offsetof(ModelFileHeader, modelId) == 0x04);
@@ -312,7 +406,7 @@ STATIC_ASSERT(offsetof(ModelFileHeader, extraJointDefs) == 0x54);
 STATIC_ASSERT(offsetof(ModelFileHeader, collisionTriangles) == 0x5C);
 STATIC_ASSERT(offsetof(ModelFileHeader, collisionBlocks) == 0x60);
 STATIC_ASSERT(offsetof(ModelFileHeader, displayLists) == 0xD0);
-STATIC_ASSERT(offsetof(ModelFileHeader, morphTargetPtrs) == 0xDC);
+STATIC_ASSERT(offsetof(ModelFileHeader, morphTargets) == 0xDC);
 STATIC_ASSERT(offsetof(ModelFileHeader, hitVolumes) == 0x58);
 STATIC_ASSERT(offsetof(ModelFileHeader, hitReactTable) == 0x58);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveData) == 0x64);
@@ -330,13 +424,17 @@ STATIC_ASSERT(offsetof(ModelFileHeader, morphTargetCount) == 0xF9);
 STATIC_ASSERT(offsetof(ModelFileHeader, texMtxCount) == 0xFA);
 
 typedef struct ModelDisplayListEntry {
-    void* dlist;
+    union {
+        u32 dlistOffset;
+        void* dlist;
+    };
     u16 dlistSize;
     u8 pad06[0x16];
 } ModelDisplayListEntry;
 
 STATIC_ASSERT(sizeof(ModelDisplayListEntry) == 0x1C);
 STATIC_ASSERT(offsetof(ModelDisplayListEntry, dlist) == 0);
+STATIC_ASSERT(offsetof(ModelDisplayListEntry, dlistOffset) == 0);
 STATIC_ASSERT(offsetof(ModelDisplayListEntry, dlistSize) == 4);
 
 /* ModelFileHeader.hitVolumes entry: joint-space sphere transformed by the
@@ -406,8 +504,8 @@ typedef struct ObjModelBlendChannel {
     f32 weight;
     f32 previousWeight; /* weight observed by the preceding blend-channel apply pass */
     f32 weightRate;     /* 0x08: per-dt weight delta (weight += weightRate * dt) */
-    s8 morphTargetA;    /* 0x0C: index into morphTargetPtrs[] for blend source A (-1 = none) */
-    s8 morphTargetB;    /* 0x0D: index into morphTargetPtrs[] for blend source B (-1 = none) */
+    s8 morphTargetA;    /* 0x0C: index into morphTargets[] for blend source A (-1 = none) */
+    s8 morphTargetB;    /* 0x0D: index into morphTargets[] for blend source B (-1 = none) */
     u8 flags;
     u8 unk0F;
 } ObjModelBlendChannel;
