@@ -333,7 +333,8 @@ void Fireball_update(GameObject* obj) {
                 (*gWaterfxInterface)
                     ->spawnSplashBurst(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, 6.0f);
                 (*gWaterfxInterface)
-                    ->spawnCircularRipple(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, obj->anim.rotX, 0.0f, 2);
+                    ->spawnCircularRipple(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, obj->anim.rotX,
+                                          0.0f, 2);
             }
             {
                 u8 colorIndex = state->colorIndex;

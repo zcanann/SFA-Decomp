@@ -604,8 +604,8 @@ extern ResourceDescriptor gWCLevelContObjDescriptor, gWCPushBlockObjDescriptor, 
 extern ResourceDescriptor gWM_SpiritSetObjDescriptor, gWM_newcrystalObjDescriptor;
 extern ResourceDescriptor gWM_spiritplaceObjDescriptor, gWM_sunObjDescriptor;
 extern ResourceDescriptor ObjSeq_funcs;
-extern ResourceDescriptor sky_funcs, sky2_funcs, newclouds_funcs, Dummy08_funcs, cloudaction_funcs,
-    dll_0B_funcs, partfx_funcs;
+extern ResourceDescriptor sky_funcs, sky2_funcs, newclouds_funcs, Dummy08_funcs, cloudaction_funcs, dll_0B_funcs,
+    partfx_funcs;
 extern ResourceDescriptor Effect1_funcs, Effect2_funcs, Effect3_funcs, Effect4_funcs, Effect5_funcs, Effect6_funcs,
     Effect7_funcs, Effect8_funcs;
 extern ResourceDescriptor Effect9_funcs, Effect10_funcs, Effect11_funcs, Effect12_funcs, Effect14_funcs, Effect16_funcs,

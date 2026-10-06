@@ -23,7 +23,7 @@
 
 #define MMSH_WATER_SPIKE_RIPPLE_DELAY_MIN 0x3C
 #define MMSH_WATER_SPIKE_RIPPLE_DELAY_MAX 0xF0
-#define MMSH_WATER_SPIKE_RIPPLE_YAW 0
+#define MMSH_WATER_SPIKE_RIPPLE_YAW       0
 #define MMSH_WATER_SPIKE_RIPPLE_RADIUS    0.5f
 #define MMSH_WATER_SPIKE_RIPPLE_INTENSITY 3
 
@@ -107,8 +107,8 @@ void mmshWaterSpike_update(GameObject* obj) {
             if (riseDelta == 0.0f) {
                 (*gWaterfxInterface)
                     ->spawnCircularRipple(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
-                                  MMSH_WATER_SPIKE_RIPPLE_YAW, MMSH_WATER_SPIKE_RIPPLE_RADIUS,
-                                  MMSH_WATER_SPIKE_RIPPLE_INTENSITY);
+                                          MMSH_WATER_SPIKE_RIPPLE_YAW, MMSH_WATER_SPIKE_RIPPLE_RADIUS,
+                                          MMSH_WATER_SPIKE_RIPPLE_INTENSITY);
             }
         }
     }

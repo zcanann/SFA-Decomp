@@ -608,14 +608,12 @@ void waterfx_spawnImpactSurface(GameObject* obj, u16 limbMask, Vec* impactPositi
             f32 pz = pos->z;
             if (surf->resultWaterDepth < WATERFX_SHALLOW_DEPTH) {
                 if (speed > WATERFX_SPLASH_SPEED_THRESHOLD) {
-                    waterfx_spawnSplashBurst(obj, px,
-                                             obj->anim.localPosY + surf->resultWaterDepth, pz,
-                                             WATERFX_ZERO);
+                    waterfx_spawnSplashBurst(obj, px, obj->anim.localPosY + surf->resultWaterDepth, pz, WATERFX_ZERO);
                 }
             }
             gWaterfxRippleScale = WATERFX_DEFAULT_SCALE;
-            waterfx_spawnCircularRipple(px, obj->anim.localPosY + surf->resultWaterDepth, pz,
-                                obj->anim.rotX, WATERFX_ZERO, 4);
+            waterfx_spawnCircularRipple(px, obj->anim.localPosY + surf->resultWaterDepth, pz, obj->anim.rotX,
+                                        WATERFX_ZERO, 4);
             gWaterfxPendingImpactPosition[0] = px;
             gWaterfxPendingImpactPosition[1] = obj->anim.localPosY + surf->resultWaterDepth;
             gWaterfxPendingImpactPosition[2] = pz;
@@ -756,10 +754,10 @@ void waterfx_initialise(void) {
         gWaterfxRipplePool = (WaterCircularRipple*)particles;
         gWaterfxSplashPool = (WaterSplashBurst*)(particles + sizeof(WaterCircularRipple) * WATERFX_POOL_SIZE);
         gWaterfxDropPool = (WaterSplashDrop*)(particles + sizeof(WaterCircularRipple) * WATERFX_POOL_SIZE +
-                                            sizeof(WaterSplashBurst) * WATERFX_MAX_SPLASHES);
+                                              sizeof(WaterSplashBurst) * WATERFX_MAX_SPLASHES);
         gWaterfxWakePool = (WaterMovementRipple*)(particles + sizeof(WaterCircularRipple) * WATERFX_POOL_SIZE +
-                                                sizeof(WaterSplashBurst) * WATERFX_MAX_SPLASHES +
-                                                sizeof(WaterSplashDrop) * WATERFX_POOL_SIZE);
+                                                  sizeof(WaterSplashBurst) * WATERFX_MAX_SPLASHES +
+                                                  sizeof(WaterSplashDrop) * WATERFX_POOL_SIZE);
     }
     gWaterfxRippleCount = 0;
     gWaterfxSplashCount = 0;

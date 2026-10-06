@@ -54,7 +54,7 @@ typedef struct WaterSplashDrop {
     u8 pad19[3];
 } WaterSplashDrop;
 
-#define WATERFX_POOL_SIZE 30
+#define WATERFX_POOL_SIZE    30
 #define WATERFX_MAX_SPLASHES 10
 
 typedef struct WaterfxStorage {

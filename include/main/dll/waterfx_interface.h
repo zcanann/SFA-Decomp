@@ -5,15 +5,12 @@
 #include "main/dll/obj_collision_state.h"
 
 typedef void (*WaterfxRunFrameFn)(int frames);
-typedef void (*WaterfxImpactSurfaceFn)(GameObject* obj, u16 limbMask, Vec* impactPositions, ObjCollisionState* collision,
-                                       f32 speed);
+typedef void (*WaterfxImpactSurfaceFn)(GameObject* obj, u16 limbMask, Vec* impactPositions,
+                                       ObjCollisionState* collision, f32 speed);
 typedef void (*WaterfxRenderFn)(int unusedDisplayList, int unusedMatrixList);
-typedef void (*WaterfxSpawnSplashBurstFn)(GameObject* sourceObject, f32 x, f32 y, f32 z,
-                                          f32 size);
-typedef void (*WaterfxSpawnCircularRippleFn)(f32 x, f32 y, f32 z, s16 yaw, f32 unknown0C,
-                                     int intensity);
-typedef void (*WaterfxSpawnMovementRippleFn)(f32 x, f32 y, f32 z, s16 yaw,
-                                           f32 unknown0C);
+typedef void (*WaterfxSpawnSplashBurstFn)(GameObject* sourceObject, f32 x, f32 y, f32 z, f32 size);
+typedef void (*WaterfxSpawnCircularRippleFn)(f32 x, f32 y, f32 z, s16 yaw, f32 unknown0C, int intensity);
+typedef void (*WaterfxSpawnMovementRippleFn)(f32 x, f32 y, f32 z, s16 yaw, f32 unknown0C);
 typedef void (*WaterfxOnMapSetupFn)(void);
 typedef void (*WaterfxSetRippleScaleFn)(int flag, f32 value);
 

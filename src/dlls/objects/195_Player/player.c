@@ -11286,8 +11286,8 @@ void playerRenderPostEffects(GameObject* obj, PlayerState* inner, int a, int b, 
                 ->spawnSplashBurst(obj, obj->anim.localPosX, (obj->anim.localPosY + inner->waterDepth) - 5.0f,
                                    obj->anim.localPosZ, 7.0f);
             (*gWaterfxInterface)
-                ->spawnCircularRipple(obj->anim.localPosX, obj->anim.localPosY + inner->waterDepth, obj->anim.localPosZ, 0,
-                              4.0f, 2);
+                ->spawnCircularRipple(obj->anim.localPosX, obj->anim.localPosY + inner->waterDepth, obj->anim.localPosZ,
+                                      0, 4.0f, 2);
             inner->flags360 &= ~PLAYER_FLAG_WATER_SPLASH_PENDING;
         }
     }

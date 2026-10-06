@@ -533,8 +533,8 @@ void dbegg_update(GameObject* obj) {
                 nb = ((surfaceHeight < 0.05f) >= 0) ? (surfaceHeight < 0.05f) : -(surfaceHeight < 0.05f);
                 if (nb != 0) {
                     (*gWaterfxInterface)
-                        ->spawnCircularRipple(obj->anim.localPosX, obj->anim.localPosY - egg->waterOffset, obj->anim.localPosZ,
-                                      obj->anim.rotX, randomGetRange(1, 10), 1);
+                        ->spawnCircularRipple(obj->anim.localPosX, obj->anim.localPosY - egg->waterOffset,
+                                              obj->anim.localPosZ, obj->anim.rotX, randomGetRange(1, 10), 1);
                 }
             }
             if (mainGetBit(GAMEBIT_DBEggSinkEnabled) != 0) {
