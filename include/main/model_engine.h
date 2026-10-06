@@ -70,7 +70,7 @@ extern int gModelEngineTimerColonX;
 extern int gModelEngineTimerDotX;
 
 u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsState* output, int bitStride,
-                          u8 encodedBitWidth);
+                           u8 encodedBitWidth);
 int modelRenderCopyPackedSamples(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int count, int gap,
                                  u8 bitWidth);
 

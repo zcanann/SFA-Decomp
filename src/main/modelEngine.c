@@ -561,9 +561,9 @@ char sModelEngineTimerDotText[] = ".";
 
 /* gModelEngineTimerState bits (roles from accessor fns: gameTimerResume,
  * isGameTimerDisabled, gameTimerIsRunning). */
-#define MODELENGINE_TIMER_PAUSED    1
-#define MODELENGINE_TIMER_DISABLED  2
-#define MODELENGINE_TIMER_RUNNING   4
+#define MODELENGINE_TIMER_PAUSED   1
+#define MODELENGINE_TIMER_DISABLED 2
+#define MODELENGINE_TIMER_RUNNING  4
 
 extern ResourceDescriptor Carryable_funcs, dll_19;
 extern ResourceDescriptor gDll219ObjDescriptor, gDll21BObjDescriptor, gDll224ObjDescriptor, gDll28BObjDescriptor;
@@ -575,11 +575,10 @@ extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor;
 extern ResourceDescriptor gCrCloudRaceObjDescriptor;
 extern ResourceDescriptor gDBHoleControl1ObjDescriptor;
 extern ResourceDescriptor gDIM_trickyObjDescriptor, gDR_CloudRunnerObjDescriptor;
-extern ResourceDescriptor gDrCageControlObjDescriptor,
-    gDrCageWithObjDescriptor, gDrChimmeyObjDescriptor, gDrCloudPerObjDescriptor, gDrCreatorObjDescriptor;
-extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor,
-    gDrLightBeaObjDescriptor, gDrMusicContObjDescriptor, gDrShackleObjDescriptor, gDrakorDThornBushObjDescriptor,
-    gDrakorEnergyObjDescriptor;
+extern ResourceDescriptor gDrCageControlObjDescriptor, gDrCageWithObjDescriptor, gDrChimmeyObjDescriptor,
+    gDrCloudPerObjDescriptor, gDrCreatorObjDescriptor;
+extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor, gDrLightBeaObjDescriptor,
+    gDrMusicContObjDescriptor, gDrShackleObjDescriptor, gDrakorDThornBushObjDescriptor, gDrakorEnergyObjDescriptor;
 extern ResourceDescriptor gDrakorMissileObjDescriptor;
 extern ResourceDescriptor gEarthWalkerObjDescriptor;
 extern ResourceDescriptor gFireFlyObjDescriptor;
@@ -594,14 +593,11 @@ extern ResourceDescriptor gSnowClawObjDescriptor;
 extern ResourceDescriptor gSpellStoneObjDescriptor;
 extern ResourceDescriptor gTitleScreenObjDescriptor, gTrickyCurveObjDescriptor;
 extern ResourceDescriptor gVFPDragHeadObjDescriptor, gVFPLiftObjDescriptor, gVFP_Block1ObjDescriptor;
-extern ResourceDescriptor gVFP_LaddersObjDescriptor, gVFP_LevelControlObjDescriptor,
-    gVFP_MiniFireObjDescriptor, gVFP_ObjCreatorObjDescriptor, gVFP_PlatformObjDescriptor,
-    gVFP_flamepointObjDescriptor;
+extern ResourceDescriptor gVFP_LaddersObjDescriptor, gVFP_LevelControlObjDescriptor, gVFP_MiniFireObjDescriptor,
+    gVFP_ObjCreatorObjDescriptor, gVFP_PlatformObjDescriptor, gVFP_flamepointObjDescriptor;
 extern ResourceDescriptor gVFP_lavapoolObjDescriptor, gVFP_lavastarObjDescriptor, gVFP_statueballObjDescriptor,
     gWCBouncyCraObjDescriptor;
-extern ResourceDescriptor gWCLevelContObjDescriptor,
-    gWCPushBlockObjDescriptor,
-    gWCTileObjDescriptor;
+extern ResourceDescriptor gWCLevelContObjDescriptor, gWCPushBlockObjDescriptor, gWCTileObjDescriptor;
 extern ResourceDescriptor gWM_SpiritSetObjDescriptor, gWM_newcrystalObjDescriptor;
 extern ResourceDescriptor gWM_spiritplaceObjDescriptor, gWM_sunObjDescriptor;
 extern ResourceDescriptor ObjSeq_funcs;
@@ -611,12 +607,13 @@ extern ResourceDescriptor Effect1_funcs, Effect2_funcs, Effect3_funcs, Effect4_f
     Effect7_funcs, Effect8_funcs;
 extern ResourceDescriptor Effect9_funcs, Effect10_funcs, Effect11_funcs, Effect12_funcs, Effect14_funcs, Effect16_funcs,
     Effect15_funcs, Effect13_funcs;
-extern ResourceDescriptor Effect17_funcs, Effect18_funcs, Effect19_funcs, Effect20_funcs, Checkpoint_funcs, screenTransition_funcs,
-    Dummy04_funcs, player_funcs;
-extern ResourceDescriptor UIController_funcs, Dummy12_funcs, RomCurve_funcs, dll_15_funcs, SaveGame_funcs, screens_funcs;
+extern ResourceDescriptor Effect17_funcs, Effect18_funcs, Effect19_funcs, Effect20_funcs, Checkpoint_funcs,
+    screenTransition_funcs, Dummy04_funcs, player_funcs;
+extern ResourceDescriptor UIController_funcs, Dummy12_funcs, RomCurve_funcs, dll_15_funcs, SaveGame_funcs,
+    screens_funcs;
 extern ResourceDescriptor Dummy30_funcs;
-extern ResourceDescriptor TitleScreenInit_funcs, n_rareware_funcs, n_attractmode_funcs, SaveSelectScreen_funcs, EnterSaveNameScreen_funcs, OptionsScreen_funcs,
-    WeirdUnusedMenu_funcs, Dummy39_funcs;
+extern ResourceDescriptor TitleScreenInit_funcs, n_rareware_funcs, n_attractmode_funcs, SaveSelectScreen_funcs,
+    EnterSaveNameScreen_funcs, OptionsScreen_funcs, WeirdUnusedMenu_funcs, Dummy39_funcs;
 extern ResourceDescriptor Dummy3A_funcs, GameUI_funcs, Menu_funcs, Link_funcs, TitleMenuItem_funcs, Dummy3E_funcs,
     Minimap_funcs, dll_3F_funcs;
 extern ResourceDescriptor gCreditsDescriptor, gWarpStoneUiDescriptor;
@@ -646,8 +643,7 @@ void* gResourceLoadedHandles[0x2C1];
 u16 gResourceRefCounts[0x2C2];
 char gModelEngineTextBuf[0x10];
 
-RingBufferQueue* Queue_Alloc(int capacity, int elemSize)
-{
+RingBufferQueue* Queue_Alloc(int capacity, int elemSize) {
     RingBufferQueue* queue = mmAlloc(elemSize * capacity + sizeof(RingBufferQueue), 0x1a, 0);
     queue->data = (u8*)queue + sizeof(RingBufferQueue);
     queue->count = 0;
@@ -657,21 +653,17 @@ RingBufferQueue* Queue_Alloc(int capacity, int elemSize)
     return queue;
 }
 
-s32 modelRenderInstrsState_getBit(ModelRenderInstrsState* state)
-{
+s32 modelRenderInstrsState_getBit(ModelRenderInstrsState* state) {
     return state->bit;
 }
 
-void modelRenderInstrsState_setBit(ModelRenderInstrsState* state, s32 bit)
-{
+void modelRenderInstrsState_setBit(ModelRenderInstrsState* state, s32 bit) {
     state->bit = bit;
 }
 
-void modelRenderInstrsState_init(ModelRenderInstrsState* state, void* instrs, int bitCount, int fieldC)
-{
+void modelRenderInstrsState_init(ModelRenderInstrsState* state, void* instrs, int bitCount, int fieldC) {
     state->byteCount = bitCount >> 3;
-    if ((bitCount & 7) != 0)
-    {
+    if ((bitCount & 7) != 0) {
         state->byteCount++;
     }
     state->bitCount = bitCount;
@@ -681,16 +673,14 @@ void modelRenderInstrsState_init(ModelRenderInstrsState* state, void* instrs, in
 }
 
 /* Signed address comparisons preserve retail codegen without truncating pointers. */
-void objList_remove(ObjLinkedList* list, void* item)
-{
+void objList_remove(ObjLinkedList* list, void* item) {
     void* head;
     void* prev;
     void* current;
     void* next;
 
     head = list->head;
-    if ((ptrdiff_t)head == (ptrdiff_t)item)
-    {
+    if ((ptrdiff_t)head == (ptrdiff_t)item) {
         list->head = *(void**)((u8*)head + list->nextOffset);
         list->count--;
         return;
@@ -698,46 +688,34 @@ void objList_remove(ObjLinkedList* list, void* item)
 
     current = head;
     prev = head;
-    while ((ptrdiff_t)current != 0 && (ptrdiff_t)current != (ptrdiff_t)item)
-    {
+    while ((ptrdiff_t)current != 0 && (ptrdiff_t)current != (ptrdiff_t)item) {
         prev = current;
         current = *(void**)((u8*)current + list->nextOffset);
     }
 
-    if ((ptrdiff_t)current == 0)
-    {
+    if ((ptrdiff_t)current == 0) {
         return;
     }
 
     next = *(void**)((u8*)current + list->nextOffset);
-    if ((ptrdiff_t)current == (ptrdiff_t)head)
-    {
+    if ((ptrdiff_t)current == (ptrdiff_t)head) {
         list->head = next;
-    }
-    else
-    {
+    } else {
         *(void**)((u8*)prev + list->nextOffset) = next;
     }
     list->count--;
 }
 
-void objListAdd(ObjLinkedList* list, void* prev, void* item)
-{
+void objListAdd(ObjLinkedList* list, void* prev, void* item) {
     void* next;
 
-    if ((ptrdiff_t)list->head == 0)
-    {
+    if ((ptrdiff_t)list->head == 0) {
         list->head = item;
-    }
-    else
-    {
-        if ((ptrdiff_t)prev == 0)
-        {
+    } else {
+        if ((ptrdiff_t)prev == 0) {
             next = list->head;
             list->head = item;
-        }
-        else
-        {
+        } else {
             next = *(void**)((u8*)prev + list->nextOffset);
             *(void**)((u8*)prev + list->nextOffset) = item;
         }
@@ -746,21 +724,17 @@ void objListAdd(ObjLinkedList* list, void* prev, void* item)
     list->count++;
 }
 
-void objListInit(ObjLinkedList* list, s16 nextOffset)
-{
+void objListInit(ObjLinkedList* list, s16 nextOffset) {
     list->head = NULL;
     list->nextOffset = nextOffset;
 }
 
-BOOL model_findIdxInModelList(ModelList* list, void* header, int* outIndex)
-{
+BOOL model_findIdxInModelList(ModelList* list, void* header, int* outIndex) {
     s16* entry;
 
     entry = list->entries;
-    while (entry < list->end)
-    {
-        if (memcmp(entry + 1, header, list->dataSize) == 0)
-        {
+    while (entry < list->end) {
+        if (memcmp(entry + 1, header, list->dataSize) == 0) {
             *outIndex = *entry;
             return TRUE;
         }
@@ -836,10 +810,8 @@ BOOL Resource_Release(void* handleSlot) {
     }
 
     gResourceRefCounts[i]--;
-    if (gResourceRefCounts[i] == 0)
-    {
-        if (descriptor->release != NULL)
-        {
+    if (gResourceRefCounts[i] == 0) {
+        if (descriptor->release != NULL) {
             descriptor->release();
         }
         return TRUE;
@@ -847,15 +819,13 @@ BOOL Resource_Release(void* handleSlot) {
     return FALSE;
 }
 
-void* Resource_Acquire(u16 id, int unused)
-{
+void* Resource_Acquire(u16 id, int unused) {
     u32 index;
     ResourceDescriptor* descriptor;
 
     index = id;
     descriptor = gResourceDescriptors[index];
-    if (gResourceRefCounts[index] == 0 && descriptor->acquire != NULL)
-    {
+    if (gResourceRefCounts[index] == 0 && descriptor->acquire != NULL) {
         descriptor->acquire(descriptor);
     }
     gResourceRefCounts[index]++;
@@ -863,42 +833,34 @@ void* Resource_Acquire(u16 id, int unused)
     return &gResourceLoadedHandles[index];
 }
 
-void Resource_ResetRefCounts(void)
-{
+void Resource_ResetRefCounts(void) {
     u32 i;
 
-    for (i = 0; i < RESOURCE_DESCRIPTOR_COUNT; i++)
-    {
+    for (i = 0; i < RESOURCE_DESCRIPTOR_COUNT; i++) {
         gResourceRefCounts[i] = 0;
     }
 }
 
-void menuSetState(s32 value)
-{
+void menuSetState(s32 value) {
     gMenuState = value;
 }
 
-u8 gameTimerIsRunning(void)
-{
+u8 gameTimerIsRunning(void) {
     return gModelEngineTimerState & MODELENGINE_TIMER_RUNNING;
 }
 
-void hudNumberRender(void* context)
-{
-    if (gModelEngineHudNumber != -1)
-    {
+void hudNumberRender(void* context) {
+    if (gModelEngineHudNumber != -1) {
         sprintf(gModelEngineTextBuf, sModelEngineHudNumberFormat, gModelEngineHudNumber);
         gameTextShowStr(gModelEngineTextBuf, 13, 0, 0);
     }
 }
 
-void hudNumberSet(s32 value)
-{
+void hudNumberSet(s32 value) {
     gModelEngineHudNumber = value;
 }
 
-void gameTimerRun(void* context)
-{
+void gameTimerRun(void* context) {
     f32 dt = timeDelta;
     u8 colorFlag = 0;
     TextSlot* box = gameTextGetBox(0xD);
@@ -910,51 +872,40 @@ void gameTimerRun(void* context)
     int wholeFrames;
     int wholeSeconds;
 
-    if ((gModelEngineTimerState & MODELENGINE_TIMER_PAUSED) || getHudHiddenFrameCount() != 0)
-    {
+    if ((gModelEngineTimerState & MODELENGINE_TIMER_PAUSED) || getHudHiddenFrameCount() != 0) {
         dt = 0.0f;
     }
 
     clamped = 0;
-    if ((gModelEngineTimerFlags & GAME_TIMER_COUNT_DOWN) != 0)
-    {
+    if ((gModelEngineTimerFlags & GAME_TIMER_COUNT_DOWN) != 0) {
         gModelEngineTimerValue -= dt;
-        if (gModelEngineTimerValue <= 0.0f)
-        {
+        if (gModelEngineTimerValue <= 0.0f) {
             clamped = 1;
             gModelEngineTimerValue = 0.0f;
         }
-        if (gModelEngineTimerValue < 600.0f)
-        {
+        if (gModelEngineTimerValue < 600.0f) {
             colorFlag = 1;
         }
-    }
-    else
-    {
+    } else {
         gModelEngineTimerValue += dt;
-        if (gModelEngineTimerValue > gModelEngineTimerDuration)
-        {
+        if (gModelEngineTimerValue > gModelEngineTimerDuration) {
             clamped = 1;
             gModelEngineTimerValue = gModelEngineTimerDuration;
         }
-        if (gModelEngineTimerValue > gModelEngineTimerDuration - 600.0f)
-        {
+        if (gModelEngineTimerValue > gModelEngineTimerDuration - 600.0f) {
             colorFlag = 1;
         }
     }
 
-    if (clamped)
-    {
-        if ((gModelEngineTimerFlags & GAME_TIMER_END_SOUND) != 0)
-        {
+    if (clamped) {
+        if ((gModelEngineTimerFlags & GAME_TIMER_END_SOUND) != 0) {
             Sfx_PlayFromObject(0, SFXTRIG_sc_lockon22);
         }
         gModelEngineTimerState &= ~MODELENGINE_TIMER_RUNNING;
         gModelEngineTimerState |= MODELENGINE_TIMER_DISABLED;
     }
 
-    if ((gModelEngineTimerFlags & GAME_TIMER_LOOP_SOUND) != 0)
-    {
+    if ((gModelEngineTimerFlags & GAME_TIMER_LOOP_SOUND) != 0) {
         f32 panByte;
         f32 volume;
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
@@ -964,21 +915,17 @@ void gameTimerRun(void* context)
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
         }
 #endif
-        if ((gModelEngineTimerFlags & GAME_TIMER_COUNT_DOWN) != 0)
-        {
+        if ((gModelEngineTimerFlags & GAME_TIMER_COUNT_DOWN) != 0) {
             panByte = (f32)(0x7F - ((int)(80.0f * (gModelEngineTimerValue / gModelEngineTimerDuration)) & 0xFF));
             volume = 1.3f - 0.6f * (gModelEngineTimerValue / gModelEngineTimerDuration);
-        }
-        else
-        {
+        } else {
             panByte = (f32)(((int)(80.0f * (gModelEngineTimerValue / gModelEngineTimerDuration)) & 0xFF) + 0x2F);
             volume = 0.6f * (gModelEngineTimerValue / gModelEngineTimerDuration) + 0.7f;
         }
         Sfx_SetObjectSfxVolume(0, SFXTRIG_sc_commsbleep_28c, panByte, volume);
     }
 
-    if ((gModelEngineTimerFlags & GAME_TIMER_DISPLAY) != 0 && pauseMenuState == 0 && getHudHiddenFrameCount() == 0)
-    {
+    if ((gModelEngineTimerFlags & GAME_TIMER_DISPLAY) != 0 && pauseMenuState == 0 && getHudHiddenFrameCount() == 0) {
         wholeFrames = gModelEngineTimerValue;
         wholeSeconds = wholeFrames / 60;
         minutes = wholeSeconds / 60;
@@ -990,13 +937,10 @@ void gameTimerRun(void* context)
         drawHudBox(0x32, (s16)(boxY - 4), 0x78, 0x28, 0xFF, 1);
         box->y = boxY;
 
-        if (colorFlag && hundredths < 0x32)
-        {
-        gameTextSetColor(0xFF, 0x40, 0x40, 0xFF);
-        }
-        else
-        {
-        gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
+        if (colorFlag && hundredths < 0x32) {
+            gameTextSetColor(0xFF, 0x40, 0x40, 0xFF);
+        } else {
+            gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
         }
 
         sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, minutes / 10);
@@ -1006,13 +950,14 @@ void gameTimerRun(void* context)
         sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, seconds / 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, gModelEngineTimerFieldXStride + 5, 3);
         sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, seconds % 10);
-        gameTextShowStr(gModelEngineTextBuf, 0xD, 5 + gModelEngineTimerFieldXStride + gModelEngineTimerDigitPairXOffset, 3);
+        gameTextShowStr(gModelEngineTextBuf, 0xD, 5 + gModelEngineTimerFieldXStride + gModelEngineTimerDigitPairXOffset,
+                        3);
         sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, hundredths / 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, gModelEngineTimerFieldXStride * 2 + 5, 3);
         sprintf(gModelEngineTextBuf, sModelEngineTimerDigitFormat, hundredths % 10);
-        gameTextShowStr(gModelEngineTextBuf, 0xD, 5 + gModelEngineTimerFieldXStride * 2 + gModelEngineTimerDigitPairXOffset, 3);
-        if (seconds & 1)
-        {
+        gameTextShowStr(gModelEngineTextBuf, 0xD,
+                        5 + gModelEngineTimerFieldXStride * 2 + gModelEngineTimerDigitPairXOffset, 3);
+        if (seconds & 1) {
             gameTextShowStr(sModelEngineTimerColonText, 0xD, gModelEngineTimerColonX, 3);
             gameTextShowStr(sModelEngineTimerDotText, 0xD, gModelEngineTimerDotX, 3);
         }
@@ -1026,93 +971,72 @@ f32 gameTimerGetElapsedMilliseconds(void) {
     return 1000.0f * (gModelEngineTimerValue / 60.0f);
 }
 
-f32 gameTimerGetValue(void)
-{
+f32 gameTimerGetValue(void) {
     return gModelEngineTimerValue;
 }
 
-int isGameTimerDisabled(void)
-{
+int isGameTimerDisabled(void) {
     return gModelEngineTimerState & MODELENGINE_TIMER_DISABLED;
 }
 
-void gameTimerStop(void)
-{
+void gameTimerStop(void) {
     gModelEngineTimerState &= ~MODELENGINE_TIMER_RUNNING;
     gModelEngineTimerState |= MODELENGINE_TIMER_DISABLED;
 }
 
-void gameTimerResume(void)
-{
-    if ((gModelEngineTimerState & MODELENGINE_TIMER_PAUSED) != 0)
-    {
+void gameTimerResume(void) {
+    if ((gModelEngineTimerState & MODELENGINE_TIMER_PAUSED) != 0) {
         gModelEngineTimerState &= ~MODELENGINE_TIMER_PAUSED;
     }
 }
 
-void gameTimerInit(s8 flags, int durationSeconds)
-{
+void gameTimerInit(s8 flags, int durationSeconds) {
     gModelEngineTimerFlags = flags;
-    if ((flags & GAME_TIMER_COUNT_DOWN) != 0)
-    {
+    if ((flags & GAME_TIMER_COUNT_DOWN) != 0) {
         gModelEngineTimerValue = durationSeconds * 60;
-    }
-    else
-    {
+    } else {
         gModelEngineTimerValue = 0.0f;
     }
     gModelEngineTimerDuration = durationSeconds * 60;
     gModelEngineTimerState |= MODELENGINE_TIMER_PAUSED;
     gModelEngineTimerState &= ~MODELENGINE_TIMER_DISABLED;
-    if ((flags & (GAME_TIMER_COUNT_DOWN | GAME_TIMER_COUNT_UP)) != 0)
-    {
+    if ((flags & (GAME_TIMER_COUNT_DOWN | GAME_TIMER_COUNT_UP)) != 0) {
         gModelEngineTimerState |= MODELENGINE_TIMER_RUNNING;
-    }
-    else
-    {
+    } else {
         gModelEngineTimerState &= ~MODELENGINE_TIMER_RUNNING;
     }
 }
 
-void curUiDllDraw(int a, int b, int c, int d)
-{
+void curUiDllDraw(int a, int b, int c, int d) {
     UiDllVTable* callbacks;
 
-    if (gModelEngineCurUiDllRes != NULL)
-    {
+    if (gModelEngineCurUiDllRes != NULL) {
         callbacks = *gModelEngineCurUiDllRes;
         callbacks->draw(a, b, c);
     }
 }
 
-void uiDll_runFrameEndAndLoadNext(void)
-{
+void uiDll_runFrameEndAndLoadNext(void) {
     UiDllVTable* callbacks;
     s32 resourceId;
 
-    if (gModelEngineCurUiDllRes != NULL)
-    {
+    if (gModelEngineCurUiDllRes != NULL) {
         callbacks = *gModelEngineCurUiDllRes;
         callbacks->frameEnd();
     }
 
-    if (gModelEnginePendingUiDll != 0)
-    {
+    if (gModelEnginePendingUiDll != 0) {
         gModelEnginePendingUiDll--;
         gModelEnginePrevUiDll = curUiDll;
-        if (gModelEngineCurUiDllRes != NULL)
-        {
+        if (gModelEngineCurUiDllRes != NULL) {
             Resource_Release(gModelEngineCurUiDllRes);
             gModelEngineCurUiDllRes = NULL;
         }
 
         resourceId = gModelEngineUiDllResourceIds[gModelEnginePendingUiDll];
-        if (resourceId != -1)
-        {
+        if (resourceId != -1) {
             gModelEngineCurUiDllRes = Resource_Acquire((u16)resourceId, 1);
-        }
-        else
-        {
+        } else {
             gModelEngineCurUiDllRes = NULL;
             gModelEnginePendingUiDll = 0;
         }
@@ -1121,36 +1045,29 @@ void uiDll_runFrameEndAndLoadNext(void)
     }
 }
 
-int uiDll_runFrameStartAndLoadNext(void)
-{
+int uiDll_runFrameStartAndLoadNext(void) {
     UiDllVTable* callbacks;
     int result;
     s32 resourceId;
 
     result = 0;
-    if (gModelEngineCurUiDllRes != NULL)
-    {
+    if (gModelEngineCurUiDllRes != NULL) {
         callbacks = *gModelEngineCurUiDllRes;
         result = callbacks->frameStart();
     }
 
-    if (gModelEnginePendingUiDll != 0)
-    {
+    if (gModelEnginePendingUiDll != 0) {
         gModelEnginePendingUiDll--;
         gModelEnginePrevUiDll = curUiDll;
-        if (gModelEngineCurUiDllRes != NULL)
-        {
+        if (gModelEngineCurUiDllRes != NULL) {
             Resource_Release(gModelEngineCurUiDllRes);
             gModelEngineCurUiDllRes = NULL;
         }
 
         resourceId = gModelEngineUiDllResourceIds[gModelEnginePendingUiDll];
-        if (resourceId != -1)
-        {
+        if (resourceId != -1) {
             gModelEngineCurUiDllRes = Resource_Acquire((u16)resourceId, 1);
-        }
-        else
-        {
+        } else {
             gModelEngineCurUiDllRes = NULL;
             gModelEnginePendingUiDll = 0;
         }
@@ -1160,54 +1077,43 @@ int uiDll_runFrameStartAndLoadNext(void)
     return result;
 }
 
-void setCurUiDll(int idx)
-{
+void setCurUiDll(int idx) {
     curUiDll = idx;
 }
 
-int getPrevUiDll(void)
-{
+int getPrevUiDll(void) {
     return gModelEnginePrevUiDll;
 }
 
-UiDllVTable** getCurUiDllInterface(void)
-{
+UiDllVTable** getCurUiDllInterface(void) {
     return gModelEngineCurUiDllRes;
 }
 
-int getCurUiDll(void)
-{
+int getCurUiDll(void) {
     return curUiDll;
 }
 
-void loadUiDll(int index)
-{
+void loadUiDll(int index) {
     s32 next;
     s32 current;
     s32 resourceId;
 
     current = curUiDll;
-    if (index != current)
-    {
+    if (index != current) {
         next = index + 1;
         gModelEnginePendingUiDll = next;
-        if (gModelEngineCurUiDllRes == NULL && next != 0)
-        {
+        if (gModelEngineCurUiDllRes == NULL && next != 0) {
             gModelEnginePendingUiDll = next - 1;
             gModelEnginePrevUiDll = current;
-            if (gModelEngineCurUiDllRes != NULL)
-            {
+            if (gModelEngineCurUiDllRes != NULL) {
                 Resource_Release(gModelEngineCurUiDllRes);
                 gModelEngineCurUiDllRes = NULL;
             }
 
             resourceId = gModelEngineUiDllResourceIds[gModelEnginePendingUiDll];
-            if (resourceId != -1)
-            {
+            if (resourceId != -1) {
                 gModelEngineCurUiDllRes = Resource_Acquire((u16)resourceId, 1);
-            }
-            else
-            {
+            } else {
                 gModelEngineCurUiDllRes = NULL;
                 gModelEnginePendingUiDll = 0;
             }
@@ -1217,8 +1123,7 @@ void loadUiDll(int index)
     }
 }
 
-void initGameTimer(void)
-{
+void initGameTimer(void) {
     gModelEngineCurUiDllRes = NULL;
     gModelEnginePendingUiDll = 0;
     gModelEnginePrevUiDll = 0;

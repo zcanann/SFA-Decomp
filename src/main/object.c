@@ -2096,14 +2096,15 @@ void Obj_UpdateAllObjects(u8 flags) {
                     cb(hitObject);
                     break;
                 }
-                Obj_GetWorldPosition(hitObject, &hitObject->anim.worldPosX,
-                                     &hitObject->anim.worldPosY, &hitObject->anim.worldPosZ);
+                Obj_GetWorldPosition(hitObject, &hitObject->anim.worldPosX, &hitObject->anim.worldPosY,
+                                     &hitObject->anim.worldPosZ);
             }
         }
         groupEntry = (u8*)objGetAllOfType(0, &count2);
         groupEntry = (count2 != 0) ? (u8*)*(GameObject**)groupEntry : 0;
         if (groupEntry != 0 && ((GameObject*)groupEntry)->childObjs[0] != 0) {
-            ((GameObject*)((GameObject*)groupEntry)->childObjs[0])->anim.parent = ((GameObject*)groupEntry)->anim.parent;
+            ((GameObject*)((GameObject*)groupEntry)->childObjs[0])->anim.parent =
+                ((GameObject*)groupEntry)->anim.parent;
             child = ((GameObject*)groupEntry)->childObjs[0];
             if ((child->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0) {
                 do {
@@ -2123,8 +2124,7 @@ void Obj_UpdateAllObjects(u8 flags) {
                         cb(child);
                         break;
                     }
-                    Obj_GetWorldPosition(child, &child->anim.worldPosX,
-                                         &child->anim.worldPosY, &child->anim.worldPosZ);
+                    Obj_GetWorldPosition(child, &child->anim.worldPosX, &child->anim.worldPosY, &child->anim.worldPosZ);
                 } while (0);
             }
         }
