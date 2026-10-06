@@ -211,3 +211,67 @@ objdiff reports regenerated without completion overrides show only the
 pre-existing TRK vector-carving and MusyX discarded exception-data
 reporting discrepancies. No compiler profiles, splits, or matching
 classifications changed.
+
+## Staff-camera path completion and storage (2026-10-06)
+
+`CameraModeStaffAnim_samplePath` formerly declared a byte result but ended
+with a bare `return`, even though `CameraModeStaffAnim_update` uses its
+result to leave the path-following mode. Retail EN at 0x80106818 calls
+`Curve_AdvanceAlongPath`, then copies the sampled X/Z coordinates without
+changing r3 before returning. Its caller at 0x8010722C narrows that result
+to a byte. The sampler now explicitly saves and returns the integer path
+completion result; the caller retains the evidenced narrowing.
+
+Two independent references support this interpretation. Foxhollow's
+`game/src/dlls/engine/67/67.c` already returns the curve-advance result.
+Dinosaur Planet's `85_attentioncam/attention.c` has the corresponding
+`attentioncam_func_112C`, declared `s32`, with the same final call, output
+stores and return. The SFA retail instructions remain the matching ground
+truth; no reference-project code or names were copied wholesale.
+
+The update's temporary position is a `Vec3f`, replacing an oversized
+four-float Z local, two separate coordinates and a pointer-assignment
+store. Retail EN's 0x40-byte frame places X/Y/Z at +0x18/+0x1C/+0x20,
+above the four relative-position outputs at +0x08..+0x14. The ordinary
+vector produces exactly these offsets and instruction order without
+padding. `defaultHandler` is now a `CamcontrolDefaultHandlerEntry*`
+throughout, so its three callback accesses preserve native pointer width.
+
+The state record now exposes the recovered roles of its fields:
+
+| Offset | Recovered field | Evidence |
+| --- | --- | --- |
+| 0x004 | `minDistance` | First output of normal mode's `getSettings` |
+| 0x008 | `maxDistance` | Second output of `getSettings`; retained despite no later staff-mode read |
+| 0x00C | `lowerHeightOffset` | Third output, used for the path endpoint and viewfinder Y offset |
+| 0x010 | `targetHeight` | Fifth output, added to target Y and passed to the viewfinder |
+| 0x014 / 0x018 | `floorHeight` / `ceilingHeight` | Collision-bound output pointers and their negative/positive sentinels |
+| 0x10C | `pathSpeedCurve[4]` | Four values written by `camcontrol_initialise` and consumed by `Curve_EvalHermite` |
+| 0x11C | `collisionTime` | Independently incremented by `timeDelta` when either collision flag is set |
+
+The old fifth `initialiseCurve` element was the collision timer, not a
+Hermite coefficient. Dinosaur Planet likewise places a scalar after a
+four-float curve. SFA's retail exit threshold remains zero; the older
+reference's ten-frame threshold is different behavior and is not imported.
+All fields remain within the existing allocation-backed 0x1C0-byte state.
+
+`python3 tools/test_staff_camera.py` compiles the actual sampler/update
+bodies and production camera, curve, state, interface and handler records
+with native pointers. ASan/UBSan runs at `-O0` and `-O2` cover return
+propagation, zero-length and clamped path progress, minimum speed,
+endpoint updates, completion exits, both collision sources, previous
+collision time, full collision-record writes, parent-frame changes and
+the no-path exit. Player and curve/trace services are isolated fixtures;
+this is a local contract test, not a complete native camera simulation.
+
+The complete ten-function TU remains 100% in all five retail versions:
+5,272 code bytes and 112 data bytes. Across the EN source-object baseline,
+only this TU's anonymous symbol names change. Each region retains exact
+code, data, symbol offsets and relocations; formatting preserves every
+source-object hash in each version.
+
+All five full-source builds and strict source-linked retail checksums
+pass against verified original DOLs. Full-project reports without
+completion overrides retain only the established TRK vector-carving and
+MusyX discarded exception-data discrepancies. Compiler profiles, split
+boundaries, descriptor order and matching classifications are unchanged.

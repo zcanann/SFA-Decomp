@@ -28,32 +28,34 @@ STATIC_ASSERT(sizeof(CameraModeStaffAnimSettings) == 0x04);
 
 typedef struct CameraModeStaffAnimState {
     GameObject* localFrame;
-    f32 actionParamX;
-    f32 unknown08;
-    f32 actionParamZ;
-    f32 actionParamY;
-    f32 curveMin;
-    f32 curveMax;
+    f32 minDistance;
+    f32 maxDistance;
+    f32 lowerHeightOffset;
+    f32 targetHeight;
+    f32 floorHeight;
+    f32 ceilingHeight;
     f32 pointsX[CAMERA_MODE_STAFF_ANIM_PATH_POINT_CAPACITY];
     f32 pointsY[CAMERA_MODE_STAFF_ANIM_PATH_POINT_CAPACITY];
     f32 pointsZ[CAMERA_MODE_STAFF_ANIM_PATH_POINT_CAPACITY];
-    f32 initialiseCurve[5];
+    f32 pathSpeedCurve[4];
+    f32 collisionTime;
     Curve pathCurve;
     u8 pathNotNeeded;
     u8 pad1BD[3];
 } CameraModeStaffAnimState;
 
 STATIC_ASSERT(offsetof(CameraModeStaffAnimState, localFrame) == 0x000);
-STATIC_ASSERT(offsetof(CameraModeStaffAnimState, actionParamX) == 0x004);
-STATIC_ASSERT(offsetof(CameraModeStaffAnimState, unknown08) == 0x008);
-STATIC_ASSERT(offsetof(CameraModeStaffAnimState, actionParamZ) == 0x00C);
-STATIC_ASSERT(offsetof(CameraModeStaffAnimState, actionParamY) == 0x010);
-STATIC_ASSERT(offsetof(CameraModeStaffAnimState, curveMin) == 0x014);
-STATIC_ASSERT(offsetof(CameraModeStaffAnimState, curveMax) == 0x018);
+STATIC_ASSERT(offsetof(CameraModeStaffAnimState, minDistance) == 0x004);
+STATIC_ASSERT(offsetof(CameraModeStaffAnimState, maxDistance) == 0x008);
+STATIC_ASSERT(offsetof(CameraModeStaffAnimState, lowerHeightOffset) == 0x00C);
+STATIC_ASSERT(offsetof(CameraModeStaffAnimState, targetHeight) == 0x010);
+STATIC_ASSERT(offsetof(CameraModeStaffAnimState, floorHeight) == 0x014);
+STATIC_ASSERT(offsetof(CameraModeStaffAnimState, ceilingHeight) == 0x018);
 STATIC_ASSERT(offsetof(CameraModeStaffAnimState, pointsX) == 0x01C);
 STATIC_ASSERT(offsetof(CameraModeStaffAnimState, pointsY) == 0x06C);
 STATIC_ASSERT(offsetof(CameraModeStaffAnimState, pointsZ) == 0x0BC);
-STATIC_ASSERT(offsetof(CameraModeStaffAnimState, initialiseCurve) == 0x10C);
+STATIC_ASSERT(offsetof(CameraModeStaffAnimState, pathSpeedCurve) == 0x10C);
+STATIC_ASSERT(offsetof(CameraModeStaffAnimState, collisionTime) == 0x11C);
 STATIC_ASSERT(offsetof(CameraModeStaffAnimState, pathCurve) == 0x120);
 STATIC_ASSERT(offsetof(CameraModeStaffAnimState, pathCurve.dir) == 0x1A0);
 STATIC_ASSERT(offsetof(CameraModeStaffAnimState, pathCurve.px) == 0x1A4);
@@ -90,7 +92,7 @@ STATIC_ASSERT(sizeof(CameraModeStaffAnimDescriptor) == 0x30);
 extern CameraModeStaffAnimState* gCameraModeStaffAnimState;
 extern CameraModeStaffAnimDescriptor gCameraModeStaffAnimDescriptor;
 
-u8 CameraModeStaffAnim_samplePath(f32* outX, f32* height, f32* outZ, GameObject* target, CameraObject* camera);
+int CameraModeStaffAnim_samplePath(f32* outX, f32* height, f32* outZ, GameObject* target, CameraObject* camera);
 void CameraModeStaffAnim_subdividePathAngles(s16* outAngles, u16* outCount, s16 baseAngle, s16 deltaAngle, s16 limit);
 void CameraModeStaffAnim_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 baseY, f32 targetZ, f32 targetY,
                                          s16 angleRange, s16 angleLimit, int* outPointCount);
