@@ -253,7 +253,7 @@ static inline void dbstealerworm_updateTurnSpeed(BaddieState* state, s16 yaw, f3
  * objDoHitParticleFx / the partfx interface (same family as ktrex's
  * gKTRexEffectSpawnWork). */
 
-DbWormEffectSpawnWork gDbWormEffectSpawnWork;
+PartFxSpawnParams gDbWormEffectSpawnWork;
 void* gDBStealerWormStateHandlersB[7];
 
 int dbstealerworm_stateHandlerB04(GameObject* obj, BaddieState* baddie) {
@@ -1753,7 +1753,7 @@ void dbstealerworm_hitDetect(GameObject* obj) {
 const f32 gDbStealerwormGravity[1] = {0.17f};
 
 void dbstealerworm_update(GameObject* obj) {
-    DbWormEffectSpawnWork* st[1];
+    PartFxSpawnParams* st[1];
     char* tbl;
     GroundBaddieState* blob;
     GroundBaddiePlacement* data;
@@ -1831,7 +1831,7 @@ void dbstealerworm_update(GameObject* obj) {
                     st[0]->posX = obj->anim.localPosX;
                     st[0]->posY = obj->anim.localPosY;
                     st[0]->posZ = obj->anim.localPosZ;
-                    objDoHitParticleFx((void*)obj, 0.014f, st[0], 1, 0);
+                    objDoHitParticleFx(obj, 0.014f, st[0], 1, 0);
                 }
                 if (blob->targetState == 0) {
                     dbstealerworm_acquireTarget(obj, blob, (int)blob);

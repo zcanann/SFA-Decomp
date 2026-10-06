@@ -1,5 +1,64 @@
 # Expgfx Source Recovery
 
+## Object APIs and independent effect tables (2026-10-06)
+
+The effect helpers now accept `GameObject*` sources and `PartFxSpawnParams*`
+origins. The latter are 0x18-byte rotation/scale/position packets, not full
+objects. In particular, `objfx_spawnLightPulse`'s former `light` argument is a
+spawn transform; `objDoHitParticleFx` has a separate `ModelLightStruct*` for
+its actual light. Trail bursts instead take a three-float velocity, as
+established by Effect20's `0x7B7` case. Source pools, table entries, cleanup,
+rendering and simulation now retain `GameObject*` throughout. The fake
+position-only object overlay and intermediate animation-prefix casts are gone.
+
+The public Expgfx interface and descriptor share exact callback types. The
+spawn slot takes `EffectSpawnConfig*`; the frame-state query returns `int`.
+The update implementation retains two unused arguments to agree with
+`Obj_UpdateAllObjects`'s four-argument call and the predecessor's
+`dll_13_func_C18` contract. `gExpgfxDescriptor` replaces the untyped callback
+array, with the generic resource cast confined to `modelEngine.c`.
+
+Three burst helpers previously read twelve tables through byte offsets
+`0x48` through `0x104` from the 30-byte `gObjFxCrystalSparkleTbl`. Those
+accesses crossed unrelated objects and depended on their linked placement.
+The constants actually belonged to a fabricated 0xE0-byte aggregate following
+the color and pulse-variant tables. They are now independent definitions:
+a five-element hit-pulse count table, then four arrays for each of the box,
+arced and directional bursts. Each group has nine effect parameters, eight
+spawn IDs, eight argument-2 values and eight argument-0 values. The two-byte
+alignment gaps after the nine-element arrays are compiler padding.
+
+Independent definitions let MWCC generate its shared `...rodata.0` base
+naturally, preserving every retail instruction and table address. No explicit
+section placement, enclosing synthetic record or out-of-bounds access is
+needed. The former crystal-sparkle table is actually ten RGB triplets used
+by `objDoParticleFx`; it is now `gObjFxParticleLightColors`, with typed channel
+accesses. All five symbol configs describe the recovered array boundaries.
+
+The stricter helper contracts also recover complete spawn packets in Baddie,
+GC robot patrol, Landed Arwing, DB stealerworm, Lightfoot and DR EarthCall.
+BombPlant's separate `lightPosition` and `hitPosition` locals are one packet;
+DR BarrelGen's partial header and following path-position local are likewise
+one packet. Their complete transforms preserve the retail stack locations.
+The duplicate packet typedefs and redundant argument casts are removed.
+
+CC Lightfoot has a distinct, apparent retail bug: the hit query, positional
+emitter and SRT-based hit-particle helper all receive `r1 + 0x14`. The query
+fills three floats there, but the last helper passes that same address to
+partfx, whose source-copy path reads the SRT position at offsets 0x0C..0x14.
+The narrow cast records that mismatch; this recovery neither shifts the
+argument nor enlarges the local to conceal it.
+
+Validation covers all five versions: every active game TU remains 100% in
+the full objdiff inventory, `all_source` succeeds, and each fully source-linked
+DOL equals its hash-verified original. The two pre-existing library report
+artifacts (`__exception` and `sal_volume`) are unchanged. Every source object's
+section contents, allocated-section metadata, symbol addresses and resolved
+relocations are preserved, accounting explicitly for the renamed symbols,
+new independent table boundaries and MWCC's generated rodata-base symbol.
+The core object's compiler metadata adds only records for those new symbols.
+Formatting is committed separately and preserves every raw source-object hash.
+
 ## Source-table identity and lifecycle (2026-10-06)
 
 `ExpgfxTableEntry` now records an `ObjAnimComponent* sourceObject` and a

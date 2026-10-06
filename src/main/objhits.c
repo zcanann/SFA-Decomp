@@ -2254,7 +2254,7 @@ u32 ObjHitReact_Update(GameObject* obj, ObjHitReactEntry* reactionEntryTable, u3
                     Resource_Release(staffCollisionResource);
                 }
             } else {
-                objDoHitParticleFx((void*)obj, 0.014f, &hitEffectParams, OBJHITREACT_ALT_EFFECT_COUNT, NULL);
+                objDoHitParticleFx(obj, 0.014f, &hitEffectParams, OBJHITREACT_ALT_EFFECT_COUNT, NULL);
             }
         }
         if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&

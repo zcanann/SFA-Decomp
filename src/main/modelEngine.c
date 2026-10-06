@@ -1,3 +1,4 @@
+#include "main/dll_000A_expgfx.h"
 #include "main/dll/dll_000E_partfx.h"
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/waterfx_interface.h"
@@ -573,7 +574,7 @@ char sModelEngineTimerDotText[] = ".";
 extern ResourceDescriptor Carryable_funcs, dll_19;
 extern ResourceDescriptor gDll219ObjDescriptor, gDll21BObjDescriptor, gDll224ObjDescriptor, gDll28BObjDescriptor;
 extern ResourceDescriptor gDll2A3ObjDescriptor;
-extern ResourceDescriptor gDll2A4ObjDescriptor, dll_2E, gDllD3ObjDescriptor, expgfx_funcs;
+extern ResourceDescriptor gDll2A4ObjDescriptor, dll_2E, gDllD3ObjDescriptor;
 extern ResourceDescriptor gARWBlockerObjDescriptor, gARWBombCollObjDescriptor, gARWGeneratoObjDescriptor,
     gARWProximitObjDescriptor;
 extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor;
@@ -1148,7 +1149,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &newclouds_funcs,
     &Dummy08_funcs,
     &cloudaction_funcs,
-    &expgfx_funcs,
+    (ResourceDescriptor*)&gExpgfxDescriptor,
     (ResourceDescriptor*)&gModgfxDescriptor,
     &projgfx_funcs,
     &playerShadow_funcs,

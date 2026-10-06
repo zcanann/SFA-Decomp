@@ -492,7 +492,7 @@ void warpstone_hitDetect(GameObject* obj) {
     if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &lightParams.posX, &lightParams.posY, &lightParams.posZ) != 0) {
         lightParams.posX += playerMapOffsetX;
         lightParams.posZ += playerMapOffsetZ;
-        objDoHitParticleFx((void*)obj, 0.01f, &lightParams, 1, 0);
+        objDoHitParticleFx(obj, 0.01f, &lightParams, 1, 0);
         if (randomChanceOneIn(3) != 0) {
             Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_short_2bc);
         } else {

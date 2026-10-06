@@ -946,14 +946,14 @@ void camcontrol_updateTargetFeedback(void) {
             targetKind = gCamcontrolCamera->targetKind;
             if (targetKind == CAMCONTROL_TARGET_KIND_LOCKON) {
                 Sfx_PlayFromObject(0, SFXTRIG_headcam_out);
-                objShowButtonGlow(&reticle->anim, 1.0f, 2);
+                objShowButtonGlow(reticle, 1.0f, 2);
             } else if ((targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_A) ||
                        (targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_B)) {
                 Sfx_PlayFromObject(0, SFXTRIG_lockon2_on);
-                objShowButtonGlow(&reticle->anim, 1.0f, 3);
+                objShowButtonGlow(reticle, 1.0f, 3);
             } else if (targetKind != CAMCONTROL_TARGET_KIND_SUPPRESSED) {
                 Sfx_PlayFromObject(0, SFXTRIG_sc_scabshortish32);
-                objShowButtonGlow(&reticle->anim, 1.0f, 1);
+                objShowButtonGlow(reticle, 1.0f, 1);
             }
         }
         if (target != NULL) {
@@ -1070,13 +1070,13 @@ void camcontrol_updateTargetFeedback(void) {
                 break;
             }
             if (targetDistance <= 0.0f && gCamcontrolCamera->targetDistance > 0.0f) {
-                objShowButtonGlow(&reticle->anim, 1.0f, 4);
+                objShowButtonGlow(reticle, 1.0f, 4);
             } else if (targetDistance <= 0.25f && gCamcontrolCamera->targetDistance > 0.25f) {
-                objShowButtonGlow(&reticle->anim, 1.0f, 4);
+                objShowButtonGlow(reticle, 1.0f, 4);
             } else if (targetDistance <= 0.5f && gCamcontrolCamera->targetDistance > 0.5f) {
-                objShowButtonGlow(&reticle->anim, 1.0f, 4);
+                objShowButtonGlow(reticle, 1.0f, 4);
             } else if (targetDistance <= 0.75f && gCamcontrolCamera->targetDistance > 0.75f) {
-                objShowButtonGlow(&reticle->anim, 1.0f, 4);
+                objShowButtonGlow(reticle, 1.0f, 4);
             }
             gCamcontrolCamera->targetDistance = targetDistance;
         }

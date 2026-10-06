@@ -260,13 +260,13 @@ void MoonSeedPlantingSpot_update(GameObject* obj)
             if (player != NULL &&
                 getXZDistanceSquared(&player->anim.worldPosX, &obj->anim.worldPosX) <= 10000.0f)
             {
-                objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, 5, 1, 0x28, 7.0f, NULL, 0);
+                objfx_spawnDirectionalBurst(obj, 5, 1.0f, 5, 1, 0x28, 7.0f, NULL, 0);
                 TRICKY_INTERFACE(tricky)->sideCommandEnable((GameObject*)tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
                                                            TRICKY_COMMAND_TYPE_FLAME);
             }
             else
             {
-                objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, 6, 1, 0x28, 5.0f, NULL, 0);
+                objfx_spawnDirectionalBurst(obj, 5, 1.0f, 6, 1, 0x28, 5.0f, NULL, 0);
             }
             if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == MSPLANTING_HIT_CUT)
             {
@@ -284,11 +284,11 @@ void MoonSeedPlantingSpot_update(GameObject* obj)
         obj->anim.localPosY = setup->posY;
         if (getXZDistanceSquared(&tricky->anim.worldPosX, &obj->anim.worldPosX) <= 10000.0f)
         {
-            objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, 5, 1, 0x28, 7.0f, NULL, 0);
+            objfx_spawnDirectionalBurst(obj, 5, 1.0f, 5, 1, 0x28, 7.0f, NULL, 0);
         }
         else
         {
-            objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, 6, 1, 0x28, 5.0f, NULL, 0);
+            objfx_spawnDirectionalBurst(obj, 5, 1.0f, 6, 1, 0x28, 5.0f, NULL, 0);
         }
         if (ex->growthTimer <= 0.0f &&
             mainGetBit(ex->plantedGameBit) != 0 &&

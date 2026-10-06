@@ -376,12 +376,6 @@ struct TrickyCommandSpawnPair {
     u32 b;
 };
 
-typedef struct {
-    s16 rot[3];
-    f32 scale;
-    Vec pos;
-} FrozenFxParams;
-
 typedef struct BaddieInstantiateWeaponPlacement {
     u8 pad0[0x4 - 0x0];
     u8 unk4;

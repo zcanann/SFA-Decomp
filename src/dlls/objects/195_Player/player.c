@@ -13260,13 +13260,13 @@ void playerProcessHitResponse(GameObject* obj, PlayerState* inner, PlayerState* 
                     Sfx_PlayFromObject(obj, SFXTRIG_foot_metal_scuff);
                 }
                 if ((inner->playerStatus)->health > 0) {
-                    objDoHitParticleFx((void*)obj, 0.014f, &buf, 6, 0);
+                    objDoHitParticleFx(obj, 0.014f, &buf, 6, 0);
                 }
                 break;
             case 0x1c:
                 Sfx_PlayFromObject(obj, SFXTRIG_fox_var);
                 if ((inner->playerStatus)->health > 0) {
-                    objDoHitParticleFx((void*)obj, 0.014f, &buf, 8, 0);
+                    objDoHitParticleFx(obj, 0.014f, &buf, 8, 0);
                 }
                 break;
             default:
@@ -13276,23 +13276,23 @@ void playerProcessHitResponse(GameObject* obj, PlayerState* inner, PlayerState* 
                     case 0x33:
                         Sfx_PlayFromObject(obj, SFXTRIG_snort);
                         if ((inner->playerStatus)->health > 0) {
-                            objDoHitParticleFx((void*)obj, 0.014f, &buf, 5, 0);
+                            objDoHitParticleFx(obj, 0.014f, &buf, 5, 0);
                         }
                         break;
                     case 0x7c8:
                         if ((inner->playerStatus)->health > 0) {
-                            objDoHitParticleFx((void*)obj, 0.014f, &buf, 8, 0);
+                            objDoHitParticleFx(obj, 0.014f, &buf, 8, 0);
                         }
                         break;
                     default:
                         if ((inner->playerStatus)->health > 0) {
-                            objDoHitParticleFx((void*)obj, 0.014f, &buf, 5, 0);
+                            objDoHitParticleFx(obj, 0.014f, &buf, 5, 0);
                         }
                         break;
                     }
                 } else {
                     if ((inner->playerStatus)->health > 0) {
-                        objDoHitParticleFx((void*)obj, 0.014f, &buf, 5, 0);
+                        objDoHitParticleFx(obj, 0.014f, &buf, 5, 0);
                     }
                 }
                 break;

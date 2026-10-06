@@ -27,7 +27,7 @@ int ktfallingrocks_getObjectTypeId(void)
     return 0x0;
 }
 
-void ktfallingrocks_free(u8* obj)
+void ktfallingrocks_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2(obj);
 }

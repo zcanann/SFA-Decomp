@@ -143,7 +143,7 @@ void MagicPlant_update(GameObject* obj) {
         if ((hitKind != 0) && (hitKind != MAGICPLANT_HIT_KIND_FADE_IN)) {
             lightParams.posX += playerMapOffsetX;
             lightParams.posZ += playerMapOffsetZ;
-            objDoHitParticleFx((void*)obj, 0.014f, &lightParams, 1, 0);
+            objDoHitParticleFx(obj, 0.014f, &lightParams, 1, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_barrel_bounce1);
             Obj_Shatter(obj);
         }
@@ -326,7 +326,7 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantPlacement* unusedPlaceme
 
             lightParams.posX += playerMapOffsetX;
             lightParams.posZ += playerMapOffsetZ;
-            objDoHitParticleFx((void*)obj, 0.014f, &lightParams, 1, 0);
+            objDoHitParticleFx(obj, 0.014f, &lightParams, 1, 0);
             Obj_SetModelColorFadeRecursive(obj, MAGICPLANT_HIT_FLASH_FRAMES, MAGICPLANT_HIT_FLASH_RED, 0, 0,
                                            MAGICPLANT_HIT_FLASH_START_AT_HALF);
             break;

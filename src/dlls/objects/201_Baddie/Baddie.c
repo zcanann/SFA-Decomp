@@ -307,7 +307,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit) {
     GameObject* proj;
     f32* dp;
     f32 zero;
-    FrozenFxParams params;
+    PartFxSpawnParams params;
     Vec hitPos;
     f32 delta[3];
     StaffCollisionColorArgs colors;
@@ -489,13 +489,13 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit) {
                 enemyState->modelLight = objCreateLight(NULL, 1);
             }
             if ((enemyState->flags2E8 & 0x200) != 0) {
-                objDoHitParticleFx((void*)obj, 0.014f, &params, 1, (void*)enemyState->modelLight);
+                objDoHitParticleFx(obj, 0.014f, &params, 1, enemyState->modelLight);
             } else if ((enemyState->flags2F1 & 0x10) != 0) {
-                objDoHitParticleFx((void*)obj, 0.014f, &params, 3, (void*)enemyState->modelLight);
+                objDoHitParticleFx(obj, 0.014f, &params, 3, enemyState->modelLight);
             } else if ((enemyState->flags2F1 & 8) != 0) {
-                objDoHitParticleFx((void*)obj, 0.014f, &params, 2, (void*)enemyState->modelLight);
+                objDoHitParticleFx(obj, 0.014f, &params, 2, enemyState->modelLight);
             } else {
-                objDoHitParticleFx((void*)obj, 0.014f, &params, 1, (void*)enemyState->modelLight);
+                objDoHitParticleFx(obj, 0.014f, &params, 1, enemyState->modelLight);
             }
             Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
         }
@@ -509,17 +509,17 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit) {
                 params.pos.y = hitPos.y;
                 params.pos.z = hitPos.z;
                 params.scale = 1.0f;
-                params.rot[2] = 0;
-                params.rot[1] = 0;
-                params.rot[0] = 0;
+                params.rotZ = 0;
+                params.rotY = 0;
+                params.rotX = 0;
                 if (gBaddieStaffCollisionInterface != NULL) {
-                    (*gBaddieStaffCollisionInterface)->spawn(NULL, 1, (PartFxSpawnParams*)&params, 0x401, -1, &colors);
+                    (*gBaddieStaffCollisionInterface)->spawn(NULL, 1, &params, 0x401, -1, &colors);
                 }
                 enemyState->freezeEffectTimer = 20.0f;
                 if (enemyState->modelLight == NULL) {
                     enemyState->modelLight = objCreateLight(NULL, 1);
                 }
-                objDoHitParticleFx((void*)obj, 0.014f, &params, 4, (void*)enemyState->modelLight);
+                objDoHitParticleFx(obj, 0.014f, &params, 4, enemyState->modelLight);
             }
             proj = enemyState->trackedObj;
             if (proj != NULL && proj->anim.classId == 1) {

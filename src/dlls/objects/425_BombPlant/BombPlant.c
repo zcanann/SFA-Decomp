@@ -211,8 +211,7 @@ void BombPlant_update(GameObject* obj) {
     ObjDef* model;
     s16 gameBit;
     int hitType;
-    Vec3f hitPosition;
-    Vec3f lightPosition;
+    PartFxSpawnParams hitEffect;
     int hitSphereIndex;
     int hitVolume;
     GameObject* hitObject;
@@ -306,16 +305,16 @@ void BombPlant_update(GameObject* obj) {
     }
 
     if ((config->flags & BOMB_PLANT_CONFIG_CHECK_HITS) != 0) {
-        hitType = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, (u32*)&hitVolume, &hitPosition.x,
-                                                     &hitPosition.y, &hitPosition.z);
+        hitType = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, (u32*)&hitVolume, &hitEffect.pos.x,
+                                                     &hitEffect.pos.y, &hitEffect.pos.z);
         if (hitType != 0 && hitVolume != 0) {
             if (hitType == 0x10) {
                 Obj_StartModelFadeIn(obj, 0x12C);
             } else if ((u32)(hitType - 0xE) <= 1 || hitType == 0x11) {
                 Sfx_PlayFromObject(obj, SFXTRIG_mv_ladderslide16);
-                hitPosition.x += playerMapOffsetX;
-                hitPosition.z += playerMapOffsetZ;
-                objDoHitParticleFx(obj, 0.014f, &lightPosition, 1, 0);
+                hitEffect.pos.x += playerMapOffsetX;
+                hitEffect.pos.z += playerMapOffsetZ;
+                objDoHitParticleFx(obj, 0.014f, &hitEffect, 1, 0);
                 Obj_SetModelColorFadeRecursive(obj, 0xF, 0xC8, 0, 0, 1);
                 state->stateIndex = BOMB_PLANT_STATE_EXPLODING;
                 state->flags |= BOMB_PLANT_STATE_FLAG_JUST_ENTERED;

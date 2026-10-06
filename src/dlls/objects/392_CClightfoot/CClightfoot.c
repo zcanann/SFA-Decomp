@@ -512,7 +512,8 @@ void ccLightfoot_update(GameObject* obj) {
                               &state->playerObject->anim.worldPosX) <
                 CC_LIGHTFOOT_HIT_EFFECT_DISTANCE_SQUARED) {
                 objfx_spawnHitEmitterAtPos(hitPos, 8, 0xff, 0xff, 0x78);
-                objDoHitParticleFx((void*)obj, CC_LIGHTFOOT_HIT_LIGHT_SCALE, hitPos, 4, 0);
+                /* Retail passes the same 12-byte hit position to the 24-byte SRT API. */
+                objDoHitParticleFx(obj, CC_LIGHTFOOT_HIT_LIGHT_SCALE, (PartFxSpawnParams*)hitPos, 4, 0);
             }
             Sfx_PlayFromObject(obj, SFXTRIG_swdtest222);
         }

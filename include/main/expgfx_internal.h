@@ -136,13 +136,6 @@ typedef struct ExpgfxPlaneOffsets {
     f32 offsets[6];
 } ExpgfxPlaneOffsets;
 
-typedef struct ExpgfxPoolSourcePosition {
-    u8 pad00[0x0C];
-    f32 x;
-    f32 y;
-    f32 z;
-} ExpgfxPoolSourcePosition;
-
 typedef union ExpgfxFloatWord {
     int bits;
     f32 value;
@@ -159,7 +152,7 @@ struct GameObject;
 
 typedef struct ExpgfxTableEntry {
     /* Copied sources retain their parent for the local-to-world transform. */
-    ObjAnimComponent* sourceObject;
+    struct GameObject* sourceObject;
     struct GameObject* sourceParent;
     void* resource;
     u16 refCount;
@@ -344,7 +337,7 @@ extern s8 gExpgfxPoolActiveCounts[EXPGFX_POOL_COUNT];
 extern Vec3s gExpgfxQuadTemplateA[4];
 extern Vec3s gExpgfxQuadTemplateB[4];
 extern ExpgfxTableEntry gExpgfxTableEntries[EXPGFX_EXPTAB_ENTRY_COUNT];
-extern ObjAnimComponent* gExpgfxTrackedPoolSourceIds[EXPGFX_POOL_COUNT];
+extern struct GameObject* gExpgfxPoolSourceObjects[EXPGFX_POOL_COUNT];
 extern u64 gExpgfxTrackedSourceFrameMasks[2];
 extern s16 gExpgfxStaticPoolSlotTypeIds[EXPGFX_POOL_COUNT];
 extern u8 gExpgfxStaticPoolFrameFlags[EXPGFX_POOL_COUNT];

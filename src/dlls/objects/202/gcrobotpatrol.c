@@ -87,14 +87,6 @@
 /* gcRobotPatrol_update: main update: child-zap timer, curve follow, heading steps,
  * landing sfx, light-pulse fx, child spark spawn. */
 
-typedef struct {
-    u8 pad[8];
-    f32 a;
-    f32 b;
-    f32 c;
-    f32 d;
-} SeqFxParams;
-
 void gcRobotPatrol_update(GameObject* obj, u8* state);
 
 void gcRobotPatrol_init(GameObject* obj, void* state);
@@ -171,7 +163,7 @@ void gcRobotPatrol_update(GameObject* obj, u8* state) {
     RomCurveWalker* path;
     int attached;
     s16 spd;
-    SeqFxParams fx;
+    PartFxSpawnParams fx;
 
     def = (GroundBaddiePlacement*)obj->anim.placementData;
     path = *(RomCurveWalker**)state;
@@ -251,17 +243,17 @@ void gcRobotPatrol_update(GameObject* obj, u8* state) {
     }
     if (obj->objectFlags & OBJECT_OBJFLAG_RENDERED) {
         f32 z = 0.0f;
-        fx.b = z;
-        fx.c = z;
-        fx.d = z;
-        fx.a = 1.0f;
+        fx.x = z;
+        fx.y = z;
+        fx.z = z;
+        fx.scale = 1.0f;
         objfx_spawnLightPulse(obj, 0.5f, 2, 0, 6, 0.25f, &fx);
-        fx.c = 12.0f;
+        fx.y = 12.0f;
         objfx_spawnMaskedHitEffect(obj, 0.4f, 1, 6, 0x20, &fx);
-        fx.b = 0.0f;
+        fx.x = 0.0f;
         z = -30.0f;
-        fx.c = z;
-        fx.d = z;
+        fx.y = z;
+        fx.z = z;
     }
     if (obj->anim.velocityY < -0.5f) {
         obj->anim.velocityY = -0.5f;

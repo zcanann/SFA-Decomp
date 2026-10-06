@@ -140,7 +140,7 @@ void drakorenergy_update(GameObject* o)
         {
             s->mode = DRAKORENERGY_MODE_CHASING;
         }
-        objfx_spawnFlaggedTrailBurst((void*)o, gDrakorEnergyTrailScale, 1, 0xc22, 0x14, (void*)&o->anim.velocity);
+        objfx_spawnFlaggedTrailBurst(o, gDrakorEnergyTrailScale, 1, 0xc22, 0x14, &o->anim.velocityX);
         break;
     case DRAKORENERGY_MODE_CHASING:
         dist = Vec_xzDistance(&o->anim.worldPosX, &player->anim.worldPosX);
@@ -167,7 +167,7 @@ void drakorenergy_update(GameObject* o)
             colorRGB.arg2 = 0xff;
             colorRGB.arg1 = 0;
             colorRGB.arg0 = 0xff;
-            objfx_spawnFlaggedTrailBurst((void*)o, gDrakorEnergyTrailScale, 1, 0xc22, 0x14, (void*)&o->anim.velocity);
+            objfx_spawnFlaggedTrailBurst(o, gDrakorEnergyTrailScale, 1, 0xc22, 0x14, &o->anim.velocityX);
         }
         break;
     case DRAKORENERGY_MODE_RESET:

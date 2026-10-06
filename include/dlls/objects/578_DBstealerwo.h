@@ -79,16 +79,6 @@ typedef struct {
     s16 count; /* 0x04 */
     u8 pad06[0x08 - 0x06];
 } DbWormMsgGroup;
-typedef struct DbWormEffectSpawnWork {
-    s16 rotX; /* 0x00 */
-    s16 rotY;
-    s16 rotZ;
-    u8 pad6[2];
-    f32 scale; /* 0x08 */
-    f32 posX;  /* 0x0C: fx spawn position */
-    f32 posY;
-    f32 posZ;
-} DbWormEffectSpawnWork;
 typedef struct DbStealerwormObjDescriptorLayout {
     u32 reserved0;
     u32 reserved1;
@@ -100,7 +90,6 @@ typedef struct DbStealerwormObjDescriptorLayout {
 
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 STATIC_ASSERT(sizeof(DbWormMsgGroup) == 0x08);
-STATIC_ASSERT(sizeof(DbWormEffectSpawnWork) == 0x18);
 STATIC_ASSERT(offsetof(DbStealerwormObjDescriptorLayout, callbacks) == 0x10);
 STATIC_ASSERT(offsetof(DbStealerwormObjDescriptorLayout, debugStrings) == 0x40);
 STATIC_ASSERT(sizeof(DbStealerwormObjDescriptorLayout) == 0x9C);

@@ -7,51 +7,37 @@
 #include "main/dll/expgfx_resource_api.h"
 #include "main/dll/effectspawnconfig_struct.h"
 
-struct GameObject;
-struct ObjAnimComponent;
-
-typedef struct ExpgfxDllInterface {
-    u32 reserved0;
-    u32 reserved1;
-    u32 reserved2;
+typedef struct ExpgfxDescriptor {
+    u32 reserved[3];
     u32 slotCountAndFlags;
-    ObjectDescriptorCallback initialise;
-    ObjectDescriptorCallback release;
-    ObjectDescriptorCallback slot02;
-    ObjectDescriptorCallback onMapSetup;
-    ObjectDescriptorCallback addremove;
-    ObjectDescriptorCallback updateFrameState;
-    ObjectDescriptorCallback resetAllPools;
-    ObjectDescriptorCallback free;
-    ObjectDescriptorCallback free2;
-    ObjectDescriptorCallback slot09;
-    ObjectDescriptorCallback slot0A;
-    ObjectDescriptorCallback slot0B;
-    ObjectDescriptorCallback ownerFree3;
-    ObjectDescriptorCallback updateSourceFrameFlags;
-} ExpgfxDllInterface;
+    void (*initialise)(void);
+    void (*release)(void);
+    ExpgfxInterface interface;
+} ExpgfxDescriptor;
 
-extern ExpgfxDllInterface expgfx_funcs;
+STATIC_ASSERT(sizeof(ExpgfxDescriptor) == 0x48);
+STATIC_ASSERT(offsetof(ExpgfxDescriptor, interface) == 0x18);
+extern ExpgfxDescriptor gExpgfxDescriptor;
 
 void expgfxRemove(void* slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot);
 void expgfxRemoveAll(void);
-int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, void* sourceObject);
+int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, GameObject* sourceObject);
 void expgfx_initSlotQuad(void* slot);
 void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFrameState);
-int expgfx_addToTable(void* resourceHandle, struct ObjAnimComponent* sourceObject, struct GameObject* sourceParent,
+int expgfx_addToTable(void* resourceHandle, GameObject* sourceObject, GameObject* sourceParent,
                       s16 resourceId);
-int expgfx_updateSourceFrameFlags(void* sourceObject);
-void expgfx_ownerFree3(void* sourceObject);
+int expgfx_updateSourceFrameFlags(GameObject* sourceObject);
+void expgfx_ownerFree3(GameObject* sourceObject);
 void expgfx_func0B_nop(void);
 void expgfx_func0A_nop(void);
 int expgfx_func09(void);
-void expgfx_renderSourcePools(struct GameObject* sourceObject, int sourceMode);
+void expgfx_renderSourcePools(GameObject* sourceObject, int sourceMode);
 void drawGlow(void* slotPoolBase, int poolIndex);
 void renderParticles(void);
-void expgfx_free2(void* sourceObject);
-void expgfx_free(void* sourceObject);
+void expgfx_free2(GameObject* sourceObject);
+void expgfx_free(GameObject* sourceObject);
 void expgfx_resetAllPools(void);
-void expgfx_updateFrameState(int sourceMode, int frameCount);
+void expgfx_updateFrameState(int sourceMode, int frameCount, int unused0, int unused1);
 int expgfx_addremove(EffectSpawnConfig* config, int preferredPoolIndex, int slotType, int planeOffsetSetId);
 void expgfx_onMapSetup(void);
 void expgfx_release(void);

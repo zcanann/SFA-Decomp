@@ -243,7 +243,7 @@ void sc_musictree_update(GameObject* obj) {
             if ((state->flags & (SC_MUSIC_TREE_FLAG_PRIORITY_HIT | SC_MUSIC_TREE_FLAG_SATELLITES)) != 0) {
                 effectParams.posX += playerMapOffsetX;
                 effectParams.posZ += playerMapOffsetZ;
-                objDoHitParticleFx((void*)obj, 0.014f, &effectParams, 1, 0);
+                objDoHitParticleFx(obj, 0.014f, &effectParams, 1, 0);
                 Obj_SetModelColorFadeRecursive(obj, 0xF, 0xC8, 0, 0, 1);
                 sc_musictree_handleHitObject(obj, state, state->flags & SC_MUSIC_TREE_FLAG_BURST_TYPE_MASK);
             } else {

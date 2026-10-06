@@ -520,7 +520,7 @@ void LargeCrate_update(GameObject* obj) {
             Obj_SetModelColorFadeRecursive(obj, 0xF, 200, 0, 0, 1);
             effectParams.posX += playerMapOffsetX;
             effectParams.posZ += playerMapOffsetZ;
-            objDoHitParticleFx((void*)obj, LARGECRATE_EFFECT_SCALE, &effectParams, 1, 0);
+            objDoHitParticleFx(obj, LARGECRATE_EFFECT_SCALE, &effectParams, 1, 0);
             if (state->damageTaken < state->damageThreshold) {
                 if (Sfx_IsPlayingFromObject(0, (u16)state->hitSfxId) == 0) {
                     Sfx_PlayFromObject(obj, (u16)state->hitSfxId);
