@@ -316,8 +316,8 @@ s16 gModelRootRotY;
 s16 gModelRootRotX;
 static const ModelBone* sJointMatrixBones;
 static struct {
-    void* work;
-    int* slot;
+    u8* work;
+    u8** slot;
 } sJointMatrixOutput = {NULL, NULL};
 static u8 sJointMatrixScratch[0x100];
 static const f32 sJointPairZeroOne[2] = {0.0f, 1.0f};
@@ -338,8 +338,8 @@ static const f32 sJointSinCoef3 = -2.29492142e-15f;
 static const f32 sJointSinCoef1 = 2.39684487e-05f;
 
 // clang-format off
-asm void modelAnimBuildJointMatrices(int* out, u8* dst, void* animState, u8* jointData, int jointCount, u8* jointScratch,
-                                     int flags, int mode) {
+asm void modelAnimBuildJointMatrices(u8** jointWorkspace, f32* rootTransform, ObjAnimState* animState,
+                                     const ModelBone* bones, int jointCount, s16* jointScratch, int flags, int mode) {
     nofralloc
     mflr r0
     stwu r1, -0xfc(r1)

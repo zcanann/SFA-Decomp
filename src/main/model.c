@@ -324,16 +324,16 @@ void modelAnimUpdateChannels(ModelFileHeader* file, ObjAnimState* work, int chan
     }
 }
 
-void modelAnimEvalSlotPair(u8* dst, ObjModel* model, ObjAnimState* channel, f32 t, int flags, int slotA, int slotB,
+void modelAnimEvalSlotPair(f32* rootTransform, ObjModel* model, ObjAnimState* channel, f32 t, int flags, int slotA, int slotB,
                            int blendSel, int mode, s16 eventVal) {
     ObjAnimState work;
-    int mtxBuf;
+    u8* jointWorkspace;
     ModelFileHeader* file;
     u32 idxA;
     u8 idxB;
 
     file = model->file;
-    mtxBuf = (int)model->jointMatrices[model->bufferFlags & 1];
+    jointWorkspace = model->jointMatrices[model->bufferFlags & 1];
     if ((u8)mode & 0x10) {
         channel->framePhase = t * channel->frameLength;
     }
@@ -379,12 +379,12 @@ void modelAnimEvalSlotPair(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
             }
         }
     }
-    modelAnimBuildJointMatrices(&mtxBuf, dst, &work, file->jointData, file->jointCount, (u8*)gModelJointScratchBuffer,
+    modelAnimBuildJointMatrices(&jointWorkspace, rootTransform, &work, (const ModelBone*)file->jointData, file->jointCount, gModelJointScratchBuffer,
                                 flags, (u8)mode);
 }
-void modelAnimEvalChannels(u8* dst, ObjModel* model, ObjAnimState* channel, f32 blend, int flags) {
+void modelAnimEvalChannels(f32* rootTransform, ObjModel* model, ObjAnimState* channel, f32 blend, int flags) {
     ObjAnimState work;
-    int mtxBuf;
+    u8* jointWorkspace;
     int slotEvent;
     int outFlags;
     ModelFileHeader* file;
@@ -394,7 +394,7 @@ void modelAnimEvalChannels(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
     int srcSlot;
 
     file = model->file;
-    mtxBuf = (int)model->jointMatrices[model->bufferFlags & 1];
+    jointWorkspace = model->jointMatrices[model->bufferFlags & 1];
     channel->framePhase = blend * channel->frameLength;
     outFlags = 0;
     if (file->flags & 8) {
@@ -423,8 +423,8 @@ void modelAnimEvalChannels(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
         if (ctrlFlags & 4) {
             outFlags |= 0x20;
         }
-        modelAnimBuildJointMatrices((int*)&mtxBuf, dst, &work, file->jointData, file->jointCount,
-                                    (u8*)gModelJointScratchBuffer, flags, outFlags | 0x40);
+        modelAnimBuildJointMatrices(&jointWorkspace, rootTransform, &work, (const ModelBone*)file->jointData, file->jointCount,
+                                    gModelJointScratchBuffer, flags, outFlags | 0x40);
     } else {
         int i;
         int blendMask;
@@ -460,8 +460,8 @@ void modelAnimEvalChannels(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
                 }
                 work.eventCountdown = slotEvent;
                 modelAnimUpdateChannels(file, &work, 2);
-                modelAnimBuildJointMatrices((int*)&mtxBuf, dst, &work, file->jointData, file->jointCount,
-                                            (u8*)gModelJointScratchBuffer, flags, blendMask);
+                modelAnimBuildJointMatrices(&jointWorkspace, rootTransform, &work, (const ModelBone*)file->jointData, file->jointCount,
+                                            gModelJointScratchBuffer, flags, blendMask);
                 if (blendMask != 0) {
                     outFlags |= 1 << i;
                 }
@@ -494,8 +494,8 @@ void modelAnimEvalChannels(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
             if (ctrlFlags & 4) {
                 outFlags |= 0x20;
             }
-            modelAnimBuildJointMatrices((int*)&mtxBuf, dst, &work, file->jointData, file->jointCount,
-                                        (u8*)gModelJointScratchBuffer, flags, outFlags);
+            modelAnimBuildJointMatrices(&jointWorkspace, rootTransform, &work, (const ModelBone*)file->jointData, file->jointCount,
+                                        gModelJointScratchBuffer, flags, outFlags);
         }
     }
 }
@@ -2091,23 +2091,23 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
         gModelRootRotZ = rot[2];
     }
     if (model->file->flags & 8) {
-        modelAnimEvalChannels((u8*)dst, model, (ObjAnimState*)model->animStateA, obj->anim.currentMoveProgress, 0x7f);
+        modelAnimEvalChannels(dst, model, (ObjAnimState*)model->animStateA, obj->anim.currentMoveProgress, 0x7f);
     } else if (((ObjAnimState*)model->animStateA)->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP) {
         ch2 = model->animStateB;
-        modelAnimEvalSlotPair((u8*)dst, model, ch, obj->anim.currentMoveProgress, 0x7f, 0, 0, 2, 0x14,
+        modelAnimEvalSlotPair(dst, model, ch, obj->anim.currentMoveProgress, 0x7f, 0, 0, 2, 0x14,
                               (s16)ch->eventState);
-        modelAnimEvalSlotPair((u8*)dst, model, ch2, obj->anim.activeMoveProgress, 0x7f, 0, 0, 2, 0x18,
+        modelAnimEvalSlotPair(dst, model, ch2, obj->anim.activeMoveProgress, 0x7f, 0, 0, 2, 0x18,
                               (s16)ch2->eventState);
-        modelAnimEvalSlotPair((u8*)dst, model, ch, obj->anim.currentMoveProgress, 0x7f, 0, 0, 0, 7,
+        modelAnimEvalSlotPair(dst, model, ch, obj->anim.currentMoveProgress, 0x7f, 0, 0, 0, 7,
                               (s16)ch2->eventCountdown);
-        modelAnimEvalSlotPair((u8*)dst, model, ch, obj->anim.currentMoveProgress, 0x7f, 0, 1, 1, 1,
+        modelAnimEvalSlotPair(dst, model, ch, obj->anim.currentMoveProgress, 0x7f, 0, 1, 1, 1,
                               (s16)ch->eventCountdown);
     } else {
-        modelAnimEvalChannels((u8*)dst, model, (ObjAnimState*)model->animStateA, obj->anim.currentMoveProgress, 0x7f);
+        modelAnimEvalChannels(dst, model, (ObjAnimState*)model->animStateA, obj->anim.currentMoveProgress, 0x7f);
         ch2 = model->animStateB;
         if (ch2 != NULL && obj->anim.activeMove > -1) {
             ObjModel_BuildAnimBlendTable(&obj->anim, model->animStateB, blend);
-            modelAnimEvalChannels((u8*)dst, model, (ObjAnimState*)model->animStateB, obj->anim.activeMoveProgress, -1);
+            modelAnimEvalChannels(dst, model, (ObjAnimState*)model->animStateB, obj->anim.activeMoveProgress, -1);
         }
     }
 }

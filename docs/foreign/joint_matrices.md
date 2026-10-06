@@ -275,3 +275,28 @@ the way to see it paired. `render.c` stays `NonMatching` because
 the live body, is archived as `joint_matrices_c.c` and remains the readable
 description of the algorithm; `tools/joint_matrices_emulation_probe.py` still
 links the compiled render object and can be used as a behaviour check.
+
+## Caller pointer contract
+
+2026-10-06. The live `modelAnimEvalSlotPair` and `modelAnimEvalChannels`
+callers now keep the selected joint buffer in a pointer local. Their former
+`int` locals truncated native addresses before passing the slot to the renderer.
+The entry stores r3 in `sJointMatrixOutput.slot`, dereferences it with
+`lwz r3, 0(r3)`, and saves the pointee as its work buffer. The corresponding
+Dinosaur Planet entry, `func_8001B4F0`, takes `MtxF**`; Foxhollow also uses
+pointer locals here, although its renderer declaration retains `int*`.
+
+The shared declaration uses `u8**` for that slot because the 64-byte joint
+records also hold intermediate poses, `f32*` for the incoming root transform,
+`ObjAnimState*` for animation state, `const ModelBone*` for the bone table,
+and `s16*` for joint adjustments. The two private output fields have the
+corresponding pointer types. The assembly instructions are unchanged.
+
+Both complete TUs and every other source object remain byte-identical across
+all five configured versions. Full objdiff reports retain only the existing
+TRK vector and MusyX exception-data accounting discrepancies; all five strict
+source-linked DOL checks and `all_source` builds pass. The native caller test,
+`tools/test_model_joint_contract.py`, checks 5,120 slot-pair and 320 channel
+evaluations at both O0 and O2 with ASan/UBSan, including both buffers and every
+renderer call path. A truncated-pointer negative control fails. Preparation
+and rendering are spies in this test; it does not validate matrix arithmetic.
