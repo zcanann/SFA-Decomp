@@ -902,8 +902,7 @@ void Lightfoot_update(GameObject* obj) {
                     effectParams.y = 10.0f;
                     effectParams.z = 0.0f;
                     for (effectCount = 0x14; effectCount != 0; effectCount--) {
-                        objfx_spawnDirectionalBurst(obj, 5, 5.0f, 5, 6, 0x64, 10.0f,
-                                                    &effectParams, 0);
+                        objfx_spawnDirectionalBurst(obj, 5, 5.0f, 5, 6, 0x64, 10.0f, &effectParams, 0);
                     }
                     if (mainGetBit(GAMEBIT_LV_ChallengeGate2Baby0Delivered) &&
                         mainGetBit(GAMEBIT_LV_ChallengeGate2Baby1Delivered) &&
@@ -931,8 +930,7 @@ void Lightfoot_update(GameObject* obj) {
                     effectParams.y = 10.0f;
                     effectParams.z = 0.0f;
                     for (effectCount = 0x14; effectCount != 0; effectCount--) {
-                        objfx_spawnDirectionalBurst(obj, 5, 5.0f, 5, 6, 0x64, 10.0f,
-                                                    &effectParams, 0);
+                        objfx_spawnDirectionalBurst(obj, 5, 5.0f, 5, 6, 0x64, 10.0f, &effectParams, 0);
                     }
                     if (mainGetBit(GAMEBIT_SC_ChallengeGate3Baby0Delivered) &&
                         mainGetBit(GAMEBIT_SC_ChallengeGate3Baby1Delivered) &&
@@ -975,8 +973,7 @@ void Lightfoot_update(GameObject* obj) {
             effectParams.x = 0.0f;
             effectParams.y = 24.0f;
             effectParams.z = 0.0f;
-            objfx_spawnArcedBurst(obj, 5, 0.75f, 1, 6, 0x32, 25.0f, 25.0f,
-                                  48.0f, &effectParams, 0);
+            objfx_spawnArcedBurst(obj, 5, 0.75f, 1, 6, 0x32, 25.0f, 25.0f, 48.0f, &effectParams, 0);
         }
     } else {
         Lightfoot_UpdateAttachedChild(obj, &inner->groundBaddie);

@@ -8,16 +8,14 @@
 typedef void (*ExpgfxOnMapSetupFn)(void);
 typedef int (*ExpgfxSpawnEffectFn)(EffectSpawnConfig* config, int preferredPoolIndex, int slotType,
                                    int planeOffsetSetId);
-typedef void (*ExpgfxUpdateFrameStateFn)(int sourceMode, int frameCount, int unused0,
-                                         int unused1);
+typedef void (*ExpgfxUpdateFrameStateFn)(int sourceMode, int frameCount, int unused0, int unused1);
 typedef void (*ExpgfxResetAllPoolsFn)(void);
 typedef void (*ExpgfxFreeSourceFn)(GameObject* sourceObject);
 typedef int (*ExpgfxFunc09Fn)(void);
 typedef void (*ExpgfxNopFn)(void);
 typedef int (*ExpgfxUpdateSourceFrameFlagsFn)(GameObject* sourceObject);
 
-typedef struct ExpgfxInterface
-{
+typedef struct ExpgfxInterface {
     u32 reserved;
     ExpgfxOnMapSetupFn onMapSetup;
     ExpgfxSpawnEffectFn spawnEffect;

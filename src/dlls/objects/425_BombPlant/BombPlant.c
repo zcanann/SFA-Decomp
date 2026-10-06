@@ -305,8 +305,8 @@ void BombPlant_update(GameObject* obj) {
     }
 
     if ((config->flags & BOMB_PLANT_CONFIG_CHECK_HITS) != 0) {
-        hitType = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, (u32*)&hitVolume, &hitEffect.pos.x,
-                                                     &hitEffect.pos.y, &hitEffect.pos.z);
+        hitType = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, (u32*)&hitVolume,
+                                                     &hitEffect.pos.x, &hitEffect.pos.y, &hitEffect.pos.z);
         if (hitType != 0 && hitVolume != 0) {
             if (hitType == 0x10) {
                 Obj_StartModelFadeIn(obj, 0x12C);

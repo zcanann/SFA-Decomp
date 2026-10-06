@@ -108,8 +108,7 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
             }
             if (foundState->flags.spawnFlags & 2)
             {
-                objfx_spawnDirectionalBurst(objs[i], 5, foundState->burstEffectChance, 1, 1, 0x64,
-                                            5.0f, NULL, 0);
+                objfx_spawnDirectionalBurst(objs[i], 5, foundState->burstEffectChance, 1, 1, 0x64, 5.0f, NULL, 0);
             }
         }
     }

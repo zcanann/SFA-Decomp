@@ -14,13 +14,14 @@ void objfx_spawnCrystalOrbitEffects(GameObject* obj, s16* state, f32 period, f32
                                     u8 flags);
 void objfx_spawnRandomBurst(GameObject* obj, u8 type, u8 count, PartFxSpawnParams* origin, f32 mult, u8 flagByte);
 void objfx_spawnMaskedHitEffect(GameObject* obj, f32 scale, u8 type, u8 mode, u8 mask, PartFxSpawnParams* origin);
-void objfx_spawnLightPulse(GameObject* obj, f32 radius, int type, int colorIndex, int mode, f32 intensity, PartFxSpawnParams* origin);
-void objfx_spawnDirectionalBurst(GameObject* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mult, PartFxSpawnParams* origin,
-                                 int flags);
-void objfx_spawnArcedBurst(GameObject* obj, u8 idx, f32 scale, u8 kind, u8 mode, int chance, f32 radiusEnd, f32 radiusStart,
-                           f32 height, PartFxSpawnParams* origin, int flags);
-void objfx_spawnBoxBurst(GameObject* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 scaleX, f32 scaleY, f32 scaleZ,
-                         PartFxSpawnParams* origin, int flags);
+void objfx_spawnLightPulse(GameObject* obj, f32 radius, int type, int colorIndex, int mode, f32 intensity,
+                           PartFxSpawnParams* origin);
+void objfx_spawnDirectionalBurst(GameObject* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mult,
+                                 PartFxSpawnParams* origin, int flags);
+void objfx_spawnArcedBurst(GameObject* obj, u8 idx, f32 scale, u8 kind, u8 mode, int chance, f32 radiusEnd,
+                           f32 radiusStart, f32 height, PartFxSpawnParams* origin, int flags);
+void objfx_spawnBoxBurst(GameObject* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 scaleX, f32 scaleY,
+                         f32 scaleZ, PartFxSpawnParams* origin, int flags);
 void projectileDoParticleFx(GameObject* obj, f32 scale, int mode);
 void itemPickupDoParticleFx(GameObject* obj, f32 scale, int mode, u8 count);
 void objfx_spawnPulseBurst(GameObject* obj, f32 scale, int type, int count, int mode, f32* offset);

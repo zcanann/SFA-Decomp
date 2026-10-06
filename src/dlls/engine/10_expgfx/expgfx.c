@@ -147,34 +147,35 @@ ExpgfxDescriptor gExpgfxDescriptor = {
     OBJECT_DESCRIPTOR_FLAGS_14_SLOTS,
     expgfx_initialise,
     expgfx_release,
-    {0,
-    expgfx_onMapSetup,
-    expgfx_addremove,
-    expgfx_updateFrameState,
-    expgfx_resetAllPools,
-    expgfx_free,
-    expgfx_free2,
-    expgfx_func09,
-    expgfx_func0A_nop,
-    expgfx_func0B_nop,
-    expgfx_ownerFree3,
-    expgfx_updateSourceFrameFlags},
+    {0, expgfx_onMapSetup, expgfx_addremove, expgfx_updateFrameState, expgfx_resetAllPools, expgfx_free, expgfx_free2,
+     expgfx_func09, expgfx_func0A_nop, expgfx_func0B_nop, expgfx_ownerFree3, expgfx_updateSourceFrameFlags},
 };
 
 s16 gObjFxCrystalSpinSpeed[4] = {-1024, -512, 512, 1024};
 
-const ObjFxLightColorTable gObjFxParticleLightColors = {{{0x00, 0x00, 0x00}, {0xFF, 0x7F, 0xFF}, {0x7F, 0xC0, 0xFF}, {0xFF, 0x7F, 0xFF}, {0x7F, 0xC0, 0xFF}, {0xFF, 0xA0, 0x00}, {0xFF, 0xA0, 0x00}, {0x7F, 0x40, 0xFF}, {0x00, 0x00, 0x00}, {0x00, 0x00, 0x00}}};
+const ObjFxLightColorTable gObjFxParticleLightColors = {{{0x00, 0x00, 0x00},
+                                                         {0xFF, 0x7F, 0xFF},
+                                                         {0x7F, 0xC0, 0xFF},
+                                                         {0xFF, 0x7F, 0xFF},
+                                                         {0x7F, 0xC0, 0xFF},
+                                                         {0xFF, 0xA0, 0x00},
+                                                         {0xFF, 0xA0, 0x00},
+                                                         {0x7F, 0x40, 0xFF},
+                                                         {0x00, 0x00, 0x00},
+                                                         {0x00, 0x00, 0x00}}};
 const ObjFxS32Table5 gObjFxPulseVariantTbl = {{0, 0, 0, 1, 2}};
 const ObjFxS32Table5 gObjFxHitPulseCounts = {{0, 2, 3, 3, 3}};
 const ObjFxU16Table9 gObjFxBoxEffectParams = {{0x0000, 0x00DF, 0x0160, 0x00DE, 0x0200, 0x00DD, 0x00E0, 0x00E4, 0x007B}};
 const ObjFxU16Table8 gObjFxBoxSpawnIds = {{0x07D3, 0x07D3, 0x07D4, 0x07D5, 0x07D6, 0x07DC, 0x07DC, 0x07DC}};
 const ObjFxU16Table8 gObjFxBoxSpawnArg2 = {{0x00FF, 0x00FF, 0x00FF, 0x00FF, 0x00FF, 0x00FF, 0x0200, 0x0080}};
 const ObjFxU16Table8 gObjFxBoxSpawnArg0 = {{0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x00BF, 0x00BF}};
-const ObjFxU16Table9 gObjFxArcedEffectParams = {{0x0000, 0x00DF, 0x0160, 0x00DE, 0x0200, 0x00DD, 0x00E0, 0x00E4, 0x007B}};
+const ObjFxU16Table9 gObjFxArcedEffectParams = {
+    {0x0000, 0x00DF, 0x0160, 0x00DE, 0x0200, 0x00DD, 0x00E0, 0x00E4, 0x007B}};
 const ObjFxU16Table8 gObjFxArcedSpawnIds = {{0x07D3, 0x07D3, 0x07D4, 0x07D5, 0x07D6, 0x07DC, 0x07DC, 0x07DC}};
 const ObjFxU16Table8 gObjFxArcedSpawnArg2 = {{0x00FF, 0x00FF, 0x00FF, 0x00FF, 0x00FF, 0x00FF, 0x0200, 0x0080}};
 const ObjFxU16Table8 gObjFxArcedSpawnArg0 = {{0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x00BF, 0x00BF}};
-const ObjFxU16Table9 gObjFxDirectionalEffectParams = {{0x0000, 0x00DF, 0x0160, 0x00DE, 0x0200, 0x00DD, 0x00E0, 0x00E4, 0x007B}};
+const ObjFxU16Table9 gObjFxDirectionalEffectParams = {
+    {0x0000, 0x00DF, 0x0160, 0x00DE, 0x0200, 0x00DD, 0x00E0, 0x00E4, 0x007B}};
 const ObjFxU16Table8 gObjFxDirectionalSpawnIds = {{0x07D3, 0x07D3, 0x07D4, 0x07D5, 0x07D6, 0x07DC, 0x07DC, 0x07DC}};
 const ObjFxU16Table8 gObjFxDirectionalSpawnArg2 = {{0x00FF, 0x00FF, 0x00FF, 0x00FF, 0x00FF, 0x00FF, 0x0200, 0x0080}};
 const ObjFxU16Table8 gObjFxDirectionalSpawnArg0 = {{0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x00BF, 0x00BF}};
@@ -1701,8 +1702,7 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT;
                             if (slot->impactEffectId != -1) {
                                 (*gPartfxInterface)
-                                    ->spawnEffect(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1,
-                                                  0);
+                                    ->spawnEffect(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
                                 slot->impactEffectId = -1;
                             }
                         } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1) != 0) {
@@ -1724,8 +1724,7 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
                             if (slot->impactEffectId != -1) {
                                 (*gPartfxInterface)
-                                    ->spawnEffect(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1,
-                                                  0);
+                                    ->spawnEffect(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
                             }
                             slot->impactEffectId = -1;
                         } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4) != 0) {
@@ -1736,8 +1735,7 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
                             if (slot->impactEffectId != -1) {
                                 (*gPartfxInterface)
-                                    ->spawnEffect(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1,
-                                                  0);
+                                    ->spawnEffect(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
                             }
                         }
                         gExpgfxFrameParityBit = 0;
@@ -1767,7 +1765,8 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                             (*gWaterfxInterface)
                                 ->spawnSplashBurst(NULL, rotParams.x, rotParams.y, rotParams.z,
                                                    EXPGFX_SLOT_MOTION_STEP);
-                            if (srcObj != NULL && coordsToMapCell(srcObj->anim.localPosX, srcObj->anim.localPosZ) == 0x10) {
+                            if (srcObj != NULL &&
+                                coordsToMapCell(srcObj->anim.localPosX, srcObj->anim.localPosZ) == 0x10) {
                                 Sfx_PlayFromObject(srcObj, SFXTRIG_blkscrp6);
                             }
                             slot->impactEffectId = -1;
@@ -1796,8 +1795,7 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                             rotParams.z = slot->posZ.value;
                         }
                         gExpgfxFrameParityBit = 1;
-                        (*gPartfxInterface)
-                            ->spawnEffect(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, NULL);
                         gExpgfxFrameParityBit = 0;
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0 && randomGetRange(0, 4) == 1) {
@@ -2607,8 +2605,8 @@ void spawnExplosion(GameObject* src, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 
     }
 }
 
-void spawnDimExplosion(GameObject* src, f32 x, f32 y, f32 z, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 flag10, u8 doShake,
-                       u8 flag20, u8 f1cinit) {
+void spawnDimExplosion(GameObject* src, f32 x, f32 y, f32 z, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 flag10,
+                       u8 doShake, u8 flag20, u8 f1cinit) {
     DimExplosionPlacement* setup;
     u8 canSetupObject;
 
@@ -2638,9 +2636,8 @@ void spawnDimExplosion(GameObject* src, f32 x, f32 y, f32 z, f32 scale, u8 kind,
         if (doShake != 0) {
             GameObject* player = Obj_GetPlayerObject();
             if (player != NULL && (player->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0) {
-                f32 d = Camera_DistanceToCurrentViewPosition(src->anim.worldPosX,
-                                                             src->anim.worldPosY,
-                                                             src->anim.worldPosZ);
+                f32 d =
+                    Camera_DistanceToCurrentViewPosition(src->anim.worldPosX, src->anim.worldPosY, src->anim.worldPosZ);
                 if (d <= 300.0f) {
                     f32 t = 1.0f - d / 300.0f;
                     CameraShake_StartDampened(5.0f * t, 10.0f * t, 4.0f);
@@ -2761,9 +2758,7 @@ void objDoHitParticleFx(GameObject* obj, f32 scale, PartFxSpawnParams* origin, u
 
     if (light != NULL) {
         modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
-        modelLightStruct_setPosition(light, origin->posX,
-                                     10.0f + origin->posY,
-                                     origin->posZ);
+        modelLightStruct_setPosition(light, origin->posX, 10.0f + origin->posY, origin->posZ);
         modelLightStruct_setDiffuseColor(light, gObjFxLightColorTbl[type].r, gObjFxLightColorTbl[type].g,
                                          gObjFxLightColorTbl[type].b, 0xff);
         modelLightStruct_setSpecularColor(light, gObjFxLightColorTbl[type].r, gObjFxLightColorTbl[type].g,
@@ -2834,8 +2829,10 @@ void objDoParticleFx(GameObject* obj, f32 scale, int type, f32 extraScale, Model
         modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setPosition(light, obj->anim.worldPosX, obj->anim.worldPosY + lightYOffset,
                                      obj->anim.worldPosZ);
-        modelLightStruct_setDiffuseColor(light, colorTbl.values[(u8)type].r, colorTbl.values[(u8)type].g, colorTbl.values[(u8)type].b, 0xff);
-        modelLightStruct_setSpecularColor(light, colorTbl.values[(u8)type].r, colorTbl.values[(u8)type].g, colorTbl.values[(u8)type].b, 0xff);
+        modelLightStruct_setDiffuseColor(light, colorTbl.values[(u8)type].r, colorTbl.values[(u8)type].g,
+                                         colorTbl.values[(u8)type].b, 0xff);
+        modelLightStruct_setSpecularColor(light, colorTbl.values[(u8)type].r, colorTbl.values[(u8)type].g,
+                                          colorTbl.values[(u8)type].b, 0xff);
         modelLightStruct_setDistanceAttenuation(light, 50.0f, 75.0f);
         lightSetField4D(light, 0);
         modelLightStruct_setEnabled(light, 1, 0.0f);
@@ -3239,7 +3236,8 @@ void objfx_spawnPulseBurst(GameObject* obj, f32 scale, int type, int count, int 
     }
 }
 
-void objfx_spawnFlaggedTrailBurst(GameObject* obj, f32 scale, u8 mode, int textureId, int lifetimeFrames, f32* velocity) {
+void objfx_spawnFlaggedTrailBurst(GameObject* obj, f32 scale, u8 mode, int textureId, int lifetimeFrames,
+                                  f32* velocity) {
     PartFxSpawnParams params;
     int i;
     u8 count;
@@ -3287,7 +3285,8 @@ void objfx_spawnFlaggedTrailBurst(GameObject* obj, f32 scale, u8 mode, int textu
     }
 }
 
-void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mode, f32 sizeParam, PartFxSpawnParams* origin) {
+void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mode, f32 sizeParam,
+                           PartFxSpawnParams* origin) {
     PartFxSpawnParams params;
     f32 lightOffset[6];
     f32 ndc[3];
@@ -3579,8 +3578,8 @@ void objfx_spawnBoxBurst(GameObject* obj, u8 idx, f32 scale, u8 kind, u8 mode, u
     }
 }
 
-void objfx_spawnArcedBurst(GameObject* obj, u8 idx, f32 scale, u8 kind, u8 mode, int chance, f32 radiusEnd, f32 radiusStart,
-                           f32 height, PartFxSpawnParams* origin, int flags) {
+void objfx_spawnArcedBurst(GameObject* obj, u8 idx, f32 scale, u8 kind, u8 mode, int chance, f32 radiusEnd,
+                           f32 radiusStart, f32 height, PartFxSpawnParams* origin, int flags) {
     PartFxSpawnParams params;
     ObjFxU16Table9 effectParams = gObjFxArcedEffectParams;
     ObjFxU16Table8 spawnIds = gObjFxArcedSpawnIds;
@@ -3657,8 +3656,8 @@ void objfx_spawnArcedBurst(GameObject* obj, u8 idx, f32 scale, u8 kind, u8 mode,
     }
 }
 
-void objfx_spawnDirectionalBurst(GameObject* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mult, PartFxSpawnParams* origin,
-                                 int flags) {
+void objfx_spawnDirectionalBurst(GameObject* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mult,
+                                 PartFxSpawnParams* origin, int flags) {
     PartFxSpawnParams params;
     ObjFxU16Table9 effectParams = gObjFxDirectionalEffectParams;
     ObjFxU16Table8 spawnIds = gObjFxDirectionalSpawnIds;

@@ -69,6 +69,7 @@ extern s16 gObjFxCrystalSpinSpeed[4];
 extern ObjFxLightColor gObjFxLightColorTbl[];
 
 void objShowButtonGlow(GameObject* obj, f32 intensity, u8 mode);
-void objfx_spawnFlaggedTrailBurst(GameObject* obj, f32 scale, u8 mode, int textureId, int lifetimeFrames, f32* velocity);
+void objfx_spawnFlaggedTrailBurst(GameObject* obj, f32 scale, u8 mode, int textureId, int lifetimeFrames,
+                                  f32* velocity);
 
 #endif /* MAIN_DLL_OBJFX_H_ */

@@ -21,11 +21,11 @@ extern ExpgfxDescriptor gExpgfxDescriptor;
 
 void expgfxRemove(void* slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot);
 void expgfxRemoveAll(void);
-int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, GameObject* sourceObject);
+int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex,
+                  GameObject* sourceObject);
 void expgfx_initSlotQuad(void* slot);
 void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFrameState);
-int expgfx_addToTable(void* resourceHandle, GameObject* sourceObject, GameObject* sourceParent,
-                      s16 resourceId);
+int expgfx_addToTable(void* resourceHandle, GameObject* sourceObject, GameObject* sourceParent, s16 resourceId);
 int expgfx_updateSourceFrameFlags(GameObject* sourceObject);
 void expgfx_ownerFree3(GameObject* sourceObject);
 void expgfx_func0B_nop(void);
