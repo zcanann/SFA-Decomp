@@ -7230,7 +7230,7 @@ int playerStateSlideDownLadder(GameObject* obj, PlayerState* state, f32 fv) {
             doRumble(5.0f);
             if (inner->waterDepth > 0.0f) {
                 (*gWaterfxInterface)
-                    ->spawnSplashBurst((void*)obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, 8.0f);
+                    ->spawnSplashBurst(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, 8.0f);
             }
         }
         if (state->baddie.moveDone != 0) {
@@ -7390,7 +7390,7 @@ int playerStateOnLadder(GameObject* obj, struct PlayerState* state) {
             doRumble(5.0f);
             if (inner->waterDepth > 0.0f) {
                 (*gWaterfxInterface)
-                    ->spawnSplashBurst((void*)obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, 8.0f);
+                    ->spawnSplashBurst(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, 8.0f);
             }
         }
         if (state->baddie.moveDone != 0) {
@@ -11283,10 +11283,10 @@ void playerRenderPostEffects(GameObject* obj, PlayerState* inner, int a, int b, 
         }
         if ((inner->flags360 & 0x20000u) != 0) {
             (*gWaterfxInterface)
-                ->spawnSplashBurst((void*)obj, obj->anim.localPosX, (obj->anim.localPosY + inner->waterDepth) - 5.0f,
+                ->spawnSplashBurst(obj, obj->anim.localPosX, (obj->anim.localPosY + inner->waterDepth) - 5.0f,
                                    obj->anim.localPosZ, 7.0f);
             (*gWaterfxInterface)
-                ->spawnRipple(obj->anim.localPosX, obj->anim.localPosY + inner->waterDepth, obj->anim.localPosZ, 0,
+                ->spawnCircularRipple(obj->anim.localPosX, obj->anim.localPosY + inner->waterDepth, obj->anim.localPosZ, 0,
                               4.0f, 2);
             inner->flags360 &= ~PLAYER_FLAG_WATER_SPLASH_PENDING;
         }
@@ -12389,10 +12389,10 @@ void playerUpdateWaterMotion(GameObject* obj, PlayerState* inner, PlayerState* s
         v.scale = 1.0f;
         setMatrixFromObjectPos(mtx, &v);
         Matrix_TransformPoint(mtx, t[0], 0.0f, t[2], &t[0], &t[1], &t[2]);
-        (*gWaterfxInterface)->spawnRipple(t[0], inner->waterSurfaceY, t[2], 0, 0.0f, 5);
+        (*gWaterfxInterface)->spawnCircularRipple(t[0], inner->waterSurfaceY, t[2], 0, 0.0f, 5);
         if (inner->waterDepth > 17.0f && state->baddie.animSpeedC > 0.4f) {
             u16 ang = inner->targetYaw - getAngle(state->baddie.animSpeedB, state->baddie.animSpeedA);
-            (*gWaterfxInterface)->spawnSimpleRipple(t[0], inner->waterSurfaceY, t[2], ang, 0.0f);
+            (*gWaterfxInterface)->spawnMovementRipple(t[0], inner->waterSurfaceY, t[2], ang, 0.0f);
         }
     }
     ObjPath_GetPointWorldPosition(obj, 0x13, &v.x, &v.y, &v.z, 0);
@@ -12530,7 +12530,7 @@ void playerEnterDeepWater(GameObject* obj, PlayerState* inner, PlayerState* stat
     if (obj->anim.velocityY < -2.0f) {
         Sfx_PlayFromObject(obj, SFXTRIG_mv_curtainopen16_212);
         (*gWaterfxInterface)
-            ->spawnSplashBurst((void*)obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, 10.0f);
+            ->spawnSplashBurst(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, 10.0f);
     }
 }
 

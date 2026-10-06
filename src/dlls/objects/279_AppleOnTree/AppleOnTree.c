@@ -370,7 +370,7 @@ int appleontree_bounceWaterStep(GameObject* obj, AppleOnTreeState* state, f32 po
             }
             state->extraAcceleration = state->waterAcceleration;
             (*gWaterfxInterface)
-                ->spawnSplashBurst((void*)obj, obj->anim.localPosX, state->splashPositionY, obj->anim.localPosZ, rad);
+                ->spawnSplashBurst(obj, obj->anim.localPosX, state->splashPositionY, obj->anim.localPosZ, rad);
             return 0;
         } else {
             obj->anim.localPosY = positionY;

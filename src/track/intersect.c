@@ -150,7 +150,7 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
     if (sfxTab != NULL) {
         vec = (f32*)points + vecIdx * 3;
         if (collision->resultWaterDepth > 0.0f) {
-            (*gWaterfxInterface)->spawnImpactSurface((u8*)obj, flags, (f32*)points, collision, speed);
+            (*gWaterfxInterface)->spawnImpactSurface(obj, flags, points, collision, speed);
             sfx = 5;
         }
         if (obj == Obj_GetPlayerObject()) {

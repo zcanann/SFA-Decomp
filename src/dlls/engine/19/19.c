@@ -27,18 +27,18 @@
 #include "dolphin/os/OSCache.h"
 #include "track/intersect_depth_state_api.h"
 
-u8* gWaterfxRippleVtx;
-u8* gWaterfxRippleVtxDesc;
-u8* gWaterfxWakeVtx;
-u8* gWaterfxWakeVtxDesc;
+LightmapVertex* gWaterfxRippleVertices;
+LightmapTriangle* gWaterfxRippleTriangles;
+LightmapVertex* gWaterfxWakeVertices;
+LightmapTriangle* gWaterfxWakeTriangles;
 int gWaterfxRippleCount;
-u8* gWaterfxRipplePool;
+WaterCircularRipple* gWaterfxRipplePool;
 int gWaterfxSplashCount;
-u8* gWaterfxSplashPool;
+WaterSplashBurst* gWaterfxSplashPool;
 int gWaterfxWakeCount;
-u8* gWaterfxWakePool;
+WaterMovementRipple* gWaterfxWakePool;
 int gWaterfxDropCount;
-u8* gWaterfxDropPool;
+WaterSplashDrop* gWaterfxDropPool;
 Texture* gWaterfxRippleTexture;
 Texture* gWaterfxSplashTexture0;
 Texture* gWaterfxSplashTexture1;
@@ -46,16 +46,13 @@ Texture* gWaterfxWakeTexture;
 f32 gWaterfxRippleScale;
 void* gWaterfxSplashDisplayList;
 u16 gWaterfxSplashDisplayListSize;
-void* gWaterfxSplashPosArray;
-void* gWaterfxSplashTexCoordArray;
+Vec* gWaterfxSplashPosArray;
+f32 (*gWaterfxSplashTexCoordArray)[2];
 u8 gWaterfxPendingImpactPositionValid;
 
 f32 gWaterfxPendingImpactPosition[4];
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
-
-#define WATERFX_POOL_SIZE    30
-#define WATERFX_MAX_SPLASHES 10
 
 #define WATERFX_TEXTURE_RIPPLE  0x56  /* gWaterfxRippleTexture */
 #define WATERFX_TEXTURE_SPLASH0 0xc2a /* gWaterfxSplashTexture0 */
@@ -145,23 +142,19 @@ static f32 waterfxBandEnvelope(f32 frac, f32 life, f32* phaseOut, f32* alphaOut)
  * For each of the 8 bands it builds a model-view matrix (scaled by the burst
  * radius, bulged outward and lifted by a parabolic 'fade' arc, translated to
  * the impact point and multiplied by the camera view), loads it as a posmtx,
- * and writes that band's per-vertex alpha into the color array (s->vtxColors).
+ * and writes that band's per-vertex alpha into the color array (s->bandColors).
  * The completed geometry is drawn twice (front then back cull) via the shared
  * display list.
  */
-void waterfx_drawSplashBurst(WaterParticle* s) {
+void waterfx_drawSplashBurst(WaterSplashBurst* s) {
     Mtx mtxD;
     Mtx scale;
     Mtx mtxB;
     Mtx mtxC;
-    int mtxIdx;
-    u8* colorOut;
     int i;
 
     PSMTXScale(scale, s->size, s->size, s->size);
     i = 0;
-    mtxIdx = 0;
-    colorOut = (u8*)s;
     for (; i < 8; i++) {
         f32 bandPhase;
         f32 dd;
@@ -192,13 +185,11 @@ void waterfx_drawSplashBurst(WaterParticle* s) {
         PSMTXTrans(mtxC, s->x - playerMapOffsetX, s->y, s->z - playerMapOffsetZ);
         PSMTXConcat(mtxC, mtxD, mtxD);
         PSMTXConcat((MtxPtr)Camera_GetViewMatrix(), mtxD, mtxD);
-        GXLoadPosMtxImm(mtxD, mtxIdx);
-        *(u32*)(colorOut + 0x18) = (u8)(int)(WATERFX_ALPHA_MAX * alpha);
-        mtxIdx += 3;
-        colorOut += 4;
+        GXLoadPosMtxImm(mtxD, i * 3);
+        s->bandColors[i] = (u8)(int)(WATERFX_ALPHA_MAX * alpha);
     }
-    DCStoreRange(s->vtxColors, 32);
-    GXSetArray(GX_VA_CLR0, s->vtxColors, 4);
+    DCStoreRange(s->bandColors, 32);
+    GXSetArray(GX_VA_CLR0, s->bandColors, 4);
     GXSetCullMode(GX_CULL_FRONT);
     GXCallDisplayList(gWaterfxSplashDisplayList, gWaterfxSplashDisplayListSize);
     GXSetCullMode(GX_CULL_BACK);
@@ -207,12 +198,11 @@ void waterfx_drawSplashBurst(WaterParticle* s) {
 
 static void waterfx_buildSplashDisplayList(void) {
     int m;
-    f32* pos;
+    Vec* pos;
     int i;
     int j;
     int k;
     void* dl;
-    u8 a[1];
 
     GXSetMisc(GX_MT_XF_FLUSH, 0);
     gWaterfxSplashPosArray = mmAlloc(192, 0, 0);
@@ -223,17 +213,17 @@ static void waterfx_buildSplashDisplayList(void) {
                 f32 ang;
                 f32 sv;
                 f32 cv;
-                pos = (f32*)((u8*)gWaterfxSplashPosArray + j * 12);
+                pos = &gWaterfxSplashPosArray[j];
                 ang = WATERFX_PI * (f32)(j * 2) / WATERFX_RING_SEGMENT_MAX;
                 sv = mathCosfPrecise(ang);
                 cv = mathSinfPrecise(ang);
-                pos[0] = sv;
-                pos[1] = WATERFX_ZERO;
-                pos[2] = cv;
+                pos->x = sv;
+                pos->y = WATERFX_ZERO;
+                pos->z = cv;
             }
             {
                 int idx = i * 16 + j;
-                f32* tex = (f32*)((u8*)gWaterfxSplashTexCoordArray + idx * 8);
+                f32* tex = gWaterfxSplashTexCoordArray[idx];
                 tex[0] = j / WATERFX_RING_SEGMENT_MAX;
                 tex[1] = i / WATERFX_BAND_COUNT;
             }
@@ -246,18 +236,16 @@ static void waterfx_buildSplashDisplayList(void) {
     DCInvalidateRange(dl, 2880);
     GXBeginDisplayList(gWaterfxSplashDisplayList, 2880);
     GXResetWriteGatherPipe();
-    a[0] = 0;
     for (k = 0; k < 15; k++) {
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT2, 16);
         for (m = 7; m >= 0; m--) {
-            a[0] = m * 3;
-            GXWGFifo.u8 = a[0];
-            GXWGFifo.u8 = a[0];
+            GXWGFifo.u8 = m * 3;
+            GXWGFifo.u8 = m * 3;
             GXWGFifo.u16 = k;
             GXWGFifo.u16 = m;
             GXWGFifo.u16 = m * 16 + k;
-            GXWGFifo.u8 = a[0];
-            GXWGFifo.u8 = a[0];
+            GXWGFifo.u8 = m * 3;
+            GXWGFifo.u8 = m * 3;
             GXWGFifo.u16 = (k + 1) % 16;
             GXWGFifo.u16 = m;
             GXWGFifo.u16 = m * 16 + (k + 1) % 16;
@@ -277,13 +265,12 @@ int waterfx_consumePendingImpactNearPoint(f32* vec, f32 dist) {
     return 0;
 }
 
-void waterfx_spawnRipple(f32 x, f32 y, f32 z, s16 rotParam, f32 w, int intensity) {
+void waterfx_spawnCircularRipple(f32 x, f32 y, f32 z, s16 yaw, f32 unknown0C, int intensity) {
     int i = 0;
-    WaterEntry7* p = (WaterEntry7*)gWaterfxRipplePool;
-    WaterVtx* q;
-    WaterEntry7* e;
+    WaterCircularRipple* p = gWaterfxRipplePool;
+    LightmapVertex* q;
     int j;
-    while (i < WATERFX_POOL_SIZE && p->active != 0) {
+    while (i < WATERFX_POOL_SIZE && p->alpha != 0) {
         p++;
         i++;
     }
@@ -291,50 +278,42 @@ void waterfx_spawnRipple(f32 x, f32 y, f32 z, s16 rotParam, f32 w, int intensity
         return;
     }
     j = i * 4;
-    q = &((WaterVtx*)gWaterfxRippleVtx)[j];
+    q = &gWaterfxRippleVertices[j];
     q->x = -300;
     q->y = 0;
     q->z = 300;
     q->a = 0xff;
-    q->u = 0;
-    q->v = 0;
-    q = &((WaterVtx*)gWaterfxRippleVtx)[j + 1];
+    q->s = 0;
+    q->t = 0;
+    q = &gWaterfxRippleVertices[j + 1];
     q->x = -300;
     q->y = 0;
     q->z = -300;
     q->a = 0xff;
-    q->u = 0;
-    q->v = 0x7f;
-    q = &((WaterVtx*)gWaterfxRippleVtx)[j + 2];
+    q->s = 0;
+    q->t = 0x7f;
+    q = &gWaterfxRippleVertices[j + 2];
     q->x = 300;
     q->y = 0;
     q->z = -300;
     q->a = 0xff;
-    q->u = 0x7f;
-    q->v = 0x7f;
-    q = &((WaterVtx*)gWaterfxRippleVtx)[j + 3];
+    q->s = 0x7f;
+    q->t = 0x7f;
+    q = &gWaterfxRippleVertices[j + 3];
     q->x = 300;
     q->y = 0;
     q->z = 300;
     q->a = 0xff;
-    q->u = 0x7f;
-    q->v = 0;
-    e = (WaterEntry7*)gWaterfxRipplePool;
-    e[i].w = w;
-    e = (WaterEntry7*)gWaterfxRipplePool;
-    e[i].active = 0xff;
-    e = (WaterEntry7*)gWaterfxRipplePool;
-    e[i].x = x;
-    e = (WaterEntry7*)gWaterfxRipplePool;
-    e[i].y = y;
-    e = (WaterEntry7*)gWaterfxRipplePool;
-    e[i].z = z;
-    e = (WaterEntry7*)gWaterfxRipplePool;
-    e[i].rot = rotParam;
-    e = (WaterEntry7*)gWaterfxRipplePool;
-    e[i].scale = gWaterfxRippleScale;
-    e = (WaterEntry7*)gWaterfxRipplePool;
-    e[i].fadeRate = WATERFX_RIPPLE_FADE_RATE * intensity;
+    q->s = 0x7f;
+    q->t = 0;
+    gWaterfxRipplePool[i].unknown0C = unknown0C;
+    gWaterfxRipplePool[i].alpha = 0xff;
+    gWaterfxRipplePool[i].x = x;
+    gWaterfxRipplePool[i].y = y;
+    gWaterfxRipplePool[i].z = z;
+    gWaterfxRipplePool[i].yaw = yaw;
+    gWaterfxRipplePool[i].scale = gWaterfxRippleScale;
+    gWaterfxRipplePool[i].fadeRate = WATERFX_RIPPLE_FADE_RATE * intensity;
     gWaterfxRippleCount++;
 }
 
@@ -345,13 +324,13 @@ void waterfx_setRippleScale(int flag, f32 val) {
     gWaterfxRippleScale = val;
 }
 
-void waterfx_spawnSimpleRipple(f32 x, f32 y, f32 z, s16 id, f32 w) {
+void waterfx_spawnMovementRipple(f32 x, f32 y, f32 z, s16 yaw, f32 unknown0C) {
     int i = 0;
-    WaterEntry* p = (WaterEntry*)gWaterfxWakePool;
-    WaterVtx* q;
-    WaterEntry* entry;
+    WaterMovementRipple* p = gWaterfxWakePool;
+    LightmapVertex* q;
+    WaterMovementRipple* entry;
     int j;
-    while (i < WATERFX_POOL_SIZE && p->active != 0) {
+    while (i < WATERFX_POOL_SIZE && p->alpha != 0) {
         p++;
         i++;
     }
@@ -359,80 +338,76 @@ void waterfx_spawnSimpleRipple(f32 x, f32 y, f32 z, s16 id, f32 w) {
         return;
     }
     j = i * 4;
-    q = &((WaterVtx*)gWaterfxWakeVtx)[j];
+    q = &gWaterfxWakeVertices[j];
     q[0].x = -200;
     q[0].y = 0;
     q[0].z = 400;
     q[0].a = 0xff;
-    q[0].u = 0;
-    q[0].v = 0;
+    q[0].s = 0;
+    q[0].t = 0;
     q[1].x = -200;
     q[1].y = 0;
     q[1].z = -200;
     q[1].a = 0xff;
-    q[1].u = 0;
-    q[1].v = 0x80;
+    q[1].s = 0;
+    q[1].t = 0x80;
     q[2].x = 200;
     q[2].y = 0;
     q[2].z = -200;
     q[2].a = 0xff;
-    q[2].u = 0x80;
-    q[2].v = 0x80;
+    q[2].s = 0x80;
+    q[2].t = 0x80;
     q[3].x = 200;
     q[3].y = 0;
     q[3].z = 400;
     q[3].a = 0xff;
-    q[3].u = 0x80;
-    q[3].v = 0;
-    entry = (WaterEntry*)gWaterfxWakePool + i;
+    q[3].s = 0x80;
+    q[3].t = 0;
+    entry = gWaterfxWakePool + i;
     entry->x = x;
     entry->y = y;
     entry->z = z;
-    entry->w = w;
+    entry->unknown0C = unknown0C;
     entry->scale = WATERFX_DEFAULT_SCALE;
-    entry->active = 0xff;
-    entry->rot = id;
-    entry->f18 = 0;
+    entry->alpha = 0xff;
+    entry->yaw = yaw;
+    entry->hidden = 0;
     gWaterfxWakeCount++;
 }
 
-void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d) {
-    WaterParticle* p;
+void waterfx_spawnSplashBurst(GameObject* obj, f32 x, f32 y, f32 z, f32 size) {
+    WaterSplashBurst* base;
     int i;
-    WaterParticle* base;
-    WaterParticle* slot;
+    WaterSplashBurst* slot;
     int rnd;
-    if (WATERFX_ZERO == d) {
-        d = WATERFX_SPLASH_VELOCITY_SCALE;
+    if (WATERFX_ZERO == size) {
+        size = WATERFX_SPLASH_VELOCITY_SCALE;
     }
     i = 0;
-    base = (WaterParticle*)gWaterfxSplashPool;
-    p = base;
-    while (i < WATERFX_MAX_SPLASHES && (p->dropCount != 0 || p->life < 1.0f)) {
-        p++;
+    base = gWaterfxSplashPool;
+    while (i < WATERFX_MAX_SPLASHES && (base[i].dropCount != 0 || base[i].life < 1.0f)) {
         i++;
     }
     if (i >= WATERFX_MAX_SPLASHES) {
         return;
     }
     slot = &base[i];
-    slot->x = a;
-    slot->y = b;
-    slot->z = c;
+    slot->x = x;
+    slot->y = y;
+    slot->z = z;
     gWaterfxSplashCount++;
-    slot->size = d;
+    slot->size = size;
     rnd = randomGetRange((int)slot->size, (int)(WATERFX_SPLASH_SIZE_SCALE * slot->size));
-    slot->dropCount = waterfx_spawnSplashDrops(&((WaterParticle*)gWaterfxSplashPool)[i], i, rnd, slot->size);
+    slot->dropCount = waterfx_spawnSplashDrops(&gWaterfxSplashPool[i], i, rnd, slot->size);
     slot->life = WATERFX_ZERO;
     slot->lifeSpeed = 1.0f / (WATERFX_SPLASH_LIFETIME_SCALE * sqrtf(slot->size));
 }
 
-int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v) {
+int waterfx_spawnSplashDrops(WaterSplashBurst* src, int idx, int count, f32 v) {
     int cur;
     f32 scale;
-    WaterDrop* p;
-    WaterDrop* base;
-    WaterDrop* slot;
+    WaterSplashDrop* base;
+    WaterSplashDrop* slot;
     int j;
     int i;
     cur = gWaterfxDropCount;
@@ -444,10 +419,8 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v) {
         scale = WATERFX_RIPPLE_GROW_SPEED * v;
         for (; i < count; i++) {
             j = 0;
-            base = (WaterDrop*)gWaterfxDropPool;
-            p = base;
-            while (j < WATERFX_POOL_SIZE && p->parentIdx != -1) {
-                p++;
+            base = gWaterfxDropPool;
+            while (j < WATERFX_POOL_SIZE && base[j].parentIdx != -1) {
                 j++;
             }
             if (j < WATERFX_POOL_SIZE) {
@@ -469,10 +442,10 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v) {
     return count;
 }
 
-void waterfx_render(int obj, int renderParam) {
+void waterfx_render(int unusedDisplayList, int unusedMatrixList) {
     int triangleIndex;
     int rippleIndex;
-    u8* particle;
+    void* particle;
     int index;
     f32 lifeLimit;
     MatrixTransform transform;
@@ -482,21 +455,21 @@ void waterfx_render(int obj, int renderParam) {
             setupReflectionBumpDistortTev(gWaterfxRippleTexture);
         }
         for (rippleIndex = 0; rippleIndex < WATERFX_POOL_SIZE; rippleIndex++) {
-            particle = (u8*)&((WaterEntry7*)gWaterfxRipplePool)[rippleIndex];
-            if (((WaterEntry7*)particle)->active != 0) {
-                setTextColor((void*)obj, 0xff, 0xff, 0xff, (u8)((WaterEntry7*)particle)->active);
-                transform.x = ((WaterEntry7*)particle)->x;
-                transform.y = ((WaterEntry7*)particle)->y;
-                transform.z = ((WaterEntry7*)particle)->z;
-                transform.scale = ((WaterEntry7*)particle)->scale;
-                transform.rotX = ((WaterEntry7*)particle)->rot;
+            particle = &gWaterfxRipplePool[rippleIndex];
+            if (((WaterCircularRipple*)particle)->alpha != 0) {
+                setTextColor((void*)unusedDisplayList, 0xff, 0xff, 0xff, (u8)((WaterCircularRipple*)particle)->alpha);
+                transform.x = ((WaterCircularRipple*)particle)->x;
+                transform.y = ((WaterCircularRipple*)particle)->y;
+                transform.z = ((WaterCircularRipple*)particle)->z;
+                transform.scale = ((WaterCircularRipple*)particle)->scale;
+                transform.rotX = ((WaterCircularRipple*)particle)->yaw;
                 transform.rotZ = 0;
                 transform.rotY = 0;
-                Camera_LoadModelViewMatrix(obj, renderParam, &transform, 1.0f, WATERFX_ZERO, NULL);
+                Camera_LoadModelViewMatrix(unusedDisplayList, unusedMatrixList, &transform, 1.0f, WATERFX_ZERO, NULL);
                 loadReflectionTexMtxs();
                 triangleIndex = rippleIndex * 2;
-                lightmapDrawTriangleList((u8*)&((WaterVtx*)gWaterfxRippleVtx)[triangleIndex * 2],
-                                         (u8*)&((WaterVtxDesc*)gWaterfxRippleVtxDesc)[triangleIndex], 2);
+                lightmapDrawTriangleList(&gWaterfxRippleVertices[triangleIndex * 2],
+                                         (u8*)&gWaterfxRippleTriangles[triangleIndex], 2);
             }
         }
         index = 0;
@@ -512,22 +485,22 @@ void waterfx_render(int obj, int renderParam) {
             GXSetVtxDesc(GX_VA_TEX0, GX_INDEX16);
         }
         for (lifeLimit = 1.0f; index < WATERFX_MAX_SPLASHES; index++) {
-            particle = (u8*)&((WaterParticle*)gWaterfxSplashPool)[index];
-            if (((WaterParticle*)particle)->life < lifeLimit) {
-                waterfx_drawSplashBurst((WaterParticle*)particle);
+            particle = &gWaterfxSplashPool[index];
+            if (((WaterSplashBurst*)particle)->life < lifeLimit) {
+                waterfx_drawSplashBurst((WaterSplashBurst*)particle);
             }
         }
         if (gWaterfxDropCount != 0) {
             waterfx_setupSplashDropPointRender();
         }
         for (index = 0; index < WATERFX_POOL_SIZE; index++) {
-            particle = (u8*)&((WaterDrop*)gWaterfxDropPool)[index];
-            if (((WaterDrop*)particle)->parentIdx != -1) {
+            particle = &gWaterfxDropPool[index];
+            if (((WaterSplashDrop*)particle)->parentIdx != -1) {
                 f32 vx, vy, vz;
                 GXBegin(GX_POINTS, GX_VTXFMT2, 1);
-                vz = ((WaterDrop*)particle)->z - playerMapOffsetZ;
-                vy = ((WaterDrop*)particle)->y;
-                vx = ((WaterDrop*)particle)->x - playerMapOffsetX;
+                vz = ((WaterSplashDrop*)particle)->z - playerMapOffsetZ;
+                vy = ((WaterSplashDrop*)particle)->y;
+                vx = ((WaterSplashDrop*)particle)->x - playerMapOffsetX;
                 GXWGFifo.f32 = vx;
                 GXWGFifo.f32 = vy;
                 GXWGFifo.f32 = vz;
@@ -537,21 +510,21 @@ void waterfx_render(int obj, int renderParam) {
             setupReflectionDistortTev(gWaterfxWakeTexture);
         }
         for (index = 0; index < WATERFX_POOL_SIZE; index++) {
-            particle = (u8*)&((WaterEntry*)gWaterfxWakePool)[index];
-            if (((WaterEntry*)particle)->active != 0 && ((WaterEntry*)particle)->f18 == 0) {
-                setTextColor((void*)obj, 0xff, 0xff, 0xff, (u8)((WaterEntry*)particle)->active);
-                transform.x = ((WaterEntry*)particle)->x;
-                transform.y = ((WaterEntry*)particle)->y;
-                transform.z = ((WaterEntry*)particle)->z;
-                transform.scale = ((WaterEntry*)particle)->scale;
-                transform.rotX = ((WaterEntry*)particle)->rot;
+            particle = &gWaterfxWakePool[index];
+            if (((WaterMovementRipple*)particle)->alpha != 0 && ((WaterMovementRipple*)particle)->hidden == 0) {
+                setTextColor((void*)unusedDisplayList, 0xff, 0xff, 0xff, (u8)((WaterMovementRipple*)particle)->alpha);
+                transform.x = ((WaterMovementRipple*)particle)->x;
+                transform.y = ((WaterMovementRipple*)particle)->y;
+                transform.z = ((WaterMovementRipple*)particle)->z;
+                transform.scale = ((WaterMovementRipple*)particle)->scale;
+                transform.rotX = ((WaterMovementRipple*)particle)->yaw;
                 transform.rotZ = 0;
                 transform.rotY = 0;
-                Camera_LoadModelViewMatrix(obj, renderParam, &transform, 1.0f, WATERFX_ZERO, NULL);
+                Camera_LoadModelViewMatrix(unusedDisplayList, unusedMatrixList, &transform, 1.0f, WATERFX_ZERO, NULL);
                 loadReflectionTexMtxs();
                 triangleIndex = index * 2;
-                lightmapDrawTriangleList((u8*)&((WaterVtx*)gWaterfxWakeVtx)[triangleIndex * 2],
-                                         (u8*)&((WaterVtxDesc*)gWaterfxWakeVtxDesc)[triangleIndex], 2);
+                lightmapDrawTriangleList(&gWaterfxWakeVertices[triangleIndex * 2],
+                                         (u8*)&gWaterfxWakeTriangles[triangleIndex], 2);
             }
         }
         Rcp_ResetRenderState();
@@ -561,30 +534,30 @@ void waterfx_render(int obj, int renderParam) {
 void waterfx_run(int frames) {
     int i;
     for (i = 0; i < WATERFX_POOL_SIZE; i++) {
-        WaterEntry7* e = &((WaterEntry7*)gWaterfxRipplePool)[i];
-        if (e->active != 0) {
+        WaterCircularRipple* e = &gWaterfxRipplePool[i];
+        if (e->alpha != 0) {
             e->scale += WATERFX_RIPPLE_GROW_SPEED * timeDelta;
-            e->active = (s16)(e->active - framesThisStep * e->fadeRate);
-            if (e->active < 0) {
-                e->active = 0;
+            e->alpha = (s16)(e->alpha - framesThisStep * e->fadeRate);
+            if (e->alpha < 0) {
+                e->alpha = 0;
                 gWaterfxRippleCount--;
             }
         }
     }
     for (i = 0; i < WATERFX_POOL_SIZE; i++) {
-        WaterEntry* g = &((WaterEntry*)gWaterfxWakePool)[i];
-        if (g->active != 0) {
+        WaterMovementRipple* g = &gWaterfxWakePool[i];
+        if (g->alpha != 0) {
             g->scale += WATERFX_WAKE_GROW_SPEED * timeDelta;
-            g->active = (s16)(g->active - framesThisStep * 2);
-            if (g->active < 0) {
-                g->active = 0;
+            g->alpha = (s16)(g->alpha - framesThisStep * 2);
+            if (g->alpha < 0) {
+                g->alpha = 0;
                 gWaterfxWakeCount--;
             }
         }
     }
     {
         for (i = 0; i < WATERFX_MAX_SPLASHES; i++) {
-            WaterParticle* s = &((WaterParticle*)gWaterfxSplashPool)[i];
+            WaterSplashBurst* s = &gWaterfxSplashPool[i];
             if (s->life < 1.0f) {
                 s->life += s->lifeSpeed * timeDelta;
                 if (s->life >= 1.0f) {
@@ -594,10 +567,10 @@ void waterfx_run(int frames) {
         }
     }
     for (i = 0; i < WATERFX_POOL_SIZE; i++) {
-        WaterParticle* wp;
-        WaterDrop* d = &((WaterDrop*)gWaterfxDropPool)[i];
+        WaterSplashBurst* wp;
+        WaterSplashDrop* d = &gWaterfxDropPool[i];
         if (d->parentIdx != -1) {
-            wp = &((WaterParticle*)gWaterfxSplashPool)[d->parentIdx];
+            wp = &gWaterfxSplashPool[d->parentIdx];
             d->vy += WATERFX_DROP_GRAVITY * timeDelta;
             d->vx *= WATERFX_DROP_DAMPING;
             d->vy *= WATERFX_DROP_DAMPING;
@@ -610,7 +583,7 @@ void waterfx_run(int frames) {
                 d->parentIdx = -1;
                 gWaterfxDropCount--;
                 gWaterfxRippleScale = WATERFX_DROP_RIPPLE_SCALE;
-                waterfx_spawnRipple(d->x, wp->y, d->z, 0, WATERFX_ZERO, 8);
+                waterfx_spawnCircularRipple(d->x, wp->y, d->z, 0, WATERFX_ZERO, 8);
             }
         }
     }
@@ -625,55 +598,55 @@ void waterfx_run(int frames) {
  * Ripple height is the object's local Y plus the collision query's water
  * depth. impactPositions contains one world-space vec3 per limb.
  */
-void waterfx_spawnImpactSurface(u8* objHeader, u16 limbMask, f32* impactPositions, ObjCollisionState* collision,
+void waterfx_spawnImpactSurface(GameObject* obj, u16 limbMask, Vec* impactPositions, ObjCollisionState* collision,
                                 f32 speed) {
     ObjCollisionState* surf = collision;
-    f32* pos = impactPositions;
+    Vec* pos = impactPositions;
     while (limbMask != 0) {
         if (limbMask & 1) {
-            f32 px = pos[0];
-            f32 pz = pos[2];
+            f32 px = pos->x;
+            f32 pz = pos->z;
             if (surf->resultWaterDepth < WATERFX_SHALLOW_DEPTH) {
                 if (speed > WATERFX_SPLASH_SPEED_THRESHOLD) {
-                    waterfx_spawnSplashBurst(objHeader, px,
-                                             ((GameObject*)objHeader)->anim.localPosY + surf->resultWaterDepth, pz,
+                    waterfx_spawnSplashBurst(obj, px,
+                                             obj->anim.localPosY + surf->resultWaterDepth, pz,
                                              WATERFX_ZERO);
                 }
             }
             gWaterfxRippleScale = WATERFX_DEFAULT_SCALE;
-            waterfx_spawnRipple(px, ((GameObject*)objHeader)->anim.localPosY + surf->resultWaterDepth, pz,
-                                ((GameObject*)objHeader)->anim.rotX, WATERFX_ZERO, 4);
+            waterfx_spawnCircularRipple(px, obj->anim.localPosY + surf->resultWaterDepth, pz,
+                                obj->anim.rotX, WATERFX_ZERO, 4);
             gWaterfxPendingImpactPosition[0] = px;
-            gWaterfxPendingImpactPosition[1] = ((GameObject*)objHeader)->anim.localPosY + surf->resultWaterDepth;
+            gWaterfxPendingImpactPosition[1] = obj->anim.localPosY + surf->resultWaterDepth;
             gWaterfxPendingImpactPosition[2] = pz;
             gWaterfxPendingImpactPositionValid = 1;
         }
         limbMask >>= 1;
-        pos += 3;
+        pos++;
     }
 }
 
 void waterfx_onMapSetup(void) {
     int i;
-    WaterVtxDesc* vd;
+    LightmapTriangle* vd;
     {
-        vd = (WaterVtxDesc*)gWaterfxRippleVtxDesc;
+        vd = gWaterfxRippleTriangles;
         for (i = 0; i < WATERFX_POOL_SIZE; i++) {
-            WaterEntry7* e;
-            vd[0].b1 = 3;
-            vd[0].b2 = 1;
-            vd[0].b3 = 0;
-            vd[1].b1 = 3;
-            vd[1].b2 = 2;
-            vd[1].b3 = 1;
+            WaterCircularRipple* e;
+            vd[0].vertexIndices[0] = 3;
+            vd[0].vertexIndices[1] = 1;
+            vd[0].vertexIndices[2] = 0;
+            vd[1].vertexIndices[0] = 3;
+            vd[1].vertexIndices[1] = 2;
+            vd[1].vertexIndices[2] = 1;
             vd += 2;
-            e = &((WaterEntry7*)gWaterfxRipplePool)[i];
+            e = &gWaterfxRipplePool[i];
             e->x = 0.0f;
             e->y = 0.0f;
             e->z = 0.0f;
-            e->w = 0.0f;
+            e->unknown0C = 0.0f;
             e->scale = 0.01f;
-            e->active = 0;
+            e->alpha = 0;
         }
     }
     {
@@ -682,7 +655,7 @@ void waterfx_onMapSetup(void) {
         initPos = WATERFX_ZERO;
         initThreshold = 1.0f;
         for (i = 0; i < WATERFX_MAX_SPLASHES; i++) {
-            WaterParticle* s = &((WaterParticle*)gWaterfxSplashPool)[i];
+            WaterSplashBurst* s = &gWaterfxSplashPool[i];
             s->x = initPos;
             s->y = initPos;
             s->z = initPos;
@@ -693,32 +666,32 @@ void waterfx_onMapSetup(void) {
     {
         f32 initScale;
         f32 initPos;
-        vd = (WaterVtxDesc*)gWaterfxWakeVtxDesc;
+        vd = gWaterfxWakeTriangles;
         initPos = WATERFX_ZERO;
         initScale = WATERFX_DEFAULT_SCALE;
         for (i = 0; i < WATERFX_POOL_SIZE; i++) {
-            WaterEntry* g;
-            vd[0].b1 = 3;
-            vd[0].b2 = 1;
-            vd[0].b3 = 0;
-            vd[1].b1 = 3;
-            vd[1].b2 = 2;
-            vd[1].b3 = 1;
+            WaterMovementRipple* g;
+            vd[0].vertexIndices[0] = 3;
+            vd[0].vertexIndices[1] = 1;
+            vd[0].vertexIndices[2] = 0;
+            vd[1].vertexIndices[0] = 3;
+            vd[1].vertexIndices[1] = 2;
+            vd[1].vertexIndices[2] = 1;
             vd += 2;
-            g = &((WaterEntry*)gWaterfxWakePool)[i];
+            g = &gWaterfxWakePool[i];
             g->x = initPos;
             g->y = initPos;
             g->z = initPos;
-            g->w = initPos;
+            g->unknown0C = initPos;
             g->scale = initScale;
-            g->active = 0;
-            g->rot = 0;
+            g->alpha = 0;
+            g->yaw = 0;
         }
     }
     {
         f32 initPos = WATERFX_ZERO;
         for (i = 0; i < WATERFX_POOL_SIZE; i++) {
-            WaterDrop* d = &((WaterDrop*)gWaterfxDropPool)[i];
+            WaterSplashDrop* d = &gWaterfxDropPool[i];
             d->parentIdx = -1;
             d->vx = initPos;
             d->vy = initPos;
@@ -731,23 +704,23 @@ void waterfx_onMapSetup(void) {
 }
 
 void waterfx_release(void) {
-    if (gWaterfxRippleVtxDesc != NULL) {
-        mm_free(gWaterfxRippleVtxDesc);
+    if (gWaterfxRippleTriangles != NULL) {
+        mm_free(gWaterfxRippleTriangles);
     }
     if (gWaterfxRippleTexture != NULL) {
-        textureFree((Texture*)((u8*)gWaterfxRippleTexture));
+        textureFree(gWaterfxRippleTexture);
         gWaterfxRippleTexture = NULL;
     }
     if (gWaterfxSplashTexture0 != NULL) {
-        textureFree((Texture*)((u8*)gWaterfxSplashTexture0));
+        textureFree(gWaterfxSplashTexture0);
         gWaterfxSplashTexture0 = NULL;
     }
     if (gWaterfxSplashTexture1 != NULL) {
-        textureFree((Texture*)((u8*)gWaterfxSplashTexture1));
+        textureFree(gWaterfxSplashTexture1);
         gWaterfxSplashTexture1 = NULL;
     }
     if (gWaterfxWakeTexture != NULL) {
-        textureFree((Texture*)((u8*)gWaterfxWakeTexture));
+        textureFree(gWaterfxWakeTexture);
         gWaterfxWakeTexture = NULL;
     }
     if (gWaterfxSplashDisplayList != NULL) {
@@ -765,25 +738,28 @@ void waterfx_release(void) {
 }
 
 void waterfx_initialise(void) {
-    u8* buf;
+    u8* memory;
 
-    buf = mmAlloc(0x22b0, 0x13, 0);
-    if (buf == NULL) {
+    memory = mmAlloc(sizeof(WaterfxStorage), 0x13, 0);
+    if (memory == NULL) {
         debugPrintf(sWaterfxDllAllocFailed);
         return;
     }
-    gWaterfxRippleVtxDesc = buf;
-    gWaterfxWakeVtxDesc = buf + 0x3c0;
+    gWaterfxRippleTriangles = (LightmapTriangle*)memory;
+    gWaterfxWakeTriangles = (LightmapTriangle*)(memory + sizeof(LightmapTriangle) * WATERFX_POOL_SIZE * 2);
     {
-        u8* p2 = buf + 0x780;
-        u8* p3;
-        gWaterfxRippleVtx = p2;
-        gWaterfxWakeVtx = p2 + 0x780;
-        p3 = p2 + 0xf00;
-        gWaterfxRipplePool = p3;
-        gWaterfxSplashPool = p3 + 0x348;
-        gWaterfxDropPool = p3 + 0x5a0;
-        gWaterfxWakePool = p3 + 0x8e8;
+        u8* vertices = memory + offsetof(WaterfxStorage, rippleVertices);
+        u8* particles;
+        gWaterfxRippleVertices = (LightmapVertex*)vertices;
+        gWaterfxWakeVertices = (LightmapVertex*)(vertices + sizeof(LightmapVertex) * WATERFX_POOL_SIZE * 4);
+        particles = vertices + sizeof(LightmapVertex) * WATERFX_POOL_SIZE * 8;
+        gWaterfxRipplePool = (WaterCircularRipple*)particles;
+        gWaterfxSplashPool = (WaterSplashBurst*)(particles + sizeof(WaterCircularRipple) * WATERFX_POOL_SIZE);
+        gWaterfxDropPool = (WaterSplashDrop*)(particles + sizeof(WaterCircularRipple) * WATERFX_POOL_SIZE +
+                                            sizeof(WaterSplashBurst) * WATERFX_MAX_SPLASHES);
+        gWaterfxWakePool = (WaterMovementRipple*)(particles + sizeof(WaterCircularRipple) * WATERFX_POOL_SIZE +
+                                                sizeof(WaterSplashBurst) * WATERFX_MAX_SPLASHES +
+                                                sizeof(WaterSplashDrop) * WATERFX_POOL_SIZE);
     }
     gWaterfxRippleCount = 0;
     gWaterfxSplashCount = 0;
@@ -797,12 +773,22 @@ void waterfx_initialise(void) {
     waterfx_buildSplashDisplayList();
 }
 
-ResourceDescriptorCallbacks11 waterfx_funcs = {
-    {0x00000000, 0x00000000, 0x00000000, 0x000a0000},
-    {(ResourceDescriptorCallback)waterfx_initialise, (ResourceDescriptorCallback)waterfx_release, 0x00000000,
-     (ResourceDescriptorCallback)waterfx_run, (ResourceDescriptorCallback)waterfx_spawnImpactSurface,
-     (ResourceDescriptorCallback)waterfx_render, (ResourceDescriptorCallback)waterfx_spawnSplashBurst,
-     (ResourceDescriptorCallback)waterfx_spawnRipple, (ResourceDescriptorCallback)waterfx_spawnSimpleRipple,
-     (ResourceDescriptorCallback)waterfx_onMapSetup, (ResourceDescriptorCallback)waterfx_setRippleScale}};
+WaterfxDescriptor gWaterfxDescriptor = {
+    {0, 0, 0},
+    0x000A0000,
+    waterfx_initialise,
+    waterfx_release,
+    {
+        0,
+        waterfx_run,
+        waterfx_spawnImpactSurface,
+        waterfx_render,
+        waterfx_spawnSplashBurst,
+        waterfx_spawnCircularRipple,
+        waterfx_spawnMovementRipple,
+        waterfx_onMapSetup,
+        waterfx_setRippleScale,
+    },
+};
 
 char sWaterfxDllAllocFailed[] = "Could not allocate memory for waterfx dll\n";

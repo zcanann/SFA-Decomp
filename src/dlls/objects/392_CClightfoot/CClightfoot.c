@@ -120,7 +120,7 @@ int ccLightfoot_animationEventCallback(GameObject* obj, int unusedArg, ObjSeqSta
                 break;
             case CC_LIGHTFOOT_ANIM_EVENT_WATER_SPLASH:
                 (*gWaterfxInterface)
-                    ->spawnSplashBurst((void*)obj, obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ,
+                    ->spawnSplashBurst(obj, obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ,
                                        CC_LIGHTFOOT_WATER_SPLASH_SCALE);
                 break;
             }

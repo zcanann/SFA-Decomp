@@ -1,3 +1,4 @@
+#include "main/dll/waterfx_interface.h"
 #include "main/dll/obj_collision.h"
 #include "main/player_control_interface.h"
 #include "dlls/objects/686_WaterFlowWe.h"
@@ -603,7 +604,7 @@ extern ResourceDescriptor gWCLevelContObjDescriptor, gWCPushBlockObjDescriptor, 
 extern ResourceDescriptor gWM_SpiritSetObjDescriptor, gWM_newcrystalObjDescriptor;
 extern ResourceDescriptor gWM_spiritplaceObjDescriptor, gWM_sunObjDescriptor;
 extern ResourceDescriptor ObjSeq_funcs;
-extern ResourceDescriptor sky_funcs, sky2_funcs, newclouds_funcs, Dummy08_funcs, cloudaction_funcs, waterfx_funcs,
+extern ResourceDescriptor sky_funcs, sky2_funcs, newclouds_funcs, Dummy08_funcs, cloudaction_funcs,
     dll_0B_funcs, partfx_funcs;
 extern ResourceDescriptor Effect1_funcs, Effect2_funcs, Effect3_funcs, Effect4_funcs, Effect5_funcs, Effect6_funcs,
     Effect7_funcs, Effect8_funcs;
@@ -1155,7 +1156,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &UIController_funcs,
     &screens_funcs,
     &Dummy12_funcs,
-    &waterfx_funcs,
+    (ResourceDescriptor*)&gWaterfxDescriptor,
     &RomCurve_funcs,
     (ResourceDescriptor*)&gObjCollisionDescriptor,
     &screenTransition_funcs,

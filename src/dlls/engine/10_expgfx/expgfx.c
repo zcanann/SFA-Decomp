@@ -1762,7 +1762,7 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                                 rotParams.z = slot->posZ.value;
                             }
                             gExpgfxFrameParityBit = 1;
-                            (*gWaterfxInterface)->spawnRipple(rotParams.x, rotParams.y, rotParams.z, 0, 0.0f, 4);
+                            (*gWaterfxInterface)->spawnCircularRipple(rotParams.x, rotParams.y, rotParams.z, 0, 0.0f, 4);
                             (*gWaterfxInterface)
                                 ->spawnSplashBurst(NULL, rotParams.x, rotParams.y, rotParams.z,
                                                    EXPGFX_SLOT_MOTION_STEP);

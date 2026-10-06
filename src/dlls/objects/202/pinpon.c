@@ -107,7 +107,7 @@ void baddieSpawnWaterRipple(GameObject* obj, EnemyState* state) {
         tx = 5.0f + randomGetRange(-20, 20) / 10.0f;
         tz = 2.0f + randomGetRange(-20, 20) / 10.0f;
         Matrix_TransformPoint(mtx, tx, 0.0f, tz, &tx, &ox, &tz);
-        (*gWaterfxInterface)->spawnRipple(tx, state->fireflyLantern.anchorY, tz, 0, 0.0f, 3);
+        (*gWaterfxInterface)->spawnCircularRipple(tx, state->fireflyLantern.anchorY, tz, 0, 0.0f, 3);
         if (sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ) > 0.5f) {
             Sfx_PlayAtPositionFromObject(obj, stk.x, stk.y, stk.z, SFXstaff_proj_putaway);
         }

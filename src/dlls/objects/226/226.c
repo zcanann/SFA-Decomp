@@ -770,7 +770,7 @@ void staff_hitDetectGeometry(GameObject* obj) {
             (*gWaterfxInterface)
                 ->spawnSplashBurst(obj, hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ, 0.0f);
             (*gWaterfxInterface)
-                ->spawnRipple(hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ, 0, 0.0f, 2);
+                ->spawnCircularRipple(hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ, 0, 0.0f, 2);
         } else {
             PartFxSpawnParams v;
             v.scale = 1.0f;
