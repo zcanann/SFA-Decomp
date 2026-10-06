@@ -237,6 +237,28 @@ ANIM bin+tab); MODELIND, OBJSEQ2C, OBJSEQ, TEXPRE, PREANIM and ENVFXACT are load
 single slot each, consistent with those being smaller/one-shot files that don't need
 transition double-buffering.
 
+`mapLoadDataFile` now names its resource kinds with `MldfFileId` values and
+uses explicit pending-map, size and in-flight file-info fields. The former
+`MLDF_SP_*`/`MLDF_FINFO4` macros accepted a nonexistent `x` argument while
+silently selecting the surrounding `slot`; those placeholders are gone.
+Runtime pointer/owner/pending-ID accessors take the resource view and slot
+explicitly and retain native-width addresses. The adjacency scratch retains
+its one-element array form because a scalar rewrite changed MWCC's scheduling.
+Both `MldfNames` and `MldfTables` remain address views across separate globals.
+
+`tools/test_map_resource_loading.py` executes the complete loader in 4,204
+cases for both regional name-view layouts at `-O0`/`-O2` under ASan/UBSan.
+It checks both requested IDs and selected slots for every paired resource,
+cached returns, stale-buffer release, pending retries, forced/immediate reads,
+merge suppression, async callback selection and submission order. It also
+covers empty files, VOXMAP's Warlock fallback and adjacent-map recursion.
+The fixture supplies host allocations for the two views and spies on IO,
+allocation, cache operations, merging and romlist preloads; callbacks are
+captured rather than executed. Branches that submit a NULL destination after
+an unchecked allocation failure retain that behavior, with the DVD spy
+recording the submission. All five target builds preserve every source object
+byte and the exact retail DOL.
+
 Seven merged `.TAB` buffers expose a combined index for those paired banks.
 Their `MldfTables` fields are word arrays: 2,048 entries each for MODELS,
 BLOCKS and VOXMAP; 3,000 for ANIM; 4,096 each for TEX0/TEX1; and 8,144 for

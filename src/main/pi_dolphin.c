@@ -170,6 +170,7 @@ char sProgramCounterFormat[] = "PC: %x";
 extern u8 gResourceFileTable[0x160]; /* resource file table -- see struct MldfTables */
 extern u32 gObjBlockStatus[];
 
+/* Address view of neighbouring filename, map and path globals, not one allocation. */
 struct MldfNames {
     u8 pad0[0x3ac];
     char* fileNames[0x22e];
@@ -248,21 +249,11 @@ struct MldfIterators {
     u8* flags;
 };
 
-#define MLDF_MAP_NAME(i)  (nm->mapNames[i])
-#define MLDF_FILE_NAME(i) (nm->fileNames[i])
-#define MLDF_ADJ(i)       (nm->adjacency[i])
-#define MLDF_REMAP        (nm->remapGroups)
-/* Constant-index accessors (typed member form). */
-#define MLDF_ID(s)       (tbl->ids[s])
-#define MLDF_SIZE(s)     (tbl->sizes[s])
+/* Resource-buffer view shared with the payload loader. */
 #define MLDF_PTR(s)      (tbl->ptrs[s])
-#define MLDF_OWNER(s)    (tbl->owners[s])
-#define MLDF_ID_RT(s)    (*(int*)(((s) << 2) + (u32)tbl->ids))
-#define MLDF_OWNER_RT(s) (*(s16*)(((s) << 1) + (u32)tbl->owners))
-#define MLDF_FINFO4(s4)  (tbl->fileInfo[slot])
-#define MLDF_SP_ID(p)    (tbl->ids[slot])
-#define MLDF_SP_SIZE(p)  (tbl->sizes[slot])
-#define MLDF_SP_PTR(p)   (*(void**)((slot << 2) + (u32)tbl->ptrs))
+#define MLDF_ID_RT(t, s)    (*(int*)(((s) << 2) + (size_t)(t)->ids))
+#define MLDF_OWNER_RT(t, s) (*(s16*)(((s) << 1) + (size_t)(t)->owners))
+#define MLDF_PTR_RT(t, s)   (*(void**)(((s) << MLDF_BUFFER_SLOT_SHIFT) + (size_t)(t)->ptrs))
 #define MLDF_QPTR        ((u8*)*(void**)(slotPtrAddr - MLDF_BUFFER_PTRS_FROM_ARENA_END))
 
 /* 16-byte header of a "ZLB"-tagged compressed stream; the deflate payload
@@ -1779,426 +1770,426 @@ char sMapAssetPathFormats[0x78] =
     "\0%s/mod%d.zlb.bin\0\0\0\0%s/mod%d.tab";
 
 void* mapLoadDataFile(int mapId, int fileId) {
-    struct MldfNames* nm = (struct MldfNames*)sResourceFileNameAudioTab;
-    struct MldfTables* tbl = (struct MldfTables*)gResourceFileTable;
-    DVDFileInfo* tabFi;
-    DVDFileInfo* fi;
-    int sync = 0;
+    struct MldfNames* names = (struct MldfNames*)sResourceFileNameAudioTab;
+    struct MldfTables* resources = (struct MldfTables*)gResourceFileTable;
+    DVDFileInfo* tableFileInfo;
+    DVDFileInfo* fileInfo;
+    int readSynchronously = 0;
     void* result;
-    int adj;
+    int adjacentMapId;
     int slot;
-    int ok;
+    int opened;
     void* loadedBuffer;
-    int adjacentClass[1];
-    char buf[56];
+    int adjacentBank[1];
+    char path[56];
 
     if (gForceNextLoadSync != 0) {
         gForceNextLoadSync = 0;
-        sync = 1;
+        readSynchronously = 1;
     }
-    adj = MLDF_ADJ(mapId);
-    if (adj != -1) {
-        int nOwned = 0;
-        s16 o25 = MLDF_OWNER(0x25);
-        s16 o47;
-        if (o25 != -1) {
-            nOwned = 1;
+    adjacentMapId = names->adjacency[mapId];
+    if (adjacentMapId != -1) {
+        int residentBlockBanks = 0;
+        s16 blockOwnerA = resources->owners[MLDF_FILEID_BLOCKS_BIN_A];
+        s16 blockOwnerB;
+        if (blockOwnerA != -1) {
+            residentBlockBanks = 1;
         }
-        o47 = MLDF_OWNER(0x47);
-        if (o47 != -1) {
-            nOwned += 1;
+        blockOwnerB = resources->owners[MLDF_FILEID_BLOCKS_BIN_B];
+        if (blockOwnerB != -1) {
+            residentBlockBanks += 1;
         }
-        if (nOwned == 0) {
+        if (residentBlockBanks == 0) {
             gForceNextLoadSync = 1;
-            if (o25 == adj) {
-                adjacentClass[0] = 0;
-            } else if (o47 == adj) {
-                adjacentClass[0] = 1;
+            if (blockOwnerA == adjacentMapId) {
+                adjacentBank[0] = 0;
+            } else if (blockOwnerB == adjacentMapId) {
+                adjacentBank[0] = 1;
             } else {
-                adjacentClass[0] = -1;
+                adjacentBank[0] = -1;
             }
-            if (adjacentClass[0] == -1) {
-                mapLoadDataFile(adj, fileId);
+            if (adjacentBank[0] == -1) {
+                mapLoadDataFile(adjacentMapId, fileId);
             }
-            sync = 1;
+            readSynchronously = 1;
         }
     }
-    sync |= gForceLoadImmediately;
+    readSynchronously |= gForceLoadImmediately;
     switch (fileId) {
-    case 0xd:
-    case 0x55:
-        result = MLDF_PTR(0xd);
-        if ((result != 0) && (MLDF_OWNER(0xd) == mapId)) {
+    case MLDF_FILEID_ANIMCURV_BIN_A:
+    case MLDF_FILEID_ANIMCURV_BIN_B:
+        result = resources->ptrs[MLDF_FILEID_ANIMCURV_BIN_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_ANIMCURV_BIN_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x55);
-        if ((result != 0) && (MLDF_OWNER(0x55) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_ANIMCURV_BIN_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_ANIMCURV_BIN_B] == mapId)) {
             return result;
         }
         {
-            if (MLDF_ID(0xd) == mapId) {
-                slot = 0xd;
-                MLDF_ID(0xd) = -1;
-            } else if (MLDF_ID(0x55) == mapId) {
-                slot = 0x55;
-                MLDF_ID(0x55) = -1;
-            } else if (MLDF_OWNER(0xd) == -1) {
-                slot = 0xd;
-            } else if (MLDF_OWNER(0x55) == -1) {
-                slot = 0x55;
+            if (resources->ids[MLDF_FILEID_ANIMCURV_BIN_A] == mapId) {
+                slot = MLDF_FILEID_ANIMCURV_BIN_A;
+                resources->ids[MLDF_FILEID_ANIMCURV_BIN_A] = -1;
+            } else if (resources->ids[MLDF_FILEID_ANIMCURV_BIN_B] == mapId) {
+                slot = MLDF_FILEID_ANIMCURV_BIN_B;
+                resources->ids[MLDF_FILEID_ANIMCURV_BIN_B] = -1;
+            } else if (resources->owners[MLDF_FILEID_ANIMCURV_BIN_A] == -1) {
+                slot = MLDF_FILEID_ANIMCURV_BIN_A;
+            } else if (resources->owners[MLDF_FILEID_ANIMCURV_BIN_B] == -1) {
+                slot = MLDF_FILEID_ANIMCURV_BIN_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
-            sprintf(buf, nm->fmtAnimCurvBin, MLDF_MAP_NAME(mapId));
-            fi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, fi);
-            if (ok == 0) {
+            sprintf(path, names->fmtAnimCurvBin, names->mapNames[mapId]);
+            fileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, fileInfo);
+            if (opened == 0) {
                 return 0;
             } else {
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
-                if (MLDF_SP_SIZE(x) == 0) {
+                resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
+                if (resources->sizes[slot] == 0) {
                     return 0;
                 } else {
-                    MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-                    DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                    loadedBuffer = MLDF_SP_PTR(x);
+                    MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot], 0x7d7d7d7d, 0);
+                    DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+                    loadedBuffer = MLDF_PTR_RT(resources, slot);
                     if (loadedBuffer == 0) {
-                        if (MLDF_ID_RT(fileId) == -1) {
+                        if (MLDF_ID_RT(resources, fileId) == -1) {
                             texRestructRefs(1);
                         }
-                        DVDClose(fi);
-                        AtomicSList_Push(gDvdFileInfoPool, fi);
-                        MLDF_SP_SIZE(x) = 0;
-                        MLDF_SP_ID(x) = mapId;
+                        DVDClose(fileInfo);
+                        AtomicSList_Push(gDvdFileInfoPool, fileInfo);
+                        resources->sizes[slot] = 0;
+                        resources->ids[slot] = mapId;
                         return 0;
                     } else {
-                        if (sync != 0) {
-                            DVDRead(fi, loadedBuffer, MLDF_SP_SIZE(x), 0);
-                            DVDClose(fi);
-                            AtomicSList_Push(gDvdFileInfoPool, fi);
+                        if (readSynchronously != 0) {
+                            DVDRead(fileInfo, loadedBuffer, resources->sizes[slot], 0);
+                            DVDClose(fileInfo);
+                            AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                             if (((gAssetLoadInFlightFlags & 0x20000000) == 0) &&
                                 ((gAssetLoadInFlightFlags & 0x80000000) == 0)) {
-                                mergeTableFiles(tbl->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
+                                mergeTableFiles(resources->mergeAnimCurv, MLDF_FILEID_ANIMCURV_TAB_A, MLDF_FILEID_ANIMCURV_TAB_B, 0x1fd0);
                             }
                         } else {
-                            if (slot == 0xd) {
+                            if (slot == MLDF_FILEID_ANIMCURV_BIN_A) {
                                 gAssetLoadInFlightFlags |= 0x10000000;
                             } else {
                                 gAssetLoadInFlightFlags |= 0x40000000;
                             }
-                            DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, animCurvReadCb, 2);
-                            MLDF_FINFO4(x) = fi;
+                            DVDReadAsyncPrio(fileInfo, loadedBuffer, resources->sizes[slot], 0, animCurvReadCb, 2);
+                            resources->fileInfo[slot] = fileInfo;
                         }
-                        MLDF_OWNER_RT(slot) = mapId;
-                        return (void*)MLDF_SP_PTR(x);
+                        MLDF_OWNER_RT(resources, slot) = mapId;
+                        return MLDF_PTR_RT(resources, slot);
                     }
                 }
             }
         }
         break;
-    case 0xe:
-    case 0x56:
-        result = MLDF_PTR(0xe);
-        if ((result != 0) && (MLDF_OWNER(0xe) == mapId)) {
+    case MLDF_FILEID_ANIMCURV_TAB_A:
+    case MLDF_FILEID_ANIMCURV_TAB_B:
+        result = resources->ptrs[MLDF_FILEID_ANIMCURV_TAB_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_ANIMCURV_TAB_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x56);
-        if ((result != 0) && (MLDF_OWNER(0x56) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_ANIMCURV_TAB_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_ANIMCURV_TAB_B] == mapId)) {
             return result;
         }
         {
             int slot;
-            DVDFileInfo* fi;
-            int ok;
+            DVDFileInfo* fileInfo;
+            int opened;
 
-            if (MLDF_OWNER(0xe) == -1) {
-                slot = 0xe;
-            } else if (MLDF_OWNER(0x56) == -1) {
-                slot = 0x56;
+            if (resources->owners[MLDF_FILEID_ANIMCURV_TAB_A] == -1) {
+                slot = MLDF_FILEID_ANIMCURV_TAB_A;
+            } else if (resources->owners[MLDF_FILEID_ANIMCURV_TAB_B] == -1) {
+                slot = MLDF_FILEID_ANIMCURV_TAB_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
-            sprintf(buf, nm->fmtAnimCurvTab, MLDF_MAP_NAME(mapId));
-            fi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, fi);
-            if (ok == 0) {
+            sprintf(path, names->fmtAnimCurvTab, names->mapNames[mapId]);
+            fileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, fileInfo);
+            if (opened == 0) {
                 return 0;
             } else {
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
-                if (MLDF_SP_SIZE(x) == 0) {
+                resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
+                if (resources->sizes[slot] == 0) {
                     return 0;
                 } else {
-                    MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-                    DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                    if (sync != 0) {
-                        DVDRead(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-                        DVDClose(fi);
-                        AtomicSList_Push(gDvdFileInfoPool, fi);
+                    MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot], 0x7d7d7d7d, 0);
+                    DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+                    if (readSynchronously != 0) {
+                        DVDRead(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0);
+                        DVDClose(fileInfo);
+                        AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x20000000) == 0) &&
                             ((gAssetLoadInFlightFlags & 0x80000000) == 0)) {
-                            mergeTableFiles(tbl->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
+                            mergeTableFiles(resources->mergeAnimCurv, MLDF_FILEID_ANIMCURV_TAB_A, MLDF_FILEID_ANIMCURV_TAB_B, 0x1fd0);
                         }
                     } else {
-                        if (slot == 0xe) {
+                        if (slot == MLDF_FILEID_ANIMCURV_TAB_A) {
                             gAssetLoadInFlightFlags |= 0x20000000;
                         } else {
                             gAssetLoadInFlightFlags |= 0x80000000;
                         }
-                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animCurvTabReadCb, 2);
-                        MLDF_FINFO4(x) = fi;
+                        DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, animCurvTabReadCb, 2);
+                        resources->fileInfo[slot] = fileInfo;
                     }
-                    MLDF_OWNER_RT(slot) = mapId;
-                    return (void*)MLDF_SP_PTR(x);
+                    MLDF_OWNER_RT(resources, slot) = mapId;
+                    return MLDF_PTR_RT(resources, slot);
                 }
             }
         }
         break;
-    case 0x1b:
-    case 0x54:
-        result = MLDF_PTR(0x1b);
-        if ((result != 0) && (MLDF_OWNER(0x1b) == mapId)) {
+    case MLDF_FILEID_VOXMAP_BIN_A:
+    case MLDF_FILEID_VOXMAP_BIN_B:
+        result = resources->ptrs[MLDF_FILEID_VOXMAP_BIN_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_VOXMAP_BIN_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x54);
-        if ((result != 0) && (MLDF_OWNER(0x54) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_VOXMAP_BIN_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_VOXMAP_BIN_B] == mapId)) {
             return result;
         }
         {
             int slot;
-            DVDFileInfo* fi;
-            int ok;
+            DVDFileInfo* fileInfo;
+            int opened;
 
-            if (MLDF_OWNER(0x1b) == -1) {
-                slot = 0x1b;
-            } else if (MLDF_OWNER(0x54) == -1) {
-                slot = 0x54;
+            if (resources->owners[MLDF_FILEID_VOXMAP_BIN_A] == -1) {
+                slot = MLDF_FILEID_VOXMAP_BIN_A;
+            } else if (resources->owners[MLDF_FILEID_VOXMAP_BIN_B] == -1) {
+                slot = MLDF_FILEID_VOXMAP_BIN_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
-            sprintf(buf, nm->fmtVoxmapBin, MLDF_MAP_NAME(mapId));
-            fi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, fi);
-            if (ok == 0) {
-                sprintf(buf, nm->fmtWarlockVoxmap);
-                ok = DVDOpen(buf, fi);
-                if (ok == 0) {
+            sprintf(path, names->fmtVoxmapBin, names->mapNames[mapId]);
+            fileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, fileInfo);
+            if (opened == 0) {
+                sprintf(path, names->fmtWarlockVoxmap);
+                opened = DVDOpen(path, fileInfo);
+                if (opened == 0) {
                     return 0;
                     break;
                 }
             }
-            MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
-            if (MLDF_SP_SIZE(x) == 0) {
-                sprintf(buf, nm->fmtWarlockVoxmap);
-                ok = DVDOpen(buf, fi);
-                if (ok == 0) {
+            resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
+            if (resources->sizes[slot] == 0) {
+                sprintf(path, names->fmtWarlockVoxmap);
+                opened = DVDOpen(path, fileInfo);
+                if (opened == 0) {
                     return 0;
                     break;
                 }
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
+                resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
             }
-            MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-            DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-            if (sync != 0) {
-                DVDRead(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-                DVDClose(fi);
-                AtomicSList_Push(gDvdFileInfoPool, fi);
+            MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot], 0x7d7d7d7d, 0);
+            DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+            if (readSynchronously != 0) {
+                DVDRead(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0);
+                DVDClose(fileInfo);
+                AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                 if (((gAssetLoadInFlightFlags & 0x2000000) == 0) && ((gAssetLoadInFlightFlags & 0x8000000) == 0)) {
-                    mergeTableFiles(tbl->mergeVoxMap, 0x1a, 0x53, 0x800);
+                    mergeTableFiles(resources->mergeVoxMap, MLDF_FILEID_VOXMAP_TAB_A, MLDF_FILEID_VOXMAP_TAB_B, 0x800);
                 }
             } else {
-                if (slot == 0x1b) {
+                if (slot == MLDF_FILEID_VOXMAP_BIN_A) {
                     gAssetLoadInFlightFlags |= 0x1000000;
                 } else {
                     gAssetLoadInFlightFlags |= 0x4000000;
                 }
-                MLDF_FINFO4(x) = fi;
-                DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapReadCb, 2);
+                resources->fileInfo[slot] = fileInfo;
+                DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, voxMapReadCb, 2);
             }
-            MLDF_OWNER_RT(slot) = mapId;
-            return (void*)MLDF_SP_PTR(x);
+            MLDF_OWNER_RT(resources, slot) = mapId;
+            return MLDF_PTR_RT(resources, slot);
         }
         break;
-    case 0x1a:
-    case 0x53:
-        result = MLDF_PTR(0x1a);
-        if ((result != 0) && (MLDF_OWNER(0x1a) == mapId)) {
+    case MLDF_FILEID_VOXMAP_TAB_A:
+    case MLDF_FILEID_VOXMAP_TAB_B:
+        result = resources->ptrs[MLDF_FILEID_VOXMAP_TAB_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_VOXMAP_TAB_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x53);
-        if ((result != 0) && (MLDF_OWNER(0x53) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_VOXMAP_TAB_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_VOXMAP_TAB_B] == mapId)) {
             return result;
         }
         {
             int slot;
-            DVDFileInfo* fi;
-            int ok;
+            DVDFileInfo* fileInfo;
+            int opened;
 
-            if (MLDF_OWNER(0x1a) == -1) {
-                slot = 0x1a;
-            } else if (MLDF_OWNER(0x53) == -1) {
-                slot = 0x53;
+            if (resources->owners[MLDF_FILEID_VOXMAP_TAB_A] == -1) {
+                slot = MLDF_FILEID_VOXMAP_TAB_A;
+            } else if (resources->owners[MLDF_FILEID_VOXMAP_TAB_B] == -1) {
+                slot = MLDF_FILEID_VOXMAP_TAB_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
-            sprintf(buf, nm->fmtVoxmapTab, MLDF_MAP_NAME(mapId));
-            fi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, fi);
-            if (ok == 0) {
+            sprintf(path, names->fmtVoxmapTab, names->mapNames[mapId]);
+            fileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, fileInfo);
+            if (opened == 0) {
                 return 0;
             } else {
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
-                if (MLDF_SP_SIZE(x) == 0) {
-                    AtomicSList_Push(gDvdFileInfoPool, fi);
+                resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
+                if (resources->sizes[slot] == 0) {
+                    AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                     return 0;
                 } else {
-                    MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-                    DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                    if (sync != 0) {
-                        DVDRead(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-                        DVDClose(fi);
-                        AtomicSList_Push(gDvdFileInfoPool, fi);
+                    MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot], 0x7d7d7d7d, 0);
+                    DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+                    if (readSynchronously != 0) {
+                        DVDRead(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0);
+                        DVDClose(fileInfo);
+                        AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x2000000) == 0) &&
                             ((gAssetLoadInFlightFlags & 0x8000000) == 0)) {
-                            mergeTableFiles(tbl->mergeVoxMap, 0x1a, 0x53, 0x800);
+                            mergeTableFiles(resources->mergeVoxMap, MLDF_FILEID_VOXMAP_TAB_A, MLDF_FILEID_VOXMAP_TAB_B, 0x800);
                         }
                     } else {
-                        if (slot == 0x1a) {
+                        if (slot == MLDF_FILEID_VOXMAP_TAB_A) {
                             gAssetLoadInFlightFlags |= 0x2000000;
                         } else {
                             gAssetLoadInFlightFlags |= 0x8000000;
                         }
-                        MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapTabReadCb, 2);
+                        resources->fileInfo[slot] = fileInfo;
+                        DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, voxMapTabReadCb, 2);
                     }
-                    MLDF_OWNER_RT(slot) = mapId;
-                    return (void*)MLDF_SP_PTR(x);
+                    MLDF_OWNER_RT(resources, slot) = mapId;
+                    return MLDF_PTR_RT(resources, slot);
                 }
             }
         }
         break;
-    case 0x25:
-    case 0x47:
-        result = MLDF_PTR(0x25);
-        if ((result != 0) && (MLDF_OWNER(0x25) == mapId)) {
+    case MLDF_FILEID_BLOCKS_BIN_A:
+    case MLDF_FILEID_BLOCKS_BIN_B:
+        result = resources->ptrs[MLDF_FILEID_BLOCKS_BIN_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_BLOCKS_BIN_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x47);
-        if ((result != 0) && (MLDF_OWNER(0x47) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_BLOCKS_BIN_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_BLOCKS_BIN_B] == mapId)) {
             return result;
         }
         {
             int slot;
-            DVDFileInfo* fi;
-            int ok;
+            DVDFileInfo* fileInfo;
+            int opened;
 
-            if (MLDF_ID(0x25) == mapId) {
-                slot = 0x25;
-                MLDF_ID(0x25) = -1;
-            } else if (MLDF_ID(0x47) == mapId) {
-                slot = 0x47;
-                MLDF_ID(0x47) = -1;
-            } else if (MLDF_OWNER(0x25) == -1) {
-                slot = 0x25;
-            } else if (MLDF_OWNER(0x47) == -1) {
-                slot = 0x47;
+            if (resources->ids[MLDF_FILEID_BLOCKS_BIN_A] == mapId) {
+                slot = MLDF_FILEID_BLOCKS_BIN_A;
+                resources->ids[MLDF_FILEID_BLOCKS_BIN_A] = -1;
+            } else if (resources->ids[MLDF_FILEID_BLOCKS_BIN_B] == mapId) {
+                slot = MLDF_FILEID_BLOCKS_BIN_B;
+                resources->ids[MLDF_FILEID_BLOCKS_BIN_B] = -1;
+            } else if (resources->owners[MLDF_FILEID_BLOCKS_BIN_A] == -1) {
+                slot = MLDF_FILEID_BLOCKS_BIN_A;
+            } else if (resources->owners[MLDF_FILEID_BLOCKS_BIN_B] == -1) {
+                slot = MLDF_FILEID_BLOCKS_BIN_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
             if (mapId > 4) {
-                sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(mapId), mapId + 1);
+                sprintf(path, names->fmtModBin, names->mapNames[mapId], mapId + 1);
             } else {
-                sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(mapId), mapId);
+                sprintf(path, names->fmtModBin, names->mapNames[mapId], mapId);
             }
-            fi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, fi);
-            if (ok == 0) {
+            fileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, fileInfo);
+            if (opened == 0) {
                 return 0;
             } else {
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
-                MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-                DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                loadedBuffer = MLDF_SP_PTR(x);
+                resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
+                MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot], 0x7d7d7d7d, 0);
+                DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+                loadedBuffer = MLDF_PTR_RT(resources, slot);
                 if (loadedBuffer == 0) {
-                    if (MLDF_ID_RT(fileId) == -1) {
+                    if (MLDF_ID_RT(resources, fileId) == -1) {
                         texRestructRefs(1);
                     }
-                    DVDClose(fi);
-                    AtomicSList_Push(gDvdFileInfoPool, fi);
-                    MLDF_SP_SIZE(x) = 0;
-                    MLDF_SP_ID(x) = mapId;
+                    DVDClose(fileInfo);
+                    AtomicSList_Push(gDvdFileInfoPool, fileInfo);
+                    resources->sizes[slot] = 0;
+                    resources->ids[slot] = mapId;
                     return 0;
                 } else {
-                    if (sync != 0) {
-                        DVDRead(fi, loadedBuffer, MLDF_SP_SIZE(x), 0);
-                        DVDClose(fi);
-                        AtomicSList_Push(gDvdFileInfoPool, fi);
+                    if (readSynchronously != 0) {
+                        DVDRead(fileInfo, loadedBuffer, resources->sizes[slot], 0);
+                        DVDClose(fileInfo);
+                        AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x20000) == 0) && ((gAssetLoadInFlightFlags & 0x80000) == 0)) {
-                            mergeTableFiles(tbl->mergeBlocks, 0x26, 0x48, 0x800);
+                            mergeTableFiles(resources->mergeBlocks, MLDF_FILEID_BLOCKS_TAB_A, MLDF_FILEID_BLOCKS_TAB_B, 0x800);
                         }
                     } else {
-                        if (slot == 0x25) {
+                        if (slot == MLDF_FILEID_BLOCKS_BIN_A) {
                             gAssetLoadInFlightFlags |= 0x10000;
                         } else {
                             gAssetLoadInFlightFlags |= 0x40000;
                         }
-                        MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, blocksReadCb, 2);
+                        resources->fileInfo[slot] = fileInfo;
+                        DVDReadAsyncPrio(fileInfo, loadedBuffer, resources->sizes[slot], 0, blocksReadCb, 2);
                     }
-                    MLDF_OWNER_RT(slot) = mapId;
-                    return (void*)MLDF_SP_PTR(x);
+                    MLDF_OWNER_RT(resources, slot) = mapId;
+                    return MLDF_PTR_RT(resources, slot);
                 }
             }
         }
         break;
-    case 0x26:
-    case 0x48: {
+    case MLDF_FILEID_BLOCKS_TAB_A:
+    case MLDF_FILEID_BLOCKS_TAB_B: {
         int idx;
         int* grp;
-        result = MLDF_PTR(0x26);
-        if ((result != 0) && (MLDF_OWNER(0x26) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_BLOCKS_TAB_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_BLOCKS_TAB_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x48);
-        if ((result != 0) && (MLDF_OWNER(0x48) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_BLOCKS_TAB_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_BLOCKS_TAB_B] == mapId)) {
             return result;
         }
         {
             int slot;
-            DVDFileInfo* fi;
-            int ok;
+            DVDFileInfo* fileInfo;
+            int opened;
 
-            if (MLDF_OWNER(0x26) == -1) {
-                slot = 0x26;
-            } else if (MLDF_OWNER(0x48) == -1) {
-                slot = 0x48;
+            if (resources->owners[MLDF_FILEID_BLOCKS_TAB_A] == -1) {
+                slot = MLDF_FILEID_BLOCKS_TAB_A;
+            } else if (resources->owners[MLDF_FILEID_BLOCKS_TAB_B] == -1) {
+                slot = MLDF_FILEID_BLOCKS_TAB_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
-            grp = MLDF_REMAP;
+            grp = names->remapGroups;
             for (idx = 0; idx < 0x4b; idx++) {
                 if (mapId == grp[idx]) {
                     break;
@@ -2206,556 +2197,556 @@ void* mapLoadDataFile(int mapId, int fileId) {
             }
             piRomLoadSection(0, idx, 0);
             if (mapId > 4) {
-                sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(mapId), mapId + 1);
+                sprintf(path, names->fmtModTab, names->mapNames[mapId], mapId + 1);
             } else {
-                sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(mapId), mapId);
+                sprintf(path, names->fmtModTab, names->mapNames[mapId], mapId);
             }
-            fi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, fi);
-            if (ok == 0) {
+            fileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, fileInfo);
+            if (opened == 0) {
                 return 0;
             } else {
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
-                MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-                DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                if (sync != 0) {
-                    DVDRead(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-                    DVDClose(fi);
-                    AtomicSList_Push(gDvdFileInfoPool, fi);
+                resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
+                MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot], 0x7d7d7d7d, 0);
+                DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+                if (readSynchronously != 0) {
+                    DVDRead(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0);
+                    DVDClose(fileInfo);
+                    AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                     if (((gAssetLoadInFlightFlags & 0x20000) == 0) && ((gAssetLoadInFlightFlags & 0x80000) == 0)) {
-                        mergeTableFiles(tbl->mergeBlocks, 0x26, 0x48, 0x800);
+                        mergeTableFiles(resources->mergeBlocks, MLDF_FILEID_BLOCKS_TAB_A, MLDF_FILEID_BLOCKS_TAB_B, 0x800);
                     }
                 } else {
-                    if (slot == 0x26) {
+                    if (slot == MLDF_FILEID_BLOCKS_TAB_A) {
                         gAssetLoadInFlightFlags |= 0x20000;
                     } else {
                         gAssetLoadInFlightFlags |= 0x80000;
                     }
-                    MLDF_FINFO4(x) = fi;
-                    DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, blocksTabReadCb, 2);
+                    resources->fileInfo[slot] = fileInfo;
+                    DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, blocksTabReadCb, 2);
                 }
-                MLDF_OWNER_RT(slot) = mapId;
-                return (void*)MLDF_SP_PTR(x);
+                MLDF_OWNER_RT(resources, slot) = mapId;
+                return MLDF_PTR_RT(resources, slot);
             }
         }
         break;
     }
-    case 0x2b:
-    case 0x46:
-        result = MLDF_PTR(0x2b);
-        if ((result != 0) && (MLDF_OWNER(0x2b) == mapId)) {
+    case MLDF_FILEID_MODELS_BIN_A:
+    case MLDF_FILEID_MODELS_BIN_B:
+        result = resources->ptrs[MLDF_FILEID_MODELS_BIN_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_MODELS_BIN_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x46);
-        if ((result != 0) && (MLDF_OWNER(0x46) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_MODELS_BIN_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_MODELS_BIN_B] == mapId)) {
             return result;
         }
         {
             int slot;
-            DVDFileInfo* fi;
-            int ok;
+            DVDFileInfo* fileInfo;
+            int opened;
 
-            if (MLDF_ID(0x2b) == mapId) {
-                slot = 0x2b;
-                MLDF_ID(0x2b) = -1;
-            } else if (MLDF_ID(0x46) == mapId) {
-                slot = 0x46;
-                MLDF_ID(0x46) = -1;
-            } else if (MLDF_OWNER(0x2b) == -1) {
-                slot = 0x2b;
-            } else if (MLDF_OWNER(0x46) == -1) {
-                slot = 0x46;
+            if (resources->ids[MLDF_FILEID_MODELS_BIN_A] == mapId) {
+                slot = MLDF_FILEID_MODELS_BIN_A;
+                resources->ids[MLDF_FILEID_MODELS_BIN_A] = -1;
+            } else if (resources->ids[MLDF_FILEID_MODELS_BIN_B] == mapId) {
+                slot = MLDF_FILEID_MODELS_BIN_B;
+                resources->ids[MLDF_FILEID_MODELS_BIN_B] = -1;
+            } else if (resources->owners[MLDF_FILEID_MODELS_BIN_A] == -1) {
+                slot = MLDF_FILEID_MODELS_BIN_A;
+            } else if (resources->owners[MLDF_FILEID_MODELS_BIN_B] == -1) {
+                slot = MLDF_FILEID_MODELS_BIN_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
-            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, fi);
-            if (ok == 0) {
+            sprintf(path, sArchivePathFormat, names->mapNames[mapId], names->fileNames[fileId]);
+            fileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, fileInfo);
+            if (opened == 0) {
                 return 0;
             } else {
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
-                MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-                DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                loadedBuffer = MLDF_SP_PTR(x);
+                resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
+                MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot], 0x7d7d7d7d, 0);
+                DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+                loadedBuffer = MLDF_PTR_RT(resources, slot);
                 if (loadedBuffer == 0) {
-                    if (MLDF_ID_RT(fileId) == -1) {
+                    if (MLDF_ID_RT(resources, fileId) == -1) {
                         texRestructRefs(1);
                     }
-                    DVDClose(fi);
-                    AtomicSList_Push(gDvdFileInfoPool, fi);
-                    MLDF_SP_SIZE(x) = 0;
-                    MLDF_SP_ID(x) = mapId;
+                    DVDClose(fileInfo);
+                    AtomicSList_Push(gDvdFileInfoPool, fileInfo);
+                    resources->sizes[slot] = 0;
+                    resources->ids[slot] = mapId;
                     return 0;
                 } else {
-                    if (sync != 0) {
-                        DVDRead(fi, loadedBuffer, MLDF_SP_SIZE(x), 0);
-                        DVDClose(fi);
-                        AtomicSList_Push(gDvdFileInfoPool, fi);
+                    if (readSynchronously != 0) {
+                        DVDRead(fileInfo, loadedBuffer, resources->sizes[slot], 0);
+                        DVDClose(fileInfo);
+                        AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 4) == 0) && ((gAssetLoadInFlightFlags & 8) == 0)) {
-                            mergeTableFiles(tbl->mergeModels, 0x2a, 0x45, 0x800);
+                            mergeTableFiles(resources->mergeModels, MLDF_FILEID_MODELS_TAB_A, MLDF_FILEID_MODELS_TAB_B, 0x800);
                         }
                         gModelsArchiveLoadCount += 1;
                     } else {
                         gModelsArchiveLoadCount += 1;
-                        if (slot == 0x2b) {
+                        if (slot == MLDF_FILEID_MODELS_BIN_A) {
                             gAssetLoadInFlightFlags |= 1;
                         } else {
                             gAssetLoadInFlightFlags |= 2;
                         }
-                        MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, modelsReadCb, 2);
+                        resources->fileInfo[slot] = fileInfo;
+                        DVDReadAsyncPrio(fileInfo, loadedBuffer, resources->sizes[slot], 0, modelsReadCb, 2);
                     }
-                    MLDF_OWNER_RT(slot) = mapId;
-                    return (void*)MLDF_SP_PTR(x);
+                    MLDF_OWNER_RT(resources, slot) = mapId;
+                    return MLDF_PTR_RT(resources, slot);
                 }
             }
         }
         break;
-    case 0x2a:
-    case 0x45:
-        result = MLDF_PTR(0x2a);
-        if ((result != 0) && (MLDF_OWNER(0x2a) == mapId)) {
+    case MLDF_FILEID_MODELS_TAB_A:
+    case MLDF_FILEID_MODELS_TAB_B:
+        result = resources->ptrs[MLDF_FILEID_MODELS_TAB_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_MODELS_TAB_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x45);
-        if ((result != 0) && (MLDF_OWNER(0x45) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_MODELS_TAB_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_MODELS_TAB_B] == mapId)) {
             return result;
         }
         {
             int slot;
-            DVDFileInfo* fi;
-            int ok;
+            DVDFileInfo* fileInfo;
+            int opened;
 
-            if (MLDF_OWNER(0x2a) == -1) {
-                slot = 0x2a;
-            } else if (MLDF_OWNER(0x45) == -1) {
-                slot = 0x45;
+            if (resources->owners[MLDF_FILEID_MODELS_TAB_A] == -1) {
+                slot = MLDF_FILEID_MODELS_TAB_A;
+            } else if (resources->owners[MLDF_FILEID_MODELS_TAB_B] == -1) {
+                slot = MLDF_FILEID_MODELS_TAB_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
-            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, fi);
-            if (ok == 0) {
+            sprintf(path, sArchivePathFormat, names->mapNames[mapId], names->fileNames[fileId]);
+            fileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, fileInfo);
+            if (opened == 0) {
                 return 0;
             } else {
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
-                MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-                DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                if (sync != 0) {
-                    DVDRead(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-                    DVDClose(fi);
-                    AtomicSList_Push(gDvdFileInfoPool, fi);
+                resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
+                MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot], 0x7d7d7d7d, 0);
+                DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+                if (readSynchronously != 0) {
+                    DVDRead(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0);
+                    DVDClose(fileInfo);
+                    AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                     if (((gAssetLoadInFlightFlags & 4) == 0) && ((gAssetLoadInFlightFlags & 8) == 0)) {
-                        mergeTableFiles(tbl->mergeModels, 0x2a, 0x45, 0x800);
+                        mergeTableFiles(resources->mergeModels, MLDF_FILEID_MODELS_TAB_A, MLDF_FILEID_MODELS_TAB_B, 0x800);
                     }
                 } else {
-                    if (slot == 0x2a) {
+                    if (slot == MLDF_FILEID_MODELS_TAB_A) {
                         gAssetLoadInFlightFlags |= 4;
                     } else {
                         gAssetLoadInFlightFlags |= 8;
                     }
-                    MLDF_FINFO4(x) = fi;
-                    DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, modelsTabReadCb, 2);
+                    resources->fileInfo[slot] = fileInfo;
+                    DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, modelsTabReadCb, 2);
                 }
-                MLDF_OWNER_RT(slot) = mapId;
-                return (void*)MLDF_SP_PTR(x);
+                MLDF_OWNER_RT(resources, slot) = mapId;
+                return MLDF_PTR_RT(resources, slot);
             }
         }
         break;
-    case 0x30:
-    case 0x4a:
-        result = MLDF_PTR(0x30);
-        if ((result != 0) && (MLDF_OWNER(0x30) == mapId)) {
+    case MLDF_FILEID_ANIM_BIN_A:
+    case MLDF_FILEID_ANIM_BIN_B:
+        result = resources->ptrs[MLDF_FILEID_ANIM_BIN_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_ANIM_BIN_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x4a);
-        if ((result != 0) && (MLDF_OWNER(0x4a) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_ANIM_BIN_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_ANIM_BIN_B] == mapId)) {
             return result;
         }
         {
             int slot;
-            DVDFileInfo* fi;
-            int ok;
+            DVDFileInfo* fileInfo;
+            int opened;
 
-            if (MLDF_ID(0x30) == mapId) {
-                slot = 0x30;
-                MLDF_ID(0x30) = -1;
-            } else if (MLDF_ID(0x4a) == mapId) {
-                slot = 0x4a;
-                MLDF_ID(0x4a) = -1;
-            } else if (MLDF_OWNER(0x30) == -1) {
-                slot = 0x30;
-            } else if (MLDF_OWNER(0x4a) == -1) {
-                slot = 0x4a;
+            if (resources->ids[MLDF_FILEID_ANIM_BIN_A] == mapId) {
+                slot = MLDF_FILEID_ANIM_BIN_A;
+                resources->ids[MLDF_FILEID_ANIM_BIN_A] = -1;
+            } else if (resources->ids[MLDF_FILEID_ANIM_BIN_B] == mapId) {
+                slot = MLDF_FILEID_ANIM_BIN_B;
+                resources->ids[MLDF_FILEID_ANIM_BIN_B] = -1;
+            } else if (resources->owners[MLDF_FILEID_ANIM_BIN_A] == -1) {
+                slot = MLDF_FILEID_ANIM_BIN_A;
+            } else if (resources->owners[MLDF_FILEID_ANIM_BIN_B] == -1) {
+                slot = MLDF_FILEID_ANIM_BIN_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
-            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, fi);
-            if (ok == 0) {
+            sprintf(path, sArchivePathFormat, names->mapNames[mapId], names->fileNames[fileId]);
+            fileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, fileInfo);
+            if (opened == 0) {
                 return 0;
             } else {
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
-                MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-                DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                loadedBuffer = MLDF_SP_PTR(x);
+                resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
+                MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot], 0x7d7d7d7d, 0);
+                DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+                loadedBuffer = MLDF_PTR_RT(resources, slot);
                 if (loadedBuffer == 0) {
-                    if (MLDF_ID_RT(fileId) == -1) {
+                    if (MLDF_ID_RT(resources, fileId) == -1) {
                         texRestructRefs(1);
                     }
-                    DVDClose(fi);
-                    AtomicSList_Push(gDvdFileInfoPool, fi);
-                    MLDF_SP_SIZE(x) = 0;
-                    MLDF_SP_ID(x) = mapId;
+                    DVDClose(fileInfo);
+                    AtomicSList_Push(gDvdFileInfoPool, fileInfo);
+                    resources->sizes[slot] = 0;
+                    resources->ids[slot] = mapId;
                     return 0;
                 } else {
-                    if (sync != 0) {
-                        DVDRead(fi, loadedBuffer, MLDF_SP_SIZE(x), 0);
-                        DVDClose(fi);
-                        AtomicSList_Push(gDvdFileInfoPool, fi);
+                    if (readSynchronously != 0) {
+                        DVDRead(fileInfo, loadedBuffer, resources->sizes[slot], 0);
+                        DVDClose(fileInfo);
+                        AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x40) == 0) && ((gAssetLoadInFlightFlags & 0x80) == 0)) {
-                            mergeTableFiles(tbl->mergeAnim, 0x2f, 0x49, 3000);
+                            mergeTableFiles(resources->mergeAnim, MLDF_FILEID_ANIM_TAB_A, MLDF_FILEID_ANIM_TAB_B, 3000);
                         }
                     } else {
-                        if (slot == 0x30) {
+                        if (slot == MLDF_FILEID_ANIM_BIN_A) {
                             gAssetLoadInFlightFlags |= 0x10;
                         } else {
                             gAssetLoadInFlightFlags |= 0x20;
                         }
-                        MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, animReadCb, 2);
+                        resources->fileInfo[slot] = fileInfo;
+                        DVDReadAsyncPrio(fileInfo, loadedBuffer, resources->sizes[slot], 0, animReadCb, 2);
                     }
-                    MLDF_OWNER_RT(slot) = mapId;
-                    return (void*)MLDF_SP_PTR(x);
+                    MLDF_OWNER_RT(resources, slot) = mapId;
+                    return MLDF_PTR_RT(resources, slot);
                 }
             }
         }
         break;
-    case 0x2f:
-    case 0x49:
-        result = MLDF_PTR(0x2f);
-        if ((result != 0) && (MLDF_OWNER(0x2f) == mapId)) {
+    case MLDF_FILEID_ANIM_TAB_A:
+    case MLDF_FILEID_ANIM_TAB_B:
+        result = resources->ptrs[MLDF_FILEID_ANIM_TAB_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_ANIM_TAB_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x49);
-        if ((result != 0) && (MLDF_OWNER(0x49) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_ANIM_TAB_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_ANIM_TAB_B] == mapId)) {
             return result;
         }
         {
             int slot;
-            DVDFileInfo* fi;
-            int ok;
+            DVDFileInfo* fileInfo;
+            int opened;
 
-            if (MLDF_OWNER(0x2f) == -1) {
-                slot = 0x2f;
-            } else if (MLDF_OWNER(0x49) == -1) {
-                slot = 0x49;
+            if (resources->owners[MLDF_FILEID_ANIM_TAB_A] == -1) {
+                slot = MLDF_FILEID_ANIM_TAB_A;
+            } else if (resources->owners[MLDF_FILEID_ANIM_TAB_B] == -1) {
+                slot = MLDF_FILEID_ANIM_TAB_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
-            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, fi);
-            if (ok == 0) {
+            sprintf(path, sArchivePathFormat, names->mapNames[mapId], names->fileNames[fileId]);
+            fileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, fileInfo);
+            if (opened == 0) {
                 return 0;
             } else {
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
-                MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-                DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                if (sync != 0) {
-                    DVDRead(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-                    DVDClose(fi);
-                    AtomicSList_Push(gDvdFileInfoPool, fi);
+                resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
+                MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot], 0x7d7d7d7d, 0);
+                DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+                if (readSynchronously != 0) {
+                    DVDRead(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0);
+                    DVDClose(fileInfo);
+                    AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                     if (((gAssetLoadInFlightFlags & 0x40) == 0) && ((gAssetLoadInFlightFlags & 0x80) == 0)) {
-                        mergeTableFiles(tbl->mergeAnim, 0x2f, 0x49, 3000);
+                        mergeTableFiles(resources->mergeAnim, MLDF_FILEID_ANIM_TAB_A, MLDF_FILEID_ANIM_TAB_B, 3000);
                     }
                 } else {
-                    if (slot == 0x2f) {
+                    if (slot == MLDF_FILEID_ANIM_TAB_A) {
                         gAssetLoadInFlightFlags |= 0x40;
                     } else {
                         gAssetLoadInFlightFlags |= 0x80;
                     }
-                    MLDF_FINFO4(x) = fi;
-                    DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animTabReadCb, 2);
+                    resources->fileInfo[slot] = fileInfo;
+                    DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, animTabReadCb, 2);
                 }
-                MLDF_OWNER_RT(slot) = mapId;
-                return (void*)MLDF_SP_PTR(x);
+                MLDF_OWNER_RT(resources, slot) = mapId;
+                return MLDF_PTR_RT(resources, slot);
             }
         }
         break;
-    case 0x23:
-    case 0x4d:
-        result = MLDF_PTR(0x23);
-        if ((result != 0) && (MLDF_OWNER(0x23) == mapId)) {
+    case MLDF_FILEID_TEX0_BIN_A:
+    case MLDF_FILEID_TEX0_BIN_B:
+        result = resources->ptrs[MLDF_FILEID_TEX0_BIN_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_TEX0_BIN_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x4d);
-        if ((result != 0) && (MLDF_OWNER(0x4d) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_TEX0_BIN_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_TEX0_BIN_B] == mapId)) {
             return result;
         }
         {
             int slot;
-            DVDFileInfo* fi;
-            int ok;
+            DVDFileInfo* fileInfo;
+            int opened;
 
-            if (MLDF_ID(0x23) == mapId) {
-                slot = 0x23;
-                MLDF_ID(0x23) = -1;
-            } else if (MLDF_ID(0x4d) == mapId) {
-                slot = 0x4d;
-                MLDF_ID(0x4d) = -1;
-            } else if (MLDF_OWNER(0x23) == -1) {
-                slot = 0x23;
-            } else if (MLDF_OWNER(0x4d) == -1) {
-                slot = 0x4d;
+            if (resources->ids[MLDF_FILEID_TEX0_BIN_A] == mapId) {
+                slot = MLDF_FILEID_TEX0_BIN_A;
+                resources->ids[MLDF_FILEID_TEX0_BIN_A] = -1;
+            } else if (resources->ids[MLDF_FILEID_TEX0_BIN_B] == mapId) {
+                slot = MLDF_FILEID_TEX0_BIN_B;
+                resources->ids[MLDF_FILEID_TEX0_BIN_B] = -1;
+            } else if (resources->owners[MLDF_FILEID_TEX0_BIN_A] == -1) {
+                slot = MLDF_FILEID_TEX0_BIN_A;
+            } else if (resources->owners[MLDF_FILEID_TEX0_BIN_B] == -1) {
+                slot = MLDF_FILEID_TEX0_BIN_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
-            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, fi);
-            if (ok == 0) {
+            sprintf(path, sArchivePathFormat, names->mapNames[mapId], names->fileNames[fileId]);
+            fileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, fileInfo);
+            if (opened == 0) {
                 return 0;
             } else {
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
-                MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
-                DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                loadedBuffer = MLDF_SP_PTR(x);
+                resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
+                MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot] + 0x20, 0x7d7d7d7d, 0);
+                DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+                loadedBuffer = MLDF_PTR_RT(resources, slot);
                 if (loadedBuffer == 0) {
-                    if (MLDF_ID_RT(fileId) == -1) {
+                    if (MLDF_ID_RT(resources, fileId) == -1) {
                         texRestructRefs(1);
                     }
-                    DVDClose(fi);
-                    AtomicSList_Push(gDvdFileInfoPool, fi);
-                    MLDF_SP_SIZE(x) = 0;
-                    MLDF_SP_ID(x) = mapId;
+                    DVDClose(fileInfo);
+                    AtomicSList_Push(gDvdFileInfoPool, fileInfo);
+                    resources->sizes[slot] = 0;
+                    resources->ids[slot] = mapId;
                     return 0;
                 } else {
-                    if (sync != 0) {
-                        DVDRead(fi, loadedBuffer, MLDF_SP_SIZE(x), 0);
-                        DVDClose(fi);
-                        AtomicSList_Push(gDvdFileInfoPool, fi);
+                    if (readSynchronously != 0) {
+                        DVDRead(fileInfo, loadedBuffer, resources->sizes[slot], 0);
+                        DVDClose(fileInfo);
+                        AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x400) == 0) && ((gAssetLoadInFlightFlags & 0x800) == 0)) {
-                            mergeTableFiles(tbl->mergeTex0, 0x24, 0x4e, 0x1000);
+                            mergeTableFiles(resources->mergeTex0, MLDF_FILEID_TEX0_TAB_A, MLDF_FILEID_TEX0_TAB_B, 0x1000);
                         }
                     } else {
-                        if (slot == 0x23) {
+                        if (slot == MLDF_FILEID_TEX0_BIN_A) {
                             gAssetLoadInFlightFlags |= 0x100;
                         } else {
                             gAssetLoadInFlightFlags |= 0x200;
                         }
-                        MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, tex0readCb, 2);
+                        resources->fileInfo[slot] = fileInfo;
+                        DVDReadAsyncPrio(fileInfo, loadedBuffer, resources->sizes[slot], 0, tex0readCb, 2);
                     }
-                    MLDF_OWNER_RT(slot) = mapId;
-                    return (void*)MLDF_SP_PTR(x);
+                    MLDF_OWNER_RT(resources, slot) = mapId;
+                    return MLDF_PTR_RT(resources, slot);
                 }
             }
         }
         break;
-    case 0x24:
-    case 0x4e:
-        result = MLDF_PTR(0x24);
-        if ((result != 0) && (MLDF_OWNER(0x24) == mapId)) {
+    case MLDF_FILEID_TEX0_TAB_A:
+    case MLDF_FILEID_TEX0_TAB_B:
+        result = resources->ptrs[MLDF_FILEID_TEX0_TAB_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_TEX0_TAB_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x4e);
-        if ((result != 0) && (MLDF_OWNER(0x4e) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_TEX0_TAB_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_TEX0_TAB_B] == mapId)) {
             return result;
         }
         {
             int slot;
-            DVDFileInfo* fi;
-            int ok;
+            DVDFileInfo* fileInfo;
+            int opened;
 
-            if (MLDF_OWNER(0x24) == -1) {
-                slot = 0x24;
-            } else if (MLDF_OWNER(0x4e) == -1) {
-                slot = 0x4e;
+            if (resources->owners[MLDF_FILEID_TEX0_TAB_A] == -1) {
+                slot = MLDF_FILEID_TEX0_TAB_A;
+            } else if (resources->owners[MLDF_FILEID_TEX0_TAB_B] == -1) {
+                slot = MLDF_FILEID_TEX0_TAB_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
-            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, fi);
-            if (ok == 0) {
+            sprintf(path, sArchivePathFormat, names->mapNames[mapId], names->fileNames[fileId]);
+            fileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, fileInfo);
+            if (opened == 0) {
                 return 0;
             } else {
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
-                MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
-                DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                if (sync != 0) {
-                    DVDRead(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-                    DVDClose(fi);
-                    AtomicSList_Push(gDvdFileInfoPool, fi);
+                resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
+                MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot] + 0x20, 0x7d7d7d7d, 0);
+                DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+                if (readSynchronously != 0) {
+                    DVDRead(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0);
+                    DVDClose(fileInfo);
+                    AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                     if (((gAssetLoadInFlightFlags & 0x400) == 0) && ((gAssetLoadInFlightFlags & 0x800) == 0)) {
-                        mergeTableFiles(tbl->mergeTex0, 0x24, 0x4e, 0x1000);
+                        mergeTableFiles(resources->mergeTex0, MLDF_FILEID_TEX0_TAB_A, MLDF_FILEID_TEX0_TAB_B, 0x1000);
                     }
                 } else {
-                    if (slot == 0x24) {
+                    if (slot == MLDF_FILEID_TEX0_TAB_A) {
                         gAssetLoadInFlightFlags |= 0x400;
-                        MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab1readCb, 2);
+                        resources->fileInfo[slot] = fileInfo;
+                        DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, tex0tab1readCb, 2);
                     } else {
                         gAssetLoadInFlightFlags |= 0x800;
-                        MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab2readCb, 2);
+                        resources->fileInfo[slot] = fileInfo;
+                        DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, tex0tab2readCb, 2);
                     }
                 }
-                MLDF_OWNER_RT(slot) = mapId;
-                return (void*)MLDF_SP_PTR(x);
+                MLDF_OWNER_RT(resources, slot) = mapId;
+                return MLDF_PTR_RT(resources, slot);
             }
         }
         break;
-    case 0x20:
-    case 0x4b:
-        result = MLDF_PTR(0x20);
-        if ((result != 0) && (MLDF_OWNER(0x20) == mapId)) {
+    case MLDF_FILEID_TEX1_BIN_A:
+    case MLDF_FILEID_TEX1_BIN_B:
+        result = resources->ptrs[MLDF_FILEID_TEX1_BIN_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_TEX1_BIN_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x4b);
-        if ((result != 0) && (MLDF_OWNER(0x4b) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_TEX1_BIN_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_TEX1_BIN_B] == mapId)) {
             return result;
         }
         {
-            DVDFileInfo* fi;
+            DVDFileInfo* fileInfo;
 
-            if (MLDF_ID(0x20) == mapId) {
-                slot = 0x20;
-                MLDF_ID(0x20) = -1;
-            } else if (MLDF_ID(0x4b) == mapId) {
-                slot = 0x4b;
-                MLDF_ID(0x4b) = -1;
-            } else if (MLDF_OWNER(0x20) == -1) {
-                slot = 0x20;
-            } else if (MLDF_OWNER(0x4b) == -1) {
-                slot = 0x4b;
+            if (resources->ids[MLDF_FILEID_TEX1_BIN_A] == mapId) {
+                slot = MLDF_FILEID_TEX1_BIN_A;
+                resources->ids[MLDF_FILEID_TEX1_BIN_A] = -1;
+            } else if (resources->ids[MLDF_FILEID_TEX1_BIN_B] == mapId) {
+                slot = MLDF_FILEID_TEX1_BIN_B;
+                resources->ids[MLDF_FILEID_TEX1_BIN_B] = -1;
+            } else if (resources->owners[MLDF_FILEID_TEX1_BIN_A] == -1) {
+                slot = MLDF_FILEID_TEX1_BIN_A;
+            } else if (resources->owners[MLDF_FILEID_TEX1_BIN_B] == -1) {
+                slot = MLDF_FILEID_TEX1_BIN_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
-            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, fi);
-            if (ok == 0) {
+            sprintf(path, sArchivePathFormat, names->mapNames[mapId], names->fileNames[fileId]);
+            fileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, fileInfo);
+            if (opened == 0) {
                 return 0;
             } else {
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(fi);
-                MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
-                DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                loadedBuffer = MLDF_SP_PTR(x);
+                resources->sizes[slot] = DVD_FI_LENGTH(fileInfo);
+                MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot] + 0x20, 0x7d7d7d7d, 0);
+                DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+                loadedBuffer = MLDF_PTR_RT(resources, slot);
                 if (loadedBuffer == 0) {
-                    if (MLDF_ID_RT(fileId) == -1) {
+                    if (MLDF_ID_RT(resources, fileId) == -1) {
                         texRestructRefs(1);
                     }
-                    DVDClose(fi);
-                    AtomicSList_Push(gDvdFileInfoPool, fi);
-                    MLDF_SP_SIZE(x) = 0;
-                    MLDF_SP_ID(x) = mapId;
+                    DVDClose(fileInfo);
+                    AtomicSList_Push(gDvdFileInfoPool, fileInfo);
+                    resources->sizes[slot] = 0;
+                    resources->ids[slot] = mapId;
                     return 0;
                 } else {
-                    if (sync != 0) {
-                        DVDRead(fi, loadedBuffer, MLDF_SP_SIZE(x), 0);
-                        DVDClose(fi);
-                        AtomicSList_Push(gDvdFileInfoPool, fi);
+                    if (readSynchronously != 0) {
+                        DVDRead(fileInfo, loadedBuffer, resources->sizes[slot], 0);
+                        DVDClose(fileInfo);
+                        AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x4000) == 0) && ((gAssetLoadInFlightFlags & 0x8000) == 0)) {
-                            mergeTableFiles(tbl->mergeTex1, 0x21, 0x4c, 0x1000);
+                            mergeTableFiles(resources->mergeTex1, MLDF_FILEID_TEX1_TAB_A, MLDF_FILEID_TEX1_TAB_B, 0x1000);
                         }
                     } else {
-                        if (slot == 0x20) {
+                        if (slot == MLDF_FILEID_TEX1_BIN_A) {
                             gAssetLoadInFlightFlags |= 0x1000;
                         } else {
                             gAssetLoadInFlightFlags |= 0x2000;
                         }
-                        MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, tex1ReadCb, 2);
+                        resources->fileInfo[slot] = fileInfo;
+                        DVDReadAsyncPrio(fileInfo, loadedBuffer, resources->sizes[slot], 0, tex1ReadCb, 2);
                     }
-                    MLDF_OWNER_RT(slot) = mapId;
-                    return (void*)MLDF_SP_PTR(x);
+                    MLDF_OWNER_RT(resources, slot) = mapId;
+                    return MLDF_PTR_RT(resources, slot);
                 }
             }
         }
         break;
-    case 0x21:
-    case 0x4c:
-        result = MLDF_PTR(0x21);
-        if ((result != 0) && (MLDF_OWNER(0x21) == mapId)) {
+    case MLDF_FILEID_TEX1_TAB_A:
+    case MLDF_FILEID_TEX1_TAB_B:
+        result = resources->ptrs[MLDF_FILEID_TEX1_TAB_A];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_TEX1_TAB_A] == mapId)) {
             return result;
         }
-        result = MLDF_PTR(0x4c);
-        if ((result != 0) && (MLDF_OWNER(0x4c) == mapId)) {
+        result = resources->ptrs[MLDF_FILEID_TEX1_TAB_B];
+        if ((result != 0) && (resources->owners[MLDF_FILEID_TEX1_TAB_B] == mapId)) {
             return result;
         }
         {
-            if (MLDF_OWNER(0x21) == -1) {
-                slot = 0x21;
-            } else if (MLDF_OWNER(0x4c) == -1) {
-                slot = 0x4c;
+            if (resources->owners[MLDF_FILEID_TEX1_TAB_A] == -1) {
+                slot = MLDF_FILEID_TEX1_TAB_A;
+            } else if (resources->owners[MLDF_FILEID_TEX1_TAB_B] == -1) {
+                slot = MLDF_FILEID_TEX1_TAB_B;
             } else {
                 return 0;
             }
-            if (MLDF_SP_PTR(x) != 0) {
-                mm_free(MLDF_SP_PTR(x));
-                MLDF_SP_PTR(x) = 0;
+            if (MLDF_PTR_RT(resources, slot) != 0) {
+                mm_free(MLDF_PTR_RT(resources, slot));
+                MLDF_PTR_RT(resources, slot) = 0;
             }
-            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            tabFi = AtomicSList_Pop(gDvdFileInfoPool);
-            ok = DVDOpen(buf, tabFi);
-            if (ok == 0) {
+            sprintf(path, sArchivePathFormat, names->mapNames[mapId], names->fileNames[fileId]);
+            tableFileInfo = AtomicSList_Pop(gDvdFileInfoPool);
+            opened = DVDOpen(path, tableFileInfo);
+            if (opened == 0) {
                 return 0;
             } else {
-                MLDF_SP_SIZE(x) = DVD_FI_LENGTH(tabFi);
-                MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-                DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                if (sync != 0) {
-                    DVDRead(tabFi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-                    DVDClose(tabFi);
-                    AtomicSList_Push(gDvdFileInfoPool, tabFi);
+                resources->sizes[slot] = DVD_FI_LENGTH(tableFileInfo);
+                MLDF_PTR_RT(resources, slot) = mmAlloc(resources->sizes[slot], 0x7d7d7d7d, 0);
+                DCInvalidateRange(MLDF_PTR_RT(resources, slot), resources->sizes[slot]);
+                if (readSynchronously != 0) {
+                    DVDRead(tableFileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0);
+                    DVDClose(tableFileInfo);
+                    AtomicSList_Push(gDvdFileInfoPool, tableFileInfo);
                     if (((gAssetLoadInFlightFlags & 0x4000) == 0) && ((gAssetLoadInFlightFlags & 0x8000) == 0)) {
-                        mergeTableFiles(tbl->mergeTex1, 0x21, 0x4c, 0x1000);
+                        mergeTableFiles(resources->mergeTex1, MLDF_FILEID_TEX1_TAB_A, MLDF_FILEID_TEX1_TAB_B, 0x1000);
                     }
                 } else {
-                    MLDF_FINFO4(x) = tabFi;
-                    if (slot == 0x21) {
+                    resources->fileInfo[slot] = tableFileInfo;
+                    if (slot == MLDF_FILEID_TEX1_TAB_A) {
                         gAssetLoadInFlightFlags |= 0x4000;
-                        DVDReadAsyncPrio(tabFi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab1readCb, 2);
+                        DVDReadAsyncPrio(tableFileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, tex1tab1readCb, 2);
                     } else {
                         gAssetLoadInFlightFlags |= 0x8000;
-                        DVDReadAsyncPrio(tabFi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab2readCb, 2);
+                        DVDReadAsyncPrio(tableFileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, tex1tab2readCb, 2);
                     }
                 }
-                MLDF_OWNER_RT(slot) = mapId;
-                return (void*)MLDF_SP_PTR(x);
+                MLDF_OWNER_RT(resources, slot) = mapId;
+                return MLDF_PTR_RT(resources, slot);
             }
         }
         break;
