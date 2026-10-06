@@ -785,7 +785,8 @@ void defragMemory(int mode) {
                         int previousFreeDelay = mmSetFreeDelay(0);
                         mm_free(replacement);
                         mmSetFreeDelay(previousFreeDelay);
-                    } else if (*sizes < MM_REGION0_LARGE_ALLOCATION_THRESHOLD && (size_t)*buffers > (size_t)replacement) {
+                    } else if (*sizes < MM_REGION0_LARGE_ALLOCATION_THRESHOLD &&
+                               (size_t)*buffers > (size_t)replacement) {
                         int previousFreeDelay = mmSetFreeDelay(0);
                         mm_free(replacement);
                         mmSetFreeDelay(previousFreeDelay);
