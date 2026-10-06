@@ -189,143 +189,143 @@ void CameraModeNormal_updateTargetAction(CameraObject* camera, GameObject* targe
 }
 
 int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, f32* outB, int angle) {
-    GameObject* tgt0;
-    float probe[75];
-    u8 box[136];
-    float pathA[21];
-    float pathB[21];
+    GameObject* initialTarget;
+    CamcontrolCameraState probeCamera;
+    TrackHitResults traceWork;
+    float positivePath[21];
+    float negativePath[21];
     float prev[3];
-    f32 spinA;
-    f32 spinB;
-    f32 spinC;
-    f32 spinD;
-    GameObject* tgt;
-    int ang;
-    float* pA;
-    float* pB;
-    float* pp;
-    float* pA0;
-    float* pB0;
+    f32 distanceXZ;
+    f32 relativeX;
+    f32 relativeY;
+    f32 relativeZ;
+    GameObject* target;
+    int positiveAngle;
+    float* positivePoint;
+    float* negativePoint;
+    float* probePosition;
+    float* positiveSegment;
+    float* negativeSegment;
     int result;
-    int s;
+    int degrees;
     int i;
-    int found1;
-    int found2;
+    int positiveClearStep;
+    int negativeClearStep;
     int dir;
     int d;
-    f32 cosv;
+    f32 sinAngle;
     f32 rad;
-    f32 dx;
-    f32 dz;
-    f32 sinv;
-    f32 t;
-    f32 v;
+    f32 offsetZ;
+    f32 offsetX;
+    f32 cosAngle;
+    f32 rotatedX;
+    f32 rotatedZ;
 
     OSGetTick(); /* timing probe; return value intentionally unused */
     result = 0;
     (*gCameraInterface)
-        ->getRelativePosition(cam, &spinB, &spinC, &spinD, &spinA, gCameraModeNormalState->targetHeight, 0);
-    tgt0 = cam->anim.targetObj;
-    *(int*)&probe[35] = (int)tgt0;
-    probe[1] = cam->anim.worldPosY;
-    pathA[0] = cam->anim.worldPosX;
-    pathA[1] = cam->anim.worldPosY;
-    pathA[2] = cam->anim.worldPosZ;
-    pathB[0] = pathA[0];
-    pathB[1] = pathA[1];
-    pathB[2] = pathA[2];
-    if (tgt0->anim.classId == 1) {
-        cameraGetPrevPos2(tgt0, &prev[0], &prev[1], &prev[2]);
+        ->getRelativePosition(cam, &relativeX, &relativeY, &relativeZ, &distanceXZ, gCameraModeNormalState->targetHeight, 0);
+    initialTarget = cam->anim.targetObj;
+    probeCamera.focusObj = &initialTarget->anim;
+    probeCamera.worldPosition[1] = cam->anim.worldPosY;
+    positivePath[0] = cam->anim.worldPosX;
+    positivePath[1] = cam->anim.worldPosY;
+    positivePath[2] = cam->anim.worldPosZ;
+    negativePath[0] = positivePath[0];
+    negativePath[1] = positivePath[1];
+    negativePath[2] = positivePath[2];
+    if (initialTarget->anim.classId == 1) {
+        cameraGetPrevPos2(initialTarget, &prev[0], &prev[1], &prev[2]);
     } else {
-        prev[0] = tgt0->anim.worldPosX;
-        prev[1] = tgt0->anim.worldPosY + gCameraModeNormalState->targetHeight;
-        prev[2] = tgt0->anim.worldPosZ;
+        prev[0] = initialTarget->anim.worldPosX;
+        prev[1] = initialTarget->anim.worldPosY + gCameraModeNormalState->targetHeight;
+        prev[2] = initialTarget->anim.worldPosZ;
     }
-    s = 0xf;
+    degrees = 0xf;
     i = 0;
-    found1 = -1;
-    found2 = -1;
-    ang = 0xaaa;
-    pA0 = pathA;
-    pA = pA0;
-    pB0 = pathB;
-    pB = pB0;
-    pp = probe;
-    while ((s16)s <= 0x5a) {
-        if (found1 == -1) {
-            dx = spinD;
-            dz = spinB;
-            tgt = (GameObject*)cam->anim.targetObj;
-            rad = (3.1415927f * (f32)(s16)ang) / 32768.0f;
-            cosv = mathSinf(rad);
-            sinv = mathCosf(rad);
-            t = dz * sinv - dx * cosv;
-            v = t * cosv + dx * sinv;
-            t += tgt->anim.worldPosX;
-            probe[0] = t;
-            v += tgt->anim.worldPosZ;
-            probe[2] = v;
-            pA[3] = probe[0];
-            pA[4] = probe[1];
-            pA[5] = probe[2];
-            if (camcontrol_traceMove(prev, pp, NULL, (TrackHitResults*)box, 7, '\0', '\0', 3.9f) != 0) {
-                found1 = i;
+    positiveClearStep = -1;
+    negativeClearStep = -1;
+    positiveAngle = 0xaaa;
+    positiveSegment = positivePath;
+    positivePoint = positiveSegment;
+    negativeSegment = negativePath;
+    negativePoint = negativeSegment;
+    probePosition = probeCamera.worldPosition;
+    while ((s16)degrees <= 0x5a) {
+        if (positiveClearStep == -1) {
+            offsetZ = relativeZ;
+            offsetX = relativeX;
+            target = cam->anim.targetObj;
+            rad = (3.1415927f * (f32)(s16)positiveAngle) / 32768.0f;
+            sinAngle = mathSinf(rad);
+            cosAngle = mathCosf(rad);
+            rotatedX = offsetX * cosAngle - offsetZ * sinAngle;
+            rotatedZ = rotatedX * sinAngle + offsetZ * cosAngle;
+            rotatedX += target->anim.worldPosX;
+            probePosition[0] = rotatedX;
+            rotatedZ += target->anim.worldPosZ;
+            probePosition[2] = rotatedZ;
+            positivePoint[3] = probePosition[0];
+            positivePoint[4] = probePosition[1];
+            positivePoint[5] = probePosition[2];
+            if (camcontrol_traceMove(prev, probePosition, NULL, &traceWork, 7, '\0', '\0', 3.9f) != 0) {
+                positiveClearStep = i;
             }
         }
-        if (found2 == -1) {
-            dx = spinD;
-            dz = spinB;
-            tgt = (GameObject*)cam->anim.targetObj;
-            rad = (3.1415927f * (f32)(s16)(-s * 0xb6)) / 32768.0f;
-            cosv = mathSinf(rad);
-            sinv = mathCosf(rad);
-            t = dz * sinv - dx * cosv;
-            v = t * cosv + dx * sinv;
-            t += tgt->anim.worldPosX;
-            probe[0] = t;
-            v += tgt->anim.worldPosZ;
-            probe[2] = v;
-            pB[3] = probe[0];
-            pB[4] = probe[1];
-            pB[5] = probe[2];
-            if (camcontrol_traceMove(prev, pp, NULL, (TrackHitResults*)box, 7, '\0', '\0', 3.9f) != 0) {
-                found2 = i;
+        if (negativeClearStep == -1) {
+            offsetZ = relativeZ;
+            offsetX = relativeX;
+            target = cam->anim.targetObj;
+            rad = (3.1415927f * (f32)(s16)(-degrees * 0xb6)) / 32768.0f;
+            sinAngle = mathSinf(rad);
+            cosAngle = mathCosf(rad);
+            rotatedX = offsetX * cosAngle - offsetZ * sinAngle;
+            rotatedZ = rotatedX * sinAngle + offsetZ * cosAngle;
+            rotatedX += target->anim.worldPosX;
+            probePosition[0] = rotatedX;
+            rotatedZ += target->anim.worldPosZ;
+            probePosition[2] = rotatedZ;
+            negativePoint[3] = probePosition[0];
+            negativePoint[4] = probePosition[1];
+            negativePoint[5] = probePosition[2];
+            if (camcontrol_traceMove(prev, probePosition, NULL, &traceWork, 7, '\0', '\0', 3.9f) != 0) {
+                negativeClearStep = i;
             }
         }
-        pA += 3;
-        pB += 3;
+        positivePoint += 3;
+        negativePoint += 3;
         i++;
-        ang += 0xaaa;
-        s += 0xf;
+        positiveAngle += 0xaaa;
+        degrees += 0xf;
     }
-    if (found1 == -1) {
-        found1 = 6;
+    if (positiveClearStep == -1) {
+        positiveClearStep = 6;
     } else {
-        for (i = 0; i <= found1; i++) {
-            if (camcontrol_traceMove(pA0, pathA + (i + 1) * 3, NULL, (TrackHitResults*)box, 7, '\0', '\0', 3.9f) == 0) {
-                found1 = 6;
+        for (i = 0; i <= positiveClearStep; i++) {
+            if (camcontrol_traceMove(positiveSegment, positivePath + (i + 1) * 3, NULL, &traceWork, 7, '\0', '\0', 3.9f) == 0) {
+                positiveClearStep = 6;
                 break;
             }
-            pA0 += 3;
+            positiveSegment += 3;
         }
     }
-    if (found2 == -1) {
-        found2 = 6;
+    if (negativeClearStep == -1) {
+        negativeClearStep = 6;
     } else {
-        for (i = 0; i <= found2; i++) {
-            if (camcontrol_traceMove(pB0, pathB + (i + 1) * 3, NULL, (TrackHitResults*)box, 7, '\0', '\0', 3.9f) == 0) {
-                found2 = 6;
+        for (i = 0; i <= negativeClearStep; i++) {
+            if (camcontrol_traceMove(negativeSegment, negativePath + (i + 1) * 3, NULL, &traceWork, 7, '\0', '\0', 3.9f) == 0) {
+                negativeClearStep = 6;
                 break;
             }
-            pB0 += 3;
+            negativeSegment += 3;
         }
     }
     dir = 0;
-    if (found1 < found2) {
+    if (positiveClearStep < negativeClearStep) {
         dir = 1;
-    } else if (found2 < found1) {
+    } else if (negativeClearStep < positiveClearStep) {
         dir = -1;
-    } else if (found1 < 6) {
+    } else if (positiveClearStep < 6) {
         dir = 1;
     }
     if (dir != 0) {

@@ -33,9 +33,14 @@ typedef struct CamcontrolCameraState {
     f32 localX;
     f32 localY;
     f32 localZ;
-    f32 worldX;
-    f32 worldY;
-    f32 worldZ;
+    union {
+        struct {
+            f32 worldX;
+            f32 worldY;
+            f32 worldZ;
+        };
+        f32 worldPosition[3];
+    };
     u8 pad24[0x30 - 0x24];
     GameObject* localFrameObj;
     u8 pad34[0xA4 - 0x34];
@@ -90,6 +95,7 @@ STATIC_ASSERT(sizeof(CamcontrolCameraState) == 0x144);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, yaw) == 0x00);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, localX) == 0x0C);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, worldX) == 0x18);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, worldPosition) == 0x18);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, localFrameObj) == 0x30);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, focusObj) == 0xA4);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, prevLocalX) == 0xA8);

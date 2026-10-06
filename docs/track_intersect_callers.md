@@ -37,8 +37,7 @@ the same instructions. Offset assertions live in the camera's owning header.
 its mask at SP+0x82. The record ends at SP+0x84, before saves at +0x88/+0x8C.
 Its former 111-byte array is now the complete aligned record. The already
 112-byte result arrays in target-position and wall-avoidance queries are
-also typed. The wall-direction search still retains larger scratch arrays
-pending recovery of its surrounding locals.
+also typed. The remaining wall-direction search storage is recovered below.
 
 ## Validation
 
@@ -102,3 +101,56 @@ function from the target object ABI. Both player and non-player paths
 exercise both trace origins, full native collision-record writes, timer
 reset, hit-mask caching, plane-based height locking, and the null-target
 return. This is a local storage probe, not a complete native camera test.
+
+## Wall-direction search camera (2026-10-06)
+
+The apparent 75-float `probe` and 136-byte `box` in
+`CameraModeNormal_chooseWallAvoidanceDirection` were an incorrect division
+of two real locals: a 0x70-byte `TrackHitResults` followed by a 0x144-byte
+camera state. Retail EN's 0x300-byte frame establishes their placement:
+
+| Local or field | Stack offset | Size |
+| --- | ---: | ---: |
+| Target trace origin | 0x18 | 12 |
+| Negative-angle path, seven positions | 0x24 | 84 |
+| Positive-angle path, seven positions | 0x78 | 84 |
+| `TrackHitResults` | 0xCC | 0x70 |
+| Temporary `CamcontrolCameraState` | 0x13C | 0x144 |
+| Temporary camera's world position | 0x154 | 12 |
+| Temporary camera's focus pointer | 0x1E0 | 4 |
+| Following conversion temporary | 0x280 | 8 |
+
+The position and focus stores independently land at the camera's +0x18
+and +0xA4 offsets. The 0x144-byte record ends at the conversion temporary;
+retail `Camera_initialise` separately clears exactly 0x144 bytes of the
+live state. The existing `CamcontrolCameraState` definition expresses all
+three facts. The old `box` consumed the camera's first 0x18 bytes, while
+`probe` consumed its remaining 0x12C bytes. Its `*(int*)&probe[35]` store
+was really `probeCamera.focusObj`, not a float-array element or padding.
+
+The search now declares both actual record types and uses the camera's
+world-position array. This view shares the existing X/Y/Z fields in their
+owning header, with a checked +0x18 offset. The focus pointer is assigned
+through `&initialTarget->anim`, preserving native pointer width. Positive
+and negative paths each retain their evidenced initial point plus six
+candidate points. Their names and trigonometric locals now describe the
+direction and value being used; the retail arithmetic is preserved.
+
+An initial typed spelling copied the world-position address through an
+extra register. The compiler trace isolated this to the pointer binding;
+using the same vector pointer for the candidate stores and trace call
+restores the exact instructions. No extra padding, compiler profile change,
+or fabricated storage is needed.
+
+All 19 camera functions, 12,592 code bytes, and 260 data bytes match in
+all five versions. Full-project reports without completion overrides show
+no new discrepancies, and every source build and strict retail checksum
+passes. Formatting preserves each version's complete camera object hash.
+
+`python3 tools/test_camera_wall_search.py` compiles the actual search and
+record definitions under ASan/UBSan at `-O0` and `-O2`. It checks the
+full-width focus pointer through the passed position view, both target
+classes, all six search steps, both path directions, tie selection,
+segment rejection, full native collision writes, and yaw-offset clamping.
+The surrounding camera and trace services are isolated fixtures, as in
+the update-local test above.
