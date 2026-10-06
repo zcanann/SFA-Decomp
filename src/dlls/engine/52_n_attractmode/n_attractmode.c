@@ -206,7 +206,7 @@ void n_attractmode_prepareMovie(void) {
     gAttractMoviePreparePending = NATTRACTMODE_MOVIE_BUSY;
     ok = AttractMovieAudio_Init(NATTRACTMODE_MOVIE_SETUP_ID);
     if (ok != 0) {
-        ok = movieLoad("starfox.thp", NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
+        ok = movieLoad("starfox.thp", FALSE);
         if (ok == 0) {
             AttractMovieAudio_Shutdown();
         } else {

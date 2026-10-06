@@ -1384,24 +1384,13 @@ main/thp/dll_3b.c:
 dolphin/ax/AX.c:
 	.text       start:0x80117668 end:0x80117668
 
-main/thp/n_options.c:
-	.text       start:0x80117668 end:0x8011846C
+main/thp/THPPlayer.c:
+	.text       start:0x80117668 end:0x80119458
 	.data       start:0x8031A3B0 end:0x8031A4B0
 	.bss        start:0x803A57C0 end:0x803A5F08
-	.sbss       start:0x803DD660 end:0x803DD664
-	.sdata2     start:0x803E1D30 end:0x803E1D54
-
-main/thp/dll_3e.c:
-	.text       start:0x8011846C end:0x80118C88
-	.sbss       start:0x803DD664 end:0x803DD681
-
-main/thp/attractmovie.c:
-	.text       start:0x80118C88 end:0x80119000
-
-main/thp/picmenu.c:
-	.text       start:0x80119000 end:0x80119458
 	.sdata      start:0x803DB9E8 end:0x803DB9F0
-	.sdata2     start:0x803E1D54 end:0x803E1D58
+	.sbss       start:0x803DD660 end:0x803DD681
+	.sdata2     start:0x803E1D30 end:0x803E1D58
 
 main/thp/THPRead.c:
 	.text       start:0x80119458 end:0x80119724

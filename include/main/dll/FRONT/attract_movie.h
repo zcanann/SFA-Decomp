@@ -108,6 +108,24 @@ typedef struct AttractMoviePlayer {
     u8 pad1A4[4];
 } AttractMoviePlayer;
 
+STATIC_ASSERT(sizeof(AttractMoviePlayer) == 0x1A8);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, header) == 0x3C);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, isOpen) == 0x98);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, state) == 0x9C);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, internalState) == 0x9D);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, playFlags) == 0x9E);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, audioExists) == 0x9F);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, isOnMemory) == 0xA8);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, movieData) == 0xAC);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, initOffset) == 0xB0);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, initReadSize) == 0xB4);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, initReadFrame) == 0xB8);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, videoDecodeCount) == 0xD0);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, curVideoFrameNumber) == 0xE4);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, curAudioFrameNumber) == 0xE8);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, curTextureSet) == 0xEC);
+STATIC_ASSERT(offsetof(AttractMoviePlayer, curAudioBuffer) == 0xF0);
+
 extern AttractMoviePlayer gAttractMoviePlayer;
 
 extern s32 gAttractMovieAudioActive;

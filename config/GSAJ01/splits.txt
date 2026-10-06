@@ -1381,24 +1381,13 @@ main/thp/dll_3b.c:
 	.bss        start:0x803A4568 end:0x803A58E0
 	.sbss       start:0x803DD778 end:0x803DD77C
 
-main/thp/n_options.c:
-	.text       start:0x80117688 end:0x8011848C
+main/thp/THPPlayer.c:
+	.text       start:0x80117688 end:0x80119478
 	.data       start:0x8031A4D0 end:0x8031A5D0
 	.bss        start:0x803A58E0 end:0x803A6028
-	.sbss       start:0x803DD780 end:0x803DD784
-	.sdata2     start:0x803E1E50 end:0x803E1E74
-
-main/thp/dll_3e.c:
-	.text       start:0x8011848C end:0x80118CA8
-	.sbss       start:0x803DD784 end:0x803DD7A1
-
-main/thp/attractmovie.c:
-	.text       start:0x80118CA8 end:0x80119020
-
-main/thp/picmenu.c:
-	.text       start:0x80119020 end:0x80119478
 	.sdata      start:0x803DBB08 end:0x803DBB10
-	.sdata2     start:0x803E1E74 end:0x803E1E78
+	.sbss       start:0x803DD780 end:0x803DD7A1
+	.sdata2     start:0x803E1E50 end:0x803E1E78
 
 main/thp/THPRead.c:
 	.text       start:0x80119478 end:0x80119744

@@ -1639,9 +1639,12 @@ and that md5-of-every-`.o` reports as 33. **A new `#include` is not priced by de
 Completing an array type is a semantic change, not a declaration move, and it is priced on both
 sides:
 
-- **Declaration side.** `gAttractMovieAudioDmaBuffer` moves into `attract_movie_api.h`, but the
-  declaration must stay `extern char gAttractMovieAudioDmaBuffer[];`. Carrying the `[0x50C]` into
-  the header completes the type for `dll_3e.c` and costs `prepareAttractMode` 100.0 -> 99.087.
+- **Declaration side, historical THP example.** Completing `gAttractMovieAudioDmaBuffer`
+  as `[0x50C]` formerly cost `prepareAttractMode` 100.0 -> 99.087 in the artificial
+  `dll_3e.c` fragment. [Player TU recovery](thp_video_decode_recovery.md) supersedes
+  that restriction: the audio buffer owns `0x500` bytes, its former tail is a separate
+  message array, and preparation addresses the actual player and queues. The complete
+  definition now shares one exact TU with preparation; no padded control overlay remains.
 - **Definition side, and it is the data axis.** `2589a58b75`: `projgfx/194`'s
   `sProjdfp1rDoNoLongerSupported` was defined `char [40]` where the string is retail's 0x24 bytes.
   The four surplus bytes over-size the object, and because `matched_data` is all-or-nothing per
