@@ -2302,7 +2302,8 @@ void ObjModel_Release(u8* model) {
         model_adjustModelList(gModelList, ((ModelFileHeader*)header)->modelId); /* modelId */
         z[0] = 0;
         for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->textureCount; z[1] += sizeof(ModelTextureEntry), z[0]++) {
-            textureFree((Texture*)(textureIdxToPtr(((ModelTextureEntry*)((u8*)((ModelFileHeader*)header)->textureEntries + z[1]))->reference)));
+            textureFree((Texture*)(textureIdxToPtr(
+                ((ModelTextureEntry*)((u8*)((ModelFileHeader*)header)->textureEntries + z[1]))->reference)));
         }
         if (((ModelFileHeader*)header)->moveData != NULL && ((ModelFileHeader*)header)->animationCount != 0) {
             z[0] = 0;
@@ -2357,7 +2358,8 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize) {
         i[0] = 0;
         textureOffset[0] = i[0];
         for (; i[0] < loaded[0]->textureCount; i[0]++) {
-            textureRef = textureLoad(-(((ModelTextureEntry*)((u8*)loaded[0]->textureEntries + textureOffset[0]))->assetId | 0x8000), 1);
+            textureRef = textureLoad(
+                -(((ModelTextureEntry*)((u8*)loaded[0]->textureEntries + textureOffset[0]))->assetId | 0x8000), 1);
             ((ModelTextureEntry*)((u8*)loaded[0]->textureEntries + textureOffset[0]))->loadResult = textureRef;
             textureOffset[0] += sizeof(ModelTextureEntry);
         }
