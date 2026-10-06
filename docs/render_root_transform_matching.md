@@ -11,8 +11,9 @@ on the IR range splitter, not by sweeping.
 
 ## Provenance
 
-Dinosaur Planet implements the same decoder as hand-written MIPS: `func_8001CAA4` in
-`asm/model_asm.s`. It uses the same `ObjAnimState` offsets (`0x2C` cursor, `0x34` descriptors,
+Dinosaur Planet has the corresponding decoder at `func_8001CAA4` in generated
+`asm/model_asm.s`. That disassembly does not establish handwritten authorship.
+It uses the same `ObjAnimState` offsets (`0x2C` cursor, `0x34` descriptors,
 `0x4C` stride). The SFA C reads like a port that keeps each 64-bit MIPS register as a `u64`/`s64`
 local: `curB` is `a3`, `posA` is `t0`, `bufA`/`bufB` are `s3`/`s7`, `h` is `s0`, `nib` is `s1`
 and `bitpos` is `s2`. This explains the pointer arithmetic done in 64 bits. It also explains
@@ -54,3 +55,61 @@ and `bitpos` is `s2`. This explains the pointer arithmetic done in 64 bits. It a
 
 - `tools/tricky_backend_ir.py` decodes `addc`/`adde`/`subfc`/`subfe`/`mulhwu` (PCode opcodes
   `0x3D`/`0x3E`/`0x4D`/`0x4E`/`0x48`). The capture's opcode alignment check verifies them.
+
+## Native address flow and defined rotation wrap
+
+2026-10-06. The decoder's frame, descriptor and output address conversions now
+use `size_t`, as do the private aligned-word helpers. The second-frame cursor
+uses `ptrdiff_t`, preserving the signed target arithmetic while retaining native
+pointer width. Previously that cursor and the helper arguments were 32-bit
+integers; widening just the initial pointer conversion would still truncate them.
+Foxhollow independently fixes these address paths with `uintptr_t` conversions
+and widened helpers, and supplies the separate endian adaptation needed by its
+native port. This recovery preserves the decomp's target-endian data accesses.
+
+The descriptor, window, bit-width, interpolation and address locals now name
+their roles. The older names above describe the original matching investigation:
+`curB`/`posA` are `frameAddressB`/`frameAddressA`, `bufA`/`bufB` are
+`windowA`/`windowB`, and `h` is `descriptor`. The 64-bit address intermediates
+remain deliberate: narrowing `RenderPackedAddress` to `size_t` on the target
+reduces the function from 2,212 to 2,100 bytes and loses retail's high-word
+operations. The existing reuse of the first window as a temporary refill byte
+count also remains intact.
+
+Rotation differences wrap to signed 14-bit values before interpolation. The
+left shift now operates on the unsigned representation before conversion back
+to `s64`, eliminating the former undefined shift of a negative signed value.
+The following repeated divisions retain truncation toward zero. Replacing those
+divisions with arithmetic shifts changes negative interpolation results.
+Zero-width rotation and translation descriptors still output zero; their base
+words do not become constant root-motion outputs. Scale tracks consume bits
+but do not produce an output in this decoder.
+
+`python3 tools/test_render_root_transform.py` runs 192 partial/full packed-word
+checks and 12,800 root-transform scenarios at each of O0 and O2 with ASan/UBSan.
+An independent Python oracle generates all 64 combinations of optional tracks
+across three axes, zero/one/14/15/mixed bit widths, five fractional phases
+(including a negative phase), and streams up to 135 bits. The native fixture
+tests every source alignment, pointers above 4 GiB, preserved inputs, output
+guards, wraparound deltas and all three refill sites. It arranges aligned input words
+in host byte order to isolate address/arithmetic behavior; it does not claim
+that the unmodified target loads deserialize big-endian assets on a little-endian
+host. Five local negative controls catch pointer truncation, truncation of the
+second cursor, signed-shift UB, arithmetic-shift rounding and an incorrect tail
+address.
+
+With optional `unicorn==2.1.4` installed,
+`python3 tools/render_root_transform_probe.py` checks the same 1,600 base cases
+against the hash-verified EN retail DOL. It executes retail `floorf` and the
+integer runtime helpers, using the existing Gekko shim for paired register
+saves. All output halfwords, input bytes, output guards, stack and nonvolatile
+registers agree. Coverage reaches 553/553 decoder instructions, 104/104 head
+helper instructions and 100/100 tail helper instructions. This is synthetic
+behavior evidence, not a source-authorship or hardware floating-point proof.
+
+All five complete render objects remain byte-identical to the pre-change
+objects, including code, data, symbols and relocations; their objdiff results
+remain 100%. Every other source object is also byte-identical. All five
+`all_source` builds and strict source-linked DOL checks pass. The two existing
+TRK/MusyX report accounting artifacts are unchanged. Formatting is committed
+separately and verified against the complete object inventories.
