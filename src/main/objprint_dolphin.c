@@ -987,7 +987,8 @@ static void objSetupLightChannels(u8* model, GameObject* obj) {
     }
 }
 
-static void modelLoadMtxsToGx(ModelFileHeader* modelFile, ObjModel* model, ModelRenderInstrsState* stream, f32* viewMatrix) {
+static void modelLoadMtxsToGx(ModelFileHeader* modelFile, ObjModel* model, ModelRenderInstrsState* stream,
+                              f32* viewMatrix) {
     char* cache = (char*)getCache();
     if (gModelMtxCacheState == 1) {
         char* cacheBase = (char*)getCache();
@@ -1040,7 +1041,8 @@ static void modelLoadMtxsToGx(ModelFileHeader* modelFile, ObjModel* model, Model
             if (gModelMtxCacheState == 2) {
                 GXLoadPosMtxImm((const f32(*)[4])(cache + jointIndex * 0x30), *posMtxIds[0]);
             } else {
-                PSMTXConcat((MtxPtr)viewMatrix, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)model, jointIndex), (MtxPtr)tmp);
+                PSMTXConcat((MtxPtr)viewMatrix, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)model, jointIndex),
+                            (MtxPtr)tmp);
                 GXLoadPosMtxImm((const f32(*)[4])tmp, *posMtxIds[0]);
             }
             posMtxIds[0]++;
@@ -1048,7 +1050,8 @@ static void modelLoadMtxsToGx(ModelFileHeader* modelFile, ObjModel* model, Model
     }
 }
 
-static void renderOpMatrix(ModelFileHeader* modelFile, ObjModel* model, ModelRenderInstrsState* stream, f32* normalScaleMatrix, f32* viewMatrix, u8 usesNormalMatrix, u8 usesTextureMatrix,
+static void renderOpMatrix(ModelFileHeader* modelFile, ObjModel* model, ModelRenderInstrsState* stream,
+                           f32* normalScaleMatrix, f32* viewMatrix, u8 usesNormalMatrix, u8 usesTextureMatrix,
                            u8 shadowPass) {
     u8* posMtxIds;
     char* cache;
@@ -1120,7 +1123,8 @@ static void renderOpMatrix(ModelFileHeader* modelFile, ObjModel* model, ModelRen
                     GXLoadNrmMtxImm((const f32(*)[4])normalMtx, *posMtxIds);
                 }
             } else {
-                PSMTXConcat((MtxPtr)viewMatrix, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)model, jointIndex), (MtxPtr)tmp);
+                PSMTXConcat((MtxPtr)viewMatrix, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)model, jointIndex),
+                            (MtxPtr)tmp);
                 GXLoadPosMtxImm((const f32(*)[4])tmp, *posMtxIds);
                 if (shadowPass == 0 && (usesNormalMatrix != 0 || usesTextureMatrix != 0)) {
                     tmp[3] = 0.0f;
