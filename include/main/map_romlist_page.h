@@ -25,8 +25,7 @@ STATIC_ASSERT(offsetof(MapRomListOffsets, layerRectsOffset) == 0x10);
 STATIC_ASSERT(offsetof(MapRomListOffsets, visLayerRectsOffset) == 0x14);
 STATIC_ASSERT(offsetof(MapRomListOffsets, objectsOffset) == 0x18);
 
-typedef struct MapRomListPage
-{
+typedef struct MapRomListPage {
     s16 sizeX;
     s16 sizeZ;
     s16 originX;
@@ -63,8 +62,7 @@ STATIC_ASSERT(offsetof(MapRomListPage, worldX) == 0x24);
 STATIC_ASSERT(offsetof(MapRomListPage, worldZ) == 0x28);
 STATIC_ASSERT(sizeof(MapRomListPage) == 0x38);
 
-typedef struct MapRomListIndex
-{
+typedef struct MapRomListIndex {
     int groupOffset[32];
     int objectsSize;
     int curvesOffset;

@@ -4021,7 +4021,10 @@ void mapsBinGetRomlistSize(int headerOffset, int* objectCount, int* unknown1E, i
     *objectCount = page->objectCount;
     *unknown1E = page->unk1E;
     *objectBytes = ((struct PackHeader*)((u8*)gResourceFileBuffers[MLDF_FILEID_MAPS_BIN] +
-        ((MapRomListOffsets*)((u8*)gResourceFileBuffers[MLDF_FILEID_MAPS_TAB] + tableWordIndex * sizeof(s32)))->objectsOffset))->decompressedSize;
+                                         ((MapRomListOffsets*)((u8*)gResourceFileBuffers[MLDF_FILEID_MAPS_TAB] +
+                                                               tableWordIndex * sizeof(s32)))
+                                             ->objectsOffset))
+                       ->decompressedSize;
 }
 
 void checkLoadBlock(int a, int* pc, int* p8) {
