@@ -37,7 +37,8 @@ static int events[32], eventCount;
 static _Alignas(32) u8 resident[2048], disk[2048], output[2048];
 static char* sResourceFileNameTable[0x58];
 static char sDirBlockTag[] = "DIR", sZlbBlockTag[] = "ZLB";
-static int gAssetLoadInFlightFlags, gAssetLoadCompletedFlags;
+static volatile int gAssetLoadInFlightFlags, gAssetLoadCompletedFlags;
+static int interruptCalls, restoreFlags;
 static DVDFileInfo activeFiles[88];
 static void* poolEntry;
 static void** gDvdFileInfoPool = &poolEntry;
@@ -94,8 +95,11 @@ static void AtomicSList_Push(void** pool, DVDFileInfo* file) {
     pushed++;
     event(PUSH);
 }
-static int OSDisableInterrupts(void) { return 19; }
-static void OSRestoreInterrupts(int value) { assert(value == 19); }
+static int OSDisableInterrupts(void) { interruptCalls++; return 19; }
+static void OSRestoreInterrupts(int value) {
+    assert(value == 19);
+    if (restoreFlags != -1) gAssetLoadInFlightFlags = restoreFlags;
+}
 static void reset(void) {
     memset(gResourceFileBuffers, 0, sizeof(gResourceFileBuffers));
     memset(gResourceFileSizes, 0, sizeof(gResourceFileSizes));
@@ -105,7 +109,8 @@ static void reset(void) {
     for (int i = 0; i < 2048; i++) resident[i] = disk[i] = i * 13 + 7;
     memset(output, 0xcc, sizeof(output));
     for (int i = 0; i < 0x58; i++) sResourceFileNameTable[i] = (char*)&resident[i];
-    eventCount = closed = freed = pushed = 0;
+    eventCount = closed = freed = pushed = interruptCalls = 0;
+    restoreFlags = -1;
     allocation = NULL;
     actualAllocation = -1;
     gAssetLoadInFlightFlags = gAssetLoadCompletedFlags = 0;
@@ -239,6 +244,7 @@ static void checkTexture(int kind, int bank, int query, int direct, int fallback
     u8* header = resident + 32;
     memcpy(header, direct ? "DIR\0" : "ZLB\0", 4);
     word(header, 8, 0x123456); word(header, 12, 0x654321);
+    memcpy(header + 64, direct ? "DIR!" : "ZLB\0", 4);
     word(header, 64 + 8, 0x112233); word(header, 64 + 12, 0x445566);
     memcpy(disk, header, 1024);
     int size = -77, packedSize = -88;
@@ -255,6 +261,96 @@ static void checkTexture(int kind, int bank, int query, int direct, int fallback
     }
     if (fallback) expectEvents((int[]){OPEN, ALLOCATE, READ, CLOSE, STORE, FREE}, 6);
     else expectEvents(NULL, 0);
+}
+
+/* Explicit bank-selection scenarios, independent of the production predicates.
+   Request/load bits here are A=1, B=2, not their encoded archive masks. */
+static const struct {
+    int request, loading, tables, bins, selected, tex1Only;
+} textureSelections[] = {
+    {0, 0, 3, 3, 0, 0}, /* unflagged, prefer A */
+    {0, 0, 2, 3, 1, 0}, /* only B table */
+    {0, 1, 3, 3, 1, 0}, /* A is loading */
+    {0, 2, 3, 3, 0, 0}, /* B is loading */
+    {1, 0, 0, 3, 0, 0}, /* explicit A needs no table */
+    {2, 0, 0, 3, 1, 0}, /* explicit B needs no table */
+    {3, 0, 3, 3, 1, 0}, /* both request bits prefer B */
+    {3, 2, 3, 3, 0, 0}, /* both requested, B loading */
+    {1, 1, 3, 3, 1, 0}, /* requested A loading, use B table */
+    {2, 2, 3, 3, 0, 0}, /* requested B loading, use A table */
+    {0, 0, 3, 2, 1, 1}, /* TEX1 skips absent A bin despite A table */
+    {1, 0, 0, 2, 0, 1}, /* TEX1 reads explicit absent A from DVD */
+    {2, 0, 0, 1, 1, 1}, /* TEX1 reads explicit absent B from DVD */
+    {0, 3, 3, 0, -1, 0}, /* no resident bin: untouched outputs */
+    {3, 0, 3, 0, -1, 0},
+    {0, 0, 0, 0, -1, 0},
+};
+static int checkTextureSelection(int kind, int scenario, int query, int hasOffsets, int direct) {
+    if (!kind && textureSelections[scenario].tex1Only) return 0;
+    reset();
+    const int slots[2][2] = {{0x23, 0x4d}, {0x20, 0x4b}};
+    const int tabs[2][2] = {{0x24, 0x4e}, {0x21, 0x4c}};
+    int selected = textureSelections[scenario].selected;
+    int bins = textureSelections[scenario].bins;
+    for (int bank = 0; bank < 2; bank++) {
+        u8* base = resident + bank * 512;
+        gResourceFileBuffers[slots[kind][bank]] = bins & (1 << bank) ? base : NULL;
+        gResourceFileBuffers[tabs[kind][bank]] = textureSelections[scenario].tables & (1 << bank) ? output : NULL;
+        /* Distinct sizes identify both the selected bank and frame. */
+        for (int frame = 0; frame < 2; frame++) {
+            u8* header = base + 32 + frame * 64;
+            memcpy(header, direct ? "DIR!" : "ZLB\0", 4);
+            word(header, 4, 1);
+            word(header, 8, 1000 + bank * 100 + frame * 10);
+            word(header, 12, 2000 + bank * 100 + frame * 10);
+        }
+    }
+    int fallback = selected >= 0 && !(bins & (1 << selected));
+    if (fallback) {
+        expectedId = slots[kind][selected]; expectedOffset = 32;
+        expectedAllocation = 1024; expectedTag = 0x7f7f7fff;
+        memcpy(disk, resident + selected * 512 + 32, 1024);
+    }
+    gAssetLoadInFlightFlags = textureSelections[scenario].loading << (kind ? 12 : 8);
+    /* A completion immediately after restoration must not change the snapshot. */
+    restoreFlags = (textureSelections[scenario].loading ^ 3) << (kind ? 12 : 8);
+    u32 request = textureSelections[scenario].request;
+    int bankWord = 16 | (request & 1 ? 0x40000000u : 0) | (request & 2 ? 0x80000000u : 0);
+    int offsets[4] = {0, 64, 128, 192};
+    int size = -77, packed = -88;
+    void (*reader)(int,int,int*,int*,int,int*,int) = kind ? tex1GetFrame : tex0GetFrame;
+    reader(bankWord, 99, &size, &packed, query == 2 ? 2 : 1, hasOffsets ? offsets : NULL, query);
+    assert(interruptCalls == (selected >= 0));
+    if (selected < 0) {
+        assert(size == -77 && packed == -88);
+        assert(memcmp(offsets, (int[]){0, 64, 128, 192}, sizeof(offsets)) == 0);
+    } else if (query == 2 && hasOffsets) {
+        assert(size == -77 && packed == -88);
+        assert(memcmp(offsets, resident + selected * 512 + 32, 12) == 0);
+        assert(offsets[3] == 192);
+    } else {
+        int frame = query == 1 && hasOffsets;
+        assert(size == 1000 + selected * 100 + frame * 10);
+        assert(packed == (kind && direct && !frame ? -1 : 2000 + selected * 100 + frame * 10));
+        assert(memcmp(offsets, (int[]){0, 64, 128, 192}, sizeof(offsets)) == 0);
+    }
+    if (fallback) expectEvents((int[]){OPEN, ALLOCATE, READ, CLOSE, STORE, FREE}, 6);
+    else expectEvents(NULL, 0);
+    return 1;
+}
+static void checkTextureAliasedOutputs(int kind, int query, int direct) {
+    reset();
+    const int slots[] = {0x23, 0x20, 0x4f};
+    void (*readers[])(int,int,int*,int*,int,int*,int) = {tex0GetFrame, tex1GetFrame, texPreGetFrame};
+    gResourceFileBuffers[slots[kind]] = resident;
+    u8* header = resident + 32 + (query == 1 ? 64 : 0);
+    memcpy(header, direct ? "DIR!" : "ZLB\0", 4);
+    word(header, 8, 1234); word(header, 12, 5678);
+    int offsets[] = {0, 64}, result = -77;
+    readers[kind](0x40000010, 99, &result, &result, 1, offsets, query);
+    /* TEX1 indexed outputs have the reverse store order. */
+    assert(result == (kind == 1 && query == 1 ? 1234 : kind && direct && query != 1 ? -1 : 5678));
+    expectEvents(NULL, 0);
 }
 static void checkBlock(int vox, int bank, int present, int validTag, int flagged) {
     reset();
@@ -299,6 +395,17 @@ int main(void) {
                 checkTexture(kind, bank, query, direct, 0, offsets);
                 if (kind == 1) checkTexture(kind, bank, query, direct, 1, offsets);
             }
+    int frameCases = 0;
+    const int queries[] = {0, 1, 2, 7, -17};
+    for (int kind = 0; kind < 2; kind++) for (int scenario = 0; scenario < 16; scenario++)
+        for (int query = 0; query < 5; query++) for (int offsets = 0; offsets < 2; offsets++)
+            for (int direct = 0; direct < 2; direct++)
+                frameCases += checkTextureSelection(kind, scenario, queries[query], offsets, direct);
+    for (int kind = 0; kind < 3; kind++) for (int query = 0; query < 2; query++)
+        for (int direct = 0; direct < 2; direct++) {
+            checkTextureAliasedOutputs(kind, query, direct); frameCases++;
+        }
+    printf("%d additional texture selection, snapshot and aliased-output cases checked\n", frameCases);
     for (int vox = 0; vox < 2; vox++) for (int bank = 0; bank < 2; bank++)
         for (int present = 0; present < 2; present++) for (int valid = 0; valid < 2; valid++)
             for (int flagged = 0; flagged < 2; flagged++) checkBlock(vox, bank, present, valid, flagged);
@@ -317,10 +424,13 @@ def harness():
     parts.append(re.search(r'enum MldfFileId \{.*?\};', ids, re.S)[0])
     for name in ('gResourceFileBuffers', 'gResourceFileSizes'):
         parts.append('static ' + re.search(rf'^(?:void\*|u32) {name}\[[^;]+;', source, re.M)[0])
+    parts.append(re.search(r'struct ZlbStreamInfo \{.*?\n\};', source, re.S)[0])
     parts.append(re.search(r'struct ZlbHeader \{.*?\n\};', source, re.S)[0])
     parts.append(re.search(r'^#define ZLB_HDR[^\n]+', source, re.M)[0])
     modes = (ROOT / 'include/main/pi_dolphin_texture_api.h').read_text()
     parts.extend(re.findall(r'^#define TEXTURE_FRAME_QUERY_[^\n]+', modes, re.M))
+    bank_header = (ROOT / 'include/main/rcp_dolphin.h').read_text()
+    parts.extend(re.findall(r'^#define TEX_TAB_MAP_[^\n]+', bank_header, re.M))
     parts.append(SERVICES)
     for name in ('animCurvReadCb', 'animCurvTabReadCb', 'voxMapReadCb', 'voxMapTabReadCb',
                  'blocksReadCb', 'blocksTabReadCb', 'tex1ReadCb', 'tex0readCb',

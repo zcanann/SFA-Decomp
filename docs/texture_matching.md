@@ -157,3 +157,44 @@ pass `all_source` and strict retail DOL checksums; the texture TU's 17
 functions, 6,308 code bytes and 5,296 data bytes remain 100% exact. The full
 active-unit inventory has no new mismatches; the existing SDK/MusyX report
 accounting exceptions remain unchanged.
+
+## Typed texture archive headers (2026-10-06)
+
+The three frame readers in `pi_dolphin.c` now use the complete 16-byte
+`ZlbHeader` and its 12-byte `ZlbStreamInfo` suffix. The suffix starts after
+the four-byte tag and contains the version, decompressed size and compressed
+size. This models the retail cursor at header +4 without integer-address
+laundering or unexplained `+4`/`+8` dereferences. Full-header users retain
+size fields at +8/+12. The layout assertions cover both views; existing ZLB
+payload-loader accesses use the same definition. These are descriptive types,
+not a claim to recovered original declarations.
+
+Archive and table slots now use the canonical MLDF IDs. The previously unused
+`TEX_TAB_MAP_A`/`TEX_TAB_MAP_B` definitions were reversed: A is `0x40000000`,
+B is `0x80000000`. This agrees with the readers and the merged-table policy.
+A keeps its signed literal type, which preserves the retail signed zero
+comparison. There were no existing uses of either macro before this change.
+
+The distinct reader behavior is retained. TEX1 can read an explicitly selected
+missing bank from DVD when the other bank is resident. Its table-based fallback
+requires a resident BIN; TEX0's does not. Only non-indexed TEX1/TEXPRE queries
+interpret `DIR` as compressed size -1. The indexed TEX1 path writes its size
+outputs in the opposite order from TEX0/TEXPRE, including when outputs alias.
+States with no usable selection remain the existing caller precondition.
+
+`test_resource_buffer_registry.py` now adds 592 cases for selection priority,
+in-flight snapshots, DVD fallback, unknown modes, null offset tables and aliased
+outputs to its 790 existing cases. Both optimization levels pass with ASan and
+UBSan and native addresses above 4 GiB. Four negative controls detect reversed
+bank selection, a wrong size field, omission of the terminal offset and taking
+the load-state snapshot after restoring interrupts. The other resource-loader,
+merge and defrag fixtures also pass after adapting to the shared metadata type.
+
+The complete `pi_dolphin` TU is 100% exact in all five versions: 57 functions,
+32,252 code bytes / 111,432 data bytes in EN/JP and 32,384 / 111,400 in the
+other versions. Object comparisons preserve every section byte, named symbol
+offset, relocation and section attribute; one anonymous pool symbol is
+renumbered. Every other source object is byte-identical to the baseline.
+All five `all_source` builds and strict source-linked retail DOL checks pass.
+Full objdiff inventories retain only the pre-existing TRK vector-carving and
+MusyX discarded-exception report artifacts; no unit regresses.

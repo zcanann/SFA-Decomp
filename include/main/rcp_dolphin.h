@@ -4,10 +4,10 @@
 #include "types.h"
 #include "main/rcp_dolphin_api.h"
 
-/* TEX0.tab/TEX1.tab/TEXPRE.tab entry (bankWord): high bits select source map, */
+/* TEX0.tab/TEX1.tab/TEXPRE.tab entry (bankWord): high bits select the MLDF A/B resource slots; */
 /* bits 29..24 are the animation-frame count (each frame has its own mip levels). */
-#define TEX_TAB_MAP_A             0x80000000u
-#define TEX_TAB_MAP_B             0x40000000u
+#define TEX_TAB_MAP_A             0x40000000
+#define TEX_TAB_MAP_B             0x80000000u
 #define TEX_TAB_FRAME_COUNT_SHIFT 24
 #define TEX_TAB_FRAME_COUNT_MASK  0x3f
 

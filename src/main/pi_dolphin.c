@@ -266,14 +266,24 @@ struct MldfIterators {
 #define MLDF_PTR_RT(t, s)   (*(void**)(((s) << MLDF_BUFFER_SLOT_SHIFT) + (size_t)(t)->ptrs))
 #define MLDF_QPTR           ((u8*)*(void**)(slotPtrAddr - MLDF_BUFFER_PTRS_FROM_ARENA_END))
 
-/* 16-byte header of a "ZLB"-tagged compressed stream; the deflate payload
-   follows at +0x10. "DIR"-tagged data is stored raw. */
+/* Metadata following the four-byte ZLB/DIR tag. Texture frame readers
+ * also address this suffix directly, without inspecting the tag. */
+struct ZlbStreamInfo {
+    u32 version;
+    u32 decompressedSize;
+    int compressedSize;
+};
+
+/* ZLB streams use this 16-byte header; DIR records share its prefix. */
 struct ZlbHeader {
     char tag[4]; /* "ZLB" (sZlbBlockTag) / "DIR" (sDirBlockTag) */
-    u32 unk4;
-    u32 decompressedSize; /* +0x08 */
-    int compressedSize;   /* +0x0c */
+    struct ZlbStreamInfo stream;
 };
+STATIC_ASSERT(sizeof(struct ZlbStreamInfo) == 0x0C);
+STATIC_ASSERT(sizeof(struct ZlbHeader) == 0x10);
+STATIC_ASSERT(offsetof(struct ZlbHeader, stream) == 0x04);
+STATIC_ASSERT(offsetof(struct ZlbHeader, stream.decompressedSize) == 0x08);
+STATIC_ASSERT(offsetof(struct ZlbHeader, stream.compressedSize) == 0x0C);
 #define ZLB_HDR(buf) ((struct ZlbHeader*)(buf))
 
 /* DVDFileInfo.length: byte length of the opened file. */
@@ -3608,8 +3618,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             }
             fileBuf = qptr + offsetFlags;
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0) {
-                decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-                zlbDecompress((u8*)(MLDF_QPTR + offsetFlags + 0x10), ZLB_HDR(fileBuf)->compressedSize, (u8*)destBuf,
+                decompSize = ZLB_HDR(fileBuf)->stream.decompressedSize;
+                zlbDecompress((u8*)(MLDF_QPTR + offsetFlags + 0x10), ZLB_HDR(fileBuf)->stream.compressedSize, (u8*)destBuf,
                               &decompSize);
                 DCStoreRange(destBuf, decompSize);
             } else {
@@ -3621,8 +3631,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             }
             fileBuf = qptr + offsetFlags;
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0) {
-                decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-                zlbDecompress((u8*)(MLDF_QPTR + offsetFlags + 0x10), ZLB_HDR(fileBuf)->compressedSize, (u8*)destBuf,
+                decompSize = ZLB_HDR(fileBuf)->stream.decompressedSize;
+                zlbDecompress((u8*)(MLDF_QPTR + offsetFlags + 0x10), ZLB_HDR(fileBuf)->stream.compressedSize, (u8*)destBuf,
                               &decompSize);
                 DCStoreRange(destBuf, decompSize);
             } else {
@@ -3641,8 +3651,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             }
         } else if (fileId == 0x23 || fileId == 0x4d) {
             fileBuf = qptr + (offsetFlags & 0xffffff);
-            decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-            zlbDecompress((u8*)(fileBuf + 0x10), ZLB_HDR(fileBuf)->compressedSize, (u8*)destBuf, &decompSize);
+            decompSize = ZLB_HDR(fileBuf)->stream.decompressedSize;
+            zlbDecompress((u8*)(fileBuf + 0x10), ZLB_HDR(fileBuf)->stream.compressedSize, (u8*)destBuf, &decompSize);
             DCStoreRange(destBuf, decompSize);
         } else if (fileId == 0x20 || fileId == 0x4b) {
             entryIndex = offsetFlags & 0xffffff;
@@ -3651,8 +3661,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                 return (void*)(MLDF_QPTR + entryIndex + 0x20);
             }
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0) {
-                decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-                zlbDecompress((u8*)(MLDF_QPTR + entryIndex + 0x10), ZLB_HDR(fileBuf)->compressedSize, (u8*)destBuf,
+                decompSize = ZLB_HDR(fileBuf)->stream.decompressedSize;
+                zlbDecompress((u8*)(MLDF_QPTR + entryIndex + 0x10), ZLB_HDR(fileBuf)->stream.compressedSize, (u8*)destBuf,
                               &decompSize);
                 DCStoreRange(destBuf, decompSize);
             }
@@ -3663,8 +3673,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                 return (void*)(MLDF_QPTR + entryIndex + 0x20);
             }
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0) {
-                decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-                zlbDecompress((u8*)(MLDF_QPTR + entryIndex + 0x10), ZLB_HDR(fileBuf)->compressedSize, (u8*)destBuf,
+                decompSize = ZLB_HDR(fileBuf)->stream.decompressedSize;
+                zlbDecompress((u8*)(MLDF_QPTR + entryIndex + 0x10), ZLB_HDR(fileBuf)->stream.compressedSize, (u8*)destBuf,
                               &decompSize);
                 DCStoreRange(destBuf, decompSize);
             }
@@ -3694,8 +3704,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             }
         }
         if (strncmp((char*)srcBuf, sZlbBlockTag, 3) == 0) {
-            decompSize = ZLB_HDR(srcBuf)->decompressedSize;
-            zlbDecompress((u8*)(srcBuf + 0x10), ZLB_HDR(srcBuf)->compressedSize, (u8*)destBuf, &decompSize);
+            decompSize = ZLB_HDR(srcBuf)->stream.decompressedSize;
+            zlbDecompress((u8*)(srcBuf + 0x10), ZLB_HDR(srcBuf)->stream.compressedSize, (u8*)destBuf, &decompSize);
         }
         mm_free((void*)srcBuf);
     } else {
@@ -3802,74 +3812,74 @@ void piRomLoadSection(int mapsOffset, int mapIndex, void* destBuf) {
 
 void tex1GetFrame(int bankWord, int unused, int* decompressedSize, int* compressedSize, int frameIndexOrCount,
                   int* frameOffsets, int queryMode) {
-    int idx = -1;
-    if (gResourceFileBuffers[0x20] != 0 || gResourceFileBuffers[0x4b] != 0) {
-        int s = OSDisableInterrupts();
-        int flags = gAssetLoadInFlightFlags;
-        void* f46c;
-        void* f518;
-        OSRestoreInterrupts(s);
-        f46c = gResourceFileBuffers[0x21];
-        f518 = gResourceFileBuffers[0x4c];
-        if ((bankWord & 0x80000000) != 0 && (flags & 0x2000) == 0) {
-            idx = 0x4b;
-        } else if ((bankWord & 0x40000000) != 0 && (flags & 0x1000) == 0) {
-            idx = 0x20;
-        } else if (f46c != 0 && (flags & 0x1000) == 0 && gResourceFileBuffers[0x20] != 0) {
-            idx = 0x20;
-        } else if (f518 != 0 && (flags & 0x2000) == 0 && gResourceFileBuffers[0x4b] != 0) {
-            idx = 0x4b;
+    int archiveId = -1;
+    if (gResourceFileBuffers[MLDF_FILEID_TEX1_BIN_A] != 0 || gResourceFileBuffers[MLDF_FILEID_TEX1_BIN_B] != 0) {
+        int interruptState = OSDisableInterrupts();
+        int loadFlags = gAssetLoadInFlightFlags;
+        void* tableA;
+        void* tableB;
+        OSRestoreInterrupts(interruptState);
+        tableA = gResourceFileBuffers[MLDF_FILEID_TEX1_TAB_A];
+        tableB = gResourceFileBuffers[MLDF_FILEID_TEX1_TAB_B];
+        if ((bankWord & TEX_TAB_MAP_B) != 0 && (loadFlags & 0x2000) == 0) {
+            archiveId = MLDF_FILEID_TEX1_BIN_B;
+        } else if ((bankWord & TEX_TAB_MAP_A) != 0 && (loadFlags & 0x1000) == 0) {
+            archiveId = MLDF_FILEID_TEX1_BIN_A;
+        } else if (tableA != 0 && (loadFlags & 0x1000) == 0 && gResourceFileBuffers[MLDF_FILEID_TEX1_BIN_A] != 0) {
+            archiveId = MLDF_FILEID_TEX1_BIN_A;
+        } else if (tableB != 0 && (loadFlags & 0x2000) == 0 && gResourceFileBuffers[MLDF_FILEID_TEX1_BIN_B] != 0) {
+            archiveId = MLDF_FILEID_TEX1_BIN_B;
         }
         {
-            u8* base = gResourceFileBuffers[idx];
-            if (base != 0) {
+            u8* archive = gResourceFileBuffers[archiveId];
+            if (archive != 0) {
                 if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0) {
-                    size_t e = (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount];
-                    int v;
-                    e = (size_t)base + e + 4;
-                    v = *(int*)(e + 4);
-                    *compressedSize = *(int*)(e + 8);
-                    *decompressedSize = v;
+                    struct ZlbStreamInfo* stream;
+                    int unpackedSize;
+                    stream = &ZLB_HDR(archive + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount])->stream;
+                    unpackedSize = stream->decompressedSize;
+                    *compressedSize = stream->compressedSize;
+                    *decompressedSize = unpackedSize;
                 } else if (queryMode == TEXTURE_FRAME_QUERY_OFFSETS && frameOffsets != 0) {
-                    memcpy(frameOffsets, (void*)(base + (bankWord & 0xffffff) * 2), (frameIndexOrCount + 1) * 4);
+                    memcpy(frameOffsets, (void*)(archive + (bankWord & 0xffffff) * 2), (frameIndexOrCount + 1) * 4);
                 } else {
-                    u8* e = base + (bankWord & 0xffffff) * 2;
-                    int v = *(int*)(e + 0xc);
-                    *decompressedSize = *(int*)(e + 8);
-                    if (strncmp(sDirBlockTag, (char*)e, 3) == 0) {
-                        *compressedSize = 0xffffffff;
+                    struct ZlbHeader* header = (struct ZlbHeader*)(archive + (bankWord & 0xffffff) * 2);
+                    int packedSize = header->stream.compressedSize;
+                    *decompressedSize = header->stream.decompressedSize;
+                    if (strncmp(sDirBlockTag, header->tag, 3) == 0) {
+                        *compressedSize = -1;
                     } else {
-                        *compressedSize = v;
+                        *compressedSize = packedSize;
                     }
                 }
             } else {
                 DVDFileInfo fileInfo;
-                int v;
-                char* buf;
-                DVDOpen(sResourceFileNameTable[idx], &fileInfo);
-                buf = mmAlloc(0x400, 0x7f7f7fff, 0);
-                DVDRead(&fileInfo, buf, 0x400, (bankWord & 0xffffff) * 2);
+                int packedSize;
+                char* readBuffer;
+                DVDOpen(sResourceFileNameTable[archiveId], &fileInfo);
+                readBuffer = mmAlloc(0x400, 0x7f7f7fff, 0);
+                DVDRead(&fileInfo, readBuffer, 0x400, (bankWord & 0xffffff) * 2);
                 DVDClose(&fileInfo);
-                DCStoreRange(buf, 0x400);
+                DCStoreRange(readBuffer, 0x400);
                 if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0) {
-                    size_t e = frameOffsets[frameIndexOrCount];
-                    int v;
-                    e = (size_t)buf + e + 4;
-                    v = *(int*)(e + 4);
-                    *compressedSize = *(int*)(e + 8);
-                    *decompressedSize = v;
+                    struct ZlbStreamInfo* stream;
+                    int unpackedSize;
+                    stream = &ZLB_HDR(readBuffer + frameOffsets[frameIndexOrCount])->stream;
+                    unpackedSize = stream->decompressedSize;
+                    *compressedSize = stream->compressedSize;
+                    *decompressedSize = unpackedSize;
                 } else if (queryMode == TEXTURE_FRAME_QUERY_OFFSETS && frameOffsets != 0) {
-                    memcpy(frameOffsets, buf, (frameIndexOrCount + 1) * 4);
+                    memcpy(frameOffsets, readBuffer, (frameIndexOrCount + 1) * 4);
                 } else {
-                    v = *(int*)(buf + 0xc);
-                    *decompressedSize = *(int*)(buf + 8);
-                    if (strncmp(sDirBlockTag, buf, 3) == 0) {
-                        *compressedSize = 0xffffffff;
+                    packedSize = ZLB_HDR(readBuffer)->stream.compressedSize;
+                    *decompressedSize = ZLB_HDR(readBuffer)->stream.decompressedSize;
+                    if (strncmp(sDirBlockTag, readBuffer, 3) == 0) {
+                        *compressedSize = -1;
                     } else {
-                        *compressedSize = v;
+                        *compressedSize = packedSize;
                     }
                 }
-                mm_free(buf);
+                mm_free(readBuffer);
             }
         }
     }
@@ -3877,61 +3887,61 @@ void tex1GetFrame(int bankWord, int unused, int* decompressedSize, int* compress
 
 void tex0GetFrame(int bankWord, int unused, int* decompressedSize, int* compressedSize, int frameIndexOrCount,
                   int* frameOffsets, int queryMode) {
-    int idx = -1;
-    if (gResourceFileBuffers[0x23] != 0 || gResourceFileBuffers[0x4d] != 0) {
-        int s = OSDisableInterrupts();
-        int flags = gAssetLoadInFlightFlags;
-        void* f478;
-        void* f520;
-        OSRestoreInterrupts(s);
-        f478 = gResourceFileBuffers[0x24];
-        f520 = gResourceFileBuffers[0x4e];
-        if ((bankWord & 0x80000000) != 0 && (flags & 0x200) == 0) {
-            idx = 0x4d;
-        } else if ((bankWord & 0x40000000) != 0 && (flags & 0x100) == 0) {
-            idx = 0x23;
-        } else if (f478 != 0 && (flags & 0x100) == 0) {
-            idx = 0x23;
-        } else if (f520 != 0 && (flags & 0x200) == 0) {
-            idx = 0x4d;
+    int archiveId = -1;
+    if (gResourceFileBuffers[MLDF_FILEID_TEX0_BIN_A] != 0 || gResourceFileBuffers[MLDF_FILEID_TEX0_BIN_B] != 0) {
+        int interruptState = OSDisableInterrupts();
+        int loadFlags = gAssetLoadInFlightFlags;
+        void* tableA;
+        void* tableB;
+        OSRestoreInterrupts(interruptState);
+        tableA = gResourceFileBuffers[MLDF_FILEID_TEX0_TAB_A];
+        tableB = gResourceFileBuffers[MLDF_FILEID_TEX0_TAB_B];
+        if ((bankWord & TEX_TAB_MAP_B) != 0 && (loadFlags & 0x200) == 0) {
+            archiveId = MLDF_FILEID_TEX0_BIN_B;
+        } else if ((bankWord & TEX_TAB_MAP_A) != 0 && (loadFlags & 0x100) == 0) {
+            archiveId = MLDF_FILEID_TEX0_BIN_A;
+        } else if (tableA != 0 && (loadFlags & 0x100) == 0) {
+            archiveId = MLDF_FILEID_TEX0_BIN_A;
+        } else if (tableB != 0 && (loadFlags & 0x200) == 0) {
+            archiveId = MLDF_FILEID_TEX0_BIN_B;
         }
         if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0) {
-            u8* base = gResourceFileBuffers[idx];
-            u8* e = base + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount] + 4;
-            int v = *(int*)(e + 8);
-            *decompressedSize = *(int*)(e + 4);
-            *compressedSize = v;
+            u8* archive = gResourceFileBuffers[archiveId];
+            struct ZlbStreamInfo* stream = &ZLB_HDR(archive + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount])->stream;
+            int packedSize = stream->compressedSize;
+            *decompressedSize = stream->decompressedSize;
+            *compressedSize = packedSize;
         } else if (queryMode == TEXTURE_FRAME_QUERY_OFFSETS && frameOffsets != 0) {
-            memcpy(frameOffsets, (void*)((u8*)gResourceFileBuffers[idx] + (bankWord & 0xffffff) * 2),
+            memcpy(frameOffsets, (void*)((u8*)gResourceFileBuffers[archiveId] + (bankWord & 0xffffff) * 2),
                    (frameIndexOrCount + 1) * 4);
         } else {
-            u8* e = (u8*)gResourceFileBuffers[idx] + (bankWord & 0xffffff) * 2 + 4;
-            int v = *(int*)(e + 8);
-            *decompressedSize = *(int*)(e + 4);
-            *compressedSize = v;
+            struct ZlbStreamInfo* stream = &ZLB_HDR((u8*)gResourceFileBuffers[archiveId] + (bankWord & 0xffffff) * 2)->stream;
+            int packedSize = stream->compressedSize;
+            *decompressedSize = stream->decompressedSize;
+            *compressedSize = packedSize;
         }
     }
 }
 
 void texPreGetFrame(int bankWord, int unused, int* decompressedSize, int* compressedSize, int frameIndexOrCount,
                     int* frameOffsets, int queryMode) {
-    u8* base = gResourceFileBuffers[0x4f];
-    if (base != 0) {
+    u8* archive = gResourceFileBuffers[MLDF_FILEID_TEXPRE_BIN];
+    if (archive != 0) {
         if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0) {
-            u8* e = base + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount] + 4;
-            int v = *(int*)(e + 8);
-            *decompressedSize = *(int*)(e + 4);
-            *compressedSize = v;
+            struct ZlbStreamInfo* stream = &ZLB_HDR(archive + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount])->stream;
+            int packedSize = stream->compressedSize;
+            *decompressedSize = stream->decompressedSize;
+            *compressedSize = packedSize;
         } else if (queryMode == TEXTURE_FRAME_QUERY_OFFSETS && frameOffsets != 0) {
-            memcpy(frameOffsets, (void*)(base + (bankWord & 0xffffff) * 2), (frameIndexOrCount + 1) * 4);
+            memcpy(frameOffsets, (void*)(archive + (bankWord & 0xffffff) * 2), (frameIndexOrCount + 1) * 4);
         } else {
-            u8* e = base + (bankWord & 0xffffff) * 2;
-            int v = *(int*)(e + 0xc);
-            *decompressedSize = *(int*)(e + 8);
-            if (strncmp(sDirBlockTag, (char*)e, 3) == 0) {
-                *compressedSize = 0xffffffff;
+            struct ZlbHeader* header = (struct ZlbHeader*)(archive + (bankWord & 0xffffff) * 2);
+            int packedSize = header->stream.compressedSize;
+            *decompressedSize = header->stream.decompressedSize;
+            if (strncmp(sDirBlockTag, header->tag, 3) == 0) {
+                *compressedSize = -1;
             } else {
-                *compressedSize = v;
+                *compressedSize = packedSize;
             }
         }
     }
@@ -4015,8 +4025,8 @@ void checkLoadBlock(int a, int* pc, int* p8) {
             *pc = 0;
         } else {
             {
-                int vc = ZLB_HDR(blk)->compressedSize;
-                *p8 = ZLB_HDR(blk)->decompressedSize;
+                int vc = ZLB_HDR(blk)->stream.compressedSize;
+                *p8 = ZLB_HDR(blk)->stream.decompressedSize;
                 *pc = vc;
             }
         }
@@ -4056,8 +4066,8 @@ void loadVoxMaps(int a, int* pc, int* p8) {
                 *pc = 0;
             } else {
                 {
-                    int vc = ZLB_HDR(blk)->compressedSize;
-                    *p8 = ZLB_HDR(blk)->decompressedSize;
+                    int vc = ZLB_HDR(blk)->stream.compressedSize;
+                    *p8 = ZLB_HDR(blk)->stream.decompressedSize;
                     *pc = vc;
                 }
             }

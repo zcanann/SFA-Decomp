@@ -292,7 +292,7 @@ def harness():
     start = source.index('typedef u8 MldfArenaBlock')
     end = source.index('\n};', start) + 3
     parts.append(source[start:end])
-    for name in ('ZlbHeader', 'PackHeader'):
+    for name in ('ZlbStreamInfo', 'ZlbHeader', 'PackHeader'):
         parts.append(re.search(rf'struct {name} \{{.*?\n\}};', source, re.S)[0])
     for name in ('MLDF_PTR', 'MLDF_QPTR', 'ZLB_HDR'):
         parts.append(re.search(rf'^#define {name}\b[^\n]+', source, re.M)[0])
