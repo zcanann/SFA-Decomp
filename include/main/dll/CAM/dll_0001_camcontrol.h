@@ -32,11 +32,12 @@ typedef void (*CamcontrolHandlerReleaseFn)(CameraObject* camera);
 typedef void (*CamcontrolHandlerActionCallbackFn)(void* actionData, int dataSize);
 typedef void (*CamcontrolDefaultHandlerFollowFn)(void* camera, ObjAnimComponent* target);
 typedef void (*CamcontrolDefaultHandlerUpdatePitchFn)(void* camera, double targetY, double distance);
-typedef void (*CamcontrolDefaultHandlerUpdateSlideFn)(void* camera, GameObject* target, f32 floorHeight, f32 ceilingHeight);
+typedef void (*CamcontrolDefaultHandlerUpdateSlideFn)(void* camera, GameObject* target, f32 floorHeight,
+                                                      f32 ceilingHeight);
 typedef void (*CamcontrolDefaultHandlerGetSettingsFn)(f32* minDistance, f32* maxDistance, f32* lowerHeightOffset,
                                                       f32* upperHeightOffset, f32* targetHeight);
-typedef void (*CamcontrolDefaultHandlerUpdateVerticalBoundsFn)(void* camera, int flags, int queryType,
-                                                               f32* floorHeight, f32* ceilingHeight);
+typedef void (*CamcontrolDefaultHandlerUpdateVerticalBoundsFn)(void* camera, int flags, int queryType, f32* floorHeight,
+                                                               f32* ceilingHeight);
 
 typedef struct CamcontrolHandlerVTable {
     CamcontrolHandlerReservedFn reserved18;

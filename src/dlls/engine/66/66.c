@@ -557,13 +557,14 @@ void CameraModeNormal_updateVerticalBounds(CameraObject* camera, int flags, int 
         camera->collisionResults.radii[0] = range;
         camera->collisionResults.surfaceTypes[0] = -1;
         camera->collisionResults.queryTypes[0] = queryType;
-        blocked = trackGetLineIntersect(&camera->prevWorldX, &camera->anim.worldPosX, range, 1, NULL, NULL, 0x10, 0xffffffff,
-                                    0xff, 0);
+        blocked = trackGetLineIntersect(&camera->prevWorldX, &camera->anim.worldPosX, range, 1, NULL, NULL, 0x10,
+                                        0xffffffff, 0xff, 0);
         camera->cameraCollisionActive = blocked;
         resolvedPosition[0] = camera->anim.worldPosX;
         resolvedPosition[1] = camera->anim.worldPosY;
         resolvedPosition[2] = camera->anim.worldPosZ;
-        hitDetect_calcSweptSphereBounds(&queryBounds, &camera->prevWorldX, resolvedPosition, camera->collisionResults.radii, 1);
+        hitDetect_calcSweptSphereBounds(&queryBounds, &camera->prevWorldX, resolvedPosition,
+                                        camera->collisionResults.radii, 1);
         trackIntersectBroadphase(focus, &queryBounds, 0x240, 1);
         trackGetIntersect(focus, &camera->prevWorldX, resolvedPosition, 1, &camera->collisionResults, 0);
         camera->anim.worldPosX = resolvedPosition[0];
@@ -571,8 +572,8 @@ void CameraModeNormal_updateVerticalBounds(CameraObject* camera, int flags, int 
         camera->anim.worldPosZ = resolvedPosition[2];
     }
     if ((flags & 2) != 0) {
-        hitCount = trackGetHeight(focus, camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ, &heightHits, 1,
-                               0x40);
+        hitCount = trackGetHeight(focus, camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
+                                  &heightHits, 1, 0x40);
         *floorHeight = -100000.0f;
         *ceilingHeight = 100000.0f;
         bestFloorDistance = 100000.0f;
