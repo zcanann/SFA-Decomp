@@ -224,7 +224,8 @@ int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, 
     OSGetTick(); /* timing probe; return value intentionally unused */
     result = 0;
     (*gCameraInterface)
-        ->getRelativePosition(cam, &relativeX, &relativeY, &relativeZ, &distanceXZ, gCameraModeNormalState->targetHeight, 0);
+        ->getRelativePosition(cam, &relativeX, &relativeY, &relativeZ, &distanceXZ,
+                              gCameraModeNormalState->targetHeight, 0);
     initialTarget = cam->anim.targetObj;
     probeCamera.focusObj = &initialTarget->anim;
     probeCamera.worldPosition[1] = cam->anim.worldPosY;
@@ -302,7 +303,8 @@ int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, 
         positiveClearStep = 6;
     } else {
         for (i = 0; i <= positiveClearStep; i++) {
-            if (camcontrol_traceMove(positiveSegment, positivePath + (i + 1) * 3, NULL, &traceWork, 7, '\0', '\0', 3.9f) == 0) {
+            if (camcontrol_traceMove(positiveSegment, positivePath + (i + 1) * 3, NULL, &traceWork, 7, '\0', '\0',
+                                     3.9f) == 0) {
                 positiveClearStep = 6;
                 break;
             }
@@ -313,7 +315,8 @@ int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, 
         negativeClearStep = 6;
     } else {
         for (i = 0; i <= negativeClearStep; i++) {
-            if (camcontrol_traceMove(negativeSegment, negativePath + (i + 1) * 3, NULL, &traceWork, 7, '\0', '\0', 3.9f) == 0) {
+            if (camcontrol_traceMove(negativeSegment, negativePath + (i + 1) * 3, NULL, &traceWork, 7, '\0', '\0',
+                                     3.9f) == 0) {
                 negativeClearStep = 6;
                 break;
             }
