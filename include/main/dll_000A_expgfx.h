@@ -7,6 +7,8 @@
 #include "main/dll/expgfx_resource_api.h"
 #include "main/dll/effectspawnconfig_struct.h"
 
+struct GameObject;
+
 typedef struct ExpgfxDllInterface {
     u32 reserved0;
     u32 reserved1;
@@ -41,8 +43,8 @@ void expgfx_ownerFree3(u32 sourceId);
 void expgfx_func0B_nop(void);
 void expgfx_func0A_nop(void);
 int expgfx_func09(void);
-void expgfx_renderSourcePools(int sourceId, int sourceMode);
-void drawGlow(u32 slotPoolBase, int poolIndex);
+void expgfx_renderSourcePools(struct GameObject* sourceObject, int sourceMode);
+void drawGlow(void* slotPoolBase, int poolIndex);
 void renderParticles(void);
 void expgfx_free2(u32 sourceId);
 void expgfx_free(u32 sourceId);

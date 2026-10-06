@@ -347,7 +347,7 @@ extern u64 gExpgfxTrackedSourceFrameMasks[2];
 extern s16 gExpgfxStaticPoolSlotTypeIds[EXPGFX_POOL_COUNT];
 extern u8 gExpgfxStaticPoolFrameFlags[EXPGFX_POOL_COUNT];
 extern u32 gExpgfxSlotActiveMasks[EXPGFX_POOL_COUNT];
-extern u32 gExpgfxSlotPoolBases[EXPGFX_POOL_COUNT];
+extern void* gExpgfxSlotPoolBases[EXPGFX_POOL_COUNT];
 extern int gExpgfxTextureFreeInProgress;
 extern s16 gExpgfxSequenceCounter;
 extern u8 gExpgfxFrameParityBit;

@@ -1,5 +1,34 @@
 # Expgfx Source Recovery
 
+## Pointer-preserving render-queue boundary (2026-10-06)
+
+The slot-pool base table now stores `void*`, with pointer-width allocation and
+walks. `renderParticlesBody` passes the pool pointer directly to the shared
+render queue; `drawGlow` receives it as a pointer. The queued object path calls
+`expgfx_renderSourcePools(GameObject*, int)`, whose source-table walk retains
+the existing `ObjAnimComponent*` entries. Both render paths preserve their
+pool filtering, frustum tests and ordering.
+
+The cache update retains its long-lived mask-table byte offset. Directly
+indexing the final pool write by `activePool` extends that local's lifetime
+through the large slot loop and changes MWCC's spills. Converting the offset
+to an index adds an instruction. The retained narrow pointer-table access
+scales the mask byte offset by the pointer/mask element-size ratio: one on the
+target, two on a 64-bit host. This preserves the exact retail instruction
+stream without assuming that native pointers are four bytes.
+
+Foxhollow's pool table and render payloads likewise use pointer-width storage.
+This recovery is limited to the table and queue/render boundary; other effect
+source-ID APIs and simulation accesses still contain 32-bit assumptions.
+`tools/test_render_queue.py` executes both production pool-routing functions
+through the production queue and dispatch loop with native pointers. Draw,
+camera and frustum services are fixtures; it does not claim complete native
+effect rendering. The existing slot-layout tests also pass.
+
+All 46 functions and 6,660 data bytes are exact in all five versions. Section
+contents, named symbol offsets and resolved relocations match the previous
+objects, and each full source build and strict retail DOL checksum passes.
+
 ## Native storage and current EN match (2026-09-07)
 
 Expgfx now reaches **100% match**, with **all 46 functions and all 6,660 data

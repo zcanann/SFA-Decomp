@@ -899,3 +899,47 @@ strict retail checksum passes without retail substitution. Section contents,
 named symbol offsets and resolved relocation destinations are unchanged; four
 relocations now name the generated BSS base and 26 anonymous literals are
 renumbered. Every other source object retains its previous raw hash.
+
+### Shared render-queue payload and independent scene globals (2026-10-06)
+
+Queue producers, sorting and dispatch now share `LightmapDrawEntry` in
+`lightmap_internal.h`. Its two payload unions hold object/bounds/effect-pool
+pointers and either a block pointer or pool index. This replaces the integer-only
+storage record and a separate pointer-bearing reader view, which had different
+strides on a 64-bit host. The target record remains 16 bytes, with assertions
+for every field offset; the 1,000-entry limit and unidentified tail are unchanged.
+The unsigned depth key and complete-record shell sort are preserved.
+
+`sceneDraw` and `renderObjects` now address the cloud matrix, render-instruction
+state, deferred-object array, distortion vector and visible-object sort keys by
+their own globals. Queue marker and object-shadow type stores use the shared
+record. The final `MapDeferredObjectListView` address overlay is removed. These
+references no longer depend on unrelated globals being adjacent to the queue.
+The existing declaration order still gives MWCC the exact retail BSS layout.
+
+Effect enqueueing and dispatch pass pointers directly. The effect unit's
+80-element slot-pool table is a pointer array, including its allocation, walks
+and cache-copy boundaries; source-pool rendering accepts a `GameObject*`.
+Foxhollow independently widens these queue payloads and pool pointers with
+`uintptr_t`. Here the recovered union roles allow pointer types while preserving
+the original 32-bit object. See `docs/expgfx_source_recovery.md` for the remaining
+effect-simulation limitations and the cache-loop offset constraint.
+
+`tools/test_render_queue.py` extracts the actual records and seven production
+functions. At both `-O0` and `-O2`, ASan/UBSan pass 1,697 scenarios using addresses
+above 4 GiB: every queue length from zero through 1,000; whole-record sorting;
+producer depth clamps, priorities and full-queue flushes; partial-row writes;
+all ten dispatch types; disguised-player fuzz; standalone and attached effect
+pool selection; and effect draws on both sides of a queued object. Camera,
+frustum and final draw services are controlled fixtures. These checks do not
+execute the whole scene or effect simulation. Five negative controls reject
+pointer truncation, a lost sort payload, signed key ordering, a late capacity
+flush and incorrect source-mode selection.
+
+Shader's 145 functions and Expgfx's 46 functions remain 100%, including all data,
+in all five versions. Every full `all_source` build and strict source-linked
+retail checksum passes. Full objdiff inventories retain only the two existing
+TRK/MusyX reporting exceptions. Both objects preserve section contents, named
+symbol offsets and resolved relocation destinations. Shader re-expresses four
+relocations through MWCC's BSS base; anonymous literal numbering changes in both
+objects. Every other source object retains its previous raw hash.

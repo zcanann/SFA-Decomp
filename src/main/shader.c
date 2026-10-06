@@ -684,20 +684,6 @@ void sceneDrawTransparentPolys(void);
 
 void renderShadowType3(GameObject* obj, u32 b, s32 offset);
 
-typedef struct LightmapDrawEntry {
-    union {
-        u32 value;
-        GameObject* object;
-        MapBlockBoundsRec* bounds;
-    } arg0;
-    union {
-        u32 value;
-        MapBlockData* block;
-    } arg1;
-    u32 sortKey;
-    s32 type;
-} LightmapDrawEntry;
-
 typedef union LightmapDrawItem {
     GameObject* object;
     MapBlockData* block;
@@ -1751,10 +1737,10 @@ void mapBlockRender_callList(u8 passSelect, u32 visArg, MapBlockData* block, Sha
     u8* byteBase;
 
     {
-        LightSortEntry* texGlobals;
+        LightmapDrawEntry* texGlobals;
         MapBlockBoundsRec* bounds[1];
 
-        texGlobals = (LightSortEntry*)gLightmapDrawQueue.entries;
+        texGlobals = gLightmapDrawQueue.entries;
         bitPos = state->bit;
         {
             int off = bitPos >> 3;
@@ -2217,16 +2203,16 @@ static u8 mapBlockBounds_HasCornerPastDepthThreshold(MapBlockBoundsRec* bounds, 
     }
 }
 
-void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32* p) {
+void lightmap_queueExternalRenderEntry(void* slotPool, u32 poolIndex, f32* position) {
     s32 t;
     if (gLightmapDrawQueueCount == 1000) {
         sceneDrawTransparentPolys();
         gLightmapDrawQueueCount = 0;
     }
-    t = (s32)-p[2];
+    t = (s32)-position[2];
     t = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
-    gLightmapDrawQueue.entries[gLightmapDrawQueueCount].a = a;
-    gLightmapDrawQueue.entries[gLightmapDrawQueueCount].b = b;
+    gLightmapDrawQueue.entries[gLightmapDrawQueueCount].arg0.effectPool = slotPool;
+    gLightmapDrawQueue.entries[gLightmapDrawQueueCount].arg1.poolIndex = poolIndex;
     gLightmapDrawQueue.entries[gLightmapDrawQueueCount].key = t | 0x38000000;
     gLightmapDrawQueue.entries[gLightmapDrawQueueCount].type = 7;
     gLightmapDrawQueueCount++;
@@ -2241,13 +2227,13 @@ void sceneDrawTransparentPolys(void) {
 
     lightmap_sortTransparentDrawQueue();
     i = 0;
-    entries = (LightmapDrawEntry*)gLightmapDrawQueue.entries;
+    entries = gLightmapDrawQueue.entries;
     for (; i < gLightmapDrawQueueCount; i++) {
         switch (entries[i].type) {
         case 0:
-            expgfx_renderSourcePools(entries[i].arg0.value, 0);
+            expgfx_renderSourcePools(entries[i].arg0.object, 0);
             lightmapDrawQueuedObject(entries[i].arg0.object);
-            expgfx_renderSourcePools(entries[i].arg0.value, 1);
+            expgfx_renderSourcePools(entries[i].arg0.object, 1);
             break;
         case 1:
             item.object = entries[i].arg0.object;
@@ -2299,7 +2285,7 @@ void sceneDrawTransparentPolys(void) {
             mapBlockRenderMain(entries[i].arg0.bounds, entries[i].arg1.block, m);
             break;
         case 7:
-            drawGlow(entries[i].arg0.value, entries[i].arg1.value);
+            drawGlow(entries[i].arg0.effectPool, entries[i].arg1.poolIndex);
             break;
         case 8:
             waterFxDraw();
@@ -2474,15 +2460,15 @@ void lightmapQueueShadowRow(MapBlockBoundsRec* bounds, MapBlockData* block, s32 
     PSMTXMultVec((MtxPtr)Camera_GetViewMatrix(), &center, &center);
     depthKey = (s32)-center.z;
     depthKey = depthKey < 0 ? 0 : (depthKey > 0x7ffffff ? 0x7ffffff : depthKey);
-    gLightmapDrawQueue.entries[gLightmapDrawQueueCount].a = (u32)bounds;
-    gLightmapDrawQueue.entries[gLightmapDrawQueueCount].b = (u32)block;
+    gLightmapDrawQueue.entries[gLightmapDrawQueueCount].arg0.bounds = bounds;
+    gLightmapDrawQueue.entries[gLightmapDrawQueueCount].arg1.block = block;
     gLightmapDrawQueue.entries[gLightmapDrawQueueCount].key = depthKey | ((selector & 0xff) << 27);
 }
 
 void lightmap_sortTransparentDrawQueue(void) {
     int i, j;
     int gap = 1;
-    LightSortEntry tmp;
+    LightmapDrawEntry tmp;
     while (gap <= (gLightmapDrawQueueCount - 1) / 9) {
         gap = gap * 3 + 1;
     }
@@ -2518,7 +2504,7 @@ void renderShadowType3(GameObject* obj, u32 b, s32 offset) {
     PSMTXMultVec((MtxPtr)Camera_GetViewMatrix(), &stk, &stk);
     t = (s32)-stk.z + offset;
     t = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
-    gLightmapDrawQueue.entries[gLightmapDrawQueueCount].a = (u32)obj;
+    gLightmapDrawQueue.entries[gLightmapDrawQueueCount].arg0.object = obj;
     gLightmapDrawQueue.entries[gLightmapDrawQueueCount].key = t | ((b & 0xff) << 27);
 }
 
@@ -2754,7 +2740,6 @@ void sceneRender(int wpad0, int wpad1, int wpad2, int wpad3, int wpad4, int wpad
 }
 
 void sceneDraw(void) {
-    char* q;
     GameObject* player;
     int i;
     GameObject** deferred;
@@ -2765,24 +2750,23 @@ void sceneDraw(void) {
     f32 skyB;
     s8 buf[616];
 
-    q = (char*)gLightmapDrawQueue.entries;
     gCloudLayerTexture = cloudGetLayerTexture(&skyA, &skyB);
     if (gCloudLayerTexture != 0) {
-        *(f32*)(q + 0x3f48) = 0.0005f;
-        *(f32*)(q + 0x3f4c) = 0.0f;
-        *(f32*)(q + 0x3f50) = 0.0f;
-        *(f32*)(q + 0x3f54) = 0.0005f * playerMapOffsetX + skyA;
-        *(f32*)(q + 0x3f58) = 0.0f;
-        *(f32*)(q + 0x3f5c) = 0.0f;
-        *(f32*)(q + 0x3f60) = 0.0005f;
-        *(f32*)(q + 0x3f64) = 0.0005f * playerMapOffsetZ + skyB;
-        *(f32*)(q + 0x3f68) = 0.0f;
-        *(f32*)(q + 0x3f6c) = 0.0f;
-        *(f32*)(q + 0x3f70) = 0.0f;
-        *(f32*)(q + 0x3f74) = 1.0f;
-        PSMTXConcat((MtxPtr)(q + 0x3f48), (MtxPtr)Camera_GetInverseViewMatrix(), (MtxPtr)(q + 0x3f48));
+        ((f32*)gCloudLayerTexMatrix)[0] = 0.0005f;
+        ((f32*)gCloudLayerTexMatrix)[1] = 0.0f;
+        ((f32*)gCloudLayerTexMatrix)[2] = 0.0f;
+        ((f32*)gCloudLayerTexMatrix)[3] = 0.0005f * playerMapOffsetX + skyA;
+        ((f32*)gCloudLayerTexMatrix)[4] = 0.0f;
+        ((f32*)gCloudLayerTexMatrix)[5] = 0.0f;
+        ((f32*)gCloudLayerTexMatrix)[6] = 0.0005f;
+        ((f32*)gCloudLayerTexMatrix)[7] = 0.0005f * playerMapOffsetZ + skyB;
+        ((f32*)gCloudLayerTexMatrix)[8] = 0.0f;
+        ((f32*)gCloudLayerTexMatrix)[9] = 0.0f;
+        ((f32*)gCloudLayerTexMatrix)[10] = 0.0f;
+        ((f32*)gCloudLayerTexMatrix)[11] = 1.0f;
+        PSMTXConcat((MtxPtr)gCloudLayerTexMatrix, (MtxPtr)Camera_GetInverseViewMatrix(), (MtxPtr)gCloudLayerTexMatrix);
     }
-    mapDebugRender((ModelRenderInstrsState*)(q + 0x4164));
+    mapDebugRender(&gMapCellRenderState);
     shadowBeginFrame();
     shadowVolumeBeginFrame();
     gVisibleObjectSortKeyCount = 1;
@@ -2844,7 +2828,7 @@ void sceneDraw(void) {
         doHeatEffect(heatEffectIntensity & 0xff);
     }
     i = 0;
-    deferred = ((MapDeferredObjectListView*)q)->deferred;
+    deferred = gLightmapDeferredObjects;
     for (; i < gLightmapDeferredObjectCount; i++) {
         (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, deferred[i]);
         objRender(0, 0, 0, 0, deferred[i], 1);
@@ -2858,8 +2842,8 @@ void sceneDraw(void) {
     }
     {
         const int queueIndex = gLightmapDrawQueueCount;
-        *(u32*)(((int)q + 8) + queueIndex * 16) = 0x78000000;
-        *(u32*)(((int)q + 12) + queueIndex * 16) = 8;
+        gLightmapDrawQueue.entries[queueIndex].key = 0x78000000;
+        gLightmapDrawQueue.entries[queueIndex].type = 8;
         gLightmapDrawQueueCount = *(const int*)&gLightmapDrawQueueCount + 1;
     }
     if (gLightmapDrawQueueCount == 1000) {
@@ -2868,8 +2852,8 @@ void sceneDraw(void) {
     }
     {
         const int queueIndex = gLightmapDrawQueueCount;
-        *(u32*)(((int)q + 8) + queueIndex * 16) = 0x50000000;
-        *(u32*)(((int)q + 12) + queueIndex * 16) = 9;
+        gLightmapDrawQueue.entries[queueIndex].key = 0x50000000;
+        gLightmapDrawQueue.entries[queueIndex].type = 9;
         gLightmapDrawQueueCount = *(const int*)&gLightmapDrawQueueCount + 1;
     }
     sceneDrawTransparentPolys();
@@ -2889,7 +2873,7 @@ void sceneDraw(void) {
     (*gNewCloudsInterface)->renderSnowClouds(0);
     if (bEnableDistortionFilter != 0) {
         newshadows_captureReflectionTextures();
-        doDistortionFilter((f32*)(q + 0x4108), distortionFilterAngle2, distortionFilterColor, distortionFilterAngle1);
+        doDistortionFilter(distortionFilterVector, distortionFilterAngle2, distortionFilterColor, distortionFilterAngle1);
     }
     renderGlows();
     (*gCameraInterface)->minimapShowHelpTextForTarget(0, 0, 0, 0);
@@ -2990,11 +2974,9 @@ static void renderObjects(s8* opacity) {
     ObjModelState* modelState;
     int deferredIndex;
     GameObject** objects;
-    u8* queueBase;
 
-    queueBase = (u8*)gLightmapDrawQueue.entries;
     objects = ObjList_GetObjects((int*)0, 0);
-    for (sortIndex = 1, sortKey = (u32*)(queueBase + 0x8818) + 1; sortIndex < gVisibleObjectSortKeyCount;
+    for (sortIndex = 1, sortKey = gVisibleObjectSortKeys + 1; sortIndex < gVisibleObjectSortKeyCount;
          sortKey++, sortIndex++) {
         objectIndex = *sortKey & 0x3ff;
         obj = objects[objectIndex];
@@ -3004,7 +2986,7 @@ static void renderObjects(s8* opacity) {
             if (opacity[objectIndex] != 0 && gLightmapDeferredObjectCount < 0x14) {
                 deferredIndex = gLightmapDeferredObjectCount;
                 gLightmapDeferredObjectCount = deferredIndex + 1;
-                ((GameObject**)(queueBase + offsetof(MapDeferredObjectListView, deferred)))[deferredIndex] = obj;
+                gLightmapDeferredObjects[deferredIndex] = obj;
             }
         } else {
             if ((objectFlags & OBJDEF_FLAG_RUNTIME_BATCHABLE) == 0) {
@@ -3016,8 +2998,7 @@ static void renderObjects(s8* opacity) {
                 u32 shadowKind;
                 renderShadowType3(obj, 0x13, 0);
                 shadowKind = 2;
-                ((u32*)(queueBase + offsetof(LightSortEntry,
-                                             type)))[gLightmapDrawQueueCount * (sizeof(LightSortEntry) / sizeof(u32))] =
+                gLightmapDrawQueue.entries[gLightmapDrawQueueCount].type =
                     shadowKind;
                 gLightmapDrawQueueCount += 1;
             } else if (obj->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH &&
@@ -3026,8 +3007,7 @@ static void renderObjects(s8* opacity) {
                 u32 shadowKind;
                 renderShadowType3(obj, 0x13, 0);
                 shadowKind = 3;
-                ((u32*)(queueBase + offsetof(LightSortEntry,
-                                             type)))[gLightmapDrawQueueCount * (sizeof(LightSortEntry) / sizeof(u32))] =
+                gLightmapDrawQueue.entries[gLightmapDrawQueueCount].type =
                     shadowKind;
                 gLightmapDrawQueueCount += 1;
             }

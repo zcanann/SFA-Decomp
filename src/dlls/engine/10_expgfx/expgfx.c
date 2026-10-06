@@ -84,7 +84,7 @@ typedef struct ExpgfxBillboardAngles {
 #define EXPGFX_BOUNDS_INIT_MAX   -3.4028235e38f
 #define EXPGFX_U16_TO_UNIT_SCALE (1.0f / 65535.0f)
 
-u32 gExpgfxSlotPoolBases[EXPGFX_POOL_COUNT];
+void* gExpgfxSlotPoolBases[EXPGFX_POOL_COUNT];
 u32 gExpgfxSlotActiveMasks[EXPGFX_POOL_COUNT];
 s8 gExpgfxPoolActiveCounts[EXPGFX_POOL_COUNT];
 u8 gExpgfxPoolPlaneOffsetSetIds[EXPGFX_POOL_COUNT];
@@ -260,9 +260,9 @@ static inline void renderParticlesBody(void) {
     float queuePosition[3];
     f32* currentMatrix;
     int poolIndex;
-    u32* slotPoolBases;
+    void** slotPoolBases;
     register s16* poolSlotTypeIds;
-    u32* poolSourceIds;
+    ObjAnimComponent** poolSourceIds;
     ExpgfxBounds* poolBounds;
     u8* poolPlaneOffsetSetIds;
     u8* poolSourceModes;
@@ -276,7 +276,7 @@ static inline void renderParticlesBody(void) {
     poolSourceModes = gExpgfxPoolSourceModes;
     poolPlaneOffsetSetIds = gExpgfxPoolPlaneOffsetSetIds;
     poolBounds = gExpgfxPoolBounds;
-    poolSourceIds = ((u32*)gExpgfxTrackedPoolSourceIds);
+    poolSourceIds = gExpgfxTrackedPoolSourceIds;
     poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
     slotPoolBases = gExpgfxSlotPoolBases;
     do {
@@ -330,7 +330,7 @@ static inline void expgfxRemoveAllBody(void) {
     s16* poolSlotTypeIds;
     s8* poolActiveCountPtrs;
     u32* poolActiveMasks;
-    u32* slotPoolBases;
+    void** slotPoolBases;
 
     poolIndex = 0;
     slotPoolBases = gExpgfxSlotPoolBases;
@@ -391,7 +391,7 @@ static inline ExpgfxPlaneOffsets* Expgfx_GetPlaneOffsets(int setIndex) {
 }
 
 static inline ExpgfxSlot* Expgfx_GetSlot(int poolIndex, int slotIndex) {
-    return (ExpgfxSlot*)(gExpgfxSlotPoolBases[poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
+    return (ExpgfxSlot*)((u8*)gExpgfxSlotPoolBases[poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
 }
 
 static inline void Expgfx_SetSlotTableIndex(ExpgfxSlot* slot, u8 tableIndex) {
@@ -410,7 +410,7 @@ void expgfx_initialise(void) {
     u32* poolActiveMasks;
     s8* poolActiveCounts;
     s16* poolSlotTypeIds[1];
-    u32* slotPoolBases[1];
+    void** slotPoolBases[1];
     int poolIndex[1];
     int groupCount;
 
@@ -451,7 +451,7 @@ void expgfx_initialise(void) {
 
     slotPoolBases[0] = gExpgfxSlotPoolBases;
     do {
-        *slotPoolBases[0] = (u32)mmAlloc(EXPGFX_POOL_BYTES, EXPGFX_POOL_ALLOC_HEAP, 0);
+        *slotPoolBases[0] = mmAlloc(EXPGFX_POOL_BYTES, EXPGFX_POOL_ALLOC_HEAP, 0);
         memset((void*)*slotPoolBases[0], 0, EXPGFX_POOL_BYTES);
         DCFlushRange((void*)*slotPoolBases[0], EXPGFX_POOL_BYTES);
         slotPoolBases[0]++;
@@ -897,7 +897,7 @@ void expgfx_free(u32 sourceId) {
     s8* poolActiveCounts[1];
     int slotIndex;
     ExpgfxTableEntry* tableEntry;
-    u32* slotPoolBases[1];
+    void** slotPoolBases[1];
     u32* poolSourceIds[1];
     int poolIndex;
     ExpgfxSlot* slot;
@@ -948,7 +948,7 @@ void renderParticles(void) {
     renderParticlesBody();
 }
 
-void drawGlow(u32 slotPoolBase, int poolIndex) {
+void drawGlow(void* slotPoolBase, int poolIndex) {
     ExpgfxBillboardAngles angles;
     ExpgfxSlot* slot;
     ExpgfxTableEntry* tabBase;
@@ -1272,26 +1272,26 @@ void drawGlow(u32 slotPoolBase, int poolIndex) {
     }
 }
 
-void expgfx_renderSourcePools(int sourceId, int sourceMode) {
+void expgfx_renderSourcePools(GameObject* sourceObject, int sourceMode) {
     ExpgfxPlaneOffsets* planeOffsets;
     s8* poolActiveCounts;
-    u32* poolSourceIds;
+    ObjAnimComponent** poolSourceIds;
     u8* poolSourceModes;
     u8* poolPlaneOffsetSetIds;
     ExpgfxBounds* poolBounds;
-    u32* slotPoolBases;
+    void** slotPoolBases;
     int poolIndex;
 
     poolIndex = 0;
     poolActiveCounts = gExpgfxPoolActiveCounts;
-    poolSourceIds = ((u32*)gExpgfxTrackedPoolSourceIds);
+    poolSourceIds = gExpgfxTrackedPoolSourceIds;
     poolSourceModes = gExpgfxPoolSourceModes;
     poolPlaneOffsetSetIds = gExpgfxPoolPlaneOffsetSetIds;
     poolBounds = gExpgfxPoolBounds;
     slotPoolBases = gExpgfxSlotPoolBases;
 
     while (poolIndex < EXPGFX_POOL_COUNT) {
-        if ((*poolActiveCounts != 0) && (*poolSourceIds == sourceId) &&
+        if ((*poolActiveCounts != 0) && (*poolSourceIds == (ObjAnimComponent*)sourceObject) &&
             (*poolSourceModes == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET)) {
             planeOffsets = Expgfx_GetPlaneOffsets(*poolPlaneOffsetSetIds);
             if ((u8)frustumTestAabbWithPlaneOffsets(poolBounds->minX - playerMapOffsetX,
@@ -1404,7 +1404,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     f32* maxXPtr;
     s8* activeCountScan;
     u8* curPoolBuf;
-    int poolByteOffset;
+    int maskByteOffset;
     ExpgfxBounds* bounds;
     int nextActivePool;
     int scanIdx;
@@ -1521,7 +1521,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
             slot = curCacheBuf;
             if (nextActivePool > -1) {
                 nextCacheBuf = (u8*)cache + cacheParity * 0x1000;
-                copyToCache(nextCacheBuf, (void*)*(u32*)((u8*)gExpgfxSlotPoolBases + nextActivePool * 4),
+                copyToCache(nextCacheBuf, gExpgfxSlotPoolBases[nextActivePool],
                             EXPGFX_POOL_CACHE_LINE_COUNT);
                 curCacheBuf = (ExpgfxSlot*)(nextCacheBuf);
                 cacheQueued = 1;
@@ -1530,8 +1530,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
             cacheQueueWait(cacheQueued);
             slot--;
             slotIdx = 0;
-            poolByteOffset = activePool * sizeof(gExpgfxSlotActiveMasks[0]);
-            maskPtr = (u32*)((u8*)gExpgfxSlotActiveMasks + poolByteOffset);
+            maskByteOffset = activePool * sizeof(gExpgfxSlotActiveMasks[0]);
+            maskPtr = (u32*)((u8*)gExpgfxSlotActiveMasks + maskByteOffset);
             curPoolBuf = (u8*)cache + cacheParity * 0x1000;
             for (; slotIdx < EXPGFX_SLOTS_PER_POOL; slotIdx++) {
                 ExpgfxQuadVertex* quad;
@@ -2248,7 +2248,10 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     }
                 }
             }
-            memcpyToCache((void*)*(u32*)((u8*)gExpgfxSlotPoolBases + poolByteOffset), curPoolBuf,
+            /* Reuse the mask-table byte offset without extending activePool's
+             * lifetime through the slot loop; scale it for the pointer table. */
+            memcpyToCache(*(void**)((u8*)gExpgfxSlotPoolBases +
+                maskByteOffset * (sizeof(void*) / sizeof(gExpgfxSlotActiveMasks[0]))), curPoolBuf,
                           EXPGFX_POOL_CACHE_LINE_COUNT);
             cacheQueued = 1;
             activePool = nextActivePool;
