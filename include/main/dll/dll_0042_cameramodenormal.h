@@ -218,11 +218,11 @@ STATIC_ASSERT(sizeof(CameraModeNormalState) == 0xCC);
 typedef void (*CameraModeNormalFollowFn)(CameraObject* camera, ObjAnimComponent* target);
 typedef void (*CameraModeNormalUpdatePitchFn)(CameraObject* camera, f32 targetY, f32 distance);
 typedef void (*CameraModeNormalUpdateSlideFn)(CameraObject* camera, GameObject* target, f32 floorHeight,
-                                                      f32 ceilingHeight);
+                                              f32 ceilingHeight);
 typedef void (*CameraModeNormalGetSettingsFn)(f32* minDistance, f32* maxDistance, f32* lowerHeightOffset,
-                                                      f32* upperHeightOffset, f32* targetHeight);
+                                              f32* upperHeightOffset, f32* targetHeight);
 typedef void (*CameraModeNormalUpdateVerticalBoundsFn)(CameraObject* camera, int flags, int queryType, f32* floorHeight,
-                                                               f32* ceilingHeight);
+                                                       f32* ceilingHeight);
 
 typedef struct CameraModeNormalDescriptor {
     u32 metadata[4];
