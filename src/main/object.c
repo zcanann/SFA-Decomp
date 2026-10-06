@@ -63,7 +63,7 @@ int gObjFileCount;
 u8* gObjTablesBinData;
 int* gObjTablesBinIndex;
 int gObjTablesBinCount;
-u8** gObjFileBufferTable;
+ObjDef** gObjFileBufferTable;
 u8* gObjFileRefCount;
 s16* gObjSeqToObjIdTable;
 int gObjSeqToObjIdMax;
@@ -771,7 +771,7 @@ static void objFreeObjdef(u8* obj, int flag) {
     int j;
     int n;
     int count;
-    GameObject* otherObj;
+    void* entry; /* Object-list entry, then the cached definition being released. */
     int* bp;
     void* curTex;
     void* tex;
@@ -805,11 +805,11 @@ static void objFreeObjdef(u8* obj, int flag) {
         if (flag == 0) {
             count = 0;
             for (i = 0; i < gObjCount; i++) {
-                otherObj = gObjList[i];
-                if (*(int*)&otherObj->anim.parent == (int)obj) {
-                    otherObj->anim.parent = NULL;
-                    if (*(void**)&otherObj->anim.placementData != NULL) {
-                        defs[count++] = (int)otherObj;
+                entry = gObjList[i];
+                if (*(int*)&((GameObject*)entry)->anim.parent == (int)obj) {
+                    ((GameObject*)entry)->anim.parent = NULL;
+                    if (*(void**)&((GameObject*)entry)->anim.placementData != NULL) {
+                        defs[count++] = (int)entry;
                     }
                 }
             }
@@ -821,9 +821,9 @@ static void objFreeObjdef(u8* obj, int flag) {
     }
     if (flag == 0 && ((GameObject*)obj)->anim.classId == 0x10) {
         for (i = 0; i < gObjCount; i++) {
-            otherObj = gObjList[i];
-            if (*(int*)&otherObj->pendingParentObj == (int)obj) {
-                otherObj->pendingParentObj = NULL;
+            entry = gObjList[i];
+            if (*(int*)&((GameObject*)entry)->pendingParentObj == (int)obj) {
+                ((GameObject*)entry)->pendingParentObj = NULL;
             }
         }
     }
@@ -900,14 +900,14 @@ static void objFreeObjdef(u8* obj, int flag) {
         } else {
             refCounts[type]--;
             if (gObjFileRefCount[type] == 0) {
-                otherObj = (GameObject*)gObjFileBufferTable[type];
-                if (*(void**)&otherObj->anim.parent != NULL) {
-                    mm_free(otherObj->anim.parent);
+                entry = gObjFileBufferTable[type];
+                if (((ObjDef*)entry)->modLines != NULL) {
+                    mm_free(((ObjDef*)entry)->modLines);
                 }
-                if (*(void**)((u8*)otherObj + 0x34) != NULL) {
-                    mm_free(*(void**)((u8*)otherObj + 0x34));
+                if (((ObjDef*)entry)->intersectionLines != NULL) {
+                    mm_free(((ObjDef*)entry)->intersectionLines);
                 }
-                mm_free(otherObj);
+                mm_free(entry);
             }
         }
     }
@@ -960,7 +960,7 @@ static inline void Obj_FreeDeferredObjects(void) {
     }
 }
 
-u8* loadObjectFile(int id) {
+ObjDef* loadObjectFile(int id) {
     int size;
     int base;
     ObjDef* buf;
@@ -975,49 +975,49 @@ u8* loadObjectFile(int id) {
         return gObjFileBufferTable[id];
     }
     {
-        int* offsets = (int*)gObjFileOffsetTable;
+        int* offsets = gObjFileOffsetTable;
         base = offsets[id];
-        size = (&offsets[id])[1] - base;
+        size = offsets[id + 1] - base;
     }
     buf = (ObjDef*)mmAlloc(size, 0xe, 0);
     if (buf != 0) {
         fileLoadToBufferOffset(MLDF_FILEID_OBJECTS_BIN, (u8*)buf, base, size);
-        if (buf->eventMoveTable != NULL) {
-            buf->eventMoveTable = (s16*)((int)buf + (int)buf->eventMoveTable);
+        if (buf->eventMoveTableOffset != 0) {
+            buf->eventMoveTable = (s16*)((u8*)buf + buf->eventMoveTableOffset);
         }
-        if (buf->hitReactMoveTable != NULL) {
-            buf->hitReactMoveTable = (ObjHitReactMoveEntry*)((int)buf + (int)buf->hitReactMoveTable);
+        if (buf->hitReactMoveTableOffset != 0) {
+            buf->hitReactMoveTable = (ObjHitReactMoveEntry*)((u8*)buf + buf->hitReactMoveTableOffset);
         }
-        if (buf->weaponDaTable != NULL) {
-            buf->weaponDaTable = (s16*)((int)buf + (int)buf->weaponDaTable);
+        if (buf->weaponDaTableOffset != 0) {
+            buf->weaponDaTable = (s16*)((u8*)buf + buf->weaponDaTableOffset);
         }
-        buf->modelFileIds = (s32*)((int)buf + (int)buf->modelFileIds);
-        buf->textureSlotDefs = (ObjTextureSlotDef*)((int)buf + (int)buf->textureSlotDefs);
+        buf->modelFileIds = (s32*)((u8*)buf + buf->modelFileIdsOffset);
+        buf->textureSlotDefs = (ObjTextureSlotDef*)((u8*)buf + buf->textureSlotDefsOffset);
         buf->jointBindings = (ObjJointBinding*)((u8*)buf + buf->jointBindingsOffset);
-        if (buf->extraSetupData != NULL) {
-            buf->extraSetupData = (u8*)((int)buf + (int)buf->extraSetupData);
+        if (buf->extraSetupDataOffset != 0) {
+            buf->extraSetupData = (u8*)buf + buf->extraSetupDataOffset;
         }
-        if (buf->hitVolumes != NULL) {
-            buf->hitVolumes = (ObjDefHitVolume*)((int)buf + (int)buf->hitVolumes);
+        if (buf->hitVolumesOffset != 0) {
+            buf->hitVolumes = (ObjDefHitVolume*)((u8*)buf + buf->hitVolumesOffset);
         }
-        if (buf->sequenceMap != NULL) {
-            buf->sequenceMap = (s16*)((int)buf + (int)buf->sequenceMap);
+        if (buf->sequenceMapOffset != 0) {
+            buf->sequenceMap = (s16*)((u8*)buf + buf->sequenceMapOffset);
         }
-        buf->attachPoints = (ObjAttachPoint*)((int)buf + (int)buf->attachPoints);
+        buf->attachPoints = (ObjAttachPoint*)((u8*)buf + buf->attachPointsOffset);
         buf->modLines = NULL;
         buf->intersectionLines = NULL;
-        n = (s8)((u8*)buf)[0x5d];
+        n = (s8)(u8)buf->modLineIndex;
         if (n > -1) {
             buf->modLines = (struct MapHitLine*)loadModLines(n, &modLine);
             buf->modLineCount = modLine;
             intersectModLineBuild(buf);
         }
-        gObjFileBufferTable[id] = (u8*)buf;
+        gObjFileBufferTable[id] = buf;
         gObjFileRefCount[id] = 1;
     } else {
         return 0;
     }
-    return (u8*)buf;
+    return buf;
 }
 
 void objGetWeaponDa(u8* obj, int objType, ObjWeaponDaTable* weaponDaTable, int key, u8 load) {
@@ -1424,14 +1424,14 @@ void modelInitBones(f32 scale, void* model) {
     }
 }
 
-int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags) {
+int objGetTotalDataSize(void* tmpl, ObjDef* def, s16* data, int flags) {
     ObjModelInstance* modelDef;
     int size;
     int r;
     int extra;
     int (*cb)(void*, int);
 
-    modelDef = (ObjModelInstance*)def;
+    modelDef = def;
     size = modelDef->modelCount * sizeof(ObjModel*) + sizeof(GameObject);
     switch (((GameObject*)tmpl)->anim.romDefNo) {
     case 0:
@@ -1560,7 +1560,7 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
     GameObject tmpl;
     GameObject* tp;
     s16 seq;
-    u8* def;
+    ObjDef* def;
     int callbackFlags;
     int (*getModelLoadFlags)(GameObject*);
     int (*getExtraSize)(GameObject*, int);
@@ -1594,12 +1594,12 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
     memset(&tmpl, 0, sizeof(GameObject));
     tp = &tmpl;
     def = loadObjectFile(id);
-    tmpl.anim.modelInstance = (ObjModelInstance*)def;
-    if (def == NULL || (int)def == -1) {
+    tmpl.anim.modelInstance = def;
+    if (def == NULL || (ptrdiff_t)def == -1) {
         debugPrintf(sObjUnknownTypeUsingDummyObjectWarning, id, data->objectId, tmpl.anim.romDefNo);
         return NULL;
     }
-    modelDef = (ObjModelInstance*)def;
+    modelDef = def;
     tmpl.anim.classId = modelDef->category;
     tmpl.anim.rootMotionScale = modelDef->rootMotionScaleBase;
     tmpl.anim.flags = 2;

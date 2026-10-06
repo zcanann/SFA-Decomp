@@ -319,32 +319,59 @@ enum ObjShadowType {
 };
 
 /*
- * Minimal recovered shape of the model pointer carried by ObjAnimComponent.
- * The named fields below are shared by root-motion sampling and hit-reaction
- * table loading; the rest of the object/model layout is still being mapped.
+ * Shared OBJECTS.bin definition cached by loadObjectFile. Each offset/pointer
+ * union is a resource-relative byte offset on disk and a pointer after loading.
+ * Collision lines are separately allocated; their derived views share storage.
  */
 typedef struct ObjDef {
     f32 shadowScaleBase;
     f32 rootMotionScaleBase;
-    s32* modelFileIds; /* 0x08: table of per-model file ids (negated -> ObjModel_Load), modelCount entries */
-    ObjTextureSlotDef* textureSlotDefs;
+    union {
+        u32 modelFileIdsOffset;
+        s32* modelFileIds;
+    }; /* modelCount file IDs, negated for ObjModel_Load. */
+    union {
+        u32 textureSlotDefsOffset;
+        ObjTextureSlotDef* textureSlotDefs;
+    };
     union {
         u32 jointBindingsOffset;
         struct ObjJointBinding* jointBindings;
         u8* jointBindingBytes; /* Packed variable-width records. */
     };
     u8 pad14[0x18 - 0x14];
-    u8* extraSetupData;
-    s16* sequenceMap;
-    s16* eventMoveTable;
-    ObjHitReactMoveEntry* hitReactMoveTable;
-    s16* weaponDaTable;
-    ObjAttachPoint* attachPoints;
+    union {
+        u32 extraSetupDataOffset;
+        u8* extraSetupData;
+    };
+    union {
+        u32 sequenceMapOffset;
+        s16* sequenceMap;
+    };
+    union {
+        u32 eventMoveTableOffset;
+        s16* eventMoveTable;
+    };
+    union {
+        u32 hitReactMoveTableOffset;
+        ObjHitReactMoveEntry* hitReactMoveTable;
+    };
+    union {
+        u32 weaponDaTableOffset;
+        s16* weaponDaTable;
+    };
+    union {
+        u32 attachPointsOffset;
+        ObjAttachPoint* attachPoints;
+    };
     struct MapHitLine* modLines;
     struct IntersectLine* intersectionLines;
     struct TrackModelLineRange* intersectionSegmentRanges;
     f32* intersectionPoints;
-    ObjDefHitVolume* hitVolumes;
+    union {
+        u32 hitVolumesOffset;
+        ObjDefHitVolume* hitVolumes;
+    };
     u32 flags;
     s16 shadowType;
     s16 shadowTextureId;
@@ -663,16 +690,24 @@ STATIC_ASSERT(offsetof(ObjDef, avoidMoveDistance) == 0x86);
 STATIC_ASSERT(offsetof(ObjDef, name) == 0x91);
 STATIC_ASSERT(offsetof(ObjDef, shadowScaleBase) == 0x00);
 STATIC_ASSERT(offsetof(ObjDef, rootMotionScaleBase) == 0x04);
+STATIC_ASSERT(offsetof(ObjDef, modelFileIdsOffset) == 0x08);
 STATIC_ASSERT(offsetof(ObjDef, modelFileIds) == 0x08);
+STATIC_ASSERT(offsetof(ObjDef, textureSlotDefsOffset) == 0x0C);
 STATIC_ASSERT(offsetof(ObjDef, textureSlotDefs) == 0x0C);
 STATIC_ASSERT(offsetof(ObjDef, jointBindingsOffset) == 0x10);
 STATIC_ASSERT(offsetof(ObjDef, jointBindings) == 0x10);
 STATIC_ASSERT(offsetof(ObjDef, jointBindingBytes) == 0x10);
+STATIC_ASSERT(offsetof(ObjDef, extraSetupDataOffset) == 0x18);
 STATIC_ASSERT(offsetof(ObjDef, extraSetupData) == 0x18);
+STATIC_ASSERT(offsetof(ObjDef, sequenceMapOffset) == 0x1C);
 STATIC_ASSERT(offsetof(ObjDef, sequenceMap) == 0x1C);
+STATIC_ASSERT(offsetof(ObjDef, eventMoveTableOffset) == 0x20);
 STATIC_ASSERT(offsetof(ObjDef, eventMoveTable) == 0x20);
+STATIC_ASSERT(offsetof(ObjDef, hitReactMoveTableOffset) == 0x24);
 STATIC_ASSERT(offsetof(ObjDef, hitReactMoveTable) == 0x24);
+STATIC_ASSERT(offsetof(ObjDef, weaponDaTableOffset) == 0x28);
 STATIC_ASSERT(offsetof(ObjDef, weaponDaTable) == 0x28);
+STATIC_ASSERT(offsetof(ObjDef, attachPointsOffset) == 0x2C);
 STATIC_ASSERT(offsetof(ObjDef, attachPoints) == 0x2C);
 STATIC_ASSERT(offsetof(ObjDef, attachPointCount) == 0x58);
 STATIC_ASSERT(offsetof(ObjDef, modLines) == 0x30);
@@ -682,6 +717,7 @@ STATIC_ASSERT(offsetof(ObjDef, intersectionPoints) == 0x3C);
 STATIC_ASSERT(offsetof(ObjDef, modLineCount) == 0x5C);
 STATIC_ASSERT(offsetof(ObjDef, modLineIndex) == 0x5D);
 STATIC_ASSERT(sizeof(ObjAttachPoint) == 0x18);
+STATIC_ASSERT(offsetof(ObjDef, hitVolumesOffset) == 0x40);
 STATIC_ASSERT(offsetof(ObjDef, hitVolumes) == 0x40);
 STATIC_ASSERT(offsetof(ObjDef, flags) == 0x44);
 STATIC_ASSERT(offsetof(ObjDef, shadowType) == 0x48);

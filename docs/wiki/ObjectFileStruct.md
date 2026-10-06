@@ -160,7 +160,7 @@ The runtime, pointer-fixed form of this exact struct is `ObjDef` (aliased `ObjMo
 in `include/main/objanim_internal.h` — `sizeof(ObjDef) == 0x9C`, i.e. it ends with the wiki's
 11-byte debug `name` field at 0x91; anything past 0x9C ("additional data depending on object")
 is not modelled. `ObjAnimComponent.modelInstance` (obj+0x50)
-points at a loaded instance of it, and `loadObjectFile` (`src/main/object.c:2423`) is the loader
+points at a loaded instance of it, and `loadObjectFile` (`src/main/object.c`) is the loader
 that performs exactly the offset-to-pointer fixups the wiki describes:
 
 - File names are literal in `src/main/pi_dolphin.c`: `sResourceFileNameObjectsTab` = `"OBJECTS.tab"`
@@ -181,12 +181,53 @@ that performs exactly the offset-to-pointer fixups the wiki describes:
   `n_models`/`n_player_objs` as `>BB` at `offset+0x55`, `n_sequences` at `offset+0x5E`, `map_id` as
   `>H` at `offset+0x78`, and exactly **4** help-text `u16`s at `offset+0x7C`.
 
+### Definition loading and ownership (2026-10-06)
+
+The ten relocated fields now have explicit `u32 ...Offset` / typed-pointer union
+views in `ObjDef`. The offsets are relative to the start of the definition, not
+`OBJECTS.bin`. `loadObjectFile` returns `ObjDef*`; the cache and its callers carry
+that type. The four unconditional fixups and six optional fixups above preserve
+the retail behavior, including a zero unconditional offset becoming the resource
+base. Foxhollow's native loader provides useful field evidence, but its conditional
+attachment-point relocation is not copied into the matching loader.
+
+A read-only audit of EN's 1,477 definitions found every nonzero offset within its
+resource or exactly at its end. Empty tables commonly use the end offset: 682
+texture and joint-binding tables and 875 attachment-point tables. None of the
+four unconditionally relocated fields is zero in these assets. Their zero-offset
+behavior is established by the retail loader, not inferred from this sample.
+
+`modLines` and `intersectionLines` are separately allocated runtime data. In
+`intersectModLineBuild`, `intersectionPoints` and `intersectionSegmentRanges`
+point inside the `intersectionLines` allocation. The last cache reference frees
+`modLines`, `intersectionLines`, then the definition, without freeing those views
+or any relocated resource table. The former teardown incorrectly expressed the
+first allocation as `GameObject.anim.parent`; it now accesses `ObjDef.modLines`.
+Dinosaur Planet's `objLoadObjdef` / `objFreeObjdef` corroborate this ownership.
+The refcount remains a byte, including its retail wraparound behavior, and the
+cache slot remains uncleared after final release; zero refcount forces a reload.
+
+The destructor retains one pointer local across its object-list and definition
+phases because splitting those lifetimes changes MWCC's register allocation.
+Likewise the signed modline selector retains an explicit byte conversion. These
+source choices preserve the complete TU, not only the recovered functions.
+
+`python3 tools/test_object_definition_lifecycle.py` exercises the production
+loader and cache-release block with native pointers above 4 GiB, all 1,024
+zero/nonzero offset combinations, signed selector extremes, byte refcounts,
+allocation failure, end offsets and reload after release. It checks allocation
+ownership with ASan/UBSan at `-O0` and `-O2`. Its I/O spy supplies a decoded host
+header; it does not claim to deserialize retail bytes on a 64-bit host. All five
+configured retail builds pass `all_source` and their strict source-linked DOL
+checks. Complete changed TUs match; the two pre-existing library report-accounting
+exceptions remain unchanged.
+
 ### Field-by-field
 
 Offset|Wiki name|`ObjDef` field|Evidence
 ------|---------|--------------|--------
 0x04|scale|`rootMotionScaleBase`|`src/main/object.c:1193`: `tmpl.scale = modelDef->rootMotionScaleBase;` — even the local variable is named `scale`.
-0x08|pModelList|(unnamed, `pad08`)|`loadCharacter`: `ObjModel_Load(-(*(int**)(def + 8))[idx], ...)` indexes it per-model.
+0x08|pModelList|`modelFileIds` (`s32*`)|`loadCharacter` indexes the table per model and negates each ID for `ObjModel_Load`.
 0x0c|textures|`textureSlotDefs` (`ObjTextureSlotDef*`)|Offset match; on-disk compact 2-byte-per-slot def (`sizeof(ObjTextureSlotDef)==2`).
 0x18|offset_0x18 (`ObjSeq*`, triggers)|`extraSetupData` (`u8*`)|Offset/optionality match, but **usage disagrees with the wiki's guess** — see below.
 0x1c|pSeq|`sequenceMap` (`s16*`)|Offset match, sequence-id role matches.
@@ -205,7 +246,7 @@ Offset|Wiki name|`ObjDef` field|Evidence
 0x56|numPlayerObjs|`group8RegistrationCount` (`s8`)|**Confirmed**, and better-named than the wiki's guess: `if (...->group8RegistrationCount > 0) objFreeObjectType((u32)obj, 8);` (`object.c:1580`) is the teardown mirror of the wiki's `objAddObjectType(obj, 8)`.
 0x58|nAttachPoints (`noplacements`)|`attachPointCount` (`u8`)|**Confirmed**: `staffUpdateSegmentTransforms` (`objhits.c`) gates on `>= 2` and bounds its `attachPoints` walk with `k < attachPointCount`; `playerUpdateCameraTargetLookAngles` (`player.c`) gates joint look-at on `!= 0`.
 0x59|nTextures|`textureSlotCount` (`u8`)|**Confirmed**: `objGetTotalDataSize`/`loadCharacter` add `textureSlotCount * sizeof(ObjTextureRuntimeSlot)`, and `sizeof(ObjTextureRuntimeSlot)==0x10` — matches the wiki's "count of sth 0x10 bytes" exactly.
-0x5a|numVecs|`jointCount` (`u8`)|**Confirmed**: `size += modelDef->jointCount * 0x12;` in `objGetTotalDataSize` — matches "count of sth 0x12 bytes" exactly.
+0x5a|numVecs|`jointBindingCount` (`u8`)|`objGetTotalDataSize` allocates this many `ObjJointPose` records, each 0x12 bytes; the packed binding table lives at `jointBindings` (0x10).
 0x5e|numSeqs|`sequenceCount` (`u8`)|Exact match.
 0x5f|flags_0x5f (`ObjFileStructFlags5F`)|`renderFlags` (`u8`)|Offset match. We already have `OBJDEF_RENDERFLAG_PROJECTED_SHADOW` (0x4) and `OBJDEF_RENDERFLAG_DEFERRED_RENDER` (0x10) named, but **our semantics for these two bits differ from the wiki's** — see "Open discrepancies" below.
 0x60|hitbox_fieldB0|`hitboxStateIndex` (`u8`)|**Confirmed chain**: copied via `*(s8*)&hitState->stateIndex = ... obj->modelInstance->hitboxStateIndex;` in `ObjHits_RefreshObjectState` (`src/main/objlib.c`), and `ObjHitsPriorityState.stateIndex` is at offset **0xB0** — exactly explaining the wiki's "B0" suffix.
