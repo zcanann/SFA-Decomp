@@ -67,7 +67,7 @@ char gAttractMovieAudioDmaBuffer[ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES];
 
 char sAttractMovieThpMagic[] = "THP";
 
-#define THP_VERSION_1_0 0x10000
+#define THP_VERSION_1_0      0x10000
 #define ALIGN_NEXT_32(value) (((value) + 0x1f) & ~0x1f)
 
 enum {
@@ -85,18 +85,15 @@ static void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount
 static void PlayControl(u32 retraceCount);
 static void InitAllMessageQueue(void);
 
-BOOL AttractMovieAudio_Init(int audioMode)
-{
+BOOL AttractMovieAudio_Init(int audioMode) {
     u32 saved;
     AIDCallback oldCb;
     register AIDCallback dmaCallback;
 
     memset(&gAttractMoviePlayer, 0, sizeof(AttractMoviePlayer));
-    OSInitMessageQueue(&gAttractMovieSpentTextureSetQueue,
-                       gAttractMovieSpentTextureSetMessages, 3);
+    OSInitMessageQueue(&gAttractMovieSpentTextureSetQueue, gAttractMovieSpentTextureSetMessages, 3);
 
-    if (!THPInit())
-    {
+    if (!THPInit()) {
         return 0;
     }
 
@@ -109,10 +106,8 @@ BOOL AttractMovieAudio_Init(int audioMode)
     oldCb = AIRegisterDMACallback(dmaCallback);
     gAttractMovieAudioPrevDmaCallback = oldCb;
 
-    if (oldCb == (AIDCallback)0)
-    {
-        if (gAttractMovieAudioMode != 0)
-        {
+    if (oldCb == (AIDCallback)0) {
+        if (gAttractMovieAudioMode != 0) {
             AIRegisterDMACallback((AIDCallback)0);
             OSRestoreInterrupts(saved);
             return 0;
@@ -121,12 +116,12 @@ BOOL AttractMovieAudio_Init(int audioMode)
 
     OSRestoreInterrupts(saved);
 
-    if (gAttractMovieAudioMode == 0)
-    {
+    if (gAttractMovieAudioMode == 0) {
         memset(gAttractMovieAudioDmaBuffer, 0, ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES);
         DCFlushRange(gAttractMovieAudioDmaBuffer, ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES);
-        AIInitDMA((u32)(gAttractMovieAudioDmaBuffer + gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE),
-                  ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE);
+        AIInitDMA(
+            (u32)(gAttractMovieAudioDmaBuffer + gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE),
+            ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE);
         AIStartDMA();
     }
 
@@ -134,59 +129,49 @@ BOOL AttractMovieAudio_Init(int audioMode)
     return 1;
 }
 
-void AttractMovieAudio_Shutdown(void)
-{
+void AttractMovieAudio_Shutdown(void) {
     u32 saved = OSDisableInterrupts();
-    if (gAttractMovieAudioPrevDmaCallback != (AIDCallback)0)
-    {
+    if (gAttractMovieAudioPrevDmaCallback != (AIDCallback)0) {
         AIRegisterDMACallback(gAttractMovieAudioPrevDmaCallback);
     }
     OSRestoreInterrupts(saved);
     gAttractMovieAudioActive = 0;
 }
 
-BOOL movieLoad(const char* fileName, BOOL onMemory)
-{
+BOOL movieLoad(const char* fileName, BOOL onMemory) {
     u32 readOff;
     s32 result;
     u32 i;
 
-    if (gAttractMovieAudioActive == 0)
-    {
+    if (gAttractMovieAudioActive == 0) {
         return 0;
     }
 
-    if (gAttractMoviePlayer.isOpen != 0)
-    {
+    if (gAttractMoviePlayer.isOpen != 0) {
         return 0;
     }
 
     memset(&gAttractMoviePlayer.videoInfo, 0, sizeof(AttractMovieVideoInfo));
     memset(&gAttractMoviePlayer.audioInfo, 0, sizeof(AttractMovieAudioInfo));
 
-    if (!DVDOpen(fileName, &gAttractMoviePlayer.fileInfo))
-    {
+    if (!DVDOpen(fileName, &gAttractMoviePlayer.fileInfo)) {
         return 0;
     }
 
     result = DVDRead(&gAttractMoviePlayer.fileInfo, gAttractMovieDvdReadBuffer, 0x40, 0);
-    if (result < 0)
-    {
+    if (result < 0) {
         DVDClose(&gAttractMoviePlayer.fileInfo);
         return 0;
     }
 
-    memcpy(&gAttractMoviePlayer.header, gAttractMovieDvdReadBuffer,
-           sizeof(gAttractMoviePlayer.header));
+    memcpy(&gAttractMoviePlayer.header, gAttractMovieDvdReadBuffer, sizeof(gAttractMoviePlayer.header));
 
-    if (strcmp(gAttractMoviePlayer.header.mMagic, sAttractMovieThpMagic) != 0)
-    {
+    if (strcmp(gAttractMoviePlayer.header.mMagic, sAttractMovieThpMagic) != 0) {
         DVDClose(&gAttractMoviePlayer.fileInfo);
         return 0;
     }
 
-    if (gAttractMoviePlayer.header.mVersion != THP_VERSION_1_0)
-    {
+    if (gAttractMoviePlayer.header.mVersion != THP_VERSION_1_0) {
         DVDClose(&gAttractMoviePlayer.fileInfo);
         return 0;
     }
@@ -195,8 +180,7 @@ BOOL movieLoad(const char* fileName, BOOL onMemory)
         u32 compOff = gAttractMoviePlayer.header.mCompInfoDataOffsets;
 
         result = DVDRead(&gAttractMoviePlayer.fileInfo, gAttractMovieDvdReadBuffer, 0x20, compOff);
-        if (result < 0)
-        {
+        if (result < 0) {
             DVDClose(&gAttractMoviePlayer.fileInfo);
             return 0;
         }
@@ -206,30 +190,24 @@ BOOL movieLoad(const char* fileName, BOOL onMemory)
         gAttractMoviePlayer.audioExists = 0;
     }
 
-    for (i = 0; i < gAttractMoviePlayer.compInfo.mNumComponents; i++)
-    {
-        switch (gAttractMoviePlayer.compInfo.mFrameComp[i])
-        {
+    for (i = 0; i < gAttractMoviePlayer.compInfo.mNumComponents; i++) {
+        switch (gAttractMoviePlayer.compInfo.mFrameComp[i]) {
         case THP_COMPONENT_VIDEO:
             result = DVDRead(&gAttractMoviePlayer.fileInfo, gAttractMovieDvdReadBuffer, 0x20, readOff);
-            if (result < 0)
-            {
+            if (result < 0) {
                 DVDClose(&gAttractMoviePlayer.fileInfo);
                 return 0;
             }
-            memcpy(&gAttractMoviePlayer.videoInfo, gAttractMovieDvdReadBuffer,
-                   sizeof(AttractMovieVideoInfo));
+            memcpy(&gAttractMoviePlayer.videoInfo, gAttractMovieDvdReadBuffer, sizeof(AttractMovieVideoInfo));
             readOff += sizeof(AttractMovieVideoInfo);
             break;
         case THP_COMPONENT_AUDIO:
             result = DVDRead(&gAttractMoviePlayer.fileInfo, gAttractMovieDvdReadBuffer, 0x20, readOff);
-            if (result < 0)
-            {
+            if (result < 0) {
                 DVDClose(&gAttractMoviePlayer.fileInfo);
                 return 0;
             }
-            memcpy(&gAttractMoviePlayer.audioInfo, gAttractMovieDvdReadBuffer,
-                   sizeof(AttractMovieAudioInfo));
+            memcpy(&gAttractMoviePlayer.audioInfo, gAttractMovieDvdReadBuffer, sizeof(AttractMovieAudioInfo));
             gAttractMoviePlayer.audioExists = 1;
             readOff += sizeof(AttractMovieAudioInfo);
             break;
@@ -250,13 +228,11 @@ BOOL movieLoad(const char* fileName, BOOL onMemory)
     return 1;
 }
 
-int AttractMovie_CloseFile(void)
-{
+int AttractMovie_CloseFile(void) {
     AttractMoviePlayer* player;
 
     player = &gAttractMoviePlayer;
-    if ((player->isOpen != 0) && (player->state == 0))
-    {
+    if ((player->isOpen != 0) && (player->state == 0)) {
         player->isOpen = 0;
         DVDClose(&player->fileInfo);
         return 1;
@@ -266,21 +242,16 @@ int AttractMovie_CloseFile(void)
 }
 
 void AttractMovie_GetBufferSizes(u32* movieOrReadBufferSize, int* yTextureBufferSize, int* uTextureBufferSize,
-                                 int* vTextureBufferSize, u32* audioBufferSize, int* thpWorkBufferSize)
-{
+                                 int* vTextureBufferSize, u32* audioBufferSize, int* thpWorkBufferSize) {
     AttractMoviePlayer* player;
     u32 movieOrReadSize;
     int size;
 
     player = &gAttractMoviePlayer;
-    if (player->isOpen != 0)
-    {
-        if (player->isOnMemory != 0)
-        {
+    if (player->isOpen != 0) {
+        if (player->isOnMemory != 0) {
             movieOrReadSize = ALIGN_NEXT_32(player->header.mMovieDataSize);
-        }
-        else
-        {
+        } else {
             movieOrReadSize = ALIGN_NEXT_32(player->header.mBufferSize) * 10;
         }
         *movieOrReadBufferSize = movieOrReadSize;
@@ -288,12 +259,9 @@ void AttractMovie_GetBufferSizes(u32* movieOrReadBufferSize, int* yTextureBuffer
         *yTextureBufferSize = ALIGN_NEXT_32(player->videoInfo.xSize * player->videoInfo.ySize) * 3;
         *uTextureBufferSize = ALIGN_NEXT_32((u32)(player->videoInfo.xSize * player->videoInfo.ySize) >> 2) * 3;
         *vTextureBufferSize = ALIGN_NEXT_32((u32)(player->videoInfo.xSize * player->videoInfo.ySize) >> 2) * 3;
-        if (player->audioExists != 0)
-        {
+        if (player->audioExists != 0) {
             size = ALIGN_NEXT_32(player->header.mAudioMaxSamples * 4) * 3;
-        }
-        else
-        {
+        } else {
             size = 0;
         }
         *audioBufferSize = size;
@@ -310,8 +278,7 @@ void AttractMovie_GetBufferSizes(u32* movieOrReadBufferSize, int* yTextureBuffer
 }
 
 int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer, void* uTextureBuffer,
-                               void* vTextureBuffer, void* audioBuffer, void* thpWorkBuffer)
-{
+                               void* vTextureBuffer, void* audioBuffer, void* thpWorkBuffer) {
     AttractMoviePlayer* player;
     u8* curr;
     u32 frameBufferSize;
@@ -320,18 +287,13 @@ int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer, vo
     u32 i;
 
     player = &gAttractMoviePlayer;
-    if (player->isOpen != 0 && player->state == 0)
-    {
-        if (player->isOnMemory != 0)
-        {
+    if (player->isOpen != 0 && player->state == 0) {
+        if (player->isOnMemory != 0) {
             player->movieData = movieOrReadBuffer;
             curr = (u8*)movieOrReadBuffer + player->header.mMovieDataSize;
-        }
-        else
-        {
+        } else {
             curr = movieOrReadBuffer;
-            for (i = 0; i < 10; i++)
-            {
+            for (i = 0; i < 10; i++) {
                 player->readBuffer[i].ptr = curr;
                 frameBufferSize = ALIGN_NEXT_32(player->header.mBufferSize);
                 curr += frameBufferSize;
@@ -341,8 +303,7 @@ int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer, vo
         player = &gAttractMoviePlayer;
         yTextureSize = ALIGN_NEXT_32(player->videoInfo.xSize * player->videoInfo.ySize);
         uvTextureSize = ALIGN_NEXT_32((player->videoInfo.xSize * player->videoInfo.ySize) >> 2);
-        for (i = 0; i < 3; i++)
-        {
+        for (i = 0; i < 3; i++) {
             player->textureSet[i].yTexture = yTextureBuffer;
             DCInvalidateRange(curr, yTextureSize);
             player->textureSet[i].uTexture = uTextureBuffer;
@@ -353,8 +314,7 @@ int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer, vo
         }
 
         player = &gAttractMoviePlayer;
-        if (player->audioExists != 0)
-        {
+        if (player->audioExists != 0) {
             player->audioBuffer[0].buffer = audioBuffer;
             player->audioBuffer[0].curPtr = audioBuffer;
             player->audioBuffer[0].validSample = 0;
@@ -429,7 +389,8 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags) {
                     return FALSE;
                 }
 
-                gAttractMoviePlayer.initOffset = gAttractMoviePlayer.header.mMovieDataOffsets + gAttractMovieDvdReadBuffer[0];
+                gAttractMoviePlayer.initOffset =
+                    gAttractMoviePlayer.header.mMovieDataOffsets + gAttractMovieDvdReadBuffer[0];
                 gAttractMoviePlayer.initReadFrame = movieIndex;
                 gAttractMoviePlayer.initReadSize = gAttractMovieDvdReadBuffer[1] - gAttractMovieDvdReadBuffer[0];
             } else {
@@ -445,11 +406,13 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags) {
         gAttractMoviePlayer.videoDecodeCount = 0;
 
         if (gAttractMoviePlayer.isOnMemory != 0) {
-            if (DVDRead(&gAttractMoviePlayer.fileInfo, gAttractMoviePlayer.movieData, gAttractMoviePlayer.header.mMovieDataSize, gAttractMoviePlayer.header.mMovieDataOffsets) < 0) {
+            if (DVDRead(&gAttractMoviePlayer.fileInfo, gAttractMoviePlayer.movieData,
+                        gAttractMoviePlayer.header.mMovieDataSize, gAttractMoviePlayer.header.mMovieDataOffsets) < 0) {
                 return FALSE;
             }
             /* Preserve the retail add/subtract order without an out-of-bounds intermediate pointer. */
-            firstFrame = (u8*)((size_t)gAttractMoviePlayer.movieData + gAttractMoviePlayer.initOffset - gAttractMoviePlayer.header.mMovieDataOffsets);
+            firstFrame = (u8*)((size_t)gAttractMoviePlayer.movieData + gAttractMoviePlayer.initOffset -
+                               gAttractMoviePlayer.header.mMovieDataOffsets);
             CreateVideoDecodeThread(0xf, firstFrame);
             if (gAttractMoviePlayer.audioExists != 0) {
                 CreateAudioDecodeThread(0xc, firstFrame);

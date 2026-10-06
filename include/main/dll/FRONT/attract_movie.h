@@ -9,9 +9,9 @@
 
 #define ATTRACT_MOVIE_READ_BUFFER_COUNT 10
 
-#define ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE 0x280
+#define ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE  0x280
 #define ATTRACT_MOVIE_AUDIO_DMA_BUFFER_COUNT 2
-#define ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES \
+#define ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES                                                                           \
     (ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_COUNT)
 #define ATTRACT_MOVIE_AUDIO_DMA_SAMPLE_COUNT 0xA0
 
@@ -27,7 +27,7 @@ typedef struct AttractMovieAudioInfo {
 } AttractMovieAudioInfo;
 
 typedef struct AttractMovieReadBuffer {
-    u8 *ptr;
+    u8* ptr;
     s32 frameNumber;
 } AttractMovieReadBuffer;
 
@@ -36,15 +36,15 @@ STATIC_ASSERT(offsetof(AttractMovieReadBuffer, ptr) == 0);
 STATIC_ASSERT(offsetof(AttractMovieReadBuffer, frameNumber) == 4);
 
 typedef struct AttractMovieTextureSet {
-    u8 *yTexture;
-    u8 *uTexture;
-    u8 *vTexture;
+    u8* yTexture;
+    u8* uTexture;
+    u8* vTexture;
     s32 frameNumber;
 } AttractMovieTextureSet;
 
 typedef struct AttractMovieAudioBuffer {
-    s16 *buffer;
-    s16 *curPtr;
+    s16* buffer;
+    s16* curPtr;
     u32 validSample;
     s32 frameNumber;
 } AttractMovieAudioBuffer;
@@ -55,7 +55,7 @@ typedef struct AttractMoviePlayer {
     THPFrameCompInfo compInfo;
     AttractMovieVideoInfo videoInfo;
     AttractMovieAudioInfo audioInfo;
-    void *thpWorkArea;
+    void* thpWorkArea;
     s32 isOpen;
     u8 state;
     u8 internalState;
@@ -68,8 +68,8 @@ typedef struct AttractMoviePlayer {
     s32 videoError;
     s32 isOnMemory;
     union {
-        u8 *movieData;
-        void *loopFrame;
+        u8* movieData;
+        void* loopFrame;
     };
     s32 initOffset;
     union {
@@ -96,11 +96,11 @@ typedef struct AttractMoviePlayer {
     };
     union {
         s32 curAudioNumber;
-        AttractMovieTextureSet *curTextureSet;
+        AttractMovieTextureSet* curTextureSet;
     };
     union {
-        AttractMovieTextureSet *dispTextureSet;
-        AttractMovieAudioBuffer *curAudioBuffer;
+        AttractMovieTextureSet* dispTextureSet;
+        AttractMovieAudioBuffer* curAudioBuffer;
     };
     AttractMovieReadBuffer readBuffer[ATTRACT_MOVIE_READ_BUFFER_COUNT];
     AttractMovieTextureSet textureSet[3];
