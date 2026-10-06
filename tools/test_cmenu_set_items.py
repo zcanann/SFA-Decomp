@@ -6,6 +6,7 @@ import tempfile
 import unittest
 
 from brute_match import find_function_body
+from cmenu_set_items_probe import runtime_aliases, runtime_storage
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -13,9 +14,6 @@ ROOT = Path(__file__).resolve().parents[1]
 def harness(source):
     start, end = find_function_body(source, 'cMenuSetItems')
     declaration = source.rfind('int cMenuSetItems', 0, start)
-    header = (ROOT / 'include/main/dll/dll_0000_gameui.h').read_text()
-    hud_end = header.index('} CMenuHud;') + len('} CMenuHud;')
-    hud_start = header.rfind('typedef struct {', 0, hud_end)
     return r'''
 #include <assert.h>
 #include <stddef.h>
@@ -30,9 +28,7 @@ typedef struct Texture { int id; } Texture;
 #define HUD_STATUS_COUNT 13
 #define CMENU_ITEM_SLOT_COUNT 64
 #include "main/dll/cmenu_item_table.h"
-''' + header[hud_start:hud_end] + r'''
-static CMenuHud state;
-#define lbl_803A87F0 (&state)
+''' + runtime_storage() + '\nstatic CMenuFixture state;\n' + runtime_aliases('state') + r'''
 static int gCMenuForcedSelIndex, gCMenuPreselectOwnedBit;
 static int gTrickyHudItemMask, gTrickyHudActionMask;
 static int yButtonItem, yButtonState, yButtonItemTextureId;

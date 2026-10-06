@@ -27,16 +27,51 @@ def function(source, name):
     return source[start.start():end].replace("cMenuSetItems(", name + "(", 1)
 
 
-def layouts():
+RUNTIME_ARRAYS = {
+    "itemFlags": "gCMenuItemFlags",
+    "enabled": "gCMenuItemEnabledTable",
+    "closeMode": "gCMenuItemCloseModes",
+    "auxiliaryBytes": "gCMenuItemAuxBytes",
+    "textIds": "gCMenuItemTextIds",
+    "auxiliaryValues": "gCMenuItemAuxValues",
+    "usedBits": "gCMenuItemUsedBits",
+    "activeBits": "gCMenuItemActiveBits",
+    "ownedBits": "gCMenuItemTargetTable",
+    "itemSlots": "gCMenuItemTextureIds",
+    "itemTextures": "gCMenuItemTextures",
+}
+
+
+def runtime_storage():
+    """Group real array declarations only for resetting/comparing host fixtures."""
+    source = (ROOT / SOURCE).read_text()
+    fields = []
+    for field, symbol in RUNTIME_ARRAYS.items():
+        declaration = re.search(r"^(?:u8|s16|int|Texture\*) " + symbol + r"\[[^\]]+\];$", source, re.M)
+        if declaration is None:
+            raise ValueError(f"runtime array definition not found: {symbol}")
+        fields.append("    " + declaration[0].replace(symbol, field))
+    return "typedef struct {\n" + "\n".join(fields) + "\n} CMenuFixture;"
+
+
+def runtime_aliases(owner):
+    return "\n".join(f"#define {symbol} {owner}.{field}" for field, symbol in RUNTIME_ARRAYS.items())
+
+
+def layouts(legacy_header=None):
     items = (ROOT / "include/main/dll/cmenu_item_table.h").read_text()
     item = re.search(r"typedef struct CMenuItemDef\s*\{.*?\} CMenuItemDef;", items, re.S)
-    hud = (ROOT / "include/main/dll/dll_0000_gameui.h").read_text()
-    end = hud.index("} CMenuHud;") + len("} CMenuHud;")
-    start = hud.rindex("typedef struct {", 0, end)
-    enum = re.search(r"typedef enum HudStatusSlot \{.*?\} HudStatusSlot;", hud, re.S)
-    if item is None or enum is None:
-        raise ValueError("canonical C-menu layouts not found")
-    return item[0] + "\n" + enum[0] + "\n" + hud[start:end]
+    if item is None:
+        raise ValueError("canonical C-menu item layout not found")
+    storage = runtime_storage()
+    if legacy_header is not None:
+        # Historical functions may still use the removed, oversized HUD view.
+        # Read that fixture from the explicitly selected baseline, never src/.
+        end = legacy_header.index("} CMenuHud;") + len("} CMenuHud;")
+        start = legacy_header.rindex("typedef struct {", 0, end)
+        enum = re.search(r"typedef enum HudStatusSlot \{.*?\} HudStatusSlot;", legacy_header, re.S)
+        storage = enum[0] + "\n" + legacy_header[start:end] + "\ntypedef CMenuHud CMenuFixture;"
+    return item[0] + "\n" + storage
 
 
 PRELUDE = r"""
@@ -60,7 +95,7 @@ typedef struct GameObject GameObject;
 FIXTURE = r"""
 typedef struct { int kind, argument; } Event;
 typedef struct {
-    CMenuHud hud;
+    CMenuFixture hud;
     CMenuItemDef staff[65], quest[65];
     s16 forced, yTexture;
     s8 preselect;
@@ -106,6 +141,8 @@ static u32 nextRandom(void) {
     return randomState;
 }
 """
+
+FIXTURE += "\n" + runtime_aliases("live.hud") + "\n"
 
 MAIN = r"""
 int main(void) {
@@ -161,7 +198,7 @@ int main(void) {
             return 1;
         }
     }
-    printf("%u cases: identical return values, complete HUD/global state, and ordered engine calls\n", test);
+    printf("%u cases: identical return values, C-menu/global state, and ordered engine calls\n", test);
     return 0;
 }
 """
@@ -181,7 +218,11 @@ def main():
         parser.error("--timeout must be finite and positive")
     old = subprocess.check_output(["git", "show", f"{args.baseline}:{SOURCE}"], cwd=ROOT, text=True)
     current = (ROOT / SOURCE).read_text()
-    harness = "\n".join([PRELUDE, layouts(), FIXTURE, function(old, "baseline"),
+    legacy_header = None
+    if "CMenuHud" in function(old, "baseline"):
+        legacy_header = subprocess.check_output(
+            ["git", "show", f"{args.baseline}:include/main/dll/dll_0000_gameui.h"], cwd=ROOT, text=True)
+    harness = "\n".join([PRELUDE, layouts(legacy_header), FIXTURE, function(old, "baseline"),
                          function(current, "candidate"), MAIN])
     with tempfile.TemporaryDirectory(prefix="cmenu-probe-") as directory:
         source = Path(directory) / "probe.c"

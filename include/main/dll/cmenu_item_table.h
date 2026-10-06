@@ -14,7 +14,7 @@
  *
  * cMenuSetItems() rebuilds the visible list every frame: for each entry whose
  * ownedGameBit is currently set (mainGetBit != 0) and whose usedGameBit is
- * clear, it appends the entry to the CMenuHud arrays and loads iconTextureId.
+ * clear, it appends the entry to the C-menu runtime arrays and loads iconTextureId.
  * The on-screen item set therefore mirrors live save state - picking an item
  * up sets its ownedGameBit; using/consuming it sets usedGameBit.
  *
