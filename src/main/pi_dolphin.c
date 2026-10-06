@@ -658,7 +658,8 @@ void defragMemory(int mode) {
     int passIndex;
     int stable;
     int previousFreeDelay;
-    u32 resourceAddress = (u32)gResourceFileTable;
+    /* Keep the shared address bias: direct field bases change MWCC's scheduling. */
+    size_t resourceBase = (size_t)gResourceFileTable;
     stable = 0;
     passIndex = 0;
     mmSetTextureAllocationState(2);
@@ -666,6 +667,7 @@ void defragMemory(int mode) {
         return;
     }
     if (mode == 0 && gDefragDelayFrames == 0) {
+        /* Texture restructuring calls back here with mode 2 before this delayed pass. */
         texRestructRefs(0);
         gDefragDelayFrames = 6;
         return;
@@ -676,10 +678,11 @@ void defragMemory(int mode) {
         s16* moveOwners;
         int* moveSizes;
         u8* moveFlags;
+        /* Make room in heap 0 first. Mode 2 keeps TEX0 archives out of this phase. */
         mmSetForceHeaps1and2Only(1);
         fileId = 0;
         {
-            u32 biasedBase = resourceAddress + sizeof(MldfArenaBlock);
+            size_t biasedBase = resourceBase + sizeof(MldfArenaBlock);
             moveBuffers = (void**)(biasedBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ptrs)));
             moveOwners = (s16*)(biasedBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, owners)));
             moveSizes = (int*)(biasedBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, sizes)));
@@ -747,15 +750,16 @@ void defragMemory(int mode) {
         } while (fileId <= MLDF_FILEID_ENVFXACT_BIN);
         mmSetForceHeaps1and2Only(-1);
     }
-    resourceAddress = (u32)((char*)resourceAddress + sizeof(MldfArenaBlock));
+    /* Retain the byte-pointer round trip; plain integer addition changes codegen. */
+    resourceBase = (size_t)((u8*)resourceBase + sizeof(MldfArenaBlock));
     while (stable == 0 && passIndex < 10) {
         stable = 1;
         fileId = 0;
-        buffers = (void**)(resourceAddress - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ptrs)));
-        owners = (s16*)(resourceAddress - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, owners)));
-        sizes = (int*)(resourceAddress - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, sizes)));
+        buffers = (void**)(resourceBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ptrs)));
+        owners = (s16*)(resourceBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, owners)));
+        sizes = (int*)(resourceBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, sizes)));
         flags =
-            (u8*)(resourceAddress - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, workspace.loadedFlags)));
+            (u8*)(resourceBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, workspace.loadedFlags)));
         do {
             switch (fileId) {
             case MLDF_FILEID_ANIMCURV_BIN_A:
@@ -775,11 +779,13 @@ void defragMemory(int mode) {
                     if (replacement == NULL) {
                         break;
                     }
-                    if (*sizes >= MM_REGION0_LARGE_ALLOCATION_THRESHOLD && (u32)*buffers < (u32)replacement) {
+                    /* Heap 0 packs large files down and small files up. These can be
+                       separate allocations, so compare their full address values. */
+                    if (*sizes >= MM_REGION0_LARGE_ALLOCATION_THRESHOLD && (size_t)*buffers < (size_t)replacement) {
                         int previousFreeDelay = mmSetFreeDelay(0);
                         mm_free(replacement);
                         mmSetFreeDelay(previousFreeDelay);
-                    } else if (*sizes < MM_REGION0_LARGE_ALLOCATION_THRESHOLD && (u32)*buffers > (u32)replacement) {
+                    } else if (*sizes < MM_REGION0_LARGE_ALLOCATION_THRESHOLD && (size_t)*buffers > (size_t)replacement) {
                         int previousFreeDelay = mmSetFreeDelay(0);
                         mm_free(replacement);
                         mmSetFreeDelay(previousFreeDelay);
@@ -794,6 +800,8 @@ void defragMemory(int mode) {
                         stable = 0;
                     }
                 } else {
+                    /* Refill heap 0 only after a pass has freed space there.
+                       The nested texture pass leaves these other-heap files alone. */
                     if (mode == 2) {
                         break;
                     }

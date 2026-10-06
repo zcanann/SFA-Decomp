@@ -396,6 +396,38 @@ borrowed file-info node, and failed async reads retain the romlist buffer;
 these retail behaviors are preserved. Every source object and retail DOL
 remains byte-identical in all five versions.
 
+`defragMemory` now retains native-width registry and buffer addresses throughout
+its relocation passes. It moves twelve archive slots: both banks of ANIMCURV,
+VOXMAP, TEX0, BLOCKS, MODELS and ANIM. With no pending delay, a normal call
+first runs texture restructuring, then schedules a resource pass six frames
+later. Texture
+restructuring calls back with mode 2: that pass evicts eligible heap-0 archives
+to heaps 1/2, except TEX0, and suppresses subsequent promotion back into heap 0.
+TEX0 remains eligible for the ordinary compaction loop; TEX1 is outside both
+resource-slot switches.
+
+Compaction runs at most ten passes, preferring lower addresses for files at
+least 0x33450 bytes and higher addresses for smaller files. That comparison
+uses file bytes, while allocation requests include 32 extra bytes; the boundary
+difference is preserved. A replacement in another heap can still be accepted
+by the heap-0 branch if its address wins. Other-heap promotion starts only after
+a successful first pass, requires a heap item of at least 0x3000 bytes, and
+rejects replacements outside heap 0. Copies precede immediate frees, with the
+previous free delay restored. The existing early-return allocation-state writes
+and reset of forced heaps to -1 also remain intact.
+
+`tools/test_resource_defrag.py` runs the complete routine in 5,521 cases at
+`-O0`/`-O2` under ASan/UBSan. It checks every slot, heap, ownership and presence
+combination; failures, eviction, promotion, copy/free order, untouched registry
+data, size boundaries and the pass limit. Sparse host mappings cross a 4 GiB
+boundary so truncated address ordering cannot pass accidentally. Five negative
+controls reject narrowed addresses, wrong ordering, threshold, slot and pass
+limit changes. Heap and texture services are spies, and the address view uses
+one host allocation; this is not a complete native allocator or registry port.
+The matched source retains MWCC's common address bias and byte-pointer round
+trip because direct-field and simplified-addition rewrites changed instructions.
+Every source object and final retail DOL is byte-identical in all five versions.
+
 ### Per-file findings (fileId, consumer, and confirmed/refined format)
 
 | Wiki file | fileId(s) | Consumer in this codebase | What we can add |
