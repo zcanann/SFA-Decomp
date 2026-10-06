@@ -3619,8 +3619,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             fileBuf = qptr + offsetFlags;
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0) {
                 decompSize = ZLB_HDR(fileBuf)->stream.decompressedSize;
-                zlbDecompress((u8*)(MLDF_QPTR + offsetFlags + 0x10), ZLB_HDR(fileBuf)->stream.compressedSize, (u8*)destBuf,
-                              &decompSize);
+                zlbDecompress((u8*)(MLDF_QPTR + offsetFlags + 0x10), ZLB_HDR(fileBuf)->stream.compressedSize,
+                              (u8*)destBuf, &decompSize);
                 DCStoreRange(destBuf, decompSize);
             } else {
                 return 0;
@@ -3632,8 +3632,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             fileBuf = qptr + offsetFlags;
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0) {
                 decompSize = ZLB_HDR(fileBuf)->stream.decompressedSize;
-                zlbDecompress((u8*)(MLDF_QPTR + offsetFlags + 0x10), ZLB_HDR(fileBuf)->stream.compressedSize, (u8*)destBuf,
-                              &decompSize);
+                zlbDecompress((u8*)(MLDF_QPTR + offsetFlags + 0x10), ZLB_HDR(fileBuf)->stream.compressedSize,
+                              (u8*)destBuf, &decompSize);
                 DCStoreRange(destBuf, decompSize);
             } else {
                 return 0;
@@ -3662,8 +3662,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             }
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0) {
                 decompSize = ZLB_HDR(fileBuf)->stream.decompressedSize;
-                zlbDecompress((u8*)(MLDF_QPTR + entryIndex + 0x10), ZLB_HDR(fileBuf)->stream.compressedSize, (u8*)destBuf,
-                              &decompSize);
+                zlbDecompress((u8*)(MLDF_QPTR + entryIndex + 0x10), ZLB_HDR(fileBuf)->stream.compressedSize,
+                              (u8*)destBuf, &decompSize);
                 DCStoreRange(destBuf, decompSize);
             }
         } else if (fileId == 0x4f) {
@@ -3674,8 +3674,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             }
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0) {
                 decompSize = ZLB_HDR(fileBuf)->stream.decompressedSize;
-                zlbDecompress((u8*)(MLDF_QPTR + entryIndex + 0x10), ZLB_HDR(fileBuf)->stream.compressedSize, (u8*)destBuf,
-                              &decompSize);
+                zlbDecompress((u8*)(MLDF_QPTR + entryIndex + 0x10), ZLB_HDR(fileBuf)->stream.compressedSize,
+                              (u8*)destBuf, &decompSize);
                 DCStoreRange(destBuf, decompSize);
             }
         } else if (fileId == 0x30 || fileId == 0x51 || fileId == 0x4a) {
@@ -3907,7 +3907,8 @@ void tex0GetFrame(int bankWord, int unused, int* decompressedSize, int* compress
         }
         if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0) {
             u8* archive = gResourceFileBuffers[archiveId];
-            struct ZlbStreamInfo* stream = &ZLB_HDR(archive + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount])->stream;
+            struct ZlbStreamInfo* stream =
+                &ZLB_HDR(archive + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount])->stream;
             int packedSize = stream->compressedSize;
             *decompressedSize = stream->decompressedSize;
             *compressedSize = packedSize;
@@ -3915,7 +3916,8 @@ void tex0GetFrame(int bankWord, int unused, int* decompressedSize, int* compress
             memcpy(frameOffsets, (void*)((u8*)gResourceFileBuffers[archiveId] + (bankWord & 0xffffff) * 2),
                    (frameIndexOrCount + 1) * 4);
         } else {
-            struct ZlbStreamInfo* stream = &ZLB_HDR((u8*)gResourceFileBuffers[archiveId] + (bankWord & 0xffffff) * 2)->stream;
+            struct ZlbStreamInfo* stream =
+                &ZLB_HDR((u8*)gResourceFileBuffers[archiveId] + (bankWord & 0xffffff) * 2)->stream;
             int packedSize = stream->compressedSize;
             *decompressedSize = stream->decompressedSize;
             *compressedSize = packedSize;
@@ -3928,7 +3930,8 @@ void texPreGetFrame(int bankWord, int unused, int* decompressedSize, int* compre
     u8* archive = gResourceFileBuffers[MLDF_FILEID_TEXPRE_BIN];
     if (archive != 0) {
         if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0) {
-            struct ZlbStreamInfo* stream = &ZLB_HDR(archive + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount])->stream;
+            struct ZlbStreamInfo* stream =
+                &ZLB_HDR(archive + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount])->stream;
             int packedSize = stream->compressedSize;
             *decompressedSize = stream->decompressedSize;
             *compressedSize = packedSize;
