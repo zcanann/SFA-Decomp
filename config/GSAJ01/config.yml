@@ -258,8 +258,7 @@ force_active:
   # aram_data.c: retain the same unreferenced 24-byte .bss block as EN.
   - lbl_803D4868
   # dlls/engine/5/5.c
-  # Retain the unused sky color table and trailing small-data word.
-  - sSkyUnusedColors
+  # Retain the unused trailing small-data word.
   - sSkyUnusedD
   # dlls/objects/429_SH_thorntai/SHthorntail.c
   # Thorntail reads these state and dialogue tables through the linked-ident base.

@@ -153,10 +153,8 @@ force_active:
   # info-start slot and texture IDs; retail keeps it and the following
   # texture IDs and format strings depend on its four-byte footprint.
   - lbl_803DBA00
-  # dlls/engine/5/5.c: retain the unused final .sbss word and the retail
-  # 60-byte .data color table when linking the complete sky TU from source.
+  # dlls/engine/5/5.c: retain the unused final .sbss word.
   - sSkyUnusedD
-  - sSkyUnusedColors
   # Placeholders for retail objects the carve leaves unnamed, in units that are
   # still NonMatching. Nothing references them, so mwld would dead-strip them
   # the moment their unit is linked from our object, shortening .sbss/.sdata and
