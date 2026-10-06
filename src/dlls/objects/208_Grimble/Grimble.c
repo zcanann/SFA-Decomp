@@ -435,8 +435,7 @@ int grimble_stateHandlerA02(GameObject* obj, GroundBaddieState* state, f32 timeS
         (1.0f - 2.0f * obj->anim.currentMoveProgress) * (f32)(s16)(pathAngle * ((controlData->reversed << 1) - 1));
     if (state->baddie.moveDone != 0) {
         (*gBaddieControlInterface)
-            ->getTargetGeometry(obj, (GameObject*)state->baddie.targetObj, 0x10, &zone,
-                                &unusedAngle, &distance);
+            ->getTargetGeometry(obj, (GameObject*)state->baddie.targetObj, 0x10, &zone, &unusedAngle, &distance);
         controlData->reversed = 1 - *(u8*)&controlData->reversed;
         obj->anim.rotX = controlData->baseRotX + (!controlData->reversed << 15);
         speed = randomGetRange(50, 100) / 100.0f;
@@ -475,8 +474,7 @@ int grimble_stateHandlerA01(GameObject* obj, GroundBaddieState* state, f32 timeS
     }
     (*gPlayerInterface)->updateAnimRootMotion(obj, &state->baddie, timeStep, 0);
     if ((state->baddie.eventFlags & BADDIE_EVENT_FOOTSTEP) != 0) {
-        state->baddie.eventFlags =
-            state->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
+        state->baddie.eventFlags = state->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
         Sfx_PlayFromObject(obj, SFXTRIG_mv_persquk1);
     }
     controlData->pathObj->pathInterface->callbacks->advance(
@@ -535,8 +533,7 @@ int grimble_stateHandlerA00(GameObject* obj, GroundBaddieState* state, f32 timeS
         controlData->pathProgress = GRIMBLE_PATH_MAX_PROGRESS;
     }
     (*gBaddieControlInterface)
-        ->getTargetGeometry(obj, (GameObject*)state->baddie.targetObj, 0x10, &zone, &unusedAngle,
-                            &distance);
+        ->getTargetGeometry(obj, (GameObject*)state->baddie.targetObj, 0x10, &zone, &unusedAngle, &distance);
     if (zone > 3 && zone < 12 && distance > 400 && controlData->pathProgress > 2.0f &&
         controlData->pathProgress < 5.0f) {
         return 3;
@@ -546,8 +543,7 @@ int grimble_stateHandlerA00(GameObject* obj, GroundBaddieState* state, f32 timeS
         return 3;
     }
     if ((state->baddie.eventFlags & BADDIE_EVENT_FOOTSTEP) != 0) {
-        state->baddie.eventFlags =
-            state->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
+        state->baddie.eventFlags = state->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
         Sfx_PlayFromObject(obj, SFXTRIG_mv_persquk1);
     }
     controlData->pathObj->pathInterface->callbacks->sample(

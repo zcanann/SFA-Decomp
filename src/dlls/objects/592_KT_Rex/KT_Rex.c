@@ -1314,7 +1314,8 @@ void ktrex_update(GameObject* obj) {
     ktrex_updateAttackEffects(obj);
     (*gBaddieControlInterface)->updateGravity(obj, runtime, 0.0f, 0);
     ObjHits_SetHitVolumeMasks(&obj->anim, 24, 2, 0x1fffff);
-    (*gPlayerInterface)->update(obj, &runtime->baddie, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
+    (*gPlayerInterface)
+        ->update(obj, &runtime->baddie, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
     obj->anim.localPosY = gKTRexState->posY;
 }
 

@@ -258,7 +258,8 @@ void dimBossTonsil_newState_hitFightMain(GameObject* obj, ObjSeqState* animUpdat
     obj->pendingParentObj = (void*)0;
 
     (*gPlayerInterface)
-        ->update(obj, &updateState->baddie, timeDelta, timeDelta, &gDIMbosstonsilStateHandlers, &gDIMbosstonsilSubstateHandlers);
+        ->update(obj, &updateState->baddie, timeDelta, timeDelta, &gDIMbosstonsilStateHandlers,
+                 &gDIMbosstonsilSubstateHandlers);
 
     obj->pendingParentObj = state->savedPendingParentObj;
 }
@@ -368,7 +369,8 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjSeqState* animUpdate) {
             if (state->subMode == 1) {
                 state->baddie.substate = 0;
                 (*gPlayerInterface)
-                    ->update(obj, &state->baddie, 1.0f, 1.0f, &gDIMbosstonsilStateHandlers, &gDIMbosstonsilSubstateHandlers);
+                    ->update(obj, &state->baddie, 1.0f, 1.0f, &gDIMbosstonsilStateHandlers,
+                             &gDIMbosstonsilSubstateHandlers);
                 animUpdate->movementState = 0;
             }
             break;

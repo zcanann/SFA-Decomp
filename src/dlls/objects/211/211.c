@@ -1317,8 +1317,9 @@ void dll_D3_update(GameObject* obj)
     state->savedPendingParentObj = obj->pendingParentObj;
     obj->pendingParentObj = 0;
 
-    (*gPlayerInterface)->update(obj, &state->baddie, timeDelta, timeDelta, gLandedArwingStateHandlers,
-                                &gLandedArwingDefaultStateHandler);
+    (*gPlayerInterface)
+        ->update(obj, &state->baddie, timeDelta, timeDelta, gLandedArwingStateHandlers,
+                 &gLandedArwingDefaultStateHandler);
 
     obj->pendingParentObj = state->savedPendingParentObj;
 

@@ -1211,7 +1211,8 @@ void DIMboss_updateCombatState(GameObject* obj, ObjSeqState* animUpdate, DIMboss
     runtime->groundBaddie.savedPendingParentObj = gameObj->pendingParentObj;
     gameObj->pendingParentObj = 0;
     (*gPlayerInterface)
-        ->update(obj, &updateRuntime->groundBaddie.baddie, timeDelta, timeDelta, &gDIMbossHitDetectAnimTable, &gDIMbossAnimTable);
+        ->update(obj, &updateRuntime->groundBaddie.baddie, timeDelta, timeDelta, &gDIMbossHitDetectAnimTable,
+                 &gDIMbossAnimTable);
     gameObj->pendingParentObj = runtime->groundBaddie.savedPendingParentObj;
 }
 
@@ -1470,7 +1471,8 @@ int DIMboss_updateState(GameObject* obj, u32 state, ObjSeqState* animUpdate) {
             if (runtime->groundBaddie.subMode == 1) {
                 runtime->groundBaddie.baddie.substate = 0;
                 (*gPlayerInterface)
-                    ->update(obj, &runtime->groundBaddie.baddie, 1.0f, 1.0f, &animScratch->hitDetectAnimTable, &animScratch->animTable);
+                    ->update(obj, &runtime->groundBaddie.baddie, 1.0f, 1.0f, &animScratch->hitDetectAnimTable,
+                             &animScratch->animTable);
                 animUpdate->movementState = 0;
             }
             break;

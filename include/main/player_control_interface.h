@@ -9,9 +9,9 @@ typedef struct BaddieState BaddieState;
 typedef struct PlayerControlInterface {
     u32 reserved;
     void (*init)(GameObject* unused, BaddieState* state, int moveA, int moveB);
-    void (*update)(GameObject* obj, BaddieState* state, f32 timeDelta, f32 pathDelta, void *stateHandlers,
-                   void *substateHandlers);
-    void (*updateVelocityState)(GameObject* obj, BaddieState* state, void *stateHandlers);
+    void (*update)(GameObject* obj, BaddieState* state, f32 timeDelta, f32 pathDelta, void* stateHandlers,
+                   void* substateHandlers);
+    void (*updateVelocityState)(GameObject* obj, BaddieState* state, void* stateHandlers);
     void (*setOverride)(GameObject* obj);
     void (*setState)(GameObject* obj, BaddieState* state, int newState);
     void (*followCurve)(GameObject* obj, BaddieState* state, f32 x, f32 z, f32 timeDelta, int flag);
@@ -45,7 +45,7 @@ typedef struct PlayerControlDescriptor {
 
 extern PlayerControlDescriptor player_funcs;
 
-extern PlayerControlInterface **gPlayerInterface;
+extern PlayerControlInterface** gPlayerInterface;
 
 STATIC_ASSERT(offsetof(PlayerControlInterface, init) == 0x04);
 STATIC_ASSERT(offsetof(PlayerControlInterface, update) == 0x08);

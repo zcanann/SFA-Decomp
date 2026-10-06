@@ -1846,8 +1846,7 @@ void dbstealerworm_update(GameObject* obj) {
                     obj->pendingParentObj = 0;
                     /* Retail derives both pointers past the 0x18-byte scratch record. */
                     (*gPlayerInterface)
-                        ->update(obj, &blob->baddie, timeDelta, timeDelta, (char*)st[0] + 0x34,
-                                 (char*)st[0] + 0x18);
+                        ->update(obj, &blob->baddie, timeDelta, timeDelta, (char*)st[0] + 0x34, (char*)st[0] + 0x18);
                     obj->pendingParentObj = blob->savedPendingParentObj;
                 }
             }

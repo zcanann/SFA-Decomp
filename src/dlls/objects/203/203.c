@@ -54,10 +54,12 @@ int dll_CB_stateHandler5(GameObject* obj, GroundBaddieState* state) {
         }
         if (routePath->useDirectSteering == 0) {
             (*gPlayerInterface)
-                ->moveTowardPoint(obj, &state->baddie, routePath->waypointPos[0], routePath->waypointPos[2], 0.0f, 0.0f, 60.0f);
+                ->moveTowardPoint(obj, &state->baddie, routePath->waypointPos[0], routePath->waypointPos[2], 0.0f, 0.0f,
+                                  60.0f);
         } else {
             (*gPlayerInterface)
-                ->moveTowardPoint(obj, &state->baddie, routePath->waypointPos[0], routePath->waypointPos[2], 15.0f, 30.0f, 60.0f);
+                ->moveTowardPoint(obj, &state->baddie, routePath->waypointPos[0], routePath->waypointPos[2], 15.0f,
+                                  30.0f, 60.0f);
         }
     } else {
         (*gPlayerInterface)->setState(obj, &state->baddie, 0);

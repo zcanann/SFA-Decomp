@@ -943,12 +943,12 @@ void HighTop_update(GameObject* obj) {
             curveStep = 8.0f;
         }
         ev = Obj_UpdateRomCurveFollowVelocity(
-            self, &runtime->curveWalker,
-            gHighTopCurveFollowSpeedFactor * (runtime->curveFollowSpeedScale * timeDelta), 70.0f, curveStep, 0);
+            self, &runtime->curveWalker, gHighTopCurveFollowSpeedFactor * (runtime->curveFollowSpeedScale * timeDelta),
+            70.0f, curveStep, 0);
 #else
         int ev = Obj_UpdateRomCurveFollowVelocity(
-            self, &runtime->curveWalker,
-            gHighTopCurveFollowSpeedFactor * (runtime->curveFollowSpeedScale * timeDelta), 70.0f, 8.0f * timeDelta, 0);
+            self, &runtime->curveWalker, gHighTopCurveFollowSpeedFactor * (runtime->curveFollowSpeedScale * timeDelta),
+            70.0f, 8.0f * timeDelta, 0);
 #endif
         if (ev != 0) {
             if (ev == -1) {
