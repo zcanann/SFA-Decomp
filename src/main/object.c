@@ -1558,7 +1558,7 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
                           int unused) {
     int id;
     int offsets[20];
-    void* models[20];
+    ModelFileHeader* models[20];
     GameObject tmpl;
     GameObject* tp;
     s16 seq;
@@ -1703,7 +1703,7 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
         idx = (loadFlags >> 0xb) & 0xf;
         if (idx < count) {
             obj->anim.modelBanks[idx] = (ObjModel*)((u8*)obj + base + offsets[idx]);
-            ObjModel_LoadAnimData(models[idx], loadFlags, (u8*)obj->anim.modelBanks[idx]);
+            ObjModel_LoadAnimData(models[idx], loadFlags, obj->anim.modelBanks[idx]);
             if (!(obj->anim.modelBanks[idx]->file->flags & 0x8000)) {
                 obj->anim.modelInstance->flags &= ~0x800000;
             }
@@ -1723,7 +1723,7 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
     } else if (!(loadFlags & OBJLOAD_FLAG_SINGLE_MODEL)) {
         for (; i < count; i++) {
             obj->anim.modelBanks[i] = (ObjModel*)((u8*)obj + base + offsets[i]);
-            ObjModel_LoadAnimData(models[i], loadFlags, (u8*)obj->anim.modelBanks[i]);
+            ObjModel_LoadAnimData(models[i], loadFlags, obj->anim.modelBanks[i]);
             modelFlags = obj->anim.modelBanks[i]->file->flags;
             if (!(modelFlags & 0x8000) && !(modelFlags & 0x4000)) {
                 obj->anim.modelInstance->flags &= ~0x800000;

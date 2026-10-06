@@ -720,13 +720,13 @@ int modelLoad_calcSizes(ModelFileHeader* file, int flags, ModelInstanceSizes* si
     int chunkBytes;
 
     if (file->animationCount != 0) {
-        sizes->jointMatrixBytes = ((u32)file->jointCount + (u32)file->extraJointCount) * 0x80;
+        sizes->jointMatrixBytes = ((u32)file->jointCount + (u32)file->extraJointCount) * (2 * sizeof(ObjModelJointMatrix));
     } else {
-        sizes->jointMatrixBytes = 0x80;
+        sizes->jointMatrixBytes = 2 * sizeof(ObjModelJointMatrix);
     }
     if (file->morphTargetCount != 0 || file->vertexAnimEntries != 0 ||
         (file->flags & MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS) != 0) {
-        sizes->geometryBytes = (u32)file->vertexCount * 0xc + 0x60;
+        sizes->geometryBytes = (u32)file->vertexCount * (2 * sizeof(Vec3s)) + 0x60;
     } else {
         sizes->geometryBytes = 0;
     }
@@ -824,7 +824,7 @@ ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstIns
     }
     modelLoad_calcSizes(file, flags, &sizes, 0);
     model = (ObjModel*)destination;
-    cursor = (u8*)roundUpTo32((int)destination + sizeof(ObjModel));
+    cursor = (u8*)roundUpTo32((size_t)destination + sizeof(ObjModel));
     ((ObjModel*)destination)->jointMatrices[0] = cursor;
     cursor += sizes.jointMatrixBytes >> 1;
     ((ObjModel*)destination)->jointMatrices[1] = cursor;
@@ -832,16 +832,16 @@ ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstIns
     ((ObjModel*)destination)->curMtxBuf = ((ObjModel*)destination)->jointMatrices[0];
     if (file->morphTargetCount != 0 || file->vertexAnimEntries != NULL ||
         (file->flags & MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS)) {
-        cursor = (u8*)roundUpTo32((int)cursor);
+        cursor = (u8*)roundUpTo32((size_t)cursor);
         model->vtxBuf[0] = cursor;
-        cursor = (u8*)roundUpTo32((int)cursor + file->vertexCount * 6);
+        cursor = (u8*)roundUpTo32((size_t)cursor + file->vertexCount * sizeof(Vec3s));
         model->vtxBuf[1] = cursor;
-        bufferEnd = cursor + file->vertexCount * 6;
-        memcpy(model->vtxBuf[0], file->vertices, file->vertexCount * 6);
-        DCFlushRange(model->vtxBuf[0], file->vertexCount * 6);
-        memcpy(model->vtxBuf[1], file->vertices, file->vertexCount * 6);
-        DCFlushRange(model->vtxBuf[1], file->vertexCount * 6);
-        cursor = (u8*)roundUpTo32((int)bufferEnd);
+        bufferEnd = cursor + file->vertexCount * sizeof(Vec3s);
+        memcpy(model->vtxBuf[0], file->vertices, file->vertexCount * sizeof(Vec3s));
+        DCFlushRange(model->vtxBuf[0], file->vertexCount * sizeof(Vec3s));
+        memcpy(model->vtxBuf[1], file->vertices, file->vertexCount * sizeof(Vec3s));
+        DCFlushRange(model->vtxBuf[1], file->vertexCount * sizeof(Vec3s));
+        cursor = (u8*)roundUpTo32((size_t)bufferEnd);
     } else {
         bufferEnd = file->vertices;
         ((ObjModel*)destination)->vtxBuf[1] = bufferEnd;
@@ -853,16 +853,16 @@ ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstIns
         } else {
             normalStride = sizeof(ModelPackedNormal);
         }
-        cursor = (u8*)roundUpTo32((int)cursor);
+        cursor = (u8*)roundUpTo32((size_t)cursor);
         model->normalBuf = cursor;
         bufferEnd = cursor + file->normalCount * normalStride;
         memcpy(model->normalBuf, file->normals, file->normalCount * normalStride);
         DCFlushRange(model->normalBuf, normalStride * file->normalCount);
-        cursor = (u8*)roundUpTo32((int)bufferEnd);
+        cursor = (u8*)roundUpTo32((size_t)bufferEnd);
     } else {
         model->normalBuf = file->normals;
     }
-    cursor = (u8*)roundUpTo4((int)cursor);
+    cursor = (u8*)roundUpTo4((size_t)cursor);
     model->animStateA = (ObjAnimState*)cursor;
     cursor += sizeof(ObjAnimState);
     if (flags & 0x80) {
@@ -870,7 +870,7 @@ ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstIns
         cursor += sizeof(ObjAnimState);
     }
     if (file->flags & MODEL_FLAG_CACHED_ANIMATIONS) {
-        cursor = (u8*)roundUpTo8((int)cursor);
+        cursor = (u8*)roundUpTo8((size_t)cursor);
         state = model->animStateA;
         state->moveCache[0] = (ObjAnimCachedMove*)cursor;
         cursor += sizes.moveCacheSlotBytes;
@@ -893,7 +893,7 @@ ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstIns
         }
     }
     if (file->morphTargetCount != 0) {
-        cursor = (u8*)roundUpTo4((int)cursor);
+        cursor = (u8*)roundUpTo4((size_t)cursor);
         model->blendChannels = (ObjModelBlendChannel*)cursor;
         cursor += sizeof(ObjModelBlendChannel) * 3;
         blend = model->blendChannels;
@@ -917,7 +917,7 @@ ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstIns
         blend[2].weightRate = zero;
     }
     if (sizes.hitSphereBytes > 0) {
-        cursor = (u8*)roundUpTo4((int)cursor);
+        cursor = (u8*)roundUpTo4((size_t)cursor);
         model->hitVolumeSphereBuffers[0] = cursor;
         hitVolumeCount = file->hitVolumeCount;
         cursor += hitVolumeCount * sizeof(ObjModelHitSphere);
@@ -926,7 +926,7 @@ ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstIns
         model->activeHitVolumeSpheres = model->hitVolumeSphereBuffers[0];
     }
     if (file->jointData != NULL && file->jointCount != 0 && file->unk18 != NULL && file->unk1C != NULL) {
-        cursor = (u8*)roundUpTo4((int)cursor);
+        cursor = (u8*)roundUpTo4((size_t)cursor);
         model->skeletonJointData = (ModelJointWork*)cursor;
         cursor += sizeof(ModelJointWork);
         model->skeletonJointData->jointPositions = (Vec*)cursor;
@@ -945,16 +945,16 @@ ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstIns
         model->skeletonJointData = NULL;
     }
     if (file->vertexAnimEntries != NULL) {
-        cursor = (u8*)roundUpTo4((int)cursor);
+        cursor = (u8*)roundUpTo4((size_t)cursor);
         model->vertexAnimOffsets = (s32*)cursor;
         cursor += file->vertexAnimJob.chunkCount * sizeof(*model->vertexAnimOffsets);
     }
     if (file->normalAnimEntries != NULL) {
-        cursor = (u8*)roundUpTo4((int)cursor);
+        cursor = (u8*)roundUpTo4((size_t)cursor);
         model->normalAnimOutputs = (u8**)cursor;
         cursor += file->normalAnimJob.chunkCount * sizeof(*model->normalAnimOutputs);
     }
-    cursor = (u8*)roundUpTo4((int)cursor);
+    cursor = (u8*)roundUpTo4((size_t)cursor);
     model->textureRefs = (ModelRenderOpTextureRefs*)cursor;
     cursor += file->renderOpCount * sizeof(ModelRenderOpTextureRefs);
     renderOpIndex = 0;
@@ -962,7 +962,7 @@ ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstIns
         model->textureRefs[renderOpIndex].swapSelector = 0;
     }
     if (flags & 0x8000) {
-        cursor = (u8*)alignUp2((int)cursor);
+        cursor = (u8*)alignUp2((size_t)cursor);
         model->groundShadowQuad = (GroundShadowQuad*)cursor;
         model->groundShadowQuad->status = 0;
     }
@@ -2339,19 +2339,19 @@ void ObjModel_Release(ObjModel* model) {
     }
 }
 
-void* ObjModel_LoadAnimData(u8* p, int b, u8* c) {
-    void* m = modelLoad_layoutBuffers((ModelFileHeader*)p, b, p[0] == 1, c);
-    modelAnimResetState(m, ((ObjModel*)m)->animStateA);
-    if (((ObjModel*)m)->animStateB != NULL) {
-        modelAnimResetState(m, ((ObjModel*)m)->animStateB);
+ObjModel* ObjModel_LoadAnimData(ModelFileHeader* file, int loadFlags, void* destination) {
+    ObjModel* model = modelLoad_layoutBuffers(file, loadFlags, file->refCount == 1, destination);
+    modelAnimResetState(model, model->animStateA);
+    if (model->animStateB != NULL) {
+        modelAnimResetState(model, model->animStateB);
     }
-    ObjModel_RelocateAnimData((ModelFileHeader*)p, (ObjModel*)m);
-    *(int*)(p + 8) = 0;
-    DCStoreRange(p, ((ModelFileHeader*)p)->dataSize);
-    return m;
+    ObjModel_RelocateAnimData(file, model);
+    file->unk08 = 0;
+    DCStoreRange(file, file->dataSize);
+    return model;
 }
 
-void* ObjModel_Load(int id, int loadFlag, int* outSize) {
+ModelFileHeader* ObjModel_Load(int id, int loadFlag, int* outSize) {
     ModelInstanceSizes sizes;
     int realId[1];
     ModelFileHeader* header;

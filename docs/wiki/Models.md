@@ -219,7 +219,8 @@ All offsets below were cross-checked against `include/main/model.h` (`ModelFileH
 |---|---|---|
 | 0x00 refCount | `refCount` | exact |
 | 0x02 flags (ModelDataFlags2) | `flags` (u16) | exact offset; see flag note below |
-| 0x04 modelId | inside `unk04[8]`, but called out by name in an inline comment: `model.c:458` `*(u16*)((u8*)model+0x4) = id; /* modelId (in unk04) */` and `model.c:1160` | exact, already named in comments |
+| 0x04 modelId | `modelId` / `modNo` (u16 union) | exact offset; shared resource ID and animation-bank model number views |
+| 0x08 ? | `unk08` (s32) | exact offset and store width; cleared after instance initialization, meaning still unknown |
 | 0x0c fileSize | `dataSize` ("anim data appended at header + dataSize") | exact offset, plausible semantics |
 | 0x18 flags18 (+0x1a) | `unk18` (u8*, 4 bytes covering both u16 sub-fields) | offset match, not split out |
 | 0x1c extraAmapSize | `unk1C` | offset match |
@@ -270,6 +271,33 @@ contract. The wiki's exact interpretation of the separate `0x10` bit remains a
 separate question.
 
 **ModelDataFlags24.** `MODEL_FLAGS24_NORMALS_9BYTE` (0x8) in `include/main/model.h` matches the wiki's "08 = use 9 normals instead of 3" exactly, including the bit value.
+
+**Instance allocation and ownership.** `ObjModel_Load` returns a shared
+`ModelFileHeader` and reports the per-instance size through `outSize`.
+`loadCharacter` supplies zeroed storage inside its object allocation;
+`ObjModel_LoadAnimData` returns the `ObjModel` constructed there. The layout
+function relies on that zeroing for absent optional buffers.
+
+`modelLoad_layoutBuffers` places matrix pairs, optional copied geometry,
+animation states and caches, blend channels, hit spheres, joint work, animation
+output tables, texture references, and the optional ground-shadow quad in that
+order. Matrix and copied geometry buffers begin on 32-byte boundaries. Static
+geometry instead borrows the shared file's vertex and normal arrays. Address
+alignment uses `size_t`, preserving native pointers without changing target code.
+
+The size calculator retains the retail padding and reservation rules. In
+particular, joint work reserves its header plus 30 bytes per joint, although
+the layout consumes 29; a missing `unk1C` also prevents layout without removing
+that reservation. Neither discrepancy establishes another field or table.
+Initialization resets both available animation states, relocates animation data,
+clears the opaque header word at `+0x08`, then stores the file's cache range.
+
+`tools/test_model_instance_layout.py` executes the production sizing, layout and
+handoff bodies for 16,384 cases at `-O0` and `-O2` under ASan/UBSan. It checks
+ownership, buffer bounds, copies, alignment and initialization order. Native
+pointer-bearing tail records use suitably aligned fixture counts; animation
+reset, relocation and cache operations are spies, not a native asset-loading
+test. All five target builds retain byte-identical source objects and retail DOLs.
 
 **Bone.** The canonical `ModelBone` in `include/main/model.h` has the proven
 0x1C-byte stride, signed parent at `+0`, output-matrix index/flags at `+1`, two

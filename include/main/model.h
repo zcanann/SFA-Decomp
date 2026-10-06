@@ -231,7 +231,8 @@ typedef struct ModelFileHeader {
         u16 modelId; /* MODELS.TAB index */
         u16 modNo;   /* animation-bank model number */
     };
-    u8 unk06[6];
+    u8 unk06[2];
+    s32 unk08; /* Cleared after instance initialization; meaning not recovered. */
     s32 dataSize; /* anim data appended at header + dataSize */
     u8 unk10[8];
     union {
@@ -387,6 +388,8 @@ typedef struct ModelFileHeader {
 #define OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED  0x40
 
 STATIC_ASSERT(sizeof(ModelFileHeader) == 0xFC);
+STATIC_ASSERT(offsetof(ModelFileHeader, unk08) == 0x08);
+STATIC_ASSERT(offsetof(ModelFileHeader, dataSize) == 0x0C);
 STATIC_ASSERT(offsetof(ModelFileHeader, unk18Offset) == 0x18);
 STATIC_ASSERT(offsetof(ModelFileHeader, unk1COffset) == 0x1C);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureEntriesOffset) == 0x20);
@@ -539,11 +542,7 @@ STATIC_ASSERT(offsetof(ObjModelBlendChannel, morphTargetA) == 0x0c);
 STATIC_ASSERT(offsetof(ObjModelBlendChannel, morphTargetB) == 0x0d);
 STATIC_ASSERT(offsetof(ObjModelBlendChannel, flags) == 0x0e);
 
-/*
- * ObjModel - per-object model working set built by modelLoad_layoutBuffers
- * (all buffers carved from one allocation). Double-buffered matrix/vertex
- * buffers are selected by flags bits 0/1.
- */
+/* Per-joint runtime work carved from the model instance allocation. */
 typedef struct ModelJointWork {
     Vec* jointPositions;
     f32* jointRadii;
@@ -561,6 +560,11 @@ STATIC_ASSERT(offsetof(ModelJointWork, jointLengths) == 0x0C);
 STATIC_ASSERT(offsetof(ModelJointWork, jointCullDistances) == 0x10);
 STATIC_ASSERT(offsetof(ModelJointWork, touchedJoints) == 0x18);
 
+/*
+ * Per-object model working set built in caller-owned, zero-initialized storage.
+ * Dynamic buffers share that allocation; immutable geometry borrows file data.
+ * Double-buffered matrix/vertex buffers are selected by flags bits 0/1.
+ */
 typedef struct ObjModel {
     union {
         ModelFileHeader* file;
@@ -575,11 +579,11 @@ typedef struct ObjModel {
     u8* normalBuf;
     struct ObjModelBlendChannel* blendChannels; /* 3 channels */
     union {
-        void* animStateA;
+        ObjAnimState* animStateA;
         ObjAnimState* currentState;
     };
     union {
-        void* animStateB; /* only with load flag 0x80 */
+        ObjAnimState* animStateB; /* only with load flag 0x80 */
         ObjAnimState* activeState;
     };
     ModelRenderOpTextureRefs* textureRefs;
@@ -706,8 +710,10 @@ int modelLoadAnimations(ModelFileHeader* file, int resourceId, u8* bufferCursor)
 void ObjModel_AdvanceBlendChannels(ObjModel* model, f32 dt);
 void ObjModel_LoadRenderOpTextures(u8* model, GameObject* object);
 void ObjModel_Release(ObjModel* model);
-void* ObjModel_LoadAnimData(u8* modelData, int loadFlags, u8* destination);
-void* ObjModel_Load(int modelId, int loadFlags, int* outSize);
+/* Initialize an instance in zeroed storage of the size returned by ObjModel_Load. */
+ObjModel* ObjModel_LoadAnimData(ModelFileHeader* file, int loadFlags, void* destination);
+/* Acquire a shared file and report the required per-instance allocation size. */
+ModelFileHeader* ObjModel_Load(int modelId, int loadFlags, int* outSize);
 void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out);
 void ObjModel_InitRenderBuffers(void);
 void ObjModel_InitResourceCaches(void);
