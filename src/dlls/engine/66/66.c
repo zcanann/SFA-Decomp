@@ -1046,8 +1046,7 @@ void CameraModeNormal_update(CameraObject* camera) {
     if (gCameraModeNormalState->wallAvoidanceFlags.active == 0) {
         gCameraModeNormalState->collisionHitMask = camera->collisionResults.hitMask;
         if (((camera->cameraCollisionActive != 0) ||
-             ((gCameraModeNormalState->collisionHitMask == 1 &&
-               (camera->collisionResults.planes[0][1] >= 0.0f)))) &&
+             ((gCameraModeNormalState->collisionHitMask == 1 && (camera->collisionResults.planes[0][1] >= 0.0f)))) &&
             (gCameraModeNormalState->clampFlags.distanceClamped == 0)) {
             if (((camera->anim.worldPosY > 30.0f + target->anim.worldPosY) &&
                  (camera->anim.worldPosY < 70.0f + target->anim.worldPosY)) &&
@@ -1065,8 +1064,7 @@ void CameraModeNormal_update(CameraObject* camera) {
         zero = 0.0f;
         camera->boundHitZUpper = zero;
         camera->boundHitZLower = zero;
-        if ((camera->collisionResults.hitMask == 1) &&
-            (camera->collisionResults.planes[0][1] < zero)) {
+        if ((camera->collisionResults.hitMask == 1) && (camera->collisionResults.planes[0][1] < zero)) {
             gCameraModeNormalState->wallAvoidanceFlags.active = 0;
         }
         if ((camera->anim.worldPosY > 75.0f + target->anim.worldPosY) ||
@@ -1088,8 +1086,8 @@ void CameraModeNormal_update(CameraObject* camera) {
                 wallOrigin[1] = target->anim.worldPosY + gCameraModeNormalState->targetHeight;
                 wallOrigin[2] = target->anim.worldPosZ;
             }
-            camcontrol_traceMove(&wallOrigin[0], &camera->anim.worldPosX, &camera->anim.worldPosX,
-                                 &wallTrace, 3, 1, 1, 4.0f);
+            camcontrol_traceMove(&wallOrigin[0], &camera->anim.worldPosX, &camera->anim.worldPosX, &wallTrace, 3, 1, 1,
+                                 4.0f);
             camera->probePosX = camera->anim.worldPosX;
             camera->probePosY = camera->anim.worldPosY;
             camera->probePosZ = camera->anim.worldPosZ;
@@ -1110,8 +1108,8 @@ void CameraModeNormal_update(CameraObject* camera) {
                 probeOrigin[1] = target->anim.worldPosY + gCameraModeNormalState->targetHeight;
                 probeOrigin[2] = target->anim.worldPosZ;
             }
-            camcontrol_traceMove(&probeOrigin[0], &camera->anim.worldPosX, &camera->anim.worldPosX,
-                                 &probeTrace, 3, 1, 1, 4.0f);
+            camcontrol_traceMove(&probeOrigin[0], &camera->anim.worldPosX, &camera->anim.worldPosX, &probeTrace, 3, 1,
+                                 1, 4.0f);
             camera->probePosX = camera->anim.worldPosX;
             camera->probePosY = camera->anim.worldPosY;
             camera->probePosZ = camera->anim.worldPosZ;
@@ -1119,13 +1117,14 @@ void CameraModeNormal_update(CameraObject* camera) {
         }
     }
     (*gCameraInterface)
-        ->getRelativePosition(camera, &relativeX, &relativeY, &relativeZ, &horizontalDistance, gCameraModeNormalState->targetHeight, 0);
+        ->getRelativePosition(camera, &relativeX, &relativeY, &relativeZ, &horizontalDistance,
+                              gCameraModeNormalState->targetHeight, 0);
     yaw = 0x8000 - (u16)getAngle(relativeX, relativeZ);
     gCameraModeNormalState->pitchOffset = 0;
     camera->anim.rotX = yaw - gCameraModeNormalState->pitchOffset;
     angleDelta =
-        0xffffu &
-        getAngle(camera->anim.worldPosY - (target->anim.worldPosY + gCameraModeNormalState->targetHeight), horizontalDistance);
+        0xffffu & getAngle(camera->anim.worldPosY - (target->anim.worldPosY + gCameraModeNormalState->targetHeight),
+                           horizontalDistance);
     angleDelta = angleDelta - ((int)camera->anim.rotY & 0xffffU);
     if ((int)angleDelta > 0x8000) {
         angleDelta -= 0xffff;
