@@ -32,25 +32,21 @@ static void* AttractMovieVideo_DecoderForOnMemory(void* firstFrame);
 static void AttractMovieVideo_Decode(AttractMovieReadBuffer* readBuffer);
 
 BOOL CreateVideoDecodeThread(OSPriority priority, void* onMemoryData) {
-
     if (onMemoryData != 0) {
-        if (!OSCreateThread(&gAttractMovieVideoThread,
-                            AttractMovieVideo_DecoderForOnMemory, onMemoryData,
-                            gAttractMovieVideoThreadStack + sizeof(gAttractMovieVideoThreadStack),
-                            THP_VIDEO_STACK_SIZE, priority, 1)) {
+        if (!OSCreateThread(&gAttractMovieVideoThread, AttractMovieVideo_DecoderForOnMemory, onMemoryData,
+                            gAttractMovieVideoThreadStack + sizeof(gAttractMovieVideoThreadStack), THP_VIDEO_STACK_SIZE,
+                            priority, 1)) {
             return 0;
         }
     } else {
-        if (!OSCreateThread(&gAttractMovieVideoThread,
-                            AttractMovieVideo_Decoder, NULL,
-                            gAttractMovieVideoThreadStack + sizeof(gAttractMovieVideoThreadStack),
-                            THP_VIDEO_STACK_SIZE, priority, 1)) {
+        if (!OSCreateThread(&gAttractMovieVideoThread, AttractMovieVideo_Decoder, NULL,
+                            gAttractMovieVideoThreadStack + sizeof(gAttractMovieVideoThreadStack), THP_VIDEO_STACK_SIZE,
+                            priority, 1)) {
             return 0;
         }
     }
 
-    OSInitMessageQueue(&gAttractMovieVideoFreeTextureSetQueue,
-                       gAttractMovieVideoFreeMessages, THP_VIDEO_BUFFER_COUNT);
+    OSInitMessageQueue(&gAttractMovieVideoFreeTextureSetQueue, gAttractMovieVideoFreeMessages, THP_VIDEO_BUFFER_COUNT);
     OSInitMessageQueue(&gAttractMovieVideoDecodedTextureSetQueue, gAttractMovieVideoDecodedMessages,
                        THP_VIDEO_BUFFER_COUNT);
     gAttractMovieVideoThreadCreated = 1;
@@ -182,8 +178,7 @@ static void AttractMovieVideo_Decode(AttractMovieReadBuffer* readBuffer) {
     player = &gAttractMoviePlayer;
 
     componentData = (char*)readBuffer->ptr + player->compInfo.mNumComponents * sizeof(u32) + 8;
-    OSReceiveMessage(&gAttractMovieVideoFreeTextureSetQueue, &message,
-                     OS_MESSAGE_BLOCK);
+    OSReceiveMessage(&gAttractMovieVideoFreeTextureSetQueue, &message, OS_MESSAGE_BLOCK);
     textureSet = message;
     i = 0;
     decodePlayer = &gAttractMoviePlayer;
@@ -192,8 +187,8 @@ static void AttractMovieVideo_Decode(AttractMovieReadBuffer* readBuffer) {
     while (i < player->compInfo.mNumComponents) {
         switch (playerCursor[offsetof(AttractMoviePlayer, compInfo.mFrameComp)]) {
         case THP_COMPONENT_VIDEO: {
-            s32 decodeResult = THPVideoDecode(componentData, textureSet->yTexture, textureSet->uTexture, textureSet->vTexture,
-                                     decodePlayer->thpWorkArea);
+            s32 decodeResult = THPVideoDecode(componentData, textureSet->yTexture, textureSet->uTexture,
+                                              textureSet->vTexture, decodePlayer->thpWorkArea);
             decodePlayer->videoError = decodeResult;
             if (decodeResult != 0) {
                 if (gAttractMovieVideoPrepareReady != 0) {
@@ -203,8 +198,7 @@ static void AttractMovieVideo_Decode(AttractMovieReadBuffer* readBuffer) {
                 OSSuspendThread(&gAttractMovieVideoThread);
             }
             textureSet->frameNumber = readBuffer->frameNumber;
-            OSSendMessage(&gAttractMovieVideoDecodedTextureSetQueue,
-                          (OSMessage)textureSet, OS_MESSAGE_BLOCK);
+            OSSendMessage(&gAttractMovieVideoDecodedTextureSetQueue, (OSMessage)textureSet, OS_MESSAGE_BLOCK);
             {
                 u32 intr = OSDisableInterrupts();
                 decodePlayer->videoDecodeCount++;
