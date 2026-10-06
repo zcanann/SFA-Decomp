@@ -841,3 +841,15 @@ relocations to their symbols. The EN `force_active` list now retains them.
 With `main/shader.c` selected as `MatchingFor("GSAE01")`, both the strict
 build checksum and `verify_source_link.py GSAE01 main/shader.c` produce retail
 SHA-1 `e750e8e894707a52446118a4b84f1b58b677b269`.
+
+### Direct stream-slot globals (2026-10-06)
+
+The [layout-buffer and stream-slot recovery](map_load_data_file_matching.md#layout-buffers-and-stream-slot-attachment-2026-10-06)
+replaces `mapProcessRomList`'s queue-relative slot/cache/buffer accesses with the
+real globals. In the current TU, direct array accesses produce the same retail
+instructions and resolved relocations. The earlier explicit cache-offset/base
+spelling is no longer necessary. The index/entry cursor and independent indexed
+slot-ID store still matter to code generation. No new aggregate spanning the
+separate BSS objects is introduced; the recovered layout-buffer record owns only
+its original five words. Other queue-relative paths discussed in this document
+remain separate recovery work.

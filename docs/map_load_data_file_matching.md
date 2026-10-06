@@ -107,3 +107,61 @@ report exceptions. The pi_dolphin object remains byte-identical; shader changes
 only anonymous literal symbol numbering, with unchanged section contents, named
 symbol offsets and normalized relocations. Formatting is verified separately
 against the recovered objects.
+
+## Layout buffers and stream-slot attachment (2026-10-06)
+
+`mapProcessRomList` now accesses the actual slot array, loaded-page cache and map
+layout buffers. It previously addressed all three through offsets from the
+unrelated render queue, and converted the loaded page pointer to `int`. Direct
+access retains the retail code with the current TU declaration order. The
+slot-index/entry cursor remains: writing `slots[cursor.index].slot` preserves the
+retail independent store, whereas `cursor.entry->slot` folds away an instruction.
+
+The former `gShaderMapRomBuffers[5]` is `gMapLayoutBuffers`, a 0x14-byte target
+record containing the unused scalar reset to -1 and four pointers:
+
+| Field | Allocation contract |
+| --- | --- |
+| `bounds` | 128 ten-byte `MapBounds` records |
+| `adjacentMapIds` | Two signed halfword IDs per map |
+| `layers` | One signed byte per map |
+| `cellBitmaps` | 64 bytes per map |
+
+All consumers now use those fields, including the allocation path and the
+formerly integer-valued bounds local in `mapGetBlockGridRects`. `MapBounds`
+and the pointer record have target size/offset assertions. These types are
+private to shader.c. `gLastLoadedRomListMapId` names the write-only map-ID latch
+formerly called `lbl_803DB620`; it and the buffer record keep their original
+storage positions in all five symbol configurations.
+
+`initMaps` now initializes the 128 records with a normal loop. GC/1.3 reproduces
+the retail eight-record unrolling, eliminating the manually expanded
+`INIT_MAP_SLOT` macro, byte-offset array and extra counter. Defaults remain
+-32768 for bounds, -128 for origins and layers, and -1 for adjacency. GLOBALMA.bin
+records override those defaults until the byte-size limit or negative map-ID
+sentinel is reached.
+
+Dinosaur Planet's `mapLoadStreamMapAddToTable` and global-map initialization in
+`src/map.c` support the slot, layout-record and ordinary-loop structure. Foxhollow
+uses direct slot/cache globals and pointer-width buffer words; its position-fixup
+overlay is not copied, since SFA already has the correct `ObjPlacement` fields.
+Reference revisions are the same ones recorded in the preceding section.
+
+`tools/test_map_streaming.py` runs the production initializer, coordinate lookup,
+stream attachment and grid-bound lookup in 38,311 native scenarios at `-O0` and
+`-O2`, with ASan and UBSan. It checks all 128 default records and allocation
+guards, EOF/sentinel handling, every valid occupied-slot pattern, the complete
+slot/cache arrays, signed layers, variable-size placements, saved-position
+overrides and the latched DVD-error service sequence. Asset IO, page loading,
+saved-position lookup and rectangle loading remain controlled services, so this
+does not claim a complete native game-load test. Six deliberately broken variants
+were rejected: truncated page and bounds pointers, missing slot-count growth,
+wrong default origins, inverted saved-position handling and lost DVD-error latch.
+
+The entire shader TU remains 145/145 functions and 100% code/data in all five
+versions. Every other source object is byte-identical to the preceding recovery.
+Shader's section bytes, renamed symbol offsets and resolved relocation targets
+are unchanged; two relocations now use the compiler's BSS base instead of the
+queue symbol, and anonymous literals are renumbered. All five `all_source` and
+strict retail checksum builds pass, with the same two pre-existing report
+exceptions described above. Formatting preserves the recovered objects.
