@@ -17,12 +17,12 @@ ROOT = Path(__file__).resolve().parents[1]
 # Independent list of the retail relocation sites, in header order. Their
 # offset aliases are checked by target layout assertions in model.h.
 FIELDS = (
-    "unk18", "unk1C", "textureEntries", "vertices", "normals", "colors", "texCoords",
+    "jointCollisionRadii", "jointCollisionLengthScales", "textureEntries", "vertices", "normals", "colors", "texCoords",
     "renderOps", "jointData", "jointFuzzScales", "extraJointDefs", "hitVolumes",
     "collisionTriangles", "collisionBlocks", "vertexAnimEntries", "vertexWeightData",
     "normalAnimEntries", "normalWeightData", "displayLists", "instrs", "morphTargets",
 )
-JOINT_DEPENDENTS = {"unk18", "unk1C", "jointFuzzScales"}
+JOINT_DEPENDENTS = {"jointCollisionRadii", "jointCollisionLengthScales", "jointFuzzScales"}
 PRELUDE = r"""
 #include <assert.h>
 #include <stdint.h>

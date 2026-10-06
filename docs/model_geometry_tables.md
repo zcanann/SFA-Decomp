@@ -61,7 +61,8 @@ on the model header. `ModelFileHeader` now exposes these two states through
 offset/pointer unions. The header's 0xFC-byte target size and every new offset
 view are asserted. The relocator takes a `ModelFileHeader*` and uses the named
 offsets, removing 43 casted `u32*` reads and the pointer-to-pointer store cast.
-The existing unidentified fields at +0x18 and +0x1C retain their unknown roles.
+The +0x18 and +0x1C tables were subsequently recovered as collision radii and
+length scales; see [object_matching.md](object_matching.md#skeleton-collision-bound-initialization-2026-10-06).
 
 Two subordinate tables undergo the same transition. A `ModelDisplayListEntry`
 has a `dlistOffset` view at +0 alongside its runtime `dlist` pointer, retaining
@@ -75,7 +76,7 @@ The source preserves these observed retail distinctions:
 | --- | --- |
 | `verticesOffset` | Always add the base, including offset zero |
 | Other header offsets | Relocate only nonzero offsets |
-| `unk18Offset`, `unk1COffset`, `jointFuzzScalesOffset` | Also require a nonzero `jointDataOffset` |
+| `jointCollisionRadiiOffset`, `jointCollisionLengthScalesOffset`, `jointFuzzScalesOffset` | Also require a nonzero `jointDataOffset` |
 | Display-list entries | Relocate the sum of primary and shadow counts; entry offset zero still means the model base |
 | Morph-table entries | Relocate `morphTargetCount` entries; entry offset zero still means the model base |
 

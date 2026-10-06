@@ -2,6 +2,63 @@
 
 Target: EN v1.0 (`GSAE01`), common game compiler GC/1.3.
 
+## Skeleton collision-bound initialization (2026-10-06)
+
+`ObjModel_InitSkeletonCollisionBounds`, formerly `modelInitBones`, initializes
+capsule radii, squared radii, lengths, and conservative root-distance bounds;
+it does not build animation matrices. It now receives `ObjModel*` and accesses
+its actual `file`. Model header offsets +0x18 and +0x1C are respectively the
+`f32* jointCollisionRadii` and `f32* jointCollisionLengthScales` tables, with
+separate serialized offset views and target layout assertions. Relocation,
+allocation, initialization, and the Thorntail rescaling caller share that API.
+These are descriptive recovered names, not a claim of original spelling.
+
+Dinosaur Planet's `obj_func_80021E74` in `src/object.c` (checkout
+`c4340802dc9f62e1181d00cc34c3175fca6ca4be`) has the same radius/length setup
+and calls the input tables `collisionA` and `collisionB`. SFA's subsequent
+skeleton-hit collectors consume these as capsule radii and lengths. The
+Foxhollow implementation at `894de8a8edecfad2e455f1a6345e328f50c74aba`
+also takes `ObjModel*`; its remaining raw fields are not independent evidence
+of their names. SFA retains these retail-specific details:
+
+- Root length is `0.01f`; a zero non-root length becomes `0.1f`.
+- Length multipliers apply only at or above one.
+- Zero-radius joints inherit their parent's cull distance; other joints use
+  the maximum of their parent bound and accumulated path length plus radius.
+- The ineffective `!flags & 0x1000` test is actually emitted by MWCC and present
+  in retail. Its precedence is documented, not silently changed.
+- A zero scaled root radius reads the second input radius even for a one-joint
+  model. The existing 152-float scratch and lack of a joint-count guard remain;
+  neither the input table nor allocation contract has been enlarged.
+
+The loop retains separate byte cursors with `sizeof` strides: native array
+indexing changes MWCC's induction setup and register assignment. Parent-bound
+accesses use ordinary indexing. The adjacent `objInitCullScale` now traverses
+`ObjModel*` banks without truncating them to `int`. Its signed null comparison
+uses pointer-width `ptrdiff_t`, preserving retail's `cmpwi` and full host pointers.
+
+`python3 tools/test_model_collision_bounds.py` executes both production routines
+and the real model records under ASan/UBSan at `-O0` and `-O2`. It checks 118,144
+scenarios using independent ancestor-walk bounds: branching/linear skeletons,
+0 through 152 joints, absent tables/workspaces, zero/negative/positive scale,
+root fallback, zero-length segments, multiplier thresholds, all cull-scale
+bytes, and null model banks. Guards and unchanged records are checked. The
+object-only dependency adapter changes its layout and uses pointers above
+4 GiB. Negative controls reject pointer truncation, the wrong root length,
+lost parent bounds, a corrected flag guard, and applying shrinking multipliers.
+The existing relocation and instance-layout suites also pass with the renamed
+float tables (732 and 16,384 scenarios per optimization level).
+
+All five configured versions pass `all_source` and strict retail DOL checksums.
+The object, model, and Thorntail TUs each remain 100% code and data; no other
+report row regresses. The full inventories retain only the existing TRK
+exception-vector carving and MusyX discarded exception-data report artifacts.
+Every model object is byte-identical. In `object.o`, sections, symbol layouts,
+and normalized relocation destinations are identical after accounting for the
+API rename; anonymous literals are unchanged. Thorntail's only source change
+is its call to that API. Separate formatting preserves every source-object hash.
+
+
 ## Player spawn and initial camera storage
 
 `mapSetupPlayer` now writes a real 32-byte `CameraModeNormalInitSettings`

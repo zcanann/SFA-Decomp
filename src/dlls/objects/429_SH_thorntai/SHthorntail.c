@@ -1128,7 +1128,7 @@ void SHthorntail_init(GameObject* obj, const SHthorntailPlacement* placement) {
     }
     obj->anim.rootMotionScale = obj->anim.modelInstance->rootMotionScaleBase * ((f32)placement->scale / 1000.0f);
     model = Obj_GetActiveModel(obj);
-    modelInitBones(obj->anim.rootMotionScale, model);
+    ObjModel_InitSkeletonCollisionBounds(obj->anim.rootMotionScale, model);
     pathState = &runtime->pathState;
     (*gPathControlInterface)->init(pathState, SHTHORNTAIL_PATH_CONTROL_MODE, SHTHORNTAIL_PATH_CONTROL_FLAGS, 0);
     (*gPathControlInterface)

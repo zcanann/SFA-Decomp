@@ -64,6 +64,7 @@ static void check(int mask, int variant) {
     const int joints[] = {0, 8, 16, 24};
     const int chunks[] = {0, 2, 4, 6};
     u8 vertices[65 * 6], normals[65 * 9], marker;
+    f32 collisionMarker;
     ModelFileHeader file = {0};
     ModelInstanceSizes sizes, forced;
     file.animationCount = mask & 2048 ? 1 : 0;
@@ -83,8 +84,8 @@ static void check(int mask, int variant) {
     file.vertexAnimEntries = mask & 8 ? (ModelVtxAnimChunk*)&marker : NULL;
     file.normalAnimEntries = mask & 16 ? (ModelVtxAnimChunk*)&marker : NULL;
     file.jointData = mask & 256 ? &marker : NULL;
-    file.unk18 = mask & 256 ? &marker : NULL;
-    file.unk1C = mask & 512 ? NULL : &marker;
+    file.jointCollisionRadii = mask & 256 ? &collisionMarker : NULL;
+    file.jointCollisionLengthScales = mask & 512 ? NULL : &collisionMarker;
     file.vertices = vertices;
     file.normals = normals;
     file.refCount = variant == 0 ? 1 : 2;

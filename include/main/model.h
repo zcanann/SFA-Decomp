@@ -246,12 +246,12 @@ typedef struct ModelFileHeader {
     s32 dataSize; /* anim data appended at header + dataSize */
     u8 unk10[8];
     union {
-        u32 unk18Offset;
-        u8* unk18;
+        u32 jointCollisionRadiiOffset;
+        f32* jointCollisionRadii; /* unscaled per-joint capsule radii */
     };
     union {
-        u32 unk1COffset;
-        u8* unk1C;
+        u32 jointCollisionLengthScalesOffset;
+        f32* jointCollisionLengthScales; /* multipliers >= 1 extend capsule lengths */
     };
     union {
         u32 textureEntriesOffset;
@@ -400,8 +400,10 @@ typedef struct ModelFileHeader {
 STATIC_ASSERT(sizeof(ModelFileHeader) == 0xFC);
 STATIC_ASSERT(offsetof(ModelFileHeader, unk08) == 0x08);
 STATIC_ASSERT(offsetof(ModelFileHeader, dataSize) == 0x0C);
-STATIC_ASSERT(offsetof(ModelFileHeader, unk18Offset) == 0x18);
-STATIC_ASSERT(offsetof(ModelFileHeader, unk1COffset) == 0x1C);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointCollisionRadii) == 0x18);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointCollisionLengthScales) == 0x1C);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointCollisionRadiiOffset) == 0x18);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointCollisionLengthScalesOffset) == 0x1C);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureEntriesOffset) == 0x20);
 STATIC_ASSERT(offsetof(ModelFileHeader, verticesOffset) == 0x28);
 STATIC_ASSERT(offsetof(ModelFileHeader, normalsOffset) == 0x2C);
@@ -612,7 +614,7 @@ typedef struct ObjModel {
 
 s16* ObjModel_GetBaseVertexCoords(ModelFileHeader* modelFile, int vertexIndex);
 s16* ObjModel_GetCurrentVertexCoords(ObjModel* model, int vertexIndex);
-void modelInitBones(f32 scale, void* model);
+void ObjModel_InitSkeletonCollisionBounds(f32 scale, ObjModel* model);
 void ObjModel_ClearRenderAttachment(ObjModel* model);
 void ObjModel_EnableDefaultRenderCallback(void* object, ObjModel* model, f32* mtx, int enabled, f32 scale);
 void ObjModel_SetRenderCallback(u8* model, void* callback);

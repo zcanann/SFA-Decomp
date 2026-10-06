@@ -766,7 +766,7 @@ int modelLoad_calcSizes(ModelFileHeader* file, int flags, ModelInstanceSizes* si
         total = (sizes->moveCacheBytes + sizes->jointMatrixBytes + sizes->hitSphereBytes + 8) + total;
     }
     total += sizes->geometryBytes;
-    if (file->jointData != 0 && file->jointCount != 0 && file->unk18 != 0) {
+    if (file->jointData != 0 && file->jointCount != 0 && file->jointCollisionRadii != 0) {
         total = ((u32)file->jointCount << 1) + (((u32)file->jointCount * 7) << 2) + (int)sizeof(ModelJointWork) + total;
     }
     if (file->vertexAnimEntries != 0) {
@@ -926,7 +926,7 @@ ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstIns
         cursor += file->hitVolumeCount * sizeof(ObjModelHitSphere);
         model->activeHitVolumeSpheres = model->hitVolumeSphereBuffers[0];
     }
-    if (file->jointData != NULL && file->jointCount != 0 && file->unk18 != NULL && file->unk1C != NULL) {
+    if (file->jointData != NULL && file->jointCount != 0 && file->jointCollisionRadii != NULL && file->jointCollisionLengthScales != NULL) {
         cursor = (u8*)roundUpTo4((size_t)cursor);
         model->skeletonJointData = (ModelJointWork*)cursor;
         cursor += sizeof(ModelJointWork);
@@ -2188,11 +2188,11 @@ void ObjModel_RelocateModelData(ModelFileHeader* file) {
     }
     if (file->jointDataOffset) {
         file->jointData = base + file->jointDataOffset;
-        if (file->unk18Offset) {
-            file->unk18 = base + file->unk18Offset;
+        if (file->jointCollisionRadiiOffset) {
+            file->jointCollisionRadii = (f32*)(base + file->jointCollisionRadiiOffset);
         }
-        if (file->unk1COffset) {
-            file->unk1C = base + file->unk1COffset;
+        if (file->jointCollisionLengthScalesOffset) {
+            file->jointCollisionLengthScales = (f32*)(base + file->jointCollisionLengthScalesOffset);
         }
         if (file->jointFuzzScalesOffset) {
             file->jointFuzzScales = (ModelFuzzScaleDef*)(base + file->jointFuzzScalesOffset);

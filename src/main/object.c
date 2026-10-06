@@ -1306,7 +1306,7 @@ void Obj_RemoveFromUpdateList(GameObject* obj) {
 }
 
 static void objInitCullScale(GameObject* obj) {
-    int modelPtr;
+    ObjModel* model;
     f32 max;
     int i;
     u32 cullScale;
@@ -1314,10 +1314,10 @@ static void objInitCullScale(GameObject* obj) {
     max = 10.0f;
     i = 0;
     for (; i < obj->anim.modelInstance->modelCount; i++) {
-        modelPtr = (int)obj->anim.modelBanks[i];
-        if (modelPtr != 0) {
-            if ((f32)modelFileHeaderGetCullDistance(*(ModelFileHeader**)modelPtr) > max) {
-                max = modelFileHeaderGetCullDistance(*(ModelFileHeader**)modelPtr);
+        model = obj->anim.modelBanks[i];
+        if ((ptrdiff_t)model != 0) {
+            if ((f32)modelFileHeaderGetCullDistance(model->file) > max) {
+                max = modelFileHeaderGetCullDistance(model->file);
             }
         }
     }
@@ -1328,77 +1328,79 @@ static void objInitCullScale(GameObject* obj) {
     obj->anim.hitboxScale = max;
 }
 
-void modelInitBones(f32 scale, void* model) {
-    f32* srcP;
-    int off;
-    int boneOff;
-    f32* sumP;
-    ModelFileHeader* hdr;
-    ModelJointWork* tbl;
+void ObjModel_InitSkeletonCollisionBounds(f32 scale, ObjModel* model) {
+    f32* radius;
+    int valueByteOffset;
+    int boneByteOffset;
+    f32* pathLength;
+    ModelFileHeader* file;
+    ModelJointWork* bounds;
     int i;
     int parent;
-    f32* src;
+    f32* radii;
     ModelBone* bone;
     f32 zero;
-    f32 sc;
-    f32 w;
-    f32 len;
-    f32 vx;
-    f32 vy;
-    f32 vz;
-    f32 v;
-    f32 pv;
-    f32 sums[152];
-    ObjModel* m = model;
+    f32 objectScale;
+    f32 lengthScale;
+    f32 length;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 distance;
+    f32 parentDistance;
+    f32 pathLengths[152];
+    ObjModel* instance = model;
 
-    sc = scale;
-    hdr = (ModelFileHeader*)*(u8**)m;
-    if ((!hdr->flags & 0x1000) || (hdr->jointCount == 0)) {
+    objectScale = scale;
+    file = instance->file;
+    /* Retail evaluates !flags before masking; retain this ineffective test. */
+    if ((!file->flags & 0x1000) || (file->jointCount == 0)) {
         return;
     }
     {
-        if ((src = (f32*)hdr->unk18) != NULL && (tbl = m->skeletonJointData) != NULL) {
+        if ((radii = file->jointCollisionRadii) != NULL && (bounds = instance->skeletonJointData) != NULL) {
             zero = 0.0f;
-            tbl->jointRadii[0] = src[0] * sc;
-            if (tbl->jointRadii[0] == zero) {
-                tbl->jointRadii[0] = src[1] * sc;
+            bounds->jointRadii[0] = radii[0] * objectScale;
+            if (bounds->jointRadii[0] == zero) {
+                bounds->jointRadii[0] = radii[1] * objectScale;
             }
-            tbl->radiiSq[0] = tbl->jointRadii[0] * tbl->jointRadii[0];
-            tbl->jointLengths[0] = 0.01f;
-            tbl->jointCullDistances[0] = tbl->jointRadii[0];
-            sums[0] = zero;
+            bounds->radiiSq[0] = bounds->jointRadii[0] * bounds->jointRadii[0];
+            bounds->jointLengths[0] = 0.01f;
+            bounds->jointCullDistances[0] = bounds->jointRadii[0];
+            pathLengths[0] = zero;
             i = 1;
-            srcP = src + 1;
-            off = 4;
-            boneOff = 0x1c;
-            sumP = &sums[1];
-            for (; i < m->file->jointCount; srcP++, off += 4, boneOff += 0x1c, sumP++, i++) {
-                *(f32*)((u8*)tbl->jointRadii + off) = sc * *srcP;
-                *(f32*)((u8*)tbl->radiiSq + off) =
-                    *(f32*)((u8*)tbl->jointRadii + off) * *(f32*)((u8*)tbl->jointRadii + off);
-                bone = (ModelBone*)(hdr->jointData + boneOff);
+            radius = radii + 1;
+            /* Separate byte cursors preserve MWCC's loop induction order. */
+            valueByteOffset = sizeof(f32);
+            boneByteOffset = sizeof(ModelBone);
+            pathLength = &pathLengths[1];
+            for (; i < instance->file->jointCount; radius++, valueByteOffset += sizeof(f32), boneByteOffset += sizeof(ModelBone), pathLength++, i++) {
+                *(f32*)((u8*)bounds->jointRadii + valueByteOffset) = objectScale * *radius;
+                *(f32*)((u8*)bounds->radiiSq + valueByteOffset) =
+                    *(f32*)((u8*)bounds->jointRadii + valueByteOffset) * *(f32*)((u8*)bounds->jointRadii + valueByteOffset);
+                bone = (ModelBone*)(file->jointData + boneByteOffset);
                 parent = bone->parent;
-                vx = bone->head[0];
-                vy = bone->head[1];
-                vz = bone->head[2];
-                len = sqrtf(vx * vx + vy * vy + vz * vz);
-                *(f32*)((u8*)tbl->jointLengths + off) = sc * len;
-                v = *(f32*)((u8*)tbl->jointLengths + off);
-                if (v == zero) {
-                    *(f32*)((u8*)tbl->jointLengths + off) = 0.1f;
+                x = bone->head[0];
+                y = bone->head[1];
+                z = bone->head[2];
+                length = sqrtf(x * x + y * y + z * z);
+                *(f32*)((u8*)bounds->jointLengths + valueByteOffset) = objectScale * length;
+                distance = *(f32*)((u8*)bounds->jointLengths + valueByteOffset);
+                if (distance == zero) {
+                    *(f32*)((u8*)bounds->jointLengths + valueByteOffset) = 0.1f;
                 }
-                w = *(f32*)(hdr->unk1C + off);
-                if (w >= 1.0f) {
-                    *(f32*)((u8*)tbl->jointLengths + off) *= w;
+                lengthScale = *(f32*)((u8*)file->jointCollisionLengthScales + valueByteOffset);
+                if (lengthScale >= 1.0f) {
+                    *(f32*)((u8*)bounds->jointLengths + valueByteOffset) *= lengthScale;
                 }
-                *sumP = sums[parent] + *(f32*)((u8*)tbl->jointLengths + off);
-                if (*srcP == zero) {
-                    *(f32*)((u8*)tbl->jointCullDistances + off) = *(f32*)((u8*)tbl->jointCullDistances + parent * 4);
+                *pathLength = pathLengths[parent] + *(f32*)((u8*)bounds->jointLengths + valueByteOffset);
+                if (*radius == zero) {
+                    *(f32*)((u8*)bounds->jointCullDistances + valueByteOffset) = bounds->jointCullDistances[parent];
                 } else {
-                    *(f32*)((u8*)tbl->jointCullDistances + off) = *sumP + *(f32*)((u8*)tbl->jointRadii + off);
-                    v = *(f32*)((u8*)tbl->jointCullDistances + off);
-                    pv = *(f32*)((u8*)tbl->jointCullDistances + parent * 4);
-                    *(f32*)((u8*)tbl->jointCullDistances + off) = (v > pv) ? v : pv;
+                    *(f32*)((u8*)bounds->jointCullDistances + valueByteOffset) = *pathLength + *(f32*)((u8*)bounds->jointRadii + valueByteOffset);
+                    distance = *(f32*)((u8*)bounds->jointCullDistances + valueByteOffset);
+                    parentDistance = bounds->jointCullDistances[parent];
+                    *(f32*)((u8*)bounds->jointCullDistances + valueByteOffset) = (distance > parentDistance) ? distance : parentDistance;
                 }
             }
         }
@@ -1687,7 +1689,7 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
                 obj->anim.modelInstance->flags &= ~0x800000;
             }
             ObjModel_LoadRenderOpTextures((u8*)obj->anim.modelBanks[idx], obj);
-            modelInitBones(obj->anim.rootMotionScale, obj->anim.modelBanks[idx]);
+            ObjModel_InitSkeletonCollisionBounds(obj->anim.rootMotionScale, obj->anim.modelBanks[idx]);
             if (obj->anim.modelInstance->flags & OBJDEF_FLAG_DEFERRED_RENDER) {
                 ObjModel_SetRenderCallback((u8*)obj->anim.modelBanks[idx], objCausticReflectionRenderCb);
             } else {
@@ -1708,7 +1710,7 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
                 obj->anim.modelInstance->flags &= ~0x800000;
             }
             ObjModel_LoadRenderOpTextures((u8*)obj->anim.modelBanks[i], obj);
-            modelInitBones(obj->anim.rootMotionScale, obj->anim.modelBanks[i]);
+            ObjModel_InitSkeletonCollisionBounds(obj->anim.rootMotionScale, obj->anim.modelBanks[i]);
             if (obj->anim.modelInstance->flags & OBJDEF_FLAG_DEFERRED_RENDER) {
                 ObjModel_SetRenderCallback((u8*)obj->anim.modelBanks[i], objCausticReflectionRenderCb);
             } else {
