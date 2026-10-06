@@ -2431,12 +2431,16 @@ void ObjModel_InitRenderBuffers(void) {
     setGQR6_2(7, 4, 7, 4);
 }
 
+/* Integer address addition preserves MWCC's offset-before-buffer load order.
+ * Keep the address wide enough for native pointers as well as the target. */
+STATIC_ASSERT(sizeof(size_t) == sizeof(void*));
+
 static inline void modelConsumeNormalChunk(u8* mtxs, ModelVtxAnimChunk* chunk, u32 i, u16* chunkBlocks, u8* chunkDst,
                                            void (*transform)(u8*, u8*, u8*, u8*, u8*, int)) {
     transform(mtxs + chunk->mtxIdxA * sizeof(ROMtx), mtxs + chunk->mtxIdxB * sizeof(ROMtx),
               gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-              (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
-              (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]), chunk->vtxCount);
+              (u8*)(chunk->dstByteOffset + (size_t)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+              (u8*)(chunk->dstByteOffset + (size_t)gModelCacheBuffersA[(u8)((i & 1) * 2)]), chunk->vtxCount);
     memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkBlocks[i & 1]);
 }
 
@@ -2458,7 +2462,7 @@ void ObjModel_BlendNormalStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, u8
         copyToCache(gModelCacheBuffersA[0], animData + chunk->srcDataOffset, vtxBlocks);
         chunkBlocks[0] = vtxBlocks;
         weightBlocks = (u32)(((chunk = job->chunks)->weightBlocks << 5) + 0x1f) >> 5;
-        copyToCache(*(u8**)((int)gModelCacheBuffersA + sizeof(gModelCacheBuffersA[0])), chunk->weightStream,
+        copyToCache(*(u8**)((u8*)gModelCacheBuffersA + sizeof(gModelCacheBuffersA[0])), chunk->weightStream,
                     weightBlocks);
         for (i = 0; i < (u32)(job->chunkCount - 1); i++) {
             int nextVtxBlocks;
@@ -2515,8 +2519,8 @@ static inline void modelConsumeVertexChunk(u8* mtxs, ModelVtxAnimChunk* chunk, u
     ObjModel_TransformVerticesWithTranslation(
         mtxs + chunk->mtxIdxA * sizeof(ROMtx), mtxs + chunk->mtxIdxB * sizeof(ROMtx),
         gModelCacheBuffersA[(u8)((u32)*work * 2) + 1],
-        (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((u32)*work * 2)]),
-        (u8*)(chunk->dstByteOffset + (int)gModelCacheBuffersA[(u8)((u32)*work * 2)]), chunk->vtxCount);
+        (u8*)(chunk->dstByteOffset + (size_t)gModelCacheBuffersA[(u8)((u32)*work * 2)]),
+        (u8*)(chunk->dstByteOffset + (size_t)gModelCacheBuffersA[(u8)((u32)*work * 2)]), chunk->vtxCount);
     memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((u32)*work * 2)], chunkBlocks[(u32)*work]);
 }
 
@@ -2537,7 +2541,7 @@ void ObjModel_BlendVertexStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, s3
         copyToCache(gModelCacheBuffersA[0], animData + chunk->srcDataOffset, vtxBlocks);
         chunkBlocks[0] = vtxBlocks;
         weightBlocks = (u32)(((chunk = job->chunks)->weightBlocks << 5) + 0x1f) >> 5;
-        copyToCache(*(u8**)((int)gModelCacheBuffersA + sizeof(gModelCacheBuffersA[0])), chunk->weightStream,
+        copyToCache(*(u8**)((u8*)gModelCacheBuffersA + sizeof(gModelCacheBuffersA[0])), chunk->weightStream,
                     weightBlocks);
         for (i = 0; i < (u32)(job->chunkCount - 1); i++) {
             chunk = modelPrefetchNextVertexChunk(job, i, animData, chunkBlocks, &work);
