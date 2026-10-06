@@ -250,11 +250,11 @@ struct MldfIterators {
 };
 
 /* Resource-buffer view shared with the payload loader. */
-#define MLDF_PTR(s)      (tbl->ptrs[s])
+#define MLDF_PTR(s)         (tbl->ptrs[s])
 #define MLDF_ID_RT(t, s)    (*(int*)(((s) << 2) + (size_t)(t)->ids))
 #define MLDF_OWNER_RT(t, s) (*(s16*)(((s) << 1) + (size_t)(t)->owners))
 #define MLDF_PTR_RT(t, s)   (*(void**)(((s) << MLDF_BUFFER_SLOT_SHIFT) + (size_t)(t)->ptrs))
-#define MLDF_QPTR        ((u8*)*(void**)(slotPtrAddr - MLDF_BUFFER_PTRS_FROM_ARENA_END))
+#define MLDF_QPTR           ((u8*)*(void**)(slotPtrAddr - MLDF_BUFFER_PTRS_FROM_ARENA_END))
 
 /* 16-byte header of a "ZLB"-tagged compressed stream; the deflate payload
    follows at +0x10. "DIR"-tagged data is stored raw. */
@@ -1873,7 +1873,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                             AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                             if (((gAssetLoadInFlightFlags & 0x20000000) == 0) &&
                                 ((gAssetLoadInFlightFlags & 0x80000000) == 0)) {
-                                mergeTableFiles(resources->mergeAnimCurv, MLDF_FILEID_ANIMCURV_TAB_A, MLDF_FILEID_ANIMCURV_TAB_B, 0x1fd0);
+                                mergeTableFiles(resources->mergeAnimCurv, MLDF_FILEID_ANIMCURV_TAB_A,
+                                                MLDF_FILEID_ANIMCURV_TAB_B, 0x1fd0);
                             }
                         } else {
                             if (slot == MLDF_FILEID_ANIMCURV_BIN_A) {
@@ -1935,7 +1936,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x20000000) == 0) &&
                             ((gAssetLoadInFlightFlags & 0x80000000) == 0)) {
-                            mergeTableFiles(resources->mergeAnimCurv, MLDF_FILEID_ANIMCURV_TAB_A, MLDF_FILEID_ANIMCURV_TAB_B, 0x1fd0);
+                            mergeTableFiles(resources->mergeAnimCurv, MLDF_FILEID_ANIMCURV_TAB_A,
+                                            MLDF_FILEID_ANIMCURV_TAB_B, 0x1fd0);
                         }
                     } else {
                         if (slot == MLDF_FILEID_ANIMCURV_TAB_A) {
@@ -1943,7 +1945,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         } else {
                             gAssetLoadInFlightFlags |= 0x80000000;
                         }
-                        DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, animCurvTabReadCb, 2);
+                        DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0,
+                                         animCurvTabReadCb, 2);
                         resources->fileInfo[slot] = fileInfo;
                     }
                     MLDF_OWNER_RT(resources, slot) = mapId;
@@ -2066,7 +2069,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x2000000) == 0) &&
                             ((gAssetLoadInFlightFlags & 0x8000000) == 0)) {
-                            mergeTableFiles(resources->mergeVoxMap, MLDF_FILEID_VOXMAP_TAB_A, MLDF_FILEID_VOXMAP_TAB_B, 0x800);
+                            mergeTableFiles(resources->mergeVoxMap, MLDF_FILEID_VOXMAP_TAB_A, MLDF_FILEID_VOXMAP_TAB_B,
+                                            0x800);
                         }
                     } else {
                         if (slot == MLDF_FILEID_VOXMAP_TAB_A) {
@@ -2075,7 +2079,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                             gAssetLoadInFlightFlags |= 0x8000000;
                         }
                         resources->fileInfo[slot] = fileInfo;
-                        DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, voxMapTabReadCb, 2);
+                        DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0,
+                                         voxMapTabReadCb, 2);
                     }
                     MLDF_OWNER_RT(resources, slot) = mapId;
                     return MLDF_PTR_RT(resources, slot);
@@ -2144,7 +2149,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         DVDClose(fileInfo);
                         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x20000) == 0) && ((gAssetLoadInFlightFlags & 0x80000) == 0)) {
-                            mergeTableFiles(resources->mergeBlocks, MLDF_FILEID_BLOCKS_TAB_A, MLDF_FILEID_BLOCKS_TAB_B, 0x800);
+                            mergeTableFiles(resources->mergeBlocks, MLDF_FILEID_BLOCKS_TAB_A, MLDF_FILEID_BLOCKS_TAB_B,
+                                            0x800);
                         }
                     } else {
                         if (slot == MLDF_FILEID_BLOCKS_BIN_A) {
@@ -2214,7 +2220,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                     DVDClose(fileInfo);
                     AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                     if (((gAssetLoadInFlightFlags & 0x20000) == 0) && ((gAssetLoadInFlightFlags & 0x80000) == 0)) {
-                        mergeTableFiles(resources->mergeBlocks, MLDF_FILEID_BLOCKS_TAB_A, MLDF_FILEID_BLOCKS_TAB_B, 0x800);
+                        mergeTableFiles(resources->mergeBlocks, MLDF_FILEID_BLOCKS_TAB_A, MLDF_FILEID_BLOCKS_TAB_B,
+                                        0x800);
                     }
                 } else {
                     if (slot == MLDF_FILEID_BLOCKS_TAB_A) {
@@ -2223,7 +2230,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         gAssetLoadInFlightFlags |= 0x80000;
                     }
                     resources->fileInfo[slot] = fileInfo;
-                    DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, blocksTabReadCb, 2);
+                    DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, blocksTabReadCb,
+                                     2);
                 }
                 MLDF_OWNER_RT(resources, slot) = mapId;
                 return MLDF_PTR_RT(resources, slot);
@@ -2288,7 +2296,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         DVDClose(fileInfo);
                         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 4) == 0) && ((gAssetLoadInFlightFlags & 8) == 0)) {
-                            mergeTableFiles(resources->mergeModels, MLDF_FILEID_MODELS_TAB_A, MLDF_FILEID_MODELS_TAB_B, 0x800);
+                            mergeTableFiles(resources->mergeModels, MLDF_FILEID_MODELS_TAB_A, MLDF_FILEID_MODELS_TAB_B,
+                                            0x800);
                         }
                         gModelsArchiveLoadCount += 1;
                     } else {
@@ -2347,7 +2356,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                     DVDClose(fileInfo);
                     AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                     if (((gAssetLoadInFlightFlags & 4) == 0) && ((gAssetLoadInFlightFlags & 8) == 0)) {
-                        mergeTableFiles(resources->mergeModels, MLDF_FILEID_MODELS_TAB_A, MLDF_FILEID_MODELS_TAB_B, 0x800);
+                        mergeTableFiles(resources->mergeModels, MLDF_FILEID_MODELS_TAB_A, MLDF_FILEID_MODELS_TAB_B,
+                                        0x800);
                     }
                 } else {
                     if (slot == MLDF_FILEID_MODELS_TAB_A) {
@@ -2356,7 +2366,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         gAssetLoadInFlightFlags |= 8;
                     }
                     resources->fileInfo[slot] = fileInfo;
-                    DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, modelsTabReadCb, 2);
+                    DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, modelsTabReadCb,
+                                     2);
                 }
                 MLDF_OWNER_RT(resources, slot) = mapId;
                 return MLDF_PTR_RT(resources, slot);
@@ -2486,7 +2497,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         gAssetLoadInFlightFlags |= 0x80;
                     }
                     resources->fileInfo[slot] = fileInfo;
-                    DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, animTabReadCb, 2);
+                    DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, animTabReadCb,
+                                     2);
                 }
                 MLDF_OWNER_RT(resources, slot) = mapId;
                 return MLDF_PTR_RT(resources, slot);
@@ -2550,7 +2562,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         DVDClose(fileInfo);
                         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x400) == 0) && ((gAssetLoadInFlightFlags & 0x800) == 0)) {
-                            mergeTableFiles(resources->mergeTex0, MLDF_FILEID_TEX0_TAB_A, MLDF_FILEID_TEX0_TAB_B, 0x1000);
+                            mergeTableFiles(resources->mergeTex0, MLDF_FILEID_TEX0_TAB_A, MLDF_FILEID_TEX0_TAB_B,
+                                            0x1000);
                         }
                     } else {
                         if (slot == MLDF_FILEID_TEX0_BIN_A) {
@@ -2613,11 +2626,13 @@ void* mapLoadDataFile(int mapId, int fileId) {
                     if (slot == MLDF_FILEID_TEX0_TAB_A) {
                         gAssetLoadInFlightFlags |= 0x400;
                         resources->fileInfo[slot] = fileInfo;
-                        DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, tex0tab1readCb, 2);
+                        DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0,
+                                         tex0tab1readCb, 2);
                     } else {
                         gAssetLoadInFlightFlags |= 0x800;
                         resources->fileInfo[slot] = fileInfo;
-                        DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, tex0tab2readCb, 2);
+                        DVDReadAsyncPrio(fileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0,
+                                         tex0tab2readCb, 2);
                     }
                 }
                 MLDF_OWNER_RT(resources, slot) = mapId;
@@ -2680,7 +2695,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         DVDClose(fileInfo);
                         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x4000) == 0) && ((gAssetLoadInFlightFlags & 0x8000) == 0)) {
-                            mergeTableFiles(resources->mergeTex1, MLDF_FILEID_TEX1_TAB_A, MLDF_FILEID_TEX1_TAB_B, 0x1000);
+                            mergeTableFiles(resources->mergeTex1, MLDF_FILEID_TEX1_TAB_A, MLDF_FILEID_TEX1_TAB_B,
+                                            0x1000);
                         }
                     } else {
                         if (slot == MLDF_FILEID_TEX1_BIN_A) {
@@ -2739,10 +2755,12 @@ void* mapLoadDataFile(int mapId, int fileId) {
                     resources->fileInfo[slot] = tableFileInfo;
                     if (slot == MLDF_FILEID_TEX1_TAB_A) {
                         gAssetLoadInFlightFlags |= 0x4000;
-                        DVDReadAsyncPrio(tableFileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, tex1tab1readCb, 2);
+                        DVDReadAsyncPrio(tableFileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0,
+                                         tex1tab1readCb, 2);
                     } else {
                         gAssetLoadInFlightFlags |= 0x8000;
-                        DVDReadAsyncPrio(tableFileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0, tex1tab2readCb, 2);
+                        DVDReadAsyncPrio(tableFileInfo, MLDF_PTR_RT(resources, slot), resources->sizes[slot], 0,
+                                         tex1tab2readCb, 2);
                     }
                 }
                 MLDF_OWNER_RT(resources, slot) = mapId;
