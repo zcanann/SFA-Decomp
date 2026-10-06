@@ -145,7 +145,7 @@ char sObjFreedObjectMessage[] = "FREED OBJECT %s\n";
 char sObjUnknownTypeUsingDummyObjectWarning[] =
     "Warning: Unknown object type '%d/%d romdefno %d', using DummyObject (128)\n";
 
-void Obj_RunInitCallback(GameObject* obj, void* placementData, int unused);
+void Obj_RunInitCallback(GameObject* obj, void* placementData, int initFlags);
 
 void doNothing_afterRenderObject(void) {
 }
@@ -1166,19 +1166,20 @@ void Obj_UpdateObject(GameObject* obj) {
     }
 }
 
-void Obj_RunInitCallback(GameObject* obj, void* placementData, int unused) {
+void Obj_RunInitCallback(GameObject* obj, void* placementData, int initFlags) {
     s16 mode = obj->anim.romDefNo;
     switch (mode) {
-    case 0x1f:
-    case 0:
+    case OBJECT_SEQID_SABRE:
+    case OBJECT_SEQID_KRYSTAL:
         objLoadPlayerFromSave(obj);
         break;
     default: {
-        ObjectInterfaceHandle p = obj->anim.dll;
-        if (p != NULL) {
-            int fn = ((int*)*p)[1];
-            if (fn != -1 && (void*)fn != NULL) {
-                ((void (*)(GameObject*))fn)(obj);
+        ObjectInterfaceHandle interface = obj->anim.dll;
+        if (interface != NULL) {
+            ObjectInterfaceInitCallback init =
+                (ObjectInterfaceInitCallback)((ObjectInterface*)*interface)->init;
+            if ((ptrdiff_t)init != -1 && init != NULL) {
+                init(obj, placementData, initFlags);
             }
         }
         break;

@@ -2,6 +2,56 @@
 
 Target: EN v1.0 (`GSAE01`), common game compiler GC/1.3.
 
+## Object init callback contract (2026-10-06)
+
+The 216-byte `Obj_RunInitCallback` at EN `0x8002CAEC` previously read the
+callback as `((int*)*handle)[1]` and called it through a one-argument prototype.
+That truncates native function pointers and loses the C contract for placement
+and initialization flags. The runtime interface now supplies a named
+`ObjectInterfaceInitCallback(GameObject*, void*, int)` dispatch type. The
+engine reads the named `ObjectInterface.init` slot, checks its full pointer
+against the `-1` sentinel and null, and explicitly forwards all three arguments.
+The sentinel comparison uses signed pointer-width `ptrdiff_t` to retain the
+retail `cmpwi`; no function pointer is stored in an `int`.
+
+Retail leaves incoming `r4` and `r5` untouched on the DLL path up to `bctrl` at
+`0x8002CB54`. The direct caller, `Obj_RegisterObject`, supplies placement data
+and zero flags. DLL initializers such as `TexScroll_init` consume placement
+and the third argument: zero clears the scroll offsets, while nonzero preserves
+them. Dinosaur Planet's `objInitObject(Object*, ObjSetup*, s32 reset)` at
+checkout `c4340802dc9f62e1181d00cc34c3175fca6ca4be` has the corresponding
+three-argument setup call. Foxhollow at
+`894de8a8edecfad2e455f1a6345e328f50c74aba` independently repairs this same
+dispatch site with a full-width function pointer and three arguments. The
+common name `initFlags` does not impose one interpretation on every DLL.
+
+The generic stored callback type remains intentional: object-specific
+implementations have different placement types and sometimes fewer formal
+arguments. The cast is confined to the engine dispatch boundary. Player
+sequence IDs still use `objLoadPlayerFromSave`. After either callback, the
+engine rereads the current shadow-state pointer, sets its initialization bit,
+snapshots the resulting local position into both previous-position triples,
+and clears external velocity. Missing callbacks still run this finalization.
+
+`python3 tools/test_object_init_native.py` checks 8,256 scenarios at `-O0` and
+`-O2` with ASan/UBSan. It uses the production interface, placement, shadow and
+texture-scroll records with an object adapter whose pointer widths and offsets
+are different. Cases cover signed sequence IDs, null handles, null/`-1`/valid
+callbacks, every player bypass, null/non-null placement, extreme flag values,
+shadow replacement/removal and callback position changes. A typed bridge
+runs the actual `TexScroll_init` for every signed step byte, both state-presence
+cases, and six flag values, checking the complete state and placement bytes.
+The player callback is a spy; this is not full native game initialization.
+Negative controls reject word-indexed and truncated callbacks, missing
+placement/flags, the one-argument call, and using world rather than local
+position for the final snapshot.
+
+All five versions retain byte-identical source objects, including every
+consumer of the interface header. Object's 60 functions and all its data remain
+100%. Full `all_source` and strict retail-checksum builds pass; the full reports
+retain only the existing TRK exception-vector and MusyX discarded-data artifacts.
+Separate formatting also preserves all source-object hashes.
+
 ## Skeleton collision-bound initialization (2026-10-06)
 
 `ObjModel_InitSkeletonCollisionBounds`, formerly `modelInitBones`, initializes
