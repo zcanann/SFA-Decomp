@@ -180,7 +180,7 @@ struct ResourceTableWorkspace {
     u32 mergeTex0[0x1000];
     u32 mergeAnim[0xbb8];
     u32 mergeModels[0x800];
-    u8 loadedFlags[0x58];       /* cleared by initLoadFiles */
+    u8 loadedFlags[0x58]; /* cleared by initLoadFiles */
 };
 
 STATIC_ASSERT(sizeof(struct ResourceTableWorkspace) == 0x18FD8);
@@ -217,11 +217,11 @@ struct MldfNames {
 struct MldfTables {
     u8 pad0[0x160];
     struct ResourceTableWorkspace workspace;
-    int ids[0x58];               /* mapId whose load must be retried, -1 = none */
-    int sizes[0x58];             /* byte size of the loaded file */
-    void* romList[0x78];         /* per-MAP romlist buffer (indexed by mapIndex) */
-    void* ptrs[0x58];            /* loaded file buffer, NULL = not resident */
-    s16 owners[0x60];            /* mapId owning the slot, -1 = free */
+    int ids[0x58];       /* mapId whose load must be retried, -1 = none */
+    int sizes[0x58];     /* byte size of the loaded file */
+    void* romList[0x78]; /* per-MAP romlist buffer (indexed by mapIndex) */
+    void* ptrs[0x58];    /* loaded file buffer, NULL = not resident */
+    s16 owners[0x60];    /* mapId owning the slot, -1 = free */
 };
 
 STATIC_ASSERT(offsetof(struct MldfTables, workspace) == 0x160);
@@ -683,7 +683,8 @@ void defragMemory(int mode) {
             moveBuffers = (void**)(biasedBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ptrs)));
             moveOwners = (s16*)(biasedBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, owners)));
             moveSizes = (int*)(biasedBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, sizes)));
-            moveFlags = (u8*)(biasedBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, workspace.loadedFlags)));
+            moveFlags =
+                (u8*)(biasedBase - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, workspace.loadedFlags)));
         }
         do {
             switch (fileId) {
@@ -753,7 +754,8 @@ void defragMemory(int mode) {
         buffers = (void**)(resourceAddress - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ptrs)));
         owners = (s16*)(resourceAddress - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, owners)));
         sizes = (int*)(resourceAddress - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, sizes)));
-        flags = (u8*)(resourceAddress - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, workspace.loadedFlags)));
+        flags =
+            (u8*)(resourceAddress - (int)(sizeof(MldfArenaBlock) - offsetof(struct MldfTables, workspace.loadedFlags)));
         do {
             switch (fileId) {
             case MLDF_FILEID_ANIMCURV_BIN_A:
@@ -1613,7 +1615,8 @@ int mergeTableFiles(void* table, int bankAFileId, int bankBFileId, int unusedCou
     } else if (merged == ((struct MldfTables*)base)->workspace.mergeAnimCurv) {
         remaining = ARRAY_COUNT(((struct MldfTables*)base)->workspace.mergeAnimCurv);
     }
-    if (merged == ((struct MldfTables*)base)->workspace.mergeTex0 || merged == ((struct MldfTables*)base)->workspace.mergeTex1) {
+    if (merged == ((struct MldfTables*)base)->workspace.mergeTex0 ||
+        merged == ((struct MldfTables*)base)->workspace.mergeTex1) {
         int* cursorA = bankA;
         int* destination = (int*)merged;
         int entryA;
@@ -2019,7 +2022,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                 DVDClose(fileInfo);
                 AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                 if (((gAssetLoadInFlightFlags & 0x2000000) == 0) && ((gAssetLoadInFlightFlags & 0x8000000) == 0)) {
-                    mergeTableFiles(resources->workspace.mergeVoxMap, MLDF_FILEID_VOXMAP_TAB_A, MLDF_FILEID_VOXMAP_TAB_B, 0x800);
+                    mergeTableFiles(resources->workspace.mergeVoxMap, MLDF_FILEID_VOXMAP_TAB_A,
+                                    MLDF_FILEID_VOXMAP_TAB_B, 0x800);
                 }
             } else {
                 if (slot == MLDF_FILEID_VOXMAP_BIN_A) {
@@ -2079,8 +2083,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x2000000) == 0) &&
                             ((gAssetLoadInFlightFlags & 0x8000000) == 0)) {
-                            mergeTableFiles(resources->workspace.mergeVoxMap, MLDF_FILEID_VOXMAP_TAB_A, MLDF_FILEID_VOXMAP_TAB_B,
-                                            0x800);
+                            mergeTableFiles(resources->workspace.mergeVoxMap, MLDF_FILEID_VOXMAP_TAB_A,
+                                            MLDF_FILEID_VOXMAP_TAB_B, 0x800);
                         }
                     } else {
                         if (slot == MLDF_FILEID_VOXMAP_TAB_A) {
@@ -2159,8 +2163,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         DVDClose(fileInfo);
                         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x20000) == 0) && ((gAssetLoadInFlightFlags & 0x80000) == 0)) {
-                            mergeTableFiles(resources->workspace.mergeBlocks, MLDF_FILEID_BLOCKS_TAB_A, MLDF_FILEID_BLOCKS_TAB_B,
-                                            0x800);
+                            mergeTableFiles(resources->workspace.mergeBlocks, MLDF_FILEID_BLOCKS_TAB_A,
+                                            MLDF_FILEID_BLOCKS_TAB_B, 0x800);
                         }
                     } else {
                         if (slot == MLDF_FILEID_BLOCKS_BIN_A) {
@@ -2230,8 +2234,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                     DVDClose(fileInfo);
                     AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                     if (((gAssetLoadInFlightFlags & 0x20000) == 0) && ((gAssetLoadInFlightFlags & 0x80000) == 0)) {
-                        mergeTableFiles(resources->workspace.mergeBlocks, MLDF_FILEID_BLOCKS_TAB_A, MLDF_FILEID_BLOCKS_TAB_B,
-                                        0x800);
+                        mergeTableFiles(resources->workspace.mergeBlocks, MLDF_FILEID_BLOCKS_TAB_A,
+                                        MLDF_FILEID_BLOCKS_TAB_B, 0x800);
                     }
                 } else {
                     if (slot == MLDF_FILEID_BLOCKS_TAB_A) {
@@ -2306,8 +2310,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         DVDClose(fileInfo);
                         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 4) == 0) && ((gAssetLoadInFlightFlags & 8) == 0)) {
-                            mergeTableFiles(resources->workspace.mergeModels, MLDF_FILEID_MODELS_TAB_A, MLDF_FILEID_MODELS_TAB_B,
-                                            0x800);
+                            mergeTableFiles(resources->workspace.mergeModels, MLDF_FILEID_MODELS_TAB_A,
+                                            MLDF_FILEID_MODELS_TAB_B, 0x800);
                         }
                         gModelsArchiveLoadCount += 1;
                     } else {
@@ -2366,8 +2370,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                     DVDClose(fileInfo);
                     AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                     if (((gAssetLoadInFlightFlags & 4) == 0) && ((gAssetLoadInFlightFlags & 8) == 0)) {
-                        mergeTableFiles(resources->workspace.mergeModels, MLDF_FILEID_MODELS_TAB_A, MLDF_FILEID_MODELS_TAB_B,
-                                        0x800);
+                        mergeTableFiles(resources->workspace.mergeModels, MLDF_FILEID_MODELS_TAB_A,
+                                        MLDF_FILEID_MODELS_TAB_B, 0x800);
                     }
                 } else {
                     if (slot == MLDF_FILEID_MODELS_TAB_A) {
@@ -2441,7 +2445,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         DVDClose(fileInfo);
                         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x40) == 0) && ((gAssetLoadInFlightFlags & 0x80) == 0)) {
-                            mergeTableFiles(resources->workspace.mergeAnim, MLDF_FILEID_ANIM_TAB_A, MLDF_FILEID_ANIM_TAB_B, 3000);
+                            mergeTableFiles(resources->workspace.mergeAnim, MLDF_FILEID_ANIM_TAB_A,
+                                            MLDF_FILEID_ANIM_TAB_B, 3000);
                         }
                     } else {
                         if (slot == MLDF_FILEID_ANIM_BIN_A) {
@@ -2498,7 +2503,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                     DVDClose(fileInfo);
                     AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                     if (((gAssetLoadInFlightFlags & 0x40) == 0) && ((gAssetLoadInFlightFlags & 0x80) == 0)) {
-                        mergeTableFiles(resources->workspace.mergeAnim, MLDF_FILEID_ANIM_TAB_A, MLDF_FILEID_ANIM_TAB_B, 3000);
+                        mergeTableFiles(resources->workspace.mergeAnim, MLDF_FILEID_ANIM_TAB_A, MLDF_FILEID_ANIM_TAB_B,
+                                        3000);
                     }
                 } else {
                     if (slot == MLDF_FILEID_ANIM_TAB_A) {
@@ -2572,8 +2578,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         DVDClose(fileInfo);
                         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x400) == 0) && ((gAssetLoadInFlightFlags & 0x800) == 0)) {
-                            mergeTableFiles(resources->workspace.mergeTex0, MLDF_FILEID_TEX0_TAB_A, MLDF_FILEID_TEX0_TAB_B,
-                                            0x1000);
+                            mergeTableFiles(resources->workspace.mergeTex0, MLDF_FILEID_TEX0_TAB_A,
+                                            MLDF_FILEID_TEX0_TAB_B, 0x1000);
                         }
                     } else {
                         if (slot == MLDF_FILEID_TEX0_BIN_A) {
@@ -2630,7 +2636,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                     DVDClose(fileInfo);
                     AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                     if (((gAssetLoadInFlightFlags & 0x400) == 0) && ((gAssetLoadInFlightFlags & 0x800) == 0)) {
-                        mergeTableFiles(resources->workspace.mergeTex0, MLDF_FILEID_TEX0_TAB_A, MLDF_FILEID_TEX0_TAB_B, 0x1000);
+                        mergeTableFiles(resources->workspace.mergeTex0, MLDF_FILEID_TEX0_TAB_A, MLDF_FILEID_TEX0_TAB_B,
+                                        0x1000);
                     }
                 } else {
                     if (slot == MLDF_FILEID_TEX0_TAB_A) {
@@ -2705,8 +2712,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                         DVDClose(fileInfo);
                         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
                         if (((gAssetLoadInFlightFlags & 0x4000) == 0) && ((gAssetLoadInFlightFlags & 0x8000) == 0)) {
-                            mergeTableFiles(resources->workspace.mergeTex1, MLDF_FILEID_TEX1_TAB_A, MLDF_FILEID_TEX1_TAB_B,
-                                            0x1000);
+                            mergeTableFiles(resources->workspace.mergeTex1, MLDF_FILEID_TEX1_TAB_A,
+                                            MLDF_FILEID_TEX1_TAB_B, 0x1000);
                         }
                     } else {
                         if (slot == MLDF_FILEID_TEX1_BIN_A) {
@@ -2759,7 +2766,8 @@ void* mapLoadDataFile(int mapId, int fileId) {
                     DVDClose(tableFileInfo);
                     AtomicSList_Push(gDvdFileInfoPool, tableFileInfo);
                     if (((gAssetLoadInFlightFlags & 0x4000) == 0) && ((gAssetLoadInFlightFlags & 0x8000) == 0)) {
-                        mergeTableFiles(resources->workspace.mergeTex1, MLDF_FILEID_TEX1_TAB_A, MLDF_FILEID_TEX1_TAB_B, 0x1000);
+                        mergeTableFiles(resources->workspace.mergeTex1, MLDF_FILEID_TEX1_TAB_A, MLDF_FILEID_TEX1_TAB_B,
+                                        0x1000);
                     }
                 } else {
                     resources->workspace.fileInfo[slot] = tableFileInfo;
@@ -3321,8 +3329,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                 }
             }
         }
-        if (tab1 != 0 &&
-            (entryByteOff = entryIndex << 2, (*(u32*)((u8*)tbl->workspace.mergeTex0 + entryByteOff) & 0x80000000) != 0)) {
+        if (tab1 != 0 && (entryByteOff = entryIndex << 2,
+                          (*(u32*)((u8*)tbl->workspace.mergeTex0 + entryByteOff) & 0x80000000) != 0)) {
             fileId = 0x4d;
             if (sizeOut != NULL) {
                 offsetFlags = *(int*)((u8*)tab1 + entryByteOff) & 0xffffff;
@@ -3342,8 +3350,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
-        } else if (tab0 != 0 &&
-                   (entryByteOff = entryIndex << 2, (*(int*)((u8*)tbl->workspace.mergeTex0 + entryByteOff) & 0x40000000) != 0)) {
+        } else if (tab0 != 0 && (entryByteOff = entryIndex << 2,
+                                 (*(int*)((u8*)tbl->workspace.mergeTex0 + entryByteOff) & 0x40000000) != 0)) {
             fileId = 0x23;
             if (sizeOut != NULL) {
                 offsetFlags = *(int*)((u8*)tab0 + entryByteOff) & 0xffffff;
@@ -3461,8 +3469,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                 }
             }
         }
-        if (tab1 != 0 &&
-            (entryByteOff = entryIndex << 2, (*(u32*)((u8*)tbl->workspace.mergeTex1 + entryByteOff) & 0x80000000) != 0)) {
+        if (tab1 != 0 && (entryByteOff = entryIndex << 2,
+                          (*(u32*)((u8*)tbl->workspace.mergeTex1 + entryByteOff) & 0x80000000) != 0)) {
             fileId = 0x4b;
             if (sizeOut != NULL) {
                 offsetFlags = *(int*)((u8*)tab1 + entryByteOff) & 0xffffff;
@@ -3482,8 +3490,8 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
                     *sizeOut = (((int*)(tab1 - 4))[i] & 0xffffff) - offsetFlags;
                 }
             }
-        } else if (tab0 != 0 &&
-                   (entryByteOff = entryIndex << 2, (*(int*)((u8*)tbl->workspace.mergeTex1 + entryByteOff) & 0x40000000) != 0)) {
+        } else if (tab0 != 0 && (entryByteOff = entryIndex << 2,
+                                 (*(int*)((u8*)tbl->workspace.mergeTex1 + entryByteOff) & 0x40000000) != 0)) {
             fileId = 0x20;
             if (sizeOut != NULL) {
                 offsetFlags = *(int*)((u8*)tab0 + entryByteOff) & 0xffffff;
