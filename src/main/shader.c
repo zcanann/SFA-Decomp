@@ -2873,7 +2873,8 @@ void sceneDraw(void) {
     (*gNewCloudsInterface)->renderSnowClouds(0);
     if (bEnableDistortionFilter != 0) {
         newshadows_captureReflectionTextures();
-        doDistortionFilter(distortionFilterVector, distortionFilterAngle2, distortionFilterColor, distortionFilterAngle1);
+        doDistortionFilter(distortionFilterVector, distortionFilterAngle2, distortionFilterColor,
+                           distortionFilterAngle1);
     }
     renderGlows();
     (*gCameraInterface)->minimapShowHelpTextForTarget(0, 0, 0, 0);
@@ -2998,8 +2999,7 @@ static void renderObjects(s8* opacity) {
                 u32 shadowKind;
                 renderShadowType3(obj, 0x13, 0);
                 shadowKind = 2;
-                gLightmapDrawQueue.entries[gLightmapDrawQueueCount].type =
-                    shadowKind;
+                gLightmapDrawQueue.entries[gLightmapDrawQueueCount].type = shadowKind;
                 gLightmapDrawQueueCount += 1;
             } else if (obj->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH &&
                        (obj->anim.flags & OBJANIM_FLAG_HIDDEN) == 0 &&
@@ -3007,8 +3007,7 @@ static void renderObjects(s8* opacity) {
                 u32 shadowKind;
                 renderShadowType3(obj, 0x13, 0);
                 shadowKind = 3;
-                gLightmapDrawQueue.entries[gLightmapDrawQueueCount].type =
-                    shadowKind;
+                gLightmapDrawQueue.entries[gLightmapDrawQueueCount].type = shadowKind;
                 gLightmapDrawQueueCount += 1;
             }
         }

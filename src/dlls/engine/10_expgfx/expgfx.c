@@ -1521,8 +1521,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
             slot = curCacheBuf;
             if (nextActivePool > -1) {
                 nextCacheBuf = (u8*)cache + cacheParity * 0x1000;
-                copyToCache(nextCacheBuf, gExpgfxSlotPoolBases[nextActivePool],
-                            EXPGFX_POOL_CACHE_LINE_COUNT);
+                copyToCache(nextCacheBuf, gExpgfxSlotPoolBases[nextActivePool], EXPGFX_POOL_CACHE_LINE_COUNT);
                 curCacheBuf = (ExpgfxSlot*)(nextCacheBuf);
                 cacheQueued = 1;
             }
@@ -2251,8 +2250,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
             /* Reuse the mask-table byte offset without extending activePool's
              * lifetime through the slot loop; scale it for the pointer table. */
             memcpyToCache(*(void**)((u8*)gExpgfxSlotPoolBases +
-                maskByteOffset * (sizeof(void*) / sizeof(gExpgfxSlotActiveMasks[0]))), curPoolBuf,
-                          EXPGFX_POOL_CACHE_LINE_COUNT);
+                                    maskByteOffset * (sizeof(void*) / sizeof(gExpgfxSlotActiveMasks[0]))),
+                          curPoolBuf, EXPGFX_POOL_CACHE_LINE_COUNT);
             cacheQueued = 1;
             activePool = nextActivePool;
         }
