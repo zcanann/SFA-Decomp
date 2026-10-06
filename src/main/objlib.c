@@ -84,8 +84,8 @@ STATIC_ASSERT(offsetof(ObjHitRegionPlacement, yaw) == 0x20);
 extern ObjContactCallbackEntry gObjContactCallbacks[0xC0 / sizeof(ObjContactCallbackEntry)];
 int gObjContactCallbackCount;
 #define OBJMSG_SEND_IGNORE_SENDER 0x1
-#define OBJMSG_SEND_MATCH_ANY      0x2
-#define OBJMSG_SEND_MATCH_OBJTYPE  0x4
+#define OBJMSG_SEND_MATCH_ANY     0x2
+#define OBJMSG_SEND_MATCH_OBJTYPE 0x4
 
 #define OBJCONTACT_CALLBACK_CAPACITY    0x10
 #define OBJCONTACT_CALLBACK_LAST_INDEX  (OBJCONTACT_CALLBACK_CAPACITY - 1)
