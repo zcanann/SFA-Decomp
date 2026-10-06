@@ -323,7 +323,7 @@ force_active:
   - gPicMenuReadedBuffer2Messages
   - gPicMenuReadedBufferMessages
   - gPicMenuFreeReadBufferMessages
-  - gPicMenuVideoDecodeThreadStack
+  - gAttractMovieVideoThreadStack
   # gameloop.c: the retail link retained this uncalled function (its jumptable
   # and the .sbss word only it reads come along via its own references);
   # dropping it would shorten .text and shift every later section.

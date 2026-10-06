@@ -86,43 +86,62 @@ but their player layouts and scheduling details are not substituted for SFA's.
 SFA's existing audio decoder already uses the same native record. The active
 retail stack accesses establish the eight-byte size used here.
 
-## Message buffers and the BSS base
+## Video thread globals and shared BSS base
 
-`gAttractMovieVideoMessages` replaces the misleading thread-area name and
-24-byte anonymous array. It contains two arrays of three `OSMessage` slots.
-`CreateVideoDecodeThread` supplies the first array to the decoded-texture queue
-and the second to the free-texture queue. These roles and capacities come from
-the retail `OSInitMessageQueue` calls, not from dividing an unexplained gap.
+The decoder's queues, thread, stack and message arrays are separate globals.
+`AttractMovieVideoDecodeLayout` formerly treated them as one aggregate reached
+from the message-storage address. The retail offsets were right, but that
+cross-object pointer arithmetic relied on the GameCube linker layout and could
+not work reliably in a native build. Thread creation, suspension, message
+receives and message sends now address their actual owning globals directly.
 
-The TU still defines its message storage, queues, stack and thread as separate
-globals. A private layout view names the offsets used by the retail shared-base
-accesses without merging those objects or changing their declaration order:
+The local Mario Kart Double Dash `THPVideoDecode.c` has the same six ordinary
+BSS definitions and creation-first function order. Using that declaration order
+with the existing deferred/no-auto-inline profile makes the common game GC/1.3
+compiler generate the retail BSS base and reverse function order naturally.
+All eight functions reproduce their original instructions. No layout overlay,
+manual section placement or compiler-version exception remains in this TU.
+Foxhollow independently uses direct queue/thread references and the actual
+stack end; its native fixes corroborate these ownership relationships.
 
-| BSS offset | Object | Size |
+| Retail BSS offset | Object | Bytes |
 | --- | --- | --- |
-| `0x0000` | Decoded messages, then free messages | `0x18` |
-| `0x0018` | Decoded-texture message queue | `0x20` |
-| `0x0038` | Free-texture message queue | `0x20` |
+| `0x0000` | Three decoded-texture messages | `0xC` |
+| `0x000C` | Three free-texture messages | `0xC` |
+| `0x0018` | Decoded-texture queue | `0x20` |
+| `0x0038` | Free-texture queue | `0x20` |
 | `0x0058` | Video decode thread stack | `0x1000` |
 | `0x1058` | Video decode thread | `0x310` |
 
-The private view is asserted through its total `0x1368` bytes. Thread creation
-now expresses the stack top as the stack offset plus its size; the equal thread
-address is passed separately as the thread object. The existing source stack
-now has its own retail symbol at EN `803A7348`, backed by the 4,096-byte
-`OSCreateThread` stack contract and the following thread at `803A8348`.
-The canonical decoder header owns message storage and public declarations;
-`CreateVideoDecodeThread` takes an optional data pointer instead of an integer.
-The preparation caller now lives in the consolidated player TU described above
-and retains the full native pointer width at that boundary.
+Each `OSInitMessageQueue` call establishes the relevant three-message capacity.
+The former two-array message record has been replaced by those two arrays;
+`OSMessage` elements can grow with native pointer width. The three small-data
+words keep their retail order: thread-created, preparation-ready, idle-frame
+count. The private thread, queue and state symbols now use the video decoder's
+namespace instead of the unrelated `picmenu` name. All five symbol configs and
+stack force-active entries use the new names.
 
-At the earlier decoder-recovery checkpoint, all four verified targets preserved
-every function's instruction bytes, all allocated section bytes and sizes, and all relocation destinations. The only
-source-object symbol change is the message-storage rename. The five named BSS
-objects agree with their retail objects in section, offset and size. Full
-function reports and aggregate measures are unchanged; this is source and
-storage recovery, not additional matching-byte credit.
+The component loop retains a byte cursor rooted in `AttractMoviePlayer` and
+uses its canonical `offsetof` to load component kinds. A direct array pointer
+changes two instructions; indexing the canonical array removes an instruction
+and changes register allocation. This cursor remains within the real player
+record and does not overlay separate objects. The in-memory decoder uses the
+canonical `initReadSize` and `movieData` members in place of legacy union aliases.
 
-That checkpoint passed all four `all_source` builds and the strict EN retail
-checksum within the 30-second limit. Unrelated source-object hashes, including the preparation
-caller and audio decoder, are unchanged. Formatting is reviewed separately.
+`tools/test_thp_video_native.py` compiles the entire production TU with native
+player records and deliberately independent host OS objects. Its 24 scenarios
+cover both thread-entry choices, creation failure, guarded start/cancel, message
+flags and ownership, component traversal, decode failure and preparation-ready
+messages, streaming catch-up, in-memory frame stepping, looping, and forced
+final-frame decoding. They pass at `-O0` and `-O2` with ASan/UBSan and addresses
+above 4 GiB. Separate negative controls reject a restored cross-object queue
+offset, a truncated thread argument, swapped message storage, and skipping the
+last non-looping frame.
+
+Across all five configured retail versions, the complete decoder matches all
+eight functions (1,276 code bytes) and all 4,980 data bytes at 100%. Every other
+source object is byte-for-byte unchanged by this decoder recovery. Full reports
+retain only the existing TRK exception-carving and MusyX discarded-data artifacts.
+All five `all_source` builds and strict source links pass, with output DOLs
+byte-identical to their verified originals. Formatting is checked separately
+against every source-object hash.

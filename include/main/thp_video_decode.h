@@ -5,18 +5,6 @@
 #include "dolphin/os/OSMessage.h"
 #include "dolphin/os/OSThread.h"
 
-#define THP_VIDEO_BUFFER_COUNT 3
-#define THP_VIDEO_STACK_SIZE   0x1000
-
-typedef struct AttractMovieVideoMessageStorage {
-    OSMessage decoded[THP_VIDEO_BUFFER_COUNT];
-    OSMessage free[THP_VIDEO_BUFFER_COUNT];
-} AttractMovieVideoMessageStorage;
-
-STATIC_ASSERT(sizeof(AttractMovieVideoMessageStorage) == 0x18);
-STATIC_ASSERT(offsetof(AttractMovieVideoMessageStorage, decoded) == 0);
-STATIC_ASSERT(offsetof(AttractMovieVideoMessageStorage, free) == 0xC);
-
 OSMessage PopDecodedTextureSet(s32 flags);
 void PushFreeTextureSet(OSMessage msg);
 void VideoDecodeThreadCancel(void);

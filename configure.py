@@ -1617,7 +1617,7 @@ config.libs = [
             Object(Matching, "main/thp/dll_3b.c", cflags=cflags_dll_noopt),
             Object(Matching, "main/thp/THPPlayer.c", cflags=cflags_dll_noopt_noautoinline_deferred),
             Object(Matching, "main/thp/THPRead.c"),
-            Object(Matching, "main/thp/THPVideoDecode.c"),
+            Object(Matching, "main/thp/THPVideoDecode.c", cflags=cflags_dll_noopt_noautoinline_deferred),
             Object(Matching, "main/debug_display.c", cflags=cflags_dll_noopt),
             Object(Matching, "main/obj_movelib.c", cflags=cflags_dll_noopt),
 
