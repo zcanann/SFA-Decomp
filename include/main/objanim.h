@@ -23,8 +23,7 @@ extern char gObjAnimMissingCachedMoveWarning[];
 #define OBJANIM_STATE_WORD_EVENT_STATE      1
 #define OBJANIM_STATE_WORD_PREV_EVENT_STATE 2
 
-void ObjAnim_SetBlendMove(GameObject* obj, ObjAnimDef* animDef, ObjAnimState* state, u32 moveId,
-                          int eventState);
+void ObjAnim_SetBlendMove(GameObject* obj, ObjAnimDef* animDef, ObjAnimState* state, u32 moveId, int eventState);
 void ObjAnim_SetLayeredBlendMove(GameObject* obj, u32 moveId, int eventState);
 void ObjAnim_SetCurrentBlendMove(GameObject* obj, u32 moveId, int eventState);
 int ObjAnim_AdvanceLayeredMove(GameObject* obj, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events);

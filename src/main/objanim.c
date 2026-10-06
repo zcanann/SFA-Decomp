@@ -9,8 +9,7 @@
  */
 #define OBJANIM_PROGRESS_ONE 1.0f
 
-void ObjAnim_SetBlendMove(GameObject* obj, ObjAnimDef* animDef, ObjAnimState* state, u32 moveId,
-                          int eventState) {
+void ObjAnim_SetBlendMove(GameObject* obj, ObjAnimDef* animDef, ObjAnimState* state, u32 moveId, int eventState) {
     int requestedEventState;
     int moveIndex;
     ObjAnimMoveData* moveData;
@@ -868,8 +867,7 @@ int ObjAnim_SetCurrentMove(GameObject* obj, int moveId, f32 moveProgress, u8 mov
     state->lastBlendMoveIndex = OBJANIM_BLEND_MOVE_INDEX_INVALID;
     hitState = objAnim->hitReactState;
     if ((hitState != NULL) && (hitState->entries != NULL)) {
-        ObjHitReact_LoadMoveEntries(objAnim, bank, objAnim->romDefNo, hitState,
-                                    requestedMoveId, 0);
+        ObjHitReact_LoadMoveEntries(objAnim, bank, objAnim->romDefNo, hitState, requestedMoveId, 0);
     }
     if (objAnim->eventTable != NULL) {
         ObjAnim_LoadMoveEvents(obj, objAnim->romDefNo, objAnim->eventTable, requestedMoveId, 0);
