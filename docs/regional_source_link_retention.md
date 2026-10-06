@@ -9,10 +9,10 @@ This validates the existing manifest together; it adds no progress claims.
 ## Retained source definitions
 
 The sky color-table retention below describes the historical link repair.
-[Sky lighting record recovery](sky_lighting_record.md) subsequently incorporates
-those actively read samples into a referenced record and removes their
-separate retention rule. The sky unit now awaits rematching after that
-storage correction; the trailing small-data word still needs retention.
+[Sky lighting curve recovery](sky_lighting_record.md) subsequently identifies
+those actively read samples as three referenced arrays and removes their
+separate retention rule. The complete sky TU matches all five versions;
+the trailing small-data word still needs retention.
 
 The previous combined PAL link resolved its symbols but lost unreferenced
 functions and data. Some apparently unreferenced objects are accessed through

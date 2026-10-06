@@ -437,9 +437,8 @@ def Rel(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
-# Completed source units are verified across the five supported retail versions.
+# All active source units are verified across the five supported retail versions.
 Matching = True
-NonMatching = False
 
 
 def Object(completed, name, **options):
@@ -842,7 +841,7 @@ config.libs = [
                    extra_cflags=["-lang=c++", "-bool", "off", "-msext", "on"]),
             Object(Matching, "dlls/engine/3/3.c", cflags=cflags_dll_noopt),
             Object(Matching, "dlls/engine/4/4.c"),
-            Object(NonMatching, "dlls/engine/5/5.c", cflags=cflags_dll_noopt),
+            Object(Matching, "dlls/engine/5/5.c", cflags=cflags_dll_noopt),
             Object(Matching, "dlls/engine/6/6.c"),
             Object(Matching, "dlls/engine/7/7.c", cflags=cflags_dll_noopt),
             Object(Matching, "dlls/engine/8/8.c"),

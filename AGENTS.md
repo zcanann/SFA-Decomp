@@ -1,5 +1,12 @@
 # AGENTS.md - SFA-Decomp Runbook
 
+> **Matching gate (2026-10-06):** Finish one recovery at a time. If a source
+> improvement regresses a TU, rematch the complete TU to 100% before committing
+> it, then verify every active TU still matches 100%. Do not commit or push
+> match regressions to `staging`, or move on while leaving that recovery
+> unfinished. `NonMatching` is a temporary local experiment state, not a way
+> to satisfy this gate with retail substitution.
+
 > **Active compiler experiment (scope corrected 2026-09-06):** Only game-category
 > MWCC C/C++ units use the common GC/1.3 `config.compiler_version`. The older
 > math block, including `rand`, belongs to the `MSL_C/PPCEABI/bare/H/` source

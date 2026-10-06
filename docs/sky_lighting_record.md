@@ -1,37 +1,37 @@
-# Sky lighting record recovery
+# Sky lighting curve recovery
 
-The sky updater no longer reads past a three-float C array into neighboring
-global objects. `gSkyTimeOfDayLighting` owns both directions and the three
-five-sample curves that the updater actually reads. The old
-`sSkyUnusedColors` name was wrong: its fifteen floats supply moon intensity,
-ambient intensity, and blend alpha throughout the day.
+The sky updater uses two three-float direction arrays and three named
+five-sample curves. Every access stays within its declared array, including
+the moon direction and the interpolator's second sample. The former
+`sSkyUnusedColors` table supplies moon intensity, ambient intensity, and blend
+alpha; none of these samples are unused.
 
-The working Foxhollow port supplied this lead: see its
-`game/src/dlls/engine/5/5.c` at commit `6a3ba4b`. This change independently
-checks the layout against retail; the descriptive type and field names are
-reconstructions, not recovered original declarations. Foxhollow's separate
-host texture-pointer storage is a port adaptation and is not imported here.
+Foxhollow's native port supplied the adjacency bug lead; see its
+`game/src/dlls/engine/5/5.c` at commit `6a3ba4b`. Retail code generation now
+supports independent arrays rather than the initially proposed combined
+`SkyTimeOfDayLighting` record. The descriptive array names are reconstructions,
+not recovered original identifiers.
 
 ## Retail evidence
 
 EN `skyUpdateLightingFromTimeOfDay` starts at `8008A04C` and loads the data
-base `8030F2C8` into r28. Its day path reads three floats at offsets 0, 4, 8;
-its night path reads offsets 12, 16, 20. The linear-curve calls pass that same
-base plus the sample index times four and offsets `40`, `18`, `2C` (hex),
-respectively. Four time intervals select indices 0 through 3, and
+pool base `8030F2C8` into r28. Its day path reads three floats at offsets 0, 4,
+8; its night path reads offsets 12, 16, 20. The linear-curve calls pass that
+same base plus the sample index times four and offsets `40`, `18`, `2C` (hex),
+respectively. Four quarter-day intervals select indices 0 through 3, and
 `Curve_EvalLinear` reads that sample and the next one. Each curve therefore
 needs exactly five floats. The final read ends at offset `54`.
 
-| Field | Offset | Size |
+| Array | Offset from pool base | Size |
 | --- | ---: | ---: |
-| Sun direction | `00` | `0C` |
-| Moon direction | `0C` | `0C` |
-| Moon intensity samples | `18` | `14` |
-| Ambient intensity samples | `2C` | `14` |
-| Blend alpha samples | `40` | `14` |
+| `gSkySunDirection` | `00` | `0C` |
+| `gSkyMoonDirection` | `0C` | `0C` |
+| `gSkyMoonIntensityCurve` | `18` | `14` |
+| `gSkyAmbientIntensityCurve` | `2C` | `14` |
+| `gSkyBlendAlphaCurve` | `40` | `14` |
 
-All five input DOLs pass their configured SHA-1 before inspection. All 21
-float words agree at the following regional bases:
+All five input DOLs pass their configured SHA-1. All 21 float words agree at
+the following regional pool bases:
 
 | Version | Address |
 | --- | --- |
@@ -41,51 +41,51 @@ float words agree at the following regional bases:
 | PAL v1.0 | `80310958` |
 | PAL v1.1 | `80310A98` |
 
-All five symbol configs now describe one `54`-byte object. No split boundary
-changes. The obsolete forced-retention rule for `sSkyUnusedColors` is removed;
-the complete record has actual source references. A tree-wide search found
-no consumers of the three old global names outside this TU.
+The five symbol configs describe each array at these offsets. No TU boundary
+changes. Direct source references retain all three curves, so the old forced
+retention rule for `sSkyUnusedColors` stays removed. The unused trailing
+`.sbss` word `sSkyUnusedD` still needs its existing rule.
 
-## Code generation and behavior
+## Matching source structure
 
-This is a storage correction, with a measured matching cost. GC/1.3, its
-existing TU flags, and function order are unchanged. EN retains 53 of 57
-exact functions and all 780 assigned data bytes; its fuzzy score is
-99.688965%. The four residuals are:
+The shared register in the updater is a compiler-generated data-pool base,
+not proof of a source-level aggregate. GC/1.3 groups the independent arrays
+into `...data.0` when the function references them together. Ordinary indexed
+accesses then reproduce retail's three independent curve-address calculations.
+Other functions reference the sun and moon arrays independently, reproducing
+retail's separate base loads and vector offsets.
 
-| Function | Before bytes | After bytes | Match |
-| --- | ---: | ---: | ---: |
-| `skyUpdateLightingFromTimeOfDay` | 1,204 | 1,196 | 99.152824% |
-| `skyUpdateShadowLightDirection` | 588 | 556 | 94.18367% |
-| `renderSunAndMoon` | 1,948 | 1,948 | 99.99384% |
-| `skyLoadLights` | 484 | 476 | 98.32231% |
+This recovers the useful curve meanings and array bounds while restoring all
+four functions that regressed under the aggregate declaration. The complete
+TU matches in every version: **57/57 functions, 16,924/16,924 code bytes, and
+780/780 data bytes**, with completion annotations disabled. Compiler version,
+flags, function order, and the assigned section extents remain unchanged.
+The unit is source-linked again in EN and all four regional manifests.
 
-The compiler shares the record base and some indexed address calculations.
-Retail instead reloads the moon-vector base or repeats intermediate additions.
-Ordinary subarray locals and cursor expressions were tested but did not
-recover the whole unit. No pointer laundering, compiler exception, assembly,
-or artificial source split is added to restore the score. The unit is
-`NonMatching` and removed from the four regional completion manifests, so
-strict links use the retail object while `all_source` compiles the recovery.
+Every other EN source object is byte-identical to the pre-recovery baseline.
+The full project reports were also regenerated without completion annotations
+for all five versions. All scored function bodies are exact. Two existing
+reporting cases require final-link evidence: the TRK vector table's padding
+symbol has no source function counterpart, and MusyX's
+[`sal_volume` exception sections](musyx_volume_completion.md) include helper
+records that the linker discards. Every version passes `ninja all_source` and
+the strict retail DOL checksum with the sky source object linked.
 
-Every non-text source section keeps its bytes, size and alignment. All other
-named data symbols retain their offsets and sizes, and every other EN source
-object is byte-identical to the baseline. The three old symbols are replaced
-by the complete record; compiler-generated literal names can be renumbered.
-All five versions produce the same per-function scores and pass both
-`ninja all_source` and their strict retail checksum target. The checksum
-proves the matching link; it does not certify the substituted sky source.
+## Behavior probe
 
 `tools/sky_lighting_probe.py` executes the compiled updater and curve
-evaluators against verified EN retail in PPC emulation. It checks exact
-light-slot call arguments, output color bytes, untouched state and record
-storage, guard bytes, and preserved registers. Its 485 cases cover absent
-state, both sides of every time/lighting boundary, all four slot-flag
-combinations, zero/full/partial color blends, and randomized directions and
-distinct curve channels. Only the final renderer calls are intercepted;
-the Gekko save/restore instructions use the existing paired-single emulator.
-This establishes behavior for those fixtures, not a gameplay or hardware
-floating-point conformance test.
+evaluators against verified EN retail in PPC emulation. It locates and checks
+each direction and curve array through its own symbol, without assuming that
+source arrays are contiguous. It checks exact light-slot call arguments,
+output color bytes, untouched state and array storage, guard bytes, and
+preserved registers.
+
+The 485 cases cover absent state, both sides of every time/lighting boundary,
+all four slot-flag combinations, zero/full/partial color blends, and randomized
+directions and distinct curve channels. Only the final renderer calls are
+intercepted; Gekko save/restore instructions use the existing paired-single
+emulator. This establishes behavior for those fixtures, not a gameplay or
+hardware floating-point conformance test.
 
 Reproduce after configuring EN and building its sky and curve source objects:
 
@@ -94,10 +94,5 @@ python3 tools/sky_lighting_probe.py
 ```
 
 The optional `unicorn` and `pyelftools` packages are required. Local reports,
-baseline object, source experiments, and build logs are under the ignored
+object comparisons, and build logs are under the ignored
 `build/sky-state-recovery/` directory.
-
-The overlapping `SkyState` / `SkyTimeBlend` texture layouts remain a separate
-recovery job. Retail establishes their shared allocation and field roles,
-but the capacity behind the legacy blend-texture index still needs evidence;
-the gap to the next pointer alone does not establish an array length.

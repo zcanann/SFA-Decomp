@@ -21,7 +21,23 @@ from version_progress import read_dol_range, verified_dol
 
 STATE = 0x81200000
 FUNCTION = "skyUpdateLightingFromTimeOfDay"
-LIGHTING = "gSkyTimeOfDayLighting"
+LIGHTING = (
+    ("gSkySunDirection", 3),
+    ("gSkyMoonDirection", 3),
+    ("gSkyMoonIntensityCurve", 5),
+    ("gSkyAmbientIntensityCurve", 5),
+    ("gSkyBlendAlphaCurve", 5),
+)
+
+
+def lighting_arrays(values):
+    assert len(values) == sum(count for _, count in LIGHTING)
+    result = {}
+    offset = 0
+    for name, count in LIGHTING:
+        result[name] = pack(f"{count}f", *values[offset:offset + count])
+        offset += count
+    return result
 
 
 def execute(segments, symbols, state, lighting):
@@ -46,7 +62,8 @@ def execute(segments, symbols, state, lighting):
     emu.mem_write(STATE - 16, b"\xa5" * (0x258 + 32))
     if state is not None:
         emu.mem_write(STATE, state)
-    emu.mem_write(symbols[LIGHTING], lighting)
+    for name, data in lighting.items():
+        emu.mem_write(symbols[name], data)
     emu.mem_write(symbols["gSkyCurrentTextureColor"], b"\x55" * 4)
     saved = {i: 0xCAFE0000 + i for i in range(14, 32)}
     for i, value in saved.items():
@@ -95,7 +112,7 @@ def execute(segments, symbols, state, lighting):
     assert emu.reg_read(ppc.UC_PPC_REG_CR) & 0x00FFF000 == 0x13579024 & 0x00FFF000
     assert read(STATE - 16, 16) == b"\xa5" * 16
     assert read(STATE + 0x258, 16) == b"\xa5" * 16
-    assert read(symbols[LIGHTING], len(lighting)) == lighting
+    assert all(read(symbols[name], len(data)) == data for name, data in lighting.items())
     assert read(STATE, 0x258) == (state if state is not None else b"\xa5" * 0x258)
     assert [call[0][0] for call in calls] == [0, 1, 2]
     return calls, read(symbols["gSkyCurrentTextureColor"], 4)
@@ -121,7 +138,7 @@ def fixtures(random_cases):
             directions = [rng.uniform(-1, 1) for _ in range(6)]
             # Independent channel values expose curve selection/stride errors.
             curves = [rng.uniform(0, 255) for _ in range(15)]
-            yield bytes(state), pack("21f", *(directions + curves))
+            yield bytes(state), lighting_arrays(directions + curves)
 
 
 def main():
@@ -135,14 +152,17 @@ def main():
     dol = verified_dol(ROOT / "orig/GSAE01/sys/main.dol", ROOT / "config/GSAE01/config.yml")
     segments = [(s.address, dol.data[s.offset:s.offset + s.size]) for s in dol.sections]
     retail_symbols = {name: value[1] for name, value in retail.items()}
-    lighting = read_dol_range(dol, retail_symbols[LIGHTING], 0x54)
+    lighting = {name: read_dol_range(dol, retail_symbols[name], count * 4)
+                for name, count in LIGHTING}
     curves = ROOT / "build/GSAE01/src/main/curves.o"
     with tempfile.TemporaryDirectory(prefix="sfa-sky-lighting-") as directory:
         source_segments, source_symbols = link_source(args.object, Path(directory), retail,
                                                      entry=FUNCTION, extra_objects=(curves,))
-        address = source_symbols[LIGHTING]
-        segment = next((base, data) for base, data in source_segments if base <= address < base + len(data))
-        assert segment[1][address - segment[0]:address - segment[0] + 0x54] == lighting
+        for name, expected in lighting.items():
+            address = source_symbols[name]
+            base, data = next((base, data) for base, data in source_segments
+                              if base <= address < base + len(data))
+            assert data[address - base:address - base + len(expected)] == expected, name
         cases = [(None, lighting), *fixtures(args.random_cases)]
         for index, (state, data) in enumerate(cases):
             expected = execute(segments, retail_symbols, state, data)
