@@ -24,7 +24,11 @@ The existing matrix lookup preserves the retail upper-bound fallback to
 joint zero. The zero-joint branch in `modelInitBoneMtxs2` retains its expanded
 lookup because replacing it with the helper changes an already-exact body.
 
-## Validation
+## Original GC/1.3 investigation (superseded)
+
+The percentages in this section record the initial compiler migration. Subsequent
+source work restored the complete matrix and rendering units to 100%; they are
+not outstanding regressions or permission to retain new ones.
 
 Under the game GC/1.3 compiler, `model_multMtxs` remains byte-exact at 184
 bytes and `modelInitBoneMtxs2` remains byte-exact at 348 bytes. The 236-byte
@@ -95,3 +99,52 @@ builds and the strict EN retail checksum pass under 30-second timeouts.
 Formatting of the active model source/header is committed separately and checked
 for unchanged generated output. This is shared structure recovery; no new match
 credit is claimed.
+
+## Matrix render commands and their data
+
+`objprint_dolphin.c` now declares the two GX matrix-ID tables, an ordinary
+48-byte `Mtx` identity, and a 48-byte diagnostic string slot. The last twelve
+floats of the former `gObjJointMtxTemp[24]` were actually the bytes of
+`<renderOpMatrix> ERROR CASE numMatrices = %d\n`, its terminator, and two padding
+bytes. The identity and diagnostic are distinct symbols in all five retail
+configs. `renderOpMatrix` directly names the texture-ID table and diagnostic
+instead of reaching beyond the position-ID array.
+
+Putting these definitions before their users lets MWCC generate its own shared
+data base. With definitions after the functions, separate named accesses add
+twelve instruction bytes. No invented aggregate, cross-global offset view,
+section override, or compiler change is needed. The writable string slot keeps
+the evidenced `.data` placement and complete byte span.
+
+Both matrix-command helpers use `ObjModel*`; `renderOpMatrix` also uses
+`ModelFileHeader*` and its canonical joint counts. Its header and cached joint
+cursor have separate lifetimes. The stream readers retain a byte pointer instead
+of truncating the instruction address to `u32`. A native-width address sum keeps
+the exact MWCC operand order; ordinary pointer addition changes the instruction
+sequence. The position-only helper retains its existing one-element cursor array:
+a scalar cursor adds a register move under the common compiler profile.
+
+The locked-cache layout is unchanged: 48-byte position matrices at `+0`, normal
+matrices at `+0x12C0`, and 64-byte input joint records at `+0x2700`.
+`modelInitMtxs` admits two through 100 joints, including extra joints. The cached
+normal path concatenates before clearing translation; the uncached path clears
+translation before concatenating. Both orders are preserved.
+
+`python3 tools/test_model_matrix_render.py` executes 8,424 scenarios at each of
+`-O0` and `-O2`, with ASan/UBSan and pointers above 4 GiB. It covers all eight bit
+alignments, counts zero through twelve (including the two padding ID entries),
+cached/preparation/uncached states, 2/17/100 cached joints, byte indices through
+255 on the uncached path, shadow/normal/texture flags, GX call order and IDs,
+matrix values, complete cache writes, and untouched input/guard bytes. Malformed
+counts 13–15 still exceed the retail ID tables; this recovery does not widen
+them. Four local negative controls caught pointer truncation, wrong texture IDs,
+wrong normal-cache offset, and wrong stream advancement.
+
+All five complete rendering TUs remain 100%: 32 functions, 25,004 instruction
+bytes, and 12,768 data bytes each. Every instruction/data byte, relocation
+destination, and other named symbol offset matches the pre-change objects.
+Every other source object is unchanged. All five `all_source` builds and strict
+source-linked retail DOL checks pass. The full report inventories retain only
+the pre-existing TRK vector-carving and MusyX discarded-data accounting artifacts;
+there are no new report regressions or retail-object substitutions. Formatting
+is verified separately against the complete source-object hashes.

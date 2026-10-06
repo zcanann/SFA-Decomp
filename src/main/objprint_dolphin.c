@@ -70,6 +70,18 @@
 #include "main/objprint_dolphin_internal.h"
 #include "main/dll/ppcwgpipe_struct.h"
 
+u8 gObjGxPosMtxIdTable[12] = {0x00, 0x03, 0x06, 0x09, 0x0C, 0x0F, 0x12, 0x15, 0x18, 0x1B, 0x00, 0x00};
+u8 gObjGxTexMtxIdTable[12] = {0x1E, 0x21, 0x24, 0x27, 0x2A, 0x2D, 0x30, 0x33, 0x36, 0x39, 0x00, 0x00};
+
+Mtx gObjJointIdentityMtx = {
+    {1.0f, 0.0f, 0.0f, 0.0f},
+    {0.0f, 1.0f, 0.0f, 0.0f},
+    {0.0f, 0.0f, 1.0f, 0.0f},
+};
+
+/* The retail string occupies a 48-byte slot, including two trailing padding bytes. */
+char gObjMatrixCountError[48] = "<renderOpMatrix> ERROR CASE numMatrices = %d\n";
+
 extern s32 gModelMtxCacheState;
 extern s32 gObjFuzzLayerIndex;
 extern u8 gObjFuzzPassActive;
@@ -151,7 +163,7 @@ int objMatrixToRotation(f32* m, s16* outA, s16* outB, s16* outC) {
     return 1;
 }
 
-void modelBuildPosNrmMtxs(ModelFileHeader* def, int* model, f32* mtxA, f32* mtxB) {
+void modelBuildPosNrmMtxs(ModelFileHeader* def, ObjModel* model, f32* mtxA, f32* mtxB) {
     void* cache;
     int count;
     int i;
@@ -753,8 +765,6 @@ void objFuzzSetupGxState(void* objArg) {
 
 extern PPCWGPipe GXWGFifo : (0xCC008000);
 
-extern u8 gObjGxPosMtxIdTable[12];
-
 void objRenderAttachment(GameObject* obj, int* p2) {
     f32 wm[16];
     f32 cm[16];
@@ -977,21 +987,19 @@ static void objSetupLightChannels(u8* model, GameObject* obj) {
     }
 }
 
-extern u8 gObjGxPosMtxIdTable[12];
-
-static void modelLoadMtxsToGx(ModelFileHeader* hdr, int* model, ModelRenderInstrsState* bs, f32* mtx) {
+static void modelLoadMtxsToGx(ModelFileHeader* modelFile, ObjModel* model, ModelRenderInstrsState* stream, f32* viewMatrix) {
     char* cache = (char*)getCache();
     if (gModelMtxCacheState == 1) {
         char* cacheBase = (char*)getCache();
         char* sourceMtx;
         char* posMtx;
         int i;
-        int count = hdr->jointCount + hdr->extraJointCount;
+        int count = modelFile->jointCount + modelFile->extraJointCount;
         sourceMtx = cacheBase + 0x2700;
         posMtx = cacheBase;
         cacheQueueWait(0);
         for (i = 0; i < count; i++) {
-            PSMTXConcat((MtxPtr)mtx, (MtxPtr)(f32*)sourceMtx, (MtxPtr)(f32*)posMtx);
+            PSMTXConcat((MtxPtr)viewMatrix, (MtxPtr)(f32*)sourceMtx, (MtxPtr)(f32*)posMtx);
             sourceMtx += 0x40;
             posMtx += 0x30;
         }
@@ -1004,34 +1012,35 @@ static void modelLoadMtxsToGx(ModelFileHeader* hdr, int* model, ModelRenderInstr
         f32 tmp[12];
         {
             u32 w;
-            int pos = bs->bit;
+            int pos = stream->bit;
             int off = pos >> 3;
             u8* p;
-            w = bs->instrs[off];
-            p = (u8*)(off + (char*)bs->instrs);
+            w = stream->instrs[off];
+            p = (u8*)(off + (char*)stream->instrs);
             w |= p[1] << 8;
             w |= p[2] << 16;
-            bs->bit = pos + 4;
+            stream->bit = pos + 4;
             count = (w >> (pos & 7)) & 0xf;
         }
         i = 0;
         posMtxIds[0] = gObjGxPosMtxIdTable;
         for (; i < count; i++) {
-            int idx;
+            int jointIndex;
             {
                 u32 w;
-                int pos = bs->bit;
-                u32 pAddr = (pos >> 3) + ((u32)bs->instrs + 1);
-                w = *(u8*)(pAddr - 1);
-                w |= *(u8*)pAddr << 8;
-                w |= *(u8*)(pAddr + 1) << 16;
-                bs->bit = pos + 8;
-                idx = (w >> (pos & 7)) & 0xff;
+                int pos = stream->bit;
+                /* Keep MWCC's address-sum order without narrowing a native pointer. */
+                u8* bytes = (u8*)((pos >> 3) + ((size_t)stream->instrs + 1));
+                w = bytes[-1];
+                w |= bytes[0] << 8;
+                w |= bytes[1] << 16;
+                stream->bit = pos + 8;
+                jointIndex = (w >> (pos & 7)) & 0xff;
             }
             if (gModelMtxCacheState == 2) {
-                GXLoadPosMtxImm((const f32(*)[4])(cache + idx * 0x30), *posMtxIds[0]);
+                GXLoadPosMtxImm((const f32(*)[4])(cache + jointIndex * 0x30), *posMtxIds[0]);
             } else {
-                PSMTXConcat((MtxPtr)mtx, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)model, idx), (MtxPtr)tmp);
+                PSMTXConcat((MtxPtr)viewMatrix, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)model, jointIndex), (MtxPtr)tmp);
                 GXLoadPosMtxImm((const f32(*)[4])tmp, *posMtxIds[0]);
             }
             posMtxIds[0]++;
@@ -1039,26 +1048,27 @@ static void modelLoadMtxsToGx(ModelFileHeader* hdr, int* model, ModelRenderInstr
     }
 }
 
-static void renderOpMatrix(u8* hdr, int* model, ModelRenderInstrsState* bs, f32* m1, f32* mtx, u8 nrm, u8 tex,
-                           u8 skip) {
-    u8* posMtxIds[1];
+static void renderOpMatrix(ModelFileHeader* modelFile, ObjModel* model, ModelRenderInstrsState* stream, f32* normalScaleMatrix, f32* viewMatrix, u8 usesNormalMatrix, u8 usesTextureMatrix,
+                           u8 shadowPass) {
+    u8* posMtxIds;
     char* cache;
-    posMtxIds[0] = gObjGxPosMtxIdTable;
+    posMtxIds = gObjGxPosMtxIdTable;
     cache = (char*)getCache();
     if (gModelMtxCacheState == 1) {
-        if (skip == 0) {
-            modelBuildPosNrmMtxs((ModelFileHeader*)hdr, model, mtx, m1);
+        if (shadowPass == 0) {
+            modelBuildPosNrmMtxs(modelFile, model, viewMatrix, normalScaleMatrix);
         } else {
+            u8* sourceMtx;
             char* cacheBase = (char*)getCache();
             char* posMtx;
             int i;
-            int total = hdr[0xf3] + hdr[0xf4];
-            hdr = (u8*)(cacheBase + 0x2700);
+            int total = modelFile->jointCount + modelFile->extraJointCount;
+            sourceMtx = (u8*)(cacheBase + 0x2700);
             posMtx = cacheBase;
             cacheQueueWait(0);
             for (i = 0; i < total; i++) {
-                PSMTXConcat((MtxPtr)mtx, (MtxPtr)(f32*)hdr, (MtxPtr)(f32*)posMtx);
-                hdr += 0x40;
+                PSMTXConcat((MtxPtr)viewMatrix, (MtxPtr)(f32*)sourceMtx, (MtxPtr)(f32*)posMtx);
+                sourceMtx += 0x40;
                 posMtx += 0x30;
             }
             gModelMtxCacheState = 2;
@@ -1071,60 +1081,61 @@ static void renderOpMatrix(u8* hdr, int* model, ModelRenderInstrsState* bs, f32*
         f32 tmp[12];
         {
             u32 w;
-            int pos = bs->bit;
+            int pos = stream->bit;
             int off = pos >> 3;
             u8* p;
-            w = bs->instrs[off];
-            p = (u8*)(off + (char*)bs->instrs);
+            w = stream->instrs[off];
+            p = (u8*)(off + (char*)stream->instrs);
             w |= p[1] << 8;
             w |= p[2] << 16;
-            bs->bit = pos + 4;
+            stream->bit = pos + 4;
             count = (w >> (pos & 7)) & 0xf;
         }
         if (count < 0 || count > 20) {
-            OSReport((char*)&posMtxIds[0][0x48], count);
+            OSReport(gObjMatrixCountError, count);
         }
         i = 0;
-        texMtxIds = posMtxIds[0] + 0xc;
+        texMtxIds = gObjGxTexMtxIdTable;
         for (; i < count; i++) {
-            int idx;
+            int jointIndex;
             {
                 u32 w;
-                int pos = bs->bit;
-                u32 pAddr = (pos >> 3) + ((u32)bs->instrs + 1);
-                w = *(u8*)(pAddr - 1);
-                w |= *(u8*)pAddr << 8;
-                w |= *(u8*)(pAddr + 1) << 16;
-                bs->bit = pos + 8;
-                idx = (w >> (pos & 7)) & 0xff;
+                int pos = stream->bit;
+                /* Keep MWCC's address-sum order without narrowing a native pointer. */
+                u8* bytes = (u8*)((pos >> 3) + ((size_t)stream->instrs + 1));
+                w = bytes[-1];
+                w |= bytes[0] << 8;
+                w |= bytes[1] << 16;
+                stream->bit = pos + 8;
+                jointIndex = (w >> (pos & 7)) & 0xff;
             }
             if (gModelMtxCacheState == 2) {
-                u8* posMtx = (u8*)(cache + idx * 0x30);
+                u8* posMtx = (u8*)(cache + jointIndex * 0x30);
                 u8* normalMtx = posMtx + 0x12c0;
-                GXLoadPosMtxImm((const f32(*)[4])posMtx, *posMtxIds[0]);
-                if (skip == 0 && tex != 0) {
+                GXLoadPosMtxImm((const f32(*)[4])posMtx, *posMtxIds);
+                if (shadowPass == 0 && usesTextureMatrix != 0) {
                     GXLoadTexMtxImm((const f32(*)[4])normalMtx, *texMtxIds, GX_MTX3x4);
                 }
-                if (skip == 0 && nrm != 0) {
-                    GXLoadNrmMtxImm((const f32(*)[4])normalMtx, *posMtxIds[0]);
+                if (shadowPass == 0 && usesNormalMatrix != 0) {
+                    GXLoadNrmMtxImm((const f32(*)[4])normalMtx, *posMtxIds);
                 }
             } else {
-                PSMTXConcat((MtxPtr)mtx, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)model, idx), (MtxPtr)tmp);
-                GXLoadPosMtxImm((const f32(*)[4])tmp, *posMtxIds[0]);
-                if (skip == 0 && (nrm != 0 || tex != 0)) {
+                PSMTXConcat((MtxPtr)viewMatrix, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)model, jointIndex), (MtxPtr)tmp);
+                GXLoadPosMtxImm((const f32(*)[4])tmp, *posMtxIds);
+                if (shadowPass == 0 && (usesNormalMatrix != 0 || usesTextureMatrix != 0)) {
                     tmp[3] = 0.0f;
                     tmp[7] = 0.0f;
                     tmp[11] = 0.0f;
-                    PSMTXConcat((MtxPtr)tmp, (MtxPtr)m1, (MtxPtr)tmp);
-                    if (tex != 0) {
+                    PSMTXConcat((MtxPtr)tmp, (MtxPtr)normalScaleMatrix, (MtxPtr)tmp);
+                    if (usesTextureMatrix != 0) {
                         GXLoadTexMtxImm((const f32(*)[4])tmp, *texMtxIds, GX_MTX3x4);
                     }
-                    if (nrm != 0) {
-                        GXLoadNrmMtxImm((const f32(*)[4])tmp, *posMtxIds[0]);
+                    if (usesNormalMatrix != 0) {
+                        GXLoadNrmMtxImm((const f32(*)[4])tmp, *posMtxIds);
                     }
                 }
             }
-            posMtxIds[0]++;
+            posMtxIds++;
             texMtxIds++;
         }
     }
@@ -1135,8 +1146,6 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* owner, ModelFileHea
 static void objRenderChild(GameObject* child, GameObject* parent, u8 isShadow);
 
 #define OBJPRINT_MODEL_DEF(obj) (((ObjAnimComponent*)(obj))->modelInstance)
-
-extern u8 gObjGxPosMtxIdTable[12];
 
 static void ModelHeader_setupPosTexFmt(u8* hdr, int* model, ModelRenderInstrsState* bs, int p4) {
     u32 flags = 0;
@@ -1804,7 +1813,6 @@ static void shaderSetGxFlags(GameObject* obj, u8* m, u8* shader) {
     }
 }
 
-extern f32 gObjJointMtxTemp[];
 static void modelDoAltRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, int p4) {
     f32 wm[16];
     f32 cm[12];
@@ -1824,14 +1832,14 @@ static void modelDoAltRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, int
         if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
             ((ModelFileHeader*)m)->jointCount != 0) {
             if (gObjCachedModel != (u32)m) {
-                ObjModel_UpdateAnimMatrices((ObjModel*)am, (ModelFileHeader*)m, obj, gObjJointMtxTemp);
+                ObjModel_UpdateAnimMatrices((ObjModel*)am, (ModelFileHeader*)m, obj, &gObjJointIdentityMtx[0][0]);
                 modelInitMtxs((ModelFileHeader*)m, (ObjModel*)am);
             } else {
                 gModelMtxCacheState = 1;
             }
         } else {
             ObjModel_ToggleMatrixBuffer((ObjModel*)am);
-            PSMTXCopy((MtxPtr)gObjJointMtxTemp, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)am, 0));
+            PSMTXCopy(gObjJointIdentityMtx, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)am, 0));
             gModelMtxCacheState = 3;
         }
         {
@@ -1903,7 +1911,7 @@ static void modelDoAltRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, int
     bs.bit += 4;
     ModelHeader_setupPosTexFmt(m, (void*)((ModelFileHeader*)m)->renderOps, &bs, p4);
     bs.bit += 4;
-    modelLoadMtxsToGx((ModelFileHeader*)m, am, &bs, cm);
+    modelLoadMtxsToGx((ModelFileHeader*)m, (ObjModel*)am, &bs, cm);
     {
         ModelDisplayListEntry* dl;
         int idx;
@@ -2138,7 +2146,7 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
             GXCallDisplayList(dl->dlist, dl->dlistSize);
         } break;
         case 4:
-            modelLoadMtxsToGx((ModelFileHeader*)m, am, &bs, vm);
+            modelLoadMtxsToGx((ModelFileHeader*)m, (ObjModel*)am, &bs, vm);
             break;
         case 5:
             done = 1;
@@ -2146,7 +2154,6 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
         }
     }
 }
-extern u8 gObjGxTexMtxIdTable[12];
 
 static void modelDoRenderInstrs(GameObject* obj, GameObject* owner, ModelFileHeader* modelFile, u8 passMask) {
     f32 modelViewMatrix[16];
@@ -2478,7 +2485,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* owner, ModelFileHea
             }
             break;
         case 4:
-            renderOpMatrix((u8*)modelFile, (int*)activeModel, &stream, scaleMatrix, viewMatrix, usesNormalMatrix,
+            renderOpMatrix(modelFile, activeModel, &stream, scaleMatrix, viewMatrix, usesNormalMatrix,
                            usesTextureMatrix, shadowPass);
             break;
         case 5:
@@ -2897,13 +2904,3 @@ void objRenderModel(GameObject* obj) {
 void objSetRenderingShadowPass(u8 x) {
     gObjRenderingShadowPass = x;
 }
-
-u8 gObjGxPosMtxIdTable[12] = {0x00, 0x03, 0x06, 0x09, 0x0C, 0x0F, 0x12, 0x15, 0x18, 0x1B, 0x00, 0x00};
-u8 gObjGxTexMtxIdTable[12] = {0x1E, 0x21, 0x24, 0x27, 0x2A, 0x2D, 0x30, 0x33, 0x36, 0x39, 0x00, 0x00};
-
-f32 gObjJointMtxTemp[24] = {
-    1.0f,         0.0f,           0.0f,           0.0f,           0.0f,           1.0f,
-    0.0f,         0.0f,           0.0f,           0.0f,           1.0f,           0.0f,
-    0.014794691f, 1.6930165e+22f, 2.5424896e+29f, 4.6243438e+30f, 1.6713787e-19f, 3.5253297e+09f,
-    13.204376f,   1.8988991e+28f, 2.818281e+20f,  4.2326e+21f,    0.03909816f,    6.162976e-33f,
-};
