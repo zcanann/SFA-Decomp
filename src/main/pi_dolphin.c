@@ -209,7 +209,7 @@ struct MldfTables {
     u8 loadedFlags[0x58];        /* cleared by initLoadFiles */
     int ids[0x58];               /* mapId whose load must be retried, -1 = none */
     int sizes[0x58];             /* byte size of the loaded file */
-    void* romList[0x78];           /* per-MAP romlist buffer (indexed by mapIndex) */
+    void* romList[0x78];         /* per-MAP romlist buffer (indexed by mapIndex) */
     void* ptrs[0x58];            /* loaded file buffer, NULL = not resident */
     s16 owners[0x60];            /* mapId owning the slot, -1 = free */
 };
@@ -1370,9 +1370,10 @@ int getTableFileEntry(int fileId, int index, int* out) {
     return 0;
 }
 
-#define MAPTBLP(idx)   (*(int**)(((idx) << 2) + ((u32) & ((struct MldfTables*)base)->ptrs[0])))
-#define MAPID_RT(s)    (*(int*)(((s) << 2) + (resourceAddress + offsetof(struct MldfTables, ids))))
-#define MAPPTR_RT(s)   (*(void**)(((s) << MLDF_BUFFER_SLOT_SHIFT) + (resourceAddress + offsetof(struct MldfTables, ptrs))))
+#define MAPTBLP(idx) (*(int**)(((idx) << 2) + ((u32) & ((struct MldfTables*)base)->ptrs[0])))
+#define MAPID_RT(s)  (*(int*)(((s) << 2) + (resourceAddress + offsetof(struct MldfTables, ids))))
+#define MAPPTR_RT(s)                                                                                                   \
+    (*(void**)(((s) << MLDF_BUFFER_SLOT_SHIFT) + (resourceAddress + offsetof(struct MldfTables, ptrs))))
 #define MAPOWNER_RT(s) (*(s16*)(((s) << 1) + (resourceAddress + offsetof(struct MldfTables, owners))))
 
 void* getCurrentDataFile(int id) {
@@ -1475,7 +1476,8 @@ int mapUnload(int mapId, int flags) {
             }
             {
                 int idx = e[0];
-                if (*(void**)((idx << MLDF_BUFFER_SLOT_SHIFT) + (resourceAddress + offsetof(struct MldfTables, ptrs))) != NULL) {
+                if (*(void**)((idx << MLDF_BUFFER_SLOT_SHIFT) +
+                              (resourceAddress + offsetof(struct MldfTables, ptrs))) != NULL) {
                     s16 v;
                     if (f80 ||
                         ((flags & e[1]) &&
@@ -1519,7 +1521,8 @@ int mapUnload(int mapId, int flags) {
                                 }
                                 if (j <= 0x50 && j != 0x49 && j != 0x43 && j != 5) {
                                     void** romListSlot =
-                                        (void**)((j << MLDF_BUFFER_SLOT_SHIFT) + (resourceAddress + offsetof(struct MldfTables, romList)));
+                                        (void**)((j << MLDF_BUFFER_SLOT_SHIFT) +
+                                                 (resourceAddress + offsetof(struct MldfTables, romList)));
                                     mm_free(*romListSlot);
                                     *romListSlot = NULL;
                                 }
@@ -1527,7 +1530,8 @@ int mapUnload(int mapId, int flags) {
                             }
                             mm_free(MAPPTR_RT(e[0]));
                             mmSetFreeDelay(2);
-                            *(void**)((e[0] << MLDF_BUFFER_SLOT_SHIFT) + (resourceAddress + offsetof(struct MldfTables, ptrs))) = NULL;
+                            *(void**)((e[0] << MLDF_BUFFER_SLOT_SHIFT) +
+                                      (resourceAddress + offsetof(struct MldfTables, ptrs))) = NULL;
                             *(s16*)((e[0] << 1) + (resourceAddress + offsetof(struct MldfTables, owners))) = -1;
                             *(int*)((e[0] << 2) + (resourceAddress + offsetof(struct MldfTables, sizes))) = 0;
                             switch (e[0]) {
@@ -4119,8 +4123,12 @@ u8 initLoadFiles(void) {
             }
         }
         lbl_803DCC98 = 0;
-        for (i = 0, himem = (u8*)tbl + 0x20000, it.ptrs = (void**)(himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ptrs))), it.owners = (s16*)(himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, owners))),
-            it.ids = (int*)(himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ids))), it.names = sResourceFileNameTable, it.sizes = (int*)(himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, sizes))),
+        for (i = 0, himem = (u8*)tbl + 0x20000,
+            it.ptrs = (void**)(himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ptrs))),
+            it.owners = (s16*)(himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, owners))),
+            it.ids = (int*)(himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ids))),
+            it.names = sResourceFileNameTable,
+            it.sizes = (int*)(himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, sizes))),
             it.flags = himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, loadedFlags));
              i <= 0x57; it.ptrs++, it.owners++, it.ids++, it.names++, it.sizes++, it.flags++, i++) {
             switch (i) {
