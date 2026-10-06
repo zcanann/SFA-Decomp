@@ -232,19 +232,19 @@ typedef struct ModelFileHeader {
         u32 textureIdsOffset;
         s32* textureIds; /* file texture ids, patched to texture ptrs on load */
     };
-    u8 flags24;      /* 0x08 = NBT triplets instead of single packed normals */
+    u8 flags24; /* 0x08 = NBT triplets instead of single packed normals */
     u8 unk25[3];
     union {
         u32 verticesOffset;
-        u8* vertices;  /* vertexCount s16 XYZ records; scale selected by MODEL_FLAG_INTEGER_VERTEX_COORDS */
+        u8* vertices; /* vertexCount s16 XYZ records; scale selected by MODEL_FLAG_INTEGER_VERTEX_COORDS */
     };
     union {
         u32 normalsOffset;
-        u8* normals;   /* 3 or 9 bytes each, normalCount */
+        u8* normals; /* 3 or 9 bytes each, normalCount */
     };
     union {
         u32 colorsOffset;
-        u8* colors;    /* GX_VA_CLR0 array, stride 2 */
+        u8* colors; /* GX_VA_CLR0 array, stride 2 */
     };
     union {
         u32 texCoordsOffset;

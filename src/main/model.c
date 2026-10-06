@@ -2181,13 +2181,11 @@ void ObjModel_RelocateModelData(ModelFileHeader* file) {
             file->unk1C = base + file->unk1COffset;
         }
         if (file->jointFuzzScalesOffset) {
-            file->jointFuzzScales =
-                (ModelFuzzScaleDef*)(base + file->jointFuzzScalesOffset);
+            file->jointFuzzScales = (ModelFuzzScaleDef*)(base + file->jointFuzzScalesOffset);
         }
     }
     if (file->extraJointDefsOffset) {
-        file->extraJointDefs =
-            (ModelExtraJointDef*)(base + file->extraJointDefsOffset);
+        file->extraJointDefs = (ModelExtraJointDef*)(base + file->extraJointDefsOffset);
     }
     if (file->textureIdsOffset) {
         file->textureIds = (s32*)(base + file->textureIdsOffset);
@@ -2212,15 +2210,13 @@ void ObjModel_RelocateModelData(ModelFileHeader* file) {
         file->morphTargets = (ModelMorphTargetRef*)(base + file->morphTargetsOffset);
     }
     if (file->vertexAnimEntriesOffset) {
-        file->vertexAnimEntries =
-            (ModelVtxAnimChunk*)(base + file->vertexAnimEntriesOffset);
+        file->vertexAnimEntries = (ModelVtxAnimChunk*)(base + file->vertexAnimEntriesOffset);
     }
     if (file->vertexWeightDataOffset) {
         file->vertexWeightData = base + file->vertexWeightDataOffset;
     }
     if (file->normalAnimEntriesOffset) {
-        file->normalAnimEntries =
-            (ModelVtxAnimChunk*)(base + file->normalAnimEntriesOffset);
+        file->normalAnimEntries = (ModelVtxAnimChunk*)(base + file->normalAnimEntriesOffset);
     }
     if (file->normalWeightDataOffset) {
         file->normalWeightData = base + file->normalWeightDataOffset;
@@ -2235,12 +2231,10 @@ void ObjModel_RelocateModelData(ModelFileHeader* file) {
         file->morphTargets[i].stream = (u16*)(base + file->morphTargets[i].offset);
     }
     if (file->collisionTrianglesOffset) {
-        file->collisionTriangles =
-            (ModelCollisionTriangle*)(base + file->collisionTrianglesOffset);
+        file->collisionTriangles = (ModelCollisionTriangle*)(base + file->collisionTrianglesOffset);
     }
     if (file->collisionBlocksOffset) {
-        file->collisionBlocks =
-            (CollisionPolygonGroup*)(base + file->collisionBlocksOffset);
+        file->collisionBlocks = (CollisionPolygonGroup*)(base + file->collisionBlocksOffset);
     }
 }
 
