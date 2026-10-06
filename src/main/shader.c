@@ -2650,8 +2650,6 @@ void setRenderFlag20000(int v) {
 }
 
 void initMapBlocks(void) {
-    u8* mb = (u8*)gLightmapDrawQueue.entries;
-    MapLayerBuffers* buffers = (MapLayerBuffers*)gLightmapDrawQueue.entries;
     MapRomListPage** romListPage;
     u16* p;
     void* tmp;
@@ -2662,20 +2660,20 @@ void initMapBlocks(void) {
     gMapBlockIds = mmAlloc(0x80, 5, 0);
     gMapBlockRefCounts = mmAlloc(0x40, 5, 0);
     gMapInfoBuffer = mmAlloc(0xd48, 5, 0);
-    buffers->blockIndices[0] = mmAlloc(MAP_BLOCK_LAYER_COUNT * 256 * sizeof(s8), 5, 0);
-    buffers->cellEntries[0] = mmAlloc(MAP_BLOCK_LAYER_COUNT * 256 * sizeof(MapCellEntry), 5, 0);
-    buffers->cellStates[0] = mmAlloc(MAP_BLOCK_LAYER_COUNT * 256 * sizeof(s8), 5, 0);
+    gMapBlockLayerTables[0] = mmAlloc(MAP_BLOCK_LAYER_COUNT * 256 * sizeof(s8), 5, 0);
+    gMapBlockCellEntryTables[0] = mmAlloc(MAP_BLOCK_LAYER_COUNT * 256 * sizeof(MapCellEntry), 5, 0);
+    gMapBlockCellStateTables[0] = mmAlloc(MAP_BLOCK_LAYER_COUNT * 256 * sizeof(s8), 5, 0);
 
     for (i = 1; i < MAP_BLOCK_LAYER_COUNT; i++) {
-        buffers->blockIndices[i] = buffers->blockIndices[i - 1] + 256;
-        buffers->cellEntries[i] = buffers->cellEntries[i - 1] + 256;
-        buffers->cellStates[i] = buffers->cellStates[i - 1] + 256;
+        gMapBlockLayerTables[i] = gMapBlockLayerTables[i - 1] + 256;
+        gMapBlockCellEntryTables[i] = gMapBlockCellEntryTables[i - 1] + 256;
+        gMapBlockCellStateTables[i] = gMapBlockCellStateTables[i - 1] + 256;
     }
 
     loadAssetFileById(&gMapsTab, MLDF_FILEID_MAPS_TAB);
     loadAssetFileById(&gHitsTab, MLDF_FILEID_HITS_TAB);
 
-    romListPage = (MapRomListPage**)((u8*)(mb + 0x10000) - 0x7c58);
+    romListPage = gLoadedRomListPages;
     for (i = 0; i < ROM_LIST_PAGE_COUNT; i++) {
         *romListPage++ = NULL;
     }
@@ -2700,8 +2698,8 @@ void initMapBlocks(void) {
     gMapTextureScrolls = tmp;
     memset(tmp, 0, 0x3a0);
 
-    memset(mb + 0x8818, 0, 0xfa0);
-    *(u32*)(mb + 0x8818) = -1;
+    memset(gVisibleObjectSortKeys, 0, 1000 * sizeof(u32));
+    gVisibleObjectSortKeys[0] = -1;
 }
 
 void updateEnvironment(int mode) {
@@ -4596,7 +4594,6 @@ void mapGetBlockGridRects(int gridX, int gridZ, int* rectA, int* rectB, int* rec
 }
 
 void beginLoadingMap(void) {
-    char* base;
     int layerIndex;
     int entryIndex;
     s8* blockIndices;
@@ -4608,9 +4605,8 @@ void beginLoadingMap(void) {
     GameObject* player;
     SaveGameEnvState* environmentState;
     int enabled;
-    char buf[0x110];
+    GameObject cloudSource;
 
-    base = (char*)gLightmapDrawQueue.entries;
     if (gArrivedWarpIndex == -1) {
         gArrivedWarpIndex = -2;
         gWarpArrivalTimer = 8;
@@ -4618,8 +4614,8 @@ void beginLoadingMap(void) {
     (*gObjectTriggerInterface)->onMapSetup();
     trackInitCollisionBuffers();
     for (layerIndex = 0; layerIndex < MAP_BLOCK_LAYER_COUNT; layerIndex++) {
-        blockIndices = ((s8**)(base + (int)offsetof(MapLayerBuffers, blockIndices)))[layerIndex];
-        cellEntries = ((MapCellEntry**)(base + (int)offsetof(MapLayerBuffers, cellEntries)))[layerIndex];
+        blockIndices = gMapBlockLayerTables[layerIndex];
+        cellEntries = gMapBlockCellEntryTables[layerIndex];
         for (entryIndex = 0; entryIndex < 256; entryIndex++) {
             blockIndices[entryIndex] = -1;
             cellEntries[entryIndex].romListIndex = -1;
@@ -4635,10 +4631,10 @@ void beginLoadingMap(void) {
     characterPosition = (SaveGameCharacterPosition*)(*gMapEventInterface)->getCurCharPos();
     gMapBlockOriginX = fastFloorf(characterPosition->x / 640.0f);
     gMapBlockOriginZ = fastFloorf(characterPosition->z / 640.0f);
-    *(f32*)(base + 0x8588) = characterPosition->x;
-    *(f32*)(base + 0x858C) = characterPosition->y;
-    *(f32*)(base + 0x8590) = characterPosition->z;
-    *(int*)(base + 0x8594) = 1;
+    gCameraPosByTransformSpace[0].x = characterPosition->x;
+    gCameraPosByTransformSpace[0].y = characterPosition->y;
+    gCameraPosByTransformSpace[0].z = characterPosition->z;
+    gCameraPosByTransformSpace[0].valid = 1;
     gMapBlockOriginWorldX = gMapBlockOriginX * 640;
     gMapBlockOriginWorldZ = gMapBlockOriginZ * 640;
     playerMapOffsetX = gMapBlockOriginWorldX;
@@ -4752,34 +4748,34 @@ void beginLoadingMap(void) {
         } else {
             gHeatEffectFadeDirection = -1;
         }
-        ((GameObject*)buf)->anim.parent = NULL;
-        ((GameObject*)buf)->anim.localPosX = 0.0f;
-        ((GameObject*)buf)->anim.localPosY = 0.0f;
-        ((GameObject*)buf)->anim.localPosZ = 0.0f;
-        ((GameObject*)buf)->anim.worldPosX = 0.0f;
-        ((GameObject*)buf)->anim.worldPosY = 0.0f;
-        ((GameObject*)buf)->anim.worldPosZ = 0.0f;
+        cloudSource.anim.parent = NULL;
+        cloudSource.anim.localPosX = 0.0f;
+        cloudSource.anim.localPosY = 0.0f;
+        cloudSource.anim.localPosZ = 0.0f;
+        cloudSource.anim.worldPosX = 0.0f;
+        cloudSource.anim.worldPosY = 0.0f;
+        cloudSource.anim.worldPosZ = 0.0f;
         {
             s16 index = environmentState->cloudEnvfxActIds[0];
             if (index != -1) {
-                ((GameObject*)buf)->anim.localPosX = (f32)environmentState->cloudPos[0][0];
-                ((GameObject*)buf)->anim.localPosY = (f32)environmentState->cloudPos[0][1];
-                ((GameObject*)buf)->anim.localPosZ = (f32)environmentState->cloudPos[0][2];
-                getEnvfxAct(buf, player, index & 0xFFFF, 0);
+                cloudSource.anim.localPosX = (f32)environmentState->cloudPos[0][0];
+                cloudSource.anim.localPosY = (f32)environmentState->cloudPos[0][1];
+                cloudSource.anim.localPosZ = (f32)environmentState->cloudPos[0][2];
+                getEnvfxAct(&cloudSource, player, index & 0xFFFF, 0);
             }
             index = environmentState->cloudEnvfxActIds[1];
             if (index != -1) {
-                ((GameObject*)buf)->anim.localPosX = (f32)environmentState->cloudPos[1][0];
-                ((GameObject*)buf)->anim.localPosY = (f32)environmentState->cloudPos[1][1];
-                ((GameObject*)buf)->anim.localPosZ = (f32)environmentState->cloudPos[1][2];
-                getEnvfxAct(buf, player, index & 0xFFFF, 0);
+                cloudSource.anim.localPosX = (f32)environmentState->cloudPos[1][0];
+                cloudSource.anim.localPosY = (f32)environmentState->cloudPos[1][1];
+                cloudSource.anim.localPosZ = (f32)environmentState->cloudPos[1][2];
+                getEnvfxAct(&cloudSource, player, index & 0xFFFF, 0);
             }
             index = environmentState->cloudEnvfxActIds[2];
             if (index != -1) {
-                ((GameObject*)buf)->anim.localPosX = (f32)environmentState->cloudPos[2][0];
-                ((GameObject*)buf)->anim.localPosY = (f32)environmentState->cloudPos[2][1];
-                ((GameObject*)buf)->anim.localPosZ = (f32)environmentState->cloudPos[2][2];
-                getEnvfxAct(buf, player, index & 0xFFFF, 0);
+                cloudSource.anim.localPosX = (f32)environmentState->cloudPos[2][0];
+                cloudSource.anim.localPosY = (f32)environmentState->cloudPos[2][1];
+                cloudSource.anim.localPosZ = (f32)environmentState->cloudPos[2][2];
+                getEnvfxAct(&cloudSource, player, index & 0xFFFF, 0);
             }
         }
         (*gSkyInterface)->setTimeOfDay(*(f32*)environmentState);

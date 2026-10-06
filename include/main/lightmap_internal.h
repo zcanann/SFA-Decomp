@@ -38,29 +38,6 @@ STATIC_ASSERT(sizeof(LightSortEntry) == 0x10);
 STATIC_ASSERT(offsetof(MapRenderQueueStorage, opaqueTail) == 0x3E80);
 STATIC_ASSERT(sizeof(MapRenderQueueStorage) == 0x3F48);
 
-struct MapCellEntry;
-
-/* Address view of the layer tables relative to the cached render-queue base. */
-typedef struct MapLayerBuffers {
-    u8 reserved[0x41cc];
-    s8* cellStates[5];
-    struct MapCellEntry* cellEntries[5];
-    s8* blockIndices[5];
-} MapLayerBuffers;
-
-STATIC_ASSERT(offsetof(MapLayerBuffers, cellStates) == 0x41CC);
-STATIC_ASSERT(offsetof(MapLayerBuffers, cellEntries) == 0x41E0);
-STATIC_ASSERT(offsetof(MapLayerBuffers, blockIndices) == 0x41F4);
-
-/* Address view of the separate ROM-list index array from the cached queue base. */
-typedef struct MapRomListBuffers {
-    u8 reserved[0x4208];
-    MapRomListIndex indexes[120];
-} MapRomListBuffers;
-
-STATIC_ASSERT(offsetof(MapRomListBuffers, indexes) == 0x4208);
-STATIC_ASSERT(sizeof(MapRomListBuffers) == 0x83A8);
-
 struct GameObject;
 
 /* Address view of gLightmapDeferredObjects relative to the cached render-queue

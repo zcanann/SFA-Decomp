@@ -853,3 +853,49 @@ slot-ID store still matter to code generation. No new aggregate spanning the
 separate BSS objects is introduced; the recovered layout-buffer record owns only
 its original five words. Other queue-relative paths discussed in this document
 remain separate recovery work.
+
+### Map-block initialization and setup (2026-10-06)
+
+`initMapBlocks` and `beginLoadingMap` now address the three owned layer-table
+arrays directly. Their other queue-relative accesses are also gone: the loaded
+ROM-list page array, visible-object sort keys, and first camera transform-space
+position use their real globals. The compiler emits the same addressing and
+register allocation with its generated BSS base. `MapLayerBuffers` has no
+remaining consumers and is removed, along with the already-unused
+`MapRomListBuffers` address view. The separate BSS storage definitions and their
+order are unchanged.
+
+`beginLoadingMap`'s temporary cloud-effect source is a `GameObject`, replacing a
+0x110-byte character buffer cast to that type. The canonical target object is
+0x10C bytes; the compiler preserves the complete retail frame and instruction
+stream. The source initializes only the parent and local/world position fields
+that retail initializes. Dinosaur Planet's `map_func_8004773C` likewise declares
+an `Object` for replaying saved cloud effects. Foxhollow's setup routine already
+uses direct layer-table and camera globals. These references support the source
+structure; SFA's own compiled object establishes the target layout.
+
+The allocation/initialization contract is deliberately unchanged: five layers
+of 256 block indices, cell records and cell-state bytes; 64 block pointers and
+IDs; and 120 loaded-page pointers. Initial setup clears exactly 1,000 words of
+the 1,024-word visible-object sort array before setting its first word to -1.
+The remaining 24 words are untouched. Starting a map resets only each cell's
+`romListIndex`, preserving the other fields and separate cell-state bytes.
+
+`tools/test_map_block_init.py` extracts the production allocation/setup functions
+and the canonical object, animation, camera, placement-table and save-state
+records. With independent native globals and addresses above 4 GiB, 55,301 cases
+pass at both `-O0` and `-O2` under ASan/UBSan. Checks cover allocation guards and
+sizes, every layer slice, track-table sentinel counting, complete cell/camera
+records, warp/character/player cases, environment flags, all saved-cloud masks,
+effect dispatch order and source positions. External asset, streaming, player
+and effect services are spies, not a claim of full native game execution. Six
+negative controls reject pointer truncation, a wrong layer stride, clearing the
+sort-array tail, a wrong track count, a missing camera-valid flag and altered
+cloud world coordinates.
+
+Shader remains 145/145 functions and 100% code/data in all five versions. Full
+objdiff inventories have no new exceptions, and every `all_source` build and
+strict retail checksum passes without retail substitution. Section contents,
+named symbol offsets and resolved relocation destinations are unchanged; four
+relocations now name the generated BSS base and 26 anonymous literals are
+renumbered. Every other source object retains its previous raw hash.
