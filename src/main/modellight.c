@@ -44,7 +44,14 @@ STATIC_ASSERT(sizeof(ModelLightCornerBlock) == 0x60);
 #define LIGHTCLIP_FAR    0x20 /* worldZ > farZ */
 
 GXColor gModelLightColorTable[2] = {{0}};
-const ModelLightCornerBlock gModelLightCornerBlock = {{{1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, -1.0f}, {1.0f, -1.0f, -1.0f}, {1.0f, -1.0f, 1.0f}, {-1.0f, -1.0f, -1.0f}, {-1.0f, -1.0f, 1.0f}, {-1.0f, 1.0f, 1.0f}, {-1.0f, 1.0f, -1.0f}}};
+const ModelLightCornerBlock gModelLightCornerBlock = {{{1.0f, 1.0f, 1.0f},
+                                                       {1.0f, 1.0f, -1.0f},
+                                                       {1.0f, -1.0f, -1.0f},
+                                                       {1.0f, -1.0f, 1.0f},
+                                                       {-1.0f, -1.0f, -1.0f},
+                                                       {-1.0f, -1.0f, 1.0f},
+                                                       {-1.0f, 1.0f, 1.0f},
+                                                       {-1.0f, 1.0f, -1.0f}}};
 
 extern ModelLightStruct* gModelLightList[0x32];
 
@@ -886,7 +893,8 @@ void modelLightStruct_loadChannelLight(int channel, ModelLightStruct* light, Gam
         case 3:
             break;
         case 4:
-            GXInitSpecularDir(&light->specularLightObj, light->viewDirection.x, light->viewDirection.y, light->viewDirection.z);
+            GXInitSpecularDir(&light->specularLightObj, light->viewDirection.x, light->viewDirection.y,
+                              light->viewDirection.z);
             break;
         }
         color = light->specularColor;
