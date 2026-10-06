@@ -401,30 +401,24 @@ struct convention, not a bug):
    global shader texture array" for `colorIdx`/`auxTex0`/`auxTex1` maps concretely to this repo's
    distortion-texture slot mechanism, not a generic texture list.
 
-### `ModelFileHeader.textureIds` — the "index into model's texture list" resolution
+### `ModelFileHeader.textureEntries` — model texture-list resolution
 
-`ObjModel_ResolveRenderOpTextures` (`model.c:474-544`) is the exact, field-by-field implementation of
-the wiki's claim "Textures here are not IDs; they're indices into the model's list of textures (or -1
-for none). They're replaced with pointers to the texture when the shader is loaded. This also applies
-to ShaderLayer":
+`ObjModel_ResolveRenderOpTextures` in `src/main/model.c` replaces signed model
+texture-list indices with the corresponding `ModelTextureEntry.reference`,
+using zero for the `-1` sentinel. This applies to each shader layer,
+`auxTextureIndex` (+0x34), `indTextureId` (+0x38), and `textureId` (+0x18).
+The current source uses the canonical `ModelFileHeader` and `Shader` fields;
+the old raw-offset and `GameObject*` alias spellings are no longer present.
 
-```c
-op = *(u8**)(m + 0x38) + j * 0x44;               /* j-th Shader record (renderOps[j]) */
-for (k = 0; k < op[0x41]; k++) {                  /* wiki nLayers */
-    u8* e = op + k * 8;                           /* wiki ShaderLayer stride, base = layer[k] */
-    if (*(int*)e != -1) *(int*)e = textureIds[*(int*)e]; else *(int*)e = 0;  /* layer[k].texture */
-}
-if (*(int*)(op + 0x34) != -1) *(int*)(op+0x34) = textureIds[*(int*)(op+0x34)]; else 0;  /* auxTex2 */
-if (*(int*)(op + 0x38) != -1) *(int*)(op+0x38) = textureIds[*(int*)(op+0x38)]; else 0;  /* furTexture */
-/* op+0x1c: -1->0, -2->0, else->1  -- this is the wiki's unnamed 0x1C field, verbatim */
-if (*(int*)(op + 0x18) != -1) *(int*)(op+0x18) = textureIds[*(int*)(op+0x18)]; else 0;  /* texture18 */
-```
-(the real source, `model.c:487-495`, dereferences `e` through a `GameObject*` alias for `e[0]` — a
-load-bearing re-spelling noted in-repo as keeping MWCC's alias/CSE class; simplified above for
-clarity, offsets unchanged.)
-(`m + 0x20` is `ModelFileHeader.textureIds`, `STATIC_ASSERT`-pinned at offset `0x20`.) The `op+0x1C`
-`-1 -> 0, -2 -> 0, else -> 1` encoding is a byte-for-byte match of the wiki's guess for that unnamed
-field, right down to the two distinguished sentinel values.
+The header table at +0x20 is layout-asserted and now distinguishes serialized
+asset IDs from loaded references. A runtime reference can be a one-based cache
+handle or a direct target address: the wiki's description of all resolved
+values as pointers is too narrow. `textureIdxToPtr` decodes both forms. See
+[Model texture references](../model_geometry_tables.md#model-texture-references-2026-10-06)
+for the loader contract and validation.
+
+The separate `unk1C` field retains `-1 -> 0, -2 -> 0, else -> 1`, matching the
+wiki's two distinguished sentinel values without assigning an unproven role.
 
 ### `polyGroupId` / `scrollingTexMtx` — confirmed via `texscroll2` and `modelRenderFn_8003e98c`
 

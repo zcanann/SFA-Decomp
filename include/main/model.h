@@ -192,6 +192,20 @@ typedef struct ModelCollisionTriangle {
 STATIC_ASSERT(sizeof(ModelCollisionTriangle) == 8);
 STATIC_ASSERT(offsetof(ModelCollisionTriangle, vertexIndices) == 0);
 
+/* One target word: an asset ID before loading, then textureLoad's opaque
+ * result. A runtime reference is either a one-based cache handle or the
+ * bits of a direct texture address; textureIdxToPtr resolves both forms. */
+typedef union ModelTextureEntry {
+    s32 assetId;
+    s32 reference;
+    void* loadResult;
+} ModelTextureEntry;
+
+STATIC_ASSERT(sizeof(ModelTextureEntry) == 4);
+STATIC_ASSERT(offsetof(ModelTextureEntry, assetId) == 0);
+STATIC_ASSERT(offsetof(ModelTextureEntry, reference) == 0);
+STATIC_ASSERT(offsetof(ModelTextureEntry, loadResult) == 0);
+
 /* A morph table entry is a model-relative byte offset on disk, then a stream
  * pointer after model relocation. Streams contain index/flags and s16 deltas. */
 typedef union ModelMorphTargetRef {
@@ -229,8 +243,8 @@ typedef struct ModelFileHeader {
         u8* unk1C;
     };
     union {
-        u32 textureIdsOffset;
-        s32* textureIds; /* file texture ids, patched to texture ptrs on load */
+        u32 textureEntriesOffset;
+        ModelTextureEntry* textureEntries;
     };
     u8 flags24; /* 0x08 = NBT triplets instead of single packed normals */
     u8 unk25[3];
@@ -375,7 +389,7 @@ typedef struct ModelFileHeader {
 STATIC_ASSERT(sizeof(ModelFileHeader) == 0xFC);
 STATIC_ASSERT(offsetof(ModelFileHeader, unk18Offset) == 0x18);
 STATIC_ASSERT(offsetof(ModelFileHeader, unk1COffset) == 0x1C);
-STATIC_ASSERT(offsetof(ModelFileHeader, textureIdsOffset) == 0x20);
+STATIC_ASSERT(offsetof(ModelFileHeader, textureEntriesOffset) == 0x20);
 STATIC_ASSERT(offsetof(ModelFileHeader, verticesOffset) == 0x28);
 STATIC_ASSERT(offsetof(ModelFileHeader, normalsOffset) == 0x2C);
 STATIC_ASSERT(offsetof(ModelFileHeader, colorsOffset) == 0x30);
@@ -414,7 +428,7 @@ STATIC_ASSERT(offsetof(ModelFileHeader, cachedAnimIds) == 0x6C);
 STATIC_ASSERT(offsetof(ModelFileHeader, animationCacheSize) == 0x84);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveGroupBaseIndices) == 0x70);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveCount) == 0xEC);
-STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20);
+STATIC_ASSERT(offsetof(ModelFileHeader, textureEntries) == 0x20);
 STATIC_ASSERT(offsetof(ModelFileHeader, normalAnimEntries) == 0xC8);
 STATIC_ASSERT(offsetof(ModelFileHeader, collisionBlockCount) == 0xF0);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureCount) == 0xF2);

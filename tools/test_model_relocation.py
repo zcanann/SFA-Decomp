@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 # Independent list of the retail relocation sites, in header order. Their
 # offset aliases are checked by target layout assertions in model.h.
 FIELDS = (
-    "unk18", "unk1C", "textureIds", "vertices", "normals", "colors", "texCoords",
+    "unk18", "unk1C", "textureEntries", "vertices", "normals", "colors", "texCoords",
     "renderOps", "jointData", "jointFuzzScales", "extraJointDefs", "hitVolumes",
     "collisionTriangles", "collisionBlocks", "vertexAnimEntries", "vertexWeightData",
     "normalAnimEntries", "normalWeightData", "displayLists", "instrs", "morphTargets",
@@ -40,6 +40,7 @@ typedef struct Shader Shader;
 typedef struct ModelCollisionTriangle ModelCollisionTriangle;
 typedef struct CollisionPolygonGroup CollisionPolygonGroup;
 typedef struct ModelVtxAnimChunk ModelVtxAnimChunk;
+typedef union ModelTextureEntry ModelTextureEntry;
 """
 FIXTURE = r"""
 typedef struct Fixture {

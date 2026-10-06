@@ -111,3 +111,48 @@ no new discrepancies, retaining only the existing `__exception` and
 source-linked DOL checksums pass for every target. The separate formatting
 change preserves every source object hash across all five targets, and both
 the active TU and canonical header pass `clang-format --dry-run --Werror`.
+
+## Model texture references (2026-10-06)
+
+The table at header +0x20 is now `textureEntries`, with four-byte
+`ModelTextureEntry` records. Each record starts as a signed asset ID. The
+loader replaces it with the opaque result of `textureLoad(-(assetId | 0x8000),
+1)`, and shader resolution copies its runtime reference word into the relevant
+shader slots. The union exposes `assetId`, `loadResult`, and `reference`
+without claiming that every loaded value is a texture pointer.
+
+`textureLoad` establishes the distinction: a cached handle is one-based, but
+the uncompressed texture path returns a direct address even when a handle was
+requested. `textureIdxToPtr` recognizes direct target addresses by bit 31 and
+otherwise looks up the handle minus one. The model getter, release path and
+modgfx DLL 91 consumer retain that decoder. Target layout assertions pin all
+three views to the same four-byte word.
+
+The loader and shader resolver now use the canonical header and shader fields,
+removing raw header offsets and integer-held table addresses. Shader indices
+retain the signed `-1` sentinel; `unk1C` retains its separate `-1`/`-2` to zero,
+otherwise one conversion. Foxhollow's working native implementation at
+`894de8a8edecfad2e455f1a6345e328f50c74aba` informed the table review, but its
+`uintptr_t` texture ABI and boolean reduction of `Shader.textureId` are not
+retail behavior. This change does not establish a complete native texture port.
+
+`python3 tools/test_model_texture_references.py` executes the production
+relocator, loader, shader resolver and getter. It checks 945 shader cases and
+20 load paths at both `-O0` and `-O2` with ASan/UBSan: mixed handle/address/null
+tokens, signed sentinels, flag masks, cache hits, mapped/direct model IDs and
+texture counts through 255. Records and tables use native pointers above
+4 GiB; texture services are stubbed and runtime tokens retain target width.
+The existing 732-case relocation probe also passes at both optimization levels.
+
+The loader's four existing one-element locals remain a source-shape limitation.
+A scalar rewrite with the same byte-offset loop changes one instruction at
+`ObjModel_Load+0x7C` from `mr r28,r30` to `li r28,0`; indexed rewrites also change
+register allocation. They were not retained. This recovery improves the table
+contract and field accesses without claiming the remaining locals are original.
+
+All source object bytes remain unchanged across EN, EN rev1, JP, PAL and PAL
+rev1, including the complete model TU and the shared-header consumers. Full
+objdiff reports retain only the two previously documented library accounting
+exceptions; there are no new discrepancies. All five `all_source` builds and
+strict source-linked retail DOL checks pass. The separate formatting change
+also preserves every source object byte.

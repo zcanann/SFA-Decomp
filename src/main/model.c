@@ -1906,7 +1906,7 @@ void ObjModel_CopyJointTranslation(u8* modelBytes, int jointIndex, f32* out) {
 }
 
 Texture* ObjModel_GetTexture(ModelFileHeader* model, int textureIndex) {
-    return textureIdxToPtr(model->textureIds[textureIndex]);
+    return textureIdxToPtr(model->textureEntries[textureIndex].reference);
 }
 
 s16* ObjModel_GetBaseVertexCoords(ModelFileHeader* modelFile, int vertexIndex) {
@@ -2098,48 +2098,48 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
 }
 void ObjModel_RelocateAnimData(ModelFileHeader* file, ObjModel* model);
 
-void ObjModel_ResolveRenderOpTextures(u8* m) {
+void ObjModel_ResolveRenderOpTextures(ModelFileHeader* file) {
     int j, k;
-    u8* op;
-    for (j = 0; j < ((ModelFileHeader*)m)->renderOpCount; j++) {
-        op = (u8*)&((ModelFileHeader*)m)->renderOps[j];
-        for (k = 0; k < ((Shader*)op)->layerCount; k++) {
-            ShaderLayer* e = &((Shader*)op)->layers[k];
+    Shader* op;
+    for (j = 0; j < file->renderOpCount; j++) {
+        op = &file->renderOps[j];
+        for (k = 0; k < op->layerCount; k++) {
+            ShaderLayer* e = &op->layers[k];
             if (e->textureIndex != -1) {
-                e->textureIndex = ((ModelFileHeader*)m)->textureIds[e->textureIndex];
+                e->textureIndex = file->textureEntries[e->textureIndex].reference;
             } else {
                 e->texture = NULL;
             }
         }
-        if (*(int*)(op + 0x34) != -1) {
-            *(int*)(op + 0x34) = ((ModelFileHeader*)m)->textureIds[*(int*)(op + 0x34)];
+        if ((s32)op->auxTextureIndex != -1) {
+            op->auxTextureIndex = file->textureEntries[(s32)op->auxTextureIndex].reference;
         } else {
-            ((Shader*)op)->auxTexture = NULL;
+            op->auxTexture = NULL;
         }
-        if (((Shader*)op)->indTextureId != -1) {
-            ((Shader*)op)->indTextureId = ((ModelFileHeader*)m)->textureIds[((Shader*)op)->indTextureId];
+        if (op->indTextureId != -1) {
+            op->indTextureId = file->textureEntries[op->indTextureId].reference;
         } else {
-            ((Shader*)op)->indTexture = NULL;
+            op->indTexture = NULL;
         }
-        if (*(int*)(op + 0x1c) != -1) {
-            if (*(int*)(op + 0x1c) == -2) {
-                ((Shader*)op)->unk1C = 0;
+        if ((s32)op->unk1C != -1) {
+            if ((s32)op->unk1C == -2) {
+                op->unk1C = 0;
             } else {
-                ((Shader*)op)->unk1C = 1;
+                op->unk1C = 1;
             }
         } else {
-            ((Shader*)op)->unk1C = 0;
+            op->unk1C = 0;
         }
-        if (((Shader*)op)->textureId != -1) {
-            ((Shader*)op)->textureId = ((ModelFileHeader*)m)->textureIds[((Shader*)op)->textureId];
+        if (op->textureId != -1) {
+            op->textureId = file->textureEntries[op->textureId].reference;
         } else {
-            ((Shader*)op)->textureId = 0;
+            op->textureId = 0;
         }
-        if (!(((ModelFileHeader*)m)->shaderFlags & 0xc)) {
-            ((Shader*)op)->reg1Texture = NULL;
+        if (!(file->shaderFlags & 0xc)) {
+            op->reg1Texture = NULL;
         }
-        if (!(((ModelFileHeader*)m)->shaderFlags & 0xe00)) {
-            ((Shader*)op)->reg2Texture = NULL;
+        if (!(file->shaderFlags & 0xe00)) {
+            op->reg2Texture = NULL;
         }
     }
 }
@@ -2187,8 +2187,8 @@ void ObjModel_RelocateModelData(ModelFileHeader* file) {
     if (file->extraJointDefsOffset) {
         file->extraJointDefs = (ModelExtraJointDef*)(base + file->extraJointDefsOffset);
     }
-    if (file->textureIdsOffset) {
-        file->textureIds = (s32*)(base + file->textureIdsOffset);
+    if (file->textureEntriesOffset) {
+        file->textureEntries = (ModelTextureEntry*)(base + file->textureEntriesOffset);
     }
     file->vertices = base + file->verticesOffset;
     if (file->normalsOffset) {
@@ -2301,8 +2301,8 @@ void ObjModel_Release(u8* model) {
     if (--((ModelFileHeader*)header)->refCount == 0) {
         model_adjustModelList(gModelList, ((ModelFileHeader*)header)->modelId); /* modelId */
         z[0] = 0;
-        for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->textureCount; z[1] += 4, z[0]++) {
-            textureFree((Texture*)(textureIdxToPtr(*(s32*)((u8*)((ModelFileHeader*)header)->textureIds + z[1]))));
+        for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->textureCount; z[1] += sizeof(ModelTextureEntry), z[0]++) {
+            textureFree((Texture*)(textureIdxToPtr(((ModelTextureEntry*)((u8*)((ModelFileHeader*)header)->textureEntries + z[1]))->reference)));
         }
         if (((ModelFileHeader*)header)->moveData != NULL && ((ModelFileHeader*)header)->animationCount != 0) {
             z[0] = 0;
@@ -2335,39 +2335,39 @@ void* ObjModel_LoadAnimData(u8* p, int b, u8* c) {
 void* ObjModel_Load(int id, int loadFlag, int* outSize) {
     int sizes[7];
     int realId[1];
-    u8* header;
+    ModelFileHeader* header;
     int i[1];
-    u8* h[1];
-    int off[1];
-    void* tex;
-    int idc;
+    ModelFileHeader* loaded[1];
+    int textureOffset[1];
+    void* textureRef;
+    int requestedId;
     realId[0] = 0;
     i[0] = 0;
-    idc = id;
-    if (idc < 0) {
-        realId[0] = -idc;
+    requestedId = id;
+    if (requestedId < 0) {
+        realId[0] = -requestedId;
     } else {
-        fileLoadToBufferOffset(MLDF_FILEID_MODELIND_BIN, gModelResourceBuffer, idc * 2, 8);
+        fileLoadToBufferOffset(MLDF_FILEID_MODELIND_BIN, gModelResourceBuffer, requestedId * 2, 8);
         realId[0] = gModelResourceBuffer[0];
     }
     if (ModelList_getHeader(gModelList, realId[0], &header) == 0) {
         header = ObjModel_LoadModelData(realId[0]);
-        ObjModel_RelocateModelData((ModelFileHeader*)header);
-        h[0] = header;
+        ObjModel_RelocateModelData(header);
+        loaded[0] = header;
         i[0] = 0;
-        off[0] = i[0];
-        for (; i[0] < h[0][0xf2]; i[0]++) {
-            tex = textureLoad(-(*(int*)(*(int*)(h[0] + 0x20) + off[0]) | 0x8000), 1);
-            *(void**)(*(int*)(h[0] + 0x20) + off[0]) = tex;
-            off[0] += 4;
+        textureOffset[0] = i[0];
+        for (; i[0] < loaded[0]->textureCount; i[0]++) {
+            textureRef = textureLoad(-(((ModelTextureEntry*)((u8*)loaded[0]->textureEntries + textureOffset[0]))->assetId | 0x8000), 1);
+            ((ModelTextureEntry*)((u8*)loaded[0]->textureEntries + textureOffset[0]))->loadResult = textureRef;
+            textureOffset[0] += sizeof(ModelTextureEntry);
         }
         ObjModel_ResolveRenderOpTextures(header);
-        modelLoadAnimations((ModelFileHeader*)header, realId[0], header + ((ModelFileHeader*)header)->dataSize);
+        modelLoadAnimations(header, realId[0], (u8*)header + header->dataSize);
         modelInitModelList(gModelList, realId[0], &header);
     } else {
-        (*header)++;
+        header->refCount++;
     }
-    *outSize = modelLoad_calcSizes(header, loadFlag, sizes, 0);
+    *outSize = modelLoad_calcSizes((u8*)header, loadFlag, sizes, 0);
     return header;
 }
 

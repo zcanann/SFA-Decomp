@@ -60,7 +60,7 @@ blockBase/blockEnd):
 Model (`ModelFileHeader`/`ObjModel`, include/main/model.h):
 13. [SAFE] `ModelFileHeader.refCount`(:101)->`usage` (u8, width pinned by UCHAR_MAX);
     `Texture.refCount` (texture.h:31)->`usage` (u16, USHRT_MAX).
-14. [SAFE] `textureIds`(:111)->`GCtextures`; `vertices/normals/colors/texCoords`(:114-117)->
+14. [SAFE] `textureIds`(:111; now `textureEntries`)->`GCtextures`; `vertices/normals/colors/texCoords`(:114-117)->
     `vertexPositions/vertexNormals/vertexColours/vertexTexCoords`; `jointData`(:119)->`joints`;
     `instrs`(:148)->`renderStream`; `vertexAnimEntries`(:138)->`vertexAnims`;
     `renderOps`(:118)->`shaders` + `renderOpCount`(:166)->`numShaders`; counts

@@ -307,7 +307,7 @@ Per-map compressed blocks (`modXX.zlb.bin`) are handled separately by
 - `src/main/rcp_dolphin.c` - `struct WarpDestination { f32 x, y, z; s16 angle0, angle1; }`,
   the fully-confirmed 16-byte WARPTAB.bin record, read by `warpToMap()`.
 - `include/main/model.h` - `struct ModelFileHeader`, the in-memory header of a loaded model
-  (fields for `textureIds`, `vertices`, `normals`, `renderOps`, `collisionTriangles`,
+  (fields for `textureEntries`, `vertices`, `normals`, `renderOps`, `collisionTriangles`,
   `collisionBlocks`, `animationModelPtrs`, `animationDataSection`, `animationHeaderBuffer`).
 - `include/main/gamebits.h` - `enum GameBitId`, symbolic quest/story/event flag ids (relevant
   to BITTABLE.BIN's "table of GameBit offsets", though the header itself is runtime-only).

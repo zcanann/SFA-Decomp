@@ -223,7 +223,7 @@ All offsets below were cross-checked against `include/main/model.h` (`ModelFileH
 | 0x0c fileSize | `dataSize` ("anim data appended at header + dataSize") | exact offset, plausible semantics |
 | 0x18 flags18 (+0x1a) | `unk18` (u8*, 4 bytes covering both u16 sub-fields) | offset match, not split out |
 | 0x1c extraAmapSize | `unk1C` | offset match |
-| 0x20 textures | `textureIds` | exact (`STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20)`) |
+| 0x20 textures | `textureEntries` | exact (`STATIC_ASSERT(offsetof(ModelFileHeader, textureEntries) == 0x20)`); entries transition from asset IDs to runtime texture references |
 | 0x24 ModelDataFlags24 | `flags24` | exact |
 | 0x28 vtxs | `vertices` | exact |
 | 0x2c normals | `normals` | exact |
