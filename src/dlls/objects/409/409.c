@@ -188,9 +188,9 @@ void dll409_update(GameObject* obj) {
     GameObject* player;
     GameObject* found;
     f32 dist;
-    u32 flags;
+    void* flags;
     u32 msg;
-    u32 param;
+    GameObject* param;
     f32 dz;
     u32 brightness;
     int delta;

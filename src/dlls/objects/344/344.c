@@ -702,7 +702,7 @@ void gunpowderBarrel_update(GameObject* obj) {
         state->linkedTimerObject = NULL;
     }
     {
-        u32 messageArgument;
+        void* messageArgument;
         u32 message;
         message = 0;
         messageArgument = 0;

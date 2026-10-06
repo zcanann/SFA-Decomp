@@ -102,15 +102,15 @@ void dbegg_processMessages(GameObject* obj) {
     DbEggState* eggState;
     DbEggPlacementPrefix* config;
     u32 msgType = 0;
-    u32 msgFlag = 0;
-    u32 msgArg;
+    void* msgFlag = 0;
+    GameObject* msgArg;
 
     eggState = obj->extra;
     config = (DbEggPlacementPrefix*)obj->anim.placementData;
 
     while (ObjMsg_Pop(obj, &msgType, &msgArg, &msgFlag) != 0) {
         if (msgType == 17) {
-            switch (msgFlag) {
+            switch ((u32)msgFlag) {
             case 18:
                 if ((eggState->flags & DBEGG_FLAG_KEEP_GROUP_WHILE_HELD) == 0) {
                     objFreeObjectType(obj, DBEGG_OBJGROUP);
@@ -571,14 +571,14 @@ void dbegg_update(GameObject* obj) {
                 pickupState->triggerGameBit = -1;
                 pickupState->pickupMessageValue = 0;
                 pickupState->pickupMessageArgument = 1.0f;
-                ObjMsg_SendToObject(playerObj, DBEGG_MSG_START_PICKUP_SEQUENCE, obj, (int)&pickupState->triggerGameBit);
+                ObjMsg_SendToObject(playerObj, DBEGG_MSG_START_PICKUP_SEQUENCE, obj, &pickupState->triggerGameBit);
                 obj->userData2 = 0;
             } else if (getButtonsJustPressed(0) & PAD_BUTTON_A) {
                 egg->mode = DBEGG_MODE_FALLING;
                 obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
             } else {
                 hitState->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
-                ObjMsg_SendToObject(player, DBEGG_MSG_PLAYER_GRAB, obj, 0x38000);
+                ObjMsg_SendToObject(player, DBEGG_MSG_PLAYER_GRAB, obj, (void*)0x38000);
                 obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             }
             break;
@@ -707,7 +707,7 @@ void dbegg_update(GameObject* obj) {
                         pickupState->pickupMessageValue = 0;
                         pickupState->pickupMessageArgument = 1.0f;
                         ObjMsg_SendToObject(playerObj, DBEGG_MSG_START_PICKUP_SEQUENCE, obj,
-                                            (int)&pickupState->triggerGameBit);
+                                            &pickupState->triggerGameBit);
                     } else {
                         v = obj->anim.localPosY - player->anim.localPosY;
                         v = v >= 0.0f ? v : -v;

@@ -612,13 +612,13 @@ void pushable_handleMsgs(GameObject* obj, int unused) {
     PushableState* state;
     GameObject* messageSender;
     u32 messageId;
-    u32 messageParam;
+    void* messageParam;
 
     (void)unused;
 
     state = obj->extra;
     messageParam = 0;
-    while (ObjMsg_Pop(obj, &messageId, (u32*)&messageSender, &messageParam) != 0) {
+    while (ObjMsg_Pop(obj, &messageId, &messageSender, &messageParam) != 0) {
         switch (messageId) {
         case PUSHABLE_MSG_SET_SENDER:
             state->msgSenderObj = messageSender;

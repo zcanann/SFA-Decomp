@@ -415,7 +415,7 @@ void collectible_checkProximityPickup(GameObject* obj, CollectibleState* state) 
         switch (obj->anim.romDefNo) {
         case COLLECTIBLE_ITEM_ENERGY_EGG:
             if (mainGetBit(GAMEBIT_SawBigHealth) == 0) {
-                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)&state->pickupMsgValue);
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, &state->pickupMsgValue);
                 mainSetBits(GAMEBIT_SawBigHealth, 1);
             } else {
                 collectible_applyPickup(obj);
@@ -430,7 +430,7 @@ void collectible_checkProximityPickup(GameObject* obj, CollectibleState* state) 
         case 0x2da:
         case COLLECTIBLE_ITEM_APPLE:
             if (mainGetBit(GAMEBIT_SawApple) == 0) {
-                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)&state->pickupMsgValue);
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, &state->pickupMsgValue);
                 mainSetBits(GAMEBIT_SawApple, 1);
             } else {
                 collectible_applyPickup(obj);
@@ -439,7 +439,7 @@ void collectible_checkProximityPickup(GameObject* obj, CollectibleState* state) 
             break;
         case COLLECTIBLE_SEQ_ID_MOON_SEED:
             if (mainGetBit(GAMEBIT_CollectedFlag09A8) == 0) {
-                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)&state->pickupMsgValue);
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, &state->pickupMsgValue);
                 mainSetBits(GAMEBIT_CollectedFlag09A8, 1);
             } else {
                 collectible_applyPickup(obj);
@@ -450,7 +450,7 @@ void collectible_checkProximityPickup(GameObject* obj, CollectibleState* state) 
             if (ObjTrigger_IsSet(obj) != 0) {
                 mainSetBits(GAMEBIT_EnableCMenu, 1);
                 state->pickupMsgValue = placement->collectGameBit;
-                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)&state->pickupMsgValue);
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, &state->pickupMsgValue);
                 state->pickupLatch |= COLLECTIBLE_PICKUP_LATCHED;
                 if (obj->anim.modelState != NULL) {
                     obj->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
@@ -498,7 +498,7 @@ void collectible_hitDetect(GameObject* obj) {
 void collectible_update(GameObject* obj) {
     CollectibleState* state = obj->extra;
     ObjHitsPriorityState* hitState;
-    int messageParam;
+    GameObject* messageParam;
     int messageId;
     int hideFrames;
     f32 timer;
@@ -541,7 +541,7 @@ void collectible_update(GameObject* obj) {
             return;
         }
     }
-    while (ObjMsg_Pop(obj, (u32*)&messageId, (u32*)&messageParam, NULL) != 0) {
+    while (ObjMsg_Pop(obj, (u32*)&messageId, &messageParam, NULL) != 0) {
         switch (messageId) {
         case COLLECTIBLE_MSG_PICKUP:
             collectible_applyPickup(obj);
@@ -581,8 +581,7 @@ void collectible_update(GameObject* obj) {
             state->delayedMsgTimer--;
             if (state->delayedMsgTimer == 0) {
                 state->pickupMsgValue = -1;
-                ObjMsg_SendToObject(Obj_GetPlayerObject(), COLLECTIBLE_MSG_IN_RANGE, (void*)obj,
-                                    (u32)&state->pickupMsgValue);
+                ObjMsg_SendToObject(Obj_GetPlayerObject(), COLLECTIBLE_MSG_IN_RANGE, (void*)obj, &state->pickupMsgValue);
             }
         } else {
             collectible_checkProximityPickup(obj, state);

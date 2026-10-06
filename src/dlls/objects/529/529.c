@@ -417,7 +417,7 @@ void wmwallcrawler_update(GameObject* obj) {
                                     if (ob->anim.currentMove == 2 && ob->anim.currentMoveProgress > 0.3f &&
                                         ob->anim.currentMoveProgress < 0.7f) {
                                         ObjMsg_SendToObject((void*)player, WMWALLCRAWLER_MSG_PLAYER_BURST, (void*)ob,
-                                                            1);
+                                                            (void*)1);
                                         gWallCrawlerHitCount = 0;
                                     }
                                     if (mainGetBit(GAMEBIT_CC_BridgeNeedBit) != 0) {
@@ -427,8 +427,8 @@ void wmwallcrawler_update(GameObject* obj) {
                                                 gWallCrawlerHitCount >= 3)) {
                                         Sfx_PlayFromObject(ob, SFXTRIG_id_75);
                                         if ((state->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0) {
-                                            ObjMsg_SendToObject((void*)player, WMWALLCRAWLER_MSG_PLAYER_BURST,
-                                                                (void*)ob, 1);
+                                            ObjMsg_SendToObject((void*)player, WMWALLCRAWLER_MSG_PLAYER_BURST, (void*)ob,
+                                                                (void*)1);
                                         } else {
                                             state->hitBits.hit = 1;
                                         }

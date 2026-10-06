@@ -1,4 +1,5 @@
 #define OBJHITS_SETTERS_S16
+#include "main/obj_message.h"
 #include <string.h>
 #include "main/frame_timing.h"
 #include "main/shader_api.h"
@@ -32,7 +33,6 @@
 #include "main/objtype.h"
 #include "main/obj_hit_region.h"
 #include "main/obj_link.h"
-#include "main/obj_message.h"
 #include "main/obj_path.h"
 #include "main/obj_query.h"
 #include "main/obj_trigger.h"
@@ -83,8 +83,7 @@ STATIC_ASSERT(offsetof(ObjHitRegionPlacement, yaw) == 0x20);
 
 extern ObjContactCallbackEntry gObjContactCallbacks[0xC0 / sizeof(ObjContactCallbackEntry)];
 int gObjContactCallbackCount;
-#define OBJMSG_QUEUE_OFFSET        0xdc
-#define OBJMSG_SEND_INCLUDE_SENDER 0x1
+#define OBJMSG_SEND_IGNORE_SENDER 0x1
 #define OBJMSG_SEND_MATCH_ANY      0x2
 #define OBJMSG_SEND_MATCH_OBJTYPE  0x4
 
@@ -107,79 +106,78 @@ int gObjContactCallbackCount;
 /* hit-object romDefNo that triggers the staff-impact sfx (retail OBJECTS.bin). */
 #define OBJLIB_HITOBJ_SEQID_STAFF 0x69 /* "staff" (DLL 0xE2) */
 #define OBJPATH_ROOT_JOINT_INDEX  -1
-typedef struct ObjMsgEntry {
-    u32 message;
-    u32 sender;
-    u32 param;
-} ObjMsgEntry;
+/* A two-word header is followed by three-word messages (id, sender, argument).
+ * Keep the retail word indexing, with pointer members for the two pointer slots.
+ * This also gives each slot the correct width in native builds. */
+typedef union ObjMsgWord {
+    u32 value;
+    GameObject* sender;
+    void* param;
+} ObjMsgWord;
 
-typedef struct ObjMsgQueue {
-    u32 count;
-    u32 capacity;
-    ObjMsgEntry entries[1];
-} ObjMsgQueue;
+struct ObjMsgQueue {
+    ObjMsgWord words[1];
+};
 
-STATIC_ASSERT(sizeof(ObjMsgEntry) == 0xC);
-STATIC_ASSERT(offsetof(ObjMsgQueue, entries) == 0x8);
+enum {
+    OBJMSG_COUNT = 0,
+    OBJMSG_CAPACITY = 1,
+    OBJMSG_HEADER_WORDS = 2,
+    OBJMSG_MESSAGE = OBJMSG_HEADER_WORDS,
+    OBJMSG_SENDER = 3,
+    OBJMSG_PARAM = 4,
+    OBJMSG_WORDS_PER_MESSAGE = 3
+};
 
-typedef struct ObjMsgQueueCursor {
-    u32 count;
-    u32 capacity;
-    ObjMsgEntry entry;
-    ObjMsgEntry nextEntry;
-} ObjMsgQueueCursor;
+STATIC_ASSERT(sizeof(ObjMsgWord) == 4);
 
-STATIC_ASSERT(offsetof(ObjMsgQueueCursor, entry) == 0x8);
-STATIC_ASSERT(offsetof(ObjMsgQueueCursor, nextEntry) == 0x14);
-STATIC_ASSERT(sizeof(ObjMsgQueueCursor) == 0x20);
-
-int ObjMsg_Peek(GameObject* obj, u32* outMessage, u32* outSender, u32* outParam) {
+int ObjMsg_Peek(GameObject* obj, u32* outMessage, GameObject** outSender, void** outParam) {
     ObjMsgQueue* queue;
 
     if (obj == 0x0) {
         return 0;
     }
     queue = obj->msgQueue;
-    if ((queue != (ObjMsgQueue*)0x0) && (queue->count != 0)) {
+    if ((queue != (ObjMsgQueue*)0x0) && (queue->words[OBJMSG_COUNT].value != 0)) {
         if (outMessage != 0x0) {
-            *outMessage = queue->entries[0].message;
+            *outMessage = queue->words[OBJMSG_MESSAGE].value;
         }
         if (outSender != 0x0) {
-            *outSender = queue->entries[0].sender;
+            *outSender = queue->words[OBJMSG_SENDER].sender;
         }
         if (outParam != 0x0) {
-            *outParam = queue->entries[0].param;
+            *outParam = queue->words[OBJMSG_PARAM].param;
         }
         return 1;
     }
     return 0;
 }
 
-int ObjMsg_Pop(GameObject* obj, u32* outMessage, u32* outSender, u32* outParam) {
+int ObjMsg_Pop(GameObject* obj, u32* outMessage, GameObject** outSender, void** outParam) {
     ObjMsgQueue* queue;
-    ObjMsgQueueCursor* slot;
+    ObjMsgWord* slot;
     u32 i;
 
     if (obj == 0x0) {
         return 0;
     }
     queue = obj->msgQueue;
-    if ((queue != (ObjMsgQueue*)0x0) && (queue->count != 0)) {
-        queue->count -= 1;
+    if ((queue != (ObjMsgQueue*)0x0) && (queue->words[OBJMSG_COUNT].value != 0)) {
+        queue->words[OBJMSG_COUNT].value -= 1;
         if (outMessage != 0x0) {
-            *outMessage = queue->entries[0].message;
+            *outMessage = queue->words[OBJMSG_MESSAGE].value;
         }
         if (outSender != 0x0) {
-            *outSender = queue->entries[0].sender;
+            *outSender = queue->words[OBJMSG_SENDER].sender;
         }
         if (outParam != 0x0) {
-            *outParam = queue->entries[0].param;
+            *outParam = queue->words[OBJMSG_PARAM].param;
         }
-        for (i = 0; i < queue->count; i = i + 1) {
-            slot = (ObjMsgQueueCursor*)((u8*)queue + ((i + i + i) << 2));
-            slot->entry.message = slot->nextEntry.message;
-            slot->entry.sender = slot->nextEntry.sender;
-            slot->entry.param = slot->nextEntry.param;
+        for (i = 0; i < queue->words[OBJMSG_COUNT].value; i = i + 1) {
+            slot = queue->words + (i + i + i);
+            slot[OBJMSG_MESSAGE].value = slot[OBJMSG_MESSAGE + OBJMSG_WORDS_PER_MESSAGE].value;
+            slot[OBJMSG_SENDER].sender = slot[OBJMSG_SENDER + OBJMSG_WORDS_PER_MESSAGE].sender;
+            slot[OBJMSG_PARAM].param = slot[OBJMSG_PARAM + OBJMSG_WORDS_PER_MESSAGE].param;
         }
         return 1;
     }
@@ -188,36 +186,36 @@ int ObjMsg_Pop(GameObject* obj, u32* outMessage, u32* outSender, u32* outParam) 
 
 char sObjMsgOverflowInObjectWarning[64] = "objmsg (%x): overflow in object %d defno=%d FROM: defno %d\n";
 
-void ObjMsg_SendToNearbyObjects(int targetId, float radius, u32 flags, void* sender, u32 message, void* param) {
+void ObjMsg_SendToNearbyObjects(int targetId, float radius, u32 flags, GameObject* sender, u32 message, void* param) {
     GameObject** objects;
     u32 count;
     int maskedFlags;
     ObjMsgQueue* queue;
-    ObjMsgQueueCursor* slot;
+    ObjMsgWord* slot;
     int objectIndex;
     int objectCount;
     GameObject* obj;
-    int includeSender;
+    int ignoreSender;
     int matchAny;
     GameObject* senderObj;
 
     objects = ObjList_GetObjects(&objectIndex, &objectCount);
     maskedFlags = flags & 0xffff;
-    includeSender = maskedFlags & OBJMSG_SEND_INCLUDE_SENDER;
+    ignoreSender = maskedFlags & OBJMSG_SEND_IGNORE_SENDER;
     matchAny = maskedFlags & OBJMSG_SEND_MATCH_ANY;
     senderObj = (GameObject*)sender;
     for (; objectIndex < objectCount; objectIndex = objectIndex + 1) {
         obj = objects[objectIndex];
-        if (((obj != sender) || (includeSender == 0)) && ((obj->anim.romDefNo == (s16)targetId || (matchAny != 0))) &&
+        if (((obj != sender) || (ignoreSender == 0)) && ((obj->anim.romDefNo == (s16)targetId || (matchAny != 0))) &&
             ((Vec_distance(&senderObj->anim.worldPosX, &obj->anim.worldPosX) < radius && (obj != 0x0)) &&
              (queue = obj->msgQueue, queue != (ObjMsgQueue*)0x0))) {
-            count = queue->count;
-            if (count < queue->capacity) {
-                slot = (ObjMsgQueueCursor*)((u8*)queue + ((count + count + count) << 2));
-                slot->entry.message = message;
-                slot->entry.sender = (u32)sender;
-                slot->entry.param = (u32)param;
-                queue->count += 1;
+            count = queue->words[OBJMSG_COUNT].value;
+            if (count < queue->words[OBJMSG_CAPACITY].value) {
+                slot = queue->words + (count + count + count);
+                slot[OBJMSG_MESSAGE].value = message;
+                slot[OBJMSG_SENDER].sender = sender;
+                slot[OBJMSG_PARAM].param = param;
+                queue->words[OBJMSG_COUNT].value += 1;
             } else {
                 debugPrintf(sObjMsgOverflowInObjectWarning, message, (int)obj->anim.classId, (int)obj->anim.romDefNo,
                             (int)senderObj->anim.romDefNo);
@@ -227,12 +225,12 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, u32 flags, void* sen
     return;
 }
 
-void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, void* param) {
+void ObjMsg_SendToObjects(int targetId, u32 flags, GameObject* sender, u32 message, void* param) {
     GameObject** objects;
     u32 count;
     int maskedFlags;
     ObjMsgQueue* queue;
-    ObjMsgQueueCursor* slot;
+    ObjMsgWord* slot;
     int objectIndex;
     int objectCount;
     GameObject* obj;
@@ -242,16 +240,16 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, vo
     if ((maskedFlags & OBJMSG_SEND_MATCH_OBJTYPE) != 0) {
         for (; objectIndex < objectCount; objectIndex = objectIndex + 1) {
             obj = objects[objectIndex];
-            if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
+            if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_IGNORE_SENDER) == 0)) &&
                 (((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0 || (targetId == obj->anim.romDefNo))) &&
                 ((obj != 0x0 && (queue = obj->msgQueue, queue != (ObjMsgQueue*)0x0)))) {
-                count = queue->count;
-                if (count < queue->capacity) {
-                    slot = (ObjMsgQueueCursor*)((u8*)queue + ((count + count + count) << 2));
-                    slot->entry.message = message;
-                    slot->entry.sender = (u32)sender;
-                    slot->entry.param = (u32)param;
-                    queue->count += 1;
+                count = queue->words[OBJMSG_COUNT].value;
+                if (count < queue->words[OBJMSG_CAPACITY].value) {
+                    slot = queue->words + (count + count + count);
+                    slot[OBJMSG_MESSAGE].value = message;
+                    slot[OBJMSG_SENDER].sender = sender;
+                    slot[OBJMSG_PARAM].param = param;
+                    queue->words[OBJMSG_COUNT].value += 1;
                 } else {
                     debugPrintf(sObjMsgOverflowInObjectWarning, message, (int)obj->anim.classId,
                                 (int)obj->anim.romDefNo, (int)((GameObject*)sender)->anim.romDefNo);
@@ -261,16 +259,16 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, vo
     } else {
         for (; objectIndex < objectCount; objectIndex = objectIndex + 1) {
             obj = objects[objectIndex];
-            if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
+            if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_IGNORE_SENDER) == 0)) &&
                 (((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0 || (targetId == obj->anim.classId))) &&
                 ((obj != 0x0 && (queue = obj->msgQueue, queue != (ObjMsgQueue*)0x0)))) {
-                count = queue->count;
-                if (count < queue->capacity) {
-                    slot = (ObjMsgQueueCursor*)((u8*)queue + ((count + count + count) << 2));
-                    slot->entry.message = message;
-                    slot->entry.sender = (u32)sender;
-                    slot->entry.param = (u32)param;
-                    queue->count += 1;
+                count = queue->words[OBJMSG_COUNT].value;
+                if (count < queue->words[OBJMSG_CAPACITY].value) {
+                    slot = queue->words + (count + count + count);
+                    slot[OBJMSG_MESSAGE].value = message;
+                    slot[OBJMSG_SENDER].sender = sender;
+                    slot[OBJMSG_PARAM].param = param;
+                    queue->words[OBJMSG_COUNT].value += 1;
                 } else {
                     debugPrintf(sObjMsgOverflowInObjectWarning, message, (int)obj->anim.classId,
                                 (int)obj->anim.romDefNo, (int)((GameObject*)sender)->anim.romDefNo);
@@ -281,11 +279,11 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, vo
     return;
 }
 
-u32 ObjMsg_SendToObject(GameObject* obj, u32 message, void* sender, u32 param) {
+u32 ObjMsg_SendToObject(GameObject* obj, u32 message, GameObject* sender, void* param) {
     u32 count;
     GameObject* senderObj;
     ObjMsgQueue* queue;
-    ObjMsgQueueCursor* slot;
+    ObjMsgWord* slot;
 
     senderObj = sender;
     if (obj == NULL) {
@@ -293,14 +291,14 @@ u32 ObjMsg_SendToObject(GameObject* obj, u32 message, void* sender, u32 param) {
     }
     queue = obj->msgQueue;
     if (queue != (ObjMsgQueue*)0x0) {
-        count = queue->count;
-        if (count < queue->capacity) {
-            slot = (ObjMsgQueueCursor*)((u8*)queue + ((count + count + count) << 2));
-            slot->entry.message = message;
-            slot->entry.sender = (u32)senderObj;
-            slot->entry.param = param;
-            queue->count += 1;
-            return queue->count;
+        count = queue->words[OBJMSG_COUNT].value;
+        if (count < queue->words[OBJMSG_CAPACITY].value) {
+            slot = queue->words + (count + count + count);
+            slot[OBJMSG_MESSAGE].value = message;
+            slot[OBJMSG_SENDER].sender = senderObj;
+            slot[OBJMSG_PARAM].param = param;
+            queue->words[OBJMSG_COUNT].value += 1;
+            return queue->words[OBJMSG_COUNT].value;
         }
         debugPrintf(sObjMsgOverflowInObjectWarning, message, (int)obj->anim.classId, (int)obj->anim.romDefNo,
                     (int)senderObj->anim.romDefNo);
@@ -313,10 +311,10 @@ void ObjMsg_AllocQueue(GameObject* obj, int capacity) {
     ObjMsgQueue* queue;
 
     if (((capacity != 0) && (obj != 0x0)) && (obj->msgQueue == (ObjMsgQueue*)0x0)) {
-        queueBytes = (capacity * 3 + 2) * 4;
+        queueBytes = (capacity * OBJMSG_WORDS_PER_MESSAGE + OBJMSG_HEADER_WORDS) * sizeof(ObjMsgWord);
         queue = (ObjMsgQueue*)mmAlloc(queueBytes, 0xe, 0);
-        queue->count = 0;
-        queue->capacity = capacity;
+        queue->words[OBJMSG_COUNT].value = 0;
+        queue->words[OBJMSG_CAPACITY].value = capacity;
         obj->msgQueue = queue;
     }
     return;

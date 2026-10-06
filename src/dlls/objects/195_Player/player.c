@@ -14027,15 +14027,15 @@ void playerUpdateSurfaceResponse(GameObject* obj, PlayerState* state, PlayerStat
 
 void playerProcessMessages(GameObject* obj, int inner, int state) {
     GameObject* p;
-    int param = 0;
+    void* param = 0;
     int msg;
 
-    while (ObjMsg_Pop(obj, (u32*)&msg, (u32*)&p, (u32*)&param) != 0) {
+    while (ObjMsg_Pop(obj, (u32*)&msg, &p, &param) != 0) {
         switch (msg) {
         case 0x80002:
             ((PlayerState*)inner)->queuedItemCommand = (s16)param;
             if (((PlayerState*)state)->baddie.targetObj != NULL &&
-                (param == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER || param == GAMEBIT_STAFF_ABILITY_FREEZE_BLAST)) {
+                ((int)param == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER || (int)param == GAMEBIT_STAFF_ABILITY_FREEZE_BLAST)) {
                 ((PlayerState*)inner)->deferredItemCommand = (s16)param;
                 ((PlayerState*)inner)->queuedItemCommand = -1;
             }
@@ -14061,7 +14061,7 @@ void playerProcessMessages(GameObject* obj, int inner, int state) {
             }
             (*gPlayerInterface)->setState((void*)obj, (void*)state, 0x21);
             ((PlayerState*)state)->baddie.stateExitFn = NULL;
-            Player_ApplyStatusDamage(obj, param);
+            Player_ApplyStatusDamage(obj, (int)param);
             ((PlayerState*)inner)->isHoldingObject = 0;
             if (((PlayerState*)inner)->heldObj != NULL) {
                 s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.romDefNo;
@@ -14094,7 +14094,7 @@ void playerProcessMessages(GameObject* obj, int inner, int state) {
             }
             (*gPlayerInterface)->setState((void*)obj, (void*)state, 0x21);
             ((PlayerState*)state)->baddie.stateExitFn = NULL;
-            Player_ApplyStatusDamage(obj, param);
+            Player_ApplyStatusDamage(obj, (int)param);
             ((PlayerState*)inner)->isHoldingObject = 0;
             if (((PlayerState*)inner)->heldObj != NULL) {
                 s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.romDefNo;
@@ -14130,7 +14130,7 @@ void playerProcessMessages(GameObject* obj, int inner, int state) {
             (*gPlayerInterface)->setState((void*)obj, (void*)state, 0x21);
             ((PlayerState*)state)->baddie.stateExitFn = NULL;
             ObjAnim_SetCurrentMove(obj, 0x450, 0.0f, 0);
-            Player_ApplyStatusDamage(obj, param);
+            Player_ApplyStatusDamage(obj, (int)param);
             ((PlayerState*)inner)->isHoldingObject = 0;
             if (((PlayerState*)inner)->heldObj != NULL) {
                 s16 typ = ((GameObject*)((PlayerState*)inner)->heldObj)->anim.romDefNo;
@@ -14206,7 +14206,7 @@ void playerProcessMessages(GameObject* obj, int inner, int state) {
                 if (mdl != NULL && (void*)*mdl != NULL && (*(u16*)(*mdl + 2) & 0x8000) == 0) {
                     *(u8*)((char*)((PlayerState*)inner)->heldObj + 0xf2) = ((GameObject*)obj)->lightColorSlot;
                 }
-                ((PlayerState*)inner)->unk7FC = (f32)(param >> 0x10) / 10.0f;
+                ((PlayerState*)inner)->unk7FC = (f32)((int)param >> 0x10) / 10.0f;
                 (*gPlayerInterface)->setState((void*)obj, (void*)state, 5);
                 ((PlayerState*)state)->baddie.stateExitFn = (BaddieStateExitFn)playerStagedMarkTeleported;
                 if (gPlayerPathObject != 0 && ((PlayerState*)inner)->flags3F4.b40 != 0) {
@@ -14224,7 +14224,7 @@ void playerProcessMessages(GameObject* obj, int inner, int state) {
                 if (mdl != NULL && (void*)*mdl != NULL && (*(u16*)(*mdl + 2) & 0x8000) == 0) {
                     *(u8*)((char*)((PlayerState*)inner)->heldObj + 0xf2) = ((GameObject*)obj)->lightColorSlot;
                 }
-                ((PlayerState*)inner)->unk7FC = (f32)(param >> 0x10);
+                ((PlayerState*)inner)->unk7FC = (f32)((int)param >> 0x10);
                 (*gPlayerInterface)->setState((void*)obj, (void*)state, 5);
                 ((PlayerState*)state)->baddie.stateExitFn = (BaddieStateExitFn)playerStagedMarkTeleported;
                 if (gPlayerPathObject != 0 && ((PlayerState*)inner)->flags3F4.b40 != 0) {

@@ -295,25 +295,25 @@ void dll_19_pollCameraTarget(GameObject* obj, void* state, u16* flags, int modeA
 
 int dll_19_processMessages(GameObject* obj, BaddieState* state, void* hitbox, s16 gameBit, u8* flagOut,
                            s16 substateIdle, s16 substateActive, s16 moveMode) {
-    u32 msgData;
+    GameObject* msgData;
     int msgType;
-    int extra;
+    void* extra;
 
     extra = 0;
-    while (ObjMsg_Pop(obj, (u32*)&msgType, &msgData, (u32*)&extra) != 0) {
+    while (ObjMsg_Pop(obj, (u32*)&msgType, &msgData, &extra) != 0) {
         switch (msgType) {
         case 4:
             ObjMsg_SendToObject((void*)msgData, 5, obj, 0);
             break;
         case 0xE0000:
-            if (msgData == (int)state->targetObj) {
+            if (msgData == state->targetObj) {
                 state->substate = substateIdle;
                 state->targetObj = 0;
                 state->hasTarget = 0;
             }
             break;
         case 11:
-            state->unk34E = extra;
+            state->unk34E = (int)extra;
             break;
         case 1:
         case 0xA0001:

@@ -209,7 +209,7 @@ void duster_update(GameObject* obj) {
         if (mainGetBit(GAMEBIT_SawBafomdad) == 0) {
             state->heldObjectId = DUSTER_HELD_OBJECT_NONE;
             ObjHits_DisableObject(obj);
-            ObjMsg_SendToObject(player, DUSTER_MESSAGE_IN_RANGE, obj, (u32)&state->heldObjectId);
+            ObjMsg_SendToObject(player, DUSTER_MESSAGE_IN_RANGE, obj, &state->heldObjectId);
             mainSetBits(GAMEBIT_SawBafomdad, 1);
         } else {
             characterState = (PlayerStatus*)(*gMapEventInterface)->getCurCharacterState();

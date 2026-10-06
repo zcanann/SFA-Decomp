@@ -80,10 +80,10 @@ void cfMainCrystal_updateBeams(GameObject* obj) {
     f32 beamDirection[3];
     GameObject* messageSender;
     u32 message;
-    u32 unusedMessageArgument = 0;
+    void* unusedMessageArgument = 0;
     Obj_GetPlayerObject();
     CameraShake_Enable();
-    while (ObjMsg_Pop(obj, &message, (u32*)&messageSender, &unusedMessageArgument) != 0) {
+    while (ObjMsg_Pop(obj, &message, &messageSender, &unusedMessageArgument) != 0) {
         switch (message) {
         case CFPOWERBASE_PYLON_MESSAGE_1:
             state->pylonX[CFMAINCRYSTAL_PYLON_RED] = messageSender->anim.localPosX;
@@ -313,9 +313,9 @@ void cfMainCrystal_hitDetect(void) {
 }
 
 void cfMainCrystal_update(GameObject* obj) {
-    u32 unusedMessageArgument;
+    void* unusedMessageArgument;
     u32 message;
-    u32 messageSender;
+    GameObject* messageSender;
     s8 variant;
     variant = ((CfMainCrystalPlacement*)obj->anim.placement)->variant;
     switch (variant) {

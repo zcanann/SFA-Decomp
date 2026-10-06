@@ -2442,7 +2442,7 @@ void cMenuRun(void) {
                             if ((s8)isTricky == 0) {
                                 if (gCMenuItemEnabledTable[gCMenuSelIndex] != 0) {
                                     if ((b2 & PAD_BUTTON_A) || matched != 0) {
-                                        ObjMsg_SendToObject(player, flags, 0, cMenuSelectedItem);
+                                        ObjMsg_SendToObject(player, flags, 0, (void*)cMenuSelectedItem);
                                         gCMenuActivatedId = cMenuSelectedItem;
                                         gCMenuCloseSfx = gCMenuItemCloseModes[gCMenuSelIndex];
                                         cMenuOpen = 0;
@@ -2475,7 +2475,7 @@ void cMenuRun(void) {
             if (btn16 & 0x800) {
                 u16 ys = yButtonState;
                 if (ys == 3 && gYButtonInUse == 0) {
-                    ObjMsg_SendToObject(player, yButtonItemFlags, 0, yButtonItem);
+                    ObjMsg_SendToObject(player, yButtonItemFlags, 0, (void*)yButtonItem);
                     gCMenuActivatedId = yButtonItem;
                     buttonDisable(0, 0x900);
                 } else if (ys == 2) {

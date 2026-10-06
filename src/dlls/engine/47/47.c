@@ -208,7 +208,7 @@ int Carryable_updateHeld(GameObject* obj, CarryableState* state) {
             }
         }
         if (*(s8*)&held->isHeld != 0) {
-            ObjMsg_SendToObject(player, CARRYABLE_MSG_PLAYER_GRAB, obj, (held->unk02 << 16) | (u16)held->unk00);
+            ObjMsg_SendToObject(player, CARRYABLE_MSG_PLAYER_GRAB, obj, (void*)((held->unk02 << 16) | (u16)held->unk00));
         }
     }
     return held->carryState;

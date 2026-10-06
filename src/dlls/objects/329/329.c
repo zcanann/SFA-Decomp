@@ -118,12 +118,12 @@ void windLift_updateRider(GameObject* obj, GameObject* rider, WindLiftSlot* slot
                 slot->phaseFlags |= WINDLIFT_SLOT_FLAG_RELEASE;
                 slot->phaseFlags &= ~WINDLIFT_SLOT_FLAG_HOLD;
                 ObjMsg_SendToObject(rider, WINDLIFT_RIDER_ENTER_MESSAGE, obj,
-                                    (((slot->phaseFlags & WINDLIFT_SLOT_PHASE_FLAGS) >> 4) << 8) | duration);
+                                    (void*)((((slot->phaseFlags & WINDLIFT_SLOT_PHASE_FLAGS) >> 4) << 8) | duration));
                 slot->phaseFlags &= ~WINDLIFT_SLOT_FLAG_LATCH;
             } else {
                 if (heightOffset > 30.0f) {
                     ObjMsg_SendToObject(rider, WINDLIFT_RIDER_ENTER_MESSAGE, obj,
-                                        (((slot->phaseFlags & WINDLIFT_SLOT_PHASE_FLAGS) >> 4) << 8) | duration);
+                                        (void*)((((slot->phaseFlags & WINDLIFT_SLOT_PHASE_FLAGS) >> 4) << 8) | duration));
                 }
                 slot->phaseFlags |= WINDLIFT_SLOT_FLAG_HOLD;
                 slot->phaseFlags &= ~WINDLIFT_SLOT_FLAG_RELEASE;
@@ -200,7 +200,7 @@ void windLift_updateRider(GameObject* obj, GameObject* rider, WindLiftSlot* slot
         if (heightOffset < 20.0f && riderGameBit != 0) {
             slot->riseSpeed = 0.0f;
             slot->oscillationCounter = 0;
-            ObjMsg_SendToObject(rider, WINDLIFT_RIDER_EXIT_MESSAGE, obj, riderGameBit);
+            ObjMsg_SendToObject(rider, WINDLIFT_RIDER_EXIT_MESSAGE, obj, (void*)riderGameBit);
             slot->phaseFlags |= WINDLIFT_SLOT_FLAG_LATCH;
             if (isPlayer != 0) {
                 player->anim.velocityY = 0.0f;
@@ -217,7 +217,7 @@ void windLift_updateRider(GameObject* obj, GameObject* rider, WindLiftSlot* slot
             Player_SetLiftVelocityY(rider, 0.0f);
         }
         if (isPlayer == 0) {
-            ObjMsg_SendToObject(rider, WINDLIFT_RIDER_EXIT_MESSAGE, obj, riderGameBit);
+            ObjMsg_SendToObject(rider, WINDLIFT_RIDER_EXIT_MESSAGE, obj, (void*)riderGameBit);
             slot->phaseFlags &= ~WINDLIFT_SLOT_RESET_FLAGS;
             slot->riseSpeed = 0.0f;
             slot->oscillationCounter = 0;

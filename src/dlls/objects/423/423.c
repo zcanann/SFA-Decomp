@@ -306,7 +306,7 @@ void EdibleMushroom_updateBehavior(GameObject* obj, EdibleMushroomState* state, 
                         }
                         state->pickupMsgValue = 0;
                         state->pickupMsgDelay = 0.4f;
-                        ObjMsg_SendToObject(player, EDIBLE_MUSHROOM_MESSAGE_IN_RANGE, obj, (u32)&state->pickupMsgBitId);
+                        ObjMsg_SendToObject(player, EDIBLE_MUSHROOM_MESSAGE_IN_RANGE, obj, &state->pickupMsgBitId);
                         bit = placement->gameBitId;
                         if (bit != -1) {
                             mainSetBits(bit, 1);

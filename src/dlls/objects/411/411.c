@@ -214,16 +214,16 @@ void dll411_update(GameObject* obj) {
     int value;
     f32 positionDelta;
     f32 distance;
-    int messageFlags;
+    void* messageFlags;
     int messageId;
-    int messageParam;
+    GameObject* messageParam;
 
     state = obj->extra;
     player = Obj_GetPlayerObject();
     distance = DLL19B_NEAREST_DISTANCE_INITIAL;
     messageState = obj->extra;
     messageFlags = 0;
-    while (ObjMsg_Pop(obj, (u32*)&messageId, (u32*)&messageParam, (u32*)&messageFlags) != 0) {
+    while (ObjMsg_Pop(obj, (u32*)&messageId, &messageParam, &messageFlags) != 0) {
         switch (messageId) {
         case DLL19B_MESSAGE_FADE:
             messageState->brightnessAVelocity = DLL19B_BRIGHTNESS_FADE_RATE;

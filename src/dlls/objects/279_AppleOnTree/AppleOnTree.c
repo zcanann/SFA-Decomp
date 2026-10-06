@@ -208,7 +208,7 @@ void appleontree_handleCollectableHit(GameObject* obj) {
         state->triggerGameBit = APPLE_ON_TREE_GAME_BIT_NONE;
         state->pickupMessageValue = 0;
         state->pickupMessageArgument = 1.0f;
-        ObjMsg_SendToObject(player, APPLE_ON_TREE_MESSAGE_IN_RANGE, obj, (int)&state->triggerGameBit);
+        ObjMsg_SendToObject(player, APPLE_ON_TREE_MESSAGE_IN_RANGE, obj, &state->triggerGameBit);
         mainSetBits(GAMEBIT_SawApple, 1);
         state->flags = (u8)(state->flags | APPLE_ON_TREE_FLAG_PICKUP_PENDING);
     } else {

@@ -317,7 +317,7 @@ void MagicDust_update(GameObject* obj) {
                     value = mainGetBit(MAGICGEM_GAMEBIT_CLAIMED);
                     if (value == 0) {
                         state->pickupMsgArg = -1;
-                        ObjMsg_SendToObject(player, MAGICGEM_MSG_IN_RANGE, obj, (u32)&state->pickupMsgArg);
+                        ObjMsg_SendToObject(player, MAGICGEM_MSG_IN_RANGE, obj, &state->pickupMsgArg);
                         ObjHits_DisableObject(obj);
                         mainSetBits(MAGICGEM_GAMEBIT_CLAIMED, 1);
                         state->flags |= MAGICGEM_FLAG_CLAIMED;

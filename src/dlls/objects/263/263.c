@@ -301,7 +301,7 @@ void windLift107_update(GameObject* obj) {
                 state->disableTimer = 0;
                 state->cooldownTimer = 0;
                 ObjMsg_SendToObject(player, WINDLIFT107_MESSAGE_GRAB_OBJECT, obj,
-                                    (state->carryParam << 0x10) | ((u16)state->carryAngle));
+                                    (void*)((state->carryParam << 0x10) | ((u16)state->carryAngle)));
             }
             if (obj->userData2 == 1) {
                 state->carryState = WINDLIFT107_CARRY_HELD;

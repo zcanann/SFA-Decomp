@@ -279,7 +279,7 @@ void shopitem_update(GameObject* obj) {
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     } else if (s->flags97.flag_80) {
         s->msgParam = -1;
-        ObjMsg_SendToObject(Obj_GetPlayerObject(), SHOPITEM_MSG_IN_RANGE, obj, state + 0x88);
+        ObjMsg_SendToObject(Obj_GetPlayerObject(), SHOPITEM_MSG_IN_RANGE, obj, &s->msgParam);
         s->flags97.flag_80 = 0;
         s->flags97.flag_40 = 1;
     } else {

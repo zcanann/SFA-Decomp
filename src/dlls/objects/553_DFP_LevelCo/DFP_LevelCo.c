@@ -131,7 +131,7 @@ void DFP_LevelControl_updateAct1(GameObject* obj) {
 
         if (mainGetBit(GAMEBIT_OFP_ZappedByFloorTiles) != 0) {
             state->zappedTimer = 300;
-            ObjMsg_SendToObject(player, DFP_LEVEL_CONTROL_MSG_ZAP_PLAYER, obj, 1);
+            ObjMsg_SendToObject(player, DFP_LEVEL_CONTROL_MSG_ZAP_PLAYER, obj, (void*)1);
         }
     }
 }

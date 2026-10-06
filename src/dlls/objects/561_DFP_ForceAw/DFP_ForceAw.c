@@ -249,7 +249,7 @@ void TrickyCurve_updateBurstHit(GameObject* obj)
         else
         {
             mainSetBits(TRICKY_CURVE_GAMEBIT_HIT, 1);
-            ObjMsg_SendToObject(player, TRICKY_CURVE_MESSAGE_BURST, obj, 2);
+            ObjMsg_SendToObject(player, TRICKY_CURVE_MESSAGE_BURST, obj, (void*)2);
             (*gPartfxInterface)->spawnObject(obj, TRICKY_CURVE_PARTFX_BURST, &partfxArgs, 2, -1, NULL);
             Sfx_PlayFromObject(obj, TRICKY_CURVE_SFX_BURST);
         }
@@ -485,7 +485,7 @@ void TrickyCurve_updateBurstTrigger(GameObject* obj)
         }
         else
         {
-            ObjMsg_SendToObject((void*)player, DFPFORCEAW_MSG_PLAYER_BURST, obj, 1);
+            ObjMsg_SendToObject((void*)player, DFPFORCEAW_MSG_PLAYER_BURST, obj, (void*)1);
             (*gPartfxInterface)->spawnObject((void*)obj, DFPFORCEAW_PARTFX_BURST, &fxParams, 2, -1, NULL);
             burstParticles = 9;
             do

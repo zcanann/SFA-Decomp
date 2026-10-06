@@ -69,9 +69,9 @@ int cfPrisonGuard_sequenceCallback(GameObject* obj, int unused, ObjSeqState* ani
     s8 guardianFreed;
     s8 shouldTransition;
     f32 distance;
-    u32 messageSender;
+    GameObject* messageSender;
     u32 message;
-    u32 messageArgument = 0;
+    void* messageArgument = 0;
     CfPrisonGuardPlacement* placement = (CfPrisonGuardPlacement*)obj->anim.placement;
 
     switch (animUpdate->curEventId) {

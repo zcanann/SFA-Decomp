@@ -48,9 +48,9 @@ int FEseqobject_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     register GameObject* self = obj;
     int receiver;
     int i;
-    u32 sender;
+    GameObject* sender;
     int message;
-    u32 param;
+    void* param;
     int receiverCount;
     int* receivers;
     f32 effectScale;
