@@ -1614,7 +1614,7 @@ config.libs = [
             Object(Matching, "track/intersect_render.c", cflags=cflags_dll_noopt),
             Object(Matching, "track/intersect_memcard.c", cflags=cflags_dll_noopt),
 
-            Object(Matching, "main/thp/dll_3b.c", cflags=cflags_dll_noopt),
+            Object(Matching, "main/thp/THPAudioDecode.c", cflags=cflags_dll_noopt_noautoinline_deferred),
             Object(Matching, "main/thp/THPPlayer.c", cflags=cflags_dll_noopt_noautoinline_deferred),
             Object(Matching, "main/thp/THPRead.c", cflags=cflags_dll_noopt_noautoinline_deferred),
             Object(Matching, "main/thp/THPVideoDecode.c", cflags=cflags_dll_noopt_noautoinline_deferred),

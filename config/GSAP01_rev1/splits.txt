@@ -1376,15 +1376,15 @@ dlls/engine/52_n_attractmode/n_attractmode.c:
 	.sbss       start:0x803DEFC0 end:0x803DF010
 	.sdata2     start:0x803E36D8 end:0x803E36F4
 
-main/thp/dll_3b.c:
+main/thp/THPAudioDecode.c:
 	.text       start:0x8011781C end:0x80117B78
-	.bss        start:0x803A5DA8 end:0x803A7120
+	.bss        start:0x803A5DA8 end:0x803A7110
 	.sbss       start:0x803DF010 end:0x803DF014
 
 main/thp/THPPlayer.c:
 	.text       start:0x80117B78 end:0x80119968
 	.data       start:0x8031BC10 end:0x8031BD10
-	.bss        start:0x803A7120 end:0x803A7868
+	.bss        start:0x803A7120 end:0x803A7868 align:32
 	.sdata      start:0x803DD3A0 end:0x803DD3A8
 	.sbss       start:0x803DF018 end:0x803DF039
 	.sdata2     start:0x803E36F8 end:0x803E3720

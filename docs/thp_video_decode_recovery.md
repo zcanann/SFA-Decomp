@@ -1,4 +1,4 @@
-# THP player and video decoder records and storage
+# THP player and decoder records and storage
 
 ## Player TU and native preparation
 
@@ -145,3 +145,73 @@ retain only the existing TRK exception-carving and MusyX discarded-data artifact
 All five `all_source` builds and strict source links pass, with output DOLs
 byte-identical to their verified originals. Formatting is checked separately
 against every source-object hash.
+
+## Audio decoder ownership and native buffers
+
+`src/main/thp/THPAudioDecode.c` replaces the misleading `dll_3b.c` helper name.
+Its eight functions occupy EN `8011730C..80117668`; this is the THP audio thread
+and its buffer queues, not a numbered front-end DLL. The local Mario Kart
+Double Dash `THPAudioDecode.c` corroborates the source family and declaration
+order. `tools/orig/source_leaks.py --search THPAudioDecode` finds no direct
+source-name leak, so the new filename records lineage rather than a literal
+recovered SFA path. Double Dash's six-buffer capacity and audio-track selection
+are not imported: SFA's creation calls specify three buffers and its decoder
+passes the audio component directly to `THPAudioDecode`.
+
+The former aggregate layout joined unrelated message arrays, queues, stack and
+thread storage. It also gave `OSThread` an unexplained 16-byte tail. Ordinary
+globals now own each object, and every operation addresses its actual queue,
+thread or stack. The retail creation function establishes these offsets:
+
+| Offset from EN `803A4448` | Object | Bytes |
+| --- | --- | --- |
+| `0x0000` | Three decoded-audio messages | `0xC` |
+| `0x000C` | Three free-audio messages | `0xC` |
+| `0x0018` | Decoded-audio queue | `0x20` |
+| `0x0038` | Free-audio queue | `0x20` |
+| `0x0058` | Audio decode thread stack | `0x1000` |
+| `0x1058` | Audio decode thread | `0x310` |
+
+The thread ends at EN `803A57B0`; the next TU's audio DMA buffer starts at
+`803A57C0`. `THPPlayer.c` already emits a BSS section aligned to 32 bytes because
+of its DVD workspace. Recording that existing alignment in the split config
+accounts for the intervening 16 bytes without inventing thread fields or a
+padding object. The same gap appears in all five versions. Regional projection
+confirms both TU windows and all seven audio storage symbols; unrelated
+projection changes are left out.
+
+SDK-style creation-first source order and the deferred/no-auto-inline profile
+already used by the other THP TUs reproduce all eight functions under the common
+game GC/1.3 compiler. The compiler generates the shared BSS base from the separate
+globals. A private typed inline `PopFreeAudioBuffer` replaces the one-element
+pointer array in the component decoder. The analogous helper exists in the
+Double Dash family. In SFA, its typed result preserves retail register allocation
+while leaving the component loop as ordinary indexing into `compInfo.mFrameComp`.
+The in-memory path uses the canonical `initReadSize` and `movieData` members.
+
+`include/main/audio_decode_thread.h` owns the public API. The old mixed header,
+aggregate types and unimplemented PC helper declarations are removed. Its unrelated
+`TitleMenu_initialise` declaration moves to the existing title-menu header, and
+the two direct consumers use their actual owner headers.
+
+`tools/test_thp_audio_native.py` runs the complete production TU with native
+game records and independent host OS objects. Its 28 scenarios cover both thread
+entry points, creation failures and priorities, guarded start/cancel, queue
+ownership and flags, component traversal, sample counts and frame tags, streaming
+handoff, variable frame sizes, nonzero initial frames, looping, one-frame movies
+and continuation after suspension. They pass at `-O0` and `-O2` with ASan/UBSan,
+pointers above 4 GiB and output canaries. Five separate negative controls reject
+a cross-object queue offset, wrong stack end, narrowed frame pointer, advancement
+by the next frame size and a wrong frame tag. Retail quirks remain: a frame
+without audio consumes a free buffer without posting it, repeated audio
+components post the same buffer, and resuming a one-frame non-looping movie
+decodes that frame again.
+
+All five versions match all eight audio functions (860 code bytes) and all
+4,972 owned data bytes at 100%. The 16 alignment bytes are no longer counted as
+thread storage. Every other source object is byte-for-byte unchanged. Full
+reports, with completion metadata removed, retain only the pre-existing TRK
+exception-carving and MusyX discarded-data artifacts. All five `all_source`
+builds and strict source links pass; each DOL equals its verified original.
+The existing player, reader and video native tests also pass. Formatting is
+validated separately against every source-object hash.

@@ -929,7 +929,7 @@ main/texture.c
 main/thp/THPPlayer.c
 main/thp/THPRead.c
 main/thp/THPVideoDecode.c
-main/thp/dll_3b.c
+main/thp/THPAudioDecode.c
 main/track_dolphin.c
 main/vecmath.c
 main/vecmath_vec3.c

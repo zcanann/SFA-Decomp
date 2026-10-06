@@ -1376,9 +1376,9 @@ dlls/engine/52_n_attractmode/n_attractmode.c:
 	.sbss       start:0x803DD610 end:0x803DD658
 	.sdata2     start:0x803E1D10 end:0x803E1D2C
 
-main/thp/dll_3b.c:
+main/thp/THPAudioDecode.c:
 	.text       start:0x8011730C end:0x80117668
-	.bss        start:0x803A4448 end:0x803A57C0
+	.bss        start:0x803A4448 end:0x803A57B0
 	.sbss       start:0x803DD658 end:0x803DD65C
 
 dolphin/ax/AX.c:
@@ -1387,7 +1387,7 @@ dolphin/ax/AX.c:
 main/thp/THPPlayer.c:
 	.text       start:0x80117668 end:0x80119458
 	.data       start:0x8031A3B0 end:0x8031A4B0
-	.bss        start:0x803A57C0 end:0x803A5F08
+	.bss        start:0x803A57C0 end:0x803A5F08 align:32
 	.sdata      start:0x803DB9E8 end:0x803DB9F0
 	.sbss       start:0x803DD660 end:0x803DD681
 	.sdata2     start:0x803E1D30 end:0x803E1D58

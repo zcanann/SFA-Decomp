@@ -70,4 +70,6 @@ typedef struct MenuPanelGroup {
 
 extern u8 gTitleMenuSelection;
 
+void TitleMenu_initialise(void);
+
 #endif /* MAIN_DLL_FRONT_TITLE_MENU_H_ */

@@ -5,7 +5,6 @@
 #include "dolphin/os.h"
 #include "dolphin/vi.h"
 #include "main/model.h"
-#include "main/dll/FRONT/dll_3B.h"
 #include "dolphin/gx/GXTexture.h"
 #include "dolphin/gx/GXGeometry.h"
 #include "main/pi_dolphin_api.h"

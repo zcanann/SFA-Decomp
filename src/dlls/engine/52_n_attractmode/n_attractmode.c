@@ -22,7 +22,7 @@
 #include "main/lightmap_render_control_api.h"
 #include "main/map_load.h"
 #include "main/model_engine.h"
-#include "main/dll/FRONT/dll_3B.h"
+#include "main/dll/FRONT/title_menu.h"
 #include "main/dll/dll_0037_optionsscreen.h"
 #include "dolphin/os.h"
 #include "dolphin/os/OSReport.h"
