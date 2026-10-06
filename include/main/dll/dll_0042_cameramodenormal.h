@@ -147,7 +147,7 @@ typedef struct CameraModeNormalState {
     u8 yawResponseFrames;
     u8 collisionProbeTimer;
     u8 collisionState;
-    u8 targetActionFlags;
+    u8 collisionHitMask;
     CameraModeNormalWallAvoidanceFlags wallAvoidanceFlags;
     u8 wallAvoidanceTimer;
     CameraModeNormalClampFlags clampFlags;
@@ -208,7 +208,7 @@ STATIC_ASSERT(offsetof(CameraModeNormalState, initialized) == 0xC1);
 STATIC_ASSERT(offsetof(CameraModeNormalState, yawResponseFrames) == 0xC2);
 STATIC_ASSERT(offsetof(CameraModeNormalState, collisionProbeTimer) == 0xC3);
 STATIC_ASSERT(offsetof(CameraModeNormalState, collisionState) == 0xC4);
-STATIC_ASSERT(offsetof(CameraModeNormalState, targetActionFlags) == 0xC5);
+STATIC_ASSERT(offsetof(CameraModeNormalState, collisionHitMask) == 0xC5);
 STATIC_ASSERT(offsetof(CameraModeNormalState, wallAvoidanceFlags) == 0xC6);
 STATIC_ASSERT(offsetof(CameraModeNormalState, wallAvoidanceTimer) == 0xC7);
 STATIC_ASSERT(offsetof(CameraModeNormalState, clampFlags) == 0xC8);

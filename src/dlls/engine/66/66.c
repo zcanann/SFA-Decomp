@@ -984,33 +984,29 @@ void CameraModeNormal_free(CameraObject* camera) {
 }
 
 void CameraModeNormal_update(CameraObject* camera) {
-    GameObject* target[1];
-    float fa;
+    GameObject* target;
+    float zero;
     int val;
     u32 angleDelta;
     int yaw;
-    float aimZ2;
-    float aimY2;
-    float aimX2;
-    float aimZ;
-    float aimY;
-    float aimX;
-    float dx2;
-    u8 relPosScratch[4];
-    float dz;
-    float dy;
-    float dx;
-    u8 wallTraceScratch[116];
-    u8 probeTraceScratch[112];
+    f32 wallOrigin[3];
+    f32 probeOrigin[3];
+    float relativeX;
+    f32 relativeY;
+    float relativeZ;
+    float horizontalDistance;
+    float targetTimeScale;
+    TrackHitResults wallTrace;
+    TrackHitResults probeTrace;
 
-    target[0] = (GameObject*)camera->anim.targetObj;
-    if (target[0] == NULL) {
+    target = camera->anim.targetObj;
+    if (target == NULL) {
         return;
     }
-    if (target[0]->anim.classId == 1) {
-        playerGetTimeScale((GameObject*)target[0], &dx);
-        gCameraModeNormalScaledTimeDelta = timeDelta * dx;
-        val = EmissionController_IsLingering((GameObject*)target[0]);
+    if (target->anim.classId == 1) {
+        playerGetTimeScale(target, &targetTimeScale);
+        gCameraModeNormalScaledTimeDelta = timeDelta * targetTimeScale;
+        val = EmissionController_IsLingering(target);
         switch (val) {
         case 1:
             gCameraModeNormalState->heightAdjustRate = 0.0f;
@@ -1038,62 +1034,62 @@ void CameraModeNormal_update(CameraObject* camera) {
     }
     camera->unk13E = 0;
     CameraModeNormal_updateSettings(camera);
-    CameraModeNormal_updateWallAvoidance(camera, target[0]);
-    CameraModeNormal_follow(camera, &target[0]->anim);
+    CameraModeNormal_updateWallAvoidance(camera, target);
+    CameraModeNormal_follow(camera, &target->anim);
     Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
                                    &camera->anim.worldPosX, &camera->anim.worldPosY, &camera->anim.worldPosZ,
                                    camera->anim.parent);
-    CameraModeNormal_updateSlide(camera, target[0], gCameraModeNormalState->verticalUpperBound,
+    CameraModeNormal_updateSlide(camera, target, gCameraModeNormalState->verticalUpperBound,
                                  gCameraModeNormalState->verticalLowerBound);
     CameraModeNormal_updateVerticalBounds(camera, 1, 8, &gCameraModeNormalState->verticalUpperBound,
                                           &gCameraModeNormalState->verticalLowerBound);
     if (gCameraModeNormalState->wallAvoidanceFlags.active == 0) {
-        gCameraModeNormalState->targetActionFlags = *(u8*)((u8*)camera + offsetof(CameraObject, anim.activeMove));
+        gCameraModeNormalState->collisionHitMask = camera->collisionResults.hitMask;
         if (((camera->cameraCollisionActive != 0) ||
-             ((gCameraModeNormalState->targetActionFlags == 1 &&
-               (*(f32*)((u8*)camera + offsetof(CameraObject, anim.next)) >= 0.0f)))) &&
+             ((gCameraModeNormalState->collisionHitMask == 1 &&
+               (camera->collisionResults.planes[0][1] >= 0.0f)))) &&
             (gCameraModeNormalState->clampFlags.distanceClamped == 0)) {
-            if (((camera->anim.worldPosY > 30.0f + target[0]->anim.worldPosY) &&
-                 (camera->anim.worldPosY < 70.0f + target[0]->anim.worldPosY)) &&
+            if (((camera->anim.worldPosY > 30.0f + target->anim.worldPosY) &&
+                 (camera->anim.worldPosY < 70.0f + target->anim.worldPosY)) &&
                 (camera->anim.parent == NULL)) {
                 gCameraModeNormalState->wallAvoidanceFlags.active = 1;
             }
         }
-        if ((((gCameraModeNormalState->targetActionFlags & 0x10) != 0) &&
-             (*(f32*)((u8*)camera + offsetof(CameraObject, anim.next)) < -0.707f)) &&
-            (target[0]->anim.velocityY <= 0.0f)) {
+        if ((((gCameraModeNormalState->collisionHitMask & 0x10) != 0) &&
+             (camera->collisionResults.planes[0][1] < -0.707f)) &&
+            (target->anim.velocityY <= 0.0f)) {
             gCameraModeNormalState->clampFlags.heightLocked = 1;
             gCameraModeNormalState->heightLockLimit = camera->anim.worldPosY;
         }
     } else {
-        fa = 0.0f;
-        camera->boundHitZUpper = fa;
-        camera->boundHitZLower = fa;
-        if ((*(u8*)((u8*)camera + offsetof(CameraObject, anim.activeMove)) == 1) &&
-            (*(f32*)((u8*)camera + offsetof(CameraObject, anim.next)) < fa)) {
+        zero = 0.0f;
+        camera->boundHitZUpper = zero;
+        camera->boundHitZLower = zero;
+        if ((camera->collisionResults.hitMask == 1) &&
+            (camera->collisionResults.planes[0][1] < zero)) {
             gCameraModeNormalState->wallAvoidanceFlags.active = 0;
         }
-        if ((camera->anim.worldPosY > 75.0f + target[0]->anim.worldPosY) ||
-            (camera->anim.worldPosY < 20.0f + target[0]->anim.worldPosY)) {
+        if ((camera->anim.worldPosY > 75.0f + target->anim.worldPosY) ||
+            (camera->anim.worldPosY < 20.0f + target->anim.worldPosY)) {
             gCameraModeNormalState->wallAvoidanceFlags.active = 0;
         }
     }
     if (gCameraModeNormalState->clampFlags.distanceClamped != 0) {
-        if ((gCameraModeNormalState->targetActionFlags == 1) || (camera->cameraCollisionActive != 0)) {
+        if ((gCameraModeNormalState->collisionHitMask == 1) || (camera->cameraCollisionActive != 0)) {
             gCameraModeNormalState->wallAvoidanceTimer += 1;
         } else {
             gCameraModeNormalState->wallAvoidanceTimer = 0;
         }
         if (gCameraModeNormalState->wallAvoidanceTimer > 10) {
-            if (target[0]->anim.classId == 1) {
-                cameraGetPrevPos2(target[0], &aimX2, &aimY2, &aimZ2);
+            if (target->anim.classId == 1) {
+                cameraGetPrevPos2(target, &wallOrigin[0], &wallOrigin[1], &wallOrigin[2]);
             } else {
-                aimX2 = target[0]->anim.worldPosX;
-                aimY2 = target[0]->anim.worldPosY + gCameraModeNormalState->targetHeight;
-                aimZ2 = target[0]->anim.worldPosZ;
+                wallOrigin[0] = target->anim.worldPosX;
+                wallOrigin[1] = target->anim.worldPosY + gCameraModeNormalState->targetHeight;
+                wallOrigin[2] = target->anim.worldPosZ;
             }
-            camcontrol_traceMove(&aimX2, &camera->anim.worldPosX, &camera->anim.worldPosX,
-                                 (TrackHitResults*)wallTraceScratch, 3, 1, 1, 4.0f);
+            camcontrol_traceMove(&wallOrigin[0], &camera->anim.worldPosX, &camera->anim.worldPosX,
+                                 &wallTrace, 3, 1, 1, 4.0f);
             camera->probePosX = camera->anim.worldPosX;
             camera->probePosY = camera->anim.worldPosY;
             camera->probePosZ = camera->anim.worldPosZ;
@@ -1101,21 +1097,21 @@ void CameraModeNormal_update(CameraObject* camera) {
         }
     }
     if (gCameraModeNormalState->wallAvoidanceFlags.active == 0) {
-        if ((gCameraModeNormalState->targetActionFlags & 0x10) != 0) {
+        if ((gCameraModeNormalState->collisionHitMask & 0x10) != 0) {
             gCameraModeNormalState->collisionProbeTimer += 1;
         } else {
             gCameraModeNormalState->collisionProbeTimer = 0;
         }
         if (gCameraModeNormalState->collisionProbeTimer > 5) {
-            if (target[0]->anim.classId == 1) {
-                cameraGetPrevPos2(target[0], &aimX, &aimY, &aimZ);
+            if (target->anim.classId == 1) {
+                cameraGetPrevPos2(target, &probeOrigin[0], &probeOrigin[1], &probeOrigin[2]);
             } else {
-                aimX = target[0]->anim.worldPosX;
-                aimY = target[0]->anim.worldPosY + gCameraModeNormalState->targetHeight;
-                aimZ = target[0]->anim.worldPosZ;
+                probeOrigin[0] = target->anim.worldPosX;
+                probeOrigin[1] = target->anim.worldPosY + gCameraModeNormalState->targetHeight;
+                probeOrigin[2] = target->anim.worldPosZ;
             }
-            camcontrol_traceMove(&aimX, &camera->anim.worldPosX, &camera->anim.worldPosX,
-                                 (TrackHitResults*)probeTraceScratch, 3, 1, 1, 4.0f);
+            camcontrol_traceMove(&probeOrigin[0], &camera->anim.worldPosX, &camera->anim.worldPosX,
+                                 &probeTrace, 3, 1, 1, 4.0f);
             camera->probePosX = camera->anim.worldPosX;
             camera->probePosY = camera->anim.worldPosY;
             camera->probePosZ = camera->anim.worldPosZ;
@@ -1123,13 +1119,13 @@ void CameraModeNormal_update(CameraObject* camera) {
         }
     }
     (*gCameraInterface)
-        ->getRelativePosition(camera, &dx2, (f32*)relPosScratch, &dz, &dy, gCameraModeNormalState->targetHeight, 0);
-    yaw = 0x8000 - (u16)getAngle(dx2, dz);
+        ->getRelativePosition(camera, &relativeX, &relativeY, &relativeZ, &horizontalDistance, gCameraModeNormalState->targetHeight, 0);
+    yaw = 0x8000 - (u16)getAngle(relativeX, relativeZ);
     gCameraModeNormalState->pitchOffset = 0;
     camera->anim.rotX = yaw - gCameraModeNormalState->pitchOffset;
     angleDelta =
         0xffffu &
-        getAngle(camera->anim.worldPosY - (target[0]->anim.worldPosY + gCameraModeNormalState->targetHeight), dy);
+        getAngle(camera->anim.worldPosY - (target->anim.worldPosY + gCameraModeNormalState->targetHeight), horizontalDistance);
     angleDelta = angleDelta - ((int)camera->anim.rotY & 0xffffU);
     if ((int)angleDelta > 0x8000) {
         angleDelta -= 0xffff;
@@ -1139,7 +1135,7 @@ void CameraModeNormal_update(CameraObject* camera) {
     }
     val = interpolate((f32)(int)angleDelta, 1.0f / (f32)(u32)gCameraModeNormalState->yawResponseFrames, timeDelta);
     camera->anim.rotY += val;
-    CameraModeNormal_updateTargetAction(camera, target[0]);
+    CameraModeNormal_updateTargetAction(camera, target);
     val = interpolate((f32)camera->anim.rotZ, 0.125f, timeDelta);
     camera->anim.rotZ -= val;
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
