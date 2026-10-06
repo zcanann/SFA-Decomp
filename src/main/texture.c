@@ -1053,7 +1053,8 @@ void texRestructRefs(int mode) {
     for (slot = 0; slot < gLoadedTextureCount; slot++) {
         texture = gLoadedTextures[slot].texture;
         if (texture != NULL && gLoadedTextures[slot].usesHandle != 0 && texture->cached == 0 &&
-            (int)gLoadedTextures[slot].allocationSize != -1 && mmGetRegionForPtr((u8*)texture) == 0 && texture->nextAnimationFrame == NULL) {
+            (int)gLoadedTextures[slot].allocationSize != -1 && mmGetRegionForPtr((u8*)texture) == 0 &&
+            texture->nextAnimationFrame == NULL) {
             allocationSize = gLoadedTextures[slot].allocationSize;
             replacement = mmAlloc(allocationSize, 0xa0a0a0a0, 0);
             if (replacement == NULL) {
@@ -1115,12 +1116,14 @@ void texRestructRefs(int mode) {
                             if (replacement == NULL) {
                                 OSReport(sTexRestructNoSpaceFormat, texture, getHeapItemSize(texture));
                             } else if (mmGetRegionForPtr((u8*)replacement) != 0) {
-                                OSReport(sTexRestructReRegionedStuckFormat, texture, replacement, getHeapItemSize(texture));
+                                OSReport(sTexRestructReRegionedStuckFormat, texture, replacement,
+                                         getHeapItemSize(texture));
                                 previousFreeDelay = mmSetFreeDelay(0);
                                 mm_free(replacement);
                                 mmSetFreeDelay(previousFreeDelay);
                             } else if (replacement != NULL) {
-                                OSReport(sTexRestructReRegionedOptimalFormat, texture, replacement, getHeapItemSize(texture));
+                                OSReport(sTexRestructReRegionedOptimalFormat, texture, replacement,
+                                         getHeapItemSize(texture));
                                 stable = 0;
                                 memcpy(replacement, texture, allocationSize);
                                 DCStoreRange(replacement, allocationSize);
