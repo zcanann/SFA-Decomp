@@ -228,11 +228,9 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
         Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
                                        &camera->anim.worldPosX, &camera->anim.worldPosY, &camera->anim.worldPosZ,
                                        (GameObject*)camera->anim.parent);
-        defaultHandler->handler->vtable->updateSlide(camera, target, -100000.0f,
-                                                                                       100000.0f);
-        defaultHandler
-            ->handler->vtable->updateVerticalBounds(camera, 1, 3, &gCameraModeStaffAnimState->floorHeight,
-                                                    &gCameraModeStaffAnimState->ceilingHeight);
+        defaultHandler->handler->vtable->updateSlide(camera, target, -100000.0f, 100000.0f);
+        defaultHandler->handler->vtable->updateVerticalBounds(camera, 1, 3, &gCameraModeStaffAnimState->floorHeight,
+                                                              &gCameraModeStaffAnimState->ceilingHeight);
         if ((camera->collisionResults.hitCount != 0) || (camera->cameraCollisionActive != 0)) {
             gCameraModeStaffAnimState->collisionTime += timeDelta;
         }
@@ -258,8 +256,7 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
             yawDelta += 0xffff;
         }
         camera->anim.rotX += yawDelta;
-        defaultHandler
-            ->handler->vtable->updatePitch(camera, (double)target->anim.worldPosY, (double)relDistXZ);
+        defaultHandler->handler->vtable->updatePitch(camera, (double)target->anim.worldPosY, (double)relDistXZ);
         if (needsReset != 0) {
             (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
         }
@@ -308,9 +305,9 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, CameraModeStaffA
     memset(gCameraModeStaffAnimState, 0, sizeof(CameraModeStaffAnimState));
 
     view = (*gCameraInterface)->getDefaultHandlerEntry();
-    view->handler->vtable->getSettings(
-        &gCameraModeStaffAnimState->minDistance, &gCameraModeStaffAnimState->maxDistance,
-        &gCameraModeStaffAnimState->lowerHeightOffset, 0, &gCameraModeStaffAnimState->targetHeight);
+    view->handler->vtable->getSettings(&gCameraModeStaffAnimState->minDistance, &gCameraModeStaffAnimState->maxDistance,
+                                       &gCameraModeStaffAnimState->lowerHeightOffset, 0,
+                                       &gCameraModeStaffAnimState->targetHeight);
 
     gCameraModeStaffAnimState->pathNotNeeded = 0;
     gCameraModeStaffAnimState->localFrame = (GameObject*)camera->anim.parent;
