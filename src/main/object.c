@@ -1374,10 +1374,11 @@ void ObjModel_InitSkeletonCollisionBounds(f32 scale, ObjModel* model) {
             valueByteOffset = sizeof(f32);
             boneByteOffset = sizeof(ModelBone);
             pathLength = &pathLengths[1];
-            for (; i < instance->file->jointCount; radius++, valueByteOffset += sizeof(f32), boneByteOffset += sizeof(ModelBone), pathLength++, i++) {
+            for (; i < instance->file->jointCount;
+                 radius++, valueByteOffset += sizeof(f32), boneByteOffset += sizeof(ModelBone), pathLength++, i++) {
                 *(f32*)((u8*)bounds->jointRadii + valueByteOffset) = objectScale * *radius;
-                *(f32*)((u8*)bounds->radiiSq + valueByteOffset) =
-                    *(f32*)((u8*)bounds->jointRadii + valueByteOffset) * *(f32*)((u8*)bounds->jointRadii + valueByteOffset);
+                *(f32*)((u8*)bounds->radiiSq + valueByteOffset) = *(f32*)((u8*)bounds->jointRadii + valueByteOffset) *
+                                                                  *(f32*)((u8*)bounds->jointRadii + valueByteOffset);
                 bone = (ModelBone*)(file->jointData + boneByteOffset);
                 parent = bone->parent;
                 x = bone->head[0];
@@ -1397,10 +1398,12 @@ void ObjModel_InitSkeletonCollisionBounds(f32 scale, ObjModel* model) {
                 if (*radius == zero) {
                     *(f32*)((u8*)bounds->jointCullDistances + valueByteOffset) = bounds->jointCullDistances[parent];
                 } else {
-                    *(f32*)((u8*)bounds->jointCullDistances + valueByteOffset) = *pathLength + *(f32*)((u8*)bounds->jointRadii + valueByteOffset);
+                    *(f32*)((u8*)bounds->jointCullDistances + valueByteOffset) =
+                        *pathLength + *(f32*)((u8*)bounds->jointRadii + valueByteOffset);
                     distance = *(f32*)((u8*)bounds->jointCullDistances + valueByteOffset);
                     parentDistance = bounds->jointCullDistances[parent];
-                    *(f32*)((u8*)bounds->jointCullDistances + valueByteOffset) = (distance > parentDistance) ? distance : parentDistance;
+                    *(f32*)((u8*)bounds->jointCullDistances + valueByteOffset) =
+                        (distance > parentDistance) ? distance : parentDistance;
                 }
             }
         }

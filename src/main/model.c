@@ -926,7 +926,8 @@ ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstIns
         cursor += file->hitVolumeCount * sizeof(ObjModelHitSphere);
         model->activeHitVolumeSpheres = model->hitVolumeSphereBuffers[0];
     }
-    if (file->jointData != NULL && file->jointCount != 0 && file->jointCollisionRadii != NULL && file->jointCollisionLengthScales != NULL) {
+    if (file->jointData != NULL && file->jointCount != 0 && file->jointCollisionRadii != NULL &&
+        file->jointCollisionLengthScales != NULL) {
         cursor = (u8*)roundUpTo4((size_t)cursor);
         model->skeletonJointData = (ModelJointWork*)cursor;
         cursor += sizeof(ModelJointWork);
