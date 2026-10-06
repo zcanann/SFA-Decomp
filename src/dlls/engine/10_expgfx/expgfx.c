@@ -344,10 +344,8 @@ static inline void expgfxRemoveAllBody(void) {
         while (slotIndex < EXPGFX_SLOTS_PER_POOL) {
             activeBit = 1 << slotIndex;
             if ((activeBit & *poolActiveMasks) != 0) {
-                if (gExpgfxTableEntries[Expgfx_GetSlotTableIndex(slot)].resource !=
-                        0 &&
-                    gExpgfxTableEntries[Expgfx_GetSlotTableIndex(slot)].resource !=
-                        0) {
+                if (gExpgfxTableEntries[Expgfx_GetSlotTableIndex(slot)].resource != 0 &&
+                    gExpgfxTableEntries[Expgfx_GetSlotTableIndex(slot)].resource != 0) {
                     gExpgfxTextureFreeInProgress = 1;
                     textureFree((Texture*)gExpgfxTableEntries[Expgfx_GetSlotTableIndex(slot)].resource);
                     gExpgfxTextureFreeInProgress = 0;
@@ -848,8 +846,7 @@ void expgfx_resetAllPools(void) {
         for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
             activeBit = 1 << slotIndex;
             if ((activeBit & gExpgfxSlotActiveMasks[poolIndex]) != 0) {
-                if (gExpgfxTableEntries[Expgfx_GetSlotTableIndex(slot)].resource !=
-                    0) {
+                if (gExpgfxTableEntries[Expgfx_GetSlotTableIndex(slot)].resource != 0) {
                     gExpgfxTextureFreeInProgress = 1;
                     textureFree((Texture*)gExpgfxTableEntries[Expgfx_GetSlotTableIndex(slot)].resource);
                     gExpgfxTextureFreeInProgress = 0;
@@ -2150,7 +2147,8 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
-                    attached = gExpgfxTableEntries[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK].sourceParent;
+                    attached = gExpgfxTableEntries[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK]
+                                   .sourceParent;
                     rotParams.x = 0.0f;
                     rotParams.y = 0.0f;
                     rotParams.z = 0.0f;
@@ -2347,7 +2345,8 @@ void expgfx_initSlotQuad(void* slotPtr) {
     quad[3].texT = texT1;
 }
 
-int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, void* sourceObject) {
+int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex,
+                  void* sourceObject) {
     int searchIndex;
     int slotIndex;
     short foundPoolIndex;
@@ -2434,7 +2433,8 @@ void expgfxRemove(void* slotPoolBase, int poolIndex, int slotIndex, int skipText
 
         if ((*(void**)((u8*)resources[0] + Expgfx_GetSlotTableIndex(slot) * sizeof(ExpgfxTableEntry))) != 0) {
             gExpgfxTextureFreeInProgress = 1;
-            textureFree((Texture*)(void*)(*(void**)((u8*)resources[0] + Expgfx_GetSlotTableIndex(slot) * sizeof(ExpgfxTableEntry))));
+            textureFree((Texture*)(void*)(*(void**)((u8*)resources[0] +
+                                                    Expgfx_GetSlotTableIndex(slot) * sizeof(ExpgfxTableEntry))));
             gExpgfxTextureFreeInProgress = 0;
         }
 

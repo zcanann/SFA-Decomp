@@ -38,7 +38,8 @@ void expgfxRemoveAll(void);
 int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, void* sourceObject);
 void expgfx_initSlotQuad(void* slot);
 void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFrameState);
-int expgfx_addToTable(void* resourceHandle, struct ObjAnimComponent* sourceObject, struct GameObject* sourceParent, s16 resourceId);
+int expgfx_addToTable(void* resourceHandle, struct ObjAnimComponent* sourceObject, struct GameObject* sourceParent,
+                      s16 resourceId);
 int expgfx_updateSourceFrameFlags(void* sourceObject);
 void expgfx_ownerFree3(void* sourceObject);
 void expgfx_func0B_nop(void);
