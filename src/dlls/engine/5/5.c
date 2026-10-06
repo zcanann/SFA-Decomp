@@ -1059,8 +1059,8 @@ void skyUpdateLightingFromTimeOfDay(void) {
                 skySetLightSlot(slotIndex, sunDirection[0], sunDirection[1], sunDirection[2], red, green, blue,
                                 moonIntensity, ambientIntensity, blendAlpha);
             } else {
-                skySetLightSlot(slotIndex, -gSkyMoonDirection[0], gSkyMoonDirection[1], -gSkyMoonDirection[2], red, green, blue,
-                                moonIntensity, ambientIntensity, blendAlpha);
+                skySetLightSlot(slotIndex, -gSkyMoonDirection[0], gSkyMoonDirection[1], -gSkyMoonDirection[2], red,
+                                green, blue, moonIntensity, ambientIntensity, blendAlpha);
             }
         }
         skySetLightSlot(2, 0.0f, 0.0f, 0.0f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
