@@ -4550,7 +4550,11 @@ Rejected probes are not retained: direct typed heap indexing loses one
 instruction per insertion; the reference-style separate heap/length-pointer
 signature does not restore it. Indexed point lookup changes eight bytes in
 `pathSearchAddNeighbor`, and removing the integer pointer round-trip changes
-15 bytes in `pathSearchStep`. Those exact forms remain protected. A direct
+15 bytes in `pathSearchStep`. Those forms were retained at that stage. The
+2026-10-06 [native path-search recovery](pathsearch_pointer_identity.md#native-heap-and-target-identity-2026-10-06)
+replaces the raw heap accesses with typed fields and a signed `s32` condition
+index, and replaces the truncating search cast with a pointer-preserving
+`void*` conversion, while retaining 100% matching. A direct
 `linkWalkGroups[i]` spelling swaps the address-add operands; a signed canonical
 `offsetof` expression preserves them.
 
