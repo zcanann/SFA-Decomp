@@ -7,7 +7,7 @@
 #include "main/camera_interface.h"
 #include "game/objects/object_setup.h"
 #include "main/mapEvent.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/player_status.h"
 #include "main/dll/dll19_state.h"

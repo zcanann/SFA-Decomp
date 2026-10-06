@@ -44,7 +44,7 @@
 #include "main/dll/dll_0004_dummy04.h"
 #include "main/dll/dll_003C_link.h"
 #include "main/dll/dll_003D_titlemenuitem.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/voxmaps.h"
 #include "track/intersect_api.h"
 #include "dolphin/vi.h"
@@ -133,7 +133,7 @@ BaddieControlInterface** gBaddieControlInterface;
 BoneParticleEffectInterface** gBoneParticleEffectInterface;
 EnvironmentUpdateInterface** gEnvironmentUpdateInterface;
 MapEventInterface** gMapEventInterface;
-PathControlInterface** gPathControlInterface;
+ObjCollisionInterface** gObjCollisionInterface;
 TitleMenuItemInterface* gTitleMenuItemInterface;
 LinkInterface* gTitleMenuLinkInterface;
 RomCurveInterface** gRomCurveInterface;
@@ -1293,7 +1293,7 @@ void init(void) {
     gWaterfxInterface = Resource_Acquire(0x13, 7);
     gRomCurveInterface = Resource_Acquire(0x14, 0x26);
     gTitleMenuLinkInterface = Resource_Acquire(0x3c, 7);
-    gPathControlInterface = Resource_Acquire(0x15, 9);
+    gObjCollisionInterface = Resource_Acquire(0x15, 9);
     gMapEventInterface = Resource_Acquire(0x17, 0x24);
     gBoneParticleEffectInterface = Resource_Acquire(0x18, 6);
     gBaddieControlInterface = Resource_Acquire(0x19, 0x16);

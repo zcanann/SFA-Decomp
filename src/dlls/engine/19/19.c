@@ -1,5 +1,5 @@
 #include "main/dll/waterfx.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXCull.h"
@@ -625,9 +625,9 @@ void waterfx_run(int frames) {
  * Ripple height is the object's local Y plus the collision query's water
  * depth. impactPositions contains one world-space vec3 per limb.
  */
-void waterfx_spawnImpactSurface(u8* objHeader, u16 limbMask, f32* impactPositions, CurvesCollisionState* collision,
+void waterfx_spawnImpactSurface(u8* objHeader, u16 limbMask, f32* impactPositions, ObjCollisionState* collision,
                                 f32 speed) {
-    CurvesCollisionState* surf = collision;
+    ObjCollisionState* surf = collision;
     f32* pos = impactPositions;
     while (limbMask != 0) {
         if (limbMask & 1) {

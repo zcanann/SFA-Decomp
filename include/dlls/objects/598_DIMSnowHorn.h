@@ -71,7 +71,7 @@ STATIC_ASSERT(sizeof(DIMSnowHorn1State) == 0xD0C);
 STATIC_ASSERT(offsetof(DIMSnowHorn1State, countdownTimer) == 0xA84);
 
 typedef struct DIMSnowHorn1PieceCounts {
-    u8 counts[4];
+    s8 counts[4];
 } DIMSnowHorn1PieceCounts;
 
 STATIC_ASSERT(sizeof(DIMSnowHorn1PieceCounts) == 4);

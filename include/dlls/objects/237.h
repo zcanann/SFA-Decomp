@@ -4,7 +4,7 @@
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 
 struct ObjSeqState;
 
@@ -55,7 +55,7 @@ typedef struct CollectibleState {
     f32 lifetimeTimer;              /* 0x44 */
     s16 pickupMsgValue;             /* 0x48 */
     u8 pad4A[6];                    /* 0x4A */
-    CurvesCollisionState pathState; /* 0x50 */
+    ObjCollisionState pathState; /* 0x50 */
 } CollectibleState;
 
 STATIC_ASSERT(offsetof(CollectibleState, playerDistance) == 0x0);

@@ -74,6 +74,46 @@ section contents, symbol locations and resolved relocations remain unchanged
 after the five intentional renames. The two pre-existing report artifacts
 described above remain unchanged.
 
+## Shared object collision contract (2026-10-06)
+
+Engine DLL 21 is the object/terrain collision service previously mislabeled
+`PathControlInterface` and `curves_*`. Its nine exports now share a typed
+`ObjCollisionInterface` embedded in the descriptor: whole `GameObject*`
+objects, `ObjCollisionState*` records, float point/radius arrays and signed
+terrain query bytes. All 161 interface calls across 22 source files use this
+contract. The height-query slot at `0x1C` is also declared instead of being
+an opaque pointer. The confirmed TU, including its save helpers, stays intact.
+
+Callers now pass their actual `objectCollision` member instead of a flags
+word or `state + 4`. Player, CloudRunner, SnowHorn and HighTop use typed state
+locals and the evidenced `heightPadding`/`subtype` fields. Surface-tilt
+updates no longer pass the state through an integer. The former
+`curves_countRandomPoints` resolves four floor samples; its name is now
+`ObjCollision_ResolveFourPointFloor`.
+
+The contract exposed concrete false data interpretations. WallCrawler's
+three-byte "collision bone" string was the leading bytes of a `10.0f`
+radius; its final zero byte is now part of the float, with the next symbol's
+address unchanged in all five versions. Baddie's subnormal float was a query
+type byte followed by three unexplained bytes, now kept opaque. Zero point
+triples, collectible radius `3.0f`, IceSmash radius `4.0f` and BombPlantSpore
+radius `5.0f` have their actual types. EarthWarrior copies a four-byte query
+record instead of loading an integer and passing its address as an array.
+
+Dinosaur Planet's `include/dlls/engine/27.h` and `src/dlls/engine/27/27.c` at
+the revision above corroborate the separate hit-point/terrain colliders and
+the nine-slot interface. They support the recovered roles, not original SFA
+identifiers or a replacement layout. Foxhollow's EarthWarrior collision-state
+access is another lead consistent with the retail-backed member recovery.
+
+All five versions pass `all_source`, strict retail DOL equality and full
+objdiff inventories. Every affected TU and every active game TU is exact.
+Across the complete source-object inventory, sections, named symbol offsets
+and resolved relocations are unchanged apart from intentional renames and
+WallCrawler's recovered final radius byte. The two existing library report
+artifacts described above remain unchanged. This recovers the target game's
+contract without adding native-port accommodations.
+
 ## Remaining question
 
 Is `ObjAnimComponent` a genuine standalone component from the original source,

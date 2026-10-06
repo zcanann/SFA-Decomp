@@ -26,7 +26,7 @@
 #include "main/camera_interface.h"
 #include "dlls/objects/237.h"
 #include "game/objects/object_setup.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/player_status.h"
 #include "main/dll/partfx_interface.h"
@@ -180,9 +180,9 @@ void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, Gro
                              int moveArg1, int pathFlags, u8 initFlags, f32 pathRadius) {
     u8 flags;
     int b1;
-    CurvesCollisionState* path;
+    ObjCollisionState* path;
     int curveLocal;
-    u8 byteLocal;
+    s8 byteLocal;
 
     curveLocal = gDll19DefaultCurveMode.u;
     byteLocal = 1;
@@ -211,17 +211,17 @@ void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, Gro
     if (state->gameBitB != -1) {
         mainSetBits(state->gameBitB, 0);
     }
-    path = &state->baddie.curvesCollision;
+    path = &state->baddie.objectCollision;
     if ((flags & 2) != 0) {
-        (*gPathControlInterface)->init(path, 0, pathFlags | 0x200000, 1);
+        (*gObjCollisionInterface)->init(path, 0, pathFlags | 0x200000, 1);
     } else {
-        (*gPathControlInterface)->init(path, 0, 0, 0);
+        (*gObjCollisionInterface)->init(path, 0, 0, 0);
     }
-    (*gPathControlInterface)->setLocalPointCollision(path, 1, gDll19LocalPointPositions, &gDll19LocalPointRadius, 4);
+    (*gObjCollisionInterface)->setLocalPoints(path, 1, gDll19LocalPointPositions, &gDll19LocalPointRadius, 4);
     if ((flags & 4) != 0) {
-        (*gPathControlInterface)->setup(path, 1, gDll19SegmentLocalPoints, &gDll19SegmentRadius, &byteLocal);
+        (*gObjCollisionInterface)->setSegments(path, 1, gDll19SegmentLocalPoints, &gDll19SegmentRadius, &byteLocal);
     }
-    (*gPathControlInterface)->attachObject((void*)obj, path);
+    (*gObjCollisionInterface)->reset(obj, path);
     state->configFlags = config->flags;
     state->triggerId = config->triggerId;
     state->aggression = config->aggression;
@@ -570,7 +570,7 @@ void dll_19_startHitReaction(GameObject* obj, BaddieState* state, void* hitbox, 
     if (animMove != 0) {
         ObjAnim_SetCurrentMove(obj, animMove, 0.0f, 0);
     }
-    (*gPathControlInterface)->attachObject((void*)obj, &state->curvesCollision);
+    (*gObjCollisionInterface)->reset(obj, &state->objectCollision);
     if (field25f != -1) {
         state->physicsActive = field25f;
     }

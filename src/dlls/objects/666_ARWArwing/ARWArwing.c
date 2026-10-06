@@ -36,7 +36,7 @@
 #include "main/screen_transition.h"
 #include "main/shader_api.h"
 #include "main/vecmath.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/player_state.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/headdisplay.h"
@@ -182,7 +182,7 @@ void arwarwing_readControls(GameObject* obj, ArwingState* state) {
         knockBlend = sDamageStickBlendRamp[(int)aw->damageFlashTimer];
         if (aw->damageFlashTimer <= zero) {
             aw->hitShake = 0;
-            (*gPathControlInterface)->attachObject((void*)obj, &aw->pathControl);
+            (*gObjCollisionInterface)->reset(obj, &aw->pathControl);
         }
         {
             f32 stickWeight;
@@ -669,12 +669,12 @@ void arwarwing_emitDamageEffects(void* obj, ArwingState* state) {
 }
 
 void arwarwing_handlePathDamage(GameObject* obj, ArwingState* state) {
-    CurvesCollisionState* pathControl = &state->pathControl;
+    ObjCollisionState* pathControl = &state->pathControl;
     int dmg;
 
-    (*gPathControlInterface)->update((void*)obj, pathControl, timeDelta);
-    (*gPathControlInterface)->apply((void*)obj, pathControl);
-    (*gPathControlInterface)->advance((void*)obj, pathControl, timeDelta);
+    (*gObjCollisionInterface)->updateQueryBounds(obj, pathControl, timeDelta);
+    (*gObjCollisionInterface)->gatherTrackTriangles(obj, pathControl);
+    (*gObjCollisionInterface)->resolve(obj, pathControl, timeDelta);
 
     if (state->hitShake == 0 || state->mode == ARWING_MODE_DEAD) {
         dmg = (s8)pathControl->surfaceFlags;
@@ -1647,7 +1647,7 @@ void arwarwing_update(GameObject* obj) {
 
 void arwarwing_init(GameObject* obj) {
     ArwingState* state;
-    CurvesCollisionState* pathControl;
+    ObjCollisionState* pathControl;
     ArwInitCfg cfg;
 
     *(ArwInitCfgAB*)&cfg = *(ArwInitCfgAB*)&gArwingInitConfig;
@@ -1655,9 +1655,9 @@ void arwarwing_init(GameObject* obj) {
     state = obj->extra;
     pathControl = &state->pathControl;
     obj->animEventCallback = arwarwing_SeqFn;
-    (*gPathControlInterface)->init(pathControl, 4, 0x1040006, 1);
-    (*gPathControlInterface)->setup(pathControl, 3, gArwingPathSetupData, sArwingPathSpeeds, &cfg);
-    (*gPathControlInterface)->attachObject((void*)obj, pathControl);
+    (*gObjCollisionInterface)->init(pathControl, 4, 0x1040006, 1);
+    (*gObjCollisionInterface)->setSegments(pathControl, 3, gArwingPathSetupData[0], sArwingPathSpeeds, (s8*)&cfg);
+    (*gObjCollisionInterface)->reset(obj, pathControl);
     objAddObjectType(obj, PLAYER_VEHICLE_OBJGROUP);
     gArwing = obj;
     ObjHits_SetTargetMask(obj, 1);

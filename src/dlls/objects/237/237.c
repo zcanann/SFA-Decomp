@@ -11,7 +11,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/dll/partfx_interface.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/player_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
@@ -60,14 +60,14 @@
 #define COLLECTIBLE_DEFAULT_PICKUP_RADIUS 15.0f
 #define COLLECTIBLE_PATH_CONFIG           0x40006
 
-static u8 sCollectiblePathData[12] = {0};
+static f32 sCollectibleTerrainPoint[3] = {0.0f, 0.0f, 0.0f};
 
-typedef struct CollectiblePathWord {
-    u8 bytes[4];
-} CollectiblePathWord;
+typedef struct CollectibleCollisionSetup {
+    f32 radius;
+} CollectibleCollisionSetup;
 
-static const CollectiblePathWord sCollectiblePathWord = {{0x40, 0x40, 0, 0}};
-static const u8 sCollectiblePathByte[1] = {5};
+static const CollectibleCollisionSetup sCollectibleCollisionSetup = {3.0f};
+static const u8 sCollectibleTerrainQueryType[1] = {5};
 
 /*
  * The collectible notifies the player when it is in range; the player replies
@@ -247,9 +247,9 @@ void collectible_updateLooseMotion(GameObject* obj) {
         objMove(obj, obj->anim.velocityX * frameCount, obj->anim.velocityY * frameCount,
                 obj->anim.velocityZ * frameCount);
     }
-    (*gPathControlInterface)->update(obj, &state->pathState, timeDelta);
-    (*gPathControlInterface)->apply(obj, &state->pathState);
-    (*gPathControlInterface)->advance(obj, &state->pathState, timeDelta);
+    (*gObjCollisionInterface)->updateQueryBounds(obj, &state->pathState, timeDelta);
+    (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->pathState);
+    (*gObjCollisionInterface)->resolve(obj, &state->pathState, timeDelta);
     if (state->pathState.surfaceCounter != 0) {
         f32 inverseVelocityX = -obj->anim.velocityX;
         f32 inverseVelocityY = -obj->anim.velocityY;
@@ -594,11 +594,11 @@ void collectible_init(GameObject* obj, CollectibleSetup* setup) {
     CollectibleState* state = obj->extra;
     int modelIndex;
     u8* modelData;
-    CollectiblePathWord pathSetup = sCollectiblePathWord;
+    CollectibleCollisionSetup pathSetup = sCollectibleCollisionSetup;
     u8 pathControlByte;
 
     objAnim = &obj->anim;
-    pathControlByte = sCollectiblePathByte[0];
+    pathControlByte = sCollectibleTerrainQueryType[0];
     objAddObjectType(obj, COLLECTIBLE_OBJECT_GROUP);
     ObjMsg_AllocQueue(obj, COLLECTIBLE_MESSAGE_QUEUE_LENGTH);
     obj->anim.rotX = (s16)(setup->rotXByte << 8);
@@ -662,9 +662,9 @@ void collectible_init(GameObject* obj, CollectibleSetup* setup) {
             state->unk40 = 10.0f;
             break;
         }
-        (*gPathControlInterface)->init(&state->pathState, 0, COLLECTIBLE_PATH_CONFIG, 1);
-        (*gPathControlInterface)->setup(&state->pathState, 1, sCollectiblePathData, pathSetup.bytes, &pathControlByte);
-        (*gPathControlInterface)->attachObject((void*)obj, &state->pathState);
+        (*gObjCollisionInterface)->init(&state->pathState, 0, COLLECTIBLE_PATH_CONFIG, 1);
+        (*gObjCollisionInterface)->setSegments(&state->pathState, 1, sCollectibleTerrainPoint, &pathSetup.radius, (s8*)&pathControlByte);
+        (*gObjCollisionInterface)->reset(obj, &state->pathState);
     }
 }
 

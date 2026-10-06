@@ -32,7 +32,7 @@
 #include "game/objects/object_setup.h"
 #include "main/objhits.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
 #include "main/vecmath.h"
@@ -71,13 +71,20 @@
 #include "main/audio/sfx_play_api.h"
 #include "main/voxmaps.h"
 
-u8 lbl_8031DBD8[12] = {0};
-u8 lbl_8031DBE4[12] = {0};
+f32 gBaddieTerrainCollisionPoint[3] = {0.0f, 0.0f, 0.0f};
+f32 gBaddieLocalCollisionPoint[3] = {0.0f, 0.0f, 0.0f};
 
 int lbl_803DBC58[2] = {2, 3};
-f32 lbl_803DBC60 = 20.0f;
-f32 lbl_803DBC64 = 20.0f;
-f32 lbl_803DBC68 = 2.3509887e-38f;
+f32 gBaddieTerrainCollisionRadius = 20.0f;
+f32 gBaddieLocalCollisionRadius = 20.0f;
+typedef struct BaddieTerrainCollisionSetup {
+    s8 queryType;
+    u8 unknown01[3];
+} BaddieTerrainCollisionSetup;
+
+STATIC_ASSERT(sizeof(BaddieTerrainCollisionSetup) == 4);
+
+BaddieTerrainCollisionSetup gBaddieTerrainCollisionSetup = {1, {0}};
 
 const struct BaddieSightQuadrantBits gBaddieSightQuadrantBitsInit = {{0x10000, 0x20000, 0x40000, 0x80000}};
 const StaffCollisionColorArgs gBaddieFrozenFxColors = {0x08, 0xFF, 0xFF, 0x78};
@@ -867,11 +874,11 @@ void enemy_applyFloorResponse(GameObject* obj, EnemyState* state) {
         }
     }
 
-    (*gPathControlInterface)->update((void*)obj, &state->flags, timeDelta);
+    (*gObjCollisionInterface)->updateQueryBounds(obj, &state->objectCollision, timeDelta);
     if ((state->flags2E4 & 4) != 0) {
-        (*gPathControlInterface)->apply((void*)obj, &state->flags);
+        (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->objectCollision);
     }
-    (*gPathControlInterface)->advance((void*)obj, &state->flags, timeDelta);
+    (*gObjCollisionInterface)->resolve(obj, &state->objectCollision, timeDelta);
 
     if (((state->physicsActive != 0) && ((state->flags2E4 & ENEMY_FLAG2E4_FLOOR_RESPONSE_MASK) == 0)) &&
         ((state->surfaceFlags & ENEMY_SURFACE_FLAG_HAS_NEARBY_FLOOR) != 0)) {
@@ -880,7 +887,7 @@ void enemy_applyFloorResponse(GameObject* obj, EnemyState* state) {
     }
     if ((state->flags2E4 & 0x00200000) != 0) {
         ObjPath_GetPointWorldPositionArray(obj, 2, 2, points);
-        objAudioDispatchEventMask(obj, state->animEventMask, 7, points, &state->curvesCollision, state->pathSpeed,
+        objAudioDispatchEventMask(obj, state->animEventMask, 7, points, &state->objectCollision, state->pathSpeed,
                                   1.0f);
     }
 }
@@ -2300,7 +2307,7 @@ void enemy_update(GameObject* obj) {
     }
     if ((state->controlFlags & 0x8000) != 0) {
         setHudForceShowMask(0);
-        (*gPathControlInterface)->attachObject(obj, &state->flags);
+        (*gObjCollisionInterface)->reset(obj, &state->objectCollision);
         state->controlFlags &= ~0x8003;
         if ((state->flags2E4 & 0x20000) != 0) {
             s2 = (EnemyPlacement*)obj->anim.placementData;
@@ -2501,14 +2508,14 @@ void enemy_init(GameObject* obj, u8* setup, int flag) {
                 ->initCurve(*(void**)state, (void*)obj, enemyState->sightRange, (int*)&lbl_803DBC58, -1) == 0) {
             enemyState->controlFlags |= BADDIE_CONTROL_PATH_FOLLOW;
         }
-        (*gPathControlInterface)->init(state + 4, 0, 422, 1);
+        (*gObjCollisionInterface)->init(&enemyState->objectCollision, 0, 422, 1);
         if ((enemyState->flags2E4 & 8) != 0) {
-            (*gPathControlInterface)->setLocalPointCollision(state + 4, 1, lbl_8031DBE4, &lbl_803DBC64, 4);
+            (*gObjCollisionInterface)->setLocalPoints(&enemyState->objectCollision, 1, gBaddieLocalCollisionPoint, &gBaddieLocalCollisionRadius, 4);
         }
         if ((enemyState->flags2E4 & 4) != 0) {
-            (*gPathControlInterface)->setup(state + 4, 1, lbl_8031DBD8, &lbl_803DBC60, &lbl_803DBC68);
+            (*gObjCollisionInterface)->setSegments(&enemyState->objectCollision, 1, gBaddieTerrainCollisionPoint, &gBaddieTerrainCollisionRadius, &gBaddieTerrainCollisionSetup.queryType);
         }
-        (*gPathControlInterface)->attachObject(obj, state + 4);
+        (*gObjCollisionInterface)->reset(obj, &enemyState->objectCollision);
         if ((enemyState->flags2E4 & 0xc) != 0) {
             enemyState->physicsActive = 1;
         }

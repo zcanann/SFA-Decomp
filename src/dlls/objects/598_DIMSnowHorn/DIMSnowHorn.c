@@ -27,7 +27,7 @@
 #include "main/shader_api.h"
 #include "sys/objects.h"
 #include "main/dll/dll_002E_moveLib.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/tricky_api.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/baddie_state.h"
@@ -749,7 +749,7 @@ int DIMSnowHorn1_animEventCallback(GameObject* obj, int unused, ObjSeqState* ani
         break;
     }
 
-    (*gPathControlInterface)->attachObject((void*)obj, (u8*)&state->baddie + 4);
+    (*gObjCollisionInterface)->reset(obj, &state->baddie.objectCollision);
     fz = 0.0f;
     state->baddie.animSpeedC = fz;
     state->baddie.animSpeedB = fz;
@@ -1098,7 +1098,7 @@ void DIMSnowHorn1_update(GameObject* obj) {
         obj->anim.velocityX = fz;
         obj->anim.velocityY = fz;
         obj->anim.velocityZ = fz;
-        (*gPathControlInterface)->attachObject((void*)obj, (u8*)&data->baddie + 4);
+        (*gObjCollisionInterface)->reset(obj, &data->baddie.objectCollision);
         DIMSnowHorn1_ridingUpdate(obj, framesThisStep, -1);
     }
     if (data->mountMode == 0) {
@@ -1219,7 +1219,7 @@ void DIMSnowHorn1_init(GameObject* obj, DIMSnowHorn1Placement* def, int spawnFla
     u8* base = gDIMSnowHorn1ConfigTable;
     DIMSnowHorn1PieceCounts stk = sDIMSnowHorn1DefaultPieceCounts;
     DIMSnowHorn1State* inner;
-    u8* pathState;
+    ObjCollisionState* pathState;
     s8 idx;
     obj->anim.rotX = (s16)(def->spawnRot << 8);
     obj->animEventCallback = (void*)DIMSnowHorn1_animEventCallback;
@@ -1237,16 +1237,16 @@ void DIMSnowHorn1_init(GameObject* obj, DIMSnowHorn1Placement* def, int spawnFla
     }
     (*gPlayerInterface)->init(obj, &inner->baddie, 0xc, 1);
     inner->baddie.gravity = 0.17f;
-    pathState = (u8*)&inner->baddie + 4;
-    pathState[0x25b] = 0;
+    pathState = &inner->baddie.objectCollision;
+    pathState->subtype = 0;
     switch (inner->mode) {
     case 1:
     case 3:
     case 4:
-        (*gPathControlInterface)->init(pathState, 3, 0x200020, 1);
-        (*gPathControlInterface)->setLocalPointCollision(pathState, 2, base + 0xe0, &gDIMSnowHorn1PathCollisionData, 8);
-        (*gPathControlInterface)->setup(pathState, 4, base + 0xa0, base + 0xd0, stk.counts);
-        (*gPathControlInterface)->attachObject((void*)obj, pathState);
+        (*gObjCollisionInterface)->init(pathState, 3, 0x200020, 1);
+        (*gObjCollisionInterface)->setLocalPoints(pathState, 2, (f32*)(base + 0xe0), gDIMSnowHorn1PathCollisionData, 8);
+        (*gObjCollisionInterface)->setSegments(pathState, 4, (f32*)(base + 0xa0), (f32*)(base + 0xd0), stk.counts);
+        (*gObjCollisionInterface)->reset(obj, pathState);
         break;
     case 2:
         break;

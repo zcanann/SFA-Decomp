@@ -10,7 +10,7 @@
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/partfx_interface.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
@@ -44,7 +44,14 @@
 
 STATIC_ASSERT(sizeof(BombPlantSporeFlags) == 1);
 
-u8 gBombPlantSporePathSetupData[8] = {0x40, 0xA0, 0, 0, 0, 0, 0, 0};
+typedef struct BombPlantSporeCollisionSetup {
+    f32 radius;
+    u8 unknown04[4];
+} BombPlantSporeCollisionSetup;
+
+STATIC_ASSERT(sizeof(BombPlantSporeCollisionSetup) == 8);
+
+BombPlantSporeCollisionSetup gBombPlantSporeCollisionSetup = {5.0f, {0}};
 f32 gBombPlantSporePathPointData[3] = {0.0f, 0.0f, 0.0f};
 
 extern const f32 gBombPlantSporeLightAttenuationNear;
@@ -56,7 +63,7 @@ void BombPlantSpore_updateDrift(GameObject* obj, BombPlantSporeState* state);
 void BombPlantSpore_init(GameObject* obj, BombPlantSporePlacement* placement) {
     BombPlantSporeState* state;
     ModelLightStruct* light;
-    u8 pathParam[8];
+    s8 pathParam[8];
 
     (void)placement;
 
@@ -70,10 +77,10 @@ void BombPlantSpore_init(GameObject* obj, BombPlantSporePlacement* placement) {
 
     state->driftAmplitudeTarget = randomGetRange(0, 1000) / 1000.0f;
 
-    (*gPathControlInterface)->init(&state->path, 0, BOMB_PLANT_SPORE_PATH_FLAGS, 1);
-    (*gPathControlInterface)
-        ->setup(&state->path, 1, gBombPlantSporePathPointData, gBombPlantSporePathSetupData, pathParam);
-    (*gPathControlInterface)->attachObject(obj, &state->path);
+    (*gObjCollisionInterface)->init(&state->path, 0, BOMB_PLANT_SPORE_PATH_FLAGS, 1);
+    (*gObjCollisionInterface)
+        ->setSegments(&state->path, 1, gBombPlantSporePathPointData, &gBombPlantSporeCollisionSetup.radius, pathParam);
+    (*gObjCollisionInterface)->reset(obj, &state->path);
     (*gPartfxInterface)->spawnObject(obj, BOMB_PLANT_SPORE_PARTFX_SPAWN, NULL, 4, -1, NULL);
 
     light = objCreateLight(obj, 1);
@@ -193,9 +200,9 @@ void BombPlantSpore_update(GameObject* obj) {
         obj->anim.velocityX = state->driftSin * state->driftSpeed + state->driftBaseX;
         obj->anim.velocityZ = state->driftCos * state->driftSpeed + state->driftBaseZ;
         objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta, obj->anim.velocityZ * timeDelta);
-        (*gPathControlInterface)->update(obj, &state->path, timeDelta);
-        (*gPathControlInterface)->apply(obj, &state->path);
-        (*gPathControlInterface)->advance(obj, &state->path, timeDelta);
+        (*gObjCollisionInterface)->updateQueryBounds(obj, &state->path, timeDelta);
+        (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->path);
+        (*gObjCollisionInterface)->resolve(obj, &state->path, timeDelta);
         if (contactObj != NULL && (hitId = contactObj->anim.romDefNo, hitId != BOMB_PLANT_SPORE_BOMB_PLANT_ALIAS_ID) &&
             hitId != BOMB_PLANT_SPORE_OBJECT_ID && hitId != BOMB_PLANT_SPORE_GROUND_QUAKE_ALIAS_ID) {
             Sfx_PlayFromObject(obj, SFXTRIG_sc_eatthefood16);

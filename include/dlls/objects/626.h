@@ -13,7 +13,7 @@
 #include "dlls/object_descriptor.h"
 
 typedef struct HighTopPathParams {
-    u8 values[4];
+    s8 values[4];
 } HighTopPathParams;
 
 typedef struct HtInitData {

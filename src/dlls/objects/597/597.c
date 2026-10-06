@@ -26,7 +26,7 @@
 #include "main/dll/dll_0015_curves.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/partfx_interface.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/dll/tricky_api.h"
 #include "main/frame_timing.h"
@@ -612,7 +612,7 @@ int SnowBike_UpdateAttachedPosition(GameObject* obj, SnowBikeState* state) {
             obj->anim.localPosX = state->routeCursor.x;
             obj->anim.localPosY = state->routeCursor.y;
             obj->anim.localPosZ = state->routeCursor.z;
-            (*gPathControlInterface)->attachObject(obj, &state->pathState);
+            (*gObjCollisionInterface)->reset(obj, &state->pathState);
             SnowBike_SyncHitReactPosition(obj);
 
             if (state->bikeType == 0) {
@@ -641,7 +641,7 @@ int SnowBike_UpdateAttachedPosition(GameObject* obj, SnowBikeState* state) {
     obj->anim.localPosX = state->routeCursor.x;
     obj->anim.localPosY = state->routeCursor.y;
     obj->anim.localPosZ = state->routeCursor.z;
-    (*gPathControlInterface)->attachObject(obj, &state->pathState);
+    (*gObjCollisionInterface)->reset(obj, &state->pathState);
     SnowBike_SyncHitReactPosition(obj);
     flags->routeAnchored = 0;
     return 0;
@@ -787,7 +787,7 @@ void SnowBike_onSeqFree(GameObject* obj) {
         state->throttle = -0.05f;
     }
     ObjHits_EnableObject(obj);
-    (*gPathControlInterface)->attachObject(obj, &state->pathState);
+    (*gObjCollisionInterface)->reset(obj, &state->pathState);
     SnowBike_SyncHitReactPosition(obj);
 }
 
@@ -927,16 +927,16 @@ void SnowBike_UpdateCollisionResponse(GameObject* obj, SnowBikeState* state) {
 }
 
 void SnowBike_UpdateSteering(GameObject* obj, SnowBikeState* state) {
-    CurvesCollisionState* pathState = &state->pathState;
+    ObjCollisionState* pathState = &state->pathState;
     f32 fa;
     f32 volume;
     int rotClamped;
     int yawDelta;
     int tiltShift;
 
-    (*gPathControlInterface)->update(obj, pathState, timeDelta);
-    (*gPathControlInterface)->apply(obj, pathState);
-    (*gPathControlInterface)->advance(obj, pathState, timeDelta);
+    (*gObjCollisionInterface)->updateQueryBounds(obj, pathState, timeDelta);
+    (*gObjCollisionInterface)->gatherTrackTriangles(obj, pathState);
+    (*gObjCollisionInterface)->resolve(obj, pathState, timeDelta);
     tiltShift = 2;
     if (state->pathState.surfaceCounter == 0) {
         state->airTime += timeDelta;
@@ -1387,7 +1387,7 @@ void SnowBike_resetToRomListPosition(GameObject* obj) {
         state->localVel.x = zero;
         state->localVel.y = zero;
         state->localVel.z = zero;
-        (*gPathControlInterface)->attachObject(obj, &state->pathState);
+        (*gObjCollisionInterface)->reset(obj, &state->pathState);
         SnowBike_SyncHitReactPosition(obj);
         state->pathState.subtype = 1;
     }
@@ -1815,7 +1815,7 @@ void SnowBike_init(GameObject* obj, SnowBikePlacement* params, int flag) {
     SnowBikePlacement* placement;
     SnowBikeSegmentTypes segmentTypes;
     SnowBikePathSetup* pathSetup[1];
-    CurvesCollisionState* pathState;
+    ObjCollisionState* pathState;
     SnowBikeState* state;
 
     pathSetup[0] = &gSnowBikePathSetup;
@@ -1949,18 +1949,18 @@ void SnowBike_init(GameObject* obj, SnowBikePlacement* params, int flag) {
     }
     pathState = &state->pathState;
     pathState->subtype = 1;
-    (*gPathControlInterface)->init(pathState, 0, 0x48607, 1);
-    (*gPathControlInterface)
-        ->setup(pathState, 4, pathSetup[0]->terrainPoints, pathSetup[0]->terrainRadii, &segmentTypes);
+    (*gObjCollisionInterface)->init(pathState, 0, 0x48607, 1);
+    (*gObjCollisionInterface)
+        ->setSegments(pathState, 4, &pathSetup[0]->terrainPoints[0].x, pathSetup[0]->terrainRadii, segmentTypes.types);
     if (state->flags.cpuDriven && state->collisionHitType != -1) {
-        curves_setLocalPointCollisionEx(pathState, 1, &pathSetup[0]->collisionPoint.x, &gSnowBikeCollisionRadius, 8,
+        ObjCollision_SetLocalPointsEx(pathState, 1, &pathSetup[0]->collisionPoint.x, &gSnowBikeCollisionRadius, 8,
                                         state->collisionHitType);
     } else {
-        (*gPathControlInterface)
-            ->setLocalPointCollision(pathState, 1, &pathSetup[0]->collisionPoint, &gSnowBikeCollisionRadius, 8);
+        (*gObjCollisionInterface)
+            ->setLocalPoints(pathState, 1, &pathSetup[0]->collisionPoint.x, &gSnowBikeCollisionRadius, 8);
     }
     pathState->activeTimer = 10.0f + gSnowBikeCollisionRadius;
-    (*gPathControlInterface)->attachObject(obj, pathState);
+    (*gObjCollisionInterface)->reset(obj, pathState);
 }
 
 void SnowBike_release(void) {

@@ -11,7 +11,7 @@
 #include "dlls/objects/196_Tricky.h"
 #include "dlls/objects/201_Baddie.h"
 #include "main/dll/partfx_interface.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/player_target.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/frame_timing.h"
@@ -36,7 +36,7 @@
 #include "main/objprint_character_api.h"
 
 typedef struct NwMammothPathParams {
-    u8 values[4];
+    s8 values[4];
 } NwMammothPathParams;
 
 typedef struct NwMammothTables {
@@ -658,7 +658,7 @@ void NW_mammoth_update(GameObject* obj, int unusedArg) {
     placement = (NwMammothPlacement*)obj->anim.placementData;
     if ((state->runtimeFlags & NW_MAMMOTH_RUNTIME_RESET_PATH) != 0) {
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
-        (*gPathControlInterface)->attachObject(obj, &state->pathState);
+        (*gObjCollisionInterface)->reset(obj, &state->pathState);
 #endif
         state->runtimeFlags &= ~NW_MAMMOTH_RUNTIME_RESET_PATH;
     }
@@ -742,9 +742,9 @@ void NW_mammoth_update(GameObject* obj, int unusedArg) {
         (*gObjectTriggerInterface)->runSequence(state->triggerList[triggerIndex], obj, -1);
     }
     if ((state->runtimeFlags & NW_MAMMOTH_RUNTIME_PATH_CONTROL) != 0) {
-        (*gPathControlInterface)->update(obj, &state->pathState, timeDelta);
-        (*gPathControlInterface)->apply(obj, &state->pathState);
-        (*gPathControlInterface)->advance(obj, &state->pathState, timeDelta);
+        (*gObjCollisionInterface)->updateQueryBounds(obj, &state->pathState, timeDelta);
+        (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->pathState);
+        (*gObjCollisionInterface)->resolve(obj, &state->pathState, timeDelta);
     }
 }
 
@@ -802,12 +802,12 @@ void NW_mammoth_init(GameObject* obj, NwMammothPlacement* placement, int isReloa
         break;
     }
     if ((state->runtimeFlags & NW_MAMMOTH_RUNTIME_PATH_CONTROL) != 0) {
-        CurvesCollisionState* path = &state->pathState;
-        (*gPathControlInterface)->init(path, 3, 2, 1);
-        (*gPathControlInterface)
-            ->setup(path, NW_MAMMOTH_PATH_SETUP_POINT_COUNT, gNwMammothPathSetupDataA, gNwMammothPathSetupDataB,
+        ObjCollisionState* path = &state->pathState;
+        (*gObjCollisionInterface)->init(path, 3, 2, 1);
+        (*gObjCollisionInterface)
+            ->setSegments(path, NW_MAMMOTH_PATH_SETUP_POINT_COUNT, gNwMammothPathSetupDataA, (f32*)gNwMammothPathSetupDataB,
                     pathParam.values);
-        (*gPathControlInterface)->attachObject(obj, path);
+        (*gObjCollisionInterface)->reset(obj, path);
     }
     objAddObjectType(obj, NW_MAMMOTH_GROUP_ID);
 }

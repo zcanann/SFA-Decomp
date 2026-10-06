@@ -33,7 +33,7 @@
 #include "main/dll/dll_0015_curves.h"
 #include "main/lightmap_api.h"
 #include "main/pi_dolphin_api.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/obj_list.h"
 #include "main/audio/sfx_ids.h"
@@ -834,7 +834,7 @@ void trickyReportError(const char* fmt, ...) {
 void Tricky_init(GameObject* obj) {
     TrickyState* state = obj->extra;
     ObjModel* model;
-    CurvesCollisionState* collision;
+    ObjCollisionState* collision;
     u32 colorVariant;
     s8 queryTypes[2] = {0x0A, 0x08};
 
@@ -866,13 +866,13 @@ void Tricky_init(GameObject* obj) {
     state->colorVariant = colorVariant;
     model = Obj_GetActiveModel(obj);
     model->textureRefs->swapSelector = state->colorVariant;
-    collision = &state->curvesCollision;
-    (*gPathControlInterface)->init(collision, 1, 0xa7, CURVES_COLLISION_SUBTYPE_OBJECT);
-    (*gPathControlInterface)
-        ->setLocalPointCollision(collision, 1, &gTrickyPathPointCollision, &gTrickyPathPointCollisionRadius, 2);
-    (*gPathControlInterface)
-        ->setup(collision, 2, gTrickyCollisionSegmentPoints, gTrickyCollisionSegmentRadii, queryTypes);
-    (*gPathControlInterface)->attachObject(obj, collision);
+    collision = &state->objectCollision;
+    (*gObjCollisionInterface)->init(collision, 1, 0xa7, OBJ_COLLISION_SUBTYPE_OBJECT);
+    (*gObjCollisionInterface)
+        ->setLocalPoints(collision, 1, &gTrickyPathPointCollision.x, &gTrickyPathPointCollisionRadius, 2);
+    (*gObjCollisionInterface)
+        ->setSegments(collision, 2, &gTrickyCollisionSegmentPoints[0].x, gTrickyCollisionSegmentRadii, queryTypes);
+    (*gObjCollisionInterface)->reset(obj, collision);
     doNothing_onTrickyInit();
     Objfsa_UpdateWalkGroupPatches();
     state->groundSnapCounter = 2;
@@ -927,7 +927,7 @@ void Tricky_update(GameObject* obj) {
         trickyState->stateFlags &= ~TRICKY_STATE_FLAG_FEED_VOICE_PENDING;
     }
     {
-        int flagsByte = trickyState->curvesCollision.surfaceFlags;
+        int flagsByte = trickyState->objectCollision.surfaceFlags;
         trickyDebugPrint("hits: %d %d %d %d %d %d %d %d", flagsByte & 1, flagsByte & 2, flagsByte & 4, flagsByte & 8,
                          flagsByte & 0x10, flagsByte & 0x20, flagsByte & 0x40, flagsByte & 0x80);
     }
@@ -947,12 +947,12 @@ void Tricky_update(GameObject* obj) {
             trickyState->recoveryPos.x = obj->anim.worldPosX;
             trickyState->recoveryPos.y = obj->anim.worldPosY;
             trickyState->recoveryPos.z = obj->anim.worldPosZ;
-            (*gPathControlInterface)->attachObject(obj, &trickyState->curvesCollision);
+            (*gObjCollisionInterface)->reset(obj, &trickyState->objectCollision);
             if (obj->anim.currentMove == TRICKY_ANIM_SWIM_TURN || obj->anim.currentMove == TRICKY_ANIM_SWIM) {
-                trickyState->curvesCollision.resultWaterDepth = TRICKY_SWIM_MIN_DEPTH;
-                trickyState->curvesCollision.resultFloorY = TRICKY_SWIM_SEED_FLOOR_Y;
+                trickyState->objectCollision.resultWaterDepth = TRICKY_SWIM_MIN_DEPTH;
+                trickyState->objectCollision.resultFloorY = TRICKY_SWIM_SEED_FLOOR_Y;
             } else {
-                trickyState->curvesCollision.resultWaterDepth = 0.0f;
+                trickyState->objectCollision.resultWaterDepth = 0.0f;
             }
         }
         trickyState->stateFlags &= ~(TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE | TRICKY_STATE_FLAG_SEQUENCE_LATCHED |
@@ -1222,7 +1222,7 @@ void Tricky_update(GameObject* obj) {
         }
     }
     obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-    trickyState->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_OBJECT;
+    trickyState->objectCollision.subtype = OBJ_COLLISION_SUBTYPE_OBJECT;
     sTrickyStateHandlers[trickyState->stateIndex](obj, trickyState);
     trickyState->stateFlags &= ~TRICKY_STATE_FLAG_STUCK_VOICE_PENDING;
     trickyState->animTransitionTimer += timeDelta;
@@ -1367,13 +1367,13 @@ void Tricky_update(GameObject* obj) {
     Tricky_updateBlendChannelWeight(obj, trickyState);
     if (trickyState->speed > TRICKY_AUDIO_EVENT_MIN_SPEED) {
         objAudioDispatchAnimEvents(obj, &trickyState->animEvents, 1, trickyState->footPoints,
-                                   &trickyState->curvesCollision, trickyState->speed, 1.0f);
+                                   &trickyState->objectCollision, trickyState->speed, 1.0f);
     }
-    if (0.0f == trickyState->curvesCollision.resultWaterDepth) {
+    if (0.0f == trickyState->objectCollision.resultWaterDepth) {
         waterFootstepActive = 0;
-    } else if (TRICKY_NO_FLOOR_Y == trickyState->curvesCollision.resultFloorY) {
+    } else if (TRICKY_NO_FLOOR_Y == trickyState->objectCollision.resultFloorY) {
         waterFootstepActive = 1;
-    } else if (trickyState->curvesCollision.resultWaterY - trickyState->curvesCollision.resultFloorY >
+    } else if (trickyState->objectCollision.resultWaterY - trickyState->objectCollision.resultFloorY >
                TRICKY_SWIM_MIN_DEPTH) {
         waterFootstepActive = 1;
     } else {
@@ -1957,7 +1957,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* sequence) {
     trickyFreePromptChild(obj, state, &state->foodChild);
     trickyUpdateColorVariant(obj, state);
     Tricky_updateBlendChannelWeight(obj, state);
-    objAudioDispatchAnimEvents(obj, &sequence->animEvents, 1, state->footPoints, &state->curvesCollision, 1.0f, 1.0f);
+    objAudioDispatchAnimEvents(obj, &sequence->animEvents, 1, state->footPoints, &state->objectCollision, 1.0f, 1.0f);
     if ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_CALLBACK) != 0) {
         sequence->flags &= ~OBJSEQ_FLAG_TEXTURE_ANIM_TRACKS;
         characterDoEyeAnims(obj, &state->eyeAnimState);
@@ -2818,7 +2818,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
     }
     if (found != NULL) {
         state->groundSnapCounter = 2;
-        (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
+        (*gObjCollisionInterface)->reset(obj, &state->objectCollision);
         trickyResetCommandState(state);
         obj->anim.localPosX = found->anim.localPosX;
         obj->anim.localPosY = found->anim.localPosY;
@@ -4374,7 +4374,7 @@ static inline void trickySetDirectionAlongRoute(GameObject* obj, TrickyState* st
 }
 
 static inline void trickyRestoreRecoveryPosition(GameObject* obj, TrickyState* state) {
-    (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
+    (*gObjCollisionInterface)->reset(obj, &state->objectCollision);
     obj->anim.localPosX = state->recoveryPos.x;
     obj->anim.localPosY = state->recoveryPos.y;
     obj->anim.localPosZ = state->recoveryPos.z;
@@ -5036,7 +5036,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 }
             }
             Obj_SetParent(obj, NULL, 0);
-            state->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_NONE;
+            state->objectCollision.subtype = OBJ_COLLISION_SUBTYPE_NONE;
         }
         break;
     }
@@ -5073,7 +5073,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     case TRICKY_MOVE_JUMPUP:
     case TRICKY_MOVE_JUMPDOWN:
         trickyDebugPrint("JUMPDOWN or JUMPUP\n");
-        state->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_NONE;
+        state->objectCollision.subtype = OBJ_COLLISION_SUBTYPE_NONE;
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         trickyTurnAlongMoveDirection(obj);
         if ((state->stateFlags & TRICKY_STATE_FLAG_MOVE_ENDED) != 0) {
@@ -5944,7 +5944,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
 
     if ((objPosToMapBlockIdx(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ) == -1) &&
         ((state->stateFlags & TRICKY_STATE_FLAG_POSITION_RELOCATED) == 0)) {
-        state->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_NONE;
+        state->objectCollision.subtype = OBJ_COLLISION_SUBTYPE_NONE;
         obj->anim.localPosX = obj->anim.previousLocalPosX;
         obj->anim.localPosY = obj->anim.previousLocalPosY;
         obj->anim.localPosZ = obj->anim.previousLocalPosZ;
@@ -5962,15 +5962,15 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
     if (doGroundSnap != 0) {
         trackGetNearestGroundOffset(obj, obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ, &hitOffsetY, 0);
         obj->anim.localPosY -= hitOffsetY;
-        state->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_NONE;
+        state->objectCollision.subtype = OBJ_COLLISION_SUBTYPE_NONE;
     }
 
-    if ((state->curvesCollision.subtype != CURVES_COLLISION_SUBTYPE_NONE) && (state->heightTracking == 0u)) {
+    if ((state->objectCollision.subtype != OBJ_COLLISION_SUBTYPE_NONE) && (state->heightTracking == 0u)) {
         doHeightSnap = trickyIsInDeepWater(state);
 
         if (doHeightSnap != 0) {
             obj->anim.velocityY = 0.0f;
-            obj->anim.localPosY = state->curvesCollision.resultWaterY - 0.01f;
+            obj->anim.localPosY = state->objectCollision.resultWaterY - 0.01f;
         } else {
             obj->anim.velocityY += -0.17f * timeDelta;
             obj->anim.localPosY += obj->anim.velocityY * timeDelta;
@@ -6040,23 +6040,23 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
         break;
     }
 
-    if (state->curvesCollision.subtype == CURVES_COLLISION_SUBTYPE_NONE) {
-        (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
+    if (state->objectCollision.subtype == OBJ_COLLISION_SUBTYPE_NONE) {
+        (*gObjCollisionInterface)->reset(obj, &state->objectCollision);
     }
 
     if ((coordsToMapCell(obj->anim.localPosX, obj->anim.localPosZ) == 0xe) ||
         (objGetNearestTypeTo(SKEETLA_TARGET_OBJGROUP, obj, &nearestDistance) != NULL)) {
-        state->curvesCollision.flags &= ~4u;
+        state->objectCollision.flags &= ~4u;
     } else {
-        state->curvesCollision.flags |= 4u;
+        state->objectCollision.flags |= 4u;
     }
 
-    (*gPathControlInterface)->update(obj, &state->curvesCollision, timeDelta);
-    (*gPathControlInterface)->apply(obj, &state->curvesCollision);
-    (*gPathControlInterface)->advance(obj, &state->curvesCollision, timeDelta);
+    (*gObjCollisionInterface)->updateQueryBounds(obj, &state->objectCollision, timeDelta);
+    (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->objectCollision);
+    (*gObjCollisionInterface)->resolve(obj, &state->objectCollision, timeDelta);
 
-    obj->anim.rotY = state->curvesCollision.tiltPitch;
-    obj->anim.rotZ = state->curvesCollision.tiltRoll;
+    obj->anim.rotY = state->objectCollision.tiltPitch;
+    obj->anim.rotZ = state->objectCollision.tiltRoll;
 }
 
 static f32 trickyAccelerate(f32 speed, f32 maxSpeed) {
@@ -6241,13 +6241,13 @@ void trickyImpress(GameObject* obj) {
 }
 
 static int trickyIsInDeepWater(TrickyState* state) {
-    if (0.0f == state->curvesCollision.resultWaterDepth) {
+    if (0.0f == state->objectCollision.resultWaterDepth) {
         return 0;
     }
-    if (TRICKY_NO_FLOOR_Y == state->curvesCollision.resultFloorY) {
+    if (TRICKY_NO_FLOOR_Y == state->objectCollision.resultFloorY) {
         return 1;
     }
-    if (state->curvesCollision.resultWaterY - state->curvesCollision.resultFloorY > TRICKY_SWIM_MIN_DEPTH) {
+    if (state->objectCollision.resultWaterY - state->objectCollision.resultFloorY > TRICKY_SWIM_MIN_DEPTH) {
         return 1;
     }
     return 0;

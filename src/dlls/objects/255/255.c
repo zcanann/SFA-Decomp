@@ -9,7 +9,7 @@
 #include "dolphin/os/OSReport.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/partfx_interface.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
 #include "main/model.h"
@@ -111,7 +111,7 @@ STATIC_ASSERT(offsetof(MagicGemObjectDef, magicAmount) == 0xB);
 
 static const u16 sMagicGemGreenTexturePair[2] = {MAGICGEM_GREEN_TEXTURE_PAIR, 0};
 static const u16 sMagicGemRedTexturePair[2] = {MAGICGEM_RED_TEXTURE_PAIR, 0};
-static u8 sMagicGemPathData[12] = {0};
+static f32 sMagicGemTerrainPoint[3] = {0.0f, 0.0f, 0.0f};
 
 /* Target data order places the descriptor before the OSReport string. */
 ObjectDescriptor gMagicGemObjDescriptor = {
@@ -217,7 +217,7 @@ void MagicDust_update(GameObject* obj) {
             if (obj->anim.modelState != NULL) {
                 obj->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
             }
-            (*gPathControlInterface)->attachObject((void*)obj, &state->path);
+            (*gObjCollisionInterface)->reset(obj, &state->path);
             return;
         }
         if (obj->anim.modelState != NULL) {
@@ -271,9 +271,9 @@ void MagicDust_update(GameObject* obj) {
             return;
         }
         if ((state->flags & MAGICGEM_FLAG_MOTION_MASK) == 0) {
-            (*gPathControlInterface)->update((void*)obj, &state->path, timeDelta);
-            (*gPathControlInterface)->apply((void*)obj, &state->path);
-            (*gPathControlInterface)->advance((void*)obj, &state->path, timeDelta);
+            (*gObjCollisionInterface)->updateQueryBounds(obj, &state->path, timeDelta);
+            (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->path);
+            (*gObjCollisionInterface)->resolve(obj, &state->path, timeDelta);
             if (state->path.surfaceCounter != 0) {
                 f32 velocityX = -obj->anim.velocityX;
                 f32 velocityY = -obj->anim.velocityY;
@@ -340,7 +340,7 @@ void MagicDust_init(GameObject* obj, CollectibleSetup* placement) {
     f32 speed;
     u16 texturePickA[2];
     u16 texturePickB[2];
-    u8 pathParams[4];
+    s8 pathParams[4];
 
     state = obj->extra;
     pathParams[0] = 3;
@@ -420,10 +420,10 @@ void MagicDust_init(GameObject* obj, CollectibleSetup* placement) {
     }
     state->collectRadius = MAGICGEM_COLLECT_RADIUS;
     if ((obj->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0) {
-        (*gPathControlInterface)->init(&state->path, 0, MAGICGEM_PATH_FLAGS, 0);
-        (*gPathControlInterface)
-            ->setup(&state->path, MAGICGEM_PATH_POINT_COUNT, sMagicGemPathData, &state->collectRadius, pathParams);
-        (*gPathControlInterface)->attachObject((void*)obj, &state->path);
+        (*gObjCollisionInterface)->init(&state->path, 0, MAGICGEM_PATH_FLAGS, 0);
+        (*gObjCollisionInterface)
+            ->setSegments(&state->path, MAGICGEM_PATH_POINT_COUNT, sMagicGemTerrainPoint, &state->collectRadius, pathParams);
+        (*gObjCollisionInterface)->reset(obj, &state->path);
     }
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
     if ((state->flags & MAGICGEM_FLAG_BURST1) != 0) {

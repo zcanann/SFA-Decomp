@@ -4,7 +4,7 @@
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 #include "dlls/objects/237.h"
 
 #define MAGICGEM_STATE_SIZE 0x288
@@ -27,7 +27,7 @@
 
 /* MagicDust_getExtraSize allocates the complete 0x288-byte state block. */
 typedef struct MagicGemState {
-    CurvesCollisionState path; /* 0x000 */
+    ObjCollisionState path; /* 0x000 */
     f32 collectRadius;         /* 0x268: added to the base pickup radius */
     f32 burstTimer;            /* 0x26C: time until the next burst phase */
     u16 burstEffectId;         /* 0x270 */

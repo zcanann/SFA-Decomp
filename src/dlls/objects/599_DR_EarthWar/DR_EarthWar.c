@@ -14,7 +14,7 @@
 #include "main/objanim.h"
 #include "main/objseq.h"
 #include "main/resource.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/objtype.h"
 #include "main/obj_link.h"
 #include "main/obj_path.h"
@@ -69,12 +69,16 @@ const EWPathRange gDREarthWarriorLookInitData1 = {{10, 10, 0, 0, 0}};
 const EWPathRange gDREarthWarriorLookInitData2 = {{20, 20, 0, 0, 0}};
 const EWColorTable gDREarthWarriorColors = {
     {{8, 255, 190, 120}, {8, 255, 255, 120}, {8, 180, 240, 255}, {8, 170, 255, 170}}};
-static const u8 gDREarthWarriorPathSetupParam[4] = {1, 1, 1, 1};
+typedef struct DREarthWarriorTerrainQueryTypes {
+    s8 types[4];
+} DREarthWarriorTerrainQueryTypes;
 
-static void DR_EarthWarrior_setupPathState(CurvesCollisionState* pathState, DREarthWarriorInitData* base,
+static const DREarthWarriorTerrainQueryTypes gDREarthWarriorPathSetupParam = {{1, 1, 1, 1}};
+
+static void DR_EarthWarrior_setupPathState(ObjCollisionState* pathState, DREarthWarriorInitData* base,
                                            EarthWarriorSub* warrior) {
-    (*gPathControlInterface)
-        ->setup(pathState, 4, base->segmentLocalPoints, base->segmentRadii, (void*)gDREarthWarriorPathSetupParam);
+    (*gObjCollisionInterface)
+        ->setSegments(pathState, 4, base->segmentLocalPoints, base->segmentRadii, gDREarthWarriorPathSetupParam.types);
     warrior->aimAccumY = 0.0f;
     warrior->aimHalfY = (f32)warrior->yawTurnDir;
 }
@@ -584,7 +588,7 @@ int DR_EarthWarrior_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) 
         }
     }
     state->sub.unk360 |= 0x800000;
-    (*gPathControlInterface)->attachObject(obj, &state->baddie.curvesCollision);
+    (*gObjCollisionInterface)->reset(obj, &state->baddie.objectCollision);
     fz = 0.0f;
     state->baddie.animSpeedC = fz;
     state->baddie.animSpeedB = fz;
@@ -882,9 +886,9 @@ void DR_EarthWarrior_runController(GameObject* obj, int updateRate, int frameInd
     playerUpdateVelocityFromMotion(obj, sub, &state->baddie, timeDelta);
     playerClampVelocityAndMove(obj, timeDelta);
 
-    (*gPathControlInterface)->update(obj, &state->baddie.flags4, timeDelta);
-    (*gPathControlInterface)->apply(obj, &state->baddie.flags4);
-    (*gPathControlInterface)->advance(obj, &state->baddie.flags4, timeDelta);
+    (*gObjCollisionInterface)->updateQueryBounds(obj, &state->baddie.objectCollision, timeDelta);
+    (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->baddie.objectCollision);
+    (*gObjCollisionInterface)->resolve(obj, &state->baddie.objectCollision, timeDelta);
 
     obj->anim.rotX = sub->appliedYaw;
 }
@@ -950,7 +954,7 @@ void DR_EarthWarrior_update(GameObject* obj) {
         obj->anim.velocityY = 0.0f;
         state->baddie.eventFlags &= ~7;
         objAudioDispatchEventMask(obj, state->baddie.eventFlags, state->sub.soundId, state->pathPoints,
-                                  &state->baddie.curvesCollision, state->baddie.animSpeedA,
+                                  &state->baddie.objectCollision, state->baddie.animSpeedA,
                                   (state->sub.soundId == 8) ? 2.5f : 2.75f);
         obj->anim.velocityY = saved;
     }
@@ -980,10 +984,10 @@ void DR_EarthWarrior_update(GameObject* obj) {
 void DR_EarthWarrior_init(GameObject* obj, DREarthWarriorPlacement* def) {
     DREarthWarriorInitData* base = (DREarthWarriorInitData*)gDREarthWarriorInitData;
     EarthWarriorState* state = obj->extra;
-    u32 stk = *(const u32*)gDREarthWarriorPathSetupParam;
+    DREarthWarriorTerrainQueryTypes queryTypes = gDREarthWarriorPathSetupParam;
     EWPathRange r2 = gDREarthWarriorLookInitData1;
     EWPathRange r1 = gDREarthWarriorLookInitData2;
-    CurvesCollisionState* pathState;
+    ObjCollisionState* pathState;
     obj->anim.rotX = (s16)(def->spawnYaw << 8);
     obj->animEventCallback = DR_EarthWarrior_SeqFn;
     objAddObjectType(obj, VEHICLE_OBJECT_GROUP);
@@ -993,12 +997,12 @@ void DR_EarthWarrior_init(GameObject* obj, DREarthWarriorPlacement* def) {
     (*gPlayerInterface)->init(obj, &state->baddie, 4, 1);
     state->baddie.flags0 |= 0x4000;
     state->baddie.gravity = 0.17f;
-    pathState = &state->baddie.curvesCollision;
-    (*gPathControlInterface)->init(pathState, 0, 0x48683, 1);
-    (*gPathControlInterface)->setup(pathState, 4, base->segmentLocalPoints, base->segmentRadii, &stk);
-    (*gPathControlInterface)->setLocalPointCollision(pathState, 1, base->localPointPositions, base->localPointRadii, 8);
+    pathState = &state->baddie.objectCollision;
+    (*gObjCollisionInterface)->init(pathState, 0, 0x48683, 1);
+    (*gObjCollisionInterface)->setSegments(pathState, 4, base->segmentLocalPoints, base->segmentRadii, queryTypes.types);
+    (*gObjCollisionInterface)->setLocalPoints(pathState, 1, base->localPointPositions, base->localPointRadii, 8);
     pathState->activeTimer = 0x28;
-    (*gPathControlInterface)->attachObject(obj, pathState);
+    (*gObjCollisionInterface)->reset(obj, pathState);
     ObjHits_EnableObject(obj);
     ObjAnim_GetPriorityHitState(&obj->anim)->trackContactMask = 9;
     dll_2E_initState(obj, &state->moveLib, -0x2000, 0x31c7, 2);

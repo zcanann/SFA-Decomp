@@ -56,7 +56,7 @@
 #include "main/resource.h"
 #include "main/sky_interface.h"
 #include "main/vecmath.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/frame_timing.h"
 #include "main/pad.h"
 #include "dolphin/gx/GXPixel.h"

@@ -4,7 +4,7 @@
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/expgfx_interface.h"
 #include "main/dll/partfx_interface.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/object_render.h"
@@ -16,11 +16,18 @@
 #define DIM_BOSS_ICE_SMASH_PARTFX_TRAIL           1000
 #define DIM_BOSS_ICE_SMASH_PATH_INIT_FLAGS        0x40002
 
-u8 gDIMBossIceSmashPathParams[8] = {0x40, 0x80, 0, 0, 0, 0, 0, 0};
+typedef struct DIMBossIceSmashCollisionSetup {
+    f32 radius;
+    u8 unknown04[4];
+} DIMBossIceSmashCollisionSetup;
+
+STATIC_ASSERT(sizeof(DIMBossIceSmashCollisionSetup) == 8);
+
+DIMBossIceSmashCollisionSetup gDIMBossIceSmashCollisionSetup = {4.0f, {0}};
 
 u8 gDIMBossIceSmashActivationStarted;
 
-u8 gDIMBossIceSmashPathPoint[0xC] = {0};
+f32 gDIMBossIceSmashTerrainPoint[3] = {0.0f, 0.0f, 0.0f};
 
 void DIMBossIceSmash_initLaunchState(GameObject* obj, DimBossIceSmashState* state,
                                      DimBossIceSmashPlacement* placement) {
@@ -205,9 +212,9 @@ void DIMBossIceSmash_update(GameObject* obj) {
             obj->anim.rotY = state->angVelY * timeDelta + (f32)obj->anim.rotY;
             obj->anim.rotZ = state->angVelZ * timeDelta + (f32)obj->anim.rotZ;
             if ((placement->flags & DIM_BOSS_ICE_SMASH_PLACEMENT_PATH_CONTROL) != 0) {
-                (*gPathControlInterface)->update(obj, &state->path, timeDelta);
-                (*gPathControlInterface)->apply(obj, &state->path);
-                (*gPathControlInterface)->advance(obj, &state->path, timeDelta);
+                (*gObjCollisionInterface)->updateQueryBounds(obj, &state->path, timeDelta);
+                (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->path);
+                (*gObjCollisionInterface)->resolve(obj, &state->path, timeDelta);
                 if (state->path.surfaceCounter != 0) {
                     nx = -obj->anim.velocityX;
                     ny = -obj->anim.velocityY;
@@ -261,7 +268,7 @@ void DIMBossIceSmash_init(GameObject* obj, DimBossIceSmashPlacement* placement) 
     DimBossIceSmashState* state;
     f32 fz;
     u8 initState;
-    u8 pathParams[8];
+    s8 pathParams[8];
 
     pathParams[0] = 5;
     ((ObjAnimComponent*)obj)->bankIndex = placement->bankIndex;
@@ -275,10 +282,10 @@ void DIMBossIceSmash_init(GameObject* obj, DimBossIceSmashPlacement* placement) 
     state->stateFlags = initState;
     gDIMBossIceSmashActivationStarted = 0;
     if ((placement->flags & DIM_BOSS_ICE_SMASH_PLACEMENT_PATH_CONTROL) != 0) {
-        (*gPathControlInterface)->init(&state->path, 0, DIM_BOSS_ICE_SMASH_PATH_INIT_FLAGS, 1);
-        (*gPathControlInterface)
-            ->setup(&state->path, 1, gDIMBossIceSmashPathPoint, gDIMBossIceSmashPathParams, pathParams);
-        (*gPathControlInterface)->attachObject(obj, &state->path);
+        (*gObjCollisionInterface)->init(&state->path, 0, DIM_BOSS_ICE_SMASH_PATH_INIT_FLAGS, 1);
+        (*gObjCollisionInterface)
+            ->setSegments(&state->path, 1, gDIMBossIceSmashTerrainPoint, &gDIMBossIceSmashCollisionSetup.radius, pathParams);
+        (*gObjCollisionInterface)->reset(obj, &state->path);
     }
 }
 

@@ -5,7 +5,7 @@
 #include "game/objects/object.h"
 #include "game/objects/object_setup.h"
 #include "main/curve_types.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 #include "main/objseq.h"
 #include "main/objprint_character_api.h"
 
@@ -80,7 +80,7 @@ typedef struct NwMammothState {
     f32 pathSpeed;
     u8 unknown58[0x5C - 0x58];
     NwMammothCurveState curveState;
-    CurvesCollisionState pathState;
+    ObjCollisionState pathState;
     u8 hitReactState;
     u8 unknown3D5[0x408 - 0x3D5];
     u8 stateIndex;        /* NwMammothStateIndex */

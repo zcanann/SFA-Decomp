@@ -3,7 +3,7 @@
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_position_api.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/waterfx_interface.h"
 #include "sys/objects.h"
@@ -56,7 +56,7 @@ typedef struct
 typedef void (*GXSetAlphaCompareIntFn)(int comp0, int ref0, int op, int comp1, int ref1);
 
 void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 type, void* points,
-                                CurvesCollisionState* collision, f32 speed, f32 scale) {
+                                ObjCollisionState* collision, f32 speed, f32 scale) {
     Vec v;
     SplashFxParams ps;
     SurfaceSfxTable* tbl;
@@ -127,7 +127,7 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
     if (flags == 0) {
         return;
     }
-    if (!(collision->surfaceFlags & 0x10) && collision->subtype != CURVES_COLLISION_SUBTYPE_NONE) {
+    if (!(collision->surfaceFlags & 0x10) && collision->subtype != OBJ_COLLISION_SUBTYPE_NONE) {
         return;
     }
     n = collision->segmentHits.surfaceTypes[0];

@@ -169,7 +169,7 @@ Texture* gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
 NewShadowEntry gNewShadowEntries[NEW_SHADOW_ENTRY_CAPACITY];
 STATIC_ASSERT(sizeof(gNewShadowEntries) == 0x294);
 
-void objAudioDispatchEventMask(GameObject* obj, int eventMask, u8 type, void* points, CurvesCollisionState* collision,
+void objAudioDispatchEventMask(GameObject* obj, int eventMask, u8 type, void* points, ObjCollisionState* collision,
                                f32 speed, f32 scale) {
     ObjAnimEventList events;
     int bit;

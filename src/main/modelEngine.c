@@ -1,3 +1,4 @@
+#include "main/dll/obj_collision.h"
 #include "main/player_control_interface.h"
 #include "dlls/objects/686_WaterFlowWe.h"
 #include "main/dll/dll_0018_boneparticleeffect.h"
@@ -610,7 +611,7 @@ extern ResourceDescriptor Effect9_funcs, Effect10_funcs, Effect11_funcs, Effect1
     Effect15_funcs, Effect13_funcs;
 extern ResourceDescriptor Effect17_funcs, Effect18_funcs, Effect19_funcs, Effect20_funcs, Checkpoint_funcs,
     screenTransition_funcs, Dummy04_funcs;
-extern ResourceDescriptor UIController_funcs, Dummy12_funcs, RomCurve_funcs, dll_15_funcs, SaveGame_funcs,
+extern ResourceDescriptor UIController_funcs, Dummy12_funcs, RomCurve_funcs, SaveGame_funcs,
     screens_funcs;
 extern ResourceDescriptor Dummy30_funcs;
 extern ResourceDescriptor TitleScreenInit_funcs, n_rareware_funcs, n_attractmode_funcs, SaveSelectScreen_funcs,
@@ -1157,7 +1158,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &Dummy12_funcs,
     &waterfx_funcs,
     &RomCurve_funcs,
-    &dll_15_funcs,
+    (ResourceDescriptor*)&gObjCollisionDescriptor,
     &screenTransition_funcs,
     &SaveGame_funcs,
     (ResourceDescriptor*)&boneParticleEffect_funcs,

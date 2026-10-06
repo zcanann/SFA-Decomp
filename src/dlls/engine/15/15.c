@@ -10,7 +10,7 @@
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
 #include "main/resource.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/vecmath.h"
 #include "main/lightmap_api.h"
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
@@ -813,9 +813,9 @@ void player_update(GameObject* obj, BaddieState* state, float dt, float pathDt, 
     gPlayerMoveOverrideObject = 0;
 
     if ((state->flags0 & 0x1000000) == 0 && (state->flags0 & 0x400000) == 0 && keepPathControls != 0) {
-        (*gPathControlInterface)->update(obj, &state->curvesCollision, dt);
-        (*gPathControlInterface)->apply(obj, &state->curvesCollision);
-        (*gPathControlInterface)->advance(obj, &state->curvesCollision, pathDt);
+        (*gObjCollisionInterface)->updateQueryBounds(obj, &state->objectCollision, dt);
+        (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->objectCollision);
+        (*gObjCollisionInterface)->resolve(obj, &state->objectCollision, pathDt);
 
         if (((s32)state->surfaceFlags & 0x10) != 0) {
             state->flags0 |= 0x40000;

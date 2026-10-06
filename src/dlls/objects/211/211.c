@@ -25,7 +25,7 @@
 #include "sys/objects.h"
 #include "main/shader_api.h"
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/partfx_interface.h"
 #include "main/track_bbox_api.h"
 #include "main/dll/landedArwing.h"
@@ -283,7 +283,7 @@ u32 LandedArwing_UpdateFlightChase(GameObject* obj, BaddieState* state)
     ((ObjHitsPriorityState *)obj->anim.hitReactState)->objectPairHitVolume = LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME;
     ObjHits_RegisterActiveHitVolumeObject(obj);
 
-    (*gPathControlInterface)->advance(obj, &state->flags4, timeDelta);
+    (*gObjCollisionInterface)->resolve(obj, &state->objectCollision, timeDelta);
 
     if (sub->surfaceMode != LANDED_ARWING_SCRIPT_MODE)
     {
@@ -431,7 +431,7 @@ u32 landedarwing_updateMovementState(GameObject* obj, BaddieState* baddie)
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->objectPairPriority = 9;
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
-    (*gPathControlInterface)->advance(obj, &baddie->flags4, timeDelta);
+    (*gObjCollisionInterface)->resolve(obj, &baddie->objectCollision, timeDelta);
     if (baddie->moveJustStartedA != 0)
     {
         if (state->surfaceMode == 6)

@@ -7,7 +7,7 @@
  * default handler. States cover idle/wander (04), locomotion (02),
  * follow/turn (01), the air-meter ride sequence (07/08), reset/death (09),
  * and a scripted progress state (10). It owns a path-control walker
- * (gPathControlInterface) for ground motion, a look-controller from
+ * (gObjCollisionInterface) for ground motion, a look-controller from
  * dll_2E, eye animation, movement SFX, and the on-screen air meter
  * (gGameUIInterface). Hits drain the air meter; emptying it shuts the
  * meter down, spawns a follow-up object and sets GameBit 0xB48.
@@ -22,7 +22,7 @@
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_002E_moveLib.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/objfx_api.h"
 #include "main/frame_timing.h"
@@ -1003,7 +1003,7 @@ void HighTop_update(GameObject* obj) {
 void HighTop_init(GameObject* obj, HighTopPlacement* placement) {
     u8* base = gHighTopConfigTable;
     HighTopRuntime* runtime = obj->extra;
-    u8* pathState;
+    ObjCollisionState* pathState;
     ObjModelState* node;
     HtInitData local1;
     HtInitData local2;
@@ -1023,12 +1023,12 @@ void HighTop_init(GameObject* obj, HighTopPlacement* placement) {
     objAddObjectType(obj, VEHICLE_OBJECT_GROUP);
     (*gPlayerInterface)->init(obj, &runtime->baddie, 11, 1);
     runtime->baddie.gravity = 0.17f;
-    pathState = (u8*)&runtime->baddie + 4;
-    pathState[0x25b] = 1;
-    (*gPathControlInterface)->init(pathState, 3, 1024, 0);
-    (*gPathControlInterface)->setLocalPointCollision(pathState, 2, &base[0xe8], gHighTopPathPointRadii, 8);
-    (*gPathControlInterface)->setup(pathState, 4, &base[0xa8], &base[0xd8], pathParam.values);
-    (*gPathControlInterface)->attachObject(obj, pathState);
+    pathState = &runtime->baddie.objectCollision;
+    pathState->subtype = 1;
+    (*gObjCollisionInterface)->init(pathState, 3, 1024, 0);
+    (*gObjCollisionInterface)->setLocalPoints(pathState, 2, (f32*)&base[0xe8], gHighTopPathPointRadii, 8);
+    (*gObjCollisionInterface)->setSegments(pathState, 4, (f32*)&base[0xa8], (f32*)&base[0xd8], pathParam.values);
+    (*gObjCollisionInterface)->reset(obj, pathState);
     dll_2E_initState(obj, &runtime->lookController, -4551, 23665, 6);
     dll_2E_setReattackDelay(&runtime->lookController, 300, 120);
     dll_2E_setMoveTables(&runtime->lookController, &local2, &local1, 6);
