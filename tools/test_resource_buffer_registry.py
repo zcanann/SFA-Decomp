@@ -64,8 +64,8 @@ static void DVDRead(DVDFileInfo* file, void* destination, int size, int offset) 
     event(READ);
 }
 static void DVDClose(DVDFileInfo* file) { assert(file); closed++; event(CLOSE); }
-static void* mmAlloc(int bytes, u32 tag, int flags) {
-    assert(bytes == expectedAllocation && tag == expectedTag && flags == 0);
+static void* mmAlloc(int bytes, u32 tag, const char* allocationName) {
+    assert(bytes == expectedAllocation && tag == expectedTag && allocationName == 0);
     actualAllocation = bytes;
     allocation = malloc(bytes + 32);
     assert(allocation && (uintptr_t)allocation > UINT32_MAX);

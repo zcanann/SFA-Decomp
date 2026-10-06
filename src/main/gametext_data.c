@@ -283,7 +283,7 @@ static u8 sGameTextUnclassifiedData[0x204] = {
     0x00, 0x00, 0x00,
 };
 
-void* gGameTextStringStore = (void*)-1;
+int gGameTextStringStoreHandle = -1;
 #if defined(VERSION_GSAP01) || defined(VERSION_GSAP01_rev1)
 char sDiscErrorSpacerLine[4] = {0};
 char sDiscReadErrorSpacerLine[4] = {0};

@@ -83,8 +83,8 @@ static int DVDOpen(char* path, DVDFileInfo* file) {
     }
     file->length = 128; opens++; event(OPEN); return openOK;
 }
-static void* mmAlloc(int size, u32 tag, int flags) {
-    assert(size >= 0 && size <= 256 && tag == 0x7d7d7d7d && flags == 0 && allocationCount < 256);
+static void* mmAlloc(int size, u32 tag, const char* allocationName) {
+    assert(size >= 0 && size <= 256 && tag == 0x7d7d7d7d && allocationName == 0 && allocationCount < 256);
     void* pointer = malloc(size + 16);
     assert(pointer && (uintptr_t)pointer > UINT32_MAX);
     memset(pointer, 0xa7, size + 16);

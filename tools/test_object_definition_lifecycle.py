@@ -51,8 +51,8 @@ static void *resource, *modLines, *intersections;
 static int currentId, allocationFails, collisionMask, lineCount;
 static int allocCalls, ioCalls, lineCalls, buildCalls, freeCalls, warnings;
 
-static void* mmAlloc(int size, int tag, int flags) {
-    assert(size == RESOURCE_SIZE && tag == 0xe && flags == 0);
+static void* mmAlloc(int size, int tag, const char* allocationName) {
+    assert(size == RESOURCE_SIZE && tag == 0xe && allocationName == 0);
     allocCalls++;
     if (allocationFails) return NULL;
     resource = calloc(1, size);

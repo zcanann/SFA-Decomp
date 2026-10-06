@@ -85,8 +85,8 @@ static void loadAndDecompressDataFile(int fileId, void* output, int offset, int 
     *written = 32;
     event(query ? QUERY : READ, output, size);
 }
-static void* mmAlloc(int size, int tag, int unused) {
-    assert(size == 32 && tag == 10 && unused == 0);
+static void* mmAlloc(int size, int tag, const char* allocationName) {
+    assert(size == 32 && tag == 10 && allocationName == 0);
     event(ALLOCATE, shared.bytes, size);
     return shared.bytes;
 }

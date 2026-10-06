@@ -14,7 +14,8 @@ size_t roundUpTo8(size_t value);
 size_t roundUpTo16(size_t value);
 size_t roundUpTo32(size_t value);
 void mm_free(void* ptr);
-void* mmAlloc(int size, int type, int flag);
+/* The optional allocation name is used by failure diagnostics. */
+void* mmAlloc(int size, int type, const char* allocationName);
 void* getCache(void);
 void cacheQueueWait(int sync);
 void copyToCache(void* dst, void* src, u32 count);

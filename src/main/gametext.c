@@ -1647,7 +1647,7 @@ void gameTextInitRendererState(void) {
     lbl_803DC980 = 0;
     gameTextBuildSystemFontAtlas();
     curGameTextDir = 3;
-    gGameTextStringStore = (void*)mmCreateMemoryStore(0x800);
+    gGameTextStringStoreHandle = mmCreateMemoryStore(0x800);
 }
 
 void gameTextInit(void) {
@@ -2972,7 +2972,7 @@ char** gameTextWrapLines(char* str, f32 maxWidth, f32 scale, int* outLineCount, 
     /* The block holds the pointer table, copied bytes, and one terminator per line. */
     byteCount = scanOffset + lineCount + tableBytes;
     if (outMaxLineHeight != NULL) {
-        lines = mmAllocateFromFBMemoryStore((int)gGameTextStringStore, byteCount);
+        lines = mmAllocateFromFBMemoryStore(gGameTextStringStoreHandle, byteCount);
     } else {
         lines = mmAlloc(byteCount, 0, 0);
     }

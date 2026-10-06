@@ -68,8 +68,8 @@ static void DVDOpen(char* name, DVDFileInfo* info) {
 static void DVDClose(DVDFileInfo* info) {
     assert(info && opens == 1 && reads == 1 && closes++ == 0);
 }
-static void* mmAlloc(u32 bytes, u32 tag, int flags) {
-    assert(opens == 1 && tag == 0x7f7f7fff && flags == 0 && allocs++ == 0);
+static void* mmAlloc(u32 bytes, u32 tag, const char* allocationName) {
+    assert(opens == 1 && tag == 0x7f7f7fff && allocationName == 0 && allocs++ == 0);
     assert(bytes == (u32)((expectedLength + 31) / 32 * 32));
     allocatedBytes = bytes;
     allocated = aligned_alloc(32, bytes + 32);

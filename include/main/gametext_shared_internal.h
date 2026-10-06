@@ -18,7 +18,7 @@ extern u8 gGameTextColorR;
 extern int gGameTextRenderingById;
 extern u16 gGameTextCursorX;
 extern u16 gGameTextCursorY;
-extern void* gGameTextStringStore;
+extern int gGameTextStringStoreHandle;
 extern int gGameTextShadowEnabled;
 extern f32 gGameTextScale;
 extern u8 gGameTextShadowColorB;

@@ -31,7 +31,7 @@ typedef struct GameObject { int unused; } GameObject;
 static GameObject player;
 static int allocations, releases, failAllocation, bitWrites, standUp;
 static f32 timeDelta;
-static void* mmAlloc(size_t size, u32 color, int flags) {
+static void* mmAlloc(size_t size, u32 color, const char* allocationName) {
     assert(size == 0x6ec);
     if (failAllocation) return NULL;
     allocations++;

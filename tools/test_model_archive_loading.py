@@ -51,8 +51,8 @@ static void fileLoadToBufferOffset(int file, void* output, int offset, int size)
     scratch[index] = 1024;
     scratch[index + 1] = 1024 + expectedStorage;
 }
-static void* mmAlloc(int bytes, int tag, int flags) {
-    assert(tag == 9 && flags == 0 && allocations++ == 0);
+static void* mmAlloc(int bytes, int tag, const char* allocationName) {
+    assert(tag == 9 && allocationName == 0 && allocations++ == 0);
     int tail = expectedCached ? (expectedAnimations * 2 + 15) / 8 * 8 :
         (expectedAnimations * (int)sizeof(void*) + 7) / 8 * 8 + expectedStorage;
     assert(bytes == expectedBytes + tail + 500);

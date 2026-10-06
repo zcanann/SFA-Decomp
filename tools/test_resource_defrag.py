@@ -69,8 +69,8 @@ static int getHeapItemSize(void* pointer) {
     int id = blockId(pointer); assert(blocks[id].live);
     heapSizeQueries++; return blocks[id].heapBytes;
 }
-static void* mmAlloc(int bytes, int tag, int flags) {
-    assert(textureState == 2 && bytes == fileBytes + 32 && tag == 0x7d7d7d7d && flags == 0);
+static void* mmAlloc(int bytes, int tag, const char* allocationName) {
+    assert(textureState == 2 && bytes == fileBytes + 32 && tag == 0x7d7d7d7d && allocationName == 0);
     assert(freeDelay == 7 && allocations < 32);
     allocationForcing[allocations] = forcedHeaps;
     int id = allocations < planLength ? plan[allocations] : -1;

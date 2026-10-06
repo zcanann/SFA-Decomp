@@ -34,7 +34,7 @@
 #define ECSH_CREATOR_SHARPCLAW_NO_TRIGGER_SEQUENCE     -1
 
 #define ECSH_CREATOR_SETUP_ALLOC_TYPE  0xE
-#define ECSH_CREATOR_SETUP_ALLOC_FLAGS 0
+#define ECSH_CREATOR_SETUP_ALLOC_NAME  0
 #define ECSH_CREATOR_CHILD_SETUP_FLAGS 5
 #define ECSH_CREATOR_NO_MAP_ID         -1
 #define ECSH_CREATOR_NO_OBJECT_INDEX   -1
@@ -89,7 +89,7 @@ void ecshCreator_update(GameObject* obj) {
     }
     canSetupObject = Obj_CanSetupObject();
     if (canSetupObject > 0 && state->spawnTimer <= 0) {
-        spawnSetup = mmAlloc(sizeof(EnemyPlacement), ECSH_CREATOR_SETUP_ALLOC_TYPE, ECSH_CREATOR_SETUP_ALLOC_FLAGS);
+        spawnSetup = mmAlloc(sizeof(EnemyPlacement), ECSH_CREATOR_SETUP_ALLOC_TYPE, ECSH_CREATOR_SETUP_ALLOC_NAME);
         spawnSetup->base.posX = placement->base.posX;
         spawnSetup->base.posY = placement->base.posY;
         spawnSetup->base.posZ = placement->base.posZ;

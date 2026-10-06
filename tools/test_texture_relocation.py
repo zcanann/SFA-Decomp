@@ -74,8 +74,8 @@ static int mmGetRegionForPtr(u8* pointer) {
 static int getHeapItemSize(void* pointer) {
     int id = blockId(pointer); assert(blocks[id].live); return blocks[id].heapBytes;
 }
-static void* mmAlloc(int bytes, int tag, int flags) {
-    assert(bytes == allocationBytes && (u32)tag == 0xa0a0a0a0u && flags == 0 && freeDelay == 7);
+static void* mmAlloc(int bytes, int tag, const char* allocationName) {
+    assert(bytes == allocationBytes && (u32)tag == 0xa0a0a0a0u && allocationName == 0 && freeDelay == 7);
     assert(textureState == (defragCalls ? 0 : 2) && allocations < 16);
     allocationHeaps[allocations] = forceHeap;
     int id = allocations < planCount ? plan[allocations] : -1;
