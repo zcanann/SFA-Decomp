@@ -97,12 +97,12 @@ static inline void modelLoadInitialMove(ModelFileHeader* file, ObjAnimCachedMove
 }
 
 extern ModelJointAdjustmentBuffer gModelJointAdjustments;
-#define APPEND_JOINT_ADJUSTMENT(FIELD, AXIS) \
-    if (poseAdjustments->FIELD[AXIS] != 0) { \
+#define APPEND_JOINT_ADJUSTMENT(FIELD, AXIS)                                                                           \
+    if (poseAdjustments->FIELD[AXIS] != 0) {                                                                           \
         gModelJointAdjustments.words[wordCount++] = (s16)(poseOffsetA + offsetof(ModelJointPosePair, FIELD[0][AXIS])); \
         gModelJointAdjustments.words[wordCount++] = (s16)(poseOffsetB + offsetof(ModelJointPosePair, FIELD[0][AXIS])); \
-        gModelJointAdjustments.words[wordCount++] = poseAdjustments->FIELD[AXIS]; \
-        gModelJointAdjustments.words[wordCount++] = poseAdjustments->FIELD[AXIS]; \
+        gModelJointAdjustments.words[wordCount++] = poseAdjustments->FIELD[AXIS];                                      \
+        gModelJointAdjustments.words[wordCount++] = poseAdjustments->FIELD[AXIS];                                      \
     }
 extern char sModelAnimationBufferOverflowWarning[];
 extern Vec gModelJitterAxis;
@@ -2044,8 +2044,10 @@ static void modelBuildJointAdjustments(ObjAnimComponent* objAnim, ObjAnimState* 
         matrixSlotsA = (const s8*)channel->moveCache[channel->moveCacheSlot]->jointMatrixSlots;
         matrixSlotsB = (const s8*)channel->moveCache[channel->prevMoveCacheSlot]->jointMatrixSlots;
     } else {
-        matrixSlotsA = (const s8*)file->animationDataSection + channel->moveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
-        matrixSlotsB = (const s8*)file->animationDataSection + channel->prevMoveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
+        matrixSlotsA =
+            (const s8*)file->animationDataSection + channel->moveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
+        matrixSlotsB =
+            (const s8*)file->animationDataSection + channel->prevMoveCacheSlot * (((file->jointCount - 1) & ~7) + 8);
     }
     modelDef = objAnim->modelInstance;
     bindingOffset = 0;
