@@ -232,7 +232,7 @@ typedef struct ModelFileHeader {
         u16 modNo;   /* animation-bank model number */
     };
     u8 unk06[2];
-    s32 unk08; /* Cleared after instance initialization; meaning not recovered. */
+    s32 unk08;    /* Cleared after instance initialization; meaning not recovered. */
     s32 dataSize; /* anim data appended at header + dataSize */
     u8 unk10[8];
     union {

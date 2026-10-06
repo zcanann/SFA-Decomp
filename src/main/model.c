@@ -720,7 +720,8 @@ int modelLoad_calcSizes(ModelFileHeader* file, int flags, ModelInstanceSizes* si
     int chunkBytes;
 
     if (file->animationCount != 0) {
-        sizes->jointMatrixBytes = ((u32)file->jointCount + (u32)file->extraJointCount) * (2 * sizeof(ObjModelJointMatrix));
+        sizes->jointMatrixBytes =
+            ((u32)file->jointCount + (u32)file->extraJointCount) * (2 * sizeof(ObjModelJointMatrix));
     } else {
         sizes->jointMatrixBytes = 2 * sizeof(ObjModelJointMatrix);
     }
