@@ -169,7 +169,7 @@ int main(int argc, char** argv) {
     assert(argc == 2);
     if (strcmp(argv[1], "--null") == 0) {
         /* Retail walks these NULL cursors without dereferencing them. C arithmetic is still undefined. */
-        mergeTableFiles(arena.tables.mergeModels, 42, 69, 2048);
+        mergeTableFiles(arena.tables.workspace.mergeModels, 42, 69, 2048);
         return 0;
     }
     FILE* input = fopen(argv[1], "rb"); assert(input);
@@ -221,6 +221,7 @@ def harness():
     parts = [PRELUDE]
     types = (ROOT / 'include/types.h').read_text()
     parts.append(re.search(r'^#define ARRAY_COUNT[^\n]*', types, re.M)[0])
+    parts.append(re.search(r'struct ResourceTableWorkspace \{.*?\n\};', source, re.S)[0])
     parts.append(re.search(r'struct MldfTables \{.*?\n\};', source, re.S)[0])
     start = source.index('typedef u8 MldfArenaBlock')
     parts.append(source[start:source.index('\n};', start) + 3])
@@ -228,7 +229,7 @@ def harness():
     parts.append(re.search(r'enum MldfFileId \{.*?\};', ids, re.S)[0])
     parts.append(re.search(r'^#define MAPTBLP\b(?:[^\n]*\\\n)*[^\n]*', source, re.M)[0])
     parts.append(SERVICES)
-    parts.append('static u32* mergedTables[] = {' + ','.join('arena.tables.' + f[0] for f in FAMILIES) + '};')
+    parts.append('static u32* mergedTables[] = {' + ','.join('arena.tables.workspace.' + f[0] for f in FAMILIES) + '};')
     parts.append('static const int ids[][2] = {' + ','.join(f'{{{f[1]},{f[2]}}}' for f in FAMILIES) + '};')
     parts.append('static const int capacities[] = {' + ','.join(str(f[3]) for f in FAMILIES) + '};')
     for name in ('mergeTableFiles', 'getCurrentDataFile', 'getTableFileEntry'):

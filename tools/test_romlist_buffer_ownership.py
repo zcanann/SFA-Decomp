@@ -203,7 +203,7 @@ static void checkStartup(int residentFiles) {
     for (int i = 0; i < 120; i++) arena.tables.romList[i] = marker;
     for (int i = 0; i < 88; i++) {
         arena.tables.ptrs[i] = residentFiles ? marker : NULL;
-        arena.tables.ids[i] = 77; arena.tables.owners[i] = 77; arena.tables.loadedFlags[i] = 77;
+        arena.tables.ids[i] = 77; arena.tables.owners[i] = 77; arena.tables.workspace.loadedFlags[i] = 77;
     }
     lbl_803DCC98 = 77;
     assert(initLoadFiles() == 0 && gLoadFilesInitDone == 1 && createCalls == 1);
@@ -222,7 +222,7 @@ static void checkStartup(int residentFiles) {
         for (int j = 0; j < rootCount; j++) if (i == rootFiles[j]) root = 1;
         assert((arena.tables.ptrs[i] != NULL) == root);
         if (root) assert((arena.tables.ptrs[i] == marker) == residentFiles);
-        assert(arena.tables.owners[i] == -1 && arena.tables.ids[i] == -1 && arena.tables.loadedFlags[i] == 0);
+        assert(arena.tables.owners[i] == -1 && arena.tables.ids[i] == -1 && arena.tables.workspace.loadedFlags[i] == 0);
     }
     assert(callbackCount == 40 + (residentFiles ? 0 : rootCount));
     assert(gPendingDvdReadCount == (residentFiles ? 0 : rootCount));
@@ -289,7 +289,7 @@ int main(void) {
 def harness():
     source = (ROOT / 'src/main/pi_dolphin.c').read_text()
     parts = [PRELUDE]
-    for name in ('MldfTables', 'MldfIterators', 'PackHeader'):
+    for name in ('ResourceTableWorkspace', 'MldfTables', 'MldfIterators', 'PackHeader'):
         parts.append(re.search(rf'struct {name} \{{.*?\n\}};', source, re.S)[0])
     start = source.index('typedef u8 MldfArenaBlock')
     parts.append(source[start:source.index('\n};', start) + 3])

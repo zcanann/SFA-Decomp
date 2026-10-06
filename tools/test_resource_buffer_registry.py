@@ -38,6 +38,7 @@ static _Alignas(32) u8 resident[2048], disk[2048], output[2048];
 static char* sResourceFileNameTable[0x58];
 static char sDirBlockTag[] = "DIR", sZlbBlockTag[] = "ZLB";
 static int gAssetLoadInFlightFlags, gAssetLoadCompletedFlags;
+static DVDFileInfo activeFiles[88];
 static void* poolEntry;
 static void** gDvdFileInfoPool = &poolEntry;
 static int expectedId, expectedSize, expectedOffset, expectedAllocation;
@@ -98,7 +99,9 @@ static void OSRestoreInterrupts(int value) { assert(value == 19); }
 static void reset(void) {
     memset(gResourceFileBuffers, 0, sizeof(gResourceFileBuffers));
     memset(gResourceFileSizes, 0, sizeof(gResourceFileSizes));
-    memset(gObjBlockStatus, 0xab, sizeof(gObjBlockStatus));
+    memset(&gResourceTableWorkspace, 0xab, sizeof(gResourceTableWorkspace));
+    assert((uintptr_t)activeFiles > UINT32_MAX);
+    for (int i = 0; i < 88; i++) gResourceTableWorkspace.fileInfo[i] = &activeFiles[i];
     for (int i = 0; i < 2048; i++) resident[i] = disk[i] = i * 13 + 7;
     memset(output, 0xcc, sizeof(output));
     for (int i = 0; i < 0x58; i++) sResourceFileNameTable[i] = (char*)&resident[i];
@@ -155,25 +158,71 @@ static void checkAcquire(int hit, int size, int id) {
         free(result);
     }
 }
-static void checkCallback(int which, int failed, int ready) {
+/* Independent callback contract: destination slot, completion bit and release slot.
+   Generic callbacks prefer bank A when both bits are set; failed reads leave both
+   slots untouched. Texture-table callbacks can complete even on failure, and the
+   two TEX1 failures release TEX0 slot B, as in retail. */
+static const struct {
+    void (*callback)(s32, DVDFileInfo*);
+    u32 flags[2];
+    int slots[2];
+    int releaseSlot;
+} callbackCases[] = {
+    {animCurvReadCb,    {0x10000000, 0x40000000}, {13, 85}, -1},
+    {animCurvTabReadCb, {0x20000000, 0x80000000}, {14, 86}, -1},
+    {voxMapReadCb,      {0x01000000, 0x04000000}, {27, 84}, -1},
+    {voxMapTabReadCb,   {0x02000000, 0x08000000}, {26, 83}, -1},
+    {blocksReadCb,      {0x00010000, 0x00040000}, {37, 71}, -1},
+    {blocksTabReadCb,   {0x00020000, 0x00080000}, {38, 72}, -1},
+    {tex1ReadCb,        {0x00001000, 0x00002000}, {32, 75}, -1},
+    {tex0readCb,        {0x00000100, 0x00000200}, {35, 77}, -1},
+    {animReadCb,        {0x00000010, 0x00000020}, {48, 74}, -1},
+    {modelsReadCb,      {0x00000001, 0x00000002}, {43, 70}, -1},
+    {animTabReadCb,     {0x00000040, 0x00000080}, {47, 73}, -1},
+    {modelsTabReadCb,   {0x00000004, 0x00000008}, {42, 69}, -1},
+    {tex1tab2readCb,    {0x00008000, 0},          {76, -1}, 78},
+    {tex1tab1readCb,    {0x00004000, 0},          {33, -1}, 78},
+    {tex0tab2readCb,    {0x00000800, 0},          {78, -1}, 78},
+    {tex0tab1readCb,    {0x00000400, 0},          {36, -1}, 36},
+};
+static void checkCallback(int which, int result, int ready) {
     reset();
-    void (*callbacks[])(s32, DVDFileInfo*) = {tex1tab2readCb, tex1tab1readCb, tex0tab2readCb, tex0tab1readCb};
-    const int flags[] = {0x8000, 0x4000, 0x800, 0x400};
-    const int releaseSlot[] = {78, 78, 78, 36};
-    const int statusSlot[] = {76, 33, 78, 36};
+    const int released = callbackCases[which].releaseSlot;
+    const int failed = result < 0;
+    const u32 initialCompleted = 0x00200000, unrelatedFlag = 0x00100000;
+    u32 expectedCompleted = initialCompleted;
     DVDFileInfo info = {0};
-    gAssetLoadInFlightFlags = ready ? flags[which] : 0;
-    gResourceFileBuffers[releaseSlot[which]] = allocation = resident;
-    callbacks[which](failed ? -1 : 0, &info);
-    assert(closed == 1 && pushed == 1 && freed == failed);
-    assert(gResourceFileBuffers[releaseSlot[which]] == (failed ? NULL : resident));
-    assert(gAssetLoadCompletedFlags == (ready ? flags[which] : 0));
-    if (failed) expectEvents((int[]){CLOSE, PUSH, FREE}, 3);
+    struct ResourceTableWorkspace expected;
+    memcpy(&expected, &gResourceTableWorkspace, sizeof(expected));
+    gAssetLoadInFlightFlags = unrelatedFlag;
+    for (int bank = 0; bank < 2; bank++) if (ready & (1 << bank))
+        gAssetLoadInFlightFlags |= callbackCases[which].flags[bank];
+    u32 inFlight = gAssetLoadInFlightFlags;
+    gAssetLoadCompletedFlags = initialCompleted;
+    if (released >= 0) {
+        gResourceFileBuffers[released] = allocation = resident;
+        if (failed) expected.fileInfo[released] = NULL;
+    }
+    if (!failed || released >= 0) {
+        for (int bank = 0; bank < 2; bank++) {
+            if (!(ready & (1 << bank))) continue;
+            expected.fileInfo[callbackCases[which].slots[bank]] = NULL;
+            expectedCompleted |= callbackCases[which].flags[bank];
+            break;
+        }
+    }
+    callbackCases[which].callback(result, &info);
+    assert(closed == 1 && pushed == 1 && freed == (failed && released >= 0));
+    assert((u32)gAssetLoadInFlightFlags == inFlight);
+    assert((u32)gAssetLoadCompletedFlags == expectedCompleted);
+    if (failed && released >= 0) expectEvents((int[]){CLOSE, PUSH, FREE}, 3);
     else expectEvents((int[]){CLOSE, PUSH}, 2);
     for (int i = 0; i < 88; i++) {
-        int cleared = (failed && i == releaseSlot[which]) || (ready && i == statusSlot[which]);
-        assert(gObjBlockStatus[i] == (cleared ? 0u : 0xababababu));
+        assert(gResourceFileBuffers[i] == (i == released && !failed ? resident : NULL));
     }
+    /* Check the complete pointer width, every untouched slot, all seven tables
+       and the load flags, not just the low word of each cleared pointer. */
+    assert(memcmp(&gResourceTableWorkspace, &expected, sizeof(expected)) == 0);
 }
 static void checkTexture(int kind, int bank, int query, int direct, int fallback, int hasOffsets) {
     reset();
@@ -242,8 +291,8 @@ int main(void) {
         checkWhole(hit, sizes[size]);
         checkAcquire(hit, sizes[size], 0); checkAcquire(hit, sizes[size], 87);
     }
-    for (int cb = 0; cb < 4; cb++) for (int failure = 0; failure < 2; failure++)
-        for (int flag = 0; flag < 2; flag++) checkCallback(cb, failure, flag);
+    for (int cb = 0; cb < 16; cb++) for (int result = -1; result <= 1; result++)
+        for (int flags = 0; flags < (cb < 12 ? 4 : 2); flags++) checkCallback(cb, result, flags);
     for (int kind = 0; kind < 3; kind++) for (int bank = 0; bank < 2; bank++)
         for (int query = 0; query < 3; query++) for (int direct = 0; direct < 2; direct++)
             for (int offsets = 0; offsets < 2; offsets++) {
@@ -254,7 +303,7 @@ int main(void) {
         for (int present = 0; present < 2; present++) for (int valid = 0; valid < 2; valid++)
             for (int flagged = 0; flagged < 2; flagged++) checkBlock(vox, bank, present, valid, flagged);
     for (int present = 0; present < 4; present++) checkMap(present);
-    puts("638 resource registry, IO, metadata and callback cases checked");
+    puts("790 resource registry cases checked, including 168 full-workspace callback checks");
     return 0;
 }
 """
@@ -262,15 +311,20 @@ int main(void) {
 
 def harness():
     source = (ROOT / 'src/main/pi_dolphin.c').read_text()
-    parts = [PRELUDE]
-    for name in ('gResourceFileBuffers', 'gResourceFileSizes', 'gObjBlockStatus'):
+    parts = [PRELUDE, re.search(r'struct ResourceTableWorkspace \{.*?\n\};', source, re.S)[0]]
+    parts.append('static ' + re.search(r'^struct ResourceTableWorkspace gResourceTableWorkspace;', source, re.M)[0])
+    ids = (ROOT / 'include/main/mldf_fileid.h').read_text()
+    parts.append(re.search(r'enum MldfFileId \{.*?\};', ids, re.S)[0])
+    for name in ('gResourceFileBuffers', 'gResourceFileSizes'):
         parts.append('static ' + re.search(rf'^(?:void\*|u32) {name}\[[^;]+;', source, re.M)[0])
     parts.append(re.search(r'struct ZlbHeader \{.*?\n\};', source, re.S)[0])
     parts.append(re.search(r'^#define ZLB_HDR[^\n]+', source, re.M)[0])
     modes = (ROOT / 'include/main/pi_dolphin_texture_api.h').read_text()
     parts.extend(re.findall(r'^#define TEXTURE_FRAME_QUERY_[^\n]+', modes, re.M))
     parts.append(SERVICES)
-    for name in ('tex1tab2readCb', 'tex1tab1readCb', 'tex0tab2readCb', 'tex0tab1readCb',
+    for name in ('animCurvReadCb', 'animCurvTabReadCb', 'voxMapReadCb', 'voxMapTabReadCb',
+                 'blocksReadCb', 'blocksTabReadCb', 'tex1ReadCb', 'tex0readCb',
+                 'animReadCb', 'modelsReadCb', 'animTabReadCb', 'modelsTabReadCb', 'tex1tab2readCb', 'tex1tab1readCb', 'tex0tab2readCb', 'tex0tab1readCb',
                  'getDataFileSize', 'fileLoad', 'fileLoadToBuffer', 'fileLoadToBufferOffset',
                  'tex1GetFrame', 'tex0GetFrame', 'texPreGetFrame', 'checkLoadBlock', 'loadVoxMaps',
                  'mapsBinGetRomlistSize'):

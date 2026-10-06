@@ -92,7 +92,7 @@ static void DVDRead(DVDFileInfo* file, void* p, int size, int offset) {
 static void DVDReadAsyncPrio(DVDFileInfo* file, void* p, int size, int offset, DVDCallback callback, int priority) {
     assert(priority == 2); DVDRead(file, p, size, offset);
     int stored = 0;
-    for (int i = 0; i < 88; i++) if (resourceView.fileInfo[i] == file) stored++;
+    for (int i = 0; i < 88; i++) if (resourceView.workspace.fileInfo[i] == file) stored++;
     storedBeforeSubmit[asyncs] = stored; submitted[asyncs++] = callback; event(ASYNC);
 }
 static void DVDClose(DVDFileInfo* file) { assert(file); closes++; event(CLOSE); }
@@ -154,13 +154,13 @@ static const Spec specs[] = {
 };
 static void* getMergedTable(int id) {
     switch (id) {
-    case 14: return resourceView.mergeAnimCurv;
-    case 26: return resourceView.mergeVoxMap;
-    case 38: return resourceView.mergeBlocks;
-    case 42: return resourceView.mergeModels;
-    case 47: return resourceView.mergeAnim;
-    case 36: return resourceView.mergeTex0;
-    case 33: return resourceView.mergeTex1;
+    case 14: return resourceView.workspace.mergeAnimCurv;
+    case 26: return resourceView.workspace.mergeVoxMap;
+    case 38: return resourceView.workspace.mergeBlocks;
+    case 42: return resourceView.workspace.mergeModels;
+    case 47: return resourceView.workspace.mergeAnim;
+    case 36: return resourceView.workspace.mergeTex0;
+    case 33: return resourceView.workspace.mergeTex1;
     default: abort();
     }
 }
@@ -213,13 +213,13 @@ static void checkLoad(int kind, int requested, int bank, int mode, int stale, in
     assert(resourceView.sizes[slot] == (failure == 1 ? 37 : failure == 2 && spec->retry ? 0 : 128));
     if (allocatedNow) assert(allocatedSizes[stale] == 128 + spec->extra);
     if (asyncs) {
-        assert(submitted[0] == spec->callbacks[bank] && resourceView.fileInfo[slot] == &files[0]);
+        assert(submitted[0] == spec->callbacks[bank] && resourceView.workspace.fileInfo[slot] == &files[0]);
         assert(storedBeforeSubmit[0] == (kind > 1));
-    } else assert(resourceView.fileInfo[slot] == NULL);
+    } else assert(resourceView.workspace.fileInfo[slot] == NULL);
     for (int i = 0; i < 88; i++) if (i != slot) {
         assert(resourceView.ptrs[i] == before.ptrs[i] && resourceView.owners[i] == before.owners[i]);
         assert(resourceView.ids[i] == before.ids[i] && resourceView.sizes[i] == before.sizes[i]);
-        assert(resourceView.fileInfo[i] == before.fileInfo[i]);
+        assert(resourceView.workspace.fileInfo[i] == before.workspace.fileInfo[i]);
     }
     checkPath(0, kind, map, id, 0);
     if (opens == 2) checkPath(1, kind, map, id, 1);
@@ -257,7 +257,7 @@ static void checkPending(int kind, int requested, int bank) {
     resourceView.ids[spec->ids[bank]] = 7;
     assert(mapLoadDataFile(7, spec->ids[requested]) == allocated[0]);
     assert(resourceView.owners[spec->ids[bank]] == 7 && resourceView.ids[spec->ids[bank]] == -1);
-    assert(resourceView.fileInfo[spec->ids[bank]] == &files[0]);
+    assert(resourceView.workspace.fileInfo[spec->ids[bank]] == &files[0]);
     cleanup();
 }
 static void checkEmpty(int kind) {
@@ -313,7 +313,7 @@ int main(void) {
 def harness():
     source = (ROOT / 'src/main/pi_dolphin.c').read_text()
     parts = [PRELUDE]
-    for name in ('MldfNames', 'MldfTables'):
+    for name in ('MldfNames', 'ResourceTableWorkspace', 'MldfTables'):
         parts.append(re.search(rf'struct {name} \{{.*?\n\}};', source, re.S)[0])
     start = source.index('typedef u8 MldfArenaBlock')
     parts.append(source[start:source.index('\n};', start) + 3])

@@ -231,6 +231,18 @@ merge buffers `mergeAnimCurv`/`mergeVoxMap`/`mergeBlocks`/`mergeTex1`/`mergeTex0
 `fmtAnimCurvBin`, `fmtVoxmapBin`, `fmtModBin`, etc., built with `sMapFileNameTable[]` - the
 117-map-name table also defined at the bottom of `pi_dolphin.c`).
 
+The former `gObjBlockStatus[0x63f6]` was not an array of block-status words.
+Its complete 0x18FD8-byte span now has the private `ResourceTableWorkspace`
+definition: 88 in-flight `DVDFileInfo*` slots, the seven merged tables, and
+88 load flags. `gResourceTableWorkspace` and `MldfTables.workspace` share that
+definition. Sizes and every field's position are asserted; this reconstruction
+does not establish the original declaration grouping. Foxhollow
+separates the pointer slots as `sDvdFileInfoInFlight` in its native loader.
+The 16 read callbacks now clear typed pointers using canonical file IDs.
+Both TEX1 table callbacks still release TEX0 table slot B on failure, and
+generic callbacks still leave their slots unchanged on failure. Simultaneous
+bank flags retain the first-bank precedence of retail.
+
 Only 14 of the resource kinds actually get a dual slot in `mapLoadDataFile`
 (ANIMCURV bin+tab, VOXMAP bin+tab, TEX1 bin+tab, TEX0 bin+tab, BLOCKS bin+tab, MODELS bin+tab,
 ANIM bin+tab); MODELIND, OBJSEQ2C, OBJSEQ, TEXPRE, PREANIM and ENVFXACT are loaded through a
@@ -342,13 +354,17 @@ The neighbouring-global `MldfTables` addressing scheme still needs recovery
 for a native build.
 
 `tools/test_resource_buffer_registry.py` imports the production registry and
-14 complete consumer bodies. Its 638 cases cover resident/DVD copies, all
+26 complete consumer bodies. Its 790 cases cover resident/DVD copies, all
 32 destination alignments, retained allocations, texture and map metadata,
-and callback release/status behavior at `-O0`/`-O2` under ASan/UBSan. Fixtures
-use native pointers and host-endian records with IO/allocation/cache spies;
+and callback release/completion behavior at `-O0`/`-O2` under ASan/UBSan.
+The 168 callback cases check full-width pointer clears, all untouched slots,
+the seven merged buffers and load flags, including failures and simultaneous
+bank flags. Fixtures use native pointers and host-endian records with IO/allocation/cache spies;
 they do not decode retail assets. Truncated-pointer and wrong-release-slot
-negative controls fail as expected. This registry recovery preserves every
-source object byte and the exact retail DOL in all five versions.
+negative controls fail as expected. The workspace recovery preserves code/data
+bytes, section properties, symbol offsets and relocations after the one explicit
+symbol rename in all five versions. Every other source object is byte-identical,
+and every final DOL exactly matches retail.
 
 Per-map `*.romlist.zlb` files are cached separately in `gMapRomListBuffers`.
 `piRomLoadSection(int mapsOffset, int mapIndex, void* destBuf)` takes its

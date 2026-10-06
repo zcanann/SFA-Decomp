@@ -286,7 +286,9 @@ int main(void) {
 
 def harness():
     source = (ROOT / 'src/main/pi_dolphin.c').read_text()
-    parts = [PRELUDE, re.search(r'struct MldfTables \{.*?\n\};', source, re.S)[0]]
+    parts = [PRELUDE]
+    for name in ('ResourceTableWorkspace', 'MldfTables'):
+        parts.append(re.search(rf'struct {name} \{{.*?\n\}};', source, re.S)[0])
     start = source.index('typedef u8 MldfArenaBlock')
     end = source.index('\n};', start) + 3
     parts.append(source[start:end])
