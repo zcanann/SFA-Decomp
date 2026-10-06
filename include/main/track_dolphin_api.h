@@ -10,9 +10,8 @@
 
 struct Shader;
 struct MapBlockData;
-enum HitQueryMask
-{
-    HITQUERY_TEST_OBJECT_HITBOXES = 0x01,  /* also test reset-object hitboxes, not just map triangles */
+enum HitQueryMask {
+    HITQUERY_TEST_OBJECT_HITBOXES = 0x01, /* also test reset-object hitboxes, not just map triangles */
     /* keep only near-horizontal triangles: trackBuildBlockTriangles drops any
      * triangle whose plane normal Y is within +-0.707 (cos 45deg) of zero */
     HITQUERY_HORIZONTAL_SURFACES_ONLY = 0x04,
@@ -30,12 +29,12 @@ typedef struct ObjModel ObjModel;
 
 int objShadowRender(GameObject* obj, int renderMode, int unused, int frameCount);
 int trackIntersectRebuildPending(void);
-int trackGetNearestGroundOffsetAndNormal(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundOffset,
-                                         f32* outNormal, int queryMask);
+int trackGetNearestGroundOffsetAndNormal(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundOffset, f32* outNormal,
+                                         int queryMask);
 int trackGetNearestGroundOffset(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundOffset, int queryMask);
 int trackGetHeight(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsOut, int mode, int queryMask);
 int trackGetIntersect(GameObject* contactSource, f32* startPoints, f32* endPoints, int pointCount, void* resultStorage,
-                        int unusedFlags);
+                      int unusedFlags);
 void hitDetect_calcSweptSphereBounds(TrackQueryBounds* boundsOut, f32* startPoints, f32* endPoints, f32* radii,
                                      int pointCount);
 void trackIntersectBroadphase(GameObject* obj, TrackQueryBounds* bounds, u32 mask, int flags);
@@ -65,8 +64,7 @@ void renderMapBlock(struct MapBlockData* block, u8 type);
 void shadowBeginFrame(void);
 void shadowVolumeBeginFrame(void);
 void trackInvalidateDynamicSlotsForObject(GameObject* target);
-int findSurfaceInYRange(GameObject* obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
-                        GameObject** outSurfaceObj);
+int findSurfaceInYRange(GameObject* obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY, GameObject** outSurfaceObj);
 void renderGlows(void);
 void MapBlock_init(struct MapBlockData* block);
 void MapBlock_initHits(struct MapBlockData* block, int index);

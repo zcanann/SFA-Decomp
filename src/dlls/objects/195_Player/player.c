@@ -10493,8 +10493,7 @@ int playerBuildLedgeClimbProbe(int a, int b, void* c, int d, f32* e, f32 distanc
             } else {
                 line = NULL;
             }
-            if (line != NULL &&
-                ((line->kind & 0x3f) == 6 || (line->kind & 0x3f) == 0x10)) {
+            if (line != NULL && ((line->kind & 0x3f) == 6 || (line->kind & 0x3f) == 0x10)) {
                 j = line->pt[0];
                 ax = *(f32*)((u8*)points + j * sizeof(Vec));
                 ay = 0.0f;
