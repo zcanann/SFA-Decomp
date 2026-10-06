@@ -754,7 +754,7 @@ static int heapSpawnSlot(int region, int idx, int size, int type, int newType, i
     return idx;
 }
 
-int roundUpTo32(int x) {
+size_t roundUpTo32(size_t x) {
     int r = x & 0x1f;
     if (r > 0) {
         x += 0x20 - r;
@@ -762,7 +762,7 @@ int roundUpTo32(int x) {
     return x;
 }
 
-int roundUpTo16(int x) {
+size_t roundUpTo16(size_t x) {
     int r = x & 0xf;
     if (r > 0) {
         x += 0x10 - r;
@@ -770,7 +770,7 @@ int roundUpTo16(int x) {
     return x;
 }
 
-int roundUpTo8(int x) {
+size_t roundUpTo8(size_t x) {
     int r = x & 7;
     if (r > 0) {
         x += 8 - r;
@@ -778,7 +778,7 @@ int roundUpTo8(int x) {
     return x;
 }
 
-int roundUpTo4(int x) {
+size_t roundUpTo4(size_t x) {
     int r = x & 3;
     if (r > 0) {
         x += 4 - r;
@@ -786,7 +786,7 @@ int roundUpTo4(int x) {
     return x;
 }
 
-int alignUp2(int x) {
+size_t alignUp2(size_t x) {
     int r = x & 1;
     if (r > 0) {
         x += 2 - r;

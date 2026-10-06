@@ -85,7 +85,7 @@ void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, s16 radius, s16 verticalM
 void ObjHitbox_SetSphereRadius(ObjAnimComponent* obj, int radius);
 void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, int radius, int verticalMin, int verticalMax);
 #endif
-int ObjHits_AllocObjectState(GameObject* obj, u32 arena);
+u8* ObjHits_AllocObjectState(GameObject* obj, u8* arena);
 void ObjHits_ResetWorkBuffers(void);
 void ObjHits_InitWorkBuffers(void);
 

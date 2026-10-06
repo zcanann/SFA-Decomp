@@ -30,7 +30,7 @@ STATIC_ASSERT(sizeof(PlayerStatus) == 12);
  * engine-wide BaddieState actor-control record (baddie_state.h); the
  * 0x35C+ tail is the player-private extension. Field widths mirror the
  * deref widths observed in player.c; unobserved ranges are padded.
- * 0x8E0 covers every observed access - the true allocation may be larger.
+ * loadCharacter reserves 0x8E0 bytes for this state for Sabre and Krystal.
  */
 /* PlayerState.flags360 bit names. */
 #define PLAYER_FLAG_AIM_READY                                                                                          \

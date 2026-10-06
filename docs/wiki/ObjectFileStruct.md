@@ -222,6 +222,57 @@ configured retail builds pass `all_source` and their strict source-linked DOL
 checks. Complete changed TUs match; the two pre-existing library report-accounting
 exceptions remain unchanged.
 
+### Instance allocation layout (2026-10-06)
+
+`loadCharacter` and `objGetTotalDataSize` describe one allocation containing the
+fixed object header, its model pointer table, optional instance state, then the
+model instances. The calculator rounds the prefix to 32 bytes; model-instance
+sizes returned by `ObjModel_Load` are accumulated separately and appended after
+that prefix. `sizeof(GameObject)` is the fixed 0x10C-byte header, not the complete
+allocation. Sabre and Krystal reserve `sizeof(PlayerState)` (0x8E0) for DLL state.
+
+The optional state is laid out in this order:
+
+| State | Retail bytes | Starting alignment |
+|---|---:|---:|
+| DLL state | Callback size, or 0x8E0 for either player | 4 |
+| Move-event header and data | 8 + 0x50 | Header 4, data 8 |
+| Weapon-DA header and data | 8 + 0x800 | Header 4, data 8 |
+| Shadow state (`ObjModelState`) | 0x44 | 4 |
+| Hit state (`ObjHitsPriorityState`) | 0xB8 | 4 |
+| Rotated hitbox state | 0x110 | 4 |
+| Joint poses | Binding count × 0x12 | 4 |
+| Texture slots | Slot count × 0x10 | 4 |
+| Hit-volume transforms | Volume count × 0x18 | 4 |
+| Hit-reaction entries | 0x12C | 8 |
+| Hit-volume bounds | Volume count × 5 | 4 |
+
+The arena helpers now accept and return byte pointers. Alignment helpers accept
+`size_t` values because callers align both sizes and addresses. `loadCharacter`
+retains its two reused sizing/address locals as `size_t`: splitting their
+lifetimes into separate pointer locals changes MWCC's register allocation.
+Structure sizes replace numeric header widths in both sizing and layout, and
+move-event / weapon-DA capacities are shared with their loading clamps.
+
+The existing conditional differences are preserved. Sizing reserves weapon-DA
+space whenever requested, but layout skips it if model bank zero is absent.
+Likewise, the hit-reaction initializer returns the incoming cursor unchanged for
+a missing bank. The extra-size callback's second argument carries a size in the
+calculator and an arena address during layout; it remains an address-width word
+without changing the descriptor callback type.
+
+Dinosaur Planet's `objSetupObjectActual` corroborates the state order. Foxhollow's
+`loadCharacter` uses native-width cursors and header sizes; its inlined alignment
+expressions are not needed to preserve the retail helper calls here.
+`python3 tools/test_object_allocation_layout.py` runs the production size
+calculator, allocation tail, four arena helpers and five alignment helpers. The
+5,120 layout cases check field locations, callback arguments, allocation bounds,
+missing-model paths and copied hit-volume data. Another 1,280 cases exercise
+alignment above and below 4 GiB and near the native integer limit. These run with
+ASan/UBSan at `-O0` and `-O2`; GameObject and service fixtures replace unrelated
+engine behavior, and DLL state sizes respect native pointer alignment. This is
+an allocation-contract probe, not a complete native object/model loader.
+
 ### Field-by-field
 
 Offset|Wiki name|`ObjDef` field|Evidence

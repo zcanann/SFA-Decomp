@@ -782,12 +782,12 @@ void shadowVolumesSetDirty(s32 dirty) {
     gShadowVolumesDirty = dirty;
 }
 
-int shadowInit(GameObject* obj, u32 arena, int flags) {
-    int rounded;
+u8* shadowInit(GameObject* obj, u8* arena, int flags) {
+    u8* rounded;
     ObjModelState* modelState;
     s16 texId;
 
-    rounded = roundUpTo4(arena);
+    rounded = (u8*)roundUpTo4((size_t)arena);
     obj->anim.modelState = (ObjModelState*)rounded;
     modelState = obj->anim.modelState;
     texId = obj->anim.modelInstance->shadowTextureId;

@@ -121,7 +121,9 @@ typedef struct CharSpawn {
 enum {
     OBJ_LIST_CAPACITY = 600,
     OBJ_DEFERRED_FREE_CAPACITY = 400,
-    OBJ_PENDING_DEF_FREE_CAPACITY = 24
+    OBJ_PENDING_DEF_FREE_CAPACITY = 24,
+    OBJ_MOVE_EVENT_BUFFER_BYTES = 0x50,
+    OBJ_WEAPON_DA_BUFFER_BYTES = 0x800
 };
 
 /* loadCharacter model-load config word, passed to ObjModel_Load etc. */
@@ -1035,8 +1037,8 @@ void objGetWeaponDa(u8* obj, int objType, ObjWeaponDaTable* weaponDaTable, int k
         if (tbl[i] == key) {
             da2 = tbl[i + 1];
             weaponDaTable->byteCount = tbl[i + 2];
-            if (weaponDaTable->byteCount > 0x800) {
-                weaponDaTable->byteCount = 0x800;
+            if (weaponDaTable->byteCount > OBJ_WEAPON_DA_BUFFER_BYTES) {
+                weaponDaTable->byteCount = OBJ_WEAPON_DA_BUFFER_BYTES;
             }
             if (load) {
                 getTabEntry(weaponDaTable->entries, MLDF_FILEID_WEAPONDA_BIN, da2, weaponDaTable->byteCount);
@@ -1064,8 +1066,8 @@ void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u
         if (tbl[i] == (int)moveId) {
             da2 = tbl[i + 1];
             eventTable->byteCount = tbl[i + 2];
-            if (eventTable->byteCount > 0x50) {
-                eventTable->byteCount = 0x50;
+            if (eventTable->byteCount > OBJ_MOVE_EVENT_BUFFER_BYTES) {
+                eventTable->byteCount = OBJ_MOVE_EVENT_BUFFER_BYTES;
             }
             if (load == 0) {
                 getTabEntry(eventTable->entries, MLDF_FILEID_OBJEVENT_BIN, da2, eventTable->byteCount);
@@ -1429,18 +1431,18 @@ int objGetTotalDataSize(void* tmpl, ObjDef* def, s16* data, int flags) {
     int size;
     int r;
     int extra;
-    int (*cb)(void*, int);
+    int (*cb)(void*, size_t);
 
     modelDef = def;
     size = modelDef->modelCount * sizeof(ObjModel*) + sizeof(GameObject);
     switch (((GameObject*)tmpl)->anim.romDefNo) {
     case 0:
     case 0x1f:
-        extra = 0x8e0;
+        extra = sizeof(PlayerState);
         break;
     default:
         if (((GameObject*)tmpl)->anim.dll != 0 &&
-            (cb = (int (*)(void*, int))((ObjectInterface*)*((GameObject*)tmpl)->anim.dll)->getExtraSize) != 0) {
+            (cb = (int (*)(void*, size_t))((ObjectInterface*)*((GameObject*)tmpl)->anim.dll)->getExtraSize) != 0) {
             extra = cb(tmpl, size);
         } else {
             extra = 0;
@@ -1448,14 +1450,14 @@ int objGetTotalDataSize(void* tmpl, ObjDef* def, s16* data, int flags) {
         break;
     }
     size += extra;
-    if ((flags & 0x40) || (modelDef->flags & OBJDEF_FLAG_HAS_EVENT)) {
-        size = roundUpTo8(roundUpTo4(size) + sizeof(ObjAnimEventTable)) + 0x50;
+    if ((flags & OBJLOAD_FLAG_ANIM_EVENTS) || (modelDef->flags & OBJDEF_FLAG_HAS_EVENT)) {
+        size = roundUpTo8(roundUpTo4(size) + sizeof(ObjAnimEventTable)) + OBJ_MOVE_EVENT_BUFFER_BYTES;
     }
     if (flags & OBJLOAD_FLAG_WEAPON_DA) {
-        size = roundUpTo8(roundUpTo4(size) + sizeof(ObjWeaponDaTable)) + 0x800;
+        size = roundUpTo8(roundUpTo4(size) + sizeof(ObjWeaponDaTable)) + OBJ_WEAPON_DA_BUFFER_BYTES;
     }
-    if ((flags & 2) && modelDef->shadowType != OBJ_SHADOW_TYPE_NONE) {
-        size = roundUpTo4(size) + 0x44;
+    if ((flags & OBJLOAD_FLAG_HAS_SHADOW) && modelDef->shadowType != OBJ_SHADOW_TYPE_NONE) {
+        size = roundUpTo4(size) + sizeof(ObjModelState);
     }
     if (modelDef->hitboxStateCount != 0) {
         size = roundUpTo4(size) + sizeof(ObjHitsPriorityState);
@@ -1473,14 +1475,14 @@ int objGetTotalDataSize(void* tmpl, ObjDef* def, s16* data, int flags) {
     }
     if (modelDef->hitVolumeCount != 0) {
         r = roundUpTo4(size);
-        size = r + modelDef->hitVolumeCount * 0x18;
+        size = r + modelDef->hitVolumeCount * sizeof(ObjHitVolumeRuntimeTransform);
     }
     if (modelDef->hitboxStateCount != 0 && modelDef->hitReactStateCount != 0) {
-        size = roundUpTo8(size) + 0x12c;
+        size = roundUpTo8(size) + OBJHITREACT_ENTRY_ARENA_BYTES;
     }
     if (modelDef->hitVolumeCount != 0) {
         r = roundUpTo4(size);
-        size = r + modelDef->hitVolumeCount * 5;
+        size = r + modelDef->hitVolumeCount * sizeof(ObjHitVolumeRuntimeBounds);
     }
     return roundUpTo32(size);
 }
@@ -1563,23 +1565,23 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
     ObjDef* def;
     int callbackFlags;
     int (*getModelLoadFlags)(GameObject*);
-    int (*getExtraSize)(GameObject*, int);
+    int (*getExtraSize)(GameObject*, size_t);
     int loadFlags;
     int idx;
     int i;
     int count;
     ObjModelInstance* modelDef;
     GameObject* obj;
-    int base;
+    size_t base; /* Sizing offset, then an address during arena layout. */
     int allocSize;
-    int cursor;
+    size_t cursor; /* Model byte count, then the arena cursor. */
     u8 n;
     u16 modelFlags;
     u8 renderFlags;
     s16 seq2[1];
     int size;
     int dllStateSize;
-    int alignedCursor;
+    size_t alignedCursor;
     int j;
 
     seq = data->objectId;
@@ -1740,15 +1742,15 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
             }
         }
     }
-    cursor = roundUpTo4((int)obj->anim.modelBanks + modelDef->modelCount * sizeof(ObjModel*));
+    cursor = roundUpTo4((size_t)obj->anim.modelBanks + modelDef->modelCount * sizeof(ObjModel*));
     switch (obj->anim.romDefNo) {
     case OBJECT_SEQID_SABRE:
     case OBJECT_SEQID_KRYSTAL:
-        dllStateSize = 0x8e0;
+        dllStateSize = sizeof(PlayerState);
         break;
     default:
         if (obj->anim.dll != NULL &&
-            (getExtraSize = (int (*)(GameObject*, int))((ObjectInterface*)*obj->anim.dll)->getExtraSize) != NULL) {
+            (getExtraSize = (int (*)(GameObject*, size_t))((ObjectInterface*)*obj->anim.dll)->getExtraSize) != NULL) {
             dllStateSize = getExtraSize(obj, cursor);
         } else {
             dllStateSize = 0;
@@ -1767,29 +1769,29 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
         seq2[0] = obj->anim.romDefNo;
         alignedCursor = roundUpTo4(cursor);
         obj->anim.eventTable = (ObjAnimEventTable*)alignedCursor;
-        cursor = roundUpTo8(alignedCursor + 8);
+        cursor = roundUpTo8(alignedCursor + sizeof(ObjAnimEventTable));
         obj->anim.eventTable->entries = (s16*)cursor;
         ObjAnim_LoadMoveEvents((u8*)obj, seq2[0], obj->anim.eventTable, 0, 1);
-        cursor += 0x50;
+        cursor += OBJ_MOVE_EVENT_BUFFER_BYTES;
     }
     if (!(loadFlags & OBJLOAD_FLAG_WEAPON_DA) || obj->anim.modelBanks[0] == NULL) {
         alignedCursor = cursor;
     } else {
         alignedCursor = roundUpTo4(cursor);
         obj->anim.weaponDaTable = (ObjWeaponDaTable*)alignedCursor;
-        alignedCursor = roundUpTo8(alignedCursor + 8);
+        alignedCursor = roundUpTo8(alignedCursor + sizeof(ObjWeaponDaTable));
         obj->anim.weaponDaTable->entries = (s16*)alignedCursor;
-        alignedCursor += 0x800;
+        alignedCursor += OBJ_WEAPON_DA_BUFFER_BYTES;
     }
     cursor = alignedCursor;
     if ((loadFlags & OBJLOAD_FLAG_HAS_SHADOW) && modelDef->shadowType != OBJ_SHADOW_TYPE_NONE) {
-        cursor = shadowInit(obj, cursor, 0);
+        cursor = (size_t)shadowInit(obj, (u8*)cursor, 0);
     }
     objInitCullScale(obj);
     if (modelDef->hitboxStateCount != 0) {
-        cursor = ObjHits_AllocObjectState(obj, cursor);
+        cursor = (size_t)ObjHits_AllocObjectState(obj, (u8*)cursor);
         if ((s8)modelDef->primaryHitboxShapeFlags & 8) {
-            cursor = ObjHitbox_AllocRotatedBounds(&obj->anim, cursor);
+            cursor = (size_t)ObjHitbox_AllocRotatedBounds(&obj->anim, (u8*)cursor);
         }
     }
     if (modelDef->jointBindingCount != 0) {
@@ -1805,12 +1807,12 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
     if (modelDef->hitVolumeCount != 0) {
         alignedCursor = roundUpTo4(cursor);
         obj->anim.hitVolumeTransforms = (ObjHitVolumeRuntimeTransform*)alignedCursor;
-        cursor = alignedCursor + modelDef->hitVolumeCount * 0x18;
+        cursor = alignedCursor + modelDef->hitVolumeCount * sizeof(ObjHitVolumeRuntimeTransform);
     }
     if (modelDef->hitboxStateCount != 0 && modelDef->hitReactStateCount != 0) {
         alignedCursor = roundUpTo4(cursor);
-        cursor = ObjHitReact_InitState(obj->anim.romDefNo, (ObjAnimBank*)obj->anim.modelBanks[0],
-                                       obj->anim.hitReactState, alignedCursor, &obj->anim);
+        cursor = (size_t)ObjHitReact_InitState(obj->anim.romDefNo, (ObjAnimBank*)obj->anim.modelBanks[0],
+                                       obj->anim.hitReactState, (u8*)alignedCursor, &obj->anim);
     }
     if (modelDef->hitVolumeCount != 0) {
         obj->anim.hitVolumeBounds = (ObjHitVolumeRuntimeBounds*)roundUpTo4(cursor);

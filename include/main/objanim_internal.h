@@ -487,6 +487,7 @@ typedef struct ObjModelState {
     u8 pad41[0x44 - 0x41];
 } ObjModelState;
 
+STATIC_ASSERT(sizeof(ObjModelState) == 0x44);
 STATIC_ASSERT(offsetof(ObjModelState, flags) == 0x30);
 
 typedef struct ObjAnimComponent {
