@@ -618,7 +618,7 @@ void TitleMenu_initialise(void) {
     int i;
     int mode;
 
-    if ((gSaveGameWorkBuffer[0x21] & 0x80) != 0) {
+    if ((gSaveGameWorkBuffer->newFileFlag & 0x80) != 0) {
         gAttractMovieAutoplayEnabled = 0;
     } else {
         gAttractMovieAutoplayEnabled = 1;

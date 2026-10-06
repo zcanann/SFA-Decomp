@@ -3,33 +3,8 @@
 
 #include "main/dll/savedata_struct.h"
 #include "main/mapEventTypes.h"
+#include "main/dll/savegame_state.h"
 
-#define SAVEGAME_OBJECT_POSITION_COUNT  0x3f
-#define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
-
-typedef struct SaveGameObjectPosition
-{
-    u32 objectId;
-    f32 x;
-    f32 y;
-    f32 z;
-} SaveGameObjectPosition;
-
-/* One saved character's spawn state; SaveGameData.characterPositions[] and the
- * record SaveGame_getCurCharPos() hands out to the map/shader code. */
-typedef struct SaveGameCharacterPosition
-{
-    f32 x;
-    f32 y;
-    f32 z;
-    s8 angle;
-    s8 mapLayer;
-    s8 mapDataFileId;
-    u8 padF;
-} SaveGameCharacterPosition;
-
-extern u8 gSaveGameData[];
-extern u8* gSaveGameWorkBuffer;
 /* SaveData describes this persisted byte buffer: the settings block followed by
  * the five high-score tables. */
 extern u8 saveData[SAVE_DATA_SIZE];

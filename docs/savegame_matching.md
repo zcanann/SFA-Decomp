@@ -87,3 +87,80 @@ The source-only changes affect the setter, transient helpers, standalone
 search wrapper, and initializer; the other function bodies are unchanged
 apart from their source order. The generated DLL path and TU boundaries are
 unchanged.
+
+## Live state and checkpoint recovery (2026-10-06)
+
+`savegame_state.h` now owns the actual live-state definition, checkpoint
+record, saved positions, and timer entries. `gSaveGameState` replaces the raw
+0xF70-byte buffer in the same BSS position. The work buffer and restart
+checkpoint use `SaveGameData*`; the latter was previously a `u32`, truncating
+heap pointers on a 64-bit native build. Indexed accesses replace shifted
+whole-record casts and integer pointer arithmetic throughout the state,
+timer, and saved-position operations, including the two direct curve/title
+consumers. Unrelated save-options/high-score storage remains outside this
+recovery.
+
+The layout follows SFA's allocation and copy boundaries:
+
+| Record | Size | Evidence |
+| --- | ---: | --- |
+| `SaveGameData` | 0x6EC | Restart allocation and full checkpoint copies |
+| `SaveGameRuntimeState` | 0x884 | Contiguous tail cleared when loading a map |
+| `SaveGameState` | 0xF70 | Retail live allocation and neighboring BSS boundary |
+| `SaveGameTimeEntry` | 8 | Object ID and expiry-time loads/stores |
+
+`main/mm.c` allocates 0x6EC bytes for the PAL work buffer and 0x6ED for
+EN/JP, where the final byte belongs to the separately addressed progressive
+scan flag. That byte is not part of `SaveGameData`. Save-point flag 2 locks
+updates via the byte at 0x22; flag 4 unlocks it. The independently zeroed
+byte at 0x23 remains unnamed.
+
+Retail `SaveGame_gplayAddTime` caps the timer count at 256. The former array
+size of 272 came only from filling the gap to the next global. The recovered
+runtime record contains 256 entries and an opaque 0x80-byte tail. Dinosaur
+Planet's `engine/29_gplay` independently has typed save/runtime state,
+`Savegame* sRestartSave`, and `MAX_TIMESAVES 256`; its different layout is
+not copied into SFA. Foxhollow's native port also provided a useful example
+of typed saved-position writes.
+
+### Preserved retail overrun
+
+After removing a saved position, `saveGame_unsaveObjectPos` writes zero at
+live-state base + 0x20158. This is not a dirty flag inside the allocation.
+All five retail bodies load the live-state base, add `0x20000`, and store
+at displacement `0x158`. In every version the write falls inside the
+separate `dataCurveTable` at offset 0x3188:
+
+| Version | Live-state base | Overrun destination |
+| --- | --- | --- |
+| EN v1.0 | 0x803A32A8 | 0x803C3400 |
+| EN v1.1 | 0x803A3F08 | 0x803C4060 |
+| JP | 0x803A33C8 | 0x803C3520 |
+| PAL v1.0 | 0x803A4A48 | 0x803C4BA0 |
+| PAL v1.1 | 0x803A4C08 | 0x803C4D60 |
+
+The explicit byte-offset access and allocation-backed size assertions
+preserve and expose this retail bug. The native checkpoint/timer test does
+not exercise object-position removal or claim the whole TU is portable.
+
+### Recovery validation
+
+Every input DOL was verified against its configured SHA-1. The complete
+save-game unit and changed curve/title consumers match 100% in all five
+versions: EN/JP have 54 save-game functions, 8,308 code bytes, and 5,524 data
+bytes; PAL has 55 functions, 8,240 code bytes, and 5,532 data bytes. Every
+version passes `ninja all_source` and the strict source-linked DOL checksum,
+with no retail-object substitution. Compiler profiles, TU boundaries, and
+matching classifications are unchanged.
+
+Full-project objdiff reports were regenerated without completion overrides.
+They retain only the existing TRK exception-vector carving and MusyX
+`sal_volume` discarded exception-data report discrepancies; the linked DOLs
+are exact. Formatting preserves each region's raw save-game object hash.
+
+`python3 tools/test_savegame_state.py` compiles the actual record definitions
+and checkpoint/timer function bodies with 64-bit pointers at `-O0` and `-O2`
+under ASan/UBSan. It checks allocation failure, checkpoint reuse and release,
+health restoration, character selection, partial-copy boundaries, save-point
+locking, timer replacement, equality at expiry, tail replacement, capacity,
+and the opaque runtime tail.

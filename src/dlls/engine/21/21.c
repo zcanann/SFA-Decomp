@@ -1495,7 +1495,7 @@ void loadSaveSettings(void) {
 }
 
 void* getLastSavedGameTexts(void) {
-    return gSaveGameData + 0x558;
+    return gSaveGameState.save.taskHintIds;
 }
 
 int pushable_savePos(GameObject* obj) {
@@ -1505,19 +1505,17 @@ int pushable_savePos(GameObject* obj) {
     f32 savedX;
 
     for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++) {
-        position = &((SaveGameObjectPosition*)gSaveGameData)[i];
+        position = &gSaveGameState.save.positions[i];
         objectId = ((RomCurveDef*)obj->anim.placementData)->id;
-        if (objectId == *(u32*)((u8*)&position->objectId + SAVEGAME_OBJECT_POSITION_OFFSET)) {
-            if ((obj->anim.localPosX ==
-                 (savedX = *(f32*)((int)gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET + 4 + (i << 4)))) &&
-                (obj->anim.localPosY == *(f32*)((int)gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET + 8 + (i << 4))) &&
-                (obj->anim.localPosZ ==
-                 *(f32*)((int)gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET + 0xc + (i << 4)))) {
+        if (objectId == position->objectId) {
+            if ((obj->anim.localPosX == (savedX = gSaveGameState.save.positions[i].x)) &&
+                (obj->anim.localPosY == gSaveGameState.save.positions[i].y) &&
+                (obj->anim.localPosZ == gSaveGameState.save.positions[i].z)) {
                 return 0;
             }
             obj->anim.localPosX = savedX;
-            obj->anim.localPosY = *(f32*)((u32)gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET + 8 + (i << 4));
-            obj->anim.localPosZ = *(f32*)((u32)gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET + 0xc + (i << 4));
+            obj->anim.localPosY = gSaveGameState.save.positions[i].y;
+            obj->anim.localPosZ = gSaveGameState.save.positions[i].z;
             return 1;
         }
     }
