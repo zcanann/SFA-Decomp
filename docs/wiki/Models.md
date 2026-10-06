@@ -211,7 +211,44 @@ Krystal's bone tree is given in the source wiki page as a worked example (root a
 
 All offsets below were cross-checked against `include/main/model.h` (`ModelFileHeader`, offsets confirmed with the `python` offset walk + existing `STATIC_ASSERT`s) and against field usage in `src/main/model.c` / `src/main/objprint_dolphin.c` / `src/main/objhits.c`. Where two independently-matched source files describe overlapping bytes of the same on-disk struct, both are listed.
 
-**Wrapper.** `src/main/pi_dolphin.c` has `struct ZlbHeader` (`tag[4]` = `"ZLB"`/`"DIR"`, matching the wiki's `0x5A4C4200`) and `struct PackHeader` (`magic` = `0xFACEFEED` zlb-packed / `0xE0E0E0E0` stored raw — the exact two other wrapper values the wiki lists), used for romlist/`MAPS.BIN` sections. Field layout and magic values match the wiki's wrapper description exactly; not confirmed here as the precise code path for `.model`-specific loads, but almost certainly the same generic mechanism.
+**Wrapper and model-file allocation.** `src/main/pi_dolphin.c` has `struct
+ZlbHeader` for `ZLB`/`DIR` streams and `struct PackHeader` for `0xFACEFEED`
+compressed or `0xE0E0E0E0` raw sections. The MODELS branch of
+`loadAndDecompressDataFile` uses the latter: the raw payload starts at
+`auxSize + 0x18`, or a ZLB stream starts there with compressed bytes at
+`auxSize + 0x28`.
+
+`loadModelsBin` reads metadata from the selected resident archive rather than
+loading the payload. Its private `ModelArchiveHeaderPrefix` recovers these
+fields while leaving bytes `0x10..0x17` opaque:
+
+| Offset | Field | Consumer |
+| --- | --- | --- |
+| `0x04` | `pack.decompressedSize` | Model payload size for allocation and decompression |
+| `0x18` | `useCachedAnimations` | Selects cached versus shared animation resources |
+| `0x1C` | `animationCount` | Animation storage sizing and the runtime header count |
+| `0x20` | `maxAnimationBytes` | Per-move payload budget, rounded to eight bytes before the existing `0xB0` cache allowance |
+
+The 0x24-byte prefix is not a claim about the entire auxiliary block.
+Inspection of 3,326 records in 53 extracted EN archives confirmed that the
+payload begins after this prefix and the decompressed lengths agree. The
+cache selector is zero or one in those records. Foxhollow independently reads
+the same offsets, with explicit big-endian decoding for its native port.
+
+`ObjModel_LoadModelData` preserves the allocation pointer through `size_t`
+alignment and returns a `ModelFileHeader*`. The shared-file allocation retains
+its payload, animation-storage budget and unexplained `0x1F4` allowance.
+Header initialization and the regional cache invalidation remain unchanged;
+pointer relocation follows in `ObjModel_Load`.
+
+`tools/test_model_archive_loading.py` checks 248 bank-selection cases and
+3,072 allocation cases plus the missing-table return, at `-O0`/`-O2` under
+ASan/UBSan for both regional invalidation paths. It executes the metadata,
+animation-size and allocation bodies with host-endian fixtures and native
+pointers. The fixture widens the resource-address registry and spies on IO,
+interrupts, allocation and cache operations; this does not establish a native
+archive decoder. All five target builds preserve every source object byte and
+the exact retail DOL.
 
 **Header → `ModelFileHeader` (`include/main/model.h`).** The struct is an offset-for-offset match with the wiki's Header table for every field either side has named:
 

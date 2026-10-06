@@ -714,6 +714,8 @@ void ObjModel_Release(ObjModel* model);
 ObjModel* ObjModel_LoadAnimData(ModelFileHeader* file, int loadFlags, void* destination);
 /* Acquire a shared file and report the required per-instance allocation size. */
 ModelFileHeader* ObjModel_Load(int modelId, int loadFlags, int* outSize);
+/* Allocate/decompress a shared file; pointer relocation follows in ObjModel_Load. */
+ModelFileHeader* ObjModel_LoadModelData(int modelId);
 void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out);
 void ObjModel_InitRenderBuffers(void);
 void ObjModel_InitResourceCaches(void);

@@ -279,6 +279,22 @@ struct PackHeader {
     int compressedSize;   /* +0x0c */
 };
 
+/* MODELS archive prefix read by loadModelsBin, before any payload decoding.
+ * The auxiliary block may extend beyond these recovered metadata fields. */
+typedef struct ModelArchiveHeaderPrefix {
+    struct PackHeader pack;
+    u8 unk10[8];
+    s32 useCachedAnimations;
+    s32 animationCount;
+    s32 maxAnimationBytes;
+} ModelArchiveHeaderPrefix;
+
+STATIC_ASSERT(sizeof(ModelArchiveHeaderPrefix) == 0x24);
+STATIC_ASSERT(offsetof(ModelArchiveHeaderPrefix, pack.decompressedSize) == 0x04);
+STATIC_ASSERT(offsetof(ModelArchiveHeaderPrefix, useCachedAnimations) == 0x18);
+STATIC_ASSERT(offsetof(ModelArchiveHeaderPrefix, animationCount) == 0x1C);
+STATIC_ASSERT(offsetof(ModelArchiveHeaderPrefix, maxAnimationBytes) == 0x20);
+
 /* Resource archive file-name strings (indexed by sResourceFileNameTable). */
 char sResourceFileNameAudioTab[] = "AUDIO.tab";
 char sResourceFileNameAudioBin[] = "AUDIO.bin";
@@ -3875,37 +3891,37 @@ void texPreGetFrame(int bankWord, int unused, int* decompressedSize, int* compre
     }
 }
 
-void loadModelsBin(int offsetFlags, int* p1c, int* p20, int* p18, int* p4, int wpad0) {
-    u32 tab0 = 0;
-    u32 tab1 = 0;
-    int idx = -1;
-    int flags;
-    int saved;
-    char* entry;
-    if (gResourceFileBuffers[0x2b] != 0 || gResourceFileBuffers[0x46] != 0) {
-        saved = OSDisableInterrupts();
-        flags = gAssetLoadInFlightFlags;
-        OSRestoreInterrupts(saved);
-        if ((flags & 4) == 0 && (flags & 1) == 0) {
-            tab0 = gResourceFileBuffers[0x2a];
+void loadModelsBin(int offsetFlags, int* animationCount, int* maxAnimationBytes, int* useCachedAnimations, int* modelBytes, int modelId) {
+    u32 tableA = 0;
+    u32 tableB = 0;
+    int archiveId = -1;
+    int loadFlags;
+    int interruptState;
+    ModelArchiveHeaderPrefix* entry;
+    if (gResourceFileBuffers[MLDF_FILEID_MODELS_BIN_A] != 0 || gResourceFileBuffers[MLDF_FILEID_MODELS_BIN_B] != 0) {
+        interruptState = OSDisableInterrupts();
+        loadFlags = gAssetLoadInFlightFlags;
+        OSRestoreInterrupts(interruptState);
+        if ((loadFlags & 4) == 0 && (loadFlags & 1) == 0) {
+            tableA = gResourceFileBuffers[MLDF_FILEID_MODELS_TAB_A];
         }
-        if ((flags & 8) == 0 && (flags & 2) == 0) {
-            tab1 = gResourceFileBuffers[0x45];
+        if ((loadFlags & 8) == 0 && (loadFlags & 2) == 0) {
+            tableB = gResourceFileBuffers[MLDF_FILEID_MODELS_TAB_B];
         }
-        if (tab1 != 0 && (offsetFlags & 0x20000000) != 0) {
-            idx = 0x46;
-        } else if (tab0 != 0 && (offsetFlags & 0x10000000) != 0) {
-            idx = 0x2b;
-        } else if (tab0 != 0) {
-            idx = 0x2b;
-        } else if (tab1 != 0) {
-            idx = 0x46;
+        if (tableB != 0 && (offsetFlags & 0x20000000) != 0) {
+            archiveId = MLDF_FILEID_MODELS_BIN_B;
+        } else if (tableA != 0 && (offsetFlags & 0x10000000) != 0) {
+            archiveId = MLDF_FILEID_MODELS_BIN_A;
+        } else if (tableA != 0) {
+            archiveId = MLDF_FILEID_MODELS_BIN_A;
+        } else if (tableB != 0) {
+            archiveId = MLDF_FILEID_MODELS_BIN_B;
         }
-        entry = (char*)gResourceFileBuffers[idx] + (offsetFlags & 0x0fffffff);
-        *p18 = *(int*)(entry + 0x18);
-        *p1c = *(int*)(entry + 0x1c);
-        *p20 = *(int*)(entry + 0x20);
-        *p4 = *(int*)(entry + 0x4);
+        entry = (ModelArchiveHeaderPrefix*)((u8*)gResourceFileBuffers[archiveId] + (offsetFlags & 0x0fffffff));
+        *useCachedAnimations = entry->useCachedAnimations;
+        *animationCount = entry->animationCount;
+        *maxAnimationBytes = entry->maxAnimationBytes;
+        *modelBytes = entry->pack.decompressedSize;
     }
 }
 

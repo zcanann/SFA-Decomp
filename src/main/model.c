@@ -2160,8 +2160,6 @@ void ObjModel_ResolveRenderOpTextures(ModelFileHeader* file) {
     }
 }
 
-void* ObjModel_LoadModelData(int id);
-
 void ObjModel_RelocateAnimData(ModelFileHeader* file, ObjModel* model) {
     int i;
     file->vertexAnimJob.chunks = file->vertexAnimEntries;
@@ -2254,36 +2252,36 @@ void ObjModel_RelocateModelData(ModelFileHeader* file) {
     }
 }
 
-void* ObjModel_LoadModelData(int id) {
-    int fileOffset, dataLen, animCount, cacheSize, amapFlag;
-    int amapSize;
+ModelFileHeader* ObjModel_LoadModelData(int modelId) {
+    int fileOffset, modelBytes, animationCount, animationCacheSize, useCachedAnimations;
+    int animationStorageBytes;
     int totalSize;
-    void* model;
-    if (getTableFileEntry(MLDF_FILEID_MODELS_TAB_A, id, &fileOffset) == 0) {
+    ModelFileHeader* file;
+    if (getTableFileEntry(MLDF_FILEID_MODELS_TAB_A, modelId, &fileOffset) == 0) {
         return NULL;
     }
-    loadModelsBin(fileOffset, &animCount, &cacheSize, &amapFlag, &dataLen, id);
-    cacheSize = roundUpTo8(cacheSize);
-    cacheSize += 0xb0;
-    amapSize = modelGetAmapSize(id, amapFlag, animCount);
-    totalSize = dataLen + amapSize + 0x1f4;
-    model = (void*)roundUpTo16((int)mmAlloc(totalSize, 9, 0));
+    loadModelsBin(fileOffset, &animationCount, &animationCacheSize, &useCachedAnimations, &modelBytes, modelId);
+    animationCacheSize = roundUpTo8(animationCacheSize);
+    animationCacheSize += 0xb0;
+    animationStorageBytes = modelGetAmapSize(modelId, useCachedAnimations, animationCount);
+    totalSize = modelBytes + animationStorageBytes + 0x1f4;
+    file = (ModelFileHeader*)roundUpTo16((size_t)mmAlloc(totalSize, 9, 0));
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
-    DCInvalidateRange(model, totalSize);
+    DCInvalidateRange(file, totalSize);
 #endif
-    loadAndDecompressDataFile(MLDF_FILEID_MODELS_BIN_A, model, fileOffset, dataLen, 0, id, 0);
-    ((ModelFileHeader*)model)->animationCacheSize = cacheSize;
-    ((ModelFileHeader*)model)->modelId = id;
-    ((ModelFileHeader*)model)->animationCount = animCount;
-    ((ModelFileHeader*)model)->flags &= ~MODEL_FLAG_CACHED_ANIMATIONS;
-    ((ModelFileHeader*)model)->refCount = 1;
-    if (((ModelFileHeader*)model)->animationCount == 0) {
-        ((ModelFileHeader*)model)->flags |= MODEL_FLAG_NO_ANIMATIONS;
+    loadAndDecompressDataFile(MLDF_FILEID_MODELS_BIN_A, file, fileOffset, modelBytes, 0, modelId, 0);
+    file->animationCacheSize = animationCacheSize;
+    file->modelId = modelId;
+    file->animationCount = animationCount;
+    file->flags &= ~MODEL_FLAG_CACHED_ANIMATIONS;
+    file->refCount = 1;
+    if (file->animationCount == 0) {
+        file->flags |= MODEL_FLAG_NO_ANIMATIONS;
     }
-    if (amapFlag != 0) {
-        ((ModelFileHeader*)model)->flags |= MODEL_FLAG_CACHED_ANIMATIONS;
+    if (useCachedAnimations != 0) {
+        file->flags |= MODEL_FLAG_CACHED_ANIMATIONS;
     }
-    return model;
+    return file;
 }
 
 void ObjModel_TouchModelCache(void) {

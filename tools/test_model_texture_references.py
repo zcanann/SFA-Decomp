@@ -61,7 +61,7 @@ static int ModelList_getHeader(void* list, int id, ModelFileHeader** output) {
     if (cached) *output = &fixture.file;
     return cached;
 }
-static void* ObjModel_LoadModelData(int id) {
+static ModelFileHeader* ObjModel_LoadModelData(int id) {
     assert(id == expectedId && !cached && lookupCalls == 1);
     return &fixture.file;
 }
