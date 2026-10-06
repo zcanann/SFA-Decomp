@@ -63,7 +63,6 @@
 #include "main/audio/stream_api.h"
 #include "main/audio/audio_control_api.h"
 #include "main/dll/headdisplay.h"
-#include "main/dll/hud_textures.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_command_api.h"
 #include "types.h"
@@ -248,6 +247,27 @@ typedef struct PauseMenuCellMapEntry {
 
 STATIC_ASSERT(sizeof(PauseMenuCellMapEntry) == 4);
 
+/* Slots in the textureLoadAsset list below; names describe their draw consumers. */
+typedef enum GameUiHudTextureSlot {
+    GAMEUI_HUD_TEX_PANEL_CORNER = 10,
+    GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE = 11,
+    GAMEUI_HUD_TEX_PANEL_FILL = 12,
+    GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE = 13,
+    GAMEUI_HUD_TEX_TASK_PANEL_CORNER = 14,
+    GAMEUI_HUD_TEX_TASK_PANEL_EDGE = 15,
+    GAMEUI_HUD_TEX_TASK_PANEL_MARKER = 16,
+    GAMEUI_HUD_TEX_GRID_CURSOR = 32,
+    GAMEUI_HUD_TEX_SCORE_MARKER = 62,
+    GAMEUI_HUD_TEX_COMMUNICATOR_ALERT = 68,
+    GAMEUI_HUD_TEX_COMMUNICATOR_ALERT_SEGMENT = 69,
+    GAMEUI_HUD_TEX_PAUSE_SIDE_RAIL_MOVING = 70,
+    GAMEUI_HUD_TEX_PAUSE_SIDE_RAIL = 71,
+    GAMEUI_HUD_TEX_TEXT_BOX_FRAME_FIRST = 79,
+    GAMEUI_HUD_TEX_PANEL_PATTERN = 84,
+    GAMEUI_HUD_TEX_STATUS_DIVIDER = 92,
+    GAMEUI_HUD_TEXTURE_COUNT = 102
+} GameUiHudTextureSlot;
+
 typedef struct HudButtonIconTextEntry {
     u8 icon;
     u8 phraseIndex;
@@ -341,7 +361,7 @@ extern CMenuSection gCMenuSections[];
 extern int gGameUiScreenHeightOffset;
 extern f32 gTrickyHudIconPosX, gTrickyHudIconPosY, gTrickyHudIconPosZ, gTrickyHudIconScale;
 extern f32 gTrickyHudIconRotZ, gTrickyHudIconRotX, gTrickyHudIconRotY, gPauseMenuSavedFovY;
-extern Texture* hudTextures[102];
+extern Texture* hudTextures[GAMEUI_HUD_TEXTURE_COUNT];
 extern s16 gFearTestMeterAlpha;
 extern s8 lbl_803DD7F8;
 extern s8 lbl_803DD7F9;
@@ -839,6 +859,8 @@ s16 gHudTextureIds[] = {
     3065, 3066, 3067, 3068, 3048, 3046, 3049, 3050, 3115, 3084, 3104, 1434, 1435, 1436, 1437, 1438, 1453,
     3035, 3036, 3037, 3032, 3033, 3034, 775,  3062, 3063, 3064, 1492, 1491, 1490, 3102, 3100, 3101, 3185,
 };
+
+STATIC_ASSERT(ARRAY_COUNT(gHudTextureIds) == GAMEUI_HUD_TEXTURE_COUNT);
 
 u8 gHudButtonIcons[] = {
     0x00, 0x00, 0x01, 0x00, 0x02, 0x01, 0x03, 0x02, 0x04, 0x03, 0x05, 0x04, 0x06, 0x05, 0x07, 0x06, 0x08,
@@ -1485,7 +1507,7 @@ u8 gCMenuItemEnabledTable[0x40];
 u8 gCMenuItemFlags[0x40];
 void* gPauseMenuIconTextures[0x28];
 s16 gPauseMenuIconTextureIds[0x28];
-Texture* hudTextures[102];
+Texture* hudTextures[GAMEUI_HUD_TEXTURE_COUNT];
 GameUiObjectMatrixWorkspace gGameUiObjectMatrixWorkspace;
 GameUiViewMatrixWorkspace gGameUiViewMatrixWorkspace;
 Mtx44 gGameUiProjectionMatrix;
@@ -1510,8 +1532,8 @@ void GameUI_initialise(void) {
     *(int*)&gGameUiScreenWidthOffset = width;
     gGameUiScreenWidthOffset = width - (SCREEN_WIDTH / 2);
     gGameUiScreenHeightOffset = height - (SCREEN_HEIGHT / 2);
-    for (i = 0; i < 102; i++) {
-        ((void**)hudTextures)[i] = textureLoadAsset(gHudTextureIds[i]);
+    for (i = 0; i < GAMEUI_HUD_TEXTURE_COUNT; i++) {
+        hudTextures[i] = textureLoadAsset(gHudTextureIds[i]);
     }
     p = textureLoadAsset(GAMEUI_TEXTURE_BLINK);
     gGameUiBlinkTexture = p;
@@ -2750,11 +2772,11 @@ void pauseMenuDrawText(int unused1, int unused2, int unused3) {
     handle = gameTextGetPhrase(gPauseMenuTitleTextId, gPauseMenuTitlePhraseIndex);
     sprite = gameTextGetBox(0x49);
 
-    gGameTextBoxFrameTextures[0] = ((HudTextures*)hudTextures)->textBoxFrameTex[0];
-    gGameTextBoxFrameTextures[1] = ((HudTextures*)hudTextures)->textBoxFrameTex[1];
-    gGameTextBoxFrameTextures[2] = ((HudTextures*)hudTextures)->textBoxFrameTex[2];
-    gGameTextBoxFrameTextures[3] = ((HudTextures*)hudTextures)->textBoxFrameTex[3];
-    gGameTextBoxFrameTextures[4] = ((HudTextures*)hudTextures)->textBoxFrameTex[4];
+    gGameTextBoxFrameTextures[0] = hudTextures[GAMEUI_HUD_TEX_TEXT_BOX_FRAME_FIRST + 0];
+    gGameTextBoxFrameTextures[1] = hudTextures[GAMEUI_HUD_TEX_TEXT_BOX_FRAME_FIRST + 1];
+    gGameTextBoxFrameTextures[2] = hudTextures[GAMEUI_HUD_TEX_TEXT_BOX_FRAME_FIRST + 2];
+    gGameTextBoxFrameTextures[3] = hudTextures[GAMEUI_HUD_TEX_TEXT_BOX_FRAME_FIRST + 3];
+    gGameTextBoxFrameTextures[4] = hudTextures[GAMEUI_HUD_TEX_TEXT_BOX_FRAME_FIRST + 4];
 
     cur = gPauseMenuTitleFadeCounter;
     mirrored = cur;
@@ -2837,20 +2859,20 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
         panelY = gTextBoxes[12].y;
         height = revealedHeight;
         width = (s16)gTextBoxes[12].maxWidth;
-        drawTexture(((HudTextures*)hudTextures)->tex28, (panelLeft = panelX - 5), (panelTop = panelY - 5), panelAlpha,
+        drawTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], (panelLeft = panelX - 5), (panelTop = panelY - 5), panelAlpha,
                     0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, panelTop, panelAlpha, 0x100, (s16)width, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, panelLeft, panelY, panelAlpha, 0x100, 5, height, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex30, panelX, panelY, panelAlpha, 0x100, (s16)width, height, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (panelBottom = panelY + height), panelAlpha,
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], panelX, panelTop, panelAlpha, 0x100, (s16)width, 5, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], panelLeft, panelY, panelAlpha, 0x100, 5, height, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_FILL], panelX, panelY, panelAlpha, 0x100, (s16)width, height, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], panelX, (panelBottom = panelY + height), panelAlpha,
                           0x100, (s16)width, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, panelX + (s16)width, panelY, panelAlpha, 0x100, 5, height,
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], panelX + (s16)width, panelY, panelAlpha, 0x100, 5, height,
                           1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + (s16)width, panelBottom, panelAlpha, 0x100, 5, 5,
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], panelX + (s16)width, panelBottom, panelAlpha, 0x100, 5, 5,
                           3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + (s16)width, panelTop, panelAlpha, 0x100, 5, 5,
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], panelX + (s16)width, panelTop, panelAlpha, 0x100, 5, 5,
                           1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelLeft, panelBottom, panelAlpha, 0x100, 5, 5, 2);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], panelLeft, panelBottom, panelAlpha, 0x100, 5, 5, 2);
         gTextBoxes[12].height = revealedHeight;
         {
             s8 firstAvailableHint;
@@ -2945,14 +2967,14 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
             }
         }
         gGameUiShimmerFrame++;
-        drawTexture(((HudTextures*)hudTextures)->tex28, 475.0f, 45.0f, panelAlpha, 0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, 480.0f, 45.0f, panelAlpha, 0x100, 0x82, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, 475.0f, 50.0f, panelAlpha, 0x100, 5, 0x96, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, 480.0f, 200.0f, panelAlpha, 0x100, 0x82, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, 610.0f, 50.0f, panelAlpha, 0x100, 5, 0x96, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, 610.0f, 200.0f, panelAlpha, 0x100, 5, 5, 3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, 610.0f, 45.0f, panelAlpha, 0x100, 5, 5, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, 475.0f, 200.0f, panelAlpha, 0x100, 5, 5, 2);
+        drawTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 475.0f, 45.0f, panelAlpha, 0x100);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], 480.0f, 45.0f, panelAlpha, 0x100, 0x82, 5, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], 475.0f, 50.0f, panelAlpha, 0x100, 5, 0x96, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], 480.0f, 200.0f, panelAlpha, 0x100, 0x82, 5, 2);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], 610.0f, 50.0f, panelAlpha, 0x100, 5, 0x96, 1);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 610.0f, 200.0f, panelAlpha, 0x100, 5, 5, 3);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 610.0f, 45.0f, panelAlpha, 0x100, 5, 5, 1);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 475.0f, 200.0f, panelAlpha, 0x100, 5, 5, 2);
         {
             int row;
             f32 shimmer;
@@ -2965,12 +2987,12 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
                           shimmerScale * fsin16Approx((u16)(row * 0xd48 + gGameUiShimmerFrame * 0x1838));
                 rawAlpha = (int)(panelAlpha * (0.4f + shimmer));
                 alpha0 = rawAlpha < 0 ? 0 : rawAlpha;
-                drawPartialTexture(((HudTextures*)hudTextures)->tex150, 480.0f, row + 0x32,
+                drawPartialTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_PATTERN], 480.0f, row + 0x32,
                                    alpha0 > 0xff ? 0xff : alpha0, 0x100, 0x82, 2, randomGetRange(0, 0x1e) << 1,
                                    randomGetRange(0, 0x1e) << 1);
                 rawAlpha = (int)(panelAlpha * (0.3f + shimmer));
                 alpha1 = rawAlpha < 0 ? 0 : rawAlpha;
-                drawPartialTexture(((HudTextures*)hudTextures)->tex150, 480.0f, row + 0x34,
+                drawPartialTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_PATTERN], 480.0f, row + 0x34,
                                    alpha1 > 0xff ? 0xff : alpha1, 0x100, 0x82, 2, randomGetRange(0, 0x1e) << 1,
                                    randomGetRange(0, 0x1e) << 1);
             }
@@ -2979,38 +3001,38 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
     } else {
         GameTextDef* mapText;
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        drawTexture(((HudTextures*)hudTextures)->tex28, 25.0f, 375.0f, 0xff, 0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, 30.0f, 375.0f, 0xff, 0x100, 0xa8, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, 25.0f, 380.0f, 0xff, 0x100, 5, 0x30, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex30, 30.0f, 380.0f, 0xff, 0x100, 0xa8, 0x30, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, 30.0f, 428.0f, 0xff, 0x100, 0xa8, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, 198.0f, 380.0f, 0xff, 0x100, 5, 0x30, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, 198.0f, 428.0f, 0xff, 0x100, 5, 5, 3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, 198.0f, 375.0f, 0xff, 0x100, 5, 5, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, 25.0f, 428.0f, 0xff, 0x100, 5, 5, 2);
-        drawTexture(((HudTextures*)hudTextures)->texFC, 46.0f, 376.0f, 0xff, 0x100);
+        drawTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 25.0f, 375.0f, 0xff, 0x100);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], 30.0f, 375.0f, 0xff, 0x100, 0xa8, 5, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], 25.0f, 380.0f, 0xff, 0x100, 5, 0x30, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_FILL], 30.0f, 380.0f, 0xff, 0x100, 0xa8, 0x30, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], 30.0f, 428.0f, 0xff, 0x100, 0xa8, 5, 2);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], 198.0f, 380.0f, 0xff, 0x100, 5, 0x30, 1);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 198.0f, 428.0f, 0xff, 0x100, 5, 5, 3);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 198.0f, 375.0f, 0xff, 0x100, 5, 5, 1);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 25.0f, 428.0f, 0xff, 0x100, 5, 5, 2);
+        drawTexture(hudTextures[63], 46.0f, 376.0f, 0xff, 0x100);
         mapText = gameTextGet(0x2ac);
         if (mapText->count > 1) {
             gameTextShowStr(mapText->strings[1], 0x93, 0x69, 0x17f);
         }
-        drawTexture(((HudTextures*)hudTextures)->tex10C, 50.0f, 403.0f, 0xff, 0x100);
+        drawTexture(hudTextures[67], 50.0f, 403.0f, 0xff, 0x100);
         if (mapText->count > 2) {
             gameTextShowStr(mapText->strings[2], 0x93, 0x51, 0x194);
         }
-        drawTexture(((HudTextures*)hudTextures)->tex28, 445.0f, 375.0f, 0xff, 0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, 450.0f, 375.0f, 0xff, 0x100, 0xa8, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, 445.0f, 380.0f, 0xff, 0x100, 5, 0x30, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex30, 450.0f, 380.0f, 0xff, 0x100, 0xa8, 0x30, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, 450.0f, 428.0f, 0xff, 0x100, 0xa8, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, 618.0f, 380.0f, 0xff, 0x100, 5, 0x30, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, 618.0f, 428.0f, 0xff, 0x100, 5, 5, 3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, 618.0f, 375.0f, 0xff, 0x100, 5, 5, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, 445.0f, 428.0f, 0xff, 0x100, 5, 5, 2);
-        drawTexture(((HudTextures*)hudTextures)->tex100, 473.0f, 353.0f, 0xff, 0x100);
+        drawTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 445.0f, 375.0f, 0xff, 0x100);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], 450.0f, 375.0f, 0xff, 0x100, 0xa8, 5, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], 445.0f, 380.0f, 0xff, 0x100, 5, 0x30, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_FILL], 450.0f, 380.0f, 0xff, 0x100, 0xa8, 0x30, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], 450.0f, 428.0f, 0xff, 0x100, 0xa8, 5, 2);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], 618.0f, 380.0f, 0xff, 0x100, 5, 0x30, 1);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 618.0f, 428.0f, 0xff, 0x100, 5, 5, 3);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 618.0f, 375.0f, 0xff, 0x100, 5, 5, 1);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 445.0f, 428.0f, 0xff, 0x100, 5, 5, 2);
+        drawTexture(hudTextures[64], 473.0f, 353.0f, 0xff, 0x100);
         if (mapText->count > 4) {
             gameTextShowStr(mapText->strings[4], 0x93, 0x20c, 0x17f);
         }
-        drawTexture(((HudTextures*)hudTextures)->tex104, 465.0f, 390.0f, 0xff, 0x100);
+        drawTexture(hudTextures[65], 465.0f, 390.0f, 0xff, 0x100);
         if (mapText->count > 5) {
             gameTextShowStr(mapText->strings[5], 0x93, 0x1f6, 0x195);
         }
@@ -3020,17 +3042,17 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
 /* Draws a 9-patch HUD box: center fill, the
  * four edges (stretched), and the four 5x5 corners, from hudTextures. */
 void drawHudBox(s16 x, s16 y, s16 w, s16 h, u8 alpha, u8 flag) {
-    drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x - 5), y, alpha, 0x100, 5, h, 0);
+    drawTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], (f32)(x - 5), y, alpha, 0x100, 5, h, 0);
     if (flag != 0) {
-        drawScaledTexture(((HudTextures*)hudTextures)->tex30, x, y, alpha, 0x100, w, h, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_FILL], x, y, alpha, 0x100, w, h, 0);
     }
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y + (s16)h), alpha, 0x100, w, 5, 2);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x + (s16)w), y, alpha, 0x100, 5, h, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + (s16)w), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 3);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + (s16)w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 2);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], x, (f32)(y + (s16)h), alpha, 0x100, w, 5, 2);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], (f32)(x + (s16)w), y, alpha, 0x100, 5, h, 1);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], (f32)(x + (s16)w), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 3);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], (f32)(x + (s16)w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], (f32)(x - 5), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 2);
 }
 
 void pauseMenuInit(void) {
@@ -4255,19 +4277,19 @@ void hudDrawCommunicatorAlert(int unused1, int unused2, int unused3) {
         return;
     }
     phase = gHudCommAlertTimer & 0x1f;
-    drawTexture(((HudTextures*)hudTextures)->tex110, 300.0f, 100.0f, 0xff, 0x100);
+    drawTexture(hudTextures[GAMEUI_HUD_TEX_COMMUNICATOR_ALERT], 300.0f, 100.0f, 0xff, 0x100);
     for (segment = 2; segment >= 0; segment--) {
-        drawTexture(((HudTextures*)hudTextures)->tex114, 324.0 + 1.5 * phase, 0x5f - phase / 4, 0xff - segment * 0x55,
+        drawTexture(hudTextures[GAMEUI_HUD_TEX_COMMUNICATOR_ALERT_SEGMENT], 324.0 + 1.5 * phase, 0x5f - phase / 4, 0xff - segment * 0x55,
                     phase * 2 + 0xbb);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex114, 282.0 - 1.5 * phase, 0x5f - phase / 4,
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_COMMUNICATOR_ALERT_SEGMENT], 282.0 - 1.5 * phase, 0x5f - phase / 4,
                           0xff - segment * 0x55, phase * 2 + 0xbb, 0x18, 0x34, 1);
         phase = (phase + 3) & 0x1f;
     }
     phase = (gHudCommAlertTimer & 0x1f) ^ 0x10;
     for (segment = 2; segment >= 0; segment--) {
-        drawTexture(((HudTextures*)hudTextures)->tex114, 324.0 + 1.5 * phase, 0x5f - phase / 4, 0xff - segment * 0x55,
+        drawTexture(hudTextures[GAMEUI_HUD_TEX_COMMUNICATOR_ALERT_SEGMENT], 324.0 + 1.5 * phase, 0x5f - phase / 4, 0xff - segment * 0x55,
                     phase * 2 + 0xbb);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex114, 282.0 - 1.5 * phase, 0x5f - phase / 4,
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_COMMUNICATOR_ALERT_SEGMENT], 282.0 - 1.5 * phase, 0x5f - phase / 4,
                           0xff - segment * 0x55, phase * 2 + 0xbb, 0x18, 0x34, 1);
         phase = (phase + 3) & 0x1f;
     }
@@ -4313,15 +4335,15 @@ void highScoreScreenDraw(int p1, int p2, int p3) {
     y = box->y;
     x = box->x;
 
-    drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(left = x - 5), (f32)(top = y - 5), 0xff, 0x100);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)top, 0xff, 0x100, w, 5, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)left, y, 0xff, 0x100, 5, h, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex30, x, y, 0xff, 0x100, w, h, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y + h), 0xff, 0x100, w, 5, 2);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x + w), y, 0xff, 0x100, 5, h, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y + h), 0xff, 0x100, 5, 5, 3);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)top, 0xff, 0x100, 5, 5, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)left, (f32)(y + h), 0xff, 0x100, 5, 5, 2);
+    drawTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], (f32)(left = x - 5), (f32)(top = y - 5), 0xff, 0x100);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], x, (f32)top, 0xff, 0x100, w, 5, 0);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], (f32)left, y, 0xff, 0x100, 5, h, 0);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_FILL], x, y, 0xff, 0x100, w, h, 0);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], x, (f32)(y + h), 0xff, 0x100, w, 5, 2);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], (f32)(x + w), y, 0xff, 0x100, 5, h, 1);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], (f32)(x + w), (f32)(y + h), 0xff, 0x100, 5, 5, 3);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], (f32)(x + w), (f32)top, 0xff, 0x100, 5, 5, 1);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], (f32)left, (f32)(y + h), 0xff, 0x100, 5, 5, 2);
 
     gameTextSetColor(0xff, 0xff, 0xff, 0xff);
     gameTextShowAt(0x345, 0, 0xa);
@@ -4347,7 +4369,7 @@ void highScoreScreenDraw(int p1, int p2, int p3) {
             if (starred != 0) {
                 TextSlot* box2 = gameTextGetBox(0x87);
                 int boxY = box2->y;
-                drawTexture(((HudTextures*)hudTextures)->texF8, (f32)(box2->x + 0x64), (f32)(starY += boxY + 0x57),
+                drawTexture(hudTextures[GAMEUI_HUD_TEX_SCORE_MARKER], (f32)(box2->x + 0x64), (f32)(starY += boxY + 0x57),
                             0xff, 0x100);
                 gameTextShowStr(sHighScoreStarMark, 0x87, 0x82, rowY);
             }
@@ -4366,15 +4388,15 @@ void timeListDraw(int unused1, int unused2, int unused3) {
     if (pauseMenuState != 0) {
         return;
     }
-    drawTexture(((HudTextures*)hudTextures)->tex28, 15.0f, 35.0f, 0xff, 0x100);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, 20.0f, 35.0f, 0xff, 0x100, 0x258, 5, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, 15.0f, 40.0f, 0xff, 0x100, 5, 0x190, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex30, 20.0f, 40.0f, 0xff, 0x100, 0x258, 0x190, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, 20.0f, 440.0f, 0xff, 0x100, 0x258, 5, 2);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, 620.0f, 40.0f, 0xff, 0x100, 5, 0x190, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, 620.0f, 440.0f, 0xff, 0x100, 5, 5, 3);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, 620.0f, 35.0f, 0xff, 0x100, 5, 5, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, 15.0f, 440.0f, 0xff, 0x100, 5, 5, 2);
+    drawTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 15.0f, 35.0f, 0xff, 0x100);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], 20.0f, 35.0f, 0xff, 0x100, 0x258, 5, 0);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], 15.0f, 40.0f, 0xff, 0x100, 5, 0x190, 0);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_FILL], 20.0f, 40.0f, 0xff, 0x100, 0x258, 0x190, 0);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], 20.0f, 440.0f, 0xff, 0x100, 0x258, 5, 2);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], 620.0f, 40.0f, 0xff, 0x100, 5, 0x190, 1);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 620.0f, 440.0f, 0xff, 0x100, 5, 5, 3);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 620.0f, 35.0f, 0xff, 0x100, 5, 5, 1);
+    drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 15.0f, 440.0f, 0xff, 0x100, 5, 5, 2);
 
     {
         s16 ang;
@@ -4584,7 +4606,7 @@ void pauseMenuDrawGrid(s16 alpha) {
         gameTextShowAt(0x3de, 0xc8, 0x154);
     }
     if (gPauseMenuSlideOut == 0) {
-        HudTextures* tex;
+        Texture** textures;
         GridEntry* e;
         f32 scale = (f32)(0.5 * (e = &gPauseMenuActiveGrid[gPauseMenuGridCursor])->f10);
         int w = cursorScale;
@@ -4603,11 +4625,11 @@ void pauseMenuDrawGrid(s16 alpha) {
             ph = (s16)(ph ^ 0x3f);
         }
         cursorAlpha = (s16)(ph * (alpha * 0xc0 / 0x100 + 0x40) / 31);
-        tex = (HudTextures*)hudTextures;
-        pauseMenuDrawElement(tex->tex80, (f32)(s16)x1, (f32)(s16)y1, 0x100, (u8)cursorAlpha, (w16 = w), 0);
-        gameUiDrawTextureRegion(tex->tex80, x2, (f32)(s16)y1, 0x100, (u8)cursorAlpha, w16, 0x12, 0xa, 1);
-        gameUiDrawTextureRegion(tex->tex80, (f32)(s16)x1, y2, 0x100, (u8)cursorAlpha, w16, 0x12, 0xa, 2);
-        gameUiDrawTextureRegion(tex->tex80, x2, y2, 0x100, (u8)cursorAlpha, w16, 0x12, 0xa, 3);
+        textures = hudTextures;
+        pauseMenuDrawElement(textures[GAMEUI_HUD_TEX_GRID_CURSOR], (f32)(s16)x1, (f32)(s16)y1, 0x100, (u8)cursorAlpha, (w16 = w), 0);
+        gameUiDrawTextureRegion(textures[GAMEUI_HUD_TEX_GRID_CURSOR], x2, (f32)(s16)y1, 0x100, (u8)cursorAlpha, w16, 0x12, 0xa, 1);
+        gameUiDrawTextureRegion(textures[GAMEUI_HUD_TEX_GRID_CURSOR], (f32)(s16)x1, y2, 0x100, (u8)cursorAlpha, w16, 0x12, 0xa, 2);
+        gameUiDrawTextureRegion(textures[GAMEUI_HUD_TEX_GRID_CURSOR], x2, y2, 0x100, (u8)cursorAlpha, w16, 0x12, 0xa, 3);
     }
     gameTextSetDrawFunc(0);
 }
@@ -4623,18 +4645,18 @@ void pauseMenuDrawTaskHintPanel(void* unused, u8 alpha) {
     u8 litSegments;
     s8 i;
 
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex38, 115.0f, 252.5f, yPos, alpha, panelScale, 0);
-    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex38, 150.0f, 252.5f, yPos, alpha, panelScale, 0x1c, 0x1e, 1);
-    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex38, 115.0f, 290.0f, yPos, alpha, panelScale, 0x1c, 0x1e, 2);
-    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex38, 150.0f, 290.0f, yPos, alpha, panelScale, 0x1c, 0x1e, 3);
-    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex3C, 145.0f, 212.5f, yPos, alpha, panelScale, 0x8, 0x20, 0);
-    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex3C, 145.0f, 327.5f, yPos, alpha, panelScale, 0x8, 0x20, 0);
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 126.25f, 175.0f, yPos, alpha, panelScale, 0);
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 81.25f, 225.0f, yPos, alpha, panelScale, 0);
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 171.25f, 225.0f, yPos, alpha, panelScale, 0);
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 81.25f, 318.75f, yPos, alpha, panelScale, 0);
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 171.25f, 318.75f, yPos, alpha, panelScale, 0);
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 126.25f, 367.5f, yPos, alpha, panelScale, 0);
+    pauseMenuDrawElement(hudTextures[GAMEUI_HUD_TEX_TASK_PANEL_CORNER], 115.0f, 252.5f, yPos, alpha, panelScale, 0);
+    gameUiDrawTextureRegion(hudTextures[GAMEUI_HUD_TEX_TASK_PANEL_CORNER], 150.0f, 252.5f, yPos, alpha, panelScale, 0x1c, 0x1e, 1);
+    gameUiDrawTextureRegion(hudTextures[GAMEUI_HUD_TEX_TASK_PANEL_CORNER], 115.0f, 290.0f, yPos, alpha, panelScale, 0x1c, 0x1e, 2);
+    gameUiDrawTextureRegion(hudTextures[GAMEUI_HUD_TEX_TASK_PANEL_CORNER], 150.0f, 290.0f, yPos, alpha, panelScale, 0x1c, 0x1e, 3);
+    gameUiDrawTextureRegion(hudTextures[GAMEUI_HUD_TEX_TASK_PANEL_EDGE], 145.0f, 212.5f, yPos, alpha, panelScale, 0x8, 0x20, 0);
+    gameUiDrawTextureRegion(hudTextures[GAMEUI_HUD_TEX_TASK_PANEL_EDGE], 145.0f, 327.5f, yPos, alpha, panelScale, 0x8, 0x20, 0);
+    pauseMenuDrawElement(hudTextures[GAMEUI_HUD_TEX_TASK_PANEL_MARKER], 126.25f, 175.0f, yPos, alpha, panelScale, 0);
+    pauseMenuDrawElement(hudTextures[GAMEUI_HUD_TEX_TASK_PANEL_MARKER], 81.25f, 225.0f, yPos, alpha, panelScale, 0);
+    pauseMenuDrawElement(hudTextures[GAMEUI_HUD_TEX_TASK_PANEL_MARKER], 171.25f, 225.0f, yPos, alpha, panelScale, 0);
+    pauseMenuDrawElement(hudTextures[GAMEUI_HUD_TEX_TASK_PANEL_MARKER], 81.25f, 318.75f, yPos, alpha, panelScale, 0);
+    pauseMenuDrawElement(hudTextures[GAMEUI_HUD_TEX_TASK_PANEL_MARKER], 171.25f, 318.75f, yPos, alpha, panelScale, 0);
+    pauseMenuDrawElement(hudTextures[GAMEUI_HUD_TEX_TASK_PANEL_MARKER], 126.25f, 367.5f, yPos, alpha, panelScale, 0);
 
     hintText = (u16)getNextTaskHintText();
     if (hintText > 0xb3) {
@@ -4675,18 +4697,18 @@ void pauseMenuDrawSideRails(s32 alpha) {
     phase = 6.0f * mathSinf(F_PI * (gPauseMenuHoloTime * speed) / 32768.0f);
 
     for (i = 10; i >= 0; i -= 2) {
-        pauseMenuDrawElement(((HudTextures*)hudTextures)->tex11C, 20.0f, 280.0f,
+        pauseMenuDrawElement(hudTextures[GAMEUI_HUD_TEX_PAUSE_SIDE_RAIL], 20.0f, 280.0f,
                              x = (s16)((0xf5 - i) - gPauseMenuSlideOut), alpha, 0x200, 0);
-        pauseMenuDrawElement(((HudTextures*)hudTextures)->tex11C, 570.0f, 280.0f, x, alpha, 0x200, 0);
+        pauseMenuDrawElement(hudTextures[GAMEUI_HUD_TEX_PAUSE_SIDE_RAIL], 570.0f, 280.0f, x, alpha, 0x200, 0);
     }
 
     j = 10;
     brightness = 512.0f - phase * brightnessStep;
     for (; j >= 0; j -= 10) {
         f32 off = phase * (40.0f - (f32)(s32)j) / 40.0f;
-        pauseMenuDrawElement(((HudTextures*)hudTextures)->tex118, 595.0f + off, 289.0f,
+        pauseMenuDrawElement(hudTextures[GAMEUI_HUD_TEX_PAUSE_SIDE_RAIL_MOVING], 595.0f + off, 289.0f,
                              x2 = (s16)((0xff - j) - gPauseMenuSlideOut), alpha, brightness, 0);
-        pauseMenuDrawElement(((HudTextures*)hudTextures)->tex118, 27.0f - off, 289.0f, x2, alpha, brightness, 0);
+        pauseMenuDrawElement(hudTextures[GAMEUI_HUD_TEX_PAUSE_SIDE_RAIL_MOVING], 27.0f - off, 289.0f, x2, alpha, brightness, 0);
     }
 }
 
@@ -4723,7 +4745,7 @@ void pauseMenuDrawStatusPage(GameObject* player) {
 
     timer = gameTextGetTimer();
     if (timer != zero) {
-        pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)((s16)alpha / 2),
+        pauseMenuDrawTextureRegion(hudTextures[GAMEUI_HUD_TEX_PANEL_PATTERN], 40.0f, 120.0f, 0xff, (u8)((s16)alpha / 2),
                                    0x230, 0x190, randomGetRange(0, 0x1e) * 2, randomGetRange(0, 0x1e) * 2);
         model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
         objRender(0, 0, 0, 0, gGameUiCommCubeObjects[1], 1);
@@ -4745,9 +4767,9 @@ void pauseMenuDrawStatusPage(GameObject* player) {
     if (gPauseMenuMapBackSide != 0) {
         for (i8 = 0x14; i8 >= 0; i8 -= 4) {
             s16 px = (s16)((0xf0 - i8) - gPauseMenuSlideOut);
-            gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex170, 120.0f, 205.0f, px, ty, 0x100, 0x190, 4, 0);
-            gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex170, 200.0f, 305.0f, px, ty, 0x100, 0xf0, 4, 0);
-            gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex170, 200.0f, 405.0f, px, ty, 0x100, 0xf0, 4, 0);
+            gameUiDrawTextureRegion(hudTextures[GAMEUI_HUD_TEX_STATUS_DIVIDER], 120.0f, 205.0f, px, ty, 0x100, 0x190, 4, 0);
+            gameUiDrawTextureRegion(hudTextures[GAMEUI_HUD_TEX_STATUS_DIVIDER], 200.0f, 305.0f, px, ty, 0x100, 0xf0, 4, 0);
+            gameUiDrawTextureRegion(hudTextures[GAMEUI_HUD_TEX_STATUS_DIVIDER], 200.0f, 405.0f, px, ty, 0x100, 0xf0, 4, 0);
         }
         gPauseMenuActiveGrid = (GridEntry*)gPauseMenuStatusBackGrid;
         pauseMenuDrawGrid(alpha);
@@ -4806,7 +4828,7 @@ void pauseMenuDrawStatusPage(GameObject* player) {
             u16 ii;
             for (ii = 0; ii < 7; ii++) {
                 f32 fy = 31.0f * (f32)(u32)ii + 80.0f;
-                pauseMenuDrawElement((int*)((HudTextures*)hudTextures)->tex5C, fy, 436.0f, px, ty, iconScale, 0);
+                pauseMenuDrawElement(hudTextures[23], fy, 436.0f, px, ty, iconScale, 0);
             }
         }
         {
@@ -4826,15 +4848,15 @@ void pauseMenuDrawStatusPage(GameObject* player) {
                 fyj = 31.0f * (f32)(u32)(jj & 0xffff) + 80.0f;
                 for (; i8 >= 0; i8 -= 4) {
                     s16 px = (s16)((0xff - i8) - gPauseMenuSlideOut);
-                    pauseMenuDrawElement((int*)hudTextures[tex], fyj, 436.0f, px, ty, iconScale, 0);
+                    pauseMenuDrawElement(hudTextures[tex], fyj, 436.0f, px, ty, iconScale, 0);
                 }
             }
         }
-        pauseMenuDrawElement((int*)((HudTextures*)hudTextures)->texBC, lbl_803DBAD0, lbl_803DBAD4,
+        pauseMenuDrawElement(hudTextures[47], lbl_803DBAD0, lbl_803DBAD4,
                              0x100 - gPauseMenuSlideOut, ty, 0x100, 0);
-        gameUiDrawTextureRegion(((HudTextures*)hudTextures)->texB8, (f32)(lbl_803DBAD0 + 0x18), lbl_803DBAD4,
+        gameUiDrawTextureRegion(hudTextures[46], (f32)(lbl_803DBAD0 + 0x18), lbl_803DBAD4,
                                 0x100 - gPauseMenuSlideOut, ty, 0x100, 0x66, 0x12, 0);
-        pauseMenuDrawElement((int*)((HudTextures*)hudTextures)->texC0, (f32)(lbl_803DBAD0 + 0x7e), lbl_803DBAD4,
+        pauseMenuDrawElement(hudTextures[48], (f32)(lbl_803DBAD0 + 0x7e), lbl_803DBAD4,
                              0x100 - gPauseMenuSlideOut, ty, 0x100, 0);
         hudDrawMagicBar((u8)ty, 0x100 - gPauseMenuSlideOut, 1);
         gPauseMenuActiveGrid = gPauseMenuStatusGrid;
@@ -4936,7 +4958,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         }
         timer = gameTextGetTimer();
         if (timer != zero) {
-            pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)(panelAlpha / 2),
+            pauseMenuDrawTextureRegion(hudTextures[GAMEUI_HUD_TEX_PANEL_PATTERN], 40.0f, 120.0f, 0xff, (u8)(panelAlpha / 2),
                                        0x230, 0x190, randomGetRange(0, 0x1e) * 2, randomGetRange(0, 0x1e) * 2);
             model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
             objRender(0, 0, 0, 0, gGameUiCommCubeObjects[1], 1);
@@ -4999,7 +5021,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         model->bufferFlags &= ~0x8;
         timer = gameTextGetTimer();
         if (timer != zero) {
-            pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)(alpha / 2), 0x230,
+            pauseMenuDrawTextureRegion(hudTextures[GAMEUI_HUD_TEX_PANEL_PATTERN], 40.0f, 120.0f, 0xff, (u8)(alpha / 2), 0x230,
                                        0x190, randomGetRange(0, 0x1e) * 2, randomGetRange(0, 0x1e) * 2);
             model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
             objRender(0, 0, 0, 0, gGameUiCommCubeObjects[1], 1);
@@ -5081,7 +5103,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         model->bufferFlags &= ~0x8;
         timer = gameTextGetTimer();
         if (timer != zero) {
-            pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)(alpha / 2), 0x230,
+            pauseMenuDrawTextureRegion(hudTextures[GAMEUI_HUD_TEX_PANEL_PATTERN], 40.0f, 120.0f, 0xff, (u8)(alpha / 2), 0x230,
                                        0x190, randomGetRange(0, 0x1e) * 2, randomGetRange(0, 0x1e) * 2);
             model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
             objRender(0, 0, 0, 0, gGameUiCommCubeObjects[1], 1);
@@ -5121,7 +5143,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
                 gPauseMenuTextScale = 2.0f;
                 gameTextShowStr(characterCount.text, 0x93, 0x14a, 0xdc);
                 gPauseMenuTextScale = 1.5f;
-                pauseMenuDrawElement(((HudTextures*)hudTextures)->tex134, 200.0f, 140.0f, 0x100, alpha, 0x258, 0);
+                pauseMenuDrawElement(hudTextures[77], 200.0f, 140.0f, 0x100, alpha, 0x258, 0);
                 break;
             }
             }
@@ -5504,7 +5526,7 @@ void headDisplayDraw(void) {
             waveAlpha = (int)((f32)(s16)panelAlpha * (0.4f + wave));
             clampedAlpha = waveAlpha < 0 ? 0 : waveAlpha;
 
-            drawPartialTexture(hudTextures[84], 490.0f, (f32)(value = panelY + y),
+            drawPartialTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_PATTERN], 490.0f, (f32)(value = panelY + y),
                                clampedAlpha > 0xff ? 0xff : clampedAlpha, 0x100, 0x78, 2, randomGetRange(0, 0x1e) << 1,
                                randomGetRange(0, 0x1e) << 1);
             clampedAlpha = (int)((f32)(s16)panelAlpha * (0.3f + wave));
@@ -5512,17 +5534,17 @@ void headDisplayDraw(void) {
                 clampedAlpha = 0;
             }
 
-            drawPartialTexture(hudTextures[84], 490.0f, (f32)(value + 2), clampedAlpha > 0xff ? 0xff : clampedAlpha,
+            drawPartialTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_PATTERN], 490.0f, (f32)(value + 2), clampedAlpha > 0xff ? 0xff : clampedAlpha,
                                0x100, 0x78, 2, randomGetRange(0, 0x1e) << 1, randomGetRange(0, 0x1e) << 1);
         }
-        drawTexture(hudTextures[10], 485.0f, (y = (s16)panelY - 5), panelAlpha, 0x100);
-        drawScaledTexture(hudTextures[13], 490.0f, y, panelAlpha, 0x100, 0x78, 5, 0);
-        drawScaledTexture(hudTextures[11], 485.0f, (s16)panelY, panelAlpha, 0x100, 5, (s16)panelHeight, 0);
-        drawScaledTexture(hudTextures[13], 490.0f, (s16)panelY + (s16)(int)panelHeight, panelAlpha, 0x100, 0x78, 5, 2);
-        drawScaledTexture(hudTextures[11], 610.0f, (s16)panelY, panelAlpha, 0x100, 5, (s16)panelHeight, 1);
-        drawScaledTexture(hudTextures[10], 610.0f, (s16)panelY + (s16)(int)panelHeight, panelAlpha, 0x100, 5, 5, 3);
-        drawScaledTexture(hudTextures[10], 610.0f, y, panelAlpha, 0x100, 5, 5, 1);
-        drawScaledTexture(hudTextures[10], 485.0f, (s16)panelY + (s16)(int)panelHeight, panelAlpha, 0x100, 5, 5, 2);
+        drawTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 485.0f, (y = (s16)panelY - 5), panelAlpha, 0x100);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], 490.0f, y, panelAlpha, 0x100, 0x78, 5, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], 485.0f, (s16)panelY, panelAlpha, 0x100, 5, (s16)panelHeight, 0);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_HORIZONTAL_EDGE], 490.0f, (s16)panelY + (s16)(int)panelHeight, panelAlpha, 0x100, 0x78, 5, 2);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_VERTICAL_EDGE], 610.0f, (s16)panelY, panelAlpha, 0x100, 5, (s16)panelHeight, 1);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 610.0f, (s16)panelY + (s16)(int)panelHeight, panelAlpha, 0x100, 5, 5, 3);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 610.0f, y, panelAlpha, 0x100, 5, 5, 1);
+        drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], 485.0f, (s16)panelY + (s16)(int)panelHeight, panelAlpha, 0x100, 5, 5, 2);
     }
 }
 
@@ -5562,7 +5584,7 @@ void drawTrickyHudOverlay(int obj, int unused1, int unused2) {
         }
         gTrickyHudCachedIconIndex = iconIndex;
         if (gTrickyHudCachedIconTexture != 0) {
-            drawTexture((void*)hudTextures[0x1d], 140.0f, 90.0f, 0xff, 0x100);
+            drawTexture(hudTextures[0x1d], 140.0f, 90.0f, 0xff, 0x100);
             drawTexture(gTrickyHudCachedIconTexture, 140.0f, 94.0f, 0xff, 0x80);
         }
     }

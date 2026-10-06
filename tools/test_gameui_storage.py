@@ -15,6 +15,15 @@ import unittest
 from brute_match import find_function_body
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def hud_texture_slots(source):
+    slots = re.search(r"typedef enum GameUiHudTextureSlot \{.*?\} GameUiHudTextureSlot;", source, re.S)
+    if slots is None:
+        raise ValueError("GameUI HUD texture slot definitions not found")
+    return slots[0]
+
+
 SYMBOLS = (
     "hudTextures", "gPauseMenuIconTextures", "gPauseMenuIconTextureIds",
     "gCMenuItemTextures", "gCMenuItemTextureIds", "gCMenuItemFlags",
@@ -116,7 +125,7 @@ int main(void) {
 
 def harness():
     source = (ROOT / "src/dlls/engine/0/0.c").read_text()
-    parts = [PRELUDE]
+    parts = [PRELUDE, hud_texture_slots(source)]
     for symbol in SYMBOLS:
         declaration = re.search(r"^(?:Texture\*|void\*|s16|u8|int) " + symbol +
                                 r"(?:\[[^\]]+\])?;$", source, re.M)

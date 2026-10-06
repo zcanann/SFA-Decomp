@@ -8,6 +8,7 @@ import tempfile
 import unittest
 
 from brute_match import find_function_body
+from test_gameui_storage import hud_texture_slots
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -41,9 +42,8 @@ int _fltused;
 #define GAMEUI_TIME_LIST_COUNT 6
 typedef struct { u16 ids[GAMEUI_TIME_LIST_COUNT]; } GameUiTimeIdList;
 static const GameUiTimeIdList sTimeListTimeBits = {{1, 2, 3, 4, 5, 6}};
-typedef struct { void *tex28, *tex2C, *tex30, *tex34; } HudTextures;
-static HudTextures textures;
-static void* hudTextures = &textures;
+''' + hud_texture_slots(source) + r'''
+static void* hudTextures[GAMEUI_HUD_TEXTURE_COUNT];
 static int pauseMenuState;
 static s16 gTimeListPulseAngle, gTimeListPulseAngleStep;
 static f32 gTimeListPulseAmplitude, gTimeListPulseBias, sineValue;

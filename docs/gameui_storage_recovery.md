@@ -41,6 +41,35 @@ the new definitions through ordinary compiler pooling, with no forced sections,
 compiler changes, TU splits or retail-object substitution. A local pointer to
 the displayed-status array preserves MWCC's health-counter register allocation.
 
+## HUD texture array
+
+The separate `HudTextures` overlay also mixed pointers with byte padding over
+`hudTextures`. Its first text-box frame field was at the intended slot 79 on
+GameCube, but at offset 464 (slot 58) with eight-byte pointers. Foxhollow changed
+the padding into pointer arrays; the matching source now removes the overlay
+and uses the actual `Texture*` array throughout instead.
+
+The 102-iteration loader and its 102-entry `gHudTextureIds` list establish the
+array capacity independently of the former struct. A size assertion ties that
+list to `GAMEUI_HUD_TEXTURE_COUNT`. Private slot names describe draw behavior:
+
+| Slots | Role established by consumers |
+| --- | --- |
+| 10–13 | Panel corner, vertical edge, fill and horizontal edge in `drawHudBox` |
+| 14–16 | Mirrored task-panel corners, edges and six markers |
+| 32 | Four mirrored corners around the active grid selection |
+| 62 | Marker beside qualifying high-score rows |
+| 68–69 | Communicator alert base and mirrored animated segments |
+| 70–71 | Moving and fixed pause-menu side rails |
+| 79–83 | Five frame textures handed to `gGameTextBoxFrameTextures` |
+| 84 | Panel pattern used by map, head-display and pause panels |
+| 92 | Four-pixel-high status-panel dividers |
+
+These are consumer-role names, not recovered artwork filenames. Other entries
+retain plain array indices until their identities are established. The old
+header has no remaining consumers and is removed. No texture list entries,
+array addresses or compiler settings change.
+
 ## Validation
 
 Reports generated with `metadata.complete` removed give these complete GameUI
@@ -69,3 +98,9 @@ shutdown behavior that leaves HUD/blink pointers populated after release.
 passes 10,000 cases against each of `6af408a1c1` and historical `6b1ba5bc2c`.
 The probe's aggregate is only a host fixture for comparing array state; older
 HUD layouts are read from the explicitly selected historical revision.
+
+After the HUD texture overlay removal, all five complete GameUI reports and
+full source/retail checksum builds retain the results above. Native checks in
+`tools/test_gameui_hud_textures.py` exercise the actual panel, communicator and
+text-box handoff functions at `-O0` and `-O2` under ASan/UBSan, with a distinct
+pointer in every array entry. The cleanup and time-list color tests also pass.
