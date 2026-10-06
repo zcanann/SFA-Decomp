@@ -83,7 +83,8 @@ s16 dll_79_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* sp
         commandCursor[2].valueZ = 32676.0f;
         commandCursor[3].stageIndex = 0;
         commandCursor[3].parameter = 8;
-        commandCursor[3].vertexIndices = (s16*)&resourceData[offsetof(Dll79EffectResourceView, firstEightVertexIndices)];
+        commandCursor[3].vertexIndices =
+            (s16*)&resourceData[offsetof(Dll79EffectResourceView, firstEightVertexIndices)];
         commandCursor[3].flags = 4;
         commandCursor[3].valueX = 100.0f;
         commandCursor[3].valueY = 0.0f;

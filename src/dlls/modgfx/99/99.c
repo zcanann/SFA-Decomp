@@ -285,8 +285,8 @@ s16 dll_63_spawnEffect(GameObject* sourceObj, int variant, void* spawnParams, u3
         }
     }
     return (*gModgfxInterface)
-        ->spawnEffect(&packet.context, 0, 0xe, (ModgfxEffectVertex*)(resourceData), 0xc, (s16*)(&resourceData[offsetof(Dll63EffectResourceView, triangleIndices)]),
-                      0x40, 0);
+        ->spawnEffect(&packet.context, 0, 0xe, (ModgfxEffectVertex*)(resourceData), 0xc,
+                      (s16*)(&resourceData[offsetof(Dll63EffectResourceView, triangleIndices)]), 0x40, 0);
 }
 
 void dll_63_release(void) {

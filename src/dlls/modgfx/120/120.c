@@ -193,8 +193,8 @@ void dll_78_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         }
     }
     (*gModgfxInterface)
-        ->spawnEffect(&packet.context, 0, 0xe, (ModgfxEffectVertex*)(resourceData), 0xc, (s16*)(&resourceData[offsetof(Dll78EffectResourceView, triangles)]),
-                      0x34, 0);
+        ->spawnEffect(&packet.context, 0, 0xe, (ModgfxEffectVertex*)(resourceData), 0xc,
+                      (s16*)(&resourceData[offsetof(Dll78EffectResourceView, triangles)]), 0x34, 0);
 }
 
 void dll_78_release(void) {

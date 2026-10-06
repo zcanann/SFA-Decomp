@@ -61,14 +61,16 @@ void dll_A9_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     if (alternateStyle != NULL) {
         commands[1].stageIndex = 0;
         commands[1].parameter = 7;
-        commands[1].vertexIndices = (s16*)&resourceData[offsetof(DllA9EffectResourceView, firstSevenVertexIndices.indices)];
+        commands[1].vertexIndices =
+            (s16*)&resourceData[offsetof(DllA9EffectResourceView, firstSevenVertexIndices.indices)];
         commands[1].flags = 2;
         commands[1].valueX = 0.8f;
         commands[1].valueY = 0.006f;
         commands[1].valueZ = 0.8f;
         commands[2].stageIndex = 0;
         commands[2].parameter = 7;
-        commands[2].vertexIndices = (s16*)&resourceData[offsetof(DllA9EffectResourceView, lastSevenVertexIndices.indices)];
+        commands[2].vertexIndices =
+            (s16*)&resourceData[offsetof(DllA9EffectResourceView, lastSevenVertexIndices.indices)];
         commands[2].flags = 2;
         commands[2].valueX = 1.5f;
         commands[2].valueY = 0.006f;
@@ -77,14 +79,16 @@ void dll_A9_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     } else {
         commands[1].stageIndex = 0;
         commands[1].parameter = 7;
-        commands[1].vertexIndices = (s16*)&resourceData[offsetof(DllA9EffectResourceView, firstSevenVertexIndices.indices)];
+        commands[1].vertexIndices =
+            (s16*)&resourceData[offsetof(DllA9EffectResourceView, firstSevenVertexIndices.indices)];
         commands[1].flags = 2;
         commands[1].valueX = 0.8f;
         commands[1].valueY = 0.028f;
         commands[1].valueZ = 0.8f;
         commands[2].stageIndex = 0;
         commands[2].parameter = 7;
-        commands[2].vertexIndices = (s16*)&resourceData[offsetof(DllA9EffectResourceView, lastSevenVertexIndices.indices)];
+        commands[2].vertexIndices =
+            (s16*)&resourceData[offsetof(DllA9EffectResourceView, lastSevenVertexIndices.indices)];
         commands[2].flags = 2;
         commands[2].valueX = 1.2f;
         commands[2].valueY = 0.028f;

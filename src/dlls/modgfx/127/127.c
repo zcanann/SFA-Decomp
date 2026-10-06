@@ -222,13 +222,15 @@ void dll_7F_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     if (variant == 0) {
         packet.context.modeByte = 0;
         (*gModgfxInterface)
-            ->spawnEffect(&packet.context, 0, 9, (ModgfxEffectVertex*)(resourceData), 8, (s16*)(&resourceData[offsetof(Dll7FEffectResourceView, triangles)]),
-                          0x156, 0);
+            ->spawnEffect(&packet.context, 0, 9, (ModgfxEffectVertex*)(resourceData), 8,
+                          (s16*)(&resourceData[offsetof(Dll7FEffectResourceView, triangles)]), 0x156, 0);
     } else {
         packet.context.modeByte = 0;
         (*gModgfxInterface)
-            ->spawnEffect(&packet.context, 0, 9, (ModgfxEffectVertex*)(&resourceData[offsetof(Dll7FEffectResourceView, nonzeroVariantVertices)]), 8,
-                          (s16*)(&resourceData[offsetof(Dll7FEffectResourceView, triangles)]), 0x8a, 0);
+            ->spawnEffect(
+                &packet.context, 0, 9,
+                (ModgfxEffectVertex*)(&resourceData[offsetof(Dll7FEffectResourceView, nonzeroVariantVertices)]), 8,
+                (s16*)(&resourceData[offsetof(Dll7FEffectResourceView, triangles)]), 0x8a, 0);
     }
 }
 

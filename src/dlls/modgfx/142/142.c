@@ -175,7 +175,9 @@ void dll_8E_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
             packet.context.position[2] += spawnParams->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&packet.context, 0, 3, (ModgfxEffectVertex*)(gDll8EEffectVtxColorTable), 1, (s16*)(&gDll8EEffectSpawnResource), 0x26A, 0);
+    (*gModgfxInterface)
+        ->spawnEffect(&packet.context, 0, 3, (ModgfxEffectVertex*)(gDll8EEffectVtxColorTable), 1,
+                      (s16*)(&gDll8EEffectSpawnResource), 0x26A, 0);
 }
 
 void dll_8E_release(void) {

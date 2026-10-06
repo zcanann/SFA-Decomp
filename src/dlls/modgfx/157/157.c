@@ -57,21 +57,24 @@ void dll_9D_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[0].valueZ = originOffset;
     commands[1].stageIndex = 0;
     commands[1].parameter = 7;
-    commands[1].vertexIndices = (s16*)&resourceData[offsetof(Dll9DEffectResourceView, sevenVertexIndexLists[0].indices)];
+    commands[1].vertexIndices =
+        (s16*)&resourceData[offsetof(Dll9DEffectResourceView, sevenVertexIndexLists[0].indices)];
     commands[1].flags = 2;
     commands[1].valueX = 16.0f;
     commands[1].valueY = 20.0f;
     commands[1].valueZ = 16.0f;
     commands[2].stageIndex = 0;
     commands[2].parameter = 7;
-    commands[2].vertexIndices = (s16*)&resourceData[offsetof(Dll9DEffectResourceView, sevenVertexIndexLists[1].indices)];
+    commands[2].vertexIndices =
+        (s16*)&resourceData[offsetof(Dll9DEffectResourceView, sevenVertexIndexLists[1].indices)];
     commands[2].flags = 2;
     commands[2].valueX = 20.0f;
     commands[2].valueY = 20.0f;
     commands[2].valueZ = 20.0f;
     commands[3].stageIndex = 0;
     commands[3].parameter = 7;
-    commands[3].vertexIndices = (s16*)&resourceData[offsetof(Dll9DEffectResourceView, sevenVertexIndexLists[2].indices)];
+    commands[3].vertexIndices =
+        (s16*)&resourceData[offsetof(Dll9DEffectResourceView, sevenVertexIndexLists[2].indices)];
     commands[3].flags = 2;
     commands[3].valueX = 16.0f;
     commands[3].valueY = 20.0f;
@@ -85,7 +88,8 @@ void dll_9D_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[4].valueZ = originOffset;
     commands[5].stageIndex = 1;
     commands[5].parameter = 7;
-    commands[5].vertexIndices = (s16*)&resourceData[offsetof(Dll9DEffectResourceView, sevenVertexIndexLists[1].indices)];
+    commands[5].vertexIndices =
+        (s16*)&resourceData[offsetof(Dll9DEffectResourceView, sevenVertexIndexLists[1].indices)];
     commands[5].flags = 4;
     commands[5].valueX = 105.0f;
     commands[5].valueY = originOffset;
@@ -134,7 +138,8 @@ void dll_9D_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[11].valueZ = originOffset;
     commands[12].stageIndex = 3;
     commands[12].parameter = 7;
-    commands[12].vertexIndices = (s16*)&resourceData[offsetof(Dll9DEffectResourceView, sevenVertexIndexLists[1].indices)];
+    commands[12].vertexIndices =
+        (s16*)&resourceData[offsetof(Dll9DEffectResourceView, sevenVertexIndexLists[1].indices)];
     commands[12].flags = 4;
     commands[12].valueX = originOffset;
     commands[12].valueY = originOffset;

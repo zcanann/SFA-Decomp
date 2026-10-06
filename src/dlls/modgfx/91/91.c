@@ -256,7 +256,8 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
         packet.context.flags = 0x4000000;
         packet.context.flags |= spawnFlags;
         spawnHandle = (*gModgfxInterface)
-                          ->spawnEffect(&packet.context, 0, 4, (ModgfxEffectVertex*)(resources[0]->vertices), 4, (s16*)(resources[0]->triangleIndices), 0, texture);
+                          ->spawnEffect(&packet.context, 0, 4, (ModgfxEffectVertex*)(resources[0]->vertices), 4,
+                                        (s16*)(resources[0]->triangleIndices), 0, texture);
     }
     partFxSpawnCount = randomGetRange(2, 6);
     if (effectId == 7) {

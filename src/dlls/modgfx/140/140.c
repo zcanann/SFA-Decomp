@@ -229,8 +229,8 @@ void dll_8C_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         }
     }
     (*gModgfxInterface)
-        ->spawnEffect(&packet.context, 0, 0x15, (ModgfxEffectVertex*)(resourceData), 0x18, (s16*)(&resourceData[offsetof(Dll8CEffectResourceView, triangles)]),
-                      0x5E0, 0);
+        ->spawnEffect(&packet.context, 0, 0x15, (ModgfxEffectVertex*)(resourceData), 0x18,
+                      (s16*)(&resourceData[offsetof(Dll8CEffectResourceView, triangles)]), 0x5E0, 0);
 }
 
 void dll_8C_release(void) {

@@ -50,14 +50,11 @@ f32 gModgfxMotionStep;
 u8 gModgfxSpawnGeneration;
 s16 gModgfxSequenceIdCounter;
 
-
 /* Object spawned to back a modgfx effect slot; retail OBJECTS.bin name
    "InvHit" (DLL 0xF1). */
 #define MODGFX_CHILD_OBJ_INVHIT 0x66
 
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
-
-
 
 ModgfxSpawnContext gModgfxSpawnContext;
 ModgfxCommand gModgfxCommandQueue[0x20];
@@ -65,8 +62,8 @@ void modgfx_freeEffectsBySequence(s16 sequenceId, int forceAll);
 #define MODGFX_ZERO 0.0f
 #define MODGFX_ONE  1.0f
 
-s16 modgfx_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount, ModgfxEffectVertex* vertexData, int triangleCount,
-                       s16* triangleIndices, int textureAssetId, Texture* textureResource);
+s16 modgfx_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount, ModgfxEffectVertex* vertexData,
+                       int triangleCount, s16* triangleIndices, int textureAssetId, Texture* textureResource);
 
 s16 modgfx_getLastSpawnHandle(void) {
     return gModgfxLastSpawnHandle;
@@ -76,7 +73,8 @@ void modgfx_addSequenceFlags(u32 flags) {
     gModgfxSpawnContext.flags |= flags;
 }
 
-void modgfx_spawnSequence(PartFxSpawnParams* spawnParams, ModgfxEffectVertex* vertices, int vertexCount, s16* triangleIndices, int triangleCount, int textureAssetId, Texture* texture) {
+void modgfx_spawnSequence(PartFxSpawnParams* spawnParams, ModgfxEffectVertex* vertices, int vertexCount,
+                          s16* triangleIndices, int triangleCount, int textureAssetId, Texture* texture) {
     gModgfxSpawnContext.commands = gModgfxCommandQueue;
     gModgfxSpawnContext.commandCount = gModgfxCommandWriteCursor - gModgfxCommandStartCursor;
     if (texture == NULL && textureAssetId == 0) {
@@ -95,7 +93,8 @@ void modgfx_spawnSequence(PartFxSpawnParams* spawnParams, ModgfxEffectVertex* ve
             gModgfxSpawnContext.position[2] += spawnParams->posZ;
         }
     }
-    gModgfxLastSpawnHandle = modgfx_spawnEffect(&gModgfxSpawnContext, 0, vertexCount, vertices, triangleCount, triangleIndices, textureAssetId, texture);
+    gModgfxLastSpawnHandle = modgfx_spawnEffect(&gModgfxSpawnContext, 0, vertexCount, vertices, triangleCount,
+                                                triangleIndices, textureAssetId, texture);
 }
 
 void modgfx_setStageDurations(s16* params) {
@@ -133,7 +132,8 @@ void modgfx_resetSequenceCommands(void) {
     gModgfxStageIndex = 0;
 }
 
-void modgfx_beginSequence(GameObject* source, u8 variant, u8 initialStateByte, int drawGroupCount, int drawGroupStride) {
+void modgfx_beginSequence(GameObject* source, u8 variant, u8 initialStateByte, int drawGroupCount,
+                          int drawGroupStride) {
     f32 fz;
     f32 fz2;
     memset(&gModgfxSpawnContext, 0, sizeof(gModgfxSpawnContext));
@@ -624,10 +624,8 @@ int modgfx_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
             p[slot]->frameUpdated = 0;
         }
         aligned = 0;
-        vertexBuffer =
-            p[slot]->vertexBuffers[p[slot]->activeVertexBufferIndex];
-        triangleBuffer =
-            p[slot]->triangleBuffers[p[slot]->activeVertexBufferIndex];
+        vertexBuffer = p[slot]->vertexBuffers[p[slot]->activeVertexBufferIndex];
+        triangleBuffer = p[slot]->triangleBuffers[p[slot]->activeVertexBufferIndex];
         xf.x = MODGFX_ZERO;
         xf.y = MODGFX_ZERO;
         xf.z = MODGFX_ZERO;
@@ -664,8 +662,7 @@ int modgfx_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
                 rot[0] = p[slot]->sourceTransform.posX;
                 rot[1] = p[slot]->sourceTransform.posY;
                 rot[2] = p[slot]->sourceTransform.posZ;
-                Obj_RotateLocalOffsetByYaw(&p[slot]->sourceTransform.posX, &rot[0],
-                                           p[slot]->sourceYawIndex);
+                Obj_RotateLocalOffsetByYaw(&p[slot]->sourceTransform.posX, &rot[0], p[slot]->sourceYawIndex);
             }
         }
         if (rot[0] > 65534.0f || rot[0] < -65534.0f) {
@@ -691,12 +688,9 @@ int modgfx_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
             xf.rotY = p[slot]->sourceObject->anim.rotY;
             xf.rotX = p[slot]->sourceObject->anim.rotX;
         } else if (aligned && p[slot]->sourceObject != NULL) {
-            xf.rotZ = p[slot]->rotOffsetZ +
-                      p[slot]->sourceObject->anim.rotZ;
-            xf.rotY = p[slot]->rotOffsetY +
-                      p[slot]->sourceObject->anim.rotY;
-            xf.rotX = p[slot]->rotOffsetX +
-                      p[slot]->sourceObject->anim.rotX;
+            xf.rotZ = p[slot]->rotOffsetZ + p[slot]->sourceObject->anim.rotZ;
+            xf.rotY = p[slot]->rotOffsetY + p[slot]->sourceObject->anim.rotY;
+            xf.rotX = p[slot]->rotOffsetX + p[slot]->sourceObject->anim.rotX;
         } else if (aligned) {
             xf.rotZ = p[slot]->rotOffsetZ + p[slot]->sourceTransform.rotZ;
             xf.rotY = p[slot]->rotOffsetY + p[slot]->sourceTransform.rotY;
@@ -732,8 +726,7 @@ int modgfx_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
         if (texture != NULL && p[slot]->textureFrameTimer != 0) {
             p[slot]->textureFrameStep -= 1;
             if (p[slot]->textureFrameStep == 0) {
-                p[slot]->textureFrameStep =
-                    0x3c / p[slot]->textureFrameTimer;
+                p[slot]->textureFrameStep = 0x3c / p[slot]->textureFrameTimer;
                 p[slot]->textureFrame += 1;
                 if (p[slot]->textureFrame >= (u32)textureFrameCount) {
                     p[slot]->textureFrame = 0;
@@ -742,10 +735,8 @@ int modgfx_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
         }
         if ((int)p[slot]->flags & 0x10000000) {
             setTextColor(drawContext, ar, ag, ab, 0xff);
-        } else if (p[slot]->sourceObject != NULL &&
-                   ((int)p[slot]->flags & 0x4000)) {
-            setTextColor(drawContext, 0xff, 0xff, 0xff,
-                         p[slot]->sourceObject->anim.renderAlpha);
+        } else if (p[slot]->sourceObject != NULL && ((int)p[slot]->flags & 0x4000)) {
+            setTextColor(drawContext, 0xff, 0xff, 0xff, p[slot]->sourceObject->anim.renderAlpha);
         } else {
             setTextColor(drawContext, 0xff, 0xff, 0xff, 0xff);
         }
@@ -757,15 +748,13 @@ int modgfx_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
                 nextTextureFrame = 0;
             }
         }
-        if (((int)p[slot]->flags & 0x1000000) &&
-            (p[slot]->frameUpdated != 0 || ((int)p[slot]->flags & 0x400))) {
+        if (((int)p[slot]->flags & 0x1000000) && (p[slot]->frameUpdated != 0 || ((int)p[slot]->flags & 0x400))) {
             {
                 for (frameIndex = 0; frameIndex < (nextTextureFrame & 0xff); frameIndex++) {
                     texture = texture->nextAnimationFrame;
                 }
                 _textSetColor(drawContext, 0xff, 0xff, 0xff,
-                              (u8)(0xff - p[slot]->textureFrameStep *
-                                              p[slot]->textureFrameFadeStep));
+                              (u8)(0xff - p[slot]->textureFrameStep * p[slot]->textureFrameFadeStep));
                 gxTevResetStages();
                 gxTevAddTextureFrameBlendStages();
                 gxTevModulateRasStage();
@@ -782,8 +771,7 @@ int modgfx_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
             gxTevModulateColor1Stage();
             gxTevCommitStages();
         }
-        if (((int)p[slot]->flags & 0x05000000) &&
-            (p[slot]->frameUpdated != 0 || ((int)p[slot]->flags & 0x400))) {
+        if (((int)p[slot]->flags & 0x05000000) && (p[slot]->frameUpdated != 0 || ((int)p[slot]->flags & 0x400))) {
             {
                 texture = p[slot]->textureResource;
                 for (frameIndex = 0; frameIndex < (textureFrame & 0xff); frameIndex++) {
@@ -794,8 +782,7 @@ int modgfx_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
         }
         if ((int)p[slot]->flags & 0x100) {
             gxSetAlphaBlendZTest();
-        } else if (((int)p[slot]->flags & 0x10) &&
-                   ((int)p[slot]->flags & 0x80)) {
+        } else if (((int)p[slot]->flags & 0x10) && ((int)p[slot]->flags & 0x80)) {
             gxSetAlphaBlendNoZTest();
         } else if ((int)p[slot]->flags & 0x80) {
             gxSetAlphaBlendZTest();
@@ -814,11 +801,9 @@ int modgfx_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
             for (di = 0; di < p[slot]->drawGroupCount; di++) {
                 if ((int)p[slot]->flags & 0x8000000) {
                     lightmapDrawTriangleList(vertexBuffer, (u8*)triangleBuffer,
-                                             p[slot]->triangleCount /
-                                                 p[slot]->drawGroupCount);
+                                             p[slot]->triangleCount / p[slot]->drawGroupCount);
                 } else {
-                    lightmapDrawTriangleList(vertexBuffer, (u8*)triangleBuffer,
-                                             p[slot]->triangleCount);
+                    lightmapDrawTriangleList(vertexBuffer, (u8*)triangleBuffer, p[slot]->triangleCount);
                 }
                 vertexBuffer += p[slot]->drawGroupStride;
                 if ((int)p[slot]->flags & 0x8000000) {
@@ -827,8 +812,7 @@ int modgfx_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
             }
         }
         Rcp_ResetRenderState();
-        p[slot]->activeVertexBufferIndex =
-            1 - p[slot]->activeVertexBufferIndex;
+        p[slot]->activeVertexBufferIndex = 1 - p[slot]->activeVertexBufferIndex;
     }
     return 0;
 }
@@ -956,8 +940,7 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                     modgfx_freeEffectsBySequence(eff->sequenceId, 0);
                     break;
                 }
-                eff->stageFrameCountdown =
-                    eff->stageDurations[eff->currentStage];
+                eff->stageFrameCountdown = eff->stageDurations[eff->currentStage];
                 active = 1;
                 modgfx_captureFrameBaseVertices(eff, 0);
             } else if (eff->requestedStage != 0) {
@@ -967,35 +950,31 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                     modgfx_freeEffectsBySequence(eff->sequenceId, 0);
                     break;
                 }
-                eff->stageFrameCountdown =
-                    eff->stageDurations[eff->currentStage];
+                eff->stageFrameCountdown = eff->stageDurations[eff->currentStage];
                 active = 1;
                 modgfx_captureFrameBaseVertices(eff, 0);
             }
             scaleGroupIndex = 0;
             alphaGroupIndex = 0;
-            modgfx_restoreBaseVertices(eff,
-                                       PENDING_SPAWNS + cursor.commandIndex * sizeof(ModgfxCommand), active);
+            modgfx_restoreBaseVertices(eff, PENDING_SPAWNS + cursor.commandIndex * sizeof(ModgfxCommand), active);
             feFlag = 0;
-            for (cursor.byteOffset = cursor.commandIndex = 0;
-                 cursor.commandIndex < eff->emitterCount;
+            for (cursor.byteOffset = cursor.commandIndex = 0; cursor.commandIndex < eff->emitterCount;
                  cursor.byteOffset += sizeof(ModgfxCommand), cursor.commandIndex++) {
 
                 int flags;
 
-
-                if (eff->currentStage != ((ModgfxCommand*)((u8*)eff->emitterCommands + cursor.byteOffset))->stageIndex) {
+                if (eff->currentStage !=
+                    ((ModgfxCommand*)((u8*)eff->emitterCommands + cursor.byteOffset))->stageIndex) {
                     continue;
                 }
                 flags = ((ModgfxCommand*)((u8*)eff->emitterCommands + cursor.byteOffset))->flags;
                 if ((flags & 0x1000) &&
-                    ((ModgfxCommand*)((u8*)eff->emitterCommands + cursor.byteOffset))->valueX > MODGFX_ZERO && eff->currentStage > 0) {
+                    ((ModgfxCommand*)((u8*)eff->emitterCommands + cursor.byteOffset))->valueX > MODGFX_ZERO &&
+                    eff->currentStage > 0) {
                     eff->currentStage =
-                        ((ModgfxCommand*)(PENDING_SPAWNS + cursor.commandIndex * sizeof(ModgfxCommand)))
-                            ->parameter;
+                        ((ModgfxCommand*)(PENDING_SPAWNS + cursor.commandIndex * sizeof(ModgfxCommand)))->parameter;
                     ((ModgfxCommand*)(PENDING_SPAWNS + cursor.commandIndex * sizeof(ModgfxCommand)))->valueX =
-                        ((ModgfxCommand*)(PENDING_SPAWNS + cursor.commandIndex * sizeof(ModgfxCommand)))
-                            ->valueX -
+                        ((ModgfxCommand*)(PENDING_SPAWNS + cursor.commandIndex * sizeof(ModgfxCommand)))->valueX -
                         MODGFX_ONE;
                     eff->stageFrameCountdown = -1;
                     break;
@@ -1003,10 +982,8 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                 if (flags & 0x2000) {
                     if (eff->releaseRequested != 0) {
                         eff->releaseRequested = 0;
-                        ((ModgfxCommand*)(PENDING_SPAWNS + cursor.commandIndex * sizeof(ModgfxCommand)))
-                            ->flags = 0;
-                        ((ModgfxCommand*)(PENDING_SPAWNS + cursor.commandIndex * sizeof(ModgfxCommand)))
-                            ->flags = 0x20;
+                        ((ModgfxCommand*)(PENDING_SPAWNS + cursor.commandIndex * sizeof(ModgfxCommand)))->flags = 0;
+                        ((ModgfxCommand*)(PENDING_SPAWNS + cursor.commandIndex * sizeof(ModgfxCommand)))->flags = 0x20;
                         eff->stageFrameCountdown = -1;
                         reprocess = 1;
                         feFlag = 0;
@@ -1014,9 +991,7 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                     }
                     if (eff->currentStage > 0) {
                         feFlag = 1;
-                        eff->currentStage =
-                            (eff->emitterCommands + cursor.commandIndex)
-                                ->parameter;
+                        eff->currentStage = (eff->emitterCommands + cursor.commandIndex)->parameter;
                         eff->stageFrameCountdown = -1;
                         reprocess = 1;
                         break;
@@ -1041,12 +1016,9 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                     if (eff->instanceObject == NULL && (u8)Obj_CanSetupObject()) {
                         ObjPlacement* o;
                         if (((int)eff->flags & 1) == 0) {
-                            tmpl.posX =
-                                eff->sourceObject->anim.worldPosX + tmpl.posX;
-                            tmpl.posY =
-                                eff->sourceObject->anim.worldPosY + tmpl.posY;
-                            tmpl.posZ =
-                                eff->sourceObject->anim.worldPosZ + tmpl.posZ;
+                            tmpl.posX = eff->sourceObject->anim.worldPosX + tmpl.posX;
+                            tmpl.posY = eff->sourceObject->anim.worldPosY + tmpl.posY;
+                            tmpl.posZ = eff->sourceObject->anim.worldPosZ + tmpl.posZ;
                         } else {
                             tmpl.posX = eff->sourceTransform.posX + tmpl.posX;
                             tmpl.posY = eff->sourceTransform.posY + tmpl.posY;
@@ -1060,12 +1032,9 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                         eff->instanceObject->userData2 = 1;
                     } else if (eff->instanceObject != NULL) {
                         if (((int)eff->flags & 1) == 0) {
-                            tmpl.posX =
-                                eff->sourceObject->anim.worldPosX + tmpl.posX;
-                            tmpl.posY =
-                                eff->sourceObject->anim.worldPosY + tmpl.posY;
-                            tmpl.posZ =
-                                eff->sourceObject->anim.worldPosZ + tmpl.posZ;
+                            tmpl.posX = eff->sourceObject->anim.worldPosX + tmpl.posX;
+                            tmpl.posY = eff->sourceObject->anim.worldPosY + tmpl.posY;
+                            tmpl.posZ = eff->sourceObject->anim.worldPosZ + tmpl.posZ;
                         } else {
                             tmpl.posX = eff->sourceTransform.posX + tmpl.posX;
                             tmpl.posY = eff->sourceTransform.posY + tmpl.posY;
@@ -1083,18 +1052,17 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                                 (int)((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->valueX) {
                                 Obj_FreeObject(o);
                                 eff->instanceObject = NULL;
-                                ((ModgfxCommand*)(PENDING_SPAWNS + cursor.commandIndex * 0x18))->flags ^=
-                                    0x10000000;
+                                ((ModgfxCommand*)(PENDING_SPAWNS + cursor.commandIndex * 0x18))->flags ^= 0x10000000;
                                 if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.commandIndex * 0x18))->valueZ >=
                                         MODGFX_ZERO &&
                                     eff->sourceObject != NULL) {
                                     (*gPartfxInterface)
-                                        ->spawnObject(eff->sourceObject,
-                                                      (int)((ModgfxCommand*)(PENDING_SPAWNS +
-                                                                                  cursor.commandIndex *
-                                                                                      sizeof(ModgfxCommand)))
-                                                          ->valueZ,
-                                                      &tmpl, 0x200001, -1, 0);
+                                        ->spawnObject(
+                                            eff->sourceObject,
+                                            (int)((ModgfxCommand*)(PENDING_SPAWNS +
+                                                                   cursor.commandIndex * sizeof(ModgfxCommand)))
+                                                ->valueZ,
+                                            &tmpl, 0x200001, -1, 0);
                                 }
                                 eff->requestedStage =
                                     ((ModgfxCommand*)(PENDING_SPAWNS + cursor.commandIndex * 0x18))->valueY;
@@ -1105,20 +1073,17 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                 }
                 ObjList_GetObjects(&objIdx, &objCount);
                 if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->flags & 0x2) {
-                    modgfx_stepVertexScale(eff,
-                                           (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset), active,
+                    modgfx_stepVertexScale(eff, (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset), active,
                                            scaleGroupIndex);
                     scaleGroupIndex++;
                 }
                 if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->flags & 0x4) {
-                    modgfx_stepVertexAlpha(eff,
-                                           (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset), active,
+                    modgfx_stepVertexAlpha(eff, (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset), active,
                                            alphaGroupIndex);
                     alphaGroupIndex++;
                 }
                 if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->flags & 0x8) {
-                    modgfx_stepVertexColor(eff,
-                                           (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset), active, 0);
+                    modgfx_stepVertexColor(eff, (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset), active, 0);
                 }
                 if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->flags & 0x100) {
                     ModgfxCommand* em = (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset);
@@ -1127,20 +1092,16 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                     eff->rotOffsetX += (s16)(em->valueZ * gModgfxMotionStep);
                 }
                 if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->flags & 0x80) {
-                    modgfx_stepS16VectorLerp(eff, (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset),
-                                             active, 0);
+                    modgfx_stepS16VectorLerp(eff, (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset), active, 0);
                 }
                 if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->flags & 0x8000000) {
                     ((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->valueZ = randomGetRange(0, 0xffff);
-                    modgfx_stepS16VectorLerp(eff, (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset),
-                                             active, 0);
+                    modgfx_stepS16VectorLerp(eff, (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset), active, 0);
                 }
                 if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->flags & 0x4000) {
-                    modgfx_scrollTexCoords(eff, (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset), active,
-                                           0);
+                    modgfx_scrollTexCoords(eff, (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset), active, 0);
                 }
-                if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->flags & 0x10000 &&
-                    active != 0) {
+                if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->flags & 0x10000 && active != 0) {
                     if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->parameter == -1) {
                         Sfx_StopObjectChannel((GameObject*)eff->sourceObject, 0x40);
                     } else {
@@ -1151,44 +1112,34 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                 if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->flags & 0x100000) {
                     if (active == 1) {
                         if (eff->stageFrameCountdown != 0) {
-                            eff->sourceAlphaStep =
-                                (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->valueX -
-                                 (f32)(u32)eff->sourceObject->anim.alpha) /
-                                (f32)eff->stageFrameCountdown;
-                            eff->sourceAlphaCurrent =
-                                (f32)(u32)eff->sourceObject->anim.alpha;
+                            eff->sourceAlphaStep = (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->valueX -
+                                                    (f32)(u32)eff->sourceObject->anim.alpha) /
+                                                   (f32)eff->stageFrameCountdown;
+                            eff->sourceAlphaCurrent = (f32)(u32)eff->sourceObject->anim.alpha;
                         } else {
-                            eff->sourceAlphaStep =
-                                ((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->valueX -
-                                (f32)(u32)eff->sourceObject->anim.alpha;
+                            eff->sourceAlphaStep = ((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->valueX -
+                                                   (f32)(u32)eff->sourceObject->anim.alpha;
                             eff->sourceAlphaCurrent = MODGFX_ZERO;
                         }
                     }
-                    eff->sourceAlphaCurrent =
-                        eff->sourceAlphaCurrent + eff->sourceAlphaStep;
+                    eff->sourceAlphaCurrent = eff->sourceAlphaCurrent + eff->sourceAlphaStep;
                     if (eff->sourceAlphaCurrent > 255.0f) {
                         eff->sourceAlphaCurrent = 255.0f;
                     } else if (eff->sourceAlphaCurrent < MODGFX_ZERO) {
                         eff->sourceAlphaCurrent = MODGFX_ZERO;
                     }
-                    eff->sourceObject->anim.alpha =
-                        eff->sourceAlphaCurrent;
+                    eff->sourceObject->anim.alpha = eff->sourceAlphaCurrent;
                 }
                 if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->flags & 0x400000) {
-                    modgfx_stepPosition(eff,
-                                        (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset), active, 0);
+                    modgfx_stepPosition(eff, (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset), active, 0);
                 }
                 if (((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->flags & 0x80000000) {
                     ModgfxCommand* em = (ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset);
-                    eff->posStepX =
-                        em->valueX * gModgfxMotionStep + eff->posStepX;
-                    eff->posStepY =
-                        em->valueY * gModgfxMotionStep + eff->posStepY;
-                    eff->posStepZ =
-                        em->valueZ * gModgfxMotionStep + eff->posStepZ;
+                    eff->posStepX = em->valueX * gModgfxMotionStep + eff->posStepX;
+                    eff->posStepY = em->valueY * gModgfxMotionStep + eff->posStepY;
+                    eff->posStepZ = em->valueZ * gModgfxMotionStep + eff->posStepZ;
                 }
-                if ((spawnCommand = ((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset)))->flags &
-                    0x800000) {
+                if ((spawnCommand = ((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset)))->flags & 0x800000) {
                     if ((((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->flags & 0x1000000) &&
                         MODGFX_ZERO == spawnCommand->valueY) {
                         for (k = 0;
@@ -1218,22 +1169,18 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                              k++) {
                             if ((int)eff->flags & 1) {
                                 (*gPartfxInterface)
-                                    ->spawnObject(eff->sourceObject, spawnCommand->parameter,
-                                                  &eff->sourceTransform, 0x10002, -1, NULL);
+                                    ->spawnObject(eff->sourceObject, spawnCommand->parameter, &eff->sourceTransform,
+                                                  0x10002, -1, NULL);
                             } else {
                                 (*gPartfxInterface)
-                                    ->spawnObject(eff->sourceObject, spawnCommand->parameter,
-                                                  NULL, 0x10002, -1, NULL);
+                                    ->spawnObject(eff->sourceObject, spawnCommand->parameter, NULL, 0x10002, -1, NULL);
                             }
                         }
                     } else if (MODGFX_ONE == spawnCommand->valueY) {
                         if (((int)eff->flags & 1) == 0) {
-                            tmpl.posX = eff->sourceObject->anim.worldPosX +
-                                        eff->drawPosX;
-                            tmpl.posY = eff->sourceObject->anim.worldPosY +
-                                        eff->drawPosY;
-                            tmpl.posZ = eff->sourceObject->anim.worldPosZ +
-                                        eff->drawPosZ;
+                            tmpl.posX = eff->sourceObject->anim.worldPosX + eff->drawPosX;
+                            tmpl.posY = eff->sourceObject->anim.worldPosY + eff->drawPosY;
+                            tmpl.posZ = eff->sourceObject->anim.worldPosZ + eff->drawPosZ;
                             if (eff->sourceObject != NULL) {
                                 (*gPartfxInterface)
                                     ->spawnObject(eff->sourceObject,
@@ -1262,8 +1209,7 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                                 if ((int)eff->flags & 1) {
                                     res->vtable->spawnEffect(NULL, 0, &eff->sourceTransform, 1, -1, NULL);
                                 } else {
-                                    res->vtable->spawnEffect(
-                                        eff->sourceObject, 0, NULL, 1, -1, NULL);
+                                    res->vtable->spawnEffect(eff->sourceObject, 0, NULL, 1, -1, NULL);
                                 }
                             }
                         }
@@ -1272,8 +1218,7 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                             if ((int)eff->flags & 1) {
                                 res->vtable->spawnEffect(NULL, 0, &eff->sourceTransform, 1, -1, NULL);
                             } else {
-                                res->vtable->spawnEffect(
-                                    eff->sourceObject, 0, NULL, 1, -1, NULL);
+                                res->vtable->spawnEffect(eff->sourceObject, 0, NULL, 1, -1, NULL);
                             }
                         }
                     }
@@ -1281,16 +1226,15 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                 }
             }
             if (feFlag == 0) {
-                eff->stageFrameCountdown =
-                    eff->stageFrameCountdown - framesThisStep;
+                eff->stageFrameCountdown = eff->stageFrameCountdown - framesThisStep;
             }
         }
         gExpgfxUpdatingActivePools = 0;
     }
 }
 
-s16 modgfx_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount, ModgfxEffectVertex* vertexData, int triangleCount,
-                       s16* triangleIndices, int textureAssetId, Texture* textureResource) {
+s16 modgfx_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount, ModgfxEffectVertex* vertexData,
+                       int triangleCount, s16* triangleIndices, int textureAssetId, Texture* textureResource) {
     int off;
     ModgfxCommand* item;
     struct {
@@ -1407,9 +1351,9 @@ s16 modgfx_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
                 dstv->z = vertexData[copy.elementIndex].positionZ;
                 if (gModgfxActiveEffects[slot]->textureResource != NULL) {
                     dstv->s = 128.0f * ((f32)vertexData[copy.elementIndex].texCoordS /
-                                                  (f32)((Texture*)gModgfxActiveEffects[slot]->textureResource)->width);
+                                        (f32)((Texture*)gModgfxActiveEffects[slot]->textureResource)->width);
                     dstv->t = 128.0f * ((f32)vertexData[copy.elementIndex].texCoordT /
-                                                    (f32)((Texture*)gModgfxActiveEffects[slot]->textureResource)->height);
+                                        (f32)((Texture*)gModgfxActiveEffects[slot]->textureResource)->height);
                 }
                 dstv->r = 0xff;
                 dstv->g = 0xff;
@@ -1449,7 +1393,8 @@ s16 modgfx_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
 
     {
         u8* dst = gModgfxActiveEffects[slot]->auxSequenceBuffer;
-        for (copy.index = 0, off = copy.index; copy.index < gModgfxActiveEffects[slot]->emitterCount; off += 0x18, copy.index++) {
+        for (copy.index = 0, off = copy.index; copy.index < gModgfxActiveEffects[slot]->emitterCount;
+             off += 0x18, copy.index++) {
             ((ModgfxCommand*)((u8*)gModgfxActiveEffects[slot]->emitterCommands + off))->stageIndex =
                 ((ModgfxCommand*)((u8*)context->commands + off))->stageIndex;
             ((ModgfxCommand*)((u8*)gModgfxActiveEffects[slot]->emitterCommands + off))->parameter =
@@ -1463,10 +1408,13 @@ s16 modgfx_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
                 ((ModgfxCommand*)((u8*)gModgfxActiveEffects[slot]->emitterCommands + off))->vertexIndices = (s16*)dst;
                 dst += ((ModgfxCommand*)((u8*)gModgfxActiveEffects[slot]->emitterCommands + off))->parameter * 2;
                 for (copy.elementIndex = 0;
-                     copy.elementIndex < ((ModgfxCommand*)(off + (int)gModgfxActiveEffects[slot]->emitterCommands))->parameter;
+                     copy.elementIndex <
+                     ((ModgfxCommand*)(off + (int)gModgfxActiveEffects[slot]->emitterCommands))->parameter;
                      copy.elementIndex++) {
-                    ((ModgfxCommand*)(off + (int)gModgfxActiveEffects[slot]->emitterCommands))->vertexIndices[copy.elementIndex] =
-                        (*(s16**)(off + (int)context->commands + offsetof(ModgfxCommand, vertexIndices)))[copy.elementIndex];
+                    ((ModgfxCommand*)(off + (int)gModgfxActiveEffects[slot]->emitterCommands))
+                        ->vertexIndices[copy.elementIndex] =
+                        (*(s16**)(off + (int)context->commands +
+                                  offsetof(ModgfxCommand, vertexIndices)))[copy.elementIndex];
                 }
             }
             ((ModgfxCommand*)((u8*)gModgfxActiveEffects[slot]->emitterCommands + off))->valueX =
@@ -1479,7 +1427,8 @@ s16 modgfx_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
     }
 
     gModgfxActiveEffects[slot]->currentStage = -1;
-    gModgfxActiveEffects[slot]->stageFrameCountdown = gModgfxActiveEffects[slot]->stageDurations[gModgfxActiveEffects[slot]->currentStage];
+    gModgfxActiveEffects[slot]->stageFrameCountdown =
+        gModgfxActiveEffects[slot]->stageDurations[gModgfxActiveEffects[slot]->currentStage];
     gModgfxActiveEffects[slot]->flags = context->flags;
     gModgfxActiveEffects[slot]->drawPosX = context->position[0];
     gModgfxActiveEffects[slot]->drawPosY = context->position[1];

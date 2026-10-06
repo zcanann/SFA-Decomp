@@ -63,28 +63,32 @@ void dll_A2_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[1].valueZ = -0.35f;
     commands[2].stageIndex = 0;
     commands[2].parameter = 7;
-    commands[2].vertexIndices = (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[0].indices)];
+    commands[2].vertexIndices =
+        (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[0].indices)];
     commands[2].flags = 8;
     commands[2].valueX = 255.0f;
     commands[2].valueY = 0.0f;
     commands[2].valueZ = 0.0f;
     commands[3].stageIndex = 1;
     commands[3].parameter = 7;
-    commands[3].vertexIndices = (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[1].indices)];
+    commands[3].vertexIndices =
+        (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[1].indices)];
     commands[3].flags = 2;
     commands[3].valueX = 4.0f;
     commands[3].valueY = 4.0f;
     commands[3].valueZ = 8.0f;
     commands[4].stageIndex = 1;
     commands[4].parameter = 7;
-    commands[4].vertexIndices = (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[2].indices)];
+    commands[4].vertexIndices =
+        (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[2].indices)];
     commands[4].flags = 2;
     commands[4].valueX = 8.0f;
     commands[4].valueY = 8.0f;
     commands[4].valueZ = 10.0f;
     commands[5].stageIndex = 1;
     commands[5].parameter = 7;
-    commands[5].vertexIndices = (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[1].indices)];
+    commands[5].vertexIndices =
+        (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[1].indices)];
     commands[5].flags = 4;
     commands[5].valueX = 255.0f;
     commands[5].valueY = 0.0f;
@@ -98,14 +102,16 @@ void dll_A2_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[6].valueZ = 0.0f;
     commands[7].stageIndex = 2;
     commands[7].parameter = 7;
-    commands[7].vertexIndices = (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[1].indices)];
+    commands[7].vertexIndices =
+        (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[1].indices)];
     commands[7].flags = 2;
     commands[7].valueX = 1.0f;
     commands[7].valueY = 1.0f;
     commands[7].valueZ = 1.0f;
     commands[8].stageIndex = 2;
     commands[8].parameter = 7;
-    commands[8].vertexIndices = (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[2].indices)];
+    commands[8].vertexIndices =
+        (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[2].indices)];
     commands[8].flags = 2;
     commands[8].valueX = 1.0f;
     commands[8].valueY = 1.0f;
@@ -119,7 +125,8 @@ void dll_A2_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[9].valueZ = 0.0f;
     commands[10].stageIndex = 3;
     commands[10].parameter = 7;
-    commands[10].vertexIndices = (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[1].indices)];
+    commands[10].vertexIndices =
+        (s16*)&resourceData[offsetof(DllA2EffectResourceView, sevenVertexIndexLists[1].indices)];
     commands[10].flags = 4;
     commands[10].valueX = 0.0f;
     commands[10].valueY = 0.0f;

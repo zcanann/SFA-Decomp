@@ -164,7 +164,8 @@ void dll_98_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         effectId = 0x3F3;
     }
     (*gModgfxInterface)
-        ->spawnEffect(&packet.context, 0, 0x12, (ModgfxEffectVertex*)((u32)invertY != 0 ? gDll98InvertedVertices : gDll98PrimaryVertices), 0x10,
+        ->spawnEffect(&packet.context, 0, 0x12,
+                      (ModgfxEffectVertex*)((u32)invertY != 0 ? gDll98InvertedVertices : gDll98PrimaryVertices), 0x10,
                       (s16*)(gDll98Triangles), effectId, 0);
 }
 

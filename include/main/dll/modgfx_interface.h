@@ -6,30 +6,35 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll/partfx_interface.h"
 
-typedef void (*ModgfxResourceSpawnFn)(GameObject* obj, int variant, PartFxSpawnParams* spawnParams, int spawnFlags, int modelId,
-                                      void* extraArgs);
+typedef void (*ModgfxResourceSpawnFn)(GameObject* obj, int variant, PartFxSpawnParams* spawnParams, int spawnFlags,
+                                      int modelId, void* extraArgs);
 typedef void (*ModgfxDetachSourceFn)(GameObject* sourceObject);
 typedef void (*ModgfxOnMapSetupFn)(void);
 typedef void (*ModgfxUpdateActiveEffectsFn)(int unused0, int unused1, int unused2);
 typedef void (*ModgfxReleaseAllFn)(void);
 typedef void (*ModgfxFreeSourceEffectsFn)(GameObject* sourceObject);
-typedef int (*ModgfxRenderEffectsFn)(void* drawContext, int unused1, int unused2, u8 sourceOnly, GameObject* sourceObject);
+typedef int (*ModgfxRenderEffectsFn)(void* drawContext, int unused1, int unused2, u8 sourceOnly,
+                                     GameObject* sourceObject);
 typedef void (*ModgfxMarkSourceFrameUpdatedFn)(void* unused);
-typedef s16 (*ModgfxSpawnEffectFn)(ModgfxSpawnContext* spawnContext, int unused, int vertexCount, ModgfxEffectVertex* vertices, int triangleCount,
-                                  s16* triangleIndices, int textureAssetId, Texture* textureResource);
+typedef s16 (*ModgfxSpawnEffectFn)(ModgfxSpawnContext* spawnContext, int unused, int vertexCount,
+                                   ModgfxEffectVertex* vertices, int triangleCount, s16* triangleIndices,
+                                   int textureAssetId, Texture* textureResource);
 typedef void (*ModgfxReleaseHandleFn)(s16* handle);
 typedef void (*ModgfxNextSpawnGenerationFn)(void);
 typedef void (*ModgfxSetSourceByte13BFn)(GameObject* sourceObject, char value);
 typedef void (*ModgfxRequestSourceReleaseFn)(GameObject* sourceObject);
-typedef void (*ModgfxBeginSequenceFn)(GameObject* sourceObject, u8 variant, u8 initialStateByte, int drawGroupCount, int drawGroupStride);
+typedef void (*ModgfxBeginSequenceFn)(GameObject* sourceObject, u8 variant, u8 initialStateByte, int drawGroupCount,
+                                      int drawGroupStride);
 typedef void (*ModgfxResetSequenceCommandsFn)(void);
-typedef void (*ModgfxAddSequenceCommandFn)(int commandFlags, f32 valueX, f32 valueY, f32 valueZ, s16 parameter, s16* vertexIndices);
+typedef void (*ModgfxAddSequenceCommandFn)(int commandFlags, f32 valueX, f32 valueY, f32 valueZ, s16 parameter,
+                                           s16* vertexIndices);
 typedef void (*ModgfxNextStageFn)(void);
 typedef void (*ModgfxSetStageIndexFn)(s16 index);
 typedef void (*ModgfxSetStageDurationFn)(s16 value);
 typedef void (*ModgfxSetStageDurationsFn)(s16* params);
-typedef void (*ModgfxSpawnSequenceFn)(PartFxSpawnParams* spawnParams, ModgfxEffectVertex* vertices, int vertexCount, s16* triangleIndices,
-                                     int triangleCount, int textureAssetId, Texture* textureResource);
+typedef void (*ModgfxSpawnSequenceFn)(PartFxSpawnParams* spawnParams, ModgfxEffectVertex* vertices, int vertexCount,
+                                      s16* triangleIndices, int triangleCount, int textureAssetId,
+                                      Texture* textureResource);
 typedef void (*ModgfxAddSequenceFlagsFn)(u32 flags);
 typedef s16 (*ModgfxGetLastSpawnHandleFn)(void);
 

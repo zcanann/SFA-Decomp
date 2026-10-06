@@ -148,7 +148,9 @@ void dll_94_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
             packet.context.position[2] += spawnParams->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&packet.context, 0, 6, (ModgfxEffectVertex*)(resource[0]), 4, (s16*)(resource[0]->spawnData), 0x3C, 0);
+    (*gModgfxInterface)
+        ->spawnEffect(&packet.context, 0, 6, (ModgfxEffectVertex*)(resource[0]), 4, (s16*)(resource[0]->spawnData),
+                      0x3C, 0);
 }
 
 void dll_94_release(void) {

@@ -55,26 +55,29 @@ void dll_AA_spawnSequence(GameObject* sourceObj, int variant, PartFxSpawnParams*
     (*gModgfxInterface)->resetSequenceCommands();
     (*gModgfxInterface)
         ->addSequenceCommand(4, 0.65f, 0.0f, 0.0f, 0x15,
-                           (s16*)(&resourceData[offsetof(DllAASequenceResourceView, allVertexIndices)]));
+                             (s16*)(&resourceData[offsetof(DllAASequenceResourceView, allVertexIndices)]));
     (*gModgfxInterface)
         ->addSequenceCommand(2, 0.5f, 1.0f, 0.5f, 0x15,
-                           (s16*)(&resourceData[offsetof(DllAASequenceResourceView, allVertexIndices)]));
+                             (s16*)(&resourceData[offsetof(DllAASequenceResourceView, allVertexIndices)]));
     (*gModgfxInterface)->addSequenceCommand(0x400000, 0.0f, -100.0f, 0.0f, 0, NULL);
     (*gModgfxInterface)->nextStage();
     (*gModgfxInterface)
-        ->addSequenceCommand(4, 160.0f, 0.0f, 0.0f, 7,
-                           (s16*)(&resourceData[offsetof(DllAASequenceResourceView, middleSevenVertexIndices.indices)]));
+        ->addSequenceCommand(
+            4, 160.0f, 0.0f, 0.0f, 7,
+            (s16*)(&resourceData[offsetof(DllAASequenceResourceView, middleSevenVertexIndices.indices)]));
     (*gModgfxInterface)->nextStage();
     (*gModgfxInterface)
-        ->addSequenceCommand(4, 255.0f, 0.0f, 0.0f, 7,
-                           (s16*)(&resourceData[offsetof(DllAASequenceResourceView, middleSevenVertexIndices.indices)]));
+        ->addSequenceCommand(
+            4, 255.0f, 0.0f, 0.0f, 7,
+            (s16*)(&resourceData[offsetof(DllAASequenceResourceView, middleSevenVertexIndices.indices)]));
     (*gModgfxInterface)
         ->addSequenceCommand(2, scale, 3.0f, scale, 0x15,
-                           (s16*)(&resourceData[offsetof(DllAASequenceResourceView, allVertexIndices)]));
+                             (s16*)(&resourceData[offsetof(DllAASequenceResourceView, allVertexIndices)]));
     (*gModgfxInterface)->nextStage();
     (*gModgfxInterface)
-        ->addSequenceCommand(4, 0.0f, 0.0f, 0.0f, 7,
-                           (s16*)(&resourceData[offsetof(DllAASequenceResourceView, middleSevenVertexIndices.indices)]));
+        ->addSequenceCommand(
+            4, 0.0f, 0.0f, 0.0f, 7,
+            (s16*)(&resourceData[offsetof(DllAASequenceResourceView, middleSevenVertexIndices.indices)]));
     (*gModgfxInterface)
         ->spawnSequence(spawnParams, (ModgfxEffectVertex*)(int)gDllAASequenceResourceData, 0x15,
                         (s16*)(&resourceData[offsetof(DllAASequenceResourceView, triangles)]), 0x18, 0x3e9, 0);

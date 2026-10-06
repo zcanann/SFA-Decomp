@@ -77,7 +77,8 @@ void dll_9E_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[3].valueZ = 1.5f;
     commands[4].stageIndex = 1;
     commands[4].parameter = 7;
-    commands[4].vertexIndices = (s16*)&resourceData[offsetof(Dll9EEffectResourceView, sevenVertexIndexLists[1].indices)];
+    commands[4].vertexIndices =
+        (s16*)&resourceData[offsetof(Dll9EEffectResourceView, sevenVertexIndexLists[1].indices)];
     commands[4].flags = 4;
     commands[4].valueX = 155.0f;
     commands[4].valueY = 0.0f;
@@ -140,7 +141,8 @@ void dll_9E_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commands[12].valueZ = 0.0f;
     commands[13].stageIndex = 3;
     commands[13].parameter = 7;
-    commands[13].vertexIndices = (s16*)&resourceData[offsetof(Dll9EEffectResourceView, sevenVertexIndexLists[1].indices)];
+    commands[13].vertexIndices =
+        (s16*)&resourceData[offsetof(Dll9EEffectResourceView, sevenVertexIndexLists[1].indices)];
     commands[13].flags = 4;
     commands[13].valueX = 0.0f;
     commands[13].valueY = 0.0f;

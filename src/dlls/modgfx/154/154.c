@@ -240,7 +240,8 @@ void dll_9A_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         }
     }
     (*gModgfxInterface)
-        ->spawnEffect(&packet.context, 0, 3, (ModgfxEffectVertex*)gDll9AEffectVertexData, 1, (s16*)(gDll9ATriangleIndices.indices), 0x31, 0);
+        ->spawnEffect(&packet.context, 0, 3, (ModgfxEffectVertex*)gDll9AEffectVertexData, 1,
+                      (s16*)(gDll9ATriangleIndices.indices), 0x31, 0);
 }
 
 void dll_9A_release(void) {

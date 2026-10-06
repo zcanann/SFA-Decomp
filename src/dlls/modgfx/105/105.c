@@ -192,7 +192,8 @@ s16 dll_69_spawnEffect(GameObject* sourceObj, int variant, void* spawnParams, u3
     }
     return (*gModgfxInterface)
         ->spawnEffect(&packet.context, 0, 8, (ModgfxEffectVertex*)(int)gDll69EffectResourceData, 4,
-                      (s16*)(&resourceData[offsetof(Dll69EffectResourceView, triangleIndices)]), variant == 2 ? 0xc11 : 0x5e0, 0);
+                      (s16*)(&resourceData[offsetof(Dll69EffectResourceView, triangleIndices)]),
+                      variant == 2 ? 0xc11 : 0x5e0, 0);
 }
 
 void dll_69_release(void) {

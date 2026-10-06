@@ -125,8 +125,8 @@ void dll_80_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     }
     packet.context.modeByte = 0;
     (*gModgfxInterface)
-        ->spawnEffect(&packet.context, 0, 9, (ModgfxEffectVertex*)(resourceData), 8, (s16*)(&resourceData[offsetof(Dll80EffectResourceView, triangles)]),
-                      0x156, 0);
+        ->spawnEffect(&packet.context, 0, 9, (ModgfxEffectVertex*)(resourceData), 8,
+                      (s16*)(&resourceData[offsetof(Dll80EffectResourceView, triangles)]), 0x156, 0);
 }
 
 void dll_80_release(void) {

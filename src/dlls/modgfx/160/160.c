@@ -83,7 +83,8 @@ void dll_A0_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commandCursor[0].valueZ = 10.0f;
     commandCursor[1].stageIndex = 1;
     commandCursor[1].parameter = 7;
-    commandCursor[1].vertexIndices = (s16*)&resourceData[offsetof(DllA0EffectResourceView, sevenVertexIndexLists[1].indices)];
+    commandCursor[1].vertexIndices =
+        (s16*)&resourceData[offsetof(DllA0EffectResourceView, sevenVertexIndexLists[1].indices)];
     commandCursor[1].flags = 4;
     commandCursor[1].valueX = 255.0f;
     commandCursor[1].valueY = 0.0f;
@@ -97,14 +98,16 @@ void dll_A0_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commandCursor[2].valueZ = 0.0f;
     commandCursor[3].stageIndex = 2;
     commandCursor[3].parameter = 7;
-    commandCursor[3].vertexIndices = (s16*)&resourceData[offsetof(DllA0EffectResourceView, sevenVertexIndexLists[1].indices)];
+    commandCursor[3].vertexIndices =
+        (s16*)&resourceData[offsetof(DllA0EffectResourceView, sevenVertexIndexLists[1].indices)];
     commandCursor[3].flags = 2;
     commandCursor[3].valueX = 2.0f;
     commandCursor[3].valueY = 1.0f;
     commandCursor[3].valueZ = 2.0f;
     commandCursor[4].stageIndex = 2;
     commandCursor[4].parameter = 7;
-    commandCursor[4].vertexIndices = (s16*)&resourceData[offsetof(DllA0EffectResourceView, sevenVertexIndexLists[2].indices)];
+    commandCursor[4].vertexIndices =
+        (s16*)&resourceData[offsetof(DllA0EffectResourceView, sevenVertexIndexLists[2].indices)];
     commandCursor[4].flags = 2;
     commandCursor[4].valueX = 4.0f;
     commandCursor[4].valueY = 1.0f;
@@ -118,7 +121,8 @@ void dll_A0_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commandCursor[5].valueZ = 0.0f;
     commandCursor[6].stageIndex = 3;
     commandCursor[6].parameter = 7;
-    commandCursor[6].vertexIndices = (s16*)&resourceData[offsetof(DllA0EffectResourceView, sevenVertexIndexLists[1].indices)];
+    commandCursor[6].vertexIndices =
+        (s16*)&resourceData[offsetof(DllA0EffectResourceView, sevenVertexIndexLists[1].indices)];
     commandCursor[6].flags = 4;
     commandCursor[6].valueX = 0.0f;
     commandCursor[6].valueY = 0.0f;
@@ -171,8 +175,8 @@ void dll_A0_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         }
     }
     (*gModgfxInterface)
-        ->spawnEffect(&packet.context, 0, 0x15, (ModgfxEffectVertex*)(resourceData), 0x18, (s16*)(&resourceData[offsetof(DllA0EffectResourceView, triangles)]),
-                      0x1d9, 0);
+        ->spawnEffect(&packet.context, 0, 0x15, (ModgfxEffectVertex*)(resourceData), 0x18,
+                      (s16*)(&resourceData[offsetof(DllA0EffectResourceView, triangles)]), 0x1d9, 0);
 }
 
 void dll_A0_release(void) {

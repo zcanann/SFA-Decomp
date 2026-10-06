@@ -180,7 +180,8 @@ void dll_A6_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         }
     }
     (*gModgfxInterface)
-        ->spawnEffect(&packet.context, 0, 3, (ModgfxEffectVertex*)(gDllA6EffectResourceData), 1, (s16*)((s16*)gDllA6TriangleIndices.indices), 0x26a, 0);
+        ->spawnEffect(&packet.context, 0, 3, (ModgfxEffectVertex*)(gDllA6EffectResourceData), 1,
+                      (s16*)((s16*)gDllA6TriangleIndices.indices), 0x26a, 0);
 }
 
 void dll_A6_release(void) {
