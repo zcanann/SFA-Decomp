@@ -55,15 +55,19 @@
 #include "string.h"
 
 typedef struct LoadedTextureEntry {
-    int key;
-    u8* texture;
-    u8 flag;
+    int assetId;
+    Texture* texture;
+    u8 usesHandle;
     u8 padding[3];
-    u32 size;
+    u32 allocationSize;
 } LoadedTextureEntry;
 
 #define LOADED_TEXTURE_CAPACITY 0x2BC
 
+STATIC_ASSERT(offsetof(LoadedTextureEntry, assetId) == 0x0);
+STATIC_ASSERT(offsetof(LoadedTextureEntry, texture) == 0x4);
+STATIC_ASSERT(offsetof(LoadedTextureEntry, usesHandle) == 0x8);
+STATIC_ASSERT(offsetof(LoadedTextureEntry, allocationSize) == 0xC);
 STATIC_ASSERT(sizeof(LoadedTextureEntry) == 0x10);
 
 LoadedTextureEntry* gLoadedTextures;
@@ -546,10 +550,10 @@ void* textureLoad(int texId, u8 useHandle) {
         }
     }
     for (n = 0; n < gLoadedTextureCount; n++) {
-        if (texId == gLoadedTextures[n].key) {
-            buf = (Texture*)gLoadedTextures[n].texture;
+        if (texId == gLoadedTextures[n].assetId) {
+            buf = gLoadedTextures[n].texture;
             buf->refCount += 1;
-            if (useHandle != 0 && gLoadedTextures[n].flag != 0) {
+            if (useHandle != 0 && gLoadedTextures[n].usesHandle != 0) {
                 return (void*)(n + 1);
             }
             return buf;
@@ -703,17 +707,17 @@ void* textureLoad(int texId, u8 useHandle) {
     walk = firstTex;
     firstTex->loadedSize = size;
     for (slot = 0; slot < gLoadedTextureCount; slot++) {
-        if (gLoadedTextures[slot].key == -1) {
+        if (gLoadedTextures[slot].assetId == -1) {
             break;
         }
     }
     if (slot == gLoadedTextureCount) {
         gLoadedTextureCount += 1;
     }
-    gLoadedTextures[slot].key = origTexId;
-    gLoadedTextures[slot].texture = (u8*)firstTex;
-    gLoadedTextures[slot].flag = useHandle;
-    gLoadedTextures[slot].size = getHeapItemSize(gLoadedTextures[slot].texture);
+    gLoadedTextures[slot].assetId = origTexId;
+    gLoadedTextures[slot].texture = firstTex;
+    gLoadedTextures[slot].usesHandle = useHandle;
+    gLoadedTextures[slot].allocationSize = getHeapItemSize(gLoadedTextures[slot].texture);
     if (gLoadedTextureCount > LOADED_TEXTURE_CAPACITY) {
         if (getLoadedFileFlags(0) != 0 && interruptsDisabled == TRUE) {
             OSRestoreInterrupts(interruptState);
@@ -756,7 +760,7 @@ static inline void loadTextureBank(int bank, int fileId) {
 void textureFree(Texture* tex) {
     Texture* iter;
     Texture* next;
-    if ((u8*)tex == gLoadedTextures[0].texture) {
+    if (tex == gLoadedTextures[0].texture) {
         return;
     }
     if (tex == NULL) {
@@ -777,7 +781,7 @@ void textureFree(Texture* tex) {
     {
         int i;
         for (i = 0; i < gLoadedTextureCount; i++) {
-            if (gLoadedTextures[i].texture == (u8*)tex) {
+            if (gLoadedTextures[i].texture == tex) {
                 iter = tex->nextAnimationFrame;
                 while (iter != NULL) {
                     if ((u32)iter < 0x80000000 || (u32)iter > 0x81800000) {
@@ -805,7 +809,7 @@ void textureFree(Texture* tex) {
                 if (((Texture*)tex)->cached == 0) {
                     mm_free(tex);
                 }
-                gLoadedTextures[i].key = -1;
+                gLoadedTextures[i].assetId = -1;
                 gLoadedTextures[i].texture = NULL;
                 return;
             }
@@ -958,14 +962,14 @@ void textureUpdateAnimationFrame(const Texture* texture, u32* animationFlags, s3
     }
 }
 
-void* getLoadedTexture(int key) {
+void* getLoadedTexture(int assetId) {
     LoadedTextureEntry* base;
     int i;
 
     i = 0;
     base = gLoadedTextures;
     for (; i < gLoadedTextureCount; i++) {
-        if (key == base[i].key) {
+        if (assetId == base[i].assetId) {
             return base[i].texture;
         }
     }
@@ -1029,40 +1033,41 @@ void textureInitSecondaryGXTexObj(Texture* tex, GXTexObj* obj) {
     }
 }
 
+/* Keep the explicit successful-allocation checks: plain else branches change MWCC codegen. */
 void texRestructRefs(int mode) {
-    u8* na;
-    int i;
-    int done;
-    int pass;
-    u8* tex;
-    u32 size;
-    int d;
+    Texture* replacement;
+    int slot;
+    int stable;
+    int passIndex;
+    Texture* texture;
+    u32 allocationSize;
+    int previousFreeDelay;
 
-    done = 0;
-    pass = 0;
+    stable = 0;
+    passIndex = 0;
     mmSetTextureAllocationState(2);
     OSReport(sTexRestructRunningBanner);
     printHeapStats(1);
     OSReport(sTexRestructReRegionBanner);
     mmSetForceHeaps1and2Only(1);
-    for (i = 0; i < gLoadedTextureCount; i++) {
-        tex = gLoadedTextures[i].texture;
-        if (tex != NULL && gLoadedTextures[i].flag != 0 && ((Texture*)tex)->cached == 0 &&
-            (int)gLoadedTextures[i].size != -1 && mmGetRegionForPtr(tex) == 0 && *(void**)tex == NULL) {
-            size = gLoadedTextures[i].size;
-            na = (u8*)mmAlloc(size, 0xa0a0a0a0, 0);
-            if (na == NULL) {
-                OSReport(sTexRestructReRegionNoSpaceFormat, tex, getHeapItemSize(tex));
-            } else if (na != NULL) {
-                OSReport(sTexRestructReRegionOptimalFormat, tex, na, getHeapItemSize(tex));
-                done = 0;
-                memcpy(na, tex, size);
-                DCStoreRange(na, size);
-                textureInitGXTexObj((Texture*)na);
-                d = mmSetFreeDelay(0);
-                mm_free(gLoadedTextures[i].texture);
-                mmSetFreeDelay(d);
-                gLoadedTextures[i].texture = na;
+    for (slot = 0; slot < gLoadedTextureCount; slot++) {
+        texture = gLoadedTextures[slot].texture;
+        if (texture != NULL && gLoadedTextures[slot].usesHandle != 0 && texture->cached == 0 &&
+            (int)gLoadedTextures[slot].allocationSize != -1 && mmGetRegionForPtr((u8*)texture) == 0 && texture->nextAnimationFrame == NULL) {
+            allocationSize = gLoadedTextures[slot].allocationSize;
+            replacement = mmAlloc(allocationSize, 0xa0a0a0a0, 0);
+            if (replacement == NULL) {
+                OSReport(sTexRestructReRegionNoSpaceFormat, texture, getHeapItemSize(texture));
+            } else if (replacement != NULL) {
+                OSReport(sTexRestructReRegionOptimalFormat, texture, replacement, getHeapItemSize(texture));
+                stable = 0;
+                memcpy(replacement, texture, allocationSize);
+                DCStoreRange(replacement, allocationSize);
+                textureInitGXTexObj(replacement);
+                previousFreeDelay = mmSetFreeDelay(0);
+                mm_free(gLoadedTextures[slot].texture);
+                mmSetFreeDelay(previousFreeDelay);
+                gLoadedTextures[slot].texture = replacement;
             }
         }
     }
@@ -1070,60 +1075,60 @@ void texRestructRefs(int mode) {
     OSReport(sTexRestructAfterReRegionBanner);
     printHeapStats(1);
     defragMemory(2);
-    while (done == 0 && pass < 4) {
-        done = 1;
-        for (i = 0; i < gLoadedTextureCount; i++) {
-            tex = gLoadedTextures[i].texture;
-            if (tex != NULL && gLoadedTextures[i].flag != 0 && ((Texture*)tex)->cached == 0 &&
-                (int)gLoadedTextures[i].size != -1) {
-                if (mmGetRegionForPtr(tex) == 0 && *(void**)tex == NULL) {
-                    size = gLoadedTextures[i].size;
-                    na = (u8*)mmAlloc(size, 0xa0a0a0a0, 0);
-                    if (na == NULL) {
-                        OSReport(sTexRestructNoSpaceFormat, tex, getHeapItemSize(tex));
-                    } else if (mmGetRegionForPtr(na) != 0) {
-                        OSReport(sTexRestructWrongRegionFormat, tex, na, getHeapItemSize(tex));
-                        d = mmSetFreeDelay(0);
-                        mm_free(na);
-                        mmSetFreeDelay(d);
-                    } else if (na < tex) {
-                        OSReport(sTexRestructSubOptimalFormat, tex, na, getHeapItemSize(tex));
-                        d = mmSetFreeDelay(0);
-                        mm_free(na);
-                        mmSetFreeDelay(d);
-                    } else if (na != NULL) {
-                        OSReport(sTexRestructOptimalFormat, tex, na, getHeapItemSize(tex));
-                        done = 0;
-                        memcpy(na, tex, size);
-                        DCStoreRange(na, size);
-                        textureInitGXTexObj((Texture*)na);
-                        d = mmSetFreeDelay(0);
-                        mm_free(gLoadedTextures[i].texture);
-                        mmSetFreeDelay(d);
-                        gLoadedTextures[i].texture = na;
+    while (stable == 0 && passIndex < 4) {
+        stable = 1;
+        for (slot = 0; slot < gLoadedTextureCount; slot++) {
+            texture = gLoadedTextures[slot].texture;
+            if (texture != NULL && gLoadedTextures[slot].usesHandle != 0 && texture->cached == 0 &&
+                (int)gLoadedTextures[slot].allocationSize != -1) {
+                if (mmGetRegionForPtr((u8*)texture) == 0 && texture->nextAnimationFrame == NULL) {
+                    allocationSize = gLoadedTextures[slot].allocationSize;
+                    replacement = mmAlloc(allocationSize, 0xa0a0a0a0, 0);
+                    if (replacement == NULL) {
+                        OSReport(sTexRestructNoSpaceFormat, texture, getHeapItemSize(texture));
+                    } else if (mmGetRegionForPtr((u8*)replacement) != 0) {
+                        OSReport(sTexRestructWrongRegionFormat, texture, replacement, getHeapItemSize(texture));
+                        previousFreeDelay = mmSetFreeDelay(0);
+                        mm_free(replacement);
+                        mmSetFreeDelay(previousFreeDelay);
+                    } else if ((size_t)replacement < (size_t)texture) {
+                        OSReport(sTexRestructSubOptimalFormat, texture, replacement, getHeapItemSize(texture));
+                        previousFreeDelay = mmSetFreeDelay(0);
+                        mm_free(replacement);
+                        mmSetFreeDelay(previousFreeDelay);
+                    } else if (replacement != NULL) {
+                        OSReport(sTexRestructOptimalFormat, texture, replacement, getHeapItemSize(texture));
+                        stable = 0;
+                        memcpy(replacement, texture, allocationSize);
+                        DCStoreRange(replacement, allocationSize);
+                        textureInitGXTexObj(replacement);
+                        previousFreeDelay = mmSetFreeDelay(0);
+                        mm_free(gLoadedTextures[slot].texture);
+                        mmSetFreeDelay(previousFreeDelay);
+                        gLoadedTextures[slot].texture = replacement;
                     }
                 } else if (mode == 0) {
-                    if (mmGetRegionForPtr(tex) == 1 || mmGetRegionForPtr(tex) == 2) {
-                        if (*(void**)tex == NULL && getHeapItemSize(tex) >= 0x3000) {
-                            size = gLoadedTextures[i].size;
-                            na = (u8*)mmAlloc(size, 0xa0a0a0a0, 0);
-                            if (na == NULL) {
-                                OSReport(sTexRestructNoSpaceFormat, tex, getHeapItemSize(tex));
-                            } else if (mmGetRegionForPtr(na) != 0) {
-                                OSReport(sTexRestructReRegionedStuckFormat, tex, na, getHeapItemSize(tex));
-                                d = mmSetFreeDelay(0);
-                                mm_free(na);
-                                mmSetFreeDelay(d);
-                            } else if (na != NULL) {
-                                OSReport(sTexRestructReRegionedOptimalFormat, tex, na, getHeapItemSize(tex));
-                                done = 0;
-                                memcpy(na, tex, size);
-                                DCStoreRange(na, size);
-                                textureInitGXTexObj((Texture*)na);
-                                d = mmSetFreeDelay(0);
-                                mm_free(gLoadedTextures[i].texture);
-                                mmSetFreeDelay(d);
-                                gLoadedTextures[i].texture = na;
+                    if (mmGetRegionForPtr((u8*)texture) == 1 || mmGetRegionForPtr((u8*)texture) == 2) {
+                        if (texture->nextAnimationFrame == NULL && getHeapItemSize(texture) >= 0x3000) {
+                            allocationSize = gLoadedTextures[slot].allocationSize;
+                            replacement = mmAlloc(allocationSize, 0xa0a0a0a0, 0);
+                            if (replacement == NULL) {
+                                OSReport(sTexRestructNoSpaceFormat, texture, getHeapItemSize(texture));
+                            } else if (mmGetRegionForPtr((u8*)replacement) != 0) {
+                                OSReport(sTexRestructReRegionedStuckFormat, texture, replacement, getHeapItemSize(texture));
+                                previousFreeDelay = mmSetFreeDelay(0);
+                                mm_free(replacement);
+                                mmSetFreeDelay(previousFreeDelay);
+                            } else if (replacement != NULL) {
+                                OSReport(sTexRestructReRegionedOptimalFormat, texture, replacement, getHeapItemSize(texture));
+                                stable = 0;
+                                memcpy(replacement, texture, allocationSize);
+                                DCStoreRange(replacement, allocationSize);
+                                textureInitGXTexObj(replacement);
+                                previousFreeDelay = mmSetFreeDelay(0);
+                                mm_free(gLoadedTextures[slot].texture);
+                                mmSetFreeDelay(previousFreeDelay);
+                                gLoadedTextures[slot].texture = replacement;
                             }
                         }
                     }
@@ -1131,9 +1136,9 @@ void texRestructRefs(int mode) {
             }
         }
         printHeapStats(1);
-        pass++;
+        passIndex++;
     }
-    OSReport(sTexRestructFinishedFormat, pass);
+    OSReport(sTexRestructFinishedFormat, passIndex);
     mmSetTextureAllocationState(0);
 }
 

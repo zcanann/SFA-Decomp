@@ -71,6 +71,7 @@ STATIC_ASSERT(offsetof(Texture, gxTexObj) == 0x20);
 STATIC_ASSERT(offsetof(Texture, tmemAddr) == 0x40);
 STATIC_ASSERT(offsetof(Texture, dataSize) == 0x44);
 STATIC_ASSERT(offsetof(Texture, preloaded) == 0x48);
+STATIC_ASSERT(offsetof(Texture, cached) == 0x49);
 STATIC_ASSERT(offsetof(Texture, loadedSize) == 0x4C);
 STATIC_ASSERT(offsetof(Texture, imageOffset) == 0x50);
 STATIC_ASSERT(sizeof(Texture) == 0x60);
