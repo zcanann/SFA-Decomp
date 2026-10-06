@@ -9,7 +9,7 @@ void Effect4_func03_nop(void);
 void Effect4_release(void);
 void Effect4_initialise(void);
 void Effect4_updateFrameState(void);
-int Effect4_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                        s16* extraArgs);
+int Effect4_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                        s8 sourceParam, s16* extraArgs);
 
 #endif /* MAIN_DLL_DLL_001D_EFFECT4_H_ */

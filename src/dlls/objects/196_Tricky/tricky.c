@@ -2521,8 +2521,8 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
                 fxBuf.posY = 2.0f + trickyState->mouthPos.y;
                 fxBuf.posZ = trickyState->mouthPos.z;
                 (*gPartfxInterface)
-                    ->spawnEffect(obj, TRICKY_PARTFX_HOWL_SPARKLE, &fxBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS,
-                                  -1, NULL);
+                    ->spawnEffect(obj, TRICKY_PARTFX_HOWL_SPARKLE, &fxBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1,
+                                  NULL);
             }
             trickyState->howlSparkleTimer = 30.0f;
         }

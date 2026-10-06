@@ -855,8 +855,7 @@ void tumbleweed_updateEffects(GameObject* obj) {
             spawnCount = TUMBLEWEED_EFFECT_SPAWN_COUNT;
             do {
                 (*gPartfxInterface)
-                    ->spawnEffect(obj, TUMBLEWEED_EFFECT_BURST_SPECIAL, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1,
-                                  NULL);
+                    ->spawnEffect(obj, TUMBLEWEED_EFFECT_BURST_SPECIAL, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
                 --spawnCount;
             } while (spawnCount != 0);
             break;
@@ -864,8 +863,7 @@ void tumbleweed_updateEffects(GameObject* obj) {
             spawnCount = TUMBLEWEED_EFFECT_SPAWN_COUNT;
             do {
                 (*gPartfxInterface)
-                    ->spawnEffect(obj, TUMBLEWEED_EFFECT_BURST_DEFAULT, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1,
-                                  NULL);
+                    ->spawnEffect(obj, TUMBLEWEED_EFFECT_BURST_DEFAULT, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
                 --spawnCount;
             } while (spawnCount != 0);
             break;
@@ -880,13 +878,11 @@ void tumbleweed_updateEffects(GameObject* obj) {
         case TUMBLEWEED_TYPE_1:
         case TUMBLEWEED_TYPE_4:
             (*gPartfxInterface)
-                ->spawnEffect(obj, TUMBLEWEED_EFFECT_PUFF_SPECIAL, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1,
-                              NULL);
+                ->spawnEffect(obj, TUMBLEWEED_EFFECT_PUFF_SPECIAL, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
             break;
         default:
             (*gPartfxInterface)
-                ->spawnEffect(obj, TUMBLEWEED_EFFECT_PUFF_DEFAULT, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1,
-                              NULL);
+                ->spawnEffect(obj, TUMBLEWEED_EFFECT_PUFF_DEFAULT, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
             break;
         }
         state->flags &= ~TUMBLEWEED_EFFECT_FLAG_PUFF;

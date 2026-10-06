@@ -1704,7 +1704,8 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT;
                             if (slot->impactEffectId != -1) {
                                 (*gPartfxInterface)
-                                    ->spawnEffect((GameObject*)srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
+                                    ->spawnEffect((GameObject*)srcObj, slot->impactEffectId, &rotParams, 0x200001, -1,
+                                                  0);
                                 slot->impactEffectId = -1;
                             }
                         } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1) != 0) {
@@ -1726,7 +1727,8 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
                             if (slot->impactEffectId != -1) {
                                 (*gPartfxInterface)
-                                    ->spawnEffect((GameObject*)srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
+                                    ->spawnEffect((GameObject*)srcObj, slot->impactEffectId, &rotParams, 0x200001, -1,
+                                                  0);
                             }
                             slot->impactEffectId = -1;
                         } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4) != 0) {
@@ -1737,7 +1739,8 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
                             if (slot->impactEffectId != -1) {
                                 (*gPartfxInterface)
-                                    ->spawnEffect((GameObject*)srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
+                                    ->spawnEffect((GameObject*)srcObj, slot->impactEffectId, &rotParams, 0x200001, -1,
+                                                  0);
                             }
                         }
                         gExpgfxFrameParityBit = 0;
@@ -1796,7 +1799,8 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                             rotParams.z = slot->posZ.value;
                         }
                         gExpgfxFrameParityBit = 1;
-                        (*gPartfxInterface)->spawnEffect((GameObject*)srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, NULL);
+                        (*gPartfxInterface)
+                            ->spawnEffect((GameObject*)srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, NULL);
                         gExpgfxFrameParityBit = 0;
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0 && randomGetRange(0, 4) == 1) {

@@ -18,7 +18,6 @@ typedef struct WorldObjSetup {
     u8 unknown1C[4];
 } WorldObjSetup;
 
-
 /*
  * The path callbacks interpret overlapping work views from the start of the
  * state at a 0x18-byte stride. The first view's opaque prefix therefore
@@ -58,7 +57,6 @@ STATIC_ASSERT(offsetof(WorldObjSetup, unknown18) == 0x18);
 STATIC_ASSERT(offsetof(WorldObjSetup, variant) == 0x1B);
 STATIC_ASSERT(offsetof(WorldObjSetup, unknown1C) == 0x1C);
 STATIC_ASSERT(sizeof(WorldObjSetup) == 0x20);
-
 
 STATIC_ASSERT(offsetof(WorldObjPathSegmentWork, start) == 0x10);
 STATIC_ASSERT(offsetof(WorldObjPathSegmentWork, end) == 0x28);

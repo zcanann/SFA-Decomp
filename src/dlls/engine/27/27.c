@@ -47,8 +47,8 @@ ObjectDescriptor6 Effect2_funcs = {
         spawnParams = &gEffect2DefaultSpawnParams;                                                                     \
     } while (0)
 
-int Effect2_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                        s16* extraArgs) {
+int Effect2_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                        s8 sourceParam, s16* extraArgs) {
     int spawnResult;
     int i;
     PartFxSpawn cfg;

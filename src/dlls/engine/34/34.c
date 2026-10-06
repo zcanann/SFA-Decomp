@@ -43,8 +43,8 @@ ObjectDescriptor6 Effect9_funcs = {
         spawnParams = &gEffect9DefaultSpawnParams;                                                                     \
     } while (0)
 
-int Effect9_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                        s16* extraArgs) {
+int Effect9_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                        s8 sourceParam, s16* extraArgs) {
     int spawnResult;
     PartFxSpawn cfg;
 

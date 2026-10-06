@@ -29,8 +29,8 @@ ObjectDescriptor6 Effect4_funcs = {
     (ObjectDescriptorCallback)Effect4_updateFrameState,
 };
 
-int Effect4_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                        s16* extraArgs) {
+int Effect4_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                        s8 sourceParam, s16* extraArgs) {
     int spawnResult;
     int randPick;
     MatrixTransform es;

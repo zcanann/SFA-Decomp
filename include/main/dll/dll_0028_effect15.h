@@ -5,8 +5,8 @@
 
 #include "main/dll/partfx_interface.h"
 
-int Effect15_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                         f32* extraArgs);
+int Effect15_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                         s8 sourceParam, f32* extraArgs);
 void Effect15_func05_nop(void);
 void Effect15_func03_nop(void);
 void Effect15_release(void);

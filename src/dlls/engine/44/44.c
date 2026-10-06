@@ -16,8 +16,8 @@ f32 gEffect19ScrollPhase1 = 0.3f;
 f32 gEffect19ScrollPhase2 = 0.1f;
 f32 gEffect19ScrollPhase3 = 0.3f;
 
-int Effect19_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                         f32* extraArgs) {
+int Effect19_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                         s8 sourceParam, f32* extraArgs) {
     int spawnResult;
     PartFxSpawn cfg;
 

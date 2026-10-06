@@ -20,8 +20,8 @@ ObjectDescriptor6 Effect15_funcs = {
     (ObjectDescriptorCallback)Effect15_func05_nop,
 };
 
-int Effect15_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                         f32* extraArgs) {
+int Effect15_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                         s8 sourceParam, f32* extraArgs) {
     int spawnResult;
     PartFxSpawn cfg;
 

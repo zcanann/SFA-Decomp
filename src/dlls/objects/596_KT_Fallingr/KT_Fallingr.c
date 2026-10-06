@@ -66,8 +66,7 @@ void ktfallingrocks_update(GameObject* obj)
         params.x = obj->anim.localPosX + randomGetRange(-200, 200);
         params.y = obj->anim.localPosY;
         params.z = obj->anim.localPosZ + randomGetRange(-200, 200);
-        (*gPartfxInterface)
-            ->spawnEffect(obj, placement->effectId, &params, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, placement->effectId, &params, 0x200001, -1, NULL);
     }
     Sfx_PlayFromObject(obj, SFXTRIG_en_birdynight11);
     mainSetBits(placement->triggerBit, 0);

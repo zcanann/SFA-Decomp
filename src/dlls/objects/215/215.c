@@ -177,8 +177,7 @@ void KaldachomSpit_update(GameObject* obj) {
             if (obj->anim.romDefNo == KALDACHOMPSPIT_SEQUENCE_ID_EXPLOSIVE) {
                 objfx_spawnPulseBurst((void*)obj, 1.0f, 1, 0, 0, NULL);
             } else {
-                (*gPartfxInterface)
-                    ->spawnEffect(obj, KALDACHOMPSPIT_PARTFX_POISON_TRAIL, NULL, 2, -1, &objAnim->alpha);
+                (*gPartfxInterface)->spawnEffect(obj, KALDACHOMPSPIT_PARTFX_POISON_TRAIL, NULL, 2, -1, &objAnim->alpha);
                 (*gPartfxInterface)->spawnEffect(obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnEffect(obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, NULL);
             }

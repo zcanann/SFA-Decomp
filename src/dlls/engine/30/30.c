@@ -30,8 +30,8 @@ ObjectDescriptor6 Effect5_funcs = {
     (ObjectDescriptorCallback)Effect5_updateFrameState,
 };
 
-int Effect5_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                        s16* extraArgs) {
+int Effect5_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                        s8 sourceParam, s16* extraArgs) {
     int spawnResult;
     MatrixTransform es;
     PartFxSpawn cfg;

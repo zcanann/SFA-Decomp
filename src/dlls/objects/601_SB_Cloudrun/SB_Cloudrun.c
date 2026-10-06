@@ -422,8 +422,7 @@ void SB_CloudRunner_HandlePriorityHit(GameObject* obj, SBCloudRunnerState* state
                     (*gPartfxInterface)->spawnEffect(obj, PARTFX_HIT_FLASH, &args, PARTFX_SPAWN_FLAGS, -1, NULL);
                     (*gPartfxInterface)->spawnEffect(obj, PARTFX_HIT_FLASH, &args, PARTFX_SPAWN_FLAGS, -1, NULL);
                     for (i = 0; i < PARTFX_HIT_DEBRIS_COUNT; i++) {
-                        (*gPartfxInterface)
-                            ->spawnEffect(obj, PARTFX_HIT_DEBRIS, &args, PARTFX_SPAWN_FLAGS, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(obj, PARTFX_HIT_DEBRIS, &args, PARTFX_SPAWN_FLAGS, -1, NULL);
                     }
                 }
             }

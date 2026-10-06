@@ -6,8 +6,7 @@
 #include "game/objects/object.h"
 #include "main/objfx.h"
 
-typedef struct ObjFxParticleEmitter
-{
+typedef struct ObjFxParticleEmitter {
     u16 rotX;
     u16 rotY;
     u16 rotZ;
@@ -18,56 +17,44 @@ typedef struct ObjFxParticleEmitter
     f32 z;
 } ObjFxParticleEmitter;
 
-typedef struct ObjFxS32Table5
-{
+typedef struct ObjFxS32Table5 {
     s32 values[5];
 } ObjFxS32Table5;
 
-typedef struct ObjFxU16Table3
-{
+typedef struct ObjFxU16Table3 {
     u16 values[3];
 } ObjFxU16Table3;
 
-typedef struct ObjFxU16Table11
-{
+typedef struct ObjFxU16Table11 {
     u16 values[11];
 } ObjFxU16Table11;
 
-
-typedef struct ObjFxU16Table7
-{
+typedef struct ObjFxU16Table7 {
     u16 values[7];
 } ObjFxU16Table7;
 
-
-typedef struct ObjFxU16Table9
-{
+typedef struct ObjFxU16Table9 {
     u16 values[9];
 } ObjFxU16Table9;
 
-typedef struct ObjFxU16Table8
-{
+typedef struct ObjFxU16Table8 {
     u16 values[8];
 } ObjFxU16Table8;
 
-typedef struct ObjFxRandomBurstEntry
-{
+typedef struct ObjFxRandomBurstEntry {
     u16 effectParam;
     u16 extraParam;
 } ObjFxRandomBurstEntry;
 
-typedef struct ObjFxRandomBurstTable
-{
+typedef struct ObjFxRandomBurstTable {
     ObjFxRandomBurstEntry entries[13];
 } ObjFxRandomBurstTable;
 
-typedef struct ObjFxColorTable
-{
+typedef struct ObjFxColorTable {
     u16 values[15];
 } ObjFxColorTable;
 
-typedef struct ObjFxSparkleEffectTable
-{
+typedef struct ObjFxSparkleEffectTable {
     ObjFxS32Table5 counts;
     u16 records[3][34];
 } ObjFxSparkleEffectTable;
@@ -98,7 +85,6 @@ typedef struct ObjFxLightColor {
 } ObjFxLightColor;
 
 extern ObjFxLightColor gObjFxLightColorTbl[];
-
 
 void objShowButtonGlow(void* obj, f32 intensity, u8 mode);
 void objfx_spawnFlaggedTrailBurst(void* obj, f32 fval, u8 mode, int f6val, int f4val, void* origin);

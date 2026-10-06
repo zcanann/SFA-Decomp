@@ -422,14 +422,14 @@ void ring_update(GameObject* obj)
                             spawnBuf.posY = dir[1] + obj->anim.localPosY;
                             spawnBuf.posZ = dir[2] + obj->anim.localPosZ;
                             (*gPartfxInterface)
-                                ->spawnEffect(obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf, RING_PARTFX_FLAGS, -1,
-                                              &obj->anim.velocityX);
+                                ->spawnEffect(obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf,
+                                              RING_PARTFX_FLAGS, -1, &obj->anim.velocityX);
                             (*gPartfxInterface)
-                                ->spawnEffect(obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf, RING_PARTFX_FLAGS, -1,
-                                              &obj->anim.velocityX);
+                                ->spawnEffect(obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf,
+                                              RING_PARTFX_FLAGS, -1, &obj->anim.velocityX);
                             (*gPartfxInterface)
-                                ->spawnEffect(obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf, RING_PARTFX_FLAGS, -1,
-                                              &obj->anim.velocityX);
+                                ->spawnEffect(obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf,
+                                              RING_PARTFX_FLAGS, -1, &obj->anim.velocityX);
                         }
                     }
                     state->flags.bit40 = 1;

@@ -195,9 +195,7 @@ void pollenfragment_update(GameObject* obj)
                 i = 2;
                 do
                 {
-                    (*gPartfxInterface)
-                        ->spawnEffect(obj, (int)(extra->def)->burstFxId, NULL, 1, -1,
-                                      NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, (int)(extra->def)->burstFxId, NULL, 1, -1, NULL);
                 } while (i-- != 0);
             }
             extra->timer = 0.0f;
@@ -215,8 +213,7 @@ void pollenfragment_update(GameObject* obj)
     }
     if ((extra->def)->auraFxId != -1)
     {
-        (*gPartfxInterface)
-            ->spawnEffect(obj, (int)(extra->def)->auraFxId, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, (int)(extra->def)->auraFxId, NULL, 1, -1, NULL);
     }
     nearObj = (GameObject*)((u8*)objGetNearestTypeTo((int)(extra->def)->targetGroup, obj, 0));
     if (nearObj != NULL &&

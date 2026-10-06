@@ -32,8 +32,8 @@ ObjectDescriptor6 Effect16_funcs = {
     (ObjectDescriptorCallback)Effect16_updateFrameState,
 };
 
-int Effect16_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                         s16* extraArgs) {
+int Effect16_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                         s8 sourceParam, s16* extraArgs) {
     int spawnResult;
     PartFxSpawn cfg;
 

@@ -141,8 +141,7 @@ void wcbeacon_update(GameObject* obj)
         if (obj->objectFlags & OBJECT_OBJFLAG_RENDERED)
         {
             (*gPartfxInterface)
-                ->spawnEffect(obj, WCBEACON_PARTFX_ACTIVE, NULL, WCBEACON_PARTFX_KIND, WCBEACON_TRIGGER_NO_ARG,
-                              NULL);
+                ->spawnEffect(obj, WCBEACON_PARTFX_ACTIVE, NULL, WCBEACON_PARTFX_KIND, WCBEACON_TRIGGER_NO_ARG, NULL);
         }
         if (obj->userData1 == 0)
         {

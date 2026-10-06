@@ -30,8 +30,8 @@ PartFxSpawnParams gEffect1DefaultSpawnParams;
         spawnParams = &gEffect1DefaultSpawnParams;                                                                     \
     } while (0)
 
-int Effect1_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                        s16* extraArgs) {
+int Effect1_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                        s8 sourceParam, s16* extraArgs) {
     int spawnResult;
     MatrixTransform es;
     PartFxSpawn cfg;

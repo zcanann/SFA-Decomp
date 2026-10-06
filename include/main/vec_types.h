@@ -6,8 +6,7 @@
 
 typedef Vec Vec3f;
 
-typedef struct Vec3s
-{
+typedef struct Vec3s {
     s16 x;
     s16 y;
     s16 z;

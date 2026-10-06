@@ -174,11 +174,11 @@ void mmpAsteroidRe_update(GameObject* obj) {
             (*gPartfxInterface)
                 ->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_DUST, NULL, 2, -1, &gMMPAsteroidDustHeightParam);
             (*gPartfxInterface)
-                ->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_DUST_CLOUD, &gMMPAsteroidDustSpawnParams, 0x200001,
-                              -1, &gMMPAsteroidDustHeightParam);
+                ->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_DUST_CLOUD, &gMMPAsteroidDustSpawnParams, 0x200001, -1,
+                              &gMMPAsteroidDustHeightParam);
             (*gPartfxInterface)
-                ->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_DUST_CLOUD, &gMMPAsteroidDustSpawnParams, 0x200001,
-                              -1, &gMMPAsteroidDustHeightParam);
+                ->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_DUST_CLOUD, &gMMPAsteroidDustSpawnParams, 0x200001, -1,
+                              &gMMPAsteroidDustHeightParam);
         }
     }
     if (state->eventFlags != 0) {
@@ -196,8 +196,7 @@ void mmpAsteroidRe_update(GameObject* obj) {
             (*gPartfxInterface)->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_EXPLOSION, NULL, 1, -1, NULL);
             count = MMP_ASTEROID_RE_EXPLOSION_CHUNK_COUNT;
             do {
-                (*gPartfxInterface)
-                    ->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_EXPLOSION_CHUNK, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_EXPLOSION_CHUNK, NULL, 1, -1, NULL);
                 count--;
             } while (count != 0);
             spawnExplosion(obj, 100.0f, 1, 1, 0, 1, 0, 1, 0);

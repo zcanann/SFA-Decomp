@@ -302,8 +302,7 @@ void worldplanet_update(GameObject* obj) {
         effectParams.y = 39.745197f;
         effectParams.z = -42.603f;
         (*gPartfxInterface)
-            ->spawnEffect(obj, WORLDPLANET_SELECTION_PFX_ID, &effectParams, WORLDPLANET_SELECTION_PFX_MODE, -1,
-                          NULL);
+            ->spawnEffect(obj, WORLDPLANET_SELECTION_PFX_ID, &effectParams, WORLDPLANET_SELECTION_PFX_MODE, -1, NULL);
         worldplanet_readMapInput(obj, &inputX, &inputY);
         obj->anim.rotZ -= 10;
         obj->anim.rotY = 0x3448;

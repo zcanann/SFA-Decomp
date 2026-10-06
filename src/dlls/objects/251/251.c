@@ -307,8 +307,8 @@ void PressureSwitchFB_update(GameObject* obj) {
                 effectIndex = 0;
                 do {
                     (*gPartfxInterface)
-                        ->spawnEffect(obj, PRESSURESWITCHFB_PARTFX_ID, &effectParams,
-                                      PRESSURESWITCHFB_PARTICLE_FLAGS, -1, NULL);
+                        ->spawnEffect(obj, PRESSURESWITCHFB_PARTFX_ID, &effectParams, PRESSURESWITCHFB_PARTICLE_FLAGS,
+                                      -1, NULL);
                     effectIndex++;
                 } while (effectIndex < PRESSURESWITCHFB_PARTICLE_COUNT);
             }

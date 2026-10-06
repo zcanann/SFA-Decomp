@@ -382,8 +382,7 @@ void kaldachom_spawnDustEffects(GameObject* obj, KaldachomControl* control) {
     Sfx_PlayFromObject(obj, SFXTRIG_wp_beamgenlp16_276);
     work = 40;
     do {
-        (*gPartfxInterface)
-            ->spawnEffect(obj, KALDACHOM_PARTFX_DUST, 0, 4, 0xffffffff, &gKaldachomDustSpawnScratch);
+        (*gPartfxInterface)->spawnEffect(obj, KALDACHOM_PARTFX_DUST, 0, 4, 0xffffffff, &gKaldachomDustSpawnScratch);
         work--;
     } while (work != 0);
     if ((control->spawnedDustObj == NULL) && (loadLocked = Obj_CanSetupObject(), loadLocked != '\0')) {
@@ -459,8 +458,7 @@ void kaldachom_handleAnimEvents(GameObject* obj, KaldachomState* objectState, Gr
         state->baddie.eventFlags &= ~KALDACHOM_EVENT_CLIMB_FX;
         Sfx_PlayFromObject(obj, SFXTRIG_mn_impyflap16);
         for (spawnCount = (2 - control->climbFxIndex) * 10; spawnCount != 0; spawnCount--) {
-            (*gPartfxInterface)
-                ->spawnEffect(obj, KALDACHOM_PARTFX_CLIMB, 0, 4, -1, &gKaldachomMouthSpawnScratch);
+            (*gPartfxInterface)->spawnEffect(obj, KALDACHOM_PARTFX_CLIMB, 0, 4, -1, &gKaldachomMouthSpawnScratch);
         }
     }
     if (((s32)state->baddie.eventFlags & KALDACHOM_EVENT_LOWER_PROJECTILE) != 0) {
@@ -479,8 +477,7 @@ void kaldachom_handleAnimEvents(GameObject* obj, KaldachomState* objectState, Gr
         control->climbFxIndex = 3;
         spawnCount = 10;
         do {
-            (*gPartfxInterface)
-                ->spawnEffect(obj, KALDACHOM_PARTFX_ATTACK, 0, 4, -1, &gKaldachomMouthSpawnScratch);
+            (*gPartfxInterface)->spawnEffect(obj, KALDACHOM_PARTFX_ATTACK, 0, 4, -1, &gKaldachomMouthSpawnScratch);
             spawnCount--;
         } while (spawnCount != 0);
         state->baddie.eventFlags &= ~KALDACHOM_EVENT_ATTACK_FX;

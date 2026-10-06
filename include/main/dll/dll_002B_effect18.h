@@ -5,8 +5,8 @@
 
 #include "main/dll/partfx_interface.h"
 
-int Effect18_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                         void* extraArgs);
+int Effect18_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                         s8 sourceParam, void* extraArgs);
 void Effect18_updateFrameState(void);
 void Effect18_func03_nop(void);
 void Effect18_release(void);

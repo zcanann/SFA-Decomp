@@ -130,11 +130,10 @@ int WM_GeneralScales_sequenceCallback(GameObject* objectHandle, int unusedArg2, 
                 setup->base.color[3] = WM_GENERAL_SCALES_SWORD_COLOR_ALPHA;
                 ObjLink_AttachChild(objectHandle,
                                     objSetupObject(&setup->base, WM_GENERAL_SCALES_SWORD_SETUP_FLAGS,
-                                                    WM_GENERAL_SCALES_SWORD_MAP_LAYER_NONE,
-                                                    WM_GENERAL_SCALES_SWORD_OBJECT_NONE, NULL),
+                                                   WM_GENERAL_SCALES_SWORD_MAP_LAYER_NONE,
+                                                   WM_GENERAL_SCALES_SWORD_OBJECT_NONE, NULL),
                                     0);
-                ((GameObject*)objectHandle->childObjs[0])->anim.rootMotionScale *=
-                    WM_GENERAL_SCALES_SWORD_SCALE;
+                ((GameObject*)objectHandle->childObjs[0])->anim.rootMotionScale *= WM_GENERAL_SCALES_SWORD_SCALE;
             }
             break;
         case WM_GENERAL_SCALES_SEQUENCE_EVENT_SHEATHE_SWORD: {

@@ -118,8 +118,7 @@ void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) 
             particleArgs.scale = ((f32)setup->windLiftScaleQ14 / VORTEX_WIND_LIFT_SCALE_DIVISOR) *
                                  (obj->anim.rootMotionScale * state->activationFade);
             particleArgs.posY = VORTEX_ZERO;
-            (*gPartfxInterface)
-                ->spawnEffect(obj, VORTEX_PARTFX_WIND_LIFT, &particleArgs, PARTFXFLAG_2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, VORTEX_PARTFX_WIND_LIFT, &particleArgs, PARTFXFLAG_2, -1, NULL);
         }
 
         model = Obj_GetActiveModel(obj);

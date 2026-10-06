@@ -34,7 +34,7 @@ void partfx_onMapSetup(void);
 void partfx_initialise(void);
 void partfx_updateFrameState(int unused);
 void partfx_release(void);
-int partfx_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, int spawnFlags, s8 sourceParam,
-                       void* extraArgs);
+int partfx_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, int spawnFlags,
+                       s8 sourceParam, void* extraArgs);
 
 #endif /* MAIN_DLL_DLL_000E_PARTFX_H_ */

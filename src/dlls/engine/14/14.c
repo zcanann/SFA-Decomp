@@ -64,8 +64,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule00 = Resource_Acquire(0x1a, 2);
         }
-        return gPartfxResourceModule00->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule00->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId > 0x257 && state.effectId < 0x2bc) {
         gPartfxResourceTimeouts[1] = 2000;
@@ -73,8 +73,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule01 = Resource_Acquire(0x1b, 2);
         }
-        return gPartfxResourceModule01->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule01->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId > 0x1f3 && state.effectId < 0x258) {
         gPartfxResourceTimeouts[2] = 2000;
@@ -82,8 +82,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule02 = Resource_Acquire(0x1c, 2);
         }
-        return gPartfxResourceModule02->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule02->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId > 0x18f && state.effectId < 0x1f4) {
         gPartfxResourceTimeouts[3] = 2000;
@@ -91,8 +91,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule03 = Resource_Acquire(0x1d, 2);
         }
-        return gPartfxResourceModule03->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule03->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId > 0xc7 && state.effectId < 0x12c) {
         gPartfxResourceTimeouts[4] = 2000;
@@ -100,8 +100,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule04 = Resource_Acquire(0x1e, 2);
         }
-        return gPartfxResourceModule04->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule04->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId > 0x419 && state.effectId < 0x44c) {
         gPartfxResourceTimeouts[5] = 2000;
@@ -109,8 +109,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule05 = Resource_Acquire(0x1f, 2);
         }
-        return gPartfxResourceModule05->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule05->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId > 0x739 && state.effectId < 0x76c) {
         gPartfxResourceTimeouts[16] = 2000;
@@ -118,8 +118,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule16 = Resource_Acquire(0x2a, 2);
         }
-        return gPartfxResourceModule16->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule16->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId - 0x84U <= 1 || state.effectId > 0x89 && state.effectId < 200) {
         gPartfxResourceTimeouts[6] = 2000;
@@ -127,8 +127,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule06 = Resource_Acquire(0x20, 2);
         }
-        return gPartfxResourceModule06->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule06->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId > 0x3b5 && state.effectId < 0x3de) {
         gPartfxResourceTimeouts[8] = 2000;
@@ -136,8 +136,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule08 = Resource_Acquire(0x22, 2);
         }
-        return gPartfxResourceModule08->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule08->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId > 0x351 && state.effectId < 0x384) {
         gPartfxResourceTimeouts[7] = 2000;
@@ -145,8 +145,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule07 = Resource_Acquire(0x21, 2);
         }
-        return gPartfxResourceModule07->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule07->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId > 0x329 && state.effectId < 0x351) {
         gPartfxResourceTimeouts[9] = 2000;
@@ -154,8 +154,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule09 = Resource_Acquire(0x23, 2);
         }
-        return gPartfxResourceModule09->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule09->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId > 0x12b && state.effectId < 0x190) {
         gPartfxResourceTimeouts[10] = 2000;
@@ -163,8 +163,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule10 = Resource_Acquire(0x24, 2);
         }
-        return gPartfxResourceModule10->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule10->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId > 0x47d && state.effectId < 0x4b0) {
         gPartfxResourceTimeouts[11] = 2000;
@@ -172,8 +172,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule11 = Resource_Acquire(0x25, 2);
         }
-        return gPartfxResourceModule11->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule11->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId > 0x4af && state.effectId < 0x4e2) {
         gPartfxResourceTimeouts[12] = 2000;
@@ -181,8 +181,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule12 = Resource_Acquire(0x27, 2);
         }
-        return gPartfxResourceModule12->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule12->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId >= 0x3e8 && state.effectId <= 0x419) {
         gPartfxResourceTimeouts[13] = 2000;
@@ -190,8 +190,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule13 = Resource_Acquire(0x28, 2);
         }
-        return gPartfxResourceModule13->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule13->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId > 0x44b && state.effectId < 0x47e) {
         gPartfxResourceTimeouts[14] = 2000;
@@ -199,8 +199,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule14 = Resource_Acquire(0x26, 2);
         }
-        return gPartfxResourceModule14->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule14->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId >= 0x6d7 && state.effectId <= 0x707) {
         gPartfxResourceTimeouts[15] = 2000;
@@ -208,8 +208,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule15 = Resource_Acquire(0x29, 2);
         }
-        return gPartfxResourceModule15->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule15->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId >= 0x708 && state.effectId <= 0x739) {
         gPartfxResourceTimeouts[17] = 2000;
@@ -217,8 +217,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule17 = Resource_Acquire(0x2b, 2);
         }
-        return gPartfxResourceModule17->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule17->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId >= 0x76c && state.effectId <= 0x79d) {
         gPartfxResourceTimeouts[18] = 2000;
@@ -226,8 +226,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule18 = Resource_Acquire(0x2c, 2);
         }
-        return gPartfxResourceModule18->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule18->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     if (state.effectId >= 0x79e && state.effectId <= 0x833) {
         gPartfxResourceTimeouts[19] = 2000;
@@ -235,8 +235,8 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule19 = Resource_Acquire(0x2d, 2);
         }
-        return gPartfxResourceModule19->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
-                                                            extraArgs);
+        return gPartfxResourceModule19->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags,
+                                                            sourceParam, extraArgs);
     }
     gPartfxSpawnAnimPhase0 += 0.001f;
     if (gPartfxSpawnAnimPhase0 > 1.0f) {
@@ -2303,7 +2303,7 @@ int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.velocityY = 0.05f;
         cfg.scale = 0.005f;
         if (extraArgs != NULL) {
-            cfg.lifetimeFrames = (s32)*(f32*)extraArgs;
+            cfg.lifetimeFrames = (s32) * (f32*)extraArgs;
         } else {
             cfg.lifetimeFrames = 0x78;
         }

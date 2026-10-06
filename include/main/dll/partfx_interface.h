@@ -16,15 +16,13 @@ typedef enum PartfxFlags {
     PARTFXFLAG_200000 = 0x200000
 } PartfxFlags;
 
-
 /* Shared SRT layout. Effect IDs may interpret the rotation halfwords or
  * scale/position values as particle-specific parameters. */
 typedef MatrixTransform PartFxSpawnParams;
 
-
 /* The optional data packet is effect-specific (colors, velocity, alpha or variant). */
-typedef int (*PartFxSpawnEffectFn)(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams,
-                                  int spawnFlags, s8 sourceParam, void* extraArgs);
+typedef int (*PartFxSpawnEffectFn)(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, int spawnFlags,
+                                   s8 sourceParam, void* extraArgs);
 typedef void (*PartFxOnMapSetupFn)(void);
 typedef void (*PartFxUpdateFrameStateFn)(int unused);
 

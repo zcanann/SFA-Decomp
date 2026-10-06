@@ -877,8 +877,7 @@ void iceBaddie_updateControlEffects(GameObject* obj, GroundBaddieState* state) {
     if ((controlAddress->effectFlags & ICEBADDIE_FX_PUFF) != 0 &&
         (state->configFlags & 0x40) == 0) {
         (*gPartfxInterface)
-            ->spawnEffect(obj, ICEBADDIE_PARTICLE_PUFF, &controlAddress->particleTransform, 0x200001, -1,
-                          particleArgs);
+            ->spawnEffect(obj, ICEBADDIE_PARTICLE_PUFF, &controlAddress->particleTransform, 0x200001, -1, particleArgs);
     }
     if ((controlAddress->effectFlags & ICEBADDIE_FX_IMPACT) != 0) {
         CameraShake_Enable();
@@ -930,11 +929,13 @@ void iceBaddie_updateEffectAnchors(GameObject* obj, GroundBaddieState* state) {
         scale = state->baddie.animSpeedA;
     }
     if (state->baddie.controlMode != 4) {
-        ObjPath_GetPointWorldPosition(obj, 2, &control->particleTransform.position[0], &control->particleTransform.position[1],
-                                      &control->particleTransform.position[2], 0);
+        ObjPath_GetPointWorldPosition(obj, 2, &control->particleTransform.position[0],
+                                      &control->particleTransform.position[1], &control->particleTransform.position[2],
+                                      0);
     } else {
-        ObjPath_GetPointWorldPosition(obj, 0, &control->particleTransform.position[0], &control->particleTransform.position[1],
-                                      &control->particleTransform.position[2], 0);
+        ObjPath_GetPointWorldPosition(obj, 0, &control->particleTransform.position[0],
+                                      &control->particleTransform.position[1], &control->particleTransform.position[2],
+                                      0);
     }
     control->particleTransform.position[1] = 8.0f + obj->anim.localPosY;
     angle = (3.1415927f * (f32) * (s16*)obj) / 32768.0f;

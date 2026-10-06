@@ -189,16 +189,16 @@ void MagicDust_update(GameObject* obj) {
             state->flags |= MAGICGEM_FLAG_AMBIENT_FX;
             fxVariant = '\0';
             (*gPartfxInterface)
-                ->spawnEffect(obj, state->ambientEffectId, NULL, MAGICGEM_AMBIENT_FX_MODE,
-                              MAGICGEM_PARTFX_MODEL_NONE, &fxVariant);
+                ->spawnEffect(obj, state->ambientEffectId, NULL, MAGICGEM_AMBIENT_FX_MODE, MAGICGEM_PARTFX_MODEL_NONE,
+                              &fxVariant);
             fxVariant = '\x01';
             (*gPartfxInterface)
-                ->spawnEffect(obj, state->ambientEffectId, NULL, MAGICGEM_AMBIENT_FX_MODE,
-                              MAGICGEM_PARTFX_MODEL_NONE, &fxVariant);
+                ->spawnEffect(obj, state->ambientEffectId, NULL, MAGICGEM_AMBIENT_FX_MODE, MAGICGEM_PARTFX_MODEL_NONE,
+                              &fxVariant);
             fxVariant = '\x02';
             (*gPartfxInterface)
-                ->spawnEffect(obj, state->ambientEffectId, NULL, MAGICGEM_AMBIENT_FX_MODE,
-                              MAGICGEM_PARTFX_MODEL_NONE, &fxVariant);
+                ->spawnEffect(obj, state->ambientEffectId, NULL, MAGICGEM_AMBIENT_FX_MODE, MAGICGEM_PARTFX_MODEL_NONE,
+                              &fxVariant);
         }
     } else if (getXZDistanceSquared(&obj->anim.worldPosX, &player->anim.worldPosX) >= MAGICGEM_ACTIVATE_DIST_SQ) {
         state->flags &= ~MAGICGEM_FLAG_AMBIENT_FX;
@@ -240,11 +240,11 @@ void MagicDust_update(GameObject* obj) {
             }
             if (obj->anim.parent == NULL) {
                 (*gPartfxInterface)
-                    ->spawnEffect(obj, state->burstEffectId, NULL, MAGICGEM_BURST_FX_MODE,
-                                  MAGICGEM_PARTFX_MODEL_NONE, NULL);
+                    ->spawnEffect(obj, state->burstEffectId, NULL, MAGICGEM_BURST_FX_MODE, MAGICGEM_PARTFX_MODEL_NONE,
+                                  NULL);
                 (*gPartfxInterface)
-                    ->spawnEffect(obj, state->burstEffectId, NULL, MAGICGEM_BURST_FX_MODE,
-                                  MAGICGEM_PARTFX_MODEL_NONE, NULL);
+                    ->spawnEffect(obj, state->burstEffectId, NULL, MAGICGEM_BURST_FX_MODE, MAGICGEM_PARTFX_MODEL_NONE,
+                                  NULL);
             }
         } else if ((flags & MAGICGEM_FLAG_BURST2) != 0) {
             if (state->burstTimer <= MAGICGEM_ZERO) {

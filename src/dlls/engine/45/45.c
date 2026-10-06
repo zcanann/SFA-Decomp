@@ -31,8 +31,8 @@ ObjectDescriptor6 Effect20_funcs = {
     (ObjectDescriptorCallback)Effect20_updateFrameState,
 };
 
-int Effect20_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                         f32* extraArgs) {
+int Effect20_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                         s8 sourceParam, f32* extraArgs) {
     int ret;
     int intVal;
     int variant;

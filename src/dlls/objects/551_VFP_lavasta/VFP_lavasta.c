@@ -93,8 +93,7 @@ void VFP_lavastar_update(GameObject* obj)
     }
     if (state->particleToggle == 0)
     {
-        (*gPartfxInterface)->spawnEffect(
-            (void*)obj, VFP_LAVASTAR_PARTFX, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect((void*)obj, VFP_LAVASTAR_PARTFX, NULL, 2, -1, NULL);
     }
     state->particleToggle ^= 1;
 }

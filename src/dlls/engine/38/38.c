@@ -10,7 +10,8 @@
 
 WaterfxCfg gEffect13DefaultSplashParams;
 
-int Effect13_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam) {
+int Effect13_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                         s8 sourceParam) {
     int spawnResult;
     PartFxSpawn cfg;
 

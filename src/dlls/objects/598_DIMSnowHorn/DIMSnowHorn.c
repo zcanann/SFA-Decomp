@@ -913,8 +913,7 @@ void DIMSnowHorn1_spawnFootstepEffects(GameObject* obj, DIMSnowHorn1State* point
 
             count = (u8)randomGetRange(2, 6);
             while (count != 0) {
-                (*gPartfxInterface)
-                    ->spawnEffect(obj, randomGetRange(0, 1) + 0x1f9, &args, 0x10001, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, randomGetRange(0, 1) + 0x1f9, &args, 0x10001, -1, NULL);
                 count--;
             }
 

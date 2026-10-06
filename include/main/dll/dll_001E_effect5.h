@@ -13,8 +13,8 @@ enum {
 void Effect5_func03_nop(void);
 void Effect5_release(void);
 void Effect5_initialise(void);
-int Effect5_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                        s16* extraArgs);
+int Effect5_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                        s8 sourceParam, s16* extraArgs);
 void Effect5_updateFrameState(void);
 
 #endif /* MAIN_DLL_DLL_001E_EFFECT5_H_ */

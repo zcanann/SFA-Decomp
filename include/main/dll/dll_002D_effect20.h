@@ -6,8 +6,8 @@
 #include "main/dll/partfx_interface.h"
 #include "global.h"
 
-int Effect20_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
-                         f32* extraArgs);
+int Effect20_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                         s8 sourceParam, f32* extraArgs);
 void Effect20_updateFrameState(void);
 void Effect20_func03_nop(void);
 void Effect20_release(void);
