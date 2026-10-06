@@ -5,7 +5,7 @@
 #include "main/dll/obj_collision_state.h"
 
 #define OBJ_COLLISION_MAX_HEIGHT_HITS 0x23
-#define OBJ_COLLISION_SURFACE_WATER 0x0e
+#define OBJ_COLLISION_SURFACE_WATER   0x0e
 
 typedef struct ObjCollisionInterface {
     u32 reserved;
@@ -47,11 +47,12 @@ TrackGroundHit* ObjCollision_QueryHeightHits(GameObject* obj, f32 x, f32 z, u32*
 void ObjCollision_Resolve(GameObject* curveObj, ObjCollisionState* state, f32 step);
 void ObjCollision_GatherTrackTriangles(GameObject* obj, ObjCollisionState* state);
 void ObjCollision_UpdateQueryBounds(GameObject* obj, ObjCollisionState* state, f32 step);
-void ObjCollision_SetSegments(ObjCollisionState* state, int count, f32* segmentLocalPoints, f32* radii, const s8* types);
+void ObjCollision_SetSegments(ObjCollisionState* state, int count, f32* segmentLocalPoints, f32* radii,
+                              const s8* types);
 void ObjCollision_SetLocalPointsEx(ObjCollisionState* state, int pointCount, f32* localPointPositions,
-                                     f32* localPointRadii, int primaryHitType, int secondaryHitType);
+                                   f32* localPointRadii, int primaryHitType, int secondaryHitType);
 void ObjCollision_SetLocalPoints(ObjCollisionState* state, int pointCount, f32* localPointPositions,
-                                   f32* localPointRadii, int primaryHitType);
+                                 f32* localPointRadii, int primaryHitType);
 void ObjCollision_Init(ObjCollisionState* state, int updateMode, u32 flags, int subtype);
 void ObjCollision_Initialise(void);
 void ObjCollision_Release(void);

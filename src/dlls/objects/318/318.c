@@ -284,7 +284,8 @@ void DIMBossIceSmash_init(GameObject* obj, DimBossIceSmashPlacement* placement) 
     if ((placement->flags & DIM_BOSS_ICE_SMASH_PLACEMENT_PATH_CONTROL) != 0) {
         (*gObjCollisionInterface)->init(&state->path, 0, DIM_BOSS_ICE_SMASH_PATH_INIT_FLAGS, 1);
         (*gObjCollisionInterface)
-            ->setSegments(&state->path, 1, gDIMBossIceSmashTerrainPoint, &gDIMBossIceSmashCollisionSetup.radius, pathParams);
+            ->setSegments(&state->path, 1, gDIMBossIceSmashTerrainPoint, &gDIMBossIceSmashCollisionSetup.radius,
+                          pathParams);
         (*gObjCollisionInterface)->reset(obj, &state->path);
     }
 }

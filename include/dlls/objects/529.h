@@ -15,7 +15,7 @@ typedef struct WcHitBits {
 } WcHitBits;
 
 typedef struct WmwallcrawlerState {
-    ObjCollisionState pathState; /* 0x000: ObjCollisionInterface state block */
+    ObjCollisionState pathState;    /* 0x000: ObjCollisionInterface state block */
     f32 triggerRadius;              /* 0x268: aggro radius, from placement; rescaled after each dive */
     f32 fleeChaseThreshold;         /* 0x26C: distance threshold; >thr+eps -> CHASE, <thr -> FLEE drains lifeTimer */
     f32 homeX;                      /* 0x270: home position, from placement */

@@ -611,8 +611,7 @@ extern ResourceDescriptor Effect9_funcs, Effect10_funcs, Effect11_funcs, Effect1
     Effect15_funcs, Effect13_funcs;
 extern ResourceDescriptor Effect17_funcs, Effect18_funcs, Effect19_funcs, Effect20_funcs, Checkpoint_funcs,
     screenTransition_funcs, Dummy04_funcs;
-extern ResourceDescriptor UIController_funcs, Dummy12_funcs, RomCurve_funcs, SaveGame_funcs,
-    screens_funcs;
+extern ResourceDescriptor UIController_funcs, Dummy12_funcs, RomCurve_funcs, SaveGame_funcs, screens_funcs;
 extern ResourceDescriptor Dummy30_funcs;
 extern ResourceDescriptor TitleScreenInit_funcs, n_rareware_funcs, n_attractmode_funcs, SaveSelectScreen_funcs,
     EnterSaveNameScreen_funcs, OptionsScreen_funcs, WeirdUnusedMenu_funcs, Dummy39_funcs;

@@ -999,7 +999,8 @@ void DR_EarthWarrior_init(GameObject* obj, DREarthWarriorPlacement* def) {
     state->baddie.gravity = 0.17f;
     pathState = &state->baddie.objectCollision;
     (*gObjCollisionInterface)->init(pathState, 0, 0x48683, 1);
-    (*gObjCollisionInterface)->setSegments(pathState, 4, base->segmentLocalPoints, base->segmentRadii, queryTypes.types);
+    (*gObjCollisionInterface)
+        ->setSegments(pathState, 4, base->segmentLocalPoints, base->segmentRadii, queryTypes.types);
     (*gObjCollisionInterface)->setLocalPoints(pathState, 1, base->localPointPositions, base->localPointRadii, 8);
     pathState->activeTimer = 0x28;
     (*gObjCollisionInterface)->reset(obj, pathState);

@@ -462,7 +462,8 @@ void ObjCollision_ResolveWaterFloorCeiling(GameObject* obj, ObjCollisionState* c
     zero = 0.0f;
     one = OBJ_COLLISION_ONE;
     for (; seg < 1; seg++) {
-        points = ObjCollision_QueryHeightHits(obj, collision->points[0][0], collision->points[0][2], (u32*)&hitCount, 0);
+        points =
+            ObjCollision_QueryHeightHits(obj, collision->points[0][0], collision->points[0][2], (u32*)&hitCount, 0);
         collision->waterY[0] = topSentinel;
         collision->floorY[0] = topSentinel;
         collision->ceilingY[0] = floorSentinel;
@@ -669,14 +670,15 @@ void ObjCollision_PreparePointCollisionFrame(GameObject* obj, ObjCollisionState*
             }
             for (iv[1] = 0; iv[1] < ((int)collision->pointCounts >> OBJ_COLLISION_POINT_COUNT_SEGMENT_SHIFT); iv[1]++) {
                 collision->traceStart[iv[1]][0] = collision->points[iv[1]][0];
-                collision->traceStart[iv[1]][1] =
-                    OBJ_COLLISION_TRACE_RADIUS_OFFSET + (collision->points[iv[1]][1] + collision->segmentHits.radii[iv[1]]);
+                collision->traceStart[iv[1]][1] = OBJ_COLLISION_TRACE_RADIUS_OFFSET +
+                                                  (collision->points[iv[1]][1] + collision->segmentHits.radii[iv[1]]);
                 collision->traceStart[iv[1]][2] = collision->points[iv[1]][2];
             }
         }
         if (obj->anim.classId == 1) {
             collision->traceStart[2][0] = collision->points[2][0] = obj->anim.worldPosX;
-            collision->traceStart[2][1] = collision->points[2][1] = OBJ_COLLISION_FALLBACK_TRACE_HEIGHT + obj->anim.worldPosY;
+            collision->traceStart[2][1] = collision->points[2][1] =
+                OBJ_COLLISION_FALLBACK_TRACE_HEIGHT + obj->anim.worldPosY;
             collision->traceStart[2][2] = collision->points[2][2] = obj->anim.worldPosZ;
         }
         collision->surfaceFlags = 0;
@@ -709,8 +711,7 @@ void ObjCollision_UpdateLocalPointTransforms(GameObject* obj, ObjCollisionState*
     f32 matrix[16];
 
     flags = collision->flags;
-    if (((s32)(flags & OBJ_COLLISION_STATE_ACTIVE) != 0) &&
-        ((s32)(flags & OBJ_COLLISION_STATE_LOCAL_POINTS) != 0)) {
+    if (((s32)(flags & OBJ_COLLISION_STATE_ACTIVE) != 0) && ((s32)(flags & OBJ_COLLISION_STATE_LOCAL_POINTS) != 0)) {
         transform.rotX = obj->anim.rotX;
         if ((s32)(flags & OBJ_COLLISION_STATE_X_ROTATION_ONLY) != 0) {
             transform.rotY = 0;
@@ -761,8 +762,7 @@ void ObjCollision_Reset(GameObject* obj, ObjCollisionState* collision) {
 
     ObjCollision_PreparePointCollisionFrame(obj, collision);
     flags = collision->flags;
-    if (((s32)(flags & OBJ_COLLISION_STATE_ACTIVE) != 0) &&
-        ((s32)(flags & OBJ_COLLISION_STATE_LOCAL_POINTS) != 0)) {
+    if (((s32)(flags & OBJ_COLLISION_STATE_ACTIVE) != 0) && ((s32)(flags & OBJ_COLLISION_STATE_LOCAL_POINTS) != 0)) {
         transform.rotX = obj->anim.rotX;
         if ((s32)(flags & OBJ_COLLISION_STATE_X_ROTATION_ONLY) != 0) {
             transform.rotY = 0;
@@ -832,7 +832,8 @@ TrackGroundHit* ObjCollision_QueryHeightHits(GameObject* obj, f32 x, f32 z, u32*
 
     if (obj != sObjCollisionCachedHeightObject) {
         sObjCollisionCachedHeightObject = obj;
-        sObjCollisionCachedHeightCount = trackGetHeight(obj, x, obj->anim.worldPosY, z, &hitPoints, queryAll != 0 ? 1 : -2, 0);
+        sObjCollisionCachedHeightCount =
+            trackGetHeight(obj, x, obj->anim.worldPosY, z, &hitPoints, queryAll != 0 ? 1 : -2, 0);
         if (OBJ_COLLISION_MAX_HEIGHT_HITS < sObjCollisionCachedHeightCount) {
             sObjCollisionCachedHeightCount = OBJ_COLLISION_MAX_HEIGHT_HITS;
         }
@@ -1340,7 +1341,7 @@ void ObjCollision_UpdateQueryBounds(GameObject* obj, ObjCollisionState* state, f
     }
 }
 void ObjCollision_SetSegments(ObjCollisionState* state, int count, f32* segmentLocalPoints, f32* radii,
-                                const s8* types) {
+                              const s8* types) {
     int i;
 
     state->pointCounts &= OBJ_COLLISION_POINT_COUNT_LOCAL_MASK;
@@ -1355,7 +1356,7 @@ void ObjCollision_SetSegments(ObjCollisionState* state, int count, f32* segmentL
 }
 
 void ObjCollision_SetLocalPointsEx(ObjCollisionState* state, int pointCount, f32* localPointPositions,
-                                     f32* localPointRadii, int primaryHitType, int secondaryHitType) {
+                                   f32* localPointRadii, int primaryHitType, int secondaryHitType) {
     state->pointCounts &= OBJ_COLLISION_POINT_COUNT_SEGMENT_MASK;
     state->pointCounts = (u8)(state->pointCounts | (pointCount & OBJ_COLLISION_POINT_COUNT_LOCAL_MASK));
     state->primaryHitType = primaryHitType;
@@ -1367,7 +1368,7 @@ void ObjCollision_SetLocalPointsEx(ObjCollisionState* state, int pointCount, f32
 }
 
 void ObjCollision_SetLocalPoints(ObjCollisionState* state, int pointCount, f32* localPointPositions,
-                                   f32* localPointRadii, int primaryHitType) {
+                                 f32* localPointRadii, int primaryHitType) {
     state->pointCounts &= OBJ_COLLISION_POINT_COUNT_SEGMENT_MASK;
     state->pointCounts = (u8)(state->pointCounts | (pointCount & OBJ_COLLISION_POINT_COUNT_LOCAL_MASK));
     state->primaryHitType = primaryHitType;

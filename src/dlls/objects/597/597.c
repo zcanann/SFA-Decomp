@@ -1954,7 +1954,7 @@ void SnowBike_init(GameObject* obj, SnowBikePlacement* params, int flag) {
         ->setSegments(pathState, 4, &pathSetup[0]->terrainPoints[0].x, pathSetup[0]->terrainRadii, segmentTypes.types);
     if (state->flags.cpuDriven && state->collisionHitType != -1) {
         ObjCollision_SetLocalPointsEx(pathState, 1, &pathSetup[0]->collisionPoint.x, &gSnowBikeCollisionRadius, 8,
-                                        state->collisionHitType);
+                                      state->collisionHitType);
     } else {
         (*gObjCollisionInterface)
             ->setLocalPoints(pathState, 1, &pathSetup[0]->collisionPoint.x, &gSnowBikeCollisionRadius, 8);

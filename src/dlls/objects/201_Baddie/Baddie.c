@@ -2510,10 +2510,14 @@ void enemy_init(GameObject* obj, u8* setup, int flag) {
         }
         (*gObjCollisionInterface)->init(&enemyState->objectCollision, 0, 422, 1);
         if ((enemyState->flags2E4 & 8) != 0) {
-            (*gObjCollisionInterface)->setLocalPoints(&enemyState->objectCollision, 1, gBaddieLocalCollisionPoint, &gBaddieLocalCollisionRadius, 4);
+            (*gObjCollisionInterface)
+                ->setLocalPoints(&enemyState->objectCollision, 1, gBaddieLocalCollisionPoint,
+                                 &gBaddieLocalCollisionRadius, 4);
         }
         if ((enemyState->flags2E4 & 4) != 0) {
-            (*gObjCollisionInterface)->setSegments(&enemyState->objectCollision, 1, gBaddieTerrainCollisionPoint, &gBaddieTerrainCollisionRadius, &gBaddieTerrainCollisionSetup.queryType);
+            (*gObjCollisionInterface)
+                ->setSegments(&enemyState->objectCollision, 1, gBaddieTerrainCollisionPoint,
+                              &gBaddieTerrainCollisionRadius, &gBaddieTerrainCollisionSetup.queryType);
         }
         (*gObjCollisionInterface)->reset(obj, &enemyState->objectCollision);
         if ((enemyState->flags2E4 & 0xc) != 0) {

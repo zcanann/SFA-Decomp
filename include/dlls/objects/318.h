@@ -61,7 +61,7 @@ typedef struct DimBossIceSmashPlacement {
 
 /* DIMBossIceSmash_getExtraSize proves the complete 0x2A0-byte allocation. */
 typedef struct DimBossIceSmashState {
-    ObjCollisionState path; /* 0x000 */
+    ObjCollisionState path;    /* 0x000 */
     u8 pad268[4];              /* 0x268 */
     f32 spawnScaleX;           /* 0x26C */
     f32 spawnScaleY;           /* 0x270 */

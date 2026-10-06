@@ -663,7 +663,8 @@ void collectible_init(GameObject* obj, CollectibleSetup* setup) {
             break;
         }
         (*gObjCollisionInterface)->init(&state->pathState, 0, COLLECTIBLE_PATH_CONFIG, 1);
-        (*gObjCollisionInterface)->setSegments(&state->pathState, 1, sCollectibleTerrainPoint, &pathSetup.radius, (s8*)&pathControlByte);
+        (*gObjCollisionInterface)
+            ->setSegments(&state->pathState, 1, sCollectibleTerrainPoint, &pathSetup.radius, (s8*)&pathControlByte);
         (*gObjCollisionInterface)->reset(obj, &state->pathState);
     }
 }

@@ -55,7 +55,7 @@ typedef struct CollectibleState {
     f32 lifetimeTimer;              /* 0x44 */
     s16 pickupMsgValue;             /* 0x48 */
     u8 pad4A[6];                    /* 0x4A */
-    ObjCollisionState pathState; /* 0x50 */
+    ObjCollisionState pathState;    /* 0x50 */
 } CollectibleState;
 
 STATIC_ASSERT(offsetof(CollectibleState, playerDistance) == 0x0);

@@ -223,8 +223,7 @@ typedef struct EnemyState {
 
 STATIC_ASSERT(sizeof(EnemyState) == 0x370);
 STATIC_ASSERT(offsetof(EnemyState, objectCollision) == 0x004);
-STATIC_ASSERT(offsetof(EnemyState, eyeAnimState) ==
-              offsetof(EnemyState, objectCollision) + OBJ_COLLISION_STATE_SIZE);
+STATIC_ASSERT(offsetof(EnemyState, eyeAnimState) == offsetof(EnemyState, objectCollision) + OBJ_COLLISION_STATE_SIZE);
 STATIC_ASSERT(offsetof(EnemyState, flags) == 0x004);
 STATIC_ASSERT(offsetof(EnemyState, prevLookDirX) == 0x2C4);
 STATIC_ASSERT(offsetof(EnemyState, spawnRotY) == 0x19C);

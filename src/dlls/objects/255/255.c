@@ -422,7 +422,8 @@ void MagicDust_init(GameObject* obj, CollectibleSetup* placement) {
     if ((obj->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0) {
         (*gObjCollisionInterface)->init(&state->path, 0, MAGICGEM_PATH_FLAGS, 0);
         (*gObjCollisionInterface)
-            ->setSegments(&state->path, MAGICGEM_PATH_POINT_COUNT, sMagicGemTerrainPoint, &state->collectRadius, pathParams);
+            ->setSegments(&state->path, MAGICGEM_PATH_POINT_COUNT, sMagicGemTerrainPoint, &state->collectRadius,
+                          pathParams);
         (*gObjCollisionInterface)->reset(obj, &state->path);
     }
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;

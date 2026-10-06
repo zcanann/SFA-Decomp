@@ -1133,7 +1133,7 @@ void SHthorntail_init(GameObject* obj, const SHthorntailPlacement* placement) {
     (*gObjCollisionInterface)->init(pathState, SHTHORNTAIL_PATH_CONTROL_MODE, SHTHORNTAIL_PATH_CONTROL_FLAGS, 0);
     (*gObjCollisionInterface)
         ->setSegments(pathState, SHTHORNTAIL_PATH_POINT_COUNT, &gSHthorntailPathPoints[0].x, gSHthorntailPathRadii,
-                pathSourceTypes.values);
+                      pathSourceTypes.values);
     (*gObjCollisionInterface)->reset(obj, pathState);
     obj->animEventCallback = SHthorntail_animEventCallback;
     dll_2E_initState(obj, &runtime->moveLib, SHTHORNTAIL_LOOK_AT_MIN_YAW, SHTHORNTAIL_LOOK_AT_MAX_YAW,

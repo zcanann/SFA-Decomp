@@ -49,7 +49,7 @@ typedef struct TumbleweedPlacement {
 } TumbleweedPlacement;
 
 typedef struct TumbleweedState {
-    ObjCollisionState pathState; /* 0x000 */
+    ObjCollisionState pathState;    /* 0x000 */
     u16 distToTarget;               /* 0x268 */
     u16 triggerRange;               /* 0x26A */
     f32 targetScale;                /* 0x26C */

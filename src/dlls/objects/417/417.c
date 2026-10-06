@@ -805,8 +805,8 @@ void NW_mammoth_init(GameObject* obj, NwMammothPlacement* placement, int isReloa
         ObjCollisionState* path = &state->pathState;
         (*gObjCollisionInterface)->init(path, 3, 2, 1);
         (*gObjCollisionInterface)
-            ->setSegments(path, NW_MAMMOTH_PATH_SETUP_POINT_COUNT, gNwMammothPathSetupDataA, (f32*)gNwMammothPathSetupDataB,
-                    pathParam.values);
+            ->setSegments(path, NW_MAMMOTH_PATH_SETUP_POINT_COUNT, gNwMammothPathSetupDataA,
+                          (f32*)gNwMammothPathSetupDataB, pathParam.values);
         (*gObjCollisionInterface)->reset(obj, path);
     }
     objAddObjectType(obj, NW_MAMMOTH_GROUP_ID);

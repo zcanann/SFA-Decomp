@@ -193,8 +193,7 @@ typedef struct BaddieState {
 
 STATIC_ASSERT(sizeof(BaddieState) == 0x35C);
 STATIC_ASSERT(offsetof(BaddieState, objectCollision) == 0x004);
-STATIC_ASSERT(offsetof(BaddieState, unk26C) ==
-              offsetof(BaddieState, objectCollision) + OBJ_COLLISION_STATE_SIZE);
+STATIC_ASSERT(offsetof(BaddieState, unk26C) == offsetof(BaddieState, objectCollision) + OBJ_COLLISION_STATE_SIZE);
 STATIC_ASSERT(offsetof(BaddieState, controlMode) == 0x274);
 STATIC_ASSERT(offsetof(BaddieState, moveJustStartedB) == 0x27B);
 STATIC_ASSERT(offsetof(BaddieState, trackedObj) == 0x29C);

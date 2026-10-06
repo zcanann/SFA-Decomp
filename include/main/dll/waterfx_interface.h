@@ -5,8 +5,8 @@
 #include "main/dll/obj_collision_state.h"
 
 typedef void (*WaterfxRunFrameFn)(int frames);
-typedef void (*WaterfxImpactSurfaceFn)(u8* objHeader, u16 limbMask, f32* impactPositions,
-                                       ObjCollisionState* collision, f32 speed);
+typedef void (*WaterfxImpactSurfaceFn)(u8* objHeader, u16 limbMask, f32* impactPositions, ObjCollisionState* collision,
+                                       f32 speed);
 typedef void (*WaterfxRenderFn)(int renderPass, int flags);
 typedef void (*WaterfxSpawnSplashBurstFn)(void* sourceObject, f32 x, f32 y, f32 z,
                                           f32 radius);

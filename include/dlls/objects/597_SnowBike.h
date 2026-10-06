@@ -79,7 +79,7 @@ typedef struct SnowBikeState {
     f32 prevPosX;                   /* 0x16c */
     f32 prevPosY;                   /* 0x170 */
     f32 prevPosZ;                   /* 0x174 */
-    ObjCollisionState pathState; /* 0x178 */
+    ObjCollisionState pathState;    /* 0x178 */
     f32 impactVelScale;             /* 0x3e0 */
     f32 impactTimer;                /* 0x3e4 */
     f32 attachPosX;                 /* 0x3e8: rider attach point in world space */

@@ -85,18 +85,21 @@ void DR_CloudRunner_setupPath(GameObject* obj, CloudRunnerState* state, int mode
         (*gObjCollisionInterface)->init(pathState, 0, 0x42087, 0);
         (*gObjCollisionInterface)
             ->setLocalPoints(pathState, 1, &base->pathCollisionA.x, &gDRCloudRunnerMode1LocalRadius, 8);
-        (*gObjCollisionInterface)->setSegments(pathState, 1, &base->pathPointsA.x, &gDRCloudRunnerMode1SegmentRadius, stk);
+        (*gObjCollisionInterface)
+            ->setSegments(pathState, 1, &base->pathPointsA.x, &gDRCloudRunnerMode1SegmentRadius, stk);
     } else if (moveMode == 2) {
         (*gObjCollisionInterface)->init(pathState, 3, 0x42087, 0);
         /* The second radius reads the following mode-0 segment-radius word. */
         (*gObjCollisionInterface)
             ->setLocalPoints(pathState, 2, &base->pathCollisionB.x, &gDRCloudRunnerMode2LocalRadius, 8);
-        (*gObjCollisionInterface)->setSegments(pathState, 1, &base->pathPointsB.x, &gDRCloudRunnerMode2SegmentRadius, stk);
+        (*gObjCollisionInterface)
+            ->setSegments(pathState, 1, &base->pathPointsB.x, &gDRCloudRunnerMode2SegmentRadius, stk);
     } else if (moveMode == 0) {
         (*gObjCollisionInterface)->init(pathState, 3, 0x42087, 0);
         (*gObjCollisionInterface)
             ->setLocalPoints(pathState, 2, &base->pathCollisionC.x, gDRCloudRunnerMode0LocalRadii, 8);
-        (*gObjCollisionInterface)->setSegments(pathState, 1, &base->pathPointsC.x, gDRCloudRunnerMode0SegmentRadii, stk);
+        (*gObjCollisionInterface)
+            ->setSegments(pathState, 1, &base->pathPointsC.x, gDRCloudRunnerMode0SegmentRadii, stk);
     }
     (*gObjCollisionInterface)->reset(obj, pathState);
 }
