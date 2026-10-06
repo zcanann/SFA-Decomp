@@ -5,6 +5,10 @@
 
 struct GameObject;
 
+void Sfx_ClearLoopedObjectSounds(void);
+void Sfx_UpdateLoopedObjectSounds(void);
+void Sfx_KeepAliveLoopedObjectSound(struct GameObject* obj, u16 sfxId);
+void Sfx_KeepAliveLoopedObjectSoundLimited(struct GameObject* obj, u16 sfxId, u16 limit);
 void Sfx_AddLoopedObjectSound(struct GameObject* obj, u16 sfxId);
 void Sfx_RemoveLoopedObjectSound(struct GameObject* obj, u16 sfxId);
 void Sfx_RemoveLoopedObjectSoundForObject(struct GameObject* obj);

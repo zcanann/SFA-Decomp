@@ -12,10 +12,6 @@
 #define AUDIO_ARQ_REQUEST_COUNT               16
 #define MUSIC_CHANNEL_COUNT                   16
 #define SFX_OBJECT_CHANNEL_COUNT              56
-#define SFX_LOOPED_OBJECT_TABLE_OBJECT_COLUMN (offsetof(SfxLoopedObjectSoundTable, objects) / sizeof(GameObject*))
-#define SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE    1
-#define SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN     2
-#define SFX_LOOPED_OBJECT_STOP_FLAG           0x40
 
 #define STREAM_FADEBITS_FLAGA_SHIFT   6
 #define STREAM_FADEBITS_FLAGB_SHIFT   4
@@ -41,26 +37,6 @@ typedef struct AudioArqRequestEntry {
 } AudioArqRequestEntry;
 
 STATIC_ASSERT(sizeof(AudioArqRequestEntry) == 0x30);
-
-typedef struct AudioDvdStreamContext {
-    DVDCommandBlock preparedCommand;
-    DVDCommandBlock stopAtEndCommand;
-    DVDFileInfo fileInfo;
-    u8 pad9C[4];
-} AudioDvdStreamContext;
-
-STATIC_ASSERT(sizeof(AudioDvdStreamContext) == 0xA0);
-STATIC_ASSERT(offsetof(AudioDvdStreamContext, preparedCommand) == 0x00);
-STATIC_ASSERT(offsetof(AudioDvdStreamContext, stopAtEndCommand) == 0x30);
-STATIC_ASSERT(offsetof(AudioDvdStreamContext, fileInfo) == 0x60);
-
-typedef struct AudioDvdStreamStorage {
-    DVDCommandBlock currentCommand;
-    AudioDvdStreamContext prepared;
-} AudioDvdStreamStorage;
-
-STATIC_ASSERT(sizeof(AudioDvdStreamStorage) == 0xD0);
-STATIC_ASSERT(offsetof(AudioDvdStreamStorage, prepared) == 0x30);
 
 typedef struct MusicTrackSlot {
     s16 id;
@@ -99,12 +75,6 @@ typedef struct MusicTrigger {
 } MusicTrigger;
 
 STATIC_ASSERT(sizeof(MusicTrigger) == 0x10);
-
-typedef struct SfxLoopedObjectSoundTable {
-    u8 flags[0x80];
-    u16 ids[0x80];
-    GameObject* objects[0x80];
-} SfxLoopedObjectSoundTable;
 
 typedef struct SfxObjectChannel {
     u32 handle;
@@ -175,10 +145,6 @@ typedef struct SfxTriggerCacheEntry {
     u16 index;
 } SfxTriggerCacheEntry;
 
-extern u8 gSfxLoopedObjectSoundFlags[0x80];
-extern u16 gSfxLoopedObjectSoundIds[0x80];
-extern GameObject* gSfxLoopedObjectSoundObjects[0x80];
-extern u16 gSfxLoopedObjectSoundCount;
 extern SfxObjectChannel gSfxObjectChannels[];
 extern u8 gSfxGlobalReverbLevel;
 extern u32 gSfxObjectChannelMatchCount;
@@ -207,9 +173,6 @@ extern s32 gAudioStreamPreparingId;
 extern s32 gAudioStreamPreparedId;
 extern f32 gAudioStreamEndPos;
 extern f32 gAudioStreamPos;
-extern DVDCommandBlock gAudioStreamDvdBlockCurrent;
-extern AudioDvdStreamContext gAudioStreamDvdBlockPrepared;
-extern char sDvdCancelStreamWarning[];
 extern volatile int gAudioArqRequestDone;
 extern int gAudioArqRequestIndex;
 extern AudioArqRequestEntry gAudioArqRequests[];
@@ -248,7 +211,6 @@ extern char sMusicTriggersLoadedCallbackLoadError[];
 extern char sStreamsLoadedCallbackLoadError[];
 extern StreamEntry* gStreamsData;
 extern int gStreamsCount;
-extern int gAudioStreamFadeTable[];
 extern MusicTrigger* gMusicTriggersData;
 extern int gMusicTriggersCount;
 extern s8 gAudioSoundMode;

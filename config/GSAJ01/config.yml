@@ -278,10 +278,6 @@ force_active:
   # dlls/objects/597/597.c
   # SnowBike reads these gamebit pairs through the path-setup table base.
   - gSnowBikeRaceGameBits
-  # main/audio_stream.c
-  # The looped-sound arrays are reached through the flags-array base.
-  - gSfxLoopedObjectSoundIds
-  - gSfxLoopedObjectSoundObjects
   # main/boot_logo.c
   # GPU diagnostics address these strings through offsets from the texture base.
   - sGpuHangSuspectedMessage

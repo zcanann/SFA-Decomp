@@ -887,6 +887,7 @@ dolphin/vi/vi.c
 main/asset_load.c
 main/audio.c
 main/audio_sfx.c
+main/audio_looped_sfx.c
 main/audio_stream.c
 main/boot_logo.c
 main/camera.c

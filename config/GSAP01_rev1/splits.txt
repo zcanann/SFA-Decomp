@@ -47,12 +47,17 @@ main/audio_sfx.c:
 	.sdata2     start:0x803DFF30 end:0x803DFF90
 
 main/audio_stream.c:
-	.text       start:0x8000CE74 end:0x8000DD94
+	.text       start:0x8000CE74 end:0x8000D748
 	.data       start:0x802C6738 end:0x802C6780
-	.bss        start:0x803385A0 end:0x803389F0
+	.bss        start:0x803385A0 end:0x8033866C
 	.sdata      start:0x803DCBB0 end:0x803DCBC0
-	.sbss       start:0x803DE208 end:0x803DE23A
+	.sbss       start:0x803DE208 end:0x803DE238
 	.sdata2     start:0x803DFF90 end:0x803DFFAC
+
+main/audio_looped_sfx.c:
+	.text       start:0x8000D748 end:0x8000DD94
+	.bss        start:0x80338670 end:0x803389F0
+	.sbss       start:0x803DE238 end:0x803DE23A
 
 main/camera.c:
 	.text       start:0x8000DD94 end:0x8000FEAC
