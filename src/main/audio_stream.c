@@ -65,13 +65,10 @@ DVDCommandBlock gAudioStreamStopAtEndCommand;
 DVDCommandBlock gAudioStreamPreparedCommand;
 DVDCommandBlock gAudioStreamDvdBlockCurrent;
 
-void AudioStream_PlayAddrCallback(u32 result)
-{
-    if ((result & 0xff) == 0)
-    {
+void AudioStream_PlayAddrCallback(u32 result) {
+    if ((result & 0xff) == 0) {
         gAudioStreamPlaying = 0;
-        if (gAudioStreamCurrentId != 0)
-        {
+        if (gAudioStreamCurrentId != 0) {
             AISetStreamVolLeft(0);
             AISetStreamVolRight(0);
             gAudioStreamCurrentId = 0;
@@ -114,8 +111,7 @@ static void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo) {
     gAudioStreamDvdState = 0;
 }
 
-void AudioStream_Init(void)
-{
+void AudioStream_Init(void) {
     AISetStreamVolLeft(0);
     AISetStreamVolRight(0);
     gAudioStreamCurrentId = 0;
@@ -125,27 +121,21 @@ void AudioStream_Init(void)
     gAudioStreamStartWhenPrepared = 0;
 }
 
-void AudioStream_SetDefaultVolume(volume)
-u8 volume;
+void AudioStream_SetDefaultVolume(volume) u8 volume;
 {
     gAudioStreamDefaultVolume = volume;
 }
 
-void AudioStream_UpdateFadeTimer(void)
-{
-    if (gAudioStreamCurrentId != 0)
-    {
+void AudioStream_UpdateFadeTimer(void) {
+    if (gAudioStreamCurrentId != 0) {
         f32 position = gAudioStreamPos;
         gAudioStreamPos = position + (timeDelta / gAudioStreamFramesPerSecond);
-    }
-    else
-    {
+    } else {
         gAudioStreamPos = 0.0f;
     }
 }
 
-int AudioStream_Play(int id, void (*preparedCallback)(void))
-{
+int AudioStream_Play(int id, void (*preparedCallback)(void)) {
     char path[64];
     u8 vol;
     int* fadeTable;
@@ -160,53 +150,42 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     count = gStreamsCount;
     slot = -1;
 
-    if (id == 1228)
-    {
+    if (id == 1228) {
         return 0;
     }
-    if (id == 1318)
-    {
+    if (id == 1318) {
         Music_Trigger(MUSICTRIG_drako_3, 0);
         Music_Trigger(MUSICTRIG_TTH_Night, 1);
     }
-    if ((int)audioIsChannelUnavailable(8) != 0)
-    {
+    if ((int)audioIsChannelUnavailable(8) != 0) {
         return 0;
     }
 
-    for (i = count; i != 0; i--)
-    {
-        if (s->id == id)
-        {
+    for (i = count; i != 0; i--) {
+        if (s->id == id) {
             slot = (s - gStreamsData) + 1;
             break;
         }
         s++;
     }
 
-    if (slot == -1)
-    {
+    if (slot == -1) {
         return 0;
     }
-    if (gAudioStreamDvdState != 0)
-    {
+    if (gAudioStreamDvdState != 0) {
         return 0;
     }
     gAudioStreamDvdState = 0;
 
-    if (concatThreeStrings(path, (void*)0x40, sAudioStreamDirectory, s->name, sAdpExtension) != 0)
-    {
-        if (DVDOpen(path, &gAudioStreamFile) == 0)
-        {
+    if (concatThreeStrings(path, (void*)0x40, sAudioStreamDirectory, s->name, sAdpExtension) != 0) {
+        if (DVDOpen(path, &gAudioStreamFile) == 0) {
             return 0;
         }
 
-        if (gAudioStreamCurrentId != 0)
-        {
+        if (gAudioStreamCurrentId != 0) {
             AISetStreamVolLeft(0);
             AISetStreamVolRight(0);
-            if (DVDCancelStreamAsync(&gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
-            {
+            if (DVDCancelStreamAsync(&gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0) {
                 OSReport(sDvdCancelStreamWarning);
                 gAudioStreamPlaying = 0;
             }
@@ -217,44 +196,36 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
             gAudioActiveChannelMask = 0;
             gAudioStreamMusicFadeFlagB = 0;
             gAudioStreamMusicFadeFlagA = 0;
-        }
-        else
-        {
+        } else {
             gAudioStreamPlaying = 0;
         }
 
         gAudioStreamEndPos = (f32)(u32)s->lengthRaw / 100.0f;
-        if (gAudioStreamEndPos == 0.0f)
-        {
+        if (gAudioStreamEndPos == 0.0f) {
             gAudioStreamEndPos = gAudioStreamEndPosInfinite;
         }
 
         gAudioStreamMusicFadeFlagA = fadeTable[s->fadeModeA] == 0 ? 0 : 1;
         gAudioStreamMusicFadeFlagB = fadeTable[s->fadeModeB] == 0 ? 0 : 1;
-        if (s->stopObjectSounds)
-        {
+        if (s->stopObjectSounds) {
             Sfx_StopAllObjectSounds();
         }
         gAudioActiveChannelMask = s->fullVolume ? 4 : 0;
 
         stopped = 0;
-        while (gAudioStreamPlaying != 0)
-        {
+        while (gAudioStreamPlaying != 0) {
             padUpdate();
             checkReset();
-            if (stopped)
-            {
+            if (stopped) {
                 mmFreeTick(0);
                 waitNextFrame();
             }
             dvdCheckError();
-            if (stopped)
-            {
+            if (stopped) {
                 gameTextRun();
                 GXFlush_(1, 0);
             }
-            if (gDvdErrorPauseActive != 0)
-            {
+            if (gDvdErrorPauseActive != 0) {
                 stopped = 1;
                 gAudioStreamPlaying = 0;
             }
@@ -275,18 +246,12 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     return 0;
 }
 
-void AudioStream_StartPrepared(void)
-{
-    if (gAudioStreamPreparingId != 0)
-    {
+void AudioStream_StartPrepared(void) {
+    if (gAudioStreamPreparingId != 0) {
         gAudioStreamStartWhenPrepared = 1;
-    }
-    else if (gAudioStreamPreparedId != 0)
-    {
-        if (getGameState() == 1)
-        {
-            if (getGameState() == 1)
-            {
+    } else if (gAudioStreamPreparedId != 0) {
+        if (getGameState() == 1) {
+            if (getGameState() == 1) {
                 AISetStreamVolLeft(gAudioStreamVolumeLeft);
                 AISetStreamVolRight(gAudioStreamVolumeRight);
                 AISetStreamPlayState(AI_STREAM_START);
@@ -296,15 +261,11 @@ void AudioStream_StartPrepared(void)
                 gAudioStreamPreparedId = 0;
                 gAudioStreamPreparingId = 0;
                 gAudioStreamStartWhenPrepared = 0;
-            }
-            else
-            {
+            } else {
                 gAudioStreamPlaying = 0;
             }
         }
-    }
-    else if (gAudioStreamCurrentId == 0)
-    {
+    } else if (gAudioStreamCurrentId == 0) {
         gAudioStreamMusicFadeFlagB = 0;
         gAudioStreamMusicFadeFlagA = 0;
         gAudioStreamStartWhenPrepared = 0;
@@ -312,13 +273,10 @@ void AudioStream_StartPrepared(void)
     }
 }
 
-void AudioStream_CancelPrepared(void)
-{
+void AudioStream_CancelPrepared(void) {
     AISetStreamVolLeft(0);
     AISetStreamVolRight(0);
-    if (DVDCancelStreamAsync(&gAudioStreamPreparedCommand,
-                             AudioStream_CancelPreparedCallback) == 0)
-    {
+    if (DVDCancelStreamAsync(&gAudioStreamPreparedCommand, AudioStream_CancelPreparedCallback) == 0) {
         OSReport(sDvdCancelStreamWarning);
     }
     gAudioStreamPreparedId = 0;
@@ -330,21 +288,17 @@ void AudioStream_CancelPrepared(void)
     gAudioStreamMusicFadeFlagA = 0;
 }
 
-static void AudioStream_CancelPreparedCallback(s32 result, DVDCommandBlock* block)
-{
+static void AudioStream_CancelPreparedCallback(s32 result, DVDCommandBlock* block) {
     (void)result;
     (void)block;
     gAudioStreamDvdState = 0;
 }
 
-void AudioStream_StopCurrent(void)
-{
-    if (gAudioStreamCurrentId != 0)
-    {
+void AudioStream_StopCurrent(void) {
+    if (gAudioStreamCurrentId != 0) {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync(&gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
-        {
+        if (DVDCancelStreamAsync(&gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0) {
             OSReport(sDvdCancelStreamWarning);
             gAudioStreamPlaying = 0;
         }
@@ -355,26 +309,21 @@ void AudioStream_StopCurrent(void)
         gAudioActiveChannelMask = 0;
         gAudioStreamMusicFadeFlagB = 0;
         gAudioStreamMusicFadeFlagA = 0;
-    }
-    else
-    {
+    } else {
         gAudioStreamPlaying = 0;
     }
 }
 
-static void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block)
-{
+static void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block) {
     (void)block;
-    if (result == 0)
-    {
+    if (result == 0) {
         AISetStreamPlayState(AI_STREAM_STOP);
     }
     gAudioActiveChannelMask = 0;
     gAudioStreamPlaying = 0;
 }
 
-void AudioStream_SetVolume(volume)
-u8 volume;
+void AudioStream_SetVolume(volume) u8 volume;
 {
     gAudioStreamVolumeLeft = volume;
     gAudioStreamVolumeRight = volume;
@@ -382,47 +331,36 @@ u8 volume;
     AISetStreamVolRight(volume);
 }
 
-u8 AudioStream_IsPreparing(void)
-{
+u8 AudioStream_IsPreparing(void) {
     return gAudioStreamDvdState;
 }
 
-s32 AudioStream_GetCurrentId(void)
-{
+s32 AudioStream_GetCurrentId(void) {
     return gAudioStreamCurrentId;
 }
 
-u32 AudioStream_GetMusicFadeFlagB(void)
-{
-    if (gAudioStreamPos > gAudioStreamEndPos)
-    {
+u32 AudioStream_GetMusicFadeFlagB(void) {
+    if (gAudioStreamPos > gAudioStreamEndPos) {
         return 0;
     }
     return gAudioStreamMusicFadeFlagB;
 }
 
-u32 AudioStream_GetMusicFadeFlagA(void)
-{
-    if (gAudioStreamPos > gAudioStreamEndPos)
-    {
+u32 AudioStream_GetMusicFadeFlagA(void) {
+    if (gAudioStreamPos > gAudioStreamEndPos) {
         return 0;
     }
     return gAudioStreamMusicFadeFlagA;
 }
 
-void AudioStream_Nop(int unused)
-{
+void AudioStream_Nop(int unused) {
 }
 
-void AudioStream_StopAll(void)
-{
-    if (gAudioStreamDvdState != 0)
-    {
+void AudioStream_StopAll(void) {
+    if (gAudioStreamDvdState != 0) {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync(&gAudioStreamPreparedCommand,
-                                 AudioStream_CancelPreparedCallback) == 0)
-        {
+        if (DVDCancelStreamAsync(&gAudioStreamPreparedCommand, AudioStream_CancelPreparedCallback) == 0) {
             OSReport(sDvdCancelStreamWarning);
         }
         gAudioStreamPreparedId = 0;
@@ -434,18 +372,14 @@ void AudioStream_StopAll(void)
         gAudioStreamMusicFadeFlagA = 0;
     }
 
-    if (gAudioStreamCurrentId != 0)
-    {
+    if (gAudioStreamCurrentId != 0) {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync(&gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
-        {
+        if (DVDCancelStreamAsync(&gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0) {
             OSReport(sDvdCancelStreamWarning);
             gAudioStreamPlaying = 0;
         }
-    }
-    else
-    {
+    } else {
         gAudioStreamPlaying = 0;
     }
 
