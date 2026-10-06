@@ -65,38 +65,38 @@ u16 gModelMorphChunkVertexLimit = 0x2A0;
 #define MODEL_MORPH_HAS_X             0x2000
 #define MODEL_MORPH_HAS_Y             0x4000
 #define MODEL_MORPH_HAS_Z             0x8000
-void* animLoadFromTable(u8* hdr, int idx, int a, ObjAnimCachedMove* b);
-#define MODEL_LOAD_INITIAL_MOVE(SLOT)                                                                                  \
-    {                                                                                                                  \
-        int animationId;                                                                                               \
-        u32 cacheAddress;                                                                                              \
-        int animationOffset;                                                                                           \
-        int unusedSize;                                                                                                \
-        int animationBytes;                                                                                            \
-        ObjAnimMoveData* animation;                                                                                    \
-                                                                                                                       \
-        cacheAddress = (u32)(SLOT);                                                                                    \
-        animationId = ((ModelFileHeader*)hdr)->cachedAnimIds[0];                                                       \
-        if ((getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) == 0 || ((ModelFileHeader*)hdr)->modelId == 1 ||      \
-            ((ModelFileHeader*)hdr)->modelId == 3) {                                                                   \
-            if (cacheAddress == 0) {                                                                                   \
-                if (ModelList_getHeader(gModelAnimCacheList, animationId, &animation) == 0) {                          \
-                    animationOffset = gModelAnimDataOffsetTable[animationId];                                          \
-                    loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, animationOffset, 0, &animationBytes,          \
-                                              animationId, 1);                                                         \
-                    animation = mmAlloc(animationBytes, 10, 0);                                                        \
-                    loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, animation, animationOffset, animationBytes,      \
-                                              &unusedSize, animationId, 0);                                            \
-                    animation->refCount = 1;                                                                           \
-                    modelInitModelList(gModelAnimCacheList, animationId, &animation);                                  \
-                } else {                                                                                               \
-                    animation->refCount += 1;                                                                          \
-                }                                                                                                      \
-            } else {                                                                                                   \
-                animLoadFromTable(hdr, animationId, 0, (ObjAnimCachedMove*)cacheAddress);                              \
-            }                                                                                                          \
-        }                                                                                                              \
+void* animLoadFromTable(ModelFileHeader* file, int idx, int a, ObjAnimCachedMove* b);
+static inline void modelLoadInitialMove(ModelFileHeader* file, ObjAnimCachedMove* cache) {
+    ObjAnimCachedMove* cachedMove;
+    int animationOffset;
+    int animationId;
+    ObjAnimMoveData* animation;
+    int animationBytes;
+    int unusedSize;
+
+    cachedMove = cache;
+    animationId = file->cachedAnimIds[0];
+    if ((getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) == 0 || file->modelId == 1 ||
+        file->modelId == 3) {
+        if (cachedMove == NULL) {
+            if (ModelList_getHeader(gModelAnimCacheList, animationId, &animation) == 0) {
+                animationOffset = gModelAnimDataOffsetTable[animationId];
+                loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, animationOffset, 0, &animationBytes,
+                                          animationId, 1);
+                animation = mmAlloc(animationBytes, 10, 0);
+                loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, animation, animationOffset, animationBytes,
+                                          &unusedSize, animationId, 0);
+                animation->refCount = 1;
+                modelInitModelList(gModelAnimCacheList, animationId, &animation);
+            } else {
+                animation->refCount += 1;
+            }
+        } else {
+            animLoadFromTable(file, animationId, 0, cachedMove);
+        }
     }
+}
+
 extern s16 gModelJointScratchBuffer[0xa0];
 #define BLENDTBL_ENTRY(FIELD, OFF)                                                                                     \
     if (poseAdjustments->FIELD != 0) {                                                                                 \
@@ -507,10 +507,9 @@ void* ObjAnim_LoadCachedMove(int animId, int moveIndex, ObjAnimCachedMove* cache
     return out;
 }
 
-void modelAnimResetState(void* m, void* data) {
-    ObjAnimState* channel = data;
-    u8* hdr;
-    u8* mdl;
+void modelAnimResetState(ObjModel* model, ObjAnimState* channel) {
+    ModelFileHeader* file;
+    ObjAnimMoveData* move;
     f32 f;
 
     channel->moveCacheSlot = 0;
@@ -523,20 +522,20 @@ void modelAnimResetState(void* m, void* data) {
     channel->framePhase = f;
     channel->frameLength = f;
     channel->frameType = 0;
-    hdr = *(u8**)m;
-    if (((ModelFileHeader*)hdr)->animationCount != 0) {
-        if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_CACHED_ANIMATIONS) {
-            MODEL_LOAD_INITIAL_MOVE(channel->moveCache[0])
-            MODEL_LOAD_INITIAL_MOVE(channel->moveCache[1])
-            MODEL_LOAD_INITIAL_MOVE(channel->blendMoveCache[0])
-            MODEL_LOAD_INITIAL_MOVE(channel->blendMoveCache[1])
+    file = model->file;
+    if (file->animationCount != 0) {
+        if (file->flags & MODEL_FLAG_CACHED_ANIMATIONS) {
+            modelLoadInitialMove(file, channel->moveCache[0]);
+            modelLoadInitialMove(file, channel->moveCache[1]);
+            modelLoadInitialMove(file, channel->blendMoveCache[0]);
+            modelLoadInitialMove(file, channel->blendMoveCache[1]);
             channel->moveCacheSlot = 0;
-            mdl = (u8*)&channel->moveCache[channel->moveCacheSlot]->moveData;
+            move = &channel->moveCache[channel->moveCacheSlot]->moveData;
         } else {
-            mdl = (u8*)((ModelFileHeader*)hdr)->moveData[channel->moveCacheSlot];
+            move = file->moveData[channel->moveCacheSlot];
         }
-        channel->moveFrameData = (ObjAnimFrameHeader*)((ObjAnimMoveData*)mdl)->frameCommands;
-        channel->frameType = (s8)(*(u8*)(mdl + 1) & 0xf0);
+        channel->moveFrameData = (ObjAnimFrameHeader*)move->frameCommands;
+        channel->frameType = (s8)((u8)move->frameControl & 0xf0);
         channel->frameLength = (f32)channel->moveFrameData->frameCount;
         if (channel->frameType == 0) {
             channel->frameLength -= 1.0f;
@@ -1836,7 +1835,7 @@ void ObjModel_SampleJointTransform(ObjModel* model, int animState, int frameSour
     outPos[2] *= rootMotionScale;
 }
 
-void* animLoadFromTable(u8* hdr, int id, int idx, ObjAnimCachedMove* out) {
+void* animLoadFromTable(ModelFileHeader* file, int id, int idx, ObjAnimCachedMove* out) {
     int size;
     int flags;
     int out2;
@@ -1849,17 +1848,17 @@ void* animLoadFromTable(u8* hdr, int id, int idx, ObjAnimCachedMove* out) {
         loadAndDecompressDataFile(MLDF_FILEID_PREANIM_BIN, 0, flags, 0, &size, id, 1);
         buf = (u8*)&out->moveData;
         loadAndDecompressDataFile(MLDF_FILEID_PREANIM_BIN, buf, flags, size, &out2, id, 0);
-        stride = ((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8;
+        stride = ((file->jointCount - 1) & ~7) + 8;
         fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, out->jointMatrixSlots,
-                               ((ModelFileHeader*)hdr)->animationDataFileOffset + idx * stride, stride);
+                               file->animationDataFileOffset + idx * stride, stride);
     } else {
         flags = gModelAnimDataOffsetTable[id];
         loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, flags, 0, &size, id, 1);
         buf = (u8*)&out->moveData;
         loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, buf, flags, size, &out2, id, 0);
-        stride = ((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8;
+        stride = ((file->jointCount - 1) & ~7) + 8;
         fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, out->jointMatrixSlots,
-                               ((ModelFileHeader*)hdr)->animationDataFileOffset + idx * stride, stride);
+                               file->animationDataFileOffset + idx * stride, stride);
     }
     return buf;
 }
@@ -1890,7 +1889,7 @@ void* loadAnimation(ModelFileHeader* file, s16 animationId, int moveIndex, ObjAn
         }
         return animation;
     }
-    return animLoadFromTable((u8*)file, animationId, (s16)moveIndex, cachedMove);
+    return animLoadFromTable(file, animationId, (s16)moveIndex, cachedMove);
 }
 
 ModelCollisionTriangle* modelFileGetCollisionTriangle(ModelFileHeader* modelFile, int index) {
@@ -2301,32 +2300,32 @@ void ObjModel_TouchModelCache(void) {
     }
 }
 
-void ObjModel_Release(u8* model) {
-    u8* header;
-    int z[2];
-    if (((ObjModel*)model)->bufferFlags & OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED) {
-        ((ObjModel*)model)->bufferFlags &= ~OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
-        z[0] = 0;
-        for (z[1] = z[0]; z[0] < ((ObjModel*)model)->file->renderOpCount; z[1] += 0xc, z[0]++) {
-            ShaderDef_free((void**)&((ObjModel*)model)->textureRefs[z[0]]);
+void ObjModel_Release(ObjModel* model) {
+    ModelFileHeader* file;
+    int counters[2];
+    if (model->bufferFlags & OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED) {
+        model->bufferFlags &= ~OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
+        counters[0] = 0;
+        for (counters[1] = counters[0]; counters[0] < model->file->renderOpCount; counters[1] += sizeof(ModelRenderOpTextureRefs), counters[0]++) {
+            ShaderDef_free((void**)&model->textureRefs[counters[0]]);
         }
     }
-    header = (u8*)((ObjModel*)model)->file;
-    if (((ObjModel*)model)->renderAttachment != NULL) {
-        mm_free(((ObjModel*)model)->renderAttachment);
+    file = model->file;
+    if (model->renderAttachment != NULL) {
+        mm_free(model->renderAttachment);
     }
-    if (--((ModelFileHeader*)header)->refCount == 0) {
-        model_adjustModelList(gModelList, ((ModelFileHeader*)header)->modelId); /* modelId */
-        z[0] = 0;
-        for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->textureCount; z[1] += sizeof(ModelTextureEntry), z[0]++) {
+    if (--file->refCount == 0) {
+        model_adjustModelList(gModelList, file->modelId);
+        counters[0] = 0;
+        for (counters[1] = counters[0]; counters[0] < file->textureCount; counters[1] += sizeof(ModelTextureEntry), counters[0]++) {
             textureFree((Texture*)(textureIdxToPtr(
-                ((ModelTextureEntry*)((u8*)((ModelFileHeader*)header)->textureEntries + z[1]))->reference)));
+                ((ModelTextureEntry*)((u8*)file->textureEntries + counters[1]))->reference)));
         }
-        if (((ModelFileHeader*)header)->moveData != NULL && ((ModelFileHeader*)header)->animationCount != 0) {
-            z[0] = 0;
-            for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->animationCount; z[1] += 4, z[0]++) {
+        if (file->moveData != NULL && file->animationCount != 0) {
+            counters[0] = 0;
+            for (counters[1] = counters[0]; counters[0] < file->animationCount; counters[1] += sizeof(ObjAnimMoveData*), counters[0]++) {
                 int idx;
-                ObjAnimMoveData* animation = *(ObjAnimMoveData**)((u8*)((ModelFileHeader*)header)->moveData + z[1]);
+                ObjAnimMoveData* animation = *(ObjAnimMoveData**)((u8*)file->moveData + counters[1]);
                 if (animation != NULL && (s8)--animation->refCount <= 0) {
                     model_findIdxInModelList(gModelAnimCacheList, &animation, &idx);
                     model_adjustModelList(gModelAnimCacheList, idx);
@@ -2334,7 +2333,7 @@ void ObjModel_Release(u8* model) {
                 }
             }
         }
-        mm_free(header);
+        mm_free(file);
     }
 }
 

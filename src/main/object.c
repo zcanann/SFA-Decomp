@@ -869,7 +869,7 @@ static void objFreeObjdef(u8* obj, int flag) {
     modelCount = ((ObjAnimComponent*)obj)->modelInstance->modelCount;
     for (j = 0; j < modelCount; j++) {
         if ((int)((ObjAnimComponent*)obj)->banks[j] != 0) {
-            ObjModel_Release((u8*)((ObjAnimComponent*)obj)->banks[j]);
+            ObjModel_Release(((ObjAnimComponent*)obj)->banks[j]);
         }
     }
     if (((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_FROZEN) {

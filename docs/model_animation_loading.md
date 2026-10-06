@@ -189,3 +189,61 @@ The native texture/load probe uses the recovered size-record type at its stub
 boundary and still passes its 945 shader cases and 20 load paths at both
 optimization levels under ASan/UBSan; it does not execute the layout function.
 Formatting is separate and preserves all source object hashes.
+
+## Initial animation state and release (2026-10-06)
+
+`modelAnimResetState` (EN `0x80024EC8`) now takes the canonical model and
+animation-state types. Its four initial-move loads use a typed inline helper
+instead of `MODEL_LOAD_INITIAL_MOVE`, which captured the caller's `hdr` local
+and converted each cache pointer to `u32`. `modelLoadInitialMove` keeps the
+cache pointer intact, and `animLoadFromTable` receives a `ModelFileHeader*`.
+The reset path selects `ObjAnimMoveData` directly and reads its `frameControl`
+field at the evidenced unsigned-byte width before storing the signed high
+nibble in `frameType`.
+
+The helper preserves the two existing paths and their file-lock gate:
+
+| Input | Behavior |
+| --- | --- |
+| Non-null private cache | Load into its `moveData` payload and joint-slot prefix through `animLoadFromTable` |
+| Null cache, shared-resource miss | Query the ANIM size, allocate and decompress it, set reference count one, then insert it in the shared cache |
+| Null cache, shared-resource hit | Increment its reference byte |
+| PI locked, model ID other than 1 or 3 | Skip resource acquisition |
+
+The null-cache branch retains its original acquisition side effects without
+installing a pointer into the caller's slot. The helper returns no value, just
+as the old macro supplied none. This reconstruction does not infer a new
+fallback assignment or fix that path's behavior. Reset still leaves unrelated
+state fields and padding untouched, and only the zero high-nibble frame mode
+subtracts one from the frame count.
+
+`ObjModel_Release` (EN `0x80029368`) now takes an `ObjModel*` and uses its typed
+file owner. It releases per-instance shader references and the render attachment
+before decrementing the shared file reference. Only the last file reference
+releases model textures, shared move resources and the file itself. Move-pointer
+table traversal now uses `sizeof(ObjAnimMoveData*)`; the target stride stays
+four bytes and native pointers are no longer traversed with a four-byte stride.
+The function does not free the instance allocation. The signed test of a
+decremented animation reference byte is retained, including its wraparound
+behavior. Its existing two-element loop-counter local remains: scalar and
+direct-index rewrites changed the exact retail register flow.
+
+`python3 tools/test_model_animation_lifecycle.py` executes the production helper,
+reset and release functions with canonical records and pointers above 4 GiB.
+At both `-O0` and `-O2`, ASan/UBSan checks 216 acquisition cases, 768 reset cases
+and 432 release cases. Spies verify asset/cache call order, all four private
+cache addresses, lock exceptions, null move entries, texture decoding,
+reference counts, and exact release order. Whole-record comparisons verify
+untouched state and header bytes. IO, texture decoding and deallocation are
+stubbed; this is not a complete native game loader. Negative-control builds
+restoring cache-pointer truncation or the four-byte native move-pointer stride
+both fail the probe.
+
+The full model TU stays at 100% in EN, EN rev1, JP, PAL and PAL rev1, including
+the 1,368-byte reset function and 380-byte release function. Only 46 anonymous
+literal symbols are renumbered at unchanged positions; code, section contents
+and normalized relocations are identical. Every other source object is
+byte-identical, including the single shared-consumer edit in `object.c`.
+Full objdiff reports retain only the two existing library accounting exceptions.
+All five full-source builds and strict source-linked retail DOL checks pass;
+the separate formatting change preserves every source object hash.
