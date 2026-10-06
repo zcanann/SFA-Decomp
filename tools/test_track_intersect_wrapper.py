@@ -37,6 +37,7 @@ class IntersectWrapperTests(unittest.TestCase):
         fixture = r'''
 #include <string.h>
 typedef float f32;
+typedef struct Vec { f32 x, y, z; } Vec;
 typedef short s16;
 typedef signed char s8;
 typedef unsigned char u8;
@@ -52,14 +53,14 @@ static int expectedCount, requestedMask, expectedContact, valid, queries, transf
 static TrackHitResults* activeResults;
 #define CHECK(test) (valid &= !!(test))
 
-static int trackGetIntersect2(int mode, void* first, void* last, f32* from, f32* to,
+static int trackGetIntersect2(int mode, void* first, void* last, Vec* from, Vec* to,
                              int count, void* storage, int flags) {
     TrackHitResults* results = storage;
     int i, hits = 0;
     queries++;
     CHECK(mode == 0 && flags == 0 && count == expectedCount);
     CHECK(first == triangles + 1 && last == triangles + 4);
-    CHECK(from == fromPoints && to == toPoints && results == activeResults);
+    CHECK((void*)from == fromPoints && (void*)to == toPoints && results == activeResults);
     CHECK(results->hitCount == 0 && results->hitMask == 0x66);
     for (i = 0; i < 4; i++) {
         CHECK(results->radii[i] == i + 0.5f && results->queryTypes[i] == i + 1);

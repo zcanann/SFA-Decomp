@@ -4,6 +4,7 @@
 #include "types.h"
 #include "game/objects/object.h"
 #include "main/track_hit_results.h"
+#include "main/track_line.h"
 #include "main/model_render_instrs_api.h"
 #include "main/track_dolphin_map_api.h"
 
@@ -71,7 +72,7 @@ void MapBlock_init(struct MapBlockData* block);
 void MapBlock_initHits(struct MapBlockData* block, int index);
 int mapBlockCountTrianglesByType(struct MapBlockData* block, int type);
 int trackGetHeightAboveGround(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int queryMask);
-extern int gIntersectLinePool;
+extern IntersectLine* gIntersectLinePool;
 extern f32* gIntersectPoints;
 
 #endif /* MAIN_TRACK_DOLPHIN_API_H_ */

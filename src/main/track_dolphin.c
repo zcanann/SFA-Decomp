@@ -77,10 +77,10 @@ u8 gIntersectRebuildCooldown;
 u8 gTrackSweepHitCount;
 MapDynamicSlot* gMapDynamicSlots;
 u8 gIntersectLineTableReady;
-u32 gIntersectLineSortOrderBuffer;
-int gIntersectLineIndexTable;
+s16* gIntersectLineSortOrderBuffer;
+s16* gIntersectLineIndexTable;
 f32* gIntersectPoints;
-int gIntersectLinePool;
+IntersectLine* gIntersectLinePool;
 TrackTriangle* gTrackTriangleBuffer;
 
 f32 gTrackCollisionEpsilon = 0.01f;
@@ -383,8 +383,8 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
             start = 0;
             end = gIntersectLineCount;
         }
-        lineIdx = (s16*)gIntersectLineIndexTable;
-        lines = (IntersectLine*)gIntersectLinePool;
+        lineIdx = gIntersectLineIndexTable;
+        lines = gIntersectLinePool;
         points = (Vec*)gIntersectPoints;
     }
 
@@ -822,20 +822,20 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
     f32 localEnd[3];
     GameObject** objects;
     int count;
+    GameObject* parent;
     int i;
-    u32 parentAddress;
 
     gTrackSweepHitCount = 0;
     if (out != NULL) {
         out->surfaceType = -1;
         out->kind = -1;
     }
-    parentAddress = (self != NULL) ? (u32)self->anim.parent : 0;
-    if (parentAddress != 0) {
+    parent = (self != NULL) ? self->anim.parent : NULL;
+    if (parent != NULL) {
         Obj_TransformLocalPointToWorld(startPos[0], startPos[1], startPos[2], &worldStart[0], &worldStart[1],
-                                       &worldStart[2], (GameObject*)parentAddress);
+                                       &worldStart[2], parent);
         Obj_TransformLocalPointToWorld(endPos[0], endPos[1], endPos[2], &worldEnd[0], &worldEnd[1], &worldEnd[2],
-                                       (GameObject*)parentAddress);
+                                       parent);
     } else {
         memcpy(worldStart, startPos, 0xc);
         memcpy(worldEnd, endPos, 0xc);
@@ -899,11 +899,11 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
                                            &localStart[2], target);
         }
         Obj_TransformWorldPointToLocal(worldEnd[0], worldEnd[1], worldEnd[2], &localEnd[0], &localEnd[1], &localEnd[2],
-                                       (GameObject*)(int)target);
+                                       target);
         if (trackSweepCircleAgainstLines(localStart, localEnd, radius, flags, out, target, lineMask, segment,
                                          yTolerance, self) != 0) {
             Obj_TransformLocalPointToWorld(localEnd[0], localEnd[1], localEnd[2], &worldEnd[0], &worldEnd[1],
-                                           &worldEnd[2], (GameObject*)(int)target);
+                                           &worldEnd[2], target);
         }
         if (slot != 0xff) {
             entry = trackAllocDynamicSlot(self, target, slot);
@@ -936,11 +936,11 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
             Obj_TransformLocalPointToWorld(out->lineEndX, out->lineEndY, out->lineEndZ, &out->lineEndX, &out->lineEndY,
                                            &out->lineEndZ, out->object);
         }
-        if (parentAddress != 0) {
+        if (parent != NULL) {
             Obj_TransformWorldPointToLocal(out->lineStartX, out->lineStartY, out->lineStartZ, &out->lineStartX,
-                                           &out->lineStartY, &out->lineStartZ, (GameObject*)parentAddress);
+                                           &out->lineStartY, &out->lineStartZ, parent);
             Obj_TransformWorldPointToLocal(out->lineEndX, out->lineEndY, out->lineEndZ, &out->lineEndX, &out->lineEndY,
-                                           &out->lineEndZ, (GameObject*)parentAddress);
+                                           &out->lineEndZ, parent);
         }
         out->normalX = out->lineEndZ - out->lineStartZ;
         out->normalY = 0.0f;
@@ -957,9 +957,9 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
         out->normalW = -(out->normalX * out->lineStartX + out->normalZ * out->lineStartZ);
     }
     if (gTrackSweepHitCount != 0) {
-        if (parentAddress != 0) {
+        if (parent != NULL) {
             Obj_TransformWorldPointToLocal(worldEnd[0], worldEnd[1], worldEnd[2], &endPos[0], &endPos[1], &endPos[2],
-                                           (GameObject*)parentAddress);
+                                           parent);
         } else {
             memcpy(endPos, worldEnd, 0xc);
         }
@@ -968,7 +968,7 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
 }
 
 static inline IntersectLine* trackGetPooledLine(int index) {
-    return &((IntersectLine*)gIntersectLinePool)[index];
+    return &gIntersectLinePool[index];
 }
 
 void intersectModLineBuild(ObjDef* definition) {
@@ -986,7 +986,7 @@ void intersectModLineBuild(ObjDef* definition) {
     sourceLineCount = definition->modLineCount;
     for (lineIndex = 0, sourceLine = definition->modLines; lineIndex < sourceLineCount; sourceLine++, lineIndex++) {
         if (gIntersectLineCount < INTERSECT_LINE_CAPACITY) {
-            line = (IntersectLine*)((u8*)gIntersectLinePool + gIntersectLineCount * (int)sizeof(IntersectLine));
+            line = &gIntersectLinePool[gIntersectLineCount];
             line->end0 = sourceLine->endpointData[0];
             line->end1 = sourceLine->endpointData[1];
             line->kind = sourceLine->kind;
@@ -1059,7 +1059,7 @@ void intersectModLineBuild(ObjDef* definition) {
         IntersectLine* candidateLines;
         int candidateLineIndex = 0;
         s16 groupIndex;
-        candidateLines = (IntersectLine*)gIntersectLinePool;
+        candidateLines = gIntersectLinePool;
         for (; candidateLineIndex < gIntersectLineCount; candidateLineIndex++) {
             if ((candidateLines[candidateLineIndex].kind & 0x3f) < (candidateLines[bestLineIndex].kind & 0x3f)) {
                 bestLineIndex = candidateLineIndex;
@@ -1105,9 +1105,9 @@ void intersectModLineBuild(ObjDef* definition) {
                 }
             }
         }
-        memcpy(&definition->intersectionLines[index], &((IntersectLine*)gIntersectLinePool)[bestLineIndex],
+        memcpy(&definition->intersectionLines[index], &gIntersectLinePool[bestLineIndex],
                sizeof(IntersectLine));
-        ((IntersectLine*)gIntersectLinePool)[bestLineIndex].kind = 0x14;
+        gIntersectLinePool[bestLineIndex].kind = 0x14;
     }
     if (previousGroup != -1) {
         definition->intersectionSegmentRanges[previousGroup].end = gIntersectLineCount;
@@ -1123,7 +1123,7 @@ static inline void trackSortLineOrder(void) {
     s16 secondLineIndex;
     s16 firstLineIndex;
     s16* sortOrder;
-    IntersectLine* lines;
+    const IntersectLine* lines;
     int sortByteOffset;
 
     sortComplete = 0;
@@ -1133,13 +1133,13 @@ static inline void trackSortLineOrder(void) {
              sortByteOffset += sizeof(s16), sortIndex++) {
             int firstType;
 
-            lines = (IntersectLine*)gIntersectLinePool;
-            sortOrder = (s16*)(gIntersectLineSortOrderBuffer + sortByteOffset);
+            lines = gIntersectLinePool;
+            sortOrder = (s16*)((u8*)gIntersectLineSortOrderBuffer + sortByteOffset);
             firstLineIndex = sortOrder[0];
             firstType = (s8)lines[firstLineIndex].kind & 0x3f;
             if (firstType < ((s8)lines[(secondLineIndex = sortOrder[1])].kind & 0x3f)) {
                 sortOrder[0] = secondLineIndex;
-                *(s16*)(gIntersectLineSortOrderBuffer + sortByteOffset + sizeof(s16)) = firstLineIndex;
+                *(s16*)((u8*)gIntersectLineSortOrderBuffer + sortByteOffset + sizeof(s16)) = firstLineIndex;
                 sortComplete = 0;
             }
         }
@@ -1197,7 +1197,7 @@ void trackIntersect(void) {
                         blockZ = 640.0f * gridZ;
                         if (gIntersectLineCount < INTERSECT_LINE_CAPACITY) {
                             MapHitLine* sourceLine = &blk->hits[sourceIndex];
-                            IntersectLine* rec = (IntersectLine*)(gIntersectLinePool + gIntersectLineCount * 0x10);
+                            IntersectLine* rec = &gIntersectLinePool[gIntersectLineCount];
                             f32 mapOriginX, mapOriginZ;
                             rec->end0 = sourceLine->endpointData[0];
                             rec->end1 = sourceLine->endpointData[1];
@@ -1266,7 +1266,7 @@ void trackIntersect(void) {
 
     if (gIntersectLineSortOrderBuffer != 0) {
         for (i = 0; i < gIntersectLineCount; i++) {
-            *(s16*)(gIntersectLineSortOrderBuffer + i * 2) = i;
+            gIntersectLineSortOrderBuffer[i] = i;
         }
         trackSortLineOrder();
     }
@@ -1279,7 +1279,7 @@ void trackIntersect(void) {
         IntersectLine* line = trackGetPooledLine(i);
         int typeIndex = (line->kind & 0x3f) + 1;
         s16 typeOffset = counts[typeIndex]++;
-        ((s16*)gIntersectLineIndexTable)[typeOffset] = i;
+        gIntersectLineIndexTable[typeOffset] = i;
     }
 
     for (i = 0; i < gIntersectLineCount - 1; i++) {
@@ -1291,7 +1291,7 @@ void trackIntersect(void) {
 
     previousType = -1;
     for (i = 0; i < gIntersectLineCount; i++) {
-        segmentType = (s16)((s8)trackGetPooledLine(((s16*)gIntersectLineIndexTable)[i])->kind & 0x3f);
+        segmentType = (s16)((s8)trackGetPooledLine(gIntersectLineIndexTable[i])->kind & 0x3f);
         if (segmentType >= 0x14) {
             segmentType = 1;
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
@@ -1323,7 +1323,7 @@ void trackSetLinesEnabledByParam(int matchVal, GameObject* obj, int flag) {
         e = mod->intersectionLines;
         count = mod->modLineCount;
     } else {
-        e = (IntersectLine*)gIntersectLinePool;
+        e = gIntersectLinePool;
         count = gIntersectLineCount;
     }
     if (flag != 0) {
@@ -3170,9 +3170,9 @@ void trackInitCollisionBuffers(void) {
     int i;
     if (gTrackTriangleBuffer == NULL) {
         gTrackTriangleBuffer = mmAlloc(TRACK_TRIANGLE_CAPACITY * sizeof(TrackTriangle), 0xffff00ff, 0);
-        gIntersectLinePool = (int)mmAlloc(INTERSECT_LINE_CAPACITY * sizeof(IntersectLine), 0xffff00ff, 0);
+        gIntersectLinePool = mmAlloc(INTERSECT_LINE_CAPACITY * sizeof(IntersectLine), 0xffff00ff, 0);
         gIntersectPoints = mmAlloc(INTERSECT_POINT_CAPACITY * sizeof(Vec), 0xffff00ff, 0);
-        gIntersectLineIndexTable = (int)mmAlloc(INTERSECT_LINE_CAPACITY * sizeof(s16), 0xffff00ff, 0);
+        gIntersectLineIndexTable = mmAlloc(INTERSECT_LINE_CAPACITY * sizeof(s16), 0xffff00ff, 0);
         gMapDynamicSlots = mmAlloc(MAP_DYNAMIC_SLOT_COUNT * sizeof(MapDynamicSlot), 0xffff00ff, 0);
     }
     for (i = 0; i < MAP_DYNAMIC_SLOT_COUNT; i++) {

@@ -10240,8 +10240,8 @@ int playerBuildWallTransitionProbe(GameObject* obj, TrackLineIntersectResult* hi
     f32* b6b8;
     s8 mode;
     int wallHit;
-    int tris;
-    int verts;
+    IntersectLine* lines;
+    f32* points;
     GameObject* parent;
 
     f32 x2;
@@ -10288,11 +10288,11 @@ int playerBuildWallTransitionProbe(GameObject* obj, TrackLineIntersectResult* hi
         int j;
         wallHit = 0;
         if (parent != NULL) {
-            tris = (int)parent->anim.modelInstance->intersectionLines;
-            verts = (int)parent->anim.modelInstance->intersectionPoints;
+            lines = parent->anim.modelInstance->intersectionLines;
+            points = parent->anim.modelInstance->intersectionPoints;
         } else {
-            tris = gIntersectLinePool;
-            verts = (int)gIntersectPoints;
+            lines = gIntersectLinePool;
+            points = gIntersectPoints;
         }
         planes[0].nx = out[9];
         planes[0].ny = 0.0f;
@@ -10315,21 +10315,21 @@ int playerBuildWallTransitionProbe(GameObject* obj, TrackLineIntersectResult* hi
             f32 dot = PSVECDotProduct((Vec*)plane, (Vec*)vec);
             *dp = plane->d + dot;
             if (*dp < thresh + b6b8[1]) {
-                int tri;
+                IntersectLine* line;
                 if (*(s16*)(hitCursor + offsetof(TrackLineIntersectResult, adjacentLine0)) > -1) {
-                    tri = tris + *(s16*)(hitCursor + offsetof(TrackLineIntersectResult, adjacentLine0)) * 0x10;
+                    line = &lines[*(s16*)(hitCursor + offsetof(TrackLineIntersectResult, adjacentLine0))];
                 } else {
-                    tri = 0;
+                    line = NULL;
                 }
-                if ((void*)tri != NULL && ((*(s8*)(tri + 3) & 0x3f) == 5 || (*(s8*)(tri + 3) & 0x3f) == 2)) {
-                    j = *(s16*)(tri + 4);
-                    x1 = *(f32*)(verts + j * 12);
+                if (line != NULL && ((line->kind & 0x3f) == 5 || (line->kind & 0x3f) == 2)) {
+                    j = line->pt[0];
+                    x1 = *(f32*)((u8*)points + j * sizeof(Vec));
                     y1 = 0.0f;
-                    z1 = ((f32*)verts)[j * 3 + 2];
-                    j = *(s16*)(tri + 6);
-                    x2 = *(f32*)(verts + j * 12);
+                    z1 = points[j * 3 + 2];
+                    j = line->pt[1];
+                    x2 = *(f32*)((u8*)points + j * sizeof(Vec));
                     y2 = 0.0f;
-                    z2 = ((f32*)verts)[j * 3 + 2];
+                    z2 = points[j * 3 + 2];
                     if (parent != NULL) {
                         Obj_TransformLocalPointToWorld(x1, y1, z1, &x1, &y1, &z1, parent);
                         Obj_TransformLocalPointToWorld(x2, y2, z2, px2, py2, pz2, parent);
@@ -10445,7 +10445,8 @@ int playerBuildLedgeClimbProbe(int a, int b, void* c, int d, f32* e, f32 distanc
     f32* pbx;
     f32* pby;
     f32* pbz;
-    int tbl1, tbl2;
+    IntersectLine* lines;
+    f32* points;
     GameObject* hit;
     int i;
     int j;
@@ -10461,11 +10462,11 @@ int playerBuildLedgeClimbProbe(int a, int b, void* c, int d, f32* e, f32 distanc
     *(u8*)((char*)d + 0x60) = *(u8*)((char*)c + 0x53);
     hit = *(void**)((char*)c + 0x0);
     if (hit != NULL) {
-        tbl1 = (int)hit->anim.modelInstance->intersectionLines;
-        tbl2 = (int)hit->anim.modelInstance->intersectionPoints;
+        lines = hit->anim.modelInstance->intersectionLines;
+        points = hit->anim.modelInstance->intersectionPoints;
     } else {
-        tbl1 = gIntersectLinePool;
-        tbl2 = (int)gIntersectPoints;
+        lines = gIntersectLinePool;
+        points = gIntersectPoints;
     }
     planes[0].nx = -*(f32*)((char*)d + 0x24);
     planes[0].ny = 0.0f;
@@ -10486,22 +10487,22 @@ int playerBuildLedgeClimbProbe(int a, int b, void* c, int d, f32* e, f32 distanc
     do {
         f32 dot = PSVECDotProduct((Vec*)plane, (Vec*)e);
         if (plane->d + dot < threshold + b6b8[1]) {
-            void* face;
+            IntersectLine* line;
             if (*(s16*)(cp + 0x4c) > -1) {
-                face = (void*)(tbl1 + *(s16*)(cp + 0x4c) * 0x10);
+                line = &lines[*(s16*)(cp + offsetof(TrackLineIntersectResult, adjacentLine0))];
             } else {
-                face = NULL;
+                line = NULL;
             }
-            if (face != NULL &&
-                (((s8) * (s8*)((char*)face + 0x3) & 0x3f) == 6 || ((s8) * (s8*)((char*)face + 0x3) & 0x3f) == 0x10)) {
-                j = *(s16*)((char*)face + 0x4);
-                ax = *(f32*)(tbl2 + j * 12);
+            if (line != NULL &&
+                ((line->kind & 0x3f) == 6 || (line->kind & 0x3f) == 0x10)) {
+                j = line->pt[0];
+                ax = *(f32*)((u8*)points + j * sizeof(Vec));
                 ay = 0.0f;
-                az = ((f32*)tbl2)[j * 3 + 2];
-                j = *(s16*)((char*)face + 0x6);
-                bx = *(f32*)(tbl2 + j * 12);
+                az = points[j * 3 + 2];
+                j = line->pt[1];
+                bx = *(f32*)((u8*)points + j * sizeof(Vec));
                 by = 0.0f;
-                bz = ((f32*)tbl2)[j * 3 + 2];
+                bz = points[j * 3 + 2];
                 if (hit != NULL) {
                     Obj_TransformLocalPointToWorld(ax, ay, az, &ax, &ay, &az, hit);
                     Obj_TransformLocalPointToWorld(bx, by, bz, pbx, pby, pbz, hit);

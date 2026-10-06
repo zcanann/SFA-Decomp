@@ -1,5 +1,69 @@
 # Track model-line ownership
 
+## October 6: Native line storage and query pointers
+
+The shared line pool is now `IntersectLine*`, and both line-index buffers are
+`s16*`. Allocation, map rebuilding, model compaction, sorting, sweeps and line
+enable changes retain these pointers throughout. The two Player probe consumers
+also use `IntersectLine*` and `f32*` for model or map geometry, replacing integer
+addresses and raw line-field offsets. Their surrounding query records and the
+ledge helper's integer parameters are unchanged; this does not establish native
+execution of the complete Player helpers.
+
+`trackGetLineIntersect` retains the query object's parent as `GameObject*` and
+passes target pointers directly to transforms. This removes the pointer-to-32-bit
+integer round trips in both object and parent coordinate conversions. Foxhollow's
+`game/src/main/track_dolphin.c` independently uses typed pool/index pointers and a
+pointer-valued parent in this path. Dinosaur Planet's `src/intersect.c` provides
+related cache/query structure, but its twenty-entry cache is not SFA's proven
+64-entry allocation and scan.
+
+Three source spellings remain significant under the unchanged GC/1.3 profile:
+
+- The sorter's local line view is `const IntersectLine*`: it reads line kinds
+  while modifying the separate order buffer. A mutable view changes global-load
+  ordering and register allocation. The existing byte-offset induction is kept;
+  ordinary indexed sorting also changes register allocation.
+- The query declares its parent pointer before its iteration counter. Reversing
+  those declarations exchanges the two nonvolatile registers.
+- Player's X-coordinate loads retain byte addressing with `sizeof(Vec)`, while
+  Z uses scalar indexing. Indexing both lets MWCC combine the base calculation
+  and replace the required indexed load. Neither form truncates a pointer.
+
+Both complete TUs remain **100% code, data and functions** in EN, EN rev1, JP,
+PAL and PAL rev1: 30 reported functions / 28,092 code bytes / 2,040 data bytes
+for `track_dolphin`, and 233 / 139,108 / 10,168 for Player. Raw section contents,
+named symbol offsets and resolved relocations equal the previous objects; only
+anonymous symbol numbering changes. Every other source object's hash is
+unchanged. Full inventories, including units marked complete, retain only the
+two existing report artifacts (`__exception` vector carving and `sal_volume`
+discarded exception data). All five original hashes are verified, `all_source`
+and strict matching builds pass, and the source-linked DOLs equal those originals.
+No compiler, split, classification or checksum setting changes.
+
+Native checks use production functions and canonical records with pointers above
+4 GiB, at both `-O0` and `-O2` under AddressSanitizer and UndefinedBehaviorSanitizer:
+
+- `python3 tools/test_track_line_storage.py`: 115 scenarios cover allocation and
+  repeated initialization, empty through over-capacity map input, optional stable
+  sorting, point deduplication, line metadata/adjacency, twenty segment ranges,
+  model compaction and line enable flags. Allocation guards remain intact.
+- `python3 tools/test_track_line_query.py`: 864 scenarios cover filtering,
+  parent/object/world conversions, cached coordinates including slot 63, full-cache
+  failure, optional results, normals, height deltas and endpoint updates. Inner
+  sweeps and transforms are controlled services, not tests of collision arithmetic.
+
+Five scratch negative controls reject truncated pool/parent pointers, an
+off-by-one line capacity, reversed sorting and a cache scan that omits slot 63.
+The existing wrapper and ground-query harnesses also pass after repairing stale
+fixture declarations; those repairs pass against the unchanged prior source too.
+
+The model test records an existing retail behavior: adjacency renumbering applies
+ordered label substitutions to both emitted and unconsumed lines, so a previously
+rewritten index can be rewritten again. It is not a simultaneous permutation of
+the original graph. The test oracle composes those substitutions; this recovery
+preserves the exact retail instructions rather than changing that behavior.
+
 ## September 6: Canonical definition and range records
 
 `intersectModLineBuild` receives the `ObjDef` loaded from `OBJECTS.bin` in
