@@ -1812,7 +1812,7 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
     if (modelDef->hitboxStateCount != 0 && modelDef->hitReactStateCount != 0) {
         alignedCursor = roundUpTo4(cursor);
         cursor = (size_t)ObjHitReact_InitState(obj->anim.romDefNo, (ObjAnimBank*)obj->anim.modelBanks[0],
-                                       obj->anim.hitReactState, (u8*)alignedCursor, &obj->anim);
+                                               obj->anim.hitReactState, (u8*)alignedCursor, &obj->anim);
     }
     if (modelDef->hitVolumeCount != 0) {
         obj->anim.hitVolumeBounds = (ObjHitVolumeRuntimeBounds*)roundUpTo4(cursor);
