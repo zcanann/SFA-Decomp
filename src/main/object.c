@@ -899,8 +899,7 @@ static void objFreeObjectInternal(GameObject* obj, int onlySelf) {
         }
         obj->seqIndex = 0xffff;
     }
-    if ((obj->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) &&
-        obj->anim.placementData != NULL) {
+    if ((obj->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) && obj->anim.placementData != NULL) {
         mm_free(obj->anim.placementData);
     }
     mm_free(obj);

@@ -170,7 +170,7 @@ struct ObjSeqState {
     u8 moveBlendParam; /* (cmd>>8)&0xf0; scaled and passed as ObjAnim_SetCurrentMove blend arg */
     u8 texId5;         /* texture id for objFindTexture channel 5 (<<8 into textureId) */
     u8 texId4;         /* texture id for objFindTexture channel 4 (<<8 into textureId) */
-    u8 targetFreed; /* targetObj was cleared by object destruction */
+    u8 targetFreed;    /* targetObj was cleared by object destruction */
     u8 sequenceControlFlags;
     u8 unk91[3];
     u8* cmds;        /* 4-byte command records */
