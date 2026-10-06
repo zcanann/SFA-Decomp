@@ -726,22 +726,20 @@ u32 lbl_8031AF14[8] = {
 };
 
 u8 gHeadDisplayEntryTable[] = {
-    0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1A, 0x01, 0x00, 0x00, 0xF0, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF,
-    0x00, 0x1C, 0x01, 0x00, 0x00, 0xF0, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1D, 0x01, 0x00,
-    0x00, 0xF0, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x02, 0xA3, 0x01, 0x00, 0x00, 0xF0, 0x00, 0x00,
-    0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1E, 0x01, 0x00, 0x00, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x51, 0xC1,
-    0x00, 0x1F, 0x01, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xC2, 0x00, 0x20, 0x01, 0x00,
-    0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xC3, 0x00, 0x2F, 0x01, 0x00, 0x00, 0x96, 0x00, 0x00,
-    0x00, 0x00, 0x51, 0xC4, 0x00, 0x30, 0x01, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB7,
-    0x00, 0x32, 0x03, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB8, 0x00, 0x33, 0x03, 0x00,
-    0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB9, 0x00, 0x39, 0x03, 0x00, 0x00, 0x5A, 0x00, 0x00,
-    0x00, 0x00, 0x51, 0xBA, 0x00, 0x3A, 0x03, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xBB,
-    0x00, 0x3B, 0x03, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB2, 0x00, 0x41, 0x02, 0x00,
-    0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB3, 0x00, 0x44, 0x02, 0x00, 0x00, 0x5A, 0x00, 0x00,
-    0x00, 0x00, 0x51, 0xB4, 0x00, 0x45, 0x02, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB5,
-    0x00, 0x46, 0x02, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB6, 0x00, 0x47, 0x02, 0x00,
-    0x00, 0x5A, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x04, 0x98, 0x03, 0x00, 0x01, 0x40, 0x00, 0x00,
-    0xFF, 0xFF, 0xFF, 0xFF, 0x04, 0x99, 0x02, 0x00, 0x01, 0x90, 0x00, 0x00,
+    0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1A, 0x01, 0x00, 0x00, 0xF0, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1C,
+    0x01, 0x00, 0x00, 0xF0, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1D, 0x01, 0x00, 0x00, 0xF0, 0x00, 0x00,
+    0xFF, 0xFF, 0xFF, 0xFF, 0x02, 0xA3, 0x01, 0x00, 0x00, 0xF0, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1E,
+    0x01, 0x00, 0x00, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x51, 0xC1, 0x00, 0x1F, 0x01, 0x00, 0x00, 0x5A, 0x00, 0x00,
+    0x00, 0x00, 0x51, 0xC2, 0x00, 0x20, 0x01, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xC3, 0x00, 0x2F,
+    0x01, 0x00, 0x00, 0x96, 0x00, 0x00, 0x00, 0x00, 0x51, 0xC4, 0x00, 0x30, 0x01, 0x00, 0x00, 0x5A, 0x00, 0x00,
+    0x00, 0x00, 0x51, 0xB7, 0x00, 0x32, 0x03, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB8, 0x00, 0x33,
+    0x03, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB9, 0x00, 0x39, 0x03, 0x00, 0x00, 0x5A, 0x00, 0x00,
+    0x00, 0x00, 0x51, 0xBA, 0x00, 0x3A, 0x03, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xBB, 0x00, 0x3B,
+    0x03, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB2, 0x00, 0x41, 0x02, 0x00, 0x00, 0x5A, 0x00, 0x00,
+    0x00, 0x00, 0x51, 0xB3, 0x00, 0x44, 0x02, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB4, 0x00, 0x45,
+    0x02, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB5, 0x00, 0x46, 0x02, 0x00, 0x00, 0x5A, 0x00, 0x00,
+    0x00, 0x00, 0x51, 0xB6, 0x00, 0x47, 0x02, 0x00, 0x00, 0x5A, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x04, 0x98,
+    0x03, 0x00, 0x01, 0x40, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x04, 0x99, 0x02, 0x00, 0x01, 0x90, 0x00, 0x00,
 };
 
 PauseMenuTokenEntry gPauseMenuTokens[] = {
@@ -843,62 +841,24 @@ s16 gHudTextureIds[] = {
 };
 
 u8 gHudButtonIcons[] = {
-    0x00, 0x00, 0x01, 0x00, 0x02, 0x01, 0x03, 0x02, 0x04, 0x03, 0x05, 0x04, 0x06, 0x05, 0x07, 0x06,
-    0x08, 0x07, 0x09, 0x08, 0x0A, 0x09, 0x0B, 0x0A, 0x0C, 0x0B, 0x0D, 0x0C, 0x0E, 0x0D, 0x0F, 0x0E,
-    0x10, 0x0F, 0x11, 0x10, 0x12, 0x11, 0x13, 0x12, 0x14, 0x13, 0x15, 0x14, 0x16, 0x15, 0x17, 0x16,
-    0x18, 0x17, 0x19, 0x18, 0x1A, 0x19, 0x1B, 0x1A, 0x1C, 0x00, 0x00, 0x00, 0x0D, 0x05, 0x13, 0x10,
-    0x04, 0x0A, 0x0C, 0x16, 0x04, 0x16, 0x0C, 0x20, 0x0D, 0x16, 0x13, 0x28, 0x14, 0x0A, 0x1C, 0x16,
-    0x14, 0x16, 0x1C, 0x20, 0x0B, 0x00, 0x15, 0x0A, 0x02, 0x04, 0x0C, 0x10, 0x04, 0x17, 0x0C, 0x28,
-    0x0B, 0x20, 0x15, 0x2C, 0x14, 0x17, 0x1C, 0x28, 0x14, 0x04, 0x1E, 0x10, 0x08, 0x0E, 0x18, 0x12,
-    0x08, 0x12, 0x18, 0x18,
+    0x00, 0x00, 0x01, 0x00, 0x02, 0x01, 0x03, 0x02, 0x04, 0x03, 0x05, 0x04, 0x06, 0x05, 0x07, 0x06, 0x08,
+    0x07, 0x09, 0x08, 0x0A, 0x09, 0x0B, 0x0A, 0x0C, 0x0B, 0x0D, 0x0C, 0x0E, 0x0D, 0x0F, 0x0E, 0x10, 0x0F,
+    0x11, 0x10, 0x12, 0x11, 0x13, 0x12, 0x14, 0x13, 0x15, 0x14, 0x16, 0x15, 0x17, 0x16, 0x18, 0x17, 0x19,
+    0x18, 0x1A, 0x19, 0x1B, 0x1A, 0x1C, 0x00, 0x00, 0x00, 0x0D, 0x05, 0x13, 0x10, 0x04, 0x0A, 0x0C, 0x16,
+    0x04, 0x16, 0x0C, 0x20, 0x0D, 0x16, 0x13, 0x28, 0x14, 0x0A, 0x1C, 0x16, 0x14, 0x16, 0x1C, 0x20, 0x0B,
+    0x00, 0x15, 0x0A, 0x02, 0x04, 0x0C, 0x10, 0x04, 0x17, 0x0C, 0x28, 0x0B, 0x20, 0x15, 0x2C, 0x14, 0x17,
+    0x1C, 0x28, 0x14, 0x04, 0x1E, 0x10, 0x08, 0x0E, 0x18, 0x12, 0x08, 0x12, 0x18, 0x18,
 };
 
 PauseMenuCellMapEntry gPauseMenuCellMap[] = {
-    {0x000B, 0x0000},
-    {0x0001, 0x0000},
-    {0x0021, 0x0000},
-    {0x0028, 0x0000},
-    {0x0002, 0x0001},
-    {0x0034, 0x0001},
-    {0x002C, 0x0001},
-    {0x003E, 0x0001},
-    {0x0017, 0x0002},
-    {0x0038, 0x0005},
-    {0x000D, 0x0003},
-    {0x0030, 0x0003},
-    {0x003D, 0x0003},
-    {0x0022, 0x0003},
-    {0x000E, 0x0004},
-    {0x0020, 0x0004},
-    {0x0048, 0x0004},
-    {0x000A, 0x0005},
-    {0x0027, 0x0005},
-    {0x0043, 0x0005},
-    {0x0007, 0x0006},
-    {0x0008, 0x0006},
-    {0x0009, 0x0006},
-    {0x0033, 0x0006},
-    {0x003A, 0x0006},
-    {0x0042, 0x0006},
-    {0x0045, 0x0006},
-    {0x0047, 0x0006},
-    {0x0013, 0x0007},
-    {0x001B, 0x0007},
-    {0x001C, 0x0007},
-    {0x0044, 0x0007},
-    {0x003B, 0x0007},
-    {0x0015, 0x0008},
-    {0x0032, 0x0008},
-    {0x0012, 0x0009},
-    {0x001F, 0x0009},
-    {0x0046, 0x0009},
-    {0x0004, 0x000A},
-    {0x002B, 0x000B},
-    {0x000C, 0x000B},
-    {0x0010, 0x000B},
-    {0x003C, 0x000B},
-    {0x001D, 0x000C},
-    {0x0049, 0x000C},
+    {0x000B, 0x0000}, {0x0001, 0x0000}, {0x0021, 0x0000}, {0x0028, 0x0000}, {0x0002, 0x0001}, {0x0034, 0x0001},
+    {0x002C, 0x0001}, {0x003E, 0x0001}, {0x0017, 0x0002}, {0x0038, 0x0005}, {0x000D, 0x0003}, {0x0030, 0x0003},
+    {0x003D, 0x0003}, {0x0022, 0x0003}, {0x000E, 0x0004}, {0x0020, 0x0004}, {0x0048, 0x0004}, {0x000A, 0x0005},
+    {0x0027, 0x0005}, {0x0043, 0x0005}, {0x0007, 0x0006}, {0x0008, 0x0006}, {0x0009, 0x0006}, {0x0033, 0x0006},
+    {0x003A, 0x0006}, {0x0042, 0x0006}, {0x0045, 0x0006}, {0x0047, 0x0006}, {0x0013, 0x0007}, {0x001B, 0x0007},
+    {0x001C, 0x0007}, {0x0044, 0x0007}, {0x003B, 0x0007}, {0x0015, 0x0008}, {0x0032, 0x0008}, {0x0012, 0x0009},
+    {0x001F, 0x0009}, {0x0046, 0x0009}, {0x0004, 0x000A}, {0x002B, 0x000B}, {0x000C, 0x000B}, {0x0010, 0x000B},
+    {0x003C, 0x000B}, {0x001D, 0x000C}, {0x0049, 0x000C},
 };
 
 struct PauseMenuMapTables gPauseMenuMapTables = {
@@ -3808,7 +3768,8 @@ void pauseMenuUpdate(void) {
                     break;
                 }
                 if (gPauseMenuPanelAnims.timedStates[pauseMenuState] != 0) {
-                    lbl_803DD820 = (f32)(u32)(gGameUiObjectMatrixWorkspace.pauseStateDelaySeconds[pauseMenuState] * 0x3c);
+                    lbl_803DD820 =
+                        (f32)(u32)(gGameUiObjectMatrixWorkspace.pauseStateDelaySeconds[pauseMenuState] * 0x3c);
                     lbl_803DD81C = 1;
                 }
             }
@@ -4590,8 +4551,7 @@ void pauseMenuDrawGrid(s16 alpha) {
     {
         f32 base = lbl_803DBAC0;
         pauseMenuDrawGridCell((u8)gPauseMenuGridCursor,
-                              alpha * (base + base * mathSinf(F_PI * (500.0f * gPauseMenuHoloTime) / 32768.0f)),
-                              4);
+                              alpha * (base + base * mathSinf(F_PI * (500.0f * gPauseMenuHoloTime) / 32768.0f)), 4);
     }
     {
         int n = alpha * (0x200 - gPauseMenuSlideOut);
@@ -4896,14 +4856,14 @@ void pauseMenuDrawStatusPage(GameObject* player) {
  */
 
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
-#define measureLeft boundsLeft
-#define measureRight boundsRight
-#define measureTop boundsTop
+#define measureLeft   boundsLeft
+#define measureRight  boundsRight
+#define measureTop    boundsTop
 #define measureBottom boundsBottom
-#define tokenLeft boundsLeft
-#define tokenRight boundsRight
-#define tokenTop boundsTop
-#define tokenBottom boundsBottom
+#define tokenLeft     boundsLeft
+#define tokenRight    boundsRight
+#define tokenTop      boundsTop
+#define tokenBottom   boundsBottom
 #endif
 void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
     s16 alpha;
@@ -5039,8 +4999,8 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         model->bufferFlags &= ~0x8;
         timer = gameTextGetTimer();
         if (timer != zero) {
-            pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)(alpha / 2),
-                                       0x230, 0x190, randomGetRange(0, 0x1e) * 2, randomGetRange(0, 0x1e) * 2);
+            pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)(alpha / 2), 0x230,
+                                       0x190, randomGetRange(0, 0x1e) * 2, randomGetRange(0, 0x1e) * 2);
             model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
             objRender(0, 0, 0, 0, gGameUiCommCubeObjects[1], 1);
             model->bufferFlags &= ~0x8;
@@ -5121,8 +5081,8 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         model->bufferFlags &= ~0x8;
         timer = gameTextGetTimer();
         if (timer != zero) {
-            pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)(alpha / 2),
-                                       0x230, 0x190, randomGetRange(0, 0x1e) * 2, randomGetRange(0, 0x1e) * 2);
+            pauseMenuDrawTextureRegion(((HudTextures*)hudTextures)->tex150, 40.0f, 120.0f, 0xff, (u8)(alpha / 2), 0x230,
+                                       0x190, randomGetRange(0, 0x1e) * 2, randomGetRange(0, 0x1e) * 2);
             model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
             objRender(0, 0, 0, 0, gGameUiCommCubeObjects[1], 1);
             model->bufferFlags &= ~0x8;
@@ -5515,9 +5475,8 @@ void headDisplayDraw(void) {
         Camera_SetCurrentViewRotation(0x8000, 0, 0);
         Camera_UpdateViewMatrices();
         Camera_RebuildProjectionMatrix();
-        GXSetViewport(230.0f, y - 240.0f, (f32)(u32)gRenderModeObj->fbWidth,
-                      (f32)(u32)GAME_UI_VIEWPORT_HEIGHT,
-                      0.0f, 1.0f);
+        GXSetViewport(230.0f, y - 240.0f, (f32)(u32)gRenderModeObj->fbWidth, (f32)(u32)GAME_UI_VIEWPORT_HEIGHT, 0.0f,
+                      1.0f);
         if (gHeadDisplayModelObjs[panelType] != NULL) {
             ObjAnim_AdvanceCurrentMove(gHeadDisplayModelObjs[panelType], gPauseMenuPanelAnims.speeds[panelType],
                                        timeDelta, NULL);
@@ -5720,8 +5679,8 @@ void hudDrawCMenu(int p1, int p2, int p3) {
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    GXSetViewport(sx - 320.0f, sy - 240.0f, (f32)(u32)gRenderModeObj->fbWidth, (f32)(u32)GAME_UI_VIEWPORT_HEIGHT,
-                  0.0f, 1.0f);
+    GXSetViewport(sx - 320.0f, sy - 240.0f, (f32)(u32)gRenderModeObj->fbWidth, (f32)(u32)GAME_UI_VIEWPORT_HEIGHT, 0.0f,
+                  1.0f);
     zero = 0;
     i = zero;
     do {
@@ -6133,14 +6092,13 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
                 gameTextShowStr(label.text, 0x93, 0x246, 0x2A + (gCMenuScrollTimer + (i * 50)));
             }
         }
-        drawTexture(hudTextures[0x21], 537.0f, 175.0f, (u8)(fade * gCMenuHighlightFade / 0xFF),
-                    0x100);
-        drawScaledTexture(hudTextures[0x21], 571.0f, 175.0f, (u8)(fade * gCMenuHighlightFade / 0xFF),
-                          0x100, 0x12, 10, 1);
-        drawScaledTexture(hudTextures[0x21], 537.0f, 209.0f, (u8)(fade * gCMenuHighlightFade / 0xFF),
-                          0x100, 0x12, 10, 2);
-        drawScaledTexture(hudTextures[0x21], 571.0f, 209.0f, (u8)(fade * gCMenuHighlightFade / 0xFF),
-                          0x100, 0x12, 10, 3);
+        drawTexture(hudTextures[0x21], 537.0f, 175.0f, (u8)(fade * gCMenuHighlightFade / 0xFF), 0x100);
+        drawScaledTexture(hudTextures[0x21], 571.0f, 175.0f, (u8)(fade * gCMenuHighlightFade / 0xFF), 0x100, 0x12, 10,
+                          1);
+        drawScaledTexture(hudTextures[0x21], 537.0f, 209.0f, (u8)(fade * gCMenuHighlightFade / 0xFF), 0x100, 0x12, 10,
+                          2);
+        drawScaledTexture(hudTextures[0x21], 571.0f, 209.0f, (u8)(fade * gCMenuHighlightFade / 0xFF), 0x100, 0x12, 10,
+                          3);
         if ((player != NULL) && (objIsCurModelNotZero(player) != 0)) {
             switch (gCMenuCurSection) {
             case 2:
@@ -6210,8 +6168,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
                 if (wid < 1) {
                     wid = 1;
                 }
-                drawScaledTexture(hudTextures[8], 0x219 - wid, 62.0f, gHudStatusAlpha, 0x100, wid,
-                                  0x16, 0);
+                drawScaledTexture(hudTextures[8], 0x219 - wid, 62.0f, gHudStatusAlpha, 0x100, wid, 0x16, 0);
                 drawTexture(hudTextures[7], 0x20D - wid, 62.0f, gHudStatusAlpha, 0x100);
             } else {
                 drawTexture(hudTextures[7], 508.0f, 62.0f, gHudStatusAlpha, 0x100);
@@ -6263,8 +6220,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
                 if (wid < 1) {
                     wid = 1;
                 }
-                drawScaledTexture(hudTextures[8], 0x219 - wid, 87.0f, gHudStatusAlpha, 0x100, wid,
-                                  0x16, 0);
+                drawScaledTexture(hudTextures[8], 0x219 - wid, 87.0f, gHudStatusAlpha, 0x100, wid, 0x16, 0);
                 drawTexture(hudTextures[7], 0x20D - wid, 87.0f, gHudStatusAlpha, 0x100);
             } else {
                 drawTexture(hudTextures[7], 525.0f, 87.0f, gHudStatusAlpha, 0x100);
@@ -6442,15 +6398,13 @@ void pauseMenuDrawStatus(void) {
                      (airMeter == NULL) && (getHudHiddenFrameCount() == 0) &&
                      ((*gCameraInterface)->getMode() != CAMERA_MODE_VIEWFINDER_RESOURCE_ID)) ||
                     ((animationSlot == HUD_STATUS_SCARABS) && ((gHudForceShowMask & 2) != 0))) {
-                    flashThreshold =
-                        8.5f * timeDelta + gHudStatusAnimation[animationSlot];
+                    flashThreshold = 8.5f * timeDelta + gHudStatusAnimation[animationSlot];
                     gHudStatusAnimation[animationSlot] = flashThreshold;
                     if (flashThreshold > 255.0f) {
                         gHudStatusAnimation[animationSlot] = 255.0f;
                     }
                 } else {
-                    flashThreshold =
-                        -(8.5f * timeDelta - gHudStatusAnimation[animationSlot]);
+                    flashThreshold = -(8.5f * timeDelta - gHudStatusAnimation[animationSlot]);
                     gHudStatusAnimation[animationSlot] = flashThreshold;
                     if (flashThreshold < 0.0f) {
                         gHudStatusAnimation[animationSlot] = 0.0f;
@@ -6466,8 +6420,7 @@ void pauseMenuDrawStatus(void) {
         gHudStatsSnapshotPending &= ~1;
         for (statusSlot = 0; statusSlot < HUD_STATUS_COUNT; statusSlot++) {
             int snapshotIndex = statusSlot;
-            hudSnapshotStatus(statuses[snapshotIndex], &gHudStatusPrevious[statusSlot],
-                              &gHudStatusValue[statusSlot],
+            hudSnapshotStatus(statuses[snapshotIndex], &gHudStatusPrevious[statusSlot], &gHudStatusValue[statusSlot],
                               &gHudStatusOpacity[statusSlot]);
         }
         if ((mainGetBit(GAMEBIT_ITEM_BombSpore_ShowCount) != 0) || (statuses[HUD_STATUS_BOMB_SPORES] != 0)) {
@@ -6559,8 +6512,7 @@ void pauseMenuDrawStatus(void) {
             case HUD_STATUS_FIREFLIES:
             case HUD_STATUS_MOON_SEEDS:
             case HUD_STATUS_FUEL_CELLS:
-                if ((previousOpacity > 0.0f) &&
-                    (gHudStatusOpacity[statusIndex] <= 0.0f)) {
+                if ((previousOpacity > 0.0f) && (gHudStatusOpacity[statusIndex] <= 0.0f)) {
                     gHudStatusOpacity[statusIndex] = 0.1f;
                 }
                 break;
@@ -6792,8 +6744,7 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3) {
         int cell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
         if (!(gHudStatusOpacity[HUD_STATUS_HEALTH] > 30.0f && gHudStatusOpacity[HUD_STATUS_HEALTH] < 150.0f &&
               ((int)gHudStatusOpacity[HUD_STATUS_HEALTH] & 8)) &&
-            !(gHudStatusOpacity[HUD_STATUS_MAX_HEALTH] > 30.0f &&
-              gHudStatusOpacity[HUD_STATUS_MAX_HEALTH] < 150.0f &&
+            !(gHudStatusOpacity[HUD_STATUS_MAX_HEALTH] > 30.0f && gHudStatusOpacity[HUD_STATUS_MAX_HEALTH] < 150.0f &&
               ((int)gHudStatusOpacity[HUD_STATUS_MAX_HEALTH] & 8)) &&
             !(cell == 0 && playerGetFocusObject(player) != NULL)) {
             for (i = 0; (int)(u8)i < (gHudStatusValue[HUD_STATUS_MAX_HEALTH] >> 2); i++) {
@@ -6806,8 +6757,7 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3) {
                 } else {
                     sel = (health & 3) + 0x12;
                 }
-                drawTexture(hudTextures[sel], (f32)(int)((u8)i * 0x21 + 0x1e), 31.0f,
-                            alpha, 0x100);
+                drawTexture(hudTextures[sel], (f32)(int)((u8)i * 0x21 + 0x1e), 31.0f, alpha, 0x100);
             }
         }
     }
@@ -6840,15 +6790,14 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3) {
         for (i = 0; (u8)i < 0x14u; i += 4) {
             int b98 = gHudStatusValue[HUD_STATUS_TRICKY_ENERGY];
             if ((b98 & 0xfc) == (int)(u8)i && (b98 & 2) != 0) {
-                drawScaledTexture(hudTextures[0x57], (f32)(int)(((u8)i * 0xf) / 4 + 0x40), 102.0f, alpha, 0x100,
-                                  6, 0x12, 0);
-                drawPartialTexture(hudTextures[0x56], (f32)(int)(((u8)i * 0xf) / 4 + 0x46), 102.0f, alpha, 0x100,
-                                   7, 0x12, 6, 0);
+                drawScaledTexture(hudTextures[0x57], (f32)(int)(((u8)i * 0xf) / 4 + 0x40), 102.0f, alpha, 0x100, 6,
+                                  0x12, 0);
+                drawPartialTexture(hudTextures[0x56], (f32)(int)(((u8)i * 0xf) / 4 + 0x46), 102.0f, alpha, 0x100, 7,
+                                   0x12, 6, 0);
             } else {
                 int sel = (b98 > (int)(u8)i) ? 0x57 : 0x56;
                 int yo = ((u8)i * 0xf) / 4;
-                drawTexture(hudTextures[sel], (f32)(int)(yo + 0x40), 102.0f, alpha,
-                            0x100);
+                drawTexture(hudTextures[sel], (f32)(int)(yo + 0x40), 102.0f, alpha, 0x100);
             }
         }
     }
@@ -6885,8 +6834,7 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3) {
             style = 0xa;
         }
         hudDrawCounter(0x1e, (s16)gHudStatusValue[HUD_STATUS_SCARABS], (s16)style,
-                       gHudStatusAnimation[HUD_STATUS_SCARABS], (int)gHudStatusOpacity[HUD_STATUS_SCARABS], &hcArg,
-                       0);
+                       gHudStatusAnimation[HUD_STATUS_SCARABS], (int)gHudStatusOpacity[HUD_STATUS_SCARABS], &hcArg, 0);
         hudDrawCounter(0x19, (s16)gHudStatusValue[HUD_STATUS_BOMB_SPORES], 7,
                        gHudStatusAnimation[HUD_STATUS_BOMB_SPORES], (int)gHudStatusOpacity[HUD_STATUS_BOMB_SPORES],
                        &hcArg, 0);
@@ -6894,11 +6842,10 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3) {
                        gHudStatusAnimation[HUD_STATUS_TRICKY_FOOD], (int)gHudStatusOpacity[HUD_STATUS_TRICKY_FOOD],
                        &hcArg, 0);
         hudDrawCounter(0x18, (s16)gHudStatusValue[HUD_STATUS_FIREFLIES], 0x1f,
-                       gHudStatusAnimation[HUD_STATUS_FIREFLIES], (int)gHudStatusOpacity[HUD_STATUS_FIREFLIES],
-                       &hcArg, 0);
-        hudDrawCounter(0x1b, (s16)gHudStatusValue[HUD_STATUS_MOON_SEEDS], 7,
-                       gHudStatusAnimation[HUD_STATUS_MOON_SEEDS], (int)gHudStatusOpacity[HUD_STATUS_MOON_SEEDS],
-                       &hcArg, 0);
+                       gHudStatusAnimation[HUD_STATUS_FIREFLIES], (int)gHudStatusOpacity[HUD_STATUS_FIREFLIES], &hcArg,
+                       0);
+        hudDrawCounter(0x1b, (s16)gHudStatusValue[HUD_STATUS_MOON_SEEDS], 7, gHudStatusAnimation[HUD_STATUS_MOON_SEEDS],
+                       (int)gHudStatusOpacity[HUD_STATUS_MOON_SEEDS], &hcArg, 0);
         hudDrawCounter(0x1c, (s16)gHudStatusValue[HUD_STATUS_FUEL_CELLS], 0xff,
                        gHudStatusAnimation[HUD_STATUS_FUEL_CELLS], (int)gHudStatusOpacity[HUD_STATUS_FUEL_CELLS],
                        &hcArg, 0);
@@ -7140,11 +7087,10 @@ void drawViewFinderHud(void) {
                 }
                 {
                     alpha = (f32)(u8)tickAlpha * gViewFinderFadeLevel;
-                    drawViewFinderSegment(tickX, gViewFinderBaseY + (480.0f + getViewFinderWaveOffset(tickX)),
-                                          (f32)(0.98 * (tickX - 320.0) + 320.0),
-                                          gViewFinderBaseY +
-                                              ((f32)((u8)tickHeight + 480) + getViewFinderWaveOffset(tickX)),
-                                          1.0f, alpha);
+                    drawViewFinderSegment(
+                        tickX, gViewFinderBaseY + (480.0f + getViewFinderWaveOffset(tickX)),
+                        (f32)(0.98 * (tickX - 320.0) + 320.0),
+                        gViewFinderBaseY + ((f32)((u8)tickHeight + 480) + getViewFinderWaveOffset(tickX)), 1.0f, alpha);
                 }
             }
         }
