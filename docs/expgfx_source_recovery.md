@@ -1,5 +1,55 @@
 # Expgfx Source Recovery
 
+## Source-table identity and lifecycle (2026-10-06)
+
+`ExpgfxTableEntry` now records an `ObjAnimComponent* sourceObject` and a
+`GameObject* sourceParent`, alongside its resource pointer. These replace the
+integer `sourceId` and `attachedTableKey`. In `expgfx_addremove`, the copy-source
+behavior takes the source's world position/rotation/scale, retains its parent,
+then clears the direct source pointer. The update loop later uses that parent's
+transform-space index when converting the copied position. Source and parent
+are therefore distinct parts of the table key, not interchangeable handles.
+
+Dinosaur Planet's `UnkBss190Struct` likewise contains two `Object*` fields and a
+`Texture*`; `dll_13_func_2060` interns the same three pointers. Its spawn path
+takes the second object from the copied source's `parent`. Foxhollow widens the
+corresponding SFA table keys to `uintptr_t`. SFA's own stores and consumers
+establish the roles and preserve the asserted 0x10-byte target record.
+
+Slot selection, table insertion, source cleanup and cleanup wrappers now accept
+pointers directly. Pool-source walks, stores and clears use the existing typed
+pointer array. Table lookups use ordinary indexing; the final added-slot global
+is an `ExpgfxSlot*`. Texture pointers no longer pass through `u32` in table
+insertion or the update loop. The separate update API's old `sourceId` parameter
+is renamed `frameCount`: `Obj_UpdateAllObjects` passes `framesThisStep` there, and the
+current update loop does not consume the parameter. Its integer ABI is retained.
+
+`expgfxRemove` retains a cached pointer to the first resource field and a narrow
+byte-stride access based on `sizeof(ExpgfxTableEntry)`. Using a table-base local
+or recovering the enclosing record with `offsetof` adds three MWCC instructions.
+The retained field-base form preserves target code while correctly walking
+pointer-bearing records on a native host. The duplicate resource predicate in
+bulk removal and the one-element local arrays remain unchanged.
+
+`tools/test_expgfx_sources.py` extracts twelve production functions and the
+canonical object, slot and table records. Its 3,936 scenarios pass at `-O0` and
+`-O2` with ASan/UBSan and pointers above 4 GiB. They cover every table entry and
+pool/slot position, all three pointer keys, table capacity and refcount overflow,
+the reserved final automatic-allocation pool, resource-release/flush flags,
+inactive removal, all source-free wrappers, and all three bulk-reset contracts.
+Texture release and cache flush are spies. Slot fixtures encode the retail table
+index explicitly; these tests do not exercise host bitfield serialization,
+particle simulation or GPU rendering. The existing queue and slot-layout tests
+also pass. Five negative controls reject truncated source pointers, omitted
+source-key comparisons, fixed 16-byte native strides, 32-bit pool-pointer clears
+and automatic allocation of the final pool.
+
+Expgfx remains 46/46 functions and 100% code/data in all five versions. Every
+source object's raw hash is unchanged, including Expgfx: symbol tables,
+relocations and all sections are identical. Full objdiff inventories introduce
+no new exceptions, all source builds pass, and all five source-linked DOLs match
+their verified originals byte for byte.
+
 ## Pointer-preserving render-queue boundary (2026-10-06)
 
 The slot-pool base table now stores `void*`, with pointer-width allocation and
