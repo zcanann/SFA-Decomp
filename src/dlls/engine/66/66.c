@@ -1167,17 +1167,17 @@ void CameraModeNormal_init(CameraObject* cam, int mode, CameraModeNormalInitSett
     case 0:
         memset(gCameraModeNormalState, 0, sizeof(CameraModeNormalState));
         if (settings != NULL) {
-            fVal = (f32)(u32)p->minDistanceWide;
+            fVal = (f32)(u32)p->initial.minDistance;
             gCameraModeNormalState->minDistance = fVal;
             gCameraModeNormalState->targetMinDistance = fVal;
-            fVal = (f32)(u32)p->maxDistanceWide;
+            fVal = (f32)(u32)p->initial.maxDistance;
             gCameraModeNormalState->maxDistance = fVal;
             gCameraModeNormalState->targetMaxDistance = fVal;
-            fVal = (f32)(u32)p->heightOffsetWide;
+            fVal = (f32)(u32)p->initial.heightOffset;
             gCameraModeNormalState->baseLowerHeightOffset = fVal;
             gCameraModeNormalState->lowerHeightOffset = fVal;
             gCameraModeNormalState->targetLowerHeightOffset = fVal;
-            fVal = (f32)(u32)p->heightOffsetWide;
+            fVal = (f32)(u32)p->initial.heightOffset;
             gCameraModeNormalState->baseUpperHeightOffset = fVal;
             gCameraModeNormalState->upperHeightOffset = fVal;
             gCameraModeNormalState->targetUpperHeightOffset = fVal;
@@ -1218,7 +1218,7 @@ void CameraModeNormal_init(CameraObject* cam, int mode, CameraModeNormalInitSett
         cam->anim.rotX = 0;
         cam->anim.rotZ = 0;
         if (settings != NULL) {
-            cam->fovY = (f32)(u32)p->fovWide;
+            cam->fovY = (f32)(u32)p->initial.fov;
         }
         break;
     case 4:
@@ -1243,32 +1243,32 @@ void CameraModeNormal_init(CameraObject* cam, int mode, CameraModeNormalInitSett
     case 2:
         if (settings != NULL) {
             gCameraModeNormalState->targetTargetHeight = 35.0f;
-            fVal = (f32)(u32)p->lowerHeightOffset;
+            fVal = (f32)(u32)p->transition.lowerHeightOffset;
             gCameraModeNormalState->baseLowerHeightOffset = fVal;
             gCameraModeNormalState->targetLowerHeightOffset = fVal;
-            fVal = (f32)(u32)p->upperHeightOffset;
+            fVal = (f32)(u32)p->transition.upperHeightOffset;
             gCameraModeNormalState->baseUpperHeightOffset = fVal;
             gCameraModeNormalState->targetUpperHeightOffset = fVal;
-            gCameraModeNormalState->targetMinDistance = (f32)(u32)p->minDistance;
-            gCameraModeNormalState->targetMaxDistance = (f32)(u32)p->maxDistance;
-            gCameraModeNormalState->fov = p->fov;
-            gCameraModeNormalState->targetSlideRightAmount = (f32)(u32)p->slideRightAmount;
-            gCameraModeNormalState->targetSlideLeftAmount = (f32)(u32)p->slideLeftAmount;
-            uVal = p->distanceAdjustRate;
+            gCameraModeNormalState->targetMinDistance = (f32)(u32)p->transition.minDistance;
+            gCameraModeNormalState->targetMaxDistance = (f32)(u32)p->transition.maxDistance;
+            gCameraModeNormalState->fov = p->transition.fov;
+            gCameraModeNormalState->targetSlideRightAmount = (f32)(u32)p->transition.slideRightAmount;
+            gCameraModeNormalState->targetSlideLeftAmount = (f32)(u32)p->transition.slideLeftAmount;
+            uVal = p->transition.distanceAdjustRate;
             if (uVal != 0) {
                 gCameraModeNormalState->targetDistanceAdjustRate = uVal / 255.0f;
             } else {
                 gCameraModeNormalState->targetDistanceAdjustRate = 0.09f;
             }
-            uVal = p->heightAdjustRate;
+            uVal = p->transition.heightAdjustRate;
             if (uVal != 0) {
                 gCameraModeNormalState->targetHeightAdjustRate = uVal / 255.0f;
             } else {
                 gCameraModeNormalState->targetHeightAdjustRate = 0.09f;
             }
-            gCameraModeNormalState->transitionTimer = (s16)p->transitionFrames;
-            gCameraModeNormalState->transitionDuration = (s16)p->transitionFrames;
-            *(u8*)&cam->letterboxTargetOffset = p->letterboxOffset;
+            gCameraModeNormalState->transitionTimer = (s16)p->transition.transitionFrames;
+            gCameraModeNormalState->transitionDuration = (s16)p->transition.transitionFrames;
+            *(u8*)&cam->letterboxTargetOffset = p->transition.letterboxOffset;
         } else {
             gCameraModeNormalState->targetTargetHeight = gCameraModeNormalState->savedTargetHeight;
             fVal = gCameraModeNormalState->savedLowerHeightOffset;
@@ -1297,7 +1297,7 @@ void CameraModeNormal_init(CameraObject* cam, int mode, CameraModeNormalInitSett
         gCameraModeNormalState->savedSlideLeftAmount = gCameraModeNormalState->slideLeftAmount;
         gCameraModeNormalState->savedDistanceAdjustRate = gCameraModeNormalState->distanceAdjustRate;
         gCameraModeNormalState->savedHeightAdjustRate = gCameraModeNormalState->heightAdjustRate;
-        if ((settings != NULL) && (p->snapToTarget != 0)) {
+        if ((settings != NULL) && (p->transition.snapToTarget != 0)) {
             camcontrol_getTargetPosition(cam, &target->anim, &cam->anim.worldPosX, &cam->anim.rotY);
             Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
                                            &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,

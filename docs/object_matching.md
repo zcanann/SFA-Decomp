@@ -2,6 +2,56 @@
 
 Target: EN v1.0 (`GSAE01`), common game compiler GC/1.3.
 
+## Player spawn and initial camera storage
+
+`mapSetupPlayer` now writes a real 32-byte `CameraModeNormalInitSettings`
+record and addresses its diagnostic strings directly. The former reconstruction
+cast the camera record's address through `int`, then indexed beyond that record
+to reach unrelated strings. That depended on both 32-bit pointers and the
+linker's global layout. The three strings formerly hidden in `sObjDebugStrings`
+are ordinary named character arrays; their natural alignment reproduces the
+retail bytes without explicit padding or section directives.
+
+The camera settings header describes two mode-specific views. Initial setup
+stores position at offsets 8, 12 and 16, then uses byte FOV/height and halfword
+distance settings near the end of the record. Transition mode uses the compact
+fields at the beginning. `CameraModeNormal_init` establishes the widths and
+signedness of these reads; assertions cover both views and the complete size.
+Uninterpreted bytes remain opaque. The names and union representation are
+recovered descriptions, not a claim to the original typedef spelling.
+
+The related `objLoadPlayer` in `../dinosaur-planet/src/object.c` corroborates the
+typed global, position offsets, 24-byte placement record, and 60-unit radius /
+40-unit height calculation. Its camera distances differ: retain SFA's retail
+90/85 defaults, rather than copying Dinosaur Planet's 92/90. The working
+`../foxhollow` port also removes the pointer truncation, though its remaining
+cross-global indexing is not needed here. Player spawning now uses the existing
+canonical `ObjPlacement` instead of a duplicate `CharSpawn` layout. Multiplying
+the signed saved heading by 256 replaces an undefined negative left shift and
+emits the same PPC instructions.
+
+Validation covers EN, EN rev1, JP, PAL and PAL rev1. Both complete affected TUs
+are 100% in each version: all 60 `object.c` functions and all 19 camera-mode
+functions, including data. The all-TU objdiff inventory has no new mismatches;
+the existing TRK exception-vector carving and discarded MusyX exception-data
+report artifacts remain. Every `all_source` build and strict retail checksum
+passes, with verified original hashes and no retail object substitutions in
+the source link. Only `object.o` changes raw identity because of its renamed
+data and anonymous symbols; the camera consumer and all other source objects
+are byte-identical. Compiler settings and TU boundaries are unchanged.
+
+`python3 tools/test_object_setup_native.py` extracts the production setup and
+camera-init functions and their canonical records. At both `-O0` and `-O2`,
+5,132 scenarios pass with ASan/UBSan on 64-bit pointers and independently
+allocated globals. Coverage includes spawn suppression/failure, locked loading,
+title mode, all signed saved headings, and all byte-valued transition inputs.
+Local negative controls reject restored cross-global string indexing, pointer
+truncation, misplaced position writes, the wrong settings view, and negative
+signed shifts. This fixture exercises setup and camera modes 0/2, not every
+function in either TU.
+
+## Loader helpers
+
 Two called private helpers account for the early literals in `object.c`:
 
 - `objPlacementRangeToWorld` converts the placement record's range units to

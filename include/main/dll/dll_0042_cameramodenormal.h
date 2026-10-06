@@ -35,45 +35,58 @@ STATIC_ASSERT(offsetof(CameraModeNormalActionSettings, distanceAdjustRate) == 0x
 STATIC_ASSERT(offsetof(CameraModeNormalActionSettings, heightAdjustRate) == 0x0C);
 STATIC_ASSERT(sizeof(CameraModeNormalActionSettings) == 0x0D);
 
-typedef struct CameraModeNormalInitSettings {
-    u8 pad00;
-    s8 transitionFrames;
-    s8 fov;
-    u8 minDistance;
-    u8 maxDistance;
-    u8 pad05;
-    u8 lowerHeightOffset;
-    u8 letterboxOffset;
-    u8 upperHeightOffset;
-    u8 slideRightAmount;
-    u8 slideLeftAmount;
-    u8 distanceAdjustRate;
-    u8 heightAdjustRate;
-    u8 snapToTarget;
-    u8 pad0E[0x0B];
-    u8 fovWide;
-    u16 maxDistanceWide;
-    u16 minDistanceWide;
-    u8 pad1E;
-    u8 heightOffsetWide;
+/* Mode 0 uses initial placement/defaults; mode 2 uses transition parameters. */
+typedef union CameraModeNormalInitSettings {
+    struct {
+        u8 unknown00[8];
+        f32 x;
+        f32 y;
+        f32 z;
+        u8 unknown14[5];
+        u8 fov;
+        u16 maxDistance;
+        u16 minDistance;
+        u8 unknown1E;
+        u8 heightOffset;
+    } initial;
+    struct {
+        u8 pad00;
+        s8 transitionFrames;
+        s8 fov;
+        u8 minDistance;
+        u8 maxDistance;
+        u8 pad05;
+        u8 lowerHeightOffset;
+        u8 letterboxOffset;
+        u8 upperHeightOffset;
+        u8 slideRightAmount;
+        u8 slideLeftAmount;
+        u8 distanceAdjustRate;
+        u8 heightAdjustRate;
+        u8 snapToTarget;
+        u8 unknown0E[0x12];
+    } transition;
 } CameraModeNormalInitSettings;
 
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transitionFrames) == 0x01);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, fov) == 0x02);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, minDistance) == 0x03);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, maxDistance) == 0x04);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, lowerHeightOffset) == 0x06);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, letterboxOffset) == 0x07);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, upperHeightOffset) == 0x08);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, slideRightAmount) == 0x09);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, slideLeftAmount) == 0x0A);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, distanceAdjustRate) == 0x0B);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, heightAdjustRate) == 0x0C);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, snapToTarget) == 0x0D);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, fovWide) == 0x19);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, maxDistanceWide) == 0x1A);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, minDistanceWide) == 0x1C);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, heightOffsetWide) == 0x1F);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.x) == 0x08);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.y) == 0x0C);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.z) == 0x10);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.fov) == 0x19);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.maxDistance) == 0x1A);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.minDistance) == 0x1C);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.heightOffset) == 0x1F);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.transitionFrames) == 0x01);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.fov) == 0x02);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.minDistance) == 0x03);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.maxDistance) == 0x04);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.lowerHeightOffset) == 0x06);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.letterboxOffset) == 0x07);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.upperHeightOffset) == 0x08);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.slideRightAmount) == 0x09);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.slideLeftAmount) == 0x0A);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.distanceAdjustRate) == 0x0B);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.heightAdjustRate) == 0x0C);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.snapToTarget) == 0x0D);
 STATIC_ASSERT(sizeof(CameraModeNormalInitSettings) == 0x20);
 
 typedef struct CameraModeNormalWallAvoidanceFlags {

@@ -1,4 +1,5 @@
 #include "dolphin/os/OSReport.h"
+#include "main/dll/dll_0042_cameramodenormal.h"
 #include "main/dll/objpathtransform_struct.h"
 #include "main/shader_api.h"
 #include "main/shader_map_api.h"
@@ -86,20 +87,6 @@ typedef struct ObjListObjectDef {
     u32 objectId;
 } ObjListObjectDef;
 
-typedef struct CharSpawn {
-    s16 id;
-    u8 unk2;
-    u8 unk3;
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-    f32 x;
-    f32 y;
-    f32 z;
-    int mapId;
-} CharSpawn;
-
 #define OBJECT_CAMMODE_DEFAULT 0x42 /* default gameplay cameramode DLL */
 
 /* special-cased seqIds (retail OBJECTS.bin names) */
@@ -139,21 +126,14 @@ GameObject* gEffectBoxObjects[20];
 void Obj_RegisterObject(GameObject* obj, int b);
 void* loadModLines(int n, s16* out);
 
-u8 gObjCameraSetupBlock[32] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x3C, 0x00, 0x5A, 0x00, 0x55, 0x1E, 0x14,
+CameraModeNormalInitSettings gObjInitialCameraSettings = {
+    { {0}, 0.0f, 0.0f, 0.0f, {0, 0, 0, 0, 0xFF}, 60, 90, 85, 30, 20 }
 };
 
 char sObjSetupObjectLoadingLockedWarning[] = "<objSetupObject>  loading is locked can't setup objno %d\n";
-
-char sObjDebugStrings[] = {
-    0x4C, 0x4F, 0x41, 0x44, 0x45, 0x44, 0x20, 0x4F, 0x42, 0x4A, 0x45, 0x43, 0x54, 0x20, 0x25, 0x73, 0x0A, 0x00,
-    0x00, 0x00, 0x3D, 0x3D, 0x3D, 0x3D, 0x3D, 0x3D, 0x3D, 0x20, 0x20, 0x4F, 0x42, 0x4A, 0x46, 0x52, 0x45, 0x45,
-    0x41, 0x4C, 0x4C, 0x20, 0x0A, 0x00, 0x00, 0x00, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x20, 0x20, 0x20,
-    0x20, 0x4C, 0x4F, 0x41, 0x44, 0x49, 0x4E, 0x47, 0x20, 0x43, 0x48, 0x41, 0x52, 0x41, 0x43, 0x54, 0x45, 0x52,
-    0x20, 0x20, 0x20, 0x20, 0x20, 0x6D, 0x61, 0x70, 0x74, 0x79, 0x70, 0x65, 0x20, 0x25, 0x64, 0x20, 0x20, 0x70,
-    0x6C, 0x61, 0x79, 0x65, 0x72, 0x6E, 0x6F, 0x20, 0x25, 0x64, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x00,
-};
+char sObjLoadedObjectMessage[] = "LOADED OBJECT %s\n";
+char sObjResetObjectSystemMessage[] = "=======  OBJFREEALL \n";
+char sObjLoadingPlayerMessage[] = "\n\n\n\n\n\n\n    LOADING CHARACTER     maptype %d  playerno %d\n\n\n\n\n\n\n";
 
 char sObjFreeObjdefError[] = "objFreeObjdef: Error!! (%d)\n";
 
@@ -538,7 +518,7 @@ GameObject* loadObjectAtObject(GameObject* src, ObjPlacement* setup) {
         obj = loadCharacter(setup, 5, type, -1, objF30, 0);
         if (obj != NULL) {
             Obj_RegisterObject(obj, 5);
-            OSReport(sObjDebugStrings, obj->anim.modelInstance->name);
+            OSReport(sObjLoadedObjectMessage, obj->anim.modelInstance->name);
         }
     }
     return obj;
@@ -679,7 +659,7 @@ GameObject* Obj_GetPlayerObject(void) {
 }
 
 void mapSetupPlayer(void) {
-    u8* base;
+    CameraModeNormalInitSettings* settings;
     int playerNo;
     int mapType;
     GameObject* obj;
@@ -688,12 +668,12 @@ void mapSetupPlayer(void) {
     int uiDll;
     CameraObject* view;
     Camera* vp;
-    CharSpawn spawn;
+    ObjPlacement spawn;
 
-    base = (u8*)(int)&gObjCameraSetupBlock;
+    settings = &gObjInitialCameraSettings;
     mapType = getCurMapType();
     if (mapType == MAPTYPE_UNLOAD_UNUSED || mapType == MAPTYPE_SUBMAP_UNUSED) {
-        OSReport((char*)(base + 0x70));
+        OSReport(sObjResetObjectSystemMessage);
         Obj_ResetObjectSystem();
     } else {
         playerNo = (*gMapEventInterface)->getCurChar();
@@ -703,42 +683,42 @@ void mapSetupPlayer(void) {
         z = pos->z;
         obj = 0;
         if (playerNo > -1 && mapType != MAPTYPE_NO_HUD) {
-            OSReport((char*)(base + 0x88), mapType, playerNo);
-            memset(&spawn, 0, 0x18);
-            spawn.mapId = -1;
-            spawn.unk3 = 0;
-            spawn.unk4 = 1;
-            spawn.unk5 = 4;
-            spawn.unk6 = 0xff;
-            spawn.unk7 = 0xff;
-            spawn.id = gObjPlayerSpawnIdTable[playerNo];
-            spawn.unk2 = 0x18;
-            spawn.x = x;
-            spawn.y = y;
-            spawn.z = z;
+            OSReport(sObjLoadingPlayerMessage, mapType, playerNo);
+            memset(&spawn, 0, sizeof(spawn));
+            spawn.ident = -1;
+            spawn.mapActFlagsLo = 0;
+            spawn.loadFlags = 1;
+            spawn.mapActFlagsHi = 4;
+            spawn.loadRange = 0xff;
+            spawn.unk07 = 0xff;
+            spawn.objectId = gObjPlayerSpawnIdTable[playerNo];
+            spawn.size = 0x18;
+            spawn.posX = x;
+            spawn.posY = y;
+            spawn.posZ = z;
             if (getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) {
-                OSReport((char*)(base + 0x20), -1);
+                OSReport(sObjSetupObjectLoadingLockedWarning, -1);
                 obj = 0;
             } else {
-                obj = loadCharacter((ObjPlacement*)&spawn, 1, -1, -1, 0, 0);
+                obj = loadCharacter(&spawn, 1, -1, -1, 0, 0);
                 if (obj != 0) {
                     Obj_RegisterObject(obj, 1);
-                    OSReport((char*)(base + 0x5c), obj->anim.modelInstance->name);
+                    OSReport(sObjLoadedObjectMessage, obj->anim.modelInstance->name);
                 }
             }
         }
-        *(f32*)(base + 8) = 60.0f * mathSinf((3.1415927f * (f32)(pos->angle << 8)) / 32768.0f) + x;
-        *(f32*)(base + 0xc) = 40.0f + y;
-        *(f32*)(base + 0x10) = 60.0f * mathCosf((3.1415927f * (f32)(pos->angle << 8)) / 32768.0f) + z;
+        settings->initial.x = 60.0f * mathSinf((3.1415927f * (f32)(pos->angle * 256)) / 32768.0f) + x;
+        settings->initial.y = 40.0f + y;
+        settings->initial.z = 60.0f * mathCosf((3.1415927f * (f32)(pos->angle * 256)) / 32768.0f) + z;
         uiDll = getCurUiDll();
         if ((u32)(uiDll - 2) <= 4 || uiDll == 7) {
-            (*gCameraInterface)->init(obj, *(f32*)(base + 8), *(f32*)(base + 0xc), *(f32*)(base + 0x10));
+            (*gCameraInterface)->init(obj, settings->initial.x, settings->initial.y, settings->initial.z);
             (*gCameraInterface)->setMode(CAMERA_MODE_TITLE_RESOURCE_ID, 0, 3, 0, NULL, 0, 0);
             (*gCameraInterface)->setFocus(obj, 0);
             (*gCameraInterface)->update(1);
         } else {
-            (*gCameraInterface)->init(obj, *(f32*)(base + 8), *(f32*)(base + 0xc), *(f32*)(base + 0x10));
-            (*gCameraInterface)->setMode(OBJECT_CAMMODE_DEFAULT, 0, 0, 0x20, (u8*)(int)&gObjCameraSetupBlock, 0, 0xff);
+            (*gCameraInterface)->init(obj, settings->initial.x, settings->initial.y, settings->initial.z);
+            (*gCameraInterface)->setMode(OBJECT_CAMMODE_DEFAULT, 0, 0, sizeof(gObjInitialCameraSettings), &gObjInitialCameraSettings, 0, 0xff);
             (*gCameraInterface)->update(1);
         }
         vp = Camera_GetCurrent();
@@ -1838,7 +1818,7 @@ GameObject* objSetupObject(ObjPlacement* data, int flags, int mapLayer, int objI
     obj = loadCharacter(data, flags, mapLayer, objIndex, parent, 0);
     if (obj != NULL) {
         Obj_RegisterObject(obj, flags);
-        OSReport(sObjDebugStrings, obj->anim.modelInstance->name);
+        OSReport(sObjLoadedObjectMessage, obj->anim.modelInstance->name);
     }
     return obj;
 }
