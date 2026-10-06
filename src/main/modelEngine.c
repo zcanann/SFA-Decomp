@@ -680,74 +680,75 @@ void modelRenderInstrsState_init(ModelRenderInstrsState* state, void* instrs, in
     state->bit = 0;
 }
 
-void objList_remove(ObjLinkedList* list, int item)
+/* Signed address comparisons preserve retail codegen without truncating pointers. */
+void objList_remove(ObjLinkedList* list, void* item)
 {
-    int head;
-    int prev;
-    int current;
-    int next;
+    void* head;
+    void* prev;
+    void* current;
+    void* next;
 
     head = list->head;
-    if (head == item)
+    if ((ptrdiff_t)head == (ptrdiff_t)item)
     {
-        list->head = *(int*)(head + list->nextOffset);
+        list->head = *(void**)((u8*)head + list->nextOffset);
         list->count--;
         return;
     }
 
     current = head;
     prev = head;
-    while (current != 0 && current != item)
+    while ((ptrdiff_t)current != 0 && (ptrdiff_t)current != (ptrdiff_t)item)
     {
         prev = current;
-        current = *(int*)(current + list->nextOffset);
+        current = *(void**)((u8*)current + list->nextOffset);
     }
 
-    if (current == 0)
+    if ((ptrdiff_t)current == 0)
     {
         return;
     }
 
-    next = *(int*)(current + list->nextOffset);
-    if (current == head)
+    next = *(void**)((u8*)current + list->nextOffset);
+    if ((ptrdiff_t)current == (ptrdiff_t)head)
     {
         list->head = next;
     }
     else
     {
-        *(int*)(prev + list->nextOffset) = next;
+        *(void**)((u8*)prev + list->nextOffset) = next;
     }
     list->count--;
 }
 
-void objListAdd(ObjLinkedList* list, int prev, int item)
+void objListAdd(ObjLinkedList* list, void* prev, void* item)
 {
-    int next;
+    void* next;
 
-    if (list->head == 0)
+    if ((ptrdiff_t)list->head == 0)
     {
         list->head = item;
     }
     else
     {
-        if (prev == 0)
+        if ((ptrdiff_t)prev == 0)
         {
             next = list->head;
             list->head = item;
         }
         else
         {
-            next = *(int*)(prev + list->nextOffset);
-            *(int*)(prev + list->nextOffset) = item;
+            next = *(void**)((u8*)prev + list->nextOffset);
+            *(void**)((u8*)prev + list->nextOffset) = item;
         }
-        *(int*)(item + list->nextOffset) = next;
+        *(void**)((u8*)item + list->nextOffset) = next;
     }
     list->count++;
 }
 
 void objListInit(ObjLinkedList* list, s16 nextOffset)
 {
-    list->head = 0;
+    list->head = NULL;
     list->nextOffset = nextOffset;
 }
 

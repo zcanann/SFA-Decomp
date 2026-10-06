@@ -50,6 +50,55 @@ truncation, misplaced position writes, the wrong settings view, and negative
 signed shifts. This fixture exercises setup and camera modes 0/2, not every
 function in either TU.
 
+## Intrusive update-list pointer recovery
+
+`ObjLinkedList.head`, list-helper arguments, and intrusive links now hold real
+pointers. Registration, enable/disable, freeing, and both frame traversals use
+that contract. The update and hit-detection passes also retain full-width child
+and callback arguments. Removing an object from `gObjList` copies pointer-sized
+entries instead of four-byte words.
+
+`../dinosaur-planet/src/linked_list.c` and its header provide particularly close
+lineage: the same signed-halfword count and link offset, pointer head, insertion
+branches, and removal walk. Its `objEnable` orders nodes by update priority.
+SFA's retail instructions independently establish each field width and branch;
+the existing `ObjAnimComponent.next` is already a `void*` link. Foxhollow's
+pointer-width integer conversion corroborates the native failure, but this
+recovery uses pointer storage and byte-based link addressing instead.
+
+Retail's signed address comparisons require narrow `ptrdiff_t` casts at those
+comparisons under the current compiler. Ordinary pointer comparisons emit
+`cmplw` / `cmplwi` instead of `cmpw` / `cmpwi`. The casts preserve complete
+addresses on the supported target and native host, with a pointer-width
+assertion; they are matching constraints, not evidence that the original source
+used this spelling. The group lookup's reused byte pointer remains: changing
+its type changes allocation in the second child pass. Its table dereference
+now uses the actual `GameObject*` element type.
+
+Keep two evidenced helper behaviours: initialization does not reset `count`,
+and insertion into an empty list does not clear the inserted node's link.
+Removal also leaves the removed node's link intact. The source preserves these
+behaviours; callers must supply a suitable initial link rather than relying on
+an invented helper-side reset.
+
+`python3 tools/test_object_list_native.py` extracts the three production list
+helpers plus registration, enable/disable, free, and frame-update functions.
+Its native dependency adapters use different offsets and 64-bit pointers.
+At `-O0` and `-O2`, 12,524 checks pass under ASan/UBSan: randomized operations
+at two link offsets, an independent ordering model, all flat-array removal
+positions in the fixture, pending/deferred free modes, and ordered frame
+callbacks including removal during traversal. Negative controls reject truncated
+heads, narrow link reads, four-byte array compaction, reversed priority order,
+and truncated callback arguments. External update, resource destruction, and
+rendering services are stubbed; this is not a complete native game execution.
+
+All five versions retain 100% for the complete `object.c` and `modelEngine.c`
+TUs, with no new mismatches in the full inventory. All source builds and strict
+retail checksums pass. Every source object except `modelEngine.o` is raw
+byte-identical; its only changes are ten anonymous literal-symbol numbers at
+unchanged addresses. Compiler profiles, TU boundaries, and source-link coverage
+remain unchanged. The two previously documented reporting artifacts remain.
+
 ## Loader helpers
 
 Two called private helpers account for the early literals in `object.c`:

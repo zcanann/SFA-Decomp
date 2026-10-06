@@ -1226,17 +1226,17 @@ void Obj_FreeObject(GameObject* obj) {
         }
         if (i < gObjCount) {
             gObjCount--;
-            off = i << 2;
+            off = i * sizeof(*gObjList);
             for (; i < gObjCount; i++) {
                 q = (u8*)gObjList + off;
-                *(int*)q = *(int*)(q + 4);
-                off += 4;
+                *(GameObject**)q = *((GameObject**)q + 1);
+                off += sizeof(*gObjList);
             }
         } else {
             OSReport(sObjFreeNonExistentObjectWarning);
         }
         if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST) {
-            objList_remove(&gObjUpdateList, (int)obj);
+            objList_remove(&gObjUpdateList, obj);
         }
         gObjPartitionPivot = 0;
     }
@@ -1290,20 +1290,20 @@ void Obj_FreeObject(GameObject* obj) {
 void Obj_InsertIntoUpdateList(GameObject* obj) {
     if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST) {
         ObjLinkedList* list = &gObjUpdateList;
-        int prev = 0;
-        int cur = list->head;
+        GameObject* prev = NULL;
+        GameObject* cur = list->head;
         int linkOff = list->nextOffset;
-        while (cur != 0 && obj->anim.activeHitboxMode < ((GameObject*)cur)->anim.activeHitboxMode) {
+        while ((ptrdiff_t)cur != 0 && obj->anim.activeHitboxMode < cur->anim.activeHitboxMode) {
             prev = cur;
-            cur = *(int*)((u8*)cur + linkOff);
+            cur = *(void**)((u8*)cur + linkOff);
         }
-        objListAdd(&gObjUpdateList, prev, (int)obj);
+        objListAdd(&gObjUpdateList, prev, obj);
     }
 }
 
 void Obj_RemoveFromUpdateList(GameObject* obj) {
     if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST) {
-        objList_remove(&gObjUpdateList, (int)obj);
+        objList_remove(&gObjUpdateList, obj);
     }
 }
 
@@ -1471,8 +1471,8 @@ int objGetTotalDataSize(void* tmpl, ObjDef* def, s16* data, int flags) {
 void Obj_RegisterObject(GameObject* obj, int flags) {
     ObjAnimComponent* object;
     int id;
-    int prev;
-    int cur;
+    GameObject* prev;
+    GameObject* cur;
     int off;
 
     object = &obj->anim;
@@ -1517,14 +1517,14 @@ void Obj_RegisterObject(GameObject* obj, int flags) {
         obj->objectFlags |= OBJECT_FLAG_IN_UPDATE_LIST;
         gObjList[gObjCount++] = obj;
         if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST) {
-            prev = 0;
+            prev = NULL;
             cur = gObjUpdateList.head;
             off = gObjUpdateList.nextOffset;
-            while (cur != 0 && object->activeHitboxMode < ((GameObject*)cur)->anim.activeHitboxMode) {
+            while ((ptrdiff_t)cur != 0 && object->activeHitboxMode < cur->anim.activeHitboxMode) {
                 prev = cur;
-                cur = *(int*)(cur + off);
+                cur = *(void**)((u8*)cur + off);
             }
-            objListAdd(&gObjUpdateList, prev, (int)obj);
+            objListAdd(&gObjUpdateList, prev, obj);
         }
     }
     if (object->modelInstance->group8RegistrationCount > 0) {
@@ -2024,14 +2024,14 @@ void Obj_UpdateAllObjects(u8 flags) {
     int updateFlags;
     int off;
     int timeStop;
-    u8* obj2;
-    int child;
-    int obj;
-    int obj3;
+    u8* groupEntry;
+    GameObject* child;
+    GameObject* obj;
+    GameObject* hitObject;
     int count1;
     int count2;
     ObjHitsPriorityState* t;
-    void (*cb)(int);
+    void (*cb)(GameObject*);
 
     updateFlags = flags;
     gObjUpdateFlags = updateFlags;
@@ -2043,88 +2043,88 @@ void Obj_UpdateAllObjects(u8 flags) {
     Obj_UpdateModelBlendStates();
     ObjHitReact_ResetActiveObjects(gObjCount);
     obj = gObjUpdateList.head;
-    while (obj != 0 && ((ObjAnimComponent*)obj)->activeHitboxMode == 0x64) {
-        Obj_UpdateObject((GameObject*)obj);
-        obj = *(int*)(obj + off);
+    while ((ptrdiff_t)obj != 0 && obj->anim.activeHitboxMode == 0x64) {
+        Obj_UpdateObject(obj);
+        obj = *(void**)((u8*)obj + off);
     }
-    while (obj != 0 && (((ObjAnimComponent*)obj)->modelInstance->flags & OBJDEF_FLAG_HITBOX_GROUP)) {
-        Obj_UpdateObject((GameObject*)obj);
-        ((GameObject*)obj)->anim.transformMatrixIndex = Obj_BuildTransformMatrixSlot((GameObject*)obj);
-        obj = *(int*)(obj + off);
+    while ((ptrdiff_t)obj != 0 && (obj->anim.modelInstance->flags & OBJDEF_FLAG_HITBOX_GROUP)) {
+        Obj_UpdateObject(obj);
+        obj->anim.transformMatrixIndex = Obj_BuildTransformMatrixSlot(obj);
+        obj = *(void**)((u8*)obj + off);
     }
     if (timeStop == 0) {
         ObjHitReact_UpdateResetObjects();
     }
-    for (; obj != 0; obj = *(int*)(obj + off)) {
-        t = (ObjHitsPriorityState*)((void*)((GameObject*)obj)->anim.hitReactState);
+    for (; (ptrdiff_t)obj != 0; obj = *(void**)((u8*)obj + off)) {
+        t = (ObjHitsPriorityState*)obj->anim.hitReactState;
         if (t != 0) {
             if ((t->shapeFlags & 8) == 0 || (t->flags & 1) == 0) {
-                Obj_UpdateObject((GameObject*)obj);
+                Obj_UpdateObject(obj);
             }
         } else {
-            Obj_UpdateObject((GameObject*)obj);
+            Obj_UpdateObject(obj);
         }
     }
-    obj2 = (u8*)objGetAllOfType(0, &count1);
+    groupEntry = (u8*)objGetAllOfType(0, &count1);
     if (count1 != 0) {
-        obj2 = *(u8**)obj2;
+        groupEntry = (u8*)*(GameObject**)groupEntry;
     } else {
-        obj2 = 0;
+        groupEntry = 0;
     }
-    if (obj2 != 0 && (u32)(child = (int)((GameObject*)obj2)->childObjs[0]) != 0) {
-        ((GameObject*)child)->anim.parent = ((GameObject*)obj2)->anim.parent;
-        Obj_UpdateObject(((GameObject*)obj2)->childObjs[0]);
+    if (groupEntry != 0 && (child = ((GameObject*)groupEntry)->childObjs[0]) != NULL) {
+        child->anim.parent = ((GameObject*)groupEntry)->anim.parent;
+        Obj_UpdateObject(((GameObject*)groupEntry)->childObjs[0]);
     }
     if (timeStop == 0) {
         ObjHits_Update(gObjCount);
-        obj3 = gObjUpdateList.head;
-        for (; obj3 != 0; obj3 = *(int*)(obj3 + off)) {
-            if ((((GameObject*)obj3)->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0) {
-                switch (((GameObject*)obj3)->anim.romDefNo) {
+        hitObject = gObjUpdateList.head;
+        for (; (ptrdiff_t)hitObject != 0; hitObject = *(void**)((u8*)hitObject + off)) {
+            if ((hitObject->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0) {
+                switch (hitObject->anim.romDefNo) {
                 case 0:
                 case 0x1f:
-                    playerDoHitDetection((GameObject*)obj3);
+                    playerDoHitDetection(hitObject);
                     break;
                 default:
-                    if (((GameObject*)obj3)->anim.dll == 0) {
+                    if (hitObject->anim.dll == 0) {
                         continue;
                     }
-                    cb = (void (*)(int))((ObjectInterface*)*((GameObject*)obj3)->anim.dll)->hitDetect;
+                    cb = (void (*)(GameObject*))((ObjectInterface*)*hitObject->anim.dll)->hitDetect;
                     if (cb == 0) {
                         continue;
                     }
-                    cb(obj3);
+                    cb(hitObject);
                     break;
                 }
-                Obj_GetWorldPosition((GameObject*)obj3, &((GameObject*)obj3)->anim.worldPosX,
-                                     &((GameObject*)obj3)->anim.worldPosY, &((GameObject*)obj3)->anim.worldPosZ);
+                Obj_GetWorldPosition(hitObject, &hitObject->anim.worldPosX,
+                                     &hitObject->anim.worldPosY, &hitObject->anim.worldPosZ);
             }
         }
-        obj2 = (u8*)objGetAllOfType(0, &count2);
-        obj2 = (count2 != 0) ? *(u8**)obj2 : 0;
-        if (obj2 != 0 && ((GameObject*)obj2)->childObjs[0] != 0) {
-            ((GameObject*)((GameObject*)obj2)->childObjs[0])->anim.parent = ((GameObject*)obj2)->anim.parent;
-            child = *(int*)&((GameObject*)obj2)->childObjs[0];
-            if ((((GameObject*)child)->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0) {
+        groupEntry = (u8*)objGetAllOfType(0, &count2);
+        groupEntry = (count2 != 0) ? (u8*)*(GameObject**)groupEntry : 0;
+        if (groupEntry != 0 && ((GameObject*)groupEntry)->childObjs[0] != 0) {
+            ((GameObject*)((GameObject*)groupEntry)->childObjs[0])->anim.parent = ((GameObject*)groupEntry)->anim.parent;
+            child = ((GameObject*)groupEntry)->childObjs[0];
+            if ((child->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0) {
                 do {
-                    switch (((GameObject*)child)->anim.romDefNo) {
+                    switch (child->anim.romDefNo) {
                     case 0:
                     case 0x1f:
-                        playerDoHitDetection((GameObject*)child);
+                        playerDoHitDetection(child);
                         break;
                     default:
-                        if (((GameObject*)child)->anim.dll == 0) {
+                        if (child->anim.dll == 0) {
                             continue;
                         }
-                        cb = (void (*)(int))((ObjectInterface*)*((GameObject*)child)->anim.dll)->hitDetect;
+                        cb = (void (*)(GameObject*))((ObjectInterface*)*child->anim.dll)->hitDetect;
                         if (cb == 0) {
                             continue;
                         }
                         cb(child);
                         break;
                     }
-                    Obj_GetWorldPosition((GameObject*)child, &((GameObject*)child)->anim.worldPosX,
-                                         &((GameObject*)child)->anim.worldPosY, &((GameObject*)child)->anim.worldPosZ);
+                    Obj_GetWorldPosition(child, &child->anim.worldPosX,
+                                         &child->anim.worldPosY, &child->anim.worldPosZ);
                 } while (0);
             }
         }
