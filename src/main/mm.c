@@ -112,7 +112,8 @@ MmStore* gMmStoreArray[MM_STORE_COUNT];
 
 static int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, const char* allocationName);
 
-static int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag, const char* allocationName);
+static int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag,
+                          const char* allocationName);
 
 static void heapFree(int region, int idx);
 
@@ -684,7 +685,8 @@ static void heapFree(int region, int idx) {
     }
 }
 
-static int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag, const char* allocationName) {
+static int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag,
+                          const char* allocationName) {
     int oldSize;
     int ni;
     HeapItem* base;
@@ -715,7 +717,8 @@ static int changeHeapSlot(int region, int idx, int newSize, int type, int newTyp
     return idx;
 }
 
-static int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, const char* allocationName) {
+static int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag,
+                         const char* allocationName) {
     int ni;
     HeapItem* base;
     int oldSize;
