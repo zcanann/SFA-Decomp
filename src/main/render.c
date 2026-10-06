@@ -1680,17 +1680,17 @@ static inline void render_writePackedU16(RenderPackedAddress address, u16 value)
 /* Refill the two parallel 64-bit bitstream windows from the next
    byte-aligned position once the consumed bit count overruns 64. */
 #define RENDER_BITS_REFILL(nb)                                                                                         \
-    consumedBits -= (nb);                                                                                                    \
-    windowA = consumedBits >> 3;                                                                                                \
-    frameAddressA += windowA;                                                                                                      \
-    frameAddressB = windowA + frameAddressB;                                                                                                \
-    consumedBits &= 7;                                                                                                       \
-    render_copyPackedU64Head(&windowA, frameAddressA);                                                                             \
-    render_copyPackedU64Tail(&windowA, frameAddressA + 7);                                                                         \
-    render_copyPackedU64Head(&windowB, frameAddressB);                                                                             \
-    render_copyPackedU64Tail(&windowB, frameAddressB + 7);                                                                         \
-    windowA <<= (consumedBits & 0xFFFFFFFF);                                                                                    \
-    windowB <<= (consumedBits & 0xFFFFFFFF);                                                                                    \
+    consumedBits -= (nb);                                                                                              \
+    windowA = consumedBits >> 3;                                                                                       \
+    frameAddressA += windowA;                                                                                          \
+    frameAddressB = windowA + frameAddressB;                                                                           \
+    consumedBits &= 7;                                                                                                 \
+    render_copyPackedU64Head(&windowA, frameAddressA);                                                                 \
+    render_copyPackedU64Tail(&windowA, frameAddressA + 7);                                                             \
+    render_copyPackedU64Head(&windowB, frameAddressB);                                                                 \
+    render_copyPackedU64Tail(&windowB, frameAddressB + 7);                                                             \
+    windowA <<= (consumedBits & 0xFFFFFFFF);                                                                           \
+    windowB <<= (consumedBits & 0xFFFFFFFF);                                                                           \
     consumedBits += (nb);
 
 const f32 gModelRenderSubframeScale[1] = {16384.0f};
