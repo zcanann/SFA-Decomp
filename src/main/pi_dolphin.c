@@ -10,6 +10,7 @@
 #include "sys/objects.h"
 #include "dolphin/gx/GXMisc.h"
 #include "main/pi_dolphin.h"
+#include "main/map_romlist_page.h"
 #include "main/gpu_hang.h"
 #include "main/newshadows.h"
 #include "main/mm.h"
@@ -4008,18 +4009,19 @@ void loadModelsBin(int offsetFlags, int* animationCount, int* maxAnimationBytes,
     }
 }
 
-void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5) {
-    char* e;
-    if (gResourceFileBuffers[0x1d] == NULL) {
+void mapsBinGetRomlistSize(int headerOffset, int* objectCount, int* unknown1E, int* objectBytes, int tableWordIndex) {
+    MapRomListPage* page;
+    if (gResourceFileBuffers[MLDF_FILEID_MAPS_BIN] == NULL) {
         return;
     }
-    if (gResourceFileBuffers[0x1e] == NULL) {
+    if (gResourceFileBuffers[MLDF_FILEID_MAPS_TAB] == NULL) {
         return;
     }
-    e = (char*)gResourceFileBuffers[0x1d] + idx;
-    *out1 = *(s16*)(e + 0x1c);
-    *out2 = *(s16*)(e + 0x1e);
-    *out3 = *(int*)((char*)gResourceFileBuffers[0x1d] + *(int*)((char*)gResourceFileBuffers[0x1e] + p5 * 4 + 0x18) + 4);
+    page = (MapRomListPage*)((u8*)gResourceFileBuffers[MLDF_FILEID_MAPS_BIN] + headerOffset);
+    *objectCount = page->objectCount;
+    *unknown1E = page->unk1E;
+    *objectBytes = ((struct PackHeader*)((u8*)gResourceFileBuffers[MLDF_FILEID_MAPS_BIN] +
+        ((MapRomListOffsets*)((u8*)gResourceFileBuffers[MLDF_FILEID_MAPS_TAB] + tableWordIndex * sizeof(s32)))->objectsOffset))->decompressedSize;
 }
 
 void checkLoadBlock(int a, int* pc, int* p8) {

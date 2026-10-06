@@ -176,7 +176,7 @@ u8* gMapBlockRefCounts;
 s8* gMapLayerCellStates;
 u16* gTrkBlkTab;
 void* gHitsTab;
-int gMapsTab;
+MapRomListOffsets* gMapsTab;
 u8* gMapInfoBuffer;
 int gMapCellRenderInstrsTable;
 s16 gMapCellRenderInstrBits;
@@ -268,15 +268,6 @@ typedef struct MapBounds {
     s8 originX;
     s8 originZ;
 } MapBounds;
-
-typedef struct MapsBinHeader {
-    s16 sizeX;
-    s16 sizeZ;
-    s16 originX;
-    s16 originZ;
-    u8 unk08[4];
-    u32* cells;
-} MapsBinHeader;
 
 typedef struct GlobalMapEntry {
     s16 originX;
@@ -487,7 +478,7 @@ static inline int mapFindLoadedRomList(int id) {
     return -1;
 }
 
-MapRomListPage* mapGetRomListAndOffsets(int p1, int b);
+MapRomListPage* mapGetRomListAndOffsets(int mapId, int skipIndex);
 
 char sShaderUnusedWordTable[172] = {
     0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 52, 0, 0, 0, 60,
@@ -3700,35 +3691,40 @@ int ViewFrustum_IsSphereVisible(float* center, float radius) {
     return 1;
 }
 
-MapRomListPage* mapGetRomListAndOffsets(int p1, int flag) {
-    int words = p1 * 7;
-    int offset0 = *(int*)(gMapsTab + (words << 2));
-    int tailLen = *(int*)((gMapsTab + 0x1c) + ((u32)words << 2)) - offset0;
-    int v0, v1, v2;
+/* Preserve the two-step table indexing used by the metadata query. Pointer-width
+ * arithmetic keeps MWCC's addressing modes without truncating native addresses. */
+#define MAP_SECTION_OFFSET(byteOffset, field) (*(s32*)((size_t)gMapsTab + offsetof(MapRomListOffsets, field) + (byteOffset)))
+#define MAP_SECTION_END(byteOffset) (*(s32*)((size_t)gMapsTab + sizeof(MapRomListOffsets) + (byteOffset)))
+
+MapRomListPage* mapGetRomListAndOffsets(int mapId, int skipIndex) {
+    int tableWordIndex = mapId * (sizeof(MapRomListOffsets) / sizeof(s32));
+    int headerOffset = MAP_SECTION_OFFSET(tableWordIndex << 2, headerOffset);
+    int pageBytes = MAP_SECTION_END((u32)tableWordIndex << 2) - headerOffset;
+    int objectCount, unknown1E, objectBytes;
     int i;
 
-    mapsBinGetRomlistSize(offset0, &v0, &v1, &v2, words);
-    gCurRomListPage = mmAlloc(tailLen + (v0 + 7 >> 3) + 0x401 + v2, 5, 0);
-    fileLoadToBufferOffset(MLDF_FILEID_MAPS_BIN, gCurRomListPage, offset0, tailLen);
+    mapsBinGetRomlistSize(headerOffset, &objectCount, &unknown1E, &objectBytes, tableWordIndex);
+    gCurRomListPage = mmAlloc(pageBytes + (objectCount + 7 >> 3) + 0x401 + objectBytes, 5, 0);
+    fileLoadToBufferOffset(MLDF_FILEID_MAPS_BIN, gCurRomListPage, headerOffset, pageBytes);
 
     ((MapRomListPage*)gCurRomListPage)->cells =
-        (u32*)((int)gCurRomListPage + *(int*)((gMapsTab + 4) + (words << 2)) - offset0);
+        (u32*)((u8*)gCurRomListPage + MAP_SECTION_OFFSET(tableWordIndex << 2, cellsOffset) - headerOffset);
     ((MapRomListPage*)gCurRomListPage)->cellRects =
-        (u32*)((int)gCurRomListPage + *(int*)((gMapsTab + 8) + (words << 2)) - offset0);
+        (u32*)((u8*)gCurRomListPage + MAP_SECTION_OFFSET(tableWordIndex << 2, cellRectsOffset) - headerOffset);
     ((MapRomListPage*)gCurRomListPage)->visCellRects =
-        (u32*)((int)gCurRomListPage + *(int*)((gMapsTab + 0xc) + (words << 2)) - offset0);
+        (u32*)((u8*)gCurRomListPage + MAP_SECTION_OFFSET(tableWordIndex << 2, visCellRectsOffset) - headerOffset);
     ((MapRomListPage*)gCurRomListPage)->layerRects =
-        (u32*)((int)gCurRomListPage + *(int*)((gMapsTab + 0x10) + (words << 2)) - offset0);
+        (u32*)((u8*)gCurRomListPage + MAP_SECTION_OFFSET(tableWordIndex << 2, layerRectsOffset) - headerOffset);
     ((MapRomListPage*)gCurRomListPage)->visLayerRects =
-        (u32*)((int)gCurRomListPage + *(int*)((gMapsTab + 0x14) + (words << 2)) - offset0);
+        (u32*)((u8*)gCurRomListPage + MAP_SECTION_OFFSET(tableWordIndex << 2, visLayerRectsOffset) - headerOffset);
     ((MapRomListPage*)gCurRomListPage)->objects =
-        (ObjPlacement*)((int)gCurRomListPage + *(int*)((gMapsTab + 0x18) + (words << 2)) - offset0);
+        (ObjPlacement*)((u8*)gCurRomListPage + MAP_SECTION_OFFSET(tableWordIndex << 2, objectsOffset) - headerOffset);
 
-    piRomLoadSection(*(int*)((gMapsTab + 0x18) + (words << 2)), p1, ((MapRomListPage*)gCurRomListPage)->objects);
+    piRomLoadSection(MAP_SECTION_OFFSET(tableWordIndex << 2, objectsOffset), mapId, ((MapRomListPage*)gCurRomListPage)->objects);
     ((MapRomListPage*)gCurRomListPage)->loadedObjectBits =
-        (s8*)((*(int*)((gMapsTab + 0x1c) + (words << 2)) + v2) + (int)gCurRomListPage - offset0);
+        (s8*)((MAP_SECTION_END((u32)tableWordIndex << 2) + objectBytes) + (u8*)gCurRomListPage - headerOffset);
 
-    for (i = 0; i < (v0 + 7 >> 3) + 1; i++) {
+    for (i = 0; i < (objectCount + 7 >> 3) + 1; i++) {
         ((MapRomListPage*)gCurRomListPage)->loadedObjectBits[i] = 0;
     }
     {
@@ -3738,9 +3734,9 @@ MapRomListPage* mapGetRomListAndOffsets(int p1, int flag) {
     }
     ((MapRomListPage*)gCurRomListPage)->unk18 = 0;
     ((MapRomListPage*)gCurRomListPage)->mapLayer = 0;
-    if (flag == 0) {
-        mapBuildRomListIndex(gCurRomListPage, &gMapRomListIndexes[p1], p1, 0);
-        (*gMapEventInterface)->updateObjGroups(p1);
+    if (skipIndex == 0) {
+        mapBuildRomListIndex(gCurRomListPage, &gMapRomListIndexes[mapId], mapId, 0);
+        (*gMapEventInterface)->updateObjGroups(mapId);
     }
     return gCurRomListPage;
 }
@@ -4156,12 +4152,12 @@ void initMaps(void) {
 #undef INIT_MAP_SLOT
 
 static void mapInitSetRects(MapBounds* rect, u8* bitmap, int originX, int originZ, int idx) {
-    MapsBinHeader* self = (MapsBinHeader*)gMapInfoBuffer;
-    int tabOff = idx * 7 << 2;
-    int offset0 = *(int*)(gMapsTab + tabOff);
+    MapRomListPage* self = (MapRomListPage*)gMapInfoBuffer;
+    int tableByteOffset = idx * (int)(sizeof(MapRomListOffsets) / sizeof(s32)) << 2;
+    int offset0 = *(s32*)((ptrdiff_t)gMapsTab + tableByteOffset);
 
-    getTabEntry(self, MLDF_FILEID_MAPS_BIN, offset0, *(int*)((gMapsTab + 8) + tabOff) - offset0);
-    self->cells = (u32*)((int)self + *(int*)((gMapsTab + 4) + tabOff) - *(int*)(gMapsTab + tabOff));
+    getTabEntry(self, MLDF_FILEID_MAPS_BIN, offset0, MAP_SECTION_OFFSET(tableByteOffset, cellRectsOffset) - offset0);
+    self->cells = (u32*)((u8*)self + MAP_SECTION_OFFSET(tableByteOffset, cellsOffset) - *(s32*)((ptrdiff_t)gMapsTab + tableByteOffset));
     rect->minX = originX - self->originX;
     rect->minZ = originZ - self->originZ;
     rect->maxX = rect->minX + self->sizeX - 1;

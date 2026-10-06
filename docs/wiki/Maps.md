@@ -497,17 +497,15 @@ walkers degrade to "occupancy 0" everywhere (routes still compute, ignoring voxe
 severed-consumer class as the entries in [UnusedThings](UnusedThings). The decompiled source
 faithfully stores NULL and must not "fix" the link.
 
-### Not found in this codebase (checked, absent)
+### Additional source links and unresolved readers
 
-- No parser for `MAPS.bin`'s `infoOffset` struct (`sizeX`/`sizeZ`/`originX`/`originZ`/`nBlocks`)
-  was found by name — likely inlined into whatever loads `MAPS.bin`, not yet decompiled/named.
-  (Note: unrelated `originX`/`originZ` fields exist elsewhere in this codebase — e.g.
-  `ModelChain`/`VoxMapState` in `model.c`/`voxmaps.c` — but they are local-origin fields for other
-  systems, not this table.)
-  - Update in this pass: `mapsBinGetRomlistSize` (`pi_dolphin.c:6178`) reads `s16` pairs at
-    `+0x1C`/`+0x1E` off a per-map-ID row in the in-memory `MAPS.tab` — offsets that don't match
-    `infoOffset`'s own layout, so this is a different (likely `blockTable`-relative) table, not
-    confirmed to be `infoOffset` itself.
+- `MAPS.bin`'s `infoOffset` header is `MapRomListPage` in
+  `include/main/map_romlist_page.h`. `mapGetRomListAndOffsets` and `mapInitSetRects`
+  in `shader.c` load it and relocate its section pointers. `mapsBinGetRomlistSize`
+  reads signed halfwords at +0x1C/+0x1E from that **MAPS.bin header**, not MAPS.tab:
+  the object count and an unresolved field. MAPS.tab supplies seven section offsets
+  per map. See the [MAPS page recovery](../map_load_data_file_matching.md#maps-table-and-page-loading-2026-10-06)
+  for corpus checks and the two object-only table entries that have no page header.
 - `MAPINFO.bin`'s record is now typed in source: `MapInfoRecord` in `src/main/shader.c`
   (`char name[0x1c]; s8 mapType; u8 unk1d; s16 objType;`). `mapType` is read when resolving a
   world position to a map id; `objType` is copied into a write-only latch on sub-map entry

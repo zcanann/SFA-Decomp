@@ -29,6 +29,7 @@ typedef uint8_t u8;
 typedef uint32_t u32;
 typedef int32_t s32;
 typedef int16_t s16;
+typedef uint16_t u16; typedef int8_t s8; typedef float f32;
 typedef struct DVDFileInfo { u32 length; } DVDFileInfo;
 """
 SERVICES = r"""
@@ -370,7 +371,8 @@ static void checkBlock(int vox, int bank, int present, int validTag, int flagged
 static void checkMap(int present) {
     reset();
     s16 values[] = {-1234, 2345};
-    memcpy(resident + 128 + 28, values, sizeof(values));
+    MapRomListPage* page = (MapRomListPage*)(resident + 128);
+    page->objectCount = values[0]; page->unk1E = values[1];
     word(resident, 256 + 4, 54321); word(disk, 2 * 4 + 24, 256);
     gResourceFileBuffers[0x1d] = present & 1 ? resident : NULL;
     gResourceFileBuffers[0x1e] = present & 2 ? disk : NULL;
@@ -431,6 +433,11 @@ def harness():
     parts.extend(re.findall(r'^#define TEXTURE_FRAME_QUERY_[^\n]+', modes, re.M))
     bank_header = (ROOT / 'include/main/rcp_dolphin.h').read_text()
     parts.extend(re.findall(r'^#define TEX_TAB_MAP_[^\n]+', bank_header, re.M))
+    page_header = (ROOT / 'include/main/map_romlist_page.h').read_text()
+    parts.append('typedef struct ObjPlacement ObjPlacement;')
+    for name in ('MapRomListOffsets', 'MapRomListPage'):
+        parts.append(re.search(rf'typedef struct {name}\s*\{{.*?\}} {name};', page_header, re.S)[0])
+    parts.append(re.search(r'struct PackHeader \{.*?\n\};', source, re.S)[0])
     parts.append(SERVICES)
     for name in ('animCurvReadCb', 'animCurvTabReadCb', 'voxMapReadCb', 'voxMapTabReadCb',
                  'blocksReadCb', 'blocksTabReadCb', 'tex1ReadCb', 'tex0readCb',

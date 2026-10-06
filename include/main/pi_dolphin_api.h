@@ -52,7 +52,7 @@ void addEnvMapTexCoord(int scale);
 void addWarpedNoiseTevStages(void* texture, void* texMtx);
 void addRenderOpFadeStage(void* renderOp);
 
-void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5);
+void mapsBinGetRomlistSize(int headerOffset, int* objectCount, int* unknown1E, int* objectBytes, int tableWordIndex);
 
 extern s16 gObjMapBlockInfo[];
 extern s16 sMapFileNameAdjacencyTable[];
