@@ -22,9 +22,10 @@ typedef int16_t s16;
 typedef uint32_t u32;
 typedef int32_t s32;
 typedef float f32;
+typedef struct Vec3f { f32 x, y, z; } Vec3f;
 typedef struct GameObject GameObject;
-/* Semantic object fixtures: only collision records and mode state use the
- * production definitions. This does not emulate the target object ABI. */
+/* The player is a semantic fixture; camera, collision and mode-state records
+ * use production definitions. This does not emulate the target object ABI. */
 typedef struct ObjAnimComponent {
     union { struct { f32 worldPosX, worldPosY, worldPosZ; }; f32 worldPos[3]; };
     f32 localPosX, localPosY, localPosZ, velocityY;
@@ -35,12 +36,6 @@ typedef struct ObjAnimComponent {
 struct GameObject { ObjAnimComponent anim; };
 """
 SERVICES = r"""
-typedef struct CameraObject {
-    ObjAnimComponent anim;
-    TrackHitResults collisionResults;
-    f32 boundHitZUpper, boundHitZLower, probePosX, probePosY, probePosZ;
-    u8 cameraCollisionActive, unk13E;
-} CameraObject;
 static CameraModeNormalState state;
 static CameraModeNormalState* gCameraModeNormalState = &state;
 static f32 timeDelta = 2.0f, gCameraModeNormalScaledTimeDelta;
@@ -105,7 +100,7 @@ static void run(int classId) {
     target.anim.worldPosX = 10.0f;
     target.anim.worldPosY = 20.0f;
     target.anim.worldPosZ = 30.0f;
-    camera.anim.targetObj = &target;
+    camera.focusObject = &target;
     camera.anim.localPosX = 40.0f;
     camera.anim.localPosY = 60.0f;
     camera.anim.localPosZ = 80.0f;
@@ -124,7 +119,7 @@ static void run(int classId) {
     assert(traces == 2 && previousPositions == (classId == 1 ? 2 : 0));
     assert(actions == 1 && state.collisionHitMask == 0x10);
     assert(state.wallAvoidanceTimer == 0 && state.collisionProbeTimer == 0);
-    assert(camera.probePosX == 60.0f && camera.probePosY == 100.0f && camera.probePosZ == 140.0f);
+    assert(camera.prevWorldX == 60.0f && camera.prevWorldY == 100.0f && camera.prevWorldZ == 140.0f);
     assert(camera.anim.localPosX == 60.0f && camera.anim.localPosY == 100.0f && camera.anim.localPosZ == 140.0f);
     assert(gCameraModeNormalScaledTimeDelta == (classId == 1 ? 1.0f : 2.0f));
 
@@ -133,7 +128,7 @@ static void run(int classId) {
     CameraModeNormal_update(&camera);
     assert(traces == 2 && state.clampFlags.heightLocked == 1);
     assert(state.heightLockLimit == camera.anim.worldPosY);
-    camera.anim.targetObj = NULL;
+    camera.focusObject = NULL;
     CameraModeNormal_update(&camera);
     assert(actions == 2 && traces == 2);
 }
@@ -146,10 +141,13 @@ int main(void) {
 """
 
 
-def harness():
+def records():
+    """Use the shared records with native pointers, omitting target ABI asserts."""
     parts = [PRELUDE]
     for path, names in (
+        ("include/main/dll/DR/dr_types.h", ("BitFlags8",)),
         ("include/main/track_hit_results.h", ("TrackHitResults",)),
+        ("include/main/camera_object.h", ("CameraTransform", "CameraObject")),
         ("include/main/dll/dll_0042_cameramodenormal.h", (
             "CameraModeNormalWallAvoidanceFlags", "CameraModeNormalClampFlags", "CameraModeNormalState")),
     ):
@@ -158,11 +156,14 @@ def harness():
             parts.append(re.search(r"^#define TRACK_HIT_MAX_POINTS[^\n]*", header, re.M)[0])
         for name in names:
             parts.append(re.search(rf"typedef struct {name}\s*\{{.*?\}} {name};", header, re.S)[0])
-    parts.append(SERVICES)
+    return "\n".join(parts)
+
+
+def harness():
     source = (ROOT / "src/dlls/engine/66/66.c").read_text()
     start, end = find_function_body(source, "CameraModeNormal_update")
     declaration = source.rfind("void CameraModeNormal_update", 0, start)
-    return "\n".join(parts + [source[declaration:end + 1], CASES])
+    return "\n".join([records(), SERVICES, source[declaration:end + 1], CASES])
 
 
 class CameraUpdateStorageTests(unittest.TestCase):

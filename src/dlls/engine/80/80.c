@@ -28,7 +28,7 @@ void CameraModeCrawl_copyToCurrent(void* actionData, int recordSize) {
         return;
     }
     camera = (*gCameraInterface)->getCamera();
-    target = (GameObject*)camera->anim.targetObj;
+    target = (GameObject*)camera->focusObject;
     originalYaw = target->anim.rotX;
 
     if (recordSize == 0) {
@@ -46,13 +46,13 @@ void CameraModeCrawl_copyToCurrent(void* actionData, int recordSize) {
 
         coordinate = targetPosition[0];
         camera->anim.worldPosX = coordinate;
-        camera->probePosX = coordinate;
+        camera->prevWorldX = coordinate;
         coordinate = targetPosition[1];
         camera->anim.worldPosY = coordinate;
-        camera->probePosY = coordinate;
+        camera->prevWorldY = coordinate;
         coordinate = targetPosition[2];
         camera->anim.worldPosZ = coordinate;
-        camera->probePosZ = coordinate;
+        camera->prevWorldZ = coordinate;
     }
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
@@ -66,7 +66,7 @@ void CameraModeCrawl_free(void) {
 }
 
 void CameraModeCrawl_update(CameraObject* camera) {
-    GameObject* target = (GameObject*)camera->anim.targetObj;
+    GameObject* target = (GameObject*)camera->focusObject;
     int yawDelta;
     f32 relativeX;
     f32 relativeY;

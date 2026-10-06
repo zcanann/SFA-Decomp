@@ -87,7 +87,7 @@ void firstPersonExit(CameraObject* camera) {
     f32 targetPos[3];
     s16 unusedRotation[2];
 
-    target = (GameObject*)self->anim.targetObj;
+    target = (GameObject*)self->focusObject;
     gCameraModeViewfinderState->positionXCurve.start = self->anim.worldPosX;
     tangent = 0.0f;
     gCameraModeViewfinderState->positionXCurve.startTangent = 0.0f;
@@ -154,10 +154,10 @@ void firstPersonDoControls(CameraObject* camera) {
     f32 fovTarget;
     f32 zoom2;
 
-    focus = (GameObject*)camera->anim.targetObj;
+    focus = (GameObject*)camera->focusObject;
     stickX = padGetStickX(0);
     stickY = padGetStickY(0);
-    t = (60.0f - camera->fov) / 50.0f;
+    t = (60.0f - camera->fovY) / 50.0f;
     zoom = (t < 0.0f) ? 0.0f : ((t > 1.0f) ? 1.0f : t);
     spin = stickX * (6.0f - 4.0f * zoom);
     spin = interpolate(spin - gCameraModeViewfinderState->yawSpeed, 0.12f, timeDelta);
@@ -194,7 +194,7 @@ void firstPersonDoControls(CameraObject* camera) {
     camera->anim.worldPosY = gCameraModeViewfinderState->clampedPositionY;
     camera->anim.worldPosZ = gCameraModeViewfinderState->cameraPositionZ;
     if (gCameraModeViewfinderState->flags.zoomHudEnabled) {
-        zoom2 = camera->fov;
+        zoom2 = camera->fovY;
         stickX = padGetCY(0);
         t = (f32)-stickX;
         t = 0.01f * t;
@@ -202,16 +202,16 @@ void firstPersonDoControls(CameraObject* camera) {
         viewFinderSetZoom(Camera_GetFovY());
         fovTarget = (zoom2 < 5.0f) ? 5.0f : ((zoom2 > 60.0f) ? 60.0f : zoom2);
         if (gCameraModeViewfinderState->flags.sfxEnabled) {
-            if ((fovTarget == camera->fov) && (gCameraModeViewfinderState->flags.zoomSfxPlaying)) {
+            if ((fovTarget == camera->fovY) && (gCameraModeViewfinderState->flags.zoomSfxPlaying)) {
                 Sfx_StopFromObject(0, SFXTRIG_and_swipe1);
                 gCameraModeViewfinderState->flags.zoomSfxPlaying = 0;
             }
-            if ((fovTarget != camera->fov) && (!gCameraModeViewfinderState->flags.zoomSfxPlaying)) {
+            if ((fovTarget != camera->fovY) && (!gCameraModeViewfinderState->flags.zoomSfxPlaying)) {
                 Sfx_PlayFromObject(0, SFXTRIG_and_swipe1);
                 gCameraModeViewfinderState->flags.zoomSfxPlaying = 1;
             }
         }
-        camera->fov = fovTarget;
+        camera->fovY = fovTarget;
     }
 }
 
@@ -233,7 +233,7 @@ int firstPersonEnter(CameraObject* camera, GameObject* focus) {
         transitionStarted = 1;
     }
     alpha = (int)(255.0f * camera->blendProgress);
-    viewObject = (GameObject*)camera->anim.targetObj;
+    viewObject = (GameObject*)camera->focusObject;
     if (alpha < 1) {
         alpha = 1;
     }
@@ -296,7 +296,7 @@ void CameraModeViewfinder_copyToCurrent(const CameraModeViewfinderPose* pose) {
         current->anim.worldPosX = pose->positionX;
         current->anim.worldPosY = pose->positionY;
         current->anim.worldPosZ = pose->positionZ;
-        current->fov = pose->fov;
+        current->fovY = pose->fov;
     }
 }
 
@@ -305,9 +305,9 @@ void CameraModeViewfinder_free(CameraObject* camera) {
     GameObject* viewObj;
     GameObject* outBuf[3];
 
-    ((GameObject*)camera->anim.targetObj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+    ((GameObject*)camera->focusObject)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     Rcp_SetViewFinderHudEnabled(0);
-    viewObj = (GameObject*)camera->anim.targetObj;
+    viewObj = (GameObject*)camera->focusObject;
     if (viewObj != NULL) {
         viewObj->anim.alpha = 0xff;
         player = Obj_GetPlayerObject();
@@ -342,12 +342,12 @@ void CameraModeViewfinder_update(CameraObject* camera) {
     GameObject* fadeHeldObject;
     GameObject* exitHeldObject;
 
-    focus = (GameObject*)camera->anim.targetObj;
+    focus = (GameObject*)camera->focusObject;
     getButtonsJustPressed(0);
     firstPersonPlaceCamera(focus, 0);
     switch (gCameraModeViewfinderState->phase) {
     case CAMERA_MODE_VIEWFINDER_PHASE_ENTER_BLEND:
-        gCameraModeViewfinderState->phase = firstPersonEnter(camera, (GameObject*)camera->anim.targetObj);
+        gCameraModeViewfinderState->phase = firstPersonEnter(camera, (GameObject*)camera->focusObject);
         break;
     case CAMERA_MODE_VIEWFINDER_PHASE_YAW_SETTLE:
         if (Curve_AdvanceAlongPath(&gCameraModeViewfinderState->transitionCurve, 1000.0f) != 0) {
@@ -385,7 +385,7 @@ void CameraModeViewfinder_update(CameraObject* camera) {
             gCameraModeViewfinderState->transitionCurve.eval = Curve_EvalHermite;
             gCameraModeViewfinderState->transitionCurve.coeffFn = Curve_BuildHermiteCoeffs;
             curvesMove(&gCameraModeViewfinderState->transitionCurve);
-            ((GameObject*)camera->anim.targetObj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+            ((GameObject*)camera->focusObject)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             firstPersonZoomOutOnExit(0xf, 0xfe);
             gCameraModeViewfinderState->phase = CAMERA_MODE_VIEWFINDER_PHASE_FADE_BACK;
             if (gCameraModeViewfinderState->flags.sfxEnabled) {
@@ -410,7 +410,7 @@ void CameraModeViewfinder_update(CameraObject* camera) {
             }
             brightness = (int)(255.0f * fade);
         }
-        fadeTarget = (GameObject*)camera->anim.targetObj;
+        fadeTarget = (GameObject*)camera->focusObject;
         if (brightness < 1) {
             brightness = 1;
         }
@@ -448,7 +448,7 @@ void CameraModeViewfinder_update(CameraObject* camera) {
         }
         if (exitBlendFinished != 0) {
             (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
-            exitTarget = (GameObject*)camera->anim.targetObj;
+            exitTarget = (GameObject*)camera->focusObject;
             if (exitTarget != NULL) {
                 exitTarget->anim.alpha = 0xff;
                 if (Obj_GetPlayerObject() == exitTarget) {
@@ -467,7 +467,7 @@ void CameraModeViewfinder_update(CameraObject* camera) {
     case CAMERA_MODE_VIEWFINDER_PHASE_IDLE:
         break;
     }
-    if (ObjHits_GetPriorityHit((GameObject*)camera->anim.targetObj, 0, 0, 0) != 0) {
+    if (ObjHits_GetPriorityHit((GameObject*)camera->focusObject, 0, 0, 0) != 0) {
         firstPersonExit(camera);
         camera->anim.worldPosX = gCameraModeViewfinderState->positionXCurve.end;
         camera->anim.worldPosY = gCameraModeViewfinderState->positionYCurve.end;
@@ -493,7 +493,7 @@ void CameraModeViewfinder_init(CameraObject* camera, int mode, CameraModeViewfin
     f32 cosv;
     f32 sinv;
     f32 zero;
-    focus = (GameObject*)camera->anim.targetObj;
+    focus = (GameObject*)camera->focusObject;
     if (gCameraModeViewfinderState == NULL) {
         gCameraModeViewfinderState = mmAlloc(sizeof(CameraModeViewfinderState), 0xf, 0);
     }

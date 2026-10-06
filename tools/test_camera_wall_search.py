@@ -2,18 +2,16 @@
 """Check wall-search camera storage and path bounds with native pointers."""
 
 from pathlib import Path
-import re
 import subprocess
 import tempfile
 import unittest
 
 from brute_match import find_function_body
-from test_camera_update_storage import PRELUDE
+from test_camera_update_storage import records
 
 ROOT = Path(__file__).resolve().parents[1]
 SERVICES = r"""
 #include <math.h>
-typedef struct CameraObject { ObjAnimComponent anim; f32 unkC4; } CameraObject;
 static CameraModeNormalState state;
 static CameraModeNormalState* gCameraModeNormalState = &state;
 static f32 gCameraModeNormalScaledTimeDelta = 1.0f;
@@ -49,10 +47,13 @@ static int camcontrol_traceMove(f32* from, f32* to, f32* out, TrackHitResults* w
     work->hitCount = 1;
     work->hitMask = 1;
     if (from[1] == origin[1]) {
-        CamcontrolCameraState* candidate = (CamcontrolCameraState*)((u8*)to -
-            offsetof(CamcontrolCameraState, worldPosition));
+        CameraObject* candidate = (CameraObject*)((u8*)to -
+            offsetof(CameraObject, worldPosition));
         assert(candidate->focusObj == &target.anim);
+        assert(candidate->focusObject == &target);
         assert((uintptr_t)candidate->focusObj > UINT32_MAX);
+        assert(candidate->anim.worldPosX == to[0] && candidate->anim.worldPosY == to[1] &&
+               candidate->anim.worldPosZ == to[2]);
         for (int i = 0; i < 3; i++) assert(from[i] == origin[i]);
         assert(probes < answerCount);
         return answers[probes++];
@@ -71,7 +72,7 @@ static void run(const int* script, int count, int expectedSegments, int expected
     target.anim.classId = classId;
     target.anim.worldPosX = 10.0f;
     target.anim.worldPosZ = 30.0f;
-    camera.anim.targetObj = &target;
+    camera.focusObject = &target;
     camera.anim.worldPosX = 110.0f;
     camera.anim.worldPosY = 50.0f;
     camera.anim.worldPosZ = 30.0f;
@@ -110,25 +111,11 @@ int main(void) {
 
 
 def harness():
-    parts = [PRELUDE]
-    for path, names in (
-        ("include/main/dll/DR/dr_types.h", ("BitFlags8",)),
-        ("include/main/dll/CAM/dll_0001_camcontrol.h", ("CamcontrolCameraState",)),
-        ("include/main/track_hit_results.h", ("TrackHitResults",)),
-        ("include/main/dll/dll_0042_cameramodenormal.h", (
-            "CameraModeNormalWallAvoidanceFlags", "CameraModeNormalClampFlags", "CameraModeNormalState")),
-    ):
-        header = (ROOT / path).read_text()
-        if "TrackHitResults" in names:
-            parts.append(re.search(r"^#define TRACK_HIT_MAX_POINTS[^\n]*", header, re.M)[0])
-        for name in names:
-            parts.append(re.search(rf"typedef struct {name}\s*\{{.*?\}} {name};", header, re.S)[0])
-    parts.append(SERVICES)
     source = (ROOT / "src/dlls/engine/66/66.c").read_text()
     name = "CameraModeNormal_chooseWallAvoidanceDirection"
     start, end = find_function_body(source, name)
     declaration = source.rfind("int " + name, 0, start)
-    return "\n".join(parts + [source[declaration:end + 1], CASES])
+    return "\n".join([records(), SERVICES, source[declaration:end + 1], CASES])
 
 
 class CameraWallSearchTests(unittest.TestCase):

@@ -54,9 +54,9 @@ void CameraModeTalk_update(CameraObject* camera) {
     f32 matrix[16];
 
     (*gCameraInterface)->getDefaultHandlerEntry();
-    target = (GameObject*)camera->anim.targetObj;
+    target = (GameObject*)camera->focusObject;
     if (target != NULL) {
-        camera->fov = 85.0f;
+        camera->fovY = 85.0f;
         targetTransform.x = target->anim.worldPosX;
         targetTransform.y = target->anim.worldPosY;
         targetTransform.z = target->anim.worldPosZ;
@@ -122,7 +122,7 @@ void CameraModeTalk_init(CameraObject* camera) {
         gCameraModeTalkState = (CameraModeTalkState*)mmAlloc(sizeof(CameraModeTalkState), 0xF, 0);
     }
     memset(gCameraModeTalkState, 0, sizeof(CameraModeTalkState));
-    gCameraModeTalkState->entryFov = camera->fov;
+    gCameraModeTalkState->entryFov = camera->fovY;
     gCameraModeTalkState->defaultFov = 85.0f;
     gCameraModeTalkState->defaultScale = 1.0f;
     gCameraModeTalkState->followDistance = 50.0f;

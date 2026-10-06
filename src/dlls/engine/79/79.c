@@ -32,9 +32,9 @@ void CameraMode4F_update(CameraObject* camera) {
     blendCurve[2] = 0.0f;
     blendCurve[3] = 0.0f;
     blendValue = Curve_EvalHermite(blendCurve, gCameraMode4FState->blendProgress, NULL);
-    yaw = (s16)(0x8000 - ((GameObject*)camera->anim.targetObj)->anim.rotX);
+    yaw = (s16)(0x8000 - ((GameObject*)camera->focusObject)->anim.rotX);
     yaw += (s32)(14560.0f * blendValue);
-    target = (GameObject*)camera->anim.targetObj;
+    target = (GameObject*)camera->focusObject;
     {
         f32 radians = (3.1415927f * (f32)(s32)yaw) / 32768.0f;
         cosValue = mathCosf(radians);
@@ -47,7 +47,7 @@ void CameraMode4F_update(CameraObject* camera) {
     camera->anim.rotX = (s16)(yaw + 0x1ffe);
     camera->anim.rotZ = 0;
     camera->letterboxTargetOffset = 0;
-    camera->fov = 60.0f;
+    camera->fovY = 60.0f;
     gCameraMode4FState->blendProgress += 0.005f * timeDelta;
     if (gCameraMode4FState->blendProgress > 1.0f) {
         gCameraMode4FState->blendProgress = 1.0f;

@@ -24,7 +24,7 @@
 CameraModeStaffAnimState* gCameraModeStaffAnimState;
 
 u8 CameraModeStaffAnim_samplePath(f32* outX, f32* height, f32* outZ, GameObject* target, CameraObject* camera) {
-    CamcontrolCameraState work;
+    CameraObject work;
     CamcontrolDefaultHandlerEntry* handler;
     int i;
     f32 pathT;
@@ -221,7 +221,7 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
             }
             gCameraModeStaffAnimState->localFrame = (GameObject*)camera->anim.parent;
         }
-        target = (GameObject*)camera->anim.targetObj;
+        target = (GameObject*)camera->focusObject;
         *(pYaddr = &localPosY) = camera->anim.localPosY;
         needsReset = (u8)CameraModeStaffAnim_samplePath(&localPosX, pYaddr, localPosZ, target, camera);
         camera->anim.localPosX = localPosX;
@@ -229,13 +229,13 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
         defaultHandler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
         Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
                                        &camera->anim.worldPosX, &camera->anim.worldPosY, &camera->anim.worldPosZ,
-                                       (GameObject*)camera->anim.parentAddress);
+                                       (GameObject*)camera->anim.parent);
         ((CamcontrolDefaultHandlerEntry*)defaultHandler)->handler->vtable->updateSlide(camera, target, -100000.0f,
                                                                                        100000.0f);
         ((CamcontrolDefaultHandlerEntry*)defaultHandler)
             ->handler->vtable->updateVerticalBounds(camera, 1, 3, &gCameraModeStaffAnimState->curveMin,
                                                     &gCameraModeStaffAnimState->curveMax);
-        if ((camera->anim.currentMove != 0) || (camera->cameraCollisionActive != 0)) {
+        if ((camera->collisionResults.hitCount != 0) || (camera->cameraCollisionActive != 0)) {
             gCameraModeStaffAnimState->initialiseCurve[4] += timeDelta;
         }
         if (gCameraModeStaffAnimState->initialiseCurve[4] > 0.0f) {
@@ -244,9 +244,9 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
             if (needsReset == 1) {
                 camcontrol_onTargetTraceBlocked(1);
             }
-            camera->probePosX = camera->anim.worldPosX;
-            camera->probePosY = camera->anim.worldPosY;
-            camera->probePosZ = camera->anim.worldPosZ;
+            camera->prevWorldX = camera->anim.worldPosX;
+            camera->prevWorldY = camera->anim.worldPosY;
+            camera->prevWorldZ = camera->anim.worldPosZ;
             needsReset = 1;
         }
         (*gCameraInterface)->getRelativePosition(camera, &relX, &relY, &relZ, &relDistXZ, 0.0f, 0);
@@ -302,7 +302,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, CameraModeStaffA
     int i;
 
     settings->snapToTarget = 1;
-    target = (GameObject*)camera->anim.targetObj;
+    target = (GameObject*)camera->focusObject;
 
     if (gCameraModeStaffAnimState == NULL) {
         gCameraModeStaffAnimState = mmAlloc(sizeof(CameraModeStaffAnimState), 0xf, 0);

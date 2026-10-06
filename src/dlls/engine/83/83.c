@@ -26,7 +26,7 @@ void CameraModeCloudRunner_free(void) {
 }
 
 void CameraModeCloudRunner_update(CameraObject* camera) {
-    GameObject* target = (GameObject*)camera->anim.targetObj;
+    GameObject* target = (GameObject*)camera->focusObject;
     GameObject* focus;
     s16 targetYaw;
     s16 targetPitch;
@@ -107,7 +107,7 @@ void CameraModeCloudRunner_update(CameraObject* camera) {
 }
 
 void CameraModeCloudRunner_init(CameraObject* camera, int fallbackRadius, CameraModeCloudRunnerInitParams* params) {
-    GameObject* targetObj = camera->anim.targetObj;
+    GameObject* targetObj = camera->focusObject;
 
     if (gCameraModeCloudRunnerState == NULL) {
         gCameraModeCloudRunnerState = (CameraModeCloudRunnerState*)mmAlloc(sizeof(CameraModeCloudRunnerState), 15, 0);
@@ -130,7 +130,7 @@ void CameraModeCloudRunner_init(CameraObject* camera, int fallbackRadius, Camera
     getAngle(camera->anim.worldPosX - gCameraModeCloudRunnerState->focusX,
              camera->anim.worldPosZ - gCameraModeCloudRunnerState->focusZ);
     {
-        GameObject* target = (GameObject*)camera->anim.targetObj;
+        GameObject* target = (GameObject*)camera->focusObject;
         f32* state = (f32*)gCameraModeCloudRunnerState;
         getAngle(target->anim.worldPosX - state[0], target->anim.worldPosZ - state[2]);
     }

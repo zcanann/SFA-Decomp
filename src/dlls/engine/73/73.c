@@ -47,8 +47,8 @@ void CameraModeCombat_evaluateTargetPosition(CameraObject* camera, f32* outX, f3
     f32 lim;
     f32 t;
 
-    target = (GameObject*)camera->targetObj;
-    focus = (GameObject*)camera->anim.targetObj;
+    target = (GameObject*)camera->overrideTarget;
+    focus = (GameObject*)camera->focusObject;
     hitVolumes = target->anim.hitVolumeTransforms;
     if ((u32)target->hitVolumeIndex != (prevIdx = (state = gCameraModeCombatState)->hitVolumeBlendTargetIndex)) {
         state->hitVolumeBlendStartIndex = prevIdx;
@@ -93,7 +93,7 @@ void CameraModeCombat_copyToCurrent(void) {
 }
 
 void CameraModeCombat_free(CameraObject* camera) {
-    if (camera->targetObj != NULL) {
+    if (camera->overrideTarget != NULL) {
         (*gCameraInterface)->setTarget(0);
     }
     mm_free(gCameraModeCombatState);
@@ -142,8 +142,8 @@ void CameraModeCombat_update(CameraObject* camera) {
     s16 classId;
 
     if (gCameraModeCombatState->invalidTarget != 0) {
-        if (camera->targetObj != NULL) {
-            if (((GameObject*)camera->targetObj)->anim.resetHitboxFlags & 0x40) {
+        if (camera->overrideTarget != NULL) {
+            if (((GameObject*)camera->overrideTarget)->anim.resetHitboxFlags & 0x40) {
                 return;
             }
             if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
@@ -155,10 +155,10 @@ void CameraModeCombat_update(CameraObject* camera) {
             ->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, CAMERA_MODE_COMBAT_EXIT_BLEND_FRAMES,
                       CAMCONTROL_QUEUE_SENTINEL);
     } else {
-        focus = (GameObject*)camera->anim.targetObj;
+        focus = (GameObject*)camera->focusObject;
         if (focus->anim.classId == 1 && playerCanUseCombatTargeting(focus) == 0) {
-            if (camera->targetObj != NULL) {
-                if (((GameObject*)camera->targetObj)->anim.resetHitboxFlags & 0x40) {
+            if (camera->overrideTarget != NULL) {
+                if (((GameObject*)camera->overrideTarget)->anim.resetHitboxFlags & 0x40) {
                     return;
                 }
                 if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
@@ -170,7 +170,7 @@ void CameraModeCombat_update(CameraObject* camera) {
                 ->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, CAMERA_MODE_COMBAT_EXIT_BLEND_FRAMES,
                           CAMCONTROL_QUEUE_SENTINEL);
         } else {
-            target = (GameObject*)camera->targetObj;
+            target = (GameObject*)camera->overrideTarget;
             if (target == NULL || (target->objectFlags & OBJECT_OBJFLAG_FREED) ||
                 (target->anim.resetHitboxFlags & 0x28)) {
                 if (target != NULL) {
@@ -190,8 +190,8 @@ void CameraModeCombat_update(CameraObject* camera) {
                 if (hitVolumes != NULL) {
                     range = (f32)(s32)((u32)target->anim.modelInstance->hitVolumes[0].bounds[1] << 2);
                     if (((u16)getButtonsJustPressed(0) & PAD_BUTTON_B) && playerIsNotAttacking(focus) != 0) {
-                        if (camera->targetObj != NULL) {
-                            if (((GameObject*)camera->targetObj)->anim.resetHitboxFlags & 0x40) {
+                        if (camera->overrideTarget != NULL) {
+                            if (((GameObject*)camera->overrideTarget)->anim.resetHitboxFlags & 0x40) {
                                 return;
                             }
                             if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
@@ -228,8 +228,8 @@ void CameraModeCombat_update(CameraObject* camera) {
                         camera->letterboxTargetOffset = CAMERA_MODE_COMBAT_LETTERBOX_TARGET_OFFSET;
                         camera->letterboxStep = 1;
                         if (dist > range) {
-                            if (camera->targetObj != NULL) {
-                                if (((GameObject*)camera->targetObj)->anim.resetHitboxFlags & 0x40) {
+                            if (camera->overrideTarget != NULL) {
+                                if (((GameObject*)camera->overrideTarget)->anim.resetHitboxFlags & 0x40) {
                                     return;
                                 }
                                 if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
@@ -383,8 +383,8 @@ void CameraModeCombat_init(CameraObject* camera, u32 unused, GameObject** target
     GameObject* target;
     GameObject* focus;
 
-    camera->targetObj = *targetPtr;
-    focus = (GameObject*)camera->anim.targetObj;
+    camera->overrideTarget = *targetPtr;
+    focus = (GameObject*)camera->focusObject;
     if (gCameraModeCombatState == NULL) {
         gCameraModeCombatState = (CameraModeCombatState*)mmAlloc(sizeof(CameraModeCombatState), 0xf, 0);
     }
@@ -399,7 +399,7 @@ void CameraModeCombat_init(CameraObject* camera, u32 unused, GameObject** target
     if (focus->anim.classId != 1) {
         gCameraModeCombatState->invalidTarget = 1;
     } else {
-        target = (GameObject*)camera->targetObj;
+        target = (GameObject*)camera->overrideTarget;
         if (target == NULL) {
             gCameraModeCombatState->invalidTarget = 1;
         } else {

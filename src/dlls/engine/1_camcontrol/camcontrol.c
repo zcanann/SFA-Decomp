@@ -99,7 +99,7 @@ enum CamcontrolHandlerConstants {
 };
 
 typedef struct CamcontrolStateStorage {
-    CamcontrolCameraState state;
+    CameraObject state;
     u8 pad144[4];
 } CamcontrolStateStorage;
 
@@ -151,7 +151,7 @@ s16 gCamcontrolTargetHelpTextId = -1;
 u16 gCamcontrolTargetClassMask = 0xFFFF;
 char sCamcontrolBlendDebugFormat[] = "t=%f\n";
 
-CamcontrolCameraState* gCamcontrolCamera;
+CameraObject* gCamcontrolCamera;
 u8 gCamcontrolHandlerCount;
 CamcontrolHandlerEntry* gCamcontrolCurrentHandler;
 s32 gCamcontrolActiveActionId;
@@ -438,7 +438,7 @@ static inline int camcontrol_isTargetCandidate(GameObject* obj, ObjHitVolumeRunt
     return 0;
 }
 
-GameObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraState, ObjAnimComponent* focus) {
+GameObject* camcontrol_findBestTarget(CameraObject* cameraState, ObjAnimComponent* focus) {
     int objIndex;
     int objCount;
     u8 occOut[4];
@@ -561,7 +561,7 @@ GameObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraState, ObjAni
     return NULL;
 }
 
-void camcontrol_updateMoveAverage(CamcontrolCameraState* cameraState, ObjAnimComponent* focus) {
+void camcontrol_updateMoveAverage(CameraObject* cameraState, ObjAnimComponent* focus) {
     Vec3f* velocity;
     f32 mag;
     f32 root;
@@ -702,7 +702,7 @@ void Camera_setBlendCurveMode(u8 mode) {
     gCamcontrolCamera->blendCurveMode = mode;
 }
 
-void camcontrol_applyState(CamcontrolCameraState* camera) {
+void camcontrol_applyState(CameraObject* camera) {
     Camera* view;
     int blendedAngleDelta;
     f32 mag;
@@ -1474,7 +1474,7 @@ void Camera_update(u8 framesThisStep) {
 }
 
 void Camera_init(void* focus, f32 x, f32 y, f32 z) {
-    memset(gCamcontrolCamera, 0, sizeof(CamcontrolCameraState));
+    memset(gCamcontrolCamera, 0, sizeof(CameraObject));
     gCamcontrolCamera->localX = x;
     gCamcontrolCamera->localY = y;
     gCamcontrolCamera->localZ = z;
@@ -1499,7 +1499,7 @@ void Camera_release(void) {
 
 void Camera_initialise(void) {
     gCamcontrolCamera = &gCamcontrolStateStorage.state;
-    memset(gCamcontrolCamera, 0, sizeof(CamcontrolCameraState));
+    memset(gCamcontrolCamera, 0, sizeof(CameraObject));
     voxmaps_initialise();
     gCamcontrolActiveActionId = -1;
     gCamcontrolCurrentHandlerIndex = -1;

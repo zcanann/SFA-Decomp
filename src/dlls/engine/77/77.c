@@ -72,7 +72,7 @@ void CameraModeNpcSpeak_free(void) {
 
 void CameraModeNpcSpeak_update(CameraObject* camera) {
     CameraModeNpcSpeakState* state;
-    GameObject* target = (GameObject*)camera->anim.targetObj;
+    GameObject* target = (GameObject*)camera->focusObject;
     f32 cameraOffsetX, cameraOffsetZ, cameraOffsetY;
     f32 lookAtOffsetX, lookAtOffsetY, lookAtOffsetZ;
 
@@ -236,8 +236,8 @@ void CameraModeNpcSpeak_init(CameraObject* camera, int unused, CameraModeNpcSpea
     cameraYaw = (u16)getAngle(camera->anim.worldPosX - gCameraModeNpcSpeakState->anchorX,
                               camera->anim.worldPosZ - gCameraModeNpcSpeakState->anchorZ);
     targetYaw =
-        (u16)getAngle(((GameObject*)camera->anim.targetObj)->anim.worldPosX - gCameraModeNpcSpeakState->anchorX,
-                      ((GameObject*)camera->anim.targetObj)->anim.worldPosZ - gCameraModeNpcSpeakState->anchorZ);
+        (u16)getAngle(((GameObject*)camera->focusObject)->anim.worldPosX - gCameraModeNpcSpeakState->anchorX,
+                      ((GameObject*)camera->focusObject)->anim.worldPosZ - gCameraModeNpcSpeakState->anchorZ);
     {
         CameraModeNpcSpeakState* state = gCameraModeNpcSpeakState;
         orbitAngleOffset = state->orbitAngleOffset;
@@ -268,7 +268,7 @@ void CameraModeNpcSpeak_init(CameraObject* camera, int unused, CameraModeNpcSpea
     }
 
     if (mode != 6 && mode != 7 && (focusedNpc = getFocusedNpc()) != NULL) {
-        GameObject* target = (GameObject*)camera->anim.targetObj;
+        GameObject* target = (GameObject*)camera->focusObject;
         s16 targetYawDelta;
         int relativeYawDelta;
         targetYawDelta = (s16)(targetYaw - (u16)target->anim.rotX);
@@ -291,7 +291,7 @@ void CameraModeNpcSpeak_init(CameraObject* camera, int unused, CameraModeNpcSpea
         }
     }
 
-    CameraModeNpcSpeak_solveOrbitPosition((GameObject*)camera->anim.targetObj, &cameraPos[0], &cameraPos[1],
+    CameraModeNpcSpeak_solveOrbitPosition((GameObject*)camera->focusObject, &cameraPos[0], &cameraPos[1],
                                           &cameraPos[2]);
     camcontrol_traceMove(&camera->anim.worldPosX, cameraPos, &gCameraModeNpcSpeakState->cameraX, &traceWork, 3,
                          1, 1, 4.0f);

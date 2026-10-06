@@ -19,7 +19,7 @@ void CameraMode55_free(void) {
 }
 
 void CameraMode55_update(CameraObject* camera) {
-    GameObject* target = camera->anim.targetObj;
+    GameObject* target = camera->focusObject;
 
     gCameraMode55State->timer -= 0.2f * timeDelta;
     if (gCameraMode55State->timer < 20.0f) {
@@ -40,7 +40,7 @@ void CameraMode55_init(CameraObject* camera) {
         gCameraMode55State = (CameraMode55State*)mmAlloc(sizeof(CameraMode55State), 15, 0);
     }
     gCameraMode55State->timer = 100.0f;
-    gCameraMode55State->cameraY = ((GameObject*)camera->anim.targetObj)->anim.worldPosY - 200.0f;
+    gCameraMode55State->cameraY = ((GameObject*)camera->focusObject)->anim.worldPosY - 200.0f;
 }
 
 void CameraMode55_release(void) {

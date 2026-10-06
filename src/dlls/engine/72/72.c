@@ -70,7 +70,7 @@ void CameraModeStatic_update(CameraObject* camera) {
     if (gCameraModeStaticState->missingAnchor != 0) {
         (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
     } else {
-        target = (GameObject*)camera->anim.targetObj;
+        target = (GameObject*)camera->focusObject;
         placement = (StaticCameraPlacement*)gCameraModeStaticState->anchor->anim.placementData;
         if ((placement->modeFlags & CAMERA_MODE_STATIC_TRACK_YAW) == 0) {
             camera->anim.rotX = placement->cameraModeRotation.yaw + 0x8000;
@@ -84,7 +84,7 @@ void CameraModeStatic_update(CameraObject* camera) {
         camera->anim.worldPosX = gCameraModeStaticState->anchor->anim.worldPosX;
         camera->anim.worldPosY = gCameraModeStaticState->anchor->anim.worldPosY;
         camera->anim.worldPosZ = gCameraModeStaticState->anchor->anim.worldPosZ;
-        camera->fov = (f32)(u32)placement->fov;
+        camera->fovY = (f32)(u32)placement->fov;
         dx = camera->anim.worldPosX - target->anim.worldPosX;
         dy = camera->anim.worldPosY - target->anim.worldPosY;
         dz = camera->anim.worldPosZ - target->anim.worldPosZ;
@@ -131,7 +131,7 @@ void CameraModeStatic_init(CameraObject* camera, int unused, const int* anchorId
     f32 dy;
     f32 dz;
 
-    target = (GameObject*)camera->anim.targetObj;
+    target = (GameObject*)camera->focusObject;
     if (gCameraModeStaticState == NULL) {
         gCameraModeStaticState = (CameraModeStaticState*)mmAlloc(sizeof(CameraModeStaticState), 0xF, 0);
     }
@@ -172,7 +172,7 @@ void CameraModeStatic_init(CameraObject* camera, int unused, const int* anchorId
         camera->anim.rotX = yaw;
         camera->anim.rotY = pitch;
         camera->anim.rotZ = roll;
-        camera->fov = fov;
+        camera->fovY = fov;
     }
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,

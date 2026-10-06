@@ -28,7 +28,7 @@ void CameraModeFixed_init(CameraObject* camera, int unused, const CameraModeFixe
     camera->anim.rotX = pose->cameraRotation.rotX;
     camera->anim.rotY = pose->cameraRotation.rotY;
     camera->anim.rotZ = pose->cameraRotation.rotZ;
-    camera->fov = pose->fov;
+    camera->fovY = pose->fov;
 }
 
 void CameraModeFixed_release(void) {

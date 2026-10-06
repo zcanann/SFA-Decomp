@@ -1891,10 +1891,10 @@ void ObjSeq_updateCamera(void) {
             camObj->anim.rotY = (s16)-yaw;
             camObj->anim.rotZ = roll;
             if ((s8)gObjSeqFovOverrideActive != 0) {
-                camObj->fov = gObjSeqFovOverrideValue;
+                camObj->fovY = gObjSeqFovOverrideValue;
                 gObjSeqCameraFov = gObjSeqFovOverrideValue;
             } else {
-                camObj->fov = gObjSeqCameraFov;
+                camObj->fovY = gObjSeqCameraFov;
             }
             gObjSeqSavedCamPosX = camObj->anim.worldPosX;
             gObjSeqSavedCamPosY = camObj->anim.worldPosY;
@@ -1902,7 +1902,7 @@ void ObjSeq_updateCamera(void) {
             gObjSeqSavedCamPitch = camObj->anim.rotX;
             gObjSeqSavedCamYaw = camObj->anim.rotY;
             gObjSeqSavedCamRoll = camObj->anim.rotZ;
-            gObjSeqSavedCamFov = camObj->fov;
+            gObjSeqSavedCamFov = camObj->fovY;
         }
     } else {
         if ((s8)gObjSeqCameraActive != 0) {

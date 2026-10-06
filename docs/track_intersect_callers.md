@@ -96,8 +96,9 @@ and MusyX discarded exception-data report discrepancies. All five
 
 `python3 tools/test_camera_update_storage.py` compiles the actual update
 body, mode-state definition, and collision record at `-O0` and `-O2` under
-ASan/UBSan. Semantic camera/player fixtures and service stubs isolate the
-function from the target object ABI. Both player and non-player paths
+ASan/UBSan. The camera uses its production definition; a semantic player
+fixture and service stubs isolate the function from the target object ABI.
+Both player and non-player paths
 exercise both trace origins, full native collision-record writes, timer
 reset, hit-mask caching, plane-based height locking, and the null-target
 return. This is a local storage probe, not a complete native camera test.
@@ -115,7 +116,7 @@ camera state. Retail EN's 0x300-byte frame establishes their placement:
 | Negative-angle path, seven positions | 0x24 | 84 |
 | Positive-angle path, seven positions | 0x78 | 84 |
 | `TrackHitResults` | 0xCC | 0x70 |
-| Temporary `CamcontrolCameraState` | 0x13C | 0x144 |
+| Temporary `CameraObject` | 0x13C | 0x144 |
 | Temporary camera's world position | 0x154 | 12 |
 | Temporary camera's focus pointer | 0x1E0 | 4 |
 | Following conversion temporary | 0x280 | 8 |
@@ -123,8 +124,8 @@ camera state. Retail EN's 0x300-byte frame establishes their placement:
 The position and focus stores independently land at the camera's +0x18
 and +0xA4 offsets. The 0x144-byte record ends at the conversion temporary;
 retail `Camera_initialise` separately clears exactly 0x144 bytes of the
-live state. The existing `CamcontrolCameraState` definition expresses all
-three facts. The old `box` consumed the camera's first 0x18 bytes, while
+live state. The canonical `CameraObject` definition expresses all three
+facts. The old `box` consumed the camera's first 0x18 bytes, while
 `probe` consumed its remaining 0x12C bytes. Its `*(int*)&probe[35]` store
 was really `probeCamera.focusObj`, not a float-array element or padding.
 
@@ -152,5 +153,61 @@ record definitions under ASan/UBSan at `-O0` and `-O2`. It checks the
 full-width focus pointer through the passed position view, both target
 classes, all six search steps, both path directions, tie selection,
 segment rejection, full native collision writes, and yaw-offset clamping.
-The surrounding camera and trace services are isolated fixtures, as in
-the update-local test above.
+The camera uses its production definition. The surrounding player and
+trace services are isolated fixtures, as in the update-local test above.
+
+## One canonical camera record (2026-10-06)
+
+Camera control and the mode handlers now share `CameraObject` in
+`include/main/camera_object.h`. The former `CamcontrolCameraState` and
+`CameraObject` views described the same live and temporary records, but
+the latter incorrectly included a complete `ObjAnimComponent`, an
+`objectFlags` overlay at +0xB0, and an unconsumed tail through +0x14B.
+
+The live initialization's 0x144-byte clear and normal-camera stack layout
+above establish the size. `CameraModeStaffAnim_samplePath` independently
+uses a full temporary record with the default camera handlers. The live
+storage wrapper retains its separately evidenced four bytes after the
+camera; those bytes are not part of `CameraObject`.
+
+A 0x34-byte `CameraTransform` now ends at the parent pointer, before the
+camera's collision record. The legacy `anim` member spelling remains in
+mode consumers, but its type no longer exposes animation/model fields.
+The prior header's claim about `camera.c` reading camera +0xB0 flags was
+incorrect: those accesses belong to `GameObject` parents. Camera +0xB0
+is the saved local Z coordinate.
+
+| Offset | Canonical field | Evidence |
+| --- | --- | --- |
+| 0x34 | `collisionResults` | Complete track-query record, including staff mode's +0xA0 hit count |
+| 0xA4 | `focusObj` / `focusObject` | Camera control uses the object's animation component; modes use its owner |
+| 0xA8 | `prevLocalX/Y/Z` / `savedLocalPos` | Local position snapshot at the end of `Camera_update` |
+| 0xB4 | `fovY` | Shared camera-control projection value and mode FOV writes |
+| 0xB8 | `prevWorldX/Y/Z` | World position snapshot, also transformed when the parent changes |
+| 0xC4 | `focusMoveAverage` | Owner maintains the five-sample movement average used by wall avoidance |
+| 0x11C | `overrideTarget` | Combat's target is the same override selected by camera control |
+
+Both focus views are actual pointers, and the staff-camera transform now
+uses its parent pointer instead of the animation overlay's integer
+address view. Unknown bytes remain opaque. Every mode and sequence-camera
+consumer uses the recovered fields; no target ABI offsets change.
+
+The native update and wall-search probes now compile the production
+`CameraTransform` and `CameraObject` definitions as well as the collision
+and mode-state records. They pass ASan/UBSan at `-O0` and `-O2`, including
+cross-view position and full-width focus-pointer checks. This validates
+the exercised local paths, not a complete native camera implementation.
+
+Every affected TU remains 100% in all five retail versions. Across the
+complete EN source-object baseline, only the sequence object's anonymous
+symbol numbering changes: its code, data, symbol offsets, bindings and
+relocations are identical. All other object hashes are unchanged.
+`clang-format -i` leaves the owner TU and both camera headers byte-identical;
+its strict dry run passes, so no separate formatting commit is needed.
+
+All original DOL hashes are verified, and all five `ninja all_source`
+builds and strict source-linked retail checksum targets pass. Full-project
+objdiff reports regenerated without completion overrides show only the
+pre-existing TRK vector-carving and MusyX discarded exception-data
+reporting discrepancies. No compiler profiles, splits, or matching
+classifications changed.
