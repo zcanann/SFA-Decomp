@@ -24,19 +24,13 @@ static void* THPRead_Reader(void* unused);
 BOOL CreateReadThread(OSPriority priority) {
     char* stackTop = gAttractMovieReadThreadStack + sizeof(gAttractMovieReadThreadStack);
 
-    if (!OSCreateThread(&gAttractMovieReadThread, THPRead_Reader, NULL,
-                        stackTop, THP_READ_STACK_SIZE, priority, 1)) {
+    if (!OSCreateThread(&gAttractMovieReadThread, THPRead_Reader, NULL, stackTop, THP_READ_STACK_SIZE, priority, 1)) {
         return 0;
     }
 
-    OSInitMessageQueue(&gAttractMovieReadFreeQueue,
-                       gAttractMovieReadFreeMessages,
-                       ATTRACT_MOVIE_READ_BUFFER_COUNT);
-    OSInitMessageQueue(&gAttractMovieReadDvdQueue,
-                       gAttractMovieReadDvdMessages,
-                       ATTRACT_MOVIE_READ_BUFFER_COUNT);
-    OSInitMessageQueue(&gAttractMovieReadAudioDecodedQueue,
-                       gAttractMovieReadAudioDecodedMessages,
+    OSInitMessageQueue(&gAttractMovieReadFreeQueue, gAttractMovieReadFreeMessages, ATTRACT_MOVIE_READ_BUFFER_COUNT);
+    OSInitMessageQueue(&gAttractMovieReadDvdQueue, gAttractMovieReadDvdMessages, ATTRACT_MOVIE_READ_BUFFER_COUNT);
+    OSInitMessageQueue(&gAttractMovieReadAudioDecodedQueue, gAttractMovieReadAudioDecodedMessages,
                        ATTRACT_MOVIE_READ_BUFFER_COUNT);
     gAttractMovieReadThreadCreated = 1;
     return 1;
@@ -69,8 +63,7 @@ static void* THPRead_Reader(void* unused) {
         OSMessage received;
         s32 readResult;
 
-        OSReceiveMessage(&gAttractMovieReadFreeQueue, &received,
-                         OS_MESSAGE_BLOCK);
+        OSReceiveMessage(&gAttractMovieReadFreeQueue, &received, OS_MESSAGE_BLOCK);
         readBuffer = (AttractMovieReadBuffer*)received;
 
         readResult = DVDReadPrio(&gAttractMoviePlayer.fileInfo, readBuffer->ptr, frameSize, readOffset, 2);
@@ -85,8 +78,7 @@ static void* THPRead_Reader(void* unused) {
         }
 
         readBuffer->frameNumber = frameNumber;
-        OSSendMessage(&gAttractMovieReadDvdQueue,
-                      (OSMessage)readBuffer, OS_MESSAGE_BLOCK);
+        OSSendMessage(&gAttractMovieReadDvdQueue, (OSMessage)readBuffer, OS_MESSAGE_BLOCK);
 
         readOffset += frameSize;
         frameSize = *(u32*)readBuffer->ptr;
