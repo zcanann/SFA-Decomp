@@ -2,6 +2,7 @@
 #define MAIN_PI_DOLPHIN_API_H_
 
 #include "types.h"
+#include "main/texture.h"
 #include "main/pi_frame_api.h"
 #include "main/pi_dolphin_path_api.h"
 
@@ -35,7 +36,7 @@ void addSignedOverlayTexStage(u8* texture, void* texMtx, u8* color);
 void addSphereMapLitStages(void* texture, f32* texMtx, void* color, int unused);
 void addTexLayerStagesLit(void* texture, void* texMtx);
 void addLitColorStage(u8 mode);
-int addEnvMapBumpStages(void* texture, int stageCount, u8 mode, u32 indirectTextureId);
+int addEnvMapBumpStages(void* texture, int stageCount, u8 mode, TextureReference indirectTextureReference);
 void addSphereMapTexStage(void* textureRef, u8 intensity);
 void addLightTexReg2Stage(void* textureRef, u8 hasBaseTexture, u8 mode);
 void addAlphaLitColorReg2Stage(u8 mode);

@@ -15,6 +15,7 @@ struct ObjAnimMoveData;
 typedef struct ShaderLayer {
     union {
         s32 textureIndex;
+        TextureReference textureReference;
         Texture* texture;
     };
     u8 typeBits;
@@ -24,6 +25,7 @@ typedef struct ShaderLayer {
 } ShaderLayer;
 
 STATIC_ASSERT(sizeof(ShaderLayer) == 0x08);
+STATIC_ASSERT(offsetof(ShaderLayer, textureReference) == 0x00);
 STATIC_ASSERT(offsetof(ShaderLayer, typeBits) == 0x04);
 STATIC_ASSERT(offsetof(ShaderLayer, materialId) == 0x05);
 STATIC_ASSERT(offsetof(ShaderLayer, scrollMtx) == 0x06);
@@ -34,7 +36,10 @@ typedef struct Shader {
     u8 alpha;
     u8 pad0D[0x14 - 0x0D];
     void* reg2Texture;
-    s32 textureId;
+    union {
+        s32 textureId;
+        TextureReference textureReference;
+    };
     u32 unk1C;
     u8 reg2TexSlot;
     u8 pad21;
@@ -43,10 +48,12 @@ typedef struct Shader {
     ShaderLayer layers[2];
     union {
         u32 auxTextureIndex;
+        TextureReference auxTextureReference;
         Texture* auxTexture;
     };
     union {
         s32 indTextureId;
+        TextureReference indTextureReference;
         Texture* indTexture;
     };
     u32 flags;
@@ -61,12 +68,15 @@ STATIC_ASSERT(offsetof(Shader, reg1Texture) == 0x08);
 STATIC_ASSERT(offsetof(Shader, alpha) == 0x0C);
 STATIC_ASSERT(offsetof(Shader, reg2Texture) == 0x14);
 STATIC_ASSERT(offsetof(Shader, textureId) == 0x18);
+STATIC_ASSERT(offsetof(Shader, textureReference) == 0x18);
 STATIC_ASSERT(offsetof(Shader, unk1C) == 0x1C);
 STATIC_ASSERT(offsetof(Shader, reg2TexSlot) == 0x20);
 STATIC_ASSERT(offsetof(Shader, reg2Alpha) == 0x22);
 STATIC_ASSERT(offsetof(Shader, layers) == 0x24);
 STATIC_ASSERT(offsetof(Shader, auxTextureIndex) == 0x34);
+STATIC_ASSERT(offsetof(Shader, auxTextureReference) == 0x34);
 STATIC_ASSERT(offsetof(Shader, indTextureId) == 0x38);
+STATIC_ASSERT(offsetof(Shader, indTextureReference) == 0x38);
 STATIC_ASSERT(offsetof(Shader, flags) == 0x3C);
 STATIC_ASSERT(offsetof(Shader, vtxAttrFlags) == 0x40);
 STATIC_ASSERT(offsetof(Shader, layerCount) == 0x41);
@@ -197,7 +207,7 @@ STATIC_ASSERT(offsetof(ModelCollisionTriangle, vertexIndices) == 0);
  * bits of a direct texture address; textureIdxToPtr resolves both forms. */
 typedef union ModelTextureEntry {
     s32 assetId;
-    s32 reference;
+    TextureReference reference;
     void* loadResult;
 } ModelTextureEntry;
 

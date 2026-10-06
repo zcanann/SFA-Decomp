@@ -407,13 +407,16 @@ struct convention, not a bug):
 texture-list indices with the corresponding `ModelTextureEntry.reference`,
 using zero for the `-1` sentinel. This applies to each shader layer,
 `auxTextureIndex` (+0x34), `indTextureId` (+0x38), and `textureId` (+0x18).
+Those file-index views now have separate pointer-width runtime reference
+views used by model resolution and rendering.
 The current source uses the canonical `ModelFileHeader` and `Shader` fields;
 the old raw-offset and `GameObject*` alias spellings are no longer present.
 
 The header table at +0x20 is layout-asserted and now distinguishes serialized
 asset IDs from loaded references. A runtime reference can be a one-based cache
 handle or a direct target address: the wiki's description of all resolved
-values as pointers is too narrow. `textureIdxToPtr` decodes both forms. See
+values as pointers is too narrow. `textureIdxToPtr` decodes both forms and
+preserves native address bits above the retail 32-bit word. See
 [Model texture references](../model_geometry_tables.md#model-texture-references-2026-10-06)
 for the loader contract and validation.
 

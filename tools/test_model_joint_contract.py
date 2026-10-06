@@ -185,6 +185,7 @@ def harness():
     render = (ROOT / "include/main/render_internal.h").read_text()
     pose = (ROOT / "include/main/joint_pose.h").read_text()
     parts = [PRELUDE]
+    parts.append(re.search(r"typedef size_t TextureReference;", (ROOT / "include/main/texture.h").read_text())[0])
     for kind, name in (("struct", "ModelJointAdjustment"), ("union", "ModelJointAdjustmentBuffer")):
         parts.append(re.search(rf"typedef {kind} {name}\s*\{{.*?\}} {name};", pose, re.S)[0])
     for header, name in ((model, "MODEL_FLAG_CACHED_ANIMATIONS"), (anim, "OBJANIM_MOVE_CACHE_SLOT_COUNT")):

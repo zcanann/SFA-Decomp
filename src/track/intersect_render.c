@@ -187,7 +187,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot) {
     Shader* renderOp;
     Texture* tex2;
     ModelFileHeader* model;
-    int handle1;
+    TextureReference baseTextureReference;
     u8 ignoredLightColor;
     Mtx scaleMtx;
     f32 fA, fB;
@@ -196,10 +196,10 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot) {
 
     model = obj_b[0];
     renderOp = ObjModel_GetRenderOp((ModelFileHeader*)model, slot);
-    handle1 = *(int*)Shader_getLayer(renderOp, 0);
-    selectTexture((Texture*)textureIdxToPtr(handle1), 0);
+    baseTextureReference = ((ShaderLayer*)Shader_getLayer(renderOp, 0))->textureReference;
+    selectTexture((Texture*)textureIdxToPtr(baseTextureReference), 0);
     newshadows_loadReflectionColorTexture(1);
-    tex2 = textureIdxToPtr(renderOp->auxTextureIndex);
+    tex2 = textureIdxToPtr(renderOp->auxTextureReference);
     wrapBit = (tex2->maxLod - tex2->minLod > 0) ? GX_TRUE : GX_FALSE;
     GXInitTexObj(&tex2->gxTexObj, (u8*)tex2 + sizeof(Texture), tex2->width, tex2->height, tex2->format, GX_REPEAT,
                  GX_REPEAT, wrapBit);
@@ -1359,7 +1359,8 @@ int objModelNormalDiskRenderCb(GameObject* object, ObjModel* model, int slot) {
 
     tintColor = sMoonFxTint;
     modelFile = model->file;
-    baseTexture = (Texture*)textureIdxToPtr(*(int*)Shader_getLayer(ObjModel_GetRenderOp(modelFile, 0), 0));
+    baseTexture = (Texture*)textureIdxToPtr(
+        ((ShaderLayer*)Shader_getLayer(ObjModel_GetRenderOp(modelFile, 0), 0))->textureReference);
     normalTexMtx[0][0] = 0.7f;
     normalTexMtx[0][1] = 0.0f;
     normalTexMtx[0][2] = 0.0f;
@@ -1438,7 +1439,7 @@ int moonFxRenderCallback(u8* obj, void** objB, int slot) {
     f32 tx;
 
     op = ObjModel_GetRenderOp((ModelFileHeader*)objB[0], slot);
-    tex = (Texture*)textureIdxToPtr(*(int*)Shader_getLayer((void*)op, 0));
+    tex = (Texture*)textureIdxToPtr(((ShaderLayer*)Shader_getLayer((void*)op, 0))->textureReference);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     gMoonFxDayNo = mainGetBit(GAMEBIT_ENV_dayNo);
     tx = renderTextureFrameOffset(gMoonFxDayNo, 30.0f);
@@ -1512,7 +1513,7 @@ int objModelProjectedIndirectRenderCb(GameObject* object, ObjModel* model, int s
 
     modelFile = model->file;
     renderOp = ObjModel_GetRenderOp(modelFile, slot);
-    baseTexture = textureIdxToPtr(*(int*)Shader_getLayer(renderOp, 0));
+    baseTexture = textureIdxToPtr(((ShaderLayer*)Shader_getLayer(renderOp, 0))->textureReference);
 
     PSMTXScale(normalTexMtx, gTrackNormalTexScale, gTrackNormalTexScale, 0.0f);
     normalTexMtx[2][3] = 1.0f;

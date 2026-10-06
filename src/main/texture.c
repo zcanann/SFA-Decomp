@@ -1145,14 +1145,15 @@ void texRestructRefs(int mode) {
     mmSetTextureAllocationState(0);
 }
 
-void* textureIdxToPtr(int idx) {
-    int i;
-    if ((u32)idx & 0x80000000) {
-        return (void*)idx;
+Texture* textureIdxToPtr(TextureReference reference) {
+    int slot;
+    /* Retail addresses have bit 31 set; retain any higher native address bits. */
+    if (reference & ~(TextureReference)0x7fffffff) {
+        return (Texture*)reference;
     }
-    i = idx - 1;
-    if (i < 0 || i >= gLoadedTextureCount) {
+    slot = (int)reference - 1;
+    if (slot < 0 || slot >= gLoadedTextureCount) {
         return NULL;
     }
-    return gLoadedTextures[i].texture;
+    return gLoadedTextures[slot].texture;
 }

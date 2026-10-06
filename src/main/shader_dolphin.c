@@ -1711,7 +1711,7 @@ void addEnvMapTexCoord(int scale) {
     gRcpNumTexGens++;
 }
 
-int addEnvMapBumpStages(void* p1, int p2, u8 p3, u32 p4) {
+int addEnvMapBumpStages(void* p1, int p2, u8 p3, TextureReference indirectTextureReference) {
     struct piIndMtx indmtx;
     f32 mtx[3][4];
     f32 v;
@@ -1726,11 +1726,11 @@ int addEnvMapBumpStages(void* p1, int p2, u8 p3, u32 p4) {
     }
     GXSetIndTexMtx(GX_ITM_0, indmtx.m, 0);
     GXSetIndTexOrder(gRcpNextIndTexStage, gRcpNextTexCoord + p2, gRcpNextTexMap);
-    if (p4 != 0) {
+    if (indirectTextureReference != 0) {
         Texture* texptr;
         u32 div;
         int p2v = (p3 & 0xf) * 4 + 1;
-        texptr = (Texture*)(textureIdxToPtr(p4));
+        texptr = (Texture*)(textureIdxToPtr(indirectTextureReference));
         div = (u32)texptr->width / (u32)(((Texture*)p1)->width * p2v);
         if (div != 0) {
             GXSetIndTexCoordScale(gRcpNextIndTexStage, lbl_8030CEE0[div - 1], lbl_8030CEE0[div - 1]);

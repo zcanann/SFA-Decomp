@@ -2122,18 +2122,18 @@ void ObjModel_ResolveRenderOpTextures(ModelFileHeader* file) {
         for (k = 0; k < op->layerCount; k++) {
             ShaderLayer* e = &op->layers[k];
             if (e->textureIndex != -1) {
-                e->textureIndex = file->textureEntries[e->textureIndex].reference;
+                e->textureReference = file->textureEntries[e->textureIndex].reference;
             } else {
                 e->texture = NULL;
             }
         }
         if ((s32)op->auxTextureIndex != -1) {
-            op->auxTextureIndex = file->textureEntries[(s32)op->auxTextureIndex].reference;
+            op->auxTextureReference = file->textureEntries[(s32)op->auxTextureIndex].reference;
         } else {
             op->auxTexture = NULL;
         }
         if (op->indTextureId != -1) {
-            op->indTextureId = file->textureEntries[op->indTextureId].reference;
+            op->indTextureReference = file->textureEntries[op->indTextureId].reference;
         } else {
             op->indTexture = NULL;
         }
@@ -2147,9 +2147,9 @@ void ObjModel_ResolveRenderOpTextures(ModelFileHeader* file) {
             op->unk1C = 0;
         }
         if (op->textureId != -1) {
-            op->textureId = file->textureEntries[op->textureId].reference;
+            op->textureReference = file->textureEntries[op->textureId].reference;
         } else {
-            op->textureId = 0;
+            op->textureReference = 0;
         }
         if (!(file->shaderFlags & 0xc)) {
             op->reg1Texture = NULL;

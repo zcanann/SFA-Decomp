@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
-"""Exercise model loading and shader resolution with mixed retail texture references.
+"""Exercise model loading, shader resolution and the production texture decoder.
 
-Records use native pointers; runtime texture tokens retain their target 32-bit
-representation. Texture IO/cache resolution is stubbed, not a native texture port.
+Records and texture references use native pointers, including both sides of a
+4 GiB boundary. Model/texture IO and animation services are spies. This does not
+deserialize on-disc records or implement the native renderer.
 """
 
 from pathlib import Path
+import os
 import re
 import subprocess
 import tempfile
 import unittest
 
 from brute_match import find_function_body
+from test_model_instance_layout import function
 
 ROOT = Path(__file__).resolve().parents[1]
 PRELUDE = r"""
@@ -20,6 +23,7 @@ PRELUDE = r"""
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/mman.h>
 typedef uint8_t u8;
 typedef int8_t s8;
 typedef uint16_t u16;
@@ -27,7 +31,7 @@ typedef int16_t s16;
 typedef uint32_t u32;
 typedef int32_t s32;
 typedef float f32;
-typedef struct Texture { int index; } Texture;
+typedef struct { u8 opaque[32]; } GXTexObj;
 typedef struct ModelCollisionTriangle ModelCollisionTriangle;
 typedef struct CollisionPolygonGroup CollisionPolygonGroup;
 typedef struct ModelVtxAnimChunk ModelVtxAnimChunk;
@@ -41,12 +45,16 @@ typedef struct Fixture {
     u8 animations[16];
 } Fixture;
 static Fixture fixture;
-static Texture resolved[4];
-static const u32 references[4] = {1, 0x81234560u, 0xFFFFFFFCu, 0};
+static Texture registered;
+static Texture* resolved[4];
+static TextureReference references[4];
+static LoadedTextureEntry registry[LOADED_TEXTURE_CAPACITY];
+static LoadedTextureEntry* gLoadedTextures = registry;
+static int gLoadedTextureCount;
 static s16 gModelResourceBuffer[4];
 static int modelList, *gModelList = &modelList;
 static int cached, loadCalls, lookupCalls, mapCalls, animationCalls, insertCalls, sizeCalls;
-static int expectedId, expectedFlags, returnSize, resolutionCalls, lastReference;
+static int expectedId, expectedFlags, returnSize;
 
 static void fileLoadToBufferOffset(int file, void* output, int offset, int size) {
     assert(file == MLDF_FILEID_MODELIND_BIN && output == gModelResourceBuffer);
@@ -88,17 +96,36 @@ static int modelLoad_calcSizes(ModelFileHeader* file, int flags, ModelInstanceSi
     sizeCalls++;
     return returnSize;
 }
-static void* textureIdxToPtr(int reference) {
-    lastReference = reference;
-    resolutionCalls++;
-    for (int i = 0; i < 4; i++) {
-        if ((u32)reference == references[i]) return reference ? &resolved[i] : NULL;
-    }
-    assert(0 && "unexpected runtime texture reference");
-    return NULL;
-}
 """
 CASES = r"""
+static void checkDecoder(void) {
+    const TextureReference invalid[] = {0, LOADED_TEXTURE_CAPACITY + 1, 0x7ffffffe, 0x7fffffff};
+    const TextureReference addresses[] = {0x80000000u, 0x81234560u, 0xfffffffcu, 0xffffffffu};
+    for (int i = 0; i < LOADED_TEXTURE_CAPACITY; i++) registry[i].texture = resolved[i % 4];
+    for (int count = 0; count <= LOADED_TEXTURE_CAPACITY; count++) {
+        gLoadedTextureCount = count;
+        for (int i = 0; i < count; i++) assert(textureIdxToPtr(i + 1) == resolved[i % 4]);
+        assert(textureIdxToPtr(count + 1) == NULL);
+        for (unsigned i = 0; i < sizeof(invalid) / sizeof(invalid[0]); i++) {
+            assert(textureIdxToPtr(invalid[i]) == NULL);
+        }
+        for (unsigned i = 0; i < sizeof(addresses) / sizeof(addresses[0]); i++) {
+            assert((TextureReference)textureIdxToPtr(addresses[i]) == addresses[i]);
+        }
+        for (int i = 1; i <= 2; i++) {
+            assert(textureIdxToPtr(references[i]) == resolved[i]);
+            assert(textureIdxToPtr(references[i])->width == 100 + i);
+        }
+    }
+    gLoadedTextureCount = LOADED_TEXTURE_CAPACITY;
+    /* A handle follows relocation of its registry slot; a direct address stays put. */
+    registry[0].texture = resolved[1];
+    assert(textureIdxToPtr(1) == resolved[1]);
+    registry[0].texture = resolved[2];
+    assert(textureIdxToPtr(1) == resolved[2]);
+    assert(textureIdxToPtr(references[1]) == resolved[1]);
+    registry[0].texture = resolved[0];
+}
 static void checkShaders(void) {
     ModelTextureEntry entries[4];
     Shader shader, expected;
@@ -108,7 +135,7 @@ static void checkShaders(void) {
     file.textureEntries = entries;
     file.renderOps = &shader;
     file.renderOpCount = 1;
-    for (int i = 0; i < 4; i++) entries[i].reference = (s32)references[i];
+    for (int i = 0; i < 4; i++) entries[i].loadResult = (void*)references[i];
     for (unsigned f = 0; f < sizeof(flags) / sizeof(flags[0]); f++) {
         for (unsigned mode = 0; mode < sizeof(selectors) / sizeof(selectors[0]); mode++) {
             for (int index = -1; index < 4; index++) {
@@ -121,28 +148,37 @@ static void checkShaders(void) {
                     shader.indTextureId = index;
                     shader.textureId = index;
                     shader.unk1C = selectors[mode];
-                    shader.reg1Texture = &resolved[0];
-                    shader.reg2Texture = &resolved[1];
+                    shader.reg1Texture = resolved[0];
+                    shader.reg2Texture = resolved[1];
                     file.shaderFlags = flags[f];
                     memcpy(&expected, &shader, sizeof(shader));
                     for (int layer = 0; layer < layers; layer++) {
                         if (index == -1) expected.layers[layer].texture = NULL;
-                        else expected.layers[layer].textureIndex = (s32)references[index];
+                        else expected.layers[layer].textureReference = references[index];
                     }
                     if (index == -1) {
                         expected.auxTexture = NULL;
                         expected.indTexture = NULL;
-                        expected.textureId = 0;
+                        expected.textureReference = 0;
                     } else {
-                        expected.auxTextureIndex = references[index];
-                        expected.indTextureId = (s32)references[index];
-                        expected.textureId = (s32)references[index];
+                        expected.auxTextureReference = references[index];
+                        expected.indTextureReference = references[index];
+                        expected.textureReference = references[index];
                     }
                     expected.unk1C = selectors[mode] != -1 && selectors[mode] != -2;
                     if (!(flags[f] & 0xC)) expected.reg1Texture = NULL;
                     if (!(flags[f] & 0xE00)) expected.reg2Texture = NULL;
                     ObjModel_ResolveRenderOpTextures(&file);
                     assert(memcmp(&shader, &expected, sizeof(shader)) == 0);
+                    Texture* texture = index < 0 ? NULL : resolved[index];
+                    for (int layer = 0; layer < layers; layer++) {
+                        ShaderLayer* selected = Shader_getLayer(&shader, layer);
+                        assert(selected == &shader.layers[layer]);
+                        assert(textureIdxToPtr(selected->textureReference) == texture);
+                    }
+                    assert(textureIdxToPtr(shader.auxTextureReference) == texture);
+                    assert(textureIdxToPtr(shader.indTextureReference) == texture);
+                    assert(textureIdxToPtr(shader.textureReference) == texture);
                 }
             }
         }
@@ -163,16 +199,18 @@ static void checkLoad(int count, int hit, int indirect) {
     for (int i = 0; i < count; i++) fixture.entries[i].assetId = i * 13 + 7;
     for (int i = 0; i < 3; i++) {
         fixture.shaders[i].layerCount = 2;
-        fixture.shaders[i].auxTextureIndex = -1;
-        fixture.shaders[i].indTextureId = -1;
-        fixture.shaders[i].textureId = -1;
+        fixture.shaders[i].layers[0].textureIndex = count ? i % count : -1;
+        fixture.shaders[i].layers[1].textureIndex = count ? (i + 1) % count : -1;
+        fixture.shaders[i].auxTextureIndex = count ? (i + 2) % count : -1;
+        fixture.shaders[i].indTextureId = count ? (i + 3) % count : -1;
+        fixture.shaders[i].textureId = count ? (i + 4) % count : -1;
         fixture.shaders[i].unk1C = -2;
     }
     cached = hit;
     expectedId = 23;
     expectedFlags = 0x8000 + count;
     returnSize = 0x4567 + count;
-    loadCalls = lookupCalls = mapCalls = animationCalls = insertCalls = sizeCalls = resolutionCalls = 0;
+    loadCalls = lookupCalls = mapCalls = animationCalls = insertCalls = sizeCalls = 0;
     if (hit) {
         ObjModel_RelocateModelData(file);
         for (int i = 0; i < count; i++) fixture.entries[i].loadResult = (void*)(uintptr_t)references[i % 4];
@@ -192,26 +230,52 @@ static void checkLoad(int count, int hit, int indirect) {
     for (int i = 0; i < count; i++) {
         assert((uintptr_t)fixture.entries[i].loadResult == references[i % 4]);
         Texture* texture = ObjModel_GetTexture(file, i);
-        assert((u32)lastReference == references[i % 4]);
-        assert(texture == (references[i % 4] ? &resolved[i % 4] : NULL));
+        assert(fixture.entries[i].reference == references[i % 4]);
+        assert(texture == resolved[i % 4]);
     }
     if (count) {
         for (int i = 0; i < 3; i++) {
-            assert((u32)fixture.shaders[i].layers[0].textureIndex == references[0]);
-            assert((u32)fixture.shaders[i].layers[1].textureIndex == references[0]);
+            Shader* shader = &fixture.shaders[i];
+            const TextureReference values[] = {shader->layers[0].textureReference,
+                shader->layers[1].textureReference, shader->auxTextureReference,
+                shader->indTextureReference, shader->textureReference};
+            for (int field = 0; field < 5; field++) {
+                int index = ((i + field) % count) % 4;
+                assert(values[field] == references[index]);
+                assert(textureIdxToPtr(values[field]) == resolved[index]);
+            }
         }
     }
 }
 int main(void) {
     const int counts[] = {0, 1, 3, 8, 255};
     assert(sizeof(void*) == 8 && (uintptr_t)&fixture > UINT32_MAX);
+    size_t span = (size_t)UINT64_C(0x200000000);
+    u8* mapping = mmap(NULL, span, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    assert(mapping != MAP_FAILED);
+    uintptr_t boundary = ((uintptr_t)mapping + UINT64_C(0xffffffff)) & ~UINT64_C(0xffffffff);
+    if (boundary - (uintptr_t)mapping < 0x100000) boundary += UINT64_C(0x100000000);
+    resolved[0] = &registered;
+    resolved[1] = (Texture*)(boundary + 0x100000);
+    resolved[2] = (Texture*)(boundary - 0x100000);
+    references[0] = 1;
+    assert((u8*)resolved[2] >= mapping && (u8*)resolved[1] + 0x4000 <= mapping + span);
+    for (int i = 1; i <= 2; i++) {
+        assert(mprotect(resolved[i], 0x4000, PROT_READ | PROT_WRITE) == 0);
+        resolved[i]->width = 100 + i;
+        references[i] = (TextureReference)resolved[i];
+        assert(references[i] > UINT32_MAX);
+    }
+    assert(!(references[1] & 0x80000000u) && (references[2] & 0x80000000u));
+    checkDecoder();
     checkShaders();
     for (unsigned i = 0; i < sizeof(counts) / sizeof(counts[0]); i++) {
         for (int hit = 0; hit <= 1; hit++) {
             for (int indirect = 0; indirect <= 1; indirect++) checkLoad(counts[i], hit, indirect);
         }
     }
-    puts("945 shader cases and 20 model load paths checked");
+    assert(munmap(mapping, span) == 0);
+    puts("701 registry sizes, 945 shader cases and 20 native model load paths checked");
     return 0;
 }
 """
@@ -219,7 +283,12 @@ int main(void) {
 
 def harness():
     header = (ROOT / "include/main/model.h").read_text()
-    parts = [PRELUDE]
+    texture_header = (ROOT / "include/main/texture.h").read_text()
+    texture_source = (ROOT / "src/main/texture.c").read_text()
+    parts = [PRELUDE, re.search(r"typedef size_t TextureReference;", texture_header)[0],
+             re.search(r"typedef struct Texture \{.*?\} Texture;", texture_header, re.S)[0],
+             re.search(r"typedef struct LoadedTextureEntry \{.*?\} LoadedTextureEntry;", texture_source, re.S)[0],
+             re.search(r"^#define LOADED_TEXTURE_CAPACITY[^\n]*", texture_source, re.M)[0]]
     for kind, name in (
         ("struct", "ShaderLayer"), ("struct", "Shader"), ("struct", "ModelVtxAnimJob"),
         ("struct", "ModelFuzzScaleDef"), ("struct", "ModelExtraJointDef"),
@@ -230,6 +299,8 @@ def harness():
     source = (ROOT / "src/main/model.c").read_text()
     parts.append(re.search(r"typedef struct ModelInstanceSizes\s*\{.*?\} ModelInstanceSizes;", source, re.S)[0])
     parts.append(SERVICES)
+    parts.append(function(texture_source, "textureIdxToPtr"))
+    parts.append(function((ROOT / "src/main/shader_dolphin.c").read_text(), "Shader_getLayer"))
     for name in ("ObjModel_RelocateModelData", "ObjModel_ResolveRenderOpTextures", "ObjModel_Load", "ObjModel_GetTexture"):
         start, end = find_function_body(source, name)
         declaration = source.rfind("\n", 0, source.rfind(name, 0, start)) + 1
@@ -249,7 +320,8 @@ class ModelTextureReferenceTests(unittest.TestCase):
                         "clang", "-std=c11", optimization, "-Wall", "-Wextra", "-Werror",
                         "-fsanitize=address,undefined", str(source), "-o", str(executable),
                     ], check=True, timeout=30)
-                    subprocess.run([str(executable)], check=True, timeout=30)
+                    subprocess.run([str(executable)], check=True, timeout=30,
+                                   env={**os.environ, "UBSAN_OPTIONS": "halt_on_error=1"})
 
 
 if __name__ == "__main__":

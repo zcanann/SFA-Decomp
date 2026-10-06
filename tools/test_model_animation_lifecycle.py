@@ -104,7 +104,7 @@ static void ShaderDef_free(void** refs) { event(SHADER, refs, 0); }
 static void model_adjustModelList(void* list, int id) {
     event(list == gModelList ? REMOVE_MODEL : REMOVE_MOVE, list, id);
 }
-static void* textureIdxToPtr(int reference) {
+static void* textureIdxToPtr(TextureReference reference) {
     event(RESOLVE, NULL, reference);
     for (int i = 0; i < 3; i++) if ((u32)reference == references[i]) return references[i] ? &textures[i] : NULL;
     assert(0 && "unexpected texture reference");
@@ -221,7 +221,7 @@ static void checkRelease(int refs, int shaders, int count, int loaded, int attac
     file.textureEntries = entries;
     file.animationCount = moveMode == 1 ? 0 : 6;
     file.moveData = moveMode == 0 ? NULL : releaseMoves;
-    for (int i = 0; i < 3; i++) entries[i].reference = (s32)references[i];
+    for (int i = 0; i < 3; i++) entries[i].reference = references[i];
     for (int i = 0; i < 6; i++) {
         resources[i].refCount = counts[i];
         releaseMoves[i] = i == 2 ? NULL : &resources[i];
@@ -289,6 +289,7 @@ def harness():
     anim_header = (ROOT / "include/main/objanim_internal.h").read_text()
     flags_header = (ROOT / "include/main/loaded_file_flags.h").read_text()
     parts = [PRELUDE]
+    parts.append(re.search(r"typedef size_t TextureReference;", (ROOT / "include/main/texture.h").read_text())[0])
     for header, name in ((model_header, "MODEL_FLAG_CACHED_ANIMATIONS"),
                          (model_header, "OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED"),
                          (anim_header, "OBJANIM_MOVE_CACHE_SLOT_COUNT"),

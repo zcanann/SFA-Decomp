@@ -114,35 +114,64 @@ the active TU and canonical header pass `clang-format --dry-run --Werror`.
 
 ## Model texture references (2026-10-06)
 
-The table at header +0x20 is now `textureEntries`, with four-byte
+The table at header +0x20 is now `textureEntries`, with four-byte target
 `ModelTextureEntry` records. Each record starts as a signed asset ID. The
 loader replaces it with the opaque result of `textureLoad(-(assetId | 0x8000),
-1)`, and shader resolution copies its runtime reference word into the relevant
+1)`, and shader resolution copies its runtime reference into the relevant
 shader slots. The union exposes `assetId`, `loadResult`, and `reference`
-without claiming that every loaded value is a texture pointer.
+without claiming that every loaded value is a texture pointer. The runtime
+view now uses the pointer-width `TextureReference` defined in `main/texture.h`;
+serialized asset IDs and shader indices keep their signed 32-bit views.
 
 `textureLoad` establishes the distinction: a cached handle is one-based, but
 the uncompressed texture path returns a direct address even when a handle was
 requested. `textureIdxToPtr` recognizes direct target addresses by bit 31 and
-otherwise looks up the handle minus one. The model getter, release path and
-modgfx DLL 91 consumer retain that decoder. Target layout assertions pin all
-three views to the same four-byte word.
+otherwise looks up the handle minus one. Its mask also retains any higher
+native address bits, so a pointer above 4 GiB is not mistaken for a handle
+when its low word has bit 31 clear. The model getter, release path and modgfx
+DLL 91 consumer retain that decoder. Target layout assertions pin all three
+views to the same four-byte word.
+
+Shader layer, auxiliary, indirect and +0x18 slots expose separate runtime
+reference views. Model resolution writes the complete runtime value, including
+a full-width zero for absent +0x18 textures. Model renderers read those views
+instead of aliasing the first word as `int*` or reading the serialized index.
+The bump-stage helper carries the same reference type; the object renderer's
+resolved-texture cache now holds `Texture*` rather than truncating the address.
 
 The loader and shader resolver now use the canonical header and shader fields,
 removing raw header offsets and integer-held table addresses. Shader indices
 retain the signed `-1` sentinel; `unk1C` retains its separate `-1`/`-2` to zero,
 otherwise one conversion. Foxhollow's working native implementation at
-`894de8a8edecfad2e455f1a6345e328f50c74aba` informed the table review, but its
-`uintptr_t` texture ABI and boolean reduction of `Shader.textureId` are not
-retail behavior. This change does not establish a complete native texture port.
+`894de8a8edecfad2e455f1a6345e328f50c74aba` informed the table and pointer-width
+review. The +0x18 field retains its complete reference and decoder call; the
+native port's boolean reduction is not adopted. This change does not establish
+a complete native texture port or deserialize pointer-bearing retail records
+into the wider native layouts.
 
 `python3 tools/test_model_texture_references.py` executes the production
-relocator, loader, shader resolver and getter. It checks 945 shader cases and
-20 load paths at both `-O0` and `-O2` with ASan/UBSan: mixed handle/address/null
-tokens, signed sentinels, flag masks, cache hits, mapped/direct model IDs and
-texture counts through 255. Records and tables use native pointers above
-4 GiB; texture services are stubbed and runtime tokens retain target width.
-The existing 732-case relocation probe also passes at both optimization levels.
+relocator, loader, shader resolver, getter, layer accessor and texture decoder,
+with canonical texture, registry, shader and model record declarations. It
+checks all 701 registry sizes, 945 shader cases and 20 load paths at both `-O0`
+and `-O2` with ASan/UBSan. Cases cover every valid handle, invalid bounds,
+retail address bit patterns, mixed handle/address/null values, signed
+sentinels, flag masks, cache hits, mapped/direct model IDs and texture counts
+through 255. Two actual texture allocations straddle a 4 GiB boundary and
+have opposite bit-31 values. Handle resolution also follows replacement of a
+registry entry. IO and animation services remain spies.
+
+Six scratch negative controls reject a narrowed decoder argument, the old
+bit-31-only mask, narrowed model/layer storage, a partial-width null store and
+an off-by-one registry bound. The complete 19-test model suite passes,
+including the existing 732-case relocation probe. Its matrix fixture now
+includes the production helper already called by the matrix initializer.
+
+All five configured versions pass `all_source`, strict retail DOL checksums
+and the complete active objdiff inventory audit. Every affected TU remains
+100% exact. Source objects are unchanged except for anonymous literal-symbol
+renumbering in engine DLL 2 and `objprint_dolphin`; section contents, flags,
+alignment, symbol positions and relocation targets remain identical. The two
+existing SDK/MusyX report-accounting exceptions are unchanged.
 
 The loader's four existing one-element locals remain a source-shape limitation.
 A scalar rewrite with the same byte-offset loop changes one instruction at

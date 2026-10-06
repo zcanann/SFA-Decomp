@@ -218,6 +218,7 @@ def harness():
     source = read("src/main/model.c")
     parts = [PRELUDE, "typedef struct Vec3s { s16 x, y, z; } Vec3s;",
              "typedef struct ObjAnimFrameHeader ObjAnimFrameHeader;"]
+    parts.append(re.search(r"typedef size_t TextureReference;", (ROOT / "include/main/texture.h").read_text())[0])
     for header, name in ((model, "MODEL_FLAG_CACHED_ANIMATIONS"), (model, "MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS"),
                          (model, "MODEL_FLAGS24_NBT_NORMALS"), (anim, "OBJANIM_MOVE_CACHE_SLOT_COUNT")):
         parts.append(re.search(rf"^#define {name}\s+[^\n]+", header, re.M)[0])
