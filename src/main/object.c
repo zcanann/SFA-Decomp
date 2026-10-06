@@ -1176,8 +1176,7 @@ void Obj_RunInitCallback(GameObject* obj, void* placementData, int initFlags) {
     default: {
         ObjectInterfaceHandle interface = obj->anim.dll;
         if (interface != NULL) {
-            ObjectInterfaceInitCallback init =
-                (ObjectInterfaceInitCallback)((ObjectInterface*)*interface)->init;
+            ObjectInterfaceInitCallback init = (ObjectInterfaceInitCallback)((ObjectInterface*)*interface)->init;
             if ((ptrdiff_t)init != -1 && init != NULL) {
                 init(obj, placementData, initFlags);
             }
