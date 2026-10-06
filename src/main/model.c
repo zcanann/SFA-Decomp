@@ -2055,7 +2055,8 @@ static void modelBuildJointAdjustments(ObjAnimComponent* objAnim, ObjAnimState* 
     i = 0;
     poseOffset = 0;
     for (; i < modelDef->jointBindingCount; i++) {
-        modelJoint = ((ObjJointBinding*)((u8*)modelDef->jointBindings + bindingOffset))->modelJoints[objAnim->bankIndex];
+        modelJoint =
+            ((ObjJointBinding*)((u8*)modelDef->jointBindings + bindingOffset))->modelJoints[objAnim->bankIndex];
         if (modelJoint != OBJ_JOINT_BINDING_MISSING) {
             poseAdjustments = (ObjJointPose*)(objAnim->jointPoseData + poseOffset);
             poseOffsetA = matrixSlotsA[modelJoint] * (int)sizeof(ObjModelJointMatrix);
