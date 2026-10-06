@@ -319,7 +319,7 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantPlacement* unusedPlaceme
             particleCount = MAGICPLANT_HIT_BURST_COUNT;
             do {
                 (*gPartfxInterface)
-                    ->spawnObject((void*)obj, MAGICPLANT_HIT_BURST_FX, NULL, MAGICPLANT_PARTFX_MODE,
+                    ->spawnEffect(obj, MAGICPLANT_HIT_BURST_FX, NULL, MAGICPLANT_PARTFX_MODE,
                                   MAGICPLANT_PARTFX_MODEL_NONE, NULL);
                 particleCount--;
             } while (particleCount != 0);

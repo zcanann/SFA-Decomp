@@ -120,7 +120,7 @@ void ecshCup_update(GameObject* obj) {
                 state->particleTimer = ECSH_CUP_PARTICLE_DELAY;
                 if (mode != ECSH_CUP_ANIM_STATE_HOLD && mode != ECSH_CUP_ANIM_STATE_RISE &&
                     mode != ECSH_CUP_ANIM_STATE_SINK) {
-                    (*gPartfxInterface)->spawnObject(obj, ECSH_CUP_PARTFX_IDLE, NULL, 0, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, ECSH_CUP_PARTFX_IDLE, NULL, 0, -1, NULL);
                 }
             }
         }
@@ -157,7 +157,7 @@ void ecshCup_update(GameObject* obj) {
             state->particleTimer -= timeDelta;
             if (state->particleTimer <= 0.0f) {
                 state->particleTimer = ECSH_CUP_PARTICLE_DELAY;
-                (*gPartfxInterface)->spawnObject(obj, ECSH_CUP_PARTFX_TRANSITION, NULL, 0, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, ECSH_CUP_PARTFX_TRANSITION, NULL, 0, -1, NULL);
             }
         } else if (modeCopy == ECSH_CUP_ANIM_STATE_SINK) {
             if (obj->anim.localPosY > state->transitionHeight - ECSH_CUP_TRANSITION_DISTANCE) {
@@ -166,7 +166,7 @@ void ecshCup_update(GameObject* obj) {
                 if (state->particleTimer <= 0.0f) {
                     state->particleTimer = ECSH_CUP_PARTICLE_DELAY;
                     if (mode != ECSH_CUP_ANIM_STATE_HOLD) {
-                        (*gPartfxInterface)->spawnObject(obj, ECSH_CUP_PARTFX_TRANSITION, NULL, 0, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(obj, ECSH_CUP_PARTFX_TRANSITION, NULL, 0, -1, NULL);
                     }
                 }
             }

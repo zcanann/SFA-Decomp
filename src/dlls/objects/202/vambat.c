@@ -284,7 +284,7 @@ void magicplantSpawnMovePuffs(GameObject* obj, void* state) {
     if (count != 0 && (bs->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) == 0) {
         u8 spawn = count;
         while (spawn != 0) {
-            (*gPartfxInterface)->spawnObject(obj, MAGICPLANT_PARTFX, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, MAGICPLANT_PARTFX, NULL, 2, -1, NULL);
             spawn--;
         }
     }

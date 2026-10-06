@@ -1057,7 +1057,7 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                                         MODGFX_ZERO &&
                                     eff->sourceObject != NULL) {
                                     (*gPartfxInterface)
-                                        ->spawnObject(
+                                        ->spawnEffect(
                                             eff->sourceObject,
                                             (int)((ModgfxCommand*)(PENDING_SPAWNS +
                                                                    cursor.commandIndex * sizeof(ModgfxCommand)))
@@ -1149,13 +1149,13 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                             if (randomGetRange(0, (int)spawnCommand->valueZ) == 0) {
                                 if ((int)eff->flags & 1) {
                                     (*gPartfxInterface)
-                                        ->spawnObject(eff->sourceObject,
+                                        ->spawnEffect(eff->sourceObject,
                                                       *(s16*)(cursor.byteOffset + (int)PENDING_SPAWNS +
                                                               offsetof(ModgfxCommand, parameter)),
                                                       NULL, 0x10001, -1, NULL);
                                 } else {
                                     (*gPartfxInterface)
-                                        ->spawnObject(eff->sourceObject,
+                                        ->spawnEffect(eff->sourceObject,
                                                       *(s16*)(cursor.byteOffset + (int)PENDING_SPAWNS +
                                                               offsetof(ModgfxCommand, parameter)),
                                                       NULL, 0x10001, -1, NULL);
@@ -1169,11 +1169,11 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                              k++) {
                             if ((int)eff->flags & 1) {
                                 (*gPartfxInterface)
-                                    ->spawnObject(eff->sourceObject, spawnCommand->parameter, &eff->sourceTransform,
+                                    ->spawnEffect(eff->sourceObject, spawnCommand->parameter, &eff->sourceTransform,
                                                   0x10002, -1, NULL);
                             } else {
                                 (*gPartfxInterface)
-                                    ->spawnObject(eff->sourceObject, spawnCommand->parameter, NULL, 0x10002, -1, NULL);
+                                    ->spawnEffect(eff->sourceObject, spawnCommand->parameter, NULL, 0x10002, -1, NULL);
                             }
                         }
                     } else if (MODGFX_ONE == spawnCommand->valueY) {
@@ -1183,7 +1183,7 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                             tmpl.posZ = eff->sourceObject->anim.worldPosZ + eff->drawPosZ;
                             if (eff->sourceObject != NULL) {
                                 (*gPartfxInterface)
-                                    ->spawnObject(eff->sourceObject,
+                                    ->spawnEffect(eff->sourceObject,
                                                   ((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->parameter,
                                                   &tmpl, 0x10001, -1, NULL);
                             }
@@ -1193,7 +1193,7 @@ void modgfx_updateActiveEffects(int unused0, int unused1, int unused2) {
                             tmpl.posZ = eff->drawPosZ;
                             if (eff->sourceObject != NULL) {
                                 (*gPartfxInterface)
-                                    ->spawnObject(eff->sourceObject,
+                                    ->spawnEffect(eff->sourceObject,
                                                   ((ModgfxCommand*)(PENDING_SPAWNS + cursor.byteOffset))->parameter,
                                                   &tmpl, 0x10001, -1, NULL);
                             }

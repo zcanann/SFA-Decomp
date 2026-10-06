@@ -2,12 +2,10 @@
 #define MAIN_DLL_EFFECTSPAWNCONFIG_STRUCT_H_
 
 #include "global.h"
+#include "game/objects/object_fwd.h"
 
 typedef struct EffectSpawnConfig {
-    union {
-        void* attachedSource;
-        s16* model;
-    };
+    GameObject* attachedSource;
     union {
         s32 impactEffectId;
         int unk04;
@@ -126,11 +124,7 @@ typedef struct EffectSpawnConfig {
         u8 linkGroup;
         u8 unk61;
     };
-    union {
-        u8 attachedSourceLinkGroup;
-        u8 modelIdByte;
-        u8 srcFlag;
-    };
+    s8 sourceParam;
 } EffectSpawnConfig;
 
 STATIC_ASSERT(sizeof(EffectSpawnConfig) == 0x64);
@@ -148,6 +142,6 @@ STATIC_ASSERT(offsetof(EffectSpawnConfig, colorWord0) == 0x58);
 STATIC_ASSERT(offsetof(EffectSpawnConfig, effectTypeByte) == 0x5E);
 STATIC_ASSERT(offsetof(EffectSpawnConfig, initialAlpha) == 0x60);
 STATIC_ASSERT(offsetof(EffectSpawnConfig, linkGroup) == 0x61);
-STATIC_ASSERT(offsetof(EffectSpawnConfig, attachedSourceLinkGroup) == 0x62);
+STATIC_ASSERT(offsetof(EffectSpawnConfig, sourceParam) == 0x62);
 
 #endif /* MAIN_DLL_EFFECTSPAWNCONFIG_STRUCT_H_ */

@@ -239,7 +239,7 @@ void cmbsrc_updateVisuals(GameObject* cmbsrc, CmbSrcState* sourceState) {
         if (sourceState->particleTimer <= 0.0f) {
             if (cmbsrc->objectFlags & OBJECT_OBJFLAG_RENDERED) {
                 param.scale = sourceState->radius;
-                (*gPartfxInterface)->spawnObject(cmbsrc, CMBSRC_PARTICLE_EFFECT_ID, &param, PARTFXFLAG_2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(cmbsrc, CMBSRC_PARTICLE_EFFECT_ID, &param, PARTFXFLAG_2, -1, NULL);
             }
             sourceState->particleTimer += 5.0f;
         }

@@ -88,7 +88,7 @@ int BombPlant_animEventCallback(GameObject* obj) {
             state->growTimer = timerValue;
         }
         if (obj->objectFlags & OBJECT_OBJFLAG_RENDERED) {
-            (*gPartfxInterface)->spawnObject(obj, BOMB_PLANT_SPARK_PARTICLE, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, BOMB_PLANT_SPARK_PARTICLE, NULL, 2, -1, NULL);
         }
     }
     return 0;
@@ -300,7 +300,7 @@ void BombPlant_update(GameObject* obj) {
                                           randomGetRange(BOMB_PLANT_RANDOM_TIMER_MIN, BOMB_PLANT_RANDOM_TIMER_MAX));
         }
         if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
-            (*gPartfxInterface)->spawnObject(obj, BOMB_PLANT_SPARK_PARTICLE, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, BOMB_PLANT_SPARK_PARTICLE, NULL, 2, -1, NULL);
         }
         break;
     }

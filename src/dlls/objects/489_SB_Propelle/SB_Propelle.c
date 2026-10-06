@@ -89,7 +89,7 @@ void SB_Propeller_update(GameObject* obj) {
                 spawnParams.posY = obj->anim.worldPosY;
                 spawnParams.posZ = obj->anim.worldPosZ;
                 spawnParams.scale = scale;
-                (*gPartfxInterface)->spawnObject(obj, SB_PROPELLER_PARTFX_SMOKE, &spawnParams, 0x200001, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, SB_PROPELLER_PARTFX_SMOKE, &spawnParams, 0x200001, -1, NULL);
             }
             state->smokeTimer = randomGetRange(0x5a, 0xf0);
         }
@@ -101,7 +101,7 @@ void SB_Propeller_update(GameObject* obj) {
             spawnParams.posY -= obj->anim.worldPosY;
             spawnParams.posZ -= obj->anim.worldPosZ;
             for (frameIndex = 0; frameIndex < framesThisStep; frameIndex++) {
-                (*gPartfxInterface)->spawnObject(obj, SB_PROPELLER_PARTFX_DEBRIS, &spawnParams, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, SB_PROPELLER_PARTFX_DEBRIS, &spawnParams, 2, -1, NULL);
             }
         }
     }

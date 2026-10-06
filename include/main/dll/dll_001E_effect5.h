@@ -1,6 +1,8 @@
 #ifndef MAIN_DLL_DLL_001E_EFFECT5_H_
 #define MAIN_DLL_DLL_001E_EFFECT5_H_
 
+#include "game/objects/object_fwd.h"
+
 #include "main/dll/partfx_interface.h"
 
 enum {
@@ -11,7 +13,7 @@ enum {
 void Effect5_func03_nop(void);
 void Effect5_release(void);
 void Effect5_initialise(void);
-int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
+int Effect5_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
                         s16* extraArgs);
 void Effect5_updateFrameState(void);
 

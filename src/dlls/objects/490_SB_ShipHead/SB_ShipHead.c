@@ -93,7 +93,7 @@ void SB_ShipHead_render(GameObject* obj, int renderArg2, int renderArg3, int ren
             effectParams.posY -= object->anim.worldPosY;
             effectParams.posZ -= object->anim.worldPosZ;
             for (particleIndex = 0; particleIndex < framesThisStep; particleIndex++) {
-                (*gPartfxInterface)->spawnObject((void*)obj, SB_SHIP_HEAD_PARTICLE_EFFECT, &effectParams, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, SB_SHIP_HEAD_PARTICLE_EFFECT, &effectParams, 2, -1, NULL);
             }
         }
     }

@@ -147,9 +147,9 @@ void DIMbosstonsil_checkHit(GameObject* obj, GroundBaddieState* state) {
             spawnPos[2] = playerMapOffsetZ + modelPos[modelPart][3];
         }
         (*gPartfxInterface)
-            ->spawnObject(obj, DIMBOSSTONSIL_HIT_EFFECT_ID, &spawnArgs, DIMBOSSTONSIL_HIT_FX_FLAGS, -1, NULL);
+            ->spawnEffect(obj, DIMBOSSTONSIL_HIT_EFFECT_ID, &spawnArgs, DIMBOSSTONSIL_HIT_FX_FLAGS, -1, NULL);
         (*gPartfxInterface)
-            ->spawnObject(obj, DIMBOSSTONSIL_HIT_EFFECT_ALT_ID, &spawnArgs, DIMBOSSTONSIL_HIT_FX_FLAGS, -1, NULL);
+            ->spawnEffect(obj, DIMBOSSTONSIL_HIT_EFFECT_ALT_ID, &spawnArgs, DIMBOSSTONSIL_HIT_FX_FLAGS, -1, NULL);
         objDoHitParticleFx(obj, 0.028f, &spawnArgs, 3, 0);
         Sfx_PlayFromObject(obj, DIMBOSSTONSIL_PRIMARY_HIT_SFX);
         doRumble(16.0f);
@@ -426,24 +426,18 @@ void DIMbosstonsil_free(GameObject* obj) {
 
 void DIMbosstonsil_render(GameObject* obj, u32 renderArg2, u32 renderArg3, u32 renderArg4, u32 renderArg5,
                           char visible) {
-    struct {
-        f32 x;
-        f32 y;
-        f32 z;
-    } pathPoint;
-    int spawnArgs[3];
-    f32* pathX;
+    PartFxSpawnParams pathPoint;
 
     if (visible != 0) {
         switch (obj->userData1) {
         case 0: {
             objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, (double)1.0f);
 
-            ObjPath_GetPointWorldPosition(obj, 1, (pathX = &pathPoint.x), &pathPoint.y, &pathPoint.z, 0);
-            (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_PARTFX, spawnArgs, 0x200001, -1, NULL);
+            ObjPath_GetPointWorldPosition(obj, 1, &pathPoint.x, &pathPoint.y, &pathPoint.z, 0);
+            (*gPartfxInterface)->spawnEffect(obj, DIMBOSSTONSIL_PARTFX, &pathPoint, 0x200001, -1, NULL);
 
-            ObjPath_GetPointWorldPosition(obj, 0, pathX, &pathPoint.y, &pathPoint.z, 0);
-            (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_PARTFX, spawnArgs, 0x200001, -1, NULL);
+            ObjPath_GetPointWorldPosition(obj, 0, &pathPoint.x, &pathPoint.y, &pathPoint.z, 0);
+            (*gPartfxInterface)->spawnEffect(obj, DIMBOSSTONSIL_PARTFX, &pathPoint, 0x200001, -1, NULL);
 
             if (gDIMbosstonsilLight != NULL && gDIMbosstonsilLight->glowType != 0 &&
                 gDIMbosstonsilLight->enabled != 0) {

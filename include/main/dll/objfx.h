@@ -33,27 +33,12 @@ typedef struct ObjFxU16Table11
     u16 values[11];
 } ObjFxU16Table11;
 
-typedef struct ObjFxParticleParams
-{
-    s16 pad00[3];
-    s16 effectParam;
-    f32 scale;
-    f32 position[3];
-} ObjFxParticleParams;
 
 typedef struct ObjFxU16Table7
 {
     u16 values[7];
 } ObjFxU16Table7;
 
-typedef struct ObjFxParticleFlags
-{
-    s16 a;
-    s16 b;
-    s16 f4;
-    s16 effectParam;
-    f32 scale;
-} ObjFxParticleFlags;
 
 typedef struct ObjFxU16Table9
 {
@@ -90,12 +75,7 @@ typedef struct ObjFxSparkleEffectTable
 STATIC_ASSERT(sizeof(ObjFxParticleEmitter) == 0x18);
 STATIC_ASSERT(sizeof(ObjFxS32Table5) == 0x14);
 STATIC_ASSERT(sizeof(ObjFxU16Table11) == 0x16);
-STATIC_ASSERT(sizeof(ObjFxParticleParams) == 0x18);
-STATIC_ASSERT(offsetof(ObjFxParticleParams, effectParam) == 0x06);
-STATIC_ASSERT(offsetof(ObjFxParticleParams, scale) == 0x08);
-STATIC_ASSERT(offsetof(ObjFxParticleParams, position) == 0x0C);
 STATIC_ASSERT(sizeof(ObjFxU16Table7) == 0x0E);
-STATIC_ASSERT(sizeof(ObjFxParticleFlags) == 0x0C);
 STATIC_ASSERT(sizeof(ObjFxU16Table9) == 0x12);
 STATIC_ASSERT(sizeof(ObjFxU16Table8) == 0x10);
 STATIC_ASSERT(sizeof(ObjFxRandomBurstTable) == 0x34);

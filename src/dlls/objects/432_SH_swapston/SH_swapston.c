@@ -73,14 +73,6 @@ extern int lbl_803DC050;
  * the tuning floats. All effects are parented to the player object.
  */
 
-typedef struct WarpStoneDustEffectParams {
-    s16 flags;
-    s16 count;
-    s16 effectType;
-    s16 radius;
-    f32 scale;
-    Vec position;
-} WarpStoneDustEffectParams;
 
 #define DUST_PUFF_EFFECT_ID             0x7ca
 #define DUST_CLOUD_EFFECT_ID            0x7d2
@@ -108,42 +100,42 @@ ObjectDescriptor gWarpStoneObjDescriptor = {
 };
 
 void warpstone_updateDustEffects(GameObject* obj) {
-    void* playerObj;
+    GameObject* playerObj;
     WarpStoneState* state;
     int burstCount;
-    WarpStoneDustEffectParams effectParams;
+    PartFxSpawnParams effectParams;
 
     playerObj = Obj_GetPlayerObject();
     state = obj->extra;
-    effectParams.position.x = 0.0f;
-    effectParams.position.y = 55.0f;
-    effectParams.position.z = 0.0f;
-    effectParams.effectType = DUST_PUFF_PARAM_TYPE;
-    effectParams.count = 1;
+    effectParams.pos.x = 0.0f;
+    effectParams.pos.y = 55.0f;
+    effectParams.pos.z = 0.0f;
+    effectParams.arg2 = DUST_PUFF_PARAM_TYPE;
+    effectParams.arg1 = 1;
     if ((state->dustEffectFlags & WARPSTONE_DUST_FLAG_ACTIVE) != 0) {
         if (state->dustEffectTimer < 120.0f) {
             if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < state->dustEffectTimer / 2.0f) {
-                (*gPartfxInterface)->spawnObject(playerObj, DUST_PUFF_EFFECT_ID, &effectParams, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(playerObj, DUST_PUFF_EFFECT_ID, &effectParams, 2, -1, NULL);
             }
         } else if (state->dustEffectTimer < 360.0f) {
             if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < state->dustEffectTimer / 3.0f) {
-                (*gPartfxInterface)->spawnObject(playerObj, DUST_PUFF_EFFECT_ID, &effectParams, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(playerObj, DUST_PUFF_EFFECT_ID, &effectParams, 2, -1, NULL);
             }
-            effectParams.radius = 0x28;
-            effectParams.flags = 0;
+            effectParams.arg3 = 0x28;
+            effectParams.arg0 = 0;
             effectParams.scale = 0.0009f * ((state->dustEffectTimer - 120.0f) / 240.0f);
-            (*gPartfxInterface)->spawnObject(playerObj, DUST_CLOUD_EFFECT_ID, &effectParams, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(playerObj, DUST_CLOUD_EFFECT_ID, &effectParams, 2, -1, NULL);
             state->dustEffectFlags |= WARPSTONE_DUST_FLAG_BURST_READY;
         } else if (state->dustEffectTimer < 420.0f) {
             if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < state->dustEffectTimer / 2.0f) {
-                (*gPartfxInterface)->spawnObject(playerObj, DUST_PUFF_EFFECT_ID, &effectParams, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(playerObj, DUST_PUFF_EFFECT_ID, &effectParams, 2, -1, NULL);
             }
             if ((state->dustEffectFlags & WARPSTONE_DUST_FLAG_BURST_READY) != 0) {
                 state->dustEffectFlags &= ~WARPSTONE_DUST_FLAG_BURST_READY;
-                effectParams.radius = 0x46;
+                effectParams.arg3 = 0x46;
                 effectParams.scale = 0.00036f;
                 for (burstCount = DUST_BURST_PUFF_COUNT; (u8)burstCount != 0; burstCount--) {
-                    (*gPartfxInterface)->spawnObject(playerObj, DUST_CLOUD_EFFECT_ID, &effectParams, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(playerObj, DUST_CLOUD_EFFECT_ID, &effectParams, 2, -1, NULL);
                 }
             }
         } else if (!(state->dustEffectTimer < 480.0f)) {

@@ -148,8 +148,8 @@ void arwarwingbo_update(GameObject* obj)
         {
             arwarwingbo_detonate(obj);
         }
-        (*gPartfxInterface)->spawnObject(obj, ARWARWINGBO_PARTFX, NULL, 1, -1, &objAnim->velocityX);
-        (*gPartfxInterface)->spawnObject(obj, ARWARWINGBO_PARTFX, NULL, 1, -1, &objAnim->velocityX);
+        (*gPartfxInterface)->spawnEffect(obj, ARWARWINGBO_PARTFX, NULL, 1, -1, &objAnim->velocityX);
+        (*gPartfxInterface)->spawnEffect(obj, ARWARWINGBO_PARTFX, NULL, 1, -1, &objAnim->velocityX);
     }
     else
     {

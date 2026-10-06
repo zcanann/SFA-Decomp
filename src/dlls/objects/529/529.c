@@ -206,7 +206,7 @@ void wmwallcrawler_update(GameObject* obj) {
             if ((state->flags & WMWALLCRAWLER_FLAG_TIMED_EXPLODE) != 0) {
                 if (timerCountDown((f32*)&state->explodeTimer) != 0) {
                     for (k = 0; k < 0x1e; k++) {
-                        (*gPartfxInterface)->spawnObject((void*)ob, WMWALLCRAWLER_PARTFX, NULL, 0, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(ob, WMWALLCRAWLER_PARTFX, NULL, 0, -1, NULL);
                     }
                     s16toFloat((f32*)&state->despawnTimer, 100);
                     return;

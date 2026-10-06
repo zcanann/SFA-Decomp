@@ -239,7 +239,7 @@ void MoonSeedPlantingSpot_update(GameObject* obj)
             if (ex->flags & MSPLANTING_FLAG_BURST)
             {
                 obj->anim.localPosY = setup->posY + randomGetRange(-1, 1);
-                (*gPartfxInterface)->spawnObject((void*)obj, MSPLANTING_PARTFX, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, MSPLANTING_PARTFX, NULL, 2, -1, NULL);
             }
             ex->burstTimer -= timeDelta;
             if (ex->burstTimer <= 0.0f)

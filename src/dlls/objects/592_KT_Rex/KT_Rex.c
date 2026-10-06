@@ -53,7 +53,7 @@ MapRomList* gKTRexMapBlock;
 int gKTRexContactEffectCooldown;
 StaffCollisionInterface** gKTRexResource;
 
-KTRexWork gKTRexEffectSpawnWork;
+PartFxSpawnParams gKTRexEffectSpawnWork;
 
 s16 gKTRexMoveIdByLaneB05[4] = {9, 0x12, 0x12, 0};
 s16 gKTRexWalkMoveIdByLane[4] = {1, 2, 3, 0};
@@ -830,8 +830,8 @@ void ktrex_updateContactEffects(GameObject* obj, GroundBaddieState* runtime) {
         gKTRexEffectSpawnWork.posZ = playerMapOffsetZ + pt[3];
         Sfx_PlayFromObject(obj, SFXTRIG_dn_rexhurt12);
         Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122);
-        (*gPartfxInterface)->spawnObject(obj, 0x4b2, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 0x4b3, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 0x4b2, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 0x4b3, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
         if (hit == 0xe) {
             runtime->baddie.hitPoints -= 1;
         } else {
@@ -849,11 +849,11 @@ void ktrex_updateContactEffects(GameObject* obj, GroundBaddieState* runtime) {
         gKTRexEffectSpawnWork.posX = contactPoints[hitType * 4 + 1] + playerMapOffsetX;
         gKTRexEffectSpawnWork.posY = contactPoints[hitType * 4 + 2];
         gKTRexEffectSpawnWork.posZ = contactPoints[hitType * 4 + 3] + playerMapOffsetZ;
-        (*gPartfxInterface)->spawnObject(obj, KTREX_PARTFX_HIT, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, KTREX_PARTFX_HIT, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
         gKTRexEffectSpawnWork.posX -= obj->anim.worldPosX;
         gKTRexEffectSpawnWork.posY -= obj->anim.worldPosY;
         gKTRexEffectSpawnWork.posZ -= obj->anim.worldPosZ;
-        gKTRexEffectSpawnWork.unk8 = 1.0f;
+        gKTRexEffectSpawnWork.scale = 1.0f;
         gKTRexEffectSpawnWork.unk0 = 0;
         gKTRexEffectSpawnWork.unk2 = 0;
         gKTRexEffectSpawnWork.unk4 = 0;
@@ -957,55 +957,55 @@ void ktrex_updateAttackEffects(GameObject* obj) {
         return;
     }
     if ((gKTRexState->phaseFlags & 0x1) != 0) {
-        gKTRexState->spawnWork[1].unk8 = 1.0f;
+        gKTRexState->spawnWork[1].scale = 1.0f;
         for (i = 0; i < 10; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x2) != 0) {
-        gKTRexState->spawnWork[2].unk8 = 1.0f;
+        gKTRexState->spawnWork[2].scale = 1.0f;
         for (i = 0; i < 10; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x4) != 0) {
-        gKTRexState->spawnWork[1].unk8 = 1.5f;
+        gKTRexState->spawnWork[1].scale = 1.5f;
         for (i = 0; i < 13; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x8) != 0) {
-        gKTRexState->spawnWork[2].unk8 = 1.5f;
+        gKTRexState->spawnWork[2].scale = 1.5f;
         for (i = 0; i < 13; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x10) != 0) {
-        gKTRexState->spawnWork[1].unk8 = 2.0f;
+        gKTRexState->spawnWork[1].scale = 2.0f;
         for (i = 0; i < 16; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x20) != 0) {
-        gKTRexState->spawnWork[2].unk8 = 2.0f;
+        gKTRexState->spawnWork[2].scale = 2.0f;
         for (i = 0; i < 16; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x800) != 0) {
-        (*gPartfxInterface)->spawnObject(obj, 0x487, &gKTRexState->spawnWork[0], 0x200001, -1, &gKTRexState->vecX);
+        (*gPartfxInterface)->spawnEffect(obj, 0x487, &gKTRexState->spawnWork[0], 0x200001, -1, &gKTRexState->vecX);
     }
     gKTRexState->phaseFlags &= 0x1800;
     if (((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject()) {

@@ -196,7 +196,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
                 state->flags &= ~KTREXFLOORSWITCH_FLAG_SINKING;
             } else {
                 moved = 1;
-                (*gPartfxInterface)->spawnObject((void*)obj, KTREXFLOORSWITCH_PARTFX_MOVING, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, KTREXFLOORSWITCH_PARTFX_MOVING, NULL, 2, -1, NULL);
             }
         }
     }
@@ -209,7 +209,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
                 state->flags &= ~KTREXFLOORSWITCH_FLAG_RISING;
             } else {
                 moved = 1;
-                (*gPartfxInterface)->spawnObject((void*)obj, KTREXFLOORSWITCH_PARTFX_MOVING, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, KTREXFLOORSWITCH_PARTFX_MOVING, NULL, 2, -1, NULL);
             }
         }
     }
@@ -337,7 +337,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
         }
         if ((state->flags & KTREXFLOORSWITCH_FLAG_MOVING) == 0)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, KTREXFLOORSWITCH_PARTFX_SETTLED, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, KTREXFLOORSWITCH_PARTFX_SETTLED, NULL, 2, -1, NULL);
         }
     } else {
         if (tex->textureId != 0)

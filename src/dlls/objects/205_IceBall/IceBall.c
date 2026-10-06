@@ -53,11 +53,11 @@ void iceBall_handleSurfaceImpact(GameObject* obj) {
 
     if (sequenceId == 0x2cb) {
         for (particleIndex = 0; particleIndex < ICEBALL_PARTICLE_COUNT; particleIndex++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, 834, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 834, NULL, 1, -1, NULL);
         }
     } else if (sequenceId == 100 || sequenceId == 0x30a) {
         for (particleIndex = 0; particleIndex < ICEBALL_PARTICLE_COUNT; particleIndex++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, 836, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 836, NULL, 1, -1, NULL);
         }
     }
 
@@ -83,7 +83,7 @@ void iceBall_handleCharacterImpact(GameObject* obj) {
             }
         }
         for (particleIndex = 0; particleIndex < ICEBALL_PARTICLE_COUNT; particleIndex++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, 832, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 832, NULL, 1, -1, NULL);
         }
     } else if (sequenceId == 100) {
         if (obj->ownerObj != NULL) {
@@ -94,7 +94,7 @@ void iceBall_handleCharacterImpact(GameObject* obj) {
             }
         }
         for (particleIndex = 0; particleIndex < ICEBALL_PARTICLE_COUNT; particleIndex++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, 835, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 835, NULL, 1, -1, NULL);
         }
     } else if (sequenceId == 0x30a) {
         if (obj->ownerObj != NULL) {
@@ -105,7 +105,7 @@ void iceBall_handleCharacterImpact(GameObject* obj) {
             }
         }
         for (particleIndex = 0; particleIndex < ICEBALL_PARTICLE_COUNT; particleIndex++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, 835, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 835, NULL, 1, -1, NULL);
         }
     }
 }

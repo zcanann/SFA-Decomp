@@ -204,7 +204,7 @@ void bossdrakor_updateHeadTracking(GameObject* obj, BossDrakorState* drakorState
                     }
                     if (drakorState->jawAnimTimer > 10.0f) {
                         partfxParams.arg3 = 45000;
-                        (*gPartfxInterface)->spawnObject((void*)obj, BOSSDRAKOR_PARTFX, &partfxParams, 1, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(obj, BOSSDRAKOR_PARTFX, &partfxParams, 1, -1, NULL);
                     }
                 }
             }

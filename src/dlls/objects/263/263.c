@@ -230,7 +230,7 @@ void windLift107_update(GameObject* obj) {
         state->burstTimer -= framesThisStep;
         if (randomGetRange(0, WINDLIFT107_PARTICLE_RANDOM_MAX) == WINDLIFT107_PARTICLE_RANDOM_MAX) {
             (*gPartfxInterface)
-                ->spawnObject(obj, WINDLIFT107_PARTICLE_EFFECT_ID, NULL, WINDLIFT107_PARTICLE_SPAWN_MODE,
+                ->spawnEffect(obj, WINDLIFT107_PARTICLE_EFFECT_ID, NULL, WINDLIFT107_PARTICLE_SPAWN_MODE,
                               WINDLIFT107_EFFECT_MODEL_ID, NULL);
         }
         if (state->burstTimer <= 0) {

@@ -114,7 +114,7 @@ void lightsource_update(GameObject* obj) {
             if (state->sparkSpawnTimer <= 0.0f) {
                 /* The effect only consumes scale; the remaining parameters stay raw. */
                 sparkParams.scale = 1.0f;
-                (*gPartfxInterface)->spawnObject(obj, LIGHTSOURCE_PARTFX_SPARK, &sparkParams, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, LIGHTSOURCE_PARTFX_SPARK, &sparkParams, 2, -1, NULL);
                 state->sparkSpawnTimer += 5.0f;
             }
         }

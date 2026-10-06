@@ -2521,7 +2521,7 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
                 fxBuf.posY = 2.0f + trickyState->mouthPos.y;
                 fxBuf.posZ = trickyState->mouthPos.z;
                 (*gPartfxInterface)
-                    ->spawnObject((void*)obj, TRICKY_PARTFX_HOWL_SPARKLE, &fxBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS,
+                    ->spawnEffect(obj, TRICKY_PARTFX_HOWL_SPARKLE, &fxBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS,
                                   -1, NULL);
             }
             trickyState->howlSparkleTimer = 30.0f;
@@ -2662,7 +2662,7 @@ int tricky_substateDigForFood(GameObject* obj, TrickyState* state) {
         spawnBuf.posY = obj->anim.worldPosY;
         spawnBuf.posZ = obj->anim.worldPosZ;
         spawnBuf.scale = 0.7f;
-        (*gPartfxInterface)->spawnObject((void*)obj, 2022, &spawnBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 2022, &spawnBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
         break;
     }
     case TRICKY_ANIM_DIG_FOOD_END:
@@ -5279,10 +5279,10 @@ void Tricky_emitDigParticles(GameObject* obj) {
     }
 
     if ((int)randomGetRange(0, TRICKY_DIG_PARTICLE_RANDOM_RATE) == 0) {
-        (*gPartfxInterface)->spawnObject(obj, PARTFX_DIG_DEBRIS, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, PARTFX_DIG_DEBRIS, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
     }
     if ((int)randomGetRange(0, TRICKY_DIG_PARTICLE_RANDOM_RATE) == 0) {
-        (*gPartfxInterface)->spawnObject(obj, PARTFX_DIG_DUST, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, PARTFX_DIG_DUST, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
     }
 
     args.posX = state->pathPointPositions[1].x;
@@ -5291,10 +5291,10 @@ void Tricky_emitDigParticles(GameObject* obj) {
     args.dig.yaw = obj->anim.rotX;
 
     if ((int)randomGetRange(0, TRICKY_DIG_PARTICLE_RANDOM_RATE) == 0) {
-        (*gPartfxInterface)->spawnObject(obj, PARTFX_DIG_DEBRIS, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, PARTFX_DIG_DEBRIS, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
     }
     if ((int)randomGetRange(0, TRICKY_DIG_PARTICLE_RANDOM_RATE) == 0) {
-        (*gPartfxInterface)->spawnObject(obj, PARTFX_DIG_DUST, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, PARTFX_DIG_DUST, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
     }
 }
 
@@ -6130,7 +6130,7 @@ void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
     if ((flags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) == 0) {
         while (spawnCount-- != 0) {
             (*gPartfxInterface)
-                ->spawnObject(obj, TRICKY_PATH_PARTFX, &particleParams, TRICKY_PATH_PARTFX_SPAWN_FLAGS, -1, NULL);
+                ->spawnEffect(obj, TRICKY_PATH_PARTFX, &particleParams, TRICKY_PATH_PARTFX_SPAWN_FLAGS, -1, NULL);
         }
         state->stateFlags &= ~TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
     }

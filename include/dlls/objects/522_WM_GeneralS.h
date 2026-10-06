@@ -27,7 +27,7 @@ STATIC_ASSERT(offsetof(WmGeneralScalesState, fadeAlpha) == 0x05);
 STATIC_ASSERT(offsetof(WmGeneralScalesState, unknown06) == 0x06);
 STATIC_ASSERT(sizeof(WmGeneralScalesState) == 0x08);
 
-int WM_GeneralScales_sequenceCallback(int objectHandle, int unusedArg2, struct ObjSeqState* animUpdate);
+int WM_GeneralScales_sequenceCallback(GameObject* objectHandle, int unusedArg2, struct ObjSeqState* animUpdate);
 int WM_GeneralScales_getExtraSize(void);
 int WM_GeneralScales_getObjectTypeId(void);
 void WM_GeneralScales_free(GameObject* obj);

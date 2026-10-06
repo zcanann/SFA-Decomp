@@ -887,19 +887,12 @@ int DIMSnowHorn1_canMount(GameObject* obj) {
     return 0;
 }
 
-void DIMSnowHorn1_spawnFootstepEffects(void* obj, DIMSnowHorn1State* pointState, DIMSnowHorn1State* inputState) {
+void DIMSnowHorn1_spawnFootstepEffects(GameObject* obj, DIMSnowHorn1State* pointState, DIMSnowHorn1State* inputState) {
     u8 flags;
     u8 pointIndex;
     u8 count;
     s32 inputFlags;
-    struct {
-        u32 unk0;
-        u32 unk4;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } args;
+    PartFxSpawnParams args;
 
     flags = 0;
     inputFlags = inputState->baddie.eventFlags;
@@ -920,8 +913,8 @@ void DIMSnowHorn1_spawnFootstepEffects(void* obj, DIMSnowHorn1State* pointState,
 
             count = (u8)randomGetRange(2, 6);
             while (count != 0) {
-                ((EffectInterface*)*gPartfxInterface)
-                    ->spawnObject(obj, randomGetRange(0, 1) + 0x1f9, &args, 0x10001, -1, NULL);
+                (*gPartfxInterface)
+                    ->spawnEffect(obj, randomGetRange(0, 1) + 0x1f9, &args, 0x10001, -1, NULL);
                 count--;
             }
 

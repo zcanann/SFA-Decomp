@@ -744,12 +744,12 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB) {
                 dll_CE_spawnIceBall(obj, state);
             }
             if ((control->effectFlags & DLL_CE_EFFECT_DUST) != 0) {
-                (*gPartfxInterface)->spawnObject((void*)obj, DLL_CE_PARTFX_DUST, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, DLL_CE_PARTFX_DUST, NULL, 1, -1, NULL);
             }
             if ((control->effectFlags & DLL_CE_EFFECT_SPRAY) != 0) {
                 spawnCount = 0;
                 do {
-                    (*gPartfxInterface)->spawnObject((void*)obj, DLL_CE_PARTFX_SPRAY, NULL, 1, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, DLL_CE_PARTFX_SPRAY, NULL, 1, -1, NULL);
                     spawnCount++;
                 } while (spawnCount < 10);
             }

@@ -960,21 +960,18 @@ void DR_EarthWarrior_update(GameObject* obj) {
     }
     if (state->sub.flags8D8 & 8) {
         f32 vecA[3];
-        struct {
-            s16 angles[4];
-            f32 mat[4];
-        } w;
+        PartFxSpawnParams w;
         vecA[0] = 0.05f * obj->anim.velocityX;
         vecA[1] = 0.0f;
         vecA[2] = 0.05f * obj->anim.velocityZ;
         for (i = 0; i < 4; i++) {
-            w.mat[1] = 8.0f * obj->anim.velocityX + state->pathPoints[i].x;
-            w.mat[2] = state->pathPoints[i].y;
-            w.mat[3] = 8.0f * obj->anim.velocityZ + state->pathPoints[i].z;
-            w.mat[0] = 1.0f;
-            w.angles[0] = 2;
+            w.x = 8.0f * obj->anim.velocityX + state->pathPoints[i].x;
+            w.y = state->pathPoints[i].y;
+            w.z = 8.0f * obj->anim.velocityZ + state->pathPoints[i].z;
+            w.scale = 1.0f;
+            w.arg0 = 2;
             for (j = 2; j != 0; j--) {
-                (*gPartfxInterface)->spawnObject(obj, DREARTHWARRIOR_PARTFX, &w, 0x200001, -1, vecA);
+                (*gPartfxInterface)->spawnEffect(obj, DREARTHWARRIOR_PARTFX, &w, 0x200001, -1, vecA);
             }
         }
         state->sub.flags8D8 &= ~8;

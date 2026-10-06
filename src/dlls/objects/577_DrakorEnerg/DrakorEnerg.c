@@ -127,7 +127,7 @@ void drakorenergy_update(GameObject* o)
         colorRGB.arg2 = 0xff;
         colorRGB.arg1 = 0xff - s->phase % 0x500;
         colorRGB.arg0 = 0xff;
-        (*gPartfxInterface)->spawnObject((void*)o, DRAKORENERGY_PARTFX, &colorRGB, 0, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(o, DRAKORENERGY_PARTFX, &colorRGB, 0, -1, NULL);
         break;
     case DRAKORENERGY_MODE_BOBBING:
         o->anim.velocityY =

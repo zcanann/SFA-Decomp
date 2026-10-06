@@ -1592,13 +1592,13 @@ void dbstealerworm_processEffectFlags(GameObject* obj, GroundBaddieState* baddie
         dbstealerworm_launchIceBall(obj, &baddie->baddie);
     }
     if (state->flags14 & DBWORM_FLAG14_FX_DUST) {
-        (*gPartfxInterface)->spawnObject((void*)obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
     }
     if (state->flags14 & DBWORM_FLAG14_FX_SPRAY) {
         for (i = 0; i < 0xa; i++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, DBSTEALERWORM_PARTFX_SPRAY, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, DBSTEALERWORM_PARTFX_SPRAY, NULL, 1, -1, NULL);
         }
     }
     state->flags14 = 0;

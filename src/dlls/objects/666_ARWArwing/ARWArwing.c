@@ -632,17 +632,10 @@ void arwarwing_updateWeaponFire(GameObject* obj, ArwingState* state) {
     state->fireCooldown = (f32)(u32)state->fireDelay;
 }
 
-void arwarwing_emitDamageEffects(void* obj, ArwingState* state) {
+void arwarwing_emitDamageEffects(GameObject* obj, ArwingState* state) {
     ArwingState* arwing = state;
     u8 spawnFlag;
-    struct {
-        u8 pad[6];
-        s16 kind;
-        f32 scale;
-        f32 posX;
-        f32 posY;
-        f32 posZ;
-    } pfx;
+    PartFxSpawnParams pfx;
     spawnFlag = 0;
     if ((s8)arwing->health <= 4) {
         if (arwing->damageEffectCounter++ % 2 != 0) {
@@ -651,20 +644,20 @@ void arwarwing_emitDamageEffects(void* obj, ArwingState* state) {
             pfx.posY = -7.0f;
             pfx.posZ = -10.0f;
             if ((s8)arwing->health <= 2) {
-                pfx.kind = 0x61a8;
+                pfx.effectParam = 0x61a8;
             } else {
-                pfx.kind = -0x63c0;
+                pfx.effectParam = -0x63c0;
             }
-            (*gPartfxInterface)->spawnObject(obj, ARWARWING_PARTFX_DAMAGE, &pfx.pad, 4, -1, &spawnFlag);
+            (*gPartfxInterface)->spawnEffect(obj, ARWARWING_PARTFX_DAMAGE, &pfx, 4, -1, &spawnFlag);
         }
     }
     if ((s8)arwing->health <= 2) {
         pfx.scale = 0.85f;
-        pfx.kind = 0xc0a;
+        pfx.effectParam = 0xc0a;
         pfx.posX = 0.0f;
         pfx.posY = 2.5f;
         pfx.posZ = -12.0f;
-        (*gPartfxInterface)->spawnObject(obj, ARWARWING_PARTFX_CRITICAL, &pfx.pad, 4, -1, &spawnFlag);
+        (*gPartfxInterface)->spawnEffect(obj, ARWARWING_PARTFX_CRITICAL, &pfx, 4, -1, &spawnFlag);
     }
 }
 

@@ -100,11 +100,11 @@ void AreaFXEmit_emitBurst(GameObject* obj, int count) {
                     args.posY += obj->anim.localPosY;
                     args.posZ += obj->anim.localPosZ;
                     (*gPartfxInterface)
-                        ->spawnObject(obj, state->effectId, &args, AREAFXEMIT_WORLD_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
+                        ->spawnEffect(obj, state->effectId, &args, AREAFXEMIT_WORLD_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
                                       NULL);
                 } else {
                     (*gPartfxInterface)
-                        ->spawnObject(obj, state->effectId, &args, AREAFXEMIT_LOCAL_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
+                        ->spawnEffect(obj, state->effectId, &args, AREAFXEMIT_LOCAL_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
                                       NULL);
                 }
             }
@@ -131,7 +131,7 @@ void AreaFXEmit_emitEffect(GameObject* obj) {
                 AREAFXEMIT_ROTATE_FROM_LOCAL(obj, state, &args.posX, rotation);
                 AREAFXEMIT_ADD_OBJECT_POSITION(obj, &args.posX);
                 (*gPartfxInterface)
-                    ->spawnObject(obj, state->effectId, &args, AREAFXEMIT_WORLD_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
+                    ->spawnEffect(obj, state->effectId, &args, AREAFXEMIT_WORLD_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
                                   NULL);
             }
         } else {
@@ -139,7 +139,7 @@ void AreaFXEmit_emitEffect(GameObject* obj) {
             AREAFXEMIT_ROTATE_FROM_LOCAL(obj, state, &args.posX, rotation);
             AREAFXEMIT_ADD_OBJECT_POSITION(obj, &args.posX);
             (*gPartfxInterface)
-                ->spawnObject(obj, state->effectId, &args, AREAFXEMIT_WORLD_SPAWN_MODE, AREAFXEMIT_MODEL_NONE, NULL);
+                ->spawnEffect(obj, state->effectId, &args, AREAFXEMIT_WORLD_SPAWN_MODE, AREAFXEMIT_MODEL_NONE, NULL);
         }
     } else if (type == AREAFXEMIT_SPAWN_OBJECT_RESOURCE) {
         resource = Resource_Acquire((state->effectId + AREAFXEMIT_RESOURCE_OFFSET), AREAFXEMIT_RESOURCE_GROUP);
@@ -169,14 +169,14 @@ void AreaFXEmit_emitEffect(GameObject* obj) {
                 AREAFXEMIT_RANDOMIZE_OFFSET(state, &args.posX);
                 AREAFXEMIT_ROTATE_FROM_LOCAL(obj, state, &args.posX, rotation);
                 (*gPartfxInterface)
-                    ->spawnObject(obj, state->effectId, &args, AREAFXEMIT_LOCAL_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
+                    ->spawnEffect(obj, state->effectId, &args, AREAFXEMIT_LOCAL_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
                                   NULL);
             }
         } else {
             AREAFXEMIT_RANDOMIZE_OFFSET(state, &args.posX);
             AREAFXEMIT_ROTATE_FROM_LOCAL(obj, state, &args.posX, rotation);
             (*gPartfxInterface)
-                ->spawnObject(obj, state->effectId, &args, AREAFXEMIT_LOCAL_SPAWN_MODE, AREAFXEMIT_MODEL_NONE, NULL);
+                ->spawnEffect(obj, state->effectId, &args, AREAFXEMIT_LOCAL_SPAWN_MODE, AREAFXEMIT_MODEL_NONE, NULL);
         }
     } else if (type >= 6) {
         if (state->emitCount > 0) {
@@ -186,11 +186,11 @@ void AreaFXEmit_emitEffect(GameObject* obj) {
                 if (state->emitType == 6) {
                     AREAFXEMIT_ADD_OBJECT_POSITION(obj, &args.posX);
                     (*gPartfxInterface)
-                        ->spawnObject(obj, state->effectId, &args, AREAFXEMIT_WORLD_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
+                        ->spawnEffect(obj, state->effectId, &args, AREAFXEMIT_WORLD_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
                                       NULL);
                 } else {
                     (*gPartfxInterface)
-                        ->spawnObject(obj, state->effectId, &args, AREAFXEMIT_LOCAL_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
+                        ->spawnEffect(obj, state->effectId, &args, AREAFXEMIT_LOCAL_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
                                       NULL);
                 }
             }
@@ -200,11 +200,11 @@ void AreaFXEmit_emitEffect(GameObject* obj) {
             if (state->emitType == 6) {
                 AREAFXEMIT_ADD_OBJECT_POSITION(obj, &args.posX);
                 (*gPartfxInterface)
-                    ->spawnObject(obj, state->effectId, &args, AREAFXEMIT_WORLD_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
+                    ->spawnEffect(obj, state->effectId, &args, AREAFXEMIT_WORLD_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
                                   NULL);
             } else {
                 (*gPartfxInterface)
-                    ->spawnObject(obj, state->effectId, &args, AREAFXEMIT_LOCAL_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
+                    ->spawnEffect(obj, state->effectId, &args, AREAFXEMIT_LOCAL_SPAWN_MODE, AREAFXEMIT_MODEL_NONE,
                                   NULL);
             }
         }

@@ -30,7 +30,7 @@ enum
 int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
 {
     WmNewCrystalState* state;
-    WmNewCrystalParticleParams params;
+    PartFxSpawnParams params;
     Vec cameraDelta;
     int i;
 
@@ -69,8 +69,8 @@ int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
     {
         if (mainGetBit(WMNEWCRYSTAL_GAMEBIT_AMBIENT_FX) == 0)
         {
-            (*gPartfxInterface)->spawnObject(obj, WMNEWCRYSTAL_PARTICLE_ID, NULL, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, WMNEWCRYSTAL_PARTICLE_ID, &params, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, WMNEWCRYSTAL_PARTICLE_ID, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, WMNEWCRYSTAL_PARTICLE_ID, &params, 2, -1, NULL);
         }
         objfx_spawnCrystalOrbitEffects(obj, state->fxState, 640.0f, 36.0f, -60.0f, 5.0f, 100.0f, 1);
         objfx_spawnCrystalOrbitEffects(obj, state->secondaryFxState, 640.0f, 36.0f, 60.0f, 5.0f, 0.0f, 1);
@@ -81,14 +81,14 @@ int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
         params.x *= obj->anim.rootMotionScale;
         params.y *= obj->anim.rootMotionScale;
         params.z *= obj->anim.rootMotionScale;
-        params.pathPoint = 1;
+        params.effectParam = 1;
         objfx_spawnDirectionalBurst(obj, 5, 2.0f, 1, 1, 10, 4.0f, &params, 0);
 
         ObjPath_GetPointLocalPosition(obj, 1, &params.x, &params.y, &params.z);
         params.x *= obj->anim.rootMotionScale;
         params.y *= obj->anim.rootMotionScale;
         params.z *= obj->anim.rootMotionScale;
-        params.pathPoint = 0;
+        params.effectParam = 0;
         objfx_spawnDirectionalBurst(obj, 5, 2.0f, 1, 1, 10, 4.0f, &params, 0);
     }
     return 0;

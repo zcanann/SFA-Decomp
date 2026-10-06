@@ -262,7 +262,7 @@ int NW_mammoth_updateSleepCycle(GameObject* obj, NwMammothState* state) {
                     partfxBlock.posX = state->spawnPosX;
                     partfxBlock.posY = state->spawnPosY;
                     partfxBlock.posZ = state->spawnPosZ;
-                    (*gPartfxInterface)->spawnObject(obj, NW_MAMMOTH_PARTFX, &partfxBlock, 0x200001, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, NW_MAMMOTH_PARTFX, &partfxBlock, 0x200001, -1, NULL);
                 }
                 state->partfxTimer = 30.0f;
             }

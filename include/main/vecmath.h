@@ -4,18 +4,7 @@
 #include "global.h"
 #include "main/vecmath_distance_api.h"
 
-typedef struct MatrixTransform {
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    s16 pad06;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} MatrixTransform;
-
-STATIC_ASSERT(sizeof(MatrixTransform) == 0x18);
+#include "main/vec_types.h"
 
 void Vec3_ScaleAdd(const f32* base, const f32* vector, f32 scale, f32* out);
 f32 Vec3_Length(const f32* vector);

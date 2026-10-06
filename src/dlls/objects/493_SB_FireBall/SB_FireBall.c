@@ -71,10 +71,10 @@ void SB_FireBall_hitDetect(GameObject* obj) {
     }
     hitState->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
     for (particleCount = SB_FIREBALL_IMPACT_SMOKE_COUNT; particleCount != 0; particleCount--) {
-        (*gPartfxInterface)->spawnObject(obj, SB_FIREBALL_IMPACT_SMOKE_PARTICLE_ID, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, SB_FIREBALL_IMPACT_SMOKE_PARTICLE_ID, NULL, 1, -1, NULL);
     }
     for (particleCount = SB_FIREBALL_IMPACT_SPARK_COUNT; particleCount != 0; particleCount--) {
-        (*gPartfxInterface)->spawnObject(obj, SB_FIREBALL_IMPACT_SPARK_PARTICLE_ID, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, SB_FIREBALL_IMPACT_SPARK_PARTICLE_ID, NULL, 1, -1, NULL);
     }
 }
 
@@ -110,7 +110,7 @@ void SB_FireBall_update(GameObject* obj) {
         particleParams.scale = 3.0f;
         objfx_spawnFlaggedTrailBurst(obj, 0.8f, SB_FIREBALL_TRAIL_BURST_MODE, SB_FIREBALL_TRAIL_BURST_EFFECT_PARAM,
                                      SB_FIREBALL_TRAIL_BURST_SECONDARY_PARAM, NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, SB_FIREBALL_TRAIL_PARTICLE_ID, &particleParams, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, SB_FIREBALL_TRAIL_PARTICLE_ID, &particleParams, 1, -1, NULL);
 
         if (state->age > SB_FIREBALL_HITBOX_ARM_DELAY) {
             ObjAnim_GetPriorityHitState(&obj->anim)->hitVolumePriority = SB_FIREBALL_HIT_VOLUME_PRIORITY;

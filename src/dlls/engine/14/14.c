@@ -1,3 +1,4 @@
+#include "main/dll/dll_000E_partfx.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/debug.h"
 #include "main/vecmath.h"
@@ -6,7 +7,6 @@
 #include "main/resource.h"
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
-#include "main/dll/dll_000E_partfx.h"
 #include "main/dll/dll_001B_effect2.h"
 #include "stdlib.h"
 
@@ -45,9 +45,12 @@ u8 gPartfxCachedResourceCount;
 s16 gPartfxResourceTimeouts[20];
 PartFxSpawnParams gPartfxDefaultSpawnParams;
 
-int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams* spawnParams, u32 spawnFlags,
-                       u8 modelId, f32* extraArgs) {
-    PartFxSpawnContext state;
+int partfx_spawnEffect(GameObject* sourceObj, int effectValue, PartFxSpawnParams* spawnParams, int spawnFlags,
+                       s8 sourceParam, void* extraArgs) {
+    struct {
+        int effectId;
+        f32* startPos;
+    } state;
     s16 i;
     int variant;
     MatrixTransform rot;
@@ -61,7 +64,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule00 = Resource_Acquire(0x1a, 2);
         }
-        return gPartfxResourceModule00->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule00->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId > 0x257 && state.effectId < 0x2bc) {
@@ -70,7 +73,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule01 = Resource_Acquire(0x1b, 2);
         }
-        return gPartfxResourceModule01->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule01->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId > 0x1f3 && state.effectId < 0x258) {
@@ -79,7 +82,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule02 = Resource_Acquire(0x1c, 2);
         }
-        return gPartfxResourceModule02->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule02->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId > 0x18f && state.effectId < 0x1f4) {
@@ -88,7 +91,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule03 = Resource_Acquire(0x1d, 2);
         }
-        return gPartfxResourceModule03->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule03->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId > 0xc7 && state.effectId < 0x12c) {
@@ -97,7 +100,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule04 = Resource_Acquire(0x1e, 2);
         }
-        return gPartfxResourceModule04->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule04->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId > 0x419 && state.effectId < 0x44c) {
@@ -106,7 +109,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule05 = Resource_Acquire(0x1f, 2);
         }
-        return gPartfxResourceModule05->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule05->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId > 0x739 && state.effectId < 0x76c) {
@@ -115,7 +118,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule16 = Resource_Acquire(0x2a, 2);
         }
-        return gPartfxResourceModule16->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule16->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId - 0x84U <= 1 || state.effectId > 0x89 && state.effectId < 200) {
@@ -124,7 +127,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule06 = Resource_Acquire(0x20, 2);
         }
-        return gPartfxResourceModule06->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule06->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId > 0x3b5 && state.effectId < 0x3de) {
@@ -133,7 +136,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule08 = Resource_Acquire(0x22, 2);
         }
-        return gPartfxResourceModule08->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule08->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId > 0x351 && state.effectId < 0x384) {
@@ -142,7 +145,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule07 = Resource_Acquire(0x21, 2);
         }
-        return gPartfxResourceModule07->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule07->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId > 0x329 && state.effectId < 0x351) {
@@ -151,7 +154,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule09 = Resource_Acquire(0x23, 2);
         }
-        return gPartfxResourceModule09->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule09->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId > 0x12b && state.effectId < 0x190) {
@@ -160,7 +163,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule10 = Resource_Acquire(0x24, 2);
         }
-        return gPartfxResourceModule10->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule10->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId > 0x47d && state.effectId < 0x4b0) {
@@ -169,7 +172,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule11 = Resource_Acquire(0x25, 2);
         }
-        return gPartfxResourceModule11->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule11->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId > 0x4af && state.effectId < 0x4e2) {
@@ -178,7 +181,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule12 = Resource_Acquire(0x27, 2);
         }
-        return gPartfxResourceModule12->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule12->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId >= 0x3e8 && state.effectId <= 0x419) {
@@ -187,7 +190,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule13 = Resource_Acquire(0x28, 2);
         }
-        return gPartfxResourceModule13->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule13->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId > 0x44b && state.effectId < 0x47e) {
@@ -196,7 +199,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule14 = Resource_Acquire(0x26, 2);
         }
-        return gPartfxResourceModule14->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule14->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId >= 0x6d7 && state.effectId <= 0x707) {
@@ -205,7 +208,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule15 = Resource_Acquire(0x29, 2);
         }
-        return gPartfxResourceModule15->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule15->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId >= 0x708 && state.effectId <= 0x739) {
@@ -214,7 +217,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule17 = Resource_Acquire(0x2b, 2);
         }
-        return gPartfxResourceModule17->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule17->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId >= 0x76c && state.effectId <= 0x79d) {
@@ -223,7 +226,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule18 = Resource_Acquire(0x2c, 2);
         }
-        return gPartfxResourceModule18->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule18->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     if (state.effectId >= 0x79e && state.effectId <= 0x833) {
@@ -232,7 +235,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule19 = Resource_Acquire(0x2d, 2);
         }
-        return gPartfxResourceModule19->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+        return gPartfxResourceModule19->vtable->spawnEffect(sourceObj, state.effectId, spawnParams, spawnFlags, sourceParam,
                                                             extraArgs);
     }
     gPartfxSpawnAnimPhase0 += 0.001f;
@@ -246,7 +249,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
     if (sourceObj == NULL) {
         return -1;
     }
-    if ((spawnFlags & 0x200000) != 0) {
+    if ((spawnFlags & 0x200000UL) != 0) {
         if (spawnParams == NULL) {
             return -1;
         }
@@ -257,7 +260,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.sourceVecZ = spawnParams->rotZ;
         cfg.sourceVecY = spawnParams->rotY;
         cfg.sourceVecX = spawnParams->rotX;
-        cfg.modelIdByte = modelId;
+        cfg.sourceParam = sourceParam;
     }
     variant = '\0';
     cfg.behaviorFlags = 0x0;
@@ -907,9 +910,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             *state.startPos = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            *state.startPos -= ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-            cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-            cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+            *state.startPos -= cfg.attachedSource->anim.worldPosX;
+            cfg.startPosY = cfg.startPosY - cfg.attachedSource->anim.worldPosY;
+            cfg.startPosZ = cfg.startPosZ - cfg.attachedSource->anim.worldPosZ;
         }
         if (randomGetRange(0, 0x28) == 0) {
             cfg.scale = 0.0003f;
@@ -939,9 +942,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             *state.startPos = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            *state.startPos = *state.startPos - ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-            cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-            cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+            *state.startPos = *state.startPos - cfg.attachedSource->anim.worldPosX;
+            cfg.startPosY = cfg.startPosY - cfg.attachedSource->anim.worldPosY;
+            cfg.startPosZ = cfg.startPosZ - cfg.attachedSource->anim.worldPosZ;
             cfg.velocityZ = 0.3f;
         }
         cfg.scale = 0.0015f;
@@ -950,7 +953,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
     case 0x53c:
 
         if (extraArgs != NULL) {
-            int alpha = cfg.initialAlpha = (int)(255.0f * (1.0f - *extraArgs));
+            int alpha = cfg.initialAlpha = (int)(255.0f * (1.0f - *(f32*)extraArgs));
             logPrintf(sModgfxAlphaDebugFormat, alpha);
         }
         cfg.scale = 4.0f;
@@ -1268,9 +1271,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             *state.startPos = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            *state.startPos -= ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-            cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-            cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+            *state.startPos -= cfg.attachedSource->anim.worldPosX;
+            cfg.startPosY = cfg.startPosY - cfg.attachedSource->anim.worldPosY;
+            cfg.startPosZ = cfg.startPosZ - cfg.attachedSource->anim.worldPosZ;
         }
         cfg.scale = 0.0003148f;
         cfg.lifetimeFrames = 0x14;
@@ -1323,7 +1326,8 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             cfg.behaviorFlags |= 0x100000;
         }
         if (randomGetRange(0, 10) == 0) {
-            spawnFlags ^= 4;
+            PartfxFlags toggle = PARTFXFLAG_4;
+            spawnFlags ^= toggle;
             spawnFlags |= 1;
         }
         cfg.lifetimeFrames = 0xdc;
@@ -1841,9 +1845,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             cfg.textureId = 0x5c;
             if ((cfg.behaviorFlags & 1) != 0) {
                 if (cfg.attachedSource != NULL) {
-                    cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.localPosX;
-                    cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.localPosY;
-                    cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.localPosZ;
+                    cfg.startPosX = cfg.startPosX + cfg.attachedSource->anim.localPosX;
+                    cfg.startPosY = cfg.startPosY + cfg.attachedSource->anim.localPosY;
+                    cfg.startPosZ = cfg.startPosZ + cfg.attachedSource->anim.localPosZ;
                 } else {
                     cfg.startPosX += cfg.sourcePosX;
                     cfg.startPosY += cfg.sourcePosY;
@@ -1900,9 +1904,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.behaviorFlags |= spawnFlags;
         if ((cfg.behaviorFlags & 1) != 0) {
             if (cfg.attachedSource != NULL) {
-                *state.startPos = *state.startPos + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-                cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-                cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+                *state.startPos = *state.startPos + cfg.attachedSource->anim.worldPosX;
+                cfg.startPosY = cfg.startPosY + cfg.attachedSource->anim.worldPosY;
+                cfg.startPosZ = cfg.startPosZ + cfg.attachedSource->anim.worldPosZ;
             } else {
                 *state.startPos = *state.startPos + cfg.sourcePosX;
                 cfg.startPosY += cfg.sourcePosY;
@@ -1954,9 +1958,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             cfg.textureId = 0x30;
             if (cfg.behaviorFlags & 1) {
                 if (cfg.attachedSource != NULL) {
-                    *state.startPos += ((GameObject*)cfg.attachedSource)->anim.localPosX;
-                    cfg.startPosY += +((GameObject*)cfg.attachedSource)->anim.localPosY;
-                    cfg.startPosZ += ((GameObject*)cfg.attachedSource)->anim.localPosZ;
+                    *state.startPos += cfg.attachedSource->anim.localPosX;
+                    cfg.startPosY += +cfg.attachedSource->anim.localPosY;
+                    cfg.startPosZ += cfg.attachedSource->anim.localPosZ;
                 } else {
                     *state.startPos += cfg.sourcePosX;
                     cfg.startPosY += +cfg.sourcePosY;
@@ -2292,14 +2296,14 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
     case 0x26:
         *state.startPos = (f32)(s32)randomGetRange(0xffffffff, 1);
         if (extraArgs != NULL) {
-            *state.startPos = *state.startPos + extraArgs[1];
+            *state.startPos = *state.startPos + ((f32*)extraArgs)[1];
         }
         cfg.startPosY = 0.0f;
         cfg.startPosZ = (f32)(s32)randomGetRange(0xffffffff, 1);
         cfg.velocityY = 0.05f;
         cfg.scale = 0.005f;
         if (extraArgs != NULL) {
-            cfg.lifetimeFrames = (s32)*extraArgs;
+            cfg.lifetimeFrames = (s32)*(f32*)extraArgs;
         } else {
             cfg.lifetimeFrames = 0x78;
         }
@@ -2590,9 +2594,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         *state.startPos = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
         cfg.startPosZ = spawnParams->posZ;
-        cfg.velocityX = *extraArgs;
-        cfg.velocityY = extraArgs[1];
-        cfg.velocityZ = extraArgs[2];
+        cfg.velocityX = *(f32*)extraArgs;
+        cfg.velocityY = ((f32*)extraArgs)[1];
+        cfg.velocityZ = ((f32*)extraArgs)[2];
         cfg.scale = 0.001f;
         cfg.lifetimeFrames = 0x28;
         cfg.initialAlpha = (u8)spawnParams->scale;
@@ -3222,15 +3226,15 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.behaviorFlags ^= 2;
     }
     if ((cfg.behaviorFlags & 1) != 0) {
-        if ((spawnFlags & 0x200000) != 0) {
+        if ((spawnFlags & 0x200000UL) != 0) {
             cfg.startPosX += cfg.sourcePosX;
             cfg.startPosY += cfg.sourcePosY;
             cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != NULL) {
-                cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-                cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-                cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+                cfg.startPosX = cfg.startPosX + cfg.attachedSource->anim.worldPosX;
+                cfg.startPosY = cfg.startPosY + cfg.attachedSource->anim.worldPosY;
+                cfg.startPosZ = cfg.startPosZ + cfg.attachedSource->anim.worldPosZ;
             }
         }
     }
@@ -3239,7 +3243,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
 
 /* Tick global effect phases and expire the 20 cached particle resource
  * slots. */
-void partfx_updateFrameState(void) {
+void partfx_updateFrameState(int unused) {
     gPartfxFrameAnimPhase0 = gPartfxFrameAnimPhase0 + 0.001f * timeDelta;
     if (gPartfxFrameAnimPhase0 > 1.0f) {
         gPartfxFrameAnimPhase0 = 0.1f;
@@ -3551,17 +3555,12 @@ EmitterCfg gEffect2VelocityRangeTable = {
     {0x00, 0x00},
 };
 
-ObjectDescriptor6 partfx_funcs = {
-    0,
-    0,
-    0,
+PartFxDescriptor gPartfxDescriptor = {
+    {0, 0, 0},
     0x00050000,
-    (ObjectDescriptorCallback)partfx_initialise,
-    (ObjectDescriptorCallback)partfx_release,
-    0,
-    (ObjectDescriptorCallback)partfx_onMapSetup,
-    (ObjectDescriptorCallback)partfx_spawnObject,
-    (ObjectDescriptorCallback)partfx_updateFrameState,
+    partfx_initialise,
+    partfx_release,
+    {0, partfx_onMapSetup, partfx_spawnEffect, partfx_updateFrameState},
 };
 
 char sModgfxAlphaDebugFormat[10] = "alpha %d\n";

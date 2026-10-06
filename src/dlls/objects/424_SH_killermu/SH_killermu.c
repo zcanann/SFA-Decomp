@@ -55,17 +55,6 @@
 #define ENEMY_MUSHROOM_STUN_ANIM_PROGRESS_DIVISOR 100.0f
 #define ENEMY_MUSHROOM_SPAWN_Y_OFFSET             2.0f
 
-typedef struct EnemyMushroomHitInfo {
-    f32 particleParams[3];
-    f32 x;
-    f32 y;
-    f32 z;
-} EnemyMushroomHitInfo;
-
-STATIC_ASSERT(sizeof(EnemyMushroomHitInfo) == 0x18);
-STATIC_ASSERT(offsetof(EnemyMushroomHitInfo, x) == 0x0C);
-STATIC_ASSERT(offsetof(EnemyMushroomHitInfo, y) == 0x10);
-STATIC_ASSERT(offsetof(EnemyMushroomHitInfo, z) == 0x14);
 
 void EnemyMushroom_resetToSpawn(GameObject* obj, EnemyMushroomState* state, int enableTimer) {
     EnemyMushroomPlacement* placement;
@@ -152,7 +141,7 @@ void EnemyMushroom_update(GameObject* obj) {
     EnemyMushroomState* state;
     GameObject* player;
     EnemyMushroomPlacement* placement;
-    EnemyMushroomHitInfo hitInfo;
+    PartFxSpawnParams hitInfo;
     GameObject* hitObject;
     int hitSphereIndex;
     u32 hitVolume;
@@ -210,7 +199,7 @@ void EnemyMushroom_update(GameObject* obj) {
             int particleFlags = 0x200000;
             while (particleCount != 0) {
                 (*gPartfxInterface)
-                    ->spawnObject(obj, ENEMY_MUSHROOM_PARTICLE_EFFECT_HIT, &hitInfo, particleFlags + 1, -1, NULL);
+                    ->spawnEffect(obj, ENEMY_MUSHROOM_PARTICLE_EFFECT_HIT, &hitInfo, particleFlags + 1, -1, NULL);
                 particleCount--;
             }
         }
@@ -265,7 +254,7 @@ void EnemyMushroom_update(GameObject* obj) {
             int particleFlags = 0x200000;
             while (particleCount != 0) {
                 (*gPartfxInterface)
-                    ->spawnObject(obj, ENEMY_MUSHROOM_PARTICLE_EFFECT_HIT, &hitInfo, particleFlags + 1, -1, NULL);
+                    ->spawnEffect(obj, ENEMY_MUSHROOM_PARTICLE_EFFECT_HIT, &hitInfo, particleFlags + 1, -1, NULL);
                 particleCount--;
             }
         }
@@ -316,7 +305,7 @@ void EnemyMushroom_update(GameObject* obj) {
                 if (effectTimer <= 0.0f) {
                     hitInfo.x = 14.0f;
                     hitInfo.y = 25.0f;
-                    (*gPartfxInterface)->spawnObject(obj, ENEMY_MUSHROOM_PARTICLE_EFFECT_STUN, &hitInfo, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, ENEMY_MUSHROOM_PARTICLE_EFFECT_STUN, &hitInfo, 2, -1, NULL);
                     state->effectTimer = ENEMY_MUSHROOM_STUN_EFFECT_INTERVAL;
                 }
                 obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;

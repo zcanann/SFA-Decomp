@@ -214,8 +214,8 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq) {
             s->flight.splineT = s->flight.splineSpeed * timeDelta + s->flight.splineT;
             obj->anim.rotX = getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
                                       obj->anim.localPosZ - obj->anim.previousLocalPosZ);
-            (*gPartfxInterface)->spawnObject((void*)obj, 415, NULL, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 416, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 415, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 416, NULL, 1, -1, NULL);
         }
         break;
     }
@@ -340,8 +340,8 @@ void shopitem_update(GameObject* obj) {
                 s->flight.splineT = s->flight.splineSpeed * timeDelta + s->flight.splineT;
                 obj->anim.rotX = getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
                                           obj->anim.localPosZ - obj->anim.previousLocalPosZ);
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x19F, NULL, 1, -1, NULL);
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x1A0, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 0x19F, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 0x1A0, NULL, 1, -1, NULL);
                 break;
             }
             }
@@ -374,7 +374,7 @@ void shopitem_init(GameObject* obj, ShopItemDef* data) {
         firefly_initFlightRec(obj, &s->flight);
         break;
     case SHOPITEM_SEQ_AMBIENT:
-        (*gPartfxInterface)->spawnObject((void*)obj, SHOPITEM_PARTFX_AMBIENT, NULL, 4, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, SHOPITEM_PARTFX_AMBIENT, NULL, 4, -1, NULL);
         break;
     case SHOPITEM_SEQ_SPARKLE:
         ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), shopitem_sparkleBlendSetup);

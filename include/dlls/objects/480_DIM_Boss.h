@@ -17,16 +17,6 @@ typedef struct DIMbossSteamFlags {
     u8 rest : 7;
 } DIMbossSteamFlags;
 
-typedef struct DIMbossEffectMarker {
-    u16 rotX;
-    u16 rotY;
-    u16 rotZ;
-    u16 effectParam;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} DIMbossEffectMarker;
 
 /*
  * The boss and icicle combat modes reuse the same control-state storage at
@@ -34,10 +24,10 @@ typedef struct DIMbossEffectMarker {
  */
 typedef struct DIMbossTopState {
     ModelLightStruct* effect;
-    DIMbossEffectMarker blueWhiteEffectSource;
-    DIMbossEffectMarker breathBurstSource;
-    DIMbossEffectMarker tonsilDustSource;
-    DIMbossEffectMarker liftGlowSource;
+    PartFxSpawnParams blueWhiteEffectSource;
+    PartFxSpawnParams breathBurstSource;
+    PartFxSpawnParams tonsilDustSource;
+    PartFxSpawnParams liftGlowSource;
     f32 breathBurstMtx[12];
     f32 blueWhiteVelocity[3];
     union {
@@ -105,9 +95,6 @@ typedef struct DIMbossPlacementView {
     s8 animObjectId;
 } DIMbossPlacementView;
 
-STATIC_ASSERT(sizeof(DIMbossEffectMarker) == 0x18);
-STATIC_ASSERT(offsetof(DIMbossEffectMarker, scale) == 0x08);
-STATIC_ASSERT(offsetof(DIMbossEffectMarker, x) == 0x0C);
 
 STATIC_ASSERT(sizeof(DIMbossTopState) == 0xB8);
 STATIC_ASSERT(offsetof(DIMbossTopState, effect) == 0x00);
@@ -160,7 +147,7 @@ int DIMbossHitDetect_trackTargetMove(GameObject* obj, BaddieState* state, f32 we
 int DIMbossHitDetect_applyForwardMove(GameObject* obj, BaddieState* state, f32 weight);
 int DIMbossHitDetect_resetIdleMove(GameObject* obj, u8* state);
 
-void DIMboss_spawnBlueWhiteEffect(DIMbossEffectMarker* source, f32* velocity);
+void DIMboss_spawnBlueWhiteEffect(PartFxSpawnParams* source, f32* velocity);
 void DIMboss_createStateLight(GameObject* obj, u8 isGreen);
 void DIMboss_updateSequenceEffects(GameObject* obj, DIMbossRuntime* runtime);
 void DIMboss_updateWarpAndEffects(GameObject* obj, DIMbossRuntime* runtime);
@@ -187,7 +174,7 @@ extern DIMbossAnimHandlerTable gDIMbossAnimTable;
 extern DIMbossHitDetectAnimHandlerTable gDIMbossHitDetectAnimTable;
 extern MoveLibState gDIMbossAnimController;
 extern f32 gDIMbossAnimScratchBase[3];
-extern DIMbossEffectMarker gDIMbossHitFxBuffer;
+extern PartFxSpawnParams gDIMbossHitFxBuffer;
 extern PartFxSpawnParams gDIMbossDustFxSource;
 
 #endif /* DLLS_OBJECTS_480_DIM_BOSS_H_ */

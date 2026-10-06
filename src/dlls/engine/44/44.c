@@ -16,7 +16,7 @@ f32 gEffect19ScrollPhase1 = 0.3f;
 f32 gEffect19ScrollPhase2 = 0.1f;
 f32 gEffect19ScrollPhase3 = 0.3f;
 
-int Effect19_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
+int Effect19_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
                          f32* extraArgs) {
     int spawnResult;
     PartFxSpawn cfg;
@@ -43,7 +43,7 @@ int Effect19_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.sourceVecZ = spawnParams->rotZ;
             cfg.sourceVecY = spawnParams->rotY;
             cfg.sourceVecX = spawnParams->rotX;
-            cfg.modelIdByte = modelId;
+            cfg.sourceParam = sourceParam;
         }
         cfg.behaviorFlags = 0;
         cfg.renderFlags = 0;
@@ -99,9 +99,9 @@ int Effect19_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
                 cfg.startPosY += cfg.sourcePosY;
                 cfg.startPosZ += cfg.sourcePosZ;
             } else if (cfg.attachedSource != NULL) {
-                cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-                cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-                cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+                cfg.startPosX = cfg.startPosX + cfg.attachedSource->anim.worldPosX;
+                cfg.startPosY = cfg.startPosY + cfg.attachedSource->anim.worldPosY;
+                cfg.startPosZ = cfg.startPosZ + cfg.attachedSource->anim.worldPosZ;
             }
         }
         spawnResult = (*gExpgfxInterface)->spawnEffect(&cfg, -1, effectId, 0);
@@ -152,6 +152,6 @@ ObjectDescriptor6 Effect19_funcs = {
     (ObjectDescriptorCallback)Effect19_release,
     0,
     (ObjectDescriptorCallback)Effect19_func03_nop,
-    (ObjectDescriptorCallback)Effect19_spawnObject,
+    (ObjectDescriptorCallback)Effect19_spawnEffect,
     (ObjectDescriptorCallback)Effect19_updateFrameState,
 };

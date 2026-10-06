@@ -92,13 +92,13 @@ void wctrexstatu_hitDetect(GameObject* obj)
         if (objAnim->bankIndex == 0)
         {
             (*gPartfxInterface)
-                ->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_0, NULL, WCTREXSTATU_PARTFX_KIND,
+                ->spawnEffect(obj, WCTREXSTATU_PARTFX_VARIANT_0, NULL, WCTREXSTATU_PARTFX_KIND,
                               WCTREXSTATU_PARTFX_INVALID_HANDLE, obj);
         }
         else
         {
             (*gPartfxInterface)
-                ->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_1, NULL, WCTREXSTATU_PARTFX_KIND,
+                ->spawnEffect(obj, WCTREXSTATU_PARTFX_VARIANT_1, NULL, WCTREXSTATU_PARTFX_KIND,
                               WCTREXSTATU_PARTFX_INVALID_HANDLE, obj);
         }
     }

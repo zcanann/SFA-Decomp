@@ -88,37 +88,37 @@ int gWorldObjEffectRenderDelay;
 GameObject* gWorldObjEffectTargetObj;
 
 void worldobj_spawnGreatFoxEffects(GameObject* obj) {
-    WorldObjEffectParams params;
+    PartFxSpawnParams params;
     u8 i;
     f32 scale;
 
     for (i = 0; i < GREAT_FOX_EFFECT_COUNT; i++) {
         scale = obj->anim.rootMotionScale;
-        params.offsetX = 0.64f * (scale * gGreatFoxEffects[i].offsetX);
-        params.offsetY = 0.64f * (scale * gGreatFoxEffects[i].offsetY);
-        params.offsetZ = 0.64f * (scale * gGreatFoxEffects[i].offsetZ);
+        params.x = 0.64f * (scale * gGreatFoxEffects[i].offsetX);
+        params.y = 0.64f * (scale * gGreatFoxEffects[i].offsetY);
+        params.z = 0.64f * (scale * gGreatFoxEffects[i].offsetZ);
         objfx_spawnMaskedHitEffect(obj, scale * gGreatFoxEffects[i].effectScale, 3, gGreatFoxEffects[i].effectType,
                                    gGreatFoxEffects[i].mask, &params);
     }
-    params.effectScale = -1.0f;
-    params.offsetX = 0.64f * (-0.823f * obj->anim.rootMotionScale);
-    params.offsetY = 0.64f * (-0.084f * obj->anim.rootMotionScale);
-    params.offsetZ = 0.64f * (-2.6f * obj->anim.rootMotionScale);
+    params.scale = -1.0f;
+    params.x = 0.64f * (-0.823f * obj->anim.rootMotionScale);
+    params.y = 0.64f * (-0.084f * obj->anim.rootMotionScale);
+    params.z = 0.64f * (-2.6f * obj->anim.rootMotionScale);
     objfx_spawnLightPulse(obj, 0.025f * obj->anim.rootMotionScale, 1, 0, 6, 0.7f, &params);
-    params.offsetX = 0.0f;
-    params.offsetY = 0.64f * (0.209f * obj->anim.rootMotionScale);
-    params.offsetZ = 0.64f * (-3.6f * obj->anim.rootMotionScale);
+    params.x = 0.0f;
+    params.y = 0.64f * (0.209f * obj->anim.rootMotionScale);
+    params.z = 0.64f * (-3.6f * obj->anim.rootMotionScale);
     objfx_spawnLightPulse(obj, 0.025f * obj->anim.rootMotionScale, 1, 0, 6, 0.5f, &params);
-    params.offsetX = 0.64f * (0.823f * obj->anim.rootMotionScale);
-    params.offsetY = 0.64f * (-0.084f * obj->anim.rootMotionScale);
-    params.offsetZ = 0.64f * (-2.6f * obj->anim.rootMotionScale);
+    params.x = 0.64f * (0.823f * obj->anim.rootMotionScale);
+    params.y = 0.64f * (-0.084f * obj->anim.rootMotionScale);
+    params.z = 0.64f * (-2.6f * obj->anim.rootMotionScale);
     objfx_spawnLightPulse(obj, 0.025f * obj->anim.rootMotionScale, 1, 0, 6, 0.7f, &params);
 }
 
 void worldobj_spawnAsteroidBatch(GameObject* obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId) {
     s16 rot[3];
     f32 vec[3];
-    WorldObjEffectParams params;
+    PartFxSpawnParams params;
     int i;
     f32 base;
 
@@ -130,11 +130,11 @@ void worldobj_spawnAsteroidBatch(GameObject* obj, int xMin, int xMax, int yMin, 
         rot[1] = 0;
         rot[2] = randomGetRange(-0x7fff, 0x7fff);
         vecRotateZXY(rot, vec);
-        params.offsetX = vec[0];
-        params.offsetY = vec[1];
-        params.offsetZ = vec[2];
-        params.dispatchTimer = 0x64;
-        (*gPartfxInterface)->spawnObject((void*)obj, dispatchId, &params, 2, -1, NULL);
+        params.x = vec[0];
+        params.y = vec[1];
+        params.z = vec[2];
+        params.effectParam = 0x64;
+        (*gPartfxInterface)->spawnEffect(obj, dispatchId, &params, 2, -1, NULL);
     }
 }
 

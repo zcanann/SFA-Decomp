@@ -237,7 +237,7 @@ void DR_CloudRunner_fireProjectile(GameObject* obj) {
     newObj->anim.rotZ = 0;
     newObj->anim.rotY = 0;
     newObj->anim.rotX = 0;
-    (*gPartfxInterface)->spawnObject(newObj, DRCLOUDRUNNER_PARTFX, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(newObj, DRCLOUDRUNNER_PARTFX, NULL, 2, -1, NULL);
 }
 
 #define PLAYER_VEHICLE_OBJGROUP          0x26
@@ -310,7 +310,7 @@ int DR_CloudRunner_stateHandler06(GameObject* obj, CloudRunnerState* baddie) {
             newObj->anim.rotZ = 0;
             newObj->anim.rotY = 0;
             newObj->anim.rotX = 0;
-            (*gPartfxInterface)->spawnObject(newObj, DRCLOUDRUNNER_PARTFX, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(newObj, DRCLOUDRUNNER_PARTFX, NULL, 2, -1, NULL);
         }
     }
     return 0;

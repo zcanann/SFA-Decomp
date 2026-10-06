@@ -139,7 +139,7 @@ void EdibleMushroom_updateBehavior(GameObject* obj, EdibleMushroomState* state, 
                     partfxBlock.posY = 18.0f + obj->anim.worldPosY;
                     partfxBlock.posZ = obj->anim.worldPosZ;
                     (*gPartfxInterface)
-                        ->spawnObject(obj, EDIBLE_MUSHROOM_PARTFX_TAIL_SWING, &partfxBlock, 0x200001, -1, NULL);
+                        ->spawnEffect(obj, EDIBLE_MUSHROOM_PARTFX_TAIL_SWING, &partfxBlock, 0x200001, -1, NULL);
                 }
                 state->tailSwingFxTimer = 30.0f;
             }
@@ -289,7 +289,7 @@ void EdibleMushroom_updateBehavior(GameObject* obj, EdibleMushroomState* state, 
                 partfxBlock.posX = 10.0f;
                 partfxBlock.posY = 12.0f;
                 if (obj->objectFlags & OBJECT_OBJFLAG_RENDERED) {
-                    (*gPartfxInterface)->spawnObject(obj, EDIBLE_MUSHROOM_PARTFX_SPORE_PUFF, &partfxBlock, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, EDIBLE_MUSHROOM_PARTFX_SPORE_PUFF, &partfxBlock, 2, -1, NULL);
                 }
                 state->sporePuffTimer = 20.0f;
             }

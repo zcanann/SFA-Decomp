@@ -178,7 +178,7 @@ void SB_CloudBall_update(GameObject* obj) {
                                      SB_CLOUD_BALL_TRAIL_BURST_EFFECT_PARAM, SB_CLOUD_BALL_TRAIL_BURST_SECONDARY_PARAM,
                                      particleVelocity);
         (*gPartfxInterface)
-            ->spawnObject((void*)obj, SB_CLOUD_BALL_TRAIL_PARTICLE_ID, NULL, SB_CLOUD_BALL_TRAIL_BURST_MODE, -1, NULL);
+            ->spawnEffect(obj, SB_CLOUD_BALL_TRAIL_PARTICLE_ID, NULL, SB_CLOUD_BALL_TRAIL_BURST_MODE, -1, NULL);
     }
 }
 

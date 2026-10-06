@@ -208,14 +208,14 @@ void staffactivated_update(GameObject* obj) {
             particle.scale = gStaffReactionOne;
             particle.arg3 = 0;
             particle.arg2 = 0x64;
-            (*gPartfxInterface)->spawnObject(obj, STAFF_ACTIVATED_PARTICLE_ID, &particle, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, STAFF_ACTIVATED_PARTICLE_ID, &particle, 2, -1, NULL);
             particle.posX = 2.8f;
             particle.posY = 1.7f;
             particle.posZ = 0.0f;
             particle.scale = gStaffReactionOne;
             particle.arg3 = 5;
             particle.arg2 = 0xA;
-            (*gPartfxInterface)->spawnObject(obj, STAFF_ACTIVATED_PARTICLE_ID, &particle, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, STAFF_ACTIVATED_PARTICLE_ID, &particle, 2, -1, NULL);
         }
         break;
     default:

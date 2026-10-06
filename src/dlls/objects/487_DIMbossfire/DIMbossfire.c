@@ -117,9 +117,9 @@ void dimbossfire_update(GameObject* obj) {
                 burstIndex = 0;
                 do {
                     if (placement->flameColor != 0) {
-                        (*gPartfxInterface)->spawnObject(obj, DIMBOSSFIRE_PARTFX_BURST_ORANGE, NULL, 2, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(obj, DIMBOSSFIRE_PARTFX_BURST_ORANGE, NULL, 2, -1, NULL);
                     } else {
-                        (*gPartfxInterface)->spawnObject(obj, DIMBOSSFIRE_PARTFX_BURST_GREEN, NULL, 2, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(obj, DIMBOSSFIRE_PARTFX_BURST_GREEN, NULL, 2, -1, NULL);
                     }
                     burstIndex += 1;
                 } while (burstIndex < DIMBOSSFIRE_BURST_COUNT);
@@ -162,11 +162,11 @@ void dimbossfire_update(GameObject* obj) {
             ObjHitbox_SetSphereRadius(&obj->anim, 0);
             ObjHits_DisableObject(obj);
         } else {
-            (*gPartfxInterface)->spawnObject(obj, DIMBOSSFIRE_PARTFX_SUSTAINED, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, DIMBOSSFIRE_PARTFX_SUSTAINED, NULL, 2, -1, NULL);
             if (placement->flameColor != 0) {
-                (*gPartfxInterface)->spawnObject(obj, DIMBOSSFIRE_PARTFX_SUSTAINED_ORANGE, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, DIMBOSSFIRE_PARTFX_SUSTAINED_ORANGE, NULL, 2, -1, NULL);
             } else {
-                (*gPartfxInterface)->spawnObject(obj, DIMBOSSFIRE_PARTFX_SUSTAINED_GREEN, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, DIMBOSSFIRE_PARTFX_SUSTAINED_GREEN, NULL, 2, -1, NULL);
             }
         }
     }

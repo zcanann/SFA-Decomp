@@ -23,21 +23,6 @@ STATIC_ASSERT(offsetof(Dll5BEffectResourceView, triangleIndices) == 0x28);
 STATIC_ASSERT(offsetof(Dll5BEffectResourceView, sequenceParams) == 0x40);
 STATIC_ASSERT(sizeof(Dll5BEffectResourceView) == 0x50);
 
-typedef struct Dll5BPartFxSpawnParams {
-    s16 rotationX;
-    s16 rotationY;
-    s16 rotationZOrEffectId;
-    u8 pad06[2];
-    f32 scale;
-    f32 position[3];
-} Dll5BPartFxSpawnParams;
-
-STATIC_ASSERT(offsetof(Dll5BPartFxSpawnParams, rotationX) == 0x00);
-STATIC_ASSERT(offsetof(Dll5BPartFxSpawnParams, rotationY) == 0x02);
-STATIC_ASSERT(offsetof(Dll5BPartFxSpawnParams, rotationZOrEffectId) == 0x04);
-STATIC_ASSERT(offsetof(Dll5BPartFxSpawnParams, scale) == 0x08);
-STATIC_ASSERT(offsetof(Dll5BPartFxSpawnParams, position) == 0x0C);
-STATIC_ASSERT(sizeof(Dll5BPartFxSpawnParams) == 0x18);
 
 u8 gDll5BZeroIndices[4] = {0};
 u8 gDll5BQuadIndices[8] = {0, 0, 0, 1, 0, 2, 0, 3};
@@ -57,7 +42,7 @@ Dll5BResourceDescriptor gDll5BResourceDescriptor = {
 s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnParams* unusedSpawnParams, u32 spawnFlags,
                              int unusedModelId, const Dll5BSpawnCountRange* countRange) {
     Dll5BSpawnCountRange spawnCountRange;
-    Dll5BPartFxSpawnParams partFxParams;
+    PartFxSpawnParams partFxParams;
     ModgfxSpawnPacket packet;
     Dll5BEffectResourceView* resources[1];
     ModgfxCommand* commandCursor;
@@ -86,7 +71,7 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
     partFxParams.position[1] = 0.0f;
     partFxParams.position[2] = 0.0f;
     partFxParams.scale = 1.0f;
-    partFxParams.rotationZOrEffectId = 0;
+    partFxParams.arg2 = 0;
     modelFile = model->file;
     if (modelFile->textureCount == 0) {
         return -1;
@@ -215,9 +200,9 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
             commandCursor[2].valueX = 0.0f;
             commandCursor[2].valueY = 0.0f;
             commandCursor[2].valueZ = 300.0f + randomGetRange(0, 300);
-            partFxParams.rotationY = randomGetRange(-0x7fff, -0xfa0);
-            partFxParams.rotationX = randomGetRange(0, 0xffff);
-            vecRotateZXY(&partFxParams.rotationX, &commandCursor[2].valueX);
+            partFxParams.rotY = randomGetRange(-0x7fff, -0xfa0);
+            partFxParams.rotX = randomGetRange(0, 0xffff);
+            vecRotateZXY(&partFxParams.rotX, &commandCursor[2].valueX);
             commandCursor += 3;
         } else if (effectId == 0x11) {
             commandCursor[2].stageIndex = 1;
@@ -227,9 +212,9 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
             commandCursor[2].valueX = 0.0f;
             commandCursor[2].valueY = 0.0f;
             commandCursor[2].valueZ = 300.0f + randomGetRange(0, 300);
-            partFxParams.rotationY = randomGetRange(-0x7fff, -0xfa0);
-            partFxParams.rotationX = randomGetRange(0, 0xffff);
-            vecRotateZXY(&partFxParams.rotationX, &commandCursor[2].valueX);
+            partFxParams.rotY = randomGetRange(-0x7fff, -0xfa0);
+            partFxParams.rotX = randomGetRange(0, 0xffff);
+            vecRotateZXY(&partFxParams.rotX, &commandCursor[2].valueX);
             commandCursor += 3;
         } else {
             commandCursor[2].stageIndex = 1;
@@ -239,9 +224,9 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
             commandCursor[2].valueX = 0.0f;
             commandCursor[2].valueY = 0.0f;
             commandCursor[2].valueZ = 100.0f + randomGetRange(0, 100);
-            partFxParams.rotationY = randomGetRange(-0x7fff, -0xfa0);
-            partFxParams.rotationX = randomGetRange(0, 0xffff);
-            vecRotateZXY(&partFxParams.rotationX, &commandCursor[2].valueX);
+            partFxParams.rotY = randomGetRange(-0x7fff, -0xfa0);
+            partFxParams.rotX = randomGetRange(0, 0xffff);
+            vecRotateZXY(&partFxParams.rotX, &commandCursor[2].valueX);
             commandCursor += 3;
         }
         commandCursor[0].stageIndex = 1;
@@ -272,125 +257,125 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
     switch (effectId) {
     case 0:
     case 0x14:
-        partFxParams.rotationZOrEffectId = 0x2a;
+        partFxParams.arg2 = 0x2a;
         for (; partFxSpawnCount != 0; partFxSpawnCount--) {
-            (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
         }
         break;
     case 1:
-        partFxParams.rotationZOrEffectId = 0x2b;
-        (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
+        partFxParams.arg2 = 0x2b;
+        (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
         break;
     case 2:
-        partFxParams.rotationZOrEffectId = 0x184;
+        partFxParams.arg2 = 0x184;
         for (; partFxSpawnCount != 0; partFxSpawnCount--) {
-            (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
         }
         break;
     case 3:
-        partFxParams.rotationZOrEffectId = 0x1a1;
+        partFxParams.arg2 = 0x1a1;
         for (; partFxSpawnCount != 0; partFxSpawnCount--) {
-            (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
         }
         break;
     case 4:
-        partFxParams.rotationZOrEffectId = 0x60;
+        partFxParams.arg2 = 0x60;
         for (; partFxSpawnCount != 0; partFxSpawnCount--) {
-            (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
         }
-        partFxParams.rotationZOrEffectId = 0x159;
-        (*gPartfxInterface)->spawnObject(sourceObj, 3, &partFxParams, 1, -1, NULL);
+        partFxParams.arg2 = 0x159;
+        (*gPartfxInterface)->spawnEffect(sourceObj, 3, &partFxParams, 1, -1, NULL);
         break;
     case 5:
-        partFxParams.rotationZOrEffectId = 0x60;
+        partFxParams.arg2 = 0x60;
         for (; partFxSpawnCount != 0; partFxSpawnCount--) {
-            (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
         }
-        partFxParams.rotationZOrEffectId = 0x91;
-        (*gPartfxInterface)->spawnObject(sourceObj, 3, &partFxParams, 1, -1, NULL);
+        partFxParams.arg2 = 0x91;
+        (*gPartfxInterface)->spawnEffect(sourceObj, 3, &partFxParams, 1, -1, NULL);
         break;
     case 6:
-        partFxParams.rotationZOrEffectId = 0x60;
+        partFxParams.arg2 = 0x60;
         for (; partFxSpawnCount != 0; partFxSpawnCount--) {
-            (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
         }
-        partFxParams.rotationZOrEffectId = 0x74;
-        (*gPartfxInterface)->spawnObject(sourceObj, 3, &partFxParams, 1, -1, NULL);
+        partFxParams.arg2 = 0x74;
+        (*gPartfxInterface)->spawnEffect(sourceObj, 3, &partFxParams, 1, -1, NULL);
         break;
     case 8:
-        partFxParams.rotationZOrEffectId = 0x60;
+        partFxParams.arg2 = 0x60;
         for (; partFxSpawnCount != 0; partFxSpawnCount--) {
-            (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
         }
         effectCount = 0x14;
-        partFxParams.rotationZOrEffectId = 0xdf;
+        partFxParams.arg2 = 0xdf;
         do {
-            (*gPartfxInterface)->spawnObject(sourceObj, 7, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 7, &partFxParams, 1, -1, NULL);
             effectCount--;
         } while (effectCount != 0);
-        partFxParams.rotationZOrEffectId = 0x159;
-        (*gPartfxInterface)->spawnObject(sourceObj, 3, &partFxParams, 1, -1, NULL);
+        partFxParams.arg2 = 0x159;
+        (*gPartfxInterface)->spawnEffect(sourceObj, 3, &partFxParams, 1, -1, NULL);
         break;
     case 9:
-        partFxParams.rotationZOrEffectId = 0x60;
+        partFxParams.arg2 = 0x60;
         for (; partFxSpawnCount != 0; partFxSpawnCount--) {
-            (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
         }
         effectCount = 0x14;
-        partFxParams.rotationZOrEffectId = 0xde;
+        partFxParams.arg2 = 0xde;
         do {
-            (*gPartfxInterface)->spawnObject(sourceObj, 7, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 7, &partFxParams, 1, -1, NULL);
             effectCount--;
         } while (effectCount != 0);
-        partFxParams.rotationZOrEffectId = 0x91;
-        (*gPartfxInterface)->spawnObject(sourceObj, 3, &partFxParams, 1, -1, NULL);
+        partFxParams.arg2 = 0x91;
+        (*gPartfxInterface)->spawnEffect(sourceObj, 3, &partFxParams, 1, -1, NULL);
         break;
     case 10:
-        partFxParams.rotationZOrEffectId = 0x60;
+        partFxParams.arg2 = 0x60;
         for (; partFxSpawnCount != 0; partFxSpawnCount--) {
-            (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
         }
         effectCount = 0x14;
-        partFxParams.rotationZOrEffectId = 0x160;
+        partFxParams.arg2 = 0x160;
         do {
-            (*gPartfxInterface)->spawnObject(sourceObj, 7, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 7, &partFxParams, 1, -1, NULL);
             effectCount--;
         } while (effectCount != 0);
-        partFxParams.rotationZOrEffectId = 0x74;
-        (*gPartfxInterface)->spawnObject(sourceObj, 3, &partFxParams, 1, -1, NULL);
+        partFxParams.arg2 = 0x74;
+        (*gPartfxInterface)->spawnEffect(sourceObj, 3, &partFxParams, 1, -1, NULL);
         break;
     case 0xc:
-        partFxParams.rotationZOrEffectId = 0x2a;
+        partFxParams.arg2 = 0x2a;
         break;
     case 0xd:
-        partFxParams.rotationZOrEffectId = 0x4c;
-        (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
+        partFxParams.arg2 = 0x4c;
+        (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
         break;
     case 0xe:
-        partFxParams.rotationZOrEffectId = 0x60;
+        partFxParams.arg2 = 0x60;
         for (; partFxSpawnCount != 0; partFxSpawnCount--) {
-            (*gPartfxInterface)->spawnObject(sourceObj, 0x135, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 0x135, &partFxParams, 1, -1, NULL);
         }
         break;
     case 0xf:
-        (*gPartfxInterface)->spawnObject(sourceObj, 0x51b, NULL, 2, -1, NULL);
-        (*gPartfxInterface)->spawnObject(sourceObj, 0x51b, NULL, 2, -1, NULL);
-        (*gPartfxInterface)->spawnObject(sourceObj, 0x51b, NULL, 2, -1, NULL);
-        (*gPartfxInterface)->spawnObject(sourceObj, 0x51b, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(sourceObj, 0x51b, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(sourceObj, 0x51b, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(sourceObj, 0x51b, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(sourceObj, 0x51b, NULL, 2, -1, NULL);
         break;
     case 0x10:
     case 0x11:
-        partFxParams.rotationZOrEffectId = 0x4c;
-        (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
+        partFxParams.arg2 = 0x4c;
+        (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
         break;
     default:
-        partFxParams.rotationZOrEffectId = 0x2a;
+        partFxParams.arg2 = 0x2a;
         effectCount = 5;
         do {
-            (*gPartfxInterface)->spawnObject(sourceObj, 5, &partFxParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(sourceObj, 5, &partFxParams, 1, -1, NULL);
             effectCount--;
         } while (effectCount != 0);
         break;

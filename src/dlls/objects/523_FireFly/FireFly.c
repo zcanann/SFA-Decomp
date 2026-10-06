@@ -196,11 +196,11 @@ void firefly_activeTick(GameObject* obj) {
         getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX, obj->anim.localPosZ - obj->anim.previousLocalPosZ);
     if (state->flight.kind == FIREFLY_KIND_BLUE_MAIN || state->flight.kind == FIREFLY_KIND_BLUE_NEAR) {
         (*gPartfxInterface)
-            ->spawnObject((void*)obj, FIREFLY_PARTFX_BLUE_TRAIL, NULL, FIREFLY_PARTFX_KIND,
+            ->spawnEffect(obj, FIREFLY_PARTFX_BLUE_TRAIL, NULL, FIREFLY_PARTFX_KIND,
                           FIREFLY_PARTFX_INVALID_HANDLE, NULL);
     } else {
         (*gPartfxInterface)
-            ->spawnObject((void*)obj, FIREFLY_PARTFX_ORANGE_TRAIL, NULL, FIREFLY_PARTFX_KIND,
+            ->spawnEffect(obj, FIREFLY_PARTFX_ORANGE_TRAIL, NULL, FIREFLY_PARTFX_KIND,
                           FIREFLY_PARTFX_INVALID_HANDLE, NULL);
     }
     /* Compare against the player's world position. */
@@ -209,15 +209,15 @@ void firefly_activeTick(GameObject* obj) {
         f32 curAlpha;
         if (state->flight.kind == FIREFLY_KIND_BLUE_NEAR) {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, FIREFLY_PARTFX_BLUE_NEAR, NULL, FIREFLY_PARTFX_KIND,
+                ->spawnEffect(obj, FIREFLY_PARTFX_BLUE_NEAR, NULL, FIREFLY_PARTFX_KIND,
                               FIREFLY_PARTFX_INVALID_HANDLE, NULL);
         } else if (state->flight.kind == FIREFLY_KIND_ORANGE_NEAR) {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL, FIREFLY_PARTFX_KIND,
+                ->spawnEffect(obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL, FIREFLY_PARTFX_KIND,
                               FIREFLY_PARTFX_INVALID_HANDLE, NULL);
         } else if (state->flight.kind == FIREFLY_KIND_ORANGE_ALT_NEAR) {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL, FIREFLY_PARTFX_KIND,
+                ->spawnEffect(obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL, FIREFLY_PARTFX_KIND,
                               FIREFLY_PARTFX_INVALID_HANDLE, NULL);
         }
         if ((curAlpha = state->flight.proximityAlpha) < (maxAlpha = 0.003f)) {

@@ -141,7 +141,7 @@ WaterfxInterface** gWaterfxInterface;
 void* gDll12Interface;
 ScreensInterface* gScreensInterface;
 PlayerControlInterface** gPlayerInterface;
-EffectInterface** gPartfxInterface;
+PartFxInterface** gPartfxInterface;
 PlayerShadowInterface** gPlayerShadowInterface;
 ProjgfxInterface** gProjgfxInterface;
 ModgfxInterface** gModgfxInterface;

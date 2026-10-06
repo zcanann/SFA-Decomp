@@ -41,9 +41,9 @@ int moonSeedBush_processAnimEvents(GameObject* obj, int unusedArg2, ObjSeqState*
             }
             break;
         case MOON_SEED_BUSH_ANIM_EVENT_PARTICLES:
-            (*gPartfxInterface)->spawnObject((void*)obj, MOON_SEED_BUSH_PRIMARY_PARTICLE_ID, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, MOON_SEED_BUSH_PRIMARY_PARTICLE_ID, NULL, 2, -1, NULL);
             for (particleIndex = 0; particleIndex < MOON_SEED_BUSH_SECONDARY_PARTICLE_COUNT; particleIndex++) {
-                (*gPartfxInterface)->spawnObject((void*)obj, MOON_SEED_BUSH_SECONDARY_PARTICLE_ID, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, MOON_SEED_BUSH_SECONDARY_PARTICLE_ID, NULL, 2, -1, NULL);
             }
             break;
         }

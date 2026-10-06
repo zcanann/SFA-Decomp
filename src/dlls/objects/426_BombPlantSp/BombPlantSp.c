@@ -81,7 +81,7 @@ void BombPlantSpore_init(GameObject* obj, BombPlantSporePlacement* placement) {
     (*gObjCollisionInterface)
         ->setSegments(&state->path, 1, gBombPlantSporePathPointData, &gBombPlantSporeCollisionSetup.radius, pathParam);
     (*gObjCollisionInterface)->reset(obj, &state->path);
-    (*gPartfxInterface)->spawnObject(obj, BOMB_PLANT_SPORE_PARTFX_SPAWN, NULL, 4, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, BOMB_PLANT_SPORE_PARTFX_SPAWN, NULL, 4, -1, NULL);
 
     light = objCreateLight(obj, 1);
     if (light != NULL) {
@@ -119,7 +119,7 @@ void BombPlantSpore_update(GameObject* obj) {
                 for (i = 0; i < BOMB_PLANT_SPORE_EXPLOSION_PARTICLE_COUNT; i++) {
                     objfx_spawnDirectionalBurst(obj, 5, 1.0f, 7, 1, 0x3C,
                                                 1.5f, NULL, 0);
-                    (*gPartfxInterface)->spawnObject(obj, BOMB_PLANT_SPORE_PARTFX_EXPLOSION, NULL, 4, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, BOMB_PLANT_SPORE_PARTFX_EXPLOSION, NULL, 4, -1, NULL);
                 }
                 modelLightStruct_setEnabled(state->light, 0, 0.5f);
                 state->detonateTimer = 200.0f;
@@ -232,7 +232,7 @@ void BombPlantSpore_update(GameObject* obj) {
             for (j = 0; j < BOMB_PLANT_SPORE_EXPLOSION_PARTICLE_COUNT; j++) {
                 objfx_spawnDirectionalBurst(obj, 5, 1.0f, 7, 1, 0x3C,
                                             1.5f, NULL, 0);
-                (*gPartfxInterface)->spawnObject(obj, BOMB_PLANT_SPORE_PARTFX_EXPLOSION, NULL, 4, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, BOMB_PLANT_SPORE_PARTFX_EXPLOSION, NULL, 4, -1, NULL);
             }
             modelLightStruct_setEnabled(state->light, 0, 0.5f);
             state->detonateTimer = 200.0f;

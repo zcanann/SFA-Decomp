@@ -81,7 +81,7 @@ int dll500_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animUpdat
         spawnParams.posZ -= obj->anim.worldPosZ;
         for (frameIndex = 0; frameIndex < framesThisStep; frameIndex++) {
             (*gPartfxInterface)
-                ->spawnObject(obj, DLL1F4_BODY_PARTICLE_ID, &spawnParams, DLL1F4_BODY_PARTICLE_MODE, -1, NULL);
+                ->spawnEffect(obj, DLL1F4_BODY_PARTICLE_ID, &spawnParams, DLL1F4_BODY_PARTICLE_MODE, -1, NULL);
         }
     }
     return 0;
@@ -130,7 +130,7 @@ void dll500_update(GameObject* obj) {
         }
         for (frameIndex = 0; frameIndex < framesThisStep; frameIndex++) {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, DLL1F4_PATH_PARTICLE_ID, &spawnParams, DLL1F4_PATH_PARTICLE_MODE, -1, NULL);
+                ->spawnEffect(obj, DLL1F4_PATH_PARTICLE_ID, &spawnParams, DLL1F4_PATH_PARTICLE_MODE, -1, NULL);
         }
     }
 }

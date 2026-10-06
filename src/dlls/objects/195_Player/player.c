@@ -503,11 +503,6 @@ typedef struct {
     int a[6];
 } UiMsgBlock;
 
-typedef struct {
-    s16 rx, ry, rz;
-    f32 scale;
-    f32 x, y, z;
-} HitFxDesc;
 
 static inline void Player_ApplyStatusDamage(GameObject* obj, int param) {
     PlayerStatus* pc;
@@ -531,12 +526,7 @@ static inline void Player_ApplyStatusDamage(GameObject* obj, int param) {
 
 void playerUpdatePathEffectCountdown(GameObject* obj, PlayerState* inner) {
     f32 outvec[3];
-    struct {
-        u8 pad[0xc];
-        f32 x;
-        f32 y;
-        f32 z;
-    } buf;
+    PartFxSpawnParams buf;
     f32 mtx[12];
     u8 cnt = inner->stepDustCount;
 
@@ -556,7 +546,7 @@ void playerUpdatePathEffectCountdown(GameObject* obj, PlayerState* inner) {
             buf.y = -1.0f;
             buf.z = -2.5f;
             ObjPath_GetPointWorldPosition(obj, 0xa, &buf.x, &buf.y, &buf.z, 1);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7e5, &buf, 0x200001, -1, outvec);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7e5, &buf, 0x200001, -1, outvec);
         }
         inner->stepDustCount -= 1;
     }
@@ -3911,9 +3901,9 @@ static inline void playerSpawnIceSpellParticles(PartFxSpawnParams* pfx) {
     pfx->scale = 2.5f;
     spawnFlags = PARTFXFLAG_200000;
     pfx->arg3 = 0;
-    (*gPartfxInterface)->spawnObject(gPlayerPathObject, 0x7f5, pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(gPlayerPathObject, 0x7f5, pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
     pfx->arg3 = 1;
-    (*gPartfxInterface)->spawnObject(gPlayerPathObject, 0x7f5, pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(gPlayerPathObject, 0x7f5, pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
 }
 
 int playerState30(GameObject* obj, PlayerState* state, f32 fv) {
@@ -4125,14 +4115,7 @@ int playerStateShootFireball(GameObject* obj, PlayerState* state, f32 fv) {
     PlayerState* inner = obj->extra;
     int r;
     f32 timer;
-    struct {
-        u8 pad[6];
-        u16 mode;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } pfx2;
+    PartFxSpawnParams pfx2;
     PartFxSpawnParams pfx;
 
     if (state->baddie.targetObj == NULL) {
@@ -4211,7 +4194,7 @@ int playerStateShootFireball(GameObject* obj, PlayerState* state, f32 fv) {
         int v;
         ObjPath_GetPointWorldPosition(gPlayerPathObject, 0, &pfx2.x, &pfx2.y, &pfx2.z, 0);
         for (i = 0; i < 0x28; i++) {
-            (*gPartfxInterface)->spawnObject(gPlayerPathObject, 0x3ed, &pfx2, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(gPlayerPathObject, 0x3ed, &pfx2, 0x200001, -1, NULL);
         }
         sub = ((PlayerState*)obj->extra)->playerStatus;
         v = sub->magic - 2;
@@ -9654,15 +9637,7 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
     f32* sc0p = sc0;
     u8 dirs[13] = {0xb, 4, 6, 0xa, 0xa, 3, 3, 2, 0xe, 0x10, 0x12, 0x13, 5};
     u16 dirMasks[13] = {1, 2, 4, 8, 8, 0x10, 0x10, 0x40, 0x80, 0x100, 1, 0x20, 0xffff};
-    struct {
-        u8 pad[2];
-        u16 mode;
-        u8 pad2[4];
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } pfx;
+    PartFxSpawnParams pfx;
     TrackLineIntersectResult buf;
     u8 useAlt;
     f32 hd;
@@ -10023,8 +9998,8 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
                         lo = buf.lineStartZ;
                         pfx.z = lo + (buf.lineEndZ - lo) * randomGetRange(0, 100) / 100.0f;
                         pfx.scale = 1.0f;
-                        pfx.mode = 0x3c;
-                        (*gPartfxInterface)->spawnObject((void*)obj, 0x804, &pfx, 0x200001, -1, NULL);
+                        pfx.arg1 = 0x3c;
+                        (*gPartfxInterface)->spawnEffect((GameObject*)obj, 0x804, &pfx, 0x200001, -1, NULL);
                     }
                     ((PlayerState*)state)->particleBurstCooldown = 30.0f;
                 }
@@ -11082,12 +11057,7 @@ void staffShootFireball(GameObject* obj, PlayerState* state, f32 unused) {
 
 void objDoTeleportAnim(GameObject* obj) {
     PlayerState* inner = obj->extra;
-    struct {
-        u8 pad[0xc];
-        f32 x;
-        f32 y;
-        f32 z;
-    } buf;
+    PartFxSpawnParams buf;
     f32 base = 40.0f;
     int i;
 
@@ -11106,8 +11076,8 @@ void objDoTeleportAnim(GameObject* obj) {
         for (i = 0; i < 10; i++) {
             buf.x = obj->anim.localPosX + randomGetRange(-0x64, 0x64) / 10.0f;
             buf.z = obj->anim.localPosZ + randomGetRange(-0x64, 0x64) / 10.0f;
-            (*gPartfxInterface)->spawnObject((void*)obj, randomGetRange(0, 2) + 0x3f4, &buf, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, randomGetRange(0, 2) + 0x3f7, &buf, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, randomGetRange(0, 2) + 0x3f4, &buf, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, randomGetRange(0, 2) + 0x3f7, &buf, 1, -1, NULL);
         }
     }
 }
@@ -11277,9 +11247,9 @@ void playerRenderPostEffects(GameObject* obj, PlayerState* inner, int a, int b, 
         gPlayerPartFxParams.posY = obj->anim.localPosY;
         gPlayerPartFxParams.posZ = obj->anim.localPosZ;
         if ((v & 0x40000u) != 0) {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x427, &gPlayerPartFxParams, 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x427, &gPlayerPartFxParams, 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x427, &gPlayerPartFxParams, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x427, &gPlayerPartFxParams, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x427, &gPlayerPartFxParams, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x427, &gPlayerPartFxParams, 0x200001, -1, NULL);
         }
         if ((inner->flags360 & 0x20000u) != 0) {
             (*gWaterfxInterface)
@@ -12305,14 +12275,7 @@ void playerUpdateWaterMotion(GameObject* obj, PlayerState* inner, PlayerState* s
     f32 waterX;
     f32 waterZ;
     MatrixTransform v;
-    struct {
-        u8 pad[6];
-        u16 mode;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } pfx;
+    PartFxSpawnParams pfx;
     f32 mtx[16];
     f32 angle;
     f32 d;
@@ -12403,7 +12366,7 @@ void playerUpdateWaterMotion(GameObject* obj, PlayerState* inner, PlayerState* s
         pfx.z = v.z + randomGetRange(-0x64, 0x64) / 20.0f;
         pfx.scale = inner->waterSurfaceY - pfx.y;
         if (pfx.scale > 0.0f) {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x202, &pfx, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x202, &pfx, 0x200001, -1, NULL);
         }
     }
 }
@@ -13029,7 +12992,7 @@ void playerProcessHitResponse(GameObject* obj, PlayerState* inner, PlayerState* 
     int knockKind;
     int canCounter;
     int anim;
-    HitFxDesc desc;
+    PartFxSpawnParams desc;
     PartFxSpawnParams buf;
     StaffCollisionColorArgs col;
     int surfIdx;
@@ -13208,7 +13171,7 @@ void playerProcessHitResponse(GameObject* obj, PlayerState* inner, PlayerState* 
                 desc.x = playerMapOffsetX + ((ObjModelHitSphere*)(pt + surfIdx * 0x10))->pos[0];
                 desc.y = ((ObjModelHitSphere*)(pt + surfIdx * 0x10))->pos[1];
                 desc.z = playerMapOffsetZ + ((ObjModelHitSphere*)(pt + surfIdx * 0x10))->pos[2];
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x328, &desc, 0x200001, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 0x328, &desc, 0x200001, -1, NULL);
                 desc.x -= obj->anim.worldPosX;
                 desc.y -= obj->anim.worldPosY;
                 desc.z -= obj->anim.worldPosZ;
@@ -13218,9 +13181,9 @@ void playerProcessHitResponse(GameObject* obj, PlayerState* inner, PlayerState* 
                 col.red += randomGetRange(0, 0x9b);
                 col.green += randomGetRange(0, 0x9b);
                 desc.scale = 1.0f;
-                desc.rx = 0;
-                desc.ry = 0;
-                desc.rz = 0;
+                desc.rotX = 0;
+                desc.rotY = 0;
+                desc.rotZ = 0;
                 (*gPlayerResource)->spawn(obj, 0, (PartFxSpawnParams*)&desc, 1, -1, &col);
                 if (gPlayerResource != NULL) {
                     Resource_Release(gPlayerResource);
@@ -15183,14 +15146,7 @@ void playerRender(int obj, int a, int b, int c, int d, int flag) {
     f32 pz;
     f32 py;
     f32 px;
-    struct {
-        u16 mode;
-        u8 pad[6];
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } pfx;
+    PartFxSpawnParams pfx;
     f32 vel[3];
 
     if ((s8)flag == -1 || (inner->flags360 & 0x4001) == 0) {
@@ -15297,17 +15253,17 @@ void playerRender(int obj, int a, int b, int c, int d, int flag) {
                     pfx.y = 8.0f * ((GameObject*)obj)->anim.velocityY + inner->footPoints[0][1];
                     pfx.z = 8.0f * ((GameObject*)obj)->anim.velocityZ + inner->footPoints[0][2];
                     pfx.scale = 0.7f;
-                    pfx.mode = gPlayerSurfacePfxModeTable[inner->surfaceType];
+                    pfx.arg0 = gPlayerSurfacePfxModeTable[inner->surfaceType];
                     for (n = 5; n != 0; n--) {
-                        (*gPartfxInterface)->spawnObject((void*)obj, 0x7e6, &pfx, 0x200001, -1, vel);
+                        (*gPartfxInterface)->spawnEffect((GameObject*)obj, 0x7e6, &pfx, 0x200001, -1, vel);
                     }
                     pfx.x = 8.0f * ((GameObject*)obj)->anim.velocityX + inner->footPoints[1][0];
                     pfx.y = 8.0f * ((GameObject*)obj)->anim.velocityY + inner->footPoints[1][1];
                     pfx.z = 8.0f * ((GameObject*)obj)->anim.velocityZ + inner->footPoints[1][2];
                     pfx.scale = 0.7f;
-                    pfx.mode = gPlayerSurfacePfxModeTable[inner->surfaceType];
+                    pfx.arg0 = gPlayerSurfacePfxModeTable[inner->surfaceType];
                     for (n = 5; n != 0; n--) {
-                        (*gPartfxInterface)->spawnObject((void*)obj, 0x7e6, &pfx, 0x200001, -1, vel);
+                        (*gPartfxInterface)->spawnEffect((GameObject*)obj, 0x7e6, &pfx, 0x200001, -1, vel);
                     }
                     inner->pendingFxFlags &= ~0x8;
                 }
@@ -15320,9 +15276,9 @@ void playerRender(int obj, int a, int b, int c, int d, int flag) {
                     pfx.y = 5.0f + ((GameObject*)obj)->anim.worldPosY;
                     pfx.z = ((GameObject*)obj)->anim.worldPosZ;
                     pfx.scale = 1.0f;
-                    pfx.mode = gPlayerSurfacePfxModeTable[inner->surfaceType];
+                    pfx.arg0 = gPlayerSurfacePfxModeTable[inner->surfaceType];
                     for (n2 = 0; n2 < 10; n2++) {
-                        (*gPartfxInterface)->spawnObject((void*)obj, 0x7e6, &pfx, 0x200001, -1, vel);
+                        (*gPartfxInterface)->spawnEffect((GameObject*)obj, 0x7e6, &pfx, 0x200001, -1, vel);
                     }
                     inner->pendingFxFlags &= ~0x4;
                 }

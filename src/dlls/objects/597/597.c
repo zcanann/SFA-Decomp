@@ -910,12 +910,12 @@ void SnowBike_UpdateCollisionResponse(GameObject* obj, SnowBikeState* state) {
         if (((hit != NULL) && (hitObj = hit, state->collidedObject = hit, state->impactTimer == zero)) &&
             (hitKind = arrayIndexOf(gSnowBikeCollisionObjectIds, 0xc, hitObj->anim.romDefNo), hitKind != -1)) {
             objfx_shakeCameraByDistance(obj, 300.0f);
-            (*gPartfxInterface)->spawnObject(obj, SNOWBIKE_PARTFX_IMPACT_A, NULL, 4, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, SNOWBIKE_PARTFX_IMPACT_B, NULL, 4, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, SNOWBIKE_PARTFX_IMPACT_C, NULL, 4, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, SNOWBIKE_PARTFX_IMPACT_A, NULL, 4, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, SNOWBIKE_PARTFX_IMPACT_B, NULL, 4, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, SNOWBIKE_PARTFX_IMPACT_C, NULL, 4, -1, NULL);
             burstCount = 0x32 / framesThisStep;
             while (burstCount-- != 0) {
-                (*gPartfxInterface)->spawnObject(obj, SNOWBIKE_PARTFX_COLLISION_SPRAY, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, SNOWBIKE_PARTFX_COLLISION_SPRAY, NULL, 2, -1, NULL);
             }
             state->impactTimer = 20.0f;
             state->impactVelScale = 1.0f;
@@ -1041,7 +1041,7 @@ void SnowBike_UpdateExhaustFx(GameObject* obj, SnowBikeState* state) {
                 }
             }
             if (speed > 0.4f) {
-                (*gPartfxInterface)->spawnObject(obj, SNOWBIKE_PARTFX_ICE_SPRAY, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, SNOWBIKE_PARTFX_ICE_SPRAY, NULL, 2, -1, NULL);
             }
             break;
         case 3:
@@ -1070,7 +1070,7 @@ void SnowBike_UpdateExhaustFx(GameObject* obj, SnowBikeState* state) {
                 effect.x = obj->anim.localPosX;
                 effect.y = 15.0f + obj->anim.localPosY;
                 effect.z = obj->anim.localPosZ;
-                (*gPartfxInterface)->spawnObject(obj, SNOWBIKE_PARTFX_SPLASH, &effect, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, SNOWBIKE_PARTFX_SPLASH, &effect, 1, -1, NULL);
             }
             break;
         }

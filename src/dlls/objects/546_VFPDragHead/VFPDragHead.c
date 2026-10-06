@@ -91,7 +91,7 @@ void VFPDragHead_update(GameObject* obj)
             return;
         if (randomGetRange(0, 2) != 0)
             return;
-        (*gPartfxInterface)->spawnObject(obj, VFPDRAGHEAD_PARTFX_IDLE, NULL, 4, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, VFPDRAGHEAD_PARTFX_IDLE, NULL, 4, -1, NULL);
     }
     else if (obj->anim.romDefNo == 0x3c5)
     {
@@ -119,18 +119,18 @@ void VFPDragHead_update(GameObject* obj)
             return;
         if (randomGetRange(0, 2) != 0)
             return;
-        (*gPartfxInterface)->spawnObject(obj, VFPDRAGHEAD_PARTFX_IDLE, NULL, 4, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, VFPDRAGHEAD_PARTFX_IDLE, NULL, 4, -1, NULL);
     }
     else if (state == 1)
     {
         self2 = obj->extra;
         if (mainGetBit(self2->gameBitA) != 0)
         {
-            (*gPartfxInterface)->spawnObject(obj, VFPDRAGHEAD_PARTFX_BREATH, NULL, 4, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, VFPDRAGHEAD_PARTFX_BREATH, NULL, 4, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, VFPDRAGHEAD_PARTFX_BREATH, NULL, 4, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, VFPDRAGHEAD_PARTFX_BREATH, NULL, 4, -1, NULL);
             if (randomGetRange(0, 1) != 0)
             {
-                (*gPartfxInterface)->spawnObject(obj, VFPDRAGHEAD_PARTFX_IDLE, NULL, 4, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, VFPDRAGHEAD_PARTFX_IDLE, NULL, 4, -1, NULL);
             }
         }
         if ((s16)ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)

@@ -45,7 +45,7 @@ static void dimbossgut2_spawnBreathSplash(GameObject* obj, DimBossGut2Control* c
             effectParams->posX = obj->anim.localPosX - xyScale * mathSinf(3.1415927f * (f32)obj->anim.rotX / 32768.0f);
             effectParams->posZ = obj->anim.localPosZ - xyScale * mathCosf(3.1415927f * (f32)obj->anim.rotX / 32768.0f);
             effectParams->scale = 0.65f * (1.0f - heightDiff / 14.0f);
-            (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSGUT2_PARTFX, effectParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, DIMBOSSGUT2_PARTFX, effectParams, 1, -1, NULL);
             control->breathFxTimer = 0;
         }
     }

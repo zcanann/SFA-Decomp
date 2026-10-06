@@ -441,7 +441,7 @@ void mmpMoonRock_update(GameObject* obj) {
     gMMPMoonRockSpawnParams.posZ = obj->anim.localPosZ;
     particleHeight = obj->anim.localPosY - state->baseY;
     (*gPartfxInterface)
-        ->spawnObject(obj, MMP_MOON_ROCK_PARTICLE_AMBIENT, &gMMPMoonRockSpawnParams,
+        ->spawnEffect(obj, MMP_MOON_ROCK_PARTICLE_AMBIENT, &gMMPMoonRockSpawnParams,
                       MMP_MOON_ROCK_PARTICLE_SPAWN_MODE, MMP_MOON_ROCK_PARTICLE_MODEL_NONE, &particleHeight);
 }
 

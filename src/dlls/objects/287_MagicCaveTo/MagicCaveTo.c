@@ -102,7 +102,7 @@ void MagicCaveTop_free(GameObject* obj) {
 }
 
 void MagicCaveTop_update(GameObject* obj) {
-    ObjFxParticleParams effectParams;
+    PartFxSpawnParams effectParams;
     GameObject* player;
     MagicCaveTopState* state;
     MagicCaveTopPlacement* placement;

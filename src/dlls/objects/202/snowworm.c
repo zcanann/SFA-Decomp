@@ -254,9 +254,9 @@ void crawler_playReactionEffects(GameObject* obj, int* st) {
     }
     if (flag != 0) {
         if (enemyState->phaseAngle != 0) {
-            (*gPartfxInterface)->spawnObject(obj, FIRECRAWLER_PARTFX_MOVE_TURN, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, FIRECRAWLER_PARTFX_MOVE_TURN, NULL, 2, -1, NULL);
         } else {
-            (*gPartfxInterface)->spawnObject(obj, FIRECRAWLER_PARTFX_MOVE_STRAIGHT, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, FIRECRAWLER_PARTFX_MOVE_STRAIGHT, NULL, 2, -1, NULL);
         }
     }
 }

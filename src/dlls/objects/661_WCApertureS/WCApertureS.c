@@ -138,7 +138,7 @@ void wcapertures_hitDetect(GameObject* obj)
         col[1] = -0.788130045f;
         col[2] = gWcAperturesZero[0];
         (*gPartfxInterface)
-            ->spawnObject((void*)obj, WCAPERTURES_PARTFX_OPEN, &ev, WCAPERTURES_PARTFX_KIND,
+            ->spawnEffect(obj, WCAPERTURES_PARTFX_OPEN, &ev, WCAPERTURES_PARTFX_KIND,
                           WCAPERTURES_PARTFX_INVALID_HANDLE, col);
     }
     if (state->light != NULL)

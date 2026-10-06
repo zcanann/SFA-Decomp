@@ -69,7 +69,7 @@ void dll_1DF_update(GameObject* obj) {
         timer = state->spawnTimer - timeDelta;
         state->spawnTimer = timer;
         if (timer < 0.0f) {
-            (*gPartfxInterface)->spawnObject(obj, DLL_1DF_PARTFX_ID, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, DLL_1DF_PARTFX_ID, NULL, 2, -1, NULL);
             state->spawnTimer = DLL_1DF_PARTFX_INTERVAL;
         }
     }

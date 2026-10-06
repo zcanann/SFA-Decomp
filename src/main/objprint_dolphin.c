@@ -849,7 +849,7 @@ void objRenderAttachment(GameObject* obj, int* p2) {
         blk.rotX = 0;
         blk.rotZ = 0;
         blk.rotY = 0;
-        (*gPartfxInterface)->spawnObject(obj, 0x7fd, &blk, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 0x7fd, &blk, 0x200001, -1, NULL);
     }
 }
 

@@ -93,7 +93,7 @@ void VFP_MiniFire_update(GameObject* obj)
     if (randomGetRange(0, 4) == 0)
     {
         (*gPartfxInterface)
-            ->spawnObject((void*)obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS, -1, NULL);
+            ->spawnEffect(obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS, -1, NULL);
     }
 
     {
@@ -107,7 +107,7 @@ void VFP_MiniFire_update(GameObject* obj)
     if (randomGetRange(0, 4) == 0)
     {
         (*gPartfxInterface)
-            ->spawnObject((void*)obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS, -1, NULL);
+            ->spawnEffect(obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS, -1, NULL);
     }
 
     args.posX *= 2.0f;
@@ -116,11 +116,11 @@ void VFP_MiniFire_update(GameObject* obj)
     if (randomGetRange(0, 4) == 0)
     {
         (*gPartfxInterface)
-            ->spawnObject((void*)obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS, -1, NULL);
+            ->spawnEffect(obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS, -1, NULL);
     }
     if (randomGetRange(0, 2) == 0)
     {
-        (*gPartfxInterface)->spawnObject((void*)obj, VFPMINIFIRE_SPARK_EFFECT, &args, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, VFPMINIFIRE_SPARK_EFFECT, &args, 1, -1, NULL);
     }
 
     linkedGfx = (ObjHitsPriorityState*)obj->anim.hitReactState;
@@ -138,7 +138,7 @@ void VFP_MiniFire_update(GameObject* obj)
         Sfx_StopObjectChannel(obj, 0x7f);
         for (; i != 0; i--)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, VFPMINIFIRE_BURST_EFFECT, &args, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, VFPMINIFIRE_BURST_EFFECT, &args, 1, -1, NULL);
         }
     }
 
@@ -162,7 +162,7 @@ void VFP_MiniFire_init(GameObject* obj, u8* init)
     obj->anim.velocityY = -15.0f;
     obj->anim.localPosY = 400.0f + ((ObjPlacement*)init)->posY;
     obj->anim.rootMotionScale *= 2.0f;
-    (*gPartfxInterface)->spawnObject(obj, VFPMINIFIRE_PERSIST_EFFECT, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, VFPMINIFIRE_PERSIST_EFFECT, NULL, 2, -1, NULL);
     Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_103);
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }

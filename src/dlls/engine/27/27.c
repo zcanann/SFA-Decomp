@@ -31,7 +31,7 @@ ObjectDescriptor6 Effect2_funcs = {
     (ObjectDescriptorCallback)Effect2_release,
     0,
     (ObjectDescriptorCallback)Effect2_func03_nop,
-    (ObjectDescriptorCallback)Effect2_spawnObject,
+    (ObjectDescriptorCallback)Effect2_spawnEffect,
     (ObjectDescriptorCallback)Effect2_updateFrameState,
 };
 
@@ -47,7 +47,7 @@ ObjectDescriptor6 Effect2_funcs = {
         spawnParams = &gEffect2DefaultSpawnParams;                                                                     \
     } while (0)
 
-int Effect2_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
+int Effect2_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
                         s16* extraArgs) {
     int spawnResult;
     int i;
@@ -75,7 +75,7 @@ int Effect2_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.sourceVecZ = spawnParams->rotZ;
         cfg.sourceVecY = spawnParams->rotY;
         cfg.sourceVecX = spawnParams->rotX;
-        cfg.modelIdByte = modelId;
+        cfg.sourceParam = sourceParam;
     }
     cfg.behaviorFlags = 0;
     cfg.renderFlags = 0;
@@ -685,7 +685,7 @@ int Effect2_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         }
         break;
     case 0x27f:
-        cfg.scale = 0.0645f * ((GameObject*)sourceObj)->anim.rootMotionScale;
+        cfg.scale = 0.0645f * sourceObj->anim.rootMotionScale;
         cfg.lifetimeFrames = 0x28;
         cfg.initialAlpha = 0x9b;
         cfg.behaviorFlags = 0x80080208;
@@ -960,9 +960,9 @@ int Effect2_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
             cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != 0) {
-                cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-                cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-                cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+                cfg.startPosX = cfg.startPosX + cfg.attachedSource->anim.worldPosX;
+                cfg.startPosY = cfg.startPosY + cfg.attachedSource->anim.worldPosY;
+                cfg.startPosZ = cfg.startPosZ + cfg.attachedSource->anim.worldPosZ;
             }
         }
     }

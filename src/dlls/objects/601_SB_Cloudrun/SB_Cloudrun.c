@@ -399,11 +399,10 @@ int SB_CloudRunner_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
 
 void SB_CloudRunner_HandlePriorityHit(GameObject* obj, SBCloudRunnerState* state) {
     GameObject* hitObj;
-    f32 pos[3];
-    struct WCPartfxArgs args;
+    PartFxSpawnParams args;
     int i;
 
-    if (ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, 0, &pos[0], &pos[1], &pos[2]) != 0) {
+    if (ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, 0, &args.x, &args.y, &args.z) != 0) {
         if (objGetFlagsE5_2((u8*)obj) == 0) {
             if (hitObj->anim.romDefNo != HIT_TYPE_INVULNERABLE) {
                 Obj_SetModelColorFadeRecursive(obj, 175, 200, 0, 0, 1);
@@ -415,16 +414,16 @@ void SB_CloudRunner_HandlePriorityHit(GameObject* obj, SBCloudRunnerState* state
                 obj->anim.rotY = COLORFADE_RUMBLE_PRESET;
                 state->rideSubState = RIDE_SUBSTATE_TILT;
                 args.scale = 1.0f;
-                args.v[0] = 0;
-                args.v[1] = 0;
-                args.v[2] = 0;
+                args.rotX = 0;
+                args.rotY = 0;
+                args.rotZ = 0;
                 if (hitObj->anim.romDefNo == HIT_TYPE_BURST) {
-                    (*gPartfxInterface)->spawnObject((void*)obj, PARTFX_HIT_FLASH, &args, PARTFX_SPAWN_FLAGS, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)obj, PARTFX_HIT_FLASH, &args, PARTFX_SPAWN_FLAGS, -1, NULL);
-                    (*gPartfxInterface)->spawnObject((void*)obj, PARTFX_HIT_FLASH, &args, PARTFX_SPAWN_FLAGS, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, PARTFX_HIT_FLASH, &args, PARTFX_SPAWN_FLAGS, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, PARTFX_HIT_FLASH, &args, PARTFX_SPAWN_FLAGS, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, PARTFX_HIT_FLASH, &args, PARTFX_SPAWN_FLAGS, -1, NULL);
                     for (i = 0; i < PARTFX_HIT_DEBRIS_COUNT; i++) {
                         (*gPartfxInterface)
-                            ->spawnObject((void*)obj, PARTFX_HIT_DEBRIS, &args, PARTFX_SPAWN_FLAGS, -1, NULL);
+                            ->spawnEffect(obj, PARTFX_HIT_DEBRIS, &args, PARTFX_SPAWN_FLAGS, -1, NULL);
                     }
                 }
             }

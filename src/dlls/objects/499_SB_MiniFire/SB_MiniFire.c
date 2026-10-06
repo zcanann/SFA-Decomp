@@ -82,7 +82,7 @@ void SB_MiniFire_update(GameObject* obj) {
     effect.rotY = 0;
     effect.rotX = 0;
     (*gPartfxInterface)
-        ->spawnObject(obj, SB_MINIFIRE_PARTFX_ID, &effect, SB_MINIFIRE_PARTFX_MODE, SB_MINIFIRE_PARTFX_MODEL_NONE,
+        ->spawnEffect(obj, SB_MINIFIRE_PARTFX_ID, &effect, SB_MINIFIRE_PARTFX_MODE, SB_MINIFIRE_PARTFX_MODEL_NONE,
                       NULL);
     dy = obj->anim.localPosY - obj->anim.previousLocalPosY;
     dz = obj->anim.localPosZ - obj->anim.previousLocalPosZ;
@@ -91,13 +91,13 @@ void SB_MiniFire_update(GameObject* obj) {
     effect.posY = dy / 3.0f;
     effect.posZ = dz / 3.0f;
     (*gPartfxInterface)
-        ->spawnObject(obj, SB_MINIFIRE_PARTFX_ID, &effect, SB_MINIFIRE_PARTFX_MODE, SB_MINIFIRE_PARTFX_MODEL_NONE,
+        ->spawnEffect(obj, SB_MINIFIRE_PARTFX_ID, &effect, SB_MINIFIRE_PARTFX_MODE, SB_MINIFIRE_PARTFX_MODEL_NONE,
                       NULL);
     effect.posX *= 2.0f;
     effect.posY *= 2.0f;
     effect.posZ *= 2.0f;
     (*gPartfxInterface)
-        ->spawnObject(obj, SB_MINIFIRE_PARTFX_ID, &effect, SB_MINIFIRE_PARTFX_MODE, SB_MINIFIRE_PARTFX_MODEL_NONE,
+        ->spawnEffect(obj, SB_MINIFIRE_PARTFX_ID, &effect, SB_MINIFIRE_PARTFX_MODE, SB_MINIFIRE_PARTFX_MODEL_NONE,
                       NULL);
     obj->anim.rotX += framesThisStep * SB_MINIFIRE_ROT_X_STEP;
     obj->anim.rotY += framesThisStep * SB_MINIFIRE_ROT_Y_STEP;

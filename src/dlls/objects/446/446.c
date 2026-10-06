@@ -161,7 +161,7 @@ void lavaball1be_update(GameObject* obj) {
         obj->anim.localPosX = obj->anim.velocityX * timeDelta + obj->anim.localPosX;
         obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
         obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
-        (*gPartfxInterface)->spawnObject(obj, DIM_LAVA_DEBRIS_PARTICLE_EFFECT, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DIM_LAVA_DEBRIS_PARTICLE_EFFECT, NULL, 1, -1, NULL);
         obj->anim.rotX = obj->anim.rotX + framesThisStep * DIM_LAVA_DEBRIS_ROTATION_X_STEP;
         obj->anim.rotY = obj->anim.rotY + framesThisStep * DIM_LAVA_DEBRIS_ROTATION_Y_STEP;
         lavaball1be_applyDebrisGravity(obj);

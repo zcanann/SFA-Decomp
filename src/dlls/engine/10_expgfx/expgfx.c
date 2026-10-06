@@ -563,7 +563,7 @@ int expgfx_addremove(EffectSpawnConfig* config, int preferredPoolIndex, int slot
         int poolIdx = poolIndex;
 
         if (poolIdx < EXPGFX_POOL_COUNT) {
-            gExpgfxTrackedPoolSourceIds[poolIdx] = config->attachedSource;
+            gExpgfxTrackedPoolSourceIds[poolIdx] = (ObjAnimComponent*)config->attachedSource;
         }
         if (poolIdx < EXPGFX_POOL_COUNT && (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0) {
             gExpgfxTrackedSourceFrameMasks[poolIdx & 1] |= (s64)(1 << (poolIdx >> 1));
@@ -1704,7 +1704,7 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT;
                             if (slot->impactEffectId != -1) {
                                 (*gPartfxInterface)
-                                    ->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
+                                    ->spawnEffect((GameObject*)srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
                                 slot->impactEffectId = -1;
                             }
                         } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1) != 0) {
@@ -1726,7 +1726,7 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
                             if (slot->impactEffectId != -1) {
                                 (*gPartfxInterface)
-                                    ->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
+                                    ->spawnEffect((GameObject*)srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
                             }
                             slot->impactEffectId = -1;
                         } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4) != 0) {
@@ -1737,7 +1737,7 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
                             if (slot->impactEffectId != -1) {
                                 (*gPartfxInterface)
-                                    ->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
+                                    ->spawnEffect((GameObject*)srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
                             }
                         }
                         gExpgfxFrameParityBit = 0;
@@ -1796,7 +1796,7 @@ void expgfx_updateActivePools(u8 sourceMode, int frameCount, int resetSourceFram
                             rotParams.z = slot->posZ.value;
                         }
                         gExpgfxFrameParityBit = 1;
-                        (*gPartfxInterface)->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect((GameObject*)srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, NULL);
                         gExpgfxFrameParityBit = 0;
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0 && randomGetRange(0, 4) == 1) {
@@ -2678,81 +2678,81 @@ void objDoHitParticleFx(void* obj, f32 scale, void* origin, u8 type, void* light
         case 1:
             spawnArgs[0] = 1;
             for (remaining = 10; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, spawnArgs);
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x325, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
             for (remaining = 4; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 2:
             spawnArgs[0] = 2;
             for (remaining = 13; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, spawnArgs);
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x325, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
             for (remaining = 6; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 3:
             spawnArgs[0] = 3;
             for (remaining = 30; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, spawnArgs);
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x325, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
             for (remaining = 8; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 4:
             for (remaining = 7; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x328, origin, 0x200001, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 0x328, origin, 0x200001, -1, NULL);
             }
             break;
         case 5:
             spawnArgs[0] = 4;
             for (remaining = 10; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
             for (remaining = 4; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 6:
             spawnArgs[0] = 5;
             for (remaining = 10; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
             for (remaining = 4; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 7:
             spawnArgs[0] = 6;
             for (remaining = 10; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
             for (remaining = 4; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 8:
             spawnArgs[0] = 7;
             for (remaining = 10; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
             for (remaining = 4; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 9:
             spawnArgs[0] = 8;
             for (remaining = 10; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
             for (remaining = 4; remaining != 0; remaining--) {
-                (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
+                (*gPartfxInterface)->spawnEffect(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         }
@@ -2777,7 +2777,7 @@ void objDoHitParticleFx(void* obj, f32 scale, void* origin, u8 type, void* light
 }
 
 void objDoParticleFx(GameObject* obj, f32 scale, int type, f32 extraScale, ModelLightStruct* light) {
-    ObjFxParticleParams params;
+    PartFxSpawnParams params;
     f32 lightYOffset = 40.0f;
     ObjFxColorTable colorTbl = gObjFxCrystalSparkleTbl;
     u8* rPtr;
@@ -2785,9 +2785,9 @@ void objDoParticleFx(GameObject* obj, f32 scale, int type, f32 extraScale, Model
     u8* bPtr;
 
     params.scale = scale;
-    params.pad00[0] = 0;
-    params.pad00[2] = 0;
-    params.pad00[1] = 0;
+    params.arg0 = 0;
+    params.arg2 = 0;
+    params.arg1 = 0;
     params.effectParam = 0xc0a;
     if ((u8)type) {
         switch (type & 0xff) {
@@ -2795,13 +2795,13 @@ void objDoParticleFx(GameObject* obj, f32 scale, int type, f32 extraScale, Model
             params.position[0] = scale * randomGetRange(-10, 10);
             params.position[1] = scale * randomGetRange(-10, 10);
             params.position[2] = scale * randomGetRange(-10, 10);
-            (*gPartfxInterface)->spawnObject(obj, 0x32f, &params, 2, -1, &extraScale);
+            (*gPartfxInterface)->spawnEffect(obj, 0x32f, &params, 2, -1, &extraScale);
             break;
         case 2:
             params.position[0] = scale * randomGetRange(-10, 10);
             params.position[1] = scale * randomGetRange(-10, 10);
             params.position[2] = scale * randomGetRange(-10, 10);
-            (*gPartfxInterface)->spawnObject(obj, 0x330, &params, 2, -1, &extraScale);
+            (*gPartfxInterface)->spawnEffect(obj, 0x330, &params, 2, -1, &extraScale);
             break;
         case 3:
             (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x32f, &extraScale, 0x19, NULL);
@@ -2819,13 +2819,13 @@ void objDoParticleFx(GameObject* obj, f32 scale, int type, f32 extraScale, Model
             break;
         case 7:
             params.effectParam = 0x605;
-            params.pad00[2] = 1;
+            params.arg2 = 1;
             (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &extraScale, 0x19, &params);
             lightYOffset = 0.0f;
             break;
         case 8:
             params.effectParam = 0x605;
-            params.pad00[2] = 0;
+            params.arg2 = 0;
             (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7cf, &extraScale, 0x19, &params);
             lightYOffset = 0.0f;
             break;
@@ -2851,7 +2851,7 @@ void objDoParticleFx(GameObject* obj, f32 scale, int type, f32 extraScale, Model
 }
 
 void itemPickupDoParticleFx(void* obj, f32 scale, int mode, u8 count) {
-    ObjFxParticleParams params;
+    PartFxSpawnParams params;
     int i;
 
     params.scale = scale;
@@ -2862,74 +2862,74 @@ void itemPickupDoParticleFx(void* obj, f32 scale, int mode, u8 count) {
     case 1:
         params.effectParam = 0x79;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 2:
         params.effectParam = 0xc13;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 3:
         params.effectParam = 0x71;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 4:
         params.effectParam = 0xdb;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 5:
         params.effectParam = 0x77;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 6:
         params.effectParam = 0x7b;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 7:
         params.effectParam = 0xda;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     case 8:
         params.effectParam = 0xdd;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7cc, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7cc, &params, 1, -1, NULL);
         }
         break;
     case 10:
         params.effectParam = 0xde;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7cc, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7cc, &params, 1, -1, NULL);
         }
         break;
     case 9:
         params.effectParam = 0xdf;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7cc, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7cc, &params, 1, -1, NULL);
         }
         break;
     default:
         params.effectParam = 0x5c;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b1, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7b1, &params, 1, -1, NULL);
         }
         break;
     }
 }
 
 void projectileDoParticleFx(void* obj, f32 scaleArg, int mode) {
-    ObjFxParticleParams params;
+    PartFxSpawnParams params;
     f32 tailScale;
     f32 scale;
     int i;
@@ -2941,7 +2941,7 @@ void projectileDoParticleFx(void* obj, f32 scaleArg, int mode) {
         for (; i < 20; i += 2) {
             params.effectParam = i;
             params.scale = scale;
-            (*gPartfxInterface)->spawnObject(obj, 0x7a0, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7a0, &params, 1, -1, NULL);
         }
         tailScale = 0.3f;
         break;
@@ -2951,10 +2951,10 @@ void projectileDoParticleFx(void* obj, f32 scaleArg, int mode) {
         for (; i < 20; i += 2) {
             params.effectParam = i;
             params.scale = scale;
-            (*gPartfxInterface)->spawnObject(obj, 0x7a0, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7a0, &params, 1, -1, NULL);
         }
         for (i = 0; i < 20; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7a0, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7a0, NULL, 1, -1, NULL);
         }
         tailScale = 1.0f;
         break;
@@ -2964,10 +2964,10 @@ void projectileDoParticleFx(void* obj, f32 scaleArg, int mode) {
         for (; i < 20; i += 2) {
             params.effectParam = i;
             params.scale = scale;
-            (*gPartfxInterface)->spawnObject(obj, 0x7a1, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7a1, &params, 1, -1, NULL);
         }
         for (i = 0; i < 20; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7a1, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7a1, NULL, 1, -1, NULL);
         }
         tailScale = 1.0f;
         break;
@@ -2977,7 +2977,7 @@ void projectileDoParticleFx(void* obj, f32 scaleArg, int mode) {
         for (; i < 20; i += 2) {
             params.effectParam = i;
             params.scale = scale;
-            (*gPartfxInterface)->spawnObject(obj, 0x7a6, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7a6, &params, 1, -1, NULL);
         }
         tailScale = 0.3f;
         break;
@@ -2987,10 +2987,10 @@ void projectileDoParticleFx(void* obj, f32 scaleArg, int mode) {
         for (; i < 20; i += 2) {
             params.effectParam = i;
             params.scale = scale;
-            (*gPartfxInterface)->spawnObject(obj, 0x7a6, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7a6, &params, 1, -1, NULL);
         }
         for (i = 0; i < 20; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7a6, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7a6, NULL, 1, -1, NULL);
         }
         tailScale = 1.0f;
         break;
@@ -3000,18 +3000,18 @@ void projectileDoParticleFx(void* obj, f32 scaleArg, int mode) {
         for (; i < 20; i += 2) {
             params.effectParam = i;
             params.scale = scale;
-            (*gPartfxInterface)->spawnObject(obj, 0x7a1, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7a1, &params, 1, -1, NULL);
         }
         tailScale = 0.3f;
         break;
     default:
         return;
     }
-    (*gPartfxInterface)->spawnObject(obj, 0x79f, NULL, 1, -1, &tailScale);
+    (*gPartfxInterface)->spawnEffect(obj, 0x79f, NULL, 1, -1, &tailScale);
 }
 
 void objfx_spawnPulseBurst(void* obj, f32 scale, int type, int count, int mode, f32* vec) {
-    ObjFxParticleParams params;
+    PartFxSpawnParams params;
     int j;
     int i;
     int pulseEffectId;
@@ -3064,45 +3064,45 @@ void objfx_spawnPulseBurst(void* obj, f32 scale, int type, int count, int mode, 
         switch ((u8)count) {
         case 1:
             params.effectParam = -20536;
-            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1965, &params, 1, -1, NULL);
             break;
         case 2:
             params.effectParam = 10000;
-            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1965, &params, 1, -1, NULL);
             break;
         case 3:
             params.effectParam = 500;
-            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1965, &params, 1, -1, NULL);
             break;
         case 4:
             params.effectParam = -1;
-            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1965, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1966, &params, 1, -1, NULL);
             break;
         case 5:
             params.effectParam = 32767;
-            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1965, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1966, &params, 1, -1, NULL);
             break;
         case 6:
             params.effectParam = 10000;
-            (*gPartfxInterface)->spawnObject(obj, 1965, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1965, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1966, &params, 1, -1, NULL);
             break;
         case 7:
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1966, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 1966, &params, 1, -1, NULL);
             break;
         case 8:
             if (params.scale < 0.5f) {
                 params.scale = 0.5f;
             }
-            params.pad00[2] = 90;
+            params.arg2 = 90;
             for (i = 0; i < frameCount * 2; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 1981, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1981, &params, 1, -1, NULL);
             }
             break;
         }
@@ -3112,15 +3112,15 @@ void objfx_spawnPulseBurst(void* obj, f32 scale, int type, int count, int mode, 
         switch ((u8)mode) {
         case 1:
             params.effectParam = 127;
-            (*gPartfxInterface)->spawnObject(obj, pulseEffectId, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, pulseEffectId, &params, 1, -1, NULL);
             break;
         case 2:
             params.effectParam = 192;
-            (*gPartfxInterface)->spawnObject(obj, pulseEffectId, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, pulseEffectId, &params, 1, -1, NULL);
             break;
         case 3:
             params.effectParam = 255;
-            (*gPartfxInterface)->spawnObject(obj, pulseEffectId, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, pulseEffectId, &params, 1, -1, NULL);
             break;
         }
     }
@@ -3131,49 +3131,49 @@ void objfx_spawnPulseBurst(void* obj, f32 scale, int type, int count, int mode, 
         case 1:
             params.effectParam = 3085;
             for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1960, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1960, &params, 1, -1, NULL);
             }
             break;
         case 2:
             params.effectParam = 3082;
             for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1961, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1961, &params, 1, -1, NULL);
             }
             break;
         case 3:
             params.effectParam = 3082;
             for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1962, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1962, &params, 1, -1, NULL);
             }
             break;
         case 4:
             params.effectParam = 3086;
             for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1963, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1963, &params, 1, -1, NULL);
             }
             break;
         case 5:
             params.effectParam = 132;
             for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1963, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1963, &params, 1, -1, NULL);
             }
             break;
         case 6:
             params.effectParam = 3087;
             for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1963, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1963, &params, 1, -1, NULL);
             }
             break;
         case 7:
             params.effectParam = 100;
             for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1964, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1964, &params, 1, -1, NULL);
             }
             break;
         case 8:
             params.effectParam = 3198;
             for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1964, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1964, &params, 1, -1, NULL);
             }
             break;
         case 9:
@@ -3182,9 +3182,9 @@ void objfx_spawnPulseBurst(void* obj, f32 scale, int type, int count, int mode, 
             }
             for (j = 0; j < frameCount * 2; j++) {
                 params.effectParam = 0;
-                (*gPartfxInterface)->spawnObject(obj, 1973, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1973, &params, 1, -1, NULL);
                 params.effectParam = 1;
-                (*gPartfxInterface)->spawnObject(obj, 1973, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1973, &params, 1, -1, NULL);
             }
             break;
         case 10:
@@ -3193,51 +3193,51 @@ void objfx_spawnPulseBurst(void* obj, f32 scale, int type, int count, int mode, 
             }
             for (j = 0; j < frameCount * 2; j++) {
                 params.effectParam = 0;
-                (*gPartfxInterface)->spawnObject(obj, 1974, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1974, &params, 1, -1, NULL);
                 params.effectParam = 1;
-                (*gPartfxInterface)->spawnObject(obj, 1974, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1974, &params, 1, -1, NULL);
             }
             break;
         case 11:
             params.effectParam = 100;
             for (j = 0; j < frameCount; j++) {
-                (*gPartfxInterface)->spawnObject(obj, 1964, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1964, &params, 1, -1, NULL);
             }
             break;
         case 12:
             if (params.scale < 0.25f) {
                 params.scale = 0.25f;
             }
-            params.pad00[2] = 50;
+            params.arg2 = 50;
             for (j = 0; j < frameCount * 2; j++) {
                 params.effectParam = 0;
-                (*gPartfxInterface)->spawnObject(obj, 1979, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1979, &params, 1, -1, NULL);
                 params.effectParam = 1;
-                (*gPartfxInterface)->spawnObject(obj, 1979, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1979, &params, 1, -1, NULL);
             }
             break;
         case 13:
             if (params.scale < 0.5f) {
                 params.scale = 0.5f;
             }
-            params.pad00[2] = 90;
+            params.arg2 = 90;
             for (j = 0; j < frameCount * 2; j++) {
                 params.effectParam = 0;
-                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1980, &params, 1, -1, NULL);
                 params.effectParam = 1;
-                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1980, &params, 1, -1, NULL);
             }
             break;
         case 14:
             if (params.scale < 0.5f) {
                 params.scale = 0.5f;
             }
-            params.pad00[2] = 240;
+            params.arg2 = 240;
             for (j = 0; j < frameCount * 2; j++) {
                 params.effectParam = 0;
-                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1980, &params, 1, -1, NULL);
                 params.effectParam = 1;
-                (*gPartfxInterface)->spawnObject(obj, 1980, &params, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 1980, &params, 1, -1, NULL);
             }
             break;
         }
@@ -3245,7 +3245,7 @@ void objfx_spawnPulseBurst(void* obj, f32 scale, int type, int count, int mode, 
 }
 
 void objfx_spawnFlaggedTrailBurst(void* obj, f32 fval, u8 mode, int f6val, int f4val, void* origin) {
-    ObjFxParticleFlags params;
+    PartFxSpawnParams params;
     int i;
     u8 count;
 
@@ -3255,45 +3255,45 @@ void objfx_spawnFlaggedTrailBurst(void* obj, f32 fval, u8 mode, int f6val, int f
         count = framesThisStep;
     }
     params.effectParam = f6val;
-    params.f4 = f4val;
+    params.arg2 = f4val;
     params.scale = fval;
     if (mode == 0) {
         return;
     }
     switch (mode) {
     case 1:
-        params.a = 0;
-        params.b = 0;
+        params.arg0 = 0;
+        params.arg1 = 0;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7b7, &params, 1, -1, origin);
         }
         break;
     case 2:
-        params.a = 1;
-        params.b = 0;
+        params.arg0 = 1;
+        params.arg1 = 0;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7b7, &params, 1, -1, origin);
         }
         break;
     case 3:
-        params.a = 0;
-        params.b = 1;
+        params.arg0 = 0;
+        params.arg1 = 1;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7b7, &params, 1, -1, origin);
         }
         break;
     case 4:
-        params.a = 1;
-        params.b = 1;
+        params.arg0 = 1;
+        params.arg1 = 1;
         for (i = 0; i < count; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7b7, &params, 1, -1, origin);
         }
         break;
     }
 }
 
 void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mode, f32 sizeParam, void* light) {
-    ObjFxParticleParams params;
+    PartFxSpawnParams params;
     f32 lightOffset[6];
     f32 ndc[3];
     s32 screenPos[3];
@@ -3315,22 +3315,22 @@ void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mod
         switch ((u8)type) {
         case 1:
             params.effectParam = 0x159;
-            params.pad00[2] = 1;
+            params.arg2 = 1;
             for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7be, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnEffect(obj, 0x7be, &params, 2, -1, light);
             }
             break;
         case 2:
             params.effectParam = 0x159;
-            params.pad00[2] = 0;
+            params.arg2 = 0;
             for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7be, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnEffect(obj, 0x7be, &params, 2, -1, light);
             }
             break;
         case 3:
             params.effectParam = 0x8e;
             for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7c0, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnEffect(obj, 0x7c0, &params, 2, -1, light);
             }
             break;
         case 4: {
@@ -3339,9 +3339,9 @@ void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mod
                 flags |= 0x20000000;
             }
             params.effectParam = 0xc0e;
-            params.pad00[2] = 0;
+            params.arg2 = 0;
             for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7eb, &params, flags, -1, light);
+                (*gPartfxInterface)->spawnEffect(obj, 0x7eb, &params, flags, -1, light);
             }
             break;
         }
@@ -3385,13 +3385,13 @@ void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mod
                 params.effectParam = 0xc74;
             }
             for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7bf, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnEffect(obj, 0x7bf, &params, 2, -1, light);
             }
             break;
         case 2:
             params.effectParam = 0x605;
             for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7bf, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnEffect(obj, 0x7bf, &params, 2, -1, light);
             }
             break;
         case 3:
@@ -3401,7 +3401,7 @@ void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mod
                 params.effectParam = 0xc74;
             }
             for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7c1, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnEffect(obj, 0x7c1, &params, 2, -1, light);
             }
             break;
         case 4:
@@ -3411,13 +3411,13 @@ void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mod
                 params.effectParam = 0xc74;
             }
             for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7c4, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnEffect(obj, 0x7c4, &params, 2, -1, light);
             }
             break;
         case 5:
             params.effectParam = 0x605;
             for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7c4, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnEffect(obj, 0x7c4, &params, 2, -1, light);
             }
             break;
         case 6:
@@ -3427,7 +3427,7 @@ void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mod
                 params.effectParam = 0xc74;
             }
             for (i = 0; i < frameCount; i++) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7c5, &params, 2, -1, light);
+                (*gPartfxInterface)->spawnEffect(obj, 0x7c5, &params, 2, -1, light);
             }
             break;
         }
@@ -3463,7 +3463,7 @@ void objfx_spawnFrameTimedHitPulse(GameObject* obj, f32 scale, u8 type, u8 varia
 }
 
 void objShowButtonGlow(void* obj, f32 intensity, u8 glowKind) {
-    ObjFxParticleParams params;
+    PartFxSpawnParams params;
     int i;
 
     params.scale = intensity;
@@ -3474,35 +3474,35 @@ void objShowButtonGlow(void* obj, f32 intensity, u8 glowKind) {
     case 1:
         params.effectParam = 0xc8c;
         for (i = 0; i < 0x28; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7c8, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7c8, &params, 1, -1, NULL);
         }
         params.effectParam = 1;
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 0x7f3, &params, 1, -1, NULL);
         break;
     case 2:
         params.effectParam = 0xc8d;
         for (i = 0; i < 0x28; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7c8, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7c8, &params, 1, -1, NULL);
         }
         params.effectParam = 0;
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 0x7f3, &params, 1, -1, NULL);
         break;
     case 3:
         params.effectParam = 0xc8e;
         for (i = 0; i < 0x28; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7c8, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7c8, &params, 1, -1, NULL);
         }
         params.effectParam = 2;
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 0x7f3, &params, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 0x7f3, &params, 1, -1, NULL);
         break;
     case 4:
         params.effectParam = 0;
         for (i = 0; i < 0x14; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x7f2, &params, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7f2, &params, 1, -1, NULL);
         }
         break;
     }
@@ -3510,7 +3510,7 @@ void objShowButtonGlow(void* obj, f32 intensity, u8 glowKind) {
 
 void objfx_spawnBoxBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mulX, f32 mulY, f32 mulZ,
                          void* origin, int flags) {
-    ObjFxParticleParams params;
+    PartFxSpawnParams params;
     ObjFxU16Table9 effectParams = *(ObjFxU16Table9*)((char*)&gObjFxCrystalSparkleTbl + 0x48);
     ObjFxU16Table8 spawnIds = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x5c);
     ObjFxU16Table8 paramC = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x6c);
@@ -3519,7 +3519,7 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chan
 
     params.scale = scale;
     params.effectParam = effectParams.values[kind];
-    params.pad00[1] = 0x3c;
+    params.arg1 = 0x3c;
     for (i = 0; i < 4; i++) {
         u16 val;
         f32 a;
@@ -3578,15 +3578,15 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chan
             params.position[1] += ((GameObject*)origin)->anim.localPosY;
             params.position[2] += ((GameObject*)origin)->anim.localPosZ;
         }
-        params.pad00[2] = paramC.values[idx];
-        params.pad00[0] = paramD.values[idx];
-        (*gPartfxInterface)->spawnObject(obj, spawnIds.values[idx], &params, flags | 2, -1, NULL);
+        params.arg2 = paramC.values[idx];
+        params.arg0 = paramD.values[idx];
+        (*gPartfxInterface)->spawnEffect(obj, spawnIds.values[idx], &params, flags | 2, -1, NULL);
     }
 }
 
 void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int chance, f32 radiusEnd, f32 radiusStart,
                            f32 height, void* origin, int flags) {
-    ObjFxParticleParams params;
+    PartFxSpawnParams params;
     ObjFxU16Table9 effectParams = *(ObjFxU16Table9*)((char*)&gObjFxCrystalSparkleTbl + 0x8c);
     ObjFxU16Table8 spawnIds = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xa0);
     ObjFxU16Table8 paramC = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xb0);
@@ -3599,7 +3599,7 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int c
 
     params.scale = scale;
     params.effectParam = effectParams.values[kind];
-    params.pad00[1] = 0x3c;
+    params.arg1 = 0x3c;
     for (i = 0; i < 4; i++) {
         u16 val;
         f32 a;
@@ -3656,15 +3656,15 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int c
             params.position[1] += ((GameObject*)origin)->anim.localPosY;
             params.position[2] += ((GameObject*)origin)->anim.localPosZ;
         }
-        params.pad00[2] = paramC.values[idx];
-        params.pad00[0] = paramD.values[idx];
-        (*gPartfxInterface)->spawnObject(obj, spawnIds.values[idx], &params, flags | 2, -1, NULL);
+        params.arg2 = paramC.values[idx];
+        params.arg0 = paramD.values[idx];
+        (*gPartfxInterface)->spawnEffect(obj, spawnIds.values[idx], &params, flags | 2, -1, NULL);
     }
 }
 
 void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mult, void* origin,
                                  int flags) {
-    ObjFxParticleParams params;
+    PartFxSpawnParams params;
     ObjFxU16Table9 effectParams = *(ObjFxU16Table9*)((char*)&gObjFxCrystalSparkleTbl + 0xd0);
     ObjFxU16Table8 spawnIds = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xe4);
     ObjFxU16Table8 paramC = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xf4);
@@ -3675,7 +3675,7 @@ void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode,
 
     params.scale = scale;
     params.effectParam = effectParams.values[kind];
-    params.pad00[1] = 0x3c;
+    params.arg1 = 0x3c;
     for (i = 0; i < 4; i++) {
         if (randomGetRange(0, 0x63) >= chance) {
             continue;
@@ -3733,14 +3733,14 @@ void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode,
             params.position[1] += ((GameObject*)origin)->anim.localPosY;
             params.position[2] += ((GameObject*)origin)->anim.localPosZ;
         }
-        params.pad00[2] = paramC.values[idx];
-        params.pad00[0] = paramD.values[idx];
-        (*gPartfxInterface)->spawnObject(obj, spawnIds.values[idx], &params, flags | 2, -1, NULL);
+        params.arg2 = paramC.values[idx];
+        params.arg0 = paramD.values[idx];
+        (*gPartfxInterface)->spawnEffect(obj, spawnIds.values[idx], &params, flags | 2, -1, NULL);
     }
 }
 
 void objfx_spawnMaskedHitEffect(void* obj, f32 scale, u8 type, u8 mode, u8 mask, void* origin) {
-    ObjFxParticleParams params;
+    PartFxSpawnParams params;
     ObjFxU16Table11 effectParamTbl = gObjFxHitEffectParamTbl;
     ObjFxU16Table7 spawnIdTbl = gObjFxMaskedHitSpawnIdTbl;
     if (type == 0 || mode == 0) {
@@ -3760,11 +3760,11 @@ void objfx_spawnMaskedHitEffect(void* obj, f32 scale, u8 type, u8 mode, u8 mask,
         params.position[1] = 0.0f;
         params.position[2] = 0.0f;
     }
-    (*gPartfxInterface)->spawnObject(obj, spawnIdTbl.values[type], &params, 2, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, spawnIdTbl.values[type], &params, 2, -1, NULL);
 }
 
 void objfx_spawnHitEffectBurst(void* obj, f32 scale, u8 idSel, u8 paramSel, u8 count, GameObject* origin) {
-    ObjFxParticleParams params;
+    PartFxSpawnParams params;
     ObjFxU16Table11 table = gObjFxHitEffectParamTbl2;
     ObjFxU16Table3 effectIds = objFxHitEffectIdTbl;
     int i;
@@ -3783,7 +3783,7 @@ void objfx_spawnHitEffectBurst(void* obj, f32 scale, u8 idSel, u8 paramSel, u8 c
         params.position[2] = 0.0f;
     }
     for (i = 0; i < count; i++) {
-        (*gPartfxInterface)->spawnObject(obj, effectIds.values[idSel], &params, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, effectIds.values[idSel], &params, 2, -1, NULL);
     }
 }
 
@@ -3807,7 +3807,7 @@ void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d) {
 }
 
 void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, f32 mult, u8 flagByte) {
-    ObjFxParticleParams params;
+    PartFxSpawnParams params;
     ObjFxRandomBurstTable burstTbl = gObjFxRandomBurstTbl;
     u16 randAngles[3];
     int i;
@@ -3834,25 +3834,25 @@ void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, f32 mult
             params.position[2] += ((PartFxSpawnParams*)origin)->posZ;
         }
         params.effectParam = burstTbl.entries[type].effectParam;
-        params.pad00[1] = burstTbl.entries[type].extraParam;
-        params.pad00[2] = flagByte;
+        params.arg1 = burstTbl.entries[type].extraParam;
+        params.arg2 = flagByte;
         params.scale = 1.0f;
         if (type >= 9 && type <= 0xb) {
             if (type == 0xb || type == 0xa) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7e3, &params, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 0x7e3, &params, 2, -1, NULL);
             }
             if (type == 0xb || type == 9) {
-                (*gPartfxInterface)->spawnObject(obj, 0x7e4, &params, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, 0x7e4, &params, 2, -1, NULL);
             }
         } else {
-            (*gPartfxInterface)->spawnObject(obj, 0x7e2, &params, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7e2, &params, 2, -1, NULL);
         }
     }
 }
 
 void objfx_spawnCrystalOrbitEffects(GameObject* obj, s16* work, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff,
                                     u8 flags) {
-    ObjFxParticleParams params;
+    PartFxSpawnParams params;
     int crystalIdx;
     int angleStep;
     int spawnFlags;
@@ -3887,7 +3887,7 @@ void objfx_spawnCrystalOrbitEffects(GameObject* obj, s16* work, f32 period, f32 
             if (flags != 0) {
                 spawnFlags |= 0x20000000;
             }
-            (*gPartfxInterface)->spawnObject(obj, 0x7ec, &params, spawnFlags, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x7ec, &params, spawnFlags, -1, NULL);
         }
     }
 }

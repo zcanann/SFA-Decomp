@@ -325,7 +325,7 @@ void collectible_updateIdleMotion(GameObject* obj) {
     case 0x27f:
         if (state->playerDistance < 200.0f) {
             if ((int)randomGetRange(0, 10) == 0) {
-                (*gPartfxInterface)->spawnObject((void*)obj, COLLECTIBLE_PARTFX_IDLE, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, COLLECTIBLE_PARTFX_IDLE, NULL, 2, -1, NULL);
             }
             obj->anim.rotX += (s16)(182.0f * timeDelta);
         }
@@ -379,7 +379,7 @@ int collectible_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
                 spawn.posX = z;
                 spawn.posY = z;
                 spawn.posZ = z;
-                (*gPartfxInterface)->spawnObject((void*)obj, COLLECTIBLE_PARTFX_SCATTER, &spawn, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, COLLECTIBLE_PARTFX_SCATTER, &spawn, 1, -1, NULL);
             }
         }
     }

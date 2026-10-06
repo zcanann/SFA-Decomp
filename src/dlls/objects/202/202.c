@@ -93,10 +93,7 @@ typedef struct IceBaddieControl {
     s16 attackPatternIndex;     /* 0x04 */
     s16 consecutiveHitCount;    /* 0x06 */
     f32 projectileTransform[6]; /* 0x08 */
-    f32 particlePositionX;      /* 0x20 */
-    f32 particlePositionY;      /* 0x24 */
-    f32 fxScale;                /* 0x28 */
-    f32 effectPosition[3];      /* 0x2C */
+    PartFxSpawnParams particleTransform; /* 0x20 */
     f32 projectileVelocity[3];  /* 0x38 */
     u8 effectFlags;             /* 0x44 */
     u8 pad45;                   /* 0x45 */
@@ -113,9 +110,9 @@ typedef struct IceBallSetup {
 
 STATIC_ASSERT(offsetof(IceBaddieControl, attackPatternIndex) == 0x4);
 
-STATIC_ASSERT(offsetof(IceBaddieControl, particlePositionX) == 0x20);
+STATIC_ASSERT(offsetof(IceBaddieControl, particleTransform) == 0x20);
 
-STATIC_ASSERT(offsetof(IceBaddieControl, effectPosition) == 0x2C);
+STATIC_ASSERT(offsetof(IceBaddieControl, particleTransform.pos) == 0x2C);
 
 STATIC_ASSERT(offsetof(IceBaddieControl, projectileVelocity) == 0x38);
 
@@ -850,11 +847,11 @@ void iceBaddie_updateControlEffects(GameObject* obj, GroundBaddieState* state) {
     f32 contactScale;
 
     if (obj->anim.romDefNo == 99) {
-        controlAddress->fxScale = 1.7f;
+        controlAddress->particleTransform.scale = 1.7f;
         shakeScale = 2.0f;
     } else {
         contactScale = 1.0f;
-        controlAddress->fxScale = contactScale;
+        controlAddress->particleTransform.scale = contactScale;
         shakeScale = contactScale;
     }
     paletteIndex = 0;
@@ -873,14 +870,14 @@ void iceBaddie_updateControlEffects(GameObject* obj, GroundBaddieState* state) {
         (state->configFlags & 0x40) == 0) {
         for (i = 0; i < 4; i++) {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, ICEBADDIE_PARTICLE_CONTACT, &controlAddress->particlePositionX, 0x200001, -1,
+                ->spawnEffect(obj, ICEBADDIE_PARTICLE_CONTACT, &controlAddress->particleTransform, 0x200001, -1,
                               particleArgs);
         }
     }
     if ((controlAddress->effectFlags & ICEBADDIE_FX_PUFF) != 0 &&
         (state->configFlags & 0x40) == 0) {
         (*gPartfxInterface)
-            ->spawnObject((void*)obj, ICEBADDIE_PARTICLE_PUFF, &controlAddress->particlePositionX, 0x200001, -1,
+            ->spawnEffect(obj, ICEBADDIE_PARTICLE_PUFF, &controlAddress->particleTransform, 0x200001, -1,
                           particleArgs);
     }
     if ((controlAddress->effectFlags & ICEBADDIE_FX_IMPACT) != 0) {
@@ -888,7 +885,7 @@ void iceBaddie_updateControlEffects(GameObject* obj, GroundBaddieState* state) {
         CameraShake_SetOffset(2.0f * shakeScale);
         for (i = 0; i < 0x28; i++) {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, ICEBADDIE_PARTICLE_PUFF, &controlAddress->particlePositionX, 0x200001, -1,
+                ->spawnEffect(obj, ICEBADDIE_PARTICLE_PUFF, &controlAddress->particleTransform, 0x200001, -1,
                               particleArgs);
         }
     }
@@ -897,12 +894,12 @@ void iceBaddie_updateControlEffects(GameObject* obj, GroundBaddieState* state) {
         CameraShake_SetOffset(3.0f * shakeScale);
         for (i = 0; i < 0x28; i++) {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, ICEBADDIE_PARTICLE_PUFF, &controlAddress->particlePositionX, 0x200001, -1,
+                ->spawnEffect(obj, ICEBADDIE_PARTICLE_PUFF, &controlAddress->particleTransform, 0x200001, -1,
                               particleArgs);
         }
         for (i = 0; i < 10; i++) {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, ICEBADDIE_PARTICLE_DEBRIS, &controlAddress->particlePositionX, 0x200001, -1,
+                ->spawnEffect(obj, ICEBADDIE_PARTICLE_DEBRIS, &controlAddress->particleTransform, 0x200001, -1,
                               particleArgs);
         }
     }
@@ -933,17 +930,17 @@ void iceBaddie_updateEffectAnchors(GameObject* obj, GroundBaddieState* state) {
         scale = state->baddie.animSpeedA;
     }
     if (state->baddie.controlMode != 4) {
-        ObjPath_GetPointWorldPosition(obj, 2, &control->effectPosition[0], &control->effectPosition[1],
-                                      &control->effectPosition[2], 0);
+        ObjPath_GetPointWorldPosition(obj, 2, &control->particleTransform.position[0], &control->particleTransform.position[1],
+                                      &control->particleTransform.position[2], 0);
     } else {
-        ObjPath_GetPointWorldPosition(obj, 0, &control->effectPosition[0], &control->effectPosition[1],
-                                      &control->effectPosition[2], 0);
+        ObjPath_GetPointWorldPosition(obj, 0, &control->particleTransform.position[0], &control->particleTransform.position[1],
+                                      &control->particleTransform.position[2], 0);
     }
-    control->effectPosition[1] = 8.0f + obj->anim.localPosY;
+    control->particleTransform.position[1] = 8.0f + obj->anim.localPosY;
     angle = (3.1415927f * (f32) * (s16*)obj) / 32768.0f;
-    control->effectPosition[0] = control->effectPosition[0] - scale * (10.0f * mathSinf(angle));
+    control->particleTransform.position[0] = control->particleTransform.position[0] - scale * (10.0f * mathSinf(angle));
     angle = (3.1415927f * (f32) * (s16*)obj) / 32768.0f;
-    control->effectPosition[2] = control->effectPosition[2] - scale * (10.0f * mathCosf(angle));
+    control->particleTransform.position[2] = control->particleTransform.position[2] - scale * (10.0f * mathCosf(angle));
     transformScratch[3] = 0.0f;
     transformScratch[4] = -15.0f;
     transformScratch[5] = -20.0f;

@@ -255,7 +255,7 @@ void DIMBossIceSmash_update(GameObject* obj) {
                     spawnParams.posY = dy * k + obj->anim.previousLocalPosY;
                     spawnParams.posZ = dz * k + obj->anim.previousLocalPosZ;
                     (*gPartfxInterface)
-                        ->spawnObject(obj, DIM_BOSS_ICE_SMASH_PARTFX_TRAIL, &spawnParams,
+                        ->spawnEffect(obj, DIM_BOSS_ICE_SMASH_PARTFX_TRAIL, &spawnParams,
                                       DIM_BOSS_ICE_SMASH_PARTFX_SPAWN_FLAGS, -1, NULL);
                     i++;
                 } while (i < 2);

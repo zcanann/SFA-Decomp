@@ -204,11 +204,11 @@ void player_steerFromInput(GameObject* obj, BaddieState* state) {
 void player_updateParticles(GameObject* obj, BaddieState* unused, int effectId, int count, int mode) {
     while (count != 0 && obj != NULL) {
         if (mode == 0) {
-            (*gPartfxInterface)->spawnObject(obj, effectId, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, effectId, NULL, 2, -1, NULL);
         } else if (mode == 1) {
-            (*gPartfxInterface)->spawnObject(obj, effectId, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, effectId, NULL, 2, -1, NULL);
         } else if (mode == 2) {
-            (*gPartfxInterface)->spawnObject(obj, effectId, NULL, 4, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, effectId, NULL, 4, -1, NULL);
         }
         count--;
     }

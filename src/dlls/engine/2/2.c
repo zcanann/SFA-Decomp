@@ -3159,7 +3159,7 @@ void objSeqDoBgCmds0D(ObjSeqState* seq, GameObject* obj, int skipSpawns) {
         switch (cmd->opcode) {
         case 3:
             if ((u8)skipSpawns == 0) {
-                (*gPartfxInterface)->spawnObject((void*)cmdObj, cmdParam, NULL, 0x10000, -1, NULL);
+                (*gPartfxInterface)->spawnEffect((GameObject*)cmdObj, cmdParam, NULL, 0x10000, -1, NULL);
             }
             break;
         case 4:

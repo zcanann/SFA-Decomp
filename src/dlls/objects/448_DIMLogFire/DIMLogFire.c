@@ -60,7 +60,7 @@ int DIMLogFire_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
         break;
     }
     if (state->smokeEnabled != 0) {
-        (*gPartfxInterface)->spawnObject(obj, DIM_LOG_FIRE_SMOKE_PARTICLE, NULL, 0, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DIM_LOG_FIRE_SMOKE_PARTICLE, NULL, 0, -1, NULL);
         Sfx_StopObjectChannel(obj, 5);
     } else {
         Sfx_StopObjectChannel(obj, 1);

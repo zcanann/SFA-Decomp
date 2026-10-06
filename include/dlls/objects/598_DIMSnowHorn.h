@@ -122,7 +122,7 @@ int DIMSnowHorn1_getObjectTypeId(void);
 void DIMSnowHorn1_free(GameObject* obj);
 void DIMSnowHorn1_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void DIMSnowHorn1_hitDetect(void);
-void DIMSnowHorn1_spawnFootstepEffects(void* obj, DIMSnowHorn1State* pointState, DIMSnowHorn1State* inputState);
+void DIMSnowHorn1_spawnFootstepEffects(GameObject* obj, DIMSnowHorn1State* pointState, DIMSnowHorn1State* inputState);
 void DIMSnowHorn1_ridingUpdate(GameObject* obj, int frameStep, int slot);
 void DIMSnowHorn1_update(GameObject* obj);
 void DIMSnowHorn1_release(void);

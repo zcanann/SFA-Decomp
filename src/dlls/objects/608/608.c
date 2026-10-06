@@ -283,7 +283,7 @@ void ProximityMine_update(GameObject* obj) {
             obj->anim.worldPosY = obj->anim.localPosY;
             obj->anim.worldPosZ = obj->anim.localPosZ;
         case PROXIMITYMINE_MODE_ARMED:
-            (*gPartfxInterface)->spawnObject(obj, PROXIMITYMINE_PARTFX, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, PROXIMITYMINE_PARTFX, NULL, 1, -1, NULL);
             if (timerCountDown(&state->hitEnableTimer) != 0) {
                 ObjHits_EnableObject(obj);
             }

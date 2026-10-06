@@ -472,7 +472,7 @@ void AppleOnTree_update(GameObject* obj) {
                 state = (int)obj->extra;
                 burstIndex = 0;
                 do {
-                    (*gPartfxInterface)->spawnObject(obj, APPLE_ON_TREE_PARTICLE_BURST, NULL, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, APPLE_ON_TREE_PARTICLE_BURST, NULL, 2, -1, NULL);
                     burstIndex += 1;
                 } while (burstIndex < APPLE_ON_TREE_PARTICLE_BURST_COUNT);
                 if (obj->anim.hitReactState != NULL) {
@@ -498,7 +498,7 @@ void AppleOnTree_update(GameObject* obj) {
                 state = (int)obj->extra;
                 particleIndex = 0;
                 do {
-                    (*gPartfxInterface)->spawnObject(obj, APPLE_ON_TREE_PARTICLE_BURST, NULL, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, APPLE_ON_TREE_PARTICLE_BURST, NULL, 2, -1, NULL);
                     particleIndex += 1;
                 } while (particleIndex < APPLE_ON_TREE_PARTICLE_BURST_COUNT);
                 if (obj->anim.hitReactState != NULL) {
@@ -510,7 +510,7 @@ void AppleOnTree_update(GameObject* obj) {
             } else if (frac > ((AppleOnTreeState*)state)->ripeEnd) {
                 particleIndex = 0;
                 do {
-                    (*gPartfxInterface)->spawnObject(obj, APPLE_ON_TREE_PARTICLE_BURST, NULL, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, APPLE_ON_TREE_PARTICLE_BURST, NULL, 2, -1, NULL);
                     particleIndex += 1;
                 } while (particleIndex < APPLE_ON_TREE_PARTICLE_BURST_COUNT);
                 ((AppleOnTreeState*)state)->animState = APPLE_ON_TREE_STATE_FALLING;

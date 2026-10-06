@@ -27,11 +27,11 @@ ObjectDescriptor6 Effect20_funcs = {
     (ObjectDescriptorCallback)Effect20_release,
     0,
     (ObjectDescriptorCallback)Effect20_func03_nop,
-    (ObjectDescriptorCallback)Effect20_spawnObject,
+    (ObjectDescriptorCallback)Effect20_spawnEffect,
     (ObjectDescriptorCallback)Effect20_updateFrameState,
 };
 
-int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
+int Effect20_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, s8 sourceParam,
                          f32* extraArgs) {
     int ret;
     int intVal;
@@ -64,7 +64,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.sourceVecZ = spawnParams->rotZ;
         cfg.sourceVecY = spawnParams->rotY;
         cfg.sourceVecX = spawnParams->rotX;
-        cfg.modelIdByte = modelId;
+        cfg.sourceParam = sourceParam;
     }
     cfg.behaviorFlags = 0;
     cfg.renderFlags = 0;
@@ -463,7 +463,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             }
             cfg.startPosY = spawnParams->posY * spawnParams->scale;
             cfg.velocityZ = 0.1f * (spawnParams->scale * (0.12f * (f32)(s32)randomGetRange(100, 0x96)));
-            vecRotateZXY(sourceObj, &cfg.velocityX);
+            vecRotateZXY(&sourceObj->anim.rotX, &cfg.velocityX);
             cfg.textureId = 0xc0a;
             cfg.renderFlags |= 0x20;
             cfg.overrideColor0 = 0xffff;
@@ -491,7 +491,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.startPosY = spawnParams->posY * spawnParams->scale;
             cfg.startPosZ = spawnParams->posZ;
             cfg.velocityZ = 0.1f * (spawnParams->scale * (0.12f * (f32)(s32)randomGetRange(100, 0x96)));
-            vecRotateZXY(sourceObj, &cfg.velocityX);
+            vecRotateZXY(&sourceObj->anim.rotX, &cfg.velocityX);
             cfg.textureId = 0x5f5;
         }
         break;
@@ -576,7 +576,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             }
             cfg.startPosY = spawnParams->posY * spawnParams->scale;
             cfg.velocityZ = 0.2f * (spawnParams->scale * (0.03f * (f32)(s32)randomGetRange(100, 0x96)));
-            vecRotateZXY(sourceObj, &cfg.velocityX);
+            vecRotateZXY(&sourceObj->anim.rotX, &cfg.velocityX);
             cfg.textureId = 0xc10;
         }
         break;
@@ -597,7 +597,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             }
             cfg.startPosY = spawnParams->posY * spawnParams->scale;
             cfg.velocityZ = 0.2f * (spawnParams->scale * (0.04f * (f32)(s32)randomGetRange(100, 0x96)));
-            vecRotateZXY(sourceObj, &cfg.velocityX);
+            vecRotateZXY(&sourceObj->anim.rotX, &cfg.velocityX);
             cfg.textureId = 0xc10;
         }
         break;
@@ -612,7 +612,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.velocityX = 0.015f * (spawnParams->scale * (0.01f * (f32)(s32)randomGetRange(0xffffff6a, 0x96)));
             cfg.velocityY = 0.015f * (spawnParams->scale * (0.01f * (f32)(s32)randomGetRange(0xffffff6a, 0x96)));
             cfg.velocityZ = 0.1f * (spawnParams->scale * (0.07f * (f32)(s32)randomGetRange(100, 0x96)));
-            vecRotateZXY(sourceObj, &cfg.velocityX);
+            vecRotateZXY(&sourceObj->anim.rotX, &cfg.velocityX);
             cfg.textureId = 0xc10;
         }
         break;
@@ -1787,7 +1787,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
                 cfg.lifetimeFrames = randomGetRange(0x14, 0x1a) + 10;
             }
             cfg.velocityY = 0.1f * (spawnParams->scale * (-0.12f * (f32)(s32)randomGetRange(100, 0x96)));
-            vecRotateZXY(sourceObj, &cfg.velocityX);
+            vecRotateZXY(&sourceObj->anim.rotX, &cfg.velocityX);
             cfg.textureId = 0x5f5;
             cfg.initialAlpha = 0x80;
         }
@@ -2049,7 +2049,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         break;
     case 0x806:
         cfg.startPosZ = 15.0f;
-        vecRotateZXY(sourceObj, &cfg.startPosX);
+        vecRotateZXY(&sourceObj->anim.rotX, &cfg.startPosX);
         cfg.velocityY = 4.2f;
         cfg.scale = 0.00025f * (f32)(s32)randomGetRange(0x50, 0x5f);
         cfg.lifetimeFrames = 0xfa;
@@ -2066,7 +2066,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         break;
     case 0x807:
         cfg.startPosZ = 15.0f;
-        vecRotateZXY(sourceObj, &cfg.startPosX);
+        vecRotateZXY(&sourceObj->anim.rotX, &cfg.startPosX);
         cfg.velocityY = 4.3f;
         cfg.scale = 0.00025f * (f32)(s32)randomGetRange(0x50, 0x5f);
         cfg.lifetimeFrames = 0xfa;

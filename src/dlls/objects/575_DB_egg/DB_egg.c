@@ -607,7 +607,7 @@ void dbegg_update(GameObject* obj) {
             if (mainGetBit(GAMEBIT_DBEggRespawn) != 0) {
                 dbegg_setupFromDef(obj, (u8*)egg);
             } else if (randomGetRange(0, 10) == 0) {
-                (*gPartfxInterface)->spawnObject(obj, DBEGG_PARTFX_RESPAWN_WAIT, NULL, 0, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, DBEGG_PARTFX_RESPAWN_WAIT, NULL, 0, -1, NULL);
             }
             break;
         case DBEGG_MODE_CURVE_INIT:
@@ -673,7 +673,7 @@ void dbegg_update(GameObject* obj) {
             } else {
                 int n = (int)(PSVECMag(&obj->anim.velocity) / 0.5f);
                 for (i = 0; i < n; i++) {
-                    (*gPartfxInterface)->spawnObject(obj, DBEGG_PARTFX_HOMING_TRAIL, NULL, 1, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, DBEGG_PARTFX_HOMING_TRAIL, NULL, 1, -1, NULL);
                 }
                 objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
                         obj->anim.velocityZ * timeDelta);

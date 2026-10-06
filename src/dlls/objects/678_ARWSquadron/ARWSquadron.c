@@ -83,7 +83,7 @@ void arwsquadron_emitEffects(GameObject* obj, ArwSquadronState* state)
                 pfx.arg3 = 0x61a8;
             else
                 pfx.arg3 = -0x63c0;
-            (*gPartfxInterface)->spawnObject(obj, ARW_SQUADRON_PARTFX_SMOKE, &pfx, 4, -1, &flag);
+            (*gPartfxInterface)->spawnEffect(obj, ARW_SQUADRON_PARTFX_SMOKE, &pfx, 4, -1, &flag);
         }
     }
     if ((s8)state->health <= 1)
@@ -91,7 +91,7 @@ void arwsquadron_emitEffects(GameObject* obj, ArwSquadronState* state)
         pfx.arg3 = 0xc0a;
         ObjPath_GetPointLocalPosition(obj, 5, &pfx.posX, &pfx.posY, &pfx.posZ);
         pfx.scale = state->fireFxScale;
-        (*gPartfxInterface)->spawnObject(obj, ARW_SQUADRON_PARTFX_FIRE, &pfx, 4, -1, &flag);
+        (*gPartfxInterface)->spawnEffect(obj, ARW_SQUADRON_PARTFX_FIRE, &pfx, 4, -1, &flag);
     }
     if (state->muzzleCount != 0 && (s8)state->health > 1)
     {

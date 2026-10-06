@@ -240,7 +240,7 @@ void dfptargetblock_hitDetect(GameObject* obj) {
 
             for (i = DFPTARGETBLOCK_RESET_PARTICLE_COUNT; i != 0; i--) {
                 (*gPartfxInterface)
-                    ->spawnObject(obj, DFPTARGETBLOCK_RESET_PARTICLE_ID, &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE,
+                    ->spawnEffect(obj, DFPTARGETBLOCK_RESET_PARTICLE_ID, &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE,
                                   -1, NULL);
             }
         }

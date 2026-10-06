@@ -140,7 +140,7 @@ int CFCrate_sequenceCallback(GameObject* obj, int unused, ObjSeqState* animUpdat
         }
         for (i = 0; i < animUpdate->eventCount; i++) {
             if (animUpdate->eventIds[i] == 1) {
-                (*gPartfxInterface)->spawnObject((void*)obj, CFCRATE_LARGE_ROCK_PARTFX_ID, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, CFCRATE_LARGE_ROCK_PARTFX_ID, NULL, 2, -1, NULL);
             }
             animUpdate->eventIds[i] = 0;
         }

@@ -39,7 +39,7 @@ typedef enum FEseqobjectMessage {
 
 static inline void FEseqobject_spawnEffect(GameObject* obj, PartFxSpawnParams* params) {
     (*gPartfxInterface)
-        ->spawnObject(obj, FESEQOBJECT_PARTICLE_EFFECT_ID, params, FESEQOBJECT_PARTICLE_SPAWN_MODE,
+        ->spawnEffect(obj, FESEQOBJECT_PARTICLE_EFFECT_ID, params, FESEQOBJECT_PARTICLE_SPAWN_MODE,
                       FESEQOBJECT_PARTICLE_MODEL_NONE, NULL);
 }
 

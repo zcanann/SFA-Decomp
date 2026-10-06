@@ -961,7 +961,7 @@ void SHthorntail_update(GameObject* obj) {
                 ObjPath_GetPointWorldPosition(obj, SHTHORNTAIL_SLEEP_EFFECT_POINT, &effectParams.posX,
                                               &effectParams.posY, &effectParams.posZ, 0);
                 (*gPartfxInterface)
-                    ->spawnObject(obj, SHTHORNTAIL_PARTFX_SLEEP, &effectParams, SHTHORNTAIL_PARTFX_SLEEP_FLAGS, -1,
+                    ->spawnEffect(obj, SHTHORNTAIL_PARTFX_SLEEP, &effectParams, SHTHORNTAIL_PARTFX_SLEEP_FLAGS, -1,
                                   NULL);
             }
             runtime->sleepEffectTimer = SHTHORNTAIL_SLEEP_EFFECT_TIME;

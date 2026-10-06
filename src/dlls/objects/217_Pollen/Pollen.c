@@ -117,7 +117,7 @@ void Pollen_update(GameObject* obj) {
         if (obj->anim.alpha == 0xff) {
             particleCounter = POLLEN_MOTE_PARTICLE_COUNTER_START;
             do {
-                (*gPartfxInterface)->spawnObject((void*)obj, POLLEN_PARTFX_MOTE, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, POLLEN_PARTFX_MOTE, NULL, 1, -1, NULL);
             } while (particleCounter-- != 0);
         }
     }

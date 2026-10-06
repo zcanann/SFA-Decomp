@@ -55,7 +55,7 @@ int nwTreeBridge_processAnimEvents(GameObject* obj, int unusedArg, ObjSeqState* 
             particlesRemaining = NW_TREE_BRIDGE_LARGE_BURST_COUNT;
             do {
                 (*gPartfxInterface)
-                    ->spawnObject(obj, NW_TREE_BRIDGE_LARGE_BURST_PARTICLE_ID, NULL, NW_TREE_BRIDGE_PARTICLE_MODE, -1,
+                    ->spawnEffect(obj, NW_TREE_BRIDGE_LARGE_BURST_PARTICLE_ID, NULL, NW_TREE_BRIDGE_PARTICLE_MODE, -1,
                                   NULL);
                 particlesRemaining--;
             } while (particlesRemaining != 0);
@@ -65,21 +65,21 @@ int nwTreeBridge_processAnimEvents(GameObject* obj, int unusedArg, ObjSeqState* 
             if (obj->anim.romDefNo == NW_TREE_BRIDGE_SPECIAL_OBJECT_SEQUENCE_ID) {
                 do {
                     (*gPartfxInterface)
-                        ->spawnObject(obj, NW_TREE_BRIDGE_MEDIUM_SPECIAL_PARTICLE_ID, NULL,
+                        ->spawnEffect(obj, NW_TREE_BRIDGE_MEDIUM_SPECIAL_PARTICLE_ID, NULL,
                                       NW_TREE_BRIDGE_PARTICLE_MODE, -1, NULL);
                     particlesRemaining--;
                 } while (particlesRemaining != 0);
             } else if (state->sequenceId == NW_TREE_BRIDGE_SEQUENCE_ID_0) {
                 do {
                     (*gPartfxInterface)
-                        ->spawnObject(obj, NW_TREE_BRIDGE_MEDIUM_SEQUENCE_0_PARTICLE_ID, NULL,
+                        ->spawnEffect(obj, NW_TREE_BRIDGE_MEDIUM_SEQUENCE_0_PARTICLE_ID, NULL,
                                       NW_TREE_BRIDGE_PARTICLE_MODE, -1, NULL);
                     particlesRemaining--;
                 } while (particlesRemaining != 0);
             } else if (state->sequenceId == NW_TREE_BRIDGE_SEQUENCE_ID_1) {
                 do {
                     (*gPartfxInterface)
-                        ->spawnObject(obj, NW_TREE_BRIDGE_MEDIUM_SEQUENCE_1_PARTICLE_ID, NULL,
+                        ->spawnEffect(obj, NW_TREE_BRIDGE_MEDIUM_SEQUENCE_1_PARTICLE_ID, NULL,
                                       NW_TREE_BRIDGE_PARTICLE_MODE, -1, NULL);
                     particlesRemaining--;
                 } while (particlesRemaining != 0);
@@ -90,21 +90,21 @@ int nwTreeBridge_processAnimEvents(GameObject* obj, int unusedArg, ObjSeqState* 
             if (obj->anim.romDefNo == NW_TREE_BRIDGE_SPECIAL_OBJECT_SEQUENCE_ID) {
                 do {
                     (*gPartfxInterface)
-                        ->spawnObject(obj, NW_TREE_BRIDGE_SMALL_SPECIAL_PARTICLE_ID, NULL, NW_TREE_BRIDGE_PARTICLE_MODE,
+                        ->spawnEffect(obj, NW_TREE_BRIDGE_SMALL_SPECIAL_PARTICLE_ID, NULL, NW_TREE_BRIDGE_PARTICLE_MODE,
                                       -1, NULL);
                     particlesRemaining--;
                 } while (particlesRemaining != 0);
             } else if (state->sequenceId == NW_TREE_BRIDGE_SEQUENCE_ID_0) {
                 do {
                     (*gPartfxInterface)
-                        ->spawnObject(obj, NW_TREE_BRIDGE_SMALL_SEQUENCE_0_PARTICLE_ID, NULL,
+                        ->spawnEffect(obj, NW_TREE_BRIDGE_SMALL_SEQUENCE_0_PARTICLE_ID, NULL,
                                       NW_TREE_BRIDGE_PARTICLE_MODE, -1, NULL);
                     particlesRemaining--;
                 } while (particlesRemaining != 0);
             } else if (state->sequenceId == NW_TREE_BRIDGE_SEQUENCE_ID_1) {
                 do {
                     (*gPartfxInterface)
-                        ->spawnObject(obj, NW_TREE_BRIDGE_SMALL_SEQUENCE_1_PARTICLE_ID, NULL,
+                        ->spawnEffect(obj, NW_TREE_BRIDGE_SMALL_SEQUENCE_1_PARTICLE_ID, NULL,
                                       NW_TREE_BRIDGE_PARTICLE_MODE, -1, NULL);
                     particlesRemaining--;
                 } while (particlesRemaining != 0);

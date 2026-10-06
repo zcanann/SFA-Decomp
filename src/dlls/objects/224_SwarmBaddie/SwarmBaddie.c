@@ -179,7 +179,7 @@ void SwarmBaddie_update(GameObject* obj) {
                                0.05f * mathSinf((SWARMBADDIE_PI * (f32)(state->yawWavePhase + state->rollWavePhase)) /
                                                 SWARMBADDIE_S16_ANGLE_SCALE) +
                                    volume);
-    (*gPartfxInterface)->spawnObject((void*)obj, SWARMBADDIE_PARTFX, NULL, 2, -1, &state->hitVolumeEnvelope);
+    (*gPartfxInterface)->spawnEffect(obj, SWARMBADDIE_PARTFX, NULL, 2, -1, &state->hitVolumeEnvelope);
     state->player = Obj_GetPlayerObject();
     if (state->player != NULL) {
         delta.x = state->player->anim.worldPosX - obj->anim.worldPosX;
