@@ -199,11 +199,11 @@ struct MldfNames {
 struct MldfTables {
     u8 pad0[0x160];
     DVDFileInfo* fileInfo[0x58]; /* async read in flight */
-    u32 mergeAnimCurv[0x1fd0];    /* merged 2-slot TAB, 0x1fd0 entries */
+    u32 mergeAnimCurv[0x1fd0];   /* merged 2-slot TAB, 0x1fd0 entries */
     u32 mergeVoxMap[0x800];      /* 0x800 entries */
     u32 mergeBlocks[0x800];      /* 0x800 entries */
-    u32 mergeTex1[0x1000];        /* 0x1000 entries */
-    u32 mergeTex0[0x1000];        /* 0x1000 entries */
+    u32 mergeTex1[0x1000];       /* 0x1000 entries */
+    u32 mergeTex0[0x1000];       /* 0x1000 entries */
     u32 mergeAnim[0xbb8];        /* 3000 entries */
     u32 mergeModels[0x800];      /* 0x800 entries */
     u8 loadedFlags[0x58];        /* cleared by initLoadFiles */
