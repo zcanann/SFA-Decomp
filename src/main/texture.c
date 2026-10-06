@@ -116,10 +116,11 @@ STATIC_ASSERT(offsetof(TextureRdpPreset, renderFlagMask) == 8);
 STATIC_ASSERT(offsetof(TextureRdpPreset, forcedRenderFlags) == 0xC);
 
 #define TEXTURE_RDP_ANTIALIAS   0x1u
-#define TEXTURE_RDP_Z_COMPARE  0x2u
+#define TEXTURE_RDP_Z_COMPARE   0x2u
 #define TEXTURE_RDP_TRANSLUCENT 0x4u
-#define TEXTURE_RDP_FOG        0x8u
-#define TEXTURE_RDP_ALL_FLAGS  (TEXTURE_RDP_ANTIALIAS | TEXTURE_RDP_Z_COMPARE | TEXTURE_RDP_TRANSLUCENT | TEXTURE_RDP_FOG)
+#define TEXTURE_RDP_FOG         0x8u
+#define TEXTURE_RDP_ALL_FLAGS                                                                                          \
+    (TEXTURE_RDP_ANTIALIAS | TEXTURE_RDP_Z_COMPARE | TEXTURE_RDP_TRANSLUCENT | TEXTURE_RDP_FOG)
 
 TextureRdpCommand gRcpTextureCombineCommands[2] = {
     {0xfc121603, 0xfffffff8},
@@ -127,41 +128,17 @@ TextureRdpCommand gRcpTextureCombineCommands[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesDefault[16] = {
-    {0xef182c00, 0x03024000},
-    {0xef182c00, 0x00112008},
-    {0xef182c00, 0x00112230},
-    {0xef182c00, 0x00112038},
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00104a50},
-    {0xef182c00, 0x001049d8},
-    {0xef182c00, 0xcb024000},
-    {0xef182c00, 0xc8112008},
-    {0xef182c00, 0xc8112230},
-    {0xef182c00, 0xc8112038},
-    {0xef182c00, 0xc8104240},
-    {0xef182c00, 0xc81041c8},
-    {0xef182c00, 0xc8104a50},
-    {0xef182c00, 0xc81049d8},
+    {0xef182c00, 0x03024000}, {0xef182c00, 0x00112008}, {0xef182c00, 0x00112230}, {0xef182c00, 0x00112038},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00104a50}, {0xef182c00, 0x001049d8},
+    {0xef182c00, 0xcb024000}, {0xef182c00, 0xc8112008}, {0xef182c00, 0xc8112230}, {0xef182c00, 0xc8112038},
+    {0xef182c00, 0xc8104240}, {0xef182c00, 0xc81041c8}, {0xef182c00, 0xc8104a50}, {0xef182c00, 0xc81049d8},
 };
 
 TextureRdpCommand gTextureRdpModesCloud[16] = {
-    {0xef182c00, 0x03024000},
-    {0xef182c00, 0x00112008},
-    {0xef182c00, 0x00112230},
-    {0xef182c00, 0x00112038},
-    {0xef182c00, 0x00104340},
-    {0xef182c00, 0x00104340},
-    {0xef182c00, 0x00104b50},
-    {0xef182c00, 0x00104b50},
-    {0xef182c00, 0xcb024000},
-    {0xef182c00, 0xc8112008},
-    {0xef182c00, 0xc8112230},
-    {0xef182c00, 0xc8112038},
-    {0xef182c00, 0xc8104340},
-    {0xef182c00, 0xc8104340},
-    {0xef182c00, 0xc8104b50},
-    {0xef182c00, 0xc8104b50},
+    {0xef182c00, 0x03024000}, {0xef182c00, 0x00112008}, {0xef182c00, 0x00112230}, {0xef182c00, 0x00112038},
+    {0xef182c00, 0x00104340}, {0xef182c00, 0x00104340}, {0xef182c00, 0x00104b50}, {0xef182c00, 0x00104b50},
+    {0xef182c00, 0xcb024000}, {0xef182c00, 0xc8112008}, {0xef182c00, 0xc8112230}, {0xef182c00, 0xc8112038},
+    {0xef182c00, 0xc8104340}, {0xef182c00, 0xc8104340}, {0xef182c00, 0xc8104b50}, {0xef182c00, 0xc8104b50},
 };
 
 TextureRdpCommand gTextureRdpCombineShadePrimitive[2] = {
@@ -170,22 +147,10 @@ TextureRdpCommand gTextureRdpCombineShadePrimitive[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesPoint[16] = {
-    {0xef180c00, 0x03024000},
-    {0xef180c00, 0x00112008},
-    {0xef180c00, 0x00112230},
-    {0xef180c00, 0x00112038},
-    {0xef180c00, 0x00104240},
-    {0xef180c00, 0x001041c8},
-    {0xef180c00, 0x00104a50},
-    {0xef180c00, 0x001049d8},
-    {0xef180c00, 0xcb024000},
-    {0xef180c00, 0xc8112008},
-    {0xef180c00, 0xc8112230},
-    {0xef180c00, 0xc8112038},
-    {0xef180c00, 0xc8104240},
-    {0xef180c00, 0xc81041c8},
-    {0xef180c00, 0xc8104a50},
-    {0xef180c00, 0xc81049d8},
+    {0xef180c00, 0x03024000}, {0xef180c00, 0x00112008}, {0xef180c00, 0x00112230}, {0xef180c00, 0x00112038},
+    {0xef180c00, 0x00104240}, {0xef180c00, 0x001041c8}, {0xef180c00, 0x00104a50}, {0xef180c00, 0x001049d8},
+    {0xef180c00, 0xcb024000}, {0xef180c00, 0xc8112008}, {0xef180c00, 0xc8112230}, {0xef180c00, 0xc8112038},
+    {0xef180c00, 0xc8104240}, {0xef180c00, 0xc81041c8}, {0xef180c00, 0xc8104a50}, {0xef180c00, 0xc81049d8},
 };
 
 TextureRdpCommand gTextureRdpCombineModulateRgba[2] = {
@@ -194,22 +159,10 @@ TextureRdpCommand gTextureRdpCombineModulateRgba[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesTranslucent[16] = {
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00104a50},
-    {0xef182c00, 0x001049d8},
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00104a50},
-    {0xef182c00, 0x001049d8},
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00104a50},
-    {0xef182c00, 0x001049d8},
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00104a50},
-    {0xef182c00, 0x001049d8},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00104a50}, {0xef182c00, 0x001049d8},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00104a50}, {0xef182c00, 0x001049d8},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00104a50}, {0xef182c00, 0x001049d8},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00104a50}, {0xef182c00, 0x001049d8},
 };
 
 TextureRdpCommand gTextureRdpCombineShadePrimitiveRgba[2] = {
@@ -218,22 +171,10 @@ TextureRdpCommand gTextureRdpCombineShadePrimitiveRgba[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesPointTranslucent[16] = {
-    {0xef080c00, 0x0c184240},
-    {0xef080c00, 0x005461c8},
-    {0xef080c00, 0x00546a70},
-    {0xef080c00, 0x005469f8},
-    {0xef080c00, 0x00504240},
-    {0xef080c00, 0x005041c8},
-    {0xef080c00, 0x00504a50},
-    {0xef080c00, 0x005049d8},
-    {0xef080c00, 0x0c184240},
-    {0xef080c00, 0x005461c8},
-    {0xef080c00, 0x00546a70},
-    {0xef080c00, 0x005469f8},
-    {0xef080c00, 0x00504240},
-    {0xef080c00, 0x005041c8},
-    {0xef080c00, 0x00504a50},
-    {0xef080c00, 0x005049d8},
+    {0xef080c00, 0x0c184240}, {0xef080c00, 0x005461c8}, {0xef080c00, 0x00546a70}, {0xef080c00, 0x005469f8},
+    {0xef080c00, 0x00504240}, {0xef080c00, 0x005041c8}, {0xef080c00, 0x00504a50}, {0xef080c00, 0x005049d8},
+    {0xef080c00, 0x0c184240}, {0xef080c00, 0x005461c8}, {0xef080c00, 0x00546a70}, {0xef080c00, 0x005469f8},
+    {0xef080c00, 0x00504240}, {0xef080c00, 0x005041c8}, {0xef080c00, 0x00504a50}, {0xef080c00, 0x005049d8},
 };
 
 TextureRdpCommand gTextureRdpCombineShadeAlphaFade[2] = {
@@ -242,14 +183,8 @@ TextureRdpCommand gTextureRdpCombineShadeAlphaFade[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesShadeAlphaFade[8] = {
-    {0xef182c00, 0x03024000},
-    {0xef182c00, 0x00112008},
-    {0xef182c00, 0x00112230},
-    {0xef182c00, 0x00112038},
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00104a50},
-    {0xef182c00, 0x001049d8},
+    {0xef182c00, 0x03024000}, {0xef182c00, 0x00112008}, {0xef182c00, 0x00112230}, {0xef182c00, 0x00112038},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00104a50}, {0xef182c00, 0x001049d8},
 };
 
 TextureRdpCommand gTextureRdpCombineUntexturedShadeAlphaFade[2] = {
@@ -258,14 +193,8 @@ TextureRdpCommand gTextureRdpCombineUntexturedShadeAlphaFade[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesUntexturedShadeAlphaFade[8] = {
-    {0xef180c00, 0x03024000},
-    {0xef180c00, 0x00112008},
-    {0xef180c00, 0x00112230},
-    {0xef180c00, 0x00112038},
-    {0xef180c00, 0x00104240},
-    {0xef180c00, 0x001041c8},
-    {0xef180c00, 0x00104a50},
-    {0xef180c00, 0x001049d8},
+    {0xef180c00, 0x03024000}, {0xef180c00, 0x00112008}, {0xef180c00, 0x00112230}, {0xef180c00, 0x00112038},
+    {0xef180c00, 0x00104240}, {0xef180c00, 0x001041c8}, {0xef180c00, 0x00104a50}, {0xef180c00, 0x001049d8},
 };
 
 TextureRdpCommand gTextureRdpCombinePrimitiveBlend[2] = {
@@ -274,14 +203,8 @@ TextureRdpCommand gTextureRdpCombinePrimitiveBlend[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesPrimitiveBlend[8] = {
-    {0xef182c00, 0x03024000},
-    {0xef182c00, 0x00112008},
-    {0xef182c00, 0x00112230},
-    {0xef182c00, 0x00112038},
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00104a50},
-    {0xef182c00, 0x001049d8},
+    {0xef182c00, 0x03024000}, {0xef182c00, 0x00112008}, {0xef182c00, 0x00112230}, {0xef182c00, 0x00112038},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00104a50}, {0xef182c00, 0x001049d8},
 };
 
 TextureRdpCommand gTextureRdpCombineUntexturedPrimitiveBlend[2] = {
@@ -290,14 +213,8 @@ TextureRdpCommand gTextureRdpCombineUntexturedPrimitiveBlend[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesUntexturedPrimitiveBlend[8] = {
-    {0xef180c00, 0x03024000},
-    {0xef180c00, 0x00112008},
-    {0xef180c00, 0x00112230},
-    {0xef180c00, 0x00112038},
-    {0xef180c00, 0x00104240},
-    {0xef180c00, 0x001041c8},
-    {0xef180c00, 0x00104a50},
-    {0xef180c00, 0x001049d8},
+    {0xef180c00, 0x03024000}, {0xef180c00, 0x00112008}, {0xef180c00, 0x00112230}, {0xef180c00, 0x00112038},
+    {0xef180c00, 0x00104240}, {0xef180c00, 0x001041c8}, {0xef180c00, 0x00104a50}, {0xef180c00, 0x001049d8},
 };
 
 TextureRdpCommand gTextureRdpCombineTrilinear[2] = {
@@ -306,22 +223,10 @@ TextureRdpCommand gTextureRdpCombineTrilinear[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesTrilinear[16] = {
-    {0xef192c00, 0x03024000},
-    {0xef192c00, 0x00112008},
-    {0xef192c00, 0x00112230},
-    {0xef192c00, 0x00112038},
-    {0xef192c00, 0x00104240},
-    {0xef192c00, 0x001041c8},
-    {0xef192c00, 0x00104a50},
-    {0xef192c00, 0x001049d8},
-    {0xef192c00, 0xcb024000},
-    {0xef192c00, 0xc8112008},
-    {0xef192c00, 0xc8112230},
-    {0xef192c00, 0xc8112038},
-    {0xef192c00, 0xc8104240},
-    {0xef192c00, 0xc81041c8},
-    {0xef192c00, 0xc8104a50},
-    {0xef192c00, 0xc81049d8},
+    {0xef192c00, 0x03024000}, {0xef192c00, 0x00112008}, {0xef192c00, 0x00112230}, {0xef192c00, 0x00112038},
+    {0xef192c00, 0x00104240}, {0xef192c00, 0x001041c8}, {0xef192c00, 0x00104a50}, {0xef192c00, 0x001049d8},
+    {0xef192c00, 0xcb024000}, {0xef192c00, 0xc8112008}, {0xef192c00, 0xc8112230}, {0xef192c00, 0xc8112038},
+    {0xef192c00, 0xc8104240}, {0xef192c00, 0xc81041c8}, {0xef192c00, 0xc8104a50}, {0xef192c00, 0xc81049d8},
 };
 
 TextureRdpCommand gTextureRdpCombineTextureBlend[2] = {
@@ -330,22 +235,10 @@ TextureRdpCommand gTextureRdpCombineTextureBlend[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesTextureBlend[16] = {
-    {0xef182c00, 0x03024000},
-    {0xef182c00, 0x00112008},
-    {0xef182c00, 0x00112230},
-    {0xef182c00, 0x00112038},
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00104a50},
-    {0xef182c00, 0x001049d8},
-    {0xef182c00, 0xcb024000},
-    {0xef182c00, 0xc8112008},
-    {0xef182c00, 0xc8112230},
-    {0xef182c00, 0xc8112038},
-    {0xef182c00, 0xc8104240},
-    {0xef182c00, 0xc81041c8},
-    {0xef182c00, 0xc8104a50},
-    {0xef182c00, 0xc81049d8},
+    {0xef182c00, 0x03024000}, {0xef182c00, 0x00112008}, {0xef182c00, 0x00112230}, {0xef182c00, 0x00112038},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00104a50}, {0xef182c00, 0x001049d8},
+    {0xef182c00, 0xcb024000}, {0xef182c00, 0xc8112008}, {0xef182c00, 0xc8112230}, {0xef182c00, 0xc8112038},
+    {0xef182c00, 0xc8104240}, {0xef182c00, 0xc81041c8}, {0xef182c00, 0xc8104a50}, {0xef182c00, 0xc81049d8},
 };
 
 TextureRdpCommand gTextureRdpCombineTextureBlendShade[2] = {
@@ -374,60 +267,24 @@ TextureRdpCommand gTextureRdpCombinePrimitiveEnvironmentBlend[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesPrimitiveEnvironmentFog[16] = {
-    {0xef082c00, 0x00504240},
-    {0xef082c00, 0x005041c8},
-    {0xef082c00, 0x00553078},
-    {0xef082c00, 0x005045d8},
-    {0xef082c00, 0x00504240},
-    {0xef082c00, 0x005041c8},
-    {0xef082c00, 0x00553078},
-    {0xef082c00, 0x005045d8},
-    {0xef182c00, 0xc8104240},
-    {0xef182c00, 0xc81041c8},
-    {0xef182c00, 0xc8113078},
-    {0xef182c00, 0xc81045d8},
-    {0xef182c00, 0xc8104240},
-    {0xef182c00, 0xc81041c8},
-    {0xef182c00, 0xc81045f8},
-    {0xef182c00, 0xc81045d8},
+    {0xef082c00, 0x00504240}, {0xef082c00, 0x005041c8}, {0xef082c00, 0x00553078}, {0xef082c00, 0x005045d8},
+    {0xef082c00, 0x00504240}, {0xef082c00, 0x005041c8}, {0xef082c00, 0x00553078}, {0xef082c00, 0x005045d8},
+    {0xef182c00, 0xc8104240}, {0xef182c00, 0xc81041c8}, {0xef182c00, 0xc8113078}, {0xef182c00, 0xc81045d8},
+    {0xef182c00, 0xc8104240}, {0xef182c00, 0xc81041c8}, {0xef182c00, 0xc81045f8}, {0xef182c00, 0xc81045d8},
 };
 
 TextureRdpCommand gTextureRdpModesPrimitiveEnvironmentFogPoint[16] = {
-    {0xef080c00, 0x00504240},
-    {0xef080c00, 0x005041c8},
-    {0xef080c00, 0x00553078},
-    {0xef080c00, 0x005045d8},
-    {0xef080c00, 0x00504240},
-    {0xef080c00, 0x005041c8},
-    {0xef080c00, 0x00553078},
-    {0xef080c00, 0x005045d8},
-    {0xef180c00, 0xc8104240},
-    {0xef180c00, 0xc81041c8},
-    {0xef180c00, 0xc8113078},
-    {0xef180c00, 0xc81045d8},
-    {0xef180c00, 0xc8104240},
-    {0xef180c00, 0xc81041c8},
-    {0xef180c00, 0xc81045f8},
-    {0xef180c00, 0xc81045d8},
+    {0xef080c00, 0x00504240}, {0xef080c00, 0x005041c8}, {0xef080c00, 0x00553078}, {0xef080c00, 0x005045d8},
+    {0xef080c00, 0x00504240}, {0xef080c00, 0x005041c8}, {0xef080c00, 0x00553078}, {0xef080c00, 0x005045d8},
+    {0xef180c00, 0xc8104240}, {0xef180c00, 0xc81041c8}, {0xef180c00, 0xc8113078}, {0xef180c00, 0xc81045d8},
+    {0xef180c00, 0xc8104240}, {0xef180c00, 0xc81041c8}, {0xef180c00, 0xc81045f8}, {0xef180c00, 0xc81045d8},
 };
 
 TextureRdpCommand gTextureRdpModesPrimitiveEnvironmentBlendNoise[16] = {
-    {0xef082c80, 0x00504240},
-    {0xef082c80, 0x005041c8},
-    {0xef082c80, 0x00553078},
-    {0xef082c80, 0x00504b50},
-    {0xef082c80, 0x00504240},
-    {0xef082c80, 0x005041c8},
-    {0xef082c80, 0x00553078},
-    {0xef082c80, 0x00504b50},
-    {0xef182c80, 0xc8104240},
-    {0xef182c80, 0xc81041c8},
-    {0xef182c80, 0xc8113078},
-    {0xef182c80, 0xc8104b50},
-    {0xef182c80, 0xc8104240},
-    {0xef182c80, 0xc81041c8},
-    {0xef182c80, 0xc81045f8},
-    {0xef182c80, 0xc8104b50},
+    {0xef082c80, 0x00504240}, {0xef082c80, 0x005041c8}, {0xef082c80, 0x00553078}, {0xef082c80, 0x00504b50},
+    {0xef082c80, 0x00504240}, {0xef082c80, 0x005041c8}, {0xef082c80, 0x00553078}, {0xef082c80, 0x00504b50},
+    {0xef182c80, 0xc8104240}, {0xef182c80, 0xc81041c8}, {0xef182c80, 0xc8113078}, {0xef182c80, 0xc8104b50},
+    {0xef182c80, 0xc8104240}, {0xef182c80, 0xc81041c8}, {0xef182c80, 0xc81045f8}, {0xef182c80, 0xc8104b50},
 };
 
 TextureRdpCommand gTextureRdpCombineTextureBlend2[2] = {
@@ -436,41 +293,17 @@ TextureRdpCommand gTextureRdpCombineTextureBlend2[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesTextureBlend2[16] = {
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00113078},
-    {0xef182c00, 0x001045d8},
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x001045f8},
-    {0xef182c00, 0x001045d8},
-    {0xef182c00, 0xc8104240},
-    {0xef182c00, 0xc81041c8},
-    {0xef182c00, 0xc8113078},
-    {0xef182c00, 0xc81045d8},
-    {0xef182c00, 0xc8104240},
-    {0xef182c00, 0xc81041c8},
-    {0xef182c00, 0xc81045f8},
-    {0xef182c00, 0xc81045d8},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00113078}, {0xef182c00, 0x001045d8},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x001045f8}, {0xef182c00, 0x001045d8},
+    {0xef182c00, 0xc8104240}, {0xef182c00, 0xc81041c8}, {0xef182c00, 0xc8113078}, {0xef182c00, 0xc81045d8},
+    {0xef182c00, 0xc8104240}, {0xef182c00, 0xc81041c8}, {0xef182c00, 0xc81045f8}, {0xef182c00, 0xc81045d8},
 };
 
 TextureRdpCommand gTextureRdpModesTextureBlend2Point[16] = {
-    {0xef180c00, 0x00104240},
-    {0xef180c00, 0x001041c8},
-    {0xef180c00, 0x00113078},
-    {0xef180c00, 0x001045d8},
-    {0xef180c00, 0x00104240},
-    {0xef180c00, 0x001041c8},
-    {0xef180c00, 0x001045f8},
-    {0xef180c00, 0x001045d8},
-    {0xef180c00, 0xc8104240},
-    {0xef180c00, 0xc81041c8},
-    {0xef180c00, 0xc8113078},
-    {0xef180c00, 0xc81045d8},
-    {0xef180c00, 0xc8104240},
-    {0xef180c00, 0xc81041c8},
-    {0xef180c00, 0xc81045f8},
-    {0xef180c00, 0xc81045d8},
+    {0xef180c00, 0x00104240}, {0xef180c00, 0x001041c8}, {0xef180c00, 0x00113078}, {0xef180c00, 0x001045d8},
+    {0xef180c00, 0x00104240}, {0xef180c00, 0x001041c8}, {0xef180c00, 0x001045f8}, {0xef180c00, 0x001045d8},
+    {0xef180c00, 0xc8104240}, {0xef180c00, 0xc81041c8}, {0xef180c00, 0xc8113078}, {0xef180c00, 0xc81045d8},
+    {0xef180c00, 0xc8104240}, {0xef180c00, 0xc81041c8}, {0xef180c00, 0xc81045f8}, {0xef180c00, 0xc81045d8},
 };
 
 TextureRdpCommand gTextureRdpCombineDecal[2] = {
@@ -479,22 +312,10 @@ TextureRdpCommand gTextureRdpCombineDecal[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesDecal[16] = {
-    {0xef182c00, 0x00112e10},
-    {0xef182c00, 0x00112d18},
-    {0xef182c00, 0x00112e10},
-    {0xef182c00, 0x00112d18},
-    {0xef182c00, 0x00104e50},
-    {0xef182c00, 0x00104dd8},
-    {0xef182c00, 0x00104e50},
-    {0xef182c00, 0x00104dd8},
-    {0xef182c00, 0xc8112e10},
-    {0xef182c00, 0xc8112d18},
-    {0xef182c00, 0xc8112e10},
-    {0xef182c00, 0xc8112d18},
-    {0xef182c00, 0xc8104e50},
-    {0xef182c00, 0xc8104dd8},
-    {0xef182c00, 0xc8104e50},
-    {0xef182c00, 0xc8104dd8},
+    {0xef182c00, 0x00112e10}, {0xef182c00, 0x00112d18}, {0xef182c00, 0x00112e10}, {0xef182c00, 0x00112d18},
+    {0xef182c00, 0x00104e50}, {0xef182c00, 0x00104dd8}, {0xef182c00, 0x00104e50}, {0xef182c00, 0x00104dd8},
+    {0xef182c00, 0xc8112e10}, {0xef182c00, 0xc8112d18}, {0xef182c00, 0xc8112e10}, {0xef182c00, 0xc8112d18},
+    {0xef182c00, 0xc8104e50}, {0xef182c00, 0xc8104dd8}, {0xef182c00, 0xc8104e50}, {0xef182c00, 0xc8104dd8},
 };
 
 TextureRdpCommand gTextureRdpCombineCutout[2] = {
@@ -503,33 +324,15 @@ TextureRdpCommand gTextureRdpCombineCutout[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesCutout[16] = {
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00111338},
-    {0xef182c00, 0x00111038},
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00111338},
-    {0xef182c00, 0x00111038},
-    {0xef182c00, 0xc8104240},
-    {0xef182c00, 0xc81041c8},
-    {0xef182c00, 0xc8111338},
-    {0xef182c00, 0xc8111038},
-    {0xef182c00, 0xc8104240},
-    {0xef182c00, 0xc81041c8},
-    {0xef182c00, 0xc8111338},
-    {0xef182c00, 0xc8111038},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00111338}, {0xef182c00, 0x00111038},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00111338}, {0xef182c00, 0x00111038},
+    {0xef182c00, 0xc8104240}, {0xef182c00, 0xc81041c8}, {0xef182c00, 0xc8111338}, {0xef182c00, 0xc8111038},
+    {0xef182c00, 0xc8104240}, {0xef182c00, 0xc81041c8}, {0xef182c00, 0xc8111338}, {0xef182c00, 0xc8111038},
 };
 
 TextureRdpCommand gTextureRdpModesFoggedCutoutBlend[8] = {
-    {0xef182c00, 0xc8104240},
-    {0xef182c00, 0xc81041c8},
-    {0xef182c00, 0xc8113078},
-    {0xef182c00, 0xc8105858},
-    {0xef182c00, 0xc8104240},
-    {0xef182c00, 0xc81041c8},
-    {0xef182c00, 0xc8113078},
-    {0xef182c00, 0xc8105858},
+    {0xef182c00, 0xc8104240}, {0xef182c00, 0xc81041c8}, {0xef182c00, 0xc8113078}, {0xef182c00, 0xc8105858},
+    {0xef182c00, 0xc8104240}, {0xef182c00, 0xc81041c8}, {0xef182c00, 0xc8113078}, {0xef182c00, 0xc8105858},
 };
 
 TextureRdpCommand gTextureRdpCombineDecalSimple[2] = {
@@ -538,22 +341,10 @@ TextureRdpCommand gTextureRdpCombineDecalSimple[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesDecalSimple[16] = {
-    {0xef182c00, 0x00104e50},
-    {0xef182c00, 0x00104dd8},
-    {0xef182c00, 0x00104e50},
-    {0xef182c00, 0x00104dd8},
-    {0xef182c00, 0x00104b50},
-    {0xef182c00, 0x00104b50},
-    {0xef182c00, 0x00104b50},
-    {0xef182c00, 0x00104b50},
-    {0xef182c00, 0x00104e50},
-    {0xef182c00, 0x00104dd8},
-    {0xef182c00, 0x00104e50},
-    {0xef182c00, 0x00104dd8},
-    {0xef182c00, 0x00104b50},
-    {0xef182c00, 0x00104b50},
-    {0xef182c00, 0x00104b50},
-    {0xef182c00, 0x00104b50},
+    {0xef182c00, 0x00104e50}, {0xef182c00, 0x00104dd8}, {0xef182c00, 0x00104e50}, {0xef182c00, 0x00104dd8},
+    {0xef182c00, 0x00104b50}, {0xef182c00, 0x00104b50}, {0xef182c00, 0x00104b50}, {0xef182c00, 0x00104b50},
+    {0xef182c00, 0x00104e50}, {0xef182c00, 0x00104dd8}, {0xef182c00, 0x00104e50}, {0xef182c00, 0x00104dd8},
+    {0xef182c00, 0x00104b50}, {0xef182c00, 0x00104b50}, {0xef182c00, 0x00104b50}, {0xef182c00, 0x00104b50},
 };
 
 TextureRdpCommand gTextureRdpCombineTrilinearDecal[2] = {
@@ -562,22 +353,10 @@ TextureRdpCommand gTextureRdpCombineTrilinearDecal[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesTrilinearDecal[16] = {
-    {0xef192c00, 0x00104e50},
-    {0xef192c00, 0x00104dd8},
-    {0xef192c00, 0x00104e50},
-    {0xef192c00, 0x00104dd8},
-    {0xef192c00, 0x00104a50},
-    {0xef192c00, 0x001049d8},
-    {0xef192c00, 0x00104a50},
-    {0xef192c00, 0x001049d8},
-    {0xef192c00, 0x00104e50},
-    {0xef192c00, 0x00104dd8},
-    {0xef192c00, 0x00104e50},
-    {0xef192c00, 0x00104dd8},
-    {0xef192c00, 0x00104a50},
-    {0xef192c00, 0x001049d8},
-    {0xef192c00, 0x00104a50},
-    {0xef192c00, 0x001049d8},
+    {0xef192c00, 0x00104e50}, {0xef192c00, 0x00104dd8}, {0xef192c00, 0x00104e50}, {0xef192c00, 0x00104dd8},
+    {0xef192c00, 0x00104a50}, {0xef192c00, 0x001049d8}, {0xef192c00, 0x00104a50}, {0xef192c00, 0x001049d8},
+    {0xef192c00, 0x00104e50}, {0xef192c00, 0x00104dd8}, {0xef192c00, 0x00104e50}, {0xef192c00, 0x00104dd8},
+    {0xef192c00, 0x00104a50}, {0xef192c00, 0x001049d8}, {0xef192c00, 0x00104a50}, {0xef192c00, 0x001049d8},
 };
 
 TextureRdpCommand gTextureRdpCombineSubsurface[2] = {
@@ -586,22 +365,10 @@ TextureRdpCommand gTextureRdpCombineSubsurface[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesSubsurface[16] = {
-    {0xef182c00, 0x03024000},
-    {0xef182c00, 0x00112248},
-    {0xef182c00, 0x00112230},
-    {0xef182c00, 0x00112278},
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00104a50},
-    {0xef182c00, 0x001049d8},
-    {0xef182c00, 0xcb024000},
-    {0xef182c00, 0xc8112248},
-    {0xef182c00, 0xc8112230},
-    {0xef182c00, 0xc8112278},
-    {0xef182c00, 0xc8104240},
-    {0xef182c00, 0xc81041c8},
-    {0xef182c00, 0xc8104a50},
-    {0xef182c00, 0xc81049d8},
+    {0xef182c00, 0x03024000}, {0xef182c00, 0x00112248}, {0xef182c00, 0x00112230}, {0xef182c00, 0x00112278},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00104a50}, {0xef182c00, 0x001049d8},
+    {0xef182c00, 0xcb024000}, {0xef182c00, 0xc8112248}, {0xef182c00, 0xc8112230}, {0xef182c00, 0xc8112278},
+    {0xef182c00, 0xc8104240}, {0xef182c00, 0xc81041c8}, {0xef182c00, 0xc8104a50}, {0xef182c00, 0xc81049d8},
 };
 
 TextureRdpCommand gTextureRdpCombineTrilinearSubsurface[2] = {
@@ -610,22 +377,10 @@ TextureRdpCommand gTextureRdpCombineTrilinearSubsurface[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesTrilinearSubsurface[16] = {
-    {0xef192c00, 0x03024000},
-    {0xef192c00, 0x00112248},
-    {0xef192c00, 0x00112230},
-    {0xef192c00, 0x00112278},
-    {0xef192c00, 0x00104240},
-    {0xef192c00, 0x001041c8},
-    {0xef192c00, 0x00104a50},
-    {0xef192c00, 0x001049d8},
-    {0xef192c00, 0xcb024000},
-    {0xef192c00, 0xc8112248},
-    {0xef192c00, 0xc8112230},
-    {0xef192c00, 0xc8112278},
-    {0xef192c00, 0xc8104240},
-    {0xef192c00, 0xc81041c8},
-    {0xef192c00, 0xc8104a50},
-    {0xef192c00, 0xc81049d8},
+    {0xef192c00, 0x03024000}, {0xef192c00, 0x00112248}, {0xef192c00, 0x00112230}, {0xef192c00, 0x00112278},
+    {0xef192c00, 0x00104240}, {0xef192c00, 0x001041c8}, {0xef192c00, 0x00104a50}, {0xef192c00, 0x001049d8},
+    {0xef192c00, 0xcb024000}, {0xef192c00, 0xc8112248}, {0xef192c00, 0xc8112230}, {0xef192c00, 0xc8112278},
+    {0xef192c00, 0xc8104240}, {0xef192c00, 0xc81041c8}, {0xef192c00, 0xc8104a50}, {0xef192c00, 0xc81049d8},
 };
 
 TextureRdpCommand gTextureRdpCombineEnvironmentFadeOpaque[2] = {
@@ -634,39 +389,32 @@ TextureRdpCommand gTextureRdpCombineEnvironmentFadeOpaque[2] = {
 };
 
 TextureRdpCommand gTextureRdpModesEnvironmentFadeOpaque[16] = {
-    {0xef182c00, 0x03024000},
-    {0xef182c00, 0x00112008},
-    {0xef182c00, 0x00112230},
-    {0xef182c00, 0x00112038},
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00104a50},
-    {0xef182c00, 0x001049d8},
-    {0xef182c00, 0x03024000},
-    {0xef182c00, 0x00112008},
-    {0xef182c00, 0x00112230},
-    {0xef182c00, 0x00112038},
-    {0xef182c00, 0x00104240},
-    {0xef182c00, 0x001041c8},
-    {0xef182c00, 0x00104a50},
-    {0xef182c00, 0x001049d8},
+    {0xef182c00, 0x03024000}, {0xef182c00, 0x00112008}, {0xef182c00, 0x00112230}, {0xef182c00, 0x00112038},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00104a50}, {0xef182c00, 0x001049d8},
+    {0xef182c00, 0x03024000}, {0xef182c00, 0x00112008}, {0xef182c00, 0x00112230}, {0xef182c00, 0x00112038},
+    {0xef182c00, 0x00104240}, {0xef182c00, 0x001041c8}, {0xef182c00, 0x00104a50}, {0xef182c00, 0x001049d8},
 };
 
 TextureRdpPreset gTextureRdpPresets[52] = {
     {gRcpTextureCombineCommands, gTextureRdpModesDefault, TEXTURE_RDP_ALL_FLAGS, 0},
-    {gTextureRdpCombineModulateRgba, gTextureRdpModesTranslucent, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, TEXTURE_RDP_TRANSLUCENT},
+    {gTextureRdpCombineModulateRgba, gTextureRdpModesTranslucent, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG,
+     TEXTURE_RDP_TRANSLUCENT},
     {gTextureRdpCombineShadeAlphaFade, gTextureRdpModesShadeAlphaFade, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
     {gTextureRdpCombinePrimitiveBlend, gTextureRdpModesPrimitiveBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
     {gTextureRdpCombineTextureBlend, gTextureRdpModesTextureBlend, TEXTURE_RDP_ALL_FLAGS, 0},
-    {gTextureRdpCombineTextureBlendShade, gTextureRdpModesTextureBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, TEXTURE_RDP_TRANSLUCENT},
-    {gTextureRdpCombineTextureBlendShadeAlpha, gTextureRdpModesTextureBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
-    {gTextureRdpCombineTextureBlendPrimitive, gTextureRdpModesTextureBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
+    {gTextureRdpCombineTextureBlendShade, gTextureRdpModesTextureBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG,
+     TEXTURE_RDP_TRANSLUCENT},
+    {gTextureRdpCombineTextureBlendShadeAlpha, gTextureRdpModesTextureBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG,
+     0},
+    {gTextureRdpCombineTextureBlendPrimitive, gTextureRdpModesTextureBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG,
+     0},
     {gTextureRdpCombineDecal, gTextureRdpModesDecal, TEXTURE_RDP_ALL_FLAGS, TEXTURE_RDP_Z_COMPARE},
     {gTextureRdpCombineDecal, gTextureRdpModesDecal, TEXTURE_RDP_ALL_FLAGS, TEXTURE_RDP_Z_COMPARE},
     {gTextureRdpCombineDecal, gTextureRdpModesDecal, TEXTURE_RDP_ALL_FLAGS, TEXTURE_RDP_Z_COMPARE},
     {gTextureRdpCombineDecal, gTextureRdpModesDecal, TEXTURE_RDP_ALL_FLAGS, TEXTURE_RDP_Z_COMPARE},
     {gTextureRdpCombineTextureBlend, gTextureRdpModesDecal, TEXTURE_RDP_ALL_FLAGS, TEXTURE_RDP_Z_COMPARE},
-    {gTextureRdpCombineTextureBlendShade, gTextureRdpModesDecal, TEXTURE_RDP_ALL_FLAGS, TEXTURE_RDP_Z_COMPARE | TEXTURE_RDP_TRANSLUCENT},
+    {gTextureRdpCombineTextureBlendShade, gTextureRdpModesDecal, TEXTURE_RDP_ALL_FLAGS,
+     TEXTURE_RDP_Z_COMPARE | TEXTURE_RDP_TRANSLUCENT},
     {gTextureRdpCombineTextureBlendShadeAlpha, gTextureRdpModesDecal, TEXTURE_RDP_ALL_FLAGS, TEXTURE_RDP_Z_COMPARE},
     {gTextureRdpCombineTextureBlendPrimitive, gTextureRdpModesDecal, TEXTURE_RDP_ALL_FLAGS, TEXTURE_RDP_Z_COMPARE},
     {gTextureRdpCombineCutout, gTextureRdpModesCutout, TEXTURE_RDP_ALL_FLAGS, 0},
@@ -674,9 +422,12 @@ TextureRdpPreset gTextureRdpPresets[52] = {
     {gTextureRdpCombineCutout, gTextureRdpModesCutout, TEXTURE_RDP_ALL_FLAGS, 0},
     {gTextureRdpCombineCutout, gTextureRdpModesCutout, TEXTURE_RDP_ALL_FLAGS, 0},
     {gTextureRdpCombineTextureBlend, gTextureRdpModesFoggedCutoutBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
-    {gTextureRdpCombineTextureBlendShade, gTextureRdpModesFoggedCutoutBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, TEXTURE_RDP_TRANSLUCENT},
-    {gTextureRdpCombineTextureBlendShadeAlpha, gTextureRdpModesFoggedCutoutBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
-    {gTextureRdpCombineTextureBlendPrimitive, gTextureRdpModesFoggedCutoutBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
+    {gTextureRdpCombineTextureBlendShade, gTextureRdpModesFoggedCutoutBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG,
+     TEXTURE_RDP_TRANSLUCENT},
+    {gTextureRdpCombineTextureBlendShadeAlpha, gTextureRdpModesFoggedCutoutBlend,
+     TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
+    {gTextureRdpCombineTextureBlendPrimitive, gTextureRdpModesFoggedCutoutBlend,
+     TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
     {gTextureRdpCombineSubsurface, gTextureRdpModesSubsurface, TEXTURE_RDP_ALL_FLAGS, 0},
     {gTextureRdpCombineModulateRgba, gTextureRdpModesSubsurface, TEXTURE_RDP_ALL_FLAGS, TEXTURE_RDP_TRANSLUCENT},
     {gTextureRdpCombineShadeAlphaFade, gTextureRdpModesSubsurface, TEXTURE_RDP_ALL_FLAGS, 0},
@@ -686,25 +437,36 @@ TextureRdpPreset gTextureRdpPresets[52] = {
     {gTextureRdpCombineTextureBlendShadeAlpha, gTextureRdpModesSubsurface, TEXTURE_RDP_ALL_FLAGS, 0},
     {gTextureRdpCombineTextureBlendPrimitive, gTextureRdpModesSubsurface, TEXTURE_RDP_ALL_FLAGS, 0},
     {gTextureRdpCombineTrilinear, gTextureRdpModesTrilinear, TEXTURE_RDP_ALL_FLAGS, 0},
-    {gTextureRdpCombineTrilinearSubsurface, gTextureRdpModesTrilinearSubsurface, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
-    {gTextureRdpCombineDecalSimple, gTextureRdpModesDecalSimple, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, TEXTURE_RDP_Z_COMPARE},
-    {gTextureRdpCombineTrilinearDecal, gTextureRdpModesTrilinearDecal, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, TEXTURE_RDP_Z_COMPARE},
-    {gTextureRdpCombineEnvironmentFadeOpaque, gTextureRdpModesEnvironmentFadeOpaque, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_TRANSLUCENT, 0},
+    {gTextureRdpCombineTrilinearSubsurface, gTextureRdpModesTrilinearSubsurface,
+     TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
+    {gTextureRdpCombineDecalSimple, gTextureRdpModesDecalSimple, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG,
+     TEXTURE_RDP_Z_COMPARE},
+    {gTextureRdpCombineTrilinearDecal, gTextureRdpModesTrilinearDecal, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG,
+     TEXTURE_RDP_Z_COMPARE},
+    {gTextureRdpCombineEnvironmentFadeOpaque, gTextureRdpModesEnvironmentFadeOpaque,
+     TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_TRANSLUCENT, 0},
     {gRcpTextureCombineCommands, gTextureRdpModesCloud, TEXTURE_RDP_ALL_FLAGS, 0},
     {gTextureRdpCombineShadePrimitive, gTextureRdpModesPoint, TEXTURE_RDP_ALL_FLAGS, 0},
-    {gTextureRdpCombineShadePrimitiveRgba, gTextureRdpModesPointTranslucent, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, TEXTURE_RDP_TRANSLUCENT},
-    {gTextureRdpCombineUntexturedShadeAlphaFade, gTextureRdpModesUntexturedShadeAlphaFade, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
-    {gTextureRdpCombineUntexturedPrimitiveBlend, gTextureRdpModesUntexturedPrimitiveBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
+    {gTextureRdpCombineShadePrimitiveRgba, gTextureRdpModesPointTranslucent, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG,
+     TEXTURE_RDP_TRANSLUCENT},
+    {gTextureRdpCombineUntexturedShadeAlphaFade, gTextureRdpModesUntexturedShadeAlphaFade,
+     TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
+    {gTextureRdpCombineUntexturedPrimitiveBlend, gTextureRdpModesUntexturedPrimitiveBlend,
+     TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
     {gTextureRdpCombineShadePrimitive, gTextureRdpModesPoint, TEXTURE_RDP_ALL_FLAGS, 0},
-    {gTextureRdpCombineShadePrimitiveRgba, gTextureRdpModesPointTranslucent, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, TEXTURE_RDP_TRANSLUCENT},
-    {gTextureRdpCombineUntexturedShadeAlphaFade, gTextureRdpModesUntexturedShadeAlphaFade, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
-    {gTextureRdpCombineUntexturedPrimitiveBlend, gTextureRdpModesUntexturedPrimitiveBlend, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
+    {gTextureRdpCombineShadePrimitiveRgba, gTextureRdpModesPointTranslucent, TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG,
+     TEXTURE_RDP_TRANSLUCENT},
+    {gTextureRdpCombineUntexturedShadeAlphaFade, gTextureRdpModesUntexturedShadeAlphaFade,
+     TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
+    {gTextureRdpCombineUntexturedPrimitiveBlend, gTextureRdpModesUntexturedPrimitiveBlend,
+     TEXTURE_RDP_ALL_FLAGS & ~TEXTURE_RDP_FOG, 0},
     {gTextureRdpCombinePrimitiveEnvironmentFog, gTextureRdpModesPrimitiveEnvironmentFog, TEXTURE_RDP_ALL_FLAGS, 0},
     {gTextureRdpCombineTextureBlend2, gTextureRdpModesTextureBlend2, TEXTURE_RDP_ALL_FLAGS, 0},
     {gTextureRdpCombinePrimitiveEnvironmentFog, gTextureRdpModesPrimitiveEnvironmentFogPoint, TEXTURE_RDP_ALL_FLAGS, 0},
     {gTextureRdpCombineTextureBlend2, gTextureRdpModesTextureBlend2Point, TEXTURE_RDP_ALL_FLAGS, 0},
     {gTextureRdpCombinePrimitiveEnvironmentBlend, gTextureRdpModesPrimitiveEnvironmentFog, TEXTURE_RDP_ALL_FLAGS, 0},
-    {gTextureRdpCombinePrimitiveEnvironmentBlend, gTextureRdpModesPrimitiveEnvironmentBlendNoise, TEXTURE_RDP_ALL_FLAGS, 0},
+    {gTextureRdpCombinePrimitiveEnvironmentBlend, gTextureRdpModesPrimitiveEnvironmentBlendNoise, TEXTURE_RDP_ALL_FLAGS,
+     0},
 };
 
 /* Seven retained tile setups, eight RDP commands in each. */
