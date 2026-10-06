@@ -301,12 +301,12 @@ force_active:
   - sWarpedRingRotAxes
   - sWarpedRingIndMtx
   # main/thp/THPRead.c
-  # Retain the message arrays addressed through their neighboring queues.
-  - gPicMenuReadedBuffer2Messages
-  - gPicMenuReadedBufferMessages
-  - gPicMenuFreeReadBufferMessages
+  # Retain the message arrays addressed through the compiler-generated BSS base.
+  - gAttractMovieReadAudioDecodedMessages
+  - gAttractMovieReadDvdMessages
+  - gAttractMovieReadFreeMessages
   # main/thp/THPVideoDecode.c
-  # Retain the video decoder stack addressed through its containing area.
+  # Retain the video decoder stack addressed through the compiler-generated BSS base.
   - gAttractMovieVideoThreadStack
   # track/intersect.c
   # Retain the uncalled surface-sound lookup and unused small-data word.

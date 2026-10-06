@@ -316,13 +316,12 @@ force_active:
   # aram_data.c: the retail link retained this unreferenced .bss block;
   # dropping it would shorten the section and shift every later .bss address.
   - lbl_803D4868
-  # picmenu.c: the retail link retained the thread message buffers and the
-  # video-decode stack even though live code reaches them only through the
-  # surrounding thread-area base pointers; dropping them would shorten .bss
-  # and shift every later .bss/.sdata address.
-  - gPicMenuReadedBuffer2Messages
-  - gPicMenuReadedBufferMessages
-  - gPicMenuFreeReadBufferMessages
+  # Retain the THP reader message arrays and video-decode stack. Compiled code
+  # can address these through the shared BSS base rather than relocations to
+  # each named object; dropping them would shift later .bss/.sdata addresses.
+  - gAttractMovieReadAudioDecodedMessages
+  - gAttractMovieReadDvdMessages
+  - gAttractMovieReadFreeMessages
   - gAttractMovieVideoThreadStack
   # gameloop.c: the retail link retained this uncalled function (its jumptable
   # and the .sbss word only it reads come along via its own references);
