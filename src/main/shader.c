@@ -256,7 +256,7 @@ typedef struct MapBounds {
     s8 originZ;
 } MapBounds;
 
-#define MAP_LAYOUT_CAPACITY 128
+#define MAP_LAYOUT_CAPACITY          128
 #define MAP_LAYOUT_CELL_BITMAP_BYTES 64
 
 /* GLOBALMA.bin maps into four parallel tables; the first word is only reset. */
@@ -3806,8 +3806,10 @@ int mapProcessRomList(int mapId) {
     gCurRomListPage = cursor.entry->romlist;
     bounds = gMapLayoutBuffers.bounds + mapId;
     ((MapRomListPage*)gCurRomListPage)->mapLayer = (u8)gMapLayoutBuffers.layers[mapId];
-    ((MapRomListPage*)gCurRomListPage)->worldX = 640.0f * (f32)(bounds->minX + ((MapRomListPage*)gCurRomListPage)->originX);
-    ((MapRomListPage*)gCurRomListPage)->worldZ = 640.0f * (f32)(bounds->minZ + ((MapRomListPage*)gCurRomListPage)->originZ);
+    ((MapRomListPage*)gCurRomListPage)->worldX =
+        640.0f * (f32)(bounds->minX + ((MapRomListPage*)gCurRomListPage)->originX);
+    ((MapRomListPage*)gCurRomListPage)->worldZ =
+        640.0f * (f32)(bounds->minZ + ((MapRomListPage*)gCurRomListPage)->originZ);
     page = gCurRomListPage;
     worldZ = page->worldZ;
     worldX = page->worldX;
@@ -4142,8 +4144,8 @@ void initMaps(void) {
     while (i < total && data[i].mapId > -1) {
         gMapLayoutBuffers.layers[data[i].mapId] = (s8)data[i].layer;
         mapInitSetRects(gMapLayoutBuffers.bounds + data[i].mapId,
-                        gMapLayoutBuffers.cellBitmaps + data[i].mapId * MAP_LAYOUT_CELL_BITMAP_BYTES, data[i].originX, data[i].originZ,
-                        data[i].mapId);
+                        gMapLayoutBuffers.cellBitmaps + data[i].mapId * MAP_LAYOUT_CELL_BITMAP_BYTES, data[i].originX,
+                        data[i].originZ, data[i].mapId);
         gMapLayoutBuffers.adjacentMapIds[data[i].mapId << 1] = data[i].adjacentMapId1;
         gMapLayoutBuffers.adjacentMapIds[(data[i].mapId << 1) + 1] = data[i].adjacentMapId2;
         i++;
