@@ -42,10 +42,10 @@ u8 gSaveGameLanguageMap[5] = {LANGUAGE_ENGLISH, LANGUAGE_FRENCH, LANGUAGE_ITALIA
 char sGameplayFoxName[] = "FOX";
 
 #define SAVEGAME_OBJECT_POSITION_OVERRUN_OFFSET 0x20158
-#define SAVEGAME_LIVE_BUFFER_SIZE             0xf70
-#define SAVEGAME_ACTIVE_SIZE                  0x6ec
-#define SAVEGAME_COMPLETION_SCORE_MAX         0xbb
-#define SAVE_SCORE_FILE_STRIDE                0x28
+#define SAVEGAME_LIVE_BUFFER_SIZE               0xf70
+#define SAVEGAME_ACTIVE_SIZE                    0x6ec
+#define SAVEGAME_COMPLETION_SCORE_MAX           0xbb
+#define SAVE_SCORE_FILE_STRIDE                  0x28
 /* number of on-disk save-game slots */
 #define SAVEGAME_SLOT_COUNT              3
 #define SAVEGAME_MAP_COUNT               0x78
@@ -262,7 +262,9 @@ void loadMapForCurrentSaveGame(void) {
     stopRumble2();
     resetYbutton();
     character = gSaveGameState.save.currentCharacter;
-    mapLoadByCoords(gSaveGameState.save.characterPositions[character].x, gSaveGameState.save.characterPositions[character].y, gSaveGameState.save.characterPositions[character].z,
+    mapLoadByCoords(gSaveGameState.save.characterPositions[character].x,
+                    gSaveGameState.save.characterPositions[character].y,
+                    gSaveGameState.save.characterPositions[character].z,
                     gSaveGameState.save.characterPositions[character].mapLayer);
     if (getCurUiDll() != 4) {
         loadUiDll(1);
@@ -367,8 +369,7 @@ void SaveGame_updateTimes(void) {
         if (base->save.playTime > base->runtime.timeEntries[i].time) {
             cnt = (base->runtime.timeEntryCount -= 1);
             base->runtime.timeEntries[i].objId = gSaveGameState.runtime.timeEntries[cnt].objId;
-            base->runtime.timeEntries[i].time =
-                gSaveGameState.runtime.timeEntries[base->runtime.timeEntryCount].time;
+            base->runtime.timeEntries[i].time = gSaveGameState.runtime.timeEntries[base->runtime.timeEntryCount].time;
         } else {
             i++;
         }
@@ -387,8 +388,7 @@ f32 SaveGame_getPlayTime(void) {
 
 void updateSavedHealth(void) {
     int idx = gSaveGameState.save.currentCharacter;
-    gSaveGameState.save.characterStatus[idx].health =
-        gSaveGameWorkBuffer->characterStatus[idx].health;
+    gSaveGameState.save.characterStatus[idx].health = gSaveGameWorkBuffer->characterStatus[idx].health;
 }
 
 void SaveGame_setMapActLut(int val, int idx) {
@@ -916,8 +916,7 @@ void saveGame_saveObjectPos(GameObject* obj) {
     if (i == SAVEGAME_OBJECT_POSITION_COUNT) {
         return;
     }
-    gSaveGameState.save.positions[i].objectId =
-        ((SaveGameRomListPosition*)obj->anim.placementData)->objectId;
+    gSaveGameState.save.positions[i].objectId = ((SaveGameRomListPosition*)obj->anim.placementData)->objectId;
     gSaveGameState.save.positions[i].x = obj->anim.localPosX;
     gSaveGameState.save.positions[i].y = obj->anim.localPosY;
     gSaveGameState.save.positions[i].z = obj->anim.localPosZ;

@@ -5,10 +5,9 @@
 #include "main/dll/savegame_env_api.h"
 #include "main/mapEventTypes.h"
 
-#define SAVEGAME_OBJECT_POSITION_COUNT  0x3f
+#define SAVEGAME_OBJECT_POSITION_COUNT 0x3f
 
-typedef struct SaveGameObjectPosition
-{
+typedef struct SaveGameObjectPosition {
     u32 objectId;
     f32 x;
     f32 y;
@@ -17,8 +16,7 @@ typedef struct SaveGameObjectPosition
 
 /* One saved character's spawn state; SaveGameData.characterPositions[] and the
  * record SaveGame_getCurCharPos() hands out to the map/shader code. */
-typedef struct SaveGameCharacterPosition
-{
+typedef struct SaveGameCharacterPosition {
     f32 x;
     f32 y;
     f32 z;
