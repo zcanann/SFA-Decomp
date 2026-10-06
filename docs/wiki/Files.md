@@ -237,6 +237,39 @@ ANIM bin+tab); MODELIND, OBJSEQ2C, OBJSEQ, TEXPRE, PREANIM and ENVFXACT are load
 single slot each, consistent with those being smaller/one-shot files that don't need
 transition double-buffering.
 
+Seven merged `.TAB` buffers expose a combined index for those paired banks.
+Their `MldfTables` fields are word arrays: 2,048 entries each for MODELS,
+BLOCKS and VOXMAP; 3,000 for ANIM; 4,096 each for TEX0/TEX1; and 8,144 for
+ANIMCURV. `mergeTableFiles` identifies the destination to select its capacity;
+the fourth argument is unused. It always overwrites the last output word
+with 0xFFFFFFFF. `getCurrentDataFile` returns these merged buffers, except
+TEXPRE, which returns its resident table directly.
+
+| Family | Entry marked present | Marked bank B in the merged table |
+|---|---|---|
+| MODELS, ANIM, BLOCKS | 0x10000000 | low 24 bits plus 0x20000000 |
+| VOXMAP, ANIMCURV | 0x80000000 | clear 0x80000000 and set 0x20000000 |
+| TEX0, TEX1 | 0x80000000 | unchanged; bank A instead clears 0x80000000 and sets 0x40000000 |
+
+Bank A takes priority when both entries are marked present. Terminator and
+fallback ordering differs by family: MODELS/ANIM may retain an unmarked zero
+from bank A, whereas texture and map families prefer nonzero fallbacks.
+VOXMAP/ANIMCURV consume a zero output row when they encounter a terminator;
+BLOCKS can select a marked entry from the other bank first. These distinctions
+remain in the recovered loops. `getTableFileEntry` derives bounds from the
+word arrays, retaining the regional waits for models and animation curves.
+Its TEXPRE case still leaves the count at zero and rejects every index.
+
+`tools/test_resource_table_merge.py` checks 623 complete merges against an
+independent bank-policy oracle, plus reader bounds, native pointer identity,
+regional waits and destination guards at `-O0`/`-O2` under ASan/UBSan. The
+positive cases allocate each bank for the full cursor walk. A separate probe
+records the existing NULL-bank cursor increment as an expected UBSan failure.
+Unknown destination identity also retains the retail
+write to the word before the supplied pointer. The fixture supplies one host
+allocation for the address view and does not establish a native registry.
+All five target builds preserve every source object byte and the retail DOL.
+
 For **disc-root** (non-map) files, the simpler loaders `fileLoad(int id)`,
 `fileLoadToBuffer(int id, void* buf)` and `fileLoadToBufferOffset(int id, void* buf, int
 offset, int size)` (also in `pi_dolphin.c`) open `sResourceFileNameTable[id]` directly through

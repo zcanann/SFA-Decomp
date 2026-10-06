@@ -199,13 +199,13 @@ struct MldfNames {
 struct MldfTables {
     u8 pad0[0x160];
     DVDFileInfo* fileInfo[0x58]; /* async read in flight */
-    u8 mergeAnimCurv[0x7f40];    /* merged 2-slot TAB, 0x1fd0 entries */
-    u8 mergeVoxMap[0x2000];      /* 0x800 entries */
-    u8 mergeBlocks[0x2000];      /* 0x800 entries */
-    u8 mergeTex1[0x4000];        /* 0x1000 entries */
-    u8 mergeTex0[0x4000];        /* 0x1000 entries */
-    u8 mergeAnim[0x2ee0];        /* 3000 entries */
-    u8 mergeModels[0x2000];      /* 0x800 entries */
+    u32 mergeAnimCurv[0x1fd0];    /* merged 2-slot TAB, 0x1fd0 entries */
+    u32 mergeVoxMap[0x800];      /* 0x800 entries */
+    u32 mergeBlocks[0x800];      /* 0x800 entries */
+    u32 mergeTex1[0x1000];        /* 0x1000 entries */
+    u32 mergeTex0[0x1000];        /* 0x1000 entries */
+    u32 mergeAnim[0xbb8];        /* 3000 entries */
+    u32 mergeModels[0x800];      /* 0x800 entries */
     u8 loadedFlags[0x58];        /* cleared by initLoadFiles */
     int ids[0x58];               /* mapId whose load must be retried, -1 = none */
     int sizes[0x58];             /* byte size of the loaded file */
@@ -1300,39 +1300,39 @@ int getTableFileEntry(int fileId, int index, int* out) {
     u32 waitMask = 0;
 #endif
     switch (fileId) {
-    case 0x2a:
-        count = 0x800;
-        table = (u8*)(base + 0x10000) + 0x70e0;
+    case MLDF_FILEID_MODELS_TAB_A:
+        count = ARRAY_COUNT(((struct MldfTables*)base)->mergeModels);
+        table = (u8*)(base + 0x10000) + ((ptrdiff_t)offsetof(struct MldfTables, mergeModels) - 0x10000);
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
         waitMask = 0xc;
 #endif
         break;
-    case 0x2f:
-        count = 0xbb8;
-        table = (u8*)(base + 0x10000) + 0x4200;
+    case MLDF_FILEID_ANIM_TAB_A:
+        count = ARRAY_COUNT(((struct MldfTables*)base)->mergeAnim);
+        table = (u8*)(base + 0x10000) + ((ptrdiff_t)offsetof(struct MldfTables, mergeAnim) - 0x10000);
         break;
-    case 0x24:
-        count = 0x1000;
-        table = (u8*)(base + 0x10000) + 0x200;
+    case MLDF_FILEID_TEX0_TAB_A:
+        count = ARRAY_COUNT(((struct MldfTables*)base)->mergeTex0);
+        table = (u8*)(base + 0x10000) + ((ptrdiff_t)offsetof(struct MldfTables, mergeTex0) - 0x10000);
         break;
-    case 0x21:
-        count = 0x1000;
-        table = (u8*)(base + 0x10000) - 0x3e00;
+    case MLDF_FILEID_TEX1_TAB_A:
+        count = ARRAY_COUNT(((struct MldfTables*)base)->mergeTex1);
+        table = (u8*)(base + 0x10000) + ((ptrdiff_t)offsetof(struct MldfTables, mergeTex1) - 0x10000);
         break;
-    case 0x50:
-        table = *(void**)&base[0x19718];
+    case MLDF_FILEID_TEXPRE_TAB:
+        table = ((struct MldfTables*)base)->ptrs[MLDF_FILEID_TEXPRE_TAB];
         break;
-    case 0x26:
-        count = 0x800;
-        table = (u8*)(base + 0x10000) - 0x5e00;
+    case MLDF_FILEID_BLOCKS_TAB_A:
+        count = ARRAY_COUNT(((struct MldfTables*)base)->mergeBlocks);
+        table = (u8*)(base + 0x10000) + ((ptrdiff_t)offsetof(struct MldfTables, mergeBlocks) - 0x10000);
         break;
-    case 0x1a:
-        count = 0x800;
-        table = (u8*)(base + 0x10000) - 0x7e00;
+    case MLDF_FILEID_VOXMAP_TAB_A:
+        count = ARRAY_COUNT(((struct MldfTables*)base)->mergeVoxMap);
+        table = (u8*)(base + 0x10000) + ((ptrdiff_t)offsetof(struct MldfTables, mergeVoxMap) - 0x10000);
         break;
-    case 0xe:
-        count = 0x1fd0;
-        table = &base[0x2c0];
+    case MLDF_FILEID_ANIMCURV_TAB_A:
+        count = ARRAY_COUNT(((struct MldfTables*)base)->mergeAnimCurv);
+        table = ((struct MldfTables*)base)->mergeAnimCurv;
 #if !defined(VERSION_GSAE01) && !defined(VERSION_GSAJ01)
         waitMask = 0xa0000000;
 #endif
@@ -1370,31 +1370,31 @@ int getTableFileEntry(int fileId, int index, int* out) {
     return 0;
 }
 
-#define MAPTBLP(idx) (*(int**)(((idx) << 2) + ((u32) & ((struct MldfTables*)base)->ptrs[0])))
+#define MAPTBLP(idx) (*(int**)(((idx) << MLDF_BUFFER_SLOT_SHIFT) + (size_t)&((struct MldfTables*)base)->ptrs[0]))
 #define MAPID_RT(s)  (*(int*)(((s) << 2) + (resourceAddress + offsetof(struct MldfTables, ids))))
 #define MAPPTR_RT(s)                                                                                                   \
     (*(void**)(((s) << MLDF_BUFFER_SLOT_SHIFT) + (resourceAddress + offsetof(struct MldfTables, ptrs))))
 #define MAPOWNER_RT(s) (*(s16*)(((s) << 1) + (resourceAddress + offsetof(struct MldfTables, owners))))
 
 void* getCurrentDataFile(int id) {
-    u8* base = gResourceFileTable;
+    struct MldfTables* tbl = (struct MldfTables*)gResourceFileTable;
     switch (id) {
-    case 42:
-        return &base[0x170e0];
-    case 47:
-        return &base[0x14200];
-    case 36:
-        return &base[0x10200];
-    case 33:
-        return &base[0xc200];
-    case 80:
-        return *(void**)&base[0x19718];
-    case 38:
-        return &base[0xa200];
-    case 26:
-        return &base[0x8200];
-    case 14:
-        return &base[0x2c0];
+    case MLDF_FILEID_MODELS_TAB_A:
+        return tbl->mergeModels;
+    case MLDF_FILEID_ANIM_TAB_A:
+        return tbl->mergeAnim;
+    case MLDF_FILEID_TEX0_TAB_A:
+        return tbl->mergeTex0;
+    case MLDF_FILEID_TEX1_TAB_A:
+        return tbl->mergeTex1;
+    case MLDF_FILEID_TEXPRE_TAB:
+        return tbl->ptrs[MLDF_FILEID_TEXPRE_TAB];
+    case MLDF_FILEID_BLOCKS_TAB_A:
+        return tbl->mergeBlocks;
+    case MLDF_FILEID_VOXMAP_TAB_A:
+        return tbl->mergeVoxMap;
+    case MLDF_FILEID_ANIMCURV_TAB_A:
+        return tbl->mergeAnimCurv;
     }
     return NULL;
 }
@@ -1574,196 +1574,197 @@ int mapUnload(int mapId, int flags) {
     return 1;
 }
 
-int mergeTableFiles(void* table, int id, int idx, int count_) {
-    u32* tbl = table;
+int mergeTableFiles(void* table, int bankAFileId, int bankBFileId, int unusedCount) {
+    u32* merged = table;
     u8* base = gResourceFileTable;
-    int i = 0;
-    int e1 = 0;
-    int e2 = 0;
-    int count = 0;
-    int* p1;
-    int* p2;
-    int* src1;
+    int written = 0;
+    int endedA = 0;
+    int endedB = 0;
+    int remaining = 0;
+    int* bankA;
+    int* bankB;
+    int* firstBank;
 
-    src1 = MAPTBLP(id);
-    if (src1 == NULL || MAPTBLP(idx) == NULL) {
-        if (src1 == NULL) {
-            e1 = 1;
+    firstBank = MAPTBLP(bankAFileId);
+    if (firstBank == NULL || MAPTBLP(bankBFileId) == NULL) {
+        if (firstBank == NULL) {
+            endedA = 1;
         }
-        if (MAPTBLP(idx) == NULL) {
-            e2 = 1;
+        if (MAPTBLP(bankBFileId) == NULL) {
+            endedB = 1;
         }
     }
-    p1 = (int*)(u32)src1;
-    p2 = MAPTBLP(idx);
-    if (tbl == (u32*)(base + 0x170e0)) {
-        count = 0x800;
-    } else if (tbl == (u32*)(base + 0x14200)) {
-        count = 0xbb8;
-    } else if (tbl == (u32*)(base + 0x10200)) {
-        count = 0x1000;
-    } else if (tbl == (u32*)(base + 0xc200)) {
-        count = 0x1000;
-    } else if (tbl == (u32*)(base + 0xa200)) {
-        count = 0x800;
-    } else if (tbl == (u32*)(base + 0x8200)) {
-        count = 0x800;
-    } else if (tbl == (u32*)(base + 0x2c0)) {
-        count = 0x1fd0;
+    /* This pointer-width round trip preserves MWCC's separate source cursor. */
+    bankA = (int*)(size_t)firstBank;
+    bankB = MAPTBLP(bankBFileId);
+    if (merged == ((struct MldfTables*)base)->mergeModels) {
+        remaining = ARRAY_COUNT(((struct MldfTables*)base)->mergeModels);
+    } else if (merged == ((struct MldfTables*)base)->mergeAnim) {
+        remaining = ARRAY_COUNT(((struct MldfTables*)base)->mergeAnim);
+    } else if (merged == ((struct MldfTables*)base)->mergeTex0) {
+        remaining = ARRAY_COUNT(((struct MldfTables*)base)->mergeTex0);
+    } else if (merged == ((struct MldfTables*)base)->mergeTex1) {
+        remaining = ARRAY_COUNT(((struct MldfTables*)base)->mergeTex1);
+    } else if (merged == ((struct MldfTables*)base)->mergeBlocks) {
+        remaining = ARRAY_COUNT(((struct MldfTables*)base)->mergeBlocks);
+    } else if (merged == ((struct MldfTables*)base)->mergeVoxMap) {
+        remaining = ARRAY_COUNT(((struct MldfTables*)base)->mergeVoxMap);
+    } else if (merged == ((struct MldfTables*)base)->mergeAnimCurv) {
+        remaining = ARRAY_COUNT(((struct MldfTables*)base)->mergeAnimCurv);
     }
-    if (tbl == (u32*)(base + 0x10200) || tbl == (u32*)(base + 0xc200)) {
-        int* w1 = p1;
-        int* dst = (int*)tbl;
-        int va;
-        int vb;
-        for (; count > 0; count--) {
-            if (!e1 && *w1 == -1) {
-                e1 = 1;
+    if (merged == ((struct MldfTables*)base)->mergeTex0 || merged == ((struct MldfTables*)base)->mergeTex1) {
+        int* cursorA = bankA;
+        int* destination = (int*)merged;
+        int entryA;
+        int entryB;
+        for (; remaining > 0; remaining--) {
+            if (!endedA && *cursorA == -1) {
+                endedA = 1;
             }
-            if (!e2 && *p2 == -1) {
-                e2 = 1;
+            if (!endedB && *bankB == -1) {
+                endedB = 1;
             }
-            if (!e1 && (va = *w1, va != -1) && (va & 0x80000000)) {
-                *dst = va & 0x7fffffff;
-                *dst = *dst | 0x40000000;
-            } else if (!e2 && (vb = *p2, vb != -1) && (vb & 0x80000000)) {
-                *dst = vb;
-            } else if (!e1 && *w1 != 0) {
-                *dst = *w1;
-            } else if (!e2 && *p2 != 0) {
-                *dst = *p2;
+            if (!endedA && (entryA = *cursorA, entryA != -1) && (entryA & 0x80000000)) {
+                *destination = entryA & 0x7fffffff;
+                *destination = *destination | 0x40000000;
+            } else if (!endedB && (entryB = *bankB, entryB != -1) && (entryB & 0x80000000)) {
+                *destination = entryB;
+            } else if (!endedA && *cursorA != 0) {
+                *destination = *cursorA;
+            } else if (!endedB && *bankB != 0) {
+                *destination = *bankB;
             } else {
-                *dst = 0;
+                *destination = 0;
             }
-            w1++;
-            p2++;
-            dst++;
-            i++;
+            cursorA++;
+            bankB++;
+            destination++;
+            written++;
         }
-    } else if (tbl == (u32*)(base + 0xa200)) {
-        int* w1 = p1;
-        int* dst = (int*)tbl;
-        int* w2 = p2;
-        int va;
-        int vb;
-        for (; count > 0; count--) {
-            if (!e1 && (va = *w1, va != -1) && (va & 0x10000000)) {
-                *dst = va;
-                if (p2 != NULL && *w2 == -1) {
-                    e2 = 1;
+    } else if (merged == ((struct MldfTables*)base)->mergeBlocks) {
+        int* cursorA = bankA;
+        int* destination = (int*)merged;
+        int* cursorB = bankB;
+        int entryA;
+        int entryB;
+        for (; remaining > 0; remaining--) {
+            if (!endedA && (entryA = *cursorA, entryA != -1) && (entryA & 0x10000000)) {
+                *destination = entryA;
+                if (bankB != NULL && *cursorB == -1) {
+                    endedB = 1;
                 }
-            } else if (!e2 && (vb = *w2, vb != -1) && (vb & 0x10000000)) {
-                *dst = (vb & 0xffffff) | 0x20000000;
-                if (p1 != NULL && *w1 == -1) {
-                    e1 = 1;
+            } else if (!endedB && (entryB = *cursorB, entryB != -1) && (entryB & 0x10000000)) {
+                *destination = (entryB & 0xffffff) | 0x20000000;
+                if (bankA != NULL && *cursorA == -1) {
+                    endedA = 1;
                 }
-            } else if (!e1 && *w1 == -1) {
-                *dst = 0;
-                e1 = 1;
-            } else if (!e2 && *w2 == -1) {
-                *dst = 0;
-                e2 = 1;
-            } else if (!e1 && *w1 != 0) {
-                *dst = *w1;
-            } else if (!e2 && *w2 != 0) {
-                *dst = *w2;
+            } else if (!endedA && *cursorA == -1) {
+                *destination = 0;
+                endedA = 1;
+            } else if (!endedB && *cursorB == -1) {
+                *destination = 0;
+                endedB = 1;
+            } else if (!endedA && *cursorA != 0) {
+                *destination = *cursorA;
+            } else if (!endedB && *cursorB != 0) {
+                *destination = *cursorB;
             } else {
-                *dst = 0;
+                *destination = 0;
             }
-            w1++;
-            dst++;
-            w2++;
-            i++;
+            cursorA++;
+            destination++;
+            cursorB++;
+            written++;
         }
-    } else if (tbl == (u32*)(base + 0x8200)) {
-        int* w1 = p1;
-        int* dst = (int*)tbl;
-        int va;
-        int vb;
-        for (; count > 0; count--) {
-            if (!e1 && *w1 == -1) {
-                *dst = 0;
-                e1 = 1;
-            } else if (!e2 && *p2 == -1) {
-                *dst = 0;
-                e2 = 1;
-            } else if (!e1 && (va = *w1, va != -1) && (va & 0x80000000)) {
-                *dst = va;
-            } else if (!e2 && (vb = *p2, vb != -1) && (vb & 0x80000000)) {
-                *dst = (vb & 0x7fffffff) | 0x20000000;
-            } else if (!e1 && *w1 != 0) {
-                *dst = *w1;
-            } else if (!e2 && *p2 != 0) {
-                *dst = *p2;
+    } else if (merged == ((struct MldfTables*)base)->mergeVoxMap) {
+        int* cursorA = bankA;
+        int* destination = (int*)merged;
+        int entryA;
+        int entryB;
+        for (; remaining > 0; remaining--) {
+            if (!endedA && *cursorA == -1) {
+                *destination = 0;
+                endedA = 1;
+            } else if (!endedB && *bankB == -1) {
+                *destination = 0;
+                endedB = 1;
+            } else if (!endedA && (entryA = *cursorA, entryA != -1) && (entryA & 0x80000000)) {
+                *destination = entryA;
+            } else if (!endedB && (entryB = *bankB, entryB != -1) && (entryB & 0x80000000)) {
+                *destination = (entryB & 0x7fffffff) | 0x20000000;
+            } else if (!endedA && *cursorA != 0) {
+                *destination = *cursorA;
+            } else if (!endedB && *bankB != 0) {
+                *destination = *bankB;
             } else {
-                *dst = 0;
+                *destination = 0;
             }
-            w1++;
-            dst++;
-            p2++;
-            i++;
+            cursorA++;
+            destination++;
+            bankB++;
+            written++;
         }
-    } else if (tbl == (u32*)(base + 0x2c0)) {
-        int* w1 = p1;
-        int* dst = (int*)tbl;
-        int va;
-        int vb;
-        for (; count > 0; count--) {
-            if (!e1 && *w1 == -1) {
-                *dst = 0;
-                e1 = 1;
-            } else if (!e2 && *p2 == -1) {
-                *dst = 0;
-                e2 = 1;
-            } else if (!e1 && (va = *w1, va != -1) && (va & 0x80000000)) {
-                *dst = va;
-            } else if (!e2 && (vb = *p2, vb != -1) && (vb & 0x80000000)) {
-                *dst = (vb & 0x7fffffff) | 0x20000000;
-            } else if (!e1 && *w1 != 0) {
-                *dst = *w1;
-            } else if (!e2 && *p2 != 0) {
-                *dst = *p2;
+    } else if (merged == ((struct MldfTables*)base)->mergeAnimCurv) {
+        int* cursorA = bankA;
+        int* destination = (int*)merged;
+        int entryA;
+        int entryB;
+        for (; remaining > 0; remaining--) {
+            if (!endedA && *cursorA == -1) {
+                *destination = 0;
+                endedA = 1;
+            } else if (!endedB && *bankB == -1) {
+                *destination = 0;
+                endedB = 1;
+            } else if (!endedA && (entryA = *cursorA, entryA != -1) && (entryA & 0x80000000)) {
+                *destination = entryA;
+            } else if (!endedB && (entryB = *bankB, entryB != -1) && (entryB & 0x80000000)) {
+                *destination = (entryB & 0x7fffffff) | 0x20000000;
+            } else if (!endedA && *cursorA != 0) {
+                *destination = *cursorA;
+            } else if (!endedB && *bankB != 0) {
+                *destination = *bankB;
             } else {
-                *dst = 0;
+                *destination = 0;
             }
-            w1++;
-            dst++;
-            p2++;
-            i++;
+            cursorA++;
+            destination++;
+            bankB++;
+            written++;
         }
     } else {
-        int* w1 = p1;
-        int* w2 = p2;
-        int* dst = (int*)tbl;
-        int va;
-        int vb;
-        for (; count > 0; count--) {
-            if (!e1 && *w1 == -1) {
-                e1 = 1;
+        int* cursorA = bankA;
+        int* cursorB = bankB;
+        int* destination = (int*)merged;
+        int entryA;
+        int entryB;
+        for (; remaining > 0; remaining--) {
+            if (!endedA && *cursorA == -1) {
+                endedA = 1;
             }
-            if (!e2 && *w2 == -1) {
-                e2 = 1;
+            if (!endedB && *cursorB == -1) {
+                endedB = 1;
             }
-            if (!e1 && (va = *w1, va != -1) && (va & 0x10000000)) {
-                *dst = va;
-            } else if (!e2 && (vb = *w2, vb != -1) && (vb & 0x10000000)) {
-                *dst = (vb & 0xffffff) | 0x20000000;
-            } else if (!e1 && p1 != NULL) {
-                *dst = *w1;
-            } else if (!e2 && p2 != NULL) {
-                *dst = *w2;
+            if (!endedA && (entryA = *cursorA, entryA != -1) && (entryA & 0x10000000)) {
+                *destination = entryA;
+            } else if (!endedB && (entryB = *cursorB, entryB != -1) && (entryB & 0x10000000)) {
+                *destination = (entryB & 0xffffff) | 0x20000000;
+            } else if (!endedA && bankA != NULL) {
+                *destination = *cursorA;
+            } else if (!endedB && bankB != NULL) {
+                *destination = *cursorB;
             } else {
-                *dst = 0;
+                *destination = 0;
             }
-            w1++;
-            w2++;
-            dst++;
-            i++;
+            cursorA++;
+            cursorB++;
+            destination++;
+            written++;
         }
     }
     {
-        int last = i - 1;
-        tbl[last] = 0xffffffff;
+        int last = written - 1;
+        merged[last] = 0xffffffff;
     }
     return 1;
 }
