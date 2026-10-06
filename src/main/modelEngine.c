@@ -1,3 +1,4 @@
+#include "main/player_control_interface.h"
 #include "dlls/objects/686_WaterFlowWe.h"
 #include "main/dll/dll_0018_boneparticleeffect.h"
 #include "dlls/objects/554_DFP_ObjCrea.h"
@@ -608,7 +609,7 @@ extern ResourceDescriptor Effect1_funcs, Effect2_funcs, Effect3_funcs, Effect4_f
 extern ResourceDescriptor Effect9_funcs, Effect10_funcs, Effect11_funcs, Effect12_funcs, Effect14_funcs, Effect16_funcs,
     Effect15_funcs, Effect13_funcs;
 extern ResourceDescriptor Effect17_funcs, Effect18_funcs, Effect19_funcs, Effect20_funcs, Checkpoint_funcs,
-    screenTransition_funcs, Dummy04_funcs, player_funcs;
+    screenTransition_funcs, Dummy04_funcs;
 extern ResourceDescriptor UIController_funcs, Dummy12_funcs, RomCurve_funcs, dll_15_funcs, SaveGame_funcs,
     screens_funcs;
 extern ResourceDescriptor Dummy30_funcs;
@@ -1150,7 +1151,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &projgfx_funcs,
     &playerShadow_funcs,
     &partfx_funcs,
-    &player_funcs,
+    (ResourceDescriptor*)&player_funcs,
     &UIController_funcs,
     &screens_funcs,
     &Dummy12_funcs,

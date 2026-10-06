@@ -8,7 +8,7 @@ struct PlayerState;
 
 int playerUpdateAirborneMotion(GameObject* obj, struct PlayerState* inner, struct PlayerState* state);
 void playerUpdate(GameObject* obj);
-void playerProcessMessages(GameObject* obj, int inner, int state);
+void playerProcessMessages(GameObject* obj, struct PlayerState* inner, struct PlayerState* state);
 void playerProcessHitResponse(GameObject* obj, struct PlayerState* inner, struct PlayerState* state);
 void playerDoHitDetection(GameObject* obj);
 int playerCheckCommonTransitions(GameObject* obj, struct PlayerState* state, struct PlayerState* inner, f32 fv);

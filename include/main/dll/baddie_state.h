@@ -124,10 +124,10 @@ typedef struct BaddieState {
     f32 gravity; /* fall acceleration: velocityY -= gravity * timeDelta (dll_000F player_applyGravity) */
     /* 0x2A8/0x2AC are two independent 0..1 ramp progresses for the deferred
      * "nudge" the shared controller applies over several frames. dll_000F
-     * player_render2 steps 0x2A8 by f1*f2, clamps it at 1.0 and adds
+     * PlayerControl_ApplyYawNudge steps 0x2A8 by f1*f2, clamps it at 1.0 and adds
      * nudgeYaw * (that frame's increment) straight into anim.rotX;
-     * player_modelMtxFn steps 0x2AC the same way and adds
-     * nudgePos{X,Y,Z} * increment into the model matrix translation. */
+     * PlayerControl_ApplyPositionNudge steps 0x2AC the same way and adds
+     * nudgePos{X,Y,Z} * increment into the object local position. */
     f32 nudgeYawProgress;
     f32 nudgePosProgress;
     u8 pad2B0[0x2B4 - 0x2B0];
@@ -138,7 +138,7 @@ typedef struct BaddieState {
     u8 unk2C4[0x2D0 - 0x2C4];
     void *targetObj; /* current attack/aggro target */
     u8 pad2D4[0x2F4 - 0x2D4];
-    f32 nudgePosX; /* translation added to the model matrix as nudgePosProgress ramps */
+    f32 nudgePosX; /* translation added to the object local position as nudgePosProgress ramps */
     f32 nudgePosY;
     f32 nudgePosZ;
     f32 nudgeYaw; /* anim.rotX delta added as nudgeYawProgress ramps */

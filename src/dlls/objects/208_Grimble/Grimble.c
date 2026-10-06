@@ -47,7 +47,7 @@ int grimble_stateHandlerB05(GameObject* obj, GroundBaddieState* state) {
 
 int grimble_stateHandlerB04(GameObject* obj, GroundBaddieState* state) {
     if (state->baddie.moveJustStartedB != 0) {
-        (*gPlayerInterface)->setState(obj, state, 8);
+        (*gPlayerInterface)->setState(obj, &state->baddie, 8);
         state->baddie.targetObj = NULL;
         state->baddie.physicsActive = 0;
         state->baddie.hasTarget = 0;
@@ -82,7 +82,7 @@ int grimble_stateHandlerB02(GameObject* obj, GroundBaddieState* state) {
 
     target = *(GameObject**)&state->baddie.targetObj;
     if (target == NULL) {
-        (*gPlayerInterface)->setState(obj, state, 0);
+        (*gPlayerInterface)->setState(obj, &state->baddie, 0);
         return 1;
     }
     if (state->baddie.controlMode != 6) {
@@ -97,15 +97,15 @@ int grimble_stateHandlerB02(GameObject* obj, GroundBaddieState* state) {
         absoluteDistance = dx < 0.0f ? -dx : dx;
         if (absoluteDistance < 1.0f &&
             (state->baddie.controlMode == 1 || (state->baddie.controlMode == 5 && state->baddie.moveDone != 0))) {
-            (*gPlayerInterface)->setState(obj, state, 6);
+            (*gPlayerInterface)->setState(obj, &state->baddie, 6);
         } else if (state->baddie.controlMode != 1) {
             if (dx > 2.5f) {
                 if (state->baddie.controlMode != 4 && (state->baddie.controlMode != 5 || state->baddie.moveDone != 0)) {
-                    (*gPlayerInterface)->setState(obj, state, 1);
+                    (*gPlayerInterface)->setState(obj, &state->baddie, 1);
                 }
             }
             if (dx < -2.5f) {
-                (*gPlayerInterface)->setState(obj, state, 1);
+                (*gPlayerInterface)->setState(obj, &state->baddie, 1);
             }
         }
         if (state->baddie.controlMode == 1) {
@@ -117,7 +117,7 @@ int grimble_stateHandlerB02(GameObject* obj, GroundBaddieState* state) {
 
 int grimble_stateHandlerB01(GameObject* obj, GroundBaddieState* state) {
     if (state->baddie.moveJustStartedB != 0) {
-        (*gPlayerInterface)->setState(obj, state, 9);
+        (*gPlayerInterface)->setState(obj, &state->baddie, 9);
     }
     if (state->baddie.moveDone != 0) {
         return 1;
@@ -137,7 +137,7 @@ int grimble_stateHandlerB00(GameObject* obj, GroundBaddieState* state) {
             if (zone < 4 || zone > 11) {
                 return 3;
             }
-            (*gPlayerInterface)->setState(obj, state, 2);
+            (*gPlayerInterface)->setState(obj, &state->baddie, 2);
             state->baddie.moveSpeed = 0.028f;
             state->baddie.moveDone = 0;
         }
@@ -249,7 +249,7 @@ int grimble_stateHandlerA06(GameObject* obj, GroundBaddieState* state, f32 speed
         state->baddie.moveDone = 0;
     }
     state->baddie.moveSpeed = 0.03f;
-    (*gPlayerInterface)->updateAnimRootMotion(obj, state, speed, 1);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, &state->baddie, speed, 1);
     control->pathObj->pathInterface->callbacks->advance(control->pathObj, &control->pathProgress,
                                                         state->baddie.animSpeedA * (f32)(1 - (control->reversed << 1)));
     if (control->pathProgress < GRIMBLE_PATH_MIN_PROGRESS) {
@@ -393,7 +393,7 @@ int grimble_stateHandlerA03(GameObject* obj, GroundBaddieState* state) {
     return 0;
 }
 
-int grimble_stateHandlerA02(GameObject* obj, char* state, f32 timeStep) {
+int grimble_stateHandlerA02(GameObject* obj, GroundBaddieState* state, f32 timeStep) {
     u16 zone;
     u16 unusedAngle;
     u16 distance;
@@ -406,14 +406,14 @@ int grimble_stateHandlerA02(GameObject* obj, char* state, f32 timeStep) {
     GrimbleControl* controlData;
 
     controlData = (GrimbleControl*)((GroundBaddieState*)obj->extra)->control;
-    if (((GroundBaddieState*)state)->baddie.moveJustStartedA != 0) {
+    if (state->baddie.moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove(obj, 3, 0.0f, 0);
-        ((GroundBaddieState*)state)->baddie.moveDone = 0;
+        state->baddie.moveDone = 0;
     }
-    ((GroundBaddieState*)state)->baddie.moveSpeed = 0.03f;
-    (*gPlayerInterface)->updateAnimRootMotion(obj, state, timeStep, 9);
+    state->baddie.moveSpeed = 0.03f;
+    (*gPlayerInterface)->updateAnimRootMotion(obj, &state->baddie, timeStep, 9);
     controlData->pathObj->pathInterface->callbacks->advance(controlData->pathObj, &controlData->pathProgress,
-                                                            ((GroundBaddieState*)state)->baddie.animSpeedA *
+                                                            state->baddie.animSpeedA *
                                                                 (f32)(1 - (controlData->reversed << 1)));
     if (controlData->pathProgress < GRIMBLE_PATH_MIN_PROGRESS) {
         controlData->pathProgress = GRIMBLE_PATH_MIN_PROGRESS;
@@ -433,9 +433,9 @@ int grimble_stateHandlerA02(GameObject* obj, char* state, f32 timeStep) {
     pathAngle = getAngle(deltaY, horizontalRunDouble);
     obj->anim.rotY =
         (1.0f - 2.0f * obj->anim.currentMoveProgress) * (f32)(s16)(pathAngle * ((controlData->reversed << 1) - 1));
-    if (((GroundBaddieState*)state)->baddie.moveDone != 0) {
+    if (state->baddie.moveDone != 0) {
         (*gBaddieControlInterface)
-            ->getTargetGeometry(obj, (GameObject*)((GroundBaddieState*)state)->baddie.targetObj, 0x10, &zone,
+            ->getTargetGeometry(obj, (GameObject*)state->baddie.targetObj, 0x10, &zone,
                                 &unusedAngle, &distance);
         controlData->reversed = 1 - *(u8*)&controlData->reversed;
         obj->anim.rotX = controlData->baseRotX + (!controlData->reversed << 15);
@@ -460,7 +460,7 @@ int grimble_stateHandlerA02(GameObject* obj, char* state, f32 timeStep) {
     return 0;
 }
 
-int grimble_stateHandlerA01(GameObject* obj, char* state, f32 timeStep) {
+int grimble_stateHandlerA01(GameObject* obj, GroundBaddieState* state, f32 timeStep) {
     f32 aheadZ, aheadY, aheadX, deltaZ, deltaY, deltaX;
     u8 hitEdge;
     s16 pathAngle;
@@ -469,19 +469,19 @@ int grimble_stateHandlerA01(GameObject* obj, char* state, f32 timeStep) {
     GrimbleControl* controlData;
 
     controlData = (GrimbleControl*)((GroundBaddieState*)obj->extra)->control;
-    if (((GroundBaddieState*)state)->baddie.moveJustStartedA != 0) {
+    if (state->baddie.moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
-        ((GroundBaddieState*)state)->baddie.moveDone = 0;
+        state->baddie.moveDone = 0;
     }
-    (*gPlayerInterface)->updateAnimRootMotion(obj, state, timeStep, 0);
-    if ((((GroundBaddieState*)state)->baddie.eventFlags & BADDIE_EVENT_FOOTSTEP) != 0) {
-        ((GroundBaddieState*)state)->baddie.eventFlags =
-            ((GroundBaddieState*)state)->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
+    (*gPlayerInterface)->updateAnimRootMotion(obj, &state->baddie, timeStep, 0);
+    if ((state->baddie.eventFlags & BADDIE_EVENT_FOOTSTEP) != 0) {
+        state->baddie.eventFlags =
+            state->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
         Sfx_PlayFromObject(obj, SFXTRIG_mv_persquk1);
     }
     controlData->pathObj->pathInterface->callbacks->advance(
         controlData->pathObj, &controlData->pathProgress,
-        50.4f * (((GroundBaddieState*)state)->baddie.moveSpeed * (f32)(1 - (controlData->reversed << 1))));
+        50.4f * (state->baddie.moveSpeed * (f32)(1 - (controlData->reversed << 1))));
     if (controlData->pathProgress < GRIMBLE_PATH_MIN_PROGRESS) {
         controlData->pathProgress = GRIMBLE_PATH_MIN_PROGRESS;
         hitEdge = 1;
@@ -509,7 +509,7 @@ int grimble_stateHandlerA01(GameObject* obj, char* state, f32 timeStep) {
     return 0;
 }
 
-int grimble_stateHandlerA00(GameObject* obj, char* state, f32 timeStep) {
+int grimble_stateHandlerA00(GameObject* obj, GroundBaddieState* state, f32 timeStep) {
     u16 zone;
     u16 unusedAngle;
     u16 distance;
@@ -520,14 +520,14 @@ int grimble_stateHandlerA00(GameObject* obj, char* state, f32 timeStep) {
     GrimbleControl* controlData;
 
     controlData = (GrimbleControl*)((GroundBaddieState*)obj->extra)->control;
-    if (((GroundBaddieState*)state)->baddie.moveJustStartedA != 0) {
+    if (state->baddie.moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
-        ((GroundBaddieState*)state)->baddie.moveDone = 0;
+        state->baddie.moveDone = 0;
     }
-    ((GroundBaddieState*)state)->baddie.moveSpeed = 0.03f;
-    (*gPlayerInterface)->updateAnimRootMotion(obj, state, timeStep, 1);
+    state->baddie.moveSpeed = 0.03f;
+    (*gPlayerInterface)->updateAnimRootMotion(obj, &state->baddie, timeStep, 1);
     controlData->pathObj->pathInterface->callbacks->advance(controlData->pathObj, &controlData->pathProgress,
-                                                            ((GroundBaddieState*)state)->baddie.animSpeedA *
+                                                            state->baddie.animSpeedA *
                                                                 (f32)(1 - (controlData->reversed << 1)));
     if (controlData->pathProgress < GRIMBLE_PATH_MIN_PROGRESS) {
         controlData->pathProgress = GRIMBLE_PATH_MIN_PROGRESS;
@@ -535,19 +535,19 @@ int grimble_stateHandlerA00(GameObject* obj, char* state, f32 timeStep) {
         controlData->pathProgress = GRIMBLE_PATH_MAX_PROGRESS;
     }
     (*gBaddieControlInterface)
-        ->getTargetGeometry(obj, (GameObject*)((GroundBaddieState*)state)->baddie.targetObj, 0x10, &zone, &unusedAngle,
+        ->getTargetGeometry(obj, (GameObject*)state->baddie.targetObj, 0x10, &zone, &unusedAngle,
                             &distance);
     if (zone > 3 && zone < 12 && distance > 400 && controlData->pathProgress > 2.0f &&
         controlData->pathProgress < 5.0f) {
         return 3;
     }
     if ((controlData->reversed ^ (controlData->pathProgress >= controlData->targetProgress)) != 0 &&
-        ((GroundBaddieState*)state)->baddie.moveDone != 0) {
+        state->baddie.moveDone != 0) {
         return 3;
     }
-    if ((((GroundBaddieState*)state)->baddie.eventFlags & BADDIE_EVENT_FOOTSTEP) != 0) {
-        ((GroundBaddieState*)state)->baddie.eventFlags =
-            ((GroundBaddieState*)state)->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
+    if ((state->baddie.eventFlags & BADDIE_EVENT_FOOTSTEP) != 0) {
+        state->baddie.eventFlags =
+            state->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
         Sfx_PlayFromObject(obj, SFXTRIG_mv_persquk1);
     }
     controlData->pathObj->pathInterface->callbacks->sample(
@@ -696,7 +696,7 @@ void grimble_update(GameObject* obj) {
         GameObject* target;
         int hitReaction;
 
-        (*gPlayerInterface)->update(obj, state, 1.0f, 1.0f, gGrimbleStateHandlersA, gGrimbleStateHandlersB);
+        (*gPlayerInterface)->update(obj, &state->baddie, 1.0f, 1.0f, gGrimbleStateHandlersA, gGrimbleStateHandlersB);
         control->pathObj->pathInterface->callbacks->sample(
             control->pathObj, control->pathProgress, &obj->anim.localPosX, &obj->anim.localPosY, &obj->anim.localPosZ);
         (*gBaddieControlInterface)
@@ -737,7 +737,7 @@ void grimble_init(GameObject* obj, ObjPlacement* placement, int flags) {
     }
     (*gBaddieControlInterface)->initGroundBaddie(obj, (u8*)placement, (u8*)state, 0, 0, 0, initFlags, 20.0f);
     obj->animEventCallback = grimble_animEventCallback;
-    (*gPlayerInterface)->setState(obj, state, 0);
+    (*gPlayerInterface)->setState(obj, &state->baddie, 0);
     state->baddie.substate = 0;
     state->baddie.animSpeedA = 0.0f;
     ((GrimbleControl*)state->control)->candidatePathObj = 0;

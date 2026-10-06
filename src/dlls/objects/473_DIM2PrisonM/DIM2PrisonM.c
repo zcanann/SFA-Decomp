@@ -144,7 +144,7 @@ int dim2prisonmammoth_SeqFn(GameObject* obj, int unusedState, ObjSeqState* animU
     animUpdate->movementState = 0;
     animUpdate->flags = animUpdate->savedFlags;
     state = obj->extra;
-    (*gPlayerInterface)->setState(obj, state, 2);
+    (*gPlayerInterface)->setState(obj, &state->baddie, 2);
 
     transform.x = obj->anim.localPosX;
     transform.y = obj->anim.localPosY;
@@ -222,7 +222,7 @@ void dim2prisonmammoth_update(GameObject* obj) {
     state->baddie.cameraYaw = 0;
     state->baddie.flags0 |= 0x400000;
     (*gPlayerInterface)
-        ->update(obj, state, timeDelta, timeDelta, gDim2PrisonMammothStateHandlers,
+        ->update(obj, &state->baddie, timeDelta, timeDelta, gDim2PrisonMammothStateHandlers,
                  gDim2PrisonMammothDefaultStateHandler);
     saveGame_saveObjectPos(obj);
 }
@@ -238,7 +238,7 @@ void dim2prisonmammoth_init(GameObject* obj, const Dim2PrisonMammothPlacement* p
             OBJ_MODEL_STATE_UNREAD_0010 | OBJ_MODEL_STATE_UNREAD_0200 | OBJ_MODEL_STATE_UNREAD_0800;
         obj->anim.modelState->flags |= OBJ_MODEL_STATE_UNREAD_8000 | OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE;
     }
-    (*gPlayerInterface)->init(obj, state, 4, 1);
+    (*gPlayerInterface)->init(obj, &state->baddie, 4, 1);
     state->baddie.physicsActive = 0;
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }

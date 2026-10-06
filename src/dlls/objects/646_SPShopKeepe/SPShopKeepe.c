@@ -800,12 +800,12 @@ int ShopKeeper_SeqFn(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
             state->flags9D4 |= SHOPKEEPER_FLAG_PURCHASED;
             break;
         case 2:
-            (*gPlayerInterface)->setState((void*)obj, (void*)state2, 3);
+            (*gPlayerInterface)->setState(obj, &state2->baddie, 3);
             (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7EF, &range, 0x50, NULL);
             state->opacity = 0;
             break;
         case 3:
-            (*gPlayerInterface)->setState((void*)obj, (void*)state2, 2);
+            (*gPlayerInterface)->setState(obj, &state2->baddie, 2);
             state->flags9D4 |= SHOPKEEPER_FLAG_TICK;
             state->opacity = 0xFF;
             break;
@@ -1035,7 +1035,7 @@ void ShopKeeper_update(GameObject* obj)
             objGetNearestTypeTo(SHOPKEEPER_VENDOR_OBJGROUP, obj, &dist);
     }
     state->playerMoney = playerGetMoney(player);
-    (*gPlayerInterface)->update((void*)obj, (void*)state, timeDelta, timeDelta, gShopKeeperStateHandlers, &gShopKeeperDefaultStateHandler);
+    (*gPlayerInterface)->update(obj, &state->baddie, timeDelta, timeDelta, gShopKeeperStateHandlers, &gShopKeeperDefaultStateHandler);
     dll_2E_updateLookAt(obj, &state->moveLib);
     characterDoEyeAnims(obj, &state->eyeAnimState);
     obj->anim.alpha = state->opacity;

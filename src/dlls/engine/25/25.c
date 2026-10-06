@@ -195,7 +195,7 @@ void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, Gro
         objAddObjectType(obj, DLL19_OBJGROUP);
         ObjMsg_AllocQueue(obj, 4);
     }
-    (*gPlayerInterface)->init(obj, state, moveArg0, moveArg1);
+    (*gPlayerInterface)->init(obj, &state->baddie, moveArg0, moveArg1);
     state->baddie.flags0 = 0;
     state->baddie.hasTarget = 0;
     state->baddie.animSpeedA = 0.0f;
@@ -748,7 +748,7 @@ int dll_19_func10(GameObject* obj, GroundBaddieState* state, int moveArg0, int m
             state->baddie.moveInputZ = 50.0f * dz;
             obj->anim.localPosX += dist * dx;
             obj->anim.localPosZ += dist * dz;
-            (*gPlayerInterface)->update(obj, state, timeDelta, timeDelta, (void*)moveArg0, (void*)moveArg1);
+            (*gPlayerInterface)->update(obj, &state->baddie, timeDelta, timeDelta, (void*)moveArg0, (void*)moveArg1);
         }
         if (*reachedOut == 0) {
             state->subMode = 0;
@@ -834,7 +834,7 @@ int dll_19_updateSequenceMovement(GameObject* obj, ObjSeqState* seq, GroundBaddi
                 seq->prevFrame = (s16)(seq->curFrame - 1);
             } else {
                 td = timeDelta;
-                (*gPlayerInterface)->update(obj, st, td, td, moveHandlers, stateHandlers);
+                (*gPlayerInterface)->update(obj, &st->baddie, td, td, moveHandlers, stateHandlers);
             }
         } else {
             nx /= total;
@@ -844,7 +844,7 @@ int dll_19_updateSequenceMovement(GameObject* obj, ObjSeqState* seq, GroundBaddi
             obj->anim.localPosX = dist * nx + seq->posOffsetX;
             obj->anim.localPosZ = dist * nz + seq->posOffsetZ;
             td = timeDelta;
-            (*gPlayerInterface)->update(obj, st, td, td, moveHandlers, stateHandlers);
+            (*gPlayerInterface)->update(obj, &st->baddie, td, td, moveHandlers, stateHandlers);
         }
     }
     gDll19SeqMinDist = dist;

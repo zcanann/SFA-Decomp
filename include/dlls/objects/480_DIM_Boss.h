@@ -73,7 +73,7 @@ typedef struct DIMbossAnimHandlerTable {
 
 typedef struct DIMbossHitDetectAnimHandlerTable {
     int (*resetIdleMove)(GameObject* obj, u8* state);
-    int (*applyForwardMove)(GameObject* obj, u8* state, f32 weight);
+    int (*applyForwardMove)(GameObject* obj, BaddieState* state, f32 weight);
     int (*trackTargetMove)(GameObject* obj, BaddieState* state, f32 weight);
     int (*randomSwipe)(GameObject* obj, BaddieState* state, f32 weight);
     int (*blueWhiteEventCapture)(GameObject* obj, BaddieState* state, f32 weight);
@@ -157,7 +157,7 @@ int DIMbossHitDetect_blueWhiteCapture(GameObject* obj, BaddieState* state, f32 w
 int DIMbossHitDetect_blueWhiteEventCapture(GameObject* obj, BaddieState* state, f32 weight);
 int DIMbossHitDetect_randomSwipe(GameObject* obj, BaddieState* state, f32 weight);
 int DIMbossHitDetect_trackTargetMove(GameObject* obj, BaddieState* state, f32 weight);
-int DIMbossHitDetect_applyForwardMove(GameObject* obj, u8* state, f32 weight);
+int DIMbossHitDetect_applyForwardMove(GameObject* obj, BaddieState* state, f32 weight);
 int DIMbossHitDetect_resetIdleMove(GameObject* obj, u8* state);
 
 void DIMboss_spawnBlueWhiteEffect(DIMbossEffectMarker* source, f32* velocity);

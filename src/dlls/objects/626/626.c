@@ -484,7 +484,7 @@ int hightop_handleMotionEvent(GameObject* obj, u8 event) {
     case 0:
         break;
     case 5:
-        (*gPlayerInterface)->setState(obj, runtime, 8);
+        (*gPlayerInterface)->setState(obj, &runtime->baddie, 8);
         break;
     case 6:
         mainSetBits(GAMEBIT_DR_HighTopRideStarted, 1);
@@ -497,14 +497,14 @@ int hightop_handleMotionEvent(GameObject* obj, u8 event) {
         obj->anim.modelInstance->runtimeSourceHitMask |= 1;
         runtime->flagsC40 &= ~0x140;
         runtime->lookController.modeBits &= ~2;
-        (*gPlayerInterface)->setState(obj, runtime, 7);
+        (*gPlayerInterface)->setState(obj, &runtime->baddie, 7);
         break;
 #endif
     case 8:
         (*gObjectTriggerInterface)->runSequence(7, obj, -1);
         break;
     case 9:
-        (*gPlayerInterface)->setState(obj, runtime, 7);
+        (*gPlayerInterface)->setState(obj, &runtime->baddie, 7);
         break;
     }
     return 0;
@@ -919,18 +919,18 @@ void HighTop_hitDetect(GameObject* obj) {
             (*gGameUIInterface)->airMeterShutdown();
         }
     } else {
-        (*gPlayerInterface)->setState(obj, runtime, 3);
+        (*gPlayerInterface)->setState(obj, &runtime->baddie, 3);
     }
 }
 
 void HighTop_update(GameObject* obj) {
     HighTopRuntime* runtime;
     HighTopRuntime* state;
-    register int self = (int)obj;
-    state = ((GameObject*)self)->extra;
+    GameObject* self = obj;
+    state = self->extra;
     runtime = state;
     runtime->turnRateThreshold = 5;
-    ((GameObject*)self)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+    self->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     runtime->baddie.physicsActive = !runtime->flagsC49.b4;
     runtime->baddie.hitPoints = 0;
     *(int*)state &= ~0x8000;
@@ -943,11 +943,11 @@ void HighTop_update(GameObject* obj) {
             curveStep = 8.0f;
         }
         ev = Obj_UpdateRomCurveFollowVelocity(
-            (GameObject*)self, &runtime->curveWalker,
+            self, &runtime->curveWalker,
             gHighTopCurveFollowSpeedFactor * (runtime->curveFollowSpeedScale * timeDelta), 70.0f, curveStep, 0);
 #else
         int ev = Obj_UpdateRomCurveFollowVelocity(
-            (GameObject*)self, &runtime->curveWalker,
+            self, &runtime->curveWalker,
             gHighTopCurveFollowSpeedFactor * (runtime->curveFollowSpeedScale * timeDelta), 70.0f, 8.0f * timeDelta, 0);
 #endif
         if (ev != 0) {
@@ -955,7 +955,7 @@ void HighTop_update(GameObject* obj) {
                 runtime->flagsC40 &= ~0x140;
                 runtime->lookController.modeBits &= ~2;
             } else {
-                hightop_handleMotionEvent((GameObject*)self, ev);
+                hightop_handleMotionEvent(self, ev);
             }
         }
     } else {
@@ -968,13 +968,13 @@ void HighTop_update(GameObject* obj) {
     runtime->baddie.cameraYaw = 0;
     *(int*)state &= ~0x400000;
     (*gPlayerInterface)
-        ->update((void*)self, state, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers,
+        ->update(self, &state->baddie, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers,
                  &gHighTopDefaultStateHandler);
-    hightop_playMovementSfx((GameObject*)self, runtime, runtime);
-    characterDoEyeAnims((GameObject*)self, &runtime->eyeAnimState);
-    objSoundUpdateMouth((GameObject*)(self), &runtime->modelSoundState);
-    dll_2E_updateLookAt((GameObject*)self, &state->lookController);
-    if (ObjTrigger_IsSet((GameObject*)self) != 0) {
+    hightop_playMovementSfx(self, runtime, runtime);
+    characterDoEyeAnims(self, &runtime->eyeAnimState);
+    objSoundUpdateMouth(self, &runtime->modelSoundState);
+    dll_2E_updateLookAt(self, &state->lookController);
+    if (ObjTrigger_IsSet(self) != 0) {
         s8 substate;
         buttonDisable(0, PAD_BUTTON_A);
         substate = (s8)runtime->substate;
@@ -987,7 +987,7 @@ void HighTop_update(GameObject* obj) {
         }
     }
     if (randomGetRange(0, 0x64) == 0) {
-        objSoundStartFromDef((GameObject*)self, &state->modelSoundState,
+        objSoundStartFromDef(self, &state->modelSoundState,
                              (ObjSoundDef*)&gHighTopConfigTable[randomGetRange(0, 2) * 6], 0);
     }
     if (runtime->flagsC49.b7 != 0) {
@@ -1021,7 +1021,7 @@ void HighTop_init(GameObject* obj, HighTopPlacement* placement) {
     }
     objAddObjectType(obj, PLAYER_VEHICLE_OBJGROUP);
     objAddObjectType(obj, VEHICLE_OBJECT_GROUP);
-    (*gPlayerInterface)->init(obj, runtime, 11, 1);
+    (*gPlayerInterface)->init(obj, &runtime->baddie, 11, 1);
     runtime->baddie.gravity = 0.17f;
     pathState = (u8*)&runtime->baddie + 4;
     pathState[0x25b] = 1;

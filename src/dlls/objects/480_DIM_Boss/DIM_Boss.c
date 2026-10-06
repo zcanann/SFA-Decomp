@@ -631,12 +631,12 @@ int DIMbossHitDetect_trackTargetMove(GameObject* obj, BaddieState* runtime, f32 
     return 0;
 }
 
-int DIMbossHitDetect_applyForwardMove(GameObject* obj, u8* state, f32 weight) {
-    if (((BaddieState*)state)->moveJustStartedA != 0) {
+int DIMbossHitDetect_applyForwardMove(GameObject* obj, BaddieState* state, f32 weight) {
+    if (state->moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove(obj, 2, 0.0f, 0);
-        ((BaddieState*)state)->moveDone = 0;
+        state->moveDone = 0;
     }
-    ((BaddieState*)state)->moveSpeed = 0.021f;
+    state->moveSpeed = 0.021f;
     (*gPlayerInterface)->updateAnimRootMotion(obj, state, weight, 1);
     (*gPlayerInterface)->rotateTowardTarget(obj, state, weight, 4);
     return 0;
@@ -1211,7 +1211,7 @@ void DIMboss_updateCombatState(GameObject* obj, ObjSeqState* animUpdate, DIMboss
     runtime->groundBaddie.savedPendingParentObj = gameObj->pendingParentObj;
     gameObj->pendingParentObj = 0;
     (*gPlayerInterface)
-        ->update((void*)obj, updateRuntime, timeDelta, timeDelta, &gDIMbossHitDetectAnimTable, &gDIMbossAnimTable);
+        ->update(obj, &updateRuntime->groundBaddie.baddie, timeDelta, timeDelta, &gDIMbossHitDetectAnimTable, &gDIMbossAnimTable);
     gameObj->pendingParentObj = runtime->groundBaddie.savedPendingParentObj;
 }
 
@@ -1470,7 +1470,7 @@ int DIMboss_updateState(GameObject* obj, u32 state, ObjSeqState* animUpdate) {
             if (runtime->groundBaddie.subMode == 1) {
                 runtime->groundBaddie.baddie.substate = 0;
                 (*gPlayerInterface)
-                    ->update(obj, runtime, 1.0f, 1.0f, &animScratch->hitDetectAnimTable, &animScratch->animTable);
+                    ->update(obj, &runtime->groundBaddie.baddie, 1.0f, 1.0f, &animScratch->hitDetectAnimTable, &animScratch->animTable);
                 animUpdate->movementState = 0;
             }
             break;
@@ -1674,7 +1674,7 @@ void DIMboss_init(GameObject* obj, void* params, int isAltVariant) {
     (*gBaddieControlInterface)->initGroundBaddie(obj, params, (u8*)runtime, 0xc, 6, 0x102, animFlags, 40.0f);
     obj->animEventCallback = (void*)DIMboss_updateState;
     runtime->groundBaddie.targetState = DIMBOSS_PHASE_START;
-    (*gPlayerInterface)->setState(obj, runtime, 0);
+    (*gPlayerInterface)->setState(obj, &runtime->groundBaddie.baddie, 0);
     runtime->groundBaddie.baddie.substate = 0;
     runtime->groundBaddie.baddie.hitPoints = 3;
     obj->anim.resetHitboxFlags =

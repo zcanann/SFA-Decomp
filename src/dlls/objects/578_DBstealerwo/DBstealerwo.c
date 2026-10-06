@@ -1746,8 +1746,8 @@ void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
 }
 
 void dbstealerworm_hitDetect(GameObject* obj) {
-    int* inner = obj->extra;
-    (*gPlayerInterface)->updateVelocityState(obj, inner, gDBStealerWormStateHandlersA);
+    GroundBaddieState* inner = obj->extra;
+    (*gPlayerInterface)->updateVelocityState(obj, &inner->baddie, gDBStealerWormStateHandlersA);
 }
 
 const f32 gDbStealerwormGravity[1] = {0.17f};
@@ -1840,13 +1840,13 @@ void dbstealerworm_update(GameObject* obj) {
                     dbstealerworm_processEffectFlags(obj, blob);
                     (*gBaddieControlInterface)->updateGravity(obj, (void*)blob, gDbStealerwormGravity[0], -1);
                     if ((sub3->flags15 & 4) == 0) {
-                        (*gPlayerInterface)->rotateTowardTarget((void*)obj, (void*)blob, timeDelta, 4);
+                        (*gPlayerInterface)->rotateTowardTarget(obj, &blob->baddie, timeDelta, 4);
                     }
                     blob->savedPendingParentObj = obj->pendingParentObj;
                     obj->pendingParentObj = 0;
                     /* Retail derives both pointers past the 0x18-byte scratch record. */
                     (*gPlayerInterface)
-                        ->update((void*)obj, (void*)blob, timeDelta, timeDelta, (char*)st[0] + 0x34,
+                        ->update(obj, &blob->baddie, timeDelta, timeDelta, (char*)st[0] + 0x34,
                                  (char*)st[0] + 0x18);
                     obj->pendingParentObj = blob->savedPendingParentObj;
                 }
@@ -1880,7 +1880,7 @@ void dbstealerworm_init(GameObject* obj, u8* def, int flag) {
     p40c->linkedObj = 0;
     ObjAnim_SetCurrentMove(obj, 8, 0.0f, 0);
     obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-    (*gPlayerInterface)->setState(obj, sub, 3);
+    (*gPlayerInterface)->setState(obj, &sub->baddie, 3);
     sub->baddie.substate = 0;
     sub->baddie.physicsActive = 1;
     ObjHits_EnableObject(obj);

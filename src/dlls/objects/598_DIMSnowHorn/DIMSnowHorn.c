@@ -251,7 +251,7 @@ int DIMSnowHorn1_stateHandler09(GameObject* obj, DIMSnowHorn1State* state, f32 f
         }
     }
     state->baddie.moveSpeed = 0.012f;
-    (*gPlayerInterface)->updateAnimRootMotion(obj, (void*)state, fv, 8);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, &state->baddie, fv, 8);
 
     if (state->baddie.pressedButtons & PAD_BUTTON_A) {
         if (near == NULL || (near->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) == 0) {
@@ -710,15 +710,15 @@ int DIMSnowHorn1_animEventCallback(GameObject* obj, int unused, ObjSeqState* ani
                 state->flags |= SNOWHORN1_FLAG_SEQ_TRIGGERED;
             }
         }
-        (*gPlayerInterface)->setState((void*)obj, state, 1);
+        (*gPlayerInterface)->setState(obj, &state->baddie, 1);
         break;
     case 5:
         animUpdate->movementState = 0;
-        (*gPlayerInterface)->setState((void*)obj, state, 2);
+        (*gPlayerInterface)->setState(obj, &state->baddie, 2);
         break;
     case 4:
         animUpdate->movementState = 0;
-        (*gPlayerInterface)->setState((void*)obj, state, 7);
+        (*gPlayerInterface)->setState(obj, &state->baddie, 7);
         break;
     case 1:
         animUpdate->movementState = 0;
@@ -738,12 +738,12 @@ int DIMSnowHorn1_animEventCallback(GameObject* obj, int unused, ObjSeqState* ani
         } else {
             animState = 7;
         }
-        (*gPlayerInterface)->setState((void*)obj, state, animState);
+        (*gPlayerInterface)->setState(obj, &state->baddie, animState);
         break;
     case 3:
         animUpdate->movementState = 0;
         state->baddie.moveJustStartedA = 1;
-        (*gPlayerInterface)->setState((void*)obj, state, 7);
+        (*gPlayerInterface)->setState(obj, &state->baddie, 7);
         break;
     default:
         break;
@@ -1024,7 +1024,7 @@ void DIMSnowHorn1_ridingUpdate(GameObject* obj, int frameStep, int slot) {
     }
 
     (*gPlayerInterface)
-        ->update(obj, (void*)state, timeDelta, timeDelta, gDIMSnowHorn1StateHandlers,
+        ->update(obj, &state->baddie, timeDelta, timeDelta, gDIMSnowHorn1StateHandlers,
                  &gDIMSnowHorn1DefaultStateHandler);
     DIMSnowHorn1_spawnFootstepEffects(obj, state, state);
 }
@@ -1235,7 +1235,7 @@ void DIMSnowHorn1_init(GameObject* obj, DIMSnowHorn1Placement* def, int spawnFla
         ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         hitState->trackContactMask = 9;
     }
-    (*gPlayerInterface)->init(obj, inner, 0xc, 1);
+    (*gPlayerInterface)->init(obj, &inner->baddie, 0xc, 1);
     inner->baddie.gravity = 0.17f;
     pathState = (u8*)&inner->baddie + 4;
     pathState[0x25b] = 0;

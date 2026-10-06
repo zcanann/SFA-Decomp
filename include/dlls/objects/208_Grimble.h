@@ -96,9 +96,9 @@ int grimble_stateHandlerA06(GameObject* obj, GroundBaddieState* state, f32 speed
 int grimble_stateHandlerA05(GameObject* obj, GroundBaddieState* state);
 int grimble_stateHandlerA04(GameObject* obj, GroundBaddieState* state);
 int grimble_stateHandlerA03(GameObject* obj, GroundBaddieState* state);
-int grimble_stateHandlerA02(GameObject* obj, char* state, f32 timeDelta);
-int grimble_stateHandlerA01(GameObject* obj, char* state, f32 timeDelta);
-int grimble_stateHandlerA00(GameObject* obj, char* state, f32 timeDelta);
+int grimble_stateHandlerA02(GameObject* obj, GroundBaddieState* state, f32 timeDelta);
+int grimble_stateHandlerA01(GameObject* obj, GroundBaddieState* state, f32 timeDelta);
+int grimble_stateHandlerA00(GameObject* obj, GroundBaddieState* state, f32 timeDelta);
 int grimble_animEventCallback(void);
 void grimble_attachNearestPath(GameObject* obj);
 

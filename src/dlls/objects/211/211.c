@@ -1317,7 +1317,7 @@ void dll_D3_update(GameObject* obj)
     state->savedPendingParentObj = obj->pendingParentObj;
     obj->pendingParentObj = 0;
 
-    (*gPlayerInterface)->update(obj, state, timeDelta, timeDelta, gLandedArwingStateHandlers,
+    (*gPlayerInterface)->update(obj, &state->baddie, timeDelta, timeDelta, gLandedArwingStateHandlers,
                                 &gLandedArwingDefaultStateHandler);
 
     obj->pendingParentObj = state->savedPendingParentObj;
@@ -1395,8 +1395,8 @@ void dll_D3_init(GameObject* obj, DllD3Placement* def, int flag)
 
 void LandedArwing_OnPlayerContact(GameObject* obj, GameObject* otherObj)
 {
-    int* state = obj->extra;
-    (*gPlayerInterface)->setState(obj, state, 2);
+    GroundBaddieState* state = obj->extra;
+    (*gPlayerInterface)->setState(obj, &state->baddie, 2);
 }
 
 void dll_D3_release_nop(void)

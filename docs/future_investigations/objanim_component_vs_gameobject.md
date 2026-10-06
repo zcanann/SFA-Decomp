@@ -33,6 +33,47 @@ the five intentional function renames. The existing TRK `__exception` vector
 carving and MusyX `sal_volume` discarded-data report artifacts are unchanged;
 all five source-linked DOLs are byte-identical to their verified originals.
 
+## Shared movement/controller contract (2026-10-06)
+
+The engine DLL 15 interface now takes `GameObject*` and `BaddieState*`, with
+285 direct calls audited across 20 source files. Player, ground enemies,
+rideable characters and bosses pass their evidenced shared controller prefix.
+The descriptor embeds that same typed interface, so its function initializers
+are checked against the public declarations instead of being independently
+cast to generic callbacks. The registry retains its explicit descriptor cast.
+
+`player_modelMtxFn` was not a matrix operation: its `mtx[3..5]` accesses are
+the object's local position at `0x0C`, `0x10` and `0x14`. It is now
+`PlayerControl_ApplyPositionNudge`; the related `player_render2` is
+`PlayerControl_ApplyYawNudge`. The old forward-velocity interface names are
+corrected accordingly. `dll_0F_func0B` and `dll_0F_func13` are now
+`PlayerControl_UpdateTurnFromRootMotion` and
+`PlayerControl_ApplyDirectionalVelocity`. The latter's floating-point
+arguments precede its angle, matching the previously cast Player call.
+`gPlayerMoveOverrideObject` also replaces the integer `playerOverride`.
+
+`player_setState` now calls its exit callback with `(obj, state)`, removing a
+false zero-argument cast that happened to preserve the argument registers.
+Animation advancement uses the canonical `ObjAnimEventList`, including its
+root-motion fields and indexed event IDs, instead of a duplicate record and
+byte-offset iteration. Dinosaur Planet's `18_objfsa` at the revision above
+corroborates the nudge operations, callback arguments and unused time-step
+argument in target turning; SFA's own transition order remains unchanged.
+These semantic names do not establish an original SFA filename.
+
+Player's sequence callback keeps separate typed views of its full state and
+controller prefix. The explicit `(BaddieState*)inner` prefix conversion
+preserves MWCC's separate register identities; replacing it with
+`&inner->baddie` merges them and changes allocation. The full state no longer
+needs an integer handle. This is a compiler constraint on an evidenced common
+prefix, not a host-port accommodation.
+
+All five versions pass `all_source`, strict retail DOL equality and full
+objdiff inventories. Every affected TU is exact, and every source object's
+section contents, symbol locations and resolved relocations remain unchanged
+after the five intentional renames. The two pre-existing report artifacts
+described above remain unchanged.
+
 ## Remaining question
 
 Is `ObjAnimComponent` a genuine standalone component from the original source,

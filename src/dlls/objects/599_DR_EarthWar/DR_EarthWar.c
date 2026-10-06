@@ -794,7 +794,7 @@ void DR_EarthWarrior_hitDetect(GameObject* obj) {
                 }
 
                 state->sub.savedControlMode = state->baddie.controlMode;
-                (*gPlayerInterface)->setState(obj, state, 3);
+                (*gPlayerInterface)->setState(obj, &state->baddie, 3);
             }
         }
     }
@@ -870,7 +870,7 @@ void DR_EarthWarrior_runController(GameObject* obj, int updateRate, int frameInd
     state->baddie.flags0 |= 0x1000000;
     playerUpdateMotionState(obj, sub, &state->baddie);
     (*gPlayerInterface)
-        ->update(obj, (void*)state, timeDelta, timeDelta, gDREarthWarriorStateHandlers,
+        ->update(obj, &state->baddie, timeDelta, timeDelta, gDREarthWarriorStateHandlers,
                  &gDREarthWarriorDefaultStateHandler);
     obj->anim.rotY += state->baddie.spawnRotY >> 2;
     obj->anim.rotZ += state->baddie.spawnRotZ >> 2;
@@ -990,7 +990,7 @@ void DR_EarthWarrior_init(GameObject* obj, DREarthWarriorPlacement* def) {
     state->sub.setupVariant = def->setupVariant;
     state->sub.turnThreshold = 5;
     state->sub.talkSequenceId = -1;
-    (*gPlayerInterface)->init(obj, state, 4, 1);
+    (*gPlayerInterface)->init(obj, &state->baddie, 4, 1);
     state->baddie.flags0 |= 0x4000;
     state->baddie.gravity = 0.17f;
     pathState = &state->baddie.curvesCollision;

@@ -958,7 +958,7 @@ void DR_CloudRunner_hitDetect(GameObject* obj) {
             (*gGameUIInterface)->airMeterShutdown();
             (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
             inner->airTimeRemaining = 1;
-            (*gPlayerInterface)->setState(obj, inner, 7);
+            (*gPlayerInterface)->setState(obj, &inner->baddie, 7);
         }
         Sfx_PlayFromObject(obj, SFXTRIG_gscsc);
     }
@@ -1000,7 +1000,7 @@ void DR_CloudRunner_updateFlightControl(GameObject* obj, f32 f, int triggerFrame
         inner->baddie.flags0 &= ~0x400000;
     }
     (*gPlayerInterface)
-        ->update(obj, inner, f, timeDelta, gDRCloudRunnerStateHandlers, &gDRCloudRunnerDefaultStateHandler);
+        ->update(obj, &inner->baddie, f, timeDelta, gDRCloudRunnerStateHandlers, &gDRCloudRunnerDefaultStateHandler);
     if ((inner->baddie.eventFlags & 1) != 0) {
         DR_CloudRunner_fireProjectile(obj);
     }
@@ -1057,7 +1057,7 @@ void DR_CloudRunner_update(GameObject* obj) {
                 inner->unkB04 = 0;
                 inner->flagsBB6 |= 4;
                 inner->moveLib.modeBits |= 1;
-                (*gPlayerInterface)->setState(obj, inner, 4);
+                (*gPlayerInterface)->setState(obj, &inner->baddie, 4);
             } else {
                 buttonDisable(0, PAD_BUTTON_A);
                 {
@@ -1095,7 +1095,7 @@ void DR_CloudRunner_init(GameObject* obj, DRCloudRunnerPlacement* def) {
         obj->anim.localPosZ = target.z;
         obj->anim.rotX = target.angle;
     }
-    (*gPlayerInterface)->init(obj, (void*)inner, 8, 1);
+    (*gPlayerInterface)->init(obj, &inner->baddie, 8, 1);
     inner->baddie.gravity = 0.17f;
     DR_CloudRunner_setupPath(obj, inner, inner->flagsBC0.b20);
     dll_2E_initState(obj, &inner->moveLib, -0x11c7, 0x1555, 1);

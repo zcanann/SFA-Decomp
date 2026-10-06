@@ -1,3 +1,4 @@
+#include "main/dll/dll_000F_unk.h"
 #include "dlls/object_descriptor.h"
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
@@ -14,7 +15,6 @@
 #include "main/lightmap_api.h"
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
-#include "main/dll/dll_000F_unk.h"
 #include "main/audio/sfx_play_api.h"
 
 u8 lbl_803DD450;
@@ -27,7 +27,7 @@ u8 gPlayerMoveAdvanced;
 u32 gPlayerMoveFastMoveId;
 u32 gPlayerMoveSlowMoveId;
 u8 gPlayerMoveVelHandled;
-u32 playerOverride;
+GameObject* gPlayerMoveOverrideObject;
 
 #define PLAYER_MOVE_ZERO             0.0f
 #define PLAYER_MOVE_DAMPING          0.9f
@@ -201,7 +201,7 @@ void player_steerFromInput(GameObject* obj, BaddieState* state) {
     }
 }
 
-void player_updateParticles(GameObject* obj, int unused, int effectId, int count, int mode) {
+void player_updateParticles(GameObject* obj, BaddieState* unused, int effectId, int count, int mode) {
     while (count != 0 && obj != NULL) {
         if (mode == 0) {
             (*gPartfxInterface)->spawnObject(obj, effectId, NULL, 2, -1, NULL);
@@ -214,7 +214,7 @@ void player_updateParticles(GameObject* obj, int unused, int effectId, int count
     }
 }
 
-void player_doProjGfx(GameObject* obj, int unusedA, int resIdBase, int count, int unusedB, int mode) {
+void player_doProjGfx(GameObject* obj, BaddieState* unusedA, int resIdBase, int count, int unusedB, int mode) {
     ModgfxResource* res = Resource_Acquire((u16)(resIdBase + 0x58), 1);
     while (count != 0) {
         if (mode == 0) {
@@ -267,7 +267,7 @@ void player_updateSecondaryBlend(GameObject* obj, BaddieState* state, int moveA,
     }
 }
 
-void player_setAnimIds(int unused1, int unused2, u32 a, u32 b) {
+void player_setAnimIds(GameObject* unusedObj, BaddieState* unusedState, u32 a, u32 b) {
     gPlayerMoveFastMoveId = a;
     gPlayerMoveSlowMoveId = b;
 }
@@ -281,7 +281,7 @@ void player_clearXZvel(GameObject* obj, BaddieState* state) {
     state->animSpeedB = z;
 }
 
-void dll_0F_func13(GameObject* obj, BaddieState* state, int angle, f32 t, f32 scale) {
+void PlayerControl_ApplyDirectionalVelocity(GameObject* obj, BaddieState* state, f32 t, f32 scale, int angle) {
     f32 ang, vx, vz, q, w, dist, s, c;
 
     state->movementFlags |= 1;
@@ -308,8 +308,8 @@ void dll_0F_func13(GameObject* obj, BaddieState* state, int angle, f32 t, f32 sc
         obj->anim.velocityX = z;
         obj->anim.velocityZ = z;
     }
-    s = mathSinf((PLAYER_MOVE_PI * (f32) * (s16*)obj) / PLAYER_MOVE_HALF_CIRCLE);
-    c = mathCosf((PLAYER_MOVE_PI * (f32) * (s16*)obj) / PLAYER_MOVE_HALF_CIRCLE);
+    s = mathSinf((PLAYER_MOVE_PI * (f32)obj->anim.rotX) / PLAYER_MOVE_HALF_CIRCLE);
+    c = mathCosf((PLAYER_MOVE_PI * (f32)obj->anim.rotX) / PLAYER_MOVE_HALF_CIRCLE);
     state->animSpeedB = obj->anim.velocityX * c - obj->anim.velocityZ * s;
     state->animSpeedA = -obj->anim.velocityZ * c - obj->anim.velocityX * s;
 }
@@ -359,7 +359,7 @@ void player_playSoundFn0F(GameObject* obj, BaddieState* state, int bit, int idx,
     }
 }
 
-void player_rotateTowardEnemy(GameObject* obj, BaddieState* state, int spd) {
+void player_rotateTowardEnemy(GameObject* obj, BaddieState* state, f32 unusedTimeDelta, int spd) {
     GameObject* enemy;
     f32 dx;
     f32 dz;
@@ -384,7 +384,7 @@ void player_rotateTowardEnemy(GameObject* obj, BaddieState* state, int spd) {
     }
 }
 
-void player_render2(GameObject* obj, BaddieState* state, f32 f1, f32 f2) {
+void PlayerControl_ApplyYawNudge(GameObject* obj, BaddieState* state, f32 f1, f32 f2) {
     f32 cur = state->nudgeYawProgress;
     f32 new_ = f2 * f1 + cur;
     if (new_ > gPlayerMoveOne[0]) {
@@ -399,7 +399,7 @@ void player_render2(GameObject* obj, BaddieState* state, f32 f1, f32 f2) {
     }
 }
 
-void player_modelMtxFn(f32* mtx, BaddieState* state, f32 f1, f32 f2) {
+void PlayerControl_ApplyPositionNudge(GameObject* obj, BaddieState* state, f32 f1, f32 f2) {
     f32 cur = state->nudgePosProgress;
     f32 new_ = f2 * f1 + cur;
     if (new_ > gPlayerMoveOne[0]) {
@@ -408,66 +408,63 @@ void player_modelMtxFn(f32* mtx, BaddieState* state, f32 f1, f32 f2) {
     {
         f32 delta = new_ - cur;
         if (delta > PLAYER_MOVE_ZERO) {
-            mtx[3] = state->nudgePosX * delta + mtx[3];
-            mtx[4] = state->nudgePosY * delta + mtx[4];
-            mtx[5] = state->nudgePosZ * delta + mtx[5];
+            obj->anim.localPosX = state->nudgePosX * delta + obj->anim.localPosX;
+            obj->anim.localPosY = state->nudgePosY * delta + obj->anim.localPosY;
+            obj->anim.localPosZ = state->nudgePosZ * delta + obj->anim.localPosZ;
             state->nudgePosProgress = new_;
         }
     }
 }
 
-void dll_0F_func0B(GameObject* obj, BaddieState* state, f32 f1, f32 f2, f32 f3) {
+void PlayerControl_UpdateTurnFromRootMotion(GameObject* obj, BaddieState* state, f32 f1, f32 f2, f32 f3) {
     if (state->inputMagnitude > PLAYER_MOVE_OVERRIDE_MIN) {
         f32 q = (f2 * f1) / f3;
-        obj->anim.rotX = (f32) * (s16*)obj + PLAYER_MOVE_DEGREES_PER_RAD * q;
+        obj->anim.rotX = (f32)obj->anim.rotX + PLAYER_MOVE_DEGREES_PER_RAD * q;
     }
 }
 
 void player_advanceMove(GameObject* obj, BaddieState* state, f32 dt, int flags) {
-    PlayerMoveBuf buf;
-    s8* ptr;
+    ObjAnimEventList buf;
     int i;
     f32 stopVal;
 
-    buf.flag = 0;
-    state->moveDone = ObjAnim_AdvanceCurrentMove(obj, state->moveSpeed, dt, (ObjAnimEventList*)&buf);
+    buf.rootCurveValid = 0;
+    state->moveDone = ObjAnim_AdvanceCurrentMove(obj, state->moveSpeed, dt, &buf);
 
     state->eventFlags = 0;
     i = 0;
-    ptr = (s8*)&buf;
-    for (; i < buf.count; i++) {
-        state->eventFlags |= 1 << ptr[0x13];
-        ptr++;
+    for (; i < buf.triggerCount; i++) {
+        state->eventFlags |= 1 << buf.triggeredIds[i];
     }
 
     state->flags0 &= ~0x10000;
 
-    if (buf.flag != 0) {
+    if (buf.rootCurveValid != 0) {
         if ((flags & 0x10) != 0) {
             if ((flags & 1) != 0) {
-                state->rootMotionDelta = -buf.c;
+                state->rootMotionDelta = -buf.rootDeltaZ;
             }
             if ((flags & 2) != 0) {
-                state->rootMotionDelta = buf.a;
+                state->rootMotionDelta = buf.rootDeltaX;
             }
             if ((flags & 4) != 0) {
-                state->rootMotionDelta = buf.b;
+                state->rootMotionDelta = buf.rootDeltaY;
             }
             if ((flags & 8) != 0) {
-                obj->anim.rotX += buf.angleDelta;
+                obj->anim.rotX += buf.rootRotation[1];
             }
         } else {
             if ((flags & 1) != 0) {
-                state->animSpeedA = -buf.c / dt;
+                state->animSpeedA = -buf.rootDeltaZ / dt;
             }
             if ((flags & 2) != 0) {
-                state->animSpeedB = buf.a / dt;
+                state->animSpeedB = buf.rootDeltaX / dt;
             }
             if ((flags & 8) != 0) {
-                obj->anim.rotX += buf.angleDelta;
+                obj->anim.rotX += buf.rootRotation[1];
             }
             if ((flags & 4) != 0) {
-                state->animSpeedY = buf.b / dt;
+                state->animSpeedY = buf.rootDeltaY / dt;
                 state->flags0 |= 0x10000;
             }
         }
@@ -643,13 +640,13 @@ void player_setState(GameObject* obj, BaddieState* state, int new_state) {
         state->prevControlMode = state->controlMode;
         state->controlMode = new_state;
         {
-            void (*fn)(void) = *(void (**)(void))&state->stateExitFn;
+            BaddieStateExitFn fn = state->stateExitFn;
             if (fn != 0) {
-                fn();
-                *(void**)&state->stateExitFn = 0;
+                fn(obj, state);
+                state->stateExitFn = NULL;
             }
         }
-        *(void**)&state->stateExitFn = state->nextStateExitFn;
+        state->stateExitFn = state->nextStateExitFn;
     }
     state->controlTimer = 0;
     state->moveJustStartedA = 1;
@@ -663,8 +660,8 @@ void player_setState(GameObject* obj, BaddieState* state, int new_state) {
     }
 }
 
-void player_setOverride(u32 x) {
-    playerOverride = x;
+void player_setOverride(GameObject* obj) {
+    gPlayerMoveOverrideObject = obj;
 }
 
 void player_updateVel(GameObject* obj, BaddieState* state, void* stateFns) {
@@ -785,8 +782,8 @@ void player_update(GameObject* obj, BaddieState* state, float dt, float pathDt, 
         player_applyVelocityStep(obj, state, dt);
     }
 
-    overrideObj = (GameObject*)playerOverride;
-    if ((void*)overrideObj != NULL) {
+    overrideObj = gPlayerMoveOverrideObject;
+    if (overrideObj != NULL) {
         dx = overrideObj->anim.localPosX - gPlayerMoveOverridePosX;
         dz = overrideObj->anim.localPosZ - gPlayerMoveOverridePosZ;
         dist = sqrtf(dx * dx + dz * dz);
@@ -813,7 +810,7 @@ void player_update(GameObject* obj, BaddieState* state, float dt, float pathDt, 
         }
     }
 
-    playerOverride = 0;
+    gPlayerMoveOverrideObject = 0;
 
     if ((state->flags0 & 0x1000000) == 0 && (state->flags0 & 0x400000) == 0 && keepPathControls != 0) {
         (*gPathControlInterface)->update(obj, &state->curvesCollision, dt);
@@ -838,7 +835,7 @@ void player_update(GameObject* obj, BaddieState* state, float dt, float pathDt, 
     }
 }
 
-void player_init(void* unused, BaddieState* state, int a, int b) {
+void player_init(GameObject* unused, BaddieState* state, int a, int b) {
     memset(state, 0, sizeof(BaddieState));
     state->unk26C = a;
     state->unk26E = b;
@@ -855,68 +852,35 @@ void player_release(void) {
 
 void player_initialise(void) {
 }
-typedef struct PlayerDllInterface {
-    u32 reserved0;
-    u32 reserved1;
-    u32 reserved2;
-    u32 slotCountAndFlags;
-    ObjectDescriptorCallback initialise;
-    ObjectDescriptorCallback release;
-    ObjectDescriptorCallback slot02;
-    ObjectDescriptorCallback init;
-    ObjectDescriptorCallback update;
-    ObjectDescriptorCallback updateVel;
-    ObjectDescriptorCallback setOverride;
-    ObjectDescriptorCallback setState;
-    ObjectDescriptorCallback followCurve;
-    ObjectDescriptorCallback moveTowardPoint;
-    ObjectDescriptorCallback advanceMove;
-    ObjectDescriptorCallback slot0B;
-    ObjectDescriptorCallback modelMtxFn;
-    ObjectDescriptorCallback render2;
-    ObjectDescriptorCallback rotateTowardEnemy;
-    ObjectDescriptorCallback playSoundFn0F;
-    ObjectDescriptorCallback playSoundFn10;
-    ObjectDescriptorCallback findCurve;
-    ObjectDescriptorCallback updateCurve;
-    ObjectDescriptorCallback slot13;
-    ObjectDescriptorCallback clearXZvel;
-    ObjectDescriptorCallback setAnimIds;
-    ObjectDescriptorCallback updateSecondaryBlend;
-    ObjectDescriptorCallback doProjGfx;
-    ObjectDescriptorCallback updateParticles;
-    ObjectDescriptorCallback slot19;
-} PlayerDllInterface;
-
-PlayerDllInterface player_funcs = {
-    0,
-    0,
-    0,
+PlayerControlDescriptor player_funcs = {
+    {0, 0, 0},
     0x00190000,
-    (ObjectDescriptorCallback)player_initialise,
-    (ObjectDescriptorCallback)player_release,
-    0,
-    (ObjectDescriptorCallback)player_init,
-    (ObjectDescriptorCallback)player_update,
-    (ObjectDescriptorCallback)player_updateVel,
-    (ObjectDescriptorCallback)player_setOverride,
-    (ObjectDescriptorCallback)player_setState,
-    (ObjectDescriptorCallback)player_followCurve,
-    (ObjectDescriptorCallback)player_moveTowardPoint,
-    (ObjectDescriptorCallback)player_advanceMove,
-    (ObjectDescriptorCallback)dll_0F_func0B,
-    (ObjectDescriptorCallback)player_modelMtxFn,
-    (ObjectDescriptorCallback)player_render2,
-    (ObjectDescriptorCallback)player_rotateTowardEnemy,
-    (ObjectDescriptorCallback)player_playSoundFn0F,
-    (ObjectDescriptorCallback)player_playSoundFn10,
-    (ObjectDescriptorCallback)player_findCurve,
-    (ObjectDescriptorCallback)player_updateCurve,
-    (ObjectDescriptorCallback)dll_0F_func13,
-    (ObjectDescriptorCallback)player_clearXZvel,
-    (ObjectDescriptorCallback)player_setAnimIds,
-    (ObjectDescriptorCallback)player_updateSecondaryBlend,
-    (ObjectDescriptorCallback)player_doProjGfx,
-    (ObjectDescriptorCallback)player_updateParticles,
-    (ObjectDescriptorCallback)dll_0F_func19_nop,
+    player_initialise,
+    player_release,
+    {
+        0,
+        player_init,
+        player_update,
+        player_updateVel,
+        player_setOverride,
+        player_setState,
+        player_followCurve,
+        player_moveTowardPoint,
+        player_advanceMove,
+        PlayerControl_UpdateTurnFromRootMotion,
+        PlayerControl_ApplyPositionNudge,
+        PlayerControl_ApplyYawNudge,
+        player_rotateTowardEnemy,
+        player_playSoundFn0F,
+        player_playSoundFn10,
+        player_findCurve,
+        player_updateCurve,
+        PlayerControl_ApplyDirectionalVelocity,
+        player_clearXZvel,
+        player_setAnimIds,
+        player_updateSecondaryBlend,
+        player_doProjGfx,
+        player_updateParticles,
+        dll_0F_func19_nop,
+    },
 };

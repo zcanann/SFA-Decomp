@@ -40,7 +40,7 @@ int dll_CB_stateHandler5(GameObject* obj, GroundBaddieState* state) {
 
     objectState = obj->extra;
     if (state->baddie.targetObj != NULL) {
-        (*gPlayerInterface)->setState(obj, state, 1);
+        (*gPlayerInterface)->setState(obj, &state->baddie, 1);
         routePath = &objectState->routeNav;
         neutralInput = 0.0f;
         state->baddie.moveInputX = neutralInput;
@@ -54,13 +54,13 @@ int dll_CB_stateHandler5(GameObject* obj, GroundBaddieState* state) {
         }
         if (routePath->useDirectSteering == 0) {
             (*gPlayerInterface)
-                ->moveTowardPoint(obj, state, routePath->waypointPos[0], routePath->waypointPos[2], 0.0f, 0.0f, 60.0f);
+                ->moveTowardPoint(obj, &state->baddie, routePath->waypointPos[0], routePath->waypointPos[2], 0.0f, 0.0f, 60.0f);
         } else {
             (*gPlayerInterface)
-                ->moveTowardPoint(obj, state, routePath->waypointPos[0], routePath->waypointPos[2], 15.0f, 30.0f, 60.0f);
+                ->moveTowardPoint(obj, &state->baddie, routePath->waypointPos[0], routePath->waypointPos[2], 15.0f, 30.0f, 60.0f);
         }
     } else {
-        (*gPlayerInterface)->setState(obj, state, 0);
+        (*gPlayerInterface)->setState(obj, &state->baddie, 0);
         state->baddie.moveDone = 0;
     }
     return 0;
@@ -70,7 +70,7 @@ int dll_CB_stateHandler4(GameObject* obj, GroundBaddieState* state) {
     if (state->baddie.moveJustStartedB != 0) {
         f32 initialVelocity;
 
-        (*gPlayerInterface)->setState(obj, state, 0);
+        (*gPlayerInterface)->setState(obj, &state->baddie, 0);
         initialVelocity = 5.0f;
         obj->anim.velocityY = initialVelocity;
         state->baddie.animSpeedA = initialVelocity;
@@ -107,7 +107,7 @@ int dll_CB_stateHandler2(GameObject* obj, GroundBaddieState* state) {
     ObjHitsPriorityState* hitState;
 
     if (state->baddie.moveJustStartedB != 0) {
-        (*gPlayerInterface)->setState(obj, state, 3);
+        (*gPlayerInterface)->setState(obj, &state->baddie, 3);
         state->baddie.targetObj = NULL;
         state->baddie.physicsActive = 0;
         state->baddie.hasTarget = 0;
@@ -199,7 +199,7 @@ int dll_CB_moveHandler0(GameObject* obj, GroundBaddieState* state, f32 timeDelta
     state->baddie.physicsActive = 1;
     obj->anim.rotZ = state->baddie.spawnRotZ;
     obj->anim.rotY = state->baddie.spawnRotY;
-    (*gPlayerInterface)->rotateTowardTarget(obj, state, timeDelta, 5);
+    (*gPlayerInterface)->rotateTowardTarget(obj, &state->baddie, timeDelta, 5);
     return 0;
 }
 
@@ -226,7 +226,7 @@ void dll_CB_seekAndUpdate(GameObject* obj, ObjSeqState* sequenceState, GroundBad
     (*gBaddieControlInterface)->updateGravity(obj, state, 0.17f, 1);
     objectState->savedPendingParentObj = obj->pendingParentObj;
     obj->pendingParentObj = NULL;
-    (*gPlayerInterface)->update(obj, state, timeDelta, timeDelta, gDllCBMoveHandlers, gDllCBStateHandlers);
+    (*gPlayerInterface)->update(obj, &state->baddie, timeDelta, timeDelta, gDllCBMoveHandlers, gDllCBStateHandlers);
     obj->pendingParentObj = objectState->savedPendingParentObj;
 }
 
@@ -289,7 +289,7 @@ int dll_CB_seqFn(GameObject* obj, int unused, ObjSeqState* sequenceState) {
             dll_CB_seekAndUpdate(obj, sequenceState, state, state);
             if (state->subMode == DLL_CB_SUBMODE_SEQUENCE) {
                 state->baddie.substate = 5;
-                (*gPlayerInterface)->update(obj, state, 1.0f, 1.0f, gDllCBMoveHandlers, gDllCBStateHandlers);
+                (*gPlayerInterface)->update(obj, &state->baddie, 1.0f, 1.0f, gDllCBMoveHandlers, gDllCBStateHandlers);
                 sequenceState->movementState = 0;
             }
             break;
@@ -375,7 +375,7 @@ void dll_CB_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int f
 void dll_CB_hitDetect(GameObject* obj) {
     GroundBaddieState* state = obj->extra;
 
-    (*gPlayerInterface)->updateVelocityState(obj, state, gDllCBMoveHandlers);
+    (*gPlayerInterface)->updateVelocityState(obj, &state->baddie, gDllCBMoveHandlers);
 }
 
 void dll_CB_update(GameObject* obj) {
@@ -438,7 +438,7 @@ void dll_CB_init(GameObject* obj, DllCBPlacement* placement, int flags) {
     obj->anim.rotZ = (s16)(placement->rotZ << 8);
     (*gBaddieControlInterface)->initGroundBaddie(obj, (u8*)placement, (u8*)state, 4, 6, 0x82, initFlags, 20.0f);
     obj->animEventCallback = dll_CB_seqFn;
-    (*gPlayerInterface)->setState(obj, state, 0);
+    (*gPlayerInterface)->setState(obj, &state->baddie, 0);
     state->baddie.substate = 0;
     if (state->aggroRange < 0x32) {
         state->aggroRange = 0x32;
