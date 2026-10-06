@@ -28,7 +28,7 @@ Camera modes 73, 75 and 77 now use the canonical record too.
 In `CameraModeNormal_updateVerticalBounds` (EN 0x801046F4), retail passes
 camera+0x34 as the result pointer and camera+0x74 as the radii pointer, writing
 surface/query inputs at +0x84/+0x88. `CameraObject.collisionResults` exposes
-this storage through the existing prefix union. The result ends at +0xA4,
+this storage directly. The result ends at +0xA4,
 where the separately used target pointer begins. The old animation-field
 accesses misrepresented camera-specific storage; direct record fields emit
 the same instructions. Offset assertions live in the camera's owning header.
@@ -275,3 +275,62 @@ pass against verified original DOLs. Full-project reports without
 completion overrides retain only the established TRK vector-carving and
 MusyX discarded exception-data discrepancies. Compiler profiles, split
 boundaries, descriptor order and matching classifications are unchanged.
+
+## Normal-camera vertical-bound contract (2026-10-06)
+
+`CameraModeNormal_updateVerticalBounds` now keeps the focus as a
+`GameObject*`, removing its round trip through a 32-bit `int`. Retail EN
+loads camera +0xA4 into r29 at 0x80104718 and passes that pointer directly
+to broadphase, intersection and height queries. Foxhollow independently
+removes the integer cast. The source fix preserves the entire retail
+object while making those calls valid with native 64-bit pointers.
+
+The height producer and both selection loops establish the bound roles:
+`TrackGroundHit.height` is the plane's Y coordinate, and its +0x08 field
+is `normalY`. The first output receives upward-facing floor heights; the
+second receives downward-facing ceiling heights. The camera's +0x12C and
++0x130 fields store the selected ceiling and floor normal-Y components,
+respectively. The former `boundHitZLower/Upper` names incorrectly described
+coordinates and reversed the physical roles. They are now
+`ceilingNormalY` and `floorNormalY`, with assertions beside the canonical
+camera definition. The normal-mode state, callback declarations and
+call sites consistently use `floorHeight` and `ceilingHeight`.
+
+The selection rules remain exactly as the retail instructions specify:
+
+- Negative normal Y qualifies as a ceiling when height is strictly greater
+  than camera Y minus ten; positive normal Y qualifies as a floor when
+  height is strictly less than camera Y plus ten.
+- Each pass chooses the smallest absolute vertical distance, retaining the
+  first candidate on equal distance. The tolerance intentionally permits
+  a ceiling below the camera or a floor above it.
+- With no qualifying hit, outputs remain -100000/+100000 and the cached
+  normal fields retain their previous values. Normal-mode wall avoidance
+  clears the same two fields at its existing reset site.
+- `flags & 1` performs the collision sweep; `flags & 2` performs the height query.
+  World-to-local synchronization runs even when neither query is requested.
+
+Dinosaur Planet's `camnormal_func_1A58` independently has the same two-pass
+floor/ceiling shape and output order, but uses normal thresholds of
++/-0.707 and a different collision setup. SFA's zero thresholds and sweep
+parameters are preserved. Foxhollow's separate collision scratch record
+also is not imported: SFA's complete camera-owned result record is already
+represented directly.
+
+`python3 tools/test_camera_vertical_bounds.py` compiles the actual helper
+and production camera, collision, bounds and height-hit records with native
+pointers. ASan/UBSan at `-O0` and `-O2` cover all four flag combinations,
+full-width focus propagation, complete collision-record writes, corrected
+sweep endpoints, the low-byte collision flag, parent conversion, empty
+results, both normal signs, strict tolerance boundaries and ties. The
+collision services are controlled fixtures. The existing update, wall
+search and staff-camera native tests also pass with the renamed fields.
+
+All 19 functions, 12,592 code bytes and 260 data bytes in the normal-camera
+TU remain exact across all five versions. The complete object is byte-for-byte
+unchanged in each version, as are all EN source-object hashes. Formatting
+also preserves every source-object hash in all five builds. Full-project
+reports without completion overrides show no new discrepancies; only the
+documented TRK vector-carving and MusyX exception-data reporting cases
+remain. Every full-source build and strict source-linked retail checksum
+passes against its verified original DOL.

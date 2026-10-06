@@ -533,84 +533,84 @@ void CameraModeNormal_updateSettings(CameraObject* camera) {
     }
 }
 
-void CameraModeNormal_updateVerticalBounds(CameraObject* camera, int flags, int collisionFlag, float* upperBound,
-                                           float* lowerBound) {
-    float pt0;
-    float wy;
-    float diff;
-    float bestUpper;
-    float bestLower;
-    float zLim;
-    float zB;
-    int res;
-    int count;
-    int i;
-    int j;
-    GameObject* camObj;
-    TrackQueryBounds bounds;
-    f32 pos[3];
-    TrackGroundHit** hits;
+void CameraModeNormal_updateVerticalBounds(CameraObject* camera, int flags, int queryType, f32* floorHeight,
+                                           f32* ceilingHeight) {
+    f32 hitHeight;
+    f32 cameraY;
+    f32 distance;
+    f32 bestFloorDistance;
+    f32 bestCeilingDistance;
+    f32 zero;
+    f32 heightTolerance;
+    int blocked;
+    int hitCount;
+    int ceilingIndex;
+    int floorIndex;
+    GameObject* focus;
+    TrackQueryBounds queryBounds;
+    f32 resolvedPosition[3];
+    TrackGroundHit** heightHits;
 
-    camObj = (GameObject*)((int)camera->focusObject);
+    focus = camera->focusObject;
     if ((flags & 1) != 0) {
-        float range = 4.0f;
+        f32 range = 4.0f;
         camera->collisionResults.radii[0] = range;
         camera->collisionResults.surfaceTypes[0] = -1;
-        camera->collisionResults.queryTypes[0] = collisionFlag;
-        res = trackGetLineIntersect(&camera->prevWorldX, &camera->anim.worldPosX, range, 1, NULL, NULL, 0x10, 0xffffffff,
+        camera->collisionResults.queryTypes[0] = queryType;
+        blocked = trackGetLineIntersect(&camera->prevWorldX, &camera->anim.worldPosX, range, 1, NULL, NULL, 0x10, 0xffffffff,
                                     0xff, 0);
-        camera->cameraCollisionActive = res;
-        pos[0] = camera->anim.worldPosX;
-        pos[1] = camera->anim.worldPosY;
-        pos[2] = camera->anim.worldPosZ;
-        hitDetect_calcSweptSphereBounds(&bounds, &camera->prevWorldX, pos, camera->collisionResults.radii, 1);
-        trackIntersectBroadphase(camObj, &bounds, 0x240, 1);
-        trackGetIntersect(camObj, &camera->prevWorldX, pos, 1, &camera->collisionResults, 0);
-        camera->anim.worldPosX = pos[0];
-        camera->anim.worldPosY = pos[1];
-        camera->anim.worldPosZ = pos[2];
+        camera->cameraCollisionActive = blocked;
+        resolvedPosition[0] = camera->anim.worldPosX;
+        resolvedPosition[1] = camera->anim.worldPosY;
+        resolvedPosition[2] = camera->anim.worldPosZ;
+        hitDetect_calcSweptSphereBounds(&queryBounds, &camera->prevWorldX, resolvedPosition, camera->collisionResults.radii, 1);
+        trackIntersectBroadphase(focus, &queryBounds, 0x240, 1);
+        trackGetIntersect(focus, &camera->prevWorldX, resolvedPosition, 1, &camera->collisionResults, 0);
+        camera->anim.worldPosX = resolvedPosition[0];
+        camera->anim.worldPosY = resolvedPosition[1];
+        camera->anim.worldPosZ = resolvedPosition[2];
     }
     if ((flags & 2) != 0) {
-        count = trackGetHeight(camObj, camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ, &hits, 1,
+        hitCount = trackGetHeight(focus, camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ, &heightHits, 1,
                                0x40);
-        *upperBound = -100000.0f;
-        *lowerBound = 100000.0f;
-        bestUpper = 100000.0f;
-        bestLower = 100000.0f;
-        zLim = 0.0f;
-        for (i = 0; i < count; i++) {
-            zB = 10.0f;
-            if (hits[i]->normalY < zLim) {
-                pt0 = hits[i]->height;
-                wy = camera->anim.worldPosY;
-                if (pt0 > wy - zB) {
-                    diff = wy - pt0;
-                    if (diff < zLim) {
-                        diff = -diff;
+        *floorHeight = -100000.0f;
+        *ceilingHeight = 100000.0f;
+        bestFloorDistance = 100000.0f;
+        bestCeilingDistance = 100000.0f;
+        zero = 0.0f;
+        for (ceilingIndex = 0; ceilingIndex < hitCount; ceilingIndex++) {
+            heightTolerance = 10.0f;
+            if (heightHits[ceilingIndex]->normalY < zero) {
+                hitHeight = heightHits[ceilingIndex]->height;
+                cameraY = camera->anim.worldPosY;
+                if (hitHeight > cameraY - heightTolerance) {
+                    distance = cameraY - hitHeight;
+                    if (distance < zero) {
+                        distance = -distance;
                     }
-                    if (diff < bestLower) {
-                        *lowerBound = pt0;
-                        camera->boundHitZLower = hits[i]->normalY;
-                        bestLower = diff;
+                    if (distance < bestCeilingDistance) {
+                        *ceilingHeight = hitHeight;
+                        camera->ceilingNormalY = heightHits[ceilingIndex]->normalY;
+                        bestCeilingDistance = distance;
                     }
                 }
             }
         }
-        zLim = 0.0f;
-        for (j = 0; j < count; j++) {
-            zB = 10.0f;
-            if (hits[j]->normalY > zLim) {
-                pt0 = hits[j]->height;
-                wy = camera->anim.worldPosY;
-                if (pt0 < zB + wy) {
-                    diff = wy - pt0;
-                    if (diff < zLim) {
-                        diff = -diff;
+        zero = 0.0f;
+        for (floorIndex = 0; floorIndex < hitCount; floorIndex++) {
+            heightTolerance = 10.0f;
+            if (heightHits[floorIndex]->normalY > zero) {
+                hitHeight = heightHits[floorIndex]->height;
+                cameraY = camera->anim.worldPosY;
+                if (hitHeight < heightTolerance + cameraY) {
+                    distance = cameraY - hitHeight;
+                    if (distance < zero) {
+                        distance = -distance;
                     }
-                    if (diff < bestUpper) {
-                        *upperBound = pt0;
-                        camera->boundHitZUpper = hits[j]->normalY;
-                        bestUpper = diff;
+                    if (distance < bestFloorDistance) {
+                        *floorHeight = hitHeight;
+                        camera->floorNormalY = heightHits[floorIndex]->normalY;
+                        bestFloorDistance = distance;
                     }
                 }
             }
@@ -636,7 +636,7 @@ void CameraModeNormal_getSettings(float* minDistanceOut, float* maxDistanceOut, 
     }
 }
 
-void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 upperBound, f32 lowerBound) {
+void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 floorHeight, f32 ceilingHeight) {
     PlayerState* state;
     f32 minHeight;
     u32 angle;
@@ -1042,10 +1042,10 @@ void CameraModeNormal_update(CameraObject* camera) {
     Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
                                    &camera->anim.worldPosX, &camera->anim.worldPosY, &camera->anim.worldPosZ,
                                    camera->anim.parent);
-    CameraModeNormal_updateSlide(camera, target, gCameraModeNormalState->verticalUpperBound,
-                                 gCameraModeNormalState->verticalLowerBound);
-    CameraModeNormal_updateVerticalBounds(camera, 1, 8, &gCameraModeNormalState->verticalUpperBound,
-                                          &gCameraModeNormalState->verticalLowerBound);
+    CameraModeNormal_updateSlide(camera, target, gCameraModeNormalState->floorHeight,
+                                 gCameraModeNormalState->ceilingHeight);
+    CameraModeNormal_updateVerticalBounds(camera, 1, 8, &gCameraModeNormalState->floorHeight,
+                                          &gCameraModeNormalState->ceilingHeight);
     if (gCameraModeNormalState->wallAvoidanceFlags.active == 0) {
         gCameraModeNormalState->collisionHitMask = camera->collisionResults.hitMask;
         if (((camera->cameraCollisionActive != 0) ||
@@ -1065,8 +1065,8 @@ void CameraModeNormal_update(CameraObject* camera) {
         }
     } else {
         zero = 0.0f;
-        camera->boundHitZUpper = zero;
-        camera->boundHitZLower = zero;
+        camera->floorNormalY = zero;
+        camera->ceilingNormalY = zero;
         if ((camera->collisionResults.hitMask == 1) && (camera->collisionResults.planes[0][1] < zero)) {
             gCameraModeNormalState->wallAvoidanceFlags.active = 0;
         }

@@ -108,8 +108,8 @@ typedef struct CameraObject {
     GameObject* targetReticleOverride;
     GameObject* currentTarget;
     GameObject* targetReticleFocus;
-    f32 boundHitZLower;
-    f32 boundHitZUpper;
+    f32 ceilingNormalY;
+    f32 floorNormalY;
     f32 targetDistance;
     u8 targetKind;
     u8 blendCurveMode;
@@ -165,8 +165,8 @@ STATIC_ASSERT(offsetof(CameraObject, collisionResults.hitCount) == 0xA0);
 STATIC_ASSERT(offsetof(CameraObject, collisionResults.hitMask) == 0xA2);
 STATIC_ASSERT(offsetof(CameraObject, focusObject) == 0xA4);
 STATIC_ASSERT(offsetof(CameraObject, savedLocalPos) == 0xA8);
-STATIC_ASSERT(offsetof(CameraObject, boundHitZLower) == 0x12C);
-STATIC_ASSERT(offsetof(CameraObject, boundHitZUpper) == 0x130);
+STATIC_ASSERT(offsetof(CameraObject, ceilingNormalY) == 0x12C);
+STATIC_ASSERT(offsetof(CameraObject, floorNormalY) == 0x130);
 STATIC_ASSERT(offsetof(CameraObject, cameraCollisionActive) == 0x142);
 
 #endif /* MAIN_CAMERA_OBJECT_H_ */
