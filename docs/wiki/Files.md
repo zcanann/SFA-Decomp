@@ -283,8 +283,8 @@ with the existing `MldfTables.ptrs` view. Allocation, cached file copies, textur
 frame queries, block/model metadata readers and release callbacks retain those
 pointers at native width. Byte positions use byte pointers; TEX1 locals reused
 as an offset and an address retain `size_t` to preserve MWCC's register allocation.
-The separate integer `gMapRomListBuffers` registry and the neighbouring-global
-`MldfTables` addressing scheme still need recovery for a native build.
+The neighbouring-global `MldfTables` addressing scheme still needs recovery
+for a native build.
 
 `tools/test_resource_buffer_registry.py` imports the production registry and
 14 complete consumer bodies. Its 638 cases cover resident/DVD copies, all
@@ -295,12 +295,35 @@ they do not decode retail assets. Truncated-pointer and wrong-release-slot
 negative controls fail as expected. This registry recovery preserves every
 source object byte and the exact retail DOL in all five versions.
 
-Per-map compressed blocks (`modXX.zlb.bin`) are handled separately by
-`piRomLoadSection(int romOffset, int mapIndex, int destBuf)`, which opens
-`sMapFileNameTable[mapIndex]` via the `sRomlistZlbPathFormat` path format and parses the
-16-byte `struct PackHeader` (`magic` 0xFACEFEED = zlb-packed / 0xE0E0E0E0 = stored raw,
-`decompressedSize`, `auxSize`, `compressedSize`) - this is the "ZLB"/"DIR"-tagged
-`struct ZlbHeader` format also defined in `pi_dolphin.c`.
+Per-map `*.romlist.zlb` files are cached separately in `gMapRomListBuffers`.
+`piRomLoadSection(int mapsOffset, int mapIndex, void* destBuf)` takes its
+16-byte `PackHeader` from resident `MAPS.bin` at `mapsOffset`, but decompresses
+the payload at byte 16 of the cached romlist. The numeric 0xFACEFEED tag and
+size fields are distinct from the string-tagged `ZlbHeader` used for other
+resources. This function only handles 0xFACEFEED; other tags return without
+copying. A NULL destination starts an asynchronous load when the romlist is
+missing. Repeating that call after the buffer becomes resident reaches the
+decompressor with the NULL destination, as in retail.
+
+The romlist registry and its startup/release views now use pointer slots.
+`initLoadFiles` clears 117 of the 120 slots and preloads 40 persistent maps:
+indices 5, 67, 73 and 80 through 116. `mapUnload` releases a transient map's
+romlist alongside its BLOCKS table, preserving the persistent-map exclusions
+and existing remap-search behavior. Its indexed address arithmetic retains
+`size_t` because a byte-pointer rewrite changed MWCC register allocation.
+Startup iterator offsets derive from the existing address view's fields;
+this does not turn the separate globals into one allocation.
+
+`tools/test_romlist_buffer_ownership.py` executes the complete loader,
+callbacks, startup and unload bodies at `-O0`/`-O2` under ASan/UBSan: 2,808
+load cases, two startup cases, 1,354 unload cases and a wait-loop case. It
+checks pointer retention, IO order, metadata/payload separation, pending
+reads, locked maps, remap boundaries and release ownership. The fixture
+provides one host allocation for the address view and spies on DVD,
+decompression, table merging and engine services. Failed opens retain the
+borrowed file-info node, and failed async reads retain the romlist buffer;
+these retail behaviors are preserved. Every source object and retail DOL
+remains byte-identical in all five versions.
 
 ### Per-file findings (fileId, consumer, and confirmed/refined format)
 
@@ -308,7 +331,7 @@ Per-map compressed blocks (`modXX.zlb.bin`) are handled separately by
 |---|---|---|---|
 | ANIM.BIN/TAB | 0x30/0x2f (+0x4a/0x49) | `src/main/model.c` (`ObjModel_Load` / `modelLoadAnimations`) | **format confirmed** (see [Animation](Animation) for the record grammar): `.TAB` = 2600 `u32` (ids 0-2596; entry 2597 = file size, then a `0xFFFFFFFF` terminator and one pad word); entry = 28-bit offset, bit `0x10000000` = "this pair holds the id's real record"; the root pair carries 609 real records, each per-map pair a subset, and every id resident elsewhere holds a uniform 32-byte null-anim stub (rev1: flag<=>non-stub exact except id 2462, flagged in the root `.TAB` but stub-bodied). All cross-container duplicate copies are byte-identical (10380 pairs checked, 0 mismatches) |
 | ANIMCURV.bin/tab | 0x0d/0x0e (+0x55/0x56) | `mapLoadDataFile` slots; the reader is `ObjSeq_objLoadAnimdata` + the ObjSeq action/curve interpreter (engine DLL 2, `src/dlls/engine/2/2.c`) | **format confirmed** = the wiki's `Scripting#ANIMCURV` cutscene/sequence data (actions + per-track control points), **not** the RomCurve path network (`rom_curve_interface.h`) - RomCurve points come from the per-map `.romlist.zlb` object stream (objType 110), see [Curves](Curves). Corpus (root + 52 map pairs, rev1): `.tab` = 6320 `u32` (ids 0-6310, two `0xFFFFFFFF` terminators, zero pad), offset = low 24 bits (4-aligned, monotone), bit31 = id present in this pair; 8309 flagged records (3827 unique ids; per-map 0-573, root 423), records tile each `.bin`; absent ids are zero-length slots except 1802 uniform 8-byte tombstones `00000000 FF00FFC4`. Record = `{char tag[4] "SEQA"/"SEQB" (176 SEQB); s16 dataSize; s16 commandCount}` + `commandCount`*4 B actions + `((dataSize>>2 - commandCount)>>1)`*8 B control points `{f32 value; u8 typeAndScale; u8 track (low 5 bits, 0-18 shipped); s16 frame}`. Data quirks: tab entry 583's stored `dataSize` is corrupt (`0x80B9`, true size 0x14) in all 23 containers that carry it (read as a negative `s16` by the loader); 10 ids (5018, 5023, 5567, 5604-5610) drifted between the root copy and a per-map copy; root `.bin` has 60 dead bytes (a delisted record at id 35's slot) |
-| modXX.zlb.bin/tab | n/a | `piRomLoadSection` + `struct PackHeader`/`struct ZlbHeader` | magic/size header fully decoded (see above) |
+| modXX.zlb.bin/tab | 0x25/0x26 (+0x47/0x48) | `mapLoadDataFile`, `checkLoadBlock`, `loadAndDecompressDataFile` | per-map BLOCKS archives; `checkLoadBlock` reads string-tagged `ZlbHeader` lengths |
 | MODELIND.bin | 0x2c | `src/main/model.c: ObjModel_Load` | `fileLoadToBufferOffset(0x2c, gModelResourceBuffer, idc*2, 8)`; word 0 of the 8-byte record is the resolved "real" model id used for the `MODELS.bin` lookup - directly confirms "maps model IDs to indices" |
 | MODELS.bin/TAB | 0x2b/0x2a (+0x46/0x45) | `src/main/model.c`, `src/main/objprint_dolphin.c` | dual-slot per-map streaming (see above) |
 | OBJSEQ2C.tab | 0x0f | `src/dlls/engine/2/2.c` (`getTabEntry(gObjSeqAnimLookup, 0x0f, ((animId & 0x7ff0) >> 4) * 2, 8)`) | anim-id to sequence lookup table, 2-byte stride |

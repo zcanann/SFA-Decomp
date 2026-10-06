@@ -10,7 +10,8 @@
 #include "main/pi_dolphin_api.h"
 #include "main/video_flip.h"
 
-void piRomLoadSection(int romOffset, int mapIndex, void* destBuf);
+/* Preload a missing romlist when destBuf is NULL, otherwise unpack it using MAPS.bin metadata. */
+void piRomLoadSection(int mapsOffset, int mapIndex, void* destBuf);
 void mapsLoadTabOffsets(int firstWord, s32* offsets, int count);
 
 /* extern-cleanup: defining-file public prototypes */

@@ -3,7 +3,7 @@
 
 Records are host-endian and the registry uses its real pointer declaration.
 DVD, cache maintenance, allocation and callback-pool operations are spies.
-The separate integer romlist registry and the adjacent-global MldfTables view
+The separate romlist registry and the adjacent-global MldfTables view
 are not modeled as a native allocation. Missing-resource intentional crashes
 and bank-selection states with no usable bank are not exercised.
 """

@@ -209,7 +209,7 @@ struct MldfTables {
     u8 loadedFlags[0x58];        /* cleared by initLoadFiles */
     int ids[0x58];               /* mapId whose load must be retried, -1 = none */
     int sizes[0x58];             /* byte size of the loaded file */
-    int romList[0x78];           /* per-MAP romlist buffer (indexed by mapIndex) */
+    void* romList[0x78];           /* per-MAP romlist buffer (indexed by mapIndex) */
     void* ptrs[0x58];            /* loaded file buffer, NULL = not resident */
     s16 owners[0x60];            /* mapId owning the slot, -1 = free */
 };
@@ -224,12 +224,13 @@ STATIC_ASSERT(offsetof(struct MldfTables, mergeModels) == 0x170E0);
 STATIC_ASSERT(offsetof(struct MldfTables, ids) == 0x19138);
 STATIC_ASSERT(offsetof(struct MldfTables, loadedFlags) == 0x190E0);
 STATIC_ASSERT(offsetof(struct MldfTables, sizes) == 0x19298);
+STATIC_ASSERT(offsetof(struct MldfTables, romList) == 0x193F8);
 STATIC_ASSERT(offsetof(struct MldfTables, ptrs) == 0x195D8);
 STATIC_ASSERT(offsetof(struct MldfTables, owners) == 0x19738);
 
 typedef u8 MldfArenaBlock[0x20000];
 enum {
-    MLDF_ROM_LIST_WORDS_FROM_ARENA_END = (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, romList)) / sizeof(int),
+    MLDF_ROM_LIST_PTRS_FROM_ARENA_END = (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, romList)) / sizeof(void*),
     MLDF_BUFFER_PTRS_FROM_ARENA_END = sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ptrs),
     MLDF_BUFFER_SLOT_SHIFT = sizeof(void*) == 8 ? 3 : 2
 };
@@ -1371,7 +1372,7 @@ int getTableFileEntry(int fileId, int index, int* out) {
 
 #define MAPTBLP(idx)   (*(int**)(((idx) << 2) + ((u32) & ((struct MldfTables*)base)->ptrs[0])))
 #define MAPID_RT(s)    (*(int*)(((s) << 2) + (resourceAddress + offsetof(struct MldfTables, ids))))
-#define MAPPTR_RT(s)   (*(u32*)(((s) << 2) + (resourceAddress + offsetof(struct MldfTables, ptrs))))
+#define MAPPTR_RT(s)   (*(void**)(((s) << MLDF_BUFFER_SLOT_SHIFT) + (resourceAddress + offsetof(struct MldfTables, ptrs))))
 #define MAPOWNER_RT(s) (*(s16*)(((s) << 1) + (resourceAddress + offsetof(struct MldfTables, owners))))
 
 void* getCurrentDataFile(int id) {
@@ -1399,7 +1400,7 @@ void* getCurrentDataFile(int id) {
 
 int mapUnload(int mapId, int flags) {
     struct MldfTables* tbl;
-    u32 resourceAddress;
+    size_t resourceAddress;
     int* e;
     int f20;
     int f10;
@@ -1413,7 +1414,7 @@ int mapUnload(int mapId, int flags) {
     SaveGameCharacterPosition* st;
 
     tbl = (struct MldfTables*)gResourceFileTable;
-    resourceAddress = (u32)tbl;
+    resourceAddress = (size_t)tbl;
     i = 0;
     needWait = 0;
     st = (SaveGameCharacterPosition*)(*gMapEventInterface)->getCurCharPos();
@@ -1474,7 +1475,7 @@ int mapUnload(int mapId, int flags) {
             }
             {
                 int idx = e[0];
-                if (*(void**)((idx << 2) + (resourceAddress + offsetof(struct MldfTables, ptrs))) != NULL) {
+                if (*(void**)((idx << MLDF_BUFFER_SLOT_SHIFT) + (resourceAddress + offsetof(struct MldfTables, ptrs))) != NULL) {
                     s16 v;
                     if (f80 ||
                         ((flags & e[1]) &&
@@ -1518,15 +1519,15 @@ int mapUnload(int mapId, int flags) {
                                 }
                                 if (j <= 0x50 && j != 0x49 && j != 0x43 && j != 5) {
                                     void** romListSlot =
-                                        (void**)((j << 2) + (resourceAddress + offsetof(struct MldfTables, romList)));
+                                        (void**)((j << MLDF_BUFFER_SLOT_SHIFT) + (resourceAddress + offsetof(struct MldfTables, romList)));
                                     mm_free(*romListSlot);
                                     *romListSlot = NULL;
                                 }
                                 break;
                             }
-                            mm_free((void*)MAPPTR_RT(e[0]));
+                            mm_free(MAPPTR_RT(e[0]));
                             mmSetFreeDelay(2);
-                            *(u32*)((e[0] << 2) + (resourceAddress + offsetof(struct MldfTables, ptrs))) = 0;
+                            *(void**)((e[0] << MLDF_BUFFER_SLOT_SHIFT) + (resourceAddress + offsetof(struct MldfTables, ptrs))) = NULL;
                             *(s16*)((e[0] << 1) + (resourceAddress + offsetof(struct MldfTables, owners))) = -1;
                             *(int*)((e[0] << 2) + (resourceAddress + offsetof(struct MldfTables, sizes))) = 0;
                             switch (e[0]) {
@@ -3676,7 +3677,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
     return 0;
 }
 
-extern int gMapRomListBuffers[];
+extern void* gMapRomListBuffers[];
 
 int mapGetDirIdx(int idx) {
     if (idx >= 0x4b) {
@@ -3720,37 +3721,38 @@ void loadDataFiles() {
     }
     loadTableFiles();
 }
-void piRomLoadSection(int romOffset, int mapIndex, void* destBuf) {
+void piRomLoadSection(int mapsOffset, int mapIndex, void* destBuf) {
     char buf[1024];
     DVDFileInfo* fi;
     int ok;
     struct PackHeader* hdr;
 
-    if ((destBuf == NULL) && ((void*)gMapRomListBuffers[mapIndex] == NULL)) {
+    if ((destBuf == NULL) && (gMapRomListBuffers[mapIndex] == NULL)) {
         sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[mapIndex]);
         fi = AtomicSList_Pop(gDvdFileInfoPool);
         ok = DVDOpen(buf, fi);
         if (ok != 0) {
-            gMapRomListBuffers[mapIndex] = (int)mmAlloc(DVD_FI_LENGTH(fi), 0x7d7d7d7d, 0);
+            gMapRomListBuffers[mapIndex] = mmAlloc(DVD_FI_LENGTH(fi), 0x7d7d7d7d, 0);
             gRomListLoadInFlight = 1;
-            DVDReadAsyncPrio(fi, (void*)gMapRomListBuffers[mapIndex], DVD_FI_LENGTH(fi), 0, romListReadCb, 2);
+            DVDReadAsyncPrio(fi, gMapRomListBuffers[mapIndex], DVD_FI_LENGTH(fi), 0, romListReadCb, 2);
         }
     } else {
-        if ((void*)gMapRomListBuffers[mapIndex] == NULL) {
+        if (gMapRomListBuffers[mapIndex] == NULL) {
             sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[mapIndex]);
             fi = AtomicSList_Pop(gDvdFileInfoPool);
             ok = DVDOpen(buf, fi);
             if (ok == 0) {
                 return;
             }
-            gMapRomListBuffers[mapIndex] = (int)mmAlloc(DVD_FI_LENGTH(fi), 0x7d7d7d7d, 0);
-            DVDRead(fi, (void*)gMapRomListBuffers[mapIndex], DVD_FI_LENGTH(fi), 0);
+            gMapRomListBuffers[mapIndex] = mmAlloc(DVD_FI_LENGTH(fi), 0x7d7d7d7d, 0);
+            DVDRead(fi, gMapRomListBuffers[mapIndex], DVD_FI_LENGTH(fi), 0);
             DVDClose(fi);
             AtomicSList_Push(gDvdFileInfoPool, fi);
         }
-        hdr = (struct PackHeader*)((u8*)gResourceFileBuffers[0x1d] + romOffset);
+        /* MAPS.bin owns the header; the per-map romlist owns the compressed payload. */
+        hdr = (struct PackHeader*)((u8*)gResourceFileBuffers[0x1d] + mapsOffset);
         if (hdr->magic == 0xfacefeed) {
-            zlbDecompress((u8*)(gMapRomListBuffers[mapIndex] + 0x10), hdr->compressedSize, (u8*)destBuf,
+            zlbDecompress((u8*)gMapRomListBuffers[mapIndex] + 0x10, hdr->compressedSize, (u8*)destBuf,
                           &hdr->decompressedSize);
             DCStoreRange(destBuf, hdr->decompressedSize);
         }
@@ -4100,7 +4102,7 @@ void* fileLoad(int id, int wpad0) {
 u8 initLoadFiles(void) {
     int i;
     DVDFileInfo* fileInfo;
-    int* rom;
+    void** rom;
     struct MldfIterators it;
     u8* himem;
     struct MldfTables* tbl = (struct MldfTables*)gResourceFileTable;
@@ -4109,7 +4111,7 @@ u8 initLoadFiles(void) {
         gPendingDvdReadCount = 0;
         gDvdFileInfoPool = stackCreate(0x5e, 0x40);
         i = 0;
-        rom = (int*)((MldfArenaBlock*)tbl + 1) - MLDF_ROM_LIST_WORDS_FROM_ARENA_END;
+        rom = (void**)((MldfArenaBlock*)tbl + 1) - MLDF_ROM_LIST_PTRS_FROM_ARENA_END;
         for (; i < 0x75; rom++, i++) {
             *rom = 0;
             if (i >= 0x50 || i == 0x49 || ((i == 0x43) | (i == 5))) {
@@ -4117,9 +4119,9 @@ u8 initLoadFiles(void) {
             }
         }
         lbl_803DCC98 = 0;
-        for (i = 0, himem = (u8*)tbl + 0x20000, it.ptrs = (void**)(himem - 27176), it.owners = (s16*)(himem - 26824),
-            it.ids = (int*)(himem - 28360), it.names = sResourceFileNameTable, it.sizes = (int*)(himem - 28008),
-            it.flags = himem - 28448;
+        for (i = 0, himem = (u8*)tbl + 0x20000, it.ptrs = (void**)(himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ptrs))), it.owners = (s16*)(himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, owners))),
+            it.ids = (int*)(himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, ids))), it.names = sResourceFileNameTable, it.sizes = (int*)(himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, sizes))),
+            it.flags = himem - (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, loadedFlags));
              i <= 0x57; it.ptrs++, it.owners++, it.ids++, it.names++, it.sizes++, it.flags++, i++) {
             switch (i) {
             case 0:
@@ -4384,7 +4386,7 @@ VideoFlipToken gVideoFlipQueueBuffer[VIDEO_FLIP_QUEUE_CAPACITY];
 OSStopwatch gFrameStopwatch;
 s16 gObjMapBlockInfo[0x9C];
 void* gResourceFileBuffers[0x58];
-int gMapRomListBuffers[0x78];
+void* gMapRomListBuffers[0x78];
 u32 gResourceFileSizes[0x58];
 int gResourcePendingMapIds[0x58];
 u32 gObjBlockStatus[0x63F6];
