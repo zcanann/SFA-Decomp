@@ -3891,7 +3891,8 @@ void texPreGetFrame(int bankWord, int unused, int* decompressedSize, int* compre
     }
 }
 
-void loadModelsBin(int offsetFlags, int* animationCount, int* maxAnimationBytes, int* useCachedAnimations, int* modelBytes, int modelId) {
+void loadModelsBin(int offsetFlags, int* animationCount, int* maxAnimationBytes, int* useCachedAnimations,
+                   int* modelBytes, int modelId) {
     u32 tableA = 0;
     u32 tableB = 0;
     int archiveId = -1;
