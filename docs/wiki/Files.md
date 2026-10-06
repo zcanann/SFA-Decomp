@@ -345,6 +345,40 @@ literal-symbol numbers changed at unchanged locations; instruction bytes,
 section contents, symbol offsets and normalized relocations remained identical.
 Every other source object was byte-identical.
 
+The October 6 table-scan recovery gives the complete loader canonical resource
+IDs, explicit cursor-macro arguments, and typed table views local to each scan.
+It removes the `MLDF_PTR` macro and the pre-array pointers formerly used for
+`(table - 4)[index]`: these reads now use `table[index - 1]`. MODELS aliases
+which point backward restart at the first occurrence of that offset before
+finding the next greater offset; texture scans instead continue from the
+selected entry. Zero-offset entries scan from the start. The ANIM/PREANIM
+adjacent-entry queries retain a byte view of the following word to preserve
+MWCC's retail load order.
+
+`tableScratch` intentionally still serves as the primary table address and
+the TEXPRE scan index. Giving those lifetimes separate locals adds an
+instruction. Typed primary-table pointers are scoped to their individual scans,
+which retains the retail register assignments. Texture merge-table byte indices
+and the resource-slot bias also remain codegen-significant. Replacing the
+address view with direct global references added 144 bytes and changed the
+shared-base addressing; this recovery does not establish native ownership of
+the neighbouring arrays.
+
+The loader test now adds 2,289 independently generated sparse-query cases,
+covering competing banks, all source and merged-table selection bits, duplicate
+and backward offsets, leading holes, and high-byte metadata. Both optimization
+levels pass with ASan/UBSan. Negative controls catch an off-by-one end offset,
+wrong merged-bank selection, a lost MODELS alias restart, and metadata leaking
+into an offset. The known ANIMCURV wait-path misreads and disk `DIR` infinite
+loop remain unchanged and excluded from the native fixture.
+
+All five complete `pi_dolphin` TUs remain 100% exact. Section bytes, named symbol
+offsets, relocations and section attributes are unchanged; one anonymous pool
+symbol is renumbered. Every other source object is byte-identical. All five
+`all_source` builds and strict source-linked DOL checks pass. Full inventories
+retain only the pre-existing TRK vector-carving and MusyX discarded-exception
+report artifacts, with no new mismatch.
+
 `gResourceFileBuffers` now declares its 88 resident slots as `void*`, consistent
 with the existing `MldfTables.ptrs` view. Allocation, cached file copies, texture
 frame queries, block/model metadata readers and release callbacks retain those

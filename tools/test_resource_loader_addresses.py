@@ -33,7 +33,7 @@ typedef struct DVDFileInfo { u8 opaque[96]; } DVDFileInfo;
 SERVICES = r"""
 static struct MldfTables arena;
 #define gResourceFileTable ((u8*)&arena)
-static int gAssetLoadInFlightFlags;
+static volatile int gAssetLoadInFlightFlags;
 static u8 gDvdErrorPauseActive;
 static char sZlbBlockTag[] = "ZLB", sDirBlockTag[] = "DIR";
 static char* sResourceFileNameTable[0x58];
@@ -239,6 +239,24 @@ static void checkSparseQuery(int family, int bank, int shape) {
     assert(opens == 0 && probes == 0 && inflates == 0);
     unchanged();
 }
+static void checkSparseMatrix(const struct QueryCase* test) {
+    reset();
+    const int files[] = {0x2b, 0x23, 0x20, 0x4f};
+    const int tabA[] = {0x2a, 0x24, 0x21, 0x50};
+    const int tabB[] = {0x45, 0x4e, 0x4c, 0x50};
+    memcpy(tables, test->entries, sizeof(tables));
+    if (test->present & 1) arena.ptrs[tabA[test->family]] = tables[0];
+    if (test->present & 2) arena.ptrs[tabB[test->family]] = tables[1];
+    arena.workspace.mergeTex0[test->index] = test->merged | 0x07123456u;
+    arena.workspace.mergeTex1[test->index] = test->merged | 0x07123456u;
+    int size = -1;
+    assert(loadAndDecompressDataFile(files[test->family], expectedDestination, test->request | 0x1234,
+                                    0, &size, test->index, 0x101) == NULL);
+    assert(size == test->expectedSize);
+    assert(opens == 0 && probes == 0 && inflates == 0 && loads == 0 && stores == 0);
+    assert(memcmp(tables, test->entries, sizeof(tables)) == 0);
+    unchanged();
+}
 static void checkDvd(int texture, int length, int alignment) {
     reset();
     expectedFile = texture ? 0x4b : 0x2c;
@@ -277,11 +295,56 @@ int main(void) {
         for (int shape = 0; shape < 3; shape++) checkSparseQuery(family, bank, shape);
     for (int length = 0; length <= 65; length++) for (int align = 0; align < 32; align++) checkDvd(0, length, align);
     for (int align = 0; align < 32; align++) checkDvd(1, 40, align);
+    for (unsigned i = 0; i < sizeof(queryCases) / sizeof(queryCases[0]); i++) checkSparseMatrix(&queryCases[i]);
+    printf("%zu sparse-table and competing-bank query cases checked\n", sizeof(queryCases) / sizeof(queryCases[0]));
     checkWait();
     puts("60 resident, 32 size-query, 2144 DVD and one wait-loop cases checked");
     return 0;
 }
 """
+
+
+def query_fixtures():
+    """Use ordered offset lists and an explicit bank-priority contract as oracle."""
+    shapes = ((0, 32, 32, 64, 96, 96, 192, 256),
+              (0, 32, 64, 32, 96, 64, 192, 256),
+              (0, 0, 32, 0, 64, 32, 192, 256))
+    rows = []
+    for family in range(4):
+        for shape in shapes:
+            values = (shape, tuple(value * 2 + 16 if value else 0 for value in shape))
+            for present in ((1,) if family == 3 else (1, 2, 3)):
+                for request in range(1 if family == 3 else 4):
+                    for merged in range(4 if family in (1, 2) else 1):
+                        if present != 3:
+                            bank = 0 if present == 1 else 1
+                        elif family == 0:
+                            bank = (0, 0, 1, 1)[request]
+                        else:
+                            bank = (1, 0, 1, 1)[merged]
+                        for index in range(7):
+                            entries = values[bank]
+                            offset = entries[index]
+                            start = index
+                            if not offset:
+                                start = 0
+                            elif family == 0 and entries[index - 1] > offset:
+                                start = entries.index(offset)
+                            size = next(value for value in entries[start:] if value > offset) - offset
+                            flag_a = 0x10000000 if family == 0 else 0x40000000
+                            flag_b = 0x20000000 if family == 0 else 0x80000000
+                            request_bits = (flag_a if request & 1 else 0) | (flag_b if request & 2 else 0)
+                            merged_bits = (0x40000000 if merged & 1 else 0) | (0x80000000 if merged & 2 else 0)
+                            # The size scan must ignore each entry's high-byte metadata.
+                            arrays = ['{' + ','.join(f'0x{value | ((i + bank + 1) << 24):08x}u'
+                                                     for i, value in enumerate(table)) + '}'
+                                      for bank, table in enumerate(values)]
+                            fields = (family, present, f'0x{request_bits:08x}u', f'0x{merged_bits:08x}u', index, size)
+                            rows.append('{' + ','.join(map(str, fields)) + ',{' + ','.join(arrays) + '}}')
+    assert len(rows) == 2289
+    return ('struct QueryCase { int family, present; u32 request, merged; int index, expectedSize; '
+            'u32 entries[2][8]; };\nstatic const struct QueryCase queryCases[] = {\n'
+            + ',\n'.join(rows) + '\n};\n')
 
 
 def harness():
@@ -294,9 +357,13 @@ def harness():
     parts.append(source[start:end])
     for name in ('ZlbStreamInfo', 'ZlbHeader', 'PackHeader'):
         parts.append(re.search(rf'struct {name} \{{.*?\n\}};', source, re.S)[0])
-    for name in ('MLDF_PTR', 'MLDF_QPTR', 'ZLB_HDR'):
+    for name in ('MLDF_PTR_RT', 'MLDF_BUFFER_FROM_CURSOR', 'ZLB_HDR'):
         parts.append(re.search(rf'^#define {name}\b[^\n]+', source, re.M)[0])
-    parts.extend([SERVICES, function(source, 'loadAndDecompressDataFile'), CASES])
+    ids = (ROOT / 'include/main/mldf_fileid.h').read_text()
+    parts.append(re.search(r'enum MldfFileId \{.*?\};', ids, re.S)[0])
+    bank_header = (ROOT / 'include/main/rcp_dolphin.h').read_text()
+    parts.extend(re.findall(r'^#define TEX_TAB_MAP_[^\n]+', bank_header, re.M))
+    parts.extend([SERVICES, function(source, 'loadAndDecompressDataFile'), query_fixtures(), CASES])
     return '\n'.join(parts)
 
 

@@ -7,6 +7,12 @@
 #include "main/pi_dolphin_path_api.h"
 
 double SeekTwiceBeforeRead(void);
+/* Select a resident archive bank and copy/unpack its entry, with DVD fallback.
+ * flagBits bit 0 skips payload transfer. ANIM/PREANIM size probes also inspect
+ * the resident packed entry and require sizeOut.
+ * Sparse MODELS/TEX tables find the next greater offset; ANIM uses adjacent entries.
+ * Resident TEX1/TEXPRE DIR records return a borrowed payload pointer. Other paths
+ * return NULL, including successful copies, so the result is not a success flag. */
 void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 length, int* sizeOut, int entryIndex,
                                 u32 flagBits);
 int mapGetDirIdx(int idx);
