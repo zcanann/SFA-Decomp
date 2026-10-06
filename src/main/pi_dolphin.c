@@ -2768,7 +2768,7 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
     struct MldfTables* tbl = (struct MldfTables*)gResourceFileTable;
     size_t tab0 = 0; /* Primary TAB address, reused as a TEXPRE search index. */
     u8* tab1 = NULL; /* TAB ptr of the alternate slot of the pair */
-    u8 frame = 0; /* run a full frame per wait iteration once dvd error UI is up */
+    u8 frame = 0;    /* run a full frame per wait iteration once dvd error UI is up */
     /* Slot-select scratch; case 0x2b reuses it for a flags snapshot and case 0x51 for a TAB address. */
     size_t slotScratch;
     int entryOff;
@@ -3590,10 +3590,11 @@ void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 
             struct PackHeader* hdr = (struct PackHeader*)(qptr + offsetFlags);
             /* Preserve the signed archive-relative arithmetic and its retail load order. */
             if (hdr->magic == 0xe0e0e0e0) {
-                memcpy(destBuf, (u8*)((size_t)qptr + ((hdr->auxSize + 0x18) + (ptrdiff_t)hdr - (ptrdiff_t)qptr)), hdr->decompressedSize);
+                memcpy(destBuf, (u8*)((size_t)qptr + ((hdr->auxSize + 0x18) + (ptrdiff_t)hdr - (ptrdiff_t)qptr)),
+                       hdr->decompressedSize);
             } else if (hdr->magic == 0xfacefeed) {
-                zlbDecompress((u8*)((size_t)qptr + ((hdr->auxSize + 0x28) + (ptrdiff_t)hdr - (ptrdiff_t)qptr)), hdr->compressedSize - 0x10,
-                              (u8*)destBuf, &hdr->decompressedSize);
+                zlbDecompress((u8*)((size_t)qptr + ((hdr->auxSize + 0x28) + (ptrdiff_t)hdr - (ptrdiff_t)qptr)),
+                              hdr->compressedSize - 0x10, (u8*)destBuf, &hdr->decompressedSize);
                 DCStoreRange(destBuf, hdr->decompressedSize);
             }
         } else if (fileId == 0x23 || fileId == 0x4d) {

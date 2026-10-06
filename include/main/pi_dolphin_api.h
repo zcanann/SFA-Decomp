@@ -6,8 +6,8 @@
 #include "main/pi_dolphin_path_api.h"
 
 double SeekTwiceBeforeRead(void);
-void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 length, int* sizeOut,
-                                int entryIndex, u32 flagBits);
+void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 length, int* sizeOut, int entryIndex,
+                                u32 flagBits);
 int mapGetDirIdx(int idx);
 u8 isHeavyFogEnabled(void);
 void disableHeavyFog(void);
