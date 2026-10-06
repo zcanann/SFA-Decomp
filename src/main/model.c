@@ -76,13 +76,12 @@ static inline void modelLoadInitialMove(ModelFileHeader* file, ObjAnimCachedMove
 
     cachedMove = cache;
     animationId = file->cachedAnimIds[0];
-    if ((getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) == 0 || file->modelId == 1 ||
-        file->modelId == 3) {
+    if ((getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) == 0 || file->modelId == 1 || file->modelId == 3) {
         if (cachedMove == NULL) {
             if (ModelList_getHeader(gModelAnimCacheList, animationId, &animation) == 0) {
                 animationOffset = gModelAnimDataOffsetTable[animationId];
-                loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, animationOffset, 0, &animationBytes,
-                                          animationId, 1);
+                loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, animationOffset, 0, &animationBytes, animationId,
+                                          1);
                 animation = mmAlloc(animationBytes, 10, 0);
                 loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, animation, animationOffset, animationBytes,
                                           &unusedSize, animationId, 0);
@@ -2306,7 +2305,8 @@ void ObjModel_Release(ObjModel* model) {
     if (model->bufferFlags & OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED) {
         model->bufferFlags &= ~OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
         counters[0] = 0;
-        for (counters[1] = counters[0]; counters[0] < model->file->renderOpCount; counters[1] += sizeof(ModelRenderOpTextureRefs), counters[0]++) {
+        for (counters[1] = counters[0]; counters[0] < model->file->renderOpCount;
+             counters[1] += sizeof(ModelRenderOpTextureRefs), counters[0]++) {
             ShaderDef_free((void**)&model->textureRefs[counters[0]]);
         }
     }
@@ -2317,13 +2317,15 @@ void ObjModel_Release(ObjModel* model) {
     if (--file->refCount == 0) {
         model_adjustModelList(gModelList, file->modelId);
         counters[0] = 0;
-        for (counters[1] = counters[0]; counters[0] < file->textureCount; counters[1] += sizeof(ModelTextureEntry), counters[0]++) {
-            textureFree((Texture*)(textureIdxToPtr(
-                ((ModelTextureEntry*)((u8*)file->textureEntries + counters[1]))->reference)));
+        for (counters[1] = counters[0]; counters[0] < file->textureCount;
+             counters[1] += sizeof(ModelTextureEntry), counters[0]++) {
+            textureFree((
+                Texture*)(textureIdxToPtr(((ModelTextureEntry*)((u8*)file->textureEntries + counters[1]))->reference)));
         }
         if (file->moveData != NULL && file->animationCount != 0) {
             counters[0] = 0;
-            for (counters[1] = counters[0]; counters[0] < file->animationCount; counters[1] += sizeof(ObjAnimMoveData*), counters[0]++) {
+            for (counters[1] = counters[0]; counters[0] < file->animationCount;
+                 counters[1] += sizeof(ObjAnimMoveData*), counters[0]++) {
                 int idx;
                 ObjAnimMoveData* animation = *(ObjAnimMoveData**)((u8*)file->moveData + counters[1]);
                 if (animation != NULL && (s8)--animation->refCount <= 0) {
