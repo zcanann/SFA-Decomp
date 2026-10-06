@@ -127,8 +127,7 @@ void Obj_RegisterObject(GameObject* obj, int b);
 void* loadModLines(int n, s16* out);
 
 CameraModeNormalInitSettings gObjInitialCameraSettings = {
-    { {0}, 0.0f, 0.0f, 0.0f, {0, 0, 0, 0, 0xFF}, 60, 90, 85, 30, 20 }
-};
+    {{0}, 0.0f, 0.0f, 0.0f, {0, 0, 0, 0, 0xFF}, 60, 90, 85, 30, 20}};
 
 char sObjSetupObjectLoadingLockedWarning[] = "<objSetupObject>  loading is locked can't setup objno %d\n";
 char sObjLoadedObjectMessage[] = "LOADED OBJECT %s\n";
@@ -718,7 +717,9 @@ void mapSetupPlayer(void) {
             (*gCameraInterface)->update(1);
         } else {
             (*gCameraInterface)->init(obj, settings->initial.x, settings->initial.y, settings->initial.z);
-            (*gCameraInterface)->setMode(OBJECT_CAMMODE_DEFAULT, 0, 0, sizeof(gObjInitialCameraSettings), &gObjInitialCameraSettings, 0, 0xff);
+            (*gCameraInterface)
+                ->setMode(OBJECT_CAMMODE_DEFAULT, 0, 0, sizeof(gObjInitialCameraSettings), &gObjInitialCameraSettings,
+                          0, 0xff);
             (*gCameraInterface)->update(1);
         }
         vp = Camera_GetCurrent();
