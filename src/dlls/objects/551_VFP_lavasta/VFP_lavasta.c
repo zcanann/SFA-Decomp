@@ -59,7 +59,7 @@ int VFP_lavastar_getObjectTypeId(void)
 void VFP_lavastar_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2(obj);
-    (*gModgfxInterface)->freeSourceEffects((void*)obj);
+    (*gModgfxInterface)->freeSourceEffects(obj);
 }
 
 void VFP_lavastar_render(void)

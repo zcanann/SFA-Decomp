@@ -39,7 +39,7 @@ int dll_299_getObjectTypeId(void)
 void dll_299_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2(obj);
-    (*gModgfxInterface)->freeSourceEffects((void*)obj);
+    (*gModgfxInterface)->freeSourceEffects(obj);
     Resource_Release(gDll299Resource);
     gDll299Resource = NULL;
 }

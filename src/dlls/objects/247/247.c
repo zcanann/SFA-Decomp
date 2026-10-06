@@ -96,7 +96,7 @@ int dll_F7_getObjectTypeId(void) {
 }
 
 void dll_F7_free(GameObject* obj) {
-    (*gModgfxInterface)->detachSource((void*)obj);
+    (*gModgfxInterface)->detachSource(obj);
     Resource_Release(gDllF7Resource5B);
     Resource_Release(gDllF7Resource5A);
     gDllF7Resource5B = NULL;

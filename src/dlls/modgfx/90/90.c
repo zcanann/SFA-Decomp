@@ -22,40 +22,6 @@ STATIC_ASSERT(offsetof(StaffCollisionEffectResource, alternateTriangleIndices) =
 STATIC_ASSERT(offsetof(StaffCollisionEffectResource, sequenceParams) == 0x54);
 STATIC_ASSERT(sizeof(StaffCollisionEffectResource) == 0x64);
 
-typedef struct StaffCollisionSpawnPacket {
-    GfxCmd* commands;
-    GameObject* sourceObj;
-    u8 pad08[0x18];
-    f32 velocity[3];
-    f32 position[3];
-    f32 scale;
-    u32 drawGroupStride;
-    u32 drawGroupCount;
-    s16 mode;
-    s16 sequenceParams[7];
-    u32 flags;
-    u8 modeByte;
-    u8 initialStateByte;
-    u8 byte5A;
-    u8 textureFrameTimer;
-    u8 sourceYawIndex;
-    s8 commandCount;
-    u8 pad5E[2];
-} StaffCollisionSpawnPacket;
-
-STATIC_ASSERT(offsetof(StaffCollisionSpawnPacket, commands) == 0x00);
-STATIC_ASSERT(offsetof(StaffCollisionSpawnPacket, sourceObj) == 0x04);
-STATIC_ASSERT(offsetof(StaffCollisionSpawnPacket, velocity) == 0x20);
-STATIC_ASSERT(offsetof(StaffCollisionSpawnPacket, position) == 0x2C);
-STATIC_ASSERT(offsetof(StaffCollisionSpawnPacket, scale) == 0x38);
-STATIC_ASSERT(offsetof(StaffCollisionSpawnPacket, drawGroupStride) == 0x3C);
-STATIC_ASSERT(offsetof(StaffCollisionSpawnPacket, drawGroupCount) == 0x40);
-STATIC_ASSERT(offsetof(StaffCollisionSpawnPacket, mode) == 0x44);
-STATIC_ASSERT(offsetof(StaffCollisionSpawnPacket, sequenceParams) == 0x46);
-STATIC_ASSERT(offsetof(StaffCollisionSpawnPacket, flags) == 0x54);
-STATIC_ASSERT(offsetof(StaffCollisionSpawnPacket, commandCount) == 0x5D);
-STATIC_ASSERT(sizeof(StaffCollisionSpawnPacket) == 0x60);
-
 u8 gStaffCollisionDefaultTriangles[8] = {0, 0, 0, 1, 0, 2, 0, 0};
 u8 gStaffCollisionDefaultIndices[8] = {0, 0, 0, 1, 0, 2, 0, 0};
 u8 gStaffCollisionAlternateIndices[8] = {0, 0, 0, 1, 0, 2, 0, 3};
@@ -72,9 +38,9 @@ StaffCollisionEffectResource gStaffCollisionEffectResourceData = {
 s16 StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                          int unusedModelId, const StaffCollisionColorArgs* colorArgs) {
     MatrixTransform transform;
-    StaffCollisionSpawnPacket packet;
-    GfxCmd commandStorage[32];
-    GfxCmd* commands = commandStorage;
+    ModgfxSpawnContext packet;
+    ModgfxCommand commandStorage[32];
+    ModgfxCommand* commands = commandStorage;
     StaffCollisionEffectResource* resources[1];
     s16 colorR, colorG, colorB;
     int spawnIndex;
@@ -114,36 +80,36 @@ s16 StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* spa
                 colorB = 0;
             }
         }
-        commands[0].layer = 0;
-        commands[0].flags = mode != 0 ? 4 : 3;
-        commands[0].tex = mode != 0 ? gStaffCollisionAlternateIndices : gStaffCollisionDefaultIndices;
-        commands[0].mode = 8;
-        commands[0].x = colorR;
-        commands[0].y = colorG;
-        commands[0].z = colorB;
+        commands[0].stageIndex = 0;
+        commands[0].parameter = mode != 0 ? 4 : 3;
+        commands[0].vertexIndices = (s16*)(mode != 0 ? gStaffCollisionAlternateIndices : gStaffCollisionDefaultIndices);
+        commands[0].flags = 8;
+        commands[0].valueX = colorR;
+        commands[0].valueY = colorG;
+        commands[0].valueZ = colorB;
         rotationX = (f32)(int)randomGetRange(0, 0xfffe);
         rotationY = (f32)(int)randomGetRange(-0xbb8, -0x2ee0);
-        commands[1].layer = 0;
-        commands[1].flags = 0;
-        commands[1].tex = NULL;
-        commands[1].mode = 0x80;
-        commands[1].x = 0.0f;
-        commands[1].y = rotationY;
-        commands[1].z = rotationX;
-        commands[2].layer = 0;
-        commands[2].flags = mode != 0 ? 4 : 3;
-        commands[2].tex = mode != 0 ? gStaffCollisionAlternateIndices : gStaffCollisionDefaultIndices;
-        commands[2].mode = 2;
-        commands[2].x = 1.0f;
-        commands[2].y = 0.5f;
-        commands[2].z = 1.5f;
-        commands[3].layer = 1;
-        commands[3].flags = 0;
-        commands[3].tex = NULL;
-        commands[3].mode = 0x400000;
-        commands[3].x = 0.0f;
-        commands[3].y = 0.0f;
-        commands[3].z = 400.0f;
+        commands[1].stageIndex = 0;
+        commands[1].parameter = 0;
+        commands[1].vertexIndices = NULL;
+        commands[1].flags = 0x80;
+        commands[1].valueX = 0.0f;
+        commands[1].valueY = rotationY;
+        commands[1].valueZ = rotationX;
+        commands[2].stageIndex = 0;
+        commands[2].parameter = mode != 0 ? 4 : 3;
+        commands[2].vertexIndices = (s16*)(mode != 0 ? gStaffCollisionAlternateIndices : gStaffCollisionDefaultIndices);
+        commands[2].flags = 2;
+        commands[2].valueX = 1.0f;
+        commands[2].valueY = 0.5f;
+        commands[2].valueZ = 1.5f;
+        commands[3].stageIndex = 1;
+        commands[3].parameter = 0;
+        commands[3].vertexIndices = NULL;
+        commands[3].flags = 0x400000;
+        commands[3].valueX = 0.0f;
+        commands[3].valueY = 0.0f;
+        commands[3].valueZ = 400.0f;
         transform.x = 0.0f;
         transform.y = 0.0f;
         transform.z = 0.0f;
@@ -151,10 +117,10 @@ s16 StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* spa
         transform.rotZ = 0;
         transform.rotY = rotationY;
         transform.rotX = rotationX;
-        vecRotateZXY(&transform.rotX, &commands[3].x);
+        vecRotateZXY(&transform.rotX, &commands[3].valueX);
         packet.modeByte = 0;
-        packet.sourceObj = sourceObj;
-        packet.mode = mode;
+        packet.sourceObject = sourceObj;
+        packet.variant = mode;
         packet.position[0] = 0.0f;
         packet.position[1] = 0.0f;
         packet.position[2] = 0.0f;
@@ -168,25 +134,25 @@ s16 StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* spa
         packet.byte5A = 0;
         packet.textureFrameTimer = 0x10;
         packet.commandCount = 4;
-        packet.sequenceParams[0] = resources[0]->sequenceParams[0];
-        packet.sequenceParams[1] = resources[0]->sequenceParams[1];
-        packet.sequenceParams[2] = resources[0]->sequenceParams[2];
-        packet.sequenceParams[3] = resources[0]->sequenceParams[3];
-        packet.sequenceParams[4] = resources[0]->sequenceParams[4];
-        packet.sequenceParams[5] = resources[0]->sequenceParams[5];
-        packet.sequenceParams[6] = resources[0]->sequenceParams[6];
+        packet.stageDurations[0] = resources[0]->sequenceParams[0];
+        packet.stageDurations[1] = resources[0]->sequenceParams[1];
+        packet.stageDurations[2] = resources[0]->sequenceParams[2];
+        packet.stageDurations[3] = resources[0]->sequenceParams[3];
+        packet.stageDurations[4] = resources[0]->sequenceParams[4];
+        packet.stageDurations[5] = resources[0]->sequenceParams[5];
+        packet.stageDurations[6] = resources[0]->sequenceParams[6];
         packet.commands = commandStorage;
         packet.flags = 0x2000490;
         packet.flags |= spawnFlags;
         if ((packet.flags & 1) != 0) {
-            if (packet.sourceObj != NULL && spawnParams != NULL) {
-                packet.position[0] += packet.sourceObj->anim.worldPosX + spawnParams->posX;
-                packet.position[1] += packet.sourceObj->anim.worldPosY + spawnParams->posY;
-                packet.position[2] += packet.sourceObj->anim.worldPosZ + spawnParams->posZ;
-            } else if (packet.sourceObj != NULL) {
-                packet.position[0] += packet.sourceObj->anim.worldPosX;
-                packet.position[1] += packet.sourceObj->anim.worldPosY;
-                packet.position[2] += packet.sourceObj->anim.worldPosZ;
+            if (packet.sourceObject != NULL && spawnParams != NULL) {
+                packet.position[0] += packet.sourceObject->anim.worldPosX + spawnParams->posX;
+                packet.position[1] += packet.sourceObject->anim.worldPosY + spawnParams->posY;
+                packet.position[2] += packet.sourceObject->anim.worldPosZ + spawnParams->posZ;
+            } else if (packet.sourceObject != NULL) {
+                packet.position[0] += packet.sourceObject->anim.worldPosX;
+                packet.position[1] += packet.sourceObject->anim.worldPosY;
+                packet.position[2] += packet.sourceObject->anim.worldPosZ;
             } else if (spawnParams != NULL) {
                 packet.position[0] += spawnParams->posX;
                 packet.position[1] += spawnParams->posY;
@@ -196,10 +162,10 @@ s16 StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* spa
         spawnHandle =
             (*gModgfxInterface)
                 ->spawnEffect(&packet, 0, mode != 0 ? 4 : 3,
-                              mode != 0 ? (void*)resources[0]->alternateVertices : (void*)resources[0]->defaultVertices,
+                              (ModgfxEffectVertex*)(mode != 0 ? (void*)resources[0]->alternateVertices : (void*)resources[0]->defaultVertices),
                               mode != 0 ? 2 : 1,
-                              mode != 0 ? (void*)resources[0]->alternateTriangleIndices
-                                        : (void*)gStaffCollisionDefaultTriangles,
+                              (s16*)(mode != 0 ? (void*)resources[0]->alternateTriangleIndices
+                                        : (void*)gStaffCollisionDefaultTriangles),
                               0, 0);
     }
     return spawnHandle;

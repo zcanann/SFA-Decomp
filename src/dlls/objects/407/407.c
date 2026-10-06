@@ -237,7 +237,7 @@ void dll407_update(GameObject* objectAddress) {
         state->sparkTimer = 1;
     } else {
         Sfx_StopObjectChannel(objectAddress, DLL197_SHUTDOWN_SFX_CHANNEL);
-        (*gModgfxInterface)->detachSource((void*)objectAddress);
+        (*gModgfxInterface)->detachSource(objectAddress);
         (*gExpgfxInterface)->freeSource(objectAddress);
         if (state->gameBit != -1 && mainGetBit(state->gameBit) != 0) {
             mainSetBits(state->gameBit, 0);

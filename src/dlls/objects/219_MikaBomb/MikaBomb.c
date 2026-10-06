@@ -67,7 +67,7 @@ void MikaBomb_free(GameObject* obj, int mode) {
         Obj_FreeObject(state->shadowObj);
         state->shadowObj = NULL;
     }
-    (*gModgfxInterface)->detachSource((void*)obj);
+    (*gModgfxInterface)->detachSource(obj);
 }
 
 void MikaBomb_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible) {

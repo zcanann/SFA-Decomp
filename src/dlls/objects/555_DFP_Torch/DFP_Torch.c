@@ -45,7 +45,7 @@ int DFP_Torch_getObjectTypeId(void) {
 }
 
 void DFP_Torch_free(GameObject* obj) {
-    (*gModgfxInterface)->detachSource((void*)obj);
+    (*gModgfxInterface)->detachSource(obj);
     (*gExpgfxInterface)->freeSource2(obj);
 }
 
@@ -181,7 +181,7 @@ void DFP_Torch_update(GameObject* obj) {
                 state->flickerTimer = 1;
             } else {
                 Sfx_StopObjectChannel(obj, 0x40);
-                (*gModgfxInterface)->detachSource((void*)obj);
+                (*gModgfxInterface)->detachSource(obj);
                 (*gExpgfxInterface)->freeSource(obj);
                 if (state->gameBit != -1) {
                     if (mainGetBit(state->gameBit) != 0) {

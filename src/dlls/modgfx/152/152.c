@@ -32,128 +32,128 @@ s16 gDll98SequenceParams[7] = {0, 100, 100, 0, 0, 0, 0};
 void dll_98_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 spawnFlags, int unused,
                         int invertY) {
     ModgfxSpawnPacket packet;
-    GfxCmd* commands;
+    ModgfxCommand* commands;
     int effectId;
     gDll98SequenceParams[1] = randomGetRange(0, 0x1E) + 0x1E;
     gDll98SequenceParams[2] = gDll98SequenceParams[1];
     commands = packet.entries;
-    commands[0].layer = 0;
-    commands[0].flags = 0x12;
-    commands[0].tex = gDll98AllVertexIndices;
-    commands[0].mode = 0x4;
-    commands[0].x = 0.0f;
-    commands[0].y = 0.0f;
-    commands[0].z = 0.0f;
-    commands[1].layer = 0;
-    commands[1].flags = 0x12;
-    commands[1].tex = gDll98AllVertexIndices;
-    commands[1].mode = 0x2;
-    commands[1].z = commands[1].x = 0.22f;
-    commands[1].y = 0.3f;
-    commands[2].layer = 1;
-    commands[2].flags = 0x12;
-    commands[2].tex = gDll98AllVertexIndices;
-    commands[2].mode = 0x4;
-    commands[2].x = 255.0f;
-    commands[2].y = 0.0f;
-    commands[2].z = 0.0f;
-    commands[3].layer = 1;
-    commands[3].flags = 0x12;
-    commands[3].tex = gDll98AllVertexIndices;
-    commands[3].mode = 0x400000;
-    commands[3].x = 0.0f;
+    commands[0].stageIndex = 0;
+    commands[0].parameter = 0x12;
+    commands[0].vertexIndices = (s16*)(gDll98AllVertexIndices);
+    commands[0].flags = 0x4;
+    commands[0].valueX = 0.0f;
+    commands[0].valueY = 0.0f;
+    commands[0].valueZ = 0.0f;
+    commands[1].stageIndex = 0;
+    commands[1].parameter = 0x12;
+    commands[1].vertexIndices = (s16*)(gDll98AllVertexIndices);
+    commands[1].flags = 0x2;
+    commands[1].valueZ = commands[1].valueX = 0.22f;
+    commands[1].valueY = 0.3f;
+    commands[2].stageIndex = 1;
+    commands[2].parameter = 0x12;
+    commands[2].vertexIndices = (s16*)(gDll98AllVertexIndices);
+    commands[2].flags = 0x4;
+    commands[2].valueX = 255.0f;
+    commands[2].valueY = 0.0f;
+    commands[2].valueZ = 0.0f;
+    commands[3].stageIndex = 1;
+    commands[3].parameter = 0x12;
+    commands[3].vertexIndices = (s16*)(gDll98AllVertexIndices);
+    commands[3].flags = 0x400000;
+    commands[3].valueX = 0.0f;
     if ((u32)invertY != 0) {
-        commands[3].y = -7.0f;
+        commands[3].valueY = -7.0f;
     } else {
-        commands[3].y = 7.0f;
+        commands[3].valueY = 7.0f;
     }
-    commands[3].z = 0.0f;
-    commands[4].layer = 1;
-    commands[4].flags = 0x12;
-    commands[4].tex = gDll98AllVertexIndices;
-    commands[4].mode = 0x4000;
-    commands[4].x = 0.0f;
+    commands[3].valueZ = 0.0f;
+    commands[4].stageIndex = 1;
+    commands[4].parameter = 0x12;
+    commands[4].vertexIndices = (s16*)(gDll98AllVertexIndices);
+    commands[4].flags = 0x4000;
+    commands[4].valueX = 0.0f;
     if ((u32)invertY != 0) {
-        commands[4].y = 1.0f;
+        commands[4].valueY = 1.0f;
     } else {
-        commands[4].y = -1.0f;
+        commands[4].valueY = -1.0f;
     }
-    commands[4].z = 0.0f;
-    commands[5].layer = 2;
-    commands[5].flags = 0x12;
-    commands[5].tex = gDll98AllVertexIndices;
-    commands[5].mode = 0x4;
-    commands[5].x = 0.0f;
-    commands[5].y = 0.0f;
-    commands[5].z = 0.0f;
-    commands[6].layer = 2;
-    commands[6].flags = 0x12;
-    commands[6].tex = gDll98AllVertexIndices;
-    commands[6].mode = 0x400000;
-    commands[6].x = 0.0f;
+    commands[4].valueZ = 0.0f;
+    commands[5].stageIndex = 2;
+    commands[5].parameter = 0x12;
+    commands[5].vertexIndices = (s16*)(gDll98AllVertexIndices);
+    commands[5].flags = 0x4;
+    commands[5].valueX = 0.0f;
+    commands[5].valueY = 0.0f;
+    commands[5].valueZ = 0.0f;
+    commands[6].stageIndex = 2;
+    commands[6].parameter = 0x12;
+    commands[6].vertexIndices = (s16*)(gDll98AllVertexIndices);
+    commands[6].flags = 0x400000;
+    commands[6].valueX = 0.0f;
     if ((u32)invertY != 0) {
-        commands[6].y = -7.0f;
+        commands[6].valueY = -7.0f;
     } else {
-        commands[6].y = 7.0f;
+        commands[6].valueY = 7.0f;
     }
-    commands[6].z = 0.0f;
-    commands[7].layer = 2;
-    commands[7].flags = 0x12;
-    commands[7].tex = gDll98AllVertexIndices;
-    commands[7].mode = 0x4000;
-    commands[7].x = 0.0f;
+    commands[6].valueZ = 0.0f;
+    commands[7].stageIndex = 2;
+    commands[7].parameter = 0x12;
+    commands[7].vertexIndices = (s16*)(gDll98AllVertexIndices);
+    commands[7].flags = 0x4000;
+    commands[7].valueX = 0.0f;
     if ((u32)invertY != 0) {
-        commands[7].y = 1.0f;
+        commands[7].valueY = 1.0f;
     } else {
-        commands[7].y = -1.0f;
+        commands[7].valueY = -1.0f;
     }
-    commands[7].z = 0.0f;
-    commands[8].layer = 2;
-    commands[8].flags = 0x12;
-    commands[8].tex = gDll98AllVertexIndices;
-    commands[8].mode = 0x2;
-    commands[8].x = 1.0f;
-    commands[8].y = 1.0f;
-    commands[8].z = 1.0f;
-    packet.modeByte = 0;
-    packet.sourceObj = sourceObj;
-    packet.sourceMode = variant;
-    packet.position[0] = 0.0f;
+    commands[7].valueZ = 0.0f;
+    commands[8].stageIndex = 2;
+    commands[8].parameter = 0x12;
+    commands[8].vertexIndices = (s16*)(gDll98AllVertexIndices);
+    commands[8].flags = 0x2;
+    commands[8].valueX = 1.0f;
+    commands[8].valueY = 1.0f;
+    commands[8].valueZ = 1.0f;
+    packet.context.modeByte = 0;
+    packet.context.sourceObject = sourceObj;
+    packet.context.variant = variant;
+    packet.context.position[0] = 0.0f;
     if ((u32)invertY != 0) {
-        packet.position[1] = -2.0f;
+        packet.context.position[1] = -2.0f;
     } else {
-        packet.position[1] = 2.0f;
+        packet.context.position[1] = 2.0f;
     }
-    packet.position[2] = 0.0f;
-    packet.velocity[0] = 0.0f;
-    packet.velocity[1] = 0.0f;
-    packet.velocity[2] = 0.0f;
-    packet.scale = 1.0f;
-    packet.drawGroupCount = 1;
-    packet.drawGroupStride = 0;
-    packet.initialStateByte = 0x12;
-    packet.byte5A = 0;
-    packet.textureFrameTimer = 0x10;
-    packet.flags = 0x4080400;
-    packet.commandCount = (GfxCmd*)((u8*)commands + sizeof(GfxCmd) * 9) - commands;
-    packet.sequenceParams[0] = gDll98SequenceParams[0];
-    packet.sequenceParams[1] = gDll98SequenceParams[1];
-    packet.sequenceParams[2] = gDll98SequenceParams[2];
-    packet.sequenceParams[3] = gDll98SequenceParams[3];
-    packet.sequenceParams[4] = gDll98SequenceParams[4];
-    packet.sequenceParams[5] = gDll98SequenceParams[5];
-    packet.sequenceParams[6] = gDll98SequenceParams[6];
-    packet.commands = (GfxCmd*)((u8*)&packet + offsetof(ModgfxSpawnPacket, entries));
-    packet.flags |= spawnFlags;
-    if ((packet.flags & 1) != 0) {
-        if ((u32)packet.sourceObj != 0) {
-            packet.position[0] += packet.sourceObj->anim.worldPosX;
-            packet.position[1] += packet.sourceObj->anim.worldPosY;
-            packet.position[2] += packet.sourceObj->anim.worldPosZ;
+    packet.context.position[2] = 0.0f;
+    packet.context.velocity[0] = 0.0f;
+    packet.context.velocity[1] = 0.0f;
+    packet.context.velocity[2] = 0.0f;
+    packet.context.scale = 1.0f;
+    packet.context.drawGroupCount = 1;
+    packet.context.drawGroupStride = 0;
+    packet.context.initialStateByte = 0x12;
+    packet.context.byte5A = 0;
+    packet.context.textureFrameTimer = 0x10;
+    packet.context.flags = 0x4080400;
+    packet.context.commandCount = (ModgfxCommand*)((u8*)commands + sizeof(ModgfxCommand) * 9) - commands;
+    packet.context.stageDurations[0] = gDll98SequenceParams[0];
+    packet.context.stageDurations[1] = gDll98SequenceParams[1];
+    packet.context.stageDurations[2] = gDll98SequenceParams[2];
+    packet.context.stageDurations[3] = gDll98SequenceParams[3];
+    packet.context.stageDurations[4] = gDll98SequenceParams[4];
+    packet.context.stageDurations[5] = gDll98SequenceParams[5];
+    packet.context.stageDurations[6] = gDll98SequenceParams[6];
+    packet.context.commands = (ModgfxCommand*)((u8*)&packet + offsetof(ModgfxSpawnPacket, entries));
+    packet.context.flags |= spawnFlags;
+    if ((packet.context.flags & 1) != 0) {
+        if ((u32)packet.context.sourceObject != 0) {
+            packet.context.position[0] += packet.context.sourceObject->anim.worldPosX;
+            packet.context.position[1] += packet.context.sourceObject->anim.worldPosY;
+            packet.context.position[2] += packet.context.sourceObject->anim.worldPosZ;
         } else {
-            packet.position[0] += spawnParams->posX;
-            packet.position[1] += spawnParams->posY;
-            packet.position[2] += spawnParams->posZ;
+            packet.context.position[0] += spawnParams->posX;
+            packet.context.position[1] += spawnParams->posY;
+            packet.context.position[2] += spawnParams->posZ;
         }
     }
     if (variant == 0) {
@@ -164,8 +164,8 @@ void dll_98_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         effectId = 0x3F3;
     }
     (*gModgfxInterface)
-        ->spawnEffect(&packet, 0, 0x12, (u32)invertY != 0 ? gDll98InvertedVertices : gDll98PrimaryVertices, 0x10,
-                      gDll98Triangles, effectId, 0);
+        ->spawnEffect(&packet.context, 0, 0x12, (ModgfxEffectVertex*)((u32)invertY != 0 ? gDll98InvertedVertices : gDll98PrimaryVertices), 0x10,
+                      (s16*)(gDll98Triangles), effectId, 0);
 }
 
 void dll_98_release(void) {

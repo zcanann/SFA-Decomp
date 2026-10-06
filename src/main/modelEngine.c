@@ -1,3 +1,4 @@
+#include "main/dll/modgfx_interface.h"
 #include "main/dll/waterfx_interface.h"
 #include "main/dll/obj_collision.h"
 #include "main/player_control_interface.h"
@@ -604,7 +605,7 @@ extern ResourceDescriptor gWCLevelContObjDescriptor, gWCPushBlockObjDescriptor, 
 extern ResourceDescriptor gWM_SpiritSetObjDescriptor, gWM_newcrystalObjDescriptor;
 extern ResourceDescriptor gWM_spiritplaceObjDescriptor, gWM_sunObjDescriptor;
 extern ResourceDescriptor ObjSeq_funcs;
-extern ResourceDescriptor sky_funcs, sky2_funcs, newclouds_funcs, Dummy08_funcs, cloudaction_funcs, dll_0B_funcs,
+extern ResourceDescriptor sky_funcs, sky2_funcs, newclouds_funcs, Dummy08_funcs, cloudaction_funcs,
     partfx_funcs;
 extern ResourceDescriptor Effect1_funcs, Effect2_funcs, Effect3_funcs, Effect4_funcs, Effect5_funcs, Effect6_funcs,
     Effect7_funcs, Effect8_funcs;
@@ -1148,7 +1149,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &Dummy08_funcs,
     &cloudaction_funcs,
     &expgfx_funcs,
-    &dll_0B_funcs,
+    (ResourceDescriptor*)&gModgfxDescriptor,
     &projgfx_funcs,
     &playerShadow_funcs,
     &partfx_funcs,

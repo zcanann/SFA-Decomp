@@ -35,196 +35,196 @@ void dll_85_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     ModgfxSpawnPacket packet;
     u8* resourceData = (u8*)(int)gDll85EffectResourceData;
     s16* resourceHalfwords = (s16*)resourceData;
-    GfxCmd* commandCursor;
-    GfxCmd* commands = packet.entries;
+    ModgfxCommand* commandCursor;
+    ModgfxCommand* commands = packet.entries;
     f32 randomValue;
 
     if (variant == DLL85_VARIANT_BURST) {
-        commands[0].layer = 0;
-        commands[0].flags = 0;
-        commands[0].tex = NULL;
-        commands[0].mode = 0x400000;
-        commands[0].x = 10.0f;
-        commands[0].y = 0.0f;
-        commands[0].z = 0.0f;
-        commands[1].layer = 0;
+        commands[0].stageIndex = 0;
+        commands[0].parameter = 0;
+        commands[0].vertexIndices = NULL;
+        commands[0].flags = 0x400000;
+        commands[0].valueX = 10.0f;
+        commands[0].valueY = 0.0f;
+        commands[0].valueZ = 0.0f;
+        commands[1].stageIndex = 0;
+        commands[1].parameter = 2;
+        commands[1].vertexIndices = (s16*)(gDll85IndexPair23);
         commands[1].flags = 2;
-        commands[1].tex = gDll85IndexPair23;
-        commands[1].mode = 2;
-        commands[1].x = 9.0f;
-        commands[1].y = 2.0f;
-        commands[1].z = 9.0f;
-        commands[2].layer = 0;
-        commands[2].flags = 4;
-        commands[2].tex = gDll85IndexPair23;
-        commands[2].mode = 0x80;
-        commands[2].x = randomGetRange(-0x7ff8, 0x7ff8);
-        commands[2].y = 0.0f;
-        commands[2].z = 16383.0f;
+        commands[1].valueX = 9.0f;
+        commands[1].valueY = 2.0f;
+        commands[1].valueZ = 9.0f;
+        commands[2].stageIndex = 0;
+        commands[2].parameter = 4;
+        commands[2].vertexIndices = (s16*)(gDll85IndexPair23);
+        commands[2].flags = 0x80;
+        commands[2].valueX = randomGetRange(-0x7ff8, 0x7ff8);
+        commands[2].valueY = 0.0f;
+        commands[2].valueZ = 16383.0f;
         commandCursor = &commands[3];
     } else {
         GameObject* scaledSource = sourceObj;
-        commands[0].layer = 0;
+        commands[0].stageIndex = 0;
+        commands[0].parameter = 2;
+        commands[0].vertexIndices = (s16*)(gDll85IndexPair01);
         commands[0].flags = 2;
-        commands[0].tex = gDll85IndexPair01;
-        commands[0].mode = 2;
-        commands[0].x = 190.0f * scaledSource->anim.rootMotionScale;
-        commands[0].y = 6.0f * scaledSource->anim.rootMotionScale;
-        commands[0].z = 1.0f;
-        commands[1].layer = 0;
+        commands[0].valueX = 190.0f * scaledSource->anim.rootMotionScale;
+        commands[0].valueY = 6.0f * scaledSource->anim.rootMotionScale;
+        commands[0].valueZ = 1.0f;
+        commands[1].stageIndex = 0;
+        commands[1].parameter = 2;
+        commands[1].vertexIndices = (s16*)(gDll85IndexPair23);
         commands[1].flags = 2;
-        commands[1].tex = gDll85IndexPair23;
-        commands[1].mode = 2;
-        commands[1].x =
+        commands[1].valueX =
             40.0f * (scaledSource->anim.rootMotionScale / scaledSource->anim.modelInstance->rootMotionScaleBase);
-        commands[1].y =
+        commands[1].valueY =
             6.0f * (scaledSource->anim.rootMotionScale / scaledSource->anim.modelInstance->rootMotionScaleBase);
-        commands[1].z = 1.0f;
+        commands[1].valueZ = 1.0f;
         randomValue = randomGetRange(0, 0xfffe);
-        commands[2].layer = 0;
-        commands[2].flags = 0;
-        commands[2].tex = NULL;
-        commands[2].mode = 0x80;
-        commands[2].x = randomValue;
-        commands[2].y = 1000.0f;
-        commands[2].z = 0.0f;
+        commands[2].stageIndex = 0;
+        commands[2].parameter = 0;
+        commands[2].vertexIndices = NULL;
+        commands[2].flags = 0x80;
+        commands[2].valueX = randomValue;
+        commands[2].valueY = 1000.0f;
+        commands[2].valueZ = 0.0f;
         commandCursor = &commands[3];
     }
-    commandCursor[0].layer = 0;
+    commandCursor[0].stageIndex = 0;
+    commandCursor[0].parameter = 4;
+    commandCursor[0].vertexIndices = (s16*)(gDll85IndexSequence0123);
     commandCursor[0].flags = 4;
-    commandCursor[0].tex = gDll85IndexSequence0123;
-    commandCursor[0].mode = 4;
-    commandCursor[0].x = 0.0f;
-    commandCursor[0].y = 0.0f;
-    commandCursor[0].z = 0.0f;
+    commandCursor[0].valueX = 0.0f;
+    commandCursor[0].valueY = 0.0f;
+    commandCursor[0].valueZ = 0.0f;
     randomValue = randomGetRange(0, 0xfffe);
-    commandCursor[1].layer = 1;
-    commandCursor[1].flags = 2;
-    commandCursor[1].tex = gDll85IndexPair01;
-    commandCursor[1].mode = 4;
-    commandCursor[1].x = 255.0f;
-    commandCursor[1].y = 0.0f;
-    commandCursor[1].z = 0.0f;
-    if (variant == DLL85_VARIANT_BURST) {
-        commandCursor[2].layer = 2;
-        commandCursor[2].flags = 0;
-        commandCursor[2].tex = NULL;
-        commandCursor[2].mode = 0x100;
-        commandCursor[2].x = 100.0f;
-        commandCursor[2].y = 0.0f;
-        commandCursor[2].z = 0.0f;
-        commandCursor += 3;
-    } else {
-        commandCursor[2].layer = 1;
-        commandCursor[2].flags = 0;
-        commandCursor[2].tex = NULL;
-        commandCursor[2].mode = 0x80;
-        commandCursor[2].x = randomValue;
-        commandCursor[2].y = 1000.0f;
-        commandCursor[2].z = 0.0f;
-        commandCursor += 3;
-    }
-    randomValue = randomGetRange(0, 0xfffe);
-    if (variant == DLL85_VARIANT_BURST) {
-        commandCursor->layer = 2;
-        commandCursor->flags = 0;
-        commandCursor->tex = NULL;
-        commandCursor->mode = 0x100;
-        commandCursor->x = 100.0f;
-        commandCursor->y = 0.0f;
-        commandCursor->z = 0.0f;
-        commandCursor++;
-    } else {
-        commandCursor->layer = 2;
-        commandCursor->flags = 0;
-        commandCursor->tex = NULL;
-        commandCursor->mode = 0x80;
-        commandCursor->x = randomValue;
-        commandCursor->y = 1000.0f;
-        commandCursor->z = 0.0f;
-        commandCursor++;
-    }
-    if (variant == DLL85_VARIANT_BURST) {
-        commandCursor->layer = 3;
-        commandCursor->flags = 0;
-        commandCursor->tex = NULL;
-        commandCursor->mode = 0x100;
-        commandCursor->x = 100.0f;
-        commandCursor->y = 0.0f;
-        commandCursor->z = 0.0f;
-        commandCursor++;
-    } else {
-        commandCursor->layer = 3;
-        commandCursor->flags = 0;
-        commandCursor->tex = NULL;
-        commandCursor->mode = 0x80;
-        commandCursor->x = randomValue;
-        commandCursor->y = 1000.0f;
-        commandCursor->z = 0.0f;
-        commandCursor++;
-    }
-    commandCursor[0].layer = 3;
-    commandCursor[0].flags = 2;
-    commandCursor[0].tex = gDll85IndexPair01;
-    commandCursor[0].mode = 4;
-    commandCursor[0].x = 100.0f;
-    commandCursor[0].y = 0.0f;
-    commandCursor[0].z = 0.0f;
-    commandCursor[1].layer = 3;
+    commandCursor[1].stageIndex = 1;
+    commandCursor[1].parameter = 2;
+    commandCursor[1].vertexIndices = (s16*)(gDll85IndexPair01);
     commandCursor[1].flags = 4;
-    commandCursor[1].tex = gDll85IndexSequence0123;
-    commandCursor[1].mode = 2;
-    commandCursor[1].x = 2.0f;
-    commandCursor[1].y = 0.1f;
-    commandCursor[1].z = 1.0f;
-    packet.modeByte = 0;
-    packet.sourceObj = sourceObj;
-    packet.sourceMode = variant;
-    packet.position[0] = 0.0f;
-    packet.position[1] = 0.0f;
-    packet.position[2] = 0.0f;
-    packet.velocity[0] = 0.0f;
-    packet.velocity[1] = 0.0f;
-    packet.velocity[2] = 0.0f;
-    packet.scale = 1.0f;
-    packet.drawGroupCount = 2;
-    packet.drawGroupStride = 0;
-    packet.initialStateByte = 4;
-    packet.byte5A = 0;
-    packet.textureFrameTimer = 0x20;
-    packet.commandCount = (GfxCmd*)((u8*)commandCursor + sizeof(GfxCmd) * 2) - commands;
-    packet.sequenceParams[0] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[0])];
-    packet.sequenceParams[1] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[1])];
-    packet.sequenceParams[2] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[2])];
-    packet.sequenceParams[3] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[3])];
-    packet.sequenceParams[4] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[4])];
-    packet.sequenceParams[5] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[5])];
-    packet.sequenceParams[6] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[6])];
-    packet.commands = (GfxCmd*)((u8*)&packet + offsetof(ModgfxSpawnPacket, entries));
+    commandCursor[1].valueX = 255.0f;
+    commandCursor[1].valueY = 0.0f;
+    commandCursor[1].valueZ = 0.0f;
     if (variant == DLL85_VARIANT_BURST) {
-        packet.flags = 0x4004400;
+        commandCursor[2].stageIndex = 2;
+        commandCursor[2].parameter = 0;
+        commandCursor[2].vertexIndices = NULL;
+        commandCursor[2].flags = 0x100;
+        commandCursor[2].valueX = 100.0f;
+        commandCursor[2].valueY = 0.0f;
+        commandCursor[2].valueZ = 0.0f;
+        commandCursor += 3;
     } else {
-        packet.flags = 0x4006410;
+        commandCursor[2].stageIndex = 1;
+        commandCursor[2].parameter = 0;
+        commandCursor[2].vertexIndices = NULL;
+        commandCursor[2].flags = 0x80;
+        commandCursor[2].valueX = randomValue;
+        commandCursor[2].valueY = 1000.0f;
+        commandCursor[2].valueZ = 0.0f;
+        commandCursor += 3;
     }
-    packet.flags |= spawnFlags;
-    if ((packet.flags & 1) != 0) {
-        if (packet.sourceObj != NULL && spawnParams != NULL) {
-            packet.position[0] += packet.sourceObj->anim.worldPosX + spawnParams->posX;
-            packet.position[1] += packet.sourceObj->anim.worldPosY + spawnParams->posY;
-            packet.position[2] += packet.sourceObj->anim.worldPosZ + spawnParams->posZ;
-        } else if (packet.sourceObj != NULL) {
-            packet.position[0] += packet.sourceObj->anim.worldPosX;
-            packet.position[1] += packet.sourceObj->anim.worldPosY;
-            packet.position[2] += packet.sourceObj->anim.worldPosZ;
+    randomValue = randomGetRange(0, 0xfffe);
+    if (variant == DLL85_VARIANT_BURST) {
+        commandCursor->stageIndex = 2;
+        commandCursor->parameter = 0;
+        commandCursor->vertexIndices = NULL;
+        commandCursor->flags = 0x100;
+        commandCursor->valueX = 100.0f;
+        commandCursor->valueY = 0.0f;
+        commandCursor->valueZ = 0.0f;
+        commandCursor++;
+    } else {
+        commandCursor->stageIndex = 2;
+        commandCursor->parameter = 0;
+        commandCursor->vertexIndices = NULL;
+        commandCursor->flags = 0x80;
+        commandCursor->valueX = randomValue;
+        commandCursor->valueY = 1000.0f;
+        commandCursor->valueZ = 0.0f;
+        commandCursor++;
+    }
+    if (variant == DLL85_VARIANT_BURST) {
+        commandCursor->stageIndex = 3;
+        commandCursor->parameter = 0;
+        commandCursor->vertexIndices = NULL;
+        commandCursor->flags = 0x100;
+        commandCursor->valueX = 100.0f;
+        commandCursor->valueY = 0.0f;
+        commandCursor->valueZ = 0.0f;
+        commandCursor++;
+    } else {
+        commandCursor->stageIndex = 3;
+        commandCursor->parameter = 0;
+        commandCursor->vertexIndices = NULL;
+        commandCursor->flags = 0x80;
+        commandCursor->valueX = randomValue;
+        commandCursor->valueY = 1000.0f;
+        commandCursor->valueZ = 0.0f;
+        commandCursor++;
+    }
+    commandCursor[0].stageIndex = 3;
+    commandCursor[0].parameter = 2;
+    commandCursor[0].vertexIndices = (s16*)(gDll85IndexPair01);
+    commandCursor[0].flags = 4;
+    commandCursor[0].valueX = 100.0f;
+    commandCursor[0].valueY = 0.0f;
+    commandCursor[0].valueZ = 0.0f;
+    commandCursor[1].stageIndex = 3;
+    commandCursor[1].parameter = 4;
+    commandCursor[1].vertexIndices = (s16*)(gDll85IndexSequence0123);
+    commandCursor[1].flags = 2;
+    commandCursor[1].valueX = 2.0f;
+    commandCursor[1].valueY = 0.1f;
+    commandCursor[1].valueZ = 1.0f;
+    packet.context.modeByte = 0;
+    packet.context.sourceObject = sourceObj;
+    packet.context.variant = variant;
+    packet.context.position[0] = 0.0f;
+    packet.context.position[1] = 0.0f;
+    packet.context.position[2] = 0.0f;
+    packet.context.velocity[0] = 0.0f;
+    packet.context.velocity[1] = 0.0f;
+    packet.context.velocity[2] = 0.0f;
+    packet.context.scale = 1.0f;
+    packet.context.drawGroupCount = 2;
+    packet.context.drawGroupStride = 0;
+    packet.context.initialStateByte = 4;
+    packet.context.byte5A = 0;
+    packet.context.textureFrameTimer = 0x20;
+    packet.context.commandCount = (ModgfxCommand*)((u8*)commandCursor + sizeof(ModgfxCommand) * 2) - commands;
+    packet.context.stageDurations[0] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[0])];
+    packet.context.stageDurations[1] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[1])];
+    packet.context.stageDurations[2] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[2])];
+    packet.context.stageDurations[3] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[3])];
+    packet.context.stageDurations[4] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[4])];
+    packet.context.stageDurations[5] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[5])];
+    packet.context.stageDurations[6] = *(s16*)&resourceData[offsetof(Dll85EffectResourceView, sequenceParams[6])];
+    packet.context.commands = (ModgfxCommand*)((u8*)&packet + offsetof(ModgfxSpawnPacket, entries));
+    if (variant == DLL85_VARIANT_BURST) {
+        packet.context.flags = 0x4004400;
+    } else {
+        packet.context.flags = 0x4006410;
+    }
+    packet.context.flags |= spawnFlags;
+    if ((packet.context.flags & 1) != 0) {
+        if (packet.context.sourceObject != NULL && spawnParams != NULL) {
+            packet.context.position[0] += packet.context.sourceObject->anim.worldPosX + spawnParams->posX;
+            packet.context.position[1] += packet.context.sourceObject->anim.worldPosY + spawnParams->posY;
+            packet.context.position[2] += packet.context.sourceObject->anim.worldPosZ + spawnParams->posZ;
+        } else if (packet.context.sourceObject != NULL) {
+            packet.context.position[0] += packet.context.sourceObject->anim.worldPosX;
+            packet.context.position[1] += packet.context.sourceObject->anim.worldPosY;
+            packet.context.position[2] += packet.context.sourceObject->anim.worldPosZ;
         } else if (spawnParams != NULL) {
-            packet.position[0] += spawnParams->posX;
-            packet.position[1] += spawnParams->posY;
-            packet.position[2] += spawnParams->posZ;
+            packet.context.position[0] += spawnParams->posX;
+            packet.context.position[1] += spawnParams->posY;
+            packet.context.position[2] += spawnParams->posZ;
         }
     }
     (*gModgfxInterface)
-        ->spawnEffect(&packet, 0, 4, (u8*)(int)gDll85EffectResourceData, 2,
-                      &resourceData[offsetof(Dll85EffectResourceView, triangles)],
+        ->spawnEffect(&packet.context, 0, 4, (ModgfxEffectVertex*)(int)gDll85EffectResourceData, 2,
+                      (s16*)(&resourceData[offsetof(Dll85EffectResourceView, triangles)]),
                       resourceHalfwords[variant * 2 + randomGetRange(0, 1) +
                                         offsetof(Dll85EffectResourceView, textureAssetIds) / sizeof(s16)],
                       0);
