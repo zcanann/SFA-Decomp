@@ -245,7 +245,7 @@ pointer relocation follows in `ObjModel_Load`.
 3,072 allocation cases plus the missing-table return, at `-O0`/`-O2` under
 ASan/UBSan for both regional invalidation paths. It executes the metadata,
 animation-size and allocation bodies with host-endian fixtures and native
-pointers. The fixture widens the resource-address registry and spies on IO,
+pointers. The fixture imports the production pointer registry and spies on IO,
 interrupts, allocation and cache operations; this does not establish a native
 archive decoder. All five target builds preserve every source object byte and
 the exact retail DOL.

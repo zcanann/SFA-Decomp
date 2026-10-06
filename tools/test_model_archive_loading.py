@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Execute model archive metadata selection, sizing and file initialization.
 
-Production C bodies use host-endian header fixtures. The resource-address
-registry is widened at the fixture boundary; production still stores target
-u32 addresses there. IO/decompression, interrupts and allocation are spies.
+Production C bodies and the resource-pointer registry use host-endian header
+fixtures. IO/decompression, interrupts and allocation are spies.
 This probes the allocator with pointers above 4 GiB, not native asset decoding.
 """
 
@@ -21,7 +20,6 @@ ROOT = Path(__file__).resolve().parents[1]
 
 SERVICES = r"""
 #include <stdlib.h>
-static uintptr_t gResourceFileBuffers[0x58];
 static volatile int gAssetLoadInFlightFlags;
 static int scratch[8], *gModelAnimOffsetTable = scratch;
 static _Alignas(16) u8 archives[2][512];
@@ -106,10 +104,10 @@ static void checkSelection(void) {
                     int usableA = (resident & 1) && !(busy & 5);
                     int usableB = (resident & 2) && !(busy & 10);
                     if (resident && !usableA && !usableB) continue; /* Retail requires a usable bank. */
-                    gResourceFileBuffers[MLDF_FILEID_MODELS_TAB_A] = resident & 1 ? 0x100 : 0;
-                    gResourceFileBuffers[MLDF_FILEID_MODELS_TAB_B] = resident & 2 ? 0x200 : 0;
-                    gResourceFileBuffers[MLDF_FILEID_MODELS_BIN_A] = resident & 1 ? (uintptr_t)archives[0] : 0;
-                    gResourceFileBuffers[MLDF_FILEID_MODELS_BIN_B] = resident & 2 ? (uintptr_t)archives[1] : 0;
+                    gResourceFileBuffers[MLDF_FILEID_MODELS_TAB_A] = resident & 1 ? archives[0] : NULL;
+                    gResourceFileBuffers[MLDF_FILEID_MODELS_TAB_B] = resident & 2 ? archives[1] : NULL;
+                    gResourceFileBuffers[MLDF_FILEID_MODELS_BIN_A] = resident & 1 ? archives[0] : 0;
+                    gResourceFileBuffers[MLDF_FILEID_MODELS_BIN_B] = resident & 2 ? archives[1] : 0;
                     metadata(archives[0] + offset, -1, 858, 8512, 54321);
                     metadata(archives[1] + offset, 0, 0, INT32_MAX, -123);
                     int bank = usableB && (preference & 2) ? 1 : usableA ? 0 : 1;
@@ -150,8 +148,8 @@ static void checkLoad(int missing, int cached, int count, int cacheBytes, int fl
     allocation = NULL;
     disables = restores = tableReads = allocations = invalidations = decompressions = 0;
     memset(gResourceFileBuffers, 0, sizeof(gResourceFileBuffers));
-    gResourceFileBuffers[MLDF_FILEID_MODELS_TAB_B] = 0x200;
-    gResourceFileBuffers[MLDF_FILEID_MODELS_BIN_B] = (uintptr_t)archives[1];
+    gResourceFileBuffers[MLDF_FILEID_MODELS_TAB_B] = archives[1];
+    gResourceFileBuffers[MLDF_FILEID_MODELS_BIN_B] = archives[1];
     gAssetLoadInFlightFlags = 0;
     metadata(archives[1] + 128, cached, count, cacheBytes, expectedBytes);
     memset(&serialized, 0x69, sizeof(serialized));
@@ -214,6 +212,7 @@ def harness():
         if name == 'ModelArchiveHeaderPrefix':
             parts.append(re.search(r'struct PackHeader \{.*?\n\};', pi, re.S)[0])
         parts.append(re.search(rf'typedef {kind} {name}\s*\{{.*?\}} {name};', source, re.S)[0])
+    parts.append('static ' + re.search(r'^void\* gResourceFileBuffers\[[^;]+;', pi, re.M)[0])
     parts.append(SERVICES)
     for name in ('roundUpTo8', 'roundUpTo16'):
         parts.append(function((ROOT / 'src/main/mm.c').read_text(), name))

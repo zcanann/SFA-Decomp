@@ -272,10 +272,28 @@ decompression and packed-animation services. It excludes the existing invalid
 animation-curve wait lookup and the disk `DIR` infinite loop. This does not
 establish a native resource registry or asset decoder.
 
-All five versions retain a 100% complete `pi_dolphin` TU and exact source-linked
-retail DOLs. Only two anonymous literal-symbol numbers change at unchanged
-locations; instruction bytes, section contents, symbol offsets and normalized
-relocations remain identical. Every other source object is byte-identical.
+That loader recovery retained a 100% complete `pi_dolphin` TU and exact
+source-linked retail DOLs in all five versions. Only two anonymous
+literal-symbol numbers changed at unchanged locations; instruction bytes,
+section contents, symbol offsets and normalized relocations remained identical.
+Every other source object was byte-identical.
+
+`gResourceFileBuffers` now declares its 88 resident slots as `void*`, consistent
+with the existing `MldfTables.ptrs` view. Allocation, cached file copies, texture
+frame queries, block/model metadata readers and release callbacks retain those
+pointers at native width. Byte positions use byte pointers; TEX1 locals reused
+as an offset and an address retain `size_t` to preserve MWCC's register allocation.
+The separate integer `gMapRomListBuffers` registry and the neighbouring-global
+`MldfTables` addressing scheme still need recovery for a native build.
+
+`tools/test_resource_buffer_registry.py` imports the production registry and
+14 complete consumer bodies. Its 638 cases cover resident/DVD copies, all
+32 destination alignments, retained allocations, texture and map metadata,
+and callback release/status behavior at `-O0`/`-O2` under ASan/UBSan. Fixtures
+use native pointers and host-endian records with IO/allocation/cache spies;
+they do not decode retail assets. Truncated-pointer and wrong-release-slot
+negative controls fail as expected. This registry recovery preserves every
+source object byte and the exact retail DOL in all five versions.
 
 Per-map compressed blocks (`modXX.zlb.bin`) are handled separately by
 `piRomLoadSection(int romOffset, int mapIndex, int destBuf)`, which opens

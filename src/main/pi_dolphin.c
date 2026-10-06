@@ -958,7 +958,7 @@ void tex1tab2readCb(s32 result, DVDFileInfo* fileInfo) {
     if (result < 0) {
         DVDClose(fileInfo);
         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
-        mm_free((void*)gResourceFileBuffers[78]);
+        mm_free(gResourceFileBuffers[78]);
         gResourceFileBuffers[78] = 0;
         gObjBlockStatus[78] = 0;
         if (gAssetLoadInFlightFlags & 0x8000) {
@@ -979,7 +979,7 @@ void tex1tab1readCb(s32 result, DVDFileInfo* fileInfo) {
     if (result < 0) {
         DVDClose(fileInfo);
         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
-        mm_free((void*)gResourceFileBuffers[78]);
+        mm_free(gResourceFileBuffers[78]);
         gResourceFileBuffers[78] = 0;
         gObjBlockStatus[78] = 0;
         if (gAssetLoadInFlightFlags & 0x4000) {
@@ -1017,7 +1017,7 @@ void tex0tab2readCb(s32 result, DVDFileInfo* fileInfo) {
     if (result < 0) {
         DVDClose(fileInfo);
         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
-        mm_free((void*)gResourceFileBuffers[78]);
+        mm_free(gResourceFileBuffers[78]);
         gResourceFileBuffers[78] = 0;
         gObjBlockStatus[78] = 0;
         if (gAssetLoadInFlightFlags & 0x800) {
@@ -1037,7 +1037,7 @@ void tex0tab1readCb(s32 result, DVDFileInfo* fileInfo) {
     if (result < 0) {
         DVDClose(fileInfo);
         AtomicSList_Push(gDvdFileInfoPool, fileInfo);
-        mm_free((void*)gResourceFileBuffers[36]);
+        mm_free(gResourceFileBuffers[36]);
         gResourceFileBuffers[36] = 0;
         gObjBlockStatus[36] = 0;
         if (gAssetLoadInFlightFlags & 0x400) {
@@ -3748,7 +3748,7 @@ void piRomLoadSection(int romOffset, int mapIndex, void* destBuf) {
             DVDClose(fi);
             AtomicSList_Push(gDvdFileInfoPool, fi);
         }
-        hdr = (struct PackHeader*)(gResourceFileBuffers[0x1d] + romOffset);
+        hdr = (struct PackHeader*)((u8*)gResourceFileBuffers[0x1d] + romOffset);
         if (hdr->magic == 0xfacefeed) {
             zlbDecompress((u8*)(gMapRomListBuffers[mapIndex] + 0x10), hdr->compressedSize, (u8*)destBuf,
                           &hdr->decompressedSize);
@@ -3763,8 +3763,8 @@ void tex1GetFrame(int bankWord, int unused, int* decompressedSize, int* compress
     if (gResourceFileBuffers[0x20] != 0 || gResourceFileBuffers[0x4b] != 0) {
         int s = OSDisableInterrupts();
         int flags = gAssetLoadInFlightFlags;
-        u32 f46c;
-        u32 f518;
+        void* f46c;
+        void* f518;
         OSRestoreInterrupts(s);
         f46c = gResourceFileBuffers[0x21];
         f518 = gResourceFileBuffers[0x4c];
@@ -3778,19 +3778,19 @@ void tex1GetFrame(int bankWord, int unused, int* decompressedSize, int* compress
             idx = 0x4b;
         }
         {
-            u32 base = gResourceFileBuffers[idx];
+            u8* base = gResourceFileBuffers[idx];
             if (base != 0) {
                 if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0) {
-                    int e = (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount];
+                    size_t e = (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount];
                     int v;
-                    e = base + e + 4;
+                    e = (size_t)base + e + 4;
                     v = *(int*)(e + 4);
                     *compressedSize = *(int*)(e + 8);
                     *decompressedSize = v;
                 } else if (queryMode == TEXTURE_FRAME_QUERY_OFFSETS && frameOffsets != 0) {
                     memcpy(frameOffsets, (void*)(base + (bankWord & 0xffffff) * 2), (frameIndexOrCount + 1) * 4);
                 } else {
-                    int e = base + (bankWord & 0xffffff) * 2;
+                    u8* e = base + (bankWord & 0xffffff) * 2;
                     int v = *(int*)(e + 0xc);
                     *decompressedSize = *(int*)(e + 8);
                     if (strncmp(sDirBlockTag, (char*)e, 3) == 0) {
@@ -3809,9 +3809,9 @@ void tex1GetFrame(int bankWord, int unused, int* decompressedSize, int* compress
                 DVDClose(&fileInfo);
                 DCStoreRange(buf, 0x400);
                 if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0) {
-                    int e = frameOffsets[frameIndexOrCount];
+                    size_t e = frameOffsets[frameIndexOrCount];
                     int v;
-                    e = (int)buf + e + 4;
+                    e = (size_t)buf + e + 4;
                     v = *(int*)(e + 4);
                     *compressedSize = *(int*)(e + 8);
                     *decompressedSize = v;
@@ -3838,8 +3838,8 @@ void tex0GetFrame(int bankWord, int unused, int* decompressedSize, int* compress
     if (gResourceFileBuffers[0x23] != 0 || gResourceFileBuffers[0x4d] != 0) {
         int s = OSDisableInterrupts();
         int flags = gAssetLoadInFlightFlags;
-        u32 f478;
-        u32 f520;
+        void* f478;
+        void* f520;
         OSRestoreInterrupts(s);
         f478 = gResourceFileBuffers[0x24];
         f520 = gResourceFileBuffers[0x4e];
@@ -3853,16 +3853,16 @@ void tex0GetFrame(int bankWord, int unused, int* decompressedSize, int* compress
             idx = 0x4d;
         }
         if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0) {
-            int base = gResourceFileBuffers[idx];
-            int e = base + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount] + 4;
+            u8* base = gResourceFileBuffers[idx];
+            u8* e = base + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount] + 4;
             int v = *(int*)(e + 8);
             *decompressedSize = *(int*)(e + 4);
             *compressedSize = v;
         } else if (queryMode == TEXTURE_FRAME_QUERY_OFFSETS && frameOffsets != 0) {
-            memcpy(frameOffsets, (void*)(gResourceFileBuffers[idx] + (bankWord & 0xffffff) * 2),
+            memcpy(frameOffsets, (void*)((u8*)gResourceFileBuffers[idx] + (bankWord & 0xffffff) * 2),
                    (frameIndexOrCount + 1) * 4);
         } else {
-            int e = gResourceFileBuffers[idx] + (bankWord & 0xffffff) * 2 + 4;
+            u8* e = (u8*)gResourceFileBuffers[idx] + (bankWord & 0xffffff) * 2 + 4;
             int v = *(int*)(e + 8);
             *decompressedSize = *(int*)(e + 4);
             *compressedSize = v;
@@ -3872,17 +3872,17 @@ void tex0GetFrame(int bankWord, int unused, int* decompressedSize, int* compress
 
 void texPreGetFrame(int bankWord, int unused, int* decompressedSize, int* compressedSize, int frameIndexOrCount,
                     int* frameOffsets, int queryMode) {
-    u32 base = gResourceFileBuffers[0x4f];
+    u8* base = gResourceFileBuffers[0x4f];
     if (base != 0) {
         if (queryMode == TEXTURE_FRAME_QUERY_INDEXED_HEADER && frameOffsets != 0) {
-            int e = base + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount] + 4;
+            u8* e = base + (bankWord & 0xffffff) * 2 + frameOffsets[frameIndexOrCount] + 4;
             int v = *(int*)(e + 8);
             *decompressedSize = *(int*)(e + 4);
             *compressedSize = v;
         } else if (queryMode == TEXTURE_FRAME_QUERY_OFFSETS && frameOffsets != 0) {
             memcpy(frameOffsets, (void*)(base + (bankWord & 0xffffff) * 2), (frameIndexOrCount + 1) * 4);
         } else {
-            int e = base + (bankWord & 0xffffff) * 2;
+            u8* e = base + (bankWord & 0xffffff) * 2;
             int v = *(int*)(e + 0xc);
             *decompressedSize = *(int*)(e + 8);
             if (strncmp(sDirBlockTag, (char*)e, 3) == 0) {
@@ -3896,8 +3896,8 @@ void texPreGetFrame(int bankWord, int unused, int* decompressedSize, int* compre
 
 void loadModelsBin(int offsetFlags, int* animationCount, int* maxAnimationBytes, int* useCachedAnimations,
                    int* modelBytes, int modelId) {
-    u32 tableA = 0;
-    u32 tableB = 0;
+    void* tableA = 0;
+    void* tableB = 0;
     int archiveId = -1;
     int loadFlags;
     int interruptState;
@@ -3931,10 +3931,10 @@ void loadModelsBin(int offsetFlags, int* animationCount, int* maxAnimationBytes,
 
 void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5) {
     char* e;
-    if ((void*)gResourceFileBuffers[0x1d] == NULL) {
+    if (gResourceFileBuffers[0x1d] == NULL) {
         return;
     }
-    if ((void*)gResourceFileBuffers[0x1e] == NULL) {
+    if (gResourceFileBuffers[0x1e] == NULL) {
         return;
     }
     e = (char*)gResourceFileBuffers[0x1d] + idx;
@@ -3948,7 +3948,8 @@ void checkLoadBlock(int a, int* pc, int* p8) {
     int flags;
     int saved;
     char* blk;
-    u32 t25, t47;
+    void* t25;
+    void* t47;
     if ((gResourceFileBuffers[0x26] != 0 && gResourceFileBuffers[0x25] != 0) ||
         (gResourceFileBuffers[0x48] != 0 && gResourceFileBuffers[0x47] != 0)) {
         saved = OSDisableInterrupts();
@@ -3987,7 +3988,8 @@ void loadVoxMaps(int a, int* pc, int* p8) {
     int flags;
     int saved;
     char* blk;
-    u32 t1b, t54;
+    void* t1b;
+    void* t54;
     if ((gResourceFileBuffers[0x1a] != 0 && gResourceFileBuffers[0x1b] != 0) ||
         (gResourceFileBuffers[0x53] != 0 && gResourceFileBuffers[0x54] != 0)) {
         saved = OSDisableInterrupts();
@@ -4044,14 +4046,14 @@ int fileLoadToBufferOffset(int id, void* buffer, int offset, int size) {
     }
     if (gResourceFileBuffers[id] != 0) {
         {
-            int base = gResourceFileBuffers[id];
+            u8* base = gResourceFileBuffers[id];
             memcpy(buffer, (void*)(base + offset), size);
         }
         DCStoreRange(buffer, size);
         return size;
     }
     DVDOpen(sResourceFileNameTable[id], &fileInfo);
-    if (((int)buffer & 0x1fu) != 0 || (size & 0x1f) != 0) {
+    if (((size_t)buffer & 0x1fu) != 0 || (size & 0x1f) != 0) {
         asize = (size + 0x1f) & ~0x1f;
         tmp = mmAlloc(asize, 0x7d7d7d7d, 0);
         DCInvalidateRange(tmp, asize);
@@ -4070,7 +4072,7 @@ int fileLoadToBufferOffset(int id, void* buffer, int offset, int size) {
 int fileLoadToBuffer(int id, void* buffer) {
     DVDFileInfo fileInfo;
     if (gResourceFileBuffers[id] != 0) {
-        memcpy(buffer, (void*)gResourceFileBuffers[id], gResourceFileSizes[id]);
+        memcpy(buffer, gResourceFileBuffers[id], gResourceFileSizes[id]);
         DCStoreRange(buffer, gResourceFileSizes[id]);
         return gResourceFileSizes[id];
     }
@@ -4084,15 +4086,15 @@ int fileLoadToBuffer(int id, void* buffer) {
 void* fileLoad(int id, int wpad0) {
     DVDFileInfo fileInfo;
     if (gResourceFileBuffers[id] != 0) {
-        return (void*)gResourceFileBuffers[id];
+        return gResourceFileBuffers[id];
     }
     DVDOpen(sResourceFileNameTable[id], &fileInfo);
     gResourceFileSizes[id] = fileInfo.length;
-    gResourceFileBuffers[id] = (u32)mmAlloc(gResourceFileSizes[id] + 0x20, 0x7d7d7d7d, 0);
-    DCInvalidateRange((void*)gResourceFileBuffers[id], gResourceFileSizes[id]);
-    DVDRead(&fileInfo, (void*)gResourceFileBuffers[id], gResourceFileSizes[id], 0);
+    gResourceFileBuffers[id] = mmAlloc(gResourceFileSizes[id] + 0x20, 0x7d7d7d7d, 0);
+    DCInvalidateRange(gResourceFileBuffers[id], gResourceFileSizes[id]);
+    DVDRead(&fileInfo, gResourceFileBuffers[id], gResourceFileSizes[id], 0);
     DVDClose(&fileInfo);
-    return (void*)gResourceFileBuffers[id];
+    return gResourceFileBuffers[id];
 }
 
 u8 initLoadFiles(void) {
@@ -4381,7 +4383,7 @@ RingBufferQueue gVideoFlipQueue;
 VideoFlipToken gVideoFlipQueueBuffer[VIDEO_FLIP_QUEUE_CAPACITY];
 OSStopwatch gFrameStopwatch;
 s16 gObjMapBlockInfo[0x9C];
-u32 gResourceFileBuffers[0x58];
+void* gResourceFileBuffers[0x58];
 int gMapRomListBuffers[0x78];
 u32 gResourceFileSizes[0x58];
 int gResourcePendingMapIds[0x58];
