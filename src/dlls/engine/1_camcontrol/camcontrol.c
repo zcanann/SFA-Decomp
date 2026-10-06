@@ -926,7 +926,7 @@ void camcontrol_updateTargetFeedback(void) {
     s16 objType;
     f32 alphaScale;
     GameObject* target;
-    ObjAnimComponent* reticle;
+    GameObject* reticle;
     u8 buttonPressed;
     int result;
     u32 buttons;
@@ -934,7 +934,7 @@ void camcontrol_updateTargetFeedback(void) {
     f32 targetDistance;
 
     target = gCamcontrolCamera->currentTarget;
-    reticle = &gCamcontrolTargetReticle->anim;
+    reticle = gCamcontrolTargetReticle;
     buttonPressed = false;
     if (reticle == NULL) {
         return;
@@ -946,14 +946,14 @@ void camcontrol_updateTargetFeedback(void) {
             targetKind = gCamcontrolCamera->targetKind;
             if (targetKind == CAMCONTROL_TARGET_KIND_LOCKON) {
                 Sfx_PlayFromObject(0, SFXTRIG_headcam_out);
-                objShowButtonGlow(reticle, 1.0f, 2);
+                objShowButtonGlow(&reticle->anim, 1.0f, 2);
             } else if ((targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_A) ||
                        (targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_B)) {
                 Sfx_PlayFromObject(0, SFXTRIG_lockon2_on);
-                objShowButtonGlow(reticle, 1.0f, 3);
+                objShowButtonGlow(&reticle->anim, 1.0f, 3);
             } else if (targetKind != CAMCONTROL_TARGET_KIND_SUPPRESSED) {
                 Sfx_PlayFromObject(0, SFXTRIG_sc_scabshortish32);
-                objShowButtonGlow(reticle, 1.0f, 1);
+                objShowButtonGlow(&reticle->anim, 1.0f, 1);
             }
         }
         if (target != NULL) {
@@ -976,7 +976,7 @@ void camcontrol_updateTargetFeedback(void) {
             }
         }
         if (gCamcontrolTargetState == '\0') {
-            if (reticle->currentMoveProgress <= 0.0f) {
+            if (reticle->anim.currentMoveProgress <= 0.0f) {
                 if (target != NULL) {
                     gCamcontrolCamera->targetReticleFocus = target;
                     gCamcontrolCamera->targetKind = camcontrol_getTargetKind(target);
@@ -988,7 +988,7 @@ void camcontrol_updateTargetFeedback(void) {
             } else {
                 ObjAnim_AdvanceCurrentMove(reticle, -0.04f, timeDelta, NULL);
             }
-        } else if ((gCamcontrolCamera->targetReticleFocus != target) && (reticle->currentMoveProgress >= 1.0f)) {
+        } else if ((gCamcontrolCamera->targetReticleFocus != target) && (reticle->anim.currentMoveProgress >= 1.0f)) {
             gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_INACTIVE;
             if (target != NULL) {
                 ObjAnim_SetMoveProgress(reticle, 0.0f);
@@ -1070,21 +1070,21 @@ void camcontrol_updateTargetFeedback(void) {
                 break;
             }
             if (targetDistance <= 0.0f && gCamcontrolCamera->targetDistance > 0.0f) {
-                objShowButtonGlow(reticle, 1.0f, 4);
+                objShowButtonGlow(&reticle->anim, 1.0f, 4);
             } else if (targetDistance <= 0.25f && gCamcontrolCamera->targetDistance > 0.25f) {
-                objShowButtonGlow(reticle, 1.0f, 4);
+                objShowButtonGlow(&reticle->anim, 1.0f, 4);
             } else if (targetDistance <= 0.5f && gCamcontrolCamera->targetDistance > 0.5f) {
-                objShowButtonGlow(reticle, 1.0f, 4);
+                objShowButtonGlow(&reticle->anim, 1.0f, 4);
             } else if (targetDistance <= 0.75f && gCamcontrolCamera->targetDistance > 0.75f) {
-                objShowButtonGlow(reticle, 1.0f, 4);
+                objShowButtonGlow(&reticle->anim, 1.0f, 4);
             }
             gCamcontrolCamera->targetDistance = targetDistance;
         }
-        alphaScale = 255.0f * reticle->currentMoveProgress;
+        alphaScale = 255.0f * reticle->anim.currentMoveProgress;
         alphaScale = (alphaScale < 0.0f) ? 0.0f : ((alphaScale > 255.0f) ? 255.0f : alphaScale);
-        reticle->alpha = alphaScale;
+        reticle->anim.alpha = alphaScale;
         gCamcontrolReticleSpin = CAMCONTROL_RETICLE_SPIN_STEP;
-        reticle->rotX = (s16)(1024.0f * timeDelta + (float)reticle->rotX);
+        reticle->anim.rotX = (s16)(1024.0f * timeDelta + (float)reticle->anim.rotX);
         break;
     }
 }

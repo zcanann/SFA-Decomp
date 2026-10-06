@@ -412,7 +412,7 @@ int dbstealerworm_stateHandlerA0F(GameObject* obj, BaddieState* baddie, f32 t) {
         sub->advanceMessage = 1;
         return 0;
     }
-    ObjAnim_SampleRootCurvePhase(&obj->anim, baddie->animSpeedA, &baddie->moveSpeed);
+    ObjAnim_SampleRootCurvePhase(obj, baddie->animSpeedA, &baddie->moveSpeed);
     return 0;
 }
 
@@ -1029,7 +1029,7 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, BaddieState* baddie, f32 t) {
             p3++;
         }
     }
-    ObjAnim_SampleRootCurvePhase(&obj->anim, baddie->animSpeedA, &baddie->moveSpeed);
+    ObjAnim_SampleRootCurvePhase(obj, baddie->animSpeedA, &baddie->moveSpeed);
     return 0;
 }
 int dbstealerworm_stateHandlerA07(GameObject* obj, BaddieState* baddie, f32 t) {
@@ -1168,7 +1168,7 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, BaddieState* baddie, f32 t) {
             p3++;
         }
     }
-    ObjAnim_SampleRootCurvePhase(&obj->anim, baddie->animSpeedA, &baddie->moveSpeed);
+    ObjAnim_SampleRootCurvePhase(obj, baddie->animSpeedA, &baddie->moveSpeed);
     return 0;
 }
 

@@ -1,6 +1,39 @@
 # ObjAnimComponent versus GameObject
 
-## Question
+## Object animation API recovery (2026-10-06)
+
+The public move, progress, blend, root-curve and move-table APIs now take
+`GameObject*`. Their callers use complete objects from object allocation,
+canonical object globals and object DLL entry points. The misleading `void*`
+“ABI-facing callback” rationale has been removed: the four affected APIs are
+called directly, and their implementations recover `&obj->anim` internally.
+The change does not establish whether the original source had a distinct
+component typedef; the existing `GameObject.anim` layout remains unchanged.
+
+The previous `Object_ObjAnimSetPrimaryBlendMove` selects `activeState`
+(layer 1), while `Object_ObjAnimSetSecondaryBlendMove` selects `currentState`
+(layer 0). They are now `ObjAnim_SetLayeredBlendMove` and
+`ObjAnim_SetCurrentBlendMove`; the other `Object_ObjAnim*` operations likewise
+use `Layered` names. Dinosaur Planet's `include/sys/objanim.h` and
+`src/objanim.c` at `c4340802dc9f62e1181d00cc34c3175fca6ca4be` provide corroborating
+whole-object signatures and current/layered state selection. These are
+semantic SFA names, not a claim to have recovered original SFA identifiers.
+
+Propagating the contract exposed `short*` object parameters in
+`player_advanceMove` and `enemyObjAnimUpdate`, an `int*` boss callback, and
+integer object parameters in three Player handlers. Their declarations,
+callback table and direct consumers now agree on `GameObject*`; affected
+rotation, position, velocity and hit-reaction accesses use canonical fields.
+
+Validation covers EN, EN rev1, JP, PAL and PAL rev1: `all_source`, strict retail
+DOL equality and full objdiff inventories with completion metadata removed.
+Every affected TU is exact. Across all source objects, section contents,
+symbol locations and resolved relocations are unchanged after accounting for
+the five intentional function renames. The existing TRK `__exception` vector
+carving and MusyX `sal_volume` discarded-data report artifacts are unchanged;
+all five source-linked DOLs are byte-identical to their verified originals.
+
+## Remaining question
 
 Is `ObjAnimComponent` a genuine standalone component from the original source,
 or is it an artificially separated reconstruction of the first `0xB0` bytes of

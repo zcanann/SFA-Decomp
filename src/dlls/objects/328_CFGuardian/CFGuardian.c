@@ -311,7 +311,7 @@ int cfguardian_flyAlongPath(GameObject* obj, RomCurveWalker* walker, f32 speed, 
             obj->anim.localPosY -= groundDistance;
         }
     }
-    ObjAnim_SampleRootCurvePhase(&obj->anim, speed, outPhase);
+    ObjAnim_SampleRootCurvePhase(obj, speed, outPhase);
     if (updateHeading != 0) {
         yawDelta = (s16)(getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
                                   obj->anim.localPosZ - obj->anim.previousLocalPosZ) +
@@ -372,7 +372,7 @@ int cfguardian_steerToward(GameObject* obj, MoveLibTarget* target, f32 speed, f3
     if (obj->anim.currentMove != CFGUARDIAN_MOVE_FLY) {
         ObjAnim_SetCurrentMove(obj, CFGUARDIAN_MOVE_FLY, 0.0f, 0);
     }
-    ObjAnim_SampleRootCurvePhase(&obj->anim, speed, outPhase);
+    ObjAnim_SampleRootCurvePhase(obj, speed, outPhase);
     return 0;
 }
 
@@ -530,7 +530,7 @@ int cfguardian_updateMain(GameObject* obj) {
                 state->moveSpeed = 0.04f;
                 if (mainGetBit(GAMEBIT_CFGUARDIAN_LANDED) != 0) {
                     ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
-                    ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
+                    ObjAnim_SetCurrentEventStepFrames(obj, 0x32);
                     obj->anim.velocityY = 0.0f;
                     objFreeObjectType(obj, CFGUARDIAN_AIRBORNE_OBJECT_GROUP);
                     {
@@ -593,7 +593,7 @@ int cfguardian_updateMain(GameObject* obj) {
         state->stateFlags |= CFGUARDIAN_STATE_PATH_FLYING;
         if (cfguardian_flyAlongPath(obj, &state->path, 0.3f, 1, &state->moveSpeed) != 0) {
             state->questState = CFGUARDIAN_STATE_TALK_1;
-            ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
+            ObjAnim_SetCurrentEventStepFrames(obj, 0x32);
         }
         break;
     case CFGUARDIAN_STATE_TALK_1: /* talk spot: greet and head-track the player; 0x43 advances */
@@ -763,7 +763,7 @@ int cfguardian_updateMain(GameObject* obj) {
         if (idleMove != -1 && (state->stateFlags & CFGUARDIAN_STATE_MOVE_LATCHED) == 0 &&
             obj->anim.currentMove != idleMove) {
             ObjAnim_SetCurrentMove(obj, idleMove, 0.0f, 0);
-            ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x50);
+            ObjAnim_SetCurrentEventStepFrames(obj, 0x50);
         }
     }
     if (ObjAnim_AdvanceCurrentMove(obj, state->moveSpeed, framesThisStep, (ObjAnimEventList*)scratch.eventBuffer) !=

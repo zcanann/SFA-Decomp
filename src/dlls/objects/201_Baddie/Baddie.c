@@ -936,7 +936,7 @@ void enemy_findNearbyFloorHeights(GameObject* obj, EnemyState* state, f32* neare
     }
 }
 
-void enemyObjAnimUpdate(short* obj, EnemyState* state) {
+void enemyObjAnimUpdate(GameObject* obj, EnemyState* state) {
     f32 vy;
     f32 dz;
     f32 dx;
@@ -952,23 +952,23 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state) {
     f32 mtx[16];
 
     memcpy(&state->prevLookDirX, &state->lookDirX, 0xc);
-    memcpy(&state->lookDirX, obj + 0x12, 0xc);
+    memcpy(&state->lookDirX, &obj->anim.velocityX, 0xc);
     if ((state->flags2E4 & 0x400) != 0) {
-        characterDoEyeAnims((GameObject*)obj, &state->eyeAnimState);
+        characterDoEyeAnims(obj, &state->eyeAnimState);
     }
     if ((state->trackedObj != NULL) && ((state->flags2E4 & 0x800) != 0)) {
-        characterSetHeadYawToTarget((GameObject*)obj, state->trackedObj, &state->eyeAnimState, 0x19);
+        characterSetHeadYawToTarget(obj, state->trackedObj, &state->eyeAnimState, 0x19);
     }
     state->prevActionId = state->actionId;
     flags = state->controlFlags;
     if ((flags & 0x800) != 0) {
-        tricky_handleDefeat((GameObject*)(obj), state);
+        tricky_handleDefeat(obj, state);
     } else if ((flags & 0x1000) != 0) {
-        Tricky_resumeAfterCommand((GameObject*)(obj), state);
+        Tricky_resumeAfterCommand(obj, state);
     } else if ((flags & 0x20000000) != 0) {
         if ((flags & 0x400) != 0) {
             state->actionId = 3;
-            switch (((GameObject*)obj)->anim.romDefNo) {
+            switch (obj->anim.romDefNo) {
             case ENEMY_SHARPCLAW_GR_OBJ:
             case ENEMY_SHARPCLAW_SN_OBJ:
             case ENEMY_SHARPCLAW_CO_OBJ:
@@ -976,73 +976,73 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state) {
             case ENEMY_SHARPCLAW_SH_OBJ:
             case ENEMY_SHARPCLAW_SO_OBJ:
             case ENEMY_BOSSGENERAL_OBJ:
-                sharpClawUpdateAttack((GameObject*)(obj), (u8*)state);
+                sharpClawUpdateAttack(obj, (u8*)state);
                 break;
             case ENEMY_GUARDCLAW_OBJ:
             case 0x281:
-                guardClaw_update((GameObject*)obj, (u8*)state);
+                guardClaw_update(obj, (u8*)state);
                 break;
             case ENEMY_GCROBOTPATROL_OBJ:
-                gcRobotPatrol_update((GameObject*)obj, (u8*)state);
+                gcRobotPatrol_update(obj, (u8*)state);
                 break;
             case ENEMY_MIKALADON_OBJ:
-                mikaladon_update((GameObject*)obj, state);
+                mikaladon_update(obj, state);
                 break;
             case ENEMY_VAMBAT_OBJ:
             case ENEMY_FIREBAT_OBJ:
-                vambat_updateEngaged((GameObject*)(obj), state);
+                vambat_updateEngaged(obj, state);
                 break;
             case ENEMY_KOOSHY_OBJ:
-                kooshy_updateEngaged((GameObject*)(obj), state);
+                kooshy_updateEngaged(obj, state);
                 break;
             case ENEMY_WEEVIL_OBJ:
-                weevil_updateEngaged((GameObject*)(obj), state);
+                weevil_updateEngaged(obj, state);
                 break;
             case ENEMY_PINPON_OBJ:
-                pinPon_updateEngaged((GameObject*)(obj), (int*)state);
+                pinPon_updateEngaged(obj, (int*)state);
                 break;
             case ENEMY_RACHNOP_OBJ:
-                rachnopUpdateAttack((GameObject*)obj, state);
+                rachnopUpdateAttack(obj, state);
                 break;
             case ENEMY_SPITTINGEBA_OBJ:
-                spittingEbaUpdateEngaged((GameObject*)(obj), (int)state);
+                spittingEbaUpdateEngaged(obj, (int)state);
                 break;
             case ENEMY_WB_OBJ:
-                wbUpdateEngaged((GameObject*)obj, (int)state);
+                wbUpdateEngaged(obj, (int)state);
                 break;
             case ENEMY_MUTATEDEBA_OBJ:
-                mutatedEbaUpdateEngaged((GameObject*)obj, state);
+                mutatedEbaUpdateEngaged(obj, state);
                 break;
             case ENEMY_WHIRLPOOL_OBJ:
-                iceBaddie_enterWhirlpoolGroup((GameObject*)obj, state);
+                iceBaddie_enterWhirlpoolGroup(obj, state);
                 break;
             case ENEMY_SNOWWORM_OBJ:
             case ENEMY_SNOWWORM_BABY_OBJ:
-                snowworm_update((GameObject*)obj, (u8*)state);
+                snowworm_update(obj, (u8*)state);
                 break;
             case ENEMY_HOODEDZYCK_OBJ:
-                hoodedZyck_update((GameObject*)obj, (u8*)state);
+                hoodedZyck_update(obj, (u8*)state);
                 break;
             case ENEMY_BATTLEDROID_OBJ:
-                battleDroidUpdateAttack((GameObject*)obj, state);
+                battleDroidUpdateAttack(obj, state);
                 break;
             case ENEMY_FIRECRAWLER_OBJ:
             case ENEMY_REDEYE_OBJ:
             case ENEMY_SHADOWHUNTER_OBJ:
             case ENEMY_SWAMPSTRIDER_OBJ:
-                crawler_update((GameObject*)obj, (u8*)state);
+                crawler_update(obj, (u8*)state);
                 break;
             case ENEMY_HAGABONMK2_OBJ:
-                hagabonMK2_updateB((GameObject*)obj, (u8*)state);
+                hagabonMK2_updateB(obj, (u8*)state);
                 break;
             case 0x7c7:
             default:
-                battleDroidUpdateAttack((GameObject*)obj, state);
+                battleDroidUpdateAttack(obj, state);
                 break;
             }
         } else {
             state->actionId = 4;
-            switch (((GameObject*)obj)->anim.romDefNo) {
+            switch (obj->anim.romDefNo) {
             case ENEMY_SHARPCLAW_GR_OBJ:
             case ENEMY_SHARPCLAW_SN_OBJ:
             case ENEMY_SHARPCLAW_CO_OBJ:
@@ -1050,68 +1050,68 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state) {
             case ENEMY_SHARPCLAW_SH_OBJ:
             case ENEMY_SHARPCLAW_SO_OBJ:
             case ENEMY_BOSSGENERAL_OBJ:
-                sharpClawUpdateApproach((GameObject*)(obj), (void*)state);
+                sharpClawUpdateApproach(obj, (void*)state);
                 break;
             case ENEMY_GUARDCLAW_OBJ:
             case 0x281:
-                guardClaw_update((GameObject*)obj, (u8*)state);
+                guardClaw_update(obj, (u8*)state);
                 break;
             case ENEMY_GCROBOTPATROL_OBJ:
-                gcRobotPatrol_update((GameObject*)obj, (u8*)state);
+                gcRobotPatrol_update(obj, (u8*)state);
                 break;
             case ENEMY_MIKALADON_OBJ:
-                mikaladon_update((GameObject*)obj, state);
+                mikaladon_update(obj, state);
                 break;
             case ENEMY_VAMBAT_OBJ:
             case ENEMY_FIREBAT_OBJ:
-                vambat_updateEngaged((GameObject*)(obj), state);
+                vambat_updateEngaged(obj, state);
                 break;
             case ENEMY_KOOSHY_OBJ:
-                kooshy_updateEngaged((GameObject*)(obj), state);
+                kooshy_updateEngaged(obj, state);
                 break;
             case ENEMY_WEEVIL_OBJ:
-                weevil_updateEngaged((GameObject*)(obj), state);
+                weevil_updateEngaged(obj, state);
                 break;
             case ENEMY_PINPON_OBJ:
-                pinPon_updateEngaged((GameObject*)(obj), (int*)state);
+                pinPon_updateEngaged(obj, (int*)state);
                 break;
             case ENEMY_RACHNOP_OBJ:
-                rachnopUpdateApproach((GameObject*)obj, state);
+                rachnopUpdateApproach(obj, state);
                 break;
             case ENEMY_SPITTINGEBA_OBJ:
-                spittingEbaUpdateEngaged((GameObject*)(obj), (int)state);
+                spittingEbaUpdateEngaged(obj, (int)state);
                 break;
             case ENEMY_WB_OBJ:
-                wbUpdateEngaged((GameObject*)obj, (int)state);
+                wbUpdateEngaged(obj, (int)state);
                 break;
             case ENEMY_MUTATEDEBA_OBJ:
-                mutatedEbaUpdateEngaged((GameObject*)obj, state);
+                mutatedEbaUpdateEngaged(obj, state);
                 break;
             case ENEMY_WHIRLPOOL_OBJ:
-                iceBaddie_enterWhirlpoolGroup((GameObject*)obj, state);
+                iceBaddie_enterWhirlpoolGroup(obj, state);
                 break;
             case ENEMY_SNOWWORM_OBJ:
             case ENEMY_SNOWWORM_BABY_OBJ:
-                snowworm_update((GameObject*)obj, (u8*)state);
+                snowworm_update(obj, (u8*)state);
                 break;
             case ENEMY_HOODEDZYCK_OBJ:
-                hoodedZyck_updateB((GameObject*)obj, (u8*)state);
+                hoodedZyck_updateB(obj, (u8*)state);
                 break;
             case ENEMY_BATTLEDROID_OBJ:
-                battleDroidUpdate((GameObject*)obj, state);
+                battleDroidUpdate(obj, state);
                 break;
             case ENEMY_FIRECRAWLER_OBJ:
             case ENEMY_REDEYE_OBJ:
             case ENEMY_SHADOWHUNTER_OBJ:
             case ENEMY_SWAMPSTRIDER_OBJ:
-                crawler_updateB((GameObject*)obj, (u8*)state);
+                crawler_updateB(obj, (u8*)state);
                 break;
             case ENEMY_HAGABONMK2_OBJ:
-                hagabonMK2_update((GameObject*)obj, (u8*)state);
+                hagabonMK2_update(obj, (u8*)state);
                 break;
             case 0x7c7:
             default:
-                battleDroidUpdate((GameObject*)obj, state);
+                battleDroidUpdate(obj, state);
                 break;
             }
         }
@@ -1131,26 +1131,26 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state) {
 #endif
             state->rootMotionFlags = 1;
             ObjAnim_SetCurrentMove(obj, moveId, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
-            if (*(void**)(obj + 0x2a) != 0) {
-                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
+            if (obj->anim.hitReactState != 0) {
+                ((ObjHitsPriorityState*)obj->anim.hitReactState)->suppressOutgoingHits = 0;
             }
         }
         if ((state->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
             state->animPlaySpeed = 0.0055555557f;
             state->rootMotionFlags = 0;
             ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
-            if (*(void**)(obj + 0x2a) != 0) {
-                ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
+            if (obj->anim.hitReactState != 0) {
+                ((ObjHitsPriorityState*)obj->anim.hitReactState)->suppressOutgoingHits = 0;
             }
             state->controlFlags &= ~0x100;
-            ((GameObject*)obj)->anim.alpha = 0xff;
+            obj->anim.alpha = 0xff;
         } else {
-            ((GameObject*)obj)->anim.alpha = (u8)(int)(255.0f * ((GameObject*)obj)->anim.currentMoveProgress);
-            ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
+            obj->anim.alpha = (u8)(int)(255.0f * obj->anim.currentMoveProgress);
+            obj->anim.flags = obj->anim.flags & ~OBJANIM_FLAG_HIDDEN;
         }
     } else {
         state->actionId = 5;
-        switch (((GameObject*)obj)->anim.romDefNo) {
+        switch (obj->anim.romDefNo) {
         case ENEMY_SHARPCLAW_GR_OBJ:
         case ENEMY_SHARPCLAW_SN_OBJ:
         case ENEMY_SHARPCLAW_CO_OBJ:
@@ -1158,68 +1158,68 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state) {
         case ENEMY_SHARPCLAW_SH_OBJ:
         case ENEMY_SHARPCLAW_SO_OBJ:
         case ENEMY_BOSSGENERAL_OBJ:
-            sharpClawUpdateIdle((GameObject*)obj, (u8*)state);
+            sharpClawUpdateIdle(obj, (u8*)state);
             break;
         case ENEMY_GUARDCLAW_OBJ:
         case 0x281:
-            guardClaw_update((GameObject*)obj, (u8*)state);
+            guardClaw_update(obj, (u8*)state);
             break;
         case ENEMY_GCROBOTPATROL_OBJ:
-            gcRobotPatrol_update((GameObject*)obj, (u8*)state);
+            gcRobotPatrol_update(obj, (u8*)state);
             break;
         case ENEMY_MIKALADON_OBJ:
-            mikaladon_update((GameObject*)obj, state);
+            mikaladon_update(obj, state);
             break;
         case ENEMY_VAMBAT_OBJ:
         case ENEMY_FIREBAT_OBJ:
-            vambat_updateIdle((GameObject*)(obj), state);
+            vambat_updateIdle(obj, state);
             break;
         case ENEMY_KOOSHY_OBJ:
-            kooshy_updateIdle((GameObject*)(obj), state);
+            kooshy_updateIdle(obj, state);
             break;
         case ENEMY_WEEVIL_OBJ:
-            weevil_updateIdle((GameObject*)(obj), state);
+            weevil_updateIdle(obj, state);
             break;
         case ENEMY_PINPON_OBJ:
-            pinPon_updateIdle((GameObject*)(obj), state);
+            pinPon_updateIdle(obj, state);
             break;
         case ENEMY_RACHNOP_OBJ:
-            rachnopUpdateIdle((GameObject*)obj, state);
+            rachnopUpdateIdle(obj, state);
             break;
         case ENEMY_SPITTINGEBA_OBJ:
-            spittingEbaUpdateIdle((GameObject*)(obj), (int)state);
+            spittingEbaUpdateIdle(obj, (int)state);
             break;
         case ENEMY_WB_OBJ:
-            wbUpdateIdle((GameObject*)obj, (int)state);
+            wbUpdateIdle(obj, (int)state);
             break;
         case ENEMY_MUTATEDEBA_OBJ:
-            mutatedEbaUpdateIdle((GameObject*)obj, state);
+            mutatedEbaUpdateIdle(obj, state);
             break;
         case ENEMY_WHIRLPOOL_OBJ:
-            iceBaddie_leaveWhirlpoolGroup((GameObject*)obj, state);
+            iceBaddie_leaveWhirlpoolGroup(obj, state);
             break;
         case ENEMY_SNOWWORM_OBJ:
         case ENEMY_SNOWWORM_BABY_OBJ:
-            snowworm_applyReactionState((GameObject*)obj, (int*)state);
+            snowworm_applyReactionState(obj, (int*)state);
             break;
         case ENEMY_HOODEDZYCK_OBJ:
-            hoodedZyck_updateIdle((GameObject*)(obj), state);
+            hoodedZyck_updateIdle(obj, state);
             break;
         case ENEMY_BATTLEDROID_OBJ:
-            battleDroidUpdate((GameObject*)obj, state);
+            battleDroidUpdate(obj, state);
             break;
         case ENEMY_FIRECRAWLER_OBJ:
         case ENEMY_REDEYE_OBJ:
         case ENEMY_SHADOWHUNTER_OBJ:
         case ENEMY_SWAMPSTRIDER_OBJ:
-            crawler_updateC((GameObject*)obj, (u8*)state);
+            crawler_updateC(obj, (u8*)state);
             break;
         case ENEMY_HAGABONMK2_OBJ:
-            hagabonMK2_updateB((GameObject*)obj, (u8*)state);
+            hagabonMK2_updateB(obj, (u8*)state);
             break;
         case 0x7c7:
         default:
-            battleDroidUpdate((GameObject*)obj, state);
+            battleDroidUpdate(obj, state);
             break;
         }
     }
@@ -1241,14 +1241,14 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state) {
     vy = 0.0f;
     if ((((state->flags2E4 & 0x20) != 0) && ((state->flags2E4 & 0x400000) == 0)) &&
         (((state->controlFlags & 0x1800) == 0) && ((state->rootMotionFlags & 4) == 0))) {
-        vy = -(state->gravity * timeDelta - ((GameObject*)obj)->anim.velocityY);
+        vy = -(state->gravity * timeDelta - obj->anim.velocityY);
     }
-    vel = ((GameObject*)obj)->anim.velocityX;
-    ((GameObject*)obj)->anim.velocityX = (vel < -10.0f) ? -10.0f : ((vel > 10.0f) ? 10.0f : vel);
-    vel = ((GameObject*)obj)->anim.velocityY;
-    ((GameObject*)obj)->anim.velocityY = (vel < -10.0f) ? -10.0f : ((vel > 10.0f) ? 10.0f : vel);
-    vel = ((GameObject*)obj)->anim.velocityZ;
-    ((GameObject*)obj)->anim.velocityZ = (vel < -10.0f) ? -10.0f : ((vel > 10.0f) ? 10.0f : vel);
+    vel = obj->anim.velocityX;
+    obj->anim.velocityX = (vel < -10.0f) ? -10.0f : ((vel > 10.0f) ? 10.0f : vel);
+    vel = obj->anim.velocityY;
+    obj->anim.velocityY = (vel < -10.0f) ? -10.0f : ((vel > 10.0f) ? 10.0f : vel);
+    vel = obj->anim.velocityZ;
+    obj->anim.velocityZ = (vel < -10.0f) ? -10.0f : ((vel > 10.0f) ? 10.0f : vel);
     mode = 0;
     if (((state->flags2E4 & 0x80) != 0) && (state->rootMotionFlags != 0)) {
         mode = 1;
@@ -1274,11 +1274,11 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state) {
             dz = -res.dz * oneOverTimeDelta;
         }
         if ((state->rootMotionFlags & 8) != 0) {
-            ((GameObject*)obj)->anim.rotX += res.dAngle;
+            obj->anim.rotX += res.dAngle;
         }
-        rec.rotX = ((GameObject*)obj)->anim.rotX;
-        rec.rotY = ((GameObject*)obj)->anim.rotY;
-        rec.rotZ = ((GameObject*)obj)->anim.rotZ;
+        rec.rotX = obj->anim.rotX;
+        rec.rotY = obj->anim.rotY;
+        rec.rotZ = obj->anim.rotZ;
         rec.scale = 1.0f;
         zero = 0.0f;
         rec.x = zero;
@@ -1286,44 +1286,44 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state) {
         rec.z = zero;
         setMatrixFromObjectPos(mtx, &rec);
         if ((state->rootMotionFlags & 4) != 0) {
-            Matrix_TransformPoint(mtx, dx, dy, -dz, (f32*)(obj + 0x12), (f32*)(obj + 0x14), (f32*)(obj + 0x16));
+            Matrix_TransformPoint(mtx, dx, dy, -dz, &obj->anim.velocityX, &obj->anim.velocityY, &obj->anim.velocityZ);
         } else {
-            Matrix_TransformPoint(mtx, dx, 0.0f, -dz, (f32*)(obj + 0x12), &outY, (f32*)(obj + 0x16));
+            Matrix_TransformPoint(mtx, dx, 0.0f, -dz, &obj->anim.velocityX, &outY, &obj->anim.velocityZ);
         }
     } else if (mode == 2) {
-        if (ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj,
-                                         sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-                                               ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ),
+        if (ObjAnim_SampleRootCurvePhase(obj,
+                                         sqrtf(obj->anim.velocityX * obj->anim.velocityX +
+                                               obj->anim.velocityZ * obj->anim.velocityZ),
                                          &phase) != 0) {
             state->animPlaySpeed = phase;
         }
     } else if (mode == 3) {
         if ((state->flags2F1 & 0x80) == 0) {
-            ((GameObject*)obj)->anim.velocityX =
-                ((GameObject*)obj)->anim.velocityX * powfBitEstimate(state->drag, timeDelta);
-            ((GameObject*)obj)->anim.velocityY =
-                ((GameObject*)obj)->anim.velocityY * powfBitEstimate(state->drag, timeDelta);
-            ((GameObject*)obj)->anim.velocityZ =
-                ((GameObject*)obj)->anim.velocityZ * powfBitEstimate(state->drag, timeDelta);
+            obj->anim.velocityX =
+                obj->anim.velocityX * powfBitEstimate(state->drag, timeDelta);
+            obj->anim.velocityY =
+                obj->anim.velocityY * powfBitEstimate(state->drag, timeDelta);
+            obj->anim.velocityZ =
+                obj->anim.velocityZ * powfBitEstimate(state->drag, timeDelta);
         }
     }
-    enemy_applyFloorResponse((GameObject*)(obj), state);
+    enemy_applyFloorResponse(obj, state);
     if (((state->flags2E4 & 0x400000) != 0) || ((state->controlFlags & 0x8100000) != 0)) {
         if ((state->flags2F1 & 0x80) == 0) {
-            objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
-                    ((GameObject*)obj)->anim.velocityY * timeDelta, ((GameObject*)obj)->anim.velocityZ * timeDelta);
+            objMove(obj, obj->anim.velocityX * timeDelta,
+                    obj->anim.velocityY * timeDelta, obj->anim.velocityZ * timeDelta);
         }
     } else if ((state->flags2E4 & 0x20) != 0) {
-        f32 newY = (((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY) -
+        f32 newY = (obj->anim.velocityY * timeDelta + obj->anim.localPosY) -
                    0.5f * (state->gravity * (timeDelta * timeDelta));
         if ((state->flags2F1 & 0x80) == 0) {
-            objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
-                    newY - ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.velocityZ * timeDelta);
-            ((GameObject*)obj)->anim.velocityY = vy;
+            objMove(obj, obj->anim.velocityX * timeDelta,
+                    newY - obj->anim.localPosY, obj->anim.velocityZ * timeDelta);
+            obj->anim.velocityY = vy;
         }
     } else if ((state->flags2F1 & 0x80) == 0) {
-        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
-                ((GameObject*)obj)->anim.velocityY * timeDelta, ((GameObject*)obj)->anim.velocityZ * timeDelta);
+        objMove(obj, obj->anim.velocityX * timeDelta,
+                obj->anim.velocityY * timeDelta, obj->anim.velocityZ * timeDelta);
     }
 }
 
@@ -2332,7 +2332,7 @@ void enemy_update(GameObject* obj) {
         baddieTurnTowardTarget(obj, state);
         baddie_updateEngagementState(obj, state);
     }
-    enemyObjAnimUpdate((short*)obj, state);
+    enemyObjAnimUpdate(obj, state);
 }
 
 void enemy_init(GameObject* obj, u8* setup, int flag) {

@@ -1001,12 +1001,12 @@ ObjDef* loadObjectFile(int id) {
     return buf;
 }
 
-void objGetWeaponDa(u8* obj, int objType, ObjWeaponDaTable* weaponDaTable, int key, u8 load) {
+void objGetWeaponDa(GameObject* obj, int objType, ObjWeaponDaTable* weaponDaTable, int key, u8 load) {
     int i;
     s16* tbl;
     s16 da2;
 
-    tbl = ((GameObject*)obj)->anim.modelInstance->weaponDaTable;
+    tbl = obj->anim.modelInstance->weaponDaTable;
     weaponDaTable->byteCount = 0;
     if (tbl == NULL) {
         return;
@@ -1030,12 +1030,12 @@ void objGetWeaponDa(u8* obj, int objType, ObjWeaponDaTable* weaponDaTable, int k
     }
 }
 
-void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u32 moveId, u8 load) {
+void ObjAnim_LoadMoveEvents(GameObject* obj, int dummy, ObjAnimEventTable* eventTable, u32 moveId, u8 load) {
     int i;
     s16* tbl;
     s16 da2;
 
-    tbl = ((GameObject*)obj)->anim.modelInstance->eventMoveTable;
+    tbl = obj->anim.modelInstance->eventMoveTable;
     eventTable->byteCount = 0;
     if (tbl == NULL) {
         return;
@@ -1755,7 +1755,7 @@ GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objec
         obj->anim.eventTable = (ObjAnimEventTable*)alignedCursor;
         cursor = roundUpTo8(alignedCursor + sizeof(ObjAnimEventTable));
         obj->anim.eventTable->entries = (s16*)cursor;
-        ObjAnim_LoadMoveEvents((u8*)obj, seq2[0], obj->anim.eventTable, 0, 1);
+        ObjAnim_LoadMoveEvents(obj, seq2[0], obj->anim.eventTable, 0, 1);
         cursor += OBJ_MOVE_EVENT_BUFFER_BYTES;
     }
     if (!(loadFlags & OBJLOAD_FLAG_WEAPON_DA) || obj->anim.modelBanks[0] == NULL) {

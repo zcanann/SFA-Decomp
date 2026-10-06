@@ -136,7 +136,7 @@ int dll_28B_stateHandler2(GameObject* obj, BaddieState* ai) {
     obj->anim.rotX = getAngle(-state->route.tangentX, -state->route.tangentZ);
     /* Retail rounds both squared components before adding; do not fuse them. */
     ObjAnim_SampleRootCurvePhase(
-        &obj->anim,
+        obj,
         sqrtf((f32)(obj->anim.velocityX * obj->anim.velocityX) + (f32)(obj->anim.velocityZ * obj->anim.velocityZ)),
         &ai->moveSpeed);
     return 0;

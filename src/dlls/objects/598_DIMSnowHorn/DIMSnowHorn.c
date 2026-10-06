@@ -216,7 +216,7 @@ int DIMSnowHorn1_stateHandler0A(GameObject* obj, DIMSnowHorn1State* state, f32 t
         }
     }
 
-    ObjAnim_SampleRootCurvePhase(&obj->anim, state->baddie.animSpeedA, &state->baddie.moveSpeed);
+    ObjAnim_SampleRootCurvePhase(obj, state->baddie.animSpeedA, &state->baddie.moveSpeed);
     if ((state->baddie.pressedButtons & PAD_BUTTON_A) != 0) {
         if (near == NULL || ((near)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) == 0) {
             return 0xc;

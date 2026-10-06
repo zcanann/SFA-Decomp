@@ -1,5 +1,12 @@
 # AGENTS.md - SFA-Decomp Runbook
 
+> **Recovery scope (2026-10-06):** Recover plausible original game source and
+> remove fake matches, misleading types and names. Portability is not the goal.
+> Use Foxhollow's necessary runtime fixes as leads to bad decomp assumptions;
+> do not add host-width accommodations or pursue native-port readiness as an
+> objective. Prefer substantial core API/type recovery propagated through its
+> real consumers, while preserving complete 100% TU matches before committing.
+
 > **Matching gate (2026-10-06):** Finish one recovery at a time. If a source
 > improvement regresses a TU, rematch the complete TU to 100% before committing
 > it, then verify every active TU still matches 100%. Do not commit or push

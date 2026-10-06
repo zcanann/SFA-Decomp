@@ -168,7 +168,7 @@ void FlammableVine_update(GameObject* obj) {
         if (state->burnTimer < FLAMMABLEVINE_BURN_ANIMATION_START &&
             state->burnTimer > FLAMMABLEVINE_BURN_FULL_INTENSITY) {
             ObjAnim_SetMoveProgress(
-                (ObjAnimComponent*)obj,
+                obj,
                 1.0f - ((state->burnTimer - FLAMMABLEVINE_BURN_FULL_INTENSITY) / FLAMMABLEVINE_BURN_ANIMATION_RANGE));
         }
 
@@ -213,7 +213,7 @@ void FlammableVine_init(GameObject* obj, FlammableVinePlacement* placement) {
     ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (s16)(FLAMMABLEVINE_HITBOX_RADIUS_SCALE * scale), 0,
                                (s16)(FLAMMABLEVINE_HITBOX_TOP_SCALE * scale));
     state->burnIntensity = FLAMMABLEVINE_INITIAL_INTENSITY;
-    ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, 0.0f);
+    ObjAnim_SetMoveProgress(obj, 0.0f);
 
     if (placement->burnedBit != -1 && mainGetBit(placement->burnedBit) != 0) {
         Obj_RemoveFromUpdateList(obj);

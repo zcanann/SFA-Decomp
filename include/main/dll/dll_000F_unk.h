@@ -40,7 +40,7 @@ void player_rotateTowardEnemy(GameObject* obj, BaddieState* state, int spd);
 void player_render2(GameObject* obj, BaddieState* state, f32 f1, f32 f2);
 void player_modelMtxFn(f32* mtx, BaddieState* state, f32 f1, f32 f2);
 void dll_0F_func0B(GameObject* obj, BaddieState* state, f32 f1, f32 f2, f32 f3);
-void player_advanceMove(short* moveState, BaddieState* state, f32 dt, int flags);
+void player_advanceMove(GameObject* obj, BaddieState* state, f32 dt, int flags);
 void player_runSubstateMachine(GameObject* obj, BaddieState* state, f32 dt, PlayerSubstateFn* stateFns);
 void playerRunStateMachine(GameObject* obj, BaddieState* state, f32 dt, PlayerStateFn* stateFns);
 void player_setState(GameObject* obj, BaddieState* state, int new_state);

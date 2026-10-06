@@ -631,7 +631,7 @@ int DIMbossHitDetect_trackTargetMove(GameObject* obj, BaddieState* runtime, f32 
     return 0;
 }
 
-int DIMbossHitDetect_applyForwardMove(int* obj, u8* state, f32 weight) {
+int DIMbossHitDetect_applyForwardMove(GameObject* obj, u8* state, f32 weight) {
     if (((BaddieState*)state)->moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove(obj, 2, 0.0f, 0);
         ((BaddieState*)state)->moveDone = 0;

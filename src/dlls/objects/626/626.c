@@ -143,7 +143,7 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg) {
         storeZeroToFloatParam(&state->transitionTimer);
         ObjHits_EnableObject(obj);
         if (obj->anim.currentMove != 2) {
-            ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x78);
+            ObjAnim_SetCurrentEventStepFrames(obj, 0x78);
             ObjAnim_SetCurrentMove(obj, 2, 0.0f, 0);
             stateArg->baddie.moveSpeed = 0.004f;
         }
@@ -166,11 +166,11 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg) {
         }
         if (stateArg->baddie.moveDone != 0) {
             if (randomChanceOneIn(2) != 0) {
-                ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x78);
+                ObjAnim_SetCurrentEventStepFrames(obj, 0x78);
                 ObjAnim_SetCurrentMove(obj, 9, 0.0f, 0);
                 stateArg->baddie.moveSpeed = 0.006f;
             } else {
-                ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x78);
+                ObjAnim_SetCurrentEventStepFrames(obj, 0x78);
                 ObjAnim_SetCurrentMove(obj, 2, 0.0f, 0);
                 stateArg->baddie.moveSpeed = 0.004f;
             }
@@ -197,7 +197,7 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg) {
             state->substate = 9;
         }
         objModelClearJointVectors(obj);
-        ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0);
+        ObjAnim_SetCurrentEventStepFrames(obj, 0);
         ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
         ObjHits_DisableObject(obj);
         Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
@@ -206,7 +206,7 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg) {
     }
     if (stateArg->baddie.moveDone != 0) {
         if (obj->anim.currentMove != 2) {
-            ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x78);
+            ObjAnim_SetCurrentEventStepFrames(obj, 0x78);
             ObjAnim_SetCurrentMove(obj, 2, 0.0f, 0);
             stateArg->baddie.moveSpeed = 0.004f;
         }
@@ -411,7 +411,7 @@ int hightop_stateHandler04(GameObject* obj, HighTopRuntime* stateArg) {
         }
     }
     if (move != -1) {
-        ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x78);
+        ObjAnim_SetCurrentEventStepFrames(obj, 0x78);
         ObjAnim_SetCurrentMove(obj, move, 0.0f, 0);
     }
     player = Obj_GetPlayerObject();
@@ -524,7 +524,7 @@ int hightop_stateHandler03(GameObject* obj, HighTopRuntime* state) {
     obj->anim.velocityY = zero;
     obj->anim.velocityZ = zero;
     if (state->baddie.moveJustStartedA != 0) {
-        ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x78);
+        ObjAnim_SetCurrentEventStepFrames(obj, 0x78);
         if (*(u32*)&runtime->savedControlMode == 4) {
             ObjAnim_SetCurrentMove(obj, 0x13, 0.0f, 0);
             state->baddie.moveSpeed = 0.008f;
@@ -634,9 +634,9 @@ int hightop_stateHandler02(GameObject* obj, HighTopRuntime* stateArg, f32 dt) {
     }
     if (changed != 0) {
         ObjAnim_SetCurrentMove(obj, gHighTopBandMoveIds[band], moveSpeed, 0);
-        ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0xa);
+        ObjAnim_SetCurrentEventStepFrames(obj, 0xa);
     }
-    ObjAnim_SampleRootCurvePhase(&obj->anim, stateArg->baddie.animSpeedA, &stateArg->baddie.moveSpeed);
+    ObjAnim_SampleRootCurvePhase(obj, stateArg->baddie.animSpeedA, &stateArg->baddie.moveSpeed);
     return 0;
 }
 

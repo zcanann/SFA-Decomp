@@ -771,7 +771,7 @@ void bossdrakor_update(GameObject* obj) {
             state->flags198.b08 = 0;
             if (!state->flags198.b40) {
                 state->moveSpeed = 600.0f;
-                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x28);
+                ObjAnim_SetCurrentEventStepFrames(obj, 0x28);
                 moveId = 0x10;
             } else {
                 moveId = bossdrakor_chooseNextMove(obj, &state->moveSpeed);

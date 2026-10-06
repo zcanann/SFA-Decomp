@@ -19,7 +19,7 @@ int playerStateOnLadder(GameObject* obj, struct PlayerState* state);
 int playerStateClimbWall(GameObject* obj, struct PlayerState* state);
 int playerStateAimStaff(GameObject* obj, struct PlayerState* state, f32 fv);
 int playerStateAttack(GameObject* obj, struct PlayerState* state, f32 fv);
-int playerState1D(int obj, struct PlayerState* state, f32 fv);
+int playerState1D(GameObject* obj, struct PlayerState* state, f32 fv);
 int playerStateIdle(GameObject* obj, struct PlayerState* state, f32 fv);
 int playerState08(GameObject* obj, struct PlayerState* state, f32 fv);
 

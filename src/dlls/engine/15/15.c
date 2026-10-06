@@ -247,7 +247,7 @@ void player_updateSecondaryBlend(GameObject* obj, BaddieState* state, int moveA,
         q1 = state->animSpeedA * state->animSpeedA;
         q2 = state->animSpeedB * state->animSpeedB;
         mag = sqrtf(q1 + q2);
-        if (ObjAnim_SampleRootCurvePhase(&obj->anim, mag, &tmp) != 0) {
+        if (ObjAnim_SampleRootCurvePhase(obj, mag, &tmp) != 0) {
             state->moveSpeed = tmp;
         }
         tmp = (PLAYER_MOVE_ZERO != mag) ? state->animSpeedB / mag : PLAYER_MOVE_ZERO;
@@ -260,9 +260,9 @@ void player_updateSecondaryBlend(GameObject* obj, BaddieState* state, int moveA,
             idx = 0x4000;
         }
         if (state->animSpeedB > PLAYER_MOVE_ZERO) {
-            Object_ObjAnimSetSecondaryBlendMove(&obj->anim, moveB, idx);
+            ObjAnim_SetCurrentBlendMove(obj, moveB, idx);
         } else {
-            Object_ObjAnimSetSecondaryBlendMove(&obj->anim, moveA, idx);
+            ObjAnim_SetCurrentBlendMove(obj, moveA, idx);
         }
     }
 }
@@ -423,14 +423,14 @@ void dll_0F_func0B(GameObject* obj, BaddieState* state, f32 f1, f32 f2, f32 f3) 
     }
 }
 
-void player_advanceMove(short* moveState, BaddieState* state, f32 dt, int flags) {
+void player_advanceMove(GameObject* obj, BaddieState* state, f32 dt, int flags) {
     PlayerMoveBuf buf;
     s8* ptr;
     int i;
     f32 stopVal;
 
     buf.flag = 0;
-    state->moveDone = ObjAnim_AdvanceCurrentMove(moveState, state->moveSpeed, dt, (ObjAnimEventList*)&buf);
+    state->moveDone = ObjAnim_AdvanceCurrentMove(obj, state->moveSpeed, dt, (ObjAnimEventList*)&buf);
 
     state->eventFlags = 0;
     i = 0;
@@ -454,7 +454,7 @@ void player_advanceMove(short* moveState, BaddieState* state, f32 dt, int flags)
                 state->rootMotionDelta = buf.b;
             }
             if ((flags & 8) != 0) {
-                *moveState += buf.angleDelta;
+                obj->anim.rotX += buf.angleDelta;
             }
         } else {
             if ((flags & 1) != 0) {
@@ -464,7 +464,7 @@ void player_advanceMove(short* moveState, BaddieState* state, f32 dt, int flags)
                 state->animSpeedB = buf.a / dt;
             }
             if ((flags & 8) != 0) {
-                *moveState += buf.angleDelta;
+                obj->anim.rotX += buf.angleDelta;
             }
             if ((flags & 4) != 0) {
                 state->animSpeedY = buf.b / dt;

@@ -101,7 +101,7 @@ void MagicPlant_init(GameObject* obj, MagicPlantPlacement* placement) {
     }
     state->mode = MAGICPLANT_MODE_WAIT_FOR_EVENT;
     state->animStepScale = MAGICPLANT_ZERO;
-    ObjAnim_SetMoveProgress(&obj->anim, state->animProgress);
+    ObjAnim_SetMoveProgress(obj, state->animProgress);
     anim->rotX = (s16)((u32)placement->yawByte << 8);
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
     anim->bankIndex = placement->modelIndex;
@@ -162,7 +162,7 @@ void MagicPlant_update(GameObject* obj) {
         if (obj->anim.currentMove != MAGICPLANT_MOVE_CLOSED) {
             ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_CLOSED, state->animProgress, 0);
         }
-        ObjAnim_SetMoveProgress(&obj->anim, state->animProgress);
+        ObjAnim_SetMoveProgress(obj, state->animProgress);
         break;
 
     case MAGICPLANT_MODE_ACTIVE:
@@ -184,7 +184,7 @@ void MagicPlant_update(GameObject* obj) {
                 state->animProgress = resetProgress;
                 state->animStepScale = resetProgress;
                 ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_CLOSED, resetProgress, 0);
-                ObjAnim_SetMoveProgress(&obj->anim, MAGICPLANT_ZERO);
+                ObjAnim_SetMoveProgress(obj, MAGICPLANT_ZERO);
             }
             obj->anim.alpha = alpha;
         }

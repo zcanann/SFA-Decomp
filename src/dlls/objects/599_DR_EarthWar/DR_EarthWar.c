@@ -104,7 +104,7 @@ int DR_EarthWarrior_updateLeap(GameObject* obj, EarthWarriorSub* warrior, Baddie
         warrior->soundId = warrior->soundIdReload;
         baddie->moveSpeed = 0.0165f;
         ObjAnim_SetCurrentMove(obj, warrior->moveTable[0x1D], 0.0f, 0);
-        ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x10);
+        ObjAnim_SetCurrentEventStepFrames(obj, 0x10);
         warrior->leapStartYaw = warrior->currentYaw;
         warrior->animSpeedRate = (0.2f + (warrior->configRow[2].maxSpeed + baddie->animSpeedC)) / 60.0f;
         warrior->appliedYaw = warrior->currentYaw;
@@ -452,7 +452,7 @@ int DR_EarthWarrior_stateHandler02(GameObject* obj, EarthWarriorState* controlle
         }
         if ((skip != 0 || warrior->prevMoveTable != warrior->moveTable ||
              obj->anim.currentMove != warrior->moveTable[warrior->attackPhase]) &&
-            (ObjAnim_GetCurrentEventCountdown(&obj->anim) == 0 || warrior->flags3F2.b10 != 0)) {
+            (ObjAnim_GetCurrentEventCountdown(obj) == 0 || warrior->flags3F2.b10 != 0)) {
             if (obj->anim.currentMove == 0x14) {
                 blend = 0.85f;
             }
@@ -460,7 +460,7 @@ int DR_EarthWarrior_stateHandler02(GameObject* obj, EarthWarriorState* controlle
         }
     }
     if (!warrior->flags3F0.b80 && !warrior->flags3F0.b40 && !state->sub.flags994.b01) {
-        if (ObjAnim_SampleRootCurvePhase(&obj->anim, controllerState->baddie.animSpeedC,
+        if (ObjAnim_SampleRootCurvePhase(obj, controllerState->baddie.animSpeedC,
                                          &controllerState->baddie.moveSpeed) == 0) {
             controllerState->baddie.moveSpeed = 0.005f;
         }
@@ -523,7 +523,7 @@ int DR_EarthWarrior_stateHandler01(GameObject* obj, BaddieState* baddie) {
         baddie->moveSpeed = 0.005f;
     }
     if (obj->anim.currentMove == warrior->moveTable[0x18] || obj->anim.currentMove == warrior->moveTable[0x19]) {
-        if (baddie->moveDone != 0 && ObjAnim_GetCurrentEventCountdown(&obj->anim) == 0 && !state->sub.flags994.b01) {
+        if (baddie->moveDone != 0 && ObjAnim_GetCurrentEventCountdown(obj) == 0 && !state->sub.flags994.b01) {
             ObjAnim_SetCurrentMove(obj, moveId, 0.0f, 0);
             baddie->moveSpeed = 0.005f;
         }

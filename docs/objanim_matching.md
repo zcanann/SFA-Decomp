@@ -1,8 +1,15 @@
 # ObjAnim root-curve phase sampling
 
-`src/main/objanim.c` remains `NonMatching` for EN GSAE01. The current GC/1.3
-build has 12 of 13 functions exact and seven floating-point operand differences
-in `ObjAnim_SampleRootCurvePhase`. Its existing optimization profile is unchanged.
+Current status (2026-10-06): `src/main/objanim.c` is matching in all five retail
+versions, including all 13 functions and its data. The object animation API
+now uses `GameObject*`; see
+[the object/component investigation](future_investigations/objanim_component_vs_gameobject.md)
+for that recovery and its complete object/link validation.
+
+The notes below preserve the earlier root-curve compiler investigation, when
+12 of 13 functions matched and seven floating-point operands remained different.
+Those percentages and the `NonMatching` state describe that historical stage,
+not the current source.
 
 | Measure | Before | Current |
 | --- | ---: | ---: |

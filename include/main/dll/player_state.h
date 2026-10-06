@@ -256,7 +256,7 @@ typedef struct PlayerState {
     f32 moveEnd2X; /* secondary local-space target position, also lerped from moveStart */
     f32 moveEnd2Y;
     f32 moveEnd2Z;
-    s16 secondaryBlendAmount; /* clamped (s16) blend amount derived from the leapSpeed normalization; passed to Object_ObjAnimSetSecondaryBlendMove for the paired jump/climb move */
+    s16 secondaryBlendAmount; /* clamped (s16) blend amount derived from the leapSpeed normalization; passed to ObjAnim_SetCurrentBlendMove for the paired jump/climb move */
     u8 unk606;
     u8 unk607;
     u8 unk608;

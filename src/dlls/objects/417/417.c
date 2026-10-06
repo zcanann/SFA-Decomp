@@ -495,7 +495,7 @@ void NW_mammoth_updatePatrol(GameObject* obj, NwMammothState* state, NwMammothPl
         {
             f32 dx = curve->sample[0] - obj->anim.localPosX;
             f32 dz = curve->sample[2] - obj->anim.localPosZ;
-            ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, oneOverTimeDelta * sqrtf(dx * dx + dz * dz),
+            ObjAnim_SampleRootCurvePhase(obj, oneOverTimeDelta * sqrtf(dx * dx + dz * dz),
                                          &state->animStepScale);
         }
         obj->anim.rotX = (s16)(getAngle(curve->tangent[0], curve->tangent[2]) + 0x8000);

@@ -456,7 +456,7 @@ void Scarab_update(GameObject* obj) {
                     obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
                     speed =
                         sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ);
-                    ObjAnim_SampleRootCurvePhase(&obj->anim, speed, &animationPhase);
+                    ObjAnim_SampleRootCurvePhase(obj, speed, &animationPhase);
                     ObjAnim_AdvanceCurrentMove(obj, animationPhase, timeDelta, NULL);
                 }
                 contact.collisionDetected = trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX,

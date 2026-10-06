@@ -354,7 +354,7 @@ int ObjSeq_TurnToFacePlayer(GameObject* obj, ObjSeqState* state, s16 turnDegrees
                 s16 t50 = state->rotOffsetX;
                 f32 fa = (f32)(t50 >= 0 ? t50 : -t50);
                 fa = fa * 3.142f / 325767.0f;
-                ObjAnim_SampleRootCurvePhase(&obj->anim, fa, &out);
+                ObjAnim_SampleRootCurvePhase(obj, fa, &out);
                 ObjAnim_AdvanceCurrentMove(obj, out, (f32)framesThisStep, NULL);
             }
         }
@@ -3827,7 +3827,7 @@ void ObjSeq_RebuildCurveStateToFrame(GameObject* obj, GameObject* seqObj, ObjSeq
         if (state->curFrame > 0 && mode != 0) {
             if ((s8)state->useRootMotionSpeed == 1 && (s8)state->isCameraSeq == 0 && action != NULL) {
                 f32 dx = posp[0] - prevX;
-                if (ObjAnim_SampleRootCurvePhase(&seqObj->anim, sqrtf(dx * dx + (posp[2] - prevZ) * (posp[2] - prevZ)),
+                if (ObjAnim_SampleRootCurvePhase(seqObj, sqrtf(dx * dx + (posp[2] - prevZ) * (posp[2] - prevZ)),
                                                  &speed) == 0) {
                     frame = state->curFrame - 1;
                     val = ObjSeq_SampleTrackCurve(seq, 9, frame);
@@ -4562,7 +4562,7 @@ int ObjSeq_update(GameObject* obj, f32 t) {
                 if (state->useRootMotionSpeed == 1 && state->isCameraSeq == 0 && action != NULL) {
                     f32 dx = px - prevX;
                     f32 dz = pz - prevZ;
-                    if (ObjAnim_SampleRootCurvePhase(&activeObj->anim, sqrtf(dx * dx + dz * dz), &moveProgress) == 0) {
+                    if (ObjAnim_SampleRootCurvePhase(activeObj, sqrtf(dx * dx + dz * dz), &moveProgress) == 0) {
                         i = state->curFrame - 1;
                         val = ObjSeq_SampleTrackCurve(seq, 9, i);
                         moveProgress = 0.0004f * val;

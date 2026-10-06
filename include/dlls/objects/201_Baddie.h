@@ -259,7 +259,7 @@ typedef struct EnemyTargetSearchResult {
 
 STATIC_ASSERT(sizeof(EnemyTargetSearchResult) == 8);
 
-void enemyObjAnimUpdate(short* obj, EnemyState* state);
+void enemyObjAnimUpdate(GameObject* obj, EnemyState* state);
 int enemy_SeqFn(GameObject* node, int unused, ObjSeqState* animUpdate);
 int enemy_findNearbyEnemies(GameObject* obj, f32 radius, u8 flags, int maxCount, EnemyTargetSearchResult* results);
 void tricky_handleDefeat(GameObject* obj, EnemyState* state);

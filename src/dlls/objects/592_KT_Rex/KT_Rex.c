@@ -777,7 +777,7 @@ int ktrex_stateHandlerB01(GameObject* obj, GroundBaddieState* runtime) {
     }
     dx = oneOverTimeDelta * (gKTRexState->posX - obj->anim.localPosX);
     dz = oneOverTimeDelta * (gKTRexState->posZ - obj->anim.localPosZ);
-    ObjAnim_SampleRootCurvePhase(&obj->anim, sqrtf(dx * dx + dz * dz), &runtime->baddie.moveSpeed);
+    ObjAnim_SampleRootCurvePhase(obj, sqrtf(dx * dx + dz * dz), &runtime->baddie.moveSpeed);
     obj->anim.localPosX = gKTRexState->posX;
     obj->anim.localPosZ = gKTRexState->posZ;
     return 0;

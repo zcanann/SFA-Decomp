@@ -1245,12 +1245,12 @@ void Tricky_update(GameObject* obj) {
     if ((trickyState->stateFlags & TRICKY_MOVE_FLAG_ROOT_TRANSLATE) != 0) {
         obj->anim.localPosX += timeDelta * (trickyState->moveVector.x * trickyState->speed);
         obj->anim.localPosZ += timeDelta * (trickyState->moveVector.z * trickyState->speed);
-        ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, trickyState->speed, &trickyState->animRate);
+        ObjAnim_SampleRootCurvePhase(obj, trickyState->speed, &trickyState->animRate);
     }
     animRate = trickyState->animRate;
     resetValue = 0.0f;
     if (animRate == resetValue) {
-        ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, trickyState->arcMoveProgress);
+        ObjAnim_SetMoveProgress(obj, trickyState->arcMoveProgress);
     }
     if (ObjAnim_AdvanceCurrentMove(obj, trickyState->animRate, timeDelta, &trickyState->animEvents) != 0) {
         trickyState->stateFlags |= TRICKY_STATE_FLAG_MOVE_ENDED;
@@ -4961,12 +4961,12 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         state->speed = speed;
         trickyTurnAlongMoveDirection(obj);
         if (obj->anim.currentMoveProgress < TRICKY_FOLLOW_ARC_HALF_PROGRESS) {
-            ObjAnim_SampleRootCurvePhase(&obj->anim, state->speed, &state->animRate);
+            ObjAnim_SampleRootCurvePhase(obj, state->speed, &state->animRate);
             obj->anim.localPosX = timeDelta * (state->moveVector.x * state->speed) + obj->anim.localPosX;
             obj->anim.localPosZ = timeDelta * (state->moveVector.z * state->speed) + obj->anim.localPosZ;
         } else {
             f32 speedScale = 0.25f;
-            ObjAnim_SampleRootCurvePhase(&obj->anim, state->speed * speedScale, &state->animRate);
+            ObjAnim_SampleRootCurvePhase(obj, state->speed * speedScale, &state->animRate);
             obj->anim.localPosX = timeDelta * (state->moveVector.x * (state->speed * speedScale)) + obj->anim.localPosX;
             obj->anim.localPosZ = timeDelta * (state->moveVector.z * (state->speed * speedScale)) + obj->anim.localPosZ;
         }

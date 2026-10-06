@@ -138,7 +138,7 @@ void staffactivated_init(GameObject* obj, StaffActivatedPlacement* placement) {
         if ((flags->locked = mainGetBit(placement->lockGameBit)) != 0) {
             switch (placement->mode) {
             case STAFF_ACTIVATED_MODE_HIT_REACTION:
-                ObjAnim_SetMoveProgress(&obj->anim, gStaffReactionOne);
+                ObjAnim_SetMoveProgress(obj, gStaffReactionOne);
                 break;
             case STAFF_ACTIVATED_MODE_DAMAGE_FIRST:
                 flags->locked = 0;
@@ -455,7 +455,7 @@ void staffactivated_updateLiftHeight(GameObject* obj, StaffActivatedState* state
                                               STAFF_ACTIVATED_HIT_EFFECT_GREEN, STAFF_ACTIVATED_HIT_EFFECT_BLUE,
                                               STAFF_ACTIVATED_HIT_EFFECT_SFX, &state->hitCooldown);
     state->previousLiftHeight = state->liftHeight;
-    ObjAnim_SetMoveProgress(&obj->anim, state->liftHeight / 2048.0f);
+    ObjAnim_SetMoveProgress(obj, state->liftHeight / 2048.0f);
 }
 
 const f32 gStaffReactionDebrisYOffset = 2.0f;

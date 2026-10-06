@@ -1127,7 +1127,7 @@ void Lightfoot_init(GameObject* obj, const LightfootPlacement* placement, int is
         }
     }
     Lightfoot_ResetScriptedPosition(obj);
-    ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, (f32)(s32)randomGetRange(0, 0x63) / 100.0f);
+    ObjAnim_SetMoveProgress(obj, (f32)(s32)randomGetRange(0, 0x63) / 100.0f);
     control->movementSfxId = (u16)(randomGetRange(0, 1) != 0 ? 0x133 : 0x134);
     control->pulseTimer = gLightfootPulseTimerInterval[0];
     if (obj->userData1 != 0) {
