@@ -113,9 +113,9 @@ u8 cmbsrc_cycleColor(GameObject* cmbsrc, CmbSrcState* sourceState) {
             modelLightStruct_setSpecularColor(sourceState->light, gCmbsrcColorRgbTable[0][idx][0],
                                               gCmbsrcColorRgbTable[0][idx][1], gCmbsrcColorRgbTable[0][idx][2], 0xff);
             modelLightStruct_setDiffuseTargetColor(sourceState->light,
-                                                   (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[0][idx][0]),
-                                                   (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[0][idx][1]),
-                                                   (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[0][idx][2]), 0xff);
+                                                   (0.8f * (f32)(u32)gCmbsrcColorRgbTable[0][idx][0]),
+                                                   (0.8f * (f32)(u32)gCmbsrcColorRgbTable[0][idx][1]),
+                                                   (0.8f * (f32)(u32)gCmbsrcColorRgbTable[0][idx][2]), 0xff);
             if (setup->flags & CMBSRC_MAP_GLOW) {
                 if (setup->flags & CMBSRC_MAP_GLOW_LARGE) {
                     modelLightStruct_setupGlow(sourceState->light, 0, gCmbsrcColorRgbTable[0][idx][0],
@@ -473,9 +473,9 @@ void cmbsrc_init(GameObject* cmbsrc, CmbSrcPlacement* mapData) {
                 }
             }
             modelLightStruct_startColorFade(state->light, 1, 3);
-            modelLightStruct_setDiffuseTargetColor(state->light, (int)(0.8f * (f32)(u32)c0[mapData->colorIndex * 3]),
-                                                   (int)(0.8f * (f32)(u32)c1[mapData->colorIndex * 3]),
-                                                   (int)(0.8f * (f32)(u32)c2[mapData->colorIndex * 3]), 0xff);
+            modelLightStruct_setDiffuseTargetColor(state->light, (0.8f * (f32)(u32)c0[mapData->colorIndex * 3]),
+                                                   (0.8f * (f32)(u32)c1[mapData->colorIndex * 3]),
+                                                   (0.8f * (f32)(u32)c2[mapData->colorIndex * 3]), 0xff);
             if (mapData->flags & CMBSRC_MAP_AFFECTS_AABB_LIGHT) {
                 modelLightStruct_setAffectsAabbLightSelection(state->light, 1);
             }

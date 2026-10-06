@@ -1,8 +1,8 @@
 #ifndef MAIN_MODELLIGHT_INTERNAL_H_
 #define MAIN_MODELLIGHT_INTERNAL_H_
 
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 
-ModelLightStruct* objAllocLight(void* owner);
+ModelLightStruct* objAllocLight(GameObject* owner);
 
 #endif /* MAIN_MODELLIGHT_INTERNAL_H_ */

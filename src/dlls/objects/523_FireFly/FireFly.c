@@ -311,7 +311,7 @@ void firefly_update(GameObject* obj) {
         }
         state->flight.activeFlags.active = isActive;
         if (state->flight.activeFlags.active != 0) {
-            state->flight.ownerData.pointLight = modelLightStruct_createPointLight((void*)obj, 100, 0xFF, 100, 0);
+            state->flight.ownerData.pointLight = modelLightStruct_createPointLight(obj, 100, 0xFF, 100, 0);
         }
     } else {
         if (timerCountDown(&state->flight.lifeTimer) != 0) {

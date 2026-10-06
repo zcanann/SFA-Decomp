@@ -47,7 +47,7 @@ void addSphereMapTexStage(void* textureRef, u8 intensity);
 void addLightTexReg2Stage(void* textureRef, u8 hasBaseTexture, u8 mode);
 void addAlphaLitColorReg2Stage(u8 mode);
 void addCastShadowTevStages(u8* objectInstance);
-void addProjectedLightTevStage(u8* texture, void* texMtx, int stageMode, int componentMode, int variant);
+void addProjectedLightTevStage(Texture* texture, void* texMtx, int stageMode, int componentMode, int variant);
 void addEnvMapTexCoord(int scale);
 void addWarpedNoiseTevStages(void* texture, void* texMtx);
 void addRenderOpFadeStage(void* renderOp);

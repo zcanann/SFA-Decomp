@@ -1610,7 +1610,7 @@ void addCastShadowTevStages(u8* objInst) {
     gRcpNextTevStage += 4;
 }
 
-void addProjectedLightTevStage(u8* texSrc, void* texMtx, int stageMode, int compMode, int variant) {
+void addProjectedLightTevStage(Texture* texSrc, void* texMtx, int stageMode, int compMode, int variant) {
     int inputSel;
     int texmap;
     GXSetTevDirect(gRcpNextTevStage);
@@ -1685,9 +1685,9 @@ void addProjectedLightTevStage(u8* texSrc, void* texMtx, int stageMode, int comp
     }
     texmap = gRcpNextTexMap;
     if (texSrc != NULL) {
-        GXTexObj* tex = &((Texture*)texSrc)->gxTexObj;
-        if (((Texture*)texSrc)->preloaded != 0) {
-            GXLoadTexObjPreLoaded(tex, (GXTexRegion*)((Texture*)texSrc)->tmemAddr, texmap);
+        GXTexObj* tex = &texSrc->gxTexObj;
+        if (texSrc->preloaded != 0) {
+            GXLoadTexObjPreLoaded(tex, (GXTexRegion*)texSrc->tmemAddr, texmap);
         } else {
             GXLoadTexObj(tex, texmap);
         }

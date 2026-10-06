@@ -15,7 +15,7 @@
 #include "main/dll/objfx.h"
 #include "main/dll/partfx_interface.h"
 #include "main/frame_timing.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/object_render.h"
 #include "main/vecmath.h"
 #include "sys/objects.h"
@@ -24,12 +24,6 @@
 enum {
     SB_CLOUD_BALL_LIGHT_KIND = 2
 };
-
-ModelLightStruct* objCreateLight(void* owner, u8 addToList);
-void ModelLightStruct_free(ModelLightStruct* light);
-void modelLightStruct_setLightKind(ModelLightStruct* light, int lightKind);
-void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 near, f32 far);
-void modelLightStruct_setDiffuseColor(ModelLightStruct* light, int red, int green, int blue, int alpha);
 
 /* Animation sequence ID that plays the shatter sound on contact. */
 #define SB_CLOUD_BALL_HIT_SFX_TARGET_SEQUENCE_ID 0x8E

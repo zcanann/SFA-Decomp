@@ -380,23 +380,23 @@ void Obj_StartModelFadeIn(GameObject* obj, int frames) {
     }
 }
 
-void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst) {
+void Obj_TransformLocalVectorByWorldMatrix(GameObject* obj, f32* src, f32* dst) {
     f32 mtx[16];
-    Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
+    Obj_BuildWorldTransformMatrix(obj, mtx, 0);
     PSMTXMultVecSR((MtxPtr)mtx, (Vec*)src, (Vec*)dst);
 }
 
-void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag) {
-    f32 savedZ;
+void Obj_TransformLocalPointByWorldMatrix(GameObject* obj, f32* src, f32* dst, u8 ignoreScale) {
+    f32 savedScale;
     f32 mtx[16];
-    if (flag) {
-        savedZ = ((GameObject*)obj)->anim.rootMotionScale;
-        ((GameObject*)obj)->anim.rootMotionScale = 1.0f;
+    if (ignoreScale) {
+        savedScale = obj->anim.rootMotionScale;
+        obj->anim.rootMotionScale = 1.0f;
     }
-    Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
+    Obj_BuildWorldTransformMatrix(obj, mtx, 0);
     PSMTXMultVec((MtxPtr)mtx, (Vec*)src, (Vec*)dst);
-    if (flag) {
-        ((GameObject*)obj)->anim.rootMotionScale = savedZ;
+    if (ignoreScale) {
+        obj->anim.rootMotionScale = savedScale;
     }
     dst[0] += playerMapOffsetX;
     dst[2] += playerMapOffsetZ;

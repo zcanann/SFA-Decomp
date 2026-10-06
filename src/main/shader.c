@@ -1299,11 +1299,11 @@ void renderGlows(void) {
         for (i = 0; i < gGlowLightCount; i++) {
             e = gGlowLightList[i];
             if (e->glowAlpha != 0) {
-                selectTexture((Texture*)e->glowTexture, 0);
-                _gxSetTevColor2((int)((f32)(u32)e->glowColor[0] * e->activeIntensity),
-                                (int)((f32)(u32)e->glowColor[1] * e->activeIntensity),
-                                (int)((f32)(u32)e->glowColor[2] * e->activeIntensity),
-                                (u8)((int)(e->glowColor[3] * e->glowAlpha) >> 8));
+                selectTexture(e->glowTexture, 0);
+                _gxSetTevColor2((int)((f32)(u32)e->glowColor.r * e->activeIntensity),
+                                (int)((f32)(u32)e->glowColor.g * e->activeIntensity),
+                                (int)((f32)(u32)e->glowColor.b * e->activeIntensity),
+                                (u8)((int)(e->glowColor.a * e->glowAlpha) >> 8));
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
                 zero = 0.0f;
                 one = 1.0f;

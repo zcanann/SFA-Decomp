@@ -145,7 +145,7 @@ int exploded_stepDebrisPhysics(GameObject* obj, ExplodedState* state) {
     f32 worldBefore[3];
 
     stopped = 0.0f;
-    Obj_TransformLocalPointByWorldMatrix((u8*)obj, &state->localCenter.x, worldBefore, 0);
+    Obj_TransformLocalPointByWorldMatrix(obj, &state->localCenter.x, worldBefore, 0);
     obj->anim.velocityX = timeDelta * state->acceleration.x + obj->anim.velocityX;
     obj->anim.velocityY = timeDelta * state->acceleration.y + obj->anim.velocityY;
     obj->anim.velocityZ = timeDelta * state->acceleration.z + obj->anim.velocityZ;
@@ -195,7 +195,7 @@ int exploded_stepDebrisPhysics(GameObject* obj, ExplodedState* state) {
     obj->anim.rotX = (s16)(state->spin.x * timeDelta + (f32)(s32)obj->anim.rotX);
     obj->anim.rotY = (s16)(state->spin.y * timeDelta + (f32)(s32)obj->anim.rotY);
     obj->anim.rotZ = (s16)(state->spin.z * timeDelta + (f32)(s32)obj->anim.rotZ);
-    Obj_TransformLocalPointByWorldMatrix((u8*)obj, &state->localCenter.x, worldAfter, 0);
+    Obj_TransformLocalPointByWorldMatrix(obj, &state->localCenter.x, worldAfter, 0);
     worldAfter[0] = worldBefore[0] - worldAfter[0];
     worldAfter[1] = worldBefore[1] - worldAfter[1];
     worldAfter[2] = worldBefore[2] - worldAfter[2];

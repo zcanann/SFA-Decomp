@@ -565,7 +565,7 @@ int objFuzzRenderCb(GameObject* obj, ObjModel* model, int ropIdx) {
         } else {
             GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD1, GX_TEXMAP5, GX_COLOR1A1);
         }
-        selectTexture((Texture*)(modelLightStruct_getProjectionTexture(gObjSelectedLights)), 5);
+        selectTexture(modelLightStruct_getProjectionTexture(gObjSelectedLights), 5);
         modelLightStruct_getProjectionTevModes(gObjSelectedLights, &projFlagOut1, &projBlendMode);
         if (projBlendMode == 2) {
             GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_C1, GX_CC_TEXC, GX_CC_ZERO);
@@ -715,16 +715,16 @@ int lbl_803DB49C = -1;
 
 #define OBJPRINT_MODEL_DEF(obj) (((ObjAnimComponent*)(obj))->modelInstance)
 
-void objFuzzSetupGxState(void* objArg) {
+void objFuzzSetupGxState(GameObject* objArg) {
     ModelLightStruct* renderHandle;
-    void* obj = objArg;
+    GameObject* obj = objArg;
     GXColor savedEnvColor = sObjFuzzSavedEnvColor;
     Texture** shadowTable;
     int shadowStride;
     int shadowParam;
     float mtx[12];
 
-    renderHandle = objCreateLight((void*)obj, '\0');
+    renderHandle = objCreateLight(obj, '\0');
     if (renderHandle != 0x0) {
         modelLightStruct_setLightKind(renderHandle, MODEL_LIGHT_KIND_DIRECTIONAL);
         modelLightStruct_setDirection(renderHandle, 0.0f, -0.707f, 0.0f);
@@ -733,7 +733,7 @@ void objFuzzSetupGxState(void* objArg) {
         modelLightChannel_configure(2, 0, 0);
         GXSetChanAmbColor(GX_ALPHA0, lbl_803DB470);
         GXSetChanMatColor(GX_ALPHA0, lbl_803DB468);
-        modelLightStruct_loadChannelLight(2, renderHandle, (GameObject*)obj);
+        modelLightStruct_loadChannelLight(2, renderHandle, obj);
         modelLightChannels_applyGXControls();
         ModelLightStruct_free(renderHandle);
     }
@@ -1489,7 +1489,7 @@ static u32 objSetupRenderOpGxState(GameObject* obj, ModelFileHeader* modelFile, 
     int shaderIndex;
     u32 renderOpIndex;
     u8 shad;
-    u8* projectionTexture;
+    Texture* projectionTexture;
     int lightIndex;
     s32 shadowColorMode;
     u8 zCompareBeforeTexture;
@@ -1595,7 +1595,7 @@ static u32 objSetupRenderOpGxState(GameObject* obj, ModelFileHeader* modelFile, 
             lp = &gObjSelectedLights;
             sp = &gObjProjectedLightChannel;
             for (; lightIndex < gObjSelectedLightCount; lightIndex++) {
-                projectionTexture = (u8*)modelLightStruct_getProjectionTexture(*lp);
+                projectionTexture = modelLightStruct_getProjectionTexture(*lp);
                 if (projectionTexture != 0) {
                     modelLightStruct_getProjectionTevModes(*lp, &colorMode, &alphaMode);
                     shadowColorMode = colorMode;

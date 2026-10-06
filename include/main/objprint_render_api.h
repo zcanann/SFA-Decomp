@@ -12,7 +12,7 @@ typedef struct ObjModel ObjModel;
 extern ModelLightStruct* gObjSelectedLights;
 
 void objRender(int a, int b, int c, int d, GameObject* obj, int flag);
-void objFuzzSetupGxState(void* obj);
+void objFuzzSetupGxState(GameObject* obj);
 void objRenderShadow(GameObject* obj);
 void objRenderShadowIfVisible(GameObject* obj, int a, int b, int c, int d, int e);
 void objRenderAttachment(GameObject* obj, int* model);

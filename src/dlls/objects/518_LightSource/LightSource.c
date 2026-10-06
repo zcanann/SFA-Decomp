@@ -220,9 +220,9 @@ void lightsource_init(GameObject* obj, const LightSourcePlacementView* placement
             modelLightStruct_startColorFade(state->light, 1, 3);
 
             colorBase = state->fxType * 3;
-            modelLightStruct_setDiffuseTargetColor(state->light, (int)(0.8f * (f32)(u32)colorTable.colors[colorBase]),
-                                                   (int)(0.8f * (f32)(u32)colorTable.colors[colorBase + 1]),
-                                                   (int)(0.8f * (f32)(u32)colorTable.colors[colorBase + 2]), 0xff);
+            modelLightStruct_setDiffuseTargetColor(state->light, (0.8f * (f32)(u32)colorTable.colors[colorBase]),
+                                                   (0.8f * (f32)(u32)colorTable.colors[colorBase + 1]),
+                                                   (0.8f * (f32)(u32)colorTable.colors[colorBase + 2]), 0xff);
             lightSetField4D(state->light, 1);
 
             if (placement->flags & LIGHTSOURCE_FLAG_CREATE_GLOW) {

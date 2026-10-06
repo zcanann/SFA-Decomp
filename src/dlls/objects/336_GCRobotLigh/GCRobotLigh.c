@@ -119,9 +119,9 @@ void gcRobotLightBeam_update(GameObject* obj) {
                PSVECDistance(&obj->anim.localPos, (Vec*)lightPosition));
     skyGetSunColor(0, &red, &green, &blue);
     if (state->pointLight != NULL) {
-        modelLightStruct_setDiffuseColor(state->pointLight, (s32)(GCROBOTLIGHTBEAM_AMBIENT_COLOR_SCALE * (f32)(u32)red),
-                                         (s32)(GCROBOTLIGHTBEAM_AMBIENT_COLOR_SCALE * (f32)(u32)green),
-                                         (s32)(GCROBOTLIGHTBEAM_AMBIENT_COLOR_SCALE * (f32)(u32)blue),
+        modelLightStruct_setDiffuseColor(state->pointLight, (GCROBOTLIGHTBEAM_AMBIENT_COLOR_SCALE * (f32)(u32)red),
+                                         (GCROBOTLIGHTBEAM_AMBIENT_COLOR_SCALE * (f32)(u32)green),
+                                         (GCROBOTLIGHTBEAM_AMBIENT_COLOR_SCALE * (f32)(u32)blue),
                                          GCROBOTLIGHTBEAM_POINT_LIGHT_ALPHA);
         modelLightStruct_setPosition(state->pointLight, lightPosition[0], lightPosition[1], lightPosition[2]);
     }
