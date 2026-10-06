@@ -81,10 +81,10 @@ static void modelInitModelList(void* list, int id, ModelFileHeader** file) {
     assert(animationCalls == 1 && !cached);
     insertCalls++;
 }
-static int modelLoad_calcSizes(u8* file, int flags, int* sizes, int unused) {
-    assert(file == (u8*)&fixture.file && flags == expectedFlags && unused == 0);
+static int modelLoad_calcSizes(ModelFileHeader* file, int flags, ModelInstanceSizes* sizes, int unused) {
+    assert(file == &fixture.file && flags == expectedFlags && unused == 0);
     assert(cached || insertCalls == 1);
-    for (int i = 0; i < 7; i++) sizes[i] = i * 17;
+    memset(sizes, 0xA5, sizeof(*sizes));
     sizeCalls++;
     return returnSize;
 }
@@ -227,8 +227,9 @@ def harness():
         ("struct", "ModelFileHeader"), ("struct", "ModelDisplayListEntry"),
     ):
         parts.append(re.search(rf"typedef {kind} {name}\s*\{{.*?\}} {name};", header, re.S)[0])
-    parts.append(SERVICES)
     source = (ROOT / "src/main/model.c").read_text()
+    parts.append(re.search(r"typedef struct ModelInstanceSizes\s*\{.*?\} ModelInstanceSizes;", source, re.S)[0])
+    parts.append(SERVICES)
     for name in ("ObjModel_RelocateModelData", "ObjModel_ResolveRenderOpTextures", "ObjModel_Load", "ObjModel_GetTexture"):
         start, end = find_function_body(source, name)
         declaration = source.rfind("\n", 0, source.rfind(name, 0, start)) + 1

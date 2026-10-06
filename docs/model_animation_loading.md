@@ -131,3 +131,61 @@ preserve each target's model report and the common object SHA-256
 `e2240860057452c42d5a2074315a7d1b3da3917d2eb9c2d54ac0d9c7e782b74a`.
 Formatting preserves those same bytes. EN `all_source` and the strict retail
 checksum build pass within their 30-second limits.
+
+## Instance buffer sizing and layout (2026-10-06)
+
+EN `modelLoad_calcSizes` at `0x80025880` and `modelLoad_layoutBuffers` at
+`0x80025AE4` share a 0x1C-byte size record. `ModelInstanceSizes` replaces the
+anonymous seven-integer arrays in both callers and the raw +0x14 access in
+the calculator. Its six used fields have explicit offset assertions:
+
+| Offset | Field | Budget |
+| --- | --- | --- |
+| `0x00` | `geometryBytes` | Dynamic vertex buffers plus optional normal buffer, including their existing alignment allowances |
+| `0x04` | `hitSphereBytes` | Two runtime hit-sphere buffers |
+| `0x08` | `unused08` | Four opaque bytes, neither read nor written by this pair |
+| `0x0C` | `moveCacheBytes` | Four move-cache slots per animation state, doubled with load flag `0x80` |
+| `0x10` | `stateBytes` | One or two animation states, plus three morph channels when requested |
+| `0x14` | `moveCacheSlotBytes` | One variable-length move-cache allocation, rounded up to eight bytes; only written in cached-animation mode |
+| `0x18` | `jointMatrixBytes` | Two joint-matrix buffers, with the retail no-animation fallback |
+
+The corresponding Dinosaur Planet `ModelStats` record and `modGetStats` /
+`createModelInstance` pair corroborate the seven-word layout and the roles of
+the six used words. The names here follow SFA consumers: for example the state
+budget includes animation states as well as optional morph channels, and the
+geometry budget includes normals. Donor names alone do not establish those
+roles. Foxhollow's layout function also corroborates the buffer order and typed
+pointer stores; its native alignment adjustments are separate port changes.
+
+The layout function now takes a `ModelFileHeader*`, returns an `ObjModel*`, and
+carves buffers with a byte cursor. Pointer fields are assigned through their
+declared types instead of `int*` aliases. Separate animation-state and morph
+locals replace the reused byte-pointer casts. Header fields, record sizes and
+chunk element widths replace the repeated header casts and several literal
+strides. The allocation base remains a byte pointer until its model view is
+needed; that source shape preserves retail's two live base registers without
+the previous `pointer | pointer` expression.
+
+The retail contract has several deliberate limits:
+
+- Matrix sizing tests `animationCount`; it does not use the separate joint-count
+  fallback in the matrix accessor.
+- Joint-work budgeting requires `jointData`, `jointCount` and `unk18`; carving
+  also requires `unk1C`. Their different predicates are preserved.
+- `firstInstance` is passed as `file->refCount == 1` but is unused by this layout
+  function. Optional fields that retail leaves untouched are still untouched;
+  this function does not clear the destination allocation.
+- The alignment functions retain their target integer-address ABI. A byte
+  cursor and typed stores do not by themselves establish a 64-bit native loader.
+
+All five verified targets retain the exact 612-byte calculator, 1,108-byte
+layout function, 300-byte model loader and complete 85-function model TU.
+The model object changes only 34 anonymous literal-symbol numbers: section
+bytes, symbol offsets and normalized relocations are identical. Every other
+source object is byte-identical. Complete objdiff reports have no new
+discrepancies, retaining the existing two library accounting exceptions.
+All five full-source builds and strict source-linked DOL checksum checks pass.
+The native texture/load probe uses the recovered size-record type at its stub
+boundary and still passes its 945 shader cases and 20 load paths at both
+optimization levels under ASan/UBSan; it does not execute the layout function.
+Formatting is separate and preserves all source object hashes.

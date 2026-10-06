@@ -700,7 +700,7 @@ void ObjModelChain_Free(ObjModelChain* chain);
 
 void setGQR6_2(int loadScale, int loadType, int storeScale, int storeType);
 void modelBlendMorphTargets(u8* srcVtx, u8* dstVtx, u16 vtxCount, u16* targetA, u16* targetB, int blendScale);
-void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c);
+ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstInstance, void* buffer);
 void modelAnimResetState(void* m, void* data);
 int modelLoadAnimations(ModelFileHeader* file, int resourceId, u8* bufferCursor);
 void ObjModel_AdvanceBlendChannels(ObjModel* model, f32 dt);
