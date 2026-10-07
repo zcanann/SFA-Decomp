@@ -23,7 +23,7 @@ def record(source, name):
 
 
 def declaration(source, name):
-    return re.search(r"^[\w* ]+\b" + name + r"(?:\[\d+\])?;", source, re.M).group()
+    return re.search(r"^[\w* ]+\b" + name + r"(?:\[[^\]\n]+\])?;", source, re.M).group()
 
 
 class TrackGroundQueryTests(unittest.TestCase):
@@ -40,7 +40,8 @@ class TrackGroundQueryTests(unittest.TestCase):
         vector_alias = re.search(r"typedef Vec Vec3f;",
                                  (ROOT / "include/main/vec_types.h").read_text()).group()
         function = re.search(r"^int trackGetHeight\(.*?^\}", source, re.M | re.S).group()
-        declarations = "\n".join(declaration(source, name) for name in (
+        capacity = re.search(r"^#define TRACK_GROUND_HIT_CAPACITY[^\n]+", source, re.M)[0]
+        declarations = "\n" + capacity + "\n" + "\n".join(declaration(source, name) for name in (
             "gTrackBlockDescriptors", "gTrackGroundHits", "gTrackGroundHitOrder",
             "gActiveTrackBlockCount", "gTrackGroundHitCount", "gTrackGroundHitWriteCursor",
             "gTrackGroundHitPtrs", "gTrackTriangleBuffer"))
@@ -58,6 +59,7 @@ typedef unsigned char u8;
 typedef struct GameObject { int unused; } GameObject;
 typedef struct TrackTriangle TrackTriangle;
 #define NULL ((void*)0)
+#define ARRAY_COUNT(array) (sizeof(array) / sizeof((array)[0]))
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
 int _fltused;

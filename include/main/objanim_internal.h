@@ -9,6 +9,7 @@
 #include "main/objhits_types.h"
 #include "main/model.h"
 
+struct ObjJointBinding;
 typedef struct ObjHitReactState ObjHitReactState;
 typedef struct ObjHitReactMoveEntry ObjHitReactMoveEntry;
 typedef struct ProjectedShadowTexture ProjectedShadowTexture;
@@ -318,28 +319,59 @@ enum ObjShadowType {
 };
 
 /*
- * Minimal recovered shape of the model pointer carried by ObjAnimComponent.
- * The named fields below are shared by root-motion sampling and hit-reaction
- * table loading; the rest of the object/model layout is still being mapped.
+ * Shared OBJECTS.bin definition cached by loadObjectFile. Each offset/pointer
+ * union is a resource-relative byte offset on disk and a pointer after loading.
+ * Collision lines are separately allocated; their derived views share storage.
  */
 typedef struct ObjDef {
     f32 shadowScaleBase;
     f32 rootMotionScaleBase;
-    s32* modelFileIds; /* 0x08: table of per-model file ids (negated -> ObjModel_Load), modelCount entries */
-    ObjTextureSlotDef* textureSlotDefs;
-    s8* jointData;
+    union {
+        u32 modelFileIdsOffset;
+        s32* modelFileIds;
+    }; /* modelCount file IDs, negated for ObjModel_Load. */
+    union {
+        u32 textureSlotDefsOffset;
+        ObjTextureSlotDef* textureSlotDefs;
+    };
+    union {
+        u32 jointBindingsOffset;
+        struct ObjJointBinding* jointBindings;
+        u8* jointBindingBytes; /* Packed variable-width records. */
+    };
     u8 pad14[0x18 - 0x14];
-    u8* extraSetupData;
-    s16* sequenceMap;
-    s16* eventMoveTable;
-    ObjHitReactMoveEntry* hitReactMoveTable;
-    s16* weaponDaTable;
-    ObjAttachPoint* attachPoints;
+    union {
+        u32 extraSetupDataOffset;
+        u8* extraSetupData;
+    };
+    union {
+        u32 sequenceMapOffset;
+        s16* sequenceMap;
+    };
+    union {
+        u32 eventMoveTableOffset;
+        s16* eventMoveTable;
+    };
+    union {
+        u32 hitReactMoveTableOffset;
+        ObjHitReactMoveEntry* hitReactMoveTable;
+    };
+    union {
+        u32 weaponDaTableOffset;
+        s16* weaponDaTable;
+    };
+    union {
+        u32 attachPointsOffset;
+        ObjAttachPoint* attachPoints;
+    };
     struct MapHitLine* modLines;
     struct IntersectLine* intersectionLines;
     struct TrackModelLineRange* intersectionSegmentRanges;
     f32* intersectionPoints;
-    ObjDefHitVolume* hitVolumes;
+    union {
+        u32 hitVolumesOffset;
+        ObjDefHitVolume* hitVolumes;
+    };
     u32 flags;
     s16 shadowType;
     s16 shadowTextureId;
@@ -353,7 +385,7 @@ typedef struct ObjDef {
     u8 unk57;
     u8 attachPointCount;
     u8 textureSlotCount;
-    u8 jointCount;
+    u8 jointBindingCount;
     u8 pad5B;
     u8 modLineCount;
     s8 modLineIndex;
@@ -455,6 +487,7 @@ typedef struct ObjModelState {
     u8 pad41[0x44 - 0x41];
 } ObjModelState;
 
+STATIC_ASSERT(sizeof(ObjModelState) == 0x44);
 STATIC_ASSERT(offsetof(ObjModelState, flags) == 0x30);
 
 typedef struct ObjAnimComponent {
@@ -505,7 +538,7 @@ typedef struct ObjAnimComponent {
     s8 transformMatrixIndex;
     u8 alpha;
     u8 renderAlpha;
-    void* next;        /* 0x38: intrusive object-list link (wiki ObjInstance.next); list not ordered */
+    void* next;        /* 0x38: intrusive object-update list link, sorted by activeHitboxMode */
     f32 loadDistance;  /* 0x3C: wiki ObjInstance.loadDistance (same value as cullDistance2) */
     f32 cullDistance2; /* 0x40: wiki ObjInstance.cullDistance2 - camera-distance opacity term */
     s16 classId;
@@ -658,14 +691,24 @@ STATIC_ASSERT(offsetof(ObjDef, avoidMoveDistance) == 0x86);
 STATIC_ASSERT(offsetof(ObjDef, name) == 0x91);
 STATIC_ASSERT(offsetof(ObjDef, shadowScaleBase) == 0x00);
 STATIC_ASSERT(offsetof(ObjDef, rootMotionScaleBase) == 0x04);
+STATIC_ASSERT(offsetof(ObjDef, modelFileIdsOffset) == 0x08);
 STATIC_ASSERT(offsetof(ObjDef, modelFileIds) == 0x08);
+STATIC_ASSERT(offsetof(ObjDef, textureSlotDefsOffset) == 0x0C);
 STATIC_ASSERT(offsetof(ObjDef, textureSlotDefs) == 0x0C);
-STATIC_ASSERT(offsetof(ObjDef, jointData) == 0x10);
+STATIC_ASSERT(offsetof(ObjDef, jointBindingsOffset) == 0x10);
+STATIC_ASSERT(offsetof(ObjDef, jointBindings) == 0x10);
+STATIC_ASSERT(offsetof(ObjDef, jointBindingBytes) == 0x10);
+STATIC_ASSERT(offsetof(ObjDef, extraSetupDataOffset) == 0x18);
 STATIC_ASSERT(offsetof(ObjDef, extraSetupData) == 0x18);
+STATIC_ASSERT(offsetof(ObjDef, sequenceMapOffset) == 0x1C);
 STATIC_ASSERT(offsetof(ObjDef, sequenceMap) == 0x1C);
+STATIC_ASSERT(offsetof(ObjDef, eventMoveTableOffset) == 0x20);
 STATIC_ASSERT(offsetof(ObjDef, eventMoveTable) == 0x20);
+STATIC_ASSERT(offsetof(ObjDef, hitReactMoveTableOffset) == 0x24);
 STATIC_ASSERT(offsetof(ObjDef, hitReactMoveTable) == 0x24);
+STATIC_ASSERT(offsetof(ObjDef, weaponDaTableOffset) == 0x28);
 STATIC_ASSERT(offsetof(ObjDef, weaponDaTable) == 0x28);
+STATIC_ASSERT(offsetof(ObjDef, attachPointsOffset) == 0x2C);
 STATIC_ASSERT(offsetof(ObjDef, attachPoints) == 0x2C);
 STATIC_ASSERT(offsetof(ObjDef, attachPointCount) == 0x58);
 STATIC_ASSERT(offsetof(ObjDef, modLines) == 0x30);
@@ -675,6 +718,7 @@ STATIC_ASSERT(offsetof(ObjDef, intersectionPoints) == 0x3C);
 STATIC_ASSERT(offsetof(ObjDef, modLineCount) == 0x5C);
 STATIC_ASSERT(offsetof(ObjDef, modLineIndex) == 0x5D);
 STATIC_ASSERT(sizeof(ObjAttachPoint) == 0x18);
+STATIC_ASSERT(offsetof(ObjDef, hitVolumesOffset) == 0x40);
 STATIC_ASSERT(offsetof(ObjDef, hitVolumes) == 0x40);
 STATIC_ASSERT(offsetof(ObjDef, flags) == 0x44);
 STATIC_ASSERT(offsetof(ObjDef, shadowType) == 0x48);
@@ -685,7 +729,7 @@ STATIC_ASSERT(offsetof(ObjDef, category) == 0x52);
 STATIC_ASSERT(offsetof(ObjDef, modelCount) == 0x55);
 STATIC_ASSERT(offsetof(ObjDef, group8RegistrationCount) == 0x56);
 STATIC_ASSERT(offsetof(ObjDef, textureSlotCount) == 0x59);
-STATIC_ASSERT(offsetof(ObjDef, jointCount) == 0x5A);
+STATIC_ASSERT(offsetof(ObjDef, jointBindingCount) == 0x5A);
 STATIC_ASSERT(offsetof(ObjDef, sequenceCount) == 0x5E);
 STATIC_ASSERT(offsetof(ObjDef, renderFlags) == 0x5F);
 
@@ -738,7 +782,7 @@ typedef enum ObjDefFlag {
     OBJDEF_FLAG_RELATED_TO_MODELS = 0x00000020,
 
     /* The object lives in OBJECT_OBJGROUP_HITBOX: Obj_RegisterObject adds it to
-   * that group and forces activeHitboxMode to 0x5a, objFreeObjDef removes it,
+   * that group and forces activeHitboxMode to 0x5a, objFreeObjectInternal removes it,
    * objSetSlot refuses mode 0x5a without it, and ObjHitReact_UpdateResetObjects
    * skips it in the per-frame reset pass. Several DLLs use
    * "HITBOX_GROUP set and CAN_HOLD_PLAYER clear" as the test for an object the

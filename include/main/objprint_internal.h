@@ -5,17 +5,17 @@
 #include "main/objtexture.h"
 #include "main/joint_pose.h"
 
-#define OBJPRINT_OBJECT(obj)            ((ObjAnimComponent*)(obj))
-#define OBJPRINT_MODEL_INSTANCE(obj)    (OBJPRINT_OBJECT(obj)->modelInstance)
-#define OBJPRINT_BANK_TABLE(obj)        ((int**)OBJPRINT_OBJECT(obj)->banks)
-#define OBJPRINT_ACTIVE_BANK_INDEX(obj) (OBJPRINT_OBJECT(obj)->bankIndex)
-#define OBJPRINT_ACTIVE_BANK(obj)       ((int*)OBJPRINT_BANK_TABLE(obj)[OBJPRINT_ACTIVE_BANK_INDEX(obj)])
-#define OBJPRINT_MODEL_COUNT(model)     (((ObjDef*)(model))->modelCount)
-#define OBJPRINT_JOINT_COUNT(model)     (((ObjDef*)(model))->jointCount)
+#define OBJPRINT_OBJECT(obj)                ((ObjAnimComponent*)(obj))
+#define OBJPRINT_MODEL_INSTANCE(obj)        (OBJPRINT_OBJECT(obj)->modelInstance)
+#define OBJPRINT_BANK_TABLE(obj)            ((int**)OBJPRINT_OBJECT(obj)->banks)
+#define OBJPRINT_ACTIVE_BANK_INDEX(obj)     (OBJPRINT_OBJECT(obj)->bankIndex)
+#define OBJPRINT_ACTIVE_BANK(obj)           ((int*)OBJPRINT_BANK_TABLE(obj)[OBJPRINT_ACTIVE_BANK_INDEX(obj)])
+#define OBJPRINT_MODEL_COUNT(model)         (((ObjDef*)(model))->modelCount)
+#define OBJPRINT_JOINT_BINDING_COUNT(model) (((ObjDef*)(model))->jointBindingCount)
 
 /*
- * ObjDef.jointData (+0x10) is a packed joint-binding table scanned by every
- * finder loop in this file: jointCount (+0x5A) records, each
+ * ObjDef.jointBindings (+0x10) is a packed joint-binding table scanned by every
+ * lookup helper: jointBindingCount (+0x5A) records, each
  * (1 + modelCount (+0x55)) bytes:
  *   byte 0             - joint key (0 = head, 1 = jaw, ...; see the key list
  *                        at gObjLookAtJointKeys used by objJointTracksAimAtTarget)
@@ -24,10 +24,9 @@
  * The record's ordinal selects the matching ObjJointPose in
  * anim.jointPoseData, whose records have a fixed 0x12-byte stride. The
  * joint-binding stride is runtime-variable, so those binding records use
- * a raw byte walk.
+ * a byte walk with the canonical ObjJointBinding offsets.
  */
-static inline s16* objFindJointVecByKey(GameObject* obj, int key)
-{
+static inline s16* objFindJointVecByKey(GameObject* obj, int key) {
     int i;
     int k;
     ObjDef* table;
@@ -35,24 +34,21 @@ static inline s16* objFindJointVecByKey(GameObject* obj, int key)
 
     found = NULL;
     table = (obj)->anim.modelInstance;
-    if (table != NULL)
-    {
+    if (table != NULL) {
         i = 0;
-        for (k = 0; k < (s32)(u32)table->jointCount; k++)
-        {
-            if ((int)*(u8*)(table->jointData + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
-                (int)*(u8*)(table->jointData + i) == key)
-            {
+        for (k = 0; k < (s32)(u32)table->jointBindingCount; k++) {
+            if ((int)*(u8*)(table->jointBindingBytes + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i +
+                            (int)offsetof(ObjJointBinding, modelJoints)) != OBJ_JOINT_BINDING_MISSING &&
+                (int)(table->jointBindingBytes)[i + (int)offsetof(ObjJointBinding, tag)] == key) {
                 found = (s16*)&((ObjJointPose*)(obj)->anim.jointPoseData)[k];
             }
-            i = i + table->modelCount + 1;
+            i = i + table->modelCount + (int)sizeof(ObjJointBinding);
         }
     }
     return found;
 }
 
-static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int kind)
-{
+static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int kind) {
     ObjTextureSlotDef* list;
     int n;
     int k;
@@ -61,18 +57,14 @@ static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int 
 
     found = NULL;
     modelDef = obj->anim.modelInstance;
-    if (modelDef != NULL)
-    {
+    if (modelDef != NULL) {
         list = modelDef->textureSlotDefs;
-        if (list == NULL)
-        {
+        if (list == NULL) {
             return NULL;
         }
         n = (s32)(u32)modelDef->textureSlotCount;
-        for (k = 0; k < n; k++)
-        {
-            if (list->tag == kind)
-            {
+        for (k = 0; k < n; k++) {
+            if (list->tag == kind) {
                 found = &obj->anim.textureSlots[k];
             }
             list++;

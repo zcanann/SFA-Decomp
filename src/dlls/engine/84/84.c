@@ -76,7 +76,7 @@ void CameraMode54_update(CameraObject* camera) {
                         gCameraMode54State->playerObj->anim.worldPosZ;
         playerDistance = sqrtf(playerOffsetX * playerOffsetX + playerOffsetZ * playerOffsetZ);
         proximity = (200.0f - playerDistance) / 200.0f;
-        camera->fov = 45.0f + 70.0f * proximity;
+        camera->fovY = 45.0f + 70.0f * proximity;
         cameraDistance = -30.0f + 350.0f * proximity;
         camera->anim.worldPosX = -(directionX * cameraDistance - gCameraMode54State->originObj->anim.worldPosX);
         camera->anim.worldPosY = (20.0f + gCameraMode54State->originObj->anim.worldPosY) + 60.0f * proximity;
@@ -136,7 +136,7 @@ void CameraMode54_init(CameraObject* camera, int unusedArg, CameraObject* source
         camera->anim.rotX = source->anim.rotX;
         camera->anim.rotY = source->anim.rotY;
         camera->anim.rotZ = source->anim.rotZ;
-        camera->fov = source->fov;
+        camera->fovY = source->fovY;
     }
     gCameraMode54State->startX = camera->anim.worldPosX;
     gCameraMode54State->startY = camera->anim.worldPosY;

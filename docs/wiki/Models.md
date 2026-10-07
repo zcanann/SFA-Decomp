@@ -211,7 +211,44 @@ Krystal's bone tree is given in the source wiki page as a worked example (root a
 
 All offsets below were cross-checked against `include/main/model.h` (`ModelFileHeader`, offsets confirmed with the `python` offset walk + existing `STATIC_ASSERT`s) and against field usage in `src/main/model.c` / `src/main/objprint_dolphin.c` / `src/main/objhits.c`. Where two independently-matched source files describe overlapping bytes of the same on-disk struct, both are listed.
 
-**Wrapper.** `src/main/pi_dolphin.c` has `struct ZlbHeader` (`tag[4]` = `"ZLB"`/`"DIR"`, matching the wiki's `0x5A4C4200`) and `struct PackHeader` (`magic` = `0xFACEFEED` zlb-packed / `0xE0E0E0E0` stored raw — the exact two other wrapper values the wiki lists), used for romlist/`MAPS.BIN` sections. Field layout and magic values match the wiki's wrapper description exactly; not confirmed here as the precise code path for `.model`-specific loads, but almost certainly the same generic mechanism.
+**Wrapper and model-file allocation.** `src/main/pi_dolphin.c` has `struct
+ZlbHeader` for `ZLB`/`DIR` streams and `struct PackHeader` for `0xFACEFEED`
+compressed or `0xE0E0E0E0` raw sections. The MODELS branch of
+`loadAndDecompressDataFile` uses the latter: the raw payload starts at
+`auxSize + 0x18`, or a ZLB stream starts there with compressed bytes at
+`auxSize + 0x28`.
+
+`loadModelsBin` reads metadata from the selected resident archive rather than
+loading the payload. Its private `ModelArchiveHeaderPrefix` recovers these
+fields while leaving bytes `0x10..0x17` opaque:
+
+| Offset | Field | Consumer |
+| --- | --- | --- |
+| `0x04` | `pack.decompressedSize` | Model payload size for allocation and decompression |
+| `0x18` | `useCachedAnimations` | Selects cached versus shared animation resources |
+| `0x1C` | `animationCount` | Animation storage sizing and the runtime header count |
+| `0x20` | `maxAnimationBytes` | Per-move payload budget, rounded to eight bytes before the existing `0xB0` cache allowance |
+
+The 0x24-byte prefix is not a claim about the entire auxiliary block.
+Inspection of 3,326 records in 53 extracted EN archives confirmed that the
+payload begins after this prefix and the decompressed lengths agree. The
+cache selector is zero or one in those records. Foxhollow independently reads
+the same offsets, with explicit big-endian decoding for its native port.
+
+`ObjModel_LoadModelData` preserves the allocation pointer through `size_t`
+alignment and returns a `ModelFileHeader*`. The shared-file allocation retains
+its payload, animation-storage budget and unexplained `0x1F4` allowance.
+Header initialization and the regional cache invalidation remain unchanged;
+pointer relocation follows in `ObjModel_Load`.
+
+`tools/test_model_archive_loading.py` checks 248 bank-selection cases and
+3,072 allocation cases plus the missing-table return, at `-O0`/`-O2` under
+ASan/UBSan for both regional invalidation paths. It executes the metadata,
+animation-size and allocation bodies with host-endian fixtures and native
+pointers. The fixture imports the production pointer registry and spies on IO,
+interrupts, allocation and cache operations; this does not establish a native
+archive decoder. All five target builds preserve every source object byte and
+the exact retail DOL.
 
 **Header → `ModelFileHeader` (`include/main/model.h`).** The struct is an offset-for-offset match with the wiki's Header table for every field either side has named:
 
@@ -219,11 +256,12 @@ All offsets below were cross-checked against `include/main/model.h` (`ModelFileH
 |---|---|---|
 | 0x00 refCount | `refCount` | exact |
 | 0x02 flags (ModelDataFlags2) | `flags` (u16) | exact offset; see flag note below |
-| 0x04 modelId | inside `unk04[8]`, but called out by name in an inline comment: `model.c:458` `*(u16*)((u8*)model+0x4) = id; /* modelId (in unk04) */` and `model.c:1160` | exact, already named in comments |
+| 0x04 modelId | `modelId` / `modNo` (u16 union) | exact offset; shared resource ID and animation-bank model number views |
+| 0x08 ? | `unk08` (s32) | exact offset and store width; cleared after instance initialization, meaning still unknown |
 | 0x0c fileSize | `dataSize` ("anim data appended at header + dataSize") | exact offset, plausible semantics |
 | 0x18 flags18 (+0x1a) | `unk18` (u8*, 4 bytes covering both u16 sub-fields) | offset match, not split out |
 | 0x1c extraAmapSize | `unk1C` | offset match |
-| 0x20 textures | `textureIds` | exact (`STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20)`) |
+| 0x20 textures | `textureEntries` | exact (`STATIC_ASSERT(offsetof(ModelFileHeader, textureEntries) == 0x20)`); entries transition from asset IDs to runtime texture references |
 | 0x24 ModelDataFlags24 | `flags24` | exact |
 | 0x28 vtxs | `vertices` | exact |
 | 0x2c normals | `normals` | exact |
@@ -270,6 +308,33 @@ contract. The wiki's exact interpretation of the separate `0x10` bit remains a
 separate question.
 
 **ModelDataFlags24.** `MODEL_FLAGS24_NORMALS_9BYTE` (0x8) in `include/main/model.h` matches the wiki's "08 = use 9 normals instead of 3" exactly, including the bit value.
+
+**Instance allocation and ownership.** `ObjModel_Load` returns a shared
+`ModelFileHeader` and reports the per-instance size through `outSize`.
+`loadCharacter` supplies zeroed storage inside its object allocation;
+`ObjModel_LoadAnimData` returns the `ObjModel` constructed there. The layout
+function relies on that zeroing for absent optional buffers.
+
+`modelLoad_layoutBuffers` places matrix pairs, optional copied geometry,
+animation states and caches, blend channels, hit spheres, joint work, animation
+output tables, texture references, and the optional ground-shadow quad in that
+order. Matrix and copied geometry buffers begin on 32-byte boundaries. Static
+geometry instead borrows the shared file's vertex and normal arrays. Address
+alignment uses `size_t`, preserving native pointers without changing target code.
+
+The size calculator retains the retail padding and reservation rules. In
+particular, joint work reserves its header plus 30 bytes per joint, although
+the layout consumes 29; a missing `unk1C` also prevents layout without removing
+that reservation. Neither discrepancy establishes another field or table.
+Initialization resets both available animation states, relocates animation data,
+clears the opaque header word at `+0x08`, then stores the file's cache range.
+
+`tools/test_model_instance_layout.py` executes the production sizing, layout and
+handoff bodies for 16,384 cases at `-O0` and `-O2` under ASan/UBSan. It checks
+ownership, buffer bounds, copies, alignment and initialization order. Native
+pointer-bearing tail records use suitably aligned fixture counts; animation
+reset, relocation and cache operations are spies, not a native asset-loading
+test. All five target builds retain byte-identical source objects and retail DOLs.
 
 **Bone.** The canonical `ModelBone` in `include/main/model.h` has the proven
 0x1C-byte stride, signed parent at `+0`, output-matrix index/flags at `+1`, two

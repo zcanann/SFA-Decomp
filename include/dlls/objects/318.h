@@ -4,7 +4,7 @@
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 
 typedef enum DimBossIceSmashPlacementFlag {
     DIM_BOSS_ICE_SMASH_PLACEMENT_HOMING = 0x01,
@@ -61,7 +61,7 @@ typedef struct DimBossIceSmashPlacement {
 
 /* DIMBossIceSmash_getExtraSize proves the complete 0x2A0-byte allocation. */
 typedef struct DimBossIceSmashState {
-    CurvesCollisionState path; /* 0x000 */
+    ObjCollisionState path;    /* 0x000 */
     u8 pad268[4];              /* 0x268 */
     f32 spawnScaleX;           /* 0x26C */
     f32 spawnScaleY;           /* 0x270 */

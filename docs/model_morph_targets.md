@@ -5,7 +5,7 @@ Target: EN v1.0 (`GSAE01`), game compiler GC/1.3.
 The old `modelApplyBoneTransform`, `modelBoneTransforms_next`, and
 `modelApplyBoneTransforms` names describe vertex morphing, not joint transforms.
 The caller `ObjModel_ApplyBlendChannels` selects two entries from
-`ModelFileHeader.morphTargetPtrs` (+0xdc) using the channel's target indices,
+`ModelFileHeader.morphTargets` (+0xdc) using the channel's target indices,
 then supplies the base and instance vertex buffers and `vertexCount`.
 The three routines are now `modelBlendMorphTargetChunk`, `modelReadMorphDelta`,
 and `modelBlendMorphTargets` respectively. Their EN addresses and TU remain
@@ -17,7 +17,10 @@ signed X, Y, and Z delta halfwords, in that order. Omitted components are zero.
 The decoder reads the flags unsigned, while the blend loop retains retail's
 signed header load before masking the index. A fixed-size record would give
 the wrong stride. The pointer table, relocation, channel selection, cache
-wrapper and decoder now share the `u16*` stream contract.
+wrapper and decoder now share the `u16*` stream contract. Each table entry is
+a `ModelMorphTargetRef`: its `offset` member holds the model-relative byte
+offset before relocation, and its `stream` member holds the resulting pointer.
+See [model relocation](model_geometry_tables.md#model-relative-offsets-2026-10-06).
 
 An absent target uses a local one-halfword stream containing `vertexCount + 1`.
 This out-of-range index requires no component payload. Both cursors are written

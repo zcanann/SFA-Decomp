@@ -6,7 +6,8 @@
 #include "main/vec_types.h"
 #include "main/vecmath.h"
 
-#define CAMERA_COUNT 12
+#define CAMERA_COUNT                  12
+#define OBJECT_TRANSFORM_MATRIX_COUNT 30
 
 typedef struct GameObject GameObject;
 
@@ -120,10 +121,10 @@ extern Camera gCameras[CAMERA_COUNT];
 extern CameraViewport gCameraViewports[4];
 extern CameraViewportTransform gCameraViewportTransforms[20];
 extern CameraMatrix gCameraDefaultModelMatrix;
-extern f32 gCameraWorldMatrix[64];
+extern CameraMatrix gCameraWorldMatrix;
 extern s8 gObjTransformMatrixSlot;
-extern CameraMatrix gObjInverseYawTransformMatrices[];
-extern CameraMatrix gObjYawTransformMatrices[];
+extern CameraMatrix gObjInverseYawTransformMatrices[OBJECT_TRANSFORM_MATRIX_COUNT];
+extern CameraMatrix gObjYawTransformMatrices[OBJECT_TRANSFORM_MATRIX_COUNT];
 extern CameraMatrix gCameraViewRotationMatrix;
 extern CameraMatrix gCameraInverseViewRotationMatrix;
 extern CameraMatrix gCameraViewMatrix;
@@ -186,6 +187,7 @@ f32* Camera_GetProjectionMatrix(void);
 void Camera_RebuildProjectionMatrix(void);
 f32 Camera_GetFarPlane(void);
 void Camera_SetFarPlane(f32 farPlane, int transitionFrames);
+void Camera_ResetFarPlane(void);
 f32 Camera_GetNearPlane(void);
 f32 Camera_GetAspectRatio(void);
 void Camera_SetAspectRatio(f32 aspectRatio);

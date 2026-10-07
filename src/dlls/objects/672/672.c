@@ -422,14 +422,14 @@ void ring_update(GameObject* obj)
                             spawnBuf.posY = dir[1] + obj->anim.localPosY;
                             spawnBuf.posZ = dir[2] + obj->anim.localPosZ;
                             (*gPartfxInterface)
-                                ->spawnObject((void*)obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf, RING_PARTFX_FLAGS, -1,
-                                              &obj->anim.velocityX);
+                                ->spawnEffect(obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf,
+                                              RING_PARTFX_FLAGS, -1, &obj->anim.velocityX);
                             (*gPartfxInterface)
-                                ->spawnObject((void*)obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf, RING_PARTFX_FLAGS, -1,
-                                              &obj->anim.velocityX);
+                                ->spawnEffect(obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf,
+                                              RING_PARTFX_FLAGS, -1, &obj->anim.velocityX);
                             (*gPartfxInterface)
-                                ->spawnObject((void*)obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf, RING_PARTFX_FLAGS, -1,
-                                              &obj->anim.velocityX);
+                                ->spawnEffect(obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf,
+                                              RING_PARTFX_FLAGS, -1, &obj->anim.velocityX);
                         }
                     }
                     state->flags.bit40 = 1;
@@ -441,7 +441,7 @@ void ring_update(GameObject* obj)
                         for (ang = 0; ang < gRingModeParams[state->mode].burstCount; ang++)
                         {
                             (*gPartfxInterface)
-                                ->spawnObject((void*)obj, gRingModeParams[state->mode].burstEffectId, NULL, 2, -1, NULL);
+                                ->spawnEffect(obj, gRingModeParams[state->mode].burstEffectId, NULL, 2, -1, NULL);
                         }
                     }
                     state->flags.bit40 = 0;

@@ -253,7 +253,7 @@ static inline void dbstealerworm_updateTurnSpeed(BaddieState* state, s16 yaw, f3
  * objDoHitParticleFx / the partfx interface (same family as ktrex's
  * gKTRexEffectSpawnWork). */
 
-DbWormEffectSpawnWork gDbWormEffectSpawnWork;
+PartFxSpawnParams gDbWormEffectSpawnWork;
 void* gDBStealerWormStateHandlersB[7];
 
 int dbstealerworm_stateHandlerB04(GameObject* obj, BaddieState* baddie) {
@@ -412,7 +412,7 @@ int dbstealerworm_stateHandlerA0F(GameObject* obj, BaddieState* baddie, f32 t) {
         sub->advanceMessage = 1;
         return 0;
     }
-    ObjAnim_SampleRootCurvePhase(&obj->anim, baddie->animSpeedA, &baddie->moveSpeed);
+    ObjAnim_SampleRootCurvePhase(obj, baddie->animSpeedA, &baddie->moveSpeed);
     return 0;
 }
 
@@ -428,7 +428,7 @@ int dbstealerworm_stateHandlerA0E(GameObject* obj, BaddieState* baddie) {
         sub->linkedObject = bs->targetObj;
         sub->heldScriptSlot = 0x24;
         sub->messageMode = 0;
-        ObjMsg_SendToObject(sub->linkedObject, 0x11, obj, 0x12);
+        ObjMsg_SendToObject(sub->linkedObject, 0x11, obj, (void*)0x12);
         Sfx_PlayFromObject(obj, SFXTRIG_mn_dimspit6);
     }
     if (obj->anim.currentMoveProgress > 0.3f) {
@@ -824,7 +824,7 @@ int dbstealerworm_stateHandlerA0A(GameObject* obj, BaddieState* state) {
             launchVelocity[1] *= 1.0666667f;
             launchVelocity[0] = 0.0f;
             launchVelocity[2] = 2.3333333f;
-            ObjMsg_SendToObject(control->linkedObject, 0x11, obj, 0x11);
+            ObjMsg_SendToObject(control->linkedObject, 0x11, obj, (void*)0x11);
             ((void (*)(GameObject*, f32*))control->linkedObject->anim.dll[0][9])(control->linkedObject, launchVelocity);
             control->linkedObject = NULL;
             control->heldScriptSlot = -1;
@@ -892,7 +892,7 @@ int dbstealerworm_stateHandlerA09(GameObject* obj, BaddieState* baddie) {
         control->linkedObject = bs->targetObj;
         control->heldScriptSlot = slotIndex;
         control->messageMode = 0;
-        ObjMsg_SendToObject(control->linkedObject, 17, obj, 18);
+        ObjMsg_SendToObject(control->linkedObject, 17, obj, (void*)18);
         Sfx_PlayFromObject(obj, SFXTRIG_mn_dimspit6);
     }
     bs->stateTag = 18;
@@ -1029,7 +1029,7 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, BaddieState* baddie, f32 t) {
             p3++;
         }
     }
-    ObjAnim_SampleRootCurvePhase(&obj->anim, baddie->animSpeedA, &baddie->moveSpeed);
+    ObjAnim_SampleRootCurvePhase(obj, baddie->animSpeedA, &baddie->moveSpeed);
     return 0;
 }
 int dbstealerworm_stateHandlerA07(GameObject* obj, BaddieState* baddie, f32 t) {
@@ -1168,7 +1168,7 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, BaddieState* baddie, f32 t) {
             p3++;
         }
     }
-    ObjAnim_SampleRootCurvePhase(&obj->anim, baddie->animSpeedA, &baddie->moveSpeed);
+    ObjAnim_SampleRootCurvePhase(obj, baddie->animSpeedA, &baddie->moveSpeed);
     return 0;
 }
 
@@ -1192,7 +1192,7 @@ int dbstealerworm_stateHandlerA06(GameObject* obj, BaddieState* baddie) {
         ObjHits_DisableObject(obj);
         objFreeObjectType(obj, DBSTEALERWORM_OBJGROUP);
         if (control->linkedObject != NULL) {
-            ObjMsg_SendToObject((void*)control->linkedObj, 17, obj, 16);
+            ObjMsg_SendToObject((void*)control->linkedObj, 17, obj, (void*)16);
             control->heldScriptSlot = -1;
             control->linkedObj = 0;
         }
@@ -1238,7 +1238,7 @@ int dbstealerworm_stateHandlerA05(GameObject* obj, BaddieState* baddie) {
         int staff;
         bs->targetObj = 0;
         if (control->linkedObject != NULL) {
-            ObjMsg_SendToObject((void*)control->linkedObj, 17, obj, 16);
+            ObjMsg_SendToObject((void*)control->linkedObj, 17, obj, (void*)16);
             control->linkedObj = 0;
         }
         staff = (int)Obj_GetPlayerObject()->childObjs[0];
@@ -1383,7 +1383,7 @@ int dbstealerworm_stateHandlerA01(GameObject* obj, BaddieState* baddie) {
         sub->targetState = 0;
         sub->configFlags |= placementData->flags;
         if (control->linkedObject != NULL) {
-            ObjMsg_SendToObject((void*)control->linkedObj, 17, obj, 19);
+            ObjMsg_SendToObject((void*)control->linkedObj, 17, obj, (void*)19);
             control->linkedObj = 0;
             control->heldScriptSlot = -1;
         }
@@ -1592,13 +1592,13 @@ void dbstealerworm_processEffectFlags(GameObject* obj, GroundBaddieState* baddie
         dbstealerworm_launchIceBall(obj, &baddie->baddie);
     }
     if (state->flags14 & DBWORM_FLAG14_FX_DUST) {
-        (*gPartfxInterface)->spawnObject((void*)obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
     }
     if (state->flags14 & DBWORM_FLAG14_FX_SPRAY) {
         for (i = 0; i < 0xa; i++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, DBSTEALERWORM_PARTFX_SPRAY, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, DBSTEALERWORM_PARTFX_SPRAY, NULL, 1, -1, NULL);
         }
     }
     state->flags14 = 0;
@@ -1746,14 +1746,14 @@ void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
 }
 
 void dbstealerworm_hitDetect(GameObject* obj) {
-    int* inner = obj->extra;
-    (*gPlayerInterface)->updateVelocityState(obj, inner, gDBStealerWormStateHandlersA);
+    GroundBaddieState* inner = obj->extra;
+    (*gPlayerInterface)->updateVelocityState(obj, &inner->baddie, gDBStealerWormStateHandlersA);
 }
 
 const f32 gDbStealerwormGravity[1] = {0.17f};
 
 void dbstealerworm_update(GameObject* obj) {
-    DbWormEffectSpawnWork* st[1];
+    PartFxSpawnParams* st[1];
     char* tbl;
     GroundBaddieState* blob;
     GroundBaddiePlacement* data;
@@ -1765,8 +1765,8 @@ void dbstealerworm_update(GameObject* obj) {
     GameObject* t;
     f32 targetDelta[3];
     f32* delta = targetDelta;
-    u32 sender;
-    u32 param;
+    GameObject* sender;
+    void* param;
     u32 msg;
 
     st[0] = &gDbWormEffectSpawnWork;
@@ -1819,7 +1819,7 @@ void dbstealerworm_update(GameObject* obj) {
                 sub2 = ((GroundBaddieState*)obj->extra)->control;
                 while (ObjMsg_Pop(obj, &msg, &sender, &param) != 0) {
                     if (msg == 0x11 && sub2->heldScriptSlot != -1) {
-                        ObjMsg_SendToObject((void*)sub2->linkedObj, 0x11, (void*)obj, 0x14);
+                        ObjMsg_SendToObject((void*)sub2->linkedObj, 0x11, (void*)obj, (void*)0x14);
                         sub2->linkedObj = 0;
                         sub2->heldScriptSlot = -1;
                         ObjAnim_SetCurrentMove(obj, 0xf, 0.0f, 0);
@@ -1831,7 +1831,7 @@ void dbstealerworm_update(GameObject* obj) {
                     st[0]->posX = obj->anim.localPosX;
                     st[0]->posY = obj->anim.localPosY;
                     st[0]->posZ = obj->anim.localPosZ;
-                    objDoHitParticleFx((void*)obj, 0.014f, st[0], 1, 0);
+                    objDoHitParticleFx(obj, 0.014f, st[0], 1, 0);
                 }
                 if (blob->targetState == 0) {
                     dbstealerworm_acquireTarget(obj, blob, (int)blob);
@@ -1840,14 +1840,13 @@ void dbstealerworm_update(GameObject* obj) {
                     dbstealerworm_processEffectFlags(obj, blob);
                     (*gBaddieControlInterface)->updateGravity(obj, (void*)blob, gDbStealerwormGravity[0], -1);
                     if ((sub3->flags15 & 4) == 0) {
-                        (*gPlayerInterface)->rotateTowardTarget((void*)obj, (void*)blob, timeDelta, 4);
+                        (*gPlayerInterface)->rotateTowardTarget(obj, &blob->baddie, timeDelta, 4);
                     }
                     blob->savedPendingParentObj = obj->pendingParentObj;
                     obj->pendingParentObj = 0;
                     /* Retail derives both pointers past the 0x18-byte scratch record. */
                     (*gPlayerInterface)
-                        ->update((void*)obj, (void*)blob, timeDelta, timeDelta, (char*)st[0] + 0x34,
-                                 (char*)st[0] + 0x18);
+                        ->update(obj, &blob->baddie, timeDelta, timeDelta, (char*)st[0] + 0x34, (char*)st[0] + 0x18);
                     obj->pendingParentObj = blob->savedPendingParentObj;
                 }
             }
@@ -1880,7 +1879,7 @@ void dbstealerworm_init(GameObject* obj, u8* def, int flag) {
     p40c->linkedObj = 0;
     ObjAnim_SetCurrentMove(obj, 8, 0.0f, 0);
     obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-    (*gPlayerInterface)->setState(obj, sub, 3);
+    (*gPlayerInterface)->setState(obj, &sub->baddie, 3);
     sub->baddie.substate = 0;
     sub->baddie.physicsActive = 1;
     ObjHits_EnableObject(obj);

@@ -2,6 +2,7 @@
 #define MAIN_PI_DOLPHIN_PATH_API_H_
 
 #include "global.h"
+#include "stddef.h"
 
 typedef struct RomCurveDef RomCurveDef;
 
@@ -38,7 +39,7 @@ typedef struct PathSearch {
     PathHeapEntry* heap;
     RomCurveDef** path;
     f32* targetPosition;
-    s32 pathId;
+    ptrdiff_t target; /* Tricky walk-group ID, or a curve pointer for other point types */
     u32 reserved14;
     RomCurveDef* startPoint;
     s32 currentNode;
@@ -66,6 +67,7 @@ STATIC_ASSERT(sizeof(PathSearch) == 0x30);
 STATIC_ASSERT(offsetof(PathSearch, nodes) == 0);
 STATIC_ASSERT(offsetof(PathSearch, heap) == 4);
 STATIC_ASSERT(offsetof(PathSearch, path) == 8);
+STATIC_ASSERT(offsetof(PathSearch, target) == 0x10);
 STATIC_ASSERT(offsetof(PathSearch, nodeCount) == 0x20);
 STATIC_ASSERT(offsetof(PathSearch, heapSize) == 0x22);
 STATIC_ASSERT(offsetof(PathSearch, reverse) == 0x28);
@@ -82,6 +84,6 @@ RomCurveDef* pathSearchGetNextPoint(PathSearch* search);
 int pathSearchBuildPath(PathSearch* search);
 void pathSearchExpandNode(PathSearch* search, PathSearchNode* node, int idx);
 int pathSearchStep(PathSearch* search, u32 maxSteps);
-int pathSearchBegin(PathSearch* search, RomCurveDef* startPoint, f32* targetPosition, int pathId, u32 reverse);
+int pathSearchBegin(PathSearch* search, RomCurveDef* startPoint, f32* targetPosition, ptrdiff_t target, u32 reverse);
 
 #endif /* MAIN_PI_DOLPHIN_PATH_API_H_ */

@@ -38,7 +38,7 @@
     },
     {
       "function_start": "0x8002F23C",
-      "function_name": "Object_ObjAnimSetMove",
+      "function_name": "ObjAnim_SetLayeredMove",
       "xrefs": [
         {
           "xref_address": "0x8002F3B0",
@@ -46,7 +46,7 @@
           "target_address": "0x802CAD50",
           "target_text": "<objanim.c -- setBlendMove> WARNING tried to load anim -1 from cache modno %d",
           "pair_kind": "lis/addi",
-          "function_name": "Object_ObjAnimSetMove"
+          "function_name": "ObjAnim_SetLayeredMove"
         }
       ]
     },

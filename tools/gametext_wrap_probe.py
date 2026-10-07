@@ -58,7 +58,7 @@ def execute(segments, symbols, retail, text, width, scale, want_height, fail=Fal
     write('gameTextCharset', pack('I', charset))
     write('gGameTextCursorX', pack('H', cursor[0]))
     write('gGameTextCursorY', pack('H', cursor[1]))
-    write('gGameTextStringStore', pack('I', 0x81600000))
+    write('gGameTextStringStoreHandle', pack('I', 37))
     if text is not None:
         emu.mem_write(INPUT, text + b'\0')
     emu.mem_write(OUTPUT, pack('if', -99, -123.0))
@@ -92,7 +92,7 @@ def execute(segments, symbols, retail, text, width, scale, want_height, fail=Fal
             amount = get(3)
             assert (get(4), get(5)) == (0, 0)
         else:
-            assert get(3) == 0x81600000
+            assert get(3) == 37
             amount = get(4)
         assert 0 < amount < 0x10000
         calls.append((name, amount))

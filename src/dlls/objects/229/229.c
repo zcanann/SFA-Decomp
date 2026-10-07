@@ -374,16 +374,6 @@ void Shield_free(GameObject* obj) {
     Sfx_StopFromObject(obj, SFXTRIG_lockon3_on);
 }
 
-typedef struct ShieldParticleParams {
-    u8 pad0[8]; /* 0x00 */
-    f32 alpha;  /* 0x08 */
-    f32 pos[3]; /* 0x0C */
-} ShieldParticleParams;
-
-STATIC_ASSERT(offsetof(ShieldParticleParams, pad0) == 0x0);
-STATIC_ASSERT(offsetof(ShieldParticleParams, alpha) == 0x8);
-STATIC_ASSERT(offsetof(ShieldParticleParams, pos) == 0xC);
-STATIC_ASSERT(sizeof(ShieldParticleParams) == 0x18);
 
 void Shield_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible) {
     ShieldState* state = obj->extra;
@@ -398,7 +388,7 @@ void Shield_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int f
         u8 hudHiddenFrames;
         ObjModel* model;
         f32 frameDelta;
-        ShieldParticleParams particle;
+        PartFxSpawnParams particle;
         u8 savedAlpha;
         model = Obj_GetActiveModel(obj);
         savedScale = obj->anim.rootMotionScale;
@@ -456,17 +446,17 @@ void Shield_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int f
                         particleAlpha = 1.0f;
                         for (; j < SHIELD_PARTICLE_COUNT_PER_SEGMENT; j++) {
                             f32 segmentScale = obj->anim.rootMotionScale;
-                            particle.pos[0] = particleOffsetX * segmentScale;
-                            particle.pos[1] = particleOffsetY * segmentScale;
-                            particle.pos[2] = particleOffsetZ;
+                            particle.position[0] = particleOffsetX * segmentScale;
+                            particle.position[1] = particleOffsetY * segmentScale;
+                            particle.position[2] = particleOffsetZ;
                             obj->anim.rotX += SHIELD_SEGMENT_HALF_TURN;
-                            vecRotateZXY(&obj->anim.rotX, particle.pos);
-                            particle.pos[0] += obj->anim.localPosX;
-                            particle.pos[1] += obj->anim.localPosY;
-                            particle.pos[2] += obj->anim.localPosZ;
-                            particle.alpha = particleAlpha;
+                            vecRotateZXY(&obj->anim.rotX, particle.position);
+                            particle.position[0] += obj->anim.localPosX;
+                            particle.position[1] += obj->anim.localPosY;
+                            particle.position[2] += obj->anim.localPosZ;
+                            particle.scale = particleAlpha;
                             (*gPartfxInterface)
-                                ->spawnObject(obj, SHIELD_PARTICLE_ID, &particle, SHIELD_PARTICLE_FLAGS, -1, NULL);
+                                ->spawnEffect(obj, SHIELD_PARTICLE_ID, &particle, SHIELD_PARTICLE_FLAGS, -1, NULL);
                         }
                     }
                 }

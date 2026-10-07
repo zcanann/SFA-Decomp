@@ -23,7 +23,7 @@ class ModelMatrixInitTests(unittest.TestCase):
                                       header).group()
                             for name in ('ModelBone', 'ObjModelJointMatrix'))
         functions = []
-        for name in ('modelGetJointMatrixCount', 'modelGetBoneMtx', 'model_multMtxs',
+        for name in ('modelGetJointMatrixCount', 'modelGetBoneMtx', 'modelJointMtxPtr', 'model_multMtxs',
                      'modelInitBoneMtxs', 'modelInitBoneMtxs2'):
             start, end = find_function_body(source, name)
             declaration = source.rfind('\n', 0, source.rfind(name, 0, start)) + 1

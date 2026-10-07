@@ -61,7 +61,7 @@ void mmpTrenchFx_update(GameObject* obj) {
         state->burstTimer -= timeDelta;
         if (state->burstTimer > 0.0f) {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, MMP_TRENCH_FX_PARTICLE_BURST, &state->burstSpawnParams,
+                ->spawnEffect(obj, MMP_TRENCH_FX_PARTICLE_BURST, &state->burstSpawnParams,
                               MMP_TRENCH_FX_PARTICLE_SPAWN_MODE, MMP_TRENCH_FX_MODEL_NONE, NULL);
         }
         gMMPTrenchFxAmbientSpawnParams.scale = 1.0f;
@@ -73,7 +73,7 @@ void mmpTrenchFx_update(GameObject* obj) {
         gMMPTrenchFxAmbientSpawnParams.posY += obj->anim.localPosY;
         gMMPTrenchFxAmbientSpawnParams.posZ += obj->anim.localPosZ;
         (*gPartfxInterface)
-            ->spawnObject((void*)obj, MMP_TRENCH_FX_PARTICLE_AMBIENT, &gMMPTrenchFxAmbientSpawnParams,
+            ->spawnEffect(obj, MMP_TRENCH_FX_PARTICLE_AMBIENT, &gMMPTrenchFxAmbientSpawnParams,
                           MMP_TRENCH_FX_PARTICLE_SPAWN_MODE, MMP_TRENCH_FX_MODEL_NONE, NULL);
     }
 }

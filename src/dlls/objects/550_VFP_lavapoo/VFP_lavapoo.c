@@ -52,12 +52,7 @@ void VFP_lavapool_updateWave(GameObject* obj)
     ObjTextureRuntimeSlot* tex;
     f32 scrollT;
     f32 waveScale;
-    struct
-    {
-        u8 pad[8];
-        f32 value;
-        f32 unused[2];
-    } parm;
+    PartFxSpawnParams parm;
 
     state = obj->extra;
     mapData = (VfpLavaPoolMapData*)obj->anim.placementData;
@@ -77,10 +72,10 @@ void VFP_lavapool_updateWave(GameObject* obj)
     phase = state->phase;
     if (phase > 4767.0f && phase < 20767.0f)
     {
-        parm.value = state->amplitude;
+        parm.scale = state->amplitude;
         if (obj->objectFlags & OBJECT_OBJFLAG_RENDERED)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, VFP_LAVAPOOL_PARTFX, &parm, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, VFP_LAVAPOOL_PARTFX, &parm, 2, -1, NULL);
         }
     }
     phase = state->phase;

@@ -213,7 +213,7 @@ void dim2roofrub_update(GameObject* obj) {
                 dustParams.posY = obj->anim.localPosY;
                 dustParams.posZ = obj->anim.localPosZ;
                 for (dustCount = 3; dustCount != 0; dustCount--) {
-                    (*gPartfxInterface)->spawnObject(obj, DIM2ROOFRUB_PARTFX_DUST, &dustParams, 0x200001, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, DIM2ROOFRUB_PARTFX_DUST, &dustParams, 0x200001, -1, NULL);
                 }
                 break;
             }

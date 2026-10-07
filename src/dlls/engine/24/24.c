@@ -229,9 +229,9 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
     transform.scale = 0.0495f;
     setTextColor(ctx, 0xff, 0xff, 0xff, 0xff);
     if (gBoneParticleEffectTimer != 0) {
-        (*gPartfxInterface)->spawnObject(obj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
         if (randomGetRange(0, 1) != 0) {
             textureSelectAnimationFramePair(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
         } else {
@@ -303,7 +303,7 @@ void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraA
                 params.unk2 = 0;
                 params.effectParam = 0;
             }
-            (*gPartfxInterface)->spawnObject(obj, effectId, &params, 2, -1, extraArg);
+            (*gPartfxInterface)->spawnEffect(obj, effectId, &params, 2, -1, extraArg);
         }
     }
 }

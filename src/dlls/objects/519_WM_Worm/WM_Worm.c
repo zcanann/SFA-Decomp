@@ -83,10 +83,10 @@ void WM_Worm_update(GameObject* obj) {
                 obj->anim.rotX += 300;
                 if (state->spawnCountOrInterval > 0) {
                     for (i = 0; (s16)i < state->spawnCountOrInterval; i++) {
-                        (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(obj, state->particleEffectId, NULL, 4, -1, NULL);
                     }
                 } else {
-                    (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, state->particleEffectId, NULL, 4, -1, NULL);
                 }
                 obj->userData1 = -state->spawnCountOrInterval;
             } else if (spawnCountOrInterval < 0 && obj->userData1 > 0) {

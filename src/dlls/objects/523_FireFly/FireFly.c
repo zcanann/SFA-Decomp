@@ -196,12 +196,12 @@ void firefly_activeTick(GameObject* obj) {
         getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX, obj->anim.localPosZ - obj->anim.previousLocalPosZ);
     if (state->flight.kind == FIREFLY_KIND_BLUE_MAIN || state->flight.kind == FIREFLY_KIND_BLUE_NEAR) {
         (*gPartfxInterface)
-            ->spawnObject((void*)obj, FIREFLY_PARTFX_BLUE_TRAIL, NULL, FIREFLY_PARTFX_KIND,
-                          FIREFLY_PARTFX_INVALID_HANDLE, NULL);
+            ->spawnEffect(obj, FIREFLY_PARTFX_BLUE_TRAIL, NULL, FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE,
+                          NULL);
     } else {
         (*gPartfxInterface)
-            ->spawnObject((void*)obj, FIREFLY_PARTFX_ORANGE_TRAIL, NULL, FIREFLY_PARTFX_KIND,
-                          FIREFLY_PARTFX_INVALID_HANDLE, NULL);
+            ->spawnEffect(obj, FIREFLY_PARTFX_ORANGE_TRAIL, NULL, FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE,
+                          NULL);
     }
     /* Compare against the player's world position. */
     if (Vec_xzDistance((f32*)(player + 0x18), &obj->anim.placement->posX) < state->flight.playerRadius) {
@@ -209,16 +209,16 @@ void firefly_activeTick(GameObject* obj) {
         f32 curAlpha;
         if (state->flight.kind == FIREFLY_KIND_BLUE_NEAR) {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, FIREFLY_PARTFX_BLUE_NEAR, NULL, FIREFLY_PARTFX_KIND,
-                              FIREFLY_PARTFX_INVALID_HANDLE, NULL);
+                ->spawnEffect(obj, FIREFLY_PARTFX_BLUE_NEAR, NULL, FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE,
+                              NULL);
         } else if (state->flight.kind == FIREFLY_KIND_ORANGE_NEAR) {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL, FIREFLY_PARTFX_KIND,
-                              FIREFLY_PARTFX_INVALID_HANDLE, NULL);
+                ->spawnEffect(obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL, FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE,
+                              NULL);
         } else if (state->flight.kind == FIREFLY_KIND_ORANGE_ALT_NEAR) {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL, FIREFLY_PARTFX_KIND,
-                              FIREFLY_PARTFX_INVALID_HANDLE, NULL);
+                ->spawnEffect(obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL, FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE,
+                              NULL);
         }
         if ((curAlpha = state->flight.proximityAlpha) < (maxAlpha = 0.003f)) {
             state->flight.proximityAlpha += 0.00001f;
@@ -245,7 +245,7 @@ void firefly_activeTick(GameObject* obj) {
                     state->flags = (u8)(state->flags | FIREFLY_FLAG_PLAYER_TOUCHED);
                     if (mainGetBit(FIREFLY_FIRST_TOUCH_BIT) == 0) {
                         state->messageParam = -1;
-                        ObjMsg_SendToObject((void*)player, FIREFLY_MESSAGE_TALK, obj, (u32)&state->messageParam);
+                        ObjMsg_SendToObject((void*)player, FIREFLY_MESSAGE_TALK, obj, &state->messageParam);
                         mainSetBits(FIREFLY_FIRST_TOUCH_BIT, 1);
                     } else {
                         FireFlyState* st = obj->extra;
@@ -311,7 +311,7 @@ void firefly_update(GameObject* obj) {
         }
         state->flight.activeFlags.active = isActive;
         if (state->flight.activeFlags.active != 0) {
-            state->flight.ownerData.pointLight = modelLightStruct_createPointLight((void*)obj, 100, 0xFF, 100, 0);
+            state->flight.ownerData.pointLight = modelLightStruct_createPointLight(obj, 100, 0xFF, 100, 0);
         }
     } else {
         if (timerCountDown(&state->flight.lifeTimer) != 0) {

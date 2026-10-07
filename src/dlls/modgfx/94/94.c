@@ -31,57 +31,57 @@ extern u8 gDll5ESequenceResourceData[];
 void dll_5E_spawnSequence(GameObject* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 spawnFlags) {
     u8* resourceData = (u8*)(int)gDll5ESequenceResourceData;
     (*gModgfxInterface)->beginSequence(sourceObj, (u8)variant, 0x12, 3, 9);
-    (*gModgfxInterface)->setSequenceParams(&resourceData[offsetof(Dll5ESequenceResourceView, sequenceParams)]);
+    (*gModgfxInterface)->setStageDurations((s16*)(&resourceData[offsetof(Dll5ESequenceResourceView, sequenceParams)]));
     (*gModgfxInterface)->addSequenceFlags(spawnFlags | 0x4004484);
-    (*gModgfxInterface)->resetSequenceSpawns();
+    (*gModgfxInterface)->resetSequenceCommands();
     (*gModgfxInterface)
-        ->addSequenceSpawn(2, 0.01f, 0.02f, 0.01f, 9,
-                           &resourceData[offsetof(Dll5ESequenceResourceView, nineVertexIndices[0])]);
+        ->addSequenceCommand(2, 0.01f, 0.02f, 0.01f, 9,
+                             (s16*)(&resourceData[offsetof(Dll5ESequenceResourceView, nineVertexIndices[0])]));
     (*gModgfxInterface)
-        ->addSequenceSpawn(2, 0.015f, 0.02f, 0.014f, 9,
-                           &resourceData[offsetof(Dll5ESequenceResourceView, nineVertexIndices[1])]);
+        ->addSequenceCommand(2, 0.015f, 0.02f, 0.014f, 9,
+                             (s16*)(&resourceData[offsetof(Dll5ESequenceResourceView, nineVertexIndices[1])]));
     (*gModgfxInterface)
-        ->addSequenceSpawn(2, 0.015f, 0.02f, 0.015f, 9,
-                           &resourceData[offsetof(Dll5ESequenceResourceView, nineVertexIndices[2])]);
+        ->addSequenceCommand(2, 0.015f, 0.02f, 0.015f, 9,
+                             (s16*)(&resourceData[offsetof(Dll5ESequenceResourceView, nineVertexIndices[2])]));
     (*gModgfxInterface)
-        ->addSequenceSpawn(2, 0.015f, 0.02f, 0.015f, 9,
-                           &resourceData[offsetof(Dll5ESequenceResourceView, nineVertexIndices[3])]);
+        ->addSequenceCommand(2, 0.015f, 0.02f, 0.015f, 9,
+                             (s16*)(&resourceData[offsetof(Dll5ESequenceResourceView, nineVertexIndices[3])]));
     (*gModgfxInterface)
-        ->addSequenceSpawn(4, 0.0f, 0.0f, 0.0f, 0x24,
-                           &resourceData[offsetof(Dll5ESequenceResourceView, allVertexIndices)]);
+        ->addSequenceCommand(4, 0.0f, 0.0f, 0.0f, 0x24,
+                             (s16*)(&resourceData[offsetof(Dll5ESequenceResourceView, allVertexIndices)]));
     (*gModgfxInterface)
-        ->addSequenceSpawn(8, 175.0f, 165.0f, 40.0f, 0x24,
-                           &resourceData[offsetof(Dll5ESequenceResourceView, allVertexIndices)]);
-    (*gModgfxInterface)->nextSequenceParam();
-    (*gModgfxInterface)->addSequenceSpawn(2, 37.0f, 11.0f, 37.0f, 0, NULL);
-    (*gModgfxInterface)->addSequenceSpawn(0x4000, 0.0f, -4.0f, 0.0f, 0, NULL);
-    (*gModgfxInterface)->addSequenceSpawn(0x1800000, 1.0f, 1.0f, 3.0f, 0x5e0, NULL);
-    (*gModgfxInterface)->nextSequenceParam();
+        ->addSequenceCommand(8, 175.0f, 165.0f, 40.0f, 0x24,
+                             (s16*)(&resourceData[offsetof(Dll5ESequenceResourceView, allVertexIndices)]));
+    (*gModgfxInterface)->nextStage();
+    (*gModgfxInterface)->addSequenceCommand(2, 37.0f, 11.0f, 37.0f, 0, NULL);
+    (*gModgfxInterface)->addSequenceCommand(0x4000, 0.0f, -4.0f, 0.0f, 0, NULL);
+    (*gModgfxInterface)->addSequenceCommand(0x1800000, 1.0f, 1.0f, 3.0f, 0x5e0, NULL);
+    (*gModgfxInterface)->nextStage();
     (*gModgfxInterface)
-        ->addSequenceSpawn(4, 254.0f, 0.0f, 0.0f, 0x12,
-                           &resourceData[offsetof(Dll5ESequenceResourceView, subsetIndices)]);
+        ->addSequenceCommand(4, 254.0f, 0.0f, 0.0f, 0x12,
+                             (s16*)(&resourceData[offsetof(Dll5ESequenceResourceView, subsetIndices)]));
     (*gModgfxInterface)
-        ->addSequenceSpawn(0x4000, 0.0f, -4.0f, 0.0f, 0x24,
-                           &resourceData[offsetof(Dll5ESequenceResourceView, allVertexIndices)]);
-    (*gModgfxInterface)->addSequenceSpawn(0x100, 0.0f, 0.0f, 1800.0f, 0, NULL);
-    (*gModgfxInterface)->addSequenceSpawn(0x1800000, 1.0f, 1.0f, 3.0f, 0x5e0, NULL);
-    (*gModgfxInterface)->nextSequenceParam();
+        ->addSequenceCommand(0x4000, 0.0f, -4.0f, 0.0f, 0x24,
+                             (s16*)(&resourceData[offsetof(Dll5ESequenceResourceView, allVertexIndices)]));
+    (*gModgfxInterface)->addSequenceCommand(0x100, 0.0f, 0.0f, 1800.0f, 0, NULL);
+    (*gModgfxInterface)->addSequenceCommand(0x1800000, 1.0f, 1.0f, 3.0f, 0x5e0, NULL);
+    (*gModgfxInterface)->nextStage();
     (*gModgfxInterface)
-        ->addSequenceSpawn(0x4000, 0.0f, -4.0f, 0.0f, 0x24,
-                           &resourceData[offsetof(Dll5ESequenceResourceView, allVertexIndices)]);
-    (*gModgfxInterface)->addSequenceSpawn(0x100, 0.0f, 0.0f, 1800.0f, 0, NULL);
-    (*gModgfxInterface)->addSequenceSpawn(0x1800000, 1.0f, 1.0f, 3.0f, 0x5e0, NULL);
-    (*gModgfxInterface)->nextSequenceParam();
+        ->addSequenceCommand(0x4000, 0.0f, -4.0f, 0.0f, 0x24,
+                             (s16*)(&resourceData[offsetof(Dll5ESequenceResourceView, allVertexIndices)]));
+    (*gModgfxInterface)->addSequenceCommand(0x100, 0.0f, 0.0f, 1800.0f, 0, NULL);
+    (*gModgfxInterface)->addSequenceCommand(0x1800000, 1.0f, 1.0f, 3.0f, 0x5e0, NULL);
+    (*gModgfxInterface)->nextStage();
     (*gModgfxInterface)
-        ->addSequenceSpawn(0x4000, 0.0f, -4.0f, 0.0f, 0x24,
-                           &resourceData[offsetof(Dll5ESequenceResourceView, allVertexIndices)]);
-    (*gModgfxInterface)->addSequenceSpawn(0x100, 0.0f, 0.0f, 1800.0f, 0, NULL);
+        ->addSequenceCommand(0x4000, 0.0f, -4.0f, 0.0f, 0x24,
+                             (s16*)(&resourceData[offsetof(Dll5ESequenceResourceView, allVertexIndices)]));
+    (*gModgfxInterface)->addSequenceCommand(0x100, 0.0f, 0.0f, 1800.0f, 0, NULL);
     (*gModgfxInterface)
-        ->addSequenceSpawn(4, 0.0f, 0.0f, 0.0f, 0x24,
-                           &resourceData[offsetof(Dll5ESequenceResourceView, allVertexIndices)]);
+        ->addSequenceCommand(4, 0.0f, 0.0f, 0.0f, 0x24,
+                             (s16*)(&resourceData[offsetof(Dll5ESequenceResourceView, allVertexIndices)]));
     (*gModgfxInterface)
-        ->spawnSequence(spawnParams, (u8*)(int)gDll5ESequenceResourceData, 0x24,
-                        &resourceData[offsetof(Dll5ESequenceResourceView, triangleIndices)], 0x10, 0x120, 0);
+        ->spawnSequence(spawnParams, (ModgfxEffectVertex*)(int)gDll5ESequenceResourceData, 0x24,
+                        (s16*)(&resourceData[offsetof(Dll5ESequenceResourceView, triangleIndices)]), 0x10, 0x120, 0);
     (*gModgfxInterface)->getLastSpawnHandle();
 }
 

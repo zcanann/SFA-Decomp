@@ -37,96 +37,96 @@ u8 gDll80EffectResourceData[sizeof(Dll80EffectResourceView)] = {
 void dll_80_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 spawnFlags) {
     ModgfxSpawnPacket packet;
     u8* resourceData = gDll80EffectResourceData;
-    GfxCmd* commands = packet.entries;
-    GfxCmd* commandCursor;
+    ModgfxCommand* commands = packet.entries;
+    ModgfxCommand* commandCursor;
 
-    commands[0].layer = 0;
-    commands[0].flags = 9;
-    commands[0].tex = &resourceData[offsetof(Dll80EffectResourceView, allVertexIndices)];
-    commands[0].mode = 0x80;
-    commands[0].x = 0.0f;
-    commands[0].y = 0.0f;
-    commands[0].z = 16383.0f;
+    commands[0].stageIndex = 0;
+    commands[0].parameter = 9;
+    commands[0].vertexIndices = (s16*)&resourceData[offsetof(Dll80EffectResourceView, allVertexIndices)];
+    commands[0].flags = 0x80;
+    commands[0].valueX = 0.0f;
+    commands[0].valueY = 0.0f;
+    commands[0].valueZ = 16383.0f;
     if (variant == 1) {
-        commands[1].layer = 0;
-        commands[1].flags = 8;
-        commands[1].tex = &resourceData[offsetof(Dll80EffectResourceView, firstEightVertexIndices)];
-        commands[1].mode = 2;
-        commands[1].x = 4.2f;
-        commands[1].y = 4.2f;
-        commands[1].z = 20.0f;
+        commands[1].stageIndex = 0;
+        commands[1].parameter = 8;
+        commands[1].vertexIndices = (s16*)&resourceData[offsetof(Dll80EffectResourceView, firstEightVertexIndices)];
+        commands[1].flags = 2;
+        commands[1].valueX = 4.2f;
+        commands[1].valueY = 4.2f;
+        commands[1].valueZ = 20.0f;
         commandCursor = commands + 2;
     } else {
-        commands[1].layer = 0;
-        commands[1].flags = 8;
-        commands[1].tex = &resourceData[offsetof(Dll80EffectResourceView, firstEightVertexIndices)];
-        commands[1].mode = 2;
-        commands[1].x = 0.42f;
-        commands[1].y = 0.42f;
-        commands[1].z = 2.0f;
+        commands[1].stageIndex = 0;
+        commands[1].parameter = 8;
+        commands[1].vertexIndices = (s16*)&resourceData[offsetof(Dll80EffectResourceView, firstEightVertexIndices)];
+        commands[1].flags = 2;
+        commands[1].valueX = 0.42f;
+        commands[1].valueY = 0.42f;
+        commands[1].valueZ = 2.0f;
         commandCursor = commands + 2;
     }
-    commandCursor[0].layer = 1;
-    commandCursor[0].flags = 8;
-    commandCursor[0].tex = &resourceData[offsetof(Dll80EffectResourceView, allVertexIndices)];
-    commandCursor[0].mode = 2;
-    commandCursor[0].x = 2.0f;
-    commandCursor[0].y = 2.0f;
-    commandCursor[0].z = 1.0f;
-    commandCursor[1].layer = 1;
-    commandCursor[1].flags = 9;
-    commandCursor[1].tex = &resourceData[offsetof(Dll80EffectResourceView, allVertexIndices)];
-    commandCursor[1].mode = 0x100;
-    commandCursor[1].x = -900.0f;
-    commandCursor[1].y = 0.0f;
-    commandCursor[1].z = 0.0f;
-    commandCursor[2].layer = 1;
-    commandCursor[2].flags = 9;
-    commandCursor[2].tex = &resourceData[offsetof(Dll80EffectResourceView, allVertexIndices)];
-    commandCursor[2].mode = 4;
-    commandCursor[2].x = 0.0f;
-    commandCursor[2].y = 0.0f;
-    commandCursor[2].z = 0.0f;
-    packet.sourceObj = sourceObj;
-    packet.sourceMode = variant;
-    packet.position[0] = 0.0f;
-    packet.position[1] = 0.0f;
-    packet.position[2] = 0.0f;
-    packet.velocity[0] = 0.0f;
-    packet.velocity[1] = 0.0f;
-    packet.velocity[2] = 0.0f;
-    packet.scale = 1.0f;
-    packet.drawGroupCount = 1;
-    packet.drawGroupStride = 0;
-    packet.initialStateByte = 9;
-    packet.byte5A = 0;
-    packet.textureFrameTimer = 0x20;
-    packet.commandCount = &commandCursor[3] - commands;
-    packet.sequenceParams[0] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[0])];
-    packet.sequenceParams[1] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[1])];
-    packet.sequenceParams[2] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[2])];
-    packet.sequenceParams[3] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[3])];
-    packet.sequenceParams[4] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[4])];
-    packet.sequenceParams[5] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[5])];
-    packet.sequenceParams[6] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[6])];
-    packet.commands = (GfxCmd*)((u8*)&packet + 0x60);
-    packet.flags = 0x4000010;
-    packet.flags |= spawnFlags;
-    if ((packet.flags & 1) != 0) {
+    commandCursor[0].stageIndex = 1;
+    commandCursor[0].parameter = 8;
+    commandCursor[0].vertexIndices = (s16*)&resourceData[offsetof(Dll80EffectResourceView, allVertexIndices)];
+    commandCursor[0].flags = 2;
+    commandCursor[0].valueX = 2.0f;
+    commandCursor[0].valueY = 2.0f;
+    commandCursor[0].valueZ = 1.0f;
+    commandCursor[1].stageIndex = 1;
+    commandCursor[1].parameter = 9;
+    commandCursor[1].vertexIndices = (s16*)&resourceData[offsetof(Dll80EffectResourceView, allVertexIndices)];
+    commandCursor[1].flags = 0x100;
+    commandCursor[1].valueX = -900.0f;
+    commandCursor[1].valueY = 0.0f;
+    commandCursor[1].valueZ = 0.0f;
+    commandCursor[2].stageIndex = 1;
+    commandCursor[2].parameter = 9;
+    commandCursor[2].vertexIndices = (s16*)&resourceData[offsetof(Dll80EffectResourceView, allVertexIndices)];
+    commandCursor[2].flags = 4;
+    commandCursor[2].valueX = 0.0f;
+    commandCursor[2].valueY = 0.0f;
+    commandCursor[2].valueZ = 0.0f;
+    packet.context.sourceObject = sourceObj;
+    packet.context.variant = variant;
+    packet.context.position[0] = 0.0f;
+    packet.context.position[1] = 0.0f;
+    packet.context.position[2] = 0.0f;
+    packet.context.velocity[0] = 0.0f;
+    packet.context.velocity[1] = 0.0f;
+    packet.context.velocity[2] = 0.0f;
+    packet.context.scale = 1.0f;
+    packet.context.drawGroupCount = 1;
+    packet.context.drawGroupStride = 0;
+    packet.context.initialStateByte = 9;
+    packet.context.byte5A = 0;
+    packet.context.textureFrameTimer = 0x20;
+    packet.context.commandCount = &commandCursor[3] - commands;
+    packet.context.stageDurations[0] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[0])];
+    packet.context.stageDurations[1] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[1])];
+    packet.context.stageDurations[2] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[2])];
+    packet.context.stageDurations[3] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[3])];
+    packet.context.stageDurations[4] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[4])];
+    packet.context.stageDurations[5] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[5])];
+    packet.context.stageDurations[6] = *(s16*)&resourceData[offsetof(Dll80EffectResourceView, sequenceParams[6])];
+    packet.context.commands = (ModgfxCommand*)((u8*)&packet + 0x60);
+    packet.context.flags = 0x4000010;
+    packet.context.flags |= spawnFlags;
+    if ((packet.context.flags & 1) != 0) {
         if ((u32)sourceObj != 0) {
-            packet.position[0] += sourceObj->anim.worldPosX;
-            packet.position[1] += sourceObj->anim.worldPosY;
-            packet.position[2] += sourceObj->anim.worldPosZ;
+            packet.context.position[0] += sourceObj->anim.worldPosX;
+            packet.context.position[1] += sourceObj->anim.worldPosY;
+            packet.context.position[2] += sourceObj->anim.worldPosZ;
         } else {
-            packet.position[0] += spawnParams->posX;
-            packet.position[1] += spawnParams->posY;
-            packet.position[2] += spawnParams->posZ;
+            packet.context.position[0] += spawnParams->posX;
+            packet.context.position[1] += spawnParams->posY;
+            packet.context.position[2] += spawnParams->posZ;
         }
     }
-    packet.modeByte = 0;
+    packet.context.modeByte = 0;
     (*gModgfxInterface)
-        ->spawnEffect(&packet, 0, 9, resourceData, 8, &resourceData[offsetof(Dll80EffectResourceView, triangles)],
-                      0x156, 0);
+        ->spawnEffect(&packet.context, 0, 9, (ModgfxEffectVertex*)(resourceData), 8,
+                      (s16*)(&resourceData[offsetof(Dll80EffectResourceView, triangles)]), 0x156, 0);
 }
 
 void dll_80_release(void) {

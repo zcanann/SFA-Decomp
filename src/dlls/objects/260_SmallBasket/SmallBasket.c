@@ -756,7 +756,7 @@ void SmallBasket_update(GameObject* obj) {
                     state->disableTimer = 0;
                     state->hiddenTimer = 0;
                     ObjMsg_SendToObject(player, SMALLBASKET_MSG_PLAYER_GRAB, obj,
-                                        (state->carryParam << 16) | ((u16)state->carryAngle));
+                                        (void*)((state->carryParam << 16) | ((u16)state->carryAngle)));
                 }
             }
         } else if (state->throwState != SMALLBASKET_THROW_NONE) {

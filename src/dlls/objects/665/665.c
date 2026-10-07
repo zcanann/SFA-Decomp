@@ -39,7 +39,7 @@ int dll_299_getObjectTypeId(void)
 void dll_299_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2(obj);
-    (*gModgfxInterface)->freeSourceEffects((void*)obj);
+    (*gModgfxInterface)->freeSourceEffects(obj);
     Resource_Release(gDll299Resource);
     gDll299Resource = NULL;
 }
@@ -58,9 +58,9 @@ void dll_299_update(GameObject* obj)
     {
         (*gDll299Resource)->spawn(obj, 1, NULL, 4, -1, 0);
     }
-    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
 }
 
 void dll_299_init(GameObject* obj, Dll299Setup* setup)
@@ -68,10 +68,10 @@ void dll_299_init(GameObject* obj, Dll299Setup* setup)
     ((Dll299State*)obj->extra)->id = setup->id;
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
     gDll299Resource = Resource_Acquire(DLL299_RESOURCE_ID, 1);
-    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_INIT2, NULL, 0x802, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, DLL0299_PARTFX_INIT, NULL, 0x802, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, DLL0299_PARTFX_INIT2, NULL, 0x802, -1, NULL);
 }
 
 void dll_299_release_nop(void)

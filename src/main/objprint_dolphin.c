@@ -70,6 +70,18 @@
 #include "main/objprint_dolphin_internal.h"
 #include "main/dll/ppcwgpipe_struct.h"
 
+u8 gObjGxPosMtxIdTable[12] = {0x00, 0x03, 0x06, 0x09, 0x0C, 0x0F, 0x12, 0x15, 0x18, 0x1B, 0x00, 0x00};
+u8 gObjGxTexMtxIdTable[12] = {0x1E, 0x21, 0x24, 0x27, 0x2A, 0x2D, 0x30, 0x33, 0x36, 0x39, 0x00, 0x00};
+
+Mtx gObjJointIdentityMtx = {
+    {1.0f, 0.0f, 0.0f, 0.0f},
+    {0.0f, 1.0f, 0.0f, 0.0f},
+    {0.0f, 0.0f, 1.0f, 0.0f},
+};
+
+/* The retail string occupies a 48-byte slot, including two trailing padding bytes. */
+char gObjMatrixCountError[48] = "<renderOpMatrix> ERROR CASE numMatrices = %d\n";
+
 extern s32 gModelMtxCacheState;
 extern s32 gObjFuzzLayerIndex;
 extern u8 gObjFuzzPassActive;
@@ -151,7 +163,7 @@ int objMatrixToRotation(f32* m, s16* outA, s16* outB, s16* outC) {
     return 1;
 }
 
-void modelBuildPosNrmMtxs(ModelFileHeader* def, int* model, f32* mtxA, f32* mtxB) {
+void modelBuildPosNrmMtxs(ModelFileHeader* def, ObjModel* model, f32* mtxA, f32* mtxB) {
     void* cache;
     int count;
     int i;
@@ -308,7 +320,7 @@ int objFuzzShellRenderCb(GameObject* obj, int* model, int ropIdx) {
     fz = (f32)gObjFuzzLayerIndex / (f32)(s32)noiseFrameCount;
     fz *= fz;
     fz /= 2.0f;
-    selectTexture((Texture*)(textureIdxToPtr(*(u32*)Shader_getLayer(rop, 0))), 0);
+    selectTexture((Texture*)(textureIdxToPtr(((ShaderLayer*)Shader_getLayer(rop, 0))->textureReference)), 0);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD2, GX_TEXMAP0, GX_COLOR_NULL);
@@ -358,7 +370,7 @@ int objFuzzShellRenderCb(GameObject* obj, int* model, int ropIdx) {
     GXSetTevAlphaIn(GX_TEVSTAGE2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
     GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    selectTexture((Texture*)(textureIdxToPtr(rop->indTextureId)), 2);
+    selectTexture((Texture*)(textureIdxToPtr(rop->indTextureReference)), 2);
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD3, GX_TEXMAP2);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE1, GX_ITS_1, GX_ITS_1);
@@ -492,7 +504,7 @@ int objFuzzRenderCb(GameObject* obj, ObjModel* model, int ropIdx) {
         fz = (f32)gObjFuzzLayerIndex / (f32)(s32)noiseFrameCount;
         fz /= 2.0f;
     }
-    selectTexture((Texture*)(textureIdxToPtr(*(u32*)Shader_getLayer(rop, 0))), 0);
+    selectTexture((Texture*)(textureIdxToPtr(((ShaderLayer*)Shader_getLayer(rop, 0))->textureReference)), 0);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     if (lbl_803DCC36 == 0) {
         GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
@@ -553,7 +565,7 @@ int objFuzzRenderCb(GameObject* obj, ObjModel* model, int ropIdx) {
         } else {
             GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD1, GX_TEXMAP5, GX_COLOR1A1);
         }
-        selectTexture((Texture*)(modelLightStruct_getProjectionTexture(gObjSelectedLights)), 5);
+        selectTexture(modelLightStruct_getProjectionTexture(gObjSelectedLights), 5);
         modelLightStruct_getProjectionTevModes(gObjSelectedLights, &projFlagOut1, &projBlendMode);
         if (projBlendMode == 2) {
             GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_C1, GX_CC_TEXC, GX_CC_ZERO);
@@ -600,8 +612,8 @@ int objFuzzRenderCb(GameObject* obj, ObjModel* model, int ropIdx) {
     GXSetTevAlphaIn(stage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
     GXSetTevColorOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
-    if (rop->indTexture != NULL) {
-        selectTexture((Texture*)(textureIdxToPtr(rop->indTextureId)), 2);
+    if (rop->indTextureReference != 0) {
+        selectTexture((Texture*)(textureIdxToPtr(rop->indTextureReference)), 2);
         GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
         GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD3, GX_TEXMAP2);
         GXSetIndTexCoordScale(GX_INDTEXSTAGE1, GX_ITS_1, GX_ITS_1);
@@ -624,7 +636,7 @@ int objFuzzRenderCb(GameObject* obj, ObjModel* model, int ropIdx) {
     GXLoadTexMtxImm(mtx4, GX_PTTEXMTX0, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD4, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_TRUE, GX_PTTEXMTX0);
     GXSetTevKColorSel(stage + 1, GX_TEV_KCSEL_1_2);
-    if (rop->indTexture != NULL) {
+    if (rop->indTextureReference != 0) {
         GXSetTevOrder(stage + 1, GX_TEXCOORD4, GX_TEXMAP3, GX_ALPHA_BUMPN);
         GXSetTevAlphaIn(stage + 1, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_APREV);
     } else {
@@ -676,7 +688,7 @@ u8 lbl_803DCC36;
 u8 lbl_803DCC35;
 u8 lbl_803DCC34;
 u32 gObjCachedModel;
-u32 gObjCachedTexture;
+Texture* gObjCachedTexture;
 u8 gObjRenderSetupDone;
 u8 gObjRenderingShadowPass;
 u8 gObjOverrideColorPending;
@@ -703,16 +715,16 @@ int lbl_803DB49C = -1;
 
 #define OBJPRINT_MODEL_DEF(obj) (((ObjAnimComponent*)(obj))->modelInstance)
 
-void objFuzzSetupGxState(void* objArg) {
+void objFuzzSetupGxState(GameObject* objArg) {
     ModelLightStruct* renderHandle;
-    void* obj = objArg;
+    GameObject* obj = objArg;
     GXColor savedEnvColor = sObjFuzzSavedEnvColor;
     Texture** shadowTable;
     int shadowStride;
     int shadowParam;
     float mtx[12];
 
-    renderHandle = objCreateLight((void*)obj, '\0');
+    renderHandle = objCreateLight(obj, '\0');
     if (renderHandle != 0x0) {
         modelLightStruct_setLightKind(renderHandle, MODEL_LIGHT_KIND_DIRECTIONAL);
         modelLightStruct_setDirection(renderHandle, 0.0f, -0.707f, 0.0f);
@@ -721,7 +733,7 @@ void objFuzzSetupGxState(void* objArg) {
         modelLightChannel_configure(2, 0, 0);
         GXSetChanAmbColor(GX_ALPHA0, lbl_803DB470);
         GXSetChanMatColor(GX_ALPHA0, lbl_803DB468);
-        modelLightStruct_loadChannelLight(2, renderHandle, (GameObject*)obj);
+        modelLightStruct_loadChannelLight(2, renderHandle, obj);
         modelLightChannels_applyGXControls();
         ModelLightStruct_free(renderHandle);
     }
@@ -752,8 +764,6 @@ void objFuzzSetupGxState(void* objArg) {
 }
 
 extern PPCWGPipe GXWGFifo : (0xCC008000);
-
-extern u8 gObjGxPosMtxIdTable[12];
 
 void objRenderAttachment(GameObject* obj, int* p2) {
     f32 wm[16];
@@ -839,7 +849,7 @@ void objRenderAttachment(GameObject* obj, int* p2) {
         blk.rotX = 0;
         blk.rotZ = 0;
         blk.rotY = 0;
-        (*gPartfxInterface)->spawnObject(obj, 0x7fd, &blk, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 0x7fd, &blk, 0x200001, -1, NULL);
     }
 }
 
@@ -977,21 +987,20 @@ static void objSetupLightChannels(u8* model, GameObject* obj) {
     }
 }
 
-extern u8 gObjGxPosMtxIdTable[12];
-
-static void modelLoadMtxsToGx(ModelFileHeader* hdr, int* model, ModelRenderInstrsState* bs, f32* mtx) {
+static void modelLoadMtxsToGx(ModelFileHeader* modelFile, ObjModel* model, ModelRenderInstrsState* stream,
+                              f32* viewMatrix) {
     char* cache = (char*)getCache();
     if (gModelMtxCacheState == 1) {
         char* cacheBase = (char*)getCache();
         char* sourceMtx;
         char* posMtx;
         int i;
-        int count = hdr->jointCount + hdr->extraJointCount;
+        int count = modelFile->jointCount + modelFile->extraJointCount;
         sourceMtx = cacheBase + 0x2700;
         posMtx = cacheBase;
         cacheQueueWait(0);
         for (i = 0; i < count; i++) {
-            PSMTXConcat((MtxPtr)mtx, (MtxPtr)(f32*)sourceMtx, (MtxPtr)(f32*)posMtx);
+            PSMTXConcat((MtxPtr)viewMatrix, (MtxPtr)(f32*)sourceMtx, (MtxPtr)(f32*)posMtx);
             sourceMtx += 0x40;
             posMtx += 0x30;
         }
@@ -1004,34 +1013,36 @@ static void modelLoadMtxsToGx(ModelFileHeader* hdr, int* model, ModelRenderInstr
         f32 tmp[12];
         {
             u32 w;
-            int pos = bs->bit;
+            int pos = stream->bit;
             int off = pos >> 3;
             u8* p;
-            w = bs->instrs[off];
-            p = (u8*)(off + (char*)bs->instrs);
+            w = stream->instrs[off];
+            p = (u8*)(off + (char*)stream->instrs);
             w |= p[1] << 8;
             w |= p[2] << 16;
-            bs->bit = pos + 4;
+            stream->bit = pos + 4;
             count = (w >> (pos & 7)) & 0xf;
         }
         i = 0;
         posMtxIds[0] = gObjGxPosMtxIdTable;
         for (; i < count; i++) {
-            int idx;
+            int jointIndex;
             {
                 u32 w;
-                int pos = bs->bit;
-                u32 pAddr = (pos >> 3) + ((u32)bs->instrs + 1);
-                w = *(u8*)(pAddr - 1);
-                w |= *(u8*)pAddr << 8;
-                w |= *(u8*)(pAddr + 1) << 16;
-                bs->bit = pos + 8;
-                idx = (w >> (pos & 7)) & 0xff;
+                int pos = stream->bit;
+                /* Keep MWCC's address-sum order without narrowing a native pointer. */
+                u8* bytes = (u8*)((pos >> 3) + ((size_t)stream->instrs + 1));
+                w = bytes[-1];
+                w |= bytes[0] << 8;
+                w |= bytes[1] << 16;
+                stream->bit = pos + 8;
+                jointIndex = (w >> (pos & 7)) & 0xff;
             }
             if (gModelMtxCacheState == 2) {
-                GXLoadPosMtxImm((const f32(*)[4])(cache + idx * 0x30), *posMtxIds[0]);
+                GXLoadPosMtxImm((const f32(*)[4])(cache + jointIndex * 0x30), *posMtxIds[0]);
             } else {
-                PSMTXConcat((MtxPtr)mtx, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)model, idx), (MtxPtr)tmp);
+                PSMTXConcat((MtxPtr)viewMatrix, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)model, jointIndex),
+                            (MtxPtr)tmp);
                 GXLoadPosMtxImm((const f32(*)[4])tmp, *posMtxIds[0]);
             }
             posMtxIds[0]++;
@@ -1039,26 +1050,28 @@ static void modelLoadMtxsToGx(ModelFileHeader* hdr, int* model, ModelRenderInstr
     }
 }
 
-static void renderOpMatrix(u8* hdr, int* model, ModelRenderInstrsState* bs, f32* m1, f32* mtx, u8 nrm, u8 tex,
-                           u8 skip) {
-    u8* posMtxIds[1];
+static void renderOpMatrix(ModelFileHeader* modelFile, ObjModel* model, ModelRenderInstrsState* stream,
+                           f32* normalScaleMatrix, f32* viewMatrix, u8 usesNormalMatrix, u8 usesTextureMatrix,
+                           u8 shadowPass) {
+    u8* posMtxIds;
     char* cache;
-    posMtxIds[0] = gObjGxPosMtxIdTable;
+    posMtxIds = gObjGxPosMtxIdTable;
     cache = (char*)getCache();
     if (gModelMtxCacheState == 1) {
-        if (skip == 0) {
-            modelBuildPosNrmMtxs((ModelFileHeader*)hdr, model, mtx, m1);
+        if (shadowPass == 0) {
+            modelBuildPosNrmMtxs(modelFile, model, viewMatrix, normalScaleMatrix);
         } else {
+            u8* sourceMtx;
             char* cacheBase = (char*)getCache();
             char* posMtx;
             int i;
-            int total = hdr[0xf3] + hdr[0xf4];
-            hdr = (u8*)(cacheBase + 0x2700);
+            int total = modelFile->jointCount + modelFile->extraJointCount;
+            sourceMtx = (u8*)(cacheBase + 0x2700);
             posMtx = cacheBase;
             cacheQueueWait(0);
             for (i = 0; i < total; i++) {
-                PSMTXConcat((MtxPtr)mtx, (MtxPtr)(f32*)hdr, (MtxPtr)(f32*)posMtx);
-                hdr += 0x40;
+                PSMTXConcat((MtxPtr)viewMatrix, (MtxPtr)(f32*)sourceMtx, (MtxPtr)(f32*)posMtx);
+                sourceMtx += 0x40;
                 posMtx += 0x30;
             }
             gModelMtxCacheState = 2;
@@ -1071,60 +1084,62 @@ static void renderOpMatrix(u8* hdr, int* model, ModelRenderInstrsState* bs, f32*
         f32 tmp[12];
         {
             u32 w;
-            int pos = bs->bit;
+            int pos = stream->bit;
             int off = pos >> 3;
             u8* p;
-            w = bs->instrs[off];
-            p = (u8*)(off + (char*)bs->instrs);
+            w = stream->instrs[off];
+            p = (u8*)(off + (char*)stream->instrs);
             w |= p[1] << 8;
             w |= p[2] << 16;
-            bs->bit = pos + 4;
+            stream->bit = pos + 4;
             count = (w >> (pos & 7)) & 0xf;
         }
         if (count < 0 || count > 20) {
-            OSReport((char*)&posMtxIds[0][0x48], count);
+            OSReport(gObjMatrixCountError, count);
         }
         i = 0;
-        texMtxIds = posMtxIds[0] + 0xc;
+        texMtxIds = gObjGxTexMtxIdTable;
         for (; i < count; i++) {
-            int idx;
+            int jointIndex;
             {
                 u32 w;
-                int pos = bs->bit;
-                u32 pAddr = (pos >> 3) + ((u32)bs->instrs + 1);
-                w = *(u8*)(pAddr - 1);
-                w |= *(u8*)pAddr << 8;
-                w |= *(u8*)(pAddr + 1) << 16;
-                bs->bit = pos + 8;
-                idx = (w >> (pos & 7)) & 0xff;
+                int pos = stream->bit;
+                /* Keep MWCC's address-sum order without narrowing a native pointer. */
+                u8* bytes = (u8*)((pos >> 3) + ((size_t)stream->instrs + 1));
+                w = bytes[-1];
+                w |= bytes[0] << 8;
+                w |= bytes[1] << 16;
+                stream->bit = pos + 8;
+                jointIndex = (w >> (pos & 7)) & 0xff;
             }
             if (gModelMtxCacheState == 2) {
-                u8* posMtx = (u8*)(cache + idx * 0x30);
+                u8* posMtx = (u8*)(cache + jointIndex * 0x30);
                 u8* normalMtx = posMtx + 0x12c0;
-                GXLoadPosMtxImm((const f32(*)[4])posMtx, *posMtxIds[0]);
-                if (skip == 0 && tex != 0) {
+                GXLoadPosMtxImm((const f32(*)[4])posMtx, *posMtxIds);
+                if (shadowPass == 0 && usesTextureMatrix != 0) {
                     GXLoadTexMtxImm((const f32(*)[4])normalMtx, *texMtxIds, GX_MTX3x4);
                 }
-                if (skip == 0 && nrm != 0) {
-                    GXLoadNrmMtxImm((const f32(*)[4])normalMtx, *posMtxIds[0]);
+                if (shadowPass == 0 && usesNormalMatrix != 0) {
+                    GXLoadNrmMtxImm((const f32(*)[4])normalMtx, *posMtxIds);
                 }
             } else {
-                PSMTXConcat((MtxPtr)mtx, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)model, idx), (MtxPtr)tmp);
-                GXLoadPosMtxImm((const f32(*)[4])tmp, *posMtxIds[0]);
-                if (skip == 0 && (nrm != 0 || tex != 0)) {
+                PSMTXConcat((MtxPtr)viewMatrix, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)model, jointIndex),
+                            (MtxPtr)tmp);
+                GXLoadPosMtxImm((const f32(*)[4])tmp, *posMtxIds);
+                if (shadowPass == 0 && (usesNormalMatrix != 0 || usesTextureMatrix != 0)) {
                     tmp[3] = 0.0f;
                     tmp[7] = 0.0f;
                     tmp[11] = 0.0f;
-                    PSMTXConcat((MtxPtr)tmp, (MtxPtr)m1, (MtxPtr)tmp);
-                    if (tex != 0) {
+                    PSMTXConcat((MtxPtr)tmp, (MtxPtr)normalScaleMatrix, (MtxPtr)tmp);
+                    if (usesTextureMatrix != 0) {
                         GXLoadTexMtxImm((const f32(*)[4])tmp, *texMtxIds, GX_MTX3x4);
                     }
-                    if (nrm != 0) {
-                        GXLoadNrmMtxImm((const f32(*)[4])tmp, *posMtxIds[0]);
+                    if (usesNormalMatrix != 0) {
+                        GXLoadNrmMtxImm((const f32(*)[4])tmp, *posMtxIds);
                     }
                 }
             }
-            posMtxIds[0]++;
+            posMtxIds++;
             texMtxIds++;
         }
     }
@@ -1135,8 +1150,6 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* owner, ModelFileHea
 static void objRenderChild(GameObject* child, GameObject* parent, u8 isShadow);
 
 #define OBJPRINT_MODEL_DEF(obj) (((ObjAnimComponent*)(obj))->modelInstance)
-
-extern u8 gObjGxPosMtxIdTable[12];
 
 static void ModelHeader_setupPosTexFmt(u8* hdr, int* model, ModelRenderInstrsState* bs, int p4) {
     u32 flags = 0;
@@ -1194,7 +1207,7 @@ static void modelRenderFn_setVtxDescr(ModelFileHeader* modelHeader, Shader* shad
         nextMatrixAttr = 1;
         previousMatrixAttr = 8;
         if (textureRefs->texture0 != 0 || textureRefs->texture1 != 0) {
-            if (shader->auxTexture != NULL) {
+            if (shader->auxTextureReference != 0) {
                 GXSetVtxDesc(GX_VA_TEX0MTXIDX, GX_DIRECT);
                 nextMatrixAttr = GX_VA_TEX1MTXIDX;
                 GXSetVtxDesc(nextMatrixAttr++, GX_DIRECT);
@@ -1369,10 +1382,10 @@ static u8 addShaderLayerStages(GameObject* obj, Shader* shader, ModelRenderOpTex
                     return 1;
                 }
                 alpha = ((obj->anim.renderAlpha + 1) * shader->alpha) >> 8;
-                if (layer->texture != NULL) {
+                if (layer->textureReference != 0) {
                     MtxPtr textureMatrix;
                     u8 blendMode;
-                    texture = textureIdxToPtr(layer->textureIndex);
+                    texture = textureIdxToPtr(layer->textureReference);
                     {
                         ObjTextureSlotDef* slotDefs;
                         ObjTextureRuntimeSlot* textureSlots;
@@ -1476,7 +1489,7 @@ static u32 objSetupRenderOpGxState(GameObject* obj, ModelFileHeader* modelFile, 
     int shaderIndex;
     u32 renderOpIndex;
     u8 shad;
-    u8* projectionTexture;
+    Texture* projectionTexture;
     int lightIndex;
     s32 shadowColorMode;
     u8 zCompareBeforeTexture;
@@ -1515,8 +1528,8 @@ static u32 objSetupRenderOpGxState(GameObject* obj, ModelFileHeader* modelFile, 
     textureRefs = ObjModel_GetRenderOpTextureRefs(activeModel, shaderIndex);
     Rcp_ResetTextureStageState();
     envtex = 0;
-    if ((textureRefs->texture0 != 0 || textureRefs->texture1 != 0) && shader->auxTextureIndex != 0) {
-        void* t = textureIdxToPtr(shader->auxTextureIndex);
+    if ((textureRefs->texture0 != 0 || textureRefs->texture1 != 0) && shader->auxTextureReference != 0) {
+        void* t = textureIdxToPtr(shader->auxTextureReference);
         int nl = gObjSelectedLightCount + 1;
         if (textureRefs->texture0 != 0) {
             nl += 1;
@@ -1524,7 +1537,7 @@ static u32 objSetupRenderOpGxState(GameObject* obj, ModelFileHeader* modelFile, 
         if (textureRefs->texture1 != 0) {
             nl += 1;
         }
-        envtex = addEnvMapBumpStages(t, nl, shader->envMapParams, shader->layers[0].textureIndex);
+        envtex = addEnvMapBumpStages(t, nl, shader->envMapParams, shader->layers[0].textureReference);
         envtex &= 0xff;
     }
     if (textureRefs->texture0 != 0) {
@@ -1582,7 +1595,7 @@ static u32 objSetupRenderOpGxState(GameObject* obj, ModelFileHeader* modelFile, 
             lp = &gObjSelectedLights;
             sp = &gObjProjectedLightChannel;
             for (; lightIndex < gObjSelectedLightCount; lightIndex++) {
-                projectionTexture = (u8*)modelLightStruct_getProjectionTexture(*lp);
+                projectionTexture = modelLightStruct_getProjectionTexture(*lp);
                 if (projectionTexture != 0) {
                     modelLightStruct_getProjectionTevModes(*lp, &colorMode, &alphaMode);
                     shadowColorMode = colorMode;
@@ -1603,9 +1616,9 @@ static u32 objSetupRenderOpGxState(GameObject* obj, ModelFileHeader* modelFile, 
         addEnvMapTexCoord(envtex);
     }
     {
-        u32 t18;
-        if ((t18 = shader->textureId) != 0 && shader->unk1C == 0 && textureRefs->texture1 != 0) {
-            textureIdxToPtr(t18);
+        TextureReference textureReference;
+        if ((textureReference = shader->textureReference) != 0 && shader->unk1C == 0 && textureRefs->texture1 != 0) {
+            textureIdxToPtr(textureReference);
             addTexModulateReg2Stage();
         }
     }
@@ -1630,7 +1643,7 @@ static u32 objSetupRenderOpGxState(GameObject* obj, ModelFileHeader* modelFile, 
                 objGetShaderLayerScroll(obj, (ShaderLayer*)l1, &tx, &ty);
                 PSMTXTrans((MtxPtr)m2, tx, ty, 0.0f);
             }
-            addWarpedNoiseTevStages(textureIdxToPtr(*(u32*)l1), m2);
+            addWarpedNoiseTevStages(textureIdxToPtr(((ShaderLayer*)l1)->textureReference), m2);
         }
         addShaderLayerStages(obj, shader, textureRefs, 0, useChannelColor, nlay);
     }
@@ -1804,7 +1817,6 @@ static void shaderSetGxFlags(GameObject* obj, u8* m, u8* shader) {
     }
 }
 
-extern f32 gObjJointMtxTemp[];
 static void modelDoAltRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, int p4) {
     f32 wm[16];
     f32 cm[12];
@@ -1824,14 +1836,14 @@ static void modelDoAltRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, int
         if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
             ((ModelFileHeader*)m)->jointCount != 0) {
             if (gObjCachedModel != (u32)m) {
-                ObjModel_UpdateAnimMatrices((ObjModel*)am, (ModelFileHeader*)m, obj, gObjJointMtxTemp);
+                ObjModel_UpdateAnimMatrices((ObjModel*)am, (ModelFileHeader*)m, obj, &gObjJointIdentityMtx[0][0]);
                 modelInitMtxs((ModelFileHeader*)m, (ObjModel*)am);
             } else {
                 gModelMtxCacheState = 1;
             }
         } else {
             ObjModel_ToggleMatrixBuffer((ObjModel*)am);
-            PSMTXCopy((MtxPtr)gObjJointMtxTemp, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)am, 0));
+            PSMTXCopy(gObjJointIdentityMtx, (MtxPtr)(f32*)ObjModel_GetJointMatrix((u8*)am, 0));
             gModelMtxCacheState = 3;
         }
         {
@@ -1868,8 +1880,8 @@ static void modelDoAltRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, int
         if (cb == NULL || cb((int*)obj, am, 0) == 0) {
             _gxSetFogParams();
             Rcp_ResetTextureStageState();
-            addTexLayerStageSwizzled(textureIdxToPtr(((ModelFileHeader*)m)->renderOps->layers[0].textureIndex), NULL, 0,
-                                     (GXColor*)color, 0, 0);
+            addTexLayerStageSwizzled(textureIdxToPtr(((ModelFileHeader*)m)->renderOps->layers[0].textureReference),
+                                     NULL, 0, (GXColor*)color, 0, 0);
             if (isHeavyFogEnabled() != 0) {
                 u8 c[4];
                 getFogColorRgb(c);
@@ -1883,9 +1895,9 @@ static void modelDoAltRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, int
             *(u32*)gObjGxKColorCache = *(u32*)color;
         }
     } else {
-        void* tex = textureIdxToPtr(((ModelFileHeader*)m)->renderOps->layers[0].textureIndex);
-        if (gObjCachedTexture != (u32)tex) {
-            gObjCachedTexture = (u32)tex;
+        void* tex = textureIdxToPtr(((ModelFileHeader*)m)->renderOps->layers[0].textureReference);
+        if (gObjCachedTexture != tex) {
+            gObjCachedTexture = tex;
             selectTexture((Texture*)tex, 0);
         }
         if (gObjGxKColorCache[0] != color[0] || gObjGxKColorCache[1] != color[1] || gObjGxKColorCache[2] != color[2] ||
@@ -1903,7 +1915,7 @@ static void modelDoAltRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, int
     bs.bit += 4;
     ModelHeader_setupPosTexFmt(m, (void*)((ModelFileHeader*)m)->renderOps, &bs, p4);
     bs.bit += 4;
-    modelLoadMtxsToGx((ModelFileHeader*)m, am, &bs, cm);
+    modelLoadMtxsToGx((ModelFileHeader*)m, (ObjModel*)am, &bs, cm);
     {
         ModelDisplayListEntry* dl;
         int idx;
@@ -1926,7 +1938,7 @@ static void modelDoAltRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, int
 
 void objRenderInvalidateStateCache(void) {
     gObjRenderSetupDone = 0;
-    gObjCachedTexture = 0;
+    gObjCachedTexture = NULL;
     gObjCachedModel = 0;
     lbl_803DCC34 = 0;
     gObjGxVtxDescCache = -1;
@@ -2138,7 +2150,7 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
             GXCallDisplayList(dl->dlist, dl->dlistSize);
         } break;
         case 4:
-            modelLoadMtxsToGx((ModelFileHeader*)m, am, &bs, vm);
+            modelLoadMtxsToGx((ModelFileHeader*)m, (ObjModel*)am, &bs, vm);
             break;
         case 5:
             done = 1;
@@ -2146,7 +2158,6 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
         }
     }
 }
-extern u8 gObjGxTexMtxIdTable[12];
 
 static void modelDoRenderInstrs(GameObject* obj, GameObject* owner, ModelFileHeader* modelFile, u8 passMask) {
     f32 modelViewMatrix[16];
@@ -2174,7 +2185,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* owner, ModelFileHea
     f32 sc;
 
     gObjRenderSetupDone = 0;
-    gObjCachedTexture = 0;
+    gObjCachedTexture = NULL;
     gObjCachedModel = 0;
     lbl_803DCC34 = 0;
     gObjGxVtxDescCache = -1;
@@ -2478,7 +2489,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* owner, ModelFileHea
             }
             break;
         case 4:
-            renderOpMatrix((u8*)modelFile, (int*)activeModel, &stream, scaleMatrix, viewMatrix, usesNormalMatrix,
+            renderOpMatrix(modelFile, activeModel, &stream, scaleMatrix, viewMatrix, usesNormalMatrix,
                            usesTextureMatrix, shadowPass);
             break;
         case 5:
@@ -2897,13 +2908,3 @@ void objRenderModel(GameObject* obj) {
 void objSetRenderingShadowPass(u8 x) {
     gObjRenderingShadowPass = x;
 }
-
-u8 gObjGxPosMtxIdTable[12] = {0x00, 0x03, 0x06, 0x09, 0x0C, 0x0F, 0x12, 0x15, 0x18, 0x1B, 0x00, 0x00};
-u8 gObjGxTexMtxIdTable[12] = {0x1E, 0x21, 0x24, 0x27, 0x2A, 0x2D, 0x30, 0x33, 0x36, 0x39, 0x00, 0x00};
-
-f32 gObjJointMtxTemp[24] = {
-    1.0f,         0.0f,           0.0f,           0.0f,           0.0f,           1.0f,
-    0.0f,         0.0f,           0.0f,           0.0f,           1.0f,           0.0f,
-    0.014794691f, 1.6930165e+22f, 2.5424896e+29f, 4.6243438e+30f, 1.6713787e-19f, 3.5253297e+09f,
-    13.204376f,   1.8988991e+28f, 2.818281e+20f,  4.2326e+21f,    0.03909816f,    6.162976e-33f,
-};

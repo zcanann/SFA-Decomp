@@ -114,7 +114,7 @@ void lightsource_update(GameObject* obj) {
             if (state->sparkSpawnTimer <= 0.0f) {
                 /* The effect only consumes scale; the remaining parameters stay raw. */
                 sparkParams.scale = 1.0f;
-                (*gPartfxInterface)->spawnObject(obj, LIGHTSOURCE_PARTFX_SPARK, &sparkParams, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, LIGHTSOURCE_PARTFX_SPARK, &sparkParams, 2, -1, NULL);
                 state->sparkSpawnTimer += 5.0f;
             }
         }
@@ -220,9 +220,9 @@ void lightsource_init(GameObject* obj, const LightSourcePlacementView* placement
             modelLightStruct_startColorFade(state->light, 1, 3);
 
             colorBase = state->fxType * 3;
-            modelLightStruct_setDiffuseTargetColor(state->light, (int)(0.8f * (f32)(u32)colorTable.colors[colorBase]),
-                                                   (int)(0.8f * (f32)(u32)colorTable.colors[colorBase + 1]),
-                                                   (int)(0.8f * (f32)(u32)colorTable.colors[colorBase + 2]), 0xff);
+            modelLightStruct_setDiffuseTargetColor(state->light, (0.8f * (f32)(u32)colorTable.colors[colorBase]),
+                                                   (0.8f * (f32)(u32)colorTable.colors[colorBase + 1]),
+                                                   (0.8f * (f32)(u32)colorTable.colors[colorBase + 2]), 0xff);
             lightSetField4D(state->light, 1);
 
             if (placement->flags & LIGHTSOURCE_FLAG_CREATE_GLOW) {

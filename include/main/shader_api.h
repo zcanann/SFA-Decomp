@@ -133,7 +133,7 @@ extern void* gHitsTab;
 extern int gLightmapDrawQueueCount;
 extern void* gCloudLayerTexture;
 extern u8* gMapInfoBuffer;
-extern int gMapsTab;
+extern MapRomListOffsets* gMapsTab;
 extern u16* gTrkBlkTab;
 extern MapCellEntry* gMapBlockCellEntryTables[];
 extern s8 gMapBlockDrawOrderFrontToBack[];

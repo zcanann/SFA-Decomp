@@ -33,7 +33,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/resource.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/objtype.h"
 #include "main/obj_path.h"
@@ -76,29 +76,32 @@ STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 
 void DR_CloudRunner_setupPath(GameObject* obj, CloudRunnerState* state, int mode) {
     DRCloudRunnerMoveParams* base = &gDRCloudRunnerMoveParamTable;
-    u8 stk[4] = {0, 1, 1, 1};
-    u8* pathState = (u8*)&state->baddie + 4;
+    s8 stk[4] = {0, 1, 1, 1};
+    ObjCollisionState* pathState = &state->baddie.objectCollision;
     u8 moveMode;
-    pathState[0x25b] = 1;
+    pathState->subtype = 1;
     moveMode = mode;
     if (moveMode == 1) {
-        (*gPathControlInterface)->init(pathState, 0, 0x42087, 0);
-        (*gPathControlInterface)
-            ->setLocalPointCollision(pathState, 1, &base->pathCollisionA, &gDRCloudRunnerMode1LocalRadius, 8);
-        (*gPathControlInterface)->setup(pathState, 1, &base->pathPointsA, &gDRCloudRunnerMode1SegmentRadius, &stk);
+        (*gObjCollisionInterface)->init(pathState, 0, 0x42087, 0);
+        (*gObjCollisionInterface)
+            ->setLocalPoints(pathState, 1, &base->pathCollisionA.x, &gDRCloudRunnerMode1LocalRadius, 8);
+        (*gObjCollisionInterface)
+            ->setSegments(pathState, 1, &base->pathPointsA.x, &gDRCloudRunnerMode1SegmentRadius, stk);
     } else if (moveMode == 2) {
-        (*gPathControlInterface)->init(pathState, 3, 0x42087, 0);
+        (*gObjCollisionInterface)->init(pathState, 3, 0x42087, 0);
         /* The second radius reads the following mode-0 segment-radius word. */
-        (*gPathControlInterface)
-            ->setLocalPointCollision(pathState, 2, &base->pathCollisionB, &gDRCloudRunnerMode2LocalRadius, 8);
-        (*gPathControlInterface)->setup(pathState, 1, &base->pathPointsB, &gDRCloudRunnerMode2SegmentRadius, &stk);
+        (*gObjCollisionInterface)
+            ->setLocalPoints(pathState, 2, &base->pathCollisionB.x, &gDRCloudRunnerMode2LocalRadius, 8);
+        (*gObjCollisionInterface)
+            ->setSegments(pathState, 1, &base->pathPointsB.x, &gDRCloudRunnerMode2SegmentRadius, stk);
     } else if (moveMode == 0) {
-        (*gPathControlInterface)->init(pathState, 3, 0x42087, 0);
-        (*gPathControlInterface)
-            ->setLocalPointCollision(pathState, 2, &base->pathCollisionC, &gDRCloudRunnerMode0LocalRadii, 8);
-        (*gPathControlInterface)->setup(pathState, 1, &base->pathPointsC, gDRCloudRunnerMode0SegmentRadii, &stk);
+        (*gObjCollisionInterface)->init(pathState, 3, 0x42087, 0);
+        (*gObjCollisionInterface)
+            ->setLocalPoints(pathState, 2, &base->pathCollisionC.x, gDRCloudRunnerMode0LocalRadii, 8);
+        (*gObjCollisionInterface)
+            ->setSegments(pathState, 1, &base->pathPointsC.x, gDRCloudRunnerMode0SegmentRadii, stk);
     }
-    (*gPathControlInterface)->attachObject(obj, pathState);
+    (*gObjCollisionInterface)->reset(obj, pathState);
 }
 void DR_CloudRunner_func23(GameObject* obj, int mode, int* out) {
     struct gbids {
@@ -234,7 +237,7 @@ void DR_CloudRunner_fireProjectile(GameObject* obj) {
     newObj->anim.rotZ = 0;
     newObj->anim.rotY = 0;
     newObj->anim.rotX = 0;
-    (*gPartfxInterface)->spawnObject(newObj, DRCLOUDRUNNER_PARTFX, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(newObj, DRCLOUDRUNNER_PARTFX, NULL, 2, -1, NULL);
 }
 
 #define PLAYER_VEHICLE_OBJGROUP          0x26
@@ -307,7 +310,7 @@ int DR_CloudRunner_stateHandler06(GameObject* obj, CloudRunnerState* baddie) {
             newObj->anim.rotZ = 0;
             newObj->anim.rotY = 0;
             newObj->anim.rotX = 0;
-            (*gPartfxInterface)->spawnObject(newObj, DRCLOUDRUNNER_PARTFX, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(newObj, DRCLOUDRUNNER_PARTFX, NULL, 2, -1, NULL);
         }
     }
     return 0;
@@ -958,7 +961,7 @@ void DR_CloudRunner_hitDetect(GameObject* obj) {
             (*gGameUIInterface)->airMeterShutdown();
             (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
             inner->airTimeRemaining = 1;
-            (*gPlayerInterface)->setState(obj, inner, 7);
+            (*gPlayerInterface)->setState(obj, &inner->baddie, 7);
         }
         Sfx_PlayFromObject(obj, SFXTRIG_gscsc);
     }
@@ -1000,7 +1003,7 @@ void DR_CloudRunner_updateFlightControl(GameObject* obj, f32 f, int triggerFrame
         inner->baddie.flags0 &= ~0x400000;
     }
     (*gPlayerInterface)
-        ->update(obj, inner, f, timeDelta, gDRCloudRunnerStateHandlers, &gDRCloudRunnerDefaultStateHandler);
+        ->update(obj, &inner->baddie, f, timeDelta, gDRCloudRunnerStateHandlers, &gDRCloudRunnerDefaultStateHandler);
     if ((inner->baddie.eventFlags & 1) != 0) {
         DR_CloudRunner_fireProjectile(obj);
     }
@@ -1057,7 +1060,7 @@ void DR_CloudRunner_update(GameObject* obj) {
                 inner->unkB04 = 0;
                 inner->flagsBB6 |= 4;
                 inner->moveLib.modeBits |= 1;
-                (*gPlayerInterface)->setState(obj, inner, 4);
+                (*gPlayerInterface)->setState(obj, &inner->baddie, 4);
             } else {
                 buttonDisable(0, PAD_BUTTON_A);
                 {
@@ -1095,7 +1098,7 @@ void DR_CloudRunner_init(GameObject* obj, DRCloudRunnerPlacement* def) {
         obj->anim.localPosZ = target.z;
         obj->anim.rotX = target.angle;
     }
-    (*gPlayerInterface)->init(obj, (void*)inner, 8, 1);
+    (*gPlayerInterface)->init(obj, &inner->baddie, 8, 1);
     inner->baddie.gravity = 0.17f;
     DR_CloudRunner_setupPath(obj, inner, inner->flagsBC0.b20);
     dll_2E_initState(obj, &inner->moveLib, -0x11c7, 0x1555, 1);

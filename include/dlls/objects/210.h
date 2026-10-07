@@ -2,7 +2,7 @@
 #define DLLS_OBJECTS_210_H_
 
 #include "dlls/object_descriptor.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
 
@@ -49,7 +49,7 @@ typedef struct TumbleweedPlacement {
 } TumbleweedPlacement;
 
 typedef struct TumbleweedState {
-    CurvesCollisionState pathState; /* 0x000 */
+    ObjCollisionState pathState;    /* 0x000 */
     u16 distToTarget;               /* 0x268 */
     u16 triggerRange;               /* 0x26A */
     f32 targetScale;                /* 0x26C */

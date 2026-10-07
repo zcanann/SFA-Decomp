@@ -243,56 +243,56 @@ has a speed set for the X and Y axes and advances its offset by this amount ever
 Every mapping below was checked against real source in this repo; unmarked claims are direct reads
 of the file/line cited, not inference.
 
-### `Texture` header == the 0x60-byte TEXn.bin header
+### Texture runtime header and relocation
 
-`include/main/texture.h` already has a named, `STATIC_ASSERT`-pinned struct for the wiki's texture
-header, field-for-field:
+The canonical runtime layout is [`Texture`](../../include/main/texture.h),
+with a 0x60-byte header on the GameCube target and variable-length image data
+following it. `textureLoad` builds `nextAnimationFrame` links at offset 0;
+`textureGetAnimationFrame` follows them. The head's `animationFrameCountFixed`
+at 0x10 stores the frame count in 8.8 form, while later frames use 1.
+`refCount` at 0x0E tracks acquisitions and releases, and cached textures arm
+`evictTimer` at 0x4B when they become eligible for eviction.
 
-```c
-typedef struct Texture {
-    u8 unk00[0xA];      /* next@0, flags@4, xOffset@8 (wiki) — not individually named here */
-    u16 width;           /* 0xA */
-    u16 height;          /* 0xC */
-    u16 refCount;        /* 0xE  == wiki "usage" */
-    u8 unk10[6];          /* frameVal10@0x10, unk12@0x12, framesPerTick@0x14 (wiki) */
-    u8 format;            /* 0x16 == wiki GXTexFmt */
-    u8 wrapS, wrapT, minFilter, magFilter, unk1B, minLod, maxLod;
-    u8 unk1E[0x22];        /* incl. the embedded 0x20-byte GXTexObj at 0x20 */
-    u32 *tmemAddr;         /* 0x40 == wiki's GXTexRegion* texRegion (see below) */
-    u8 unk44[4];            /* bufSize */
-    u8 preloaded;           /* 0x48 == wiki bNoTexRegionCallback */
-    u8 cached;              /* 0x49 == wiki bDoNotFree */
-    u8 unk4A;
-    u8 evictTimer;          /* 0x4B — matches wiki's "set to 10 when freeing" for unk4B exactly */
-    u8 unk4C[4];             /* bufSize2 */
-    s32 imageOffset;         /* 0x50 — see discrepancy note below */
-    u8 unk54[0xC];
-} Texture;
-STATIC_ASSERT(sizeof(Texture) == 0x60);
-```
+The embedded `GXTexObj` is at 0x20. `textureInitGXTexObj` binds the image just
+after the header, sets its user data to the owning texture, clears `tmemAddr`
+and `preloaded`, and updates `dataSize`. `textureInitSecondaryGXTexObj` adds
+`imageOffset` at 0x50 to that image position and uses I4 format. That direct
+use supports an image offset rather than the older wiki's TEV-stage-count
+interpretation. `tmemAddr` is passed to GX as a `GXTexRegion*`; its historical
+field name is retained in the canonical layout.
 
-- `next` (wiki 0x0000, `Texture*`): confirmed by `textureFn_800541ac` (`rcp_dolphin.c:752`), which
-  walks `node = *(int**)node` starting from a `Texture*` to reach the *n*-th animation frame — the
-  in-memory frame chain the wiki's "next" field implies.
-- `frameVal10` (wiki 0x0010): the same function reads `*(u16*)((char*)tex + 0x10)`, then
-  `count = f10 >> 8` — confirming the wiki's "low byte always 0" claim (count lives in the high byte)
-  and pinning down what "relates to number of frames" means concretely. `rcp_dolphin.c:600` (in
-  `fn_80053C40`) writes `*(u16*)(obj + 16) = 1;` with an existing comment `/* 0x10: mip-chain word
-  (count<<8), not named in Texture */` — independent corroboration in this repo's own commentary.
-- `refCount` (wiki 0x000E "usage"): matches exactly — `rcp_dolphin.c` increments/decrements it on
-  every `textureLoad`/`textureFn_800541ac`/`ShaderDef_free`/`shaderInit` acquire-release pair.
-- **Discrepancy at 0x50**: the wiki calls this field `tevVal50` (`u32`, "0:use 1 TEV stage, not 2").
-  This repo's `imageOffset` (`s32`, "image data lives at `(u8*)tex + 0x60 + imageOffset`") is a
-  *different* interpretation of the same offset, backed by concrete use at `rcp_dolphin.c:1503`:
-  `GXInitTexObj(obj, (u8*)(tex + ((Texture*)tex)->imageOffset + 0x60), ...)`. Both readings can't be
-  simultaneously literal — worth a second look by whoever revisits this field; this repo's evidence
-  (a real pointer-arithmetic use, not just a heuristic) currently outweighs the wiki's guess.
-- `tmemAddr` (0x40): wiki names this `GXTexRegion*`. Every use in `rcp_dolphin.c`
-  (`GXLoadTexObjPreLoaded(to, ((Texture*)tex)->tmemAddr, map)`, e.g. line 1087/1152/1217) passes it
-  as the SDK's `GXTexRegion*` parameter (`include/dolphin/gx/GXTexture.h:28`) — so the wiki's field
-  name is the more accurate one; `tmemAddr` undersells what the field actually is.
-- `evictTimer` (0x4B): matches the wiki's unk4B description ("set to 10 when freeing") exactly —
-  `rcp_dolphin.c:667/672/677` all do `((Texture*)tex)->evictTimer = 10;` on release paths.
+The private `LoadedTextureEntry` in `texture.c` stores the original asset ID,
+a `Texture*`, `usesHandle`, and `allocationSize`. The loader preserves the
+untranslated ID as the lookup key, records its handle-return choice, and gets
+the size from `getHeapItemSize`. Target offsets 0/4/8/0xC and the 0x10-byte
+record size are asserted. All direct consumers share this typed registry.
+
+`texRestructRefs` moves only handle-based, uncached, single-frame textures
+whose allocation size is not the -1 sentinel. It first moves eligible heap-0
+textures to heaps 1/2, then calls `defragMemory(2)`, then runs at most four
+compaction passes. Heap-0 replacements must remain in heap 0 and have an
+address no lower than the old texture. In mode 0, allocations in heaps 1/2
+of at least 0x3000 bytes can move back to heap 0; this promotion does not
+compare old/new addresses. Nonzero modes skip that promotion.
+
+Each successful move copies the allocation, flushes it, rebuilds the GX object,
+frees the old allocation with zero free delay, restores the previous delay,
+and only then publishes the new registry pointer. The canonical frame link
+and cache fields replace raw pointer dereferences and repeated texture casts.
+Address ordering uses complete native-width values across distinct allocations.
+
+`tools/test_texture_relocation.py` executes the production relocation routine,
+GX initializer and registry lookup in 1,172 cases at `-O0`/`-O2` under ASan/UBSan.
+It covers every registry position, eligibility, allocation failures, rejected
+moves, heap promotion, the four-pass limit, mipmap paths and publication order.
+Sparse mappings cross a 4 GiB boundary to test full-width address ordering.
+Five negative controls reject narrowed comparisons, animated-chain moves,
+incorrect GX user data, reordered cache flushes and a changed pass limit.
+GX spies verify the replacement's image and user-data pointers; complete header,
+payload and guard checks protect the copy. Heap, resource-defrag, diagnostic
+and GX services are spies; the fixture uses native records and does not decode
+retail headers or implement loading/rendering. All five target builds retain
+byte-identical source objects and exact retail DOLs.
 
 ### `GXTexFmt` / `GXTexObj` / `GXTexRegion` — verbatim SDK types
 
@@ -401,30 +401,27 @@ struct convention, not a bug):
    global shader texture array" for `colorIdx`/`auxTex0`/`auxTex1` maps concretely to this repo's
    distortion-texture slot mechanism, not a generic texture list.
 
-### `ModelFileHeader.textureIds` — the "index into model's texture list" resolution
+### `ModelFileHeader.textureEntries` — model texture-list resolution
 
-`ObjModel_ResolveRenderOpTextures` (`model.c:474-544`) is the exact, field-by-field implementation of
-the wiki's claim "Textures here are not IDs; they're indices into the model's list of textures (or -1
-for none). They're replaced with pointers to the texture when the shader is loaded. This also applies
-to ShaderLayer":
+`ObjModel_ResolveRenderOpTextures` in `src/main/model.c` replaces signed model
+texture-list indices with the corresponding `ModelTextureEntry.reference`,
+using zero for the `-1` sentinel. This applies to each shader layer,
+`auxTextureIndex` (+0x34), `indTextureId` (+0x38), and `textureId` (+0x18).
+Those file-index views now have separate pointer-width runtime reference
+views used by model resolution and rendering.
+The current source uses the canonical `ModelFileHeader` and `Shader` fields;
+the old raw-offset and `GameObject*` alias spellings are no longer present.
 
-```c
-op = *(u8**)(m + 0x38) + j * 0x44;               /* j-th Shader record (renderOps[j]) */
-for (k = 0; k < op[0x41]; k++) {                  /* wiki nLayers */
-    u8* e = op + k * 8;                           /* wiki ShaderLayer stride, base = layer[k] */
-    if (*(int*)e != -1) *(int*)e = textureIds[*(int*)e]; else *(int*)e = 0;  /* layer[k].texture */
-}
-if (*(int*)(op + 0x34) != -1) *(int*)(op+0x34) = textureIds[*(int*)(op+0x34)]; else 0;  /* auxTex2 */
-if (*(int*)(op + 0x38) != -1) *(int*)(op+0x38) = textureIds[*(int*)(op+0x38)]; else 0;  /* furTexture */
-/* op+0x1c: -1->0, -2->0, else->1  -- this is the wiki's unnamed 0x1C field, verbatim */
-if (*(int*)(op + 0x18) != -1) *(int*)(op+0x18) = textureIds[*(int*)(op+0x18)]; else 0;  /* texture18 */
-```
-(the real source, `model.c:487-495`, dereferences `e` through a `GameObject*` alias for `e[0]` — a
-load-bearing re-spelling noted in-repo as keeping MWCC's alias/CSE class; simplified above for
-clarity, offsets unchanged.)
-(`m + 0x20` is `ModelFileHeader.textureIds`, `STATIC_ASSERT`-pinned at offset `0x20`.) The `op+0x1C`
-`-1 -> 0, -2 -> 0, else -> 1` encoding is a byte-for-byte match of the wiki's guess for that unnamed
-field, right down to the two distinguished sentinel values.
+The header table at +0x20 is layout-asserted and now distinguishes serialized
+asset IDs from loaded references. A runtime reference can be a one-based cache
+handle or a direct target address: the wiki's description of all resolved
+values as pointers is too narrow. `textureIdxToPtr` decodes both forms and
+preserves native address bits above the retail 32-bit word. See
+[Model texture references](../model_geometry_tables.md#model-texture-references-2026-10-06)
+for the loader contract and validation.
+
+The separate `unk1C` field retains `-1 -> 0, -2 -> 0, else -> 1`, matching the
+wiki's two distinguished sentinel values without assigning an unproven role.
 
 ### `polyGroupId` / `scrollingTexMtx` — confirmed via `texscroll2` and `modelRenderFn_8003e98c`
 

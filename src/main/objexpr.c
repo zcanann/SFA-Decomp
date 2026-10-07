@@ -86,25 +86,26 @@ typedef struct PlayerBlinkState {
 } PlayerBlinkState;
 
 static inline ObjJointPose* playerEyeAnim_FindJoint(ObjAnimComponent* objAnim, int tag) {
-    int jointCount;
-    u8* jointData;
+    int bindingCount;
+    u8* bindings;
     int poseOffset;
-    int jointDataOffset;
-    ObjModelInstance* model;
+    int bindingOffset;
+    ObjDef* definition;
     ObjJointPose* joint;
 
     joint = NULL;
-    model = objAnim->modelInstance;
-    if (model != 0) {
-        jointDataOffset = 0;
+    definition = objAnim->modelInstance;
+    if (definition != 0) {
+        bindingOffset = 0;
         poseOffset = 0;
-        for (jointCount = model->jointCount; jointCount > 0; jointCount--) {
-            jointData = (u8*)model->jointData;
-            if (((int)*(u8*)(jointData + objAnim->bankIndex + jointDataOffset + 1) != 0xff) &&
-                ((int)jointData[jointDataOffset] == tag)) {
+        for (bindingCount = definition->jointBindingCount; bindingCount > 0; bindingCount--) {
+            bindings = definition->jointBindingBytes;
+            if (((int)*(u8*)(bindings + objAnim->bankIndex + bindingOffset +
+                             (int)offsetof(ObjJointBinding, modelJoints)) != OBJ_JOINT_BINDING_MISSING) &&
+                ((int)bindings[bindingOffset + (int)offsetof(ObjJointBinding, tag)] == tag)) {
                 joint = (ObjJointPose*)(objAnim->jointPoseData + poseOffset);
             }
-            jointDataOffset += model->modelCount + 1;
+            bindingOffset += definition->modelCount + (int)sizeof(ObjJointBinding);
             poseOffset += sizeof(ObjJointPose);
         }
     }
@@ -405,30 +406,32 @@ void objGetJointWorldPosition(GameObject* obj, int key, f32* outPosition) {
     int k;
     int n;
     int joint;
-    ObjModelJointMatrix* model;
+    ObjModel* model;
+    ObjModelJointMatrix* matrix;
 
-    table = (void*)obj->anim.modelInstance;
+    table = obj->anim.modelInstance;
     i = 0;
-    n = (s32)(u32)table->jointCount;
+    n = (s32)(u32)table->jointBindingCount;
     for (k = 0; k < n; k++) {
-        if (key == (int)(*(u8**)&table->jointData)[i]) {
-            joint = (*(u8**)&table->jointData + i + OBJPRINT_ACTIVE_BANK_INDEX(obj))[1];
+        if (key == (int)(table->jointBindingBytes)[i + (int)offsetof(ObjJointBinding, tag)]) {
+            joint = (table->jointBindingBytes + i +
+                     OBJPRINT_ACTIVE_BANK_INDEX(obj))[(int)offsetof(ObjJointBinding, modelJoints)];
             break;
         }
-        i = i + table->modelCount + 1;
+        i = i + table->modelCount + (int)sizeof(ObjJointBinding);
     }
-    model = (ObjModelJointMatrix*)Obj_GetActiveModel(obj);
-    model = ObjModel_GetJointMatrix((u8*)model, joint);
-    outPosition[0] = model->translationX;
-    outPosition[1] = model->translationY;
-    outPosition[2] = model->translationZ;
+    model = Obj_GetActiveModel(obj);
+    matrix = ObjModel_GetJointMatrix((u8*)model, joint);
+    outPosition[0] = matrix->translationX;
+    outPosition[1] = matrix->translationY;
+    outPosition[2] = matrix->translationZ;
     outPosition[0] += playerMapOffsetX;
     outPosition[2] += playerMapOffsetZ;
 }
 
 s16* objFindJointPoseVector(GameObject* obj, int key) {
     int vecOffset;
-    u8* jointData;
+    u8* bindings;
     int entryIdx;
     ObjDef* modelDef;
     s16* result;
@@ -440,14 +443,15 @@ s16* objFindJointPoseVector(GameObject* obj, int key) {
     if (modelDef != NULL) {
         entryIdx = 0;
         vecOffset = 0;
-        count = OBJPRINT_JOINT_COUNT(modelDef);
+        count = OBJPRINT_JOINT_BINDING_COUNT(modelDef);
         for (i = 0; i < count; i++) {
-            jointData = (u8*)modelDef->jointData;
-            if ((int)*(u8*)(jointData + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
-                (s32) * (u8*)(jointData + entryIdx) == key) {
+            bindings = modelDef->jointBindingBytes;
+            if ((int)*(u8*)(bindings + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx +
+                            (int)offsetof(ObjJointBinding, modelJoints)) != OBJ_JOINT_BINDING_MISSING &&
+                (s32)bindings[entryIdx + (int)offsetof(ObjJointBinding, tag)] == key) {
                 result = (s16*)((char*)obj->anim.jointPoseData + vecOffset);
             }
-            entryIdx += OBJPRINT_MODEL_COUNT(modelDef) + 1;
+            entryIdx += OBJPRINT_MODEL_COUNT(modelDef) + (int)sizeof(ObjJointBinding);
             vecOffset += sizeof(ObjJointPose);
         }
     }
@@ -1036,14 +1040,15 @@ void characterAimHeadAtTarget(GameObject* obj, void* tgt, void* state, int limit
         int j;
         iv[0] = 0;
         iv[1] = 0;
-        n = ((ObjDef*)m[0])->jointCount;
+        n = ((ObjDef*)m[0])->jointBindingCount;
         for (j = 0; j < n; j++) {
-            u8* entries = (u8*)((ObjDef*)m[0])->jointData;
-            if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + iv[0] + 1) != 0xff &&
-                (int)*(u8*)(entries + iv[0]) == 0) {
+            u8* bindings = ((ObjDef*)m[0])->jointBindingBytes;
+            if ((int)*(u8*)(bindings + OBJPRINT_ACTIVE_BANK_INDEX(obj) + iv[0] +
+                            (int)offsetof(ObjJointBinding, modelJoints)) != OBJ_JOINT_BINDING_MISSING &&
+                (int)bindings[iv[0] + (int)offsetof(ObjJointBinding, tag)] == 0) {
                 found[0] = (s16*)((char*)obj->anim.jointPoseData + iv[1]);
             }
-            iv[0] += ((ObjDef*)m[0])->modelCount + 1;
+            iv[0] += ((ObjDef*)m[0])->modelCount + (int)sizeof(ObjJointBinding);
             iv[1] += sizeof(ObjJointPose);
         }
     }

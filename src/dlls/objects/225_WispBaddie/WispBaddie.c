@@ -160,9 +160,9 @@ void WispBaddie_update(GameObject* obj) {
     }
 
     particleMode = 4;
-    (*gPartfxInterface)->spawnObject((void*)obj, state->particleId, NULL, 1, -1, &particleMode);
+    (*gPartfxInterface)->spawnEffect(obj, state->particleId, NULL, 1, -1, &particleMode);
     particleMode = 3;
-    (*gPartfxInterface)->spawnObject((void*)obj, state->particleId, NULL, 2, -1, &particleMode);
+    (*gPartfxInterface)->spawnEffect(obj, state->particleId, NULL, 2, -1, &particleMode);
 
     if (state->hitRadius < state->maxHitRadius) {
         state->hitRadius += 0.005f;
@@ -170,15 +170,15 @@ void WispBaddie_update(GameObject* obj) {
     } else {
         state->hitRadius = state->maxHitRadius;
         particleMode = 2;
-        (*gPartfxInterface)->spawnObject((void*)obj, state->particleId, NULL, 2, -1, &particleMode);
+        (*gPartfxInterface)->spawnEffect(obj, state->particleId, NULL, 2, -1, &particleMode);
         particleMode = 0;
-        (*gPartfxInterface)->spawnObject((void*)obj, state->particleId, NULL, 2, -1, &particleMode);
+        (*gPartfxInterface)->spawnEffect(obj, state->particleId, NULL, 2, -1, &particleMode);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, WISPBADDIE_HIT_VOLUME_SLOT, 1, 0);
         ObjHits_EnableObject(obj);
     }
 
     particleMode = 1;
-    (*gPartfxInterface)->spawnObject((void*)obj, state->particleId, NULL, 2, -1, &particleMode);
+    (*gPartfxInterface)->spawnEffect(obj, state->particleId, NULL, 2, -1, &particleMode);
     state->player = Obj_GetPlayerObject();
     if (state->player != NULL) {
         delta[0] = state->player->anim.worldPosX - obj->anim.worldPosX;

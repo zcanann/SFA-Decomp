@@ -99,7 +99,7 @@ enum CamcontrolHandlerConstants {
 };
 
 typedef struct CamcontrolStateStorage {
-    CamcontrolCameraState state;
+    CameraObject state;
     u8 pad144[4];
 } CamcontrolStateStorage;
 
@@ -151,7 +151,7 @@ s16 gCamcontrolTargetHelpTextId = -1;
 u16 gCamcontrolTargetClassMask = 0xFFFF;
 char sCamcontrolBlendDebugFormat[] = "t=%f\n";
 
-CamcontrolCameraState* gCamcontrolCamera;
+CameraObject* gCamcontrolCamera;
 u8 gCamcontrolHandlerCount;
 CamcontrolHandlerEntry* gCamcontrolCurrentHandler;
 s32 gCamcontrolActiveActionId;
@@ -337,7 +337,7 @@ int camcontrol_aButtonIconTextureCallback(GameObject* obj, ObjModel* model, u32 
     if (gCamcontrolCamera->targetKind == CAMCONTROL_TARGET_KIND_SUPPRESSED) {
         color.a = 0;
     }
-    addTexLayerStageKAlpha(textureIdxToPtr(renderOp->layers[0].textureIndex), NULL, 0, &color);
+    addTexLayerStageKAlpha(textureIdxToPtr(renderOp->layers[0].textureReference), NULL, 0, &color);
     Rcp_ApplyTextureStageCounts();
     if (color.a < 0xff) {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
@@ -379,13 +379,13 @@ int camcontrol_lockIconTextureCallback(GameObject* obj, ObjModel* model, int ren
         color.b = 0;
         alphaVal = ((obj->anim.alpha + 1) * CAMCONTROL_RETICLE_DIM_ALPHA_SCALE) >> 8;
         color.a = alphaVal;
-        addTexLayerStageKAlpha(textureIdxToPtr(renderOp->layers[0].textureIndex), NULL, 0, &color);
+        addTexLayerStageKAlpha(textureIdxToPtr(renderOp->layers[0].textureReference), NULL, 0, &color);
     } else {
         color.r = 0xff;
         color.g = 0xff;
         color.b = 0xff;
         color.a = obj->anim.alpha;
-        addTexLayerStageKAlpha(textureIdxToPtr(renderOp->layers[0].textureIndex), NULL, 0, &color);
+        addTexLayerStageKAlpha(textureIdxToPtr(renderOp->layers[0].textureReference), NULL, 0, &color);
     }
     Rcp_ApplyTextureStageCounts();
     if (obj->anim.alpha < 0xff || renderOp->layers[0].materialId <= tier) {
@@ -438,7 +438,7 @@ static inline int camcontrol_isTargetCandidate(GameObject* obj, ObjHitVolumeRunt
     return 0;
 }
 
-GameObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraState, ObjAnimComponent* focus) {
+GameObject* camcontrol_findBestTarget(CameraObject* cameraState, ObjAnimComponent* focus) {
     int objIndex;
     int objCount;
     u8 occOut[4];
@@ -561,7 +561,7 @@ GameObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraState, ObjAni
     return NULL;
 }
 
-void camcontrol_updateMoveAverage(CamcontrolCameraState* cameraState, ObjAnimComponent* focus) {
+void camcontrol_updateMoveAverage(CameraObject* cameraState, ObjAnimComponent* focus) {
     Vec3f* velocity;
     f32 mag;
     f32 root;
@@ -702,7 +702,7 @@ void Camera_setBlendCurveMode(u8 mode) {
     gCamcontrolCamera->blendCurveMode = mode;
 }
 
-void camcontrol_applyState(CamcontrolCameraState* camera) {
+void camcontrol_applyState(CameraObject* camera) {
     Camera* view;
     int blendedAngleDelta;
     f32 mag;
@@ -926,7 +926,7 @@ void camcontrol_updateTargetFeedback(void) {
     s16 objType;
     f32 alphaScale;
     GameObject* target;
-    ObjAnimComponent* reticle;
+    GameObject* reticle;
     u8 buttonPressed;
     int result;
     u32 buttons;
@@ -934,7 +934,7 @@ void camcontrol_updateTargetFeedback(void) {
     f32 targetDistance;
 
     target = gCamcontrolCamera->currentTarget;
-    reticle = &gCamcontrolTargetReticle->anim;
+    reticle = gCamcontrolTargetReticle;
     buttonPressed = false;
     if (reticle == NULL) {
         return;
@@ -976,7 +976,7 @@ void camcontrol_updateTargetFeedback(void) {
             }
         }
         if (gCamcontrolTargetState == '\0') {
-            if (reticle->currentMoveProgress <= 0.0f) {
+            if (reticle->anim.currentMoveProgress <= 0.0f) {
                 if (target != NULL) {
                     gCamcontrolCamera->targetReticleFocus = target;
                     gCamcontrolCamera->targetKind = camcontrol_getTargetKind(target);
@@ -988,7 +988,7 @@ void camcontrol_updateTargetFeedback(void) {
             } else {
                 ObjAnim_AdvanceCurrentMove(reticle, -0.04f, timeDelta, NULL);
             }
-        } else if ((gCamcontrolCamera->targetReticleFocus != target) && (reticle->currentMoveProgress >= 1.0f)) {
+        } else if ((gCamcontrolCamera->targetReticleFocus != target) && (reticle->anim.currentMoveProgress >= 1.0f)) {
             gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_INACTIVE;
             if (target != NULL) {
                 ObjAnim_SetMoveProgress(reticle, 0.0f);
@@ -1080,11 +1080,11 @@ void camcontrol_updateTargetFeedback(void) {
             }
             gCamcontrolCamera->targetDistance = targetDistance;
         }
-        alphaScale = 255.0f * reticle->currentMoveProgress;
+        alphaScale = 255.0f * reticle->anim.currentMoveProgress;
         alphaScale = (alphaScale < 0.0f) ? 0.0f : ((alphaScale > 255.0f) ? 255.0f : alphaScale);
-        reticle->alpha = alphaScale;
+        reticle->anim.alpha = alphaScale;
         gCamcontrolReticleSpin = CAMCONTROL_RETICLE_SPIN_STEP;
-        reticle->rotX = (s16)(1024.0f * timeDelta + (float)reticle->rotX);
+        reticle->anim.rotX = (s16)(1024.0f * timeDelta + (float)reticle->anim.rotX);
         break;
     }
 }
@@ -1474,7 +1474,7 @@ void Camera_update(u8 framesThisStep) {
 }
 
 void Camera_init(void* focus, f32 x, f32 y, f32 z) {
-    memset(gCamcontrolCamera, 0, sizeof(CamcontrolCameraState));
+    memset(gCamcontrolCamera, 0, sizeof(CameraObject));
     gCamcontrolCamera->localX = x;
     gCamcontrolCamera->localY = y;
     gCamcontrolCamera->localZ = z;
@@ -1499,7 +1499,7 @@ void Camera_release(void) {
 
 void Camera_initialise(void) {
     gCamcontrolCamera = &gCamcontrolStateStorage.state;
-    memset(gCamcontrolCamera, 0, sizeof(CamcontrolCameraState));
+    memset(gCamcontrolCamera, 0, sizeof(CameraObject));
     voxmaps_initialise();
     gCamcontrolActiveActionId = -1;
     gCamcontrolCurrentHandlerIndex = -1;

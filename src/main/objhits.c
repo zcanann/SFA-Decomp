@@ -2254,7 +2254,7 @@ u32 ObjHitReact_Update(GameObject* obj, ObjHitReactEntry* reactionEntryTable, u3
                     Resource_Release(staffCollisionResource);
                 }
             } else {
-                objDoHitParticleFx((void*)obj, 0.014f, &hitEffectParams, OBJHITREACT_ALT_EFFECT_COUNT, NULL);
+                objDoHitParticleFx(obj, 0.014f, &hitEffectParams, OBJHITREACT_ALT_EFFECT_COUNT, NULL);
             }
         }
         if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
@@ -2300,10 +2300,10 @@ void ObjHitReact_ResetActiveObjects(int objectCount) {
     }
 }
 
-int ObjHitbox_AllocRotatedBounds(ObjAnimComponent* objAnim, u32 arena) {
+u8* ObjHitbox_AllocRotatedBounds(ObjAnimComponent* objAnim, u8* arena) {
     ObjHitboxTransformState* transformState;
 
-    transformState = (ObjHitboxTransformState*)roundUpTo4(arena);
+    transformState = (ObjHitboxTransformState*)roundUpTo4((size_t)arena);
     objAnim->hitboxTransformState = transformState;
     if (objAnim->hitboxTransformState != NULL) {
         objAnim->hitboxTransformState->activeMatrixIndex = 0;
@@ -2312,7 +2312,7 @@ int ObjHitbox_AllocRotatedBounds(ObjAnimComponent* objAnim, u32 arena) {
         ObjHitbox_UpdateRotatedBounds(objAnim, 1);
         ObjHitbox_UpdateRotatedBounds(objAnim, 1);
     }
-    return (u32)transformState + sizeof(ObjHitboxTransformState);
+    return (u8*)transformState + sizeof(ObjHitboxTransformState);
 }
 
 void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, int objType, ObjHitReactState* hitState,
@@ -2350,7 +2350,7 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, i
     return;
 }
 
-u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitState, u32 entryArena,
+u8* ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitState, u8* entryArena,
                           ObjAnimComponent* objAnim) {
     ObjHitReactEntry* entries;
 
@@ -2358,9 +2358,9 @@ u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitS
         return entryArena;
     }
     hitState->entryBufferByteCapacity = OBJHITREACT_ENTRY_ARENA_BYTES;
-    entries = (ObjHitReactEntry*)roundUpTo8(entryArena);
+    entries = (ObjHitReactEntry*)roundUpTo8((size_t)entryArena);
     hitState->entries = entries;
-    entryArena = (u32)entries + hitState->entryBufferByteCapacity;
+    entryArena = (u8*)entries + hitState->entryBufferByteCapacity;
     hitState->activeHitboxMode = OBJHITREACT_ACTIVE_HITBOX_MODE;
     if ((hitState->shapeFlags & OBJHITS_SHAPE_RESET_MODE_MASK) != 0) {
         hitState->resetHitboxMode = OBJHITREACT_RESET_HITBOX_MODE;
@@ -2663,11 +2663,11 @@ void ObjHits_SyncObjectPosition(GameObject* obj) {
     return;
 }
 
-int ObjHits_AllocObjectState(GameObject* obj, u32 arena) {
-    u32 stateArena;
+u8* ObjHits_AllocObjectState(GameObject* obj, u8* arena) {
+    u8* stateArena;
     ObjHitsPriorityState* hitState;
 
-    stateArena = roundUpTo4(arena);
+    stateArena = (u8*)roundUpTo4((size_t)arena);
     obj->anim.hitReactState = (ObjHitReactState*)stateArena;
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     ObjHits_RefreshObjectState(obj);

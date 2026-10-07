@@ -8,6 +8,12 @@ This validates the existing manifest together; it adds no progress claims.
 
 ## Retained source definitions
 
+The sky color-table retention below describes the historical link repair.
+[Sky lighting curve recovery](sky_lighting_record.md) subsequently identifies
+those actively read samples as three referenced arrays and removes their
+separate retention rule. The complete sky TU matches all five versions;
+the trailing small-data word still needs retention.
+
 The previous combined PAL link resolved its symbols but lost unreferenced
 functions and data. Some apparently unreferenced objects are accessed through
 offsets from neighboring symbols. EN already retains these definitions. The
@@ -144,3 +150,64 @@ but one `u32` still reports `2**3`), so a source object can never be placed at a
 preceding unit or to alignment padding. And a pooled two-byte string literal is
 padded to four, so a reconstructed trailing gap should declare only the bytes
 the compiler does not already emit.
+
+## DVD stream and looped-sound storage recovery, 2026-10-06
+
+The two looped-sound retention entries above are now unnecessary in every
+version. Ordinary references to three independent arrays replace the old
+`SfxLoopedObjectSoundTable` cast across separately defined objects. The pointer
+array uses `GameObject**` cursors and `sizeof(GameObject*)` for compaction;
+reverse searches use array indices without constructing pointers before the
+arrays. This preserves the retail instructions and works with native pointers.
+
+The former `audio_stream.c` reconstruction joined two independent storage
+pools. Retail DVD stream functions address the pool at EN `80336C40`, while
+the following seven looped-sound functions address `80336D10`. Three SDK
+`DVDCommandBlock` objects occupy `0x30` bytes each, followed by a `0x3C`-byte
+`DVDFileInfo`, ending at `80336D0C`. The four bytes before the next pool are
+link alignment, not a field in an invented DVD context. The looped-sound count
+also starts a separate small-data span at `803DC878`, after the stream state.
+These disjoint consumers, pool bases and storage boundaries establish the
+recovered input boundary at `8000D728`.
+
+`main/audio_stream.c` now owns the 18 DVD stream functions and actual SDK
+objects; `main/audio_looped_sfx.c` owns the seven sound-list functions, three
+128-entry arrays and count. Both use the same common GC/1.3 compiler and existing
+deferred/no-auto-inline optimization profile. The boundary is supported by
+retail pool and layout evidence, not separate per-function flags. Source-leak
+and regional source-matrix searches did not recover either original filename;
+the filenames describe the recovered roles.
+
+The stream data pool likewise consists of real definitions: the three-integer
+fade table at `802C5DB8`, a `0x30`-byte warning array at `802C5DC4`, and a
+`0xC`-byte directory array at `802C5DF4`. Ordinary references reproduce the
+compiler's pool addressing without a struct cast across these objects. The
+warning and `/streams/` directory no longer masquerade as one string. No
+section directives or duplicate constants are needed.
+
+The working `../foxhollow` port corroborates the need for native pointer copy
+widths and direct DVD references. Its enlarged flags-array backing store still
+models the sound arrays through an overlay; the recovered version defines and
+references each actual array. The public sound-list API has one owning header,
+and the shared SFX consumer uses the existing `OBJECT_OBJFLAG_FREED` definition.
+
+All five input DOL hashes were verified, and regional projection confirms both
+recovered windows. Each version passes `all_source`, the strict matching link
+and byte comparison with its original DOL. Direct objdiff reports with
+completion annotations removed show all 25 functions, 3,872 code bytes and
+1,266 data bytes at 100%. Every other existing source object's raw hash is
+unchanged. Full inventories contain 993 units in EN and 990 in each secondary
+target; only the unchanged DTK exception-vector carve and MusyX discarded
+exception-data report artifacts remain outside 100% reports. Neither is a
+source-link regression, and no linked source unit is replaced with a retail
+object.
+
+`python3 tools/test_audio_stream_native.py` exercises 60 complete-TU DVD stream
+scenarios. `python3 tools/test_audio_looped_sfx_native.py` compares 5,162
+operations against an independent record-array model, including capacity,
+duplicates, deletion, keep-alive, object freeing and playback restart. Both run
+at `-O0` and `-O2` with ASan, UBSan and independent global redzones. Host SDK
+objects deliberately have different layouts, and pointers are 64-bit. Negative
+controls reject four-byte pointer copies, the old flags-base overlay, an
+incorrect deletion source, the old fixed DVD-file offset and a wrong fade-table
+index. Existing callback timing, limit semantics and volume ABI are preserved.

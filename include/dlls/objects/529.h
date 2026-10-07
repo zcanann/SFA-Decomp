@@ -3,9 +3,9 @@
 
 #include "dlls/object_descriptor.h"
 #include "game/objects/object.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 #include "main/track_dolphin_api.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "game/objects/object_setup.h"
 #include "main/vecmath.h"
 
@@ -15,7 +15,7 @@ typedef struct WcHitBits {
 } WcHitBits;
 
 typedef struct WmwallcrawlerState {
-    CurvesCollisionState pathState; /* 0x000: PathControlInterface state block */
+    ObjCollisionState pathState;    /* 0x000: ObjCollisionInterface state block */
     f32 triggerRadius;              /* 0x268: aggro radius, from placement; rescaled after each dive */
     f32 fleeChaseThreshold;         /* 0x26C: distance threshold; >thr+eps -> CHASE, <thr -> FLEE drains lifeTimer */
     f32 homeX;                      /* 0x270: home position, from placement */
@@ -88,7 +88,7 @@ void wmwallcrawler_release(void);
 void wmwallcrawler_initialise(void);
 
 extern f32 gWallCrawlerSpeedCap;
-extern u8 sWallCrawlerCollisionBone[3];
+extern f32 sWallCrawlerLocalCollisionRadius;
 extern u8 gWallCrawlerHitCount;
 extern u16 gWallCrawlerVariantFlags[8];
 extern f32 gWallCrawlerPointCollision[3];

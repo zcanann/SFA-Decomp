@@ -147,7 +147,7 @@ void drgenerator_update(GameObject* obj)
     n = 1;
     do
     {
-        (*gPartfxInterface)->spawnObject((void*)obj, DRGENERATOR_PARTFX, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DRGENERATOR_PARTFX, NULL, 1, -1, NULL);
     } while (n-- != 0);
 }
 

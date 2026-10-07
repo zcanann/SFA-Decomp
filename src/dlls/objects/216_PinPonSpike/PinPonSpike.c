@@ -141,7 +141,7 @@ void pinponspike_update(GameObject* obj) {
             obj->userData1 = PINPONSPIKE_IMPACT_DESPAWN_DELAY;
             ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             for (particleIndex = 0; particleIndex < PINPONSPIKE_IMPACT_PARTICLE_COUNT; particleIndex++) {
-                (*gPartfxInterface)->spawnObject((void*)obj, PINPONSPIKE_PARTFX_IMPACT, NULL, 1, -1, &particleIndex);
+                (*gPartfxInterface)->spawnEffect(obj, PINPONSPIKE_PARTFX_IMPACT, NULL, 1, -1, &particleIndex);
             }
             Sfx_PlayFromObject(obj, SFXTRIG_lummy311);
         } else if (((ObjHitsPriorityState*)obj->anim.hitReactState)->contactFlags != 0) {
@@ -150,7 +150,7 @@ void pinponspike_update(GameObject* obj) {
             obj->userData1 = PINPONSPIKE_IMPACT_DESPAWN_DELAY;
             ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             for (particleIndex = 0; particleIndex < PINPONSPIKE_IMPACT_PARTICLE_COUNT; particleIndex++) {
-                (*gPartfxInterface)->spawnObject((void*)obj, PINPONSPIKE_PARTFX_IMPACT, NULL, 1, -1, &particleIndex);
+                (*gPartfxInterface)->spawnEffect(obj, PINPONSPIKE_PARTFX_IMPACT, NULL, 1, -1, &particleIndex);
             }
             Sfx_PlayFromObject(obj, SFXTRIG_lummy311);
         } else if (obj->anim.localPosY < PINPONSPIKE_KILL_PLANE_Y) {

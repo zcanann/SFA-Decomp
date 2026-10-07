@@ -60,7 +60,7 @@ void CameraModeWorldMap_update(CameraObject* camera) {
     f32 focusOffsetX, focusOffsetZ;
     f32 requestedDistanceVelocity = 0.0f;
 
-    target = (GameObject*)camera->anim.targetObj;
+    target = (GameObject*)camera->focusObject;
     mapOrigin = ObjList_FindObjectById(0x42fff);
     indicator = ObjList_FindObjectById(0x4325b);
     buttons = getButtonsHeld(0);
@@ -329,7 +329,7 @@ void CameraModeWorldMap_init(CameraObject* camera) {
     gCameraModeWorldMapState->settleFrames = 1;
     gCameraModeWorldMapState->focusBlendTimer = 0;
     gCameraModeWorldMapState->focusObjectId = 0;
-    camera->fov = 60.0f;
+    camera->fovY = 60.0f;
     camera->anim.rotX = -32768;
 }
 

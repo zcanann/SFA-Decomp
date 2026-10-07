@@ -32,8 +32,8 @@ typedef enum CfPrisonCageObjectSequenceId {
 
 int cfPrisonCage_sequenceCallback(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     u32 message;
-    u32 unusedMessageSender;
-    u32 unusedMessageArgument = 0;
+    GameObject* unusedMessageSender;
+    void* unusedMessageArgument = 0;
     CfPrisonCagePlacement* placement = (CfPrisonCagePlacement*)obj->anim.placement;
 
     if (mainGetBit(placement->openedGameBit) != 0) {

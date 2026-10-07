@@ -100,7 +100,7 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
             foundState = (McLightningState*)((GameObject*)objs[i])->extra;
             if (foundState->flags.spawnFlags & 1)
             {
-                objfx_spawnHitEffectBurst((void*)objs[i], foundState->hitEffectScale, 1, 7, 0x1e, NULL);
+                objfx_spawnHitEffectBurst(objs[i], foundState->hitEffectScale, 1, 7, 0x1e, NULL);
             }
             if (state->flags.spawnFlags & 2)
             {
@@ -108,8 +108,7 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
             }
             if (foundState->flags.spawnFlags & 2)
             {
-                objfx_spawnDirectionalBurst((void*)objs[i], 5, foundState->burstEffectChance, 1, 1, 0x64,
-                                            5.0f, NULL, 0);
+                objfx_spawnDirectionalBurst(objs[i], 5, foundState->burstEffectChance, 1, 1, 0x64, 5.0f, NULL, 0);
             }
         }
     }

@@ -136,7 +136,7 @@ void dll_1FF_update(GameObject* obj) {
         }
         if (state->messagePending != 0) {
             ObjMsg_SendToObject(player, DLL1FF_MSG_GRAB, obj,
-                                ((int)state->messageParamHigh << 16) | ((int)state->messageParamLow & 0xffff));
+                                (void*)(((int)state->messageParamHigh << 16) | ((int)state->messageParamLow & 0xffff)));
         }
     }
 }

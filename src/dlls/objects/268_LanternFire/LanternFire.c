@@ -186,10 +186,10 @@ void LanternFireFly_update(GameObject* obj) {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_pk_lightcritter_lp);
         if ((f32)state->timer > sLanternFireFlyEffectSpawnTimerThreshold) {
             if (state->stateId == LANTERN_FIREFLY_LIGHT_STATE_A || state->stateId == LANTERN_FIREFLY_LIGHT_STATE_B) {
-                (*gPartfxInterface)->spawnObject((void*)obj, LANTERN_FIREFLY_EFFECT_GLOW_A, NULL, 1, -1, NULL);
-                (*gPartfxInterface)->spawnObject((void*)obj, LANTERN_FIREFLY_EFFECT_GLOW_B, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, LANTERN_FIREFLY_EFFECT_GLOW_A, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, LANTERN_FIREFLY_EFFECT_GLOW_B, NULL, 1, -1, NULL);
             } else {
-                (*gPartfxInterface)->spawnObject((void*)obj, LANTERN_FIREFLY_EFFECT_TRAIL, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, LANTERN_FIREFLY_EFFECT_TRAIL, NULL, 1, -1, NULL);
             }
         }
         if ((state->timer -= framesThisStep) < 0) {
@@ -217,8 +217,8 @@ void LanternFireFly_update(GameObject* obj) {
             modelLightStruct_setDistanceAttenuation(state->light, attenuation, 30.0f + attenuation);
         }
     } else {
-        (*gPartfxInterface)->spawnObject((void*)obj, LANTERN_FIREFLY_EFFECT_GLOW_A, NULL, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, LANTERN_FIREFLY_EFFECT_GLOW_B, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, LANTERN_FIREFLY_EFFECT_GLOW_A, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, LANTERN_FIREFLY_EFFECT_GLOW_B, NULL, 1, -1, NULL);
     }
 }
 

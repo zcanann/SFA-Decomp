@@ -149,21 +149,21 @@ void CurveFish_update(GameObject* obj) {
         if (state->speed < slowSpeedThreshold) {
             if (obj->anim.currentMove == CURVEFISH_MOVE_GLIDE && state->moveTimer > CURVEFISH_SLOW_MOVE_DELAY) {
                 ObjAnim_SetCurrentMove(obj, CURVEFISH_MOVE_SWIM, 0.0f, 0);
-                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, CURVEFISH_MOVE_EVENT_STEP_FRAMES);
+                ObjAnim_SetCurrentEventStepFrames(obj, CURVEFISH_MOVE_EVENT_STEP_FRAMES);
                 state->moveTimer = 0.0f;
             }
             state->animStep = CURVEFISH_SLOW_ANIM_STEP;
         } else if (state->speed > CURVEFISH_FAST_BAND_MULTIPLIER * state->maxSpeed / CURVEFISH_SPEED_BAND_DIVISOR) {
             if (obj->anim.currentMove == CURVEFISH_MOVE_GLIDE && state->moveTimer > CURVEFISH_FAST_MOVE_DELAY) {
                 ObjAnim_SetCurrentMove(obj, CURVEFISH_MOVE_SWIM, 0.0f, 0);
-                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, CURVEFISH_MOVE_EVENT_STEP_FRAMES);
+                ObjAnim_SetCurrentEventStepFrames(obj, CURVEFISH_MOVE_EVENT_STEP_FRAMES);
                 state->moveTimer = 0.0f;
             }
             state->animStep = CURVEFISH_FAST_ANIM_STEP;
         } else {
             if (obj->anim.currentMove == CURVEFISH_MOVE_SWIM && state->moveTimer > CURVEFISH_FAST_MOVE_DELAY) {
                 ObjAnim_SetCurrentMove(obj, CURVEFISH_MOVE_GLIDE, 0.0f, 0);
-                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, CURVEFISH_MOVE_EVENT_STEP_FRAMES);
+                ObjAnim_SetCurrentEventStepFrames(obj, CURVEFISH_MOVE_EVENT_STEP_FRAMES);
                 state->moveTimer = 0.0f;
             }
             state->animStep = (CURVEFISH_FAST_ANIM_STEP * state->speed) / state->maxSpeed;

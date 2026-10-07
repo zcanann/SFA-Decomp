@@ -73,12 +73,12 @@ ObjectDescriptor gWM_GeneralScalesObjDescriptor = {
     WM_GeneralScales_getExtraSize,
 };
 
-int WM_GeneralScales_sequenceCallback(int objectHandle, int unusedArg2, ObjSeqState* animUpdate) {
+int WM_GeneralScales_sequenceCallback(GameObject* objectHandle, int unusedArg2, ObjSeqState* animUpdate) {
     WmGeneralScalesState* state;
     int eventIndex;
     u8 partfxOutput[WM_GENERAL_SCALES_PARTFX_OUTPUT_SIZE];
 
-    state = ((GameObject*)objectHandle)->extra;
+    state = objectHandle->extra;
     if (state->fadeAlpha != 0) {
         int alpha = state->fadeAlpha + framesThisStep;
         if (alpha < 0) {
@@ -87,9 +87,9 @@ int WM_GeneralScales_sequenceCallback(int objectHandle, int unusedArg2, ObjSeqSt
             alpha = WM_GENERAL_SCALES_MAX_ALPHA;
         }
         state->fadeAlpha = alpha;
-        Obj_SetModelRenderOpAlpha((void*)objectHandle, (u8)alpha);
+        Obj_SetModelRenderOpAlpha(objectHandle, (u8)alpha);
     } else {
-        Obj_SetModelRenderOpAlpha((void*)objectHandle, 0);
+        Obj_SetModelRenderOpAlpha(objectHandle, 0);
     }
 
     for (eventIndex = 0; eventIndex < animUpdate->eventCount; eventIndex++) {
@@ -100,60 +100,59 @@ int WM_GeneralScales_sequenceCallback(int objectHandle, int unusedArg2, ObjSeqSt
         case WM_GENERAL_SCALES_SEQUENCE_EVENT_SLAM_A:
             state->phase = WM_GENERAL_SCALES_PHASE_SLAM_A;
             (*gPartfxInterface)
-                ->spawnObject((void*)objectHandle, WM_GENERAL_SCALES_PARTFX_ID, NULL, WM_GENERAL_SCALES_PARTFX_MODE,
+                ->spawnEffect(objectHandle, WM_GENERAL_SCALES_PARTFX_ID, NULL, WM_GENERAL_SCALES_PARTFX_MODE,
                               WM_GENERAL_SCALES_PARTFX_MODEL_NONE, partfxOutput);
-            Sfx_PlayFromObject((GameObject*)objectHandle, SFXTRIG_id_7b);
-            Sfx_PlayFromObject((GameObject*)objectHandle, SFXTRIG_id_7c);
+            Sfx_PlayFromObject(objectHandle, SFXTRIG_id_7b);
+            Sfx_PlayFromObject(objectHandle, SFXTRIG_id_7c);
             state->unknown00 = WM_GENERAL_SCALES_SLAM_A_VALUE;
             break;
         case WM_GENERAL_SCALES_SEQUENCE_EVENT_SLAM_B:
             state->phase = WM_GENERAL_SCALES_PHASE_SLAM_B;
             (*gPartfxInterface)
-                ->spawnObject((void*)objectHandle, WM_GENERAL_SCALES_PARTFX_ID, NULL, WM_GENERAL_SCALES_PARTFX_MODE,
+                ->spawnEffect(objectHandle, WM_GENERAL_SCALES_PARTFX_ID, NULL, WM_GENERAL_SCALES_PARTFX_MODE,
                               WM_GENERAL_SCALES_PARTFX_MODEL_NONE, NULL);
-            Sfx_PlayFromObject((GameObject*)objectHandle, SFXTRIG_id_7b);
-            Sfx_PlayFromObject((GameObject*)objectHandle, SFXTRIG_id_7c);
+            Sfx_PlayFromObject(objectHandle, SFXTRIG_id_7b);
+            Sfx_PlayFromObject(objectHandle, SFXTRIG_id_7c);
             state->unknown00 = WM_GENERAL_SCALES_SLAM_B_VALUE;
             break;
         case WM_GENERAL_SCALES_SEQUENCE_EVENT_IDLE:
             state->phase = WM_GENERAL_SCALES_PHASE_IDLE;
             break;
         case WM_GENERAL_SCALES_SEQUENCE_EVENT_DRAW_SWORD:
-            if (((GameObject*)objectHandle)->childObjs[0] == NULL && (u8)Obj_CanSetupObject() != 0) {
+            if (objectHandle->childObjs[0] == NULL && (u8)Obj_CanSetupObject() != 0) {
                 CFCratePlacement* setup =
                     (CFCratePlacement*)Obj_AllocObjectSetup(sizeof(CFCratePlacement), CFCRATE_OBJ_SCALESSWORD);
-                setup->base.posX = ((GameObject*)objectHandle)->anim.localPosX;
-                setup->base.posY = ((GameObject*)objectHandle)->anim.localPosY;
-                setup->base.posZ = ((GameObject*)objectHandle)->anim.localPosZ;
+                setup->base.posX = objectHandle->anim.localPosX;
+                setup->base.posY = objectHandle->anim.localPosY;
+                setup->base.posZ = objectHandle->anim.localPosZ;
                 setup->base.color[0] = WM_GENERAL_SCALES_SWORD_COLOR_RED;
                 setup->base.color[1] = WM_GENERAL_SCALES_SWORD_COLOR_GREEN;
                 setup->base.color[3] = WM_GENERAL_SCALES_SWORD_COLOR_ALPHA;
-                ObjLink_AttachChild((GameObject*)objectHandle,
+                ObjLink_AttachChild(objectHandle,
                                     objSetupObject(&setup->base, WM_GENERAL_SCALES_SWORD_SETUP_FLAGS,
-                                                    WM_GENERAL_SCALES_SWORD_MAP_LAYER_NONE,
-                                                    WM_GENERAL_SCALES_SWORD_OBJECT_NONE, NULL),
+                                                   WM_GENERAL_SCALES_SWORD_MAP_LAYER_NONE,
+                                                   WM_GENERAL_SCALES_SWORD_OBJECT_NONE, NULL),
                                     0);
-                ((GameObject*)((GameObject*)objectHandle)->childObjs[0])->anim.rootMotionScale *=
-                    WM_GENERAL_SCALES_SWORD_SCALE;
+                ((GameObject*)objectHandle->childObjs[0])->anim.rootMotionScale *= WM_GENERAL_SCALES_SWORD_SCALE;
             }
             break;
         case WM_GENERAL_SCALES_SEQUENCE_EVENT_SHEATHE_SWORD: {
-            GameObject* child = ((GameObject*)objectHandle)->childObjs[0];
+            GameObject* child = objectHandle->childObjs[0];
             if (child != NULL) {
-                ObjLink_DetachChild((GameObject*)objectHandle, child);
+                ObjLink_DetachChild(objectHandle, child);
             }
             break;
         }
         case WM_GENERAL_SCALES_SEQUENCE_EVENT_BEGIN_FADE: {
-            ObjDef* model = ((GameObject*)objectHandle)->anim.modelInstance;
+            ObjDef* model = objectHandle->anim.modelInstance;
             model->renderFlags |= OBJDEF_RENDERFLAG_DEFERRED_RENDER;
             state->fadeAlpha = WM_GENERAL_SCALES_FADE_START_ALPHA;
             break;
         }
         case WM_GENERAL_SCALES_SEQUENCE_EVENT_END_FADE: {
-            ObjDef* model = ((GameObject*)objectHandle)->anim.modelInstance;
+            ObjDef* model = objectHandle->anim.modelInstance;
             model->renderFlags &= ~OBJDEF_RENDERFLAG_DEFERRED_RENDER;
-            Obj_SetModelRenderOpAlpha((void*)objectHandle, 0);
+            Obj_SetModelRenderOpAlpha(objectHandle, 0);
             state->fadeAlpha = 0;
             break;
         }

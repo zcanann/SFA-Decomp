@@ -25,12 +25,12 @@ ObjectDescriptor6 Effect4_funcs = {
     (ObjectDescriptorCallback)Effect4_release,
     NULL,
     (ObjectDescriptorCallback)Effect4_func03_nop,
-    (ObjectDescriptorCallback)Effect4_spawnObject,
+    (ObjectDescriptorCallback)Effect4_spawnEffect,
     (ObjectDescriptorCallback)Effect4_updateFrameState,
 };
 
-int Effect4_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                        s16* extraArgs) {
+int Effect4_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                        s8 sourceParam, s16* extraArgs) {
     int spawnResult;
     int randPick;
     MatrixTransform es;
@@ -58,7 +58,7 @@ int Effect4_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.sourceVecZ = spawnParams->rotZ;
         cfg.sourceVecY = spawnParams->rotY;
         cfg.sourceVecX = spawnParams->rotX;
-        cfg.modelIdByte = modelId;
+        cfg.sourceParam = sourceParam;
     }
     cfg.behaviorFlags = 0;
     cfg.renderFlags = 0;
@@ -876,9 +876,9 @@ int Effect4_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
             cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != 0) {
-                cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-                cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-                cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+                cfg.startPosX = cfg.startPosX + cfg.attachedSource->anim.worldPosX;
+                cfg.startPosY = cfg.startPosY + cfg.attachedSource->anim.worldPosY;
+                cfg.startPosZ = cfg.startPosZ + cfg.attachedSource->anim.worldPosZ;
             }
         }
     }

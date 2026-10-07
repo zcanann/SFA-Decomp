@@ -203,8 +203,8 @@ void InvHit_update(GameObject* obj) {
                 obj->anim.localPosX = state->anchorX + anchorDeltaX;
                 obj->anim.localPosZ = state->anchorZ + anchorDeltaZ;
             }
-            (*gPartfxInterface)->spawnObject(obj, INVHIT_HOMING_TRAIL_EFFECT_ID, NULL, 0, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, INVHIT_HOMING_SECONDARY_EFFECT_ID, NULL, 0, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, INVHIT_HOMING_TRAIL_EFFECT_ID, NULL, 0, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, INVHIT_HOMING_SECONDARY_EFFECT_ID, NULL, 0, -1, NULL);
         }
         {
             s8 hitCount =

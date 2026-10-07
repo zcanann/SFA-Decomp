@@ -196,7 +196,7 @@ void dfshLaserBeam_update(GameObject* obj) {
                         Sfx_PlayFromObject(obj, SFXTRIG_wp_espk2_c);
                         for (i = 0; i < DFSH_LASER_BEAM_HIT_PARTICLE_COUNT; i++) {
                             (*gPartfxInterface)
-                                ->spawnObject(Obj_GetPlayerObject(), DFSH_LASER_BEAM_HIT_PARTICLE_ID, NULL,
+                                ->spawnEffect(Obj_GetPlayerObject(), DFSH_LASER_BEAM_HIT_PARTICLE_ID, NULL,
                                               DFSH_LASER_BEAM_HIT_PARTICLE_MODE, -1, NULL);
                         }
                         state->knockbackTargetX = beamDirectionX * pushDistance + player->anim.localPosX;

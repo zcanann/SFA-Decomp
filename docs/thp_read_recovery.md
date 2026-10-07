@@ -10,7 +10,7 @@ decoder, and player initialization use the same typed contract.
 
 EN `THPRead_Reader` (`80119520..80119618`) receives a free buffer, reads DVD data
 into its pointer, stores the frame number at `+4`, and posts the record to
-`gPicMenuReadedBufferQueue`. The next frame size comes from the first word of the
+`gAttractMovieReadDvdQueue`. The next frame size comes from the first word of the
 current frame. The file offset advances by the current frame size; the loop flag
 resets that offset to the movie-data start after the final frame.
 
@@ -41,47 +41,66 @@ message arrays of ten entries each. Relative to the stack base `803A5F08`:
 | `0x13A8` | DVD-filled queue | `0x20` |
 | `0x13C8` | Free queue | `0x20` |
 
-The private layout type names the offsets used by the retail shared base. It is
-not instantiated: the globals and their declaration order remain separate. The
-message arrays already existed in source; their names now identify the previously
-anonymous `0x78` bytes in all four verified retail symbol configs. The stack's
-former `Area` name now describes its actual role.
+The globals now use direct references throughout the reader. The former private
+`AttractMovieReadThreadLayout` overlaid these independent objects by starting
+from the stack address. Its offsets described the retail linker layout, but
+could not establish valid cross-object pointer arithmetic in a native build.
+The overlay and its padded type are removed. Each queue uses its actual
+message array; each thread operation uses the actual `OSThread`, and creation
+passes the stack's own end.
 
-The read-buffer count is defined beside `AttractMoviePlayer`, whose ten records
-supply the queue. No count or object size is inferred only from a neighboring gap.
+All nine owned symbols now use the `gAttractMovieRead` namespace. Queue and
+message names distinguish DVD-filled, audio-decoded and free buffers. The five
+retail symbol configs preserve every original address and size, and the three
+message-array force-active entries follow their renamed definitions. The
+read-buffer count remains beside `AttractMoviePlayer`, whose ten records supply
+the queue. No count or object size is inferred only from a neighboring gap.
 
 ## Source lineage and code generation
 
-The local Sunshine `src/THPPlayer/THPRead.c` reference has the same three queues,
-three ten-entry message arrays, stack, thread, and reader flow. Its differing
-function order and signed locals are not imported. SFA's retail calls and active
-compiler output remain the authority for the recovered layout and expressions.
+The local Sunshine and Mario Kart Double Dash THP reader implementations have
+the same three queues, three ten-entry message arrays, stack, thread and reader
+flow. Double Dash also puts the definitions in the order that produces SFA's
+retail BSS and declares thread creation before the reader and queue helpers.
+Foxhollow independently replaces the stack-relative overlay accesses with
+direct queue and thread references.
 
-Direct references to the separate globals increased the reader from 248 to 264
-bytes and thread creation from 156 to 176 bytes. The layout view preserves the
-shared base without those extra instructions. The reader's OS receive temporary
-also remains `OSMessage`: making that temporary a record pointer added one
-instruction. The typed record begins immediately after receipt, and the public
-queue interface is typed. These are code-generation constraints, not evidence
-that the original source used a layout struct or a particular local spelling.
+That declaration order, with the existing deferred/no-auto-inline optimization
+profile and the common game GC/1.3 compiler, generates the shared BSS base
+naturally and emits the functions in retail reverse order. All eight functions
+remain exact. Earlier direct-reference experiments without deferred compilation
+increased the reader from 248 to 264 bytes and creation from 156 to 176 bytes;
+those results do not require keeping an overlay. The current reader is 248
+bytes and creation is 156 bytes, using ordinary globals and no synthetic section
+placement or compiler-version exception.
+
+The receive temporary remains an `OSMessage`, followed immediately by the typed
+read-buffer pointer. The public queue API keeps its established SDK spellings
+and typed records; callers do not need a new interface or local declarations.
 
 ## Validation
 
-All four input DOLs pass their configured SHA-1 checks: EN, EN rev1, JP, and PAL
-rev1. Full source builds preserve every function instruction and allocated section
-byte. The only source-object symbol change is the stack rename; relocation
-changes refer to that same renamed object at the same offsets. All other source
-objects are byte-identical, including all three edited callers. The eight named
-BSS objects agree with the retail section offsets and sizes in every version.
+`tools/test_thp_read_native.py` compiles the complete production TU with the real
+game record definitions and independent host OS objects. Its 25 scenarios cover
+thread creation/failure and priorities, guarded start/cancel, all four queue API
+functions, message flags and ownership, variable frame sizes, nonzero start
+frames, one-frame movies, looping, 32-bit file-position wrap, DVD errors, short
+and other mismatched read results, and continuation after suspension. The
+fixture keeps record pointers above 4 GiB and checks buffer canaries. Both `-O0`
+and `-O2` pass ASan and UBSan. Separate negative controls reject the old queue
+overlay, a wrong message array, a narrowed buffer pointer, advancement by the
+next frame size, and sending the ready-failure message for the wrong frame.
 
-Function reports and aggregate match scores are unchanged. The reader's 716 code
-bytes remain exact in every version. EN remains fully exact with 5100 data bytes;
-EN rev1 and JP retained their existing complete status in the reader recovery.
-That pass also exposed a PAL `.sbss` mismatch: the regional projection included
-an extra four-byte trailing word named `lbl_803DF04C`, while source emitted only
-the four-byte thread-created flag. The subsequent [word-gap projection fix](version_progress.md#preserve-word-aligned-object-extents)
-restores the four-byte section extent and makes the PAL reader fully exact too.
-No split extent changed in the reader source-recovery commit itself.
+The tests preserve retail error behavior: only a `-1` DVD result sets `dvdError`,
+any mismatched read count suspends the thread, and only the first requested
+frame sends `PrepareReady(0)`. Resuming after an error continues by posting that
+same buffer; resuming after the non-looping final frame continues reading.
+Thread suspension, rather than an implicit return from the reader, is the stop.
 
-The strict EN matching link and retail checksum pass. Secondary builds validate
-projected objects, not full regional DOL relinks.
+All five input DOLs pass their configured SHA-1 checks. The complete reader
+matches all eight functions (716 code bytes) and all 5,100 data bytes at 100% in
+EN, EN rev1, JP, PAL and PAL rev1. Every other source object is byte-for-byte
+unchanged. Full inventories retain only the pre-existing TRK exception-carving
+and MusyX discarded-data report artifacts. All five `all_source` builds and
+strict source links pass, and each output DOL equals its original byte for byte.
+Formatting is checked separately against every source-object hash.

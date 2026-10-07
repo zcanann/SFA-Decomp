@@ -2,7 +2,14 @@
 #define MAIN_TEXTURE_H_
 
 #include "global.h"
+#include <stddef.h>
 #include "dolphin/gx/GXStruct.h"
+
+/* Runtime value returned by textureLoad: a one-based registry handle or the
+ * bits of a direct Texture pointer. File texture IDs and shader indices remain
+ * signed 32-bit values until loading resolves them. */
+typedef size_t TextureReference;
+STATIC_ASSERT(sizeof(TextureReference) == sizeof(void*));
 
 #define TEXTURE_ANIM_SELECT_NEXT  0x40
 #define TEXTURE_ANIM_RANDOM_START 0x20000
@@ -71,6 +78,7 @@ STATIC_ASSERT(offsetof(Texture, gxTexObj) == 0x20);
 STATIC_ASSERT(offsetof(Texture, tmemAddr) == 0x40);
 STATIC_ASSERT(offsetof(Texture, dataSize) == 0x44);
 STATIC_ASSERT(offsetof(Texture, preloaded) == 0x48);
+STATIC_ASSERT(offsetof(Texture, cached) == 0x49);
 STATIC_ASSERT(offsetof(Texture, loadedSize) == 0x4C);
 STATIC_ASSERT(offsetof(Texture, imageOffset) == 0x50);
 STATIC_ASSERT(sizeof(Texture) == 0x60);
@@ -88,6 +96,7 @@ static inline GXTexRegion* textureGetGXTexRegion(Texture* texture) {
 }
 
 void* textureLoadAsset(int asset);
+Texture* textureIdxToPtr(TextureReference reference);
 void textureFree(Texture* texture);
 void selectTextureWithSecondary(Texture* texture, int mapId);
 void selectTexture(Texture* texture, int mapId);

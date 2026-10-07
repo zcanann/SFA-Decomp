@@ -172,32 +172,31 @@ void mmpAsteroidRe_update(GameObject* obj) {
             gMMPAsteroidDustSpawnParams.posZ = obj->anim.localPosZ;
             gMMPAsteroidDustHeightParam = (int)(obj->anim.localPosY - state->baseY);
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, MMP_ASTEROID_RE_PARTICLE_DUST, NULL, 2, -1, &gMMPAsteroidDustHeightParam);
+                ->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_DUST, NULL, 2, -1, &gMMPAsteroidDustHeightParam);
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, MMP_ASTEROID_RE_PARTICLE_DUST_CLOUD, &gMMPAsteroidDustSpawnParams, 0x200001,
-                              -1, &gMMPAsteroidDustHeightParam);
+                ->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_DUST_CLOUD, &gMMPAsteroidDustSpawnParams, 0x200001, -1,
+                              &gMMPAsteroidDustHeightParam);
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, MMP_ASTEROID_RE_PARTICLE_DUST_CLOUD, &gMMPAsteroidDustSpawnParams, 0x200001,
-                              -1, &gMMPAsteroidDustHeightParam);
+                ->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_DUST_CLOUD, &gMMPAsteroidDustSpawnParams, 0x200001, -1,
+                              &gMMPAsteroidDustHeightParam);
         }
     }
     if (state->eventFlags != 0) {
         if ((state->eventFlags & MMP_ASTEROID_RE_FX_SMOKE) != 0) {
-            (*gPartfxInterface)->spawnObject((void*)obj, MMP_ASTEROID_RE_PARTICLE_SMOKE, NULL, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, MMP_ASTEROID_RE_PARTICLE_SMOKE, NULL, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, MMP_ASTEROID_RE_PARTICLE_SMOKE, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_SMOKE, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_SMOKE, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_SMOKE, NULL, 1, -1, NULL);
         }
         if ((state->eventFlags & MMP_ASTEROID_RE_FX_DEBRIS) != 0) {
-            (*gPartfxInterface)->spawnObject((void*)obj, MMP_ASTEROID_RE_PARTICLE_DEBRIS, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_DEBRIS, NULL, 2, -1, NULL);
         }
         if ((state->eventFlags & MMP_ASTEROID_RE_FX_EXPLODE) != 0) {
             int count;
 
-            (*gPartfxInterface)->spawnObject((void*)obj, MMP_ASTEROID_RE_PARTICLE_EXPLOSION, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_EXPLOSION, NULL, 1, -1, NULL);
             count = MMP_ASTEROID_RE_EXPLOSION_CHUNK_COUNT;
             do {
-                (*gPartfxInterface)
-                    ->spawnObject((void*)obj, MMP_ASTEROID_RE_PARTICLE_EXPLOSION_CHUNK, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_EXPLOSION_CHUNK, NULL, 1, -1, NULL);
                 count--;
             } while (count != 0);
             spawnExplosion(obj, 100.0f, 1, 1, 0, 1, 0, 1, 0);
@@ -209,14 +208,14 @@ void mmpAsteroidRe_update(GameObject* obj) {
             state->eventFlags &= ~MMP_ASTEROID_RE_FX_EXPLODE;
         }
         if ((state->eventFlags & MMP_ASTEROID_RE_FX_IMPACT) != 0) {
-            (*gPartfxInterface)->spawnObject((void*)obj, MMP_ASTEROID_RE_PARTICLE_IMPACT, NULL, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, MMP_ASTEROID_RE_PARTICLE_IMPACT, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_IMPACT, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_IMPACT, NULL, 1, -1, NULL);
         }
         if ((state->eventFlags & MMP_ASTEROID_RE_FX_PERIODIC) != 0) {
             state->periodicFxTimer -= timeDelta;
             if (state->periodicFxTimer < 0.0f) {
                 state->periodicFxTimer = randomGetRange(10, 0x3C);
-                (*gPartfxInterface)->spawnObject((void*)obj, MMP_ASTEROID_RE_PARTICLE_PERIODIC, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, MMP_ASTEROID_RE_PARTICLE_PERIODIC, NULL, 1, -1, NULL);
             }
         }
     }

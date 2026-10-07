@@ -16,12 +16,12 @@ ObjectDescriptor6 Effect15_funcs = {
     (ObjectDescriptorCallback)Effect15_release,
     0,
     (ObjectDescriptorCallback)Effect15_func03_nop,
-    (ObjectDescriptorCallback)Effect15_spawnObject,
+    (ObjectDescriptorCallback)Effect15_spawnEffect,
     (ObjectDescriptorCallback)Effect15_func05_nop,
 };
 
-int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                         f32* extraArgs) {
+int Effect15_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                         s8 sourceParam, f32* extraArgs) {
     int spawnResult;
     PartFxSpawn cfg;
 
@@ -39,7 +39,7 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.sourceVecZ = spawnParams->rotZ;
         cfg.sourceVecY = spawnParams->rotY;
         cfg.sourceVecX = spawnParams->rotX;
-        cfg.modelIdByte = modelId;
+        cfg.sourceParam = sourceParam;
     }
     cfg.behaviorFlags = 0;
     cfg.renderFlags = 0;
@@ -281,9 +281,9 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = cfg.startPosX - ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-            cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-            cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+            cfg.startPosX = cfg.startPosX - cfg.attachedSource->anim.worldPosX;
+            cfg.startPosY = cfg.startPosY - cfg.attachedSource->anim.worldPosY;
+            cfg.startPosZ = cfg.startPosZ - cfg.attachedSource->anim.worldPosZ;
         }
         if (randomGetRange(0, 0x28) == 0) {
             cfg.scale = 0.0003f;
@@ -315,9 +315,9 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = cfg.startPosX - ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-            cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-            cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+            cfg.startPosX = cfg.startPosX - cfg.attachedSource->anim.worldPosX;
+            cfg.startPosY = cfg.startPosY - cfg.attachedSource->anim.worldPosY;
+            cfg.startPosZ = cfg.startPosZ - cfg.attachedSource->anim.worldPosZ;
             cfg.velocityZ = 0.3f;
         }
         cfg.scale = 0.0015f;
@@ -345,9 +345,9 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = cfg.startPosX - ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-            cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-            cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+            cfg.startPosX = cfg.startPosX - cfg.attachedSource->anim.worldPosX;
+            cfg.startPosY = cfg.startPosY - cfg.attachedSource->anim.worldPosY;
+            cfg.startPosZ = cfg.startPosZ - cfg.attachedSource->anim.worldPosZ;
             cfg.velocityZ = 0.01f;
         }
         cfg.scale = 0.0015f;
@@ -362,9 +362,9 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = cfg.startPosX - ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-            cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-            cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+            cfg.startPosX = cfg.startPosX - cfg.attachedSource->anim.worldPosX;
+            cfg.startPosY = cfg.startPosY - cfg.attachedSource->anim.worldPosY;
+            cfg.startPosZ = cfg.startPosZ - cfg.attachedSource->anim.worldPosZ;
             cfg.scale = spawnParams->scale;
         }
         cfg.lifetimeFrames = 5;
@@ -378,9 +378,9 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = cfg.startPosX - ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-            cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-            cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+            cfg.startPosX = cfg.startPosX - cfg.attachedSource->anim.worldPosX;
+            cfg.startPosY = cfg.startPosY - cfg.attachedSource->anim.worldPosY;
+            cfg.startPosZ = cfg.startPosZ - cfg.attachedSource->anim.worldPosZ;
             cfg.scale = spawnParams->scale;
         }
         cfg.lifetimeFrames = 5;
@@ -403,9 +403,9 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != 0) {
-                cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-                cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-                cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+                cfg.startPosX = cfg.startPosX + cfg.attachedSource->anim.worldPosX;
+                cfg.startPosY = cfg.startPosY + cfg.attachedSource->anim.worldPosY;
+                cfg.startPosZ = cfg.startPosZ + cfg.attachedSource->anim.worldPosZ;
             }
         }
     }

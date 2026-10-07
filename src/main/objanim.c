@@ -9,8 +9,7 @@
  */
 #define OBJANIM_PROGRESS_ONE 1.0f
 
-void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAnimState* state, u32 moveId,
-                          int eventState) {
+void ObjAnim_SetBlendMove(GameObject* obj, ObjAnimDef* animDef, ObjAnimState* state, u32 moveId, int eventState) {
     int requestedEventState;
     int moveIndex;
     ObjAnimMoveData* moveData;
@@ -62,27 +61,27 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
     return;
 }
 
-void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, int eventState) {
+void ObjAnim_SetLayeredBlendMove(GameObject* obj, u32 moveId, int eventState) {
     ObjAnimBank* bank;
 
-    bank = ObjAnim_GetActiveBank(objAnim);
+    bank = ObjAnim_GetActiveBank(&obj->anim);
     if (bank->animDef->moveCount != 0) {
-        ObjAnim_SetBlendMove(objAnim, bank->animDef, bank->activeState, moveId, (s16)eventState);
+        ObjAnim_SetBlendMove(obj, bank->animDef, bank->activeState, moveId, (s16)eventState);
     }
     return;
 }
 
-void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, int eventState) {
+void ObjAnim_SetCurrentBlendMove(GameObject* obj, u32 moveId, int eventState) {
     ObjAnimBank* bank;
 
-    bank = ObjAnim_GetActiveBank(objAnim);
+    bank = ObjAnim_GetActiveBank(&obj->anim);
     if (bank->animDef->moveCount != 0) {
-        ObjAnim_SetBlendMove(objAnim, bank->animDef, bank->currentState, moveId, (s16)eventState);
+        ObjAnim_SetBlendMove(obj, bank->animDef, bank->currentState, moveId, (s16)eventState);
     }
     return;
 }
 
-int Object_ObjAnimAdvanceMove(void* objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events) {
+int ObjAnim_AdvanceLayeredMove(GameObject* obj, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events) {
     ObjAnimComponent* objAnim;
     ObjAnimBank* bank;
     ObjAnimState* state;
@@ -102,7 +101,7 @@ int Object_ObjAnimAdvanceMove(void* objAnimHandle, f32 moveStepScale, f32 deltaT
     int eventFrame;
     int scanMode;
 
-    objAnim = (ObjAnimComponent*)objAnimHandle;
+    objAnim = &obj->anim;
     wrapped = 0;
     bank = ObjAnim_GetActiveBank(objAnim);
     if (bank->animDef->moveCount == 0) {
@@ -226,17 +225,17 @@ int Object_ObjAnimAdvanceMove(void* objAnimHandle, f32 moveStepScale, f32 deltaT
 
 #define OBJANIM_SET_MOVE_PROGRESS_MAX 0.999f
 
-int Object_ObjAnimSetMoveProgress(ObjAnimComponent* objAnim, f32 moveProgress) {
+int ObjAnim_SetLayeredMoveProgress(GameObject* obj, f32 moveProgress) {
     if (moveProgress > OBJANIM_SET_MOVE_PROGRESS_MAX) {
         moveProgress = OBJANIM_SET_MOVE_PROGRESS_MAX;
     } else if (moveProgress < 0.0f) {
         moveProgress = 0.0f;
     }
-    objAnim->activeMoveProgress = moveProgress;
+    obj->anim.activeMoveProgress = moveProgress;
     return 0;
 }
 
-int Object_ObjAnimSetMove(void* objAnimHandle, int moveId, f32 moveProgress, u8 moveControlFlags) {
+int ObjAnim_SetLayeredMove(GameObject* obj, int moveId, f32 moveProgress, u8 moveControlFlags) {
     ObjAnimComponent* objAnim;
     ObjAnimBank* bank;
     ObjAnimDef* animDef;
@@ -246,7 +245,7 @@ int Object_ObjAnimSetMove(void* objAnimHandle, int moveId, f32 moveProgress, u8 
     int frameStep;
     ObjAnimMoveData* moveData;
     float eventCountdownStep;
-    objAnim = (ObjAnimComponent*)objAnimHandle;
+    objAnim = &obj->anim;
     if (moveProgress > OBJANIM_PROGRESS_ONE) {
         moveProgress = OBJANIM_PROGRESS_ONE;
     } else if (moveProgress < 0.0f) {
@@ -309,17 +308,17 @@ int Object_ObjAnimSetMove(void* objAnimHandle, int moveId, f32 moveProgress, u8 
     return 0;
 }
 
-int ObjAnim_GetCurrentEventCountdown(ObjAnimComponent* objAnim) {
-    return ObjAnim_GetCurrentState(objAnim)->eventCountdown;
+int ObjAnim_GetCurrentEventCountdown(GameObject* obj) {
+    return ObjAnim_GetCurrentState(&obj->anim)->eventCountdown;
 }
 
-void ObjAnim_WriteStateWord(ObjAnimComponent* objAnim, int stateIndex, short wordIndex, int value) {
+void ObjAnim_WriteStateWord(GameObject* obj, int stateIndex, short wordIndex, int value) {
     ObjAnimBank* bank;
     ObjAnimState* state;
     u16* stateWords;
     u16 stateWord;
 
-    bank = ObjAnim_GetActiveBank(objAnim);
+    bank = ObjAnim_GetActiveBank(&obj->anim);
     if (bank == NULL) {
         return;
     }
@@ -333,11 +332,11 @@ void ObjAnim_WriteStateWord(ObjAnimComponent* objAnim, int stateIndex, short wor
     stateWords[wordIndex] = stateWord;
 }
 
-void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent* objAnim, u32 frameCount) {
+void ObjAnim_SetCurrentEventStepFrames(GameObject* obj, u32 frameCount) {
     ObjAnimBank* bank;
     float eventCountdownStep;
 
-    bank = ObjAnim_GetActiveBank(objAnim);
+    bank = ObjAnim_GetActiveBank(&obj->anim);
     if (bank != NULL) {
         eventCountdownStep = 16384.0f / (float)(s32)frameCount;
         bank->currentState->eventStep = eventCountdownStep;
@@ -362,7 +361,7 @@ static inline s16 ObjAnim_ReadRootAxisSample(s16* axis, int sampleIndex) {
     return ((ObjAnimRootCurveAxis*)axis)->samples[sampleIndex];
 }
 
-int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float* phaseOut) {
+int ObjAnim_SampleRootCurvePhase(GameObject* obj, f32 distance, float* phaseOut) {
     s16* axisSamples;
     f32 blendDistanceDelta;
     f32 moveDistanceDelta;
@@ -394,15 +393,15 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     int foundPhase;
     ObjAnimState* state;
 
-    bank = ObjAnim_GetActiveBank(objAnim);
+    bank = ObjAnim_GetActiveBank(&obj->anim);
     animDef = bank->animDef;
     if (animDef->moveCount == 0) {
         return 0;
     }
 
     state = bank->currentState;
-    rootMotionScale = objAnim->rootMotionScale;
-    model = objAnim->modelInstance;
+    rootMotionScale = obj->anim.rootMotionScale;
+    model = obj->anim.modelInstance;
     targetTravelDistance = distance * (rootMotionScale / model->rootMotionScaleBase);
     blendSamples = NULL;
 
@@ -472,7 +471,7 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
 
             sampleCount = segmentCount;
             phaseStep = OBJANIM_PROGRESS_ONE / sampleCount;
-            curveProgress = sampleCount * objAnim->currentMoveProgress;
+            curveProgress = sampleCount * obj->anim.currentMoveProgress;
             sampleIndex = curveProgress;
             curveFraction = curveProgress - sampleIndex;
 
@@ -528,7 +527,7 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
 
 #define OBJANIM_MOVE_STEP_SCALE_MIN -1.0f
 
-int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events) {
+int ObjAnim_AdvanceCurrentMove(GameObject* obj, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events) {
     int segmentCount;
     ObjAnimComponent* objAnim;
     ObjAnimBank* bank;
@@ -572,7 +571,7 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
     int eventFrame;
     int scanMode;
 
-    objAnim = (ObjAnimComponent*)objAnimHandle;
+    objAnim = &obj->anim;
     wrapped = 0;
     clampedStepScale = (moveStepScale < OBJANIM_MOVE_STEP_SCALE_MIN)
                            ? OBJANIM_MOVE_STEP_SCALE_MIN
@@ -814,17 +813,17 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
     return wrapped;
 }
 
-int ObjAnim_SetMoveProgress(ObjAnimComponent* objAnim, f32 moveProgress) {
+int ObjAnim_SetMoveProgress(GameObject* obj, f32 moveProgress) {
     if (moveProgress > OBJANIM_SET_MOVE_PROGRESS_MAX) {
         moveProgress = OBJANIM_SET_MOVE_PROGRESS_MAX;
     } else if (moveProgress < 0.0f) {
         moveProgress = 0.0f;
     }
-    objAnim->currentMoveProgress = moveProgress;
+    obj->anim.currentMoveProgress = moveProgress;
     return 0;
 }
 
-int ObjAnim_SetCurrentMove(void* objAnimHandle, int moveId, f32 moveProgress, u8 moveControlFlags) {
+int ObjAnim_SetCurrentMove(GameObject* obj, int moveId, f32 moveProgress, u8 moveControlFlags) {
     ObjAnimComponent* objAnim;
     ObjAnimBank* bank;
     ObjAnimDef* animDef;
@@ -837,7 +836,7 @@ int ObjAnim_SetCurrentMove(void* objAnimHandle, int moveId, f32 moveProgress, u8
     float eventCountdownStep;
     ObjHitReactState* hitState;
 
-    objAnim = (ObjAnimComponent*)objAnimHandle;
+    objAnim = &obj->anim;
     requestedMoveId = moveId;
     if (moveProgress > OBJANIM_PROGRESS_ONE) {
         moveProgress = OBJANIM_PROGRESS_ONE;
@@ -868,11 +867,10 @@ int ObjAnim_SetCurrentMove(void* objAnimHandle, int moveId, f32 moveProgress, u8
     state->lastBlendMoveIndex = OBJANIM_BLEND_MOVE_INDEX_INVALID;
     hitState = objAnim->hitReactState;
     if ((hitState != NULL) && (hitState->entries != NULL)) {
-        ObjHitReact_LoadMoveEntries((ObjAnimComponent*)objAnimHandle, bank, objAnim->romDefNo, hitState,
-                                    requestedMoveId, 0);
+        ObjHitReact_LoadMoveEntries(objAnim, bank, objAnim->romDefNo, hitState, requestedMoveId, 0);
     }
     if (objAnim->eventTable != NULL) {
-        ObjAnim_LoadMoveEvents((u8*)objAnimHandle, objAnim->romDefNo, objAnim->eventTable, requestedMoveId, 0);
+        ObjAnim_LoadMoveEvents(obj, objAnim->romDefNo, objAnim->eventTable, requestedMoveId, 0);
     }
     previousMove = objAnim->currentMove;
     moveChanged = previousMove != requestedMoveId;

@@ -8,8 +8,8 @@
 /*
  * ObjSeqState - per-object sequence playback state, stored in the obj+0xB8
  * extra block of sequence-driven objects (seq = *(u8 **)(obj + 0xb8) in
- * objseq.c). Only fields with read/write evidence in objseq.c are named;
- * everything else is padded.
+ * sequence playback). Fields are named from playback and engine consumers;
+ * unexplained storage remains opaque.
  */
 
 typedef struct SeqByte136 {
@@ -170,7 +170,7 @@ struct ObjSeqState {
     u8 moveBlendParam; /* (cmd>>8)&0xf0; scaled and passed as ObjAnim_SetCurrentMove blend arg */
     u8 texId5;         /* texture id for objFindTexture channel 5 (<<8 into textureId) */
     u8 texId4;         /* texture id for objFindTexture channel 4 (<<8 into textureId) */
-    u8 unk8F;
+    u8 targetFreed;    /* targetObj was cleared by object destruction */
     u8 sequenceControlFlags;
     u8 unk91[3];
     u8* cmds;        /* 4-byte command records */
@@ -192,6 +192,8 @@ struct ObjSeqState {
 
 STATIC_ASSERT(sizeof(ObjSeqCommand) == 0x04);
 STATIC_ASSERT(sizeof(ObjSeqState) == 0x138);
+STATIC_ASSERT(offsetof(ObjSeqState, targetObj) == 0x00);
+STATIC_ASSERT(offsetof(ObjSeqState, targetFreed) == 0x8F);
 STATIC_ASSERT(offsetof(ObjSeqState, curFrame) == 0x58);
 STATIC_ASSERT(offsetof(ObjSeqState, eventIds) == 0x81);
 STATIC_ASSERT(offsetof(ObjSeqState, eventCount) == 0x8B);

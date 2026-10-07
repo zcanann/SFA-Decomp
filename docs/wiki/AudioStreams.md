@@ -1145,13 +1145,12 @@ verify (and in a few cases correct) the wiki's directory-name guesses.
   the disc path with `concatThreeStrings(path, 0x40, "/streams/", s->name, ".adp")` and calls
   `DVDOpen`/`DVDPrepareStreamAsync`. This is the literal code that turns a `StreamEntry` into one
   of the wiki's `<DIR>/<name>.adp` files.
-- **The `/streams/` prefix is verified in our own decompiled data**, not assumed: MWCC's string-pool
-  merging left it as a trailing substring of an unrelated warning string —
-  `src/main/audio.c:3283`: `char sDvdCancelStreamWarning[0x3C] = "WARNING:DVDCancelStreamAsync returned FALSE\n\0\0\0\0/streams/";`
-  (symbol `sDvdCancelStreamWarning` at `.data:0x802C5DC4`, size `0x3C`, per
-  `config/GSAE01/symbols.txt:10255`). `AudioStream_Play` reads the `/streams/` tail via
-  `(char*)fadeTbl + 0x3C` where `fadeTbl == gAudioStreamFadeTable` (`.data:0x802C5DB8`), i.e.
-  `gAudioStreamFadeTable + 0x3C == sDvdCancelStreamWarning + 0x30`.
+- **The `/streams/` prefix is verified in retail data** at EN `.data:0x802C5DF4`.
+  `src/main/audio_stream.c` now defines it as `sAudioStreamDirectory[0xC]`, after
+  the separate `sDvdCancelStreamWarning[0x30]` at `0x802C5DC4`. The former merged
+  string and cross-object offset were reconstruction artifacts: ordinary array
+  references reproduce MWCC's data-pool addressing exactly in all five versions.
+  See the [storage recovery](../regional_source_link_retention.md#dvd-stream-and-looped-sound-storage-recovery-2026-10-06).
 - **`.adp` extension**: `extern char sAdpExtension;` used at `src/main/audio.c:2214`; the actual
   symbol is `sAdpExtension = .sdata:0x803DB254; size:0x5 data:string` (`config/GSAE01/symbols.txt:12713`),
   i.e. `".adp\0"` — matches the wiki's "standard GameCube ADP files" line exactly.

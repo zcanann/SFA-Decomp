@@ -1153,24 +1153,17 @@ void SB_Galleon_free(GameObject* obj, int leavingMap) {
 
 void SB_Galleon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) {
     SBGalleonState* state = (SBGalleonState*)obj->extra;
-    struct {
-        u8 pad[6];
-        u16 mode;
-        f32 unused;
-        f32 a;
-        f32 b;
-        f32 c;
-    } stk;
+    PartFxSpawnParams stk;
     if (visible != 0) {
         if (state->cameraState < 2) {
-            stk.mode = state->wanderA;
-            stk.c = 570.0f;
-            stk.b = 85.0f;
-            stk.a = 217.0f;
-            (*gPartfxInterface)->spawnObject((void*)obj, SBGALLEON_FX_WANDER, stk.pad, 2, -1, NULL);
-            stk.mode = state->wanderB;
-            stk.a = -217.0f;
-            (*gPartfxInterface)->spawnObject((void*)obj, SBGALLEON_FX_WANDER, stk.pad, 2, -1, NULL);
+            stk.effectParam = state->wanderA;
+            stk.z = 570.0f;
+            stk.y = 85.0f;
+            stk.x = 217.0f;
+            (*gPartfxInterface)->spawnEffect(obj, SBGALLEON_FX_WANDER, &stk, 2, -1, NULL);
+            stk.effectParam = state->wanderB;
+            stk.x = -217.0f;
+            (*gPartfxInterface)->spawnEffect(obj, SBGALLEON_FX_WANDER, &stk, 2, -1, NULL);
         }
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
@@ -1179,22 +1172,15 @@ void SB_Galleon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
 void SB_Galleon_hitDetect(GameObject* obj) {
     SBGalleonState* state = (SBGalleonState*)obj->extra;
     u8 i;
-    struct {
-        u8 pad[6];
-        u16 mode;
-        f32 a;
-        f32 b;
-        f32 c;
-        f32 d;
-    } stk;
+    PartFxSpawnParams stk;
     if (state->sprayActive != 0 && state->linkedActor != NULL) {
-        stk.a = 1.5f;
-        stk.mode = 0xc0a;
-        stk.b = 0.0f;
-        stk.c = 60.0f;
-        stk.d = 120.0f;
+        stk.scale = 1.5f;
+        stk.effectParam = 0xc0a;
+        stk.x = 0.0f;
+        stk.y = 60.0f;
+        stk.z = 120.0f;
         for (i = 0; i < framesThisStep; i++) {
-            (*gPartfxInterface)->spawnObject(state->linkedActor, SBGALLEON_FX_SPRAY, stk.pad, 2, -1, 0);
+            (*gPartfxInterface)->spawnEffect(state->linkedActor, SBGALLEON_FX_SPRAY, &stk, 2, -1, 0);
         }
     }
 }

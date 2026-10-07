@@ -12,7 +12,7 @@
 #include "dolphin/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/debug.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/player_state.h"
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
@@ -87,7 +87,7 @@ static inline void sidekickBall_throw(GameObject* obj, f32 velocityX, f32 veloci
     state->previousPosY = obj->anim.localPosY;
     state->previousPosZ = obj->anim.localPosZ;
 #if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
-    (*gPathControlInterface)->attachObject(obj, &state->pathControl);
+    (*gObjCollisionInterface)->reset(obj, &state->pathControl);
 #endif
 }
 
@@ -217,7 +217,7 @@ void sidekickBall_launch(GameObject* obj, GameObject* source, f32 velocityX, f32
     state->previousPosY = obj->anim.localPosY;
     state->previousPosZ = obj->anim.localPosZ;
 #if defined(VERSION_GSAE01_rev1) || defined(VERSION_GSAP01_rev1)
-    (*gPathControlInterface)->attachObject(obj, &state->pathControl);
+    (*gObjCollisionInterface)->reset(obj, &state->pathControl);
 #endif
 }
 
@@ -306,16 +306,16 @@ void SidekickBall_update(GameObject* obj) {
     }
 
 #if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
-    (*gPathControlInterface)->update(obj, &state->pathControl, timeDelta);
-    (*gPathControlInterface)->apply(obj, &state->pathControl);
-    (*gPathControlInterface)->advance(obj, &state->pathControl, timeDelta);
+    (*gObjCollisionInterface)->updateQueryBounds(obj, &state->pathControl, timeDelta);
+    (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->pathControl);
+    (*gObjCollisionInterface)->resolve(obj, &state->pathControl, timeDelta);
 #else
     if (((SidekickBallState*)obj->extra)->hittableLatch == 1) {
-        (*gPathControlInterface)->update(obj, &state->pathControl, timeDelta);
-        (*gPathControlInterface)->apply(obj, &state->pathControl);
-        (*gPathControlInterface)->advance(obj, &state->pathControl, timeDelta);
+        (*gObjCollisionInterface)->updateQueryBounds(obj, &state->pathControl, timeDelta);
+        (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->pathControl);
+        (*gObjCollisionInterface)->resolve(obj, &state->pathControl, timeDelta);
     } else {
-        (*gPathControlInterface)->attachObject(obj, obj->extra);
+        (*gObjCollisionInterface)->reset(obj, &((SidekickBallState*)obj->extra)->pathControl);
     }
 #endif
 }
@@ -396,16 +396,16 @@ u8 trickyBallMove(GameObject* obj) {
 
     objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta, obj->anim.velocityZ * timeDelta);
 #if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
-    (*gPathControlInterface)->update(obj, &state->pathControl, timeDelta);
-    (*gPathControlInterface)->apply(obj, &state->pathControl);
-    (*gPathControlInterface)->advance(obj, &state->pathControl, timeDelta);
+    (*gObjCollisionInterface)->updateQueryBounds(obj, &state->pathControl, timeDelta);
+    (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->pathControl);
+    (*gObjCollisionInterface)->resolve(obj, &state->pathControl, timeDelta);
 #else
     if (((SidekickBallState*)obj->extra)->hittableLatch == 1) {
-        (*gPathControlInterface)->update(obj, &state->pathControl, timeDelta);
-        (*gPathControlInterface)->apply(obj, &state->pathControl);
-        (*gPathControlInterface)->advance(obj, &state->pathControl, timeDelta);
+        (*gObjCollisionInterface)->updateQueryBounds(obj, &state->pathControl, timeDelta);
+        (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->pathControl);
+        (*gObjCollisionInterface)->resolve(obj, &state->pathControl, timeDelta);
     } else {
-        (*gPathControlInterface)->attachObject(obj, obj->extra);
+        (*gObjCollisionInterface)->reset(obj, &((SidekickBallState*)obj->extra)->pathControl);
     }
 #endif
 
@@ -461,7 +461,7 @@ u8 trickyBallMove(GameObject* obj) {
 }
 
 void SidekickBall_init(GameObject* obj) {
-    u8 pathFlag;
+    s8 pathFlag;
     SidekickBallState* state;
     ObjHitsPriorityState* hitState;
 
@@ -474,12 +474,12 @@ void SidekickBall_init(GameObject* obj) {
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     state->primaryRadius = hitState->primaryRadius;
-    (*gPathControlInterface)->init(&state->pathControl, 0, SIDEKICKBALL_PATH_CONFIG, 1);
-    (*gPathControlInterface)
-        ->setLocalPointCollision(&state->pathControl, 1, gSidekickBallPathPointData, &state->primaryRadius, 1);
-    (*gPathControlInterface)
-        ->setup(&state->pathControl, 1, gSidekickBallPathPointData, &state->primaryRadius, &pathFlag);
-    (*gPathControlInterface)->attachObject((void*)obj, &state->pathControl);
+    (*gObjCollisionInterface)->init(&state->pathControl, 0, SIDEKICKBALL_PATH_CONFIG, 1);
+    (*gObjCollisionInterface)
+        ->setLocalPoints(&state->pathControl, 1, gSidekickBallPathPointData, &state->primaryRadius, 1);
+    (*gObjCollisionInterface)
+        ->setSegments(&state->pathControl, 1, gSidekickBallPathPointData, &state->primaryRadius, &pathFlag);
+    (*gObjCollisionInterface)->reset(obj, &state->pathControl);
     ObjHits_DisableObject(obj);
     state->hittableLatch = 0;
     ObjMsg_AllocQueue((void*)obj, SIDEKICKBALL_MESSAGE_CAPACITY);

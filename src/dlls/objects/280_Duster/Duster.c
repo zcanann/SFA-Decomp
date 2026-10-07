@@ -89,9 +89,9 @@ void duster_update(GameObject* obj) {
         switch (message) {
         case DUSTER_MESSAGE_DEPOSIT:
             Sfx_PlayFromObject(obj, SFXTRIG_sc_cam90_c);
-            (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
             mainSetBits(state->completeGameBit, 1);
             characterState = (PlayerStatus*)(*gMapEventInterface)->getCurCharacterState();
             characterState->healCount =
@@ -150,8 +150,8 @@ void duster_update(GameObject* obj) {
     if (state->settleTimer == 0 && state->hitReactTimer == 0) {
         if (ObjAnim_AdvanceCurrentMove(obj, state->moveStepScale, timeDelta, NULL) != 0 || state->priorityHit != 0) {
             Sfx_PlayFromObject(obj, SFXTRIG_en_lflsh3_c);
-            (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_BOUNCE, NULL, 2, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_BOUNCE, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, DUSTER_PARTICLE_BOUNCE, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, DUSTER_PARTICLE_BOUNCE, NULL, 2, -1, NULL);
             state->driftDirection = randomGetRange(0, DUSTER_DRIFT_DIRECTION_MAX);
             if (state->useLaunchVelocity != 0) {
                 obj->anim.velocityX = 0.2f;
@@ -209,15 +209,15 @@ void duster_update(GameObject* obj) {
         if (mainGetBit(GAMEBIT_SawBafomdad) == 0) {
             state->heldObjectId = DUSTER_HELD_OBJECT_NONE;
             ObjHits_DisableObject(obj);
-            ObjMsg_SendToObject(player, DUSTER_MESSAGE_IN_RANGE, obj, (u32)&state->heldObjectId);
+            ObjMsg_SendToObject(player, DUSTER_MESSAGE_IN_RANGE, obj, &state->heldObjectId);
             mainSetBits(GAMEBIT_SawBafomdad, 1);
         } else {
             characterState = (PlayerStatus*)(*gMapEventInterface)->getCurCharacterState();
             if (characterState->healCount < characterState->healCountMax) {
                 Sfx_PlayFromObject(obj, SFXTRIG_sc_cam90_c);
-                (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
-                (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
-                (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
                 mainSetBits(state->completeGameBit, 1);
                 characterState = (PlayerStatus*)(*gMapEventInterface)->getCurCharacterState();
                 characterState->healCount =

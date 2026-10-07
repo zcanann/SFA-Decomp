@@ -222,18 +222,87 @@ has its own copy of every asset" note, generalized into a fixed dual-slot pool r
 one-slot-per-map. This is implemented by `mapLoadDataFile(int mapId, int fileId)`, which
 `switch`es on `fileId` with paired `case` labels (e.g. `case 0xd: case 0x55:` for
 ANIMCURV.bin) and picks whichever of the two physical slots is free or already owns `mapId`.
-The backing storage is `struct MldfTables` at `lbl_80345E10` (see the struct comment in
-`pi_dolphin.c` for the full slot layout: `ids`, `sizes`, `ptrs`, `owners`, plus per-resource
+`struct MldfTables` is an address view of neighbouring globals relative to
+`gResourceFileTable`, whose own allocation is only 0x160 bytes. It is not one
+large backing allocation (see the struct comment in `pi_dolphin.c` for the
+full slot layout: `ids`, `sizes`, `ptrs`, `owners`, plus per-resource
 merge buffers `mergeAnimCurv`/`mergeVoxMap`/`mergeBlocks`/`mergeTex1`/`mergeTex0`/`mergeAnim`/
 `mergeModels`), and file-name formatting comes from `struct MldfNames` (per-map format strings
 `fmtAnimCurvBin`, `fmtVoxmapBin`, `fmtModBin`, etc., built with `sMapFileNameTable[]` - the
 117-map-name table also defined at the bottom of `pi_dolphin.c`).
+
+The former `gObjBlockStatus[0x63f6]` was not an array of block-status words.
+Its complete 0x18FD8-byte span now has the private `ResourceTableWorkspace`
+definition: 88 in-flight `DVDFileInfo*` slots, the seven merged tables, and
+88 load flags. `gResourceTableWorkspace` and `MldfTables.workspace` share that
+definition. Sizes and every field's position are asserted; this reconstruction
+does not establish the original declaration grouping. Foxhollow
+separates the pointer slots as `sDvdFileInfoInFlight` in its native loader.
+The 16 read callbacks now clear typed pointers using canonical file IDs.
+Both TEX1 table callbacks still release TEX0 table slot B on failure, and
+generic callbacks still leave their slots unchanged on failure. Simultaneous
+bank flags retain the first-bank precedence of retail.
 
 Only 14 of the resource kinds actually get a dual slot in `mapLoadDataFile`
 (ANIMCURV bin+tab, VOXMAP bin+tab, TEX1 bin+tab, TEX0 bin+tab, BLOCKS bin+tab, MODELS bin+tab,
 ANIM bin+tab); MODELIND, OBJSEQ2C, OBJSEQ, TEXPRE, PREANIM and ENVFXACT are loaded through a
 single slot each, consistent with those being smaller/one-shot files that don't need
 transition double-buffering.
+
+`mapLoadDataFile` now names its resource kinds with `MldfFileId` values and
+uses explicit pending-map, size and in-flight file-info fields. The former
+`MLDF_SP_*`/`MLDF_FINFO4` macros accepted a nonexistent `x` argument while
+silently selecting the surrounding `slot`; those placeholders are gone.
+Runtime pointer/owner/pending-ID accessors take the resource view and slot
+explicitly and retain native-width addresses. The adjacency scratch retains
+its one-element array form because a scalar rewrite changed MWCC's scheduling.
+Both `MldfNames` and `MldfTables` remain address views across separate globals.
+
+`tools/test_map_resource_loading.py` executes the complete loader in 4,204
+cases for both regional name-view layouts at `-O0`/`-O2` under ASan/UBSan.
+It checks both requested IDs and selected slots for every paired resource,
+cached returns, stale-buffer release, pending retries, forced/immediate reads,
+merge suppression, async callback selection and submission order. It also
+covers empty files, VOXMAP's Warlock fallback and adjacent-map recursion.
+The fixture supplies host allocations for the two views and spies on IO,
+allocation, cache operations, merging and romlist preloads; callbacks are
+captured rather than executed. Branches that submit a NULL destination after
+an unchecked allocation failure retain that behavior, with the DVD spy
+recording the submission. All five target builds preserve every source object
+byte and the exact retail DOL.
+
+Seven merged `.TAB` buffers expose a combined index for those paired banks.
+Their `MldfTables` fields are word arrays: 2,048 entries each for MODELS,
+BLOCKS and VOXMAP; 3,000 for ANIM; 4,096 each for TEX0/TEX1; and 8,144 for
+ANIMCURV. `mergeTableFiles` identifies the destination to select its capacity;
+the fourth argument is unused. It always overwrites the last output word
+with 0xFFFFFFFF. `getCurrentDataFile` returns these merged buffers, except
+TEXPRE, which returns its resident table directly.
+
+| Family | Entry marked present | Marked bank B in the merged table |
+|---|---|---|
+| MODELS, ANIM, BLOCKS | 0x10000000 | low 24 bits plus 0x20000000 |
+| VOXMAP, ANIMCURV | 0x80000000 | clear 0x80000000 and set 0x20000000 |
+| TEX0, TEX1 | 0x80000000 | unchanged; bank A instead clears 0x80000000 and sets 0x40000000 |
+
+Bank A takes priority when both entries are marked present. Terminator and
+fallback ordering differs by family: MODELS/ANIM may retain an unmarked zero
+from bank A, whereas texture and map families prefer nonzero fallbacks.
+VOXMAP/ANIMCURV consume a zero output row when they encounter a terminator;
+BLOCKS can select a marked entry from the other bank first. These distinctions
+remain in the recovered loops. `getTableFileEntry` derives bounds from the
+word arrays, retaining the regional waits for models and animation curves.
+Its TEXPRE case still leaves the count at zero and rejects every index.
+
+`tools/test_resource_table_merge.py` checks 623 complete merges against an
+independent bank-policy oracle, plus reader bounds, native pointer identity,
+regional waits and destination guards at `-O0`/`-O2` under ASan/UBSan. The
+positive cases allocate each bank for the full cursor walk. A separate probe
+records the existing NULL-bank cursor increment as an expected UBSan failure.
+Unknown destination identity also retains the retail
+write to the word before the supplied pointer. The fixture supplies one host
+allocation for the address view and does not establish a native registry.
+All five target builds preserve every source object byte and the retail DOL.
 
 For **disc-root** (non-map) files, the simpler loaders `fileLoad(int id)`,
 `fileLoadToBuffer(int id, void* buf)` and `fileLoadToBufferOffset(int id, void* buf, int
@@ -243,12 +312,155 @@ the disc root" table. `src/main/gameloop.c` wraps these in an async `AssetReq`/`
 request struct (`resourceId`, `dest`, `offset`, `argC` fields) for the game's asynchronous
 streaming path.
 
-Per-map compressed blocks (`modXX.zlb.bin`) are handled separately by
-`piRomLoadSection(int romOffset, int mapIndex, int destBuf)`, which opens
-`sMapFileNameTable[mapIndex]` via the `sRomlistZlbPathFormat` path format and parses the
-16-byte `struct PackHeader` (`magic` 0xFACEFEED = zlb-packed / 0xE0E0E0E0 = stored raw,
-`decompressedSize`, `auxSize`, `compressedSize`) - this is the "ZLB"/"DIR"-tagged
-`struct ZlbHeader` format also defined in `pi_dolphin.c`.
+`loadAndDecompressDataFile` selects a resident bank, optionally reports an
+entry's size, then copies or decompresses its payload. TEX1/TEXPRE `DIR`
+records return a borrowed pointer into the resident archive. When no resident
+buffer exists, the DVD path uses a temporary allocation for TEX1 or for reads
+whose destination/length is not 32-byte aligned.
+
+The loader now retains table, payload and temporary-buffer pointers at native
+width. `MLDF_PTR` no longer changes into a narrowing integer macro halfway
+through the TU. Locals reused for a table address and an index/flag snapshot
+remain `size_t`; pointer-only locals use pointer types. The biased slot address
+comes from `sizeof(MldfArenaBlock) - offsetof(MldfTables, ptrs)`, preserving
+the existing addressing scheme without treating that bias as an allocation
+boundary. Slot indexing retains the retail shift, derived from pointer width
+and size-asserted. A multiplication changed MWCC's instruction order. Model
+payload positioning likewise retains signed archive-relative arithmetic through
+`ptrdiff_t`; simpler pointer expressions changed code generation.
+
+`tools/test_resource_loader_addresses.py` executes the complete loader body
+under ASan/UBSan at `-O0` and `-O2`: 60 resident-resource cases, 32 size queries
+(including sparse/out-of-order tables), 2,144 DVD cases and one wait-loop case.
+It checks native pointers, borrowed versus copied data, buffer bounds, query
+sizes, cache operations and temporary-buffer release. The fixture supplies the
+address view as one host allocation, uses host-endian headers, and spies on DVD,
+decompression and packed-animation services. It excludes the existing invalid
+animation-curve wait lookup and the disk `DIR` infinite loop. This does not
+establish a native resource registry or asset decoder.
+
+That loader recovery retained a 100% complete `pi_dolphin` TU and exact
+source-linked retail DOLs in all five versions. Only two anonymous
+literal-symbol numbers changed at unchanged locations; instruction bytes,
+section contents, symbol offsets and normalized relocations remained identical.
+Every other source object was byte-identical.
+
+The October 6 table-scan recovery gives the complete loader canonical resource
+IDs, explicit cursor-macro arguments, and typed table views local to each scan.
+It removes the `MLDF_PTR` macro and the pre-array pointers formerly used for
+`(table - 4)[index]`: these reads now use `table[index - 1]`. MODELS aliases
+which point backward restart at the first occurrence of that offset before
+finding the next greater offset; texture scans instead continue from the
+selected entry. Zero-offset entries scan from the start. The ANIM/PREANIM
+adjacent-entry queries retain a byte view of the following word to preserve
+MWCC's retail load order.
+
+`tableScratch` intentionally still serves as the primary table address and
+the TEXPRE scan index. Giving those lifetimes separate locals adds an
+instruction. Typed primary-table pointers are scoped to their individual scans,
+which retains the retail register assignments. Texture merge-table byte indices
+and the resource-slot bias also remain codegen-significant. Replacing the
+address view with direct global references added 144 bytes and changed the
+shared-base addressing; this recovery does not establish native ownership of
+the neighbouring arrays.
+
+The loader test now adds 2,289 independently generated sparse-query cases,
+covering competing banks, all source and merged-table selection bits, duplicate
+and backward offsets, leading holes, and high-byte metadata. Both optimization
+levels pass with ASan/UBSan. Negative controls catch an off-by-one end offset,
+wrong merged-bank selection, a lost MODELS alias restart, and metadata leaking
+into an offset. The known ANIMCURV wait-path misreads and disk `DIR` infinite
+loop remain unchanged and excluded from the native fixture.
+
+All five complete `pi_dolphin` TUs remain 100% exact. Section bytes, named symbol
+offsets, relocations and section attributes are unchanged; one anonymous pool
+symbol is renumbered. Every other source object is byte-identical. All five
+`all_source` builds and strict source-linked DOL checks pass. Full inventories
+retain only the pre-existing TRK vector-carving and MusyX discarded-exception
+report artifacts, with no new mismatch.
+
+`gResourceFileBuffers` now declares its 88 resident slots as `void*`, consistent
+with the existing `MldfTables.ptrs` view. Allocation, cached file copies, texture
+frame queries, block/model metadata readers and release callbacks retain those
+pointers at native width. Byte positions use byte pointers; TEX1 locals reused
+as an offset and an address retain `size_t` to preserve MWCC's register allocation.
+The neighbouring-global `MldfTables` addressing scheme still needs recovery
+for a native build.
+
+`tools/test_resource_buffer_registry.py` imports the production registry and
+26 complete consumer bodies. Its 790 cases cover resident/DVD copies, all
+32 destination alignments, retained allocations, texture and map metadata,
+and callback release/completion behavior at `-O0`/`-O2` under ASan/UBSan.
+The 168 callback cases check full-width pointer clears, all untouched slots,
+the seven merged buffers and load flags, including failures and simultaneous
+bank flags. Fixtures use native pointers and host-endian records with IO/allocation/cache spies;
+they do not decode retail assets. Truncated-pointer and wrong-release-slot
+negative controls fail as expected. The workspace recovery preserves code/data
+bytes, section properties, symbol offsets and relocations after the one explicit
+symbol rename in all five versions. Every other source object is byte-identical,
+and every final DOL exactly matches retail.
+
+Per-map `*.romlist.zlb` files are cached separately in `gMapRomListBuffers`.
+`piRomLoadSection(int mapsOffset, int mapIndex, void* destBuf)` takes its
+16-byte `PackHeader` from resident `MAPS.bin` at `mapsOffset`, but decompresses
+the payload at byte 16 of the cached romlist. The numeric 0xFACEFEED tag and
+size fields are distinct from the string-tagged `ZlbHeader` used for other
+resources. This function only handles 0xFACEFEED; other tags return without
+copying. A NULL destination starts an asynchronous load when the romlist is
+missing. Repeating that call after the buffer becomes resident reaches the
+decompressor with the NULL destination, as in retail.
+
+The romlist registry and its startup/release views now use pointer slots.
+`initLoadFiles` clears 117 of the 120 slots and preloads 40 persistent maps:
+indices 5, 67, 73 and 80 through 116. `mapUnload` releases a transient map's
+romlist alongside its BLOCKS table, preserving the persistent-map exclusions
+and existing remap-search behavior. Its indexed address arithmetic retains
+`size_t` because a byte-pointer rewrite changed MWCC register allocation.
+Startup iterator offsets derive from the existing address view's fields;
+this does not turn the separate globals into one allocation.
+
+`tools/test_romlist_buffer_ownership.py` executes the complete loader,
+callbacks, startup and unload bodies at `-O0`/`-O2` under ASan/UBSan: 2,808
+load cases, two startup cases, 1,354 unload cases and a wait-loop case. It
+checks pointer retention, IO order, metadata/payload separation, pending
+reads, locked maps, remap boundaries and release ownership. The fixture
+provides one host allocation for the address view and spies on DVD,
+decompression, table merging and engine services. Failed opens retain the
+borrowed file-info node, and failed async reads retain the romlist buffer;
+these retail behaviors are preserved. Every source object and retail DOL
+remains byte-identical in all five versions.
+
+`defragMemory` now retains native-width registry and buffer addresses throughout
+its relocation passes. It moves twelve archive slots: both banks of ANIMCURV,
+VOXMAP, TEX0, BLOCKS, MODELS and ANIM. With no pending delay, a normal call
+first runs texture restructuring, then schedules a resource pass six frames
+later. Texture
+restructuring calls back with mode 2: that pass evicts eligible heap-0 archives
+to heaps 1/2, except TEX0, and suppresses subsequent promotion back into heap 0.
+TEX0 remains eligible for the ordinary compaction loop; TEX1 is outside both
+resource-slot switches.
+
+Compaction runs at most ten passes, preferring lower addresses for files at
+least 0x33450 bytes and higher addresses for smaller files. That comparison
+uses file bytes, while allocation requests include 32 extra bytes; the boundary
+difference is preserved. A replacement in another heap can still be accepted
+by the heap-0 branch if its address wins. Other-heap promotion starts only after
+a successful first pass, requires a heap item of at least 0x3000 bytes, and
+rejects replacements outside heap 0. Copies precede immediate frees, with the
+previous free delay restored. The existing early-return allocation-state writes
+and reset of forced heaps to -1 also remain intact.
+
+`tools/test_resource_defrag.py` runs the complete routine in 5,521 cases at
+`-O0`/`-O2` under ASan/UBSan. It checks every slot, heap, ownership and presence
+combination; failures, eviction, promotion, copy/free order, untouched registry
+data, size boundaries and the pass limit. Sparse host mappings cross a 4 GiB
+boundary so truncated address ordering cannot pass accidentally. Five negative
+controls reject narrowed addresses, wrong ordering, threshold, slot and pass
+limit changes. Heap and texture services are spies, and the address view uses
+one host allocation; this is not a complete native allocator or registry port.
+The matched source retains MWCC's common address bias and byte-pointer round
+trip because direct-field and simplified-addition rewrites changed instructions.
+Every source object and final retail DOL is byte-identical in all five versions.
 
 ### Per-file findings (fileId, consumer, and confirmed/refined format)
 
@@ -256,7 +468,7 @@ Per-map compressed blocks (`modXX.zlb.bin`) are handled separately by
 |---|---|---|---|
 | ANIM.BIN/TAB | 0x30/0x2f (+0x4a/0x49) | `src/main/model.c` (`ObjModel_Load` / `modelLoadAnimations`) | **format confirmed** (see [Animation](Animation) for the record grammar): `.TAB` = 2600 `u32` (ids 0-2596; entry 2597 = file size, then a `0xFFFFFFFF` terminator and one pad word); entry = 28-bit offset, bit `0x10000000` = "this pair holds the id's real record"; the root pair carries 609 real records, each per-map pair a subset, and every id resident elsewhere holds a uniform 32-byte null-anim stub (rev1: flag<=>non-stub exact except id 2462, flagged in the root `.TAB` but stub-bodied). All cross-container duplicate copies are byte-identical (10380 pairs checked, 0 mismatches) |
 | ANIMCURV.bin/tab | 0x0d/0x0e (+0x55/0x56) | `mapLoadDataFile` slots; the reader is `ObjSeq_objLoadAnimdata` + the ObjSeq action/curve interpreter (engine DLL 2, `src/dlls/engine/2/2.c`) | **format confirmed** = the wiki's `Scripting#ANIMCURV` cutscene/sequence data (actions + per-track control points), **not** the RomCurve path network (`rom_curve_interface.h`) - RomCurve points come from the per-map `.romlist.zlb` object stream (objType 110), see [Curves](Curves). Corpus (root + 52 map pairs, rev1): `.tab` = 6320 `u32` (ids 0-6310, two `0xFFFFFFFF` terminators, zero pad), offset = low 24 bits (4-aligned, monotone), bit31 = id present in this pair; 8309 flagged records (3827 unique ids; per-map 0-573, root 423), records tile each `.bin`; absent ids are zero-length slots except 1802 uniform 8-byte tombstones `00000000 FF00FFC4`. Record = `{char tag[4] "SEQA"/"SEQB" (176 SEQB); s16 dataSize; s16 commandCount}` + `commandCount`*4 B actions + `((dataSize>>2 - commandCount)>>1)`*8 B control points `{f32 value; u8 typeAndScale; u8 track (low 5 bits, 0-18 shipped); s16 frame}`. Data quirks: tab entry 583's stored `dataSize` is corrupt (`0x80B9`, true size 0x14) in all 23 containers that carry it (read as a negative `s16` by the loader); 10 ids (5018, 5023, 5567, 5604-5610) drifted between the root copy and a per-map copy; root `.bin` has 60 dead bytes (a delisted record at id 35's slot) |
-| modXX.zlb.bin/tab | n/a | `piRomLoadSection` + `struct PackHeader`/`struct ZlbHeader` | magic/size header fully decoded (see above) |
+| modXX.zlb.bin/tab | 0x25/0x26 (+0x47/0x48) | `mapLoadDataFile`, `checkLoadBlock`, `loadAndDecompressDataFile` | per-map BLOCKS archives; `checkLoadBlock` reads string-tagged `ZlbHeader` lengths |
 | MODELIND.bin | 0x2c | `src/main/model.c: ObjModel_Load` | `fileLoadToBufferOffset(0x2c, gModelResourceBuffer, idc*2, 8)`; word 0 of the 8-byte record is the resolved "real" model id used for the `MODELS.bin` lookup - directly confirms "maps model IDs to indices" |
 | MODELS.bin/TAB | 0x2b/0x2a (+0x46/0x45) | `src/main/model.c`, `src/main/objprint_dolphin.c` | dual-slot per-map streaming (see above) |
 | OBJSEQ2C.tab | 0x0f | `src/dlls/engine/2/2.c` (`getTabEntry(gObjSeqAnimLookup, 0x0f, ((animId & 0x7ff0) >> 4) * 2, 8)`) | anim-id to sequence lookup table, 2-byte stride |
@@ -307,7 +519,7 @@ Per-map compressed blocks (`modXX.zlb.bin`) are handled separately by
 - `src/main/rcp_dolphin.c` - `struct WarpDestination { f32 x, y, z; s16 angle0, angle1; }`,
   the fully-confirmed 16-byte WARPTAB.bin record, read by `warpToMap()`.
 - `include/main/model.h` - `struct ModelFileHeader`, the in-memory header of a loaded model
-  (fields for `textureIds`, `vertices`, `normals`, `renderOps`, `collisionTriangles`,
+  (fields for `textureEntries`, `vertices`, `normals`, `renderOps`, `collisionTriangles`,
   `collisionBlocks`, `animationModelPtrs`, `animationDataSection`, `animationHeaderBuffer`).
 - `include/main/gamebits.h` - `enum GameBitId`, symbolic quest/story/event flag ids (relevant
   to BITTABLE.BIN's "table of GameBit offsets", though the header itself is runtime-only).

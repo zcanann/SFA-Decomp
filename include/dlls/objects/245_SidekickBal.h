@@ -4,7 +4,7 @@
 #include "dolphin/mtx/vec.h"
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_fwd.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 
 typedef enum SidekickBallMode {
     SIDEKICK_BALL_IDLE = 0,
@@ -16,7 +16,7 @@ typedef enum SidekickBallMode {
 
 typedef struct SidekickBallState {
     union {
-        CurvesCollisionState pathControl; /* 0x000: gPathControlInterface state block */
+        ObjCollisionState pathControl; /* 0x000: gObjCollisionInterface state block */
         struct {
             u8 pathControlPrefix[0x68]; /* 0x000 */
             Vec collisionNormal;        /* 0x068 */

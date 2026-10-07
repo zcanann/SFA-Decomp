@@ -45,7 +45,7 @@ int DFP_Torch_getObjectTypeId(void) {
 }
 
 void DFP_Torch_free(GameObject* obj) {
-    (*gModgfxInterface)->detachSource((void*)obj);
+    (*gModgfxInterface)->detachSource(obj);
     (*gExpgfxInterface)->freeSource2(obj);
 }
 
@@ -109,7 +109,7 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
                     renderWork.flickerParams.posY = 5.0f;
                     renderWork.flickerParams.posZ = 0.0f;
                     (*gPartfxInterface)
-                        ->spawnObject((void*)obj, DFPTORCH_PARTFX_FLICKER, &renderWork.flickerParams, 0x12, -1, NULL);
+                        ->spawnEffect(obj, DFPTORCH_PARTFX_FLICKER, &renderWork.flickerParams, 0x12, -1, NULL);
                 }
                 state->flickerTimer = (s16)(randomGetRange(-10, 10) + 0x3c);
             }
@@ -163,7 +163,7 @@ void DFP_Torch_update(GameObject* obj) {
                 (*res)->spawn(obj, 1, &flameParams, 0x10004, -1, &prm);
                 Resource_Release(res);
                 for (i = 0; i < 0x64; i++) {
-                    (*gPartfxInterface)->spawnObject((void*)obj, DFPTORCH_PARTFX_IGNITE, NULL, 0, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, DFPTORCH_PARTFX_IGNITE, NULL, 0, -1, NULL);
                 }
                 if (state->gameBit != -1) {
                     if (mainGetBit(state->gameBit) == 0) {
@@ -181,7 +181,7 @@ void DFP_Torch_update(GameObject* obj) {
                 state->flickerTimer = 1;
             } else {
                 Sfx_StopObjectChannel(obj, 0x40);
-                (*gModgfxInterface)->detachSource((void*)obj);
+                (*gModgfxInterface)->detachSource(obj);
                 (*gExpgfxInterface)->freeSource(obj);
                 if (state->gameBit != -1) {
                     if (mainGetBit(state->gameBit) != 0) {

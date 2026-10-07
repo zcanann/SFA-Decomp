@@ -1,10 +1,14 @@
 #ifndef GAME_OBJECTS_OBJECT_INTERFACE_H_
 #define GAME_OBJECTS_OBJECT_INTERFACE_H_
 
+#include "game/objects/object_fwd.h"
 #include "global.h"
 
 typedef void (*ObjectInterfaceCallback)(void);
 typedef int (*ObjectInterfaceExtraSizeCallback)(void);
+
+/* Engine init dispatch contract; individual slots retain their object-specific prototypes. */
+typedef void (*ObjectInterfaceInitCallback)(GameObject* obj, void* placementData, int initFlags);
 
 /*
  * Common prefix of every object DLL's runtime interface. Resource_Acquire

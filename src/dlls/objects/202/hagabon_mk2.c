@@ -109,14 +109,6 @@ extern s32 gHagabonMK2ModelChain4BoneIds[];
 #define FIRECRAWLER_OBJFLAG_PARENT_SLACK 0x1000
 #define FIREHOLE_OBJ_ID                  0x710 /* FireHole child spawned by firecrawler (firepipe DLL 0x273) */
 
-typedef struct {
-    u8 pad[6];
-    u16 sfxId; /* 0x6 */
-    f32 vol;   /* 0x8 */
-    f32 x;     /* 0xc */
-    f32 y;     /* 0x10 */
-    f32 z;     /* 0x14 */
-} CrawlerSfxParams;
 
 static const f32 gHagabonMK2LightAttenNear[] = {100.0f};
 
@@ -208,7 +200,7 @@ void hagabonMK2_updateB(GameObject* obj, u8* state) {
     RomCurveWalker* base = *(RomCurveWalker**)state;
     f32 spd;
     f32 cap;
-    CrawlerSfxParams sp;
+    PartFxSpawnParams sp;
     f32 dv[3];
     int i;
 
@@ -223,10 +215,10 @@ void hagabonMK2_updateB(GameObject* obj, u8* state) {
     sp.x = 0.0f;
     sp.y = 4.0f;
     sp.z = 0.0f;
-    sp.vol = 1.1f;
-    sp.sfxId = 0x605;
+    sp.scale = 1.1f;
+    sp.effectParam = 0x605;
     if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
-        (*gPartfxInterface)->spawnObject(obj, 1999, &sp, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 1999, &sp, 2, -1, NULL);
         if (enemyState->modelLight == NULL) {
             crawler_createEngineLight(obj, state);
         } else {
@@ -337,7 +329,7 @@ void hagabonMK2_update(GameObject* obj, u8* state) {
     EnemyState* enemyState = (EnemyState*)state;
     RomCurveWalker* base = *(RomCurveWalker**)state;
     f32 d[3];
-    CrawlerSfxParams sp;
+    PartFxSpawnParams sp;
     int i;
     f32 pw;
 
@@ -349,10 +341,10 @@ void hagabonMK2_update(GameObject* obj, u8* state) {
     sp.x = 0.0f;
     sp.y = 4.0f;
     sp.z = 0.0f;
-    sp.vol = 1.1f;
-    sp.sfxId = 0x605;
+    sp.scale = 1.1f;
+    sp.effectParam = 0x605;
     if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
-        (*gPartfxInterface)->spawnObject(obj, 1999, &sp, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 1999, &sp, 2, -1, NULL);
         if (enemyState->modelLight == NULL) {
             crawler_createEngineLight(obj, state);
         } else {

@@ -28,17 +28,17 @@
 #include "main/obj_message.h"
 #include "main/object_update_list.h"
 #include "main/objhits.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 
 f32 gWallCrawlerSpeedCap = 0.1f;
-u8 sWallCrawlerCollisionBone[3] = {0x41, 0x20, 0};
+f32 sWallCrawlerLocalCollisionRadius = 10.0f;
 
 #define WMWALLCRAWLER_OBJGROUP        3
 #define WMWALLCRAWLER_PARTFX          0x1a3
 
 /* state->flags, from the per-variant table gWallCrawlerVariantFlags */
 #define WMWALLCRAWLER_FLAG_START_ACTIVE   0x1   /* spawn already diving (rotZ 0) */
-#define WMWALLCRAWLER_FLAG_PATH_CONTROL   0x2   /* drive movement through gPathControlInterface */
+#define WMWALLCRAWLER_FLAG_PATH_CONTROL   0x2   /* drive movement through gObjCollisionInterface */
 #define WMWALLCRAWLER_FLAG_FLOOR_SNAP     0x4   /* snap Y to the nearest floor (trackGetHeight) */
 #define WMWALLCRAWLER_FLAG_TIMED_EXPLODE  0x8   /* burst into particles when explodeTimer expires */
 #define WMWALLCRAWLER_FLAG_TARGET_NEAREST 0x10  /* chase the nearest group-10 object, not the player */
@@ -206,7 +206,7 @@ void wmwallcrawler_update(GameObject* obj) {
             if ((state->flags & WMWALLCRAWLER_FLAG_TIMED_EXPLODE) != 0) {
                 if (timerCountDown((f32*)&state->explodeTimer) != 0) {
                     for (k = 0; k < 0x1e; k++) {
-                        (*gPartfxInterface)->spawnObject((void*)ob, WMWALLCRAWLER_PARTFX, NULL, 0, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(ob, WMWALLCRAWLER_PARTFX, NULL, 0, -1, NULL);
                     }
                     s16toFloat((f32*)&state->despawnTimer, 100);
                     return;
@@ -287,9 +287,9 @@ void wmwallcrawler_update(GameObject* obj) {
                     }
                     if (state->mode == WMWALLCRAWLER_MODE_FLEE) {
                         if ((state->flags & WMWALLCRAWLER_FLAG_PATH_CONTROL) != 0) {
-                            (*gPathControlInterface)->update((void*)ob, state, timeDelta);
-                            (*gPathControlInterface)->apply((void*)ob, state);
-                            (*gPathControlInterface)->advance((void*)ob, state, timeDelta);
+                            (*gObjCollisionInterface)->updateQueryBounds(ob, &state->pathState, timeDelta);
+                            (*gObjCollisionInterface)->gatherTrackTriangles(ob, &state->pathState);
+                            (*gObjCollisionInterface)->resolve(ob, &state->pathState, timeDelta);
                         }
                         sq = ob->anim.velocityX * ob->anim.velocityX + ob->anim.velocityZ * ob->anim.velocityZ;
                         if (sq != 0.0f) {
@@ -361,9 +361,9 @@ void wmwallcrawler_update(GameObject* obj) {
                             } else if (mode == WMWALLCRAWLER_MODE_CHASE) {
                                 Sfx_PlayFromObject(ob, SFXTRIG_id_47);
                                 if ((state->flags & WMWALLCRAWLER_FLAG_PATH_CONTROL) != 0) {
-                                    (*gPathControlInterface)->update((void*)ob, state, timeDelta);
-                                    (*gPathControlInterface)->apply((void*)ob, state);
-                                    (*gPathControlInterface)->advance((void*)ob, state, timeDelta);
+                                    (*gObjCollisionInterface)->updateQueryBounds(ob, &state->pathState, timeDelta);
+                                    (*gObjCollisionInterface)->gatherTrackTriangles(ob, &state->pathState);
+                                    (*gObjCollisionInterface)->resolve(ob, &state->pathState, timeDelta);
                                 }
                                 if ((state->flags & WMWALLCRAWLER_FLAG_FLOOR_SNAP) != 0) {
                                     best = 10000.0f;
@@ -417,7 +417,7 @@ void wmwallcrawler_update(GameObject* obj) {
                                     if (ob->anim.currentMove == 2 && ob->anim.currentMoveProgress > 0.3f &&
                                         ob->anim.currentMoveProgress < 0.7f) {
                                         ObjMsg_SendToObject((void*)player, WMWALLCRAWLER_MSG_PLAYER_BURST, (void*)ob,
-                                                            1);
+                                                            (void*)1);
                                         gWallCrawlerHitCount = 0;
                                     }
                                     if (mainGetBit(GAMEBIT_CC_BridgeNeedBit) != 0) {
@@ -427,8 +427,8 @@ void wmwallcrawler_update(GameObject* obj) {
                                                 gWallCrawlerHitCount >= 3)) {
                                         Sfx_PlayFromObject(ob, SFXTRIG_id_75);
                                         if ((state->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0) {
-                                            ObjMsg_SendToObject((void*)player, WMWALLCRAWLER_MSG_PLAYER_BURST,
-                                                                (void*)ob, 1);
+                                            ObjMsg_SendToObject((void*)player, WMWALLCRAWLER_MSG_PLAYER_BURST, (void*)ob,
+                                                                (void*)1);
                                         } else {
                                             state->hitBits.hit = 1;
                                         }
@@ -537,12 +537,12 @@ void wmwallcrawler_init(GameObject* obj, WmwallcrawlerMapData* mapData) {
     state->fleeChaseThreshold = 80.0f;
     state->counterGameBit = mapData->counterGameBit;
     if ((state->flags & WMWALLCRAWLER_FLAG_PATH_CONTROL) != 0) {
-        state->pathState.subtype = CURVES_COLLISION_SUBTYPE_OBJECT;
-        (*gPathControlInterface)->init((void*)state, 0, 0, 1);
-        (*gPathControlInterface)
-            ->setLocalPointCollision((void*)state, 1, gWallCrawlerPointCollision, sWallCrawlerCollisionBone, 4);
-        (*gPathControlInterface)->attachObject((void*)obj, state);
-        state->pathState.flags |= 0x40000u | CURVES_COLLISION_STATE_LOCAL_POINTS;
+        state->pathState.subtype = OBJ_COLLISION_SUBTYPE_OBJECT;
+        (*gObjCollisionInterface)->init(&state->pathState, 0, 0, 1);
+        (*gObjCollisionInterface)
+            ->setLocalPoints(&state->pathState, 1, gWallCrawlerPointCollision, &sWallCrawlerLocalCollisionRadius, 4);
+        (*gObjCollisionInterface)->reset(obj, &state->pathState);
+        state->pathState.flags |= 0x40000u | OBJ_COLLISION_STATE_LOCAL_POINTS;
     }
     obj->animEventCallback = wmwallcrawler_animEventCallback;
     ObjHits_EnableObject(obj);

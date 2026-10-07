@@ -33,7 +33,7 @@
 #include "main/dll/dll_0015_curves.h"
 #include "main/lightmap_api.h"
 #include "main/pi_dolphin_api.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/obj_list.h"
 #include "main/audio/sfx_ids.h"
@@ -834,7 +834,7 @@ void trickyReportError(const char* fmt, ...) {
 void Tricky_init(GameObject* obj) {
     TrickyState* state = obj->extra;
     ObjModel* model;
-    CurvesCollisionState* collision;
+    ObjCollisionState* collision;
     u32 colorVariant;
     s8 queryTypes[2] = {0x0A, 0x08};
 
@@ -866,13 +866,13 @@ void Tricky_init(GameObject* obj) {
     state->colorVariant = colorVariant;
     model = Obj_GetActiveModel(obj);
     model->textureRefs->swapSelector = state->colorVariant;
-    collision = &state->curvesCollision;
-    (*gPathControlInterface)->init(collision, 1, 0xa7, CURVES_COLLISION_SUBTYPE_OBJECT);
-    (*gPathControlInterface)
-        ->setLocalPointCollision(collision, 1, &gTrickyPathPointCollision, &gTrickyPathPointCollisionRadius, 2);
-    (*gPathControlInterface)
-        ->setup(collision, 2, gTrickyCollisionSegmentPoints, gTrickyCollisionSegmentRadii, queryTypes);
-    (*gPathControlInterface)->attachObject(obj, collision);
+    collision = &state->objectCollision;
+    (*gObjCollisionInterface)->init(collision, 1, 0xa7, OBJ_COLLISION_SUBTYPE_OBJECT);
+    (*gObjCollisionInterface)
+        ->setLocalPoints(collision, 1, &gTrickyPathPointCollision.x, &gTrickyPathPointCollisionRadius, 2);
+    (*gObjCollisionInterface)
+        ->setSegments(collision, 2, &gTrickyCollisionSegmentPoints[0].x, gTrickyCollisionSegmentRadii, queryTypes);
+    (*gObjCollisionInterface)->reset(obj, collision);
     doNothing_onTrickyInit();
     Objfsa_UpdateWalkGroupPatches();
     state->groundSnapCounter = 2;
@@ -927,7 +927,7 @@ void Tricky_update(GameObject* obj) {
         trickyState->stateFlags &= ~TRICKY_STATE_FLAG_FEED_VOICE_PENDING;
     }
     {
-        int flagsByte = trickyState->curvesCollision.surfaceFlags;
+        int flagsByte = trickyState->objectCollision.surfaceFlags;
         trickyDebugPrint("hits: %d %d %d %d %d %d %d %d", flagsByte & 1, flagsByte & 2, flagsByte & 4, flagsByte & 8,
                          flagsByte & 0x10, flagsByte & 0x20, flagsByte & 0x40, flagsByte & 0x80);
     }
@@ -947,12 +947,12 @@ void Tricky_update(GameObject* obj) {
             trickyState->recoveryPos.x = obj->anim.worldPosX;
             trickyState->recoveryPos.y = obj->anim.worldPosY;
             trickyState->recoveryPos.z = obj->anim.worldPosZ;
-            (*gPathControlInterface)->attachObject(obj, &trickyState->curvesCollision);
+            (*gObjCollisionInterface)->reset(obj, &trickyState->objectCollision);
             if (obj->anim.currentMove == TRICKY_ANIM_SWIM_TURN || obj->anim.currentMove == TRICKY_ANIM_SWIM) {
-                trickyState->curvesCollision.resultWaterDepth = TRICKY_SWIM_MIN_DEPTH;
-                trickyState->curvesCollision.resultFloorY = TRICKY_SWIM_SEED_FLOOR_Y;
+                trickyState->objectCollision.resultWaterDepth = TRICKY_SWIM_MIN_DEPTH;
+                trickyState->objectCollision.resultFloorY = TRICKY_SWIM_SEED_FLOOR_Y;
             } else {
-                trickyState->curvesCollision.resultWaterDepth = 0.0f;
+                trickyState->objectCollision.resultWaterDepth = 0.0f;
             }
         }
         trickyState->stateFlags &= ~(TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE | TRICKY_STATE_FLAG_SEQUENCE_LATCHED |
@@ -1222,7 +1222,7 @@ void Tricky_update(GameObject* obj) {
         }
     }
     obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-    trickyState->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_OBJECT;
+    trickyState->objectCollision.subtype = OBJ_COLLISION_SUBTYPE_OBJECT;
     sTrickyStateHandlers[trickyState->stateIndex](obj, trickyState);
     trickyState->stateFlags &= ~TRICKY_STATE_FLAG_STUCK_VOICE_PENDING;
     trickyState->animTransitionTimer += timeDelta;
@@ -1245,12 +1245,12 @@ void Tricky_update(GameObject* obj) {
     if ((trickyState->stateFlags & TRICKY_MOVE_FLAG_ROOT_TRANSLATE) != 0) {
         obj->anim.localPosX += timeDelta * (trickyState->moveVector.x * trickyState->speed);
         obj->anim.localPosZ += timeDelta * (trickyState->moveVector.z * trickyState->speed);
-        ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, trickyState->speed, &trickyState->animRate);
+        ObjAnim_SampleRootCurvePhase(obj, trickyState->speed, &trickyState->animRate);
     }
     animRate = trickyState->animRate;
     resetValue = 0.0f;
     if (animRate == resetValue) {
-        ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, trickyState->arcMoveProgress);
+        ObjAnim_SetMoveProgress(obj, trickyState->arcMoveProgress);
     }
     if (ObjAnim_AdvanceCurrentMove(obj, trickyState->animRate, timeDelta, &trickyState->animEvents) != 0) {
         trickyState->stateFlags |= TRICKY_STATE_FLAG_MOVE_ENDED;
@@ -1367,13 +1367,13 @@ void Tricky_update(GameObject* obj) {
     Tricky_updateBlendChannelWeight(obj, trickyState);
     if (trickyState->speed > TRICKY_AUDIO_EVENT_MIN_SPEED) {
         objAudioDispatchAnimEvents(obj, &trickyState->animEvents, 1, trickyState->footPoints,
-                                   &trickyState->curvesCollision, trickyState->speed, 1.0f);
+                                   &trickyState->objectCollision, trickyState->speed, 1.0f);
     }
-    if (0.0f == trickyState->curvesCollision.resultWaterDepth) {
+    if (0.0f == trickyState->objectCollision.resultWaterDepth) {
         waterFootstepActive = 0;
-    } else if (TRICKY_NO_FLOOR_Y == trickyState->curvesCollision.resultFloorY) {
+    } else if (TRICKY_NO_FLOOR_Y == trickyState->objectCollision.resultFloorY) {
         waterFootstepActive = 1;
-    } else if (trickyState->curvesCollision.resultWaterY - trickyState->curvesCollision.resultFloorY >
+    } else if (trickyState->objectCollision.resultWaterY - trickyState->objectCollision.resultFloorY >
                TRICKY_SWIM_MIN_DEPTH) {
         waterFootstepActive = 1;
     } else {
@@ -1957,7 +1957,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* sequence) {
     trickyFreePromptChild(obj, state, &state->foodChild);
     trickyUpdateColorVariant(obj, state);
     Tricky_updateBlendChannelWeight(obj, state);
-    objAudioDispatchAnimEvents(obj, &sequence->animEvents, 1, state->footPoints, &state->curvesCollision, 1.0f, 1.0f);
+    objAudioDispatchAnimEvents(obj, &sequence->animEvents, 1, state->footPoints, &state->objectCollision, 1.0f, 1.0f);
     if ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_CALLBACK) != 0) {
         sequence->flags &= ~OBJSEQ_FLAG_TEXTURE_ANIM_TRACKS;
         characterDoEyeAnims(obj, &state->eyeAnimState);
@@ -2521,8 +2521,8 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
                 fxBuf.posY = 2.0f + trickyState->mouthPos.y;
                 fxBuf.posZ = trickyState->mouthPos.z;
                 (*gPartfxInterface)
-                    ->spawnObject((void*)obj, TRICKY_PARTFX_HOWL_SPARKLE, &fxBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS,
-                                  -1, NULL);
+                    ->spawnEffect(obj, TRICKY_PARTFX_HOWL_SPARKLE, &fxBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1,
+                                  NULL);
             }
             trickyState->howlSparkleTimer = 30.0f;
         }
@@ -2662,7 +2662,7 @@ int tricky_substateDigForFood(GameObject* obj, TrickyState* state) {
         spawnBuf.posY = obj->anim.worldPosY;
         spawnBuf.posZ = obj->anim.worldPosZ;
         spawnBuf.scale = 0.7f;
-        (*gPartfxInterface)->spawnObject((void*)obj, 2022, &spawnBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 2022, &spawnBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
         break;
     }
     case TRICKY_ANIM_DIG_FOOD_END:
@@ -2818,7 +2818,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
     }
     if (found != NULL) {
         state->groundSnapCounter = 2;
-        (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
+        (*gObjCollisionInterface)->reset(obj, &state->objectCollision);
         trickyResetCommandState(state);
         obj->anim.localPosX = found->anim.localPosX;
         obj->anim.localPosY = found->anim.localPosY;
@@ -4374,7 +4374,7 @@ static inline void trickySetDirectionAlongRoute(GameObject* obj, TrickyState* st
 }
 
 static inline void trickyRestoreRecoveryPosition(GameObject* obj, TrickyState* state) {
-    (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
+    (*gObjCollisionInterface)->reset(obj, &state->objectCollision);
     obj->anim.localPosX = state->recoveryPos.x;
     obj->anim.localPosY = state->recoveryPos.y;
     obj->anim.localPosZ = state->recoveryPos.z;
@@ -4961,12 +4961,12 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         state->speed = speed;
         trickyTurnAlongMoveDirection(obj);
         if (obj->anim.currentMoveProgress < TRICKY_FOLLOW_ARC_HALF_PROGRESS) {
-            ObjAnim_SampleRootCurvePhase(&obj->anim, state->speed, &state->animRate);
+            ObjAnim_SampleRootCurvePhase(obj, state->speed, &state->animRate);
             obj->anim.localPosX = timeDelta * (state->moveVector.x * state->speed) + obj->anim.localPosX;
             obj->anim.localPosZ = timeDelta * (state->moveVector.z * state->speed) + obj->anim.localPosZ;
         } else {
             f32 speedScale = 0.25f;
-            ObjAnim_SampleRootCurvePhase(&obj->anim, state->speed * speedScale, &state->animRate);
+            ObjAnim_SampleRootCurvePhase(obj, state->speed * speedScale, &state->animRate);
             obj->anim.localPosX = timeDelta * (state->moveVector.x * (state->speed * speedScale)) + obj->anim.localPosX;
             obj->anim.localPosZ = timeDelta * (state->moveVector.z * (state->speed * speedScale)) + obj->anim.localPosZ;
         }
@@ -5036,7 +5036,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 }
             }
             Obj_SetParent(obj, NULL, 0);
-            state->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_NONE;
+            state->objectCollision.subtype = OBJ_COLLISION_SUBTYPE_NONE;
         }
         break;
     }
@@ -5073,7 +5073,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     case TRICKY_MOVE_JUMPUP:
     case TRICKY_MOVE_JUMPDOWN:
         trickyDebugPrint("JUMPDOWN or JUMPUP\n");
-        state->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_NONE;
+        state->objectCollision.subtype = OBJ_COLLISION_SUBTYPE_NONE;
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         trickyTurnAlongMoveDirection(obj);
         if ((state->stateFlags & TRICKY_STATE_FLAG_MOVE_ENDED) != 0) {
@@ -5279,10 +5279,10 @@ void Tricky_emitDigParticles(GameObject* obj) {
     }
 
     if ((int)randomGetRange(0, TRICKY_DIG_PARTICLE_RANDOM_RATE) == 0) {
-        (*gPartfxInterface)->spawnObject(obj, PARTFX_DIG_DEBRIS, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, PARTFX_DIG_DEBRIS, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
     }
     if ((int)randomGetRange(0, TRICKY_DIG_PARTICLE_RANDOM_RATE) == 0) {
-        (*gPartfxInterface)->spawnObject(obj, PARTFX_DIG_DUST, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, PARTFX_DIG_DUST, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
     }
 
     args.posX = state->pathPointPositions[1].x;
@@ -5291,10 +5291,10 @@ void Tricky_emitDigParticles(GameObject* obj) {
     args.dig.yaw = obj->anim.rotX;
 
     if ((int)randomGetRange(0, TRICKY_DIG_PARTICLE_RANDOM_RATE) == 0) {
-        (*gPartfxInterface)->spawnObject(obj, PARTFX_DIG_DEBRIS, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, PARTFX_DIG_DEBRIS, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
     }
     if ((int)randomGetRange(0, TRICKY_DIG_PARTICLE_RANDOM_RATE) == 0) {
-        (*gPartfxInterface)->spawnObject(obj, PARTFX_DIG_DUST, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, PARTFX_DIG_DUST, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
     }
 }
 
@@ -5434,7 +5434,7 @@ RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u
 }
 
 int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRoutes, u8* candidateRouteDirections,
-                                  int targetWalkGroup) {
+                                  ptrdiff_t target) {
     s8 searchIndex;
     s8 routeStatus[TRICKY_ROUTE_CANDIDATE_COUNT];
     s8 routeIndex;
@@ -5444,7 +5444,7 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
     for (routeIndex = 0; routeIndex < TRICKY_ROUTE_CANDIDATE_COUNT; routeIndex++) {
         if (candidateRoutes[routeIndex] != NULL) {
             pathSearchBegin(&state->candidateSearches[routeIndex], candidateRoutes[routeIndex], state->targetPosPtr,
-                            targetWalkGroup, candidateRouteDirections[routeIndex]);
+                            target, candidateRouteDirections[routeIndex]);
         }
     }
 
@@ -5944,7 +5944,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
 
     if ((objPosToMapBlockIdx(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ) == -1) &&
         ((state->stateFlags & TRICKY_STATE_FLAG_POSITION_RELOCATED) == 0)) {
-        state->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_NONE;
+        state->objectCollision.subtype = OBJ_COLLISION_SUBTYPE_NONE;
         obj->anim.localPosX = obj->anim.previousLocalPosX;
         obj->anim.localPosY = obj->anim.previousLocalPosY;
         obj->anim.localPosZ = obj->anim.previousLocalPosZ;
@@ -5962,15 +5962,15 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
     if (doGroundSnap != 0) {
         trackGetNearestGroundOffset(obj, obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ, &hitOffsetY, 0);
         obj->anim.localPosY -= hitOffsetY;
-        state->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_NONE;
+        state->objectCollision.subtype = OBJ_COLLISION_SUBTYPE_NONE;
     }
 
-    if ((state->curvesCollision.subtype != CURVES_COLLISION_SUBTYPE_NONE) && (state->heightTracking == 0u)) {
+    if ((state->objectCollision.subtype != OBJ_COLLISION_SUBTYPE_NONE) && (state->heightTracking == 0u)) {
         doHeightSnap = trickyIsInDeepWater(state);
 
         if (doHeightSnap != 0) {
             obj->anim.velocityY = 0.0f;
-            obj->anim.localPosY = state->curvesCollision.resultWaterY - 0.01f;
+            obj->anim.localPosY = state->objectCollision.resultWaterY - 0.01f;
         } else {
             obj->anim.velocityY += -0.17f * timeDelta;
             obj->anim.localPosY += obj->anim.velocityY * timeDelta;
@@ -6040,23 +6040,23 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
         break;
     }
 
-    if (state->curvesCollision.subtype == CURVES_COLLISION_SUBTYPE_NONE) {
-        (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
+    if (state->objectCollision.subtype == OBJ_COLLISION_SUBTYPE_NONE) {
+        (*gObjCollisionInterface)->reset(obj, &state->objectCollision);
     }
 
     if ((coordsToMapCell(obj->anim.localPosX, obj->anim.localPosZ) == 0xe) ||
         (objGetNearestTypeTo(SKEETLA_TARGET_OBJGROUP, obj, &nearestDistance) != NULL)) {
-        state->curvesCollision.flags &= ~4u;
+        state->objectCollision.flags &= ~4u;
     } else {
-        state->curvesCollision.flags |= 4u;
+        state->objectCollision.flags |= 4u;
     }
 
-    (*gPathControlInterface)->update(obj, &state->curvesCollision, timeDelta);
-    (*gPathControlInterface)->apply(obj, &state->curvesCollision);
-    (*gPathControlInterface)->advance(obj, &state->curvesCollision, timeDelta);
+    (*gObjCollisionInterface)->updateQueryBounds(obj, &state->objectCollision, timeDelta);
+    (*gObjCollisionInterface)->gatherTrackTriangles(obj, &state->objectCollision);
+    (*gObjCollisionInterface)->resolve(obj, &state->objectCollision, timeDelta);
 
-    obj->anim.rotY = state->curvesCollision.tiltPitch;
-    obj->anim.rotZ = state->curvesCollision.tiltRoll;
+    obj->anim.rotY = state->objectCollision.tiltPitch;
+    obj->anim.rotZ = state->objectCollision.tiltRoll;
 }
 
 static f32 trickyAccelerate(f32 speed, f32 maxSpeed) {
@@ -6130,7 +6130,7 @@ void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
     if ((flags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) == 0) {
         while (spawnCount-- != 0) {
             (*gPartfxInterface)
-                ->spawnObject(obj, TRICKY_PATH_PARTFX, &particleParams, TRICKY_PATH_PARTFX_SPAWN_FLAGS, -1, NULL);
+                ->spawnEffect(obj, TRICKY_PATH_PARTFX, &particleParams, TRICKY_PATH_PARTFX_SPAWN_FLAGS, -1, NULL);
         }
         state->stateFlags &= ~TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
     }
@@ -6241,13 +6241,13 @@ void trickyImpress(GameObject* obj) {
 }
 
 static int trickyIsInDeepWater(TrickyState* state) {
-    if (0.0f == state->curvesCollision.resultWaterDepth) {
+    if (0.0f == state->objectCollision.resultWaterDepth) {
         return 0;
     }
-    if (TRICKY_NO_FLOOR_Y == state->curvesCollision.resultFloorY) {
+    if (TRICKY_NO_FLOOR_Y == state->objectCollision.resultFloorY) {
         return 1;
     }
-    if (state->curvesCollision.resultWaterY - state->curvesCollision.resultFloorY > TRICKY_SWIM_MIN_DEPTH) {
+    if (state->objectCollision.resultWaterY - state->objectCollision.resultFloorY > TRICKY_SWIM_MIN_DEPTH) {
         return 1;
     }
     return 0;

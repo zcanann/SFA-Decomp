@@ -34,7 +34,7 @@ int dfppowersl_spawnHitEffects(GameObject* obj) {
     if ((outObj != NULL) && (i != 0)) {
         i = 1;
         do {
-            (*gPartfxInterface)->spawnObject(obj, DFPPOWERSL_HIT_EFFECT_ID, 0, PARTFXFLAG_1, 0xffffffff, 0);
+            (*gPartfxInterface)->spawnEffect(obj, DFPPOWERSL_HIT_EFFECT_ID, 0, PARTFXFLAG_1, 0xffffffff, 0);
         } while (i++ < DFPPOWERSL_HIT_EFFECT_COUNT);
     }
     return 0;
@@ -59,8 +59,8 @@ void dfppowersl_render(GameObject* obj) {
     if ((u32)powerSl != 0) {
         state = dfppowersl_getState(powerSl);
         if (mainGetBit(state->disableEffectGameBit) == 0) {
-            (*gPartfxInterface)->spawnObject(powerSl, state->effectId, 0, PARTFXFLAG_4, 0xffffffff, 0);
-            (*gPartfxInterface)->spawnObject(powerSl, state->effectId, 0, PARTFXFLAG_1, 0xffffffff, 0);
+            (*gPartfxInterface)->spawnEffect(powerSl, state->effectId, 0, PARTFXFLAG_4, 0xffffffff, 0);
+            (*gPartfxInterface)->spawnEffect(powerSl, state->effectId, 0, PARTFXFLAG_1, 0xffffffff, 0);
         }
     }
     return;

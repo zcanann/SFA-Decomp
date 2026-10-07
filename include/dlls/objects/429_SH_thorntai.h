@@ -5,7 +5,7 @@
 #include "game/objects/object.h"
 #include "game/objects/object_setup.h"
 #include "main/objprint_character_api.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 #include "main/dll/dll_002E_moveLib.h"
 
 typedef struct SHthorntailPlacement {
@@ -40,7 +40,7 @@ typedef struct SHthorntailState {
     u8 freezeFrameCounter;
     u8 hitReactState;
     u8 pad641[0x3];
-    CurvesCollisionState pathState;
+    ObjCollisionState pathState;
     f32 hitReactStepScale;
     CharacterEyeAnimState eyeAnimState;
     u8 pad8D8[0x8];

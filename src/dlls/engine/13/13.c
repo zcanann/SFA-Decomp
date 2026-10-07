@@ -133,41 +133,40 @@ void playerShadow_scatterFootfallEffects(PlayerShadowTriHit* hits, int count, f3
                 {
                     if (randomGetRange(0, 0x1e) == 1)
                     {
-                        (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_A, &data, 0x200001, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(obj, PLAYERSHADOW_PARTFX_A, &data, 0x200001, -1, NULL);
                     }
                 }
                 else if (rt == 0x11)
                 {
                     if (randomGetRange(0, 8) == 2)
                     {
-                        (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_B, &data, 0x111, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(obj, PLAYERSHADOW_PARTFX_B, &data, 0x111, -1, NULL);
                     }
                 }
                 else if (rt == 0x14)
                 {
                     if (randomGetRange(0, 8) == 2)
                     {
-                        (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_B, &data, 0x111, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(obj, PLAYERSHADOW_PARTFX_B, &data, 0x111, -1, NULL);
                     }
                 }
                 else if (rt == 0x15)
                 {
                     if (randomGetRange(0, 8) == 2)
                     {
-                        (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_B, &data, 0x111, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(obj, PLAYERSHADOW_PARTFX_B, &data, 0x111, -1, NULL);
                     }
                 }
                 else if (rt == 0x17)
                 {
-                    (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_C, &data, 0x111, -1, NULL);
-                    (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_C, &data, 0x111, -1, NULL);
-                    (*gPartfxInterface)->spawnObject(obj, PLAYERSHADOW_PARTFX_C, &data, 0x111, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, PLAYERSHADOW_PARTFX_C, &data, 0x111, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, PLAYERSHADOW_PARTFX_C, &data, 0x111, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, PLAYERSHADOW_PARTFX_C, &data, 0x111, -1, NULL);
                 }
             }
         }
     }
 }
-
 
 
 void playerShadow_setMode(u8 v)

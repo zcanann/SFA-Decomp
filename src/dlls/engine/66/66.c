@@ -189,143 +189,146 @@ void CameraModeNormal_updateTargetAction(CameraObject* camera, GameObject* targe
 }
 
 int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, f32* outB, int angle) {
-    GameObject* tgt0;
-    float probe[75];
-    u8 box[136];
-    float pathA[21];
-    float pathB[21];
+    GameObject* initialTarget;
+    CameraObject probeCamera;
+    TrackHitResults traceWork;
+    float positivePath[21];
+    float negativePath[21];
     float prev[3];
-    f32 spinA;
-    f32 spinB;
-    f32 spinC;
-    f32 spinD;
-    GameObject* tgt;
-    int ang;
-    float* pA;
-    float* pB;
-    float* pp;
-    float* pA0;
-    float* pB0;
+    f32 distanceXZ;
+    f32 relativeX;
+    f32 relativeY;
+    f32 relativeZ;
+    GameObject* target;
+    int positiveAngle;
+    float* positivePoint;
+    float* negativePoint;
+    float* probePosition;
+    float* positiveSegment;
+    float* negativeSegment;
     int result;
-    int s;
+    int degrees;
     int i;
-    int found1;
-    int found2;
+    int positiveClearStep;
+    int negativeClearStep;
     int dir;
     int d;
-    f32 cosv;
+    f32 sinAngle;
     f32 rad;
-    f32 dx;
-    f32 dz;
-    f32 sinv;
-    f32 t;
-    f32 v;
+    f32 offsetZ;
+    f32 offsetX;
+    f32 cosAngle;
+    f32 rotatedX;
+    f32 rotatedZ;
 
     OSGetTick(); /* timing probe; return value intentionally unused */
     result = 0;
     (*gCameraInterface)
-        ->getRelativePosition(cam, &spinB, &spinC, &spinD, &spinA, gCameraModeNormalState->targetHeight, 0);
-    tgt0 = cam->anim.targetObj;
-    *(int*)&probe[35] = (int)tgt0;
-    probe[1] = cam->anim.worldPosY;
-    pathA[0] = cam->anim.worldPosX;
-    pathA[1] = cam->anim.worldPosY;
-    pathA[2] = cam->anim.worldPosZ;
-    pathB[0] = pathA[0];
-    pathB[1] = pathA[1];
-    pathB[2] = pathA[2];
-    if (tgt0->anim.classId == 1) {
-        cameraGetPrevPos2(tgt0, &prev[0], &prev[1], &prev[2]);
+        ->getRelativePosition(cam, &relativeX, &relativeY, &relativeZ, &distanceXZ,
+                              gCameraModeNormalState->targetHeight, 0);
+    initialTarget = cam->focusObject;
+    probeCamera.focusObj = &initialTarget->anim;
+    probeCamera.worldPosition[1] = cam->anim.worldPosY;
+    positivePath[0] = cam->anim.worldPosX;
+    positivePath[1] = cam->anim.worldPosY;
+    positivePath[2] = cam->anim.worldPosZ;
+    negativePath[0] = positivePath[0];
+    negativePath[1] = positivePath[1];
+    negativePath[2] = positivePath[2];
+    if (initialTarget->anim.classId == 1) {
+        cameraGetPrevPos2(initialTarget, &prev[0], &prev[1], &prev[2]);
     } else {
-        prev[0] = tgt0->anim.worldPosX;
-        prev[1] = tgt0->anim.worldPosY + gCameraModeNormalState->targetHeight;
-        prev[2] = tgt0->anim.worldPosZ;
+        prev[0] = initialTarget->anim.worldPosX;
+        prev[1] = initialTarget->anim.worldPosY + gCameraModeNormalState->targetHeight;
+        prev[2] = initialTarget->anim.worldPosZ;
     }
-    s = 0xf;
+    degrees = 0xf;
     i = 0;
-    found1 = -1;
-    found2 = -1;
-    ang = 0xaaa;
-    pA0 = pathA;
-    pA = pA0;
-    pB0 = pathB;
-    pB = pB0;
-    pp = probe;
-    while ((s16)s <= 0x5a) {
-        if (found1 == -1) {
-            dx = spinD;
-            dz = spinB;
-            tgt = (GameObject*)cam->anim.targetObj;
-            rad = (3.1415927f * (f32)(s16)ang) / 32768.0f;
-            cosv = mathSinf(rad);
-            sinv = mathCosf(rad);
-            t = dz * sinv - dx * cosv;
-            v = t * cosv + dx * sinv;
-            t += tgt->anim.worldPosX;
-            probe[0] = t;
-            v += tgt->anim.worldPosZ;
-            probe[2] = v;
-            pA[3] = probe[0];
-            pA[4] = probe[1];
-            pA[5] = probe[2];
-            if (camcontrol_traceMove(prev, pp, NULL, (TrackHitResults*)box, 7, '\0', '\0', 3.9f) != 0) {
-                found1 = i;
+    positiveClearStep = -1;
+    negativeClearStep = -1;
+    positiveAngle = 0xaaa;
+    positiveSegment = positivePath;
+    positivePoint = positiveSegment;
+    negativeSegment = negativePath;
+    negativePoint = negativeSegment;
+    probePosition = probeCamera.worldPosition;
+    while ((s16)degrees <= 0x5a) {
+        if (positiveClearStep == -1) {
+            offsetZ = relativeZ;
+            offsetX = relativeX;
+            target = cam->focusObject;
+            rad = (3.1415927f * (f32)(s16)positiveAngle) / 32768.0f;
+            sinAngle = mathSinf(rad);
+            cosAngle = mathCosf(rad);
+            rotatedX = offsetX * cosAngle - offsetZ * sinAngle;
+            rotatedZ = rotatedX * sinAngle + offsetZ * cosAngle;
+            rotatedX += target->anim.worldPosX;
+            probePosition[0] = rotatedX;
+            rotatedZ += target->anim.worldPosZ;
+            probePosition[2] = rotatedZ;
+            positivePoint[3] = probePosition[0];
+            positivePoint[4] = probePosition[1];
+            positivePoint[5] = probePosition[2];
+            if (camcontrol_traceMove(prev, probePosition, NULL, &traceWork, 7, '\0', '\0', 3.9f) != 0) {
+                positiveClearStep = i;
             }
         }
-        if (found2 == -1) {
-            dx = spinD;
-            dz = spinB;
-            tgt = (GameObject*)cam->anim.targetObj;
-            rad = (3.1415927f * (f32)(s16)(-s * 0xb6)) / 32768.0f;
-            cosv = mathSinf(rad);
-            sinv = mathCosf(rad);
-            t = dz * sinv - dx * cosv;
-            v = t * cosv + dx * sinv;
-            t += tgt->anim.worldPosX;
-            probe[0] = t;
-            v += tgt->anim.worldPosZ;
-            probe[2] = v;
-            pB[3] = probe[0];
-            pB[4] = probe[1];
-            pB[5] = probe[2];
-            if (camcontrol_traceMove(prev, pp, NULL, (TrackHitResults*)box, 7, '\0', '\0', 3.9f) != 0) {
-                found2 = i;
+        if (negativeClearStep == -1) {
+            offsetZ = relativeZ;
+            offsetX = relativeX;
+            target = cam->focusObject;
+            rad = (3.1415927f * (f32)(s16)(-degrees * 0xb6)) / 32768.0f;
+            sinAngle = mathSinf(rad);
+            cosAngle = mathCosf(rad);
+            rotatedX = offsetX * cosAngle - offsetZ * sinAngle;
+            rotatedZ = rotatedX * sinAngle + offsetZ * cosAngle;
+            rotatedX += target->anim.worldPosX;
+            probePosition[0] = rotatedX;
+            rotatedZ += target->anim.worldPosZ;
+            probePosition[2] = rotatedZ;
+            negativePoint[3] = probePosition[0];
+            negativePoint[4] = probePosition[1];
+            negativePoint[5] = probePosition[2];
+            if (camcontrol_traceMove(prev, probePosition, NULL, &traceWork, 7, '\0', '\0', 3.9f) != 0) {
+                negativeClearStep = i;
             }
         }
-        pA += 3;
-        pB += 3;
+        positivePoint += 3;
+        negativePoint += 3;
         i++;
-        ang += 0xaaa;
-        s += 0xf;
+        positiveAngle += 0xaaa;
+        degrees += 0xf;
     }
-    if (found1 == -1) {
-        found1 = 6;
+    if (positiveClearStep == -1) {
+        positiveClearStep = 6;
     } else {
-        for (i = 0; i <= found1; i++) {
-            if (camcontrol_traceMove(pA0, pathA + (i + 1) * 3, NULL, (TrackHitResults*)box, 7, '\0', '\0', 3.9f) == 0) {
-                found1 = 6;
+        for (i = 0; i <= positiveClearStep; i++) {
+            if (camcontrol_traceMove(positiveSegment, positivePath + (i + 1) * 3, NULL, &traceWork, 7, '\0', '\0',
+                                     3.9f) == 0) {
+                positiveClearStep = 6;
                 break;
             }
-            pA0 += 3;
+            positiveSegment += 3;
         }
     }
-    if (found2 == -1) {
-        found2 = 6;
+    if (negativeClearStep == -1) {
+        negativeClearStep = 6;
     } else {
-        for (i = 0; i <= found2; i++) {
-            if (camcontrol_traceMove(pB0, pathB + (i + 1) * 3, NULL, (TrackHitResults*)box, 7, '\0', '\0', 3.9f) == 0) {
-                found2 = 6;
+        for (i = 0; i <= negativeClearStep; i++) {
+            if (camcontrol_traceMove(negativeSegment, negativePath + (i + 1) * 3, NULL, &traceWork, 7, '\0', '\0',
+                                     3.9f) == 0) {
+                negativeClearStep = 6;
                 break;
             }
-            pB0 += 3;
+            negativeSegment += 3;
         }
     }
     dir = 0;
-    if (found1 < found2) {
+    if (positiveClearStep < negativeClearStep) {
         dir = 1;
-    } else if (found2 < found1) {
+    } else if (negativeClearStep < positiveClearStep) {
         dir = -1;
-    } else if (found1 < 6) {
+    } else if (positiveClearStep < 6) {
         dir = 1;
     }
     if (dir != 0) {
@@ -341,7 +344,7 @@ int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, 
         if (d < 0) {
             d = -d;
         }
-        f = cam->unkC4 * cam->unkC4;
+        f = cam->focusMoveAverage * cam->focusMoveAverage;
         if (f < 1.0f) {
             f = 1.0f;
         }
@@ -525,89 +528,90 @@ void CameraModeNormal_updateSettings(CameraObject* camera) {
         gCameraModeNormalState->slideLeftAmount =
             blend * (gCameraModeNormalState->targetSlideLeftAmount - gCameraModeNormalState->savedSlideLeftAmount) +
             gCameraModeNormalState->savedSlideLeftAmount;
-        camera->fov =
+        camera->fovY =
             blend * (gCameraModeNormalState->fov - gCameraModeNormalState->savedFov) + gCameraModeNormalState->savedFov;
     }
 }
 
-void CameraModeNormal_updateVerticalBounds(CameraObject* camera, int flags, int collisionFlag, float* upperBound,
-                                           float* lowerBound) {
-    float pt0;
-    float wy;
-    float diff;
-    float bestUpper;
-    float bestLower;
-    float zLim;
-    float zB;
-    int res;
-    int count;
-    int i;
-    int j;
-    GameObject* camObj;
-    TrackQueryBounds bounds;
-    f32 pos[3];
-    TrackGroundHit** hits;
+void CameraModeNormal_updateVerticalBounds(CameraObject* camera, int flags, int queryType, f32* floorHeight,
+                                           f32* ceilingHeight) {
+    f32 hitHeight;
+    f32 cameraY;
+    f32 distance;
+    f32 bestFloorDistance;
+    f32 bestCeilingDistance;
+    f32 zero;
+    f32 heightTolerance;
+    int blocked;
+    int hitCount;
+    int ceilingIndex;
+    int floorIndex;
+    GameObject* focus;
+    TrackQueryBounds queryBounds;
+    f32 resolvedPosition[3];
+    TrackGroundHit** heightHits;
 
-    camObj = (GameObject*)((int)camera->anim.targetObj);
+    focus = camera->focusObject;
     if ((flags & 1) != 0) {
-        float range = 4.0f;
+        f32 range = 4.0f;
         camera->collisionResults.radii[0] = range;
         camera->collisionResults.surfaceTypes[0] = -1;
-        camera->collisionResults.queryTypes[0] = collisionFlag;
-        res = trackGetLineIntersect(&camera->probePosX, &camera->anim.worldPosX, range, 1, NULL, NULL, 0x10, 0xffffffff,
-                                    0xff, 0);
-        camera->cameraCollisionActive = res;
-        pos[0] = camera->anim.worldPosX;
-        pos[1] = camera->anim.worldPosY;
-        pos[2] = camera->anim.worldPosZ;
-        hitDetect_calcSweptSphereBounds(&bounds, &camera->probePosX, pos, camera->collisionResults.radii, 1);
-        trackIntersectBroadphase(camObj, &bounds, 0x240, 1);
-        trackGetIntersect(camObj, &camera->probePosX, pos, 1, &camera->collisionResults, 0);
-        camera->anim.worldPosX = pos[0];
-        camera->anim.worldPosY = pos[1];
-        camera->anim.worldPosZ = pos[2];
+        camera->collisionResults.queryTypes[0] = queryType;
+        blocked = trackGetLineIntersect(&camera->prevWorldX, &camera->anim.worldPosX, range, 1, NULL, NULL, 0x10,
+                                        0xffffffff, 0xff, 0);
+        camera->cameraCollisionActive = blocked;
+        resolvedPosition[0] = camera->anim.worldPosX;
+        resolvedPosition[1] = camera->anim.worldPosY;
+        resolvedPosition[2] = camera->anim.worldPosZ;
+        hitDetect_calcSweptSphereBounds(&queryBounds, &camera->prevWorldX, resolvedPosition,
+                                        camera->collisionResults.radii, 1);
+        trackIntersectBroadphase(focus, &queryBounds, 0x240, 1);
+        trackGetIntersect(focus, &camera->prevWorldX, resolvedPosition, 1, &camera->collisionResults, 0);
+        camera->anim.worldPosX = resolvedPosition[0];
+        camera->anim.worldPosY = resolvedPosition[1];
+        camera->anim.worldPosZ = resolvedPosition[2];
     }
     if ((flags & 2) != 0) {
-        count = trackGetHeight(camObj, camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ, &hits, 1,
-                               0x40);
-        *upperBound = -100000.0f;
-        *lowerBound = 100000.0f;
-        bestUpper = 100000.0f;
-        bestLower = 100000.0f;
-        zLim = 0.0f;
-        for (i = 0; i < count; i++) {
-            zB = 10.0f;
-            if (hits[i]->normalY < zLim) {
-                pt0 = hits[i]->height;
-                wy = camera->anim.worldPosY;
-                if (pt0 > wy - zB) {
-                    diff = wy - pt0;
-                    if (diff < zLim) {
-                        diff = -diff;
+        hitCount = trackGetHeight(focus, camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
+                                  &heightHits, 1, 0x40);
+        *floorHeight = -100000.0f;
+        *ceilingHeight = 100000.0f;
+        bestFloorDistance = 100000.0f;
+        bestCeilingDistance = 100000.0f;
+        zero = 0.0f;
+        for (ceilingIndex = 0; ceilingIndex < hitCount; ceilingIndex++) {
+            heightTolerance = 10.0f;
+            if (heightHits[ceilingIndex]->normalY < zero) {
+                hitHeight = heightHits[ceilingIndex]->height;
+                cameraY = camera->anim.worldPosY;
+                if (hitHeight > cameraY - heightTolerance) {
+                    distance = cameraY - hitHeight;
+                    if (distance < zero) {
+                        distance = -distance;
                     }
-                    if (diff < bestLower) {
-                        *lowerBound = pt0;
-                        camera->boundHitZLower = hits[i]->normalY;
-                        bestLower = diff;
+                    if (distance < bestCeilingDistance) {
+                        *ceilingHeight = hitHeight;
+                        camera->ceilingNormalY = heightHits[ceilingIndex]->normalY;
+                        bestCeilingDistance = distance;
                     }
                 }
             }
         }
-        zLim = 0.0f;
-        for (j = 0; j < count; j++) {
-            zB = 10.0f;
-            if (hits[j]->normalY > zLim) {
-                pt0 = hits[j]->height;
-                wy = camera->anim.worldPosY;
-                if (pt0 < zB + wy) {
-                    diff = wy - pt0;
-                    if (diff < zLim) {
-                        diff = -diff;
+        zero = 0.0f;
+        for (floorIndex = 0; floorIndex < hitCount; floorIndex++) {
+            heightTolerance = 10.0f;
+            if (heightHits[floorIndex]->normalY > zero) {
+                hitHeight = heightHits[floorIndex]->height;
+                cameraY = camera->anim.worldPosY;
+                if (hitHeight < heightTolerance + cameraY) {
+                    distance = cameraY - hitHeight;
+                    if (distance < zero) {
+                        distance = -distance;
                     }
-                    if (diff < bestUpper) {
-                        *upperBound = pt0;
-                        camera->boundHitZUpper = hits[j]->normalY;
-                        bestUpper = diff;
+                    if (distance < bestFloorDistance) {
+                        *floorHeight = hitHeight;
+                        camera->floorNormalY = heightHits[floorIndex]->normalY;
+                        bestFloorDistance = distance;
                     }
                 }
             }
@@ -633,7 +637,7 @@ void CameraModeNormal_getSettings(float* minDistanceOut, float* maxDistanceOut, 
     }
 }
 
-void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 upperBound, f32 lowerBound) {
+void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 floorHeight, f32 ceilingHeight) {
     PlayerState* state;
     f32 minHeight;
     u32 angle;
@@ -798,7 +802,7 @@ void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 
     }
 }
 
-void CameraModeNormal_updatePitch(f32 targetY, f32 dist, CameraObject* camera) {
+void CameraModeNormal_updatePitch(CameraObject* camera, f32 targetY, f32 dist) {
     int pitchDelta;
 
     pitchDelta =
@@ -840,9 +844,9 @@ void CameraModeNormal_follow(CameraObject* camera, ObjAnimComponent* target) {
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                        &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                        camera->anim.parent);
-        camera->probePosX = camera->anim.worldPosX;
-        camera->probePosY = camera->anim.worldPosY;
-        camera->probePosZ = camera->anim.worldPosZ;
+        camera->prevWorldX = camera->anim.worldPosX;
+        camera->prevWorldY = camera->anim.worldPosY;
+        camera->prevWorldZ = camera->anim.worldPosZ;
         (*gCameraInterface)->getRelativePosition(camera, &dx, &dz, &dy, &dist, gCameraModeNormalState->targetHeight, 1);
         dist = dy * dy + (dx * dx + dz * dz);
         if (dist > 0.0f) {
@@ -924,7 +928,7 @@ void CameraModeNormal_copyToCurrent(CameraModeNormalActionSettings* settings) {
     gCameraModeNormalState->savedUpperHeightOffset = gCameraModeNormalState->upperHeightOffset;
     gCameraModeNormalState->savedMinDistance = gCameraModeNormalState->minDistance;
     gCameraModeNormalState->savedMaxDistance = gCameraModeNormalState->maxDistance;
-    gCameraModeNormalState->savedFov = camera->fov;
+    gCameraModeNormalState->savedFov = camera->fovY;
     gCameraModeNormalState->savedSlideRightAmount = gCameraModeNormalState->slideRightAmount;
     gCameraModeNormalState->savedSlideLeftAmount = gCameraModeNormalState->slideLeftAmount;
     gCameraModeNormalState->savedHeightAdjustRate = gCameraModeNormalState->heightAdjustRate;
@@ -947,7 +951,7 @@ void CameraModeNormal_copyToCurrent(CameraModeNormalActionSettings* settings) {
     gCameraModeNormalState->maxDistance = fval;
     gCameraModeNormalState->targetMaxDistance = fval;
     fval = settings->fov;
-    camera->fov = fval;
+    camera->fovY = fval;
     gCameraModeNormalState->fov = fval;
     fval = (f32)(u32)settings->slideRightAmount;
     gCameraModeNormalState->slideRightAmount = fval;
@@ -984,33 +988,29 @@ void CameraModeNormal_free(CameraObject* camera) {
 }
 
 void CameraModeNormal_update(CameraObject* camera) {
-    GameObject* target[1];
-    float fa;
+    GameObject* target;
+    float zero;
     int val;
     u32 angleDelta;
     int yaw;
-    float aimZ2;
-    float aimY2;
-    float aimX2;
-    float aimZ;
-    float aimY;
-    float aimX;
-    float dx2;
-    u8 relPosScratch[4];
-    float dz;
-    float dy;
-    float dx;
-    u8 wallTraceScratch[116];
-    u8 probeTraceScratch[112];
+    f32 wallOrigin[3];
+    f32 probeOrigin[3];
+    float relativeX;
+    f32 relativeY;
+    float relativeZ;
+    float horizontalDistance;
+    float targetTimeScale;
+    TrackHitResults wallTrace;
+    TrackHitResults probeTrace;
 
-    target[0] = (GameObject*)camera->anim.targetObj;
-    if (target[0] == NULL) {
+    target = camera->focusObject;
+    if (target == NULL) {
         return;
     }
-    if (target[0]->anim.classId == 1) {
-        playerGetTimeScale((GameObject*)target[0], &dx);
-        gCameraModeNormalScaledTimeDelta = timeDelta * dx;
-        val = EmissionController_IsLingering((GameObject*)target[0]);
+    if (target->anim.classId == 1) {
+        playerGetTimeScale(target, &targetTimeScale);
+        gCameraModeNormalScaledTimeDelta = timeDelta * targetTimeScale;
+        val = EmissionController_IsLingering(target);
         switch (val) {
         case 1:
             gCameraModeNormalState->heightAdjustRate = 0.0f;
@@ -1038,98 +1038,97 @@ void CameraModeNormal_update(CameraObject* camera) {
     }
     camera->unk13E = 0;
     CameraModeNormal_updateSettings(camera);
-    CameraModeNormal_updateWallAvoidance(camera, target[0]);
-    CameraModeNormal_follow(camera, &target[0]->anim);
+    CameraModeNormal_updateWallAvoidance(camera, target);
+    CameraModeNormal_follow(camera, &target->anim);
     Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
                                    &camera->anim.worldPosX, &camera->anim.worldPosY, &camera->anim.worldPosZ,
                                    camera->anim.parent);
-    CameraModeNormal_updateSlide(camera, target[0], gCameraModeNormalState->verticalUpperBound,
-                                 gCameraModeNormalState->verticalLowerBound);
-    CameraModeNormal_updateVerticalBounds(camera, 1, 8, &gCameraModeNormalState->verticalUpperBound,
-                                          &gCameraModeNormalState->verticalLowerBound);
+    CameraModeNormal_updateSlide(camera, target, gCameraModeNormalState->floorHeight,
+                                 gCameraModeNormalState->ceilingHeight);
+    CameraModeNormal_updateVerticalBounds(camera, 1, 8, &gCameraModeNormalState->floorHeight,
+                                          &gCameraModeNormalState->ceilingHeight);
     if (gCameraModeNormalState->wallAvoidanceFlags.active == 0) {
-        gCameraModeNormalState->targetActionFlags = *(u8*)((u8*)camera + offsetof(CameraObject, anim.activeMove));
+        gCameraModeNormalState->collisionHitMask = camera->collisionResults.hitMask;
         if (((camera->cameraCollisionActive != 0) ||
-             ((gCameraModeNormalState->targetActionFlags == 1 &&
-               (*(f32*)((u8*)camera + offsetof(CameraObject, anim.next)) >= 0.0f)))) &&
+             ((gCameraModeNormalState->collisionHitMask == 1 && (camera->collisionResults.planes[0][1] >= 0.0f)))) &&
             (gCameraModeNormalState->clampFlags.distanceClamped == 0)) {
-            if (((camera->anim.worldPosY > 30.0f + target[0]->anim.worldPosY) &&
-                 (camera->anim.worldPosY < 70.0f + target[0]->anim.worldPosY)) &&
+            if (((camera->anim.worldPosY > 30.0f + target->anim.worldPosY) &&
+                 (camera->anim.worldPosY < 70.0f + target->anim.worldPosY)) &&
                 (camera->anim.parent == NULL)) {
                 gCameraModeNormalState->wallAvoidanceFlags.active = 1;
             }
         }
-        if ((((gCameraModeNormalState->targetActionFlags & 0x10) != 0) &&
-             (*(f32*)((u8*)camera + offsetof(CameraObject, anim.next)) < -0.707f)) &&
-            (target[0]->anim.velocityY <= 0.0f)) {
+        if ((((gCameraModeNormalState->collisionHitMask & 0x10) != 0) &&
+             (camera->collisionResults.planes[0][1] < -0.707f)) &&
+            (target->anim.velocityY <= 0.0f)) {
             gCameraModeNormalState->clampFlags.heightLocked = 1;
             gCameraModeNormalState->heightLockLimit = camera->anim.worldPosY;
         }
     } else {
-        fa = 0.0f;
-        camera->boundHitZUpper = fa;
-        camera->boundHitZLower = fa;
-        if ((*(u8*)((u8*)camera + offsetof(CameraObject, anim.activeMove)) == 1) &&
-            (*(f32*)((u8*)camera + offsetof(CameraObject, anim.next)) < fa)) {
+        zero = 0.0f;
+        camera->floorNormalY = zero;
+        camera->ceilingNormalY = zero;
+        if ((camera->collisionResults.hitMask == 1) && (camera->collisionResults.planes[0][1] < zero)) {
             gCameraModeNormalState->wallAvoidanceFlags.active = 0;
         }
-        if ((camera->anim.worldPosY > 75.0f + target[0]->anim.worldPosY) ||
-            (camera->anim.worldPosY < 20.0f + target[0]->anim.worldPosY)) {
+        if ((camera->anim.worldPosY > 75.0f + target->anim.worldPosY) ||
+            (camera->anim.worldPosY < 20.0f + target->anim.worldPosY)) {
             gCameraModeNormalState->wallAvoidanceFlags.active = 0;
         }
     }
     if (gCameraModeNormalState->clampFlags.distanceClamped != 0) {
-        if ((gCameraModeNormalState->targetActionFlags == 1) || (camera->cameraCollisionActive != 0)) {
+        if ((gCameraModeNormalState->collisionHitMask == 1) || (camera->cameraCollisionActive != 0)) {
             gCameraModeNormalState->wallAvoidanceTimer += 1;
         } else {
             gCameraModeNormalState->wallAvoidanceTimer = 0;
         }
         if (gCameraModeNormalState->wallAvoidanceTimer > 10) {
-            if (target[0]->anim.classId == 1) {
-                cameraGetPrevPos2(target[0], &aimX2, &aimY2, &aimZ2);
+            if (target->anim.classId == 1) {
+                cameraGetPrevPos2(target, &wallOrigin[0], &wallOrigin[1], &wallOrigin[2]);
             } else {
-                aimX2 = target[0]->anim.worldPosX;
-                aimY2 = target[0]->anim.worldPosY + gCameraModeNormalState->targetHeight;
-                aimZ2 = target[0]->anim.worldPosZ;
+                wallOrigin[0] = target->anim.worldPosX;
+                wallOrigin[1] = target->anim.worldPosY + gCameraModeNormalState->targetHeight;
+                wallOrigin[2] = target->anim.worldPosZ;
             }
-            camcontrol_traceMove(&aimX2, &camera->anim.worldPosX, &camera->anim.worldPosX,
-                                 (TrackHitResults*)wallTraceScratch, 3, 1, 1, 4.0f);
-            camera->probePosX = camera->anim.worldPosX;
-            camera->probePosY = camera->anim.worldPosY;
-            camera->probePosZ = camera->anim.worldPosZ;
+            camcontrol_traceMove(&wallOrigin[0], &camera->anim.worldPosX, &camera->anim.worldPosX, &wallTrace, 3, 1, 1,
+                                 4.0f);
+            camera->prevWorldX = camera->anim.worldPosX;
+            camera->prevWorldY = camera->anim.worldPosY;
+            camera->prevWorldZ = camera->anim.worldPosZ;
             gCameraModeNormalState->wallAvoidanceTimer = 0;
         }
     }
     if (gCameraModeNormalState->wallAvoidanceFlags.active == 0) {
-        if ((gCameraModeNormalState->targetActionFlags & 0x10) != 0) {
+        if ((gCameraModeNormalState->collisionHitMask & 0x10) != 0) {
             gCameraModeNormalState->collisionProbeTimer += 1;
         } else {
             gCameraModeNormalState->collisionProbeTimer = 0;
         }
         if (gCameraModeNormalState->collisionProbeTimer > 5) {
-            if (target[0]->anim.classId == 1) {
-                cameraGetPrevPos2(target[0], &aimX, &aimY, &aimZ);
+            if (target->anim.classId == 1) {
+                cameraGetPrevPos2(target, &probeOrigin[0], &probeOrigin[1], &probeOrigin[2]);
             } else {
-                aimX = target[0]->anim.worldPosX;
-                aimY = target[0]->anim.worldPosY + gCameraModeNormalState->targetHeight;
-                aimZ = target[0]->anim.worldPosZ;
+                probeOrigin[0] = target->anim.worldPosX;
+                probeOrigin[1] = target->anim.worldPosY + gCameraModeNormalState->targetHeight;
+                probeOrigin[2] = target->anim.worldPosZ;
             }
-            camcontrol_traceMove(&aimX, &camera->anim.worldPosX, &camera->anim.worldPosX,
-                                 (TrackHitResults*)probeTraceScratch, 3, 1, 1, 4.0f);
-            camera->probePosX = camera->anim.worldPosX;
-            camera->probePosY = camera->anim.worldPosY;
-            camera->probePosZ = camera->anim.worldPosZ;
+            camcontrol_traceMove(&probeOrigin[0], &camera->anim.worldPosX, &camera->anim.worldPosX, &probeTrace, 3, 1,
+                                 1, 4.0f);
+            camera->prevWorldX = camera->anim.worldPosX;
+            camera->prevWorldY = camera->anim.worldPosY;
+            camera->prevWorldZ = camera->anim.worldPosZ;
             gCameraModeNormalState->collisionProbeTimer = 0;
         }
     }
     (*gCameraInterface)
-        ->getRelativePosition(camera, &dx2, (f32*)relPosScratch, &dz, &dy, gCameraModeNormalState->targetHeight, 0);
-    yaw = 0x8000 - (u16)getAngle(dx2, dz);
+        ->getRelativePosition(camera, &relativeX, &relativeY, &relativeZ, &horizontalDistance,
+                              gCameraModeNormalState->targetHeight, 0);
+    yaw = 0x8000 - (u16)getAngle(relativeX, relativeZ);
     gCameraModeNormalState->pitchOffset = 0;
     camera->anim.rotX = yaw - gCameraModeNormalState->pitchOffset;
     angleDelta =
-        0xffffu &
-        getAngle(camera->anim.worldPosY - (target[0]->anim.worldPosY + gCameraModeNormalState->targetHeight), dy);
+        0xffffu & getAngle(camera->anim.worldPosY - (target->anim.worldPosY + gCameraModeNormalState->targetHeight),
+                           horizontalDistance);
     angleDelta = angleDelta - ((int)camera->anim.rotY & 0xffffU);
     if ((int)angleDelta > 0x8000) {
         angleDelta -= 0xffff;
@@ -1139,7 +1138,7 @@ void CameraModeNormal_update(CameraObject* camera) {
     }
     val = interpolate((f32)(int)angleDelta, 1.0f / (f32)(u32)gCameraModeNormalState->yawResponseFrames, timeDelta);
     camera->anim.rotY += val;
-    CameraModeNormal_updateTargetAction(camera, target[0]);
+    CameraModeNormal_updateTargetAction(camera, target);
     val = interpolate((f32)camera->anim.rotZ, 0.125f, timeDelta);
     camera->anim.rotZ -= val;
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
@@ -1163,22 +1162,22 @@ void CameraModeNormal_init(CameraObject* cam, int mode, CameraModeNormalInitSett
     gCameraModeNormalState->wallAvoidanceTimer = 0;
     gCameraModeNormalState->clampFlags.distanceClamped = 0;
     gCameraModeNormalState->yawResponseFrames = 8;
-    target = (GameObject*)cam->anim.targetObj;
+    target = (GameObject*)cam->focusObject;
     switch (mode) {
     case 0:
         memset(gCameraModeNormalState, 0, sizeof(CameraModeNormalState));
         if (settings != NULL) {
-            fVal = (f32)(u32)p->minDistanceWide;
+            fVal = (f32)(u32)p->initial.minDistance;
             gCameraModeNormalState->minDistance = fVal;
             gCameraModeNormalState->targetMinDistance = fVal;
-            fVal = (f32)(u32)p->maxDistanceWide;
+            fVal = (f32)(u32)p->initial.maxDistance;
             gCameraModeNormalState->maxDistance = fVal;
             gCameraModeNormalState->targetMaxDistance = fVal;
-            fVal = (f32)(u32)p->heightOffsetWide;
+            fVal = (f32)(u32)p->initial.heightOffset;
             gCameraModeNormalState->baseLowerHeightOffset = fVal;
             gCameraModeNormalState->lowerHeightOffset = fVal;
             gCameraModeNormalState->targetLowerHeightOffset = fVal;
-            fVal = (f32)(u32)p->heightOffsetWide;
+            fVal = (f32)(u32)p->initial.heightOffset;
             gCameraModeNormalState->baseUpperHeightOffset = fVal;
             gCameraModeNormalState->upperHeightOffset = fVal;
             gCameraModeNormalState->targetUpperHeightOffset = fVal;
@@ -1202,24 +1201,24 @@ void CameraModeNormal_init(CameraObject* cam, int mode, CameraModeNormalInitSett
         gCameraModeNormalState->unknown24 = -100000.0f;
         gCameraModeNormalState->unknown20 = 100000.0f;
         gCameraModeNormalState->initialized = 1;
-        gCameraModeNormalState->fov = cam->fov;
+        gCameraModeNormalState->fov = cam->fovY;
         camcontrol_getTargetPosition(cam, &target->anim, &cam->anim.worldPosX, &cam->anim.rotY);
         fVal = cam->anim.worldPosX;
         cam->anim.localPosX = fVal;
-        cam->probePosX = fVal;
+        cam->prevWorldX = fVal;
         cam->savedLocalPos.x = fVal;
         fVal = cam->anim.worldPosY;
         cam->anim.localPosY = fVal;
-        cam->probePosY = fVal;
+        cam->prevWorldY = fVal;
         cam->savedLocalPos.y = fVal;
         fVal = cam->anim.worldPosZ;
         cam->anim.localPosZ = fVal;
-        cam->probePosZ = fVal;
+        cam->prevWorldZ = fVal;
         cam->savedLocalPos.z = fVal;
         cam->anim.rotX = 0;
         cam->anim.rotZ = 0;
         if (settings != NULL) {
-            cam->fov = (f32)(u32)p->fovWide;
+            cam->fovY = (f32)(u32)p->initial.fov;
         }
         break;
     case 4:
@@ -1232,44 +1231,44 @@ void CameraModeNormal_init(CameraObject* cam, int mode, CameraModeNormalInitSett
         vOutB = cam->anim.localPosY - (target->anim.localPosY + gCameraModeNormalState->targetHeight);
         cam->anim.rotY = getAngle(vOutB, vOutD);
         cam->anim.rotZ = 0;
-        cam->probePosX = cam->anim.worldPosX;
-        cam->probePosY = cam->anim.worldPosY;
-        cam->probePosZ = cam->anim.worldPosZ;
+        cam->prevWorldX = cam->anim.worldPosX;
+        cam->prevWorldY = cam->anim.worldPosY;
+        cam->prevWorldZ = cam->anim.worldPosZ;
         cam->savedLocalPos.x = cam->anim.localPosX;
         cam->savedLocalPos.y = cam->anim.localPosY;
         cam->savedLocalPos.z = cam->anim.localPosZ;
-        cam->fov = gCameraModeNormalState->fov;
+        cam->fovY = gCameraModeNormalState->fov;
         gCameraModeNormalState->transitionTimer = 0;
         break;
     case 2:
         if (settings != NULL) {
             gCameraModeNormalState->targetTargetHeight = 35.0f;
-            fVal = (f32)(u32)p->lowerHeightOffset;
+            fVal = (f32)(u32)p->transition.lowerHeightOffset;
             gCameraModeNormalState->baseLowerHeightOffset = fVal;
             gCameraModeNormalState->targetLowerHeightOffset = fVal;
-            fVal = (f32)(u32)p->upperHeightOffset;
+            fVal = (f32)(u32)p->transition.upperHeightOffset;
             gCameraModeNormalState->baseUpperHeightOffset = fVal;
             gCameraModeNormalState->targetUpperHeightOffset = fVal;
-            gCameraModeNormalState->targetMinDistance = (f32)(u32)p->minDistance;
-            gCameraModeNormalState->targetMaxDistance = (f32)(u32)p->maxDistance;
-            gCameraModeNormalState->fov = p->fov;
-            gCameraModeNormalState->targetSlideRightAmount = (f32)(u32)p->slideRightAmount;
-            gCameraModeNormalState->targetSlideLeftAmount = (f32)(u32)p->slideLeftAmount;
-            uVal = p->distanceAdjustRate;
+            gCameraModeNormalState->targetMinDistance = (f32)(u32)p->transition.minDistance;
+            gCameraModeNormalState->targetMaxDistance = (f32)(u32)p->transition.maxDistance;
+            gCameraModeNormalState->fov = p->transition.fov;
+            gCameraModeNormalState->targetSlideRightAmount = (f32)(u32)p->transition.slideRightAmount;
+            gCameraModeNormalState->targetSlideLeftAmount = (f32)(u32)p->transition.slideLeftAmount;
+            uVal = p->transition.distanceAdjustRate;
             if (uVal != 0) {
                 gCameraModeNormalState->targetDistanceAdjustRate = uVal / 255.0f;
             } else {
                 gCameraModeNormalState->targetDistanceAdjustRate = 0.09f;
             }
-            uVal = p->heightAdjustRate;
+            uVal = p->transition.heightAdjustRate;
             if (uVal != 0) {
                 gCameraModeNormalState->targetHeightAdjustRate = uVal / 255.0f;
             } else {
                 gCameraModeNormalState->targetHeightAdjustRate = 0.09f;
             }
-            gCameraModeNormalState->transitionTimer = (s16)p->transitionFrames;
-            gCameraModeNormalState->transitionDuration = (s16)p->transitionFrames;
-            *(u8*)&cam->letterboxTargetOffset = p->letterboxOffset;
+            gCameraModeNormalState->transitionTimer = (s16)p->transition.transitionFrames;
+            gCameraModeNormalState->transitionDuration = (s16)p->transition.transitionFrames;
+            *(u8*)&cam->letterboxTargetOffset = p->transition.letterboxOffset;
         } else {
             gCameraModeNormalState->targetTargetHeight = gCameraModeNormalState->savedTargetHeight;
             fVal = gCameraModeNormalState->savedLowerHeightOffset;
@@ -1293,12 +1292,12 @@ void CameraModeNormal_init(CameraObject* cam, int mode, CameraModeNormalInitSett
         gCameraModeNormalState->savedUpperHeightOffset = gCameraModeNormalState->upperHeightOffset;
         gCameraModeNormalState->savedMinDistance = gCameraModeNormalState->minDistance;
         gCameraModeNormalState->savedMaxDistance = gCameraModeNormalState->maxDistance;
-        gCameraModeNormalState->savedFov = cam->fov;
+        gCameraModeNormalState->savedFov = cam->fovY;
         gCameraModeNormalState->savedSlideRightAmount = gCameraModeNormalState->slideRightAmount;
         gCameraModeNormalState->savedSlideLeftAmount = gCameraModeNormalState->slideLeftAmount;
         gCameraModeNormalState->savedDistanceAdjustRate = gCameraModeNormalState->distanceAdjustRate;
         gCameraModeNormalState->savedHeightAdjustRate = gCameraModeNormalState->heightAdjustRate;
-        if ((settings != NULL) && (p->snapToTarget != 0)) {
+        if ((settings != NULL) && (p->transition.snapToTarget != 0)) {
             camcontrol_getTargetPosition(cam, &target->anim, &cam->anim.worldPosX, &cam->anim.rotY);
             Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
                                            &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
@@ -1307,7 +1306,7 @@ void CameraModeNormal_init(CameraObject* cam, int mode, CameraModeNormalInitSett
         }
         break;
     case 3:
-        cam->fov = gCameraModeNormalState->fov;
+        cam->fovY = gCameraModeNormalState->fov;
         cam->anim.worldPosX = gCameraModeNormalState->savedWorldX;
         cam->anim.worldPosY = gCameraModeNormalState->savedWorldY;
         cam->anim.worldPosZ = gCameraModeNormalState->savedWorldZ;
@@ -1320,13 +1319,13 @@ void CameraModeNormal_init(CameraObject* cam, int mode, CameraModeNormalInitSett
         cam->savedLocalPos.x = cam->anim.localPosX;
         cam->savedLocalPos.y = cam->anim.localPosY;
         cam->savedLocalPos.z = cam->anim.localPosZ;
-        cam->probePosX = cam->anim.worldPosX;
-        cam->probePosY = cam->anim.worldPosY;
-        cam->probePosZ = cam->anim.worldPosZ;
+        cam->prevWorldX = cam->anim.worldPosX;
+        cam->prevWorldY = cam->anim.worldPosY;
+        cam->prevWorldZ = cam->anim.worldPosZ;
         gCameraModeNormalState->transitionTimer = 0;
         break;
     case 1:
-        cam->fov = gCameraModeNormalState->fov;
+        cam->fovY = gCameraModeNormalState->fov;
         gCameraModeNormalState->wallAvoidanceFlags.active = gCameraModeNormalState->wallAvoidanceFlags.savedActive;
         break;
     }

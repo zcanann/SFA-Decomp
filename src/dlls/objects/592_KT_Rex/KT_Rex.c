@@ -53,7 +53,7 @@ MapRomList* gKTRexMapBlock;
 int gKTRexContactEffectCooldown;
 StaffCollisionInterface** gKTRexResource;
 
-KTRexWork gKTRexEffectSpawnWork;
+PartFxSpawnParams gKTRexEffectSpawnWork;
 
 s16 gKTRexMoveIdByLaneB05[4] = {9, 0x12, 0x12, 0};
 s16 gKTRexWalkMoveIdByLane[4] = {1, 2, 3, 0};
@@ -211,7 +211,7 @@ int ktrex_stateHandlerA10(GameObject* obj, GroundBaddieState* runtime) {
     phase = (flags >> 1) & 3;
     laneBit = flags & 1;
     if ((s8)runtime->baddie.moveJustStartedB != 0) {
-        (*gPlayerInterface)->setState(obj, runtime, 1);
+        (*gPlayerInterface)->setState(obj, &runtime->baddie, 1);
         gKTRexState->laneIndex = 2;
         {
             u8* row = (u8*)p + 0x38;
@@ -298,7 +298,7 @@ int ktrex_stateHandlerA10(GameObject* obj, GroundBaddieState* runtime) {
 
 int ktrex_stateHandlerA09(GameObject* obj, GroundBaddieState* runtime) {
     if ((s8)runtime->baddie.moveJustStartedB != 0) {
-        (*gPlayerInterface)->setState(obj, runtime, 8);
+        (*gPlayerInterface)->setState(obj, &runtime->baddie, 8);
         if ((*gCameraInterface)->getMode() == CAMMODE_DEFAULT) {
             (*gCameraInterface)->loadTriggeredCamAction(2, 0, 0);
         }
@@ -316,7 +316,7 @@ int ktrex_stateHandlerA08(GameObject* obj, GroundBaddieState* runtime) {
     void* p;
     p = obj->anim.placementData;
     if ((s8)runtime->baddie.moveJustStartedB != 0) {
-        (*gPlayerInterface)->setState(obj, runtime, 7);
+        (*gPlayerInterface)->setState(obj, &runtime->baddie, 7);
         {
             u8* row = (u8*)p + 0x4a;
             gKTRexState->stateTimer = (f32)(u32) * (u16*)(row + (gKTRexState->phaseCounter & ~1));
@@ -341,7 +341,7 @@ int ktrex_stateHandlerA08(GameObject* obj, GroundBaddieState* runtime) {
 
 int ktrex_stateHandlerA07(GameObject* obj, GroundBaddieState* runtime) {
     if ((s8)runtime->baddie.moveJustStartedB != 0) {
-        (*gPlayerInterface)->setState(obj, runtime, 6);
+        (*gPlayerInterface)->setState(obj, &runtime->baddie, 6);
         obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         gKTRexState->phaseCounter += 1;
         ktrexlevel_clearPathGameBits();
@@ -360,7 +360,7 @@ int ktrex_stateHandlerA07(GameObject* obj, GroundBaddieState* runtime) {
 int ktrex_stateHandlerA06(GameObject* obj, GroundBaddieState* runtime) {
     int slot;
     if (runtime->baddie.moveJustStartedB != 0) {
-        (*gPlayerInterface)->setState(obj, runtime, 5);
+        (*gPlayerInterface)->setState(obj, &runtime->baddie, 5);
     } else if (runtime->baddie.moveDone != 0) {
         slot = 0;
         if (Stack_IsEmpty(gKTRexState->stack) == 0) {
@@ -377,7 +377,7 @@ int ktrex_stateHandlerA05(GameObject* obj, GroundBaddieState* runtime) {
     int pushHi;
     p = obj->anim.placementData;
     if ((s8)runtime->baddie.moveJustStartedB != 0) {
-        (*gPlayerInterface)->setState(obj, runtime, 1);
+        (*gPlayerInterface)->setState(obj, &runtime->baddie, 1);
         gKTRexState->laneIndex = 1;
         p = (char*)p + gKTRexState->laneIndex * 4;
         runtime->baddie.animSpeedC = ((KtrexPlacement*)p)->laneSpeeds[0] / 1000.0f;
@@ -412,7 +412,7 @@ int ktrex_stateHandlerA04(GameObject* obj, GroundBaddieState* runtime) {
     f32 timer;
     p = obj->anim.placementData;
     if ((s8)runtime->baddie.moveJustStartedB != 0) {
-        (*gPlayerInterface)->setState(obj, runtime, 4);
+        (*gPlayerInterface)->setState(obj, &runtime->baddie, 4);
         gKTRexState->stateTimer = (f32)(u32)((u16*)((char*)p + 0x44))[gKTRexState->moveVariant];
     } else {
         timer = gKTRexState->stateTimer - timeDelta;
@@ -439,7 +439,7 @@ int ktrex_stateHandlerA03(GameObject* obj, GroundBaddieState* runtime) {
     f32 f5;
     int popped;
     if ((s8)runtime->baddie.moveJustStartedB != 0) {
-        (*gPlayerInterface)->setState(obj, runtime, 2);
+        (*gPlayerInterface)->setState(obj, &runtime->baddie, 2);
     } else if (runtime->baddie.moveDone != 0) {
         phase = (gKTRexState->timerFA >> 1) & 3;
         f5 = gKTRexState->rowBX[phase] - gKTRexState->rowAX[phase];
@@ -468,7 +468,7 @@ int ktrex_stateHandlerA02(GameObject* obj, GroundBaddieState* runtime) {
     u8* pb;
     p = obj->anim.placementData;
     if ((s8)runtime->baddie.moveJustStartedB != 0) {
-        (*gPlayerInterface)->setState(obj, runtime, 1);
+        (*gPlayerInterface)->setState(obj, &runtime->baddie, 1);
         gKTRexState->laneIndex = 0;
         gKTRexState->timerFA &= ~0x20;
         {
@@ -724,7 +724,7 @@ int ktrex_stateHandlerB02(GameObject* obj, GroundBaddieState* runtime) {
         gKTRexState->phaseFlags |= 0x10000;
     }
     runtime->baddie.movementFlags |= 1;
-    (*gPlayerInterface)->updateAnimRootMotion(obj, runtime, timeDelta, 3);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, &runtime->baddie, timeDelta, 3);
     pos.rotX = gKTRexState->homeYaw;
     pos.rotY = 0;
     pos.rotZ = 0;
@@ -777,7 +777,7 @@ int ktrex_stateHandlerB01(GameObject* obj, GroundBaddieState* runtime) {
     }
     dx = oneOverTimeDelta * (gKTRexState->posX - obj->anim.localPosX);
     dz = oneOverTimeDelta * (gKTRexState->posZ - obj->anim.localPosZ);
-    ObjAnim_SampleRootCurvePhase(&obj->anim, sqrtf(dx * dx + dz * dz), &runtime->baddie.moveSpeed);
+    ObjAnim_SampleRootCurvePhase(obj, sqrtf(dx * dx + dz * dz), &runtime->baddie.moveSpeed);
     obj->anim.localPosX = gKTRexState->posX;
     obj->anim.localPosZ = gKTRexState->posZ;
     return 0;
@@ -830,8 +830,8 @@ void ktrex_updateContactEffects(GameObject* obj, GroundBaddieState* runtime) {
         gKTRexEffectSpawnWork.posZ = playerMapOffsetZ + pt[3];
         Sfx_PlayFromObject(obj, SFXTRIG_dn_rexhurt12);
         Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122);
-        (*gPartfxInterface)->spawnObject(obj, 0x4b2, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 0x4b3, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 0x4b2, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 0x4b3, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
         if (hit == 0xe) {
             runtime->baddie.hitPoints -= 1;
         } else {
@@ -849,11 +849,11 @@ void ktrex_updateContactEffects(GameObject* obj, GroundBaddieState* runtime) {
         gKTRexEffectSpawnWork.posX = contactPoints[hitType * 4 + 1] + playerMapOffsetX;
         gKTRexEffectSpawnWork.posY = contactPoints[hitType * 4 + 2];
         gKTRexEffectSpawnWork.posZ = contactPoints[hitType * 4 + 3] + playerMapOffsetZ;
-        (*gPartfxInterface)->spawnObject(obj, KTREX_PARTFX_HIT, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, KTREX_PARTFX_HIT, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
         gKTRexEffectSpawnWork.posX -= obj->anim.worldPosX;
         gKTRexEffectSpawnWork.posY -= obj->anim.worldPosY;
         gKTRexEffectSpawnWork.posZ -= obj->anim.worldPosZ;
-        gKTRexEffectSpawnWork.unk8 = 1.0f;
+        gKTRexEffectSpawnWork.scale = 1.0f;
         gKTRexEffectSpawnWork.unk0 = 0;
         gKTRexEffectSpawnWork.unk2 = 0;
         gKTRexEffectSpawnWork.unk4 = 0;
@@ -957,55 +957,55 @@ void ktrex_updateAttackEffects(GameObject* obj) {
         return;
     }
     if ((gKTRexState->phaseFlags & 0x1) != 0) {
-        gKTRexState->spawnWork[1].unk8 = 1.0f;
+        gKTRexState->spawnWork[1].scale = 1.0f;
         for (i = 0; i < 10; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x2) != 0) {
-        gKTRexState->spawnWork[2].unk8 = 1.0f;
+        gKTRexState->spawnWork[2].scale = 1.0f;
         for (i = 0; i < 10; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x4) != 0) {
-        gKTRexState->spawnWork[1].unk8 = 1.5f;
+        gKTRexState->spawnWork[1].scale = 1.5f;
         for (i = 0; i < 13; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x8) != 0) {
-        gKTRexState->spawnWork[2].unk8 = 1.5f;
+        gKTRexState->spawnWork[2].scale = 1.5f;
         for (i = 0; i < 13; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x10) != 0) {
-        gKTRexState->spawnWork[1].unk8 = 2.0f;
+        gKTRexState->spawnWork[1].scale = 2.0f;
         for (i = 0; i < 16; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x20) != 0) {
-        gKTRexState->spawnWork[2].unk8 = 2.0f;
+        gKTRexState->spawnWork[2].scale = 2.0f;
         for (i = 0; i < 16; i++) {
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x800) != 0) {
-        (*gPartfxInterface)->spawnObject(obj, 0x487, &gKTRexState->spawnWork[0], 0x200001, -1, &gKTRexState->vecX);
+        (*gPartfxInterface)->spawnEffect(obj, 0x487, &gKTRexState->spawnWork[0], 0x200001, -1, &gKTRexState->vecX);
     }
     gKTRexState->phaseFlags &= 0x1800;
     if (((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject()) {
@@ -1314,7 +1314,8 @@ void ktrex_update(GameObject* obj) {
     ktrex_updateAttackEffects(obj);
     (*gBaddieControlInterface)->updateGravity(obj, runtime, 0.0f, 0);
     ObjHits_SetHitVolumeMasks(&obj->anim, 24, 2, 0x1fffff);
-    (*gPlayerInterface)->update(obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
+    (*gPlayerInterface)
+        ->update(obj, &runtime->baddie, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
     obj->anim.localPosY = gKTRexState->posY;
 }
 
@@ -1337,7 +1338,7 @@ void ktrex_init(GameObject* obj, char* arg, int flag) {
     (*gBaddieControlInterface)->initGroundBaddie(obj, (u8*)arg, (u8*)gKTRexRuntime, 9, 0xc, 0x100, spawnFlags, 20.0f);
     obj->animEventCallback = ktrex_animEventCallback;
     rt = (GroundBaddieState*)gKTRexRuntime;
-    (*gPlayerInterface)->setState(obj, rt, 0);
+    (*gPlayerInterface)->setState(obj, &rt->baddie, 0);
     rt->baddie.substate = 2;
     rt->baddie.targetObj = 0;
     rt->baddie.physicsActive = 0;

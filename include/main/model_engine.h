@@ -5,6 +5,7 @@
 #include "main/game_timer.h"
 #include "main/model_engine_ui_api.h"
 #include "main/model_render_instrs_api.h"
+#include <stddef.h>
 
 typedef struct RingBufferQueue {
     s16 count;
@@ -16,11 +17,18 @@ typedef struct RingBufferQueue {
     void* data;
 } RingBufferQueue;
 
+/* Intrusive nodes contain a void* link at nextOffset. */
 typedef struct ObjLinkedList {
     s16 count;
     s16 nextOffset;
-    int head;
+    void* head;
 } ObjLinkedList;
+
+STATIC_ASSERT(offsetof(ObjLinkedList, count) == 0x00);
+STATIC_ASSERT(offsetof(ObjLinkedList, nextOffset) == 0x02);
+STATIC_ASSERT(offsetof(ObjLinkedList, head) == 0x04);
+STATIC_ASSERT(sizeof(ObjLinkedList) == 0x08);
+STATIC_ASSERT(sizeof(ptrdiff_t) == sizeof(void*));
 
 typedef struct ModelList {
     s16* entries;
@@ -62,7 +70,7 @@ extern int gModelEngineTimerColonX;
 extern int gModelEngineTimerDotX;
 
 u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsState* output, int bitStride,
-                          u8 encodedBitWidth);
+                           u8 encodedBitWidth);
 int modelRenderCopyPackedSamples(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int count, int gap,
                                  u8 bitWidth);
 
@@ -79,8 +87,9 @@ void Stack_Push(RingBufferQueue* stack, void* src);
 void Stack_Free(RingBufferQueue* stack);
 RingBufferQueue* Queue_Alloc(int capacity, int elemSize);
 
-void objList_remove(ObjLinkedList* list, int item);
-void objListAdd(ObjLinkedList* list, int prev, int item);
+/* Init preserves count; an insertion into an empty list preserves the node link. */
+void objList_remove(ObjLinkedList* list, void* item);
+void objListAdd(ObjLinkedList* list, void* prev, void* item);
 void objListInit(ObjLinkedList* list, s16 nextOffset);
 BOOL model_findIdxInModelList(ModelList* list, void* header, int* outIndex);
 BOOL ModelList_getHeader(ModelList* list, int index, void* outHeader);

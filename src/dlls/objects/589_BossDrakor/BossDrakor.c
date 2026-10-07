@@ -204,7 +204,7 @@ void bossdrakor_updateHeadTracking(GameObject* obj, BossDrakorState* drakorState
                     }
                     if (drakorState->jawAnimTimer > 10.0f) {
                         partfxParams.arg3 = 45000;
-                        (*gPartfxInterface)->spawnObject((void*)obj, BOSSDRAKOR_PARTFX, &partfxParams, 1, -1, NULL);
+                        (*gPartfxInterface)->spawnEffect(obj, BOSSDRAKOR_PARTFX, &partfxParams, 1, -1, NULL);
                     }
                 }
             }
@@ -771,7 +771,7 @@ void bossdrakor_update(GameObject* obj) {
             state->flags198.b08 = 0;
             if (!state->flags198.b40) {
                 state->moveSpeed = 600.0f;
-                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x28);
+                ObjAnim_SetCurrentEventStepFrames(obj, 0x28);
                 moveId = 0x10;
             } else {
                 moveId = bossdrakor_chooseNextMove(obj, &state->moveSpeed);

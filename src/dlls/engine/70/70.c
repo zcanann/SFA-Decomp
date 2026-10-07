@@ -32,7 +32,7 @@ void CameraModeDebug_update(CameraObject* camera) {
     f32 radius;
 
     move = 0.0f;
-    target = (GameObject*)camera->anim.targetObj;
+    target = (GameObject*)camera->focusObject;
     held = getButtonsHeld(0);
     if (((u16)getButtonsJustPressed(0) & PAD_BUTTON_RIGHT) != 0) {
         (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);

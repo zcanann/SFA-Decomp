@@ -165,7 +165,7 @@ void dll414_render(GameObject* obj, int renderArg2, int renderArg3, int renderAr
                 scratch.particleParams.posY = 5.0f;
                 scratch.particleParams.posZ = 0.0f;
                 (*gPartfxInterface)
-                    ->spawnObject(obj, DLL19E_IDLE_PARTICLE_ID, &scratch.particleParams, DLL19E_IDLE_PARTICLE_MODE, -1,
+                    ->spawnEffect(obj, DLL19E_IDLE_PARTICLE_ID, &scratch.particleParams, DLL19E_IDLE_PARTICLE_MODE, -1,
                                   NULL);
             }
             state->delayTimer = (s16)(randomGetRange(DLL19E_IDLE_DELAY_RANDOM_MIN, DLL19E_IDLE_DELAY_RANDOM_MAX) +
@@ -235,7 +235,7 @@ void dll414_update(GameObject* obj) {
 
                 particleIndex = 0;
                 do {
-                    (*gPartfxInterface)->spawnObject(obj, DLL19E_ACTIVATION_PARTICLE_ID, NULL, 0, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, DLL19E_ACTIVATION_PARTICLE_ID, NULL, 0, -1, NULL);
                     particleIndex++;
                 } while (particleIndex < DLL19E_ACTIVATION_PARTICLE_COUNT);
 

@@ -25,7 +25,7 @@ void CameraModeForceBehind_free(void) {
 
 void CameraModeForceBehind_update(CameraObject* camera) {
     extern const f32 gCamForceBehindEaseRate[1];
-    GameObject* target = (GameObject*)camera->anim.targetObj;
+    GameObject* target = (GameObject*)camera->focusObject;
     s16 yaw;
     s16 pitch;
     s16 traceRotY;
@@ -106,7 +106,7 @@ void CameraModeForceBehind_update(CameraObject* camera) {
 const f32 gCamForceBehindEaseRate[] = {0.25f};
 
 void CameraModeForceBehind_init(CameraObject* camera, int unused, CameraModeForceBehindInitParams* params) {
-    GameObject* target = (GameObject*)camera->anim.targetObj;
+    GameObject* target = (GameObject*)camera->focusObject;
     f32 radians;
     f32 orbitSin;
     f32 orbitCos;

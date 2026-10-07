@@ -12,7 +12,7 @@ typedef struct ObjModel ObjModel;
 extern ModelLightStruct* gObjSelectedLights;
 
 void objRender(int a, int b, int c, int d, GameObject* obj, int flag);
-void objFuzzSetupGxState(void* obj);
+void objFuzzSetupGxState(GameObject* obj);
 void objRenderShadow(GameObject* obj);
 void objRenderShadowIfVisible(GameObject* obj, int a, int b, int c, int d, int e);
 void objRenderAttachment(GameObject* obj, int* model);
@@ -26,7 +26,7 @@ void objSetOverrideColor(u8 red, u8 green, u8 blue);
 void objRenderModel(GameObject* obj);
 void objSetCurrentMatrix(MtxPtr mtx);
 void modelInitMtxs(ModelFileHeader* modelFile, ObjModel* model);
-void modelBuildPosNrmMtxs(ModelFileHeader* modelFile, int* model, f32* matrix, f32* matrix2);
+void modelBuildPosNrmMtxs(ModelFileHeader* modelFile, ObjModel* model, f32* matrix, f32* matrix2);
 int objMatrixToRotation(f32* matrix, s16* outX, s16* outY, s16* outZ);
 int objFuzzShellRenderCb(GameObject* obj, int* model, int renderOpIndex);
 int objFuzzRenderCb(GameObject* obj, ObjModel* model, int renderOpIndex);

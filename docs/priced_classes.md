@@ -1639,9 +1639,12 @@ and that md5-of-every-`.o` reports as 33. **A new `#include` is not priced by de
 Completing an array type is a semantic change, not a declaration move, and it is priced on both
 sides:
 
-- **Declaration side.** `gAttractMovieAudioDmaBuffer` moves into `attract_movie_api.h`, but the
-  declaration must stay `extern char gAttractMovieAudioDmaBuffer[];`. Carrying the `[0x50C]` into
-  the header completes the type for `dll_3e.c` and costs `prepareAttractMode` 100.0 -> 99.087.
+- **Declaration side, historical THP example.** Completing `gAttractMovieAudioDmaBuffer`
+  as `[0x50C]` formerly cost `prepareAttractMode` 100.0 -> 99.087 in the artificial
+  `dll_3e.c` fragment. [Player TU recovery](thp_video_decode_recovery.md) supersedes
+  that restriction: the audio buffer owns `0x500` bytes, its former tail is a separate
+  message array, and preparation addresses the actual player and queues. The complete
+  definition now shares one exact TU with preparation; no padded control overlay remains.
 - **Definition side, and it is the data axis.** `2589a58b75`: `projgfx/194`'s
   `sProjdfp1rDoNoLongerSupported` was defined `char [40]` where the string is retail's 0x24 bytes.
   The four surplus bytes over-size the object, and because `matched_data` is all-or-nothing per
@@ -4550,7 +4553,11 @@ Rejected probes are not retained: direct typed heap indexing loses one
 instruction per insertion; the reference-style separate heap/length-pointer
 signature does not restore it. Indexed point lookup changes eight bytes in
 `pathSearchAddNeighbor`, and removing the integer pointer round-trip changes
-15 bytes in `pathSearchStep`. Those exact forms remain protected. A direct
+15 bytes in `pathSearchStep`. Those forms were retained at that stage. The
+2026-10-06 [native path-search recovery](pathsearch_pointer_identity.md#native-heap-and-target-identity-2026-10-06)
+replaces the raw heap accesses with typed fields and a signed `s32` condition
+index, and replaces the truncating search cast with a pointer-preserving
+`void*` conversion, while retaining 100% matching. A direct
 `linkWalkGroups[i]` spelling swaps the address-add operands; a signed canonical
 `offsetof` expression preserves them.
 

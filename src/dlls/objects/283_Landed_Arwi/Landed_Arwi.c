@@ -57,13 +57,6 @@ typedef struct LandedArwingFxPoint {
     u8 pad;
 } LandedArwingFxPoint;
 
-typedef struct LandedArwingFxScratch {
-    u8 effectData[12];
-    f32 x;
-    f32 y;
-    f32 z;
-} LandedArwingFxScratch;
-
 STATIC_ASSERT(offsetof(LandedArwingFxPoint, scale) == 0x0);
 STATIC_ASSERT(offsetof(LandedArwingFxPoint, pathPoint) == 0x4);
 STATIC_ASSERT(offsetof(LandedArwingFxPoint, mode) == 0x5);
@@ -71,11 +64,6 @@ STATIC_ASSERT(offsetof(LandedArwingFxPoint, mask) == 0x6);
 STATIC_ASSERT(offsetof(LandedArwingFxPoint, pad) == 0x7);
 STATIC_ASSERT(sizeof(LandedArwingFxPoint) == 0x8);
 
-STATIC_ASSERT(offsetof(LandedArwingFxScratch, effectData) == 0x0);
-STATIC_ASSERT(offsetof(LandedArwingFxScratch, x) == 0xC);
-STATIC_ASSERT(offsetof(LandedArwingFxScratch, y) == 0x10);
-STATIC_ASSERT(offsetof(LandedArwingFxScratch, z) == 0x14);
-STATIC_ASSERT(sizeof(LandedArwingFxScratch) == 0x18);
 
 extern f32 gStaffReactionDebrisYOffset;
 extern f32 gStaffReactionOne;
@@ -89,7 +77,7 @@ LandedArwingFxPoint gLandedArwingPathFxTable[] = {
 void landed_arwing_renderPathEffects(GameObject* obj) {
     LandedArwingObjectState* state;
     u8 effectIndex;
-    LandedArwingFxScratch scratch;
+    PartFxSpawnParams scratch;
     f32 zero = 0.0f;
 
     state = obj->extra;
@@ -103,7 +91,7 @@ void landed_arwing_renderPathEffects(GameObject* obj) {
             scratch.z -= obj->anim.localPosZ;
             objfx_spawnMaskedHitEffect(obj, obj->anim.rootMotionScale * gLandedArwingPathFxTable[effectIndex].scale, 4,
                                        gLandedArwingPathFxTable[effectIndex].mode,
-                                       gLandedArwingPathFxTable[effectIndex].mask, scratch.effectData);
+                                       gLandedArwingPathFxTable[effectIndex].mask, &scratch);
             effectIndex++;
         }
     }
@@ -113,7 +101,7 @@ void landed_arwing_renderPathEffects(GameObject* obj) {
         scratch.x -= obj->anim.localPosX;
         scratch.y -= obj->anim.localPosY;
         scratch.z -= obj->anim.localPosZ;
-        objfx_spawnLightPulse(obj, 0.7f, 4, 0, 0, state->path6EffectStrength, scratch.effectData);
+        objfx_spawnLightPulse(obj, 0.7f, 4, 0, 0, state->path6EffectStrength, &scratch);
     }
 
     if (state->path8EffectStrength != zero) {
@@ -121,7 +109,7 @@ void landed_arwing_renderPathEffects(GameObject* obj) {
         scratch.x -= obj->anim.localPosX;
         scratch.y -= obj->anim.localPosY;
         scratch.z -= obj->anim.localPosZ;
-        objfx_spawnLightPulse(obj, 0.7f, 4, 0, 0, state->path8EffectStrength, scratch.effectData);
+        objfx_spawnLightPulse(obj, 0.7f, 4, 0, 0, state->path8EffectStrength, &scratch);
     }
 
     if (state->path7EffectStrength != zero) {
@@ -129,7 +117,7 @@ void landed_arwing_renderPathEffects(GameObject* obj) {
         scratch.x -= obj->anim.localPosX;
         scratch.y -= obj->anim.localPosY;
         scratch.z -= obj->anim.localPosZ;
-        objfx_spawnLightPulse(obj, 0.7f, 4, 0, 0, state->path7EffectStrength, scratch.effectData);
+        objfx_spawnLightPulse(obj, 0.7f, 4, 0, 0, state->path7EffectStrength, &scratch);
     }
 }
 

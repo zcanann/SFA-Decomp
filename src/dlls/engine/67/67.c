@@ -23,11 +23,12 @@
 
 CameraModeStaffAnimState* gCameraModeStaffAnimState;
 
-u8 CameraModeStaffAnim_samplePath(f32* outX, f32* height, f32* outZ, GameObject* target, CameraObject* camera) {
-    CamcontrolCameraState work;
+int CameraModeStaffAnim_samplePath(f32* outX, f32* height, f32* outZ, GameObject* target, CameraObject* camera) {
+    CameraObject work;
     CamcontrolDefaultHandlerEntry* handler;
     int i;
     f32 pathT;
+    int pathFinished;
 
     memset(&work, 0, sizeof(work));
     work.localFrameObj = (GameObject*)camera->anim.parent;
@@ -44,8 +45,8 @@ u8 CameraModeStaffAnim_samplePath(f32* outX, f32* height, f32* outZ, GameObject*
     handler->handler->vtable->follow(&work, &target->anim);
     Obj_TransformLocalPointToWorld(work.localX, work.localY, work.localZ, &work.worldX, &work.worldY, &work.worldZ,
                                    work.localFrameObj);
-    handler->handler->vtable->updateVerticalBounds(&work, 1, 3, &gCameraModeStaffAnimState->curveMin,
-                                                   &gCameraModeStaffAnimState->curveMax);
+    handler->handler->vtable->updateVerticalBounds(&work, 1, 3, &gCameraModeStaffAnimState->floorHeight,
+                                                   &gCameraModeStaffAnimState->ceilingHeight);
     i = gCameraModeStaffAnimState->pathCurve.count + -3;
     for (; i < gCameraModeStaffAnimState->pathCurve.count; i = i + 1) {
         gCameraModeStaffAnimState->pointsX[i] = work.localX;
@@ -61,14 +62,14 @@ u8 CameraModeStaffAnim_samplePath(f32* outX, f32* height, f32* outZ, GameObject*
     } else if (pathT < 0.0f) {
         pathT = 0.0f;
     }
-    pathT = Curve_EvalHermite(gCameraModeStaffAnimState->initialiseCurve, pathT, NULL);
+    pathT = Curve_EvalHermite(gCameraModeStaffAnimState->pathSpeedCurve, pathT, NULL);
     if (pathT < 0.2f) {
         pathT = 0.2f;
     }
-    Curve_AdvanceAlongPath(&gCameraModeStaffAnimState->pathCurve, pathT);
+    pathFinished = Curve_AdvanceAlongPath(&gCameraModeStaffAnimState->pathCurve, pathT);
     *outX = gCameraModeStaffAnimState->pathCurve.sample[0];
     *outZ = gCameraModeStaffAnimState->pathCurve.sample[2];
-    return;
+    return pathFinished;
 }
 
 void CameraModeStaffAnim_subdividePathAngles(s16* outAngles, u16* outCount, s16 baseAngle, s16 deltaAngle, s16 limit) {
@@ -169,9 +170,9 @@ void CameraModeStaffAnim_updateTargetAction(CameraObject* camera, GameObject* ta
         return;
     }
     state = gCameraModeStaffAnimState;
-    viewfinderSettings.radius = state->actionParamX;
-    viewfinderSettings.yOffset = state->actionParamZ;
-    viewfinderSettings.height = state->actionParamY;
+    viewfinderSettings.radius = state->minDistance;
+    viewfinderSettings.yOffset = state->lowerHeightOffset;
+    viewfinderSettings.height = state->targetHeight;
     cam = *gCameraInterface;
     cam->setMode(CAMERA_MODE_VIEWFINDER_RESOURCE_ID, 1, 0, sizeof(CameraModeViewfinderSettings), &viewfinderSettings, 0,
                  0xff);
@@ -188,18 +189,15 @@ void CameraModeStaffAnim_free(void) {
 void CameraModeStaffAnim_update(CameraObject* camera) {
     u8 needsReset;
     u32 angle;
-    int defaultHandler;
+    CamcontrolDefaultHandlerEntry* defaultHandler;
     int yawDelta;
     GameObject* target;
     int pointIndex;
-    f32 localPosZ[4];
-    f32 localPosY;
-    f32 localPosX;
+    Vec3f localPos;
     f32 relX;
     f32 relY;
     f32 relZ;
     f32 relDistXZ;
-    f32* pYaddr;
 
     if (gCameraModeStaffAnimState->pathNotNeeded != 0) {
         (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
@@ -221,32 +219,30 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
             }
             gCameraModeStaffAnimState->localFrame = (GameObject*)camera->anim.parent;
         }
-        target = (GameObject*)camera->anim.targetObj;
-        *(pYaddr = &localPosY) = camera->anim.localPosY;
-        needsReset = (u8)CameraModeStaffAnim_samplePath(&localPosX, pYaddr, localPosZ, target, camera);
-        camera->anim.localPosX = localPosX;
-        camera->anim.localPosZ = localPosZ[0];
-        defaultHandler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
+        target = (GameObject*)camera->focusObject;
+        localPos.y = camera->anim.localPosY;
+        needsReset = (u8)CameraModeStaffAnim_samplePath(&localPos.x, &localPos.y, &localPos.z, target, camera);
+        camera->anim.localPosX = localPos.x;
+        camera->anim.localPosZ = localPos.z;
+        defaultHandler = (*gCameraInterface)->getDefaultHandlerEntry();
         Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
                                        &camera->anim.worldPosX, &camera->anim.worldPosY, &camera->anim.worldPosZ,
-                                       (GameObject*)camera->anim.parentAddress);
-        ((CamcontrolDefaultHandlerEntry*)defaultHandler)->handler->vtable->updateSlide(camera, target, -100000.0f,
-                                                                                       100000.0f);
-        ((CamcontrolDefaultHandlerEntry*)defaultHandler)
-            ->handler->vtable->updateVerticalBounds(camera, 1, 3, &gCameraModeStaffAnimState->curveMin,
-                                                    &gCameraModeStaffAnimState->curveMax);
-        if ((camera->anim.currentMove != 0) || (camera->cameraCollisionActive != 0)) {
-            gCameraModeStaffAnimState->initialiseCurve[4] += timeDelta;
+                                       (GameObject*)camera->anim.parent);
+        defaultHandler->handler->vtable->updateSlide(camera, target, -100000.0f, 100000.0f);
+        defaultHandler->handler->vtable->updateVerticalBounds(camera, 1, 3, &gCameraModeStaffAnimState->floorHeight,
+                                                              &gCameraModeStaffAnimState->ceilingHeight);
+        if ((camera->collisionResults.hitCount != 0) || (camera->cameraCollisionActive != 0)) {
+            gCameraModeStaffAnimState->collisionTime += timeDelta;
         }
-        if (gCameraModeStaffAnimState->initialiseCurve[4] > 0.0f) {
+        if (gCameraModeStaffAnimState->collisionTime > 0.0f) {
             needsReset =
                 camcontrol_getTargetPosition(camera, &target->anim, &camera->anim.worldPosX, &camera->anim.rotY);
             if (needsReset == 1) {
                 camcontrol_onTargetTraceBlocked(1);
             }
-            camera->probePosX = camera->anim.worldPosX;
-            camera->probePosY = camera->anim.worldPosY;
-            camera->probePosZ = camera->anim.worldPosZ;
+            camera->prevWorldX = camera->anim.worldPosX;
+            camera->prevWorldY = camera->anim.worldPosY;
+            camera->prevWorldZ = camera->anim.worldPosZ;
             needsReset = 1;
         }
         (*gCameraInterface)->getRelativePosition(camera, &relX, &relY, &relZ, &relDistXZ, 0.0f, 0);
@@ -260,8 +256,7 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
             yawDelta += 0xffff;
         }
         camera->anim.rotX += yawDelta;
-        ((CamcontrolDefaultHandlerEntry*)defaultHandler)
-            ->handler->vtable->updatePitch(camera, (double)target->anim.worldPosY, (double)relDistXZ);
+        defaultHandler->handler->vtable->updatePitch(camera, target->anim.worldPosY, relDistXZ);
         if (needsReset != 0) {
             (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
         }
@@ -302,7 +297,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, CameraModeStaffA
     int i;
 
     settings->snapToTarget = 1;
-    target = (GameObject*)camera->anim.targetObj;
+    target = (GameObject*)camera->focusObject;
 
     if (gCameraModeStaffAnimState == NULL) {
         gCameraModeStaffAnimState = mmAlloc(sizeof(CameraModeStaffAnimState), 0xf, 0);
@@ -310,9 +305,9 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, CameraModeStaffA
     memset(gCameraModeStaffAnimState, 0, sizeof(CameraModeStaffAnimState));
 
     view = (*gCameraInterface)->getDefaultHandlerEntry();
-    view->handler->vtable->getSettings(
-        &gCameraModeStaffAnimState->actionParamX, &gCameraModeStaffAnimState->unknown08,
-        &gCameraModeStaffAnimState->actionParamZ, 0, &gCameraModeStaffAnimState->actionParamY);
+    view->handler->vtable->getSettings(&gCameraModeStaffAnimState->minDistance, &gCameraModeStaffAnimState->maxDistance,
+                                       &gCameraModeStaffAnimState->lowerHeightOffset, 0,
+                                       &gCameraModeStaffAnimState->targetHeight);
 
     gCameraModeStaffAnimState->pathNotNeeded = 0;
     gCameraModeStaffAnimState->localFrame = (GameObject*)camera->anim.parent;
@@ -346,16 +341,16 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, CameraModeStaffA
     if (approachAngle < threshold) {
         gCameraModeStaffAnimState->pathNotNeeded = 1;
     } else {
-        pathRadius = gCameraModeStaffAnimState->actionParamX * gCameraModeStaffAnimState->actionParamX -
-                     gCameraModeStaffAnimState->actionParamZ * gCameraModeStaffAnimState->actionParamZ;
+        pathRadius = gCameraModeStaffAnimState->minDistance * gCameraModeStaffAnimState->minDistance -
+                     gCameraModeStaffAnimState->lowerHeightOffset * gCameraModeStaffAnimState->lowerHeightOffset;
         if (pathRadius < 5.0f) {
             pathRadius = 5.0f;
         }
         pathRadius = sqrtf(pathRadius);
 
         localPos[0] = (sinFacing * pathRadius) + target->anim.worldPosX;
-        localPos[1] = gCameraModeStaffAnimState->actionParamZ +
-                      (target->anim.worldPosY + gCameraModeStaffAnimState->actionParamY);
+        localPos[1] = gCameraModeStaffAnimState->lowerHeightOffset +
+                      (target->anim.worldPosY + gCameraModeStaffAnimState->targetHeight);
         localPos[2] = (cosFacing * pathRadius) + target->anim.worldPosZ;
 
         if (settings->snapToTarget != 0) {
@@ -437,10 +432,10 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, CameraModeStaffA
 
         pathScale = gCameraModeStaffAnimState->pathCurve.pathLength;
         (*gCameraInterface)
-            ->initialise(pathScale, &gCameraModeStaffAnimState->initialiseCurve[0], 20.0f, 0.5f, 1.0f, -10.0f);
+            ->initialise(pathScale, &gCameraModeStaffAnimState->pathSpeedCurve[0], 20.0f, 0.5f, 1.0f, -10.0f);
 
-        gCameraModeStaffAnimState->curveMin = -100000.0f;
-        gCameraModeStaffAnimState->curveMax = 100000.0f;
+        gCameraModeStaffAnimState->floorHeight = -100000.0f;
+        gCameraModeStaffAnimState->ceilingHeight = 100000.0f;
     }
 }
 

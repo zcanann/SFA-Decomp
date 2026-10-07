@@ -738,3 +738,32 @@ launder to cast → `state`→`timer` → expanded one-liners → moved three pr
 `cflags_dll_noopt_nocse` in `configure.py` → merged decls with initializers (kept `path`
 split) → extracted `VecRotateZXYArg`. Held at 100% the whole way; the odd store orders
 and one split declaration were proven load-bearing and left as the faithful original.
+
+
+## Model-light ownership and color contracts (2026-10-06)
+
+`ModelLightStruct` now retains the types established by its consumers: a
+`GameObject*` owner, `Texture*` projection/glow resources, and `GXColor` diffuse,
+specular, fade, and glow colors. The lighting, object-transform, and rendering
+interfaces carry those types through their callers. The color table is two
+`GXColor` records, the clipping corners are eight `Vec` records, and the channel
+state array explicitly has the six entries reset and traversed by the code.
+Layout assertions preserve the retail 0x300-byte light record and its recovered
+field offsets.
+
+The two diffuse setters previously combined old-style byte parameter definitions
+with public `int` prototypes. Replacing those definitions and declarations with
+consistent `u8` parameters exposed four caller functions whose intermediate
+float-to-`int` casts added unwanted masks. Passing their floating-point color
+expressions directly to the byte parameters reproduces retail's conversions in
+GCRobotLigh, LightSource, and both CmbSrc callers. This removes the conflicting
+signatures and the old-style-definition matching workaround together.
+
+All 60 model-light functions and every active game TU remain exact across EN,
+EN rev1, JP, PAL, and PAL rev1. Each version passes `ninja all_source` and the
+strict retail DOL checksum with source objects linked. The full objdiff inventory
+retains only the pre-existing TRK `__exception` carving and MusyX `sal_volume`
+discarded-data report artifacts. Source-object comparisons preserve section
+bytes, named symbol offsets/sizes, anonymous pool addresses, and relocation
+destinations; only anonymous symbol numbering in `main/object.o` changes.
+Compiler profiles, TU boundaries, and target layouts are unchanged.

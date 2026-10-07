@@ -428,7 +428,7 @@ void Sfx_UpdateObjectSounds(void)
         {
             if (ch->tracksObjectPosition != 0)
             {
-                if ((ch->object->objectFlags & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)
+                if ((ch->object->objectFlags & OBJECT_OBJFLAG_FREED) != 0)
                 {
                     ch->tracksObjectPosition = 0;
                 }

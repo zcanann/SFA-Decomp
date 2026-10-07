@@ -363,7 +363,7 @@ void explosion_update(GameObject* obj) {
         }
     }
     memcpy(&partfxSource, (void*)obj, sizeof(partfxSource));
-    partfxSource.rootMotionScale = sExplosionBaseScale[0];
+    partfxSource.transform.scale = sExplosionBaseScale[0];
     partfxSource.velocityX = sExplosionZero[0];
     partfxSource.velocityY = sExplosionZero[0];
     partfxSource.velocityZ = sExplosionZero[0];
@@ -385,12 +385,12 @@ void explosion_update(GameObject* obj) {
                 if (state->nearGround != 0 && debris->posY < state->groundY && debris->velocityY < sExplosionZero[0]) {
                     debris->velocityY = 0.95f * -debris->velocityY;
                 }
-                partfxSource.localPosX = debris->posX;
-                partfxSource.localPosY = debris->posY;
-                partfxSource.localPosZ = debris->posZ;
-                partfxSource.worldPosX = partfxSource.localPosX;
-                partfxSource.worldPosY = partfxSource.localPosY;
-                partfxSource.worldPosZ = partfxSource.localPosZ;
+                partfxSource.transform.posX = debris->posX;
+                partfxSource.transform.posY = debris->posY;
+                partfxSource.transform.posZ = debris->posZ;
+                partfxSource.worldPosX = partfxSource.transform.posX;
+                partfxSource.worldPosY = partfxSource.transform.posY;
+                partfxSource.worldPosZ = partfxSource.transform.posZ;
                 if (gExplosionUpdateTick & 1) {
                     int debrisAge = debris->age;
                     if (debrisAge < 0x40) {
@@ -447,7 +447,7 @@ void explosion_update(GameObject* obj) {
                         }
                     }
                     (*gPartfxInterface)
-                        ->spawnObject((void*)obj, DIM_EXPLOSION_PARTICLE_EFFECT_ID, &partfxSource, 0x200001, -1,
+                        ->spawnEffect(obj, DIM_EXPLOSION_PARTICLE_EFFECT_ID, &partfxSource.transform, 0x200001, -1,
                                       particleAngles);
                 }
             }

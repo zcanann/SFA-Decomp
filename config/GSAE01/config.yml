@@ -119,23 +119,17 @@ force_active:
   # aram_data.c: the retail link retained this unreferenced .bss block;
   # dropping it would shorten the section and shift every later .bss address.
   - lbl_803D4868
-  # picmenu.c: the retail link retained the thread message buffers and the
-  # video-decode stack even though live code reaches them only through the
-  # surrounding thread-area base pointers; dropping them would shorten .bss
-  # and shift every later .bss/.sdata address.
-  - gPicMenuReadedBuffer2Messages
-  - gPicMenuReadedBufferMessages
-  - gPicMenuFreeReadBufferMessages
-  - gPicMenuVideoDecodeThreadStack
+  # Retain the THP reader message arrays and video-decode stack. Compiled code
+  # can address these through the shared BSS base rather than relocations to
+  # each named object; dropping them would shift later .bss/.sdata addresses.
+  - gAttractMovieReadAudioDecodedMessages
+  - gAttractMovieReadDvdMessages
+  - gAttractMovieReadFreeMessages
+  - gAttractMovieVideoThreadStack
   # gameloop.c: the retail link retained this uncalled function (its jumptable
   # and the .sbss word only it reads come along via its own references);
   # dropping it would shorten .text and shift every later section.
   - cardShowMessage
-  # audio_stream.c: the looped-object-sound table is reached through the
-  # gSfxLoopedObjectSoundFlags base, so no relocation names the id or object
-  # halves; dropping them would shorten .bss and shift every later address.
-  - gSfxLoopedObjectSoundIds
-  - gSfxLoopedObjectSoundObjects
   # intersect_surfacesfx.c: the retail link retained this uncalled function
   # (its own switch jumptable is the only thing that names it); dropping it
   # would shorten .text and shift every later section.
@@ -153,10 +147,8 @@ force_active:
   # info-start slot and texture IDs; retail keeps it and the following
   # texture IDs and format strings depend on its four-byte footprint.
   - lbl_803DBA00
-  # dlls/engine/5/5.c: retain the unused final .sbss word and the retail
-  # 60-byte .data color table when linking the complete sky TU from source.
+  # dlls/engine/5/5.c: retain the unused final .sbss word.
   - sSkyUnusedD
-  - sSkyUnusedColors
   # Placeholders for retail objects the carve leaves unnamed, in units that are
   # still NonMatching. Nothing references them, so mwld would dead-strip them
   # the moment their unit is linked from our object, shortening .sbss/.sdata and
@@ -291,91 +283,91 @@ block_relocations:
   end: 0x800C0104
 - target: 0x80008000
   end: 0x80008004
-# Effect1_spawnObject: 0x80080108
+# Effect1_spawnEffect: 0x80080108
 - source: 0x800B02FC
   end: 0x800B0304
-# Effect1_spawnObject: 0x80080110
+# Effect1_spawnEffect: 0x80080110
 - source: 0x800B0A10
   end: 0x800B0A18
-# Effect2_spawnObject: 0x80080100
+# Effect2_spawnEffect: 0x80080100
 - source: 0x800B434C
   end: 0x800B4354
-# Effect3_spawnObject: 0x80080110
+# Effect3_spawnEffect: 0x80080110
 - source: 0x800B83D8
   end: 0x800B83E0
-# Effect4_spawnObject: 0x80080112
+# Effect4_spawnEffect: 0x80080112
 - source: 0x800B978C
   end: 0x800B9794
-# Effect4_spawnObject: 0x80080112
+# Effect4_spawnEffect: 0x80080112
 - source: 0x800B987C
   end: 0x800B9884
-# Effect4_spawnObject: 0x80180104
+# Effect4_spawnEffect: 0x80180104
 - source: 0x800BB614
   end: 0x800BB61C
-# Effect5_spawnObject: 0x80080118
+# Effect5_spawnEffect: 0x80080118
 - source: 0x800BC9D0
   end: 0x800BC9D8
-# Effect5_spawnObject: 0x80080118
+# Effect5_spawnEffect: 0x80080118
 - source: 0x800BCC08
   end: 0x800BCC10
-# Effect5_spawnObject: 0x80180100
+# Effect5_spawnEffect: 0x80180100
 - source: 0x800BD1F4
   end: 0x800BD1FC
-# Effect6_spawnObject: 0x80180200
+# Effect6_spawnEffect: 0x80180200
 - source: 0x800BD95C
   end: 0x800BD964
-# Effect7_spawnObject: 0x80180100
+# Effect7_spawnEffect: 0x80180100
 - source: 0x800BE6BC
   end: 0x800BE6C4
-# Effect7_spawnObject: 0x80080100
+# Effect7_spawnEffect: 0x80080100
 - source: 0x800BF360
   end: 0x800BF368
-# Effect7_spawnObject: 0x80180200
+# Effect7_spawnEffect: 0x80180200
 - source: 0x800BF6C0
   end: 0x800BF6C8
-# Effect7_spawnObject: 0x80180210
+# Effect7_spawnEffect: 0x80180210
 - source: 0x800BF72C
   end: 0x800BF734
-# Effect8_spawnObject: 0x80080100
+# Effect8_spawnEffect: 0x80080100
 - source: 0x800C0F78
   end: 0x800C0F80
-# Effect9_spawnObject: 0x80180100
+# Effect9_spawnEffect: 0x80180100
 - source: 0x800C141C
   end: 0x800C1424
-# Effect9_spawnObject: 0x80180108
+# Effect9_spawnEffect: 0x80180108
 - source: 0x800C1B40
   end: 0x800C1B48
-# Effect12_spawnObject: 0x80180200
+# Effect12_spawnEffect: 0x80180200
 - source: 0x800C5EE8
   end: 0x800C5EF0
-# Effect14_spawnObject: 0x80180208
+# Effect14_spawnEffect: 0x80180208
 - source: 0x800C77AC
   end: 0x800C77B4
-# Effect16_spawnObject: 0x80180214
+# Effect16_spawnEffect: 0x80180214
 - source: 0x800C81FC
   end: 0x800C8204
-# Effect16_spawnObject: 0x80180214
+# Effect16_spawnEffect: 0x80180214
 - source: 0x800C82A0
   end: 0x800C82A8
-# Effect16_spawnObject: 0x80180200
+# Effect16_spawnEffect: 0x80180200
 - source: 0x800C85DC
   end: 0x800C85E4
-# Effect17_spawnObject: 0x80180200
+# Effect17_spawnEffect: 0x80180200
 - source: 0x800CAB68
   end: 0x800CAB70
-# Effect18_spawnObject: 0x80180100
+# Effect18_spawnEffect: 0x80180100
 - source: 0x800CC740
   end: 0x800CC748
-# Effect18_spawnObject: 0x80180200
+# Effect18_spawnEffect: 0x80180200
 - source: 0x800CC9C0
   end: 0x800CC9C8
-# Effect20_spawnObject: 0x80080100
+# Effect20_spawnEffect: 0x80080100
 - source: 0x800D3224
   end: 0x800D322C
-# Effect20_spawnObject: 0x80080100
+# Effect20_spawnEffect: 0x80080100
 - source: 0x800D3434
   end: 0x800D343C
-# Effect20_spawnObject: 0x80180200
+# Effect20_spawnEffect: 0x80180200
 - source: 0x800D4558
   end: 0x800D4560
 

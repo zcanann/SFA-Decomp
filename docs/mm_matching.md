@@ -83,3 +83,58 @@ header first; its private storage types remain local.
   object. The source and header pass `clang-format --dry-run --Werror`.
 
 Both Ninja invocations use a 30-second timeout.
+
+## Native allocation and memory-store contract (2026-10-06)
+
+The allocator now keeps native pointer widths from region initialization through
+the returned allocation and memory-store cursor. `mmAllocFromRegion` returns
+`void*`; `MmStore` owns byte pointers; store allocation uses `sizeof(MmStore)`.
+The retail record remains 16 bytes. Region alignment and split diagnostics use
+signed `ptrdiff_t` address values. An unsigned address local changes the EN
+alignment comparison from `cmpwi` to `cmplwi`; the signed form preserves it.
+Foxhollow's `game/src/main/mm.c` independently widens these address paths.
+This recovery does not replace the hardware arena setup in `mmInit`.
+
+`mmAlloc`'s third argument is a nullable diagnostic name. Retail passes it to
+the `%s` allocation failures; the two store allocations supply string pointers.
+All 200 other source calls supply zero, including the ECSH creator's named
+macro. Dinosaur Planet's `src/memory.c` independently declares the same argument
+as `const char* name`. The public prototype, private forwarding arguments, and
+native test stubs now express that contract without pointer-to-int laundering.
+
+Game text is the store allocator's only source client. Its global is now
+`int gGameTextStringStoreHandle`, initialized to `-1`, with the same four-byte
+small-data location in every version. Renderer initialization and line wrapping
+pass the integer handle directly. The native initializer test and retail/source
+wrapping probe use handle 37 instead of treating it as a pointer.
+
+Retail behavior is preserved: the first successful store can return zero, also
+used for failure; a failed backing allocation consumes a handle; exhausting all
+32 store slots releases the buffer before the store record. Frame ticks reset
+live store cursors. Zero-sized requests return the current cursor, and negative
+requests can rewind it without validation. The space-error call still omits
+arguments for its two `%d` slots. The existing one-element `requestedSize` local
+is retained: a scalar changes MWCC register allocation in this exact function.
+
+Validation:
+
+- `tools/test_mm_stores.py` executes production region setup, allocation,
+  splitting, freeing, stores, and frame ticks at `-O0` and `-O2`, with ASan and
+  UBSan. Its 45 scenarios cover full-width pointers, allocation routing and
+  fallback, sizes at routing/alignment boundaries, handle lookup through holes,
+  cursor limits, immediate/deferred failure cleanup, and heap accounting.
+  Five temporary negative controls detect region, allocation-return, and
+  store-return truncation, a truncated diagnostic name, and a missing reset.
+- The updated consumer fixtures pass. The wrapping probe compares retail and
+  compiled code across 151 cases, including the integer handle passed to the
+  store allocator.
+- All five versions pass `all_source` and the strict checksum build, with each
+  input hash verified and each output DOL byte-identical to its original.
+  All four touched TUs are 100% in every version. The complete inventory has
+  no new mismatches; the existing TRK `__exception` vector-boundary and MusyX
+  `sal_volume` discarded-exception-data report artifacts remain unchanged.
+- Every source object except the two game-text objects is byte-identical to
+  its baseline, including `mm.o` and the ECSH creator. Those two differ only
+  in the store-handle symbol name; section contents, symbol layouts, and
+  relocations agree after that explicit rename. Compiler settings and TU
+  boundaries are unchanged.

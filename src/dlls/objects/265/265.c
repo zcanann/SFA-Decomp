@@ -92,9 +92,9 @@ void breakableCarryable_update(GameObject* obj) {
                                obj->anim.parent);
             }
             (*gPartfxInterface)
-                ->spawnObject(obj, BREAKABLE_CARRYABLE_EFFECT_A_ID, NULL, 0, BREAKABLE_CARRYABLE_EFFECT_MODEL_ID, NULL);
+                ->spawnEffect(obj, BREAKABLE_CARRYABLE_EFFECT_A_ID, NULL, 0, BREAKABLE_CARRYABLE_EFFECT_MODEL_ID, NULL);
             (*gPartfxInterface)
-                ->spawnObject(obj, BREAKABLE_CARRYABLE_EFFECT_B_ID, NULL, 0, BREAKABLE_CARRYABLE_EFFECT_MODEL_ID, NULL);
+                ->spawnEffect(obj, BREAKABLE_CARRYABLE_EFFECT_B_ID, NULL, 0, BREAKABLE_CARRYABLE_EFFECT_MODEL_ID, NULL);
             state->phase = BREAKABLE_CARRYABLE_PHASE_BREAKING;
         }
         break;

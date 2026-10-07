@@ -106,12 +106,6 @@ typedef struct {
     s8 sfxFlag;
 } WCAnimEvents;
 
-struct WCPartfxArgs {
-    s16 v[3];
-    s16 _pad;
-    f32 scale;
-};
-
 void SB_CloudRunner_onSeqFree(GameObject* obj);
 void SB_CloudRunner_SpawnFromPath(GameObject* path, u8* unusedState);
 void SB_CloudRunner_UpdateCloudAction(GameObject* obj, SBCloudRunnerRideState* state);

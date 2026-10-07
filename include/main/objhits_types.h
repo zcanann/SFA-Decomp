@@ -121,6 +121,7 @@ typedef struct ObjHitsPriorityState {
     u8 secondaryShapeFlags;
 } ObjHitsPriorityState;
 
+STATIC_ASSERT(sizeof(ObjHitsPriorityState) == 0xB8);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, hitObject) == 0x00);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, activeHitboxMode) == 0xAE);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, resetHitboxMode) == 0xAF);

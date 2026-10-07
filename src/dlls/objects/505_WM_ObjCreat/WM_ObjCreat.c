@@ -224,7 +224,7 @@ void WM_ObjCreator_update(GameObject* obj) {
                 ((HoodedZyckSpawnSetup*)setup)->droppedItemId = 1;
                 spawned = objSetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if (spawned != NULL) {
-                    (*gPartfxInterface)->spawnObject(obj, WMOBJCREATOR_PARTFX_HOODED_ZYCK_SPAWN, NULL, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, WMOBJCREATOR_PARTFX_HOODED_ZYCK_SPAWN, NULL, 2, -1, NULL);
                 }
                 state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
@@ -284,7 +284,7 @@ void WM_ObjCreator_update(GameObject* obj) {
                         particleArgs.posZ = spawned->anim.velocityZ;
                         particleArgs.posY = 0.0f;
                         (*gPartfxInterface)
-                            ->spawnObject(spawned, WMOBJCREATOR_PARTFX_SCATTER_TRAIL, &particleArgs, 0x10000, -1, NULL);
+                            ->spawnEffect(spawned, WMOBJCREATOR_PARTFX_SCATTER_TRAIL, &particleArgs, 0x10000, -1, NULL);
                     }
                 } while (remainingCount != 0);
                 mainSetBits(state->gameBit, 0);
@@ -328,7 +328,7 @@ void WM_ObjCreator_update(GameObject* obj) {
                     particleArgs.posX = randomGetRange(-200, 200);
                     particleArgs.posZ = randomGetRange(-0x14, 0x14);
                     particleArgs.posY = 200.0f;
-                    (*gPartfxInterface)->spawnObject(obj, WMOBJCREATOR_PARTFX_DEBRIS, &particleArgs, 0x10002, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, WMOBJCREATOR_PARTFX_DEBRIS, &particleArgs, 0x10002, -1, NULL);
                 }
                 mainSetBits(state->gameBit, 0);
             }

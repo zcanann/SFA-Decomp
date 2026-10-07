@@ -456,7 +456,7 @@ void Scarab_update(GameObject* obj) {
                     obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
                     speed =
                         sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ);
-                    ObjAnim_SampleRootCurvePhase(&obj->anim, speed, &animationPhase);
+                    ObjAnim_SampleRootCurvePhase(obj, speed, &animationPhase);
                     ObjAnim_AdvanceCurrentMove(obj, animationPhase, timeDelta, NULL);
                 }
                 contact.collisionDetected = trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX,
@@ -513,7 +513,7 @@ void Scarab_update(GameObject* obj) {
                         state->messageParamA = -1;
                         state->messageParamB = 0;
                         state->messageParamC = 1.0f;
-                        ObjMsg_SendToObject(player, SCARAB_MSG_IN_RANGE, obj, (u32)&state->messageParamA);
+                        ObjMsg_SendToObject(player, SCARAB_MSG_IN_RANGE, obj, &state->messageParamA);
                         mainSetBits(GAMEBIT_SawScarab, 1);
                         state->pickupFlags |= SCARAB_PICKUP_PENDING;
                     } else {
@@ -532,7 +532,7 @@ void Scarab_update(GameObject* obj) {
                     deltaY = (deltaY >= 0.0f) ? deltaY : -deltaY;
                     if (deltaY < 20.0f) {
                         if (mainGetBit(SCARAB_SUPPRESS_BURST_GAMEBIT) == 0) {
-                            ObjMsg_SendToObject(player, SCARAB_MSG_PLAYER_BURST, obj, 1);
+                            ObjMsg_SendToObject(player, SCARAB_MSG_PLAYER_BURST, obj, (void*)1);
                         }
                         obj->anim.localPosX = 26.0f * -obj->anim.velocityX + obj->anim.localPosX;
                         obj->anim.localPosZ = 26.0f * -obj->anim.velocityZ + obj->anim.localPosZ;

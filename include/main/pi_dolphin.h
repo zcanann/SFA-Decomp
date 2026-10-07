@@ -10,7 +10,8 @@
 #include "main/pi_dolphin_api.h"
 #include "main/video_flip.h"
 
-void piRomLoadSection(int romOffset, int mapIndex, void* destBuf);
+/* Preload a missing romlist when destBuf is NULL, otherwise unpack it using MAPS.bin metadata. */
+void piRomLoadSection(int mapsOffset, int mapIndex, void* destBuf);
 void mapsLoadTabOffsets(int firstWord, s32* offsets, int count);
 
 /* extern-cleanup: defining-file public prototypes */
@@ -18,7 +19,9 @@ void setDisplayCopyFilter(void);
 void allocSomething32bytes(void);
 void initViewport(void);
 void tvInit(void);
-void loadModelsBin(int fileOffset, int* animCount, int* headerSize, int* amapFlag, int* dataLen, int id);
+/* Read model metadata from the selected resident archive; modelId is unused. */
+void loadModelsBin(int offsetFlags, int* animationCount, int* maxAnimationBytes, int* useCachedAnimations,
+                   int* modelBytes, int modelId);
 void* fileLoad(int id, int heap);
 void videoInit(void* rmode, int arg);
 int fileLoadToBuffer(int id, void* buffer);

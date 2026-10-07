@@ -75,23 +75,22 @@ void DR_BarrelGr_render(GameObject* obj, int p2, int p3, int p4, int p5) {
     int match;
     int i;
     f32 dval;
-    f32 pathPoint[3];
-    DrBarrelGrRenderParams params;
+    PartFxSpawnParams params;
 
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     ObjPath_GetPointWorldPosition(obj, 0, &state->grabX, &state->grabY, &state->grabZ, 0);
-    params.a = 0;
-    params.c = 0;
-    params.b = 0x4000;
+    params.rotX = 0;
+    params.rotZ = 0;
+    params.rotY = 0x4000;
     i = 0;
-    pathPointZ = &pathPoint[2];
-    pathPointY = &pathPoint[1];
-    pathPointCoords = &pathPoint[0];
+    pathPointZ = &params.position[2];
+    pathPointY = &params.position[1];
+    pathPointCoords = &params.position[0];
     dval = 0.0f;
     for (; i < 4; i++) {
         ObjPath_GetPointWorldPosition(obj, i + 1, pathPointCoords, pathPointY, pathPointZ, 0);
         PSVECSubtract((Vec*)pathPointCoords, (const Vec*)&obj->anim.localPosX, (Vec*)pathPointCoords);
-        params.d = dval;
+        params.scale = dval;
         objfx_spawnLightPulse(obj, 0.3f, 3, 0, 0, 0.15f, &params);
     }
     objRef = state->heldBarrel;

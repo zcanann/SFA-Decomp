@@ -58,7 +58,7 @@ void arwarwing_addHealth(GameObject* arwing, int amount);
 void arwarwing_clampToFlightBounds(GameObject* obj, ArwingState* state);
 void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state);
 void arwarwing_updateBombFire(GameObject* obj, ArwingState* state);
-void arwarwing_emitDamageEffects(void* obj, ArwingState* state);
+void arwarwing_emitDamageEffects(GameObject* obj, ArwingState* state);
 void arwarwing_warpByCourse(GameObject* obj);
 void arwarwing_updateWeaponFire(GameObject* obj, ArwingState* state);
 void arwarwing_update(GameObject* obj);

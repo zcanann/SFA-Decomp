@@ -301,7 +301,7 @@ source-object hashes are unchanged.
 ## Preserve word-aligned object extents
 
 The THP reader exposed the same boundary problem for four-byte gaps. EN emits a
-four-byte `gPicMenuReadThreadCreated` section ending at `803DD68C`, followed by a
+four-byte `gAttractMovieReadThreadCreated` section ending at `803DD68C`, followed by a
 four-byte gap before the video decoder's `.sbss`. The regional projector extended
 that section to eight bytes in every secondary target. PAL additionally named
 the trailing word `lbl_803DF04C`, causing its reader data report to miss the exact

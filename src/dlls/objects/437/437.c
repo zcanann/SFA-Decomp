@@ -56,7 +56,7 @@
 #include "main/resource.h"
 #include "main/sky_interface.h"
 #include "main/vecmath.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/frame_timing.h"
 #include "main/pad.h"
 #include "dolphin/gx/GXPixel.h"
@@ -865,7 +865,7 @@ void Lightfoot_update(GameObject* obj) {
     int workValue = obj->anim.placementDataAddress;
     LightfootControlState* control = inner->groundBaddie.control;
     Vec pulseOffset;
-    f32 effectParams[6];
+    PartFxSpawnParams effectParams;
     u8 effectCount;
     f32 terminalLifeTimer;
     f32 lifeTimer;
@@ -898,12 +898,11 @@ void Lightfoot_update(GameObject* obj) {
                 if (other != NULL &&
                     Vec_distance(&obj->anim.worldPosX, &other->anim.worldPosX) < 25.0f) {
                     mainSetBits(inner->groundBaddie.gameBitA, 1);
-                    effectParams[3] = 0.0f;
-                    effectParams[4] = 10.0f;
-                    effectParams[5] = 0.0f;
+                    effectParams.x = 0.0f;
+                    effectParams.y = 10.0f;
+                    effectParams.z = 0.0f;
                     for (effectCount = 0x14; effectCount != 0; effectCount--) {
-                        objfx_spawnDirectionalBurst(obj, 5, 5.0f, 5, 6, 0x64, 10.0f,
-                                                    effectParams, 0);
+                        objfx_spawnDirectionalBurst(obj, 5, 5.0f, 5, 6, 0x64, 10.0f, &effectParams, 0);
                     }
                     if (mainGetBit(GAMEBIT_LV_ChallengeGate2Baby0Delivered) &&
                         mainGetBit(GAMEBIT_LV_ChallengeGate2Baby1Delivered) &&
@@ -927,12 +926,11 @@ void Lightfoot_update(GameObject* obj) {
                 if (other != NULL &&
                     Vec_distance(&obj->anim.worldPosX, &other->anim.worldPosX) < 25.0f) {
                     mainSetBits(inner->groundBaddie.gameBitA, 1);
-                    effectParams[3] = 0.0f;
-                    effectParams[4] = 10.0f;
-                    effectParams[5] = 0.0f;
+                    effectParams.x = 0.0f;
+                    effectParams.y = 10.0f;
+                    effectParams.z = 0.0f;
                     for (effectCount = 0x14; effectCount != 0; effectCount--) {
-                        objfx_spawnDirectionalBurst(obj, 5, 5.0f, 5, 6, 0x64, 10.0f,
-                                                    effectParams, 0);
+                        objfx_spawnDirectionalBurst(obj, 5, 5.0f, 5, 6, 0x64, 10.0f, &effectParams, 0);
                     }
                     if (mainGetBit(GAMEBIT_SC_ChallengeGate3Baby0Delivered) &&
                         mainGetBit(GAMEBIT_SC_ChallengeGate3Baby1Delivered) &&
@@ -972,11 +970,10 @@ void Lightfoot_update(GameObject* obj) {
               (mainGetBit(GAMEBIT_SC_ChallengeGate3Baby0Delivered) == 0 ||
                mainGetBit(GAMEBIT_SC_ChallengeGate3Baby1Delivered) == 0 ||
                mainGetBit(GAMEBIT_SC_ChallengeGate3Baby2Delivered) == 0)))) {
-            effectParams[3] = 0.0f;
-            effectParams[4] = 24.0f;
-            effectParams[5] = 0.0f;
-            objfx_spawnArcedBurst(obj, 5, 0.75f, 1, 6, 0x32, 25.0f, 25.0f,
-                                  48.0f, effectParams, 0);
+            effectParams.x = 0.0f;
+            effectParams.y = 24.0f;
+            effectParams.z = 0.0f;
+            objfx_spawnArcedBurst(obj, 5, 0.75f, 1, 6, 0x32, 25.0f, 25.0f, 48.0f, &effectParams, 0);
         }
     } else {
         Lightfoot_UpdateAttachedChild(obj, &inner->groundBaddie);
@@ -1127,7 +1124,7 @@ void Lightfoot_init(GameObject* obj, const LightfootPlacement* placement, int is
         }
     }
     Lightfoot_ResetScriptedPosition(obj);
-    ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, (f32)(s32)randomGetRange(0, 0x63) / 100.0f);
+    ObjAnim_SetMoveProgress(obj, (f32)(s32)randomGetRange(0, 0x63) / 100.0f);
     control->movementSfxId = (u16)(randomGetRange(0, 1) != 0 ? 0x133 : 0x134);
     control->pulseTimer = gLightfootPulseTimerInterval[0];
     if (obj->userData1 != 0) {

@@ -26,7 +26,7 @@
 #include "main/camera_interface.h"
 #include "dlls/objects/237.h"
 #include "game/objects/object_setup.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/player_status.h"
 #include "main/dll/partfx_interface.h"
@@ -180,9 +180,9 @@ void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, Gro
                              int moveArg1, int pathFlags, u8 initFlags, f32 pathRadius) {
     u8 flags;
     int b1;
-    CurvesCollisionState* path;
+    ObjCollisionState* path;
     int curveLocal;
-    u8 byteLocal;
+    s8 byteLocal;
 
     curveLocal = gDll19DefaultCurveMode.u;
     byteLocal = 1;
@@ -195,7 +195,7 @@ void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, Gro
         objAddObjectType(obj, DLL19_OBJGROUP);
         ObjMsg_AllocQueue(obj, 4);
     }
-    (*gPlayerInterface)->init(obj, state, moveArg0, moveArg1);
+    (*gPlayerInterface)->init(obj, &state->baddie, moveArg0, moveArg1);
     state->baddie.flags0 = 0;
     state->baddie.hasTarget = 0;
     state->baddie.animSpeedA = 0.0f;
@@ -211,17 +211,17 @@ void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, Gro
     if (state->gameBitB != -1) {
         mainSetBits(state->gameBitB, 0);
     }
-    path = &state->baddie.curvesCollision;
+    path = &state->baddie.objectCollision;
     if ((flags & 2) != 0) {
-        (*gPathControlInterface)->init(path, 0, pathFlags | 0x200000, 1);
+        (*gObjCollisionInterface)->init(path, 0, pathFlags | 0x200000, 1);
     } else {
-        (*gPathControlInterface)->init(path, 0, 0, 0);
+        (*gObjCollisionInterface)->init(path, 0, 0, 0);
     }
-    (*gPathControlInterface)->setLocalPointCollision(path, 1, gDll19LocalPointPositions, &gDll19LocalPointRadius, 4);
+    (*gObjCollisionInterface)->setLocalPoints(path, 1, gDll19LocalPointPositions, &gDll19LocalPointRadius, 4);
     if ((flags & 4) != 0) {
-        (*gPathControlInterface)->setup(path, 1, gDll19SegmentLocalPoints, &gDll19SegmentRadius, &byteLocal);
+        (*gObjCollisionInterface)->setSegments(path, 1, gDll19SegmentLocalPoints, &gDll19SegmentRadius, &byteLocal);
     }
-    (*gPathControlInterface)->attachObject((void*)obj, path);
+    (*gObjCollisionInterface)->reset(obj, path);
     state->configFlags = config->flags;
     state->triggerId = config->triggerId;
     state->aggression = config->aggression;
@@ -295,25 +295,25 @@ void dll_19_pollCameraTarget(GameObject* obj, void* state, u16* flags, int modeA
 
 int dll_19_processMessages(GameObject* obj, BaddieState* state, void* hitbox, s16 gameBit, u8* flagOut,
                            s16 substateIdle, s16 substateActive, s16 moveMode) {
-    u32 msgData;
+    GameObject* msgData;
     int msgType;
-    int extra;
+    void* extra;
 
     extra = 0;
-    while (ObjMsg_Pop(obj, (u32*)&msgType, &msgData, (u32*)&extra) != 0) {
+    while (ObjMsg_Pop(obj, (u32*)&msgType, &msgData, &extra) != 0) {
         switch (msgType) {
         case 4:
             ObjMsg_SendToObject((void*)msgData, 5, obj, 0);
             break;
         case 0xE0000:
-            if (msgData == (int)state->targetObj) {
+            if (msgData == state->targetObj) {
                 state->substate = substateIdle;
                 state->targetObj = 0;
                 state->hasTarget = 0;
             }
             break;
         case 11:
-            state->unk34E = extra;
+            state->unk34E = (int)extra;
             break;
         case 1:
         case 0xA0001:
@@ -570,7 +570,7 @@ void dll_19_startHitReaction(GameObject* obj, BaddieState* state, void* hitbox, 
     if (animMove != 0) {
         ObjAnim_SetCurrentMove(obj, animMove, 0.0f, 0);
     }
-    (*gPathControlInterface)->attachObject((void*)obj, &state->curvesCollision);
+    (*gObjCollisionInterface)->reset(obj, &state->objectCollision);
     if (field25f != -1) {
         state->physicsActive = field25f;
     }
@@ -748,7 +748,7 @@ int dll_19_func10(GameObject* obj, GroundBaddieState* state, int moveArg0, int m
             state->baddie.moveInputZ = 50.0f * dz;
             obj->anim.localPosX += dist * dx;
             obj->anim.localPosZ += dist * dz;
-            (*gPlayerInterface)->update(obj, state, timeDelta, timeDelta, (void*)moveArg0, (void*)moveArg1);
+            (*gPlayerInterface)->update(obj, &state->baddie, timeDelta, timeDelta, (void*)moveArg0, (void*)moveArg1);
         }
         if (*reachedOut == 0) {
             state->subMode = 0;
@@ -834,7 +834,7 @@ int dll_19_updateSequenceMovement(GameObject* obj, ObjSeqState* seq, GroundBaddi
                 seq->prevFrame = (s16)(seq->curFrame - 1);
             } else {
                 td = timeDelta;
-                (*gPlayerInterface)->update(obj, st, td, td, moveHandlers, stateHandlers);
+                (*gPlayerInterface)->update(obj, &st->baddie, td, td, moveHandlers, stateHandlers);
             }
         } else {
             nx /= total;
@@ -844,7 +844,7 @@ int dll_19_updateSequenceMovement(GameObject* obj, ObjSeqState* seq, GroundBaddi
             obj->anim.localPosX = dist * nx + seq->posOffsetX;
             obj->anim.localPosZ = dist * nz + seq->posOffsetZ;
             td = timeDelta;
-            (*gPlayerInterface)->update(obj, st, td, td, moveHandlers, stateHandlers);
+            (*gPlayerInterface)->update(obj, &st->baddie, td, td, moveHandlers, stateHandlers);
         }
     }
     gDll19SeqMinDist = dist;

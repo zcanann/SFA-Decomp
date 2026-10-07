@@ -102,13 +102,13 @@ void cfforcefield_update(GameObject* obj) {
                 particleParams.posY = localPosition[1] + obj->anim.localPosY;
                 particleParams.posZ = localPosition[2] + obj->anim.localPosZ;
                 (*gPartfxInterface)
-                    ->spawnObject(obj, emitter->spiralEffectId, &particleParams, CFFORCEFIELD_PARTFX_FLAGS,
+                    ->spawnEffect(obj, emitter->spiralEffectId, &particleParams, CFFORCEFIELD_PARTFX_FLAGS,
                                   CFFORCEFIELD_PARTFX_MODEL_NONE, &obj->anim.velocity);
                 (*gPartfxInterface)
-                    ->spawnObject(obj, emitter->spiralEffectId, &particleParams, CFFORCEFIELD_PARTFX_FLAGS,
+                    ->spawnEffect(obj, emitter->spiralEffectId, &particleParams, CFFORCEFIELD_PARTFX_FLAGS,
                                   CFFORCEFIELD_PARTFX_MODEL_NONE, &obj->anim.velocity);
                 (*gPartfxInterface)
-                    ->spawnObject(obj, emitter->spiralEffectId, &particleParams, CFFORCEFIELD_PARTFX_FLAGS,
+                    ->spawnEffect(obj, emitter->spiralEffectId, &particleParams, CFFORCEFIELD_PARTFX_FLAGS,
                                   CFFORCEFIELD_PARTFX_MODEL_NONE, &obj->anim.velocity);
             }
 

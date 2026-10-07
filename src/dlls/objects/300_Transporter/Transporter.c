@@ -50,47 +50,31 @@ typedef enum TransporterSequenceId {
     TRANSPORTER_SEQUENCE_TUTORIAL = 2,
 } TransporterSequenceId;
 
-typedef struct TransporterEffectParams {
-    s16 unk00;
-    s16 mode;
-    s16 effectId;
-    s16 count;
-    f32 scale;
-    f32 pos[3];
-} TransporterEffectParams;
-
-STATIC_ASSERT(offsetof(TransporterEffectParams, unk00) == 0x00);
-STATIC_ASSERT(offsetof(TransporterEffectParams, mode) == 0x02);
-STATIC_ASSERT(offsetof(TransporterEffectParams, effectId) == 0x04);
-STATIC_ASSERT(offsetof(TransporterEffectParams, count) == 0x06);
-STATIC_ASSERT(offsetof(TransporterEffectParams, scale) == 0x08);
-STATIC_ASSERT(offsetof(TransporterEffectParams, pos) == 0x0C);
-STATIC_ASSERT(sizeof(TransporterEffectParams) == 0x18);
 
 void Transporter_updateEffects(GameObject* obj) {
     TransporterState* state;
     GameObject* player;
-    TransporterEffectParams fx;
+    PartFxSpawnParams fx;
     u8 flags;
     u8 i;
 
     state = obj->extra;
     player = Obj_GetPlayerObject();
-    fx.pos[0] = 0.0f;
-    fx.pos[1] = 55.0f;
-    fx.pos[2] = 0.0f;
+    fx.position[0] = 0.0f;
+    fx.position[1] = 55.0f;
+    fx.position[2] = 0.0f;
     flags = state->flags;
 
     if ((flags & TRANSPORTER_FLAG_WARP_A) != 0) {
         if ((flags & TRANSPORTER_FLAG_WARP_B) != 0) {
-            fx.effectId = 0xC0E;
-            fx.mode = 1;
+            fx.arg2 = 0xC0E;
+            fx.arg1 = 1;
         } else if ((flags & TRANSPORTER_FLAG_WARP_C) != 0) {
-            fx.effectId = 0xC7E;
-            fx.mode = 2;
+            fx.arg2 = 0xC7E;
+            fx.arg1 = 2;
         } else {
-            fx.effectId = 0xC13;
-            fx.mode = 0;
+            fx.arg2 = 0xC13;
+            fx.arg1 = 0;
         }
     } else if ((flags & TRANSPORTER_FLAG_WARP_B) != 0) {
         if (vec3f_distanceSquared(&obj->anim.worldPosX, &player->anim.worldPosX) < WARP_PAD_PROXIMITY_DISTANCE_SQ) {
@@ -101,8 +85,8 @@ void Transporter_updateEffects(GameObject* obj) {
                 objfx_spawnArcedBurst(obj, 1, 0.5f, 1, 6, 100, 30.0f, 30.0f, 110.0f, &fx, 0);
             }
         }
-        fx.effectId = 0xC0E;
-        fx.mode = 1;
+        fx.arg2 = 0xC0E;
+        fx.arg1 = 1;
     } else if ((flags & TRANSPORTER_FLAG_WARP_C) != 0) {
         if (vec3f_distanceSquared(&obj->anim.worldPosX, &player->anim.worldPosX) < WARP_PAD_PROXIMITY_DISTANCE_SQ) {
             if (((state->flags & (TRANSPORTER_FLAG_DISABLED | TRANSPORTER_FLAG_ENABLE_GAMEBIT_OFF)) != 0) &&
@@ -112,8 +96,8 @@ void Transporter_updateEffects(GameObject* obj) {
                 objfx_spawnArcedBurst(obj, 1, 0.5f, 5, 6, 100, 30.0f, 30.0f, 110.0f, &fx, 0);
             }
         }
-        fx.effectId = 0xC7E;
-        fx.mode = 2;
+        fx.arg2 = 0xC7E;
+        fx.arg1 = 2;
     } else {
         if (vec3f_distanceSquared(&obj->anim.worldPosX, &player->anim.worldPosX) < WARP_PAD_PROXIMITY_DISTANCE_SQ) {
             if (((state->flags & (TRANSPORTER_FLAG_DISABLED | TRANSPORTER_FLAG_ENABLE_GAMEBIT_OFF)) != 0) &&
@@ -123,35 +107,35 @@ void Transporter_updateEffects(GameObject* obj) {
                 objfx_spawnArcedBurst(obj, 1, 0.5f, 3, 6, 100, 30.0f, 30.0f, 110.0f, &fx, 0);
             }
         }
-        fx.effectId = 0xC13;
-        fx.mode = 0;
+        fx.arg2 = 0xC13;
+        fx.arg1 = 0;
     }
 
     if ((state->flags & TRANSPORTER_FLAG_PULSE_FX) != 0) {
         if (state->pulseTimer < WARP_PAD_PULSE_STAGE1_TIME) {
             if ((f32)(s32)randomGetRange(0, WARP_PAD_PULSE_RANDOM_LIMIT) < state->pulseTimer / 2.0f) {
-                (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
         } else if (state->pulseTimer < WARP_PAD_PULSE_STAGE2_TIME) {
             if ((f32)(s32)randomGetRange(0, WARP_PAD_PULSE_RANDOM_LIMIT) < state->pulseTimer / 3.0f) {
-                (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
-            fx.count = 0x28;
-            fx.unk00 = 0;
+            fx.effectParam = 0x28;
+            fx.arg0 = 0;
             fx.scale = WARP_PAD_SURGE_SCALE_GROWTH *
                        ((state->pulseTimer - WARP_PAD_PULSE_STAGE1_TIME) / WARP_PAD_PULSE_STAGE2_DURATION);
-            (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_SURGE, &fx, 2, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, WARPPAD_PARTFX_SURGE, &fx, 2, -1, NULL);
             state->flags |= TRANSPORTER_FLAG_PULSE_LATCH;
         } else if (state->pulseTimer < WARP_PAD_PULSE_STAGE3_TIME) {
             if ((f32)(s32)randomGetRange(0, WARP_PAD_PULSE_RANDOM_LIMIT) < state->pulseTimer / 2.0f) {
-                (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
             if ((state->flags & TRANSPORTER_FLAG_PULSE_LATCH) != 0) {
                 state->flags &= ~TRANSPORTER_FLAG_PULSE_LATCH;
-                fx.count = 0x46;
+                fx.effectParam = 0x46;
                 fx.scale = WARP_PAD_SURGE_SCALE_RELEASE;
                 for (i = 0xF; i != 0; i--) {
-                    (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_SURGE, &fx, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, WARPPAD_PARTFX_SURGE, &fx, 2, -1, NULL);
                 }
             }
         } else if (!(state->pulseTimer < WARP_PAD_PULSE_END_TIME)) {
@@ -229,7 +213,6 @@ void Transporter_updateInteraction(GameObject* obj) {
         state->unk0A = -1;
     }
 }
-
 
 
 /* Environment effects restored by animation event 8. */

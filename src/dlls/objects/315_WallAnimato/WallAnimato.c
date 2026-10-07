@@ -58,8 +58,8 @@ f32 WallAnimator_applyImpact(GameObject* obj, GameObject* target) {
         spawn.posX = obj->anim.worldPosX + offset[0];
         spawn.posY = 15.0f + (obj->anim.worldPosY + offset[1]);
         spawn.posZ = obj->anim.worldPosZ + offset[2];
-        (*gPartfxInterface)->spawnObject((void*)obj, PARTFX_DIG_DEBRIS, &spawn, WALL_ANIMATOR_PARTFX_FLAGS, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, PARTFX_DIG_DUST, &spawn, WALL_ANIMATOR_PARTFX_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, PARTFX_DIG_DEBRIS, &spawn, WALL_ANIMATOR_PARTFX_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, PARTFX_DIG_DUST, &spawn, WALL_ANIMATOR_PARTFX_FLAGS, -1, NULL);
         burstCount--;
     } while (burstCount != 0);
 

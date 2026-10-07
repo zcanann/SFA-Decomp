@@ -287,7 +287,7 @@ void Hagabon_update(GameObject* obj) {
             Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
             effectParams.posX += playerMapOffsetX;
             effectParams.posZ += playerMapOffsetZ;
-            objDoHitParticleFx((void*)obj, 0.014f, &effectParams, 3, 0);
+            objDoHitParticleFx(obj, 0.014f, &effectParams, 3, 0);
             (*gMapEventInterface)
                 ->addTime(placement->base.ident, (f32)(s32)(placement->timeReward * HAGABON_MAP_SECONDS_PER_MINUTE));
             if (placement->armGameBit != HAGABON_GAME_BIT_NONE) {

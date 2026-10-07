@@ -216,7 +216,6 @@ main/dll/flybaddie.c
 main/dll/flybaddie1D7.c
 main/dll/foodbag.c
 main/dll/FRONT/dll_39.c
-main/thp/dll_3b.c
 main/thp/dll_3e.c
 main/dll/dll_40.c
 main/dll/dll_44.c

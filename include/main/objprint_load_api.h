@@ -3,7 +3,8 @@
 
 #include "dolphin/dvd.h"
 
-int mergeTableFiles(void* table, int id, int idx, int count);
+/* Merged-table identity selects capacity; unusedCount is retained for the retail API. */
+int mergeTableFiles(void* table, int bankAFileId, int bankBFileId, int unusedCount);
 void animCurvReadCb(s32 result, DVDFileInfo* fileInfo);
 void animCurvTabReadCb(s32 result, DVDFileInfo* fileInfo);
 void voxMapReadCb(s32 result, DVDFileInfo* fileInfo);

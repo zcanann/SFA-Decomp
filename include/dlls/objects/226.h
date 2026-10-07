@@ -168,16 +168,6 @@ STATIC_ASSERT(sizeof(StaffWeaponSample) == 0x0C);
 typedef struct SwipeColorTable {
     StaffCollisionColorArgs colors[4];
 } SwipeColorTable;
-typedef struct StaffEffectParams {
-    u16 id;
-    u16 a;
-    u16 b;
-    s16 count;
-    f32 scale;
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-} StaffEffectParams;
 
 STATIC_ASSERT(sizeof(SwipeColorTable) == 0x40);
 

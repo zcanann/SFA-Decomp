@@ -145,20 +145,20 @@ void KT_Lazerwall_update(GameObject* obj)
         mainSetBits(placement->activeBit, 1);
         state->flags |= KT_LAZERWALL_FLAG_TRIGGERED | KT_LAZERWALL_FLAG_BOLT_ACTIVE;
         KT_Lazerwall_spawnEnergyArc(obj, 230.0f, 120);
-        (*gPartfxInterface)->spawnObject((void*)obj, 1150, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, 1150, NULL, 2, -1, NULL);
         for (i = 10; i != 0; i--)
         {
             mode = 2;
-            (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
+            (*gPartfxInterface)->spawnEffect(obj, 1164, NULL, 2, -1, &mode);
         }
         state->reloadTimer = (f32)(int)randomGetRange(1, 60);
     }
     if (state->flags & KT_LAZERWALL_FLAG_FIRING)
     {
         mode = 0;
-        (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
+        (*gPartfxInterface)->spawnEffect(obj, 1164, NULL, 2, -1, &mode);
         mode = 1;
-        (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
+        (*gPartfxInterface)->spawnEffect(obj, 1164, NULL, 2, -1, &mode);
         if ((state->previousFlags & KT_LAZERWALL_FLAG_FIRING) == 0)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_wp_beamhit16);
@@ -167,9 +167,9 @@ void KT_Lazerwall_update(GameObject* obj)
     if (state->flags & KT_LAZERWALL_FLAG_BOLT_ACTIVE)
     {
         mode = 0;
-        (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
+        (*gPartfxInterface)->spawnEffect(obj, 1164, NULL, 2, -1, &mode);
         mode = 2;
-        (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
+        (*gPartfxInterface)->spawnEffect(obj, 1164, NULL, 2, -1, &mode);
     }
     if ((state->flags & KT_LAZERWALL_FLAG_BOLT_ACTIVE) == 0 &&
         (state->previousFlags & KT_LAZERWALL_FLAG_BOLT_ACTIVE) != 0)

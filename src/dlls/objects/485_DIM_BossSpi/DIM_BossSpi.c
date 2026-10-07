@@ -74,12 +74,12 @@ void DIMbossspit_updateBurst(GameObject* obj) {
         i = 0;
         do {
             (*gPartfxInterface)
-                ->spawnObject(obj, DIMBOSSSPIT_PARTFX_BURST_START, NULL, DIMBOSSSPIT_PARTFX_MODE,
+                ->spawnEffect(obj, DIMBOSSSPIT_PARTFX_BURST_START, NULL, DIMBOSSSPIT_PARTFX_MODE,
                               DIMBOSSSPIT_PARTFX_MODEL_NONE, NULL);
             i += 1;
         } while (i < DIMBOSSSPIT_BURST_START_PARTICLE_COUNT);
         (*gPartfxInterface)
-            ->spawnObject(obj, DIMBOSSSPIT_PARTFX_BURST_FLASH, NULL, DIMBOSSSPIT_PARTFX_MODE,
+            ->spawnEffect(obj, DIMBOSSSPIT_PARTFX_BURST_FLASH, NULL, DIMBOSSSPIT_PARTFX_MODE,
                           DIMBOSSSPIT_PARTFX_MODEL_NONE, NULL);
         Sfx_PlayFromObject(obj, SFXTRIG_wp_gcexp1_c);
         Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311);
@@ -117,7 +117,7 @@ void DIMbossspit_updateBurst(GameObject* obj) {
         }
     }
     (*gPartfxInterface)
-        ->spawnObject(obj, DIMBOSSSPIT_PARTFX_BURST, NULL, DIMBOSSSPIT_PARTFX_MODE, DIMBOSSSPIT_PARTFX_MODEL_NONE,
+        ->spawnEffect(obj, DIMBOSSSPIT_PARTFX_BURST, NULL, DIMBOSSSPIT_PARTFX_MODE, DIMBOSSSPIT_PARTFX_MODEL_NONE,
                       &radius);
 }
 
@@ -187,7 +187,7 @@ void DIMbossspit_update(GameObject* obj) {
         i = 0;
         do {
             (*gPartfxInterface)
-                ->spawnObject(obj, DIMBOSSSPIT_PARTFX_FLIGHT_TRAIL, NULL, DIMBOSSSPIT_PARTFX_MODE,
+                ->spawnEffect(obj, DIMBOSSSPIT_PARTFX_FLIGHT_TRAIL, NULL, DIMBOSSSPIT_PARTFX_MODE,
                               DIMBOSSSPIT_PARTFX_MODEL_NONE, NULL);
             i += 1;
         } while (i < DIMBOSSSPIT_FLIGHT_TRAIL_PARTICLE_COUNT);

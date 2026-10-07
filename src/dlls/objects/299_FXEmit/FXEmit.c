@@ -112,10 +112,10 @@ void FXEmit_emitEffect(GameObject* obj) {
         args.scale = 1.0f;
         if (state->emitRate > 0) {
             for (i = 0; i < state->emitRate; i++) {
-                (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, spawnFlags, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, state->effectId, &args, spawnFlags, -1, NULL);
             }
         } else {
-            (*gPartfxInterface)->spawnObject(obj, state->alternateEffectId, &args, spawnFlags, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, state->alternateEffectId, &args, spawnFlags, -1, NULL);
         }
     } else {
         ModgfxResource* resource;
@@ -124,10 +124,10 @@ void FXEmit_emitEffect(GameObject* obj) {
         if (effectBank == FXEMIT_EFFECT_BANK_PARTICLE) {
             if (state->emitRate > 0) {
                 for (i = 0; i < state->emitRate; i++) {
-                    (*gPartfxInterface)->spawnObject(obj, state->effectId, NULL, spawnFlags, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, state->effectId, NULL, spawnFlags, -1, NULL);
                 }
             } else {
-                (*gPartfxInterface)->spawnObject(obj, state->effectId, NULL, spawnFlags, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, state->effectId, NULL, spawnFlags, -1, NULL);
             }
         } else if (effectBank == FXEMIT_EFFECT_BANK_MODEL) {
             resource = Resource_Acquire((state->effectId + FXEMIT_MODEL_RESOURCE_ID_BASE), 1);

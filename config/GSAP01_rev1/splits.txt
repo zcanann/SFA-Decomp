@@ -47,12 +47,17 @@ main/audio_sfx.c:
 	.sdata2     start:0x803DFF30 end:0x803DFF90
 
 main/audio_stream.c:
-	.text       start:0x8000CE74 end:0x8000DD94
+	.text       start:0x8000CE74 end:0x8000D748
 	.data       start:0x802C6738 end:0x802C6780
-	.bss        start:0x803385A0 end:0x803389F0
+	.bss        start:0x803385A0 end:0x8033866C
 	.sdata      start:0x803DCBB0 end:0x803DCBC0
-	.sbss       start:0x803DE208 end:0x803DE23A
+	.sbss       start:0x803DE208 end:0x803DE238
 	.sdata2     start:0x803DFF90 end:0x803DFFAC
+
+main/audio_looped_sfx.c:
+	.text       start:0x8000D748 end:0x8000DD94
+	.bss        start:0x80338670 end:0x803389F0
+	.sbss       start:0x803DE238 end:0x803DE23A
 
 main/camera.c:
 	.text       start:0x8000DD94 end:0x8000FEAC
@@ -1376,29 +1381,18 @@ dlls/engine/52_n_attractmode/n_attractmode.c:
 	.sbss       start:0x803DEFC0 end:0x803DF010
 	.sdata2     start:0x803E36D8 end:0x803E36F4
 
-main/thp/dll_3b.c:
+main/thp/THPAudioDecode.c:
 	.text       start:0x8011781C end:0x80117B78
-	.bss        start:0x803A5DA8 end:0x803A7120
+	.bss        start:0x803A5DA8 end:0x803A7110
 	.sbss       start:0x803DF010 end:0x803DF014
 
-main/thp/n_options.c:
-	.text       start:0x80117B78 end:0x8011897C
+main/thp/THPPlayer.c:
+	.text       start:0x80117B78 end:0x80119968
 	.data       start:0x8031BC10 end:0x8031BD10
-	.bss        start:0x803A7120 end:0x803A7868
-	.sbss       start:0x803DF018 end:0x803DF01C
-	.sdata2     start:0x803E36F8 end:0x803E371C
-
-main/thp/dll_3e.c:
-	.text       start:0x8011897C end:0x80119198
-	.sbss       start:0x803DF01C end:0x803DF039
-
-main/thp/attractmovie.c:
-	.text       start:0x80119198 end:0x80119510
-
-main/thp/picmenu.c:
-	.text       start:0x80119510 end:0x80119968
+	.bss        start:0x803A7120 end:0x803A7868 align:32
 	.sdata      start:0x803DD3A0 end:0x803DD3A8
-	.sdata2     start:0x803E371C end:0x803E3720
+	.sbss       start:0x803DF018 end:0x803DF039
+	.sdata2     start:0x803E36F8 end:0x803E3720
 
 main/thp/THPRead.c:
 	.text       start:0x80119968 end:0x80119C34

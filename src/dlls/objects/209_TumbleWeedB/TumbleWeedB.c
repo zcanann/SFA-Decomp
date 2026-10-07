@@ -27,7 +27,7 @@
 #include "main/audio/sfx_looped_object_api.h"
 #include "dlls/objects/196_Tricky.h"
 #include "main/dll/partfx_interface.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
 #include "main/gameloop_gamebit_api.h"
@@ -670,7 +670,7 @@ void tumbleweed_updateStateMachine(GameObject* obj) {
                 }
             }
             tumbleweed_updateRollingMotion(obj, state);
-            (*gPathControlInterface)->advance(obj, state, timeDelta);
+            (*gObjCollisionInterface)->resolve(obj, &state->pathState, timeDelta);
             state->phaseTimer -= timeDelta;
             if (state->phaseTimer < 0.0f) {
                 state->flags |= TUMBLEWEED_EFFECT_FLAGS_ALL;
@@ -695,7 +695,7 @@ void tumbleweed_updateStateMachine(GameObject* obj) {
                 state->triggerGameBit = GAMEBIT_TumbleWeedPickup0195;
                 state->pickupMsgValue = 0;
                 state->unk29C = 0.5f;
-                ObjMsg_SendToObject(player, TUMBLEWEED_MESSAGE_IN_RANGE, obj, (u32)&state->triggerGameBit);
+                ObjMsg_SendToObject(player, TUMBLEWEED_MESSAGE_IN_RANGE, obj, &state->triggerGameBit);
                 state->phase = TUMBLEWEED_PHASE_PICKUP_WAIT;
             } else {
                 state->growRate -= timeDelta;
@@ -710,7 +710,7 @@ void tumbleweed_updateStateMachine(GameObject* obj) {
                 }
             }
             tumbleweedbush_updateDetachedPiece(obj, state);
-            (*gPathControlInterface)->advance(obj, state, timeDelta);
+            (*gObjCollisionInterface)->resolve(obj, &state->pathState, timeDelta);
         } else if (phase == TUMBLEWEED_PHASE_PICKUP_WAIT) {
             while (ObjMsg_Pop(obj, &messageId, 0, 0) != 0) {
                 if (messageId == TUMBLEWEED_MESSAGE_PICKUP) {
@@ -831,7 +831,7 @@ void tumbleweed_updateTargetedStateMachine(GameObject* obj) {
             obj->anim.velocityZ = -(bounceScale * obj->anim.velocityZ);
         }
         tumbleweed_updateRollingMotion(obj, state);
-        (*gPathControlInterface)->advance(obj, state, timeDelta);
+        (*gObjCollisionInterface)->resolve(obj, &state->pathState, timeDelta);
         if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0) {
             mainSetBits(GAMEBIT_TumbleweedRelated642, 1);
             state->flags |= TUMBLEWEED_EFFECT_FLAGS_ALL;
@@ -855,8 +855,7 @@ void tumbleweed_updateEffects(GameObject* obj) {
             spawnCount = TUMBLEWEED_EFFECT_SPAWN_COUNT;
             do {
                 (*gPartfxInterface)
-                    ->spawnObject((void*)obj, TUMBLEWEED_EFFECT_BURST_SPECIAL, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1,
-                                  NULL);
+                    ->spawnEffect(obj, TUMBLEWEED_EFFECT_BURST_SPECIAL, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
                 --spawnCount;
             } while (spawnCount != 0);
             break;
@@ -864,8 +863,7 @@ void tumbleweed_updateEffects(GameObject* obj) {
             spawnCount = TUMBLEWEED_EFFECT_SPAWN_COUNT;
             do {
                 (*gPartfxInterface)
-                    ->spawnObject((void*)obj, TUMBLEWEED_EFFECT_BURST_DEFAULT, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1,
-                                  NULL);
+                    ->spawnEffect(obj, TUMBLEWEED_EFFECT_BURST_DEFAULT, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
                 --spawnCount;
             } while (spawnCount != 0);
             break;
@@ -880,13 +878,11 @@ void tumbleweed_updateEffects(GameObject* obj) {
         case TUMBLEWEED_TYPE_1:
         case TUMBLEWEED_TYPE_4:
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, TUMBLEWEED_EFFECT_PUFF_SPECIAL, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1,
-                              NULL);
+                ->spawnEffect(obj, TUMBLEWEED_EFFECT_PUFF_SPECIAL, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
             break;
         default:
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, TUMBLEWEED_EFFECT_PUFF_DEFAULT, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1,
-                              NULL);
+                ->spawnEffect(obj, TUMBLEWEED_EFFECT_PUFF_DEFAULT, NULL, TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
             break;
         }
         state->flags &= ~TUMBLEWEED_EFFECT_FLAG_PUFF;
@@ -931,10 +927,10 @@ void tumbleweed_init(GameObject* obj, TumbleweedPlacement* placement) {
     state->growRate = state->targetScale / (f32)(s32)randomGetRange(0xc8, 0x1f4);
     state->targetObj = NULL;
     obj->anim.rootMotionScale = 0.001f;
-    (*gPathControlInterface)->init(state, 0, 0x40000, 1);
-    (*gPathControlInterface)
-        ->setLocalPointCollision(state, 1, gTumbleweedCollisionPoint, gTumbleweedCollisionPointData, 8);
-    (*gPathControlInterface)->attachObject(obj, state);
+    (*gObjCollisionInterface)->init(&state->pathState, 0, 0x40000, 1);
+    (*gObjCollisionInterface)
+        ->setLocalPoints(&state->pathState, 1, gTumbleweedCollisionPoint, gTumbleweedCollisionPointData, 8);
+    (*gObjCollisionInterface)->reset(obj, &state->pathState);
     state->phase = TUMBLEWEED_PHASE_GROWING;
     state->phaseTimer = 1200.0f + (f32)(s32)randomGetRange(-0x12c, 0x12c);
     objAddObjectType(obj, TUMBLEWEED_OBJECT_GROUP);

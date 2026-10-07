@@ -3,7 +3,7 @@
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_position_api.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/waterfx_interface.h"
 #include "sys/objects.h"
@@ -43,22 +43,13 @@
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_internal.h"
 
-typedef struct
-{
-    s16 id;
-    s16 unk2;
-    s16 unk4;
-    f32 scale;
-    Vec pos;
-} SplashFxParams;
-
 
 typedef void (*GXSetAlphaCompareIntFn)(int comp0, int ref0, int op, int comp1, int ref1);
 
 void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 type, void* points,
-                                CurvesCollisionState* collision, f32 speed, f32 scale) {
+                                ObjCollisionState* collision, f32 speed, f32 scale) {
     Vec v;
-    SplashFxParams ps;
+    PartFxSpawnParams ps;
     SurfaceSfxTable* tbl;
     u16* sfxTab;
     u8 flags;
@@ -127,7 +118,7 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
     if (flags == 0) {
         return;
     }
-    if (!(collision->surfaceFlags & 0x10) && collision->subtype != CURVES_COLLISION_SUBTYPE_NONE) {
+    if (!(collision->surfaceFlags & 0x10) && collision->subtype != OBJ_COLLISION_SUBTYPE_NONE) {
         return;
     }
     n = collision->segmentHits.surfaceTypes[0];
@@ -150,7 +141,7 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
     if (sfxTab != NULL) {
         vec = (f32*)points + vecIdx * 3;
         if (collision->resultWaterDepth > 0.0f) {
-            (*gWaterfxInterface)->spawnImpactSurface((u8*)obj, flags, (f32*)points, collision, speed);
+            (*gWaterfxInterface)->spawnImpactSurface(obj, flags, points, collision, speed);
             sfx = 5;
         }
         if (obj == Obj_GetPlayerObject()) {
@@ -180,7 +171,7 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
             ps.pos.y = vec[1];
             ps.pos.z = vec[2];
             ps.scale = scale;
-            ps.id = sfx;
+            ps.arg0 = sfx;
             ps.unk4 = 0;
             ps.unk2 = 0;
             v.x = 0.25f * obj->anim.velocityX;
@@ -189,13 +180,13 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
             if (sfx == 6 || sfx == 3) {
                 cnt = randomGetRange(2, 4);
                 while (cnt != 0) {
-                    (*gPartfxInterface)->spawnObject(obj, 0x7e6, &ps, 0x200001, -1, &v);
+                    (*gPartfxInterface)->spawnEffect(obj, 0x7e6, &ps, 0x200001, -1, &v);
                     cnt--;
                 }
             } else if (sfx == 2) {
                 cnt = randomGetRange(4, 8);
                 while (cnt != 0) {
-                    (*gPartfxInterface)->spawnObject(obj, 0x7e6, &ps, 0x200001, -1, &v);
+                    (*gPartfxInterface)->spawnEffect(obj, 0x7e6, &ps, 0x200001, -1, &v);
                     cnt--;
                 }
             }
@@ -297,7 +288,6 @@ GXColor gScreenImageKColor3 = {0x80, 0, 0x80, 0};
 GXColor gWhirlpoolReflectionTintColor = {0xFF, 0xFF, 0xFF, 0x60};
 GXColor gWhirlpoolReflectionKColor = {0xA0, 0xA0, 0xA0, 0x80};
 static u32 sIntersectUnused1[1] = {0};
-
 
 
 /* Per-frame alpha decrement of the two water-effect pools. */
@@ -464,7 +454,6 @@ void waterFxDraw(void)
     }
     Camera_ApplyFullViewport();
 }
-
 
 
 void waterFxSpawnContactEffect(u8* obj, f32* pos, u8 flip, u8 type)

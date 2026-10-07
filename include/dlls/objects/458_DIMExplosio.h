@@ -1,6 +1,8 @@
 #ifndef DLLS_OBJECTS_458_DIMEXPLOSIO_H_
 #define DLLS_OBJECTS_458_DIMEXPLOSIO_H_
 
+#include "main/dll/partfx_interface.h"
+
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
@@ -149,14 +151,7 @@ STATIC_ASSERT(offsetof(DimExplosionState, unknownA5E) == 0xA5E);
 STATIC_ASSERT(sizeof(DimExplosionState) == 0xA60);
 
 typedef struct DimExplosionPartfxSource {
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    s16 flags;
-    f32 rootMotionScale;
-    f32 localPosX;
-    f32 localPosY;
-    f32 localPosZ;
+    PartFxSpawnParams transform;
     f32 worldPosX;
     f32 worldPosY;
     f32 worldPosZ;
@@ -175,8 +170,8 @@ typedef struct DimExplosionTextureTable {
 } DimExplosionTextureTable;
 
 STATIC_ASSERT(sizeof(DimExplosionPartfxSource) == 0x38);
-STATIC_ASSERT(offsetof(DimExplosionPartfxSource, rootMotionScale) == 0x08);
-STATIC_ASSERT(offsetof(DimExplosionPartfxSource, localPosX) == 0x0C);
+STATIC_ASSERT(offsetof(DimExplosionPartfxSource, transform.scale) == 0x08);
+STATIC_ASSERT(offsetof(DimExplosionPartfxSource, transform.posX) == 0x0C);
 STATIC_ASSERT(offsetof(DimExplosionPartfxSource, worldPosX) == 0x18);
 STATIC_ASSERT(offsetof(DimExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(DimExplosionTextureTable) == 0x10);

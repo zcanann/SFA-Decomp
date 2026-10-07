@@ -1,6 +1,8 @@
 #ifndef MAIN_DLL_DLL_001B_EFFECT2_H_
 #define MAIN_DLL_DLL_001B_EFFECT2_H_
 
+#include "game/objects/object_fwd.h"
+
 #include "main/dll/partfx_interface.h"
 
 /* Per-config velocity-range band count (emit[6]/sub[6]/col[6] parallel tables). */
@@ -25,8 +27,8 @@ void Effect2_func03_nop(void);
 void Effect2_release(void);
 void Effect2_initialise(void);
 void Effect2_updateFrameState(void);
-int Effect2_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                        s16* extraArgs);
+int Effect2_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                        s8 sourceParam, s16* extraArgs);
 extern u32 lbl_803DD2C4;
 
 #endif /* MAIN_DLL_DLL_001B_EFFECT2_H_ */

@@ -2,12 +2,19 @@
 #define MAIN_PI_DOLPHIN_API_H_
 
 #include "types.h"
+#include "main/texture.h"
 #include "main/pi_frame_api.h"
 #include "main/pi_dolphin_path_api.h"
 
 double SeekTwiceBeforeRead(void);
-void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 length, int* sizeOut,
-                                int entryIndex, u32 flagBits);
+/* Select a resident archive bank and copy/unpack its entry, with DVD fallback.
+ * flagBits bit 0 skips payload transfer. ANIM/PREANIM size probes also inspect
+ * the resident packed entry and require sizeOut.
+ * Sparse MODELS/TEX tables find the next greater offset; ANIM uses adjacent entries.
+ * Resident TEX1/TEXPRE DIR records return a borrowed payload pointer. Other paths
+ * return NULL, including successful copies, so the result is not a success flag. */
+void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 length, int* sizeOut, int entryIndex,
+                                u32 flagBits);
 int mapGetDirIdx(int idx);
 u8 isHeavyFogEnabled(void);
 void disableHeavyFog(void);
@@ -35,22 +42,23 @@ void addSignedOverlayTexStage(u8* texture, void* texMtx, u8* color);
 void addSphereMapLitStages(void* texture, f32* texMtx, void* color, int unused);
 void addTexLayerStagesLit(void* texture, void* texMtx);
 void addLitColorStage(u8 mode);
-int addEnvMapBumpStages(void* texture, int stageCount, u8 mode, u32 indirectTextureId);
+int addEnvMapBumpStages(void* texture, int stageCount, u8 mode, TextureReference indirectTextureReference);
 void addSphereMapTexStage(void* textureRef, u8 intensity);
 void addLightTexReg2Stage(void* textureRef, u8 hasBaseTexture, u8 mode);
 void addAlphaLitColorReg2Stage(u8 mode);
 void addCastShadowTevStages(u8* objectInstance);
-void addProjectedLightTevStage(u8* texture, void* texMtx, int stageMode, int componentMode, int variant);
+void addProjectedLightTevStage(Texture* texture, void* texMtx, int stageMode, int componentMode, int variant);
 void addEnvMapTexCoord(int scale);
 void addWarpedNoiseTevStages(void* texture, void* texMtx);
 void addRenderOpFadeStage(void* renderOp);
 
-void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5);
+void mapsBinGetRomlistSize(int headerOffset, int* objectCount, int* unknown1E, int* objectBytes, int tableWordIndex);
 
 extern s16 gObjMapBlockInfo[];
 extern s16 sMapFileNameAdjacencyTable[];
 extern char sAssetIndexOverflowError[];
 
-extern u32 gResourceFileBuffers[];
+/* Resident resource allocations, indexed by MldfFileId. */
+extern void* gResourceFileBuffers[];
 
 #endif /* MAIN_PI_DOLPHIN_API_H_ */

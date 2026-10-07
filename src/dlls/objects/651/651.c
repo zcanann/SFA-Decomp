@@ -45,7 +45,7 @@ int dll_28B_substateHandler3(GameObject* obj, BaddieState* ai) {
 
     if (ai->moveJustStartedB != 0) {
         state->flagsAC0 &= ~1;
-        (*gPlayerInterface)->setState((void*)obj, (void*)ai, 3);
+        (*gPlayerInterface)->setState(obj, ai, 3);
     } else if (ai->moveDone != 0) {
         return 3;
     }
@@ -58,7 +58,7 @@ int dll_28B_substateHandler2(GameObject* obj, BaddieState* ai) {
 
     if (ai->moveJustStartedB != 0) {
         state->flagsAC0 |= 1;
-        (*gPlayerInterface)->setState((void*)obj, (void*)ai, 1);
+        (*gPlayerInterface)->setState(obj, ai, 1);
     }
     state->randomTimer -= timeDelta;
     dist = state->playerDistance;
@@ -85,7 +85,7 @@ int dll_28B_substateHandler1(GameObject* obj, BaddieState* ai) {
 
     if (ai->moveJustStartedB != 0) {
         state->flagsAC0 &= ~1;
-        (*gPlayerInterface)->setState((void*)obj, (void*)ai, 2);
+        (*gPlayerInterface)->setState(obj, ai, 2);
     }
     if (Curve_AdvanceAlongPath(&route->curve, WC_EARTHWALKER_CURVE_ADVANCE_STEP) != 0 || route->atSegmentEnd != 0) {
         (*gRomCurveInterface)->goNextPoint(route);
@@ -136,7 +136,7 @@ int dll_28B_stateHandler2(GameObject* obj, BaddieState* ai) {
     obj->anim.rotX = getAngle(-state->route.tangentX, -state->route.tangentZ);
     /* Retail rounds both squared components before adding; do not fuse them. */
     ObjAnim_SampleRootCurvePhase(
-        &obj->anim,
+        obj,
         sqrtf((f32)(obj->anim.velocityX * obj->anim.velocityX) + (f32)(obj->anim.velocityZ * obj->anim.velocityZ)),
         &ai->moveSpeed);
     return 0;
@@ -186,7 +186,7 @@ void dll_28B_update(GameObject* obj) {
     state->playerDistance = Vec_xzDistance(&obj->anim.worldPosX, &player->anim.worldPosX);
     state->baddie.flags0 |= OBJFLAG_BIT_2000000;
     dt = timeDelta;
-    (*gPlayerInterface)->update(obj, state, dt, dt, gDll28BStateHandlers, gDll28BSubstateHandlers);
+    (*gPlayerInterface)->update(obj, &state->baddie, dt, dt, gDll28BStateHandlers, gDll28BSubstateHandlers);
     if ((state->flagsAC0 & 1) != 0) {
         state->moveLib.modeBits &= ~1;
     } else {
@@ -225,7 +225,7 @@ void dll_28B_init(GameObject* obj) {
     dll_2E_setMoveTables(&state->moveLib, &blockB, &blockA, 8);
     state->moveLib.modeBits |= 0x22;
     (*gRomCurveInterface)->initCurve(&state->route, obj, gDll28BCurveInitParam, &curveParam, -1);
-    (*gPlayerInterface)->init(obj, state, 4, 4);
+    (*gPlayerInterface)->init(obj, &state->baddie, 4, 4);
     objAddObjectType(obj, DLL28B_OBJ_GROUP);
 }
 

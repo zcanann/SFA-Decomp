@@ -25,7 +25,7 @@ void CameraModeShipBattle_update(CameraObject* camera) {
     f32 lateralStep;
     CameraModeShipBattleState* state;
     int targetMode = 0;
-    GameObject* focus = (GameObject*)camera->anim.targetObj;
+    GameObject* focus = (GameObject*)camera->focusObject;
     if (focus != NULL) {
         targetMode = SB_CloudRunner_getTargetMode(focus);
     }
@@ -101,7 +101,7 @@ void CameraModeShipBattle_update(CameraObject* camera) {
     camera->anim.rotY = 0x708;
     camera->anim.rotX = 0x4000;
     camera->anim.rotZ = (s16)(-focus->anim.rotZ >> 3);
-    camera->fov = 40.0f;
+    camera->fovY = 40.0f;
     state = gCameraModeShipBattleState;
     lateralStep = (state->targetLateralOffset - state->lateralOffset) / 100.0f;
     if (lateralStep > 3.0f) {

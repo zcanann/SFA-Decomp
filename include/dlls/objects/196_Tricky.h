@@ -5,7 +5,7 @@
 #include "global.h"
 #include "main/objprint_character_api.h"
 #include "main/dll/curve_walker.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 #include "main/dll/objfsa.h"
 #include "game/objects/object.h"
 #include "main/objprint_sound_api.h"
@@ -184,7 +184,7 @@ typedef struct TrickyState {
     Vec linkedPatchPos;
     Vec recoveryPos; /* fallback position; seeded on relocation and refreshed while inside walkable areas */
     Vec patchExitPos;
-    CurvesCollisionState curvesCollision;
+    ObjCollisionState objectCollision;
     GameObject* lastContactObj;
     f32 contactTimer;
     int hitType;    /* current cooldown-filtered priority hit; zero when no hit is accepted */
@@ -382,14 +382,14 @@ STATIC_ASSERT(offsetof(TrickyState, recoveryPos.x) == 0xE0);
 STATIC_ASSERT(offsetof(TrickyState, recoveryPos.y) == 0xE4);
 STATIC_ASSERT(offsetof(TrickyState, recoveryPos.z) == 0xE8);
 STATIC_ASSERT(offsetof(TrickyState, patchExitPos) == 0xEC);
-STATIC_ASSERT(offsetof(TrickyState, curvesCollision) == 0xF8);
-STATIC_ASSERT(offsetof(TrickyState, curvesCollision.subtype) == 0x353);
-STATIC_ASSERT(offsetof(TrickyState, curvesCollision.surfaceFlags) == 0x358);
-STATIC_ASSERT(offsetof(TrickyState, curvesCollision.tiltPitch) == 0x290);
-STATIC_ASSERT(offsetof(TrickyState, curvesCollision.tiltRoll) == 0x292);
-STATIC_ASSERT(offsetof(TrickyState, curvesCollision.resultWaterDepth) == 0x2AC);
-STATIC_ASSERT(offsetof(TrickyState, curvesCollision.resultFloorY) == 0x2B0);
-STATIC_ASSERT(offsetof(TrickyState, curvesCollision.resultWaterY) == 0x2B4);
+STATIC_ASSERT(offsetof(TrickyState, objectCollision) == 0xF8);
+STATIC_ASSERT(offsetof(TrickyState, objectCollision.subtype) == 0x353);
+STATIC_ASSERT(offsetof(TrickyState, objectCollision.surfaceFlags) == 0x358);
+STATIC_ASSERT(offsetof(TrickyState, objectCollision.tiltPitch) == 0x290);
+STATIC_ASSERT(offsetof(TrickyState, objectCollision.tiltRoll) == 0x292);
+STATIC_ASSERT(offsetof(TrickyState, objectCollision.resultWaterDepth) == 0x2AC);
+STATIC_ASSERT(offsetof(TrickyState, objectCollision.resultFloorY) == 0x2B0);
+STATIC_ASSERT(offsetof(TrickyState, objectCollision.resultWaterY) == 0x2B4);
 STATIC_ASSERT(offsetof(TrickyState, routeSeedNode) == 0x418);
 STATIC_ASSERT(offsetof(TrickyState, routeSeedDirection) == 0x41C);
 STATIC_ASSERT(offsetof(TrickyState, route) == 0x420);
@@ -600,7 +600,7 @@ RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* state, RomCurveDef* 
 RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, RomCurveDef* route, int targetWalkGroup);
 RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u8 routeDirection);
 int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRoutes, u8* candidateRouteDirections,
-                                  int targetWalkGroup);
+                                  ptrdiff_t target);
 void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteDirections, s16 objectWalkGroup,
                                      RomCurveDef** outRoutes);
 void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* targetPos, f32* center, f32 minDistance, f32 moveDistance);

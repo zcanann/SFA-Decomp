@@ -29,7 +29,7 @@ ObjectDescriptor6 Effect7_funcs = {
     (ObjectDescriptorCallback)Effect7_release,
     0,
     (ObjectDescriptorCallback)Effect7_func03_nop,
-    (ObjectDescriptorCallback)Effect7_spawnObject,
+    (ObjectDescriptorCallback)Effect7_spawnEffect,
     (ObjectDescriptorCallback)Effect7_updateFrameState,
 };
 
@@ -45,8 +45,8 @@ ObjectDescriptor6 Effect7_funcs = {
         spawnParams = &gEffect7DefaultSpawnParams;                                                                     \
     } while (0)
 
-int Effect7_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                        s16* extraArgs) {
+int Effect7_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                        s8 sourceParam, s16* extraArgs) {
     int spawnResult;
     GameObject* player;
     PartFxSpawn cfg;
@@ -74,7 +74,7 @@ int Effect7_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.sourceVecZ = spawnParams->rotZ;
         cfg.sourceVecY = spawnParams->rotY;
         cfg.sourceVecX = spawnParams->rotX;
-        cfg.modelIdByte = modelId;
+        cfg.sourceParam = sourceParam;
     }
     cfg.behaviorFlags = 0;
     cfg.renderFlags = 0;
@@ -405,9 +405,9 @@ int Effect7_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
             cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != 0) {
-                cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-                cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-                cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+                cfg.startPosX = cfg.startPosX + cfg.attachedSource->anim.worldPosX;
+                cfg.startPosY = cfg.startPosY + cfg.attachedSource->anim.worldPosY;
+                cfg.startPosZ = cfg.startPosZ + cfg.attachedSource->anim.worldPosZ;
             }
         }
     }

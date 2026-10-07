@@ -45,7 +45,7 @@ static void dimbossgut2_spawnBreathSplash(GameObject* obj, DimBossGut2Control* c
             effectParams->posX = obj->anim.localPosX - xyScale * mathSinf(3.1415927f * (f32)obj->anim.rotX / 32768.0f);
             effectParams->posZ = obj->anim.localPosZ - xyScale * mathCosf(3.1415927f * (f32)obj->anim.rotX / 32768.0f);
             effectParams->scale = 0.65f * (1.0f - heightDiff / 14.0f);
-            (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSGUT2_PARTFX, effectParams, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, DIMBOSSGUT2_PARTFX, effectParams, 1, -1, NULL);
             control->breathFxTimer = 0;
         }
     }
@@ -213,9 +213,9 @@ void DIM_BossGut2_update(GameObject* obj) {
     DimBossGut2Control* control;
     DimBossGut2Control* lightOwner;
     ModelLightStruct* light;
-    u32 msgB;
+    GameObject* msgB;
     u32 msgA;
-    u32 msgC;
+    void* msgC;
     PartFxSpawnParams effectParams;
 
     state = obj->extra;
@@ -225,7 +225,7 @@ void DIM_BossGut2_update(GameObject* obj) {
            result >= 0)))) {
         msgC = 0;
         do {
-            result = ObjMsg_Pop(obj, (u32*)&msgA, (u32*)&msgB, (u32*)&msgC);
+            result = ObjMsg_Pop(obj, (u32*)&msgA, &msgB, &msgC);
         } while (result != 0);
         control = state->groundBaddie.control;
         dimbossgut2_spawnBreathSplash(obj, control, &effectParams);

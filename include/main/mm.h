@@ -2,17 +2,20 @@
 #define MAIN_MM_H_
 
 #include "types.h"
+#include "stddef.h"
 
 /* Region 0 places large allocations toward its low-address end. */
 #define MM_REGION0_LARGE_ALLOCATION_THRESHOLD 0x33450
 
-int alignUp2(int value);
-int roundUpTo4(int value);
-int roundUpTo8(int value);
-int roundUpTo16(int value);
-int roundUpTo32(int value);
+/* Alignment helpers accept both byte counts and address values. */
+size_t alignUp2(size_t value);
+size_t roundUpTo4(size_t value);
+size_t roundUpTo8(size_t value);
+size_t roundUpTo16(size_t value);
+size_t roundUpTo32(size_t value);
 void mm_free(void* ptr);
-void* mmAlloc(int size, int type, int flag);
+/* The optional allocation name is used by failure diagnostics. */
+void* mmAlloc(int size, int type, const char* allocationName);
 void* getCache(void);
 void cacheQueueWait(int sync);
 void copyToCache(void* dst, void* src, u32 count);

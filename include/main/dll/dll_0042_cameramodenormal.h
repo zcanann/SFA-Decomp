@@ -35,45 +35,58 @@ STATIC_ASSERT(offsetof(CameraModeNormalActionSettings, distanceAdjustRate) == 0x
 STATIC_ASSERT(offsetof(CameraModeNormalActionSettings, heightAdjustRate) == 0x0C);
 STATIC_ASSERT(sizeof(CameraModeNormalActionSettings) == 0x0D);
 
-typedef struct CameraModeNormalInitSettings {
-    u8 pad00;
-    s8 transitionFrames;
-    s8 fov;
-    u8 minDistance;
-    u8 maxDistance;
-    u8 pad05;
-    u8 lowerHeightOffset;
-    u8 letterboxOffset;
-    u8 upperHeightOffset;
-    u8 slideRightAmount;
-    u8 slideLeftAmount;
-    u8 distanceAdjustRate;
-    u8 heightAdjustRate;
-    u8 snapToTarget;
-    u8 pad0E[0x0B];
-    u8 fovWide;
-    u16 maxDistanceWide;
-    u16 minDistanceWide;
-    u8 pad1E;
-    u8 heightOffsetWide;
+/* Mode 0 uses initial placement/defaults; mode 2 uses transition parameters. */
+typedef union CameraModeNormalInitSettings {
+    struct {
+        u8 unknown00[8];
+        f32 x;
+        f32 y;
+        f32 z;
+        u8 unknown14[5];
+        u8 fov;
+        u16 maxDistance;
+        u16 minDistance;
+        u8 unknown1E;
+        u8 heightOffset;
+    } initial;
+    struct {
+        u8 pad00;
+        s8 transitionFrames;
+        s8 fov;
+        u8 minDistance;
+        u8 maxDistance;
+        u8 pad05;
+        u8 lowerHeightOffset;
+        u8 letterboxOffset;
+        u8 upperHeightOffset;
+        u8 slideRightAmount;
+        u8 slideLeftAmount;
+        u8 distanceAdjustRate;
+        u8 heightAdjustRate;
+        u8 snapToTarget;
+        u8 unknown0E[0x12];
+    } transition;
 } CameraModeNormalInitSettings;
 
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transitionFrames) == 0x01);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, fov) == 0x02);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, minDistance) == 0x03);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, maxDistance) == 0x04);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, lowerHeightOffset) == 0x06);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, letterboxOffset) == 0x07);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, upperHeightOffset) == 0x08);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, slideRightAmount) == 0x09);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, slideLeftAmount) == 0x0A);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, distanceAdjustRate) == 0x0B);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, heightAdjustRate) == 0x0C);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, snapToTarget) == 0x0D);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, fovWide) == 0x19);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, maxDistanceWide) == 0x1A);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, minDistanceWide) == 0x1C);
-STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, heightOffsetWide) == 0x1F);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.x) == 0x08);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.y) == 0x0C);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.z) == 0x10);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.fov) == 0x19);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.maxDistance) == 0x1A);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.minDistance) == 0x1C);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, initial.heightOffset) == 0x1F);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.transitionFrames) == 0x01);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.fov) == 0x02);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.minDistance) == 0x03);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.maxDistance) == 0x04);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.lowerHeightOffset) == 0x06);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.letterboxOffset) == 0x07);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.upperHeightOffset) == 0x08);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.slideRightAmount) == 0x09);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.slideLeftAmount) == 0x0A);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.distanceAdjustRate) == 0x0B);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.heightAdjustRate) == 0x0C);
+STATIC_ASSERT(offsetof(CameraModeNormalInitSettings, transition.snapToTarget) == 0x0D);
 STATIC_ASSERT(sizeof(CameraModeNormalInitSettings) == 0x20);
 
 typedef struct CameraModeNormalWallAvoidanceFlags {
@@ -136,8 +149,8 @@ typedef struct CameraModeNormalState {
     f32 targetTargetHeight;
     f32 baseLowerHeightOffset;
     f32 baseUpperHeightOffset;
-    f32 verticalUpperBound;
-    f32 verticalLowerBound;
+    f32 floorHeight;
+    f32 ceilingHeight;
     u8 unknownA8[4];
     s32 slideAngle;
     u8 unknownB0[0x0C];
@@ -147,7 +160,7 @@ typedef struct CameraModeNormalState {
     u8 yawResponseFrames;
     u8 collisionProbeTimer;
     u8 collisionState;
-    u8 targetActionFlags;
+    u8 collisionHitMask;
     CameraModeNormalWallAvoidanceFlags wallAvoidanceFlags;
     u8 wallAvoidanceTimer;
     CameraModeNormalClampFlags clampFlags;
@@ -197,8 +210,8 @@ STATIC_ASSERT(offsetof(CameraModeNormalState, savedTargetHeight) == 0x90);
 STATIC_ASSERT(offsetof(CameraModeNormalState, targetTargetHeight) == 0x94);
 STATIC_ASSERT(offsetof(CameraModeNormalState, baseLowerHeightOffset) == 0x98);
 STATIC_ASSERT(offsetof(CameraModeNormalState, baseUpperHeightOffset) == 0x9C);
-STATIC_ASSERT(offsetof(CameraModeNormalState, verticalUpperBound) == 0xA0);
-STATIC_ASSERT(offsetof(CameraModeNormalState, verticalLowerBound) == 0xA4);
+STATIC_ASSERT(offsetof(CameraModeNormalState, floorHeight) == 0xA0);
+STATIC_ASSERT(offsetof(CameraModeNormalState, ceilingHeight) == 0xA4);
 STATIC_ASSERT(offsetof(CameraModeNormalState, unknownA8) == 0xA8);
 STATIC_ASSERT(offsetof(CameraModeNormalState, slideAngle) == 0xAC);
 STATIC_ASSERT(offsetof(CameraModeNormalState, unknownB0) == 0xB0);
@@ -208,12 +221,21 @@ STATIC_ASSERT(offsetof(CameraModeNormalState, initialized) == 0xC1);
 STATIC_ASSERT(offsetof(CameraModeNormalState, yawResponseFrames) == 0xC2);
 STATIC_ASSERT(offsetof(CameraModeNormalState, collisionProbeTimer) == 0xC3);
 STATIC_ASSERT(offsetof(CameraModeNormalState, collisionState) == 0xC4);
-STATIC_ASSERT(offsetof(CameraModeNormalState, targetActionFlags) == 0xC5);
+STATIC_ASSERT(offsetof(CameraModeNormalState, collisionHitMask) == 0xC5);
 STATIC_ASSERT(offsetof(CameraModeNormalState, wallAvoidanceFlags) == 0xC6);
 STATIC_ASSERT(offsetof(CameraModeNormalState, wallAvoidanceTimer) == 0xC7);
 STATIC_ASSERT(offsetof(CameraModeNormalState, clampFlags) == 0xC8);
 STATIC_ASSERT(offsetof(CameraModeNormalState, padC9) == 0xC9);
 STATIC_ASSERT(sizeof(CameraModeNormalState) == 0xCC);
+
+typedef void (*CameraModeNormalFollowFn)(CameraObject* camera, ObjAnimComponent* target);
+typedef void (*CameraModeNormalUpdatePitchFn)(CameraObject* camera, f32 targetY, f32 distance);
+typedef void (*CameraModeNormalUpdateSlideFn)(CameraObject* camera, GameObject* target, f32 floorHeight,
+                                              f32 ceilingHeight);
+typedef void (*CameraModeNormalGetSettingsFn)(f32* minDistance, f32* maxDistance, f32* lowerHeightOffset,
+                                              f32* upperHeightOffset, f32* targetHeight);
+typedef void (*CameraModeNormalUpdateVerticalBoundsFn)(CameraObject* camera, int flags, int queryType, f32* floorHeight,
+                                                       f32* ceilingHeight);
 
 typedef struct CameraModeNormalDescriptor {
     u32 metadata[4];
@@ -224,12 +246,11 @@ typedef struct CameraModeNormalDescriptor {
     void (*update)(CameraObject* camera);
     void (*free)(CameraObject* camera);
     void (*copyToCurrent)(CameraModeNormalActionSettings* settings);
-    void (*follow)(CameraObject* camera, ObjAnimComponent* target);
-    void (*updatePitch)(f32 targetY, f32 distance, CameraObject* camera);
-    void (*updateSlide)(CameraObject* camera, GameObject* target, f32 upperBound, f32 lowerBound);
-    void (*getSettings)(f32* minDistance, f32* maxDistance, f32* lowerHeightOffset, f32* upperHeightOffset,
-                        f32* targetHeight);
-    void (*updateVerticalBounds)(CameraObject* camera, int flags, int collisionFlag, f32* upperBound, f32* lowerBound);
+    CameraModeNormalFollowFn follow;
+    CameraModeNormalUpdatePitchFn updatePitch;
+    CameraModeNormalUpdateSlideFn updateSlide;
+    CameraModeNormalGetSettingsFn getSettings;
+    CameraModeNormalUpdateVerticalBoundsFn updateVerticalBounds;
 } CameraModeNormalDescriptor;
 
 STATIC_ASSERT(offsetof(CameraModeNormalDescriptor, metadata) == 0x00);
@@ -259,12 +280,12 @@ void CameraModeNormal_updateTargetAction(CameraObject* camera, GameObject* targe
 int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* camera, f32* outA, f32* outB, int angle);
 void CameraModeNormal_updateWallAvoidance(CameraObject* camera, GameObject* target);
 void CameraModeNormal_updateSettings(CameraObject* camera);
-void CameraModeNormal_updateVerticalBounds(CameraObject* camera, int flags, int collisionFlag, f32* upperBound,
-                                           f32* lowerBound);
+void CameraModeNormal_updateVerticalBounds(CameraObject* camera, int flags, int queryType, f32* floorHeight,
+                                           f32* ceilingHeight);
 void CameraModeNormal_getSettings(f32* minDistance, f32* maxDistance, f32* lowerHeightOffset, f32* upperHeightOffset,
                                   f32* targetHeight);
-void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 upperBound, f32 lowerBound);
-void CameraModeNormal_updatePitch(f32 targetY, f32 distance, CameraObject* camera);
+void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 floorHeight, f32 ceilingHeight);
+void CameraModeNormal_updatePitch(CameraObject* camera, f32 targetY, f32 distance);
 void CameraModeNormal_follow(CameraObject* camera, ObjAnimComponent* target);
 void CameraModeNormal_copyToCurrent(CameraModeNormalActionSettings* settings);
 void CameraModeNormal_free(CameraObject* camera);

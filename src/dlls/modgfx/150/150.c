@@ -39,105 +39,105 @@ extern u32 gDll96EffectResourceData[sizeof(Dll96EffectResourceView) / sizeof(u32
 s16 dll_96_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 spawnFlags) {
     ModgfxSpawnPacket packet;
     u8* resourceData = (u8*)(int)gDll96EffectResourceData;
-    GfxCmd* commands;
+    ModgfxCommand* commands;
 
     if (mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) != 0) {
         return -1;
     }
     commands = packet.entries;
-    commands[0].layer = 0;
-    commands[0].flags = 0x15;
-    commands[0].tex = &resourceData[offsetof(Dll96EffectResourceView, allVertexIndices)];
-    commands[0].mode = 0x4;
-    commands[0].x = 0.0f;
-    commands[0].y = 0.0f;
-    commands[0].z = 0.0f;
-    commands[1].layer = 0;
-    commands[1].flags = 0x15;
-    commands[1].tex = &resourceData[offsetof(Dll96EffectResourceView, allVertexIndices)];
-    commands[1].mode = 0x2;
+    commands[0].stageIndex = 0;
+    commands[0].parameter = 0x15;
+    commands[0].vertexIndices = (s16*)&resourceData[offsetof(Dll96EffectResourceView, allVertexIndices)];
+    commands[0].flags = 0x4;
+    commands[0].valueX = 0.0f;
+    commands[0].valueY = 0.0f;
+    commands[0].valueZ = 0.0f;
+    commands[1].stageIndex = 0;
+    commands[1].parameter = 0x15;
+    commands[1].vertexIndices = (s16*)&resourceData[offsetof(Dll96EffectResourceView, allVertexIndices)];
+    commands[1].flags = 0x2;
     if (mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) != 0) {
-        commands[1].x = 0.15f;
+        commands[1].valueX = 0.15f;
     } else {
-        commands[1].x = 0.03f * randomGetRange(5, 10);
+        commands[1].valueX = 0.03f * randomGetRange(5, 10);
     }
-    commands[1].y = 10.5f;
-    commands[1].z = commands[1].x;
-    commands[2].layer = 1;
-    commands[2].flags = 7;
-    commands[2].tex = &resourceData[offsetof(Dll96EffectResourceView, firstSevenVertexIndices)];
-    commands[2].mode = 0x2;
-    commands[2].x = 4.0f;
-    commands[2].y = 1.0f;
-    commands[2].z = 4.0f;
-    commands[3].layer = 1;
-    commands[3].flags = 0x15;
-    commands[3].tex = &resourceData[offsetof(Dll96EffectResourceView, allVertexIndices)];
-    commands[3].mode = 0x4;
-    commands[3].x = 255.0f;
-    commands[3].y = 0.0f;
-    commands[3].z = 0.0f;
-    commands[4].layer = 1;
-    commands[4].flags = 0x15;
-    commands[4].tex = &resourceData[offsetof(Dll96EffectResourceView, allVertexIndices)];
-    commands[4].mode = 0x4000;
-    commands[4].x = 0.0f;
-    commands[4].y = 4.0f;
-    commands[4].z = 0.0f;
-    commands[5].layer = 2;
-    commands[5].flags = 0x15;
-    commands[5].tex = &resourceData[offsetof(Dll96EffectResourceView, allVertexIndices)];
-    commands[5].mode = 0x4;
-    commands[5].x = 0.0f;
-    commands[5].y = 0.0f;
-    commands[5].z = 0.0f;
-    commands[6].layer = 2;
-    commands[6].flags = 0x15;
-    commands[6].tex = &resourceData[offsetof(Dll96EffectResourceView, allVertexIndices)];
-    commands[6].mode = 0x4000;
-    commands[6].x = 0.0f;
-    commands[6].y = 4.0f;
-    commands[6].z = 0.0f;
-    packet.modeByte = 0;
-    packet.sourceObj = sourceObj;
-    packet.sourceMode = variant;
-    packet.position[0] = 0.0f;
-    packet.position[1] = 0.0f;
-    packet.position[2] = 0.0f;
-    packet.velocity[0] = 0.0f;
-    packet.velocity[1] = 0.0f;
-    packet.velocity[2] = 0.0f;
-    packet.scale = 4.0f;
-    packet.drawGroupCount = 2;
-    packet.drawGroupStride = 7;
-    packet.initialStateByte = 0xE;
-    packet.byte5A = 0;
-    packet.textureFrameTimer = 0;
-    packet.commandCount = (GfxCmd*)((u8*)commands + sizeof(GfxCmd) * 7) - commands;
-    packet.sequenceParams[0] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[0])];
-    packet.sequenceParams[1] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[1])];
-    packet.sequenceParams[2] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[2])];
-    packet.sequenceParams[3] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[3])];
-    packet.sequenceParams[4] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[4])];
-    packet.sequenceParams[5] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[5])];
-    packet.sequenceParams[6] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[6])];
-    packet.commands = (GfxCmd*)((u8*)&packet + offsetof(ModgfxSpawnPacket, entries));
-    packet.flags = 0xc0104c0;
-    packet.flags |= spawnFlags;
-    if ((packet.flags & 1) != 0) {
+    commands[1].valueY = 10.5f;
+    commands[1].valueZ = commands[1].valueX;
+    commands[2].stageIndex = 1;
+    commands[2].parameter = 7;
+    commands[2].vertexIndices = (s16*)&resourceData[offsetof(Dll96EffectResourceView, firstSevenVertexIndices)];
+    commands[2].flags = 0x2;
+    commands[2].valueX = 4.0f;
+    commands[2].valueY = 1.0f;
+    commands[2].valueZ = 4.0f;
+    commands[3].stageIndex = 1;
+    commands[3].parameter = 0x15;
+    commands[3].vertexIndices = (s16*)&resourceData[offsetof(Dll96EffectResourceView, allVertexIndices)];
+    commands[3].flags = 0x4;
+    commands[3].valueX = 255.0f;
+    commands[3].valueY = 0.0f;
+    commands[3].valueZ = 0.0f;
+    commands[4].stageIndex = 1;
+    commands[4].parameter = 0x15;
+    commands[4].vertexIndices = (s16*)&resourceData[offsetof(Dll96EffectResourceView, allVertexIndices)];
+    commands[4].flags = 0x4000;
+    commands[4].valueX = 0.0f;
+    commands[4].valueY = 4.0f;
+    commands[4].valueZ = 0.0f;
+    commands[5].stageIndex = 2;
+    commands[5].parameter = 0x15;
+    commands[5].vertexIndices = (s16*)&resourceData[offsetof(Dll96EffectResourceView, allVertexIndices)];
+    commands[5].flags = 0x4;
+    commands[5].valueX = 0.0f;
+    commands[5].valueY = 0.0f;
+    commands[5].valueZ = 0.0f;
+    commands[6].stageIndex = 2;
+    commands[6].parameter = 0x15;
+    commands[6].vertexIndices = (s16*)&resourceData[offsetof(Dll96EffectResourceView, allVertexIndices)];
+    commands[6].flags = 0x4000;
+    commands[6].valueX = 0.0f;
+    commands[6].valueY = 4.0f;
+    commands[6].valueZ = 0.0f;
+    packet.context.modeByte = 0;
+    packet.context.sourceObject = sourceObj;
+    packet.context.variant = variant;
+    packet.context.position[0] = 0.0f;
+    packet.context.position[1] = 0.0f;
+    packet.context.position[2] = 0.0f;
+    packet.context.velocity[0] = 0.0f;
+    packet.context.velocity[1] = 0.0f;
+    packet.context.velocity[2] = 0.0f;
+    packet.context.scale = 4.0f;
+    packet.context.drawGroupCount = 2;
+    packet.context.drawGroupStride = 7;
+    packet.context.initialStateByte = 0xE;
+    packet.context.byte5A = 0;
+    packet.context.textureFrameTimer = 0;
+    packet.context.commandCount = (ModgfxCommand*)((u8*)commands + sizeof(ModgfxCommand) * 7) - commands;
+    packet.context.stageDurations[0] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[0])];
+    packet.context.stageDurations[1] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[1])];
+    packet.context.stageDurations[2] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[2])];
+    packet.context.stageDurations[3] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[3])];
+    packet.context.stageDurations[4] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[4])];
+    packet.context.stageDurations[5] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[5])];
+    packet.context.stageDurations[6] = *(s16*)&resourceData[offsetof(Dll96EffectResourceView, sequenceParams[6])];
+    packet.context.commands = (ModgfxCommand*)((u8*)&packet + offsetof(ModgfxSpawnPacket, entries));
+    packet.context.flags = 0xc0104c0;
+    packet.context.flags |= spawnFlags;
+    if ((packet.context.flags & 1) != 0) {
         if ((u32)sourceObj != 0) {
-            packet.position[0] += sourceObj->anim.localPosX;
-            packet.position[1] += sourceObj->anim.localPosY;
-            packet.position[2] += sourceObj->anim.localPosZ;
+            packet.context.position[0] += sourceObj->anim.localPosX;
+            packet.context.position[1] += sourceObj->anim.localPosY;
+            packet.context.position[2] += sourceObj->anim.localPosZ;
         } else {
-            packet.position[0] += spawnParams->posX;
-            packet.position[1] += spawnParams->posY;
-            packet.position[2] += spawnParams->posZ;
+            packet.context.position[0] += spawnParams->posX;
+            packet.context.position[1] += spawnParams->posY;
+            packet.context.position[2] += spawnParams->posZ;
         }
     }
     return (*gModgfxInterface)
-        ->spawnEffect(&packet, 0, 0x15, (u8*)(int)gDll96EffectResourceData, 0x18,
-                      &resourceData[offsetof(Dll96EffectResourceView, triangles)], 0x89, 0);
+        ->spawnEffect(&packet.context, 0, 0x15, (ModgfxEffectVertex*)(int)gDll96EffectResourceData, 0x18,
+                      (s16*)(&resourceData[offsetof(Dll96EffectResourceView, triangles)]), 0x89, 0);
 }
 
 void dll_96_release(void) {

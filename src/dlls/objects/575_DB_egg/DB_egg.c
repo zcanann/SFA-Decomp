@@ -102,15 +102,15 @@ void dbegg_processMessages(GameObject* obj) {
     DbEggState* eggState;
     DbEggPlacementPrefix* config;
     u32 msgType = 0;
-    u32 msgFlag = 0;
-    u32 msgArg;
+    void* msgFlag = 0;
+    GameObject* msgArg;
 
     eggState = obj->extra;
     config = (DbEggPlacementPrefix*)obj->anim.placementData;
 
     while (ObjMsg_Pop(obj, &msgType, &msgArg, &msgFlag) != 0) {
         if (msgType == 17) {
-            switch (msgFlag) {
+            switch ((u32)msgFlag) {
             case 18:
                 if ((eggState->flags & DBEGG_FLAG_KEEP_GROUP_WHILE_HELD) == 0) {
                     objFreeObjectType(obj, DBEGG_OBJGROUP);
@@ -533,8 +533,8 @@ void dbegg_update(GameObject* obj) {
                 nb = ((surfaceHeight < 0.05f) >= 0) ? (surfaceHeight < 0.05f) : -(surfaceHeight < 0.05f);
                 if (nb != 0) {
                     (*gWaterfxInterface)
-                        ->spawnRipple(obj->anim.localPosX, obj->anim.localPosY - egg->waterOffset, obj->anim.localPosZ,
-                                      obj->anim.rotX, randomGetRange(1, 10), 1);
+                        ->spawnCircularRipple(obj->anim.localPosX, obj->anim.localPosY - egg->waterOffset,
+                                              obj->anim.localPosZ, obj->anim.rotX, randomGetRange(1, 10), 1);
                 }
             }
             if (mainGetBit(GAMEBIT_DBEggSinkEnabled) != 0) {
@@ -571,14 +571,14 @@ void dbegg_update(GameObject* obj) {
                 pickupState->triggerGameBit = -1;
                 pickupState->pickupMessageValue = 0;
                 pickupState->pickupMessageArgument = 1.0f;
-                ObjMsg_SendToObject(playerObj, DBEGG_MSG_START_PICKUP_SEQUENCE, obj, (int)&pickupState->triggerGameBit);
+                ObjMsg_SendToObject(playerObj, DBEGG_MSG_START_PICKUP_SEQUENCE, obj, &pickupState->triggerGameBit);
                 obj->userData2 = 0;
             } else if (getButtonsJustPressed(0) & PAD_BUTTON_A) {
                 egg->mode = DBEGG_MODE_FALLING;
                 obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
             } else {
                 hitState->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
-                ObjMsg_SendToObject(player, DBEGG_MSG_PLAYER_GRAB, obj, 0x38000);
+                ObjMsg_SendToObject(player, DBEGG_MSG_PLAYER_GRAB, obj, (void*)0x38000);
                 obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             }
             break;
@@ -607,7 +607,7 @@ void dbegg_update(GameObject* obj) {
             if (mainGetBit(GAMEBIT_DBEggRespawn) != 0) {
                 dbegg_setupFromDef(obj, (u8*)egg);
             } else if (randomGetRange(0, 10) == 0) {
-                (*gPartfxInterface)->spawnObject(obj, DBEGG_PARTFX_RESPAWN_WAIT, NULL, 0, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, DBEGG_PARTFX_RESPAWN_WAIT, NULL, 0, -1, NULL);
             }
             break;
         case DBEGG_MODE_CURVE_INIT:
@@ -673,7 +673,7 @@ void dbegg_update(GameObject* obj) {
             } else {
                 int n = (int)(PSVECMag(&obj->anim.velocity) / 0.5f);
                 for (i = 0; i < n; i++) {
-                    (*gPartfxInterface)->spawnObject(obj, DBEGG_PARTFX_HOMING_TRAIL, NULL, 1, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, DBEGG_PARTFX_HOMING_TRAIL, NULL, 1, -1, NULL);
                 }
                 objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
                         obj->anim.velocityZ * timeDelta);
@@ -707,7 +707,7 @@ void dbegg_update(GameObject* obj) {
                         pickupState->pickupMessageValue = 0;
                         pickupState->pickupMessageArgument = 1.0f;
                         ObjMsg_SendToObject(playerObj, DBEGG_MSG_START_PICKUP_SEQUENCE, obj,
-                                            (int)&pickupState->triggerGameBit);
+                                            &pickupState->triggerGameBit);
                     } else {
                         v = obj->anim.localPosY - player->anim.localPosY;
                         v = v >= 0.0f ? v : -v;

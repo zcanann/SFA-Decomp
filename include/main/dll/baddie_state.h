@@ -6,7 +6,7 @@
 #include "global.h"
 #include "main/objprint_character_api.h"
 #include "main/voxmaps.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 
 struct GameObject;
 struct BaddieState;
@@ -45,14 +45,14 @@ typedef void (*BaddieStateExitFn)(struct GameObject* obj, struct BaddieState* st
 typedef struct BaddieState {
     int flags0; /* actor-state flags; player climbing sets bit 0x200000 */
     /*
-     * 0x004..0x26C is a CurvesCollisionState. The collision engine (DLL 21)
-     * writes the region through the curves names; the player and the baddies
+     * 0x004..0x26C is an ObjCollisionState. The collision engine (DLL 21)
+     * writes the region through the collision fields; the player and the baddies
      * read it back through the padded view below. Two independent paddings over
      * one set of bytes is exactly how the two descriptions drift apart, so the
      * union states the aliasing instead of leaving it to be rediscovered.
      */
     union {
-        CurvesCollisionState curvesCollision;
+        ObjCollisionState objectCollision;
         struct {
     int flags4; /* secondary actor-state flags; player climbing sets bits 0x100000/0x8000000 */
     u8 unk08[0x14 - 0x8];
@@ -124,10 +124,10 @@ typedef struct BaddieState {
     f32 gravity; /* fall acceleration: velocityY -= gravity * timeDelta (dll_000F player_applyGravity) */
     /* 0x2A8/0x2AC are two independent 0..1 ramp progresses for the deferred
      * "nudge" the shared controller applies over several frames. dll_000F
-     * player_render2 steps 0x2A8 by f1*f2, clamps it at 1.0 and adds
+     * PlayerControl_ApplyYawNudge steps 0x2A8 by f1*f2, clamps it at 1.0 and adds
      * nudgeYaw * (that frame's increment) straight into anim.rotX;
-     * player_modelMtxFn steps 0x2AC the same way and adds
-     * nudgePos{X,Y,Z} * increment into the model matrix translation. */
+     * PlayerControl_ApplyPositionNudge steps 0x2AC the same way and adds
+     * nudgePos{X,Y,Z} * increment into the object local position. */
     f32 nudgeYawProgress;
     f32 nudgePosProgress;
     u8 pad2B0[0x2B4 - 0x2B0];
@@ -138,7 +138,7 @@ typedef struct BaddieState {
     u8 unk2C4[0x2D0 - 0x2C4];
     void *targetObj; /* current attack/aggro target */
     u8 pad2D4[0x2F4 - 0x2D4];
-    f32 nudgePosX; /* translation added to the model matrix as nudgePosProgress ramps */
+    f32 nudgePosX; /* translation added to the object local position as nudgePosProgress ramps */
     f32 nudgePosY;
     f32 nudgePosZ;
     f32 nudgeYaw; /* anim.rotX delta added as nudgeYawProgress ramps */
@@ -192,9 +192,8 @@ typedef struct BaddieState {
 } BaddieState;
 
 STATIC_ASSERT(sizeof(BaddieState) == 0x35C);
-STATIC_ASSERT(offsetof(BaddieState, curvesCollision) == 0x004);
-STATIC_ASSERT(offsetof(BaddieState, unk26C) ==
-              offsetof(BaddieState, curvesCollision) + CURVES_COLLISION_STATE_SIZE);
+STATIC_ASSERT(offsetof(BaddieState, objectCollision) == 0x004);
+STATIC_ASSERT(offsetof(BaddieState, unk26C) == offsetof(BaddieState, objectCollision) + OBJ_COLLISION_STATE_SIZE);
 STATIC_ASSERT(offsetof(BaddieState, controlMode) == 0x274);
 STATIC_ASSERT(offsetof(BaddieState, moveJustStartedB) == 0x27B);
 STATIC_ASSERT(offsetof(BaddieState, trackedObj) == 0x29C);

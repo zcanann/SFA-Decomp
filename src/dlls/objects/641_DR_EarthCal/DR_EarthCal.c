@@ -40,11 +40,7 @@ void drearthcal_update(GameObject* obj)
 {
     GameObject* player;
     int i;
-    struct
-    {
-        f32 _pad[3];
-        f32 vec[3];
-    } part;
+    PartFxSpawnParams part;
     f32 searchDist;
 
     player = Obj_GetPlayerObject();
@@ -94,9 +90,9 @@ void drearthcal_update(GameObject* obj)
     }
     if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0)
     {
-        part.vec[0] = 0.0f;
-        part.vec[1] = 30.0f;
-        part.vec[2] = 0.0f;
+        part.position[0] = 0.0f;
+        part.position[1] = 30.0f;
+        part.position[2] = 0.0f;
         objfx_spawnArcedBurst(obj, 5, 0.75f, 2, 2, 0xf, 18.0f, 18.0f, 2.0f,
                              &part, 0);
     }

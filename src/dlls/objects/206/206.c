@@ -162,17 +162,17 @@ int dll_CE_checkChooseAttackState(GameObject* obj, GroundBaddieState* state) {
             if ((objectState->configFlags & 2) != 0) {
                 control->coordinationFlags |= DLL_CE_COORDINATION_ATTACKING;
             }
-            (*gPlayerInterface)->setState((void*)obj, state, 4);
+            (*gPlayerInterface)->setState(obj, &state->baddie, 4);
         } else if (attackRoll > 32) {
             if (attackingSiblingCount > 1) {
-                (*gPlayerInterface)->setState((void*)obj, state, 2);
+                (*gPlayerInterface)->setState(obj, &state->baddie, 2);
             } else {
-                (*gPlayerInterface)->setState((void*)obj, state, 4);
+                (*gPlayerInterface)->setState(obj, &state->baddie, 4);
             }
         } else if (attackRoll > 16) {
-            (*gPlayerInterface)->setState((void*)obj, state, 2);
+            (*gPlayerInterface)->setState(obj, &state->baddie, 2);
         } else {
-            (*gPlayerInterface)->setState((void*)obj, state, 3);
+            (*gPlayerInterface)->setState(obj, &state->baddie, 3);
         }
     }
     return 0;
@@ -184,7 +184,7 @@ int dll_CE_checkSubmergeState(GameObject* obj, GroundBaddieState* state) {
     if (state->baddie.moveJustStartedB != 0) {
         f32 zero;
 
-        (*gPlayerInterface)->setState(obj, state, 1);
+        (*gPlayerInterface)->setState(obj, &state->baddie, 1);
         {
             DllCEControl* control = objectState->control;
 
@@ -222,7 +222,7 @@ int dll_CE_checkDeathState(GameObject* obj, GroundBaddieState* state) {
         zero = 0.0f;
         control->soundTimer = zero;
         control->nextSoundTime = zero;
-        (*gPlayerInterface)->setState(obj, state, 6);
+        (*gPlayerInterface)->setState(obj, &state->baddie, 6);
         state->baddie.targetObj = 0;
         state->baddie.physicsActive = 0;
         state->baddie.hasTarget = 0;
@@ -258,7 +258,7 @@ int dll_CE_checkTargetState(GameObject* obj, GroundBaddieState* state) {
 
             state->baddie.animSpeedB = zero;
             state->baddie.animSpeedA = zero;
-            (*gPlayerInterface)->setState(obj, state, 0);
+            (*gPlayerInterface)->setState(obj, &state->baddie, 0);
         }
         if (state->baddie.moveDone != 0) {
             return 6;
@@ -645,7 +645,7 @@ void dll_CE_handleMessage(GameObject* obj, int message) {
     case DLL_CE_MESSAGE_HIDE:
         ((DllCEControl*)objectState->control)->coordinationFlags |= DLL_CE_COORDINATION_HIDDEN;
         Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_264);
-        (*gPlayerInterface)->setState((void*)obj, (void*)stateAlias, 1);
+        (*gPlayerInterface)->setState(obj, &stateAlias->baddie, 1);
         stateAlias->baddie.substate = 4;
         stateAlias->baddie.moveJustStartedB = 1;
         break;
@@ -744,22 +744,22 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB) {
                 dll_CE_spawnIceBall(obj, state);
             }
             if ((control->effectFlags & DLL_CE_EFFECT_DUST) != 0) {
-                (*gPartfxInterface)->spawnObject((void*)obj, DLL_CE_PARTFX_DUST, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, DLL_CE_PARTFX_DUST, NULL, 1, -1, NULL);
             }
             if ((control->effectFlags & DLL_CE_EFFECT_SPRAY) != 0) {
                 spawnCount = 0;
                 do {
-                    (*gPartfxInterface)->spawnObject((void*)obj, DLL_CE_PARTFX_SPRAY, NULL, 1, -1, NULL);
+                    (*gPartfxInterface)->spawnEffect(obj, DLL_CE_PARTFX_SPRAY, NULL, 1, -1, NULL);
                     spawnCount++;
                 } while (spawnCount < 10);
             }
             control->effectFlags = 0;
             (*gBaddieControlInterface)->updateGravity(obj, state, 0.0f, -1);
-            (*gPlayerInterface)->rotateTowardTarget(obj, state, timeDelta, 4);
+            (*gPlayerInterface)->rotateTowardTarget(obj, &state->baddie, timeDelta, 4);
             state->savedPendingParentObj = obj->pendingParentObj;
             obj->pendingParentObj = 0;
             (*gPlayerInterface)
-                ->update(obj, state, timeDelta, timeDelta, gDllCEMoveHandlers, gDllCECheckHandlers);
+                ->update(obj, &state->baddie, timeDelta, timeDelta, gDllCEMoveHandlers, gDllCECheckHandlers);
             obj->pendingParentObj = state->savedPendingParentObj;
         }
         obj->anim.localPosY = placement->base.posY - 2.0f;
@@ -787,7 +787,7 @@ void dll_CE_init(GameObject* obj, DllCEPlacement* placement, int flags) {
     control->soundTimer = randomGetRange(10, 300);
     ObjAnim_SetCurrentMove(obj, 8, 0.0f, 0);
     obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-    (*gPlayerInterface)->setState(obj, state, 0);
+    (*gPlayerInterface)->setState(obj, &state->baddie, 0);
     state->baddie.substate = 0;
     state->baddie.physicsActive = 0;
     ObjHits_DisableObject(obj);

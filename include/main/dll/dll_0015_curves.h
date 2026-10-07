@@ -6,7 +6,7 @@
 #include "global.h"
 #include "types.h"
 #include "main/dll/curve_walker.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 #include "main/dll/dll_0015_save_settings.h"
 #include "main/dll/rom_curve_def.h"
 #include "main/dll/savegame_object_api.h"
@@ -34,8 +34,6 @@ typedef struct GameObject GameObject;
 #define ROMCURVE_TYPE_17                              0x17 /* curves_findEnclosingLoopOfType17 */
 #define ROMCURVE_TYPE_CURVEFISH                       0x23 /* CurveFish path query */
 #define ROMCURVE_TYPE_TRICKY                          0x24 /* Objfsa_FindNearest(Enabled)CurveType24 */
-#define ROMCURVE_GETCURVES_MAX_POINTS                 0x23
-#define ROMCURVE_POINT_TYPE_WATER                     0x0e
 
 typedef struct TrackGroundHit TrackGroundHit;
 
@@ -43,7 +41,6 @@ extern RomCurveDef* romCurves[ROMCURVE_MAX_CURVES];
 extern int nRomCurves;
 extern RomCurveDef* gRomCurveLastFindStart;
 extern RomCurveDef* gRomCurveLastFindEnd;
-extern TrackGroundHit sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
 extern char sCurvesMaxRomCurvesExceeded[];
 
 #include "main/dll/rom_curve_segment_projection.h"
@@ -79,33 +76,9 @@ void RomCurve_remove(RomCurveDef* curve);
 void RomCurve_add(RomCurveDef* curve);
 void curves_initialise(void);
 void RomCurve_release(void);
-void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* state);
-void curves_resolveSingleTrace(GameObject* obj, CurvesCollisionState* state);
-void curves_resolveAveragedSegments(GameObject* obj, CurvesCollisionState* state);
-void curves_updateSurfaceTilt(GameObject* obj, int state);
-void curves_snapToNearestSurface(GameObject* obj, CurvesCollisionState* state);
-void curves_resolveWaterFloorCeiling(GameObject* obj, CurvesCollisionState* state);
-void curves_updateLocalPointCollision(GameObject* obj, CurvesCollisionState* state);
-void curves_preparePointCollisionFrame(struct GameObject* obj, CurvesCollisionState* state);
-void curves_updateLocalPointTransforms(struct GameObject* obj, CurvesCollisionState* state);
-void curves_reset(GameObject* obj, CurvesCollisionState* state);
-f32 curves_sampleHeight(GameObject* obj, f32 x, f32 baseY, f32 z, f32 height);
-TrackGroundHit* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, int queryAll);
-void curves_advanceCollision(GameObject* curveObj, CurvesCollisionState* state, f32 step);
-void curves_setSegmentCollision(CurvesCollisionState* state, int count, f32* segmentLocalPoints, f32* radii, s8* types);
-void curves_updateQueryBounds(GameObject* obj, CurvesCollisionState* state, f32 step);
-void curves_setLocalPointCollisionEx(CurvesCollisionState* state, int pointCount, f32* localPointPositions,
-                                     f32* localPointRadii, int primaryHitType, int secondaryHitType);
-void curves_clear(CurvesCollisionState* state, int updateMode, u32 flags, int subtype);
 void saveFileStruct_setCheatActive(u8 optionIndex, u8 active);
 
 /* extern-cleanup: defining-file public prototypes */
 void* getLastSavedGameTexts(void);
-
-void curves_gatherTrackTriangles(GameObject* obj, CurvesCollisionState* state);
-void curves_setLocalPointCollision(CurvesCollisionState* state, int pointCount, f32* localPointPositions,
-                                   f32* localPointRadii, int primaryHitType);
-void dll_15_initialise_nop(void);
-void dll_15_release_nop(void);
 
 #endif /* MAIN_DLL_CURVES_H_ */

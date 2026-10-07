@@ -63,8 +63,8 @@ void dimicewall_update(GameObject* obj) {
                                                         randomGetRange(DIM_ICE_WALL_VERTICAL_RANDOM_MIN,
                                                                                  DIM_ICE_WALL_VERTICAL_RANDOM_MAX));
                 (*gPartfxInterface)
-                    ->spawnObject((int*)obj, DIM_ICE_WALL_PRIMARY_PARTICLE_ID, &spawnParams,
-                                  DIM_ICE_WALL_PARTICLE_SPAWN_MODE, -1, NULL);
+                    ->spawnEffect(obj, DIM_ICE_WALL_PRIMARY_PARTICLE_ID, &spawnParams, DIM_ICE_WALL_PARTICLE_SPAWN_MODE,
+                                  -1, NULL);
             }
             for (i = DIM_ICE_WALL_SECONDARY_PARTICLE_COUNT; i != 0; i--) {
                 spawnParams.posX = spawnParams.scale * (DIM_ICE_WALL_RANDOM_OFFSET_SCALE *
@@ -74,7 +74,7 @@ void dimicewall_update(GameObject* obj) {
                                                         randomGetRange(DIM_ICE_WALL_VERTICAL_RANDOM_MIN,
                                                                                  DIM_ICE_WALL_VERTICAL_RANDOM_MAX));
                 (*gPartfxInterface)
-                    ->spawnObject((int*)obj, DIM_ICE_WALL_SECONDARY_PARTICLE_ID, &spawnParams,
+                    ->spawnEffect(obj, DIM_ICE_WALL_SECONDARY_PARTICLE_ID, &spawnParams,
                                   DIM_ICE_WALL_PARTICLE_SPAWN_MODE, -1, NULL);
             }
             if ((u32)placement->base.ident != DIM_ICE_WALL_SILENT_MAP_ID) {

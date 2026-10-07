@@ -2,6 +2,262 @@
 
 Target: EN v1.0 (`GSAE01`), common game compiler GC/1.3.
 
+## Object init callback contract (2026-10-06)
+
+The 216-byte `Obj_RunInitCallback` at EN `0x8002CAEC` previously read the
+callback as `((int*)*handle)[1]` and called it through a one-argument prototype.
+That truncates native function pointers and loses the C contract for placement
+and initialization flags. The runtime interface now supplies a named
+`ObjectInterfaceInitCallback(GameObject*, void*, int)` dispatch type. The
+engine reads the named `ObjectInterface.init` slot, checks its full pointer
+against the `-1` sentinel and null, and explicitly forwards all three arguments.
+The sentinel comparison uses signed pointer-width `ptrdiff_t` to retain the
+retail `cmpwi`; no function pointer is stored in an `int`.
+
+Retail leaves incoming `r4` and `r5` untouched on the DLL path up to `bctrl` at
+`0x8002CB54`. The direct caller, `Obj_RegisterObject`, supplies placement data
+and zero flags. DLL initializers such as `TexScroll_init` consume placement
+and the third argument: zero clears the scroll offsets, while nonzero preserves
+them. Dinosaur Planet's `objInitObject(Object*, ObjSetup*, s32 reset)` at
+checkout `c4340802dc9f62e1181d00cc34c3175fca6ca4be` has the corresponding
+three-argument setup call. Foxhollow at
+`894de8a8edecfad2e455f1a6345e328f50c74aba` independently repairs this same
+dispatch site with a full-width function pointer and three arguments. The
+common name `initFlags` does not impose one interpretation on every DLL.
+
+The generic stored callback type remains intentional: object-specific
+implementations have different placement types and sometimes fewer formal
+arguments. The cast is confined to the engine dispatch boundary. Player
+sequence IDs still use `objLoadPlayerFromSave`. After either callback, the
+engine rereads the current shadow-state pointer, sets its initialization bit,
+snapshots the resulting local position into both previous-position triples,
+and clears external velocity. Missing callbacks still run this finalization.
+
+`python3 tools/test_object_init_native.py` checks 8,256 scenarios at `-O0` and
+`-O2` with ASan/UBSan. It uses the production interface, placement, shadow and
+texture-scroll records with an object adapter whose pointer widths and offsets
+are different. Cases cover signed sequence IDs, null handles, null/`-1`/valid
+callbacks, every player bypass, null/non-null placement, extreme flag values,
+shadow replacement/removal and callback position changes. A typed bridge
+runs the actual `TexScroll_init` for every signed step byte, both state-presence
+cases, and six flag values, checking the complete state and placement bytes.
+The player callback is a spy; this is not full native game initialization.
+Negative controls reject word-indexed and truncated callbacks, missing
+placement/flags, the one-argument call, and using world rather than local
+position for the final snapshot.
+
+All five versions retain byte-identical source objects, including every
+consumer of the interface header. Object's 60 functions and all its data remain
+100%. Full `all_source` and strict retail-checksum builds pass; the full reports
+retain only the existing TRK exception-vector and MusyX discarded-data artifacts.
+Separate formatting also preserves all source-object hashes.
+
+## Skeleton collision-bound initialization (2026-10-06)
+
+`ObjModel_InitSkeletonCollisionBounds`, formerly `modelInitBones`, initializes
+capsule radii, squared radii, lengths, and conservative root-distance bounds;
+it does not build animation matrices. It now receives `ObjModel*` and accesses
+its actual `file`. Model header offsets +0x18 and +0x1C are respectively the
+`f32* jointCollisionRadii` and `f32* jointCollisionLengthScales` tables, with
+separate serialized offset views and target layout assertions. Relocation,
+allocation, initialization, and the Thorntail rescaling caller share that API.
+These are descriptive recovered names, not a claim of original spelling.
+
+Dinosaur Planet's `obj_func_80021E74` in `src/object.c` (checkout
+`c4340802dc9f62e1181d00cc34c3175fca6ca4be`) has the same radius/length setup
+and calls the input tables `collisionA` and `collisionB`. SFA's subsequent
+skeleton-hit collectors consume these as capsule radii and lengths. The
+Foxhollow implementation at `894de8a8edecfad2e455f1a6345e328f50c74aba`
+also takes `ObjModel*`; its remaining raw fields are not independent evidence
+of their names. SFA retains these retail-specific details:
+
+- Root length is `0.01f`; a zero non-root length becomes `0.1f`.
+- Length multipliers apply only at or above one.
+- Zero-radius joints inherit their parent's cull distance; other joints use
+  the maximum of their parent bound and accumulated path length plus radius.
+- The ineffective `!flags & 0x1000` test is actually emitted by MWCC and present
+  in retail. Its precedence is documented, not silently changed.
+- A zero scaled root radius reads the second input radius even for a one-joint
+  model. The existing 152-float scratch and lack of a joint-count guard remain;
+  neither the input table nor allocation contract has been enlarged.
+
+The loop retains separate byte cursors with `sizeof` strides: native array
+indexing changes MWCC's induction setup and register assignment. Parent-bound
+accesses use ordinary indexing. The adjacent `objInitCullScale` now traverses
+`ObjModel*` banks without truncating them to `int`. Its signed null comparison
+uses pointer-width `ptrdiff_t`, preserving retail's `cmpwi` and full host pointers.
+
+`python3 tools/test_model_collision_bounds.py` executes both production routines
+and the real model records under ASan/UBSan at `-O0` and `-O2`. It checks 118,144
+scenarios using independent ancestor-walk bounds: branching/linear skeletons,
+0 through 152 joints, absent tables/workspaces, zero/negative/positive scale,
+root fallback, zero-length segments, multiplier thresholds, all cull-scale
+bytes, and null model banks. Guards and unchanged records are checked. The
+object-only dependency adapter changes its layout and uses pointers above
+4 GiB. Negative controls reject pointer truncation, the wrong root length,
+lost parent bounds, a corrected flag guard, and applying shrinking multipliers.
+The existing relocation and instance-layout suites also pass with the renamed
+float tables (732 and 16,384 scenarios per optimization level).
+
+All five configured versions pass `all_source` and strict retail DOL checksums.
+The object, model, and Thorntail TUs each remain 100% code and data; no other
+report row regresses. The full inventories retain only the existing TRK
+exception-vector carving and MusyX discarded exception-data report artifacts.
+Every model object is byte-identical. In `object.o`, sections, symbol layouts,
+and normalized relocation destinations are identical after accounting for the
+API rename; anonymous literals are unchanged. Thorntail's only source change
+is its call to that API. Separate formatting preserves every source-object hash.
+
+
+## Player spawn and initial camera storage
+
+`mapSetupPlayer` now writes a real 32-byte `CameraModeNormalInitSettings`
+record and addresses its diagnostic strings directly. The former reconstruction
+cast the camera record's address through `int`, then indexed beyond that record
+to reach unrelated strings. That depended on both 32-bit pointers and the
+linker's global layout. The three strings formerly hidden in `sObjDebugStrings`
+are ordinary named character arrays; their natural alignment reproduces the
+retail bytes without explicit padding or section directives.
+
+The camera settings header describes two mode-specific views. Initial setup
+stores position at offsets 8, 12 and 16, then uses byte FOV/height and halfword
+distance settings near the end of the record. Transition mode uses the compact
+fields at the beginning. `CameraModeNormal_init` establishes the widths and
+signedness of these reads; assertions cover both views and the complete size.
+Uninterpreted bytes remain opaque. The names and union representation are
+recovered descriptions, not a claim to the original typedef spelling.
+
+The related `objLoadPlayer` in `../dinosaur-planet/src/object.c` corroborates the
+typed global, position offsets, 24-byte placement record, and 60-unit radius /
+40-unit height calculation. Its camera distances differ: retain SFA's retail
+90/85 defaults, rather than copying Dinosaur Planet's 92/90. The working
+`../foxhollow` port also removes the pointer truncation, though its remaining
+cross-global indexing is not needed here. Player spawning now uses the existing
+canonical `ObjPlacement` instead of a duplicate `CharSpawn` layout. Multiplying
+the signed saved heading by 256 replaces an undefined negative left shift and
+emits the same PPC instructions.
+
+Validation covers EN, EN rev1, JP, PAL and PAL rev1. Both complete affected TUs
+are 100% in each version: all 60 `object.c` functions and all 19 camera-mode
+functions, including data. The all-TU objdiff inventory has no new mismatches;
+the existing TRK exception-vector carving and discarded MusyX exception-data
+report artifacts remain. Every `all_source` build and strict retail checksum
+passes, with verified original hashes and no retail object substitutions in
+the source link. Only `object.o` changes raw identity because of its renamed
+data and anonymous symbols; the camera consumer and all other source objects
+are byte-identical. Compiler settings and TU boundaries are unchanged.
+
+`python3 tools/test_object_setup_native.py` extracts the production setup and
+camera-init functions and their canonical records. At both `-O0` and `-O2`,
+5,132 scenarios pass with ASan/UBSan on 64-bit pointers and independently
+allocated globals. Coverage includes spawn suppression/failure, locked loading,
+title mode, all signed saved headings, and all byte-valued transition inputs.
+Local negative controls reject restored cross-global string indexing, pointer
+truncation, misplaced position writes, the wrong settings view, and negative
+signed shifts. This fixture exercises setup and camera modes 0/2, not every
+function in either TU.
+
+## Intrusive update-list pointer recovery
+
+`ObjLinkedList.head`, list-helper arguments, and intrusive links now hold real
+pointers. Registration, enable/disable, freeing, and both frame traversals use
+that contract. The update and hit-detection passes also retain full-width child
+and callback arguments. Removing an object from `gObjList` copies pointer-sized
+entries instead of four-byte words.
+
+`../dinosaur-planet/src/linked_list.c` and its header provide particularly close
+lineage: the same signed-halfword count and link offset, pointer head, insertion
+branches, and removal walk. Its `objEnable` orders nodes by update priority.
+SFA's retail instructions independently establish each field width and branch;
+the existing `ObjAnimComponent.next` is already a `void*` link. Foxhollow's
+pointer-width integer conversion corroborates the native failure, but this
+recovery uses pointer storage and byte-based link addressing instead.
+
+Retail's signed address comparisons require narrow `ptrdiff_t` casts at those
+comparisons under the current compiler. Ordinary pointer comparisons emit
+`cmplw` / `cmplwi` instead of `cmpw` / `cmpwi`. The casts preserve complete
+addresses on the supported target and native host, with a pointer-width
+assertion; they are matching constraints, not evidence that the original source
+used this spelling. The group lookup's reused byte pointer remains: changing
+its type changes allocation in the second child pass. Its table dereference
+now uses the actual `GameObject*` element type.
+
+Keep two evidenced helper behaviours: initialization does not reset `count`,
+and insertion into an empty list does not clear the inserted node's link.
+Removal also leaves the removed node's link intact. The source preserves these
+behaviours; callers must supply a suitable initial link rather than relying on
+an invented helper-side reset.
+
+`python3 tools/test_object_list_native.py` extracts the three production list
+helpers plus registration, enable/disable, free, and frame-update functions.
+Its native dependency adapters use different offsets and 64-bit pointers.
+At `-O0` and `-O2`, 12,524 checks pass under ASan/UBSan: randomized operations
+at two link offsets, an independent ordering model, all flat-array removal
+positions in the fixture, pending/deferred free modes, and ordered frame
+callbacks including removal during traversal. Negative controls reject truncated
+heads, narrow link reads, four-byte array compaction, reversed priority order,
+and truncated callback arguments. External update, resource destruction, and
+rendering services are stubbed; this is not a complete native game execution.
+
+All five versions retain 100% for the complete `object.c` and `modelEngine.c`
+TUs, with no new mismatches in the full inventory. All source builds and strict
+retail checksums pass. Every source object except `modelEngine.o` is raw
+byte-identical; its only changes are ten anonymous literal-symbol numbers at
+unchanged addresses. Compiler profiles, TU boundaries, and source-link coverage
+remain unchanged. The two previously documented reporting artifacts remain.
+
+## Object destruction and sequence detachment
+
+The private full-object destructor is now `objFreeObjectInternal`, with a
+`GameObject*` argument and an `onlySelf` flag. The former `objFreeObjdef` name
+came from the cache-release diagnostic embedded near its end, but that block
+is only one stage of destruction. Dinosaur Planet separates
+`objFreeObjectInternal(Object*, s32 onlySelf)` from `objFreeObjdef(s32 tabIdx)`;
+its full destructor follows the same child collection, sequence detachment,
+shadow/message/model cleanup, cached-definition release, and placement-release
+order. This is strong lineage for the descriptive rename, not proof of SFA's
+original symbol spelling. The retail diagnostic string remains unchanged.
+
+The existing 40-entry temporary child array now stores `GameObject*`, so the
+collection survives native pointer widths and later removal from the global
+object array. Sequence detachment uses the canonical `ObjSeqState.targetObj`
+field rather than an integer store through the extra-state pointer. The byte
+written at retail offset `0x8F` is named `targetFreed`, with assertions for it
+and the target pointer. That name describes the observed destruction write;
+no separate reader of that byte has been identified. Foxhollow independently
+uses pointer-array storage and this same sequence-state layout.
+
+Shadow, message queue, model-bank, and placement accesses now use canonical
+fields directly. The generic DLL free slot retains an explicit cast to its
+evidenced `(GameObject*, int)` call signature. Signed pointer comparisons retain
+pointer-width `ptrdiff_t` casts for retail instruction selection. The reused
+object/definition local keeps its existing lifetime. Cleanup order, the
+40-entry scratch capacity, and retail's lack of a child-count bounds check are
+preserved.
+
+`python3 tools/test_object_free_native.py` extracts the complete production
+destructor and the actual object-definition, shadow-state, and sequence-state
+records. Its 15,360 scenarios pass at `-O0` and `-O2` under ASan/UBSan, using
+64-bit pointers and a native object adapter. They cover 0, 1, 20, and 40 children,
+mutation of the global list by child destruction, player/DLL callbacks,
+`onlySelf`, shared/owned/sentinel shadow resources, frozen-model effects,
+definition reference counts, sequence IDs, and owned placement data. Release
+and callback spies check the complete order and pointer identity; they do not
+execute the underlying game services. Negative controls reject truncated child
+pointers, a four-byte sequence-pointer clear, the old fixed flag offset,
+incorrect shared-texture ownership, and a dropped callback flag.
+
+The existing object-list and definition-cache fixtures also pass after updating
+their references to the typed, renamed destructor. All 60 retail functions and
+all assigned data in `object.c` remain 100% in EN, EN rev1, JP, PAL, and PAL rev1.
+Every source build and strict retail checksum passes, with no new mismatches
+in the complete inventories. All other source objects are raw byte-identical.
+The destructor rename and eight anonymous literal-symbol renumberings explain
+`object.o`'s identity change; instructions, allocated storage, compiler profiles,
+and TU boundaries are unchanged.
+
+## Loader helpers
+
 Two called private helpers account for the early literals in `object.c`:
 
 - `objPlacementRangeToWorld` converts the placement record's range units to

@@ -75,9 +75,9 @@ void dll413_hitDetect(GameObject* obj) {
         return;
     }
 
-    (*gPartfxInterface)->spawnObject(obj, DLL19D_PARTFX_IMPACT, &spawnParams, DLL19D_IMPACT_PARTFX_MODE, -1, NULL);
-    (*gPartfxInterface)->spawnObject(obj, DLL19D_PARTFX_IMPACT, &spawnParams, DLL19D_IMPACT_PARTFX_MODE, -1, NULL);
-    (*gPartfxInterface)->spawnObject(obj, DLL19D_PARTFX_IMPACT, &spawnParams, DLL19D_IMPACT_PARTFX_MODE, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, DLL19D_PARTFX_IMPACT, &spawnParams, DLL19D_IMPACT_PARTFX_MODE, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, DLL19D_PARTFX_IMPACT, &spawnParams, DLL19D_IMPACT_PARTFX_MODE, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, DLL19D_PARTFX_IMPACT, &spawnParams, DLL19D_IMPACT_PARTFX_MODE, -1, NULL);
     state->despawnTimer = DLL19D_DESPAWN_TIMER_RESET;
 }
 
@@ -107,9 +107,9 @@ void dll413_update(GameObject* obj) {
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if (hitState->contactFlags != 0) {
         Sfx_PlayFromObject(obj, SFXTRIG_npu_216);
-        (*gPartfxInterface)->spawnObject(obj, DLL19D_PARTFX_IMPACT, &spawnParams, DLL19D_IMPACT_PARTFX_MODE, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, DLL19D_PARTFX_IMPACT, &spawnParams, DLL19D_IMPACT_PARTFX_MODE, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, DLL19D_PARTFX_IMPACT, &spawnParams, DLL19D_IMPACT_PARTFX_MODE, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DLL19D_PARTFX_IMPACT, &spawnParams, DLL19D_IMPACT_PARTFX_MODE, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DLL19D_PARTFX_IMPACT, &spawnParams, DLL19D_IMPACT_PARTFX_MODE, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DLL19D_PARTFX_IMPACT, &spawnParams, DLL19D_IMPACT_PARTFX_MODE, -1, NULL);
         state->despawnTimer = DLL19D_DESPAWN_TIMER_RESET;
     }
 
@@ -134,15 +134,15 @@ void dll413_update(GameObject* obj) {
 
         obj->anim.rotX = (s16)(obj->anim.rotX + state->angularVelocityX * framesThisStep);
         obj->anim.rotZ = (s16)(obj->anim.rotZ + state->angularVelocityZ * framesThisStep);
-        (*gPartfxInterface)->spawnObject(obj, DLL19D_PARTFX_TRAIL, &spawnParams, DLL19D_FLIGHT_PARTFX_MODE, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DLL19D_PARTFX_TRAIL, &spawnParams, DLL19D_FLIGHT_PARTFX_MODE, -1, NULL);
 
         if ((state->effectTimer -= framesThisStep) <= 0) {
             (*gPartfxInterface)
-                ->spawnObject(obj, DLL19D_PARTFX_PULSE_A, &spawnParams, DLL19D_FLIGHT_PARTFX_MODE, -1, NULL);
+                ->spawnEffect(obj, DLL19D_PARTFX_PULSE_A, &spawnParams, DLL19D_FLIGHT_PARTFX_MODE, -1, NULL);
             (*gPartfxInterface)
-                ->spawnObject(obj, DLL19D_PARTFX_PULSE_B, &spawnParams, DLL19D_FLIGHT_PARTFX_MODE, -1, NULL);
+                ->spawnEffect(obj, DLL19D_PARTFX_PULSE_B, &spawnParams, DLL19D_FLIGHT_PARTFX_MODE, -1, NULL);
             (*gPartfxInterface)
-                ->spawnObject(obj, DLL19D_PARTFX_PULSE_C, &spawnParams, DLL19D_FLIGHT_PARTFX_MODE, -1, NULL);
+                ->spawnEffect(obj, DLL19D_PARTFX_PULSE_C, &spawnParams, DLL19D_FLIGHT_PARTFX_MODE, -1, NULL);
             state->effectTimer = DLL19D_EFFECT_TIMER_RESET;
         }
 

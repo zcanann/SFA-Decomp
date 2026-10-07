@@ -48,9 +48,10 @@ three-vector transform paths.
 
 A direct `gModelCacheBuffersA[1]` access at the initial weight transfer keeps an
 extra address alive and changes register allocation throughout both loaders.
-The proven integer-address expression remains, with its byte offset expressed
-as the size of one actual array element. The existing byte-sized cache indices
-and reload order also remain.
+The initial recovery retained an integer-address expression, with its byte
+offset expressed as the size of one actual array element. The native pointer
+correction below replaces that truncating expression while preserving the
+existing byte-sized cache indices and reload order.
 
 The paired-single transform kernels retain their existing scalar C fallbacks.
 This job recovery does not claim to reproduce their quantized instructions or
@@ -177,3 +178,50 @@ the independent call oracle (1,280 comparisons). `ninja all_source
 build/GSAE01/ok`, explicit retail checksum verification, and source/header
 formatting checks pass. These checks retain the oracle's DMA, transform and
 save/restore stub limitations described above.
+
+## Native cache pointer flow (2026-10-06)
+
+Before this correction, both stream wrappers cast cache addresses through `int` at six source
+sites: the first weight-buffer lookup in each wrapper and the paired in-place
+source/destination arguments in each consume helper. These casts discard the
+upper half of a native 64-bit pointer. The working Foxhollow port uses pointer
+arithmetic for these accesses; its model wrapper supplied a useful cross-check
+of the intended data flow.
+
+The initial weight-buffer lookups now advance a byte pointer by one pointer
+element and load the pointer there. This preserves the complete target object;
+direct array indexing still changes register allocation. The consume helpers
+retain integer address addition with `size_t`, guarded by a pointer-size
+assertion, instead of `int`. Ordinary pointer addition puts the buffer load
+before the byte-offset load in GC/1.3; explicit locals and inline pointer
+helpers produced the same reordered sequence. The native-width integer form
+preserves retail's load order without truncating the address. This is a
+documented matching spelling, not evidence of the original source expression.
+
+`python3 tools/test_model_cache_streams.py` executes the actual scratch-buffer
+initializer, both wrappers and their three inline consume/prefetch helpers.
+It extracts the production job/chunk records and uses native pointers above
+4 GiB. An independent call oracle covers 4,480 scenarios at each of `-O0` and
+`-O2`, with ASan/UBSan and warnings treated as errors:
+
+- Zero through 31 chunks, exercising empty jobs, priming, alternating cache
+  buffers, final chunks, queue waits and output-copy ordering.
+- Both normal kernels, including flags whose low byte differs from the full
+  integer's truth value, plus the translated vertex kernel.
+- Signed source/output offsets, varied matrix indices, transfer counts,
+  element counts and byte offsets within the cache buffers.
+
+The transform stubs check every pointer and write through the selected native
+cache address. DMA transfers and skinning arithmetic remain stubbed. Restoring
+either class of `int` cast in a local negative control fails compilation with
+a pointer-truncation diagnostic. These are native wrapper checks, not an
+end-to-end native build or a hardware DMA test.
+
+The complete model object remains byte-identical in EN, EN rev1, JP, PAL and
+PAL rev1: all 85 functions and 604 data bytes are 100% exact. Every other source
+object hash is also unchanged. Each input DOL passed its configured hash;
+`all_source`, the strict source-linked DOL checksum, and complete objdiff
+reports pass with no new discrepancies. The reports retain the two existing
+library accounting exceptions (`__exception` and `sal_volume`). Running
+`clang-format` on the model TU and its canonical header made no changes, and
+both pass the formatting check.

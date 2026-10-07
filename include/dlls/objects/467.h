@@ -18,15 +18,6 @@ typedef struct WorldObjSetup {
     u8 unknown1C[4];
 } WorldObjSetup;
 
-typedef struct WorldObjEffectParams {
-    u8 unknown00[6];
-    s16 dispatchTimer;
-    f32 effectScale;
-    f32 offsetX;
-    f32 offsetY;
-    f32 offsetZ;
-} WorldObjEffectParams;
-
 /*
  * The path callbacks interpret overlapping work views from the start of the
  * state at a 0x18-byte stride. The first view's opaque prefix therefore
@@ -66,13 +57,6 @@ STATIC_ASSERT(offsetof(WorldObjSetup, unknown18) == 0x18);
 STATIC_ASSERT(offsetof(WorldObjSetup, variant) == 0x1B);
 STATIC_ASSERT(offsetof(WorldObjSetup, unknown1C) == 0x1C);
 STATIC_ASSERT(sizeof(WorldObjSetup) == 0x20);
-
-STATIC_ASSERT(offsetof(WorldObjEffectParams, dispatchTimer) == 0x06);
-STATIC_ASSERT(offsetof(WorldObjEffectParams, effectScale) == 0x08);
-STATIC_ASSERT(offsetof(WorldObjEffectParams, offsetX) == 0x0C);
-STATIC_ASSERT(offsetof(WorldObjEffectParams, offsetY) == 0x10);
-STATIC_ASSERT(offsetof(WorldObjEffectParams, offsetZ) == 0x14);
-STATIC_ASSERT(sizeof(WorldObjEffectParams) == 0x18);
 
 STATIC_ASSERT(offsetof(WorldObjPathSegmentWork, start) == 0x10);
 STATIC_ASSERT(offsetof(WorldObjPathSegmentWork, end) == 0x28);

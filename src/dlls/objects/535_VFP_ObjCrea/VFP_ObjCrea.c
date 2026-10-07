@@ -152,9 +152,9 @@ void VFP_ObjCreator_update(GameObject* obj)
             launch.ang[0] = obj->anim.rotX;
             vecRotateZXY(launch.ang, &spawned->anim.velocityX);
             Sfx_PlayFromObject(spawned, SFXTRIG_id_10c);
-            (*gPartfxInterface)->spawnObject(spawned, 0x39a, NULL, 0x10002, -1, NULL);
-            (*gPartfxInterface)->spawnObject(spawned, 0x39b, NULL, 0x10002, -1, NULL);
-            (*gPartfxInterface)->spawnObject(spawned, 0x39c, NULL, 0x10002, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(spawned, 0x39a, NULL, 0x10002, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(spawned, 0x39b, NULL, 0x10002, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(spawned, 0x39c, NULL, 0x10002, -1, NULL);
         }
         break;
     }

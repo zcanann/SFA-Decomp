@@ -30,7 +30,7 @@ STATIC_ASSERT(sizeof(PlayerStatus) == 12);
  * engine-wide BaddieState actor-control record (baddie_state.h); the
  * 0x35C+ tail is the player-private extension. Field widths mirror the
  * deref widths observed in player.c; unobserved ranges are padded.
- * 0x8E0 covers every observed access - the true allocation may be larger.
+ * loadCharacter reserves 0x8E0 bytes for this state for Sabre and Krystal.
  */
 /* PlayerState.flags360 bit names. */
 #define PLAYER_FLAG_AIM_READY                                                                                          \
@@ -256,7 +256,7 @@ typedef struct PlayerState {
     f32 moveEnd2X; /* secondary local-space target position, also lerped from moveStart */
     f32 moveEnd2Y;
     f32 moveEnd2Z;
-    s16 secondaryBlendAmount; /* clamped (s16) blend amount derived from the leapSpeed normalization; passed to Object_ObjAnimSetSecondaryBlendMove for the paired jump/climb move */
+    s16 secondaryBlendAmount; /* clamped (s16) blend amount derived from the leapSpeed normalization; passed to ObjAnim_SetCurrentBlendMove for the paired jump/climb move */
     u8 unk606;
     u8 unk607;
     u8 unk608;

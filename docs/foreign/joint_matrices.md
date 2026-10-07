@@ -275,3 +275,100 @@ the way to see it paired. `render.c` stays `NonMatching` because
 the live body, is archived as `joint_matrices_c.c` and remains the readable
 description of the algorithm; `tools/joint_matrices_emulation_probe.py` still
 links the compiled render object and can be used as a behaviour check.
+
+## Caller pointer contract
+
+2026-10-06. The live `modelAnimEvalSlotPair` and `modelAnimEvalChannels`
+callers now keep the selected joint buffer in a pointer local. Their former
+`int` locals truncated native addresses before passing the slot to the renderer.
+The entry stores r3 in `sJointMatrixOutput.slot`, dereferences it with
+`lwz r3, 0(r3)`, and saves the pointee as its work buffer. The corresponding
+Dinosaur Planet entry, `func_8001B4F0`, takes `MtxF**`; Foxhollow also uses
+pointer locals here, although its renderer declaration retains `int*`.
+
+The shared declaration uses `u8**` for that slot because the 64-byte joint
+records also hold intermediate poses, `f32*` for the incoming root transform,
+`ObjAnimState*` for animation state, `const ModelBone*` for the bone table,
+and `s16*` for joint adjustments. The two private output fields have the
+corresponding pointer types. The assembly instructions are unchanged.
+
+Both complete TUs and every other source object remain byte-identical across
+all five configured versions. Full objdiff reports retain only the existing
+TRK vector and MusyX exception-data accounting discrepancies; all five strict
+source-linked DOL checks and `all_source` builds pass. The native caller test,
+`tools/test_model_joint_contract.py`, checks 5,120 slot-pair and 320 channel
+evaluations at both O0 and O2 with ASan/UBSan, including both buffers and every
+renderer call path. A truncated-pointer negative control fails. Preparation
+and rendering are spies in this test; it does not validate matrix arithmetic.
+
+## Joint-adjustment stream
+
+2026-10-06. `modelBuildJointAdjustments` (formerly
+`ObjModel_BuildAnimBlendTable`) builds additive joint adjustments, not blend
+weights. Each nonzero `ObjJointPose` component emits four halfwords: current
+and previous pose byte offsets, then the signed delta duplicated for both
+channels. The renderer's loops at EN `0x800075FC` and `0x80007830` read an
+unsigned offset at byte 0 and a signed delta at byte 4, then advance eight
+bytes. The second interpolated channel enters with the stream pointer advanced
+two bytes. The paired decoder applies the first delta to both adjacent samples.
+Both terminal offsets are `0x1000`; terminal deltas are never read.
+
+`ModelJointPosePair` records the decoded rotation, unsigned scale and signed
+translation rows, starting at workspace byte `0x1C`. Their component offsets
+replace the builder's numeric offset arguments. Signed matrix-slot indices
+still select 64-byte workspaces; multiplication preserves the retail `extsb` /
+`slwi` sequence without C's undefined left shift of a negative value.
+Dinosaur Planet's `mod_func_8001A640` emits the older single-channel offset /
+delta pairs with the same component offsets.
+
+`gModelJointAdjustments` keeps the evidenced 0x140-byte allocation. Its union
+exposes the producer's halfword stream and the renderer's typed eight-byte
+records. At most 39 records fit before the two-word terminator; the retail
+builder has no capacity check. No allocation or behavior was expanded here.
+
+All five versions retain identical model section contents, symbol offsets and
+relocations after normalizing the two intentional names; every other source
+object is byte-identical. Full objdiff and strict source-linked DOL checks
+pass with the same two library accounting discrepancies noted above.
+`tools/test_model_joint_adjustments.py` checks 7,428 streams at O0 and O2 with
+ASan/UBSan, including the last fitting record and untouched terminal deltas.
+Negative controls detect both an incorrect component offset and the former
+signed shift. The native caller-contract test also passes with the typed input.
+
+## Object joint bindings
+
+2026-10-06. `ObjDef.jointBindingsOffset` is the file-relative word at `0x10`;
+loading turns it into `jointBindings`, with `jointBindingBytes` as the explicit
+packed-byte view. `jointBindingCount` at `0x5A` counts bindings, not skeleton
+joints. Each `ObjJointBinding` has an unsigned tag followed by `modelCount`
+unsigned model-joint indices. The record ordinal selects the corresponding
+18-byte `ObjJointPose`; `0xFF` means absent in that model. Allocation, lookup
+and adjustment-building consumers now use this contract. The relocation uses
+byte-pointer addition without truncating the allocation pointer through `int`.
+
+`python3 tools/orig/joint_bindings.py GSAE01 --include-records` audits the
+available EN asset table and records its hashes. Of 1,478 definitions, 147
+have bindings: 542 records, all contained within their owning object records,
+with one to three model indices per record and 33 absent-model entries.
+`SC_animbaby` (definition 729) has duplicate tags 0 and 1. Dinosaur Planet's
+`pSequenceBones` and `mod_func_8001A640` corroborate the variable stride and
+per-model mapping; the EN bytes and consumers establish this target's layout.
+
+Pose lookups keep the last valid matching tag. World-position lookup instead
+uses the first matching tag and retains its existing matrix-index clamp. If
+the tag is entirely absent, that function leaves its joint index uninitialized;
+this existing behavior is preserved. Its model and matrix pointer lifetimes
+now have their actual types. The packed lookup loops retain explicit scalar
+loads with canonical `offsetof` expressions: a cached record pointer changes
+MWCC's address selection. The byte view removes the old pointer-to-pointer
+type laundering without that codegen change.
+
+The native lookup test checks 8,643 pose lookups, 2,320 world-position calls
+with existing tags, and four binding relocations at both O0 and O2 under
+ASan/UBSan. The known missing-tag compiler warning remains visible. Controls
+reject first-match pose semantics and truncated relocation pointers; the
+7,428-stream adjustment test also passes with the recovered binding type.
+All five versions pass full objdiff, `all_source` and strict source-linked DOL
+checks with the same two library accounting discrepancies. The only object
+differences are anonymous literal names in objexpr and engine/2; their contents,
+symbol offsets and relocations remain unchanged.

@@ -107,7 +107,7 @@ void SPScarab_update(GameObject* obj)
     distance = sqrtf(obj->anim.velocityX * obj->anim.velocityX +
                      obj->anim.velocityZ * obj->anim.velocityZ);
 
-    ObjAnim_SampleRootCurvePhase(&obj->anim, distance, &phase);
+    ObjAnim_SampleRootCurvePhase(obj, distance, &phase);
     ObjAnim_AdvanceCurrentMove(obj, phase, timeDelta, 0);
 
     if (obj->anim.localPosY < state->groundY)

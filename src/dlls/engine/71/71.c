@@ -397,7 +397,7 @@ u32 CameraModePath_updateTransition(CameraObject* camera, u32 flagsIn) {
     gCameraModePathState->rotationXEnd = camera->anim.rotX;
     gCameraModePathState->rotationYEnd = camera->anim.rotY;
     gCameraModePathState->rotationZEnd = camera->anim.rotZ;
-    gCameraModePathState->fovEnd = camera->fov;
+    gCameraModePathState->fovEnd = camera->fovY;
 
     if (gCameraModePathState->transitionDuration != 0.0f) {
         speed = gCameraModePathState->transitionElapsed / gCameraModePathState->transitionDuration;
@@ -423,7 +423,7 @@ u32 CameraModePath_updateTransition(CameraObject* camera, u32 flagsIn) {
     camera->anim.localPosX = Curve_EvalLinear(&gCameraModePathState->positionStartX, t, NULL);
     camera->anim.localPosY = Curve_EvalLinear(&gCameraModePathState->positionStartY, t, NULL);
     camera->anim.localPosZ = Curve_EvalLinear(&gCameraModePathState->positionStartZ, t, NULL);
-    camera->fov = Curve_EvalLinear(&gCameraModePathState->fovStart, t, NULL);
+    camera->fovY = Curve_EvalLinear(&gCameraModePathState->fovStart, t, NULL);
 
     if (((gCameraModePathState->rotationXStart - gCameraModePathState->rotationXEnd) > 32768.0f) ||
         ((gCameraModePathState->rotationXStart - gCameraModePathState->rotationXEnd) < -32768.0f)) {
@@ -476,7 +476,7 @@ void CameraModePath_startTransition(f32 fovEnd, CameraObject* camera, f32* posEn
     gCameraModePathState->rotationXStart = (f32)(s32)camera->anim.rotX;
     gCameraModePathState->rotationYStart = (f32)(s32)camera->anim.rotY;
     gCameraModePathState->rotationZStart = (f32)(s32)camera->anim.rotZ;
-    gCameraModePathState->fovStart = camera->fov;
+    gCameraModePathState->fovStart = camera->fovY;
     gCameraModePathState->positionEndX = posEnd[0];
     gCameraModePathState->positionEndY = posEnd[1];
     gCameraModePathState->positionEndZ = posEnd[2];
@@ -529,7 +529,7 @@ void CameraModePath_update(CameraObject* cam) {
     if (gCameraModePathState->pathFailed != 0) {
         (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
     } else {
-        obj = cam->anim.targetObj;
+        obj = cam->focusObject;
         getButtonsJustPressed(0);
         node = (RomCurvePathNode*)(*gRomCurveInterface)->getById(gCameraModePathState->controlNodeId);
         node2 = (RomCurvePathNode*)(*gRomCurveInterface)->getById(gCameraModePathState->moveNodeId);
@@ -597,7 +597,7 @@ void CameraModePath_update(CameraObject* cam) {
         if (trackRotationZ == 0) {
             cam->anim.rotZ = Curve_EvalCatmullRom(rotationZSamples, t, 0);
         }
-        cam->fov = Curve_EvalBSpline(fov, t, 0);
+        cam->fovY = Curve_EvalBSpline(fov, t, 0);
         if (gCameraModePathState->transitionComplete == 0 &&
             (s32)CameraModePath_updateTransition(cam, (u32)flags) != 0) {
             gCameraModePathState->transitionComplete = 1;
@@ -675,7 +675,7 @@ void CameraModePath_init(CameraObject* cam, int mode, CameraModePathSettings* se
     f32 zSamples[4];
     int tags[2];
 
-    obj = cam->anim.targetObj;
+    obj = cam->focusObject;
     if (gCameraModePathState == 0) {
         gCameraModePathState = (CameraModePathState*)mmAlloc(sizeof(CameraModePathState), 0xf, 0);
     }
@@ -745,7 +745,7 @@ void CameraModePath_init(CameraObject* cam, int mode, CameraModePathSettings* se
         cam->anim.rotX = rotationX;
         cam->anim.rotY = rotationY;
         cam->anim.rotZ = rotationZ;
-        cam->fov = fov;
+        cam->fovY = fov;
     }
     gCameraModePathState->pathProgress = t;
 }

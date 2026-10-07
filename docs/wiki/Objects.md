@@ -471,25 +471,62 @@ Wiki offset/name | This codebase | Verified how
 `0xFC` `Vec oldVel` | `f32 externalVelX/Y/Z` | offset matches (`externalVelX..externalVelZ == 0xFC-0x104`); own comment: "velocity imparted externally (carrier object's velocity / move-data velocity), added to `anim.velocity` in the localPos integration" — plausibly the same "old/other velocity" concept under a more specific name
 `0x108` `cbAfterUpdateBones` callback | not modeled — `GameObject`'s own comment says "the record extends past 0x108; total size unverified; do not take `sizeof(GameObject)`" | not found; consistent with the wiki that there's more struct beyond this codebase's current `GameObject` tail
 
-### Message Queue — confirmed field-for-field
+### Message queue storage and pointer contract (2026-10-06)
 
-`src/main/objlib.c` implements this section almost exactly:
+`GameObject.msgQueue` is the pointer at target offset `0xDC`. Retail queues have
+an eight-byte header (32-bit count and capacity), followed by twelve-byte
+messages: a 32-bit ID, an object sender, and an argument. The argument is either
+an address or a message-specific integer encoded as a pointer.
 
-- `#define OBJMSG_QUEUE_OFFSET 0xdc` — matches the wiki's field 0xDC precisely.
-- `ObjMsgQueue { u32 count; u32 capacity; ObjMsgEntry entries[1]; }` — `count`/`capacity` are the
-  wiki's `numMsgs`/`maxMsgs`.
-- `ObjMsgEntry { u32 message; u32 sender; u32 param; }` — a byte-for-byte match of the wiki's
-  `msg`/`from`/`param` triple.
-- `ObjMsg_Peek` / `ObjMsg_Pop` (peek/pop, "normally done in the update method"), `ObjMsg_SendToObject`
-  (direct-by-pointer send), `ObjMsg_SendToObjects` (send by defNo/category), `ObjMsg_SendToNearbyObjects`
-  (send within radius), and `ObjMsg_AllocQueue` (the "size hard-coded in the object's setup method"
-  allocator) cover every send/receive mode the wiki describes.
-- `OBJMSG_SEND_INCLUDE_SENDER` / `OBJMSG_SEND_MATCH_ANY` / `OBJMSG_SEND_MATCH_OBJTYPE` flags on the
-  send functions correspond to the wiki's "option to exclude itself" and "match by defNo or
-  category" behavior.
-- The overflow warning is a real retail string: `char sObjMsgOverflowInObjectWarning[] =
-  "objmsg (%x): overflow in object %d defno=%d FROM: defno %d\n";` — matches the wiki's "an error
-  message is printed to the console if any message is dropped".
+`src/main/objlib.c` now represents the allocation as a variable-length array of
+`ObjMsgWord` unions. The two header slots use the integer member; each subsequent
+three-slot message uses its ID, sender and argument members. Allocation and
+indexing use the word type's actual size. This removes the fabricated
+`ObjMsgQueueCursor` overlay and fixed byte stride while preserving retail's
+word-oriented index arithmetic. The union is a reconstruction, not a recovered
+original typedef. Direct indexing of twelve-byte structs changes MWCC's multiply
+and loop-induction instructions; the explicit three-word indexing retains the
+existing shared compiler profile without new flags, pragmas or boundaries.
+
+Dinosaur Planet's `src/objmsg.c` and `include/sys/objmsg.h` corroborate the FIFO,
+object sender, pointer argument and optional output pointers. Its allocator also
+works in three message words plus two header words. Foxhollow's
+`game/src/main/objlib.c` independently widens the sender and argument storage for
+native pointers. The recovered API uses `GameObject**` and `void**` outputs at
+all consumers, and `GameObject*` / `void*` inputs at all send functions. Pointer
+send sites no longer truncate their arguments to `u32`; numeric messages retain
+explicit conversions at the protocol boundary. This recovers the queue contract,
+not unrelated pointer arithmetic elsewhere in those callers.
+
+The six operations remain allocation, direct send, filtered broadcast,
+radius-filtered broadcast, peek and pop. Filter bit 1 is now correctly named
+`OBJMSG_SEND_IGNORE_SENDER`: setting it excludes the sender. Bit 2 bypasses the
+ID filter; bit 4 selects `romDefNo` instead of `classId` for the non-radius
+broadcast. The radius broadcast always filters `romDefNo` and uses a strict
+less-than distance comparison. Both mask flags to their low sixteen bits.
+
+Overflow still prints the original `objmsg (%x): overflow in object %d defno=%d
+FROM: defno %d` diagnostic and leaves the queue unchanged. Existing retail
+preconditions remain: positive requested capacities, successful allocation,
+valid objects in the broadcast list, and a valid sender when an overflow
+needs its definition number.
+
+All five hash-verified retail versions pass `all_source` and the strict DOL
+checksum. The complete `objlib` TU retains 26 matching functions, 5,380 code
+bytes and 300 data bytes. Every affected caller remains exact. Only `objlib.o`
+and `player.o` change raw hashes: object comparison shows anonymous literal
+symbols renumbered at unchanged addresses, with matching bytes and relocations.
+Full objdiff inventories with completion annotations removed retain only the
+pre-existing DTK exception-vector and MusyX discarded exception-data artifacts.
+
+`python3 tools/test_objmsg_native.py` compiles all six production queue functions
+and the canonical API on a 64-bit host. An independent FIFO model checks 6,082
+operations at `-O0` and `-O2` with ASan/UBSan: allocation, empty/full queues,
+compaction, optional outputs, pointer and integer payloads, filtering, exact
+radius boundaries and overflow diagnostics. Five local negative controls reject
+four-byte allocation, four-byte indexing, sender truncation, argument truncation
+and reversed sender filtering. The harness adapts only external engine fields;
+it does not claim to execute every complete object DLL natively.
 
 ### Category-ID (`classId`) sample cross-references
 

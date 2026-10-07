@@ -22,7 +22,7 @@
 #include "main/lightmap_render_control_api.h"
 #include "main/map_load.h"
 #include "main/model_engine.h"
-#include "main/dll/FRONT/dll_3B.h"
+#include "main/dll/FRONT/title_menu.h"
 #include "main/dll/dll_0037_optionsscreen.h"
 #include "dolphin/os.h"
 #include "dolphin/os/OSReport.h"
@@ -206,7 +206,7 @@ void n_attractmode_prepareMovie(void) {
     gAttractMoviePreparePending = NATTRACTMODE_MOVIE_BUSY;
     ok = AttractMovieAudio_Init(NATTRACTMODE_MOVIE_SETUP_ID);
     if (ok != 0) {
-        ok = movieLoad("starfox.thp", NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
+        ok = movieLoad("starfox.thp", FALSE);
         if (ok == 0) {
             AttractMovieAudio_Shutdown();
         } else {
@@ -618,7 +618,7 @@ void TitleMenu_initialise(void) {
     int i;
     int mode;
 
-    if ((gSaveGameWorkBuffer[0x21] & 0x80) != 0) {
+    if ((gSaveGameWorkBuffer->newFileFlag & 0x80) != 0) {
         gAttractMovieAutoplayEnabled = 0;
     } else {
         gAttractMovieAutoplayEnabled = 1;

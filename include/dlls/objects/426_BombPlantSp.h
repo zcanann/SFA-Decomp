@@ -2,7 +2,7 @@
 #define DLLS_OBJECTS_426_BOMB_PLANT_SP_H_
 
 #include "dlls/object_descriptor.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
 #include "main/modellight_api.h"
@@ -35,7 +35,7 @@ typedef struct BombPlantSporeState {
     s16 pickupMsgBitId;
     s16 pickupMsgValue;
     f32 pickupMsgDelay;
-    CurvesCollisionState path;
+    ObjCollisionState path;
     ModelLightStruct* light;
     f32 fuseTimer;
     f32 driftAmplitude;

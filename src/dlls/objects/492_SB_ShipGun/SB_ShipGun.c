@@ -297,8 +297,8 @@ void SB_ShipGun_update(GameObject* obj) {
             spawnArgs.posZ -= obj->anim.worldPosZ;
             for (i = 0; i < (int)(u32)framesThisStep; i = i + 1) {
                 (*gPartfxInterface)
-                    ->spawnObject((void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, &spawnArgs, SB_SHIPGUN_SMOKE_PARTICLE_MODE,
-                                  -1, NULL);
+                    ->spawnEffect(obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, &spawnArgs, SB_SHIPGUN_SMOKE_PARTICLE_MODE, -1,
+                                  NULL);
             }
             break;
         }
@@ -323,8 +323,8 @@ void SB_ShipGun_update(GameObject* obj) {
             spawnArgs.posZ -= obj->anim.worldPosZ;
             for (i = 0; i < (int)(u32)framesThisStep; i = i + 1) {
                 (*gPartfxInterface)
-                    ->spawnObject((void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, &spawnArgs, SB_SHIPGUN_SMOKE_PARTICLE_MODE,
-                                  -1, NULL);
+                    ->spawnEffect(obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, &spawnArgs, SB_SHIPGUN_SMOKE_PARTICLE_MODE, -1,
+                                  NULL);
             }
             break;
         }

@@ -245,13 +245,14 @@ void loadSunAndMoon(void) {
     }
 }
 
-f32 gSkySunDirection[] = {0.0f, 1.0f, 0.0f};
+f32 gSkySunDirection[3] = {0.0f, 1.0f, 0.0f};
 
-f32 gSkyMoonDirection[] = {0.0f, 1.0f, 0.0f};
+f32 gSkyMoonDirection[3] = {0.0f, 1.0f, 0.0f};
 
-f32 sSkyUnusedColors[] = {
-    80.0f, 120.0f, 165.0f, 120.0f, 80.0f, 80.0f, 100.0f, 125.0f, 100.0f, 80.0f, 255.0f, 220.0f, 190.0f, 220.0f, 255.0f,
-};
+/* Quarter-day samples, including the endpoint at the following midnight. */
+f32 gSkyMoonIntensityCurve[5] = {80.0f, 120.0f, 165.0f, 120.0f, 80.0f};
+f32 gSkyAmbientIntensityCurve[5] = {80.0f, 100.0f, 125.0f, 100.0f, 80.0f};
+f32 gSkyBlendAlphaCurve[5] = {255.0f, 220.0f, 190.0f, 220.0f, 255.0f};
 
 u8 gSkyColorBlendTable[248] = {
     0,   29,  164, 0,   0,   72,  155, 68,  29,  12,  53,  28,  255, 143, 191, 255, 116, 186, 255, 219, 255, 255, 176,
@@ -961,7 +962,7 @@ void skyUpdateLightingFromTimeOfDay(void) {
     int blueCurveOffset;
     int slotIndex;
     int lightSlotOffset;
-    f32* lightingData;
+    f32* sunDirection;
     int rawR;
     int blue;
     int rawG;
@@ -976,10 +977,10 @@ void skyUpdateLightingFromTimeOfDay(void) {
     f32 segmentFraction;
     f32 dayStart;
 
-    lightingData = gSkySunDirection;
+    sunDirection = gSkySunDirection;
     if (gSkyState == NULL) {
         for (slotIndex = 0; slotIndex < 3; slotIndex++) {
-            skySetLightSlot(slotIndex, lightingData[0], lightingData[1], lightingData[2], 0xff, 0xff, 0xff, 0xff, 0xff,
+            skySetLightSlot(slotIndex, sunDirection[0], sunDirection[1], sunDirection[2], 0xff, 0xff, 0xff, 0xff, 0xff,
                             0xff);
         }
     } else {
@@ -1002,9 +1003,9 @@ void skyUpdateLightingFromTimeOfDay(void) {
             curveSegment = 3;
         }
         for (slotIndex = 0; slotIndex < 2; slotIndex++) {
-            blendAlphaCurve = &((f32*)((u8*)lightingData + 0x40))[curveSegment];
-            moonIntensityCurve = &((f32*)((u8*)lightingData + 0x18))[curveSegment];
-            ambientIntensityCurve = &((f32*)((u8*)lightingData + 0x2c))[curveSegment];
+            blendAlphaCurve = &gSkyBlendAlphaCurve[curveSegment];
+            moonIntensityCurve = &gSkyMoonIntensityCurve[curveSegment];
+            ambientIntensityCurve = &gSkyAmbientIntensityCurve[curveSegment];
             greenCurveOffset = (curveSegment + 7) * 4;
             blueCurveOffset = (curveSegment + 0xe) * 4;
             zero = 0.0f;
@@ -1055,11 +1056,11 @@ void skyUpdateLightingFromTimeOfDay(void) {
             }
             timeOfDay = ((SkyState*)gSkyState)->timeOfDay;
             if (timeOfDay >= dayStart && timeOfDay <= 75600.0f) {
-                skySetLightSlot(slotIndex, lightingData[0], lightingData[1], lightingData[2], red, green, blue,
+                skySetLightSlot(slotIndex, sunDirection[0], sunDirection[1], sunDirection[2], red, green, blue,
                                 moonIntensity, ambientIntensity, blendAlpha);
             } else {
-                skySetLightSlot(slotIndex, -lightingData[3], lightingData[4], -lightingData[5], red, green, blue,
-                                moonIntensity, ambientIntensity, blendAlpha);
+                skySetLightSlot(slotIndex, -gSkyMoonDirection[0], gSkyMoonDirection[1], -gSkyMoonDirection[2], red,
+                                green, blue, moonIntensity, ambientIntensity, blendAlpha);
             }
         }
         skySetLightSlot(2, 0.0f, 0.0f, 0.0f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);

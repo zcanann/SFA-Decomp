@@ -48,7 +48,7 @@ void CameraModeArwing_free(void) {
 
 void CameraModeArwing_update(CameraObject* camera) {
     int targetYaw, targetPitch;
-    GameObject* target = (GameObject*)camera->anim.targetObj;
+    GameObject* target = (GameObject*)camera->focusObject;
     int angleDelta;
 
     camera->anim.worldPosX = gCameraModeArwingState.offsetX * gCameraModeArwingState.xScale;
@@ -134,7 +134,7 @@ void CameraModeArwing_update(CameraObject* camera) {
 }
 
 void CameraModeArwing_init(CameraObject* camera, int mode, int unusedArg) {
-    GameObject* target = (GameObject*)camera->anim.targetObj;
+    GameObject* target = (GameObject*)camera->focusObject;
     CameraModeArwingState* state;
     Vec* initialOffset;
     f32 zEaseValue;

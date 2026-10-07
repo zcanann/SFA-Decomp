@@ -2,21 +2,21 @@
 #define MAIN_DLL_EXPGFX_INTERFACE_H_
 
 #include "global.h"
+#include "game/objects/object_fwd.h"
+#include "main/dll/effectspawnconfig_struct.h"
 
 typedef void (*ExpgfxOnMapSetupFn)(void);
-typedef int (*ExpgfxSpawnEffectFn)(void* config, int preferredPoolIndex, int slotType,
+typedef int (*ExpgfxSpawnEffectFn)(EffectSpawnConfig* config, int preferredPoolIndex, int slotType,
                                    int planeOffsetSetId);
-typedef void (*ExpgfxUpdateFrameStateFn)(int sourceMode, int sourceId, int unused0,
-                                         int unused1);
+typedef void (*ExpgfxUpdateFrameStateFn)(int sourceMode, int frameCount, int unused0, int unused1);
 typedef void (*ExpgfxResetAllPoolsFn)(void);
-typedef void (*ExpgfxFreeSourceFn)(void* sourceId);
+typedef void (*ExpgfxFreeSourceFn)(GameObject* sourceObject);
 typedef int (*ExpgfxFunc09Fn)(void);
 typedef void (*ExpgfxNopFn)(void);
-typedef void (*ExpgfxUpdateSourceFrameFlagsFn)(void* sourceObject);
+typedef int (*ExpgfxUpdateSourceFrameFlagsFn)(GameObject* sourceObject);
 
-typedef struct ExpgfxInterface
-{
-    u8 pad00[0x04];
+typedef struct ExpgfxInterface {
+    u32 reserved;
     ExpgfxOnMapSetupFn onMapSetup;
     ExpgfxSpawnEffectFn spawnEffect;
     ExpgfxUpdateFrameStateFn updateFrameState;
@@ -30,6 +30,7 @@ typedef struct ExpgfxInterface
     ExpgfxUpdateSourceFrameFlagsFn updateSourceFrameFlags;
 } ExpgfxInterface;
 
+STATIC_ASSERT(sizeof(ExpgfxInterface) == 0x30);
 STATIC_ASSERT(offsetof(ExpgfxInterface, onMapSetup) == 0x04);
 STATIC_ASSERT(offsetof(ExpgfxInterface, spawnEffect) == 0x08);
 STATIC_ASSERT(offsetof(ExpgfxInterface, updateFrameState) == 0x0C);

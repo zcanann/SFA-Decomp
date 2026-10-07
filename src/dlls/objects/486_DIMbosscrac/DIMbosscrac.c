@@ -21,8 +21,8 @@ int DIMbosscrackpar_SeqFn(GameObject* obj) {
         return 0;
     }
     (*gPartfxInterface)
-        ->spawnObject(obj, placement->particleEffectOffset + DIMBOSSCRACKPAR_BASE_PARTICLE_ID, NULL, 2, -1, NULL);
-    (*gPartfxInterface)->spawnObject(obj, DIMBOSSCRACKPAR_GLOW_PARTICLE_ID, NULL, 2, -1, NULL);
+        ->spawnEffect(obj, placement->particleEffectOffset + DIMBOSSCRACKPAR_BASE_PARTICLE_ID, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, DIMBOSSCRACKPAR_GLOW_PARTICLE_ID, NULL, 2, -1, NULL);
     return 0;
 }
 
@@ -53,8 +53,8 @@ void DIMbosscrackpar_update(GameObject* obj) {
 
     if (mainGetBit(placement->triggerGameBit) != 0) {
         (*gPartfxInterface)
-            ->spawnObject(obj, placement->particleEffectOffset + DIMBOSSCRACKPAR_BASE_PARTICLE_ID, NULL, 2, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, DIMBOSSCRACKPAR_GLOW_PARTICLE_ID, NULL, 2, -1, NULL);
+            ->spawnEffect(obj, placement->particleEffectOffset + DIMBOSSCRACKPAR_BASE_PARTICLE_ID, NULL, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DIMBOSSCRACKPAR_GLOW_PARTICLE_ID, NULL, 2, -1, NULL);
     }
 }
 

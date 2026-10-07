@@ -81,7 +81,7 @@ void kaldachomspit_burst(GameObject* obj) {
                        1, 1, 0, randomVariant, 0, 1, 0);
     } else {
         for (i = 0; i < KALDACHOMPSPIT_POISON_BURST_COUNT; i++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, &i);
+            (*gPartfxInterface)->spawnEffect(obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, &i);
         }
         Sfx_PlayFromObject(obj, SFXTRIG_lummy311);
     }
@@ -175,12 +175,11 @@ void KaldachomSpit_update(GameObject* obj) {
             kaldachomspit_burst(obj);
         } else {
             if (obj->anim.romDefNo == KALDACHOMPSPIT_SEQUENCE_ID_EXPLOSIVE) {
-                objfx_spawnPulseBurst((void*)obj, 1.0f, 1, 0, 0, NULL);
+                objfx_spawnPulseBurst(obj, 1.0f, 1, 0, 0, NULL);
             } else {
-                (*gPartfxInterface)
-                    ->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_TRAIL, NULL, 2, -1, &objAnim->alpha);
-                (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, NULL);
-                (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, KALDACHOMPSPIT_PARTFX_POISON_TRAIL, NULL, 2, -1, &objAnim->alpha);
+                (*gPartfxInterface)->spawnEffect(obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, NULL);
             }
             light = state->light;
             if (light != NULL && light->glowType != 0 && light->enabled != 0) {

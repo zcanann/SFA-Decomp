@@ -97,7 +97,7 @@ static int gGameTextShadowOffsetX, gGameTextShadowOffsetY, gGameTextShadowEnable
 static u8 gGameTextColorR, gGameTextColorG, gGameTextColorB, gGameTextColorA;
 static u8 gGameTextShadowColorR, gGameTextShadowColorG, gGameTextShadowColorB, lbl_803DC980;
 static GameTextBox* gCurTextBox;
-static void* gGameTextStringStore;
+static int gGameTextStringStoreHandle;
 static char *gCurTextBuffer, *gGameTextCommandStringCursor;
 static f32 timeDelta;
 static char* sMapDirectoryNameTable[] = {"test"};
@@ -105,8 +105,8 @@ static char sGameTextBlankFormat[] = "";
 static int atlasCalls, storeSize, formatKind, allocatedSize, copiedSize, argCount;
 static union { void* alignment; u8 bytes[256]; } allocation;
 static void gameTextBuildSystemFontAtlas(void) { atlasCalls++; }
-static void* mmCreateMemoryStore(int size) { storeSize = size; return &storeSize; }
-static void* mmAlloc(int size, int tag, int flags) {
+static int mmCreateMemoryStore(int size) { storeSize = size; return 37; }
+static void* mmAlloc(int size, int tag, const char* allocationName) {
     allocatedSize = size;
     return allocation.bytes;
 }
@@ -183,7 +183,7 @@ EXPORT int checkInit(void) {
         gGameTextColorR != 255 || gGameTextColorG != 255 || gGameTextColorB != 255 || gGameTextColorA != 255 ||
         gGameTextShadowColorR || gGameTextShadowColorG || gGameTextShadowColorB ||
         gGameTextShadowOffsetX != 5 || gGameTextShadowOffsetY != 5 || !gGameTextShadowEnabled ||
-        atlasCalls != 1 || storeSize != 0x800 || gGameTextStringStore != &storeSize) return 5;
+        atlasCalls != 1 || storeSize != 0x800 || gGameTextStringStoreHandle != 37) return 5;
     return 0;
 }
 EXPORT int checkRing(int method, int status, int previous) {

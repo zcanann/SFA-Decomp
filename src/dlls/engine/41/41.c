@@ -28,12 +28,12 @@ ObjectDescriptor6 Effect16_funcs = {
     (ObjectDescriptorCallback)Effect16_release,
     0,
     (ObjectDescriptorCallback)Effect16_func03_nop,
-    (ObjectDescriptorCallback)Effect16_spawnObject,
+    (ObjectDescriptorCallback)Effect16_spawnEffect,
     (ObjectDescriptorCallback)Effect16_updateFrameState,
 };
 
-int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                         s16* extraArgs) {
+int Effect16_spawnEffect(GameObject* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                         s8 sourceParam, s16* extraArgs) {
     int spawnResult;
     PartFxSpawn cfg;
 
@@ -59,7 +59,7 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.sourceVecZ = spawnParams->rotZ;
         cfg.sourceVecY = spawnParams->rotY;
         cfg.sourceVecX = spawnParams->rotX;
-        cfg.modelIdByte = modelId;
+        cfg.sourceParam = sourceParam;
     }
     cfg.behaviorFlags = 0;
     cfg.renderFlags = 0;
@@ -390,9 +390,9 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != 0) {
-                cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-                cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-                cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+                cfg.startPosX = cfg.startPosX + cfg.attachedSource->anim.worldPosX;
+                cfg.startPosY = cfg.startPosY + cfg.attachedSource->anim.worldPosY;
+                cfg.startPosZ = cfg.startPosZ + cfg.attachedSource->anim.worldPosZ;
             }
         }
     }

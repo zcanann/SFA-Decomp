@@ -10,8 +10,8 @@
 #include "MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "MSL_C/PPCEABI/bare/H/floorf.h"
 
-static void render_copyPackedU64Tail(u64* dst, u32 packed);
-static void render_copyPackedU64Head(u64* dst, u32 packed);
+static void render_copyPackedU64Tail(u64* dst, size_t packed);
+static void render_copyPackedU64Head(u64* dst, size_t packed);
 
 const int gModelRenderAdpcmStepTable[89] = {
     0x4,    0x8,    0x9,    0xA,    0xB,    0xC,    0xD,    0xE,    0x10,   0x11,   0x13,   0x15,   0x17,
@@ -316,8 +316,8 @@ s16 gModelRootRotY;
 s16 gModelRootRotX;
 static const ModelBone* sJointMatrixBones;
 static struct {
-    void* work;
-    int* slot;
+    u8* work;
+    u8** slot;
 } sJointMatrixOutput = {NULL, NULL};
 static u8 sJointMatrixScratch[0x100];
 static const f32 sJointPairZeroOne[2] = {0.0f, 1.0f};
@@ -338,8 +338,9 @@ static const f32 sJointSinCoef3 = -2.29492142e-15f;
 static const f32 sJointSinCoef1 = 2.39684487e-05f;
 
 // clang-format off
-asm void modelAnimBuildJointMatrices(int* out, u8* dst, void* animState, u8* jointData, int jointCount, u8* jointScratch,
-                                     int flags, int mode) {
+asm void modelAnimBuildJointMatrices(u8** jointWorkspace, f32* rootTransform, ObjAnimState* animState,
+                                     const ModelBone* bones, int jointCount,
+                                     const struct ModelJointAdjustment* jointAdjustments, int flags, int mode) {
     nofralloc
     mflr r0
     stwu r1, -0xfc(r1)
@@ -1662,162 +1663,166 @@ asm void modelAnimBuildJointMatrices(int* out, u8* dst, void* animState, u8* joi
 }
 // clang-format on
 
+/* The retail decoder retains 64-bit address arithmetic from its packed-register
+ * implementation. Pointer conversions must still preserve the native width. */
 typedef u64 RenderPackedAddress;
 
-#define RENDER_PACKED_ADDRESS(pointer) ((u32)(pointer))
+#define RENDER_PACKED_ADDRESS(pointer) ((size_t)(pointer))
 
 static inline u16 render_readPackedU16(RenderPackedAddress address) {
-    return *(u16*)(u32)address;
+    return *(u16*)(size_t)address;
 }
 
 static inline void render_writePackedU16(RenderPackedAddress address, u16 value) {
-    *(u16*)(u32)address = value;
+    *(u16*)(size_t)address = value;
 }
 
 /* Refill the two parallel 64-bit bitstream windows from the next
    byte-aligned position once the consumed bit count overruns 64. */
 #define RENDER_BITS_REFILL(nb)                                                                                         \
-    bitpos -= (nb);                                                                                                    \
-    bufA = bitpos >> 3;                                                                                                \
-    posA += bufA;                                                                                                      \
-    curB = bufA + curB;                                                                                                \
-    bitpos &= 7;                                                                                                       \
-    render_copyPackedU64Head(&bufA, posA);                                                                             \
-    render_copyPackedU64Tail(&bufA, posA + 7);                                                                         \
-    render_copyPackedU64Head(&bufB, curB);                                                                             \
-    render_copyPackedU64Tail(&bufB, curB + 7);                                                                         \
-    bufA <<= (bitpos & 0xFFFFFFFF);                                                                                    \
-    bufB <<= (bitpos & 0xFFFFFFFF);                                                                                    \
-    bitpos += (nb);
+    consumedBits -= (nb);                                                                                              \
+    windowA = consumedBits >> 3;                                                                                       \
+    frameAddressA += windowA;                                                                                          \
+    frameAddressB = windowA + frameAddressB;                                                                           \
+    consumedBits &= 7;                                                                                                 \
+    render_copyPackedU64Head(&windowA, frameAddressA);                                                                 \
+    render_copyPackedU64Tail(&windowA, frameAddressA + 7);                                                             \
+    render_copyPackedU64Head(&windowB, frameAddressB);                                                                 \
+    render_copyPackedU64Tail(&windowB, frameAddressB + 7);                                                             \
+    windowA <<= (consumedBits & 0xFFFFFFFF);                                                                           \
+    windowB <<= (consumedBits & 0xFFFFFFFF);                                                                           \
+    consumedBits += (nb);
 
 const f32 gModelRenderSubframeScale[1] = {16384.0f};
 
 void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s16* outRotation) {
     f32 framePhase;
-    u64 nib3;
-    int curB;
-    s64 posA;
-    u64 outPos;
-    u64 tp;
-    u64 end;
-    u64 bufA;
-    u64 bufB;
-    s64 tmp;
-    s64* q;
-    s64 frac;
-    u64 vA;
+    u64 translationBits;
+    ptrdiff_t frameAddressB;
+    s64 frameAddressA;
+    RenderPackedAddress rotationAddress;
+    RenderPackedAddress descriptorAddress;
+    RenderPackedAddress positionEndAddress;
+    u64 windowA;
+    u64 windowB;
+    s64 delta;
+    s64* divisionValue;
+    s64 fraction;
+    u64 firstSample;
     int i;
     u64 sample;
-    u32 hw;
-    u64 h;
-    u64 bitpos;
-    u64 nib;
-    u64 nib2;
+    u32 rotationDescriptor;
+    u64 descriptor;
+    u64 consumedBits;
+    u64 rotationBits;
+    u64 scaleBits;
 
     framePhase = anim->framePhase;
-    outPos = RENDER_PACKED_ADDRESS(outRotation);
-    curB = anim->frameStreamStride;
-    posA = RENDER_PACKED_ADDRESS(anim->frameStreamCursor);
-    tp = RENDER_PACKED_ADDRESS(anim->moveFrameData->trackDescriptors);
-    q = &tmp;
+    rotationAddress = RENDER_PACKED_ADDRESS(outRotation);
+    frameAddressB = anim->frameStreamStride;
+    frameAddressA = RENDER_PACKED_ADDRESS(anim->frameStreamCursor);
+    descriptorAddress = RENDER_PACKED_ADDRESS(anim->moveFrameData->trackDescriptors);
+    divisionValue = &delta;
 
-    curB += posA;
-    end = RENDER_PACKED_ADDRESS(outPosition + 3);
+    frameAddressB += frameAddressA;
+    positionEndAddress = RENDER_PACKED_ADDRESS(outPosition + 3);
     framePhase -= floorf(framePhase);
     framePhase *= gModelRenderSubframeScale[0];
-    frac = (int)framePhase;
+    fraction = (int)framePhase;
 
-    render_copyPackedU64Head(&bufA, posA);
-    render_copyPackedU64Tail(&bufA, posA + 7);
-    render_copyPackedU64Head(&bufB, curB);
-    render_copyPackedU64Tail(&bufB, curB + 7);
-    bitpos = 0;
+    render_copyPackedU64Head(&windowA, frameAddressA);
+    render_copyPackedU64Tail(&windowA, frameAddressA + 7);
+    render_copyPackedU64Head(&windowB, frameAddressB);
+    render_copyPackedU64Tail(&windowB, frameAddressB + 7);
+    consumedBits = 0;
 
     do {
         sample = 0;
-        h = render_readPackedU16(tp);
-        nib = h & 0xf;
-        hw = h;
-        h &= 0xFFF0;
+        descriptor = render_readPackedU16(descriptorAddress);
+        rotationBits = descriptor & 0xf;
+        rotationDescriptor = descriptor;
+        descriptor &= 0xFFF0;
 
-        if (nib != 0) {
-            bitpos += nib;
-            if ((s64)bitpos > 64) {
-                RENDER_BITS_REFILL(nib)
+        if (rotationBits != 0) {
+            consumedBits += rotationBits;
+            if ((s64)consumedBits > 64) {
+                RENDER_BITS_REFILL(rotationBits)
             }
-            tmp = 64 - nib;
-            vA = bufA >> (tmp & 0xFFFFFFFF);
-            tmp = bufB >> (tmp & 0xFFFFFFFF);
-            tmp -= vA;
-            tmp = tmp << 50;
+            delta = 64 - rotationBits;
+            firstSample = windowA >> (delta & 0xFFFFFFFF);
+            delta = windowB >> (delta & 0xFFFFFFFF);
+            delta -= firstSample;
+            /* Wrap to the signed 14-bit rotation delta before interpolation.
+             * Shift the unsigned representation so negative deltas are defined. */
+            delta = (s64)((u64)delta << 50);
             for (i = 50; i != 0; i--) {
-                *q /= 2;
+                *divisionValue /= 2;
             }
-            tmp *= frac;
+            delta *= fraction;
             for (i = 14; i != 0; i--) {
-                *q /= 2;
+                *divisionValue /= 2;
             }
-            h += (vA + tmp) << 2;
-            bufA <<= (nib & 0xFFFFFFFF);
-            bufB <<= (nib & 0xFFFFFFFF);
-            sample = h;
+            descriptor += (firstSample + delta) << 2;
+            windowA <<= (rotationBits & 0xFFFFFFFF);
+            windowB <<= (rotationBits & 0xFFFFFFFF);
+            sample = descriptor;
         }
-        tp += 2;
-        render_writePackedU16(outPos, sample);
-        outPos += 2;
+        descriptorAddress += 2;
+        render_writePackedU16(rotationAddress, sample);
+        rotationAddress += 2;
 
         do {
-            if ((hw & 0x10) == 0) {
+            if ((rotationDescriptor & 0x10) == 0) {
                 sample = 0;
                 break;
             }
-            h = render_readPackedU16(tp);
-            if ((h & 0x10) != 0) {
-                nib2 = h & 0xf;
-                if (nib2 != 0) {
-                    bitpos += nib2;
-                    if ((s64)bitpos > 64) {
-                        RENDER_BITS_REFILL(nib2)
+            descriptor = render_readPackedU16(descriptorAddress);
+            if ((descriptor & 0x10) != 0) {
+                scaleBits = descriptor & 0xf;
+                if (scaleBits != 0) {
+                    consumedBits += scaleBits;
+                    if ((s64)consumedBits > 64) {
+                        RENDER_BITS_REFILL(scaleBits)
                     }
-                    bufA <<= (nib2 & 0xFFFFFFFF);
-                    bufB <<= (nib2 & 0xFFFFFFFF);
+                    windowA <<= (scaleBits & 0xFFFFFFFF);
+                    windowB <<= (scaleBits & 0xFFFFFFFF);
                 }
-                tp += 2;
-                if (((u32)h & 0x20) == 0) {
+                descriptorAddress += 2;
+                if (((u32)descriptor & 0x20) == 0) {
                     sample = 0;
                     break;
                 }
-                h = render_readPackedU16(tp);
+                descriptor = render_readPackedU16(descriptorAddress);
             }
             sample = 0;
-            nib3 = h & 0xf;
-            if (nib3 != 0) {
-                h &= 0xFFF0;
-                bitpos += nib3;
-                if ((s64)bitpos > 64) {
-                    RENDER_BITS_REFILL(nib3)
+            translationBits = descriptor & 0xf;
+            if (translationBits != 0) {
+                descriptor &= 0xFFF0;
+                consumedBits += translationBits;
+                if ((s64)consumedBits > 64) {
+                    RENDER_BITS_REFILL(translationBits)
                 }
-                tmp = 64 - nib3;
-                vA = bufA >> (tmp & 0xFFFFFFFF);
-                tmp = bufB >> (tmp & 0xFFFFFFFF);
-                tmp -= vA;
-                tmp *= frac;
+                delta = 64 - translationBits;
+                firstSample = windowA >> (delta & 0xFFFFFFFF);
+                delta = windowB >> (delta & 0xFFFFFFFF);
+                delta -= firstSample;
+                delta *= fraction;
                 for (i = 14; i != 0; i--) {
-                    *q /= 2;
+                    *divisionValue /= 2;
                 }
-                h += vA + tmp;
-                bufA <<= (nib3 & 0xFFFFFFFF);
-                bufB <<= (nib3 & 0xFFFFFFFF);
-                sample = h;
+                descriptor += firstSample + delta;
+                windowA <<= (translationBits & 0xFFFFFFFF);
+                windowB <<= (translationBits & 0xFFFFFFFF);
+                sample = descriptor;
             }
-            tp += 2;
+            descriptorAddress += 2;
         } while (0);
         outPosition[0] = sample;
         outPosition++;
-    } while (RENDER_PACKED_ADDRESS(outPosition) != end);
+    } while (RENDER_PACKED_ADDRESS(outPosition) != positionEndAddress);
 }
 
-static void render_copyPackedU64Tail(u64* dst, u32 packed) {
+static void render_copyPackedU64Tail(u64* dst, size_t packed) {
     /* Preserve the leading bytes of *dst; fill the tail from the aligned
        64-bit word shifted down. */
     u64 src = *(u64*)(packed & ~7);
@@ -1850,7 +1855,7 @@ static void render_copyPackedU64Tail(u64* dst, u32 packed) {
     }
 }
 
-static void render_copyPackedU64Head(u64* dst, u32 packed) {
+static void render_copyPackedU64Head(u64* dst, size_t packed) {
     /* Fill the head from the aligned 64-bit word; preserve bytes after the
        unaligned source offset. */
     u64 src = *(u64*)(packed & ~7);

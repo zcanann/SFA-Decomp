@@ -11,8 +11,8 @@
 
 static int pathSearchNodeMatchesTarget(PathSearch* search, PathSearchNode* node) {
     RomCurveDef* point;
-    int target;
-    target = search->pathId;
+    ptrdiff_t target;
+    target = search->target;
     point = (RomCurveDef*)node->point;
     switch (point->type) {
     case ROMCURVE_TYPE_TRICKY: {
@@ -35,7 +35,7 @@ static int pathSearchNodeMatchesTarget(PathSearch* search, PathSearchNode* node)
         return 0;
     }
     default:
-        return target == (int)point;
+        return target == (ptrdiff_t)point;
     }
 }
 
@@ -70,25 +70,23 @@ static void pathSearchHeapSiftDown(PathHeapEntry* heap, int size, int idx) {
 static inline void pathSearchHeapInsert(PathSearch* search, u16 index, u32 distance) {
     int i;
     u32 key;
-    u16 idx16;
+    u16 nodeIndex;
     int parent;
-    u32* heap;
-    u16* hh;
-    heap = (u32*)search->heap;
-    hh = (u16*)heap;
-    hh[++search->heapSize * 4 + 2] = index;
-    *(u32*)((int)heap + search->heapSize * 8) = -1 - distance;
+    PathHeapEntry* heap;
+    heap = search->heap;
+    heap[++search->heapSize].nodeIndex = index;
+    heap[search->heapSize].priority = -1 - distance;
     i = search->heapSize;
-    key = *(u32*)((int)heap + i * 8);
-    idx16 = hh[i * 4 + 2];
-    *heap = -1;
-    while (parent = i >> 1, *(u32*)(hh + parent * 4) < key) {
-        *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
-        *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
+    key = heap[i].priority;
+    nodeIndex = heap[i].nodeIndex;
+    heap[0].priority = -1;
+    while (parent = i >> 1, heap[(s32)parent].priority < key) {
+        heap[i].nodeIndex = heap[parent].nodeIndex;
+        heap[i].priority = heap[parent].priority;
         i = parent;
     }
-    *(u32*)((int)heap + i * 8) = key;
-    hh[i * 4 + 2] = idx16;
+    heap[i].priority = key;
+    heap[i].nodeIndex = nodeIndex;
 }
 
 static inline void pathSearchClear(PathSearch* search) {
@@ -312,7 +310,7 @@ int pathSearchBuildPath(PathSearch* search) {
 
 int pathSearchStep(PathSearch* search, u32 maxSteps) {
     int stepsRemaining;
-    PathSearch* q = (PathSearch*)(int)search;
+    PathSearch* state = (void*)search;
     int idx;
     int done;
     int result;
@@ -322,24 +320,24 @@ int pathSearchStep(PathSearch* search, u32 maxSteps) {
     done = 0;
     result = PATH_SEARCH_PENDING;
     while (done == 0 && stepsRemaining != 0) {
-        heap = q->heap;
-        if (q->heapSize == 0) {
+        heap = state->heap;
+        if (state->heapSize == 0) {
             idx = -1;
         } else {
             idx = heap[1].nodeIndex;
-            heap[1].priority = heap[q->heapSize].priority;
-            heap[1].nodeIndex = heap[q->heapSize--].nodeIndex;
-            pathSearchHeapSiftDown(heap, q->heapSize, 1);
+            heap[1].priority = heap[state->heapSize].priority;
+            heap[1].nodeIndex = heap[state->heapSize--].nodeIndex;
+            pathSearchHeapSiftDown(heap, state->heapSize, 1);
         }
         if (idx >= 0) {
-            elem = &q->nodes[idx];
-            q->currentNode = idx;
-            if (pathSearchNodeMatchesTarget(q, elem) != 0) {
+            elem = &state->nodes[idx];
+            state->currentNode = idx;
+            if (pathSearchNodeMatchesTarget(state, elem) != 0) {
                 done = 1;
                 result = PATH_SEARCH_REACHED_TARGET;
             } else {
                 elem->visited = 1;
-                pathSearchExpandNode(q, elem, idx);
+                pathSearchExpandNode(state, elem, idx);
             }
         } else {
             done = 1;
@@ -350,14 +348,14 @@ int pathSearchStep(PathSearch* search, u32 maxSteps) {
     return result;
 }
 
-int pathSearchBegin(PathSearch* queue, RomCurveDef* startPoint, f32* targetPosition, int pathId, u32 reverse) {
+int pathSearchBegin(PathSearch* queue, RomCurveDef* startPoint, f32* targetPosition, ptrdiff_t target, u32 reverse) {
     PathSearchNode* node;
     int nodeCount;
 
     pathSearchClear(queue);
     queue->startPoint = startPoint;
     queue->targetPosition = targetPosition;
-    queue->pathId = pathId;
+    queue->target = target;
     queue->reverse = reverse & 1;
     queue->closestDistanceSq = 10000;
     nodeCount = queue->nodeCount;

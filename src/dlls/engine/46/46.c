@@ -261,7 +261,7 @@ int dll_2E_advanceAlongRoute(GameObject* obj, RomCurveWalker* route, f32 phase, 
             *flags |= MOVELIB_CURVE_WALK_DONE;
         }
     }
-    ObjAnim_SampleRootCurvePhase(&obj->anim, phase, rootOut);
+    ObjAnim_SampleRootCurvePhase(obj, phase, rootOut);
     if (*flags & 1)
     {
         if (trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &ground,
@@ -352,7 +352,7 @@ int dll_2E_moveToTarget(GameObject* obj, const MoveLibTarget* target, f32 speed,
             delta += 0xffff;
         }
         speed *= -mathCosf(3.1415927f * delta / 32768.0f);
-        ObjAnim_SampleRootCurvePhase(&obj->anim, speed, out);
+        ObjAnim_SampleRootCurvePhase(obj, speed, out);
     }
     return 0;
 }
@@ -782,12 +782,12 @@ int moveLibTurnToFaceTarget(GameObject* obj, GameObject* targetObj, int* turning
         if ((yawDelta > 0) && (obj->anim.currentMove != moves[1]))
         {
             ObjAnim_SetCurrentMove(obj, moves[1], 0.0f, 0);
-            ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x1e);
+            ObjAnim_SetCurrentEventStepFrames(obj, 0x1e);
         }
         if ((yawDelta < 0) && (obj->anim.currentMove != moves[0]))
         {
             ObjAnim_SetCurrentMove(obj, moves[0], 0.0f, 0);
-            ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x1e);
+            ObjAnim_SetCurrentEventStepFrames(obj, 0x1e);
         }
 
         if (hitResult == 0)

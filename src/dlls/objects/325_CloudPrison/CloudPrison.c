@@ -76,7 +76,7 @@ void CloudPrisonControl_hitDetect(void) {
 
 void CloudPrisonControl_update(GameObject* obj) {
     GameObject* sender;
-    int data;
+    void* data;
     int message[2];
     int targetIndex;
     int targetCount;
@@ -94,7 +94,7 @@ void CloudPrisonControl_update(GameObject* obj) {
         gCloudPrisonControlNeedsCurveLookup = 0;
     }
     gCloudPrisonDeferredMessageCount = 0;
-    while (ObjMsg_Pop(obj, (u32*)message, (u32*)&sender, (u32*)&data) != 0) {
+    while (ObjMsg_Pop(obj, (u32*)message, &sender, &data) != 0) {
         messageId = message[0];
         switch (messageId) {
         case CLOUD_PRISON_CONTROL_MESSAGE_REGISTER:
@@ -102,7 +102,7 @@ void CloudPrisonControl_update(GameObject* obj) {
                 targetFound = 0;
                 targetAddress = (int)sender;
                 targetEntry[0] = gCloudPrisonTargets;
-                targetValue = data;
+                targetValue = (int)data;
                 targetCount = gCloudPrisonTargetCount;
                 for (targetIndex = 0; targetIndex < targetCount; targetIndex++) {
                     if ((u32)targetEntry[0]->object == targetAddress) {
@@ -114,7 +114,7 @@ void CloudPrisonControl_update(GameObject* obj) {
                 if (!targetFound) {
                     gCloudPrisonTargets[gCloudPrisonTargetCount].object = sender;
                     gCloudPrisonTargets[gCloudPrisonTargetCount].flags = 0;
-                    gCloudPrisonTargets[gCloudPrisonTargetCount++].value = data;
+                    gCloudPrisonTargets[gCloudPrisonTargetCount++].value = (int)data;
                 }
                 ObjMsg_SendToObject((void*)sender, CLOUD_PRISON_CONTROL_MESSAGE_REGISTERED, obj, 0);
             }
@@ -147,7 +147,7 @@ void CloudPrisonControl_update(GameObject* obj) {
                 sender;
             ((CloudPrisonDeferredMessage*)((char*)gCloudPrisonDeferredMessageStorage + deferredOffset))->messageId =
                 messageId;
-            ((CloudPrisonDeferredMessage*)((char*)gCloudPrisonDeferredMessageStorage + deferredOffset))->data = data;
+            ((CloudPrisonDeferredMessage*)((char*)gCloudPrisonDeferredMessageStorage + deferredOffset))->data = (int)data;
             gCloudPrisonDeferredMessageCount++;
             break;
         }

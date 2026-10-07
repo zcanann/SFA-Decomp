@@ -113,8 +113,9 @@ void dim2icicle_update(GameObject* obj) {
             mainSetBits(placement->impactGameBit, 1);
             state->mode = DIM2ICICLE_MODE_IMPACTED;
             (*gWaterfxInterface)
-                ->spawnSplashBurst((void*)obj, obj->anim.localPosX, state->dropTargetY, obj->anim.localPosZ, 10.0f);
-            (*gWaterfxInterface)->spawnRipple(obj->anim.localPosX, state->dropTargetY, obj->anim.localPosZ, 0, 0.0f, 2);
+                ->spawnSplashBurst(obj, obj->anim.localPosX, state->dropTargetY, obj->anim.localPosZ, 10.0f);
+            (*gWaterfxInterface)
+                ->spawnCircularRipple(obj->anim.localPosX, state->dropTargetY, obj->anim.localPosZ, 0, 0.0f, 2);
             Sfx_PlayFromObject(obj, SFXTRIG_mv_curtainopen16);
             state->timer = 0x96;
         }

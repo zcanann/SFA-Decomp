@@ -136,13 +136,6 @@ typedef struct ExpgfxPlaneOffsets {
     f32 offsets[6];
 } ExpgfxPlaneOffsets;
 
-typedef struct ExpgfxPoolSourcePosition {
-    u8 pad00[0x0C];
-    f32 x;
-    f32 y;
-    f32 z;
-} ExpgfxPoolSourcePosition;
-
 typedef union ExpgfxFloatWord {
     int bits;
     f32 value;
@@ -151,22 +144,24 @@ typedef union ExpgfxFloatWord {
 STATIC_ASSERT(sizeof(ExpgfxFloatWord) == 4);
 
 /*
- * Retail warning strings call this structure "exptab". The key fields are
- * still only partially understood, but the table's role and lifetime rules
- * are stable enough to stop treating it as raw integer arrays.
+ * Retail warning strings call this structure "exptab". Live slots share an
+ * entry keyed by source, copied-source parent and texture; refCount counts
+ * their references.
  */
+struct GameObject;
+
 typedef struct ExpgfxTableEntry {
-    /* The add/remove paths key entries by source identity plus an optional attached-source key. */
-    u32 sourceId;
-    u32 attachedTableKey;
+    /* Copied sources retain their parent for the local-to-world transform. */
+    struct GameObject* sourceObject;
+    struct GameObject* sourceParent;
     void* resource;
     u16 refCount;
     s16 resourceId;
 } ExpgfxTableEntry;
 
 STATIC_ASSERT(sizeof(ExpgfxTableEntry) == EXPGFX_TABLE_ENTRY_SIZE);
-STATIC_ASSERT(offsetof(ExpgfxTableEntry, sourceId) == 0x00);
-STATIC_ASSERT(offsetof(ExpgfxTableEntry, attachedTableKey) == 0x04);
+STATIC_ASSERT(offsetof(ExpgfxTableEntry, sourceObject) == 0x00);
+STATIC_ASSERT(offsetof(ExpgfxTableEntry, sourceParent) == 0x04);
 STATIC_ASSERT(offsetof(ExpgfxTableEntry, resource) == 0x08);
 STATIC_ASSERT(offsetof(ExpgfxTableEntry, refCount) == 0x0C);
 STATIC_ASSERT(offsetof(ExpgfxTableEntry, resourceId) == 0x0E);
@@ -342,16 +337,16 @@ extern s8 gExpgfxPoolActiveCounts[EXPGFX_POOL_COUNT];
 extern Vec3s gExpgfxQuadTemplateA[4];
 extern Vec3s gExpgfxQuadTemplateB[4];
 extern ExpgfxTableEntry gExpgfxTableEntries[EXPGFX_EXPTAB_ENTRY_COUNT];
-extern ObjAnimComponent* gExpgfxTrackedPoolSourceIds[EXPGFX_POOL_COUNT];
+extern struct GameObject* gExpgfxPoolSourceObjects[EXPGFX_POOL_COUNT];
 extern u64 gExpgfxTrackedSourceFrameMasks[2];
 extern s16 gExpgfxStaticPoolSlotTypeIds[EXPGFX_POOL_COUNT];
 extern u8 gExpgfxStaticPoolFrameFlags[EXPGFX_POOL_COUNT];
 extern u32 gExpgfxSlotActiveMasks[EXPGFX_POOL_COUNT];
-extern u32 gExpgfxSlotPoolBases[EXPGFX_POOL_COUNT];
+extern void* gExpgfxSlotPoolBases[EXPGFX_POOL_COUNT];
 extern int gExpgfxTextureFreeInProgress;
 extern s16 gExpgfxSequenceCounter;
 extern u8 gExpgfxFrameParityBit;
 extern u8 gExpgfxRenderResetPending;
-extern int gExpgfxLastAddedSlot;
+extern ExpgfxSlot* gExpgfxLastAddedSlot;
 
 #endif /* MAIN_EXPGFX_INTERNAL_H_ */

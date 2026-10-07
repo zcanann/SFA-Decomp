@@ -77,11 +77,11 @@ int imAnimSpace_sequenceCallback(GameObject* obj, int unusedArg2, ObjSeqState* a
         gIMAnimSpacePartFxParams.posX = 143.0f;
         gIMAnimSpacePartFxParams.posY = 16.0f;
         gIMAnimSpacePartFxParams.posZ = -79.0f;
-        (*gPartfxInterface)->spawnObject(obj, IM_ANIM_SPACE_PARTFX_ID, &gIMAnimSpacePartFxParams, 4, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, IM_ANIM_SPACE_PARTFX_ID, &gIMAnimSpacePartFxParams, 4, -1, NULL);
         gIMAnimSpacePartFxParams.posX = -143.0f;
         gIMAnimSpacePartFxParams.posY = 16.0f;
         gIMAnimSpacePartFxParams.posZ = -79.0f;
-        (*gPartfxInterface)->spawnObject(obj, IM_ANIM_SPACE_PARTFX_ID, &gIMAnimSpacePartFxParams, 4, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, IM_ANIM_SPACE_PARTFX_ID, &gIMAnimSpacePartFxParams, 4, -1, NULL);
     }
     texture = objFindTexture(obj, 0, 0);
     texture->textureId = 0x100;

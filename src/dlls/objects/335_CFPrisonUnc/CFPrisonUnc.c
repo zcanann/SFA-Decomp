@@ -94,11 +94,11 @@ void cfPrisonUncle_hitDetect(void) {
 void cfPrisonUncle_update(GameObject* obj) {
     CfPrisonUncleState* state = obj->extra;
     GameObject* player;
-    u32 messageSender;
+    GameObject* messageSender;
     int objectIndex;
     int objectCount;
     u32 message;
-    u32 messageArgument;
+    void* messageArgument;
     GameObject** objects;
     int index;
     if (state == NULL) {

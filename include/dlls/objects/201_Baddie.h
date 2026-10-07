@@ -8,7 +8,7 @@
 #include "types.h"
 #include "global.h"
 #include "main/dll/wall_plane_state.h"
-#include "main/dll/curves_collision_state.h"
+#include "main/dll/obj_collision_state.h"
 #include "main/objprint_character_api.h"
 #include "main/objseq.h"
 
@@ -26,14 +26,14 @@ struct ObjModelChain;
 typedef struct EnemyState {
     u8 unk0[0x4 - 0x0];
     /*
-     * 0x004..0x26C is a CurvesCollisionState, the same aliasing BaddieState
-     * carries: DLL 21 writes the region through the curves names and the
+     * 0x004..0x26C is an ObjCollisionState, the same aliasing BaddieState
+     * carries: DLL 21 writes the region through the collision fields and the
      * baddie code reads it back through the padded view below.
      */
     union {
-        CurvesCollisionState curvesCollision;
+        ObjCollisionState objectCollision;
         struct {
-            u32 flags; /* head word of the embedded gPathControlInterface record at +4 */
+            u32 flags; /* head word of the embedded gObjCollisionInterface record at +4 */
             u8 unk8[0x19C - 0x8];
             s16 spawnRotY; /* engine-maintained pitch pair; the family handlers restore anim.rotY/rotZ from it after a move change */
             s16 spawnRotZ;
@@ -222,9 +222,8 @@ typedef struct EnemyState {
 } EnemyState;
 
 STATIC_ASSERT(sizeof(EnemyState) == 0x370);
-STATIC_ASSERT(offsetof(EnemyState, curvesCollision) == 0x004);
-STATIC_ASSERT(offsetof(EnemyState, eyeAnimState) ==
-              offsetof(EnemyState, curvesCollision) + CURVES_COLLISION_STATE_SIZE);
+STATIC_ASSERT(offsetof(EnemyState, objectCollision) == 0x004);
+STATIC_ASSERT(offsetof(EnemyState, eyeAnimState) == offsetof(EnemyState, objectCollision) + OBJ_COLLISION_STATE_SIZE);
 STATIC_ASSERT(offsetof(EnemyState, flags) == 0x004);
 STATIC_ASSERT(offsetof(EnemyState, prevLookDirX) == 0x2C4);
 STATIC_ASSERT(offsetof(EnemyState, spawnRotY) == 0x19C);
@@ -259,7 +258,7 @@ typedef struct EnemyTargetSearchResult {
 
 STATIC_ASSERT(sizeof(EnemyTargetSearchResult) == 8);
 
-void enemyObjAnimUpdate(short* obj, EnemyState* state);
+void enemyObjAnimUpdate(GameObject* obj, EnemyState* state);
 int enemy_SeqFn(GameObject* node, int unused, ObjSeqState* animUpdate);
 int enemy_findNearbyEnemies(GameObject* obj, f32 radius, u8 flags, int maxCount, EnemyTargetSearchResult* results);
 void tricky_handleDefeat(GameObject* obj, EnemyState* state);
@@ -376,12 +375,6 @@ struct TrickyCommandSpawnPair {
     u32 a;
     u32 b;
 };
-
-typedef struct {
-    s16 rot[3];
-    f32 scale;
-    Vec pos;
-} FrozenFxParams;
 
 typedef struct BaddieInstantiateWeaponPlacement {
     u8 pad0[0x4 - 0x0];

@@ -231,7 +231,7 @@ void dll_200_updateMapAct2(GameObject* obj) {
                     speed = 0.25f;
                     obj->anim.velocityX = speed * (deltaX / distance);
                     obj->anim.velocityZ = speed * (deltaY / distance);
-                    ObjAnim_SampleRootCurvePhase(&obj->anim, speed, &state->animationStep);
+                    ObjAnim_SampleRootCurvePhase(obj, speed, &state->animationStep);
                 } else {
                     if (obj->anim.currentMove != 12) {
                         ObjAnim_SetCurrentMove(obj, 12, 0.0f, 0);

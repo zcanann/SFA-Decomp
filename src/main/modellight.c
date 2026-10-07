@@ -1,6 +1,6 @@
+#include "main/model_light.h"
 #include "dolphin/mtx.h"
 #include "main/shader_api.h"
-#include "main/model_light.h"
 #include "main/modellight_internal.h"
 #include "main/mm.h"
 #include "main/camera.h"
@@ -28,7 +28,7 @@ typedef struct {
 } ModelLightChannelState;
 
 typedef struct ModelLightCornerBlock {
-    f32 v[24];
+    Vec corners[8];
 } ModelLightCornerBlock;
 
 STATIC_ASSERT(sizeof(ModelLightCornerBlock) == 0x60);
@@ -43,10 +43,15 @@ STATIC_ASSERT(sizeof(ModelLightCornerBlock) == 0x60);
 #define LIGHTCLIP_NEAR   0x10 /* worldZ < nearZ */
 #define LIGHTCLIP_FAR    0x20 /* worldZ > farZ */
 
-u8 gModelLightColorTable[8] = {0};
-const ModelLightCornerBlock gModelLightCornerBlock = {{1.0f,  1.0f, 1.0f,  1.0f, 1.0f,  -1.0f, 1.0f,  -1.0f,
-                                                       -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f,
-                                                       -1.0f, 1.0f, -1.0f, 1.0f, 1.0f,  -1.0f, 1.0f,  -1.0f}};
+GXColor gModelLightColorTable[2] = {{0}};
+const ModelLightCornerBlock gModelLightCornerBlock = {{{1.0f, 1.0f, 1.0f},
+                                                       {1.0f, 1.0f, -1.0f},
+                                                       {1.0f, -1.0f, -1.0f},
+                                                       {1.0f, -1.0f, 1.0f},
+                                                       {-1.0f, -1.0f, -1.0f},
+                                                       {-1.0f, -1.0f, 1.0f},
+                                                       {-1.0f, 1.0f, 1.0f},
+                                                       {-1.0f, 1.0f, -1.0f}}};
 
 extern ModelLightStruct* gModelLightList[0x32];
 
@@ -69,7 +74,7 @@ static inline void modelLightRemoveAndFree(ModelLightStruct* light) {
     }
 
     if (light->glowType == 2 && light->glowTexture != NULL) {
-        textureFree((Texture*)(light->glowTexture));
+        textureFree(light->glowTexture);
     }
     mm_free(light);
 }
@@ -84,7 +89,7 @@ void modelLightStruct_freeSlot(ModelLightStruct** lightSlot) {
     }
 }
 
-ModelLightStruct* modelLightStruct_createPointLight(void* owner, u8 red, u8 green, u8 blue, u8 setFlag) {
+ModelLightStruct* modelLightStruct_createPointLight(GameObject* owner, u8 red, u8 green, u8 blue, u8 setFlag) {
     ModelLightStruct* light;
     ModelLightStruct* newLight;
 
@@ -103,14 +108,14 @@ ModelLightStruct* modelLightStruct_createPointLight(void* owner, u8 red, u8 gree
 
     if (light != NULL) {
         light->lightKind = MODEL_LIGHT_KIND_POINT;
-        light->diffuseFadeStartColor[0] = red;
-        light->diffuseColor[0] = red;
-        light->diffuseFadeStartColor[1] = green;
-        light->diffuseColor[1] = green;
-        light->diffuseFadeStartColor[2] = blue;
-        light->diffuseColor[2] = blue;
-        light->diffuseFadeStartColor[3] = 0;
-        light->diffuseColor[3] = 0;
+        light->diffuseFadeStartColor.r = red;
+        light->diffuseColor.r = red;
+        light->diffuseFadeStartColor.g = green;
+        light->diffuseColor.g = green;
+        light->diffuseFadeStartColor.b = blue;
+        light->diffuseColor.b = blue;
+        light->diffuseFadeStartColor.a = 0;
+        light->diffuseColor.a = 0;
         light->fieldBC = 1;
         light->attenuationNear = 50.0f;
         light->attenuationFar = 80.0f;
@@ -161,9 +166,9 @@ static u8 modelLightStruct_projectedLightIntersectsObject(ModelLightStruct* ligh
         i = 0;
         zero = 0.0f;
         for (; i < 8; i++) {
-            worldPos.x = localPos.x + scaledExtent * cornerBlock.v[i * 3 + 0];
-            worldPos.y = localPos.y + scaledExtent * cornerBlock.v[i * 3 + 1];
-            worldPos.z = localPos.z + scaledExtent * cornerBlock.v[i * 3 + 2];
+            worldPos.x = localPos.x + scaledExtent * cornerBlock.corners[i].x;
+            worldPos.y = localPos.y + scaledExtent * cornerBlock.corners[i].y;
+            worldPos.z = localPos.z + scaledExtent * cornerBlock.corners[i].z;
             PSMTXMultVec((MtxPtr)light->lightProjectionClipMtx, &worldPos, &projected);
             if (zero != projected.z) {
                 projected.x /= projected.z;
@@ -266,41 +271,41 @@ void modelLightStruct_updateColorFade(ModelLightStruct* light) {
         light->colorFadeStep = -light->colorFadeStep;
     }
 
-    light->diffuseColor[0] =
-        (light->colorFadeProgress * (f32)(light->diffuseFadeTargetColor[0] - light->diffuseFadeStartColor[0]) +
-         light->diffuseFadeStartColor[0]);
-    light->diffuseColor[1] =
-        (light->colorFadeProgress * (f32)(light->diffuseFadeTargetColor[1] - light->diffuseFadeStartColor[1]) +
-         light->diffuseFadeStartColor[1]);
-    light->diffuseColor[2] =
-        (light->colorFadeProgress * (f32)(light->diffuseFadeTargetColor[2] - light->diffuseFadeStartColor[2]) +
-         light->diffuseFadeStartColor[2]);
-    light->diffuseColor[3] =
-        (light->colorFadeProgress * (f32)(light->diffuseFadeTargetColor[3] - light->diffuseFadeStartColor[3]) +
-         light->diffuseFadeStartColor[3]);
+    light->diffuseColor.r =
+        (light->colorFadeProgress * (f32)(light->diffuseFadeTargetColor.r - light->diffuseFadeStartColor.r) +
+         light->diffuseFadeStartColor.r);
+    light->diffuseColor.g =
+        (light->colorFadeProgress * (f32)(light->diffuseFadeTargetColor.g - light->diffuseFadeStartColor.g) +
+         light->diffuseFadeStartColor.g);
+    light->diffuseColor.b =
+        (light->colorFadeProgress * (f32)(light->diffuseFadeTargetColor.b - light->diffuseFadeStartColor.b) +
+         light->diffuseFadeStartColor.b);
+    light->diffuseColor.a =
+        (light->colorFadeProgress * (f32)(light->diffuseFadeTargetColor.a - light->diffuseFadeStartColor.a) +
+         light->diffuseFadeStartColor.a);
 
-    light->diffuseColor[0] = ((f32)light->diffuseColor[0] * light->activeIntensity);
-    light->diffuseColor[1] = ((f32)light->diffuseColor[1] * light->activeIntensity);
-    light->diffuseColor[2] = ((f32)light->diffuseColor[2] * light->activeIntensity);
-    light->diffuseColor[3] = ((f32)light->diffuseColor[3] * light->activeIntensity);
+    light->diffuseColor.r = ((f32)light->diffuseColor.r * light->activeIntensity);
+    light->diffuseColor.g = ((f32)light->diffuseColor.g * light->activeIntensity);
+    light->diffuseColor.b = ((f32)light->diffuseColor.b * light->activeIntensity);
+    light->diffuseColor.a = ((f32)light->diffuseColor.a * light->activeIntensity);
 
-    light->specularColor[0] =
-        (light->colorFadeProgress * (f32)(light->specularFadeTargetColor[0] - light->specularFadeStartColor[0]) +
-         light->specularFadeStartColor[0]);
-    light->specularColor[1] =
-        (light->colorFadeProgress * (f32)(light->specularFadeTargetColor[1] - light->specularFadeStartColor[1]) +
-         light->specularFadeStartColor[1]);
-    light->specularColor[2] =
-        (light->colorFadeProgress * (f32)(light->specularFadeTargetColor[2] - light->specularFadeStartColor[2]) +
-         light->specularFadeStartColor[2]);
-    light->specularColor[3] =
-        (light->colorFadeProgress * (f32)(light->specularFadeTargetColor[3] - light->specularFadeStartColor[3]) +
-         light->specularFadeStartColor[3]);
+    light->specularColor.r =
+        (light->colorFadeProgress * (f32)(light->specularFadeTargetColor.r - light->specularFadeStartColor.r) +
+         light->specularFadeStartColor.r);
+    light->specularColor.g =
+        (light->colorFadeProgress * (f32)(light->specularFadeTargetColor.g - light->specularFadeStartColor.g) +
+         light->specularFadeStartColor.g);
+    light->specularColor.b =
+        (light->colorFadeProgress * (f32)(light->specularFadeTargetColor.b - light->specularFadeStartColor.b) +
+         light->specularFadeStartColor.b);
+    light->specularColor.a =
+        (light->colorFadeProgress * (f32)(light->specularFadeTargetColor.a - light->specularFadeStartColor.a) +
+         light->specularFadeStartColor.a);
 
-    light->specularColor[0] = ((f32)light->specularColor[0] * light->activeIntensity);
-    light->specularColor[1] = ((f32)light->specularColor[1] * light->activeIntensity);
-    light->specularColor[2] = ((f32)light->specularColor[2] * light->activeIntensity);
-    light->specularColor[3] = ((f32)light->specularColor[3] * light->activeIntensity);
+    light->specularColor.r = ((f32)light->specularColor.r * light->activeIntensity);
+    light->specularColor.g = ((f32)light->specularColor.g * light->activeIntensity);
+    light->specularColor.b = ((f32)light->specularColor.b * light->activeIntensity);
+    light->specularColor.a = ((f32)light->specularColor.a * light->activeIntensity);
 }
 
 void modelLightStruct_startColorFade(ModelLightStruct* light, int mode, s16 frames) {
@@ -314,12 +319,12 @@ void modelLightStruct_startColorFade(ModelLightStruct* light, int mode, s16 fram
             denom = 1.0f;
         }
         light->colorFadeStep = 1.0f / denom;
-        light->diffuseFadeStartColor[0] = light->diffuseColor[0];
-        light->diffuseFadeStartColor[1] = light->diffuseColor[1];
-        light->diffuseFadeStartColor[2] = light->diffuseColor[2];
-        light->specularFadeStartColor[0] = light->specularColor[0];
-        light->specularFadeStartColor[1] = light->specularColor[1];
-        light->specularFadeStartColor[2] = light->specularColor[2];
+        light->diffuseFadeStartColor.r = light->diffuseColor.r;
+        light->diffuseFadeStartColor.g = light->diffuseColor.g;
+        light->diffuseFadeStartColor.b = light->diffuseColor.b;
+        light->specularFadeStartColor.r = light->specularColor.r;
+        light->specularFadeStartColor.g = light->specularColor.g;
+        light->specularFadeStartColor.b = light->specularColor.b;
         denom = 0.0f;
         light->colorFadeProgress = denom;
         light->colorFadeTimer = denom;
@@ -351,15 +356,15 @@ void modelLightStruct_setGlowProjectionRadius(ModelLightStruct* light, f32 radiu
 }
 
 void modelLightStruct_setGlowColor(ModelLightStruct* light, u8 red, u8 green, u8 blue, u8 alpha) {
-    light->glowColor[0] = red;
-    light->glowColor[1] = green;
-    light->glowColor[2] = blue;
-    light->glowColor[3] = alpha;
+    light->glowColor.r = red;
+    light->glowColor.g = green;
+    light->glowColor.b = blue;
+    light->glowColor.a = alpha;
 }
 
 void modelLightStruct_setupGlow(ModelLightStruct* light, u32 textureId, u8 red, u8 green, u8 blue, u8 alpha,
                                 f32 scale) {
-    void* texture;
+    Texture* texture;
 
     if (textureId != 0) {
         texture = textureLoadAsset(textureId);
@@ -374,10 +379,10 @@ void modelLightStruct_setupGlow(ModelLightStruct* light, u32 textureId, u8 red, 
             light->glowType = 2;
         }
     }
-    light->glowColor[0] = red;
-    light->glowColor[1] = green;
-    light->glowColor[2] = blue;
-    light->glowColor[3] = alpha;
+    light->glowColor.r = red;
+    light->glowColor.g = green;
+    light->glowColor.b = blue;
+    light->glowColor.a = alpha;
     light->glowScale = scale;
     light->glowAlpha = 0;
     light->glowAlphaStep = 0;
@@ -435,11 +440,11 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 top, f32 b
                     obj->projectionRight, 0.5f, 0.5f, 0.5f, 0.5f);
 }
 
-void* modelLightStruct_getProjectionTexture(ModelLightStruct* p) {
+Texture* modelLightStruct_getProjectionTexture(ModelLightStruct* p) {
     return p->projectionTexture;
 }
 
-void modelLightStruct_setProjectionTexture(ModelLightStruct* p, void* v) {
+void modelLightStruct_setProjectionTexture(ModelLightStruct* p, Texture* v) {
     p->projectionTexture = v;
 }
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f32 brightness) {
@@ -452,28 +457,28 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f
 }
 
 void modelLightStruct_setSpecularTargetColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a) {
-    p->specularFadeTargetColor[0] = r;
-    p->specularFadeTargetColor[1] = g;
-    p->specularFadeTargetColor[2] = b;
-    p->specularFadeTargetColor[3] = a;
+    p->specularFadeTargetColor.r = r;
+    p->specularFadeTargetColor.g = g;
+    p->specularFadeTargetColor.b = b;
+    p->specularFadeTargetColor.a = a;
 }
 
 void modelLightStruct_getSpecularColor(ModelLightStruct* p, u8* r, u8* g, u8* b, u8* a) {
-    *r = p->specularColor[0];
-    *g = p->specularColor[1];
-    *b = p->specularColor[2];
-    *a = p->specularColor[3];
+    *r = p->specularColor.r;
+    *g = p->specularColor.g;
+    *b = p->specularColor.b;
+    *a = p->specularColor.a;
 }
 
 void modelLightStruct_setSpecularColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a) {
-    p->specularFadeStartColor[0] = r;
-    p->specularColor[0] = r;
-    p->specularFadeStartColor[1] = g;
-    p->specularColor[1] = g;
-    p->specularFadeStartColor[2] = b;
-    p->specularColor[2] = b;
-    p->specularFadeStartColor[3] = a;
-    p->specularColor[3] = a;
+    p->specularFadeStartColor.r = r;
+    p->specularColor.r = r;
+    p->specularFadeStartColor.g = g;
+    p->specularColor.g = g;
+    p->specularFadeStartColor.b = b;
+    p->specularColor.b = b;
+    p->specularFadeStartColor.a = a;
+    p->specularColor.a = a;
 }
 
 void modelLightStruct_setAngularAttenuation(ModelLightStruct* p, f32 a, f32 b, f32 c) {
@@ -490,39 +495,29 @@ void modelLightStruct_setSpotAttenuation(ModelLightStruct* obj, f32 cutoff, int 
     }
 }
 
-void modelLightStruct_setDiffuseTargetColor(p, r, g, b, a) ModelLightStruct* p;
-u8 r;
-u8 g;
-u8 b;
-u8 a;
-{
-    p->diffuseFadeTargetColor[0] = r;
-    p->diffuseFadeTargetColor[1] = g;
-    p->diffuseFadeTargetColor[2] = b;
-    p->diffuseFadeTargetColor[3] = a;
+void modelLightStruct_setDiffuseTargetColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a) {
+    p->diffuseFadeTargetColor.r = r;
+    p->diffuseFadeTargetColor.g = g;
+    p->diffuseFadeTargetColor.b = b;
+    p->diffuseFadeTargetColor.a = a;
 }
 
 void modelLightStruct_getDiffuseColor(ModelLightStruct* p, u8* r, u8* g, u8* b, u8* a) {
-    *r = p->diffuseColor[0];
-    *g = p->diffuseColor[1];
-    *b = p->diffuseColor[2];
-    *a = p->diffuseColor[3];
+    *r = p->diffuseColor.r;
+    *g = p->diffuseColor.g;
+    *b = p->diffuseColor.b;
+    *a = p->diffuseColor.a;
 }
 
-void modelLightStruct_setDiffuseColor(p, r, g, b, a) ModelLightStruct* p;
-u8 r;
-u8 g;
-u8 b;
-u8 a;
-{
-    p->diffuseFadeStartColor[0] = r;
-    p->diffuseColor[0] = r;
-    p->diffuseFadeStartColor[1] = g;
-    p->diffuseColor[1] = g;
-    p->diffuseFadeStartColor[2] = b;
-    p->diffuseColor[2] = b;
-    p->diffuseFadeStartColor[3] = a;
-    p->diffuseColor[3] = a;
+void modelLightStruct_setDiffuseColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a) {
+    p->diffuseFadeStartColor.r = r;
+    p->diffuseColor.r = r;
+    p->diffuseFadeStartColor.g = g;
+    p->diffuseColor.g = g;
+    p->diffuseFadeStartColor.b = b;
+    p->diffuseColor.b = b;
+    p->diffuseFadeStartColor.a = a;
+    p->diffuseColor.a = a;
 }
 
 void modelLightStruct_setFieldBC(ModelLightStruct* p, u8 v) {
@@ -628,7 +623,7 @@ void modelLightStruct_setDirection(ModelLightStruct* s, f32 x, f32 y, f32 z) {
     }
 }
 
-ModelLightChannelState gModelLightChannelStates[0x60 / sizeof(ModelLightChannelState)];
+ModelLightChannelState gModelLightChannelStates[6];
 
 void modelLightStruct_setAffectsAabbLightSelection(ModelLightStruct* p, u8 v) {
     p->affectsAabbLightSelection = v;
@@ -676,7 +671,7 @@ void modelLightStruct_setPosition(ModelLightStruct* s, f32 x, f32 y, f32 z) {
         }
     }
 }
-ModelLightStruct* objAllocLight(void* owner) {
+ModelLightStruct* objAllocLight(GameObject* owner) {
     ModelLightStruct* light;
     Vec tmp;
     f32* view;
@@ -751,41 +746,41 @@ ModelLightStruct* objAllocLight(void* owner) {
     light->transformMode = 0;
     light->field4D = 0;
     light->fieldBC = 0;
-    light->diffuseFadeStartColor[0] = 0xff;
-    light->diffuseColor[0] = 0xff;
-    light->diffuseFadeStartColor[1] = 0xff;
-    light->diffuseColor[1] = 0xff;
-    light->diffuseFadeStartColor[2] = 0xff;
-    light->diffuseColor[2] = 0xff;
-    light->diffuseFadeStartColor[3] = 0xff;
-    light->diffuseColor[3] = 0xff;
+    light->diffuseFadeStartColor.r = 0xff;
+    light->diffuseColor.r = 0xff;
+    light->diffuseFadeStartColor.g = 0xff;
+    light->diffuseColor.g = 0xff;
+    light->diffuseFadeStartColor.b = 0xff;
+    light->diffuseColor.b = 0xff;
+    light->diffuseFadeStartColor.a = 0xff;
+    light->diffuseColor.a = 0xff;
     light->spotCutoff = 90.0f;
     light->spotFunction = 0;
     GXInitLightAttnA(&light->diffuseLightObj, 1.0f, zero, zero);
     light->field114 = 0;
-    light->specularFadeStartColor[0] = 0xff;
-    light->specularColor[0] = 0xff;
-    light->specularFadeStartColor[1] = 0xff;
-    light->specularColor[1] = 0xff;
-    light->specularFadeStartColor[2] = 0xff;
-    light->specularColor[2] = 0xff;
-    light->specularFadeStartColor[3] = 0xff;
-    light->specularColor[3] = 0xff;
+    light->specularFadeStartColor.r = 0xff;
+    light->specularColor.r = 0xff;
+    light->specularFadeStartColor.g = 0xff;
+    light->specularColor.g = 0xff;
+    light->specularFadeStartColor.b = 0xff;
+    light->specularColor.b = 0xff;
+    light->specularFadeStartColor.a = 0xff;
+    light->specularColor.a = 0xff;
     light->specularAttenuationScale = 4.0f;
     light->specularBrightness = 255.0f;
     atten = light->specularAttenuationScale / 2.0f;
     GXInitLightAttn(&light->specularLightObj, 0.0f, 0.0f, 1.0f, atten, 0.0f, 1.0f - atten);
     modelLightStruct_startColorFade(light, 0, 0);
-    light->diffuseFadeTargetColor[0] = 0xff;
-    light->diffuseFadeTargetColor[1] = 0xff;
-    light->diffuseFadeTargetColor[2] = 0xff;
-    light->diffuseFadeTargetColor[3] = 0xff;
-    light->specularFadeTargetColor[0] = 0xff;
-    light->specularFadeTargetColor[1] = 0xff;
-    light->specularFadeTargetColor[2] = 0xff;
-    light->specularFadeTargetColor[3] = 0xff;
+    light->diffuseFadeTargetColor.r = 0xff;
+    light->diffuseFadeTargetColor.g = 0xff;
+    light->diffuseFadeTargetColor.b = 0xff;
+    light->diffuseFadeTargetColor.a = 0xff;
+    light->specularFadeTargetColor.r = 0xff;
+    light->specularFadeTargetColor.g = 0xff;
+    light->specularFadeTargetColor.b = 0xff;
+    light->specularFadeTargetColor.a = 0xff;
     if (light->owner != NULL) {
-        Obj_BuildInverseWorldTransformMatrix((GameObject*)light->owner, light->inverseWorldProjectionMtx);
+        Obj_BuildInverseWorldTransformMatrix(light->owner, light->inverseWorldProjectionMtx);
     }
     atten = 1.0f;
     light->lightAmount = atten;
@@ -825,15 +820,15 @@ static void modelLightStruct_loadDiffuseGXLight(ModelLightStruct* light, GameObj
         if (obj != NULL && (obj->anim.modelInstance->flags & OBJDEF_FLAG_DIFFERENT_LIGHT_COLOR) == 0) {
             GXColor color;
             f32 amt;
-            color.r = light->diffuseColor[0] * (amt = light->lightAmount);
-            color.g = light->diffuseColor[1] * amt;
-            color.b = light->diffuseColor[2] * amt;
-            color.a = light->diffuseColor[3] * amt;
+            color.r = light->diffuseColor.r * (amt = light->lightAmount);
+            color.g = light->diffuseColor.g * amt;
+            color.b = light->diffuseColor.b * amt;
+            color.a = light->diffuseColor.a * amt;
             GXInitLightColor(&light->diffuseLightObj, color);
             GXInitLightAttnK(&light->diffuseLightObj, 1.0f, 0.0f, 0.0f);
         } else {
             GXColor color;
-            color = *(GXColor*)light->diffuseColor;
+            color = light->diffuseColor;
             GXInitLightColor(&light->diffuseLightObj, color);
             GXInitLightAttnK(&light->diffuseLightObj, light->attenuationK0, light->attenuationK1, light->attenuationK2);
         }
@@ -858,7 +853,7 @@ static void modelLightStruct_loadDiffuseGXLight(ModelLightStruct* light, GameObj
         PSVECScale(&light->viewDirection, &light->viewPos, -100000.0f);
         PSVECAdd(&light->viewPos, &viewPos, &viewPos);
         GXInitLightPos(&light->diffuseLightObj, viewPos.x, viewPos.y, viewPos.z);
-        color = *(GXColor*)light->diffuseColor;
+        color = light->diffuseColor;
         GXInitLightColor(&light->diffuseLightObj, color);
         GXInitLightAttnK(&light->diffuseLightObj, 1.0f, 0.0f, 0.0f);
         break;
@@ -898,10 +893,11 @@ void modelLightStruct_loadChannelLight(int channel, ModelLightStruct* light, Gam
         case 3:
             break;
         case 4:
-            GXInitSpecularDir(&light->specularLightObj, light->viewDirection.x, light->viewDirection.y, light->viewDirection.z);
+            GXInitSpecularDir(&light->specularLightObj, light->viewDirection.x, light->viewDirection.y,
+                              light->viewDirection.z);
             break;
         }
-        color = *(GXColor*)light->specularColor;
+        color = light->specularColor;
         GXInitLightColor(&light->specularLightObj, color);
         GXLoadLightObjImm(&light->specularLightObj, lightId[0]);
     }
@@ -1010,11 +1006,11 @@ void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f3
                 light->worldY - light->attenuationFar <= maxY && light->worldZ - light->attenuationFar <= maxZ) {
                 intensity = 1.0f / (light->attenuationK0 +
                                     (dist * (light->attenuationK2 * dist) + light->attenuationK1 * dist));
-                red = intensity * light->diffuseColor[0];
+                red = intensity * light->diffuseColor.r;
                 red = (red < 0.0f) ? 0.0f : ((red > 255.0f) ? 255.0f : red);
-                green = intensity * light->diffuseColor[1];
+                green = intensity * light->diffuseColor.g;
                 green = (green < 0.0f) ? 0.0f : ((green > 255.0f) ? 255.0f : green);
-                blue = intensity * light->diffuseColor[2];
+                blue = intensity * light->diffuseColor.b;
                 blue = (blue < 0.0f) ? 0.0f : ((blue > 255.0f) ? 255.0f : blue);
                 red = (red > green) ? red : green;
                 light->selectionScore = red;
@@ -1094,11 +1090,11 @@ void modelLightStruct_selectObjectLights(GameObject* obj, ModelLightStruct** out
             } else {
                 intensity = modelLightStruct_getObjectIntensity(light, obj);
                 light->lightAmount = intensity;
-                red = light->lightAmount * light->diffuseColor[0];
+                red = light->lightAmount * light->diffuseColor.r;
                 red = (red < 0.0f) ? 0.0f : ((red > 255.0f) ? 255.0f : red);
-                green = light->lightAmount * light->diffuseColor[1];
+                green = light->lightAmount * light->diffuseColor.g;
                 green = (green < 0.0f) ? 0.0f : ((green > 255.0f) ? 255.0f : green);
-                blue = light->lightAmount * light->diffuseColor[2];
+                blue = light->lightAmount * light->diffuseColor.b;
                 blue = (blue < 0.0f) ? 0.0f : ((blue > 255.0f) ? 255.0f : blue);
                 red = (red > green) ? red : green;
                 light->selectionScore = red;
@@ -1137,17 +1133,17 @@ void modelLightStruct_selectObjectLights(GameObject* obj, ModelLightStruct** out
 }
 
 void lightGetColor(int i, u8* r, u8* g, u8* b) {
-    u8* base = gModelLightColorTable;
-    *r = base[i * 4];
-    *g = base[i * 4 + 1];
-    *b = base[i * 4 + 2];
+    GXColor* colors = gModelLightColorTable;
+    *r = colors[i].r;
+    *g = colors[i].g;
+    *b = colors[i].b;
 }
 
 void lightSetColor(int i, u8 r, u8 g, u8 b) {
-    u8* base = gModelLightColorTable;
-    base[i * 4] = r;
-    base[i * 4 + 1] = g;
-    base[i * 4 + 2] = b;
+    GXColor* colors = gModelLightColorTable;
+    colors[i].r = r;
+    colors[i].g = g;
+    colors[i].b = b;
 }
 
 void updateLights(void) {
@@ -1204,18 +1200,18 @@ void updateLights(void) {
             if (light->colorFadeMode != 0) {
                 modelLightStruct_updateColorFade(light);
             } else {
-                light->diffuseColor[0] = (f32)light->diffuseFadeStartColor[0] * light->activeIntensity;
-                light->diffuseColor[1] = (f32)light->diffuseFadeStartColor[1] * light->activeIntensity;
-                light->diffuseColor[2] = (f32)light->diffuseFadeStartColor[2] * light->activeIntensity;
-                light->diffuseColor[3] = (f32)light->diffuseFadeStartColor[3] * light->activeIntensity;
-                light->specularColor[0] = (f32)light->specularFadeStartColor[0] * light->activeIntensity;
-                light->specularColor[1] = (f32)light->specularFadeStartColor[1] * light->activeIntensity;
-                light->specularColor[2] = (f32)light->specularFadeStartColor[2] * light->activeIntensity;
-                light->specularColor[3] = (f32)light->specularFadeStartColor[3] * light->activeIntensity;
+                light->diffuseColor.r = (f32)light->diffuseFadeStartColor.r * light->activeIntensity;
+                light->diffuseColor.g = (f32)light->diffuseFadeStartColor.g * light->activeIntensity;
+                light->diffuseColor.b = (f32)light->diffuseFadeStartColor.b * light->activeIntensity;
+                light->diffuseColor.a = (f32)light->diffuseFadeStartColor.a * light->activeIntensity;
+                light->specularColor.r = (f32)light->specularFadeStartColor.r * light->activeIntensity;
+                light->specularColor.g = (f32)light->specularFadeStartColor.g * light->activeIntensity;
+                light->specularColor.b = (f32)light->specularFadeStartColor.b * light->activeIntensity;
+                light->specularColor.a = (f32)light->specularFadeStartColor.a * light->activeIntensity;
             }
 
             if (light->lightKind == MODEL_LIGHT_KIND_PROJECTED) {
-                Obj_BuildInverseWorldTransformMatrix((GameObject*)light->owner, light->inverseWorldProjectionMtx);
+                Obj_BuildInverseWorldTransformMatrix(light->owner, light->inverseWorldProjectionMtx);
                 PSMTXConcat((MtxPtr)light->inverseWorldProjectionMtx, (MtxPtr)Camera_GetInverseViewMatrix(),
                             (MtxPtr)concatMtx);
                 PSMTXConcat((MtxPtr)light->lightProjectionTexMtx, (MtxPtr)concatMtx, (MtxPtr)light->projectionTexMtx);
@@ -1243,12 +1239,12 @@ void ModelLightStruct_free(ModelLightStruct* light) {
     }
 
     if (light->glowType == 2 && light->glowTexture != NULL) {
-        textureFree((Texture*)(light->glowTexture));
+        textureFree(light->glowTexture);
     }
     mm_free(light);
 }
 
-ModelLightStruct* objCreateLight(void* owner, u8 addToList) {
+ModelLightStruct* objCreateLight(GameObject* owner, u8 addToList) {
     ModelLightStruct* light;
     if (addToList) {
         if (gModelLightCount >= 0x32) {

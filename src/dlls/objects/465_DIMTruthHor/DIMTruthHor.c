@@ -90,8 +90,8 @@ void dimtruthhornice_update(GameObject* obj) {
                     DIM_TRUTH_HORN_ICE_PARTICLE_OFFSET_SCALE *
                     (f32)(int)randomGetRange(DIM_TRUTH_HORN_ICE_PARTICLE_XZ_MIN, DIM_TRUTH_HORN_ICE_PARTICLE_XZ_MAX);
                 spawnParams.scale = DIM_TRUTH_HORN_ICE_PARTICLE_SCALE;
-                (*gPartfxInterface)->spawnObject(obj, DIM_TRUTH_HORN_ICE_PARTICLE_EFFECT_A, &spawnParams, 2, -1, NULL);
-                (*gPartfxInterface)->spawnObject(obj, DIM_TRUTH_HORN_ICE_PARTICLE_EFFECT_B, &spawnParams, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, DIM_TRUTH_HORN_ICE_PARTICLE_EFFECT_A, &spawnParams, 2, -1, NULL);
+                (*gPartfxInterface)->spawnEffect(obj, DIM_TRUTH_HORN_ICE_PARTICLE_EFFECT_B, &spawnParams, 2, -1, NULL);
             }
         }
         spawnParams.posX =
@@ -104,7 +104,7 @@ void dimtruthhornice_update(GameObject* obj) {
             DIM_TRUTH_HORN_ICE_PARTICLE_OFFSET_SCALE *
             (f32)(int)randomGetRange(DIM_TRUTH_HORN_ICE_PARTICLE_XZ_MIN, DIM_TRUTH_HORN_ICE_PARTICLE_XZ_MAX);
         spawnParams.scale = DIM_TRUTH_HORN_ICE_PARTICLE_SCALE;
-        (*gPartfxInterface)->spawnObject(obj, DIM_TRUTH_HORN_ICE_PARTICLE_EFFECT_B, &spawnParams, 2, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DIM_TRUTH_HORN_ICE_PARTICLE_EFFECT_B, &spawnParams, 2, -1, NULL);
         break;
     }
     case DIM_TRUTH_HORN_ICE_PHASE_SHATTERED:

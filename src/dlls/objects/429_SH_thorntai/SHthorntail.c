@@ -24,7 +24,7 @@
 #include "main/objseq.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/newshadows_audio_api.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/sky_interface.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
@@ -195,7 +195,7 @@ STATIC_ASSERT(sizeof(SHthorntailDataTables) == 0x5A0);
 #define SHTHORNTAIL_DATA_TABLES ((SHthorntailDataTables*)gSHthorntailLinkedIdents)
 
 typedef struct SHthorntailPathSourceTypes {
-    u8 values[SHTHORNTAIL_PATH_POINT_COUNT];
+    s8 values[SHTHORNTAIL_PATH_POINT_COUNT];
 } SHthorntailPathSourceTypes;
 
 static const SHthorntailPathSourceTypes sSHthorntailPathSourceTypes = {{1, 1, 1, 1}};
@@ -927,9 +927,9 @@ void SHthorntail_render(GameObject* obj, int renderArg2, int renderArg3, int ren
 
 static void SHthorntail_stepPathControl(GameObject* obj, SHthorntailState* runtime) {
     obj->anim.velocityY = -(SHTHORNTAIL_GRAVITY * timeDelta - obj->anim.velocityY);
-    (*gPathControlInterface)->update(obj, &runtime->pathState, timeDelta);
-    (*gPathControlInterface)->apply(obj, &runtime->pathState);
-    (*gPathControlInterface)->advance(obj, &runtime->pathState, timeDelta);
+    (*gObjCollisionInterface)->updateQueryBounds(obj, &runtime->pathState, timeDelta);
+    (*gObjCollisionInterface)->gatherTrackTriangles(obj, &runtime->pathState);
+    (*gObjCollisionInterface)->resolve(obj, &runtime->pathState, timeDelta);
     obj->anim.rotY = runtime->pathState.tiltPitch;
     obj->anim.rotZ = runtime->pathState.tiltRoll;
 }
@@ -961,7 +961,7 @@ void SHthorntail_update(GameObject* obj) {
                 ObjPath_GetPointWorldPosition(obj, SHTHORNTAIL_SLEEP_EFFECT_POINT, &effectParams.posX,
                                               &effectParams.posY, &effectParams.posZ, 0);
                 (*gPartfxInterface)
-                    ->spawnObject(obj, SHTHORNTAIL_PARTFX_SLEEP, &effectParams, SHTHORNTAIL_PARTFX_SLEEP_FLAGS, -1,
+                    ->spawnEffect(obj, SHTHORNTAIL_PARTFX_SLEEP, &effectParams, SHTHORNTAIL_PARTFX_SLEEP_FLAGS, -1,
                                   NULL);
             }
             runtime->sleepEffectTimer = SHTHORNTAIL_SLEEP_EFFECT_TIME;
@@ -1091,7 +1091,7 @@ void SHthorntail_update(GameObject* obj) {
                 (runtime->behaviorState <= SHTHORNTAIL_STATE_WALK_STOP)) {
                 SHthorntail_stepPathControl(obj, runtime);
             } else {
-                (*gPathControlInterface)->attachObject(obj, &runtime->pathState);
+                (*gObjCollisionInterface)->reset(obj, &runtime->pathState);
             }
         }
     }
@@ -1101,7 +1101,7 @@ void SHthorntail_init(GameObject* obj, const SHthorntailPlacement* placement) {
     SHthorntailState* runtime = obj->extra;
     ObjModel* model;
     int randomTime;
-    CurvesCollisionState* pathState;
+    ObjCollisionState* pathState;
     SHthorntailPathSourceTypes pathSourceTypes = sSHthorntailPathSourceTypes;
 
     obj->anim.rotX = placement->initialFacing << 8;
@@ -1128,13 +1128,13 @@ void SHthorntail_init(GameObject* obj, const SHthorntailPlacement* placement) {
     }
     obj->anim.rootMotionScale = obj->anim.modelInstance->rootMotionScaleBase * ((f32)placement->scale / 1000.0f);
     model = Obj_GetActiveModel(obj);
-    modelInitBones(obj->anim.rootMotionScale, model);
+    ObjModel_InitSkeletonCollisionBounds(obj->anim.rootMotionScale, model);
     pathState = &runtime->pathState;
-    (*gPathControlInterface)->init(pathState, SHTHORNTAIL_PATH_CONTROL_MODE, SHTHORNTAIL_PATH_CONTROL_FLAGS, 0);
-    (*gPathControlInterface)
-        ->setup(pathState, SHTHORNTAIL_PATH_POINT_COUNT, gSHthorntailPathPoints, gSHthorntailPathRadii,
-                &pathSourceTypes);
-    (*gPathControlInterface)->attachObject(obj, pathState);
+    (*gObjCollisionInterface)->init(pathState, SHTHORNTAIL_PATH_CONTROL_MODE, SHTHORNTAIL_PATH_CONTROL_FLAGS, 0);
+    (*gObjCollisionInterface)
+        ->setSegments(pathState, SHTHORNTAIL_PATH_POINT_COUNT, &gSHthorntailPathPoints[0].x, gSHthorntailPathRadii,
+                      pathSourceTypes.values);
+    (*gObjCollisionInterface)->reset(obj, pathState);
     obj->animEventCallback = SHthorntail_animEventCallback;
     dll_2E_initState(obj, &runtime->moveLib, SHTHORNTAIL_LOOK_AT_MIN_YAW, SHTHORNTAIL_LOOK_AT_MAX_YAW,
                      SHTHORNTAIL_LOOK_AT_POINT_COUNT);

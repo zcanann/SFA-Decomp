@@ -14,63 +14,37 @@ typedef struct EnvironmentUpdateInterface {
 
 extern EnvironmentUpdateInterface** gEnvironmentUpdateInterface;
 
-/*
- * One 0x10-stride row of gLightmapDrawQueue, the render/shadow queue shared by
- * the map-rendering unit in shader.c. lightmap_sortTransparentDrawQueue sorts
- * the rows by key; mapBlockRender_callList writes type (4/5 = object shadow,
- * 6 = indirect lightmap), and renderObjects writes the object-shadow kinds
- * into the same field.
- */
-typedef struct {
-    u32 a;
-    u32 b;
+struct GameObject;
+struct MapBlockBoundsRec;
+struct MapBlockData;
+
+/* Shared by queue producers, the depth sorter and the dispatch loop. */
+typedef struct LightmapDrawEntry {
+    union {
+        struct GameObject* object;
+        struct MapBlockBoundsRec* bounds;
+        void* effectPool;
+    } arg0;
+    union {
+        u32 poolIndex;
+        struct MapBlockData* block;
+    } arg1;
     u32 key;
     u32 type;
-} LightSortEntry;
+} LightmapDrawEntry;
 
 /* The queue flushes at 1,000 entries. The following bytes remain unidentified. */
 typedef struct MapRenderQueueStorage {
-    LightSortEntry entries[1000];
+    LightmapDrawEntry entries[1000];
     u8 opaqueTail[0xC8];
 } MapRenderQueueStorage;
 
-STATIC_ASSERT(sizeof(LightSortEntry) == 0x10);
+STATIC_ASSERT(sizeof(LightmapDrawEntry) == 0x10);
+STATIC_ASSERT(offsetof(LightmapDrawEntry, arg0) == 0);
+STATIC_ASSERT(offsetof(LightmapDrawEntry, arg1) == 4);
+STATIC_ASSERT(offsetof(LightmapDrawEntry, key) == 8);
+STATIC_ASSERT(offsetof(LightmapDrawEntry, type) == 12);
 STATIC_ASSERT(offsetof(MapRenderQueueStorage, opaqueTail) == 0x3E80);
 STATIC_ASSERT(sizeof(MapRenderQueueStorage) == 0x3F48);
-
-struct MapCellEntry;
-
-/* Address view of the layer tables relative to the cached render-queue base. */
-typedef struct MapLayerBuffers {
-    u8 reserved[0x41cc];
-    s8* cellStates[5];
-    struct MapCellEntry* cellEntries[5];
-    s8* blockIndices[5];
-} MapLayerBuffers;
-
-STATIC_ASSERT(offsetof(MapLayerBuffers, cellStates) == 0x41CC);
-STATIC_ASSERT(offsetof(MapLayerBuffers, cellEntries) == 0x41E0);
-STATIC_ASSERT(offsetof(MapLayerBuffers, blockIndices) == 0x41F4);
-
-/* Address view of the separate ROM-list index array from the cached queue base. */
-typedef struct MapRomListBuffers {
-    u8 reserved[0x4208];
-    MapRomListIndex indexes[120];
-} MapRomListBuffers;
-
-STATIC_ASSERT(offsetof(MapRomListBuffers, indexes) == 0x4208);
-STATIC_ASSERT(sizeof(MapRomListBuffers) == 0x83A8);
-
-struct GameObject;
-
-/* Address view of gLightmapDeferredObjects relative to the cached render-queue
- * base. The list is a separate BSS object, not part of MapRenderQueueStorage. */
-typedef struct MapDeferredObjectListView {
-    u8 reserved[0x4114];
-    struct GameObject* deferred[20];
-} MapDeferredObjectListView;
-
-STATIC_ASSERT(offsetof(MapDeferredObjectListView, deferred) == 0x4114);
-STATIC_ASSERT(sizeof(((MapDeferredObjectListView*)0)->deferred) == 0x50);
 
 #endif /* MAIN_LIGHTMAP_INTERNAL_H_ */

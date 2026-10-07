@@ -51,7 +51,7 @@ void ExplodeAnimator_update(GameObject* obj) {
         spawnParams.posY = (f32)(s32)randomGetRange(placement->posYMin, placement->posYMax);
         spawnParams.posZ = (f32)(s32)randomGetRange(placement->posZMin, placement->posZMax);
         (*gPartfxInterface)
-            ->spawnObject(obj, placement->effectId, &spawnParams, EXPLODE_ANIMATOR_PARTFX_SPAWN_FLAGS, -1, velocity);
+            ->spawnEffect(obj, placement->effectId, &spawnParams, EXPLODE_ANIMATOR_PARTFX_SPAWN_FLAGS, -1, velocity);
     }
 }
 

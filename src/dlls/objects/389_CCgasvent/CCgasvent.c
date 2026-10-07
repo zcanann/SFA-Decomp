@@ -50,7 +50,7 @@ void ccGasVent_update(GameObject* obj) {
                 state->phase = CC_GAS_VENT_PHASE_BLOCKED;
             } else {
                 (*gPartfxInterface)
-                    ->spawnObject(obj, CC_GAS_VENT_PARTICLE_GAS, NULL, CC_GAS_VENT_PARTICLE_SPAWN_MODE,
+                    ->spawnEffect(obj, CC_GAS_VENT_PARTICLE_GAS, NULL, CC_GAS_VENT_PARTICLE_SPAWN_MODE,
                                   CC_GAS_VENT_PARTICLE_MODEL_NONE, NULL);
             }
             break;

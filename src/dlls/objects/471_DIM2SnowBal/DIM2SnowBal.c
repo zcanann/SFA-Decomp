@@ -130,7 +130,7 @@ void dim2snowball_update(GameObject* obj) {
             particleParams.posX = obj->anim.localPosX;
             particleParams.posY = obj->anim.localPosY;
             particleParams.posZ = obj->anim.localPosZ;
-            (*gPartfxInterface)->spawnObject(obj, DIM2_SNOWBALL_IMPACT_PARTFX_ID, &particleParams, 4, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, DIM2_SNOWBALL_IMPACT_PARTFX_ID, &particleParams, 4, -1, NULL);
             if (obj->anim.alpha == 0) {
                 Obj_FreeObject(obj);
                 return;

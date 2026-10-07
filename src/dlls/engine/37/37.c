@@ -16,11 +16,11 @@ ObjectDescriptor6 Effect12_funcs = {
     (ObjectDescriptorCallback)Effect12_release,
     0,
     (ObjectDescriptorCallback)Effect12_func03_nop,
-    (ObjectDescriptorCallback)Effect12_spawnObject,
+    (ObjectDescriptorCallback)Effect12_spawnEffect,
     (ObjectDescriptorCallback)Effect12_func05_nop,
 };
 
-int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 flags, u8 srcByte, f32* auxParam) {
+int Effect12_spawnEffect(GameObject* obj, int id, PartFxSpawnParams* src, u32 flags, s8 sourceParam, f32* auxParam) {
     PartFxSpawnParams local;
     PartFxSpawn p;
     u32 hasOffset;
@@ -40,7 +40,7 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.sourceVecZ = src->rotZ;
         p.sourceVecY = src->rotY;
         p.sourceVecX = src->rotX;
-        p.modelIdByte = srcByte;
+        p.sourceParam = sourceParam;
     }
     p.behaviorFlags = 0;
     p.renderFlags = 0;
@@ -282,9 +282,9 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
             p.startPosY += p.sourcePosY;
             p.startPosZ += p.sourcePosZ;
         } else if (p.attachedSource != NULL) {
-            p.startPosX = p.startPosX + ((GameObject*)p.attachedSource)->anim.worldPosX;
-            p.startPosY = p.startPosY + ((GameObject*)p.attachedSource)->anim.worldPosY;
-            p.startPosZ = p.startPosZ + ((GameObject*)p.attachedSource)->anim.worldPosZ;
+            p.startPosX = p.startPosX + p.attachedSource->anim.worldPosX;
+            p.startPosY = p.startPosY + p.attachedSource->anim.worldPosY;
+            p.startPosZ = p.startPosZ + p.attachedSource->anim.worldPosZ;
         }
     }
     return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);

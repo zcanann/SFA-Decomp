@@ -122,13 +122,13 @@ void SB_CannonBall_hitDetect(GameObject* obj) {
     {
         int i;
         for (i = SB_CANNONBALL_SMOKE_PARTICLE_COUNT; i != 0; i--) {
-            (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_IMPACT_SMOKE_PARTICLE_ID, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, SB_CANNONBALL_IMPACT_SMOKE_PARTICLE_ID, NULL, 1, -1, NULL);
         }
     }
     {
         int i;
         for (i = SB_CANNONBALL_SPARK_PARTICLE_COUNT; i != 0; i--) {
-            (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_IMPACT_SPARK_PARTICLE_ID, NULL, 1, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(obj, SB_CANNONBALL_IMPACT_SPARK_PARTICLE_ID, NULL, 1, -1, NULL);
         }
     }
 }
@@ -137,9 +137,9 @@ void SB_CannonBall_update(GameObject* obj) {
     SBCannonBallState* state = obj->extra;
 #define hitState ((ObjHitsPriorityState*)obj->anim.hitReactState)
     if ((state->flags & SB_CANNONBALL_INITIAL_BURST_FLAG) != 0) {
-        (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID, NULL, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID, NULL, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, SB_CANNONBALL_BURST_PARTICLE_ID, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, SB_CANNONBALL_BURST_PARTICLE_ID, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, SB_CANNONBALL_BURST_PARTICLE_ID, NULL, 1, -1, NULL);
         state->flags = (s8)(state->flags & ~SB_CANNONBALL_INITIAL_BURST_FLAG);
     } else {
         objfx_spawnFlaggedTrailBurst(obj, 0.22f, SB_CANNONBALL_TRAIL_MODE, SB_CANNONBALL_TRAIL_EFFECT_PARAM,
@@ -147,7 +147,7 @@ void SB_CannonBall_update(GameObject* obj) {
         objfx_spawnFlaggedTrailBurst(obj, 0.22f, SB_CANNONBALL_TRAIL_MODE, SB_CANNONBALL_TRAIL_EFFECT_PARAM,
                                      SB_CANNONBALL_TRAIL_PARAM, NULL);
     }
-    (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_TRAIL_PARTICLE_ID, NULL, 1, -1, NULL);
+    (*gPartfxInterface)->spawnEffect(obj, SB_CANNONBALL_TRAIL_PARTICLE_ID, NULL, 1, -1, NULL);
     obj->anim.rotY += SB_CANNONBALL_ROTATION_STEP;
     if ((state->flags & SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG) == 0) {
         state->velocityX = obj->anim.velocityX;

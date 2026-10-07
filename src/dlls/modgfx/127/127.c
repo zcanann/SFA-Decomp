@@ -56,179 +56,181 @@ u8 gDll7FEffectResourceData[sizeof(Dll7FEffectResourceView)] = {
 void dll_7F_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 spawnFlags) {
     ModgfxSpawnPacket packet;
     u8* resourceData = gDll7FEffectResourceData;
-    GfxCmd* commandCursor;
-    GfxCmd* commands = packet.entries;
+    ModgfxCommand* commandCursor;
+    ModgfxCommand* commands = packet.entries;
     f32 originOffset = 0.0f;
 
-    commands[0].layer = 0;
-    commands[0].flags = 0x8c;
-    commands[0].tex = NULL;
-    commands[0].mode = 0x20000000;
-    commands[0].x = 999.0f;
-    commands[0].y = 94.0f;
-    commands[0].z = 95.0f;
+    commands[0].stageIndex = 0;
+    commands[0].parameter = 0x8c;
+    commands[0].vertexIndices = NULL;
+    commands[0].flags = 0x20000000;
+    commands[0].valueX = 999.0f;
+    commands[0].valueY = 94.0f;
+    commands[0].valueZ = 95.0f;
     commandCursor = &commands[1];
     if (variant != 2) {
-        commandCursor->layer = 0;
-        commandCursor->flags = 9;
-        commandCursor->tex = &resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
-        commandCursor->mode = 0x80;
-        commandCursor->x = originOffset;
-        commandCursor->y = originOffset;
-        commandCursor->z = 16383.0f;
+        commandCursor->stageIndex = 0;
+        commandCursor->parameter = 9;
+        commandCursor->vertexIndices = (s16*)&resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
+        commandCursor->flags = 0x80;
+        commandCursor->valueX = originOffset;
+        commandCursor->valueY = originOffset;
+        commandCursor->valueZ = 16383.0f;
         commandCursor++;
     }
     if (variant == 0) {
-        commandCursor->layer = 0;
-        commandCursor->flags = 8;
-        commandCursor->tex = &resourceData[offsetof(Dll7FEffectResourceView, firstEightVertexIndices)];
-        commandCursor->mode = 2;
-        commandCursor->x = 0.7f;
-        commandCursor->y = 0.7f;
-        commandCursor->z = 3.3333333f;
+        commandCursor->stageIndex = 0;
+        commandCursor->parameter = 8;
+        commandCursor->vertexIndices = (s16*)&resourceData[offsetof(Dll7FEffectResourceView, firstEightVertexIndices)];
+        commandCursor->flags = 2;
+        commandCursor->valueX = 0.7f;
+        commandCursor->valueY = 0.7f;
+        commandCursor->valueZ = 3.3333333f;
         commandCursor++;
     } else {
-        commandCursor->layer = 0;
-        commandCursor->flags = 8;
-        commandCursor->tex = &resourceData[offsetof(Dll7FEffectResourceView, firstEightVertexIndices)];
-        commandCursor->mode = 2;
-        commandCursor->x = 0.36666667f;
-        commandCursor->y = 0.36666667f;
-        commandCursor->z = 5.0f;
+        commandCursor->stageIndex = 0;
+        commandCursor->parameter = 8;
+        commandCursor->vertexIndices = (s16*)&resourceData[offsetof(Dll7FEffectResourceView, firstEightVertexIndices)];
+        commandCursor->flags = 2;
+        commandCursor->valueX = 0.36666667f;
+        commandCursor->valueY = 0.36666667f;
+        commandCursor->valueZ = 5.0f;
         commandCursor++;
     }
     if (variant == 0) {
-        commandCursor->layer = 1;
-        commandCursor->flags = 8;
-        commandCursor->tex = &resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
-        commandCursor->mode = 2;
-        commandCursor->x = 3.0f;
-        commandCursor->y = 3.0f;
-        commandCursor->z = 3.0f;
+        commandCursor->stageIndex = 1;
+        commandCursor->parameter = 8;
+        commandCursor->vertexIndices = (s16*)&resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
+        commandCursor->flags = 2;
+        commandCursor->valueX = 3.0f;
+        commandCursor->valueY = 3.0f;
+        commandCursor->valueZ = 3.0f;
         commandCursor++;
     } else {
-        commandCursor->layer = 1;
-        commandCursor->flags = 8;
-        commandCursor->tex = &resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
-        commandCursor->mode = 2;
-        commandCursor->x = 3.0f;
-        commandCursor->y = 3.0f;
-        commandCursor->z = 3.0f;
+        commandCursor->stageIndex = 1;
+        commandCursor->parameter = 8;
+        commandCursor->vertexIndices = (s16*)&resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
+        commandCursor->flags = 2;
+        commandCursor->valueX = 3.0f;
+        commandCursor->valueY = 3.0f;
+        commandCursor->valueZ = 3.0f;
         commandCursor++;
     }
     if (variant == 0) {
-        commandCursor->layer = 1;
-        commandCursor->flags = 9;
-        commandCursor->tex = &resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
-        commandCursor->mode = 0x100;
-        commandCursor->x = -400.0f;
-        commandCursor->y = originOffset;
-        commandCursor->z = originOffset;
+        commandCursor->stageIndex = 1;
+        commandCursor->parameter = 9;
+        commandCursor->vertexIndices = (s16*)&resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
+        commandCursor->flags = 0x100;
+        commandCursor->valueX = -400.0f;
+        commandCursor->valueY = originOffset;
+        commandCursor->valueZ = originOffset;
         commandCursor++;
-        commandCursor->layer = 1;
-        commandCursor->flags = 1;
-        commandCursor->tex = &gDll7FSingleVertexIndexData.vertexIndex;
-        commandCursor->mode = 0x4000;
-        commandCursor->x = -4.0f;
-        commandCursor->y = -4.0f;
-        commandCursor->z = originOffset;
+        commandCursor->stageIndex = 1;
+        commandCursor->parameter = 1;
+        commandCursor->vertexIndices = (s16*)&gDll7FSingleVertexIndexData.vertexIndex;
+        commandCursor->flags = 0x4000;
+        commandCursor->valueX = -4.0f;
+        commandCursor->valueY = -4.0f;
+        commandCursor->valueZ = originOffset;
     } else if (variant == 1) {
-        commandCursor->layer = 1;
-        commandCursor->flags = 9;
-        commandCursor->tex = &resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
-        commandCursor->mode = 0x100;
-        commandCursor->x = 400.0f;
-        commandCursor->y = originOffset;
-        commandCursor->z = originOffset;
+        commandCursor->stageIndex = 1;
+        commandCursor->parameter = 9;
+        commandCursor->vertexIndices = (s16*)&resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
+        commandCursor->flags = 0x100;
+        commandCursor->valueX = 400.0f;
+        commandCursor->valueY = originOffset;
+        commandCursor->valueZ = originOffset;
         commandCursor++;
     }
     if (variant == 0) {
-        commandCursor->layer = 2;
-        commandCursor->flags = 9;
-        commandCursor->tex = &resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
-        commandCursor->mode = 0x100;
-        commandCursor->x = -400.0f;
-        commandCursor->y = originOffset;
-        commandCursor->z = originOffset;
+        commandCursor->stageIndex = 2;
+        commandCursor->parameter = 9;
+        commandCursor->vertexIndices = (s16*)&resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
+        commandCursor->flags = 0x100;
+        commandCursor->valueX = -400.0f;
+        commandCursor->valueY = originOffset;
+        commandCursor->valueZ = originOffset;
         commandCursor++;
-        commandCursor->layer = 2;
-        commandCursor->flags = 1;
-        commandCursor->tex = &gDll7FSingleVertexIndexData.vertexIndex;
-        commandCursor->mode = 0x4000;
-        commandCursor->x = -4.0f;
-        commandCursor->y = -4.0f;
-        commandCursor->z = originOffset;
+        commandCursor->stageIndex = 2;
+        commandCursor->parameter = 1;
+        commandCursor->vertexIndices = (s16*)&gDll7FSingleVertexIndexData.vertexIndex;
+        commandCursor->flags = 0x4000;
+        commandCursor->valueX = -4.0f;
+        commandCursor->valueY = -4.0f;
+        commandCursor->valueZ = originOffset;
     } else if (variant == 1) {
-        commandCursor->layer = 2;
-        commandCursor->flags = 9;
-        commandCursor->tex = &resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
-        commandCursor->mode = 0x100;
-        commandCursor->x = 400.0f;
-        commandCursor->y = originOffset;
-        commandCursor->z = originOffset;
+        commandCursor->stageIndex = 2;
+        commandCursor->parameter = 9;
+        commandCursor->vertexIndices = (s16*)&resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
+        commandCursor->flags = 0x100;
+        commandCursor->valueX = 400.0f;
+        commandCursor->valueY = originOffset;
+        commandCursor->valueZ = originOffset;
         commandCursor++;
     }
-    commandCursor->layer = 2;
-    commandCursor->flags = 9;
-    commandCursor->tex = &resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
-    commandCursor->mode = 4;
-    commandCursor->x = originOffset;
-    commandCursor->y = originOffset;
-    commandCursor->z = originOffset;
+    commandCursor->stageIndex = 2;
+    commandCursor->parameter = 9;
+    commandCursor->vertexIndices = (s16*)&resourceData[offsetof(Dll7FEffectResourceView, allVertexIndices)];
+    commandCursor->flags = 4;
+    commandCursor->valueX = originOffset;
+    commandCursor->valueY = originOffset;
+    commandCursor->valueZ = originOffset;
     commandCursor++;
-    commandCursor->layer = 3;
-    commandCursor->flags = 0;
-    commandCursor->tex = NULL;
-    commandCursor->mode = 0x20000000;
-    commandCursor->x = 999.0f;
-    commandCursor->y = 94.0f;
-    commandCursor->z = 95.0f;
-    packet.sourceObj = sourceObj;
-    packet.sourceMode = variant;
-    packet.position[0] = originOffset;
-    packet.position[1] = originOffset;
-    packet.position[2] = originOffset;
-    packet.velocity[0] = originOffset;
-    packet.velocity[1] = originOffset;
-    packet.velocity[2] = originOffset;
-    packet.scale = 1.0f;
-    packet.drawGroupCount = 1;
-    packet.drawGroupStride = 0;
-    packet.initialStateByte = 9;
-    packet.byte5A = 0;
-    packet.textureFrameTimer = 0x20;
-    packet.commandCount = (GfxCmd*)((u8*)commandCursor + sizeof(GfxCmd)) - commands;
-    packet.sequenceParams[0] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[0])];
-    packet.sequenceParams[1] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[1])];
-    packet.sequenceParams[2] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[2])];
-    packet.sequenceParams[3] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[3])];
-    packet.sequenceParams[4] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[4])];
-    packet.sequenceParams[5] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[5])];
-    packet.sequenceParams[6] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[6])];
-    packet.commands = (GfxCmd*)((u8*)&packet + 0x60);
-    packet.flags = 0x4000000;
-    packet.flags |= spawnFlags;
-    if ((packet.flags & 1) != 0) {
+    commandCursor->stageIndex = 3;
+    commandCursor->parameter = 0;
+    commandCursor->vertexIndices = NULL;
+    commandCursor->flags = 0x20000000;
+    commandCursor->valueX = 999.0f;
+    commandCursor->valueY = 94.0f;
+    commandCursor->valueZ = 95.0f;
+    packet.context.sourceObject = sourceObj;
+    packet.context.variant = variant;
+    packet.context.position[0] = originOffset;
+    packet.context.position[1] = originOffset;
+    packet.context.position[2] = originOffset;
+    packet.context.velocity[0] = originOffset;
+    packet.context.velocity[1] = originOffset;
+    packet.context.velocity[2] = originOffset;
+    packet.context.scale = 1.0f;
+    packet.context.drawGroupCount = 1;
+    packet.context.drawGroupStride = 0;
+    packet.context.initialStateByte = 9;
+    packet.context.byte5A = 0;
+    packet.context.textureFrameTimer = 0x20;
+    packet.context.commandCount = (ModgfxCommand*)((u8*)commandCursor + sizeof(ModgfxCommand)) - commands;
+    packet.context.stageDurations[0] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[0])];
+    packet.context.stageDurations[1] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[1])];
+    packet.context.stageDurations[2] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[2])];
+    packet.context.stageDurations[3] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[3])];
+    packet.context.stageDurations[4] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[4])];
+    packet.context.stageDurations[5] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[5])];
+    packet.context.stageDurations[6] = *(s16*)&resourceData[offsetof(Dll7FEffectResourceView, sequenceParams[6])];
+    packet.context.commands = (ModgfxCommand*)((u8*)&packet + 0x60);
+    packet.context.flags = 0x4000000;
+    packet.context.flags |= spawnFlags;
+    if ((packet.context.flags & 1) != 0) {
         if ((u32)sourceObj != 0) {
-            packet.position[0] += sourceObj->anim.worldPosX;
-            packet.position[1] += sourceObj->anim.worldPosY;
-            packet.position[2] += sourceObj->anim.worldPosZ;
+            packet.context.position[0] += sourceObj->anim.worldPosX;
+            packet.context.position[1] += sourceObj->anim.worldPosY;
+            packet.context.position[2] += sourceObj->anim.worldPosZ;
         } else {
-            packet.position[0] += spawnParams->posX;
-            packet.position[1] += spawnParams->posY;
-            packet.position[2] += spawnParams->posZ;
+            packet.context.position[0] += spawnParams->posX;
+            packet.context.position[1] += spawnParams->posY;
+            packet.context.position[2] += spawnParams->posZ;
         }
     }
     if (variant == 0) {
-        packet.modeByte = 0;
+        packet.context.modeByte = 0;
         (*gModgfxInterface)
-            ->spawnEffect(&packet, 0, 9, resourceData, 8, &resourceData[offsetof(Dll7FEffectResourceView, triangles)],
-                          0x156, 0);
+            ->spawnEffect(&packet.context, 0, 9, (ModgfxEffectVertex*)(resourceData), 8,
+                          (s16*)(&resourceData[offsetof(Dll7FEffectResourceView, triangles)]), 0x156, 0);
     } else {
-        packet.modeByte = 0;
+        packet.context.modeByte = 0;
         (*gModgfxInterface)
-            ->spawnEffect(&packet, 0, 9, &resourceData[offsetof(Dll7FEffectResourceView, nonzeroVariantVertices)], 8,
-                          &resourceData[offsetof(Dll7FEffectResourceView, triangles)], 0x8a, 0);
+            ->spawnEffect(
+                &packet.context, 0, 9,
+                (ModgfxEffectVertex*)(&resourceData[offsetof(Dll7FEffectResourceView, nonzeroVariantVertices)]), 8,
+                (s16*)(&resourceData[offsetof(Dll7FEffectResourceView, triangles)]), 0x8a, 0);
     }
 }
 

@@ -93,25 +93,25 @@ void WaterFallSpray_update(GameObject* obj) {
                         partfxArgs.posZ = (f32)(s32)randomGetRange(-placement->randomExtentZ, placement->randomExtentZ);
                         if ((placement->flags & WATERFALLSPRAY_FLAG_EFFECT_320) != 0) {
                             (*gPartfxInterface)
-                                ->spawnObject(obj, WATERFALLSPRAY_EFFECT_320, &partfxArgs,
+                                ->spawnEffect(obj, WATERFALLSPRAY_EFFECT_320, &partfxArgs,
                                               WATERFALLSPRAY_PARTICLE_SPAWN_MODE, WATERFALLSPRAY_PARTICLE_MODEL_NONE,
                                               NULL);
                         }
                         if ((placement->flags & WATERFALLSPRAY_FLAG_EFFECT_321) != 0) {
                             (*gPartfxInterface)
-                                ->spawnObject(obj, WATERFALLSPRAY_EFFECT_321, &partfxArgs,
+                                ->spawnEffect(obj, WATERFALLSPRAY_EFFECT_321, &partfxArgs,
                                               WATERFALLSPRAY_PARTICLE_SPAWN_MODE, WATERFALLSPRAY_PARTICLE_MODEL_NONE,
                                               NULL);
                         }
                         if ((placement->flags & WATERFALLSPRAY_FLAG_EFFECT_322) != 0) {
                             (*gPartfxInterface)
-                                ->spawnObject(obj, WATERFALLSPRAY_EFFECT_322, &partfxArgs,
+                                ->spawnEffect(obj, WATERFALLSPRAY_EFFECT_322, &partfxArgs,
                                               WATERFALLSPRAY_PARTICLE_SPAWN_MODE, WATERFALLSPRAY_PARTICLE_MODEL_NONE,
                                               NULL);
                         }
                         if ((placement->flags & WATERFALLSPRAY_FLAG_EFFECT_351) != 0) {
                             (*gPartfxInterface)
-                                ->spawnObject(obj, WATERFALLSPRAY_EFFECT_351, &partfxArgs,
+                                ->spawnEffect(obj, WATERFALLSPRAY_EFFECT_351, &partfxArgs,
                                               WATERFALLSPRAY_PARTICLE_SPAWN_MODE, WATERFALLSPRAY_PARTICLE_MODEL_NONE,
                                               NULL);
                         }

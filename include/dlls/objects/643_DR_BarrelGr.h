@@ -10,13 +10,6 @@
 extern f32 gDRBarrelGrThrowScale;
 extern f32 gDrBarrelGenGrabYOffset;
 
-typedef struct DrBarrelGrRenderParams {
-    s16 a;
-    s16 b;
-    s16 c;
-    f32 d;
-} DrBarrelGrRenderParams;
-
 typedef struct DrBarrelGrFlags {
     u8 bit80 : 1;
     u8 bit40 : 1;

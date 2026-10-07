@@ -1,6 +1,8 @@
 #ifndef DLLS_OBJECTS_592_KT_REX_H_
 #define DLLS_OBJECTS_592_KT_REX_H_
 
+#include "main/dll/partfx_interface.h"
+
 #include "dlls/object_descriptor.h"
 #include "global.h"
 #include "main/dll/dll_005A_staffcollision.h"
@@ -19,16 +21,6 @@ typedef struct KtrexMsgBlob {
 
 STATIC_ASSERT(sizeof(KtrexMsgBlob) == 0x10);
 
-typedef struct KTRexWork {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    u8 pad6[0x8 - 0x6];
-    f32 unk8;
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-} KTRexWork;
 
 typedef struct KtrexPlacement {
     u8 pad0[0x38];
@@ -83,7 +75,7 @@ typedef struct KTRexArenaState {
     u32 phaseFlags;
     u8 laneAltSelect;
     u8 pad109[0x10C - 0x109];
-    KTRexWork spawnWork[4];
+    PartFxSpawnParams spawnWork[4];
     f32 vecX;
     f32 vecY;
     f32 vecZ;
@@ -99,7 +91,6 @@ typedef struct KTRexLaneTuning {
 
 STATIC_ASSERT(sizeof(KtrexState) == 0x5A4);
 STATIC_ASSERT(offsetof(KtrexState, controlMode) == 0x274);
-STATIC_ASSERT(sizeof(KTRexWork) == 0x18);
 STATIC_ASSERT(offsetof(KTRexArenaState, spawnWork) == 0x10c);
 STATIC_ASSERT(offsetof(KTRexArenaState, light) == 0x178);
 STATIC_ASSERT(offsetof(KTRexArenaState, lightning) == 0x17c);
@@ -117,7 +108,7 @@ extern MapRomList* gKTRexMapBlock;
 extern StaffCollisionInterface** gKTRexResource;
 extern const KtrexMsgBlob gKTRexMsgTemplate;
 extern int gKTRexContactEffectCooldown;
-extern KTRexWork gKTRexEffectSpawnWork;
+extern PartFxSpawnParams gKTRexEffectSpawnWork;
 extern s16 gKTRexLaneEnabledGameBits[4];
 extern s16 gKTRexLaneModeGameBits[4];
 extern s16 gKTRexMoveIdByLaneB05[4];

@@ -1,5 +1,143 @@
 # Expgfx Source Recovery
 
+## Object APIs and independent effect tables (2026-10-06)
+
+The effect helpers now accept `GameObject*` sources and `PartFxSpawnParams*`
+origins. The latter are 0x18-byte rotation/scale/position packets, not full
+objects. In particular, `objfx_spawnLightPulse`'s former `light` argument is a
+spawn transform; `objDoHitParticleFx` has a separate `ModelLightStruct*` for
+its actual light. Trail bursts instead take a three-float velocity, as
+established by Effect20's `0x7B7` case. Source pools, table entries, cleanup,
+rendering and simulation now retain `GameObject*` throughout. The fake
+position-only object overlay and intermediate animation-prefix casts are gone.
+
+The public Expgfx interface and descriptor share exact callback types. The
+spawn slot takes `EffectSpawnConfig*`; the frame-state query returns `int`.
+The update implementation retains two unused arguments to agree with
+`Obj_UpdateAllObjects`'s four-argument call and the predecessor's
+`dll_13_func_C18` contract. `gExpgfxDescriptor` replaces the untyped callback
+array, with the generic resource cast confined to `modelEngine.c`.
+
+Three burst helpers previously read twelve tables through byte offsets
+`0x48` through `0x104` from the 30-byte `gObjFxCrystalSparkleTbl`. Those
+accesses crossed unrelated objects and depended on their linked placement.
+The constants actually belonged to a fabricated 0xE0-byte aggregate following
+the color and pulse-variant tables. They are now independent definitions:
+a five-element hit-pulse count table, then four arrays for each of the box,
+arced and directional bursts. Each group has nine effect parameters, eight
+spawn IDs, eight argument-2 values and eight argument-0 values. The two-byte
+alignment gaps after the nine-element arrays are compiler padding.
+
+Independent definitions let MWCC generate its shared `...rodata.0` base
+naturally, preserving every retail instruction and table address. No explicit
+section placement, enclosing synthetic record or out-of-bounds access is
+needed. The former crystal-sparkle table is actually ten RGB triplets used
+by `objDoParticleFx`; it is now `gObjFxParticleLightColors`, with typed channel
+accesses. All five symbol configs describe the recovered array boundaries.
+
+The stricter helper contracts also recover complete spawn packets in Baddie,
+GC robot patrol, Landed Arwing, DB stealerworm, Lightfoot and DR EarthCall.
+BombPlant's separate `lightPosition` and `hitPosition` locals are one packet;
+DR BarrelGen's partial header and following path-position local are likewise
+one packet. Their complete transforms preserve the retail stack locations.
+The duplicate packet typedefs and redundant argument casts are removed.
+
+CC Lightfoot has a distinct, apparent retail bug: the hit query, positional
+emitter and SRT-based hit-particle helper all receive `r1 + 0x14`. The query
+fills three floats there, but the last helper passes that same address to
+partfx, whose source-copy path reads the SRT position at offsets 0x0C..0x14.
+The narrow cast records that mismatch; this recovery neither shifts the
+argument nor enlarges the local to conceal it.
+
+Validation covers all five versions: every active game TU remains 100% in
+the full objdiff inventory, `all_source` succeeds, and each fully source-linked
+DOL equals its hash-verified original. The two pre-existing library report
+artifacts (`__exception` and `sal_volume`) are unchanged. Every source object's
+section contents, allocated-section metadata, symbol addresses and resolved
+relocations are preserved, accounting explicitly for the renamed symbols,
+new independent table boundaries and MWCC's generated rodata-base symbol.
+The core object's compiler metadata adds only records for those new symbols.
+Formatting is committed separately and preserves every raw source-object hash.
+
+## Source-table identity and lifecycle (2026-10-06)
+
+`ExpgfxTableEntry` now records an `ObjAnimComponent* sourceObject` and a
+`GameObject* sourceParent`, alongside its resource pointer. These replace the
+integer `sourceId` and `attachedTableKey`. In `expgfx_addremove`, the copy-source
+behavior takes the source's world position/rotation/scale, retains its parent,
+then clears the direct source pointer. The update loop later uses that parent's
+transform-space index when converting the copied position. Source and parent
+are therefore distinct parts of the table key, not interchangeable handles.
+
+Dinosaur Planet's `UnkBss190Struct` likewise contains two `Object*` fields and a
+`Texture*`; `dll_13_func_2060` interns the same three pointers. Its spawn path
+takes the second object from the copied source's `parent`. Foxhollow widens the
+corresponding SFA table keys to `uintptr_t`. SFA's own stores and consumers
+establish the roles and preserve the asserted 0x10-byte target record.
+
+Slot selection, table insertion, source cleanup and cleanup wrappers now accept
+pointers directly. Pool-source walks, stores and clears use the existing typed
+pointer array. Table lookups use ordinary indexing; the final added-slot global
+is an `ExpgfxSlot*`. Texture pointers no longer pass through `u32` in table
+insertion or the update loop. The separate update API's old `sourceId` parameter
+is renamed `frameCount`: `Obj_UpdateAllObjects` passes `framesThisStep` there, and the
+current update loop does not consume the parameter. Its integer ABI is retained.
+
+`expgfxRemove` retains a cached pointer to the first resource field and a narrow
+byte-stride access based on `sizeof(ExpgfxTableEntry)`. Using a table-base local
+or recovering the enclosing record with `offsetof` adds three MWCC instructions.
+The retained field-base form preserves target code while correctly walking
+pointer-bearing records on a native host. The duplicate resource predicate in
+bulk removal and the one-element local arrays remain unchanged.
+
+`tools/test_expgfx_sources.py` extracts twelve production functions and the
+canonical object, slot and table records. Its 3,936 scenarios pass at `-O0` and
+`-O2` with ASan/UBSan and pointers above 4 GiB. They cover every table entry and
+pool/slot position, all three pointer keys, table capacity and refcount overflow,
+the reserved final automatic-allocation pool, resource-release/flush flags,
+inactive removal, all source-free wrappers, and all three bulk-reset contracts.
+Texture release and cache flush are spies. Slot fixtures encode the retail table
+index explicitly; these tests do not exercise host bitfield serialization,
+particle simulation or GPU rendering. The existing queue and slot-layout tests
+also pass. Five negative controls reject truncated source pointers, omitted
+source-key comparisons, fixed 16-byte native strides, 32-bit pool-pointer clears
+and automatic allocation of the final pool.
+
+Expgfx remains 46/46 functions and 100% code/data in all five versions. Every
+source object's raw hash is unchanged, including Expgfx: symbol tables,
+relocations and all sections are identical. Full objdiff inventories introduce
+no new exceptions, all source builds pass, and all five source-linked DOLs match
+their verified originals byte for byte.
+
+## Pointer-preserving render-queue boundary (2026-10-06)
+
+The slot-pool base table now stores `void*`, with pointer-width allocation and
+walks. `renderParticlesBody` passes the pool pointer directly to the shared
+render queue; `drawGlow` receives it as a pointer. The queued object path calls
+`expgfx_renderSourcePools(GameObject*, int)`, whose source-table walk retains
+the existing `ObjAnimComponent*` entries. Both render paths preserve their
+pool filtering, frustum tests and ordering.
+
+The cache update retains its long-lived mask-table byte offset. Directly
+indexing the final pool write by `activePool` extends that local's lifetime
+through the large slot loop and changes MWCC's spills. Converting the offset
+to an index adds an instruction. The retained narrow pointer-table access
+scales the mask byte offset by the pointer/mask element-size ratio: one on the
+target, two on a 64-bit host. This preserves the exact retail instruction
+stream without assuming that native pointers are four bytes.
+
+Foxhollow's pool table and render payloads likewise use pointer-width storage.
+This recovery is limited to the table and queue/render boundary; other effect
+source-ID APIs and simulation accesses still contain 32-bit assumptions.
+`tools/test_render_queue.py` executes both production pool-routing functions
+through the production queue and dispatch loop with native pointers. Draw,
+camera and frustum services are fixtures; it does not claim complete native
+effect rendering. The existing slot-layout tests also pass.
+
+All 46 functions and 6,660 data bytes are exact in all five versions. Section
+contents, named symbol offsets and resolved relocations match the previous
+objects, and each full source build and strict retail DOL checksum passes.
+
 ## Native storage and current EN match (2026-09-07)
 
 Expgfx now reaches **100% match**, with **all 46 functions and all 6,660 data

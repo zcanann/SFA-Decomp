@@ -17,7 +17,7 @@
 #include "main/objfx.h"
 #include "main/mapEvent.h"
 #include "main/model.h"
-#include "main/dll/path_control_interface.h"
+#include "main/dll/obj_collision.h"
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
 #include "main/mapEventTypes.h"
@@ -240,7 +240,7 @@ void dfptargetblock_hitDetect(GameObject* obj) {
 
             for (i = DFPTARGETBLOCK_RESET_PARTICLE_COUNT; i != 0; i--) {
                 (*gPartfxInterface)
-                    ->spawnObject(obj, DFPTARGETBLOCK_RESET_PARTICLE_ID, &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE,
+                    ->spawnEffect(obj, DFPTARGETBLOCK_RESET_PARTICLE_ID, &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE,
                                   -1, NULL);
             }
         }
@@ -293,9 +293,9 @@ void dfptargetblock_update(GameObject* obj) {
                 }
             }
         } else if (state->pathState != NULL) {
-            (*gPathControlInterface)->update(obj, state->pathState, timeDelta);
-            (*gPathControlInterface)->apply(obj, state->pathState);
-            (*gPathControlInterface)->advance(obj, state->pathState, timeDelta);
+            (*gObjCollisionInterface)->updateQueryBounds(obj, state->pathState, timeDelta);
+            (*gObjCollisionInterface)->gatherTrackTriangles(obj, state->pathState);
+            (*gObjCollisionInterface)->resolve(obj, state->pathState, timeDelta);
         }
     }
     return;

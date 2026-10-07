@@ -127,7 +127,7 @@ void dll407_render(GameObject* obj, int renderArg2, int renderArg3, int renderAr
         particleParams.posX = originOffset;
         particleParams.posY = 5.0f;
         particleParams.posZ = originOffset;
-        (*gPartfxInterface)->spawnObject((void*)obj, DLL197_PARTFX_SPARKLE, &particleParams, 0x12, -1, NULL);
+        (*gPartfxInterface)->spawnEffect(obj, DLL197_PARTFX_SPARKLE, &particleParams, 0x12, -1, NULL);
     }
 
     state->sparkTimer = randomGetRange(-10, 10) + 0x3C;
@@ -217,7 +217,7 @@ void dll407_update(GameObject* objectAddress) {
         Resource_Release(resource);
 
         for (effect = 0; effect < DLL197_PARTFX_SPARK_COUNT; effect++) {
-            (*gPartfxInterface)->spawnObject((void*)objectAddress, DLL197_PARTFX_SPARK, NULL, 0, -1, NULL);
+            (*gPartfxInterface)->spawnEffect(objectAddress, DLL197_PARTFX_SPARK, NULL, 0, -1, NULL);
         }
 
         if (state->gameBit != -1 && mainGetBit(state->gameBit) == 0) {
@@ -237,7 +237,7 @@ void dll407_update(GameObject* objectAddress) {
         state->sparkTimer = 1;
     } else {
         Sfx_StopObjectChannel(objectAddress, DLL197_SHUTDOWN_SFX_CHANNEL);
-        (*gModgfxInterface)->detachSource((void*)objectAddress);
+        (*gModgfxInterface)->detachSource(objectAddress);
         (*gExpgfxInterface)->freeSource(objectAddress);
         if (state->gameBit != -1 && mainGetBit(state->gameBit) != 0) {
             mainSetBits(state->gameBit, 0);

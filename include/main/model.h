@@ -15,6 +15,7 @@ struct ObjAnimMoveData;
 typedef struct ShaderLayer {
     union {
         s32 textureIndex;
+        TextureReference textureReference;
         Texture* texture;
     };
     u8 typeBits;
@@ -24,6 +25,7 @@ typedef struct ShaderLayer {
 } ShaderLayer;
 
 STATIC_ASSERT(sizeof(ShaderLayer) == 0x08);
+STATIC_ASSERT(offsetof(ShaderLayer, textureReference) == 0x00);
 STATIC_ASSERT(offsetof(ShaderLayer, typeBits) == 0x04);
 STATIC_ASSERT(offsetof(ShaderLayer, materialId) == 0x05);
 STATIC_ASSERT(offsetof(ShaderLayer, scrollMtx) == 0x06);
@@ -34,7 +36,10 @@ typedef struct Shader {
     u8 alpha;
     u8 pad0D[0x14 - 0x0D];
     void* reg2Texture;
-    s32 textureId;
+    union {
+        s32 textureId;
+        TextureReference textureReference;
+    };
     u32 unk1C;
     u8 reg2TexSlot;
     u8 pad21;
@@ -43,10 +48,12 @@ typedef struct Shader {
     ShaderLayer layers[2];
     union {
         u32 auxTextureIndex;
+        TextureReference auxTextureReference;
         Texture* auxTexture;
     };
     union {
         s32 indTextureId;
+        TextureReference indTextureReference;
         Texture* indTexture;
     };
     u32 flags;
@@ -61,12 +68,15 @@ STATIC_ASSERT(offsetof(Shader, reg1Texture) == 0x08);
 STATIC_ASSERT(offsetof(Shader, alpha) == 0x0C);
 STATIC_ASSERT(offsetof(Shader, reg2Texture) == 0x14);
 STATIC_ASSERT(offsetof(Shader, textureId) == 0x18);
+STATIC_ASSERT(offsetof(Shader, textureReference) == 0x18);
 STATIC_ASSERT(offsetof(Shader, unk1C) == 0x1C);
 STATIC_ASSERT(offsetof(Shader, reg2TexSlot) == 0x20);
 STATIC_ASSERT(offsetof(Shader, reg2Alpha) == 0x22);
 STATIC_ASSERT(offsetof(Shader, layers) == 0x24);
 STATIC_ASSERT(offsetof(Shader, auxTextureIndex) == 0x34);
+STATIC_ASSERT(offsetof(Shader, auxTextureReference) == 0x34);
 STATIC_ASSERT(offsetof(Shader, indTextureId) == 0x38);
+STATIC_ASSERT(offsetof(Shader, indTextureReference) == 0x38);
 STATIC_ASSERT(offsetof(Shader, flags) == 0x3C);
 STATIC_ASSERT(offsetof(Shader, vtxAttrFlags) == 0x40);
 STATIC_ASSERT(offsetof(Shader, layerCount) == 0x41);
@@ -192,12 +202,36 @@ typedef struct ModelCollisionTriangle {
 STATIC_ASSERT(sizeof(ModelCollisionTriangle) == 8);
 STATIC_ASSERT(offsetof(ModelCollisionTriangle, vertexIndices) == 0);
 
+/* One target word: an asset ID before loading, then textureLoad's opaque
+ * result. A runtime reference is either a one-based cache handle or the
+ * bits of a direct texture address; textureIdxToPtr resolves both forms. */
+typedef union ModelTextureEntry {
+    s32 assetId;
+    TextureReference reference;
+    void* loadResult;
+} ModelTextureEntry;
+
+STATIC_ASSERT(sizeof(ModelTextureEntry) == 4);
+STATIC_ASSERT(offsetof(ModelTextureEntry, assetId) == 0);
+STATIC_ASSERT(offsetof(ModelTextureEntry, reference) == 0);
+STATIC_ASSERT(offsetof(ModelTextureEntry, loadResult) == 0);
+
+/* A morph table entry is a model-relative byte offset on disk, then a stream
+ * pointer after model relocation. Streams contain index/flags and s16 deltas. */
+typedef union ModelMorphTargetRef {
+    u32 offset;
+    u16* stream;
+} ModelMorphTargetRef;
+
+STATIC_ASSERT(sizeof(ModelMorphTargetRef) == 4);
+STATIC_ASSERT(offsetof(ModelMorphTargetRef, offset) == 0);
+STATIC_ASSERT(offsetof(ModelMorphTargetRef, stream) == 0);
+
 /*
  * ModelFileHeader - in-place header of a loaded .MOD model file. Offset
- * fields are patched to pointers by ObjModel_RelocateModelData /
- * ObjModel_RelocateAnimData (the u32-vs-pointer launders in model.c keep
- * the original load widths). Only fields with read/write evidence in
- * model.c are named; everything else is padded.
+ * fields become native pointers during relocation. The unions distinguish
+ * serialized u32 offsets from their runtime pointer views. Only fields with
+ * read/write evidence are named; everything else is padded.
  */
 typedef struct ModelFileHeader {
     u8 refCount;
@@ -207,29 +241,70 @@ typedef struct ModelFileHeader {
         u16 modelId; /* MODELS.TAB index */
         u16 modNo;   /* animation-bank model number */
     };
-    u8 unk06[6];
+    u8 unk06[2];
+    s32 unk08;    /* Cleared after instance initialization; meaning not recovered. */
     s32 dataSize; /* anim data appended at header + dataSize */
     u8 unk10[8];
-    u8* unk18;
-    u8* unk1C;
-    s32* textureIds; /* file texture ids, patched to texture ptrs on load */
-    u8 flags24;      /* 0x08 = NBT triplets instead of single packed normals */
-    u8 unk25[3];
-    u8* vertices;  /* vertexCount s16 XYZ records; scale selected by MODEL_FLAG_INTEGER_VERTEX_COORDS */
-    u8* normals;   /* 3 or 9 bytes each, normalCount */
-    u8* colors;    /* GX_VA_CLR0 array, stride 2 */
-    u8* texCoords; /* GX_VA_TEX0/TEX1 array, stride 4 */
-    Shader* renderOps;
-    u8* jointData;
-    ModelFuzzScaleDef* jointFuzzScales; /* one record per joint */
-    ModelFuzzScaleDef vertexFuzzScale;
-    ModelExtraJointDef* extraJointDefs;
     union {
+        u32 jointCollisionRadiiOffset;
+        f32* jointCollisionRadii; /* unscaled per-joint capsule radii */
+    };
+    union {
+        u32 jointCollisionLengthScalesOffset;
+        f32* jointCollisionLengthScales; /* multipliers >= 1 extend capsule lengths */
+    };
+    union {
+        u32 textureEntriesOffset;
+        ModelTextureEntry* textureEntries;
+    };
+    u8 flags24; /* 0x08 = NBT triplets instead of single packed normals */
+    u8 unk25[3];
+    union {
+        u32 verticesOffset;
+        u8* vertices; /* vertexCount s16 XYZ records; scale selected by MODEL_FLAG_INTEGER_VERTEX_COORDS */
+    };
+    union {
+        u32 normalsOffset;
+        u8* normals; /* 3 or 9 bytes each, normalCount */
+    };
+    union {
+        u32 colorsOffset;
+        u8* colors; /* GX_VA_CLR0 array, stride 2 */
+    };
+    union {
+        u32 texCoordsOffset;
+        u8* texCoords; /* GX_VA_TEX0/TEX1 array, stride 4 */
+    };
+    union {
+        u32 renderOpsOffset;
+        Shader* renderOps;
+    };
+    union {
+        u32 jointDataOffset;
+        u8* jointData;
+    };
+    union {
+        u32 jointFuzzScalesOffset;
+        ModelFuzzScaleDef* jointFuzzScales; /* one record per joint */
+    };
+    ModelFuzzScaleDef vertexFuzzScale;
+    union {
+        u32 extraJointDefsOffset;
+        ModelExtraJointDef* extraJointDefs;
+    };
+    union {
+        u32 hitVolumesOffset;
         u8* hitVolumes;      /* 0x18-byte ModelHitSphereDef records */
         void* hitReactTable; /* animation-bank hit-reaction rows */
     };
-    ModelCollisionTriangle* collisionTriangles;
-    CollisionPolygonGroup* collisionBlocks;
+    union {
+        u32 collisionTrianglesOffset;
+        ModelCollisionTriangle* collisionTriangles;
+    };
+    union {
+        u32 collisionBlocksOffset;
+        CollisionPolygonGroup* collisionBlocks;
+    };
     struct ObjAnimMoveData** moveData;
     u8* animationDataSection;
     union {
@@ -245,17 +320,38 @@ typedef struct ModelFileHeader {
     u8 unk86[2];
     ModelVtxAnimJob vertexAnimJob;
     u8 unk98[0xC];
-    ModelVtxAnimChunk* vertexAnimEntries;
-    u8* vertexWeightData;
+    union {
+        u32 vertexAnimEntriesOffset;
+        ModelVtxAnimChunk* vertexAnimEntries;
+    };
+    union {
+        u32 vertexWeightDataOffset;
+        u8* vertexWeightData;
+    };
     ModelVtxAnimJob normalAnimJob;
     u8 unkBC[0xC];
-    ModelVtxAnimChunk* normalAnimEntries;
-    u8* normalWeightData;
-    struct ModelDisplayListEntry* displayLists; /* primary group followed by shadow group */
-    u8* instrs;
+    union {
+        u32 normalAnimEntriesOffset;
+        ModelVtxAnimChunk* normalAnimEntries;
+    };
+    union {
+        u32 normalWeightDataOffset;
+        u8* normalWeightData;
+    };
+    union {
+        u32 displayListsOffset;
+        struct ModelDisplayListEntry* displayLists; /* primary group followed by shadow group */
+    };
+    union {
+        u32 instrsOffset;
+        u8* instrs;
+    };
     u16 instrsBitLenWords; /* 0xD8: render-instruction stream length; *8 gives bit length (see objprint_dolphin render-instr readers) */
     u8 unkDA[2];
-    u16** morphTargetPtrs; /* morphTargetCount streams: index/flags, then signed component words */
+    union {
+        u32 morphTargetsOffset;
+        ModelMorphTargetRef* morphTargets; /* morphTargetCount entries */
+    };
     u16 cullDistance;
     u16 shaderFlags;
     u16 vertexCount;
@@ -301,6 +397,33 @@ typedef struct ModelFileHeader {
 #define OBJMODEL_BUFFER_FLAG_HITSPHERE_SELECT 0x4 /* selects a hitVolumeSphereBuffers entry */
 #define OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED  0x40
 
+STATIC_ASSERT(sizeof(ModelFileHeader) == 0xFC);
+STATIC_ASSERT(offsetof(ModelFileHeader, unk08) == 0x08);
+STATIC_ASSERT(offsetof(ModelFileHeader, dataSize) == 0x0C);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointCollisionRadii) == 0x18);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointCollisionLengthScales) == 0x1C);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointCollisionRadiiOffset) == 0x18);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointCollisionLengthScalesOffset) == 0x1C);
+STATIC_ASSERT(offsetof(ModelFileHeader, textureEntriesOffset) == 0x20);
+STATIC_ASSERT(offsetof(ModelFileHeader, verticesOffset) == 0x28);
+STATIC_ASSERT(offsetof(ModelFileHeader, normalsOffset) == 0x2C);
+STATIC_ASSERT(offsetof(ModelFileHeader, colorsOffset) == 0x30);
+STATIC_ASSERT(offsetof(ModelFileHeader, texCoordsOffset) == 0x34);
+STATIC_ASSERT(offsetof(ModelFileHeader, renderOpsOffset) == 0x38);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointDataOffset) == 0x3C);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointFuzzScalesOffset) == 0x40);
+STATIC_ASSERT(offsetof(ModelFileHeader, extraJointDefsOffset) == 0x54);
+STATIC_ASSERT(offsetof(ModelFileHeader, collisionTrianglesOffset) == 0x5C);
+STATIC_ASSERT(offsetof(ModelFileHeader, collisionBlocksOffset) == 0x60);
+STATIC_ASSERT(offsetof(ModelFileHeader, vertexAnimEntriesOffset) == 0xA4);
+STATIC_ASSERT(offsetof(ModelFileHeader, vertexWeightDataOffset) == 0xA8);
+STATIC_ASSERT(offsetof(ModelFileHeader, normalAnimEntriesOffset) == 0xC8);
+STATIC_ASSERT(offsetof(ModelFileHeader, normalWeightDataOffset) == 0xCC);
+STATIC_ASSERT(offsetof(ModelFileHeader, displayListsOffset) == 0xD0);
+STATIC_ASSERT(offsetof(ModelFileHeader, instrsOffset) == 0xD4);
+STATIC_ASSERT(offsetof(ModelFileHeader, morphTargetsOffset) == 0xDC);
+STATIC_ASSERT(offsetof(ModelFileHeader, hitVolumesOffset) == 0x58);
+
 STATIC_ASSERT(offsetof(ModelFileHeader, vertexAnimJob) == 0x88);
 STATIC_ASSERT(offsetof(ModelFileHeader, normalAnimJob) == 0xac);
 STATIC_ASSERT(offsetof(ModelFileHeader, modelId) == 0x04);
@@ -312,7 +435,7 @@ STATIC_ASSERT(offsetof(ModelFileHeader, extraJointDefs) == 0x54);
 STATIC_ASSERT(offsetof(ModelFileHeader, collisionTriangles) == 0x5C);
 STATIC_ASSERT(offsetof(ModelFileHeader, collisionBlocks) == 0x60);
 STATIC_ASSERT(offsetof(ModelFileHeader, displayLists) == 0xD0);
-STATIC_ASSERT(offsetof(ModelFileHeader, morphTargetPtrs) == 0xDC);
+STATIC_ASSERT(offsetof(ModelFileHeader, morphTargets) == 0xDC);
 STATIC_ASSERT(offsetof(ModelFileHeader, hitVolumes) == 0x58);
 STATIC_ASSERT(offsetof(ModelFileHeader, hitReactTable) == 0x58);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveData) == 0x64);
@@ -320,7 +443,7 @@ STATIC_ASSERT(offsetof(ModelFileHeader, cachedAnimIds) == 0x6C);
 STATIC_ASSERT(offsetof(ModelFileHeader, animationCacheSize) == 0x84);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveGroupBaseIndices) == 0x70);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveCount) == 0xEC);
-STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20);
+STATIC_ASSERT(offsetof(ModelFileHeader, textureEntries) == 0x20);
 STATIC_ASSERT(offsetof(ModelFileHeader, normalAnimEntries) == 0xC8);
 STATIC_ASSERT(offsetof(ModelFileHeader, collisionBlockCount) == 0xF0);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureCount) == 0xF2);
@@ -330,13 +453,17 @@ STATIC_ASSERT(offsetof(ModelFileHeader, morphTargetCount) == 0xF9);
 STATIC_ASSERT(offsetof(ModelFileHeader, texMtxCount) == 0xFA);
 
 typedef struct ModelDisplayListEntry {
-    void* dlist;
+    union {
+        u32 dlistOffset;
+        void* dlist;
+    };
     u16 dlistSize;
     u8 pad06[0x16];
 } ModelDisplayListEntry;
 
 STATIC_ASSERT(sizeof(ModelDisplayListEntry) == 0x1C);
 STATIC_ASSERT(offsetof(ModelDisplayListEntry, dlist) == 0);
+STATIC_ASSERT(offsetof(ModelDisplayListEntry, dlistOffset) == 0);
 STATIC_ASSERT(offsetof(ModelDisplayListEntry, dlistSize) == 4);
 
 /* ModelFileHeader.hitVolumes entry: joint-space sphere transformed by the
@@ -406,8 +533,8 @@ typedef struct ObjModelBlendChannel {
     f32 weight;
     f32 previousWeight; /* weight observed by the preceding blend-channel apply pass */
     f32 weightRate;     /* 0x08: per-dt weight delta (weight += weightRate * dt) */
-    s8 morphTargetA;    /* 0x0C: index into morphTargetPtrs[] for blend source A (-1 = none) */
-    s8 morphTargetB;    /* 0x0D: index into morphTargetPtrs[] for blend source B (-1 = none) */
+    s8 morphTargetA;    /* 0x0C: index into morphTargets[] for blend source A (-1 = none) */
+    s8 morphTargetB;    /* 0x0D: index into morphTargets[] for blend source B (-1 = none) */
     u8 flags;
     u8 unk0F;
 } ObjModelBlendChannel;
@@ -427,11 +554,7 @@ STATIC_ASSERT(offsetof(ObjModelBlendChannel, morphTargetA) == 0x0c);
 STATIC_ASSERT(offsetof(ObjModelBlendChannel, morphTargetB) == 0x0d);
 STATIC_ASSERT(offsetof(ObjModelBlendChannel, flags) == 0x0e);
 
-/*
- * ObjModel - per-object model working set built by modelLoad_layoutBuffers
- * (all buffers carved from one allocation). Double-buffered matrix/vertex
- * buffers are selected by flags bits 0/1.
- */
+/* Per-joint runtime work carved from the model instance allocation. */
 typedef struct ModelJointWork {
     Vec* jointPositions;
     f32* jointRadii;
@@ -449,6 +572,11 @@ STATIC_ASSERT(offsetof(ModelJointWork, jointLengths) == 0x0C);
 STATIC_ASSERT(offsetof(ModelJointWork, jointCullDistances) == 0x10);
 STATIC_ASSERT(offsetof(ModelJointWork, touchedJoints) == 0x18);
 
+/*
+ * Per-object model working set built in caller-owned, zero-initialized storage.
+ * Dynamic buffers share that allocation; immutable geometry borrows file data.
+ * Double-buffered matrix/vertex buffers are selected by flags bits 0/1.
+ */
 typedef struct ObjModel {
     union {
         ModelFileHeader* file;
@@ -463,11 +591,11 @@ typedef struct ObjModel {
     u8* normalBuf;
     struct ObjModelBlendChannel* blendChannels; /* 3 channels */
     union {
-        void* animStateA;
+        ObjAnimState* animStateA;
         ObjAnimState* currentState;
     };
     union {
-        void* animStateB; /* only with load flag 0x80 */
+        ObjAnimState* animStateB; /* only with load flag 0x80 */
         ObjAnimState* activeState;
     };
     ModelRenderOpTextureRefs* textureRefs;
@@ -486,7 +614,7 @@ typedef struct ObjModel {
 
 s16* ObjModel_GetBaseVertexCoords(ModelFileHeader* modelFile, int vertexIndex);
 s16* ObjModel_GetCurrentVertexCoords(ObjModel* model, int vertexIndex);
-void modelInitBones(f32 scale, void* model);
+void ObjModel_InitSkeletonCollisionBounds(f32 scale, ObjModel* model);
 void ObjModel_ClearRenderAttachment(ObjModel* model);
 void ObjModel_EnableDefaultRenderCallback(void* object, ObjModel* model, f32* mtx, int enabled, f32 scale);
 void ObjModel_SetRenderCallback(u8* model, void* callback);
@@ -588,14 +716,18 @@ void ObjModelChain_Free(ObjModelChain* chain);
 
 void setGQR6_2(int loadScale, int loadType, int storeScale, int storeType);
 void modelBlendMorphTargets(u8* srcVtx, u8* dstVtx, u16 vtxCount, u16* targetA, u16* targetB, int blendScale);
-void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c);
-void modelAnimResetState(void* m, void* data);
+ObjModel* modelLoad_layoutBuffers(ModelFileHeader* file, int flags, int firstInstance, void* buffer);
+void modelAnimResetState(ObjModel* model, ObjAnimState* channel);
 int modelLoadAnimations(ModelFileHeader* file, int resourceId, u8* bufferCursor);
 void ObjModel_AdvanceBlendChannels(ObjModel* model, f32 dt);
 void ObjModel_LoadRenderOpTextures(u8* model, GameObject* object);
-void ObjModel_Release(u8* model);
-void* ObjModel_LoadAnimData(u8* modelData, int loadFlags, u8* destination);
-void* ObjModel_Load(int modelId, int loadFlags, int* outSize);
+void ObjModel_Release(ObjModel* model);
+/* Initialize an instance in zeroed storage of the size returned by ObjModel_Load. */
+ObjModel* ObjModel_LoadAnimData(ModelFileHeader* file, int loadFlags, void* destination);
+/* Acquire a shared file and report the required per-instance allocation size. */
+ModelFileHeader* ObjModel_Load(int modelId, int loadFlags, int* outSize);
+/* Allocate/decompress a shared file; pointer relocation follows in ObjModel_Load. */
+ModelFileHeader* ObjModel_LoadModelData(int modelId);
 void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out);
 void ObjModel_InitRenderBuffers(void);
 void ObjModel_InitResourceCaches(void);

@@ -81,7 +81,7 @@ int dll500_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animUpdat
         spawnParams.posZ -= obj->anim.worldPosZ;
         for (frameIndex = 0; frameIndex < framesThisStep; frameIndex++) {
             (*gPartfxInterface)
-                ->spawnObject(obj, DLL1F4_BODY_PARTICLE_ID, &spawnParams, DLL1F4_BODY_PARTICLE_MODE, -1, NULL);
+                ->spawnEffect(obj, DLL1F4_BODY_PARTICLE_ID, &spawnParams, DLL1F4_BODY_PARTICLE_MODE, -1, NULL);
         }
     }
     return 0;
@@ -104,7 +104,7 @@ void dll500_update(GameObject* obj) {
     if (obj->anim.romDefNo != DLL1F4_STATIC_SEQUENCE_ID) {
         if (obj->userData2 == 0) {
             obj->userData2 = 1;
-            ObjAnim_SetMoveProgress(&obj->anim, (f32)(s32)randomGetRange(DLL1F4_MOVE_PROGRESS_RANDOM_MIN,
+            ObjAnim_SetMoveProgress(obj, (f32)(s32)randomGetRange(DLL1F4_MOVE_PROGRESS_RANDOM_MIN,
                                                                                      DLL1F4_MOVE_PROGRESS_RANDOM_MAX) /
                                                                 DLL1F4_MOVE_PROGRESS_DIVISOR);
         }
@@ -130,7 +130,7 @@ void dll500_update(GameObject* obj) {
         }
         for (frameIndex = 0; frameIndex < framesThisStep; frameIndex++) {
             (*gPartfxInterface)
-                ->spawnObject((void*)obj, DLL1F4_PATH_PARTICLE_ID, &spawnParams, DLL1F4_PATH_PARTICLE_MODE, -1, NULL);
+                ->spawnEffect(obj, DLL1F4_PATH_PARTICLE_ID, &spawnParams, DLL1F4_PATH_PARTICLE_MODE, -1, NULL);
         }
     }
 }

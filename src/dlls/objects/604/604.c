@@ -242,10 +242,10 @@ void snowclaw_updateMountAttack(GameObject* obj, GameObject* mount)
     }
 
     if (mountFlag != 0 && obj->anim.currentMove == inner->moveIdBase) {
-        Object_ObjAnimSetSecondaryBlendMove(&obj->anim, inner->moveIdBase + 1,
+        ObjAnim_SetCurrentBlendMove(obj, inner->moveIdBase + 1,
                                             magnitude);
     } else {
-        Object_ObjAnimSetSecondaryBlendMove(&obj->anim, inner->moveIdBase + 2,
+        ObjAnim_SetCurrentBlendMove(obj, inner->moveIdBase + 2,
                                             magnitude);
     }
 
