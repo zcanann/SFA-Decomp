@@ -66,6 +66,7 @@ class Object:
             "cflags": None,
             "custom_rule": None,
             "custom_rule_implicit": [],
+            "dead_strip": False,
             "extab_padding": None,
             "extra_asflags": [],
             "extra_cflags": [],
@@ -761,6 +762,13 @@ def generate_build_ninja(
     # force these variants through cmd so the chain is not forwarded to MWCC
     # (or sjiswrap) as compiler arguments.
     mwcc_realign_cmd = f"{CHAIN}{mwcc_cmd}"
+
+    # MWCC with unreferenced static functions stripped, as the final link does
+    dead_strip_object = config.tools_dir / "dead_strip_object.py"
+    mwcc_dead_strip_cmd = f"{CHAIN}{mwcc_cmd} && $python {dead_strip_object} $out"
+    mwcc_dead_strip_implicit: List[Optional[Path]] = [*mwcc_implicit, dead_strip_object]
+    mwcc_sjis_dead_strip_cmd = f"{CHAIN}{mwcc_sjis_cmd} && $python {dead_strip_object} $out"
+    mwcc_sjis_dead_strip_implicit: List[Optional[Path]] = [*mwcc_sjis_implicit, dead_strip_object]
     mwcc_sjis_realign_cmd = f"{CHAIN}{mwcc_sjis_cmd}"
 
     normalize_rsp = config.tools_dir / "normalize_rsp.py"
@@ -832,6 +840,26 @@ def generate_build_ninja(
     n.rule(
         name="mwcc_extab",
         command=mwcc_extab_cmd,
+        description="MWCC $out",
+        depfile="$basefile.d",
+        deps="gcc",
+    )
+    n.newline()
+
+    n.comment("MWCC build (with dead-strip post-processing)")
+    n.rule(
+        name="mwcc_dead_strip",
+        command=mwcc_dead_strip_cmd,
+        description="MWCC $out",
+        depfile="$basefile.d",
+        deps="gcc",
+    )
+    n.newline()
+
+    n.comment("MWCC build (with UTF-8 to Shift JIS wrapper and dead-strip post-processing)")
+    n.rule(
+        name="mwcc_sjis_dead_strip",
+        command=mwcc_sjis_dead_strip_cmd,
         description="MWCC $out",
         depfile="$basefile.d",
         deps="gcc",
@@ -1137,6 +1165,15 @@ def generate_build_ninja(
                 build_rule = "mwcc_realign"
             if section_alignments:
                 build_implcit = [*build_implcit, objcopy_implicit, section_realign]
+            if obj.options["dead_strip"]:
+                if build_rule == "mwcc":
+                    build_rule = "mwcc_dead_strip"
+                    build_implcit = mwcc_dead_strip_implicit
+                elif build_rule == "mwcc_sjis":
+                    build_rule = "mwcc_sjis_dead_strip"
+                    build_implcit = mwcc_sjis_dead_strip_implicit
+                else:
+                    sys.exit(f"{obj.name}: dead_strip is not supported with build rule {build_rule}")
             if obj.options["custom_rule"]:
                 build_rule = obj.options["custom_rule"]
                 build_implcit = [

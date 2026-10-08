@@ -800,7 +800,7 @@ config.libs = [
             Object(Matching, "musyx/runtime/snd_groups.c", extra_cflags=["-inline", "noauto"]),
             Object(Matching, "musyx/runtime/sal_studio.c"),
             Object(Matching, "musyx/runtime/hw_dspctrl.c"),
-            Object(Matching, "musyx/runtime/sal_volume.c", extra_cflags=["-fp_contract", "off", "-inline", "all"]),
+            Object(Matching, "musyx/runtime/sal_volume.c", extra_cflags=["-fp_contract", "off", "-inline", "all"], dead_strip=True),
             Object(Matching, "musyx/runtime/snd3dgroup.c", extra_cflags=["-fp_contract", "off", "-inline", "noauto"]),
             Object(Matching, "musyx/runtime/snd_core.c", extra_cflags=["-fp_contract", "off"]),
             Object(Matching, "musyx/runtime/snd_midictrl.c"),
