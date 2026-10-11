@@ -1,9 +1,12 @@
-"""Find retail map-streaming transitions that exceed the 64-block live table.
+"""Find retail map-streaming transitions that may exceed the 64-block table.
 
 The game loads every block in the new 16x16 camera neighborhood before it
 releases references held by the old neighborhood.  This tool reconstructs the
-same neighborhoods from MAPS.bin/MAPS.tab, globalma.bin, and TRKBLK.tab and
-reports transitions whose temporary union needs more than 64 unique blocks.
+referenced block IDs from MAPS.bin/MAPS.tab, globalma.bin, and TRKBLK.tab.
+
+The report is an upper-bound candidate scan.  It does not yet reproduce
+mapCheckCurBlocks or validate each ID against the two merged mod*.tab archives,
+so an ID that is unavailable at runtime can appear in the reported union.
 """
 from __future__ import annotations
 
@@ -319,11 +322,12 @@ def main() -> None:
         needle = args.map_filter.lower()
         neighborhoods = [item for item in neighborhoods if needle in names[item.center_map_id].lower()]
     maximum = max(neighborhoods, key=lambda item: len(item.unique))
-    print(f"{args.version}: {len(neighborhoods)} valid centers; maximum neighborhood "
-          f"{len(maximum.unique)} blocks at ({maximum.center_x}, {maximum.center_z}), "
+    print(f"{args.version}: {len(neighborhoods)} valid centers; maximum referenced neighborhood "
+          f"{len(maximum.unique)} block IDs at ({maximum.center_x}, {maximum.center_z}), "
           f"layer {maximum.cur_layer}, map {maximum.center_map_id} {names[maximum.center_map_id]!r}")
     rows = transition_rows(neighborhoods, args.max_step)
-    print(f"transitions requiring >64 simultaneous slots: {len(rows)}")
+    print(f"candidate transitions with >64 referenced IDs: {len(rows)} "
+          "(archive availability not applied)")
     for union_count, old, new, appended in rows[:args.limit]:
         print(f"union={union_count} {names[old.center_map_id]!r} "
               f"({old.center_x},{old.center_z})[{len(old.unique)}] -> "

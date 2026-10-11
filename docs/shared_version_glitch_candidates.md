@@ -716,25 +716,27 @@ that one can then write race-started. The missing ingredient is a reachable
 sequence cancel or actor/controller streaming split that leaves the controller
 alive for its following update. [Code and watches](#code-s22).
 
-## S23 - Overflow the live map-block tables at Dragon Rock's landing area
+## S23 - Test a possible map-block-table overflow at Dragon Rock
 
-**Natural camera crossing performs deterministic writes beyond three live
-streaming arrays; runtime payload is the next target.**
+**The overflow sink is real; the asset scan is an upper bound and a natural
+camera trajectory has not been demonstrated.**
 
 The map loader has room for 64 unique blocks, but it loads the new camera
 neighborhood before releasing the old one. Dragon Rock Top contains ordinary
-adjacent camera cells whose temporary union is 65 to 67 unique blocks. The
-landing-area crossing from grid center `(-22,17)` to `(-21,17)` needs 66 and
-writes slots 64 and 65 beyond all three arrays.
+adjacent grid cells whose raw referenced-ID union reaches 65 to 67. However,
+not every referenced ID has a loadable entry in the two map-block archives
+merged at runtime, and the grid centers are driven by the camera rather than
+directly by Fox. The static coordinates therefore do not establish a natural
+repro by themselves.
 
 Those writes alias the beginning of the following allocations: new block
 pointers replace old block IDs, new IDs replace old reference counts, and new
 reference counts replace bytes in the global `TRKBLK.tab` map-block base table.
 Returning across the boundary should then reload blocks whose identities were
-destroyed and extend the corruption. This is the first candidate in this audit
-with both a normal player-controlled setup and a direct OOB write; the open
-question is whether the corrupted block-base mapping yields useful missing or
-wrong collision before the cascading table damage crashes.
+destroyed and extend the corruption. The open questions are whether ordinary
+camera motion reaches the candidate transition with 64 occupied slots and
+whether the corrupted block-base mapping then yields useful missing or wrong
+collision before the cascading table damage crashes.
 [Code, exact boundaries and watches](#code-s23).
 
 ## Technical appendix
@@ -1290,8 +1292,7 @@ wrong collision before the cascading table damage crashes.
 
 ### Code S23
 
-- **This is a natural out-of-bounds write, not a capacity-only thought
-  experiment.** [initMapBlocks](../src/main/shader.c) allocates arrays for
+- [initMapBlocks](../src/main/shader.c) allocates arrays for
   exactly 64 live map-block pointers, 64 block IDs, and 64 reference counts.
   [trackLoadBlockEnd](../src/main/shader.c) increments `gMapBlockCount`, prints
   its overrun warning when the count first reaches 64, but never rejects slot
@@ -1317,24 +1318,31 @@ wrong collision before the cascading table damage crashes.
   and 73 would replace Dragon Rock Top's own base at entry 4 (`0x003A`). The
   competing pointer/ID overflows simultaneously destroy old block identities
   and counts, supplying the duplicate loads that can extend this walk.
-- The active EN v1.0 disc assets contain reachable over-capacity transitions in
-  Dragon Rock Top. Of 2,515 valid retail camera centers, only this map has an
-  adjacent one-cell transition whose old/new union exceeds 64 blocks. There
-  are 26 directed adjacent transitions. The result is identical in the
-  extracted EN v1.1, JP, PAL v1.0, and PAL v1.1 assets.
-- A direct landing-area transition is camera center `(-22,17)` (62 unique
-  blocks) to `(-21,17)` (64 unique blocks). It introduces blocks
-  `215, 216, 1592, 217`; the first two fill valid slots 62 and 63, then blocks
-  1592 and 217 write slots 64 and 65. The next north/south boundary between
-  centers `(-21,17)` and `(-21,18)` has a 67-block union and can append three
-  out-of-range blocks in one recenter.
+- The raw active EN v1.0 asset scan finds over-capacity referenced-ID unions in
+  Dragon Rock Top. Of 2,515 valid retail grid centers, only this map produces
+  adjacent raw unions above 64. The raw result is identical in the extracted
+  EN v1.1, JP, PAL v1.0, and PAL v1.1 assets.
+- Filtering the landing-area IDs against the loadable ranges in
+  `dragrock/mod4.tab` (`58..121`) and `dragrockbot/mod11.tab` (`215..230`)
+  removes the unavailable block ID 1592. The `(-22,17)` to `(-21,17)` union is
+  therefore 65 loadable IDs, not 66: blocks 215 and 216 fill slots 62 and 63,
+  and block 217 is the sole candidate slot-64 write. The nearby
+  `(-21,17)`/`(-21,18)` pair has a 66-ID loadable union, but its actual append
+  count depends on the holes and corruption left by the preceding recenter.
+- This is still not a gameplay repro. The vulnerable coordinate sequence must
+  be observed from the real camera, and `gMapBlockCount` plus the merged block
+  table must show block 217 reaching `trackLoadBlockEnd` at index 64. The fact
+  that ordinary Dragon Rock play is not known to exhibit obvious corruption is
+  meaningful negative evidence; camera constraints or live-slot holes may
+  prevent the static worst case.
 - In world coordinates, the first camera boundary is `X = -13440`; once the
   camera center is in column `-21`, the second is `Z = 11520`. Relative to
   `dragrock`'s retail world origin `(-17920,10880)`, those are local
   `X = 4480` and `Z = 640`. The landing area's TrickyWarp chain and nearby
   placements occupy that same local neighborhood, so this does not require a
   remote camera teleport merely to cross the vulnerable cells.
-- Bouncing should amplify the corruption. Once slots 64+ overwrite the first
+- If slot 64 is reached, bouncing could amplify the corruption. Once slots 64+
+  overwrite the first
   block IDs, the next recenter fails to recognize those still-live blocks and
   loads duplicates. Holes from blocks that leave the neighborhood are consumed
   first; subsequent misses extend the high-water count and overwrite later ID
@@ -1349,8 +1357,10 @@ wrong collision before the cascading table damage crashes.
   Break on `trackLoadBlockEnd` with the count at least 64; arguments are block
   pointer `r3`, block ID `r4`, cell slot `r5`, and layer `r6`.
 - [map_stream_overflow_probe.py](../tools/map_stream_overflow_probe.py)
-  reconstructs the retail neighborhoods and insertion order. It can read the
-  active disc directly without extracting it:
+  reconstructs the retail referenced-ID neighborhoods and insertion order. It
+  does not yet model `mapCheckCurBlocks` or validate the merged `mod*.tab`
+  entries, so its totals are upper bounds. It can read the active disc directly
+  without extracting it:
 
   ```text
   python tools/map_stream_overflow_probe.py --version GSAE01 \
