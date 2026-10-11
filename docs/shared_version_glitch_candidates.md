@@ -729,11 +729,12 @@ writes slots 64 and 65 beyond all three arrays.
 
 Those writes alias the beginning of the following allocations: new block
 pointers replace old block IDs, new IDs replace old reference counts, and new
-reference counts replace bytes in the map-info buffer. Returning across the
-boundary should then reload blocks whose identities were destroyed and extend
-the corruption. This is the first candidate in this audit with both a normal
-player-controlled setup and a direct OOB write; the open question is whether
-repeated crossings yield useful missing/stale collision or only a crash.
+reference counts replace bytes in the global `TRKBLK.tab` map-block base table.
+Returning across the boundary should then reload blocks whose identities were
+destroyed and extend the corruption. This is the first candidate in this audit
+with both a normal player-controlled setup and a direct OOB write; the open
+question is whether the corrupted block-base mapping yields useful missing or
+wrong collision before the cascading table damage crashes.
 [Code, exact boundaries and watches](#code-s23).
 
 ## Technical appendix
@@ -1300,14 +1301,22 @@ repeated crossings yield useful missing/stale collision or only a crash.
   the old references. A camera-grid crossing therefore temporarily needs the
   union of both neighborhoods. The old blocks cannot provide holes while the
   new blocks are being appended.
-- The three allocations are consecutive 32-byte-exact allocations in small
-  heap region 2. Consequently slot 64 is a deterministic alias, not an
-  allocator-header guess: `gMapBlocks[64]` overwrites `gMapBlockIds[0..1]`,
-  `gMapBlockIds[64]` overwrites `gMapBlockRefCounts[0..1]`, and
-  `gMapBlockRefCounts[64]` overwrites byte 0 of `gMapInfoBuffer`. Slot 65
-  overwrites the next two IDs/counts and byte 1, and so on. The out-of-range
-  entries remain self-consistent through these aliases, while the oldest
-  in-range block identities and counts are destroyed.
+- The three arrays are consecutive 32-byte-exact allocations in small heap
+  region 2. Consequently slot 64 is a deterministic alias, not an
+  allocator-header guess: `gMapBlocks[64]` overwrites `gMapBlockIds[0..1]` and
+  `gMapBlockIds[64]` overwrites `gMapBlockRefCounts[0..1]`. The larger map-info
+  and layer buffers route to other heap regions. The next small-region startup
+  allocation is the `0xC0`-byte allocation holding the `0xA0`-byte
+  `TRKBLK.tab`, so `gMapBlockRefCounts[64]` overwrites byte 0 of
+  `gTrkBlkTab`; slot 65 overwrites byte 1, and so on.
+- `gTrkBlkTab` is live map geometry state. [mapFillCellEntry](../src/main/shader.c)
+  calculates each terrain block ID as `cellIndex + gTrkBlkTab[romListIndex]`.
+  The landing-area writes to slots 64 and 65 therefore change its first
+  big-endian base from `0x0000` to `0x0101`. Later out-of-range slots walk
+  forward through the remaining directory bases. Reaching refcount slots 72
+  and 73 would replace Dragon Rock Top's own base at entry 4 (`0x003A`). The
+  competing pointer/ID overflows simultaneously destroy old block identities
+  and counts, supplying the duplicate loads that can extend this walk.
 - The active EN v1.0 disc assets contain reachable over-capacity transitions in
   Dragon Rock Top. Of 2,515 valid retail camera centers, only this map has an
   adjacent one-cell transition whose old/new union exceeds 64 blocks. There
@@ -1334,7 +1343,9 @@ repeated crossings yield useful missing/stale collision or only a crash.
   failure before it crashes. A progression payload is not claimed yet.
 - Active EN v1.0 watches: `trackLoadBlockEnd = 0x80056CEC`,
   `gMapBlockCount = 0x803DCE98`, `gMapBlocks = 0x803DCE9C`,
-  `gMapBlockIds = 0x803DCE94`, and `gMapBlockRefCounts = 0x803DCE8C`.
+  `gMapBlockIds = 0x803DCE94`, `gMapBlockRefCounts = 0x803DCE8C`, and
+  `gTrkBlkTab = 0x803DCE84`. These globals hold the allocated pointers; watch
+  the memory at the dereferenced values.
   Break on `trackLoadBlockEnd` with the count at least 64; arguments are block
   pointer `r3`, block ID `r4`, cell slot `r5`, and layer `r6`.
 - [map_stream_overflow_probe.py](../tools/map_stream_overflow_probe.py)
