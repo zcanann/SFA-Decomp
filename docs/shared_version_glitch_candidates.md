@@ -716,6 +716,26 @@ that one can then write race-started. The missing ingredient is a reachable
 sequence cancel or actor/controller streaming split that leaves the controller
 alive for its following update. [Code and watches](#code-s22).
 
+## S23 - Overflow the live map-block tables at Dragon Rock's landing area
+
+**Natural camera crossing performs deterministic writes beyond three live
+streaming arrays; runtime payload is the next target.**
+
+The map loader has room for 64 unique blocks, but it loads the new camera
+neighborhood before releasing the old one. Dragon Rock Top contains ordinary
+adjacent camera cells whose temporary union is 65 to 67 unique blocks. The
+landing-area crossing from grid center `(-22,17)` to `(-21,17)` needs 66 and
+writes slots 64 and 65 beyond all three arrays.
+
+Those writes alias the beginning of the following allocations: new block
+pointers replace old block IDs, new IDs replace old reference counts, and new
+reference counts replace bytes in the map-info buffer. Returning across the
+boundary should then reload blocks whose identities were destroyed and extend
+the corruption. This is the first candidate in this audit with both a normal
+player-controlled setup and a direct OOB write; the open question is whether
+repeated crossings yield useful missing/stale collision or only a crash.
+[Code, exact boundaries and watches](#code-s23).
+
 ## Technical appendix
 
 ### Code S01
@@ -1266,6 +1286,66 @@ alive for its following update. [Code and watches](#code-s22).
   the existing Ice Mountain route. It does not need heap exhaustion, and
   sequence-slot exhaustion is counterproductive because a failed
   `runSequence` never invokes the callback that arms the completion write.
+
+### Code S23
+
+- **This is a natural out-of-bounds write, not a capacity-only thought
+  experiment.** [initMapBlocks](../src/main/shader.c) allocates arrays for
+  exactly 64 live map-block pointers, 64 block IDs, and 64 reference counts.
+  [trackLoadBlockEnd](../src/main/shader.c) increments `gMapBlockCount`, prints
+  its overrun warning when the count first reaches 64, but never rejects slot
+  64 or any later slot.
+- [doPendingMapLoads](../src/main/shader.c) first saves every old cell's slot,
+  then loads the complete new camera neighborhood, and only afterward releases
+  the old references. A camera-grid crossing therefore temporarily needs the
+  union of both neighborhoods. The old blocks cannot provide holes while the
+  new blocks are being appended.
+- The three allocations are consecutive 32-byte-exact allocations in small
+  heap region 2. Consequently slot 64 is a deterministic alias, not an
+  allocator-header guess: `gMapBlocks[64]` overwrites `gMapBlockIds[0..1]`,
+  `gMapBlockIds[64]` overwrites `gMapBlockRefCounts[0..1]`, and
+  `gMapBlockRefCounts[64]` overwrites byte 0 of `gMapInfoBuffer`. Slot 65
+  overwrites the next two IDs/counts and byte 1, and so on. The out-of-range
+  entries remain self-consistent through these aliases, while the oldest
+  in-range block identities and counts are destroyed.
+- The active EN v1.0 disc assets contain reachable over-capacity transitions in
+  Dragon Rock Top. Of 2,515 valid retail camera centers, only this map has an
+  adjacent one-cell transition whose old/new union exceeds 64 blocks. There
+  are 26 directed adjacent transitions. The result is identical in the
+  extracted EN v1.1, JP, PAL v1.0, and PAL v1.1 assets.
+- A direct landing-area transition is camera center `(-22,17)` (62 unique
+  blocks) to `(-21,17)` (64 unique blocks). It introduces blocks
+  `215, 216, 1592, 217`; the first two fill valid slots 62 and 63, then blocks
+  1592 and 217 write slots 64 and 65. The next north/south boundary between
+  centers `(-21,17)` and `(-21,18)` has a 67-block union and can append three
+  out-of-range blocks in one recenter.
+- In world coordinates, the first camera boundary is `X = -13440`; once the
+  camera center is in column `-21`, the second is `Z = 11520`. Relative to
+  `dragrock`'s retail world origin `(-17920,10880)`, those are local
+  `X = 4480` and `Z = 640`. The landing area's TrickyWarp chain and nearby
+  placements occupy that same local neighborhood, so this does not require a
+  remote camera teleport merely to cross the vulnerable cells.
+- Bouncing should amplify the corruption. Once slots 64+ overwrite the first
+  block IDs, the next recenter fails to recognize those still-live blocks and
+  loads duplicates. Holes from blocks that leave the neighborhood are consumed
+  first; subsequent misses extend the high-water count and overwrite later ID
+  pairs. This is the immediate experiment: determine whether repeated crossing
+  produces missing/stale collision, a wrong retained block, or a useful loader
+  failure before it crashes. A progression payload is not claimed yet.
+- Active EN v1.0 watches: `trackLoadBlockEnd = 0x80056CEC`,
+  `gMapBlockCount = 0x803DCE98`, `gMapBlocks = 0x803DCE9C`,
+  `gMapBlockIds = 0x803DCE94`, and `gMapBlockRefCounts = 0x803DCE8C`.
+  Break on `trackLoadBlockEnd` with the count at least 64; arguments are block
+  pointer `r3`, block ID `r4`, cell slot `r5`, and layer `r6`.
+- [map_stream_overflow_probe.py](../tools/map_stream_overflow_probe.py)
+  reconstructs the retail neighborhoods and insertion order. It can read the
+  active disc directly without extracting it:
+
+  ```text
+  python tools/map_stream_overflow_probe.py --version GSAE01 \
+    --iso "orig/GSAE01/Star Fox Adventures (USA) (v1.00).iso" \
+    --map "Dragon Rock" --max-step 1
+  ```
 
 ## Additional streaming-memory leads recorded for follow-up
 
