@@ -13,32 +13,73 @@ relative to the speedrunning scene.
 The focus is behavior shared between versions. The known respawn-gamebit and
 quit-to-title persistence tricks are omitted, as are the findings already covered
 in [the version-specific catalog](version_specific_glitches.md). Map placement
-checks use the available **JP v1.0 assets**; addresses below are **EN v1.0** unless
-stated otherwise. A map having enough objects does not prove they can all be
-loaded or moved into the required arrangement.
+checks use the available **JP v1.0 and EN v1.1 assets**, as labeled; addresses
+below are **EN v1.0** unless stated otherwise. A map having enough objects does
+not prove they can all be loaded or moved into the required arrangement.
 
 ## S01 — Too many carryables on one object corrupt its collision state
 
-**Confirmed unchecked write; gameplay setup still needed.**
+**Confirmed collision-erasure write; a natural route setup still needs testing.**
 
 A resting carryable adds itself to the object it is standing on. That object's
-contact list holds three pointers. The carryable code ignores the limit: a fourth
-entry overwrites the platform's collision bookkeeping, including the count used
-for the next entry. Further writes can consequently land much farther away.
+contact list holds three pointers. The carryable code ignores the limit. A fourth
+entry stores its complete object pointer across four one-byte fields: the collision
+matrix selector, reset timer, an otherwise-unwritten collision-exclusion byte, and
+the signed contact count.
+
+The exclusion byte is the useful payload. The dynamic track builder refuses to
+add any object whose byte at hitbox state `+0x10E` is nonzero. No ordinary update
+clears that byte: the per-object cleanup clears only the count, while rotated-bound
+updates repair the matrix selector and decrement the timer. Thus the usual fourth
+pointer removes the **entire supporting object's model collision until reload**.
+This is not limited to the four carryables falling through it; later player and
+object height queries omit the corrupted platform or door too.
 
 **Test:** put four resting barrels or other carryables on the **same object-backed
-floor or platform**. Ordinary map terrain does not meet the condition. Watch the
-supporting object's contact count while adding the fourth object. The list resets
-during updates, so this needs simultaneous contacts, not four separate visits.
+floor, platform, or door model**. Ordinary map terrain does not meet the condition.
+Watch the supporting object's state byte `+0x10E` while adding the fourth object.
+The list resets during the support's update, so this needs four contacts in one
+update-order interval, not four separate visits.
 
-Dragon Rock (`dragrock`) has eleven gunpowder-barrel placements; Warlock Mountain
-(`warlock`) has six. These are places to scout for a suitable shared support,
-not established repro locations. Moon Mountain Pass (`moonpass`) also has three
-moon rocks and a gunpowder barrel, though moving all four onto one support may be
-impractical.
+**Best authored test found so far:** Krazoa Palace / `warlock` act 1 has exactly
+four simultaneously enabled gunpowder barrels. `WMFinalDoor` at romlist
+`+0x5738` is a real dynamic-collision object whose generic door DLL never reads
+the contact list. Its model has broad upward-facing collision patches spread
+across a roughly 304 by 304 footprint--ample physical room for four barrels.
+If all four can be transported onto those patches, the fourth should make the
+final door non-solid without changing its `0xF27` control bit. That is a direct
+progression-shaped payoff, but the closest act-1 barrel is still about 1,974
+world units away with a major elevation change, so a natural haul is unproven.
 
-The first overwrite is solid. A crash, bad collision, or further corruption depends
-on update order and the overwritten pointer bytes. [Code and watches](#code-s01).
+The same act has a `WM_colrise` moving column at `+0x2D54`. Its roughly 72 by 72
+top is a much easier four-barrel lab, but its update iterates the corrupted signed
+count. A fourth barrel whose address ends in a positive byte can therefore make
+the column scan bogus pointers and crash before the collision loss becomes useful.
+A low byte of zero or `0x80..0xFF` skips that loop and is the safer heap-layout
+case. Dragon Rock (`dragrock`) has eleven barrels and several puzzle platforms,
+making it the broadest dungeon testbed.
+
+The nearby `WM_Door1` at `+0x2C5C` is not the shortcut it first appears to be.
+Its eight collision triangles include a horizontal underside, but no
+upward-facing floor triangle accepted by the carryable height query. The barrel
+only 221 units away therefore cannot register its resting contact on that door.
+
+Moon Mountain Pass (`moonpass`) really does supply exactly four unsafe producers:
+three moon rocks plus one gunpowder barrel. The EN v1.1 placement audit found only
+four eligible dynamic-collision owners there, however--a direction sign, two
+defense-door pieces, and the Magic Cave object--all roughly 2,400 or more units
+from at least one required carryable. The nearby barrel generator recycles its
+one linked barrel; it does not duplicate barrels. MMP therefore establishes a
+hub-world supply but not a convenient target.
+
+There is also a conditional second-stage write. On big-endian hardware the fourth
+pointer's third byte becomes the exclusion byte and its low byte becomes the signed
+count. If the exclusion byte happens to be zero, a following producer can use that
+signed low byte as an array index and store another object pointer between roughly
+`state-0x100` and `state+0x2FC`. In the usual nonzero case the collision erasure
+self-quenches the setup before a fifth carryable can find the same support. Treat
+the indexed write as a heap-address-dependent moonshot; the persistent collision
+deletion is the primary mechanism. [Code and watches](#code-s01).
 
 ## S02 — Collecting a buried item clears a pointer in an unrelated audio table
 
@@ -750,14 +791,35 @@ collision before the cascading table damage crashes.
 - [ObjHitboxTransformState](../include/main/objhits_types.h) has three pointers
   at `+0x100`, then `activeMatrixIndex`, `resetFrames`, padding and the signed
   contact count at `+0x10C..+0x10F`. The fourth pointer overwrites these four bytes.
-- On this big-endian machine, an object pointer beginning `0x80` changes the
-  matrix index to `0x80`; its last byte becomes the new contact count. The next
-  insertion sign-extends that count. It need not write immediately after the
-  fourth entry. Matrix refresh can mask the index back into range, so a later
-  invalid matrix access depends on timing.
+- On this big-endian machine, a pointer `0x80AABBCC` writes `0x80` to the matrix
+  index, `0xAA` to the reset timer, `0xBB` to the byte at `+0x10E`, and `0xCC`
+  to the signed contact count. The next insertion, if one remains possible,
+  sign-extends `0xCC` before scaling it by four.
+- [trackIntersectBroadphase](../src/main/track_dolphin.c) tests `resetFrames`
+  and then the byte at `+0x10E`; either being nonzero skips the complete dynamic
+  collision model. Retail EN v1.0 performs the `+0x10E` load at `0x800693D0`
+  and branches around the object at `0x800693D8`.
+- [Obj_UpdateObject](../src/main/object.c) clears only `contactObjectCount` after
+  the object's update. [ObjHitbox_UpdateRotatedBounds](../src/main/objhits.c)
+  masks `activeMatrixIndex` back to 0/1 and decrements `resetFrames`, but no
+  runtime writer clears `+0x10E`. The object allocation is initially zeroed, so
+  a nonzero fourth-pointer byte persists until the object is freed/reloaded.
+- Gunpowder barrels call the unchecked carryable update before their own physics
+  update. Their later [ObjHits_AddContactObject](../src/main/objhits.c) call is
+  bounded and duplicate-safe, but it cannot undo the earlier overwrite. A
+  nonzero `+0x10E` can make the barrel's second height query lose the supporting
+  object in that same update.
 - EN function: `0x800EA9BC`; unchecked pointer store: `0x800EAC24`. At that
   store, `r29` is the carryable. Obtain the support's state through its object
-  pointer at `+0x58`; watch state `+0x10C` as a word and `+0x10F` as a byte.
+  pointer at `+0x58`; watch state `+0x10C` as a word, `+0x10E` as the collision
+  exclusion byte, and `+0x10F` as the signed count.
+- EN v1.1 `warlock` placements used for the first route test: barrels at
+  `+0x114`, `+0x5AC`, `+0x97C`, and `+0xA94` are all visible in act 1;
+  `WM_colrise` is at `+0x2D54`, and `WMFinalDoor` is at `+0x5738`. The other
+  two placed barrels exclude act 1, leaving exactly four for this setup. The
+  final door placement names bits `0xF27` and `0xF28`; its model ID 599 has two
+  collision groups and upward-facing triangles at local height 153 across its
+  four-sided footprint.
 - Retail checked: EN v1.0/v1.1, JP v1.0, and PAL v1.0/v1.1 all contain the
   unchecked append.
 
@@ -1377,12 +1439,6 @@ collision before the cascading table damage crashes.
   pointer into freed page memory. Its route search also seeds a local 64-entry
   stack with every nearby matching checkpoint without bounding that initial
   seed phase.
-- **TrickyWarp curve cache:**
-  [TrickyWarp_isPlayerReachable](../src/dlls/objects/256_TrickyWarp/TrickyWarp.c)
-  scans every loaded curve and writes matching IDs into 24 state entries without
-  a limit. Duplicate/stale curve pages could overflow the object's complete
-  `0x64`-byte extra-state allocation. Normal curve-page de-duplication must be
-  defeated first, so this remains a compound lead.
 - **Texture cache off-by-one:** [texture.c](../src/main/texture.c) allocates 700
   loaded-texture entries. When all are occupied, the load path constructs entry
   700 before checking that the resulting count exceeds 700, producing one
@@ -1403,6 +1459,19 @@ collision before the cascading table damage crashes.
   writing. No player-controlled route to such a hierarchy is currently known.
 
 ## Leads held back and false positives
+
+- **TrickyWarp curve cache:**
+  [TrickyWarp_isPlayerReachable](../src/dlls/objects/256_TrickyWarp/TrickyWarp.c)
+  really does append matching curve IDs to 24 entries without a limit, but the
+  obvious hub cases do not reach another allocation. EN v1.1 `wallcity` group 1
+  and `hollow` group 74 each supply 26 matching curve IDs. That is an eight-byte
+  logical overrun, wholly contained by the 12 bytes of zero tail padding in the
+  object's 32-byte-rounded allocation (`0x110` extra-state start, `0x174` state
+  end, `0x180` allocation end). Dragon Rock group 10 supplies 34 IDs and would
+  cross the allocation by seven words, but Tricky is absent there, so the
+  function returns before filling the cache. Duplicate or stale curve pages
+  could still change those totals, but ordinary Walled City/TTH traversal is
+  not a heap-corruption repro.
 
 - **Effect-box list:** the global list holds twenty objects and registration has
   no limit. JP CloudRunner Fortress has 35 placements, but most use distance
