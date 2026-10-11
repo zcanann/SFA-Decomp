@@ -42,14 +42,24 @@ The list resets during the support's update, so this needs four contacts in one
 update-order interval, not four separate visits.
 
 **Best authored test found so far:** Krazoa Palace / `warlock` act 1 has exactly
-four simultaneously enabled gunpowder barrels. `WMFinalDoor` at romlist
-`+0x5738` is a real dynamic-collision object whose generic door DLL never reads
-the contact list. Its model has broad upward-facing collision patches spread
-across a roughly 304 by 304 footprint--ample physical room for four barrels.
+four simultaneously enabled gunpowder barrels. (`WM` is the old Warlock Mountain
+name for Krazoa Palace.) `WMFinalDoor` at romlist `+0x5738` is the four-sided
+gate/cage around the late-game transporter on the Palace roof, near the Arwing
+landing area. In the normal route the gate lowers to expose the pad that sends
+Fox to the General Scales encounter. It is a real dynamic-collision object whose
+generic door DLL never reads the contact list. Its model has broad upward-facing
+collision patches spread across a roughly 304 by 304 footprint--ample physical
+room for four barrels.
+
 If all four can be transported onto those patches, the fourth should make the
-final door non-solid without changing its `0xF27` control bit. That is a direct
-progression-shaped payoff, but the closest act-1 barrel is still about 1,974
-world units away with a major elevation change, so a natural haul is unproven.
+closed cage non-solid without changing its `0xF27` control bit. More importantly,
+the transporter placed inside it has warp ID `0x25`, no enable-gamebit gate, and
+an object-specific sequence path that loads map ID `0x28` (`nwshrine`, the
+General Scales arena). It is disabled only after the final-spirit progression
+bits are already set. Getting through the cage early could therefore be an
+early-General-Scales/final-sequence route, not merely a door skip. The closest
+act-1 barrel is still about 1,974 world units away with a major elevation change,
+so a natural haul is unproven.
 
 The same act has a `WM_colrise` moving column at `+0x2D54`. Its roughly 72 by 72
 top is a much easier four-barrel lab, but its update iterates the corrupted signed
@@ -820,6 +830,13 @@ collision before the cascading table damage crashes.
   final door placement names bits `0xF27` and `0xF28`; its model ID 599 has two
   collision groups and upward-facing triangles at local height 153 across its
   four-sided footprint.
+- The `Transporter` at `warlock` `+0x5454` is only about 16 world units from
+  the gate's origin. Its placement has `warpId = 0x25` and
+  `enableGameBit = -1`. Its identifier `0x4A533` selects the sequence path that
+  loads and locks map ID `0x28`; the retail map table names that map `nwshrine`
+  / `BOSS Scales`. The transporter's initialization disables it after the
+  Spirit 6 obtained/released/placement-ready bits, rather than requiring a bit
+  before use.
 - Retail checked: EN v1.0/v1.1, JP v1.0, and PAL v1.0/v1.1 all contain the
   unchecked append.
 
