@@ -689,11 +689,11 @@ enum GameText {
     GAMETEXT_UI_GiveGold = 1132, //0x046c: Give Gold
     GAMETEXT_UI_ScarabBag = 1133, //0x046d: This is used to hold Scarabs.  It is found in three different sizes - 50, 100 and 200.
     GAMETEXT_UI_Saved1134 = 1134, //0x046e: SAVED
-    GAMETEXT_MAP_ToPlanet = 1135, //0x046f: To Planet
-    GAMETEXT_MAP_DarkIceMines = 1136, //0x0470: DarkIce Mines
-    GAMETEXT_MAP_CloudRunner = 1137, //0x0471: CloudRunner
-    GAMETEXT_MAP_WalledCity = 1138, //0x0472: Walled City
-    GAMETEXT_MAP_DragonRock = 1139, //0x0473: Dragon Rock
+    GAMETEXT_WORLD_ToPlanet = 1135, //0x046f: To Planet
+    GAMETEXT_WORLD_DarkIceMines = 1136, //0x0470: DarkIce Mines
+    GAMETEXT_WORLD_CloudRunner = 1137, //0x0471: CloudRunner
+    GAMETEXT_WORLD_WalledCity = 1138, //0x0472: Walled City
+    GAMETEXT_WORLD_DragonRock = 1139, //0x0473: Dragon Rock
     GAMETEXT_UI_FireGem = 1140, //0x0474: This is a FIRE GEM.; Inside this gem is the sacred Krazoa Flame.; Return it to a Krazoa Head and unlock the path...; ...to the Ocean Force Point Temple.
     GAMETEXT_UI_WrongWay = 1141, //0x0475: WRONG WAY
     GAMETEXT_GF_Meanwhile = 1142, //0x0476: Meanwhile in a lost corner; of the Lylat System...
