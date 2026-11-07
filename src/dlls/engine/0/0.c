@@ -9,7 +9,7 @@
 #include "main/pi_dolphin_api.h"
 #include "main/pi_dolphin.h"
 #include "main/dll/player_api.h"
-#include "game/gametext.h"
+#include "main/gametext.h"
 #include "game/objects/object.h"
 #include "main/objtype.h"
 #include "main/model.h"
