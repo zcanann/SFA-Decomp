@@ -1,6 +1,7 @@
 #include "dlls/object_descriptor.h"
 #include "global.h"
 #include "main/dll/ppcwgpipe_struct.h"
+#include "dolphin/pad.h"
 #include "dolphin/mtx.h"
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_depth_read_api.h"
@@ -403,9 +404,6 @@ char sHighScoreStarMark[] = "x10";
 #define CAMMODE_WORLDMAP              0x4e
 #define GAMEUI_OBJFLAG_PARENT_SLACK   0x1000
 #define GAMEUI_TEXTURE_BLINK          1280
-#define PAD_BUTTON_A                  0x100
-#define PAD_BUTTON_B                  0x200
-#define PAD_BUTTON_MENU               0x1000
 #define GAMEUI_TASK_HINT_COUNT        5
 #define GAMEUI_HINT_BAR_SEGMENT_COUNT 6
 #define GCMENU_ITEM_ICON_COUNT        7
