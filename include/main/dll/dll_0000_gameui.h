@@ -8,20 +8,18 @@
 /* Shared struct layouts for the in-game GameUI / HUD / C-menu subsystem
  * exposed through DLL 0. Field offsets are recovered from the EN v1.0 asm. */
 
-typedef struct TaskHintEntry {
-    u16 hint0;     /* 0x00 */
-    u16 hint2;     /* 0x02 */
-    u16 hint4;     /* 0x04 */
-    u8 pad06[0x2]; /* 0x06 */
-    s32 hint8;     /* 0x08 */
-    s32 hintC;     /* 0x0c */
-    s32 hint10;    /* 0x10 */
+typedef struct ArwingMissionBriefing {
+    u16 textMission; /* 0x00 text ID for mission briefing */
+    u16 textGoBack;  /* 0x02 text ID for going back unnecessarily */
+    u16 textDone;    /* 0x04 text ID for returning when done */
+    s32 streamId08;  /* 0x08 */
+    s32 streamId0C;  /* 0x0c */
+    s32 streamId10;  /* 0x10 */
     u16 unk14;     /* 0x14 */
     u16 bit_id;    /* 0x16 */
     u8 thresh;     /* 0x18 */
-    u8 unk19;      /* 0x19 */
-    u16 bit1a;     /* 0x1a */
-} TaskHintEntry;   /* sizeof = 0x1c */
+    u16 bitCompletedArea;     /* 0x1a */
+} ArwingMissionBriefing;   /* sizeof = 0x1c */
 
 typedef struct {
     s16 id;     /* 0x00 */

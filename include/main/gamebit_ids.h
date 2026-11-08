@@ -1687,7 +1687,11 @@ enum GameBitId {
     GAMEBIT_ECSH_PushedSwitch = 0xA60,                   /* table 0; opens 2nd door temporarily */
     GAMEBIT_ECSH_BarrelSpawning = 0xA61,                 /* table 0 */
     GAMEBIT_FinalBoss_ObjGroups = 0xA62,                 /* table 3; size 32 */
+    GAMEBIT_WorldMapRelated0A63 = 0xA63,
+    GAMEBIT_WorldMapRelated0A64 = 0xA64,
+    GAMEBIT_WorldMapRelated0A65 = 0xA65,
     GAMEBIT_WorldMapRelated0A66 = 0xA66,                 /* table 2 */
+    GAMEBIT_WorldMapRelated0A67 = 0xA67,
     GAMEBIT_MMP_CFTreasWindActivation0A68 = 0xA68,       /* Read out of the retail placement data: moonpass/CFTreasWind activationGameBit x1; 1 placement. Nothing in the code names it and no objref lists it - the object def and the Placement field are all the evidence there is */
     GAMEBIT_MMP_CFTreasWindActivation0A69 = 0xA69,       /* Read out of the retail placement data: moonpass/CFTreasWind activationGameBit x1; moonpass/TrigCyl activate x1; 2 placements. Nothing in the code names it and no objref lists it - the object def and the Placement field are all the evidence there is */
     GAMEBIT_MMP_CFTreasWindActivation0A6A = 0xA6A,       /* Read out of the retail placement data: moonpass/CFTreasWind activationGameBit x1; moonpass/TrigCyl activate x1; 2 placements. Nothing in the code names it and no objref lists it - the object def and the Placement field are all the evidence there is */

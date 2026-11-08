@@ -790,12 +790,52 @@ u8 lbl_8031B050[36] = {
     0x0C, 0x7D, 0x0C, 0x7B, 0x0C, 0x7A, 0x0C, 0x7A, 0x0C, 0x07, 0x0C, 0x7A, 0x0C, 0x08, 0x0C, 0x1A, 0x00, 0x00,
 };
 
-TaskHintEntry gTaskHintTable[] = {
-    {0x02AA, 0x0487, 0x047A, {0x00, 0x00}, 0x28EA, 0x51CD, 0x51CA, 0x009C, 0x0A66, 0x03, 0x00, 0x063C},
-    {0x02A9, 0x0487, 0x0479, {0x00, 0x00}, 0x51C5, 0x51CD, 0x51C9, 0x009B, 0x0A65, 0x02, 0x00, 0x05F3},
-    {0x03DF, 0x0477, 0x0000, {0x00, 0x00}, 0x28E9, 0x51C7, 0x0, 0x0000, 0x0A63, 0x01, 0x00, 0x0000},
-    {0x02AB, 0x0487, 0x047B, {0x00, 0x00}, 0x51C6, 0x51CC, 0x51CB, 0x009D, 0x0A67, 0x04, 0x00, 0x05F4},
-    {0x02A8, 0x0487, 0x0478, {0x00, 0x00}, 0x28EB, 0x51CC, 0x51C8, 0x009A, 0x0A64, 0x01, 0x00, 0x04E9},
+ArwingMissionBriefing gArwingMissionBriefs[] = {
+    {
+        GAMETEXT_WORLD_WC,
+        GAMETEXT_WORLD_GotStone,
+        GAMETEXT_WORLD_WC_Done,
+        0x28EA, 0x51CD, 0x51CA, //streams
+        0x009C, //unk14 (unreferenced gamebit?)
+        GAMEBIT_WorldMapRelated0A66, //bit_id
+        0x03, //thresh
+        GAMEBIT_ITEM_SpellStone3_Got}, //bit1A
+    {
+        GAMETEXT_WORLD_CRF,
+        GAMETEXT_WORLD_GotStone,
+        GAMETEXT_WORLD_CRF_Done,
+        0x51C5, 0x51CD, 0x51C9, //streams
+        0x009B, //unk14
+        GAMEBIT_WorldMapRelated0A65, //bit_id
+        0x02, //thresh
+        GAMEBIT_ITEM_SpellStone2_Used}, //bit1A
+    {
+        GAMETEXT_PepperMissionHollow,
+        GAMETEXT_WORLD_NotGotStone,
+        0x0000,
+        0x28E9, 0x51C7, 0x0000, //streams
+        0x0000, //unk14
+        GAMEBIT_WorldMapRelated0A63, //bit_id
+        0x01, //thresh
+        0x0000}, //bit1A
+    {
+        GAMETEXT_WORLD_DR,
+        GAMETEXT_WORLD_GotStone,
+        GAMETEXT_WORLD_DR_Done,
+        0x51C6, 0x51CC, 0x51CB, //streams
+        0x009D, //unk14
+        GAMEBIT_WorldMapRelated0A67, //bit_id
+        0x04, //thresh
+        GAMEBIT_ITEM_SpellStone4_Used}, //bit1A
+    {
+        GAMETEXT_WORLD_DIM,
+        GAMETEXT_WORLD_GotStone,
+        GAMETEXT_WORLD_DIM_Done,
+        0x28EB, 0x51CC, 0x51C8, //streams
+        0x009A, //unk14
+        GAMEBIT_WorldMapRelated0A64, //bit_id
+        0x01, //thresh
+        GAMEBIT_ITEM_SpellStone1_Used}, //bit1A
 };
 
 CMenuItemDef gCMenuCollectableItems[] = {
@@ -2534,7 +2574,7 @@ void timeListPromptOpen(void) {
 /* State setter with bit-flag dispatch.
  * Args: (s32 textId, u8 idx, u8 flags, u8 q).
  *   flags & 0x08 : commit `idx` to gPauseMenuHintIndex and consult the bit
- *                  table at gTaskHintTable (stride 0x1c, halfword field
+ *                  table at gArwingMissionBriefs (stride 0x1c, halfword field
  *                  at +0x16) -- if the GameBit reads 0, override idx
  *                  to 5 before the rest of the work runs.
  *   flags & 0x04 : full reset path -- clear gPauseMenuTitleFadeCounter and return.
@@ -2548,7 +2588,7 @@ void timeListPromptOpen(void) {
 void pauseMenuSetupTitle(s32 textId, u8 idx, u8 flags, u8 q) {
     if (flags & PAUSEMENU_TITLE_FLAG_SET_HINT) {
         gPauseMenuHintIndex = idx;
-        if (mainGetBit(gTaskHintTable[idx].bit_id) == 0) {
+        if (mainGetBit(gArwingMissionBriefs[idx].bit_id) == 0) {
             idx = 5;
         }
     }
@@ -2663,7 +2703,7 @@ void drawWorldMapHud(void) {
         s8 li_;
         u8 lv;
         int n;
-        int hint;
+        int streamId;
         int hv;
 
         {
@@ -2673,7 +2713,7 @@ void drawWorldMapHud(void) {
             base = (u8*)gGameUiTaskHintCandidates;
             p = base;
             for (;;) {
-                if (mainGetBit(gTaskHintTable[*p].bit_id)) {
+                if (mainGetBit(gArwingMissionBriefs[*p].bit_id)) {
                     fi = gGameUiTaskHintCandidates[i];
                     break;
                 }
@@ -2700,7 +2740,7 @@ void drawWorldMapHud(void) {
             }
 
             {
-                TaskHintEntry* he = gTaskHintTable;
+                ArwingMissionBriefing* he = gArwingMissionBriefs;
                 if (n >= he[base[0]].thresh) {
                     u8* candidate = gGameUiTaskHintCandidates;
                     li_ = *candidate++;
@@ -2726,31 +2766,31 @@ void drawWorldMapHud(void) {
         {
             u8 cur = gPauseMenuHintIndex;
             if (cur == 2 && lv != 0) {
-                hint = 0x51e4;
+                streamId = 0x51e4;
             } else if (fi == cur && li_ != cur) {
-                hint = gTaskHintTable[cur].hint8;
+                streamId = gArwingMissionBriefs[cur].streamId08;
             } else if (cur == 2) {
                 if ((*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0) {
-                    hint = 0x51e5;
+                    streamId = 0x51e5;
                 } else if (fi == li_) {
-                    if (mainGetBit(gTaskHintTable[li_].bit1a)) {
-                        hint = 0x51e6;
+                    if (mainGetBit(gArwingMissionBriefs[li_].bitCompletedArea)) {
+                        streamId = 0x51e6;
                     } else {
-                        hint = gTaskHintTable[li_].hint10;
+                        streamId = gArwingMissionBriefs[li_].streamId10;
                     }
                 } else {
-                    hint = gTaskHintTable[gPauseMenuHintIndex].hintC;
+                    streamId = gArwingMissionBriefs[gPauseMenuHintIndex].streamId0C;
                 }
             } else {
                 if (cur == 0 && (*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0) {
-                    hint = 0x51e2;
+                    streamId = 0x51e2;
                 } else {
-                    hint = gTaskHintTable[gPauseMenuHintIndex].hintC;
+                    streamId = gArwingMissionBriefs[gPauseMenuHintIndex].streamId0C;
                 }
             }
         }
-        if (hint != 0) {
-            AudioStream_Play(hint, AudioStream_StartPrepared);
+        if (streamId != 0) {
+            AudioStream_Play(streamId, AudioStream_StartPrepared);
         }
     }
     if (gWorldMapVoiceoverTimer > 0xff) {
@@ -2889,7 +2929,7 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
             s8 progressHint;
             u8 hasLateGameHint;
             int taskCount;
-            int hint;
+            int textId;
             {
                 int candidateIndex;
                 s8 hintIndex;
@@ -2898,7 +2938,7 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
                 hintCandidates = (u8*)&gGameUiTaskHintCandidates;
                 candidate = hintCandidates;
                 for (;;) {
-                    if (mainGetBit(gTaskHintTable[*candidate].bit_id)) {
+                    if (mainGetBit(gArwingMissionBriefs[*candidate].bit_id)) {
                         hintIndex = gGameUiTaskHintCandidates[candidateIndex];
                         break;
                     }
@@ -2910,8 +2950,10 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
                     }
                 }
                 firstAvailableHint = (s8)hintIndex;
-                taskCount = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) +
-                            mainGetBit(GAMEBIT_ITEM_SpellStone2_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
+                taskCount = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) +
+                    mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) +
+                    mainGetBit(GAMEBIT_ITEM_SpellStone2_Used) +
+                    mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
                 if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got)) {
                     taskCount++;
                 }
@@ -2925,7 +2967,7 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
                     taskCount++;
                 }
                 {
-                    TaskHintEntry* entry = gTaskHintTable;
+                    ArwingMissionBriefing* entry = gArwingMissionBriefs;
                     if (taskCount >= entry[hintCandidates[0]].thresh) {
                         u8* candidate = gGameUiTaskHintCandidates;
                         hintIndex = *candidate++;
@@ -2952,28 +2994,34 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
             }
             {
                 if (gPauseMenuHintIndex == 2 && hasLateGameHint != 0) {
-                    hint = 0x574;
-                } else if (firstAvailableHint == gPauseMenuHintIndex && progressHint != gPauseMenuHintIndex) {
-                    hint = gTaskHintTable[gPauseMenuHintIndex].hint0;
+                    //flying to KP for final boss fight
+                    textId = GAMETEXT_WORLD_FlyKP;
+                } else if (firstAvailableHint == gPauseMenuHintIndex
+                && progressHint != gPauseMenuHintIndex) {
+                    textId = gArwingMissionBriefs[gPauseMenuHintIndex].textMission;
                 } else if (gPauseMenuHintIndex == 2) {
-                    if ((*gMapEventInterface)->getMapAct(0xd) == 2 && hasLateGameHint == 0) {
-                        hint = 0x577;
+                    if ((*gMapEventInterface)->getMapAct(0xd) == 2
+                    && hasLateGameHint == 0) {
+                        //leaving without the spirit
+                        textId = GAMETEXT_WORLD_NotGotSpirit;
                     } else if (firstAvailableHint == progressHint) {
-                        if (mainGetBit(gTaskHintTable[progressHint].bit1a)) {
-                            hint = 0x578;
+                        if (mainGetBit(gArwingMissionBriefs[progressHint].bitCompletedArea)) {
+                            //going back to completed area
+                            textId = GAMETEXT_WORLD_WastingTime;
                         } else {
-                            hint = gTaskHintTable[progressHint].hint4;
+                            textId = gArwingMissionBriefs[progressHint].textDone;
                         }
                     } else {
-                        hint = gTaskHintTable[gPauseMenuHintIndex].hint2;
+                        textId = gArwingMissionBriefs[gPauseMenuHintIndex].textGoBack;
                     }
                 } else if (gPauseMenuHintIndex == 0 && (*gMapEventInterface)->getMapAct(0xd) == 2 &&
                            hasLateGameHint == 0) {
-                    hint = 0x568;
+                    //going to WC for spirit
+                    textId = GAMETEXT_WORLD_AnotherShrineWC;
                 } else {
-                    hint = gTaskHintTable[gPauseMenuHintIndex].hint2;
+                    textId = gArwingMissionBriefs[gPauseMenuHintIndex].textGoBack;
                 }
-                gameTextShow(hint);
+                gameTextShow(textId);
             }
         }
         gGameUiShimmerFrame++;
