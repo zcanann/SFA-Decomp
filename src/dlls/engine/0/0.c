@@ -839,37 +839,495 @@ ArwingMissionBriefing gArwingMissionBriefs[] = {
 };
 
 CMenuItemDef gCMenuCollectableItems[] = {
-    {199, 180, -1, 581, -1, 16, 1028, 0xFF, 0x01},     {68, -1, -1, 373, -1, 7, 1029, 0xFF, 0x01},
-    {96, -1, -1, 374, -1, 1215, 1030, 0xFF, 0x01},     {81, -1, -1, 384, -1, 1217, 1033, 0xFF, 0x01},
-    {82, -1, -1, 385, -1, 1217, 1033, 0xFF, 0x01},     {83, -1, -1, 386, -1, 1217, 1033, 0xFF, 0x01},
-    {43, 42, -1, 373, -1, 19, 1035, 0xFF, 0x01},       {368, -1, -1, 419, -1, 11, 1036, 0xFF, 0x01},
-    {379, 385, -1, 1145, -1, 11, 1037, 0xFF, 0x01},    {382, 386, -1, 1145, -1, 11, 1037, 0xFF, 0x01},
-    {383, 387, -1, 1145, -1, 11, 1037, 0xFF, 0x01},    {384, 388, -1, 1145, -1, 11, 1037, 0xFF, 0x01},
-    {744, -1, 3260, 3101, -1, -1, 1041, 0xFF, 0x01},   {2106, -1, 3260, 3100, -1, -1, 1041, 0xFF, 0x01},
-    {1981, -1, 3260, 3100, -1, -1, 1041, 0xFF, 0x01},  {1983, -1, -1, 3100, -1, -1, 1041, 0xFF, 0x01},
-    {494, -1, 2406, 3210, -1, 29, 1045, 0xFF, 0x01},   {822, -1, -1, 1384, -1, -1, 1046, 0xFF, 0x01},
-    {318, -1, 2407, 3078, -1, 61, 1047, 0xFF, 0x01},   {1553, 1107, -1, 1384, -1, 7, 1046, 0xFF, 0x01},
-    {3360, 3350, -1, 3183, -1, 7, 1219, 0xFF, 0x01},   {2154, -1, -1, 1037, -1, 98, 1048, 0xFF, 0x01},
-    {2387, -1, 3765, 3207, -1, 109, 1049, 0xFF, 0x01}, {1398, -1, -1, 419, -1, 11, 1036, 0xFF, 0x01},
-    {418, 419, -1, 3103, -1, 11, 1130, 0xFF, 0x01},    {193, -1, 2408, 3209, -1, 12, 1051, 0xFF, 0x01},
-    {1644, -1, -1, 3219, -1, 87, 1052, 0xFF, 0x01},    {1645, -1, -1, 1175, -1, 86, 1053, 0xFF, 0x01},
-    {497, 537, -1, 1051, -1, 25, 1054, 0xFF, 0x01},    {499, 538, -1, 1052, -1, 25, 1055, 0xFF, 0x01},
-    {2208, 2210, -1, 581, -1, 16, 1028, 0xFF, 0x01},   {577, 578, -1, 373, -1, 25, 1055, 0xFF, 0x01},
-    {642, 643, -1, 373, -1, 25, 1055, 0xFF, 0x01},     {726, -1, -1, 373, -1, 29, 1061, 0xFF, 0x01},
-    {2077, 603, -1, 1323, -1, 0, 1056, 0xFF, 0x01},    {2078, 602, -1, 1322, -1, 0, 1057, 0xFF, 0x01},
-    {513, 514, -1, 936, -1, 27, 1058, 0xFF, 0x01},     {612, 579, -1, 982, -1, 28, 1059, 0xFF, 0x01},
-    {291, 555, 3260, 3100, -1, 96, 1041, 0xFF, 0x01},  {555, -1, 3260, 3100, -1, 97, 1041, 0xFF, 0x01},
-    {2107, -1, 3260, 3100, -1, -1, 1041, 0xFF, 0x01},  {2108, -1, 3260, 3101, -1, -1, 1041, 0xFF, 0x01},
-    {404, -1, -1, 3222, -1, 261, 1060, 0xFF, 0x01},    {2807, -1, -1, 3069, -1, 265, 1132, 0xFF, 0x01},
-    {169, -1, -1, 3113, -1, 258, 1061, 0xFF, 0x01},    {2332, 2778, -1, 1051, -1, 100, 1054, 0xFF, 0x01},
-    {1013, -1, -1, 3097, -1, 100, 1062, 0xFF, 0x01},   {3109, 3045, -1, 3094, -1, -1, 1348, 0xFF, 0x01},
-    {3110, 1607, -1, 3095, -1, -1, 1348, 0xFF, 0x01},  {3111, 3038, -1, 3093, -1, -1, 1348, 0xFF, 0x01},
-    {3213, -1, -1, 3099, -1, -1, 1115, 0xFF, 0x01},    {3196, 3197, -1, 3228, -1, 97, 1150, 0xFF, 0x01},
-    {446, -1, -1, 3208, -1, -1, 1129, 0xFF, 0x01},     {3548, 3892, -1, 3230, -1, -1, 1353, 0xFF, 0x01},
-    {3549, 3893, -1, 3230, -1, -1, 1353, 0xFF, 0x01},  {3550, 3894, -1, 3230, -1, -1, 1353, 0xFF, 0x01},
-    {3551, 3895, -1, 3230, -1, -1, 1353, 0xFF, 0x01},  {3552, 3896, -1, 3230, -1, -1, 1353, 0xFF, 0x01},
-    {3553, 3897, -1, 3230, -1, -1, 1353, 0xFF, 0x01},  {3554, 3898, -1, 3230, -1, -1, 1353, 0xFF, 0x01},
-    {3555, 3899, -1, 3230, -1, -1, 1353, 0xFF, 0x01},  {-1, -1, -1, -1, 0, 0, 0, 0x00, 0x00},
+    { //unused item
+        GAMEBIT_ITEM_Unknown_Got, //owned/count
+        GAMEBIT_ITEM_Unknown_Used, //used
+        -1, //disabled
+        0x0245, //icon
+        -1, 0x0010, //unknown
+        GAMETEXT_UI_Unknown, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_PrisonKey_Got, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0175, //icon
+        -1, 0x0007, //unknown
+        GAMETEXT_UI_UsePrisonKey, //title
+        255, 1}, //unknown
+    { //CRF power room key
+        GAMEBIT_ITEM_CFPowerKey_Got, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0176, //icon
+        -1, 0x04bf, //unknown
+        GAMETEXT_UI_UsePowerKey, //title
+        255, 1}, //unknown
+    { //CRF red power crystal
+        GAMEBIT_ITEM_CFRedCrystal_Got, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0180, //icon
+        -1, 0x04c1, //unknown
+        GAMETEXT_UI_PlaceCrystal, //title
+        255, 1}, //unknown
+    { //CRF green power crystal
+        GAMEBIT_ITEM_CFGreenCrystal_Got, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0181, //icon
+        -1, 0x04c1, //unknown
+        GAMETEXT_UI_PlaceCrystal, //title
+        255, 1}, //unknown
+    { //CRF blue power crystal
+        GAMEBIT_ITEM_CFBlueCrystal_Got, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0182, //icon
+        -1, 0x04c1, //unknown
+        GAMETEXT_UI_PlaceCrystal, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_DIMShackleKey_Got, //owned/count
+        GAMEBIT_DIM_ReleasedSnowHorn, //used
+        -1, //disabled
+        0x0175, //icon
+        -1, 0x0013, //unknown
+        GAMETEXT_UI_UseShackleKey, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_DIMAlpineRoot_Count, //owned/count
+        -1, //used
+        -1, //disabled
+        0x01a3, //icon
+        -1, 0x000b, //unknown
+        GAMETEXT_UI_AlpineRoot, //title
+        255, 1}, //unknown
+    { //DIM bridge cogs
+        GAMEBIT_ITEM_DIMCog1_Got, //owned/count
+        GAMEBIT_ITEM_DIMCog1_Used, //used
+        -1, //disabled
+        0x0479, //icon
+        -1, 0x000b, //unknown
+        GAMETEXT_UI_PlaceCog, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_DIMCog2_Got, //owned/count
+        GAMEBIT_ITEM_DIMCog2_Used, //used
+        -1, //disabled
+        0x0479, //icon
+        -1, 0x000b, //unknown
+        GAMETEXT_UI_PlaceCog, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_DIMCog3_Got, //owned/count
+        GAMEBIT_ITEM_DIMCog3_Used, //used
+        -1, //disabled
+        0x0479, //icon
+        -1, 0x000b, //unknown
+        GAMETEXT_UI_PlaceCog, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_DIMCog4_Got, //owned/count
+        GAMEBIT_ITEM_DIMCog4_Used, //used
+        -1, //disabled
+        0x0479, //icon
+        -1, 0x000b, //unknown
+        GAMETEXT_UI_PlaceCog, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_WaterSpellStone1_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_SpellStone_Disabled, //disabled
+        0x0c1d, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_UseSpellStone, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_SpellStone83A_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_SpellStone_Disabled, //disabled
+        0x0c1c, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_UseSpellStone, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_SpellStone7BD_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_SpellStone_Disabled, //disabled
+        0x0c1c, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_UseSpellStone, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_SpellStone7BF_Got, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0c1c, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_UseSpellStone, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_DinoHorn_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_DinoHorn_Disabled, //disabled
+        0x0c8a, //icon
+        -1, 0x001d, //unknown
+        GAMETEXT_UI_BlowHorn, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_Key336_Got, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0568, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_UseKey, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_FireflyLantern_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_Firefly_Disabled, //disabled
+        0x0c06, //icon
+        -1, 0x003d, //unknown
+        GAMETEXT_UI_UseLantern, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_MMPKey_Got, //owned/count
+        GAMEBIT_ITEM_MMPKey_Used, //used
+        -1, //disabled
+        0x0568, //icon
+        -1, 0x0007, //unknown
+        GAMETEXT_UI_UseKey, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_NW_Key_Got, //owned/count
+        GAMEBIT_NW_Key_Used, //used
+        -1, //disabled
+        0x0c6f, //icon
+        -1, 0x0007, //unknown
+        GAMETEXT_UseGateKey, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_MoonSeed_Count, //owned/count
+        -1, //used
+        -1, //disabled
+        0x040d, //icon
+        -1, 0x0062, //unknown
+        GAMETEXT_UI_PlantMoonSeed, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_Flute_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_Flute_Disabled, //disabled
+        0x0c87, //icon
+        -1, 0x006d, //unknown
+        GAMETEXT_UI_BlowFlute, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_IMAlpineRoot_Count, //owned/count
+        -1, //used
+        -1, //disabled
+        0x01a3, //icon
+        -1, 0x000b, //unknown
+        GAMETEXT_UI_AlpineRoot, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_NWSnowHornArtifact_Got, //owned/count
+        GAMEBIT_ITEM_NWSnowHornArtifact_Used, //used
+        -1, //disabled
+        0x0c1f, //icon
+        -1, 0x000b, //unknown
+        GAMETEXT_UI_GiveGift, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_TrickyFood_Count, //owned/count
+        -1, //used
+        GAMEBIT_Tricky_CantFeed, //disabled
+        0x0c89, //icon
+        -1, 0x000c, //unknown
+        GAMETEXT_UI_FeedToTricky, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_BombSpore_Count, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0c93, //icon
+        -1, 0x0057, //unknown
+        GAMETEXT_UI_PlantBombSpore, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_WhiteShroom_Count, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0497, //icon
+        -1, 0x0056, //unknown
+        GAMETEXT_UI_FeedToQueen, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_DIM2CellKey_Got, //owned/count
+        GAMEBIT_ITEM_DIMGoldKey_Used, //used
+        -1, //disabled
+        0x041b, //icon
+        -1, 0x0019, //unknown
+        GAMETEXT_UI_UseGoldKey, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_DIMSilverKey_Got, //owned/count
+        GAMEBIT_ITEM_DIMSilverKey_Used_2, //used
+        -1, //disabled
+        0x041c, //icon
+        -1, 0x0019, //unknown
+        GAMETEXT_UI_UseSilverKey, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_Spirit3_Released, //owned/count
+        GAMEBIT_WM_SpiritPlace3Ready, //used
+        -1, //disabled
+        0x0245, //icon
+        -1, 0x0010, //unknown
+        GAMETEXT_UI_Unknown, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_SilverKey241_Got, //owned/count
+        GAMEBIT_ITEM_SilverKey241_Used, //used
+        -1, //disabled
+        0x0175, //icon
+        -1, 0x0019, //unknown
+        GAMETEXT_UI_UseSilverKey, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_SilverKey282_Got, //owned/count
+        GAMEBIT_ITEM_SilverKey282_Used, //used
+        -1, //disabled
+        0x0175, //icon
+        -1, 0x0019, //unknown
+        GAMETEXT_UI_UseSilverKey, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_FireGem_Got, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0175, //icon
+        -1, 0x001d, //unknown
+        GAMETEXT_UI_PlaceFireGem, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_WCSilverTooth_Got, //owned/count
+        GAMEBIT_ITEM_WCSilverTooth_Used, //used
+        -1, //disabled
+        0x052b, //icon
+        -1, 0x0000, //unknown
+        GAMETEXT_UI_UseSilverTooth, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_WCGoldTooth_Got, //owned/count
+        GAMEBIT_ITEM_WCGoldTooth_Used, //used
+        -1, //disabled
+        0x052a, //icon
+        -1, 0x0000, //unknown
+        GAMETEXT_UI_UseGoldTooth, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_WCSunStone_Got, //owned/count
+        GAMEBIT_ITEM_WCSunStone_Used, //used
+        -1, //disabled
+        0x03a8, //icon
+        -1, 0x001b, //unknown
+        GAMETEXT_UI_UseSunStone, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_WCMoonStone_Got, //owned/count
+        GAMEBIT_ITEM_WCMoonStone_Used, //used
+        -1, //disabled
+        0x03d6, //icon
+        -1, 0x001c, //unknown
+        GAMETEXT_UI_UseMoonStone, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_FireSpellStone1_Got, //owned/count
+        GAMEBIT_ITEM_FireSpellStone1_Used, //used
+        GAMEBIT_ITEM_SpellStone_Disabled, //disabled
+        0x0c1c, //icon
+        -1, 0x0060, //unknown
+        GAMETEXT_UI_UseSpellStone, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_FireSpellStone1_Used, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_SpellStone_Disabled, //disabled
+        0x0c1c, //icon
+        -1, 0x0061, //unknown
+        GAMETEXT_UI_UseSpellStone, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_FireSpellStone2_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_SpellStone_Disabled, //disabled
+        0x0c1c, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_UseSpellStone, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_WaterSpellStone2_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_SpellStone_Disabled, //disabled
+        0x0c1d, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_UseSpellStone, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_FireWeed_Count, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0c96, //icon
+        -1, 0x0105, //unknown
+        GAMETEXT_UI_PlaceFireWeed, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_CCGoldBar_Count, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0bfd, //icon
+        -1, 0x0109, //unknown
+        GAMETEXT_UI_GiveGold, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_FireGem_Count, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0c29, //icon
+        -1, 0x0102, //unknown
+        GAMETEXT_UI_PlaceFireGem, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_WMGoldKey_Got, //owned/count
+        GAMEBIT_ITEM_WMGoldKey_Used, //used
+        -1, //disabled
+        0x041b, //icon
+        -1, 0x0064, //unknown
+        GAMETEXT_UI_UseGoldKey, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_FuelCell_Count, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0c19, //icon
+        -1, 0x0064, //unknown
+        GAMETEXT_UI_UseFuelCells, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_LVBlock1_Got, //owned/count
+        GAMEBIT_ITEM_LVBlock1_Used, //used
+        -1, //disabled
+        0x0c16, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_PlaceBlock, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_LVBlock2_Got, //owned/count
+        GAMEBIT_ITEM_LVBlock2_Used, //used
+        -1, //disabled
+        0x0c17, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_PlaceBlock, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_LVBlock3_Got, //owned/count
+        GAMEBIT_ITEM_LVBlock3_Used, //used
+        -1, //disabled
+        0x0c15, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_PlaceBlock, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_PDA_Got, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0c1b, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_PdaOnOff, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_RockCandy_Got, //owned/count
+        GAMEBIT_ITEM_RockCandy_Used, //used
+        -1, //disabled
+        0x0c9c, //icon
+        -1, 0x0061, //unknown
+        GAMETEXT_UI_GiveGift1150, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_GiveScarabs_Count, //owned/count
+        -1, //used
+        -1, //disabled
+        0x0c88, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_GiveScarabs, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_CheatToken0_Got, //owned/count
+        GAMEBIT_ITEM_CheatToken0_Used, //used
+        -1, //disabled
+        0x0c9e, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_DropToken, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_CheatToken3_Got, //owned/count
+        GAMEBIT_ITEM_CheatToken3_Used, //used
+        -1, //disabled
+        0x0c9e, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_DropToken, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_CheatToken2_Got, //owned/count
+        GAMEBIT_ITEM_CheatToken2_Used, //used
+        -1, //disabled
+        0x0c9e, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_DropToken, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_CheatToken6_Got, //owned/count
+        GAMEBIT_ITEM_CheatToken6_Used, //used
+        -1, //disabled
+        0x0c9e, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_DropToken, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_CheatToken4_Got, //owned/count
+        GAMEBIT_ITEM_CheatToken4_Used, //used
+        -1, //disabled
+        0x0c9e, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_DropToken, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_CheatToken7_Got, //owned/count
+        GAMEBIT_ITEM_CheatToken7_Used, //used
+        -1, //disabled
+        0x0c9e, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_DropToken, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_CheatToken1_Got, //owned/count
+        GAMEBIT_ITEM_CheatToken1_Used, //used
+        -1, //disabled
+        0x0c9e, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_DropToken, //title
+        255, 1}, //unknown
+    {
+        GAMEBIT_ITEM_CheatToken5_Got, //owned/count
+        GAMEBIT_ITEM_CheatToken5_Used, //used
+        -1, //disabled
+        0x0c9e, //icon
+        -1, -1, //unknown
+        GAMETEXT_UI_DropToken, //title
+        255, 1}, //unknown
+    {-1, -1, -1, -1, 0, 0x0000, 0, 0, 0}, //end of list
 };
 
 /* Staff ability entries, terminated by an ownedGameBit of -1. */
