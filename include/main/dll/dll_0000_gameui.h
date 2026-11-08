@@ -42,18 +42,18 @@ typedef struct {
 
 typedef struct {
     u16 unk0;
-    u16 titleId;
+    u16 gameTextId;
 } HighScoreTitleIdEntry;
 
 typedef struct {
     s16 bitA;
     s16 bitB;
-    u8 thresh;
+    u8 numFuel; //fuel cells needed
     u8 unk5;
-    s16 alt;
-} PauseMenuTokenEntry;
+    s16 gameTextId; //ID of place name
+} NeededFuelCells;
 
-STATIC_ASSERT(sizeof(PauseMenuTokenEntry) == 0x8);
+STATIC_ASSERT(sizeof(NeededFuelCells) == 0x8);
 
 typedef enum HudStatusSlot {
     HUD_STATUS_HEALTH,

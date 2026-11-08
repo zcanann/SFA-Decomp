@@ -1,6 +1,7 @@
 #include "dlls/object_descriptor.h"
 #include "global.h"
 #include "main/dll/ppcwgpipe_struct.h"
+#include "dolphin/pad.h"
 #include "dolphin/mtx.h"
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_depth_read_api.h"
@@ -8,6 +9,7 @@
 #include "main/pi_dolphin_api.h"
 #include "main/pi_dolphin.h"
 #include "main/dll/player_api.h"
+#include "main/gametext.h"
 #include "game/objects/object.h"
 #include "main/objtype.h"
 #include "main/model.h"
@@ -403,9 +405,6 @@ char sHighScoreStarMark[] = "x10";
 #define CAMMODE_WORLDMAP              0x4e
 #define GAMEUI_OBJFLAG_PARENT_SLACK   0x1000
 #define GAMEUI_TEXTURE_BLINK          1280
-#define PAD_BUTTON_A                  0x100
-#define PAD_BUTTON_B                  0x200
-#define PAD_BUTTON_MENU               0x1000
 #define GAMEUI_TASK_HINT_COUNT        5
 #define GAMEUI_HINT_BAR_SEGMENT_COUNT 6
 #define GCMENU_ITEM_ICON_COUNT        7
@@ -738,7 +737,11 @@ u32 lbl_8031AE20[56] = {
 };
 
 HighScoreTitleIdEntry gHighScoreTitleIdTable[5] = {
-    {0x0A9F, 0x046F}, {0x0AA4, 0x0470}, {0x0AA9, 0x0471}, {0x0AAE, 0x0472}, {0x0AB3, 0x0473},
+    {0x0A9F, GAMETEXT_WORLD_ToPlanet},
+    {0x0AA4, GAMETEXT_WORLD_DarkIceMines},
+    {0x0AA9, GAMETEXT_WORLD_CloudRunner},
+    {0x0AAE, GAMETEXT_WORLD_WalledCity},
+    {0x0AB3, GAMETEXT_WORLD_DragonRock},
 };
 
 u32 lbl_8031AF14[8] = {
@@ -762,11 +765,24 @@ u8 gHeadDisplayEntryTable[] = {
     0x03, 0x00, 0x01, 0x40, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x04, 0x99, 0x02, 0x00, 0x01, 0x90, 0x00, 0x00,
 };
 
-PauseMenuTokenEntry gPauseMenuTokens[] = {
-    {0x0A64, 0x03F9, 0x0005, 0x0000, 0x043C},
-    {0x0A65, 0x03FA, 0x000A, 0x0000, 0x043D},
-    {0x0A66, 0x03FB, 0x000C, 0x0000, 0x043E},
-    {0x0A67, 0x03FC, 0x000F, 0x0000, 0x043F},
+NeededFuelCells gNeededFuelCells[] = {
+    {
+        GAMEBIT_WORLDMAP_NAME_DARKICE_MINES,
+        GAMEBIT_WORLDMAP_UNLOCK_DARKICE_MINES, 5, 0,
+        GAMETEXT_UI_FuelForDarkIceMines
+    }, {
+        GAMEBIT_WORLDMAP_NAME_CLOUDRUNNER,
+        GAMEBIT_WORLDMAP_UNLOCK_CLOUDRUNNER, 10, 0,
+        GAMETEXT_UI_FuelForCloudRunnerFortress
+    }, {
+        GAMEBIT_WORLDMAP_NAME_WALLED_CITY,
+        GAMEBIT_WORLDMAP_UNLOCK_WALLED_CITY, 12, 0,
+        GAMETEXT_UI_FuelForWalledCity
+    }, {
+        GAMEBIT_WORLDMAP_NAME_DRAGON_ROCK,
+        GAMEBIT_WORLDMAP_UNLOCK_DRAGON_ROCK, 15, 0,
+        GAMETEXT_UI_FuelForDragonRock
+    },
 };
 
 u8 lbl_8031B050[36] = {
@@ -4076,11 +4092,11 @@ void pauseMenuUpdate(void) {
                     gPauseMenuPlayerMapCell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
                     if (gPauseMenuPlayerMapCell == 7) {
                         for (gPauseMenuTokenIndex = 0; gPauseMenuTokenIndex < 4;) {
-                            if (!mainGetBit(gPauseMenuTokens[gPauseMenuTokenIndex].bitA)) {
+                            if (!mainGetBit(gNeededFuelCells[gPauseMenuTokenIndex].bitA)) {
                                 break;
                             }
-                            if (mainGetBit(gPauseMenuTokens[gPauseMenuTokenIndex].bitB) == 0) {
-                                if (have >= gPauseMenuTokens[gPauseMenuTokenIndex].thresh) {
+                            if (mainGetBit(gNeededFuelCells[gPauseMenuTokenIndex].bitB) == 0) {
+                                if (have >= gNeededFuelCells[gPauseMenuTokenIndex].numFuel) {
                                     gPauseMenuTokenPromptState = 2;
                                 } else {
                                     gPauseMenuTokenPromptState = 1;
@@ -4093,9 +4109,9 @@ void pauseMenuUpdate(void) {
                 }
                 if ((btn & PAD_BUTTON_A) && gPauseMenuOpenVel > 0.0 && gPauseMenuOpenAmount >= 1.0) {
                     if (gPauseMenuTokenPromptState == 2) {
-                        have -= gPauseMenuTokens[gPauseMenuTokenIndex].thresh;
+                        have -= gNeededFuelCells[gPauseMenuTokenIndex].numFuel;
                         mainSetBits(GAMEBIT_ITEM_FuelCell_Count, have);
-                        mainSetBits(gPauseMenuTokens[gPauseMenuTokenIndex].bitB, 1);
+                        mainSetBits(gNeededFuelCells[gPauseMenuTokenIndex].bitB, 1);
                     }
                     gPauseMenuTokenConfirmFlag = 1;
                     buttonDisable(0, PAD_BUTTON_A);
@@ -4344,8 +4360,9 @@ void highScoreScreenDraw(int p1, int p2, int p3) {
     drawScaledTexture(hudTextures[GAMEUI_HUD_TEX_PANEL_CORNER], (f32)left, (f32)(y + h), 0xff, 0x100, 5, 5, 2);
 
     gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-    gameTextShowAt(0x345, 0, 0xa);
-    gameTextShowAt(gHighScoreTitleIdTable[gHighScoreActiveTableId].titleId, 0, 0x28);
+    gameTextShowAt(GAMETEXT_UI_HighScores, 0, 0xa);
+    gameTextShowAt(gHighScoreTitleIdTable[gHighScoreActiveTableId].gameTextId,
+        0, 0x28);
 
     {
         u8 k;
@@ -4373,7 +4390,7 @@ void highScoreScreenDraw(int p1, int p2, int p3) {
             }
         }
     }
-    gameTextShowAt(0x346, 0, 0x104);
+    gameTextShowAt(GAMETEXT_UI_HighScoresPressA, 0, 0x104);
 }
 
 /* Draws the race-times list panel and the six
@@ -4895,7 +4912,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
     ObjModel* model;
     s32 x;
     s16 panelAlpha;
-    PauseMenuTokenEntry* tokens;
+    NeededFuelCells* tokens;
     s32 taskTextY;
     s32 stringIndex;
     s32 textY;
@@ -5222,16 +5239,16 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
             gameTextShowAt(0x440, 0, 0x78);
             gameTextMeasureById(0x440, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             tokenTextY = (tokenBottom - tokenTop) + 5;
-            sprintf(tokenCountText, lbl_803DBB58, gPauseMenuTokens[gPauseMenuTokenIndex].thresh);
+            sprintf(tokenCountText, lbl_803DBB58, gNeededFuelCells[gPauseMenuTokenIndex].numFuel);
             gameTextShowStr(tokenCountText, 0x79, 0, tokenTextY + 0x78);
             gameTextMeasureStringBoundsAt(tokenCountText, 0x79, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             tokenTextY += (tokenBottom - tokenTop) + 5;
             gameTextShowAt(0x441, 0, tokenTextY + 0x78);
             gameTextMeasureById(0x441, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             tokenTextY += tokenBottom - tokenTop;
-            tokens = gPauseMenuTokens;
-            gameTextShowAt(tokens[gPauseMenuTokenIndex].alt, 0, tokenTextY + 0x78);
-            gameTextMeasureById(tokens[gPauseMenuTokenIndex].alt, 0, 0, &tokenLeft, &tokenRight, &tokenTop,
+            tokens = gNeededFuelCells;
+            gameTextShowAt(tokens[gPauseMenuTokenIndex].gameTextId, 0, tokenTextY + 0x78);
+            gameTextMeasureById(tokens[gPauseMenuTokenIndex].gameTextId, 0, 0, &tokenLeft, &tokenRight, &tokenTop,
                                 &tokenBottom);
             tokenTextY += (tokenBottom - tokenTop) + 0xa;
             gameTextShowAt(0x442, 0, tokenTextY + 0x78);
@@ -5244,9 +5261,9 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
             gameTextShowAt(0x443, 0, 0xa0);
             gameTextMeasureById(0x443, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             taskTextY = (tokenBottom - tokenTop) + 5;
-            tokens = gPauseMenuTokens;
-            gameTextShowAt(tokens[gPauseMenuTokenIndex].alt, 0, taskTextY + 0xa0);
-            gameTextMeasureById(tokens[gPauseMenuTokenIndex].alt, 0, 0, &tokenLeft, &tokenRight, &tokenTop,
+            tokens = gNeededFuelCells;
+            gameTextShowAt(tokens[gPauseMenuTokenIndex].gameTextId, 0, taskTextY + 0xa0);
+            gameTextMeasureById(tokens[gPauseMenuTokenIndex].gameTextId, 0, 0, &tokenLeft, &tokenRight, &tokenTop,
                                 &tokenBottom);
             taskTextY += (tokenBottom - tokenTop) + 0xa;
             gameTextShowAt(0x444, 0, taskTextY + 0xa0);
