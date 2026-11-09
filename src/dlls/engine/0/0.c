@@ -1332,28 +1332,123 @@ CMenuItemDef gCMenuCollectableItems[] = {
 
 /* Staff ability entries, terminated by an ownedGameBit of -1. */
 CMenuItemDef gCMenuStaffAbilities[] = {
-    {45, -1, 2438, 3194, -1, 13, 1021, 0xFF, 0x00},   {1486, -1, 2401, 3195, -1, 60, 1022, 0xFF, 0x00},
-    {64, -1, 2409, 3196, -1, 14, 1023, 0xFF, 0x00},   {263, 3157, 2411, 3080, -1, 13, 1024, 0xFF, 0x00},
-    {3157, -1, 2411, 3098, -1, 13, 1387, 0xFF, 0x00}, {1469, -1, 2400, 3197, -1, 59, 1025, 0xFF, 0x00},
-    {2391, -1, 2404, 3079, -1, 62, 1026, 0xFF, 0x00}, {-1, -1, -1, -1, 0, 0, 0, 0x00, 0x00},
+    {
+        GAMEBIT_STAFF_ABILITY_FIRE_BLASTER, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_FireBlaster_Disabled, //disabled
+        0x0c7a, //icon
+        -1, 0x000d, //unknown
+        GAMETEXT_UI_FireBlaster, //title
+        255, 0}, //unknown
+	{
+        GAMEBIT_ITEM_IceBlast_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_Spell0961_Disabled, //disabled
+        0x0c7b, //icon
+        -1, 0x003c, //unknown
+        GAMETEXT_UI_FreezeBlast, //title
+        255, 0}, //unknown
+	{
+        GAMEBIT_STAFF_ABILITY_SHARPCLAW_DISGUISE, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_SharpClawDisguise_Disabled, //disabled
+        0x0c7c, //icon
+        -1, 0x000e, //unknown
+        GAMETEXT_UI_SharpClawDisguise, //title
+        255, 0}, //unknown
+	{
+        GAMEBIT_ITEM_GroundQuake_Got, //owned/count
+        GAMEBIT_ITEM_SuperQuake_Got, //used
+        GAMEBIT_ITEM_SuperQuake_Disabled, //disabled
+        0x0c08, //icon
+        -1, 0x000d, //unknown
+        GAMETEXT_UI_GroundQuake, //title
+        255, 0}, //unknown
+	{
+        GAMEBIT_ITEM_SuperQuake_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_SuperQuake_Disabled, //disabled
+        0x0c1a, //icon
+        -1, 0x000d, //unknown
+        GAMETEXT_UI_SuperQuake1387, //title
+        255, 0}, //unknown
+	{
+        GAMEBIT_ITEM_OpenPortal_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_PortalSpell_Disabled, //disabled
+        0x0c7d, //icon
+        -1, 0x003b, //unknown
+        GAMETEXT_UI_OpenPortal, //title
+        255, 0}, //unknown
+	{
+        GAMEBIT_ITEM_StaffBooster_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_StaffBooster_Disabled, //disabled
+        0x0c07, //icon
+        -1, 0x003e, //unknown
+        GAMETEXT_UI_StaffBooster, //title
+        255, 0}, //unknown
+	{-1, -1, -1, -1, 0, 0x0000, 0, 0, 0},
 };
 
-s32 gPauseMenuTrickyIconGameBits[] = {0xDD, 0x25, 0x384, 0x245, 0x384, -1};
+s32 gPauseMenuTrickyIconGameBits[] = {
+    GAMEBIT_ITEM_TrickyCall_Got,
+    GAMEBIT_ITEM_TrickyBall_Bought,
+    GAMEBIT_LINKB_Stage1Reached,
+    GAMEBIT_ITEM_TrickyFlame_Got,
+    GAMEBIT_LINKB_Stage1Reached,
+    -1};
 
 CMenuItemDef gCMenuTrickyAbilities[] = {
-    {TRICKY_COMMAND_FLAG_CALL, -1, TRICKY_COMMAND_TYPE_CALL, 3201, 3201, 0, 1015, 0x00, 0x00},
-    {TRICKY_COMMAND_FLAG_PLAY_BALL, -1, TRICKY_COMMAND_TYPE_PLAY_BALL, 3204, 3204, 6, 1016, 0x00, 0x00},
-    {TRICKY_COMMAND_FLAG_FIND_SECRET, -1, TRICKY_COMMAND_TYPE_FIND_SECRET, 3202, 3202, 1, 1017, 0x00, 0x00},
-    {TRICKY_COMMAND_FLAG_FLAME, -1, TRICKY_COMMAND_TYPE_FLAME, 3203, 3203, 2, 1018, 0x00, 0x00},
-    {TRICKY_COMMAND_FLAG_STAY, -1, TRICKY_COMMAND_TYPE_STAY, 3205, 3205, 4, 1020, 0x00, 0x00},
+    {
+        TRICKY_COMMAND_FLAG_CALL, //owned/count
+        -1, //used
+        TRICKY_COMMAND_TYPE_CALL, //disabled
+        0x0c81, //icon
+        0x0c81, 0x0000, //unknown
+        GAMETEXT_UI_CallTricky, //title
+        0, 0}, //unknown
+	{
+        TRICKY_COMMAND_FLAG_PLAY_BALL, //owned/count
+        -1, //used
+        TRICKY_COMMAND_TYPE_PLAY_BALL, //disabled
+        0x0c84, //icon
+        0x0c84, 0x0006, //unknown
+        GAMETEXT_UI_ThrowBall, //title
+        0, 0}, //unknown
+	{
+        TRICKY_COMMAND_FLAG_FIND_SECRET, //owned/count
+        -1, //used
+        TRICKY_COMMAND_TYPE_FIND_SECRET, //disabled
+        0x0c82, //icon
+        0x0c82, 0x0001, //unknown
+        GAMETEXT_UI_FindSecret, //title
+        0, 0}, //unknown
+	{
+        TRICKY_COMMAND_FLAG_FLAME, //owned/count
+        -1, //used
+        TRICKY_COMMAND_TYPE_FLAME, //disabled
+        0x0c83, //icon
+        0x0c83, 0x0002, //unknown
+        GAMETEXT_UI_UseFlame, //title
+        0, 0}, //unknown
+	{
+        TRICKY_COMMAND_FLAG_STAY, //owned/count
+        -1, //used
+        TRICKY_COMMAND_TYPE_STAY, //disabled
+        0x0c85, //icon
+        0x0c85, 0x0004, //unknown
+        GAMETEXT_UI_TrickyStay, //title
+        0, 0}, //unknown
+
     {-1, -1, -1, -1, 0, 0, 0, 0x00, 0x00},
 };
 
 CMenuSection gCMenuSections[] = {
-    {gCMenuCollectableItems, 0, 0, 0x80001, 0x80000},
-    {gCMenuStaffAbilities, 0, 0, 0x80002, 0x40000},
-    {gCMenuTrickyAbilities, 0, 0, 0x80009, 0x20000},
-    {NULL, 0, 0, 0x0, 0x0},
+    {gCMenuCollectableItems, 0, 0x80001, 0x80000},
+    {gCMenuStaffAbilities,   0, 0x80002, 0x40000},
+    {gCMenuTrickyAbilities,  0, 0x80009, 0x20000},
+    {NULL, 0, 0x0, 0x0},
 };
 
 s16 gTrickyHudIconTextureIds[] = {
