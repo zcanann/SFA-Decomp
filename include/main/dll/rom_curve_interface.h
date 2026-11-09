@@ -55,8 +55,7 @@ typedef int (*RomCurveFindShortestPathLinkFn)(RomCurveDef *startCurve,int unused
 typedef int (*RomCurveIsPointInsideLoopFn)(int curveId,f32 x,f32 y,f32 z,f32 *outDistance);
 typedef int (*RomCurveCountRandomPointsFn)(RomCurveDef *curve);
 typedef int (*RomCurveBuildRandomPointsFn)(RomCurveDef *curve,f32 *outX,f32 *outY,f32 *outZ,s8 *outTypes);
-typedef int (*RomCurveInitFromCurveIdFn)(RomCurveWalker *walker,struct GameObject *obj,int startCurveId,
-                                         RomCurveInterface *interface);
+typedef int (*RomCurveInitFromCurveIdFn)(RomCurveWalker *walker,struct GameObject *obj,int startCurveId);
 typedef u8 (*RomCurveInitWalkerFn)(void *walker,void *obj,f32 scale,int *curveParam,int arg);
 typedef u8 (*RomCurveGoNextPointFn)(void *walker);
 typedef int (*RomCurveSetClosedFn)(void *walker,int closed);

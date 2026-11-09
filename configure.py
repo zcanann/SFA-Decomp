@@ -1513,7 +1513,7 @@ config.libs = [
             Object(Matching, "dlls/objects/653_WCLevelCont/WCLevelCont.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "dlls/objects/654_WCBeacon/WCBeacon.c"),
             Object(Matching, "dlls/objects/655_WCPressureS/WCPressureS.c"),
-            Object(Matching, "dlls/objects/656_WCPushBlock/WCPushBlock.c", cflags=[*cflags_base, "-opt", "nopeephole,noschedule,nocse,nodeadstore"]),
+            Object(Matching, "dlls/objects/656_WCPushBlock/WCPushBlock.c", extra_cflags=["-inline", "auto,deferred"]),
             Object(Matching, "dlls/objects/657_WCTile/WCTile.c", cflags=cflags_dll_noopt_nocse),
             Object(Matching, "dlls/objects/658_WCTrexStatu/WCTrexStatu.c"),
             Object(Matching, "dlls/objects/659/659.c"),

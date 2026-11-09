@@ -617,7 +617,7 @@ int gameBitDecrement(int bit) {
     return 0;
 }
 
-int gameBitIncrement(int bit) {
+u32 gameBitIncrement(int bit) {
     int val = mainGetBit(bit) + 1;
     int max = 1 << ((gGameBitTable[bit].flags & GAMEBIT_FLAG_WIDTH_MASK) + 1);
     if (val < max) {
