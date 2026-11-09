@@ -245,7 +245,7 @@ typedef struct GameUiIndirectMatrix {
 
 typedef struct PauseMenuCellMapEntry {
     u16 cell;
-    u16 code;
+    u16 mapIdx; //-> gPauseMenuPlayerMapId; add GAMEBIT_MapBits to get GameBit ID
 } PauseMenuCellMapEntry;
 
 STATIC_ASSERT(sizeof(PauseMenuCellMapEntry) == 4);
@@ -490,7 +490,7 @@ extern u8 gCurTaskHintMapId;
 extern GridEntry* gPauseMenuActiveGrid;
 extern u8 gPauseMenuScarabCapacity;
 extern GameTextDef* gPauseMenuCurHintText;
-extern int gPauseMenuPlayerMapCell;
+extern int gPauseMenuPlayerMapId;
 typedef struct SmallText {
     char text[4];
 } SmallText;
@@ -1954,7 +1954,7 @@ static inline void gameUiFreeResources(void) {
     textureFree(gGameUiBlinkTexture);
 }
 
-int gPauseMenuPlayerMapCell;
+int gPauseMenuPlayerMapId;
 int gPauseMenuSavedTextDir;
 int gGameUiCurHintTextMap;
 short gCMenuOpenAnim;
@@ -3355,7 +3355,7 @@ void drawWorldMapHud(void) {
             } else if (fi == cur && li_ != cur) {
                 streamId = gArwingMissionBriefs[cur].streamId08;
             } else if (cur == 2) {
-                if ((*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0) {
+                if ((*gMapEventInterface)->getMapAct(MAP_ID_WALLCITY) == 2 && lv == 0) {
                     streamId = 0x51e5;
                 } else if (fi == li_) {
                     if (mainGetBit(gArwingMissionBriefs[li_].bitCompletedArea)) {
@@ -3367,7 +3367,7 @@ void drawWorldMapHud(void) {
                     streamId = gArwingMissionBriefs[gPauseMenuHintIndex].streamId0C;
                 }
             } else {
-                if (cur == 0 && (*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0) {
+                if (cur == 0 && (*gMapEventInterface)->getMapAct(MAP_ID_WALLCITY) == 2 && lv == 0) {
                     streamId = 0x51e2;
                 } else {
                     streamId = gArwingMissionBriefs[gPauseMenuHintIndex].streamId0C;
@@ -3585,7 +3585,7 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
                 && progressHint != gPauseMenuHintIndex) {
                     textId = gArwingMissionBriefs[gPauseMenuHintIndex].textMission;
                 } else if (gPauseMenuHintIndex == 2) {
-                    if ((*gMapEventInterface)->getMapAct(0xd) == 2
+                    if ((*gMapEventInterface)->getMapAct(MAP_ID_WALLCITY) == 2
                     && hasLateGameHint == 0) {
                         //leaving without the spirit
                         textId = GAMETEXT_WORLD_NotGotSpirit;
@@ -3599,7 +3599,7 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
                     } else {
                         textId = gArwingMissionBriefs[gPauseMenuHintIndex].textGoBack;
                     }
-                } else if (gPauseMenuHintIndex == 0 && (*gMapEventInterface)->getMapAct(0xd) == 2 &&
+                } else if (gPauseMenuHintIndex == 0 && (*gMapEventInterface)->getMapAct(MAP_ID_WALLCITY) == 2 &&
                            hasLateGameHint == 0) {
                     //going to WC for spirit
                     textId = GAMETEXT_WORLD_AnotherShrineWC;
@@ -3911,7 +3911,7 @@ void pauseMenuRunSubmenu(int p1) {
         switch (pauseMenuState) {
         case 3:
             if (gPauseMenuIdleVoiceTimer >= 600.0f && old < 600.0f) {
-                if (gCurTaskHintMapId == gPauseMenuPlayerMapCell) {
+                if (gCurTaskHintMapId == gPauseMenuPlayerMapId) {
                     AudioStream_Play(0x271a, AudioStream_StartPrepared);
                 } else {
                     AudioStream_Play(0x2715, AudioStream_StartPrepared);
@@ -4195,48 +4195,48 @@ void pauseMenuUpdate(void) {
     }
     gCurTaskHintMapId = getCurTaskHintTextMap();
     if (player != 0) {
-        int cell;
+        int mapNo;
         if (player->anim.parent != NULL) {
-            cell = ((GameObject*)player->anim.parent)->anim.mapEventSlot;
+            mapNo = ((GameObject*)player->anim.parent)->anim.mapEventSlot;
         } else {
-            cell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
+            mapNo = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
         }
-        gPauseMenuPlayerMapCell = cell;
-        if (cell == 0x36) {
-            if ((*gMapEventInterface)->getMapAct(cell) == 1) {
-                if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 0)) {
-                    gPauseMenuPlayerMapCell = 5;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 1)) {
-                    gPauseMenuPlayerMapCell = 6;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 2)) {
-                    gPauseMenuPlayerMapCell = 0xc;
+        gPauseMenuPlayerMapId = mapNo;
+        if (mapNo == MAP_ID_MAGICAVE) {
+            if ((*gMapEventInterface)->getMapAct(mapNo) == 1) {
+                if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 0)) {
+                    gPauseMenuPlayerMapId = 5;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 1)) {
+                    gPauseMenuPlayerMapId = 6;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 2)) {
+                    gPauseMenuPlayerMapId = 0xc;
                 }
-            } else if ((*gMapEventInterface)->getMapAct(gPauseMenuPlayerMapCell) == 2) {
-                if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 0)) {
-                    gPauseMenuPlayerMapCell = 6;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 1)) {
-                    gPauseMenuPlayerMapCell = 6;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 2)) {
-                    gPauseMenuPlayerMapCell = 6;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 3)) {
-                    gPauseMenuPlayerMapCell = 0xa;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 4)) {
-                    gPauseMenuPlayerMapCell = 9;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 5)) {
-                    gPauseMenuPlayerMapCell = 3;
+            } else if ((*gMapEventInterface)->getMapAct(gPauseMenuPlayerMapId) == 2) {
+                if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 0)) {
+                    gPauseMenuPlayerMapId = 6;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 1)) {
+                    gPauseMenuPlayerMapId = 6;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 2)) {
+                    gPauseMenuPlayerMapId = 6;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 3)) {
+                    gPauseMenuPlayerMapId = 0xa;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 4)) {
+                    gPauseMenuPlayerMapId = 9;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 5)) {
+                    gPauseMenuPlayerMapId = 3;
                 }
             }
         } else {
             u8 i;
             for (i = 0; i < 0x2d; i++) {
-                if (cell == gPauseMenuCellMap[i].cell) {
+                if (mapNo == gPauseMenuCellMap[i].cell) {
                     break;
                 }
             }
             if (i != 0x2d) {
-                int code = gPauseMenuCellMap[i].code;
-                gPauseMenuPlayerMapCell = code;
-                mainSetBits(code + 0xf10, 1);
+                int code = gPauseMenuCellMap[i].mapIdx;
+                gPauseMenuPlayerMapId = code;
+                mainSetBits(code + GAMEBIT_MapBits, 1);
             }
         }
     }
@@ -4287,11 +4287,11 @@ void pauseMenuUpdate(void) {
                 }
                 if (gHudIncomingCommTimer != 0 || gHudCommAlertTimer != 0) {
                     gPauseMenuSavedTextDir = (int)getCurGameText();
-                    if (gPauseMenuPlayerMapCell == gCurTaskHintMapId) {
+                    if (gPauseMenuPlayerMapId == gCurTaskHintMapId) {
                         hintTextLoadTaskMapTexts();
                     }
                     pauseMenuState = 4;
-                    if (gPauseMenuPlayerMapCell == gCurTaskHintMapId) {
+                    if (gPauseMenuPlayerMapId == gCurTaskHintMapId) {
                         hintTextLoadTaskMapTexts();
                     } else {
                         gameTextLoadDir(0xb);
@@ -4421,7 +4421,7 @@ void pauseMenuUpdate(void) {
                 case 3:
                     pauseMenuSetupTitle(0x2b1, prev, 4, 3);
                     pauseMenuState = 4;
-                    if (gPauseMenuPlayerMapCell == gCurTaskHintMapId) {
+                    if (gPauseMenuPlayerMapId == gCurTaskHintMapId) {
                         gGameUiCurHintTextMap = hintTextLoadTaskMapTexts();
                     } else {
                         gGameUiCurHintTextMap = (int)getCurGameText();
@@ -4494,7 +4494,7 @@ void pauseMenuUpdate(void) {
                 if (gPauseMenuMapBackSide == 0) {
                     hintTextGetAvailableMaps(hintBuf);
                     if ((u8)r != 0 || (0.0 == gPauseMenuOpenAmount && gPauseMenuOpenVel > 0.0)) {
-                        gPauseMenuGridCursor = gPauseMenuPlayerMapCell;
+                        gPauseMenuGridCursor = gPauseMenuPlayerMapId;
                     }
                     {
                         u8 k;
@@ -4508,16 +4508,16 @@ void pauseMenuUpdate(void) {
                             gPauseMenuActiveGrid[k].trailY = 0xc;
                         }
                     }
-                    if (gCurTaskHintMapId == gPauseMenuPlayerMapCell) {
-                        gPauseMenuActiveGrid[gPauseMenuPlayerMapCell].id = 0x4c;
+                    if (gCurTaskHintMapId == gPauseMenuPlayerMapId) {
+                        gPauseMenuActiveGrid[gPauseMenuPlayerMapId].id = 0x4c;
                     } else {
-                        gPauseMenuActiveGrid[gPauseMenuPlayerMapCell].id = 0x4b;
+                        gPauseMenuActiveGrid[gPauseMenuPlayerMapId].id = 0x4b;
                         gPauseMenuActiveGrid[gCurTaskHintMapId].id = 0x4a;
                         gPauseMenuActiveGrid[gCurTaskHintMapId].trailX = 0x14;
                         gPauseMenuActiveGrid[gCurTaskHintMapId].trailY = 0x10;
                     }
-                    gPauseMenuActiveGrid[gPauseMenuPlayerMapCell].trailX = 0x1a;
-                    gPauseMenuActiveGrid[gPauseMenuPlayerMapCell].trailY = 0x18;
+                    gPauseMenuActiveGrid[gPauseMenuPlayerMapId].trailX = 0x1a;
+                    gPauseMenuActiveGrid[gPauseMenuPlayerMapId].trailY = 0x18;
                 } else {
                     int gi;
                     u8 k;
@@ -4723,8 +4723,8 @@ void pauseMenuUpdate(void) {
                 int have = mainGetBit(GAMEBIT_ITEM_FuelCell_Count);
                 gPauseMenuTokenPromptState = 0;
                 if (player != 0) {
-                    gPauseMenuPlayerMapCell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
-                    if (gPauseMenuPlayerMapCell == 7) {
+                    gPauseMenuPlayerMapId = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
+                    if (gPauseMenuPlayerMapId == 7) {
                         for (gPauseMenuTokenIndex = 0; gPauseMenuTokenIndex < 4;) {
                             if (!mainGetBit(gNeededFuelCells[gPauseMenuTokenIndex].bitA)) {
                                 break;
@@ -5693,7 +5693,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
             gPauseMenuTextZ = 0xc0;
             gPauseMenuTextScale = 1.5f;
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-            if (gPauseMenuPlayerMapCell == gCurTaskHintMapId) {
+            if (gPauseMenuPlayerMapId == gCurTaskHintMapId) {
                 if (gPauseMenuCurHintText != 0 && gPauseMenuCurHintText->count >= 2) {
                     textY = 0x96;
                     for (stringIndex = 1; stringIndex < gPauseMenuCurHintText->count; stringIndex++) {
