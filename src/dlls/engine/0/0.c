@@ -17,6 +17,7 @@
 #include "main/objprint_render_api.h"
 #include "sys/objects/lifecycle.h"
 #include "main/gamebits.h"
+#include "main/mapIds.h"
 #include "main/camera_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/texture.h"
@@ -745,7 +746,10 @@ HighScoreTitleIdEntry gHighScoreTitleIdTable[5] = {
 };
 
 u32 lbl_8031AF14[8] = {
-    0x22B, 0x50, 0x219, 0x66, 0x100, (u32)&lbl_8031AF14[0], 0x200, (u32)&lbl_8031AF14[2],
+    0x22B, 0x50,
+    0x219, 0x66,
+    0x100, (u32)&lbl_8031AF14[0],
+    0x200, (u32)&lbl_8031AF14[2],
 };
 
 u8 gHeadDisplayEntryTable[] = {
@@ -785,9 +789,36 @@ NeededFuelCells gNeededFuelCells[] = {
     },
 };
 
-u8 lbl_8031B050[36] = {
-    0x42, 0x38, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x00, 0x00, 0x00, 0x0C, 0x7A, 0x0C, 0x7C, 0x0C, 0x7A,
-    0x0C, 0x7D, 0x0C, 0x7B, 0x0C, 0x7A, 0x0C, 0x7A, 0x0C, 0x07, 0x0C, 0x7A, 0x0C, 0x08, 0x0C, 0x1A, 0x00, 0x00,
+//Used by pause menu to know if the map is a link map,
+//on which most options are unavailable.
+u8 linkMapIds[NUM_LINK_MAPS] = {
+    MAP_ID_LINKA, //Warpstone to Others
+    MAP_ID_LINKB, //Ice2Wastes
+    MAP_ID_LINKC, //Wastes to Hollow
+    MAP_ID_LINKD, //Darkmines top to bottom
+    MAP_ID_LINKE, //hollow to moon pass
+    MAP_ID_LINKF, //moonpass to volcano
+    MAP_ID_LINKG, //hollow to lightfoot
+    MAP_ID_LINKH, //lightfoot to capeclaw
+    //missing: MAP_ID_LINKI (unused: CloudRunner to Race)
+    MAP_ID_LINKJ, //capeclaw to ocean force point
+};
+
+//seems unreferenced. doesn't appear to be GameBits.
+//possibly not related to link maps, just guessing name
+u16 unkLinkMapData[] = {
+    0x0C7A,
+    0x0C7C,
+    0x0C7A,
+    0x0C7D,
+    0x0C7B,
+    0x0C7A,
+    0x0C7A,
+    0x0C07,
+    0x0C7A,
+    0x0C08,
+    0x0C1A,
+    0x0000,
 };
 
 ArwingMissionBriefing gArwingMissionBriefs[] = {
@@ -1493,7 +1524,7 @@ PauseMenuCellMapEntry gPauseMenuCellMap[] = {
 };
 
 struct PauseMenuMapTables gPauseMenuMapTables = {
-    {   //    id    x    y   ofs  tx  ty  ct xo  nav
+    {   //    id    x    y   ofs  tx  ty  ct xo dn  up  lf  rt
          {72, 289, 467, 256, 16, 12, 10, 0, 12, -1,  3, 12, 1.7f, 1101, 937,  0},
          {72, 576, 411, 256, 16, 12, 10, 0,  8, -1, 12, -1, 1.7f, 1102, 937,  1},
          {72, 187, 280, 256, 16, 12, 10, 0,  7,  5,  3,  5, 1.7f, 1103, 937,  2},
@@ -1700,6 +1731,7 @@ static inline s16 cMenuMinRingAbs(void) {
 
     curd = gCMenuRingAngle;
     d1 = curd;
+    //@bug: Result of comparison of constant 32768 with expression of type 's16' (aka 'short') is always false
     if (curd > 0x8000) {
         d1 = (s16)(curd - 0xFFFF);
     }
@@ -1749,9 +1781,9 @@ static inline s16 cMenuMinRingAbs(void) {
  */
 
 /* head-display panel scroll-width animation bounds */
-#define HEADPANEL_WIDTH_MAX  0x152
-#define HEADPANEL_WIDTH_MIN  0x122
-#define HEADPANEL_WIDTH_OPEN 0x159
+#define HEADPANEL_WIDTH_MAX  338
+#define HEADPANEL_WIDTH_MIN  290
+#define HEADPANEL_WIDTH_OPEN 345
 
 /* gHeadDisplayEntryTable head-display table: 0xC-byte records */
 #define HEADREC_STRIDE       0xc
@@ -4033,28 +4065,28 @@ void pauseMenuUpdateFadeAndBack(void) {
 
 /* Returns whether the current player can appear in the pause-menu carousel. */
 u8 pauseMenuIsFox(void) {
-    GameObject* s;
+    GameObject* player;
     void* inner;
-    u8 lookup;
+    u8 mapNo;
     u8 i;
-    u8 is_zero;
+    u8 bModelZero;
 
-    s = Obj_GetPlayerObject();
-    if (s == NULL) {
-        return 0;
-    }
-    is_zero = objIsCurModelNotZero(s) == 0;
-    if (is_zero) {
-        return 0;
-    }
-    inner = s->anim.parent;
+    player = Obj_GetPlayerObject();
+    if(!player) return 0;
+
+    //are we Krystal?
+    bModelZero = objIsCurModelNotZero(player) == 0;
+    if(bModelZero) return 0;
+
+    //are we on a link map? (most pause items disabled)
+    inner = player->anim.parent;
     if (inner != NULL) {
-        lookup = ((GameObject*)inner)->anim.mapEventSlot;
+        mapNo = ((GameObject*)inner)->anim.mapEventSlot;
     } else {
-        lookup = coordsToMapCell(s->anim.localPosX, s->anim.localPosZ);
+        mapNo = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
     }
-    for (i = 0; i < 9; i++) {
-        if (lookup == lbl_8031B050[i]) {
+    for (i = 0; i < NUM_LINK_MAPS; i++) {
+        if (mapNo == linkMapIds[i]) {
             return 0;
         }
     }
