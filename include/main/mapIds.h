@@ -132,6 +132,68 @@ typedef enum MapId
     MAP_ID_VFPPUSHBLOCK    = 0x74, /* ObjType VFP_Bobbing */
 } MapId;
 
+typedef enum MapDirId {
+    MAPDIR_ID_ARWING         = 0x03,
+    MAPDIR_ID_DRAGROCK       = 0x04,
+    MAPDIR_ID_ANIMTEST       = 0x05,
+    MAPDIR_ID_DFPTOP         = 0x06,
+    MAPDIR_ID_VOLCANO        = 0x07,
+    MAPDIR_ID_MAZECAVE       = 0x09,
+    MAPDIR_ID_DRAGROCKBOT    = 0x0A,
+    MAPDIR_ID_SWAPHOL        = 0x0C,
+    MAPDIR_ID_SHIPBATTLE     = 0x0D,
+    MAPDIR_ID_NWASTES        = 0x0E,
+    MAPDIR_ID_WARLOCK        = 0x0F,
+    MAPDIR_ID_SHOP           = 0x10,
+    MAPDIR_ID_CRFORT         = 0x12,
+    MAPDIR_ID_SWAPHOLBOT     = 0x13,
+    MAPDIR_ID_WALLCITY       = 0x14,
+    MAPDIR_ID_LIGHTFOOT      = 0x15,
+    MAPDIR_ID_CLOUDTREASURE  = 0x16,
+    MAPDIR_ID_CLOUDDUNGEON   = 0x18,
+    MAPDIR_ID_MMPASS         = 0x19,
+    MAPDIR_ID_DARKICEMINES   = 0x1A,
+    MAPDIR_ID_DESERT         = 0x1C,
+    MAPDIR_ID_ICEMOUNTAIN    = 0x1E,
+    MAPDIR_ID_ANIMTEST_1F    = 0x1F,
+    MAPDIR_ID_ANIMTEST_20    = 0x20,
+    MAPDIR_ID_DARKICEMINES2  = 0x22,
+    MAPDIR_ID_BOSSGALDON     = 0x23,
+    MAPDIR_ID_INSIDEGAL      = 0x25,
+    MAPDIR_ID_MAGICCAVE      = 0x26,
+    MAPDIR_ID_DFSHRINE       = 0x27,
+    MAPDIR_ID_MMSHRINE       = 0x28,
+    MAPDIR_ID_ECSHRINE       = 0x29,
+    MAPDIR_ID_GPSHRINE       = 0x2A,
+    MAPDIR_ID_DBSHRINE       = 0x2B,
+    MAPDIR_ID_NWSHRINE       = 0x2C,
+    MAPDIR_ID_WORLDMAP       = 0x2D,
+    MAPDIR_ID_CAPECLAW       = 0x2F,
+    MAPDIR_ID_DBAY           = 0x30,
+    MAPDIR_ID_CLOUDRACE      = 0x32,
+    MAPDIR_ID_BOSSDRAKOR     = 0x33,
+    MAPDIR_ID_BOSSTREX       = 0x35,
+    MAPDIR_ID_LINKB          = 0x36,
+    MAPDIR_ID_CLOUDJOIN      = 0x37,
+    MAPDIR_ID_ARWINGTOPLANET = 0x38,
+    MAPDIR_ID_ARWINGDARKICE  = 0x39,
+    MAPDIR_ID_ARWINGCLOUD    = 0x3A,
+    MAPDIR_ID_ARWINGCITY     = 0x3B,
+    MAPDIR_ID_ARWINGDRAGON   = 0x3C,
+    MAPDIR_ID_GAMEFRONT      = 0x3D,
+    MAPDIR_ID_LINKLEVEL      = 0x3E,
+    MAPDIR_ID_GREATFOX       = 0x3F,
+    MAPDIR_ID_LINKA          = 0x40,
+    MAPDIR_ID_LINKC          = 0x41,
+    MAPDIR_ID_LINKD          = 0x42,
+    MAPDIR_ID_LINKE          = 0x43,
+    MAPDIR_ID_LINKF          = 0x44,
+    MAPDIR_ID_LINKG          = 0x45,
+    MAPDIR_ID_LINKH          = 0x46,
+    MAPDIR_ID_LINKJ          = 0x47,
+    MAPDIR_ID_LINKI          = 0x48,
+} MapDirId;
+
 #define ROM_LIST_PAGE_COUNT 120
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -170,4 +232,5 @@ typedef enum MapType {
     MAPTYPE_SUBMAP_UNUSED = 3, /* unused: same as MAPTYPE_UNLOAD_UNUSED; only frontend2 has this */
     MAPTYPE_NO_HUD = 4,        /* hides PDA HUD; title screen + Arwing maps; no player object spawned */
 } MapType;
+
 #endif //_MAIN_MAPIDS_H_
