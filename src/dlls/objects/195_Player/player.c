@@ -1,6 +1,7 @@
 #include "main/dll/baddie_state.h"
 #define BADDIE_MOVE_STATUS_SIGNED
 
+#include "main/mapIds.h"
 #include "main/dll/player.h"
 #include "dlls/objects/372_CCriverflow.h"
 #include "dlls/object_descriptor.h"
@@ -14895,7 +14896,7 @@ int player_SeqFn(GameObject* obj, int obj2, ObjSeqState* seq, int endFlag) {
                 setHudForceShowMask(0);
                 break;
             case 0x2a:
-                if ((*gMapEventInterface)->getMapAct(0xb) == 7) {
+                if ((*gMapEventInterface)->getMapAct(MAP_ID_WARLOCK) == 7) {
                     getEnvfxActImmediately(obj, obj, 0x1fb, 0);
                     getEnvfxActImmediately(obj, obj, 0x1ff, 0);
                     getEnvfxActImmediately(obj, obj, 0x249, 0);

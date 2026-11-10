@@ -19,8 +19,7 @@ int nRomCurves;
 RomCurveDef* gRomCurveLastFindStart;
 RomCurveDef* gRomCurveLastFindEnd;
 
-int RomCurve_initFromCurveId(RomCurveWalker* state, GameObject* unusedObj, int startCurveId,
-                             RomCurveInterface* unusedInterface);
+int RomCurve_initFromCurveId(RomCurveWalker* state, GameObject* unusedObj, int startCurveId);
 int RomCurve_goNextPointIndexed(RomCurveWalker* state, int pickIdx);
 void RomCurve_setNextNode(void* walker, void* curve);
 int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, int curveType, f32 maxDistance);
@@ -370,8 +369,7 @@ static inline int RomCurve_pickRandomControlPointId_2B(RomCurveDef* curve) {
                  ROMCURVE_HALF_CIRCLE_ANGLE);                                                                          \
     state->hermZ2[3] = ROMCURVE_TANGENT_SCALE * t
 
-int RomCurve_initFromCurveId(RomCurveWalker* state, GameObject* unusedObj, int startCurveId,
-                             RomCurveInterface* unusedInterface) {
+int RomCurve_initFromCurveId(RomCurveWalker* state, GameObject* unusedObj, int startCurveId) {
     char* stateBytes;
     RomCurveDef* currentCurve;
     int nextId;

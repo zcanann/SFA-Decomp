@@ -28,7 +28,7 @@ typedef struct CMenuItemDef
     s16 usedGameBit;   /* +0x2  consumed/used gate; entry hidden while set (-1 = none) */
     s16 activeGameBit; /* +0x4  "currently in use" gate (-1 = none) */
     s16 iconTextureId; /* +0x6  HUD icon texture id (drives the on-screen art) */
-    s16 unk8;          /* +0x8  -1 in every shipped entry */
+    s16 unk8;          /* +0x8  same as iconTextureId for gCMenuTrickyAbilities, else -1 */
     s16 auxiliaryValue; /* +0xA  per-entry value, purpose TBD */
     s16 nameTextId;    /* +0xC  gametext id for the "<verb> <noun>" label */
     u8 auxiliaryByte;  /* +0xE  0xff in every shipped entry */
@@ -39,7 +39,6 @@ typedef struct CMenuSection
 {
     CMenuItemDef* items; /* +0x0  item table, terminated by an ownedGameBit == -1 entry */
     s16 cursor;          /* +0x4  remembered selection index for this section */
-    s16 unk6;
     int flags;           /* +0x8 */
     int unkC;
 } CMenuSection; /* sizeof 0x10 */

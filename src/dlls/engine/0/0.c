@@ -17,6 +17,7 @@
 #include "main/objprint_render_api.h"
 #include "sys/objects/lifecycle.h"
 #include "main/gamebits.h"
+#include "main/mapIds.h"
 #include "main/camera_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/texture.h"
@@ -244,7 +245,7 @@ typedef struct GameUiIndirectMatrix {
 
 typedef struct PauseMenuCellMapEntry {
     u16 cell;
-    u16 code;
+    u16 mapIdx; //-> gPauseMenuPlayerMapId; add GAMEBIT_MapBits to get GameBit ID
 } PauseMenuCellMapEntry;
 
 STATIC_ASSERT(sizeof(PauseMenuCellMapEntry) == 4);
@@ -489,7 +490,7 @@ extern u8 gCurTaskHintMapId;
 extern GridEntry* gPauseMenuActiveGrid;
 extern u8 gPauseMenuScarabCapacity;
 extern GameTextDef* gPauseMenuCurHintText;
-extern int gPauseMenuPlayerMapCell;
+extern int gPauseMenuPlayerMapId;
 typedef struct SmallText {
     char text[4];
 } SmallText;
@@ -745,7 +746,10 @@ HighScoreTitleIdEntry gHighScoreTitleIdTable[5] = {
 };
 
 u32 lbl_8031AF14[8] = {
-    0x22B, 0x50, 0x219, 0x66, 0x100, (u32)&lbl_8031AF14[0], 0x200, (u32)&lbl_8031AF14[2],
+    0x22B, 0x50,
+    0x219, 0x66,
+    0x100, (u32)&lbl_8031AF14[0],
+    0x200, (u32)&lbl_8031AF14[2],
 };
 
 u8 gHeadDisplayEntryTable[] = {
@@ -785,9 +789,36 @@ NeededFuelCells gNeededFuelCells[] = {
     },
 };
 
-u8 lbl_8031B050[36] = {
-    0x42, 0x38, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x00, 0x00, 0x00, 0x0C, 0x7A, 0x0C, 0x7C, 0x0C, 0x7A,
-    0x0C, 0x7D, 0x0C, 0x7B, 0x0C, 0x7A, 0x0C, 0x7A, 0x0C, 0x07, 0x0C, 0x7A, 0x0C, 0x08, 0x0C, 0x1A, 0x00, 0x00,
+//Used by pause menu to know if the map is a link map,
+//on which most options are unavailable.
+u8 linkMapIds[NUM_LINK_MAPS] = {
+    MAP_ID_LINKA, //Warpstone to Others
+    MAP_ID_LINKB, //Ice2Wastes
+    MAP_ID_LINKC, //Wastes to Hollow
+    MAP_ID_LINKD, //Darkmines top to bottom
+    MAP_ID_LINKE, //hollow to moon pass
+    MAP_ID_LINKF, //moonpass to volcano
+    MAP_ID_LINKG, //hollow to lightfoot
+    MAP_ID_LINKH, //lightfoot to capeclaw
+    //missing: MAP_ID_LINKI (unused: CloudRunner to Race)
+    MAP_ID_LINKJ, //capeclaw to ocean force point
+};
+
+//seems unreferenced. doesn't appear to be GameBits.
+//possibly not related to link maps, just guessing name
+u16 unkLinkMapData[] = {
+    0x0C7A,
+    0x0C7C,
+    0x0C7A,
+    0x0C7D,
+    0x0C7B,
+    0x0C7A,
+    0x0C7A,
+    0x0C07,
+    0x0C7A,
+    0x0C08,
+    0x0C1A,
+    0x0000,
 };
 
 ArwingMissionBriefing gArwingMissionBriefs[] = {
@@ -1332,28 +1363,123 @@ CMenuItemDef gCMenuCollectableItems[] = {
 
 /* Staff ability entries, terminated by an ownedGameBit of -1. */
 CMenuItemDef gCMenuStaffAbilities[] = {
-    {45, -1, 2438, 3194, -1, 13, 1021, 0xFF, 0x00},   {1486, -1, 2401, 3195, -1, 60, 1022, 0xFF, 0x00},
-    {64, -1, 2409, 3196, -1, 14, 1023, 0xFF, 0x00},   {263, 3157, 2411, 3080, -1, 13, 1024, 0xFF, 0x00},
-    {3157, -1, 2411, 3098, -1, 13, 1387, 0xFF, 0x00}, {1469, -1, 2400, 3197, -1, 59, 1025, 0xFF, 0x00},
-    {2391, -1, 2404, 3079, -1, 62, 1026, 0xFF, 0x00}, {-1, -1, -1, -1, 0, 0, 0, 0x00, 0x00},
+    {
+        GAMEBIT_STAFF_ABILITY_FIRE_BLASTER, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_FireBlaster_Disabled, //disabled
+        0x0c7a, //icon
+        -1, 0x000d, //unknown
+        GAMETEXT_UI_FireBlaster, //title
+        255, 0}, //unknown
+	{
+        GAMEBIT_ITEM_IceBlast_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_Spell0961_Disabled, //disabled
+        0x0c7b, //icon
+        -1, 0x003c, //unknown
+        GAMETEXT_UI_FreezeBlast, //title
+        255, 0}, //unknown
+	{
+        GAMEBIT_STAFF_ABILITY_SHARPCLAW_DISGUISE, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_SharpClawDisguise_Disabled, //disabled
+        0x0c7c, //icon
+        -1, 0x000e, //unknown
+        GAMETEXT_UI_SharpClawDisguise, //title
+        255, 0}, //unknown
+	{
+        GAMEBIT_ITEM_GroundQuake_Got, //owned/count
+        GAMEBIT_ITEM_SuperQuake_Got, //used
+        GAMEBIT_ITEM_SuperQuake_Disabled, //disabled
+        0x0c08, //icon
+        -1, 0x000d, //unknown
+        GAMETEXT_UI_GroundQuake, //title
+        255, 0}, //unknown
+	{
+        GAMEBIT_ITEM_SuperQuake_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_SuperQuake_Disabled, //disabled
+        0x0c1a, //icon
+        -1, 0x000d, //unknown
+        GAMETEXT_UI_SuperQuake1387, //title
+        255, 0}, //unknown
+	{
+        GAMEBIT_ITEM_OpenPortal_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_PortalSpell_Disabled, //disabled
+        0x0c7d, //icon
+        -1, 0x003b, //unknown
+        GAMETEXT_UI_OpenPortal, //title
+        255, 0}, //unknown
+	{
+        GAMEBIT_ITEM_StaffBooster_Got, //owned/count
+        -1, //used
+        GAMEBIT_ITEM_StaffBooster_Disabled, //disabled
+        0x0c07, //icon
+        -1, 0x003e, //unknown
+        GAMETEXT_UI_StaffBooster, //title
+        255, 0}, //unknown
+	{-1, -1, -1, -1, 0, 0x0000, 0, 0, 0},
 };
 
-s32 gPauseMenuTrickyIconGameBits[] = {0xDD, 0x25, 0x384, 0x245, 0x384, -1};
+s32 gPauseMenuTrickyIconGameBits[] = {
+    GAMEBIT_ITEM_TrickyCall_Got,
+    GAMEBIT_ITEM_TrickyBall_Bought,
+    GAMEBIT_LINKB_Stage1Reached,
+    GAMEBIT_ITEM_TrickyFlame_Got,
+    GAMEBIT_LINKB_Stage1Reached,
+    -1};
 
 CMenuItemDef gCMenuTrickyAbilities[] = {
-    {TRICKY_COMMAND_FLAG_CALL, -1, TRICKY_COMMAND_TYPE_CALL, 3201, 3201, 0, 1015, 0x00, 0x00},
-    {TRICKY_COMMAND_FLAG_PLAY_BALL, -1, TRICKY_COMMAND_TYPE_PLAY_BALL, 3204, 3204, 6, 1016, 0x00, 0x00},
-    {TRICKY_COMMAND_FLAG_FIND_SECRET, -1, TRICKY_COMMAND_TYPE_FIND_SECRET, 3202, 3202, 1, 1017, 0x00, 0x00},
-    {TRICKY_COMMAND_FLAG_FLAME, -1, TRICKY_COMMAND_TYPE_FLAME, 3203, 3203, 2, 1018, 0x00, 0x00},
-    {TRICKY_COMMAND_FLAG_STAY, -1, TRICKY_COMMAND_TYPE_STAY, 3205, 3205, 4, 1020, 0x00, 0x00},
+    {
+        TRICKY_COMMAND_FLAG_CALL, //owned/count
+        -1, //used
+        TRICKY_COMMAND_TYPE_CALL, //disabled
+        0x0c81, //icon
+        0x0c81, 0x0000, //unknown
+        GAMETEXT_UI_CallTricky, //title
+        0, 0}, //unknown
+	{
+        TRICKY_COMMAND_FLAG_PLAY_BALL, //owned/count
+        -1, //used
+        TRICKY_COMMAND_TYPE_PLAY_BALL, //disabled
+        0x0c84, //icon
+        0x0c84, 0x0006, //unknown
+        GAMETEXT_UI_ThrowBall, //title
+        0, 0}, //unknown
+	{
+        TRICKY_COMMAND_FLAG_FIND_SECRET, //owned/count
+        -1, //used
+        TRICKY_COMMAND_TYPE_FIND_SECRET, //disabled
+        0x0c82, //icon
+        0x0c82, 0x0001, //unknown
+        GAMETEXT_UI_FindSecret, //title
+        0, 0}, //unknown
+	{
+        TRICKY_COMMAND_FLAG_FLAME, //owned/count
+        -1, //used
+        TRICKY_COMMAND_TYPE_FLAME, //disabled
+        0x0c83, //icon
+        0x0c83, 0x0002, //unknown
+        GAMETEXT_UI_UseFlame, //title
+        0, 0}, //unknown
+	{
+        TRICKY_COMMAND_FLAG_STAY, //owned/count
+        -1, //used
+        TRICKY_COMMAND_TYPE_STAY, //disabled
+        0x0c85, //icon
+        0x0c85, 0x0004, //unknown
+        GAMETEXT_UI_TrickyStay, //title
+        0, 0}, //unknown
+
     {-1, -1, -1, -1, 0, 0, 0, 0x00, 0x00},
 };
 
 CMenuSection gCMenuSections[] = {
-    {gCMenuCollectableItems, 0, 0, 0x80001, 0x80000},
-    {gCMenuStaffAbilities, 0, 0, 0x80002, 0x40000},
-    {gCMenuTrickyAbilities, 0, 0, 0x80009, 0x20000},
-    {NULL, 0, 0, 0x0, 0x0},
+    {gCMenuCollectableItems, 0, 0x80001, 0x80000},
+    {gCMenuStaffAbilities,   0, 0x80002, 0x40000},
+    {gCMenuTrickyAbilities,  0, 0x80009, 0x20000},
+    {NULL, 0, 0x0, 0x0},
 };
 
 s16 gTrickyHudIconTextureIds[] = {
@@ -1398,92 +1524,92 @@ PauseMenuCellMapEntry gPauseMenuCellMap[] = {
 };
 
 struct PauseMenuMapTables gPauseMenuMapTables = {
-    {
-        {72, 289, 467, 256, 16, 12, 10, 0, {12, -1, 3, 12}, 1.7f, 1101, 937, 0, {0, 0, 0}},
-        {72, 576, 411, 256, 16, 12, 10, 0, {8, -1, 12, -1}, 1.7f, 1102, 937, 1, {0, 0, 0}},
-        {72, 187, 280, 256, 16, 12, 10, 0, {7, 5, 3, 5}, 1.7f, 1103, 937, 2, {0, 0, 0}},
-        {72, 76, 407, 256, 16, 12, 10, 0, {2, -1, -1, 0}, 1.7f, 1003, 937, 3, {0, 0, 0}},
-        {72, 397, 351, 256, 16, 12, 10, 0, {6, 12, 5, 8}, 1.7f, 1004, 937, 4, {0, 0, 0}},
-        {72, 226, 304, 256, 16, 12, 10, 0, {2, 0, 2, 6}, 1.7f, 1005, 937, 5, {0, 0, 0}},
-        {72, 379, 317, 256, 16, 12, 10, 0, {9, 4, 5, 8}, 1.7f, 1006, 937, 6, {0, 0, 0}},
-        {72, 96, 164, 256, 16, 12, 10, 0, {-1, 2, -1, 10}, 1.7f, 1007, 937, 7, {0, 0, 0}},
-        {72, 443, 363, 256, 16, 12, 10, 0, {9, 12, 4, 1}, 1.7f, 1008, 937, 8, {0, 0, 0}},
-        {72, 379, 253, 256, 16, 12, 10, 0, {10, 6, 10, 11}, 1.7f, 1009, 937, 9, {0, 0, 0}},
-        {72, 316, 202, 256, 16, 12, 10, 0, {-1, 9, 7, 11}, 1.7f, 1010, 937, 10, {0, 0, 0}},
-        {72, 549, 162, 256, 16, 12, 10, 0, {-1, 1, 10, -1}, 1.7f, 1011, 937, 11, {0, 0, 0}},
-        {72, 404, 404, 256, 16, 12, 10, 0, {4, 0, 0, 1}, 1.7f, 1012, 937, 12, {0, 0, 0}},
-        {0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0, 0}, 0.0f, -1, -1, 0, {0, 0, 0}},
+    {   //    id    x    y   ofs  tx  ty  ct xo dn  up  lf  rt
+         {72, 289, 467, 256, 16, 12, 10, 0, 12, -1,  3, 12, 1.7f, 1101, 937,  0},
+         {72, 576, 411, 256, 16, 12, 10, 0,  8, -1, 12, -1, 1.7f, 1102, 937,  1},
+         {72, 187, 280, 256, 16, 12, 10, 0,  7,  5,  3,  5, 1.7f, 1103, 937,  2},
+         {72,  76, 407, 256, 16, 12, 10, 0,  2, -1, -1,  0, 1.7f, 1003, 937,  3},
+         {72, 397, 351, 256, 16, 12, 10, 0,  6, 12,  5,  8, 1.7f, 1004, 937,  4},
+         {72, 226, 304, 256, 16, 12, 10, 0,  2,  0,  2,  6, 1.7f, 1005, 937,  5},
+         {72, 379, 317, 256, 16, 12, 10, 0,  9,  4,  5,  8, 1.7f, 1006, 937,  6},
+         {72,  96, 164, 256, 16, 12, 10, 0, -1,  2, -1, 10, 1.7f, 1007, 937,  7},
+         {72, 443, 363, 256, 16, 12, 10, 0,  9, 12,  4,  1, 1.7f, 1008, 937,  8},
+         {72, 379, 253, 256, 16, 12, 10, 0, 10,  6, 10, 11, 1.7f, 1009, 937,  9},
+        {72, 316, 202, 256, 16, 12, 10, 0, -1,  9,  7, 11, 1.7f, 1010, 937, 10},
+        {72, 549, 162, 256, 16, 12, 10, 0, -1,  1, 10, -1, 1.7f, 1011, 937, 11},
+        {72, 404, 404, 256, 16, 12, 10, 0,  4,  0,  0,  1, 1.7f, 1012, 937, 12},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0f, -1, -1, 0},
     },
     {
-        0x07E5,
-        0x05A3,
-        0x059D,
-        0x07E9,
-        0x0835,
-        0x05A2,
-        0x059E,
-        0x082E,
-        0x05A1,
-        0x05A0,
-        0x082F,
-        0x07DD,
+        GAMEBIT_ITEM_MapWM_Got,
+        GAMEBIT_ITEM_MapSH_Got,
+        GAMEBIT_ITEM_MapVFP_Got,
+        GAMEBIT_ITEM_MapOFP_Got,
+        GAMEBIT_ITEM_MapMMP_Got,
+        GAMEBIT_ITEM_MapLV_Got,
+        GAMEBIT_ITEM_MapDIM_Got,
+        GAMEBIT_ITEM_MapWC_Got,
+        GAMEBIT_ITEM_MapCF_Got,
+        GAMEBIT_ITEM_MapNW_Got,
+        GAMEBIT_ITEM_MapCC_Got,
+        GAMEBIT_ITEM_MapDR_Got,
     },
     {
-        {38, 167, 206, 256, 48, 48, 20, 15, {-1, 5, -1, 1}, 1.5f, 1288, 1300, 0, {0, 0, 0}},
-        {38, 242, 206, 256, 48, 48, 20, 15, {-1, 6, 0, 2}, 1.5f, 1289, 1300, 1, {0, 0, 0}},
-        {38, 317, 206, 256, 48, 48, 20, 15, {-1, 7, 1, 3}, 1.5f, 1290, 1300, 2, {0, 0, 0}},
-        {38, 392, 206, 256, 48, 48, 20, 15, {-1, 8, 2, 4}, 1.5f, 1291, 1300, 3, {0, 0, 0}},
-        {38, 467, 206, 256, 48, 48, 20, 15, {-1, 9, 3, -1}, 1.5f, 1292, 1300, 4, {0, 0, 0}},
-        {38, 167, 306, 256, 48, 48, 20, 15, {0, 10, -1, 6}, 1.5f, 1293, 1300, 5, {0, 0, 0}},
-        {38, 242, 306, 256, 48, 48, 20, 15, {1, 10, 5, 7}, 1.5f, 1294, 1300, 6, {0, 0, 0}},
-        {38, 317, 306, 256, 48, 48, 20, 15, {2, 11, 6, 8}, 1.5f, 1295, 1300, 7, {0, 0, 0}},
-        {38, 392, 306, 256, 48, 48, 20, 15, {3, 11, 7, 9}, 1.5f, 1296, 1300, 8, {0, 0, 0}},
-        {38, 467, 306, 256, 48, 48, 20, 15, {4, 11, 8, -1}, 1.5f, 1297, 1300, 9, {0, 0, 0}},
-        {38, 242, 406, 256, 48, 48, 20, 15, {6, -1, -1, 11}, 1.5f, 1298, 1300, 10, {0, 0, 0}},
-        {38, 317, 406, 256, 48, 48, 20, 15, {7, -1, 10, -1}, 1.5f, 1299, 1300, 11, {0, 0, 0}},
-        {0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0, 0}, 0.0f, -1, -1, 0, {0, 0, 0}},
+         {38, 167, 206, 256, 48, 48, 20, 15, -1,  5, -1,  1, 1.5f, 1288, 1300,  0},
+         {38, 242, 206, 256, 48, 48, 20, 15, -1,  6,  0,  2, 1.5f, 1289, 1300,  1},
+         {38, 317, 206, 256, 48, 48, 20, 15, -1,  7,  1,  3, 1.5f, 1290, 1300,  2},
+         {38, 392, 206, 256, 48, 48, 20, 15, -1,  8,  2,  4, 1.5f, 1291, 1300,  3},
+         {38, 467, 206, 256, 48, 48, 20, 15, -1,  9,  3, -1, 1.5f, 1292, 1300,  4},
+         {38, 167, 306, 256, 48, 48, 20, 15,  0, 10, -1,  6, 1.5f, 1293, 1300,  5},
+         {38, 242, 306, 256, 48, 48, 20, 15,  1, 10,  5,  7, 1.5f, 1294, 1300,  6},
+         {38, 317, 306, 256, 48, 48, 20, 15,  2, 11,  6,  8, 1.5f, 1295, 1300,  7},
+         {38, 392, 306, 256, 48, 48, 20, 15,  3, 11,  7,  9, 1.5f, 1296, 1300,  8},
+         {38, 467, 306, 256, 48, 48, 20, 15,  4, 11,  8, -1, 1.5f, 1297, 1300,  9},
+        {38, 242, 406, 256, 48, 48, 20, 15,  6, -1, -1, 11, 1.5f, 1298, 1300, 10},
+        {38, 317, 406, 256, 48, 48, 20, 15,  7, -1, 10, -1, 1.5f, 1299, 1300, 11},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0f, -1, -1, 0},
     },
 };
 
 GridEntry gPauseMenuStatusGrid[] = {
-    {17, 113, 242, 256, 38, 38, 20, 0, {2, 1, -1, 2}, 1.25f, 969, 938, 5, {0, 0, 0}},
-    {17, 113, 336, 256, 38, 38, 20, 0, {0, 3, -1, 3}, 1.25f, 967, 938, 4, {0, 0, 0}},
-    {17, 158, 192, 256, 38, 38, 20, 0, {-1, 3, 0, 4}, 1.25f, 963, 938, 0, {0, 0, 0}},
-    {17, 158, 385, 256, 38, 38, 20, 0, {2, -1, 1, 5}, 1.25f, 966, 938, 3, {0, 0, 0}},
-    {17, 203, 242, 256, 38, 38, 20, 0, {2, 5, 2, 10}, 1.25f, 964, 938, 1, {0, 0, 0}},
-    {17, 203, 336, 256, 38, 38, 20, 0, {4, 3, 3, 11}, 1.25f, 965, 938, 2, {0, 0, 0}},
-    {34, 490, 181, 256, 48, 48, 20, 12, {-1, 7, 10, -1}, 1.3f, 944, 938, 6, {0, 0, 0}},
-    {34, 490, 246, 256, 48, 48, 20, 12, {6, 8, 10, -1}, 1.3f, 945, 938, 7, {0, 0, 0}},
-    {34, 490, 311, 256, 48, 48, 20, 12, {7, 9, 11, -1}, 1.3f, 944, 938, 8, {0, 0, 0}},
-    {34, 490, 376, 256, 48, 48, 20, 12, {8, -1, 11, -1}, 1.3f, 945, 938, 9, {0, 0, 0}},
-    {77, 300, 190, 256, 64, 48, 20, 30, {-1, 11, 4, 7}, 1.8f, 1131, 938, 10, {0, 0, 0}},
-    {78, 300, 280, 256, 90, 45, 20, 30, {10, -1, 5, 8}, 1.6f, 1133, 938, 11, {0, 0, 0}},
-    {0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0, 0}, 0.0f, -1, -1, 0, {0, 0, 0}},
+     {17, 113, 242, 256, 38, 38, 20,  0,  2,  1, -1,  2, 1.25f, 969, 938,  5},
+     {17, 113, 336, 256, 38, 38, 20,  0,  0,  3, -1,  3, 1.25f, 967, 938,  4},
+     {17, 158, 192, 256, 38, 38, 20,  0, -1,  3,  0,  4, 1.25f, 963, 938,  0},
+     {17, 158, 385, 256, 38, 38, 20,  0,  2, -1,  1,  5, 1.25f, 966, 938,  3},
+     {17, 203, 242, 256, 38, 38, 20,  0,  2,  5,  2, 10, 1.25f, 964, 938,  1},
+     {17, 203, 336, 256, 38, 38, 20,  0,  4,  3,  3, 11, 1.25f, 965, 938,  2},
+     {34, 490, 181, 256, 48, 48, 20, 12, -1,  7, 10, -1, 1.3f,  944, 938,  6},
+     {34, 490, 246, 256, 48, 48, 20, 12,  6,  8, 10, -1, 1.3f,  945, 938,  7},
+     {34, 490, 311, 256, 48, 48, 20, 12,  7,  9, 11, -1, 1.3f,  944, 938,  8},
+     {34, 490, 376, 256, 48, 48, 20, 12,  8, -1, 11, -1, 1.3f,  945, 938,  9},
+    {77, 300, 190, 256, 64, 48, 20, 30, -1, 11,  4,  7, 1.8f, 1131, 938, 10},
+    {78, 300, 280, 256, 90, 45, 20, 30, 10, -1,  5,  8, 1.6f, 1133, 938, 11},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0f, -1, -1, 0},
 };
 
 GridEntry gPauseMenuConfirmGrid[] = {
-    {-1, 240, 300, 256, 56, 24, 20, 0, {-1, -1, -1, 1}, 2.0f, 0, 0, 0, {0, 0, 0}},
-    {-1, 400, 300, 256, 56, 24, 20, 0, {-1, -1, 0, -1}, 2.0f, 0, 0, 0, {0, 0, 0}},
-    {0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0, 0}, 1.0f, -1, -1, 0, {0, 0, 0}},
+    {-1, 240, 300, 256, 56, 24, 20, 0, -1, -1, -1,  1, 2.0f, 0, 0, 0},
+    {-1, 400, 300, 256, 56, 24, 20, 0, -1, -1,  0, -1, 2.0f, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0f, -1, -1, 0},
 };
 
 GridEntry gPauseMenuStatusBackGrid[] = {
-    {10, 84, 206, 256, 48, 48, 20, 15, {-1, 7, -1, 1}, 1.5f, 946, 939, 0, {0, 0, 0}},
-    {11, 159, 206, 256, 48, 48, 20, 15, {-1, 7, 0, 2}, 1.5f, 947, 939, 1, {0, 0, 0}},
-    {12, 234, 206, 256, 48, 48, 20, 15, {-1, 8, 1, 3}, 1.5f, 948, 939, 2, {0, 0, 0}},
-    {13, 309, 206, 256, 48, 48, 20, 15, {-1, 9, 2, 4}, 1.5f, 962, 939, 6, {0, 0, 0}},
-    {14, 384, 206, 256, 48, 48, 20, 15, {-1, 10, 3, 5}, 1.5f, 950, 939, 3, {0, 0, 0}},
-    {15, 459, 206, 256, 48, 48, 20, 15, {-1, 11, 4, 6}, 1.5f, 949, 939, 5, {0, 0, 0}},
-    {16, 534, 206, 256, 48, 48, 20, 15, {-1, 11, 5, -1}, 1.5f, 951, 939, 4, {0, 0, 0}},
-    {0, 159, 306, 256, 48, 48, 20, 15, {1, 12, -1, 8}, 1.5f, 952, 939, 7, {0, 0, 0}},
-    {1, 234, 306, 256, 48, 48, 20, 15, {2, 12, 7, 9}, 1.5f, 953, 939, 8, {0, 0, 0}},
-    {2, 309, 306, 256, 48, 48, 20, 15, {3, 13, 8, 10}, 1.5f, 954, 939, 9, {0, 0, 0}},
-    {3, 384, 306, 256, 48, 48, 20, 15, {4, 14, 9, 11}, 1.5f, 955, 939, 10, {0, 0, 0}},
-    {4, 459, 306, 256, 48, 48, 20, 15, {5, 14, 10, -1}, 1.5f, 957, 939, 12, {0, 0, 0}},
-    {20, 234, 406, 256, 48, 48, 20, 15, {8, -1, -1, 13}, 1.5f, 958, 939, 13, {0, 0, 0}},
-    {21, 309, 406, 256, 48, 48, 20, 15, {9, -1, 12, 14}, 1.5f, 959, 939, 14, {0, 0, 0}},
-    {22, 384, 406, 256, 48, 48, 20, 15, {10, -1, 13, -1}, 1.5f, 960, 939, 15, {0, 0, 0}},
-    {0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0, 0}, 0.0f, -1, -1, 0, {0, 0, 0}},
+     {10,  84, 206, 256, 48, 48, 20, 15, -1,  7, -1,  1, 1.5f, 946, 939,  0},
+     {11, 159, 206, 256, 48, 48, 20, 15, -1,  7,  0,  2, 1.5f, 947, 939,  1},
+     {12, 234, 206, 256, 48, 48, 20, 15, -1,  8,  1,  3, 1.5f, 948, 939,  2},
+     {13, 309, 206, 256, 48, 48, 20, 15, -1,  9,  2,  4, 1.5f, 962, 939,  6},
+     {14, 384, 206, 256, 48, 48, 20, 15, -1, 10,  3,  5, 1.5f, 950, 939,  3},
+     {15, 459, 206, 256, 48, 48, 20, 15, -1, 11,  4,  6, 1.5f, 949, 939,  5},
+     {16, 534, 206, 256, 48, 48, 20, 15, -1, 11,  5, -1, 1.5f, 951, 939,  4},
+     { 0, 159, 306, 256, 48, 48, 20, 15,  1, 12, -1,  8, 1.5f, 952, 939,  7},
+     { 1, 234, 306, 256, 48, 48, 20, 15,  2, 12,  7,  9, 1.5f, 953, 939,  8},
+     { 2, 309, 306, 256, 48, 48, 20, 15,  3, 13,  8, 10, 1.5f, 954, 939,  9},
+    { 3, 384, 306, 256, 48, 48, 20, 15,  4, 14,  9, 11, 1.5f, 955, 939, 10},
+    { 4, 459, 306, 256, 48, 48, 20, 15,  5, 14, 10, -1, 1.5f, 957, 939, 12},
+    {20, 234, 406, 256, 48, 48, 20, 15,  8, -1, -1, 13, 1.5f, 958, 939, 13},
+    {21, 309, 406, 256, 48, 48, 20, 15,  9, -1, 12, 14, 1.5f, 959, 939, 14},
+    {22, 384, 406, 256, 48, 48, 20, 15, 10, -1, 13, -1, 1.5f, 960, 939, 15},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0f, -1, -1, 0},
 };
 
 u32 gGameUiHudAnimObjIds[] = {0x6A8, 0x6A9, 0x6AA, 0x6AB, 0x752, 0x6AC};
@@ -1605,6 +1731,7 @@ static inline s16 cMenuMinRingAbs(void) {
 
     curd = gCMenuRingAngle;
     d1 = curd;
+    //@bug: Result of comparison of constant 32768 with expression of type 's16' (aka 'short') is always false
     if (curd > 0x8000) {
         d1 = (s16)(curd - 0xFFFF);
     }
@@ -1654,9 +1781,9 @@ static inline s16 cMenuMinRingAbs(void) {
  */
 
 /* head-display panel scroll-width animation bounds */
-#define HEADPANEL_WIDTH_MAX  0x152
-#define HEADPANEL_WIDTH_MIN  0x122
-#define HEADPANEL_WIDTH_OPEN 0x159
+#define HEADPANEL_WIDTH_MAX  338
+#define HEADPANEL_WIDTH_MIN  290
+#define HEADPANEL_WIDTH_OPEN 345
 
 /* gHeadDisplayEntryTable head-display table: 0xC-byte records */
 #define HEADREC_STRIDE       0xc
@@ -1827,7 +1954,7 @@ static inline void gameUiFreeResources(void) {
     textureFree(gGameUiBlinkTexture);
 }
 
-int gPauseMenuPlayerMapCell;
+int gPauseMenuPlayerMapId;
 int gPauseMenuSavedTextDir;
 int gGameUiCurHintTextMap;
 short gCMenuOpenAnim;
@@ -3228,7 +3355,7 @@ void drawWorldMapHud(void) {
             } else if (fi == cur && li_ != cur) {
                 streamId = gArwingMissionBriefs[cur].streamId08;
             } else if (cur == 2) {
-                if ((*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0) {
+                if ((*gMapEventInterface)->getMapAct(MAP_ID_WALLCITY) == 2 && lv == 0) {
                     streamId = 0x51e5;
                 } else if (fi == li_) {
                     if (mainGetBit(gArwingMissionBriefs[li_].bitCompletedArea)) {
@@ -3240,7 +3367,7 @@ void drawWorldMapHud(void) {
                     streamId = gArwingMissionBriefs[gPauseMenuHintIndex].streamId0C;
                 }
             } else {
-                if (cur == 0 && (*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0) {
+                if (cur == 0 && (*gMapEventInterface)->getMapAct(MAP_ID_WALLCITY) == 2 && lv == 0) {
                     streamId = 0x51e2;
                 } else {
                     streamId = gArwingMissionBriefs[gPauseMenuHintIndex].streamId0C;
@@ -3458,7 +3585,7 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
                 && progressHint != gPauseMenuHintIndex) {
                     textId = gArwingMissionBriefs[gPauseMenuHintIndex].textMission;
                 } else if (gPauseMenuHintIndex == 2) {
-                    if ((*gMapEventInterface)->getMapAct(0xd) == 2
+                    if ((*gMapEventInterface)->getMapAct(MAP_ID_WALLCITY) == 2
                     && hasLateGameHint == 0) {
                         //leaving without the spirit
                         textId = GAMETEXT_WORLD_NotGotSpirit;
@@ -3472,7 +3599,7 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
                     } else {
                         textId = gArwingMissionBriefs[gPauseMenuHintIndex].textGoBack;
                     }
-                } else if (gPauseMenuHintIndex == 0 && (*gMapEventInterface)->getMapAct(0xd) == 2 &&
+                } else if (gPauseMenuHintIndex == 0 && (*gMapEventInterface)->getMapAct(MAP_ID_WALLCITY) == 2 &&
                            hasLateGameHint == 0) {
                     //going to WC for spirit
                     textId = GAMETEXT_WORLD_AnotherShrineWC;
@@ -3784,7 +3911,7 @@ void pauseMenuRunSubmenu(int p1) {
         switch (pauseMenuState) {
         case 3:
             if (gPauseMenuIdleVoiceTimer >= 600.0f && old < 600.0f) {
-                if (gCurTaskHintMapId == gPauseMenuPlayerMapCell) {
+                if (gCurTaskHintMapId == gPauseMenuPlayerMapId) {
                     AudioStream_Play(0x271a, AudioStream_StartPrepared);
                 } else {
                     AudioStream_Play(0x2715, AudioStream_StartPrepared);
@@ -3818,17 +3945,17 @@ void pauseMenuRunSubmenu(int p1) {
             padGetAnalogInput(0, (s8*)&analogX, (s8*)&analogY);
             navY = analogY;
             if ((s8)navY == 1) {
-                sel = gPauseMenuActiveGrid[gPauseMenuGridCursor].nav[0];
+                sel = gPauseMenuActiveGrid[gPauseMenuGridCursor].navDown;
             }
             if ((s8)navY == -1) {
-                sel = gPauseMenuActiveGrid[gPauseMenuGridCursor].nav[1];
+                sel = gPauseMenuActiveGrid[gPauseMenuGridCursor].navUp;
             }
             navX = analogX;
             if ((s8)navX == -1 && sel == -1) {
-                sel = gPauseMenuActiveGrid[gPauseMenuGridCursor].nav[2];
+                sel = gPauseMenuActiveGrid[gPauseMenuGridCursor].navLeft;
             }
             if ((s8)navX == 1 && sel == -1) {
-                sel = gPauseMenuActiveGrid[gPauseMenuGridCursor].nav[3];
+                sel = gPauseMenuActiveGrid[gPauseMenuGridCursor].navRight;
             }
         }
         if (sel >= 0) {
@@ -3880,14 +4007,15 @@ void pauseMenuRunSubmenu(int p1) {
             }
         }
         if (valid == 0) {
-            pauseMenuSetupTitle(gPauseMenuActiveGrid[gPauseMenuGridCursor].f18,
-                                gPauseMenuActiveGrid[gPauseMenuGridCursor].f1c, 2, 0);
+            pauseMenuSetupTitle(
+                gPauseMenuActiveGrid[gPauseMenuGridCursor].textId,
+                gPauseMenuActiveGrid[gPauseMenuGridCursor].hint, 2, 0);
             return;
         }
         if (sel >= 0 || (u8)p1 != 0 || (0.0 == gPauseMenuOpenAmount && gPauseMenuOpenVel > 0.0)) {
-            if (gPauseMenuActiveGrid[gPauseMenuGridCursor].f18 != 0) {
-                pauseMenuSetupTitle(gPauseMenuActiveGrid[gPauseMenuGridCursor].f18,
-                                    gPauseMenuActiveGrid[gPauseMenuGridCursor].f1c, 1, 0);
+            if (gPauseMenuActiveGrid[gPauseMenuGridCursor].textId != 0) {
+                pauseMenuSetupTitle(gPauseMenuActiveGrid[gPauseMenuGridCursor].textId,
+                                    gPauseMenuActiveGrid[gPauseMenuGridCursor].hint, 1, 0);
             }
         }
     }
@@ -3937,28 +4065,28 @@ void pauseMenuUpdateFadeAndBack(void) {
 
 /* Returns whether the current player can appear in the pause-menu carousel. */
 u8 pauseMenuIsFox(void) {
-    GameObject* s;
+    GameObject* player;
     void* inner;
-    u8 lookup;
+    u8 mapNo;
     u8 i;
-    u8 is_zero;
+    u8 bModelZero;
 
-    s = Obj_GetPlayerObject();
-    if (s == NULL) {
-        return 0;
-    }
-    is_zero = objIsCurModelNotZero(s) == 0;
-    if (is_zero) {
-        return 0;
-    }
-    inner = s->anim.parent;
+    player = Obj_GetPlayerObject();
+    if(!player) return 0;
+
+    //are we Krystal?
+    bModelZero = objIsCurModelNotZero(player) == 0;
+    if(bModelZero) return 0;
+
+    //are we on a link map? (most pause items disabled)
+    inner = player->anim.parent;
     if (inner != NULL) {
-        lookup = ((GameObject*)inner)->anim.mapEventSlot;
+        mapNo = ((GameObject*)inner)->anim.mapEventSlot;
     } else {
-        lookup = coordsToMapCell(s->anim.localPosX, s->anim.localPosZ);
+        mapNo = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
     }
-    for (i = 0; i < 9; i++) {
-        if (lookup == lbl_8031B050[i]) {
+    for (i = 0; i < NUM_LINK_MAPS; i++) {
+        if (mapNo == linkMapIds[i]) {
             return 0;
         }
     }
@@ -3984,7 +4112,7 @@ int pauseMenuUpdateMapScroll(void) {
 
     if (gPauseMenuSlideOut == 0 && dir != 0 && !gPauseMenuMapSwivelAngle) {
         int idx = gPauseMenuGridCursor;
-        pauseMenuSetupTitle(gPauseMenuActiveGrid[idx].f18, gPauseMenuActiveGrid[idx].f1c, 2, 0);
+        pauseMenuSetupTitle(gPauseMenuActiveGrid[idx].textId, gPauseMenuActiveGrid[idx].hint, 2, 0);
         gPauseMenuMapSwivelAngle = dir;
         gPauseMenuMapSwivelVel = (f32)(dir * 0x320);
         gPauseMenuGridCursor = 0;
@@ -4067,48 +4195,48 @@ void pauseMenuUpdate(void) {
     }
     gCurTaskHintMapId = getCurTaskHintTextMap();
     if (player != 0) {
-        int cell;
+        int mapNo;
         if (player->anim.parent != NULL) {
-            cell = ((GameObject*)player->anim.parent)->anim.mapEventSlot;
+            mapNo = ((GameObject*)player->anim.parent)->anim.mapEventSlot;
         } else {
-            cell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
+            mapNo = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
         }
-        gPauseMenuPlayerMapCell = cell;
-        if (cell == 0x36) {
-            if ((*gMapEventInterface)->getMapAct(cell) == 1) {
-                if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 0)) {
-                    gPauseMenuPlayerMapCell = 5;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 1)) {
-                    gPauseMenuPlayerMapCell = 6;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 2)) {
-                    gPauseMenuPlayerMapCell = 0xc;
+        gPauseMenuPlayerMapId = mapNo;
+        if (mapNo == MAP_ID_MAGICAVE) {
+            if ((*gMapEventInterface)->getMapAct(mapNo) == 1) {
+                if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 0)) {
+                    gPauseMenuPlayerMapId = 5;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 1)) {
+                    gPauseMenuPlayerMapId = 6;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 2)) {
+                    gPauseMenuPlayerMapId = 0xc;
                 }
-            } else if ((*gMapEventInterface)->getMapAct(gPauseMenuPlayerMapCell) == 2) {
-                if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 0)) {
-                    gPauseMenuPlayerMapCell = 6;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 1)) {
-                    gPauseMenuPlayerMapCell = 6;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 2)) {
-                    gPauseMenuPlayerMapCell = 6;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 3)) {
-                    gPauseMenuPlayerMapCell = 0xa;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 4)) {
-                    gPauseMenuPlayerMapCell = 9;
-                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapCell, 5)) {
-                    gPauseMenuPlayerMapCell = 3;
+            } else if ((*gMapEventInterface)->getMapAct(gPauseMenuPlayerMapId) == 2) {
+                if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 0)) {
+                    gPauseMenuPlayerMapId = 6;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 1)) {
+                    gPauseMenuPlayerMapId = 6;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 2)) {
+                    gPauseMenuPlayerMapId = 6;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 3)) {
+                    gPauseMenuPlayerMapId = 0xa;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 4)) {
+                    gPauseMenuPlayerMapId = 9;
+                } else if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 5)) {
+                    gPauseMenuPlayerMapId = 3;
                 }
             }
         } else {
             u8 i;
             for (i = 0; i < 0x2d; i++) {
-                if (cell == gPauseMenuCellMap[i].cell) {
+                if (mapNo == gPauseMenuCellMap[i].cell) {
                     break;
                 }
             }
             if (i != 0x2d) {
-                int code = gPauseMenuCellMap[i].code;
-                gPauseMenuPlayerMapCell = code;
-                mainSetBits(code + 0xf10, 1);
+                int code = gPauseMenuCellMap[i].mapIdx;
+                gPauseMenuPlayerMapId = code;
+                mainSetBits(code + GAMEBIT_MapBits, 1);
             }
         }
     }
@@ -4159,11 +4287,11 @@ void pauseMenuUpdate(void) {
                 }
                 if (gHudIncomingCommTimer != 0 || gHudCommAlertTimer != 0) {
                     gPauseMenuSavedTextDir = (int)getCurGameText();
-                    if (gPauseMenuPlayerMapCell == gCurTaskHintMapId) {
+                    if (gPauseMenuPlayerMapId == gCurTaskHintMapId) {
                         hintTextLoadTaskMapTexts();
                     }
                     pauseMenuState = 4;
-                    if (gPauseMenuPlayerMapCell == gCurTaskHintMapId) {
+                    if (gPauseMenuPlayerMapId == gCurTaskHintMapId) {
                         hintTextLoadTaskMapTexts();
                     } else {
                         gameTextLoadDir(0xb);
@@ -4293,7 +4421,7 @@ void pauseMenuUpdate(void) {
                 case 3:
                     pauseMenuSetupTitle(0x2b1, prev, 4, 3);
                     pauseMenuState = 4;
-                    if (gPauseMenuPlayerMapCell == gCurTaskHintMapId) {
+                    if (gPauseMenuPlayerMapId == gCurTaskHintMapId) {
                         gGameUiCurHintTextMap = hintTextLoadTaskMapTexts();
                     } else {
                         gGameUiCurHintTextMap = (int)getCurGameText();
@@ -4366,7 +4494,7 @@ void pauseMenuUpdate(void) {
                 if (gPauseMenuMapBackSide == 0) {
                     hintTextGetAvailableMaps(hintBuf);
                     if ((u8)r != 0 || (0.0 == gPauseMenuOpenAmount && gPauseMenuOpenVel > 0.0)) {
-                        gPauseMenuGridCursor = gPauseMenuPlayerMapCell;
+                        gPauseMenuGridCursor = gPauseMenuPlayerMapId;
                     }
                     {
                         u8 k;
@@ -4380,16 +4508,16 @@ void pauseMenuUpdate(void) {
                             gPauseMenuActiveGrid[k].trailY = 0xc;
                         }
                     }
-                    if (gCurTaskHintMapId == gPauseMenuPlayerMapCell) {
-                        gPauseMenuActiveGrid[gPauseMenuPlayerMapCell].id = 0x4c;
+                    if (gCurTaskHintMapId == gPauseMenuPlayerMapId) {
+                        gPauseMenuActiveGrid[gPauseMenuPlayerMapId].id = 0x4c;
                     } else {
-                        gPauseMenuActiveGrid[gPauseMenuPlayerMapCell].id = 0x4b;
+                        gPauseMenuActiveGrid[gPauseMenuPlayerMapId].id = 0x4b;
                         gPauseMenuActiveGrid[gCurTaskHintMapId].id = 0x4a;
                         gPauseMenuActiveGrid[gCurTaskHintMapId].trailX = 0x14;
                         gPauseMenuActiveGrid[gCurTaskHintMapId].trailY = 0x10;
                     }
-                    gPauseMenuActiveGrid[gPauseMenuPlayerMapCell].trailX = 0x1a;
-                    gPauseMenuActiveGrid[gPauseMenuPlayerMapCell].trailY = 0x18;
+                    gPauseMenuActiveGrid[gPauseMenuPlayerMapId].trailX = 0x1a;
+                    gPauseMenuActiveGrid[gPauseMenuPlayerMapId].trailY = 0x18;
                 } else {
                     int gi;
                     u8 k;
@@ -4595,8 +4723,8 @@ void pauseMenuUpdate(void) {
                 int have = mainGetBit(GAMEBIT_ITEM_FuelCell_Count);
                 gPauseMenuTokenPromptState = 0;
                 if (player != 0) {
-                    gPauseMenuPlayerMapCell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
-                    if (gPauseMenuPlayerMapCell == 7) {
+                    gPauseMenuPlayerMapId = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
+                    if (gPauseMenuPlayerMapId == 7) {
                         for (gPauseMenuTokenIndex = 0; gPauseMenuTokenIndex < 4;) {
                             if (!mainGetBit(gNeededFuelCells[gPauseMenuTokenIndex].bitA)) {
                                 break;
@@ -5069,7 +5197,7 @@ void pauseMenuDrawGrid(s16 alpha) {
         int off;
         s8 i = 0;
         off = 0;
-        while (((GridEntry*)((char*)gPauseMenuActiveGrid + off))->f18 > -1) {
+        while (((GridEntry*)((char*)gPauseMenuActiveGrid + off))->textId > -1) {
             if (i != gPauseMenuGridCursor) {
                 pauseMenuDrawGridCell((u8)i, alpha, 0);
             }
@@ -5079,7 +5207,7 @@ void pauseMenuDrawGrid(s16 alpha) {
     } else {
         s8 j = 0;
         GridEntry* e = gPauseMenuActiveGrid;
-        while (e->f18 > -1) {
+        while (e->textId > -1) {
             e++;
             j++;
         }
@@ -5565,7 +5693,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
             gPauseMenuTextZ = 0xc0;
             gPauseMenuTextScale = 1.5f;
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-            if (gPauseMenuPlayerMapCell == gCurTaskHintMapId) {
+            if (gPauseMenuPlayerMapId == gCurTaskHintMapId) {
                 if (gPauseMenuCurHintText != 0 && gPauseMenuCurHintText->count >= 2) {
                     textY = 0x96;
                     for (stringIndex = 1; stringIndex < gPauseMenuCurHintText->count; stringIndex++) {

@@ -194,7 +194,7 @@ void sc_levelcontrol_update(GameObject* obj) {
         (*gMapEventInterface)->setObjGroupStatus(SC_LEVEL_CONTROL_MAP_SWAPCIRCLE, 0xa, 1);
         state->statusFlags.challengeGateGroupEnabled = 1;
     }
-    if (state->playerMapCell != SC_LEVEL_CONTROL_MAP_SWAPCIRCLE) {
+    if (state->playerMapId != SC_LEVEL_CONTROL_MAP_SWAPCIRCLE) {
         if (coordsToMapCell(player->anim.localPosX, player->anim.localPosZ) == SC_LEVEL_CONTROL_MAP_SWAPCIRCLE) {
             u8 mapAct = ((int (*)(s32))(*gMapEventInterface)->getMapAct)(SC_LEVEL_CONTROL_MAP_SWAPCIRCLE);
             Obj_GetPlayerObject();
@@ -250,7 +250,7 @@ void sc_levelcontrol_update(GameObject* obj) {
             mainSetBits(SC_TOTEM_POLE_GAMEBIT_REAR, 0);
         }
     }
-    state->playerMapCell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
+    state->playerMapId = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
     if (mainGetBit(GAMEBIT_SC_HelpTextEnabled) != 0) {
         if (state->helpTextTimer > 0.0f) {
             gameTextShow(0x429);
@@ -415,7 +415,7 @@ void sc_levelcontrol_init(GameObject* obj) {
     f32 fogNear;
 
     state->statusFlags.challengeGateGroupEnabled = 0;
-    state->playerMapCell = 0xff;
+    state->playerMapId = 0xff;
     state->animEventState = 0;
     obj->animEventCallback = sc_levelcontrol_processAnimEventsCallback;
     mainSetBits(GAMEBIT_SC_TotemCircleRelated060F, 1);

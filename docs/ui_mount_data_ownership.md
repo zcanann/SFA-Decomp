@@ -4,7 +4,7 @@ Target: EN v1.0, GC/1.3 game compiler with existing per-unit flags.
 
 ## Pause-menu map cell
 
-All references to `gPauseMenuPlayerMapCell` belong to engine slot 0. The map
+All references to `gPauseMenuPlayerMapId` belong to engine slot 0. The map
 page writes the player cell, applies map-act/group remaps, and compares or
 indexes the resulting cell while displaying the current task and player marker.
 The retail word at `803DD8E0` immediately follows this unit's saved text-directory

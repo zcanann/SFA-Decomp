@@ -25,7 +25,7 @@ typedef struct ScLevelControlState {
     GameBitLatchState musicLatches;
     u8 totemComboIndex;
     u8 animEventState;
-    u8 playerMapCell;
+    u8 playerMapId;
     u8 animEventFlags;
     u8 musicTriggerId;
     s8 ambientMusicTriggerId;
@@ -44,7 +44,7 @@ STATIC_ASSERT(offsetof(ScLevelControlState, fadeTimer) == 0x14);
 STATIC_ASSERT(offsetof(ScLevelControlState, musicLatches) == 0x18);
 STATIC_ASSERT(offsetof(ScLevelControlState, totemComboIndex) == 0x1C);
 STATIC_ASSERT(offsetof(ScLevelControlState, animEventState) == 0x1D);
-STATIC_ASSERT(offsetof(ScLevelControlState, playerMapCell) == 0x1E);
+STATIC_ASSERT(offsetof(ScLevelControlState, playerMapId) == 0x1E);
 STATIC_ASSERT(offsetof(ScLevelControlState, animEventFlags) == 0x1F);
 STATIC_ASSERT(offsetof(ScLevelControlState, musicTriggerId) == 0x20);
 STATIC_ASSERT(offsetof(ScLevelControlState, ambientMusicTriggerId) == 0x21);
