@@ -1524,20 +1524,20 @@ PauseMenuCellMapEntry gPauseMenuCellMap[] = {
 };
 
 struct PauseMenuMapTables gPauseMenuMapTables = {
-    {   //    id    x    y   ofs  tx  ty  ct xo dn  up  lf  rt
-         {72, 289, 467, 256, 16, 12, 10, 0, 12, -1,  3, 12, 1.7f, 1101, 937,  0},
-         {72, 576, 411, 256, 16, 12, 10, 0,  8, -1, 12, -1, 1.7f, 1102, 937,  1},
-         {72, 187, 280, 256, 16, 12, 10, 0,  7,  5,  3,  5, 1.7f, 1103, 937,  2},
-         {72,  76, 407, 256, 16, 12, 10, 0,  2, -1, -1,  0, 1.7f, 1003, 937,  3},
-         {72, 397, 351, 256, 16, 12, 10, 0,  6, 12,  5,  8, 1.7f, 1004, 937,  4},
-         {72, 226, 304, 256, 16, 12, 10, 0,  2,  0,  2,  6, 1.7f, 1005, 937,  5},
-         {72, 379, 317, 256, 16, 12, 10, 0,  9,  4,  5,  8, 1.7f, 1006, 937,  6},
-         {72,  96, 164, 256, 16, 12, 10, 0, -1,  2, -1, 10, 1.7f, 1007, 937,  7},
-         {72, 443, 363, 256, 16, 12, 10, 0,  9, 12,  4,  1, 1.7f, 1008, 937,  8},
-         {72, 379, 253, 256, 16, 12, 10, 0, 10,  6, 10, 11, 1.7f, 1009, 937,  9},
-        {72, 316, 202, 256, 16, 12, 10, 0, -1,  9,  7, 11, 1.7f, 1010, 937, 10},
-        {72, 549, 162, 256, 16, 12, 10, 0, -1,  1, 10, -1, 1.7f, 1011, 937, 11},
-        {72, 404, 404, 256, 16, 12, 10, 0,  4,  0,  0,  1, 1.7f, 1012, 937, 12},
+    {   //    id    x    y  ofs  tx  ty  ct xo dn   up  lf  rt  scl txt txt hint
+        {72, 289, 467, 256, 16, 12, 10, 0, 12, -1,  3, 12, 1.7f, GAMETEXT_UI_Map_KP,  GAMETEXT_UI_MapNames,  0},
+        {72, 576, 411, 256, 16, 12, 10, 0,  8, -1, 12, -1, 1.7f, GAMETEXT_UI_Map_DR,  GAMETEXT_UI_MapNames,  1},
+        {72, 187, 280, 256, 16, 12, 10, 0,  7,  5,  3,  5, 1.7f, GAMETEXT_UI_Map_IM,  GAMETEXT_UI_MapNames,  2},
+        {72,  76, 407, 256, 16, 12, 10, 0,  2, -1, -1,  0, 1.7f, GAMETEXT_UI_Map_WC,  GAMETEXT_UI_MapNames,  3},
+        {72, 397, 351, 256, 16, 12, 10, 0,  6, 12,  5,  8, 1.7f, GAMETEXT_UI_Map_LV,  GAMETEXT_UI_MapNames,  4},
+        {72, 226, 304, 256, 16, 12, 10, 0,  2,  0,  2,  6, 1.7f, GAMETEXT_UI_Map_SW,  GAMETEXT_UI_MapNames,  5},
+        {72, 379, 317, 256, 16, 12, 10, 0,  9,  4,  5,  8, 1.7f, GAMETEXT_UI_Map_TTH, GAMETEXT_UI_MapNames,  6},
+        {72,  96, 164, 256, 16, 12, 10, 0, -1,  2, -1, 10, 1.7f, GAMETEXT_UI_Map_DIM, GAMETEXT_UI_MapNames,  7},
+        {72, 443, 363, 256, 16, 12, 10, 0,  9, 12,  4,  1, 1.7f, GAMETEXT_UI_Map_OFP, GAMETEXT_UI_MapNames,  8},
+        {72, 379, 253, 256, 16, 12, 10, 0, 10,  6, 10, 11, 1.7f, GAMETEXT_UI_Map_MMP, GAMETEXT_UI_MapNames,  9},
+        {72, 316, 202, 256, 16, 12, 10, 0, -1,  9,  7, 11, 1.7f, GAMETEXT_UI_Map_VFP, GAMETEXT_UI_MapNames, 10},
+        {72, 549, 162, 256, 16, 12, 10, 0, -1,  1, 10, -1, 1.7f, GAMETEXT_UI_Map_CRF, GAMETEXT_UI_MapNames, 11},
+        {72, 404, 404, 256, 16, 12, 10, 0,  4,  0,  0,  1, 1.7f, GAMETEXT_UI_Map_CC,  GAMETEXT_UI_MapNames, 12},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0f, -1, -1, 0},
     },
     {
@@ -1554,61 +1554,64 @@ struct PauseMenuMapTables gPauseMenuMapTables = {
         GAMEBIT_ITEM_MapCC_Got,
         GAMEBIT_ITEM_MapDR_Got,
     },
-    {
-         {38, 167, 206, 256, 48, 48, 20, 15, -1,  5, -1,  1, 1.5f, 1288, 1300,  0},
-         {38, 242, 206, 256, 48, 48, 20, 15, -1,  6,  0,  2, 1.5f, 1289, 1300,  1},
-         {38, 317, 206, 256, 48, 48, 20, 15, -1,  7,  1,  3, 1.5f, 1290, 1300,  2},
-         {38, 392, 206, 256, 48, 48, 20, 15, -1,  8,  2,  4, 1.5f, 1291, 1300,  3},
-         {38, 467, 206, 256, 48, 48, 20, 15, -1,  9,  3, -1, 1.5f, 1292, 1300,  4},
-         {38, 167, 306, 256, 48, 48, 20, 15,  0, 10, -1,  6, 1.5f, 1293, 1300,  5},
-         {38, 242, 306, 256, 48, 48, 20, 15,  1, 10,  5,  7, 1.5f, 1294, 1300,  6},
-         {38, 317, 306, 256, 48, 48, 20, 15,  2, 11,  6,  8, 1.5f, 1295, 1300,  7},
-         {38, 392, 306, 256, 48, 48, 20, 15,  3, 11,  7,  9, 1.5f, 1296, 1300,  8},
-         {38, 467, 306, 256, 48, 48, 20, 15,  4, 11,  8, -1, 1.5f, 1297, 1300,  9},
-        {38, 242, 406, 256, 48, 48, 20, 15,  6, -1, -1, 11, 1.5f, 1298, 1300, 10},
-        {38, 317, 406, 256, 48, 48, 20, 15,  7, -1, 10, -1, 1.5f, 1299, 1300, 11},
+    {   //    id    x    y  ofs  tx  ty  ct xo dn   up  lf  rt  scl txt txt hint
+        {38, 167, 206, 256, 48, 48, 20, 15, -1,  5, -1,  1, 1.5f, GAMETEXT_UI_MapDescKP,  GAMETEXT_UI_MapNames1300,  0},
+        {38, 242, 206, 256, 48, 48, 20, 15, -1,  6,  0,  2, 1.5f, GAMETEXT_UI_MapDescTTH, GAMETEXT_UI_MapNames1300,  1},
+        {38, 317, 206, 256, 48, 48, 20, 15, -1,  7,  1,  3, 1.5f, GAMETEXT_UI_MapDescVFP, GAMETEXT_UI_MapNames1300,  2},
+        {38, 392, 206, 256, 48, 48, 20, 15, -1,  8,  2,  4, 1.5f, GAMETEXT_UI_MapDescOFP, GAMETEXT_UI_MapNames1300,  3},
+        {38, 467, 206, 256, 48, 48, 20, 15, -1,  9,  3, -1, 1.5f, GAMETEXT_UI_MapDescMMP, GAMETEXT_UI_MapNames1300,  4},
+        {38, 167, 306, 256, 48, 48, 20, 15,  0, 10, -1,  6, 1.5f, GAMETEXT_UI_MapDescLV,  GAMETEXT_UI_MapNames1300,  5},
+        {38, 242, 306, 256, 48, 48, 20, 15,  1, 10,  5,  7, 1.5f, GAMETEXT_UI_MapDescDIM, GAMETEXT_UI_MapNames1300,  6},
+        {38, 317, 306, 256, 48, 48, 20, 15,  2, 11,  6,  8, 1.5f, GAMETEXT_UI_MapDescWC,  GAMETEXT_UI_MapNames1300,  7},
+        {38, 392, 306, 256, 48, 48, 20, 15,  3, 11,  7,  9, 1.5f, GAMETEXT_UI_MapDescCRF, GAMETEXT_UI_MapNames1300,  8},
+        {38, 467, 306, 256, 48, 48, 20, 15,  4, 11,  8, -1, 1.5f, GAMETEXT_UI_MapDescSW,  GAMETEXT_UI_MapNames1300,  9},
+        {38, 242, 406, 256, 48, 48, 20, 15,  6, -1, -1, 11, 1.5f, GAMETEXT_UI_MapDescCC,  GAMETEXT_UI_MapNames1300, 10},
+        {38, 317, 406, 256, 48, 48, 20, 15,  7, -1, 10, -1, 1.5f, GAMETEXT_UI_MapDescDR,  GAMETEXT_UI_MapNames1300, 11},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0f, -1, -1, 0},
     },
 };
 
 GridEntry gPauseMenuStatusGrid[] = {
-     {17, 113, 242, 256, 38, 38, 20,  0,  2,  1, -1,  2, 1.25f, 969, 938,  5},
-     {17, 113, 336, 256, 38, 38, 20,  0,  0,  3, -1,  3, 1.25f, 967, 938,  4},
-     {17, 158, 192, 256, 38, 38, 20,  0, -1,  3,  0,  4, 1.25f, 963, 938,  0},
-     {17, 158, 385, 256, 38, 38, 20,  0,  2, -1,  1,  5, 1.25f, 966, 938,  3},
-     {17, 203, 242, 256, 38, 38, 20,  0,  2,  5,  2, 10, 1.25f, 964, 938,  1},
-     {17, 203, 336, 256, 38, 38, 20,  0,  4,  3,  3, 11, 1.25f, 965, 938,  2},
-     {34, 490, 181, 256, 48, 48, 20, 12, -1,  7, 10, -1, 1.3f,  944, 938,  6},
-     {34, 490, 246, 256, 48, 48, 20, 12,  6,  8, 10, -1, 1.3f,  945, 938,  7},
-     {34, 490, 311, 256, 48, 48, 20, 12,  7,  9, 11, -1, 1.3f,  944, 938,  8},
-     {34, 490, 376, 256, 48, 48, 20, 12,  8, -1, 11, -1, 1.3f,  945, 938,  9},
-    {77, 300, 190, 256, 64, 48, 20, 30, -1, 11,  4,  7, 1.8f, 1131, 938, 10},
-    {78, 300, 280, 256, 90, 45, 20, 30, 10, -1,  5,  8, 1.6f, 1133, 938, 11},
+    //    id    x    y  ofs  tx  ty  ct xo dn   up  lf  rt  scl txt txt hint
+    {17, 113, 242, 256, 38, 38, 20,  0,  2,  1, -1,  2, 1.25f, GAMETEXT_UI_Spirit6,    GAMETEXT_UI_ItemNames,  5},
+    {17, 113, 336, 256, 38, 38, 20,  0,  0,  3, -1,  3, 1.25f, GAMETEXT_UI_Spirit5,    GAMETEXT_UI_ItemNames,  4},
+    {17, 158, 192, 256, 38, 38, 20,  0, -1,  3,  0,  4, 1.25f, GAMETEXT_UI_Spirit1,    GAMETEXT_UI_ItemNames,  0},
+    {17, 158, 385, 256, 38, 38, 20,  0,  2, -1,  1,  5, 1.25f, GAMETEXT_UI_Spirit4,    GAMETEXT_UI_ItemNames,  3},
+    {17, 203, 242, 256, 38, 38, 20,  0,  2,  5,  2, 10, 1.25f, GAMETEXT_UI_Spirit2,    GAMETEXT_UI_ItemNames,  1},
+    {17, 203, 336, 256, 38, 38, 20,  0,  4,  3,  3, 11, 1.25f, GAMETEXT_UI_Spirit3,    GAMETEXT_UI_ItemNames,  2},
+    {34, 490, 181, 256, 48, 48, 20, 12, -1,  7, 10, -1, 1.3f,  GAMETEXT_UI_FireStone,  GAMETEXT_UI_ItemNames,  6},
+    {34, 490, 246, 256, 48, 48, 20, 12,  6,  8, 10, -1, 1.3f,  GAMETEXT_UI_WaterStone, GAMETEXT_UI_ItemNames,  7},
+    {34, 490, 311, 256, 48, 48, 20, 12,  7,  9, 11, -1, 1.3f,  GAMETEXT_UI_FireStone,  GAMETEXT_UI_ItemNames,  8},
+    {34, 490, 376, 256, 48, 48, 20, 12,  8, -1, 11, -1, 1.3f,  GAMETEXT_UI_WaterStone, GAMETEXT_UI_ItemNames,  9},
+    {77, 300, 190, 256, 64, 48, 20, 30, -1, 11,  4,  7, 1.8f, GAMETEXT_UI_Bafomdad,    GAMETEXT_UI_ItemNames, 10},
+    {78, 300, 280, 256, 90, 45, 20, 30, 10, -1,  5,  8, 1.6f, GAMETEXT_UI_ScarabBag,   GAMETEXT_UI_ItemNames, 11},
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0f, -1, -1, 0},
 };
 
 GridEntry gPauseMenuConfirmGrid[] = {
+    //    id    x    y  ofs  tx  ty  ct xo dn   up  lf  rt  scl txt txt hint
     {-1, 240, 300, 256, 56, 24, 20, 0, -1, -1, -1,  1, 2.0f, 0, 0, 0},
     {-1, 400, 300, 256, 56, 24, 20, 0, -1, -1,  0, -1, 2.0f, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0f, -1, -1, 0},
 };
 
 GridEntry gPauseMenuStatusBackGrid[] = {
-     {10,  84, 206, 256, 48, 48, 20, 15, -1,  7, -1,  1, 1.5f, 946, 939,  0},
-     {11, 159, 206, 256, 48, 48, 20, 15, -1,  7,  0,  2, 1.5f, 947, 939,  1},
-     {12, 234, 206, 256, 48, 48, 20, 15, -1,  8,  1,  3, 1.5f, 948, 939,  2},
-     {13, 309, 206, 256, 48, 48, 20, 15, -1,  9,  2,  4, 1.5f, 962, 939,  6},
-     {14, 384, 206, 256, 48, 48, 20, 15, -1, 10,  3,  5, 1.5f, 950, 939,  3},
-     {15, 459, 206, 256, 48, 48, 20, 15, -1, 11,  4,  6, 1.5f, 949, 939,  5},
-     {16, 534, 206, 256, 48, 48, 20, 15, -1, 11,  5, -1, 1.5f, 951, 939,  4},
-     { 0, 159, 306, 256, 48, 48, 20, 15,  1, 12, -1,  8, 1.5f, 952, 939,  7},
-     { 1, 234, 306, 256, 48, 48, 20, 15,  2, 12,  7,  9, 1.5f, 953, 939,  8},
-     { 2, 309, 306, 256, 48, 48, 20, 15,  3, 13,  8, 10, 1.5f, 954, 939,  9},
-    { 3, 384, 306, 256, 48, 48, 20, 15,  4, 14,  9, 11, 1.5f, 955, 939, 10},
-    { 4, 459, 306, 256, 48, 48, 20, 15,  5, 14, 10, -1, 1.5f, 957, 939, 12},
-    {20, 234, 406, 256, 48, 48, 20, 15,  8, -1, -1, 13, 1.5f, 958, 939, 13},
-    {21, 309, 406, 256, 48, 48, 20, 15,  9, -1, 12, 14, 1.5f, 959, 939, 14},
-    {22, 384, 406, 256, 48, 48, 20, 15, 10, -1, 13, -1, 1.5f, 960, 939, 15},
+    //    id    x    y  ofs  tx  ty  ct  xo  dn  up  lf  rt  scl  txt txt hint
+    {10,  84, 206, 256, 48, 48, 20, 15, -1,  7, -1,  1, 1.5f, GAMETEXT_UI_FireBlast, GAMETEXT_UI_Spellnames,  0},
+    {11, 159, 206, 256, 48, 48, 20, 15, -1,  7,  0,  2, 1.5f, GAMETEXT_UI_IceBlast, GAMETEXT_UI_Spellnames,  1},
+    {12, 234, 206, 256, 48, 48, 20, 15, -1,  8,  1,  3, 1.5f, GAMETEXT_UI_Disguise, GAMETEXT_UI_Spellnames,  2},
+    {13, 309, 206, 256, 48, 48, 20, 15, -1,  9,  2,  4, 1.5f, GAMETEXT_UI_Quake, GAMETEXT_UI_Spellnames,  6},
+    {14, 384, 206, 256, 48, 48, 20, 15, -1, 10,  3,  5, 1.5f, GAMETEXT_UI_SuperQuake, GAMETEXT_UI_Spellnames,  3},
+    {15, 459, 206, 256, 48, 48, 20, 15, -1, 11,  4,  6, 1.5f, GAMETEXT_UI_Portal, GAMETEXT_UI_Spellnames,  5},
+    {16, 534, 206, 256, 48, 48, 20, 15, -1, 11,  5, -1, 1.5f, GAMETEXT_UI_Rocket, GAMETEXT_UI_Spellnames,  4},
+    { 0, 159, 306, 256, 48, 48, 20, 15,  1, 12, -1,  8, 1.5f, GAMETEXT_UI_Heel, GAMETEXT_UI_Spellnames,  7},
+    { 1, 234, 306, 256, 48, 48, 20, 15,  2, 12,  7,  9, 1.5f, GAMETEXT_UI_Ball, GAMETEXT_UI_Spellnames,  8},
+    { 2, 309, 306, 256, 48, 48, 20, 15,  3, 13,  8, 10, 1.5f, GAMETEXT_UI_Find, GAMETEXT_UI_Spellnames,  9},
+    { 3, 384, 306, 256, 48, 48, 20, 15,  4, 14,  9, 11, 1.5f, GAMETEXT_UI_Flame, GAMETEXT_UI_Spellnames, 10},
+    { 4, 459, 306, 256, 48, 48, 20, 15,  5, 14, 10, -1, 1.5f, GAMETEXT_UI_Stay, GAMETEXT_UI_Spellnames, 12},
+    {20, 234, 406, 256, 48, 48, 20, 15,  8, -1, -1, 13, 1.5f, GAMETEXT_UI_DinoHorn, GAMETEXT_UI_Spellnames, 13},
+    {21, 309, 406, 256, 48, 48, 20, 15,  9, -1, 12, 14, 1.5f, GAMETEXT_UI_Firefly, GAMETEXT_UI_Spellnames, 14},
+    {22, 384, 406, 256, 48, 48, 20, 15, 10, -1, 13, -1, 1.5f, GAMETEXT_UI_Goggles, GAMETEXT_UI_Spellnames, 15},
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0f, -1, -1, 0},
 };
 
@@ -3644,7 +3647,7 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
                                    randomGetRange(0, 0x1e) << 1);
             }
         }
-        gameTextShowAt(0x3dd, 0x64, 0x15e);
+        gameTextShowAt(GAMETEXT_UI_BackSelect, 0x64, 0x15e);
     } else {
         GameTextDef* mapText;
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
@@ -3874,7 +3877,7 @@ void timeListPromptUpdate(void) {
         gTimeListPromptSelection = 0;
         cutsceneFadeInOut(0);
         (*gCameraInterface)->loadTriggeredCamAction(3, 0x80, 1);
-        pauseMenuFrameCounter = 0x3c;
+        pauseMenuFrameCounter = 60;
         Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
     }
     if ((buttons & PAD_BUTTON_B) != 0) {
@@ -3882,7 +3885,7 @@ void timeListPromptUpdate(void) {
         gTimeListPromptSelection = 0;
         cutsceneFadeInOut(0);
         (*gCameraInterface)->loadTriggeredCamAction(3, 0x80, 1);
-        pauseMenuFrameCounter = 0x3c;
+        pauseMenuFrameCounter = 60;
         Sfx_PlayFromObject(0, SFXTRIG_menu_pause_down);
     }
 }
@@ -4203,6 +4206,7 @@ void pauseMenuUpdate(void) {
         }
         gPauseMenuPlayerMapId = mapNo;
         if (mapNo == MAP_ID_MAGICAVE) {
+            //override displayed location
             if ((*gMapEventInterface)->getMapAct(mapNo) == 1) {
                 if ((*gMapEventInterface)->getObjGroupStatus(gPauseMenuPlayerMapId, 0)) {
                     gPauseMenuPlayerMapId = 5;
@@ -4276,7 +4280,7 @@ void pauseMenuUpdate(void) {
             if ((btn & PAD_BUTTON_MENU) && pauseMenuFrameCounter == 0 && pauseDisabled == 0 &&
                 (*gScreenTransitionInterface)->getProgress() == 0.0f && canOpen != 0 && gTimeListPromptSelection == 0 &&
                 getHudHiddenFrameCount() == 0) {
-                pauseMenuFrameCounter = 0x3c;
+                pauseMenuFrameCounter = 60;
                 cutsceneFadeInOut(1);
                 setTimeStop(0xff);
                 buttonDisable(0, PAD_BUTTON_MENU);
@@ -4338,7 +4342,8 @@ void pauseMenuUpdate(void) {
         case 1: {
             u16 b2;
             padGetAnalogInput(0, (s8*)&analogX, (s8*)&analogY);
-            pauseMenuSetupTitle(0x2b1, gPauseMenuPageIndex, 1, 3);
+            pauseMenuSetupTitle(GAMETEXT_UI_PauseMenu,
+                gPauseMenuPageIndex, 1, 3);
             if ((s8)gPauseMenuCloseAnimIndex != 0 && AudioStream_GetCurrentId() == 0 &&
                 AudioStream_IsPreparing() == 0) {
                 ObjAnim_SetCurrentMove(gGameUiHudAnimObjects[(s8)gPauseMenuCloseAnimIndex], 0, 0.0f, 0);
@@ -4383,10 +4388,11 @@ void pauseMenuUpdate(void) {
             if (gPauseMenuTitleDelayTimer < gPauseMenuTitleDelayFrames) {
                 gPauseMenuTitleDelayTimer += framesThisStep;
                 if (gPauseMenuTitleDelayTimer >= gPauseMenuTitleDelayFrames) {
-                    pauseMenuSetupTitle(0x2b1, gPauseMenuPageIndex, 1, 3);
+                    pauseMenuSetupTitle(GAMETEXT_UI_PauseMenu,
+                        gPauseMenuPageIndex, 1, 3);
                 }
             } else {
-                gPauseMenuRingExpand += framesThisStep * 0x28;
+                gPauseMenuRingExpand += framesThisStep * 40;
                 if (gPauseMenuRingExpand > 0x400) {
                     gPauseMenuRingExpand = 0x400;
                 }
@@ -4406,20 +4412,20 @@ void pauseMenuUpdate(void) {
                 case 0:
                     break;
                 case 1:
-                    pauseMenuSetupTitle(0x2b1, prev, 2, 3);
+                    pauseMenuSetupTitle(GAMETEXT_UI_PauseMenu, prev, 2, 3);
                     pauseMenuState = 5;
                     gPauseMenuMapBackSide = 0;
                     gPauseMenuGridCursor = 2;
                     AudioStream_Play(0x272f, AudioStream_StartPrepared);
                     break;
                 case 2:
-                    pauseMenuSetupTitle(0x2b1, prev, 2, 3);
+                    pauseMenuSetupTitle(GAMETEXT_UI_PauseMenu, prev, 2, 3);
                     pauseMenuState = 3;
                     gPauseMenuMapBackSide = 0;
                     AudioStream_Play(randomGetRange(0, 1) + 0x2710, AudioStream_StartPrepared);
                     break;
                 case 3:
-                    pauseMenuSetupTitle(0x2b1, prev, 4, 3);
+                    pauseMenuSetupTitle(GAMETEXT_UI_PauseMenu, prev, 4, 3);
                     pauseMenuState = 4;
                     if (gPauseMenuPlayerMapId == gCurTaskHintMapId) {
                         gGameUiCurHintTextMap = hintTextLoadTaskMapTexts();
@@ -4447,17 +4453,17 @@ void pauseMenuUpdate(void) {
             if ((b2 & 0x1200) && pauseMenuFrameCounter == 0) {
                 Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
                 Sfx_PlayFromObject(0, SFXTRIG_menu_fox_weapons_up);
-                pauseMenuFrameCounter = 0x3c;
+                pauseMenuFrameCounter = 60;
                 mapLoadGameTextDir(1);
                 cutsceneFadeInOut(0);
                 buttonDisable(0, 0x1200);
                 pauseMenuState = 2;
-                pauseMenuSetupTitle(0x2b1, gPauseMenuPageIndex, 2, 3);
+                pauseMenuSetupTitle(GAMETEXT_UI_PauseMenu, gPauseMenuPageIndex, 2, 3);
             }
             break;
         }
         case 2: {
-            s16 t = (s16)(gPauseMenuPodiumRamp - framesThisStep * 0x32);
+            s16 t = (s16)(gPauseMenuPodiumRamp - framesThisStep * 50);
             gPauseMenuPodiumRamp = t;
             if (t < 0) {
                 gPauseMenuPodiumRamp = 0;
@@ -4470,7 +4476,7 @@ void pauseMenuUpdate(void) {
                 }
                 gameUiFreeHudAnims(&gGameUiHudAnimObjects[0]);
                 Music_Trigger(MUSICTRIG_cldrnr_tune1, 0);
-                pauseMenuSetupTitle(0x2b1, gPauseMenuPageIndex, 4, 3);
+                pauseMenuSetupTitle(GAMETEXT_UI_PauseMenu, gPauseMenuPageIndex, 4, 3);
             } else {
                 pauseMenuAnimateCarousel();
             }
@@ -4538,7 +4544,7 @@ void pauseMenuUpdate(void) {
                     textureFree(gPauseMenuGridBackdropTexture);
                     gPauseMenuGridBackdropTexture = 0;
                 }
-                pauseMenuSetupTitle(0x3a9, 0, 2, 0);
+                pauseMenuSetupTitle(GAMETEXT_UI_MapNames, 0, 2, 0);
                 pauseMenuState = 1;
                 gPauseMenuRingExpand = 0;
             }
@@ -4612,7 +4618,7 @@ void pauseMenuUpdate(void) {
                 pauseMenuUpdateFadeAndBack();
             } else {
                 pauseMenuFreeIconTextures();
-                pauseMenuSetupTitle(0x3a9, 0, 2, 0);
+                pauseMenuSetupTitle(GAMETEXT_UI_MapNames, 0, 2, 0);
                 pauseMenuState = 1;
                 gPauseMenuRingExpand = 0;
             }
@@ -4689,8 +4695,8 @@ void pauseMenuUpdate(void) {
                     playerHeal(player);
                     gameTextLoadDir(gPauseMenuSavedTextDir);
                     pauseMenuState = 2;
-                    pauseMenuFrameCounter = 0x3c;
-                    pauseMenuSetupTitle(0x2b1, gPauseMenuPageIndex, 2, 3);
+                    pauseMenuFrameCounter = 60;
+                    pauseMenuSetupTitle(GAMETEXT_UI_PauseMenu, gPauseMenuPageIndex, 2, 3);
                     break;
                 case 9:
                     updateSavedHealth();
@@ -4709,9 +4715,9 @@ void pauseMenuUpdate(void) {
                     gPauseMenuTitleFadeCounter = 0;
                     gWorldMapVoiceoverTimer = 0;
                     gPauseMenuTitlePhraseIndex = -1;
-                    pauseMenuSetupTitle(0x2b1, 1, 4, 3);
+                    pauseMenuSetupTitle(GAMETEXT_UI_PauseMenu, 1, 4, 3);
                     pauseMenuState = 2;
-                    pauseMenuFrameCounter = 0x3c;
+                    pauseMenuFrameCounter = 60;
                     (*gScreenTransitionInterface)->start(0x14, SCREEN_TRANSITION_BLACK);
                     gPauseMenuTransitionStarted = 1;
                     break;
@@ -4720,7 +4726,7 @@ void pauseMenuUpdate(void) {
             break;
         case 0xb:
             if (gPauseMenuOpenAmount > 0.0 || gPauseMenuOpenVel > 0.0) {
-                int have = mainGetBit(GAMEBIT_ITEM_FuelCell_Count);
+                int fuel = mainGetBit(GAMEBIT_ITEM_FuelCell_Count);
                 gPauseMenuTokenPromptState = 0;
                 if (player != 0) {
                     gPauseMenuPlayerMapId = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
@@ -4730,7 +4736,7 @@ void pauseMenuUpdate(void) {
                                 break;
                             }
                             if (mainGetBit(gNeededFuelCells[gPauseMenuTokenIndex].bitB) == 0) {
-                                if (have >= gNeededFuelCells[gPauseMenuTokenIndex].numFuel) {
+                                if (fuel >= gNeededFuelCells[gPauseMenuTokenIndex].numFuel) {
                                     gPauseMenuTokenPromptState = 2;
                                 } else {
                                     gPauseMenuTokenPromptState = 1;
@@ -4743,8 +4749,8 @@ void pauseMenuUpdate(void) {
                 }
                 if ((btn & PAD_BUTTON_A) && gPauseMenuOpenVel > 0.0 && gPauseMenuOpenAmount >= 1.0) {
                     if (gPauseMenuTokenPromptState == 2) {
-                        have -= gNeededFuelCells[gPauseMenuTokenIndex].numFuel;
-                        mainSetBits(GAMEBIT_ITEM_FuelCell_Count, have);
+                        fuel -= gNeededFuelCells[gPauseMenuTokenIndex].numFuel;
+                        mainSetBits(GAMEBIT_ITEM_FuelCell_Count, fuel);
                         mainSetBits(gNeededFuelCells[gPauseMenuTokenIndex].bitB, 1);
                     }
                     gPauseMenuTokenConfirmFlag = 1;
@@ -4760,7 +4766,7 @@ void pauseMenuUpdate(void) {
                 cutsceneFadeInOut(0);
                 mapLoadGameTextDir(1);
                 pauseMenuState = 2;
-                pauseMenuFrameCounter = 0x3c;
+                pauseMenuFrameCounter = 60;
             }
             break;
         }
@@ -5061,11 +5067,11 @@ void timeListDraw(int unused1, int unused2, int unused3) {
             firstPromptBrightness = 0xff;
             secondPromptBrightness = pulseBrightness;
         }
-        gameTextShowAt(0x2f7, 0, 5);
+        gameTextShowAt(GAMETEXT_UI_LvTests, 0, 5);
         gameTextSetColor(firstPromptBrightness, firstPromptBrightness, firstPromptBrightness, 0xff);
-        gameTextShow(0x2f8);
+        gameTextShow(GAMETEXT_UI_TrackTest);
         gameTextSetColor(secondPromptBrightness, secondPromptBrightness, secondPromptBrightness, 0xff);
-        gameTextShow(0x2fb);
+        gameTextShow(GAMETEXT_UI_StrengthTest);
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
     }
     {
@@ -5077,10 +5083,10 @@ void timeListDraw(int unused1, int unused2, int unused3) {
             int mins;
             if (k == 0) {
                 gameTextSetWindowById(6);
-                gameTextShow(0x2fa);
+                gameTextShow(GAMETEXT_UI_BestTimes);
             } else if (k == 3) {
                 gameTextSetWindowById(7);
-                gameTextShow(0x2fa);
+                gameTextShow(GAMETEXT_UI_BestTimes);
             }
             mins = v / 6000;
             sprintf(buf, "  %02d:%02d.%02d", mins, v / 100 - mins * 60, v - (int)((long)v / 100) * 100);
@@ -5115,7 +5121,7 @@ void pauseMenuDrawGridCell(u8 i, s16 alpha, int flag) {
     }
     trailStep = gPauseMenuActiveGrid[i].count;
     for (; trailStep >= 0; trailStep -= 4) {
-        scale = 256.0f * gPauseMenuActiveGrid[i].f10;
+        scale = 256.0f * gPauseMenuActiveGrid[i].scale;
         x = gPauseMenuActiveGrid[i].x;
         y = gPauseMenuActiveGrid[i].y;
         depth = gPauseMenuActiveGrid[i].ofs6 - trailStep;
@@ -5233,10 +5239,10 @@ void pauseMenuDrawGrid(s16 alpha) {
     case 8:
     case 9:
     case 10:
-        gameTextShowAt(0x3e8, 0xc8, 0x154);
+        gameTextShowAt(GAMETEXT_UI_ASelect, 0xc8, 0x154);
         break;
     default:
-        gameTextShowAt(0x3dd, 0xc8, 0x154);
+        gameTextShowAt(GAMETEXT_UI_BackSelect, 0xc8, 0x154);
         break;
     }
     if (gPauseMenuSlideOut != 0) {
@@ -5246,18 +5252,21 @@ void pauseMenuDrawGrid(s16 alpha) {
         gPauseMenuTextZ = (s16)(gPauseMenuSlideOut - 0xff);
         if (gPauseMenuActiveGrid == gPauseMenuMapTables.entries) {
             int o1, o2, o3, o4;
-            gameTextMeasureById(gPauseMenuActiveGrid[gPauseMenuGridCursor].f14, 0, 0, &o1, &o2, &o3, &o4);
+            gameTextMeasureById(
+                gPauseMenuActiveGrid[gPauseMenuGridCursor].textId14,
+                0, 0,
+                &o1, &o2, &o3, &o4);
             tx = (s16)(0xdc - (o4 - o3) / 2);
         } else {
             tx = 0xdc;
         }
-        gameTextShowAt(gPauseMenuActiveGrid[gPauseMenuGridCursor].f14, 0xc8, tx);
-        gameTextShowAt(0x3de, 0xc8, 0x154);
+        gameTextShowAt(gPauseMenuActiveGrid[gPauseMenuGridCursor].textId14, 0xc8, tx);
+        gameTextShowAt(GAMETEXT_UI_Back, 0xc8, 0x154);
     }
     if (gPauseMenuSlideOut == 0) {
         Texture** textures;
         GridEntry* e;
-        f32 scale = (f32)(0.5 * (e = &gPauseMenuActiveGrid[gPauseMenuGridCursor])->f10);
+        f32 scale = (f32)(0.5 * (e = &gPauseMenuActiveGrid[gPauseMenuGridCursor])->scale);
         int w = cursorScale;
         int cw = (int)(scale * (f32)e->trailX);
         int ch = (int)(scale * (f32)e->trailY);
@@ -5580,7 +5589,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
     case 1:
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextLoadDir(0xb);
-        gameTextShowAt(0x3dd, 0xc8, 0x12c);
+        gameTextShowAt(GAMETEXT_UI_BackSelect, 0xc8, 0x12c);
     case 2:
         pauseMenuDoSave();
         break;
@@ -5719,9 +5728,9 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
                     }
                 }
             } else {
-                gameTextShowAt(0x515, 0xc8, 0x96);
+                gameTextShowAt(GAMETEXT_UI_CheckMap, 0xc8, 0x96);
             }
-            gameTextShowAt(0x3de, 0xc8, 0x154);
+            gameTextShowAt(GAMETEXT_UI_Back, 0xc8, 0x154);
             gPauseMenuTextZ = 0x100;
             gameTextSetDrawFunc(0);
             Camera_SetCurrentViewIndex(0);
@@ -5778,21 +5787,21 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
             case 7:
             case 9:
 #if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
-                gameTextShowAt(0x3cf, 0xc8, 0x118);
+                gameTextShowAt(GAMETEXT_UI_DoNotRemoveCard, 0xc8, 0x118);
 #else
-                gameTextShowAt(0x3cf, 0xc8, 0x109);
+                gameTextShowAt(GAMETEXT_UI_DoNotRemoveCard, 0xc8, 0x109);
 #endif
-                gameTextShowAt(0x3e1, 0xc8, 0x96);
+                gameTextShowAt(GAMETEXT_UI_WishSave, 0xc8, 0x96);
                 break;
             case 6:
             case 10:
-                gameTextShowAt(0x3ce, 0xc8, 0x96);
+                gameTextShowAt(GAMETEXT_UI_Quit, 0xc8, 0x96);
                 break;
             case 8: {
                 MapEventInterface* mapEvents = *gMapEventInterface;
                 PauseMenuCharacterState* characterState = mapEvents->getCurCharacterState();
                 characterCount = sHudBlankSmallText;
-                gameTextShowAt(0x3e0, 0xc8, 0x118);
+                gameTextShowAt(GAMETEXT_UI_UseBafomdad, 0xc8, 0x118);
                 sprintf(characterCount.text, lbl_803DBB68, characterState->healCount);
                 gPauseMenuTextScale = 2.0f;
                 gameTextShowStr(characterCount.text, 0x93, 0x14a, 0xdc);
@@ -5805,14 +5814,14 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
                 TextSlot* textBox;
                 gPauseMenuTextScale = 2.0f;
                 textBox = gameTextGetBox(0x7f);
-                gameTextMeasureById(0x3cd, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
+                gameTextMeasureById(GAMETEXT_UI_QuitYes, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
                 textHeight = boundsRight - boundsLeft;
                 gPauseMenuActiveGrid[0].trailX = textHeight;
                 gPauseMenuActiveGrid[0].x =
                     gPauseMenuTextScale * (f32)(s32)(textBox->x + textBox->width - (textHeight >> 1) - 0x140) + 320.0f;
 
                 textBox = gameTextGetBox(0x80);
-                gameTextMeasureById(0x3cc, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
+                gameTextMeasureById(GAMETEXT_UI_QuitNo, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
                 textHeight = boundsRight - boundsLeft;
                 gPauseMenuActiveGrid[1].trailX = textHeight;
                 x = textBox->x + (textHeight >> 1) - 0x140;
@@ -5823,13 +5832,13 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
                 } else {
                     gameTextSetColor(0xff, 0xff, 0xff, 0xff);
                 }
-                gameTextShowAt(0x3cd, 0, 0xc8);
+                gameTextShowAt(GAMETEXT_UI_QuitYes, 0, 0xc8);
                 if (gPauseMenuGridCursor != 0) {
                     gameTextSetColor(0xff, 0xff, 0xff, 0xff);
                 } else {
                     gameTextSetColor(0x96, 0x96, 0x96, 0xff);
                 }
-                gameTextShowAt(0x3cc, 0, 0xc8);
+                gameTextShowAt(GAMETEXT_UI_QuitNo, 0, 0xc8);
                 gameTextSetDrawFunc(0);
                 model = Obj_GetActiveModel(gGameUiCommCubeObjects[1]);
                 objRender(0, 0, 0, 0, gGameUiCommCubeObjects[1], 1);
@@ -5866,41 +5875,41 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         gPauseMenuTextScale = 1.5f;
         switch (gPauseMenuTokenPromptState) {
         case 0:
-            gameTextShowAt(0x43a, 0, 0xb4);
+            gameTextShowAt(GAMETEXT_UI_PressAReturnOrbit, 0, 0xb4);
             break;
         case 1: {
             s32 tokenTextY;
-            gameTextShowAt(0x440, 0, 0x78);
-            gameTextMeasureById(0x440, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            gameTextShowAt(GAMETEXT_UI_YouNeed, 0, 0x78);
+            gameTextMeasureById(GAMETEXT_UI_YouNeed, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             tokenTextY = (tokenBottom - tokenTop) + 5;
             sprintf(tokenCountText, lbl_803DBB58, gNeededFuelCells[gPauseMenuTokenIndex].numFuel);
             gameTextShowStr(tokenCountText, 0x79, 0, tokenTextY + 0x78);
             gameTextMeasureStringBoundsAt(tokenCountText, 0x79, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             tokenTextY += (tokenBottom - tokenTop) + 5;
-            gameTextShowAt(0x441, 0, tokenTextY + 0x78);
-            gameTextMeasureById(0x441, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            gameTextShowAt(GAMETEXT_UI_FuelToReach, 0, tokenTextY + 0x78);
+            gameTextMeasureById(GAMETEXT_UI_FuelToReach, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             tokenTextY += tokenBottom - tokenTop;
             tokens = gNeededFuelCells;
             gameTextShowAt(tokens[gPauseMenuTokenIndex].gameTextId, 0, tokenTextY + 0x78);
             gameTextMeasureById(tokens[gPauseMenuTokenIndex].gameTextId, 0, 0, &tokenLeft, &tokenRight, &tokenTop,
                                 &tokenBottom);
             tokenTextY += (tokenBottom - tokenTop) + 0xa;
-            gameTextShowAt(0x442, 0, tokenTextY + 0x78);
-            gameTextMeasureById(0x442, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            gameTextShowAt(GAMETEXT_UI_RobDroppedFuel, 0, tokenTextY + 0x78);
+            gameTextMeasureById(GAMETEXT_UI_RobDroppedFuel, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             tokenTextY += (tokenBottom - tokenTop) + 0xa;
-            gameTextShowAt(0x43a, 0, tokenTextY + 0x78);
+            gameTextShowAt(GAMETEXT_UI_PressAReturnOrbit, 0, tokenTextY + 0x78);
             break;
         }
         case 2: {
-            gameTextShowAt(0x443, 0, 0xa0);
-            gameTextMeasureById(0x443, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            gameTextShowAt(GAMETEXT_UI_EnoughFuel, 0, 0xa0);
+            gameTextMeasureById(GAMETEXT_UI_EnoughFuel, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             taskTextY = (tokenBottom - tokenTop) + 5;
             tokens = gNeededFuelCells;
             gameTextShowAt(tokens[gPauseMenuTokenIndex].gameTextId, 0, taskTextY + 0xa0);
             gameTextMeasureById(tokens[gPauseMenuTokenIndex].gameTextId, 0, 0, &tokenLeft, &tokenRight, &tokenTop,
                                 &tokenBottom);
             taskTextY += (tokenBottom - tokenTop) + 0xa;
-            gameTextShowAt(0x444, 0, taskTextY + 0xa0);
+            gameTextShowAt(GAMETEXT_UI_PressANewMission, 0, taskTextY + 0xa0);
             break;
         }
         }
@@ -8087,7 +8096,7 @@ void gameUiResetMenuState(void) {
     gTrickyHudShowNearestInfo = 0;
     gTimeListPromptSelection = 0;
     gHudIncomingCommTimer = 0;
-    pauseMenuFrameCounter = 0x3c;
+    pauseMenuFrameCounter = 60;
     gHudForceShowMask = 0;
 }
 void pauseMenuSetHoloTransform(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c) {

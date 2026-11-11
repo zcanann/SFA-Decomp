@@ -22,22 +22,22 @@ typedef struct ArwingMissionBriefing {
 } ArwingMissionBriefing;   /* sizeof = 0x1c */
 
 typedef struct {
-    s16 id;      /* 0x00 */
-    u16 x;       /* 0x02 */
-    u16 y;       /* 0x04 */
-    s16 ofs6;    /* 0x06 */
-    u8 trailX;   /* 0x08 */
-    u8 trailY;   /* 0x09 */
-    u8 count;    /* 0x0a */
-    s8 xOffset;  /* 0x0b */
-    s8 navDown;  /* 0x0c item index below this one */
-    s8 navUp;    /* 0x0d item index above this one */
-    s8 navLeft;  /* 0x0e item index left of this one */
-    s8 navRight; /* 0x0f item index right of this one */
-    f32 f10;     /* 0x10 */
-    s32 f14;     /* 0x14 */
-    s32 textId;  /* 0x18 */
-    u8 hint;     /* 0x1c */
+    s16 id;       /* 0x00 */
+    u16 x;        /* 0x02 */
+    u16 y;        /* 0x04 */
+    s16 ofs6;     /* 0x06 */
+    u8 trailX;    /* 0x08 */
+    u8 trailY;    /* 0x09 */
+    u8 count;     /* 0x0a */
+    s8 xOffset;   /* 0x0b */
+    s8 navDown;   /* 0x0c item index below this one */
+    s8 navUp;     /* 0x0d item index above this one */
+    s8 navLeft;   /* 0x0e item index left of this one */
+    s8 navRight;  /* 0x0f item index right of this one */
+    f32 scale;    /* 0x10 */
+    s32 textId14; /* 0x14 */
+    s32 textId;   /* 0x18 */
+    u8 hint;      /* 0x1c */
 } GridEntry; /* sizeof = 0x20 */
 
 typedef struct {
