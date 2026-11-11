@@ -193,7 +193,6 @@ typedef struct HudItemInfoPopup {
     int framesLeft;
     f32 alpha;
     s16 itemCount;
-    u8 padE[0x10 - 0xE];
 } HudItemInfoPopup;
 
 typedef struct TrickyAirMeter {
@@ -211,11 +210,9 @@ typedef struct TrickyAirMeter {
         struct {
             Texture* filled;
             Texture* empty;
-            u8 pad34[0x40 - 0x34];
         } segments;
         struct {
             u16 backgroundId;
-            u8 pad2E[2];
             Texture* background;
             Texture* end;
             Texture* filled;
@@ -225,7 +222,6 @@ typedef struct TrickyAirMeter {
     s32 type;
     u8 shutdown : 1;
     u8 flags : 7;
-    u8 pad45[3];
 } TrickyAirMeter;
 
 STATIC_ASSERT(offsetof(TrickyAirMeter, alpha) == 0x18);
@@ -377,7 +373,13 @@ typedef struct GameUiTimeIdList {
 
 STATIC_ASSERT(sizeof(GameUiTimeIdList) == 0xC);
 
-const GameUiTimeIdList sTimeListTimeBits = {{0x2B7, 0x2CB, 0x2CC, 0x2B6, 0x2D7, 0x2D8}};
+const GameUiTimeIdList sTimeListTimeBits = {{
+    GAMEBIT_LV_TestTrackingBestTime1,
+    GAMEBIT_LV_TestTrackingBestTime2,
+    GAMEBIT_LV_TestTrackingBestTime3,
+    GAMEBIT_LV_TestStrengthBestTime1,
+    GAMEBIT_LV_TestStrengthBestTime2,
+    GAMEBIT_LV_TestStrengthBestTime3 }};
 const GameUiIndirectMatrix sGameUiZeroIndTexMtx = {0};
 extern f32 gPauseMenuMapSwivelCos;
 extern s16 cMenuFadeCounter;
@@ -5993,7 +5995,7 @@ void drawArwingHud(int unused1, int unused2, int unused3) {
         sprintf(score.text, sHeadDisplayScoreFmt, arwarwing_getScore(arwing));
     }
     gameTextSetColor(0xff, 0xff, 0xff, (u8)arwingHudAlpha);
-    gameTextShowStr(score.text, 0x93, 0x23a, 0x41);
+    gameTextShowStr(score.text, 0x93, 570, 65);
     headDisplayDraw();
 }
 
