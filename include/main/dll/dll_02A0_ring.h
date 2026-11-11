@@ -8,10 +8,10 @@
 
 typedef struct RingFlags
 {
-    u8 bit80 : 1;
-    u8 bit40 : 1;
-    u8 bit20 : 1;
-    u8 bit10 : 1;
+    u8 bIntangible : 1; //set when collected
+    u8 bSpawnParticles : 1;
+    u8 bMissed : 1; //triggers "missed a gold ring" text
+    u8 bit10 : 1; //set for silver rings during Andross + WC rings
     u8 pad : 4;
 } RingFlags;
 
