@@ -1,4 +1,5 @@
 #include "main/audio/sfx_limited_object_api.h"
+#include "main/dll/dll_0000_gameui.h"
 #include "main/dll/partfx_interface.h"
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
@@ -327,7 +328,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
                     squad->phase = ARW_SQUADRON_STATE_DISABLED;
                     squad->phase = ARW_SQUADRON_STATE_DEAD;
                     if (squad->dialogueVariant == 3)
-                        headDisplayOpen(0xe);
+                        headDisplayOpen(HEADDISP_KEEPGOING);
                 }
                 else
                 {
@@ -437,9 +438,9 @@ void ARWSquadron_update(GameObject* obj)
         if (arwsquadron_isPlayerWithinRangeZ(obj, 2700.0f))
         {
             if (randomGetRange(0, 1) != 0)
-                headDisplayOpen(0x10);
+                headDisplayOpen(HEADDISP_ENEMYAPPROACHING);
             else
-                headDisplayOpen(0xd);
+                headDisplayOpen(HEADDISP_DANGERAHEAD);
             state->dialogueVariant = 0;
         }
     }

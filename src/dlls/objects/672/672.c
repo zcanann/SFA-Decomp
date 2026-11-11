@@ -16,6 +16,7 @@
  * Per-mode timing/particle parameters come from gRingModeParams[mode]
  * (RingTable); the optional glow is a ModelLightStruct.
  */
+#include "main/dll/dll_0000_gameui.h"
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
@@ -181,12 +182,12 @@ void ring_onCollect(GameObject* obj, RingState* state, GameObject* arwing)
             if (collected == seg)
             {
                 if (state->flags.bit20)
-                    headDisplayOpen(7);
+                    headDisplayOpen(HEADDISP_FORCEFIELDDOWN);
             }
             else
             {
                 if (state->flags.bit20)
-                    headDisplayOpen(9);
+                    headDisplayOpen(HEADDISP_GOODJOBFOX);
             }
         }
     }
@@ -224,7 +225,7 @@ int ring_checkArwingCollision(GameObject* obj, RingState* state, GameObject* arw
             if (sqrtf(dx * dx + dy * dy) < 55.0f)
                 return 1;
             if (state->mode == RING_MODE_GOLD && f->bit20)
-                headDisplayOpen(0xa);
+                headDisplayOpen(HEADDISP_MISSEDGOLDRING);
         }
     }
     return 0;

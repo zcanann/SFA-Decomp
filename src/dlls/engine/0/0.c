@@ -761,9 +761,9 @@ HeadDisplayEntry gHeadDisplayEntryTable[] = {
     {-1, GAMETEXT_Fly7Rings,              0x01, 0x00, 0x00F0},
     {0x51C1, GAMETEXT_GoodFlyingFox,      0x01, 0x00, 0x005A}, //unused
     {0x51C2, GAMETEXT_NewHighScore,       0x01, 0x00, 0x005A}, //unused
-    {0x51C3, GAMETEXT_ForceFieldDown,     0x01, 0x00, 0x0096},
+    {0x51C3, GAMETEXT_ForceFieldDown,     0x01, 0x00, 0x0096}, //all gold rings
     {0x51C4, GAMETEXT_WellDone,           0x01, 0x00, 0x005A}, //unused
-    {0x51B7, GAMETEXT_GoodJobFox,         0x03, 0x00, 0x005A}, //unused
+    {0x51B7, GAMETEXT_GoodJobFox,         0x03, 0x00, 0x005A}, //collecting gold ring
     {0x51B8, GAMETEXT_MissedGoldRing,     0x03, 0x00, 0x005A},
     {0x51B9, GAMETEXT_WatchOutMines,      0x03, 0x00, 0x005A},
     {0x51BA, GAMETEXT_CarefulFox,         0x03, 0x00, 0x005A}, //unused
@@ -773,8 +773,8 @@ HeadDisplayEntry gHeadDisplayEntryTable[] = {
     {0x51B4, GAMETEXT_EnemyApproaching,   0x02, 0x00, 0x005A}, //unused
     {0x51B5, GAMETEXT_ShootBigAsteroids,  0x02, 0x00, 0x005A}, //unused
     {0x51B6, GAMETEXT_UseTheBomb,         0x02, 0x00, 0x005A}, //unused
-    {-1, GAMETEXT_ARW_GotRings,           0x03, 0x00, 0x0140},
-    {-1, GAMETEXT_ARW_NotGotRings,        0x02, 0x00, 0x0190},
+    {-1, GAMETEXT_ARW_GotRings,           0x03, 0x00, 0x0140}, //finished with enough gold rings
+    {-1, GAMETEXT_ARW_NotGotRings,        0x02, 0x00, 0x0190}, //finished with insufficient rings
 };
 
 NeededFuelCells gNeededFuelCells[] = {
