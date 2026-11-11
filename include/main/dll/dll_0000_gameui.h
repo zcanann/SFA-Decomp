@@ -46,6 +46,14 @@ typedef struct {
 } HighScoreTitleIdEntry;
 
 typedef struct {
+    int streamId;
+    u16 textId;
+    u8 panelType;
+    u8 npcDialogue;
+    u16 box;
+} HeadDisplayEntry;
+
+typedef struct {
     s16 bitA;
     s16 bitB;
     u8 numFuel; //fuel cells needed
