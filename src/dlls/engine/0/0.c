@@ -6042,8 +6042,8 @@ void headDisplayOpen(int idx) {
     int textId;
 
     if (gHeadDisplayActive) return;
-    if (idx < 0 || idx >= 0x15) {
-        idx = 0x14;
+    if (idx < 0 || idx >= HEADDISP_COUNT) {
+        idx = HEADDISP_COUNT - 1;
     }
     gHeadDisplayActive = 1;
     gHeadDisplayEntryIdx = idx;
@@ -6097,14 +6097,14 @@ void headDisplayDraw(void) {
             }
         }
         gHeadDisplayPanelHeight = gHeadDisplayPanelHeight - framesThisStep * 10;
-        gHeadDisplayFadeAlpha = gHeadDisplayFadeAlpha - framesThisStep * 0x17;
+        gHeadDisplayFadeAlpha = gHeadDisplayFadeAlpha - framesThisStep * 23;
     } else {
         gHeadDisplayPanelWidth = gHeadDisplayPanelWidth - framesThisStep * 5;
         if (gHeadDisplayPanelWidth < HEADPANEL_WIDTH_MIN) {
             gHeadDisplayPanelWidth = HEADPANEL_WIDTH_MIN;
         }
         gHeadDisplayPanelHeight = gHeadDisplayPanelHeight + framesThisStep * 10;
-        gHeadDisplayFadeAlpha = gHeadDisplayFadeAlpha + framesThisStep * 0x17;
+        gHeadDisplayFadeAlpha = gHeadDisplayFadeAlpha + framesThisStep * 23;
     }
     clampedAlpha = gHeadDisplayFadeAlpha;
     if (clampedAlpha < 0) {
@@ -6114,8 +6114,8 @@ void headDisplayDraw(void) {
     }
     panelAlpha = gHeadDisplayFadeAlpha = clampedAlpha;
     value = gHeadDisplayPanelHeight;
-    if ((u32)value > 0x6e) {
-        value = 0x6e;
+    if ((u32)value > 110) {
+        value = 110;
     }
     gHeadDisplayPanelHeight = value;
     panelY = gHeadDisplayPanelWidth;
@@ -6124,17 +6124,17 @@ void headDisplayDraw(void) {
     switch (panelType) {
     default:
     case 1:
-        y = 0x19a;
+        y = 410;
         break;
     case 3:
-        y = 0x195;
+        y = 405;
         break;
     case 2:
-        y = 0x186;
+        y = 390;
         break;
     }
-    GXSetScissor(0x1ea, panelY, 0x78, panelHeight);
-    drawRect(490.0f, (f32)(int)panelY, 0x78, panelHeight);
+    GXSetScissor(490, panelY, 120, panelHeight);
+    drawRect(490.0f, (f32)(int)panelY, 120, panelHeight);
     gGameUiSavedFovY = Camera_GetFovY();
     Camera_SetFovY(43.0f);
     Camera_SetCurrentViewIndex(1);
@@ -6145,11 +6145,14 @@ void headDisplayDraw(void) {
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    GXSetViewport(230.0f, y - 240.0f, (f32)(u32)gRenderModeObj->fbWidth, (f32)(u32)GAME_UI_VIEWPORT_HEIGHT, 0.0f,
-                    1.0f);
+    GXSetViewport(230.0f, y - 240.0f,
+        (f32)(u32)gRenderModeObj->fbWidth,
+        (f32)(u32)GAME_UI_VIEWPORT_HEIGHT,
+        0.0f, 1.0f);
     if (gHeadDisplayModelObjs[panelType] != NULL) {
-        ObjAnim_AdvanceCurrentMove(gHeadDisplayModelObjs[panelType], gPauseMenuPanelAnims.speeds[panelType],
-                                    timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove(gHeadDisplayModelObjs[panelType],
+            gPauseMenuPanelAnims.speeds[panelType],
+            timeDelta, NULL);
         if (gHeadDisplayModelObjs[panelType]->anim.placementDataAddress > 0x90000000u) {
             gHeadDisplayModelObjs[panelType]->anim.placementDataAddress = 0;
         }

@@ -75,6 +75,7 @@ typedef enum HeadDisplayId {
     HEADDISP_USETHEBOMB,
     HEADDISP_GOTRINGS,
     HEADDISP_NOTGOTRINGS,
+    HEADDISP_COUNT, //number of entries, not a valid entry
 } HeadDisplayId;
 
 typedef struct {
