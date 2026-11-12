@@ -10,6 +10,7 @@
  * / taunt text lines are shown.
  */
 #include "main/dll/ARW/dll_029A_arwarwing.h"
+#include "main/dll/dll_0000_gameui.h"
 #include "main/dll/headdisplay.h"
 #include "main/frame_timing.h"
 #include "main/maketex_timer_api.h"
@@ -88,7 +89,7 @@ void arwproximit_update(GameObject* obj)
             arwing = Obj_GetPlayerObject();
         if (Vec_distance(&objAnim->worldPosX, &arwing->anim.worldPosX) < ARW_PROXIMITY_TAUNT_DISTANCE)
         {
-            headDisplayOpen(0xb);
+            headDisplayOpen(HEADDISP_WATCHOUTMINES);
             state->textVariant = 0;
         }
     }
@@ -144,9 +145,9 @@ void arwproximit_update(GameObject* obj)
             if (state->textVariant == 2)
             {
                 if (randomGetRange(0, 1) != 0)
-                    headDisplayOpen(0xf);
+                    headDisplayOpen(HEADDISP_LOOKOUTFOX);
                 else
-                    headDisplayOpen(0xc);
+                    headDisplayOpen(HEADDISP_CAREFULFOX);
             }
         }
         break;
@@ -196,9 +197,9 @@ void arwproximit_update(GameObject* obj)
     {
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
         {
-            arwarwing_addScore(getArwing(), 0xa);
+            arwarwing_addScore(getArwing(), 10);
             if (state->textVariant == 3)
-                headDisplayOpen(0xe);
+                headDisplayOpen(HEADDISP_KEEPGOING);
             if (state->light != NULL)
                 modelLightStruct_setEnabled(state->light, 0, gARWProximitZero[0]);
             spawnExplosion(obj, gARWProximitShotDownExplosionSize[0], 1, 0, 0, 0, 0, 0, 1);

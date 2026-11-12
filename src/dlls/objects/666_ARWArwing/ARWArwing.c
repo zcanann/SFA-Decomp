@@ -23,6 +23,7 @@
  * each use - that spelling reproduces the retail register colouring; see the
  * CLAUDE.md matching notes.
  */
+#include "main/dll/dll_0000_gameui.h"
 #include "main/dll/partfx_interface.h"
 #include "MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
@@ -1036,18 +1037,18 @@ int arwarwing_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
                 int clampedScore;
                 scoreView->score += 0xc8;
                 clampedScore = scoreView->score;
-                if ((u16)clampedScore > 0x270f) {
-                    clampedScore = 0x270f;
+                if ((u16)clampedScore > 9999) {
+                    clampedScore = 9999;
                 }
                 scoreView->score = clampedScore;
             }
             registerNewScore((s8)state->scoreSlot, state->score, state->collectedRings, 2);
             break;
         case 0xd:
-            headDisplayOpen(0x13);
+            headDisplayOpen(HEADDISP_GOTRINGS);
             break;
         case 0xe:
-            headDisplayOpen(0x14);
+            headDisplayOpen(HEADDISP_NOTGOTRINGS);
             break;
         }
     }

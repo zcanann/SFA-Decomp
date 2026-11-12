@@ -193,7 +193,6 @@ typedef struct HudItemInfoPopup {
     int framesLeft;
     f32 alpha;
     s16 itemCount;
-    u8 padE[0x10 - 0xE];
 } HudItemInfoPopup;
 
 typedef struct TrickyAirMeter {
@@ -211,11 +210,9 @@ typedef struct TrickyAirMeter {
         struct {
             Texture* filled;
             Texture* empty;
-            u8 pad34[0x40 - 0x34];
         } segments;
         struct {
             u16 backgroundId;
-            u8 pad2E[2];
             Texture* background;
             Texture* end;
             Texture* filled;
@@ -225,7 +222,6 @@ typedef struct TrickyAirMeter {
     s32 type;
     u8 shutdown : 1;
     u8 flags : 7;
-    u8 pad45[3];
 } TrickyAirMeter;
 
 STATIC_ASSERT(offsetof(TrickyAirMeter, alpha) == 0x18);
@@ -377,7 +373,13 @@ typedef struct GameUiTimeIdList {
 
 STATIC_ASSERT(sizeof(GameUiTimeIdList) == 0xC);
 
-const GameUiTimeIdList sTimeListTimeBits = {{0x2B7, 0x2CB, 0x2CC, 0x2B6, 0x2D7, 0x2D8}};
+const GameUiTimeIdList sTimeListTimeBits = {{
+    GAMEBIT_LV_TestTrackingBestTime1,
+    GAMEBIT_LV_TestTrackingBestTime2,
+    GAMEBIT_LV_TestTrackingBestTime3,
+    GAMEBIT_LV_TestStrengthBestTime1,
+    GAMEBIT_LV_TestStrengthBestTime2,
+    GAMEBIT_LV_TestStrengthBestTime3 }};
 const GameUiIndirectMatrix sGameUiZeroIndTexMtx = {0};
 extern f32 gPauseMenuMapSwivelCos;
 extern s16 cMenuFadeCounter;
@@ -752,21 +754,29 @@ u32 lbl_8031AF14[8] = {
     0x200, (u32)&lbl_8031AF14[2],
 };
 
-u8 gHeadDisplayEntryTable[] = {
-    0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1A, 0x01, 0x00, 0x00, 0xF0, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1C,
-    0x01, 0x00, 0x00, 0xF0, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1D, 0x01, 0x00, 0x00, 0xF0, 0x00, 0x00,
-    0xFF, 0xFF, 0xFF, 0xFF, 0x02, 0xA3, 0x01, 0x00, 0x00, 0xF0, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1E,
-    0x01, 0x00, 0x00, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x51, 0xC1, 0x00, 0x1F, 0x01, 0x00, 0x00, 0x5A, 0x00, 0x00,
-    0x00, 0x00, 0x51, 0xC2, 0x00, 0x20, 0x01, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xC3, 0x00, 0x2F,
-    0x01, 0x00, 0x00, 0x96, 0x00, 0x00, 0x00, 0x00, 0x51, 0xC4, 0x00, 0x30, 0x01, 0x00, 0x00, 0x5A, 0x00, 0x00,
-    0x00, 0x00, 0x51, 0xB7, 0x00, 0x32, 0x03, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB8, 0x00, 0x33,
-    0x03, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB9, 0x00, 0x39, 0x03, 0x00, 0x00, 0x5A, 0x00, 0x00,
-    0x00, 0x00, 0x51, 0xBA, 0x00, 0x3A, 0x03, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xBB, 0x00, 0x3B,
-    0x03, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB2, 0x00, 0x41, 0x02, 0x00, 0x00, 0x5A, 0x00, 0x00,
-    0x00, 0x00, 0x51, 0xB3, 0x00, 0x44, 0x02, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB4, 0x00, 0x45,
-    0x02, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x51, 0xB5, 0x00, 0x46, 0x02, 0x00, 0x00, 0x5A, 0x00, 0x00,
-    0x00, 0x00, 0x51, 0xB6, 0x00, 0x47, 0x02, 0x00, 0x00, 0x5A, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x04, 0x98,
-    0x03, 0x00, 0x01, 0x40, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x04, 0x99, 0x02, 0x00, 0x01, 0x90, 0x00, 0x00,
+HeadDisplayEntry gHeadDisplayEntryTable[] = {
+    //streamID  text                           panl  dlg   box
+    {-1, GAMETEXT_Fly1Ring,               0x01, 0x00, 0x00F0},
+    {-1, GAMETEXT_Fly3Rings,              0x01, 0x00, 0x00F0},
+    {-1, GAMETEXT_Fly5Rings,              0x01, 0x00, 0x00F0},
+    {-1, GAMETEXT_Fly10Rings,             0x01, 0x00, 0x00F0},
+    {-1, GAMETEXT_Fly7Rings,              0x01, 0x00, 0x00F0},
+    {0x51C1, GAMETEXT_GoodFlyingFox,      0x01, 0x00, 0x005A}, //unused
+    {0x51C2, GAMETEXT_NewHighScore,       0x01, 0x00, 0x005A}, //unused
+    {0x51C3, GAMETEXT_ForceFieldDown,     0x01, 0x00, 0x0096}, //all gold rings
+    {0x51C4, GAMETEXT_WellDone,           0x01, 0x00, 0x005A}, //unused
+    {0x51B7, GAMETEXT_GoodJobFox,         0x03, 0x00, 0x005A}, //collecting gold ring
+    {0x51B8, GAMETEXT_MissedGoldRing,     0x03, 0x00, 0x005A},
+    {0x51B9, GAMETEXT_WatchOutMines,      0x03, 0x00, 0x005A},
+    {0x51BA, GAMETEXT_CarefulFox,         0x03, 0x00, 0x005A}, //unused
+    {0x51BB, GAMETEXT_DangerAhead,        0x03, 0x00, 0x005A}, //unused
+    {0x51B2, GAMETEXT_KeepGoing,          0x02, 0x00, 0x005A},
+    {0x51B3, GAMETEXT_LookOutFox,         0x02, 0x00, 0x005A}, //unused
+    {0x51B4, GAMETEXT_EnemyApproaching,   0x02, 0x00, 0x005A}, //unused
+    {0x51B5, GAMETEXT_ShootBigAsteroids,  0x02, 0x00, 0x005A}, //unused
+    {0x51B6, GAMETEXT_UseTheBomb,         0x02, 0x00, 0x005A}, //unused
+    {-1, GAMETEXT_ARW_GotRings,           0x03, 0x00, 0x0140}, //finished with enough gold rings
+    {-1, GAMETEXT_ARW_NotGotRings,        0x02, 0x00, 0x0190}, //finished with insufficient rings
 };
 
 NeededFuelCells gNeededFuelCells[] = {
@@ -1787,23 +1797,6 @@ static inline s16 cMenuMinRingAbs(void) {
 #define HEADPANEL_WIDTH_MAX  338
 #define HEADPANEL_WIDTH_MIN  290
 #define HEADPANEL_WIDTH_OPEN 345
-
-/* gHeadDisplayEntryTable head-display table: 0xC-byte records */
-#define HEADREC_STRIDE       0xc
-#define HEADREC_STREAM_ID    0 /* int  */
-#define HEADREC_TEXT_ID      4 /* u16  */
-#define HEADREC_PANEL_TYPE   6 /* u8   */
-#define HEADREC_NPC_DIALOGUE 7 /* u8   */
-#define HEADREC_BOX          8 /* u16  */
-
-typedef struct HeadDisplayEntry {
-    s32 streamId;
-    u16 textId;
-    u8 panelType;
-    u8 npcDialogue;
-    u16 boxId;
-    u16 unkA;
-} HeadDisplayEntry;
 
 static inline void pauseMenuSetSpellStoneIcons(GridEntry* entries, u8 count) {
     s8 i;
@@ -6002,7 +5995,7 @@ void drawArwingHud(int unused1, int unused2, int unused3) {
         sprintf(score.text, sHeadDisplayScoreFmt, arwarwing_getScore(arwing));
     }
     gameTextSetColor(0xff, 0xff, 0xff, (u8)arwingHudAlpha);
-    gameTextShowStr(score.text, 0x93, 0x23a, 0x41);
+    gameTextShowStr(score.text, 0x93, 570, 65);
     headDisplayDraw();
 }
 
@@ -6051,24 +6044,20 @@ void headDisplayOpen(int idx) {
     int textId;
 
     if (gHeadDisplayActive) return;
-    if (idx < 0 || idx >= 0x15) {
-        idx = 0x14;
+    if (idx < 0 || idx >= HEADDISP_COUNT) {
+        idx = HEADDISP_COUNT - 1;
     }
     gHeadDisplayActive = 1;
     gHeadDisplayEntryIdx = idx;
     {
-        int off = idx * HEADREC_STRIDE;
-        u8* base = gHeadDisplayEntryTable;
-        HeadDisplayEntry* entry;
-        if (((HeadDisplayEntry*)base)[idx].streamId != -1 && AudioStream_IsPreparing() == 0) {
-            AudioStream_Play(((HeadDisplayEntry*)base)[idx].streamId, AudioStream_StartPrepared);
+        if (gHeadDisplayEntryTable[idx].streamId != -1 && AudioStream_IsPreparing() == 0) {
+            AudioStream_Play(gHeadDisplayEntryTable[idx].streamId, AudioStream_StartPrepared);
         }
-        entry = (HeadDisplayEntry*)(gHeadDisplayEntryTable + off);
-        if (entry->npcDialogue != 0) {
-            (*gGameUIInterface)->showNpcDialogue(entry->textId, 0, 0, 0);
+        if (gHeadDisplayEntryTable[idx].npcDialogue != 0) {
+            (*gGameUIInterface)->showNpcDialogue(gHeadDisplayEntryTable[idx].textId, 0, 0, 0);
         } else {
-            boxId = entry->boxId;
-            textId = entry->textId;
+            boxId = gHeadDisplayEntryTable[idx].box;
+            textId = gHeadDisplayEntryTable[idx].textId;
             if (textId != -1 && curGameText == 0xffff) {
                 gameTextGetBox(0x7c);
                 gNpcDialogueActive = 1;
@@ -6076,7 +6065,7 @@ void headDisplayOpen(int idx) {
                 curGameText = textId;
                 gNpcDialogueLetterbox = 0;
                 gNpcDialoguePageFrames = boxId;
-                gNpcDialoguePageTimer = (f32)(s16)boxId;
+                gNpcDialoguePageTimer = gNpcDialoguePageFrames;
                 gameTextFreePhrase(&gNpcDialoguePhraseState);
                 gNpcDialogueDidFade = 0;
             }
@@ -6104,20 +6093,20 @@ void headDisplayDraw(void) {
         if (gHeadDisplayPanelWidth > HEADPANEL_WIDTH_MAX) {
             gHeadDisplayPanelWidth = HEADPANEL_WIDTH_MAX;
             gHeadDisplayActive = 0;
-            if (((HeadDisplayEntry*)gHeadDisplayEntryTable)[gHeadDisplayEntryIdx].streamId != -1) {
+            if (gHeadDisplayEntryTable[gHeadDisplayEntryIdx].streamId != -1) {
                 AudioStream_StopCurrent();
                 AudioStream_Nop(0);
             }
         }
         gHeadDisplayPanelHeight = gHeadDisplayPanelHeight - framesThisStep * 10;
-        gHeadDisplayFadeAlpha = gHeadDisplayFadeAlpha - framesThisStep * 0x17;
+        gHeadDisplayFadeAlpha = gHeadDisplayFadeAlpha - framesThisStep * 23;
     } else {
         gHeadDisplayPanelWidth = gHeadDisplayPanelWidth - framesThisStep * 5;
         if (gHeadDisplayPanelWidth < HEADPANEL_WIDTH_MIN) {
             gHeadDisplayPanelWidth = HEADPANEL_WIDTH_MIN;
         }
         gHeadDisplayPanelHeight = gHeadDisplayPanelHeight + framesThisStep * 10;
-        gHeadDisplayFadeAlpha = gHeadDisplayFadeAlpha + framesThisStep * 0x17;
+        gHeadDisplayFadeAlpha = gHeadDisplayFadeAlpha + framesThisStep * 23;
     }
     clampedAlpha = gHeadDisplayFadeAlpha;
     if (clampedAlpha < 0) {
@@ -6127,27 +6116,27 @@ void headDisplayDraw(void) {
     }
     panelAlpha = gHeadDisplayFadeAlpha = clampedAlpha;
     value = gHeadDisplayPanelHeight;
-    if ((u32)value > 0x6e) {
-        value = 0x6e;
+    if ((u32)value > 110) {
+        value = 110;
     }
     gHeadDisplayPanelHeight = value;
     panelY = gHeadDisplayPanelWidth;
     panelHeight = (u16)value;
-    panelType = gHeadDisplayEntryTable[gHeadDisplayEntryIdx * HEADREC_STRIDE + HEADREC_PANEL_TYPE];
+    panelType = gHeadDisplayEntryTable[gHeadDisplayEntryIdx].panelType;
     switch (panelType) {
     default:
     case 1:
-        y = 0x19a;
+        y = 410;
         break;
     case 3:
-        y = 0x195;
+        y = 405;
         break;
     case 2:
-        y = 0x186;
+        y = 390;
         break;
     }
-    GXSetScissor(0x1ea, panelY, 0x78, panelHeight);
-    drawRect(490.0f, (f32)(int)panelY, 0x78, panelHeight);
+    GXSetScissor(490, panelY, 120, panelHeight);
+    drawRect(490.0f, (f32)(int)panelY, 120, panelHeight);
     gGameUiSavedFovY = Camera_GetFovY();
     Camera_SetFovY(43.0f);
     Camera_SetCurrentViewIndex(1);
@@ -6158,11 +6147,14 @@ void headDisplayDraw(void) {
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    GXSetViewport(230.0f, y - 240.0f, (f32)(u32)gRenderModeObj->fbWidth, (f32)(u32)GAME_UI_VIEWPORT_HEIGHT, 0.0f,
-                    1.0f);
+    GXSetViewport(230.0f, y - 240.0f,
+        (f32)(u32)gRenderModeObj->fbWidth,
+        (f32)(u32)GAME_UI_VIEWPORT_HEIGHT,
+        0.0f, 1.0f);
     if (gHeadDisplayModelObjs[panelType] != NULL) {
-        ObjAnim_AdvanceCurrentMove(gHeadDisplayModelObjs[panelType], gPauseMenuPanelAnims.speeds[panelType],
-                                    timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove(gHeadDisplayModelObjs[panelType],
+            gPauseMenuPanelAnims.speeds[panelType],
+            timeDelta, NULL);
         if (gHeadDisplayModelObjs[panelType]->anim.placementDataAddress > 0x90000000u) {
             gHeadDisplayModelObjs[panelType]->anim.placementDataAddress = 0;
         }

@@ -46,6 +46,39 @@ typedef struct {
 } HighScoreTitleIdEntry;
 
 typedef struct {
+    int streamId;
+    u16 textId;
+    u8 panelType;
+    u8 npcDialogue;
+    u16 box;
+} HeadDisplayEntry;
+
+typedef enum HeadDisplayId {
+    HEADDISP_FLY1RING,
+    HEADDISP_FLY3RINGS,
+    HEADDISP_FLY5RINGS,
+    HEADDISP_FLY10RINGS,
+    HEADDISP_FLY7RINGS,
+    HEADDISP_GOODFLYING,
+    HEADDISP_NEWHIGHSCORE,
+    HEADDISP_FORCEFIELDDOWN,
+    HEADDISP_WELLDONE,
+    HEADDISP_GOODJOBFOX,
+    HEADDISP_MISSEDGOLDRING,
+    HEADDISP_WATCHOUTMINES,
+    HEADDISP_CAREFULFOX,
+    HEADDISP_DANGERAHEAD,
+    HEADDISP_KEEPGOING,
+    HEADDISP_LOOKOUTFOX,
+    HEADDISP_ENEMYAPPROACHING,
+    HEADDISP_SHOOTBIGASTEROIDS,
+    HEADDISP_USETHEBOMB,
+    HEADDISP_GOTRINGS,
+    HEADDISP_NOTGOTRINGS,
+    HEADDISP_COUNT, //number of entries, not a valid entry
+} HeadDisplayId;
+
+typedef struct {
     s16 bitA;
     s16 bitB;
     u8 numFuel; //fuel cells needed
